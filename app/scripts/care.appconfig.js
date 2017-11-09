@@ -134,6 +134,7 @@
           deleteFeatureName: null,
           deleteFeatureId: null,
           deleteFeatureType: null,
+          deleteQueueId: null,
         },
       });
   }

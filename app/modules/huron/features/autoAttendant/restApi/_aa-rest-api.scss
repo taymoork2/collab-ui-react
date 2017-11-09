@@ -71,3 +71,31 @@
   line-height: 1.75rem;
   word-wrap: break-word;
 }
+
+.aa-rest-header-text {
+  color: #aeaeaf;
+}
+
+.aa-variable-text {
+  font-size: 1rem;
+  @include vr-spacing(mt, 0.3);
+}
+
+.aa-rest-helper-text {
+  @include vr-spacing(mt, 0.4);
+  color: #aeaeaf;
+}
+
+.aa-rest-value-text {
+  @include vr-spacing(mt, 0.6);
+  font-size: 1rem;
+}
+
+.aa-rest-dynamic-variables {
+  @include vr-spacing(mt, 0.6);
+}
+
+.aa-rest-test-button-spacing {
+  @include vr-spacing(mt, 1.06);
+  @include vr-spacing(mb, 1.06);
+}

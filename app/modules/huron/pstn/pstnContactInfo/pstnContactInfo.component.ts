@@ -1,3 +1,6 @@
+import { TerminusService } from 'modules/huron/pstn';
+import { Notification } from 'modules/core/notifications';
+
 interface IPstnContractInfo {
   companyName: string;
   firstName: string;
@@ -18,6 +21,29 @@ export class PstnContactInfoComponent implements ng.IComponentOptions {
 export class PstnProvidersCtrl implements ng.IComponentController {
   public contact: IPstnContractInfo;
   public form: ng.IFormController;
+
+  /* @ngInject */
+  constructor(
+    private TerminusService: TerminusService,
+    private Notification: Notification,
+  ) { }
+
+  public checkTerminusCustomer() {
+    return this.TerminusService.customerV2().query({
+      name: this.contact.companyName,
+    })
+    .$promise;
+  }
+
+  public verifyLegalCompanyName() {
+    this.checkTerminusCustomer()
+    .then((response) => {
+      this.form.companyName.$setValidity('duplicateCompanyName', (response.length === 0));
+    })
+    .catch(response => {
+      this.Notification.errorResponse(response);
+    });
+  }
 
   public verifyConfirmEmailAddress() {
     if (!_.isEmpty(this.contact.emailAddress && !_.isEmpty(this.contact.confirmEmailAddress))) {

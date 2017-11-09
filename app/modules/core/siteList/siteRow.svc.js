@@ -128,6 +128,16 @@
       return !_.isEmpty(SetupWizardService.getNonTrialWebexLicenses());
     };
 
+    this.isSubscriptionPending = function (subscriptionId) {
+      return SetupWizardService.isSubscriptionPending(subscriptionId);
+    };
+
+    this.hasNonPendingSubscriptions = function () {
+      return _.some(SetupWizardService.getSubscriptionListWithStatus(), function (sub) {
+        return !sub.isPending;
+      });
+    };
+
     this.getConferenceServices = function () {
       var funcName = 'getConferenceServices()';
       var logMsg = '';

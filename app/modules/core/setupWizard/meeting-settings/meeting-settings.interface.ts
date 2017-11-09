@@ -5,6 +5,7 @@ export interface IWebExSite {
   quantity?: number;
   audioPackageDisplay?: string;
   setupType?: string;
+  isCIUnifiedSite?: boolean;
 }
 
 export interface IExistingWebExTrialSite extends IWebExSite {

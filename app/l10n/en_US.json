@@ -852,6 +852,10 @@
     "csvConcurrentMeetingsPeak": "# of Peak concurrent meetings"
   },
   "careReportsPage": {
+    "chat": "Chat",
+    "chatWithVideo": "Chat With Video",
+    "avgCsatChat": "Avg. CSAT (Chat)",
+    "avgCsatWebcall": "Avg. CSAT (Chat with Video)",
     "tasks": "Tasks",
     "handled": "Handled",
     "accepted": "Accepted",
@@ -886,19 +890,19 @@
     "yesterdayDrilldownTitle": "for Yesterday",
     "yesterdayDrilldownDescription": "For yesterday",
     "week": "Last Week",
-    "week2": "for the last week",
+    "week2": "in the last week",
     "weekTaskStatus": "handled and abandoned",
     "weekInterval": "given day",
     "weekDrilldownTitle": "in the Last Week",
     "weekDrilldownDescription": "During the last week",
     "month": "Last Month",
-    "month2": "for the last month",
+    "month2": "in the last month",
     "monthTaskStatus": "handled and abandoned",
     "monthInterval": "given week",
     "monthDrilldownTitle": "in the Last Month",
     "monthDrilldownDescription": "During the last month",
     "threeMonths": "Last Three Months",
-    "threeMonths2": "for the last three months",
+    "threeMonths2": "in the last three months",
     "threeMonthsTaskStatus": "handled and abandoned",
     "threeMonthsInterval": "given month",
     "threeMonthsDrilldownTitle": "in the Last Three Months",
@@ -907,6 +911,7 @@
     "media_type_chat": "Chats",
     "media_type_callback": "Callbacks",
     "media_type_voice": "Inbound Calls",
+    "media_type_webcall": "Chat with Video",
     "taskDataGetError": "There was an error while loading the {{dataType}} data.",
     "tableDataGetError": "There was an error while loading the detailed efficient user data.",
     "errorLoadingName": "Error Loading Name",
@@ -1010,8 +1015,10 @@
     "loadingCustomer": "Sample Customer"
   },
   "taskIncoming": {
-    "title": "Total Completed Tasks",
+    "title": "Total Incoming {{mediaType}}",
     "description": "The graph depicts the total number of tasks completed {{time}}. Hover over the area chart for a breakdown of {{taskStatus}} tasks during a {{interval}}.",
+    "desc": "This chart represents the total number of incoming {{mediaType}} {{time}}. Hover over the chart to see the details.",
+    "breakdownDescription": "This chart represents the breakdown of all {{mediaType}} handled {{time}}. Hover over the chart to see the details.",
     "drilldownShow": "Show most active users",
     "drilldownHide": "Hide most active users",
     "drilldownTitle": "Most Active Users {{time}}",
@@ -1023,8 +1030,9 @@
     "drilldownSearchPlaceholder": "Search"
   },
   "taskOffered": {
-    "title": "Offered Tasks",
+    "title": "Offered {{mediaType}}",
     "description": "This chart depicts the accepted and ignored tasks in relation to the total tasks offered via automated routing {{time}}. Hover over the chart to see details of accepted and ignored tasks.",
+    "desc": "This chart represents the accepted and ignored {{mediaType}} in relation to the total {{mediaType}} offered via automated routing {{time}}. Hover over the chart to see the details.",
     "drilldownShow": "Show most active users",
     "drilldownHide": "Hide most active users",
     "drilldownTitle": "Most Active Users {{time}}",
@@ -1040,8 +1048,10 @@
     "drilldownSearchPlaceholder": "Search"
   },
   "taskTime": {
-    "title": "Task Time Measure",
+    "title": "{{mediaType}} Completion Time",
     "description": "The graph depicts the average time spent by a customer waiting for an agent and in getting their enquiries handled {{time}}. Hover over the area chart for a breakdown of average waiting time and average time taken to handle a customer enquiry during a {{interval}}.",
+    "desc": "This chart represents the average time taken to complete a {{mediaType}} {{time}}. Hover over the chart to see the details.",
+    "breakdownDescription": "This chart represents the breakdown of all {{mediaType}} and their average handle time {{time}}. Hover over the chart to see the details.",
     "drilldownShow": "Show most efficient users",
     "drilldownHide": "Hide most efficient users",
     "drilldownTitle": "Most efficient Users {{time}}",
@@ -1055,6 +1065,8 @@
   "averageCsat": {
     "title": "Customer Satisfaction",
     "description": "The graph depicts the customer satisfaction rating {{time}}. Hover over the trend line to know the average customer satisfaction rating during a {{interval}}.",
+    "desc": "This chart represents the average customer satisfaction rating {{time}}. Hover over the chart to see the details.",
+    "breakdownDescription": "This chart represents the breakdown of all {{mediaType}} and their average customer satisfaction {{time}}. Hover over the chart to see the details.",
     "drilldownShow": "Show users with best CSAT",
     "drilldownHide": "Hide users with best CSAT",
     "drilldownTitle": "Highest Rated Users {{time}}",
@@ -1066,8 +1078,10 @@
     "drilldownSearchPlaceholder": "Search"
   },
   "taskAggregate": {
-    "title": "Aggregated Tasks",
-    "description": "The graph depicts the number of waiting and in-progress tasks aggregated for today. Hover over the area chart to view the count of waiting and in-progress tasks aggregated from the start of business hours."
+    "title": "Aggregated {{mediaType}}",
+    "description": "The graph depicts the number of waiting and in-progress tasks aggregated for today. Hover over the area chart to view the count of waiting and in-progress tasks aggregated from the start of business hours.",
+    "desc": "This chart represents the number of active and queued {{mediaType}} aggregated today. Hover over the chart to see the details.",
+    "breakdownDescription": "This chart represents the breakdown of all {{mediaType}} active today. Hover over the chart to see the details."
   },
   "profilePage": {
     "userProfile": "User Profile",
@@ -1553,6 +1567,7 @@
     "selectNumber": "Select a number",
     "service": "Service",
     "settings": "Settings",
+    "setUp": "Set Up",
     "showAllAdminUsers": "Show all {{numUsers}} administrators",
     "showLess": "Show Less",
     "showMore": "Show More",
@@ -1670,7 +1685,7 @@
     "setUpGoogleCalendarService": "Hybrid Calendar (Google) is available. Use @WebEx or @Spark in a meeting location to insert join details, show upcoming meetings in the Cisco Spark app, and provide One Button to Push (OBTP) to Join.",
     "setUpCallAwareService": "Call Service Aware is available. Users can instantly share their desktops from their Cisco Spark clients while on a call.",
     "setUpCallConnectService": "Call Service Connect is available. Users can answer calls to their work phones on their Cisco Spark clients, and place calls to others' work phones from their Cisco Spark clients.",
-    "setUpHybridMessaging": "Hybrid Messaging Service is available.",
+    "setUpHybridMessaging": "Hybrid Message Service is available.",
     "setUpDevices": "Activate your devices when they arrive.",
     "setUpSharedDevices": "Activate your room devices when they arrive.",
     "setUpSparkBoardDevices": "Activate your Cisco Spark Boards when they arrive.",
@@ -1856,10 +1871,10 @@
     "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network.",
     "voicemailToPhoneLabel": "Voicemail to phone",
     "voicemailToEmailLabel": "Voicemail to email",
-    "voicemailToSparkLabel": "Voicemail to Spark",
+    "voicemailToSparkLabel": "Voicemail to Cisco Spark",
     "voicemailToPhoneDescriptionText": "Select a number that users can call to check their voicemail from outside the company network.",
-    "notificationAttached": "Notification with Attachment",
-    "notificationTranscript": "Notification with Transcript",
+    "notificationAttached": "Notification with attachment",
+    "notificationTranscript": "Notification with transcript",
     "voicemailToEmailHelpText": "Warning: Voicemail attachments sent via email are not secure.",
     "voicemailToEmailGetError": "Failed to get voicemail to email settings.",
     "voicemailToEmailUpdateError": "Failed to update voicemail to email settings.",
@@ -2335,7 +2350,7 @@
       "squared-fusion-ec": "Call Service Connect",
       "squared-fusion-ec.full": "Call Service Connect",
       "squared-fusion-mgmt": "Expressway Management Service",
-      "spark-hybrid-impinterop": "Messaging Service"
+      "spark-hybrid-impinterop": "Message Service"
     },
     "hybridServiceNames": {
       "squared-fusion-mgmt": "Hybrid Management Service",
@@ -2347,7 +2362,7 @@
       "squared-fusion-media": "Hybrid Media Service",
       "hybrid-context": "Hybrid Context Service",
       "ept": "Enterprise Private Trunking",
-      "spark-hybrid-impinterop": "Hybrid Messaging Service"
+      "spark-hybrid-impinterop": "Hybrid Message Service"
     },
     "connectorNames": {
       "squared-fusion-uc": "Call Connector",
@@ -2357,7 +2372,7 @@
       "contact-center-context": "Context Connector",
       "squared-fusion-ec": "Call Connector",
       "squared-fusion-mgmt": "Management Connector",
-      "spark-hybrid-impinterop": "Hybrid Messaging Connector"
+      "spark-hybrid-impinterop": "Hybrid Message Connector"
     },
     "connectorNameFromConnectorType": {
       "c_cal": "Calendar Connector",
@@ -2369,7 +2384,7 @@
       "cs_context": "Context Connector",
       "ucm_mgmt": "Management Connector",
       "c_serab": "Serviceability Connector",
-      "c_imp": "Hybrid Messaging Connector"
+      "c_imp": "Hybrid Message Connector"
     },
     "shortConnectorNameFromConnectorType": {
       "c_cal": "Calendar",
@@ -2381,7 +2396,7 @@
       "cs_context": "Context",
       "ucm_mgmt": "Management",
       "c_serab": "Serviceability",
-      "c_imp": "Messaging"
+      "c_imp": "Message"
     },
     "serviceNameFromConnectorType": {
       "c_cal": "Calendar Service",
@@ -2391,7 +2406,7 @@
       "cs_context": "Context Connector",
       "ucm_mgmt": "Management Connector",
       "c_serab": "Serviceability Connector",
-      "c_imp": "Messaging Service"
+      "c_imp": "Message Service"
     },
     "clusterTypeFromServiceId": {
       "squared-fusion-mgmt": "Expressway",
@@ -2441,7 +2456,7 @@
         "squared-fusion-gcal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
         "squared-fusion-o365": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
         "squared-fusion-ec": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
-        "spark-hybrid-impinterop": "[TODO: Here is a description of what Hybrid Messaging can do.]"
+        "spark-hybrid-impinterop": "[TODO: Here is a description of what Hybrid Message can do.]"
       },
       "preferredWebExSite": "Preferred WebEx Site",
       "preferredWebExSiteDefault": "Default",
@@ -2922,7 +2937,7 @@
           "error": "Error fetching the different cluster types.",
           "title": "What type of resource do you want to add?",
           "expressway-description": "Can run Hybrid Call Service or Hybrid Calendar Service",
-          "expressway-description-with-imp": "Can run Hybrid Call Service, Hybrid Calendar Service, or Hybrid Messaging",
+          "expressway-description-with-imp": "Can run Hybrid Call Service, Hybrid Calendar Service, or Hybrid Message Service.",
           "expressway-not-setup": "Expressway not set up",
           "mediafusion-description": "Can run Hybrid Media Service",
           "mediafusion-not-setup": "Media Service not set up",
@@ -2937,9 +2952,9 @@
             "title": "Choose services that you want the Expressway to manage:",
             "call-not-setup": "Hybrid Call Service not set up",
             "calendar-not-setup": "Hybrid Calendar Service not set up",
-            "imp-not-setup": "Hybrid Messaging Service not set up",
+            "imp-not-setup": "Hybrid Message Service not set up",
             "add-more-later": "You can add more services later by clicking Add Resource in the Call or Calendar page.",
-            "add-more-later-with-imp": "You can add more services later by clicking Add Resource in the Call, Calendar, or Messaging page."
+            "add-more-later-with-imp": "You can add more services later by clicking Add Resource in the Call, Calendar, or Message page."
           },
           "end": {
             "line1": "You may now register the Expressway with Cisco Collaboration Cloud.",
@@ -5222,6 +5237,7 @@
       "addrRetry": "Use a different address",
       "addrFound": "We have verified the provided address as:",
       "verifyAddress": "Verify Address",
+      "duplicateCompanyName": "This company name is already taken, please choose a unique name.",
       "error": {
         "areaCodes": "Failed to get area codes for selected state",
         "numbers": "Failed to get numbers for selected area code",
@@ -6855,11 +6871,18 @@
     "deleteSiteModalTitle": "Delete WebEx Site?",
     "deleteSiteModalBody": "Are you sure you want to delete <strong>{{siteUrl}}</strong>?",
     "deleteSiteModalBody2": "All data related to the site will be lost and this action can not be undone.",
-    "deleteSiteRejectModalTitle": "Cannot Delete",
-    "deleteSiteRejectModalBody": "You cannot delete the last site in a subscription",
-    "redistributeRejectModalTitle": "Cannot Redistribute",
-    "redistributeRejectModalBody": "You cannot redistribute licenses between sites because there is only one site.",
-    "addSiteSuccess": "Site has been added successfully"
+    "deleteSiteRejectModalTitle": "Cannot Delete Site",
+    "deleteSiteRejectModalBodyOnlySite": "You cannot delete the last site in a subscription",
+    "deleteSiteRejectModalBodyPending": "You cannot delete this site because the WebEx service in this subscription has not been provisioned. Please go to Meeting Service Setup to provision the WebEx subscription",
+    "redistributeRejectModalTitle": "Cannot Redistribute Licenses",
+    "redistributeRejectModalBodyOnlySite": "You cannot redistribute licenses between sites because there is only one site.",
+    "redistributeRejectModalBodyPending": "You cannot redistribute licenses between sites because the WebEx service in this subscription has not been provisioned. Please go to Meeting Service Setup to provision this WebEx subscription.",
+    "addSiteSuccess": "Site has been added successfully",
+    "addSiteRejectModalTitle": "Cannot Add Site",
+    "addSiteRejectNoSubscription": "You cannot add site because you have no active WebEx subscriptions",
+    "addSiteRejectPending": "The WebEx service in this subscription is not yet provisioned, therefore you cannot add another site. Please go to Meeting Service Setup and provision the WebEx service.",
+    "addSiteSelectPending": "The WebEx service in this subscription is not yet provisioned, therefore you cannot add another site. Please select a different subscription or else go to <a ng-click=\"{{onclick}}\">Meeting Service Setup</a> and provision the WebEx service for this subscription."
+
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
@@ -7287,6 +7310,7 @@
     "editAction": "Edit",
     "deleteFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?",
     "deleteVaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?<br>Deleting the Customer Virtual Assistant removes it from all Customer Support Templates. Customers can no longer interact with the virtual assistant.",
+    "deleteEvaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?<br>You can no longer escalate chat requests to Cisco Spark expert spaces.",
     "createSuccessText": "{{ featureName }} template has been created successfully.",
     "createTemplateFailureText": "Failed to create Care template.",
     "editSuccessText": "{{ featureName }} template has been updated successfully.",
@@ -7532,7 +7556,7 @@
     "summary": "Summary",
     "summaryDesc": "You have configured the template. Click Finish to save the configuration and generate embed code so you can start using this template on your organization website.",
     "editSummaryDesc": "You have edited the template. Click Finish to save the configuration so you can start using the new version of this template on your organization website.",
-    "editCodeWarnMsg2Line1": "It can take up to 15 minutes for the template changes to be reflected.",
+    "editCodeWarnMsg2Line1": "It can take up to 5 minutes for the template changes to be reflected.",
     "editCodeWarnMsg2Line2": "Open the template in a new browser tab after this time to view the changes.",
     "summaryDesc_callback": "You have configured the callback template. Click Finish to save the configuration and generate embed code so you can start using this callback template on your organization website.",
     "editSummaryDesc_callback": "You have edited the callback template. Click Finish to save the configuration so you can start using the new version of this callback template on your organization website.",
@@ -7931,8 +7955,7 @@
         "title": "Hybrid Services",
         "googleCalendarError": "Could not reach the service for Google Calendar.",
         "herculesError": "Could not reach the service for Cisco Spark Hybrid Services.",
-        "herculesErrorCacheInvalidation": "Could not invalidate current user's Hybrid Services cache.",
-        "herculesErrorAuthentication": "The current user is not allowed to read this organization's Hybrid Services data.",
+        "herculesErrorAuthentication": "Could not validate partner admin's access rights in customer organization. This could indicate a caching problem. Try logging out and in again, and contact Cisco support if the problem persists.",
         "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Spark Platform.",
         "notEnabledTextNew": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Spark Platform.",
         "notEnabledActionText": "Learn More",
@@ -7942,7 +7965,7 @@
           "squared-fusion-gcal": "Calendar (Google)",
           "squared-fusion-o365": "Calendar (Office 365)",
           "squared-fusion-uc": "Call",
-          "spark-hybrid-impinterop": "Messaging",
+          "spark-hybrid-impinterop": "Message",
           "squared-fusion-mgmt": "Management",
           "squared-fusion-media": "Media",
           "spark-hybrid-datasecurity": "Data Security",
@@ -8486,7 +8509,7 @@
     },
     "care": "Care",
     "hybridImp": {
-      "hybridImp": "Hybrid Messaging"
+      "hybridImp": "Hybrid Message"
     }
   },
   "partnerManagement": {
@@ -8861,8 +8884,8 @@
         }
       },
       "hybridImp": {
-        "title": "Hybrid Messaging",
-        "description": "[A description of Hybrid Messaging goes here]",
+        "title": "Hybrid Message",
+        "description": "[A description of Hybrid Message goes here]",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"

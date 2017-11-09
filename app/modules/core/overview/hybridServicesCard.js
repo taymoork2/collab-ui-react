@@ -9,7 +9,7 @@
     .factory('OverviewHybridServicesCard', OverviewHybridServicesCard);
 
   /* @ngInject */
-  function OverviewHybridServicesCard($q, Authinfo, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, HybridServicesExtrasService, HybridServicesUtilsService, Notification, USSService) {
+  function OverviewHybridServicesCard($q, Authinfo, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, HybridServicesUtilsService, Notification) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -22,7 +22,7 @@
         card.notEnabledActionText = 'overview.cards.hybrid.notEnabledActionText';
         card.serviceList = [];
 
-        function init(hasInvalidated) {
+        function init() {
           $q.all({
             hybridImp: FeatureToggleService.atlasHybridImpGetStatus(),
           }).then(function (featureToggles) {
@@ -61,26 +61,10 @@
                 card.serviceList.push(HybridServicesClusterService.getStatusForService('contact-center-context', response.clusterList.value));
               }
             } else {
-              if (_.get(response, 'clusterList.reason.status') === 403 && !hasInvalidated) {
-                $q.all([
-                  // Partner user most likely is out of sync in FMS/USS cache after the trial was added in the Atlas backend
-                  // To remedy, invalidate the user cache
-                  USSService.invalidateHybridUserCache(),
-                  HybridServicesExtrasService.invalidateHybridUserCache(),
-                ])
-                  .then(function () {
-                    // We have invalidated the cache, lets init again
-                    init(true);
-                  })
-                  .catch(function (error) {
-                    Notification.errorWithTrackingId(error, 'overview.cards.hybrid.herculesErrorCacheInvalidation');
-                  });
+              if (_.get(response, 'clusterList.reason.status') === 403 && Authinfo.isCustomerLaunchedFromPartner()) {
+                Notification.errorWithTrackingId(response.clusterList.reason, 'overview.cards.hybrid.herculesErrorAuthentication');
               } else {
-                if (_.get(response, 'clusterList.reason.status') === 403) {
-                  Notification.errorWithTrackingId(response.clusterList.reason, 'overview.cards.hybrid.herculesErrorAuthentication');
-                } else {
-                  Notification.errorWithTrackingId(response.clusterList.reason, 'overview.cards.hybrid.herculesError');
-                }
+                Notification.errorWithTrackingId(response.clusterList.reason, 'overview.cards.hybrid.herculesError');
               }
             }
             card.enabled = _.some(card.serviceList, function (service) {
@@ -94,7 +78,7 @@
             }
           });
         }
-        init(false);
+        init();
 
         function getUIStateLink(serviceId) {
           if (serviceId === 'squared-fusion-uc') {

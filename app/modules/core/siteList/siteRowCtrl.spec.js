@@ -46,6 +46,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
     spyOn(WebExSiteRowService, 'getShowGridData').and.returnValue(fakeShowGridData);
     spyOn(TokenService, 'getAccessToken').and.returnValue(accessToken);
     spyOn(WebExSiteRowService, 'getLicensesInSubscriptionGroupedBySites').and.returnValue(licensesGroupedBySites);
+    spyOn(WebExSiteRowService, 'isSubscriptionPending').and.returnValue(false);
     spyOn(WebExSiteRowService, 'deleteSite');
     spyOn($modal, 'open').and.returnValue({ result: $q.resolve() });
   }));
@@ -117,7 +118,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
     expect(WebExSiteRowService.initSiteRows).toHaveBeenCalledWith(true);
   });
 
-  describe('isOnlySiteInSubscription function', function () {
+  describe('canModify function', function () {
     var entity;
     var licensesGroupedBySites = _.groupBy(getJSONFixture('core/json/authInfo/webexLicenses.json'), 'siteUrl');
 
@@ -127,22 +128,29 @@ describe('Controller: WebExSiteRowCtrl', function () {
         siteUrl: 'ag-test1-org.webex.com',
       };
     });
-    it('should return FALSE if there are 2 or more sites in subscription', function () {
+
+    it('should return TRUE if there are 2 or more sites in subscription and subscription is not pending', function () {
       expect(_.keys(licensesGroupedBySites).length >= 2).toBeTruthy();
-      expect(controller.isOnlySiteInSubscription(entity)).toBeFalsy();
+      expect(controller.canModify(entity)).toBeTruthy();
     });
 
-    it('should return TRUE if there is only one site in subscription', function () {
+    it('should return FALSE if there are 2 or more sites in subscription but subscription is  pending', function () {
+      WebExSiteRowService.isSubscriptionPending.and.returnValue(true);
+      expect(_.keys(licensesGroupedBySites).length >= 2).toBeTruthy();
+      expect(controller.canModify(entity)).toBeFalsy();
+    });
+
+    it('should return FALSE if there is only one site in subscription', function () {
       var oneSite = _.pick(licensesGroupedBySites, 'ag-test1-org.webex.com');
       WebExSiteRowService.getLicensesInSubscriptionGroupedBySites.and.returnValue(oneSite);
-      expect(controller.isOnlySiteInSubscription(entity)).toBeTruthy();
+      expect(controller.canModify(entity)).toBeFalsy();
     });
 
-    it('should return TRUE if entity does not have billingServiceId (e.g. trial site)', function () {
+    it('should return FALSE if entity does not have billingServiceId (e.g. trial site)', function () {
       entity = {
         siteUrl: 'ag-test1-org.webex.com',
       };
-      expect(controller.isOnlySiteInSubscription(entity)).toBeTruthy();
+      expect(controller.canModify(entity)).toBeFalsy();
     });
   });
 
@@ -157,9 +165,9 @@ describe('Controller: WebExSiteRowCtrl', function () {
       };
     });
 
-    it('should launch license redistribution if there are more than 2 sites in subscription', function () {
+    it('should launch license redistribution if there are more than 2 sites in subscription and subscription not pending', function () {
       var expectedModalTitle = '<h3 class="modal-title" translate="webexSiteManagement.deleteSiteModalTitle"></h3>';
-      expect(controller.isOnlySiteInSubscription(entity)).toBeFalsy();
+      expect(controller.canModify(entity)).toBeTruthy();
       controller.deleteSite(entity);
       $scope.$digest();
       var modalCallArgs = $modal.open.calls.mostRecent().args[0];
@@ -168,7 +176,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
       expect(WebExSiteRowService.deleteSite).not.toHaveBeenCalled();
     });
 
-    it('should redistribute licenses itself when there are two sites in subscription', function () {
+    it('should redistribute licenses itself when there are two sites in subscription and subscription is not pending', function () {
       var twoSites = _.omit(licensesGroupedBySites, 'JP-TEST-ORG.webex.com');
       var expectedResult = [
         {
@@ -184,18 +192,18 @@ describe('Controller: WebExSiteRowCtrl', function () {
       ];
 
       WebExSiteRowService.getLicensesInSubscriptionGroupedBySites.and.returnValue(twoSites);
-      expect(controller.isOnlySiteInSubscription(entity)).toBeFalsy();
+      expect(controller.canModify(entity)).toBeTruthy();
       controller.deleteSite(entity);
       $scope.$digest();
       expect(state.go).not.toHaveBeenCalled();
       expect(WebExSiteRowService.deleteSite).toHaveBeenCalledWith(entity.siteUrl, expectedResult);
     });
 
-    it('should not allow deletion if there is only one site in subscription', function () {
+    it('should not allow deletion if canModify() is false ', function () {
       var expectedModalTitle = '<h3 class="modal-title" translate="webexSiteManagement.deleteSiteRejectModalTitle"></h3>';
       var oneSite = _.pick(licensesGroupedBySites, 'ag-test1-org.webex.com');
       WebExSiteRowService.getLicensesInSubscriptionGroupedBySites.and.returnValue(oneSite);
-      expect(controller.isOnlySiteInSubscription(entity)).toBeTruthy();
+      expect(controller.canModify(entity)).toBeFalsy();
       controller.deleteSite(entity);
       var modalCallArgs = $modal.open.calls.mostRecent().args[0];
       expect(modalCallArgs.template.indexOf(expectedModalTitle) > -1);
@@ -218,16 +226,25 @@ describe('Controller: WebExSiteRowCtrl', function () {
       var expectedModalTitle = '<h3 class="modal-title" translate="webexSiteManagement.redistributeRejectModalTitle"></h3>';
       var oneSite = _.pick(licensesGroupedBySites, 'ag-test1-org.webex.com');
       WebExSiteRowService.getLicensesInSubscriptionGroupedBySites.and.returnValue(oneSite);
-      expect(controller.isOnlySiteInSubscription(entity)).toBeTruthy();
+      expect(controller.canModify(entity)).toBeFalsy();
       controller.redistributeLicenses(entity);
       var modalCallArgs = $modal.open.calls.mostRecent().args[0];
       expect(modalCallArgs.template.indexOf(expectedModalTitle) > -1);
       expect(state.go).not.toHaveBeenCalled();
     });
-    it('should launch license redistribution if there are more than 2 sites in subscription', function () {
-      expect(controller.isOnlySiteInSubscription(entity)).toBeFalsy();
+    it('should launch license redistribution if there are more than 2 sites in subscription and subscription is not pending', function () {
+      expect(controller.canModify(entity)).toBeTruthy();
       controller.redistributeLicenses(entity);
       expect(state.go).toHaveBeenCalledWith('site-list-distribute-licenses', { subscriptionId: '123' });
+    });
+    it('should NOT launch license redistribution and should show appropriate modal if subscription is pending', function () {
+      var expectedModalTitle = '<h3 class="modal-title" translate="webexSiteManagement.redistributeRejectModalTitle"></h3>';
+      WebExSiteRowService.isSubscriptionPending.and.returnValue(true);
+      expect(controller.canModify(entity)).toBeFalsy();
+      controller.redistributeLicenses(entity);
+      var modalCallArgs = $modal.open.calls.mostRecent().args[0];
+      expect(modalCallArgs.template.indexOf(expectedModalTitle) > -1);
+      expect(state.go).not.toHaveBeenCalled();
     });
   });
 });

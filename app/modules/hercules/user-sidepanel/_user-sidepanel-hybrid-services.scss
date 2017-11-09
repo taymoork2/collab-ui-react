@@ -92,6 +92,12 @@
     font-size: 14px;
     color: $gray-darkest;
 
+    .hs-header {
+      display: flex;
+      justify-content: center;
+      padding-bottom: 6px;
+    }
+
     .indented {
       margin-left: 1.5rem;
     }
@@ -100,12 +106,6 @@
       padding: 1.5rem;
     }
 
-    .service-heading {
-      color: $color-primary-base;
-      font-family: $brand-font-light;
-      font-size: 14px;
-      line-height: 24px;
-    }
   }
 
   .has-warnings-icon {

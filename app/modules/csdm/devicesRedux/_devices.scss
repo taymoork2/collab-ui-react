@@ -28,6 +28,9 @@
   .page-sub-header {
     height: auto;
     flex-wrap: nowrap;
+    .page-sub-header__right {
+      align-self: flex-start;
+    }
   }
 
   background-color: white !important;
@@ -301,72 +304,104 @@
       transition: $property $duration $easeType;
     }
 
-    .searchbox {
+    .bulleted-searchbox {
       text-decoration: none;
-      .searchinput.searcherror {
+
+      .expanded {
+        width: 430px;
+        padding-right: 32px;
+      }
+      .bulleted-searchinput.searcherror {
         border-color: red !important;
       }
-      .searchinput {
+
+      .bulleted-searchinput {
         position: relative;
-        display: inline-block;
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        flex-basis: 100%;
         background: $brand-white;
         border: 1px solid $gray-light-2;
         border-radius: 2px;
-        min-width: 36px;
-        height: 36px;
+        height: 100%;
         margin-right: 1rem;
+
         > input {
           position: relative;
           top: 1px;
-        }
-        > input {
           font-family: $brand-font-light;
-          max-width: 350px;
+          flex-grow: 1;
+          margin-right: 0;
           min-width: 35px;
           font-size: 1.125rem;
           color: $gray !important;
           background: $brand-white;
           padding: 8px 1px 7px 0;
-          margin-left: 38px;
+          margin-left: 4px;
           margin-bottom: 3px;
           border: none;
           height: 32px;
           display: inline-block;
           @include easing-transition(width, 500ms, $easeOutQuint);
           &:focus {
-            margin-right: 30px;
             outline: none !important;
             box-shadow: none !important;
             background-color: white !important;
           }
+        }
+        > input.collapsed {
+          min-width: 1px;
+          width: 1px;
         }
         > i {
           border: none;
           color: $gray-darker;
           font-size: 16px;
           border-radius: 0;
-          position: absolute;
           top: 9px;
-          left: 11px;
+          margin-left: 8px;
+        }
+        > i.icon-search {
+          margin-right: 4px;
         }
         > i.clear {
           color: $gray-base;
           left: auto;
           right: 11px;
-          display: none;
+          position: absolute;
         }
-        > input.ng-not-empty {
-          margin-right: 30px;
-          + i.clear {
-            display: block;
+      }
+      > button {
+        border: none;
+        background: transparent;
+        height: 29px;
+        padding: 2px;
+        color: $gray;
+        i {
+          font-size: 14px;
+          border: solid 1px;
+          border-radius: 60%;
+          border-color: transparent;
+          &:hover {
+            border-color: $gray-light;
           }
         }
+        &:focus {
+          outline: none;
+        }
+      }
+      &:hover {
+        cursor: pointer;
+      }
+      .dropdown-positioner {
+        position: relative;
+        height: 0;
         .suggestions-dropdown {
           user-select: none;
-          position: absolute;
-          top: 35px;
-          left: -1px;
-          width: 370px;
+          position:absolute;
+          top: -1px;
+          width: 430px;
           background-color: white;
           z-index: 1;
           border: 1px solid $gray-light-2;
@@ -404,36 +439,7 @@
           }
         }
       }
-      > button {
-        border: none;
-        background: transparent;
-        height: 29px;
-        padding: 2px;
-        color: $gray;
-        i {
-          font-size: 14px;
-          border: solid 1px;
-          border-radius: 60%;
-          border-color: transparent;
-          &:hover {
-            border-color: $gray-light;
-          }
-        }
-        &:focus {
-          outline: none;
-        }
-      }
-      &:hover {
-        cursor: pointer;
-      }
     }
-  }
-  .bullets {
-    display: flex;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    flex-basis: 100%;
-    margin: 8px 0;
   }
 
   device-search-bullet {
@@ -461,11 +467,11 @@
     }
     .bullet_toplevel {
       display: block;
-      margin: 4px 8px 0 0;
+      margin: 4px;
       padding: 0 7px;
     }
     .bullet_edited {
-      display:none;
+      display: none;
       color: $black;
       background-color: $gray-light;
       border-color: $gray-dark;

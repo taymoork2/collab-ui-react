@@ -66,6 +66,7 @@ export class MeetingSettingsCtrl {
     min: this.$translate.instant('firstTimeWizard.meetingSettingsError.invalidLicense'),
     step: this.$translate.instant('firstTimeWizard.meetingSettingsError.invalidLicense'),
   };
+
   public showTransferCodeInput: boolean = false;
   public hasTrialSites: boolean = false;
   public transferSiteUrl = '';
@@ -306,7 +307,8 @@ export class MeetingSettingsCtrl {
          siteUrl: siteUrl,
          timezone: timezone,
          setupType: site.setupType,
-         keepExistingSite: keepExistingSite });
+         keepExistingSite: keepExistingSite,
+         isCIUnifiedSite: site.isCIUnifiedSite });
     }).value();
 
     this.sitesArray = sitesArray;
@@ -358,6 +360,7 @@ export class MeetingSettingsCtrl {
         //SparkControlHub user management means there is no setupType
         if (this.siteModel.setupType !== this.setupTypeLegacy) {
           delete this.siteModel.setupType;
+          this.siteModel.isCIUnifiedSite = true;
         }
         const siteModel = _.clone(this.siteModel);
         this.sitesArray.push(siteModel);
@@ -408,7 +411,14 @@ export class MeetingSettingsCtrl {
   public addSiteToDistributedArray(site) {
     if (!_.isEmpty(this.distributedLicensesArray)) {
       const newSite = _.map(this.centerDetails, (center) => {
-        return new WebExSite({ centerType: center.centerType, quantity: site.quantity, siteUrl: site.siteUrl, timezone: site.timezone, setupType: site.setupType });
+        return new WebExSite({
+          centerType: center.centerType,
+          quantity: site.quantity,
+          siteUrl: site.siteUrl,
+          timezone: site.timezone,
+          setupType: site.setupType,
+          isCIUnifiedSite: site.isCIUnifiedSite,
+        });
       });
       this.distributedLicensesArray.push(newSite);
     }
@@ -654,7 +664,14 @@ export class MeetingSettingsCtrl {
     if (_.isEmpty(this.distributedLicensesArray)) {
       this.distributedLicensesArray = _.map(this.sitesArray, (site: IWebExSite) => {
         return _.map(this.centerDetails, (center) => {
-          return new WebExSite({ centerType: center.centerType, quantity: site.quantity || 0, siteUrl: site.siteUrl, timezone: site.timezone, setupType: site.setupType });
+          return new WebExSite({
+            centerType: center.centerType,
+            quantity: site.quantity || 0,
+            siteUrl: site.siteUrl,
+            timezone: site.timezone,
+            setupType: site.setupType,
+            isCIUnifiedSite: site.isCIUnifiedSite,
+          });
         });
       });
       this.mergeExistingWebexSites();
@@ -691,7 +708,9 @@ export class MeetingSettingsCtrl {
           quantity: trial.license.volume,
           siteUrl: _.get<string>(trial, 'license.siteUrl').replace(this.Config.siteDomainUrl.webexUrl, ''),
           timezone: undefined,
-          setupType: this.Config.setupTypes.trialConvert, keepExistingSite: true }));
+          setupType: this.Config.setupTypes.trialConvert,
+          keepExistingSite: true,
+          isCIUnifiedSite:  trial.license.isCIUnifiedSite }));
       }
     });
     return existingTrialSites;
@@ -716,6 +735,7 @@ export class MeetingSettingsCtrl {
         quantity: license.volume,
         centerType: license.offerName,
         setupType: (license.isCIUnifiedSite !== true) ? this.setupTypeLegacy : undefined,
+        isCIUnifiedSite: license.isCIUnifiedSite,
       });
     });
     return existingWebexSites;
@@ -733,6 +753,7 @@ export class MeetingSettingsCtrl {
         centerType: '',
         keepExistingSite: true,
         setupType: site.setupType,
+        isCIUnifiedSite: site.isCIUnifiedSite,
       });
     }));
   }
@@ -761,6 +782,7 @@ export class MeetingSettingsCtrl {
     this.siteModel.siteUrl = '';
     this.siteModel.timezone = '';
     this.siteModel.setupType = undefined;
+    this.siteModel.isCIUnifiedSite = undefined;
   }
 
   private constructWebexLicensesPayload(): IWebexLicencesPayload {

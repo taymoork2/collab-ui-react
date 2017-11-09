@@ -171,6 +171,7 @@ describe('Care Feature Ctrl should ', function () {
       deleteFeatureName: featureTobBeDeleted.name,
       deleteFeatureId: featureTobBeDeleted.templateId,
       deleteFeatureType: featureTobBeDeleted.featureType,
+      deleteQueueId: featureTobBeDeleted.queueId,
     });
   });
 

@@ -7,6 +7,7 @@ export class WebExSite {
   public audioPackageDisplay?: string;
   public timezone?: string | object;
   public setupType?: string;
+  public isCIUnifiedSite?: boolean;
 
   constructor({
     centerType,
@@ -14,13 +15,14 @@ export class WebExSite {
     siteUrl,
     timezone,
     setupType,
+    isCIUnifiedSite,
   }: IWebExSite) {
     this.centerType = centerType;
     this.quantity = quantity || 0;
     this.siteUrl = siteUrl;
     this.timezone = timezone;
     this.setupType = setupType;
-
+    this.isCIUnifiedSite = isCIUnifiedSite;
     if (!setupType) {
       delete this.setupType;
     }
@@ -36,6 +38,7 @@ export class ExistingWebExSite extends WebExSite {
     timezone,
     setupType,
     keepExistingSite,
+    isCIUnifiedSite,
   }: IExistingWebExTrialSite) {
     super({
       centerType,
@@ -43,6 +46,7 @@ export class ExistingWebExSite extends WebExSite {
       siteUrl,
       timezone,
       setupType,
+      isCIUnifiedSite,
     });
     if (keepExistingSite) {
       this.keepExistingSite = true;

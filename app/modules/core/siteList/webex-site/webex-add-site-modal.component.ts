@@ -22,8 +22,12 @@ class WebexAddSiteModalController implements ng.IComponentController {
   public sitesArray: IWebExSite[] = [];
   public conferenceLicensesInSubscription: IConferenceLicense[];
   public audioPackage?: string;
+
   public audioPartnerName = null;
-  public subscriptionList: string[] = [];
+  public subscriptionList: {
+    id: string;
+    isPending: boolean;
+  }[] = [];
 
   // parameters received
   public singleStep?: number;
@@ -67,11 +71,21 @@ class WebexAddSiteModalController implements ng.IComponentController {
   }
 
   public $onInit(): void {
-    this.subscriptionList = <string[]>_.chain(this.SetupWizardService.getNonTrialWebexLicenses()).map('billingServiceId').uniq().value();
-    this.changeCurrentSubscription(_.first(this.subscriptionList));
-    if (this.subscriptionList.length === 1 && _.isNil(this.singleStep)) {
-      this.firstStep = 1;
-      this.next();
+    this.subscriptionList = this.SetupWizardService.getSubscriptionListWithStatus();
+    const hasActionableSubscriptions = !_.isEmpty(this.subscriptionList) && !_.first(this.subscriptionList).isPending;
+    if (hasActionableSubscriptions) {
+
+      // if there are any non-pending subs the first will be non-pending
+      const firstSubscription = _.first(this.subscriptionList);
+      this.changeCurrentSubscription(firstSubscription.id);
+      if (this.subscriptionList.length === 1 && _.isNil(this.singleStep)) {
+        this.firstStep = 1;
+        this.next();
+      }
+    } else {
+      this.currentSubscriptionId = _.get(this.subscriptionList, '[0].id', '');
+      this.isCanProceed = false;
+      this.singleStep = this.totalSteps =  1;
     }
   }
 
@@ -95,7 +109,7 @@ class WebexAddSiteModalController implements ng.IComponentController {
   public isNextDisabled(): boolean {
     switch (this.currentStep) {
       case 0:
-        return _.isEmpty(this.currentSubscriptionId);
+        return _.isEmpty(this.currentSubscriptionId) || !this.isCanProceed;
       case 1:
       case 2:
       case 3:

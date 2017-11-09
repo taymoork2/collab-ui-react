@@ -57,7 +57,7 @@
 
     var oneTier = '1-tier';
     var PROVISIONED = 'PROVISIONED';
-    var UNPROVISIONED_STATUSES = ['PENDING_PARM', 'PROV_READY'];
+    var UNPROVISIONED_STATUSES = ['PENDING_PARM', 'PROV_READY', 'RECEIVED'];
 
     var emailObjsMap = {
       customer: {

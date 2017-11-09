@@ -8,44 +8,6 @@
     var RESIZE_DELAY_IN_MS = 100;
 
     dd.$onInit = function () {
-      var defaultProps = {
-        broadcast: {},
-        description: '',
-        display: false,
-        hasData: false,
-        emptyDescription: '',
-        errorDescription: '',
-        show: '',
-        hide: '',
-        search: '',
-        searchPlaceholder: '',
-        state: ReportConstants.EMPTY,
-        table: {
-          columnDefs: [],
-          gridOptions: {
-            data: 'gridData',
-            multiSelect: false,
-            enableRowHeaderSelection: false,
-            enableColumnResize: true,
-            enableSorting: true,
-            enableFiltering: true,
-            enableColumnMenus: false,
-            enableHorizontalScrollbar: 0,
-            enableVerticalScrollbar: 0,
-            paginationPageSize: 5,
-            enablePaginationControls: false,
-            onRegisterApi: onRegisterApi,
-            columnDefs: dd.props.table.columnDefs,
-          },
-          pagination: {
-            maxPages: 3,
-          },
-        },
-        title: '',
-      };
-
-      dd.props = _.merge(defaultProps, dd.props);
-
       if (dd.props.broadcast) {
         if (dd.props.broadcast.refresh) {
           $scope.$on(dd.props.broadcast.refresh, function () {
@@ -58,6 +20,13 @@
             dd.resetDrilldownView();
           });
         }
+      }
+    };
+
+    dd.$onChanges = function (changeObj) {
+      var currentValue = changeObj.props && changeObj.props.currentValue;
+      if (currentValue && currentValue.table && currentValue.table.gridOptions) {
+        dd.props.table.gridOptions.onRegisterApi = onRegisterApi;
       }
     };
 
@@ -164,7 +133,7 @@
   angular.module('Sunlight').component('drilldownReport', {
     controller: DrilldownReportController,
     bindings: {
-      props: '=',
+      props: '<',
       callback: '&',
       gridData: '=?',
     },

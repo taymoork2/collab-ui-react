@@ -102,6 +102,20 @@ export class EvaService {
   }
 
   /**
+   * obtain resource for Expert Assistant's queue API Rest calls to UR.
+   * @param {string} orgId
+   * @param {string} queueId
+   * @returns {IConfigurationResource}
+   */
+  private getExpertAssistantQueueResource(orgId: string, queueId: string): IConfigurationResource {
+    const baseUrl = this.UrlConfig.getSunlightURServiceUrl();
+    return <IConfigurationResource>this.$resource(baseUrl + 'organization/:orgId/queue/:queueId', {
+      orgId: orgId,
+      queueId: queueId,
+    });
+  }
+
+  /**
    * list all Expert Virtual Assistants for orgId
    * @param orgId
    * returns {ng.IPromise<any>} promise resolving to JSON array of configurations or empty array on error
@@ -128,8 +142,19 @@ export class EvaService {
    * @param orgId
    * returns {ng.IPromise<any>} promise
    */
-  public deleteExpertAssistant(expertAssistantId: string, orgId: string): ng.IPromise<void>  {
+  public deleteExpertAssistant(expertAssistantId: string, orgId: string): ng.IPromise<any>  {
     return this.getExpertAssistantResource(orgId || this.Authinfo.getOrgId(), expertAssistantId)
+      .delete().$promise;
+  }
+
+  /**
+   * delete a queue associated with the expert assistant from Universal Router
+   * @param {string} orgId
+   * @param {string} queueId
+   * @returns {angular.IPromise<any>}
+   */
+  public deleteExpertAssistantQueue(orgId: string, queueId: string): ng.IPromise<any>  {
+    return this.getExpertAssistantQueueResource(orgId || this.Authinfo.getOrgId(), queueId)
       .delete().$promise;
   }
 

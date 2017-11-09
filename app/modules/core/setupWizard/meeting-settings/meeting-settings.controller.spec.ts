@@ -81,6 +81,10 @@ describe('Controller: MeetingSettingsCtrl', () => {
       expect(legacySetupSite.hasOwnProperty('setupType')).toBeTruthy();
       expect(legacySetupSite['setupType']).toEqual(this.Config.setupTypes.legacy);
     });
+    it('should correctly identify CI Unified sites', function () {
+      expect(this.controller.sitesArray[0].isCIUnifiedSite).toBe(true);
+      expect(this.controller.sitesArray[1].isCIUnifiedSite).toBe(false);
+    });
 
   });
 

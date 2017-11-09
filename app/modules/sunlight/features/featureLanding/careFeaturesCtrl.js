@@ -225,6 +225,7 @@
         deleteFeatureName: feature.name,
         deleteFeatureId: feature.templateId,
         deleteFeatureType: feature.featureType,
+        deleteQueueId: feature.queueId,
       });
     }
 
