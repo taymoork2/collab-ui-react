@@ -21,10 +21,6 @@
     vm.canContinue = canContinue;
     vm.loading = true;
 
-    vm.deleteAreYouSure = $translate.instant('mediaFusion.deleteGroup.message', {
-      groupName: cluster.name,
-    });
-
     MediaClusterServiceV2.getAll()
       .then(function (clusters) {
         vm.clusters = _.filter(clusters, { targetType: 'mf_mgmt' });
