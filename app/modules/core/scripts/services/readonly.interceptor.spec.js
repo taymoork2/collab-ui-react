@@ -115,7 +115,7 @@ describe('ReadonlyInterceptor', function () {
       expect(this.Notification.notifyReadOnly.calls.count()).toBe(0);
     });
 
-    it('does not intercept global status service POST operation', function () {
+    it('does not intercept global status service post operation', function () {
       var config = {
         method: 'POST',
         url: 'https://service-collaborationhelp.cisco.com/status',
@@ -125,7 +125,7 @@ describe('ReadonlyInterceptor', function () {
       expect(this.Notification.notifyReadOnly.calls.count()).toBe(0);
     });
 
-    it('does not intercept global status service PUT operation', function () {
+    it('does not intercept global status service put operation', function () {
       var config = {
         method: 'PUT',
         url: 'https://service-collaborationhelp.cisco.com/status',
@@ -135,7 +135,7 @@ describe('ReadonlyInterceptor', function () {
       expect(this.Notification.notifyReadOnly.calls.count()).toBe(0);
     });
 
-    it('does not intercept global status service DELETE operation', function () {
+    it('does not intercept global status service delete operation', function () {
       var config = {
         method: 'DELETE',
         url: 'https://service-collaborationhelp.cisco.com/status',
