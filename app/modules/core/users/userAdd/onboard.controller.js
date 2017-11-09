@@ -1311,8 +1311,8 @@ require('./_user-add.scss');
     }
 
     // Hybrid Services entitlements
-    var getExtensionEntitlements = function (action) {
-      return _.chain($scope.extensionEntitlements)
+    var getHybridServicesEntitlements = function (action) {
+      return _.chain($scope.hybridServicesEntitlements)
         .filter(function (entry) {
           return action === 'add' && entry.entitlementState === 'ACTIVE';
         })
@@ -1889,7 +1889,7 @@ require('./_user-add.scss');
             : [];
         }
 
-        entitleList = entitleList.concat(getExtensionEntitlements('add'));
+        entitleList = entitleList.concat(getHybridServicesEntitlements('add'));
 
         $scope.numAddedUsers = 0;
         $scope.numUpdatedUsers = 0;
@@ -1908,13 +1908,18 @@ require('./_user-add.scss');
       return deferred.promise;
     }
 
-    $scope.extensionEntitlements = [];
-    $scope.updateExtensionEntitlements = function (entitlements) {
+    /* Used by the hybrid services component, because you need at least one paid license to enable hybrid services  */
+    $scope.userIsLicensed = function () {
+      return !_.isEmpty(getAccountLicenses());
+    };
+
+    $scope.hybridServicesEntitlements = [];
+    $scope.updateHybridServicesEntitlements = function (entitlements) {
       $scope.hybridCallServiceAware = _.some(entitlements, {
         entitlementName: 'squaredFusionUC',
         entitlementState: 'ACTIVE',
       });
-      $scope.extensionEntitlements = entitlements;
+      $scope.hybridServicesEntitlements = entitlements;
     };
 
     function entitleUserCallback(data, status, method, headers) {
@@ -2328,7 +2333,7 @@ require('./_user-add.scss');
           } else {
             entitleList = getEntitlements('add');
           }
-          entitleList = entitleList.concat(getExtensionEntitlements('add'));
+          entitleList = entitleList.concat(getHybridServicesEntitlements('add'));
           convertPending = false;
           Userservice.updateUsers(successMovedUsers, licenseList, entitleList, 'convertUser', entitleUserCallback);
         } else {
@@ -2592,7 +2597,7 @@ require('./_user-add.scss');
           entitlementName: 'ciscoUC',
         });
       }
-      entitleList = entitleList.concat(getExtensionEntitlements('add'));
+      entitleList = entitleList.concat(getHybridServicesEntitlements('add'));
 
       function onboardCsvUsers(startIndex, userArray, entitlementArray, licenseArray, csvPromise) {
         return csvPromise.then(function () {
