@@ -400,7 +400,9 @@ require('./_overview.scss');
 
     ReportsService.getOverviewMetrics(true);
 
-    SunlightReportService.getOverviewData();
+    if (Authinfo.isCare()) {
+      SunlightReportService.getOverviewData();
+    }
 
     var params = {
       disableCache: true,

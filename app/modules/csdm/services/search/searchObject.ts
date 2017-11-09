@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { SearchElement, QueryParser, OperatorAnd } from './queryParser';
+import { SearchElement, QueryParser, OperatorAnd, FieldQuery } from './queryParser';
 import { SearchTranslator } from './searchTranslator';
 
 enum Aggregate {
@@ -73,6 +73,13 @@ export class SearchObject {
     return [this.parsedQuery];
   }
 
+  public hasAnyBulletOrEditedText(): boolean {
+    const anyElementWithText =  SearchObject.findFirstElementMatching(this.parsedQuery,
+        se => se instanceof FieldQuery && se.toQuery().length > 0);
+
+    return anyElementWithText != null;
+  }
+
   public setSortOrder(field: string, order: string) {
     this.sortField = field;
     this.sortOrder = order;
@@ -92,9 +99,7 @@ export class SearchObject {
   }
 
   public setWorkingElementText(translatedQuery: string) {
-
-    const alreadyEdited = SearchObject.findEditedElement(this.parsedQuery);
-
+    const alreadyEdited =  SearchObject.findFirstElementMatching(this.parsedQuery, se => se.isBeingEdited());
     if (_.isEmpty(translatedQuery) && alreadyEdited) {
       this.removeSearchElement(alreadyEdited);
     } else {
@@ -121,7 +126,7 @@ export class SearchObject {
   }
 
   public submitWorkingElement() {
-    const alreadyEdited = SearchObject.findEditedElement(this.parsedQuery);
+    const alreadyEdited =  SearchObject.findFirstElementMatching(this.parsedQuery, se => se.isBeingEdited());
     if (alreadyEdited) {
       alreadyEdited.setBeingEdited(false);
     }
@@ -130,18 +135,18 @@ export class SearchObject {
     }
   }
 
-  private static findEditedElement(element: SearchElement): SearchElement | null {
+  private static findFirstElementMatching(element: SearchElement, matchFunction: (se: SearchElement) => boolean): SearchElement | null {
     if (!element) {
       return null;
     }
-    if (element.isBeingEdited()) {
+    if (matchFunction(element)) {//element.isBeingEdited()) {
       return element;
     }
     if (element.getExpressions().length < 1) {
       return null;
     }
     return _.first(_.map(element.getExpressions(), (e) => {
-      return SearchObject.findEditedElement(e);
+      return SearchObject.findFirstElementMatching(e, matchFunction);
     }).filter(e => e != null));
   }
 

@@ -1,31 +1,30 @@
-<div class="bullets">
-  <device-search-bullet ng-repeat="bullet in dctrl.getBullets()" search-element="bullet" bullet-container="dctrl"></device-search-bullet>
-</div>
 <div class="search-filters-redux">
   <form ng-submit="dctrl.onInputSubmit()" ng-class="{ 'active': dctrl.inputActive}">
-    <div class="searchbox" onclick="angular.element('#searchFilterInput').focus();">
-      <div class="searchinput" ng-class="{'searcherror': dctrl.searchObject.hasError}">
+    <div class="bulleted-searchbox" onclick="angular.element('#searchFilterInput').focus();">
+      <div class="bulleted-searchinput"
+           ng-class="{'searcherror': dctrl.searchObject.hasError, 'expanded': dctrl.inputActive || dctrl.searchObject.hasAnyBulletOrEditedText()}">
         <i class="icon icon-search"></i>
+        <device-search-bullet ng-repeat="bullet in dctrl.getBullets()" search-element="bullet"
+                              bullet-container="dctrl"></device-search-bullet>
         <input
           autocomplete="off"
           autocorrect="off"
           autocapitalize="off"
           spellcheck="false"
           id="searchFilterInput"
-          cs-expandinginput
           ng-model="dctrl.searchInput"
           ng-change="dctrl.onInputChange()"
           ng-keydown="dctrl.onSearchInputKeyDown($event)"
           type="text"
           placeholder="{{::'common.search' | translate}}"
-          ng-focus="searchFilterInput.inputFocus = true; dctrl.inputActive=true; searchFilterInput.expand()"
-          ng-blur="searchFilterInput.inputFocus = true; dctrl.inputActive=false"
-          focus-width="300"
-          style="width: 1px; min-width: 1px; max-width: 350px;"
-          cs-expandinginput-minwidth="1px"
-          class="form-control ng-valid ng-isolate-scope ng-dirty ng-valid-parse ng-touched ng-empty"
-        >
-        <i class="icon icon-exit-outline clear" ng-click="dctrl.clearSearchInput();"></i>
+          ng-focus="dctrl.inputActive=true"
+          ng-blur="dctrl.inputActive=false"
+          ng-class="{ 'collapsed': !dctrl.inputActive && !dctrl.searchObject.hasAnyBulletOrEditedText()}">
+
+        <i class="icon icon-exit-outline clear" ng-click="dctrl.clearSearchInput();"
+           ng-if="dctrl.searchObject.hasAnyBulletOrEditedText()"></i>
+      </div>
+      <div class="dropdown-positioner">
         <div class="suggestions-dropdown" ng-mouseleave="dctrl.suggestions.resetActive()"
              ng-show="dctrl.showSuggestions || dctrl.startSelecting" ng-mousedown="dctrl.startSelecting = true"
              ng-mouseup="dctrl.selectSuggestion(dctrl.suggestions.getActiveSuggestion());dctrl.startSelecting = false">

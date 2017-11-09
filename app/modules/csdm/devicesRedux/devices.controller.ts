@@ -8,13 +8,11 @@ require('./_devices.scss');
 
 export class DevicesCtrl {
   public anyDevicesOrCodesLoaded = true; //TODO remove
-  public searchMinimized = true;
   public searchInteraction = new SearchInteraction();
   public issearching = false;
   private _searchResult: SearchResult;
   private _searchObject: SearchObject;
   public licenseError: string;
-
 
   //region for add device/place button
   private showPersonal = false;
@@ -77,12 +75,12 @@ export class DevicesCtrl {
   }
 
   public emptysearchresult(): boolean {
-    return this._searchObject && this._searchObject.getTranslatedQueryString(null) !== ''
+    return !this.issearching && this._searchObject && this._searchObject.getTranslatedQueryString(null) !== ''
       && (this._searchResult && this._searchResult.hits.total === 0);
   }
 
   public emptydatasource(): boolean {
-    return this._searchObject && this._searchObject.getTranslatedQueryString(null) === ''
+    return !this.issearching && this._searchObject && this._searchObject.getTranslatedQueryString(null) === ''
       && (this._searchResult && this._searchResult.hits.total === 0);
   }
 
@@ -151,7 +149,7 @@ export class DevicesCtrl {
 
   public searchResultChanged(result: SearchResult) {
     this._searchResult = result;
-    this.issearching = false;
+   // this.issearching = false;
   }
 
   private initForAddButton() {

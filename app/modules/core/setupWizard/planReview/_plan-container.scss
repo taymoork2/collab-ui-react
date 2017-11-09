@@ -251,14 +251,6 @@
     font-size: 12px;
   }
 
-  .item-mtg-license {
-    color: $gray-dark-2;
-    font-family: $brand-font-light;
-    font-weight: bold;
-    font-size: 14px;
-    line-height: 24px;
-  }
-
   .item-msg-license {
     color: $gray-dark-2;
     font-family: $brand-font-light;
@@ -337,4 +329,13 @@
     padding-top: 5px;
     margin-bottom: 20px;
   }
+}
+
+
+.item-mtg-license {
+  color: $gray-dark-2;
+  font-family: $brand-font-light;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 24px;
 }
