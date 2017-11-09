@@ -6098,7 +6098,6 @@
       "decreasedBy": "Decreased by"
     },
     "deleteGroup": {
-      "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
       "errorHeader": "Unexpected Error",
       "errorMessage": "Unable delete {{groupName}}."
     },
