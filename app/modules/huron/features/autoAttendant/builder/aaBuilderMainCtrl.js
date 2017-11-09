@@ -5,10 +5,12 @@
     .module('uc.autoattendant')
     .controller('AABuilderMainCtrl', AABuilderMainCtrl); /* was AutoAttendantMainCtrl */
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
-  function AABuilderMainCtrl($modalStack, $q, $rootScope, $scope, $state, $stateParams, $translate, AACalendarService, AACommonService,
+  function AABuilderMainCtrl($element, $modalStack, $q, $rootScope, $scope, $state, $stateParams, $translate, AACalendarService, AACommonService,
     AADependencyService, AAMediaUploadService, AAMetricNameService, AAModelService, AANotificationService, AANumberAssignmentService, AARestModelService,
-    AATrackChangeService, AAUiModelService, AAUiScheduleService, AAValidationService, AutoAttendantCeInfoModelService,
+    AATrackChangeService, AAUiModelService, AAUiScheduleService, AAValidationService, AccessibilityService, AutoAttendantCeInfoModelService,
     AutoAttendantCeMenuModelService, AutoAttendantCeService, AutoAttendantLocationService, Analytics, Authinfo, DoRestService, FeatureToggleService, ServiceSetup) {
     var vm = this;
     vm.isWarn = false;
@@ -907,13 +909,14 @@
         vm.aaModel.aaRecord = undefined;
         vm.selectAA(aaName);
         setLoadingDone();
+        // wait for page to finish loading, then set focus
+        AccessibilityService.setFocus($element, '.aa-name-edit', 2000);
       });
     }
 
-    function evalKeyPress($keyCode) {
-      switch ($keyCode) {
-        // esc key
-        case 27:
+    function evalKeyPress($event) {
+      switch ($event.keyCode) {
+        case KeyCodes.ESCAPE:
           closePanel();
           break;
         default:
