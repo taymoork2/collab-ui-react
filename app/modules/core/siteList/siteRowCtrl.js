@@ -8,17 +8,19 @@ require('./_site-list.scss');
     .controller('WebExSiteRowCtrl', WebExSiteRowCtrl);
 
   /*@ngInject*/
-  function WebExSiteRowCtrl($log, $modal, $scope, $sce, $state, $stateParams, $timeout, $translate, accountLinkingPhase2, FeatureToggleService, ModalService, TokenService, WebExUtilsFact, WebExSiteRowService, WebExSiteService, Utils) {
+
+  function WebExSiteRowCtrl($log, $modal, $scope, $sce, $state, $stateParams, $timeout, $translate, accountLinkingPhase2, ModalService, TokenService, WebExUtilsFact, WebExSiteRowService, WebExSiteService, Utils) {
     var vm = this;
     vm.showGridData = false;
     vm.isShowAddSite = false;
     vm.canAddSite = WebExSiteRowService.canAddSite();
     vm.isAdminPage = Utils.isAdminPage();
+    var showSiteMgmntEmailPattern = '^ordersimp-.*@mailinator.com';
 
     $log.debug('StateParams in sitreRowCrtl', $stateParams);
 
     var dontShowLinkedSites = accountLinkingPhase2;
-    FeatureToggleService.atlasWebexAddSiteGetStatus().then(function (result) {
+    WebExSiteRowService.shouldShowSiteManagement(showSiteMgmntEmailPattern).then(function (result) {
       vm.isShowAddSite = result;
     });
 

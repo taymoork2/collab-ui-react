@@ -39,7 +39,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
 
     spyOn(state, 'go');
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
-    spyOn(FeatureToggleService, 'atlasWebexAddSiteGetStatus').and.returnValue($q.resolve(true));
+    spyOn(WebExSiteRowService, 'shouldShowSiteManagement').and.returnValue($q.resolve(true));
     spyOn(WebExSiteRowService, 'getConferenceServices');
     spyOn(WebExSiteRowService, 'configureGrid');
     spyOn(WebExSiteRowService, 'initSiteRows');
@@ -95,12 +95,12 @@ describe('Controller: WebExSiteRowCtrl', function () {
     expect(state.go).toHaveBeenCalledWith(stateName, { siteUrl: siteUrl });
   });
 
-  it('will set isShowAddSite to TRUE if \'atlasWebexAddSiteGetStatus\' FT is enabled', function () {
+  it('will set isShowAddSite to TRUE if \'shouldShowSiteManagement()\' resolves with TRUE ', function () {
     expect(controller.isShowAddSite).toBeTruthy();
   });
 
-  it('will set isShowAddSite to FALSE  if \'atlasWebexAddSiteGetStatus\' FT is disabled', function () {
-    FeatureToggleService.atlasWebexAddSiteGetStatus.and.returnValue($q.resolve(false));
+  it('will set isShowAddSite to FALSE  if \'shouldShowSiteManagement\' resolves with FALSE', function () {
+    WebExSiteRowService.shouldShowSiteManagement.and.returnValue($q.resolve(false));
     initController();
     expect(controller.isShowAddSite).toBeFalsy();
   });
