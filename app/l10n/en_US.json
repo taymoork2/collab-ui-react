@@ -6098,7 +6098,6 @@
       "decreasedBy": "Decreased by"
     },
     "deleteGroup": {
-      "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
       "errorHeader": "Unexpected Error",
       "errorMessage": "Unable delete {{groupName}}."
     },
@@ -6121,7 +6120,6 @@
       "moveTo": "Move to:",
       "cancel": "Cancel",
       "continue": "Continue",
-      "deregisterAllconfirmation": "I understand that all the nodes in this cluster will be deregistered automatically, and that the cluster will be deleted permanently. I also understand that I cannot undo this action.",
       "unabletomovenodes": "Failed to move/defuse {{nodes}} press cancel and try again",
       "clusterdeleteSuccess": "Successfully deleted {{clustername}}",
       "clusterCreationFailed": "Failed to create new cluster: {{enteredCluster}}",
@@ -6131,7 +6129,10 @@
       "stable": "STABLE",
       "beta": "BETA",
       "latest": "LATEST",
-      "errorMsg": "Before you can delete this cluster, you must either move all nodes to another cluster or deregister all nodes."
+      "errorMsg": "Before you can delete this cluster, you must either move all nodes to another cluster or deregister all nodes.",
+      "deregisterWarning": "All the nodes in this cluster will be deregistered automatically and the cluster will be moved permanently. This action can not be undone.",
+      "deactivateWarning": "This is the last cluster running Hybrid Media for this organization if you remove it, the service will be deactivated.",
+      "iUnderstand": "I understand"
     },
     "upgradeClusters": {
       "title": "Software Upgrade",

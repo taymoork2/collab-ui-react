@@ -52,10 +52,20 @@
     <div ng-show=" deleteClust.radioModel == '2' && !deleteClust.ngDisable">
       <div class="form-group">
         <div class="cs-checkbox-group">
+          <span class="warning-icon"><i class="icon icon-warning"></i></span> <span translate="mediaFusion.clusters.deregisterWarning"></span>
           <div class="cs-input-group cs-input-checkbox">
             <input type="checkbox" id="individualcheckbox" ng-model="deleteClust.checkboxModel">
             <label for="individualcheckbox">
-              <span translate="mediaFusion.clusters.deregisterAllconfirmation"></span>
+              <span translate="mediaFusion.clusters.iUnderstand"></span>
+            </label>
+          </div>
+        </div>
+        <div class="cs-checkbox-group" ng-show="deleteClust.clusters.length === 1">
+          <span class="warning-icon"><i class="icon icon-warning"></i></span> <span translate="mediaFusion.clusters.deactivateWarning"></span>
+          <div class="cs-input-group cs-input-checkbox">
+            <input type="checkbox" id="deactivateCheckbox" ng-model="deleteClust.checkboxModel">
+            <label for="deactivateCheckbox">
+              <span translate="mediaFusion.clusters.iUnderstand"></span>
             </label>
           </div>
         </div>
