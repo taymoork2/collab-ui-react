@@ -107,9 +107,7 @@
       if (!_.includes(servicesWithUserAssignments, serviceId)) {
         return;
       }
-      var summaryForService = _.find(USSService.getStatusesSummary(), {
-        serviceId: serviceId,
-      });
+      var summaryForService = USSService.getStatusesSummary()[serviceId];
       var noUsersActivatedId = serviceId + ':noUsersActivated';
       var needsUserActivation = summaryForService && summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated === 0;
       if (needsUserActivation) {

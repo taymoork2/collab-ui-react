@@ -2,13 +2,25 @@ import { CsdmHubFactory, CsdmPollerFactory } from 'modules/squared/devices/servi
 import { HybridServicesI18NService } from 'modules/hercules/services/hybrid-services-i18n.service';
 import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
 
-export interface IStatusSummary {
-  serviceId: HybridServiceId | null;
+interface IStatusSummary {
+  'spark-hybrid-impinterop': IStatusSummaryForAService;
+  'squared-fusion-cal': IStatusSummaryForAService;
+  'squared-fusion-ec': IStatusSummaryForAService;
+  'squared-fusion-gcal': IStatusSummaryForAService;
+  'squared-fusion-o365': IStatusSummaryForAService;
+  'squared-fusion-uc': IStatusSummaryForAService;
+}
+
+interface IStatusSummaryForAService {
   activated: number;
-  notActivated: number;
+  activatedWithWarning: number;
   error: number;
+  notActivated: number;
+  notActivatedWithWarning: number;
   total: number;
 }
+
+export type IExtendedStatusSummary = IStatusSummaryForAService & {serviceId: HybridServiceId};
 
 export interface IUserProps {
   userId: string;
@@ -119,7 +131,7 @@ interface IReplacementValue {
 }
 
 export class USSService {
-  private cachedUserStatusSummary: IStatusSummary[] = [];
+  private cachedUserStatusSummary: IStatusSummary;
   private USSUrl = `${this.UrlConfig.getUssUrl()}uss/api/v1`;
   private hub = this.CsdmHubFactory.create();
 
@@ -165,9 +177,15 @@ export class USSService {
     }
   }
 
-  public extractSummaryForAService(servicesId: HybridServiceId[]): IStatusSummary[] {
-    return _.filter(this.getStatusesSummary(), (summary) => {
-      return _.includes(servicesId, summary.serviceId);
+  public extractSummaryForAService(servicesId: HybridServiceId[]): IExtendedStatusSummary[] {
+    if (!this.cachedUserStatusSummary) {
+      return [];
+    }
+    return _.map(servicesId, (serviceId) => {
+      return {
+        ...this.cachedUserStatusSummary[serviceId],
+        serviceId: serviceId,
+      };
     });
   }
 
@@ -194,8 +212,8 @@ export class USSService {
       .then(this.extractAndTweakUserStatuses);
   }
 
-  public getStatusesSummary(): IStatusSummary[] {
-    return this.cachedUserStatusSummary;
+  public getStatusesSummary(): IStatusSummary | {} {
+    return this.cachedUserStatusSummary || {};
   }
 
   public getUserJournal(userId: string, orgId?: string, limit?: number, serviceId?: HybridServiceId): ng.IPromise<IJournalEntry[]> {
@@ -274,26 +292,13 @@ export class USSService {
     return this.$http
       .get(`${this.USSUrl}/orgs/${this.Authinfo.getOrgId()}/userStatuses/summary`)
       .then((res) => {
-        const summary: IStatusSummary[] = _.get(res, 'data.summary', []);
-        // The server returns *nothing* for call and calendar
-        // but we want to show that there are 0 users so let's populate
-        // the data with defaults
-        const emptySummary: IStatusSummary = {
-          serviceId: null,
-          activated: 0,
-          notActivated: 0,
-          error: 0,
-          total: 0,
-        };
-        _.forEach(['squared-fusion-cal', 'squared-fusion-uc'] as HybridServiceId[], (serviceId) => {
-          const found = _.find(summary, { serviceId: serviceId });
-          if (!found) {
-            const newSummary = _.cloneDeep(emptySummary);
-            newSummary.serviceId = serviceId;
-            summary.push(newSummary);
-          }
-        });
-        this.cachedUserStatusSummary = summary;
+        this.cachedUserStatusSummary  = _.get(res, 'data.countsByState');
+        const o365 = _.get<IStatusSummaryForAService>(res, 'data.countsByOwnerAndState.squared-fusion-cal.ccc');
+        const onPremExchange = _.get<IStatusSummaryForAService>(res, 'data.countsByOwnerAndState.squared-fusion-cal.uss');
+        if (o365) {
+          this.cachedUserStatusSummary['squared-fusion-o365'] = o365;
+        }
+        this.cachedUserStatusSummary['squared-fusion-cal'] = onPremExchange;
       });
   }
 

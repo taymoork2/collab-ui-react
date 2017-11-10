@@ -1,9 +1,9 @@
-import { USSService, IStatusSummary } from 'modules/hercules/services/uss.service';
+import { USSService, IExtendedStatusSummary } from 'modules/hercules/services/uss.service';
 
 class HybridCallActiveCardController implements ng.IComponentController {
   private subscribeStatusesSummary: any;
 
-  public userStatusesSummary: IStatusSummary[] | undefined;
+  public userStatusesSummary: IExtendedStatusSummary[] | undefined;
 
   /* @ngInject */
   constructor(
