@@ -1,3 +1,11 @@
 sip-destination-settings-section {
   display: block;
+
+  .sip-details {
+    margin-top: 0.75rem;
+
+    p, ul {
+      font-size: 0.75rem;
+    }
+  }
 }

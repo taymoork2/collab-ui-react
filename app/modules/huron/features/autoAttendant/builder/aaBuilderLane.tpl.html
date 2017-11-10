@@ -2,8 +2,14 @@
   <div class="aa-vertical-line"></div>
   <div class="panel aa-panel">
     <div class="aa-panel-round">
-      <a ng-click="aaLane.addAction(-1)">
-        <span class="icon icon-plus-circle aa-add-step-icon" popover=" {{ :: 'autoAttendant.builderAddNewStep' | translate }} " popover-trigger="mouseenter" popover-animation="true" popover-placement="right" popover-append-to-body="false"></span>
+      <a href ng-click="aaLane.addAction(-1)"
+        class="icon icon-plus-circle aa-add-step-icon"
+        popover="{{::'autoAttendant.builderAddNewStep' | translate}}"
+        popover-trigger="focus mouseenter"
+        popover-animation="true"
+        popover-placement="right"
+        popover-append-to-body="false"
+        aria-label="{{::'autoAttendant.builderAddNewStep' | translate}}">
       </a>
     </div>
   </div>

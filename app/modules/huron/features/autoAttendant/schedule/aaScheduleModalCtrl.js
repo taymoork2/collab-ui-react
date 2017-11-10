@@ -6,7 +6,6 @@
     .controller('AAScheduleModalCtrl', AAScheduleModalCtrl);
 
   /* @ngInject */
-
   function AAScheduleModalCtrl($modal, $modalInstance, $translate, Analytics, AAMetricNameService, sectionToToggle, AANotificationService, AACalendarService,
     AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService,
     $timeout) {
