@@ -50,7 +50,7 @@ class BotAuthorizationsController {
     const rolePromise = this.AuthorizationService.getRoleName(auth.grant.id).then(r => {
       auth.grant.name = r;
     }).catch((error) => {
-      auth.grant.name = 'NA';
+      auth.grant.name = this.$translate.instant('common.notAvailable');
       this.Notification.errorResponse(error, 'placesPage.botAuthorizations.failedToGetRoles');
     });
     const subjectPromise = this.DirectoryService.getAccount(auth.subject.id).then(r => {
@@ -60,14 +60,14 @@ class BotAuthorizationsController {
       auth.subject.email = r.email;
       auth.subject.class = r.type === 'BOT' ? 'icon icon-bot-four icon-2x' : 'icon icon-user icon-2x';
     }).catch((error) => {
-      auth.subject.name = 'NA';
-      auth.subject.type = 'NA';
+      auth.subject.name = this.$translate.instant('common.notAvailable');
+      auth.subject.type = this.$translate.instant('common.notAvailable');
       this.Notification.errorResponse(error, 'placesPage.botAuthorizations.failedToLookupAccount');
     });
     const createdByPromise = this.DirectoryService.getAccount(auth.createdBy).then(r => {
       auth.createdByName = r.name;
     }).catch((error) => {
-      auth.createdByName = 'NA';
+      auth.createdByName = this.$translate.instant('common.notAvailable');
       this.Notification.errorResponse(error, 'placesPage.botAuthorizations.failedToLookupAccount');
     });
     return this.$q.all([rolePromise, subjectPromise, createdByPromise]);
@@ -98,14 +98,13 @@ class BotAuthorizationsController {
   }
   public startAdding(): void {
     this.isCollapsed = false;
-    this.showAddedMessage = false;
-    this.lastSearchInput = '';
-    this.accountQuery = '';
-    this._selectedRole = null;
-    this.searchAccountResult = [];
+    this.resetAddFields();
   }
   public cancelAdding(): void {
     this.isCollapsed = true;
+    this.resetAddFields();
+  }
+  private resetAddFields(): void {
     this.showAddedMessage = false;
     this.lastSearchInput = '';
     this.accountQuery = '';
