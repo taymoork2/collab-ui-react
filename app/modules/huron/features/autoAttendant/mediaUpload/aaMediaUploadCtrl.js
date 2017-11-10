@@ -4,6 +4,8 @@
   angular.module('uc.autoattendant')
     .controller('AAMediaUploadCtrl', AAMediaUploadCtrl);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
   function AAMediaUploadCtrl($scope, $translate, Upload, ModalService, AANotificationService, AACommonService, AAMediaUploadService, AAUiModelService, AutoAttendantCeMenuModelService, Analytics, CryptoJS, Authinfo, AAMetricNameService) {
     var vm = this;
@@ -30,6 +32,7 @@
     vm.progress = 0;
     vm.actionCopy = undefined;
     vm.isSquishable = isSquishable;
+    vm.uploadOnKeypress = uploadOnKeypress;
 
     var maxLanes = 3;
 
@@ -64,6 +67,15 @@
     var mediaResources = AAMediaUploadService.getResources(uniqueCtrlIdentifier);
 
     //////////////////////////////////////////////////////
+
+    function uploadOnKeypress($event) {
+      switch ($event.keyCode) {
+        case KeyCodes.SPACE:
+        case KeyCodes.ENTER:
+          $event.target.click();
+          break;
+      }
+    }
 
     function upload(file) {
       if (file) {

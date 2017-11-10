@@ -704,3 +704,10 @@
     @include vr-spacing(ml, 2);
   }
 }
+
+.hybrid-service-warning {
+  margin-left: 20px;
+  color: $gray-dark;
+  font-size: smaller;
+  font-style: italic;
+}
