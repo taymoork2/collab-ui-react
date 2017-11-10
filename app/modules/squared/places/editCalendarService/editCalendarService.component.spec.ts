@@ -321,10 +321,13 @@ describe('EditCalendarService component:', () => {
         state.controller.emailOfMailbox = email;
         spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve());
         spyOn(test.USSService, 'updateBulkUserProps').and.returnValue(test.$q.resolve({}));
+        spyOn(test.USSService, 'refreshEntitlementsForUser').and.returnValue(test.$q.resolve({}));
         state.controller.save();
         test.$rootScope.$digest();
 
         expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalled();
+        expect(test.USSService.updateBulkUserProps).toHaveBeenCalled();
+        expect(test.USSService.refreshEntitlementsForUser).toHaveBeenCalled();
         expect(jasmine).not.toBeUndefined();
         expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(jasmine.anything(),
           {
@@ -351,10 +354,13 @@ describe('EditCalendarService component:', () => {
         state.controller.emailOfMailbox = email;
         spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve());
         spyOn(test.USSService, 'updateBulkUserProps').and.returnValue(test.$q.resolve({}));
+        spyOn(test.USSService, 'refreshEntitlementsForUser').and.returnValue(test.$q.resolve({}));
         state.controller.save();
         test.$rootScope.$digest();
 
         expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalled();
+        expect(test.USSService.updateBulkUserProps).toHaveBeenCalled();
+        expect(test.USSService.refreshEntitlementsForUser).toHaveBeenCalled();
         expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(jasmine.anything(),
           {
             entitlements: ['webex-squared', 'spark', FUSION_GCAL_ENTITLEMENT],

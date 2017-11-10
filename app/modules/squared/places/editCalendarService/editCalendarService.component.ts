@@ -6,6 +6,7 @@ import { USSService, IUserProps } from 'modules/hercules/services/uss.service';
 import { Notification } from 'modules/core/notifications';
 import IWizardData = csdm.IWizardData;
 import { ExternalLinkedAccountHelperService } from '../../devices/services/external-acct-helper.service';
+import { IQService } from 'angular';
 
 class EditCalendarService implements ng.IComponentController {
   private dismiss: Function;
@@ -63,6 +64,7 @@ class EditCalendarService implements ng.IComponentController {
     private ResourceGroupService: ResourceGroupService,
     private ServiceDescriptorService: ServiceDescriptorService,
     private USSService: USSService,
+    private $q: IQService,
   ) {
     this.ServiceDescriptorService.getServices()
       .then((services) => {
@@ -224,7 +226,10 @@ class EditCalendarService implements ng.IComponentController {
           .then(() => {
             const props = this.getUssProps();
             if (props) {
-              this.USSService.updateBulkUserProps([props]).then(() => {
+              this.$q.all({
+                saveRGroup: this.USSService.updateBulkUserProps([props]),
+                ussRefresh: this.USSService.refreshEntitlementsForUser(place.id || ''),
+              }).then(() => {
                 this.dismiss();
                 this.Notification.success('addDeviceWizard.editServices.servicesSaved');
               }, (error) => {
