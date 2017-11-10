@@ -50,7 +50,6 @@ describe('Service: WebExSite Service', function () {
           centerType: 'EE',
           quantity: 100,
           siteUrl: 'cognizanttraining',
-
         },
         {
           centerType: 'MC',
@@ -69,7 +68,6 @@ describe('Service: WebExSite Service', function () {
         },
       };
       this.WebExSiteService.deleteSite('Sub100448', remainingSite);
-
       expect(this.SetupWizardService.updateSitesInActiveSubscription).toHaveBeenCalledWith(expectedResult);
     });
   });

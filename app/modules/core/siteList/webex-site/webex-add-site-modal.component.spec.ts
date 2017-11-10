@@ -25,6 +25,7 @@ describe('Component: WebexAddSiteModalComponent', function () {
     spyOn(this.SetupWizardService, 'getNonTrialWebexLicenses').and.returnValue(confServices);
     spyOn(this.SetupWizardService, 'getConferenceLicensesBySubscriptionId').and.returnValue(confServicesSub100448);
     spyOn(this.WebExSiteService, 'getAudioPackageInfo').and.returnValue({ audioPackage: 'VoIPOnly' });
+    spyOn(this.$rootScope, '$broadcast').and.callThrough();
   }
 
   describe('When first opened', () => {
@@ -113,14 +114,21 @@ describe('Component: WebexAddSiteModalComponent', function () {
   });
 
   describe('Callback functions handling', () => {
-    it('should, on change subscription callback, change the subscription id and repopulateInfo with new subscription id', function () {
+    it('should, on change subscription callback, change the subscription id and repopulateInfo with new subscription id if ! needsSetup', function () {
       this.controller.currentSubscriptionId = '123';
       this.controller.changeCurrentSubscription('345');
       expect(this.controller.currentSubscriptionId).toBe('345');
       expect(this.SetupWizardService.getConferenceLicensesBySubscriptionId).toHaveBeenCalledWith('345');
     });
 
-    it('should, on tranfer site callback, add the site to the sites array and enable the next button  and go to add sites if last argument is true', function () {
+    it('should, on change subscription callback, broadcast EventNames.LAUNCH_MEETING_SETUP', function () {
+      this.controller.currentSubscriptionId = '123';
+      this.controller.changeCurrentSubscription('', true);
+      expect(this.controller.currentSubscriptionId).toBe('123');
+      expect(this.$rootScope.$broadcast).toHaveBeenCalledWith('core::launchMeetingSetup');
+    });
+
+    it('should, on tranfer site callback, add the site to the sites array and enable the next button and go to add sites if last argument is true', function () {
       const sites = [{
         siteUrl: 'abc.dmz.webex.com',
         timezone: '1',

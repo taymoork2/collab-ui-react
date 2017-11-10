@@ -76,7 +76,8 @@ class WebexAddSiteModalController implements ng.IComponentController {
     } else {
       this.currentSubscriptionId = _.get(this.subscriptionList, '[0].id', '');
       this.isCanProceed = false;
-      this.singleStep = this.totalSteps = 1;
+      this.totalSteps = 1;
+      this.singleStep = 1;
     }
   }
 
@@ -150,11 +151,16 @@ class WebexAddSiteModalController implements ng.IComponentController {
   }
 
   // callbacks from components
-  public changeCurrentSubscription(subscriptionId) {
-    this.currentSubscriptionId = subscriptionId;
-    this.conferenceLicensesInSubscription = this.SetupWizardService.getConferenceLicensesBySubscriptionId(subscriptionId);
-    this.setAudioPackageInfo(subscriptionId);
-    this.sitesArray = this.WebExSiteService.transformExistingSites(this.conferenceLicensesInSubscription);
+  public changeCurrentSubscription(subscriptionId, needsSetup?: boolean) {
+    if (needsSetup) {
+      this.$rootScope.$broadcast(EventNames.LAUNCH_MEETING_SETUP);
+      this.dismiss();
+    } else {
+      this.currentSubscriptionId = subscriptionId;
+      this.conferenceLicensesInSubscription = this.SetupWizardService.getConferenceLicensesBySubscriptionId(subscriptionId);
+      this.setAudioPackageInfo(subscriptionId);
+      this.sitesArray = this.WebExSiteService.transformExistingSites(this.conferenceLicensesInSubscription);
+    }
   }
 
   public addTransferredSites(sites, transferCode, isValid) {
@@ -201,7 +207,6 @@ class WebexAddSiteModalController implements ng.IComponentController {
       .then(() => {
         // TODO algendel: 10/30/17 - get real copy.
         this.Notification.success(this.$translate.instant('webexSiteManagement.addSiteSuccess'));
-        this.dismiss();
       })
       .catch((response) => {
         this.Notification.errorWithTrackingId(response);

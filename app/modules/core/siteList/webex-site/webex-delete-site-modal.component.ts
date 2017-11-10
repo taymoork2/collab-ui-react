@@ -75,7 +75,6 @@ class WebexDeleteSiteModalController implements ng.IComponentController {
       .then(() => {
         // TODO algendel: 10/30/17 - get real copy.
         this.Notification.success(this.$translate.instant('webexSiteManagement.deleteSiteSuccess'));
-        this.dismiss();
       })
       .catch((response) => {
         this.Notification.errorWithTrackingId(response);

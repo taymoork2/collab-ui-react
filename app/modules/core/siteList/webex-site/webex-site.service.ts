@@ -86,8 +86,8 @@ export class WebExSiteService {
   }
 
   public deleteSite(subscriptionId, remainingSite) {
-    const AudioInfo = this.getAudioPackageInfo(subscriptionId);
-    const payload = this.constructWebexLicensesPayload(remainingSite, subscriptionId, Actions.DELETE, AudioInfo.audioPartnerName, AudioInfo.ccaspSubscriptionId);
+    const audioInfo = this.getAudioPackageInfo(subscriptionId);
+    const payload = this.constructWebexLicensesPayload(remainingSite, subscriptionId, Actions.DELETE, audioInfo.audioPartnerName, audioInfo.ccaspSubscriptionId);
     return this.SetupWizardService.updateSitesInActiveSubscription(payload);
   }
 

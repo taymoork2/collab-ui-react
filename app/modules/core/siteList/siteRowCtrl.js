@@ -170,6 +170,23 @@ require('./_site-list.scss');
       });
     }
 
+    // notes:
+    // - it has been observed that when trying to launch setup wizard modal from add site modal, the
+    //   setup wizard modal comes up blank
+    // - this is possibly related to redirecting from a modal state to a modal state
+    // - as a workaround, we:
+    //   - emit an event
+    //   - close the modal
+    //   - 'siteRowCtrl' catches the event (since it's not a modal), and launches the setup wizard
+    // - in order to avoid conflicting animations (one modal closing, another one opening), we insert
+    //   an 800ms delay
+
+    $scope.$on('core::launchMeetingSetup', function () {
+      $timeout(function () {
+        goToMeetingSetup();
+      }, 800);
+    });
+
     function showRejectionModal(isOnlySite, title, errorMessage) {
       var params = {
         title: $translate.instant(title),

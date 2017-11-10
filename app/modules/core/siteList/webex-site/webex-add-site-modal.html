@@ -10,7 +10,7 @@
   <p ng-if="$ctrl.currentStep > 0">{{$ctrl.currentSubscriptionId}}</p>
   <webex-site-subscription subscriptions="$ctrl.subscriptionList"
     current-subscription-id="$ctrl.currentSubscriptionId"
-    on-subscription-change="$ctrl.changeCurrentSubscription(subId)"
+    on-subscription-change="$ctrl.changeCurrentSubscription(subId, needsSetup)"
     on-validation-status-change="$ctrl.setNextEnabled(isValid)"
     ng-if="$ctrl.currentStep===0">
   </webex-site-subscription>

@@ -14,7 +14,7 @@ describe('Component: WebexSiteSubscription', function () {
     this.compileComponent('webexSiteSubscription', {
       subscriptions: 'fixtures.subscriptions',
       currentSubscriptionId: 'fixtures.currentSubscriptionId',
-      onSubscriptionChange: 'onSubscriptionChangeFn(subId)',
+      onSubscriptionChange: 'onSubscriptionChangeFn(subId, needsSetup)',
       onValidationStatusChange: 'onValidationStatusChangeFn(isValid)',
     });
   });
@@ -34,14 +34,20 @@ describe('Component: WebexSiteSubscription', function () {
     it('should, if subscription not pending, call the subscription change function with subscription id, and call validation change with TRUE', function () {
       this.controller.currentSubscription = this.$scope.fixtures.subscriptions[0];
       this.controller.setSubscription();
-      expect(this.$scope.onSubscriptionChangeFn).toHaveBeenCalledWith('sub123');
+      expect(this.$scope.onSubscriptionChangeFn).toHaveBeenCalledWith('sub123', undefined);
       expect(this.$scope.onValidationStatusChangeFn).toHaveBeenCalledWith(true);
     });
     it('should, if subscription is pending, NOT call the subscription change function with subscription id, and call validation change with FALSE', function () {
       this.controller.currentSubscription = this.$scope.fixtures.subscriptions[1];
       this.controller.setSubscription();
-      expect(this.$scope.onSubscriptionChangeFn).not.toHaveBeenCalledWith();
+      expect(this.$scope.onSubscriptionChangeFn).not.toHaveBeenCalled();
       expect(this.$scope.onValidationStatusChangeFn).toHaveBeenCalledWith(false);
+    });
+  });
+  describe('On launchMeetingSetup', () => {
+    it('should call the subscription change function with blank subscription id and TRUE as second param', function () {
+      this.controller.launchMeetingSetup();
+      expect(this.$scope.onSubscriptionChangeFn).toHaveBeenCalledWith('', true);
     });
   });
 });
