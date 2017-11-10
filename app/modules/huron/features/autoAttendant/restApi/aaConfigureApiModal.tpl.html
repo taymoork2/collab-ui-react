@@ -14,7 +14,7 @@
             <dynamic-prompt class="small-12 columns dynamic-prompt aa-message-height" ng-model="aaConfigureApiModal.url" dynamic-tags="aaConfigureApiModal.dynamicTags" model-values="aaConfigureApiModal.dynamicValues" insert-element="insertElement" aa-keypress ng-keyup = "aaConfigureApiModal.saveDynamicUi()" id="configureApiUrl{{schedule + index}}" name="url" data-placeholder="{{:: aaConfigureApiModal.messageInputPlaceholder}}"></dynamic-prompt>
           <div ng-if="aaConfigureApiModal.getWarning()">
             <br></br>
-            <div class="columns small-12 aa-div-click" ng-click="aaConfigureApiModal.toggleFullWarningMsg()" ng-blur="aaConfigureApiModal.closeFullWarningMsg()"> 
+            <div class="columns small-12 aa-div-click" ng-click="aaConfigureApiModal.toggleFullWarningMsg()" ng-blur="aaConfigureApiModal.closeFullWarningMsg()">
               <span class="ellipsis icon icon-warning warning aa-icon-font-size"></span>
               <span class="aa-text-overflow" data-ng-bind="aaConfigureApiModal.deletedSessionVariablesListAlongWithWarning"></span>
               <div ng-if = "aaConfigureApiModal.fullWarningMsgValue" class="aa-full-warning" data-ng-bind = "aaConfigureApiModal.deletedSessionVariablesListAlongWithWarning"></div>
@@ -45,7 +45,7 @@
               <input id="responseSelect" type="text" ng-model="variable.value" name="response" class="large-4 medium-4 small-4">
             </div>
             <div class="small-1 columns">
-              <i ng-if="aaConfigureApiModal.variableSet.length > 1" class="icon icon-trash aa-trash-icon" aria-label="common.delete" ng-click="aaConfigureApiModal.deleteVariableSet($index);"></i>
+              <i ng-if="aaConfigureApiModal.variableSet.length > 1" class="icon icon-trash aa-trash-icon" aria-label="{{::'common.delete' | translate}}" ng-click="aaConfigureApiModal.deleteVariableSet($index);"></i>
             </div>
           </div>
           <div class="row">
@@ -71,100 +71,100 @@
       </div>
     </div>
     <div class="row">
-      <a class="large-4 medium-4 small-4 medium-offset-4 columns" id="addVariableToSet" ng-click="aaConfigureApiModal.addVariableSet()">
+      <a href class="large-4 medium-4 small-4 medium-offset-4 columns" id="addVariableToSet" ng-click="aaConfigureApiModal.addVariableSet()">
       <i class="icon icon-plus-circle"></i>{{ :: 'autoAttendant.addVariableToSet' | translate }}</a>
     </div>
   </div>
-  <div ng-if='aaConfigureApiModal.showStep(2)'>     
+  <div ng-if='aaConfigureApiModal.showStep(2)'>
     <div class="row">
-      <div class="large-12 medium-12 small-12 columns">   
-        <label class="h4 bold" translate="autoAttendant.configureApiHeading"></label>   
-      </div>    
-      <div class="large-12 medium-12 small-12 columns">   
-        <label class ="aa-rest-header-text" translate="autoAttendant.configureApiHeadingHelperText"></label>   
-      </div>    
+      <div class="large-12 medium-12 small-12 columns">
+        <label class="h4 bold" translate="autoAttendant.configureApiHeading"></label>
+      </div>
+      <div class="large-12 medium-12 small-12 columns">
+        <label class ="aa-rest-header-text" translate="autoAttendant.configureApiHeadingHelperText"></label>
+      </div>
     </div>
     <div class="row">
-        <div class="large-12 medium-12 small-12 columns">   
-          <label class="h4 bold aa-variable-text" translate="autoAttendant.Variables"></label>   
-        </div>    
-      </div>  
-    <div class="row">   
-      <div class="large-12 medium-12 small-12 columns">   
-          <label class ="aa-rest-helper-text" translate="autoAttendant.configureApiHelpertext"></label>    
-      </div>  
+        <div class="large-12 medium-12 small-12 columns">
+          <label class="h4 bold aa-variable-text" translate="autoAttendant.Variables"></label>
+        </div>
+      </div>
+    <div class="row">
+      <div class="large-12 medium-12 small-12 columns">
+          <label class ="aa-rest-helper-text" translate="autoAttendant.configureApiHelpertext"></label>
+      </div>
 
       <div class="large-10 medium-10 small-10 columns">
-        <div class="row" ng-repeat="i in aaConfigureApiModal.dynamics">   
+        <div class="row" ng-repeat="i in aaConfigureApiModal.dynamics">
           <p class = "large-12 medium-12 small-12 columns aa-rest-value-text" translate = "autoAttendant.value"></p>
-          <div class="large-6 medium-6 small-6 columns">    
-              <input type="text" name="value" ng-model="i.value" ng-keyup = "aaConfigureApiModal.isSaveDisabled(true)">   
+          <div class="large-6 medium-6 small-6 columns">
+              <input type="text" name="value" ng-model="i.value" ng-keyup = "aaConfigureApiModal.isSaveDisabled(true)">
           </div>
-          <div class="large-6 medium-6 small-6 columns">    
-            <label name="variables" class = "aa-rest-dynamic-variables">{{i.variableName}}</label>  
-          </div>        
+          <div class="large-6 medium-6 small-6 columns">
+            <label name="variables" class = "aa-rest-dynamic-variables">{{i.variableName}}</label>
+          </div>
         </div>
-      </div>    
+      </div>
       <div> </div>
-    </div>    
-    <div class="row">   
-      <div class="large-12 medium-12 small-12 columns">   
-        <button id="testBtn" class="btn btn-primary aa-rest-test-button-spacing" ng-click="aaConfigureApiModal.callTestRestApiConfigs()" ng-disabled="aaConfigureApiModal.isTestDisabled();">{{ :: 'common.test' | translate }}</button>    
-      </div>    
     </div>
-    <div class="row">   
-      <div class="large-12 medium-12 small-12 columns">   
-        <tabset>    
+    <div class="row">
+      <div class="large-12 medium-12 small-12 columns">
+        <button id="testBtn" class="btn btn-primary aa-rest-test-button-spacing" ng-click="aaConfigureApiModal.callTestRestApiConfigs()" ng-disabled="aaConfigureApiModal.isTestDisabled();">{{ :: 'common.test' | translate }}</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="large-12 medium-12 small-12 columns">
+        <tabset>
           <tab heading="{{'autoAttendant.requestRestApi' | translate}}">
-            <div class="large-12">    
-              <p class ="cs-input__help-text" translate="autoAttendant.customVariablesAssignmentHelpText"></p>    
-            </div>    
-            <div class="tab-content">   
-              <div class="row">   
-                <div class="large-12 medium-12 small-12 columns">   
-                  <textarea class="aa-message-textarea aa-tab-text-area " id="restApiRequest" cols="20" rows="7" maxlength="2000" ng-readonly="true" ng-model="aaConfigureApiModal.restApiRequest"></textarea>    
-                </div>    
-              </div>    
-            </div>    
-          </tab>    
-          <tab heading="{{'autoAttendant.responseRestApi' | translate}}">    
-            <div class="large-12">    
-              <p class ="cs-input__help-text" translate="autoAttendant.customVariablesAssignmentHelpText"></p>    
-            </div>    
-            <div class="tab-content">   
-              <div class="row">   
-                <div class="large-12 medium-12 small-12 columns">   
-                  <textarea class="aa-message-textarea aa-tab-text-area " id="restApiResponse" cols="20" rows="7" maxlength="2000" ng-readonly="true" ng-model="aaConfigureApiModal.restApiResponse"></textarea>    
-                </div>    
-              </div>    
-            </div>    
-          </tab>    
-          <tab heading="{{'autoAttendant.assignmentRestApi' | translate}}">    
-            <div class="large-12">    
-              <p class ="cs-input__help-text" translate="autoAttendant.customVariablesAssignmentHelpText"></p>    
-            </div>    
-            <div class="tab-content">   
-              <div class="row">   
-                <div class="large-12 medium-12 small-12 columns">   
-                  <table class="table table-striped table-bordered">    
-                    <tr>    
-                      <th translate = "autoAttendant.restApiResponseVar"></th>    
-                      <th translate="autoAttendant.restApiResponseVal"></th>    
-                      <th translate="autoAttendant.restApiCustomVar"></th>    
-                    </tr> 
+            <div class="large-12">
+              <p class ="cs-input__help-text" translate="autoAttendant.customVariablesAssignmentHelpText"></p>
+            </div>
+            <div class="tab-content">
+              <div class="row">
+                <div class="large-12 medium-12 small-12 columns">
+                  <textarea class="aa-message-textarea aa-tab-text-area " id="restApiRequest" cols="20" rows="7" maxlength="2000" ng-readonly="true" ng-model="aaConfigureApiModal.restApiRequest"></textarea>
+                </div>
+              </div>
+            </div>
+          </tab>
+          <tab heading="{{'autoAttendant.responseRestApi' | translate}}">
+            <div class="large-12">
+              <p class ="cs-input__help-text" translate="autoAttendant.customVariablesAssignmentHelpText"></p>
+            </div>
+            <div class="tab-content">
+              <div class="row">
+                <div class="large-12 medium-12 small-12 columns">
+                  <textarea class="aa-message-textarea aa-tab-text-area " id="restApiResponse" cols="20" rows="7" maxlength="2000" ng-readonly="true" ng-model="aaConfigureApiModal.restApiResponse"></textarea>
+                </div>
+              </div>
+            </div>
+          </tab>
+          <tab heading="{{'autoAttendant.assignmentRestApi' | translate}}">
+            <div class="large-12">
+              <p class ="cs-input__help-text" translate="autoAttendant.customVariablesAssignmentHelpText"></p>
+            </div>
+            <div class="tab-content">
+              <div class="row">
+                <div class="large-12 medium-12 small-12 columns">
+                  <table class="table table-striped table-bordered">
+                    <tr>
+                      <th translate = "autoAttendant.restApiResponseVar"></th>
+                      <th translate="autoAttendant.restApiResponseVal"></th>
+                      <th translate="autoAttendant.restApiCustomVar"></th>
+                    </tr>
                   </table>
-                </div>    
-              </div>    
-            </div>    
-          </tab>    
-        </tabset>   
-      </div>    
-    </div>    
+                </div>
+              </div>
+            </div>
+          </tab>
+        </tabset>
+      </div>
+    </div>
   </div>
 </div>
 <div class="modal-footer">
- <button id="cancelBtn" class="btn" ng-click="aaConfigureApiModal.cancel()" ng-if='aaConfigureApiModal.currentStep == 1'>{{ :: 'common.cancel' | translate }}</button>    
- <button id="backBtn" class="btn btn-default" ng-click="aaConfigureApiModal.stepBack()" ng-hide='aaConfigureApiModal.currentStep == 1'>{{ :: 'common.back' | translate }}</button>    
- <button id="nextBtn" class="btn btn-primary" ng-click="aaConfigureApiModal.stepNext()" ng-hide='aaConfigureApiModal.currentStep == 2' ng-disabled="aaConfigureApiModal.isNextDisabled();">{{ :: 'common.next' | translate }}</button>    
+ <button id="cancelBtn" class="btn" ng-click="aaConfigureApiModal.cancel()" ng-if='aaConfigureApiModal.currentStep == 1'>{{ :: 'common.cancel' | translate }}</button>
+ <button id="backBtn" class="btn btn-default" ng-click="aaConfigureApiModal.stepBack()" ng-hide='aaConfigureApiModal.currentStep == 1'>{{ :: 'common.back' | translate }}</button>
+ <button id="nextBtn" class="btn btn-primary" ng-click="aaConfigureApiModal.stepNext()" ng-hide='aaConfigureApiModal.currentStep == 2' ng-disabled="aaConfigureApiModal.isNextDisabled();">{{ :: 'common.next' | translate }}</button>
  <button id="saveBtn" class="btn btn-primary" ng-click="aaConfigureApiModal.save()" ng-if='aaConfigureApiModal.currentStep == 2' ng-disabled="aaConfigureApiModal.saveButtonDisable">{{ :: 'common.save' | translate }}</button>
 </div>

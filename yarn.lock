@@ -1935,9 +1935,24 @@ collab-ui-icons@^1.0.0:
   version "1.0.0"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui-icons/-/collab-ui-icons-1.0.0.tgz#961743805f0d7650c21fa2071d068de21499b74c"
 
-collab-ui-ng@*, collab-ui-ng@~7.7.0:
+collab-ui-ng@*:
   version "7.7.0"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui-ng/-/collab-ui-ng-7.7.0.tgz#8ffe281de5d2deff99d3952beca8b6b6ebc80467"
+  dependencies:
+    angular "^1.5.0"
+    angular-animate "^1.5.0"
+    angular-messages "^1.5.0"
+    angular-ui-grid "~3.0.7"
+    angular-ui-router "^0.3.1"
+    google-libphonenumber "^2.0.15"
+    imagesloaded "3.1.8"
+    jquery "2.1.1"
+    masonry-layout "^4.1.1"
+    moment "^2.10.6"
+
+collab-ui-ng@~7.8.0:
+  version "7.8.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui-ng/-/collab-ui-ng-7.8.0.tgz#841ea8e5d0bde5335397e1149e349972d588889d"
   dependencies:
     angular "^1.5.0"
     angular-animate "^1.5.0"

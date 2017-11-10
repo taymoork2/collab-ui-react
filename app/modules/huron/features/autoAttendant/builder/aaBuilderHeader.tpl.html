@@ -3,7 +3,7 @@
     <div class="row aa-flex-row">
       <a class="aa-flex-row-item-bottom-align" id="aa-header-row-name">
         <aa-builder-name-edit aa-keypress class="h2 aa-name-edit" aa-max-length="64" aa-name-focus="aaBuilderMain.aaNameFocus" ng-model="aaBuilderMain.ui.builder.ceInfo_name" ng-click="aaBuilderMain.setAANameFocus()"></aa-builder-name-edit>
-        <span class="icon icon-edit aa-edit-icon" aria-label="common.edit" ng-click="aaBuilderMain.setAANameFocus()"></span>
+        <span class="icon icon-edit aa-edit-icon" aria-label="{{::'common.edit' | translate}}" ng-click="aaBuilderMain.setAANameFocus()"></span>
       </a>
       <div class="aa-flex-row-item">
         <h2 class="aa-nowrap">{{ aaBuilderMain.ui.ceInfo | preferredAAResource | telephoneNumber}}</h2>

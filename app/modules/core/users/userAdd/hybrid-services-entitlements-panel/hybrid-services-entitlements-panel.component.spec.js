@@ -1,14 +1,16 @@
 'use strict';
 
+var hybridServicesPanelCtrlModuleName = require('./index.ts').default;
+
 describe('Directive Controller: hybridServicesPanelCtrl', function () {
-  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(hybridServicesPanelCtrlModuleName));
 
-  var vm, $scope, $rootScope, $controller, $q, FeatureToggleService, $translate, OnboardService, ServiceDescriptorService, CloudConnectorService, Authinfo;
+  var vm, $scope, $rootScope, $componentController, $q, FeatureToggleService, $translate, OnboardService, ServiceDescriptorService, CloudConnectorService, Authinfo;
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _OnboardService_, _ServiceDescriptorService_, _CloudConnectorService_, _Authinfo_, _$q_, _FeatureToggleService_, _$translate_) {
+  beforeEach(inject(function (_$rootScope_, _$componentController_, _OnboardService_, _ServiceDescriptorService_, _CloudConnectorService_, _Authinfo_, _$q_, _FeatureToggleService_, _$translate_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
-    $controller = _$controller_;
+    $componentController = _$componentController_;
     $q = _$q_;
     FeatureToggleService = _FeatureToggleService_;
     $translate = _$translate_;
@@ -25,7 +27,7 @@ describe('Directive Controller: hybridServicesPanelCtrl', function () {
   }));
 
   function initController() {
-    var controller = $controller('hybridServicesPanelCtrl', {
+    var controller = $componentController('hybridServicesEntitlementsPanel', {
       $scope: $scope,
       $q: $q,
       $translate: $translate,
@@ -35,6 +37,7 @@ describe('Directive Controller: hybridServicesPanelCtrl', function () {
       Authinfo: Authinfo,
       CloudConnectorService: CloudConnectorService,
     });
+    controller.$onInit();
     $scope.$apply();
     return controller;
   }
@@ -51,7 +54,6 @@ describe('Directive Controller: hybridServicesPanelCtrl', function () {
     if (_.includes(enabledServiceIds, 'squared-fusion-gcal' || _.includes(disabledServiceIds, 'squared-fusion-gcal'))) {
       CloudConnectorService.getService.and.returnValue($q.resolve({ setup: _.includes(enabledServiceIds, 'squared-fusion-gcal') }));
       Authinfo.isEntitled.and.returnValue(true);
-      FeatureToggleService.supports.and.returnValue($q.resolve(true));
     }
   }
 
@@ -211,5 +213,40 @@ describe('Directive Controller: hybridServicesPanelCtrl', function () {
     expect(vm.services.callServiceAware.entitled).toBeFalsy();
     expect(vm.services.callServiceConnect.entitled).toBeFalsy();
     expect(vm.entitlements.length).toBe(0);
+  });
+
+  it('should not show any hybrid message info if the org is not feature toggled', function () {
+    FeatureToggleService.supports.and.returnValue($q.resolve(false));
+    initMockServices(['spark-hybrid-impinterop'], []);
+    vm = initController();
+    expect(vm.services.hybridMessage).toBe(null);
+  });
+
+  it('should show hybrid message info if the org is feature toggled', function () {
+    FeatureToggleService.supports.and.returnValue($q.resolve(true));
+    initMockServices(['spark-hybrid-impinterop'], []);
+    vm = initController();
+    expect(vm.services.hasHybridMessageService()).toBe(true);
+    expect(vm.services.hybridMessage.enabled).toBe(true);
+  });
+
+  it('should use the callback with an empty entitlement list when a user no longer has a paid license', function () {
+    initMockServices(['squared-fusion-uc', 'squared-fusion-ec'], []);
+    vm = initController();
+    vm.entitlementsCallback = jasmine.createSpy('entitlementsCallback');
+    vm.$onChanges({
+      userIsLicensed: {
+        previousValue: true,
+        currentValue: false,
+        isFirstChange: function () {
+          return false;
+        },
+      },
+    });
+
+    expect(vm.entitlementsCallback).toHaveBeenCalledWith({
+      entitlements: [],
+    });
+    expect(vm.entitlementsCallback.calls.count()).toBe(1);
   });
 });

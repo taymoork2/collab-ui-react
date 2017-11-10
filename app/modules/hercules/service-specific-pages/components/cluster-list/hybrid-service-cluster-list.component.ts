@@ -1,5 +1,5 @@
 import ClusterServiceModuleName, { ClusterService } from 'modules/hercules/services/cluster-service';
-import { ConnectorType, HybridServiceId, IExtendedCluster } from 'modules/hercules/hybrid-services.types';
+import { ConnectorType, HybridServiceId, IExtendedCluster, IExtendedClusterServiceStatus } from 'modules/hercules/hybrid-services.types';
 import EnterprisePrivateTrunkServiceModuleName, { EnterprisePrivateTrunkService, IPrivateTrunkResourceWithStatus } from 'modules/hercules/services/enterprise-private-trunk-service';
 import HybridServicesUtilsServiceModuleName, { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 
@@ -187,7 +187,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
   public _keepOnlyRelevantServiceStatus(clusters: IExtendedCluster[]): any[] {
     return _.map(clusters, (cluster: any) => {
       // Augment cluster.extendedProperties just for this page!
-      cluster.extendedProperties.servicesStatus = _.find(cluster.extendedProperties.servicesStatuses, (serviceStatus: any) => {
+      cluster.extendedProperties.servicesStatus = _.find(cluster.extendedProperties.servicesStatuses, (serviceStatus: IExtendedClusterServiceStatus) => {
         return serviceStatus.serviceId === this.serviceId;
       });
       return cluster;

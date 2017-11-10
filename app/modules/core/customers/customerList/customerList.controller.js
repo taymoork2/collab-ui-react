@@ -54,12 +54,6 @@ require('./_customer-list.scss');
     vm.activeFilter = 'all';
     vm.filterList = _.debounce(filterAction, vm.timeoutVal);
 
-    // for jasmine tests
-    vm._helpers = {
-      updateResultCount: updateResultCount,
-      updateServiceForOrg: updateServiceForOrg,
-    };
-
     // columnSort - this is the collection of column sorting algorithms
     // NOTE: version of ui-grid we are using does not support 'defaultSort', otherwise
     // we'd want to set a default sort on the name field
@@ -71,21 +65,23 @@ require('./_customer-list.scss');
           return 1;
         } else if (first.toLowerCase() < second.toLowerCase()) {
           return -1;
-        } else {
-          return 0;
         }
+        return 0;
       },
 
       // Sort function to keep partner org at top
       namePartnerAtTop: function (a, b) {
         var orgName = Authinfo.getOrgName();
-        if (a === orgName) {
+        var aOrg = (a === orgName);
+        var bOrg = (b === orgName);
+        if (aOrg && bOrg) {
+          return 0;
+        } else if (aOrg) {
           return -1;
-        } else if (b === orgName) {
+        } else if (bOrg) {
           return 1;
-        } else {
-          return columnSort.name(a, b);
         }
+        return columnSort.name(a, b);
       },
 
       accountStatus: function (a, b, rowA, rowB) {
@@ -129,7 +125,7 @@ require('./_customer-list.scss');
             modB = b.daysLeft;
           }
 
-          return modA - modB;
+          return modB - modA;
         }
         return 0;
       },
@@ -154,6 +150,13 @@ require('./_customer-list.scss');
         var bPercent = rowB.entity.activeUsers / rowB.entity.numUsers;
         return aPercent - bPercent;
       }*/
+    };
+
+    // for jasmine tests
+    vm._helpers = {
+      columnSort: columnSort,
+      updateResultCount: updateResultCount,
+      updateServiceForOrg: updateServiceForOrg,
     };
 
     function init() {
