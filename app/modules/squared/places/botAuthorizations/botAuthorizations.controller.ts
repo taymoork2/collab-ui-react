@@ -1,3 +1,4 @@
+import IBasePlace = csdm.IBasePlace;
 class BotAuthorizationsController {
   public selectPlaceholder = this.$translate.instant('placesPage.botAuthorizations.selectRole');
   public roles: any;
@@ -20,7 +21,7 @@ class BotAuthorizationsController {
   constructor(
     private DirectoryService,
     private AuthorizationService,
-    private place,
+    private place: IBasePlace,
     private Notification,
     private $q,
     private $translate,
@@ -31,7 +32,7 @@ class BotAuthorizationsController {
   private loadAuthorizations(): void {
     let authorizations: any[] = [];
     const promises: any[] = [];
-    this.AuthorizationService.getAuthorizations(this.place.id).then(result => {
+    this.AuthorizationService.getAuthorizations(this.place.cisUuid).then(result => {
       authorizations = result;
       _.each(authorizations, (auth) => {
         promises.push(this.enrichAuthData(auth));
