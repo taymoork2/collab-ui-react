@@ -1,5 +1,4 @@
 import _ = require('lodash');
-
 import { FieldQuery, OperatorAnd, OperatorOr, QueryParser, SearchElement } from './queryParser';
 
 export class SearchTranslator {
@@ -148,54 +147,83 @@ export class SearchTranslator {
       });
   }
 
-  // private static validFieldNames = ['displayname',
-  //   'cisuuid',
-  //   'accounttype',
-  //   QueryParser.Field_ActiveInterface,
-  //   'serial',
-  //   'mac',
-  //   'ip',
-  //   'activeinterface',
-  //   'description',
-  //   'productfamily',
-  //   'software',
-  //   QueryParser.Field_UpgradeChannel,
-  //   'product',
-  //   QueryParser.Field_ConnectionStatus,
-  //   'sipurl',
-  //   QueryParser.Field_ErrorCodes,
-  //   'tags'];
-
-
-  private static fieldNameTranslations: { [fieldKey: string]: { tKey?: string, tValuePrefix?: string } } = {
-    displayname: { tKey: 'spacesPage.nameHeader' },
-    connectionstatus: { tKey: 'spacesPage.statusHeader', tValuePrefix: 'CsdmStatus.connectionStatus.' },
-    upgradechannel: { tValuePrefix: 'CsdmStatus.upgradeChannels.' },
-    activeinterface: { tValuePrefix: 'CsdmStatus.activeInterface.' },
-    product: { tKey: 'spacesPage.typeHeader' },
+  private static fieldNameTranslations: { [fieldKey: string]: { tKey: string, getValueKey?: (value: string) => string } } = {
+    displayname: {
+      tKey: 'spacesPage.nameHeader', //belongsto
+    },
+    connectionstatus: {
+      tKey: 'spacesPage.statusHeader',
+      getValueKey: (value: string) => {
+        return 'CsdmStatus.connectionStatus.' + _.toUpper(value);
+      },
+    },
+    upgradechannel: {
+      tKey: 'deviceSettings.softwareUpgradeChannel',
+      getValueKey: (value: string) => {
+        return 'CsdmStatus.upgradeChannels.' + _.upperFirst(_.camelCase(_.toLower(value)));
+      },
+    },
+    activeinterface: {
+      tKey: 'deviceOverviewPage.networkConnectivity',
+      getValueKey: (value: string) => {
+        return 'CsdmStatus.activeInterface.' + _.camelCase(_.toLower(value));
+      },
+    },
+    product: {
+      tKey: 'spacesPage.typeHeader',
+    },
+    mac: {
+      tKey: 'deviceOverviewPage.macAddr',
+    },
+    ip: {
+      tKey: 'deviceOverviewPage.ipAddr',
+    },
+    sipurl: {
+      tKey: 'deviceOverviewPage.sipUrl',
+    },
+    errorcodes: {
+      tKey: 'deviceOverviewPage.issues',
+    },
+    serial: {
+      tKey: 'deviceOverviewPage.serial',
+    },
+    tags: {
+      tKey: 'spacesPage.tags',
+    },
   };
 
-  public getFieldTranslationKey(field: string): string {
-    const translationMatch = SearchTranslator.fieldNameTranslations[field];
+  private static getFieldTranslationKey(field: string): string {
+    const translationMatch = SearchTranslator.fieldNameTranslations[_.toLower(field)];
     return (translationMatch && translationMatch.tKey) ? translationMatch.tKey : field;
   }
 
   public translateQueryField(field: string): string {
 
-    const fieldTranslationKey = this.getFieldTranslationKey(field);
+    const fieldTranslationKey = SearchTranslator.getFieldTranslationKey(field);
     if (_.isEmpty(fieldTranslationKey)) {
       return field;
     }
-    return this.$translate.instant(fieldTranslationKey);
-
+    const localizedRawKey = this.$translate.instant(fieldTranslationKey) + '';
+    return _(localizedRawKey)
+      .toLower()
+      .replace(new RegExp(' ', 'g'), '_')
+      .replace(new RegExp('[\:\=]', 'g'), '');
   }
 
-  public translateQueryValue(field: string, value: string): string {
-    const translationMatch = field && SearchTranslator.fieldNameTranslations[field];
-    if (!translationMatch || !translationMatch.tValuePrefix) {
+  public translateQueryValue(searchElement: FieldQuery): string {
+
+    const value = searchElement.getQueryWithoutField();
+
+    if (searchElement.type !== FieldQuery.QueryTypeExact) {
       return value;
     }
-    return this.$translate.instant(translationMatch.tValuePrefix + value);
+
+    const translationMatch = _.isEmpty(searchElement.field) ? null : SearchTranslator.fieldNameTranslations[_.toLower(searchElement.field)];
+    if (!translationMatch || translationMatch.getValueKey === undefined) {
+      return value;
+    }
+    const translatedQueryValue = this.$translate.instant(translationMatch.getValueKey(value));
+
+    return (!translatedQueryValue || translatedQueryValue === value) ? value : translatedQueryValue;
   }
 }
-

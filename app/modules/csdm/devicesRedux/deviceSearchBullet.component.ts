@@ -50,7 +50,7 @@ export class DeviceSearchBullet implements ng.IComponentController {
   public getTranslatedQueryValue() {
     const searchElement = this.searchElement;
     if (searchElement instanceof FieldQuery) {
-      return this.DeviceSearchTranslator.translateQueryValue(searchElement.field + '', searchElement.getQueryWithoutField());
+      return this.DeviceSearchTranslator.translateQueryValue(searchElement);
     }
     return '';
   }

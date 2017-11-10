@@ -2076,6 +2076,7 @@
   },
   "spacesPage": {
     "addTag": "Add tag",
+    "tags": "Tags",
     "title": "Devices",
     "addBtn": "New Device",
     "addPlaceBtn": "New Place",
@@ -5561,30 +5562,6 @@
     "inputPlacehoder": "Enter phone numbers separated by commas",
     "didFormatHelpText": "For example: {{examples}}",
     "didAlreadyExist": "Phone number already exists."
-  },
-  "deviceDetailPage": {
-    "deviceConfig": "Device Configuration",
-    "deviceStatus": "Device Status",
-    "description": "Description",
-    "tags": "Tags",
-    "id": "ID",
-    "ipAddress": "IP Address",
-    "deactivate": "Deactivate",
-    "success": "Device updated successfully",
-    "error": "Device configuration failed",
-    "deactivateDevice": "Deactivate Device",
-    "deactivateBody": "This action cannot be undone.  Are you sure you want to deactivate this device?",
-    "deviceStatusFailureMsg": "Failed to fetch device status",
-    "deviceIpAddressFailureMsg": "Failed to fetch device IP",
-    "logTitle": "Logs",
-    "retrieveLogBttn": "Retrieve Latest Log",
-    "viewPreviousLogBttn": "View Previous Log",
-    "retrieveLogInstructions": "Device logs can be used by Cisco to troubleshoot issues related to device performance and call quality.",
-    "logWait": "Getting log file from the device. This may take a minute…",
-    "errorLogTryAgain": "Log file request timed out. Retry?",
-    "errorLogInvaidMsg": "Log service message is invalid",
-    "unknownFilename": "Unknown Filename",
-    "errorLogNotFound": "No device log was been found"
   },
   "deviceOverviewPage": {
     "software": "Software",

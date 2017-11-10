@@ -1,6 +1,6 @@
 import searchModule from '../index';
 import { SearchTranslator } from './searchTranslator';
-import { OperatorOr, QueryParser, SearchElement } from './queryParser';
+import { FieldQuery, OperatorOr, QueryParser, SearchElement } from './queryParser';
 import { isNull } from 'util';
 
 describe('SearchTranslator', () => {
@@ -195,5 +195,86 @@ describe('SearchTranslator', () => {
       expect(expectedQuery).toBe(res.toQuery());
     }
   }
+
+  describe('translateQueryField', () => {
+
+    it('should translate all supported search fields', function () {
+      expectFieldToTranslateTo('displayname', 'spacespage.nameheader');
+      expectFieldToTranslateTo('cisuuid', 'cisuuid');
+      expectFieldToTranslateTo('accounttype', 'accounttype');
+      expectFieldToTranslateTo('activeinterface', 'deviceoverviewpage.networkconnectivity');
+      expectFieldToTranslateTo('serial', 'deviceoverviewpage.serial');
+      expectFieldToTranslateTo('mac', 'deviceoverviewpage.macaddr');
+      expectFieldToTranslateTo('ip', 'deviceoverviewpage.ipaddr');
+      expectFieldToTranslateTo('description', 'description');
+      expectFieldToTranslateTo('productfamily', 'productfamily');
+      expectFieldToTranslateTo('software', 'software');
+      expectFieldToTranslateTo('upgradechannel', 'devicesettings.softwareupgradechannel');
+      expectFieldToTranslateTo('product', 'spacespage.typeheader');
+      expectFieldToTranslateTo('connectionstatus', 'spacespage.statusheader');
+      expectFieldToTranslateTo('sipurl', 'deviceoverviewpage.sipurl');
+      expectFieldToTranslateTo('errorcodes', 'deviceoverviewpage.issues');
+      expectFieldToTranslateTo('tags', 'spacespage.tags');
+    });
+
+    it('should translate all supported search fields case insensitive', function () {
+      expectFieldToTranslateTo('Displayname', 'spacespage.nameheader');
+      expectFieldToTranslateTo('Upgradechannel', 'devicesettings.softwareupgradechannel');
+      expectFieldToTranslateTo('DISPLAYNAME', 'spacespage.nameheader');
+      expectFieldToTranslateTo('UPGRADECHANNEL', 'devicesettings.softwareupgradechannel');
+      expectFieldToTranslateTo('displayname', 'spacespage.nameheader');
+      expectFieldToTranslateTo('upgradechannel', 'devicesettings.softwareupgradechannel');
+    });
+
+    it('should not translate an unsupported search field', function () {
+      expectFieldToTranslateTo('qwerty', 'qwerty');
+    });
+
+    function expectFieldToTranslateTo(fieldInQuery: string, expectedLocalizedField: string) {
+      const searchTranslator = new SearchTranslator(transMock);
+      const translatedQueryField = searchTranslator.translateQueryField(fieldInQuery);
+      expect(translatedQueryField).toBe(expectedLocalizedField);
+    }
+  });
+
+  describe('translateQueryValue', () => {
+
+    it('should a translate connectionStatus search field value to upper', function () {
+      expectQueryValueToTranslateTo('connectionstatus', 'uppercase1', 'CsdmStatus.connectionStatus.UPPERCASE1');
+      expectQueryValueToTranslateTo('connEctionstaTus', 'uppercase1', 'CsdmStatus.connectionStatus.UPPERCASE1');
+
+    });
+
+    it('should a translate upgradechannel search field value to camel', function () {
+      expectQueryValueToTranslateTo('upgradechannel', 'uppercase1', 'CsdmStatus.upgradeChannels.Uppercase1');
+      expectQueryValueToTranslateTo('upgradechannel', 'uppercase1 two', 'CsdmStatus.upgradeChannels.Uppercase1Two');
+      expectQueryValueToTranslateTo('upgraDechaNnel', 'uppErcase1', 'CsdmStatus.upgradeChannels.Uppercase1');
+
+    });
+
+    it('should a translate networkConnectivity search field value to lower', function () {
+      expectQueryValueToTranslateTo('activeinterface', 'wlan', 'CsdmStatus.activeInterface.wlan');
+      expectQueryValueToTranslateTo('actiVeinteRface', 'Wired', 'CsdmStatus.activeInterface.wired');
+      expectQueryValueToTranslateTo('actiVeinteRface', 'wiRed', 'CsdmStatus.activeInterface.wired');
+    });
+
+    it('should not a translate value for unsupported field', function () {
+      expectQueryValueToTranslateTo('qwertyX', 'qwerty', 'qwerty');
+    });
+
+    it('should not translate when not exact search', function () {
+      const searchTranslator = new SearchTranslator(transMock);
+      const queryElement = new FieldQuery('qwerty', 'qwertyX', FieldQuery.QueryTypeExact)
+      const translatedQueryValue = searchTranslator.translateQueryValue(queryElement);
+      expect(translatedQueryValue).toBe('qwerty');
+    });
+
+    function expectQueryValueToTranslateTo(fieldInQuery: string, fieldValue: string, expectedLocalizedValue: string) {
+      const searchTranslator = new SearchTranslator(transMock);
+      const queryElement = new FieldQuery(fieldValue, fieldInQuery, FieldQuery.QueryTypeExact)
+      const translatedQueryValue = searchTranslator.translateQueryValue(queryElement);
+      expect(translatedQueryValue).toBe(expectedLocalizedValue);
+    }
+  });
 });
 
