@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "Çevrimiçi",
-      "OnlineWithIssues": "Çevrimiçi, Sorunları Var",
-      "Offline": "Çevrimdışı",
-      "OfflineExpired": "Devre Dışı",
-      "Unknown": "Bilinmiyor"
+      "CONNECTED": "Çevrimiçi",
+      "CONNECTED_WITH_ISSUES": "Çevrimiçi, Sorunları Var",
+      "DISCONNECTED": "Çevrimdışı",
+      "OFFLINE_EXPIRED": "Devre Dışı",
+      "UNKNOWN": "Bilinmiyor"
     },
     "WithDevices": "Cihazlarla",
     "upgradeChannels": {

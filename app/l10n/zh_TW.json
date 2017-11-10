@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "線上",
-      "OnlineWithIssues": "線上，有問題",
-      "Offline": "離線",
-      "OfflineExpired": "已停用",
-      "Unknown": "不明"
+      "CONNECTED": "線上",
+      "CONNECTED_WITH_ISSUES": "線上，有問題",
+      "DISCONNECTED": "離線",
+      "OFFLINE_EXPIRED": "已停用",
+      "UNKNOWN": "不明"
     },
     "WithDevices": "使用裝置",
     "upgradeChannels": {

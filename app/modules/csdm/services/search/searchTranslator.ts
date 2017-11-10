@@ -1,10 +1,9 @@
 import _ = require('lodash');
-
 import { FieldQuery, OperatorAnd, OperatorOr, QueryParser, SearchElement } from './queryParser';
 
 export class SearchTranslator {
   /* @ngInject */
-  constructor(private $translate: ng.translate.ITranslateService| any) {
+  constructor(private $translate: ng.translate.ITranslateService | any) {
     this.updateLanguageIfNeeded();
   }
 
@@ -96,19 +95,16 @@ export class SearchTranslator {
       .value();
   }
 
-  private static CreateFieldQuery(translationKey: string) {
+  private static CreateFieldQuery(translationKey: string): FieldQuery {
     const searchField = SearchTranslator.getSearchField(translationKey);
 
     let searchQuery = translationKey;
     switch (searchField) {
       case (QueryParser.Field_ActiveInterface):
       case (QueryParser.Field_UpgradeChannel):
-      case (QueryParser.Field_ErrorCodes): {
-        searchQuery = translationKey.split('.')[2];
-        break;
-      }
+      case (QueryParser.Field_ErrorCodes):
       case (QueryParser.Field_ConnectionStatus): {
-        searchQuery = SearchTranslator.mapConnectionStatusQuery(translationKey);
+        searchQuery = translationKey.split('.')[2];
         break;
       }
       default: {
@@ -117,24 +113,6 @@ export class SearchTranslator {
     }
 
     return new FieldQuery(searchQuery, searchField, FieldQuery.QueryTypeExact);
-  }
-
-  private static mapConnectionStatusQuery(translationKey: string) {
-    const connectionStatusSubCode = translationKey.split('.')[2];
-    switch (connectionStatusSubCode) {
-      case 'OnlineWithIssues':
-        return 'CONNECTED_WITH_ISSUES';
-      case 'Online':
-        return 'CONNECTED';
-      case 'Offline':
-        return 'DISCONNECTED';
-      case 'OfflineExpired':
-        return 'OFFLINE_EXPIRED';
-      case 'Unknown':
-        return 'UNKNOWN';
-      default:
-        return connectionStatusSubCode;
-    }
   }
 
   private matches(element: SearchElement, translationKey: string, translationValue: string): boolean {
@@ -168,5 +146,84 @@ export class SearchTranslator {
         return _.startsWith(translationKey, transKeyPrefix);
       });
   }
-}
 
+  private static fieldNameTranslations: { [fieldKey: string]: { tKey: string, getValueKey?: (value: string) => string } } = {
+    displayname: {
+      tKey: 'spacesPage.nameHeader', //belongsto
+    },
+    connectionstatus: {
+      tKey: 'spacesPage.statusHeader',
+      getValueKey: (value: string) => {
+        return 'CsdmStatus.connectionStatus.' + _.toUpper(value);
+      },
+    },
+    upgradechannel: {
+      tKey: 'deviceSettings.softwareUpgradeChannel',
+      getValueKey: (value: string) => {
+        return 'CsdmStatus.upgradeChannels.' + _.upperFirst(_.camelCase(_.toLower(value)));
+      },
+    },
+    activeinterface: {
+      tKey: 'deviceOverviewPage.networkConnectivity',
+      getValueKey: (value: string) => {
+        return 'CsdmStatus.activeInterface.' + _.camelCase(_.toLower(value));
+      },
+    },
+    product: {
+      tKey: 'spacesPage.typeHeader',
+    },
+    mac: {
+      tKey: 'deviceOverviewPage.macAddr',
+    },
+    ip: {
+      tKey: 'deviceOverviewPage.ipAddr',
+    },
+    sipurl: {
+      tKey: 'deviceOverviewPage.sipUrl',
+    },
+    errorcodes: {
+      tKey: 'deviceOverviewPage.issues',
+    },
+    serial: {
+      tKey: 'deviceOverviewPage.serial',
+    },
+    tags: {
+      tKey: 'spacesPage.tags',
+    },
+  };
+
+  private static getFieldTranslationKey(field: string): string {
+    const translationMatch = SearchTranslator.fieldNameTranslations[_.toLower(field)];
+    return (translationMatch && translationMatch.tKey) ? translationMatch.tKey : field;
+  }
+
+  public translateQueryField(field: string): string {
+
+    const fieldTranslationKey = SearchTranslator.getFieldTranslationKey(field);
+    if (_.isEmpty(fieldTranslationKey)) {
+      return field;
+    }
+    const localizedRawKey = this.$translate.instant(fieldTranslationKey) + '';
+    return _(localizedRawKey)
+      .toLower()
+      .replace(new RegExp(' ', 'g'), '_')
+      .replace(new RegExp('[\:\=]', 'g'), '');
+  }
+
+  public translateQueryValue(searchElement: FieldQuery): string {
+
+    const value = searchElement.getQueryWithoutField();
+
+    if (searchElement.type !== FieldQuery.QueryTypeExact) {
+      return value;
+    }
+
+    const translationMatch = _.isEmpty(searchElement.field) ? null : SearchTranslator.fieldNameTranslations[_.toLower(searchElement.field)];
+    if (!translationMatch || translationMatch.getValueKey === undefined) {
+      return value;
+    }
+    const translatedQueryValue = this.$translate.instant(translationMatch.getValueKey(value));
+
+    return (!translatedQueryValue || translatedQueryValue === value) ? value : translatedQueryValue;
+  }
+}

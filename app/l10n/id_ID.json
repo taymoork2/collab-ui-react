@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "Online",
-      "OnlineWithIssues": "Online, Dengan Masalah",
-      "Offline": "Offline",
-      "OfflineExpired": "Dinonaktifkan",
-      "Unknown": "Tidak Diketahui"
+      "CONNECTED": "Online",
+      "CONNECTED_WITH_ISSUES": "Online, Dengan Masalah",
+      "DISCONNECTED": "Offline",
+      "OFFLINE_EXPIRED": "Dinonaktifkan",
+      "UNKNOWN": "Tidak Diketahui"
     },
     "WithDevices": "Dengan Perangkat",
     "upgradeChannels": {
