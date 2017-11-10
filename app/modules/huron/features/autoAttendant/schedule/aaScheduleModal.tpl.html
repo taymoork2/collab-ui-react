@@ -26,8 +26,7 @@
   </form>
   <div class="modal-body-gray">
     <p name="hours-subtitle" class="aa-schedule-subtitle" ng-click="aaScheduleModalCtrl.toggleSection('hours')">{{:: 'autoAttendant.scheduleOpen' | translate}} ({{aaScheduleModalCtrl.openhours.length}})
-      <a class="icon icon-right-arrow pull-right"
-      ng-class="{'down': !aaScheduleModalCtrl.toggleHours}"></a></p>
+      <a class="icon icon-right-arrow pull-right" ng-class="{'down': !aaScheduleModalCtrl.toggleHours}"></a></p>
     <div collapse="aaScheduleModalCtrl.toggleHours">
       <form name="aaScheduleModalCtrl.hoursForm" role="form" novalidate>
         <div ng-repeat="hours in aaScheduleModalCtrl.openhours" class="aa-schedule-hour">
@@ -69,7 +68,7 @@
       <div ng-if="aaScheduleModalCtrl.openhours.length === 0">
         <p translate="autoAttendant.hoursMissing"></p>
       </div>
-      <a class="aa-schedule-add" id="addHours" ng-click="aaScheduleModalCtrl.addRange();">
+      <a href class="aa-schedule-add" id="addHours" ng-click="aaScheduleModalCtrl.addRange()">
         <i class="icon icon-plus-circle"></i>{{ :: 'autoAttendant.scheduleAddHours' | translate }}</a>
     </div>
   </div>
@@ -77,7 +76,7 @@
 
   <div class="modal-body-gray">
     <p name="holidays-subtitle" class="aa-schedule-subtitle" ng-click="aaScheduleModalCtrl.toggleSection('holidays')">{{ ::' autoAttendant.scheduleHolidays' | translate}} ({{aaScheduleModalCtrl.holidays.length}})
-      <a id="toggleHolidays"
+      <a href id="toggleHolidays"
         class="icon icon-right-arrow pull-right"
         ng-class="{'down': !aaScheduleModalCtrl.toggleHolidays}"></a>
     </p>
@@ -266,7 +265,7 @@
       <div ng-if="aaScheduleModalCtrl.holidays.length === 0">
         <p translate="autoAttendant.holidaysMissing"></p>
       </div>
-      <a class="aa-schedule-add" id="addHoliday" ng-click="aaScheduleModalCtrl.addHoliday()">
+      <a href class="aa-schedule-add" id="addHoliday" ng-click="aaScheduleModalCtrl.addHoliday()">
         <i class="icon icon-plus-circle"></i>{{ :: 'autoAttendant.scheduleAddAdditionalHolidays' | translate }}</a>
     </div>
   </div>

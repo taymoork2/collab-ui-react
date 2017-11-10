@@ -13,7 +13,8 @@
                 aria-label="{{::'huronFeatureDetails.viewDepend' | translate}}"></a>
               <button type="button" class="close"
                 ng-click="huronFeaturesCtrl.deleteHuronFeature((huronFeature), $event)"
-                aria-label="{{::'common.close' | translate}}"></button>
+                ng-keydown="huronFeaturesCtrl.deleteKeypress((huronFeature), $event)"
+                aria-label="{{::'common.delete' | translate}}"></button>
             </div>
           </div>
           <p><span class="badge badge--outline" ng-class="huronFeaturesCtrl.badgeColor[huronFeature.filterValue]">{{:: huronFeature.featureName | translate}}</span></p>

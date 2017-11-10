@@ -347,6 +347,7 @@
     "call": "Call",
     "subscriptionIdError": "An error occurred loading your subscription ids",
     "hybridServices": "Hybrid Services",
+    "hybridServicesWarning": "Assign at least one license to enable Hybrid Services for the user",
     "freeCollab": "Free Public Collaboration Services",
     "licCollab": "Licensed Collaboration Services",
     "siteAdminUrl": "Sign-in to manage",
@@ -386,7 +387,6 @@
     "trainingCenter": "Training Center {{capacity}}",
     "eventCenter": "Event Center {{capacity}}",
     "communication": "Communication",
-    "cloudExtensions": "Hybrid Services",
     "cmr": "Collaboration Meeting Rooms",
     "licenseShortage": "Not enough licenses",
     "licenseShortageBulk": "You did not have enough licenses",
@@ -2162,6 +2162,14 @@
       "domain-not-verified": "The domain for this Directory URI must be verified for this service to function properly. ",
       "navigateToCallSettings": "Verify the domain in <a ng-click=\"{{onclick}}\">Call Service Settings</a>."
     },
+    "sipExplanation": {
+      "line1": "You can use one of the following address formats:",
+      "line2": "SRV domain (_sips.tcp.<strong>sipmtls.example.com</strong>)",
+      "line3": "Hostname/FQDN:port (<strong>exp-e.example.com:5062</strong>)",
+      "line4": "IP address:port (<strong>203.0.113.0:5062</strong>)",
+      "line5": "See <a href=\"https://www.cisco.com/go/spark-calling-branch-office\" target=\"_blank\">Configure the Enterprise Private Trunk Connection</a> if you need further help.",
+      "line5alt": "See <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Deploy Hybrid Call Connect</a> if you need further help."
+    },
     "connectors": {
       "group_by": "Group services by:",
       "cluster_id": "Cluster",
@@ -2704,8 +2712,7 @@
         "certificatesUpload": "Upload",
         "certificatesModalHeading": "Remove Certificate",
         "sipDomainHeading": "SIP Destination",
-        "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
-        "sipDomainPlaceholder": "Enter a SIP Destination"
+        "sipDomainPlaceholder": "sipmtls.example.com"
       },
       "verifySipDestination": {
         "title": "Verify SIP Destination",
@@ -6098,7 +6105,6 @@
       "decreasedBy": "Decreased by"
     },
     "deleteGroup": {
-      "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
       "errorHeader": "Unexpected Error",
       "errorMessage": "Unable delete {{groupName}}."
     },
@@ -8967,10 +8973,9 @@
         "radioSelect1": "I want to use a verified domain for Private Trunking",
         "radioSelect2": "I don’t want to use a verified domain for Private Trunking",
         "destinationTitle": "Add SIP Destination",
-        "destination": "Enter the SIP destination of the on-premises Expressway-E that you want to use for Private Trunking",
-        "destinationHelp": "Enter an SRV domain, FQDN:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
-        "sipLabel": "Sip destination",
-        "sip": "Enter Sip destination",
+        "destination": "Enter a SIP destination address to establish a mutual TLS connection to you Expressway-E:",
+        "sipLabel": "SIP destination",
+        "sip": "sipmtls.example.com",
         "displayLabel": "Display name",
         "displayName": "Enter display name",
         "addDestination": "Add another SIP destination",

@@ -7,6 +7,8 @@ require('./_feature-landing.scss');
     .module('Huron')
     .controller('HuronFeaturesCtrl', HuronFeaturesCtrl);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
   function HuronFeaturesCtrl($scope, $state, $filter, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, CallParkService, PagingGroupSettingsService, CallPickupGroupService, AutoAttendantCeInfoModelService, Notification, Log, CardUtils) {
     var vm = this;
@@ -252,6 +254,17 @@ require('./_feature-landing.scss');
         deleteFeatureId: feature.id,
         deleteFeatureType: feature.filterValue,
       });
+    };
+
+    vm.deleteKeypress = function (feature, $event) {
+      switch ($event.keyCode) {
+        case KeyCodes.ENTER:
+        case KeyCodes.SPACE:
+          $event.preventDefault();
+          $event.stopPropagation();
+          vm.deleteHuronFeature(feature, $event);
+          break;
+      }
     };
 
     vm.detailsHuronFeature = function (feature, $event) {
