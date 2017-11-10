@@ -147,7 +147,7 @@ class BotAuthorizationsController {
   }
   public createAuth(): void {
     this.isAdding = true;
-    this.AuthorizationService.createAuthorization(this.selectedAccount.id, this._selectedRole.id, this.place.id)
+    this.AuthorizationService.createAuthorization(this.selectedAccount.id, this._selectedRole.id, this.place.cisUuid)
       .then((data) => {
         this.enrichAuthData(data).then(() => {
           this.isAdding = false;

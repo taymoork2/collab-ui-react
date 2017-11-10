@@ -6,7 +6,7 @@ export class AuthorizationService {
     this.authUrl = UrlConfig.getLyraServiceUrl() + '/authorizations/';
   }
 
-  public getAuthorizations(id: String): IPromise<Object> {
+  public getAuthorizations(id: String): IPromise<any[]> {
     return this.$http.get(this.authUrl + '?targetIdentity=' + id).then((res) => {
       return res.data.items;
     }); // alert
