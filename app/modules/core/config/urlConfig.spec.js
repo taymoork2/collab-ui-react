@@ -407,24 +407,6 @@ describe('UrlConfigSpec', function () {
     });
   });
 
-  it('should return correct sunlight pick notification url', function () {
-    whenCalling('getSunlightPickNotificationUrl').expectUrlToBe({
-      dev: 'https://notifs.devus1.ciscoccservice.com/notifs/v1/publish',
-      cfe: 'https://notifs.appstaging.ciscoccservice.com/notifs/v1/publish',
-      integration: 'https://notifs.appstaging.ciscoccservice.com/notifs/v1/publish',
-      prod: 'https://notifs.produs1.ciscoccservice.com/notifs/v1/publish',
-    });
-  });
-
-  it('should return correct sunlight push notification url', function () {
-    whenCalling('getSunlightPushNotificationUrl').expectUrlToBe({
-      dev: 'https://pqm.devus1.ciscoccservice.com/pqm/v1/publish/taskState',
-      cfe: 'https://pqm.appstaging.ciscoccservice.com/pqm/v1/publish/taskState',
-      integration: 'https://pqm.appstaging.ciscoccservice.com/pqm/v1/publish/taskState',
-      prod: 'https://pqm.produs1.ciscoccservice.com/pqm/v1/publish/taskState',
-    });
-  });
-
   it('should return correct prod admin url', function () {
     whenCalling('getProdAdminServiceUrl').expectUrlToBe({
       dev: 'https://atlas-a.wbx2.com/admin/api/v1/',

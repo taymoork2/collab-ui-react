@@ -5,7 +5,7 @@ var HttpStatus = require('http-status-codes');
   angular.module('Core')
     .controller('CareSettingsCtrl', CareSettingsCtrl);
 
-  function CareSettingsCtrl($interval, $q, $scope, $translate, Authinfo, Log, Notification, SunlightConfigService, UrlConfig, URService) {
+  function CareSettingsCtrl($interval, $q, $scope, $translate, Authinfo, Log, Notification, SunlightConfigService, URService) {
     var vm = this;
 
     vm.status = {
@@ -78,7 +78,7 @@ var HttpStatus = require('http-status-codes');
         var createQueueRequest = {
           queueId: Authinfo.getOrgId(),
           queueName: 'DEFAULT',
-          notificationUrls: [UrlConfig.getSunlightPickNotificationUrl()],
+          notificationUrls: [],
           routingType: 'pick',
         };
 
