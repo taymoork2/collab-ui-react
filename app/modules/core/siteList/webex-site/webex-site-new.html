@@ -2,7 +2,7 @@
   <div class="row"
     ng-repeat="site in $ctrl.sitesArray">
     <webex-site-new-display site="site"
-      is-show-user-management="$ctrl.isShowUserManagement"
+      is-show-user-management="true"
       can-remove-site="false"
       index="$index">
     </webex-site-new-display>
@@ -10,7 +10,7 @@
   <div class="row"
     ng-repeat="site in $ctrl.newSitesArray">
     <webex-site-new-display site="site"
-      is-show-user-management="$ctrl.isShowUserManagement"
+      is-show-user-management="true"
       on-remove-site="$ctrl.removeSite(index)"
       can-remove-site="true"
       index="$index">
@@ -60,8 +60,7 @@
       </div>
     </div>
     <div>
-      <div class="row"
-        ng-if="$ctrl.isShowUserManagement">
+      <div class="row">
         <h5 translate="firstTimeWizard.userManagement"></h5>
         <div class="col-lg-6 small"><span translate="firstTimeWizard.userManagementWhere"></span></div>
         <div class="col-lg-6">
