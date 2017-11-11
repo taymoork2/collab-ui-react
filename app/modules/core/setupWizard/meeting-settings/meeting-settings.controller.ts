@@ -797,7 +797,13 @@ export class MeetingSettingsCtrl {
     _.forEach(distributedLicenses, (site: WebExSite) => {
       if (_.get(site, 'quantity', 0) > 0) {
         const siteUrl = site.siteUrl + this.Config.siteDomainUrl.webexUrl;
-        const webexSiteDetail = new WebExSite({ centerType: site.centerType, quantity: _.get<number>(site, 'quantity', 0), siteUrl: siteUrl, timezone: _.get<string>(site, 'timezone.timeZoneId'), setupType: site.setupType });
+        const webexSiteDetail = new WebExSite({
+          centerType: site.centerType,
+          quantity: _.get<number>(site, 'quantity', 0),
+          siteUrl: siteUrl,
+          timezone: _.get<string>(site, 'timezone.timeZoneId'),
+          setupType: site.setupType,
+          isCIUnifiedSite: site.isCIUnifiedSite });
         webexSiteDetailsList.push(webexSiteDetail);
       }
     });
