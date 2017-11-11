@@ -1,0 +1,74 @@
+#!/bin/bash
+
+function kebab_case_to_pascal_case {
+  sed -E 's/(^|-)([a-z0-9])/\U\2/g'
+}
+
+function pascal_case_to_camel_case {
+  sed -E 's/^([A-Z])/\L\1/'
+}
+
+function html_element_to_component_basename {
+    echo "$1" | kebab_case_to_pascal_case
+}
+
+function html_element_to_directive_name {
+    echo "$1" | kebab_case_to_pascal_case | pascal_case_to_camel_case
+}
+
+function subdir_path_to_ng_module_name {
+    # remove './' prefix, then convert '/' chars to '.'
+    echo "$1" | sed -e 's/^..//' | tr '/' .
+}
+
+function rm_dir_if_empty {
+    local dest_dir="$1"
+    local results
+    results="$(find "$dest_dir" -type f)"
+    if [ -z "$results" ]; then
+        rm -rf "$dest_dir"
+    fi
+}
+
+function get_full_path {
+    local dest_dir="$1"
+    if [ -d "$dest_dir" ]; then
+        dest_dir="$(cd -P "$dest_dir" && pwd)"
+    else
+        mkdir -p "$dest_dir"
+        dest_dir="$(cd -P "$dest_dir" && pwd)"
+        rm_dir_if_empty "$dest_dir"
+    fi
+    echo "$dest_dir"
+}
+
+function get_es6_module_path {
+    local dest_dir="$1"
+    dest_dir="$(get_full_path "$dest_dir")"
+    echo "${dest_dir##*app\/}"  # chop from head everything up to 'app/'
+}
+
+function get_ng_module_name {
+    local dest_dir="$1"
+    dest_dir="$(get_es6_module_path "$dest_dir" | sed -e 's,/,.,g')"
+    dest_dir="${dest_dir##*modules.}"  # chop from head everything up to 'modules.'
+    echo "$dest_dir"
+}
+
+function has_parent_index_ts {
+    test -s "$(get_parent_index_ts_file "$1")"
+}
+
+function get_parent_index_ts_file  {
+    local dest_dir="$1"
+    local parent_dir
+    parent_dir="$(get_full_path "${dest_dir}/..")"
+
+    # cleanup:
+    # - given dir might not exist yet
+    # - 'get_full_path' uses 'mkdir -p' (creates dirs in the given path)
+    # - so we cleanup the path at the given dir, if created as a side-effect
+    rm_dir_if_empty "$dest_dir"
+
+    echo "${parent_dir}/index.ts"
+}
