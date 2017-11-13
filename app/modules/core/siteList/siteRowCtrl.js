@@ -8,17 +8,19 @@ require('./_site-list.scss');
     .controller('WebExSiteRowCtrl', WebExSiteRowCtrl);
 
   /*@ngInject*/
-  function WebExSiteRowCtrl($log, $modal, $scope, $sce, $state, $stateParams, $timeout, $translate, accountLinkingPhase2, FeatureToggleService, ModalService, TokenService, WebExUtilsFact, WebExSiteRowService, Utils) {
+
+  function WebExSiteRowCtrl($log, $modal, $scope, $sce, $state, $stateParams, $timeout, $translate, accountLinkingPhase2, ModalService, TokenService, WebExUtilsFact, WebExSiteRowService, WebExSiteService, Utils) {
     var vm = this;
     vm.showGridData = false;
     vm.isShowAddSite = false;
     vm.canAddSite = WebExSiteRowService.canAddSite();
     vm.isAdminPage = Utils.isAdminPage();
+    var showSiteMgmntEmailPattern = '^ordersimp-.*@mailinator.com';
 
     $log.debug('StateParams in sitreRowCrtl', $stateParams);
 
     var dontShowLinkedSites = accountLinkingPhase2;
-    FeatureToggleService.atlasWebexAddSiteGetStatus().then(function (result) {
+    WebExSiteRowService.shouldShowSiteManagement(showSiteMgmntEmailPattern).then(function (result) {
       vm.isShowAddSite = result;
     });
 
@@ -98,8 +100,13 @@ require('./_site-list.scss');
       var sites = WebExSiteRowService.getLicensesInSubscriptionGroupedBySites(subscriptionId);
       if (_.keys(sites).length === 2) {
         var remainingSite = moveLicensesToRemainingSite(subscriptionId, sites, siteUrl);
-        WebExSiteRowService.deleteSite(siteUrl, remainingSite);
-        //TODO: algendel 10/16/2017 -- call backend API to update licenses and remove the site.
+        WebExSiteService.deleteSite(subscriptionId, remainingSite)
+          .then(function () {
+            this.Notification.success(this.$translate.instant('webexSiteManagement.deleteSiteSuccess'));
+          })
+          .catch(function (response) {
+            this.Notification.errorWithTrackingId(response);
+          });
       } else { //open modal to redistribute licenses
         $state.go('site-list-delete', { subscriptionId: subscriptionId, siteUrl: siteUrl });
       }
@@ -164,6 +171,23 @@ require('./_site-list.scss');
         showStandardModal: true,
       });
     }
+
+    // notes:
+    // - it has been observed that when trying to launch setup wizard modal from add site modal, the
+    //   setup wizard modal comes up blank
+    // - this is possibly related to redirecting from a modal state to a modal state
+    // - as a workaround, we:
+    //   - emit an event
+    //   - close the modal
+    //   - 'siteRowCtrl' catches the event (since it's not a modal), and launches the setup wizard
+    // - in order to avoid conflicting animations (one modal closing, another one opening), we insert
+    //   an 800ms delay
+
+    $scope.$on('core::launchMeetingSetup', function () {
+      $timeout(function () {
+        goToMeetingSetup();
+      }, 800);
+    });
 
     function showRejectionModal(isOnlySite, title, errorMessage) {
       var params = {

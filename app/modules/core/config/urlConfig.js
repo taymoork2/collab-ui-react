@@ -152,18 +152,6 @@
       integration: 'https://reporting.appstaging.ciscoccservice.com/reporting/v1',
       prod: 'https://reporting.produs1.ciscoccservice.com/reporting/v1',
     },
-    SunlightPickNotificationUrl: {
-      dev: 'https://notifs.devus1.ciscoccservice.com/notifs/v1/publish',
-      cfe: 'https://notifs.appstaging.ciscoccservice.com/notifs/v1/publish',
-      integration: 'https://notifs.appstaging.ciscoccservice.com/notifs/v1/publish',
-      prod: 'https://notifs.produs1.ciscoccservice.com/notifs/v1/publish',
-    },
-    SunlightPushNotificationUrl: {
-      dev: 'https://pqm.devus1.ciscoccservice.com/pqm/v1/publish/taskState',
-      cfe: 'https://pqm.appstaging.ciscoccservice.com/pqm/v1/publish/taskState',
-      integration: 'https://pqm.appstaging.ciscoccservice.com/pqm/v1/publish/taskState',
-      prod: 'https://pqm.produs1.ciscoccservice.com/pqm/v1/publish/taskState',
-    },
     CalliopeUrl: {
       dev: 'https://calliope-intb.ciscospark.com/calliope/api/authorization/v1',
       cfe: 'https://calliope-loada.ciscospark.com/calliope/api/authorization/v1',

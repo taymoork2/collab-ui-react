@@ -41,6 +41,7 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
     private SetupWizardService: SetupWizardService,
     private TrialTimeZoneService: TrialTimeZoneService,
   ) {
+    this.migrateSiteUrl = this.Config.webexSiteMigrationUrl;
   }
 
   public $onInit() {

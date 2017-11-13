@@ -4,13 +4,13 @@ describe('Component: WebexAddSiteModalComponent', function () {
   const TRANSFER_SCREEN = 'webex-site-transfer';
   const SUBSCRIPTION_SCREEN = 'webex-site-subscription';
   const ADD_SITE_SCREEN = 'webex-site-new';
-  const licenses =  getJSONFixture('core/json/authInfo/complexCustomerCases/customerWithCCASPActiveLicenses.json');
-  const allLicenses = licenses.allLicenses;
+  const licenses = getJSONFixture('core/json/authInfo/complexCustomerCases/customerWithCCASPActiveLicenses.json');
   const confServices = licenses.confLicenses;
   const confServicesSub100448 = _.filter(confServices, { billingServiceId: 'Sub100448' });
+
   beforeEach(function () {
     this.initModules(module);
-    this.injectDependencies('$componentController', '$scope', '$rootScope', 'Authinfo', 'Config', 'SetupWizardService');
+    this.injectDependencies('$componentController', '$scope', '$rootScope', 'Config', 'SetupWizardService', 'WebExSiteService');
     this.$scope.fixtures = {
     };
 
@@ -23,8 +23,9 @@ describe('Component: WebexAddSiteModalComponent', function () {
 
   function initSpies() {
     spyOn(this.SetupWizardService, 'getNonTrialWebexLicenses').and.returnValue(confServices);
-    spyOn(this.Authinfo, 'getLicenses').and.returnValue(allLicenses);
     spyOn(this.SetupWizardService, 'getConferenceLicensesBySubscriptionId').and.returnValue(confServicesSub100448);
+    spyOn(this.WebExSiteService, 'getAudioPackageInfo').and.returnValue({ audioPackage: 'VoIPOnly' });
+    spyOn(this.$rootScope, '$broadcast').and.callThrough();
   }
 
   describe('When first opened', () => {
@@ -59,9 +60,22 @@ describe('Component: WebexAddSiteModalComponent', function () {
       expect(this.view.find('button.btn-primary')[0].innerText.trim()).toBe('common.save');
     });
 
-    it('should have both audioPartnerName name and ccaspSubscriptionId if CCASP', function () {
-      expect(this.controller.audioPartnerName).toBe('West IP Communications');
+    it('should have audioPackage but not audioPartnerName ccaspSubscriptionId if VoiP', function () {
+      expect(this.controller.audioPartnerName).toBeUndefined();
+      expect(this.controller.ccaspSubscriptionId).toBeUndefined();
+      expect(this.controller.audioPackage).toBe('VoIPOnly');
+    });
+    it('should have both audioPartnerName and ccaspSubscriptionId if CCASP', function () {
+      const ccaspPackage = {
+        audioPackage: 'CCASP',
+        audioPartnerName: 'partnerName',
+        ccaspSubscriptionId: '123',
+      };
+      this.WebExSiteService.getAudioPackageInfo.and.returnValue(ccaspPackage);
+      this.compileComponent('webexAddSiteModal');
+      expect(this.controller.audioPartnerName).toBe('partnerName');
       expect(this.controller.audioPackage).toBe('CCASP');
+      expect(this.controller.ccaspSubscriptionId).toBe('123');
     });
 
     it('should not throw if there is no audio licenses in subscription', function () {
@@ -83,10 +97,9 @@ describe('Component: WebexAddSiteModalComponent', function () {
           centerType: '',
         },
       ];
-      expect(this.controller.subscriptionList).toEqual([{ id: 'Sub100448', isPending: false } , { id: 'Sub100449', isPending: false }]);
+      expect(this.controller.subscriptionList).toEqual([{ id: 'Sub100448', isPending: false }, { id: 'Sub100449', isPending: false }]);
       expect(this.controller.currentSubscriptionId).toBe('Sub100448');
       expect(this.controller.sitesArray).toEqual(expectedSites_48);
-      expect(this.controller.audioPackage).toBe('CCASP');
     });
     it('should not throw if there are no webex subscriptions', function () {
       this.SetupWizardService.getNonTrialWebexLicenses.and.returnValue([]);
@@ -101,14 +114,21 @@ describe('Component: WebexAddSiteModalComponent', function () {
   });
 
   describe('Callback functions handling', () => {
-    it('should on change subscription callback change the subscription id and repopulateInfo with new subscription id', function () {
+    it('should, on change subscription callback, change the subscription id and repopulateInfo with new subscription id if ! needsSetup', function () {
       this.controller.currentSubscriptionId = '123';
       this.controller.changeCurrentSubscription('345');
       expect(this.controller.currentSubscriptionId).toBe('345');
       expect(this.SetupWizardService.getConferenceLicensesBySubscriptionId).toHaveBeenCalledWith('345');
     });
 
-    it('should on tranfer site callback add the site to the sites array and enable the next button  and go to add sites if last argument is true', function () {
+    it('should, on change subscription callback, broadcast EventNames.LAUNCH_MEETING_SETUP', function () {
+      this.controller.currentSubscriptionId = '123';
+      this.controller.changeCurrentSubscription('', true);
+      expect(this.controller.currentSubscriptionId).toBe('123');
+      expect(this.$rootScope.$broadcast).toHaveBeenCalledWith('core::launchMeetingSetup');
+    });
+
+    it('should, on tranfer site callback, add the site to the sites array and enable the next button and go to add sites if last argument is true', function () {
       const sites = [{
         siteUrl: 'abc.dmz.webex.com',
         timezone: '1',
@@ -122,7 +142,7 @@ describe('Component: WebexAddSiteModalComponent', function () {
       expect(this.controller.transferCode).toBe('123');
     });
 
-    it('should on tranfer site callback add the site to the sites array and enable the next button  and go to add sites if last argument is true', function () {
+    it('should, on tranfer site callback NOT add the site to the sites array and NOT go to add sites if last argument is false', function () {
       this.controller.currentStep = 1;
       const numberOfSites = this.controller.sitesArray.length;
       this.controller.addTransferredSites(null, null, false);

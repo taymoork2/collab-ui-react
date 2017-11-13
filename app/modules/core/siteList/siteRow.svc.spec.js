@@ -243,6 +243,9 @@ describe('Service: WebExSiteRowService', function () {
     spyOn(Auth, 'redirectToLogin');
     spyOn(Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue(fakeConferenceServicesArray);
     spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('nobody@nowhere.com');
+    spyOn(Authinfo, 'getUserName').and.returnValue('bob@nonmatching-email.com');
+    spyOn(FeatureToggleService, 'atlasWebexAddSiteGetStatus').and.returnValue($q.resolve(true));
+    spyOn(Authinfo, 'getCustomerAdminEmail').and.returnValue('bob@nonmatching-email.com');
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(WebExUtilsFact, 'getAllSitesWebexLicenseInfo').and.returnValue(deferred_licenseInfo.promise);
     spyOn(WebExApiGatewayService, 'siteFunctions').and.returnValue(deferredIsSiteSupportsIframe.promise);
@@ -255,6 +258,7 @@ describe('Service: WebExSiteRowService', function () {
       }
     });
     spyOn(SetupWizardService, 'getConferenceLicensesBySubscriptionId').and.returnValue(confServices);
+    installPromiseMatchers();
   }));
 
   ////////
@@ -722,5 +726,45 @@ describe('Service: WebExSiteRowService', function () {
   it('can group licenses by sites correctly', function () {
     var sites = WebExSiteRowService.getLicensesInSubscriptionGroupedBySites();
     expect(_.keys(sites).length).toEqual(3);
+  });
+
+  describe('shouldShowSiteManagement() function', function () {
+    it('should return TRUE the logged in user\'s email or customer admin email matches the pattern supplied', function () {
+      FeatureToggleService.atlasWebexAddSiteGetStatus.and.returnValue($q.resolve(false));
+      Authinfo.getCustomerAdminEmail.and.returnValue('ordersimp-alina@mailinator.com');
+      var promise = WebExSiteRowService.shouldShowSiteManagement('^ordersimp-.*@mailinator.com');
+      promise.then(function (result) {
+        expect(result).toBeTruthy();
+      });
+      expect(promise).toBeResolved();
+    });
+
+    it('should return FALSE if the logged in user\'s PrimaryEmail or CustomerAdminEmail or UserName does NOT match the pattern supplied AND FT is false', function () {
+      FeatureToggleService.atlasWebexAddSiteGetStatus.and.returnValue($q.resolve(false));
+      Authinfo.getUserName.and.returnValue('bob@nonmatching-email.com');
+      Authinfo.getCustomerAdminEmail.and.returnValue('another@nonmatching-email.com');
+      var promise = WebExSiteRowService.shouldShowSiteManagement('^ordersimp-.*@mailinator.com');
+      promise.then(function (result) {
+        expect(result).toBeFalsy();
+      });
+      expect(promise).toBeResolved();
+    });
+
+    it('will return TRUE if \'atlasWebexAddSiteGetStatus\' FT is enabled whoever logged in user is', function () {
+      var promise = WebExSiteRowService.shouldShowSiteManagement('doesnotmatterwhatpattern');
+      promise.then(function (result) {
+        expect(result).toBeTruthy();
+      });
+      expect(promise).toBeResolved();
+    });
+
+    it('will return FALSE  if \'atlasWebexAddSiteGetStatus\' FT is disabled and the pattern does not match', function () {
+      FeatureToggleService.atlasWebexAddSiteGetStatus.and.returnValue($q.resolve(false));
+      var promise = WebExSiteRowService.shouldShowSiteManagement('doesnotmatterwhatpattern');
+      promise.then(function (result) {
+        expect(result).toBeFalsy();
+      });
+      expect(promise).toBeResolved();
+    });
   });
 });

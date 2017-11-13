@@ -166,7 +166,7 @@ export class SetupWizardService {
         id: sub.billingServiceId,
         isPending: this.isSubscriptionPending(sub.billingServiceId),
       }))
-      .orderBy(['isPending']['asc'])
+      .orderBy(['isPending'], ['asc'])
       .value();
     return list;
   }
@@ -394,7 +394,7 @@ export class SetupWizardService {
     return this.$http.post(url, payload);
   }
 
-  public addSiteToActiveSubscription(payload) {
+  public updateSitesInActiveSubscription(payload) {
     const url = `${this.UrlConfig.getAdminServiceUrl()}subscriptions/site`;
     return this.$http.post(url, payload);
   }
