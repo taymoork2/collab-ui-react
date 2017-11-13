@@ -9,7 +9,7 @@ export class AuthorizationService {
   public getAuthorizations(id: String): IPromise<any[]> {
     return this.$http.get(this.authUrl + '?targetIdentity=' + id).then((res) => {
       return res.data.items;
-    }); // alert
+    });
   }
   public getRoleName(id: any): IPromise<String> {
     return this.$http.get(this.authUrl + 'roles').then((res) => {
@@ -21,7 +21,7 @@ export class AuthorizationService {
   public delete(id: String): IPromise<Object> {
     return this.$http.delete(this.authUrl + id).then((res) => {
       return res.data.items;
-    }); // alert
+    });
   }
   public updateGrant(authorization: any, grant: any): IPromise<boolean> {
     return this.$http.patch(this.authUrl + authorization.id, grant).then(() => {
