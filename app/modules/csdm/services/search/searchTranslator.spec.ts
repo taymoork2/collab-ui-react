@@ -264,14 +264,14 @@ describe('SearchTranslator', () => {
 
     it('should not translate when not exact search', function () {
       const searchTranslator = new SearchTranslator(transMock);
-      const queryElement = new FieldQuery('qwerty', 'qwertyX', FieldQuery.QueryTypeExact)
+      const queryElement = new FieldQuery('qwerty', 'qwertyX', FieldQuery.QueryTypeExact);
       const translatedQueryValue = searchTranslator.translateQueryValue(queryElement);
       expect(translatedQueryValue).toBe('qwerty');
     });
 
     function expectQueryValueToTranslateTo(fieldInQuery: string, fieldValue: string, expectedLocalizedValue: string) {
       const searchTranslator = new SearchTranslator(transMock);
-      const queryElement = new FieldQuery(fieldValue, fieldInQuery, FieldQuery.QueryTypeExact)
+      const queryElement = new FieldQuery(fieldValue, fieldInQuery, FieldQuery.QueryTypeExact);
       const translatedQueryValue = searchTranslator.translateQueryValue(queryElement);
       expect(translatedQueryValue).toBe(expectedLocalizedValue);
     }
