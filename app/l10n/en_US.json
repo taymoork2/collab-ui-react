@@ -2076,6 +2076,7 @@
   },
   "spacesPage": {
     "addTag": "Add tag",
+    "tags": "Tags",
     "title": "Devices",
     "addBtn": "New Device",
     "addPlaceBtn": "New Place",
@@ -2229,8 +2230,7 @@
       "selectClusterPlaceholder": "Select an Expressway cluster…",
       "selectClusterPlaceholderNoneFound": "No eligible clusters found",
       "enterDisplayName": "Enter a name for the Expressway cluster",
-      "nameHelptext": "The cluster name is used for display purposes in Cloud Collaboration Management.",
-      "nameHelptextNew": "The cluster name is used for display purposes in {{appTitle}}.",
+      "nameHelptext": "The cluster name is used for display purposes in Spark Control Hub.",
       "clusternameWatermark": "Enter cluster name…",
       "cannotCreateCluster": "Could not create cluster. Please try again later.",
       "cannotProvisionConnector": "Could not provision {{ConnectorName}}. Try again later.",
@@ -2455,7 +2455,8 @@
         "squared-fusion-gcal": "Calendar",
         "squared-fusion-o365": "Calendar",
         "squared-fusion-ec": "Connect",
-        "squared-fusion-ec-place": "Hybrid Call Service Connect"
+        "squared-fusion-ec-place": "Hybrid Call Service Connect",
+        "spark-hybrid-impinterop": "Message"
       },
       "serviceDescriptions": {
         "squared-fusion-uc": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
@@ -2866,6 +2867,7 @@
       },
       "user-activation-errors": {
         "title": "Activation Error",
+        "hybrid-message-user-errors": "There are {{numberUsers}} users with Hybrid Message Service activation errors.",
         "calendar-user-errors": "There are {{numberUsers}} users with Calendar Service activation errors.",
         "aware-user-errors": "There are {{numberUsers}} users with Call Service Aware activation errors.",
         "connect-user-errors": "There are {{numberUsers}} users with Call Service Connect activation errors.",
@@ -5569,30 +5571,6 @@
     "didFormatHelpText": "For example: {{examples}}",
     "didAlreadyExist": "Phone number already exists."
   },
-  "deviceDetailPage": {
-    "deviceConfig": "Device Configuration",
-    "deviceStatus": "Device Status",
-    "description": "Description",
-    "tags": "Tags",
-    "id": "ID",
-    "ipAddress": "IP Address",
-    "deactivate": "Deactivate",
-    "success": "Device updated successfully",
-    "error": "Device configuration failed",
-    "deactivateDevice": "Deactivate Device",
-    "deactivateBody": "This action cannot be undone.  Are you sure you want to deactivate this device?",
-    "deviceStatusFailureMsg": "Failed to fetch device status",
-    "deviceIpAddressFailureMsg": "Failed to fetch device IP",
-    "logTitle": "Logs",
-    "retrieveLogBttn": "Retrieve Latest Log",
-    "viewPreviousLogBttn": "View Previous Log",
-    "retrieveLogInstructions": "Device logs can be used by Cisco to troubleshoot issues related to device performance and call quality.",
-    "logWait": "Getting log file from the device. This may take a minute…",
-    "errorLogTryAgain": "Log file request timed out. Retry?",
-    "errorLogInvaidMsg": "Log service message is invalid",
-    "unknownFilename": "Unknown Filename",
-    "errorLogNotFound": "No device log was been found"
-  },
   "deviceOverviewPage": {
     "software": "Software",
     "serial": "Serial",
@@ -6880,6 +6858,7 @@
     "deleteSiteRejectModalTitle": "Cannot Delete Site",
     "deleteSiteRejectModalBodyOnlySite": "You cannot delete the last site in a subscription",
     "deleteSiteRejectModalBodyPending": "You cannot delete this site because the WebEx service in this subscription has not been provisioned. Please go to Meeting Service Setup to provision the WebEx subscription",
+    "deleteSiteSuccess": "Site has been deleted successfully",
     "redistributeRejectModalTitle": "Cannot Redistribute Licenses",
     "redistributeRejectModalBodyOnlySite": "You cannot redistribute licenses between sites because there is only one site.",
     "redistributeRejectModalBodyPending": "You cannot redistribute licenses between sites because the WebEx service in this subscription has not been provisioned. Please go to Meeting Service Setup to provision this WebEx subscription.",
@@ -6910,11 +6889,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "Online",
-      "OnlineWithIssues": "Online, With Issues",
-      "Offline": "Offline",
-      "OfflineExpired": "Requires Activation",
-      "Unknown": "Unknown"
+      "CONNECTED": "Online",
+      "CONNECTED_WITH_ISSUES": "Online, With Issues",
+      "DISCONNECTED": "Offline",
+      "OFFLINE_EXPIRED": "Requires Activation",
+      "UNKNOWN": "Unknown"
     },
     "WithDevices": "With Devices",
     "upgradeChannels": {

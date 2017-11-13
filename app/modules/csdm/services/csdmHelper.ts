@@ -136,22 +136,22 @@ export class DeviceHelper {
       case 'CONNECTED':
         if (DeviceHelper.hasIssues(obj)) {
           return {
-            readableState: this.t('CsdmStatus.connectionStatus.OnlineWithIssues'),
+            readableState: this.t('CsdmStatus.connectionStatus.CONNECTED_WITH_ISSUES'),
             priority: '1',
           };
         }
         return {
-          readableState: this.t('CsdmStatus.connectionStatus.Online'),
+          readableState: this.t('CsdmStatus.connectionStatus.CONNECTED'),
           priority: '5',
         };
       case 'CONNECTED_WITH_ISSUES':
         return {
-          readableState: this.t('CsdmStatus.connectionStatus.OnlineWithIssues'),
+          readableState: this.t('CsdmStatus.connectionStatus.CONNECTED_WITH_ISSUES'),
           priority: '1',
         };
       case 'OFFLINE_EXPIRED':
         return {
-          readableState: this.t('CsdmStatus.connectionStatus.OfflineExpired'),
+          readableState: this.t('CsdmStatus.connectionStatus.OFFLINE_EXPIRED'),
           priority: '2',
         };
       case 'DISCONNECTED':
@@ -159,7 +159,7 @@ export class DeviceHelper {
 
       default:
         return {
-          readableState: this.t('CsdmStatus.connectionStatus.Offline'),
+          readableState: this.t('CsdmStatus.connectionStatus.DISCONNECTED'),
           priority: '2',
         };
     }

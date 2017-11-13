@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "Online",
-      "OnlineWithIssues": "Online, med problemer",
-      "Offline": "Ikke pålogget",
-      "OfflineExpired": "Deaktivert",
-      "Unknown": "Ukjent"
+      "CONNECTED": "Online",
+      "CONNECTED_WITH_ISSUES": "Online, med problemer",
+      "DISCONNECTED": "Ikke pålogget",
+      "OFFLINE_EXPIRED": "Deaktivert",
+      "UNKNOWN": "Ukjent"
     },
     "WithDevices": "Med enheter",
     "upgradeChannels": {

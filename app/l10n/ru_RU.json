@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "Онлайн",
-      "OnlineWithIssues": "Онлайн, со сложностями",
-      "Offline": "Автономно",
-      "OfflineExpired": "Деактивировано",
-      "Unknown": "Неизвестно"
+      "CONNECTED": "Онлайн",
+      "CONNECTED_WITH_ISSUES": "Онлайн, со сложностями",
+      "DISCONNECTED": "Автономно",
+      "OFFLINE_EXPIRED": "Деактивировано",
+      "UNKNOWN": "Неизвестно"
     },
     "WithDevices": "С устройствами",
     "upgradeChannels": {

@@ -408,17 +408,17 @@ export class Helper {
       case 'CONNECTED':
         if (Helper.hasIssues(obj)) {
           return {
-            readableState: this.t('CsdmStatus.connectionStatus.OnlineWithIssues'),
+            readableState: this.t('CsdmStatus.connectionStatus.CONNECTED_WITH_ISSUES'),
             priority: '1',
           };
         }
         return {
-          readableState: this.t('CsdmStatus.connectionStatus.Online'),
+          readableState: this.t('CsdmStatus.connectionStatus.CONNECTED'),
           priority: '5',
         };
       default:
         return {
-          readableState: this.t('CsdmStatus.connectionStatus.Offline'),
+          readableState: this.t('CsdmStatus.connectionStatus.DISCONNECTED'),
           priority: '2',
         };
     }

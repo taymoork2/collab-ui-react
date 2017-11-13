@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "온라인",
-      "OnlineWithIssues": "온라인, 문제 포함",
-      "Offline": "오프라인",
-      "OfflineExpired": "비활성화됨",
-      "Unknown": "알려지지 않음"
+      "CONNECTED": "온라인",
+      "CONNECTED_WITH_ISSUES": "온라인, 문제 포함",
+      "DISCONNECTED": "오프라인",
+      "OFFLINE_EXPIRED": "비활성화됨",
+      "UNKNOWN": "알려지지 않음"
     },
     "WithDevices": "장치로",
     "upgradeChannels": {

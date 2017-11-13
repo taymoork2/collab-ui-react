@@ -7,7 +7,7 @@ var HttpStatus = require('http-status-codes');
     .controller('CareLocalSettingsCtrl', CareLocalSettingsCtrl);
 
   /* @ngInject */
-  function CareLocalSettingsCtrl($location, $interval, $q, $scope, $translate, Authinfo, Log, Notification, SunlightConfigService, ModalService, FeatureToggleService, UrlConfig, URService) {
+  function CareLocalSettingsCtrl($location, $interval, $q, $scope, $translate, Authinfo, Log, Notification, SunlightConfigService, ModalService, FeatureToggleService, URService) {
     var vm = this;
 
     vm.ONBOARDED = 'onboarded';
@@ -121,8 +121,8 @@ var HttpStatus = require('http-status-codes');
       URService.getQueue(vm.defaultQueueId).then(function () {
         var updateQueueRequest = {
           queueName: 'DEFAULT',
-          notificationUrls: queueConfig.notificationUrls,
           routingType: queueConfig.routingType,
+          notificationUrls: queueConfig.notificationUrls,
         };
         URService.updateQueue(vm.defaultQueueId, updateQueueRequest).then(function (results) {
           vm.defaultQueueStatus = vm.status.SUCCESS;
@@ -211,11 +211,7 @@ var HttpStatus = require('http-status-codes');
     function getRoutingTypeFromView() {
       var queueConfig = {};
       queueConfig.routingType = vm.queueConfig.selectedRouting;
-      if (vm.queueConfig.selectedRouting === vm.RoutingType.PUSH) {
-        queueConfig.notificationUrls = [UrlConfig.getSunlightPushNotificationUrl()];
-      } else {
-        queueConfig.notificationUrls = [UrlConfig.getSunlightPickNotificationUrl()];
-      }
+      queueConfig.notificationUrls = [];
       return queueConfig;
     }
 
@@ -296,7 +292,7 @@ var HttpStatus = require('http-status-codes');
         var createQueueRequest = {
           queueId: Authinfo.getOrgId(),
           queueName: 'DEFAULT',
-          notificationUrls: [UrlConfig.getSunlightPickNotificationUrl()],
+          notificationUrls: [],
           routingType: 'pick',
         };
 

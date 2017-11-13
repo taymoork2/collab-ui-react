@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: WebExSiteRowCtrl', function () {
-  var controller, $controller, $modal, $scope, $q, FeatureToggleService, WebExSiteRowService, TokenService, state;
+  var controller, $controller, $modal, $scope, $q, FeatureToggleService, WebExSiteRowService, WebExSiteService, TokenService, state;
   var fakeShowGridData = true;
   var fakeGridData = {
     siteUrl: 'abc.webex.com',
@@ -26,11 +26,12 @@ describe('Controller: WebExSiteRowCtrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('WebExApp'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$modal_, _$q_, $state, _FeatureToggleService_, _WebExSiteRowService_, _TokenService_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$modal_, _$q_, $state, _FeatureToggleService_, _WebExSiteService_, _WebExSiteRowService_, _TokenService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     FeatureToggleService = _FeatureToggleService_;
     WebExSiteRowService = _WebExSiteRowService_;
+    WebExSiteService = _WebExSiteService_;
     TokenService = _TokenService_;
     state = $state;
     $modal = _$modal_;
@@ -38,7 +39,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
 
     spyOn(state, 'go');
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
-    spyOn(FeatureToggleService, 'atlasWebexAddSiteGetStatus').and.returnValue($q.resolve(true));
+    spyOn(WebExSiteRowService, 'shouldShowSiteManagement').and.returnValue($q.resolve(true));
     spyOn(WebExSiteRowService, 'getConferenceServices');
     spyOn(WebExSiteRowService, 'configureGrid');
     spyOn(WebExSiteRowService, 'initSiteRows');
@@ -47,7 +48,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
     spyOn(TokenService, 'getAccessToken').and.returnValue(accessToken);
     spyOn(WebExSiteRowService, 'getLicensesInSubscriptionGroupedBySites').and.returnValue(licensesGroupedBySites);
     spyOn(WebExSiteRowService, 'isSubscriptionPending').and.returnValue(false);
-    spyOn(WebExSiteRowService, 'deleteSite');
+    spyOn(WebExSiteService, 'deleteSite');
     spyOn($modal, 'open').and.returnValue({ result: $q.resolve() });
   }));
 
@@ -94,12 +95,12 @@ describe('Controller: WebExSiteRowCtrl', function () {
     expect(state.go).toHaveBeenCalledWith(stateName, { siteUrl: siteUrl });
   });
 
-  it('will set isShowAddSite to TRUE if \'atlasWebexAddSiteGetStatus\' FT is enabled', function () {
+  it('will set isShowAddSite to TRUE if \'shouldShowSiteManagement()\' resolves with TRUE ', function () {
     expect(controller.isShowAddSite).toBeTruthy();
   });
 
-  it('will set isShowAddSite to FALSE  if \'atlasWebexAddSiteGetStatus\' FT is disabled', function () {
-    FeatureToggleService.atlasWebexAddSiteGetStatus.and.returnValue($q.resolve(false));
+  it('will set isShowAddSite to FALSE  if \'shouldShowSiteManagement\' resolves with FALSE', function () {
+    WebExSiteRowService.shouldShowSiteManagement.and.returnValue($q.resolve(false));
     initController();
     expect(controller.isShowAddSite).toBeFalsy();
   });
@@ -173,7 +174,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
       var modalCallArgs = $modal.open.calls.mostRecent().args[0];
       expect(modalCallArgs.template.indexOf(expectedModalTitle) > -1);
       expect(state.go).toHaveBeenCalledWith('site-list-delete', { subscriptionId: '123', siteUrl: 'ag-test1-org.webex.com' });
-      expect(WebExSiteRowService.deleteSite).not.toHaveBeenCalled();
+      expect(WebExSiteService.deleteSite).not.toHaveBeenCalled();
     });
 
     it('should redistribute licenses itself when there are two sites in subscription and subscription is not pending', function () {
@@ -196,7 +197,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
       controller.deleteSite(entity);
       $scope.$digest();
       expect(state.go).not.toHaveBeenCalled();
-      expect(WebExSiteRowService.deleteSite).toHaveBeenCalledWith(entity.siteUrl, expectedResult);
+      expect(WebExSiteService.deleteSite).toHaveBeenCalledWith(entity.billingServiceId, expectedResult);
     });
 
     it('should not allow deletion if canModify() is false ', function () {
@@ -208,7 +209,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
       var modalCallArgs = $modal.open.calls.mostRecent().args[0];
       expect(modalCallArgs.template.indexOf(expectedModalTitle) > -1);
       expect(state.go).not.toHaveBeenCalled();
-      expect(WebExSiteRowService.deleteSite).not.toHaveBeenCalled();
+      expect(WebExSiteService.deleteSite).not.toHaveBeenCalled();
     });
   });
 

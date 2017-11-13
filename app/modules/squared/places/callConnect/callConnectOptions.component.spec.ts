@@ -16,6 +16,7 @@ describe('CallConnectOptions component:', () => {
       'CsdmDataModelService',
       'ResourceGroupService',
       'USSService',
+      'Notification',
       '$q',
     );
     test = this;
@@ -136,9 +137,11 @@ describe('CallConnectOptions component:', () => {
       });
       it('should call CsdmDataModelService with correct entitlement and extLinkAccts with cleaned out call and calendar', () => {
         spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve({}));
+        spyOn(test.Notification, 'success');
         const place = { cisUuid: uid };
         spyOn(test.CsdmDataModelService, 'reloadPlace').and.returnValue(test.$q.resolve(place));
         spyOn(test.USSService, 'updateBulkUserProps').and.returnValue(test.$q.resolve({}));
+        spyOn(test.USSService, 'refreshEntitlementsForUser').and.returnValue(test.$q.resolve({}));
 
         const mailId = 'mail@example.com';
         state.controller.mailID = mailId;
@@ -147,6 +150,8 @@ describe('CallConnectOptions component:', () => {
         };
         state.controller.save();
         test.$rootScope.$digest();
+        expect(test.USSService.updateBulkUserProps).toHaveBeenCalled();
+        expect(test.USSService.refreshEntitlementsForUser).toHaveBeenCalled();
         expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, {
           entitlements: ['webex-squared', FUSION_HYBRID_EC, FUSION_HYBRID_UC],
           externalLinkedAccounts: [
@@ -155,6 +160,7 @@ describe('CallConnectOptions component:', () => {
             { providerID: FUSION_HYBRID_UC, accountGUID: mailId, status: 'unconfirmed-email' },
           ],
         });
+        expect(test.Notification.success).toHaveBeenCalled();
       });
     });
     describe('when there are existing calendar entitlements', () => {
@@ -173,6 +179,7 @@ describe('CallConnectOptions component:', () => {
         const place = { cisUuid: uid };
         spyOn(test.CsdmDataModelService, 'reloadPlace').and.returnValue(test.$q.resolve(place));
         spyOn(test.USSService, 'updateBulkUserProps').and.returnValue(test.$q.resolve({}));
+        spyOn(test.USSService, 'refreshEntitlementsForUser').and.returnValue(test.$q.resolve({}));
 
         const mailId = 'mail@example.com';
         state.controller.mailID = mailId;
@@ -181,6 +188,8 @@ describe('CallConnectOptions component:', () => {
         };
         state.controller.save();
         test.$rootScope.$digest();
+        expect(test.USSService.updateBulkUserProps).toHaveBeenCalled();
+        expect(test.USSService.refreshEntitlementsForUser).toHaveBeenCalled();
         expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, {
           entitlements: ['webex-squared', FUSION_CALENDAR, FUSION_HYBRID_EC, FUSION_HYBRID_UC],
           externalLinkedAccounts: [
@@ -207,6 +216,7 @@ describe('CallConnectOptions component:', () => {
         const place = { cisUuid: uid };
         spyOn(test.CsdmDataModelService, 'reloadPlace').and.returnValue(test.$q.resolve(place));
         spyOn(test.USSService, 'updateBulkUserProps').and.returnValue(test.$q.resolve({}));
+        spyOn(test.USSService, 'refreshEntitlementsForUser').and.returnValue(test.$q.resolve({}));
 
         const mailId = 'mail@example.com';
         state.controller.mailID = mailId;
@@ -215,6 +225,8 @@ describe('CallConnectOptions component:', () => {
         };
         state.controller.save();
         test.$rootScope.$digest();
+        expect(test.USSService.updateBulkUserProps).toHaveBeenCalled();
+        expect(test.USSService.refreshEntitlementsForUser).toHaveBeenCalled();
         expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, {
           entitlements: ['webex-squared', FUSION_GCALENDAR, FUSION_HYBRID_EC, FUSION_HYBRID_UC],
           externalLinkedAccounts: [
@@ -232,6 +244,7 @@ describe('CallConnectOptions component:', () => {
       const place = { cisUuid: uid };
       spyOn(test.CsdmDataModelService, 'reloadPlace').and.returnValue(test.$q.resolve(place));
       spyOn(test.USSService, 'updateBulkUserProps').and.returnValue(test.$q.resolve({}));
+      spyOn(test.USSService, 'refreshEntitlementsForUser').and.returnValue(test.$q.resolve({}));
 
       const mailId = 'mail@example.com';
       state.controller.mailID = mailId;
@@ -240,6 +253,8 @@ describe('CallConnectOptions component:', () => {
       };
       state.controller.save();
       test.$rootScope.$digest();
+      expect(test.USSService.updateBulkUserProps).toHaveBeenCalled();
+      expect(test.USSService.refreshEntitlementsForUser).toHaveBeenCalled();
       expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, {
         entitlements: ['webex-squared', FUSION_HYBRID_EC, FUSION_HYBRID_UC],
         externalLinkedAccounts: [{ providerID: FUSION_HYBRID_UC, accountGUID: mailId, status: 'unconfirmed-email' }],
