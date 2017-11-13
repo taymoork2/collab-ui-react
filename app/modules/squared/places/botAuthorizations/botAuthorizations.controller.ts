@@ -1,5 +1,5 @@
 import IBasePlace = csdm.IBasePlace;
-class BotAuthorizationsController {
+export class BotAuthorizationsController {
   public selectPlaceholder = this.$translate.instant('placesPage.botAuthorizations.selectRole');
   public roles: any;
   private _selectedRole: any;
@@ -112,8 +112,8 @@ class BotAuthorizationsController {
     this._selectedRole = null;
     this.searchAccountResult = [];
   }
-  public delete(id): void {
-    this.AuthorizationService.delete(id).then(() => {
+  public delete(id): IPromise<any> {
+    return this.AuthorizationService.delete(id).then(() => {
       this.authorizations = this.authorizations.filter((auth) => auth.id !== id);
     }).catch((error) => {
       this.Notification.errorResponse(error, 'placesPage.botAuthorizations.failedToDelete');
