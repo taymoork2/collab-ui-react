@@ -2,10 +2,7 @@
 
 describe('CareSettingsCtrl', function () {
   function initDependencies() {
-    this.injectDependencies('$controller', '$q', '$rootScope', '$httpBackend', 'Notification', '$interval',
-      'Authinfo', 'SunlightConfigService', 'UrlConfig', 'URService');
-    this.$scope = this.$rootScope.$new();
-    this.intervalSpy = jasmine.createSpy('$interval', this.$interval).and.callThrough();
+    this.injectDependencies('$controller', '$httpBackend', '$interval', '$q', '$scope', 'Authinfo', 'Notification', 'SunlightConfigService', 'UrlConfig', 'URService');
     this.$scope.wizard = {};
     this.$scope.wizard.isNextDisabled = false;
     this.orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
@@ -14,7 +11,7 @@ describe('CareSettingsCtrl', function () {
       this.Authinfo.getOrgId() + '/chat';
     this.controller = this.$controller('CareSettingsCtrl', {
       $scope: this.$scope,
-      $interval: this.intervalSpy,
+      $interval: jasmine.createSpy('$interval', this.$interval).and.callThrough(),
       Notification: this.Notification,
     });
   }
@@ -26,6 +23,11 @@ describe('CareSettingsCtrl', function () {
     spyOn(this.SunlightConfigService, 'onboardCareBot').and.returnValue(this.$q.resolve('fake onboardCareBot response'));
   }
 
+  afterEach(function () {
+    this.$httpBackend.verifyNoOutstandingExpectation();
+    this.$httpBackend.verifyNoOutstandingRequest();
+  });
+
   describe('Partner managing other orgs: Controller: Care Settings', function () {
     var spiedAuthinfo = {
       getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
@@ -35,7 +37,6 @@ describe('CareSettingsCtrl', function () {
     };
     beforeEach(function () {
       this.initModules(
-        'Core',
         'Sunlight'
       );
     });
@@ -54,7 +55,7 @@ describe('CareSettingsCtrl', function () {
         expect(this.$scope.wizard.isNextDisabled).toBe(true);
       });
 
-      it('show enabled setup care button and disabled next button, if onboarded status is UNKNOWN', function () {
+      it('should show enabled setup care button and disabled next button, if onboarded status is UNKNOWN', function () {
         var chatConfigResponse = {
           csOnboardingStatus: this.controller.status.UNKNOWN,
           aaOnboardingStatus: this.controller.status.SUCCESS,
@@ -66,7 +67,7 @@ describe('CareSettingsCtrl', function () {
         expect(this.$scope.wizard.isNextDisabled).toBe(true);
       });
 
-      it('show enabled setup care button and disabled next button, if default sunlight queue is not created', function () {
+      it('should show enabled setup care button and disabled next button, if default sunlight queue is not created', function () {
         this.$httpBackend.expectGET(this.urServiceUrl).respond(404);
         expect(this.controller.state).toBe(this.controller.status.UNKNOWN);
         this.$httpBackend.flush();
@@ -134,6 +135,7 @@ describe('CareSettingsCtrl', function () {
         this.$scope.$apply();
         this.$httpBackend.expectGET(this.sunlightChatConfigUrl).respond(200, { csOnboardingStatus: 'Pending' });
         this.$interval.flush(10002);
+        this.$httpBackend.flush();
         expect(this.controller.state).toBe(this.controller.IN_PROGRESS);
         expect(this.$scope.wizard.isNextDisabled).toBe(true);
       });
@@ -373,7 +375,6 @@ describe('CareSettingsCtrl', function () {
     };
     beforeEach(function () {
       this.initModules(
-        'Core',
         'Sunlight'
       );
     });
@@ -457,6 +458,7 @@ describe('CareSettingsCtrl', function () {
         this.$scope.$apply();
         this.$httpBackend.expectGET(this.sunlightChatConfigUrl).respond(200, { csOnboardingStatus: 'Pending' });
         this.$interval.flush(10002);
+        this.$httpBackend.flush();
         expect(this.controller.state).toBe(this.controller.IN_PROGRESS);
         expect(this.$scope.wizard.isNextDisabled).toBe(true);
       });

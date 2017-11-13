@@ -2,18 +2,15 @@
 
 describe('CareLocalSettingsCtrl', function () {
   function initDependencies() {
-    this.injectDependencies('$controller', '$q', '$rootScope', '$httpBackend', 'Notification', '$interval',
-      'Authinfo', 'SunlightConfigService', 'UrlConfig', 'FeatureToggleService', 'URService');
-    this.$scope = this.$rootScope.$new();
+    this.injectDependencies('$controller', '$httpBackend', '$interval', '$q', '$scope', 'Authinfo', 'FeatureToggleService', 'Notification', 'SunlightConfigService', 'UrlConfig', 'URService');
     this.$scope.orgConfigForm = { dirty: false };
-    this.intervalSpy = jasmine.createSpy('$interval', this.$interval).and.callThrough();
     this.orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
     this.urServiceUrl = this.UrlConfig.getSunlightURServiceUrl() + '/organization/' + this.orgId + '/queue/' + this.orgId;
     this.sunlightChatConfigUrl = this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' +
       this.Authinfo.getOrgId() + '/chat';
     this.controller = this.$controller('CareLocalSettingsCtrl', {
       $scope: this.$scope,
-      $interval: this.intervalSpy,
+      $interval: jasmine.createSpy('$interval', this.$interval).and.callThrough(),
       Notification: this.Notification,
     });
   }
@@ -26,6 +23,11 @@ describe('CareLocalSettingsCtrl', function () {
     spyOn(this.SunlightConfigService, 'onboardCareBot').and.returnValue(this.$q.resolve('fake onboardCareBot response'));
     spyOn(this.FeatureToggleService, 'atlasCareAutomatedRouteTrialsGetStatus').and.returnValue(this.$q.resolve(true));
   }
+
+  afterEach(function () {
+    this.$httpBackend.verifyNoOutstandingExpectation();
+    this.$httpBackend.verifyNoOutstandingRequest();
+  });
 
   describe('Controller: Care Local Settings', function () {
     var spiedAuthinfo = {
@@ -122,7 +124,9 @@ describe('CareLocalSettingsCtrl', function () {
         expect(this.controller.state).toBe(this.controller.NOT_ONBOARDED);
         this.controller.onboardToCare();
         this.$scope.$apply();
-        this.$httpBackend.expectGET(this.sunlightChatConfigUrl).respond(404, {});
+        this.$httpBackend.expectGET(this.sunlightChatConfigUrl).respond(200, { csOnboardingStatus: 'Pending' });
+        this.$interval.flush(10002);
+        this.$httpBackend.flush();
         expect(this.controller.state).toBe(this.controller.IN_PROGRESS);
       });
 
@@ -635,11 +639,8 @@ describe('CareLocalSettingsCtrl', function () {
       });
 
     it('should show the saved org chat configurations as selected.', function () {
-      this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
-        .respond(200, { maxChatCount: 4, videoCallEnabled: true });
+      this.$httpBackend.expectGET(this.sunlightChatConfigUrl).respond(200, { maxChatCount: 4, videoCallEnabled: true });
       this.$httpBackend.flush();
-      this.$httpBackend.expectGET(this.urServiceUrl)
-        .respond(200, this.queueDetails);
       expect(this.controller.queueConfig.selectedRouting).toBe(this.controller.RoutingType.PICK);
       expect(this.controller.orgChatConfig.selectedChatCount).toBe(4);
       expect(this.controller.orgChatConfig.selectedVideoInChatToggle).toBe(true);
