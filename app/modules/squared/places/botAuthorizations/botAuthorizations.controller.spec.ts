@@ -104,7 +104,7 @@ describe('Controller: BotAuthorizationsController', () => {
       it('should show one authorization.', () => {
         controller.delete('1').then(() => {
           expect(controller.authorizations.length).toEqual(1);
-        })
+        });
       });
     });
   });
