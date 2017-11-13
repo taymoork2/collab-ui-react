@@ -7199,7 +7199,30 @@
     "deletePlace": "Delete Place",
     "deletePlaceConfText": "Are you sure you want to delete {{ placeName }}?",
     "failedToSaveChanges": "Failed to save changes to place. Reason:",
-    "failedToDelete": "Failed to delete place. Reason:"
+    "failedToDelete": "Failed to delete place. Reason:",
+    "botAuthorizations": {
+      "title": "Places APIs access",
+      "header": "Current access for devices belonging to '{{ placeName }}'",
+      "subHeader": "The following bots and users are authorized to access the device APIs. Full access provides control over all devices belonging to this place. Make sure you trust the source.",
+      "table": {
+        "name": "Authorized To",
+        "role": "Access Level",
+        "givenBy": "Access Given By"
+      },
+      "search": "Search user or bot",
+      "selectRole": "Select one",
+      "add": "Authorize",
+      "noUserFound": "No users found",
+      "typeLimitNotReached": "You need to type at least 3 characters to search",
+      "failedToGetRoles": "Failed to get roles",
+      "failedToLookupAccount": "Failed to lookup account",
+      "failedToLoadAuthorizations": "Failed to load authorizations",
+      "failedToDelete": "Failed to delete",
+      "failedToCreateAuthorization": "Failed to create",
+      "addedSuccess": "Access successfully added now",
+      "nonFoundHeader": "No users or bots authorized",
+      "nonFoundBody": "Authorize users and bots here"
+    }
   },
   "linesPage": {
     "manageLines": "Numbers",
@@ -9883,7 +9906,9 @@
     "softwareUpgradeChannel": "Software Upgrade Channel",
     "deviceNotSupported": "The {{deviceType}} is not yet able to observe this setting.",
     "settingsLock": "Settings Lock",
-    "settingsLockUpdated": "Settings Lock updated"
+    "settingsLockUpdated": "Settings Lock updated",
+    "deviceApis": "Device APIs",
+    "deviceApiViewEdit": "View/Edit Access"
   },
   "mediaMgrModal": {
     "title": "Media Manager",
