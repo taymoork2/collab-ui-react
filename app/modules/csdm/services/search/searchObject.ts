@@ -3,7 +3,7 @@ import { SearchElement, QueryParser, OperatorAnd, FieldQuery } from './queryPars
 import { SearchTranslator } from './searchTranslator';
 
 enum Aggregate {
-  connectionStatus, product, productFamily, activeInterface, errorCodes, upgradeChannel, software,
+  connectionStatus, product, productFamily, activeInterface, errorCodes, upgradeChannel, software, tag,
 }
 
 export class SearchObject {
@@ -18,6 +18,7 @@ export class SearchObject {
     // Aggregate[Aggregate.errorCodes],
     Aggregate[Aggregate.software],
     Aggregate[Aggregate.upgradeChannel],
+    Aggregate[Aggregate.tag],
   ];
 
   public size: number = 20;
@@ -152,8 +153,11 @@ export class SearchObject {
 
   public addSearchElement(translatedQuery: string) {
     const parsedNewQuery = QueryParser.parseQueryString(translatedQuery);
-    this.addParsedSearchElement(parsedNewQuery);
-    this.setQuery(translatedQuery, this.parsedQuery);
+    const alreadyAdded =  SearchObject.findFirstElementMatching(parsedNewQuery, se => parsedNewQuery.getExpressions() === se.getExpressions());
+    if (!alreadyAdded) {
+      this.addParsedSearchElement(parsedNewQuery);
+      this.setQuery(translatedQuery, this.parsedQuery);
+    }
   }
 
   private addParsedSearchElement(newElement: SearchElement) {

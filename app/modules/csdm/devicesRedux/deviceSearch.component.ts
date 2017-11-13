@@ -68,7 +68,8 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
   }
 
   public addToSearch(field: string, query: string) {
-    this.searchObject.addSearchElement((field ? (field + ':') : '') + query);
+    this.searchObject.addSearchElement((field ? `${field}="${query}"` : '' + query));
+    this.searchChange();
   }
 
   public onInputSubmit() {

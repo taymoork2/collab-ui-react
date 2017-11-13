@@ -14,13 +14,14 @@
 
   <div ng-if="devices.anyDevicesOrCodesLoaded">
     <cs-page-sub-header ng-hide="devices.emptydatasource()">
-      <cs-page-sub-header-left>
+      <!--<cs-page-sub-header-left>-->
         <device-search search-object="devices.searchObject"
                        is-searching="devices.issearching"
                        search-interaction="devices.searchInteraction"
                        search-result-changed="devices.searchResultChanged(result)"></device-search>
-      </cs-page-sub-header-left>
-      <cs-page-sub-header-right>
+        <device-chart search-result="devices.searchResult" pie-chart-clicked="devices.addToSearch(searchField, query)"></device-chart>
+      <!--</cs-page-sub-header-left>-->
+      <div class="new-export">
         <span
           ng-if="devices.deviceExportFeature"
           class="icon icon-download export-button"
@@ -34,7 +35,7 @@
           <span translate="spacesPage.addBtn"></span>
         </button>
 
-      </cs-page-sub-header-right>
+      </div>
     </cs-page-sub-header>
     <div class="content-container">
       <cs-accordion id="licenseWarning" ng-show="devices.licenseError">

@@ -174,6 +174,8 @@ export class DeviceHelper {
         return 'success';
       case 'CONNECTED_WITH_ISSUES':
         return 'warning';
+      case 'OFFLINE_EXPIRED':
+        return 'expired';
       default:
         return 'danger';
     }

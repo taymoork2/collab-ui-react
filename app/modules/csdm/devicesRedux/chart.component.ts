@@ -9,12 +9,14 @@ class Chart implements ng.IComponentController {
   private baseChart = 'chartArea';
   public chartTitle: string;
 
+  private Colors = require('modules/core/config/colors').Colors;
+
   //bindings:
   public pieChartClicked: (e: { searchField: string, query: string }) => {};
   public searchResult?: SearchResult;
 
   /* @ngInject */
-  constructor() {
+  constructor(private $translate) {
   }
 
   public $onInit() {
@@ -29,7 +31,7 @@ class Chart implements ng.IComponentController {
     this.currentAggregations = _.map(this.searchResult.aggregations, (a, k) => {
       return new NamedAggregation(k, a);
     });
-    this.updateGraph(this.pickAggregate(this.currentAggregations, 'errorCodes'), 'key', 'docCount');
+    this.updateGraph(this.pickAggregate(this.currentAggregations, 'connectionStatus'), 'key', 'docCount');
     this.setChartTitle(this.searchResult);
   }
 
@@ -38,60 +40,107 @@ class Chart implements ng.IComponentController {
       this.chartTitle = '';
       return;
     }
-    this.chartTitle = 'Total:' + data.hits.total;
+    this.chartTitle = this.$translate.instant('spacesPage.chart.total', { totalValue: data.hits.total });
   }
 
-  private updateGraph(data?: BucketHolder, titleField = 'name', valueField = 'value') {
+  private updateGraph(data?: BucketHolder, _titleField = 'name', valueField = 'value') {
+    if (data) {
+      data = this.fillBlankValues(data);
+      this.setChartLabelsAndColors(data);
+    } else {
+
+    }
     this.selectedAggregation = data;
     const chartData = {
       type: 'pie',
       startDuration: 0,
-      titleField: titleField,
+      titleField: 'name',
       valueField: valueField,
-      // balloonText: chartOptions.balloonText,
-      outlineThickness: 0,
+      colorField: 'color',
+      outlineThickness: 2,
+      outlineColor: '#ffffff',
       hoverAlpha: 0.5,
       labelRadius: 1,
-      marginBottom: 40,
-      marginLeft: 40,
-      marginRight: 40,
-      marginTop: 40,
+      marginBottom: 0,
+      marginLeft: 0,
+      marginRight: 0,
+      marginTop: 0,
       autoMargins: false,
       pullOutRadius: '1%',
-      // titleField: 'name',
-      // valueField: 'value',
+      innerRadius: '32%',
       theme: 'light',
       allLabels: [],
-      balloon: { enabled: false },
+      balloon: { adjustBorderColor: true, borderThickness: 1, borderAlpha: 1, fillAlpha: 1, fillColor: '#FFFFFF', fixedPosition: true, shadowAlpha: 0 },
+      // balloon: { enabled: false },
       fontSize: 10,
+      fontFamily: 'CiscoSansTT Light',
       legend: {
-        enabled: false,
-        align: 'center',
+        divId: 'searchlegend',
+        enabled: true,
+        align: 'left',
+        position: 'right',
         forceWidth: true,
         switchable: false,
-        valueText: '',
+        valueText: '[[value]]',
         markerSize: 8,
+        markerType: 'circle',
+        labelWidth: 120,
+        valueWidth: 12,
+        textClickEnabled: true,
+        autoMargins: false,
       },
       labelText: '[[title]]:[[value]]',
+      labelsEnabled: false,
       dataProvider: data && data.buckets || [],
       listeners: [{
         event: 'clickSlice',
         method: (e) => {
           if (data) {
-            this.pieChartClicked({ searchField: data.bucketName, query: e.dataItem.title });
+            this.pieChartClicked({ searchField: data.bucketName, query: e.dataItem.dataContext.key });
           }
         },
       }],
     };
     this.chart = AmCharts.makeChart(this.baseChart, chartData);
+  }
 
+  private colors = {
+    connected: this.Colors['$color-green-base'], //this.ChartColors.ctaBase,
+    disconnected: this.Colors['$color-red-base'], //this.ChartColors.negativeBase,
+    offline_expired: this.Colors['$color-red-darker'], //this.ChartColors.negativeDarker,
+    connected_with_issues: this.Colors['$color-yellow-base'], //this.ChartColors.attentionBase,
+  };
+
+  private setChartLabelsAndColors(data: BucketHolder) {
+    _.each(data.buckets, (bucket: { key: string, name: string, color: string }) => {
+      bucket.name = this.$translate.instant(`CsdmStatus.${data.bucketName}.${(bucket.key || '').toUpperCase()}`);
+      bucket.color = this.colors[bucket.key];
+    });
+  }
+
+  private fillBlankValues(data: BucketHolder): BucketHolder {
+    switch (data.bucketName)  {
+      case 'connectionStatus':
+        return this.fillConnectionStatusBlanks(data);
+      default:
+        return data;
+    }
+  }
+
+  private fillConnectionStatusBlanks(data: BucketHolder): BucketHolder {
+    const dataKeyed = _.keyBy(data.buckets, 'key');
+    const merged = _.merge({
+      connected_with_issues: { key: 'connected_with_issues', docCount: 0 },
+      offline_expired: { key: 'offline_expired', docCount: 0 },
+      disconnected: { key: 'disconnected', docCount: 0 },
+      connected: { key: 'connected', docCount: 0 },
+    }, dataKeyed);
+    data.buckets =  _.values(merged);
+    return data;
   }
 
   private pickAggregate(aggregations: NamedAggregation[], bucketName?: string): BucketHolder {
     const buckets = _.chain(aggregations)
-    // .map((a, k) => {
-    //   return { bucketName: k, buckets: a.buckets };
-    // })
       .orderBy((a: Aggregation) => a.buckets.length, 'desc')
       .value();
 

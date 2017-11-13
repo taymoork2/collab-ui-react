@@ -2155,7 +2155,11 @@
       "exportCompleted": "Export completed",
       "deviceListReadyForDownload": "Your device list has been compiled and is ready to download.",
       "deviceExportFailedOrCancelled": "Device Export failed or was cancelled."
+    },
+    "chart": {
+      "total": "Total: {{totalValue}}"
     }
+
   },
   "hercules": {
     "page_title": "Connector Management",
