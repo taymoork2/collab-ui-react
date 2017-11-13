@@ -2803,6 +2803,9 @@
           "INVALID_CREDENTIALS": "The service account credentials are invalid."
         }
       },
+      "office365": {
+        "couldNotReadOffice365Status": "Could not read Office 365 status."
+      },
       "hybridCalendarCommon": {
         "hybridCalendarSetUp": "Hybrid Calendar setup",
         "selectCalendarType": "Select Calendar type",
