@@ -38,7 +38,7 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
   public startedTime: string;
   public startedBy: string;
   private intervalPromise: ng.IPromise<void>;
-  public static readonly TASK_POLLING_INTERVAL = 1000;
+  public static readonly TASK_POLLING_INTERVAL = 5000;
 
   /* @ngInject */
   constructor(
@@ -57,35 +57,19 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
   public $onChanges(changes: ng.IOnChangesObject): void {
     if (changes.inputActiveTask) {
       const newTask = changes.inputActiveTask.currentValue;
-      const oldTask = changes.inputActiveTask.previousValue;
 
-      if ((!_.isUndefined(newTask) && _.isUndefined(oldTask)) ||
-        (!_.isUndefined(newTask) && !_.isUndefined(oldTask) && newTask.jobInstanceId !== oldTask.jobInstanceId)) {
+      if (_.isUndefined(newTask)) {
+        this.activeTask = undefined;
+      } else {
         // cancel the current task polling
         this.cancelPolling();
         // populate task details
-        this.activeTask = changes.inputActiveTask.currentValue;
-        this.populateTaskData();
+        this.activeTask = newTask;
+        this.setActiveTaskData(this.activeTask!);
         // if the new task is pending, poll the task data every TASK_POLLING_INTERVAL seconds
         if (this.UserTaskManagerService.isTaskPending(this.activeTask!.status)) {
-          this.intervalPromise = this.$interval(() => {
-            if (_.isUndefined(this.activeTask)) {
-              this.cancelPolling();
-            } else {
-              this.UserTaskManagerService.getTask(this.activeTask!.jobInstanceId)
-              .then(response => {
-                this.activeTask = response;
-                this.populateTaskData();
-                // if this task is done processing, cancel the task polling
-                if (!this.UserTaskManagerService.isTaskPending(this.activeTask!.status)) {
-                  this.cancelPolling();
-                }
-              });
-            }
-          }, CsvUploadResultsCtrl.TASK_POLLING_INTERVAL);
+          this.initPolling();
         }
-      } else {
-        this.activeTask = undefined;
       }
     }
   }
@@ -95,32 +79,33 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
     this.cancelPolling();
   }
 
-  private populateTaskData(): void {
-    this.numTotalUsers = this.activeTask!.totalUsers;
-    this.numNewUsers = this.activeTask!.addedUsers;
-    this.numUpdatedUsers = this.activeTask!.updatedUsers;
-    this.numErroredUsers = this.activeTask!.erroredUsers;
+  private setActiveTaskData(task: ITask): void {
+    this.numTotalUsers = task.totalUsers;
+    this.numNewUsers = task.addedUsers;
+    this.numUpdatedUsers = task.updatedUsers;
+    this.numErroredUsers = task.erroredUsers;
     this.processProgress = Math.floor((this.numNewUsers + this.numUpdatedUsers + this.numErroredUsers) * 100 / this.numTotalUsers);
     if (isNaN(this.processProgress)) {
       this.processProgress = 0;
     }
-    this.isProcessing = this.UserTaskManagerService.isTaskInProcess(this.activeTask!.status);
+    this.isProcessing = this.UserTaskManagerService.isTaskInProcess(task.status);
     this.isCancelledByUser = false;
-    this.fileName = this.getShortFileName(this.activeTask!.filename);
-    this.startedDate = this.activeTask!.startedDate;
-    this.startedTime = this.activeTask!.startedTime;
-    this.Userservice.getUserAsPromise(this.activeTask!.creatorUserId)
+    this.fileName = this.getShortFileName(task.filename);
+    this.startedDate = task.startedDate;
+    this.startedTime = task.startedTime;
+    this.Userservice.getUserAsPromise(task.creatorUserId)
     .then((response) => {
       this.startedBy = response.data.displayName + ' (' + response.data.userName + ')';
     });
 
-    if (this.activeTask!.erroredUsers > 0) {
-      this.UserTaskManagerService.getTaskErrors(this.activeTask!.jobInstanceId)
+    if (task.erroredUsers > 0) {
+      this.UserTaskManagerService.getTaskErrors(task.jobInstanceId)
       .then(response => {
         this.userErrorArray = _.map(response, errorEntry => {
-          errorEntry.errorMessage = this.UserCsvService.getBulkErrorResponse(_.parseInt(errorEntry.error.key), errorEntry.error.message[0].code) +
+          const err = _.cloneDeep(errorEntry);
+          err.errorMessage = this.UserCsvService.getBulkErrorResponse(_.parseInt(errorEntry.error.key), errorEntry.error.message[0].code) +
             ' TrackingID: ' + errorEntry.trackingId;
-          return errorEntry;
+          return err;
         });
         // load the errors to userCsvService when it's done
         if (!this.isProcessing) {
@@ -144,13 +129,14 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
     }
   }
 
-  private getShortFileName(longFileName: string): string {
-    if (!_.isNil(longFileName)) {
+  private getShortFileName(longFileName?: string): string {
+    if (!_.isString(longFileName)) {
+      return '';
+    } else {
       const tempString = _.split(longFileName, '/')[1];
       const csvIndex = tempString.indexOf('.csv');
       return tempString.substring(0, csvIndex + 4);
     }
-    return '';
   }
 
   public onCancelImport(): void {
@@ -166,6 +152,27 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
         this.Notification.errorResponse(response, 'userTaskManagerModal.cancelCsvError');
       });
     });
+  }
+
+  private initPolling(): void {
+    this.intervalPromise = this.$interval(() => {
+      if (_.isUndefined(this.activeTask)) {
+        this.cancelPolling();
+      } else {
+        this.UserTaskManagerService.getTask(this.activeTask!.jobInstanceId)
+        .then(response => {
+          this.activeTask = response;
+          this.setActiveTaskData(this.activeTask!);
+          // if this task is done processing, cancel the task polling
+          if (!this.UserTaskManagerService.isTaskPending(this.activeTask!.status)) {
+            this.cancelPolling();
+          }
+        }).catch(response => {
+          this.cancelPolling();
+          this.Notification.errorResponse(response, 'userTaskManagerModal.getTaskError');
+        });
+      }
+    }, CsvUploadResultsCtrl.TASK_POLLING_INTERVAL);
   }
 
   private cancelPolling(): void {

@@ -357,6 +357,7 @@
     "title": "Tasks",
     "viewAllTasks": "View all tasks",
     "getTaskListError": "An error occurred obtaining the list of task. Please refresh to try again.",
+    "getTaskError": "An error occurred obtaining the task. Please refresh to try again.",
     "submitCsvError": "An error occurred submitting the CSV file.",
     "cancelCsvError": "An error occurred canceling the CSV import.",
     "csvImport": "CSV Import",

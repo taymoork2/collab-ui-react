@@ -1,5 +1,5 @@
 import userTaskManagerModuleName from '../index';
-import { TaskListFilterType } from '../user-task-manager.keys';
+import { TaskListFilterType } from '../user-task-manager.constants';
 
 describe('Component: userTaskListFilter', () => {
 

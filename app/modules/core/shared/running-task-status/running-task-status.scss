@@ -9,36 +9,20 @@ running-task-status {
     position: absolute;
     left: 50%;
     font-family: $brand-font-light;
-    font-size: 0.75em;
+    font-size: 1rem;
     background-color: $gray-dark-4;
-    @include vr-spacing(mv, 0.5);
-    @include vr-spacing(ph, 0.5);
+    color: $color-white;
+    @include vr-spacing(pv, 0.25);
+    @include vr-spacing(ph, 1);
     z-index: 10;
     &:hover {
-      color: $color-white;
       background: $gray-dark-2;
     }
-    &:focus {
-      color: $color-white;
-      background: $gray-dark-2;
-    }
-  }
 
-  .icon-spinner {
-    color: $color-white;
-    vertical-align: middle;
-    @include vr-spacing(mr, 0.25);
-  }
-
-  a {
-    color: $color-white;
-    &:hover {
+    &__spinner {
       color: $color-white;
-      background: $gray-dark-2;
-    }
-    &:focus {
-      color: $color-white;
-      background: $gray-dark-2;
+      vertical-align: middle;
+      @include vr-spacing(mr, 0.25);
     }
   }
 }

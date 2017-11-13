@@ -1,5 +1,6 @@
 export class RunningTaskStatusCtrl implements ng.IComponentController {
 
+  public anchorText: string;
   public clickCallback: Function;
 
   /* @ngInject */
@@ -16,7 +17,7 @@ export class RunningTaskStatusComponent implements ng.IComponentOptions {
   public controller = RunningTaskStatusCtrl;
   public template = require('./running-task-status.html');
   public bindings = {
-    anchorText: '@',
+    anchorText: '<',
     hasRunningTask: '<',
     clickCallback: '&',
   };

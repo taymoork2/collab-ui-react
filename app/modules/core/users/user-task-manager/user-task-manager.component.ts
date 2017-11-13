@@ -1,5 +1,5 @@
 import { UserTaskManagerService } from './user-task-manager.service';
-import { TaskListFilterType, TaskType, TaskStatus } from './user-task-manager.keys';
+import { TaskListFilterType, TaskType, TaskStatus } from './user-task-manager.constants';
 import { Notification } from 'modules/core/notifications';
 
 export interface ITask {
@@ -43,8 +43,8 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
   public fileName: string;
   public exactMatchCsv = false;
   private intervalPromise: ng.IPromise<void>;
-  public static readonly ACTIVE_TASK_POLLING_INTERVAL = 1000;
-  public static readonly IDLE_TASK_POLLING_INTERVAL = 5000;
+  public static readonly ACTIVE_TASK_POLLING_INTERVAL = 5000;
+  public static readonly IDLE_TASK_POLLING_INTERVAL = 100000;
   public currentPollingInterval = UserTaskManagerModalCtrl.IDLE_TASK_POLLING_INTERVAL;
 
   /* @ngInject */
@@ -73,26 +73,7 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
       }
     });
 
-    const deferred = this.$q.defer();
-    if (!_.isUndefined(this.fileName) && _.isUndefined(this.activeTask)) {
-      // importing a CSV file
-      this.UserTaskManagerService.submitCsvImportTask(this.fileName, this.fileData, this.exactMatchCsv)
-      .then(taskObj => {
-        this.activeTask = taskObj;
-        deferred.resolve();
-      }).catch(response => {
-        this.Notification.errorResponse(response, 'userTaskManagerModal.submitCsvError');
-        deferred.resolve();
-      });
-    } else if (!_.isUndefined(this.activeTask) && _.isUndefined(this.fileName)) {
-      // accessing a specific task
-      deferred.resolve();
-    } else {
-      // this should not happen
-      deferred.resolve();
-    }
-
-    return deferred.promise
+    return this.init()
     .then(() => {
       return this.fetchTasks()
         .finally(() => {
@@ -115,6 +96,28 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
     this.fileData = _.get<string>(this.$stateParams, 'job.fileData', undefined);
     this.exactMatchCsv = _.get<boolean>(this.$stateParams, 'job.exactMatchCsv', undefined);
     this.activeFilter = !_.isUndefined(this.activeTask) || !_.isUndefined(this.fileName) ? TaskListFilterType.ACTIVE : TaskListFilterType.ALL;
+  }
+
+  private init(): ng.IPromise<any> {
+    return this.$q(resolve => {
+      if (!_.isUndefined(this.fileName) && _.isUndefined(this.activeTask)) {
+        // importing a CSV file
+        this.UserTaskManagerService.submitCsvImportTask(this.fileName, this.fileData, this.exactMatchCsv)
+        .then(taskObj => {
+          this.activeTask = taskObj;
+          resolve();
+        }).catch(response => {
+          this.Notification.errorResponse(response, 'userTaskManagerModal.submitCsvError');
+          resolve();
+        });
+      } else if (!_.isUndefined(this.activeTask) && _.isUndefined(this.fileName)) {
+        // accessing a specific task
+        resolve();
+      } else {
+        // this should not happen
+        resolve();
+      }
+    });
   }
 
   public fetchTasks(): ng.IPromise<any> {
@@ -238,7 +241,8 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
   private setListTanslationFields(taskList: ITask[]): ITask[] {
     let newTaskList: ITask[];
     newTaskList = _.map(taskList, task => {
-      return this.fillTaskData(task);
+      const newTask = _.cloneDeep(task);
+      return this.fillTaskData(newTask);
     });
     return newTaskList;
   }

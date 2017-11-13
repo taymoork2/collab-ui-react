@@ -1,5 +1,5 @@
 import { ITask } from './user-task-manager.component';
-import { TaskStatus } from './user-task-manager.keys';
+import { TaskStatus } from './user-task-manager.constants';
 import { IErrorItem } from './csv-upload-results.component';
 
 export interface IPaging {
@@ -62,15 +62,10 @@ export class UserTaskManagerService {
     // 2. upload CSV file to Swift
     // 3. create and start the Kafka job
     return this.getFileUrl(fileName)
-      .then(fileUploadObject => {
-        return this.uploadToFileStorage(fileUploadObject, fileData)
-          .then(() => {
-            return this.submitCsvImportJob(fileUploadObject, exactMatchCsv)
-              .then(response => {
-                return response;
-              });
-          });
-      });
+    .then(fileUploadObject => {
+      return this.uploadToFileStorage(fileUploadObject, fileData)
+      .then(() => this.submitCsvImportJob(fileUploadObject, exactMatchCsv));
+    });
   }
 
   private getFileUrl(fileName: string): ng.IPromise<IGetFileUrlResponse> {
