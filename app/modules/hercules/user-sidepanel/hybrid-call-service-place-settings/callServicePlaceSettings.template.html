@@ -8,6 +8,18 @@
           ng-click="reset()"></button>
 </cs-sp-buttons>
 <cs-sp-container ng-if="isPlace" cs-tabindex="showButtons ? -1 : 0">
+  <cs-sp-section ng-if="currentUser.sipUrl">
+    <section-title
+      title-key="deviceOverviewPage.sipUrl">
+    </section-title>
+    <p>{{currentUser.sipUrl}}</p>
+  </cs-sp-section>
+  <cs-sp-section ng-if="directoryNumbers">
+    <section-title
+      title-key="directoryNumberPanel.directNumbers">
+    </section-title>
+    <p>{{directoryNumbers}}</p>
+  </cs-sp-section>
   <cs-sp-section class="cloud-extensions">
     <div class="section-title-row">
       <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-ec-place"></span>

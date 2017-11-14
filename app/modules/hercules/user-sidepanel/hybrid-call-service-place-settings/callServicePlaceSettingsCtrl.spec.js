@@ -3,7 +3,7 @@
 describe('Directive Controller: CallServicePreviewCtrl', function () {
   beforeEach(angular.mock.module('Hercules'));
 
-  var $scope, $rootScope, $controller, $q, USSService, $state, $stateParams, FeatureToggleService, Notification, HybridServicesClusterService, ResourceGroupService, $translate, Userservice, Authinfo, UriVerificationService, DomainManagementService, UCCService;
+  var $scope, $rootScope, $controller, $q, USSService, $state, $stateParams, FeatureToggleService, Notification, HybridServicesClusterService, ResourceGroupService, $translate, Userservice, Authinfo, UriVerificationService, DomainManagementService, UCCService, userDiscovery;
 
   beforeEach(inject(function (_$rootScope_, _$controller_, _$state_, _$stateParams_, _Authinfo_, _USSService_, _$q_, _Notification_, _HybridServicesClusterService_, _ResourceGroupService_, _FeatureToggleService_, _$translate_, _Userservice_, _UriVerificationService_, _DomainManagementService_, _UCCService_) {
     $rootScope = _$rootScope_;
@@ -28,7 +28,7 @@ describe('Directive Controller: CallServicePreviewCtrl', function () {
     var userStatuses = [{
       userId: '1234', state: 'activated', serviceId: 'squared-fusion-uc', entitled: true, clusterId: 'clusterId', connectorId: '1234',
     }];
-    var userDiscovery = { directoryURI: 'tvasset@cisco.com' };
+    userDiscovery = { directoryURI: 'tvasset@cisco.com' };
     var cluster = { id: 'clusterId', name: 'SuperCluster', connectors: [{ id: '1234', hostname: 'jalla.com' }] };
     var domains = [{ status: 'verified', text: 'cisco.com' }];
     $stateParams.currentUser = { id: '1234', userName: 'tvasset@cisco.com', entitlements: ['squared-fusion-uc'] };
@@ -101,6 +101,40 @@ describe('Directive Controller: CallServicePreviewCtrl', function () {
     expect($scope.callServiceAware.entitled).toBeTruthy();
     expect($scope.callServiceAware.status.state).toBe('unknown');
     expect(Notification.error.calls.count()).toBe(1);
+  });
+
+  describe('Directory numbers', function () {
+    it('Should show both separated by translation for "common.or" if both are present and not identical', function () {
+      userDiscovery.primaryDn = 'dn';
+      userDiscovery.telephoneNumber = 'tn';
+      spyOn($translate, 'instant').and.returnValue('o');
+      initController();
+      expect($scope.directoryNumbers).toBe('dn o tn');
+    });
+
+    it('Should show only one if both are present and identical', function () {
+      userDiscovery.primaryDn = 'dn';
+      userDiscovery.telephoneNumber = 'dn';
+      spyOn($translate, 'instant').and.returnValue('o');
+      initController();
+      expect($scope.directoryNumbers).toBe('dn');
+    });
+
+    it('Should show only primaryDn if telephoneNumber is not present', function () {
+      userDiscovery.primaryDn = 'dn';
+      userDiscovery.telephoneNumber = null;
+      spyOn($translate, 'instant').and.returnValue('o');
+      initController();
+      expect($scope.directoryNumbers).toBe('dn');
+    });
+
+    it('Should show only telephoneNumber if primaryDn is not present', function () {
+      userDiscovery.primaryDn = null;
+      userDiscovery.telephoneNumber = 'tn';
+      spyOn($translate, 'instant').and.returnValue('o');
+      initController();
+      expect($scope.directoryNumbers).toBe('tn');
+    });
   });
 
   describe('Entitled to both Aware and Connect', function () {
