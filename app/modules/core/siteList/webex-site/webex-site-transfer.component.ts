@@ -14,6 +14,7 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
   public transferSiteCode;
   public migrateSiteUrl;
   public transferSiteUrl;
+  public introCopy;
   public error: ISiteNameError = {
     isError: false,
     errorMsg: '',
@@ -149,5 +150,6 @@ export class WebexSiteTransferComponent implements ng.IComponentOptions {
     onSitesReceived: '&',
     onValidationStatusChange: '&',
     currentSubscription: '<',
+    introCopy: '<',
   };
 }

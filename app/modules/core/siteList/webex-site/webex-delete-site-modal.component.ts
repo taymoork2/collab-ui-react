@@ -17,13 +17,13 @@ class WebexDeleteSiteModalController implements ng.IComponentController {
   public dismiss: Function;
 
   // used in own ui
-  public isLoading = false;
+  public isSuccess: boolean | undefined = undefined;
+  public isLoading;
   private isCanProceed = false;
   private webexSiteDetailsList = [];
 
   /* @ngInject */
   constructor(
-    private $translate: ng.translate.ITranslateService,
     private Notification: Notification,
     private SetupWizardService: SetupWizardService,
     private WebExSiteService: WebExSiteService,
@@ -45,9 +45,16 @@ class WebexDeleteSiteModalController implements ng.IComponentController {
   }
 
   public next(): void {
-    this.saveData();
+    if (!this.isResult()) {
+      this.saveData();
+    } else {
+      this.cancel();
+    }
   }
 
+  public isResult(): boolean {
+    return this.isSuccess !== undefined;
+  }
 
   private changeCurrentSubscription(subscriptionId) {
     this.subscriptionId = subscriptionId;
@@ -68,19 +75,22 @@ class WebexDeleteSiteModalController implements ng.IComponentController {
   }
 
   private saveData() {
+    this.isLoading = true;
     const audioData = this.WebExSiteService.getAudioPackageInfo(this.subscriptionId);
     const payload = this.WebExSiteService.constructWebexLicensesPayload(this.webexSiteDetailsList, this.subscriptionId, Actions.DELETE,
-    audioData.audioPartnerName, audioData.ccaspSubscriptionId);
+      audioData.audioPartnerName, audioData.ccaspSubscriptionId);
     this.SetupWizardService.updateSitesInActiveSubscription(payload)
       .then(() => {
-        // TODO algendel: 10/30/17 - get real copy.
-        this.Notification.success(this.$translate.instant('webexSiteManagement.deleteSiteSuccess'));
+        this.isSuccess = true;
+        this.Notification.success('webexSiteManagement.deleteSiteSuccessToaster');
       })
       .catch((response) => {
-        this.Notification.errorWithTrackingId(response);
+        this.isSuccess = false;
+        this.Notification.errorWithTrackingId(response, 'webexSiteManagement.deleteSiteFailureToaster');
       })
       .finally(() => {
-        this.dismiss();
+        this.isLoading = false;
+        this.isCanProceed = true;
       });
   }
 }

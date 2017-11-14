@@ -11,12 +11,15 @@ describe('Component: WebexSiteTransferComponent', function () {
     this.initModules(module);
     this.injectDependencies('$componentController', '$q', '$rootScope', '$scope', 'SetupWizardService');
     this.$scope.fixtures = {
+      introCopy: 'some Copy',
+      currentSubscription: 'sub123',
     };
 
     initSpies.apply(this);
 
     this.compileComponent('webexSiteTransfer', {
-      currentSubscription: 'sub123',
+      currentSubscription: 'fixtures.currentSubscription',
+      introCopy: 'fixtures.introCopy',
       onValidationStatusChange: 'onValidationChangedFn(isValid)',
       onSitesReceived: 'onSitesReceivedFn(sites, transferCode, isValid)',
     });
@@ -31,6 +34,7 @@ describe('Component: WebexSiteTransferComponent', function () {
 
   describe('When first opened', () => {
     it('shoud have unchecked transfer code input and other hidden', function () {
+      expect(_.includes(this.view[0].innerHTML, 'some Copy')).toBe(true);
       expect(this.view.find('input#has-transfer-code')[0].checked).toBeFalsy();
       expect(this.view.find('input').length).toBe(1);
     });

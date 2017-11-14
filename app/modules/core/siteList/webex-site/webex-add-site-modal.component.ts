@@ -34,6 +34,8 @@ class WebexAddSiteModalController implements ng.IComponentController {
   public steps: IStep[];
   public currentStep = 0;
   public firstStep = 0;
+  public isSuccess: boolean | undefined = undefined;
+
   private totalSteps = 4;
   private isCanProceed = true;
   private webexSiteDetailsList = [];
@@ -45,7 +47,6 @@ class WebexAddSiteModalController implements ng.IComponentController {
     private Notification: Notification,
     private SetupWizardService: SetupWizardService,
     private $rootScope: ng.IRootScopeService,
-    private $translate: ng.translate.ITranslateService,
     private WebExSiteService: WebExSiteService,
   ) {
 
@@ -99,6 +100,9 @@ class WebexAddSiteModalController implements ng.IComponentController {
   }
 
   public isNextDisabled(): boolean {
+    if (this.isResult()) {
+      return false;
+    }
     switch (this.currentStep) {
       case 0:
         return _.isEmpty(this.currentSubscriptionId) || !this.isCanProceed;
@@ -115,6 +119,13 @@ class WebexAddSiteModalController implements ng.IComponentController {
     return this.currentStep < (this.totalSteps - 1);
   }
 
+  public getPrimaryButtonText() {
+    if (this.isResult()) {
+      return 'common.close';
+    } else {
+      return  this.hasNext()  ? 'common.next' : 'common.save';
+    }
+  }
   //if there is not an event associated with a step: - proceed. Otherwise - emit event and set loading
   public next(): void {
     if (this.hasNext()) {
@@ -125,6 +136,8 @@ class WebexAddSiteModalController implements ng.IComponentController {
       } else {
         this.advanceStep();
       }
+    } else if (this.isResult()) {
+      this.cancel();
     } else {
       this.saveData();
     }
@@ -148,6 +161,10 @@ class WebexAddSiteModalController implements ng.IComponentController {
 
   public getTotalSteps(): number {
     return this.totalSteps - this.firstStep;
+  }
+
+  public isResult(): boolean {
+    return this.isSuccess !== undefined;
   }
 
   // callbacks from components
@@ -191,6 +208,10 @@ class WebexAddSiteModalController implements ng.IComponentController {
     }
   }
 
+  public isLicenseRedistribution() {
+    return this.singleStep === 3;
+  }
+
   private setAudioPackageInfo(subscripionId): void {
     const audioPackage = this.WebExSiteService.getAudioPackageInfo(subscripionId);
     this.audioPackage = audioPackage.audioPackage;
@@ -201,19 +222,23 @@ class WebexAddSiteModalController implements ng.IComponentController {
   }
 
   private saveData() {
-    const action = (this.singleStep === 3) ? Actions.UPDATE : Actions.ADD;
+    const action = this.isLicenseRedistribution() ? Actions.UPDATE : Actions.ADD;
+    const toasterPrefix = this.isLicenseRedistribution() ? 'redistribute' : 'addSite';
+    this.isLoading = true;
     const payload = this.WebExSiteService.constructWebexLicensesPayload(this.webexSiteDetailsList, this.currentSubscriptionId || '',
-    action, this.audioPartnerName, this.ccaspSubscriptionId, this.transferCode);
+      action, this.audioPartnerName, this.ccaspSubscriptionId, this.transferCode);
     this.SetupWizardService.updateSitesInActiveSubscription(payload)
       .then(() => {
-        // TODO algendel: 10/30/17 - get real copy.
-        this.Notification.success(this.$translate.instant('webexSiteManagement.addSiteSuccess'));
+        this.Notification.success('webexSiteManagement.' + toasterPrefix + 'SuccessToaster');
+        this.isSuccess = true;
       })
       .catch((response) => {
-        this.Notification.errorWithTrackingId(response);
+        this.isSuccess = false;
+        this.Notification.errorWithTrackingId(response, 'webexSiteManagement.' + toasterPrefix + 'FailureToaster');
       })
       .finally(() => {
-        this.dismiss();
+        this.isLoading = false;
+        this.currentStep = this.currentStep + 1;
       });
   }
 }

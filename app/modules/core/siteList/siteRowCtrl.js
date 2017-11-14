@@ -9,7 +9,7 @@ require('./_site-list.scss');
 
   /*@ngInject*/
 
-  function WebExSiteRowCtrl($log, $modal, $scope, $sce, $state, $stateParams, $timeout, $translate, accountLinkingPhase2, ModalService, SetupWizardService, TokenService, WebExUtilsFact, WebExSiteRowService, WebExSiteService, Utils) {
+  function WebExSiteRowCtrl($log, $modal, $scope, $sce, $state, $stateParams, $timeout, $translate, accountLinkingPhase2, ModalService, Notification, SetupWizardService, TokenService, WebExUtilsFact, WebExSiteRowService, WebExSiteService, Utils) {
     var vm = this;
     vm.showGridData = false;
     vm.isShowAddSite = false;
@@ -112,10 +112,16 @@ require('./_site-list.scss');
         var remainingSite = moveLicensesToRemainingSite(subscriptionId, sites, siteUrl);
         WebExSiteService.deleteSite(subscriptionId, remainingSite)
           .then(function () {
-            this.Notification.success(this.$translate.instant('webexSiteManagement.deleteSiteSuccess'));
+            var params = {
+              title: $translate.instant('webexSiteManagement.deleteSiteSuccessModalTitle'),
+              message: $translate.instant('webexSiteManagement.deleteSiteSuccessModalBody'),
+              hideDismiss: true,
+            };
+            ModalService.open(params);
+            Notification.success('webexSiteManagement.deleteSiteSuccessToaster');
           })
           .catch(function (response) {
-            this.Notification.errorWithTrackingId(response);
+            Notification.errorWithTrackingId(response, 'webexSiteManagement.deleteSiteFailureToaster');
           });
       } else { //open modal to redistribute licenses
         $state.go('site-list-delete', { subscriptionId: subscriptionId, siteUrl: siteUrl });
