@@ -29,4 +29,9 @@
     <span class="small" translate="hercules.settings.googleCalendar.couldNotReadGoogleCalendarStatus"></span>
     <span ng-if="$ctrl.googleCalendarError.config.headers.TrackingID" class="small" translate="common.trackingId" translate-values="{ trackingId: $ctrl.googleCalendarError.config.headers.TrackingID }"></span>
   </p>
+  <p ng-if="$ctrl.office365Error" class="cloud-extensions">
+    <i class="icon icon-error status-error"></i>
+    <span class="small" translate="hercules.settings.office365.couldNotReadOffice365Status"></span>
+    <span ng-if="$ctrl.office365Error.config.headers.TrackingID" class="small" translate="common.trackingId" translate-values="{ trackingId: $ctrl.office365Error.config.headers.TrackingID }"></span>
+  </p>
 </cs-sp-section>
