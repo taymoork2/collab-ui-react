@@ -127,13 +127,13 @@ describe('Controller: UserRolesCtrl', function () {
       expect($scope.rolesObj.adminRadioValue).toBeDefined();
       expect($scope.rolesObj.adminRadioValue).toEqual(1);
       expect($scope.rolesObj.complianceValue).toBeDefined();
-      expect($scope.rolesObj.complianceValue).toBeFalsy();
+      expect($scope.rolesObj.complianceValue).toBe(false);
     });
   });
 
   describe('Initialize isPartner from current org response', function () {
     beforeEach(function () {
-      expect($scope.isPartner).toBeFalsy();
+      expect($scope.isPartner).toBe(undefined);
     });
     afterEach(function () {
       initController();
@@ -262,7 +262,7 @@ describe('Controller: UserRolesCtrl', function () {
       });
 
       afterEach(function () {
-        expect($scope.updatingUser).toBeFalsy();
+        expect($scope.updatingUser).toBe(false);
       });
 
       ///////////
@@ -418,32 +418,32 @@ describe('Controller: UserRolesCtrl', function () {
     it('should update Compliance Officer setting', function () {
       spyOn(EdiscoveryService, 'setEntitledForCompliance').and.returnValue($q.resolve(true));
 
-      expect($scope.rolesObj.complianceValue).toBeFalsy();
+      expect($scope.rolesObj.complianceValue).toBe(false);
       $scope.rolesObj.complianceValue = true;
       $scope.updateRoles();
       $scope.$digest();
 
       expect($scope.currentUser.entitlements).toContain('compliance');
-      expect($scope.rolesObj.complianceValue).toBeTruthy();
+      expect($scope.rolesObj.complianceValue).toBe(true);
       $scope.rolesObj.complianceValue = false;
       $scope.updateRoles();
       $scope.$digest();
 
       expect($scope.currentUser.entitlements).not.toContain('compliance');
-      expect($scope.rolesObj.complianceValue).toBeFalsy();
+      expect($scope.rolesObj.complianceValue).toBe(false);
       expect(Notification.errorResponse).not.toHaveBeenCalled();
     });
 
     it('should not update on error', function () {
       spyOn(EdiscoveryService, 'setEntitledForCompliance').and.returnValue($q.reject({}));
 
-      expect($scope.rolesObj.complianceValue).toBeFalsy();
+      expect($scope.rolesObj.complianceValue).toBe(false);
       $scope.rolesObj.complianceValue = true;
       $scope.updateRoles();
       $scope.$digest();
 
       expect($scope.currentUser.entitlements).not.toContain('compliance');
-      expect($scope.rolesObj.complianceValue).toBeTruthy();
+      expect($scope.rolesObj.complianceValue).toBe(true);
       expect(Notification.errorResponse).toHaveBeenCalledWith(jasmine.any(Object), 'profilePage.complianceError');
     });
   });
@@ -636,6 +636,36 @@ describe('Controller: UserRolesCtrl', function () {
         expect(controller).toBeDefined();
         $scope.resetAccess();
         expect(Auth.revokeUserAuthTokens).toHaveBeenCalled();
+      });
+    });
+
+    describe('should disallow some/all editing based on', function () {
+      it('whether it is editing self', function () {
+        Authinfo.getUserId.and.returnValue(currentUser.id);
+        initController();
+
+        expect($scope.isEditingSelf).toBe(true);
+        expect($scope.isUserAdminUser).toBe(false);
+        expect($scope.isNotEditable).toBe(false);
+      });
+
+      it('whether it is a User_Admin', function () {
+        spyOn(Authinfo, 'isUserAdminUser').and.returnValue(true);
+        currentUser.roles = [];
+        initController();
+
+        expect($scope.isEditingSelf).toBe(false);
+        expect($scope.isUserAdminUser).toBe(true);
+        expect($scope.isNotEditable).toBe(false);
+      });
+
+      it('whether it is a User_Admin looking at a Full_Admin', function () {
+        spyOn(Authinfo, 'isUserAdminUser').and.returnValue(true);
+        initController();
+
+        expect($scope.isEditingSelf).toBe(false);
+        expect($scope.isUserAdminUser).toBe(true);
+        expect($scope.isNotEditable).toBe(false);
       });
     });
   });

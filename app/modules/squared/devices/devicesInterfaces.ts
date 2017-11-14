@@ -21,10 +21,13 @@ declare namespace csdm {
     readableActiveInterface: string;
   }
 
-  interface IDevicePlaceCommon {
-    accountType: string;
+  interface IBasePlace {
     cisUuid: string;
     displayName: string;
+  }
+
+  interface IDevicePlaceCommon extends IBasePlace {
+    accountType: string;
     image: string;
     isPlace?: boolean;
     readonly type?: string;

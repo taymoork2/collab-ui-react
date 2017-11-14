@@ -1,8 +1,9 @@
 import './deviceSettings.scss';
+import IBasePlace = csdm.IBasePlace;
 
 class DeviceSettings implements ng.IComponentController {
   public ownerType: string;
-  public ownerId: string;
+  public owner: IBasePlace;
   public deviceList: any;
 
   private upgradeChannelOptions;
@@ -23,6 +24,7 @@ class DeviceSettings implements ng.IComponentController {
     private CsdmUpgradeChannelService,
     private CsdmConfigurationService,
     private Notification,
+    private BotAuthorizationsModal,
   ) {}
 
   public $onInit(): void {
@@ -31,7 +33,7 @@ class DeviceSettings implements ng.IComponentController {
 
   public onSaveUpgradeChannel() {
     this.updatingUpgradeChannel = true;
-    this.CsdmConfigurationService.updateRuleForPlace(this.ownerId, 'software_channel', this.selectedUpgradeChannel.value)
+    this.CsdmConfigurationService.updateRuleForPlace(this.owner.cisUuid, 'software_channel', this.selectedUpgradeChannel.value)
       .then(() => {
         this.Notification.success('deviceOverviewPage.channelUpdated');
       })
@@ -50,7 +52,7 @@ class DeviceSettings implements ng.IComponentController {
 
   set settingsLockedDown(newSetting: boolean) {
     this.updatingSettingsLockDown = true;
-    this.CsdmConfigurationService.updateRuleForPlace(this.ownerId, 'gui_settings_enabled', !newSetting)
+    this.CsdmConfigurationService.updateRuleForPlace(this.owner.cisUuid, 'gui_settings_enabled', !newSetting)
       .then(() => {
         this.Notification.success('deviceSettings.settingsLockUpdated');
         this._settingsLockedDown = newSetting;
@@ -63,7 +65,9 @@ class DeviceSettings implements ng.IComponentController {
         this.updatingSettingsLockDown = false;
       });
   }
-
+  public startManageApiAccessFlow() {
+    this.BotAuthorizationsModal.open(this.owner);
+  }
   private fetchAsyncSettings(): void {
     this.FeatureToggleService.csdmPlaceUpgradeChannelGetStatus().then(placeUpgradeChannel => {
       if (placeUpgradeChannel) {
@@ -96,7 +100,7 @@ class DeviceSettings implements ng.IComponentController {
   }
 
   private resetSelectedUpgradeChannel() {
-    this.CsdmConfigurationService.getRuleForPlace(this.ownerId, 'software_channel').then(rule => {
+    this.CsdmConfigurationService.getRuleForPlace(this.owner.cisUuid, 'software_channel').then(rule => {
       this.selectedUpgradeChannel = this.getUpgradeChannelObject(rule.value);
     }).catch(() => {
       this.selectedUpgradeChannel = {
@@ -106,7 +110,7 @@ class DeviceSettings implements ng.IComponentController {
   }
 
   private resetSettingsLockedDown() {
-    this.CsdmConfigurationService.getRuleForPlace(this.ownerId, 'gui_settings_enabled').then(rule => {
+    this.CsdmConfigurationService.getRuleForPlace(this.owner.cisUuid, 'gui_settings_enabled').then(rule => {
       this._settingsLockedDown = !rule.value;
     }).catch(() => {
       this._settingsLockedDown = false;
@@ -130,8 +134,8 @@ export class DeviceSettingsComponent implements ng.IComponentOptions {
   public controller = DeviceSettings;
   public template = require('modules/squared/places/deviceSettings/deviceSettings.html');
   public bindings = <{ [binding: string]: string }>{
+    owner: '<',
     ownerType: '@',
-    ownerId: '<',
     deviceList: '<',
   };
 }
