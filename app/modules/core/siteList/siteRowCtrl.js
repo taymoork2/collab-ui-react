@@ -16,6 +16,11 @@ require('./_site-list.scss');
     vm.canAddSite = WebExSiteRowService.canAddSite();
     vm.isAdminPage = Utils.isAdminPage();
     var showSiteMgmntEmailPattern = '^ordersimp-.*@mailinator.com';
+    var actions = {
+      ADD: 'add',
+      DELETE: 'delete',
+      REDISTRIBUTE: 'redistribute',
+    };
 
     $log.debug('StateParams in sitreRowCrtl', $stateParams);
 
@@ -49,9 +54,7 @@ require('./_site-list.scss');
       if (vm.canModify(entity)) {
         $state.go('site-list-distribute-licenses', { subscriptionId: entity.billingServiceId });
       } else {
-        var isOnlySite = isOnlySiteInSubscription(entity);
-        var errorMessage = isOnlySite ? 'webexSiteManagement.redistributeRejectModalBodyOnlySite' : 'webexSiteManagement.redistributeRejectModalBodyPending';
-        showRejectionModal(isOnlySite, 'webexSiteManagement.redistributeRejectModalTitle', errorMessage);
+        showRejectionModal(actions.REDISTRIBUTE, isOnlySiteInSubscription(entity));
       }
     };
 
@@ -59,7 +62,7 @@ require('./_site-list.scss');
       if (WebExSiteRowService.hasNonPendingSubscriptions()) {
         $state.go('site-list-add');
       } else {
-        showRejectionModal(false, 'webexSiteManagement.addSiteRejectModalTitle', 'webexSiteManagement.addSiteRejectPending');
+        showRejectionModal(actions.ADD, false);
       }
     };
 
@@ -93,9 +96,7 @@ require('./_site-list.scss');
           deleteSite(subscriptionId, siteUrl);
         });
       } else {
-        var isOnlySite = isOnlySiteInSubscription(entity);
-        var errorMessage = isOnlySite ? 'webexSiteManagement.deleteSiteRejectModalBodyOnlySite' : 'webexSiteManagement.deleteSiteRejectModalBodyPending';
-        showRejectionModal(isOnlySite, 'webexSiteManagement.deleteSiteRejectModalTitle', errorMessage);
+        showRejectionModal(actions.DELETE, isOnlySiteInSubscription(entity));
       }
     };
     vm.showGridData = true;
@@ -198,6 +199,7 @@ require('./_site-list.scss');
     //   - 'siteRowCtrl' catches the event (since it's not a modal), and launches the setup wizard
     // - in order to avoid conflicting animations (one modal closing, another one opening), we insert
     //   an 800ms delay
+    // 11/15/17 we are temporarily taking out the setup launch. This should be brought back within a week.
 
     $scope.$on('core::launchMeetingSetup', function () {
       $timeout(function () {
@@ -205,20 +207,43 @@ require('./_site-list.scss');
       }, 800);
     });
 
-    function showRejectionModal(isOnlySite, title, errorMessage) {
+
+    function showRejectionModal(action, isOnlySite) {
+      /*  algendel 11/13/17. We are working on implementation where in certain instances of pending setup
+      the user is sent to the setup screen. This should come within a week. therefore I am leaving in the
+      code to make this happen gated by this false isShowSetup flag below */
+
+      var isShowSetup = false;
+      var title, errorMessage;
+      switch (action) {
+        case actions.ADD:
+          title = 'webexSiteManagement.addSiteRejectModalTitle';
+          errorMessage = 'webexSiteManagement.addSiteRejectPending';
+          break;
+        case actions.DELETE:
+          errorMessage = isOnlySite ? 'webexSiteManagement.deleteSiteRejectModalBodyOnlySite' : 'webexSiteManagement.deleteSiteRejectModalBodyPending';
+          title = 'webexSiteManagement.deleteSiteRejectModalTitle';
+          break;
+        case actions.REDISTRIBUTE:
+          errorMessage = isOnlySite ? 'webexSiteManagement.redistributeRejectModalBodyOnlySite' : 'webexSiteManagement.redistributeRejectModalBodyPending';
+          title = 'webexSiteManagement.redistributeRejectModalTitle';
+          break;
+      }
+
       var params = {
         title: $translate.instant(title),
         message: $translate.instant(errorMessage),
+        close: $translate.instant('common.dismiss'),
+        hideDismiss: true,
       };
-      if (isOnlySite) {
-        params.close = $translate.instant('common.dismiss');
-        params.hideDismiss = true;
-      } else {
+
+      if (isShowSetup) {
+        params.hideDismiss = false;
         params.dismiss = $translate.instant('common.dismiss');
         params.close = $translate.instant('common.setUp');
       }
       ModalService.open(params).result.then(function () {
-        if (!isOnlySite) {
+        if (isShowSetup) {
           goToMeetingSetup();
         }
       });
