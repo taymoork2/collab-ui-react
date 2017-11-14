@@ -10,7 +10,7 @@ describe('Component: WebexAddSiteModalComponent', function () {
 
   beforeEach(function () {
     this.initModules(module);
-    this.injectDependencies('$componentController', '$q', '$rootScope', '$scope', 'Config', 'SetupWizardService', 'WebExSiteService');
+    this.injectDependencies('$componentController', '$q', '$rootScope', '$scope', 'Authinfo', 'Config', 'SetupWizardService', 'WebExSiteService');
     this.$scope.fixtures = {
     };
 
@@ -22,9 +22,10 @@ describe('Component: WebexAddSiteModalComponent', function () {
   });
 
   function initSpies() {
+    spyOn(this.Authinfo, 'isEnterpriseCustomer').and.returnValue(true);
     spyOn(this.SetupWizardService, 'getNonTrialWebexLicenses').and.returnValue(confServices);
     spyOn(this.SetupWizardService, 'getConferenceLicensesBySubscriptionId').and.returnValue(confServicesSub100448);
-    spyOn(this.WebExSiteService, 'constructWebexLicensesPayload').and.returnValue(this.$q.resolve(true));
+    spyOn(this.WebExSiteService, 'constructWebexLicensesPayload').and.returnValue({});
     spyOn(this.WebExSiteService, 'getAudioPackageInfo').and.returnValue({ audioPackage: 'VoIPOnly' });
     spyOn(this.$rootScope, '$broadcast').and.callThrough();
   }

@@ -122,15 +122,11 @@
     };
 
     this.canAddSite = function () {
-      return !_.isEmpty(SetupWizardService.getNonTrialWebexLicenses());
-    };
-
-    this.isSubscriptionPending = function (subscriptionId) {
-      return SetupWizardService.isSubscriptionPending(subscriptionId);
+      return !_.isEmpty(SetupWizardService.getNonTrialWebexLicenses()) && !_.isEmpty(SetupWizardService.getEnterpriseSubscriptionListWithStatus());
     };
 
     this.hasNonPendingSubscriptions = function () {
-      return _.some(SetupWizardService.getSubscriptionListWithStatus(), function (sub) {
+      return _.some(SetupWizardService.getEnterpriseSubscriptionListWithStatus(), function (sub) {
         return !sub.isPending;
       });
     };
@@ -726,6 +722,7 @@
     this.shouldShowSiteManagement = function (pattern) {
       var regex = new RegExp(pattern);
       var isPatternMatch = regex.test(Authinfo.getUserName()) || regex.test(Authinfo.getPrimaryEmail()) || regex.test(Authinfo.getCustomerAdminEmail());
+
       if (isPatternMatch) {
         return $q.resolve(true);
       }

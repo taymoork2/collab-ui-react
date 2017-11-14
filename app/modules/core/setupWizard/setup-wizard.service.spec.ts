@@ -281,7 +281,7 @@ describe('Service: SetupWizard Service', function () {
   });
 
   describe('getting the subscriptions status correctly', function () {
-    beforeEach(function() {
+    beforeEach(function () {
       this.Authinfo.getConferenceServices.and.returnValue(getLicensesFromCustomers(this.webexTrialMixed['customers']));
       this.Authinfo.getSubscriptions.and.returnValue(getSubscriptionsFromCustomers(this.webexTrialMixed['customers']));
     });
@@ -291,9 +291,28 @@ describe('Service: SetupWizard Service', function () {
       expect(result).toBe(true);
     });
 
-    it('should have getSubscriptionListWithStatus() correctly return the billingServiceIds with their pending status', function () {
-      const result = this.SetupWizardService.getSubscriptionListWithStatus();
+    it('should have getEnterpriseSubscriptionListWithStatus() correctly return the billingServiceIds with their pending status', function () {
+      const result = this.SetupWizardService.getEnterpriseSubscriptionListWithStatus();
       expect(result).toEqual([{ id: 'Sub110871', isPending: true }]);
+    });
+
+    it('should determine if subscription is Enterprise correctly', function () {
+      const subs = [{
+        startDate: '2017-10-10T19:37:49.708Z',
+        orderingTool: 'CCW',
+        subscriptionId: 'fe5149ac-7c8b-402b-b06c-afed12a72e84',
+        externalSubscriptionId: 'Sub100448',
+      }, {
+        startDate: '2017-10-10T19:37:49.708Z',
+        orderingTool: 'OTHER',
+        subscriptionId: 'fe5149ac-7c8b-402b-b06c-afed12a72e84',
+        externalSubscriptionId: 'Sub100449',
+      }];
+      this.Authinfo.getSubscriptions.and.returnValue(subs);
+      let result = this.SetupWizardService.isSubscriptionEnterprise('Sub100448');
+      expect(result).toBeTruthy();
+      result = this.SetupWizardService.isSubscriptionEnterprise('Sub100449');
+      expect(result).toBeFalsy();
     });
   });
 });

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: WebExSiteRowCtrl', function () {
-  var controller, $controller, $modal, $scope, $q, FeatureToggleService, WebExSiteRowService, WebExSiteService, TokenService, state;
+  var controller, $controller, $modal, $scope, $q, FeatureToggleService, SetupWizardService, WebExSiteRowService, WebExSiteService, TokenService, state;
   var fakeShowGridData = true;
   var fakeGridData = {
     siteUrl: 'abc.webex.com',
@@ -14,7 +14,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
   var licensesGroupedBySites = _.groupBy(getJSONFixture('core/json/authInfo/webexLicenses.json'), 'siteUrl');
 
   afterEach(function () {
-    controller = $scope = $modal = $controller = $q = FeatureToggleService = WebExSiteRowService = TokenService = state = undefined;
+    controller = $scope = $modal = $controller = $q = FeatureToggleService = SetupWizardService = WebExSiteRowService = TokenService = state = undefined;
   });
 
   afterAll(function () {
@@ -26,13 +26,14 @@ describe('Controller: WebExSiteRowCtrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('WebExApp'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$modal_, _$q_, $state, _FeatureToggleService_, _WebExSiteService_, _WebExSiteRowService_, _TokenService_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$modal_, _$q_, $state, _FeatureToggleService_, _SetupWizardService_, _WebExSiteService_, _WebExSiteRowService_, _TokenService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     FeatureToggleService = _FeatureToggleService_;
     WebExSiteRowService = _WebExSiteRowService_;
     WebExSiteService = _WebExSiteService_;
     TokenService = _TokenService_;
+    SetupWizardService = _SetupWizardService_;
     state = $state;
     $modal = _$modal_;
     $q = _$q_;
@@ -45,10 +46,10 @@ describe('Controller: WebExSiteRowCtrl', function () {
     spyOn(WebExSiteRowService, 'initSiteRows');
     spyOn(WebExSiteRowService, 'getGridOptions').and.returnValue(fakeGridOptions);
     spyOn(WebExSiteRowService, 'getShowGridData').and.returnValue(fakeShowGridData);
-    spyOn(TokenService, 'getAccessToken').and.returnValue(accessToken);
     spyOn(WebExSiteRowService, 'getLicensesInSubscriptionGroupedBySites').and.returnValue(licensesGroupedBySites);
-    spyOn(WebExSiteRowService, 'isSubscriptionPending').and.returnValue(false);
+    spyOn(SetupWizardService, 'isSubscriptionPending').and.returnValue(false);
     spyOn(WebExSiteService, 'deleteSite');
+    spyOn(TokenService, 'getAccessToken').and.returnValue(accessToken);
     spyOn($modal, 'open').and.returnValue({ result: $q.resolve() });
   }));
 
@@ -136,7 +137,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
     });
 
     it('should return FALSE if there are 2 or more sites in subscription but subscription is  pending', function () {
-      WebExSiteRowService.isSubscriptionPending.and.returnValue(true);
+      SetupWizardService.isSubscriptionPending.and.returnValue(true);
       expect(_.keys(licensesGroupedBySites).length >= 2).toBeTruthy();
       expect(controller.canModify(entity)).toBeFalsy();
     });
@@ -240,7 +241,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
     });
     it('should NOT launch license redistribution and should show appropriate modal if subscription is pending', function () {
       var expectedModalTitle = '<h3 class="modal-title" translate="webexSiteManagement.redistributeRejectModalTitle"></h3>';
-      WebExSiteRowService.isSubscriptionPending.and.returnValue(true);
+      SetupWizardService.isSubscriptionPending.and.returnValue(true);
       expect(controller.canModify(entity)).toBeFalsy();
       controller.redistributeLicenses(entity);
       var modalCallArgs = $modal.open.calls.mostRecent().args[0];

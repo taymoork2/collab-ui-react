@@ -63,7 +63,7 @@ class WebexAddSiteModalController implements ng.IComponentController {
   }
 
   public $onInit(): void {
-    this.subscriptionList = this.SetupWizardService.getSubscriptionListWithStatus();
+    this.subscriptionList = this.SetupWizardService.getEnterpriseSubscriptionListWithStatus();
     const hasActionableSubscriptions = !_.isEmpty(this.subscriptionList) && !_.first(this.subscriptionList).isPending;
     if (hasActionableSubscriptions) {
       // if there are any non-pending subs the first will be non-pending

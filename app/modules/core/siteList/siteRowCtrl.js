@@ -9,7 +9,7 @@ require('./_site-list.scss');
 
   /*@ngInject*/
 
-  function WebExSiteRowCtrl($log, $modal, $scope, $sce, $state, $stateParams, $timeout, $translate, accountLinkingPhase2, ModalService, TokenService, WebExUtilsFact, WebExSiteRowService, WebExSiteService, Utils) {
+  function WebExSiteRowCtrl($log, $modal, $scope, $sce, $state, $stateParams, $timeout, $translate, accountLinkingPhase2, ModalService, SetupWizardService, TokenService, WebExUtilsFact, WebExSiteRowService, WebExSiteService, Utils) {
     var vm = this;
     vm.showGridData = false;
     vm.isShowAddSite = false;
@@ -64,7 +64,17 @@ require('./_site-list.scss');
     };
 
     vm.canModify = function (entity) {
-      return !isOnlySiteInSubscription(entity) && !WebExSiteRowService.isSubscriptionPending(entity.billingServiceId);
+      return !isOnlySiteInSubscription(entity) && !SetupWizardService.isSubscriptionPending(entity.billingServiceId);
+    };
+
+    //if we are checking a single subscription - we pass the entity. If entity is not passed
+    //check if this customer ha any enterprise non-trial subscriptions
+    vm.isSubscriptionEnterprise = function (entity) {
+      if (entity) {
+        SetupWizardService.isSubscriptionEnterprise(entity.billingServiceId);
+      } else {
+        return _.isEmpty(SetupWizardService.getEnterpriseSubscriptionListWithStatus());
+      }
     };
 
     vm.deleteSite = function (entity) {
