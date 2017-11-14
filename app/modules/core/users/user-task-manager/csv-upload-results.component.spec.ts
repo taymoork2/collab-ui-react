@@ -11,26 +11,6 @@ describe('Component: csvUploadResults', () => {
   const ERROR_USER_BLOCK = '.stat.error-users';
   const ERROR_TABLE = '.flex-container.upload-errors';
 
-  beforeEach(angular.mock.module(mockDependencies));
-
-  function mockDependencies($provide) {
-    const Userservice = {
-      getUserAsPromise: () => {
-        return {
-          then: (success) => {
-            return success({
-              data: {
-                displayName: 'User Me',
-                userName: 'user.me@gmail.com',
-              },
-            });
-          },
-        };
-      },
-    };
-    $provide.value('Userservice', Userservice);
-  }
-
   beforeEach(function() {
     this.initModules(userTaskManagerModalModuleName);
     this.injectDependencies(
@@ -45,6 +25,7 @@ describe('Component: csvUploadResults', () => {
       result: this.$q.resolve(),
     });
     spyOn(this.UserTaskManagerService, 'cancelTask').and.returnValue(this.$q.resolve());
+    spyOn(this.UserTaskManagerService, 'getUserDisplayAndEmail').and.returnValue(this.$q.resolve('User Me (user.me@gmail.com)'));
 
     this.aTask = require('./test-tasks.json').csvUploadResultsTasks;
     this.$scope.activeTask = this.aTask;

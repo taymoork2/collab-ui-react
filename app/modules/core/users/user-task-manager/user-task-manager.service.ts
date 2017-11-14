@@ -26,12 +26,19 @@ export interface IGetTaskErrorsResponse {
   paging: IPaging;
 }
 
+export interface IGetUserResponse {
+  displayName: string;
+  userName: string;
+}
+
+
 export class UserTaskManagerService {
 
   private inProcessTaskPollingPromise: ng.IPromise<ITask[]>;
   private inProcessTaskPollingStarted = false;
   private inProcessTaskList: ITask[] = [];
   public static readonly TASK_POLLING_INTERVAL = 30000;
+  private getInProcessTasksDone = false;
 
   /* @ngInject */
   constructor(
@@ -151,9 +158,15 @@ export class UserTaskManagerService {
       }).then(() => {
         // then start the interval
         return this.inProcessTaskPollingPromise = this.$interval(() => {
-          this.getInProcessTasks()
-          .then(response => {
+          if (!this.getInProcessTasksDone) {
+            return;
+          }
+
+          this.getInProcessTasksDone = false;
+          this.getInProcessTasks().then(response => {
             this.inProcessTaskList = response;
+          }).finally(() => {
+            this.getInProcessTasksDone = true;
           });
         }, UserTaskManagerService.TASK_POLLING_INTERVAL);
       });
@@ -162,6 +175,12 @@ export class UserTaskManagerService {
         resolve(this.inProcessTaskList);
       });
     }
+  }
+
+  public getUserDisplayAndEmail(userId: string): ng.IPromise<string> {
+    const scimUrl = `${this.UrlConfig.getScimUrl(this.Authinfo.getOrgId())}/${userId}`;
+    return this.$http.get<IGetUserResponse>(scimUrl)
+    .then(response => `${response.data.displayName} (${response.data.userName})`);
   }
 
   public cancelPollingForInProcessTasks(): void {

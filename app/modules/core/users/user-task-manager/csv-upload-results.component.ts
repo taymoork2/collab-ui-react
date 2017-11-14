@@ -47,7 +47,6 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
     private ModalService,
     private UserTaskManagerService: UserTaskManagerService,
     private UserCsvService,
-    private Userservice,
     private Notification: Notification,
   ) {}
 
@@ -93,9 +92,9 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
     this.fileName = this.getShortFileName(task.filename);
     this.startedDate = task.startedDate;
     this.startedTime = task.startedTime;
-    this.Userservice.getUserAsPromise(task.creatorUserId)
-    .then((response) => {
-      this.startedBy = response.data.displayName + ' (' + response.data.userName + ')';
+    this.UserTaskManagerService.getUserDisplayAndEmail(task.creatorUserId)
+    .then(userDisplayNameAndEmail => {
+      this.startedBy = userDisplayNameAndEmail;
     });
 
     if (task.erroredUsers > 0) {
