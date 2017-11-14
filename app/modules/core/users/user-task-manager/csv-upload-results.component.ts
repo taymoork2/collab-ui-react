@@ -38,7 +38,7 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
   public startedTime: string;
   public startedBy: string;
   private intervalPromise: ng.IPromise<void>;
-  public static readonly TASK_POLLING_INTERVAL = 5000;
+  public static readonly TASK_POLLING_INTERVAL = 15000;
 
   /* @ngInject */
   constructor(

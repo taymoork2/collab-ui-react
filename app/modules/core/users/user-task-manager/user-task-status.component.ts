@@ -6,7 +6,6 @@ export class UserTaskStatusCtrl implements ng.IComponentController {
   public hasInProcessTask = false;
   public inProcessTaskList: ITask[];
   private intervalPromise: ng.IPromise<void>;
-  public static readonly TASK_POLLING_INTERVAL = 100000;
   public text = this.$translate.instant('userTaskManagerModal.backgroundTasksRunning');
 
   /* @ngInject */
@@ -24,8 +23,7 @@ export class UserTaskStatusCtrl implements ng.IComponentController {
     this.FeatureToggleService.atlasCsvImportTaskManagerGetStatus()
       .then(toggle => {
         if (toggle) {
-          this.getInProcessList()
-          .then(() => this.initPolling());
+          this.initPolling();
         }
       });
   }
@@ -45,26 +43,22 @@ export class UserTaskStatusCtrl implements ng.IComponentController {
 
   public initPolling(): ng.IPromise<any> {
     return this.intervalPromise = this.$interval(() => {
-      // get in-process list
-      this.getInProcessList();
-    }, UserTaskStatusCtrl.TASK_POLLING_INTERVAL);
+      this.UserTaskManagerService.initPollingForInProcessTasks()
+      .then(response => {
+        this.inProcessTaskList = response;
+        this.hasInProcessTask = !_.isEmpty(this.inProcessTaskList);
+      }).catch(response => {
+        this.cancelPolling();
+        this.Notification.errorResponse(response, 'userTaskManagerModal.getTaskListError');
+      });
+    }, UserTaskManagerService.TASK_POLLING_INTERVAL);
   }
 
   private cancelPolling(): void {
     if (!_.isUndefined(this.intervalPromise)) {
       this.$interval.cancel(this.intervalPromise);
     }
-  }
-
-  private getInProcessList(): ng.IPromise<any> {
-    return this.UserTaskManagerService.getInProcessTasks()
-    .then(response => {
-      this.inProcessTaskList = response;
-      this.hasInProcessTask = !_.isEmpty(this.inProcessTaskList);
-    }).catch(response => {
-      this.cancelPolling();
-      this.Notification.errorResponse(response, 'userTaskManagerModal.getTaskListError');
-    });
+    this.UserTaskManagerService.cancelPollingForInProcessTasks();
   }
 }
 

@@ -43,19 +43,15 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
   public fileName: string;
   public exactMatchCsv = false;
   private intervalPromise: ng.IPromise<void>;
-  public static readonly ACTIVE_TASK_POLLING_INTERVAL = 5000;
-  public static readonly IDLE_TASK_POLLING_INTERVAL = 100000;
-  public currentPollingInterval = UserTaskManagerModalCtrl.IDLE_TASK_POLLING_INTERVAL;
 
   /* @ngInject */
   constructor(
-    private $scope: ng.IScope,
     private $stateParams,
     private Notification: Notification,
     private UserTaskManagerService: UserTaskManagerService,
-    private $interval: ng.IIntervalService,
     private $q: ng.IQService,
     private $translate: ng.translate.ITranslateService,
+    private $interval: ng.IIntervalService,
   ) {
   }
 
@@ -64,24 +60,15 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
     this.loading = true;
     this.initActives();
 
-    this.$scope.$watch(() => {
-      return this.currentPollingInterval;
-    }, (newInterval: number, oldInterval: number) => {
-      if (newInterval !== oldInterval) {
-        this.cancelPolling();
-        this.startPolling();
-      }
-    });
-
     return this.init()
     .then(() => {
       return this.fetchTasks()
-        .finally(() => {
-          this.loading = false;
-          if (_.isUndefined(this.intervalPromise) && !this.loadingError) {
-            this.startPolling();
-          }
-        });
+      .finally(() => {
+        this.loading = false;
+        if (!this.loadingError) {
+          this.initPolling();
+        }
+      });
     });
   }
 
@@ -110,9 +97,6 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
           this.Notification.errorResponse(response, 'userTaskManagerModal.submitCsvError');
           resolve();
         });
-      } else if (!_.isUndefined(this.activeTask) && _.isUndefined(this.fileName)) {
-        // accessing a specific task
-        resolve();
       } else {
         // this should not happen
         resolve();
@@ -145,11 +129,11 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
     }
   }
 
-  private startPolling(): void {
+  private initPolling(): void {
     this.intervalPromise = this.$interval(() => {
       // get in-process list
       // match and update allTaskList and inProcessTaskList
-      this.UserTaskManagerService.getInProcessTasks()
+      this.UserTaskManagerService.initPollingForInProcessTasks()
       .then(response => {
         const inProcessTasks = response;
 
@@ -170,17 +154,17 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
         _.forEach(inProcessTasks, task => {
           this.assignTaskToList(task, true);
         });
-
-        if (_.isEmpty(this.inProcessTaskList)) {
-          this.currentPollingInterval = UserTaskManagerModalCtrl.IDLE_TASK_POLLING_INTERVAL;
-        } else {
-          this.currentPollingInterval = UserTaskManagerModalCtrl.ACTIVE_TASK_POLLING_INTERVAL;
-        }
       }).catch(response => {
         this.cancelPolling();
         this.Notification.errorResponse(response, 'userTaskManagerModal.getTaskListError');
       });
-    }, this.currentPollingInterval);
+    }, UserTaskManagerService.TASK_POLLING_INTERVAL);
+  }
+
+  private cancelPolling(): void {
+    if (!_.isUndefined(this.intervalPromise)) {
+      this.$interval.cancel(this.intervalPromise);
+    }
   }
 
   private assignTaskToList(task: ITask, isInsert: boolean): void {
@@ -230,12 +214,6 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
     this.inProcessTaskList = _.filter(this.allTaskList, task => {
       return this.UserTaskManagerService.isTaskPending(task.status);
     });
-  }
-
-  private cancelPolling(): void {
-    if (!_.isUndefined(this.intervalPromise)) {
-      this.$interval.cancel(this.intervalPromise);
-    }
   }
 
   private setListTanslationFields(taskList: ITask[]): ITask[] {

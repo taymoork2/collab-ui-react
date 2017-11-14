@@ -28,11 +28,18 @@ export interface IGetTaskErrorsResponse {
 
 export class UserTaskManagerService {
 
+  private inProcessTaskPollingPromise: ng.IPromise<ITask[]>;
+  private inProcessTaskPollingStarted = false;
+  private inProcessTaskList: ITask[] = [];
+  public static readonly TASK_POLLING_INTERVAL = 30000;
+
   /* @ngInject */
   constructor(
     private Authinfo,
     private UrlConfig,
     private $http: ng.IHttpService,
+    private $interval: ng.IIntervalService,
+    private $q: ng.IQService,
   ) {}
 
   public getTasks(): ng.IPromise<ITask[]> {
@@ -130,6 +137,38 @@ export class UserTaskManagerService {
       url: `${this.UrlConfig.getAdminBatchServiceUrl()}/customers/${this.Authinfo.getOrgId()}/jobs/general/useronboard/${jobInstanceId}/actions/resume/invoke`,
     };
     return this.$http(postReq);
+  }
+
+  public initPollingForInProcessTasks(): ng.IPromise<ITask[]> {
+    if (!this.inProcessTaskPollingStarted) {
+      this.inProcessTaskPollingStarted = true;
+
+      // first get the inProcessTaskList
+      return this.getInProcessTasks()
+      .then(response => {
+        this.inProcessTaskList = response;
+        return this.inProcessTaskList;
+      }).then(() => {
+        // then start the interval
+        return this.inProcessTaskPollingPromise = this.$interval(() => {
+          this.getInProcessTasks()
+          .then(response => {
+            this.inProcessTaskList = response;
+          });
+        }, UserTaskManagerService.TASK_POLLING_INTERVAL);
+      });
+    } else {
+      return this.$q(resolve => {
+        resolve(this.inProcessTaskList);
+      });
+    }
+  }
+
+  public cancelPollingForInProcessTasks(): void {
+    if (!_.isUndefined(this.inProcessTaskPollingPromise)) {
+      this.$interval.cancel(this.inProcessTaskPollingPromise);
+    }
+    this.inProcessTaskPollingStarted = false;
   }
 
   public isTaskPending(status: string): boolean {
