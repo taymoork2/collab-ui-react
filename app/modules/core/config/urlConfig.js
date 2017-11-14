@@ -312,15 +312,15 @@
       prod: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
     },
     CvaServiceUrl: {
-      dev: 'https://virtual-assistant.appstaging.ciscoccservice.com/virtual-assistant/v1/',
-      cfe: 'https://virtual-assistant.appstaging.ciscoccservice.com/virtual-assistant/v1/',
-      integration: 'https://virtual-assistant.appstaging.ciscoccservice.com/virtual-assistant/v1/',
+      dev: 'https://int-virtual-assistant.appstaging.ciscoccservice.com/virtual-assistant/v1/',
+      cfe: 'https://int-virtual-assistant.appstaging.ciscoccservice.com/virtual-assistant/v1/',
+      integration: 'https://int-virtual-assistant.appstaging.ciscoccservice.com/virtual-assistant/v1/',
       prod: 'https://virtual-assistant.produs1.ciscoccservice.com/virtual-assistant/v1/',
     },
     EvaServiceUrl: {
-      dev: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
-      cfe: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
-      integration: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      dev: 'https://int-expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      cfe: 'https://int-expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      integration: 'https://int-expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
       prod: 'https://expert-assistant.produs1.ciscoccservice.com/expert-assistant/v1/',
     },
     WebExReportAppforMEIUrl: {
