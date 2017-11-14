@@ -1,5 +1,5 @@
 <div ng-if="dd.props.hasData">
-  <div ng-if="dd.props.display" class="report-table">
+  <div ng-if="dd.display" class="report-table">
     <h4 class="box-match">{{dd.props.title()}}</h4>
     <p ng-if="!dd.isDataEmpty() && !dd.isDataError()">{{dd.props.description()}}</p>
     <p ng-if="dd.isDataEmpty()">
@@ -24,7 +24,7 @@
   </div>
   <div style="width: 98%;" class="box-match">
     <div id="paginator"
-         ng-show="dd.isDataAvailable() && gridApi.pagination.getTotalPages() > 1 && dd.display()"
+         ng-show="dd.isDataAvailable() && gridApi.pagination.getTotalPages() > 1 && dd.display"
          sl-pagination
          total-items="dd.props.table.gridOptions.totalItems"
          items-per-page="dd.props.table.gridOptions.paginationPageSize"
@@ -35,8 +35,8 @@
     </div>
     <div class="pull-left">
       <a href ng-click="dd.toggleDrilldownReport()">
-        <span ng-if="!dd.display()">{{dd.props.show()}}</span>
-        <span ng-if="dd.display()">{{dd.props.hide()}}</span>
+        <span ng-if="!dd.display">{{dd.props.show()}}</span>
+        <span ng-if="dd.display">{{dd.props.hide()}}</span>
       </a>
     </div>
   </div>

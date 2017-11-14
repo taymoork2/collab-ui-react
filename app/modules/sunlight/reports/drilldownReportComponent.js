@@ -5,6 +5,7 @@
     var dd = this;
     dd.gridData = [];
     $scope.gridData = dd.gridData;
+    dd.display = false;
     var RESIZE_DELAY_IN_MS = 100;
 
     dd.$onInit = function () {
@@ -23,9 +24,8 @@
       }
     };
 
-    dd.$onChanges = function (changeObj) {
-      var currentValue = changeObj.props && changeObj.props.currentValue;
-      if (currentValue && currentValue.table && currentValue.table.gridOptions) {
+    dd.$doCheck = function () {
+      if (dd.props && dd.props.table && dd.props.table.gridOptions && !dd.props.table.gridOptions.onRegisterApi) {
         dd.props.table.gridOptions.onRegisterApi = onRegisterApi;
       }
     };
@@ -35,8 +35,8 @@
     }
 
     dd.toggleDrilldownReport = function () {
-      dd.props.display = !dd.props.display;
-      if (dd.display() && $scope.gridData && $scope.gridData.length === 0) {
+      dd.display = !dd.display;
+      if (dd.display && $scope.gridData && $scope.gridData.length === 0) {
         dd.refreshData();
       } else {
         CardUtils.resize();
@@ -73,12 +73,8 @@
       dd.resetCurrentPage();
     };
 
-    dd.display = function () {
-      return dd.props.display;
-    };
-
     dd.setDisplay = function (bool) {
-      dd.props.display = Boolean(bool);
+      dd.display = Boolean(bool);
     };
 
     dd.isDataError = function () {

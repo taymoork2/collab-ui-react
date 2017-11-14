@@ -1070,7 +1070,7 @@
     "drilldownShow": "Show users with best CSAT",
     "drilldownHide": "Hide users with best CSAT",
     "drilldownTitle": "Highest Rated Users {{time}}",
-    "drilldownDescription": "{{time}}, these are the users who got the best CSAT ratings. The table can be sorted by user’s name or averege CSAT rating.",
+    "drilldownDescription": "{{time}}, these are the users who got the best CSAT ratings. The table can be sorted by user’s name or average CSAT rating.",
     "drilldownErrorDescription": "This data is temporarily unavailable. Our servers are working to return it soon, please check back again shortly.",
     "drilldownEmptyDescription": "{{time}}, there have been no active users. To see user status and resend invitations to those still pending, visit the users tab.",
     "user": "User",

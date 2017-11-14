@@ -220,15 +220,6 @@
       return categoryRange + balloonText;
     }
 
-    function balloonTextForTaskAggregateBreakdown(graphDataItem, graph) {
-      var numChatWorkingTasks = _.get(graphDataItem, 'dataContext.numChatWorkingTasks', 0);
-      var numWebcallWorkingTasks = _.get(graphDataItem, 'dataContext.numWebcallWorkingTasks', 0);
-      var categoryRange = setCategoryRange(graph.categoryAxis.title, graphDataItem.category);
-      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.chat') + ': ' + numChatWorkingTasks + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.chatWithVideo') + ': ' + numWebcallWorkingTasks + '</span>';
-
-      return categoryRange + balloonText;
-    }
-
     function balloonTextForAvgCsat(graphDataItem, graph) {
       var avgCsatScores = _.get(graphDataItem, 'dataContext.avgCsatScores', 0);
       var categoryRange = setCategoryRange(graph.categoryAxis.title, graphDataItem.category);
@@ -367,30 +358,20 @@
         'createdTime', categoryAxis, valueAxes, exportReport, titles);
     }
 
-    function showTaskAggregateGraph(taskAggregateDiv, taskAggregateBreakdownDiv, data, categoryAxisTitle, title) {
-      var taskAggregateChartConfig = getTaskAggregateGraphConfig(data, categoryAxisTitle, title, false, 'in-queue',
+    function showTaskAggregateGraph(taskAggregateDiv, data, categoryAxisTitle, title) {
+      var taskAggregateChartConfig = getTaskAggregateGraphConfig(data, categoryAxisTitle, title, 'in-queue',
         'assigned', 'numPendingTasks', 'numWorkingTasks', ChartColors.attentionBase, ChartColors.attentionBase);
-      var taskAggregateBreakdownChartConfig = getTaskAggregateGraphConfig(data, categoryAxisTitle, title, true,
-        'chatWithVideo', 'chat', 'numWebcallWorkingTasks', 'numChatWorkingTasks', ChartColors.primaryBase, ChartColors.ctaBase);
-
-      return [AmCharts.makeChart(taskAggregateDiv, taskAggregateChartConfig),
-        AmCharts.makeChart(taskAggregateBreakdownDiv, taskAggregateBreakdownChartConfig)];
+      return AmCharts.makeChart(taskAggregateDiv, taskAggregateChartConfig);
     }
 
-    function showTaskAggregateDummy(taskAggregateDiv, taskAggregateBreakdownDiv, data, categoryAxisTitle, title) {
-      var taskAggregateChartConfig = getTaskAggregateGraphConfig(data, categoryAxisTitle, title, false,
+    function showTaskAggregateDummy(taskAggregateDiv, data, categoryAxisTitle, title) {
+      var taskAggregateChartConfig = getTaskAggregateGraphConfig(data, categoryAxisTitle, title,
         'in-queue', 'assigned', 'numPendingTasks', 'numWorkingTasks');
-      var taskAggregateBreakdownChartConfig = getTaskAggregateGraphConfig(data, categoryAxisTitle, title, true,
-        'chatWithVideo', 'chat', 'numPendingTasks', 'numWorkingTasks');
-
       dummifyGraph(taskAggregateChartConfig);
-      dummifyGraph(taskAggregateBreakdownChartConfig);
-
-      return [AmCharts.makeChart(taskAggregateDiv, taskAggregateChartConfig),
-        AmCharts.makeChart(taskAggregateBreakdownDiv, taskAggregateBreakdownChartConfig)];
+      return AmCharts.makeChart(taskAggregateDiv, taskAggregateChartConfig);
     }
 
-    function getTaskAggregateGraphConfig(data, categoryAxisTitle, title, isBreakdown, upperGraphTitle, lowerGraphTitle,
+    function getTaskAggregateGraphConfig(data, categoryAxisTitle, title, upperGraphTitle, lowerGraphTitle,
       upperGraphValue, lowerGraphValue, upperGraphLineColor, lowerGraphLineColor) {
       var exportReport = CareReportsGraphService.getBaseVariable('export');
       exportReport.enabled = true;
@@ -420,13 +401,7 @@
         height: 14,
       };
 
-      var upperGraph = isBreakdown ? {
-        title: $translate.instant('careReportsPage.' + upperGraphTitle),
-        lineColor: upperGraphLineColor,
-        valueField: upperGraphValue,
-        showBalloon: true,
-        balloonFunction: balloonTextForTaskAggregateBreakdown,
-      } : {
+      var upperGraph = {
         title: $translate.instant('careReportsPage.' + upperGraphTitle),
         lineColor: upperGraphLineColor,
         valueField: upperGraphValue,
@@ -546,6 +521,23 @@
       return Math.round(value * 100) / 100;
     }
 
+    function getWebcallDataStats(dataArr) {
+      var webcallData = dataArr.filter(function (data) { return data.mediaType === 'webcall'; });
+      var webcallStats = {
+        isNumHandledTaskPresent: false,
+        isAvgHandleTimePresent: false,
+        isAvgCSATPresent: false,
+      };
+
+      webcallData.forEach(function (data) {
+        webcallStats.isNumHandledTaskPresent = webcallStats.isNumHandledTaskPresent || Boolean(data.numWebcallTasksHandled);
+        webcallStats.isAvgHandleTimePresent = webcallStats.isAvgHandleTimePresent || Boolean(data.avgWebcallTaskCloseTime);
+        webcallStats.isAvgCSATPresent = webcallStats.isAvgCSATPresent || Boolean(data.avgWebcallCsatScores);
+      });
+
+      return webcallStats;
+    }
+
     var service = {
       showTaskIncomingGraph: showTaskIncomingGraph,
       showTaskIncomingDummy: showTaskIncomingDummy,
@@ -562,6 +554,7 @@
       getTaskTimeGraphConfig: getTaskTimeGraphConfig,
       getAverageCsatGraphConfig: getAverageCsatGraphConfig,
       getTaskAggregateGraphConfig: getTaskAggregateGraphConfig,
+      getWebcallDataStats: getWebcallDataStats,
       millisToTime: millisToTime,
       roundCSATAvg: roundCSATAvg,
     };

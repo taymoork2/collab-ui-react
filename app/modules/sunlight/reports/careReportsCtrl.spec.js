@@ -3,7 +3,7 @@
 describe('Controller: Care Reports Controller', function () {
   var controller, $q, $scope, $translate, $timeout, CareReportsService, DummyCareReportService, FeatureToggleService,
     Notification, SunlightReportService, deferredReportingData, deferredTableData, deferredFeatureToggle,
-    DrillDownReportProps;
+    DrillDownReportProps, SunlightConfigService, deferredChatConfig;
 
   var timeOptions = [{
     value: 0,
@@ -62,7 +62,7 @@ describe('Controller: Care Reports Controller', function () {
   };
   beforeEach(
     inject(function ($controller, _$q_, _$translate_, _$timeout_, $rootScope, _CareReportsService_,
-      _DummyCareReportService_, _FeatureToggleService_, _Notification_, _SunlightReportService_, _DrillDownReportProps_) {
+      _DummyCareReportService_, _FeatureToggleService_, _Notification_, _SunlightReportService_, _DrillDownReportProps_, _SunlightConfigService_) {
       $scope = $rootScope.$new();
       $translate = _$translate_;
       $timeout = _$timeout_;
@@ -73,9 +73,12 @@ describe('Controller: Care Reports Controller', function () {
       DummyCareReportService = _DummyCareReportService_;
       CareReportsService = _CareReportsService_;
       DrillDownReportProps = _DrillDownReportProps_;
+      SunlightConfigService = _SunlightConfigService_;
+
       deferredReportingData = _$q_.defer();
       deferredTableData = _$q_.defer();
       deferredFeatureToggle = _$q_.defer();
+      deferredChatConfig = _$q_.defer();
       spyOn(SunlightReportService, 'getReportingData').and.returnValue(deferredReportingData.promise);
       spyOn(SunlightReportService, 'getAllUsersAggregatedData').and.returnValue(deferredTableData.promise);
       spyOn(DrillDownReportProps, 'taskIncomingDrilldownProps');
@@ -87,7 +90,7 @@ describe('Controller: Care Reports Controller', function () {
       Object.keys(CareReportsService).forEach(function (key) {
         spyOn(CareReportsService, key).and.returnValue([{}, {}]);
       });
-
+      spyOn(SunlightConfigService, 'getChatConfig').and.returnValue(deferredChatConfig.promise);
       controller = $controller('CareReportsController', {
         $scope: $scope,
         $q: $q,
@@ -98,6 +101,7 @@ describe('Controller: Care Reports Controller', function () {
         DummyCareReportService: DummyCareReportService,
         CareReportsService: CareReportsService,
         DrillDownReportProps: DrillDownReportProps,
+        SunlightConfigService: SunlightConfigService,
       });
     })
   );
@@ -107,7 +111,7 @@ describe('Controller: Care Reports Controller', function () {
     SunlightReportService.getReportingData.calls.reset();
     SunlightReportService.getAllUsersAggregatedData.calls.reset();
     $scope = $translate = $timeout = $q = SunlightReportService = Notification = FeatureToggleService = DummyCareReportService =
-      CareReportsService = deferredReportingData = deferredTableData = deferredFeatureToggle = controller = undefined;
+      CareReportsService = deferredReportingData = deferredTableData = deferredFeatureToggle = controller = deferredChatConfig = undefined;
   });
 
   afterAll(function () {
@@ -118,7 +122,7 @@ describe('Controller: Care Reports Controller', function () {
     expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[4]).toBeUndefined();
     expect(CareReportsService.showTaskOfferedDummy.calls.argsFor(0)[3]).toBeUndefined();
     expect(CareReportsService.showAverageCsatDummy.calls.argsFor(0)[4]).toBeUndefined();
-    expect(CareReportsService.showTaskAggregateDummy.calls.argsFor(0)[4]).toBeUndefined();
+    expect(CareReportsService.showTaskAggregateDummy.calls.argsFor(0)[3]).toBeUndefined();
     expect(CareReportsService.showTaskTimeDummy.calls.argsFor(0)[4]).toBeUndefined();
   }
 
@@ -129,7 +133,7 @@ describe('Controller: Care Reports Controller', function () {
     expect(CareReportsService.showTaskTimeGraph.calls.argsFor(0)[4]).toEqual(title);
 
     if (isToday) {
-      expect(CareReportsService.showTaskAggregateGraph.calls.argsFor(0)[4]).toEqual(title);
+      expect(CareReportsService.showTaskAggregateGraph.calls.argsFor(0)[3]).toEqual(title);
     }
   }
 
@@ -142,7 +146,6 @@ describe('Controller: Care Reports Controller', function () {
 
     expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[1]).toEqual('taskIncomingBreakdownDiv');
     expect(CareReportsService.showAverageCsatDummy.calls.argsFor(0)[1]).toEqual('averageCsatBreakdownDiv');
-    expect(CareReportsService.showTaskAggregateDummy.calls.argsFor(0)[1]).toEqual('taskAggregateBreakdownDiv');
     expect(CareReportsService.showTaskTimeDummy.calls.argsFor(0)[1]).toEqual('taskTimeBreakdownDiv');
   }
 
@@ -157,7 +160,6 @@ describe('Controller: Care Reports Controller', function () {
     expect(CareReportsService.showTaskTimeGraph.calls.argsFor(0)[1]).toEqual('taskTimeBreakdownDiv');
     if (isToday) {
       expect(CareReportsService.showTaskAggregateGraph.calls.argsFor(0)[0]).toEqual('taskAggregateDiv');
-      expect(CareReportsService.showTaskAggregateGraph.calls.argsFor(0)[1]).toEqual('taskAggregateBreakdownDiv');
     }
   }
 
@@ -173,19 +175,22 @@ describe('Controller: Care Reports Controller', function () {
 
     it('should make calls to data services with correct options', function () {
       deferredFeatureToggle.resolve(false);
+      deferredChatConfig.resolve({
+        data: { videoCallEnabled: true },
+      });
       $scope.$digest();
       $timeout.flush();
-      expect(controller.isVideoEnabled).toEqual(false);
+      expect(controller.isVideoFeatureEnabled).toEqual(false);
       expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([0]);
       expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_snapshot_stats', 0, 'chat', true]);
       expect(SunlightReportService.getReportingData.calls.argsFor(1)).toEqual(['org_stats', 0, 'chat']);
-      expect(DrillDownReportProps.taskIncomingDrilldownProps.calls.argsFor(0)[1]).toEqual(false);
-      expect(DrillDownReportProps.avgCsatDrilldownProps.calls.argsFor(0)[1]).toEqual(false);
-      expect(DrillDownReportProps.taskTimeDrilldownProps.calls.argsFor(0)[1]).toEqual(false);
     });
 
     it('should show Today and Task Incoming, Task Aggregate and Average Csat graphs on Init', function () {
       deferredFeatureToggle.resolve(false);
+      deferredChatConfig.resolve({
+        data: { videoCallEnabled: true },
+      });
       $scope.$digest();
       $timeout.flush();
       verifyDummyData();
@@ -198,6 +203,9 @@ describe('Controller: Care Reports Controller', function () {
     it('should set title for dummydata as empty and todays date for actual data', function () {
       var title = moment().format('MMM D');
       deferredFeatureToggle.resolve(false);
+      deferredChatConfig.resolve({
+        data: { videoCallEnabled: true },
+      });
       $scope.$digest();
       $timeout.flush();
       verifyDummyDataTitle();
@@ -210,6 +218,9 @@ describe('Controller: Care Reports Controller', function () {
       var title = (moment().subtract(1, 'days').format('MMM D'));
 
       deferredFeatureToggle.resolve(false);
+      deferredChatConfig.resolve({
+        data: { videoCallEnabled: true },
+      });
       $scope.$digest();
       $timeout.flush();
       verifyDummyDataTitle();
@@ -221,6 +232,9 @@ describe('Controller: Care Reports Controller', function () {
       var randomIndex = Math.floor((Math.random() * 3) + 2);
       controller.timeSelected = timeOptions[randomIndex];
       deferredFeatureToggle.resolve(false);
+      deferredChatConfig.resolve({
+        data: { videoCallEnabled: true },
+      });
       $scope.$digest();
       $timeout.flush();
       verifyDummyDataTitle();
@@ -236,6 +250,9 @@ describe('Controller: Care Reports Controller', function () {
       controller.mediaTypeSelected = mediaTypeOptions[1];
 
       deferredFeatureToggle.resolve(false);
+      deferredChatConfig.resolve({
+        data: { videoCallEnabled: true },
+      });
       $scope.$digest();
       $timeout.flush();
       expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([2]);
@@ -273,10 +290,9 @@ describe('Controller: Care Reports Controller', function () {
     var notCalled = function (err) { fail('Callback function call unexpected. ' + JSON.stringify(err)); };
     var dummyStats = getJSONFixture('sunlight/json/features/careReport/sunlightReportStats.json');
     var allUserFifteenMinutesStats = dummyStats.reportUsersFifteenMinutesStats;
-    var ciUserStats = dummyStats.ciUserStats;
 
     afterAll(function () {
-      notCalled = dummyStats = allUserFifteenMinutesStats = ciUserStats = undefined;
+      notCalled = dummyStats = allUserFifteenMinutesStats = undefined;
     });
 
     it('should fetch drill-down data on clicking show', function (done) {
@@ -290,12 +306,14 @@ describe('Controller: Care Reports Controller', function () {
       };
       controller.showTable(testOnSuccess, notCalled, controller.mediaTypeSelected, controller.timeSelected);
       expect(SunlightReportService.getAllUsersAggregatedData.calls.argsFor(0)).toEqual(['all_user_stats', 0, 'chat']);
-      deferredReportingData.resolve(allUserFifteenMinutesStats.data);
-      deferredTableData.resolve(ciUserStats);
+      deferredTableData.resolve({
+        data: allUserFifteenMinutesStats.data,
+        isWebcallDataPresent: {},
+      });
       $scope.$digest();
     });
 
-    it('should piggy-back on existing promise, if present ', function (done) {
+    it('should piggy-back on existing promise, if present ', function () {
       controller.timeSelected = timeOptions[0];
       controller.mediaTypeSelected = mediaTypeOptions[1];
       controller.filtersUpdate();
@@ -307,13 +325,13 @@ describe('Controller: Care Reports Controller', function () {
       };
       controller.showTable(testOnSuccess, notCalled, controller.mediaTypeSelected, controller.timeSelected);
       expect(SunlightReportService.getAllUsersAggregatedData.calls.argsFor(0)).toEqual(['all_user_stats', 0, 'chat']);
-      deferredReportingData.resolve(allUserFifteenMinutesStats.data);
-      deferredTableData.resolve(ciUserStats);
-      $scope.$digest();
+      deferredTableData.resolve({
+        data: allUserFifteenMinutesStats.data,
+        isWebcallDataPresent: {},
+      });
 
       var testOnSuccess2 = function (data) {
         expect(data).toEqual(data1);
-        done();
       };
       controller.showTable(testOnSuccess2, notCalled, controller.mediaTypeSelected, controller.timeSelected);
       $scope.$digest();
@@ -354,8 +372,10 @@ describe('Controller: Care Reports Controller', function () {
       controller.mediaTypeSelected = mediaTypeOptions[1];
       controller.filtersUpdate();
       $timeout.flush();
-      deferredReportingData.resolve(allUserFifteenMinutesStats.data);
-      deferredTableData.resolve(ciUserStats);
+      deferredTableData.resolve({
+        data: allUserFifteenMinutesStats.data,
+        isWebcallDataPresent: {},
+      });
       $scope.$digest();
     });
 
@@ -376,8 +396,10 @@ describe('Controller: Care Reports Controller', function () {
       };
       controller.showTable(testOnSuccess, notCalled, controller.mediaTypeSelected, controller.timeSelected);
       expect(SunlightReportService.getAllUsersAggregatedData.calls.argsFor(0)).toEqual(['all_user_stats', 2, 'all']);
-      deferredReportingData.resolve(allUserFifteenMinutesStats.data);
-      deferredTableData.resolve(ciUserStats);
+      deferredTableData.resolve({
+        data: allUserFifteenMinutesStats.data,
+        isWebcallDataPresent: {},
+      });
       $scope.$digest();
     });
 
@@ -390,7 +412,6 @@ describe('Controller: Care Reports Controller', function () {
       };
       controller.showTable(notCalled, testOnError, controller.mediaTypeSelected, controller.timeSelected);
       expect(SunlightReportService.getAllUsersAggregatedData.calls.argsFor(0)).toEqual(['all_user_stats', 3, 'callback']);
-      deferredReportingData.resolve(allUserFifteenMinutesStats.data);
       deferredTableData.reject('testError');
       $scope.$digest();
     });
@@ -430,6 +451,73 @@ describe('Controller: Care Reports Controller', function () {
       expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, 'careReportsPage.taskDataGetError');
       expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, 'careReportsPage.taskDataGetError');
       expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, 'careReportsPage.taskDataGetError');
+    });
+  });
+
+  describe('Display of chat to video reports', function () {
+    function setInitFlags(videoCallEnabled, mediaType) {
+      deferredFeatureToggle.resolve(true);
+      deferredChatConfig.resolve({
+        data: { videoCallEnabled: videoCallEnabled },
+      });
+      $scope.$digest();
+      $timeout.flush();
+      controller.mediaTypeSelected = {
+        name: mediaType,
+      };
+    }
+
+    it('selectced mediaType is non chat', function () {
+      setInitFlags(true, 'callback');
+      expect(controller.shouldVideoDrillDownDisplayed(false)).toBe(false);
+      controller.shouldDisplayBreakdown({});
+      expect(controller.showChartWithoutBreakdown.taskIncoming).toBe(true);
+      expect(controller.showChartWithoutBreakdown.avgCsat).toBe(true);
+      expect(controller.showChartWithoutBreakdown.taskTime).toBe(true);
+    });
+
+    it('selectced mediaType chat, chat-to-video is enabled and data is present', function () {
+      setInitFlags(true, 'chat');
+      expect(controller.shouldVideoDrillDownDisplayed(true)).toBe(true);
+      controller.shouldDisplayBreakdown({
+        isNumHandledTaskPresent: true, isAvgCSATPresent: true, isAvgHandleTimePresent: true,
+      });
+      expect(controller.showChartWithoutBreakdown.taskIncoming).toBe(false);
+      expect(controller.showChartWithoutBreakdown.avgCsat).toBe(false);
+      expect(controller.showChartWithoutBreakdown.taskTime).toBe(false);
+    });
+
+    it('selectced mediaType chat, chat-to-video is enabled and data is not present', function () {
+      setInitFlags(true, 'chat');
+      expect(controller.shouldVideoDrillDownDisplayed(false)).toBe(true);
+      controller.shouldDisplayBreakdown({
+        isNumHandledTaskPresent: false, isAvgCSATPresent: false, isAvgHandleTimePresent: false,
+      });
+      expect(controller.showChartWithoutBreakdown.taskIncoming).toBe(false);
+      expect(controller.showChartWithoutBreakdown.avgCsat).toBe(false);
+      expect(controller.showChartWithoutBreakdown.taskTime).toBe(false);
+    });
+
+    it('selectced mediaType chat, chat-to-video is disabled and data is not present', function () {
+      setInitFlags(false, 'chat');
+      expect(controller.shouldVideoDrillDownDisplayed(false)).toBe(false);
+      controller.shouldDisplayBreakdown({
+        isNumHandledTaskPresent: false, isAvgCSATPresent: false, isAvgHandleTimePresent: false,
+      });
+      expect(controller.showChartWithoutBreakdown.taskIncoming).toBe(true);
+      expect(controller.showChartWithoutBreakdown.avgCsat).toBe(true);
+      expect(controller.showChartWithoutBreakdown.taskTime).toBe(true);
+    });
+
+    it('selectced mediaType chat, chat-to-video is disabled and data is present', function () {
+      setInitFlags(false, 'chat');
+      expect(controller.shouldVideoDrillDownDisplayed(true)).toBe(true);
+      controller.shouldDisplayBreakdown({
+        isNumHandledTaskPresent: true, isAvgCSATPresent: true, isAvgHandleTimePresent: true,
+      });
+      expect(controller.showChartWithoutBreakdown.taskIncoming).toBe(false);
+      expect(controller.showChartWithoutBreakdown.avgCsat).toBe(false);
+      expect(controller.showChartWithoutBreakdown.taskTime).toBe(false);
     });
   });
 });

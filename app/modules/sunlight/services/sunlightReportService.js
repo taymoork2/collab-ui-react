@@ -85,8 +85,8 @@
 
     function addUserDataToReportingData(reportingUserData) {
       var reportedUserIds = [];
-      if (reportingUserData && reportingUserData.length > 0) {
-        reportedUserIds = _.map(reportingUserData, function (reportUser) {
+      if (reportingUserData.data && reportingUserData.data.length > 0) {
+        reportedUserIds = _.map(reportingUserData.data, function (reportUser) {
           return reportUser.userId;
         });
         return $q(function (resolve) {
@@ -101,12 +101,13 @@
               if (ciNonCareUserIds.length > 0) {
                 getNonCareUserDetails(ciNonCareUserIds, ciCareUsers, reportingUserData, resolve);
               } else {
-                resolve(mergeReportingAndUserData(reportingUserData, ciCareUsers));
+                mergeReportingAndUserData(reportingUserData.data, ciCareUsers);
+                resolve(reportingUserData);
               }
             });
         });
       } else {
-        return $q.resolve([]);
+        return $q.resolve(reportingUserData);
       }
     }
 
@@ -122,9 +123,11 @@
           });
 
           var totalUsers = _.concat(ciCareUsers, userObjs[0]);
-          resolve(mergeReportingAndUserData(reportingUserData, totalUsers));
+          mergeReportingAndUserData(reportingUserData.data, totalUsers);
+          resolve(reportingUserData);
         }, function () {
-          resolve(mergeReportingAndUserData(reportingUserData, ciCareUsers, true));
+          mergeReportingAndUserData(reportingUserData.data, ciCareUsers, true);
+          resolve(reportingUserData);
         });
     }
 
@@ -389,7 +392,7 @@
           break;
       }
 
-      var downSampledStatsByHour = [];
+      var downSampledStats = [];
       _.map(groupedStats, function (statsList) {
         var seggregatedData = _.partition(statsList, function (data) { return data.mediaType === 'chat'; });
         var chatData = _.head(seggregatedData);
@@ -410,38 +413,22 @@
           reducedList.avgChatCsatScores = roundTwoDecimalPlaces(reducedChatList.avgCsatScores);
           reducedList.avgWebcallCsatScores = roundTwoDecimalPlaces(reducedWebcallList.avgCsatScores);
         }
-        downSampledStatsByHour.push(reducedList);
+        downSampledStats.push(reducedList);
       });
 
-      return downSampledStatsByHour;
+      return downSampledStats;
     }
 
     function processGroupedStatsSnapshot(groupedStats) {
-      var downSampledStatsByHour = [];
+      var downSampledStats = [];
       _.map(groupedStats, function (statsList) {
-        var seggregatedData = _.partition(statsList, function (data) { return data.mediaType === 'chat'; });
-        var chatData = _.head(seggregatedData);
-        var webcallData = _.last(seggregatedData);
         var reducedList = _.reduce(statsList, reduceOrgSnapshotStatsByHour, emptyOrgstats);
         reducedList.numWorkingTasks = Math.max(0, reducedList.numWorkingTasks);
         reducedList.numPendingTasks = Math.max(0, reducedList.numPendingTasks);
-
-        if (chatData.length > 0) {
-          var reducedChatList = _.reduce(chatData, reduceOrgSnapshotStatsByHour, emptyOrgstats);
-          var reducedWebcallList = _.reduce(webcallData, reduceOrgSnapshotStatsByHour, emptyOrgstats);
-          reducedChatList.numWorkingTasks = Math.max(0, reducedChatList.numWorkingTasks);
-          reducedWebcallList.numWorkingTasks = Math.max(0, reducedWebcallList.numWorkingTasks);
-          reducedChatList.numPendingTasks = Math.max(0, reducedChatList.numPendingTasks);
-          reducedWebcallList.numPendingTasks = Math.max(0, reducedWebcallList.numPendingTasks);
-          reducedList.numWorkingTasks = reducedChatList.numWorkingTasks + reducedWebcallList.numWorkingTasks;
-          reducedList.numPendingTasks = reducedChatList.numPendingTasks + reducedWebcallList.numPendingTasks;
-          reducedList.numChatWorkingTasks = reducedChatList.numWorkingTasks;
-          reducedList.numWebcallWorkingTasks = reducedWebcallList.numWorkingTasks;
-        }
-        downSampledStatsByHour.push(reducedList);
+        downSampledStats.push(reducedList);
       });
 
-      return downSampledStatsByHour;
+      return downSampledStats;
     }
 
     function downSampleByHour(data, isSnapshot) {
@@ -475,20 +462,37 @@
       return processGroupedStats(statsGroupedByMonth, 'month');
     }
 
+    function updateWebcallDataPresent(reducedUserVal, dataObj) {
+      dataObj.isWebcallDataPresent.isAvgCSATPresent = dataObj.isWebcallDataPresent.isAvgCSATPresent
+        || Boolean(reducedUserVal.avgWebcallCsatScore);
+      dataObj.isWebcallDataPresent.isAvgHandleTimePresent = dataObj.isWebcallDataPresent.isAvgHandleTimePresent
+        || Boolean(reducedUserVal.avgWebcallHandleTime);
+      dataObj.isWebcallDataPresent.isTotalHandledPresent = dataObj.isWebcallDataPresent.isTotalHandledPresent
+        || Boolean(reducedUserVal.webcallTasksHandled);
+    }
+
     function downSampleByUserId(data) {
       var statsGroupedByUserId = _.groupBy(data, function (stats) {
         return stats.userId;
       });
-      var downSampledStatsByUserId = [];
+      var downSampledStatsByUserId = {
+        data: [],
+        isWebcallDataPresent: {
+          isAvgCSATPresent: false,
+          isAvgHandleTimePresent: false,
+          isTotalHandledPresent: false,
+        },
+      };
       _.map(statsGroupedByUserId, function (statsList) {
         var reducedForUserId = _.reduce(statsList, reduceUserStats, emptyUserstats);
         reducedForUserId.avgHandleTime = calculateAvg(reducedForUserId.handleTime, reducedForUserId.tasksHandled);
         reducedForUserId.avgCsatScore = calculateAvg(reducedForUserId.totalCSAT, reducedForUserId.numCsatScores);
         reducedForUserId.avgWebcallHandleTime = calculateAvg(reducedForUserId.webcallHandleTime, reducedForUserId.webcallTasksHandled);
         reducedForUserId.avgWebcallCsatScore = calculateAvg(reducedForUserId.webcallTotalCSAT, reducedForUserId.webcallNumCsatScores);
-        downSampledStatsByUserId.push(reducedForUserId);
+        updateWebcallDataPresent(reducedForUserId, downSampledStatsByUserId);
+        downSampledStatsByUserId.data.push(reducedForUserId);
       });
-      _.map(downSampledStatsByUserId, function (stats) {
+      _.map(downSampledStatsByUserId.data, function (stats) {
         stats.tasksAccepted = Math.max(stats.tasksOffered - stats.tasksMissed, 0);
       });
       return downSampledStatsByUserId;
