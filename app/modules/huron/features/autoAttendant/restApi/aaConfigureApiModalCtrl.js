@@ -10,7 +10,6 @@
     var vm = this;
 
     var GET = 'GET';
-    //var apiConfig;
     var action;
     var CONSTANTS = {};
     var ui;
