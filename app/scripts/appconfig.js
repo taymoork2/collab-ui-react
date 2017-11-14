@@ -1033,7 +1033,12 @@
             },
           })
           .state('users.manage.edit-auto-assign-template-modal', {
-            template: '<edit-auto-assign-template-modal dismiss="$dismiss()"></edit-auto-assign-template-modal>',
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<edit-auto-assign-template-modal dismiss="$dismiss()"></edit-auto-assign-template-modal>',
+              },
+            },
             params: {
               prevState: 'users.manage.picker',
             },
