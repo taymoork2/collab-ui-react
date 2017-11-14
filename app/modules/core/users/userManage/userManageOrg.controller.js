@@ -7,7 +7,7 @@ require('./_user-manage.scss');
     .controller('UserManageOrgController', UserManageOrgController);
 
   /* @ngInject */
-  function UserManageOrgController(Analytics, FeatureToggleService, OnboardService, Orgservice, $state, UserCsvService) {
+  function UserManageOrgController($q, $state, Analytics, DirSyncService, FeatureToggleService, OnboardService, Orgservice, UserCsvService) {
     var vm = this;
 
     vm.onInit = onInit;
@@ -16,7 +16,10 @@ require('./_user-manage.scss');
     vm.maxUsersInManual = OnboardService.maxUsersInManual;
     vm.onNext = onNext;
     vm.cancelModal = cancelModal;
+    vm.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
     vm.convertableUsers = false;
+    vm.isAtlasF3745AutoAssignToggle = false;
+    vm.isAutoAssignTemplateEnabled = false;
     vm.onInit();
 
     var isAtlasEmailSuppressToggle = false;
@@ -29,8 +32,13 @@ require('./_user-manage.scss');
           vm.convertableUsers = true;
         }
       });
-      FeatureToggleService.atlasEmailSuppressGetStatus().then(function (toggle) {
-        isAtlasEmailSuppressToggle = toggle;
+
+      $q.all({
+        atlasEmailSuppress: FeatureToggleService.atlasEmailSuppressGetStatus(),
+        atlasF3745AutoAssignLicenses: FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus(),
+      }).then(function (toggles) {
+        isAtlasEmailSuppressToggle = toggles.atlasEmailSuppress;
+        vm.isAtlasF3745AutoAssignToggle = toggles.atlasF3745AutoAssignLicenses;
       });
     }
 
@@ -39,12 +47,26 @@ require('./_user-manage.scss');
       Analytics.trackAddUsers(Analytics.eventNames.CANCEL_MODAL);
     }
 
-    function onNext() {
+    function goToAutoAssignTemplate() {
+      $state.go('users.manage.edit-auto-assign-template-modal', {
+        prevState: 'users.manage.picker',
+      });
+    }
+
+    function onNext(_manageType) {
+      if (_manageType) {
+        vm.manageType = _manageType;
+      }
+
       if (isAtlasEmailSuppressToggle) {
-        $state.go('users.manage.emailSuppress', {
-          manageType: vm.manageType,
-          prevState: 'users.manage.org',
-        });
+        if (vm.manageType === vm.ManageType.AUTO_ASSIGN_TEMPLATE) {
+          goToAutoAssignTemplate();
+        } else {
+          $state.go('users.manage.emailSuppress', {
+            manageType: vm.manageType,
+            prevState: 'users.manage.org',
+          });
+        }
       } else {
         switch (vm.manageType) {
           case vm.ManageType.MANUAL:
@@ -66,6 +88,10 @@ require('./_user-manage.scss');
             $state.go('users.convert', {
               manageUsers: true,
             });
+            break;
+
+          case vm.ManageType.AUTO_ASSIGN_TEMPLATE:
+            goToAutoAssignTemplate();
             break;
         }
       }

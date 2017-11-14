@@ -5,7 +5,7 @@ describe('UserManageOrgController', function () {
 
   function init() {
     this.initModules('Core', 'Huron', 'Sunlight');
-    this.injectDependencies('$scope', '$stateParams', '$controller', 'Analytics', 'UserCsvService', 'OnboardService', 'Orgservice', 'FeatureToggleService', '$q');
+    this.injectDependencies('$q', '$scope', '$state', '$stateParams', 'Analytics', 'DirSyncService', 'FeatureToggleService', 'OnboardService', 'Orgservice', 'UserCsvService');
 
     this.$state = {
       modal: {
@@ -18,17 +18,19 @@ describe('UserManageOrgController', function () {
   }
 
   function initController() {
-    this.controller = this.$controller('UserManageOrgController', {
-      $scope: this.$scope,
-      $state: this.$state,
-      $stateParams: this.$stateParams,
-      Analytics: this.Analytics,
-      UserCsvService: this.UserCsvService,
-      OnboardService: this.OnboardService,
-      Orgservice: this.Orgservice,
-      FeatureToggleService: this.FeatureToggleService,
+    this.initController('UserManageOrgController', {
+      controllerLocals: {
+        $scope: this.$scope,
+        $state: this.$state,
+        $stateParams: this.$stateParams,
+        Analytics: this.Analytics,
+        DirSyncService: this.DirSyncService,
+        FeatureToggleService: this.FeatureToggleService,
+        OnboardService: this.OnboardService,
+        Orgservice: this.Orgservice,
+        UserCsvService: this.UserCsvService,
+      },
     });
-    this.$scope.$apply();
   }
 
   function initControllerAndDefaults() {
@@ -37,7 +39,16 @@ describe('UserManageOrgController', function () {
         success: false,
       });
     });
+    spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(false);
     spyOn(this.FeatureToggleService, 'atlasEmailSuppressGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(false));
+
+    initController.apply(this);
+  }
+
+  function initControllerAndAutoAssignFeatureToggleOn() {
+    spyOn(this.FeatureToggleService, 'atlasEmailSuppressGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(true));
 
     initController.apply(this);
   }
@@ -62,6 +73,7 @@ describe('UserManageOrgController', function () {
       });
     });
     spyOn(this.FeatureToggleService, 'atlasEmailSuppressGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(false));
 
     initController.apply(this);
   }
@@ -151,7 +163,7 @@ describe('UserManageOrgController', function () {
     expect(this.Analytics.trackAddUsers).not.toHaveBeenCalled();
   });
 
-  it('when emailSuppress toggle is on, should go to users.manage.emailSuppress', function () {
+  it('should go to users.manage.emailSuppress when emailSuppress toggle is on', function () {
     initControllerAndUnlicensedUsersAndFeatureToggleOn.apply(this);
     this.controller.manageType = 'manual';
 
@@ -159,6 +171,16 @@ describe('UserManageOrgController', function () {
     expect(this.$state.go).toHaveBeenCalledWith('users.manage.emailSuppress', {
       manageType: 'manual',
       prevState: 'users.manage.org',
+    });
+  });
+
+  it('should go to auto assign template when isAtlasF3745AutoAssignToggle is on', function () {
+    initControllerAndAutoAssignFeatureToggleOn.apply(this);
+    this.controller.manageType = 'autoAssignTemplate';
+
+    this.controller.onNext();
+    expect(this.$state.go).toHaveBeenCalledWith('users.manage.edit-auto-assign-template-modal', {
+      prevState: 'users.manage.picker',
     });
   });
 });

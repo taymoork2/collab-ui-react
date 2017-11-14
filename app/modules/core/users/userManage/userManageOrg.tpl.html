@@ -3,7 +3,8 @@
   <h3 class="modal-title" translate="usersPage.manageUsers"></h3>
 </div>
 
-<div class="modal-body user-manage">
+<!-- Does NOT have AtlasF3745AutoAssignToggle assigned -->
+<div ng-if="!umoc.isAtlasF3745AutoAssignToggle" class="modal-body user-manage">
   <form name="userModifyUsersForm">
     <div class="columns medium-5">
       <h4 translate="userManage.org.typeLabel"></h4>
@@ -29,7 +30,7 @@
               ng-value="umoc.ManageType.BULK"
               cs-input-label="{{::'userManage.org.bulkLabel'|translate}}"
               cs-input-help-text="{{::'userManage.org.bulkDetails'|translate: {maxUsersInCSV: umoc.maxUsersInCSV} }}">
-            <p class="csv-export-link">
+            <p class="csv-export-link csv-export-link--not-auto-assign">
               <cr-user-csv-export
                 as-link="{{::'userManage.bulk.exportUserList'|translate}}"
                 use-csv-download-directive="true">
@@ -67,7 +68,100 @@
   </form>
 </div>
 
-<div class="modal-footer">
+<div ng-if="!umoc.isAtlasF3745AutoAssignToggle" class="modal-footer">
   <button type="button" id="btnClear" class="btn" ng-click="umoc.cancelModal()"><span translate="common.cancel"></span></button>
   <button type="button" class="btn btn--primary" ng-click="umoc.onNext()"><span translate="common.next"></span></button>
 </div>
+
+<!-- Does have AtlasF3745AutoAssignToggle -->
+<div ng-if="umoc.isAtlasF3745AutoAssignToggle" class="modal-body user-manage">
+  <div class="row">
+    <div class="columns medium-4 manage-modal-header">
+      <h4 translate="userManage.org.activeDirectory"></h4>
+    </div>
+    <div class="columns medium-3 manage-modal-label sync-status">
+      <h5 translate="userManage.org.directorySynchronization"></h5>
+      <span class="manage-modal-detail ds-sync">
+        <i class="icon icon-circle icon-circle-manage" 
+          ng-class="{'working': umoc.isDirSyncEnabled, 'disabled': !umoc.isDirSyncEnabled}">
+        </i>
+        <h6 ng-if="umoc.isDirSyncEnabled" translate="userManage.org.enabled"></h6>
+        <h6 ng-if="!umoc.isDirSyncEnabled" translate="userManage.org.disabled"></h6>
+      </span>
+    </div>
+    <div class="columns medium-5 manage-modal-dots">
+      <span cs-dropdown class="actions-menu">
+        <button cs-dropdown-toggle class="btn--none dropdown-toggle icon icon-three-dots" 
+          ng-click="$event.stopPropagation()">
+        </button>
+        <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
+          <li ng-if="!umoc.isDirSyncEnabled" class="menu-item">
+            <a href ng-click="umoc.onNext(ManageType.ADVANCED_NO_DS)" translate="userManage.org.directorySynchronizationEnableLabel"></a>
+          </li>
+          <li ng-if="umoc.isDirSyncEnabled" class="menu-item">
+            <a href ng-click="umoc.onNext(ManageType.ADVANCED_NO_DS)" translate="userManage.org.directorySynchronizationDisableLabel"></a>
+          </li>
+        </ul>
+      </span>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="columns medium-4 manage-modal-header">
+      <h4 translate="userManage.org.licenses"></h4>
+    </div>
+    <div class="columns manage-modal-label" 
+      ng-class="{'medium-3': umoc.isAutoAssignTemplateEnabled, 'medium-8': !umoc.isAutoAssignTemplateEnabled}">
+      <h5 translate="userManage.org.autoAssignLicenses"></h5>
+      <h6 class="manage-modal-detail manage-modal-detail--link" translate="userManage.org.setUpAutoAssignTemplate" 
+        ng-click="umoc.onNext(umoc.ManageType.AUTO_ASSIGN_TEMPLATE)">
+      </h6>
+    </div>
+     <div ng-if="umoc.isAutoAssignTemplateEnabled" class="columns medium-5 manage-modal-dots">
+      <span cs-dropdown class="actions-menu">
+        <button cs-dropdown-toggle class="btn--none dropdown-toggle icon icon-three-dots" 
+          ng-click="$event.stopPropagation();">
+        </button>
+        <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
+          <li class="menu-item">
+            <a href ng-click="" translate="userManage.org.moreOptions.modifyAutoAssign"></a>
+          </li>
+          <li class="menu-item">
+            <a href ng-click="" translate="userManage.org.moreOptions.deactivateAutoAssign"></a>
+          </li>
+          <li class="menu-item">
+            <a href ng-click="" translate="userManage.org.moreOptions.deleteAutoAssign"></a>
+          </li>
+        </ul>
+      </span>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <h4 class="manage-modal-header" translate="userManage.org.modifyUsers"></h4>
+    <div class="columns medium-4 modify-users-section" ng-click="umoc.onNext(umoc.ManageType.MANUAL)">
+      <h4 class="modify-users-section--label" translate="userManage.org.manualLabelNew"></h4>
+      <h6 class="modify-users-section--details" translate="userManage.org.manualDetailsNew" translate-values="{maxUsersInManual: umoc.maxUsersInManual}"></h6>
+    </div>
+    <div class="columns medium-4 modify-users-section modify-users-section--middle-box" 
+        ng-click="umoc.onNext(umoc.ManageType.BULK)">
+      <h4 class="modify-users-section--label" translate="userManage.org.bulkLabelNew"></h4>
+      <h6 class="modify-users-section--details" translate="userManage.org.bulkDetailsNew" translate-values="{maxUsersInCSV: umoc.maxUsersInCSV}"></h6>
+      <p class="csv-export-link">
+        <cr-user-csv-export as-link="{{::'userManage.bulk.exportUserList'|translate}}" ng-click="$event.stopPropagation()"
+          use-csv-download-directive="true">
+        </cr-user-csv-export>
+      </p>
+    </div>
+    <div ng-if="umoc.convertableUsers" class="columns medium-4 modify-users-section" ng-click="umoc.onNext(umoc.ManageType.CONVERT)">
+      <h4 class="modify-users-section--label" translate="userManage.org.convertLabel" ></h4>
+      <h6 class="modify-users-section--details" translate="userManage.org.convertDetails"></h6>
+    </div>
+    <div ng-if="!umoc.convertableUsers" class="columns medium-4 modify-users-section">
+      <h4 class="modify-users-section--label modify-users-section--disabled" translate="userManage.org.convertLabel" ></h4>
+      <h6 class="modify-users-section--disabled" translate="userManage.org.convertUnavailable"></h6>
+    </div>
+  </div>
+</div>
+
+<div ng-if="umoc.isAtlasF3745AutoAssignToggle" class="modal-footer"></div>
