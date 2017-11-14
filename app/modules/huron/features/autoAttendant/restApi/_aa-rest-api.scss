@@ -99,3 +99,26 @@
   @include vr-spacing(mt, 1.06);
   @include vr-spacing(mb, 1.06);
 }
+
+.aa-rest-assignment-block {
+  @include vr-spacing(mt, 0);
+  @include vr-spacing(mb, 0);
+}
+
+.var-assignment-table {
+  border-collapse: collapse;
+  border: 0.01rem solid #aeaeaf;
+
+  tr {
+    border-top: none;
+  }
+
+  th {
+    background-color: #ffffff;
+    border-bottom: 0.01rem solid #aeaeaf;
+  }
+
+  th, td {
+    border-right: 0.01rem solid #aeaeaf;
+  }
+}
