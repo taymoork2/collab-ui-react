@@ -159,7 +159,7 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
           const cloudServiceIsSetup: boolean = _.get(results[0], 'value.setup', false) || _.get(results[1], 'value.setup', false);
           // We only want to show *one* link to Calendar in the sidepanel.
           // If both Exchange/Office365-based and Google are enabled, we need to "cheat" and pretend one of them is not.
-          const ignoreCloudService = expresswayBasedCalendar.enabled && !expresswayBasedCalendar.userIsEntitled && !cloudBasedCalendar.userIsEntitled;
+          const ignoreCloudService = _.isUndefined(cloudBasedCalendar) || (expresswayBasedCalendar.enabled && !expresswayBasedCalendar.userIsEntitled && !cloudBasedCalendar.userIsEntitled);
           if (cloudServiceIsSetup && (!expresswayBasedCalendar.enabled || !expresswayBasedCalendar.userIsEntitled) && !ignoreCloudService) {
             cloudBasedCalendar.enabled = true;
             expresswayBasedCalendar.enabled = false;
