@@ -206,7 +206,7 @@ require('./_customer-list.scss');
         [PREMIUM],
         [STANDARD],
         ['expired'],
-        //['pending'], -- don't include pending until DE2048 fixed
+        //['pending'], -- don't include pending until DE2048 is fixed
         ['purchasedWithActive'],
         ['purchasedWithExpired'],
       ];
@@ -221,7 +221,7 @@ require('./_customer-list.scss');
 
       _.forEach(arFilters, function (filter) {
         var isPremium = (filter[0] === PREMIUM) || (filter[0] === STANDARD);
-        var key = filter[1] || (filter[0] + 'AccountsFilter');
+        var key = filter[1] || (filter[0] + 'Accounts');
         vm.filter.options.push({
           count: 0,
           value: filter[0],
@@ -612,7 +612,7 @@ require('./_customer-list.scss');
       var accountFilters = _.filter(vm.filter.options, { isAccountFilter: true });
       _.forEach(accountFilters, function (filter) {
         filter.count = statusTypeCounts[filter.value] || 0;
-        filter.label = $translate.instant('customerPage.' + filter.key, {
+        filter.label = $translate.instant('customerPage.filters.' + filter.key, {
           count: filter.count,
         });
       });
@@ -625,7 +625,7 @@ require('./_customer-list.scss');
 
         _.forEach(premiumFilters, function (filter) {
           filter.count = _.get(counts, filter.value, []).length;
-          filter.label = $translate.instant('customerPage.' + filter.key, {
+          filter.label = $translate.instant('customerPage.filters.' + filter.key, {
             count: filter.count,
           });
 

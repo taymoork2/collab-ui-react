@@ -5451,7 +5451,7 @@
       "meeting": "Meeting",
       "call": "Call",
       "webexOverview": "WebEx",
-      "roomSystems": "Room Devices",
+      "roomSystem": "Room Devices",
       "sparkBoard": "Cisco Spark Board",
       "care": "Care",
       "trialAccounts": "Trial Accounts ({{count}})",
