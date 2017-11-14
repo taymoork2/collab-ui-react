@@ -237,6 +237,7 @@ var AutoAttendantPage = function () {
   this.voiceSelectopenHours0 = element(by.id('voiceSelectopenHours0'));
   this.cancelTreatmentFeature = element(by.id('cancelTreatmentFeature'));
 
+  this.sessionVarOption = element.all(by.id('sessionVar'));
   // first item is caller input
   this.newStepCallerInput = element.all(by.css('div.aa-panel[name="newStepForm"]'))
     .filter(function (el) {
@@ -279,7 +280,7 @@ var AutoAttendantPage = function () {
     .all(by.css('div.aa-flex-row'))
     .last()
     .all(by.tagName('li'))
-    .get(3);
+    .get(4);
 
   // fifth item in newStep dropdown: REST API
   this.newStepSelectRestApi = element.all(by.css('div.aa-panel[name="newStepForm"]'))
@@ -290,7 +291,7 @@ var AutoAttendantPage = function () {
     .all(by.css('div.aa-flex-row'))
     .last()
     .all(by.tagName('li'))
-    .get(4);
+    .get(3);
 
   // sixth item in newStep dropdown: Route Call
   this.newStepSelectRouteCall = element.all(by.css('div.aa-panel[name="newStepForm"]'))
@@ -329,7 +330,8 @@ var AutoAttendantPage = function () {
     .all(by.tagName('li'))
     .get(9);
 
-  this.restApi = element(by.css('div.aa-panel-body[name="REST API"]'));
+  this.restApi = element(by.css('div.aa-panel-body[name="Invoke REST API"]'));
+  this.restDynamicsValue = element(by.name('value'));
   this.configureApi = element(by.id('configureApi'));
   this.configureApiURL = element(by.css('.dynamic-prompt'));
   this.addDynamicFeature = element(by.id('addDynamicFeature'));
@@ -338,17 +340,16 @@ var AutoAttendantPage = function () {
   this.variable1 = element(by.css('#variableSelect select[name="variableSelect"] + div div.dropdown-menu')).all(by.tagName('li')).last();
 
   this.dynamicModalOkButton = element(by.css('.btn-primary'));
-  this.sessionVar = element(by.id('sessionVar'));
-  this.sessionVar1 = element.all(by.id('sessionVar')).get(1);
-  this.sessionVarAll = element.all(by.id('sessionVar'));
-
-  this.newSessionVar = this.sessionVar.element(by.css('div.dropdown-menu')).all(by.tagName('li')).last();
-  this.newSessionVar1 = this.sessionVar1.element(by.css('div.dropdown-menu')).all(by.tagName('li')).last();
+  this.sessionVarCombo = element(by.id('sessionVar'));
+  this.sessionVarComboOptions1 = this.sessionVarCombo.element(by.tagName('a'));
   this.addVariableToSet = element(by.id('addVariableToSet'));
   this.newVariableName = element(by.name('newVariableName'));
   this.newVariableName1 = element.all(by.name('newVariableName')).get(1);
 
   this.saveBtn = element(by.id('saveBtn'));
+  this.nextBtn = element(by.id('nextBtn'));
+  this.testBtn = element(by.id('testBtn'));
+  this.assignmentTab = element(by.id('assignmentTab'));
   this.restApiUrlLabel = element(by.css('.aa-rest-api-url'));
   this.restApiVariableLabel1 = element.all(by.css('.aa-rest-api-variables')).get(0);
   this.restApiVariableLabel2 = element.all(by.css('.aa-rest-api-variables')).get(1);
