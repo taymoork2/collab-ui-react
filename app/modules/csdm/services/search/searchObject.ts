@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
-import { SearchElement, QueryParser, OperatorAnd, FieldQuery } from './queryParser';
+import { QueryParser } from './queryParser';
 import { SearchTranslator } from './searchTranslator';
+import { FieldQuery, OperatorAnd, SearchElement } from './searchElement';
 
 enum Aggregate {
   connectionStatus, product, productFamily, activeInterface, errorCodes, upgradeChannel, software,
@@ -9,7 +10,6 @@ enum Aggregate {
 export class SearchObject {
 
   public query: string;
-  public tokenizedQuery: { [key: string]: { searchField: string, query: string, active: boolean } };
   public aggregates?: string[] = [
     Aggregate[Aggregate.product],
     Aggregate[Aggregate.connectionStatus],
@@ -29,11 +29,11 @@ export class SearchObject {
   private parsedQuery: SearchElement;
   public currentFilterValue: string;
 
-  private constructor() {
+  private constructor(private queryParser: QueryParser) {
   }
 
-  public static createWithQuery(query: string): SearchObject {
-    const so = new SearchObject();
+  public static createWithQuery(queryParser: QueryParser, query: string): SearchObject {
+    const so = new SearchObject(queryParser);
     so.setQuery(query);
     return so;
   }
@@ -89,7 +89,7 @@ export class SearchObject {
   public setQuery(query: string, alreadyParsedQuery?: SearchElement) {
     try {
       this.query = query;
-      this.parsedQuery = alreadyParsedQuery || QueryParser.parseQueryString(query);
+      this.parsedQuery = alreadyParsedQuery || this.queryParser.parseQueryString(query);
       this.from = 0;
       this.hasError = false;
       this.lastGoodQuery = _.cloneDeep(this.parsedQuery);
@@ -104,7 +104,7 @@ export class SearchObject {
       this.removeSearchElement(alreadyEdited);
     } else {
       try {
-        const parsedNewQuery = QueryParser.parseQueryString(translatedQuery);
+        const parsedNewQuery = this.queryParser.parseQueryString(translatedQuery);
         this.hasError = false;
         parsedNewQuery.setBeingEdited(true);
 
@@ -151,7 +151,7 @@ export class SearchObject {
   }
 
   public addSearchElement(translatedQuery: string) {
-    const parsedNewQuery = QueryParser.parseQueryString(translatedQuery);
+    const parsedNewQuery = this.queryParser.parseQueryString(translatedQuery);
     this.addParsedSearchElement(parsedNewQuery);
     this.setQuery(translatedQuery, this.parsedQuery);
   }
@@ -183,11 +183,11 @@ export class SearchObject {
       : query;
 
     if (this.currentFilterValue) {
-      const parsedFilter = QueryParser.parseQueryString(this.currentFilterValue);
+      const parsedFilter = this.queryParser.parseQueryString(this.currentFilterValue);
       if (translatedQuery) {
         return new OperatorAnd([translatedQuery, parsedFilter]);
       } else {
-        return QueryParser.parseQueryString(this.currentFilterValue);
+        return this.queryParser.parseQueryString(this.currentFilterValue);
       }
     } else {
       return translatedQuery;

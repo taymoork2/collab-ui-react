@@ -1,5 +1,6 @@
 import _ = require('lodash');
-import { FieldQuery, OperatorAnd, OperatorOr, QueryParser, SearchElement } from './queryParser';
+import { QueryParser } from './queryParser';
+import { FieldQuery, OperatorAnd, OperatorOr, SearchElement } from './searchElement';
 
 export class SearchTranslator {
   /* @ngInject */
@@ -14,17 +15,20 @@ export class SearchTranslator {
     'CsdmStatus.connectionStatus.': QueryParser.Field_ConnectionStatus,
   };
 
+  private fieldNameTranslationTable: { [fieldKey: string]: string };
+
   private csdmPartOfTranslationTable: any[];
   private currentLanguage: string;
 
   private updateLanguageIfNeeded() {
-    if (this.$translate.proposedLanguage() !== this.currentLanguage) {
+    if (this.$translate && this.$translate.proposedLanguage() !== this.currentLanguage) {
       this.currentLanguage = this.$translate.proposedLanguage();
       const csdmTranslationTable = _.pickBy(this.$translate.getTranslationTable(),
         (_value, key: string) => {
           return _.startsWith(key, 'CsdmStatus') && (_.split(key, '.').length > 2);
         });
       this.csdmPartOfTranslationTable = _.toPairs(csdmTranslationTable);
+      this.fieldNameTranslationTable = _.mapValues(SearchTranslator.fieldNameTranslations, (translation) => this.getTranslatedFieldKey(translation.tKey));
     }
   }
 
@@ -134,13 +138,13 @@ export class SearchTranslator {
     return false;
   }
 
-  private static queryFoundInFieldValue(query: string, exactMatch: boolean, fieldValue: string) {
+  private static queryFoundInFieldValue(query: string, exactMatch: boolean, fieldValue: string): boolean {
     return exactMatch ?
       _.isEqual(_.lowerCase(query), _.lowerCase(fieldValue)) :
       (_.includes(_.lowerCase(fieldValue), _.lowerCase(query)));
   }
 
-  public static getSearchField(translationKey: string) {
+  public static getSearchField(translationKey: string): string {
     return _.find(SearchTranslator.translationKeyToSearchFieldConversionTable,
       (_field, transKeyPrefix) => {
         return _.startsWith(translationKey, transKeyPrefix);
@@ -192,18 +196,12 @@ export class SearchTranslator {
     },
   };
 
-  private static getFieldTranslationKey(field: string): string {
-    const translationMatch = SearchTranslator.fieldNameTranslations[_.toLower(field)];
-    return (translationMatch && translationMatch.tKey) ? translationMatch.tKey : field;
-  }
-
-  public translateQueryField(field: string): string {
-
-    const fieldTranslationKey = SearchTranslator.getFieldTranslationKey(field);
-    if (_.isEmpty(fieldTranslationKey)) {
-      return field;
+  private getTranslatedFieldKey(translationKey: string) {
+    if (!this.$translate) {
+      return translationKey;
     }
-    const localizedRawKey = this.$translate.instant(fieldTranslationKey) + '';
+
+    const localizedRawKey = this.$translate.instant(translationKey) + '';
     return _(localizedRawKey)
       .toLower()
       .replace(new RegExp(' ', 'g'), '_')
@@ -225,5 +223,27 @@ export class SearchTranslator {
     const translatedQueryValue = this.$translate.instant(translationMatch.getValueKey(value));
 
     return (!translatedQueryValue || translatedQueryValue === value) ? value : translatedQueryValue;
+  }
+
+  public getLocalizedFieldnames(): string[] {
+    this.updateLanguageIfNeeded();
+
+    return _.values(this.fieldNameTranslationTable);
+  }
+
+  public getFieldName(translatedField: string): string {
+    this.updateLanguageIfNeeded();
+    return _.findKey(this.fieldNameTranslationTable, (tField: string) => _.isEqual(_.toLower(translatedField), _.toLower(tField)));
+  }
+
+  public translateQueryField(field: string): string {
+
+    this.updateLanguageIfNeeded();
+
+    const translatedField = this.fieldNameTranslationTable[_.toLower(field)];
+    if (_.isEmpty(translatedField)) {
+      return field;
+    }
+    return translatedField;
   }
 }

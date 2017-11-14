@@ -1,14 +1,15 @@
 import searchModule from '../index';
 import { SearchTranslator } from './searchTranslator';
-import { FieldQuery, OperatorOr, QueryParser, SearchElement } from './queryParser';
-import { isNull } from 'util';
+import { QueryParser } from './queryParser';
+import { isNull, isUndefined } from 'util';
+import { FieldQuery, OperatorOr, SearchElement } from './searchElement';
 
 describe('SearchTranslator', () => {
   let transMock;
 
   beforeEach(function () {
     this.initModules(searchModule);
-    this.injectDependencies('$translate', 'CsdmSearchService', 'UrlConfig', 'Authinfo', '$rootScope');
+    this.injectDependencies('$translate');
 
     const keyMock = {
       'CsdmStatus.connectionStatus.CONNECTED': 'Online',
@@ -60,6 +61,11 @@ describe('SearchTranslator', () => {
     transMock = this.$translate;
     spyOn(this.$translate, 'getTranslationTable').and.returnValue(keyMock);
     spyOn(this.$translate, 'proposedLanguage').and.returnValue('nb_NO');
+    spyOn(this.$translate, 'instant').and.callFake(key => transMock[key] ? transMock[key] : 'translated.' + key);
+  });
+
+  afterEach(() => {
+    transMock = null;
   });
 
   it('should map correct search field', function () {
@@ -167,7 +173,7 @@ describe('SearchTranslator', () => {
 
     function expectQueryToTranslateTo(query: string, expectedQuery: string | null) {
       const searchTranslator = new SearchTranslator(transMock);
-      const parsedQuery = QueryParser.parseQueryString(query);
+      const parsedQuery = new QueryParser(searchTranslator).parseQueryString(query);
       const translatedQuery = searchTranslator.translateQuery(parsedQuery);
       expect(translatedQuery.toQuery()).toBe(expectedQuery || '');
     }
@@ -175,7 +181,7 @@ describe('SearchTranslator', () => {
 
   function expectQueryToFindTranslation(query: string, expectedQuery: string | null, maxResult: number = 2) {
     const searchTranslator = new SearchTranslator(transMock);
-    const parsedQuery = QueryParser.parseQueryString(query);
+    const parsedQuery = new QueryParser(searchTranslator).parseQueryString(query);
     const translatedQueries = searchTranslator.findTranslations(parsedQuery, maxResult);
 
     if (isNull(expectedQuery)) {
@@ -199,31 +205,31 @@ describe('SearchTranslator', () => {
   describe('translateQueryField', () => {
 
     it('should translate all supported search fields', function () {
-      expectFieldToTranslateTo('displayname', 'spacespage.nameheader');
+      expectFieldToTranslateTo('displayname', 'translated.spacespage.nameheader');
       expectFieldToTranslateTo('cisuuid', 'cisuuid');
       expectFieldToTranslateTo('accounttype', 'accounttype');
-      expectFieldToTranslateTo('activeinterface', 'deviceoverviewpage.networkconnectivity');
-      expectFieldToTranslateTo('serial', 'deviceoverviewpage.serial');
-      expectFieldToTranslateTo('mac', 'deviceoverviewpage.macaddr');
-      expectFieldToTranslateTo('ip', 'deviceoverviewpage.ipaddr');
+      expectFieldToTranslateTo('activeinterface', 'translated.deviceoverviewpage.networkconnectivity');
+      expectFieldToTranslateTo('serial', 'translated.deviceoverviewpage.serial');
+      expectFieldToTranslateTo('mac', 'translated.deviceoverviewpage.macaddr');
+      expectFieldToTranslateTo('ip', 'translated.deviceoverviewpage.ipaddr');
       expectFieldToTranslateTo('description', 'description');
       expectFieldToTranslateTo('productfamily', 'productfamily');
       expectFieldToTranslateTo('software', 'software');
-      expectFieldToTranslateTo('upgradechannel', 'devicesettings.softwareupgradechannel');
-      expectFieldToTranslateTo('product', 'spacespage.typeheader');
-      expectFieldToTranslateTo('connectionstatus', 'spacespage.statusheader');
-      expectFieldToTranslateTo('sipurl', 'deviceoverviewpage.sipurl');
-      expectFieldToTranslateTo('errorcodes', 'deviceoverviewpage.issues');
-      expectFieldToTranslateTo('tags', 'spacespage.tags');
+      expectFieldToTranslateTo('upgradechannel', 'translated.devicesettings.softwareupgradechannel');
+      expectFieldToTranslateTo('product', 'translated.spacespage.typeheader');
+      expectFieldToTranslateTo('connectionstatus', 'translated.spacespage.statusheader');
+      expectFieldToTranslateTo('sipurl', 'translated.deviceoverviewpage.sipurl');
+      expectFieldToTranslateTo('errorcodes', 'translated.deviceoverviewpage.issues');
+      expectFieldToTranslateTo('tags', 'translated.spacespage.tags');
     });
 
     it('should translate all supported search fields case insensitive', function () {
-      expectFieldToTranslateTo('Displayname', 'spacespage.nameheader');
-      expectFieldToTranslateTo('Upgradechannel', 'devicesettings.softwareupgradechannel');
-      expectFieldToTranslateTo('DISPLAYNAME', 'spacespage.nameheader');
-      expectFieldToTranslateTo('UPGRADECHANNEL', 'devicesettings.softwareupgradechannel');
-      expectFieldToTranslateTo('displayname', 'spacespage.nameheader');
-      expectFieldToTranslateTo('upgradechannel', 'devicesettings.softwareupgradechannel');
+      expectFieldToTranslateTo('Displayname', 'translated.spacespage.nameheader');
+      expectFieldToTranslateTo('Upgradechannel', 'translated.devicesettings.softwareupgradechannel');
+      expectFieldToTranslateTo('DISPLAYNAME', 'translated.spacespage.nameheader');
+      expectFieldToTranslateTo('UPGRADECHANNEL', 'translated.devicesettings.softwareupgradechannel');
+      expectFieldToTranslateTo('displayname', 'translated.spacespage.nameheader');
+      expectFieldToTranslateTo('upgradechannel', 'translated.devicesettings.softwareupgradechannel');
     });
 
     it('should not translate an unsupported search field', function () {
@@ -237,25 +243,61 @@ describe('SearchTranslator', () => {
     }
   });
 
+  describe('getFieldName', () => {
+
+    it('should translate all supported search fields', function () {
+      expectLookupByTranslatedField('translated.spacesPage.nameHeader', 'displayname');
+      expectLookupByTranslatedField('translated.spacesPage.statusHeader', 'connectionstatus');
+      expectLookupByTranslatedField('translated.deviceSettings.softwareUpgradeChannel', 'upgradechannel');
+      expectLookupByTranslatedField('translated.deviceOverviewPage.networkConnectivity', 'activeinterface');
+      expectLookupByTranslatedField('translated.spacesPage.typeHeader', 'product');
+      expectLookupByTranslatedField('translated.deviceOverviewPage.macAddr', 'mac');
+      expectLookupByTranslatedField('translated.deviceOverviewPage.ipAddr', 'ip');
+      expectLookupByTranslatedField('translated.deviceOverviewPage.sipUrl', 'sipurl');
+      expectLookupByTranslatedField('translated.deviceOverviewPage.issues', 'errorcodes');
+      expectLookupByTranslatedField('translated.deviceOverviewPage.serial', 'serial');
+      expectLookupByTranslatedField('translated.spacesPage.tags', 'tags');
+    });
+
+    it('should translate supported search fields case insensitive', function () {
+      expectLookupByTranslatedField('Translated.SPACESPAGE.typeHeader', 'product');
+      expectLookupByTranslatedField('translated.deviceoverviewpage.ipaddr', 'ip');
+    });
+
+    it('should not translate an unsupported search field', function () {
+      expectLookupByTranslatedField('qwertyX', undefined);
+    });
+
+    function expectLookupByTranslatedField(localizedField: string, expectedField: string | undefined) {
+      const searchTranslator = new SearchTranslator(transMock);
+      const field = searchTranslator.getFieldName(localizedField);
+      if (isUndefined(expectedField)) {
+        expect(field).toBeUndefined();
+      } else {
+        expect(field).toBe(expectedField + '');
+      }
+    }
+  });
+
   describe('translateQueryValue', () => {
 
     it('should a translate connectionStatus search field value to upper', function () {
-      expectQueryValueToTranslateTo('connectionstatus', 'uppercase1', 'CsdmStatus.connectionStatus.UPPERCASE1');
-      expectQueryValueToTranslateTo('connEctionstaTus', 'uppercase1', 'CsdmStatus.connectionStatus.UPPERCASE1');
+      expectQueryValueToTranslateTo('connectionstatus', 'uppercase1', 'translated.CsdmStatus.connectionStatus.UPPERCASE1');
+      expectQueryValueToTranslateTo('connEctionstaTus', 'uppercase1', 'translated.CsdmStatus.connectionStatus.UPPERCASE1');
 
     });
 
     it('should a translate upgradechannel search field value to camel', function () {
-      expectQueryValueToTranslateTo('upgradechannel', 'uppercase1', 'CsdmStatus.upgradeChannels.Uppercase1');
-      expectQueryValueToTranslateTo('upgradechannel', 'uppercase1 two', 'CsdmStatus.upgradeChannels.Uppercase1Two');
-      expectQueryValueToTranslateTo('upgraDechaNnel', 'uppErcase1', 'CsdmStatus.upgradeChannels.Uppercase1');
+      expectQueryValueToTranslateTo('upgradechannel', 'uppercase1', 'translated.CsdmStatus.upgradeChannels.Uppercase1');
+      expectQueryValueToTranslateTo('upgradechannel', 'uppercase1 two', 'translated.CsdmStatus.upgradeChannels.Uppercase1Two');
+      expectQueryValueToTranslateTo('upgraDechaNnel', 'uppErcase1', 'translated.CsdmStatus.upgradeChannels.Uppercase1');
 
     });
 
     it('should a translate networkConnectivity search field value to lower', function () {
-      expectQueryValueToTranslateTo('activeinterface', 'wlan', 'CsdmStatus.activeInterface.wlan');
-      expectQueryValueToTranslateTo('actiVeinteRface', 'Wired', 'CsdmStatus.activeInterface.wired');
-      expectQueryValueToTranslateTo('actiVeinteRface', 'wiRed', 'CsdmStatus.activeInterface.wired');
+      expectQueryValueToTranslateTo('activeinterface', 'wlan', 'translated.CsdmStatus.activeInterface.wlan');
+      expectQueryValueToTranslateTo('actiVeinteRface', 'Wired', 'translated.CsdmStatus.activeInterface.wired');
+      expectQueryValueToTranslateTo('actiVeinteRface', 'wiRed', 'translated.CsdmStatus.activeInterface.wired');
     });
 
     it('should not a translate value for unsupported field', function () {

@@ -1,6 +1,6 @@
 import { BucketData, SearchResult } from './searchResult';
 import { List } from 'lodash';
-import { SearchElement } from './queryParser';
+import { SearchElement } from './searchElement';
 
 export interface ISuggestion {
   searchString: string;

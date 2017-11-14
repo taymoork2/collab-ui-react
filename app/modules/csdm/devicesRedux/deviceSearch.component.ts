@@ -3,7 +3,7 @@ import { SearchObject } from '../services/search/searchObject';
 import { SearchResult } from '../services/search/searchResult';
 import { Caller, CsdmSearchService } from '../services/csdmSearch.service';
 import { Notification } from '../../core/notifications/notification.service';
-import { SearchElement } from '../services/search/queryParser';
+import { SearchElement } from '../services/search/searchElement';
 import { SearchTranslator } from 'modules/csdm/services/search/searchTranslator';
 import { KeyCodes } from 'collab-ui-ng/src/directives/dropdown/keyCodes';
 import { ISuggestion, ISuggestionDropdown, SuggestionDropdown } from '../services/search/suggestion';
