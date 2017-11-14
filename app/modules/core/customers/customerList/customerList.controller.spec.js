@@ -281,9 +281,8 @@ describe('Controller: CustomerListCtrl', function () {
   });
 
   describe('filterColumns', function () {
-    it('return 10 items in the filter list without Care with care FT turned off', function () {
+    it('should not have care, premium, or standard in list with care FT turned off', function () {
       initController();
-      expect(controller.filter.options.length).toBe(10);
       expect(controller.filter.options).toContain(jasmine.objectContaining({
         value: 'sparkBoard',
       }));
@@ -301,7 +300,7 @@ describe('Controller: CustomerListCtrl', function () {
     it('show care in the filter list with care FT on', function () {
       FeatureToggleService.atlasCareTrialsGetStatus.and.returnValue($q.resolve(true));
       initController();
-      expect(controller.filter.options.length).toBe(11);
+      expect(controller.filter.options.length).toBe(12);
       expect(controller.filter.options).toContain(jasmine.objectContaining({
         value: 'care',
       }));
@@ -313,7 +312,7 @@ describe('Controller: CustomerListCtrl', function () {
     it('show Pro Pack in the filter list with correct FT on', function () {
       FeatureToggleService.atlasITProPackGetStatus.and.returnValue($q.resolve(true));
       initController();
-      expect(controller.filter.options.length).toBe(12);
+      expect(controller.filter.options.length).toBe(13);
       expect(controller.filter.options).toContain(jasmine.objectContaining({
         value: 'premium',
       }));

@@ -50,6 +50,7 @@ require('./_customer-list.scss');
     vm.isPastGracePeriod = isPastGracePeriod;
     vm.isPstnSetup = isPstnSetup;
     vm.exportCsv = exportCsv;
+    vm.onChangeFilters = onChangeFilters;
 
     vm.activeFilter = 'all';
     vm.filterList = _.debounce(filterAction, vm.timeoutVal);
@@ -200,28 +201,34 @@ require('./_customer-list.scss');
         ['roomSystems', 'roomSystem'],
         ['sparkBoard', 'sparkBoard'],
         ['care', 'care'],
-        ['trial', 'trialAccountsFilter'],
-        ['active', 'activeAccountsFilter'],
-        [PREMIUM, 'premiumAccountsFilter'],
-        [STANDARD, 'standardAccountsFilter'],
-        ['expired', 'expiredAccountsFilter'],
-        ['pending', 'pendingAccountsFilter'],
+        ['trial'],
+        ['active'],
+        [PREMIUM],
+        [STANDARD],
+        ['expired'],
+        //['pending'], -- don't include pending until DE2048 fixed
+        ['purchasedWithActive'],
+        ['purchasedWithExpired'],
       ];
 
       vm.filter = {
         selected: [],
-        placeholder: $translate.instant('customerPage.filterSelectPlaceholder'),
+        placeholder: $translate.instant('customerPage.filters.placeholder'),
+        singular: $translate.instant('customerPage.filters.filter'),
+        plural: $translate.instant('customerPage.filters.filters'),
         options: [],
       };
 
       _.forEach(arFilters, function (filter) {
         var isPremium = (filter[0] === PREMIUM) || (filter[0] === STANDARD);
+        var key = filter[1] || (filter[0] + 'AccountsFilter');
         vm.filter.options.push({
           count: 0,
           value: filter[0],
-          label: $translate.instant('customerPage.' + filter[1], { count: 0 }),
+          key: key,
+          label: $translate.instant('customerPage.filters.' + key, { count: 0 }),
           isSelected: false,
-          isAccountFilter: (filter[1].indexOf('Accounts') !== -1) && !isPremium,
+          isAccountFilter: (key.indexOf('Accounts') !== -1) && !isPremium,
           isPremiumFilter: isPremium,
           previousState: false,
         });
@@ -236,6 +243,13 @@ require('./_customer-list.scss');
         function (o) { return o.isAccountFilter || o.isPremiumFilter; },
         'isPremiumFilter', 'label',
       ]);
+    }
+
+    // onChangeFilters invoked everytime filter droplist modified
+    function onChangeFilters() {
+      if (_.get(vm, 'gridApi.grid.refresh')) {
+        vm.gridApi.grid.refresh();
+      }
     }
 
     function initUIGrid() {
@@ -355,16 +369,7 @@ require('./_customer-list.scss');
       vm.gridOptions.columnDefs = columnDefs;
 
       initStatusTextOrder(); // sort order for 'status' column
-
       initFilters();
-
-      $scope.$watch(function () {
-        return vm.filter.selected;
-      }, function () {
-        if (vm.gridApi) {
-          vm.gridApi.grid.refresh();
-        }
-      }, true);
     }
 
     function getSubfields(entry, name) {
@@ -404,6 +409,8 @@ require('./_customer-list.scss');
     function initStatusTextOrder() {
       var statuses = [
         { key: 'active', xlat: 'purchased' },
+        { key: 'purchasedWithActive' },
+        { key: 'purchasedWithExpired' },
         { key: 'trial' },
         { key: 'expired' },
         { key: 'pending' },
@@ -605,7 +612,7 @@ require('./_customer-list.scss');
       var accountFilters = _.filter(vm.filter.options, { isAccountFilter: true });
       _.forEach(accountFilters, function (filter) {
         filter.count = statusTypeCounts[filter.value] || 0;
-        filter.label = $translate.instant('customerPage.' + filter.value + 'AccountsFilter', {
+        filter.label = $translate.instant('customerPage.' + filter.key, {
           count: filter.count,
         });
       });
@@ -618,7 +625,7 @@ require('./_customer-list.scss');
 
         _.forEach(premiumFilters, function (filter) {
           filter.count = _.get(counts, filter.value, []).length;
-          filter.label = $translate.instant('customerPage.' + filter.value + 'AccountsFilter', {
+          filter.label = $translate.instant('customerPage.' + filter.key, {
             count: filter.count,
           });
 
