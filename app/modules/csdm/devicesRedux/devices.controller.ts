@@ -158,7 +158,6 @@ export class DevicesCtrl {
 
   public searchResultChanged(result: SearchResult) {
     this._searchResult = result;
-    // this.issearching = false;
   }
 
   private initForAddButton() {
