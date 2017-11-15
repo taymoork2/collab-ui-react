@@ -1,20 +1,20 @@
-'use strict';
+import { CTService } from './CTService';
 
 describe('Chat Template Service', function () {
-  var $httpBackend, $q, BrandService, CTService, logoUrlDeferred, orgSettingsDeferred;
-  var orgId = 'a-b-c-d';
-  var logoUrl = 'https://www.example.com/logo.png';
-  var logoResponse = 'logo';
-  var appName = 'testApp.ciscoservice.com';
-  var templateId = 'abcd';
-  var orgSettings = {
+  let $httpBackend, $q, BrandService, CTService: CTService, logoUrlDeferred, orgSettingsDeferred;
+  const orgId = 'a-b-c-d';
+  const logoUrl = 'https://www.example.com/logo.png';
+  const logoResponse = 'logo';
+  const appName = 'testApp.ciscoservice.com';
+  const templateId = 'abcd';
+  const orgSettings = {
     logoUrl: logoUrl,
   };
 
-  var spiedUrlConfig = {
+  const spiedUrlConfig = {
     getSunlightBubbleUrl: jasmine.createSpy('getSunlightBubbleUrl').and.returnValue(appName),
   };
-  var spiedAuthinfo = {
+  const spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue(orgId),
   };
 
@@ -48,7 +48,7 @@ describe('Chat Template Service', function () {
   });
 
   it('should generate chat template script when template id is provided', function () {
-    var result = CTService.generateCodeSnippet(templateId);
+    const result = CTService.generateCodeSnippet(templateId);
     expect(result).toContainText(templateId);
     expect(result).toContainText(orgId);
     expect(result).toContainText(appName);
@@ -62,12 +62,12 @@ describe('Chat Template Service', function () {
   });
 
   it('should return getOverviewPageCards length as 5, if isVirtualChatAssistantEnabled is true', function () {
-    var result = CTService.getOverviewPageCards('chat', false, true);
+    const result = CTService.getOverviewPageCards('chat', false, true);
     expect(result.length).toBe(5);
   });
 
   it('should return getOverviewPageCards length as 5, if isVirtualChatAssistantEnabled is false', function () {
-    var result = CTService.getOverviewPageCards('chat', false, false);
+    const result = CTService.getOverviewPageCards('chat', false, false);
     expect(result.length).toBe(4);
   });
 });
