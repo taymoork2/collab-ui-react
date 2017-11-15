@@ -4860,6 +4860,7 @@
             controller: 'ImpServiceContainerController',
             controllerAs: 'vm',
             params: {
+              backState: null,
               clusterId: null,
             },
             parent: 'main',

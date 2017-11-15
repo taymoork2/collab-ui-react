@@ -118,6 +118,11 @@ export class ClusterCardController implements ng.IComponentController {
         backState: 'cluster-list',
         clusterId: clusterId,
       });
+    } else if (serviceId === 'spark-hybrid-impinterop') {
+      this.$state.go('imp-service.list', {
+        backState: 'cluster-list',
+        clusterId: clusterId,
+      });
     } else if (serviceId === 'squared-fusion-media') {
       this.$state.go('media-service-v2.list', {
         backState: 'cluster-list',
