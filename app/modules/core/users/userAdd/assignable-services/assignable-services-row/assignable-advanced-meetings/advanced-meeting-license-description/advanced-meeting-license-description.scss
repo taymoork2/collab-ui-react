@@ -1,0 +1,24 @@
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+
+advanced-meeting-license-description {
+  display: block;
+
+  .license__description, .license__description-tooltip {
+    font-family: $brand-font-light;
+    font-size: 12px;
+  }
+
+  .license__description-tooltip {
+    color: $color-primary-base;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .tooltip[popup-class="advanced-meeting-license-type"] .c-nub {
+    font-size: 12px;
+    text-align:center;
+    width: 170px;
+    height: auto;
+  }
+}
