@@ -6,6 +6,7 @@ describe('CareSettingsCtrl', function () {
     this.$scope.wizard = {};
     this.$scope.wizard.isNextDisabled = false;
     this.orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
+    this.userOrgId = 'aeba1221-ab12-cd34-de56-abcdef123456';
     this.urServiceUrlRegEx = /qnr\/v1\/organization\/.*\/queue\/.*/;
     this.constants = {
       ONBOARDED: 'onboarded',
@@ -56,7 +57,7 @@ describe('CareSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, 'aeba1221-ab12-cd34-de56-abcdef123456', false);
+      initSpies.call(this, this.userOrgId, false);
     });
 
     describe('CareSettings - Init', function () {
@@ -257,7 +258,7 @@ describe('CareSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, 'aeba1221-ab12-cd34-de56-abcdef123456', true);
+      initSpies.call(this, this.userOrgId, true);
     });
 
     it('should show enabled setup care button and disabled next button, if Org is not onboarded already.', function () {
@@ -399,7 +400,7 @@ describe('CareSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, 'deba1221-ab12-cd34-de56-abcdef123456', false);
+      initSpies.call(this, this.orgId, false);
     });
 
     describe('CareSettings - Init', function () {
@@ -579,7 +580,7 @@ describe('CareSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, 'deba1221-ab12-cd34-de56-abcdef123456', true);
+      initSpies.call(this, this.orgId, true);
     });
 
     it('should show enabled setup care button and disabled next button, if Org is not onboarded already.', function () {
@@ -712,7 +713,7 @@ describe('CareSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, 'deba1221-ab12-cd34-de56-abcdef123456', true);
+      initSpies.call(this, this.orgId, true);
     });
 
     it('should not show error notification and disable setup care button, if org is already onboarded', function () {

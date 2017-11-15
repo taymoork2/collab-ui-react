@@ -5,6 +5,7 @@ describe('CareLocalSettingsCtrl', function () {
     this.injectDependencies('$controller', '$httpBackend', '$interval', '$q', '$scope', 'Authinfo', 'FeatureToggleService', 'Notification', 'SunlightConfigService', 'UrlConfig', 'URService');
     this.$scope.orgConfigForm = { dirty: false };
     this.orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
+    this.userOrgId = 'aeba1221-ab12-cd34-de56-abcdef123456';
     this.urServiceUrlRegEx = /qnr\/v1\/organization\/.*\/queue\/.*/;
     this.constants = {
       ONBOARDED: 'onboarded',
@@ -62,7 +63,7 @@ describe('CareLocalSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, 'deba1221-ab12-cd34-de56-abcdef123456', false);
+      initSpies.call(this, this.orgId, false);
     });
 
     describe('CareSettings - Init', function () {
@@ -230,7 +231,7 @@ describe('CareLocalSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, 'deba1221-ab12-cd34-de56-abcdef123456', true);
+      initSpies.call(this, this.orgId, true);
     });
 
     it('should enable setup care button, when Org is not onboarded', function () {
@@ -376,7 +377,7 @@ describe('CareLocalSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, 'aeba1221-ab12-cd34-de56-abcdef123456', true);
+      initSpies.call(this, this.userOrgId, true);
     });
 
     it('should enable setup care button, when Org is not onboarded', function () {
@@ -507,7 +508,7 @@ describe('CareLocalSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, 'deba1221-ab12-cd34-de56-abcdef123456', true);
+      initSpies.call(this, this.orgId, true);
     });
 
     it('should enable setup care button, when Org is not onboarded', function () {
@@ -642,7 +643,7 @@ describe('CareLocalSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, 'deba1221-ab12-cd34-de56-abcdef123456', false);
+      initSpies.call(this, this.orgId, false);
     });
     beforeEach(
       function () {
