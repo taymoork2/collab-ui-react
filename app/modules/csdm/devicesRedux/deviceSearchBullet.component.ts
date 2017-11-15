@@ -1,5 +1,6 @@
-import { FieldQuery, OperatorAnd, OperatorOr, SearchElement } from '../services/search/queryParser';
+import { OperatorOr } from '../services/search/searchElement';
 import { SearchTranslator } from '../services/search/searchTranslator';
+import { FieldQuery, OperatorAnd, SearchElement } from '../services/search/searchElement';
 
 export interface IBulletContainer {
   removeBullet(bullet: SearchElement);

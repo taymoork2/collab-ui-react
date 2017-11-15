@@ -3,6 +3,8 @@ import { SearchObject } from '../services/search/searchObject';
 import { SearchResult } from '../services/search/searchResult';
 import { IToolkitModalService } from '../../core/modal/index';
 import { Notification } from 'modules/core/notifications';
+import { QueryParser } from '../services/search/queryParser';
+import { SearchTranslator } from '../services/search/searchTranslator';
 
 require('./_devices.scss');
 
@@ -42,7 +44,14 @@ export class DevicesCtrl {
               private DeviceExportService,
               private $translate: ng.translate.ITranslateService,
               private Notification: Notification,
-              private WizardFactory, private $state, private FeatureToggleService, private $q, private Userservice, private ServiceDescriptorService, private Authinfo) {
+              private WizardFactory,
+              private $state,
+              private FeatureToggleService,
+              private $q,
+              private Userservice,
+              private DeviceSearchTranslator: SearchTranslator,
+              private ServiceDescriptorService,
+              private Authinfo) {
     this.initForAddButton();
     AccountOrgService.getAccount(Authinfo.getOrgId())
       .then((response) => {
@@ -55,7 +64,7 @@ export class DevicesCtrl {
         this.licenseError = hasNoSuspendedLicense ? $translate.instant('spacesPage.licenseSuspendedWarning') : '';
       });
 
-    this._searchObject = SearchObject.createWithQuery('');
+    this._searchObject = SearchObject.createWithQuery(new QueryParser(this.DeviceSearchTranslator), '');
   }
 
   get searchResult(): SearchResult {
@@ -149,7 +158,7 @@ export class DevicesCtrl {
 
   public searchResultChanged(result: SearchResult) {
     this._searchResult = result;
-   // this.issearching = false;
+    // this.issearching = false;
   }
 
   private initForAddButton() {
