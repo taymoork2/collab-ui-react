@@ -80,6 +80,7 @@ describe('drilldownReports Controller Positive Test cases', function () {
     expect(ddController.props.description).toEqual('Dummy set Description');
     expect(ddController.toggleDrilldownReport).toBeDefined();
     expect(ddController.isDataEmpty()).toBe(false);
+    expect(ddController.display).toBe(false);
 
     //callback check
     ddController.callback();
@@ -87,9 +88,9 @@ describe('drilldownReports Controller Positive Test cases', function () {
   });
 
   it('Toggle Drilldown Report test', function () {
-    var display = ddController.display();
+    var display = ddController.display;
     ddController.toggleDrilldownReport();
-    expect(ddController.display()).toBe(!display);
+    expect(ddController.display).toBe(!display);
   });
 
   it('State should be set to empty when onGetDataSuccess is called with 0 records', function () {
@@ -119,17 +120,8 @@ describe('drilldownReports Controller Positive Test cases', function () {
   });
 
   it('on change of props attribute, should set onRegisterApi attribute of gridOptions', function () {
-    var changeObj = {
-      props: {
-        currentValue: {
-          table: {
-            gridOptions: {},
-          },
-        },
-      },
-    };
     expect(ddController.props.table.gridOptions.onRegisterApi).not.toBeDefined();
-    ddController.$onChanges(changeObj);
+    ddController.$doCheck();
     expect(ddController.props.table.gridOptions.onRegisterApi).toBeDefined();
   });
 });

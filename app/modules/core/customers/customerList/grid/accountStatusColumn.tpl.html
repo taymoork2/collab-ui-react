@@ -19,6 +19,14 @@
       <i class="icon icon-circle status-indicator warning"></i>
       <span translate="customerPage.pending"></span>
     </div>
+    <div ng-switch-when="purchasedWithActive">
+      <i class="icon icon-circle status-indicator success"></i>
+      <span translate="customerPage.purchasedWithActive"></span>
+    </div>
+    <div ng-switch-when="purchasedWithExpired">
+      <i class="icon icon-circle status-indicator warning"></i>
+      <span translate="customerPage.purchasedWithExpired"></span>
+    </div>
     <div ng-switch-default>
       <i class="icon icon-circle"></i>
       <span translate="common.unknown"></span>

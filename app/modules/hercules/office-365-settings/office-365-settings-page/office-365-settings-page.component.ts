@@ -1,12 +1,12 @@
-import { IStatusSummary, USSService } from 'modules/hercules/services/uss.service';
+import { IExtendedStatusSummary, USSService } from 'modules/hercules/services/uss.service';
 import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
 
 class Office365SettingsCtrl implements ng.IComponentController {
   public backState = 'services-overview';
-  public userStatusesSummary: IStatusSummary[] = [];
+  public userStatusesSummary: IExtendedStatusSummary[] = [];
   private subscribeStatusesSummary: any;
 
-  private serviceId: HybridServiceId = 'squared-fusion-cal';
+  private serviceId: HybridServiceId = 'squared-fusion-o365';
 
   /* @ngInject */
   constructor(

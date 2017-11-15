@@ -201,8 +201,9 @@ class WebexAddSiteModalController implements ng.IComponentController {
   }
 
   private saveData() {
+    const action = (this.singleStep === 3) ? Actions.UPDATE : Actions.ADD;
     const payload = this.WebExSiteService.constructWebexLicensesPayload(this.webexSiteDetailsList, this.currentSubscriptionId || '',
-    Actions.ADD, this.audioPartnerName, this.ccaspSubscriptionId, this.transferCode);
+    action, this.audioPartnerName, this.ccaspSubscriptionId, this.transferCode);
     this.SetupWizardService.updateSitesInActiveSubscription(payload)
       .then(() => {
         // TODO algendel: 10/30/17 - get real copy.

@@ -61,7 +61,7 @@ describe('Service: ServiceStateChecker', function () {
     ServiceDescriptorService.getServices = jasmine.createSpy('getServices');
     USSService.getOrg = jasmine.createSpy('getOrg');
     USSService.getOrgId = jasmine.createSpy('getOrgId');
-    USSService.getStatusesSummary = jasmine.createSpy('getStatusesSummary');
+    USSService.getStatusesSummary = jasmine.createSpy('getStatusesSummary').and.returnValue({});
     HybridServicesExtrasService.getAlarms = jasmine.createSpy('getAlarms').and.returnValue($q.resolve([]));
   }));
 
@@ -83,53 +83,56 @@ describe('Service: ServiceStateChecker', function () {
   });
 
   it('should raise the "noUsersActivated" message and clear appropriately when there are no users activated ', function () {
-    USSService.getStatusesSummary.and.returnValue(
-      [{
-        serviceId: 'squared-fusion-cal',
+    USSService.getStatusesSummary.and.returnValue({
+      'squared-fusion-cal': {
         activated: 0,
         error: 0,
         notActivated: 0,
-      }]
-    );
+      },
+    });
 
     ClusterService.getClustersByConnectorType.and.returnValue([okClusterMockData]);
     ServiceStateChecker.checkState('squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('squared-fusion-cal:noUsersActivated');
-    USSService.getStatusesSummary.and.returnValue([{
-      serviceId: 'squared-fusion-cal',
-      activated: 1,
-    }]);
+    USSService.getStatusesSummary.and.returnValue({
+      'squared-fusion-cal': {
+        activated: 1,
+      },
+    });
     ServiceStateChecker.checkState('squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(0);
   });
 
   it('should raise the "userErrors" message and clear appropriately when there are users with errors ', function () {
-    USSService.getStatusesSummary.and.returnValue([{
-      serviceId: 'squared-fusion-cal',
-      activated: 0,
-      error: 5,
-      notActivated: 0,
-    }]);
+    USSService.getStatusesSummary.and.returnValue({
+      'squared-fusion-cal': {
+        activated: 0,
+        error: 5,
+        notActivated: 0,
+      },
+    });
     ClusterService.getClustersByConnectorType.and.returnValue([okClusterMockData]);
     ServiceStateChecker.checkState('squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('squared-fusion-cal:userErrors');
-    USSService.getStatusesSummary.and.returnValue([{
-      serviceId: 'squared-fusion-cal',
-      activated: 1,
-    }]);
+    USSService.getStatusesSummary.and.returnValue({
+      'squared-fusion-cal': {
+        activated: 1,
+      },
+    });
     ServiceStateChecker.checkState('squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(0);
   });
 
   it('should clear connect available notification when connect is configured ', function () {
-    USSService.getStatusesSummary.and.returnValue([{
-      serviceId: 'squared-fusion-uc',
-      activated: 1,
-      error: 0,
-      notActivated: 0,
-    }]);
+    USSService.getStatusesSummary.and.returnValue({
+      'squared-fusion-uc': {
+        activated: 1,
+        error: 0,
+        notActivated: 0,
+      },
+    });
 
     USSService.getOrgId.and.returnValue('orgId');
     USSService.getOrg.and.returnValue($q.resolve({}));
@@ -141,7 +144,6 @@ describe('Service: ServiceStateChecker', function () {
         enabled: false, // will spawn a 'connect available' notification,
       }]
     ));
-
 
     ServiceStateChecker.checkState('squared-fusion-uc');
     $rootScope.$digest();
@@ -172,11 +174,13 @@ describe('Service: ServiceStateChecker', function () {
       enabled: true,
     }])
     );
-    USSService.getStatusesSummary.and.returnValue([{
-      serviceId: 'squared-fusion-uc',
-      activated: 1,
-      notActivated: 0,
-    }]);
+    USSService.getStatusesSummary.and.returnValue({
+      'squared-fusion-uc': {
+        activated: 1,
+        error: 0,
+        notActivated: 0,
+      },
+    });
 
     // this should spawn a domain verification notification
     DomainManagementService.getVerifiedDomains = jasmine.createSpy('getVerifiedDomains').and.returnValue($q.resolve([]));
@@ -205,12 +209,13 @@ describe('Service: ServiceStateChecker', function () {
 
   it('should add sip uri domain notification when sip uri domain is not set ', function () {
     FmsOrgSettings.get.and.returnValue($q.resolve({ expresswayClusterReleaseChannel: 'stable' }));
-    USSService.getStatusesSummary.and.returnValue([{
-      serviceId: 'squared-fusion-uc',
-      activated: 1,
-      error: 0,
-      notActivated: 0,
-    }]);
+    USSService.getStatusesSummary.and.returnValue({
+      'squared-fusion-uc': {
+        activated: 1,
+        error: 0,
+        notActivated: 0,
+      },
+    });
     USSService.getOrgId.and.returnValue('orgId');
     USSService.getOrg.and.returnValue($q.resolve({
       sipDomain: 'somedomain',
@@ -239,12 +244,13 @@ describe('Service: ServiceStateChecker', function () {
 
   it('should remove sip uri domain notification when sip uri domain is set', function () {
     FmsOrgSettings.get.and.returnValue($q.resolve({ expresswayClusterReleaseChannel: 'stable' }));
-    USSService.getStatusesSummary.and.returnValue([{
-      serviceId: 'squared-fusion-uc',
-      activated: 1,
-      error: 0,
-      notActivated: 0,
-    }]);
+    USSService.getStatusesSummary.and.returnValue({
+      'squared-fusion-uc': {
+        activated: 1,
+        error: 0,
+        notActivated: 0,
+      },
+    });
     USSService.getOrgId.and.returnValue('orgId');
     USSService.getOrg.and.returnValue($q.resolve({
       sipDomain: 'somedomain',

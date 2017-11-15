@@ -9,7 +9,7 @@
       </div>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
-      <cs-select  class="filter-dropdown" ng-model="customerList.filter.selected" options="customerList.filter.options" placeholder="customerList.filter.placeholder" multi="true" singular="filter" plural="filters"></cs-select>
+      <cs-select class="filter-dropdown" ng-model="customerList.filter.selected" options="customerList.filter.options" placeholder="customerList.filter.placeholder" multi="true" singular="{{::customerList.filter.singular}}" plural="{{::customerList.filter.plural}}" on-change-fn="customerList.onChangeFilters()"></cs-select>
 
       <csv-simple-export
         on-export="customerList.exportCsv()"

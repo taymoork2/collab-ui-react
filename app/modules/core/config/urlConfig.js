@@ -44,6 +44,12 @@
       integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
       prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
     },
+    IdentityServiceUrl: {
+      dev: 'https://identity.webex.com/',
+      cfe: 'https://identitybts.webex.com/',
+      integration: 'https://identity.webex.com/',
+      prod: 'https://identity.webex.com/',
+    },
     ScimUrl: {
       dev: 'https://identity.webex.com/identity/scim/%s/v1/Users',
       cfe: 'https://identitybts.webex.com/identity/scim/%s/v1/Users',
@@ -212,6 +218,12 @@
       integration: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1', // Tool is not working in integration, we need to point to prod for now.
       prod: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1',
     },
+    ArgonautServiceUrl: {
+      dev: 'https://argonaut-intb.ciscospark.com/argonaut/api/v1/',
+      cfe: 'https://argonaut-loada.ciscospark.com/argonaut/api/v1/',
+      integration: 'https://argonaut-intb.ciscospark.com/argonaut/api/v1/',
+      prod: 'https://argonaut-a.wbx2.com/argonaut/api/v1/',
+    },
     ArgonautReportUrl: {
       dev: 'https://argonaut-intb.ciscospark.com/argonaut/api/v1/compliance/report',
       cfe: 'https://argonaut-loada.ciscospark.com/argonaut/api/v1/compliance/report',
@@ -300,15 +312,15 @@
       prod: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
     },
     CvaServiceUrl: {
-      dev: 'https://virtual-assistant.appstaging.ciscoccservice.com/virtual-assistant/v1/',
-      cfe: 'https://virtual-assistant.appstaging.ciscoccservice.com/virtual-assistant/v1/',
-      integration: 'https://virtual-assistant.appstaging.ciscoccservice.com/virtual-assistant/v1/',
+      dev: 'https://int-virtual-assistant.appstaging.ciscoccservice.com/virtual-assistant/v1/',
+      cfe: 'https://int-virtual-assistant.appstaging.ciscoccservice.com/virtual-assistant/v1/',
+      integration: 'https://int-virtual-assistant.appstaging.ciscoccservice.com/virtual-assistant/v1/',
       prod: 'https://virtual-assistant.produs1.ciscoccservice.com/virtual-assistant/v1/',
     },
     EvaServiceUrl: {
-      dev: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
-      cfe: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
-      integration: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      dev: 'https://int-expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      cfe: 'https://int-expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      integration: 'https://int-expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
       prod: 'https://expert-assistant.produs1.ciscoccservice.com/expert-assistant/v1/',
     },
     WebExReportAppforMEIUrl: {

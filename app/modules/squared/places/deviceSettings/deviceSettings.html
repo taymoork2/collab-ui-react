@@ -33,7 +33,13 @@
       >
       </cs-toggle-switch>
       <p class="form-control-static settingsWarning" ng-show="$ctrl.unsupportedDeviceTypeForSettingsLockDown"
-         translate="deviceSettings.deviceNotSupported" translate-values="{ deviceType: $ctrl.unsupportedDeviceTypeForGuiSettings }"></p>
+         translate="deviceSettings.deviceNotSupported" translate-values="{ deviceType: $ctrl.unsupportedDeviceTypeForSettingsLockDown }"></p>
+    </div>
+  </div>
+  <div class="form-group" cr-feature-toggle feature-show="csdm-api-access">
+    <label class="col-sm-4 control-label" translate="deviceSettings.deviceApis"></label>
+    <div class="col-sm-8">
+      <a sq-click-promise="$ctrl.startManageApiAccessFlow()" translate="deviceSettings.deviceApiViewEdit"></a>
     </div>
   </div>
 </div>

@@ -3,14 +3,20 @@
 
   angular.module('Sunlight').controller('CareReportsController', CareReportsController);
   /* @ngInject */
-  function CareReportsController($log, $q, $scope, $timeout, $translate, CardUtils, CareReportsService, DrillDownReportProps, DummyCareReportService, Notification, ReportConstants, SunlightReportService, FeatureToggleService) {
+  function CareReportsController($log, $q, $scope, $timeout, $translate, CardUtils, CareReportsService, DrillDownReportProps, DummyCareReportService, Notification, ReportConstants, SunlightReportService, FeatureToggleService, SunlightConfigService) {
     var vm = this;
     var REFRESH = 'refresh';
     var SET = 'set';
     var EMPTY = 'empty';
     var RESIZE_DELAY_IN_MS = 600;
 
-    vm.isVideoEnabled = EMPTY;
+    vm.showChartWithoutBreakdown = {
+      taskIncoming: EMPTY,
+      taskTime: EMPTY,
+      avgCsat: EMPTY,
+    };
+    vm.isVideoCallEnabled = EMPTY;
+    vm.isVideoFeatureEnabled = EMPTY;
     vm.dataStatus = REFRESH;
     vm.tableDataStatus = EMPTY;
     vm.snapshotDataStatus = REFRESH;
@@ -66,6 +72,18 @@
       };
     });
 
+    vm.shouldDisplayBreakdown = function (webcallStats) {
+      var isVideoDisabledOrChatNotSelected = !vm.isVideoFeatureEnabled || vm.mediaTypeSelected.name !== 'chat';
+      vm.showChartWithoutBreakdown.taskIncoming = isVideoDisabledOrChatNotSelected || (vm.isVideoCallEnabled === false && webcallStats.isNumHandledTaskPresent === false);
+      vm.showChartWithoutBreakdown.avgCsat = isVideoDisabledOrChatNotSelected || (vm.isVideoCallEnabled === false && webcallStats.isAvgCSATPresent === false);
+      vm.showChartWithoutBreakdown.taskTime = isVideoDisabledOrChatNotSelected || (vm.isVideoCallEnabled === false && webcallStats.isAvgHandleTimePresent === false);
+    };
+
+    vm.shouldVideoDrillDownDisplayed = function (isDataPresent) {
+      var selectedMediaType = vm.mediaTypeSelected.name;
+      return vm.isVideoFeatureEnabled && selectedMediaType === 'chat' && (vm.isVideoCallEnabled || isDataPresent);
+    };
+
     vm.timeSelected = vm.timeOptions[0];
 
     function timeSelected() {
@@ -86,16 +104,19 @@
     vm.mediaTypeSelected = vm.mediaTypeOptions[1];
     vm.callbackFeature = false;
 
-    function setDrillDownProps() {
-      vm.taskIncomingDrilldownProps = DrillDownReportProps.taskIncomingDrilldownProps(timeSelected, vm.isVideoEnabled, vm.mediaTypeSelected.name);
-      vm.taskOfferedDrilldownProps = DrillDownReportProps.taskOfferedDrilldownProps(timeSelected, vm.isVideoEnabled);
-      vm.avgCsatDrilldownProps = DrillDownReportProps.avgCsatDrilldownProps(timeSelected, vm.isVideoEnabled, vm.mediaTypeSelected.name);
-      vm.taskTimeDrilldownProps = DrillDownReportProps.taskTimeDrilldownProps(timeSelected, vm.isVideoEnabled, vm.mediaTypeSelected.name);
+    function setDrillDownProps(webcallDataPresent) {
+      vm.taskIncomingDrilldownProps = DrillDownReportProps.taskIncomingDrilldownProps(timeSelected,
+        vm.shouldVideoDrillDownDisplayed(webcallDataPresent.isTotalHandledPresent));
+      vm.taskOfferedDrilldownProps = DrillDownReportProps.taskOfferedDrilldownProps(timeSelected);
+      vm.avgCsatDrilldownProps = DrillDownReportProps.avgCsatDrilldownProps(timeSelected,
+        vm.shouldVideoDrillDownDisplayed(webcallDataPresent.isAvgCSATPresent));
+      vm.taskTimeDrilldownProps = DrillDownReportProps.taskTimeDrilldownProps(timeSelected,
+        vm.shouldVideoDrillDownDisplayed(webcallDataPresent.isAvgHandleTimePresent));
     }
 
     function filtersUpdate() {
+      vm.shouldDisplayBreakdown({});
       $timeout(function () {
-        setDrillDownProps();
         vm.dataStatus = REFRESH;
         vm.snapshotDataStatus = REFRESH;
         vm.tableDataStatus = EMPTY;
@@ -119,13 +140,13 @@
         if (!isTableDataClean(mediaTypeSelected, timeSelected)) {
           return $q.reject({ reason: 'filtersChanged' });
         }
-        if (_.get(mergedData, 'length')) {
+        if (_.get(mergedData.data, 'length')) {
           vm.tableDataStatus = SET;
         } else {
           vm.tableDataStatus = EMPTY;
         }
-        vm.tableData = mergedData;
-        return $q.resolve(vm.tableData);
+        vm.tableData = mergedData.data;
+        return $q.resolve(mergedData);
       };
     }
 
@@ -146,10 +167,15 @@
         onSuccess(vm.tableData);
         return $q.resolve(vm.tableData);
       } else if (vm.tableDataPromise && isTableDataClean(mediaTypeSelected, timeSelected)) {
-        return vm.tableDataPromise.then(onSuccess, onError);
+        return vm.tableDataPromise.then(function (dataObj) {
+          onSuccess(dataObj.data);
+        }, onError);
       } else {
         vm.tableDataPromise = getTableData(mediaTypeSelected, timeSelected);
-        return vm.tableDataPromise.then(onSuccess, onError);
+        return vm.tableDataPromise.then(function (dataObj) {
+          setDrillDownProps(dataObj.isWebcallDataPresent);
+          onSuccess(dataObj.data);
+        }, onError);
       }
     };
 
@@ -231,6 +257,9 @@
       var title = generateReportTitle();
       return SunlightReportService.getReportingData('org_stats', vm.timeSelected.value, vm.mediaTypeSelected.name)
         .then(function (data) {
+          var webcallStats = CareReportsService.getWebcallDataStats(data);
+          vm.shouldDisplayBreakdown(webcallStats);
+
           if (data.length === 0) {
             vm.dataStatus = EMPTY;
           } else {
@@ -262,7 +291,7 @@
             vm.snapshotDataStatus = EMPTY;
           } else {
             vm.snapshotDataStatus = SET;
-            CareReportsService.showTaskAggregateGraph('taskAggregateDiv', 'taskAggregateBreakdownDiv', data, categoryAxisTitle, title);
+            CareReportsService.showTaskAggregateGraph('taskAggregateDiv', data, categoryAxisTitle, title);
             resizeCards();
           }
         }, function (data) {
@@ -289,7 +318,7 @@
       CareReportsService.showTaskOfferedDummy('taskOffereddiv', dummyData, categoryAxisTitle, dummyTitle);
       CareReportsService.showTaskTimeDummy('taskTimeDiv', 'taskTimeBreakdownDiv', dummyData, categoryAxisTitle, dummyTitle);
       CareReportsService.showAverageCsatDummy('averageCsatDiv', 'averageCsatBreakdownDiv', dummyData, categoryAxisTitle, dummyTitle);
-      CareReportsService.showTaskAggregateDummy('taskAggregateDiv', 'taskAggregateBreakdownDiv', dummyData, categoryAxisTitle, dummyTitle);
+      CareReportsService.showTaskAggregateDummy('taskAggregateDiv', dummyData, categoryAxisTitle, dummyTitle);
       resizeCards();
     }
 
@@ -325,17 +354,19 @@
       delayedResize();
     }
 
-    function renderCards(result) {
-      vm.isVideoEnabled = result;
-      setDrillDownProps();
+    function renderCards(isVideoFeatureEnabled, isVideoCallEnabled) {
+      setDrillDownProps({});
+      vm.isVideoFeatureEnabled = isVideoFeatureEnabled;
+      vm.isVideoCallEnabled = isVideoCallEnabled;
       filtersUpdate();
     }
 
-    var featurePromise = FeatureToggleService.atlasCareChatToVideoTrialsGetStatus();
+    var featurePromise = $q.all([FeatureToggleService.atlasCareChatToVideoTrialsGetStatus(),
+      SunlightConfigService.getChatConfig()]);
     featurePromise.then(function (result) {
-      renderCards(result);
+      renderCards(result[0], result[1].data.videoCallEnabled);
     }).catch(function () {
-      renderCards(false);
+      renderCards(false, false);
     });
   }
 })();

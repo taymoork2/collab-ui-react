@@ -1,11 +1,11 @@
 <cs-card id='average-csat-card' class="report-card"
          ng-class="{'hideCard': !nav.displayQuality || nav.mediaTypeSelected.name === 'voice',
-            'large': !nav.isVideoEnabled || nav.mediaTypeSelected.name !== 'chat'}">
+            'large': nav.showChartWithoutBreakdown.avgCsat}">
   <article>
     <header>
       <h4 class='report-section-header' translate='averageCsat.title'></h4>
     </header>
-    <section class='report-section' ng-class="{'showBreakdown': nav.isVideoEnabled && nav.mediaTypeSelected.name === 'chat'}">
+    <section class='report-section' ng-class="{'showBreakdown': !nav.showChartWithoutBreakdown.avgCsat}">
       <div class="care-card-report">
         <p class="report-description">{{nav.averageCsatDescription}}</p>
         <div id="averageCsatDiv" class="areachart"></div>
@@ -21,7 +21,7 @@
           </h3>
         </div>
       </div>
-      <div class="care-card-report" ng-if="nav.isVideoEnabled && nav.mediaTypeSelected.name === 'chat'">
+      <div class="care-card-report" ng-if="!nav.showChartWithoutBreakdown.avgCsat">
         <p class="report-description">{{nav.averageCsatBreakdownDescription}}</p>
         <div id="averageCsatBreakdownDiv" class="areachart"></div>
         <div class="spinner-position" ng-if="nav.isRefresh(nav.dataStatus)">
@@ -37,4 +37,3 @@
     </section>
   </article>
 </cs-card>
-

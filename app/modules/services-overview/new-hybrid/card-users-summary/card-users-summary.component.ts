@@ -1,13 +1,13 @@
 import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
-import { IStatusSummary } from 'modules/hercules/services/uss.service';
+import { IExtendedStatusSummary } from 'modules/hercules/services/uss.service';
 import { IToolkitModalService } from 'modules/core/modal';
 
 import './card-users-summary.scss';
 
-type SimpleSummary = Pick<IStatusSummary, 'activated' | 'error' | 'notActivated'>;
+type SimpleSummary = Pick<IExtendedStatusSummary, 'activated' | 'error' | 'notActivated'>;
 
 class CardUsersSummaryController implements ng.IComponentController {
-  public summary: IStatusSummary;
+  public summary: IExtendedStatusSummary;
   public serviceId: HybridServiceId;
   public sum: SimpleSummary = {
     activated: 0,
@@ -21,7 +21,7 @@ class CardUsersSummaryController implements ng.IComponentController {
     private $modal: IToolkitModalService,
   ) {}
 
-  public $onChanges(changes: { summary: ng.IChangesObject<IStatusSummary[]> }) {
+  public $onChanges(changes: { summary: ng.IChangesObject<IExtendedStatusSummary[]> }) {
     if (changes.summary && changes.summary.currentValue) {
       this.sum = _.reduce(changes.summary.currentValue, (acc, summary) => {
         if (!this.serviceId && summary.serviceId && summary.serviceId !== 'squared-fusion-ec') {

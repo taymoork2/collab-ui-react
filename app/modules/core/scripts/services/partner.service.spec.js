@@ -982,15 +982,18 @@ describe('Partner Service -', function () {
 
     describe('massage data helpers', function () {
       it('should set the correct purchase status', function () {
-        // purchased
-        var dataPurchased = testData.customers[6];
-        expect(PartnerService.helpers.calculatePurchaseStatus(dataPurchased)).toBe(true);
-        // active, but on trial
-        var dataNotPurchased1 = testData.customers[0];
-        expect(PartnerService.helpers.calculatePurchaseStatus(dataNotPurchased1)).toBe(false);
-        // not active
-        var dataNotPurchased2 = testData.customers[3];
-        expect(PartnerService.helpers.calculatePurchaseStatus(dataNotPurchased2)).toBe(false);
+        // ACTIVE
+        expect(PartnerService.helpers.calculatePurchaseStatus(testData.customers[6])).toBe(true);
+        // ACTIVE, all licenses trials
+        expect(PartnerService.helpers.calculatePurchaseStatus(testData.customers[0])).toBe(false);
+        // ACTIVE, mixture of purchased and trial licenses
+        testData.customers[0].licenseList[0].isTrial = false;
+        expect(PartnerService.helpers.calculatePurchaseStatus(testData.customers[0])).toBe(true);
+        // PENDING, all licenses trials
+        expect(PartnerService.helpers.calculatePurchaseStatus(testData.customers[3])).toBe(false);
+        // PENDING, mixture of purchased and trial licenses
+        testData.customers[3].licenseList[0].isTrial = false;
+        expect(PartnerService.helpers.calculatePurchaseStatus(testData.customers[3])).toBe(false);
       });
 
       it('should set the service count properly', function () {
@@ -1025,6 +1028,10 @@ describe('Partner Service -', function () {
         // No 'named' licenses marked as 'isTrial' means 'active' (purchased)
         data.daysLeft = -1;
         data.communications.isTrial = false;
+        expect(PartnerService.getAccountStatus(data)).toBe('active');
+
+        // Purchased set when some
+        data.purchased = true;
         expect(PartnerService.getAccountStatus(data)).toBe('active');
       });
     });

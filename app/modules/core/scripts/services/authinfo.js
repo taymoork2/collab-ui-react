@@ -454,6 +454,12 @@
       isSupportUser: function () {
         return this.hasRole('Support') && !this.isAdmin();
       },
+      isUserAdminUser: function () {
+        return this.hasRole('User_Admin') && !this.isAdmin();
+      },
+      isDeviceAdminUser: function () {
+        return this.hasRole('Device_Admin') && !this.isAdmin();
+      },
       isTechSupport: function () {
         return this.hasRole('Tech_Support');
       },
