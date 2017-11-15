@@ -24,13 +24,15 @@
 
         function init() {
           $q.all({
+            atlasOffice365Support: FeatureToggleService.atlasOffice365SupportGetStatus(),
             hybridImp: FeatureToggleService.atlasHybridImpGetStatus(),
           }).then(function (featureToggles) {
             card.notEnabledText = 'overview.cards.hybrid.notEnabledTextNew';
 
             return HybridServicesUtilsService.allSettled({
               clusterList: HybridServicesClusterService.getAll(),
-              gcalService: Authinfo.isEntitled(Config.entitlements.fusion_gcal) ? CloudConnectorService.getService('squared-fusion-gcal') : $q.resolve({}),
+              gcalService: Authinfo.isEntitled(Config.entitlements.fusion_gcal) ? CloudConnectorService.getService('squared-fusion-gcal') : $q.resolve({ setup: false }),
+              o365Service: featureToggles.atlasOffice365Support ? CloudConnectorService.getService('squared-fusion-o365') : $q.resolve({ setup: false }),
               featureToggles: featureToggles,
             });
           }).then(function (response) {
@@ -40,6 +42,13 @@
               }
             } else {
               Notification.errorWithTrackingId(response.gcalService.reason, 'overview.cards.hybrid.googleCalendarError');
+            }
+            if (response.o365Service.status === 'fulfilled') {
+              var value = response.o365Service.value;
+              value.serviceId = 'squared-fusion-o365';
+              card.serviceList.push(value);
+            } else {
+              Notification.errorWithTrackingId(response.o365Service.reason, 'overview.cards.hybrid.o365CalendarError');
             }
             if (response.clusterList.status === 'fulfilled') {
               if (Authinfo.isEntitled(Config.entitlements.fusion_cal)) {
@@ -89,6 +98,8 @@
             return 'media-service-v2.list';
           } else if (serviceId === 'squared-fusion-gcal') {
             return 'google-calendar-service.settings';
+          } else if (serviceId === 'squared-fusion-o365') {
+            return 'office-365-service.settings';
           } else if (serviceId === 'spark-hybrid-datasecurity') {
             return 'hds.list';
           } else if (serviceId === 'contact-center-context') {
