@@ -48,6 +48,8 @@ describe('Controller: WebExSiteRowCtrl', function () {
     spyOn(WebExSiteRowService, 'getShowGridData').and.returnValue(fakeShowGridData);
     spyOn(WebExSiteRowService, 'getLicensesInSubscriptionGroupedBySites').and.returnValue(licensesGroupedBySites);
     spyOn(SetupWizardService, 'isSubscriptionPending').and.returnValue(false);
+    spyOn(SetupWizardService, 'isSubscriptionEnterprise').and.returnValue(true);
+    spyOn(SetupWizardService, 'getEnterpriseSubscriptionListWithStatus').and.returnValue([{}]);
     spyOn(WebExSiteService, 'deleteSite');
     spyOn(TokenService, 'getAccessToken').and.returnValue(accessToken);
     spyOn($modal, 'open').and.returnValue({ result: $q.resolve() });
@@ -211,6 +213,19 @@ describe('Controller: WebExSiteRowCtrl', function () {
       expect(modalCallArgs.template.indexOf(expectedModalTitle) > -1);
       expect(state.go).not.toHaveBeenCalled();
       expect(WebExSiteService.deleteSite).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('isSubscriptionEnterprise() function', function () {
+    it('should return result from SetupWizardService.isSubscriptionEnterprise if license is passed ', function () {
+      expect(controller.isSubscriptionEnterprise('123')).toBeTruthy();
+      SetupWizardService.isSubscriptionEnterprise.and.returnValue(false);
+      expect(controller.isSubscriptionEnterprise('123')).toBeFalsy();
+    });
+    it('should, if no license is passed, return true if there are any licenses returned by SetupWizardService.getEnterpriseSubscriptionListWithStatus', function () {
+      expect(controller.isSubscriptionEnterprise()).toBeTruthy();
+      SetupWizardService.getEnterpriseSubscriptionListWithStatus.and.returnValue([]);
+      expect(controller.isSubscriptionEnterprise()).toBeFalsy();
     });
   });
 

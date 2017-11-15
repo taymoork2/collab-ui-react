@@ -68,12 +68,12 @@ require('./_site-list.scss');
     };
 
     //if we are checking a single subscription - we pass the entity. If entity is not passed
-    //check if this customer ha any enterprise non-trial subscriptions
+    //check if this customer has any enterprise non-trial subscriptions
     vm.isSubscriptionEnterprise = function (entity) {
       if (entity) {
-        SetupWizardService.isSubscriptionEnterprise(entity.billingServiceId);
+        return SetupWizardService.isSubscriptionEnterprise(entity.billingServiceId);
       } else {
-        return _.isEmpty(SetupWizardService.getEnterpriseSubscriptionListWithStatus());
+        return !_.isEmpty(SetupWizardService.getEnterpriseSubscriptionListWithStatus());
       }
     };
 
