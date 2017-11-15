@@ -8394,7 +8394,8 @@
       "SB": "Cisco Spark Board",
       "linkedSite": "Legacy WebEx License",
       "CDC": "Chat and Callback",
-      "CVC": "Chat, Callback and Inbound Call"
+      "CVC": "Chat, Callback and Inbound Call",
+      "MSGR": "Messenger"
     },
     "trial": "Trial",
     "adminUsers": "Administrators",
