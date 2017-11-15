@@ -82,6 +82,15 @@ describe('QueryParser', () => {
     expectQueryToParseTo(' product= term1', { query: 'term1', field: 'product', type: 'exact' });
   });
 
+  describe('translation', () => {
+    it('should translate a field query for future upgracechannels', () => {
+      //Unknown sw upgrade channel:
+      expectQueryToParseTo('translated.deviceSettings.softwareUpgradeChannel="new SecretOne"', { query: 'New_Secretone', field: 'upgradechannel', type: 'exact' });
+      //Translated upgrade channel:
+      expectQueryToParseTo('translated.deviceSettings.softwareUpgradeChannel="Stable Preview"', { query: 'Stable_Preview', field: 'upgradechannel', type: 'exact' });
+    });
+  });
+
   it('should parse mixed and+or queries', () => {
     expectQueryToParseTo('(a and b) or c', { or: [{ and: [{ query: 'a' }, { query: 'b' }] }, { query: 'c' }] });
     expectQueryToParseTo('a and (b or c)', { and: [{ query: 'a' }, { or: [{ query: 'b' }, { query: 'c' }] }] });

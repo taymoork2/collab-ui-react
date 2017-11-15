@@ -16,7 +16,6 @@ export class SearchTranslator {
   };
 
   private fieldNameTranslationTable: { [fieldKey: string]: string };
-
   private csdmPartOfTranslationTable: any[];
   private currentLanguage: string;
 
@@ -101,22 +100,23 @@ export class SearchTranslator {
 
   private static CreateFieldQuery(translationKey: string): FieldQuery {
     const searchField = SearchTranslator.getSearchField(translationKey);
+    const searchQuery = SearchTranslator.getSearchFieldValue(translationKey, searchField);
 
-    let searchQuery = translationKey;
+    return new FieldQuery(searchQuery, searchField, FieldQuery.QueryTypeExact);
+  }
+
+  private static getSearchFieldValue(translationValueKey: string, searchField: string) {
     switch (searchField) {
       case (QueryParser.Field_ActiveInterface):
       case (QueryParser.Field_UpgradeChannel):
       case (QueryParser.Field_ErrorCodes):
       case (QueryParser.Field_ConnectionStatus): {
-        searchQuery = translationKey.split('.')[2];
-        break;
+        return translationValueKey.split('.')[2];
       }
       default: {
-        searchQuery = translationKey;
+        return translationValueKey;
       }
     }
-
-    return new FieldQuery(searchQuery, searchField, FieldQuery.QueryTypeExact);
   }
 
   private matches(element: SearchElement, translationKey: string, translationValue: string): boolean {
@@ -140,7 +140,7 @@ export class SearchTranslator {
 
   private static queryFoundInFieldValue(query: string, exactMatch: boolean, fieldValue: string): boolean {
     return exactMatch ?
-      _.isEqual(_.lowerCase(query), _.lowerCase(fieldValue)) :
+      _.isEqual(_.lowerCase(query), _.lowerCase(fieldValue)) : //note: _.lowerCase, not toLower in search
       (_.includes(_.lowerCase(fieldValue), _.lowerCase(query)));
   }
 
@@ -151,25 +151,34 @@ export class SearchTranslator {
       });
   }
 
-  private static fieldNameTranslations: { [fieldKey: string]: { tKey: string, getValueKey?: (value: string) => string } } = {
+  private static fieldNameTranslations: {
+    [fieldKey: string]: {
+      tKey: string,
+      getValueTranslationKey?: (value: string) => string,
+      normalizeUnknownValueKey?: (value: string) => string,
+    },
+  } = {
     displayname: {
       tKey: 'spacesPage.nameHeader', //belongsto
     },
     connectionstatus: {
       tKey: 'spacesPage.statusHeader',
-      getValueKey: (value: string) => {
+      getValueTranslationKey: (value: string) => {
         return 'CsdmStatus.connectionStatus.' + _.toUpper(value);
       },
     },
     upgradechannel: {
       tKey: 'deviceSettings.softwareUpgradeChannel',
-      getValueKey: (value: string) => {
-        return 'CsdmStatus.upgradeChannels.' + _.upperFirst(_.camelCase(_.toLower(value)));
+      getValueTranslationKey: (value: string) => {
+        return 'CsdmStatus.upgradeChannels.' + _.startCase(_.toLower(value)).replace(new RegExp(' ', 'g'), '_');
+      },
+      normalizeUnknownValueKey: (value: string) => {
+        return _.startCase(_.toLower(value)).replace(new RegExp(' ', 'g'), '_');
       },
     },
     activeinterface: {
       tKey: 'deviceOverviewPage.networkConnectivity',
-      getValueKey: (value: string) => {
+      getValueTranslationKey: (value: string) => {
         return 'CsdmStatus.activeInterface.' + _.camelCase(_.toLower(value));
       },
     },
@@ -217,10 +226,10 @@ export class SearchTranslator {
     }
 
     const translationMatch = _.isEmpty(searchElement.field) ? null : SearchTranslator.fieldNameTranslations[_.toLower(searchElement.field)];
-    if (!translationMatch || translationMatch.getValueKey === undefined) {
+    if (!translationMatch || translationMatch.getValueTranslationKey === undefined) {
       return value;
     }
-    const translatedQueryValue = this.$translate.instant(translationMatch.getValueKey(value));
+    const translatedQueryValue = this.$translate.instant(translationMatch.getValueTranslationKey(value));
 
     return (!translatedQueryValue || translatedQueryValue === value) ? value : translatedQueryValue;
   }
@@ -245,5 +254,29 @@ export class SearchTranslator {
       return field;
     }
     return translatedField;
+  }
+
+  public lookupTranslatedQueryValue(queryValue: string, searchField: string): string {
+    this.updateLanguageIfNeeded();
+    const searchFieldLower = _.toLower(searchField);
+
+    const translatedFieldInfo = SearchTranslator.fieldNameTranslations[searchFieldLower];
+    if (!translatedFieldInfo || !translatedFieldInfo.getValueTranslationKey) {
+      return queryValue;
+    }
+    const possibleTransKey = translatedFieldInfo.getValueTranslationKey(queryValue);
+    const match = _(this.csdmPartOfTranslationTable)
+      .filter(([tKey, tValue]) => {
+        //Using _.lowerCase in search match:
+        return _.isEqual(tKey, possibleTransKey) || _.isEqual(_.lowerCase(tValue), _.lowerCase(queryValue));
+      })
+      .map(([tKey]) => SearchTranslator.getSearchFieldValue(tKey, searchFieldLower))
+      .first();
+
+    if (!match && translatedFieldInfo.normalizeUnknownValueKey) {
+      return translatedFieldInfo.normalizeUnknownValueKey(queryValue);
+    }
+
+    return match;
   }
 }

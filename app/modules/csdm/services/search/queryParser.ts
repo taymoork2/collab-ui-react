@@ -89,7 +89,7 @@ export class QueryParser {
 
       if (QueryParser.startsPhrase(currentText)) {
         const endIndex = QueryParser.getQuotationEndIndex(currentText);
-        builder.add(new FieldQuery(currentText.substring(1, endIndex).trim(), searchField, queryType));
+        builder.add(this.createFieldQuery(currentText.substring(1, endIndex).trim(), searchField, queryType));
         curIndex += endIndex + 1;
       } else if (QueryParser.startsParenthesis(currentText)) {
         const endIndex = QueryParser.getParenthesisEndIndex(currentText);
@@ -107,7 +107,7 @@ export class QueryParser {
 
         if (QueryParser.startsPhrase(currentFieldText)) {
           const endIndex = QueryParser.getQuotationEndIndex(currentFieldText);
-          builder.add(new FieldQuery(currentFieldText.substring(1, endIndex), fieldName, fieldQueryType));
+          builder.add(this.createFieldQuery(currentFieldText.substring(1, endIndex), fieldName, fieldQueryType));
           curIndex += endIndex + 1;
         } else if (QueryParser.startsParenthesis(currentFieldText)) {
           const endIndex = QueryParser.getParenthesisEndIndex(currentFieldText);
@@ -116,7 +116,7 @@ export class QueryParser {
         } else {
           //It's a term. Grab the first word
           const endIndex = QueryParser.getFirstWordEndIndex(currentFieldText);
-          builder.add(new FieldQuery(currentFieldText.substring(0, endIndex), fieldName, fieldQueryType));
+          builder.add(this.createFieldQuery(currentFieldText.substring(0, endIndex), fieldName, fieldQueryType));
           curIndex += endIndex;
         }
 
@@ -132,7 +132,7 @@ export class QueryParser {
             builder.setOperatorAnd();
             break;
           default:
-            builder.add(new FieldQuery(word, searchField, queryType));
+            builder.add(this.createFieldQuery(word, searchField, queryType));
             break;
         }
         curIndex += endIndex;
@@ -217,5 +217,15 @@ export class QueryParser {
 
   private static startsPhrase(expression: string): boolean {
     return _.startsWith(expression, '"');
+  }
+
+  private createFieldQuery(query: string, searchField?: string, queryType?: string) {
+    if (query && searchField && queryType === FieldQuery.QueryTypeExact) {
+      const translatedKeyValue = this.searchTranslator.lookupTranslatedQueryValue(query, searchField);
+      if (translatedKeyValue) {
+        return new FieldQuery(translatedKeyValue, searchField, queryType);
+      }
+    }
+    return new FieldQuery(query, searchField, queryType);
   }
 }
