@@ -74,8 +74,8 @@ export class SearchObject {
   }
 
   public hasAnyBulletOrEditedText(): boolean {
-    const anyElementWithText =  SearchObject.findFirstElementMatching(this.parsedQuery,
-        se => se instanceof FieldQuery && se.toQuery().length > 0);
+    const anyElementWithText = SearchObject.findFirstElementMatching(this.parsedQuery,
+      se => se instanceof FieldQuery && se.toQuery().length > 0);
 
     return anyElementWithText != null;
   }
@@ -99,7 +99,7 @@ export class SearchObject {
   }
 
   public setWorkingElementText(translatedQuery: string) {
-    const alreadyEdited =  SearchObject.findFirstElementMatching(this.parsedQuery, se => se.isBeingEdited());
+    const alreadyEdited = SearchObject.findFirstElementMatching(this.parsedQuery, se => se.isBeingEdited());
     if (_.isEmpty(translatedQuery) && alreadyEdited) {
       this.removeSearchElement(alreadyEdited);
     } else {
@@ -126,7 +126,7 @@ export class SearchObject {
   }
 
   public submitWorkingElement() {
-    const alreadyEdited =  SearchObject.findFirstElementMatching(this.parsedQuery, se => se.isBeingEdited());
+    const alreadyEdited = SearchObject.findFirstElementMatching(this.parsedQuery, se => se.isBeingEdited());
     if (alreadyEdited) {
       alreadyEdited.setBeingEdited(false);
     }
@@ -150,17 +150,19 @@ export class SearchObject {
     }).filter(e => e != null));
   }
 
-  public addSearchElement(translatedQuery: string) {
-    const parsedNewQuery = this.queryParser.parseQueryString(translatedQuery);
-    this.addParsedSearchElement(parsedNewQuery);
-    this.setQuery(translatedQuery, this.parsedQuery);
-  }
-
-  private addParsedSearchElement(newElement: SearchElement) {
+  public addParsedSearchElement(newElement: SearchElement) {
     if (!this.parsedQuery) {
       this.parsedQuery = newElement;
-    } else if (this.parsedQuery instanceof OperatorAnd) {
-      this.parsedQuery.addSubElement(newElement);
+      return;
+    }
+    if (this.parsedQuery.isEqual(newElement)) {
+      return;
+    }
+
+    if (this.parsedQuery instanceof OperatorAnd) {
+      if (!this.parsedQuery.contains(newElement)) {
+        this.parsedQuery.addSubElement(newElement);
+      }
     } else {
       this.parsedQuery = new OperatorAnd([this.parsedQuery, newElement]);
     }

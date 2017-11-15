@@ -30,6 +30,8 @@ export abstract class SearchElement {
     return this.parent;
   }
 
+  public abstract isEqual(other: SearchElement): boolean;
+
   public abstract toQuery(): string;
 
   public setBeingEdited(beingEdited: boolean) {
@@ -72,6 +74,16 @@ export class FieldQuery extends SearchElement {
     return this.type === FieldQuery.QueryTypeExact ? '=' : ':';
   }
 
+  public isEqual(other: SearchElement): boolean {
+    if (!other || !(other instanceof FieldQuery)) {
+      return false;
+    }
+    return this.getMatchOperator() === other.getMatchOperator()
+      && _.isEqual(_.toLower(this.field), _.toLower(other.field))
+      && _.isEqual(_.toLower(this.query), _.toLower(other.query));
+  }
+
+
   public toQuery(): string {
     return this.getQueryPrefix() + this.getQueryWithoutField();
   }
@@ -95,6 +107,20 @@ export class OperatorAnd extends SearchElement {
       _.each(andedElements, s => s.setParent(this));
     }
   }
+
+  public contains(element: SearchElement): boolean {
+    return _.some(this.and, e => e.isEqual(element));
+  }
+
+  public isEqual(other: SearchElement): boolean {
+    if (!other || !(other instanceof OperatorAnd)) {
+      return false;
+    }
+    return _.every(this.and, e => {
+      e.isEqual(other);
+    });
+  }
+
 
   public toQuery(): string {
     const joinedQuery = _.join(_.map(this.and, (e) => e.toQuery()), ' and ');
@@ -136,6 +162,15 @@ export class OperatorOr extends SearchElement {
     if (takeOwnerShip) {
       _.each(oredElements, s => s.setParent(this));
     }
+  }
+
+  public isEqual(other: SearchElement): boolean {
+    if (!other || !(other instanceof OperatorOr)) {
+      return false;
+    }
+    return _.every(this.or, e => {
+      e.isEqual(other);
+    });
   }
 
   public toQuery(): string {

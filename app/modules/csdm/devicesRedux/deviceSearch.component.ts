@@ -67,8 +67,8 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     this.searchChange();
   }
 
-  public addToSearch(field: string, query: string) {
-    this.searchObject.addSearchElement((field ? `${field}="${query}"` : '' + query));
+  public addToSearch(searchElement: SearchElement) {
+    this.searchObject.addParsedSearchElement(searchElement);
     this.searchChange();
   }
 
@@ -322,7 +322,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
 }
 
 export interface ISearchHandler {
-  addToSearch(field: string, query: string);
+  addToSearch(searchElement: SearchElement);
 
   setSortOrder(field?: string, order?: string);
 }
@@ -330,9 +330,9 @@ export interface ISearchHandler {
 export class SearchInteraction implements ISearchHandler {
   public receiver: ISearchHandler;
 
-  public addToSearch(field: string, query: string) {
+  public addToSearch(searchElement: SearchElement) {
     if (this.receiver) {
-      this.receiver.addToSearch(field, query);
+      this.receiver.addToSearch(searchElement);
     }
   }
 

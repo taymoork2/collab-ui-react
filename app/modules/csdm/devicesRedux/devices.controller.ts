@@ -5,6 +5,7 @@ import { IToolkitModalService } from '../../core/modal/index';
 import { Notification } from 'modules/core/notifications';
 import { QueryParser } from '../services/search/queryParser';
 import { SearchTranslator } from '../services/search/searchTranslator';
+import { SearchElement } from '../services/search/searchElement';
 
 require('./_devices.scss');
 
@@ -148,8 +149,8 @@ export class DevicesCtrl {
     }
   }
 
-  public addToSearch(field: string, query: string) {
-    this.searchInteraction.addToSearch(field, query);
+  public addToSearch(searchElement: SearchElement) {
+    this.searchInteraction.addToSearch(searchElement);
   }
 
   public sortOrderChanged(field, order) {

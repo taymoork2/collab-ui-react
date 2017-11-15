@@ -1,6 +1,7 @@
 import { List } from 'lodash';
 import { IOnChangesObject } from 'angular';
 import { Aggregation, BucketData, NamedAggregation, SearchResult } from '../services/search/searchResult';
+import { FieldQuery, SearchElement } from '../services/search/searchElement';
 
 class Chart implements ng.IComponentController {
   private currentAggregations: NamedAggregation[] = [];
@@ -12,7 +13,7 @@ class Chart implements ng.IComponentController {
   private Colors = require('modules/core/config/colors').Colors;
 
   //bindings:
-  public pieChartClicked: (e: { searchField: string, query: string }) => {};
+  public pieChartClicked: (e: { searchElement: SearchElement }) => {};
   public searchResult?: SearchResult;
 
   /* @ngInject */
@@ -70,7 +71,7 @@ class Chart implements ng.IComponentController {
       innerRadius: '32%',
       theme: 'light',
       allLabels: [],
-      balloon: { adjustBorderColor: true, borderThickness: 1, borderAlpha: 1, fillAlpha: 1, fillColor: '#FFFFFF', fixedPosition: true, shadowAlpha: 0 },
+      balloon: { adjustBorderColor: true, borderThickness: 1, borderAlpha: 1, fillAlpha: 1, fillColor: '#FFFFFF', fixedPosition: false, shadowAlpha: 0 },
       // balloon: { enabled: false },
       fontSize: 10,
       fontFamily: 'CiscoSansTT Light',
@@ -96,7 +97,7 @@ class Chart implements ng.IComponentController {
         event: 'clickSlice',
         method: (e) => {
           if (data) {
-            this.pieChartClicked({ searchField: data.bucketName, query: e.dataItem.dataContext.key });
+            this.pieChartClicked({ searchElement: new FieldQuery(e.dataItem.dataContext.key, data.bucketName, FieldQuery.QueryTypeExact) });
           }
         },
       }],
