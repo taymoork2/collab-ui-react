@@ -23,7 +23,7 @@ describe('CareLocalSettingsCtrl', function () {
     };
   }
 
-  function initSpies() {
+  function initSpies(userOrgId, isCareVoice) {
     spyOn(this.URService, 'createQueue').and.returnValue(this.$q.resolve('fake createQueue response'));
     spyOn(this.URService, 'updateQueue').and.returnValue(this.$q.resolve('fake updateQueue response'));
     spyOn(this.SunlightConfigService, 'updateChatConfig').and.returnValue(this.$q.resolve('fake updateChatConfig response'));
@@ -31,9 +31,9 @@ describe('CareLocalSettingsCtrl', function () {
     spyOn(this.SunlightConfigService, 'onboardCareBot').and.returnValue(this.$q.resolve('fake onboardCareBot response'));
     spyOn(this.FeatureToggleService, 'atlasCareAutomatedRouteTrialsGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456');
-    spyOn(this.Authinfo, 'getUserOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456');
+    spyOn(this.Authinfo, 'getUserOrgId').and.returnValue(userOrgId);
     spyOn(this.Authinfo, 'getOrgName').and.returnValue('SunlightConfigService test org');
-    spyOn(this.Authinfo, 'isCareVoice').and.returnValue(false);
+    spyOn(this.Authinfo, 'isCareVoice').and.returnValue(isCareVoice);
     spyOn(this, '$interval').and.callThrough();
 
     this.sunlightChatConfigUrl = this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/chat';
@@ -61,7 +61,9 @@ describe('CareLocalSettingsCtrl', function () {
       );
     });
     beforeEach(initDependencies);
-    beforeEach(initSpies);
+    beforeEach(function () {
+      initSpies.call(this, 'deba1221-ab12-cd34-de56-abcdef123456', false);
+    });
 
     describe('CareSettings - Init', function () {
       it('should show enabled setup care button, if Org is not onboarded already.', function () {
@@ -227,10 +229,11 @@ describe('CareLocalSettingsCtrl', function () {
       );
     });
     beforeEach(initDependencies);
-    beforeEach(initSpies);
+    beforeEach(function () {
+      initSpies.call(this, 'deba1221-ab12-cd34-de56-abcdef123456', true);
+    });
 
     it('should enable setup care button, when Org is not onboarded', function () {
-      this.Authinfo.isCareVoice = jasmine.createSpy('isCareVoice').and.returnValue(true);
       this.$httpBackend.expectGET(this.urServiceUrlRegEx)
         .respond(200, this.queueDetails);
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
@@ -245,7 +248,6 @@ describe('CareLocalSettingsCtrl', function () {
     });
 
     it('should disable setup care, if already onboarded', function () {
-      this.Authinfo.isCareVoice = jasmine.createSpy('isCareVoice').and.returnValue(true);
       this.$httpBackend.expectGET(this.urServiceUrlRegEx)
         .respond(200, this.queueDetails);
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
@@ -262,7 +264,6 @@ describe('CareLocalSettingsCtrl', function () {
     });
 
     it('should show loading animation on setup care button, if Org onboarding is in progress', function () {
-      this.Authinfo.isCareVoice = jasmine.createSpy('isCareVoice').and.returnValue(true);
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
         .respond(200, {
           csOnboardingStatus: this.constants.status.PENDING,
@@ -277,7 +278,6 @@ describe('CareLocalSettingsCtrl', function () {
     });
 
     it('should show loading animation on setup care button, if csOnboarding or aaOnboarding is pending', function () {
-      this.Authinfo.isCareVoice = jasmine.createSpy('isCareVoice').and.returnValue(true);
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
@@ -292,7 +292,6 @@ describe('CareLocalSettingsCtrl', function () {
     });
 
     it('should enable setup care button, if csOnboarding or aaOnboarding is failure', function () {
-      this.Authinfo.isCareVoice = jasmine.createSpy('isCareVoice').and.returnValue(true);
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
@@ -307,7 +306,6 @@ describe('CareLocalSettingsCtrl', function () {
     });
 
     it('should disable setup care button, after onboarding is complete', function () {
-      this.Authinfo.isCareVoice = jasmine.createSpy('isCareVoice').and.returnValue(true);
       spyOn(this.SunlightConfigService, 'aaOnboard').and.returnValue(this.$q.resolve('fake aaOnboard response'));
       spyOn(this.Notification, 'success').and.returnValue(true);
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl).respond(404, {});
@@ -332,7 +330,6 @@ describe('CareLocalSettingsCtrl', function () {
     });
 
     it('should not show error notification and disable setup care button, if org is already onboarded', function () {
-      this.Authinfo.isCareVoice = jasmine.createSpy('isCareVoice').and.returnValue(true);
       spyOn(this.SunlightConfigService, 'aaOnboard').and.returnValue(this.$q.reject({ status: 412 }));
       spyOn(this.Notification, 'success').and.returnValue(true);
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl).respond(404, {});
@@ -357,7 +354,6 @@ describe('CareLocalSettingsCtrl', function () {
     });
 
     it('should show error notification, if any of the onboarding promises fail', function () {
-      this.Authinfo.isCareVoice = jasmine.createSpy('isCareVoice').and.returnValue(true);
       spyOn(this.SunlightConfigService, 'aaOnboard').and.returnValue(this.$q.reject('fake aaOnboard response'));
       spyOn(this.Notification, 'errorWithTrackingId').and.returnValue(true);
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl).respond(404, {});
@@ -379,11 +375,11 @@ describe('CareLocalSettingsCtrl', function () {
       );
     });
     beforeEach(initDependencies);
-    beforeEach(initSpies);
+    beforeEach(function () {
+      initSpies.call(this, 'aeba1221-ab12-cd34-de56-abcdef123456', true);
+    });
 
     it('should enable setup care button, when Org is not onboarded', function () {
-      this.Authinfo.getUserOrgId = jasmine.createSpy('getUserOrgId').and.returnValue('aeba1221-ab12-cd34-de56-abcdef123456');
-      this.Authinfo.isCareVoice = jasmine.createSpy('isCareVoice').and.returnValue(true);
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
         .respond(200, {
           csOnboardingStatus: this.constants.status.UNKNOWN,
@@ -395,8 +391,6 @@ describe('CareLocalSettingsCtrl', function () {
     });
 
     it('should disable setup care, if cs and aa are already onboarded but app onboarding is not done', function () {
-      this.Authinfo.getUserOrgId = jasmine.createSpy('getUserOrgId').and.returnValue('aeba1221-ab12-cd34-de56-abcdef123456');
-      this.Authinfo.isCareVoice = jasmine.createSpy('isCareVoice').and.returnValue(true);
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
@@ -411,8 +405,6 @@ describe('CareLocalSettingsCtrl', function () {
     });
 
     it('should disable setup care, if already onboarded', function () {
-      this.Authinfo.getUserOrgId = jasmine.createSpy('getUserOrgId').and.returnValue('aeba1221-ab12-cd34-de56-abcdef123456');
-      this.Authinfo.isCareVoice = jasmine.createSpy('isCareVoice').and.returnValue(true);
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
@@ -427,8 +419,6 @@ describe('CareLocalSettingsCtrl', function () {
     });
 
     it('should show loading animation on setup care button, if Org onboarding is in progress', function () {
-      this.Authinfo.getUserOrgId = jasmine.createSpy('getUserOrgId').and.returnValue('aeba1221-ab12-cd34-de56-abcdef123456');
-      this.Authinfo.isCareVoice = jasmine.createSpy('isCareVoice').and.returnValue(true);
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
         .respond(200, {
           csOnboardingStatus: this.constants.status.PENDING,
@@ -443,8 +433,6 @@ describe('CareLocalSettingsCtrl', function () {
     });
 
     it('should show loading animation on setup care button, if csOnboarding or aaOnboarding is pending', function () {
-      this.Authinfo.getUserOrgId = jasmine.createSpy('getUserOrgId').and.returnValue('aeba1221-ab12-cd34-de56-abcdef123456');
-      this.Authinfo.isCareVoice = jasmine.createSpy('isCareVoice').and.returnValue(true);
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
@@ -459,8 +447,6 @@ describe('CareLocalSettingsCtrl', function () {
     });
 
     it('should enable setup care button, if csOnboarding or aaOnboarding is failure', function () {
-      this.Authinfo.getUserOrgId = jasmine.createSpy('getUserOrgId').and.returnValue('aeba1221-ab12-cd34-de56-abcdef123456');
-      this.Authinfo.isCareVoice = jasmine.createSpy('isCareVoice').and.returnValue(true);
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
@@ -475,8 +461,6 @@ describe('CareLocalSettingsCtrl', function () {
     });
 
     it('should disable setup care button, after onboarding is complete', function () {
-      this.Authinfo.getUserOrgId = jasmine.createSpy('getUserOrgId').and.returnValue('aeba1221-ab12-cd34-de56-abcdef123456');
-      this.Authinfo.isCareVoice = jasmine.createSpy('isCareVoice').and.returnValue(true);
       spyOn(this.SunlightConfigService, 'aaOnboard').and.returnValue(this.$q.resolve('fake aaOnboard response'));
       spyOn(this.Notification, 'success').and.returnValue(true);
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl).respond(404, {});
@@ -501,8 +485,6 @@ describe('CareLocalSettingsCtrl', function () {
     });
 
     it('should show error notification, if any of the onboarding promises fail', function () {
-      this.Authinfo.getUserOrgId = jasmine.createSpy('getUserOrgId').and.returnValue('aeba1221-ab12-cd34-de56-abcdef123456');
-      this.Authinfo.isCareVoice = jasmine.createSpy('isCareVoice').and.returnValue(true);
       spyOn(this.SunlightConfigService, 'aaOnboard').and.returnValue(this.$q.reject('fake aaOnboard response'));
       spyOn(this.Notification, 'errorWithTrackingId').and.returnValue(true);
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl).respond(404, {});
@@ -524,10 +506,11 @@ describe('CareLocalSettingsCtrl', function () {
       );
     });
     beforeEach(initDependencies);
-    beforeEach(initSpies);
+    beforeEach(function () {
+      initSpies.call(this, 'deba1221-ab12-cd34-de56-abcdef123456', true);
+    });
 
     it('should enable setup care button, when Org is not onboarded', function () {
-      this.Authinfo.isCareVoice = jasmine.createSpy('isCareVoice').and.returnValue(true);
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
         .respond(200, {
           csOnboardingStatus: this.constants.status.UNKNOWN,
@@ -539,7 +522,6 @@ describe('CareLocalSettingsCtrl', function () {
     });
 
     it('should enable setup care, if cs and aa are already onboarded but app onboarding is not done', function () {
-      this.Authinfo.isCareVoice = jasmine.createSpy('isCareVoice').and.returnValue(true);
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
@@ -554,7 +536,6 @@ describe('CareLocalSettingsCtrl', function () {
     });
 
     it('should disable setup care, if already onboarded', function () {
-      this.Authinfo.isCareVoice = jasmine.createSpy('isCareVoice').and.returnValue(true);
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
@@ -569,7 +550,6 @@ describe('CareLocalSettingsCtrl', function () {
     });
 
     it('should show loading animation on setup care button, if Org onboarding is in progress', function () {
-      this.Authinfo.isCareVoice = jasmine.createSpy('isCareVoice').and.returnValue(true);
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
         .respond(200, {
           csOnboardingStatus: this.constants.status.PENDING,
@@ -584,7 +564,6 @@ describe('CareLocalSettingsCtrl', function () {
     });
 
     it('should show loading animation on setup care button, if csOnboarding or aaOnboarding is pending', function () {
-      this.Authinfo.isCareVoice = jasmine.createSpy('isCareVoice').and.returnValue(true);
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
@@ -599,7 +578,6 @@ describe('CareLocalSettingsCtrl', function () {
     });
 
     it('should enable setup care button, if csOnboarding or aaOnboarding is failure', function () {
-      this.Authinfo.isCareVoice = jasmine.createSpy('isCareVoice').and.returnValue(true);
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
@@ -614,7 +592,6 @@ describe('CareLocalSettingsCtrl', function () {
     });
 
     it('should disable setup care button, after onboarding is complete', function () {
-      this.Authinfo.isCareVoice = jasmine.createSpy('isCareVoice').and.returnValue(true);
       spyOn(this.SunlightConfigService, 'aaOnboard').and.returnValue(this.$q.resolve('fake aaOnboard response'));
       spyOn(this.Notification, 'success').and.returnValue(true);
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl).respond(404, {});
@@ -639,7 +616,6 @@ describe('CareLocalSettingsCtrl', function () {
     });
 
     it('should show error notification, if any of the onboarding promises fail', function () {
-      this.Authinfo.isCareVoice = jasmine.createSpy('isCareVoice').and.returnValue(true);
       var dummyResponse = { status: 202 };
       var promise = this.$q.resolve(dummyResponse);
       this.SunlightConfigService.onBoardCare.and.returnValue(promise);
@@ -665,15 +641,15 @@ describe('CareLocalSettingsCtrl', function () {
       );
     });
     beforeEach(initDependencies);
-    beforeEach(initSpies);
+    beforeEach(function () {
+      initSpies.call(this, 'deba1221-ab12-cd34-de56-abcdef123456', false);
+    });
     beforeEach(
       function () {
         this.$scope.orgConfigForm = {
           dirty: false,
-          $setPristine: function () {
-          },
-          $setUntouched: function () {
-          },
+          $setPristine: _.noop,
+          $setUntouched: _.noop,
         };
       });
 
