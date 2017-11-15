@@ -59,8 +59,7 @@
           </div>
           <div class="aa-schedule-days">
             <div ng-repeat="day in hours.days">
-              <cs-checkbox ckid="{{'chk_'+$parent.$index+'_'+$index}}" ng-model="day.active"
-                          label="{{:: day.label }}"></cs-checkbox>
+              <input cs-input type="checkbox" id="{{'chk_'+$parent.$index+'_'+$index}}" ng-model="day.active" cs-input-label="{{::day.label}}">
             </div>
           </div>
         </div>
@@ -76,9 +75,7 @@
 
   <div class="modal-body-gray">
     <p name="holidays-subtitle" class="aa-schedule-subtitle" ng-click="aaScheduleModalCtrl.toggleSection('holidays')">{{ ::' autoAttendant.scheduleHolidays' | translate}} ({{aaScheduleModalCtrl.holidays.length}})
-      <a href id="toggleHolidays"
-        class="icon icon-right-arrow pull-right"
-        ng-class="{'down': !aaScheduleModalCtrl.toggleHolidays}"></a>
+      <a id="toggleHolidays" class="icon icon-right-arrow pull-right" ng-class="{'down': !aaScheduleModalCtrl.toggleHolidays}"></a>
     </p>
     <div collapse="aaScheduleModalCtrl.toggleHolidays">
       <div class="cs-checkbox-group aa-schedule-holidays-behavior">
