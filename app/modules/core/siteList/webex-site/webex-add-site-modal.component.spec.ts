@@ -10,7 +10,7 @@ describe('Component: WebexAddSiteModalComponent', function () {
 
   beforeEach(function () {
     this.initModules(module);
-    this.injectDependencies('$componentController', '$scope', '$rootScope', 'Config', 'SetupWizardService', 'WebExSiteService');
+    this.injectDependencies('$componentController', '$q', '$rootScope', '$scope', 'Config', 'SetupWizardService', 'WebExSiteService');
     this.$scope.fixtures = {
     };
 
@@ -24,6 +24,7 @@ describe('Component: WebexAddSiteModalComponent', function () {
   function initSpies() {
     spyOn(this.SetupWizardService, 'getNonTrialWebexLicenses').and.returnValue(confServices);
     spyOn(this.SetupWizardService, 'getConferenceLicensesBySubscriptionId').and.returnValue(confServicesSub100448);
+    spyOn(this.WebExSiteService, 'constructWebexLicensesPayload').and.returnValue(this.$q.resolve(true));
     spyOn(this.WebExSiteService, 'getAudioPackageInfo').and.returnValue({ audioPackage: 'VoIPOnly' });
     spyOn(this.$rootScope, '$broadcast').and.callThrough();
   }
@@ -148,6 +149,27 @@ describe('Component: WebexAddSiteModalComponent', function () {
       this.controller.addTransferredSites(null, null, false);
       expect(this.controller.sitesArray.length).toBe(numberOfSites);
       expect(this.controller.transferCode).toBeUndefined();
+    });
+  });
+
+  describe('Saving site data', function () {
+    beforeEach(function () {
+      this.controller.currentStep = 3;
+      this.controller.totalSteps = 3;
+    });
+
+    it('should call the payload creation function with \'ADD\' action when in add sites mode', function () {
+      this.singleStep = null;
+      this.controller.next();
+      expect(this.WebExSiteService.constructWebexLicensesPayload).toHaveBeenCalled();
+      expect(this.WebExSiteService.constructWebexLicensesPayload.calls.mostRecent().args[2]).toBe('ADD');
+    });
+
+    it('should call the payload creation function with \'REDISTRIBUTE\' action when in license redistribution  mode', function () {
+      this.controller.singleStep = 3;
+      this.controller.next();
+      expect(this.WebExSiteService.constructWebexLicensesPayload).toHaveBeenCalled();
+      expect(this.WebExSiteService.constructWebexLicensesPayload.calls.mostRecent().args[2]).toBe('REDISTRIBUTE');
     });
   });
 });

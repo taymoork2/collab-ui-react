@@ -1,11 +1,11 @@
 <cs-card id='task-time-card' class="report-card"
          ng-class="{'hideCard': !nav.displayEngagement || nav.timeSelected.value === 0,
-            'large': !nav.isVideoEnabled || nav.mediaTypeSelected.name !== 'chat'}">
+            'large': nav.showChartWithoutBreakdown.taskTime}">
   <article>
     <header>
       <h4 class='report-section-header'>{{ nav.taskTimeTitle }}</h4>
     </header>
-    <section class='report-section' ng-class="{'showBreakdown': nav.isVideoEnabled && nav.mediaTypeSelected.name === 'chat'}">
+    <section class='report-section' ng-class="{'showBreakdown': !nav.showChartWithoutBreakdown.taskTime}">
       <div class="care-card-report">
         <p class="report-description">{{nav.taskTimeDescription}}</p>
         <div id="taskTimeDiv" class="areachart"></div>
@@ -21,7 +21,7 @@
           </h3>
         </div>
       </div>
-      <div class="care-card-report" ng-if="nav.isVideoEnabled && nav.mediaTypeSelected.name === 'chat'">
+      <div class="care-card-report" ng-if="!nav.showChartWithoutBreakdown.taskTime">
         <p class="report-description">{{nav.taskTimeBreakdownDescription}}</p>
         <div id="taskTimeBreakdownDiv" class="areachart"></div>
         <div class="spinner-position" ng-if="nav.isRefresh(nav.dataStatus)">

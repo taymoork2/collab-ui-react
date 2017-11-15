@@ -156,18 +156,10 @@ describe('Service: Care Reports Service', function () {
 
     it('Task Aggregate Chart Config should return expected Report', function () {
       var taskAggregateReport = CareReportsService.getTaskAggregateGraphConfig('dummyData', 'dummyTitle', 'dummyTitle',
-        false, 'in-queue', 'assigned', 'numPendingTasks', 'numWorkingTasks', '#F5A623', '#F5A623');
+        'in-queue', 'assigned', 'numPendingTasks', 'numWorkingTasks', '#F5A623', '#F5A623');
       var expectedConfig = _.clone(responseData.taskIncomingReportToday);
       expectedConfig.graphs = responseData.taskAggregateGraphs;
       verifyReportConfig(taskAggregateReport, expectedConfig, 'tasks');
-    });
-
-    it('Task Aggregate Chart Config should return breakdown of Chat and chatWithVideo Report', function () {
-      var taskAggregateBreakdownReport = CareReportsService.getTaskAggregateGraphConfig('dummyData', 'dummyTitle', 'dummyTitle',
-        true, 'chatWithVideo', 'chat', 'numWebcallWorkingTasks', 'numChatWorkingTasks', '#F5A623', '#F5A623');
-      var expectedConfig = _.clone(responseData.taskIncomingReportToday);
-      expectedConfig.graphs = responseData.taskAggregateBreakdownGraphs;
-      verifyReportConfig(taskAggregateBreakdownReport, expectedConfig, 'tasks');
     });
   });
 });

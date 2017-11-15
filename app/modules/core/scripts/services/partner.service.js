@@ -344,7 +344,11 @@
       });
 
       if (isTrial) {
-        status = (rowData.daysLeft < 0) ? 'expired' : 'trial';
+        if (rowData.purchased) {
+          status = (rowData.daysLeft < 0) ? 'purchasedWithExpired' : 'purchasedWithActive';
+        } else {
+          status = (rowData.daysLeft < 0) ? 'expired' : 'trial';
+        }
       } else if (_.isEmpty(rowData.licenseList)) {
         status = 'expired';
       }
@@ -354,14 +358,17 @@
 
     function setNotesSortOrder(rowData) {
       var notes = {};
+      var key = 'licenseInfoNotAvailable';
+      var hasTrialLicenses = _.some(rowData.licenseList, 'isTrial');
+
       notes.daysLeft = rowData.daysLeft;
       if (isLicenseInfoAvailable(rowData.licenseList)) {
         if (rowData.status === 'CANCELED') {
-          notes.text = $translate.instant('customerPage.suspended');
-        } else if (rowData.purchased) {
-          notes.text = $translate.instant('customerPage.purchased');
+          key = 'suspended';
+        } else if (rowData.purchased && !hasTrialLicenses) {
+          key = 'purchased';
         } else if (rowData.customerOrgId === Authinfo.getOrgId()) {
-          notes.text = $translate.instant('customerPage.myOrganization');
+          key = 'myOrganization';
         } else if (rowData.status === 'ACTIVE' || rowData.status === 'EXPIRED') {
           notes.sortOrder = customerStatus.NOTE_DAYS_LEFT;
           if (rowData.daysLeft > 0) {
@@ -369,21 +376,21 @@
               count: rowData.daysLeft,
             }, 'messageformat');
           } else if (rowData.daysLeft === 0) {
-            notes.text = $translate.instant('customerPage.expiringToday');
+            key = 'expiringToday';
           } else if (rowData.daysLeft < 0) {
             if (rowData.accountStatus === 'pending') {
-              notes.text = $translate.instant('customerPage.needsSetup');
+              key = 'needsSetup';
             } else if (rowData.startDate && _.inRange(rowData.daysLeft, 0, Config.trialGracePeriod)) {
-              notes.text = $translate.instant('customerPage.expiredWithGracePeriod');
+              key = 'expiredWithGracePeriod';
             } else {
-              notes.text = $translate.instant('customerPage.expired');
+              key = 'expired';
             }
           }
         }
       }
-      // If any of the previous tests fail, fall back to no license info
-      if (!_.has(notes, 'text')) {
-        notes.text = $translate.instant('customerPage.licenseInfoNotAvailable');
+
+      if (_.isUndefined(notes.text)) {
+        notes.text = $translate.instant('customerPage.' + key);
       }
       rowData.notes = notes;
     }
@@ -555,10 +562,9 @@
 
     function _calculatePurchaseStatus(customerData) {
       if (customerData.state === Config.licenseStatus.ACTIVE && customerData.licenseList) {
-        return !(customerData.licenseList.length === 0 || _.some(customerData.licenseList, 'isTrial'));
-      } else {
-        return false;
+        return !_.isEmpty(customerData.licenseList) && _.some(customerData.licenseList, ['isTrial', false]);
       }
+      return false;
     }
 
 
