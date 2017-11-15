@@ -1,8 +1,10 @@
+import { ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
+
 class AssignableServicesController implements ng.IComponentController {
   public isCareEnabled = false;
   public isCareAndCDCEnabled = false;
   public isCareAndCVCEnabled = false;
-  public sortedSubscriptions: any[];
+  public sortedSubscriptions: ISubscription[];
 
   /* @ngInject */
   constructor (
