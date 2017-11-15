@@ -72,6 +72,7 @@ class WebexSiteNewCtrl implements ng.IComponentController {
         //SparkControlHub user management means there is no setupType
         if (this.siteModel.setupType !== this.setupTypeLegacy) {
           delete this.siteModel.setupType;
+          this.siteModel.isCIUnifiedSite = true;
         }
         this.addSite(_.clone(this.siteModel));
         this.clearWebexSiteInputs();
@@ -125,6 +126,7 @@ class WebexSiteNewCtrl implements ng.IComponentController {
     this.siteModel.siteUrl = '';
     this.siteModel.timezone = '';
     this.siteModel.setupType = undefined;
+    this.siteModel.isCIUnifiedSite = undefined;
   }
 
   public getSitesAudioPackageDisplay() {

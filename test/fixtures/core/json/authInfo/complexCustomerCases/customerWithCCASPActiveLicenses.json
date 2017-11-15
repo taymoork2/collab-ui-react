@@ -15,7 +15,7 @@
       "capacity": 1000,
       "siteUrl": "cognizanttraining.webex.com",
       "partnerEmail": "wtf@west.com",
-      "isCIUnifiedSite": false,
+      "isCIUnifiedSite": true,
       "siteId": "668573",
       "ccaspPartnerName": "West IP Communications",
       "ccaspSubscriptionId": "Sub120766"

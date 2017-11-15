@@ -31,11 +31,15 @@ export class WebExSiteService {
   ) { }
 
   public transformExistingSites(confServicesInActingSubscription): IWebExSite[] {
-    return _.chain(confServicesInActingSubscription).map('siteUrl').uniq().map(siteUrl => {
+    return _.chain(confServicesInActingSubscription).map((site) => {
+      return { siteUrl: site.siteUrl, isCIUnifiedSite: site.isCIUnifiedSite };
+    })
+    .uniqBy('siteUrl').map(site => {
       return {
-        siteUrl: _.replace(siteUrl.toString(), this.Config.siteDomainUrl.webexUrl, ''),
+        siteUrl: _.replace(site.siteUrl.toString(), this.Config.siteDomainUrl.webexUrl, ''),
         quantity: 0,
         centerType: '',
+        isCIUnifiedSite: site.isCIUnifiedSite,
       };
     }).value();
   }
