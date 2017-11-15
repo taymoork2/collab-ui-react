@@ -43,6 +43,8 @@
     </div>
   </div>
   <div ng-repeat="subscription in $ctrl.sortedSubscriptions track by subscription.subscriptionId">
-    <subscription-row-sha-d9c2 subscription="subscription"></subscription-row-sha-d9c2>
+    <assignable-services-row
+      subscription="subscription"
+      is-care-enabled="$ctrl.isCareEnabled"></assignable-services-row>
   </div>
 </div>

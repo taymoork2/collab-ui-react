@@ -1,0 +1,26 @@
+<div class="column-subsription-header paid subscription__header">
+  {{:: $ctrl.subscription.subscriptionId }}
+  <i class="icon toggle"
+     ng-class="{
+       'icon-chevron-up': $ctrl.showContent,
+       'icon-chevron-down': !$ctrl.showContent,
+     }"
+    ng-click="$ctrl.showContent = !$ctrl.showContent;"></i>
+</div>
+<div class="row full flex-row row-licenses subscription__content" ng-show="$ctrl.showContent">
+  <div class="small-4 columns column-paid column__messaging" style="border:1px solid red;">
+    TODO: add messaging service items
+  </div>
+
+  <div class="small-4 columns column-paid column__meeting" style="border:1px solid red;">
+    TODO: add meeting service items
+  </div>
+
+  <div class="small-4 columns column-paid column__communication" style="border:1px solid red;">
+    TODO: add call service items
+  </div>
+
+  <div ng-if="$ctrl.isCareEnabled" class="small-4 columns column-paid column__care">
+    TODO: add care service items
+  </div>
+</div>
