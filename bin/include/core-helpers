@@ -17,6 +17,29 @@ function get_physical_path {
     cd ~-
 }
 
+function print_error_required_param_missing {
+    local missing_param_name="$1"
+    echo_error "${FUNCNAME[1]}: missing param '$missing_param_name'"
+}
+
+function abort_required_env_var_missing {
+    local missing_env_var="$1"
+    echo_error "'$missing_env_var' is not set, please export this environment variable first."
+    exit 1
+}
+
+function echo_error {
+    >&2 echo "[ERROR]" "$@"
+}
+
+function echo_warn {
+    >&2 echo "[WARNING]" "$@"
+}
+
+function echo_info {
+    >&2 echo "[INFO]" "$@"
+}
+
 # note:
 # - this function expects banner contents to be piped in
 #
