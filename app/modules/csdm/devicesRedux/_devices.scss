@@ -362,15 +362,6 @@
     form {
       margin: 0;
     }
-
-    .search-filters-only {
-      margin-left: 10px;
-      .searchbox {
-        visibility: hidden;
-        width: 0;
-      }
-    }
-
     $easeOutQuint: cubic-bezier(0.230, 1.000, 0.320, 1.000);
     @mixin easing-transition($property: all, $duration: 500ms, $easeType: $ease ) {
       -webkit-transition: $property $duration $easeType;
