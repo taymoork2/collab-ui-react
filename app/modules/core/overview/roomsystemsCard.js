@@ -9,7 +9,7 @@
     .factory('OverviewRoomSystemsCard', OverviewRoomSystemsCard);
 
   /* @ngInject */
-  function OverviewRoomSystemsCard(OverviewHelper, Authinfo) {
+  function OverviewRoomSystemsCard(Authinfo, FeatureToggleService, OverviewHelper) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -64,6 +64,14 @@
           });
         }
 
+        function fetchToggleAndSetLink() {
+          FeatureToggleService.csdmDevRedGetStatus().then(function (toggle) {
+            if (toggle) {
+              card.settingsUrl = '#/devices-redux';
+            }
+          });
+        }
+
         //list: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-service/blob/master/common/src/main/java/com/cisco/wx2/atlas/common/bean/order/OfferCode.java
 
         card.orgEventHandler = function (data) {
@@ -71,7 +79,7 @@
             card.enabled = true; //If we are a test org and allLicenses is empty, enable the card.
           }
         };
-
+        fetchToggleAndSetLink();
         return card;
       },
     };
