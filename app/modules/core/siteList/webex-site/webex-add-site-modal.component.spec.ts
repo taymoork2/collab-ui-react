@@ -25,6 +25,7 @@ describe('Component: WebexAddSiteModalComponent', function () {
     spyOn(this.Authinfo, 'isEnterpriseCustomer').and.returnValue(true);
     spyOn(this.SetupWizardService, 'getNonTrialWebexLicenses').and.returnValue(confServices);
     spyOn(this.SetupWizardService, 'getConferenceLicensesBySubscriptionId').and.returnValue(confServicesSub100448);
+    spyOn(this.SetupWizardService, 'updateSitesInActiveSubscription').and.returnValue(this.$q.resolve(true));
     spyOn(this.WebExSiteService, 'constructWebexLicensesPayload').and.returnValue({});
     spyOn(this.WebExSiteService, 'getAudioPackageInfo').and.returnValue({ audioPackage: 'VoIPOnly' });
     spyOn(this.$rootScope, '$broadcast').and.callThrough();
@@ -165,15 +166,49 @@ describe('Component: WebexAddSiteModalComponent', function () {
       this.singleStep = null;
       this.controller.next();
       expect(this.WebExSiteService.constructWebexLicensesPayload).toHaveBeenCalled();
+      expect(this.controller.isLicenseRedistribution()).toBeFalsy();
       expect(this.WebExSiteService.constructWebexLicensesPayload.calls.mostRecent().args[2]).toBe('ADD');
     });
 
     it('should call the payload creation function with \'REDISTRIBUTE\' action when in license redistribution  mode', function () {
       this.controller.singleStep = 3;
       this.controller.next();
+      expect(this.controller.isLicenseRedistribution()).toBeTruthy();
       expect(this.WebExSiteService.constructWebexLicensesPayload).toHaveBeenCalled();
       expect(this.WebExSiteService.constructWebexLicensesPayload.calls.mostRecent().args[2]).toBe('REDISTRIBUTE');
     });
   });
+
+  describe('Showing the result page', function () {
+    beforeEach(function () {
+      this.controller.currentStep = 3;
+      this.controller.totalSteps = 3;
+    });
+    it('should have a single enabled \'close\' button after data has been saved', function () {
+      this.controller.next();
+      this.$scope.$digest();
+      const button = this.view.find('.modal-footer').find('button');
+      expect(button.length).toBe(1);
+      expect(_.includes(button[0].innerHTML, 'common.close')).toBeTruthy();
+      expect(button[0].disabled).toBeFalsy();
+    });
+    it('should have a \'add \' text for redistribution', function () {
+      this.controller.next();
+      this.$scope.$digest();
+      const bodyHtml = this.view.find('.modal-body')[0].innerHTML;
+      expect(_.includes(bodyHtml, 'addSiteSuccessModalTitle')).toBeTruthy();
+      expect(_.includes(bodyHtml, 'redistributeSuccessModalTitle')).toBeFalsy();
+    });
+
+    it('should have an \'redistribute\' text for redistribution', function () {
+      this.controller.singleStep = 3;
+      this.controller.next();
+      this.$scope.$digest();
+      const bodyHtml = this.view.find('.modal-body')[0].innerHTML;
+      expect(_.includes(bodyHtml, 'addSiteSuccessModalTitle')).toBeFalsy();
+      expect(_.includes(bodyHtml, 'redistributeSuccessModalTitle')).toBeTruthy();
+    });
+  });
+
 });
 
