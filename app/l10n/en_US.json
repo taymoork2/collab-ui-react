@@ -1685,7 +1685,7 @@
     "setUpGoogleCalendarService": "Hybrid Calendar (Google) is available. Use @WebEx or @Spark in a meeting location to insert join details, show upcoming meetings in the Cisco Spark app, and provide One Button to Push (OBTP) to Join.",
     "setUpCallAwareService": "Call Service Aware is available. Users can instantly share their desktops from their Cisco Spark clients while on a call.",
     "setUpCallConnectService": "Call Service Connect is available. Users can answer calls to their work phones on their Cisco Spark clients, and place calls to others' work phones from their Cisco Spark clients.",
-    "setUpHybridMessaging": "Hybrid Message Service is available.",
+    "setUpHybridMessaging": "Hybrid Message Service is available. Connect Cisco Spark to IM and Presence Service, so that Cisco Spark users and Cisco Jabber users can direct message each other.",
     "setUpDevices": "Activate your devices when they arrive.",
     "setUpSharedDevices": "Activate your room devices when they arrive.",
     "setUpSparkBoardDevices": "Activate your Cisco Spark Boards when they arrive.",
@@ -2469,7 +2469,7 @@
         "squared-fusion-gcal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
         "squared-fusion-o365": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
         "squared-fusion-ec": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
-        "spark-hybrid-impinterop": "[TODO: Here is a description of what Hybrid Message can do.]"
+        "spark-hybrid-impinterop": "Connect Cisco Spark to IM and Presence Service, so that Cisco Spark users and Cisco Jabber users can direct message each other."
       },
       "preferredWebExSite": "Preferred WebEx Site",
       "preferredWebExSiteDefault": "Default",
@@ -8917,7 +8917,7 @@
       },
       "hybridImp": {
         "title": "Hybrid Message",
-        "description": "[A description of Hybrid Message goes here]",
+        "description": "Connect Cisco Spark to IM and Presence Service, so that Cisco Spark users and Cisco Jabber users can direct message each other.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"

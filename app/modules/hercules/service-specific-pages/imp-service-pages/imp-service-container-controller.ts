@@ -30,6 +30,7 @@ export class ImpServiceContainerController extends ExpresswayContainerController
     $modal,
     $scope: ng.IScope,
     $state: ng.ui.IStateService,
+    private $stateParams: ng.ui.IStateParamsService,
     private $translate: ng.translate.ITranslateService,
     public clusterId: string,
     ClusterService: ClusterService,
@@ -39,6 +40,9 @@ export class ImpServiceContainerController extends ExpresswayContainerController
     USSService,
   ) {
     super($modal, $scope, $state, ClusterService, Notification, ServiceDescriptorService, ServiceStateChecker, USSService, ['spark-hybrid-impinterop'], 'c_imp');
+    if (this.$stateParams['backState']) {
+      this.backState = this.$stateParams['backState'];
+    }
   }
 
 }
