@@ -71,8 +71,7 @@ class Chart implements ng.IComponentController {
       innerRadius: '32%',
       theme: 'light',
       allLabels: [],
-      balloon: { adjustBorderColor: true, borderThickness: 1, borderAlpha: 1, fillAlpha: 1, fillColor: '#FFFFFF', fixedPosition: false, shadowAlpha: 0 },
-      // balloon: { enabled: false },
+      balloon: { enabled: false },
       fontSize: 10,
       fontFamily: 'CiscoSansTT Light',
       legend: {
