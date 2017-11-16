@@ -13,7 +13,7 @@ class AssignableAdvancedMeetingsController implements ng.IComponentController {
   }
 
   public hasAdvancedMeetings(): boolean {
-    return !!_.size(this.licenses);
+    return !_.isEmpty(this.licenses);
   }
 
   public getTotalLicenseUsage(offerName: string): number {
