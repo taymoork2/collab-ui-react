@@ -1,10 +1,7 @@
 <div class="column-subsription-header paid subscription__header">
   {{:: $ctrl.subscription.subscriptionId }}
   <i class="icon toggle"
-     ng-class="{
-       'icon-chevron-up': $ctrl.showContent,
-       'icon-chevron-down': !$ctrl.showContent,
-     }"
+    ng-class="$ctrl.showContent ? 'icon-chevron-up': 'icon-chevron-down'"
     ng-click="$ctrl.showContent = !$ctrl.showContent;"></i>
 </div>
 <div class="row full flex-row row-licenses subscription__content" ng-show="$ctrl.showContent">
