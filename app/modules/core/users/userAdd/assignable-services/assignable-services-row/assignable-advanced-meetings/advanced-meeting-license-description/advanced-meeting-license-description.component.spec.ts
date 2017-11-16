@@ -4,25 +4,40 @@ describe('Component: advancedMeetingLicenseDescription:', () => {
   beforeEach(function() {
     this.initModules(moduleName);
     this.injectDependencies(
-      // TODO: add dependencies here
+      '$scope',
+      '$translate',
     );
   });
 
-  // TODO: use as-appropriate
-  beforeEach(function () {
-    // this.compileTemplate('<advanced-meeting-license-description></advanced-meeting-license-description>');
-    // this.compileComponent('advancedMeetingLicenseDescription', { ... });
-  });
-
   describe('primary behaviors (view):', () => {
-    it('...', function () {
-      // TODO: implement
+    it('should render a description and a tooltip', function () {
+      this.compileComponent('advancedMeetingLicenseDescription');
+      expect(this.view.find('.license__description').length).toBe(1);
+      expect(this.view.find('.license__description-tooltip').length).toBe(1);
+      expect(this.view.find('.license__description-tooltip .icon.icon-info').length).toBe(1);
     });
   });
 
   describe('primary behaviors (controller):', () => {
-    it('...', function () {
-      // TODO: implement
+    it('should set "l10nLicenseDescription" and "l10nLicenseDescriptionTooltip" properties according to "isCloudSharedMeeting" binding', function () {
+      spyOn(this.$translate, 'instant').and.callThrough();
+      this.$scope.isCloudSharedMeeting = true;
+      this.compileComponent('advancedMeetingLicenseDescription', {
+        isCloudSharedMeeting: 'isCloudSharedMeeting',
+      });
+      expect(this.controller.l10nLicenseDescription).toBe('firstTimeWizard.sharedLicense');
+      expect(this.$translate.instant).toHaveBeenCalledWith('firstTimeWizard.sharedLicense');
+      expect(this.controller.l10nLicenseDescriptionTooltip).toBe('firstTimeWizard.sharedLicenseTooltip');
+      expect(this.$translate.instant).toHaveBeenCalledWith('firstTimeWizard.sharedLicenseTooltip');
+
+      this.$scope.isCloudSharedMeeting = false;
+      this.compileComponent('advancedMeetingLicenseDescription', {
+        isCloudSharedMeeting: 'isCloudSharedMeeting',
+      });
+      expect(this.controller.l10nLicenseDescription).toBe('firstTimeWizard.namedLicense');
+      expect(this.$translate.instant).toHaveBeenCalledWith('firstTimeWizard.namedLicense');
+      expect(this.controller.l10nLicenseDescriptionTooltip).toBe('firstTimeWizard.namedLicenseTooltip');
+      expect(this.$translate.instant).toHaveBeenCalledWith('firstTimeWizard.namedLicenseTooltip');
     });
   });
 });
