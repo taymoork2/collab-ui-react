@@ -17,9 +17,9 @@ var HuntGroup = function () {
   this.member2Search = 'e2e-hg-member2';
 
   this.serviceTab = element(by.css('.servicesTab'));
-  this.communicationsPage = element(by.css('.servicesTab li [href="#hurondetails/settings"]'));
-  this.settingTab = element(by.css('.nav-tabs li [href="#/hurondetails/settings"]'));
-  this.featuresTab = element(by.css('.nav-tabs li [href="#/hurondetails/features"]'));
+  this.communicationsPage = element(by.css('.servicesTab li [href="hurondetails/settings"]'));
+  this.settingTab = element(by.css('.nav-tabs li [href="/hurondetails/settings"]'));
+  this.featuresTab = element(by.css('.nav-tabs li [href="/hurondetails/features"]'));
   this.hgwizardCloseBtn = element(by.css('.wizard-main button.close'));
   this.huntGroupBtn = element(by.css('.feature-icon-color-HG'));
   this.huntGroupCreateTitle = element(by.css('.overlay-heading .title-heading'));
