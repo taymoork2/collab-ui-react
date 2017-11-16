@@ -130,7 +130,7 @@ require('./_overview.scss');
                 FeatureToggleService.supports(FeatureToggleService.features.atlasOffice365Support)
                   .then(function (supported) {
                     if (!supported) {
-                      vm.notifications.push(OverviewNotificationFactory.createGoogleCalendarNotification($state, HybridServicesFlagService, HybridServicesUtilsService));
+                      vm.notifications.push(OverviewNotificationFactory.createGoogleCalendarNotification($state, CloudConnectorService, HybridServicesFlagService, HybridServicesUtilsService));
                       resizeNotifications();
                     }
                   });
