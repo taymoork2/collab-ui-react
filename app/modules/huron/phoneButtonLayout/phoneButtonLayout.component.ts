@@ -2,6 +2,7 @@ import { PhoneButtonLayoutService, IPhoneButton } from './phoneButtonLayout.serv
 import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
 import { Notification } from 'modules/core/notifications';
 import { CallDestinationTranslateService, ICallDestinationTranslate } from 'modules/call/shared/call-destination-translate';
+import { DraggableService, DraggableInstance } from 'modules/core/accessibility';
 
 interface IValidationMessages {
   required: string;
@@ -27,9 +28,7 @@ const PLACE_OWNER_TYPE: string = 'places';
 class PhoneButtonLayoutCtrl implements ng.IComponentController {
   private ownerId: string;
   private ownerType: string;
-  private firstReordering: boolean = true;
   private editing: boolean;
-  private reordering: boolean;
   private phoneButtonList: IPhoneButton[] = [];
   private phoneButtonListReadonly: IPhoneButton[] = [];
   private phoneButtonListFull: IPhoneButton[] = [];
@@ -47,6 +46,7 @@ class PhoneButtonLayoutCtrl implements ng.IComponentController {
   private callDestInputs: string[];
   private optionSelected: string = '';
   private isButtonLimitReached: boolean = false;
+  private draggableInstance: DraggableInstance;
 
   public ownerName: string = '';
   public isValid: boolean = false;
@@ -60,27 +60,25 @@ class PhoneButtonLayoutCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
+    private $element: ng.IRootElementService,
     private $modal,
     private $scope: ng.IScope,
-    private $translate: ng.translate.ITranslateService,
-    private dragularService,
-    private Notification: Notification,
-    private PhoneButtonLayoutService: PhoneButtonLayoutService,
-    private CallDestinationTranslateService: CallDestinationTranslateService,
     private $timeout: ng.ITimeoutService,
-    private BlfInternalExtValidation,
+    private $translate: ng.translate.ITranslateService,
     private Authinfo,
+    private BlfInternalExtValidation,
+    private BlfURIValidation,
+    private CallDestinationTranslateService: CallDestinationTranslateService,
+    private DraggableService: DraggableService,
     private FeatureMemberService,
     private HuronUserService,
-    private BlfURIValidation,
-  ) {
-  }
+    private Notification: Notification,
+    private PhoneButtonLayoutService: PhoneButtonLayoutService,
+  ) { }
 
   public $onInit() {
     this.callDestInputs = inputs;
-    this.firstReordering = true;
     this.editing = false;
-    this.reordering = false;
     if (this.ownerType === PLACE_OWNER_TYPE) {
       this.FeatureMemberService.getMachineAcct(this.ownerId).then((machine) => {
         this.ownerName = _.get(machine, 'displayName');
@@ -193,8 +191,9 @@ class PhoneButtonLayoutCtrl implements ng.IComponentController {
       phoneButton.edit = false;
       phoneButton.label = this.newLabel;
       phoneButton.type = this.newType.value;
-    } else if (this.reordering) {
+    } else if (this.isReordering()) {
       this.copyList = undefined;
+      this.draggableInstance.selectedItem = undefined;
     }
     _.each(this.phoneButtonListFull, (phoneButton) => {
       if (phoneButton.type === this.buttonTypeEmpty) {
@@ -205,8 +204,8 @@ class PhoneButtonLayoutCtrl implements ng.IComponentController {
     this.PhoneButtonLayoutService.updatePhoneButtons(this.ownerType, this.ownerId, this.phoneButtonListFull).then(() => {
       this.Notification.success('phoneButtonLayout.success');
       this.isValid = false;
-      this.reordering = false;
       this.editing = false;
+      this.deactivateDraggable();
       this.setDefaultPhoneButtonAttributes(this.phoneButtonListFull);
       this.buildActionList();
     }, () => {
@@ -218,8 +217,8 @@ class PhoneButtonLayoutCtrl implements ng.IComponentController {
           this.Notification.error('phoneButtonLayout.retrievePhoneButtonLayoutFailed');
         });
       }
-      this.reordering = false;
       this.editing = false;
+      this.deactivateDraggable();
       this.setDefaultPhoneButtonAttributes(this.phoneButtonListFull);
       this.buildActionList();
     });
@@ -242,31 +241,48 @@ class PhoneButtonLayoutCtrl implements ng.IComponentController {
       this.newType = { name: '', value: '' };
       this.callPickupEnabled = false;
       this.isValid = false;
-    } else if (this.reordering) {
+    } else if (this.isReordering()) {
       this.phoneButtonList.length = 0;
       Array.prototype.push.apply(this.phoneButtonList, _.cloneDeep(this.copyList));
+      this.draggableInstance.selectedItem = undefined;
     }
     this.editing = false;
-    this.reordering = false;
+    this.deactivateDraggable();
     this.buildActionList();
   }
 
   public setReorder(): void {
-    this.reordering = true;
     this.actionList = [];  // empty the actionList so that it's not displayed
     this.copyList = _.cloneDeep(this.phoneButtonList);
-    if (this.firstReordering) {
-      this.firstReordering = false;
-      this.dragularService('#arrangeablePhoneButtonsContainer', {
-        classes: {
-          transit: 'phonebuttonlayout-reorder-transit',
-        },
-        containersModel: [this.phoneButtonList],
-        moves: () => {
-          return this.reordering;
-        },
+    if (_.isUndefined(this.draggableInstance)) {
+      this.draggableInstance = this.DraggableService.createDraggableInstance({
+        elem: this.$element,
+        identifier: '#arrangeablePhoneButtonsContainer',
+        transitClass: 'phonebuttonlayout-reorder',
+        itemIdentifier: '#phoneButton',
+        list: this.phoneButtonList,
+        scope: this.$scope,
       });
+    } else {
+      this.draggableInstance.reordering = true;
     }
+  }
+
+  public phoneButtonKeyPress($event: KeyboardEvent, phoneButton: IPhoneButton) {
+    if (!this.isReordering()) {
+      return;
+    } else if (_.get(this.draggableInstance, 'keyPress')) {
+      this.draggableInstance.keyPress($event, phoneButton);
+      this.phoneButtonList = this.draggableInstance.list;
+    }
+  }
+
+  public isReordering() {
+    return _.get(this.draggableInstance, 'reordering', false);
+  }
+
+  public isSelectedPhoneButton(phoneButton: IPhoneButton) {
+    return phoneButton === this.draggableInstance.selectedItem;
   }
 
   public setEdit(phoneButton: IPhoneButton): void {
@@ -309,7 +325,7 @@ class PhoneButtonLayoutCtrl implements ng.IComponentController {
 
   private buildActionList(): void {
     const hasAddButtonsAction = _.some(this.actionList, { actionKey: 'phoneButtonLayout.addButton' });
-    if (this.editing || this.reordering) {
+    if (this.editing || this.isReordering()) {
       this.actionList = [];  // empty the actionList so that it's not displayed
     } else {
       if (hasAddButtonsAction) {
@@ -347,6 +363,13 @@ class PhoneButtonLayoutCtrl implements ng.IComponentController {
       name: this.$translate.instant('phoneButtonLayout.buttonType.' + buttonTypeValue),
       value: buttonTypeValue,
     };
+  }
+
+  private deactivateDraggable() {
+    if (!_.isUndefined(this.draggableInstance)) {
+      this.draggableInstance.selectedItem = undefined;
+      this.draggableInstance.reordering = false;
+    }
   }
 
   private setDefaultPhoneButtonAttributes(phoneButtonList: IPhoneButton[]): IPhoneButton[] {
