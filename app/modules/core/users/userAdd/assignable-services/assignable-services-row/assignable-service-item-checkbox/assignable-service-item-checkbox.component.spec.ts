@@ -4,25 +4,32 @@ describe('Component: assignableServiceItemCheckbox:', () => {
   beforeEach(function() {
     this.initModules(moduleName);
     this.injectDependencies(
-      // TODO: add dependencies here
+      '$scope',
     );
-  });
-
-  // TODO: use as-appropriate
-  beforeEach(function () {
-    // this.compileTemplate('<assignable-service-item-checkbox></assignable-service-item-checkbox>');
-    // this.compileComponent('assignableServiceItemCheckbox', { ... });
+    this.$scope.fakeServiceItemId = 'fake-serviceItemId';
   });
 
   describe('primary behaviors (view):', () => {
-    it('...', function () {
-      // TODO: implement
+    it('should render an input[cs-input][type="checkbox"]', function () {
+      this.compileTemplate(`
+        <assignable-service-item-checkbox
+          service-item-id="fakeServiceItemId"
+          l10n-label="foo">
+        </assignable-service-item-checkbox>`);
+      expect(this.view.find('input[cs-input][type="checkbox"]').length).toBe(1);
+      expect(this.view.find('input[cs-input][type="checkbox"][id="cb--fake-serviceItemId"]').length).toBe(1);
+      expect(this.view.find('input[cs-input][type="checkbox"][name="cb--fake-serviceItemId"]').length).toBe(1);
+      expect(this.view.find('input[cs-input][type="checkbox"][cs-input-label="foo"]').length).toBe(1);
     });
-  });
 
-  describe('primary behaviors (controller):', () => {
-    it('...', function () {
-      // TODO: implement
+    it('should transclude its contents', function () {
+      this.compileTemplate(`
+        <assignable-service-item-checkbox
+          service-item-id="fakeServiceItemId"
+          l10n-label="foo">
+          <span>fake-contents</span>
+        </assignable-service-item-checkbox>`);
+      expect(this.view.find('.sub-content')).toContainText('fake-contents');
     });
   });
 });
