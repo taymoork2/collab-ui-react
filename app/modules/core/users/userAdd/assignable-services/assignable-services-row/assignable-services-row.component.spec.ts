@@ -16,7 +16,7 @@ describe('Component: assignableServicesRow:', () => {
     it('should render with a subscription id', function () {
       this.compileComponent('assignableServicesRow', {
         subscription: 'fakeSubscription',
-			});
+      });
       expect(this.view.find('.subscription__header').length).toBe(1);
       expect(this.view.find('.subscription__header')).toContainText('fake-subscriptionId-1');
     });
@@ -24,7 +24,7 @@ describe('Component: assignableServicesRow:', () => {
     it('should have a viewable content area toggled by an icon', function () {
       this.compileComponent('assignableServicesRow', {
         subscription: 'fakeSubscription',
-			});
+      });
       expect(this.view.find('.subscription__header .icon.toggle').length).toBe(1);
       expect(this.view.find('.subscription__header .icon.toggle')).toHaveClass('icon-chevron-up');
       expect(this.view.find('.subscription__content')).not.toHaveClass('ng-hide');
@@ -36,14 +36,14 @@ describe('Component: assignableServicesRow:', () => {
     it('should have at least 3 columns (4 if "isCareEnabled" is true)', function () {
       this.compileComponent('assignableServicesRow', {
         subscription: 'fakeSubscription',
-			});
+      });
       expect(this.view.find('.subscription__content .column-paid').length).toBe(3);
 
       this.$scope.isCareEnabled = true;
       this.compileComponent('assignableServicesRow', {
         subscription: 'fakeSubscription',
         isCareEnabled: 'isCareEnabled',
-			});
+      });
       expect(this.view.find('.subscription__content .column-paid').length).toBe(4);
     });
   });
