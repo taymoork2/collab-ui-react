@@ -180,27 +180,59 @@ describe('Controller: WebExSiteRowCtrl', function () {
       expect(WebExSiteService.deleteSite).not.toHaveBeenCalled();
     });
 
-    it('should redistribute licenses itself when there are two sites in subscription and subscription is not pending', function () {
-      var twoSites = _.omit(licensesGroupedBySites, 'JP-TEST-ORG.webex.com');
-      var expectedResult = [
-        {
-          offerName: 'EE',
-          volume: 100,
-          siteUrl: 'jp-test1-org.webex.com',
-        },
-        {
-          offerName: 'TC',
-          volume: 200,
-          siteUrl: 'jp-test1-org.webex.com',
-        },
-      ];
+    describe('behavior with two sites and non-pending subscription', function () {
+      beforeEach(function () {
+        var twoSites = _.omit(licensesGroupedBySites, 'JP-TEST-ORG.webex.com');
+        WebExSiteRowService.getLicensesInSubscriptionGroupedBySites.and.returnValue(twoSites);
+      });
 
-      WebExSiteRowService.getLicensesInSubscriptionGroupedBySites.and.returnValue(twoSites);
-      expect(controller.canModify(entity)).toBeTruthy();
-      controller.deleteSite(entity);
-      $scope.$digest();
-      expect(state.go).not.toHaveBeenCalled();
-      expect(WebExSiteService.deleteSite).toHaveBeenCalledWith(entity.billingServiceId, expectedResult);
+      it('should redistribute licenses itself and call WebExSiteService.deleteSite() passing subscriptionId', function () {
+        expect(controller.canModify(entity)).toBeTruthy();
+        controller.deleteSite(entity);
+        $scope.$digest();
+        expect(state.go).not.toHaveBeenCalled();
+        expect(WebExSiteService.deleteSite).toHaveBeenCalled();
+        expect(WebExSiteService.deleteSite.calls.mostRecent().args[0]).toBe(entity.billingServiceId);
+      });
+
+      it('should add licenses together for the remaining site', function () {
+        var expectedResult = [
+          {
+            centerType: 'EE',
+            quantity: 100,
+            siteUrl: 'jp-test1-org.webex.com',
+          },
+          {
+            centerType: 'TC',
+            quantity: 200,
+            siteUrl: 'jp-test1-org.webex.com',
+          },
+        ];
+        controller.deleteSite(entity);
+        $scope.$digest();
+        var deleteSiteArgs = WebExSiteService.deleteSite.calls.mostRecent().args;
+        expect(_.isEqual(deleteSiteArgs[1], expectedResult)).toBeTruthy();
+      });
+
+      it('if deleted site has the center type, and the remaining does not, add center type to remaining site', function () {
+        entity.siteUrl = 'jp-test1-org.webex.com';
+        var expectedResult = [
+          {
+            centerType: 'TC',
+            quantity: 200,
+            siteUrl: 'ag-test1-org.webex.com',
+          },
+          {
+            centerType: 'EE',
+            quantity: 100,
+            siteUrl: 'ag-test1-org.webex.com',
+          },
+        ];
+        controller.deleteSite(entity);
+        $scope.$digest();
+        var deleteSiteArgs = WebExSiteService.deleteSite.calls.mostRecent().args;
+        expect(_.isEqual(deleteSiteArgs[1], expectedResult)).toBeTruthy();
+      });
     });
 
     it('should not allow deletion if canModify() is false ', function () {

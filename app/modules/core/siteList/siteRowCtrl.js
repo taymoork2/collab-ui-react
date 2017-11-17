@@ -140,25 +140,26 @@ require('./_site-list.scss');
     function moveLicensesToRemainingSite(subscriptionId, sites, urlToRemove) {
       var keys = _.keys(sites);
       _.pull(keys, urlToRemove);
+      var remainingSiteUrl = keys[0];
       var siteToRemove = sites[urlToRemove];
-      var remainingSite = _.map(sites[keys[0]], function (s) {
+      var remainingSite = _.map(sites[remainingSiteUrl], function (s) {
         return {
-          offerName: s.offerName,
-          volume: s.volume,
+          centerType: s.offerName,
+          quantity: s.volume,
           siteUrl: s.siteUrl,
         };
       });
 
       _.forEach(siteToRemove, function (license) {
-        var i = _.findIndex(remainingSite, { offerName: license.offerName });
+        var i = _.findIndex(remainingSite, { centerType: license.offerName });
         if (i > -1) {
-          remainingSite[i].volume = remainingSite[i].volume + license.volume;
+          remainingSite[i].quantity = remainingSite[i].quantity + license.volume;
         } else {
           remainingSite.push(
             {
-              offerName: license.offerName,
-              volume: license.volume,
-              siteUrl: license.siteUrl,
+              centerType: license.offerName,
+              quantity: license.volume,
+              siteUrl: remainingSiteUrl,
             });
         }
       });
