@@ -249,7 +249,6 @@ describe('Component: assignableAdvancedMeetings:', () => {
     });
 
     it('should pass through its calls to respective LicenseUsageUtilService methods', function () {
-      spyOn(this.LicenseUsageUtilService, 'findLicense');
       spyOn(this.LicenseUsageUtilService, 'getTotalLicenseUsage');
       spyOn(this.LicenseUsageUtilService, 'getTotalLicenseVolume');
       spyOn(this.LicenseUsageUtilService, 'isSharedMeetingsLicense');
@@ -265,9 +264,6 @@ describe('Component: assignableAdvancedMeetings:', () => {
         licenses: 'licenses',
         siteUrls: 'siteUrls',
       });
-
-      this.controller.findLicense({ foo: 'bar' });
-      expect(this.LicenseUsageUtilService.findLicense).toHaveBeenCalledWith({ foo: 'bar' }, this.controller.licenses);
 
       this.controller.getTotalLicenseUsage('foo');
       expect(this.LicenseUsageUtilService.getTotalLicenseUsage).toHaveBeenCalledWith('foo', this.controller.licenses);

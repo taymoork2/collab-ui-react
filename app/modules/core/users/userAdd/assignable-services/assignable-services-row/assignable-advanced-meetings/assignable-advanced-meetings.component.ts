@@ -66,10 +66,6 @@ class AssignableAdvancedMeetingsController implements ng.IComponentController {
     });
   }
 
-  public findLicense(findOptions: Object): ILicenseUsage | undefined {
-    return this.LicenseUsageUtilService.findLicense(findOptions, this.licenses);
-  }
-
   public hasAdvancedMeetings(): boolean {
     return !_.isEmpty(this.licenses);
   }
