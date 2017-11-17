@@ -71,9 +71,13 @@ function get_ng_module_name {
 }
 
 dir_path="$1"
+html_element_name="$("$this_pwd/check-ng-component-name.sh" "$dir_path")"
+if [ -z "$html_element_name" ]; then
+    abort
+fi
+
 mkdir "$dir_path"
 
-html_element_name="$(basename "$dir_path")"
 js_component_file="${html_element_name}.component.ts"
 js_component_file_no_ext="${html_element_name}.component"
 js_component_spec_file="${html_element_name}.component.spec.ts"
@@ -85,6 +89,8 @@ ng_module_name="$(get_ng_module_name "$html_element_name")"
 
 function print_index_ts {
     cat << _EOF
+import './${html_element_name}.scss';
+
 import { $js_component_name } from './${js_component_file_no_ext}';
 
 export default angular.module('${ng_module_name}', [
@@ -142,10 +148,26 @@ describe('Component: ${js_directive_name}:', () => {
 _EOF
 }
 
+function print_component_scss {
+    cat << _EOF
+// TODO: use as-appropriate
+// @import '~collab-ui/scss/settings/typography';
+// @import '~collab-ui/scss/settings/colors';
+// @import 'styles/partials/mixins';  // <- for 'keep-flex()'
+
+${html_element_name} {
+  // TODO: use as-appropriate
+  display: block;
+  // @include keep-flex();
+}
+_EOF
+}
+
 touch "${dir_path}/${template_file}"
 print_component_ts > "${dir_path}/${js_component_file}"
 print_component_spec_ts  > "${dir_path}/${js_component_spec_file}"
 print_index_ts > "${dir_path}/index.ts"
+print_component_scss > "${dir_path}/${html_element_name}.scss"
 
 function has_parent_index_ts {
     test -s "$(get_parent_index_ts_file "$1")"
