@@ -5,7 +5,7 @@ describe('Component: assignableServicesRow:', () => {
     this.initModules(moduleName);
     this.injectDependencies(
       '$scope',
-      'LicenseUsageUtilService'
+      'LicenseUsageUtilService',
     );
     this.$scope.fakeSubscription = {
       subscriptionId: 'fake-subscriptionId-1',

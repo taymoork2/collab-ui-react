@@ -215,7 +215,7 @@ describe('Component: assignableAdvancedMeetings:', () => {
         const licenses = [{
           licenseId: 'fake-license-id-1',
           offerName: 'MC',
-          siteUrl: 'fake-site-url-1'
+          siteUrl: 'fake-site-url-1',
         }];
         this.controller.reinsertCmrLicenses(this.fakeCmrLicenses, licenses);
         expect(licenses.length).toBe(2);
@@ -227,8 +227,8 @@ describe('Component: assignableAdvancedMeetings:', () => {
         const licenses = [{
           licenseId: 'fake-license-id-3',
           offerName: 'EE',
-          siteUrl: 'fake-site-url-1'
-        }]
+          siteUrl: 'fake-site-url-1',
+        }];
         this.controller.reinsertCmrLicenses(this.fakeCmrLicenses, licenses);
         expect(licenses.length).toBe(2);
         expect(_.get(licenses, '[0].offerName')).toBe('EE');
@@ -240,8 +240,8 @@ describe('Component: assignableAdvancedMeetings:', () => {
         const licenses = [{
           licenseId: 'fake-license-id-4',
           offerName: 'TC',
-          siteUrl: 'fake-site-url-1'
-        }]
+          siteUrl: 'fake-site-url-1',
+        }];
         this.controller.reinsertCmrLicenses(this.fakeCmrLicenses, licenses);
         expect(licenses.length).toBe(1);
         expect(_.get(licenses, '[0].offerName')).toBe('TC');
