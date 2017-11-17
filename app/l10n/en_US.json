@@ -5814,7 +5814,7 @@
     "partialAdmin": "Some administrator privileges",
     "partialAdminError": "At least one administrator privilege must be selected",
     "noAdmin": "No administrator privileges",
-    "deviceAdmin": "Device Admin",
+    "deviceAdmin": "Device Administrator",
     "salesAdmin": "Sales Administrator",
     "userAdmin": "User Administrator",
     "billingAdmin": "Billing Administrator",
