@@ -65,7 +65,26 @@
   </div>
 
   <div ng-if="$ctrl.isCareEnabled" class="small-4 columns column-paid column__care">
-    <!-- care-->
-    TODO: implement Care-related service options
+    <!-- care - K1 -->
+    <assignable-service-item-checkbox ng-if="$ctrl.hasLicenseWithAnyOfferName('CDC')"
+      service-item-id="$ctrl.subscription.subscriptionId + '--CDC'"
+      l10n-label="onboardModal.paidCDC">
+      <div translate="firstTimeWizard.namedLicense"></div>
+      <usage-line
+        usage="$ctrl.getTotalLicenseUsage('CDC')"
+        volume="$ctrl.getTotalLicenseVolume('CDC')">
+      </usage-line>
+    </assignable-service-item-checkbox>
+
+    <!-- care - K2 -->
+    <assignable-service-item-checkbox ng-if="$ctrl.hasLicenseWithAnyOfferName('CVC')"
+      service-item-id="$ctrl.subscription.subscriptionId + '--CVC'"
+      l10n-label="onboardModal.paidCDC">
+      <div translate="firstTimeWizard.namedLicense"></div>
+      <usage-line
+        usage="$ctrl.getTotalLicenseUsage('CVC')"
+        volume="$ctrl.getTotalLicenseVolume('CVC')">
+      </usage-line>
+    </assignable-service-item-checkbox>
   </div>
 </div>
