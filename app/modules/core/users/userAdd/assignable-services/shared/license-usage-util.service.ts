@@ -39,12 +39,10 @@ export class LicenseUsageUtilService {
 
   public hasLicenseWithAnyOfferName(offerNameOrOfferNames: string|string[], licenses: ILicenseUsage[]): boolean {
     if (!_.isArray(offerNameOrOfferNames)) {
-      const offerName: string = offerNameOrOfferNames;
-      return !_.isEmpty(_.filter(licenses, { offerName: offerName }));
+      return !_.isEmpty(_.filter(licenses, { offerName: offerNameOrOfferNames }));
     }
-    const offerNames: string[] = offerNameOrOfferNames;
     const results = _.filter(licenses, (license) => {
-      return _.includes(offerNames, _.get(license, 'offerName'));
+      return _.includes(offerNameOrOfferNames, _.get(license, 'offerName'));
     });
     return !_.isEmpty(results);
   }
