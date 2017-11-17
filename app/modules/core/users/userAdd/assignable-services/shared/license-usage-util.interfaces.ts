@@ -4,6 +4,7 @@ export interface ILicenseUsage {
   billingServiceId: string;
   licenseId: string;
   offerName: MeetingOfferName;
+  siteUrl: string;
 }
 
 export interface ISubscription {

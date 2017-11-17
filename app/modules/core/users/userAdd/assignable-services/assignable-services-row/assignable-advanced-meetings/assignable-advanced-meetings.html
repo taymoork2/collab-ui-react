@@ -1,47 +1,25 @@
 <div ng-if="$ctrl.hasAdvancedMeetings()" class="advanced-meetings">
   <div translate="firstTimeWizard.advancedMeetings" class="license__category"></div>
-  <div ng-repeat="siteUrl in $ctrl.siteUrls">
-
-    <!--
-      EC => event center
-      EE => enterprise edition
-      MC => meeting center
-      TC => training center
-    -->
-    <div ng-repeat="offerName in ['EC', 'EE', 'MC', 'TC']">
-
-      <div ng-init="license = $ctrl.findLicense({ siteUrl: siteUrl, offerName: offerName })">
-        <div ng-if="!!license">
-          <assignable-service-item-checkbox
-            service-item-id="license.licenseId"
-            l10n-label="{{:: 'subscriptions.licenseTypes.' + license.offerName }}">
-            <advanced-meeting-license-description is-cloud-shared-meeting="$ctrl.isSharedMeetingsLicense(license)">
-            </advanced-meeting-license-description>
-            <advanced-meeting-site-url site-url="{{::siteUrl}}"></advanced-meeting-site-url>
-            <usage-line
-              usage="$ctrl.getTotalLicenseUsage(offerName)"
-              volume="$ctrl.getTotalLicenseVolume(offerName)">
-            </usage-line>
-          </assignable-service-item-checkbox>
-
-          <!-- collaboration meeting room (only applicable for 'MC' and 'EE') -->
-          <div ng-if="offerName === 'MC' || offerName === 'EE'">
-            <div ng-init="cmrLicense = $ctrl.findLicense({ siteUrl: siteUrl, offerName: 'CMR' })">
-              <assignable-service-item-checkbox ng-if="!!cmrLicense"
-                service-item-id="cmrLicense.licenseId"
-                l10n-label="subscriptions.licenseTypes.CMR"
-                class="cs-input--nested-1">
-                <usage-line
-                  usage="$ctrl.getTotalLicenseUsage('CMR')"
-                  volume="$ctrl.getTotalLicenseVolume('CMR')">
-                </usage-line>
-              </assignable-service-item-checkbox>
-            </div>
-          </div>
-        </div>
+  <div ng-repeat="license in $ctrl.licenses track by license.licenseId">
+    <assignable-service-item-checkbox
+      service-item-id="license.licenseId"
+      l10n-label="{{:: 'subscriptions.licenseTypes.' + license.offerName }}"
+      ng-class="license.offerName === 'CMR' ? 'cs-input--nested-1' : ''">
+      <div ng-if="license.offerName === 'CMR'">
+        <usage-line
+          usage="$ctrl.getTotalLicenseUsage('CMR')"
+          volume="$ctrl.getTotalLicenseVolume('CMR')">
+        </usage-line>
       </div>
-
-    </div>
-
+      <div ng-if="license.offerName !== 'CMR'">
+        <advanced-meeting-license-description is-cloud-shared-meeting="$ctrl.isSharedMeetingsLicense(license)">
+        </advanced-meeting-license-description>
+        <advanced-meeting-site-url site-url="{{::license.siteUrl}}"></advanced-meeting-site-url>
+        <usage-line
+          usage="$ctrl.getTotalLicenseUsage(offerName)"
+          volume="$ctrl.getTotalLicenseVolume(offerName)">
+        </usage-line>
+      </div>
+    </assignable-service-item-checkbox>
   </div>
 </div>
