@@ -68,8 +68,10 @@ class WebexAddSiteModalController implements ng.IComponentController {
     const hasActionableSubscriptions = !_.isEmpty(this.subscriptionList) && !_.first(this.subscriptionList).isPending;
     if (hasActionableSubscriptions) {
       // if there are any non-pending subs the first will be non-pending
-      const firstSubscription = _.first(this.subscriptionList);
-      this.changeCurrentSubscription(firstSubscription.id);
+      if (!this.currentSubscriptionId) {
+        const firstSubscription = _.first(this.subscriptionList);
+        this.changeCurrentSubscription(firstSubscription.id);
+      }
       if (this.subscriptionList.length === 1 && _.isNil(this.singleStep)) {
         this.firstStep = 1;
         this.next();
@@ -250,6 +252,7 @@ export class WebexAddSiteModalComponent implements ng.IComponentOptions {
     modalTitle: '<',
     dismiss: '&',
     singleStep: '<',
+    subscriptionId: '<',
   };
 }
 

@@ -12,6 +12,7 @@ describe('Component: WebexAddSiteModalComponent', function () {
     this.initModules(module);
     this.injectDependencies('$componentController', '$q', '$rootScope', '$scope', 'Authinfo', 'Config', 'SetupWizardService', 'WebExSiteService');
     this.$scope.fixtures = {
+      subscriptionId: '123',
     };
 
     initSpies.apply(this);
@@ -52,15 +53,23 @@ describe('Component: WebexAddSiteModalComponent', function () {
       expect(this.view.find('button.btn-primary')[0].innerText.trim()).toBe('common.next');
     });
 
-    it('should go to a specified screen when singleStep is true and display a save button instead of next', function () {
-      this.compileComponent('webexAddSiteModal', {
-        singleStep: '2',
+    describe('single step user', function () {
+      beforeEach(function() {
+        this.compileComponent('webexAddSiteModal', {
+          singleStep: '2',
+          subscriptionId: 'fixtures.subscriptionId',
+        });
       });
-      expect(this.view.find(ADD_SITE_SCREEN).length).toBe(1);
-      expect(this.view.find(TRANSFER_SCREEN).length).toBe(0);
-      expect(this.view.find(SUBSCRIPTION_SCREEN).length).toBe(0);
-      expect(this.view.find('button.btn-primary').length).toBe(1);
-      expect(this.view.find('button.btn-primary')[0].innerText.trim()).toBe('common.save');
+      it('should go to a specified screen when singleStep is true and display a save button instead of next', function () {
+        expect(this.view.find(ADD_SITE_SCREEN).length).toBe(1);
+        expect(this.view.find(TRANSFER_SCREEN).length).toBe(0);
+        expect(this.view.find(SUBSCRIPTION_SCREEN).length).toBe(0);
+        expect(this.view.find('button.btn-primary').length).toBe(1);
+        expect(this.view.find('button.btn-primary')[0].innerText.trim()).toBe('common.save');
+      });
+      it('should set the current subscription id correctly', function() {
+        expect(this.controller.currentSubscriptionId).toBe('123');
+      });
     });
 
     it('should have audioPackage but not audioPartnerName ccaspSubscriptionId if VoiP', function () {
