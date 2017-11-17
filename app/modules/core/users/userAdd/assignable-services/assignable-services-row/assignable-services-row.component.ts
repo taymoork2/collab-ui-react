@@ -12,7 +12,9 @@ class AssignableServicesRowController implements ng.IComponentController {
   /* @ngInject */
   constructor (
     private LicenseUsageUtilService,
-  ) {
+  ) {}
+
+  public $onInit(): void {
     this.licenses = this.subscription.licenses;
     this.basicMeetingLicenses = this.getBasicMeetingLicenses();
     this.advancedMeetingLicenses = this.getAdvancedMeetingLicenses();
