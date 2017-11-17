@@ -292,6 +292,7 @@
     var DIGITS_DIAL_BY = 2;
     var DIGITS_RAW = 3;
     var DIGITS_CHOICE = 4;
+    var DIGITS_DIAL_BY_ESN = 5;
 
     var dynAnnounceToggle = false;
 
@@ -544,6 +545,10 @@
         action = new Action('routeToExtension', inAction.routeToExtension.destination);
         setDescription(action, inAction.routeToExtension);
         menuEntry.addAction(action);
+      } else if (!_.isUndefined(inAction.routeToEsn)) {
+        action = new Action('routeToEsn', inAction.routeToEsn.destination);
+        setDescription(action, inAction.routeToEsn);
+        menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.routeToHuntGroup)) {
         action = new Action('routeToHuntGroup', inAction.routeToHuntGroup.id);
         setDescription(action, inAction.routeToHuntGroup);
@@ -581,7 +586,7 @@
         if (_.has(inAction.runActionsOnInput, 'inputType')) {
           action.inputType = inAction.runActionsOnInput.inputType;
           // check if this dial-by-extension
-          if (_.includes([DIGITS_DIAL_BY, DIGITS_RAW, DIGITS_CHOICE], action.inputType) &&
+          if (_.includes([DIGITS_DIAL_BY, DIGITS_RAW, DIGITS_CHOICE, DIGITS_DIAL_BY_ESN], action.inputType) &&
             (_.has(inAction, 'runActionsOnInput.prompts.sayList') ||
             _.has(inAction, 'runActionsOnInput.prompts.announcements') ||
             _.has(inAction, 'runActionsOnInput.prompts.playList'))) {
@@ -638,6 +643,8 @@
             menuEntry.attempts = inAction.runActionsOnInput.attempts;
             if (_.includes([3, 4], action.inputType)) {
               action.variableName = inAction.runActionsOnInput.rawInputActions[0].assignVar.variableName;
+            } else if (_.includes([5], action.inputType)) {
+              action.routingPrefix = inAction.runActionsOnInput.rawInputActions[0].routeToEsn.routingPrefix;
             }
             if (_.has(inAction.runActionsOnInput, 'inputs') && inAction.runActionsOnInput.inputs.length > 0) {
               action.inputActions = [];
@@ -1401,7 +1408,7 @@
             } else if (actionName === 'routeToQueue') {
               newActionArray[i][actionName] = populateRouteToQueue(menuEntry.actions[0]);
             } else if (actionName === 'runActionsOnInput') {
-              if (_.includes([DIGITS_DIAL_BY, DIGITS_RAW, DIGITS_CHOICE], menuEntry.actions[0].inputType)) {
+              if (_.includes([DIGITS_DIAL_BY, DIGITS_RAW, DIGITS_CHOICE, DIGITS_DIAL_BY_ESN], menuEntry.actions[0].inputType)) {
                 // dial by extension of caller input
                 newActionArray[i][actionName] = populateRunActionsOnInput(menuEntry.actions[0]);
                 newActionArray[i][actionName].attempts = menuEntry.attempts;
@@ -1565,6 +1572,8 @@
         } else if (actionName === 'route') {
           newActionArray[i][actionName].destination = val;
         } else if (actionName === 'routeToExtension') {
+          newActionArray[i][actionName].destination = val;
+        } else if (actionName === 'routeToEsn') {
           newActionArray[i][actionName].destination = val;
         } else if (actionName === 'routeToVoiceMail') {
           newActionArray[i][actionName].id = val;
@@ -1735,6 +1744,7 @@
       var announcementsArr = [];
       var announcements = {};
       var rawInputAction = {};
+      var routeToEsn = {};
       var routeToExtension = {};
       var assignVar = {};
       if (!_.isUndefined(action.inputType)) {
@@ -1765,11 +1775,19 @@
         announcementsArr[0] = announcements;
         prompts.announcements = announcementsArr;
         newAction.prompts = prompts;
-        if (newAction.inputType == 2 && !_.isUndefined(action.value)) {
-          newAction.description = action.description;
-          routeToExtension.destination = '$Input';
-          routeToExtension.description = action.description;
-          rawInputAction.routeToExtension = routeToExtension;
+        if (_.includes([2, 5], newAction.inputType) && !_.isUndefined(action.value)) {
+          if (newAction.inputType === 2) {
+            newAction.description = action.description;
+            routeToExtension.destination = '$Input';
+            routeToExtension.description = action.description;
+            rawInputAction.routeToExtension = routeToExtension;
+          } else if (newAction.inputType === 5) {
+            routeToEsn.destination = '$Input';
+            if (!_.isEmpty(action.routingPrefix)) {
+              routeToEsn.routingPrefix = action.routingPrefix;
+            }
+            rawInputAction.routeToEsn = routeToEsn;
+          }
           newAction.rawInputActions = [];
           newAction.rawInputActions[0] = rawInputAction;
           newAction.minNumberOfCharacters = action.minNumberOfCharacters;

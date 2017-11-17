@@ -12,6 +12,11 @@ var auth = {
     pass: 'Cisc0123!',
     org: '7e0f0f48-0582-444e-ac75-908a36b29539',
   },
+  'aa-multisite-admin': {
+    user: 'AAIntPartner+Location1@gmail.com',
+    pass: 'Cisc0123!',
+    org: '82589e95-30c7-43de-94c5-04401747ebdd',
+  },
   'account-admin': {
     user: 'phtest77+acc2@gmail.com',
     pass: 'Cisco123!!!',

@@ -34,7 +34,7 @@
     vm.templateName = $stateParams.aaTemplate;
     vm.saveAANumberAssignmentWithErrorDetail = saveAANumberAssignmentWithErrorDetail;
     vm.areAssignedResourcesDifferent = areAssignedResourcesDifferent;
-
+    vm.populateRoutingLocation = populateRoutingLocation;
     vm.getSystemTimeZone = getSystemTimeZone;
     vm.getTimeZoneOptions = getTimeZoneOptions;
     vm.save8To5Schedule = save8To5Schedule;
@@ -843,6 +843,22 @@
       AACommonService.setMultiSiteEnabledToggle(featureToggles.hasMultiSites);
     }
 
+    function populateRoutingLocation() {
+      return AutoAttendantLocationService.listLocations()
+        .then(function (routingLocations) {
+          _.forEach(routingLocations.locations, function (location) {
+            if (!_.isEmpty(location.routingPrefix)) {
+              vm.ui.routingPrefixOptions.push(location.routingPrefix);
+            }
+          });
+          return $q.resolve();
+        })
+        .catch(function () {
+          AANotificationService.error('autoAttendant.errorReadLocations');
+          return $q.reject();
+        });
+    }
+
     //load the feature toggle prior to creating the elements
     function activate() {
       setUpFeatureToggles(false).then(assignFeatureToggles).finally(init);
@@ -858,6 +874,7 @@
       vm.ui.ceInfo.name = aaName;
       vm.ui.builder = {};
       vm.ui.aaTemplate = $stateParams.aaTemplate;
+      vm.ui.routingPrefixOptions = [];
 
       // Define vm.ui.builder.ceInfo_name for editing purpose.
       vm.ui.builder.ceInfo_name = _.cloneDeep(vm.ui.ceInfo.name);
@@ -873,7 +890,12 @@
         vm.aaModel = AAModelService.getAAModel();
         vm.aaModel.aaRecord = undefined;
         vm.selectAA(aaName);
-        setLoadingDone();
+        if (AACommonService.isMultiSiteEnabled()) {
+          populateRoutingLocation()
+            .then(setLoadingDone());
+        } else {
+          setLoadingDone();
+        }
       });
     }
 
