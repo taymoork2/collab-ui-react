@@ -13,7 +13,7 @@ module.exports = {
     middleware: [
       compression,
       customCSPmiddleware,
-      history()
+      history(),
     ],
   },
   ghostMode: {

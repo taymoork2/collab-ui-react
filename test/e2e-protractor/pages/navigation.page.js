@@ -212,11 +212,9 @@ var Navigation = function () {
 
   // html5Mode - strip leading hashes
   function removeUrlHash(urls) {
-    var ret = [];
-    _.forEach(urls, function(url) {
-      ret.push((url[0] === '#') ? url.slice(1) : url);
+    return _.map(urls, function (url) {
+      return (url[0] === '#') ? url.slice(1) : url;
     });
-    return ret;
   }
 
   function doesCurrentUrlContainValues(urlArray) {
