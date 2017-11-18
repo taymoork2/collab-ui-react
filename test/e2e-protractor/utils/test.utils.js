@@ -155,26 +155,11 @@ exports.wait = function (elem, timeout) {
     }, timeout || TIMEOUT, 'Waiting for element array to be displayed: ' + elem.locator());
   }
 
-  function logAndWait() {
-    log('Waiting for element to be visible: ' + elem.locator());
-    return EC.visibilityOf(elem)().thenCatch(function () {
-      // handle a possible stale element
-      log('Possible stale element: ' + elem.locator());
-      return false;
-    });
-  }
-  return browser.wait(logAndWait, timeout || TIMEOUT, 'Waiting for element to be visible: ' + elem.locator());
+  return browser.wait(EC.visibilityOf(elem), timeout || TIMEOUT, 'Waiting for element to be visible: ' + elem.locator());
 };
 
 exports.waitForPresence = function (elem, timeout) {
-  function logAndWait() {
-    log('Waiting for element to be present: ' + elem.locator());
-    return EC.presenceOf(elem)().thenCatch(function () {
-      // handle a possible stale element
-      return false;
-    });
-  }
-  return browser.wait(logAndWait, timeout || TIMEOUT, 'Waiting for element to be present: ' + elem.locator());
+  return browser.wait(EC.presenceOf(elem), timeout || TIMEOUT, 'Waiting for element to be present: ' + elem.locator());
 };
 
 exports.waitUntilEnabled = function (elem) {
@@ -287,15 +272,7 @@ exports.expectIsNotDisplayed = function (elem, timeout) {
     }, timeout || TIMEOUT, 'Waiting for element array not to be displayed: ' + elem.locator());
   }
 
-  function logAndWait() {
-    log('Waiting for element not to be visible: ' + elem.locator());
-    return EC.invisibilityOf(elem)().thenCatch(function () {
-      // Handle stale element reference
-      return EC.stalenessOf(elem)();
-    });
-  }
-
-  return browser.wait(logAndWait, timeout || TIMEOUT, 'Waiting for element not to be visible: ' + elem.locator());
+  return browser.wait(EC.invisibilityOf(elem), timeout || TIMEOUT, 'Waiting for element not to be visible: ' + elem.locator());
 };
 
 exports.expectAllNotDisplayed = exports.expectIsNotDisplayed;
@@ -379,15 +356,8 @@ exports.expectTokenInput = function (elem, value) {
 };
 
 exports.click = function (elem, maxRetry) {
-  function logAndWait() {
-    log('Waiting for element to be clickable: ' + elem.locator());
-    return EC.elementToBeClickable(elem)().thenCatch(function () {
-      // handle a possible stale element
-      return false;
-    });
-  }
   return this.wait(elem).then(function () {
-    return browser.wait(logAndWait, TIMEOUT, 'Waiting for element to be clickable: ' + elem.locator());
+    return browser.wait(EC.elementToBeClickable(elem), TIMEOUT, 'Waiting for element to be clickable: ' + elem.locator());
   }).then(function () {
     if (typeof maxRetry === 'undefined') {
       maxRetry = RETRY_COUNT;
@@ -625,14 +595,6 @@ exports.findDirectoryNumber = function (message, lineNumber) {
 exports.search = function (query, _searchCount) {
   var searchCount = _searchCount || 1;
 
-  function logAndWait() {
-    log('Waiting for ' + searchCount + ' search result');
-    return EC.textToBePresentInElement(element(by.css('.searchfilter li:first-child .count')), searchCount)().thenCatch(function () {
-      // handle a possible stale element
-      return false;
-    });
-  }
-
   exports.click(exports.searchbox);
   exports.clear(exports.searchField);
   if (query) {
@@ -642,7 +604,7 @@ exports.search = function (query, _searchCount) {
   }
 
   if (searchCount > -1) {
-    browser.wait(logAndWait, TIMEOUT, 'Waiting for ' + searchCount + ' search result');
+    browser.wait(EC.textToBePresentInElement(element(by.css('.searchfilter li:first-child .count')), searchCount), TIMEOUT, 'Waiting for ' + searchCount + ' search result');
   }
 
   if (query) {

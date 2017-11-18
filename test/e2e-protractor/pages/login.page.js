@@ -20,17 +20,17 @@ var LoginPage = function () {
     browser.driver.findElement(by.id('Button1')).click();
   };
   this.isLoginUsernamePresent = function () {
-    return browser.driver.isElementPresent(by.id('IDToken1'));
+    return browser.isElementPresent(by.id('IDToken1'));
   };
   this.isLoginPasswordPresent = function () {
-    return browser.driver.isElementPresent(by.id('IDToken2'));
+    return browser.isElementPresent(by.id('IDToken2'));
   };
   this.setActiveDirectoryFederationServicesCredentials = function (credential) {
     browser.driver.findElement(by.id('userNameInput')).sendKeys(helper.auth[credential].adId);
     browser.driver.findElement(by.id('passwordInput')).sendKeys(helper.auth[credential].adPass);
   };
   this.isActiveDirectoryFederationServicesUsernamePresent = function () {
-    return browser.driver.isElementPresent(by.id('userNameInput'));
+    return browser.isElementPresent(by.id('userNameInput'));
   };
   this.clickActiveDirectoryFederationServicesLoginSubmitButton = function () {
     browser.driver.findElement(by.id('submitButton')).click();
@@ -39,7 +39,7 @@ var LoginPage = function () {
     browser.driver.findElement(by.css('button[type="submit"]')).click();
   };
   this.isLoginSSOPresent = function () {
-    return browser.driver.isElementPresent(by.id('username')) && browser.driver.isElementPresent(by.id('password'));
+    return browser.isElementPresent(by.id('username')) && browser.isElementPresent(by.id('password'));
   };
 
   this.assertLoginError = function (msg) {

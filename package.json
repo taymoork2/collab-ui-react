@@ -212,7 +212,7 @@
     "plato": "^1.5.0",
     "postcss-loader": "^2.0.5",
     "promise": "^7.1.1",
-    "protractor": "4.0.9",
+    "protractor": "5.2.0",
     "protractor-console-plugin": "^0.1.1",
     "request": "^2.72.0",
     "request-promise": "^4.2.1",
