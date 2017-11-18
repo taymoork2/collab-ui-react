@@ -22,8 +22,8 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
   }
 
   public next(): void {
-    // TODO: f3745 - update with appropriate UI state
-    // this.$state.go(...);
+    // TODO: pass appropriate subscription assignments data
+    this.$state.go('users.manage.edit-summary-auto-assign-template-modal', {});
   }
 }
 
