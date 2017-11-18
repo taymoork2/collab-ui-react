@@ -1038,6 +1038,9 @@
               prevState: 'users.manage.picker',
             },
           })
+          .state('users.manage.edit-summary-auto-assign-template-modal', {
+            template: '<edit-summary-auto-assign-template-modal dismiss="$dismiss()"></edit-summary-auto-assign-template-modal>',
+          })
 
           //////////////////
 
