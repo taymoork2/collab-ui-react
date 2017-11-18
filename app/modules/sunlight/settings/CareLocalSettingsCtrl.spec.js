@@ -2,7 +2,7 @@
 
 describe('CareLocalSettingsCtrl', function () {
   function initDependencies() {
-    this.injectDependencies('$controller', '$httpBackend', '$interval', '$q', '$scope', 'Authinfo', 'FeatureToggleService', 'Notification', 'SunlightConfigService', 'UrlConfig', 'URService');
+    this.injectDependencies('$controller', '$httpBackend', '$interval', '$q', '$scope', 'SunlightUtilitiesService', 'Authinfo', 'FeatureToggleService', 'Notification', 'SunlightConfigService', 'UrlConfig', 'URService');
     this.$scope.orgConfigForm = { dirty: false };
     this.orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
     this.userOrgId = 'aeba1221-ab12-cd34-de56-abcdef123456';
@@ -36,7 +36,7 @@ describe('CareLocalSettingsCtrl', function () {
     spyOn(this.Authinfo, 'getOrgName').and.returnValue('SunlightConfigService test org');
     spyOn(this.Authinfo, 'isCareVoice').and.returnValue(isCareVoice);
     spyOn(this, '$interval').and.callThrough();
-
+    spyOn(this.SunlightUtilitiesService, 'removeCareSetupKey').and.callFake(function () { });
     this.sunlightChatConfigUrl = this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/chat';
   }
 
@@ -174,6 +174,7 @@ describe('CareLocalSettingsCtrl', function () {
           });
         this.$interval.flush(10001);
         this.$httpBackend.flush();
+        expect(this.SunlightUtilitiesService.removeCareSetupKey).toHaveBeenCalled();
         expect(this.controller.state).toBe(this.constants.ONBOARDED);
         expect(this.Notification.success).toHaveBeenCalled();
       });
@@ -193,6 +194,7 @@ describe('CareLocalSettingsCtrl', function () {
           this.$interval.flush(10000);
         }
         this.$httpBackend.flush();
+        expect(this.SunlightUtilitiesService.removeCareSetupKey).not.toHaveBeenCalled();
         expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
         expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
       });
@@ -210,6 +212,7 @@ describe('CareLocalSettingsCtrl', function () {
         }
         this.$httpBackend.flush();
         expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+        expect(this.SunlightUtilitiesService.removeCareSetupKey).not.toHaveBeenCalled();
         expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
       });
 
@@ -326,6 +329,7 @@ describe('CareLocalSettingsCtrl', function () {
         });
       this.$interval.flush(10001);
       this.$httpBackend.flush();
+      expect(this.SunlightUtilitiesService.removeCareSetupKey).toHaveBeenCalled();
       expect(this.controller.state).toBe(this.constants.ONBOARDED);
       expect(this.Notification.success).toHaveBeenCalled();
     });
@@ -351,6 +355,7 @@ describe('CareLocalSettingsCtrl', function () {
       this.$interval.flush(10001);
       this.$httpBackend.flush();
       expect(this.controller.state).toBe(this.constants.ONBOARDED);
+      expect(this.SunlightUtilitiesService.removeCareSetupKey).toHaveBeenCalled();
       expect(this.Notification.success).toHaveBeenCalled();
     });
 
@@ -365,6 +370,7 @@ describe('CareLocalSettingsCtrl', function () {
       this.controller.onboardToCare();
       this.$scope.$apply();
       expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+      expect(this.SunlightUtilitiesService.removeCareSetupKey).not.toHaveBeenCalled();
       expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
     });
   });
@@ -386,6 +392,7 @@ describe('CareLocalSettingsCtrl', function () {
           csOnboardingStatus: this.constants.status.UNKNOWN,
           aaOnboardingStatus: this.constants.status.UNKNOWN,
         });
+
       initController.call(this);
       this.$httpBackend.flush();
       expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
@@ -482,6 +489,7 @@ describe('CareLocalSettingsCtrl', function () {
       this.$interval.flush(10001);
       this.$httpBackend.flush();
       expect(this.controller.state).toBe(this.constants.ONBOARDED);
+      expect(this.SunlightUtilitiesService.removeCareSetupKey).toHaveBeenCalled();
       expect(this.Notification.success).toHaveBeenCalled();
     });
 
@@ -496,6 +504,7 @@ describe('CareLocalSettingsCtrl', function () {
       this.controller.onboardToCare();
       this.$scope.$apply();
       expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+      expect(this.SunlightUtilitiesService.removeCareSetupKey).not.toHaveBeenCalled();
       expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
     });
   });
@@ -613,6 +622,7 @@ describe('CareLocalSettingsCtrl', function () {
       this.$interval.flush(10001);
       this.$httpBackend.flush();
       expect(this.controller.state).toBe(this.constants.ONBOARDED);
+      expect(this.SunlightUtilitiesService.removeCareSetupKey).toHaveBeenCalled();
       expect(this.Notification.success).toHaveBeenCalled();
     });
 
@@ -631,6 +641,7 @@ describe('CareLocalSettingsCtrl', function () {
       this.$scope.$apply();
       expect(this.controller.csOnboardingStatus).toBe(this.constants.status.SUCCESS);
       expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+      expect(this.SunlightUtilitiesService.removeCareSetupKey).not.toHaveBeenCalled();
       expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
     });
   });

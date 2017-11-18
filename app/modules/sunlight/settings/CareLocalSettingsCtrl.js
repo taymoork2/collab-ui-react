@@ -7,7 +7,7 @@ var HttpStatus = require('http-status-codes');
     .controller('CareLocalSettingsCtrl', CareLocalSettingsCtrl);
 
   /* @ngInject */
-  function CareLocalSettingsCtrl($location, $interval, $q, $scope, $translate, Authinfo, Log, Notification, SunlightConfigService, ModalService, FeatureToggleService, URService) {
+  function CareLocalSettingsCtrl($location, $interval, $q, $scope, $translate, Authinfo, Log, Notification, SunlightUtilitiesService, SunlightConfigService, ModalService, FeatureToggleService, URService) {
     var vm = this;
 
     vm.ONBOARDED = 'onboarded';
@@ -242,7 +242,6 @@ var HttpStatus = require('http-status-codes');
         vm.orgChatConfig.selectedVideoInChatToggle = vm.orgChatConfigDataModel.videoInChatToggle;
       }
     }
-
     function onboardCsAaAppToCare() {
       var promises = {};
       if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
@@ -287,7 +286,6 @@ var HttpStatus = require('http-status-codes');
 
     vm.onboardToCare = function () {
       vm.state = vm.IN_PROGRESS;
-
       if (vm.defaultQueueStatus !== vm.status.SUCCESS) {
         var createQueueRequest = {
           queueId: Authinfo.getOrgId(),
@@ -319,7 +317,6 @@ var HttpStatus = require('http-status-codes');
 
     function startPolling() {
       if (!_.isUndefined(poller)) return;
-
       vm.errorCount = 0;
       poller = $interval(processOnboardStatus, pollInterval, pollRetryCount);
       poller.then(processTimeout);
@@ -358,6 +355,7 @@ var HttpStatus = require('http-status-codes');
           case vm.status.SUCCESS:
             Notification.success($translate.instant('sunlightDetails.settings.setUpCareSuccess'));
             vm.state = vm.ONBOARDED;
+            SunlightUtilitiesService.removeCareSetupKey();
             stopPolling();
             break;
           case vm.status.FAILURE:

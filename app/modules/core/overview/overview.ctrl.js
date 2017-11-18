@@ -1,5 +1,4 @@
 require('./_overview.scss');
-
 (function () {
   'use strict';
 
@@ -8,9 +7,8 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($q, $rootScope, $state, $scope, Authinfo, CardUtils, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, ProPackService, LearnMoreBannerService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SetupWizardService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
+  function OverviewCtrl($q, $rootScope, $state, $scope, Authinfo, CardUtils, SunlightUtilitiesService, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, ProPackService, LearnMoreBannerService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SetupWizardService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
     var vm = this;
-
     var PSTN_TOS_ACCEPT = require('modules/huron/pstn/pstnTermsOfService').PSTN_TOS_ACCEPT;
     var PSTN_ESA_DISCLAIMER_ACCEPT = require('modules/huron/pstn/pstn.const').PSTN_ESA_DISCLAIMER_ACCEPT;
 
@@ -45,7 +43,6 @@ require('./_overview.scss');
     vm.showUserTaskManagerModal = showUserTaskManagerModal;
 
     ////////////////////////////////
-
     $q.all({
       enabledNotPurchased: ProPackService.hasProPackEnabledAndNotPurchased(),
       purchased: ProPackService.hasProPackPurchased(),
@@ -257,6 +254,15 @@ require('./_overview.scss');
 
       TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
         vm.trialDaysLeft = daysLeft;
+      });
+    }
+
+    if (Authinfo.isCare() && Authinfo.isCustomerAdmin()) {
+      SunlightUtilitiesService.isCareSetup().then(function (isOrgOnboarded) {
+        if (!isOrgOnboarded && SunlightUtilitiesService.showSetUpCareNotification()) {
+          vm.notifications.push(OverviewNotificationFactory.createCareNotSetupNotification());
+          resizeNotifications();
+        }
       });
     }
 

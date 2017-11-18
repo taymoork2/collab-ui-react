@@ -1729,7 +1729,10 @@
     "setUpAllCalendarsOnlyOffice365IsSetup": "Use it with Exchange or Google Calendar.",
     "setUpAllCalendarsOnlyGoogleIsSetup": "Use it with Exchange or Office365.",
     "setUpAllCalendarsGoogleAndOffice365AreSetup": "Use it with Exchange.",
-    "setUpAllCalendarsNoneIsSetup": "Use it with Exchange, Google Calendar or Office365."
+    "setUpAllCalendarsNoneIsSetup": "Use it with Exchange, Google Calendar or Office365.",
+    "setUpCarePrimaryNotification": "Your Organization is enabled for Cisco Spark Care.",
+    "setUpCareSecondaryNotification": "Looks like you haven’t set up Cisco Spark Care yet!",
+    "setUpCareLinkText": "Setup Care Service"
   },
   "inviteModal": {
     "title": "Service Entitlement",
