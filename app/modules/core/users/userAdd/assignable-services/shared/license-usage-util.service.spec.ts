@@ -201,4 +201,13 @@ describe('LicenseUsageUtilService:', () => {
       expect(this.LicenseUsageUtilService.isSharedMeetingsLicense({ licenseModel: cloudSharedMeeting })).toBe(true);
     });
   });
+
+  describe('sanitizeIdForJs(): ', () => {
+    it('should transform input string to replace characters invalid for a JS variable name with underscore', function () {
+      expect(this.LicenseUsageUtilService.sanitizeIdForJs('foo_bar')).toBe('foo__bar');
+      expect(this.LicenseUsageUtilService.sanitizeIdForJs('foo.bar')).toBe('foo_bar');
+      expect(this.LicenseUsageUtilService.sanitizeIdForJs('foo-bar')).toBe('foo_bar');
+      expect(this.LicenseUsageUtilService.sanitizeIdForJs('.foo_bar-baz')).toBe('_foo__bar_baz');
+    });
+  });
 });

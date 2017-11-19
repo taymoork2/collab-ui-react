@@ -17,8 +17,8 @@ describe('Component: assignableServiceItemCheckbox:', () => {
           l10n-label="foo">
         </assignable-service-item-checkbox>`);
       expect(this.view.find('input[cs-input][type="checkbox"]').length).toBe(1);
-      expect(this.view.find('input[cs-input][type="checkbox"][id="cb--fake-serviceItemId"]').length).toBe(1);
-      expect(this.view.find('input[cs-input][type="checkbox"][name="cb--fake-serviceItemId"]').length).toBe(1);
+      expect(this.view.find('input[cs-input][type="checkbox"][id="fake_serviceItemId"]').length).toBe(1);
+      expect(this.view.find('input[cs-input][type="checkbox"][name="fake_serviceItemId"]').length).toBe(1);
       expect(this.view.find('input[cs-input][type="checkbox"][cs-input-label="foo"]').length).toBe(1);
     });
 

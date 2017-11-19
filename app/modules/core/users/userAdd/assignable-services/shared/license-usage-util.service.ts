@@ -18,6 +18,11 @@ export class LicenseUsageUtilService {
     return _.find(licenses, findOptions);
   }
 
+  public findLicenseIdForOfferName(offerName: string, licenses: ILicenseUsage[]): string | undefined {
+    const result: ILicenseUsage = _.find(licenses, { offerName });
+    return _.get(result, 'licenseId');
+  }
+
   public hasLicensesWith(searchOptions: Object, licenses: ILicenseUsage[]): boolean {
     return _.some(licenses, searchOptions);
   }
@@ -60,5 +65,11 @@ export class LicenseUsageUtilService {
 
   public isSharedMeetingsLicense(license: ILicenseUsage): boolean {
     return _.get(license, 'licenseModel') === this.Config.licenseModel.cloudSharedMeeting;
+  }
+
+  public sanitizeIdForJs(_licenseId: string): string {
+    let licenseId = _licenseId.replace(/_/g, '__');
+    licenseId = licenseId.replace(/[.-]/g, '_');
+    return licenseId;
   }
 }

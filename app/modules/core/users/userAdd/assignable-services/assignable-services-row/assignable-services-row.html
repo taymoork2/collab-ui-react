@@ -8,7 +8,7 @@
   <div class="small-4 columns column-paid column__messaging">
     <!-- messaging -->
     <assignable-service-item-checkbox ng-if="$ctrl.hasLicenseWithAnyOfferName('MS')"
-      service-item-id="$ctrl.subscription.subscriptionId + '--MS'"
+      service-item-id="$ctrl.findLicenseIdForOfferName('MS')"
       l10n-label="onboardModal.paidCiscoSparkMessaging">
       <div translate="firstTimeWizard.namedLicense"></div>
       <usage-line
@@ -19,7 +19,7 @@
 
     <!-- messenger -->
     <assignable-service-item-checkbox ng-if="$ctrl.hasLicenseWithAnyOfferName('MSGR')"
-      service-item-id="$ctrl.subscription.subscriptionId + '--MSGR'"
+      service-item-id="$ctrl.findLicenseIdForOfferName('MSGR')"
       l10n-label="onboardModal.ciscoSparkJabberInterop">
       <div translate="firstTimeWizard.namedLicense"></div>
       <usage-line
@@ -34,7 +34,7 @@
     <div ng-if="$ctrl.hasLicenseWithAnyOfferName('CF')" class="basic-meetings">
       <div translate="firstTimeWizard.basicMeetings" class="license__category"></div>
       <assignable-service-item-checkbox ng-if="$ctrl.hasLicenseWithAnyOfferName('CF')"
-        service-item-id="$ctrl.subscription.subscriptionId + '--CF'"
+        service-item-id="$ctrl.findLicenseIdForOfferName('CF')"
         l10n-label="firstTimeWizard.meetingsInSpark">
         <div translate="firstTimeWizard.namedLicense"></div>
         <usage-line
@@ -54,7 +54,7 @@
   <div class="small-4 columns column-paid column__communication">
     <!-- call -->
     <assignable-service-item-checkbox ng-if="$ctrl.hasLicenseWithAnyOfferName('CO')"
-      service-item-id="$ctrl.subscription.subscriptionId + '--CO'"
+      service-item-id="$ctrl.findLicenseIdForOfferName('CO')"
       l10n-label="onboardModal.paidSparkCall">
       <div translate="firstTimeWizard.namedLicense"></div>
       <usage-line
@@ -67,7 +67,7 @@
   <div ng-if="$ctrl.isCareEnabled" class="small-4 columns column-paid column__care">
     <!-- care - K1 -->
     <assignable-service-item-checkbox ng-if="$ctrl.hasLicenseWithAnyOfferName('CDC')"
-      service-item-id="$ctrl.subscription.subscriptionId + '--CDC'"
+      service-item-id="$ctrl.findLicenseIdForOfferName('CDC')"
       l10n-label="onboardModal.paidCDC">
       <div translate="firstTimeWizard.namedLicense"></div>
       <usage-line
@@ -78,7 +78,7 @@
 
     <!-- care - K2 -->
     <assignable-service-item-checkbox ng-if="$ctrl.hasLicenseWithAnyOfferName('CVC')"
-      service-item-id="$ctrl.subscription.subscriptionId + '--CVC'"
+      service-item-id="$ctrl.findLicenseIdForOfferName('CVC')"
       l10n-label="onboardModal.paidCVC">
       <div translate="firstTimeWizard.namedLicense"></div>
       <usage-line
