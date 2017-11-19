@@ -9,12 +9,6 @@ describe('Component: assignableAdvancedMeetings:', () => {
     );
   });
 
-  // TODO: use as-appropriate
-  beforeEach(function () {
-    // this.compileTemplate('<assignable-advanced-meetings><assignable-advanced-meetings>');
-    // this.compileComponent('assignableAdvancedMeetings', { ... });
-  });
-
   describe('primary behaviors (view):', () => {
     it('should render nothing if there is not at least 1 license with the right "offerName"', function () {
       this.compileComponent('assignableAdvancedMeetings');
@@ -39,6 +33,8 @@ describe('Component: assignableAdvancedMeetings:', () => {
       expect(this.view.find('assignable-service-item-checkbox[l10n-label="subscriptions.licenseTypes.EC"]').length).toBe(1);
       expect(this.view.find('assignable-service-item-checkbox advanced-meeting-license-description').length).toBe(1);
       expect(this.view.find('assignable-service-item-checkbox usage-line').length).toBe(1);
+      expect(this.view.find('assignable-service-item-checkbox[state-data]').length).toBe(1);
+      expect(this.view.find('assignable-service-item-checkbox[on-update]').length).toBe(1);
 
       this.$scope.licenses = [{
         licenseId: 'fake-license-id-1',

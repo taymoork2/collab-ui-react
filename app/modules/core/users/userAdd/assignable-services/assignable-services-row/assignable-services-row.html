@@ -9,7 +9,9 @@
     <!-- messaging -->
     <assignable-service-item-checkbox ng-if="$ctrl.hasLicenseWithAnyOfferName('MS')"
       service-item-id="$ctrl.findLicenseIdForOfferName('MS')"
-      l10n-label="onboardModal.paidCiscoSparkMessaging">
+      l10n-label="onboardModal.paidCiscoSparkMessaging"
+      on-update="$ctrl.onUpdate({ $event: $event })"
+      state-data="$ctrl.stateData">
       <div translate="firstTimeWizard.namedLicense"></div>
       <usage-line
         usage="$ctrl.getTotalLicenseUsage('MS')"
@@ -20,7 +22,9 @@
     <!-- messenger -->
     <assignable-service-item-checkbox ng-if="$ctrl.hasLicenseWithAnyOfferName('MSGR')"
       service-item-id="$ctrl.findLicenseIdForOfferName('MSGR')"
-      l10n-label="onboardModal.ciscoSparkJabberInterop">
+      l10n-label="onboardModal.ciscoSparkJabberInterop"
+      on-update="$ctrl.onUpdate({ $event: $event })"
+      state-data="$ctrl.stateData">
       <div translate="firstTimeWizard.namedLicense"></div>
       <usage-line
         usage="$ctrl.getTotalLicenseUsage('MSGR')"
@@ -35,7 +39,9 @@
       <div translate="firstTimeWizard.basicMeetings" class="license__category"></div>
       <assignable-service-item-checkbox ng-if="$ctrl.hasLicenseWithAnyOfferName('CF')"
         service-item-id="$ctrl.findLicenseIdForOfferName('CF')"
-        l10n-label="firstTimeWizard.meetingsInSpark">
+        l10n-label="firstTimeWizard.meetingsInSpark"
+        on-update="$ctrl.onUpdate({ $event: $event })"
+        state-data="$ctrl.stateData">
         <div translate="firstTimeWizard.namedLicense"></div>
         <usage-line
           usage="$ctrl.getTotalLicenseUsage('CF')"
@@ -47,7 +53,9 @@
     <!-- advanced meeting (webex variants) -->
     <assignable-advanced-meetings
       licenses="$ctrl.advancedMeetingLicenses"
-      site-urls="$ctrl.advancedMeetingSiteUrls">
+      site-urls="$ctrl.advancedMeetingSiteUrls"
+      on-update="$ctrl.onUpdate({ $event: $event })"
+      state-data="$ctrl.stateData">
     </assignable-advanced-meetings>
   </div>
 
@@ -55,7 +63,9 @@
     <!-- call -->
     <assignable-service-item-checkbox ng-if="$ctrl.hasLicenseWithAnyOfferName('CO')"
       service-item-id="$ctrl.findLicenseIdForOfferName('CO')"
-      l10n-label="onboardModal.paidSparkCall">
+      l10n-label="onboardModal.paidSparkCall"
+      on-update="$ctrl.onUpdate({ $event: $event })"
+      state-data="$ctrl.stateData">
       <div translate="firstTimeWizard.namedLicense"></div>
       <usage-line
         usage="$ctrl.getTotalLicenseUsage('CO')"
@@ -68,7 +78,9 @@
     <!-- care - K1 -->
     <assignable-service-item-checkbox ng-if="$ctrl.hasLicenseWithAnyOfferName('CDC')"
       service-item-id="$ctrl.findLicenseIdForOfferName('CDC')"
-      l10n-label="onboardModal.paidCDC">
+      l10n-label="onboardModal.paidCDC"
+      on-update="$ctrl.onUpdate({ $event: $event })"
+      state-data="$ctrl.stateData">
       <div translate="firstTimeWizard.namedLicense"></div>
       <usage-line
         usage="$ctrl.getTotalLicenseUsage('CDC')"
@@ -79,7 +91,9 @@
     <!-- care - K2 -->
     <assignable-service-item-checkbox ng-if="$ctrl.hasLicenseWithAnyOfferName('CVC')"
       service-item-id="$ctrl.findLicenseIdForOfferName('CVC')"
-      l10n-label="onboardModal.paidCVC">
+      l10n-label="onboardModal.paidCVC"
+      on-update="$ctrl.onUpdate({ $event: $event })"
+      state-data="$ctrl.stateData">
       <div translate="firstTimeWizard.namedLicense"></div>
       <usage-line
         usage="$ctrl.getTotalLicenseUsage('CVC')"

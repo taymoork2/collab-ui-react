@@ -42,9 +42,12 @@
       <div translate="onboardModal.none"></div>
     </div>
   </div>
-  <div ng-repeat="subscription in $ctrl.sortedSubscriptions track by subscription.subscriptionId">
+  <div ng-repeat="subscription in $ctrl.subscriptions track by subscription.subscriptionId">
     <assignable-services-row
       subscription="subscription"
-      is-care-enabled="$ctrl.isCareEnabled"></assignable-services-row>
+      is-care-enabled="$ctrl.isCareEnabled"
+      on-update="$ctrl.onUpdate({ $event: $event })"
+      state-data="$ctrl.stateData">
+    </assignable-services-row>
   </div>
 </div>

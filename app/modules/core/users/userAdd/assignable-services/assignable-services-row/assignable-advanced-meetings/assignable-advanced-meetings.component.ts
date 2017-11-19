@@ -89,5 +89,7 @@ export class AssignableAdvancedMeetingsComponent implements ng.IComponentOptions
   public bindings = {
     licenses: '<',
     siteUrls: '<',
+    onUpdate: '&',
+    stateData: '<',
   };
 }

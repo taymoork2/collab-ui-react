@@ -64,5 +64,7 @@ export class AssignableServicesRowComponent implements ng.IComponentOptions {
   public bindings = {
     isCareEnabled: '<',
     subscription: '<',
+    onUpdate: '&',
+    stateData: '<',
   };
 }

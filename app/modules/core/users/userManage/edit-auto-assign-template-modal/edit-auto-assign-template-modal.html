@@ -17,7 +17,11 @@
     </a>
   </p>
   <div class="modal-content__assignable-services">
-    <assignable-services></assignable-services>
+    <assignable-services
+      subscriptions="$ctrl.sortedSubscriptions"
+      on-update="$ctrl.recvUpdate($event)"
+      state-data="$ctrl.stateData">
+    </assignable-services>
     <hybrid-services-panel bind-entitlements="updateExtensionEntitlements(entitlements)"></hybrid-services-panel>
   </div>
 </multi-step-modal>

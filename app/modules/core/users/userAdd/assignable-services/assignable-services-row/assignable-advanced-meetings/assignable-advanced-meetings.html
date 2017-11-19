@@ -4,6 +4,8 @@
     <assignable-service-item-checkbox
       service-item-id="license.licenseId"
       l10n-label="{{:: 'subscriptions.licenseTypes.' + license.offerName }}"
+      on-update="$ctrl.onUpdate({ $event: $event })"
+      state-data="$ctrl.stateData"
       ng-class="license.offerName === 'CMR' ? 'cs-input--nested-1' : ''">
       <div ng-if="license.offerName === 'CMR'">
         <usage-line

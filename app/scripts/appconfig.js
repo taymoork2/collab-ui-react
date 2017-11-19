@@ -1036,10 +1036,14 @@
             template: '<edit-auto-assign-template-modal dismiss="$dismiss()"></edit-auto-assign-template-modal>',
             params: {
               prevState: 'users.manage.picker',
+              stateData: null,
             },
           })
           .state('users.manage.edit-summary-auto-assign-template-modal', {
             template: '<edit-summary-auto-assign-template-modal dismiss="$dismiss()"></edit-summary-auto-assign-template-modal>',
+            params: {
+              stateData: null,
+            },
           })
 
           //////////////////

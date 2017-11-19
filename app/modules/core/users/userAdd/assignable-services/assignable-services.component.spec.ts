@@ -4,27 +4,26 @@ describe('Component: assignableServices:', () => {
   beforeEach(function() {
     this.initModules(moduleName);
     this.injectDependencies(
-      '$httpBackend',
-      '$q',
+      '$scope',
       'Authinfo',
-      'Orgservice',
     );
-    this.fixtures = {};
-    this.fixtures.fakeLicenseUsage = [{
-      subscriptionId: 'fake-subscriptionId-2',
-    }, {
-      subscriptionId: 'fake-subscriptionId-3',
-    }, {
-      subscriptionId: 'fake-subscriptionId-1',
-    }];
-  });
-
-  afterEach(function () {
-    this.$httpBackend.verifyNoOutstandingExpectation();
-    this.$httpBackend.verifyNoOutstandingRequest();
   });
 
   describe('primary behaviors (view):', () => {
+    it('should render an "assignable-services-row" for each subscription passed through input binding', function () {
+      this.$scope.fakeSubscriptions = [{
+        subscriptionId: 'fake-subscriptionId-2',
+      }, {
+        subscriptionId: 'fake-subscriptionId-3',
+      }, {
+        subscriptionId: 'fake-subscriptionId-1',
+      }];
+      this.compileComponent('assignableServices', {
+        subscriptions: 'fakeSubscriptions',
+      });
+      expect(this.view.find('assignable-services-row[subscription="subscription"]').length).toBe(3);
+    });
+
     it('should have three or four columns depending on "isCareEnabled"', function () {
       spyOn(this.Authinfo, 'isCareAndCDC').and.returnValue(false);
       spyOn(this.Authinfo, 'isCareVoiceAndCVC').and.returnValue(false);
@@ -43,18 +42,6 @@ describe('Component: assignableServices:', () => {
   });
 
   describe('primary behaviors (controller):', () => {
-    beforeEach(function () {
-      spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.fixtures.fakeLicenseUsage));
-    });
-
-    it('should initialize "sortedSubscription" property', function () {
-      this.compileComponent('assignableServices');
-      expect(this.controller.sortedSubscriptions.length).toBe(3);
-      expect(_.get(this.controller, 'sortedSubscriptions[0].subscriptionId')).toBe('fake-subscriptionId-1');
-      expect(_.get(this.controller, 'sortedSubscriptions[1].subscriptionId')).toBe('fake-subscriptionId-2');
-      expect(_.get(this.controller, 'sortedSubscriptions[2].subscriptionId')).toBe('fake-subscriptionId-3');
-    });
-
     it('should initialize "isCare*" properties', function () {
       spyOn(this.Authinfo, 'isCareAndCDC').and.returnValue(false);
       spyOn(this.Authinfo, 'isCareVoiceAndCVC').and.returnValue(false);

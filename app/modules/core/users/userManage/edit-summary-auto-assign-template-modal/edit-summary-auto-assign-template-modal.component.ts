@@ -3,12 +3,11 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
-  ) {
-  }
+  ) {}
 
   public back(): void {
     this.$state.go('users.manage.edit-auto-assign-template-modal', {
-      // TODO: pass back subscription assignments data
+      stateData: _.get(this.$state, 'params.stateData'),
     });
   }
 
