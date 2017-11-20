@@ -2192,7 +2192,7 @@
     },
     "sipExplanation": {
       "line1": "You can use one of the following address formats:",
-      "line2": "SRV domain (_sips.tcp.<strong>sipmtls.example.com</strong>)",
+      "line2": "SRV domain (_sips._tcp.<strong>sipmtls.example.com</strong>)",
       "line3": "Hostname/FQDN:port (<strong>exp-e.example.com:5062</strong>)",
       "line4": "IP address:port (<strong>203.0.113.0:5062</strong>)",
       "line5": "See <a href=\"https://www.cisco.com/go/spark-calling-branch-office\" target=\"_blank\">Configure the Enterprise Private Trunk Connection</a> if you need further help.",
@@ -2596,11 +2596,12 @@
       "expresswayDataWiped": "{{connectorName}} will be removed from all of your Expressway clusters, and all connectors' local settings will be deleted.",
       "noClustersWillBeDeregistered": "Clusters will not be deregistered from Cisco Collaboration Cloud.",
       "deactivateServiceConfirmationHeader": "Deactivate {{serviceName}}",
-      "deactivateServiceConfirmationTextGoogleCalendar": "Are you sure? Service-related features will be removed for users.",
+      "deactivateServiceConfirmationTextCloudCalendar": "Are you sure? Service-related features will be removed for users.",
       "deactivateServiceConfirmationText": "Are you sure? {{connectorName}} and related configuration will be removed from your clusters and service-related features will be removed for users.",
       "serviceWasDeactivated": "{{serviceName}} successfully deactivated.",
       "connectWarning": "Are you sure? Remote device configuration will be removed and the service will be disabled for your users.",
-      "deactivateCallServiceConnect": "Deactivate Call Service Connect"
+      "deactivateCallServiceConnect": "Deactivate Call Service Connect",
+      "o365Timing": "Please be patient while this service is being deactivated, the operation may take a few minutes."
     },
     "clusterHistoryTable": {
       "types": {
