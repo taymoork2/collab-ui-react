@@ -188,7 +188,7 @@ class WebexAddSiteModalController implements ng.IComponentController {
       this.sitesArray = _.concat(this.sitesArray, sites);
       this.transferCode = transferCode;
       // if transferring a site - we dont have to add new one
-      this.advanceStep(!_.isNil(transferCode));
+      this.advanceStep(!_.isEmpty(transferCode));
     }
   }
 

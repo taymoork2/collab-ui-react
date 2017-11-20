@@ -62,8 +62,11 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
       if ((siteUrlEmpty && !transferCodeEmpty) || (transferCodeEmpty && !siteUrlEmpty)) {
         invalid = true;
       }
-      this.onValidationStatusChange({ isValid: !invalid });
+    } else {
+      this.transferSiteUrl = null;
+      this.transferSiteCode = null;
     }
+    this.onValidationStatusChange({ isValid: !invalid });
 
   }
 
