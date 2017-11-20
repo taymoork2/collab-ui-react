@@ -341,7 +341,9 @@
       "editSummary": {
         "title": "Set Up Auto-Assign Template",
         "header": "License Summary",
-        "description": "The following licenses will automatically be assigned to new users."
+        "description": "The following licenses will automatically be assigned to new users.",
+        "saveSuccess": "Your license template has been set up successfully. Licenses will be assigned to new users automatically.",
+        "saveError": "An error occurred while saving your license template. Please try again."
       }
     }
   },
