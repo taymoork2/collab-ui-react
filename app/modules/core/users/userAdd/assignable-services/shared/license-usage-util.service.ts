@@ -67,9 +67,10 @@ export class LicenseUsageUtilService {
     return _.get(license, 'licenseModel') === this.Config.licenseModel.cloudSharedMeeting;
   }
 
-  public sanitizeIdForJs(_licenseId: string): string {
-    let licenseId = _licenseId.replace(/_/g, '__');
-    licenseId = licenseId.replace(/[.-]/g, '_');
-    return licenseId;
+  public sanitizeIdForJs(licenseId: string): string | undefined {
+    if (!licenseId) {
+      return;
+    }
+    return licenseId.replace(/[.-]/g, '_');
   }
 }

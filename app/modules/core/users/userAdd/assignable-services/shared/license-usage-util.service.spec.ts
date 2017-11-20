@@ -204,10 +204,10 @@ describe('LicenseUsageUtilService:', () => {
 
   describe('sanitizeIdForJs(): ', () => {
     it('should transform input string to replace characters invalid for a JS variable name with underscore', function () {
-      expect(this.LicenseUsageUtilService.sanitizeIdForJs('foo_bar')).toBe('foo__bar');
+      expect(this.LicenseUsageUtilService.sanitizeIdForJs('')).toBe(undefined);
       expect(this.LicenseUsageUtilService.sanitizeIdForJs('foo.bar')).toBe('foo_bar');
       expect(this.LicenseUsageUtilService.sanitizeIdForJs('foo-bar')).toBe('foo_bar');
-      expect(this.LicenseUsageUtilService.sanitizeIdForJs('.foo_bar-baz')).toBe('_foo__bar_baz');
+      expect(this.LicenseUsageUtilService.sanitizeIdForJs('foo.bar-baz')).toBe('foo_bar_baz');
     });
   });
 });
