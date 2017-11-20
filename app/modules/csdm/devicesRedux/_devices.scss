@@ -373,10 +373,6 @@
     .bulleted-searchbox {
       text-decoration: none;
 
-      .expanded {
-        width: 430px;
-        padding-right: 32px;
-      }
       .bulleted-searchinput.searcherror {
         border-color: red !important;
       }
@@ -391,6 +387,8 @@
         border: 1px solid $gray-light-2;
         border-radius: 2px;
         height: 100%;
+        width: 430px;
+        padding-right: 32px;
         margin-right: 1rem;
 
         > input {
@@ -415,10 +413,6 @@
             box-shadow: none !important;
             background-color: white !important;
           }
-        }
-        > input.collapsed {
-          min-width: 1px;
-          width: 1px;
         }
         > i {
           border: none;
