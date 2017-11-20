@@ -3695,6 +3695,7 @@
       "viewDetails": "View Details",
       "generateReport": "Generate Report",
       "cancelReport": "Cancel Report",
+      "cancelReportDescription": "Are you sure you want to cancel this report?",
       "downloadReport": "Download Report",
       "failure": "Report generation failed",
       "failed": "Report failed",
