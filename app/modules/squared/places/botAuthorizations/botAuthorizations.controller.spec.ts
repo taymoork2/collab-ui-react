@@ -4,10 +4,8 @@ describe('Controller: BotAuthorizationsController', () => {
 
   function initController() {
     controller = $controller('BotAuthorizationsController', {
-      place: {
-        cisUuid: 'cisUuid',
-        displayName: 'displayName',
-      },
+      accountId: 'cisUuid',
+      accountDisplayName: 'displayName',
       $q: $q,
       AuthorizationService: AuthorizationService,
       DirectoryService: DirectoryService,

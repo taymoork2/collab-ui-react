@@ -1,4 +1,3 @@
-import IBasePlace = csdm.IBasePlace;
 export class BotAuthorizationsController {
   public selectPlaceholder = this.$translate.instant('placesPage.botAuthorizations.selectRole');
   public roles: any;
@@ -21,7 +20,8 @@ export class BotAuthorizationsController {
   constructor(
     private DirectoryService,
     private AuthorizationService,
-    private place: IBasePlace,
+    private accountId: string,
+    public accountDisplayName: string,
     private Notification,
     private $q,
     private $translate,
@@ -32,7 +32,7 @@ export class BotAuthorizationsController {
   private loadAuthorizations(): void {
     let authorizations: any[] = [];
     const promises: any[] = [];
-    this.AuthorizationService.getAuthorizations(this.place.cisUuid).then(result => {
+    this.AuthorizationService.getAuthorizations(this.accountId).then(result => {
       authorizations = result;
       _.each(authorizations, (auth) => {
         promises.push(this.enrichAuthData(auth));
@@ -147,7 +147,7 @@ export class BotAuthorizationsController {
   }
   public createAuth(): void {
     this.isAdding = true;
-    this.AuthorizationService.createAuthorization(this.selectedAccount.id, this._selectedRole.id, this.place.cisUuid)
+    this.AuthorizationService.createAuthorization(this.selectedAccount.id, this._selectedRole.id, this.accountId)
       .then((data) => {
         this.enrichAuthData(data).then(() => {
           this.isAdding = false;
@@ -173,10 +173,11 @@ angular
   .service('BotAuthorizationsModal',
     /* @ngInject */
     function ($modal) {
-      function open(place) {
+      function open(accountId, accountDisplayName) {
         return $modal.open({
           resolve: {
-            place: _.constant(place),
+            accountId: _.constant(accountId),
+            accountDisplayName: _.constant(accountDisplayName),
           },
           controllerAs: 'vm',
           controller: 'BotAuthorizationsController',
