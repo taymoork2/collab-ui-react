@@ -2212,7 +2212,8 @@
       "goToHost": "Go to Node",
       "localizedConnectorAndHostHeader": "{{connectorName}} on {{hostname}}",
       "no_nodes": "No nodes registered.",
-      "goToNodes": "Perform actions on Node"
+      "goToNodes": "Perform actions on Node",
+      "no_name": "No name"
     },
     "export": {
       "modalTitle": "User Status Report",
