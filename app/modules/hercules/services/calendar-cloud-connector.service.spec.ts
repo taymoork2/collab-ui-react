@@ -44,11 +44,23 @@ describe('CloudConnectorService', () => {
       };
       $httpBackend.expectPOST('https://calendar-cloud-connector-intb.ciscospark.com/api/v1/orgs/myOrgId/services/squared-fusion-gcal', dataToBeSentToServer).respond({});
       $httpBackend.expectPATCH('https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/myOrgId/services/squared-fusion-gcal').respond({});
-      CloudConnectorService.updateConfig({
-        apiClientId: inputData.apiClientId,
-        aclAdminAccount: inputData.aclAdminAccount,
-        testEmailAccount: inputData.testEmailAccount,
-      });
+      CloudConnectorService.updateConfig(inputData);
+      $httpBackend.flush();
+    });
+
+    it('should reuse the aclAdminAccount as testEmailAccount if missing', () => {
+      const inputData = {
+        apiClientId: '123',
+        aclAdminAccount: 'acl@example.org',
+      };
+      const dataToBeSentToServer = {
+        apiClientId: '123',
+        testEmailAccount: inputData.aclAdminAccount,
+        aclAdminAccount: 'acl@example.org',
+      };
+      $httpBackend.expectPOST('https://calendar-cloud-connector-intb.ciscospark.com/api/v1/orgs/myOrgId/services/squared-fusion-gcal', dataToBeSentToServer).respond({});
+      $httpBackend.expectPATCH('https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/myOrgId/services/squared-fusion-gcal').respond({});
+      CloudConnectorService.updateConfig(inputData);
       $httpBackend.flush();
     });
 

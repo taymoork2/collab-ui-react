@@ -2676,7 +2676,8 @@
         "line2": "If you use room resources, you may need to make access control list (ACL) changes to their calendars.",
         "line3": "To let Hybrid Calendar Service perform this change automatically, enter the information for an authorized ACL admin account.",
         "subtitle": "ACL Admin Account",
-        "error": "Couldn't save the Google Calendar config"
+        "error": "Couldn't save the Google Calendar config",
+        "success": "New configuration saved."
       },
       "completion": {
         "title": "Set up completed",
