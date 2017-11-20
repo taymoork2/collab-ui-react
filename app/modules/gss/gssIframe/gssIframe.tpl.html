@@ -4,21 +4,7 @@
                   back="false"
                   tabs="gssIframeCtrl.headerTabs">
   </cs-page-header>
-
-  <div ng-if="!gssIframeCtrl.isEqualVersion" class="cs-card syncContent">
-    <div class="spinner-loading" ng-show="gssIframeCtrl.isCompareVersionLoading">
-      <i class="icon icon-spinner"></i>
-    </div>
-    <article ng-if="!gssIframeCtrl.isCompareVersionLoading">
-      <section>{{ 'common.warning' | translate }}! {{ 'gss.syncMessage' | translate}}
-      <button cs-btn class="btn btn--primary"
-              loading="gssIframeCtrl.isLoading" ng-click="gssIframeCtrl.syncUp()">
-          <span translate="gss.syncBtn"></span>
-      </button>
-      </section>
-    </article>
-  </div>
-  <div ng-if="gssIframeCtrl.isEqualVersion">
+  <div>
     <cs-select
       id="serviceSelector"
       ng-model="gssIframeCtrl.selected"
