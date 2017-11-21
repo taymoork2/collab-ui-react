@@ -2,7 +2,7 @@
   <form ng-submit="dctrl.onInputSubmit()" ng-class="{ 'active': dctrl.inputActive}">
     <div class="bulleted-searchbox" onclick="angular.element('#searchFilterInput').focus();">
       <div class="bulleted-searchinput"
-           ng-class="{'searcherror': dctrl.searchObject.hasError, 'expanded': dctrl.inputActive || dctrl.searchObject.hasAnyBulletOrEditedText()}">
+           ng-class="{'searcherror': dctrl.searchObject.hasError}">
         <i class="icon icon-search"></i>
         <device-search-bullet ng-repeat="bullet in dctrl.getBullets()" search-element="bullet"
                               bullet-container="dctrl"></device-search-bullet>
@@ -16,10 +16,9 @@
           ng-change="dctrl.onInputChange()"
           ng-keydown="dctrl.onSearchInputKeyDown($event)"
           type="text"
-          placeholder="{{::'common.search' | translate}}"
+          placeholder="{{::'spacesPage.deviceSearchPlaceholder' | translate}}"
           ng-focus="dctrl.inputActive=true"
-          ng-blur="dctrl.inputActive=false"
-          ng-class="{ 'collapsed': !dctrl.inputActive && !dctrl.searchObject.hasAnyBulletOrEditedText()}">
+          ng-blur="dctrl.inputActive=false">
 
         <i class="icon icon-exit-outline clear" ng-click="dctrl.clearSearchInput();"
            ng-if="dctrl.searchObject.hasAnyBulletOrEditedText()"></i>
