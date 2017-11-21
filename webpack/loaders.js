@@ -8,6 +8,9 @@ exports.js = {
   test: /\.js$/,
   use: [
     {
+      loader: 'cache-loader',
+    },
+    {
       loader: 'ng-annotate-loader',
     },
   ],
@@ -49,6 +52,9 @@ exports.ts = {
   test: /\.ts$/,
   use: [
     {
+      loader: 'cache-loader',
+    },
+    {
       loader: 'ng-annotate-loader',
     },
     {
@@ -65,6 +71,9 @@ exports.ts = {
 exports.scss = {
   test: /\.scss$/,
   use: [
+    {
+      loader: 'cache-loader',
+    },
     {
       loader: 'style-loader',
     },

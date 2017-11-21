@@ -156,6 +156,7 @@
     "babel-preset-latest": "^6.24.1",
     "base64-js": "^1.2.0",
     "browser-sync": "^2.13.0",
+    "cache-loader": "^1.2.0",
     "commitizen": "^2.8.2",
     "compression": "^1.6.2",
     "cross-spawn": "^5.1.0",
