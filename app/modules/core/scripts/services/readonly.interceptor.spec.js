@@ -118,7 +118,7 @@ describe('ReadonlyInterceptor', function () {
     it('does not intercept global status service post operation', function () {
       var config = {
         method: 'POST',
-        url: 'https://service-collaborationhelp.cisco.com/status',
+        url: 'https://statusbts.webex.com/status',
       };
       this.ReadonlyInterceptor.request(config);
       expect(this.$q.reject.calls.count()).toBe(0);
@@ -128,7 +128,7 @@ describe('ReadonlyInterceptor', function () {
     it('does not intercept global status service put operation', function () {
       var config = {
         method: 'PUT',
-        url: 'https://service-collaborationhelp.cisco.com/status',
+        url: 'https://statusbts.webex.com/status',
       };
       this.ReadonlyInterceptor.request(config);
       expect(this.$q.reject.calls.count()).toBe(0);
@@ -138,7 +138,7 @@ describe('ReadonlyInterceptor', function () {
     it('does not intercept global status service delete operation', function () {
       var config = {
         method: 'DELETE',
-        url: 'https://service-collaborationhelp.cisco.com/status',
+        url: 'https://statusbts.webex.com/status',
       };
       this.ReadonlyInterceptor.request(config);
       expect(this.$q.reject.calls.count()).toBe(0);
