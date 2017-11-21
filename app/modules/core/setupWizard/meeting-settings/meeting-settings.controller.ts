@@ -257,8 +257,8 @@ export class MeetingSettingsCtrl {
         _.forEach(transferredSitesArray, (site) => {
           if (!(_.some(this.sitesArray, { siteUrl: site.siteUrl }))) {
             const transferredSiteModel = _.clone(this.siteModel);
-            transferredSiteModel.siteUrl = site.siteUrl.replace(this.Config.siteDomainUrl.webexUrl, ''),
-              transferredSiteModel.timezone = this.findTimezoneObject(site.timezone);
+            transferredSiteModel.siteUrl = site.siteUrl.replace(this.Config.siteDomainUrl.webexUrl, '');
+            transferredSiteModel.timezone = this.findTimezoneObject(site.timezone);
             transferredSiteModel.setupType = this.Config.setupTypes.transfer;
             this.sitesArray.push(transferredSiteModel);
             const properties = _.assignIn(transferSiteDetails , { trackingId: this.Utils.extractTrackingIdFromResponse(response) });
