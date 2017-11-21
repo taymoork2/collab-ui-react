@@ -45,9 +45,7 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
     if (user && user.currentValue) {
       this.user = user.currentValue;
       this.isLicensed = this.userIsLicensed();
-      if (this.isLicensed) {
-        this.init();
-      }
+      this.init();
     }
   }
 

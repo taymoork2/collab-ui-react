@@ -2,7 +2,7 @@
   <div class="section-title-row">
     <span class="section-name" translate="cloudExtensions.cloudExtensions"></span>
   </div>
-  <p ng-if="!$ctrl.isLicensed" translate="cloudExtensions.noLicensedServices"></p>
+  <p ng-if="!$ctrl.isLicensed" translate="hercules.cloudExtensions.noLicensedServices"></p>
   <div class="feature-list cloud-extensions" ng-if="$ctrl.isLicensed">
     <ul>
       <li class="feature" ng-repeat="service in $ctrl.allServicesinOrg | filter: $ctrl.allEnabledServicesExceptUcFilter">
