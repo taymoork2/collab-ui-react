@@ -9973,6 +9973,7 @@
     "deviceNotSupported": "The {{deviceType}} is not yet able to observe this setting.",
     "settingsLock": "Settings Lock",
     "settingsLockUpdated": "Settings Lock updated",
+    "settingsLockTooltip": "Turn the settings lock on to prevent unintended changes on the device. Certain settings won’t be accessible.",
     "deviceApis": "Device APIs",
     "deviceApiViewEdit": "View/Edit Access"
   },

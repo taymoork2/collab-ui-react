@@ -21,7 +21,7 @@
   <div class="form-group" ng-if="$ctrl.shouldShowSettingsLockDown">
     <div class="col-sm-4 setting-with-tooltip">
       <label class="control-label" translate="deviceSettings.settingsLock"></label>
-      <i class="icon icon-information" tooltip-trigger="mouseenter" tooltip-placement="top-left" tooltip-class="setting-help-tooltip" tooltip-animation="true" tooltip="Turn the settings lock on to prevent unintended changes on the device. Certain settings won’t be accessible." tabindex="0" aria-label="Turn the settings lock on to prevent unintended changes on the device. Certain settings won’t be accessible."></i>
+      <i class="icon icon-information" tooltip-trigger="mouseenter" tooltip-placement="top-left" tooltip-class="setting-help-tooltip" tooltip-animation="true" tooltip="{{::'deviceSettings.settingsLockTooltip' | translate}}" tabindex="0" aria-label="{{::'deviceSettings.settingsLockTooltip' | translate}}"></i>
     </div>
     <div class="col-sm-8" >
       <cs-toggle-switch
