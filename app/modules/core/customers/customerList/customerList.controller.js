@@ -112,16 +112,18 @@ require('./_customer-list.scss');
           return 1;
         } else if (a.sortOrder === PartnerService.customerStatus.NOTE_DAYS_LEFT) {
           // Anything with 'days left' is sorted by the actual days, not the text
-          // Then lump all expired but within grace period trials together (-1)
-          // Then lump all expired trials together (-2)
+          // Then lump all expired but within grace period trials by how expired (-x days)
+          // Then lump all expired trials together (-9999)
           if (a.daysLeft < 0) {
-            modA = (rowA.entity.startDate && _.inRange(a.daysLeft, 0, Config.trialGracePeriod)) ? -1 : -2;
+            modA = (rowA.entity.startDate && _.inRange(a.daysLeft, 0, Config.trialGracePeriod)) ?
+              a.daysLeft : -9999;
           } else {
             modA = a.daysLeft;
           }
 
           if (b.daysLeft < 0) {
-            modB = (rowB.entity.startDate && _.inRange(b.daysLeft, 0, Config.trialGracePeriod)) ? -1 : -2;
+            modB = (rowB.entity.startDate && _.inRange(b.daysLeft, 0, Config.trialGracePeriod)) ?
+              b.daysLeft : -9999;
           } else {
             modB = b.daysLeft;
           }
@@ -297,7 +299,10 @@ require('./_customer-list.scss');
         }, {*/
           field: 'notes',
           displayName: 'notes',
-          cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showCustomerDetails(row.entity)" cell-value="row.entity.notes.text"></cs-grid-cell>',
+          cellTemplate: '<cs-grid-cell title="TOOLTIP" row="row" grid="grid" cell-click-function="grid.appScope.showCustomerDetails(row.entity)" cell-value="row.entity.notes.text"></cs-grid-cell>',
+          cellTooltip: function (row) {
+            return _.get(row, 'entity.notes.text');
+          },
           sortingAlgorithm: columnSort.notes,
         },
       ];
