@@ -49,6 +49,7 @@ export class QueryParser {
   public static readonly Field_UpgradeChannel = 'upgradechannel';
   public static readonly Field_ActiveInterface = 'activeinterface';
   public static readonly Field_ConnectionStatus = 'connectionstatus';
+  public static readonly Field_Tags = 'tags';
 
   private static validFieldNames = ['displayname',
     'cisuuid',
@@ -65,7 +66,7 @@ export class QueryParser {
     QueryParser.Field_ConnectionStatus,
     'sipurl',
     QueryParser.Field_ErrorCodes,
-    'tags'];
+    QueryParser.Field_Tags];
 
   public constructor(private searchTranslator: SearchTranslator) {
   }
