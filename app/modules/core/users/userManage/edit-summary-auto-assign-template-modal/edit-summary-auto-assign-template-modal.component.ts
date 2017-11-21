@@ -1,9 +1,10 @@
 import { ILicenseRequestItem, IUserEntitlementRequestItem, IAutoAssignTemplateRequestPayload } from 'modules/core/users/shared';
+import { LicenseChangeOperation } from 'modules/core/users/shared/onboard.interfaces';
 
 class EditSummaryAutoAssignTemplateModalController implements ng.IComponentController {
   private stateData: any;  // TODO: better type
-  private DEFAULT_TEMPLATE_NAME = 'Default';
-  private ADD_OPERATION = 'ADD';
+  private readonly DEFAULT_TEMPLATE_NAME = 'Default';
+  private readonly ADD_OPERATION: LicenseChangeOperation = 'ADD';
 
   /* @ngInject */
   constructor(

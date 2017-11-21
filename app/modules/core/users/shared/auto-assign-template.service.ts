@@ -2,15 +2,15 @@ import { IAutoAssignTemplateRequestPayload } from 'modules/core/users/shared/onb
 
 export class AutoAssignTemplateService {
 
-  private autoAssignTemplateUrl: string;
-
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
     private Authinfo,
     private UrlConfig,
-  ) {
-    this.autoAssignTemplateUrl = `${this.UrlConfig.getAdminServiceUrl()}/organizations/${this.Authinfo.getOrgId()}/templates`;
+  ) {}
+
+  private get autoAssignTemplateUrl(): string {
+    return `${this.UrlConfig.getAdminServiceUrl()}organizations/${this.Authinfo.getOrgId()}/templates`;
   }
 
   public save(payload: IAutoAssignTemplateRequestPayload): ng.IPromise<any> {
