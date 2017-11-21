@@ -149,8 +149,8 @@ export class DevicesCtrl {
     }
   }
 
-  public addToSearch(searchElement: SearchElement) {
-    this.searchInteraction.addToSearch(searchElement);
+  public addToSearch(searchElement: SearchElement, toggle: boolean) {
+    this.searchInteraction.addToSearch(searchElement, toggle);
   }
 
   public sortOrderChanged(field, order) {

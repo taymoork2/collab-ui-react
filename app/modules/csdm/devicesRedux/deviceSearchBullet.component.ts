@@ -38,12 +38,12 @@ export class DeviceSearchBullet implements ng.IComponentController {
     if (searchElement instanceof FieldQuery) {
       const parent = searchElement.getParent();
       if (parent instanceof OperatorOr) {
-        return parent.getFieldNameIfAllSubElementsAreSameField() ? '' : searchElement.getQueryPrefix();
+        return parent.getCommonField() ? '' : searchElement.getQueryPrefix();
       }
       return searchElement.field + '';
     }
-    if (this.searchElement instanceof OperatorOr) {
-      return this.searchElement.getFieldNameIfAllSubElementsAreSameField();
+    if (searchElement instanceof OperatorOr) {
+      return searchElement.getCommonField() + '';
     }
     return '';
   }
@@ -59,11 +59,11 @@ export class DeviceSearchBullet implements ng.IComponentController {
   public getTranslatedQueryPrefix(): string {
     const searchElement = this.searchElement;
 
-    if (!(searchElement instanceof FieldQuery) || _.isEmpty(searchElement.field)) {
+    if (_.isEmpty(searchElement.getCommonField())) {
       return '';
     }
 
-    return this.DeviceSearchTranslator.translateQueryField(searchElement.field + '') + searchElement.getMatchOperator();
+    return this.DeviceSearchTranslator.translateQueryField(searchElement.getCommonField() + '') + searchElement.getCommonMatchOperator();
   }
 }
 

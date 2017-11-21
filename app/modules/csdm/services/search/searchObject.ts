@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import { QueryParser } from './queryParser';
 import { SearchTranslator } from './searchTranslator';
-import { FieldQuery, OperatorAnd, SearchElement } from './searchElement';
+import { CollectionOperator, FieldQuery, OperatorAnd, SearchElement } from './searchElement';
 
 enum Aggregate {
   connectionStatus, product, productFamily, activeInterface, errorCodes, upgradeChannel, software, tag,
@@ -52,11 +52,7 @@ export class SearchObject {
     }
 
     if (elementToRemove.getParent() && elementToRemove.getParent().getExpressions()) {
-      const index = elementToRemove.getParent().getExpressions().indexOf(elementToRemove, 0);
-      if (index > -1) {
-        elementToRemove.getParent().getExpressions().splice(index, 1);
-      }
-
+      elementToRemove.removeFromParent();
       this.setQuery(this.parsedQuery.toQuery(), this.parsedQuery);
     } else {
       this.setQuery('');
@@ -115,7 +111,7 @@ export class SearchObject {
             alreadyEdited.replaceWith(parsedNewQuery);
           }
         } else {
-          this.addParsedSearchElement(parsedNewQuery);
+          this.addParsedSearchElement(parsedNewQuery, false);
         }
         this.setQuery(this.parsedQuery.toQuery(), this.parsedQuery);
 
@@ -128,14 +124,18 @@ export class SearchObject {
   public submitWorkingElement() {
     const alreadyEdited = SearchObject.findFirstElementMatching(this.parsedQuery, se => se.isBeingEdited());
     if (alreadyEdited) {
-      alreadyEdited.setBeingEdited(false);
-    }
-    if (alreadyEdited instanceof OperatorAnd) {
-      alreadyEdited.tryFlattenIntoParent();
+      this.removeSearchElement(alreadyEdited);
+      const duplicate = SearchObject.findFirstElementMatching(this.parsedQuery, se => {
+        return se && !se.isBeingEdited() && se.isEqual(alreadyEdited);
+      });
+      if (!duplicate) {
+        alreadyEdited.setBeingEdited(false);
+        this.addParsedSearchElement(alreadyEdited, false);
+      }
     }
   }
 
-  private static findFirstElementMatching(element: SearchElement, matchFunction: (se: SearchElement) => boolean): SearchElement | null {
+  public static findFirstElementMatching(element: SearchElement, matchFunction: (se: SearchElement) => boolean): SearchElement | null {
     if (!element) {
       return null;
     }
@@ -150,22 +150,34 @@ export class SearchObject {
     }).filter(e => e != null));
   }
 
-  public addParsedSearchElement(newElement: SearchElement) {
+  public addParsedSearchElement(newElement: SearchElement, toggle: boolean) {
     if (!this.parsedQuery) {
       this.parsedQuery = newElement;
+      this.setQuery(this.parsedQuery.toQuery(), this.parsedQuery);
       return;
     }
     if (this.parsedQuery.isEqual(newElement)) {
+      if (toggle) {
+        this.parsedQuery = new OperatorAnd([]);
+        this.setQuery(this.parsedQuery.toQuery(), this.parsedQuery);
+      }
       return;
     }
 
-    if (this.parsedQuery instanceof OperatorAnd) {
-      if (!this.parsedQuery.contains(newElement)) {
-        this.parsedQuery.addSubElement(newElement);
+    if (this.parsedQuery instanceof CollectionOperator) {
+      const equalEffectElement = this.parsedQuery.containsEffectOf(newElement);
+      if (equalEffectElement) {
+        if (toggle) {
+          equalEffectElement.removeFromParent();
+          this.setQuery(this.parsedQuery.toQuery(), this.parsedQuery);
+        }
+        return;
       }
+      this.parsedQuery.addSubElement(newElement);
     } else {
       this.parsedQuery = new OperatorAnd([this.parsedQuery, newElement]);
     }
+    newElement.tryFlattenIntoParent();
     this.setQuery(this.parsedQuery.toQuery(), this.parsedQuery);
   }
 

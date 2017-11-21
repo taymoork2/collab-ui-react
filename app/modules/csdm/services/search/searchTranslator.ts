@@ -140,8 +140,8 @@ export class SearchTranslator {
 
   private static queryFoundInFieldValue(query: string, exactMatch: boolean, fieldValue: string): boolean {
     return exactMatch ?
-      _.isEqual(_.lowerCase(query), _.lowerCase(fieldValue)) : //note: _.lowerCase, not toLower in search
-      (_.includes(_.lowerCase(fieldValue), _.lowerCase(query)));
+      _.isEqual(_.toLower(query), _.toLower(fieldValue)) :
+      (_.includes(_.toLower(fieldValue), _.toLower(query)));
   }
 
   public static getSearchField(translationKey: string): string {
@@ -267,8 +267,7 @@ export class SearchTranslator {
     const possibleTransKey = translatedFieldInfo.getValueTranslationKey(queryValue);
     const match = _(this.csdmPartOfTranslationTable)
       .filter(([tKey, tValue]) => {
-        //Using _.lowerCase in search match:
-        return _.isEqual(tKey, possibleTransKey) || _.isEqual(_.lowerCase(tValue), _.lowerCase(queryValue));
+        return _.isEqual(tKey, possibleTransKey) || _.isEqual(_.toLower(tValue), _.toLower(queryValue));
       })
       .map(([tKey]) => SearchTranslator.getSearchFieldValue(tKey, searchFieldLower))
       .first();
