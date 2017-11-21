@@ -98,6 +98,7 @@
     require('modules/gemini/reports').default,
     require('modules/account-linking/banner').default,
     require('modules/core/siteList/webex-site').default,
+    require('modules/core/overview/notifications').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('addressparser', require('emailjs-addressparser'));

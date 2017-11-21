@@ -1737,7 +1737,9 @@
     "setUpAllCalendarsNoneIsSetup": "Use it with Exchange, Google Calendar or Office365.",
     "setUpCarePrimaryNotification": "Your Organization is enabled for Cisco Spark Care.",
     "setUpCareSecondaryNotification": "Looks like you haven’t set up Cisco Spark Care yet!",
-    "setUpCareLinkText": "Setup Care Service"
+    "setUpCareLinkText": "Setup Care Service",
+    "autoAssignText": "Manage your licenses in a productive way with the Auto-Assign template.",
+    "autoAssignLink": "Set Up Now"
   },
   "inviteModal": {
     "title": "Service Entitlement",
