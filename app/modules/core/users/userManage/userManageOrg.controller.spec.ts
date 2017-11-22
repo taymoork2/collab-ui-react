@@ -1,11 +1,21 @@
-'use strict';
+import moduleName from './index';
 
-describe('UserManageOrgController', function () {
+describe('UserManageOrgController', () => {
   ///////////////////
 
   function init() {
-    this.initModules('Core', 'Huron', 'Sunlight');
-    this.injectDependencies('$q', '$scope', '$state', '$stateParams', 'Analytics', 'DirSyncService', 'FeatureToggleService', 'OnboardService', 'Orgservice', 'UserCsvService');
+    this.initModules(moduleName);
+    this.injectDependencies(
+     '$q',
+     '$scope',
+     '$state',
+     'Analytics',
+     'DirSyncService',
+     'FeatureToggleService',
+     'OnboardService',
+     'Orgservice',
+     'UserCsvService',
+    );
 
     this.$state = {
       modal: {

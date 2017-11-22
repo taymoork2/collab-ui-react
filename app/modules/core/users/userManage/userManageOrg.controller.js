@@ -1,5 +1,3 @@
-require('./_user-manage.scss');
-
 // TODO: convert to TS and register to './index.ts'
 (function () {
   'use strict';
