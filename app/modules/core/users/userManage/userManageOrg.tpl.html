@@ -82,7 +82,7 @@
     <div class="columns medium-3 manage-modal-label sync-status">
       <h5 translate="userManage.org.directorySynchronization"></h5>
       <span class="manage-modal-detail ds-sync">
-        <i class="icon icon-circle icon-circle-manage" 
+        <i class="icon icon-circle icon-circle-manage"
           ng-class="{'working': umoc.isDirSyncEnabled, 'disabled': !umoc.isDirSyncEnabled}">
         </i>
         <h6 ng-if="umoc.isDirSyncEnabled" translate="userManage.org.enabled"></h6>
@@ -91,7 +91,7 @@
     </div>
     <div class="columns medium-5 manage-modal-dots">
       <span cs-dropdown class="actions-menu">
-        <button cs-dropdown-toggle class="btn--none dropdown-toggle icon icon-three-dots" 
+        <button cs-dropdown-toggle class="btn--none dropdown-toggle icon icon-three-dots"
           ng-click="$event.stopPropagation()">
         </button>
         <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
@@ -110,31 +110,16 @@
     <div class="columns medium-4 manage-modal-header">
       <h4 translate="userManage.org.licenses"></h4>
     </div>
-    <div class="columns manage-modal-label" 
+    <div class="columns manage-modal-label"
       ng-class="{'medium-3': umoc.isAutoAssignTemplateEnabled, 'medium-8': !umoc.isAutoAssignTemplateEnabled}">
       <h5 translate="userManage.org.autoAssignLicenses"></h5>
-      <h6 class="manage-modal-detail manage-modal-detail--link" translate="userManage.org.setUpAutoAssignTemplate" 
+      <h6 class="manage-modal-detail manage-modal-detail--link" translate="userManage.org.setUpAutoAssignTemplate"
         ng-click="umoc.onNext(umoc.ManageType.AUTO_ASSIGN_TEMPLATE)">
       </h6>
     </div>
-     <div ng-if="umoc.isAutoAssignTemplateEnabled" class="columns medium-5 manage-modal-dots">
-      <span cs-dropdown class="actions-menu">
-        <button cs-dropdown-toggle class="btn--none dropdown-toggle icon icon-three-dots" 
-          ng-click="$event.stopPropagation();">
-        </button>
-        <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
-          <li class="menu-item">
-            <a href ng-click="" translate="userManage.org.moreOptions.modifyAutoAssign"></a>
-          </li>
-          <li class="menu-item">
-            <a href ng-click="" translate="userManage.org.moreOptions.deactivateAutoAssign"></a>
-          </li>
-          <li class="menu-item">
-            <a href ng-click="" translate="userManage.org.moreOptions.deleteAutoAssign"></a>
-          </li>
-        </ul>
-      </span>
-    </div>
+    <auto-assign-template-manage-options
+      ng-if="umoc.isAutoAssignTemplateEnabled">
+    </auto-assign-template-manage-options>
   </div>
   <hr>
   <div class="row">
@@ -143,8 +128,8 @@
       <h4 class="modify-users-section--label" translate="userManage.org.manualLabelNew"></h4>
       <h6 class="modify-users-section--details" translate="userManage.org.manualDetailsNew" translate-values="{maxUsersInManual: umoc.maxUsersInManual}"></h6>
     </div>
-    <div class="columns medium-4 modify-users-section modify-users-section--middle-box" 
-        ng-click="umoc.onNext(umoc.ManageType.BULK)">
+    <div class="columns medium-4 modify-users-section modify-users-section--middle-box"
+      ng-click="umoc.onNext(umoc.ManageType.BULK)">
       <h4 class="modify-users-section--label" translate="userManage.org.bulkLabelNew"></h4>
       <h6 class="modify-users-section--details" translate="userManage.org.bulkDetailsNew" translate-values="{maxUsersInCSV: umoc.maxUsersInCSV}"></h6>
       <p class="csv-export-link">
