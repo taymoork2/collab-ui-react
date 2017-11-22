@@ -1,5 +1,6 @@
 require('./_user-manage.scss');
 
+// TODO: convert to TS and register to './index.ts'
 (function () {
   'use strict';
 
@@ -7,8 +8,11 @@ require('./_user-manage.scss');
     .controller('UserManageOrgController', UserManageOrgController);
 
   /* @ngInject */
-  function UserManageOrgController($q, $state, Analytics, DirSyncService, FeatureToggleService, OnboardService, Orgservice, UserCsvService) {
+  function UserManageOrgController($q, $state, Analytics, AutoAssignTemplateService, DirSyncService, FeatureToggleService, OnboardService, Orgservice, UserCsvService) {
+    var DEFAULT_AUTO_ASSIGN_TEMPLATE = 'Default';
     var vm = this;
+
+    vm.ManageType = require('./userManage.keys').ManageType;
 
     vm.onInit = onInit;
     vm.manageType = 'manual';
@@ -19,27 +23,64 @@ require('./_user-manage.scss');
     vm.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
     vm.convertableUsers = false;
     vm.isAtlasF3745AutoAssignToggle = false;
-    vm.isAutoAssignTemplateEnabled = false;
-    vm.onInit();
+    vm.autoAssignTemplates = {};
+    vm.isAutoAssignTemplateEnabled = isAutoAssignTemplateEnabled;
 
     var isAtlasEmailSuppressToggle = false;
-    vm.ManageType = require('./userManage.keys').ManageType;
+
+    vm.onInit();
 
     //////////////////
     function onInit() {
-      Orgservice.getUnlicensedUsers(function (data) {
-        if (data.success && data.totalResults > 0) {
-          vm.convertableUsers = true;
-        }
-      });
+      initConvertableUsers();
+      initFeatureToggles()
+        .then(function () {
+          initDefaultAutoAssignTemplate();
+        });
+    }
 
-      $q.all({
+    function initFeatureToggles() {
+      return $q.all({
         atlasEmailSuppress: FeatureToggleService.atlasEmailSuppressGetStatus(),
         atlasF3745AutoAssignLicenses: FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus(),
       }).then(function (toggles) {
         isAtlasEmailSuppressToggle = toggles.atlasEmailSuppress;
         vm.isAtlasF3745AutoAssignToggle = toggles.atlasF3745AutoAssignLicenses;
       });
+    }
+
+    function initConvertableUsers() {
+      Orgservice.getUnlicensedUsers(function (data) {
+        if (data.success && data.totalResults > 0) {
+          vm.convertableUsers = true;
+        }
+      });
+    }
+
+    function initDefaultAutoAssignTemplate() {
+      if (!vm.isAtlasF3745AutoAssignToggle) {
+        return;
+      }
+      AutoAssignTemplateService.getTemplates()
+        .then(function (response) {
+          var templates = _.get(response, 'data');
+          var foundTemplate = _.find(templates, { name: DEFAULT_AUTO_ASSIGN_TEMPLATE });
+          _.set(vm.autoAssignTemplates, DEFAULT_AUTO_ASSIGN_TEMPLATE, foundTemplate);
+        })
+        .catch(function (response) {
+          // 404's when fetching auto-assign templates will be fairly common
+          if (response.status === 404) {
+            return;
+          }
+        });
+    }
+
+    function getAutoAssignTemplate() {
+      return _.get(vm.autoAssignTemplates, DEFAULT_AUTO_ASSIGN_TEMPLATE);
+    }
+
+    function isAutoAssignTemplateEnabled() {
+      return !!getAutoAssignTemplate();
     }
 
     function cancelModal() {
