@@ -27,7 +27,7 @@ export class SearchObject {
   public hasError: boolean;
   public lastGoodQuery: SearchElement;
   private parsedQuery: SearchElement;
-  public currentFilterValue: string;
+  private workingElementText: string;
 
   private constructor(private queryParser: QueryParser) {
   }
@@ -95,6 +95,7 @@ export class SearchObject {
   }
 
   public setWorkingElementText(translatedQuery: string) {
+    this.workingElementText = translatedQuery;
     const alreadyEdited = SearchObject.findFirstElementMatching(this.parsedQuery, se => se.isBeingEdited());
     if (_.isEmpty(translatedQuery) && alreadyEdited) {
       this.removeSearchElement(alreadyEdited);
@@ -119,6 +120,14 @@ export class SearchObject {
         this.hasError = true;
       }
     }
+  }
+
+  public getWorkingElement(): SearchElement | null {
+    return SearchObject.findFirstElementMatching(this.parsedQuery, se => se.isBeingEdited());
+  }
+
+  public getWorkingElementRawText(): string {
+    return this.workingElementText;
   }
 
   public submitWorkingElement() {
@@ -177,13 +186,10 @@ export class SearchObject {
     } else {
       this.parsedQuery = new OperatorAnd([this.parsedQuery, newElement]);
     }
-    newElement.tryFlattenIntoParent();
+    if (!newElement.isBeingEdited()) {
+      newElement.tryFlattenIntoParent();
+    }
     this.setQuery(this.parsedQuery.toQuery(), this.parsedQuery);
-  }
-
-  public setFilterValue(filterValue: string) {
-    this.currentFilterValue = filterValue;
-    this.from = 0;
   }
 
   public getTranslatedSearchElement(deviceSearchTranslator: SearchTranslator | null): SearchElement | null {
@@ -192,20 +198,9 @@ export class SearchObject {
       ? null
       : this.lastGoodQuery;
 
-    const translatedQuery = (query && deviceSearchTranslator)
+    return (query && deviceSearchTranslator)
       ? deviceSearchTranslator.translateQuery(query)
       : query;
-
-    if (this.currentFilterValue) {
-      const parsedFilter = this.queryParser.parseQueryString(this.currentFilterValue);
-      if (translatedQuery) {
-        return new OperatorAnd([translatedQuery, parsedFilter]);
-      } else {
-        return this.queryParser.parseQueryString(this.currentFilterValue);
-      }
-    } else {
-      return translatedQuery;
-    }
   }
 
   public getTranslatedQueryString(deviceSearchTranslator: SearchTranslator | null): string {
@@ -215,18 +210,9 @@ export class SearchObject {
 
   public equals(other: SearchObject): boolean {
     return other && other.query === (this.query || '')
-      && other.currentFilterValue === this.currentFilterValue
       && other.from === this.from
       && other.sortField === this.sortField
       && other.sortOrder === this.sortOrder;
-  }
-
-  public cloneWithoutFilters(): SearchObject {
-    const myClone = this.clone();
-    myClone.setFilterValue('');
-    myClone.size = 0;
-    myClone.from = 0;
-    return myClone;
   }
 
   public clone(): SearchObject {
