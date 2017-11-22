@@ -4,8 +4,7 @@ require('./_user-manage.scss');
 (function () {
   'use strict';
 
-  angular.module('Core')
-    .controller('UserManageOrgController', UserManageOrgController);
+  module.exports = UserManageOrgController;
 
   /* @ngInject */
   function UserManageOrgController($q, $state, Analytics, AutoAssignTemplateService, DirSyncService, FeatureToggleService, OnboardService, Orgservice, UserCsvService) {

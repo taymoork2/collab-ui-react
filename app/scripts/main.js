@@ -24,6 +24,7 @@
     require('modules/core/notifications').default,
     require('modules/core/users/userAdd').default,
     require('modules/core/users/userAdd/hybrid-services-entitlements-panel').default,
+    require('modules/core/users/userManage').default,
     'core.pageparam',
     'core.previousstate',
     'core.trackingId',

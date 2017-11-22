@@ -10,4 +10,5 @@ export default angular
     editSummaryAutoAssignTemplateModalModuleName,
     autoAssignTemplateManageOptionsModuleName,
   ])
+  .controller('UserManageOrgController', require('./userManageOrg.controller'))
   .name;
