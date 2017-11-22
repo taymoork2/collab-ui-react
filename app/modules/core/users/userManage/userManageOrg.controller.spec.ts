@@ -6,15 +6,16 @@ describe('UserManageOrgController', () => {
   function init() {
     this.initModules(moduleName);
     this.injectDependencies(
-     '$q',
-     '$scope',
-     '$state',
-     'Analytics',
-     'DirSyncService',
-     'FeatureToggleService',
-     'OnboardService',
-     'Orgservice',
-     'UserCsvService',
+      '$q',
+      '$scope',
+      '$state',
+      'Analytics',
+      'AutoAssignTemplateService',
+      'DirSyncService',
+      'FeatureToggleService',
+      'OnboardService',
+      'Orgservice',
+      'UserCsvService',
     );
 
     this.$state = {
@@ -191,6 +192,54 @@ describe('UserManageOrgController', () => {
     this.controller.onNext();
     expect(this.$state.go).toHaveBeenCalledWith('users.manage.edit-auto-assign-template-modal', {
       prevState: 'users.manage.picker',
+    });
+  });
+
+  describe('initFeatureToggles():', function () {
+    it('should fetch feature toggles"', function () {
+      spyOn(this.FeatureToggleService, 'atlasEmailSuppressGetStatus');
+      spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus');
+      initController.call(this);
+      this.controller.initFeatureToggles();
+      expect(this.FeatureToggleService.atlasEmailSuppressGetStatus).toHaveBeenCalled();
+      expect(this.FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus).toHaveBeenCalled();
+    });
+  });
+
+  describe('initConvertableUsers():', function () {
+    it('should call "Orgservice.getUnlicensedUsers()"', function () {
+      spyOn(this.Orgservice, 'getUnlicensedUsers');
+      initController.call(this);
+      this.controller.initConvertableUsers();
+      expect(this.Orgservice.getUnlicensedUsers).toHaveBeenCalled();
+    });
+  });
+
+  describe('initDefaultAutoAssignTemplate():', function () {
+    it('should call early out if "isAtlasF3745AutoAssignToggle" is not true', function () {
+      initController.call(this);
+      this.controller.isAtlasF3745AutoAssignToggle = false;
+      expect(this.controller.initDefaultAutoAssignTemplate()).toBe(undefined);
+    });
+
+    it('should set "autoAssignTemplates" property if "AutoAssignTemplateService.getTemplates()" responds with appropriate data', function () {
+      initController.call(this);
+      this.controller.isAtlasF3745AutoAssignToggle = true;
+      spyOn(this.AutoAssignTemplateService, 'getTemplates').and.returnValue(this.$q.resolve({
+        data: [{
+          name: 'Default',
+          foo: 'bar',
+        }],
+      }));
+
+      this.controller.initDefaultAutoAssignTemplate();
+      this.$scope.$apply();
+      expect(this.controller.autoAssignTemplates).toEqual({
+        Default: {
+          name: 'Default',
+          foo: 'bar',
+        },
+      });
     });
   });
 });

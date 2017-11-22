@@ -24,6 +24,10 @@
     vm.isAutoAssignTemplateEnabled = isAutoAssignTemplateEnabled;
     vm.recvDelete = recvDelete;
 
+    vm.initFeatureToggles = initFeatureToggles;
+    vm.initConvertableUsers = initConvertableUsers;
+    vm.initDefaultAutoAssignTemplate = initDefaultAutoAssignTemplate;
+
     var isAtlasEmailSuppressToggle = false;
 
     vm.onInit();
