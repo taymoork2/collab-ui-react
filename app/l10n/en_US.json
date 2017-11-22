@@ -224,6 +224,12 @@
         "modifyAutoAssign": "Modify Auto-Assign Template",
         "deactivateAutoAssign": "Deactivate Auto-Assign",
         "deleteAutoAssign": "Delete Auto-Assign Template"
+      },
+      "deleteAutoAssignModal": {
+        "title": "Delete Auto-Assign Template",
+        "description": "Template will be deleted and licenses won't be assigned to new users automatically. Existing users' licenses won't be affected. Do you want to continue?",
+        "deleteSuccess": "Template was deleted successfully.",
+        "deleteError": "Template failed to delete."
       }
     },
     "ad": {
