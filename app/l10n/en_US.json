@@ -2304,11 +2304,11 @@
     },
     "deactivateServiceSingleCluster": {
       "title": "Deactivate {{serviceName}}",
-      "intro": "You are about to remove the following Hybrid Service:",
-      "fromCluster": "from the Expressway cluster {{clusterName}}.",
-      "wipeSettingsWarning": "This action will remove {{connectorName}} from {{clusterName}} and delete all of the connector's local settings.",
-      "notDeregistered": "{{clusterName}} will not be deregistered from Cisco Collaboration Cloud, and the Expressway cluster can still be used for hosting Hybrid Services.",
-      "confirmButton": "Confirm Deactivation"
+      "intro": "You are about to remove {{serviceName}} from the Expressway cluster {{clusterName}}.",
+      "settingsWillBeWiped": "This action will remove {{connectorName}} and delete all of the connector's local settings.",
+      "notDeregistered": "{{clusterName}} will still be registered to Cisco Collaboration Cloud, and the Expressway cluster can still be used for hosting Hybrid Services.",
+      "lastClusterWarning": "This is the last cluster that's running {{connectorName}} for this organization. If you deactivate {{connectorName}}, the service will be unavailable for your users until you add more resources. To completely deactivate the service for this organization and its users, go to the {{serviceName}} settings page.",
+      "iUnderstand": "I understand"
     },
     "clusters": {
       "listing": {

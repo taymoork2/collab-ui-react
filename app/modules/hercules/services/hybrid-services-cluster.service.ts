@@ -319,6 +319,25 @@ export class HybridServicesClusterService {
       });
   }
 
+  public hasOnlyOneExpresswayWithConnectorProvisioned(connectorType: ConnectorType): ng.IPromise<boolean> {
+    return this.getAll()
+      .then((clusters) => {
+        return _.compact(_.map(clusters, (cluster) => {
+          if (cluster.targetType === 'c_mgmt') {
+            return cluster.provisioning;
+          }
+        }));
+      })
+      .then((provisioningData) => {
+        return _.map(provisioningData, (services: IConnectorProvisioning) => {
+          return _.some(services, (service) => service.connectorType === connectorType);
+        });
+      })
+      .then((hasConnectorProvisioned: boolean[]) => {
+        return _.sumBy(hasConnectorProvisioned, x => x === true ? 1 : 0) === 1;
+      });
+  }
+
   public addExtendedPropertiesToClusters(clusters: IClusterWithExtendedConnectors[]): ng.IPromise<IExtendedClusterFusion[]> {
     const promises = _.map(clusters, (cluster) => {
       const isClusterEmpty = _.size(cluster.connectors) === 0;

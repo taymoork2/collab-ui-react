@@ -1,5 +1,6 @@
 import { Notification } from 'modules/core/notifications';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
+import { ConnectorType } from 'modules/hercules/hybrid-services.types';
 
 interface IResourceGroupOptions {
   label: string;
@@ -205,14 +206,13 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
     });
   }
 
-  public deactivateService(serviceId, cluster) {
+  public deactivateService(connectorType: ConnectorType, cluster) {
     this.$modal.open({
       template: require('modules/hercules/resource-settings/deactivate-service-on-expressway-modal.html'),
       controller: 'DeactivateServiceOnExpresswayModalController',
-      controllerAs: 'deactivateServiceOnExpresswayModal',
-      type: 'small',
+      controllerAs: 'vm',
       resolve: {
-        serviceId: () => serviceId,
+        connectorType: () => connectorType,
         clusterName: () => cluster.name,
         clusterId: () => cluster.id,
       },
