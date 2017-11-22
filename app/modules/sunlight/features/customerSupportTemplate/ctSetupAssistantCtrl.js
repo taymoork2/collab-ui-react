@@ -1084,20 +1084,11 @@
     }
 
     function cancelModal() {
-      var modelText = $stateParams.isEditFeature ? {
-        bodyMessage: $translate.instant('careChatTpl.ctEditBody'),
-        trailingMessage: $translate.instant('careChatTpl.ctEditMessage'),
-      } : {
-        bodyMessage: $translate.instant('careChatTpl.ctCreationBody'),
-        trailingMessage: $translate.instant('careChatTpl.ctCreationMessage'),
-      };
-
+      var featureType = $translate.instant('sunlightDetails.newFeatures.' + vm.selectedMediaType + 'Type');
+      var cancelDialogKey = $stateParams.isEditFeature ? 'careChatTpl.cancelEditDialog' : 'careChatTpl.cancelCreateDialog';
       vm.cancelModalText = {
         cancelHeader: $translate.instant('careChatTpl.cancelHeader'),
-        cancelDialog: $translate.instant('careChatTpl.cancelDialog', {
-          bodyMessage: modelText.bodyMessage,
-          trailingMessage: modelText.trailingMessage,
-        }),
+        cancelDialog: $translate.instant(cancelDialogKey, { featureName: featureType }),
         continueButton: $translate.instant('careChatTpl.continueButton'),
         confirmButton: $translate.instant('careChatTpl.confirmButton'),
       };

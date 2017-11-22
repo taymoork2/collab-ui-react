@@ -21,11 +21,13 @@ var VirtualAssistantTemplateCreation = function () {
 
   // Name page info
   this.name = element(by.name('nameInput'));
+  this.nameHint = element(by.css('.ct-input-hint'));
 
   // Email page info
   this.email = element(by.name('input'));
   this.validEmailExtension = element(by.css('.valid-extension'));
   this.invalidEmailExtension = element(by.css('.invalid-extension'));
+  this.disabledEmailExtension = element(by.css('.disabled-extension'));
   this.visibleCheckIcon = element(by.css('.icon.icon-check.icon-2x.visible'));
   this.errorMessage = element(by.css('.ct-input-error'));
 
@@ -36,6 +38,7 @@ var VirtualAssistantTemplateCreation = function () {
 
   // Summary Page
   this.finishBtn = element(by.id('vaSetupFinishBtn'));
+  this.editWarning = element(by.css('.edit-message'));
 
   // Cancel Modal
   this.cancelBtn = element(by.id('cancelChat'));
