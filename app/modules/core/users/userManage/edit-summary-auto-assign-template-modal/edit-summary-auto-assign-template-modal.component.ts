@@ -2,6 +2,7 @@ import { ILicenseRequestItem, IUserEntitlementRequestItem, IAutoAssignTemplateRe
 import { LicenseChangeOperation } from 'modules/core/users/shared/onboard.interfaces';
 
 class EditSummaryAutoAssignTemplateModalController implements ng.IComponentController {
+  private dismiss: Function;
   private stateData: any;  // TODO: better type
   private readonly DEFAULT_TEMPLATE_NAME = 'Default';
   private readonly ADD_OPERATION: LicenseChangeOperation = 'ADD';
@@ -10,11 +11,17 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
   constructor(
     private $state: ng.ui.IStateService,
     private Notification,
+    private Analytics,
     private AutoAssignTemplateService,
   ) {}
 
   public $onInit(): void {
     this.stateData = _.get(this.$state, 'params.stateData');
+  }
+
+  public dismissModal(): void {
+    this.Analytics.trackAddUsers(this.Analytics.eventNames.CANCEL_MODAL);
+    this.dismiss();
   }
 
   public back(): void {
@@ -80,5 +87,7 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
 export class EditSummaryAutoAssignTemplateModalComponent implements ng.IComponentOptions {
   public controller = EditSummaryAutoAssignTemplateModalController;
   public template = require('./edit-summary-auto-assign-template-modal.html');
-  public bindings = {};
+  public bindings = {
+    dismiss: '&?',
+  };
 }
