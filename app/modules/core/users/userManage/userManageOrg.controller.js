@@ -25,6 +25,7 @@ require('./_user-manage.scss');
     vm.isAtlasF3745AutoAssignToggle = false;
     vm.autoAssignTemplates = {};
     vm.isAutoAssignTemplateEnabled = isAutoAssignTemplateEnabled;
+    vm.recvDelete = recvDelete;
 
     var isAtlasEmailSuppressToggle = false;
 
@@ -81,6 +82,10 @@ require('./_user-manage.scss');
 
     function isAutoAssignTemplateEnabled() {
       return !!getAutoAssignTemplate();
+    }
+
+    function recvDelete() {
+      initDefaultAutoAssignTemplate();
     }
 
     function cancelModal() {
