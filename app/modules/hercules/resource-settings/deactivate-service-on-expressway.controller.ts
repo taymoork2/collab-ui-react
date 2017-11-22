@@ -1,25 +1,38 @@
-import { Notification } from 'modules/core/notifications';
+import NotificationModuleName, { Notification } from 'modules/core/notifications';
+import { ConnectorType } from 'modules/hercules/hybrid-services.types';
+import HybridServicesClusterServiceModuleName, { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 export class DeactivateServiceOnExpresswayModalController implements ng.IComponentController {
+
   /* @ngInject */
   constructor(
-    private $modalInstance,
+    private $modalInstance: ng.ui.bootstrap.IModalInstanceService,
     private $translate: ng.translate.ITranslateService,
-    private HybridServicesUtilsService,
-    private HybridServicesClusterService,
+    private HybridServicesClusterService: HybridServicesClusterService,
     private Notification: Notification,
-    private serviceId,
-    public clusterId,
-    public clusterName,
-  ) {}
+    private connectorType: ConnectorType,
+    public clusterId: string,
+    public clusterName: string,
+  ) {
+    this.init();
+  }
 
-  public localizedConnectorName: string = this.$translate.instant('hercules.connectorNameFromConnectorType.' + this.serviceId);
-  public localizedServiceName: string = this.$translate.instant('hercules.serviceNameFromConnectorType.' + this.serviceId);
+  public localizedConnectorName: string = this.$translate.instant('hercules.connectorNameFromConnectorType.' + this.connectorType);
+  public localizedServiceName: string = this.$translate.instant('hercules.serviceNameFromConnectorType.' + this.connectorType);
   public loading: boolean = false;
+  public isLastClusterInOrg = false;
+  public hasCheckedWarning = false;
+
+  private init() {
+    this.HybridServicesClusterService.hasOnlyOneExpresswayWithConnectorProvisioned(this.connectorType)
+      .then((isLast) => {
+        this.isLastClusterInOrg = isLast;
+      });
+  }
 
   public deactivateService() {
     this.loading = true;
-    this.HybridServicesClusterService.deprovisionConnector(this.clusterId, this.serviceId)
+    this.HybridServicesClusterService.deprovisionConnector(this.clusterId, this.connectorType)
       .then(this.$modalInstance.close)
       .catch((error: any): void => {
         this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
@@ -29,13 +42,14 @@ export class DeactivateServiceOnExpresswayModalController implements ng.ICompone
       });
   }
 
-  public getIconClassForService() {
-    return this.HybridServicesUtilsService.serviceId2Icon(this.HybridServicesUtilsService.connectorType2ServicesId(this.serviceId)[0]);
-  }
 }
 
 export default angular
-  .module('Hercules')
+  .module('hercules.deactivate-service-on-expressway', [
+    require('angular-translate'),
+    HybridServicesClusterServiceModuleName,
+    NotificationModuleName,
+  ])
   .controller('DeactivateServiceOnExpresswayModalController', DeactivateServiceOnExpresswayModalController)
   .name;
 
