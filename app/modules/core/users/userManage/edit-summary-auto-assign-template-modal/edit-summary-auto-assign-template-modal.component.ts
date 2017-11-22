@@ -6,6 +6,7 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
   private stateData: any;  // TODO: better type
   private readonly DEFAULT_TEMPLATE_NAME = 'Default';
   private readonly ADD_OPERATION: LicenseChangeOperation = 'ADD';
+  public saveLoading = false;
 
   /* @ngInject */
   constructor(
@@ -31,6 +32,7 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
   }
 
   public save(): void {
+    this.saveLoading = true;
     const payload: IAutoAssignTemplateRequestPayload = this.mkPayload();
     this.AutoAssignTemplateService.saveTemplate(payload)
       .then(() => {
@@ -39,6 +41,9 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
       })
       .catch((response) => {
         this.Notification.errorResponse(response, 'userManage.autoAssignTemplate.editSummary.saveError');
+      })
+      .finally(() => {
+        this.saveLoading = false;
       });
   }
 
