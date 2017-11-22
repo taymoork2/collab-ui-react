@@ -153,7 +153,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     this.searchDelayTimer = this.$timeout(() => {
       this.performSearch(searchClone); //TODO avoid at now
       this.lastSearchObject = searchClone;
-      this.suggestions.onSearchChanged(this.getBullets(), this.searchObject);
+      this.suggestions.onSearchChanged(this.searchObject);
     }, DeviceSearch.SEARCH_DELAY_MS);
   }
 

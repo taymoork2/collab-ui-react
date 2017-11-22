@@ -36,7 +36,7 @@ export interface ISuggestionDropdown {
                                        searchResult: SearchResult | undefined,
                                        searchObject: SearchObject): void;
 
-  onSearchChanged(searchElements: SearchElement[], searchObject: SearchObject): void;
+  onSearchChanged(searchObject: SearchObject): void;
 }
 
 export class SuggestionDropdown implements ISuggestionDropdown {
@@ -83,9 +83,11 @@ export class SuggestionDropdown implements ISuggestionDropdown {
     }
   }
 
-  public onSearchChanged(searchElements: SearchElement[], searchObject: SearchObject) {
-    this.currentBullets = searchElements;
+  public onSearchChanged(searchObject: SearchObject) {
     this.searchObject = searchObject;
+    this.currentBullets = _.filter(searchObject.getBullets(), (bullet) => {
+      return !bullet.isBeingEdited();
+    });
     this.removeIrrelevantSuggestions();
   }
 
