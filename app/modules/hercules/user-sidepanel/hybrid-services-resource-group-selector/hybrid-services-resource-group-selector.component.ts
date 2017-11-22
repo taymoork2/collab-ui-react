@@ -9,6 +9,7 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
   private userId: string;
   private resourceGroupId: string;
   private serviceId: HybridServiceId;
+  private userOwnedByCCC: boolean;
   private connectorType: ConnectorType | undefined;
 
   public localizedConnectorName: string;
@@ -42,7 +43,7 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
   }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
-    const { userId, resourceGroupId, serviceId } = changes;
+    const { userId, resourceGroupId, serviceId, userOwnedByCCC } = changes;
     if (userId && userId.currentValue) {
       this.userId = userId.currentValue;
     }
@@ -52,6 +53,9 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
     if (serviceId && serviceId.currentValue) {
       this.serviceId = serviceId.currentValue;
       this.connectorType = this.HybridServicesUtilsService.serviceId2ConnectorType(this.serviceId);
+    }
+    if (userOwnedByCCC && userOwnedByCCC.currentValue) {
+      this.userOwnedByCCC = userOwnedByCCC.currentValue;
     }
   }
 
@@ -164,10 +168,11 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
 
 export class HybridServicesResourceGroupSelectorComponent implements ng.IComponentOptions {
   public controller = HybridServicesResourceGroupSelectorCtrl;
-  public template = require('modules/hercules/user-sidepanel/hybrid-services-resource-group-selector/hybrid-services-resource-group-selector.component.html');
+  public template = require('./hybrid-services-resource-group-selector.component.html');
   public bindings = {
     userId: '<',
     resourceGroupId: '<',
     serviceId: '<',
+    userOwnedByCCC: '<',
   };
 }

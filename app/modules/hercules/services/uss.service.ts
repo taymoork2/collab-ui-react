@@ -33,6 +33,7 @@ export interface IUserProps {
 }
 
 export interface IUserStatusWithExtendedMessages extends IUserStatus {
+  owner: string;
   messages: IMessageExtended[];
   hasWarnings?: boolean;
 }

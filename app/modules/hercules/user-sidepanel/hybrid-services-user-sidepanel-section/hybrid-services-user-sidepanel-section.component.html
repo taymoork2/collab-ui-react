@@ -8,7 +8,7 @@
       <li class="feature" ng-repeat="service in $ctrl.allServicesinOrg | filter: $ctrl.allEnabledServicesExceptUcFilter">
         <a href id="link_{{service.id}}"
            ng-hide="service.id === 'spark-hybrid-impinterop' && !$ctrl.atlasHybridImpFeatureToggle"
-           ui-sref="user-overview.hybrid-services-{{service.id}}({ extensionId: service.id, extensions: $ctrl.allServicesinOrg, userUpdatedCallback: $ctrl.userUpdatedCallback })">
+           ui-sref="user-overview.hybrid-services-{{service.id}}({ userUpdatedCallback: $ctrl.userUpdatedCallback })">
           <i class="feature-icon" ng-class="$ctrl.serviceIcon(service.id)"></i>
           <span class="feature-name" translate="hercules.serviceNames.{{service.id}}"></span>
           <span class="feature-status has-warnings-icon" ng-if="service.userIsEntitled && service.status && service.status.hasWarnings"><i class="icon icon-warning"></i></span>

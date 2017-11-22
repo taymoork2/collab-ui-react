@@ -1556,7 +1556,7 @@
             params: {
               extensionId: {},
               extensions: {},
-              userUpdatedCallback: Function,
+              userUpdatedCallback: _.noop,
             },
           })
           .state('user-overview.hybrid-services-spark-hybrid-impinterop.history', {
@@ -1574,19 +1574,25 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-cal', {
-            views: {
-              'side-panel-container@user-overview': {
-                template: require('modules/hercules/user-sidepanel/calendarServicePreview.tpl.html'),
-                controller: 'CalendarServicePreviewCtrl',
-              },
-            },
+            template: '<hybrid-calendar-service-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)" preferred-web-ex-site-name="$resolve.preferredWebExSiteName"></hybrid-calendar-service-user-settings>',
             data: {},
-            resolve: {
-              displayName: translateDisplayName('hercules.serviceNames.squared-fusion-cal'),
-            },
             params: {
-              extensionId: {},
-              extensions: {},
+              userUpdatedCallback: _.noop,
+            },
+            resolve: {
+              userId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentUser.id;
+              },
+              userName: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentUser.userName;
+              },
+              userUpdatedCallback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.userUpdatedCallback;
+              },
+              preferredWebExSiteName: /* @ngInject */ function ($stateParams, HybridServiceUserSidepanelHelperService) {
+                return HybridServiceUserSidepanelHelperService.getPreferredWebExSiteName($stateParams.currentUser, $stateParams.orgInfo);
+              },
+              displayName: translateDisplayName('hercules.serviceNames.squared-fusion-cal'),
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-cal.history', {
@@ -1604,19 +1610,22 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-gcal', {
-            views: {
-              'side-panel-container@user-overview': {
-                template: require('modules/hercules/user-sidepanel/calendarServicePreview.tpl.html'),
-                controller: 'CalendarServicePreviewCtrl',
-              },
-            },
+            template: '<hybrid-calendar-service-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)"></hybrid-calendar-service-user-settings>',
             data: {},
-            resolve: {
-              displayName: translateDisplayName('hercules.serviceNames.squared-fusion-gcal'),
-            },
             params: {
-              extensionId: {},
-              extensions: {},
+              userUpdatedCallback: _.noop,
+            },
+            resolve: {
+              userId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentUser.id;
+              },
+              userName: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentUser.userName;
+              },
+              userUpdatedCallback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.userUpdatedCallback;
+              },
+              displayName: translateDisplayName('hercules.serviceNames.squared-fusion-cal'),
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-gcal.history', {
@@ -1637,7 +1646,7 @@
             template: '<hybrid-call-service-aggregated-section user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)"></hybrid-call-service-aggregated-section>',
             data: {},
             params: {
-              userUpdatedCallback: Function,
+              userUpdatedCallback: _.noop,
             },
             resolve: {
               userId: /* @ngInject */ function ($stateParams) {
@@ -2587,7 +2596,7 @@
             views: {
               'side-panel-container@place-overview': {
                 template: require('modules/hercules/user-sidepanel/calendarServicePreview.tpl.html'),
-                controller: 'CalendarServicePreviewCtrl',
+                controller: 'HybridCloudberryCalendarCtrl',
               },
             },
             data: {},
@@ -2623,7 +2632,7 @@
             views: {
               'side-panel-container@place-overview': {
                 template: require('modules/hercules/user-sidepanel/calendarServicePreview.tpl.html'),
-                controller: 'CalendarServicePreviewCtrl',
+                controller: 'HybridCloudberryCalendarCtrl',
               },
             },
             data: {},

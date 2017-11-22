@@ -267,6 +267,19 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
         }
       }
     }
+    if (!_.isUndefined(options.calendarServiceEntitled)) {
+      if (!options.calendarServiceEntitled) {
+        _.remove(this.user.entitlements, (e) => e === 'squared-fusion-cal');
+        _.remove(this.user.entitlements, (e) => e === 'squared-fusion-gcal');
+      } else {
+        if (options.calendarType === 'squared-fusion-cal' && !_.some(this.user.entitlements, (e) => e === 'squared-fusion-cal')) {
+          this.user.entitlements.push('squared-fusion-cal');
+        }
+        if (options.calendarType === 'squared-fusion-gcal' && !_.some(this.user.entitlements, (e) => e === 'squared-fusion-gcal')) {
+          this.user.entitlements.push('squared-fusion-gcal');
+        }
+      }
+    }
     if (options.refresh) {
       this.init();
     }
