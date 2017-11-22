@@ -2,19 +2,27 @@ import { ILicenseRequestItem, IUserEntitlementRequestItem, IAutoAssignTemplateRe
 import { LicenseChangeOperation } from 'modules/core/users/shared/onboard.interfaces';
 
 class EditSummaryAutoAssignTemplateModalController implements ng.IComponentController {
+  private dismiss: Function;
   private stateData: any;  // TODO: better type
   private readonly DEFAULT_TEMPLATE_NAME = 'Default';
   private readonly ADD_OPERATION: LicenseChangeOperation = 'ADD';
+  public saveLoading = false;
 
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
     private Notification,
+    private Analytics,
     private AutoAssignTemplateService,
   ) {}
 
   public $onInit(): void {
     this.stateData = _.get(this.$state, 'params.stateData');
+  }
+
+  public dismissModal(): void {
+    this.Analytics.trackAddUsers(this.Analytics.eventNames.CANCEL_MODAL);
+    this.dismiss();
   }
 
   public back(): void {
@@ -24,14 +32,18 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
   }
 
   public save(): void {
+    this.saveLoading = true;
     const payload: IAutoAssignTemplateRequestPayload = this.mkPayload();
-    this.AutoAssignTemplateService.save(payload)
+    this.AutoAssignTemplateService.saveTemplate(payload)
       .then(() => {
         this.Notification.success('userManage.autoAssignTemplate.editSummary.saveSuccess');
         this.$state.go('users.list');
       })
       .catch((response) => {
         this.Notification.errorResponse(response, 'userManage.autoAssignTemplate.editSummary.saveError');
+      })
+      .finally(() => {
+        this.saveLoading = false;
       });
   }
 
@@ -80,5 +92,7 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
 export class EditSummaryAutoAssignTemplateModalComponent implements ng.IComponentOptions {
   public controller = EditSummaryAutoAssignTemplateModalController;
   public template = require('./edit-summary-auto-assign-template-modal.html');
-  public bindings = {};
+  public bindings = {
+    dismiss: '&?',
+  };
 }

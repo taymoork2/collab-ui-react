@@ -6,14 +6,21 @@ describe('Component: editSummaryAutoAssignTemplateModal:', () => {
     this.injectDependencies(
       '$scope',
       '$state',
-      'Notification',
+      'Analytics',
       'AutoAssignTemplateService',
+      'Notification',
     );
+    this.$scope.dismiss = _.noop;
   });
 
   describe('primary behaviors (view):', () => {
-    it('...', function () {
-      // TODO: implement
+    it('should track the event when the modal is dismissed', function () {
+      spyOn(this.Analytics, 'trackAddUsers');
+      this.compileComponent('editSummaryAutoAssignTemplateModal', {
+        dismiss: 'dismiss',
+      });
+      this.view.find('button.close[aria-label="common.close"]').click();
+      expect(this.Analytics.trackAddUsers).toHaveBeenCalledWith(this.Analytics.eventNames.CANCEL_MODAL);
     });
   });
 
@@ -26,7 +33,9 @@ describe('Component: editSummaryAutoAssignTemplateModal:', () => {
           'fake-license-id-3': {},
         },
       });
-      this.compileComponent('editSummaryAutoAssignTemplateModal');
+      this.compileComponent('editSummaryAutoAssignTemplateModal', {
+        dismiss: 'dismiss',
+      });
       expect(this.controller.stateData).toEqual({
         items: {
           'fake-license-id-1': {},

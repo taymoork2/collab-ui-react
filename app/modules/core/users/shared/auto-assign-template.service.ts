@@ -13,7 +13,19 @@ export class AutoAssignTemplateService {
     return `${this.UrlConfig.getAdminServiceUrl()}organizations/${this.Authinfo.getOrgId()}/templates`;
   }
 
-  public save(payload: IAutoAssignTemplateRequestPayload): ng.IPromise<any> {
+  public getTemplates(): ng.IPromise<any> {
+    return this.$http.get(this.autoAssignTemplateUrl);
+  }
+
+  public saveTemplate(payload: IAutoAssignTemplateRequestPayload): ng.IPromise<any> {
     return this.$http.post(this.autoAssignTemplateUrl, payload);
+  }
+
+  public updateTemplate(payload: IAutoAssignTemplateRequestPayload): ng.IPromise<any> {
+    return this.$http.patch(this.autoAssignTemplateUrl, payload);
+  }
+
+  public deleteTemplate(templateId: string): ng.IPromise<any> {
+    return this.$http.delete(`${this.autoAssignTemplateUrl}/${templateId}`);
   }
 }
