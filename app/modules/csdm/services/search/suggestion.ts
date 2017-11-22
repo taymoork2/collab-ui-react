@@ -29,6 +29,7 @@ export interface ISuggestionDropdown {
 
   getSuggestionById(suggestionId: number): ISuggestion | null;
 
+  setFirstActive(): void;
 
   updateBasedOnInput(searchObject: SearchObject): void;
 
@@ -85,9 +86,9 @@ export class SuggestionDropdown implements ISuggestionDropdown {
 
   public onSearchChanged(searchObject: SearchObject) {
     this.searchObject = searchObject;
-    this.currentBullets = _.filter(searchObject.getBullets(), (bullet) => {
+    this.currentBullets = searchObject ? _.filter(searchObject.getBullets(), (bullet) => {
       return !bullet.isBeingEdited();
-    });
+    }) : [];
     this.removeIrrelevantSuggestions();
   }
 
@@ -190,6 +191,15 @@ export class SuggestionDropdown implements ISuggestionDropdown {
     _.forEach(productSuggestions, (s) => this.suggestions.push(s));
     _.forEach(this.generateErrorCodeSuggestions(searchResult), s => this.suggestions.push(s));
     this.removeIrrelevantSuggestions();
+    this.setFirstActive();
+  }
+
+  public setFirstActive = () => {
+    if (this.uiSuggestions.length > 0 && this.searchObject && this.searchObject.getWorkingElementRawText() !== '') {
+      this.setActiveSuggestion(0);
+    } else {
+      this.resetActive();
+    }
   }
 
   private generateProductSuggestions(searchResult: SearchResult): ISuggestion[] {
@@ -225,7 +235,8 @@ export class SuggestionDropdown implements ISuggestionDropdown {
     this.uiSuggestions =
       SuggestionDropdown.removeExistingQueries(
         SuggestionDropdown.filterSuggestion(
-          _.concat(this.inputBasedSuggestions, this.suggestions), this.searchObject), this.currentBullets);
+          _.concat(this.inputBasedSuggestions, this.suggestions), this.searchObject),
+        this.currentBullets);
   }
 
   public static removeExistingQueries = (suggestions: ISuggestion[], currentSearchBullets: SearchElement[]): ISuggestion[] => {
