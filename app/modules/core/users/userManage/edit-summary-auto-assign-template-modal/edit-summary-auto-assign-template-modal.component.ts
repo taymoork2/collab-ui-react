@@ -25,7 +25,7 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
 
   public save(): void {
     const payload: IAutoAssignTemplateRequestPayload = this.mkPayload();
-    this.AutoAssignTemplateService.save(payload)
+    this.AutoAssignTemplateService.saveTemplate(payload)
       .then(() => {
         this.Notification.success('userManage.autoAssignTemplate.editSummary.saveSuccess');
         this.$state.go('users.list');
