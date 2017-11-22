@@ -1,4 +1,4 @@
-<cs-sp-section class="cloud-extensions">
+<cs-sp-section class="cloud-extensions" ng-if="$ctrl.options.length > 1">
   <div class="section-title-row">
     <span class="section-name" translate="hercules.resourceGroups.resourceGroupHeading"></span>
   </div>
@@ -15,14 +15,8 @@
          cs-loader
          class="loader-example--small"></div>
 
-    <div class="warning-message" ng-if="$ctrl.showGroupIsEmptyWarning">
-      <i class="icon icon-warning"></i>
-      <p class="message"
-         translate="hercules.resourceGroups.groupIsEmptyWarning"
-         translate-values="{ConnectorName: $ctrl.localizedConnectorName}">
-      </p>
-    </div>
   </div>
+
   <div ng-if="$ctrl.showButtons" class="saveCancelButtons">
     <span ng-if="$ctrl.saving" class="resource-group-spinner">
       <i class="icon icon-spinner"></i>
@@ -39,6 +33,21 @@
             translate="common.save">
     </button>
   </div>
+
+  <div class="warning-message" ng-if="$ctrl.showGroupIsEmptyWarning">
+    <i class="icon icon-warning"></i>
+    <p class="message"
+       translate="hercules.resourceGroups.groupIsEmptyWarning"
+       translate-values="{ConnectorName: $ctrl.localizedConnectorName}">
+    </p>
+  </div>
+
+  <div ng-if="$ctrl.userOwnedByCCC" class="info-message">
+    <i class="icon icon-info"></i>
+    <p class="message"
+       translate="hercules.resourceGroups.cautionOwnedByCCC"></p>
+  </div>
+
   <div ng-if="$ctrl.cannotFindResourceGroup" class="error-message">
     <i class="icon icon-error"></i>
     <p class="message"
