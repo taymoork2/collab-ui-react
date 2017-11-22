@@ -16,7 +16,6 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
   private lastSearchInput = '';
   public searchInput = '';
   public searchField = '';
-  public searchFilters;
   private lastSearchObject: SearchObject;
   private _inputActive: boolean;
   private searchDelayTimer: ng.IPromise<any> | null;
@@ -49,7 +48,8 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
               private Notification,
               private $timeout: ng.ITimeoutService) {
     this.suggestions = new SuggestionDropdown($translate);
-    this.updateSearchFilters();
+
+    this.suggestions.updateSuggestionsBasedOnSearchResult(this.getDocCount, undefined, this.searchObject);
   }
 
   public $onInit(): void {
@@ -59,9 +59,8 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
 
   private updateSearchResult(result?: SearchResult) {
     this.searchResultChanged({ result: result });
-    if (!this.searchObject.currentFilterValue) {
-      this.updateSearchFilters(result);
-    }
+
+    this.suggestions.updateSuggestionsBasedOnSearchResult(this.getDocCount, result, this.searchObject);
   }
 
   public setSortOrder(field: string, order: string) {
@@ -95,7 +94,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
         // TODO: show error in drop down?
       } else {
         this.showHideSuggestionDropdown(true);
-        this.suggestions.updateBasedOnInput(this.searchInput);
+        this.suggestions.updateBasedOnInput(this.searchObject);
       }
     }
   }
@@ -138,18 +137,10 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     }
   }
 
-  public setCurrentFilterValue(value: string) {
-    value = value === 'all' ? '' : value;
-    if (this.searchObject.currentFilterValue !== value) {
-      this.searchObject.setFilterValue(value);
-      this.searchChange();
-    }
-  }
-
   public searchChange() {
     if (this.lastSearchObject && this.lastSearchObject.equals(this.searchObject)) {
       return;
-    } else if (this.searchObject.hasError && (!this.lastSearchObject || this.lastSearchObject.currentFilterValue === this.searchObject.currentFilterValue)) {
+    } else if (this.searchObject.hasError && !this.lastSearchObject) {
       return;
     }
     const searchClone = this.searchObject.clone();
@@ -162,11 +153,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     this.searchDelayTimer = this.$timeout(() => {
       this.performSearch(searchClone); //TODO avoid at now
       this.lastSearchObject = searchClone;
-      this.suggestions.onSearchChanged(this.getBullets(), this.searchInput);
-
-      if (this.searchObject.currentFilterValue) {
-        this.performFilterUpdateSearch();
-      }
+      this.suggestions.onSearchChanged(this.getBullets(), this.searchObject);
     }, DeviceSearch.SEARCH_DELAY_MS);
   }
 
@@ -264,52 +251,12 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     }
   }
 
-  private performFilterUpdateSearch() {
-    this.CsdmSearchService.search(this.searchObject.cloneWithoutFilters(), Caller.aggregator)
-      .then(response => {
-        if (response && response.data) {
-          this.updateSearchFilters(response.data);
-          DeviceSearch.ShowPartialSearchErrors(response.data, this.Notification);
-          return;
-        }
-        this.updateSearchFilters();
-      })
-      .catch(e => DeviceSearch.ShowSearchError(this.Notification, e));
-  }
-
   public getBullets(): SearchElement[] {
     return this.searchObject.getBullets();
   }
 
   public getTranslatedQuery(): string {
     return this.searchObject.getTranslatedQueryString(new SearchTranslator(this.$translate));
-  }
-
-  private updateSearchFilters(searchResult?: SearchResult) {
-    this.suggestions.updateSuggestionsBasedOnSearchResult(this.getDocCount, searchResult, this.searchInput);
-    this.searchFilters = [
-      {
-        count: searchResult && searchResult.hits.total || 0,
-        name: this.$translate.instant('common.all'),
-        filterValue: 'all',
-      }, {
-        count: this.getDocCount(searchResult, 'connectionStatus', 'connected_with_issues'),
-        name: this.$translate.instant('CsdmStatus.connectionStatus.CONNECTED_WITH_ISSUES'),
-        filterValue: 'connectionStatus=CONNECTED_WITH_ISSUES',
-      }, {
-        count: this.getDocCount(searchResult, 'connectionStatus', 'offline')
-        + this.getDocCount(searchResult, 'connectionStatus', 'disconnected'),
-        name: this.$translate.instant('CsdmStatus.connectionStatus.DISCONNECTED'),
-        filterValue: 'connectionStatus=DISCONNECTED',
-      }, {
-        count: this.getDocCount(searchResult, 'connectionStatus', 'offline_expired'),
-        name: this.$translate.instant('CsdmStatus.connectionStatus.OFFLINE_EXPIRED'),
-        filterValue: 'connectionStatus=OFFLINE_EXPIRED',
-      }, {
-        count: this.getDocCount(searchResult, 'connectionStatus', 'connected'),
-        name: this.$translate.instant('CsdmStatus.connectionStatus.CONNECTED'),
-        filterValue: 'connectionStatus="CONNECTED"',
-      }];
   }
 
   private getDocCount(searchResult: SearchResult | undefined, aggregation: string, bucketName: string) {

@@ -1,6 +1,7 @@
 import { BucketData, SearchResult } from './searchResult';
 import { List } from 'lodash';
 import { SearchElement } from './searchElement';
+import { SearchObject } from './searchObject';
 
 export interface ISuggestion {
   searchString: string;
@@ -13,8 +14,6 @@ export interface ISuggestionDropdown {
   uiSuggestions: ISuggestion[];
 
   showEmpty(): void;
-
-  updateBasedOnInput(searchInput: string): void;
 
   setActiveSuggestion(suggestionId: number): void;
 
@@ -30,10 +29,14 @@ export interface ISuggestionDropdown {
 
   getSuggestionById(suggestionId: number): ISuggestion | null;
 
+
+  updateBasedOnInput(searchObject: SearchObject): void;
+
   updateSuggestionsBasedOnSearchResult(docCountFunc: (searchResult: SearchResult | undefined, aggregation: string, bucketName: string) => number,
                                        searchResult: SearchResult | undefined,
-                                       searchInput: string): void;
-  onSearchChanged(searchElements: SearchElement[], searchInput: string): void;
+                                       searchObject: SearchObject): void;
+
+  onSearchChanged(searchElements: SearchElement[], searchObject: SearchObject): void;
 }
 
 export class SuggestionDropdown implements ISuggestionDropdown {
@@ -43,7 +46,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
 
   public activeSuggestion?: string;
   private activeSuggestionIndex: number | undefined;
-  private searchInput: string = '';
+  private searchObject: SearchObject;
   private currentBullets: SearchElement[] = [];
 
   constructor(private $translate: ng.translate.ITranslateService) {
@@ -55,25 +58,35 @@ export class SuggestionDropdown implements ISuggestionDropdown {
     this.resetActive();
   }
 
-  public updateBasedOnInput(searchInput: string, totalCount: number| undefined = undefined, updateUiSuggestions = true): void {
+  public updateBasedOnInput(searchObject: SearchObject, totalCount: number | undefined = undefined, updateUiSuggestions = true): void {
+
+    const currentEditedElement = searchObject.getWorkingElement();
+
+    if (!currentEditedElement) {
+      this.inputBasedSuggestions = [];
+      return;
+    }
+
     this.inputBasedSuggestions = [
       {
         count: totalCount,
-        searchString: `"${searchInput}"`,
+        searchString: currentEditedElement.toQuery(),
         field: 'All devices',
-        text: `containing "${searchInput}"`,
+        text: `containing ${currentEditedElement.toQuery()}`,
       },
     ];
-    this.searchInput = searchInput;
+
+    this.searchObject = searchObject;
+
     if (updateUiSuggestions) {
-      this.updateUiSuggestions();
+      this.removeIrrelevantSuggestions();
     }
   }
 
-  public onSearchChanged(searchElements: SearchElement[], searchInput: string) {
+  public onSearchChanged(searchElements: SearchElement[], searchObject: SearchObject) {
     this.currentBullets = searchElements;
-    this.searchInput = searchInput;
-    this.updateUiSuggestions();
+    this.searchObject = searchObject;
+    this.removeIrrelevantSuggestions();
   }
 
   public setActiveSuggestion = (suggestionId: number): void => {
@@ -81,7 +94,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
     this.activeSuggestionIndex = suggestionId;
   }
 
-  public resetActive = () => {
+  public resetActive() {
     this.activeSuggestion = undefined;
     this.activeSuggestionIndex = undefined;
   }
@@ -133,8 +146,8 @@ export class SuggestionDropdown implements ISuggestionDropdown {
 
   public updateSuggestionsBasedOnSearchResult(getDocCount: (searchResult: SearchResult | undefined, aggregation: string, bucketName: string) => number,
                                               searchResult: SearchResult,
-                                              searchInput: string): void {
-    this.updateBasedOnInput(searchInput, searchResult && searchResult.hits.total || 0, false);
+                                              searchObject: SearchObject): void {
+    this.updateBasedOnInput(searchObject, searchResult && searchResult.hits.total || 0, false);
     this.suggestions = [
       // {
       //   count: searchResult && searchResult.hits.total || 0,
@@ -143,6 +156,9 @@ export class SuggestionDropdown implements ISuggestionDropdown {
       //   text: 'containing "' + searchInput + '"',
       // },
       {
+
+        //TODO: make these generate automatically, instead of $translate, use SearchTranslator that has a key/value to translationkeys
+
         count: getDocCount(searchResult, 'connectionStatus', 'connected_with_issues'),
         searchString: 'connectionStatus=CONNECTED_WITH_ISSUES',
         field: this.$translate.instant('spacesPage.statusHeader'),
@@ -171,7 +187,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
     const productSuggestions = this.generateProductSuggestions(searchResult);
     _.forEach(productSuggestions, (s) => this.suggestions.push(s));
     _.forEach(this.generateErrorCodeSuggestions(searchResult), s => this.suggestions.push(s));
-    this.updateUiSuggestions();
+    this.removeIrrelevantSuggestions();
   }
 
   private generateProductSuggestions(searchResult: SearchResult): ISuggestion[] {
@@ -198,11 +214,16 @@ export class SuggestionDropdown implements ISuggestionDropdown {
     });
   }
 
-  private updateUiSuggestions() {
+  private removeIrrelevantSuggestions() {
+
+    if (!this.searchObject) {
+      return;
+    }
+
     this.uiSuggestions =
       SuggestionDropdown.removeExistingQueries(
         SuggestionDropdown.filterSuggestion(
-          _.concat(this.inputBasedSuggestions, this.suggestions), this.searchInput), this.currentBullets);
+          _.concat(this.inputBasedSuggestions, this.suggestions), this.searchObject), this.currentBullets);
   }
 
   public static removeExistingQueries = (suggestions: ISuggestion[], currentSearchBullets: SearchElement[]): ISuggestion[] => {
@@ -215,13 +236,20 @@ export class SuggestionDropdown implements ISuggestionDropdown {
     });
   }
 
-  public static filterSuggestion = (suggestions: ISuggestion[], searchInput: string): ISuggestion[] => {
-    if (!searchInput) {
+  public static filterSuggestion = (suggestions: ISuggestion[], searchObject: SearchObject): ISuggestion[] => {
+    if (!searchObject) {
       return suggestions;
     }
-    searchInput = searchInput.toLowerCase();
+    const workingElement = searchObject.getWorkingElement();
+    if (!workingElement) {
+      return suggestions;
+    }
+    const parsedInput = workingElement.toQuery().toLowerCase();
+    const rawInput = searchObject.getWorkingElementRawText();
+
     return _.filter(suggestions, (su) => {
-      return su.text.toLowerCase().indexOf(searchInput) > -1 || su.field.toLowerCase().indexOf(searchInput) > -1;
+      return su.text.toLowerCase().indexOf(parsedInput) > -1 || su.field.toLowerCase().indexOf(parsedInput) > -1
+        || su.text.toLowerCase().indexOf(rawInput) > -1 || su.field.toLowerCase().indexOf(rawInput) > -1;
     });
   }
 }
