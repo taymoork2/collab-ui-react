@@ -2,7 +2,7 @@ import { CustChartComponent } from './chart.component';
 import { ReportsChartService } from './reportsChartService';
 import { CcaReportsComponent } from './ccaReports.component';
 import { CcaReportsTabsComponent } from './ccaReportsTabs.component';
-import { SearchService } from '../../core/customerReports/webexReports/search/searchService';
+import { SearchService } from 'modules/core/customerReports/webexReports/diagnostic/searchService';
 
 export default angular
   .module('gemini.services.reports', [

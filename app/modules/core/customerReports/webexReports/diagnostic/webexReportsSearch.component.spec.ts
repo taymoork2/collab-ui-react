@@ -1,7 +1,7 @@
 import testModule from './index';
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 
-describe('Component: meetingSearch', () => {
+describe('Component: webexReportsSearch', () => {
   beforeAll(function () {
     this.meetingSearch = [
       {
@@ -49,35 +49,26 @@ describe('Component: meetingSearch', () => {
   beforeEach(function () {
     this.initModules(testModule);
     this.injectDependencies('$q', '$state', '$timeout', '$translate', 'SearchService', 'Notification');
+    moment.tz.setDefault('America/Chicago');
 
     initSpies.apply(this);
-
   });
 
   function initSpies() {
-    spyOn(this.$state, 'go');
     spyOn(this.Notification, 'errorResponse');
-    spyOn(this.SearchService, 'setStorage').and.returnValue({});
-    spyOn(this.SearchService, 'getGuess').and.returnValue('Asia/Shanghai');
     spyOn(this.SearchService, 'getMeetings').and.returnValue(this.$q.resolve());
-    spyOn(this.SearchService, 'utcDateByTimezone').and.callFake(utdDateByTimezone);
-  }
-
-  function utdDateByTimezone(date) {
-    const offset = '+08:00';
-    return moment.utc(date).utcOffset(offset).format('MMMM Do, YYYY h:mm:ss A');
   }
 
   function initComponent() {
-    this.compileComponent('custWebexReportsSearch');
+    this.compileComponent('dgcWebexReportsSearch');
     this.$scope.$apply();
   }
 
   it('should show the correct data for the grid when search with enter keyup', function () {
     const $event = { type: 'keyup', keyCode: 13, which: 13 };
-
     this.SearchService.getMeetings.and.returnValue(this.$q.resolve(this.meetingSearch));
     initComponent.call(this);
+
     this.view.find(this.input).val('355602502').change().triggerHandler($event);
     expect(this.controller.gridData.length).toBe(2);
 
@@ -110,10 +101,9 @@ describe('Component: meetingSearch', () => {
     };
 
     this.controller.gridOptions.onRegisterApi(fakeGridApi);
-
   });
 
-  xit('should show the empty data for the grid when search with incorrect email or incorrect meeting number then trigger blur event', function () {
+  it('should show the empty data for the grid when search with incorrect email or incorrect meeting number then trigger blur event', function () {
     spyOn(this.$translate, 'instant').and.returnValue('Please enter the correct email or meeting number');
 
     initComponent.call(this);
@@ -158,12 +148,6 @@ describe('Component: meetingSearch', () => {
     initComponent.call(this);
     this.view.find(this.input).val('23423432').change().triggerHandler('blur');
     expect(this.Notification.errorResponse).toHaveBeenCalled();
-  });
-
-  it('should call $state.go when show meeting detail', function () {
-    initComponent.call(this);
-    this.controller.showDetail(this.item);
-    expect(this.$state.go).toHaveBeenCalled();
   });
 
   it('should change timeZone: onChangeTz', function () {

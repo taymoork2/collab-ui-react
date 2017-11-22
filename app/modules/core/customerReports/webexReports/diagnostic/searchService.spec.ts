@@ -56,13 +56,9 @@ describe('Service: searchService', () => {
 
   it('should get correct data when call getMeetingDetail', function () {
     const mockData = {
-      overview: {
-        conferenceID: '65168195997140080',
-        status: 1,
-        participantsSize: 1,
-      },
+      overview: { status: 1, participantsSize: 1, conferenceID: '65168195997140080' },
     };
-    const url = `${this.UrlConfig.getGeminiUrl()}meetings/${this.conferenceID}/session`;
+    const url = `${this.UrlConfig.getGeminiUrl()}meetings/${this.conferenceID}/meeting-detail`;
     this.$httpBackend.expectGET(url).respond(200, mockData);
     this.SearchService.getMeetingDetail(this.conferenceID).then((res) => {
       expect(res.overview).toBeDefined();

@@ -45,8 +45,8 @@ class TimeZone implements ng.IComponentController {
   }
 }
 
-export class CustTimeZoneComponent implements ng.IComponentOptions {
+export class DgcTimeZoneComponent implements ng.IComponentOptions {
   public controller = TimeZone;
   public bindings = { timeZone: '<', onChangeFn: '&' };
-  public template = require('modules/core/customerReports/webexReports/search/timeZone.html');
+  public template = require('modules/core/customerReports/webexReports/diagnostic/timeZone.html');
 }

@@ -540,6 +540,8 @@ export class Config {
       'cdrladderdiagram',
       'cdrsupport',
       'customerprofile',
+      'dgc',
+      'dgc-panel',
       'domainmanagement',
       'dr-login-forward',
       'editService',

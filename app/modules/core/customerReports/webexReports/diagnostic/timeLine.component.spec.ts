@@ -1,11 +1,12 @@
 import testModule from './index';
 
-describe('Component: custTimeLine', () => {
+describe('Component: dgcTimeLine', () => {
   beforeAll(function () {
     this.sourceData = {
       lines: [],
       offset: '+08:00',
-      overview: { endTime: 1497829527000, startTime: 1497829243000 },
+      endTime: 1497829527000,
+      startTime: 1497829243000,
     };
     this.circleColor = [{ joinTime: 1497829243001, guestId: 0, userId: 62527, joinMeetingTime: '22', jmtQuality: '3' }];
     this.lineColor = [{ joinTime: 1497829243001, guestId: 0, userId: 62527, packageLossRate: 0.06, latency: 500.3, dataQuality: '2' }];
@@ -14,6 +15,7 @@ describe('Component: custTimeLine', () => {
   beforeEach(function () {
     this.initModules(testModule);
     this.injectDependencies();
+    moment.tz.setDefault('America/Chicago');
   });
 
   function mockLines(n) {
@@ -29,7 +31,7 @@ describe('Component: custTimeLine', () => {
   }
 
   function initComponent(bindings) {
-    this.compileComponent('custTimeLine', bindings);
+    this.compileComponent('dgcTimeLine', bindings);
     this.$scope.$apply();
   }
 

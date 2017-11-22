@@ -1,7 +1,5 @@
 @import '~collab-ui/scss/settings/colors';
 @import '~collab-ui/scss/settings/page';
-@import '~collab-ui/scss/settings/fonts';
-@import '~collab-ui-icons/scss/variables';
 
 .gemini-side-panel {
   .feature-arrow {
@@ -10,6 +8,14 @@
     }
     i {
       font-size: 12px;
+    }
+  }
+
+  .nav-tabs {
+    > li {
+      > a {
+        padding-bottom: 1.0625rem;
+      }
     }
   }
 }
@@ -58,11 +64,17 @@
 
       .session-type-list li {
         overflow: hidden;
-        font-family: $brand-font-light;
+        font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
         span {
           float: right;
         }
       }
+    }
+
+    .meeting-header {
+      color: $gray-dark-3;
+      font-size: 1.5rem;
+      font-weight: 300;
     }
   }
 
@@ -95,6 +107,16 @@
     .gridStyle {
       margin-top: 20px;
       height: calc(100vh - 266px) !important;
+
+      .ui-grid-header-cell {
+        height: 40px !important;
+
+        .sortable {
+          display: flex;
+          display: -webkit-flex;
+          align-items: center;
+        }
+      }
     }
 
     .error {
@@ -219,75 +241,6 @@
 }
 
 .meeting-large-detail {
-  .sessionInfo {
-    .title {
-      padding: 2rem 0 1rem 0.5rem;
-      color: $gray-base;
-      font-weight: 400;
-    }
-
-    .row {
-      max-width: none;
-    }
-
-    .session-card {
-      background-color: $white;
-      border-radius: 2px;
-      -webkit-box-shadow: 0px 1px 2px 1px rgba(52, 53, 55, 0.18);
-      box-shadow: 0px 1px 2px 1px rgba(52, 53, 55, 0.18);
-      color: $gray-dark-1;
-      width: 100%;
-      padding: 1rem;
-      box-sizing: border-box;
-
-      header {
-        padding-bottom: 0.5rem;
-
-        .name {
-          color: $gray-base;
-          line-height: 1;
-          font-size: 1rem;
-          font-family: "CiscoSans";
-        }
-
-        small {
-          color: $gray-base;
-        }
-      }
-
-      section {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-align: center;
-        -ms-flex-align: center;
-        align-items: center;
-        -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-        justify-content: space-between;
-        width: 100%;
-
-        .text-center {
-          width: 50%;
-
-          h6 {
-            color: $gray-base;
-          }
-
-          small {
-            color: $gray-base;
-          }
-        }
-      }
-    }
-  }
-
-  .timeline {
-    margin-top: 25px;
-    min-height: 340px;
-    text-align: center;
-  }
-
   .row {
     margin: 0;
   }
@@ -309,117 +262,6 @@
     font-size: 17px;
     font-family: "CiscoSans";
   }
-
-  .session-list {
-    overflow: hidden;
-    padding-bottom: 30px;
-
-    .columns {
-      float: left !important;
-      margin-bottom: 20px;
-    }
-  }
-
-  .medium.header-border {
-    header {
-      border-bottom: 0;
-      text-align: center;
-      padding-bottom: 0;
-    }
-
-    &.meeting-time {
-      text-align: center;
-
-      article {
-        box-shadow: none;
-
-        header {
-          padding-top: 0;
-          height: 31px;
-          h4 {
-            color: $gray-base;
-            font-size: 1rem;
-          }
-        }
-        section {
-          overflow: hidden;
-          margin: -24px 0;
-          padding: 0;
-        }
-
-        p {
-          color: $color-primary-base;
-          font-size: 30px;
-          font-weight: 300;
-          font-family: "CiscoSans";
-
-          .cs-loading {
-            display: inherit;
-            padding-left: .45rem;
-
-            span {
-              color: $color-primary-base;
-              font-size: 0.575rem;
-              font-family: $icon-font-name;
-            }
-          }
-        }
-
-        span {
-          font-size: 14px;
-          color: $gray-base;
-          font-family: $brand-font-light;
-        }
-      }
-    }
-
-    &.meeting-info {
-      width: 25%;
-      text-align: left;
-      margin-bottom: 10px;
-      article {
-        background: $gray-light-4;
-
-        header {
-          padding-top: 1rem;
-          padding-left: 1rem;
-          h4 {
-            font-size: 20px;
-            color: $gray-dark-3;
-            text-align: left;
-          }
-        }
-
-        p {
-          color: $gray-light-1;
-          padding-top: 0;
-          padding-left: 1rem;
-        }
-
-        footer {
-          display: flex;
-
-          .meeting-duration {
-            text-align: center;
-            flex: 1;
-            color: $gray-dark-1;
-            line-height: 20px;
-            font-size: 16px;
-
-            span {
-              display: block;
-              margin-bottom: 5px;
-            }
-
-            i {
-              color: $gray-light-1;
-              font-style: normal;
-            }
-          }
-        }
-      }
-    }
-  }
 }
 
 .tooltip.tip-top[popup-class="tn-search-error"] {
@@ -434,7 +276,7 @@
     font-size: 0.75rem;
 
     &::before {
-      font-family: $icon-font-name;
+      font-family: "Cisco_Toolkit_Icons";
       color: $color-alerts-base;
       //content: '\E0B0'; //TODO  same about.
       content: '\E0BA';

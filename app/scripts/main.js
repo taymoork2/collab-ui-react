@@ -73,7 +73,7 @@
     require('modules/core/myCompany/mySubscriptions').default,
     require('modules/core/cards').default,
     require('modules/core/customerReports/sparkReports').default,
-    require('modules/core/customerReports/webexReports/search').default,
+    require('modules/core/customerReports/webexReports/diagnostic').default,
     require('modules/core/partnerReports/commonReportServices').default,
     require('modules/core/partnerReports/reportCard').default,
     require('modules/core/partnerReports/reportFilter').default,

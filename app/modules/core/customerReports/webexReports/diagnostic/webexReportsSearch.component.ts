@@ -16,7 +16,7 @@ class WebexReportsSearch implements ng.IComponentController {
   public endDate: string;
   public timeZone: string;
   public startDate: string;
-  public searchStr: string;
+  public searchStr: any;
   public errMsg: any = {};
   public dateRange: any = {};
   public storeData: any = {};
@@ -40,18 +40,23 @@ class WebexReportsSearch implements ng.IComponentController {
     this.gridData = [];
     this.timeZone = this.SearchService.getGuess('');
     this.errMsg = { search: '', datePicker: '' };
+    this.searchStr = this.SearchService.getStorage('searchStr');
   }
 
   public $onInit(): void {
-    this.Analytics.trackEvent(this.SearchService.featureName, {});
     this.initDateRange();
     this.setGridOptions();
     this.$scope.$emit('selectEnable', false);
+    this.Analytics.trackEvent(this.SearchService.featureName, {});
+    if (this.searchStr) {
+      this.startSearch();
+    }
   }
 
   public showDetail(item) {
     this.SearchService.setStorage('webexMeeting', item);
-    this.$state.go('webexReportsPanel', {}, { reload: true });
+    this.SearchService.setStorage('searchStr', this.searchStr);
+    this.$state.go('dgc.tab.meetingdetail', { cid: item.conferenceID });
   }
 
   public onKeySearch($event: KeyboardEvent) {
@@ -154,6 +159,7 @@ class WebexReportsSearch implements ng.IComponentController {
       .then((res) => {
         _.forEach(res, (item) => {
           item.status_ = this.SearchService.getStatus(item.status);
+          item.Duration = item.duration ? moment.duration(item.duration * 1000).humanize() : '';
           item.endTime_ = this.SearchService.utcDateByTimezone(item.endTime) ;
           item.startTime_ = this.SearchService.utcDateByTimezone(item.startTime);
         });
@@ -168,40 +174,57 @@ class WebexReportsSearch implements ng.IComponentController {
 
   private setGridOptions(): void {
     const columnDefs = [{
-      width: '20%',
-      sortable: true,
-      cellTooltip: true,
-      field: 'startTime_',
-      displayName: this.$translate.instant('webexReports.searchGridHeader.startTime'),
-    }, {
       width: '12%',
-      sortable: true,
-      field: 'status_',
-      displayName: this.$translate.instant('webexReports.searchGridHeader.status'),
-      cellTemplate: require('modules/core/customerReports/webexReports/search/webexMeetingStatus.html'),
+      cellTooltip: true,
+      field: 'conferenceID',
+      displayName: this.$translate.instant('webexReports.searchGridHeader.conferenceID'),
+    }, {
+      width: '11%',
+      field: 'meetingNumber',
+      displayName: this.$translate.instant('webexReports.meetingNumber'),
     }, {
       cellTooltip: true,
       field: 'meetingName',
       displayName: this.$translate.instant('webexReports.searchGridHeader.meetingName'),
     }, {
-      width: '16%',
+      width: '18%',
+      sortable: true,
       cellTooltip: true,
-      field: 'conferenceID',
-      displayName: this.$translate.instant('webexReports.searchGridHeader.conferenceID'),
+      field: 'startTime_',
+      displayName: this.$translate.instant('webexReports.searchGridHeader.startTime'),
     }, {
-      width: '20%',
-      field: 'endTime_',
-      cellTooltip: true,
-      displayName: this.$translate.instant('webexReports.searchGridHeader.endTime'),
+      width: '10%',
+      field: 'Duration',
+      displayName: this.$translate.instant('webexReports.duration'),
+    }, {
+      field: 'hostName',
+      displayName: this.$translate.instant('webexReports.hostName'),
+    }, {
+      width: '8%',
+      cellClass: 'text-center',
+      field: 'numberOfParticipants',
+      headerCellTemplate: `<div class="aaaaa" ng-class="{ \'sortable\': sortable }">
+      <div class="ui-grid-cell-contents" col-index="renderIndex">
+      <span>Number of <br>Participants</span>
+      <span ui-grid-visible="col.sort.direction">
+      <i ng-class="{ \'ui-grid-icon-up-dir\': col.sort.direction == asc, \'ui-grid-icon-down-dir\': col.sort.direction == desc, \'ui-grid-icon-blank\': !col.sort.direction }"></i>
+      </span></div></div>`,
+    }, {
+      width: '7%',
+      sortable: true,
+      field: 'status_',
+      displayName: this.$translate.instant('webexReports.searchGridHeader.status'),
+      cellTemplate: require('modules/core/customerReports/webexReports/diagnostic/webexMeetingStatus.html'),
     }];
+
     this.gridOptions = {
       rowHeight: 45,
       data: '$ctrl.gridData',
       multiSelect: false,
-      appScopeProvider: this,
       columnDefs: columnDefs,
       enableRowSelection: true,
       enableColumnMenus: false,
+      enableColumnResizing: true,
       enableRowHeaderSelection: false,
       enableVerticalScrollbar: 0,
       enableHorizontalScrollbar: 0,
@@ -214,7 +237,7 @@ class WebexReportsSearch implements ng.IComponentController {
   }
 }
 
-export class CustWebexReportsSearchComponent implements ng.IComponentOptions {
+export class DgcWebexReportsSearchComponent implements ng.IComponentOptions {
   public controller = WebexReportsSearch;
-  public template = require('modules/core/customerReports/webexReports/search/webexReportsSearch.html');
+  public template = require('modules/core/customerReports/webexReports/diagnostic/webexReportsSearch.html');
 }

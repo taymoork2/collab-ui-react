@@ -2026,27 +2026,6 @@
               settingPageIframeUrl: null,
             },
           })
-          .state('webexReportsPanel', {
-            data: {},
-            parent: 'sidepanel',
-            views: {
-              'sidepanel@': {
-                template: '<cust-webex-reports-panel></cust-webex-reports-panel>',
-              },
-              'header@webexReportsPanel': {
-                template: require('modules/core/customerReports/webexReports/search/webexReportsPanelHeader.html'),
-              },
-            },
-          })
-          .state('webexReportsPanel.more', {
-            views: {
-              'side-panel-container@webexReportsPanel': {
-                template: '<cust-webex-reports-more></cust-webex-reports-more>',
-              },
-            },
-            onEnter: SidePanelLargeOpen,
-            onExit: SidePanelLargeClose,
-          })
           .state('reports', {
             url: '/reports',
             template: require('modules/core/customerReports/customerReportsHeader.tpl.html'),
@@ -2122,9 +2101,29 @@
             url: '/diagnostics',
             views: {
               metricsContent: {
-                template: '<cust-webex-reports-search></cust-webex-reports-search>',
+                template: '<dgc-webex-reports-search></dgc-webex-reports-search>',
               },
             },
+          })
+          .state('dgc', {
+            parent: 'main',
+            template: '<div ui-view></div>',
+          })
+          .state('dgc.tab', {
+            template: '<dgc-tab></dgc-tab>',
+          })
+          .state('dgc.tab.meetingdetail', {
+            url: '/diagnostics/meeting/:cid',
+            views: { tabContent: { template: '<dgc-tab-meetingdetail></dgc-tab-meetingdetail>' } },
+          })
+          .state('dgc.tab.participants', {
+            url: '/diagnostics/participants/:cid',
+            views: { tabContent: { template: '<dgc-tab-participants></dgc-tab-participants>' } },
+          })
+          .state('dgc-panel', {
+            data: {},
+            parent: 'sidepanel',
+            views: { 'sidepanel@': { template: '<dgc-panel-participant></dgc-panel-participant>' } },
           })
           .state('reports.webex-metrics.classic', {
             url: '/classic',

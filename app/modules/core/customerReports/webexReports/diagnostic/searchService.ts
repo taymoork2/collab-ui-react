@@ -16,12 +16,17 @@ export class SearchService {
     return this.$http.get(url).then(this.extractData);
   }
 
+  public getMeetingDetail(conferenceID) {
+    const url = `${this.url}meetings/${conferenceID}/meeting-detail`;
+    return this.$http.get(url).then(this.extractData);
+  }
+
   public getMeetings(data) {
     const url = `${this.url}meetings`;
     return this.$http.post(url, data).then(this.extractData);
   }
 
-  public getMeetingDetail(conferenceID) {
+  public getMeetingSession(conferenceID) {
     const url = `${this.url}meetings/${conferenceID}/session`;
     return this.$http.get(url).then(this.extractData);
   }
@@ -80,5 +85,33 @@ export class SearchService {
 
   public getNames(tz) {
     return tz ? '' : moment.tz.names();
+  }
+
+  public timestampToDate(timestamp, format): string {
+    const timeZone = this.getStorage('timeZone');
+    const offset = this.getOffset(timeZone);
+    return moment(timestamp).utc().utcOffset(offset).format(format);
+  }
+
+  public getBrowser(num) {
+    const arr = ['Netscape', 'IE', 'Stand alone application', 'MOZILLA', 'FIREFOX', 'SAFARI', 'CHROME'];
+    return arr[num] ? arr[num] : 'Other';
+  }
+
+  public getPlartform(obj): string {
+    if (obj.sessionType === 25) {
+      return 'PSTN';
+    }
+    const key = _.parseInt(obj.platform);
+    const arr = ['Windows', 'MAC', 'Solaris', 'Java', 'Linux', 'Flash', 'Javascript', 'IPHONE', 'MOBILE DEVICE', 'IP PHONE', 'Cisco TP', 'BlackBerry', 'WinMobile', 'Android', 'Nokia'];
+    return arr[key] ? arr[key] : 'Other';
+  }
+
+  public getParticipantEndReson(endReson) {
+    const status = this.getStorage('webexOneMeeting.overview.status');
+    if (status === 1) {
+      return '';
+    }
+    return endReson ? 'Normal' : 'Abnormal';
   }
 }
