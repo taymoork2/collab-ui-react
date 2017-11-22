@@ -14,7 +14,7 @@ export class AutoAssignTemplateService {
   }
 
   public getTemplates(): ng.IPromise<any> {
-    return this.$http.get(this.autoAssignTemplateUrl);
+    return this.$http.get(this.autoAssignTemplateUrl).then(response => response.data);
   }
 
   public saveTemplate(payload: IAutoAssignTemplateRequestPayload): ng.IPromise<any> {

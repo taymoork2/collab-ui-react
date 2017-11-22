@@ -5,7 +5,7 @@
   module.exports = UserManageOrgController;
 
   /* @ngInject */
-  function UserManageOrgController($q, $state, Analytics, AutoAssignTemplateService, DirSyncService, FeatureToggleService, OnboardService, Orgservice, UserCsvService) {
+  function UserManageOrgController($q, $state, Analytics, AutoAssignTemplateService, DirSyncService, FeatureToggleService, Notification, OnboardService, Orgservice, UserCsvService) {
     var DEFAULT_AUTO_ASSIGN_TEMPLATE = 'Default';
     var vm = this;
 
@@ -64,8 +64,7 @@
         return;
       }
       AutoAssignTemplateService.getTemplates()
-        .then(function (response) {
-          var templates = _.get(response, 'data');
+        .then(function (templates) {
           var foundTemplate = _.find(templates, { name: DEFAULT_AUTO_ASSIGN_TEMPLATE });
           _.set(vm.autoAssignTemplates, DEFAULT_AUTO_ASSIGN_TEMPLATE, foundTemplate);
         })
@@ -74,6 +73,7 @@
           if (response.status === 404) {
             return;
           }
+          Notification.errorResponse(response);
         });
     }
 

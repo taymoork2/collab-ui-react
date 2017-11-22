@@ -225,12 +225,10 @@ describe('UserManageOrgController', () => {
     it('should set "autoAssignTemplates" property if "AutoAssignTemplateService.getTemplates()" responds with appropriate data', function () {
       initController.call(this);
       this.controller.isAtlasF3745AutoAssignToggle = true;
-      spyOn(this.AutoAssignTemplateService, 'getTemplates').and.returnValue(this.$q.resolve({
-        data: [{
-          name: 'Default',
-          foo: 'bar',
-        }],
-      }));
+      spyOn(this.AutoAssignTemplateService, 'getTemplates').and.returnValue(this.$q.resolve([{
+        name: 'Default',
+        foo: 'bar',
+      }]));
 
       this.controller.initDefaultAutoAssignTemplate();
       this.$scope.$apply();
