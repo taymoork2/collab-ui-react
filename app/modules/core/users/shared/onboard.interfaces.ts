@@ -22,7 +22,10 @@ export type UserEntitlementName = 'ciscoUC' |
  'squaredSyncUp' |
  'webExSquared';
 export type UserEntitlementState = 'ACTIVE' | 'PENDING' | 'DISABLED';
-export type LicenseChangeOperation = 'ADD' | 'REMOVE';
+export enum LicenseChangeOperation {
+  ADD = 'ADD',
+  REMOVE = 'REMOVE',
+}
 
 export interface IUserEntitlementRequestItem {
   entitlementName: UserEntitlementName;

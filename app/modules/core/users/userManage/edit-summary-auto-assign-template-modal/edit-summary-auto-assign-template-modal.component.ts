@@ -5,7 +5,6 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
   private dismiss: Function;
   private stateData: any;  // TODO: better type
   private readonly DEFAULT_TEMPLATE_NAME = 'Default';
-  private readonly ADD_OPERATION: LicenseChangeOperation = 'ADD';
   public saveLoading = false;
 
   /* @ngInject */
@@ -66,7 +65,7 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
     const result = _.map(_.keys(selectedLicenses), (licenseId: string) => {
       return <ILicenseRequestItem>{
         id: licenseId,
-        idOperation: this.ADD_OPERATION,
+        idOperation: LicenseChangeOperation.ADD,
         properties: {},
       };
     });
