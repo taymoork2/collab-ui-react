@@ -370,11 +370,29 @@
       transition: $property $duration $easeType;
     }
 
+    .search-error-box {
+      visibility: hidden;
+    }
+
+    .search-error-box.warning {
+      visibility: visible;
+      transition-property: visibility;
+      transition-duration: .1s;
+      transition-delay: 1s;
+    }
+
     .bulleted-searchbox {
       text-decoration: none;
 
       .bulleted-searchinput.searcherror {
-        border-color: red !important;
+        background-color: $color-attention-lighter !important;
+        border-color: $color-attention;
+        &:focus {
+          border-color: $color-attention;
+        }
+        transition-property: background-color, border-color;
+        transition-duration: .1s;
+        transition-delay: 1s
       }
 
       .bulleted-searchinput {
@@ -385,7 +403,7 @@
         flex-basis: 100%;
         background: $brand-white;
         border: 1px solid $gray-light-2;
-        border-radius: 2px;
+        border-radius: 4px;
         height: 100%;
         width: 430px;
         padding-right: 32px;
@@ -399,8 +417,7 @@
           margin-right: 0;
           min-width: 35px;
           font-size: 1.125rem;
-          color: $gray !important;
-          background: $brand-white;
+          background: inherit;
           padding: 8px 1px 7px 0;
           margin-left: 4px;
           margin-bottom: 3px;
@@ -411,7 +428,6 @@
           &:focus {
             outline: none !important;
             box-shadow: none !important;
-            background-color: white !important;
           }
         }
         > i {
