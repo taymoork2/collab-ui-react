@@ -2111,6 +2111,7 @@
     "addBtn": "New Device",
     "addPlaceBtn": "New Place",
     "deviceSearchPlaceholder": "Find devices by status, type, and more",
+    "searchError": "The search input is not recognized.",
     "typeHeader": "Type",
     "nameHeader": "Belongs to",
     "statusHeader": "Status",

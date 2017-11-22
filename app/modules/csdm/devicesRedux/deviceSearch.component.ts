@@ -28,7 +28,9 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
 
   set inputActive(value: boolean) {
     this._inputActive = value;
-    this.showHideSuggestionDropdown(value);
+    if (!value) {
+      this.showHideSuggestionDropdown(false);
+    }
   }
 
   public suggestions: ISuggestionDropdown;
@@ -88,7 +90,13 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
       this.searchObject.setWorkingElementText(this.searchInput);
       this.lastSearchInput = this.searchInput;
       this.searchChange();
-      this.suggestions.updateBasedOnInput(this.searchInput);
+      if (this.searchObject.hasError || this.searchInput.length === 0) {
+        this.showHideSuggestionDropdown(false);
+        // TODO: show error in drop down?
+      } else {
+        this.showHideSuggestionDropdown(true);
+        this.suggestions.updateBasedOnInput(this.searchInput);
+      }
     }
   }
 
@@ -171,6 +179,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     this.lastSearchInput = '';
     this.searchChange();
     this.suggestions.showEmpty();
+    this.showHideSuggestionDropdown(false);
   }
 
   public onSearchInputKeyDown($keyEvent: KeyboardEvent) {
