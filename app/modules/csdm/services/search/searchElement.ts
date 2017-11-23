@@ -128,7 +128,7 @@ export class FieldQuery extends SearchElement {
 
     if (this.field && this.type === FieldQuery.QueryTypeExact && myParent instanceof OperatorAnd) {
 
-      if (this.field !== QueryParser.Field_Tags && this.field !== QueryParser.Field_ErrorCodes) {
+      if (this.field !== QueryParser.Field_Tag && this.field !== QueryParser.Field_ErrorCodes) {
 
         const otherSameField = SearchObject.findFirstElementMatching(myParent, (se) => {
           return se !== this && se.getParent() === myParent && se instanceof FieldQuery && _.isEqual(_.toLower(se.field), _.toLower(this.field)) && se.type === FieldQuery.QueryTypeExact;

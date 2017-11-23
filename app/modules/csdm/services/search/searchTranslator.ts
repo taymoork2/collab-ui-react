@@ -16,6 +16,7 @@ export class SearchTranslator {
   };
 
   private fieldNameTranslationTable: { [fieldKey: string]: string };
+  private fieldNameDisplayNameTranslationTable: { [fieldKey: string]: string };
   private csdmPartOfTranslationTable: any[];
   private currentLanguage: string;
 
@@ -28,6 +29,7 @@ export class SearchTranslator {
         });
       this.csdmPartOfTranslationTable = _.toPairs(csdmTranslationTable);
       this.fieldNameTranslationTable = _.mapValues(SearchTranslator.fieldNameTranslations, (translation) => this.getTranslatedFieldKey(translation.tKey));
+      this.fieldNameDisplayNameTranslationTable = _.mapValues(SearchTranslator.fieldNameTranslations, (translation) => this.$translate.instant(translation.tKey));
     }
   }
 
@@ -151,6 +153,13 @@ export class SearchTranslator {
       });
   }
 
+  public static getFieldTranslationKeyPrefix(searchField: string): string {
+    return _.findKey(SearchTranslator.translationKeyToSearchFieldConversionTable,
+      (field: string) => {
+        return _.isEqual(_.toLower(searchField), _.toLower(field));
+      });
+  }
+
   private static fieldNameTranslations: {
     [fieldKey: string]: {
       tKey: string,
@@ -164,12 +173,18 @@ export class SearchTranslator {
     connectionstatus: {
       tKey: 'spacesPage.statusHeader',
       getValueTranslationKey: (value: string) => {
+        if ('unknown' === _.toLower(value)) {
+          return 'common.unknown';
+        }
         return 'CsdmStatus.connectionStatus.' + _.toUpper(value);
       },
     },
     upgradechannel: {
       tKey: 'deviceSettings.softwareUpgradeChannel',
       getValueTranslationKey: (value: string) => {
+        if ('unknown' === _.toLower(value)) {
+          return 'common.unknown';
+        }
         return 'CsdmStatus.upgradeChannels.' + _.startCase(_.toLower(value)).replace(new RegExp(' ', 'g'), '_');
       },
       normalizeUnknownValueKey: (value: string) => {
@@ -179,6 +194,9 @@ export class SearchTranslator {
     activeinterface: {
       tKey: 'deviceOverviewPage.networkConnectivity',
       getValueTranslationKey: (value: string) => {
+        if ('unknown' === _.toLower(value)) {
+          return 'common.unknown';
+        }
         return 'CsdmStatus.activeInterface.' + _.camelCase(_.toLower(value));
       },
     },
@@ -196,11 +214,14 @@ export class SearchTranslator {
     },
     errorcodes: {
       tKey: 'deviceOverviewPage.issues',
+      getValueTranslationKey: (value: string) => {
+        return 'CsdmStatus.errorCodes.' + value + '.type';
+      },
     },
     serial: {
       tKey: 'deviceOverviewPage.serial',
     },
-    tags: {
+    tag: {
       tKey: 'spacesPage.tags',
     },
   };
@@ -246,10 +267,18 @@ export class SearchTranslator {
   }
 
   public translateQueryField(field: string): string {
+    return this.getFieldFromTable(field, this.fieldNameTranslationTable);
+  }
+
+  public getTranslatedQueryFieldDisplayName(field: string): string {
+    return this.getFieldFromTable(field, this.fieldNameDisplayNameTranslationTable);
+  }
+
+  private getFieldFromTable(field: string, table: { [fieldKey: string]: string }): string {
 
     this.updateLanguageIfNeeded();
 
-    const translatedField = this.fieldNameTranslationTable[_.toLower(field)];
+    const translatedField = table[_.toLower(field)];
     if (_.isEmpty(translatedField)) {
       return field;
     }
@@ -277,5 +306,18 @@ export class SearchTranslator {
     }
 
     return match;
+  }
+
+  public lookupTranslatedQueryValueDisplayName(queryValue: string, searchField: string): string {
+    this.updateLanguageIfNeeded();
+    const searchFieldLower = _.toLower(searchField);
+
+    const translatedFieldInfo = SearchTranslator.fieldNameTranslations[searchFieldLower];
+    if (!translatedFieldInfo || !translatedFieldInfo.getValueTranslationKey) {
+      return queryValue;
+    }
+    const possibleTransKey = translatedFieldInfo.getValueTranslationKey(queryValue);
+
+    return this.$translate.instant(possibleTransKey);
   }
 }

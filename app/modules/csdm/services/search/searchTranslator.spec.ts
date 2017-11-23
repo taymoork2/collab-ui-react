@@ -9,7 +9,6 @@ const keyMock = {
   'CsdmStatus.connectionStatus.CONNECTED_WITH_ISSUES': 'Online, med problemer',
   'CsdmStatus.connectionStatus.DISCONNECTED': 'Ikke pålogget',
   'CsdmStatus.connectionStatus.OFFLINE_EXPIRED': 'Deaktivert',
-  'CsdmStatus.connectionStatus.UNKNOWN': 'Ukjent',
   'CsdmStatus.WithDevices': 'Med enheter',
   'CsdmStatus.upgradeChannels.Specialcharone': '在线',
   'CsdmStatus.upgradeChannels.Stable': 'Stabil',
@@ -20,37 +19,38 @@ const keyMock = {
   'CsdmStatus.activeInterface.lan': 'Kablet',
   'CsdmStatus.activeInterface.wlan': 'Trådløst',
   'CsdmStatus.activeInterface.wlan2': 'translated.CsdmStatus.activeInterface.wlan2',
-  'CsdmStatus.errorCodes.mediaProtocol.type': 'Nettverksporter blokkert',
-  'CsdmStatus.errorCodes.mediaProtocol.message': 'En brannmur kan blokkere media på UDP. Samtalekvalitet kan være redusert. For informasjon om krav til nettverksporter, se artikkelen <a href=\'https://support.ciscospark.com/customer/portal/articles/1911657\' class=\'issue-link\'>Brannmurer og nettverkskrav for Cisco Spark App</a>.',
-  'CsdmStatus.errorCodes.TCPMediaFallback.type': 'Nettverksporter blokkert',
-  'CsdmStatus.errorCodes.TCPMediaFallback.message': 'En brannmur kan blokkere media på UDP. Samtalekvalitet kan være redusert. For informasjon om krav til nettverksporter, se artikkelen <a href=\'https://support.ciscospark.com/customer/portal/articles/1911657\' class=\'issue-link\'>Brannmurer og nettverkskrav for Cisco Spark App</a>.',
-  'CsdmStatus.errorCodes.MediaBlockingDetected.type': 'Nettverksporter blokkert',
-  'CsdmStatus.errorCodes.MediaBlockingDetected.message': 'En brannmur kan blokkere media på UDP og TCP. Samtalekvalitet kan være redusert. For informasjon om krav til nettverksporter, se artikkelen <a href=\'https://support.ciscospark.com/customer/portal/articles/1911657\' class=\'issue-link\'>Brannmurer og nettverkskrav for Cisco Spark App</a>.',
-  'CsdmStatus.errorCodes.TemperatureCheck.type': 'Høy temperatur',
-  'CsdmStatus.errorCodes.TemperatureCheck.message': 'Systemtemperaturen er for høy.',
-  'CsdmStatus.errorCodes.OSDVideoOutput.type': 'Hovedskjerm ikke funnet',
-  'CsdmStatus.errorCodes.OSDVideoOutput.message': 'Sjekk at hovedskjermen er påslått og tilkoblet rett skjermport på videosystemet.',
+  'CsdmStatus.errorCodes.mediaprotocol.type': 'Nettverksporter blokkert',
+  'CsdmStatus.errorCodes.mediaprotocol.message': 'En brannmur kan blokkere media på UDP. Samtalekvalitet kan være redusert. For informasjon om krav til nettverksporter, se artikkelen <a href=\'https://support.ciscospark.com/customer/portal/articles/1911657\' class=\'issue-link\'>Brannmurer og nettverkskrav for Cisco Spark App</a>.',
+  'CsdmStatus.errorCodes.tcpmediafallback.type': 'Nettverksporter blokkert',
+  'CsdmStatus.errorCodes.tcpmediafallback.message': 'En brannmur kan blokkere media på UDP. Samtalekvalitet kan være redusert. For informasjon om krav til nettverksporter, se artikkelen <a href=\'https://support.ciscospark.com/customer/portal/articles/1911657\' class=\'issue-link\'>Brannmurer og nettverkskrav for Cisco Spark App</a>.',
+  'CsdmStatus.errorCodes.mediablockingdetected.type': 'Nettverksporter blokkert',
+  'CsdmStatus.errorCodes.mediablockingdetected.message': 'En brannmur kan blokkere media på UDP og TCP. Samtalekvalitet kan være redusert. For informasjon om krav til nettverksporter, se artikkelen <a href=\'https://support.ciscospark.com/customer/portal/articles/1911657\' class=\'issue-link\'>Brannmurer og nettverkskrav for Cisco Spark App</a>.',
+  'CsdmStatus.errorCodes.temperaturecheck.type': 'Høy temperatur',
+  'CsdmStatus.errorCodes.temperaturecheck.message': 'Systemtemperaturen er for høy.',
+  'CsdmStatus.errorCodes.osdvideooutput.type': 'Hovedskjerm ikke funnet',
+  'CsdmStatus.errorCodes.osdvideooutput.message': 'Sjekk at hovedskjermen er påslått og tilkoblet rett skjermport på videosystemet.',
   'CsdmStatus.errorCodes.noupgrade.type': 'Automatiske oppdateringer deaktivert',
   'CsdmStatus.errorCodes.noupgrade.message': 'Systemprogramvaren vil ikke bli oppdatert.',
-  'CsdmStatus.errorCodes.NTPStatus.type': 'Tidsserver kan ikke nås',
-  'CsdmStatus.errorCodes.NTPStatus.message': 'Koblingen til en NTP-server kunne ikke etableres. Tiden som vises på endepunktet kan være feil.',
-  'CsdmStatus.errorCodes.AudioPairingInterference.type': 'Signalforstyrrelser fra andre enheter',
-  'CsdmStatus.errorCodes.AudioPairingInterference.message': 'Det er ultralyd signalforstyrrelse i dette rommet fra andre enheter (f.eks. andre videosystemer) som kan forhindre paring mellom videosystemet og din telefon eller bærbare PC.',
-  'CsdmStatus.errorCodes.ECReferenceDelay.type': 'Lydforsinkelse',
-  'CsdmStatus.errorCodes.ECReferenceDelay.message': 'Skjerminnstillingene dine fører til en forsinkelse av lyden. Juster skjerminnstillingene dine til en passende modus (f.eks. spillemodus).',
-  'CsdmStatus.errorCodes.UltrasoundSpeakerAvailability.type': 'Ingen innebygget ultralyd-høyttaler',
-  'CsdmStatus.errorCodes.UltrasoundSpeakerAvailability.message': 'Denne maskinvareversjonen av SX10 har ikke en innebygget ultralyd-høyttaler.',
-  'CsdmStatus.errorCodes.MissingEncryptionKey.type': 'Mangler krypteringsalternativnøkkel',
-  'CsdmStatus.errorCodes.MissingEncryptionKey.message': 'Legg til en krypteringsalternativnøkkel.',
-  'CsdmStatus.errorCodes.ConfiguredForTestAutomation.type': 'Konfigurert for testautomatisering',
-  'CsdmStatus.errorCodes.ConfiguredForTestAutomation.message': 'Metrikk- og loggrapportering påvirkes.',
-  'CsdmStatus.errorCodes.TouchPanelConnection.type': 'Berøringsskjerm nødvendig',
-  'CsdmStatus.errorCodes.TouchPanelConnection.message': 'Det er ingen berøringsskjerm tilkoblet rom-enheten. Sjekk kabelen som kobler berøringsskjermen til rom-enheten.',
-  'CsdmStatus.errorCodes.NetworkQuality.type': 'Pakketap oppdaget',
-  'CsdmStatus.errorCodes.NetworkQuality.message': 'I løpet av den forrige samtalen oppdaget vi et nivå av pakketap som kan ha påvirket samtalekvaliteten. Pakketap forårsakes vanligvis av nettverksblokkering.',
+  'CsdmStatus.errorCodes.ntpstatus.type': 'Tidsserver kan ikke nås',
+  'CsdmStatus.errorCodes.ntpstatus.message': 'Koblingen til en NTP-server kunne ikke etableres. Tiden som vises på endepunktet kan være feil.',
+  'CsdmStatus.errorCodes.audiopairinginterference.type': 'Signalforstyrrelser fra andre enheter',
+  'CsdmStatus.errorCodes.audiopairinginterference.message': 'Det er ultralyd signalforstyrrelse i dette rommet fra andre enheter (f.eks. andre videosystemer) som kan forhindre paring mellom videosystemet og din telefon eller bærbare PC.',
+  'CsdmStatus.errorCodes.ecreferencedelay.type': 'Lydforsinkelse',
+  'CsdmStatus.errorCodes.ecreferencedelay.message': 'Skjerminnstillingene dine fører til en forsinkelse av lyden. Juster skjerminnstillingene dine til en passende modus (f.eks. spillemodus).',
+  'CsdmStatus.errorCodes.ultrasoundspeakeravailability.type': 'Ingen innebygget ultralyd-høyttaler',
+  'CsdmStatus.errorCodes.ultrasoundspeakeravailability.message': 'Denne maskinvareversjonen av SX10 har ikke en innebygget ultralyd-høyttaler.',
+  'CsdmStatus.errorCodes.missingencryptionkey.type': 'Mangler krypteringsalternativnøkkel',
+  'CsdmStatus.errorCodes.missingencryptionkey.message': 'Legg til en krypteringsalternativnøkkel.',
+  'CsdmStatus.errorCodes.configuredfortestautomation.type': 'Konfigurert for testautomatisering',
+  'CsdmStatus.errorCodes.configuredfortestautomation.message': 'Metrikk- og loggrapportering påvirkes.',
+  'CsdmStatus.errorCodes.touchpanelconnection.type': 'Berøringsskjerm nødvendig',
+  'CsdmStatus.errorCodes.touchpanelconnection.message': 'Det er ingen berøringsskjerm tilkoblet rom-enheten. Sjekk kabelen som kobler berøringsskjermen til rom-enheten.',
+  'CsdmStatus.errorCodes.networkquality.type': 'Pakketap oppdaget',
+  'CsdmStatus.errorCodes.networkquality.message': 'I løpet av den forrige samtalen oppdaget vi et nivå av pakketap som kan ha påvirket samtalekvaliteten. Pakketap forårsakes vanligvis av nettverksblokkering.',
   'CsdmStatus.errorCodes.unknown.type': 'En ukjent feil oppsto',
   'CsdmStatus.errorCodes.unknown.message': 'Enheten rapporterte en ukjent feil, og ingen beskrivelse er tilgjengelig. Feilkoden er: {{errorCode}}',
   'CsdmStatus.errorCodes.unknown.message_with_description': 'Enheten rapporterte en ukjent feil. Feilkoden er: {{errorCode}}. Beskrivelse: {{description}}',
+  'common.unknown': 'Ukjent',
 };
 
 describe('SearchTranslator', () => {
@@ -78,8 +78,16 @@ describe('SearchTranslator', () => {
       expect(SearchTranslator.getSearchField('Csdm.The.unknown.thing')).toBeUndefined();
     });
 
+    it('should map correct translation key prefix', function () {
+      expect('CsdmStatus.upgradeChannels.').toEqual(SearchTranslator.getFieldTranslationKeyPrefix('upgradechannel'));
+      expect('CsdmStatus.errorCodes.').toEqual(SearchTranslator.getFieldTranslationKeyPrefix('errorcodes'));
+      expect('CsdmStatus.connectionStatus.').toEqual(SearchTranslator.getFieldTranslationKeyPrefix('connectionstatus'));
+      expect('CsdmStatus.upgradeChannels.').toEqual(SearchTranslator.getFieldTranslationKeyPrefix('upgradechannel'));
+      expect(SearchTranslator.getFieldTranslationKeyPrefix('madeupfield')).toBeUndefined();
+    });
+
     it('should translate single term', function () {
-      expectQueryToFindTranslation('krypteringsalternativnøkkel', 'errorcodes=MissingEncryptionKey');
+      expectQueryToFindTranslation('krypteringsalternativnøkkel', 'errorcodes=missingencryptionkey');
       expectQueryToFindTranslation('Online, med problemer', 'connectionstatus=CONNECTED_WITH_ISSUES');
       expectQueryToFindTranslation('Deaktivert', 'connectionstatus=OFFLINE_EXPIRED or errorcodes=noupgrade');
       expectQueryToFindTranslation('Forhåndsvisning', 'upgradechannel=Preview');
@@ -89,7 +97,7 @@ describe('SearchTranslator', () => {
     });
 
     it('should translate an incomplete single term', function () {
-      expectQueryToFindTranslation('krypteringsalternativnø', 'errorcodes=MissingEncryptionKey');
+      expectQueryToFindTranslation('krypteringsalternativnø', 'errorcodes=missingencryptionkey');
       expectQueryToFindTranslation('Online, med problem', 'connectionstatus=CONNECTED_WITH_ISSUES');
       expectQueryToFindTranslation('Deaktiver', 'connectionstatus=OFFLINE_EXPIRED or errorcodes=noupgrade');
       expectQueryToFindTranslation('Forhåndsvisni', 'upgradechannel=Preview');
@@ -97,7 +105,7 @@ describe('SearchTranslator', () => {
     });
 
     it('should translate single phrase', function () {
-      expectQueryToFindTranslation('"innebygget ultralyd-høyttaler"', 'errorcodes=UltrasoundSpeakerAvailability');
+      expectQueryToFindTranslation('"innebygget ultralyd-høyttaler"', 'errorcodes=ultrasoundspeakeravailability');
     });
 
     it('should not translate incorrect single phrase', function () {
@@ -110,11 +118,11 @@ describe('SearchTranslator', () => {
     });
 
     it('should translate an all expressions match', function () {
-      expectQueryToFindTranslation('innebygget ultralyd-høyttaler', 'errorcodes=UltrasoundSpeakerAvailability');
+      expectQueryToFindTranslation('innebygget ultralyd-høyttaler', 'errorcodes=ultrasoundspeakeravailability');
     });
 
     it('should translate single field term', function () {
-      expectQueryToFindTranslation('errorCodes:krypteringsalternativnøkkel', 'errorcodes=MissingEncryptionKey');
+      expectQueryToFindTranslation('errorCodes:krypteringsalternativnøkkel', 'errorcodes=missingencryptionkey');
     });
 
     it('should not translate single field term matching only error key', function () {
@@ -152,7 +160,7 @@ describe('SearchTranslator', () => {
   describe('translateQuery', () => {
 
     it('should translate single term', function () {
-      expectQueryToTranslateTo('krypteringsalternativnøkkel', 'krypteringsalternativnøkkel or errorcodes=MissingEncryptionKey');
+      expectQueryToTranslateTo('krypteringsalternativnøkkel', 'krypteringsalternativnøkkel or errorcodes=missingencryptionkey');
       expectQueryToTranslateTo('Online, med problemer', '(online, and med and problemer) or connectionstatus=CONNECTED_WITH_ISSUES');
       expectQueryToTranslateTo('Deaktivert', 'deaktivert or connectionstatus=OFFLINE_EXPIRED or errorcodes=noupgrade');
       expectQueryToTranslateTo('Forhåndsvisning', 'forhåndsvisning or upgradechannel=Preview');
@@ -163,22 +171,22 @@ describe('SearchTranslator', () => {
     });
 
     it('should translate multiple terms', function () {
-      expectQueryToTranslateTo('krypteringsalternativnøkkel sx10x1', '(krypteringsalternativnøkkel or errorcodes=MissingEncryptionKey) and sx10x1');
-      expectQueryToTranslateTo('sx10X1 krypteringsalternativnøkkel', 'sx10x1 and (krypteringsalternativnøkkel or errorcodes=MissingEncryptionKey)');
-      expectQueryToTranslateTo('sx10X2 "innebygget ultralyd-høyttaler"', 'sx10x2 and ("innebygget ultralyd-høyttaler" or errorcodes=UltrasoundSpeakerAvailability)');
-      expectQueryToTranslateTo('"innebygget ultralyd-høyttaler" sx10X ', '("innebygget ultralyd-høyttaler" or errorcodes=UltrasoundSpeakerAvailability) and sx10x');
-      expectQueryToTranslateTo('sx10X3 innebygget ultralyd-høyttaler', 'sx10x3 and ((innebygget and ultralyd-høyttaler) or errorcodes=UltrasoundSpeakerAvailability)');
-      expectQueryToTranslateTo('innebygget ultralyd-høyttaler sx10X ', '((innebygget and ultralyd-høyttaler) or errorcodes=UltrasoundSpeakerAvailability) and sx10x');
-      expectQueryToTranslateTo('Nettverksporter blokkert', '(nettverksporter and blokkert) or errorcodes=mediaProtocol or errorcodes=TCPMediaFallback or errorcodes=MediaBlockingDetected');
-      expectQueryToTranslateTo('"Nettverksporter blokkert"', '"nettverksporter blokkert" or errorcodes=mediaProtocol or errorcodes=TCPMediaFallback or errorcodes=MediaBlockingDetected');
+      expectQueryToTranslateTo('krypteringsalternativnøkkel sx10x1', '(krypteringsalternativnøkkel or errorcodes=missingencryptionkey) and sx10x1');
+      expectQueryToTranslateTo('sx10X1 krypteringsalternativnøkkel', 'sx10x1 and (krypteringsalternativnøkkel or errorcodes=missingencryptionkey)');
+      expectQueryToTranslateTo('sx10X2 "innebygget ultralyd-høyttaler"', 'sx10x2 and ("innebygget ultralyd-høyttaler" or errorcodes=ultrasoundspeakeravailability)');
+      expectQueryToTranslateTo('"innebygget ultralyd-høyttaler" sx10X ', '("innebygget ultralyd-høyttaler" or errorcodes=ultrasoundspeakeravailability) and sx10x');
+      expectQueryToTranslateTo('sx10X3 innebygget ultralyd-høyttaler', 'sx10x3 and ((innebygget and ultralyd-høyttaler) or errorcodes=ultrasoundspeakeravailability)');
+      expectQueryToTranslateTo('innebygget ultralyd-høyttaler sx10X ', '((innebygget and ultralyd-høyttaler) or errorcodes=ultrasoundspeakeravailability) and sx10x');
+      expectQueryToTranslateTo('Nettverksporter blokkert', '(nettverksporter and blokkert) or errorcodes=mediaprotocol or errorcodes=tcpmediafallback or errorcodes=mediablockingdetected');
+      expectQueryToTranslateTo('"Nettverksporter blokkert"', '"nettverksporter blokkert" or errorcodes=mediaprotocol or errorcodes=tcpmediafallback or errorcodes=mediablockingdetected');
     });
 
     it('should translate multiple terms ored', function () {
-      expectQueryToTranslateTo('krypteringsalternativnøkkel or "innebygget ultralyd-høyttaler"', '(krypteringsalternativnøkkel or errorcodes=MissingEncryptionKey) or ("innebygget ultralyd-høyttaler" or errorcodes=UltrasoundSpeakerAvailability)');
+      expectQueryToTranslateTo('krypteringsalternativnøkkel or "innebygget ultralyd-høyttaler"', '(krypteringsalternativnøkkel or errorcodes=missingencryptionkey) or ("innebygget ultralyd-høyttaler" or errorcodes=ultrasoundspeakeravailability)');
     });
 
     it('should translate multiple terms anded', function () {
-      expectQueryToTranslateTo('krypteringsalternativnøkkel and "innebygget ultralyd-høyttaler"', '(krypteringsalternativnøkkel or errorcodes=MissingEncryptionKey) and ("innebygget ultralyd-høyttaler" or errorcodes=UltrasoundSpeakerAvailability)');
+      expectQueryToTranslateTo('krypteringsalternativnøkkel and "innebygget ultralyd-høyttaler"', '(krypteringsalternativnøkkel or errorcodes=missingencryptionkey) and ("innebygget ultralyd-høyttaler" or errorcodes=ultrasoundspeakeravailability)');
     });
 
     it('should expectQueryToTranslateTo an partial expression match', function () {
@@ -227,7 +235,7 @@ describe('SearchTranslator', () => {
       expectFieldToTranslateTo('connectionstatus', 'translated.spacespage.statusheader');
       expectFieldToTranslateTo('sipurl', 'translated.deviceoverviewpage.sipurl');
       expectFieldToTranslateTo('errorcodes', 'translated.deviceoverviewpage.issues');
-      expectFieldToTranslateTo('tags', 'translated.spacespage.tags');
+      expectFieldToTranslateTo('tag', 'translated.spacespage.tags');
     });
 
     it('should translate all supported search fields case insensitive', function () {
@@ -250,7 +258,52 @@ describe('SearchTranslator', () => {
     }
   });
 
-  describe('getFieldName', () => {
+  describe('getTranslatedQueryFieldDisplayName', () => {
+
+    beforeEach(function () {
+      spyOn(transMock, 'instant').and.callFake(key => 'translated.' + key);
+    });
+
+    it('should translate all supported search fields', function () {
+      expectFieldToTranslateToDisplayName('displayname', 'translated.spacesPage.nameHeader');
+      expectFieldToTranslateToDisplayName('cisuuid', 'cisuuid');
+      expectFieldToTranslateToDisplayName('accounttype', 'accounttype');
+      expectFieldToTranslateToDisplayName('activeinterface', 'translated.deviceOverviewPage.networkConnectivity');
+      expectFieldToTranslateToDisplayName('serial', 'translated.deviceOverviewPage.serial');
+      expectFieldToTranslateToDisplayName('mac', 'translated.deviceOverviewPage.macAddr');
+      expectFieldToTranslateToDisplayName('ip', 'translated.deviceOverviewPage.ipAddr');
+      expectFieldToTranslateToDisplayName('description', 'description');
+      expectFieldToTranslateToDisplayName('productfamily', 'productfamily');
+      expectFieldToTranslateToDisplayName('software', 'software');
+      expectFieldToTranslateToDisplayName('upgradechannel', 'translated.deviceSettings.softwareUpgradeChannel');
+      expectFieldToTranslateToDisplayName('product', 'translated.spacesPage.typeHeader');
+      expectFieldToTranslateToDisplayName('connectionstatus', 'translated.spacesPage.statusHeader');
+      expectFieldToTranslateToDisplayName('sipurl', 'translated.deviceOverviewPage.sipUrl');
+      expectFieldToTranslateToDisplayName('errorcodes', 'translated.deviceOverviewPage.issues');
+      expectFieldToTranslateToDisplayName('tag', 'translated.spacesPage.tags');
+    });
+
+    it('should translate all supported search fields case insensitive', function () {
+      expectFieldToTranslateToDisplayName('Displayname', 'translated.spacesPage.nameHeader');
+      expectFieldToTranslateToDisplayName('Upgradechannel', 'translated.deviceSettings.softwareUpgradeChannel');
+      expectFieldToTranslateToDisplayName('DISPLAYNAME', 'translated.spacesPage.nameHeader');
+      expectFieldToTranslateToDisplayName('UPGRADECHANNEL', 'translated.deviceSettings.softwareUpgradeChannel');
+      expectFieldToTranslateToDisplayName('displayname', 'translated.spacesPage.nameHeader');
+      expectFieldToTranslateToDisplayName('upgradechannel', 'translated.deviceSettings.softwareUpgradeChannel');
+    });
+
+    it('should not translate an unsupported search field', function () {
+      expectFieldToTranslateToDisplayName('qwerty', 'qwerty');
+    });
+
+    function expectFieldToTranslateToDisplayName(fieldInQuery: string, expectedLocalizedField: string) {
+      const searchTranslator = new SearchTranslator(transMock);
+      const translatedQueryField = searchTranslator.getTranslatedQueryFieldDisplayName(fieldInQuery);
+      expect(translatedQueryField).toBe(expectedLocalizedField);
+    }
+  });
+
+  describe('getUniversalFieldName', () => {
     beforeEach(function () {
       spyOn(transMock, 'instant').and.callFake(key => 'translated.' + key);
     });
@@ -266,7 +319,7 @@ describe('SearchTranslator', () => {
       expectLookupByTranslatedField('translated.deviceOverviewPage.sipUrl', 'sipurl');
       expectLookupByTranslatedField('translated.deviceOverviewPage.issues', 'errorcodes');
       expectLookupByTranslatedField('translated.deviceOverviewPage.serial', 'serial');
-      expectLookupByTranslatedField('translated.spacesPage.tags', 'tags');
+      expectLookupByTranslatedField('translated.spacesPage.tags', 'tag');
     });
 
     it('should translate supported search fields case insensitive', function () {
@@ -298,14 +351,12 @@ describe('SearchTranslator', () => {
     it('should a translate connectionStatus search field value to upper', function () {
       expectQueryValueToTranslateTo('connectionstatus', 'uppercase1', 'translated.CsdmStatus.connectionStatus.UPPERCASE1');
       expectQueryValueToTranslateTo('connEctionstaTus', 'uppercase1', 'translated.CsdmStatus.connectionStatus.UPPERCASE1');
-
     });
 
     it('should a translate upgradechannel search field value to camel', function () {
       expectQueryValueToTranslateTo('upgradechannel', 'UPPERCASE', 'translated.CsdmStatus.upgradeChannels.Uppercase');
       expectQueryValueToTranslateTo('upgradechannel', 'uppercase two', 'translated.CsdmStatus.upgradeChannels.Uppercase_Two');
       expectQueryValueToTranslateTo('upgraDechaNnel', 'uppErcase', 'translated.CsdmStatus.upgradeChannels.Uppercase');
-
     });
 
     it('should a translate networkConnectivity search field value to lower', function () {
@@ -323,6 +374,12 @@ describe('SearchTranslator', () => {
 
     it('should not a translate value for unsupported field', function () {
       expectQueryValueToTranslateTo('qwertyX', 'qwerty', 'qwerty');
+    });
+
+    it('should translate to \'common.unknown\' for fields we expect to have unknowns', function () {
+      expectQueryValueToTranslateTo('connectionstatus', 'UNKNOWN', 'translated.common.unknown');
+      expectQueryValueToTranslateTo('upgradechannel', 'unknown', 'translated.common.unknown');
+      expectQueryValueToTranslateTo('activeinterface', 'Unknown', 'translated.common.unknown');
     });
 
     it('should not translate when not exact search', function () {
@@ -364,6 +421,11 @@ describe('SearchTranslator', () => {
     it('should translate networkConnectivity', function () {
       expectQueryValueToTranslateBothWays('activeinterface', 'wlan', 'Trådløst');
       expectQueryValueToTranslateBothWays('actiVeinteRface', 'lan', 'Kablet');
+    });
+
+    it('should translate errorCodes', function () {
+      expectQueryValueToTranslateBothWays('errorCodes', 'osdvideooutput', 'Hovedskjerm ikke funnet');
+      expectQueryValueToTranslateBothWays('erroRcodes', 'noupgrade', 'Automatiske oppdateringer deaktivert');
     });
 
     it('should not a translate value for unsupported field', function () {
