@@ -1,3 +1,5 @@
+const _ = require('lodash');
+const args = require('yargs').argv;
 const path = require('path');
 
 const appPath = path.resolve('./app');
@@ -260,3 +262,16 @@ exports.instrumentTs = {
   ],
   enforce: 'post',
 };
+
+function stripCacheLoader(loaderList) {
+  return _.reject(loaderList, {
+    loader: 'cache-loader',
+  });
+}
+
+// remove 'cache-loader' for CLI switch
+if (args.env.nocacheloader) {
+  exports.js.use = stripCacheLoader(exports.js.use);
+  exports.ts.use = stripCacheLoader(exports.ts.use);
+  exports.scss.use = stripCacheLoader(exports.scss.use);
+}

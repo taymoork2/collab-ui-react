@@ -99,7 +99,7 @@ function phase_2 {
         set +e
         # - 'typings' seems to be required for webpack to succeed
         yarn typings
-        time nice -10 yarn build --env.nolint --env.noprogress --devtool source-map
+        time nice -10 yarn build --env.nolint --env.noprogress --env.nocacheloader --devtool source-map
         echo $? > ./.cache/webpack_exit_code
         set -e
     ) &
