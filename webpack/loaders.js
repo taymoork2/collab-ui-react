@@ -270,7 +270,7 @@ function stripCacheLoader(loaderList) {
 }
 
 // remove 'cache-loader' for CLI switch
-if (args.env.nocacheloader) {
+if (args.env && args.env.nocacheloader) {
   exports.js.use = stripCacheLoader(exports.js.use);
   exports.ts.use = stripCacheLoader(exports.ts.use);
   exports.scss.use = stripCacheLoader(exports.scss.use);
