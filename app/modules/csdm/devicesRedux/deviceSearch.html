@@ -24,7 +24,7 @@
            ng-if="dctrl.searchObject.hasAnyBulletOrEditedText()"></i>
       </div>
       <div class="dropdown-positioner">
-        <div class="suggestions-dropdown" ng-mouseleave="dctrl.suggestions.resetActive()"
+        <div class="suggestions-dropdown" ng-mouseleave="dctrl.suggestions.setFirstActive()"
              ng-show="dctrl.showSuggestions || dctrl.startSelecting" ng-mousedown="dctrl.startSelecting = true"
              ng-mouseup="dctrl.selectSuggestion(dctrl.suggestions.getActiveSuggestion());dctrl.startSelecting = false">
           <ul>
