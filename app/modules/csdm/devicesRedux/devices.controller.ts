@@ -13,6 +13,7 @@ export class DevicesCtrl {
   public anyDevicesOrCodesLoaded = true; //TODO remove
   public searchInteraction = new SearchInteraction();
   public issearching = false;
+  private devicesHaveBeenSeen = false;
   private _searchResult: SearchResult;
   private _searchObject: SearchObject;
   public licenseError: string;
@@ -90,7 +91,7 @@ export class DevicesCtrl {
   }
 
   public emptydatasource(): boolean {
-    return !this.issearching && this._searchObject && this._searchObject.getTranslatedQueryString(null) === ''
+    return !this.devicesHaveBeenSeen && !this.issearching && this._searchObject && this._searchObject.getTranslatedQueryString(null) === ''
       && (this._searchResult && this._searchResult.hits.total === 0);
   }
 
@@ -158,6 +159,9 @@ export class DevicesCtrl {
   }
 
   public searchResultChanged(result: SearchResult) {
+    if (result && result.hits && result.hits.total > 0) {
+      this.devicesHaveBeenSeen = true;
+    }
     this._searchResult = result;
   }
 
