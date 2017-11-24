@@ -6678,23 +6678,23 @@
       "wlan": "Bezprzewodowe"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "Zablokowane porty sieciowe",
         "message": "Zapora sieciowa może blokować multimedia na portach UDP. Jakość połączenia może się pogorszyć. Informacje na temat wymagań dotyczących portów sieciowych można znaleźć w artykule <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls and Network Requirements for the Cisco Spark App</a>."
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "Zablokowane porty sieciowe",
         "message": "Zapora sieciowa może blokować multimedia na portach UDP. Jakość połączenia może się pogorszyć. Informacje na temat wymagań dotyczących portów sieciowych można znaleźć w artykule <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls and Network Requirements for the Cisco Spark App</a>."
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "Zablokowane porty sieciowe",
         "message": "Zapora sieciowa może blokować multimedia na portach UDP i TCP. Jakość połączenia może się pogorszyć. Informacje na temat wymagań dotyczących portów sieciowych można znaleźć w artykule <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls and Network Requirements for the Cisco Spark App</a>."
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "Wysoka temperatura",
         "message": "Temperatura systemu jest zbyt wysoka."
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "Nie wykryto głównego wyświetlacza",
         "message": "Sprawdź, czy główny wyświetlacz jest włączony i połączony z odpowiednim portem wyjściowym systemu wideo."
       },
@@ -6702,35 +6702,35 @@
         "type": "Wyłączono automatyczne aktualizacje",
         "message": "Oprogramowanie systemowe nie zostanie zaktualizowane."
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "Serwer czasu jest nieosiągalny",
         "message": "Nie można ustanowić połączenia z serwerem NTP. Godzina wyświetlana w punkcie końcowym może być nieprawidłowa."
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "Zakłócenia sygnału pochodzące z innych urządzeń",
         "message": "Inne urządzenia (np. inne systemy wideo) w tym pokoju generują ultradźwiękowe zakłócenia sygnału, które mogą uniemożliwić parowanie systemu wideo z Twoim telefonem lub laptopem."
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "Opóźnienie sygnału audio",
         "message": "Ustawienia monitora powodują opóźnienie sygnału audio. Przełącz monitor w odpowiedni tryb (np. tryb gry)."
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "Brak wbudowanego głośnika ultradźwiękowego",
         "message": "Ta wersja sprzętowa urządzenia SX10 nie jest wyposażona we wbudowany głośnik ultradźwiękowy."
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "Brak klucza opcji szyfrowania",
         "message": "Dodaj klucz opcji szyfrowania."
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "Skonfigurowano na potrzeby automatyzacji testowej",
         "message": "Ma to wpływ na metryki oraz raportowanie w dzienniku."
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "Wymagany jest panel dotykowy",
         "message": "Do urządzenia pokoju nie podłączono panelu dotykowego. Sprawdź kabel łączący panel dotykowy z urządzeniem pokoju."
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "Wykryto utratę pakietów",
         "message": "W trakcie ostatniego połączenia wykryliśmy pewien poziom utraty pakietów, który mógł wpłynąć na jakość połączenia. Utrata pakietów jest zazwyczaj powodowana przeciążeniem sieci."
       },

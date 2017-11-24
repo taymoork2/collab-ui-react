@@ -47,9 +47,9 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
               private $translate: ng.translate.ITranslateService,
               private Notification,
               private $timeout: ng.ITimeoutService) {
-    this.suggestions = new SuggestionDropdown($translate);
+    this.suggestions = new SuggestionDropdown(new SearchTranslator($translate));
 
-    this.suggestions.updateSuggestionsBasedOnSearchResult(this.getDocCount, undefined, this.searchObject);
+    this.suggestions.updateSuggestionsBasedOnSearchResult(undefined, this.searchObject);
   }
 
   public $onInit(): void {
@@ -60,7 +60,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
   private updateSearchResult(result?: SearchResult) {
     this.searchResultChanged({ result: result });
 
-    this.suggestions.updateSuggestionsBasedOnSearchResult(this.getDocCount, result, this.searchObject);
+    this.suggestions.updateSuggestionsBasedOnSearchResult(result, this.searchObject);
   }
 
   public setSortOrder(field: string, order: string) {
@@ -252,15 +252,6 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
 
   public getTranslatedQuery(): string {
     return this.searchObject.getTranslatedQueryString(new SearchTranslator(this.$translate));
-  }
-
-  private getDocCount(searchResult: SearchResult | undefined, aggregation: string, bucketName: string) {
-    const buckets = searchResult
-      && searchResult.aggregations
-      && searchResult.aggregations[aggregation]
-      && searchResult.aggregations[aggregation].buckets;
-    const bucket = _.find(buckets || [], { key: bucketName });
-    return bucket && bucket.docCount || 0;
   }
 
   private deleteLastBullet() {

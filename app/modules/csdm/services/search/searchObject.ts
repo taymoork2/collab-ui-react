@@ -15,9 +15,10 @@ export class SearchObject {
     Aggregate[Aggregate.connectionStatus],
     Aggregate[Aggregate.productFamily],
     Aggregate[Aggregate.activeInterface],
-    // Aggregate[Aggregate.errorCodes],
+    Aggregate[Aggregate.errorCodes],
     Aggregate[Aggregate.software],
     Aggregate[Aggregate.upgradeChannel],
+    Aggregate[Aggregate.tag],
   ];
 
   public size: number = 20;

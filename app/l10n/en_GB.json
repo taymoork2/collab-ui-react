@@ -6678,23 +6678,23 @@
       "wlan": "Wireless"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "Network Ports Blocked",
         "message": "A firewall may be blocking media on UDP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls and Network Requirements for the Cisco Spark App</a>."
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "Network Ports Blocked",
         "message": "A firewall may be blocking media on UDP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls and Network Requirements for the Cisco Spark App</a>."
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "Network Ports Blocked",
         "message": "A firewall may be blocking media on UDP and TCP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls and Network Requirements for the Cisco Spark App</a>."
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "High temperature",
         "message": "System temperature is too high."
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "Main Display Not Detected",
         "message": "Verify that the main display is turned on and connected to the correct display output on the video system."
       },
@@ -6702,35 +6702,35 @@
         "type": "Automatic Updates Disabled",
         "message": "System software will not be updated."
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "Time Server Not Reachable",
         "message": "The connection to an NTP server could not be established. The time displayed on your endpoint may be wrong."
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "Signal interference from other devices",
         "message": "There is an ultrasound signal interference in this room from other devices (i.e. other video systems) that could prevent pairing between the video system and your phone or laptop."
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "Audio Delay",
         "message": "Your monitor settings are adding a delay to your audio. Change the monitor settings to a suitable mode (i.e.: Game mode)."
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "No Embedded Ultrasound Speaker",
         "message": "This hardware version of the SX10 does not have an embedded ultrasound speaker."
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "Missing encryption option key",
         "message": "Please add an encryption option key."
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "Configured for test automation",
         "message": "Metrics and log reporting are affected."
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "Touch Panel Required",
         "message": "There is no touch panel connected to the room device. Check the cable connecting the touch panel to the room device."
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "Packet Loss Detected",
         "message": "During the last call we detected a level of packet loss that may have impacted the call quality. Packet loss is typically caused by network congestion."
       },

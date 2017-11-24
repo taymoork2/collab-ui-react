@@ -108,10 +108,11 @@ export class DeviceHelper {
   }
 
   public diagnosticsEventTranslated(e) {
-    if (this.isTranslatable('CsdmStatus.errorCodes.' + e.type + '.type')) {
+    const type_lower = _.toLower(e.type);
+    if (this.isTranslatable('CsdmStatus.errorCodes.' + type_lower + '.type')) {
       return {
-        type: this.translateOrDefault('CsdmStatus.errorCodes.' + e.type + '.type', e.type),
-        message: this.translateOrDefault('CsdmStatus.errorCodes.' + e.type + '.message', e.description, e.references),
+        type: this.translateOrDefault('CsdmStatus.errorCodes.' + type_lower + '.type', e.type),
+        message: this.translateOrDefault('CsdmStatus.errorCodes.' + type_lower + '.message', e.description, e.references),
       };
     } else if (e.description) {
       return {

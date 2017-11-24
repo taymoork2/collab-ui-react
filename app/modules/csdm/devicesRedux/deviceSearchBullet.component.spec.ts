@@ -58,7 +58,7 @@ describe('deviceSearchBullet', () => {
         expectFieldDisplayForOperatorOR(
           createBullet(new OperatorOr([new FieldQuery('q1', QueryParser.Field_ConnectionStatus, FieldQuery.QueryTypeExact),
             new FieldQuery('q2', QueryParser.Field_ConnectionStatus, FieldQuery.QueryTypeExact),
-            new FieldQuery('q3', QueryParser.Field_Tags, FieldQuery.QueryTypeExact)])),
+            new FieldQuery('q3', QueryParser.Field_Tag, FieldQuery.QueryTypeExact)])),
           QueryParser.Field_ConnectionStatus,
           false);
       });

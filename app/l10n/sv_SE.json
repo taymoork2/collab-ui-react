@@ -6678,23 +6678,23 @@
       "wlan": "Trådlös"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "Blockerade nätverksportar",
         "message": "En brandvägg blockerar eventuellt media på UDP, vilket kan påverka samtalskvaliteten. Information om nätverksportkrav finns i artikeln <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Brandväggar och nätverkskrav för Cisco Spark-appen</a>."
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "Blockerade nätverksportar",
         "message": "En brandvägg blockerar eventuellt media på UDP, vilket kan påverka samtalskvaliteten. Information om nätverksportkrav finns i artikeln <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Brandväggar och nätverkskrav för Cisco Spark-appen</a>."
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "Blockerade nätverksportar",
         "message": "En brandvägg blockerar eventuellt media på UDP och TCP, vilket kan påverka samtalskvaliteten. Information om nätverksportkrav finns i artikeln <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Brandväggar och nätverkskrav för Cisco Spark-appen</a>."
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "Hög temperatur",
         "message": "Systemtemperaturen är för hög."
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "Huvudskärmen hittas inte",
         "message": "Bekräfta att huvudskärmen är påslagen och ansluten till rätt skärmutgång på videosystemet."
       },
@@ -6702,35 +6702,35 @@
         "type": "Automatiska uppdateringar är inaktiverade",
         "message": "Systemets programvara kommer inte att uppdateras."
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "Tidsserver kan ej nås",
         "message": "Anslutningen till en NTP-server kunde inte upprättas. Tiden som visas på din slutpunkt kan vara felaktig."
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "Signalstörningar från andra enheter",
         "message": "Det finns en ultraljudssignalstörning i detta rum som kommer från andra enheter (t.ex. andra videosystem) som kan hindra sammanlänkning mellan videosystemet och din telefon eller bärbara dator."
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "Ljudfördröjning",
         "message": "Dina bildskärmsinställningar innebär fördröjningar i ljudet. Ändra bildskärmsinställningarna till lämpligt läge (t.ex. spelläge)."
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "Ingen inbäddad ultraljudshögtalare",
         "message": "Denna maskinvaruversion av SX10 har ingen inbäddad ultraljudshögtalare."
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "Saknar nyckel för krypteringsalternativ",
         "message": "Lägg till en nyckel för krypteringsalternativ."
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "Konfigurerad för testautomatisering",
         "message": "Statistik och loggrapportering påverkas."
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "Pekskärm krävs",
         "message": "Ingen pekskärm är ansluten till rumsenheten. Kontrollera kabelanslutningen mellan pekskärmen och rumsenheten."
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "Upptäckt paketförlust",
         "message": "Under det senaste samtalet upptäckte vi en nivå av paketförlust som kan ha påverkat samtalskvaliteten. Paketförlust orsakas vanligtvis av nätverksöverbelastning."
       },
