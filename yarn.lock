@@ -9433,6 +9433,10 @@ universalify@^0.1.0:
   version "0.1.1"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/universalify/-/universalify-0.1.1.tgz#fa71badd4437af4c148841e3b3b165f9e9e590b7"
 
+unorm@^1.4.1:
+  version "1.4.1"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/unorm/-/unorm-1.4.1.tgz#364200d5f13646ca8bcd44490271335614792300"
+
 unparse-args@^1.1.0:
   version "1.2.0"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/unparse-args/-/unparse-args-1.2.0.tgz#c2e053d1f6490958c946e33aa8eb8a4ba035ad6a"

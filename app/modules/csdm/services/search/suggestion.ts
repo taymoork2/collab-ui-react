@@ -3,6 +3,7 @@ import { SearchElement } from './searchElement';
 import { SearchObject } from './searchObject';
 import { SearchTranslator } from './searchTranslator';
 import { QueryParser } from './queryParser';
+import { NormalizeHelper } from 'modules/core/l10n/normalize.helper';
 
 export interface ISuggestion {
   searchString: string;
@@ -226,11 +227,11 @@ export class SuggestionDropdown implements ISuggestionDropdown {
     if (!workingElement) {
       return suggestions;
     }
-    const parsedInput = workingElement.toQuery().toLowerCase();
-    const rawInput = searchObject.getWorkingElementRawText();
+    const parsedInput = NormalizeHelper.stripAccents(workingElement.toQuery()).toLowerCase();
+    const rawInput = NormalizeHelper.stripAccents(searchObject.getWorkingElementRawText());
 
     return _.filter(suggestions, (su) => {
-      return su.text && (su.text.toLowerCase().indexOf(parsedInput) > -1 || su.text.toLowerCase().indexOf(rawInput) > -1);
+      return su.text && (NormalizeHelper.stripAccents(su.text).toLowerCase().indexOf(parsedInput) > -1 || su.text.toLowerCase().indexOf(rawInput) > -1);
     });
   }
 }
