@@ -5,7 +5,7 @@ import uuid = require('uuid');
 export class CTService {
   /* @ngInject */
   constructor(
-    // private $http: ng.IHttpService,
+    private $http: ng.IHttpService,
     private $translate: ng.translate.ITranslateService,
     private $modal: IToolkitModalService,
     private Authinfo,
@@ -74,7 +74,7 @@ export class CTService {
   }
 
   public getLogo() {
-    return this.BrandService.getLogoUrl(this.Authinfo.getOrgId()).then(function (logoUrl) {
+    return this.BrandService.getLogoUrl(this.Authinfo.getOrgId()).then((logoUrl) => {
       return this.$http.get(logoUrl, {
         responseType: 'arraybuffer',
       });
@@ -82,7 +82,7 @@ export class CTService {
   }
 
   public getLogoUrl() {
-    return this.BrandService.getSettings(this.Authinfo.getOrgId()).then(function (settings) {
+    return this.BrandService.getSettings(this.Authinfo.getOrgId()).then((settings) => {
       return settings.logoUrl;
     });
   }
@@ -319,8 +319,6 @@ export class CTService {
     }
     return states;
   }
-
-
 }
 
 export class Card {

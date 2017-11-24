@@ -1,7 +1,4 @@
-import { CTService } from './CTService';
-
 describe('Chat Template Service', function () {
-  let $httpBackend, $q, BrandService, CTService: CTService, logoUrlDeferred, orgSettingsDeferred;
   const orgId = 'a-b-c-d';
   const logoUrl = 'https://www.example.com/logo.png';
   const logoResponse = 'logo';
@@ -18,56 +15,57 @@ describe('Chat Template Service', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue(orgId),
   };
 
-  beforeEach(angular.mock.module('Sunlight'));
-  beforeEach(angular.mock.module('Hercules'));
-  beforeEach(angular.mock.module(function ($provide) {
-    $provide.value('UrlConfig', spiedUrlConfig);
-    $provide.value('Authinfo', spiedAuthinfo);
-  }));
-
-  beforeEach(inject(function (_$q_, _$httpBackend_, _BrandService_, _CTService_) {
-    $q = _$q_;
-    $httpBackend = _$httpBackend_;
-    BrandService = _BrandService_;
-    CTService = _CTService_;
-    logoUrlDeferred = $q.defer();
-    orgSettingsDeferred = $q.defer();
-    spyOn(BrandService, 'getLogoUrl').and.returnValue(logoUrlDeferred.promise);
-    return spyOn(BrandService, 'getSettings').and.returnValue(orgSettingsDeferred.promise);
-  }));
+  beforeEach(function () {
+    angular.mock.module('Sunlight');
+    angular.mock.module('Hercules');
+    angular.mock.module(function ($provide) {
+      $provide.value('UrlConfig', spiedUrlConfig);
+      $provide.value('Authinfo', spiedAuthinfo);
+    });
+    this.injectDependencies(
+      '$q',
+      '$httpBackend',
+      'BrandService',
+      'CTService',
+    );
+    this.logoUrlDeferred = this.$q.defer();
+    this.orgSettingsDeferred = this.$q.defer();
+    spyOn(this.BrandService, 'getLogoUrl').and.returnValue(this.logoUrlDeferred.promise);
+    spyOn(this.BrandService, 'getSettings').and.returnValue(this.orgSettingsDeferred.promise);
+  });
 
   it('should return image data when logo url is present', function () {
-    logoUrlDeferred.resolve(logoUrl);
-    $httpBackend.expectGET(logoUrl).respond(200, logoResponse);
-    CTService.getLogo().then(function (response) {
+    this.logoUrlDeferred.resolve(logoUrl);
+    this.$httpBackend.expectGET(logoUrl).respond(200, logoResponse);
+    this.CTService.getLogo().then((response) => {
       expect(angular.equals(response.data, logoResponse)).toBeTruthy();
     });
-    $httpBackend.flush();
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
+    this.$httpBackend.flush();
+    this.$httpBackend.verifyNoOutstandingExpectation();
+    this.$httpBackend.verifyNoOutstandingRequest();
   });
 
   it('should generate chat template script when template id is provided', function () {
-    const result = CTService.generateCodeSnippet(templateId);
+    const result = this.CTService.generateCodeSnippet(templateId);
     expect(result).toContainText(templateId);
     expect(result).toContainText(orgId);
     expect(result).toContainText(appName);
   });
 
   it('should return a promise that resolves to a url, if getting org setting succeeds', function () {
-    orgSettingsDeferred.resolve(orgSettings);
-    return CTService.getLogoUrl().then(function (url) {
+    this.orgSettingsDeferred.resolve(orgSettings);
+    return this.CTService.getLogoUrl().then(function (url) {
       expect(angular.equals(url, logoUrl)).toBeTruthy();
     });
   });
 
   it('should return getOverviewPageCards length as 5, if isVirtualChatAssistantEnabled is true', function () {
-    const result = CTService.getOverviewPageCards('chat', false, true);
+    const result = this.CTService.getOverviewPageCards('chat', false, true);
     expect(result.length).toBe(5);
   });
 
   it('should return getOverviewPageCards length as 5, if isVirtualChatAssistantEnabled is false', function () {
-    const result = CTService.getOverviewPageCards('chat', false, false);
+    const result = this.CTService.getOverviewPageCards('chat', false, false);
     expect(result.length).toBe(4);
   });
 });
