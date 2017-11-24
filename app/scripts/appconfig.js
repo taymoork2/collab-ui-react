@@ -1609,39 +1609,6 @@
               serviceId: {},
             },
           })
-          .state('user-overview.hybrid-services-squared-fusion-gcal', {
-            template: '<hybrid-calendar-service-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)"></hybrid-calendar-service-user-settings>',
-            data: {},
-            params: {
-              userUpdatedCallback: _.noop,
-            },
-            resolve: {
-              userId: /* @ngInject */ function ($stateParams) {
-                return $stateParams.currentUser.id;
-              },
-              userName: /* @ngInject */ function ($stateParams) {
-                return $stateParams.currentUser.userName;
-              },
-              userUpdatedCallback: /* @ngInject */ function ($stateParams) {
-                return $stateParams.userUpdatedCallback;
-              },
-              displayName: translateDisplayName('hercules.serviceNames.squared-fusion-cal'),
-            },
-          })
-          .state('user-overview.hybrid-services-squared-fusion-gcal.history', {
-            views: {
-              'side-panel-container@user-overview': {
-                template: '<user-status-history service-id="\'squared-fusion-gcal\'"></user-status-history>',
-              },
-            },
-            data: {},
-            resolve: {
-              displayName: translateDisplayName('sidePanelBreadcrumb.statusHistory'),
-            },
-            params: {
-              serviceId: {},
-            },
-          })
           .state('user-overview.hybrid-services-squared-fusion-uc', {
             template: '<hybrid-call-service-aggregated-section user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)"></hybrid-call-service-aggregated-section>',
             data: {},

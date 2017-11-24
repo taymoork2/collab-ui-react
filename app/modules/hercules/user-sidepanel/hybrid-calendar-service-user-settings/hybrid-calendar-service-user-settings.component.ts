@@ -26,8 +26,6 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
   public userStatus: IUserStatusWithExtendedMessages;
   public lastStateChangeText: string;
 
-  public stateName: string | undefined;
-
   public orgHasExpresswayBasedCalendarEnabled: boolean;
   public orgHasOffice365Enabled: boolean;
   public orgHasGoogleEnabled: boolean;
@@ -44,7 +42,6 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
     private CloudConnectorService: CloudConnectorService,
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
@@ -54,12 +51,6 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
     private Notification: Notification,
     private USSService: USSService,
   ) { }
-
-  public $onInit() {
-    /* Unfortunate hack because this component is used in different UI-router states, and we need to know which to know which history section to use.
-     * Remove when simplifying hybrid-services-user-sidepanel-section */
-    this.stateName = this.$state.current.name;
-  }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
     const { userId, userEmailAddress,  userUpdatedCallback, preferredWebExSiteName } = changes;
