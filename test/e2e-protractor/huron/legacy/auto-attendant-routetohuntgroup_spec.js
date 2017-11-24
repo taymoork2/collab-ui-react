@@ -58,7 +58,7 @@ describe('Huron Auto Attendant', function () {
 
     }, 120000);
 
-    /*it('should add a single phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+    it('should add a single phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       autoattendant.scrollIntoView(autoattendant.lanesWrapper);
       utils.click(autoattendant.addAANumbers);
@@ -68,7 +68,7 @@ describe('Huron Auto Attendant', function () {
 
       // No save and until valid Phone Menu - see AutoAttn 922
 
-    }, 120000);*/
+    }, 120000);
 
     it('should add Phone Menu Say to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
         
