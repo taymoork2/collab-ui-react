@@ -6678,23 +6678,23 @@
       "wlan": "Wireless"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "Netzwerkports blockiert",
         "message": "Die Firewall blockiert möglicherweise Medien auf UDP. Die Anrufqualität kann beeinträchtigt sein. Informationen zu den Netzwerkanschlussanforderungen finden Sie im Artikel zu <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls und Netzwerkanforderungen für die Cisco Spark-App</a>."
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "Netzwerkports blockiert",
         "message": "Die Firewall blockiert möglicherweise Medien auf UDP. Die Anrufqualität kann beeinträchtigt sein. Informationen zu den Netzwerkanschlussanforderungen finden Sie im Artikel zu <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls und Netzwerkanforderungen für die Cisco Spark-App</a>."
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "Netzwerkports blockiert",
         "message": "Die Firewall blockiert möglicherweise Medien auf UDP und TCP. Die Anrufqualität kann beeinträchtigt sein. Informationen zu den Netzwerkanschlussanforderungen finden Sie im Artikel zu<a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls und Netzwerkanforderungen für die Cisco Spark-App</a>."
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "Hohe Temperatur",
         "message": "Systemtemperatur zu hoch."
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "Hauptdisplay wurde nicht erkannt",
         "message": "Überprüfen Sie, ob das Hauptdisplay eingeschaltet und an die richtige Displayausgabe des Videosystems angeschlossen ist."
       },
@@ -6702,35 +6702,35 @@
         "type": "Automatische Aktualisierungen deaktiviert",
         "message": "System-Software wird nicht aktualisiert."
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "Time Server nicht erreichbar",
         "message": "Es konnte keine Verbindung zu einem NTP-Server aufgebaut werden. Unter Umständen wird auf Ihrem Endpunkt eine falsche Uhrzeit angezeigt."
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "Signalstörung durch andere Geräte",
         "message": "In diesem Raum liegt eine Ultraschall-Signalstörung durch andere Geräte vor (z. B. andere Videosysteme), die eine Kopplung zwischen dem Videosystem und Ihrem Telefon oder Laptop verhindern könnte."
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "Audioverzögerung",
         "message": "Durch Ihre Monitoreinstellungen entsteht eine zusätzliche Audioverzögerung. Stellen Sie Ihren Monitor auf einen geeigneten Modus um (z. B. Spielmodus)."
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "Keine eingebetteten Ultraschall-Lautsprecher",
         "message": "Diese Hardware-Version des SX10 verfügt über keinen eingebetteten Ultraschall-Lautsprecher."
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "Fehlender Schlüssel für die Verschlüsselungsoption",
         "message": "Bitte fügen Sie einen Schlüssel für die Verschlüsselungsoption hinzu."
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "Zur Test-Automatisierung konfiguriert",
         "message": "Hiervon sind die Metriken und Protokollberichte betroffen."
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "Touchpanel erforderlich",
         "message": "Es ist kein Touchpanel mit dem Raumgerät verbunden. Überprüfen Sie das Verbindungskabel zwischen Touchpanel und Raumgerät."
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "Paketverlust erkannt",
         "message": "Während des letzten Anrufs wurde ein Paketverlust festgestellt, der möglicherweise die Anrufqualität beeinflusst hat. Paketverluste werden normalerweise durch Netzüberlastung verursacht."
       },

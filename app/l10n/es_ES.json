@@ -6678,23 +6678,23 @@
       "wlan": "Inalámbrica"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "Puertos de red bloqueados",
         "message": "Es posible que el cortafuegos esté bloqueando el contenido multimedia con el protocolo UDP, lo que puede afectar a la calidad de la llamada. Para obtener información sobre los requisitos del puerto de red, consulte el artículo <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Requisitos de red y firewall para la aplicación Cisco Spark</a>."
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "Puertos de red bloqueados",
         "message": "Es posible que el cortafuegos esté bloqueando el contenido multimedia con el protocolo UDP, lo que puede afectar a la calidad de la llamada. Para obtener información sobre los requisitos del puerto de red, consulte el artículo <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Requisitos de red y firewall para la aplicación Cisco Spark</a>."
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "Puertos de red bloqueados",
         "message": "Es posible que el cortafuegos esté bloqueando el contenido multimedia con los protocolos UDP y TCP, lo que puede afectar a la calidad de la llamada. Para obtener información sobre los requisitos del puerto de red, consulte el artículo <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Requisitos de red y firewall para la aplicación Cisco Spark</a>."
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "Temperatura elevada",
         "message": "La temperatura del sistema es elevada."
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "No se ha detectado la pantalla principal",
         "message": "Compruebe que la pantalla principal está encendida y conectada a la salida correcta de pantalla del sistema de vídeo."
       },
@@ -6702,35 +6702,35 @@
         "type": "Actualizaciones automáticas desactivadas",
         "message": "El software del sistema no se actualizará."
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "No se puede acceder al servidor horario.",
         "message": "No se ha podido establecer conexión con el servidor NTP. La hora que se muestra en su terminal podría ser errónea."
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "Interferencias de señal de otros dispositivos",
         "message": "Existen interferencias de señales de ultrasonido en la sala procedentes de otros dispositivos (p. ej.: otros sistemas de vídeo) que podrían bloquear la conexión entre el sistema de vídeo y su teléfono u ordenador portátil."
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "Retraso del audio",
         "message": "La configuración de su monitor está provocando un retraso del audio. Cambie la configuración del monitor a un modo que no cause conflictos (p. ej.: modo de juego)."
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "Altavoz de ultrasonidos no integrado",
         "message": "La versión del hardware del SX10 no cuenta con ningún altavoz de ultrasonidos integrado."
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "Falta la clave opcional de cifrado",
         "message": "Añada una clave opcional de cifrado."
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "Configurado para la automatización de prueba",
         "message": "Las métricas y los informes de registro se han visto afectados."
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "Se requiere un panel táctil",
         "message": "No hay ningún panel táctil conectado al dispositivo de sala. Compruebe que el cable del panel táctil esté conectado al dispositivo de sala."
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "Pérdida de paquetes detectada",
         "message": "Durante la última llamada, se ha detectado una pérdida de paquetes que puede haber afectado a la calidad de la llamada. Normalmente, esta pérdida de paquetes se debe a una congestión en la red."
       },

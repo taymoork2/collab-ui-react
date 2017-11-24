@@ -1,7 +1,8 @@
-import { BucketData, SearchResult } from './searchResult';
-import { List } from 'lodash';
+import { Aggregations, SearchResult } from './searchResult';
 import { SearchElement } from './searchElement';
 import { SearchObject } from './searchObject';
+import { SearchTranslator } from './searchTranslator';
+import { QueryParser } from './queryParser';
 
 export interface ISuggestion {
   searchString: string;
@@ -33,8 +34,7 @@ export interface ISuggestionDropdown {
 
   updateBasedOnInput(searchObject: SearchObject): void;
 
-  updateSuggestionsBasedOnSearchResult(docCountFunc: (searchResult: SearchResult | undefined, aggregation: string, bucketName: string) => number,
-                                       searchResult: SearchResult | undefined,
+  updateSuggestionsBasedOnSearchResult(searchResult: SearchResult | undefined,
                                        searchObject: SearchObject): void;
 
   onSearchChanged(searchObject: SearchObject): void;
@@ -50,7 +50,14 @@ export class SuggestionDropdown implements ISuggestionDropdown {
   private searchObject: SearchObject;
   private currentBullets: SearchElement[] = [];
 
-  constructor(private $translate: ng.translate.ITranslateService) {
+  private static fieldNamesForSuggestion = [QueryParser.Field_ActiveInterface,
+    QueryParser.Field_UpgradeChannel,
+    QueryParser.Field_Product,
+    QueryParser.Field_ConnectionStatus,
+    QueryParser.Field_ErrorCodes,
+    QueryParser.Field_Tag];
+
+  constructor(private searchTranslator: SearchTranslator) {
   }
 
   public showEmpty(): void {
@@ -92,7 +99,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
     this.removeIrrelevantSuggestions();
   }
 
-  public setActiveSuggestion = (suggestionId: number): void => {
+  public setActiveSuggestion(suggestionId: number): void {
     this.activeSuggestion = this.uiSuggestions[suggestionId].searchString;
     this.activeSuggestionIndex = suggestionId;
   }
@@ -147,83 +154,45 @@ export class SuggestionDropdown implements ISuggestionDropdown {
     return null;
   }
 
-  public updateSuggestionsBasedOnSearchResult(getDocCount: (searchResult: SearchResult | undefined, aggregation: string, bucketName: string) => number,
-                                              searchResult: SearchResult,
+  public updateSuggestionsBasedOnSearchResult(searchResult: SearchResult,
                                               searchObject: SearchObject): void {
     this.updateBasedOnInput(searchObject, searchResult && searchResult.hits.total || 0, false);
-    this.suggestions = [
-      // {
-      //   count: searchResult && searchResult.hits.total || 0,
-      //   searchString: '"' + searchInput + '"',
-      //   field: 'All devices',
-      //   text: 'containing "' + searchInput + '"',
-      // },
-      {
-
-        //TODO: make these generate automatically, instead of $translate, use SearchTranslator that has a key/value to translationkeys
-
-        count: getDocCount(searchResult, 'connectionStatus', 'connected_with_issues'),
-        searchString: 'connectionStatus=CONNECTED_WITH_ISSUES',
-        field: this.$translate.instant('spacesPage.statusHeader'),
-        text: this.$translate.instant('CsdmStatus.connectionStatus.CONNECTED_WITH_ISSUES'),
-      },
-      {
-        count: getDocCount(searchResult, 'connectionStatus', 'offline')
-        + getDocCount(searchResult, 'connectionStatus', 'disconnected'),
-        searchString: 'connectionStatus=DISCONNECTED',
-        field: this.$translate.instant('spacesPage.statusHeader'),
-        text: this.$translate.instant('CsdmStatus.connectionStatus.DISCONNECTED'),
-      },
-      {
-        count: getDocCount(searchResult, 'connectionStatus', 'offline_expired'),
-        searchString: 'connectionStatus=OFFLINE_EXPIRED',
-        field: this.$translate.instant('spacesPage.statusHeader'),
-        text: this.$translate.instant('CsdmStatus.connectionStatus.OFFLINE_EXPIRED'),
-      },
-      {
-        count: getDocCount(searchResult, 'connectionStatus', 'connected'),
-        searchString: 'connectionStatus="CONNECTED"',
-        field: this.$translate.instant('spacesPage.statusHeader'),
-        text: this.$translate.instant('CsdmStatus.connectionStatus.CONNECTED'),
-      },
-    ];
-    const productSuggestions = this.generateProductSuggestions(searchResult);
-    _.forEach(productSuggestions, (s) => this.suggestions.push(s));
-    _.forEach(this.generateErrorCodeSuggestions(searchResult), s => this.suggestions.push(s));
-    this.removeIrrelevantSuggestions();
-    this.setFirstActive();
+    this.suggestions = [];
+    if (searchResult) {
+      const sortedAggregations = _.fromPairs(_.sortBy(_.toPairs(searchResult.aggregations), (aggregationPair) => {
+        switch (aggregationPair[0]) {
+          case QueryParser.Field_Tag: return 1;
+          case QueryParser.Field_ConnectionStatus: return 2;
+          case QueryParser.Field_Product: return 3;
+          case QueryParser.Field_ErrorCodes: return 4;
+          case QueryParser.Field_UpgradeChannel: return 5;
+          case QueryParser.Field_ActiveInterface: return 6;
+          default: return 7;
+        }
+      })) as Aggregations;
+      _.forEach(sortedAggregations, (aggregation, aggregationName: string) => {
+        if (_.includes(SuggestionDropdown.fieldNamesForSuggestion, _.toLower(aggregationName))) {
+          this.suggestions = _.concat(this.suggestions, _.map(aggregation.buckets, (bucket) => {
+            return {
+              searchString: `${aggregationName}="${bucket.key}"`,
+              field: this.searchTranslator.getTranslatedQueryFieldDisplayName(aggregationName),
+              text: this.searchTranslator.lookupTranslatedQueryValueDisplayName(bucket.key, aggregationName),
+              count: bucket.docCount,
+            };
+          }));
+        }
+      });
+      this.removeIrrelevantSuggestions();
+      this.setFirstActive();
+    }
   }
 
-  public setFirstActive = () => {
+  public setFirstActive() {
     if (this.uiSuggestions.length > 0 && this.searchObject && this.searchObject.getWorkingElementRawText() !== '') {
       this.setActiveSuggestion(0);
     } else {
       this.resetActive();
     }
-  }
-
-  private generateProductSuggestions(searchResult: SearchResult): ISuggestion[] {
-    const buckets: List<BucketData> = _.get(searchResult, `aggregations['product'].buckets`);
-    return _.map(buckets, (bucket) => {
-      return {
-        searchString: `product="${bucket.key}"`,
-        field: this.$translate.instant('spacesPage.typeHeader'),
-        text: bucket.key,
-        count: bucket.docCount,
-      };
-    });
-  }
-
-  private generateErrorCodeSuggestions(searchResult: SearchResult) {
-    const buckets: List<BucketData> = _.get(searchResult, `aggregations['errorCodes'].buckets`);
-    return _.map(buckets, (bucket) => {
-      return {
-        searchString: `errorCodes=${bucket.key}`,
-        field: this.$translate.instant('deviceOverviewPage.issues'),
-        text: this.$translate.instant(`CsdmStatus.errorCodes.${bucket.key}.type`),
-        count: bucket.docCount,
-      };
-    });
   }
 
   private removeIrrelevantSuggestions() {
@@ -261,8 +230,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
     const rawInput = searchObject.getWorkingElementRawText();
 
     return _.filter(suggestions, (su) => {
-      return su.text.toLowerCase().indexOf(parsedInput) > -1 || su.field.toLowerCase().indexOf(parsedInput) > -1
-        || su.text.toLowerCase().indexOf(rawInput) > -1 || su.field.toLowerCase().indexOf(rawInput) > -1;
+      return su.text && (su.text.toLowerCase().indexOf(parsedInput) > -1 || su.text.toLowerCase().indexOf(rawInput) > -1);
     });
   }
 }

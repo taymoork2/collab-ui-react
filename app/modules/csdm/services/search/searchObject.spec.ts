@@ -111,7 +111,7 @@ describe('converting search string', () => {
     it('adding an exact field pill should transform an existing of the same field to OR', () => {
 
       //Applies to all fields except tags and errorcodes(?)
-      verifyAddingSameFieldExactPillBehavior(QueryParser.Field_Tags, 'FirstTag', 'Secondtag', 'Thirdtag', false);
+      verifyAddingSameFieldExactPillBehavior(QueryParser.Field_Tag, 'FirstTag', 'Secondtag', 'Thirdtag', false);
       verifyAddingSameFieldExactPillBehavior(QueryParser.Field_UpgradeChannel, 'Stable', 'Beta', 'Preview', true);
       verifyAddingSameFieldExactPillBehavior(QueryParser.Field_ConnectionStatus, 'ONLINE', 'DISCONNECTED', 'OFFLINE_EXPIRED', true);
     });

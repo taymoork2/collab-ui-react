@@ -47,9 +47,9 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
               private $translate: ng.translate.ITranslateService,
               private Notification,
               private $timeout: ng.ITimeoutService) {
-    this.suggestions = new SuggestionDropdown($translate);
+    this.suggestions = new SuggestionDropdown(new SearchTranslator($translate));
 
-    this.suggestions.updateSuggestionsBasedOnSearchResult(this.getDocCount, undefined, this.searchObject);
+    this.suggestions.updateSuggestionsBasedOnSearchResult(undefined, this.searchObject);
   }
 
   public $onInit(): void {
@@ -60,7 +60,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
   private updateSearchResult(result?: SearchResult) {
     this.searchResultChanged({ result: result });
 
-    this.suggestions.updateSuggestionsBasedOnSearchResult(this.getDocCount, result, this.searchObject);
+    this.suggestions.updateSuggestionsBasedOnSearchResult(result, this.searchObject);
   }
 
   public setSortOrder(field: string, order: string) {
@@ -212,7 +212,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
       this.isSearching = false;
     }).catch(e => {
       this.isSearching = false;
-      DeviceSearch.ShowSearchError(this.Notification, e);
+      DeviceSearch.ShowSearchError(this.Notification, e.data && e.data.trackingId);
     });
   }
 
@@ -220,7 +220,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     if (response && response.data) {
       const trackingId = response.config && response.config.headers && response.config.headers.TrackingID;
       if (!response.data.successfullyRetrievedFromCmi && !response.data.successfullyRetrievedFromCsdm) {
-        DeviceSearch.ShowSearchError(Notification, null);
+        DeviceSearch.ShowSearchError(Notification, trackingId);
       } else if (!response.data.successfullyRetrievedFromCmi || !response.data.successfullyRetrievedFromCsdm) {
         if (!DeviceSearch.partialSearchError) {
           DeviceSearch.partialSearchError = true;
@@ -239,16 +239,11 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
       true);
   }
 
-  public static ShowSearchError(Notification: Notification, e) {
-    if (e) {
-      if (e.status === 400) {
-        Notification.errorWithTrackingId(e, 'spacesPage.searchFailedQuery');
-      } else {
-        Notification.errorResponse(e, 'spacesPage.searchFailed');
-      }
-    } else {
-      Notification.error('spacesPage.searchFailed');
-    }
+  public static ShowSearchError(Notification: Notification, trackingId) {
+    Notification.error('spacesPage.searchFailedDetails',
+        { trackingID: trackingId },
+        'spacesPage.searchFailedTitle',
+        true);
   }
 
   public getBullets(): SearchElement[] {
@@ -257,15 +252,6 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
 
   public getTranslatedQuery(): string {
     return this.searchObject.getTranslatedQueryString(new SearchTranslator(this.$translate));
-  }
-
-  private getDocCount(searchResult: SearchResult | undefined, aggregation: string, bucketName: string) {
-    const buckets = searchResult
-      && searchResult.aggregations
-      && searchResult.aggregations[aggregation]
-      && searchResult.aggregations[aggregation].buckets;
-    const bucket = _.find(buckets || [], { key: bucketName });
-    return bucket && bucket.docCount || 0;
   }
 
   private deleteLastBullet() {

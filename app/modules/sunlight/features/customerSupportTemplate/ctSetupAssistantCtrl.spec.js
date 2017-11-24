@@ -1276,7 +1276,13 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
     it('the overview page should have expected cards', function () {
-      expect(controller.overviewCards).toEqual([
+      var overviewCards = controller.overviewCards.map(function (card) {
+        return {
+          name: card.name,
+          mediaIcons: card.mediaIcons,
+        };
+      });
+      expect(overviewCards).toEqual([
         { name: 'customerInformation', mediaIcons: [] },
         { name: 'offHours', mediaIcons: [] },
         { name: 'feedbackCallback', mediaIcons: [] },

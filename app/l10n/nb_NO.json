@@ -6678,23 +6678,23 @@
       "wlan": "Trådløst"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "Nettverksporter blokkert",
         "message": "En brannmur kan blokkere media på UDP. Samtalekvalitet kan være redusert. For informasjon om krav til nettverksporter, se artikkelen <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Brannmurer og nettverkskrav for Cisco Spark App</a>."
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "Nettverksporter blokkert",
         "message": "En brannmur kan blokkere media på UDP. Samtalekvalitet kan være redusert. For informasjon om krav til nettverksporter, se artikkelen <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Brannmurer og nettverkskrav for Cisco Spark App</a>."
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "Nettverksporter blokkert",
         "message": "En brannmur kan blokkere media på UDP og TCP. Samtalekvalitet kan være redusert. For informasjon om krav til nettverksporter, se artikkelen <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Brannmurer og nettverkskrav for Cisco Spark App</a>."
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "Høy temperatur",
         "message": "Systemtemperaturen er for høy."
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "Hovedskjerm ikke funnet",
         "message": "Sjekk at hovedskjermen er påslått og tilkoblet rett skjermport på videosystemet."
       },
@@ -6702,35 +6702,35 @@
         "type": "Automatiske oppdateringer deaktivert",
         "message": "Systemprogramvaren vil ikke bli oppdatert."
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "Tidsserver kan ikke nås",
         "message": "Koblingen til en NTP-server kunne ikke etableres. Tiden som vises på endepunktet kan være feil."
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "Signalforstyrrelser fra andre enheter",
         "message": "Det er ultralyd signalforstyrrelse i dette rommet fra andre enheter (f.eks. andre videosystemer) som kan forhindre paring mellom videosystemet og din telefon eller bærbare PC."
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "Lydforsinkelse",
         "message": "Skjerminnstillingene dine fører til en forsinkelse av lyden. Juster skjerminnstillingene dine til en passende modus (f.eks. spillemodus)."
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "Ingen innebygget ultralyd-høyttaler",
         "message": "Denne maskinvareversjonen av SX10 har ikke en innebygget ultralyd-høyttaler."
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "Mangler krypteringsalternativnøkkel",
         "message": "Legg til en krypteringsalternativnøkkel."
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "Konfigurert for testautomatisering",
         "message": "Metrikk- og loggrapportering påvirkes."
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "Berøringsskjerm nødvendig",
         "message": "Det er ingen berøringsskjerm tilkoblet rom-enheten. Sjekk kabelen som kobler berøringsskjermen til rom-enheten."
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "Pakketap oppdaget",
         "message": "I løpet av den forrige samtalen oppdaget vi et nivå av pakketap som kan ha påvirket samtalekvaliteten. Pakketap forårsakes vanligvis av nettverksblokkering."
       },

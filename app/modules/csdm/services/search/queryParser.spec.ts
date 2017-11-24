@@ -142,11 +142,11 @@ describe('QueryParser', () => {
     expectLookupByTranslatedField('translated.deviceOverviewPage.sipUrl', 'sipurl');
     expectLookupByTranslatedField('translated.deviceOverviewPage.issues', 'errorcodes');
     expectLookupByTranslatedField('translated.deviceOverviewPage.serial', 'serial');
-    expectLookupByTranslatedField('translated.spacesPage.tags', 'tags');
+    expectLookupByTranslatedField('translated.spacesPage.tags', 'tag');
   });
 
   function expectLookupByTranslatedField(translationValue: string, expectedField: string) {
-    expect(new QueryParser(new SearchTranslator(translate)).getFieldName(translationValue)).toEqual(expectedField);
+    expect(new QueryParser(new SearchTranslator(translate)).getUniversalFieldName(translationValue)).toEqual(expectedField);
   }
 
   it('should allow the translated field names case insensitive', () => {
@@ -154,9 +154,9 @@ describe('QueryParser', () => {
   });
 
   it('should not allow unknown field names', () => {
-    expect(new QueryParser(new SearchTranslator(translate)).getFieldName('proXduct')).toBeUndefined();
-    expect(new QueryParser(new SearchTranslator(translate)).getFieldName('maXc')).toBeUndefined();
-    expect(new QueryParser(new SearchTranslator(translate)).getFieldName('proXduct')).toBeUndefined();
+    expect(new QueryParser(new SearchTranslator(translate)).getUniversalFieldName('proXduct')).toBeUndefined();
+    expect(new QueryParser(new SearchTranslator(translate)).getUniversalFieldName('maXc')).toBeUndefined();
+    expect(new QueryParser(new SearchTranslator(translate)).getUniversalFieldName('proXduct')).toBeUndefined();
   });
 
   function expectQueryToThrow(query: string) {

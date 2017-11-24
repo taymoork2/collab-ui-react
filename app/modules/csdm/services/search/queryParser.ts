@@ -47,9 +47,10 @@ export class QueryParser {
 
   public static readonly Field_ErrorCodes = 'errorcodes';
   public static readonly Field_UpgradeChannel = 'upgradechannel';
+  public static readonly Field_Product = 'product';
   public static readonly Field_ActiveInterface = 'activeinterface';
   public static readonly Field_ConnectionStatus = 'connectionstatus';
-  public static readonly Field_Tags = 'tags';
+  public static readonly Field_Tag = 'tag';
 
   private static validFieldNames = ['displayname',
     'cisuuid',
@@ -59,14 +60,13 @@ export class QueryParser {
     'mac',
     'ip',
     'description',
-    'productfamily',
     'software',
     QueryParser.Field_UpgradeChannel,
-    'product',
+    QueryParser.Field_Product,
     QueryParser.Field_ConnectionStatus,
     'sipurl',
     QueryParser.Field_ErrorCodes,
-    QueryParser.Field_Tags];
+    QueryParser.Field_Tag];
 
   public constructor(private searchTranslator: SearchTranslator) {
   }
@@ -100,7 +100,7 @@ export class QueryParser {
 
         const fieldOperatorIndex = QueryParser.getOperatorIndex(currentText);
         const fieldQueryType = currentText[fieldOperatorIndex] === '=' ? FieldQuery.QueryTypeExact : undefined;
-        const fieldName = this.getFieldName(currentText.substring(0, fieldOperatorIndex).trim());
+        const fieldName = this.getUniversalFieldName(currentText.substring(0, fieldOperatorIndex).trim());
         curIndex += fieldOperatorIndex + 1;
         curIndex += QueryParser.getLeadingWhiteSpaceCount(expression, curIndex);
 
@@ -159,7 +159,7 @@ export class QueryParser {
       (searchElement[fieldName.length] === ':' || searchElement[fieldName.length] === '='));
   }
 
-  public getFieldName(field: string): string {
+  public getUniversalFieldName(field: string): string {
     if (_.some(QueryParser.validFieldNames, validField => _.isEqual(validField, _.toLower(field)))) {
       return _.toLower(field);
     }
