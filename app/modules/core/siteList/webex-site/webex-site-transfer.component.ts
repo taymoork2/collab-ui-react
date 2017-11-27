@@ -22,6 +22,7 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
   public sitesArray: IWebExSite[] = [];
   public onValidationStatusChange: Function;
   public onSitesReceived: Function;
+  public onSendTracking: Function;
 
   public siteModel: IWebExSite = {
     siteUrl: '',
@@ -37,10 +38,12 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
     private $q: ng.IQService,
     private $scope: ng.IScope,
     private $translate: ng.translate.ITranslateService,
+    private Analytics,
     private Config: Config,
     private Notification: Notification,
     private SetupWizardService: SetupWizardService,
     private TrialTimeZoneService: TrialTimeZoneService,
+    private Utils,
   ) {
     this.migrateSiteUrl = this.Config.webexSiteMigrationUrl;
   }
@@ -108,16 +111,22 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
             transferredSiteModel.timezone = this.findTimezoneObject(site.timezone);
             transferredSiteModel.setupType = this.Config.setupTypes.transfer;
             this.sitesArray.push(transferredSiteModel);
+            const properties = _.assignIn(transferSiteDetails , { trackingId: this.Utils.extractTrackingIdFromResponse(response) });
+            this.sendTracking(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.TRANSFER_SITE_ADDED, properties);
           }
         });
         return this.$q.resolve();
       } else {
         this.showError(this.$translate.instant('firstTimeWizard.transferCodeInvalidError'));
+        const properties = _.assignIn(transferSiteDetails , { trackingId: this.Utils.extractTrackingIdFromResponse(response) });
+        this.sendTracking(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.INVALID_TRANSFER_CODE, properties);
         return this.$q.reject();
       }
     }).catch((response) => {
       if (response) {
         this.Notification.errorWithTrackingId(response, 'firstTimeWizard.transferCodeError');
+        const properties = _.assignIn(transferSiteDetails , { trackingId: this.Utils.extractTrackingIdFromResponse(response) });
+        this.sendTracking(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.TRANSFER_CODE_CALL_FAILED, properties);
       }
       return this.$q.reject();
     });
@@ -144,6 +153,15 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
     this.error.errorMsg = '';
     delete this.error.errorType;
   }
+
+  private sendTracking(event: string, properties: {}) {
+    if (typeof this.onSendTracking === 'function') {
+      this.onSendTracking({
+        event: event,
+        properties: properties,
+      });
+    }
+  }
 }
 
 export class WebexSiteTransferComponent implements ng.IComponentOptions {
@@ -152,6 +170,7 @@ export class WebexSiteTransferComponent implements ng.IComponentOptions {
   public bindings = {
     onSitesReceived: '&',
     onValidationStatusChange: '&',
+    onSendTracking: '&?',
     currentSubscription: '<',
     introCopy: '<',
   };

@@ -170,6 +170,10 @@ export class MeetingSettingsCtrl {
       view: _.get(this.$state, 'current.data.firstTimeSetup') ? 'Service Setup' : 'overview: Meeting Settings Modal',
     };
     _.assignIn(analyticsProperties, properties);
+    // events sent by components are generic and don't have \'Service Setup\' prefix. If prefix not there -- add it
+    if (!_.includes(event, this.Analytics.sections.SERVICE_SETUP.name)) {
+      event = this.Analytics.sections.SERVICE_SETUP.name + ': ' + event;
+    }
     this.Analytics.trackServiceSetupSteps(event, analyticsProperties);
   }
 
@@ -262,7 +266,7 @@ export class MeetingSettingsCtrl {
             transferredSiteModel.setupType = this.Config.setupTypes.transfer;
             this.sitesArray.push(transferredSiteModel);
             const properties = _.assignIn(transferSiteDetails , { trackingId: this.Utils.extractTrackingIdFromResponse(response) });
-            this.sendMetrics(this.Analytics.sections.SERVICE_SETUP.eventNames.TRANSFER_SITE_ADDED, properties);
+            this.sendMetrics(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.TRANSFER_SITE_ADDED, properties);
           }
         });
         this.constructDistributedSitesArray();
@@ -272,14 +276,14 @@ export class MeetingSettingsCtrl {
         _.set(this.$scope.wizard, 'isNextDisabled', true);
         this.showError(this.$translate.instant('firstTimeWizard.transferCodeInvalidError'));
         const properties = _.assignIn(transferSiteDetails , { trackingId: this.Utils.extractTrackingIdFromResponse(response) });
-        this.sendMetrics(this.Analytics.sections.SERVICE_SETUP.eventNames.INVALID_TRANSFER_CODE, properties);
+        this.sendMetrics(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.INVALID_TRANSFER_CODE, properties);
         return this.$q.reject();
       }
     }).catch((response) => {
       if (response) {
         this.Notification.errorWithTrackingId(response, 'firstTimeWizard.transferCodeError');
         const properties = _.assignIn(transferSiteDetails , { trackingId: this.Utils.extractTrackingIdFromResponse(response) });
-        this.sendMetrics(this.Analytics.sections.SERVICE_SETUP.eventNames.TRANSFER_CODE_CALL_FAILED, properties);
+        this.sendMetrics(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.TRANSFER_CODE_CALL_FAILED, properties);
       }
       return this.$q.reject();
     });
@@ -365,19 +369,19 @@ export class MeetingSettingsCtrl {
         const siteModel = _.clone(this.siteModel);
         this.sitesArray.push(siteModel);
         this.addSiteToDistributedArray(siteModel);
-        this.clearWebexSiteInputs();
         const properties = {
           siteUrl: siteModel.siteUrl + this.Config.siteDomainUrl.webexUrl,
           timezoneSelected: _.get(siteModel, 'timezone.label'),
         };
-        this.sendMetrics(this.Analytics.sections.SERVICE_SETUP.eventNames.NEW_SITE_ADDED, properties);
+        this.clearWebexSiteInputs();
+        this.sendMetrics(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.NEW_SITE_ADDED, properties);
       } else {
         if (response.errorCode === 'duplicateSite') {
           this.showError(this.$translate.instant('firstTimeWizard.meetingSettingsError.duplicateSite'), this.siteErrorType.URL);
-          this.sendMetrics(this.Analytics.sections.SERVICE_SETUP.eventNames.DUPLICATE_WEBEX_SITE, { webexSiteUrl: siteName });
+          this.sendMetrics(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.DUPLICATE_WEBEX_SITE, { webexSiteUrl: siteName });
         } else {
           this.showError(this.$translate.instant('firstTimeWizard.meetingSettingsError.enteredSiteNotValid'), this.siteErrorType.URL);
-          this.sendMetrics(this.Analytics.sections.SERVICE_SETUP.eventNames.INVALID_WEBEX_SITE, { webexSiteUrl: siteName });
+          this.sendMetrics(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.INVALID_WEBEX_SITE, { webexSiteUrl: siteName });
         }
         return;
       }
@@ -392,7 +396,7 @@ export class MeetingSettingsCtrl {
     const clientVersion = this.siteModel.setupType === _.get(this.Config, 'setupTypes.legacy')
       ? this.Config.userManagementService.webexSiteAdmin
       : this.Config.userManagementService.sparkControlHub;
-    this.sendMetrics(this.Analytics.sections.SERVICE_SETUP.eventNames.CLIENT_VERSION_RADIO, { clientVersionSelected: clientVersion });
+    this.sendMetrics(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.CLIENT_VERSION_RADIO, { clientVersionSelected: clientVersion });
     this.clearError();
   }
 
@@ -428,7 +432,7 @@ export class MeetingSettingsCtrl {
     const siteObj = this.sitesArray[index];
     this.removeFromDistributedLicensesArray(siteObj);
     this.sitesArray.splice(index, 1);
-    this.sendMetrics(this.Analytics.sections.SERVICE_SETUP.eventNames.REMOVE_SITE, { siteUrl: _.get(siteObj, 'siteUrl') + this.Config.siteDomainUrl.webexUrl, timezone: _.get(siteObj, 'timezone.label') });
+    this.sendMetrics(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.REMOVE_SITE, { siteUrl: _.get(siteObj, 'siteUrl') + this.Config.siteDomainUrl.webexUrl, timezone: _.get(siteObj, 'timezone.label') });
   }
 
   public sumOfWebExLicensesAssigned(siteArray) {
