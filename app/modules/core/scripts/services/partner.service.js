@@ -381,7 +381,9 @@
             if (rowData.accountStatus === 'pending') {
               key = 'needsSetup';
             } else if (rowData.startDate && _.inRange(rowData.daysLeft, 0, Config.trialGracePeriod)) {
-              key = 'expiredWithGracePeriod';
+              notes.text = $translate.instant('customerPage.expiredWithGracePeriod', {
+                count: rowData.daysLeft - Config.trialGracePeriod,
+              }, 'messageformat');
             } else {
               key = 'expired';
             }

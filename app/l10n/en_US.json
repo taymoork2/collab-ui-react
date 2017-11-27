@@ -5390,7 +5390,7 @@
     "daysLeftToRenew": "{count, plural, =1{# day} other{# days}} left to renew",
     "expiringToday": "Expiring today",
     "expired": "Expired",
-    "expiredWithGracePeriod": "Expired. Purchase now",
+    "expiredWithGracePeriod": "Purchase Now: {count, plural, =0{Last day} =1{# day} other {# days}} before trial licenses are removed.",
     "needsSetup": "Setup Required",
     "suspended": "This account has been suspended.",
     "licenseInfoNotAvailable": "No license information available.",
