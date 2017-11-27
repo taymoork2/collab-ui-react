@@ -98,7 +98,7 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
     spyOn(this.Analytics, 'trackEvent');
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(OrgId);
     spyOn(this.Authinfo, 'getOrgName').and.returnValue(OrgName);
-    spyOn(Date, 'now').and.returnValues(0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10);
+    spyOn(Date, 'now').and.returnValues(10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10);
 
     this.compileComponent('cva-setup', {
       dismiss: 'dismiss()',
@@ -140,14 +140,16 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
     });
 
     it('getSummaryDescription', function () {
+      controller.template.configuration.pages.vaName.nameValue = 'testName';
       controller.getSummaryDescription();
-      expect(controller.getText).toHaveBeenCalledWith('summary.desc');
+      expect(controller.getText).toHaveBeenCalledWith('summary.cvaDesc', { name: controller.template.configuration.pages.vaName.nameValue });
     });
 
     it('getSummaryDescription with isEditFeature true', function () {
+      controller.template.configuration.pages.vaName.nameValue = 'testName';
       controller.isEditFeature = true;
       controller.getSummaryDescription();
-      expect(controller.getText).toHaveBeenCalledWith('summary.editDesc');
+      expect(controller.getText).toHaveBeenCalledWith('summary.cvaDescEdit', { name: controller.template.configuration.pages.vaName.nameValue });
     });
   });
 

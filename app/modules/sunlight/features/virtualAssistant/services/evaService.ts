@@ -32,12 +32,6 @@ export class EvaService {
     icons: this.evaServiceCard.icons,
     data: [],
   };
-  // Feature List Filter definition. describes how to filter this feature
-  public featureFilter = {
-    name: this.getText('featureText.mediaType'),
-    filterValue: this.evaServiceCard.mediaType,
-  };
-
 
   /* @ngInject */
   constructor(
@@ -49,15 +43,12 @@ export class EvaService {
   ) {
   }
 
-
   /**
-   * Function to obtain translated string off virtual-assistant's area for strings
-   * @param textIdExtension
+   * Get the feature name text
    * @returns {string}
    */
-  public getText(textIdExtension: string, params?: object): string {
-    const featureName = this.$translate.instant('careChatTpl.virtualAssistant.eva.featureText.name');
-    return this.$translate.instant('careChatTpl.virtualAssistant.eva.' + textIdExtension, (<any>Object).assign({ featureName }, params));
+  public getFeatureName(): string {
+    return this.$translate.instant('careChatTpl.virtualAssistant.eva.featureText.name');
   }
 
   /**
@@ -141,15 +132,17 @@ export class EvaService {
    * @param name
    * @param orgId
    * @param email
+   * @param defaultSpaceId
    * @param iconUrl URL to avatar icon file
    * returns {ng.IPromise<any>} promise
    */
-  public addExpertAssistant(name: string, orgId: string, email: string, iconUrl?: string): ng.IPromise<any> {
+  public addExpertAssistant(name: string, orgId: string, email: string, defaultSpaceId: string, iconUrl?: string): ng.IPromise<any> {
     return this.getExpertAssistantResource(orgId || this.Authinfo.getOrgId())
       .save({
         name: name,
         email: email,
         icon: iconUrl,
+        defaultSpaceId: defaultSpaceId,
       }, function (data, headers) {
         data.expertAssistantId = headers('location').split('/').pop();
         return data;
@@ -162,14 +155,16 @@ export class EvaService {
    * @param name
    * @param orgId
    * @param email
+   * @param defaultSpaceId
    * @param iconUrl URL to avatar icon file
    * returns {ng.IPromise<any>} promise
    */
-  public updateExpertAssistant(expertAssistantId: string, name: string, orgId: string, email: string, iconUrl?: string): ng.IPromise<void> {
+  public updateExpertAssistant(expertAssistantId: string, name: string, orgId: string, email: string, defaultSpaceId: string, iconUrl?: string): ng.IPromise<void> {
     return this.getExpertAssistantResource(orgId || this.Authinfo.getOrgId(), expertAssistantId)
       .update({
         name: name,
         email: email,
+        defaultSpaceId: defaultSpaceId,
         icon: iconUrl,
       }).$promise;
   }
@@ -199,6 +194,36 @@ export class EvaService {
       //converting cardName to lower case as _.sortBy by default does a case sensitive sorting
       return item.name.toLowerCase();
     });
+  }
+
+  /**
+   * obtain resource for Expert Virtual Assistant Icon Validation API Rest calls.
+   * @param orgId
+   * @returns {*}
+   */
+  private getValidateResource(orgId?: string): IConfigurationResource {
+    const baseUrl = this.UrlConfig.getCvaServiceUrl();
+    return <IConfigurationResource>this.$resource(baseUrl + 'validateIcon', {
+      orgId: orgId,
+    }, {
+      update: {
+        method: 'POST',
+      },
+    });
+  }
+
+  /**
+   * Test the avatar file to see if it is within expected boundaries: PNG file, 1MB max
+   *
+   * @param orgId
+   * @param iconUrl
+   * returns promise resolving true on success, false on failure
+   */
+  public isAvatarFileValid(orgId: string, iconUrl: string): ng.IPromise<void> {
+    return this.getValidateResource(orgId || this.Authinfo.getOrgId())
+      .update({
+        icon: iconUrl,
+      }).$promise;
   }
 
   /**
