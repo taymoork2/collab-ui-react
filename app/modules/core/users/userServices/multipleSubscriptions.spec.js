@@ -71,8 +71,14 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
       });
 
       it('should verify there is a trial subscription', function () {
+        controller.selectedSubscription = controller.subscriptionOptions[controller.subscriptionOptions.length - 1];
+        $scope.$apply();
         expect(controller.oneBilling).toEqual(false);
         expect(controller.showLicenses('', true)).toEqual(true);
+      });
+      it('should place trial subscription at the bottom of the subscription selection dropdown', function () {
+        var trialOption = 'Trial';
+        expect(controller.subscriptionOptions[controller.subscriptionOptions.length - 1]).toEqual(trialOption);
       });
     });
 
