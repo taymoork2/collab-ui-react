@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "온라인",
-      "OnlineWithIssues": "온라인, 문제 포함",
-      "Offline": "오프라인",
-      "OfflineExpired": "비활성화됨",
-      "Unknown": "알려지지 않음"
+      "CONNECTED": "온라인",
+      "CONNECTED_WITH_ISSUES": "온라인, 문제 포함",
+      "DISCONNECTED": "오프라인",
+      "OFFLINE_EXPIRED": "비활성화됨",
+      "UNKNOWN": "알려지지 않음"
     },
     "WithDevices": "장치로",
     "upgradeChannels": {
@@ -6678,23 +6678,23 @@
       "wlan": "무선"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "네트워크 포트 차단됨",
         "message": "방화벽이 UDP에서 미디어를 차단하고 있는 것 같습니다. 통화 품질에 영향을 미칠 수도 있습니다. 네트워크 포트 요구 사항에 대한 자세한 정보는 <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Cisco Spark 앱의 방화벽 및 네트워크 요구 사항</a> 문서를 참조하십시오."
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "네트워크 포트 차단됨",
         "message": "방화벽이 UDP에서 미디어를 차단하고 있는 것 같습니다. 통화 품질에 영향을 미칠 수도 있습니다. 네트워크 포트 요구 사항에 대한 자세한 정보는 <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Cisco Spark 앱의 방화벽 및 네트워크 요구 사항</a> 문서를 참조하십시오."
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "네트워크 포트 차단됨",
         "message": "방화벽이 UDP 및 TCP에서 미디어를 차단하고 있는 것 같습니다. 통화 품질에 영향을 미칠 수도 있습니다. 네트워크 포트 요구 사항에 대한 자세한 정보는 <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Cisco Spark 앱의 방화벽 및 네트워크 요구 사항</a> 문서를 참조하십시오."
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "고온",
         "message": "시스템 온도가 너무 높습니다."
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "기본 표시를 탐지할 수 없음",
         "message": "비디오 시스템에서 기본 디스플레이가 켜져 있고 올바른 디스플레이 출력으로 연결되어 있는지 확인하십시오."
       },
@@ -6702,35 +6702,35 @@
         "type": "자동 업데이트 비활성화됨",
         "message": "시스템 소프트웨어가 업데이트되지 않습니다."
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "타임 서버에 연결할 수 없음",
         "message": "NTP 서버에 연결하지 못했습니다. 엔드포인트에 표시된 시간이 틀릴 수도 있습니다."
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "다른 장치로부터의 시그널 장애",
         "message": "이 회의실에 다른 장치(예: 다른 비디오 시스템)로부터의 초음파 시그널 혼선이 있습니다. 이는 비디오 시스템과 전화 또는 노트북 간의 페어링을 방해할 수도 있습니다."
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "오디오 지연",
         "message": "모니터 설정에서 오디오를 지연시키고 있습니다. 모니터 설정을 적합한 모드(예: 게임 모드)로 변경하십시오."
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "연계된 초음파 스피커 없음",
         "message": "SX10의 이 하드웨어 버전에 연계된 초음파 스피커가 없습니다."
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "암호화 옵션 키 없음",
         "message": "암호화 옵션 키를 추가하십시오."
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "테스트 자동화 구성됨",
         "message": "메트릭 및 로그 보고서에 영향을 미침."
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "터치 패널 필요함",
         "message": "회의실 장치에 연결된 터치 패널이 없습니다. 회의실 장치에 터치 패널을 연결하는 케이블을 확인하십시오."
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "패킷 손실 탐지됨",
         "message": "마지막 통화 중에 통화 품질에 영향을 미칠 수도 있는 수준의 패킷 손실을 탐지했습니다. 일반적으로 패킷 손실은 네트워크 정체로 인해 발생합니다."
       },

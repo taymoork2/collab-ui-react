@@ -1,0 +1,69 @@
+<div class="timeline">
+  <dgc-time-line source-data="$ctrl.dataSet" circle-color="$ctrl.circleColor" line-color="$ctrl.lineColor" ng-if="!$ctrl.loading"></dgc-time-line>
+  <div ng-if="$ctrl.loading" class="loading">
+    <i class="icon icon-spinner icon-3x"></i>
+  </div>
+</div>
+
+<div class="meeting-overview">
+  <h4 translate="webexReports.meetingOverview"></h4>
+  <ul class="overviewInfo">
+    <li>
+      <h6 translate="webexReports.created"></h6>
+      <p>{{$ctrl.overview.createTime_}}</p>
+      <p>{{::'webexReports.scheduledFrom' | translate}} {{$ctrl.overview.scheduleFrom}}</p>
+    </li>
+    <li>
+      <h6 translate="webexReports.searchGridHeader.startTime"></h6>
+      <p>{{$ctrl.overview.startTime_}}</p>
+      <p>{{::'webexReports.startFrom' | translate}} {{$ctrl.overview.startFrom}}</p>
+    </li>
+    <li>
+      <h6 translate="webexReports.searchGridHeader.endTime"></h6>
+      <p>{{$ctrl.overview.endTime_}}</p>
+      <p>{{$ctrl.overview.duration_}}</p>
+    </li>
+    <li>
+      <h6 translate="webexReports.site"></h6>
+      <p>{{$ctrl.overview.siteName}}</p>
+      <p>({{$ctrl.overview.siteId}})</p>
+    </li>
+    <li>
+      <h6 translate="webexReports.meetingType"></h6>
+      <p>{{$ctrl.overview.meetingType}}</p>
+    </li>
+    <li>
+      <h6 translate="webexReports.hostID"></h6>
+      <p>{{$ctrl.overview.hostId}}</p>
+    </li>
+    <li>
+      <h6 translate="webexReports.hostName"></h6>
+      <p>{{$ctrl.overview.hostName}}</p>
+    </li>
+    <li>
+      <h6 translate="webexReports.hostEmail"></h6>
+      <p>{{$ctrl.overview.hostEmail}}</p>
+    </li>
+  </ul>
+</div>
+<cs-card-layout>
+  <div class="sessionInfo" ng-class="{'showInfo': $ctrl.showInfo}">
+    <h4 class="title icon" ng-click="$ctrl.showInfo = !$ctrl.showInfo" ng-class="{'icon-chevron-right': !$ctrl.showInfo, 'icon-chevron-down': $ctrl.showInfo}">
+      <span>{{::'webexReports.sessionInfo' | translate}}</span>
+    </h4>
+
+    <div class="info-box" ng-if="$ctrl.showInfo">
+      <h6 class="note">Features and connections status for this meeting session <i class="icon icon-info-outline"></i></h6>
+      <div class="row showgrid">
+        <cs-card class="medium" ng-repeat="val in $ctrl.featAndconn">
+          <article>
+            <header>
+              <h6 class="name">{{val.key}}</h6>
+              <small ng-class="{'green-color': val.class}">{{val.val}}</small>
+            </header>
+          </article>
+        </cs-card>
+      </div>
+    </div>
+  </div>
+</cs-card-layout>

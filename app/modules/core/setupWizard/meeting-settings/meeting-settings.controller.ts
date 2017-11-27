@@ -257,8 +257,8 @@ export class MeetingSettingsCtrl {
         _.forEach(transferredSitesArray, (site) => {
           if (!(_.some(this.sitesArray, { siteUrl: site.siteUrl }))) {
             const transferredSiteModel = _.clone(this.siteModel);
-            transferredSiteModel.siteUrl = site.siteUrl.replace(this.Config.siteDomainUrl.webexUrl, ''),
-              transferredSiteModel.timezone = this.findTimezoneObject(site.timezone);
+            transferredSiteModel.siteUrl = site.siteUrl.replace(this.Config.siteDomainUrl.webexUrl, '');
+            transferredSiteModel.timezone = this.findTimezoneObject(site.timezone);
             transferredSiteModel.setupType = this.Config.setupTypes.transfer;
             this.sitesArray.push(transferredSiteModel);
             const properties = _.assignIn(transferSiteDetails , { trackingId: this.Utils.extractTrackingIdFromResponse(response) });
@@ -797,7 +797,13 @@ export class MeetingSettingsCtrl {
     _.forEach(distributedLicenses, (site: WebExSite) => {
       if (_.get(site, 'quantity', 0) > 0) {
         const siteUrl = site.siteUrl + this.Config.siteDomainUrl.webexUrl;
-        const webexSiteDetail = new WebExSite({ centerType: site.centerType, quantity: _.get<number>(site, 'quantity', 0), siteUrl: siteUrl, timezone: _.get<string>(site, 'timezone.timeZoneId'), setupType: site.setupType });
+        const webexSiteDetail = new WebExSite({
+          centerType: site.centerType,
+          quantity: _.get<number>(site, 'quantity', 0),
+          siteUrl: siteUrl,
+          timezone: _.get<string>(site, 'timezone.timeZoneId'),
+          setupType: site.setupType,
+          isCIUnifiedSite: site.isCIUnifiedSite });
         webexSiteDetailsList.push(webexSiteDetail);
       }
     });

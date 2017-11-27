@@ -4,7 +4,7 @@ import { IServiceDescription, ServiceDescriptorService } from 'modules/hercules/
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 import { IMessage, IUserStatusWithExtendedMessages, USSService } from 'modules/hercules/services/uss.service';
 import { IUser } from 'modules/core/auth/user/user';
-import { CloudConnectorService, ICCCService } from 'modules/hercules/services/calendar-cloud-connector.service';
+import { CloudConnectorService } from 'modules/hercules/services/calendar-cloud-connector.service';
 import { Notification } from 'modules/core/notifications';
 
 interface IServiceSetupStatus {
@@ -26,6 +26,7 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
   private userSubscriptionTimer: ng.IPromise<void>;
   public isLicensed;
   public googleCalendarError: string;
+  public office365Error: string;
 
   /* @ngInject */
   constructor(
@@ -44,9 +45,7 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
     if (user && user.currentValue) {
       this.user = user.currentValue;
       this.isLicensed = this.userIsLicensed();
-      if (this.isLicensed) {
-        this.init();
-      }
+      this.init();
     }
   }
 
@@ -85,10 +84,11 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
         }
       })
       .then(() => {
-        const calServiceGoogle: IServiceSetupStatus = this.getService('squared-fusion-gcal');
-        if (calServiceGoogle) {
-          const calServiceExchange: IServiceSetupStatus = this.getService('squared-fusion-cal') || {};
-          return this.checkCloudCalendarService(calServiceExchange, calServiceGoogle);
+        // If the org is entitled to either Office365 or Google Calendar, check with the Cloud Calendar Service as well
+        const expresswayBasedCalendarStatus = this.getService('squared-fusion-cal'); // We let 'squared-fusion-cal' represent only Expressway-based calendar
+        const cloudBasedCalendarStatus = this.getService('squared-fusion-gcal'); // We let 'squared-fusion-gcal' represent cloud calendars in general, not only Google
+        if (expresswayBasedCalendarStatus || cloudBasedCalendarStatus) {
+          return this.checkCloudCalendarService(expresswayBasedCalendarStatus, cloudBasedCalendarStatus);
         }
       })
       .catch((error) => {
@@ -141,22 +141,37 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
     }, 10000);
   }
 
-  private checkCloudCalendarService = (calServiceExchange, calServiceGoogle): ng.IPromise<void> => {
-    return this.CloudConnectorService.getService('squared-fusion-gcal')
-      .then((service: ICCCService) => {
-        const isSetup = service.setup;
-        calServiceGoogle.isSetup = isSetup;
-        const ignoreGoogle = calServiceExchange.enabled && !calServiceExchange.userIsEntitled && !calServiceGoogle.userIsEntitled;
-        if (isSetup && (!calServiceExchange.enabled || !calServiceExchange.userIsEntitled) && !ignoreGoogle) {
-          calServiceGoogle.enabled = true;
-          calServiceExchange.enabled = false;
-          if (!this.userSubscriptionTimer) {
-            this.updateStatusForUser();
+  private checkCloudCalendarService = (expresswayBasedCalendar: IServiceSetupStatus, cloudBasedCalendar: IServiceSetupStatus): ng.IPromise<void> => {
+
+    const promises: ng.IPromise<any>[] = [];
+    if (cloudBasedCalendar) {
+      promises.push(this.CloudConnectorService.getService('squared-fusion-gcal'));
+    }
+    if (expresswayBasedCalendar) {
+      promises.push(this.CloudConnectorService.getService('squared-fusion-o365'));
+    }
+
+    return this.HybridServicesUtilsService.allSettled(promises)
+      .then((results) => {
+        if (results[0] && results[0].status === 'fulfilled' || results[1] && results[1].status === 'fulfilled') {
+          const cloudServiceIsSetup: boolean = _.get(results[0], 'value.setup', false) || _.get(results[1], 'value.setup', false);
+          // We only want to show *one* link to Calendar in the sidepanel.
+          // If both Exchange/Office365-based and Google are enabled, we need to "cheat" and pretend one of them is not.
+          const ignoreCloudService = _.isUndefined(cloudBasedCalendar) || (expresswayBasedCalendar.enabled && !expresswayBasedCalendar.userIsEntitled && !cloudBasedCalendar.userIsEntitled);
+          if (cloudServiceIsSetup && (!expresswayBasedCalendar.enabled || !expresswayBasedCalendar.userIsEntitled) && !ignoreCloudService) {
+            cloudBasedCalendar.enabled = true;
+            expresswayBasedCalendar.enabled = false;
+            if (!this.userSubscriptionTimer) {
+              this.updateStatusForUser();
+            }
           }
         }
-      })
-      .catch((error) => {
-        this.googleCalendarError = error;
+        if (results[0] && results[0].status === 'rejected') {
+          this.googleCalendarError = results[0].reason;
+        }
+        if (results[1] && results[1].status === 'rejected') {
+          this.office365Error = results[1].reason;
+        }
       });
   }
 
@@ -249,6 +264,19 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
       } else {
         if (!_.some(this.user.entitlements, (e) => e === 'spark-hybrid-impinterop')) {
           this.user.entitlements.push('spark-hybrid-impinterop');
+        }
+      }
+    }
+    if (!_.isUndefined(options.calendarServiceEntitled)) {
+      if (!options.calendarServiceEntitled) {
+        _.remove(this.user.entitlements, (e) => e === 'squared-fusion-cal');
+        _.remove(this.user.entitlements, (e) => e === 'squared-fusion-gcal');
+      } else {
+        if (options.calendarType === 'squared-fusion-cal' && !_.some(this.user.entitlements, (e) => e === 'squared-fusion-cal')) {
+          this.user.entitlements.push('squared-fusion-cal');
+        }
+        if (options.calendarType === 'squared-fusion-gcal' && !_.some(this.user.entitlements, (e) => e === 'squared-fusion-gcal')) {
+          this.user.entitlements.push('squared-fusion-gcal');
         }
       }
     }

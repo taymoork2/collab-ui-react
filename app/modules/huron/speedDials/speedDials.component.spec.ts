@@ -2,13 +2,13 @@ import { KeyCodes } from 'modules/core/accessibility';
 
 describe('component: speedDial', () => {
   const DROPDOWN_LIST = 'button[cs-dropdown-toggle]';
-  const DROPDOWN_LIST_ADD = '.actions-services li:nth-child(1) a';
+  const DROPDOWN_LIST_ADD = '.actions-services li:nth-child(1)';
 
   const INPUT_NAME = 'input[name="label"]';
   const INPUT_NUMBER = 'input[name="phoneinput"]';
   const SAVE_BUTTON = 'button.btn--primary';
   const READ_ONLY = '.sd-readonly-wrapper .sd-label';
-  const DROPDOWN_LIST_REORDER = '.actions-services li:nth-child(2) a';
+  const DROPDOWN_LIST_REORDER = '.actions-services li:nth-child(2)';
   const REORDER = '.sd-reorder';
 
   beforeEach(function() {
@@ -24,6 +24,7 @@ describe('component: speedDial', () => {
       'HuronConfig',
       'HuronCustomerService',
       'FeatureMemberService',
+      'DraggableService',
       'SpeedDialService',
       'UrlConfig',
     );
@@ -141,173 +142,42 @@ describe('component: speedDial', () => {
 
   describe(' - keyboard navigation functionality', function (){
     beforeEach(initComponent);
-
     beforeEach(function () {
       this.$httpBackend.flush();
+      this.list = [{
+        id: 'speedDial1',
+        index: 1,
+      }, {
+        id: 'speedDial2',
+        index: 2,
+      }, {
+        id: 'speedDial3',
+        index: 3,
+      }];
 
+      this.controller.speedDialList = this.list;
+    });
+
+    it('should call DraggableService functions createDraggableInstance', function () {
+      spyOn(this.DraggableService, 'createDraggableInstance').and.callThrough();
       this.controller.setReorder();
-      this.controller.speedDialList = [{
-        id: 'speedDial1',
-        index: 1,
-      }, {
-        id: 'speedDial2',
-        index: 2,
-      }, {
-        id: 'speedDial3',
-        index: 3,
-      }];
-      this.defaultSpeedDialList = [{
-        id: 'speedDial1',
-        index: 1,
-        $$hashKey: jasmine.any(String),
-      }, {
-        id: 'speedDial2',
-        index: 2,
-        $$hashKey: jasmine.any(String),
-      }, {
-        id: 'speedDial3',
-        index: 3,
-        $$hashKey: jasmine.any(String),
-      }];
-      spyOn(this.controller.$element, 'find').and.callThrough();
+      expect(this.DraggableService.createDraggableInstance).toHaveBeenCalledWith({
+        elem: this.controller.$element,
+        list: this.list,
+        identifier: '#speedDialsContainer',
+        transitClass: 'sd-reorder',
+        itemIdentifier: '#speedDial',
+      });
     });
 
-    it('should focus up without reordering the list when no speeddial is selected', function () {
-      this.controller.speedDialKeypress({ which: KeyCodes.UP }, this.defaultSpeedDialList[1]);
-      this.$timeout.flush();
-      expect(this.controller.$element.find).toHaveBeenCalledWith('#speedDial1');
-      expect(this.controller.speedDialList).toEqual(this.defaultSpeedDialList);
-      expect(this.controller.isSelectedSpeedDial(this.controller.speedDialList[1])).toBeFalsy();
+    it('should return true or false for isSelectedSpeedDial', function () {
+      this.controller.setReorder();
+      spyOn(this.controller.draggableInstance, 'keyPress').and.callThrough();
 
-      this.controller.$element.find.calls.reset();
-      this.controller.speedDialKeypress({
-        which: KeyCodes.TAB,
-        shiftKey: true,
-        preventDefault: _.noop,
-        stopPropagation: _.noop,
-      }, this.defaultSpeedDialList[1]);
-      expect(this.controller.$element.find).not.toHaveBeenCalled();
-      expect(this.controller.speedDialList).toEqual(this.defaultSpeedDialList);
-      expect(this.controller.isSelectedSpeedDial(this.controller.speedDialList[1])).toBeFalsy();
-    });
-
-    it('should focus up and reorder the list when a speeddial is selected', function () {
-      const speedDialList = [{
-        id: 'speedDial1',
-        index: 1,
-        $$hashKey: jasmine.any(String),
-      }, {
-        id: 'speedDial3',
-        index: 2,
-        $$hashKey: jasmine.any(String),
-      }, {
-        id: 'speedDial2',
-        index: 3,
-        $$hashKey: jasmine.any(String),
-      }];
-      const speedDialListTwo = [{
-        id: 'speedDial3',
-        index: 1,
-        $$hashKey: jasmine.any(String),
-      }, {
-        id: 'speedDial1',
-        index: 2,
-        $$hashKey: jasmine.any(String),
-      }, {
-        id: 'speedDial2',
-        index: 3,
-        $$hashKey: jasmine.any(String),
-      }];
-
-      this.controller.speedDialKeypress({ which: KeyCodes.ENTER }, this.controller.speedDialList[2]);
-      expect(this.controller.isSelectedSpeedDial(this.controller.speedDialList[2])).toBeTruthy();
-
-      this.controller.speedDialKeypress({ which: KeyCodes.UP }, this.controller.speedDialList[2]);
-      this.$timeout.flush();
-      expect(this.controller.$element.find).toHaveBeenCalledWith('#speedDial2');
-      expect(this.controller.speedDialList).toEqual(speedDialList);
-      expect(this.controller.isSelectedSpeedDial(this.controller.speedDialList[1])).toBeTruthy();
-
-      this.controller.$element.find.calls.reset();
-      this.controller.speedDialKeypress({
-        which: KeyCodes.TAB,
-        shiftKey: true,
-        preventDefault: _.noop,
-        stopPropagation: _.noop,
-      }, this.controller.speedDialList[1]);
-      this.$timeout.flush();
-      expect(this.controller.$element.find).toHaveBeenCalledWith('#speedDial1');
-      expect(this.controller.speedDialList).toEqual(speedDialListTwo);
-      expect(this.controller.isSelectedSpeedDial(this.controller.speedDialList[0])).toBeTruthy();
-    });
-
-    it('should focus down without reordering the list when no speeddial is selected', function () {
-      this.controller.speedDialKeypress({ which: KeyCodes.DOWN }, this.defaultSpeedDialList[1]);
-      this.$timeout.flush();
-      expect(this.controller.$element.find).toHaveBeenCalledWith('#speedDial3');
-      expect(this.controller.speedDialList).toEqual(this.defaultSpeedDialList);
-      expect(this.controller.isSelectedSpeedDial(this.controller.speedDialList[1])).toBeFalsy();
-
-      this.controller.$element.find.calls.reset();
-      this.controller.speedDialKeypress({
-        which: KeyCodes.TAB,
-        shiftKey: false,
-        preventDefault: _.noop,
-        stopPropagation: _.noop,
-      }, this.defaultSpeedDialList[1]);
-      expect(this.controller.$element.find).not.toHaveBeenCalled();
-      expect(this.controller.speedDialList).toEqual(this.defaultSpeedDialList);
-      expect(this.controller.isSelectedSpeedDial(this.controller.speedDialList[1])).toBeFalsy();
-    });
-
-    it('should focus up and reorder the list when a speeddial is selected', function () {
-      const speedDialList = [{
-        id: 'speedDial2',
-        index: 1,
-        $$hashKey: jasmine.any(String),
-      }, {
-        id: 'speedDial1',
-        index: 2,
-        $$hashKey: jasmine.any(String),
-      }, {
-        id: 'speedDial3',
-        index: 3,
-        $$hashKey: jasmine.any(String),
-      }];
-      const speedDialListTwo = [{
-        id: 'speedDial2',
-        index: 1,
-        $$hashKey: jasmine.any(String),
-      }, {
-        id: 'speedDial3',
-        index: 2,
-        $$hashKey: jasmine.any(String),
-      }, {
-        id: 'speedDial1',
-        index: 3,
-        $$hashKey: jasmine.any(String),
-      }];
-
-      this.controller.speedDialKeypress({ which: KeyCodes.ENTER }, this.controller.speedDialList[0]);
-      expect(this.controller.isSelectedSpeedDial(this.controller.speedDialList[0])).toBeTruthy();
-
-      this.controller.speedDialKeypress({ which: KeyCodes.DOWN }, this.controller.speedDialList[0]);
-      this.$timeout.flush();
-      expect(this.controller.$element.find).toHaveBeenCalledWith('#speedDial2');
-      expect(this.controller.speedDialList).toEqual(speedDialList);
-      expect(this.controller.isSelectedSpeedDial(this.controller.speedDialList[1])).toBeTruthy();
-
-      this.controller.$element.find.calls.reset();
-      this.controller.speedDialKeypress({
-        which: KeyCodes.TAB,
-        shiftKey: false,
-        preventDefault: _.noop,
-        stopPropagation: _.noop,
-      }, this.controller.speedDialList[1]);
-      this.$timeout.flush();
-      expect(this.controller.$element.find).toHaveBeenCalledWith('#speedDial3');
-      expect(this.controller.speedDialList).toEqual(speedDialListTwo);
-      expect(this.controller.isSelectedSpeedDial(this.controller.speedDialList[2])).toBeTruthy();
+      this.controller.speedDialKeypress({ which: KeyCodes.ENTER }, this.list[1]);
+      expect(this.controller.isSelectedSpeedDial(this.list[1])).toBeTruthy();
+      expect(this.controller.isSelectedSpeedDial(this.list[0])).toBeFalsy();
+      expect(this.controller.draggableInstance.keyPress).toHaveBeenCalledWith({ which: KeyCodes.ENTER }, this.list[1]);
     });
   });
 });

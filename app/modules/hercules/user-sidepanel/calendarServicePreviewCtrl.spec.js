@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive Controller: CalendarServicePreviewCtrl', function () {
+describe('Directive Controller: HybridCloudberryCalendarCtrl', function () {
   beforeEach(angular.mock.module('Hercules'));
 
   var $scope, $rootScope, $controller, $q, USSService, $state, $stateParams, FeatureToggleService, Notification, ClusterService, ResourceGroupService, $translate, Userservice, Orgservice;
@@ -46,7 +46,7 @@ describe('Directive Controller: CalendarServicePreviewCtrl', function () {
   }));
 
   function initController() {
-    $controller('CalendarServicePreviewCtrl', {
+    $controller('HybridCloudberryCalendarCtrl', {
       $scope: $scope,
       $state: $state,
       $stateParams: $stateParams,

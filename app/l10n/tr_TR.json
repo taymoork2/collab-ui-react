@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "Çevrimiçi",
-      "OnlineWithIssues": "Çevrimiçi, Sorunları Var",
-      "Offline": "Çevrimdışı",
-      "OfflineExpired": "Devre Dışı",
-      "Unknown": "Bilinmiyor"
+      "CONNECTED": "Çevrimiçi",
+      "CONNECTED_WITH_ISSUES": "Çevrimiçi, Sorunları Var",
+      "DISCONNECTED": "Çevrimdışı",
+      "OFFLINE_EXPIRED": "Devre Dışı",
+      "UNKNOWN": "Bilinmiyor"
     },
     "WithDevices": "Cihazlarla",
     "upgradeChannels": {
@@ -6678,23 +6678,23 @@
       "wlan": "Kablosuz"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "Ağ Bağlantı Noktaları Engelli",
         "message": "UDP üzerindeki medya, güvenlik duvarı tarafından engelleniyor olabilir. Çağrı kalitesi etkilenebilir. Ağ bağlantı noktası gereksinimleriyle ilgili bilgi için <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Cisco Spark Uygulaması için Güvenlik Duvarları ve Ağ Gereksinimleri</a> makalesini okuyun."
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "Ağ Bağlantı Noktaları Engelli",
         "message": "UDP üzerindeki medya, güvenlik duvarı tarafından engelleniyor olabilir. Çağrı kalitesi etkilenebilir. Ağ bağlantı noktası gereksinimleriyle ilgili bilgi için <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Cisco Spark Uygulaması için Güvenlik Duvarları ve Ağ Gereksinimleri</a> makalesini okuyun."
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "Ağ Bağlantı Noktaları Engelli",
         "message": "UDP ve TCP üzerindeki medya, güvenlik duvarı tarafından engelleniyor olabilir. Çağrı kalitesi etkilenebilir. Ağ bağlantı noktası gereksinimleriyle ilgili bilgi için <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Cisco Spark Uygulaması için Güvenlik Duvarları ve Ağ Gereksinimleri</a> makalesini okuyun."
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "Yüksek sıcaklık",
         "message": "Sistem sıcaklığı çok yüksek."
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "Ana Ekran Algılanmadı",
         "message": "Ana ekranın açık olduğundan ve video sistemindeki doğru ekran çıktısına bağlı olduğundan emin olun."
       },
@@ -6702,35 +6702,35 @@
         "type": "Otomatik Güncellemeler Devre Dışı Bırakıldı",
         "message": "Sistem yazılımı güncellenmeyecek."
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "Zaman Sunucusuna Erişilemiyor",
         "message": "NTP sunucusuyla bağlantı kurulamadı. Uç noktanızda görüntülenen saat yanlış olabilir."
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "Diğer cihazlardan sinyal karışması",
         "message": "Bu odada, video sistemiyle telefonunuz ya da dizüstü bilgisayarınız arasındaki eşleşmeyi engelleyebilecek, diğer cihazlardan gelen ses ötesi sinyal karışması var (ör: diğer video sistemleri)."
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "Ses Gecikmesi",
         "message": "Monitörünüzün ayarları, sesinize gecikme süresi ekliyor. Monitör ayarlarını uygun bir moda geçirin (ör: Oyun modu)."
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "Ekli Ses Ötesi Hoparlör Yok",
         "message": "SX10'un bu donanım sürümünde ekli bir ses ötesi hoparlör yoktur."
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "Şifreleme seçeneği anahtarı yok",
         "message": "Lütfen bir şifreleme seçeneği anahtarı ekleyin."
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "Test otomasyonu için yapılandırıldı",
         "message": "Ölçümler ve günlük raporları etkilenir."
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "Dokunmatik Panel Gerekli",
         "message": "Oda cihazına bağlı bir dokunmatik panel yok. Dokunmatik paneli oda cihazına bağlayan kabloyu kontrol edin."
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "Paket Kaybı Algılandı",
         "message": "Son arama sırasında arama kalitesini etkilemiş olabilecek bir paket kaybı algılandık. Paket kaybı genellikle ağ tıkanıklığından kaynaklanır."
       },

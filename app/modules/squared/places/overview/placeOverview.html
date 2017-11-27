@@ -63,7 +63,8 @@
       <cs-sp-section ng-if="$ctrl.showDeviceSettings">
         <uc-device-settings
           owner-type="place"
-          owner-id="$ctrl.currentPlace.id"
+          owner-id="$ctrl.currentPlace.cisUuid"
+          owner-display-name="$ctrl.currentPlace.displayName"
           device-list="$ctrl.currentPlace.devices">
         </uc-device-settings>
       </cs-sp-section>

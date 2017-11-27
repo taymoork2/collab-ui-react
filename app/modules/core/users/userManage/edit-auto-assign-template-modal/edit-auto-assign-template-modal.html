@@ -1,10 +1,8 @@
-<!-- TODO: enable 'next' button once appropriate UI state is determined -->
 <multi-step-modal
   l10n-title="userManage.autoAssignTemplate.edit.title"
   dismiss="$ctrl.dismissModal()"
   back="$ctrl.back()"
-  next="$ctrl.next()"
-  next-disabled="true">
+  next="$ctrl.next()">
   <h4 translate="userManage.autoAssignTemplate.edit.header"></h4>
   <p translate="userManage.autoAssignTemplate.edit.description"></p>
   <p>
@@ -17,7 +15,12 @@
         tooltip-animation="false"></i>
     </a>
   </p>
-  <div style="border:1px solid red; height: 400px; margin-top: 25px;">
-    **TODO: f3745 - populate this content with services selection grid**
+  <div class="modal-content__assignable-services">
+    <assignable-services
+      subscriptions="$ctrl.sortedSubscriptions"
+      on-update="$ctrl.recvUpdate($event)"
+      state-data="$ctrl.stateData">
+    </assignable-services>
+    <hybrid-services-panel bind-entitlements="updateExtensionEntitlements(entitlements)"></hybrid-services-panel>
   </div>
 </multi-step-modal>

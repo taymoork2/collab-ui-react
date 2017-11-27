@@ -3,10 +3,10 @@
 
   angular
     .module('Hercules')
-    .controller('CalendarServicePreviewCtrl', CalendarServicePreviewCtrl);
+    .controller('HybridCloudberryCalendarCtrl', HybridCloudberryCalendarCtrl);
 
   /*@ngInject*/
-  function CalendarServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Orgservice, Notification, USSService, $translate, ResourceGroupService, FeatureToggleService, HybridServicesI18NService) {
+  function HybridCloudberryCalendarCtrl($scope, $state, $stateParams, Authinfo, Userservice, Orgservice, Notification, USSService, $translate, ResourceGroupService, FeatureToggleService, HybridServicesI18NService) {
     $scope.entitlementNames = {
       'squared-fusion-cal': 'squaredFusionCal',
       'squared-fusion-gcal': 'squaredFusionGCal',

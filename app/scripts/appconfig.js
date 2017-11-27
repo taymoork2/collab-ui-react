@@ -1036,6 +1036,13 @@
             template: '<edit-auto-assign-template-modal dismiss="$dismiss()"></edit-auto-assign-template-modal>',
             params: {
               prevState: 'users.manage.picker',
+              stateData: null,
+            },
+          })
+          .state('users.manage.edit-summary-auto-assign-template-modal', {
+            template: '<edit-summary-auto-assign-template-modal dismiss="$dismiss()"></edit-summary-auto-assign-template-modal>',
+            params: {
+              stateData: null,
             },
           })
 
@@ -1549,7 +1556,7 @@
             params: {
               extensionId: {},
               extensions: {},
-              userUpdatedCallback: Function,
+              userUpdatedCallback: _.noop,
             },
           })
           .state('user-overview.hybrid-services-spark-hybrid-impinterop.history', {
@@ -1567,19 +1574,25 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-cal', {
-            views: {
-              'side-panel-container@user-overview': {
-                template: require('modules/hercules/user-sidepanel/calendarServicePreview.tpl.html'),
-                controller: 'CalendarServicePreviewCtrl',
-              },
-            },
+            template: '<hybrid-calendar-service-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)" preferred-web-ex-site-name="$resolve.preferredWebExSiteName"></hybrid-calendar-service-user-settings>',
             data: {},
-            resolve: {
-              displayName: translateDisplayName('hercules.serviceNames.squared-fusion-cal'),
-            },
             params: {
-              extensionId: {},
-              extensions: {},
+              userUpdatedCallback: _.noop,
+            },
+            resolve: {
+              userId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentUser.id;
+              },
+              userName: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentUser.userName;
+              },
+              userUpdatedCallback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.userUpdatedCallback;
+              },
+              preferredWebExSiteName: /* @ngInject */ function ($stateParams, HybridServiceUserSidepanelHelperService) {
+                return HybridServiceUserSidepanelHelperService.getPreferredWebExSiteName($stateParams.currentUser, $stateParams.orgInfo);
+              },
+              displayName: translateDisplayName('hercules.serviceNames.squared-fusion-cal'),
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-cal.history', {
@@ -1597,19 +1610,22 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-gcal', {
-            views: {
-              'side-panel-container@user-overview': {
-                template: require('modules/hercules/user-sidepanel/calendarServicePreview.tpl.html'),
-                controller: 'CalendarServicePreviewCtrl',
-              },
-            },
+            template: '<hybrid-calendar-service-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)"></hybrid-calendar-service-user-settings>',
             data: {},
-            resolve: {
-              displayName: translateDisplayName('hercules.serviceNames.squared-fusion-gcal'),
-            },
             params: {
-              extensionId: {},
-              extensions: {},
+              userUpdatedCallback: _.noop,
+            },
+            resolve: {
+              userId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentUser.id;
+              },
+              userName: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentUser.userName;
+              },
+              userUpdatedCallback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.userUpdatedCallback;
+              },
+              displayName: translateDisplayName('hercules.serviceNames.squared-fusion-cal'),
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-gcal.history', {
@@ -1630,7 +1646,7 @@
             template: '<hybrid-call-service-aggregated-section user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)"></hybrid-call-service-aggregated-section>',
             data: {},
             params: {
-              userUpdatedCallback: Function,
+              userUpdatedCallback: _.noop,
             },
             resolve: {
               userId: /* @ngInject */ function ($stateParams) {
@@ -2019,27 +2035,6 @@
               settingPageIframeUrl: null,
             },
           })
-          .state('webexReportsPanel', {
-            data: {},
-            parent: 'sidepanel',
-            views: {
-              'sidepanel@': {
-                template: '<cust-webex-reports-panel></cust-webex-reports-panel>',
-              },
-              'header@webexReportsPanel': {
-                template: require('modules/core/customerReports/webexReports/search/webexReportsPanelHeader.html'),
-              },
-            },
-          })
-          .state('webexReportsPanel.more', {
-            views: {
-              'side-panel-container@webexReportsPanel': {
-                template: '<cust-webex-reports-more></cust-webex-reports-more>',
-              },
-            },
-            onEnter: SidePanelLargeOpen,
-            onExit: SidePanelLargeClose,
-          })
           .state('reports', {
             url: '/reports',
             template: require('modules/core/customerReports/customerReportsHeader.tpl.html'),
@@ -2115,9 +2110,29 @@
             url: '/diagnostics',
             views: {
               metricsContent: {
-                template: '<cust-webex-reports-search></cust-webex-reports-search>',
+                template: '<dgc-webex-reports-search></dgc-webex-reports-search>',
               },
             },
+          })
+          .state('dgc', {
+            parent: 'main',
+            template: '<div ui-view></div>',
+          })
+          .state('dgc.tab', {
+            template: '<dgc-tab></dgc-tab>',
+          })
+          .state('dgc.tab.meetingdetail', {
+            url: '/diagnostics/meeting/:cid',
+            views: { tabContent: { template: '<dgc-tab-meetingdetail></dgc-tab-meetingdetail>' } },
+          })
+          .state('dgc.tab.participants', {
+            url: '/diagnostics/participants/:cid',
+            views: { tabContent: { template: '<dgc-tab-participants></dgc-tab-participants>' } },
+          })
+          .state('dgc-panel', {
+            data: {},
+            parent: 'sidepanel',
+            views: { 'sidepanel@': { template: '<dgc-panel-participant></dgc-panel-participant>' } },
           })
           .state('reports.webex-metrics.classic', {
             url: '/classic',
@@ -2581,7 +2596,7 @@
             views: {
               'side-panel-container@place-overview': {
                 template: require('modules/hercules/user-sidepanel/calendarServicePreview.tpl.html'),
-                controller: 'CalendarServicePreviewCtrl',
+                controller: 'HybridCloudberryCalendarCtrl',
               },
             },
             data: {},
@@ -2617,7 +2632,7 @@
             views: {
               'side-panel-container@place-overview': {
                 template: require('modules/hercules/user-sidepanel/calendarServicePreview.tpl.html'),
-                controller: 'CalendarServicePreviewCtrl',
+                controller: 'HybridCloudberryCalendarCtrl',
               },
             },
             data: {},
@@ -4860,6 +4875,7 @@
             controller: 'ImpServiceContainerController',
             controllerAs: 'vm',
             params: {
+              backState: null,
               clusterId: null,
             },
             parent: 'main',

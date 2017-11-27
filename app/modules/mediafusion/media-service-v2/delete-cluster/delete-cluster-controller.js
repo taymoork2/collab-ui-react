@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function DeleteClusterSettingControllerV2($filter, $modalInstance, $q, $state, $translate, cluster, HybridServicesClusterService, MediaClusterServiceV2, Notification) {
+  function DeleteClusterSettingControllerV2($filter, $modalInstance, $q, $state, $translate, cluster, HybridServicesClusterService, MediaClusterServiceV2, Notification, DeactivateHybridMediaService) {
     var vm = this;
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
     vm.options = [];
@@ -19,6 +19,8 @@
     vm.hosts = '';
     vm.ngDisable = false;
     vm.canContinue = canContinue;
+    vm.clusters = [];
+    vm.loading = true;
 
     MediaClusterServiceV2.getAll()
       .then(function (clusters) {
@@ -41,6 +43,8 @@
         vm.selectModel[key] = value;
         vm.fillModel[key] = false;
       }
+    }).finally(function () {
+      vm.loading = false;
     });
 
     vm.continue = function () {
@@ -66,6 +70,10 @@
       //this is to deregister all host and delete cluster
       for (var i = 0; i < vm.hosts.length; i++) {
         defuseHost(vm.hosts[i]);
+      }
+      if (vm.clusters.length === 1) {
+        DeactivateHybridMediaService.deactivateMediaService();
+        $modalInstance.close();
       }
     };
 

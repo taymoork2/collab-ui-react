@@ -21,6 +21,23 @@ if [[ "$1" == "--help" \
     exit 1
 fi
 
+this_pwd="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1090
+source "${this_pwd}/include/core-helpers"
+
+function is_bsd_sed {
+    ! sed --version >/dev/null 2>&1
+}
+
+if [ "$(uname)" = "Darwin" ] && is_bsd_sed; then
+    echo_error "Need \`sed\` with enhanced regex support. On OSX this can be installed with:"
+    >&2 echo ""
+    >&2 echo "  brew install gnu-sed --with-default-names"
+    >&2 echo ""
+    echo_warn "This will replace your default \`sed\` command. Do not run the above if you do not wish to do this."
+    abort
+fi
+
 function kebab_case_to_pascal_case {
   sed -E 's/(^|-)([a-z])/\U\2/g'
 }
@@ -44,11 +61,8 @@ function subdir_path_to_ng_module_name {
 
 function get_ng_module_name {
     local dir_name="$1"
-    local THIS_PWD
-    THIS_PWD="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
     # start search for relevant subdir from '.../app/modules'
-    pushd "$THIS_PWD/../app/modules" > /dev/null
+    pushd "$this_pwd/../app/modules" > /dev/null
     local subdir_path
     subdir_path="$(find . -type d -name "${dir_name}")"
     subdir_path="$(subdir_path_to_ng_module_name "$subdir_path")"
@@ -57,9 +71,13 @@ function get_ng_module_name {
 }
 
 dir_path="$1"
+html_element_name="$("$this_pwd/check-ng-component-name.sh" "$dir_path")"
+if [ -z "$html_element_name" ]; then
+    abort
+fi
+
 mkdir "$dir_path"
 
-html_element_name="$(basename "$dir_path")"
 js_component_file="${html_element_name}.component.ts"
 js_component_file_no_ext="${html_element_name}.component"
 js_component_spec_file="${html_element_name}.component.spec.ts"
@@ -71,6 +89,8 @@ ng_module_name="$(get_ng_module_name "$html_element_name")"
 
 function print_index_ts {
     cat << _EOF
+import './${html_element_name}.scss';
+
 import { $js_component_name } from './${js_component_file_no_ext}';
 
 export default angular.module('${ng_module_name}', [
@@ -95,7 +115,89 @@ export class $js_component_name implements ng.IComponentOptions {
 _EOF
 }
 
+function print_component_spec_ts {
+    cat << _EOF
+import moduleName from './index';
+
+describe('Component: ${js_directive_name}:', () => {
+  beforeEach(function() {
+    this.initModules(moduleName);
+    this.injectDependencies(
+      // TODO: add dependencies here
+    );
+  });
+
+  // TODO: use as-appropriate
+  beforeEach(function () {
+    // this.compileTemplate('<${html_element_name}></${html_element_name}>');
+    // this.compileComponent('${js_directive_name}', { ... });
+  });
+
+  describe('primary behaviors (view):', () => {
+    it('...', function () {
+      // TODO: implement
+    });
+  });
+
+  describe('primary behaviors (controller):', () => {
+    it('...', function () {
+      // TODO: implement
+    });
+  });
+});
+_EOF
+}
+
+function print_component_scss {
+    cat << _EOF
+// TODO: use as-appropriate
+// @import '~collab-ui/scss/settings/typography';
+// @import '~collab-ui/scss/settings/colors';
+// @import 'styles/partials/mixins';  // <- for 'keep-flex()'
+
+${html_element_name} {
+  // TODO: use as-appropriate
+  display: block;
+  // @include keep-flex();
+}
+_EOF
+}
+
 touch "${dir_path}/${template_file}"
-touch "${dir_path}/${js_component_spec_file}"
 print_component_ts > "${dir_path}/${js_component_file}"
+print_component_spec_ts  > "${dir_path}/${js_component_spec_file}"
 print_index_ts > "${dir_path}/index.ts"
+print_component_scss > "${dir_path}/${html_element_name}.scss"
+
+function has_parent_index_ts {
+    test -s "$(get_parent_index_ts_file "$1")"
+}
+
+function get_parent_index_ts_file  {
+    echo "${1}/../index.ts"
+}
+
+function add_import_of_module_name {
+    local dir_path="$1"
+    local js_directive_name="$2"
+    local html_element_name="$3"
+    local parent_index_ts_file
+    parent_index_ts_file="$(get_parent_index_ts_file "$dir_path")"
+    local line_num_of_last_import_statement
+
+    # grep for lines with 'import'-statement
+    line_num_of_last_import_statement="$(grep -n "^import " "$parent_index_ts_file" 2>/dev/null | tail -1 | cut -d: -f1)"
+    line_num_of_last_import_statement="${line_num_of_last_import_statement}"
+    local import_statement="import ${js_directive_name}ModuleName from './${html_element_name}';"
+
+    # if no line found, insert at line 1, otherwise insert after last import statement
+    if [ -z "$line_num_of_last_import_statement" ]; then
+        sed -i -E "1i $import_statement" "$parent_index_ts_file"
+    else
+        sed -i -E "${line_num_of_last_import_statement}a $import_statement" "$parent_index_ts_file"
+    fi
+}
+
+if has_parent_index_ts "$dir_path"; then
+    add_import_of_module_name "$dir_path" "$js_directive_name" "$html_element_name"
+fi

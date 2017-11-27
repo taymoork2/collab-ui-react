@@ -55,9 +55,9 @@ export class EvaService {
    * @param textIdExtension
    * @returns {string}
    */
-  public getText(textIdExtension: string): string {
+  public getText(textIdExtension: string, params?: object): string {
     const featureName = this.$translate.instant('careChatTpl.virtualAssistant.eva.featureText.name');
-    return this.$translate.instant('careChatTpl.virtualAssistant.eva.' + textIdExtension, { featureName });
+    return this.$translate.instant('careChatTpl.virtualAssistant.eva.' + textIdExtension, (<any>Object).assign({ featureName }, params));
   }
 
   /**
@@ -98,20 +98,9 @@ export class EvaService {
       update: {
         method: 'PUT',
       },
-    });
-  }
-
-  /**
-   * obtain resource for Expert Assistant's queue API Rest calls to UR.
-   * @param {string} orgId
-   * @param {string} queueId
-   * @returns {IConfigurationResource}
-   */
-  private getExpertAssistantQueueResource(orgId: string, queueId: string): IConfigurationResource {
-    const baseUrl = this.UrlConfig.getSunlightURServiceUrl();
-    return <IConfigurationResource>this.$resource(baseUrl + 'organization/:orgId/queue/:queueId', {
-      orgId: orgId,
-      queueId: queueId,
+      save: {
+        method: 'POST',
+      },
     });
   }
 
@@ -148,17 +137,6 @@ export class EvaService {
   }
 
   /**
-   * delete a queue associated with the expert assistant from Universal Router
-   * @param {string} orgId
-   * @param {string} queueId
-   * @returns {angular.IPromise<any>}
-   */
-  public deleteExpertAssistantQueue(orgId: string, queueId: string): ng.IPromise<any>  {
-    return this.getExpertAssistantQueueResource(orgId || this.Authinfo.getOrgId(), queueId)
-      .delete().$promise;
-  }
-
-  /**
    * add a new expert virtual assistant
    * @param name
    * @param orgId
@@ -170,9 +148,8 @@ export class EvaService {
     return this.getExpertAssistantResource(orgId || this.Authinfo.getOrgId())
       .save({
         name: name,
-        icon: iconUrl,
         email: email,
-        queueId: orgId,
+        icon: iconUrl,
       }, function (data, headers) {
         data.expertAssistantId = headers('location').split('/').pop();
         return data;
@@ -193,7 +170,6 @@ export class EvaService {
       .update({
         name: name,
         email: email,
-        queueId: orgId,
         icon: iconUrl,
       }).$promise;
   }

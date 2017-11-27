@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "オンライン",
-      "OnlineWithIssues": "オンライン、問題あり",
-      "Offline": "オフライン",
-      "OfflineExpired": "アクティベート解除",
-      "Unknown": "不明"
+      "CONNECTED": "オンライン",
+      "CONNECTED_WITH_ISSUES": "オンライン、問題あり",
+      "DISCONNECTED": "オフライン",
+      "OFFLINE_EXPIRED": "アクティベート解除",
+      "UNKNOWN": "不明"
     },
     "WithDevices": "デバイスを使用",
     "upgradeChannels": {
@@ -6678,23 +6678,23 @@
       "wlan": "無線"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "ネットワーク ポートがブロックされています",
         "message": "UDP でファイアウォールがメディアをブロックしている可能性があります。通話品質に影響を与える場合があります。ネットワーク ポートの要件にいて詳しくは、記事「<a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Cisco Spark アプリのファイアウォールとネットワーク要件</a>」を参照してください。"
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "ネットワーク ポートがブロックされています",
         "message": "UDP でファイアウォールがメディアをブロックしている可能性があります。通話品質に影響を与える場合があります。ネットワーク ポートの要件にいて詳しくは、記事「<a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Cisco Spark アプリのファイアウォールとネットワーク要件</a>」を参照してください。"
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "ネットワーク ポートがブロックされています",
         "message": "UDP および TCP でファイアウォールがメディアをブロックしている可能性があります。通話品質に影響を与える場合があります。ネットワーク ポートの要件にいて詳しくは、記事「<a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Cisco Spark アプリのファイアウォールとネットワーク要件</a>」を参照してください。"
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "高温",
         "message": "システム温度が高すぎます。"
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "メイン ディスプレイが検出されません",
         "message": "メイン ディスプレイがオンになっていて、ビデオ システムの正しいディスプレイ出力に接続されていることを確認してください。"
       },
@@ -6702,35 +6702,35 @@
         "type": "自動更新が無効になっています",
         "message": "システム ソフトウェアは更新されません。"
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "タイム サーバーに接続できません",
         "message": "NTP サーバーへの接続が確立できませんでした。エンドポイントに表示されている時間が正しくない可能性があります。"
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "他のデバイスからの信号インターフェイス",
         "message": "この会議室には、他のデバイス (他のビデオ システムなど) からの超音波信号インターフェイスがあります。これがビデオ システムと電話またはラップトップとの間のペアリングを妨害している可能性があります。"
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "音声の遅延",
         "message": "モニター設定によって音声に遅延が発生しています。モニター設定を適切なモード (ゲーム モードなど) に変更してください。"
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "内蔵超音波スピーカーがありません",
         "message": "SX10 のこのハードウェア バージョンには超音波スピーカーが内蔵されていません。"
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "暗号化オプション キーが欠落しています",
         "message": "暗号化オプション キーを追加してください。"
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "テスト自動化に対して設定されました",
         "message": "メトリックとログ報告が影響を受けます。"
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "タッチパネルが必要です",
         "message": "ビデオ会議端末にはタッチパネルがありません。タッチパネルをビデオ会議端末に接続するケーブルを確認してください。"
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "パケット損失が検出されました",
         "message": "最後の通話中に、通話品質に影響を与えるレベルのパケット損失を検出しました。パケット損失は一般的にネットワークの輻輳により発生します。"
       },

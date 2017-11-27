@@ -1,3 +1,5 @@
+const _ = require('lodash');
+const args = require('yargs').argv;
 const path = require('path');
 
 const appPath = path.resolve('./app');
@@ -7,6 +9,9 @@ const examplePath = path.resolve('./examples');
 exports.js = {
   test: /\.js$/,
   use: [
+    {
+      loader: 'cache-loader',
+    },
     {
       loader: 'ng-annotate-loader',
     },
@@ -49,6 +54,9 @@ exports.ts = {
   test: /\.ts$/,
   use: [
     {
+      loader: 'cache-loader',
+    },
+    {
       loader: 'ng-annotate-loader',
     },
     {
@@ -65,6 +73,9 @@ exports.ts = {
 exports.scss = {
   test: /\.scss$/,
   use: [
+    {
+      loader: 'cache-loader',
+    },
     {
       loader: 'style-loader',
     },
@@ -251,3 +262,16 @@ exports.instrumentTs = {
   ],
   enforce: 'post',
 };
+
+function stripCacheLoader(loaderList) {
+  return _.reject(loaderList, {
+    loader: 'cache-loader',
+  });
+}
+
+// remove 'cache-loader' for CLI switch
+if (args.env && args.env.nocacheloader) {
+  exports.js.use = stripCacheLoader(exports.js.use);
+  exports.ts.use = stripCacheLoader(exports.ts.use);
+  exports.scss.use = stripCacheLoader(exports.scss.use);
+}

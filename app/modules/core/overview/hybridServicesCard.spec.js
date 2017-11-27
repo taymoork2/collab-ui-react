@@ -19,7 +19,14 @@ describe('OverviewHybridServicesCard', function () {
     spyOn(this.Authinfo, 'isEntitled').and.returnValue(true);
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlasHybridImpGetStatus').and.returnValue(this.$q.resolve(false));
-    spyOn(this.CloudConnectorService, 'getService').and.returnValue(this.$q.resolve({ serviceId: 'squared-fusion-gcal', setup: false, cssClass: 'default' }));
+    spyOn(this.FeatureToggleService, 'atlasOffice365SupportGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.CloudConnectorService, 'getService').and.callFake(function (serviceId) {
+      return {
+        serviceId: (serviceId === 'squared-fusion-gcal') ? 'squared-fusion-gcal' : 'squared-fusion-cal',
+        setup: false,
+        cssClass: 'default',
+      };
+    });
   });
 
   it('should not show card when no services are set up', function () {
@@ -69,13 +76,20 @@ describe('OverviewHybridServicesCard', function () {
     this.$rootScope.$apply();
 
     expect(card.serviceList[0].setup).toBe(false);
-    expect(card.serviceList[1].setup).toBe(true);
-    expect(card.serviceList[2].setup).toBe(false);
+    expect(card.serviceList[1].setup).toBe(false);
+    expect(card.serviceList[2].setup).toBe(true);
+    expect(card.serviceList[3].setup).toBe(false);
   });
 
   it('should show card when google calendar is setup', function () {
     this.HybridServicesClusterService.getAll.and.returnValue(this.$q.resolve(_.cloneDeep(this.jsonData)));
-    this.CloudConnectorService.getService.and.returnValue(this.$q.resolve({ serviceId: 'squared-fusion-gcal', setup: true, cssClass: 'success' }));
+    this.CloudConnectorService.getService.and.callFake(function (serviceId) {
+      if (serviceId === 'squared-fusion-gcal') {
+        return { serviceId: 'squared-fusion-gcal', setup: true, cssClass: 'success' };
+      } else {
+        return { serviceId: 'squared-fusion-cal', setup: false, cssClass: 'default' };
+      }
+    });
     var card = this.OverviewHybridServicesCard.createCard();
     this.$rootScope.$apply();
 

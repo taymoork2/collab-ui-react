@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "En ligne",
-      "OnlineWithIssues": "En ligne, avec des problèmes",
-      "Offline": "Hors-ligne",
-      "OfflineExpired": "Désactivé(s)",
-      "Unknown": "Inconnu(e)"
+      "CONNECTED": "En ligne",
+      "CONNECTED_WITH_ISSUES": "En ligne, avec des problèmes",
+      "DISCONNECTED": "Hors-ligne",
+      "OFFLINE_EXPIRED": "Désactivé(s)",
+      "UNKNOWN": "Inconnu(e)"
     },
     "WithDevices": "Avec les périphériques",
     "upgradeChannels": {
@@ -6678,23 +6678,23 @@
       "wlan": "Sans fil"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "Ports du réseau bloqués",
         "message": "Le pare-feu peut bloquer les médias sur le protocole UDP. La qualité des appels peut être affectée. Pour plus d'informations concernant les exigences des ports du réseau voir l'article <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Exigences pour les pare-feux et configuration minimale du réseau requise pour l'application Cisco Spark</a>."
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "Ports du réseau bloqués",
         "message": "Le pare-feu peut bloquer les médias sur le protocole UDP. La qualité des appels peut être affectée. Pour plus d'informations concernant les exigences des ports du réseau voir l'article <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Exigences pour les pare-feux et configuration minimale du réseau requise pour l'application Cisco Spark</a>."
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "Ports du réseau bloqués",
         "message": "Le pare-feu peut bloquer les médias sur les protocoles UDP et TCP. La qualité des appels peut être affectée. Pour plus d'informations concernant les exigences des ports du réseau voir l'article <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Exigences pour les pare-feux et configuration minimale du réseau requise pour l'application Cisco Spark</a>."
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "Température élevée",
         "message": "La température du système est trop élevée."
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "Affichage principal non détecté",
         "message": "Vérifiez que l'affichage principal est activé et connecté à la sortie d'affichage adéquate sur le système vidéo."
       },
@@ -6702,35 +6702,35 @@
         "type": "Les mises à jour automatiques sont désactivées",
         "message": "Le logiciel du système ne sera pas mis à jour."
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "Serveur horaire injoignable",
         "message": "La connexion vers un serveur NTP n'a pas pu aboutir. L'heure affichée sur votre point de destination peut être erronée."
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "Interférences sur le signal provenant d'autres périphériques",
         "message": "Il y a une interférence de signal ultrason dans cette salle provenant d'autres périphériques (ex. : autres systèmes vidéo) susceptibles d'empêcher le pairage entre le système vidéo et votre téléphone ou ordinateur portable."
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "Délai audio",
         "message": "Les paramètres de votre moniteur ajoutent un délai à votre audio. Modifiez les paramètres du moniteur sur un mode adéquat (ex. : Mode Jeu)."
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "Aucun haut-parleur ultrason intégré",
         "message": "Cette version matérielle du SX10 n'a pas de haut-parleur ultrason intégré."
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "Clé d'option de chiffrement manquante",
         "message": "Veuillez ajouter une clé d'option de chiffrement."
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "Configuré pour l'automatisation de test",
         "message": "Les métriques et le reporting des journaux sont affectés."
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "Panneau tactile requis",
         "message": "Aucun panneau tactile n'est connecté au périphérique de la salle. Vérifiez le câble connectant le panneau tactile au périphérique de la salle."
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "Perte de paquets détectée",
         "message": "Au cours du dernier appel nous avons détecté un niveau de perte de paquets qui peuvent avoir eu des conséquences sur la qualité de l'appel. La perte de paquets est généralement causée par un encombrement du réseau."
       },

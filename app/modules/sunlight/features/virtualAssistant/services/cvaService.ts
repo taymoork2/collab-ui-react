@@ -183,6 +183,7 @@ export class CvaService {
         icon: iconURL,
       }).$promise;
   }
+
   /**
    * test the Dialogflow client access token to see if it works.
    * @param token

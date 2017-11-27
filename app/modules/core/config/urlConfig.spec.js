@@ -382,18 +382,18 @@ describe('UrlConfigSpec', function () {
 
   it('should return correct Customer Virtual Assistant Service url', function () {
     whenCalling('getCvaServiceUrl').expectUrlToBe({
-      dev: 'https://virtual-assistant.appstaging.ciscoccservice.com/virtual-assistant/v1/',
-      cfe: 'https://virtual-assistant.appstaging.ciscoccservice.com/virtual-assistant/v1/',
-      integration: 'https://virtual-assistant.appstaging.ciscoccservice.com/virtual-assistant/v1/',
+      dev: 'https://int-virtual-assistant.appstaging.ciscoccservice.com/virtual-assistant/v1/',
+      cfe: 'https://int-virtual-assistant.appstaging.ciscoccservice.com/virtual-assistant/v1/',
+      integration: 'https://int-virtual-assistant.appstaging.ciscoccservice.com/virtual-assistant/v1/',
       prod: 'https://virtual-assistant.produs1.ciscoccservice.com/virtual-assistant/v1/',
     });
   });
 
   it('should return correct Expert Virtual Assistant Service url', function () {
     whenCalling('getEvaServiceUrl').expectUrlToBe({
-      dev: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
-      cfe: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
-      integration: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      dev: 'https://int-expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      cfe: 'https://int-expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      integration: 'https://int-expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
       prod: 'https://expert-assistant.produs1.ciscoccservice.com/expert-assistant/v1/',
     });
   });
@@ -404,24 +404,6 @@ describe('UrlConfigSpec', function () {
       cfe: 'https://bubble.appstaging.ciscoccservice.com',
       integration: 'https://bubble.appstaging.ciscoccservice.com',
       prod: 'https://bubble.produs1.ciscoccservice.com',
-    });
-  });
-
-  it('should return correct sunlight pick notification url', function () {
-    whenCalling('getSunlightPickNotificationUrl').expectUrlToBe({
-      dev: 'https://notifs.devus1.ciscoccservice.com/notifs/v1/publish',
-      cfe: 'https://notifs.appstaging.ciscoccservice.com/notifs/v1/publish',
-      integration: 'https://notifs.appstaging.ciscoccservice.com/notifs/v1/publish',
-      prod: 'https://notifs.produs1.ciscoccservice.com/notifs/v1/publish',
-    });
-  });
-
-  it('should return correct sunlight push notification url', function () {
-    whenCalling('getSunlightPushNotificationUrl').expectUrlToBe({
-      dev: 'https://pqm.devus1.ciscoccservice.com/pqm/v1/publish/taskState',
-      cfe: 'https://pqm.appstaging.ciscoccservice.com/pqm/v1/publish/taskState',
-      integration: 'https://pqm.appstaging.ciscoccservice.com/pqm/v1/publish/taskState',
-      prod: 'https://pqm.produs1.ciscoccservice.com/pqm/v1/publish/taskState',
     });
   });
 

@@ -1,10 +1,10 @@
-import { IStatusSummary, USSService } from 'modules/hercules/services/uss.service';
+import { IExtendedStatusSummary, USSService } from 'modules/hercules/services/uss.service';
 import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
 import { IToolkitModalService } from 'modules/core/modal';
 
 class GoogleCalendarSettingsCtrl implements ng.IComponentController {
   public backState = 'services-overview';
-  public userStatusesSummary: IStatusSummary[] = [];
+  public userStatusesSummary: IExtendedStatusSummary[] = [];
   private subscribeStatusesSummary: any;
 
   private serviceId: HybridServiceId = 'squared-fusion-gcal';

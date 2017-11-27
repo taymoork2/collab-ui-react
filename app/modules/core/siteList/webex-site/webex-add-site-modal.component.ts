@@ -1,8 +1,8 @@
 import './webex-site.scss';
 
-import { IWebExSite, IConferenceLicense, IWebexProvisioningParams } from 'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
+import { IWebExSite, IConferenceLicense } from 'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
 import { SetupWizardService } from 'modules/core/setupWizard/setup-wizard.service';
-import { Config } from 'modules/core/config/config';
+import { WebExSiteService, Actions } from './webex-site.service';
 import { Notification } from 'modules/core/notifications';
 import { EventNames } from './webex-site.constants';
 
@@ -11,19 +11,13 @@ export interface IStep {
   event?: EventNames;
 }
 
-export interface IWebexLicencesPayload {
-  externalSubscriptionId?: string;
-  webexProvisioningParams?: IWebexProvisioningParams;
-}
-
 class WebexAddSiteModalController implements ng.IComponentController {
 
   // parameters for child controls
   public sitesArray: IWebExSite[] = [];
   public conferenceLicensesInSubscription: IConferenceLicense[];
-  public audioPackage?: string;
-
-  public audioPartnerName = null;
+  public audioPackage: string | null;
+  public audioPartnerName?: string;
   public subscriptionList: {
     id: string;
     isPending: boolean;
@@ -40,21 +34,20 @@ class WebexAddSiteModalController implements ng.IComponentController {
   public steps: IStep[];
   public currentStep = 0;
   public firstStep = 0;
+  public isSuccess: boolean | undefined = undefined;
+
   private totalSteps = 4;
   private isCanProceed = true;
   private webexSiteDetailsList = [];
-
   private ccaspSubscriptionId?: string;
   private transferCode?: string;
 
   /* @ngInject */
   constructor(
-    private Authinfo,
-    private Config: Config,
     private Notification: Notification,
     private SetupWizardService: SetupWizardService,
     private $rootScope: ng.IRootScopeService,
-    private $translate: ng.translate.ITranslateService,
+    private WebExSiteService: WebExSiteService,
   ) {
 
     this.steps = [{
@@ -71,13 +64,14 @@ class WebexAddSiteModalController implements ng.IComponentController {
   }
 
   public $onInit(): void {
-    this.subscriptionList = this.SetupWizardService.getSubscriptionListWithStatus();
+    this.subscriptionList = this.SetupWizardService.getEnterpriseSubscriptionListWithStatus();
     const hasActionableSubscriptions = !_.isEmpty(this.subscriptionList) && !_.first(this.subscriptionList).isPending;
     if (hasActionableSubscriptions) {
-
       // if there are any non-pending subs the first will be non-pending
-      const firstSubscription = _.first(this.subscriptionList);
-      this.changeCurrentSubscription(firstSubscription.id);
+      if (!this.currentSubscriptionId) {
+        const firstSubscription = _.first(this.subscriptionList);
+        this.changeCurrentSubscription(firstSubscription.id);
+      }
       if (this.subscriptionList.length === 1 && _.isNil(this.singleStep)) {
         this.firstStep = 1;
         this.next();
@@ -85,7 +79,8 @@ class WebexAddSiteModalController implements ng.IComponentController {
     } else {
       this.currentSubscriptionId = _.get(this.subscriptionList, '[0].id', '');
       this.isCanProceed = false;
-      this.singleStep = this.totalSteps =  1;
+      this.totalSteps = 1;
+      this.singleStep = 1;
     }
   }
 
@@ -107,6 +102,9 @@ class WebexAddSiteModalController implements ng.IComponentController {
   }
 
   public isNextDisabled(): boolean {
+    if (this.isResult()) {
+      return false;
+    }
     switch (this.currentStep) {
       case 0:
         return _.isEmpty(this.currentSubscriptionId) || !this.isCanProceed;
@@ -123,6 +121,13 @@ class WebexAddSiteModalController implements ng.IComponentController {
     return this.currentStep < (this.totalSteps - 1);
   }
 
+  public getPrimaryButtonText() {
+    if (this.isResult()) {
+      return 'common.close';
+    } else {
+      return  this.hasNext()  ? 'common.next' : 'common.save';
+    }
+  }
   //if there is not an event associated with a step: - proceed. Otherwise - emit event and set loading
   public next(): void {
     if (this.hasNext()) {
@@ -133,6 +138,8 @@ class WebexAddSiteModalController implements ng.IComponentController {
       } else {
         this.advanceStep();
       }
+    } else if (this.isResult()) {
+      this.cancel();
     } else {
       this.saveData();
     }
@@ -142,11 +149,11 @@ class WebexAddSiteModalController implements ng.IComponentController {
     this.isCanProceed = isCanProceed;
   }
 
-  private advanceStep() {
+  private advanceStep(canProceed?: boolean) {
     this.currentStep = this.currentStep + 1;
     // you can just breeze through transfer sites. Next is enabled
     if (this.steps[this.currentStep].name !== 'TRANSFER_SITE') {
-      this.isCanProceed = false;
+      this.isCanProceed = canProceed || false;
     }
   }
 
@@ -158,12 +165,21 @@ class WebexAddSiteModalController implements ng.IComponentController {
     return this.totalSteps - this.firstStep;
   }
 
+  public isResult(): boolean {
+    return this.isSuccess !== undefined;
+  }
+
   // callbacks from components
-  public changeCurrentSubscription(subscriptionId) {
-    this.currentSubscriptionId = subscriptionId;
-    this.conferenceLicensesInSubscription = this.SetupWizardService.getConferenceLicensesBySubscriptionId(subscriptionId);
-    this.setAudioPackageInfo(subscriptionId);
-    this.sitesArray = this.transformExistingSites(this.conferenceLicensesInSubscription);
+  public changeCurrentSubscription(subscriptionId, needsSetup?: boolean) {
+    if (needsSetup) {
+      this.$rootScope.$broadcast(EventNames.LAUNCH_MEETING_SETUP);
+      this.dismiss();
+    } else {
+      this.currentSubscriptionId = subscriptionId;
+      this.conferenceLicensesInSubscription = this.SetupWizardService.getConferenceLicensesBySubscriptionId(subscriptionId);
+      this.setAudioPackageInfo(subscriptionId);
+      this.sitesArray = this.WebExSiteService.transformExistingSites(this.conferenceLicensesInSubscription);
+    }
   }
 
   public addTransferredSites(sites, transferCode, isValid) {
@@ -171,7 +187,8 @@ class WebexAddSiteModalController implements ng.IComponentController {
     if (isValid) {
       this.sitesArray = _.concat(this.sitesArray, sites);
       this.transferCode = transferCode;
-      this.advanceStep();
+      // if transferring a site - we dont have to add new one
+      this.advanceStep(!_.isEmpty(transferCode));
     }
   }
 
@@ -193,55 +210,38 @@ class WebexAddSiteModalController implements ng.IComponentController {
     }
   }
 
-  // data massaging
-
-  private setAudioPackageInfo(subscripionId): void {
-    const audioLicenses = _.filter(this.Authinfo.getLicenses(), { licenseType: this.Config.licenseTypes.AUDIO });
-    const license = <IConferenceLicense>_.find(audioLicenses, { billingServiceId: subscripionId });
-    if (_.isEmpty(license)) {
-      return;
-    }
-    this.audioPackage = license.offerName;
-    if (this.audioPackage === this.Config.offerCodes.CCASP) {
-      this.audioPartnerName = _.get(license, 'ccaspPartnerName');
-      this.ccaspSubscriptionId = _.get(license, 'ccaspSubscriptionId');
-    } else if (this.audioPackage === this.Config.offerCodes.TSP) {
-      this.audioPartnerName = _.get(license, 'tspPartnerName');
-      this.ccaspSubscriptionId = _.get(license, 'ccaspSubscriptionId');
-    }
+  public isLicenseRedistribution() {
+    return this.singleStep === 3;
   }
 
-  private transformExistingSites(confServicesInActingSubscription): IWebExSite[] {
-    return _.chain(confServicesInActingSubscription).map('siteUrl').uniq().map(siteUrl => {
-      return {
-        siteUrl: _.replace(siteUrl.toString(), this.Config.siteDomainUrl.webexUrl, ''),
-        quantity: 0,
-        centerType: '',
-      };
-    }).value();
+  private setAudioPackageInfo(subscripionId): void {
+    const audioPackage = this.WebExSiteService.getAudioPackageInfo(subscripionId);
+    this.audioPackage = audioPackage.audioPackage;
+    if (this.audioPackage) {
+      this.audioPartnerName = audioPackage.audioPartnerName;
+      this.ccaspSubscriptionId = audioPackage.ccaspSubscriptionId;
+    }
   }
 
   private saveData() {
-    const payload = this.constructWebexLicensesPayload(this.webexSiteDetailsList);
-    this.SetupWizardService.addSiteToActiveSubscription(payload).then(() => {
-      // TODO algendel: 10/30/17 - get real copy.
-      this.Notification.success(this.$translate.instant('webexSiteManagement.addSiteSuccess'));
-    });
-  }
-
-  private constructWebexLicensesPayload(webexSiteDetailsList): IWebexLicencesPayload {
-    const webexLicensesPayload: IWebexLicencesPayload = {
-      externalSubscriptionId: this.currentSubscriptionId,
-    };
-    _.set(webexLicensesPayload, 'webexProvisioningParams', {
-      webexSiteDetailsList: webexSiteDetailsList,
-      audioPartnerName: this.audioPartnerName,
-      transferCode: this.transferCode,
-      ccaspSubscriptionId: this.ccaspSubscriptionId,
-      asIs: false,
-      siteManagementAction: 'ADD',
-    });
-    return webexLicensesPayload;
+    const action = this.isLicenseRedistribution() ? Actions.UPDATE : Actions.ADD;
+    const toasterPrefix = this.isLicenseRedistribution() ? 'redistribute' : 'addSite';
+    this.isLoading = true;
+    const payload = this.WebExSiteService.constructWebexLicensesPayload(this.webexSiteDetailsList, this.currentSubscriptionId || '',
+      action, this.audioPartnerName, this.ccaspSubscriptionId, this.transferCode);
+    this.SetupWizardService.updateSitesInActiveSubscription(payload)
+      .then(() => {
+        this.Notification.success('webexSiteManagement.' + toasterPrefix + 'SuccessToaster');
+        this.isSuccess = true;
+      })
+      .catch((response) => {
+        this.isSuccess = false;
+        this.Notification.errorWithTrackingId(response, 'webexSiteManagement.' + toasterPrefix + 'FailureToaster');
+      })
+      .finally(() => {
+        this.isLoading = false;
+        this.currentStep = this.currentStep + 1;
+      });
   }
 }
 
@@ -252,6 +252,7 @@ export class WebexAddSiteModalComponent implements ng.IComponentOptions {
     modalTitle: '<',
     dismiss: '&',
     singleStep: '<',
+    subscriptionId: '<',
   };
 }
 

@@ -51,7 +51,16 @@
   position: inherit;
   width: 100%;
 }
+.remove-cluster-spinner {
+  text-align: center;
+  height: 100%;
+  width: 100%;
+}
 .warning-icon {
   color: #FFB400;
   margin-right: 15px;
+}
+.warning-container {
+  margin-left: 30px;
+  max-width: 550px;
 }

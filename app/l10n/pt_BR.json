@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "Online",
-      "OnlineWithIssues": "On-line, com problemas",
-      "Offline": "Offline",
-      "OfflineExpired": "Desativado",
-      "Unknown": "Desconhecido"
+      "CONNECTED": "Online",
+      "CONNECTED_WITH_ISSUES": "On-line, com problemas",
+      "DISCONNECTED": "Offline",
+      "OFFLINE_EXPIRED": "Desativado",
+      "UNKNOWN": "Desconhecido"
     },
     "WithDevices": "Com dispositivos",
     "upgradeChannels": {
@@ -6678,23 +6678,23 @@
       "wlan": "Sem fio"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "Portas de rede bloqueadas",
         "message": "O firewall pode estar bloqueando a mídia no UDP. A qualidade da chamada pode ser afetada. Para obter informações sobre os requisitos de porta de rede, consulte o artigo <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls e requisitos de rede para o aplicativo Cisco Spark</a>."
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "Portas de rede bloqueadas",
         "message": "O firewall pode estar bloqueando a mídia no UDP. A qualidade da chamada pode ser afetada. Para obter informações sobre os requisitos de porta de rede, consulte o artigo <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls e requisitos de rede para o aplicativo Cisco Spark</a>."
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "Portas de rede bloqueadas",
         "message": "O firewall pode estar bloqueando a mídia no UDP e TCP. A qualidade da chamada pode ser afetada. Para obter informações sobre os requisitos de porta de rede, consulte o artigo <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls e requisitos de rede para o aplicativo Cisco Spark</a>."
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "Alta temperatura",
         "message": "A temperatura do sistema é demasiado elevada."
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "Visor principal não detectado",
         "message": "Verifique se o visor principal está ligado e conectado à saída do visor correto no sistema de vídeo."
       },
@@ -6702,35 +6702,35 @@
         "type": "Atualizações automáticas desativadas",
         "message": "O software do sistema não será atualizado."
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "Servidor de hora inacessível",
         "message": "Não foi possível estabelecer a conexão com um servidor NTP. A hora exibida em seu terminal pode estar errada."
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "Interferência de sinal de outros dispositivos",
         "message": "Há uma interferência de sinal de ultrassom nesta sala de outros dispositivos (ex: outros sistemas de vídeo) que pode impedir o emparelhamento entre o sistema de vídeo e seu telefone ou laptop."
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "Atraso de áudio",
         "message": "As configurações do monitor estão adicionando um atraso ao seu áudio. Altere as configurações do monitor para um modo adequado (ex: modo de jogo)."
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "Sem alto falante de ultrassom incorporado",
         "message": "Esta versão de hardware do SX10 não tem um alto falante de ultrassom incorporado."
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "Chave de opção de criptografia faltando",
         "message": "Adicione uma chave de opção de criptografia."
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "Configurada para automação de testes",
         "message": "Métricas e relatórios de registros são afetados."
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "Painel de toque necessário",
         "message": "Não há nenhum painel de toque conectado ao dispositivo da sala. Verifique o cabo que conecta o painel de toque no dispositivo da sala."
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "Perda de pacotes detectada",
         "message": "Durante a última chamada, detectamos um nível de perda de pacotes que pode ter afetado a qualidade da chamada. A perda de pacotes é tipicamente causada por congestionamento da rede."
       },

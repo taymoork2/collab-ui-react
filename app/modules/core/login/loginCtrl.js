@@ -84,6 +84,10 @@
               Authinfo.setCustomerView(false);
             } else if (Authinfo.isSupportUser()) {
               state = 'support.status';
+            } else if (Authinfo.isUserAdminUser()) {
+              state = 'users.list';
+            } else if (Authinfo.isDeviceAdminUser()) {
+              state = 'devices';
             } else if (!SessionStorage.get(StorageKeys.CUSTOMER_ORG_ID) && Authinfo.isHelpDeskUserOnly()) {
               state = 'helpdesk.search';
             } else if (!SessionStorage.get(StorageKeys.CUSTOMER_ORG_ID) && Authinfo.isComplianceUserOnly()) {

@@ -4,6 +4,7 @@
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
 @import '../../../styles/variables';
 
+
 .devices-redux {
 
   .ui-grid-cell:first-child,
@@ -26,9 +27,78 @@
     height: 65px !important;
   }
   .page-sub-header {
+    display: flex;
     height: auto;
     flex-wrap: nowrap;
     .page-sub-header__right {
+      align-self: flex-start;
+    }
+    align-items: center;
+    device-search {
+      flex-grow: 1;
+    }
+    .graphCarousel {
+      position: relative;
+      height: 160px;
+
+      margin-right: 16px;
+      margin-left: 16px;
+      #chartTitle {
+        position: absolute;
+        left: 190px;
+      }
+      @media (min-width: 1225px) {
+        width: 360px;
+        #chartArea {
+          width: 360px;
+        }
+      }
+      @media (max-width: 1224px) {
+        width: 160px;
+        #chartArea {
+          width: 200px;
+        }
+        #chartTitle {
+          display: none;
+        }
+        .amcharts-legend-div {
+          display: none;
+        }
+      }
+      #chartArea {
+        position: absolute;
+        height: 160px;
+
+        //margin: auto;
+      }
+
+      .carousel {
+        .title {
+          flex-basis: 100%;
+          font-size: 1.2rem;
+        }
+        .large {
+          font-size: 2rem;
+        }
+        .selected {
+          font-size: 0.9rem;
+        }
+        .icon {
+          line-height: 1rem;
+        }
+
+        font-size: 0.6rem;
+        justify-content: center;
+        text-align: center;
+        display: flex;
+        flex-wrap: wrap;
+        position: absolute;
+        bottom: 0;
+        margin: 0 35%;
+        width: 30%;
+      }
+    }
+    .new-export {
       align-self: flex-start;
     }
   }
@@ -63,6 +133,19 @@
     a {
       font-size: .7rem;
     }
+  }
+
+  .danger {
+    color: $brand-danger;
+  }
+  .warning {
+    color: $brand-warning;
+  }
+  .success {
+    color: $brand-success;
+  }
+  .expired {
+    color: $brand-danger-darker;
   }
 
   .device-card {
@@ -105,15 +188,7 @@
       width: 16px;
       border: 3px solid white;
     }
-    .danger {
-      color: $brand-danger;
-    }
-    .warning {
-      color: $brand-warning;
-    }
-    .success {
-      color: $brand-success;
-    }
+
 
     .device-status-red {
       background-color: $brand-danger;
@@ -287,15 +362,6 @@
     form {
       margin: 0;
     }
-
-    .search-filters-only {
-      margin-left: 10px;
-      .searchbox {
-        visibility: hidden;
-        width: 0;
-      }
-    }
-
     $easeOutQuint: cubic-bezier(0.230, 1.000, 0.320, 1.000);
     @mixin easing-transition($property: all, $duration: 500ms, $easeType: $ease ) {
       -webkit-transition: $property $duration $easeType;
@@ -304,15 +370,29 @@
       transition: $property $duration $easeType;
     }
 
+    .search-error-box {
+      visibility: hidden;
+    }
+
+    .search-error-box.warning {
+      visibility: visible;
+      transition-property: visibility;
+      transition-duration: .1s;
+      transition-delay: 1s;
+    }
+
     .bulleted-searchbox {
       text-decoration: none;
 
-      .expanded {
-        width: 430px;
-        padding-right: 32px;
-      }
       .bulleted-searchinput.searcherror {
-        border-color: red !important;
+        background-color: $color-attention-lighter !important;
+        border-color: $color-attention;
+        &:focus {
+          border-color: $color-attention;
+        }
+        transition-property: background-color, border-color;
+        transition-duration: .1s;
+        transition-delay: 1s
       }
 
       .bulleted-searchinput {
@@ -323,8 +403,10 @@
         flex-basis: 100%;
         background: $brand-white;
         border: 1px solid $gray-light-2;
-        border-radius: 2px;
+        border-radius: 4px;
         height: 100%;
+        width: 430px;
+        padding-right: 32px;
         margin-right: 1rem;
 
         > input {
@@ -335,8 +417,7 @@
           margin-right: 0;
           min-width: 35px;
           font-size: 1.125rem;
-          color: $gray !important;
-          background: $brand-white;
+          background: inherit;
           padding: 8px 1px 7px 0;
           margin-left: 4px;
           margin-bottom: 3px;
@@ -347,12 +428,7 @@
           &:focus {
             outline: none !important;
             box-shadow: none !important;
-            background-color: white !important;
           }
-        }
-        > input.collapsed {
-          min-width: 1px;
-          width: 1px;
         }
         > i {
           border: none;
@@ -494,20 +570,44 @@
   }
 }
 
-.is-read-only-admin .devices-redux .result-pane {
-  .gridStyle {
-    height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + #{$read-only-banner-height}));
+$search-header-height: 185px;
+@media (max-width:991px) {
+  .is-read-only-admin .devices-redux .result-pane {
+    .gridStyle {
+      height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + #{$read-only-banner-height}));
+    }
+    .grid-container {
+      height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + 48rem + #{$read-only-banner-height}));
+    }
   }
-  .grid-container {
-    height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + 48rem + #{$read-only-banner-height}));
+
+  .devices-redux .result-pane {
+    .gridStyle {
+      height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height}));
+    }
+    .grid-container {
+      height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + 48rem));
+    }
   }
 }
 
-.devices-redux .result-pane {
-  .gridStyle {
-    height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height}));
+@media (min-width:992px) {
+  .is-read-only-admin .devices-redux .result-pane {
+    .gridStyle {
+      height: calc(100vh - (#{$page-header-height} + #{$search-header-height} + #{$read-only-banner-height}));
+    }
+    .grid-container {
+      height: calc(100vh - (#{$page-header-height} + #{$search-header-height} + 48rem + #{$read-only-banner-height}));
+    }
   }
-  .grid-container {
-    height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + 48rem));
+
+  .devices-redux .result-pane {
+    .gridStyle {
+      height: calc(100vh - (#{$page-header-height} + #{$search-header-height}));
+    }
+    .grid-container {
+      height: calc(100vh - (#{$page-header-height} + #{$search-header-height} + 48rem));
+    }
   }
 }
+

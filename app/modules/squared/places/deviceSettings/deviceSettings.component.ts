@@ -3,6 +3,7 @@ import './deviceSettings.scss';
 class DeviceSettings implements ng.IComponentController {
   public ownerType: string;
   public ownerId: string;
+  public ownerDisplayName: string;
   public deviceList: any;
 
   private upgradeChannelOptions;
@@ -23,6 +24,7 @@ class DeviceSettings implements ng.IComponentController {
     private CsdmUpgradeChannelService,
     private CsdmConfigurationService,
     private Notification,
+    private BotAuthorizationsModal,
   ) {}
 
   public $onInit(): void {
@@ -63,7 +65,9 @@ class DeviceSettings implements ng.IComponentController {
         this.updatingSettingsLockDown = false;
       });
   }
-
+  public startManageApiAccessFlow() {
+    this.BotAuthorizationsModal.open(this.ownerId, this.ownerDisplayName);
+  }
   private fetchAsyncSettings(): void {
     this.FeatureToggleService.csdmPlaceUpgradeChannelGetStatus().then(placeUpgradeChannel => {
       if (placeUpgradeChannel) {
@@ -130,8 +134,9 @@ export class DeviceSettingsComponent implements ng.IComponentOptions {
   public controller = DeviceSettings;
   public template = require('modules/squared/places/deviceSettings/deviceSettings.html');
   public bindings = <{ [binding: string]: string }>{
-    ownerType: '@',
     ownerId: '<',
+    ownerDisplayName: '<',
+    ownerType: '<',
     deviceList: '<',
   };
 }

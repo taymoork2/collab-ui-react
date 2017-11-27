@@ -141,33 +141,71 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
     }
 
     function initSpies() {
-      spyOn(CloudConnectorService, 'getService').and.returnValue($q.resolve({
+      spyOn(CloudConnectorService, 'getService');
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve({}));
+      spyOn(ServiceDescriptorService, 'getServices');
+    }
+
+    it('should check status with CloudConnectorService if the org is entitled to Google Calendar ', () => {
+      CloudConnectorService.getService.and.returnValues($q.resolve({
+        setup: true,
+      }), $q.resolve({
         setup: true,
       }));
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve({}));
-      spyOn(ServiceDescriptorService, 'getServices').and.returnValue($q.resolve([{
+      ServiceDescriptorService.getServices.and.returnValue($q.resolve([{
         id: 'squared-fusion-gcal',
         enabled: true,
       }, {
         id: 'squared-fusion-cal',
         enabled: true,
       }]));
-    }
-
-    it('should check status with CloudConnectorService if the org is entitled to Google Calendar ', () => {
       initController();
-      expect(CloudConnectorService.getService.calls.count()).toBe(1);
+      expect(CloudConnectorService.getService.calls.count()).toBe(2);
 
     });
 
     it('should overwrite the Exchange-based status to enabled=false if Google Calendar also is enabled, so that we only show Calendar once in the template ', () => {
-
+      CloudConnectorService.getService.and.returnValues($q.resolve({
+        setup: true,
+      }), $q.resolve({
+        setup: false,
+      }));
+      ServiceDescriptorService.getServices.and.returnValue($q.resolve([{
+        id: 'squared-fusion-gcal',
+        enabled: true,
+      }, {
+        id: 'squared-fusion-cal',
+        enabled: true,
+      }]));
       const userWithBothEntitlements = {
         entitlements: ['squared-fusion-gcal'],
         licenseID: ['something', 'and', 'more things'],
       };
 
       const controller = initController(userWithBothEntitlements);
+      expect(_.find(controller.allServicesinOrg, (service: any) => service.id === 'squared-fusion-gcal').enabled).toBe(true);
+      expect(_.find(controller.allServicesinOrg, (service: any) => service.id === 'squared-fusion-cal').enabled).toBe(false);
+    });
+
+    it('should set squared-fusion-gcal to enabled also if Office365 is enabled and Google is not, because it represents all cloud services', () => {
+      CloudConnectorService.getService.and.returnValues($q.resolve({
+        setup: false,
+      }), $q.resolve({
+        setup: true,
+      }));
+      ServiceDescriptorService.getServices.and.returnValue($q.resolve([{
+        id: 'squared-fusion-gcal',
+        enabled: false,
+      }, {
+        id: 'squared-fusion-cal',
+        enabled: false,
+      }]));
+      const userWithNoGcal = {
+        entitlements: ['squared-fusion-cal'],
+        licenseID: ['something', 'and', 'more things'],
+      };
+
+      const controller = initController(userWithNoGcal);
       expect(_.find(controller.allServicesinOrg, (service: any) => service.id === 'squared-fusion-gcal').enabled).toBe(true);
       expect(_.find(controller.allServicesinOrg, (service: any) => service.id === 'squared-fusion-cal').enabled).toBe(false);
     });

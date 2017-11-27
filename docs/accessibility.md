@@ -69,9 +69,60 @@ Currently Atlas uses ui-grid for pages where large amounts of data are being dis
 
 ## Draggable lists
 
-Currently Atlas utilizes Dragular to create drag and drop lists.  However, Dragular does not have any keyboard support.  There is currently a Jira, [ATLAS-2669](https://jira-eng-chn-sjc1.cisco.com/jira/browse/ATLAS-2669), that has been opened for creating a keyboard accessible draggable list component that will encapsulate Dragular, similar to how cs-grid wraps around ui-grid, to create draggable lists that are keyboard accessible by default.  The Speed Dials re-order list has already been made keyboard accessible as a proof of concept and part of ATLAS-2669 will be to migrate Speed Dials to the generic component.
+Atlas currently utilizes [Dragular](https://www.npmjs.com/package/dragular) to create drag and drop lists.  However, Dragular does not have any keyboard support.  To remedy this, the DraggableService has been created in order to streamline inserting keyboard support into drag and drop lists.  DraggableService has a single function: `createDraggableInstance`.  This function creates a new instance of DraggableInstance, which has two public variables - `reordering: boolean` and `selectedItem?: any` - and one public function - `keyPress`.  To control whether the list is draggable, `reordering` should be toggled between `true` and `false`; `true` for when the list is draggable and `false` for when its static.  `reordering` defaults to `true`.  `selectedItem` is the list item currently selected when navigating via keyboard while the list is draggable.  When reordering is set to `false`, `selectedItem` should be reset to `undefined`.
 
-This section should be updated upon the completion of ATLAS-2669.
+To utilize the DraggableService:
+- The service, and the associated class, can be imported from 'modules/core/accessibility'
+```typescript
+import { DraggableService, DraggableInstance } from 'modules/core/accessibility';
+```
+
+- First create a draggable instance
+```typescript
+private draggableInstance: DraggableInstance;
+...
+  this.draggableInstance = this.DraggableService.createDraggableInstance({
+      elem: this.$element,
+      identifier: '#containerId',
+      transitClass: 'reorder-class',
+      itemIdentifier: '#itemId',
+      list: this.draggableList,
+    });
+```
+
+- Make sure the html setup matches the id/classes used in the creation of the draggableInstance (do not forget to set the tabindex)
+```html
+<div id="containerId">
+  <div ng-repeat="item in $ctrl.draggableList" id="itemId{{$index}}" ng-class="{'reorder-class': $ctrl.isReordering()}" tabindex="{{$ctrl.isReordering() ? 0 : -1}}" ng-keydown="$ctrl.itemKeyPress($event, item)">
+    <!-- Unique Content Here -->
+    <div ng-if="$ctrl.isReordering()">
+      <i class="icon icon-tables" ng-class="{'selected': $ctrl.isSelectedItem(item)}"></i>
+    </div>
+  </div>
+</div>
+```
+
+- There will need to be keypress, isReordering, and isSelected functions added to the controller for use in the html
+```typescript
+public itemKeyPress($event: KeyboardEvent, item: IListItem) {
+  if (!this.isReordering()) {
+    return;
+  } else {
+    this.draggableInstance = this.DraggableService.keyPress($event, item);
+    this.draggableList = this.draggableInstance.list;
+  }
+}
+
+public isReordering(): boolean {
+  return _.get(this.draggableInstance, 'reordering', false);
+}
+
+public isSelectedItem(item: IListItem): boolean {
+  return item === this.draggableInstance.selectedItem;
+}
+```
+
+- Remember that the DraggableInstance starts with `reordering` as `true` and must be toggled on/off is the list is only sometimes draggable.
 
 ## Keyboard Events and Keycodes
 

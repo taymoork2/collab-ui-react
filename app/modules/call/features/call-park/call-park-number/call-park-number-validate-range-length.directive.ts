@@ -4,12 +4,7 @@ export class CallParkRangeLengthValidator implements ng.IDirective {
   public restrict: string = 'A';
   public require: string = 'ngModel';
 
-  public link: ng.IDirectiveLinkFn = (
-    scope: ng.IScope,
-    _element: ng.IAugmentedJQuery,
-    _attrs: ng.IAttributes,
-    ctrl: any,
-  ) => {
+  public link: ng.IDirectiveLinkFn = (scope: ng.IScope, _element: ng.IAugmentedJQuery, _attrs: ng.IAttributes, ctrl: any) => {
     ctrl.$validators.rangeLength = (modelValue) => {
       if (!ctrl.$dirty) {
         return true;

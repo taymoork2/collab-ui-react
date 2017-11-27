@@ -1,8 +1,7 @@
 import { USSService, IUserStatusWithExtendedMessages } from 'modules/hercules/services/uss.service';
-// import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
 
 export interface IEntitlementNameAndState {
-  entitlementName: 'squaredFusionUC' | 'squaredFusionEC' | 'sparkHybridImpInterop';
+  entitlementName: 'squaredFusionUC' | 'squaredFusionEC' | 'sparkHybridImpInterop' | 'squaredFusionCal' | 'squaredFusionGCal';
   entitlementState: 'ACTIVE' | 'INACTIVE';
 }
 
@@ -42,6 +41,10 @@ export class HybridServiceUserSidepanelHelperService {
       .then((userId) => {
         return this.USSService.refreshEntitlementsForUser(userId);
       });
+  }
+
+  public getPreferredWebExSiteName(userObject, orgObject): string | undefined {
+    return this.Userservice.getPreferredWebExSiteForCalendaring(userObject) || _.get(orgObject, 'orgSettings.calSvcpreferredWebExSite', undefined);
   }
 
 

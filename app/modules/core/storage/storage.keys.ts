@@ -23,4 +23,9 @@ export class StorageKeys {
 
   // Login strings
   public static readonly LOGOUT = 'logout';
+
+  //care setup
+  public static readonly CARE = {
+    setUpStatus: 'setupCare',
+  };
 }

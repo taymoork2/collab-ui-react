@@ -16,12 +16,12 @@
           <header>
             <div translate="homePage.notifications"></div>
           </header>
-
           <section class="monitoring-panel small-3 medium-12 column" ng-if="overview.notifications.length === 0 && !overview.showLearnMoreNotification">
             <div class="notification-style">
               <span translate="overview.nonotifications"></span>
             </div>
-          </section>
+            </section>
+
           <section class="monitoring-panel small-3 medium-12 column" ng-if="overview.notifications.length > 0 || overview.showLearnMoreNotification">
             <div class="notification-style no-close" ng-if="overview.showLearnMoreNotification">
               <span class="notification-spacing">

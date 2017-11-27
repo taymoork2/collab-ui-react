@@ -3,7 +3,7 @@ import { SearchObject } from '../services/search/searchObject';
 import { SearchResult } from '../services/search/searchResult';
 import { Caller, CsdmSearchService } from '../services/csdmSearch.service';
 import { Notification } from '../../core/notifications/notification.service';
-import { SearchElement } from '../services/search/queryParser';
+import { SearchElement } from '../services/search/searchElement';
 import { SearchTranslator } from 'modules/csdm/services/search/searchTranslator';
 import { KeyCodes } from 'collab-ui-ng/src/directives/dropdown/keyCodes';
 import { ISuggestion, ISuggestionDropdown, SuggestionDropdown } from '../services/search/suggestion';
@@ -16,7 +16,6 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
   private lastSearchInput = '';
   public searchInput = '';
   public searchField = '';
-  public searchFilters;
   private lastSearchObject: SearchObject;
   private _inputActive: boolean;
   private searchDelayTimer: ng.IPromise<any> | null;
@@ -28,7 +27,9 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
 
   set inputActive(value: boolean) {
     this._inputActive = value;
-    this.showHideSuggestionDropdown(value);
+    if (!value) {
+      this.showHideSuggestionDropdown(false);
+    }
   }
 
   public suggestions: ISuggestionDropdown;
@@ -46,8 +47,9 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
               private $translate: ng.translate.ITranslateService,
               private Notification,
               private $timeout: ng.ITimeoutService) {
-    this.suggestions = new SuggestionDropdown($translate);
-    this.updateSearchFilters();
+    this.suggestions = new SuggestionDropdown(new SearchTranslator($translate));
+
+    this.suggestions.updateSuggestionsBasedOnSearchResult(undefined, this.searchObject);
   }
 
   public $onInit(): void {
@@ -57,9 +59,8 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
 
   private updateSearchResult(result?: SearchResult) {
     this.searchResultChanged({ result: result });
-    if (!this.searchObject.currentFilterValue) {
-      this.updateSearchFilters(result);
-    }
+
+    this.suggestions.updateSuggestionsBasedOnSearchResult(result, this.searchObject);
   }
 
   public setSortOrder(field: string, order: string) {
@@ -67,8 +68,9 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     this.searchChange();
   }
 
-  public addToSearch(field: string, query: string) {
-    this.searchObject.addSearchElement((field ? (field + ':') : '') + query);
+  public addToSearch(searchElement: SearchElement, toggle: boolean) {
+    this.searchObject.addParsedSearchElement(searchElement, toggle);
+    this.searchChange();
   }
 
   public onInputSubmit() {
@@ -87,7 +89,13 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
       this.searchObject.setWorkingElementText(this.searchInput);
       this.lastSearchInput = this.searchInput;
       this.searchChange();
-      this.suggestions.updateBasedOnInput(this.searchInput);
+      if (this.searchObject.hasError || this.searchInput.length === 0) {
+        this.showHideSuggestionDropdown(false);
+        // TODO: show error in drop down?
+      } else {
+        this.showHideSuggestionDropdown(true);
+        this.suggestions.updateBasedOnInput(this.searchObject);
+      }
     }
   }
 
@@ -129,18 +137,10 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     }
   }
 
-  public setCurrentFilterValue(value: string) {
-    value = value === 'all' ? '' : value;
-    if (this.searchObject.currentFilterValue !== value) {
-      this.searchObject.setFilterValue(value);
-      this.searchChange();
-    }
-  }
-
   public searchChange() {
     if (this.lastSearchObject && this.lastSearchObject.equals(this.searchObject)) {
       return;
-    } else if (this.searchObject.hasError && (!this.lastSearchObject || this.lastSearchObject.currentFilterValue === this.searchObject.currentFilterValue)) {
+    } else if (this.searchObject.hasError && !this.lastSearchObject) {
       return;
     }
     const searchClone = this.searchObject.clone();
@@ -153,11 +153,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     this.searchDelayTimer = this.$timeout(() => {
       this.performSearch(searchClone); //TODO avoid at now
       this.lastSearchObject = searchClone;
-      this.suggestions.onSearchChanged(this.getBullets(), this.searchInput);
-
-      if (this.searchObject.currentFilterValue) {
-        this.performFilterUpdateSearch();
-      }
+      this.suggestions.onSearchChanged(this.searchObject);
     }, DeviceSearch.SEARCH_DELAY_MS);
   }
 
@@ -170,6 +166,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     this.lastSearchInput = '';
     this.searchChange();
     this.suggestions.showEmpty();
+    this.showHideSuggestionDropdown(false);
   }
 
   public onSearchInputKeyDown($keyEvent: KeyboardEvent) {
@@ -215,7 +212,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
       this.isSearching = false;
     }).catch(e => {
       this.isSearching = false;
-      DeviceSearch.ShowSearchError(this.Notification, e);
+      DeviceSearch.ShowSearchError(this.Notification, e.data && e.data.trackingId);
     });
   }
 
@@ -223,7 +220,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     if (response && response.data) {
       const trackingId = response.config && response.config.headers && response.config.headers.TrackingID;
       if (!response.data.successfullyRetrievedFromCmi && !response.data.successfullyRetrievedFromCsdm) {
-        DeviceSearch.ShowSearchError(Notification, null);
+        DeviceSearch.ShowSearchError(Notification, trackingId);
       } else if (!response.data.successfullyRetrievedFromCmi || !response.data.successfullyRetrievedFromCsdm) {
         if (!DeviceSearch.partialSearchError) {
           DeviceSearch.partialSearchError = true;
@@ -242,29 +239,11 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
       true);
   }
 
-  public static ShowSearchError(Notification: Notification, e) {
-    if (e) {
-      if (e.status === 400) {
-        Notification.errorWithTrackingId(e, 'spacesPage.searchFailedQuery');
-      } else {
-        Notification.errorResponse(e, 'spacesPage.searchFailed');
-      }
-    } else {
-      Notification.error('spacesPage.searchFailed');
-    }
-  }
-
-  private performFilterUpdateSearch() {
-    this.CsdmSearchService.search(this.searchObject.cloneWithoutFilters(), Caller.aggregator)
-      .then(response => {
-        if (response && response.data) {
-          this.updateSearchFilters(response.data);
-          DeviceSearch.ShowPartialSearchErrors(response.data, this.Notification);
-          return;
-        }
-        this.updateSearchFilters();
-      })
-      .catch(e => DeviceSearch.ShowSearchError(this.Notification, e));
+  public static ShowSearchError(Notification: Notification, trackingId) {
+    Notification.error('spacesPage.searchFailedDetails',
+        { trackingID: trackingId },
+        'spacesPage.searchFailedTitle',
+        true);
   }
 
   public getBullets(): SearchElement[] {
@@ -273,42 +252,6 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
 
   public getTranslatedQuery(): string {
     return this.searchObject.getTranslatedQueryString(new SearchTranslator(this.$translate));
-  }
-
-  private updateSearchFilters(searchResult?: SearchResult) {
-    this.suggestions.updateSuggestionsBasedOnSearchResult(this.getDocCount, searchResult, this.searchInput);
-    this.searchFilters = [
-      {
-        count: searchResult && searchResult.hits.total || 0,
-        name: this.$translate.instant('common.all'),
-        filterValue: 'all',
-      }, {
-        count: this.getDocCount(searchResult, 'connectionStatus', 'connected_with_issues'),
-        name: this.$translate.instant('CsdmStatus.connectionStatus.OnlineWithIssues'),
-        filterValue: 'connectionStatus=CONNECTED_WITH_ISSUES',
-      }, {
-        count: this.getDocCount(searchResult, 'connectionStatus', 'offline')
-        + this.getDocCount(searchResult, 'connectionStatus', 'disconnected'),
-        name: this.$translate.instant('CsdmStatus.connectionStatus.Offline'),
-        filterValue: 'connectionStatus=DISCONNECTED',
-      }, {
-        count: this.getDocCount(searchResult, 'connectionStatus', 'offline_expired'),
-        name: this.$translate.instant('CsdmStatus.connectionStatus.OfflineExpired'),
-        filterValue: 'connectionStatus=OFFLINE_EXPIRED',
-      }, {
-        count: this.getDocCount(searchResult, 'connectionStatus', 'connected'),
-        name: this.$translate.instant('CsdmStatus.connectionStatus.Online'),
-        filterValue: 'connectionStatus="CONNECTED"',
-      }];
-  }
-
-  private getDocCount(searchResult: SearchResult | undefined, aggregation: string, bucketName: string) {
-    const buckets = searchResult
-      && searchResult.aggregations
-      && searchResult.aggregations[aggregation]
-      && searchResult.aggregations[aggregation].buckets;
-    const bucket = _.find(buckets || [], { key: bucketName });
-    return bucket && bucket.docCount || 0;
   }
 
   private deleteLastBullet() {
@@ -321,7 +264,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
 }
 
 export interface ISearchHandler {
-  addToSearch(field: string, query: string);
+  addToSearch(searchElement: SearchElement, toggle: boolean);
 
   setSortOrder(field?: string, order?: string);
 }
@@ -329,9 +272,9 @@ export interface ISearchHandler {
 export class SearchInteraction implements ISearchHandler {
   public receiver: ISearchHandler;
 
-  public addToSearch(field: string, query: string) {
+  public addToSearch(searchElement: SearchElement, toggle: boolean) {
     if (this.receiver) {
-      this.receiver.addToSearch(field, query);
+      this.receiver.addToSearch(searchElement, toggle);
     }
   }
 

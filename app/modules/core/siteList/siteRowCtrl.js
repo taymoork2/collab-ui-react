@@ -8,17 +8,24 @@ require('./_site-list.scss');
     .controller('WebExSiteRowCtrl', WebExSiteRowCtrl);
 
   /*@ngInject*/
-  function WebExSiteRowCtrl($log, $modal, $scope, $sce, $state, $stateParams, $timeout, $translate, accountLinkingPhase2, FeatureToggleService, ModalService, TokenService, WebExUtilsFact, WebExSiteRowService, Utils) {
+
+  function WebExSiteRowCtrl($log, $modal, $scope, $sce, $state, $stateParams, $timeout, $translate, accountLinkingPhase2, ModalService, Notification, SetupWizardService, TokenService, WebExUtilsFact, WebExSiteRowService, WebExSiteService, Utils) {
     var vm = this;
     vm.showGridData = false;
     vm.isShowAddSite = false;
     vm.canAddSite = WebExSiteRowService.canAddSite();
     vm.isAdminPage = Utils.isAdminPage();
+    var showSiteMgmntEmailPattern = '^ordersimp-.*@mailinator.com';
+    var actions = {
+      ADD: 'add',
+      DELETE: 'delete',
+      REDISTRIBUTE: 'redistribute',
+    };
 
     $log.debug('StateParams in sitreRowCrtl', $stateParams);
 
     var dontShowLinkedSites = accountLinkingPhase2;
-    FeatureToggleService.atlasWebexAddSiteGetStatus().then(function (result) {
+    WebExSiteRowService.shouldShowSiteManagement(showSiteMgmntEmailPattern).then(function (result) {
       vm.isShowAddSite = result;
     });
 
@@ -47,9 +54,7 @@ require('./_site-list.scss');
       if (vm.canModify(entity)) {
         $state.go('site-list-distribute-licenses', { subscriptionId: entity.billingServiceId });
       } else {
-        var isOnlySite = isOnlySiteInSubscription(entity);
-        var errorMessage = isOnlySite ? 'webexSiteManagement.redistributeRejectModalBodyOnlySite' : 'webexSiteManagement.redistributeRejectModalBodyPending';
-        showRejectionModal(isOnlySite, 'webexSiteManagement.redistributeRejectModalTitle', errorMessage);
+        showRejectionModal(actions.REDISTRIBUTE, isOnlySiteInSubscription(entity));
       }
     };
 
@@ -57,12 +62,22 @@ require('./_site-list.scss');
       if (WebExSiteRowService.hasNonPendingSubscriptions()) {
         $state.go('site-list-add');
       } else {
-        showRejectionModal(false, 'webexSiteManagement.addSiteRejectModalTitle', 'webexSiteManagement.addSiteRejectPending');
+        showRejectionModal(actions.ADD, false);
       }
     };
 
     vm.canModify = function (entity) {
-      return !isOnlySiteInSubscription(entity) && !WebExSiteRowService.isSubscriptionPending(entity.billingServiceId);
+      return !isOnlySiteInSubscription(entity) && !SetupWizardService.isSubscriptionPending(entity.billingServiceId);
+    };
+
+    //if we are checking a single subscription - we pass the entity. If entity is not passed
+    //check if this customer has any enterprise non-trial subscriptions
+    vm.isSubscriptionEnterprise = function (entity) {
+      if (entity) {
+        return SetupWizardService.isSubscriptionEnterprise(entity.billingServiceId);
+      } else {
+        return !_.isEmpty(SetupWizardService.getEnterpriseSubscriptionListWithStatus());
+      }
     };
 
     vm.deleteSite = function (entity) {
@@ -81,9 +96,7 @@ require('./_site-list.scss');
           deleteSite(subscriptionId, siteUrl);
         });
       } else {
-        var isOnlySite = isOnlySiteInSubscription(entity);
-        var errorMessage = isOnlySite ? 'webexSiteManagement.deleteSiteRejectModalBodyOnlySite' : 'webexSiteManagement.deleteSiteRejectModalBodyPending';
-        showRejectionModal(isOnlySite, 'webexSiteManagement.deleteSiteRejectModalTitle', errorMessage);
+        showRejectionModal(actions.DELETE, isOnlySiteInSubscription(entity));
       }
     };
     vm.showGridData = true;
@@ -98,8 +111,19 @@ require('./_site-list.scss');
       var sites = WebExSiteRowService.getLicensesInSubscriptionGroupedBySites(subscriptionId);
       if (_.keys(sites).length === 2) {
         var remainingSite = moveLicensesToRemainingSite(subscriptionId, sites, siteUrl);
-        WebExSiteRowService.deleteSite(siteUrl, remainingSite);
-        //TODO: algendel 10/16/2017 -- call backend API to update licenses and remove the site.
+        WebExSiteService.deleteSite(subscriptionId, remainingSite)
+          .then(function () {
+            var params = {
+              title: $translate.instant('webexSiteManagement.deleteSiteSuccessModalTitle'),
+              message: $translate.instant('webexSiteManagement.deleteSiteSuccessModalBody'),
+              hideDismiss: true,
+            };
+            ModalService.open(params);
+            Notification.success('webexSiteManagement.deleteSiteSuccessToaster');
+          })
+          .catch(function (response) {
+            Notification.errorWithTrackingId(response, 'webexSiteManagement.deleteSiteFailureToaster');
+          });
       } else { //open modal to redistribute licenses
         $state.go('site-list-delete', { subscriptionId: subscriptionId, siteUrl: siteUrl });
       }
@@ -116,25 +140,26 @@ require('./_site-list.scss');
     function moveLicensesToRemainingSite(subscriptionId, sites, urlToRemove) {
       var keys = _.keys(sites);
       _.pull(keys, urlToRemove);
+      var remainingSiteUrl = keys[0];
       var siteToRemove = sites[urlToRemove];
-      var remainingSite = _.map(sites[keys[0]], function (s) {
+      var remainingSite = _.map(sites[remainingSiteUrl], function (s) {
         return {
-          offerName: s.offerName,
-          volume: s.volume,
+          centerType: s.offerName,
+          quantity: s.volume,
           siteUrl: s.siteUrl,
         };
       });
 
       _.forEach(siteToRemove, function (license) {
-        var i = _.findIndex(remainingSite, { offerName: license.offerName });
+        var i = _.findIndex(remainingSite, { centerType: license.offerName });
         if (i > -1) {
-          remainingSite[i].volume = remainingSite[i].volume + license.volume;
+          remainingSite[i].quantity = remainingSite[i].quantity + license.volume;
         } else {
           remainingSite.push(
             {
-              offerName: license.offerName,
-              volume: license.volume,
-              siteUrl: license.siteUrl,
+              centerType: license.offerName,
+              quantity: license.volume,
+              siteUrl: remainingSiteUrl,
             });
         }
       });
@@ -165,20 +190,61 @@ require('./_site-list.scss');
       });
     }
 
-    function showRejectionModal(isOnlySite, title, errorMessage) {
+    // notes:
+    // - it has been observed that when trying to launch setup wizard modal from add site modal, the
+    //   setup wizard modal comes up blank
+    // - this is possibly related to redirecting from a modal state to a modal state
+    // - as a workaround, we:
+    //   - emit an event
+    //   - close the modal
+    //   - 'siteRowCtrl' catches the event (since it's not a modal), and launches the setup wizard
+    // - in order to avoid conflicting animations (one modal closing, another one opening), we insert
+    //   an 800ms delay
+    // 11/15/17 we are temporarily taking out the setup launch. This should be brought back within a week.
+
+    $scope.$on('core::launchMeetingSetup', function () {
+      $timeout(function () {
+        goToMeetingSetup();
+      }, 800);
+    });
+
+
+    function showRejectionModal(action, isOnlySite) {
+      /*  algendel 11/13/17. We are working on implementation where in certain instances of pending setup
+      the user is sent to the setup screen. This should come within a week. therefore I am leaving in the
+      code to make this happen gated by this false isShowSetup flag below */
+
+      var isShowSetup = false;
+      var title, errorMessage;
+      switch (action) {
+        case actions.ADD:
+          title = 'webexSiteManagement.addSiteRejectModalTitle';
+          errorMessage = 'webexSiteManagement.addSiteRejectPending';
+          break;
+        case actions.DELETE:
+          errorMessage = isOnlySite ? 'webexSiteManagement.deleteSiteRejectModalBodyOnlySite' : 'webexSiteManagement.deleteSiteRejectModalBodyPending';
+          title = 'webexSiteManagement.deleteSiteRejectModalTitle';
+          break;
+        case actions.REDISTRIBUTE:
+          errorMessage = isOnlySite ? 'webexSiteManagement.redistributeRejectModalBodyOnlySite' : 'webexSiteManagement.redistributeRejectModalBodyPending';
+          title = 'webexSiteManagement.redistributeRejectModalTitle';
+          break;
+      }
+
       var params = {
         title: $translate.instant(title),
         message: $translate.instant(errorMessage),
+        close: $translate.instant('common.dismiss'),
+        hideDismiss: true,
       };
-      if (isOnlySite) {
-        params.close = $translate.instant('common.dismiss');
-        params.hideDismiss = true;
-      } else {
+
+      if (isShowSetup) {
+        params.hideDismiss = false;
         params.dismiss = $translate.instant('common.dismiss');
         params.close = $translate.instant('common.setUp');
       }
       ModalService.open(params).result.then(function () {
-        if (!isOnlySite) {
+        if (isShowSetup) {
           goToMeetingSetup();
         }
       });

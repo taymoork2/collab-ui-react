@@ -4,7 +4,6 @@ class WebexSiteSubscriptionCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
   ) {
   }
@@ -43,12 +42,8 @@ class WebexSiteSubscriptionCtrl implements ng.IComponentController {
     }
   }
 
-  public goToMeetingSetup() {
-    this.$state.go('setupwizardmodal', {
-      currentTab: 'meetingSettings',
-      onlyShowSingleTab: true,
-      showStandardModal: true,
-    });
+  public launchMeetingSetup() {
+    this.onSubscriptionChange({ subId: '', needsSetup: true });
   }
 }
 

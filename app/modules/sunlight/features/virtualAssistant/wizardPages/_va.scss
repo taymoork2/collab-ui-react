@@ -1,7 +1,8 @@
 @import 'cva-config-overview';
 @import 'cva-dialog-integration';
 @import 'cva-access-token';
-@import 'va-name';
+@import 'eva-overview';
+@import 'eva-email';
 @import 'va-summary';
 @import 'va-avatar';
 
@@ -22,8 +23,19 @@
   line-height: 24px;
 }
 
+.ct-input-hint {
+  @include vr-spacing(p, 1);
+  @include vr-spacing(mt, 0.2);
+
+  border: 0;
+  width: 100%;
+  text-align: center;
+  color: $gray;
+  font-style: italic;
+}
+
 .va-card {
-  @include vr-spacing(mt, 5);
+  @include vr-spacing(mt, 3);
 
   display: flex;
   flex-flow: column;
@@ -40,6 +52,13 @@
 
   .submit {
     @include vr-spacing(m, 0);
+  }
+}
+
+.ct-name {
+  .message {
+    margin-left: 0;
+    max-width: inherit;
   }
 }
 

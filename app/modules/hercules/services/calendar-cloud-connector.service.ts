@@ -104,6 +104,12 @@ export class CloudConnectorService {
         config = _.extend({}, config, {
           apiClientId: apiClientId,
         });
+        // We should be able to only update aclAdminAccount, but there is a bug in CCC which forces us to always provide
+        // testEmailAccount, and testEmailAccount needs apiClientId! Thankfully apiClientId is always present, but if
+        // aclAdminAccount is provided without testEmailAccount, let's use the same value for both.
+        if (config.aclAdminAccount && !config.testEmailAccount) {
+          config.testEmailAccount = config.aclAdminAccount;
+        }
         return this.$http.post(`${this.UrlConfig.getCccUrl()}/orgs/${this.Authinfo.getOrgId()}/services/${serviceId}`, config);
       })
       .then(() => {

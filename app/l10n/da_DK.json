@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "Online",
-      "OnlineWithIssues": "Online, med problemer",
-      "Offline": "Offline",
-      "OfflineExpired": "Deaktiveret",
-      "Unknown": "Ukendt"
+      "CONNECTED": "Online",
+      "CONNECTED_WITH_ISSUES": "Online, med problemer",
+      "DISCONNECTED": "Offline",
+      "OFFLINE_EXPIRED": "Deaktiveret",
+      "UNKNOWN": "Ukendt"
     },
     "WithDevices": "Med enheder",
     "upgradeChannels": {
@@ -6678,23 +6678,23 @@
       "wlan": "Trådløs"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "Netværksporte blokeret",
         "message": "Firewall kan blokere medie på UDP. Opkaldskvaliteten kan blive påvirket. For oplysninger om krav til netværksport, se artiklen <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls og netværkskrav for Cisco Spark-appen</a>."
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "Netværksporte blokeret",
         "message": "Firewall kan blokere medie på UDP. Opkaldskvaliteten kan blive påvirket. For oplysninger om krav til netværksport, se artiklen <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls og netværkskrav for Cisco Spark-appen</a>."
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "Netværksporte blokeret",
         "message": "Firewall kan blokere medie på UDP og TCP. Opkaldskvaliteten kan blive påvirket. For oplysninger om krav til netværksport, se artiklen <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls og netværkskrav for Cisco Spark-appen</a>."
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "Høj temperatur",
         "message": "Systemtemperaturen er for høj."
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "Hovedskærm er ikke registreret",
         "message": "Bekræft at hovedskærmen er tændt og tilsluttet den korrekte skærmudgang på videosystemet."
       },
@@ -6702,35 +6702,35 @@
         "type": "Automatiske opdateringer deaktiveret",
         "message": "Systemsoftware vil ikke blive opdateret."
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "Tidsserver kan ikke kontaktes",
         "message": "Forbindelsen til en NTP-server kunne ikke oprettes. Tiden, der vises på dit slutpunkt, kan være forkert."
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "Signalinterferens fra andre enheder.",
         "message": "Der er ultralydssignalinterferens i dette rum fra andre enheder (f.eks. andre videosystemer), som kan forhindre parring mellem videosystemet og din telefon eller bærbare computer."
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "Lydforsinkelse",
         "message": "Dine skærmindstillinger tilfører en forsinkelse på din lyd. Skift skærmindstillingerne til en passende tilstand (f.eks. spilstilstand)."
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "Ingen indbygget ultralydshøjttaler",
         "message": "Denne hardwareversion af SX10 har ikke en indbygget ultralydshøjtaler."
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "Mangler nøgle til krypteringsvalgmulighed",
         "message": "Tilføj en nøgle til krypteringsvalgmulighed."
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "Konfigureret til testautomatisering",
         "message": "Metrik og lograpportering påvirkes."
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "Berøringspanel er nødvendigt",
         "message": "Der er intet berøringspanel tilsluttet rumenheden. Kontroller kablet, der forbinder berøringspanelet med rumenheden."
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "Pakketab påvist",
         "message": "Under de seneste opkald påviste vi et niveau af pakketab, som kan have påvirket opkaldskvaliteten. Pakketab opstår typisk, når et netværk er overbelastet."
       },

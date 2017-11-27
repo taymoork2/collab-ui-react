@@ -10,7 +10,7 @@ var SSOWizardPage = function () {
   this.fileToUploadBtnHolder = element(by.id('fileToUploadBtnHolder'));
 
   this.nextBtnIsPresent = function () {
-    return browser.driver.isElementPresent(by.buttonText('Next'));
+    return browser.isElementPresent(by.buttonText('Next'));
   };
 
   this.testBrowserFileDownload = function (filename) {

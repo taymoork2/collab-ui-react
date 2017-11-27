@@ -172,7 +172,7 @@
   </button>
 
   <button class="btn"
-          ng-hide="vm.inFinalScreen() || !vm.firstTimeSetup"
+          ng-hide="vm.gettingResourceGroupInput || vm.inFinalScreen() || !vm.firstTimeSetup"
           ng-click="vm.back()">
     <span translate="common.back"></span>
   </button>

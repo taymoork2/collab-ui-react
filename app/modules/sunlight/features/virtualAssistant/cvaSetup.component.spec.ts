@@ -376,8 +376,9 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
       controller.submitFeature();
       this.$scope.$apply();
 
+      const featureNameObj = { featureName: 'careChatTpl.virtualAssistant.cva.featureText.name' };
       expect(controller.saveTemplateErrorOccurred).toBeTruthy();
-      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String));
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String), featureNameObj);
     });
 
     it('should submit template successfully', function () {
@@ -433,8 +434,9 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
       controller.submitFeature();
       this.$scope.$apply();
 
+      const featureNameObj = { featureName: 'careChatTpl.virtualAssistant.cva.featureText.name' };
       expect(controller.saveTemplateErrorOccurred).toBeTruthy();
-      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String));
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String), featureNameObj);
     });
   });
 });

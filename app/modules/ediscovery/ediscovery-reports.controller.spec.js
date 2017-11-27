@@ -4,12 +4,13 @@ var ediscoveryModule = require('./ediscovery.module');
 describe('Controller: EdiscoveryReportsController', function () {
   beforeEach(angular.mock.module(ediscoveryModule));
 
-  var $controller, $q, $scope, $translate, Analytics, Authinfo, controller, EdiscoveryService, TrialService;
+  var $controller, $modal, $q, $scope, $translate, Analytics, Authinfo, controller, EdiscoveryService, TrialService;
   var getReportsWithCreated, getReportsWithCompleted;
 
-  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$translate_, _Analytics_, _Authinfo_, _EdiscoveryService_, _TrialService_) {
+  beforeEach(inject(function (_$controller_, _$modal_, _$q_, _$rootScope_, _$translate_, _Analytics_, _Authinfo_, _EdiscoveryService_, _TrialService_) {
     $scope = _$rootScope_.$new();
     $controller = _$controller_;
+    $modal = _$modal_;
     $translate = _$translate_;
     $q = _$q_;
     Analytics = _Analytics_;
@@ -20,6 +21,8 @@ describe('Controller: EdiscoveryReportsController', function () {
     spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve({}));
     spyOn(Authinfo, 'getOrgId');
     spyOn(EdiscoveryService, 'getReports').and.returnValue($q.resolve({}));
+    spyOn(EdiscoveryService, 'patchReport').and.returnValue($q.resolve({}));
+    spyOn($modal, 'open').and.returnValue({ result: $q.resolve() });
     spyOn(TrialService, 'getDaysLeftForCurrentUser');
 
     Authinfo.getOrgId.and.returnValue('ce8d17f8-1734-4a54-8510-fae65acc505e');
@@ -97,6 +100,43 @@ describe('Controller: EdiscoveryReportsController', function () {
       controller.pollAvalonReport();
       $scope.$apply();
       expect(controller.isReportGenerating).toBe(false);
+    });
+  });
+
+  describe('Cancel report modal', function () {
+    var fakeModal;
+
+    beforeEach(function () {
+      fakeModal = {
+        result: {
+          then: function (okCallback, cancelCallback) {
+            this.okCallback = okCallback;
+            this.cancelCallback = cancelCallback;
+          },
+        },
+        opened: {
+          then: function (okCallback) {
+            okCallback();
+          },
+        },
+        close: function (item) {
+          this.result.okCallback(item);
+        },
+        dismiss: function (type) {
+          this.result.cancelCallback(type);
+        },
+      };
+
+      $modal.open.and.returnValue(fakeModal);
+    });
+
+    it('should open up a modal and start cancel report when closed', function () {
+      $scope.openCancelReportModal();
+      $scope.$apply();
+      expect($modal.open).toHaveBeenCalled();
+      fakeModal.close();
+      expect($modal.open).toHaveBeenCalled();
+      expect(EdiscoveryService.patchReport).toHaveBeenCalled();
     });
   });
 });

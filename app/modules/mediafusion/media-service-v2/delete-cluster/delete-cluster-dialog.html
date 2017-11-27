@@ -5,7 +5,8 @@
   </div>
 </div>
 <div class="modal-body">
-  <div ng-show="deleteClust.noOfHost > 0">
+  <div ng-hide="deleteClust.loading">
+    <div ng-show="deleteClust.noOfHost > 0" >
     <div ng-hide="deleteClust.failedToDelete">
       <p translate="mediaFusion.clusters.deleteClusterBodyDesc"></p>
       <p class="makeASelection"> <strong translate="mediaFusion.clusters.makeASelection" /></p>
@@ -49,19 +50,25 @@
         </tr>
       </table>
     </div>
+  </div>
     <div ng-show=" deleteClust.radioModel == '2' && !deleteClust.ngDisable">
       <div class="form-group">
-        <div class="cs-checkbox-group">
-          <span class="warning-icon"><i class="icon icon-warning"></i></span> <span translate="mediaFusion.clusters.deregisterWarning"></span>
+        <div class="cs-checkbox-group" ng-show=" deleteClust.radioModel == '2'">
+          <span class="warning-icon"><i class="icon icon-warning"></i></span>
+          <div class="warning-container">
+          <span translate="mediaFusion.clusters.deregisterWarning"></span>
           <div class="cs-input-group cs-input-checkbox">
             <input type="checkbox" id="individualcheckbox" ng-model="deleteClust.checkboxModel">
             <label for="individualcheckbox">
               <span translate="mediaFusion.clusters.iUnderstand"></span>
             </label>
           </div>
+          </div>
         </div>
         <div class="cs-checkbox-group" ng-show="deleteClust.clusters.length === 1">
-          <span class="warning-icon"><i class="icon icon-warning"></i></span> <span translate="mediaFusion.clusters.deactivateWarning"></span>
+          <span class="warning-icon"><i class="icon icon-warning"></i></span>
+          <div class="warning-container">
+          <span translate="mediaFusion.clusters.deactivateWarning"></span>
           <div class="cs-input-group cs-input-checkbox">
             <input type="checkbox" id="deactivateCheckbox" ng-model="deleteClust.checkboxModel">
             <label for="deactivateCheckbox">
@@ -69,15 +76,32 @@
             </label>
           </div>
         </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group" ng-show="deleteClust.clusters.length === 1 && deleteClust.noOfHost < 1" >
+      <div class="cs-checkbox-group" ng-show="deleteClust.clusters.length === 1">
+        <span class="warning-icon"><i class="icon icon-warning"></i></span>
+        <div class="warning-container">
+        <span translate="mediaFusion.clusters.deactivateWarning"></span>
+        <div class="cs-input-group cs-input-checkbox">
+          <input type="checkbox" id="alertCheckbox" ng-model="deleteClust.alertCheckboxModel">
+          <label for="alertCheckbox">
+            <span translate="mediaFusion.clusters.iUnderstand"></span>
+          </label>
+        </div>
+      </div>
       </div>
     </div>
   </div>
-  <div ng-hide="deleteClust.noOfHost > 0">
-    <p>{{deleteClust.deleteAreYouSure}}</p>
+  <div ng-show="deleteClust.loading">
+    <div class="spinner-position remove-cluster-spinner">
+      <i class='icon icon-spinner icon-3x media-modal-position'></i>
+    </div>
   </div>
 </div>
 <div class="modal-footer">
-  <div ng-show=" deleteClust.radioModel == '1' ">
+  <div ng-show=" deleteClust.radioModel == '1' && deleteClust.noOfHost > 0">
     <button class="btn btn--primary pull-right" id="convertActionButton" ng-click="deleteClust.continue()" ng-disabled="!deleteClust.canContinue()" ng-hide="deleteClust.ngDisable">
       <span ng-hide="saving" translate="mediaFusion.clusters.continue">
     </span>
@@ -89,6 +113,16 @@
   </div>
   <div ng-show=" deleteClust.radioModel == '2' ">
     <button class="btn btn--negative pull-right" id="convertActionButton" ng-click="deleteClust.deleteCluster()" ng-disabled="!deleteClust.checkboxModel || deleteClust.ngDisable">
+      <span ng-hide="saving" translate="mediaFusion.clusters.deletecluster">
+    </span>
+      <span ng-show="saving">
+      <i class="icon icon-spinner">
+      </i>
+    </span>
+    </button>
+  </div>
+  <div ng-show="deleteClust.clusters.length === 1 && deleteClust.noOfHost < 1" >
+    <button class="btn btn--negative pull-right" id="convertActionButton" ng-click="deleteClust.deleteCluster()" ng-disabled="!deleteClust.alertCheckboxModel">
       <span ng-hide="saving" translate="mediaFusion.clusters.deletecluster">
     </span>
       <span ng-show="saving">

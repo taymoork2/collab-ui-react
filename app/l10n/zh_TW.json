@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "線上",
-      "OnlineWithIssues": "線上，有問題",
-      "Offline": "離線",
-      "OfflineExpired": "已停用",
-      "Unknown": "不明"
+      "CONNECTED": "線上",
+      "CONNECTED_WITH_ISSUES": "線上，有問題",
+      "DISCONNECTED": "離線",
+      "OFFLINE_EXPIRED": "已停用",
+      "UNKNOWN": "不明"
     },
     "WithDevices": "使用裝置",
     "upgradeChannels": {
@@ -6678,23 +6678,23 @@
       "wlan": "無線"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "網路埠已封鎖",
         "message": "防火牆可能封鎖了 UDP 上的媒體。通話品質可能受影響。如需網路埠需求的相關資訊，請參閱文章 <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Cisco Spark 應用程式的防火牆和網路需求</a>。"
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "網路埠已封鎖",
         "message": "防火牆可能封鎖了 UDP 上的媒體。通話品質可能受影響。如需網路埠需求的相關資訊，請參閱文章 <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Cisco Spark 應用程式的防火牆和網路需求</a>。"
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "網路埠已封鎖",
         "message": "防火牆可能封鎖了 UDP 和 TCP 上的媒體。通話品質可能受影響。如需網路埠需求的相關資訊，請參閱文章 <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Cisco Spark 應用程式的防火牆和網路需求</a>。"
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "高溫",
         "message": "系統溫度太高。"
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "未偵測到主顯示畫面",
         "message": "請確認主顯示畫面已開啟，且連線至視訊系統上的正確顯示輸出。"
       },
@@ -6702,35 +6702,35 @@
         "type": "自動更新已停用",
         "message": "將無法更新系統軟體。"
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "無法存取時間伺服器",
         "message": "無法建立與 NTP 伺服器的連線。端點上顯示的時間可能是錯誤的。"
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "來自其他裝置的訊號干擾",
         "message": "在此協作室裡，有來自其他裝置（例如：其他視訊系統）的超聲訊號干擾，會阻止視訊系統與電話或膝上型電腦之間的配對。"
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "音訊延遲",
         "message": "您的監視器設定會給音訊加上延遲。請將監視器設定變更為適當的模式（例如：遊戲模式）。"
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "無嵌入式超聲喇叭",
         "message": "SX10 的這個硬體版本不具有嵌入式超聲喇叭。"
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "遺漏了加密選項金鑰",
         "message": "請新增加密選項金鑰。"
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "已設定測試自動化",
         "message": "影響度量和記錄報告。"
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "需要觸控面板",
         "message": "協作室裝置未連線任何觸控面板。請檢查將觸控面板連線至協作室裝置的電纜。"
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "偵測到封包遺失",
         "message": "在前次通話期間，我們偵測到一定程度的封包遺失，這可能影響了通話品質。封包遺失一般由網路擁塞所致。"
       },

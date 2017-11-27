@@ -16,7 +16,6 @@
           reset: broadcastReset,
         },
         description: '',
-        display: false,
         hasData: true,
         emptyDescription: '',
         errorDescription: '',
@@ -49,8 +48,7 @@
       };
     }
 
-    function taskIncomingDrilldownProps(timeSelected, isVideoEnabled, mediaType) {
-      var shouldDisplayWebcall = shouldDisplayWebcallFn(isVideoEnabled, mediaType);
+    function taskIncomingDrilldownProps(timeSelected, shouldDisplayWebcall) {
       var props = {
         description: function () {
           return $translate.instant('taskIncoming.drilldownDescription', {
@@ -93,6 +91,7 @@
                 enableFiltering: false,
                 width: shouldDisplayWebcall ? '30%' : '40%',
                 sortable: true,
+                type: 'number',
                 sort: {
                   direction: uiGridConstants.DESC,
                 },
@@ -115,6 +114,7 @@
           enableFiltering: false,
           width: '40%',
           sortable: true,
+          type: 'number',
           sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
         });
       }
@@ -164,6 +164,7 @@
                 enableFiltering: false,
                 width: '22%',
                 sortable: true,
+                type: 'number',
                 sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
               }, {
                 field: 'tasksAccepted',
@@ -172,6 +173,7 @@
                 enableFiltering: false,
                 width: '23%',
                 sortable: true,
+                type: 'number',
                 sort: {
                   direction: uiGridConstants.DESC,
                 },
@@ -183,6 +185,7 @@
                 enableFiltering: false,
                 width: '22%',
                 sortable: true,
+                type: 'number',
                 sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
               },
             ],
@@ -197,8 +200,7 @@
       return _.merge(getDefaultProps(), props);
     }
 
-    function avgCsatDrilldownProps(timeSelected, isVideoEnabled, mediaType) {
-      var shouldDisplayWebcall = shouldDisplayWebcallFn(isVideoEnabled, mediaType);
+    function avgCsatDrilldownProps(timeSelected, shouldDisplayWebcall) {
       var props = {
         description: function () {
           return $translate.instant('averageCsat.drilldownDescription', {
@@ -238,11 +240,11 @@
                 id: 'averageCsat',
                 displayName: shouldDisplayWebcall ? $translate.instant('careReportsPage.media_type_chat') :
                   $translate.instant('averageCsat.averageCsat'),
-                type: 'string',
                 enableFiltering: false,
                 cellFilter: 'careAvgCSAT',
                 width: shouldDisplayWebcall ? '30%' : '40%',
                 sortable: true,
+                type: 'number',
                 sort: {
                   direction: uiGridConstants.DESC,
                 },
@@ -262,19 +264,18 @@
           field: 'avgWebcallCsatScore',
           id: 'avgWebcallCsatScore',
           displayName: $translate.instant('careReportsPage.media_type_webcall'),
-          type: 'string',
           enableFiltering: false,
           cellFilter: 'careAvgCSAT',
           width: '40%',
           sortable: true,
+          type: 'number',
           sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
         });
       }
       return _.merge(getDefaultProps(), props);
     }
 
-    function taskTimeDrilldownProps(timeSelected, isVideoEnabled, mediaType) {
-      var shouldDisplayWebcall = shouldDisplayWebcallFn(isVideoEnabled, mediaType);
+    function taskTimeDrilldownProps(timeSelected, shouldDisplayWebcall) {
       var props = {
         description: function () {
           return $translate.instant('taskTime.drilldownDescription', {
@@ -318,6 +319,7 @@
                 enableFiltering: false,
                 width: shouldDisplayWebcall ? '30%' : '40%',
                 sortable: true,
+                type: 'number',
                 sort: {
                   direction: uiGridConstants.ASC,
                 },
@@ -341,6 +343,7 @@
           enableFiltering: false,
           width: '40%',
           sortable: true,
+          type: 'number',
           sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
         });
       }
@@ -357,10 +360,6 @@
     };
 
     return service;
-  }
-
-  function shouldDisplayWebcallFn(isVideoEnabled, mediaType) {
-    return isVideoEnabled && mediaType === 'chat';
   }
 
   function getClassName(grid, row) {

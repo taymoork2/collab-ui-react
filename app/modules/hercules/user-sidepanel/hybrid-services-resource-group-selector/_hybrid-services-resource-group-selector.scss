@@ -1,6 +1,10 @@
 hybrid-services-resource-group-selector {
   display: block;
 
+  .info-message, .error-message {
+    margin-top: 20px;
+  }
+
   .saveCancelButtons {
     margin-top: 20px;
     text-align: right;

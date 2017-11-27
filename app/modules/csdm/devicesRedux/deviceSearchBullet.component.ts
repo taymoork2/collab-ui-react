@@ -1,4 +1,6 @@
-import { FieldQuery, OperatorAnd, OperatorOr, SearchElement } from '../services/search/queryParser';
+import { OperatorOr } from '../services/search/searchElement';
+import { SearchTranslator } from '../services/search/searchTranslator';
+import { FieldQuery, OperatorAnd, SearchElement } from '../services/search/searchElement';
 
 export interface IBulletContainer {
   removeBullet(bullet: SearchElement);
@@ -14,7 +16,7 @@ export class DeviceSearchBullet implements ng.IComponentController {
   public isSubLevel: boolean;
 
   /* @ngInject */
-  constructor() {
+  constructor(private DeviceSearchTranslator: SearchTranslator) {
   }
 
   public subElements(): SearchElement[] {
@@ -31,18 +33,37 @@ export class DeviceSearchBullet implements ng.IComponentController {
     return '';
   }
 
-  public getQueryPrefix(): string {
-    if (this.searchElement instanceof FieldQuery) {
-      const parent = this.searchElement.getParent();
+  public getQueryField(): string {
+    const searchElement = this.searchElement;
+    if (searchElement instanceof FieldQuery) {
+      const parent = searchElement.getParent();
       if (parent instanceof OperatorOr) {
-        return parent.getFieldNameIfAllSubElementsAreSameField() ? '' : this.searchElement.getQueryPrefix();
+        return parent.getCommonField() ? '' : searchElement.getQueryPrefix();
       }
-      return this.searchElement.getQueryPrefix();
+      return searchElement.field + '';
     }
-    if (this.searchElement instanceof OperatorOr) {
-      return this.searchElement.getFieldNameIfAllSubElementsAreSameField();
+    if (searchElement instanceof OperatorOr) {
+      return searchElement.getCommonField() + '';
     }
     return '';
+  }
+
+  public getTranslatedQueryValue() {
+    const searchElement = this.searchElement;
+    if (searchElement instanceof FieldQuery) {
+      return this.DeviceSearchTranslator.translateQueryValue(searchElement);
+    }
+    return '';
+  }
+
+  public getTranslatedQueryPrefix(): string {
+    const searchElement = this.searchElement;
+
+    if (_.isEmpty(searchElement.getCommonField())) {
+      return '';
+    }
+
+    return this.DeviceSearchTranslator.translateQueryField(searchElement.getCommonField() + '') + searchElement.getCommonMatchOperator();
   }
 }
 

@@ -15,7 +15,6 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     this.selectString = 'Select a cluster';
 
     spyOn(this.HybridServicesClusterService, 'deregisterEcpNode').and.returnValue(this.$q.resolve({}));
-    spyOn(this.MediaClusterServiceV2, 'get').and.returnValue({ then: _.noop });
     spyOn(this.MediaClusterServiceV2, 'getAll').and.returnValue({ then: _.noop });
     spyOn(this.MediaClusterServiceV2, 'moveV2Host').and.returnValue(this.$q.resolve({}));
     spyOn(this.MediaClusterServiceV2, 'createClusterV2').and.returnValue(this.$q.resolve({}));

@@ -30,6 +30,7 @@ export class SetupWizardService {
   private org;
   private willNotProvision = false;
   private actingSubscriptionChangeFn: Function = _.noop;
+  private static enterpriseSubscriptionOrderingTools = ['CCW', 'CCW_CSB', 'ATLAS_SITE_MGMT'];
 
   /* @ngInject */
   constructor(
@@ -159,14 +160,15 @@ export class SetupWizardService {
     return webexLicenses;
   }
 
-  public getSubscriptionListWithStatus(): { id: string; isPending: boolean }[] {
+  public getEnterpriseSubscriptionListWithStatus(): { id: string; isPending: boolean }[] {
     const list = _.chain(this.getNonTrialWebexLicenses())
       .uniqBy('billingServiceId')
+      .reject(sub => ! this.isSubscriptionEnterprise(sub.billingServiceId))
       .map((sub) => ({
         id: sub.billingServiceId,
         isPending: this.isSubscriptionPending(sub.billingServiceId),
       }))
-      .orderBy(['isPending']['asc'])
+      .orderBy(['isPending'], ['asc'])
       .value();
     return list;
   }
@@ -174,6 +176,17 @@ export class SetupWizardService {
   public isSubscriptionPending(subscriptionId: string): boolean {
     const subscription = _.find(this.Authinfo.getSubscriptions(), { externalSubscriptionId: subscriptionId });
     return _.has(subscription, 'pendingServiceOrderUUID');
+  }
+
+  public isSubscriptionEnterprise(subscriptionId: string): boolean {
+    // if we have this subscription within customer.subscriptions check ordering tool. Otherwise
+    // just check if it's an enterprise customer
+    const subscription = _.find(this.Authinfo.getSubscriptions(), { externalSubscriptionId: subscriptionId });
+    const subOrderingTool = _.get(subscription, 'orderingTool');
+    if (!subOrderingTool) {
+      return (this.Authinfo.isEnterpriseCustomer());
+    }
+    return _.includes(SetupWizardService.enterpriseSubscriptionOrderingTools, subOrderingTool);
   }
 
   public getWillNotProvision(): boolean {
@@ -394,7 +407,7 @@ export class SetupWizardService {
     return this.$http.post(url, payload);
   }
 
-  public addSiteToActiveSubscription(payload) {
+  public updateSitesInActiveSubscription(payload) {
     const url = `${this.UrlConfig.getAdminServiceUrl()}subscriptions/site`;
     return this.$http.post(url, payload);
   }

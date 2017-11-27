@@ -17,7 +17,6 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
   var schedule = 'openHours';
   var index = '0';
   var menu;
-  var menuEntry;
   var q;
   var action;
   var $translate;
@@ -159,71 +158,6 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
     });
   });
 
-  describe('canShowWarn', function () {
-    it('should set isWarn false whenever nameInput is valid', function () {
-      $scope.$apply();
-      var test = {
-        value: '',
-        variableName: 'New Variable',
-        newVariableValue: 'test1',
-        isWarn: true,
-      };
-      controller.canShowWarn(test);
-      expect(test.isWarn).toBe(false);
-    });
-
-    it('should set warn to true because of duplicate variable name in session object', function () {
-      $scope.$apply();
-      var test = {
-        value: '',
-        variableName: 'New Variable',
-        newVariableValue: 'Test1',
-        isWarn: false,
-      };
-      controller.variableSet = [{
-        value: '',
-        newVariableValue: 'Test1',
-        variableName: 'New Variable',
-        isWarn: false,
-      }, {
-        value: '',
-        variableName: 'Test1',
-        isWarn: false,
-      }];
-      controller.canShowWarn(test);
-      expect(test.isWarn).toBe(true);
-    });
-
-    it('isWarn should be false', function () {
-      $scope.$apply();
-      var test = {
-        value: '',
-        newVariableValue: '',
-        isWarn: false,
-      };
-      controller.canShowWarn(test);
-      expect(test.isWarn).toBe(false);
-    });
-  });
-
-  describe('addVariableSet', function () {
-    it('should push variableSet in existing set', function () {
-      $scope.$apply();
-      expect(controller.variableSet.length).toBe(1);
-      controller.addVariableSet();
-      expect(controller.variableSet.length).toBe(2);
-    });
-  });
-
-  describe('deleteVariableSet', function () {
-    it('should delete variableSet for given index', function () {
-      $scope.$apply();
-      expect(controller.variableSet.length).toBe(1);
-      controller.deleteVariableSet(0);
-      expect(controller.variableSet.length).toBe(0);
-    });
-  });
-
   describe('save', function () {
     it('save function call results in closing the Modal.', function () {
       $scope.$apply();
@@ -332,7 +266,8 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
       expect(_.get(menuEntry.actions[0], 'dynamicList[0].isDynamic', '')).toBe(false);
     });
 
-    describe('variable warning', function () {
+    //will be used and updated in the next story which covers errors part
+    /*describe('variable warning', function () {
       it('fullWarningMsg', function () {
         menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
         menuEntry.addAction(AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', ''));
@@ -405,6 +340,127 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         controller.getWarning();
         expect(controller.fullWarningMsgValue).toBe(false);
       });
+    });*/
+
+    describe('should test stepNext Function', function () {
+      var result;
+      beforeEach(function () {
+        controller.currentStep = 1;
+        controller.restApiResponse = '';
+      });
+
+      it('url should be equate to URL when dynamicList is empty', function () {
+        controller.currentStep = 0;
+        controller.menuEntry.actions[0].dynamicList = '';
+        controller.menuEntry.actions[0].url = [{ testURL: 'test' }];
+        controller.stepNext();
+        expect(controller.currentStep).toEqual(1);
+        expect(action.url).toEqual(controller.menuEntry.actions[0].url);
+      });
+
+      it('url should be equate to dynamicList when dynamicList is not empty', function () {
+        controller.menuEntry.actions[0].dynamicList = [
+          {
+            isDynamic: true,
+            action: {
+              eval: {
+                value: 'this is test value',
+              },
+            },
+          },
+        ];
+
+        controller.stepNext();
+        expect(controller.currentStep).toEqual(2);
+        expect(action.url).toEqual(controller.menuEntry.actions[0].dynamicList);
+      });
+
+      it('dynamics should be empty when there is no dynamic text', function () {
+        controller.menuEntry.actions[0].dynamicList = [
+          {
+            isDynamic: false,
+            action: {
+              eval: {
+                value: 'test',
+              },
+            },
+          },
+        ];
+
+        controller.stepNext();
+        expect(controller.currentStep).toEqual(2);
+        expect(controller.dynamics.length).toEqual(0);
+      });
+
+      it('dynamics should be updated when there is dynamic text', function () {
+        controller.menuEntry.actions[0].dynamicList = [
+          {
+            isDynamic: true,
+            action: {
+              eval: {
+                value: 'aaa',
+              },
+            },
+          },
+        ];
+        controller.dynamics = [{ variableName: 'aaa', value: 'aa', $$hashkey: 'aa' }];
+        controller.stepNext();
+        expect(controller.currentStep).toEqual(2);
+
+        result = [{ value: 'aa', variableName: 'aaa' }];
+        expect(controller.dynamics).toEqual(result);
+
+        controller.dynamics = [
+          {
+            variableName: 'aa',
+            value: 'a',
+          },
+        ];
+        controller.currentStep = 1;
+        result = [{ value: '', variableName: 'aaa' }];
+        controller.stepNext();
+        expect(controller.dynamics).toEqual(result);
+      });
+
+      it('tableData should be updated when corresponding variableSet is present', function () {
+        var restApiResponse = { message: 'Hello' };
+        controller.restApiResponse = JSON.stringify(restApiResponse);
+        controller.variableSet = [{ value: 'message', variableName: 'greeting' }];
+        controller.stepNext();
+        expect(controller.currentStep).toEqual(2);
+        result = [
+          {
+            responseKey: 'message',
+            responseValue: 'Hello',
+            options: [],
+            selected: 'greeting',
+          },
+        ];
+        expect(controller.tableData).toEqual(result);
+      });
+
+      it('tableData should be without selected when variableSet is empty', function () {
+        var restApiResponse = { key: 'Hello' };
+        controller.restApiResponse = JSON.stringify(restApiResponse);
+        controller.variableSet = [];
+        result = [
+          {
+            options: [],
+            responseKey: 'key',
+            responseValue: 'Hello',
+          },
+        ];
+        controller.stepNext();
+        expect(controller.tableData).toEqual(result);
+      });
+
+      it('tableData should be empty when restApiResponse is empty', function () {
+        var restApiResponse = { mesage: {} };
+        controller.restApiResponse = JSON.stringify(restApiResponse);
+        result = [];
+        controller.stepNext();
+        expect(controller.tableData).toEqual(result);
+      });
     });
 
     describe('should test the api configure modal wizard', function () {
@@ -427,58 +483,18 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         expect(controller.currentStep).toEqual(1);
       });
 
-      it('should test stepNext functions', function () {
-        controller.menuEntry.actions[0].dynamicList = '';
-        controller.menuEntry.actions[0].url = [{ a: 'a' }];
-        controller.stepNext();
-        expect(action.url).toEqual(controller.menuEntry.actions[0].url);
-
-        controller.menuEntry.actions[0].dynamicList = [
-          {
-            isDynamic: true,
-            action: {
-              eval: {
-                value: 'aaa',
-              },
-            },
-          },
-        ];
-        controller.currentStep = 1;
-        controller.stepNext();
-        expect(action.url).toEqual(controller.menuEntry.actions[0].dynamicList);
-
-        controller.dynamics = [{ variableName: 'aaa', value: 'aa', $$hashkey: 'aa' }];
-        controller.stepNext();
-
-        controller.dynamics = [
-          {
-            variableName: 'aa',
-            value: 'a',
-          },
-        ];
-        controller.stepNext();
-      });
-
       it('should test isNextDisabled function', function () {
+        //empty url
         controller.url = '';
         expect(controller.isNextDisabled()).toBe(true);
 
-        controller.url = { a: 'a' };
-        controller.isNextDisabled();
+        //valid url
+        controller.url = { testURL: 'testURL' };
+        expect(controller.isNextDisabled()).toEqual(false);
 
-        controller.variableSet = [
-          {
-            value: 'aaa',
-            variableName: 'aaa',
-            newVariableValue: 'bbb',
-          },
-        ];
-        controller.newVariable = 'aaa';
-        controller.isNextDisabled();
-
-        controller.newVariable = 'qq';
-        controller.isNextDisabled();
-        expect(controller.isNextDisabled()).toBe(false);
+        //not empty but not valid url
+        controller.url = '<br class="ng-scope">';
+        expect(controller.isNextDisabled()).toEqual(true);
       });
 
       it('should test isTestDisabled function', function () {
@@ -507,10 +523,54 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
       });
 
       it('should test isSaveDisabled function', function () {
-        var value = true;
-        controller.saveButtonDisable = false;
-        controller.isSaveDisabled(value);
-        expect(controller.saveButtonDisable).toBe(true);
+        controller.tableData = [];
+        expect(controller.isSaveDisabled()).toBe(true);
+
+        controller.tableData = [
+          {
+            selected: 'aaa',
+          },
+        ];
+        expect(controller.isSaveDisabled()).toBe(false);
+
+        controller.tableData = [
+          {
+            selected: '',
+          },
+        ];
+        expect(controller.isSaveDisabled()).toBe(true);
+      });
+
+      it('should test saveUpdatedVariableSet function', function () {
+        var result = [];
+        controller.variableSet = [];
+        controller.tableData = [
+          {
+            selected: '',
+          },
+        ];
+        controller.save();
+        expect(controller.variableSet).toEqual(result);
+
+        result = [
+          {
+            variableName: 'aaa',
+            value: 'weather',
+          },
+        ];
+        controller.tableData = [
+          {
+            selected: 'aaa',
+            responseKey: 'weather',
+          },
+        ];
+        controller.save();
+        expect(controller.variableSet).toEqual(result);
+      });
+
+      it('should test isDynamicsValueUpdated function', function () {
+        controller.isDynamicsValueUpdated();
+        expect(controller.isDynamicsValueUpdated).toBeDefined();
       });
     });
   });

@@ -37,6 +37,12 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
   private tokenFormErrors = {};
   private escalationIntentUrl: string;
 
+  public NameMessages = {
+    DUPLICATE_ERROR: 'duplicate_error',
+    ERROR_CHAR_50: 'error_char_50',
+    PROCESSING: 'processing',
+  };
+
   // Avatar file error
   public avatarErrorType = {
     NO_ERROR: 'None',
@@ -220,6 +226,9 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
     if (0 === this.getPageIndex()) {
       return 'hidden';
     }
+    if (this.creatingTemplate) {
+      return false;
+    }
     return (this.getPageIndex() > 0 && !this.isAvatarUploading());
   }
 
@@ -236,7 +245,7 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
       case 'cvaAccessToken':
         return this.isAccessTokenValid();
       case 'vaName':
-        return this.isNameValid() && !this.isAvatarUploading();
+        return this.isNamePageValid() && !this.isAvatarUploading();
       case 'vaAvatar':
         return !this.isAvatarUploading();
       case 'vaSummary':
@@ -399,7 +408,12 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
 
   public isNameValid(): boolean {
     const name = (this.template.configuration.pages.vaName.nameValue || '').trim();
-    return !!name && this.isValidNameLength(name) && this.isUniqueName(name);
+    return this.isNameLengthValid(name) && this.isUniqueName(name);
+  }
+
+  public isNamePageValid(): boolean {
+    const name = (this.template.configuration.pages.vaName.nameValue || '').trim();
+    return name !== '' && this.isNameValid();
   }
 
   /**
@@ -498,8 +512,8 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
     }
   }
 
-  public getText(textIdExtension: string): string {
-    return this.service.getText(textIdExtension);
+  public getText(textIdExtension: string, params?: object): string {
+    return this.service.getText(textIdExtension, params);
   }
 
   public getMessageKey(textIdExtension: string): string {
@@ -569,7 +583,9 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
       })
       .catch(function (response) {
         controller.handleFeatureError();
-        controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.createConfigFailureText'));
+        controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.createConfigFailureText'), {
+          featureName: controller.$translate.instant('careChatTpl.virtualAssistant.cva.featureText.name'),
+        });
       });
   }
 
@@ -618,7 +634,9 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
       })
       .catch(function (response) {
         controller.handleFeatureError();
-        controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.updateConfigFailureText'));
+        controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.updateConfigFailureText'), {
+          featureName: controller.$translate.instant('careChatTpl.virtualAssistant.cva.featureText.name'),
+        });
       });
   }
 
@@ -637,18 +655,29 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
   private isValidTokenLength(): boolean {
     return (this.template.configuration.pages.cvaAccessToken.accessTokenValue || '').trim().length <= this.maxTokenLength;
   }
-  private isValidNameLength(name): boolean {
-    return name.trim().length <= this.maxNameLength;
+
+  private isNameLengthValid (name): boolean {
+    const isLengthValid = (_.get(name, 'length', 0) <= this.maxNameLength);
+
+    if (this.nameForm && name) {
+      this.nameForm.nameInput.$setValidity(this.NameMessages.ERROR_CHAR_50, isLengthValid);
+    }
+    return isLengthValid;
   }
+
   private isUniqueName(name): boolean {
     const controller = this;
+    if (this.nameForm && name) {
+      this.nameForm.nameInput.$setValidity(this.NameMessages.PROCESSING, true);
+    }
+
     const list = this.service.featureList.data;
     //will return undefined if no name found,  !undefined = true
     const isUnique = !_.find(list, function (cva: any) {
       return cva.id !== controller.template.templateId && cva.name.toLowerCase() === name.toLowerCase();
     });
     if (this.nameForm && name) {
-      this.nameForm.nameInput.$setValidity('duplicateNameError', isUnique);
+      this.nameForm.nameInput.$setValidity(this.NameMessages.DUPLICATE_ERROR, isUnique);
     }
     return isUnique;
   }

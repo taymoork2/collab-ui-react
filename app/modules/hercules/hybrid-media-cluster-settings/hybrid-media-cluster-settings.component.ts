@@ -1,4 +1,4 @@
-import { ICluster, IClusterPropertySet } from 'modules/hercules/hybrid-services.types';
+import { IExtendedClusterFusion, ICluster, IClusterPropertySet } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { ClusterService } from 'modules/hercules/services/cluster-service';
 import { Notification } from 'modules/core/notifications';
@@ -14,6 +14,7 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
   public hasMfTrustedSipToggle: boolean;
   public clusterId: string;
   public cluster: ICluster;
+  public clusterList: IExtendedClusterFusion[] = [];
 
   public sipurlconfiguration: string | undefined;
   public trustedsipconfiguration: ITag[] = [];
@@ -50,6 +51,7 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
     const { clusterId } = changes;
     if (clusterId && clusterId.currentValue) {
       this.clusterId = clusterId.currentValue;
+      this.getClusterList();
       this.loadCluster(clusterId.currentValue);
       this.getProperties(clusterId.currentValue);
     }
@@ -60,11 +62,20 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
       .then((cluster) => {
         this.cluster = cluster;
 
-        if (cluster.connectors && cluster.connectors.length === 0) {
+        if (cluster.connectors && cluster.connectors.length === 0 && this.clusterList.length > 1) {
           /* We have cluster data, but there are no nodes. Let's use the default deregistration dialog.  */
           this.deregisterModalOptions = undefined;
         }
         return cluster;
+      });
+  }
+
+  private getClusterList() {
+    return this.HybridServicesClusterService.getAll()
+      .then((clusters) => {
+        this.clusterList = _.filter(clusters, {
+          targetType: 'mf_mgmt',
+        });
       });
   }
 

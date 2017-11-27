@@ -3,12 +3,8 @@ import { Config } from 'modules/core/config/config';
 import { TrialTimeZoneService } from 'modules/core/trials/trialTimeZone.service';
 import { TrialWebexService } from 'modules/core/trials/trialWebex.service';
 import { EventNames } from './webex-site.constants';
-import { FeatureToggleService } from 'modules/core/featureToggle/featureToggle.service';
-import { Authinfo } from 'modules/core/scripts/services/authinfo';
 
 class WebexSiteNewCtrl implements ng.IComponentController {
-
-  private static showUserMgmntEmailPattern = '^ordersimp-.*@mailinator.com';
 
   public siteModel: IWebExSite = {
     siteUrl: '',
@@ -18,12 +14,9 @@ class WebexSiteNewCtrl implements ng.IComponentController {
   };
   /* @ngInject */
   constructor(
-    private $q: ng.IQService,
     private $translate: ng.translate.ITranslateService,
     private $scope: ng.IScope,
     private Config: Config,
-    private Authinfo: Authinfo,
-    private FeatureToggleService: FeatureToggleService,
     private TrialTimeZoneService: TrialTimeZoneService,
     private TrialWebexService: TrialWebexService,
 
@@ -41,7 +34,6 @@ class WebexSiteNewCtrl implements ng.IComponentController {
   public currentSubscription = '';
   public selectTimeZonePlaceholder = this.$translate.instant('firstTimeWizard.selectTimeZonePlaceholder');
   public timeZoneOptions;
-  public isShowUserManagement = false;
   public audioPackage;
   public disableValidateButton = false;
   public onSitesAdd: Function;
@@ -80,6 +72,7 @@ class WebexSiteNewCtrl implements ng.IComponentController {
         //SparkControlHub user management means there is no setupType
         if (this.siteModel.setupType !== this.setupTypeLegacy) {
           delete this.siteModel.setupType;
+          this.siteModel.isCIUnifiedSite = true;
         }
         this.addSite(_.clone(this.siteModel));
         this.clearWebexSiteInputs();
@@ -100,9 +93,6 @@ class WebexSiteNewCtrl implements ng.IComponentController {
 
   public $onInit(): void {
     this.timeZoneOptions = this.TrialTimeZoneService.getTimeZones();
-    this.shouldShowUserManagement().then(result => {
-      this.isShowUserManagement = result;
-    });
     this.$scope.$on(EventNames.ADD_SITES, () => {
       this.onSitesAdd({ sites: this.newSitesArray, isValid: true });
     });
@@ -126,18 +116,7 @@ class WebexSiteNewCtrl implements ng.IComponentController {
     this.clearError();
   }
 
-  // algendel9/25/17 we show user management if FT is enabled OR the pattern matches
-  private shouldShowUserManagement(): ng.IPromise<boolean> {
-    const regex = new RegExp(WebexSiteNewCtrl.showUserMgmntEmailPattern);
-    const isPatternMatch  = regex.test(this.Authinfo.getUserName()) || regex.test(this.Authinfo.getPrimaryEmail()) || regex.test(this.Authinfo.getCustomerAdminEmail());
-    if (isPatternMatch) {
-      return this.$q.resolve(true);
-    }
-    return this.FeatureToggleService.atlasSetupSiteUserManagementGetStatus();
-  }
-
   private clearError(): void {
-
     this.error.isError = false;
     this.error.errorMsg = '';
     delete this.error.errorType;
@@ -147,6 +126,7 @@ class WebexSiteNewCtrl implements ng.IComponentController {
     this.siteModel.siteUrl = '';
     this.siteModel.timezone = '';
     this.siteModel.setupType = undefined;
+    this.siteModel.isCIUnifiedSite = undefined;
   }
 
   public getSitesAudioPackageDisplay() {

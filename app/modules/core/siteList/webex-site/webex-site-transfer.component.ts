@@ -14,6 +14,7 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
   public transferSiteCode;
   public migrateSiteUrl;
   public transferSiteUrl;
+  public introCopy;
   public error: ISiteNameError = {
     isError: false,
     errorMsg: '',
@@ -41,6 +42,7 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
     private SetupWizardService: SetupWizardService,
     private TrialTimeZoneService: TrialTimeZoneService,
   ) {
+    this.migrateSiteUrl = this.Config.webexSiteMigrationUrl;
   }
 
   public $onInit() {
@@ -60,8 +62,11 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
       if ((siteUrlEmpty && !transferCodeEmpty) || (transferCodeEmpty && !siteUrlEmpty)) {
         invalid = true;
       }
-      this.onValidationStatusChange({ isValid: !invalid });
+    } else {
+      this.transferSiteUrl = null;
+      this.transferSiteCode = null;
     }
+    this.onValidationStatusChange({ isValid: !invalid });
 
   }
 
@@ -99,8 +104,8 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
         _.forEach(transferredSitesArray, (site) => {
           if (!(_.some(this.sitesArray, { siteUrl: site.siteUrl }))) {
             const transferredSiteModel = _.clone(this.siteModel);
-            transferredSiteModel.siteUrl = site.siteUrl.replace(this.Config.siteDomainUrl.webexUrl, ''),
-              transferredSiteModel.timezone = this.findTimezoneObject(site.timezone);
+            transferredSiteModel.siteUrl = site.siteUrl.replace(this.Config.siteDomainUrl.webexUrl, '');
+            transferredSiteModel.timezone = this.findTimezoneObject(site.timezone);
             transferredSiteModel.setupType = this.Config.setupTypes.transfer;
             this.sitesArray.push(transferredSiteModel);
           }
@@ -148,5 +153,6 @@ export class WebexSiteTransferComponent implements ng.IComponentOptions {
     onSitesReceived: '&',
     onValidationStatusChange: '&',
     currentSubscription: '<',
+    introCopy: '<',
   };
 }

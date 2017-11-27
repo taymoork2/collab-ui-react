@@ -301,6 +301,9 @@
     vm.back = function () {
       if (vm.welcomeScreenAccepted) {
         vm.welcomeScreenAccepted = false;
+        vm.chooseClusterName = false;
+        vm.provisioningToExistingExpresswayCompleted = false;
+        vm.preregistrationCompletedGoToExpressway = false;
         return;
       }
       $modalInstance.close('back');

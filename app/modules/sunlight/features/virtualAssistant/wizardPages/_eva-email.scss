@@ -1,0 +1,96 @@
+.eva-email {
+  display: flex;
+  position: absolute;
+  top: 50%;
+  left: 25%;
+  width: 50%;
+
+  .email-form {
+    display: flex;
+
+    .extension {
+      font-family: 'CiscoSansTT Thin';
+      margin-left: 1rem;
+    }
+
+    .extension.valid-extension {
+        color: $color-green-darker;
+    }
+
+    .extension.invalid-extension {
+        color: $color-red-base;
+    }
+
+    .icon-check {
+      color: $color-green-darker;
+      margin-top: .4rem;
+      margin-left: .5rem;
+      order: 3;
+    }
+
+    .icon-check.invisible {
+      visibility: hidden;
+    }
+
+    .icon-check.visibe {
+      visibility: visible;
+    }
+  }
+
+  .ct-input-hint {
+    @include vr-spacing(p, 1);
+
+    border: 0;
+    width: 100%;
+    text-align: center;
+    color: $gray;
+    font-style: italic;
+  }
+
+  .ct-input-no-border {
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    outline-width: 0;
+  }
+  .ct-input-valid-border {
+    border-top: solid 1px $gray-light;
+  }
+
+  .ct-input-invalid-border {
+    border-top: solid 1px $color-negative-dark !important;
+  }
+
+  .ct-input-error {
+    color: $color-alerts-base;
+    padding: rem-calc(5px);
+    text-align: center;
+  }
+
+  .ct-input-pending {
+    color: $color-blue-base;
+    padding: rem-calc(5px);
+    text-align: center;
+  }
+
+  .ct-input-no-focus:focus {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+  // Input control.
+  .ct-input {
+    width: 100%;
+    text-align: center;
+    border-bottom: 0;
+    height: rem-calc(44); // prevents Firefox from clipping top of text
+    &:focus ~ .ct-input-hint {
+      border-top: solid rem(1px) $brand-primary;
+    }
+  }
+
+  .message {
+    margin: 0;
+  }
+}

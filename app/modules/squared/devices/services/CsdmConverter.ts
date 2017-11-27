@@ -380,10 +380,11 @@ export class Helper {
   }
 
   public diagnosticsEventTranslated(e) {
-    if (this.isTranslatable('CsdmStatus.errorCodes.' + e.type + '.type')) {
+    const type_lower = _.toLower(e.type);
+    if (this.isTranslatable('CsdmStatus.errorCodes.' + type_lower + '.type')) {
       return {
-        type: this.translateOrDefault('CsdmStatus.errorCodes.' + e.type + '.type', e.type),
-        message: this.translateOrDefault('CsdmStatus.errorCodes.' + e.type + '.message', e.description, e.references),
+        type: this.translateOrDefault('CsdmStatus.errorCodes.' + type_lower + '.type', e.type),
+        message: this.translateOrDefault('CsdmStatus.errorCodes.' + type_lower + '.message', e.description, e.references),
       };
     } else if (e.description) {
       return {
@@ -408,17 +409,17 @@ export class Helper {
       case 'CONNECTED':
         if (Helper.hasIssues(obj)) {
           return {
-            readableState: this.t('CsdmStatus.connectionStatus.OnlineWithIssues'),
+            readableState: this.t('CsdmStatus.connectionStatus.CONNECTED_WITH_ISSUES'),
             priority: '1',
           };
         }
         return {
-          readableState: this.t('CsdmStatus.connectionStatus.Online'),
+          readableState: this.t('CsdmStatus.connectionStatus.CONNECTED'),
           priority: '5',
         };
       default:
         return {
-          readableState: this.t('CsdmStatus.connectionStatus.Offline'),
+          readableState: this.t('CsdmStatus.connectionStatus.DISCONNECTED'),
           priority: '2',
         };
     }

@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "Online",
-      "OnlineWithIssues": "Online, Dengan Masalah",
-      "Offline": "Offline",
-      "OfflineExpired": "Dinonaktifkan",
-      "Unknown": "Tidak Diketahui"
+      "CONNECTED": "Online",
+      "CONNECTED_WITH_ISSUES": "Online, Dengan Masalah",
+      "DISCONNECTED": "Offline",
+      "OFFLINE_EXPIRED": "Dinonaktifkan",
+      "UNKNOWN": "Tidak Diketahui"
     },
     "WithDevices": "Dengan Perangkat",
     "upgradeChannels": {
@@ -6678,23 +6678,23 @@
       "wlan": "Nirkabel"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "Port Jaringan Diblokir",
         "message": "Firewall mungkin memblok media pada UDP. Kualitas panggilan mungkin terpengaruh. Untuk informasi mengenai persyaratan port jaringan lihat artikel <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Persyaratan Firewall dan Jaringan untuk Aplikasi Spark Cisco</a>."
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "Port Jaringan Diblokir",
         "message": "Firewall mungkin memblok media pada UDP. Kualitas panggilan mungkin terpengaruh. Untuk informasi mengenai persyaratan port jaringan lihat artikel <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Persyaratan Firewall dan Jaringan untuk Aplikasi Spark Cisco</a>."
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "Port Jaringan Diblokir",
         "message": "Firewall mungkin memblok media pada UDP dan TCP. Kualitas panggilan mungkin terpengaruh. Untuk informasi mengenai persyaratan port jaringan lihat artikel <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Persyaratan Firewall dan Jaringan untuk Aplikasi Spark Cisco</a>."
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "Suhu tinggi",
         "message": "Suhu sistem terlalu tinggi."
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "Layar Utama Tidak Terdeteksi",
         "message": "Verifikasi bahwa layar utama aktif dan tersambung ke output tampilan yang benar di sistem video."
       },
@@ -6702,35 +6702,35 @@
         "type": "Pembaruan Otomatis Dinonaktifkan",
         "message": "Perangkat lunak sistem tidak akan diperbarui."
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "Server Waktu Tidak Dapat Dijangkau",
         "message": "Koneksi ke server NTP tidak dapat terhubung. Waktu yang ditampilkan pada endpoint Anda mungkin salah."
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "Gangguan sinyal dari perangkat lain",
         "message": "Terdapat gangguan sinyal ultrasonografi dalam ruangan ini dari perangkat lain (misalnya: sistem video lain) yang dapat mencegah penyandingan antara sistem video dan ponsel atau laptop Anda."
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "Penundaan Audio",
         "message": "Pengaturan monitor Anda menyebabkan penundaan audio. Ubah pengaturan monitor ke mode yang sesuai (misalkan: mode Game)."
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "Tidak Ada Speaker Ultrasonografi Tertanam",
         "message": "Versi perangkat keras SX10 tidak memiliki speaker ultrasonografi tertanam."
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "Tidak ada tombol opsi enkripsi",
         "message": "Harap tambahkan tombol opsi enkripsi."
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "Dikonfigurasi untuk otomasi pengujian",
         "message": "Metrik dan laporan log terpengaruh."
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "Diperlukan Panel Sentuh",
         "message": "Tidak ada panel sentuh yang terhubung ke perangkat kamar. Periksa kabel penghubung panel sentuh ke perangkat kamar."
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "Hilangnya Paket Terdeteksi",
         "message": "Selama panggilan terakhir kami mendeteksi satu level hilangnya paket yang mungkin berdampak pada kualitas panggilan. Hilangnya paket umumnya disebabkan oleh macetnya jaringan."
       },

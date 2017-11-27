@@ -43,6 +43,19 @@ describe('Care Spark Service', function () {
     this.$rootScope.$apply();
   });
 
+  it('getPersonByEmail Success', function () {
+    const email = 'me@sparkbot.io';
+    const expectedResult = { items: [ 'abc@sparkbot.io' ] };
+    sdkRequestDeferred.resolve(createSparkResponseMockObject(expectedResult));
+    this.SparkService.getPersonByEmail(email).then(function (existingEmails) {
+      expect(requestSpy).toHaveBeenCalledWith(jasmine.objectContaining({ resource: `people/?email=${email}` }));
+      expect(existingEmails['items']).toBe(expectedResult['items']);
+    }).catch(function (error) {
+      fail(error.message);
+    });
+    this.$rootScope.$apply();
+  });
+
   it('listMemberships Success', function () {
     const expectedResult = { items: [{ id: 'HERE I AM' }] };
     sdkRequestDeferred.resolve(createSparkResponseMockObject(expectedResult));
@@ -84,6 +97,18 @@ describe('Care Spark Service', function () {
     const expectedError = new Error('OOPS');
     sdkRequestDeferred.reject(expectedError);
     this.SparkService.getPerson('me').then(function () {
+      fail('unexpected success. should have failed');
+    }).catch(function (error) {
+      expect(error.message).toContainText(expectedError.message);
+    });
+    this.$rootScope.$apply();
+  });
+
+  it('getPersonByEmail Failure', function () {
+    const email = 'me@sparkbot.io';
+    const expectedError = new Error('OOPS');
+    sdkRequestDeferred.reject(expectedError);
+    this.SparkService.getPersonByEmail(email).then(function () {
       fail('unexpected success. should have failed');
     }).catch(function (error) {
       expect(error.message).toContainText(expectedError.message);

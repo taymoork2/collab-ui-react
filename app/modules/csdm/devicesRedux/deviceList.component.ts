@@ -173,7 +173,7 @@ class DeviceList implements ng.IComponentController {
             DeviceSearch.ShowPartialSearchErrors(response.data, this.Notification);
           }
         })
-        .catch(e => DeviceSearch.ShowSearchError(this.Notification, e))
+        .catch(e => DeviceSearch.ShowSearchError(this.Notification, e.data && e.data.trackingId))
         .finally(() => {
           if (
             (this.gridApi.grid.gridHeight || 0) > (DeviceList.HeaderHeight + DeviceList.RowHeight * this.searchHits.hits.length)

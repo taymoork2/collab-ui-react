@@ -749,7 +749,7 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisplayed(autoattendant.newStep);
       utils.click(autoattendant.newStepMenu);
 
-      // 5th menu option is REST API
+      // 4th menu option is REST API
       utils.click(autoattendant.newStepSelectRestApi);
       utils.expectIsDisplayed(autoattendant.restApi);
 
@@ -761,65 +761,38 @@ describe('Huron Auto Attendant', function () {
 
       utils.click(autoattendant.configureApi);
       utils.expectIsDisplayed(autoattendant.configureApiURL);
-      utils.expectIsDisplayed(autoattendant.sessionVar);
-      utils.expectIsDisplayed(autoattendant.addVariableToSet);
+      //utils.expectIsDisplayed(autoattendant.sessionVar);
+      //utils.expectIsDisplayed(autoattendant.addVariableToSet);
 
     });
     it('should add url and it should be visible in REST API new step upon save "' + deleteUtils.testAAName + '"', function () {
 
       // REST API
       utils.click(autoattendant.configureApiURL);
+      utils.expectIsDisabled(autoattendant.nextBtn);
       utils.wait(autoattendant.configureApiURL, 60000);
-      utils.sendKeys(autoattendant.configureApiURL, "This is test URL");
-
-      utils.click(autoattendant.restResponseDataBlock);
-      utils.wait(autoattendant.restResponseDataBlock, 20000);
-      utils.sendKeys(autoattendant.restResponseDataBlock, "Test Response Block 1");
-
-      utils.click(autoattendant.sessionVar);
-      utils.click(autoattendant.newSessionVar);
-
-      utils.sendKeys(autoattendant.newVariableName, "Test Variable 1");
-      utils.click(autoattendant.addVariableToSet);
-
-
-      utils.click(autoattendant.restResponseDataBlock1);
-      
-      utils.sendKeys(autoattendant.restResponseDataBlock1, "Test Response Block2");
-      utils.click(autoattendant.sessionVar1);
-      utils.click(autoattendant.newSessionVar1);
-
-      utils.sendKeys(autoattendant.newVariableName1, "Test Variable 2");
-
-
-      utils.click(autoattendant.addVariableToSet);
-
-      utils.expectCount(autoattendant.sessionVarAll, 3);
-
-      utils.expectIsDisabled(autoattendant.saveBtn);
-
-      utils.click(autoattendant.restApiTrash);
-
-      utils.expectIsEnabled(autoattendant.saveBtn);
-
+      utils.sendKeys(autoattendant.configureApiURL, "http://www.mocky.io/v2/5a04217b310000422d916c1a");
+      utils.expectIsEnabled(autoattendant.nextBtn);
+      utils.click(autoattendant.nextBtn);
+      utils.expectIsEnabled(autoattendant.testBtn);
+      utils.click(autoattendant.testBtn);
+      utils.wait(autoattendant.saveBtn, 60000);
+      utils.click(autoattendant.assignmentTab);
+      utils.wait(autoattendant.assignmentTab, 60000);
+      utils.click(autoattendant.sessionVarCombo);
+      utils.click(autoattendant.sessionVarComboOptions1);
       utils.click(autoattendant.saveBtn);
-
       utils.expectIsDisplayed(autoattendant.restApiUrlLabel);
-      utils.waitForText(autoattendant.restApiUrlLabel, "This is test URL");
+      utils.waitForText(autoattendant.restApiUrlLabel, "http://www.mocky.io/v2/5a04217b310000422d916c1a");
       utils.expectIsDisplayed(autoattendant.restApiVariableLabel1);
-      utils.waitForText(autoattendant.restApiVariableLabel1, "Test Variable 1");
-      utils.expectIsDisplayed(autoattendant.restApiVariableLabel2);
-      utils.waitForText(autoattendant.restApiVariableLabel2, "Test Variable 2");
-
+      utils.waitForText(autoattendant.restApiVariableLabel1, "named Variable");
     });
 
     it('should click configureApi hyperlink again and add dynamic text "' + deleteUtils.testAAName + '"', function () {
-
       utils.click(autoattendant.configureApi);
       utils.expectIsDisplayed(autoattendant.configureApiURL);
-      utils.expectIsDisplayed(autoattendant.sessionVar);
-      utils.expectIsDisplayed(autoattendant.addVariableToSet);
-
+      utils.click(autoattendant.configureApiURL);
+      utils.sendKeys(autoattendant.configureApiURL, "/test");
       utils.expectIsDisplayed(autoattendant.addDynamicTextButton);
       utils.click(autoattendant.addDynamicTextButton);
 
@@ -833,9 +806,17 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.dynamicModalOkButton);
       utils.wait(autoattendant.dynamicModalOkButton, 20000);
 
-      utils.expectIsEnabled(autoattendant.saveBtn);
+      utils.expectIsEnabled(autoattendant.nextBtn);
+      utils.click(autoattendant.nextBtn);
+      utils.expectIsDisplayed(autoattendant.testBtn);
+      utils.expectIsDisabled(autoattendant.testBtn);
+      utils.expectIsDisabled(autoattendant.saveBtn);
+      utils.sendKeys(autoattendant.restDynamicsValue, '123');
+      utils.wait(autoattendant.restDynamicsValue, 6000);
+      utils.expectIsEnabled(autoattendant.testBtn);
+      utils.click(autoattendant.testBtn);
       utils.click(autoattendant.saveBtn);
-
+      utils.click(autoattendant.saveButton);
     });
 
 

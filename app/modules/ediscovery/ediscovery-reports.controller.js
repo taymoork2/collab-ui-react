@@ -6,7 +6,7 @@ require('@ciscospark/internal-plugin-search');
 
   module.exports = EdiscoveryReportsController;
   /* @ngInject */
-  function EdiscoveryReportsController($interval, $scope, $state, $translate, $window, Analytics, Authinfo, EdiscoveryService, EdiscoveryNotificationService, Notification, ReportUtilService, uiGridConstants) {
+  function EdiscoveryReportsController($interval, $modal, $scope, $state, $translate, $window, Analytics, Authinfo, EdiscoveryService, EdiscoveryNotificationService, Notification, ReportUtilService, uiGridConstants) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant('ediscovery.browserTabHeaderTitle');
     });
@@ -26,6 +26,7 @@ require('@ciscospark/internal-plugin-search');
 
     $scope.downloadReport = downloadReport;
     $scope.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
+    $scope.openCancelReportModal = openCancelReportModal;
     $scope.cancelReport = cancelReport;
     vm.pollAvalonReport = pollAvalonReport;
     $scope.rerunReport = rerunReport;
@@ -71,6 +72,17 @@ require('@ciscospark/internal-plugin-search');
             getKey(report);
           }
         });
+    }
+
+    function openCancelReportModal(id) {
+      var template = require('./ediscovery-cancel-report-modal.html');
+
+      $modal.open({
+        type: 'dialog',
+        template: template,
+      }).result.then(function () {
+        cancelReport(id);
+      });
     }
 
     function cancelReport(id) {

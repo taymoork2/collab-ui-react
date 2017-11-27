@@ -2,13 +2,25 @@ import { CsdmHubFactory, CsdmPollerFactory } from 'modules/squared/devices/servi
 import { HybridServicesI18NService } from 'modules/hercules/services/hybrid-services-i18n.service';
 import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
 
-export interface IStatusSummary {
-  serviceId: HybridServiceId | null;
+interface IStatusSummary {
+  'spark-hybrid-impinterop': IStatusSummaryForAService;
+  'squared-fusion-cal': IStatusSummaryForAService;
+  'squared-fusion-ec': IStatusSummaryForAService;
+  'squared-fusion-gcal': IStatusSummaryForAService;
+  'squared-fusion-o365': IStatusSummaryForAService;
+  'squared-fusion-uc': IStatusSummaryForAService;
+}
+
+interface IStatusSummaryForAService {
   activated: number;
-  notActivated: number;
+  activatedWithWarning: number;
   error: number;
+  notActivated: number;
+  notActivatedWithWarning: number;
   total: number;
 }
+
+export type IExtendedStatusSummary = IStatusSummaryForAService & {serviceId: HybridServiceId};
 
 export interface IUserProps {
   userId: string;
@@ -21,6 +33,7 @@ export interface IUserProps {
 }
 
 export interface IUserStatusWithExtendedMessages extends IUserStatus {
+  owner: string;
   messages: IMessageExtended[];
   hasWarnings?: boolean;
 }
@@ -119,7 +132,7 @@ interface IReplacementValue {
 }
 
 export class USSService {
-  private cachedUserStatusSummary: IStatusSummary[] = [];
+  private cachedUserStatusSummary: IStatusSummary;
   private USSUrl = `${this.UrlConfig.getUssUrl()}uss/api/v1`;
   private hub = this.CsdmHubFactory.create();
 
@@ -165,9 +178,15 @@ export class USSService {
     }
   }
 
-  public extractSummaryForAService(servicesId: HybridServiceId[]): IStatusSummary[] {
-    return _.filter(this.getStatusesSummary(), (summary) => {
-      return _.includes(servicesId, summary.serviceId);
+  public extractSummaryForAService(servicesId: HybridServiceId[]): IExtendedStatusSummary[] {
+    if (!this.cachedUserStatusSummary) {
+      return [];
+    }
+    return _.map(servicesId, (serviceId) => {
+      return {
+        ...this.cachedUserStatusSummary[serviceId],
+        serviceId: serviceId,
+      };
     });
   }
 
@@ -176,9 +195,9 @@ export class USSService {
       .then(this.extractAndTweakUserStatuses);
   }
 
-  public getAllUserProps(orgId?: string): ng.IPromise<IUserProps[]> {
+  public getAllUserProps(orgId = this.Authinfo.getOrgId()): ng.IPromise<IUserProps[]> {
     return this.$http
-      .get<IUserProps[]>(`${this.USSUrl}/orgs/${(orgId || this.Authinfo.getOrgId())}/userProps`)
+      .get<IUserProps[]>(`${this.USSUrl}/orgs/${(orgId)}/userProps`)
       .then(this.extractUserProps);
   }
 
@@ -188,31 +207,31 @@ export class USSService {
       .then(this.extractData);
   }
 
-  public getStatusesForUser(userId: string, orgId?: string): ng.IPromise<IUserStatusWithExtendedMessages[]> {
+  public getStatusesForUser(userId: string, orgId = this.Authinfo.getOrgId()): ng.IPromise<IUserStatusWithExtendedMessages[]> {
     return this.$http
-      .get<IUserStatusesResponse>(`${this.USSUrl}/orgs/${(orgId || this.Authinfo.getOrgId())}/userStatuses?includeMessages=true&entitled=true&userId=${userId}`)
+      .get<IUserStatusesResponse>(`${this.USSUrl}/orgs/${(orgId)}/userStatuses?includeMessages=true&entitled=true&userId=${userId}`)
       .then(this.extractAndTweakUserStatuses);
   }
 
-  public getStatusesSummary(): IStatusSummary[] {
-    return this.cachedUserStatusSummary;
+  public getStatusesSummary(): IStatusSummary | {} {
+    return this.cachedUserStatusSummary || {};
   }
 
-  public getUserJournal(userId: string, orgId?: string, limit?: number, serviceId?: HybridServiceId): ng.IPromise<IJournalEntry[]> {
+  public getUserJournal(userId: string, orgId = this.Authinfo.getOrgId(), limit?: number, serviceId?: HybridServiceId): ng.IPromise<IJournalEntry[]> {
     return this.$http
-      .get<IUserJournalResponse>(`${this.USSUrl}/orgs/${(orgId || this.Authinfo.getOrgId())}/userJournal/${userId}${(limit ? `?limit=${limit}` : '')}${(serviceId ? `&serviceId=${serviceId}` : '')}`)
+      .get<IUserJournalResponse>(`${this.USSUrl}/orgs/${(orgId)}/userJournal/${userId}${(limit ? `?limit=${limit}` : '')}${(serviceId ? `&serviceId=${serviceId}` : '')}`)
       .then(this.extractJournalEntries);
   }
 
-  public getUserProps(userId: string, orgId?: string): ng.IPromise<IUserProps> {
+  public getUserProps(userId: string, orgId = this.Authinfo.getOrgId()): ng.IPromise<IUserProps> {
     return this.$http
-      .get<IUserProps>(`${this.USSUrl}/orgs/${(orgId || this.Authinfo.getOrgId())}/userProps/${userId}`)
+      .get<IUserProps>(`${this.USSUrl}/orgs/${(orgId)}/userProps/${userId}`)
       .then(this.extractData);
   }
 
-  public getUserPropsSummary(orgId?: string): ng.IPromise<IUserPropsSummary> {
+  public getUserPropsSummary(orgId = this.Authinfo.getOrgId()): ng.IPromise<IUserPropsSummary> {
     return this.$http
-      .get<IUserPropsSummary>(`${this.USSUrl}/orgs/${(orgId || this.Authinfo.getOrgId())}/userProps/summary`)
+      .get<IUserPropsSummary>(`${this.USSUrl}/orgs/${(orgId)}/userProps/summary`)
       .then(this.extractData);
   }
 
@@ -221,9 +240,9 @@ export class USSService {
       .then(this.extractData);
   }
 
-  public refreshEntitlementsForUser(userId: string, orgId?: string): ng.IPromise<''> {
+  public refreshEntitlementsForUser(userId: string, orgId = this.Authinfo.getOrgId()): ng.IPromise<''> {
     return this.$http
-      .post<''>(`${this.USSUrl}/userStatuses/actions/refreshEntitlementsForUser/invoke?orgId=${(orgId || this.Authinfo.getOrgId())}&userId=${userId}`, null)
+      .post<''>(`${this.USSUrl}/userStatuses/actions/refreshEntitlementsForUser/invoke?orgId=${(orgId)}&userId=${userId}`, null)
       .then(this.extractData);
   }
 
@@ -233,9 +252,9 @@ export class USSService {
       .then(this.extractData);
   }
 
-  public updateBulkUserProps(props: IUserProps[], orgId?: string): ng.IPromise<''> {
+  public updateBulkUserProps(props: IUserProps[], orgId = this.Authinfo.getOrgId()): ng.IPromise<''> {
     return this.$http
-      .post<''>(`${this.USSUrl}/orgs/${(orgId || this.Authinfo.getOrgId())}/userProps`, { userProps: props })
+      .post<''>(`${this.USSUrl}/orgs/${(orgId)}/userProps`, { userProps: props })
       .then(this.extractData);
   }
 
@@ -260,6 +279,16 @@ export class USSService {
     }
   }
 
+  public resetOwnershipForAllUsers(orgId = this.Authinfo.getOrgId()): ng.IPromise<''> {
+    return this.$http
+      .post<''>(`${this.USSUrl}/orgs/${orgId}/actions/resetOwnershipForAllUsers/invoke`, null, {
+        params: {
+          serviceId: 'squared-fusion-cal',
+        },
+      })
+      .then(this.extractData);
+  }
+
   private convertToTranslateReplacements(messageReplacementValues: IReplacementValue[] | undefined): object {
     if (!messageReplacementValues) {
       return {};
@@ -274,26 +303,13 @@ export class USSService {
     return this.$http
       .get(`${this.USSUrl}/orgs/${this.Authinfo.getOrgId()}/userStatuses/summary`)
       .then((res) => {
-        const summary: IStatusSummary[] = _.get(res, 'data.summary', []);
-        // The server returns *nothing* for call and calendar
-        // but we want to show that there are 0 users so let's populate
-        // the data with defaults
-        const emptySummary: IStatusSummary = {
-          serviceId: null,
-          activated: 0,
-          notActivated: 0,
-          error: 0,
-          total: 0,
-        };
-        _.forEach(['squared-fusion-cal', 'squared-fusion-uc'] as HybridServiceId[], (serviceId) => {
-          const found = _.find(summary, { serviceId: serviceId });
-          if (!found) {
-            const newSummary = _.cloneDeep(emptySummary);
-            newSummary.serviceId = serviceId;
-            summary.push(newSummary);
-          }
-        });
-        this.cachedUserStatusSummary = summary;
+        this.cachedUserStatusSummary  = _.get(res, 'data.countsByState');
+        const o365 = _.get<IStatusSummaryForAService>(res, 'data.countsByOwnerAndState.squared-fusion-cal.ccc');
+        const onPremExchange = _.get<IStatusSummaryForAService>(res, 'data.countsByOwnerAndState.squared-fusion-cal.uss');
+        if (o365) {
+          this.cachedUserStatusSummary['squared-fusion-o365'] = o365;
+        }
+        this.cachedUserStatusSummary['squared-fusion-cal'] = onPremExchange;
       });
   }
 

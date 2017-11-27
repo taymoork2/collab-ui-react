@@ -71,6 +71,9 @@ export class NodeListComponentCtrl implements ng.IComponentController {
         const node = _.find(nodes, node => {
           return node.hostname === connector.hostname;
         });
+        if (node.hostname === '') {
+          node.hostname = this.$translate.instant('hercules.connectors.no_name');
+        }
         node.connectors.push(connector);
       }
     });
