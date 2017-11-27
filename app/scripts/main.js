@@ -165,6 +165,7 @@
     require('modules/hercules/user-sidepanel/hybrid-services-sidepanel-error-message').default,
     require('modules/hercules/user-sidepanel/hybrid-services-user-homed-cluster-and-hostname').default,
     require('modules/hercules/user-sidepanel/hybrid-services-user-sidepanel-section').default,
+    require('modules/hercules/rename-and-deregister-cluster-section').default,
     require('modules/hercules/resource-group-card').default,
     require('modules/hercules/resource-settings/deactivate-service-on-expressway.controller').default,
     require('modules/hercules/service-settings/calendar-service-setup').default,

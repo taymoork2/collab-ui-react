@@ -33,14 +33,11 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
   };
 
   public atlasHybridAuditLogEnabled = false;
-  public serviceId: string;
   public showRenameSection: boolean;
   public clusterName: string;
   public clusterType: string;
   public savingNameState: boolean = false;
-  public clusterSection = {
-    title: 'common.cluster',
-  };
+  public clusterSection;
   public localizedClusterNameWatermark: string = this.$translate.instant('hercules.renameAndDeregisterComponent.clusterNameWatermark');
 
   /* @ngInject */
@@ -59,13 +56,6 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
       .then((enabled: boolean) => {
         this.atlasHybridAuditLogEnabled = enabled;
       });
-
-    this.clusterType = this.$translate.instant(`hercules.clusterTypeFromServiceId.${this.serviceId}`);
-    if (this.serviceId === 'ept') {
-      this.clusterSection = {
-        title: 'hercules.clusterListComponent.clusters-title-ept',
-      };
-    }
   }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
@@ -76,6 +66,17 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
       this.cluster = cluster.currentValue;
       this.clusterName = this.cluster.name;
       this.clusterId = this.cluster.id;
+
+      this.clusterType = this.$translate.instant(`hercules.platformNameFromTargetType.${this.cluster.targetType}`);
+      if (this.cluster.targetType === 'ept') {
+        this.clusterSection = {
+          title: 'hercules.clusterListComponent.clusters-title-ept',
+        };
+      } else {
+        this.clusterSection = {
+          title: 'common.cluster',
+        };
+      }
     }
 
     if (deregisterModalOptions && deregisterModalOptions.currentValue) {
@@ -91,7 +92,7 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
       return;
     }
     this.savingNameState = true;
-    if (this.serviceId === 'ept') {
+    if (this.cluster.targetType === 'ept') {
       this.PrivateTrunkService.setPrivateTrunkResource(this.clusterId, clusterName)
         .then(() => {
           this.Notification.success('hercules.renameAndDeregisterComponent.sipDestinationNameSaved');
@@ -134,16 +135,15 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
       return true;
     }
     const provisionedConnectors = _.map(this.cluster.provisioning, 'connectorType');
-    return (_.includes(provisionedConnectors, 'c_cal') || _.includes(provisionedConnectors, 'c_ucmc'));
+    return (_.includes(provisionedConnectors, 'c_cal') || _.includes(provisionedConnectors, 'c_ucmc') || _.includes(provisionedConnectors, 'c_imp'));
   }
 
 }
 
 export class RenameAndDeregisterClusterSectionComponent implements ng.IComponentOptions {
   public controller = RenameAndDeregisterClusterSectionCtrl;
-  public template = require('modules/hercules/rename-and-deregister-cluster-section/hs-rename-and-deregister-cluster.component.html');
+  public template = require('./hs-rename-and-deregister-cluster.component.html');
   public bindings = {
-    serviceId: '<',
     cluster: '<',
     showRenameSection: '<',
     deregisterModalOptions: '<',

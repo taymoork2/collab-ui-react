@@ -2451,16 +2451,14 @@
       "c_serab": "Serviceability Connector",
       "c_imp": "Message Service"
     },
-    "clusterTypeFromServiceId": {
-      "squared-fusion-mgmt": "Expressway",
-      "squared-fusion-cal": "Expressway",
-      "squared-fusion-uc": "Expressway",
-      "spark-hybrid-impinterop": "Expressway",
-      "squared-fusion-media": "Hybrid Media",
-      "spark-hybrid-datasecurity": "Hybrid Data Security",
-      "squared-fusion-khaos": "Cisco Unified CM"
+    "platformNameFromTargetType": {
+      "c_mgmt": "Expressway",
+      "mf_mgmt": "Hybrid Media",
+      "hds_app": "Hybrid Data Security",
+      "ucm_mgmt": "Cisco Unified CM",
+      "cs_mgmt": "Context Service",
+      "ept": "Private Trunk"
     },
-
     "serviceDescriptions": {
       "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Spark clients while on a call. Call Service Connect lets your users answer calls to their work phones and to place calls to other work phones, on their Cisco Spark client.",
       "squared-fusion-cal": "Calendar Service helps your users to collaborate instantly. Just add @spark to create a Cisco Spark room. Add @webex to attach a WebEx link to your invitation.",
