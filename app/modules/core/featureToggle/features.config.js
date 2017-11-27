@@ -39,6 +39,7 @@ module.exports = {
   atlasHybridCallUserTestTool: 'atlas-hybrid-call-user-test-tool',
   atlasHybridCucmSupport: 'atlas-hybrid-cucm-support',
   atlasHybridImp: 'atlas-hybrid-imp',
+  atlasHybridPrerequisites: 'atlas-hybrid-prerequisites',
   atlasITProPack: 'atlas-it-pro-pack',
   atlasITProPackPurchased: 'atlas-it-pro-pack-purchased',
   atlasJabberInterop: 'atlas-jabber-interop',
