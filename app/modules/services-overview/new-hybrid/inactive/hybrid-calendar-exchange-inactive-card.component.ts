@@ -1,11 +1,22 @@
+import { FeatureToggleService } from 'modules/core/featureToggle';
 import { IToolkitModalService } from 'modules/core/modal';
 
 class HybridCalendarExchangeInactiveCardController implements ng.IComponentController {
+  public showPrerequisitesButton = false;
+
   /* @ngInject */
   constructor(
     private $modal: IToolkitModalService,
     private $state: ng.ui.IStateService,
+    private FeatureToggleService: FeatureToggleService,
   ) {}
+
+  public $onInit(): void {
+    this.FeatureToggleService.hasFeatureToggleOrIsTestOrg(this.FeatureToggleService.features.atlasHybridPrerequisites)
+      .then(support => {
+        this.showPrerequisitesButton = support;
+      });
+  }
 
   public openPrerequisites(): void {
     this.$modal.open({
@@ -45,7 +56,7 @@ export class HybridCalendarExchangeInactiveCardComponent implements ng.IComponen
         <p translate="servicesOverview.cards.hybridCalendar.description"></p>
       </div>
       <div class="inactive-card_footer">
-        <p><button class="btn btn--link" ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></button></p>
+        <p ng-if="$ctrl.showPrerequisitesButton"><button class="btn btn--link" ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></button></p>
         <p><button class="btn btn--primary" ng-click="$ctrl.openSetUp()" translate="servicesOverview.genericButtons.setup"></button></p>
       </div>
     </article>
