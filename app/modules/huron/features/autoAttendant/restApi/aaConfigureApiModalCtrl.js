@@ -508,7 +508,7 @@
     function isValidJson(jsonData) {
       try {
         return JSON.parse(jsonData);
-      } catch (e) {
+      } catch (exception) {
         return false;
       }
     }
