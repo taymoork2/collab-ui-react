@@ -463,7 +463,7 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
       });
 
       it('tableData should be empty when restApiResponse is not valid', function () {
-        controller.restApiResponse = "<div></div>"
+        controller.restApiResponse = '<div></div>';
         result = [];
         controller.stepNext();
         expect(controller.tableData).toEqual(result);
