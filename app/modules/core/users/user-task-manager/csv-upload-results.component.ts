@@ -20,10 +20,11 @@ export interface IErrorItem {
   errorMessage; string;
 }
 
-// TODO: brspence refactor component into task-details
 export class CsvUploadResultsCtrl implements ng.IComponentController {
 
   public inputActiveTask: ITask;
+  public onStatusUpdate: Function;
+
   public activeTask?: ITask;
   public numTotalUsers = 0;
   public numNewUsers = 0;
@@ -31,119 +32,58 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
   public numErroredUsers = 0;
   public processProgress = 0;
   public isProcessing = false;
-  public userErrorArray: IErrorItem[];
+  public userErrorArray: IErrorItem[] = [];
   public isCancelledByUser = false;
   public fileName: string;
   public startedDate: string;
   public startedTime: string;
   public startedBy: string;
-  private intervalPromise: ng.IPromise<void>;
-  public static readonly TASK_POLLING_INTERVAL = 15000;
+
+  private cancelErrorsDeferred?: ng.IDeferred<void>;
 
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
+    private $scope: ng.IScope,
     private $translate: ng.translate.ITranslateService,
-    private $interval: ng.IIntervalService,
     private ModalService,
+    private Notification: Notification,
     private UserTaskManagerService: UserTaskManagerService,
     private UserCsvService,
-    private Notification: Notification,
   ) {}
 
-  public $onInit(): void {
+  private intervalCallback = (task: ITask) => {
+    this.setActiveTaskData(task);
+    this.onStatusUpdate({
+      status: task.status,
+    });
+    if (!this.UserTaskManagerService.isTaskPending(task.status)) {
+      this.UserTaskManagerService.cleanupTaskDetailPolling(this.intervalCallback);
+    }
   }
 
   public $onChanges(changes: ng.IOnChangesObject): void {
     if (changes.inputActiveTask) {
       const newTask = changes.inputActiveTask.currentValue;
+      this.resetErrorArrayOnChange();
 
       if (_.isUndefined(newTask)) {
         this.activeTask = undefined;
       } else {
-        // cancel the current task polling
-        this.cancelPolling();
-        // populate task details
-        this.activeTask = newTask;
-        this.setActiveTaskData(this.activeTask!);
-        // if the new task is pending, poll the task data every TASK_POLLING_INTERVAL seconds
-        if (this.UserTaskManagerService.isTaskPending(this.activeTask!.status)) {
-          this.initPolling();
+        this.setStartedByUser(newTask.creatorUserId);
+
+        this.UserTaskManagerService.cleanupTaskDetailPolling(this.intervalCallback);
+        this.setActiveTaskData(newTask);
+        if (this.UserTaskManagerService.isTaskPending(newTask.status)) {
+          this.UserTaskManagerService.initTaskDetailPolling(newTask.jobInstanceId, this.intervalCallback, this.$scope);
         }
       }
     }
   }
 
-  public $onDestroy(): void {
-    // cancel the interval
-    this.cancelPolling();
-  }
-
   public get progressbarLabel() {
     if (this.isCancelledByUser) {
       return this.$translate.instant('common.cancelingEllipsis');
-    }
-  }
-
-  private setActiveTaskData(task: ITask): void {
-    this.numTotalUsers = task.totalUsers;
-    this.numNewUsers = task.addedUsers;
-    this.numUpdatedUsers = task.updatedUsers;
-    this.numErroredUsers = task.erroredUsers;
-    this.processProgress = Math.floor((this.numNewUsers + this.numUpdatedUsers + this.numErroredUsers) * 100 / this.numTotalUsers);
-    if (isNaN(this.processProgress)) {
-      this.processProgress = 0;
-    }
-    this.isProcessing = this.UserTaskManagerService.isTaskInProcess(task.status);
-    this.isCancelledByUser = false;
-    this.fileName = this.getShortFileName(task.filename);
-    const startedMoment = moment(task.started);
-    if (startedMoment.isValid()) {
-      this.startedDate = startedMoment.format('ll');
-      this.startedTime = startedMoment.format('LT');
-    }
-    this.UserTaskManagerService.getUserDisplayAndEmail(task.creatorUserId)
-    .then(userDisplayNameAndEmail => {
-      this.startedBy = userDisplayNameAndEmail;
-    });
-
-    if (task.erroredUsers > 0) {
-      this.UserTaskManagerService.getTaskErrors(task.jobInstanceId)
-      .then(response => {
-        this.userErrorArray = _.map(response, errorEntry => {
-          const err = _.cloneDeep(errorEntry);
-          err.errorMessage = this.UserCsvService.getBulkErrorResponse(_.parseInt(errorEntry.error.key), errorEntry.error.message[0].code) +
-            ' TrackingID: ' + errorEntry.trackingId;
-          return err;
-        });
-        // load the errors to userCsvService when it's done
-        if (!this.isProcessing) {
-          // empty userErrorArray first
-          this.UserCsvService.setCsvStat({
-            userErrorArray: [],
-          }, true);
-          _.forEach(this.userErrorArray, errorEntry => {
-            this.UserCsvService.setCsvStat({
-              userErrorArray: [{
-                row: errorEntry.itemNumber,
-                email: 'User',
-                error: errorEntry.errorMessage,
-              }],
-            });
-          });
-        }
-      });
-    } else {
-      this.userErrorArray = [];
-    }
-  }
-
-  private getShortFileName(longFileName?: string): string {
-    if (!_.isString(longFileName)) {
-      return '';
-    } else {
-      const tempString = _.split(longFileName, '/')[1];
-      const csvIndex = tempString.indexOf('.csv');
-      return tempString.substring(0, csvIndex + 4);
     }
   }
 
@@ -156,38 +96,95 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
       btnType: 'alert',
     }).result.then(() => {
       this.UserTaskManagerService.cancelTask(this.activeTask!.jobInstanceId)
-      .then(() => this.isCancelledByUser = true)
-      .catch(response => {
-        this.Notification.errorResponse(response, 'userTaskManagerModal.cancelCsvError');
-      });
+        .then(() => this.isCancelledByUser = true)
+        .catch(response => {
+          this.Notification.errorResponse(response, 'userTaskManagerModal.cancelCsvError');
+        });
     });
   }
 
-  private initPolling(): void {
-    this.intervalPromise = this.$interval(() => {
-      if (_.isUndefined(this.activeTask)) {
-        this.cancelPolling();
-      } else {
-        this.UserTaskManagerService.getTask(this.activeTask!.jobInstanceId)
-        .then(response => {
-          this.activeTask = response;
-          this.setActiveTaskData(this.activeTask!);
-          // if this task is done processing, cancel the task polling
-          if (!this.UserTaskManagerService.isTaskPending(this.activeTask!.status)) {
-            this.cancelPolling();
-          }
-        }).catch(response => {
-          this.cancelPolling();
-          this.Notification.errorResponse(response, 'userTaskManagerModal.getTaskError');
-        });
-      }
-    }, CsvUploadResultsCtrl.TASK_POLLING_INTERVAL);
+  private setStartedByUser(userId: string) {
+    this.UserTaskManagerService.getUserDisplayAndEmail(userId)
+      .then(userDisplayNameAndEmail => this.startedBy = userDisplayNameAndEmail);
   }
 
-  private cancelPolling(): void {
-    if (!_.isUndefined(this.intervalPromise)) {
-      this.$interval.cancel(this.intervalPromise);
+  private setActiveTaskData(task: ITask): void {
+    this.activeTask = task;
+    this.numTotalUsers = task.totalUsers;
+    this.numNewUsers = task.addedUsers;
+    this.numUpdatedUsers = task.updatedUsers;
+    this.numErroredUsers = task.erroredUsers;
+    this.processProgress = Math.floor((this.numNewUsers + this.numUpdatedUsers + this.numErroredUsers) * 100 / this.numTotalUsers);
+    if (isNaN(this.processProgress)) {
+      this.processProgress = 0;
     }
+    this.isProcessing = this.UserTaskManagerService.isTaskInProcess(task.status);
+    this.isCancelledByUser = false;
+    this.fileName = this.getShortFileName(task.filename);
+    const { date, time } = this.UserTaskManagerService.getDateAndTime(task.started);
+    this.startedDate = date;
+    this.startedTime = time;
+
+    this.populateTaskErrors(task);
+  }
+
+  private populateTaskErrors(task: ITask) {
+    if (task.erroredUsers > 0) {
+      this.fetchTaskErrors(task);
+    } else {
+      this.userErrorArray = [];
+    }
+  }
+
+  private fetchTaskErrors(task: ITask) {
+    if (this.cancelErrorsDeferred) {
+      return;
+    }
+
+    this.cancelErrorsDeferred = this.$q.defer();
+    this.UserTaskManagerService.getTaskErrors(task.jobInstanceId, this.cancelErrorsDeferred.promise).then(response => {
+      this.cancelErrorsDeferred = undefined;
+      this.userErrorArray = _.map(response, errorEntry => {
+        return _.assignIn({}, errorEntry, {
+          errorMessage: `${this.UserCsvService.getBulkErrorResponse(_.parseInt(_.get(errorEntry, 'error.key')), _.get(errorEntry, 'error.message[0].code'))} TrackingID: ${_.get(errorEntry, 'trackingId')}`,
+        });
+      });
+      // load the errors to userCsvService when it's done
+      if (!this.isProcessing) {
+        // empty userErrorArray first
+        this.UserCsvService.setCsvStat({
+          userErrorArray: [],
+        }, true);
+        _.forEach(this.userErrorArray, errorEntry => {
+          this.UserCsvService.setCsvStat({
+            userErrorArray: [{
+              row: errorEntry.itemNumber,
+              email: 'User',
+              error: errorEntry.errorMessage,
+            }],
+          });
+        });
+      }
+    });
+  }
+
+  private resetErrorArrayOnChange() {
+    if (this.cancelErrorsDeferred) {
+      this.cancelErrorsDeferred.resolve();
+      this.cancelErrorsDeferred = undefined;
+    }
+    this.userErrorArray = [];
+  }
+
+  private getShortFileName(longFileName?: string): string {
+    if (!_.isString(longFileName)) {
+      return '';
+    }
+
+    const csvIndex = longFileName.indexOf('.csv');
+    const shortFileName = csvIndex > -1 ? longFileName.substring(0, csvIndex + 4) : longFileName;
+    const shortFileNameChunks = shortFileName.split('/');
+    return shortFileNameChunks[shortFileNameChunks.length - 1];
   }
 }
 
@@ -196,5 +193,6 @@ export class CsvUploadResultsComponent implements ng.IComponentOptions {
   public template = require('./csv-upload-results.html');
   public bindings = {
     inputActiveTask: '<',
+    onStatusUpdate: '&',
   };
 }

@@ -35,161 +35,30 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
   public activeTask?: ITask;
   public loading = false;
   public dismiss: Function;
-  private loadingError = false;
   public allTaskList: ITask[] = [];
   public inProcessTaskList: ITask[] = [];
   public activeFilter: TaskListFilterType = TaskListFilterType.ALL;
-  public fileData: string;
-  public fileName: string;
-  public exactMatchCsv = false;
-  private intervalPromise: ng.IPromise<void>;
+
+  private fileData: string;
+  private fileName: string;
+  private exactMatchCsv = false;
+  private requestedTaskId?: string;
 
   /* @ngInject */
   constructor(
+    private $scope: ng.IScope,
     private $stateParams,
     private Notification: Notification,
     private UserTaskManagerService: UserTaskManagerService,
     private $q: ng.IQService,
     private $translate: ng.translate.ITranslateService,
-    private $interval: ng.IIntervalService,
-  ) {
-  }
+  ) {}
 
   public $onInit(): ng.IPromise<any> {
-
     this.loading = true;
     this.initActives();
-
-    return this.init()
-    .then(() => {
-      return this.fetchTasks()
-      .finally(() => {
-        this.loading = false;
-        if (!this.loadingError) {
-          this.initPolling();
-        }
-      });
-    });
-  }
-
-  public $onDestroy(): void {
-    // cancel the interval
-    this.cancelPolling();
-  }
-
-  private initActives() {
-    this.activeTask = _.get<ITask>(this.$stateParams, 'task', undefined);
-    this.fileName = _.get<string>(this.$stateParams, 'job.fileName', undefined);
-    this.fileData = _.get<string>(this.$stateParams, 'job.fileData', undefined);
-    this.exactMatchCsv = _.get<boolean>(this.$stateParams, 'job.exactMatchCsv', undefined);
-    this.activeFilter = !_.isUndefined(this.activeTask) || !_.isUndefined(this.fileName) ? TaskListFilterType.ACTIVE : TaskListFilterType.ALL;
-  }
-
-  private init(): ng.IPromise<any> {
-    return this.$q(resolve => {
-      if (!_.isUndefined(this.fileName) && _.isUndefined(this.activeTask)) {
-        // importing a CSV file
-        this.UserTaskManagerService.submitCsvImportTask(this.fileName, this.fileData, this.exactMatchCsv)
-        .then(taskObj => {
-          this.activeTask = taskObj;
-          resolve();
-        }).catch(response => {
-          this.Notification.errorResponse(response, 'userTaskManagerModal.submitCsvError');
-          resolve();
-        });
-      } else {
-        // this should not happen
-        resolve();
-      }
-    });
-  }
-
-  public fetchTasks(): ng.IPromise<any> {
-    // Get all tasks and identify active tasks
-    return this.UserTaskManagerService.getTasks()
-    .then(tasks => {
-      this.allTaskList = this.setListTanslationFields(tasks);
-      this.populateInProcessTaskList();
-      this.setActiveFilter(this.activeFilter);
-    }).catch(response => {
-      this.loadingError = true;
-      this.Notification.errorResponse(response, 'userTaskManagerModal.getTaskListError');
-    });
-  }
-
-  public setActiveFilter(activeFilter: TaskListFilterType): void {
-    this.activeFilter = activeFilter;
-    // when switching to ALL list, update the in-process list
-    // this will clear the non-in-process tasks from the Active view
-    if (this.activeFilter === TaskListFilterType.ALL) {
-      this.populateInProcessTaskList();
-      this.activeTask = _.isEmpty(this.allTaskList) ? undefined : this.allTaskList[0];
-    } else {
-      this.activeTask = _.isEmpty(this.inProcessTaskList) ? undefined : this.inProcessTaskList[0];
-    }
-  }
-
-  private initPolling(): void {
-    this.intervalPromise = this.$interval(() => {
-      // get in-process list
-      // match and update allTaskList and inProcessTaskList
-      this.UserTaskManagerService.initPollingForInProcessTasks()
-      .then(response => {
-        const inProcessTasks = response;
-
-        // update tasks that were in-process, but now finishes
-        _.forEach(this.inProcessTaskList, task => {
-          const isStillInProcess = _.some(inProcessTasks, aTask => {
-            return aTask.jobInstanceId === task.jobInstanceId;
-          });
-          if (!isStillInProcess) {
-            this.UserTaskManagerService.getTask(task.jobInstanceId)
-            .then(response => {
-              this.assignTaskToList(response, false);
-            });
-          }
-        });
-
-        // add or update in-process tasks into allTaskList
-        _.forEach(inProcessTasks, task => {
-          this.assignTaskToList(task, true);
-        });
-      }).catch(response => {
-        this.cancelPolling();
-        this.Notification.errorResponse(response, 'userTaskManagerModal.getTaskListError');
-      });
-    }, UserTaskManagerService.TASK_POLLING_INTERVAL);
-  }
-
-  private cancelPolling(): void {
-    if (!_.isUndefined(this.intervalPromise)) {
-      this.$interval.cancel(this.intervalPromise);
-    }
-  }
-
-  private assignTaskToList(task: ITask, isInsert: boolean): void {
-    const filledDataTask = this.fillTaskData(task);
-    let idx = -1;
-
-    // allTaskList
-    idx = _.findIndex(this.allTaskList, aTask => {
-      return aTask.jobInstanceId === filledDataTask.jobInstanceId;
-    });
-    if (idx !== -1) {
-      this.allTaskList[idx] = filledDataTask;
-    } else if (isInsert) {
-      this.allTaskList.unshift(filledDataTask);
-    }
-
-    // inProcessTaskList
-    idx = _.findIndex(this.inProcessTaskList, aTask => {
-      return aTask.jobInstanceId === filledDataTask.jobInstanceId;
-    });
-    if (idx !== -1) {
-      this.inProcessTaskList[idx] = filledDataTask;
-    } else if (isInsert) {
-      this.inProcessTaskList.unshift(filledDataTask);
-    }
+    return this.importTask()
+      .then(() => this.initPolling());
   }
 
   public get taskList() {
@@ -209,28 +78,105 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
     this.dismiss();
   }
 
-  private populateInProcessTaskList(): void {
-    this.inProcessTaskList = [];
-    this.inProcessTaskList = _.filter(this.allTaskList, task => {
+  public updateActiveTaskStatus(status: string) {
+    if (!this.activeTask) {
+      return;
+    }
+
+    const task = this.getTaskById(this.activeTask.jobInstanceId);
+    if (!task) {
+      return;
+    }
+
+    task.status = status;
+    this.populateTaskStatusTranslate(task);
+  }
+
+  private initActives() {
+    this.activeTask = _.get<ITask>(this.$stateParams, 'task', undefined);
+    this.requestedTaskId = _.get(this.activeTask, 'jobInstanceId');
+    this.fileName = _.get<string>(this.$stateParams, 'job.fileName', undefined);
+    this.fileData = _.get<string>(this.$stateParams, 'job.fileData', undefined);
+    this.exactMatchCsv = _.get<boolean>(this.$stateParams, 'job.exactMatchCsv', undefined);
+    this.activeFilter = !_.isUndefined(this.activeTask) || !_.isUndefined(this.fileName) ? TaskListFilterType.ACTIVE : TaskListFilterType.ALL;
+  }
+
+  private importTask(): ng.IPromise<any> {
+    if (_.isUndefined(this.fileName) || !_.isUndefined(this.activeTask)) {
+      return this.$q.resolve();
+    }
+
+    return this.UserTaskManagerService.submitCsvImportTask(this.fileName, this.fileData, this.exactMatchCsv)
+      .then(importedTask => {
+        this.activeTask = importedTask;
+        this.requestedTaskId = importedTask.jobInstanceId;
+      })
+      .catch(response => this.Notification.errorResponse(response, 'userTaskManagerModal.submitCsvError'));
+  }
+
+  private intervalCallback = (tasks: ITask[] = []) => {
+    this.populateTaskListData(tasks);
+    this.allTaskList = tasks;
+    this.inProcessTaskList = this.filterInProcessTaskList(tasks);
+    this.initSelectedTask();
+    this.loading = false;
+  }
+
+  private initPolling() {
+    this.UserTaskManagerService.initAllTaskListPolling(this.intervalCallback, this.$scope);
+  }
+
+  public setActiveFilter(activeFilter: TaskListFilterType): void {
+    this.activeFilter = activeFilter;
+
+    this.initSelectedTask();
+  }
+
+  private initSelectedTask() {
+    if (_.some(this.taskList, (task) => task.jobInstanceId === _.get(this.activeTask, 'jobInstanceId'))) {
+      return;
+    }
+
+    this.activeTask = this.taskList[0];
+  }
+
+  private getTaskById(jobInstanceId: string): ITask | undefined {
+    return _.find(this.taskList, { jobInstanceId });
+  }
+
+  private filterInProcessTaskList(tasks: ITask[]) {
+    const filteredTasks = _.filter(tasks, task => {
       return this.UserTaskManagerService.isTaskPending(task.status);
     });
-  }
 
-  private setListTanslationFields(taskList: ITask[]): ITask[] {
-    let newTaskList: ITask[];
-    newTaskList = _.map(taskList, task => {
-      const newTask = _.cloneDeep(task);
-      return this.fillTaskData(newTask);
-    });
-    return newTaskList;
-  }
-
-  private fillTaskData(task: ITask): ITask {
-    switch (task.jobType) {
-      case TaskType.USERONBOARD:
-        task.jobTypeTranslate = this.$translate.instant('userTaskManagerModal.csvImport');
-        break;
+    // If we have a requested task, sort it to the top of the list or add it first
+    if (this.requestedTaskId) {
+      const requestedTask = _.find(tasks, { jobInstanceId: this.requestedTaskId });
+      if (requestedTask) {
+        if (_.includes(filteredTasks, requestedTask)) {
+          filteredTasks.sort((aTask, bTask) => {
+            if (aTask.jobInstanceId === this.requestedTaskId) {
+              return -1;
+            }
+            if (bTask.jobInstanceId === this.requestedTaskId) {
+              return 1;
+            }
+            return 0;
+          });
+        } else {
+          filteredTasks.unshift(requestedTask);
+        }
+      }
     }
+
+    return filteredTasks;
+  }
+
+  private populateTaskListData(taskList: ITask[]) {
+    _.forEach(taskList, task => this.populateTaskData(task));
+  }
+
+  private populateTaskStatusTranslate(task: ITask) {
     switch (task.status) {
       case TaskStatus.CREATED:
         task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.created');
@@ -259,27 +205,38 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
         task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.stoppedForMaintenance');
         break;
     }
+  }
 
-    // created date/time
+  private populateTaskJobType(task: ITask) {
+    switch (task.jobType) {
+      case TaskType.USERONBOARD:
+        task.jobTypeTranslate = this.$translate.instant('userTaskManagerModal.csvImport');
+        break;
+    }
+  }
+
+  private populateTaskDatesAndTime(task: ITask) {
     if (task.created) {
-      const createdMoment = moment(task.created);
-      task.createdDate = createdMoment.format('ll');
-      task.createdTime = createdMoment.format('LT');
+      const { date, time } = this.UserTaskManagerService.getDateAndTime(task.created);
+      task.createdDate = date;
+      task.createdTime = time;
     }
-    // started date/time
     if (task.started) {
-      const startedMoment = moment(task.started);
-      task.startedDate = startedMoment.format('ll');
-      task.startedTime = startedMoment.format('LT');
+      const { date, time } = this.UserTaskManagerService.getDateAndTime(task.started);
+      task.startedDate = date;
+      task.startedTime = time;
     }
-    // stopped date/time
     if (task.stopped) {
-      const stoppedMoment = moment(task.stopped);
-      task.stoppedDate = stoppedMoment.format('ll');
-      task.stoppedTime = stoppedMoment.format('LT');
+      const { date, time } = this.UserTaskManagerService.getDateAndTime(task.started);
+      task.stoppedDate = date;
+      task.stoppedTime = time;
     }
+  }
 
-    return task;
+  private populateTaskData(task: ITask) {
+    this.populateTaskJobType(task);
+    this.populateTaskStatusTranslate(task);
+    this.populateTaskDatesAndTime(task);
   }
 }
 
