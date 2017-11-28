@@ -1,0 +1,46 @@
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/tools/placeholders/page-layout';
+
+.account-linking-side-panel-section {
+  .webex-header-image {
+    .icon {
+      font-size: 60px;
+      line-height: 70px;
+      opacity: 0.5;
+    }
+  }
+  .read-only-site {
+    background-color: $color-yellow-light;
+    border-top: 4px solid $color-yellow-dark;
+    text-align: center;
+    span {
+      display: inline-block;
+    }
+  }
+}
+
+.account-linking {
+  @extend %grid-header;
+  @extend %page-background-white;
+
+  .ui-grid-row {
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
+  .grid-vcenter {
+    vertical-align: middle;
+  }
+
+  .loading-sites {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+
+    .loading-sites-spinner {
+      font-size: 2rem;
+    }
+  }
+}

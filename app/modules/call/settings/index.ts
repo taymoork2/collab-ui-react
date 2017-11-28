@@ -14,12 +14,14 @@ import preferredLanguageModule from 'modules/call/settings/settings-preferred-la
 import extensionRangeModule from 'modules/call/settings/settings-extension-range';
 import extensionLengthModule from 'modules/call/settings/settings-extension-length';
 import routingPrefixModule from 'modules/call/settings/settings-routing-prefix';
+import routingPrefixLengthModule from 'modules/call/settings/settings-routing-prefix-length';
 import timeZoneModule from 'modules/call/shared/settings-time-zone';
 import outboundDialDigitModule from 'modules/call/settings/settings-outbound-dial-digit';
 import companyVoicemailModule from 'modules/call/settings/settings-company-voicemail';
 import companyVoicemailAvrilModule from 'modules/call/settings/settings-company-voicemail-avril';
 import companyVoicemailAvrilI1559Module from 'modules/call/settings/settings-company-voicemail-avril-i1559';
 import companyVoicemailLocationModule from 'modules/call/settings/settings-company-voicemail-locations';
+import voicemailModule from 'modules/call/settings/settings-voicemail';
 import dialingModule from 'modules/call/settings/settings-dialing';
 import timeFormatModule from 'modules/call/settings/settings-time-format';
 import dateFormatModule from 'modules/call/settings/settings-date-format';
@@ -51,12 +53,14 @@ export default angular
     extensionRangeModule,
     extensionLengthModule,
     routingPrefixModule,
+    routingPrefixLengthModule,
     timeZoneModule,
     outboundDialDigitModule,
     companyVoicemailModule,
     companyVoicemailAvrilModule,
     companyVoicemailAvrilI1559Module,
     companyVoicemailLocationModule,
+    voicemailModule,
     dialingModule,
     timeFormatModule,
     dateFormatModule,

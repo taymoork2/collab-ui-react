@@ -8,6 +8,7 @@
   var notificationsNoUsersActivatedForCallConnectTemplatePath = require('ngtemplate-loader?module=Hercules!modules/hercules/notifications/no_users_activated_for_call_connect.html');
   var notificationsNoUsersActivatedForCallAwareTemplatePath = require('ngtemplate-loader?module=Hercules!modules/hercules/notifications/no_users_activated_for_call_aware.html');
   var notificationsCallUserErrorsTemplatePath = require('ngtemplate-loader?module=Hercules!modules/hercules/notifications/call-user-errors.html');
+  var notificationsHybridMessageUserErrorsTemplatePath = require('ngtemplate-loader?module=Hercules!modules/hercules/notifications/hybrid-message-user-errors.html');
   var notificationsCalendarUserErrorsTemplatePath = require('ngtemplate-loader?module=Hercules!modules/hercules/notifications/calendar-user-errors.html');
   var notificationsSipUriDomainEnterpriseNotSetTemplatePath = require('ngtemplate-loader?module=Hercules!modules/hercules/notifications/sip_uri_domain_enterprise_not_set.html');
   var notificationsSipDomainNotConfiguredTemplatePath = require('ngtemplate-loader?module=Hercules!modules/hercules/notifications/sip_domain_not_configured.html');
@@ -25,7 +26,7 @@
     var hasSipUriDomainConfigured = false;
     var hasVerifiedDomains = false;
     var allExpresswayServices = ['squared-fusion-uc', 'squared-fusion-ec', 'squared-fusion-cal', 'squared-fusion-mgmt'];
-    var servicesWithUserAssignments = ['squared-fusion-uc', 'squared-fusion-ec', 'squared-fusion-cal', 'squared-fusion-gcal'];
+    var servicesWithUserAssignments = ['squared-fusion-uc', 'squared-fusion-ec', 'squared-fusion-cal', 'spark-hybrid-impinterop', 'squared-fusion-gcal'];
 
     function checkState(serviceId) {
       if (checkIfFusePerformed()) {
@@ -106,9 +107,7 @@
       if (!_.includes(servicesWithUserAssignments, serviceId)) {
         return;
       }
-      var summaryForService = _.find(USSService.getStatusesSummary(), {
-        serviceId: serviceId,
-      });
+      var summaryForService = USSService.getStatusesSummary()[serviceId];
       var noUsersActivatedId = serviceId + ':noUsersActivated';
       var needsUserActivation = summaryForService && summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated === 0;
       if (needsUserActivation) {
@@ -153,14 +152,23 @@
           } else {
             NotificationService.removeNotification(userErrorsId);
           }
-        } else {
-          // if we are not in the Call Service page, we must be in the Calendar Service page
+        } else if (serviceId === 'squared-fusion-cal') {
           if (summaryForService && summaryForService.error > 0) {
             NotificationService.addNotification(
               NotificationService.types.ALERT,
               userErrorsId,
               4,
               notificationsCalendarUserErrorsTemplatePath, ['squared-fusion-cal'], summaryForService);
+          } else {
+            NotificationService.removeNotification(userErrorsId);
+          }
+        } else if (serviceId === 'spark-hybrid-impinterop') {
+          if (summaryForService && summaryForService.error > 0) {
+            NotificationService.addNotification(
+              NotificationService.types.ALERT,
+              userErrorsId,
+              4,
+              notificationsHybridMessageUserErrorsTemplatePath, ['spark-hybrid-impinterop'], summaryForService);
           } else {
             NotificationService.removeNotification(userErrorsId);
           }

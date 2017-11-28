@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "線上",
-      "OnlineWithIssues": "線上，有問題",
-      "Offline": "離線",
-      "OfflineExpired": "已停用",
-      "Unknown": "不明"
+      "CONNECTED": "線上",
+      "CONNECTED_WITH_ISSUES": "線上，有問題",
+      "DISCONNECTED": "離線",
+      "OFFLINE_EXPIRED": "已停用",
+      "UNKNOWN": "不明"
     },
     "WithDevices": "使用裝置",
     "upgradeChannels": {
@@ -6678,23 +6678,23 @@
       "wlan": "無線"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "網路埠已封鎖",
         "message": "防火牆可能封鎖了 UDP 上的媒體。通話品質可能受影響。如需網路埠需求的相關資訊，請參閱文章 <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Cisco Spark 應用程式的防火牆和網路需求</a>。"
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "網路埠已封鎖",
         "message": "防火牆可能封鎖了 UDP 上的媒體。通話品質可能受影響。如需網路埠需求的相關資訊，請參閱文章 <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Cisco Spark 應用程式的防火牆和網路需求</a>。"
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "網路埠已封鎖",
         "message": "防火牆可能封鎖了 UDP 和 TCP 上的媒體。通話品質可能受影響。如需網路埠需求的相關資訊，請參閱文章 <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Cisco Spark 應用程式的防火牆和網路需求</a>。"
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "高溫",
         "message": "系統溫度太高。"
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "未偵測到主顯示畫面",
         "message": "請確認主顯示畫面已開啟，且連線至視訊系統上的正確顯示輸出。"
       },
@@ -6702,35 +6702,35 @@
         "type": "自動更新已停用",
         "message": "將無法更新系統軟體。"
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "無法存取時間伺服器",
         "message": "無法建立與 NTP 伺服器的連線。端點上顯示的時間可能是錯誤的。"
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "來自其他裝置的訊號干擾",
         "message": "在此協作室裡，有來自其他裝置（例如：其他視訊系統）的超聲訊號干擾，會阻止視訊系統與電話或膝上型電腦之間的配對。"
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "音訊延遲",
         "message": "您的監視器設定會給音訊加上延遲。請將監視器設定變更為適當的模式（例如：遊戲模式）。"
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "無嵌入式超聲喇叭",
         "message": "SX10 的這個硬體版本不具有嵌入式超聲喇叭。"
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "遺漏了加密選項金鑰",
         "message": "請新增加密選項金鑰。"
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "已設定測試自動化",
         "message": "影響度量和記錄報告。"
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "需要觸控面板",
         "message": "協作室裝置未連線任何觸控面板。請檢查將觸控面板連線至協作室裝置的電纜。"
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "偵測到封包遺失",
         "message": "在前次通話期間，我們偵測到一定程度的封包遺失，這可能影響了通話品質。封包遺失一般由網路擁塞所致。"
       },
@@ -7332,25 +7332,25 @@
       "configOverview": {
         "title": "客戶虛擬助理設定需求",
         "desc": "檢閱建立「客戶虛擬助理」的先決條件",
-        "boxTitle": "建立「客戶虛擬助理」之前，先建立一個 API.AI 客服。",
-        "boxDesc": "使用自然語言對話框在 API.AI 中建置自動化客服。您的整合「客戶虛擬助理」使用內建對話框與您的客戶進行互動，並根據需要將會話上報至即時客服人員。",
-        "boxRadioOne": "不，我沒有預先設定的 API.AI 客服",
+        "boxTitle": "建立「客戶虛擬助理」之前，先建立一個 Dialogflow 客服。",
+        "boxDesc": "使用自然語言對話框在 Dialogflow 中建置自動化客服。您的整合「客戶虛擬助理」使用內建對話框與您的客戶進行互動，並根據需要將會話上報至即時客服人員。",
+        "boxRadioOne": "不，我沒有預先設定的 Dialogflow 客服",
         "boxRadioOneDesc1": "前往 ",
-        "boxRadioApiai": "API.AI",
+        "boxRadioDialogflow": "Dialogflow",
         "boxRadioOneDesc2": " 以創建客服。若要開始使用，請參閱 ",
-        "boxRadioApiaiDoc": "API.AI 說明文件",
-        "boxRadioTwo": "是，我有預先設定的 API.AI 客服，並準備好繼續",
-        "boxRadioTwoDesc": "按一下箭頭，繼續整合您的 API.AI 客服與「客戶虛擬助理」"
+        "boxRadioDialogflowDoc": "Dialogflow 說明文件",
+        "boxRadioTwo": "是，我有預先設定的 Dialogflow 客服，並準備好繼續",
+        "boxRadioTwoDesc": "按一下箭頭，繼續整合您的 Dialogflow 客服與「客戶虛擬助理」"
       },
       "dialogIntegration": {
         "title": "設定對話整合",
-        "desc": "新增預先設定的上報意圖，完成您的 API.AI 客服設定",
+        "desc": "新增預先設定的上報意圖，完成您的 Dialogflow 客服設定",
         "boxStepOne": "下載預先設定的上報意圖 JSON 檔案。",
         "boxStepOneDesc": "上報意圖允許您的「客戶虛擬助理」將會話上報至到客服人員。",
-        "boxStepTwo": "將上報意圖上報至 API.AI 客服。",
-        "boxStepTwoDesc": "在您的 API.AI 客服的「意圖」頁面上，按一下垂直省略號 (⋮)，然後選擇「上報意圖」。上傳您下載的 escalation.json 檔案。",
-        "boxStepThree": "在 API.AI 中自訂上報意圖。",
-        "boxStepThreeDesc": "在您的 API.AI 客服「意圖」頁面上，選擇「上報意圖」。修改「使用者說」欄位，以變更觸發上報的使用者表示式。所有使用者表示式必須：",
+        "boxStepTwo": "將上報意圖上報至 Dialogflow 客服。",
+        "boxStepTwoDesc": "在您的 Dialogflow 客服的「意圖」頁面上，按一下垂直省略號 (⋮)，然後選擇「上報意圖」。上傳您下載的 escalation.json 檔案。",
+        "boxStepThree": "在 Dialogflow 中自訂上報意圖。",
+        "boxStepThreeDesc": "在您的 Dialogflow 客服「意圖」頁面上，選擇「上報意圖」。修改「使用者說」欄位，以變更觸發上報的使用者表示式。所有使用者表示式必須：",
         "boxBulletOne": "使用範本模式",
         "boxBulletTwo": "包含對 @sys.any:Topic 的參照",
         "boxStepThreeDescCont": "使用者表示式旁邊的 @ 符號表示範本模式。按一下該符號以切換模式。不要修改 GetExpert 動作。",
@@ -7361,11 +7361,11 @@
       "accessToken": {
         "title": "完成對話整合",
         "desc": "完成您的整合，以便在客戶互動中使用自然對話框",
-        "boxDesc": "每個 API.AI 客服都具有在客服設定中儲存的唯一用戶端存取記號。從設定的 API.AI 客服設定複製記號，在這裡輸入，然後按一下「驗證」以檢查記號，然後再完成對話整合。",
-        "inputLabel": "API.AI 用戶端存取記號",
+        "boxDesc": "每個 Dialogflow 客服都具有在客服設定中儲存的唯一用戶端存取記號。從設定的 Dialogflow 客服設定複製記號，在這裡輸入，然後按一下「驗證」以檢查記號，然後再完成對話整合。",
+        "inputLabel": "Dialogflow 用戶端存取記號",
         "validateButtonText": "驗證",
         "maxLengthError": "用戶端存取記號的長度不能超過 128 個字元。",
-        "invalidTokenText": "API.AI 用戶端存取記號無效。請驗證記號，然後再試一次。"
+        "invalidTokenText": "Dialogflow 用戶端存取記號無效。請驗證記號，然後再試一次。"
       },
       "name": {
         "title": "客戶虛擬助理名稱",

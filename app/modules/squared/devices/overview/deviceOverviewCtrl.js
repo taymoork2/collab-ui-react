@@ -5,12 +5,10 @@
     .module('Core')
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo,
-    FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal,
-    ResetDeviceModal, channels, RemoteSupportModal, LaunchAdvancedSettingsModal, ServiceSetup, KemService,
-    TerminusService, EmergencyServicesService, AtaDeviceModal, DeviceOverviewService,
-    FeatureToggleService, ConfirmAtaRebootModal, PstnModel, PstnService) {
+  function DeviceOverviewCtrl($element, $interval, $q, $state, $stateParams, $scope, $timeout, $translate, $window, AccessibilityService, AtaDeviceModal, Authinfo, ConfirmAtaRebootModal, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, channels, DeviceOverviewService, EmergencyServicesService, FeatureToggleService, FeedbackService, KemService, LaunchAdvancedSettingsModal, Notification, PstnModel, PstnService, RemDeviceModal, RemoteSupportModal, ResetDeviceModal, ServiceSetup, TerminusService, Utils) {
     var deviceOverview = this;
     var huronDeviceService = $stateParams.huronDeviceService;
     deviceOverview.linesAreLoaded = false;
@@ -70,6 +68,7 @@
 
     function displayDevice(device) {
       var lastDevice = deviceOverview.currentDevice;
+      var promises = [];
       deviceOverview.currentDevice = device;
 
       if (!lastDevice || lastDevice.product != deviceOverview.currentDevice.product) {
@@ -84,42 +83,46 @@
           $interval.cancel(deviceOverview.huronPollInterval);
         });
       }
-      pollLines();
+      promises.push(pollLines());
 
       if (deviceOverview.currentDevice.isHuronDevice) {
         if (!deviceOverview.tzIsLoaded) {
-          initTimeZoneOptions().then(function () {
-            getCurrentDeviceInfo();
+          var timeZonePromise = initTimeZoneOptions().then(function () {
+            return getCurrentDeviceInfo();
           });
+          promises.push(timeZonePromise);
         }
         if (!deviceOverview.countryIsLoaded) {
-          initCountryOptions().then(function () {
-            getCurrentDeviceInfo();
+          var countryPromise = initCountryOptions().then(function () {
+            return getCurrentDeviceInfo();
           });
+          promises.push(countryPromise);
         }
       }
 
       if (deviceOverview.currentDevice.isATA) {
-        getCurrentAtaSettings();
+        promises.push(getCurrentAtaSettings());
       }
 
       deviceOverview.deviceHasInformation = deviceOverview.currentDevice.ip || deviceOverview.currentDevice.mac || deviceOverview.currentDevice.serial || deviceOverview.currentDevice.software || deviceOverview.currentDevice.hasRemoteSupport;
 
-      FeatureToggleService.csdmPlaceUpgradeChannelGetStatus().then(function (feature) {
+      var featureTogglePromise = FeatureToggleService.csdmPlaceUpgradeChannelGetStatus().then(function (feature) {
         var placeUpgradeChannelSupported = feature && deviceOverview.currentDevice.productFamily === 'Cloudberry';
         deviceOverview.canChangeUpgradeChannel = channels.length > 1 && !deviceOverview.currentDevice.isHuronDevice && deviceOverview.currentDevice.isOnline && !placeUpgradeChannelSupported;
         deviceOverview.shouldShowUpgradeChannel = channels.length > 1 && !deviceOverview.currentDevice.isHuronDevice && (!deviceOverview.currentDevice.isOnline || placeUpgradeChannelSupported);
       });
+      promises.push(featureTogglePromise);
 
       deviceOverview.upgradeChannelOptions = _.map(channels, getUpgradeChannelObject);
 
       resetSelectedChannel();
+      return $q.all(promises);
     }
 
     function getCurrentAtaSettings() {
       deviceOverview.updatingT38Settings = true;
       deviceOverview.updatingCpcSettings = true;
-      huronDeviceService.getAtaInfo(deviceOverview.currentDevice).then(function (result) {
+      return huronDeviceService.getAtaInfo(deviceOverview.currentDevice).then(function (result) {
         deviceOverview.faxEnabled = result.t38FaxEnabled;
         deviceOverview.cpcEnabled = result.cpcDelay > 2;
         deviceOverview.updatingT38Settings = false;
@@ -191,7 +194,7 @@
     }
 
     function getCurrentDeviceInfo() {
-      huronDeviceService.getDeviceInfo(deviceOverview.currentDevice).then(function (result) {
+      return huronDeviceService.getDeviceInfo(deviceOverview.currentDevice).then(function (result) {
         deviceOverview.timeZone = result.timeZone;
         deviceOverview.emergencyCallbackNumber = result.emergencyCallbackNumber;
         deviceOverview.selectedTimeZone = getTimeZoneFromId(result);
@@ -211,7 +214,7 @@
     }
 
     function pollLines() {
-      huronDeviceService.getLinesForDevice(deviceOverview.currentDevice).then(function (result) {
+      return huronDeviceService.getLinesForDevice(deviceOverview.currentDevice).then(function (result) {
         deviceOverview.lines = result;
         deviceOverview.linesAreLoaded = true;
       }).then(function () {
@@ -487,7 +490,7 @@
         return CsdmDataModelService
           .updateTags(deviceOverview.currentDevice, deviceOverview.currentDevice.tags.concat(tag))
           .then(function (updatedDevice) {
-            displayDevice(updatedDevice);
+            return displayDevice(updatedDevice);
           })
           .catch(function (response) {
             Notification.errorResponse(response, 'deviceOverviewPage.failedToSaveChanges');
@@ -499,19 +502,30 @@
     };
 
     deviceOverview.addTagOnEnter = function ($event) {
-      if ($event.keyCode == 13) {
+      if ($event.keyCode === KeyCodes.ENTER) {
         deviceOverview.addTag();
       }
     };
 
-    deviceOverview.removeTag = function (tag) {
+    deviceOverview.removeTag = function (tag, index) {
       var tags = _.without(deviceOverview.currentDevice.tags, tag);
       return CsdmDataModelService.updateTags(deviceOverview.currentDevice, tags)
         .then(function (updatedDevice) {
-          displayDevice(updatedDevice);
+          return displayDevice(updatedDevice);
+        }, function (response) {
+          // this only applies to the previous promise rejection from `updateTags()`
+          Notification.errorResponse(response, 'deviceOverviewPage.failedToSaveChanges');
         })
         .catch(function (response) {
-          Notification.errorResponse(response, 'deviceOverviewPage.failedToSaveChanges');
+          // this applies to the `displayDevice(updatedDevice)` promise
+          Notification.errorResponse(response, 'deviceOverviewPage.failedToDisplayDevice');
+        })
+        .finally(function () {
+          if (index < deviceOverview.currentDevice.tags.length) {
+            AccessibilityService.setFocus($element, '#deleteTag' + index);
+          } else {
+            AccessibilityService.setFocus($element, '#addNewTag');
+          }
         });
     };
 

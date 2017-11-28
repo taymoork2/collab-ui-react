@@ -38,10 +38,13 @@
                   <i class="icon icon-user-chat icon-2x"></i>
                 </div>
 
-                <div class="bot" ng-switch-default>
-                  <i class="icon icon-bot-four icon-2x"></i>
+                <div ng-switch-default>
+                  <img ng-if="careSetupAssistant.selectedVA.icon" class="uploded-org-img"
+                    ng-src="{{careSetupAssistant.selectedVA.icon}}"/>
+                  <div class="bot" ng-if="!careSetupAssistant.selectedVA.icon">
+                    <i class="icon icon-bot-four icon-2x"></i>
+                  </div>
                 </div>
-
 
               </div>
               <div class="h5 profile-name" ng-switch = "careSetupAssistant.displaySelectedProfileAttribute()">

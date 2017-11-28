@@ -51,7 +51,6 @@
 .aa-static-var {
   margin-top: 0.2rem;
   line-height: 1.5rem;
-  display: inline-block;
   word-wrap: break-word;
 }
 
@@ -71,4 +70,55 @@
   border-color: $brand-primary;
   line-height: 1.75rem;
   word-wrap: break-word;
+}
+
+.aa-rest-header-text {
+  color: #aeaeaf;
+}
+
+.aa-variable-text {
+  font-size: 1rem;
+  @include vr-spacing(mt, 0.3);
+}
+
+.aa-rest-helper-text {
+  @include vr-spacing(mt, 0.4);
+  color: #aeaeaf;
+}
+
+.aa-rest-value-text {
+  @include vr-spacing(mt, 0.6);
+  font-size: 1rem;
+}
+
+.aa-rest-dynamic-variables {
+  @include vr-spacing(mt, 0.6);
+}
+
+.aa-rest-test-button-spacing {
+  @include vr-spacing(mt, 1.06);
+  @include vr-spacing(mb, 1.06);
+}
+
+.aa-rest-assignment-block {
+  @include vr-spacing(mt, 0);
+  @include vr-spacing(mb, 0);
+}
+
+.var-assignment-table {
+  border-collapse: collapse;
+  border: 0.01rem solid #aeaeaf;
+
+  tr {
+    border-top: none;
+  }
+
+  th {
+    background-color: #ffffff;
+    border-bottom: 0.01rem solid #aeaeaf;
+  }
+
+  th, td {
+    border-right: 0.01rem solid #aeaeaf;
+  }
 }

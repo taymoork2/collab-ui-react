@@ -1,6 +1,6 @@
 import './reports.scss';
 import { ReportsChartService } from './reportsChartService';
-import { SearchService } from 'modules/core/customerReports/webexReports/search/searchService';
+import { SearchService } from 'modules/core/customerReports/webexReports/diagnostic/searchService';
 
 class ReportsChart implements ng.IComponentController {
   public size;

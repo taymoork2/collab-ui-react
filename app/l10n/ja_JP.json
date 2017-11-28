@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "オンライン",
-      "OnlineWithIssues": "オンライン、問題あり",
-      "Offline": "オフライン",
-      "OfflineExpired": "アクティベート解除",
-      "Unknown": "不明"
+      "CONNECTED": "オンライン",
+      "CONNECTED_WITH_ISSUES": "オンライン、問題あり",
+      "DISCONNECTED": "オフライン",
+      "OFFLINE_EXPIRED": "アクティベート解除",
+      "UNKNOWN": "不明"
     },
     "WithDevices": "デバイスを使用",
     "upgradeChannels": {
@@ -6678,23 +6678,23 @@
       "wlan": "無線"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "ネットワーク ポートがブロックされています",
         "message": "UDP でファイアウォールがメディアをブロックしている可能性があります。通話品質に影響を与える場合があります。ネットワーク ポートの要件にいて詳しくは、記事「<a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Cisco Spark アプリのファイアウォールとネットワーク要件</a>」を参照してください。"
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "ネットワーク ポートがブロックされています",
         "message": "UDP でファイアウォールがメディアをブロックしている可能性があります。通話品質に影響を与える場合があります。ネットワーク ポートの要件にいて詳しくは、記事「<a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Cisco Spark アプリのファイアウォールとネットワーク要件</a>」を参照してください。"
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "ネットワーク ポートがブロックされています",
         "message": "UDP および TCP でファイアウォールがメディアをブロックしている可能性があります。通話品質に影響を与える場合があります。ネットワーク ポートの要件にいて詳しくは、記事「<a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Cisco Spark アプリのファイアウォールとネットワーク要件</a>」を参照してください。"
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "高温",
         "message": "システム温度が高すぎます。"
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "メイン ディスプレイが検出されません",
         "message": "メイン ディスプレイがオンになっていて、ビデオ システムの正しいディスプレイ出力に接続されていることを確認してください。"
       },
@@ -6702,35 +6702,35 @@
         "type": "自動更新が無効になっています",
         "message": "システム ソフトウェアは更新されません。"
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "タイム サーバーに接続できません",
         "message": "NTP サーバーへの接続が確立できませんでした。エンドポイントに表示されている時間が正しくない可能性があります。"
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "他のデバイスからの信号インターフェイス",
         "message": "この会議室には、他のデバイス (他のビデオ システムなど) からの超音波信号インターフェイスがあります。これがビデオ システムと電話またはラップトップとの間のペアリングを妨害している可能性があります。"
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "音声の遅延",
         "message": "モニター設定によって音声に遅延が発生しています。モニター設定を適切なモード (ゲーム モードなど) に変更してください。"
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "内蔵超音波スピーカーがありません",
         "message": "SX10 のこのハードウェア バージョンには超音波スピーカーが内蔵されていません。"
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "暗号化オプション キーが欠落しています",
         "message": "暗号化オプション キーを追加してください。"
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "テスト自動化に対して設定されました",
         "message": "メトリックとログ報告が影響を受けます。"
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "タッチパネルが必要です",
         "message": "ビデオ会議端末にはタッチパネルがありません。タッチパネルをビデオ会議端末に接続するケーブルを確認してください。"
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "パケット損失が検出されました",
         "message": "最後の通話中に、通話品質に影響を与えるレベルのパケット損失を検出しました。パケット損失は一般的にネットワークの輻輳により発生します。"
       },
@@ -7332,25 +7332,25 @@
       "configOverview": {
         "title": "顧客仮想アシスタント設定要件",
         "desc": "顧客仮想アシスタントを作成するための前提条件を見直します",
-        "boxTitle": "顧客仮想アシスタントを作成する前に、API.AI エージェントを作成します。",
-        "boxDesc": "自然言語ダイアログで API.AI の自動化されたエージェントを構築します。統合された顧客仮想アシスタントはビルトイン ダイアログを使用して、顧客と対話し、必要に応じてライブ エージェントに会話をエスカレートします。",
-        "boxRadioOne": "いいえ。事前設定した API.AI エージェントはありません",
+        "boxTitle": "顧客仮想アシスタントを作成する前に、Dialogflow エージェントを作成します。",
+        "boxDesc": "自然言語ダイアログで Dialogflow の自動化されたエージェントを構築します。統合された顧客仮想アシスタントはビルトイン ダイアログを使用して、顧客と対話し、必要に応じてライブ エージェントに会話をエスカレートします。",
+        "boxRadioOne": "いいえ。事前設定した Dialogflow エージェントはありません",
         "boxRadioOneDesc1": "ヘルプセンターに ",
-        "boxRadioApiai": "API.AI",
+        "boxRadioDialogflow": "Dialogflow",
         "boxRadioOneDesc2": " エージェントを作成します。まずはじめに、 ",
-        "boxRadioApiaiDoc": "API.AI ドキュメンテーションを参照してください。",
-        "boxRadioTwo": "はい。事前設定した API.AI エージェントがあるため、先に進む準備ができています",
-        "boxRadioTwoDesc": "矢印をクリックして、引き続き顧客仮想アシスタントで API.AI エージェントを統合してください"
+        "boxRadioDialogflowDoc": "Dialogflow ドキュメンテーションを参照してください。",
+        "boxRadioTwo": "はい。事前設定した Dialogflow エージェントがあるため、先に進む準備ができています",
+        "boxRadioTwoDesc": "矢印をクリックして、引き続き顧客仮想アシスタントで Dialogflow エージェントを統合してください"
       },
       "dialogIntegration": {
         "title": "ダイアログ統合の設定",
-        "desc": "事前設定されたエスカレーションのインテントを追加して、API.AI エージェント設定を完了してください",
+        "desc": "事前設定されたエスカレーションのインテントを追加して、Dialogflow エージェント設定を完了してください",
         "boxStepOne": "事前設定されたエスカレーションのインテント JSON ファイルをダウンロードしてください。",
         "boxStepOneDesc": "エスカレーションのインテントでは、顧客仮想アシスタントがエージェントに会話をエスカレーションできるようにします。",
-        "boxStepTwo": "エスカレーションのインテントを API.AI エージェントにアップロードします。",
-        "boxStepTwoDesc": "API.AI エージェントの [インテント] ページで、縦の省略符 (⋮) をクリックして、[インテントのアップロード] を選択します。ダウンロードした escalation.json ファイルをアップロードします。",
-        "boxStepThree": "API.AI のエスカレーション インテントをカスタマイズします。",
-        "boxStepThreeDesc": "API.AI エージェントの [インテント] ページで、[エスカレーション インテント] を選択します。[ユーザーの発言] フィールドを変更して、エスカレーションをトリガーするユーザーの表現を変更します。すべてのユーザー表現は、次のようになります。",
+        "boxStepTwo": "エスカレーションのインテントを Dialogflow エージェントにアップロードします。",
+        "boxStepTwoDesc": "Dialogflow エージェントの [インテント] ページで、縦の省略符 (⋮) をクリックして、[インテントのアップロード] を選択します。ダウンロードした escalation.json ファイルをアップロードします。",
+        "boxStepThree": "Dialogflow のエスカレーション インテントをカスタマイズします。",
+        "boxStepThreeDesc": "Dialogflow エージェントの [インテント] ページで、[エスカレーション インテント] を選択します。[ユーザーの発言] フィールドを変更して、エスカレーションをトリガーするユーザーの表現を変更します。すべてのユーザー表現は、次のようになります。",
         "boxBulletOne": "テンプレート モードを使用します",
         "boxBulletTwo": "@sys.any:Topic への参照を含みます",
         "boxStepThreeDescCont": "ユーザーの表現の隣の @ 機能は、テンプレート モードを示しています。モードを切り替えるためにシステムをクリックします。GetExpert アクションを変更しないでください。",
@@ -7361,11 +7361,11 @@
       "accessToken": {
         "title": "完全なダイアログ統合の設定",
         "desc": "顧客インターラクションで自然なダイアログの仕様を有効にするために、統合を完了します",
-        "boxDesc": "各 API.AI エージェントには、エージェント設定で保管された固有のクライアント アクセス トークンがあります。設定した API.AI エージェント設定からトークンをコピーし、それをここに入力して、[検証] をクリックしてトークンを確認してから、ダイアログの統合を完了してください。",
-        "inputLabel": "API.AI クライアント アクセス トークン",
+        "boxDesc": "各 Dialogflow エージェントには、エージェント設定で保管された固有のクライアント アクセス トークンがあります。設定した Dialogflow エージェント設定からトークンをコピーし、それをここに入力して、[検証] をクリックしてトークンを確認してから、ダイアログの統合を完了してください。",
+        "inputLabel": "Dialogflow クライアント アクセス トークン",
         "validateButtonText": "検証",
         "maxLengthError": "クライアント アクセス トークンは、128 文字より長いものであってはいけません。",
-        "invalidTokenText": "無効な API.AI クライアント アクセス トークンです。トークンを検証し、もう一度試してください。"
+        "invalidTokenText": "無効な Dialogflow クライアント アクセス トークンです。トークンを検証し、もう一度試してください。"
       },
       "name": {
         "title": "顧客仮想アシスタント名",

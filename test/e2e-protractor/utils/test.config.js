@@ -11,9 +11,25 @@ var scopes = [
   'cloudMeetings:login',
   'webex-messenger:get_webextoken',
   'cloud-contact-center:admin',
+  'spark-compliance:rooms_read',
   'compliance:spark_conversations_read',
   'contact-center-context:pod_read',
   'contact-center-context:pod_write',
+  'spark-admin:people_read',
+  'spark-admin:people_write',
+  'spark-admin:customers_read',
+  'spark-admin:customers_write',
+  'spark-admin:organizations_read',
+  'spark-admin:licenses_read',
+  'spark-admin:logs_read',
+  'spark:kms',
+  // to onboard bot account
+  'spark:applications_write',
+  'spark:applications_read',
+  // for Care Virtual Assistant
+  'spark:messages_read',
+  'spark:memberships_read',
+  'spark:rooms_read',
 ];
 var oauth2Scope = scopes.join(' ');
 

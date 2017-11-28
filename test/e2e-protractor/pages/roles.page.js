@@ -8,7 +8,7 @@ var RolesPage = function () {
   this.emailInput = element(by.id('customerEmailInput'));
 
   this.fullAdmin = element(by.id('full-admin-options')).element(by.css('div.cs-input-radio'));
-  this.salesAdmin = element(by.id('sales-admin-options')).element(by.css('cs-checkbox'));
+  this.salesAdmin = element(by.css('label[for="salesAdminCkbx"]'));
   this.noAdmin = element(by.id('no-admin-options')).element(by.css('div.cs-input-radio'));
 
   this.saveButton = element(by.id('saveButton'));

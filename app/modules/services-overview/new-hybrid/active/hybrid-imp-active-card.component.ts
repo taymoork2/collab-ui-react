@@ -1,7 +1,27 @@
+import { USSService, IExtendedStatusSummary } from 'modules/hercules/services/uss.service';
+
 class HybridIMPActiveCardController implements ng.IComponentController {
+  private subscribeStatusesSummary: any;
+
+  public userStatusesSummary: IExtendedStatusSummary[] | undefined;
+
   /* @ngInject */
   constructor(
+    private USSService: USSService,
   ) {}
+
+  public $onInit() {
+    this.extractSummary();
+    this.subscribeStatusesSummary = this.USSService.subscribeStatusesSummary('data', this.extractSummary.bind(this));
+  }
+
+  public $onDestroy() {
+    this.subscribeStatusesSummary.cancel();
+  }
+
+  private extractSummary() {
+    this.userStatusesSummary = this.USSService.extractSummaryForAService(['spark-hybrid-impinterop']);
+  }
 }
 
 export class HybridIMPActiveCardComponent implements ng.IComponentOptions {
@@ -21,6 +41,7 @@ export class HybridIMPActiveCardComponent implements ng.IComponentOptions {
           <div class="active-card_title" translate="servicesOverview.cards.shared.resources"></div>
           <div class="active-card_action"><a ui-sref="imp-service.list" translate="servicesOverview.cards.shared.viewAll"></a></div>
         </div>
+        <card-users-summary summary="$ctrl.userStatusesSummary"></card-users-summary>
       </div>
       <div class="active-card_footer">
         <a ui-sref="imp-service.list">

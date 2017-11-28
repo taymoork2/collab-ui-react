@@ -1,3 +1,5 @@
+import { ChartColors } from 'modules/core/config/chartColors';
+
 export class CommonGraphService {
   public readonly AXIS: string = 'axis';
   public readonly CENTER: string = 'center';
@@ -15,16 +17,14 @@ export class CommonGraphService {
   public readonly TITLE: string = 'title';
 
   /* @ngInject */
-  constructor(
-    private chartColors,
-  ) {}
+  constructor() {}
 
   private baseVariables = {
     axis: {
-      axisColor: this.chartColors.grayLightTwo,
-      gridColor: this.chartColors.grayLightTwo,
-      color: this.chartColors.grayDarkThree,
-      titleColor: this.chartColors.grayDarkThree,
+      axisColor: ChartColors.grayLightTwo,
+      gridColor: ChartColors.grayLightTwo,
+      color: ChartColors.grayDarkThree,
+      titleColor: ChartColors.grayDarkThree,
       fontFamily: 'CiscoSansTT Light',
       gridAlpha: 0,
       axisAlpha: 1,
@@ -34,7 +34,7 @@ export class CommonGraphService {
       adjustBorderColor: true,
       borderThickness: 1,
       fillAlpha: 1,
-      fillColor: this.chartColors.brandWhite,
+      fillColor: ChartColors.brandWhite,
       fixedPosition: true,
       shadowAlpha: 0,
     },
@@ -42,7 +42,7 @@ export class CommonGraphService {
       type: 'column',
       fillAlphas: 1,
       lineAlpha: 0,
-      balloonColor: this.chartColors.grayLightTwo,
+      balloonColor: ChartColors.grayLightTwo,
       columnWidth: 0.6,
     },
     cursor: {
@@ -60,7 +60,7 @@ export class CommonGraphService {
       menu: [],
     },
     legend: {
-      color: this.chartColors.grayDarkThree,
+      color: ChartColors.grayDarkThree,
       align: this.CENTER,
       switchable: false,
       fontSize: 13,
@@ -86,7 +86,7 @@ export class CommonGraphService {
       type: this.LINE,
       bullet: 'round',
       bulletBorderAlpha: 1,
-      bulletColor: this.chartColors.brandWhite,
+      bulletColor: ChartColors.brandWhite,
       bulletSize: 5,
       fillAlphas: 0,
       lineAlpha: 1,
@@ -95,10 +95,10 @@ export class CommonGraphService {
       useLineColorForBulletBorder: true,
     },
     lineAxis: {
-      axisColor: this.chartColors.grayLightTwo,
-      gridColor: this.chartColors.grayLightTwo,
-      color: this.chartColors.grayDarkThree,
-      titleColor: this.chartColors.grayDarkThree,
+      axisColor: ChartColors.grayLightTwo,
+      gridColor: ChartColors.grayLightTwo,
+      color: ChartColors.grayDarkThree,
+      titleColor: ChartColors.grayDarkThree,
       fontFamily: 'CiscoSansTT Light',
       gridAlpha: 1,
       axisAlpha: 1,
@@ -139,7 +139,7 @@ export class CommonGraphService {
       startEffect: 'easeOutSine',
       addClassNames: true,
       fontFamily: 'CiscoSansTT Extra Light',
-      backgroundColor: this.chartColors.brandWhite,
+      backgroundColor: ChartColors.brandWhite,
       backgroundAlpha: 1,
       balloon: this.getBaseVariable('balloon'),
       export: this.getBaseVariable('export'),

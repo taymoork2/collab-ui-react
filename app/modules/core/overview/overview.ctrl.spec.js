@@ -23,6 +23,8 @@ describe('Controller: OverviewCtrl', function () {
       'ReportsService',
       'SetupWizardService',
       'SunlightReportService',
+      'SunlightUtilitiesService',
+      'LocalStorage',
       'TrialService'
     );
 
@@ -90,6 +92,8 @@ describe('Controller: OverviewCtrl', function () {
       pstnCarrierId: '111-222-333',
     }));
 
+    spyOn(this.SunlightUtilitiesService, 'isCareSetup').and.returnValue(this.$q.resolve(true));
+
     spyOn(this.ReportsService, 'getOverviewMetrics').and.callFake(_.noop);
     spyOn(this.ReportsService, 'healthMonitor').and.callFake(_.noop);
     spyOn(this.SunlightReportService, 'getOverviewData').and.returnValue({});
@@ -118,6 +122,9 @@ describe('Controller: OverviewCtrl', function () {
         PstnService: this.PstnService,
         ReportsService: this.ReportsService,
         SunlightReportService: this.SunlightReportService,
+        SunlightUtilitiesService: this.SunlightUtilitiesService,
+        SunlightConfigService: this.SunlightConfigService,
+        LocalStorage: this.LocalStorage,
         TrialService: this.TrialService,
       });
       this.$scope.$apply();
@@ -129,6 +136,16 @@ describe('Controller: OverviewCtrl', function () {
       }).head();
     };
   });
+
+  function checkForCareNotification(notifications) {
+    var careNotificationExists = false;
+    _.forEach(notifications, function (notif) {
+      if (notif.name === 'careSetupNotification') {
+        careNotificationExists = true;
+      }
+    });
+    return careNotificationExists;
+  }
 
   describe('Wire up', function () {
     beforeEach(function () {
@@ -282,6 +299,62 @@ describe('Controller: OverviewCtrl', function () {
 
       this.$rootScope.$broadcast('DISMISS_SIP_NOTIFICATION');
       expect(this.controller.notifications.length).toEqual(this.TOTAL_NOTIFICATIONS - 1);
+    });
+  });
+
+  describe('Notifications - Login as Full-Admin, create CareNotSetup notification ', function () {
+    beforeEach(function () {
+      this.SunlightUtilitiesService.isCareSetup.and.returnValue(this.$q.resolve(false));
+      this.Authinfo.isCare.and.returnValue(true);
+      this.Authinfo.isCustomerAdmin.and.returnValue(true);
+      this.SunlightUtilitiesService.removeCareSetupKey();
+      this.initController();
+    });
+    afterAll(function () {
+      this.SunlightUtilitiesService.isCareSetup.and.returnValue(this.$q.resolve(true));
+      this.Authinfo.isCare.and.returnValue(true);
+      this.Authinfo.isCustomerAdmin.and.returnValue(true);
+    });
+
+    it('should show CareNotSetup notification and dismiss it', function () {
+      //dismiss the notification
+      expect(checkForCareNotification(this.controller.notifications)).toEqual(true);
+      var notification = this.OverviewNotificationFactory.createCareNotSetupNotification();
+      this.controller.dismissNotification(notification);
+      expect(checkForCareNotification(this.controller.notifications)).toEqual(false);
+      this.SunlightUtilitiesService.removeCareSetupKey();
+    });
+
+    it('should not show notification if care is onboarded', function () {
+      this.SunlightUtilitiesService.isCareSetup.and.returnValue(this.$q.resolve(true));
+      this.initController();
+      expect(checkForCareNotification(this.controller.notifications)).toEqual(false);
+    });
+
+    it('should not show notification if care not enabled', function () {
+      this.Authinfo.isCare.and.returnValue(false);
+      this.initController();
+      expect(checkForCareNotification(this.controller.notifications)).toEqual(false);
+    });
+
+    it('should not show notification if not full admin', function () {
+      this.Authinfo.isCustomerAdmin.and.returnValue(false);
+      this.initController();
+      expect(checkForCareNotification(this.controller.notifications)).toEqual(false);
+    });
+
+    it('should show notification if snooze time is up', function () {
+      this.SunlightUtilitiesService.removeCareSetupKey();
+      this.LocalStorage.put(this.SunlightUtilitiesService.getCareSetupKey(), moment().subtract(49, 'hours').toISOString());
+      this.initController();
+      expect(checkForCareNotification(this.controller.notifications)).toEqual(true);
+    });
+
+    it('should not show createCareNotSetupNotification if snooze time is not up ', function () {
+      this.SunlightUtilitiesService.removeCareSetupKey();
+      this.LocalStorage.put(this.SunlightUtilitiesService.getCareSetupKey(), moment().add(4, 'hours').toISOString());
+      this.initController();
+      expect(checkForCareNotification(this.controller.notifications)).toEqual(false);
     });
   });
 

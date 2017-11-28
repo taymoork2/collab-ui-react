@@ -1,10 +1,11 @@
 'use strict';
 
+var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
 describe('Care Setup Assistant Ctrl', function () {
   var controller, $scope, $modal, $q, CTService, getLogoDeferred, getTogglePromise, getLogoUrlDeferred, SunlightConfigService, $state, $stateParams, LogMetricsService;
   var Notification, $translate, _scomUrl, $httpBackend, CvaService;
 
-  var escapeKey = 27;
   var templateName = 'Atlas UT Template';
   var NAME_PAGE_INDEX = 0;
   var OVERVIEW_PAGE_INDEX = 1;
@@ -317,7 +318,7 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
     it('keyboard functionality', function () {
-      controller.evalKeyPress(escapeKey);
+      controller.evalKeyPress(KeyCodes.ESCAPE);
       expect($modal.open).toHaveBeenCalled();
     });
   });
@@ -897,7 +898,7 @@ describe('Care Setup Assistant Ctrl', function () {
 
     it('should update modified name of the VA in the template config', function () {
       controller.currentState = 'virtualAssistant';
-      var VAService = { id: 'id1', name: 'cva' };
+      var VAService = { id: 'id1', name: 'cva', icon: undefined };
 
       controller.template.configuration.virtualAssistant.config.id = VAService.id;
       controller.template.configuration.virtualAssistant.config.name = 'some-name';
@@ -928,7 +929,7 @@ describe('Care Setup Assistant Ctrl', function () {
       controller.template.configuration.virtualAssistant.config.name = 'some-name';
       controller.template.configuration.virtualAssistant.welcomeMessage = getStringOfLength(51);
 
-      controller.hasConfiguredVirtualAssistantServices = false;
+      controller.hasConfiguredVirtualAssistantServices = true;
       controller.configuredVirtualAssistantServices = [];
       controller.populateVirtualAssistantInfo();
 
@@ -936,6 +937,30 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.selectedVA).toEqual(DefaultSelectedVA);
       expect(controller.template.configuration.virtualAssistant.config.id).toEqual(DefaultVirtualAssistantConfig.config.id);
       expect(controller.template.configuration.virtualAssistant.config.name).toEqual(DefaultVirtualAssistantConfig.config.name);
+    });
+
+    it('should disable VA if on edit, no bot is found to be configured in the system', function () {
+      var defaultVirtualAssistantConfig = {
+        enabled: false,
+        config: {
+          id: '',
+          name: '',
+        },
+        welcomeMessage: $translate.instant('careChatTpl.virtualAssistantWelcomeMessage'),
+      };
+
+      controller.template.configuration.virtualAssistant.config.id = 'id-x';
+      controller.template.configuration.virtualAssistant.config.name = 'some-name';
+      controller.template.configuration.virtualAssistant.welcomeMessage = getStringOfLength(51);
+
+      controller.hasConfiguredVirtualAssistantServices = false;
+      controller.configuredVirtualAssistantServices = [];
+      controller.populateVirtualAssistantInfo();
+
+      expect(controller.template.configuration.virtualAssistant.enabled).toBe(false);
+      expect(controller.selectedVA).toEqual(defaultVirtualAssistantConfig.config);
+      expect(controller.template.configuration.virtualAssistant.config.id).toEqual(defaultVirtualAssistantConfig.config.id);
+      expect(controller.template.configuration.virtualAssistant.config.name).toEqual(defaultVirtualAssistantConfig.config.name);
     });
   });
 
@@ -1251,7 +1276,13 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
     it('the overview page should have expected cards', function () {
-      expect(controller.overviewCards).toEqual([
+      var overviewCards = controller.overviewCards.map(function (card) {
+        return {
+          name: card.name,
+          mediaIcons: card.mediaIcons,
+        };
+      });
+      expect(overviewCards).toEqual([
         { name: 'customerInformation', mediaIcons: [] },
         { name: 'offHours', mediaIcons: [] },
         { name: 'feedbackCallback', mediaIcons: [] },

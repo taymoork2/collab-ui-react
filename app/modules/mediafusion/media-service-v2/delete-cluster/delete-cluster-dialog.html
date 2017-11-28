@@ -1,15 +1,11 @@
 <div class="modal-header">
-  <button class="close" id="convertModalClose" ng-click="deleteClust.close()" type="button">
-    <span class="sr-only" translate="common.close">
-    </span>
-  </button>
+  <button class="close" id="convertModalClose" ng-click="deleteClust.close()" type="button" aria-label="{{::'common.close' | translate}}"></button>
   <div>
-    <h5 class="modal-title" translate="mediaFusion.clusters.deleteclusterHeadding">
-    </h5>
+    <h5 class="modal-title" translate="mediaFusion.clusters.deleteclusterHeadding"></h5>
   </div>
 </div>
 <div class="modal-body">
-  <div ng-show="deleteClust.noOfHost > 0">
+  <div ng-hide="deleteClust.loading">
     <div ng-hide="deleteClust.failedToDelete">
       <p translate="mediaFusion.clusters.deleteClusterBodyDesc"></p>
       <p class="makeASelection"> <strong translate="mediaFusion.clusters.makeASelection" /></p>
@@ -66,8 +62,10 @@
       </div>
     </div>
   </div>
-  <div ng-hide="deleteClust.noOfHost > 0">
-    <p>{{deleteClust.deleteAreYouSure}}</p>
+  <div ng-show="deleteClust.loading">
+    <div class="spinner-position remove-cluster-spinner">
+      <i class='icon icon-spinner icon-3x media-modal-position'></i>
+    </div>
   </div>
 </div>
 <div class="modal-footer">

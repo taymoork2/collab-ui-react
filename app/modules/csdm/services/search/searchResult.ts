@@ -4,6 +4,8 @@ import { List } from 'lodash';
 export class SearchResult {
   public aggregations: Aggregations;
   public hits: SearchHits;
+  public successfullyRetrievedFromCsdm: boolean;
+  public successfullyRetrievedFromCmi: boolean;
 }
 export class SearchHits {
   public hits: Device[];

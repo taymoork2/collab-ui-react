@@ -21,6 +21,9 @@ require('./_user-roles.scss');
     FeatureToggleService.supports(FeatureToggleService.features.atlasPartnerManagement).then(function (result) {
       $scope.showPartnerManagementRole = result;
     });
+    FeatureToggleService.supports(FeatureToggleService.features.atlasF2993NewUserAndDeviceRoles).then(function (result) {
+      $scope.showUserDeviceAdminRoles = result;
+    });
 
     var ROLE_TRANSLATIONS = {
       analytics: $translate.instant('rolesPanel.analytics'),
@@ -33,6 +36,7 @@ require('./_user-roles.scss');
       supportMetrics: $translate.instant('rolesPanel.supportMetrics'),
       trialsManagement: $translate.instant('rolesPanel.trialsManagement'),
       userManagement: $translate.instant('rolesPanel.userManagement'),
+      deviceManagement: $translate.instant('rolesPanel.deviceManagement'),
     };
 
     $scope.roleTooltips = {
@@ -74,16 +78,28 @@ require('./_user-roles.scss');
         '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.licensesAndUpgrades +
         '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.assignRoles + '</li></ul>',
 
-      userAdminAria: ROLE_TRANSLATIONS.userManagement + ' ' + ROLE_TRANSLATIONS.companyPolicyTemplates + ' ' +
-        ROLE_TRANSLATIONS.analytics + ' ' + ROLE_TRANSLATIONS.supportMetrics + ' ' + ROLE_TRANSLATIONS.licensesAndUpgrades,
+      // TODO: When altasF2993NewUserAndDeviceRoles is activated for all, Device Management should be added to tooltips above;
+      // icon-remove for all but Full-Admin
+      userAdminAria: ROLE_TRANSLATIONS.userManagement + ' ' + ROLE_TRANSLATIONS.assignRoles,
       userAdmin: '<ul class="roles-tooltip"><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.userManagement +
-        '</li><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.companyPolicyTemplates +
-        '</li><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.analytics +
-        '</li><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.supportMetrics +
+        '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.deviceManagement +
+        '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.companyPolicyTemplates +
+        '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.analytics +
+        '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.supportMetrics +
         '</li><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.licensesAndUpgrades +
+        '</li><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.assignRoles + '</li></ul>',
+
+      deviceAdminAria: ROLE_TRANSLATIONS.deviceManagement,
+      deviceAdmin: '<ul class="roles-tooltip"><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.userManagement +
+        '</li><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.deviceManagement +
+        '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.companyPolicyTemplates +
+        '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.analytics +
+        '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.supportMetrics +
+        '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.licensesAndUpgrades +
         '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.assignRoles + '</li></ul>',
     };
 
+    $scope.isUserAdminUser = Authinfo.isUserAdminUser();
     $scope.showOrderAdminRole = false;
     $scope.showComplianceRole = false;
     $scope.updateRoles = updateRoles;
@@ -190,6 +206,7 @@ require('./_user-roles.scss');
 
       if ($scope.currentUser) {
         $scope.isEditingSelf = ($scope.currentUser.id === Authinfo.getUserId());
+        $scope.isNotEditable = $scope.isUserAdminUser && hasRole(Config.backend_roles.full_admin);
       }
 
       // reset the form to match the currentUser
@@ -231,6 +248,8 @@ require('./_user-roles.scss');
       $scope.rolesObj.helpdeskValue = hasRole(Config.backend_roles.helpdesk);
       $scope.rolesObj.orderAdminValue = hasRole(Config.backend_roles.orderadmin);
       $scope.rolesObj.partnerManagementValue = hasRole(Config.backend_roles.partner_management);
+      $scope.rolesObj.userAdminValue = hasRole(Config.backend_roles.user_admin);
+      $scope.rolesObj.deviceAdminValue = hasRole(Config.backend_roles.device_admin);
       $scope.rolesObj.complianceValue = isEntitledToCompliance();
 
       $scope.initialRoles = rolesFromScope();
@@ -242,7 +261,7 @@ require('./_user-roles.scss');
           return 1;
         } else if (hasRole(Config.backend_roles.readonly_admin)) {
           return 3;
-        } else if (hasRole(Config.backend_roles.sales) || hasRole(Config.backend_roles.billing) || hasRole(Config.backend_roles.support) || hasRole(Config.backend_roles.application)) {
+        } else if (hasAnyRole([Config.backend_roles.sales, Config.backend_roles.billing, Config.backend_roles.support, Config.backend_roles.application, Config.backend_roles.user_admin, Config.backend_roles.device_admin])) {
           return 2;
         }
       }
@@ -251,6 +270,18 @@ require('./_user-roles.scss');
 
     function hasRole(role) {
       return _.get($scope, 'currentUser.roles') && _.includes(_.get($scope, 'currentUser.roles'), role);
+    }
+
+    function hasAnyRole(roleArray) {
+      if (_.isString(roleArray)) {
+        roleArray = [roleArray];
+      }
+
+      if (_.isArray(roleArray)) {
+        var currentUserRoles = _.get($scope, 'currentUser.roles');
+        return !!_.size(_.intersection(currentUserRoles, roleArray));
+      }
+      return false;
     }
 
     function checkPartialRoles(roleEnabled) {
@@ -335,6 +366,16 @@ require('./_user-roles.scss');
             roleName: Config.roles.reports,
             roleState: Config.roleState.inactive,
           });
+          if ($scope.showUserDeviceAdminRoles) {
+            roles.push({
+              roleName: Config.roles.user_admin,
+              roleState: Config.roleState.inactive,
+            });
+            roles.push({
+              roleName: Config.roles.device_admin,
+              roleState: Config.roleState.inactive,
+            });
+          }
           break;
         case 2: // Some admin roles
           roles.push({
@@ -361,6 +402,16 @@ require('./_user-roles.scss');
             roleName: Config.roles.reports,
             roleState: checkPartialRoles($scope.rolesObj.supportAdminValue),
           });
+          if ($scope.showUserDeviceAdminRoles) {
+            roles.push({
+              roleName: Config.roles.user_admin,
+              roleState: checkPartialRoles($scope.rolesObj.userAdminValue),
+            });
+            roles.push({
+              roleName: Config.roles.device_admin,
+              roleState: checkPartialRoles($scope.rolesObj.deviceAdminValue),
+            });
+          }
           break;
         case 3: // Readonly admin
           roles.push({
@@ -387,6 +438,16 @@ require('./_user-roles.scss');
             roleName: Config.roles.reports,
             roleState: Config.roleState.inactive,
           });
+          if ($scope.showUserDeviceAdminRoles) {
+            roles.push({
+              roleName: Config.roles.user_admin,
+              roleState: Config.roleState.inactive,
+            });
+            roles.push({
+              roleName: Config.roles.device_admin,
+              roleState: Config.roleState.inactive,
+            });
+          }
           break;
       }
 
@@ -505,6 +566,7 @@ require('./_user-roles.scss');
 
     function clearCheckboxes() {
       $scope.rolesObj.userAdminValue = false;
+      $scope.rolesObj.deviceAdminValue = false;
       $scope.rolesObj.billingAdminValue = false;
       $scope.rolesObj.supportAdminValue = false;
       $scope.rolesObj.salesAdminValue = false;
@@ -583,7 +645,7 @@ require('./_user-roles.scss');
 
     function getPartialAdminValidity() {
       if ($scope.rolesObj.adminRadioValue === $scope.partialAdmin.value) {
-        return $scope.rolesObj.salesAdminValue || $scope.rolesObj.userAdminValue || $scope.rolesObj.billingAdminValue || $scope.rolesObj.supportAdminValue;
+        return $scope.rolesObj.salesAdminValue || $scope.rolesObj.userAdminValue || $scope.rolesObj.deviceAdminValue || $scope.rolesObj.billingAdminValue || $scope.rolesObj.supportAdminValue;
       } else {
         return true;
       }

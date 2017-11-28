@@ -1,7 +1,5 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$ctrl.dismiss()">
-    <span class="sr-only" translate="common.close"></span>
-  </button>
+  <button type="button" class="close" ng-click="$ctrl.dismiss()" aria-label="{{::'common.close' | translate}}"></button>
   <h3 class="modal-title" translate="{{$ctrl.title}}"></h3>
 </div>
 <div class="modal-body">
@@ -12,10 +10,6 @@
           <label class="feature-icon-circle {{feature.color}}" ng-if="feature.icons.length !== 0"
                  ng-class="{'feature-icon-disabled': feature.disabled}" ng-repeat="ftIcon in feature.icons">
               <i class="icon {{ftIcon}}" ng-if="ftIcon"></i>
-          </label>
-          <label class="feature-icon-circle {{feature.color}}" ng-if="feature.icons.length === 0"
-                 ng-class="{'feature-icon-disabled': feature.disabled}">
-            <img class="icon" ng-src="{{feature.image}}">
           </label>
         </div>
       <h4 class="feature-label-container {{feature.color}}" ng-class="{'feature-label-disabled': feature.disabled}">

@@ -1,8 +1,11 @@
 import { ExtensionLengthService } from 'modules/call/settings/shared';
+import { CustomerConfigService } from 'modules/call/shared/customer-config-ces/customerConfig.service';
 import { Notification } from 'modules/core/notifications';
+import { CallSettingsData } from 'modules/call/settings/shared';
 
 class ExtensionPrefixCtrl implements ng.IComponentController {
   public extensionPrefix: string;
+  public routingPrefixLength: string;
   public newExtensionLength: string;
   public oldExtensionLength: string;
   public prefixLength: number;
@@ -11,15 +14,35 @@ class ExtensionPrefixCtrl implements ng.IComponentController {
   public extensionPrefixForm: ng.IFormController;
   public processing: boolean = false;
   public exampleExtensionHelpText: string = '';
+  public settingsData: CallSettingsData;
+  public countryCode: string;
+  private isHI1484: boolean = false;
 
   /* @ngInject */
   constructor(
     private ExtensionLengthService: ExtensionLengthService,
+    private CustomerConfigService: CustomerConfigService,
+    private FeatureToggleService,
     private $translate: ng.translate.ITranslateService,
     private Notification: Notification,
+    private Orgservice,
   ) {}
 
   public $onInit(): void {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
+    .then(isSupported => {
+      this.isHI1484 = isSupported;
+      if (isSupported) {
+        this.Orgservice.getOrg(_.noop, null, { basicInfo: true }).then( response => {
+          if (response.data.countryCode) {
+            this.countryCode = response.data.countryCode;
+          } else {
+            this.countryCode = 'US';
+          }
+        });
+      }
+    });
+
     this.prefixLength = _.toSafeInteger(this.newExtensionLength) - _.toSafeInteger(this.oldExtensionLength);
     this.exampleExtensionHelpText = this.getExampleExtension(this.extensionPrefix);
   }
@@ -30,6 +53,9 @@ class ExtensionPrefixCtrl implements ng.IComponentController {
 
   public save(): void {
     this.processing = true;
+    if (this.isHI1484) {
+      this.CustomerConfigService.createCompanyLevelCustomerConfig(this.routingPrefixLength, this.newExtensionLength, this.countryCode);
+    }
     this.ExtensionLengthService.saveExtensionLength(Number(this.newExtensionLength), Number(this.extensionPrefix))
       .then(() => {
         this.Notification.success('serviceSetupModal.extensionLengthSaveSuccess');
@@ -53,6 +79,7 @@ export class ExtensionPrefixComponent implements ng.IComponentOptions {
   public bindings = {
     newExtensionLength: '<',
     oldExtensionLength: '<',
+    routingPrefixLength: '<',
     close: '&',
     dismiss: '&',
   };

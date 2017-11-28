@@ -45,7 +45,7 @@ describe('Service: IdleTimeoutService: ', function () {
   describe('Should on initializing', () => {
     beforeEach(() => {
       IdleTimeoutService.init();
-      $rootScope.$broadcast('LOGIN');
+      $rootScope.$broadcast('Core::loginCompleted');
       $rootScope.$digest();
     });
 

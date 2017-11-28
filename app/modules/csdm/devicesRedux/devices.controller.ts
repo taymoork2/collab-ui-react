@@ -3,18 +3,20 @@ import { SearchObject } from '../services/search/searchObject';
 import { SearchResult } from '../services/search/searchResult';
 import { IToolkitModalService } from '../../core/modal/index';
 import { Notification } from 'modules/core/notifications';
+import { QueryParser } from '../services/search/queryParser';
+import { SearchTranslator } from '../services/search/searchTranslator';
+import { SearchElement } from '../services/search/searchElement';
 
 require('./_devices.scss');
 
 export class DevicesCtrl {
   public anyDevicesOrCodesLoaded = true; //TODO remove
-  public searchMinimized = true;
   public searchInteraction = new SearchInteraction();
   public issearching = false;
+  private devicesHaveBeenSeen = false;
   private _searchResult: SearchResult;
   private _searchObject: SearchObject;
   public licenseError: string;
-
 
   //region for add device/place button
   private showPersonal = false;
@@ -44,7 +46,14 @@ export class DevicesCtrl {
               private DeviceExportService,
               private $translate: ng.translate.ITranslateService,
               private Notification: Notification,
-              private WizardFactory, private $state, private FeatureToggleService, private $q, private Userservice, private ServiceDescriptorService, private Authinfo) {
+              private WizardFactory,
+              private $state,
+              private FeatureToggleService,
+              private $q,
+              private Userservice,
+              private DeviceSearchTranslator: SearchTranslator,
+              private ServiceDescriptorService,
+              private Authinfo) {
     this.initForAddButton();
     AccountOrgService.getAccount(Authinfo.getOrgId())
       .then((response) => {
@@ -57,7 +66,7 @@ export class DevicesCtrl {
         this.licenseError = hasNoSuspendedLicense ? $translate.instant('spacesPage.licenseSuspendedWarning') : '';
       });
 
-    this._searchObject = SearchObject.createWithQuery('');
+    this._searchObject = SearchObject.createWithQuery(new QueryParser(this.DeviceSearchTranslator), '');
   }
 
   get searchResult(): SearchResult {
@@ -77,12 +86,12 @@ export class DevicesCtrl {
   }
 
   public emptysearchresult(): boolean {
-    return this._searchObject && this._searchObject.getTranslatedQueryString(null) !== ''
+    return !this.issearching && this._searchObject && this._searchObject.getTranslatedQueryString(null) !== ''
       && (this._searchResult && this._searchResult.hits.total === 0);
   }
 
   public emptydatasource(): boolean {
-    return this._searchObject && this._searchObject.getTranslatedQueryString(null) === ''
+    return !this.devicesHaveBeenSeen && !this.issearching && this._searchObject && this._searchObject.getTranslatedQueryString(null) === ''
       && (this._searchResult && this._searchResult.hits.total === 0);
   }
 
@@ -141,8 +150,8 @@ export class DevicesCtrl {
     }
   }
 
-  public addToSearch(field: string, query: string) {
-    this.searchInteraction.addToSearch(field, query);
+  public addToSearch(searchElement: SearchElement, toggle: boolean) {
+    this.searchInteraction.addToSearch(searchElement, toggle);
   }
 
   public sortOrderChanged(field, order) {
@@ -150,8 +159,10 @@ export class DevicesCtrl {
   }
 
   public searchResultChanged(result: SearchResult) {
+    if (result && result.hits && result.hits.total > 0) {
+      this.devicesHaveBeenSeen = true;
+    }
     this._searchResult = result;
-    this.issearching = false;
   }
 
   private initForAddButton() {

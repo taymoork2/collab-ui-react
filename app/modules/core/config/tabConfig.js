@@ -202,7 +202,7 @@
     iconClass: 'icon-outline',
   }, {
     tab: 'supportTab',
-    icon: 'icon-support',
+    icon: 'icon-diagnostics-active',
     title: 'tabs.supportTab',
     link: '/support/status',
     state: 'support.status',

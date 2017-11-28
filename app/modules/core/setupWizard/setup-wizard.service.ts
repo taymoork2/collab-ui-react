@@ -21,6 +21,8 @@ export class SetupWizardService {
   public provisioningCallbacks = {};
   public serviceDataHasBeenInitialized: boolean = false;
 
+  public static readonly ONLINE_SUFFIX = '-ONL-';
+
   private actingSubscription?: IPendingSubscription;
   private pendingSubscriptions: IPendingSubscription[] = [];
   private country = '';
@@ -28,6 +30,7 @@ export class SetupWizardService {
   private org;
   private willNotProvision = false;
   private actingSubscriptionChangeFn: Function = _.noop;
+  private static enterpriseSubscriptionOrderingTools = ['CCW', 'CCW_CSB', 'ATLAS_SITE_MGMT'];
 
   /* @ngInject */
   constructor(
@@ -145,16 +148,45 @@ export class SetupWizardService {
   }
 
   public getConferenceLicensesBySubscriptionId(subscriptionId): IConferenceLicense[] {
-    const webexLicenses = this.getWebexLicenses();
+    const webexLicenses = this.getNonTrialWebexLicenses();
     const actingSubscriptionLicenses = <IConferenceLicense[]>_.filter(webexLicenses, { billingServiceId: subscriptionId });
     return actingSubscriptionLicenses;
   }
 
-  public getWebexLicenses(): IPendingLicense[] {
+  public getNonTrialWebexLicenses(): IConferenceLicense[] {
     const webexOffers = [this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC];
     const conferenceLicenses = _.map(this.Authinfo.getConferenceServices(), 'license');
-    const webexLicenses = <IPendingLicense[]>_.filter(conferenceLicenses, (license: IPendingLicense) => _.includes(webexOffers, license.offerName));
+    const webexLicenses = <IConferenceLicense[]>_.filter(conferenceLicenses, (license: IConferenceLicense) => _.includes(webexOffers, license.offerName) && license.billingServiceId);
     return webexLicenses;
+  }
+
+  public getEnterpriseSubscriptionListWithStatus(): { id: string; isPending: boolean }[] {
+    const list = _.chain(this.getNonTrialWebexLicenses())
+      .uniqBy('billingServiceId')
+      .reject(sub => ! this.isSubscriptionEnterprise(sub.billingServiceId))
+      .map((sub) => ({
+        id: sub.billingServiceId,
+        isPending: this.isSubscriptionPending(sub.billingServiceId),
+      }))
+      .orderBy(['isPending'], ['asc'])
+      .value();
+    return list;
+  }
+
+  public isSubscriptionPending(subscriptionId: string): boolean {
+    const subscription = _.find(this.Authinfo.getSubscriptions(), { externalSubscriptionId: subscriptionId });
+    return _.has(subscription, 'pendingServiceOrderUUID');
+  }
+
+  public isSubscriptionEnterprise(subscriptionId: string): boolean {
+    // if we have this subscription within customer.subscriptions check ordering tool. Otherwise
+    // just check if it's an enterprise customer
+    const subscription = _.find(this.Authinfo.getSubscriptions(), { externalSubscriptionId: subscriptionId });
+    const subOrderingTool = _.get(subscription, 'orderingTool');
+    if (!subOrderingTool) {
+      return (this.Authinfo.isEnterpriseCustomer());
+    }
+    return _.includes(SetupWizardService.enterpriseSubscriptionOrderingTools, subOrderingTool);
   }
 
   public getWillNotProvision(): boolean {
@@ -349,13 +381,34 @@ export class SetupWizardService {
   }
 
   public hasWebexMeetingTrial() {
-    const conferencingServices: IConferenceService[] = _.filter(this.Authinfo.getConferenceServices(), { license: { isTrial: true } });
+    let conferencingServices: IConferenceService[] = _.filter(this.Authinfo.getConferenceServices(), { license: { isTrial: true } });
+    // Make sure not to touch online trial sites
+    conferencingServices = _.reject(conferencingServices, (service: IConferenceService) => {
+      return _.includes(service.license.masterOfferName, SetupWizardService.ONLINE_SUFFIX);
+    });
+
     return _.some(conferencingServices, (service: IConferenceService) => _.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC, this.Config.offerCodes.CF, this.Config.offerCodes.CMR], service.license.offerName));
   }
 
   public validateTransferCode(payload) {
     const orderUuid = this.getActingSubscriptionServiceOrderUUID();
     const url = `${this.UrlConfig.getAdminServiceUrl()}orders/${orderUuid}/transferCode/verify`;
+    return this.$http.post(url, payload);
+  }
+
+  public validateTransferCodeBySubscriptionId(siteUrl: string, transferCode: string, externalSubscriptionId: string, orderUuid?: string) {
+    const payload = {
+      siteUrl: siteUrl,
+      transferCode: transferCode,
+      serviceId: externalSubscriptionId,
+      orderUuid: orderUuid,
+    };
+    const url = `${this.UrlConfig.getAdminServiceUrl()}subscriptions/site/verifytransfercode`;
+    return this.$http.post(url, payload);
+  }
+
+  public updateSitesInActiveSubscription(payload) {
+    const url = `${this.UrlConfig.getAdminServiceUrl()}subscriptions/site`;
     return this.$http.post(url, payload);
   }
 

@@ -164,6 +164,17 @@ describe('User Service', function () {
         .respond(200, testData.onboard_success_response);
       this.Userservice.onboardUsers(testData.usersDataArray, testData.entitlements, [testData.non_sunlight_license]);
     });
+
+    it('onboardUsers modify without sunlight license should send DELETE request to Sunlight Config', function () {
+      this.$httpBackend
+        .expectPOST(this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/users/onboard')
+        .respond(200, testData.onboard_success_response);
+
+      var userId = testData.onboard_success_response.userResponse[0].uuid;
+      this.$httpBackend.expectDELETE(this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + this.Authinfo.getOrgId() +
+        '/user' + '/' + userId).respond(200);
+      this.Userservice.onboardUsers(testData.usersDataArray, testData.entitlements, testData.non_sunlight_license_payload);
+    });
   });
 
   describe('getUserLicence():', function () {

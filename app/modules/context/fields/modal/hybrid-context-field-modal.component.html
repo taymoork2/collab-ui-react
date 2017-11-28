@@ -1,7 +1,5 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$ctrl.dismiss()">
-    <span class="sr-only" translate="common.close"></span>
-  </button>
+  <button type="button" class="close" ng-click="$ctrl.dismiss()" aria-label="{{::'common.close' | translate}}"></button>
   <h3 ng-if="$ctrl.createMode" class="modal-title" translate="context.dictionary.fieldPage.createNew"></h3>
   <h3 ng-if="!$ctrl.createMode" class="modal-title" tooltip-class="context-tooltip" tooltip-trigger="mouseenter"
       tooltip-placement="bottom" tooltip-animation="true" tooltip="{{$ctrl.fieldData.id}}">
@@ -60,7 +58,7 @@
           <div class="small-6 medium-6 large-6">
             <cs-select
               is-disabled="$ctrl.isDisabledWhenInUse()"
-              ng-model="$ctrl.fieldData.dataTypeUI"
+              ng-model="$ctrl.fieldData.dataTypeValue"
               options="$ctrl.dataTypeOptions"
               placeholder="$ctrl.dataTypePlaceholder">
             </cs-select>
@@ -212,3 +210,4 @@
     ng-click="$ctrl.update()"
     ng-disabled="!$ctrl.createOrSaveButtonEnabled() || forms.newFieldForm.$pristine"></button>
 </div>
+

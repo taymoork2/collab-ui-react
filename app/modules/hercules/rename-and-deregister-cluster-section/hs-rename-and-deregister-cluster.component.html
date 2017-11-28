@@ -2,14 +2,14 @@
 
   <expressway-cluster-history-section cluster-id="$ctrl.clusterId"
                                       cluster-name="$ctrl.cluster.name"
-                                      ng-if="$ctrl.atlasHybridAuditLogEnabled && $ctrl.serviceId === 'squared-fusion-cal'"></expressway-cluster-history-section>
+                                      ng-if="$ctrl.atlasHybridAuditLogEnabled && $ctrl.cluster.targetType === 'c_mgmt'"></expressway-cluster-history-section>
 
   <div class="sub-section" ng-if="$ctrl.showRenameSection" id="renameSection">
     <h5 class="sub-section__label" translate="common.rename"></h5>
-    <p ng-if="$ctrl.serviceId !== 'ept'"
+    <p ng-if="$ctrl.cluster.targetType !== 'ept'"
        class="sub-section__description"
        translate="hercules.renameAndDeregisterComponent.renameClusterParagraph"></p>
-    <p ng-if="$ctrl.serviceId === 'ept'"
+    <p ng-if="$ctrl.cluster.targetType === 'ept'"
        class="sub-section__description"
        translate="hercules.renameAndDeregisterComponent.renameSipDestinationParagraph"></p>
 
@@ -34,17 +34,17 @@
 
   <div class="sub-section">
     <h5 class="sub-section__label cap-long-names" translate="common.remove"></h5>
-    <p ng-if="!$ctrl.blockDeregistration() && $ctrl.serviceId !== 'squared-fusion-media' && $ctrl.serviceId !== 'ept' "
+    <p ng-if="!$ctrl.blockDeregistration() && $ctrl.cluster.targetType !== 'mf_mgmt' && $ctrl.cluster.targetType !== 'ept' "
        class="sub-section__description"
        translate="hercules.renameAndDeregisterComponent.deregisterClusterExplanation"
        translate-values="{clusterType: $ctrl.clusterType}"></p>
-    <p ng-if="$ctrl.blockDeregistration() && $ctrl.serviceId !== 'squared-fusion-media' && $ctrl.serviceId !== 'ept'"
+    <p ng-if="$ctrl.blockDeregistration() && $ctrl.cluster.targetType !== 'mf_mgmt' && $ctrl.cluster.targetType !== 'ept'"
        class="sub-section__description"
        translate="hercules.renameAndDeregisterComponent.deregisterClusterExplanationBlocked"></p>
-    <p ng-if="$ctrl.serviceId === 'squared-fusion-media'"
+    <p ng-if="$ctrl.cluster.targetType === 'mf_mgmt'"
        class="sub-section__description"
        translate="hercules.renameAndDeregisterComponent.deregisterMediaClusterExplanation"></p>
-    <p ng-if="$ctrl.serviceId === 'ept'"
+    <p ng-if="$ctrl.cluster.targetType === 'ept'"
        class="sub-section__description"
        translate="hercules.renameAndDeregisterComponent.deregisterSipDestinationExplanation"></p>
 

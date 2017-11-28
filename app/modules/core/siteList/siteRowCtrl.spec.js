@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: WebExSiteRowCtrl', function () {
-  var controller, $controller, $modal, $scope, $q, FeatureToggleService, WebExSiteRowService, TokenService, state;
+  var controller, $controller, $modal, $scope, $q, FeatureToggleService, SetupWizardService, WebExSiteRowService, WebExSiteService, TokenService, state;
   var fakeShowGridData = true;
   var fakeGridData = {
     siteUrl: 'abc.webex.com',
@@ -14,7 +14,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
   var licensesGroupedBySites = _.groupBy(getJSONFixture('core/json/authInfo/webexLicenses.json'), 'siteUrl');
 
   afterEach(function () {
-    controller = $scope = $modal = $controller = $q = FeatureToggleService = WebExSiteRowService = TokenService = state = undefined;
+    controller = $scope = $modal = $controller = $q = FeatureToggleService = SetupWizardService = WebExSiteRowService = TokenService = state = undefined;
   });
 
   afterAll(function () {
@@ -26,27 +26,32 @@ describe('Controller: WebExSiteRowCtrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('WebExApp'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$modal_, _$q_, $state, _FeatureToggleService_, _WebExSiteRowService_, _TokenService_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$modal_, _$q_, $state, _FeatureToggleService_, _SetupWizardService_, _WebExSiteService_, _WebExSiteRowService_, _TokenService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     FeatureToggleService = _FeatureToggleService_;
     WebExSiteRowService = _WebExSiteRowService_;
+    WebExSiteService = _WebExSiteService_;
     TokenService = _TokenService_;
+    SetupWizardService = _SetupWizardService_;
     state = $state;
     $modal = _$modal_;
     $q = _$q_;
 
     spyOn(state, 'go');
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
-    spyOn(FeatureToggleService, 'atlasWebexAddSiteGetStatus').and.returnValue($q.resolve(true));
+    spyOn(WebExSiteRowService, 'shouldShowSiteManagement').and.returnValue($q.resolve(true));
     spyOn(WebExSiteRowService, 'getConferenceServices');
     spyOn(WebExSiteRowService, 'configureGrid');
     spyOn(WebExSiteRowService, 'initSiteRows');
     spyOn(WebExSiteRowService, 'getGridOptions').and.returnValue(fakeGridOptions);
     spyOn(WebExSiteRowService, 'getShowGridData').and.returnValue(fakeShowGridData);
-    spyOn(TokenService, 'getAccessToken').and.returnValue(accessToken);
     spyOn(WebExSiteRowService, 'getLicensesInSubscriptionGroupedBySites').and.returnValue(licensesGroupedBySites);
-    spyOn(WebExSiteRowService, 'deleteSite');
+    spyOn(SetupWizardService, 'isSubscriptionPending').and.returnValue(false);
+    spyOn(SetupWizardService, 'isSubscriptionEnterprise').and.returnValue(true);
+    spyOn(SetupWizardService, 'getEnterpriseSubscriptionListWithStatus').and.returnValue([{}]);
+    spyOn(WebExSiteService, 'deleteSite');
+    spyOn(TokenService, 'getAccessToken').and.returnValue(accessToken);
     spyOn($modal, 'open').and.returnValue({ result: $q.resolve() });
   }));
 
@@ -93,12 +98,12 @@ describe('Controller: WebExSiteRowCtrl', function () {
     expect(state.go).toHaveBeenCalledWith(stateName, { siteUrl: siteUrl });
   });
 
-  it('will set isShowAddSite to TRUE if \'atlasWebexAddSiteGetStatus\' FT is enabled', function () {
+  it('will set isShowAddSite to TRUE if \'shouldShowSiteManagement()\' resolves with TRUE ', function () {
     expect(controller.isShowAddSite).toBeTruthy();
   });
 
-  it('will set isShowAddSite to FALSE  if \'atlasWebexAddSiteGetStatus\' FT is disabled', function () {
-    FeatureToggleService.atlasWebexAddSiteGetStatus.and.returnValue($q.resolve(false));
+  it('will set isShowAddSite to FALSE  if \'shouldShowSiteManagement\' resolves with FALSE', function () {
+    WebExSiteRowService.shouldShowSiteManagement.and.returnValue($q.resolve(false));
     initController();
     expect(controller.isShowAddSite).toBeFalsy();
   });
@@ -116,6 +121,43 @@ describe('Controller: WebExSiteRowCtrl', function () {
     });
     expect(WebExSiteRowService.initSiteRows).toHaveBeenCalledWith(true);
   });
+
+  describe('canModify function', function () {
+    var entity;
+    var licensesGroupedBySites = _.groupBy(getJSONFixture('core/json/authInfo/webexLicenses.json'), 'siteUrl');
+
+    beforeEach(function () {
+      entity = {
+        billingServiceId: '123',
+        siteUrl: 'ag-test1-org.webex.com',
+      };
+    });
+
+    it('should return TRUE if there are 2 or more sites in subscription and subscription is not pending', function () {
+      expect(_.keys(licensesGroupedBySites).length >= 2).toBeTruthy();
+      expect(controller.canModify(entity)).toBeTruthy();
+    });
+
+    it('should return FALSE if there are 2 or more sites in subscription but subscription is  pending', function () {
+      SetupWizardService.isSubscriptionPending.and.returnValue(true);
+      expect(_.keys(licensesGroupedBySites).length >= 2).toBeTruthy();
+      expect(controller.canModify(entity)).toBeFalsy();
+    });
+
+    it('should return FALSE if there is only one site in subscription', function () {
+      var oneSite = _.pick(licensesGroupedBySites, 'ag-test1-org.webex.com');
+      WebExSiteRowService.getLicensesInSubscriptionGroupedBySites.and.returnValue(oneSite);
+      expect(controller.canModify(entity)).toBeFalsy();
+    });
+
+    it('should return FALSE if entity does not have billingServiceId (e.g. trial site)', function () {
+      entity = {
+        siteUrl: 'ag-test1-org.webex.com',
+      };
+      expect(controller.canModify(entity)).toBeFalsy();
+    });
+  });
+
   describe('delete behavior', function () {
     var entity;
     var licensesGroupedBySites = _.groupBy(getJSONFixture('core/json/authInfo/webexLicenses.json'), 'siteUrl');
@@ -127,50 +169,131 @@ describe('Controller: WebExSiteRowCtrl', function () {
       };
     });
 
-    it('should launch license redistribution if there are more than 2 sites in subscription', function () {
+    it('should launch license redistribution if there are more than 2 sites in subscription and subscription not pending', function () {
       var expectedModalTitle = '<h3 class="modal-title" translate="webexSiteManagement.deleteSiteModalTitle"></h3>';
-      expect(controller.canDeleteSite(entity)).toBeTruthy();
+      expect(controller.canModify(entity)).toBeTruthy();
       controller.deleteSite(entity);
       $scope.$digest();
       var modalCallArgs = $modal.open.calls.mostRecent().args[0];
       expect(modalCallArgs.template.indexOf(expectedModalTitle) > -1);
       expect(state.go).toHaveBeenCalledWith('site-list-delete', { subscriptionId: '123', siteUrl: 'ag-test1-org.webex.com' });
-      expect(WebExSiteRowService.deleteSite).not.toHaveBeenCalled();
+      expect(WebExSiteService.deleteSite).not.toHaveBeenCalled();
     });
 
-    it('should redistribute licenses itself when there are two sites in subscription', function () {
-      var twoSites = _.omit(licensesGroupedBySites, 'JP-TEST-ORG.webex.com');
-      var expectedResult = [
-        {
-          offerName: 'EE',
-          volume: 100,
-          siteUrl: 'jp-test1-org.webex.com',
-        },
-        {
-          offerName: 'TC',
-          volume: 200,
-          siteUrl: 'jp-test1-org.webex.com',
-        },
-      ];
+    describe('behavior with two sites and non-pending subscription', function () {
+      beforeEach(function () {
+        var twoSites = _.omit(licensesGroupedBySites, 'JP-TEST-ORG.webex.com');
+        WebExSiteRowService.getLicensesInSubscriptionGroupedBySites.and.returnValue(twoSites);
+      });
 
-      WebExSiteRowService.getLicensesInSubscriptionGroupedBySites.and.returnValue(twoSites);
-      expect(controller.canDeleteSite(entity)).toBeTruthy();
-      controller.deleteSite(entity);
-      $scope.$digest();
-      expect(state.go).not.toHaveBeenCalled();
-      expect(WebExSiteRowService.deleteSite).toHaveBeenCalledWith(entity.siteUrl, expectedResult);
+      it('should redistribute licenses itself and call WebExSiteService.deleteSite() passing subscriptionId', function () {
+        expect(controller.canModify(entity)).toBeTruthy();
+        controller.deleteSite(entity);
+        $scope.$digest();
+        expect(state.go).not.toHaveBeenCalled();
+        expect(WebExSiteService.deleteSite).toHaveBeenCalled();
+        expect(WebExSiteService.deleteSite.calls.mostRecent().args[0]).toBe(entity.billingServiceId);
+      });
+
+      it('should add licenses together for the remaining site', function () {
+        var expectedResult = [
+          {
+            centerType: 'EE',
+            quantity: 100,
+            siteUrl: 'jp-test1-org.webex.com',
+          },
+          {
+            centerType: 'TC',
+            quantity: 200,
+            siteUrl: 'jp-test1-org.webex.com',
+          },
+        ];
+        controller.deleteSite(entity);
+        $scope.$digest();
+        var deleteSiteArgs = WebExSiteService.deleteSite.calls.mostRecent().args;
+        expect(_.isEqual(deleteSiteArgs[1], expectedResult)).toBeTruthy();
+      });
+
+      it('if deleted site has the center type, and the remaining does not, add center type to remaining site', function () {
+        entity.siteUrl = 'jp-test1-org.webex.com';
+        var expectedResult = [
+          {
+            centerType: 'TC',
+            quantity: 200,
+            siteUrl: 'ag-test1-org.webex.com',
+          },
+          {
+            centerType: 'EE',
+            quantity: 100,
+            siteUrl: 'ag-test1-org.webex.com',
+          },
+        ];
+        controller.deleteSite(entity);
+        $scope.$digest();
+        var deleteSiteArgs = WebExSiteService.deleteSite.calls.mostRecent().args;
+        expect(_.isEqual(deleteSiteArgs[1], expectedResult)).toBeTruthy();
+      });
     });
 
-    it('should not allow deletion if there is only one site in subscription', function () {
+    it('should not allow deletion if canModify() is false ', function () {
       var expectedModalTitle = '<h3 class="modal-title" translate="webexSiteManagement.deleteSiteRejectModalTitle"></h3>';
       var oneSite = _.pick(licensesGroupedBySites, 'ag-test1-org.webex.com');
       WebExSiteRowService.getLicensesInSubscriptionGroupedBySites.and.returnValue(oneSite);
-      expect(controller.canDeleteSite(entity)).toBeFalsy();
+      expect(controller.canModify(entity)).toBeFalsy();
       controller.deleteSite(entity);
       var modalCallArgs = $modal.open.calls.mostRecent().args[0];
       expect(modalCallArgs.template.indexOf(expectedModalTitle) > -1);
       expect(state.go).not.toHaveBeenCalled();
-      expect(WebExSiteRowService.deleteSite).not.toHaveBeenCalled();
+      expect(WebExSiteService.deleteSite).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('isSubscriptionEnterprise() function', function () {
+    it('should return result from SetupWizardService.isSubscriptionEnterprise if license is passed ', function () {
+      expect(controller.isSubscriptionEnterprise('123')).toBeTruthy();
+      SetupWizardService.isSubscriptionEnterprise.and.returnValue(false);
+      expect(controller.isSubscriptionEnterprise('123')).toBeFalsy();
+    });
+    it('should, if no license is passed, return true if there are any licenses returned by SetupWizardService.getEnterpriseSubscriptionListWithStatus', function () {
+      expect(controller.isSubscriptionEnterprise()).toBeTruthy();
+      SetupWizardService.getEnterpriseSubscriptionListWithStatus.and.returnValue([]);
+      expect(controller.isSubscriptionEnterprise()).toBeFalsy();
+    });
+  });
+
+  describe('redistribute licenses behavior', function () {
+    var entity;
+    var licensesGroupedBySites = _.groupBy(getJSONFixture('core/json/authInfo/webexLicenses.json'), 'siteUrl');
+
+    beforeEach(function () {
+      entity = {
+        billingServiceId: '123',
+        siteUrl: 'ag-test1-org.webex.com',
+      };
+    });
+    it('should not launch redistribution if there is only one site in subscription', function () {
+      var expectedModalTitle = '<h3 class="modal-title" translate="webexSiteManagement.redistributeRejectModalTitle"></h3>';
+      var oneSite = _.pick(licensesGroupedBySites, 'ag-test1-org.webex.com');
+      WebExSiteRowService.getLicensesInSubscriptionGroupedBySites.and.returnValue(oneSite);
+      expect(controller.canModify(entity)).toBeFalsy();
+      controller.redistributeLicenses(entity);
+      var modalCallArgs = $modal.open.calls.mostRecent().args[0];
+      expect(modalCallArgs.template.indexOf(expectedModalTitle) > -1);
+      expect(state.go).not.toHaveBeenCalled();
+    });
+    it('should launch license redistribution if there are more than 2 sites in subscription and subscription is not pending', function () {
+      expect(controller.canModify(entity)).toBeTruthy();
+      controller.redistributeLicenses(entity);
+      expect(state.go).toHaveBeenCalledWith('site-list-distribute-licenses', { subscriptionId: '123' });
+    });
+    it('should NOT launch license redistribution and should show appropriate modal if subscription is pending', function () {
+      var expectedModalTitle = '<h3 class="modal-title" translate="webexSiteManagement.redistributeRejectModalTitle"></h3>';
+      SetupWizardService.isSubscriptionPending.and.returnValue(true);
+      expect(controller.canModify(entity)).toBeFalsy();
+      controller.redistributeLicenses(entity);
+      var modalCallArgs = $modal.open.calls.mostRecent().args[0];
+      expect(modalCallArgs.template.indexOf(expectedModalTitle) > -1);
+      expect(state.go).not.toHaveBeenCalled();
     });
   });
 });

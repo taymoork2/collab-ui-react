@@ -10,7 +10,8 @@
       <a href id="rolesChevron" ui-sref="user-overview.user-profile">
         <i class="feature-arrow"></i>
         <div class="header-title">
-          <span>{{userOverview.titleCard}}</span><i class="edit-button icon icon-edit"><span class="sr-only" translate="common.edit"></span></i>
+          <span>{{userOverview.titleCard}}</span>
+          <i class="edit-button icon icon-edit" aria-label="{{::'common.edit' | translate}}"></span></i>
         </div>
         <div ng-if="userOverview.subTitleCard" class="header-sub-info user-header-title">{{userOverview.subTitleCard}}</div>
       </a>

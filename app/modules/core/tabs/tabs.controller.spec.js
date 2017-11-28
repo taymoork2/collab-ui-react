@@ -92,6 +92,7 @@
       $provide.value('tabConfig', tabConfig);
       states = ['tab1', 'subTab1', 'subTab2', 'devTab', 'subDevTab'];
       spyOn(ControlHubService, 'getTabs').and.returnValue(tabConfig);
+      spyOn(ControlHubService, 'getIcon').and.returnValue(undefined);
     }));
 
     function initTabsController(args, dontApply) {

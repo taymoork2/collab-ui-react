@@ -169,13 +169,20 @@ describe('Controller: HelpdeskOrderController', function () {
   });
 
   describe('CSM pending order, if the order contains a service status of other than pending', function () {
+    var subId = 'b08bc9f5-4b3b-4969-9a8a-c158380fcdfd';
+    var orgId = '123456';
     beforeEach(function () {
       spyOn(HelpdeskService, 'searchOrders');
+      spyOn(HelpdeskService, 'getSubscription').and.returnValue($q.resolve({ customer: { orgId: orgId } }));
       $stateParams.order = getJSONFixture('core/json/orders/csmOrderConflictingServiceStatus.json');
       orderController = $controller('HelpdeskOrderController', {
         $stateParams: $stateParams,
       });
       $scope.$apply();
+    });
+    it('gets the details for the org info link', function () {
+      expect(HelpdeskService.getSubscription).toHaveBeenCalledWith(subId);
+      expect(orderController.orgId).toBe(orgId);
     });
     it('sets the hasConflictingServiceStatus to true', function () {
       expect(orderController.hasConflictingServiceStatus).toBe(true);
@@ -183,10 +190,12 @@ describe('Controller: HelpdeskOrderController', function () {
   });
 
   describe('CSM provisioned purchase order details', function () {
+    var orgId = '123456';
+    var provisioned = 'PROVISIONED';
     beforeEach(function () {
-      spyOn(HelpdeskService, 'getSubscription').and.returnValue($q.resolve({ customer: { orgId: '123456' } }));
+      spyOn(HelpdeskService, 'getSubscription').and.returnValue($q.resolve({ customer: { orgId: orgId } }));
       $stateParams.order = getJSONFixture('core/json/orders/csmOrder.json');
-      $stateParams.order.orderStatus = 'PROVISIONED';
+      $stateParams.order.orderStatus = provisioned;
       orderController = $controller('HelpdeskOrderController', {
         $stateParams: $stateParams,
       });
@@ -194,13 +203,34 @@ describe('Controller: HelpdeskOrderController', function () {
     });
     it('gets the value for the orgId if the order is provisioned', function () {
       expect(HelpdeskService.getSubscription).toHaveBeenCalled();
-      expect(orderController.orgId).toBe('123456');
+      expect(orderController.orgId).toBe(orgId);
     });
     it('sets the canEditResendAdminEmail to false', function () {
       expect(orderController.canEditResendAdminEmail()).toBe(false);
     });
     it('sets the canEditResendProvisioningContact to false', function () {
       expect(orderController.canEditResendProvisioningContact()).toBe(false);
+    });
+  });
+
+  describe('CSM link to org details', function () {
+    it('does not show the org link if the call is not successful', function () {
+      spyOn(HelpdeskService, 'getSubscription').and.returnValue($q.reject());
+      $stateParams.order = getJSONFixture('core/json/orders/csmOrder.json');
+      orderController = $controller('HelpdeskOrderController', {
+        $stateParams: $stateParams,
+      });
+      $scope.$apply();
+      expect(orderController.showOrgDetailsLink()).not.toBe(true);
+    });
+    it('does not show the org link if the orgId is not returned', function () {
+      spyOn(HelpdeskService, 'getSubscription').and.returnValue($q.resolve({ customer: {} }));
+      $stateParams.order = getJSONFixture('core/json/orders/csmOrder.json');
+      orderController = $controller('HelpdeskOrderController', {
+        $stateParams: $stateParams,
+      });
+      $scope.$apply();
+      expect(orderController.showOrgDetailsLink()).not.toBe(true);
     });
   });
 });

@@ -6,47 +6,40 @@
     .controller('AAConfigureApiModalCtrl', AAConfigureApiModalCtrl);
 
   /* @ngInject */
-  function AAConfigureApiModalCtrl($modalInstance, $scope, $translate, aa_schedule, aa_index, AACommonService, AADynaAnnounceService, AAModelService, AASessionVariableService, AAUiModelService) {
+  function AAConfigureApiModalCtrl($modalInstance, $scope, $translate, aa_schedule, aa_index, AACommonService, AADynaAnnounceService, AAModelService, AASessionVariableService, AAUiModelService, RestApiService) {
     var vm = this;
 
     var GET = 'GET';
-    var apiConfig;
     var action;
     var CONSTANTS = {};
     var ui;
+    var initialPageEnterCount;
 
     var dependentCeSessionVariablesList = [];
     var dynamicVariablesList = [];
     var availableSessionVariablesList = [];
     var lastSavedDynList = [];
     var lastSavedVariableList = [];
-
+    var lastSaveDynamicValueSet = [];
+    var lastSavedApiRequest = '';
+    var lastSavedApiResponse = '';
+    var sessionVarOptions = [];
+    var urlUpdated = false;
     CONSTANTS.idSelectorPrefix = '#';
 
     vm.url = '';
     vm.aaElementType = 'REST';
 
-    vm.sessionVarOptions = [];
-    vm.variableSet = [{
-      value: '',
-      variableName: '',
-      isWarn: false,
-    }];
+    vm.variableSet = [];
     vm.deletedSessionVariablesList = [];
-
-    vm.selectVariablePlaceholder = $translate.instant('autoAttendant.selectVariablePlaceholder');
-    vm.addElement = '<aa-insertion-element element-text="DynamicText" read-as="ReadAs" element-id="Id" aa-schedule="' + aa_schedule + '" aa-index="' + aa_index + '" aa-element-type="' + vm.aaElementType + '"></aa-insertion-element>';
+    vm.addElement = '<aa-insertion-element element-text="DynamicText" read-as="ReadAs" element-id="elementId" id="Id" aa-schedule="' + aa_schedule + '" aa-index="' + aa_index + '" aa-element-type="' + vm.aaElementType + '"></aa-insertion-element>';
 
     vm.dynamicTags = ['DYNAMIC-EXAMPLE'];
     vm.isDynamicToggle = isDynamicToggle;
-    vm.deleteVariableSet = deleteVariableSet;
-    vm.addVariableSet = addVariableSet;
     vm.save = save;
     vm.cancel = cancel;
-    vm.isNewVariable = isNewVariable;
-    vm.canShowWarn = canShowWarn;
-    vm.isSaveDisabled = isSaveDisabled;
     vm.saveDynamicUi = saveDynamicUi;
+    vm.isSaveDisabled = isSaveDisabled;
 
     vm.newVariable = $translate.instant('autoAttendant.newVariable');
     vm.validationMsgs = {
@@ -63,6 +56,19 @@
 
     vm.maxVariableLength = 16;
     vm.minVariableLength = 3;
+    vm.isNextDisabled = isNextDisabled;
+    vm.callTestRestApiConfigs = callTestRestApiConfigs;
+    vm.isDynamicListEmpty = isDynamicListEmpty;
+    vm.dynamicData = [];
+    vm.stepBack = stepBack;
+    vm.stepNext = stepNext;
+    vm.restApiRequest = '';
+    vm.restApiResponse = '';
+    vm.currentStep = 0;
+    vm.isTestDisabled = isTestDisabled;
+    vm.showStep = showStep;
+    vm.tableData = [];
+    vm.isDynamicsValueUpdated = isDynamicsValueUpdated;
     /////////////////////
 
     $scope.$on('CE Updated', function () {
@@ -147,11 +153,17 @@
     }
 
     function save() {
-      action.url = vm.menuEntry.actions[0].dynamicList;
-      action.variableSet = vm.variableSet;
       //for now set method to GET as default
       action.method = GET;
+      updateApiDetails();
+      action.variableSet = saveUpdatedVariableSet();
+      action.dynamics = saveDynamics(vm.dynamics);
       $modalInstance.close();
+    }
+
+    function updateApiDetails() {
+      action.restApiRequest = vm.restApiRequest;
+      action.restApiResponse = vm.restApiResponse;
     }
 
     function cancel() {
@@ -160,9 +172,11 @@
     }
 
     function updateUiModel() {
-      vm.menuEntry.actions[0].dynamicList = lastSavedDynList;
-      vm.menuEntry.actions[0].url = lastSavedDynList;
-      vm.menuEntry.actions[0].variableSet = lastSavedVariableList;
+      action.url = lastSavedDynList;
+      action.variableSet = lastSavedVariableList;
+      action.dynamics = saveDynamics(lastSaveDynamicValueSet);
+      action.restApiRequest = lastSavedApiRequest;
+      action.restApiResponse = lastSavedApiResponse;
     }
 
     function saveDynamicUi() {
@@ -172,6 +186,7 @@
       if (dynamicList.className.includes('dynamic-prompt') && !(_.isEqual(dynamicList.id, 'configureApiUrl{{schedule + index}}'))) {
         vm.menuEntry.actions[0].dynamicList = createDynamicList(dynamicList, []);
         vm.menuEntry.actions[0].url = vm.menuEntry.actions[0].dynamicList;
+        urlUpdated = true;
       }
     }
 
@@ -218,7 +233,7 @@
               } else {
                 attributes = node.attributes;
               }
-              var ele = '<aa-insertion-element element-text="' + attributes[0].value + '" read-as="' + attributes[1].value + '" element-id="' + attributes[2].value + '" aa-element-type="' + vm.aaElementType + '"></aa-insertion-element>';
+              var ele = '<aa-insertion-element element-text="' + attributes[0].value + '" read-as="' + attributes[1].value + '" element-id="' + attributes[2].value + '"id="' + attributes[2].value + '" aa-element-type="' + vm.aaElementType + '"></aa-insertion-element>';
               opt = createAction(attributes[0].value, true, encodeURIComponent(ele));
           }
 
@@ -234,10 +249,6 @@
       return finalDynamicList;
     }
 
-    function isSaveDisabled() {
-      return (areVariableSetsEmpty() || isDynamicListEmpty());
-    }
-
     function isDynamicListEmpty() {
       var status = true;
       vm.menuEntry.actions[0].url = vm.menuEntry.actions[0].dynamicList;
@@ -250,56 +261,6 @@
       return status;
     }
 
-    function areVariableSetsEmpty() {
-      var status = false;
-      _.forEach(vm.variableSet, function (variable) {
-        if (_.isEmpty(variable.value) || _.isEmpty(variable.variableName === vm.newVariable ? variable.newVariableValue : variable.variableName)) {
-          status = true;
-        }
-      });
-      return status;
-    }
-
-    function canShowWarn(variable) {
-      // if invalid (from html, too short or too long nameInput is undefined
-      var nameInput = variable.newVariableValue;
-      AACommonService.setIsValid(apiConfig, nameInput);
-
-      action.variableSet = vm.variableSet;
-      if (!nameInput) {
-        // don't bother with undefined for warnings as other lanes could have invalid inputs also
-        variable.isWarn = false;
-        return;
-      }
-      variable.isWarn = !_.isUndefined(vm.sessionVarOptions[nameInput]);
-
-      if (!variable.isWarn) {
-        // args to collect - ui to examine, true for sessionVars, false for conditionals
-        variable.isWarn = AACommonService.collectThisCeActionValue(ui, true, false).filter(function (value) {
-          return _.isEqual(value, nameInput);
-        }).length > 1;
-      }
-    }
-
-    function isNewVariable(name) {
-      if (name === vm.newVariable) {
-        return true;
-      }
-      return false;
-    }
-
-    function addVariableSet() {
-      vm.variableSet.push({
-        value: '',
-        variableName: '',
-      });
-    }
-
-    // the user has pressed the trash can icon for a key/action pair
-    function deleteVariableSet(index) {
-      vm.variableSet.splice(index, 1);
-    }
-
     function decodedValue(evalValue) {
       return decodeURIComponent(evalValue).trim();
     }
@@ -307,7 +268,7 @@
     function populateUiModel() {
       if (!_.isEmpty(action)) {
         if (!_.isEmpty(action.url)) {
-          lastSavedDynList = _.get(vm.menuEntry, 'actions[0].url');
+          vm.url = action.url;
           vm.dynamicValues = [];
           _.forEach(action.url, function (opt) {
             var model;
@@ -325,11 +286,28 @@
             vm.dynamicValues.push(model);
           });
         }
-      }
-      vm.url = action.url;
-      if (!_.isEmpty(action.variableSet)) {
-        lastSavedVariableList = action.variableSet;
-        vm.variableSet = action.variableSet;
+        if (!_.isEmpty(action.variableSet)) {
+          vm.variableSet = action.variableSet;
+        }
+        if (!_.isEmpty(action.dynamics)) {
+          vm.dynamics = [];
+          _.forEach(action.dynamics, function (dyna) {
+            vm.dynamics.push(dyna.assignVar);
+          });
+        }
+        if (!_.isEmpty(action.restApiRequest)) {
+          vm.restApiRequest = action.restApiRequest;
+        }
+        if (!_.isEmpty(action.restApiResponse)) {
+          vm.restApiResponse = action.restApiResponse;
+        }
+        if (initialPageEnterCount === 0) {
+          lastSavedVariableList = action.variableSet;
+          lastSavedDynList = _.get(vm.menuEntry, 'actions[0].url');
+          lastSaveDynamicValueSet = vm.dynamics;
+          lastSavedApiRequest = vm.restApiRequest;
+          lastSavedApiResponse = vm.restApiResponse;
+        }
       }
     }
 
@@ -339,7 +317,8 @@
 
     function activate() {
       ui = AAUiModelService.getUiModel();
-      apiConfig = 'apiConfig' + aa_schedule + '-' + aa_index + '-' + AACommonService.getUniqueId();
+      // will be covered with error user story for variable assignments
+      //apiConfig = 'apiConfig' + aa_schedule + '-' + aa_index + '-' + AACommonService.getUniqueId();
       var uiMenu = ui[aa_schedule];
 
       vm.menuEntry = uiMenu.entries[aa_index];
@@ -349,11 +328,9 @@
       populateUiModel();
       AASessionVariableService.getSessionVariables(AAModelService.getAAModel().aaRecordUUID).then(function (data) {
         if (!_.isUndefined(data) && data.length > 0) {
-          vm.sessionVarOptions = data;
-          vm.sessionVarOptions.sort();
+          sessionVarOptions = data;
+          sessionVarOptions.sort();
         }
-      }).finally(function () {
-        vm.sessionVarOptions.push(vm.newVariable);
       });
       getSessionVariablesOfDependentCe().finally(function () {
         getDynamicVariables();
@@ -361,9 +338,173 @@
       });
     }
 
+    function showStep(step) {
+      return step == vm.currentStep;
+    }
+
+    function stepBack() {
+      vm.currentStep--;
+      initialPageEnterCount++;
+      updateApiDetails();
+      populateUiModel();
+    }
+
+    function stepNext() {
+      vm.currentStep++;
+      if (vm.menuEntry.actions[0].dynamicList) {
+        action.url = vm.menuEntry.actions[0].dynamicList;
+      } else {
+        action.url = vm.menuEntry.actions[0].url;
+      }
+      if (vm.currentStep === 2) {
+        updateDynamicsList(action.url);
+        if (!_.isEmpty(vm.restApiResponse) && (initialPageEnterCount === 0)) {
+          createAssignmentTable();
+        }
+      }
+    }
+
+    function updateDynamicsList(url) {
+      var arr = [];
+      _.forEach(url, function (dyna) {
+        if (_.isEqual(dyna.isDynamic, true) && !_.isEmpty(dyna.action.eval.value)) {
+          arr.push({ variableName: dyna.action.eval.value, value: '' });
+        }
+      });
+      if (vm.dynamics.length !== 0) {
+        _.forEach(vm.dynamics, function (newValue) {
+          _.forEach(arr, function (oldValue) {
+            if (newValue.variableName === oldValue.variableName) {
+              oldValue.value = newValue.value;
+            }
+          });
+        });
+      }
+      vm.dynamics = arr;
+      action.dynamics = saveDynamics(vm.dynamics);
+    }
+
+
+    function isNextDisabled() {
+      return (_.isEmpty(vm.url) || vm.url === '<br class="ng-scope">');
+    }
+
+    function callTestRestApiConfigs() {
+      return RestApiService.testRestApiConfigs(JSON.stringify(updateRequestBody()))
+        .then(function (data) {
+          vm.restApiRequest = JSON.stringify(JSON.parse(data.request), null, 2);
+          if (data.responseCode === '200') {
+            vm.restApiResponse = data.response;
+            urlUpdated = false;
+            createAssignmentTable();
+          } else {
+            vm.restApiResponse = data.responseCode + ': ' + data.response;
+            vm.tableData = [];
+          }
+        });
+    }
+
+    function updateRequestBody() {
+      var req = {},
+        urlData = _.cloneDeep(action.url);
+      _.forEach(urlData, function (dyna) {
+        dyna.action.eval.value = decodedValue(dyna.action.eval.value);
+        delete (dyna.htmlModel);
+        _.forEach(vm.dynamics, function (dynamic) {
+          if (_.isEqual(dyna.action.eval.value, dynamic.variableName)) {
+            dyna.action.eval.value = dynamic.value;
+            dyna.isDynamic = false;
+          }
+        });
+      });
+      _.set(req, 'url.action.concat.actions[0].dynamic.dynamicOperations', urlData);
+      _.set(req, 'method', 'GET');
+      return req;
+    }
+
+    function isTestDisabled() {
+      var status = false;
+      if (!_.isEmpty(vm.dynamics)) {
+        _.forEach(vm.dynamics, function (dyna) {
+          if (_.isEmpty(dyna.value)) {
+            status = true;
+            urlUpdated = true;
+          }
+        });
+      }
+      return status;
+    }
+
+    function saveDynamics(dynamics) {
+      var preTestActions = [];
+      var assignedVariables = {};
+      _.forEach(dynamics, function (dyna) {
+        assignedVariables = {};
+        _.set(assignedVariables, 'assignVar', dyna);
+        preTestActions.push(assignedVariables);
+        if (dyna.$$hashKey) {
+          delete (dyna.$$hashKey);
+        }
+      });
+      return preTestActions;
+    }
+
+    function isDynamicsValueUpdated() {
+      urlUpdated = true;
+    }
+
+    function isSaveDisabled() {
+      var isDisabled = true;
+      if (!_.isEmpty(vm.tableData)) {
+        _.forEach(vm.tableData, function (data) {
+          if (!_.isEmpty(data.selected)) {
+            isDisabled = false;
+            return isDisabled || urlUpdated;
+          }
+        });
+      }
+      return isDisabled || urlUpdated;
+    }
+
+    function saveUpdatedVariableSet() {
+      var arr = [];
+      _.forEach(vm.tableData, function (data) {
+        if (!_.isEmpty(data.selected)) {
+          var obj = {};
+          obj.variableName = data.selected;
+          obj.value = data.responseKey;
+          arr.push(obj);
+        }
+      });
+      vm.variableSet = _.sortBy(arr, 'variableName');
+      return vm.variableSet;
+    }
+
+    function createAssignmentTable() {
+      var tempTableData = [];
+      _.forEach(JSON.parse(vm.restApiResponse), function (value, key) {
+        if (_.isString(value)) {
+          var obj = {};
+          obj.responseKey = key;
+          obj.responseValue = value;
+          obj.options = sessionVarOptions;
+          _.forEach(vm.variableSet, function (set) {
+            if (_.isEqual(set.value, key)) {
+              obj.selected = set.variableName;
+            }
+          });
+          tempTableData.push(obj);
+        }
+      });
+      vm.tableData = tempTableData;
+    }
+
     function init() {
       $scope.schedule = aa_schedule;
       $scope.index = aa_index;
+      vm.currentStep = 1;
+      vm.dynamics = [];
+      initialPageEnterCount = 0;
       activate();
     }
 

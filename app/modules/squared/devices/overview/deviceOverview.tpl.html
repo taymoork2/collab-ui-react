@@ -24,22 +24,23 @@
           <div class="tag-container" ng-show="deviceOverview.currentDevice.tags && deviceOverview.currentDevice.tags.length > 0">
           <span class="tag" ng-repeat="tag in deviceOverview.currentDevice.tags">
             <span ng-bind-html="tag"></span>
-            <i class="icon icon-close" ng-show="!deviceOverview.currentDevice.isHuronDevice || !$first" ng-click="deviceOverview.removeTag(tag)"></i>
+            <i id="deleteTag{{$index}}" class="icon icon-close" ng-show="!deviceOverview.currentDevice.isHuronDevice || !$first" ng-click="deviceOverview.removeTag(tag, $index)"></i>
           </span>
           </div>
           <div class="tag-container">
-          <span class="tag add-tag" ng-hide="deviceOverview.isAddingTag" ng-click="deviceOverview.isAddingTag = true">
-            <span translate="spacesPage.addTag"></span>
-            <i class="icon icon-plus"></i>
-          </span>
+            <span id="addNewTag" class="tag add-tag" ng-if="!deviceOverview.isAddingTag" ng-click="deviceOverview.isAddingTag = true">
+              <span translate="spacesPage.addTag"></span>
+              <i class="icon icon-plus"></i>
+            </span>
             <input
+              id="newTagInput"
               type="text"
-              placeholder="{{'spacesPage.newCustomTagPlaceholder' | translate}}"
+              placeholder="{{::'spacesPage.newCustomTagPlaceholder' | translate}}"
               ng-model="deviceOverview.newTag"
-              ng-show="deviceOverview.isAddingTag"
-              focus-on="deviceOverview.isAddingTag"
+              ng-if="deviceOverview.isAddingTag"
+              focus-on
               ng-blur="deviceOverview.addTag()"
-              ng-keyup="deviceOverview.addTagOnEnter($event)"/>
+              ng-keypress="deviceOverview.addTagOnEnter($event)"/>
           </div>
         </div>
       </cs-sp-section>

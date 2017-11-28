@@ -561,7 +561,7 @@ describe('Service: HybridServicesClusterService', function () {
 
   });
 
-  describe('serviceHasHighAvailability()', () => {
+  describe('serviceHasHighAvailability() and hasOnlyOneExpresswayWithConnectorProvisioned()', () => {
 
     function createExpresswayCluster(connectorType: ConnectorType): IExtendedClusterFusion {
       return {
@@ -719,5 +719,60 @@ describe('Service: HybridServicesClusterService', function () {
       $httpBackend.flush();
     });
 
+    it('should not treat a cluster list with no connectors as having exactly one one', () => {
+      const clusters = [createExpresswayCluster('c_ucmc'), createExpresswayCluster('c_ucmc')];
+      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3?fields=@wide').respond({
+        clusters: clusters,
+      });
+      HybridServicesClusterService.hasOnlyOneExpresswayWithConnectorProvisioned('c_cal')
+        .then((isLast) => {
+          expect(isLast).toBe(false);
+        });
+      $httpBackend.flush();
+    });
+
+    it ('should treat a cluster with one provisioned connector as having only one' , () => {
+      const clusters = [createExpresswayCluster('c_cal'), createExpresswayCluster('c_ucmc')];
+      clusters[0].connectors = [createConnector('c_cal')];
+      clusters[1].connectors = [createConnector('c_ucmc')];
+      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3?fields=@wide').respond({
+        clusters: clusters,
+      });
+      HybridServicesClusterService.hasOnlyOneExpresswayWithConnectorProvisioned('c_cal')
+        .then((isLast) => {
+          expect(isLast).toBe(true);
+        });
+      $httpBackend.flush();
+    });
+
+    it ('should not treat a cluster with two provisioned connectors as having only one' , () => {
+      const clusters = [createExpresswayCluster('c_cal'), createExpresswayCluster('c_cal')];
+      clusters[0].connectors = [createConnector('c_cal')];
+      clusters[1].connectors = [createConnector('c_cal')];
+      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3?fields=@wide').respond({
+        clusters: clusters,
+      });
+      HybridServicesClusterService.hasOnlyOneExpresswayWithConnectorProvisioned('c_cal')
+        .then((isLast) => {
+          expect(isLast).toBe(false);
+        });
+      $httpBackend.flush();
+    });
+
+    it ('should not look at other connector types when calculating' , () => {
+      const clusters = [createExpresswayCluster('c_cal'), createExpresswayCluster('c_ucmc')];
+      clusters[0].connectors = [createConnector('c_cal')];
+      clusters[1].connectors = [createConnector('c_ucmc')];
+      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3?fields=@wide').respond({
+        clusters: clusters,
+      });
+      HybridServicesClusterService.hasOnlyOneExpresswayWithConnectorProvisioned('c_imp')
+        .then((isLast) => {
+          expect(isLast).toBe(false);
+        });
+      $httpBackend.flush();
+    });
+
   });
+
 });

@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "Online",
-      "OnlineWithIssues": "Online, With Issues",
-      "Offline": "Offline",
-      "OfflineExpired": "Deactivated",
-      "Unknown": "Unknown"
+      "CONNECTED": "Online",
+      "CONNECTED_WITH_ISSUES": "Online, With Issues",
+      "DISCONNECTED": "Offline",
+      "OFFLINE_EXPIRED": "Deactivated",
+      "UNKNOWN": "Unknown"
     },
     "WithDevices": "With Devices",
     "upgradeChannels": {
@@ -6678,23 +6678,23 @@
       "wlan": "Wireless"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "Network Ports Blocked",
         "message": "A firewall may be blocking media on UDP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls and Network Requirements for the Cisco Spark App</a>."
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "Network Ports Blocked",
         "message": "A firewall may be blocking media on UDP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls and Network Requirements for the Cisco Spark App</a>."
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "Network Ports Blocked",
         "message": "A firewall may be blocking media on UDP and TCP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls and Network Requirements for the Cisco Spark App</a>."
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "High temperature",
         "message": "System temperature is too high."
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "Main Display Not Detected",
         "message": "Verify that the main display is turned on and connected to the correct display output on the video system."
       },
@@ -6702,35 +6702,35 @@
         "type": "Automatic Updates Disabled",
         "message": "System software will not be updated."
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "Time Server Not Reachable",
         "message": "The connection to an NTP server could not be established. The time displayed on your endpoint may be wrong."
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "Signal interference from other devices",
         "message": "There is an ultrasound signal interference in this room from other devices (i.e. other video systems) that could prevent pairing between the video system and your phone or laptop."
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "Audio Delay",
         "message": "Your monitor settings are adding a delay to your audio. Change the monitor settings to a suitable mode (i.e.: Game mode)."
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "No Embedded Ultrasound Speaker",
         "message": "This hardware version of the SX10 does not have an embedded ultrasound speaker."
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "Missing encryption option key",
         "message": "Please add an encryption option key."
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "Configured for test automation",
         "message": "Metrics and log reporting are affected."
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "Touch Panel Required",
         "message": "There is no touch panel connected to the room device. Check the cable connecting the touch panel to the room device."
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "Packet Loss Detected",
         "message": "During the last call we detected a level of packet loss that may have impacted the call quality. Packet loss is typically caused by network congestion."
       },
@@ -7332,25 +7332,25 @@
       "configOverview": {
         "title": "Customer Virtual Assistant Configuration Requirements",
         "desc": "Review the prerequisites for creating a Customer Virtual Assistant",
-        "boxTitle": "Create an API.AI agent before you create your Customer Virtual Assistant.",
-        "boxDesc": "Build an automated agent in API.AI with a natural language dialogue. Your integrated Customer Virtual Assistant uses the built-in dialogue to interact with your customers and escalate a conversation to live agents as needed.",
-        "boxRadioOne": "No, I don’t have a preconfigured API.AI agent",
+        "boxTitle": "Create an Dialogflow agent before you create your Customer Virtual Assistant.",
+        "boxDesc": "Build an automated agent in Dialogflow with a natural language dialogue. Your integrated Customer Virtual Assistant uses the built-in dialogue to interact with your customers and escalate a conversation to live agents as needed.",
+        "boxRadioOne": "No, I don’t have a preconfigured Dialogflow agent",
         "boxRadioOneDesc1": "Go to ",
-        "boxRadioApiai": "API.AI",
+        "boxRadioDialogflow": "Dialogflow",
         "boxRadioOneDesc2": " to create an agent. To get started, see the ",
-        "boxRadioApiaiDoc": "API.AI documentation",
-        "boxRadioTwo": "Yes, I have a preconfigured API.AI agent and am ready to proceed",
-        "boxRadioTwoDesc": "Click the arrow to continue to integrate your API.AI agent with a Customer Virtual Assistant"
+        "boxRadioDialogflowDoc": "Dialogflow documentation",
+        "boxRadioTwo": "Yes, I have a preconfigured Dialogflow agent and am ready to proceed",
+        "boxRadioTwoDesc": "Click the arrow to continue to integrate your Dialogflow agent with a Customer Virtual Assistant"
       },
       "dialogIntegration": {
         "title": "Configure Dialogue Integration",
-        "desc": "Add a preconfigured Escalation Intent to complete your API.AI agent configuration",
+        "desc": "Add a preconfigured Escalation Intent to complete your Dialogflow agent configuration",
         "boxStepOne": "Download preconfigured Escalation Intent JSON file.",
         "boxStepOneDesc": "An Escalation Intent allows your Customer Virtual Assistant to escalate a conversation to an agent.",
-        "boxStepTwo": "Upload Escalation Intent to API.AI Agent.",
-        "boxStepTwoDesc": "On your API.AI agent’s Intents page, click the vertical ellipsis (⋮) and choose Upload Intent. Upload the escalation.json file you downloaded.",
-        "boxStepThree": "Customise Escalation Intent in API.AI.",
-        "boxStepThreeDesc": "On your API.AI agent’s Intents page, choose Escalation Intent. Modify the User Says fields to change the user expressions that trigger escalation. All user expressions must:",
+        "boxStepTwo": "Upload Escalation Intent to Dialogflow Agent.",
+        "boxStepTwoDesc": "On your Dialogflow agent’s Intents page, click the vertical ellipsis (⋮) and choose Upload Intent. Upload the escalation.json file you downloaded.",
+        "boxStepThree": "Customise Escalation Intent in Dialogflow.",
+        "boxStepThreeDesc": "On your Dialogflow agent’s Intents page, choose Escalation Intent. Modify the User Says fields to change the user expressions that trigger escalation. All user expressions must:",
         "boxBulletOne": "Use template mode",
         "boxBulletTwo": "Contain a reference to @sys.any:Topic",
         "boxStepThreeDescCont": "The @ symbol next to the user expression indicates the template mode. Click the symbol to toggle the mode. Do not modify the GetExpert action.",
@@ -7361,11 +7361,11 @@
       "accessToken": {
         "title": "Complete Dialogue Integration",
         "desc": "Complete your integration to enable the use of natural dialogue in your customer interactions",
-        "boxDesc": "Each API.AI agent has a unique client access token stored in the agent settings. Copy the token from your configured API.AI agent settings, enter it here and click 'Validate' to check the token before you complete the dialogue integration.",
-        "inputLabel": "API.AI Client Access Token",
+        "boxDesc": "Each Dialogflow agent has a unique client access token stored in the agent settings. Copy the token from your configured Dialogflow agent settings, enter it here and click 'Validate' to check the token before you complete the dialogue integration.",
+        "inputLabel": "Dialogflow Client Access Token",
         "validateButtonText": "Validate",
         "maxLengthError": "Client Access Token cannot be longer than 128 characters.",
-        "invalidTokenText": "Invalid API.AI client access token. Verify the token and try again."
+        "invalidTokenText": "Invalid Dialogflow client access token. Verify the token and try again."
       },
       "name": {
         "title": "Customer Virtual Assistant Name",

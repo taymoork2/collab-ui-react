@@ -4,7 +4,7 @@ import { ExtensionLengthService } from './extension-length.service';
 import { LocationsService, Location } from 'modules/call/locations/shared';
 import { CompanyNumber, ExternalCallerIdType } from 'modules/call/settings/settings-company-caller-id';
 import { MediaOnHoldService } from 'modules/huron/media-on-hold';
-import { AvrilService, AvrilCustomer } from 'modules/huron/avril';
+import { AvrilService, AvrilCustomer, AvrilFeatures } from 'modules/call/avril';
 import { InternalNumberRange, InternalNumberRangeService } from 'modules/call/shared/internal-number-range';
 import { Notification } from 'modules/core/notifications';
 
@@ -15,6 +15,7 @@ export class CallSettingsData {
   public companyCallerId: CompanyNumber;
   public avrilCustomer: AvrilCustomer;
   public defaultLocation: Location;
+  public avrilFeatures: AvrilFeatures;
 }
 // TODO: (jlowery) This service will eventually replace
 // the HuronSettings service when multilocation goes GA.
@@ -233,7 +234,15 @@ export class CallSettingsService {
     if (!_.isEqual(this.callSettingsDataCopy.defaultLocation, location)) {
       return this.LocationsService.updateLocation(location)
       .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'locations.updateFailed'));
+        const ERRORCODE = '19416';
+        if (_.has(error.data, 'details') &&
+            _.isArray(error.data.details) &&
+            _.has(error.data.details[0], 'productErrorMessage') &&
+            _.includes(error.data.details[0].productErrorMessage, ERRORCODE)) {
+          this.errors.push(this.Notification.processErrorResponse(error, 'locations.voicemailPilotUpdateFailed', { number : location.voicemailPilotNumber ? location.voicemailPilotNumber.number : '' }));
+        } else {
+          this.errors.push(this.Notification.processErrorResponse(error, 'locations.updateFailed'));
+        }
         return this.$q.reject();
       });
     } else {

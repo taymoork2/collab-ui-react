@@ -1,10 +1,11 @@
 <span id="{{$ctrl.license.siteUrl}}_licensesIcon" name="{{$ctrl.license.siteUrl}}_licensesIcon">
   <i id="{{$ctrl.license.siteUrl}}_webex-site-licenses"
-    class="icon icon-browser iconEnabledWithHover grid-vcenter"
+    class="icon icon-browser grid-vcenter"
+    ng-class="$ctrl.canModify ? 'iconEnabledWithHover' : 'iconDisabled'"
     tabindex="0"
     tooltip-append-to-body="true"
     tooltip="{{::'webexSiteManagement.redistributeLicenses' | translate}}"
     ng-click="$ctrl.redistributeLicenses($ctrl.license)"
-    tooltip-trigger="focus mouseenter">
+    tooltip-trigger="mouseenter">
   </i>
 </span>

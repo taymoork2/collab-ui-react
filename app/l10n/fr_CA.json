@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "En ligne",
-      "OnlineWithIssues": "En ligne, avec des problèmes",
-      "Offline": "Déconnecté",
-      "OfflineExpired": "Désactivé",
-      "Unknown": "Inconnu"
+      "CONNECTED": "En ligne",
+      "CONNECTED_WITH_ISSUES": "En ligne, avec des problèmes",
+      "DISCONNECTED": "Déconnecté",
+      "OFFLINE_EXPIRED": "Désactivé",
+      "UNKNOWN": "Inconnu"
     },
     "WithDevices": "Avec appareils",
     "upgradeChannels": {
@@ -6678,23 +6678,23 @@
       "wlan": "Sans fil"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "Ports réseau bloqués",
         "message": "Le pare-feu bloque peut-être les médias sur l’UDP. La qualité des appels peut être impactée. Pour plus de renseignements sur les exigences en matière de ports réseau, consulter l’article <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Exigences en matière de réseau et de pare-feu pour l’application Cisco Spark</a>."
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "Ports réseau bloqués",
         "message": "Le pare-feu bloque peut-être les médias sur l’UDP. La qualité des appels peut être impactée. Pour plus de renseignements sur les exigences en matière de ports réseau, consulter l’article <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Exigences en matière de réseau et de pare-feu pour l’application Cisco Spark</a>."
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "Ports réseau bloqués",
         "message": "Le pare-feu bloque peut-être les médias sur l’UDP et le TCP. La qualité des appels peut être impactée. Pour plus de renseignements sur les exigences en matière de ports réseau, consulter l’article <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Exigences en matière de réseau et de pare-feu pour l’application Cisco Spark</a>."
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "Température élevée",
         "message": "La température du système est trop élevée."
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "Affichage principal non détecté",
         "message": "Vérifiez que l’écran principal est allumé et connecté à la sortie d’affichage adéquate sur le système vidéo."
       },
@@ -6702,35 +6702,35 @@
         "type": "Mises à jour automatiques désactivées",
         "message": "Le logiciel système ne sera pas mis à jour."
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "Serveur de temps non joignable",
         "message": "Connexion à un serveur NTP impossible. L’heure affichée sur votre terminal peut être fausse."
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "Interférences provenant d’autres appareils",
         "message": "Des interférences dues à des ultrasons en provenance d’autres appareils (par ex., d’autres systèmes vidéo) dans cette salle pourraient empêcher l’association du système vidéo à votre téléphone ou ordinateur portable."
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "Décalage audio",
         "message": "Les réglages de votre écran ajoutent un décalage à l’audio. Configurez les paramètres de l’écran sur un mode adéquat (par ex., mode Jeu)."
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "Aucun haut-parleur à ultrasons intégré",
         "message": "Cette version matérielle du SX10 n’a pas de haut-parleur à ultrasons intégré."
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "Clé d’option de cryptage manquante",
         "message": "Veuillez ajouter une clé d’option de cryptage"
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "Configuré pour l’automatisation du test",
         "message": "Les rapports de mesures et de journaux sont affectés"
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "Écran tactile requis",
         "message": "Aucun écran tactile n’est connecté à l’appareil de salle. Vérifiez le câble connectant l’écran tactile à l’appareil de salle."
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "Perte de paquets détectée",
         "message": "Lors du dernier appel, nous avons détecté un niveau de perte de paquets qui pourrait avoir affecté la qualité de l’appel. La perte de paquets est habituellement causée par un encombrement du réseau."
       },
@@ -7332,25 +7332,25 @@
       "configOverview": {
         "title": "Exigences de configuration de l’assistant virtuel du service à la clientèle",
         "desc": "Passer en revue les prérequis pour créer un assistant virtuel du service à la clientèle",
-        "boxTitle": "Créer un agent API.AI avant de créer votre assistant virtuel du service à la clientèle.",
-        "boxDesc": "Établir un agent automatisé dans API.AI, avec un dialogue en langage naturel. Votre assistant virtuel du service à la clientèle utilise la boîte de dialogue intégrée pour interagir avec vos clients et, au besoin, transférer la conversation à des agents en ligne en cas de problèmes.",
-        "boxRadioOne": "Non, je n’ai pas un agent préconfiguré API.AI.",
+        "boxTitle": "Créer un agent Dialogflow avant de créer votre assistant virtuel du service à la clientèle.",
+        "boxDesc": "Établir un agent automatisé dans Dialogflow, avec un dialogue en langage naturel. Votre assistant virtuel du service à la clientèle utilise la boîte de dialogue intégrée pour interagir avec vos clients et, au besoin, transférer la conversation à des agents en ligne en cas de problèmes.",
+        "boxRadioOne": "Non, je n’ai pas un agent préconfiguré Dialogflow.",
         "boxRadioOneDesc1": "Aller à ",
-        "boxRadioApiai": "API.AI",
+        "boxRadioDialogflow": "Dialogflow",
         "boxRadioOneDesc2": " pour créer un agent. Pour commencer, voir la ",
-        "boxRadioApiaiDoc": "documentation API.AI.",
-        "boxRadioTwo": "Oui, j’ai un agent API.AI préconfiguré et je suis prêt à aller de l’avant",
-        "boxRadioTwoDesc": "Cliquer sur la flèche pour continuer d’intégrer votre agent API.AI avec l’assistant virtuel du service à la clientèle"
+        "boxRadioDialogflowDoc": "documentation Dialogflow.",
+        "boxRadioTwo": "Oui, j’ai un agent Dialogflow préconfiguré et je suis prêt à aller de l’avant",
+        "boxRadioTwoDesc": "Cliquer sur la flèche pour continuer d’intégrer votre agent Dialogflow avec l’assistant virtuel du service à la clientèle"
       },
       "dialogIntegration": {
         "title": "Configurer l’intégration du dialogue",
-        "desc": "Ajouter un processus d’escalade préconfiguré pour terminer la configuration de votre agent API.AI",
+        "desc": "Ajouter un processus d’escalade préconfiguré pour terminer la configuration de votre agent Dialogflow",
         "boxStepOne": "Télécharger le fichier JSON du processus d’escalade préconfiguré.",
         "boxStepOneDesc": "Le processus d’escalade préconfiguré permet à votre assistant virtuel du service à la clientèle de faire âsser la conversation à un agent.",
-        "boxStepTwo": "Téléverser le processus d’escalade vers l’agent API.AI.",
-        "boxStepTwoDesc": "Sur votre page de processus d’escalade des agents API.AI, cliquez sur l’ellipse verticale (⋮) et choisissez Téléverser processus. Téléversez le fichier escalation.json que vous avez téléchargé.",
+        "boxStepTwo": "Téléverser le processus d’escalade vers l’agent Dialogflow.",
+        "boxStepTwoDesc": "Sur votre page de processus d’escalade des agents Dialogflow, cliquez sur l’ellipse verticale (⋮) et choisissez Téléverser processus. Téléversez le fichier escalation.json que vous avez téléchargé.",
         "boxStepThree": "Personnaliser le processus d’escalade dans API.IA.",
-        "boxStepThreeDesc": "Sur la page du processus de votre agent API.AI, choisissez Processus d’escalade. Modifier les champs « Utilisateur a dit » pour modifier le expressions qui amorcent le processus d’escalade. Toutes les expressions de l’utilisateur doivent :",
+        "boxStepThreeDesc": "Sur la page du processus de votre agent Dialogflow, choisissez Processus d’escalade. Modifier les champs « Utilisateur a dit » pour modifier le expressions qui amorcent le processus d’escalade. Toutes les expressions de l’utilisateur doivent :",
         "boxBulletOne": "Utiliser le mode modèle",
         "boxBulletTwo": "Contenir une référence à @sys.any:Topic",
         "boxStepThreeDescCont": "Le symbole @ près de l’expression de l’utilisateur indique le mode modèle. Cliquer sur le symbole pour faire basculer le mode. Ne pas modifier l’action GetExpert.",
@@ -7361,11 +7361,11 @@
       "accessToken": {
         "title": "Terminer l’intégration de dialogue",
         "desc": "Terminez votre intégration pour permettre l’utilisation de dialogue en langage naturel dans vos interactions avec le client.",
-        "boxDesc": "Chaque agent API.AI a un jeton d’accès client unique, entreposé dans les paramètres de l’agent. Copiez le jeton à partir des paramètres configurés de votre agent API.AI, entrez-le ici et cliquez sur « Valider » avant de terminer l’intégration de dialogue.",
-        "inputLabel": "Jeton d’accès client API.AI",
+        "boxDesc": "Chaque agent Dialogflow a un jeton d’accès client unique, entreposé dans les paramètres de l’agent. Copiez le jeton à partir des paramètres configurés de votre agent Dialogflow, entrez-le ici et cliquez sur « Valider » avant de terminer l’intégration de dialogue.",
+        "inputLabel": "Jeton d’accès client Dialogflow",
         "validateButtonText": "Valider",
         "maxLengthError": "Le jeton d’accès client ne peut avoir plus 128 caractères.",
-        "invalidTokenText": "Jeton d’accès client API.AI non valide. Vérifier le jeton et essayer de nouveau."
+        "invalidTokenText": "Jeton d’accès client Dialogflow non valide. Vérifier le jeton et essayer de nouveau."
       },
       "name": {
         "title": "Nom de l’assistant virtuel du service à la clientèle",

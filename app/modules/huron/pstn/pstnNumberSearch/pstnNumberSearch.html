@@ -46,16 +46,14 @@
       class="btn--circle btn--primary icon icon-chevron-left"
       ng-click="$ctrl.previousPage()"
       ng-class="{invisible: $ctrl.showPreviousButton()}"
-    >
-      <span class="sr-only" translate="common.back"></span>
+      aria-label="{{::'common.back' | translate}}">
     </button>
     <button
       type="button"
       class="btn--circle btn--primary icon icon-chevron-right"
       ng-click="$ctrl.nextPage()"
       ng-class="{invisible: $ctrl.showNextButton()}"
-    >
-      <span class="sr-only" translate="common.next"></span>
+      aria-label="{{::'common.next' | translate}}">
     </button>
   </div>
 </section>

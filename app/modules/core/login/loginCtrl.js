@@ -3,9 +3,10 @@
 
   var TimingKey = require('../metrics').TimingKey;
   var DiagnosticKey = require('../metrics').DiagnosticKey;
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
   /* @ngInject */
-  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, CacheWarmUpService, Config, Log, LocalStorage, LogMetricsService, MetricsService, PageParam, SessionStorage, StorageKeys, TokenService, Utils) {
+  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $translate, ApiCacheManagementService, Auth, Authinfo, Log, LocalStorage, LogMetricsService, MetricsService, PageParam, SessionStorage, StorageKeys, TokenService, Utils) {
     MetricsService.startTimer(TimingKey.LOGIN_DURATION);
     var queryParams = SessionStorage.popObject(StorageKeys.REQUESTED_QUERY_PARAMS);
     var language = LocalStorage.get(StorageKeys.LANGUAGE);
@@ -51,7 +52,7 @@
     $scope.checkForIeWorkaround = Utils.checkForIeWorkaround();
 
     $scope.login = function (keyCode) {
-      if (!keyCode || (keyCode === 13 && $scope.loginForm.email.$valid)) {
+      if (!keyCode || (keyCode === KeyCodes.ENTER && $scope.loginForm.email.$valid)) {
         Auth.redirectToLogin($scope.email);
       }
     };
@@ -63,7 +64,7 @@
         reauthorize: $stateParams.reauthorize,
       })
         .then(function () {
-          CacheWarmUpService.warmUpOnInterval();
+          ApiCacheManagementService.warmUpOnInterval();
 
           if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
             $state.go('firsttimewizard');
@@ -83,6 +84,10 @@
               Authinfo.setCustomerView(false);
             } else if (Authinfo.isSupportUser()) {
               state = 'support.status';
+            } else if (Authinfo.isUserAdminUser()) {
+              state = 'users.list';
+            } else if (Authinfo.isDeviceAdminUser()) {
+              state = 'devices';
             } else if (!SessionStorage.get(StorageKeys.CUSTOMER_ORG_ID) && Authinfo.isHelpDeskUserOnly()) {
               state = 'helpdesk.search';
             } else if (!SessionStorage.get(StorageKeys.CUSTOMER_ORG_ID) && Authinfo.isComplianceUserOnly()) {
@@ -101,8 +106,14 @@
               Log.debug('Sending "customer logged in" metrics');
               LogMetricsService.logMetrics('Customer logged in', LogMetricsService.getEventType('customerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
             }
-            $rootScope.$emit('LOGIN');
-            return $state.go(state, params).catch(_.noop); // don't reject on $stateChangeStart prevention (eg. unauthorized)
+
+            if (Authinfo.isCustomerLaunchedFromPartner() && !Authinfo.isReadOnlyAdmin()) {
+              return ApiCacheManagementService.invalidateHybridServicesCaches()
+                .then(function () {
+                  return navigateToLogin(state, params);
+                });
+            }
+            return navigateToLogin(state, params);
           }
         }).catch(function (response) {
           isSuccess = false;
@@ -122,6 +133,11 @@
           });
         });
     };
+
+    function navigateToLogin(state, params) {
+      $rootScope.$emit('Core::loginCompleted');
+      return $state.go(state, params).catch(_.noop); // don't reject on $stateChangeStart prevention (eg. unauthorized)
+    }
 
     $scope.$on('ACCESS_TOKEN_RETRIEVED', function () {
       authorizeUser();

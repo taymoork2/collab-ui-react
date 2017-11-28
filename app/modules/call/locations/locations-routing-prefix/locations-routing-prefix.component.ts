@@ -7,21 +7,21 @@ class LocationsRoutingPrefixCtrl implements ng.IComponentController {
   //Controller class properties
   public routingPrefixForm: ng.IFormController;
   public messages: any = {};
-  public minRoutingPrefixLength: string = '1';
+  public minRoutingPrefixLength: string = '0';
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
   ) {}
 
-  public isRequired(): boolean {
+  public isDisabled(): boolean {
     if (this.ftsw) {
-      return true;
-    }
-    if (!this.routingPrefixLength) {
       return false;
     }
-    return true;
+    if (!this.routingPrefixLength) {
+      return true;
+    }
+    return false;
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {

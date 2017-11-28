@@ -60,9 +60,9 @@
   <div class="members-header">
     <span ng-if="$ctrl.dragAndDrop" translate="common.members"></span>
     <span ng-if="$ctrl.dragAndDrop" class="drag-and-drop pull-right">
-      <span ng-if="!$ctrl.reordering"><a class ng-click="$ctrl.onReorderClicked()" translate="common.reorder"></a></span>
-      <span ng-if="$ctrl.reordering"><a class="cancel-reorder" ng-click="$ctrl.onCancelReorderClicked()" translate="common.cancel"></a></span>
-      <span ng-if="$ctrl.reordering" class="apply-reorder"><a ng-click="$ctrl.onApplyReorderClicked()" translate="common.apply"></a></span>
+      <span ng-if="!$ctrl.reordering"><a href class ng-click="$ctrl.onReorderClicked()" translate="common.reorder"></a></span>
+      <span ng-if="$ctrl.reordering"><a href class="cancel-reorder" ng-click="$ctrl.onCancelReorderClicked()" translate="common.cancel"></a></span>
+      <span ng-if="$ctrl.reordering" class="apply-reorder"><a href ng-click="$ctrl.onApplyReorderClicked()" translate="common.apply"></a></span>
     </span>
     <span
       ng-if="$ctrl.getMemberCount() > 6 && $ctrl.isNew"
@@ -100,12 +100,10 @@
       translate="common.memberCount"
       translate-values="{count: $ctrl.getMemberCount()}">
     </span>
-    <a ng-click="$ctrl.onShowMoreClicked()"
-      ng-show="$ctrl.showMoreButton() && !$ctrl.reordering">
+    <a href ng-click="$ctrl.onShowMoreClicked()" ng-show="$ctrl.showMoreButton() && !$ctrl.reordering">
       <span translate="common.showMore"></span>
     </a>
-    <a ng-click="$ctrl.onShowLessClicked()"
-      ng-show="$ctrl.showLessButton() && !$ctrl.reordering">
+    <a href ng-click="$ctrl.onShowLessClicked()" ng-show="$ctrl.showLessButton() && !$ctrl.reordering">
       <span translate="common.showLess"></span>
     </a>
   </div>

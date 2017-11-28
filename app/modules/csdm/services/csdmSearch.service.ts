@@ -18,6 +18,7 @@ export class CsdmSearchService {
     if (this.pendingPromise[caller]) {
       this.pendingPromise[caller].resolve();
     }
+    // note the /devices/_search is whitelisted in readonly.interceptor.js
     const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/devices/_search';
     this.pendingPromise[caller] = this.$q.defer();
     return this.$http

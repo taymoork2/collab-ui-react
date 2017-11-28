@@ -1,9 +1,9 @@
-import { USSService, IStatusSummary } from 'modules/hercules/services/uss.service';
+import { USSService, IExtendedStatusSummary } from 'modules/hercules/services/uss.service';
 
 class HybridCalendarO365ActiveCardController implements ng.IComponentController {
   private subscribeStatusesSummary: any;
 
-  public userStatusesSummary: IStatusSummary[] | undefined;
+  public userStatusesSummary: IExtendedStatusSummary[] | undefined;
 
   /* @ngInject */
   constructor(
@@ -21,7 +21,7 @@ class HybridCalendarO365ActiveCardController implements ng.IComponentController 
 
   private extractSummary() {
     // TODO: filter by "ownedBy" once implemented on the server
-    this.userStatusesSummary = this.USSService.extractSummaryForAService(['squared-fusion-cal']);
+    this.userStatusesSummary = this.USSService.extractSummaryForAService(['squared-fusion-o365']);
   }
 }
 

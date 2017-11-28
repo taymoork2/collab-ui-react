@@ -57,7 +57,7 @@ describe('Controller: LineListCtrl', function () {
     });
 
     it('should have grid data', function () {
-      expect($scope.gridData.length).toBe(4);
+      expect(controller.gridOptions.data.length).toBe(4);
     });
 
     it('should show Actions column', function () {
@@ -65,17 +65,17 @@ describe('Controller: LineListCtrl', function () {
     });
 
     it('should show Actions icon on rows with unassingnable externalNumbers', function () {
-      expect($scope.canShowActionsMenu($scope.gridData[0])).toBeFalsy();
-      expect($scope.canShowActionsMenu($scope.gridData[1])).toBeFalsy();
-      expect($scope.canShowActionsMenu($scope.gridData[2])).toBeFalsy();
-      expect($scope.canShowActionsMenu($scope.gridData[3])).toBeTruthy();
+      expect(controller.canShowActionsMenu(controller.gridOptions.data[0])).toBeFalsy();
+      expect(controller.canShowActionsMenu(controller.gridOptions.data[1])).toBeFalsy();
+      expect(controller.canShowActionsMenu(controller.gridOptions.data[2])).toBeFalsy();
+      expect(controller.canShowActionsMenu(controller.gridOptions.data[3])).toBeTruthy();
     });
 
     it('should show Delete menu item on rows with unassingnable externalNumbers', function () {
-      expect($scope.canShowExternalNumberDelete($scope.gridData[0])).toBeFalsy();
-      expect($scope.canShowExternalNumberDelete($scope.gridData[1])).toBeFalsy();
-      expect($scope.canShowExternalNumberDelete($scope.gridData[2])).toBeFalsy();
-      expect($scope.canShowExternalNumberDelete($scope.gridData[3])).toBeTruthy();
+      expect(controller.canShowExternalNumberDelete(controller.gridOptions.data[0])).toBeFalsy();
+      expect(controller.canShowExternalNumberDelete(controller.gridOptions.data[1])).toBeFalsy();
+      expect(controller.canShowExternalNumberDelete(controller.gridOptions.data[2])).toBeFalsy();
+      expect(controller.canShowExternalNumberDelete(controller.gridOptions.data[3])).toBeTruthy();
     });
   });
 
@@ -93,7 +93,7 @@ describe('Controller: LineListCtrl', function () {
       $scope.$apply();
 
       expect(LineListService.getLineList.calls.count()).toEqual(1);
-      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', '', 'assignedLines', $scope.gridData, true);
+      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', '', 'assignedLines', controller.gridOptions.data, true);
     });
 
     it('should call getLineList with filter unassignedLines', function () {
@@ -101,7 +101,7 @@ describe('Controller: LineListCtrl', function () {
       $scope.$apply();
 
       expect(LineListService.getLineList.calls.count()).toEqual(1);
-      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', '', 'unassignedLines', $scope.gridData, true);
+      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', '', 'unassignedLines', controller.gridOptions.data, true);
     });
   });
 
@@ -129,7 +129,7 @@ describe('Controller: LineListCtrl', function () {
 
       controller.sortColumn($scope, sortColumns);
       expect(LineListService.getLineList.calls.count()).toEqual(1);
-      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'internalnumber', '-asc', '', 'all', $scope.gridData, true);
+      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'internalnumber', '-asc', '', 'all', controller.gridOptions.data, true);
     });
   });
 
@@ -147,7 +147,7 @@ describe('Controller: LineListCtrl', function () {
       $timeout.flush();
 
       expect(LineListService.getLineList.calls.count()).toEqual(1);
-      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', 'abc', 'all', $scope.gridData, true);
+      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', 'abc', 'all', controller.gridOptions.data, true);
     });
   });
 

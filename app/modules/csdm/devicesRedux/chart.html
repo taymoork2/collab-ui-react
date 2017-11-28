@@ -1,8 +1,7 @@
 <div class="graphCarousel hidden-sm hidden-xs">
   <div id="chartTitle">{{chart.chartTitle}}</div>
   <div id="chartArea"></div>
-  <div class="carousel">
-    <div class="title">{{chart.selectedAggregation.bucketName}}</div>
+  <div class="carousel" ng-if="chart.showCarousel">
     <i class="icon icon-chevron-left large" ng-click="chart.cycleAggregateLeft()"/>
     <i class="icon icon-circle" ng-class="{selected: chart.selectedAggregation.bucketName === aggregate.bucketName}"
        ng-repeat="aggregate in chart.currentAggregations" title="{{aggregate.bucketName}}"

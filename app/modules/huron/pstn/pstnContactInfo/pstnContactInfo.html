@@ -7,9 +7,12 @@
               type="text"
               id="companyName"
               name="companyName"
-              ng-model="$ctrl.contact.companyName" required>
+              ng-change="$ctrl.verifyLegalCompanyName()"
+              ng-model="$ctrl.contact.companyName"
+              ng-model-options="{updateOn: 'default blur', debounce: { default: 2000, blur: 0 } }" required>
         <div class="cs-input__messages" ng-messages="$ctrl.form.companyName.$error" role="alert">
           <div class="message" ng-message="required">{{::'common.invalidRequired' | translate}}</div>
+          <div id="duplicateCompanyName" class="message" ng-message="duplicateCompanyName">{{::'trialModal.pstn.duplicateCompanyName' | translate}}</div>
         </div>
       </div>
     </div>

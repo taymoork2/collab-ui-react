@@ -498,6 +498,9 @@
       action.method = restBlock.method;
       action.url = restBlock.url;
       action.variableSet = parseResponseBlock(restBlock);
+      action.restApiRequest = restBlock.testResponse.request;
+      action.restApiResponse = restBlock.testResponse.response;
+      action.dynamics = restBlock.testResponse.preTestActions;
     }
 
     function parseAction(menuEntry, inAction) {
@@ -1419,6 +1422,11 @@
               newActionArray[i][actionName] = createConditional(menuEntry.actions[0]);
             } else if (actionName === 'doREST') {
               var restBlockId = menuEntry.actions[0].value;
+              var testResponse = {};
+              testResponse.request = menuEntry.actions[0].restApiRequest;
+              testResponse.response = menuEntry.actions[0].restApiResponse;
+              testResponse.preTestActions = [];
+              testResponse.preTestActions = menuEntry.actions[0].dynamics;
               if (_.isEmpty(restBlockId)) {
                 restBlockId = AARestModelService.getRestTempId();
               }
@@ -1427,6 +1435,7 @@
               var overrideProps = {
                 url: menuEntry.actions[0].url,
                 method: menuEntry.actions[0].method,
+                testResponse: testResponse,
                 responseActions: createResponseBlock(menuEntry.actions[0]),
               };
               _.set(uiRestBlocks, restBlockId, overrideProps);

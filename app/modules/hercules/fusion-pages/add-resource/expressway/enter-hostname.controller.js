@@ -4,6 +4,8 @@
   angular.module('Hercules')
     .controller('ExpresswayEnterHostnameController', ExpresswayEnterHostnameController);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
   function ExpresswayEnterHostnameController($stateParams, $translate) {
     var vm = this;
@@ -38,7 +40,7 @@
     }
 
     function handleKeypress(event) {
-      if (event.keyCode === 13 && canGoNext()) {
+      if (event.keyCode === KeyCodes.ENTER && canGoNext()) {
         next();
       }
     }

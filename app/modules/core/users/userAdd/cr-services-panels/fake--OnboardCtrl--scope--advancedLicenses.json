@@ -1,0 +1,135 @@
+[
+  {
+    "site": "sqcie2e30.dmz.webex.com",
+    "billing": [
+      "SubCt31test20161222111"
+    ],
+    "confLic": [
+      {
+        "siteUrl": "sqcie2e30.dmz.webex.com",
+        "billing": "SubCt31test20161222111",
+        "volume": 200,
+        "licenseId": "MC_60a53872-76d1-404d-ba44-a4929ac839e6_sqcie2e30.dmz.webex.com",
+        "licenseModel": "Cloud Shared Meeting",
+        "offerName": "MC",
+        "label": "Meeting Center 200",
+        "isTrial": true,
+        "status": "ACTIVE",
+        "confModel": false,
+        "cmrModel": false
+      },
+      {
+        "siteUrl": "sqcie2e30.dmz.webex.com",
+        "billing": "SubCt31test20161222111",
+        "volume": 200,
+        "licenseId": "MC_60a53872-76d1-404d-ba44-a4929ac839e6_sqcie2e30.dmz.webex.com",
+        "licenseModel": "Cloud Shared Meeting",
+        "offerName": "MC",
+        "label": "Meeting Center 200",
+        "isTrial": false,
+        "status": "ACTIVE",
+        "confModel": false,
+        "cmrModel": false
+      }
+    ],
+    "cmrLic": [],
+    "isCISite": true,
+    "siteAdminUrl": ""
+  },
+  {
+    "site": "someonlinesite.my.webex.com",
+    "billing": [
+      "0000-000b-0007-0045-900000000"
+    ],
+    "confLic": [
+      {
+        "siteUrl": "someonlinesite.my.webex.com",
+        "billing": "0000-000b-0007-0045-900000000",
+        "volume": 1,
+        "licenseId": "MC_63423459-d345-5318-934f-6353535355a1_someonlinesite.my.webex.com",
+        "licenseModel": "",
+        "offerName": "MC",
+        "label": "Meeting Center 200",
+        "isTrial": true,
+        "status": "ACTIVE",
+        "confModel": false,
+        "cmrModel": false
+      }
+    ],
+    "cmrLic": [],
+    "isCISite": true,
+    "siteAdminUrl": ""
+  },
+  {
+    "site": "sqcie2e31.dmz.webex.com",
+    "billing": [
+      "SubCt31test20161222112"
+    ],
+    "confLic": [
+      {
+        "siteUrl": "sqcie2e31.dmz.webex.com",
+        "billing": "SubCt31test20161222112",
+        "volume": 200,
+        "licenseId": "EE_35c24923-4c76-4240-8c60-1224d8d20c6a_sqcie2e31.dmz.webex.com",
+        "licenseModel": "Cloud Shared Meeting",
+        "offerName": "EE",
+        "label": "Enterprise Edition 200",
+        "isTrial": false,
+        "status": "PENDING",
+        "confModel": false,
+        "cmrModel": false
+      }
+    ],
+    "cmrLic": [],
+    "isCISite": true,
+    "siteAdminUrl": ""
+  },
+  {
+    "site": "sqe2e01.dmz.webex.com",
+    "billing": [
+      "Sub20161222117"
+    ],
+    "confLic": [
+      {
+        "siteUrl": "sqe2e01.dmz.webex.com",
+        "billing": "Sub20161222117",
+        "volume": 100,
+        "licenseId": "MC_590f0c6e-cb09-4b7e-a521-8f8cce9ce7c9_sqe2e01.dmz.webex.com",
+        "licenseModel": "hosts",
+        "offerName": "MC",
+        "label": "Meeting Center 100",
+        "isTrial": false,
+        "status": "PENDING",
+        "confModel": false,
+        "cmrModel": false
+      }
+    ],
+    "cmrLic": [],
+    "isCISite": true,
+    "siteAdminUrl": ""
+  },
+  {
+    "site": "sqe2e05.dmz.webex.com",
+    "billing": [
+      "Sub20161222115"
+    ],
+    "confLic": [
+      {
+        "siteUrl": "sqe2e05.dmz.webex.com",
+        "billing": "Sub20161222115",
+        "volume": 100,
+        "licenseId": "MC_92892b81-a1da-421e-b4ad-60e97a640397_sqe2e05.dmz.webex.com",
+        "licenseModel": "hosts",
+        "offerName": "MC",
+        "label": "Meeting Center 100",
+        "isTrial": false,
+        "status": "PENDING",
+        "confModel": false,
+        "cmrModel": false
+      }
+    ],
+    "cmrLic": [],
+    "isCISite": true,
+    "siteAdminUrl": ""
+  }
+]

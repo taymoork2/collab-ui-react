@@ -6,20 +6,29 @@ require('@ciscospark/internal-plugin-search');
 
   module.exports = EdiscoveryReportsController;
   /* @ngInject */
-  function EdiscoveryReportsController($interval, $scope, $state, $translate, $window, Analytics, Authinfo, EdiscoveryService, EdiscoveryNotificationService, Notification, ReportUtilService, uiGridConstants) {
+  function EdiscoveryReportsController($interval, $modal, $scope, $state, $translate, $window, Analytics, Authinfo, EdiscoveryService, EdiscoveryNotificationService, Notification, ReportUtilService, uiGridConstants) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant('ediscovery.browserTabHeaderTitle');
     });
     var vm = this;
     var spark;
+    var ReportStates = {
+      ABORTED: 'ABORTED',
+      COMPLETED: 'COMPLETED',
+      FAILED: 'FAILED',
+      RUNNING: 'RUNNING',
+    };
 
     vm.readingReports = true;
     vm.concat = false;
     vm.moreReports = false;
+    vm.isReportGenerating = false;
 
     $scope.downloadReport = downloadReport;
     $scope.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
+    $scope.openCancelReportModal = openCancelReportModal;
     $scope.cancelReport = cancelReport;
+    vm.pollAvalonReport = pollAvalonReport;
     $scope.rerunReport = rerunReport;
     $scope.viewReport = viewReport;
     $scope.getKeyTooltip = getKeyTooltip;
@@ -65,13 +74,24 @@ require('@ciscospark/internal-plugin-search');
         });
     }
 
+    function openCancelReportModal(id) {
+      var template = require('./ediscovery-cancel-report-modal.html');
+
+      $modal.open({
+        type: 'dialog',
+        template: template,
+      }).result.then(function () {
+        cancelReport(id);
+      });
+    }
+
     function cancelReport(id) {
       if ($scope.reportsBeingCancelled[id]) {
         return;
       }
       $scope.reportsBeingCancelled[id] = true;
       EdiscoveryService.patchReport(id, {
-        state: 'ABORTED',
+        state: ReportStates.ABORTED,
       }).then(function () {
         if (!EdiscoveryNotificationService.notificationsEnabled()) {
           Notification.success('ediscovery.searchResults.reportCancelled');
@@ -115,7 +135,7 @@ require('@ciscospark/internal-plugin-search');
             if (!avalonRefreshPoller) {
               avalonRefreshPoller = $interval(function () {
                 _.each(vm.reports, function (r, index) {
-                  if (r.state === 'RUNNING') {
+                  if (r.state === ReportStates.RUNNING) {
                     EdiscoveryService.getReport(r.id).then(function (updatedReport) {
                       r = updatedReport;
                       vm.reports[index] = updatedReport;
@@ -167,6 +187,7 @@ require('@ciscospark/internal-plugin-search');
       EdiscoveryService.getReports($scope.offset, $scope.limit).then(function (res) {
         var reports = res.reports;
         var paging = res.paging;
+        vm.isReportGenerating = reports[0].state !== (ReportStates.COMPLETED || ReportStates.FAILED);
         vm.moreReports = !!paging.next;
         if (vm.concat) {
           vm.reports = vm.reports.concat(reports);

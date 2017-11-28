@@ -61,17 +61,5 @@ describe('fieldUtils', () => {
       expect(this.FieldUtils.getDataType(getAdvancedField('anything'))).toBe('context.dictionary.dataTypes.unknownDataType');
     });
   });
-
-  describe('cacheing', () => {
-    it('should cache translations', function () {
-      spyOn(this.$translate, 'instant').and.returnValue('value');
-      expect(this.$translate.instant).toHaveBeenCalledTimes(0);
-      this.FieldUtils.getDataType(getField('string'));
-      expect(this.$translate.instant).toHaveBeenCalledTimes(1);
-      this.FieldUtils.getDataType(getField('string'));
-      expect(this.$translate.instant).toHaveBeenCalledTimes(1);
-      this.FieldUtils.getDataType(getField('boolean'));
-      expect(this.$translate.instant).toHaveBeenCalledTimes(2);
-    });
-  });
 });
+

@@ -931,9 +931,6 @@
                 },
               },
             },
-            data: {
-              showMessengerInteropToggle: true,
-            },
           })
           .state('users.add.services.dn', {
             views: {
@@ -1039,6 +1036,13 @@
             template: '<edit-auto-assign-template-modal dismiss="$dismiss()"></edit-auto-assign-template-modal>',
             params: {
               prevState: 'users.manage.picker',
+              stateData: null,
+            },
+          })
+          .state('users.manage.edit-summary-auto-assign-template-modal', {
+            template: '<edit-summary-auto-assign-template-modal dismiss="$dismiss()"></edit-summary-auto-assign-template-modal>',
+            params: {
+              stateData: null,
             },
           })
 
@@ -1303,7 +1307,7 @@
           .state('user-overview.communication.voicemail', {
             views: {
               'side-panel-container@user-overview': {
-                template: '<uc-voicemail  owner-id="$resolve.ownerId"  ></uc-voicemail>',
+                template: '<uc-user-voicemail  owner-id="$resolve.ownerId"></uc-user-voicemail>',
               },
             },
             params: {
@@ -1552,7 +1556,7 @@
             params: {
               extensionId: {},
               extensions: {},
-              userUpdatedCallback: Function,
+              userUpdatedCallback: _.noop,
             },
           })
           .state('user-overview.hybrid-services-spark-hybrid-impinterop.history', {
@@ -1570,19 +1574,25 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-cal', {
-            views: {
-              'side-panel-container@user-overview': {
-                template: require('modules/hercules/user-sidepanel/calendarServicePreview.tpl.html'),
-                controller: 'CalendarServicePreviewCtrl',
-              },
-            },
+            template: '<hybrid-calendar-service-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)" preferred-web-ex-site-name="$resolve.preferredWebExSiteName"></hybrid-calendar-service-user-settings>',
             data: {},
-            resolve: {
-              displayName: translateDisplayName('hercules.serviceNames.squared-fusion-cal'),
-            },
             params: {
-              extensionId: {},
-              extensions: {},
+              userUpdatedCallback: _.noop,
+            },
+            resolve: {
+              userId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentUser.id;
+              },
+              userName: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentUser.userName;
+              },
+              userUpdatedCallback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.userUpdatedCallback;
+              },
+              preferredWebExSiteName: /* @ngInject */ function ($stateParams, HybridServiceUserSidepanelHelperService) {
+                return HybridServiceUserSidepanelHelperService.getPreferredWebExSiteName($stateParams.currentUser, $stateParams.orgInfo);
+              },
+              displayName: translateDisplayName('hercules.serviceNames.squared-fusion-cal'),
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-cal.history', {
@@ -1599,41 +1609,11 @@
               serviceId: {},
             },
           })
-          .state('user-overview.hybrid-services-squared-fusion-gcal', {
-            views: {
-              'side-panel-container@user-overview': {
-                template: require('modules/hercules/user-sidepanel/calendarServicePreview.tpl.html'),
-                controller: 'CalendarServicePreviewCtrl',
-              },
-            },
-            data: {},
-            resolve: {
-              displayName: translateDisplayName('hercules.serviceNames.squared-fusion-gcal'),
-            },
-            params: {
-              extensionId: {},
-              extensions: {},
-            },
-          })
-          .state('user-overview.hybrid-services-squared-fusion-gcal.history', {
-            views: {
-              'side-panel-container@user-overview': {
-                template: '<user-status-history service-id="\'squared-fusion-gcal\'"></user-status-history>',
-              },
-            },
-            data: {},
-            resolve: {
-              displayName: translateDisplayName('sidePanelBreadcrumb.statusHistory'),
-            },
-            params: {
-              serviceId: {},
-            },
-          })
           .state('user-overview.hybrid-services-squared-fusion-uc', {
             template: '<hybrid-call-service-aggregated-section user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)"></hybrid-call-service-aggregated-section>',
             data: {},
             params: {
-              userUpdatedCallback: Function,
+              userUpdatedCallback: _.noop,
             },
             resolve: {
               userId: /* @ngInject */ function ($stateParams) {
@@ -1878,13 +1858,13 @@
             controllerAs: 'siteList',
             parent: 'main',
             resolve: {
-              accountLinkingPhase2: function () {
-                return false;
+              accountLinkingPhase2: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasAccountLinkingPhase2);
               },
             },
           })
           .state('site-list.not-linked', {
-            url: '/site-list/not-linked',
+            url: '/not-linked',
             views: {
               tabContent: {
                 controllerAs: 'siteList',
@@ -1894,30 +1874,51 @@
             },
           })
           .state('site-list.linked', {
-            url: '/site-list/linked',
+            url: '/linked',
             views: {
               tabContent: {
-                controllerAs: 'siteList',
-                controller: 'WebExSiteRowCtrl',
-                template: 'preliminary placeholder for linked sites component',
+                template: '<linked-sites></linked-sites>',
               },
             },
+            params: {
+              originator: 'Menu',
+            },
+          })
+          .state('site-list.linked.details', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<linked-sites-details></linked-sites-details>',
+              },
+            },
+            params: {
+              siteInfo: null,
+            },
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('accountLinking.siteDetails.breadCrumb'),
+            },
+          })
+          .state('site-list.linked.details.wizard', {
+            views: {
+              'modal@': {
+                template: '<account-linking-wizard></account-linking-wizard>',
+              },
+            },
+            params: {
+              siteInfo: null,
+              operation: null,
+            },
+            onEnter: modalOnEnter({
+              type: 'full',
+            }),
+            onExit: modalOnExit,
           })
           .state('site-list-add', {
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<webex-add-site-modal subscription-list="$resolve.subscriptionList" audio-licenses="$resolve.audioLicenses" title="\'firstTimeWizard.addWebexSite\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site-modal>',
-              },
-            },
-            resolve: {
-              audioLicenses: /*@ngInject */ function (Authinfo, Config) {
-                var audioLicenses = _.filter(Authinfo.getLicenses(), { licenseType: Config.licenseTypes.AUDIO });
-                return audioLicenses;
-              },
-              subscriptionList: /* @ngInject */ function (Authinfo) {
-                var subscriptionIds = _.map(Authinfo.getSubscriptions(), 'externalSubscriptionId');
-                return subscriptionIds;
+                template: '<webex-add-site-modal  modal-title="\'firstTimeWizard.addWebexSite\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site-modal>',
               },
             },
           })
@@ -1925,16 +1926,15 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<webex-add-site-modal subscription-list="$resolve.subscriptionList" single-step="3" title="\'webexSiteManagement.redistributeLicenses\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site-modal>',
+                template: '<webex-add-site-modal subscription-id="$resolve.subscriptionId" single-step="3" modal-title="\'webexSiteManagement.redistributeLicenses\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site-modal>',
               },
             },
             params: {
               subscriptionId: null,
             },
             resolve: {
-              subscriptionList: /* @ngInject */ function ($stateParams) {
-                var subscriptionIds = $stateParams['subscriptionId'];
-                return [subscriptionIds];
+              subscriptionId: /* @ngInject */ function ($stateParams) {
+                return $stateParams['subscriptionId'];
               },
             },
           })
@@ -1942,7 +1942,7 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<webex-delete-site-modal subscription-id="$resolve.subscriptionId" site-url="$resolve.siteUrl" title="\'webexSiteManagement.redistributeLicenses\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-delete-site-modal>',
+                template: '<webex-delete-site-modal subscription-id="$resolve.subscriptionId" site-url="$resolve.siteUrl" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-delete-site-modal>',
               },
             },
             params: {
@@ -2001,27 +2001,6 @@
               webexPageId: null,
               settingPageIframeUrl: null,
             },
-          })
-          .state('webexReportsPanel', {
-            data: {},
-            parent: 'sidepanel',
-            views: {
-              'sidepanel@': {
-                template: '<cust-webex-reports-panel></cust-webex-reports-panel>',
-              },
-              'header@webexReportsPanel': {
-                template: require('modules/core/customerReports/webexReports/search/webexReportsPanelHeader.html'),
-              },
-            },
-          })
-          .state('webexReportsPanel.more', {
-            views: {
-              'side-panel-container@webexReportsPanel': {
-                template: '<cust-webex-reports-more></cust-webex-reports-more>',
-              },
-            },
-            onEnter: SidePanelLargeOpen,
-            onExit: SidePanelLargeClose,
           })
           .state('reports', {
             url: '/reports',
@@ -2086,13 +2065,41 @@
               },
             },
           })
+          .state('reports.webex-metrics.system', {
+            url: '/system',
+            views: {
+              metricsContent: {
+                template: '<div> To be continue...</div>',
+              },
+            },
+          })
           .state('reports.webex-metrics.diagnostics', {
             url: '/diagnostics',
             views: {
               metricsContent: {
-                template: '<cust-webex-reports-search></cust-webex-reports-search>',
+                template: '<dgc-webex-reports-search></dgc-webex-reports-search>',
               },
             },
+          })
+          .state('dgc', {
+            parent: 'main',
+            template: '<div ui-view></div>',
+          })
+          .state('dgc.tab', {
+            template: '<dgc-tab></dgc-tab>',
+          })
+          .state('dgc.tab.meetingdetail', {
+            url: '/diagnostics/meeting/:cid',
+            views: { tabContent: { template: '<dgc-tab-meetingdetail></dgc-tab-meetingdetail>' } },
+          })
+          .state('dgc.tab.participants', {
+            url: '/diagnostics/participants/:cid',
+            views: { tabContent: { template: '<dgc-tab-participants></dgc-tab-participants>' } },
+          })
+          .state('dgc-panel', {
+            data: {},
+            parent: 'sidepanel',
+            views: { 'sidepanel@': { template: '<dgc-panel-participant></dgc-panel-participant>' } },
           })
           .state('reports.webex-metrics.classic', {
             url: '/classic',
@@ -2556,7 +2563,7 @@
             views: {
               'side-panel-container@place-overview': {
                 template: require('modules/hercules/user-sidepanel/calendarServicePreview.tpl.html'),
-                controller: 'CalendarServicePreviewCtrl',
+                controller: 'HybridCloudberryCalendarCtrl',
               },
             },
             data: {},
@@ -2592,7 +2599,7 @@
             views: {
               'side-panel-container@place-overview': {
                 template: require('modules/hercules/user-sidepanel/calendarServicePreview.tpl.html'),
-                controller: 'CalendarServicePreviewCtrl',
+                controller: 'HybridCloudberryCalendarCtrl',
               },
             },
             data: {},
@@ -3553,7 +3560,7 @@
               customerEmail: '',
               customerCommunicationLicenseIsTrial: '',
               customerRoomSystemsLicenseIsTrial: '',
-              showContractIncomplete: {},
+              showContractIncomplete: false,
               refreshFn: function () {},
             },
             views: {
@@ -3607,7 +3614,6 @@
               customerEmail: {},
               customerCommunicationLicenseIsTrial: {},
               customerRoomSystemsLicenseIsTrial: {},
-              showContractIncomplete: {},
               refreshFn: function () {},
             },
             views: {
@@ -3952,7 +3958,7 @@
             parent: 'main',
             resolve: {
               atlasServicesOverviewRefresh: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasServicesOverviewRefresh);
+                return FeatureToggleService.hasFeatureToggleOrIsTestOrg(FeatureToggleService.features.atlasServicesOverviewRefresh);
               },
               urlParams: /* @ngInject */ function ($stateParams) {
                 return $stateParams;
@@ -4009,6 +4015,27 @@
                 return $stateParams.clusterId;
               },
             },
+          })
+          .state('context-cluster', {
+            abstract: true,
+            url: '/services/cluster/context/:id',
+            parent: 'main',
+            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" back-state="$resolve.backState"></hybrid-services-cluster-page>',
+            params: {
+              backState: null,
+            },
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.id;
+              },
+              backState: /* @ngInject */ function ($stateParams) {
+                return $stateParams.backState;
+              },
+            },
+          })
+          .state('context-cluster.nodes', {
+            url: '/nodes',
+            template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
           })
           .state('context-fields', {
             url: '/services/context/fields',
@@ -4492,10 +4519,11 @@
           })
           .state('mediafusion-cluster.settings', {
             url: '/settings',
-            template: require('modules/hercules/fusion-pages/mediafusion-settings.html'),
-            controller: 'MediafusionClusterSettingsController',
-            controllerAs: 'clusterSettings',
+            template: '<hybrid-media-cluster-settings cluster-id="$resolve.id" has-mf-phase-two-toggle="$resolve.hasMFFeatureToggle" has-mf-trusted-sip-toggle="$resolve.hasMFSIPFeatureToggle"></hybrid-media-cluster-settings>',
             resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.id;
+              },
               hasMFFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwo);
               },
@@ -4814,6 +4842,7 @@
             controller: 'ImpServiceContainerController',
             controllerAs: 'vm',
             params: {
+              backState: null,
               clusterId: null,
             },
             parent: 'main',

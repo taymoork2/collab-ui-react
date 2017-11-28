@@ -4,8 +4,10 @@
   angular.module('Core')
     .controller('OverviewReportsCtrl', OverviewReportsCtrl);
 
+  var ChartColors = require('modules/core/config/chartColors').ChartColors;
+
   /* @ngInject */
-  function OverviewReportsCtrl($scope, $translate, Authinfo, Notification, PartnerService, ReportsService, chartColors, CommonGraphService) {
+  function OverviewReportsCtrl($scope, $translate, Authinfo, Notification, PartnerService, ReportsService, CommonGraphService) {
     var LINE = 'line';
     var AXIS = 'axis';
     var NUMFORMAT = 'numFormat';
@@ -92,7 +94,7 @@
       var catAxis = CommonGraphService.getBaseVariable(AXIS);
       catAxis.gridPosition = 'start';
       catAxis.title = $translate.instant('reports.weekOf');
-      catAxis.gridColor = chartColors.grayLightTwo;
+      catAxis.gridColor = ChartColors.grayLightTwo;
       catAxis.gridAlpha = 1;
 
       var graphs = [];
@@ -113,7 +115,7 @@
       chartObject.export = undefined;
       chartObject.colors = [colors];
       chartObject.plotAreaBorderAlpha = 0;
-      chartObject.plotAreaBorderColor = chartColors.grayDarkThree;
+      chartObject.plotAreaBorderColor = ChartColors.grayDarkThree;
       chartObject.balloon.borderThickness = 2;
       chartObject.balloon.fillAlpha = 0.8;
       chartObject.numberFormatter = CommonGraphService.getBaseVariable(NUMFORMAT);
@@ -121,7 +123,7 @@
         enabled: showCursor,
         valueLineEnabled: true,
         valueLineBalloonEnabled: true,
-        cursorColor: chartColors.grayDarkThree,
+        cursorColor: ChartColors.grayDarkThree,
         valueBalloonsEnabled: false,
         cursorPosition: 'mouse',
       };
@@ -210,14 +212,14 @@
         }
         $scope.entCount = _.round(dataCount);
 
-        updateChart(formattedData, chartColors.primaryBase, true);
+        updateChart(formattedData, ChartColors.primaryBase, true);
       } else {
         errorMessage(entTitle, response);
         $scope.entCount = 0;
       }
       if ($scope.entCount === 0) {
         $scope.entitlementStatus = NO_DATA;
-        updateChart(dummyChartVals, chartColors.grayLightTwo, false);
+        updateChart(dummyChartVals, ChartColors.grayLightTwo, false);
       }
     });
   }

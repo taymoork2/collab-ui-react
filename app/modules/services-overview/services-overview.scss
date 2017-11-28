@@ -263,10 +263,9 @@ services-overview {
     }
 
     .icon-question-circle {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
       font-size: 1.125rem;
+      padding-top: 0.8rem;
+      margin-left: auto;
     }
 
     .badge {
@@ -283,6 +282,24 @@ services-overview {
       @include text-overflow();
       font-size: 1.2rem !important;
       text-align: left !important;
+    }
+  }
+
+  .active-card_header {
+    display: flex;
+
+    &.card_header--stretched {
+      display: block;
+
+      .icon-question-circle {
+        position: absolute;
+        top: 0;
+        right: 1rem;
+      }
+    }
+
+    h4 {
+      flex: 1 1 auto;
     }
   }
 

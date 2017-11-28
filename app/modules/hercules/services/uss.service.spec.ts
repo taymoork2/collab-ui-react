@@ -262,7 +262,7 @@ describe('Service: USSService', function () {
   describe('getStatusesSummary', function () {
     it('should be empty by default', function () {
       const statuses = USSService.getStatusesSummary();
-      expect(statuses).toEqual([]);
+      expect(statuses).toEqual({});
     });
 
     // TODO: find how to check changes after polling

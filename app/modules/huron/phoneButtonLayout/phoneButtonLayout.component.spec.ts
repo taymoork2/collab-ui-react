@@ -1,33 +1,35 @@
 import { IPhoneButton } from './phoneButtonLayout.service';
+import { KeyCodes } from 'modules/core/accessibility';
 
 describe('component: phoneButtonLayout', () => {
   const DROPDOWN_LIST = 'button[cs-dropdown-toggle]';
-  const DROPDOWN_LIST_ADD = '.actions-services li:nth-child(1) a';
+  const DROPDOWN_LIST_ADD = '.actions-services li:nth-child(1)';
 
   const INPUT_NAME = 'input[name="buttonLabel"]';
   const INPUT_NUMBER = 'input[name="phoneinput"]';
   const SAVE_BUTTON = 'button.btn--primary';
   const READ_ONLY = '.phonebuttonlayout-readonly-wrapper .phonebutton-label';
-  const DROPDOWN_LIST_REORDER = '.actions-services li:nth-child(2) a';
+  const DROPDOWN_LIST_REORDER = '.actions-services li:nth-child(2)';
   const REORDER = '.phonebuttonlayout-reorder';
 
   beforeEach(function() {
     this.initModules('huron.phone-button-layout');
     this.injectDependencies(
+      '$httpBackend',
+      '$q',
       '$scope',
       '$timeout',
-      'PhoneButtonLayoutService',
-      '$q',
-      'HuronCustomerService',
-      'BlfInternalExtValidation',
       'Authinfo',
+      'BlfInternalExtValidation',
       'BlfURIValidation',
-      'HuronConfig',
-      'UrlConfig',
-      '$httpBackend',
+      'DraggableService',
       'FeatureMemberService',
+      'HuronConfig',
+      'HuronCustomerService',
       'HuronUserService',
       'Notification',
+      'PhoneButtonLayoutService',
+      'UrlConfig',
     );
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
     this.callDestInputs = ['external', 'uri', 'custom'];
@@ -166,7 +168,6 @@ describe('component: phoneButtonLayout', () => {
 
     it('should insert the Add Buttons in the actionList', function () {
       this.controller.editing = false;
-      this.controller.reordering = false;
       this.controller.buildActionList();
       expect(this.controller.actionList[0].actionKey).toEqual('phoneButtonLayout.addButton');
       expect(this.controller.actionList[1].actionKey).toEqual('phoneButtonLayout.reorder');
@@ -174,7 +175,6 @@ describe('component: phoneButtonLayout', () => {
 
     it('should remove Add Buttons from the actionList if button limit reached', function () {
       this.controller.editing = false;
-      this.controller.reordering = false;
       this.controller.buildActionList();
       expect(this.controller.actionList[0].actionKey).toEqual('phoneButtonLayout.addButton');
       expect(this.controller.actionList[1].actionKey).toEqual('phoneButtonLayout.reorder');
@@ -191,7 +191,7 @@ describe('component: phoneButtonLayout', () => {
     });
 
     it('should make actionList empty if in reorder mode', function () {
-      this.controller.reordering = true;
+      this.controller.draggableInstance = { reordering: true };
       this.controller.buildActionList();
       expect(this.controller.actionList.length).toEqual(0);
     });
@@ -330,6 +330,47 @@ describe('component: phoneButtonLayout', () => {
       expect(buttonList[1].index).toEqual(2);
       expect(buttonList[2].index).toEqual(3);
       expect(buttonList[3].index).toEqual(4);
+    });
+  });
+
+  describe(' - keyboard navigation functionality', function (){
+    beforeEach(initComponent('users', '12345'));
+    beforeEach(function () {
+      this.list = [{
+        id: 'phoneButton1',
+        index: 1,
+      }, {
+        id: 'phoneButton2',
+        index: 2,
+      }, {
+        id: 'phoneButton3',
+        index: 3,
+      }];
+
+      this.controller.phoneButtonList = this.list;
+    });
+
+    it('should call DraggableService functions createDraggableInstance and keyPress', function () {
+      spyOn(this.DraggableService, 'createDraggableInstance').and.callThrough();
+      this.controller.setReorder();
+      expect(this.DraggableService.createDraggableInstance).toHaveBeenCalledWith({
+        elem: this.controller.$element,
+        scope: jasmine.any(Object),
+        list: this.list,
+        identifier: '#arrangeablePhoneButtonsContainer',
+        transitClass: 'phonebuttonlayout-reorder',
+        itemIdentifier: '#phoneButton',
+      });
+    });
+
+    it('should return true or false for isSelectedPhoneButton', function () {
+      this.controller.setReorder();
+      spyOn(this.controller.draggableInstance, 'keyPress').and.callThrough();
+
+      this.controller.phoneButtonKeyPress({ which: KeyCodes.ENTER }, this.list[1]);
+      expect(this.controller.isSelectedPhoneButton(this.list[1])).toBeTruthy();
+      expect(this.controller.isSelectedPhoneButton(this.list[0])).toBeFalsy();
+      expect(this.controller.draggableInstance.keyPress).toHaveBeenCalledWith({ which: KeyCodes.ENTER }, this.list[1]);
     });
   });
 });

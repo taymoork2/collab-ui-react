@@ -6,6 +6,7 @@ describe('Service: SetupWizard Service', function () {
     this.injectDependencies(
       '$httpBackend',
       '$q',
+      'AccountService',
       'Authinfo',
       'SessionStorage',
       'SetupWizardService',
@@ -20,6 +21,9 @@ describe('Service: SetupWizard Service', function () {
     this.pendingSubscriptions = getJSONFixture('core/json/setupWizard/pendingSubscriptions.json');
     this.pendingSubscriptionOptions = getJSONFixture('core/json/setupWizard/pendingSubscriptionOptions.json');
     this.conferenceServices = _.clone(getJSONFixture('core/json/authInfo/confServices.json'));
+    this.webexTrialMixed = _.clone(getJSONFixture('core/json/authInfo/complexCustomerCases/accountWithTrial.json'));
+    this.webexTrialOnly = _.clone(getJSONFixture('core/json/authInfo/complexCustomerCases/aboutToConvert.json'));
+    this.noWebexTrial = _.clone(getJSONFixture('core/json/authInfo/complexCustomerCases/customerWithCCASP.json'));
     spyOn(this.Authinfo, 'getSubscriptions').and.returnValue(this.authinfoPendingSubscriptions);
     spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(this.conferenceServices);
   });
@@ -28,6 +32,27 @@ describe('Service: SetupWizard Service', function () {
     this.$httpBackend.verifyNoOutstandingExpectation();
     this.$httpBackend.verifyNoOutstandingRequest();
   });
+
+  function getLicensesFromCustomers(accounts) {
+    const result = <any>[];
+    _.forEach(accounts, function (account) {
+      let licenses;
+      // If org has subscriptions get the license information from subscriptions, else from licences
+      if (_.has(account, 'subscriptions')) {
+        licenses = _.flatMap(account.subscriptions, 'licenses');
+      } else if (_.has(account, 'licenses')) {
+        licenses = _.get(account, 'licenses', []);
+      }
+      _.forEach(licenses, function (license) {
+        result.push({ license: license });
+      });
+    });
+    return result;
+  }
+
+  function getSubscriptionsFromCustomers(accounts) {
+    return _.without(_.flattenDeep(_.map(accounts, 'subscriptions')), undefined);
+  }
 
   describe('populatePendingSubscriptions()', () => {
     describe('with multiple subscriptions', () => {
@@ -211,6 +236,83 @@ describe('Service: SetupWizard Service', function () {
     it('should return the list of conference licenses', function () {
       const result = this.SetupWizardService.getConferenceLicensesBySubscriptionId('SubCt31test20161222111');
       expect(result.length).toBe(2);
+    });
+  });
+
+  describe('getNonTrialWebexLicenses', function () {
+    it('should return an array with webex licenses for some services when there are trial and non trial webex subscriptions', function () {
+      this.Authinfo.getConferenceServices.and.returnValue(getLicensesFromCustomers(this.webexTrialMixed['customers']));
+      const result = this.SetupWizardService.getNonTrialWebexLicenses();
+      expect(result.length).toBe(1);
+    });
+    it('should return an empty array if only webex licenses are trial', function () {
+      this.Authinfo.getConferenceServices.and.returnValue(getLicensesFromCustomers(this.webexTrialOnly['customers']));
+      const result = this.SetupWizardService.getNonTrialWebexLicenses();
+      expect(result.length).toBe(0);
+    });
+
+    it('should return an array with webex licenses for all services when no webex trial', function () {
+      this.Authinfo.getConferenceServices.and.returnValue(getLicensesFromCustomers(this.noWebexTrial['customers']));
+      const result = this.SetupWizardService.getNonTrialWebexLicenses();
+      expect(result.length).toBe(6);
+    });
+  });
+
+  describe('validateTransferCodeBySubscriptionId', function () {
+    it('should call backend correctly and return the approriate data', function () {
+      const payload = {
+        siteUrl: 'www.somesite',
+        transferCode: '123',
+        serviceId: 's_id123',
+        orderUuid: undefined,
+      };
+      const url = `${this.UrlConfig.getAdminServiceUrl()}subscriptions/site/verifytransfercode`;
+      this.SetupWizardService.validateTransferCodeBySubscriptionId('www.somesite', '123', 's_id123')
+        .then(result => {
+          expect(result.data.siteList).toEqual(['www.somesite']);
+          expect(result.status).toBe(200);
+        });
+      this.$httpBackend.expectPOST(url, payload)
+        .respond(200, {
+          siteList: ['www.somesite'],
+        });
+      this.$httpBackend.flush();
+    });
+  });
+
+  describe('getting the subscriptions status correctly', function () {
+    beforeEach(function () {
+      this.Authinfo.getConferenceServices.and.returnValue(getLicensesFromCustomers(this.webexTrialMixed['customers']));
+      this.Authinfo.getSubscriptions.and.returnValue(getSubscriptionsFromCustomers(this.webexTrialMixed['customers']));
+    });
+
+    it('should return true if subscription has \'pendingServiceOrderUUID\'', function () {
+      const result = this.SetupWizardService.isSubscriptionPending('Sub110871');
+      expect(result).toBe(true);
+    });
+
+    it('should have getEnterpriseSubscriptionListWithStatus() correctly return the billingServiceIds with their pending status', function () {
+      const result = this.SetupWizardService.getEnterpriseSubscriptionListWithStatus();
+      expect(result).toEqual([{ id: 'Sub110871', isPending: true }]);
+    });
+
+    it('should determine if subscription is Enterprise correctly', function () {
+      const subs = [{
+        startDate: '2017-10-10T19:37:49.708Z',
+        orderingTool: 'CCW',
+        subscriptionId: 'fe5149ac-7c8b-402b-b06c-afed12a72e84',
+        externalSubscriptionId: 'Sub100448',
+      }, {
+        startDate: '2017-10-10T19:37:49.708Z',
+        orderingTool: 'OTHER',
+        subscriptionId: 'fe5149ac-7c8b-402b-b06c-afed12a72e84',
+        externalSubscriptionId: 'Sub100449',
+      }];
+      this.Authinfo.getSubscriptions.and.returnValue(subs);
+      let result = this.SetupWizardService.isSubscriptionEnterprise('Sub100448');
+      expect(result).toBeTruthy();
+      result = this.SetupWizardService.isSubscriptionEnterprise('Sub100449');
+      expect(result).toBeFalsy();
     });
   });
 });

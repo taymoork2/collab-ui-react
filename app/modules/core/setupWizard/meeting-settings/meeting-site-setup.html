@@ -13,8 +13,8 @@
       <div class="col-lg-5">
         <b><div>{{site.siteUrl}}<span translate="firstTimeWizard.pmrSiteURLDomain"></span></div></b>
         <div ng-if="site.timezone" class="time-zone" translate-values="{label: site.timezone.label}" translate="firstTimeWizard.timeZoneSetTo"></div>
-        <div ng-if="site.setupType && meetingCtrl.isShowUserManagement" class="time-zone" translate="firstTimeWizard.userManagementViaWebex"></div>
-        <div ng-if="!site.setupType &&  meetingCtrl.isShowUserManagement" class="time-zone" translate="firstTimeWizard.userManagementViaSpark"></div>
+        <div ng-if="meetingCtrl.isShowUserManagement && site.isCIUnifiedSite" class="time-zone" translate="firstTimeWizard.userManagementViaSpark"></div>
+        <div ng-if="meetingCtrl.isShowUserManagement && !site.isCIUnifiedSite" class="time-zone" translate="firstTimeWizard.userManagementViaWebex"></div>
       </div>
       <div class="col-lg-1" ng-if="!(site.setupType === 'TRANSFER' || site.keepExistingSite)">
         <i class="icon icon-delete delete-site" ng-click="meetingCtrl.removeSite($index)"></i>
@@ -64,8 +64,8 @@
       <div class="row">
         <div class="col-lg-12 element-spacing">
           <div class="cs-radio-group" ng-class="{'error': meetingCtrl.error.isError &&  meetingCtrl.error.errorType === meetingCtrl.siteErrorType.USER_MGMT}">
-            <input 
-              cs-input 
+            <input
+              cs-input
               type="radio"
               required
               ng-model="meetingCtrl.siteModel.setupType"
@@ -74,8 +74,8 @@
               name="addWebexUsers1"
               value="undefined"
               cs-input-label="{{::'firstTimeWizard.userManagementSpark' | translate }}">
-            <input 
-              cs-input  
+            <input
+              cs-input
               type="radio"
               required
               ng-model="meetingCtrl.siteModel.setupType"

@@ -5,6 +5,8 @@
     .module('Squared')
     .controller('HelpdeskUserController', HelpdeskUserController);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
   function HelpdeskUserController($modal, $q, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, HybridServicesI18NService, HybridServicesClusterService, Userservice, ResourceGroupService, UCCService) {
     var vm = this;
@@ -505,7 +507,7 @@
 
     function keyPressHandler(event) {
       if (!modalVisible()) {
-        if (event.keyCode === 27) { // Esc
+        if (event.keyCode === KeyCodes.ESCAPE) {
           $window.history.back();
         }
       }

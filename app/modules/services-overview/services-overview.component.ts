@@ -16,6 +16,7 @@ import { ServicesOverviewPrivateTrunkCard } from './hybrid/private-trunk-card';
 import { Config } from 'modules/core/config/config';
 import { CloudConnectorService, CCCService, ICCCService } from 'modules/hercules/services/calendar-cloud-connector.service';
 import { EnterprisePrivateTrunkService, IPrivateTrunkResourceWithStatus } from 'modules/hercules/services/enterprise-private-trunk-service';
+import { FeatureToggleService } from 'modules/core/featureToggle';
 import { HybridServicesClusterService, IServiceStatusWithSetup } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { ICluster, HybridServiceId, IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
 import { IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
@@ -49,6 +50,7 @@ export class ServicesOverviewController implements ng.IComponentController {
   public _servicesActive: HybridServiceId[] = []; // made public for easier testing
   public _servicesInactive: HybridServiceId[] = []; // made public for easier testing
   public clusters: IExtendedClusterFusion[] | null = null;
+  public trunks: IPrivateTrunkResourceWithStatus[] | null = null;
   public servicesStatuses: (ICCCService | IPrivateTrunkResourceWithStatus | IServiceStatusWithSetup)[] = [];
   public loadingHybridServicesCards = true;
 
@@ -63,7 +65,7 @@ export class ServicesOverviewController implements ng.IComponentController {
     private CloudConnectorService: CloudConnectorService,
     private Config: Config,
     private EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
-    private FeatureToggleService,
+    private FeatureToggleService: FeatureToggleService,
     private HDSService,
     private HybridServicesClusterService: HybridServicesClusterService,
     private Notification: Notification,
@@ -84,9 +86,8 @@ export class ServicesOverviewController implements ng.IComponentController {
       });
 
     const features = this.$q.all({
-      atlasHybridDataSecurity: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridDataSecurity),
       atlasHybridImp: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridImp),
-      atlasOffice365Support: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasOffice365Support), // cleaner this way, but utimately same value has this.showNewUI
+      atlasOffice365Support: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasOffice365Support),
       atlasPMRonM2: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasPMRonM2),
       hI1484: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484),
       hI802: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI802),
@@ -97,12 +98,10 @@ export class ServicesOverviewController implements ng.IComponentController {
       this.loadHybridServicesStatuses();
       features
         .then((response) => {
-          this.forwardEvent('hybridDataSecurityFeatureToggleEventHandler', response.atlasHybridDataSecurity);
           this.forwardEvent('atlasHybridImpFeatureToggleEventHandler', response.atlasHybridImp);
           if (response.atlasPMRonM2) {
             this.getPMRStatus();
           }
-          this.forwardEvent('atlasHybridImpFeatureToggleEventHandler', response.atlasHybridImp);
           this.forwardEvent('hI1484FeatureToggleEventhandler', response.hI1484);
           this.forwardEvent('sparkCallCdrReportingFeatureToggleEventhandler', response.hI802);
           this.forwardEvent('privateTrunkFeatureToggleEventHandler', response.huronEnterprisePrivateTrunking);
@@ -115,6 +114,14 @@ export class ServicesOverviewController implements ng.IComponentController {
     } else {
       features
         .then((response) => {
+          // Used by cloud cards
+          if (response.atlasPMRonM2) {
+            this.getPMRStatus();
+          }
+          this.forwardEvent('hI1484FeatureToggleEventhandler', response.hI1484);
+          this.forwardEvent('sparkCallCdrReportingFeatureToggleEventhandler', response.hI802);
+
+          // Used by hybrid cards
           if (this.Authinfo.isFusionUC()) {
             this._servicesToDisplay.push('squared-fusion-uc');
           }
@@ -130,7 +137,7 @@ export class ServicesOverviewController implements ng.IComponentController {
           if (this.Authinfo.isFusionMedia() && _.some(this.Authinfo.getRoles(), (role) => role === this.Config.roles.full_admin || this.Config.roles.readonly_admin)) {
             this._servicesToDisplay.push('squared-fusion-media');
           }
-          if ((this.Authinfo.isFusionHDS() || response.atlasHybridDataSecurity) && this.Authinfo.isEnterpriseCustomer() && _.some(this.Authinfo.getRoles(), (role) => role === this.Config.roles.full_admin || this.Config.roles.readonly_admin)) {
+          if (this.Authinfo.isFusionHDS() && this.Authinfo.isEnterpriseCustomer() && _.some(this.Authinfo.getRoles(), (role) => role === this.Config.roles.full_admin || this.Config.roles.readonly_admin)) {
             this._servicesToDisplay.push('spark-hybrid-datasecurity');
           }
           if (this.Authinfo.isContactCenterContext()) {
@@ -161,6 +168,13 @@ export class ServicesOverviewController implements ng.IComponentController {
                 }));
             } else if (serviceId === 'ept') {
               return this.EnterprisePrivateTrunkService.fetch()
+                .then((trunks) => {
+                  this.trunks = trunks;
+                  return {
+                    serviceId: serviceId,
+                    setup: trunks.length > 0,
+                  };
+                })
                 .catch(() => ({
                   serviceId: serviceId,
                   setup: false,

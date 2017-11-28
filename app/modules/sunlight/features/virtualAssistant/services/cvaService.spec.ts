@@ -3,11 +3,11 @@ import { CvaService } from './cvaService';
 
 describe('Care Customer Virtual Assistant Service', function () {
 
-  const SERVICE_URL = 'testApp.ciscoservice.com/bot-services/v1/';
+  const SERVICE_URL = 'testApp.ciscoservice.com/virtual-assistant/v1/';
   const TEST_ORG_ID = 'A-UUID-VALUE';
   const TEST_BOT_NAME = 'A NAME';
   const TEST_BOT_CONFIG_ID = 'ANOTHER-UUID-VALUE';
-  const APIAI_TEST_BOT_TOKEN = 'APIAI-UUID-TOKEN';
+  const DIALOGFLOW_TEST_BOT_TOKEN = 'DIALOGFLOW-UUID-TOKEN';
   let CvaService: CvaService, $httpBackend, $state;
 
   const spiedUrlConfig = {
@@ -41,7 +41,7 @@ describe('Care Customer Virtual Assistant Service', function () {
   it('service Card goto Service should do just that', function () {
     const goSpy = spyOn($state, 'go');
     CvaService.cvaServiceCard.goToService($state, { type: 'virtualAssistant' });
-    expect(goSpy).toHaveBeenCalledWith('care.assistant', {
+    expect(goSpy).toHaveBeenCalledWith('care.customerVirtualAssistant', {
       type: 'virtualAssistant',
     });
   });
@@ -124,24 +124,24 @@ describe('Care Customer Virtual Assistant Service', function () {
 
   it('URL should support updateConfig', function () {
     const url = new RegExp('.*/organization/' + TEST_ORG_ID + '/botconfig/' + TEST_BOT_CONFIG_ID);
-    const config = { token: APIAI_TEST_BOT_TOKEN };
+    const config = { token: DIALOGFLOW_TEST_BOT_TOKEN };
     $httpBackend.expectPUT(url, {
-      type: CvaService.configurationTypes.apiai,
+      type: CvaService.configurationTypes.dialogflow,
       name: TEST_BOT_NAME,
       config: config,
       icon: 'iconURL',
     }).respond(200);
-    CvaService.updateConfig(TEST_BOT_CONFIG_ID, CvaService.configurationTypes.apiai, TEST_BOT_NAME, config, TEST_ORG_ID, 'iconURL');
+    CvaService.updateConfig(TEST_BOT_CONFIG_ID, CvaService.configurationTypes.dialogflow, TEST_BOT_NAME, config, TEST_ORG_ID, 'iconURL');
     $httpBackend.flush();
   });
 
   it('URL should support addConfig', function () {
     const url = new RegExp('.*/organization/' + TEST_ORG_ID + '/botconfig');
     const expectedResponse = { botServicesConfigId: TEST_BOT_CONFIG_ID };
-    const config = { token: APIAI_TEST_BOT_TOKEN };
+    const config = { token: DIALOGFLOW_TEST_BOT_TOKEN };
     $httpBackend
       .expectPOST(url, {
-        type: CvaService.configurationTypes.apiai,
+        type: CvaService.configurationTypes.dialogflow,
         name: TEST_BOT_NAME,
         config: config,
         icon: 'iconURL',
@@ -149,8 +149,8 @@ describe('Care Customer Virtual Assistant Service', function () {
       .respond(201, {}, {
         location: 'organization/' + TEST_ORG_ID + '/botconfig/' + TEST_BOT_CONFIG_ID,
       });
-    let result = { };
-    CvaService.addConfig(CvaService.configurationTypes.apiai, TEST_BOT_NAME, config, TEST_ORG_ID, 'iconURL')
+    let result = {};
+    CvaService.addConfig(CvaService.configurationTypes.dialogflow, TEST_BOT_NAME, config, TEST_ORG_ID, 'iconURL')
       .then(function (response) {
         result = { botServicesConfigId: response.botServicesConfigId };
       });

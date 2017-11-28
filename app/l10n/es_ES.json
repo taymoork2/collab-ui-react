@@ -1483,7 +1483,7 @@
     "notFound": "No se ha encontrado",
     "notSet": "Sin configurar",
     "off": "Desactivado",
-    "offline": "Sin conexión:",
+    "offline": "Sin conexión",
     "ok": "Aceptar",
     "on": "Activado",
     "online": "En línea",
@@ -2198,7 +2198,7 @@
       "disabled": "Deshabilitado",
       "not_installed": "No instalado",
       "stopped": "Detenido",
-      "offline": "Sin conexión:",
+      "offline": "Sin conexión",
       "registered": "Registrado",
       "downloading": "Descargando",
       "uninstalling": "Desinstalando",
@@ -3337,7 +3337,7 @@
       "disabled": "Deshabilitado",
       "not_installed": "No instalado",
       "stopped": "Detenido",
-      "offline": "Sin conexión:",
+      "offline": "Sin conexión",
       "registered": "Registrado",
       "downloading": "Descargando",
       "uninstalling": "Desinstalando",
@@ -6029,7 +6029,7 @@
     "ipAddr": "Dirección IP",
     "status": "Estado",
     "actions": "Acciones",
-    "offline": "Sin conexión:",
+    "offline": "Sin conexión",
     "active": "Elementos activos:",
     "close": "Cerrar",
     "moveHostSuccess": "Nodo movido correctamente.",
@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "En línea",
-      "OnlineWithIssues": "En línea, con errores",
-      "Offline": "Sin conexión:",
-      "OfflineExpired": "Desactivado",
-      "Unknown": "Desconocido"
+      "CONNECTED": "En línea",
+      "CONNECTED_WITH_ISSUES": "En línea, con errores",
+      "DISCONNECTED": "Sin conexión",
+      "OFFLINE_EXPIRED": "Desactivado",
+      "UNKNOWN": "Desconocido"
     },
     "WithDevices": "Con dispositivos",
     "upgradeChannels": {
@@ -6678,23 +6678,23 @@
       "wlan": "Inalámbrica"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "Puertos de red bloqueados",
         "message": "Es posible que el cortafuegos esté bloqueando el contenido multimedia con el protocolo UDP, lo que puede afectar a la calidad de la llamada. Para obtener información sobre los requisitos del puerto de red, consulte el artículo <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Requisitos de red y firewall para la aplicación Cisco Spark</a>."
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "Puertos de red bloqueados",
         "message": "Es posible que el cortafuegos esté bloqueando el contenido multimedia con el protocolo UDP, lo que puede afectar a la calidad de la llamada. Para obtener información sobre los requisitos del puerto de red, consulte el artículo <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Requisitos de red y firewall para la aplicación Cisco Spark</a>."
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "Puertos de red bloqueados",
         "message": "Es posible que el cortafuegos esté bloqueando el contenido multimedia con los protocolos UDP y TCP, lo que puede afectar a la calidad de la llamada. Para obtener información sobre los requisitos del puerto de red, consulte el artículo <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Requisitos de red y firewall para la aplicación Cisco Spark</a>."
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "Temperatura elevada",
         "message": "La temperatura del sistema es elevada."
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "No se ha detectado la pantalla principal",
         "message": "Compruebe que la pantalla principal está encendida y conectada a la salida correcta de pantalla del sistema de vídeo."
       },
@@ -6702,35 +6702,35 @@
         "type": "Actualizaciones automáticas desactivadas",
         "message": "El software del sistema no se actualizará."
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "No se puede acceder al servidor horario.",
         "message": "No se ha podido establecer conexión con el servidor NTP. La hora que se muestra en su terminal podría ser errónea."
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "Interferencias de señal de otros dispositivos",
         "message": "Existen interferencias de señales de ultrasonido en la sala procedentes de otros dispositivos (p. ej.: otros sistemas de vídeo) que podrían bloquear la conexión entre el sistema de vídeo y su teléfono u ordenador portátil."
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "Retraso del audio",
         "message": "La configuración de su monitor está provocando un retraso del audio. Cambie la configuración del monitor a un modo que no cause conflictos (p. ej.: modo de juego)."
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "Altavoz de ultrasonidos no integrado",
         "message": "La versión del hardware del SX10 no cuenta con ningún altavoz de ultrasonidos integrado."
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "Falta la clave opcional de cifrado",
         "message": "Añada una clave opcional de cifrado."
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "Configurado para la automatización de prueba",
         "message": "Las métricas y los informes de registro se han visto afectados."
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "Se requiere un panel táctil",
         "message": "No hay ningún panel táctil conectado al dispositivo de sala. Compruebe que el cable del panel táctil esté conectado al dispositivo de sala."
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "Pérdida de paquetes detectada",
         "message": "Durante la última llamada, se ha detectado una pérdida de paquetes que puede haber afectado a la calidad de la llamada. Normalmente, esta pérdida de paquetes se debe a una congestión en la red."
       },
@@ -7332,25 +7332,25 @@
       "configOverview": {
         "title": "Requisitos de configuración del asistente virtual para clientes",
         "desc": "Consulte los requisitos previos para crear un asistente virtual para clientes",
-        "boxTitle": "Cree un agente API.AI antes de crear el asistente virtual para clientes.",
-        "boxDesc": "Cree un agente automatizado en API.AI que ofrezca un diálogo en un lenguaje natural. Su asistente virtual para clientes integrado emplea el diálogo de serie para interactuar con sus clientes y derivar una conversación a agentes en directo cuando sea necesario.",
-        "boxRadioOne": "No, no tengo ningún agente API.AI preconfigurado",
+        "boxTitle": "Cree un agente Dialogflow antes de crear el asistente virtual para clientes.",
+        "boxDesc": "Cree un agente automatizado en Dialogflow que ofrezca un diálogo en un lenguaje natural. Su asistente virtual para clientes integrado emplea el diálogo de serie para interactuar con sus clientes y derivar una conversación a agentes en directo cuando sea necesario.",
+        "boxRadioOne": "No, no tengo ningún agente Dialogflow preconfigurado",
         "boxRadioOneDesc1": "Vaya a ",
-        "boxRadioApiai": "API.AI",
+        "boxRadioDialogflow": "Dialogflow",
         "boxRadioOneDesc2": " para crear un agente. Para comenzar, consulte la ",
-        "boxRadioApiaiDoc": "documentación de API.AI",
-        "boxRadioTwo": "Sí, tengo un agente API.AI preconfigurado y puedo continuar",
-        "boxRadioTwoDesc": "Haga clic en la flecha para proceder con la integración de su agente API.AI en un asistente virtual para clientes"
+        "boxRadioDialogflowDoc": "documentación de Dialogflow",
+        "boxRadioTwo": "Sí, tengo un agente Dialogflow preconfigurado y puedo continuar",
+        "boxRadioTwoDesc": "Haga clic en la flecha para proceder con la integración de su agente Dialogflow en un asistente virtual para clientes"
       },
       "dialogIntegration": {
         "title": "Configurar la integración del diálogo",
-        "desc": "Añada un objetivo de derivación preconfigurado para finalizar la configuración del agente API.AI",
+        "desc": "Añada un objetivo de derivación preconfigurado para finalizar la configuración del agente Dialogflow",
         "boxStepOne": "Descargue el archivo JSON del objetivo de derivación preconfigurado.",
         "boxStepOneDesc": "Los objetivos de derivación permiten que el asistente virtual para clientes derive una conversación a un agente.",
-        "boxStepTwo": "Cargue el objetivo de derivación en el agente API.AI.",
-        "boxStepTwoDesc": "En la página de objetivos del agente API.AI, haga clic en los tres puntos verticales (⋮) y elija la opción de cargar un objetivo. Cargue el archivo escalation.json descargado.",
-        "boxStepThree": "Personalizar el objetivo de derivación en API.AI.",
-        "boxStepThreeDesc": "En la página de objetivos del agente API.AI, elija Objetivo de derivación. Modifique los campos de El usuario dice para cambiar las frases del usuario que provocarán la derivación. Todas las frases del usuario deben cumplir estos requisitos:",
+        "boxStepTwo": "Cargue el objetivo de derivación en el agente Dialogflow.",
+        "boxStepTwoDesc": "En la página de objetivos del agente Dialogflow, haga clic en los tres puntos verticales (⋮) y elija la opción de cargar un objetivo. Cargue el archivo escalation.json descargado.",
+        "boxStepThree": "Personalizar el objetivo de derivación en Dialogflow.",
+        "boxStepThreeDesc": "En la página de objetivos del agente Dialogflow, elija Objetivo de derivación. Modifique los campos de El usuario dice para cambiar las frases del usuario que provocarán la derivación. Todas las frases del usuario deben cumplir estos requisitos:",
         "boxBulletOne": "Utilizar el modo de plantilla",
         "boxBulletTwo": "Contener una referencia a @sys.any:Topic",
         "boxStepThreeDescCont": "El símbolo @ que se encuentra junto a la frase del usuario indica el modo de plantilla. Haga clic en el símbolo para cambiar de modo. No modifique la acción GetExpert.",
@@ -7361,11 +7361,11 @@
       "accessToken": {
         "title": "Finalizar la integración del diálogo",
         "desc": "Finalice la integración para activar el uso del diálogo natural en las interacciones con el cliente",
-        "boxDesc": "Cada agente API.AI posee un token único de acceso para clientes almacenado en la configuración del agente. Copie el token de la configuración del agente API.AI establecido, introdúzcalo aquí y haga clic en “Validar” para comprobarlo antes de finalizar la integración del diálogo.",
-        "inputLabel": "Token de acceso para clientes API.AI",
+        "boxDesc": "Cada agente Dialogflow posee un token único de acceso para clientes almacenado en la configuración del agente. Copie el token de la configuración del agente Dialogflow establecido, introdúzcalo aquí y haga clic en “Validar” para comprobarlo antes de finalizar la integración del diálogo.",
+        "inputLabel": "Token de acceso para clientes Dialogflow",
         "validateButtonText": "Validar",
         "maxLengthError": "El token de acceso para clientes no puede tener más de 128 caracteres.",
-        "invalidTokenText": "El token de acceso para clientes API.AI no es válido. Compruébelo y vuelva a intentarlo."
+        "invalidTokenText": "El token de acceso para clientes Dialogflow no es válido. Compruébelo y vuelva a intentarlo."
       },
       "name": {
         "title": "Nombre del asistente virtual para clientes",

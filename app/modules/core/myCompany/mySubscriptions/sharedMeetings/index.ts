@@ -11,7 +11,6 @@ export default angular
     require('modules/core/config/urlConfig'),
     require('collab-ui-ng').default,
     require('modules/core/partnerReports/commonReportServices').default,
-    require('modules/core/config/chartColors').default,
   ])
   .component('sharedMeetingReport', new SharedMeetingComponent())
   .service('SharedMeetingsReportService', SharedMeetingsReportService)

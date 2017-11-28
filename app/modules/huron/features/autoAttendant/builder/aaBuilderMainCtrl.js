@@ -5,10 +5,12 @@
     .module('uc.autoattendant')
     .controller('AABuilderMainCtrl', AABuilderMainCtrl); /* was AutoAttendantMainCtrl */
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
-  function AABuilderMainCtrl($modalStack, $q, $rootScope, $scope, $state, $stateParams, $translate, AACalendarService, AACommonService,
+  function AABuilderMainCtrl($element, $modalStack, $q, $rootScope, $scope, $state, $stateParams, $translate, AACalendarService, AACommonService,
     AADependencyService, AAMediaUploadService, AAMetricNameService, AAModelService, AANotificationService, AANumberAssignmentService, AARestModelService,
-    AATrackChangeService, AAUiModelService, AAUiScheduleService, AAValidationService, AutoAttendantCeInfoModelService,
+    AATrackChangeService, AAUiModelService, AAUiScheduleService, AAValidationService, AccessibilityService, AutoAttendantCeInfoModelService,
     AutoAttendantCeMenuModelService, AutoAttendantCeService, AutoAttendantLocationService, Analytics, Authinfo, DoRestService, FeatureToggleService, ServiceSetup) {
     var vm = this;
     vm.isWarn = false;
@@ -108,7 +110,7 @@
         // otherwise, filter on the passed-in field and compare
         var a1 = _.map(aa1, tag);
         var a2 = _.map(aa2, tag);
-        return (_.difference(a1, a2).length > 0 || _.difference(a2, a1).length > 0);
+        return _.difference(a1, a2).length !== 0;
       }
     }
 
@@ -118,8 +120,10 @@
       if (!_.isUndefined(vm.aaModel.aaRecord) && areAssignedResourcesDifferent(vm.aaModel.aaRecord.assignedResources, vm.ui.ceInfo.getResources(), 'id')) {
         var ceInfo = AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord);
         return AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, ceInfo.getResources()).then(
-          function (response) {
-            return response;
+          function () {
+            return AANumberAssignmentService.getAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID).then(function (numbers) {
+              return numbers;
+            });
           },
           function (response) {
             AANotificationService.error('autoAttendant.errorResetCMI');
@@ -136,9 +140,38 @@
 
     function closePanel() {
       AAMediaUploadService.resetResources();
+      var aaRecord = vm.aaModel.aaRecord;
+      var aaRecords = vm.aaModel.aaRecords;
+      var ceURL = '';
 
       AutoAttendantCeMenuModelService.clearCeMenuMap();
-      unAssignAssigned().finally(function () {
+
+      unAssignAssigned().then(function (numbers) {
+        if (numbers.length === 0) {
+          return;
+        }
+        _.forEach(aaRecord.assignedResources, function (resource) {
+          resource.uuid = _.find(numbers, { number: resource.number }).uuid;
+        });
+
+        if (vm.aaModel.aaRecordUUID.length > 0) {
+          _.forEach(aaRecords, function (aa) {
+            if (AutoAttendantCeInfoModelService.extractUUID(aa.callExperienceURL) === vm.aaModel.aaRecordUUID) {
+              ceURL = aa.callExperienceURL;
+            }
+          });
+        }
+
+        return AutoAttendantCeService.updateCe(
+          ceURL,
+          aaRecord).catch(function (response) {
+          AANotificationService.errorResponse(response, 'autoAttendant.errorUpdateCe', {
+            name: aaRecord.callExperienceName,
+            statusText: response.statusText,
+            status: response.status,
+          });
+        });
+      }).finally(function () {
         $state.go('huronfeatures');
       });
     }
@@ -248,6 +281,7 @@
         url: getThirdPartyRestApiDynamicUrl(action),
         method: action.method,
         responseActions: action.responseActions,
+        testResponse: action.testResponse,
       };
       return doRestBody;
     }
@@ -643,6 +677,7 @@
             url: '',
             method: response.method,
             responseActions: response.responseActions,
+            testResponse: response.testResponse,
           };
 
           // make use of 'response' to get rest of the items to be shown under the REST block
@@ -896,13 +931,13 @@
         } else {
           setLoadingDone();
         }
+        AccessibilityService.setFocus($element, '.aa-name-edit', 2000);
       });
     }
 
-    function evalKeyPress($keyCode) {
-      switch ($keyCode) {
-        // esc key
-        case 27:
+    function evalKeyPress($event) {
+      switch ($event.keyCode) {
+        case KeyCodes.ESCAPE:
           closePanel();
           break;
         default:

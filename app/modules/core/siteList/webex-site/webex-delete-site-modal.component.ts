@@ -1,8 +1,9 @@
 import './webex-site.scss';
 
-import { IWebExSite, IConferenceLicense, IWebexLicencesPayload } from 'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
+import { IWebExSite, IConferenceLicense } from 'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
 import { SetupWizardService } from 'modules/core/setupWizard/setup-wizard.service';
-import { Config } from 'modules/core/config/config';
+import { WebExSiteService, Actions } from './webex-site.service';
+import { Notification } from 'modules/core/notifications';
 
 class WebexDeleteSiteModalController implements ng.IComponentController {
 
@@ -12,19 +13,20 @@ class WebexDeleteSiteModalController implements ng.IComponentController {
   public siteUrl: string;
 
   // parameters received
-  public title: string;
   public subscriptionId: string;
   public dismiss: Function;
 
   // used in own ui
-  public isLoading = false;
+  public isSuccess: boolean | undefined = undefined;
+  public isLoading;
   private isCanProceed = false;
   private webexSiteDetailsList = [];
 
   /* @ngInject */
   constructor(
-    private Config: Config,
+    private Notification: Notification,
     private SetupWizardService: SetupWizardService,
+    private WebExSiteService: WebExSiteService,
   ) { }
 
   public $onChanges(changes: ng.IOnChangesObject): void {
@@ -43,17 +45,25 @@ class WebexDeleteSiteModalController implements ng.IComponentController {
   }
 
   public next(): void {
-    this.saveData();
+    if (!this.isResult()) {
+      this.saveData();
+    } else {
+      this.cancel();
+    }
   }
 
-  // callbacks from components
+  public isResult(): boolean {
+    return this.isSuccess !== undefined;
+  }
+
   private changeCurrentSubscription(subscriptionId) {
     this.subscriptionId = subscriptionId;
     this.conferenceLicensesInSubscription = this.SetupWizardService.getConferenceLicensesBySubscriptionId(subscriptionId);
     const licensesWithoutDeletedSite = _.reject(this.conferenceLicensesInSubscription, { siteUrl: this.siteUrl });
-    this.sitesArray = this.transformExistingSites(licensesWithoutDeletedSite);
+    this.sitesArray = this.WebExSiteService.transformExistingSites(licensesWithoutDeletedSite);
   }
 
+  // callbacks from components
   public updateSitesWithNewDistribution(sitesWithLicenseDetail, isValid) {
     if (isValid) {
       this.webexSiteDetailsList = sitesWithLicenseDetail;
@@ -64,31 +74,24 @@ class WebexDeleteSiteModalController implements ng.IComponentController {
     }
   }
 
-  // data massaging
-  private transformExistingSites(confServicesInActingSubscription): IWebExSite[] {
-    return _.chain(confServicesInActingSubscription).map('siteUrl').uniq().map((siteUrl: string) => {
-      return {
-        siteUrl: _.replace(siteUrl, this.Config.siteDomainUrl.webexUrl, ''),
-        quantity: 0,
-        centerType: '',
-      };
-    }).value();
-  }
-
   private saveData() {
-    this.constructWebexLicensesPayload(this.webexSiteDetailsList);
-  }
-
-  private constructWebexLicensesPayload(webexSiteDetailsList): IWebexLicencesPayload {
-    const webexLicensesPayload: IWebexLicencesPayload = {
-      provisionOrder: true,
-      sendCustomerEmail: false,
-      serviceOrderUUID: this.SetupWizardService.getActingSubscriptionServiceOrderUUID(),
-    };
-    _.set(webexLicensesPayload, 'webexProvisioningParams', {
-      webexSiteDetailsList: webexSiteDetailsList,
-    });
-    return webexLicensesPayload;
+    this.isLoading = true;
+    const audioData = this.WebExSiteService.getAudioPackageInfo(this.subscriptionId);
+    const payload = this.WebExSiteService.constructWebexLicensesPayload(this.webexSiteDetailsList, this.subscriptionId, Actions.DELETE,
+      audioData.audioPartnerName, audioData.ccaspSubscriptionId);
+    this.SetupWizardService.updateSitesInActiveSubscription(payload)
+      .then(() => {
+        this.isSuccess = true;
+        this.Notification.success('webexSiteManagement.deleteSiteSuccessToaster');
+      })
+      .catch((response) => {
+        this.isSuccess = false;
+        this.Notification.errorWithTrackingId(response, 'webexSiteManagement.deleteSiteFailureToaster');
+      })
+      .finally(() => {
+        this.isLoading = false;
+        this.isCanProceed = true;
+      });
   }
 }
 

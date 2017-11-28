@@ -34,7 +34,7 @@ class CareFeatureModalCtrl implements ng.IComponentController {
       serviceCards.push({ //Virtual Assistant
         id: 'virtualAssistant',
         label: 'sunlightDetails.newFeatures.virtualAssistant',
-        description: 'careChatTpl.virtualAssistant.featureText.selectVADesc',
+        description: 'careChatTpl.virtualAssistant.featureText.selectDesc',
         icons: ['icon-bot-four'],
         color: 'feature-va-color',
         disabled: false,

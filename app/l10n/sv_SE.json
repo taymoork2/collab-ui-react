@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "Online",
-      "OnlineWithIssues": "Online, med problem",
-      "Offline": "Offline",
-      "OfflineExpired": "Inaktiverad",
-      "Unknown": "Okänt"
+      "CONNECTED": "Online",
+      "CONNECTED_WITH_ISSUES": "Online, med problem",
+      "DISCONNECTED": "Offline",
+      "OFFLINE_EXPIRED": "Inaktiverad",
+      "UNKNOWN": "Okänt"
     },
     "WithDevices": "Med enheter",
     "upgradeChannels": {
@@ -6678,23 +6678,23 @@
       "wlan": "Trådlös"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "Blockerade nätverksportar",
         "message": "En brandvägg blockerar eventuellt media på UDP, vilket kan påverka samtalskvaliteten. Information om nätverksportkrav finns i artikeln <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Brandväggar och nätverkskrav för Cisco Spark-appen</a>."
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "Blockerade nätverksportar",
         "message": "En brandvägg blockerar eventuellt media på UDP, vilket kan påverka samtalskvaliteten. Information om nätverksportkrav finns i artikeln <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Brandväggar och nätverkskrav för Cisco Spark-appen</a>."
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "Blockerade nätverksportar",
         "message": "En brandvägg blockerar eventuellt media på UDP och TCP, vilket kan påverka samtalskvaliteten. Information om nätverksportkrav finns i artikeln <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Brandväggar och nätverkskrav för Cisco Spark-appen</a>."
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "Hög temperatur",
         "message": "Systemtemperaturen är för hög."
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "Huvudskärmen hittas inte",
         "message": "Bekräfta att huvudskärmen är påslagen och ansluten till rätt skärmutgång på videosystemet."
       },
@@ -6702,35 +6702,35 @@
         "type": "Automatiska uppdateringar är inaktiverade",
         "message": "Systemets programvara kommer inte att uppdateras."
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "Tidsserver kan ej nås",
         "message": "Anslutningen till en NTP-server kunde inte upprättas. Tiden som visas på din slutpunkt kan vara felaktig."
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "Signalstörningar från andra enheter",
         "message": "Det finns en ultraljudssignalstörning i detta rum som kommer från andra enheter (t.ex. andra videosystem) som kan hindra sammanlänkning mellan videosystemet och din telefon eller bärbara dator."
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "Ljudfördröjning",
         "message": "Dina bildskärmsinställningar innebär fördröjningar i ljudet. Ändra bildskärmsinställningarna till lämpligt läge (t.ex. spelläge)."
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "Ingen inbäddad ultraljudshögtalare",
         "message": "Denna maskinvaruversion av SX10 har ingen inbäddad ultraljudshögtalare."
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "Saknar nyckel för krypteringsalternativ",
         "message": "Lägg till en nyckel för krypteringsalternativ."
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "Konfigurerad för testautomatisering",
         "message": "Statistik och loggrapportering påverkas."
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "Pekskärm krävs",
         "message": "Ingen pekskärm är ansluten till rumsenheten. Kontrollera kabelanslutningen mellan pekskärmen och rumsenheten."
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "Upptäckt paketförlust",
         "message": "Under det senaste samtalet upptäckte vi en nivå av paketförlust som kan ha påverkat samtalskvaliteten. Paketförlust orsakas vanligtvis av nätverksöverbelastning."
       },
@@ -7332,25 +7332,25 @@
       "configOverview": {
         "title": "Konfigurationskrav för virtuell assistent",
         "desc": "Granska förutsättningarna för att skapa en virtuell assistent",
-        "boxTitle": "Skapa en API.AI-agent innan du skapar din virtuella assistent.",
-        "boxDesc": "Skapa en automatiserad agent i API.AI med naturligt språk. Den integrerade virtuella assistenten använder den förprogrammerade dialogen när den interagerar med kunder och för konversationen vidare till en agent om det skulle behövas.",
-        "boxRadioOne": "Nej, jag har inte någon förkonfigurerad API.AI-agent",
+        "boxTitle": "Skapa en Dialogflow-agent innan du skapar din virtuella assistent.",
+        "boxDesc": "Skapa en automatiserad agent i Dialogflow med naturligt språk. Den integrerade virtuella assistenten använder den förprogrammerade dialogen när den interagerar med kunder och för konversationen vidare till en agent om det skulle behövas.",
+        "boxRadioOne": "Nej, jag har inte någon förkonfigurerad Dialogflow-agent",
         "boxRadioOneDesc1": "Gå till ",
-        "boxRadioApiai": "API.AI",
-        "boxRadioOneDesc2": " Skapa en agent. Läs API.AI-dokumentationen ",
-        "boxRadioApiaiDoc": "för att komma igång",
-        "boxRadioTwo": "Ja, jag har en förkonfigurerad API.AI-agent och jag är redo för nästa steg",
-        "boxRadioTwoDesc": "Klicka på pilen för integrera API.AI-agenten med en virtuell assistent"
+        "boxRadioDialogflow": "Dialogflow",
+        "boxRadioOneDesc2": " Skapa en agent. Läs Dialogflow-dokumentationen ",
+        "boxRadioDialogflowDoc": "för att komma igång",
+        "boxRadioTwo": "Ja, jag har en förkonfigurerad Dialogflow-agent och jag är redo för nästa steg",
+        "boxRadioTwoDesc": "Klicka på pilen för integrera Dialogflow-agenten med en virtuell assistent"
       },
       "dialogIntegration": {
         "title": "Konfigurera dialogen",
-        "desc": "Lägg till en förkonfigurerad eskaleringsfunktion för att slutföra konfigurationen av API.AI-agenten",
+        "desc": "Lägg till en förkonfigurerad eskaleringsfunktion för att slutföra konfigurationen av Dialogflow-agenten",
         "boxStepOne": "Hämta JSON-filen med en förkonfigurerad eskaleringsfunktion.",
         "boxStepOneDesc": "En eskaleringsfunktion gör att din virtuella assistent kan skicka vidare, eller eskalera, en konversation till en agent.",
-        "boxStepTwo": "Ladda upp eskaleringsfunktionen till API.AI-agenten.",
-        "boxStepTwoDesc": "På funktionssidan för din API.AI-agent klickar du på den lodräta ellipsen (⋮) och väljer Ladda upp funktion. Ladda sedan upp json-filen med eskaleringsfunktionen som du hämtade.",
-        "boxStepThree": "Anpassa eskaleringsfunktionen i API.AI.",
-        "boxStepThreeDesc": "På funktionssidan för din API.AI-agent väljer du Eskaleringsfunktion. Ändra fälten för Användare säger för att ändra användaruttrycken som sätter igång eskaleringen. Alla uttryck måste",
+        "boxStepTwo": "Ladda upp eskaleringsfunktionen till Dialogflow-agenten.",
+        "boxStepTwoDesc": "På funktionssidan för din Dialogflow-agent klickar du på den lodräta ellipsen (⋮) och väljer Ladda upp funktion. Ladda sedan upp json-filen med eskaleringsfunktionen som du hämtade.",
+        "boxStepThree": "Anpassa eskaleringsfunktionen i Dialogflow.",
+        "boxStepThreeDesc": "På funktionssidan för din Dialogflow-agent väljer du Eskaleringsfunktion. Ändra fälten för Användare säger för att ändra användaruttrycken som sätter igång eskaleringen. Alla uttryck måste",
         "boxBulletOne": "använda malläget",
         "boxBulletTwo": "innehålla en referens till @sys.any:Topic.",
         "boxStepThreeDescCont": "Symbolen @ bredvid användaruttrycket visar malläget. Klicka på symbolen för att visa eller dölja läget. Ändra inte GetExpert-åtgärden.",
@@ -7361,11 +7361,11 @@
       "accessToken": {
         "title": "Slutför dialogintegrering",
         "desc": "Slutför integreringen för att se till att en naturlig dialog används i konversationen med kunder",
-        "boxDesc": "Alla API.AI-agenter har en unik kundåtkomstnyckel lagrad i agentinställningarna. Kopiera nyckeln från dina konfigurerade API.AI-agentinställningar och ange den här. Klicka sedan på ”Validera” för att verifiera nyckeln innan du slutför dialogintegreringen.",
-        "inputLabel": "Kundåtkomstnyckel för API.AI",
+        "boxDesc": "Alla Dialogflow-agenter har en unik kundåtkomstnyckel lagrad i agentinställningarna. Kopiera nyckeln från dina konfigurerade Dialogflow-agentinställningar och ange den här. Klicka sedan på ”Validera” för att verifiera nyckeln innan du slutför dialogintegreringen.",
+        "inputLabel": "Kundåtkomstnyckel för Dialogflow",
         "validateButtonText": "Bekräfta",
         "maxLengthError": "Kundåtkomstnyckeln får inte vara längre än 128 tecken.",
-        "invalidTokenText": "Ogiltig kundåtkomstnyckel för API.AI. Kontrollera nyckeln och försök igen."
+        "invalidTokenText": "Ogiltig kundåtkomstnyckel för Dialogflow. Kontrollera nyckeln och försök igen."
       },
       "name": {
         "title": "Namn på virtuell assistent",

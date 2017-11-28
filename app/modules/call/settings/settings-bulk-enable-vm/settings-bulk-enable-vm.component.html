@@ -16,9 +16,7 @@
       </div>
       <!-- Need to check what is isprocessing -->
       <div id="cancelProgress" ng-if="$ctrl.processProgress < 100" class="close-button">
-        <a class="icon icon-close" ng-click="$ctrl.onCancelProcess()">
-          <span class="sr-only" translate="common.close"></span>
-        </a>
+        <a href class="icon icon-close" ng-click="$ctrl.onCancelProcess()" aria-label="{{::'common.close' | translate}}"></a>
       </div>
     </div>
   </div>

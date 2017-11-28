@@ -6,6 +6,7 @@
 
   .ct-input-hint {
     @include vr-spacing(p, 1);
+    @include vr-spacing(mt, 0.2);
 
     border: 0;
     width: 100%;

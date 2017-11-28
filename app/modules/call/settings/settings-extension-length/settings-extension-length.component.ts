@@ -16,6 +16,7 @@ class ExtensionLengthCtrl implements ng.IComponentController {
   public showHelpText: boolean = false;
   public isDisabled: boolean = false;
   public helpText: string;
+  public routingPrefixLength: string;
 
   private originalExtLength: number;
   private supportsI1484: boolean = false;
@@ -32,6 +33,7 @@ class ExtensionLengthCtrl implements ng.IComponentController {
 
   public $onInit(): void {
     this.extensionLengthOptions = this.buildExtensionLengthOptions();
+    this.routingPrefixLength = _.get(this.settingsData, 'customerVoice.routingPrefixLength');
     this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
       .then(supports => {
         this.supportsI1484 = supports;
@@ -146,7 +148,7 @@ class ExtensionLengthCtrl implements ng.IComponentController {
   private openExtensionPrefixModal(): ng.IPromise<any> {
     return this.$modal.open({
       type: 'small',
-      template: `<uc-extension-prefix-modal class="ucExtensionPrefixModal" new-extension-length="${this.extensionLength}" old-extension-length="${this.originalExtLength}" dismiss="$dismiss()" close="$close()"></uc-extension-prefix-modal>`,
+      template: `<uc-extension-prefix-modal class="ucExtensionPrefixModal" new-extension-length="${this.extensionLength}" old-extension-length="${this.originalExtLength}" routing-prefix-length="${this.routingPrefixLength}" dismiss="$dismiss()" close="$close()"></uc-extension-prefix-modal>`,
     }).result;
   }
 

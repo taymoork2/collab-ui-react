@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
   function HelpdeskCloudberryDeviceController($stateParams, $window, Authinfo, HelpdeskLogService, HelpdeskService, Notification, WindowLocation) {
     $('body').css('background', 'white');
@@ -53,7 +55,7 @@
     }
 
     function keyPressHandler(event) {
-      if (event.keyCode === 27) { // Esc
+      if (event.keyCode === KeyCodes.ESCAPE) {
         $window.history.back();
       }
     }

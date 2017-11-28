@@ -3,11 +3,11 @@
     "axis": {
       "axisColor": "#D7D7D8",
       "gridColor": "#D7D7D8",
-      "color": "#6A6B6C",
+      "color": "#6a6b6c",
       "fontFamily": "CiscoSansTT Light",
       "fontSize": 12,
       "titleBold": false,
-      "titleColor": "#6A6B6C",
+      "titleColor": "#6a6b6c",
       "gridAlpha": 0,
       "axisAlpha": 1,
       "stackType": "regular"
@@ -121,11 +121,11 @@
     "categoryAxis": {
       "axisColor": "#D7D7D8",
       "gridColor": "#D7D7D8",
-      "color": "#6A6B6C",
+      "color": "#6a6b6c",
       "fontFamily": "CiscoSansTT Light",
       "fontSize": 12,
       "titleBold": false,
-      "titleColor": "#6A6B6C",
+      "titleColor": "#6a6b6c",
       "gridAlpha": 0,
       "axisAlpha": 1,
       "stackType": "regular"
@@ -133,11 +133,11 @@
     "valueAxes": {
       "axisColor": "#D7D7D8",
       "gridColor": "#D7D7D8",
-      "color": "#6A6B6C",
+      "color": "#6a6b6c",
       "fontFamily": "CiscoSansTT Light",
       "fontSize": 12,
       "titleBold": false,
-      "titleColor": "#6A6B6C",
+      "titleColor": "#6a6b6c",
       "gridAlpha": 0,
       "axisAlpha": 1,
       "stackType": "regular"
@@ -169,7 +169,7 @@
         "bold": false,
         "font-family": "Verdana",
         "size": 12,
-        "color": "#6A6B6C",
+        "color": "#6a6b6c",
         "class": "amcharts-axis-title",
         "enabled": false
       }
@@ -219,7 +219,6 @@
       {
         "title": "careReportsPage.abandoned",
         "lineColor": "#F96452",
-        "fillColors": "#FF0000",
         "valueField": "numTasksAbandonedState",
         "showBalloon": true,
         "lineAlpha": 1,
@@ -245,11 +244,11 @@
     "categoryAxis": {
       "axisColor": "#D7D7D8",
       "gridColor": "#D7D7D8",
-      "color": "#6A6B6C",
+      "color": "#6a6b6c",
       "fontFamily": "CiscoSansTT Light",
       "fontSize": 12,
       "titleBold": false,
-      "titleColor": "#6A6B6C",
+      "titleColor": "#6a6b6c",
       "gridAlpha": 0,
       "axisAlpha": 1,
       "stackType": "regular",
@@ -259,11 +258,11 @@
     "valueAxes": [{
       "axisColor": "#D7D7D8",
       "gridColor": "#D7D7D8",
-      "color": "#6A6B6C",
+      "color": "#6a6b6c",
       "fontFamily": "CiscoSansTT Light",
       "fontSize": 12,
       "titleBold": false,
-      "titleColor": "#6A6B6C",
+      "titleColor": "#6a6b6c",
       "gridAlpha": 0,
       "axisAlpha": 1,
       "stackType": "regular",
@@ -300,7 +299,7 @@
         "bold": false,
         "font-family": "Verdana",
         "size": 12,
-        "color": "#6A6B6C",
+        "color": "#6a6b6c",
         "class": "amcharts-axis-title",
         "enabled": true
       }
@@ -322,6 +321,36 @@
       "shadowAlpha": 0
     }
   },
+  "taskIncomingBreakdownGraphs": [
+    {
+      "title": "careReportsPage.chat",
+      "lineColor": "#43A942",
+      "valueField": "numChatTasksHandled",
+      "lineAlpha": 1,
+      "balloonColor": "#AEAEAF",
+      "lineThickness": 1,
+      "marginTop": 10,
+      "marginLeft": 0,
+      "plotAreaBorderAlpha": 0,
+      "legendValueText": " ",
+      "showBalloon": false,
+      "fillAlphas": 0.1
+    },
+    {
+      "title": "careReportsPage.chatWithVideo",
+      "lineColor": "#F96452",
+      "valueField": "numWebcallTasksHandled",
+      "showBalloon": true,
+      "lineAlpha": 1,
+      "balloonColor": "#AEAEAF",
+      "lineThickness": 1,
+      "marginTop": 10,
+      "marginLeft": 0,
+      "plotAreaBorderAlpha": 0,
+      "legendValueText": " ",
+      "fillAlphas": 0.1
+    }
+  ],
   "taskOfferedReportToday": {
     "dataProvider": "dummyData",
     "legend": {
@@ -385,11 +414,11 @@
     "categoryAxis": {
       "axisColor": "#D7D7D8",
       "gridColor": "#D7D7D8",
-      "color": "#6A6B6C",
+      "color": "#6a6b6c",
       "fontFamily": "CiscoSansTT Light",
       "fontSize": 12,
       "titleBold": false,
-      "titleColor": "#6A6B6C",
+      "titleColor": "#6a6b6c",
       "gridAlpha": 0,
       "axisAlpha": 1,
       "stackType": "regular",
@@ -399,11 +428,11 @@
     "valueAxes": [{
       "axisColor": "#D7D7D8",
       "gridColor": "#D7D7D8",
-      "color": "#6A6B6C",
+      "color": "#6a6b6c",
       "fontFamily": "CiscoSansTT Light",
       "fontSize": 12,
       "titleBold": false,
-      "titleColor": "#6A6B6C",
+      "titleColor": "#6a6b6c",
       "gridAlpha": 0,
       "axisAlpha": 1,
       "stackType": "100%",
@@ -440,7 +469,7 @@
         "bold": false,
         "font-family": "Verdana",
         "size": 12,
-        "color": "#6A6B6C",
+        "color": "#6a6b6c",
         "class": "amcharts-axis-title",
         "enabled": true
       }
@@ -466,7 +495,6 @@
     {
       "title": "careReportsPage.handleTime",
       "lineColor": "#43A942",
-      "fillColors": "#017900",
       "valueField": "avgTaskCloseTime",
       "lineAlpha": 1,
       "balloonColor": "#AEAEAF",
@@ -481,7 +509,6 @@
     {
       "title": "careReportsPage.queueTime",
       "lineColor": "#F5A623",
-      "fillColors": "#F5A623",
       "valueField": "avgTaskWaitTime",
       "dashLength": 2,
       "fillAlphas": 1,
@@ -501,11 +528,41 @@
       "legendValueText": " "
     }
   ],
+  "taskTimeBreakdownGraphs": [
+    {
+      "title": "careReportsPage.chat",
+      "lineColor": "#43A942",
+      "valueField": "avgChatTaskCloseTime",
+      "lineAlpha": 1,
+      "balloonColor": "#AEAEAF",
+      "lineThickness": 1,
+      "marginTop": 10,
+      "marginLeft": 0,
+      "plotAreaBorderAlpha": 0,
+      "legendValueText": " ",
+      "showBalloon": false,
+      "fillAlphas": 0.1
+    },
+    {
+      "title": "careReportsPage.chatWithVideo",
+      "lineColor": "#F5A623",
+      "valueField": "avgWebcallTaskCloseTime",
+      "lineAlpha": 1,
+      "balloonColor": "#AEAEAF",
+      "lineThickness": 1,
+      "marginTop": 10,
+      "marginLeft": 0,
+      "plotAreaBorderAlpha": 0,
+      "legendValueText": " ",
+      "showBalloon": true,
+      "balloonFunction": "undefined",
+      "fillAlphas": 0.1
+    }
+  ],
   "taskAggregateGraphs": [
     {
       "title": "careReportsPage.assigned",
       "lineColor": "#F5A623",
-      "fillColors": "#FFA200",
       "valueField": "numWorkingTasks",
       "lineAlpha": 1,
       "balloonColor": "#AEAEAF",
@@ -520,7 +577,6 @@
     {
       "title": "careReportsPage.in-queue",
       "lineColor": "#F5A623",
-      "fillColors": "#F5A623",
       "valueField": "numPendingTasks",
       "dashLength": 2,
       "fillAlphas": 1,
@@ -529,6 +585,37 @@
         "width": 14,
         "height": 14
       },
+      "showBalloon": true,
+      "balloonFunction": "undefined",
+      "lineAlpha": 1,
+      "balloonColor": "#AEAEAF",
+      "lineThickness": 1,
+      "marginTop": 10,
+      "marginLeft": 0,
+      "plotAreaBorderAlpha": 0,
+      "legendValueText": " "
+    }
+  ],
+  "taskAggregateBreakdownGraphs": [
+    {
+      "title": "careReportsPage.chat",
+      "lineColor": "#F5A623",
+      "valueField": "numChatWorkingTasks",
+      "lineAlpha": 1,
+      "balloonColor": "#AEAEAF",
+      "lineThickness": 1,
+      "marginTop": 10,
+      "marginLeft": 0,
+      "plotAreaBorderAlpha": 0,
+      "legendValueText": " ",
+      "fillAlphas": 0.1,
+      "showBalloon": false
+    },
+    {
+      "title": "careReportsPage.chatWithVideo",
+      "lineColor": "#F5A623",
+      "valueField": "numWebcallWorkingTasks",
+      "fillAlphas": 0.1,
       "showBalloon": true,
       "balloonFunction": "undefined",
       "lineAlpha": 1,
@@ -578,11 +665,11 @@
     "categoryAxis": {
       "axisColor": "#D7D7D8",
       "gridColor": "#D7D7D8",
-      "color": "#6A6B6C",
+      "color": "#6a6b6c",
       "fontFamily": "CiscoSansTT Light",
       "fontSize": 12,
       "titleBold": false,
-      "titleColor": "#6A6B6C",
+      "titleColor": "#6a6b6c",
       "gridAlpha": 0,
       "axisAlpha": 1,
       "stackType": "regular",
@@ -592,14 +679,14 @@
     "valueAxes": [{
       "axisColor": "#D7D7D8",
       "gridColor": "#D7D7D8",
-      "color": "#6A6B6C",
+      "color": "#6a6b6c",
       "fontFamily": "CiscoSansTT Light",
       "fontSize": 12,
       "titleBold": false,
-      "titleColor": "#6A6B6C",
+      "titleColor": "#6a6b6c",
       "gridAlpha": 0,
       "axisAlpha": 1,
-      "stackType": "regular",
+      "stackType": "none",
       "title": "careReportsPage.tasks",
       "maximum": 5
     }],
@@ -634,7 +721,7 @@
         "bold": false,
         "font-family": "Verdana",
         "size": 12,
-        "color": "#6A6B6C",
+        "color": "#6a6b6c",
         "class": "amcharts-axis-title",
         "enabled": true
       }
@@ -655,5 +742,39 @@
       "fixedPosition": true,
       "shadowAlpha": 0
     }
-  }
+  },
+  "taskAverageCsatBreakdownGraphs" : [
+    {
+      "title": "careReportsPage.chat",
+      "lineColor": "#43A942",
+      "fillColors": "#FFFFFF",
+      "valueField": "avgChatCsatScores",
+      "showBalloon": true,
+      "balloonFunction": "undefined",
+      "lineAlpha": 1,
+      "balloonColor": "#AEAEAF",
+      "lineThickness": 1,
+      "marginTop": 10,
+      "marginLeft": 0,
+      "plotAreaBorderAlpha": 0,
+      "legendValueText": " ",
+      "fillAlphas": 0.1
+    },
+    {
+      "title": "careReportsPage.chatWithVideo",
+      "lineColor": "#43A942",
+      "fillColors": "#FFFFFF",
+      "valueField": "avgWebcallCsatScores",
+      "showBalloon": false,
+      "balloonFunction": "undefined",
+      "lineAlpha": 1,
+      "balloonColor": "#AEAEAF",
+      "lineThickness": 1,
+      "marginTop": 10,
+      "marginLeft": 0,
+      "plotAreaBorderAlpha": 0,
+      "legendValueText": " ",
+      "fillAlphas": 0.1
+    }
+  ]
 }

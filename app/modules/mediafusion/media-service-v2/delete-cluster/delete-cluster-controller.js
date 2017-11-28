@@ -19,10 +19,7 @@
     vm.hosts = '';
     vm.ngDisable = false;
     vm.canContinue = canContinue;
-
-    vm.deleteAreYouSure = $translate.instant('mediaFusion.deleteGroup.message', {
-      groupName: cluster.name,
-    });
+    vm.loading = true;
 
     MediaClusterServiceV2.getAll()
       .then(function (clusters) {
@@ -45,6 +42,8 @@
         vm.selectModel[key] = value;
         vm.fillModel[key] = false;
       }
+    }).finally(function () {
+      vm.loading = false;
     });
 
     vm.continue = function () {

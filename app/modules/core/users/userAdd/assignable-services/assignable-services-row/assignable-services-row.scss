@@ -1,0 +1,30 @@
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+
+assignable-services-row {
+  display: block;
+
+  .subscription__header {
+    .icon.toggle {
+      float: right;
+      font-size: 18px;
+    }
+  }
+
+  // TODO: mv this to sub-component
+  .subscription__content {
+    .license__category {
+      color: $gray-dark-2;
+      font-family: $brand-font-light;
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 26px;
+      margin-top: .625rem;
+      margin-bottom: .25rem;
+
+      &:first-of-type {
+        margin-top: 0;
+      }
+    }
+  }
+}

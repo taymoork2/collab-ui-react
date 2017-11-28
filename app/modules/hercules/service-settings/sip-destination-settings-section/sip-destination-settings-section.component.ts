@@ -1,3 +1,4 @@
+import { FeatureToggleService } from 'modules/core/featureToggle';
 import { IUSSOrg, USSService } from 'modules/hercules/services/uss.service';
 import { Notification } from 'modules/core/notifications/notification.service';
 import { IFormattedResult } from 'modules/hercules/services/l2sip-service';
@@ -20,9 +21,8 @@ class SipDestinationSettingsSectionComponentCtrl implements ng.IComponentControl
   constructor(
     private $modal: IToolkitModalService,
     private Authinfo,
-    private FeatureToggleService,
+    private FeatureToggleService: FeatureToggleService,
     private Notification: Notification,
-    private Orgservice,
     private USSService: USSService,
   ) {}
 
@@ -32,12 +32,9 @@ class SipDestinationSettingsSectionComponentCtrl implements ng.IComponentControl
   }
 
   private showSIPTestToolCheck(): void {
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridCallDiagnosticTool)
-      .then((isFeatureToggled) => {
-        return this.Orgservice.isTestOrg()
-          .then((isTestOrg) => {
-            this.showSIPTestTool = isTestOrg || isFeatureToggled;
-          });
+    this.FeatureToggleService.hasFeatureToggleOrIsTestOrg(this.FeatureToggleService.features.atlasHybridCallDiagnosticTool)
+      .then((showFeature) => {
+        this.showSIPTestTool = showFeature;
       });
   }
 

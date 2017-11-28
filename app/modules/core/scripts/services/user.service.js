@@ -42,6 +42,7 @@
       removeCESRoleforUser: removeCESRoleforUser,
       getUserLicence: getUserLicence,
       createUserData: createUserData,
+      isCareFeatureGettingRemoved: isCareFeatureGettingRemoved,
     };
 
     return service;
@@ -530,8 +531,23 @@
                 checkRolesAndOnboardSunlightUser(userId, ciUserData, sunlightUserData, checkCesRole);
               }
             });
+        } else if (_helpers.isCareFeatureGettingRemoved(userLicenses)) {
+          SunlightConfigService.deleteUser(userId)
+            .catch(function (response) {
+              Notification.errorWithTrackingId(response, 'usersPage.careDeleteUserError');
+            });
         }
       });
+    }
+
+    function isCareFeatureGettingRemoved(licenses) {
+      var careLicenses = _.filter(licenses, function (license) {
+        return (_.includes(license.id, Config.offerCodes.CDC) || _.includes(license.id, Config.offerCodes.CVC));
+      });
+      var hasCareLicenses = !!_.size(careLicenses);
+      var careLicensesToAdd = _.filter(careLicenses, { idOperation: 'ADD' });
+      var hasCareLicensesToAdd = !!_.size(careLicensesToAdd);
+      return hasCareLicenses && !hasCareLicensesToAdd;
     }
 
     function licenseUpdateRequired(licenses, offerCode, idOperation) {

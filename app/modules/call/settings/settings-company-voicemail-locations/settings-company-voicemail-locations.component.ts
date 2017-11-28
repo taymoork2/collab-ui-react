@@ -1,4 +1,4 @@
-import { IAvrilCustomerFeatures } from 'modules/huron/avril';
+import { IAvrilCustomerFeatures } from 'modules/call/avril';
 import { VoicemailPilotNumber } from 'modules/call/locations/shared';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 import { IOption } from 'modules/huron/dialing';
@@ -84,7 +84,7 @@ class LocationCompanyVoicemailCtrl implements ng.IComponentController {
 
   public onCompanyVoicemailChange(value: boolean, setOTP: boolean = true): void {
     if (value) {
-      if (setOTP && this.isMessage) {
+      if (setOTP && this.isMessage && !_.isUndefined(this.features)) {
         this.enableOTP = this.features.VMOTP = true;
       }
       if (this.selectedNumber && this.selectedNumber.value) {

@@ -57,7 +57,6 @@ describe('OnboardCtrl: Ctrl', function () {
     this.mock.headers = getJSONFixture('core/json/users/headers.json');
     this.mock.getMessageServices = getJSONFixture('core/json/authInfo/messagingServices.json');
     this.mock.unlicensedUsers = getJSONFixture('core/json/organizations/unlicensedUsers.json');
-    this.mock.allLicensesData = getJSONFixture('core/json/organizations/allLicenses.json');
     this.mock.getCareServices = getJSONFixture('core/json/authInfo/careServices.json');
     this.mock.getCareVoiceServices = getJSONFixture('core/json/authInfo/careVoiceServices.json');
     this.mock.getCareServicesWithoutCareLicense = getJSONFixture('core/json/authInfo/careServicesWithoutCareLicense.json');
@@ -332,46 +331,6 @@ describe('OnboardCtrl: Ctrl', function () {
     });
   });
 
-  describe('with determining message checkbox visibility', function () {
-    beforeEach(initController);
-    it('should return false if more than one license', function () {
-      var displayMessageCheckbox = this.$scope.checkMessageVisibility([{
-        license: 1,
-      }, {
-        license: 2,
-      }]);
-      expect(displayMessageCheckbox).toBeFalsy();
-    });
-
-    it('should return true if only one license and no billingServiceId', function () {
-      var displayMessageCheckbox = this.$scope.checkMessageVisibility([{
-        license: 1,
-      }], 2);
-      expect(displayMessageCheckbox).toBeTruthy();
-    });
-
-    it('should return true if only one license and no selectedSubscription', function () {
-      var displayMessageCheckbox = this.$scope.checkMessageVisibility([{
-        billingServiceId: 1,
-      }]);
-      expect(displayMessageCheckbox).toBeTruthy();
-    });
-
-    it('should return false if only one license and billingServiceId does not match selectedSubscription', function () {
-      var displayMessageCheckbox = this.$scope.checkMessageVisibility([{
-        billingServiceId: 1,
-      }], 2);
-      expect(displayMessageCheckbox).toBeFalsy();
-    });
-
-    it('should return true if only one license and billingServiceId match selectedSubscription', function () {
-      var displayMessageCheckbox = this.$scope.checkMessageVisibility([{
-        billingServiceId: 1,
-      }], 1);
-      expect(displayMessageCheckbox).toBeTruthy();
-    });
-  });
-
   describe('With assigning meeting licenses', function () {
     beforeEach(initController);
     beforeEach(function () {
@@ -516,7 +475,7 @@ describe('OnboardCtrl: Ctrl', function () {
       this.$scope.$apply();
       expect(this.$scope.externalNumberMapping.length).toEqual(2);
       expect(this.$scope.usrlist[0].externalNumber.pattern).toEqual('+14084744532');
-      expect(this.$scope.usrlist[0].assignedDn).toEqual('4532');
+      expect(this.$scope.usrlist[0].assignedDn.pattern).toEqual('4532');
       expect(this.$scope.usrlist[1].didDnMapMsg).toEqual('usersPage.noExtMappingAvail');
     });
 
@@ -934,41 +893,6 @@ describe('OnboardCtrl: Ctrl', function () {
       this.$scope.updateUserLicense();
       this.$scope.$apply();
     }
-  });
-
-  describe('MC/CMR Checkbox logic', function () {
-    beforeEach(initCurrentUserAndController);
-
-    it('should check if CMR gets checked when CF gets checked', function () {
-      this.mock.allLicensesData.allLicenses.forEach(function (lic) {
-        lic.confLic.forEach(function (cfLic) {
-          cfLic.confModel = true; // check CF license
-          this.$scope.checkCMR(cfLic.confModel, lic.cmrLic);
-          lic.cmrLic.forEach(function (cmrLic) {
-            expect(cmrLic).toBeTruthy(); // expect CMR license to be checked
-          });
-        }.bind(this));
-      }.bind(this));
-    });
-
-    it('should check if CF gets checked when CMR gets checked', function () {
-      this.mock.allLicensesData.allLicenses.forEach(function (lic) {
-        lic.confLic.forEach(function (cfLic) {
-          this.$scope.checkCMR(cfLic.confModel, lic.cmrLic);
-          expect(cfLic.confModel).toBeTruthy(); // expect CF license to be checked
-        }.bind(this));
-      }.bind(this));
-    });
-
-    it('should check if CF remains checked when CMR is unchecked', function () {
-      this.mock.allLicensesData.allLicenses.forEach(function (lic) {
-        lic.confLic.forEach(function (cfLic) {
-          cfLic.confModel = true; // check CF license
-          this.$scope.checkCMR(cfLic.confModel, lic.cmrLic);
-          expect(cfLic.confModel).toBeTruthy(); // expect CF license to remain checked
-        }.bind(this));
-      }.bind(this));
-    });
   });
 
   describe('With assigning care licenses', function () {
@@ -1414,79 +1338,6 @@ describe('OnboardCtrl: Ctrl', function () {
     });
   });
 
-  describe('Tests for hasBasicLicenses and hasAdvancedLicenses functions: ', function () {
-    beforeEach(function () {
-      spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
-      spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
-      spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(this.mock.getConferenceServices);
-    });
-    beforeEach(initController);
-
-    it('The hasBasicLicenses() should return true for Conference Services data that have basic licenses', function () {
-      var result = this.$scope.hasBasicLicenses;
-      expect(result).toEqual(true);
-    });
-
-    it('The hasAdvancedLicenses() should return true for Conference Services data that have advanced licenses', function () {
-      var result = this.$scope.hasAdvancedLicenses;
-      expect(result).toEqual(true);
-    });
-  });
-
-  describe('selectedSubscriptionHasBasicLicenses function ', function () {
-    beforeEach(function () {
-      spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
-      spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
-      spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(this.mock.getConferenceServices);
-    });
-    beforeEach(initController);
-
-    it('should return false for a subscription that does not have basic licenses', function () {
-      var billingServiceId = 'Sub20161222115';
-      var result = this.$scope.selectedSubscriptionHasBasicLicenses(billingServiceId);
-      expect(result).toEqual(false);
-    });
-
-    it('should return true for a subscription that has basic licenses', function () {
-      var billingServiceId = 'SubCt31test20161222111';
-      var result = this.$scope.selectedSubscriptionHasBasicLicenses(billingServiceId);
-      expect(result).toEqual(true);
-    });
-
-    it('should return true for a subscription that is a Trial and has basic licenses', function () {
-      var billingServiceId = 'Trial';
-      var result = this.$scope.selectedSubscriptionHasBasicLicenses(billingServiceId);
-      expect(result).toEqual(true);
-    });
-  });
-
-  describe('selectedSubscriptionHasAdvancedLicenses function ', function () {
-    beforeEach(function () {
-      spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
-      spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
-      spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(this.mock.getConferenceServices);
-    });
-    beforeEach(initController);
-
-    it('should return false for a subscription that does not have advanced licenses', function () {
-      var billingServiceId = 'Sub20161222111';
-      var result = this.$scope.selectedSubscriptionHasAdvancedLicenses(billingServiceId);
-      expect(result).toEqual(false);
-    });
-
-    it('should return true for a subscriptions that have advanced licenses', function () {
-      var billingServiceId = 'SubCt31test20161222111';
-      var result = this.$scope.selectedSubscriptionHasAdvancedLicenses(billingServiceId);
-      expect(result).toEqual(true);
-    });
-
-    it('should return true for a subscriptions that are Trial and have advanced licenses', function () {
-      var billingServiceId = 'Trial';
-      var result = this.$scope.selectedSubscriptionHasAdvancedLicenses(billingServiceId);
-      expect(result).toEqual(true);
-    });
-  });
-
   describe('fetch different siteUrl cases ', function () {
     beforeEach(function () {
       spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
@@ -1518,30 +1369,6 @@ describe('OnboardCtrl: Ctrl', function () {
       expect(this.$scope.manageUsers).toBeTruthy();
       this.$scope.goToManageUsers();
       expect(this.$state.go).toHaveBeenCalledWith('users.manage.picker');
-    });
-  });
-
-  describe('showMessengerInteropToggle():', function () {
-    it('should return true only if both "$state.current.data.showMessengerInteropToggle" and "MessengerInteropService.hasAssignableMessageOrgEntitlement()" are true', function () {
-      _.set(this.$state, 'current.data.showMessengerInteropToggle', false);
-      initController.apply(this);
-      this.$scope.$apply();
-      expect(this.$scope.showMessengerInteropToggle()).toBe(false);
-      expect(this.MessengerInteropService.hasAssignableMessageOrgEntitlement).not.toHaveBeenCalled();
-
-      _.set(this.$state, 'current.data.showMessengerInteropToggle', true);
-      this.MessengerInteropService.hasAssignableMessageOrgEntitlement.and.returnValue(false);
-      initController.apply(this);
-      this.$scope.$apply();
-      expect(this.$scope.showMessengerInteropToggle()).toBe(false);
-      expect(this.MessengerInteropService.hasAssignableMessageOrgEntitlement).toHaveBeenCalled();
-
-      _.set(this.$state, 'current.data.showMessengerInteropToggle', true);
-      this.MessengerInteropService.hasAssignableMessageOrgEntitlement.and.returnValue(true);
-      initController.apply(this);
-      this.$scope.$apply();
-      expect(this.$scope.showMessengerInteropToggle()).toBe(true);
-      expect(this.MessengerInteropService.hasAssignableMessageOrgEntitlement).toHaveBeenCalled();
     });
   });
 

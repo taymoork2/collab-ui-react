@@ -1,3 +1,4 @@
+import { AccessibilityService } from 'modules/core/accessibility';
 import { CallParkService, ICallParkRangeItem } from 'modules/call/features/call-park';
 
 export enum RangeType {
@@ -18,6 +19,7 @@ class CallParkNumberCtrl implements ng.IComponentController {
   public extensionLength: string;
   public onChangeFn: Function;
   public onKeyPressFn: Function;
+  public setFocus: boolean;
 
   public form: ng.IFormController;
   public rangeType: RangeType = RangeType.RANGE;
@@ -29,8 +31,16 @@ class CallParkNumberCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
+    private $element: ng.IRootElementService,
+    private AccessibilityService: AccessibilityService,
     private CallParkService: CallParkService,
   ) {}
+
+  public $onInit() {
+    if (this.setFocus) {
+      this.AccessibilityService.setFocus(this.$element, '[name="startRange"]', 100);
+    }
+  }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { range } = changes;
@@ -128,10 +138,6 @@ class CallParkNumberCtrl implements ng.IComponentController {
       this.singleNumber = '';
     }
   }
-
-  public focusInput($event) {
-    angular.element($event.currentTarget).siblings('label').find('input').first().focus();
-  }
 }
 
 export class CallParkNumberComponent implements ng.IComponentOptions {
@@ -143,5 +149,6 @@ export class CallParkNumberComponent implements ng.IComponentOptions {
     location: '<',
     onChangeFn: '&',
     onKeyPressFn: '&',
+    setFocus: '<',
   };
 }

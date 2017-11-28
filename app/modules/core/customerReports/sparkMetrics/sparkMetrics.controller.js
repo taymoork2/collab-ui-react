@@ -46,6 +46,7 @@
     }
 
     function init() {
+      setViewHeight();
       Userservice.getUser(
         'me',
         function (data) {
@@ -58,6 +59,14 @@
         }
       );
       Analytics.trackReportsEvent(Analytics.sections.REPORTS.eventNames.CUST_SPARK_REPORT);
+    }
+
+    function setViewHeight() {
+      if (Authinfo.isReadOnlyAdmin()) {
+        vm.iframeContainerClass = 'sparkMetricsContentWithReadOnly';
+      } else {
+        vm.iframeContainerClass = 'sparkMetricsContent';
+      }
     }
 
     function loadMetricsReport() {

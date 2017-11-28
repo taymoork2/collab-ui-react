@@ -41,7 +41,7 @@
         vm.readAs = result.readAs.value;
         actionType.value = result.variable.value;
         actionType.as = vm.readAs;
-        var ele = '<aa-insertion-element element-text="' + actionType.value + '" read-as="' + actionType.as + '" element-id="' + insertionElementID + '" aa-element-type="' + $scope.aaElementType + '"></aa-insertion-element>';
+        var ele = '<aa-insertion-element element-text="' + actionType.value + '" read-as="' + actionType.as + '" element-id="' + insertionElementID + '"id="' + insertionElementID + '" aa-element-type="' + $scope.aaElementType + '"></aa-insertion-element>';
         node.htmlModel = encodeURIComponent(ele);
       }
     }

@@ -29,9 +29,7 @@
         <div class="csv-filename">{{$ctrl.csvData.model.fileName}}</div>
       </div>
       <div ng-if="$ctrl.csvData.model.isProcessing" class="close-button">
-        <a class="icon icon-close" ng-click="$ctrl.onCancelImport()">
-          <span class="sr-only" translate="common.close"></span>
-        </a>
+        <a href class="icon icon-close" ng-click="$ctrl.onCancelImport()" aria-label="{{::'common.close' | translate}}"></a>
       </div>
     </div>
   </div>

@@ -43,13 +43,13 @@
                 </input>
               </div>
               <div class="small-1 columns">
-                <i ng-if="aaCallerInput.inputActions.length > 1" class="icon icon-trash aa-trash-icon" aria-label="common.delete" ng-click="aaCallerInput.deleteKeyAction($index); $event.stopPropagation();"></i>
+                <i ng-if="aaCallerInput.inputActions.length > 1" class="icon icon-trash aa-trash-icon" aria-label="{{::'common.delete' | translate}}" ng-click="aaCallerInput.deleteKeyAction($index); $event.stopPropagation();"></i>
               </div>
             </ng-form>
           </div>
         </div>
         <div class="row" ng-if="aaCallerInput.inputActions.length < 12">
-          <a class="aa-pm-add-text" ng-click="aaCallerInput.addKeyAction()">
+          <a href class="aa-pm-add-text" ng-click="aaCallerInput.addKeyAction()">
             <i name="aa-caller-input-add-action" class="icon icon-plus-circle"></i>{{(aaCallerInput.inputActions.length === 0 ?  'autoAttendant.phoneMenuAddDigit' : 'autoAttendant.phoneMenuAnotherDigit') | translate }}</a>
         </div>
       </div>

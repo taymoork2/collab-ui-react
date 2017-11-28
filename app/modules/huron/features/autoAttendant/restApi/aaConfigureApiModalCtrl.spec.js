@@ -5,6 +5,7 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
   var AAUiModelService, AutoAttendantCeMenuModelService;
   var AASessionVariableService;
   var AACommonService;
+  var RestApiService;
   var customVarJson = getJSONFixture('huron/json/autoAttendant/aaCustomVariables.json');
 
   var $rootScope, $scope;
@@ -16,7 +17,6 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
   var schedule = 'openHours';
   var index = '0';
   var menu;
-  var menuEntry;
   var q;
   var action;
   var $translate;
@@ -29,10 +29,18 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
     },
   };
 
-  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('uc.autoattendant', function ($provide) {
+    $provide.value(RestApiService, {
+      testRestApiConfigs: function () {
+        var deferred = q.defer();
+        deferred.resolve({ request: 'aa', response: 'aaaa', responsecode: '200' });
+        return deferred.promise();
+      },
+    });
+  }));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($controller, $q, _$rootScope_, _$translate_, _$window_, _AutoAttendantCeMenuModelService_, _AACommonService_, _AASessionVariableService_, _AAUiModelService_) {
+  beforeEach(inject(function ($controller, $q, _$rootScope_, _$translate_, _$window_, _AutoAttendantCeMenuModelService_, _AACommonService_, _AASessionVariableService_, _AAUiModelService_, _RestApiService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     q = $q;
@@ -50,6 +58,7 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
     $window = _$window_;
 
     AAUiModelService = _AAUiModelService_;
+    RestApiService = _RestApiService_;
     AACommonService = _AACommonService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     $translate = _$translate_;
@@ -98,6 +107,19 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
       isDynamic: true,
       htmlModel: '',
     }];
+    action.variableSet = [{
+      value: '',
+      variableName: '',
+      isWarn: false,
+    }];
+    action.dynamics = [{
+      assignVar: {
+        variableName: 'aa',
+        value: 'aa',
+      },
+    }];
+    action.restApiRequest = 'http://www.mocky.io';
+    action.restApiResponse = 'message: Hello';
     aaUiModel[schedule].entries[0].addAction(action);
     $scope.schedule = schedule;
     $scope.index = index;
@@ -122,6 +144,7 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
     AutoAttendantCeMenuModelService = null;
     AASessionVariableService = null;
     AACommonService = null;
+    RestApiService = null;
     controller = null;
     aaUiModel = null;
     menu = null;
@@ -132,102 +155,6 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
     it('should be defined', function () {
       $scope.$apply();
       expect(controller).toBeDefined();
-    });
-  });
-
-  describe('canShowWarn', function () {
-    it('should set isWarn false whenever nameInput is valid', function () {
-      $scope.$apply();
-      var test = {
-        value: '',
-        variableName: 'New Variable',
-        newVariableValue: 'test1',
-        isWarn: true,
-      };
-      controller.canShowWarn(test);
-      expect(test.isWarn).toBe(false);
-    });
-
-    it('should set warn to true because of duplicate variable name in session object', function () {
-      $scope.$apply();
-      var test = {
-        value: '',
-        variableName: 'New Variable',
-        newVariableValue: 'Test1',
-        isWarn: false,
-      };
-      controller.variableSet = [{
-        value: '',
-        newVariableValue: 'Test1',
-        variableName: 'New Variable',
-        isWarn: false,
-      }, {
-        value: '',
-        variableName: 'Test1',
-        isWarn: false,
-      }];
-      controller.canShowWarn(test);
-      expect(test.isWarn).toBe(true);
-    });
-
-    it('isWarn should be false', function () {
-      $scope.$apply();
-      var test = {
-        value: '',
-        newVariableValue: '',
-        isWarn: false,
-      };
-      controller.canShowWarn(test);
-      expect(test.isWarn).toBe(false);
-    });
-  });
-
-  describe('addVariableSet', function () {
-    it('should push variableSet in existing set', function () {
-      $scope.$apply();
-      expect(controller.variableSet.length).toBe(1);
-      controller.addVariableSet();
-      expect(controller.variableSet.length).toBe(2);
-    });
-  });
-
-  describe('isSaveDisabled', function () {
-    it('should disable save whenever any field is empty', function () {
-      var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
-      action.dynamicList = [{
-        action: {
-          eval: {
-            value: 'Static Text',
-          },
-        },
-        isDynamic: false,
-        htmlModel: '',
-      }];
-      var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-      menuEntry.addAction(action);
-      aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
-      aaUiModel.openHours.addEntryAt(0, menuEntry);
-      controller.variableSet = [{
-        value: 'testResponse',
-        newVariableValue: 'Test1',
-        variableName: 'New Variable',
-        isWarn: false,
-      }, {
-        value: 'testRes2',
-        variableName: 'Test1',
-        isWarn: false,
-      }];
-      $scope.$apply();
-      expect(controller.isSaveDisabled()).toBe(false);
-    });
-  });
-
-  describe('deleteVariableSet', function () {
-    it('should delete variableSet for given index', function () {
-      $scope.$apply();
-      expect(controller.variableSet.length).toBe(1);
-      controller.deleteVariableSet(0);
-      expect(controller.variableSet.length).toBe(0);
     });
   });
 
@@ -339,7 +266,8 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
       expect(_.get(menuEntry.actions[0], 'dynamicList[0].isDynamic', '')).toBe(false);
     });
 
-    describe('variable warning', function () {
+    //will be used and updated in the next story which covers errors part
+    /*describe('variable warning', function () {
       it('fullWarningMsg', function () {
         menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
         menuEntry.addAction(AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', ''));
@@ -411,6 +339,238 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         $rootScope.$broadcast('CIVarNameChanged');
         controller.getWarning();
         expect(controller.fullWarningMsgValue).toBe(false);
+      });
+    });*/
+
+    describe('should test stepNext Function', function () {
+      var result;
+      beforeEach(function () {
+        controller.currentStep = 1;
+        controller.restApiResponse = '';
+      });
+
+      it('url should be equate to URL when dynamicList is empty', function () {
+        controller.currentStep = 0;
+        controller.menuEntry.actions[0].dynamicList = '';
+        controller.menuEntry.actions[0].url = [{ testURL: 'test' }];
+        controller.stepNext();
+        expect(controller.currentStep).toEqual(1);
+        expect(action.url).toEqual(controller.menuEntry.actions[0].url);
+      });
+
+      it('url should be equate to dynamicList when dynamicList is not empty', function () {
+        controller.menuEntry.actions[0].dynamicList = [
+          {
+            isDynamic: true,
+            action: {
+              eval: {
+                value: 'this is test value',
+              },
+            },
+          },
+        ];
+
+        controller.stepNext();
+        expect(controller.currentStep).toEqual(2);
+        expect(action.url).toEqual(controller.menuEntry.actions[0].dynamicList);
+      });
+
+      it('dynamics should be empty when there is no dynamic text', function () {
+        controller.menuEntry.actions[0].dynamicList = [
+          {
+            isDynamic: false,
+            action: {
+              eval: {
+                value: 'test',
+              },
+            },
+          },
+        ];
+
+        controller.stepNext();
+        expect(controller.currentStep).toEqual(2);
+        expect(controller.dynamics.length).toEqual(0);
+      });
+
+      it('dynamics should be updated when there is dynamic text', function () {
+        controller.menuEntry.actions[0].dynamicList = [
+          {
+            isDynamic: true,
+            action: {
+              eval: {
+                value: 'aaa',
+              },
+            },
+          },
+        ];
+        controller.dynamics = [{ variableName: 'aaa', value: 'aa', $$hashkey: 'aa' }];
+        controller.stepNext();
+        expect(controller.currentStep).toEqual(2);
+
+        result = [{ value: 'aa', variableName: 'aaa' }];
+        expect(controller.dynamics).toEqual(result);
+
+        controller.dynamics = [
+          {
+            variableName: 'aa',
+            value: 'a',
+          },
+        ];
+        controller.currentStep = 1;
+        result = [{ value: '', variableName: 'aaa' }];
+        controller.stepNext();
+        expect(controller.dynamics).toEqual(result);
+      });
+
+      it('tableData should be updated when corresponding variableSet is present', function () {
+        var restApiResponse = { message: 'Hello' };
+        controller.restApiResponse = JSON.stringify(restApiResponse);
+        controller.variableSet = [{ value: 'message', variableName: 'greeting' }];
+        controller.stepNext();
+        expect(controller.currentStep).toEqual(2);
+        result = [
+          {
+            responseKey: 'message',
+            responseValue: 'Hello',
+            options: [],
+            selected: 'greeting',
+          },
+        ];
+        expect(controller.tableData).toEqual(result);
+      });
+
+      it('tableData should be without selected when variableSet is empty', function () {
+        var restApiResponse = { key: 'Hello' };
+        controller.restApiResponse = JSON.stringify(restApiResponse);
+        controller.variableSet = [];
+        result = [
+          {
+            options: [],
+            responseKey: 'key',
+            responseValue: 'Hello',
+          },
+        ];
+        controller.stepNext();
+        expect(controller.tableData).toEqual(result);
+      });
+
+      it('tableData should be empty when restApiResponse is empty', function () {
+        var restApiResponse = { mesage: {} };
+        controller.restApiResponse = JSON.stringify(restApiResponse);
+        result = [];
+        controller.stepNext();
+        expect(controller.tableData).toEqual(result);
+      });
+    });
+
+    describe('should test the api configure modal wizard', function () {
+      it('should test showStep function', function () {
+        var step = 1;
+        controller.currentStep = 1;
+        expect(controller.showStep(step)).toBe(true);
+        step = 2;
+        expect(controller.showStep(step)).toBe(false);
+      });
+
+      it('should test stepBack function', function () {
+        controller.currentStep = 2;
+        var action = {};
+        action.variableSet = [{ a: 'a' }];
+        action.dynamics = [{ variablename: 'variable', value: 'vale' }];
+        action.restApiRequest = 'http://www.mocky.io';
+        action.restApiResponse = 'message: hellow';
+        controller.stepBack();
+        expect(controller.currentStep).toEqual(1);
+      });
+
+      it('should test isNextDisabled function', function () {
+        //empty url
+        controller.url = '';
+        expect(controller.isNextDisabled()).toBe(true);
+
+        //valid url
+        controller.url = { testURL: 'testURL' };
+        expect(controller.isNextDisabled()).toEqual(false);
+
+        //not empty but not valid url
+        controller.url = '<br class="ng-scope">';
+        expect(controller.isNextDisabled()).toEqual(true);
+      });
+
+      it('should test isTestDisabled function', function () {
+        controller.dynamics = '';
+        controller.isTestDisabled();
+
+        controller.dynamics = [
+          {
+            value: '',
+          },
+        ];
+        controller.isTestDisabled();
+
+        controller.dynamics[0].value = 'aaa';
+        controller.isTestDisabled();
+        expect(controller.isTestDisabled()).toBe(false);
+      });
+
+      it('should test callTestRestApiConfigs function', function () {
+        controller.dynamics = [{
+          variableName: 'Static text',
+          value: '',
+        }];
+        controller.callTestRestApiConfigs();
+        expect(controller.dynamics[0].$$hashkey).not.toBeDefined();
+      });
+
+      it('should test isSaveDisabled function', function () {
+        controller.tableData = [];
+        expect(controller.isSaveDisabled()).toBe(true);
+
+        controller.tableData = [
+          {
+            selected: 'aaa',
+          },
+        ];
+        expect(controller.isSaveDisabled()).toBe(false);
+
+        controller.tableData = [
+          {
+            selected: '',
+          },
+        ];
+        expect(controller.isSaveDisabled()).toBe(true);
+      });
+
+      it('should test saveUpdatedVariableSet function', function () {
+        var result = [];
+        controller.variableSet = [];
+        controller.tableData = [
+          {
+            selected: '',
+          },
+        ];
+        controller.save();
+        expect(controller.variableSet).toEqual(result);
+
+        result = [
+          {
+            variableName: 'aaa',
+            value: 'weather',
+          },
+        ];
+        controller.tableData = [
+          {
+            selected: 'aaa',
+            responseKey: 'weather',
+          },
+        ];
+        controller.save();
+        expect(controller.variableSet).toEqual(result);
+      });
+
+      it('should test isDynamicsValueUpdated function', function () {
+        controller.isDynamicsValueUpdated();
+        expect(controller.isDynamicsValueUpdated).toBeDefined();
       });
     });
   });

@@ -46,7 +46,7 @@
     }
 
     function showProBadge() {
-      return Authinfo.isEnterpriseCustomer() && Authinfo.isPremium();
+      return ProPackService.showProBadge();
     }
 
     function getAdminTabs() {

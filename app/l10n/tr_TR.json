@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "Çevrimiçi",
-      "OnlineWithIssues": "Çevrimiçi, Sorunları Var",
-      "Offline": "Çevrimdışı",
-      "OfflineExpired": "Devre Dışı",
-      "Unknown": "Bilinmiyor"
+      "CONNECTED": "Çevrimiçi",
+      "CONNECTED_WITH_ISSUES": "Çevrimiçi, Sorunları Var",
+      "DISCONNECTED": "Çevrimdışı",
+      "OFFLINE_EXPIRED": "Devre Dışı",
+      "UNKNOWN": "Bilinmiyor"
     },
     "WithDevices": "Cihazlarla",
     "upgradeChannels": {
@@ -6678,23 +6678,23 @@
       "wlan": "Kablosuz"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "Ağ Bağlantı Noktaları Engelli",
         "message": "UDP üzerindeki medya, güvenlik duvarı tarafından engelleniyor olabilir. Çağrı kalitesi etkilenebilir. Ağ bağlantı noktası gereksinimleriyle ilgili bilgi için <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Cisco Spark Uygulaması için Güvenlik Duvarları ve Ağ Gereksinimleri</a> makalesini okuyun."
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "Ağ Bağlantı Noktaları Engelli",
         "message": "UDP üzerindeki medya, güvenlik duvarı tarafından engelleniyor olabilir. Çağrı kalitesi etkilenebilir. Ağ bağlantı noktası gereksinimleriyle ilgili bilgi için <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Cisco Spark Uygulaması için Güvenlik Duvarları ve Ağ Gereksinimleri</a> makalesini okuyun."
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "Ağ Bağlantı Noktaları Engelli",
         "message": "UDP ve TCP üzerindeki medya, güvenlik duvarı tarafından engelleniyor olabilir. Çağrı kalitesi etkilenebilir. Ağ bağlantı noktası gereksinimleriyle ilgili bilgi için <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Cisco Spark Uygulaması için Güvenlik Duvarları ve Ağ Gereksinimleri</a> makalesini okuyun."
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "Yüksek sıcaklık",
         "message": "Sistem sıcaklığı çok yüksek."
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "Ana Ekran Algılanmadı",
         "message": "Ana ekranın açık olduğundan ve video sistemindeki doğru ekran çıktısına bağlı olduğundan emin olun."
       },
@@ -6702,35 +6702,35 @@
         "type": "Otomatik Güncellemeler Devre Dışı Bırakıldı",
         "message": "Sistem yazılımı güncellenmeyecek."
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "Zaman Sunucusuna Erişilemiyor",
         "message": "NTP sunucusuyla bağlantı kurulamadı. Uç noktanızda görüntülenen saat yanlış olabilir."
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "Diğer cihazlardan sinyal karışması",
         "message": "Bu odada, video sistemiyle telefonunuz ya da dizüstü bilgisayarınız arasındaki eşleşmeyi engelleyebilecek, diğer cihazlardan gelen ses ötesi sinyal karışması var (ör: diğer video sistemleri)."
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "Ses Gecikmesi",
         "message": "Monitörünüzün ayarları, sesinize gecikme süresi ekliyor. Monitör ayarlarını uygun bir moda geçirin (ör: Oyun modu)."
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "Ekli Ses Ötesi Hoparlör Yok",
         "message": "SX10'un bu donanım sürümünde ekli bir ses ötesi hoparlör yoktur."
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "Şifreleme seçeneği anahtarı yok",
         "message": "Lütfen bir şifreleme seçeneği anahtarı ekleyin."
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "Test otomasyonu için yapılandırıldı",
         "message": "Ölçümler ve günlük raporları etkilenir."
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "Dokunmatik Panel Gerekli",
         "message": "Oda cihazına bağlı bir dokunmatik panel yok. Dokunmatik paneli oda cihazına bağlayan kabloyu kontrol edin."
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "Paket Kaybı Algılandı",
         "message": "Son arama sırasında arama kalitesini etkilemiş olabilecek bir paket kaybı algılandık. Paket kaybı genellikle ağ tıkanıklığından kaynaklanır."
       },
@@ -7332,25 +7332,25 @@
       "configOverview": {
         "title": "Müşteri Sanal Yardımcısı Yapılandırma Gereksinimleri",
         "desc": "Müşteri Sanal Yardımcısı oluşturma ön koşullarını gözden geçirin",
-        "boxTitle": "Müşteri Sanal Yardımcınızı oluşturmadan önce bir API.AI aracısı oluşturun.",
-        "boxDesc": "API.AI’da doğal dil diyaloğuna sahip otomatik bir aracı oluşturun. Tümleşik Müşteri Sanal Yardımcınız, müşterilerinizle etkileşim kurmak ve gerektiğinde bir sohbeti canlı aracılara aktarmak için yerleşik diyaloğu kullanır.",
-        "boxRadioOne": "Hayır, önceden yapılandırılmış bir API.AI aracım yok",
+        "boxTitle": "Müşteri Sanal Yardımcınızı oluşturmadan önce bir Dialogflow aracısı oluşturun.",
+        "boxDesc": "Dialogflow’da doğal dil diyaloğuna sahip otomatik bir aracı oluşturun. Tümleşik Müşteri Sanal Yardımcınız, müşterilerinizle etkileşim kurmak ve gerektiğinde bir sohbeti canlı aracılara aktarmak için yerleşik diyaloğu kullanır.",
+        "boxRadioOne": "Hayır, önceden yapılandırılmış bir Dialogflow aracım yok",
         "boxRadioOneDesc1": "Bir aracı oluşturmak için ",
-        "boxRadioApiai": "API.AI",
+        "boxRadioDialogflow": "Dialogflow",
         "boxRadioOneDesc2": " adresine gidin. Başlamak için bkz. ",
-        "boxRadioApiaiDoc": "API.AI belgeleri",
-        "boxRadioTwo": "Evet, bir API.AI aracısı yapılandırdım ve devam etmeye hazırım",
-        "boxRadioTwoDesc": "API.AI aracınızı bir Müşteri Sanal Yardımcısıyla entegre etmek üzere devam etmek için oka tıklayın"
+        "boxRadioDialogflowDoc": "Dialogflow belgeleri",
+        "boxRadioTwo": "Evet, bir Dialogflow aracısı yapılandırdım ve devam etmeye hazırım",
+        "boxRadioTwoDesc": "Dialogflow aracınızı bir Müşteri Sanal Yardımcısıyla entegre etmek üzere devam etmek için oka tıklayın"
       },
       "dialogIntegration": {
         "title": "Diyalog Entegrasyonunu Yapılandır",
-        "desc": "API.AI aracısı yapılandırmanızı tamamlamak için önceden yapılandırılmış bir Yükseltme İzni ekleyin",
+        "desc": "Dialogflow aracısı yapılandırmanızı tamamlamak için önceden yapılandırılmış bir Yükseltme İzni ekleyin",
         "boxStepOne": "Önceden yapılandırılmış Yükseltme İzni JSON dosyanızı indirin.",
         "boxStepOneDesc": "Yükseltme İzni, Müşteri Sanal Yardımcınızın sohbeti bir aracıya yükseltmesini sağlar.",
-        "boxStepTwo": "Yükseltme İznini API.AI Aracısına yükleyin.",
-        "boxStepTwoDesc": "API.AI aracınızın İzinler sayfasında dikey üç noktaya (⋮) tıklayarak İstek Yükle’yi seçin. İndirdiğiniz escalation.json dosyasını karşıya yükleyin.",
-        "boxStepThree": "Yükseltme İznini API.AI adresinden özelleştirin.",
-        "boxStepThreeDesc": "API.AI aracınızın İstekler sayfasında Yükseltme İzni’ni seçin. Yükseltmeyi tetikleyen kullanıcı ifadelerini değiştirmek için Kullanıcı Sözleri alanlarını değiştirin. Tüm kullanıcı ifadeleri:",
+        "boxStepTwo": "Yükseltme İznini Dialogflow Aracısına yükleyin.",
+        "boxStepTwoDesc": "Dialogflow aracınızın İzinler sayfasında dikey üç noktaya (⋮) tıklayarak İstek Yükle’yi seçin. İndirdiğiniz escalation.json dosyasını karşıya yükleyin.",
+        "boxStepThree": "Yükseltme İznini Dialogflow adresinden özelleştirin.",
+        "boxStepThreeDesc": "Dialogflow aracınızın İstekler sayfasında Yükseltme İzni’ni seçin. Yükseltmeyi tetikleyen kullanıcı ifadelerini değiştirmek için Kullanıcı Sözleri alanlarını değiştirin. Tüm kullanıcı ifadeleri:",
         "boxBulletOne": "Bir şablon modu kullanmalıdır",
         "boxBulletTwo": "Bir @sys.any:Konu başvurusu içermelidir",
         "boxStepThreeDescCont": "Kullanıcı ifadesinin yanındaki @ sembolü, şablon modunu ifade eder. Modu değiştirmek için sembole tıklayın. GetExpert eylemini değiştirmeyin.",
@@ -7361,11 +7361,11 @@
       "accessToken": {
         "title": "Diyalog Entegrasyonunu Tamamla",
         "desc": "Müşteri etkileşimlerinizde doğal diyalog kullanmak için entegrasyonunuzu tamamlayın",
-        "boxDesc": "Her API.AI aracısının aracı ayarlarında depolanan benzersiz bir istemci erişim belirteci vardır. Yapılandırılan API.AI aracı ayarlarınızdaki belirteci kopyalayarak buraya girin, diyalog entegrasyonunu tamamlamadan önce kontrol etmek için “Doğrula”ya tıklayın.",
-        "inputLabel": "API.AI İstemci Erişimi Belirteci",
+        "boxDesc": "Her Dialogflow aracısının aracı ayarlarında depolanan benzersiz bir istemci erişim belirteci vardır. Yapılandırılan Dialogflow aracı ayarlarınızdaki belirteci kopyalayarak buraya girin, diyalog entegrasyonunu tamamlamadan önce kontrol etmek için “Doğrula”ya tıklayın.",
+        "inputLabel": "Dialogflow İstemci Erişimi Belirteci",
         "validateButtonText": "Onayla",
         "maxLengthError": "İstemci Erişimi Belirteci, 128 karakterden uzun olamaz.",
-        "invalidTokenText": "API.AI istemci erişimi belirteci geçersiz. Belirteci doğrulayarak tekrar deneyin."
+        "invalidTokenText": "Dialogflow istemci erişimi belirteci geçersiz. Belirteci doğrulayarak tekrar deneyin."
       },
       "name": {
         "title": "Müşteri Sanal Yardımcısı Adı",

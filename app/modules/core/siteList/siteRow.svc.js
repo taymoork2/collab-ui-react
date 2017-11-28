@@ -9,15 +9,17 @@
 
   /* @ngInject */
   function WebExSiteRowService(
-    $log,
     $interval,
+    $log,
+    $q,
     $translate,
     Authinfo,
+    FeatureToggleService,
     SetupWizardService,
     UrlConfig,
     Userservice,
-    WebExApiGatewayService,
     WebExApiGatewayConstsService,
+    WebExApiGatewayService,
     WebExUtilsFact
   ) {
     this.initSiteRowsObj = function () {
@@ -114,14 +116,19 @@
       _this.updateConferenceServices();
     }; //configureGrid
 
-    //TODO: algendel 10/16/2017 -- call backend API to update licenses and remove the site.
-    this.deleteSite = function (urlToDelete, remainingSite) {
-      return [urlToDelete, remainingSite];
-    };
-
     this.getLicensesInSubscriptionGroupedBySites = function (subscriptionId) {
       var sites = _.groupBy(SetupWizardService.getConferenceLicensesBySubscriptionId(subscriptionId), 'siteUrl');
       return sites;
+    };
+
+    this.canAddSite = function () {
+      return !_.isEmpty(SetupWizardService.getNonTrialWebexLicenses()) && !_.isEmpty(SetupWizardService.getEnterpriseSubscriptionListWithStatus());
+    };
+
+    this.hasNonPendingSubscriptions = function () {
+      return _.some(SetupWizardService.getEnterpriseSubscriptionListWithStatus(), function (sub) {
+        return !sub.isPending;
+      });
     };
 
     this.getConferenceServices = function () {
@@ -710,6 +717,17 @@
 
       siteRow.showCSVInfo = true;
     }; //updateDisplayControlFlagsInRow()
+
+
+    this.shouldShowSiteManagement = function (pattern) {
+      var regex = new RegExp(pattern);
+      var isPatternMatch = regex.test(Authinfo.getUserName()) || regex.test(Authinfo.getPrimaryEmail()) || regex.test(Authinfo.getCustomerAdminEmail());
+
+      if (isPatternMatch) {
+        return $q.resolve(true);
+      }
+      return FeatureToggleService.atlasWebexAddSiteGetStatus();
+    };
 
     ////////
 

@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "Online",
-      "OnlineWithIssues": "Online, mit Problemen",
-      "Offline": "Offline",
-      "OfflineExpired": "Deaktiviert",
-      "Unknown": "Unbekannt"
+      "CONNECTED": "Online",
+      "CONNECTED_WITH_ISSUES": "Online, mit Problemen",
+      "DISCONNECTED": "Offline",
+      "OFFLINE_EXPIRED": "Deaktiviert",
+      "UNKNOWN": "Unbekannt"
     },
     "WithDevices": "Mit Geräten",
     "upgradeChannels": {
@@ -6678,23 +6678,23 @@
       "wlan": "Wireless"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "Netzwerkports blockiert",
         "message": "Die Firewall blockiert möglicherweise Medien auf UDP. Die Anrufqualität kann beeinträchtigt sein. Informationen zu den Netzwerkanschlussanforderungen finden Sie im Artikel zu <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls und Netzwerkanforderungen für die Cisco Spark-App</a>."
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "Netzwerkports blockiert",
         "message": "Die Firewall blockiert möglicherweise Medien auf UDP. Die Anrufqualität kann beeinträchtigt sein. Informationen zu den Netzwerkanschlussanforderungen finden Sie im Artikel zu <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls und Netzwerkanforderungen für die Cisco Spark-App</a>."
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "Netzwerkports blockiert",
         "message": "Die Firewall blockiert möglicherweise Medien auf UDP und TCP. Die Anrufqualität kann beeinträchtigt sein. Informationen zu den Netzwerkanschlussanforderungen finden Sie im Artikel zu<a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls und Netzwerkanforderungen für die Cisco Spark-App</a>."
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "Hohe Temperatur",
         "message": "Systemtemperatur zu hoch."
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "Hauptdisplay wurde nicht erkannt",
         "message": "Überprüfen Sie, ob das Hauptdisplay eingeschaltet und an die richtige Displayausgabe des Videosystems angeschlossen ist."
       },
@@ -6702,35 +6702,35 @@
         "type": "Automatische Aktualisierungen deaktiviert",
         "message": "System-Software wird nicht aktualisiert."
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "Time Server nicht erreichbar",
         "message": "Es konnte keine Verbindung zu einem NTP-Server aufgebaut werden. Unter Umständen wird auf Ihrem Endpunkt eine falsche Uhrzeit angezeigt."
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "Signalstörung durch andere Geräte",
         "message": "In diesem Raum liegt eine Ultraschall-Signalstörung durch andere Geräte vor (z. B. andere Videosysteme), die eine Kopplung zwischen dem Videosystem und Ihrem Telefon oder Laptop verhindern könnte."
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "Audioverzögerung",
         "message": "Durch Ihre Monitoreinstellungen entsteht eine zusätzliche Audioverzögerung. Stellen Sie Ihren Monitor auf einen geeigneten Modus um (z. B. Spielmodus)."
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "Keine eingebetteten Ultraschall-Lautsprecher",
         "message": "Diese Hardware-Version des SX10 verfügt über keinen eingebetteten Ultraschall-Lautsprecher."
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "Fehlender Schlüssel für die Verschlüsselungsoption",
         "message": "Bitte fügen Sie einen Schlüssel für die Verschlüsselungsoption hinzu."
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "Zur Test-Automatisierung konfiguriert",
         "message": "Hiervon sind die Metriken und Protokollberichte betroffen."
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "Touchpanel erforderlich",
         "message": "Es ist kein Touchpanel mit dem Raumgerät verbunden. Überprüfen Sie das Verbindungskabel zwischen Touchpanel und Raumgerät."
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "Paketverlust erkannt",
         "message": "Während des letzten Anrufs wurde ein Paketverlust festgestellt, der möglicherweise die Anrufqualität beeinflusst hat. Paketverluste werden normalerweise durch Netzüberlastung verursacht."
       },
@@ -7332,25 +7332,25 @@
       "configOverview": {
         "title": "Konfigurationsanforderungen für virtuelle Kundenmitarbeiter",
         "desc": "Überprüfen Sie die Voraussetzungen für die Erstellung eines virtuellen Kundenmitarbeiters",
-        "boxTitle": "Erstellen Sie einen API.AI-Agenten, bevor Sie Ihren virtuellen Kundenmitarbeiter erstellen.",
-        "boxDesc": "Erstellen Sie einen automatischen Agenten in API.AI mit einem natürlichen Sprachdialog. Ihr integrierter virtueller Kundenmitarbeiter verwendet den vordefinierten Dialog, um mit Ihren Kunden zu interagieren und eine Konversation bei Bedarf an einen Live-Agenten zu eskalieren.",
-        "boxRadioOne": "Nein, ich habe keinen vorkonfigurierten API.AI-Agenten",
+        "boxTitle": "Erstellen Sie einen Dialogflow-Agenten, bevor Sie Ihren virtuellen Kundenmitarbeiter erstellen.",
+        "boxDesc": "Erstellen Sie einen automatischen Agenten in Dialogflow mit einem natürlichen Sprachdialog. Ihr integrierter virtueller Kundenmitarbeiter verwendet den vordefinierten Dialog, um mit Ihren Kunden zu interagieren und eine Konversation bei Bedarf an einen Live-Agenten zu eskalieren.",
+        "boxRadioOne": "Nein, ich habe keinen vorkonfigurierten Dialogflow-Agenten",
         "boxRadioOneDesc1": "Besuchen Sie ",
-        "boxRadioApiai": "API.AI,",
+        "boxRadioDialogflow": "Dialogflow,",
         "boxRadioOneDesc2": " um einen Agenten zu erstellen. Weitere Informationen finden Sie in der ",
-        "boxRadioApiaiDoc": "API.AI-Dokumentation",
-        "boxRadioTwo": "Ja, ich habe einen vorkonfigurierten API.AI-Agenten und möchte fortfahren",
-        "boxRadioTwoDesc": "Klicken Sie auf den Pfeil, um Ihren API.AI-Agenten mit einem virtuellen Kundenmitarbeiter zu integrieren"
+        "boxRadioDialogflowDoc": "Dialogflow-Dokumentation",
+        "boxRadioTwo": "Ja, ich habe einen vorkonfigurierten Dialogflow-Agenten und möchte fortfahren",
+        "boxRadioTwoDesc": "Klicken Sie auf den Pfeil, um Ihren Dialogflow-Agenten mit einem virtuellen Kundenmitarbeiter zu integrieren"
       },
       "dialogIntegration": {
         "title": "Dialogintegration konfigurieren",
-        "desc": "Fügen Sie einen vorkonfigurierten Eskalationsgrund hinzu, um die Konfiguration Ihres API.AI-Agenten abzuschließen",
+        "desc": "Fügen Sie einen vorkonfigurierten Eskalationsgrund hinzu, um die Konfiguration Ihres Dialogflow-Agenten abzuschließen",
         "boxStepOne": "Laden Sie eine vorkonfigurierte JSON-Datei mit Eskalationsgründen herunter.",
         "boxStepOneDesc": "Ihr virtueller Kundenmitarbeiter benötigt einen Eskalationsgrund, um eine Konversation an einen Agenten zu eskalieren.",
-        "boxStepTwo": "Laden Sie den Eskalationsgrund zu Ihrem API.AI-Agenten hoch.",
-        "boxStepTwoDesc": "Klicken Sie auf der Begründungsseite Ihres API.AI-Agenten auf die vertikale Ellipse (⋮), und wählen Sie „Grund hochladen“ aus. Laden Sie die heruntergeladene Datei „escalation.json“ hoch.",
-        "boxStepThree": "Passen Sie den Eskalationsgrund in API.AI an.",
-        "boxStepThreeDesc": "Wählen Sie auf der Begründungsseite Ihres API.AI-Agenten den Eintrag „Eskalationsgrund“ aus. Bearbeiten Sie die Felder „Benutzer sagt“, um die Benutzerausdrücke zu ändern, die eine Eskalation auslösen. Alle Benutzerausdrücke müssen die folgenden Voraussetzungen erfüllen:",
+        "boxStepTwo": "Laden Sie den Eskalationsgrund zu Ihrem Dialogflow-Agenten hoch.",
+        "boxStepTwoDesc": "Klicken Sie auf der Begründungsseite Ihres Dialogflow-Agenten auf die vertikale Ellipse (⋮), und wählen Sie „Grund hochladen“ aus. Laden Sie die heruntergeladene Datei „escalation.json“ hoch.",
+        "boxStepThree": "Passen Sie den Eskalationsgrund in Dialogflow an.",
+        "boxStepThreeDesc": "Wählen Sie auf der Begründungsseite Ihres Dialogflow-Agenten den Eintrag „Eskalationsgrund“ aus. Bearbeiten Sie die Felder „Benutzer sagt“, um die Benutzerausdrücke zu ändern, die eine Eskalation auslösen. Alle Benutzerausdrücke müssen die folgenden Voraussetzungen erfüllen:",
         "boxBulletOne": "Vorlagenmodus verwendet",
         "boxBulletTwo": "Enthält einen Verweis auf @sys.any:Topic",
         "boxStepThreeDescCont": "Das @-Zeichen neben dem Benutzerausdruck verweist auf den Vorlagenmodus. Klicken Sie auf das Symbol, um den Modus umzuschalten. Die GetExpert-Aktion darf nicht verändert werden.",
@@ -7361,11 +7361,11 @@
       "accessToken": {
         "title": "Dialogintegration abschließen",
         "desc": "Schließen Sie Ihre Integration ab, um natürliche Dialoge in Ihren Kundeninteraktionen zu aktivieren",
-        "boxDesc": "Für jeden API.AI-Agenten wird ein eindeutiges Clientzugriffstoken in den Agenteneinstellungen gespeichert. Kopieren Sie das Token aus den Einstellungen Ihres API.AI-Agenten, fügen Sie es hier ein, und klicken Sie auf „Validieren“, um das Token zu überprüfen, bevor Sie die Dialogintegration abschließen.",
-        "inputLabel": "API.AI-Clientzugriffstoken",
+        "boxDesc": "Für jeden Dialogflow-Agenten wird ein eindeutiges Clientzugriffstoken in den Agenteneinstellungen gespeichert. Kopieren Sie das Token aus den Einstellungen Ihres Dialogflow-Agenten, fügen Sie es hier ein, und klicken Sie auf „Validieren“, um das Token zu überprüfen, bevor Sie die Dialogintegration abschließen.",
+        "inputLabel": "Dialogflow-Clientzugriffstoken",
         "validateButtonText": "Überprüfen",
         "maxLengthError": "Das Clientzugriffstoken darf nicht länger als 128 Zeichen sein.",
-        "invalidTokenText": "Ungültiges API.AI-Clientzugriffstoken. Überprüfen Sie das Token und versuchen Sie es erneut."
+        "invalidTokenText": "Ungültiges Dialogflow-Clientzugriffstoken. Überprüfen Sie das Token und versuchen Sie es erneut."
       },
       "name": {
         "title": "Name des virtuellen Kundenmitarbeiters",

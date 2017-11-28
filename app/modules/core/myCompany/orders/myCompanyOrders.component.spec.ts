@@ -1,5 +1,3 @@
-import { IOrderDetail } from './myCompanyOrders.service';
-
 describe('Component: myCompanyOrders', () => {
   beforeEach(function () {
     this.initModules('Core');
@@ -11,23 +9,22 @@ describe('Component: myCompanyOrders', () => {
       'Notification',
     );
 
-    const purchaseOrdersList: IOrderDetail[] = [{
+    const purchaseOrdersList = [{
       externalOrderId: '1',
       orderDate: new Date(),
       status: 'COMPLETED',
       total: 15.95,
-      productDescriptionList: [
-        'first description',
+      productList: [
+        { description: 'first description' },
       ],
-      invoiceURL: 'invoice.com',
     }, {
       externalOrderId: '2',
       orderDate: new Date(),
       status: 'PROVISIONING',
       total: 15.95,
-      productDescriptionList: [
-        'fourth description',
-        'fifth description',
+      productList: [
+        { description: 'fourth description' },
+        { description: 'fifth description' },
       ],
       invoiceURL: '',
     }, {
@@ -35,8 +32,8 @@ describe('Component: myCompanyOrders', () => {
       orderDate: new Date(),
       status: this.Config.webexSiteStatus.PENDING_PARM,
       total: 15.95,
-      productDescriptionList: [
-        'second description',
+      productList: [
+        { description: 'second description' },
       ],
       invoiceURL: '',
     }, {
@@ -44,8 +41,8 @@ describe('Component: myCompanyOrders', () => {
       orderDate: new Date(),
       status: 'CLOSED',
       total: 15.95,
-      productDescriptionList: [
-        'closed description',
+      productList: [
+        { description: 'closed description' },
       ],
       invoiceURL: '',
     }];
@@ -58,6 +55,7 @@ describe('Component: myCompanyOrders', () => {
     spyOn(this.Notification, 'errorWithTrackingId');
 
     spyOn(this.DigitalRiverService, 'logout').and.returnValue(this.$q.resolve());
+    spyOn(this.DigitalRiverService, 'getInvoiceUrl').and.returnValue(this.$q.resolve('invoice.com'));
 
     this.compileComponent('myCompanyOrders');
   });

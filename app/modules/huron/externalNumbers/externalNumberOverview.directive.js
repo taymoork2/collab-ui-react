@@ -9,7 +9,7 @@
     var directive = {
       restrict: 'EA',
       scope: {
-        showContractIncomplete: '@showContractIncomplete',
+        showContractIncomplete: '=',
       },
       template: require('modules/huron/externalNumbers/externalNumberOverview.tpl.html'),
       controller: 'ExternalNumberOverviewCtrl',

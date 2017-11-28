@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Care Feature Delete Ctrl', function () {
-  var controller, $rootScope, $q, $scope, $stateParams, $timeout, $translate, CareFeatureList, CvaService, Log, Notification, Authinfo;
-  var deferred, cvaDeferred;
+  var controller, $rootScope, $q, $scope, $stateParams, $timeout, $translate, CareFeatureList, CvaService, Log, Notification, Authinfo, EvaService;
+  var deferred, cvaDeferred, evaDeferred;
 
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
@@ -22,7 +22,7 @@ describe('Care Feature Delete Ctrl', function () {
     $provide.value('Authinfo', spiedAuthinfo);
   }));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$stateParams_, _$timeout_, _$translate_, _$q_, _Authinfo_, _CareFeatureList_, _CvaService_, _Notification_, _Log_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$stateParams_, _$timeout_, _$translate_, _$q_, _Authinfo_, _CareFeatureList_, _CvaService_, _EvaService_, _Notification_, _Log_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -35,11 +35,14 @@ describe('Care Feature Delete Ctrl', function () {
     Log = _Log_;
     controller = $controller;
     Authinfo = _Authinfo_;
+    EvaService = _EvaService_;
 
     deferred = $q.defer();
     cvaDeferred = $q.defer();
+    evaDeferred = $q.defer();
     spyOn(CareFeatureList, 'deleteTemplate').and.returnValue(deferred.promise);
     spyOn(CvaService, 'deleteConfig').and.returnValue(cvaDeferred.promise);
+    spyOn(EvaService, 'deleteExpertAssistant').and.returnValue(evaDeferred.promise);
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
     spyOn(Notification, 'errorWithTrackingId');
@@ -47,7 +50,7 @@ describe('Care Feature Delete Ctrl', function () {
   }));
 
   afterEach(function () {
-    controller = $rootScope = $q = $scope = $stateParams = $timeout = $translate = CareFeatureList = CvaService = Log = Notification = Authinfo = deferred = cvaDeferred = undefined;
+    controller = $rootScope = $q = $scope = $stateParams = $timeout = $translate = CareFeatureList = CvaService = Log = Notification = Authinfo = EvaService = deferred = cvaDeferred = evaDeferred = undefined;
   });
 
   $stateParams = {
@@ -60,6 +63,12 @@ describe('Care Feature Delete Ctrl', function () {
     deleteFeatureId: 123,
     deleteFeatureName: 'Customer Virtual Assistant Dev Config',
     deleteFeatureType: 'customerVirtualAssistant',
+  };
+
+  var evaStateParams = {
+    deleteFeatureId: 123,
+    deleteFeatureName: 'Expert Virtual Assistant Dev Config',
+    deleteFeatureType: 'expertVirtualAssistant',
   };
 
   function callController(_stateParams) {
@@ -99,7 +108,7 @@ describe('Care Feature Delete Ctrl', function () {
     });
   });
 
-  it('should delete VA config successfully', function () {
+  it('should delete CVA config successfully', function () {
     callController(cvaStateParams);
     controller.deleteFeature();
     cvaDeferred.resolve(successResponse);
@@ -111,7 +120,7 @@ describe('Care Feature Delete Ctrl', function () {
     });
   });
 
-  it('should fail at deleting VA config', function () {
+  it('should fail at deleting CVA config', function () {
     callController(cvaStateParams);
     controller.deleteFeature();
     cvaDeferred.reject(failureResponse);
@@ -119,6 +128,29 @@ describe('Care Feature Delete Ctrl', function () {
     $timeout.flush();
     expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(failureResponse, jasmine.any(String), {
       featureName: cvaStateParams.deleteFeatureName,
+    });
+  });
+
+  it('should delete EVA config successfully', function () {
+    callController(evaStateParams);
+    controller.deleteFeature();
+    evaDeferred.resolve(successResponse);
+    $scope.$apply();
+    $timeout.flush();
+    expect($rootScope.$broadcast).toHaveBeenCalledWith('CARE_FEATURE_DELETED');
+    expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
+      featureName: evaStateParams.deleteFeatureName,
+    });
+  });
+
+  it('should fail at deleting EVA config', function () {
+    callController(evaStateParams);
+    controller.deleteFeature();
+    evaDeferred.reject(failureResponse);
+    $scope.$apply();
+    $timeout.flush();
+    expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(failureResponse, jasmine.any(String), {
+      featureName: evaStateParams.deleteFeatureName,
     });
   });
 });

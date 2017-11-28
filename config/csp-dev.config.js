@@ -20,6 +20,7 @@ var cspDevConfig = {
     'http://127.0.0.1:8080', // Local Atlas Backend
     'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
     'http://localhost:8080', // Local Atlas Backend
+    'http://localhost:8090', // Lcoal Expert Virtual Assistant Backend
     'https://10.224.166.46:8443',
     'ws://127.0.0.1:8000', // Browser Sync
     'ws://127.0.0.1:8443', // Browser Sync

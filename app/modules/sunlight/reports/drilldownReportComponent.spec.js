@@ -31,19 +31,21 @@ describe('drilldownReports Controller Positive Test cases', function () {
       searchPlaceholder: 'Dummy Search Placeholder',
       state: 'SET',
       table: {
-        columnDefs: [
-          {
-            field: 'userName',
-            id: 'userName',
-            displayName: 'Dummy userName',
-            sortable: true,
-          }, {
-            field: 'csat',
-            id: 'averageCsat',
-            displayName: 'Dummy Csat',
-            sortable: true,
-          },
-        ],
+        gridOptions: {
+          columnDefs: [
+            {
+              field: 'userName',
+              id: 'userName',
+              displayName: 'Dummy userName',
+              sortable: true,
+            }, {
+              field: 'csat',
+              id: 'averageCsat',
+              displayName: 'Dummy Csat',
+              sortable: true,
+            },
+          ],
+        },
       },
       title: 'Dummy Title',
     };
@@ -78,6 +80,7 @@ describe('drilldownReports Controller Positive Test cases', function () {
     expect(ddController.props.description).toEqual('Dummy set Description');
     expect(ddController.toggleDrilldownReport).toBeDefined();
     expect(ddController.isDataEmpty()).toBe(false);
+    expect(ddController.display).toBe(false);
 
     //callback check
     ddController.callback();
@@ -85,9 +88,9 @@ describe('drilldownReports Controller Positive Test cases', function () {
   });
 
   it('Toggle Drilldown Report test', function () {
-    var display = ddController.display();
+    var display = ddController.display;
     ddController.toggleDrilldownReport();
-    expect(ddController.display()).toBe(!display);
+    expect(ddController.display).toBe(!display);
   });
 
   it('State should be set to empty when onGetDataSuccess is called with 0 records', function () {
@@ -114,5 +117,11 @@ describe('drilldownReports Controller Positive Test cases', function () {
     ddController.onGetDataSuccess([1, 2, 3]);
     ddController.toggleDrilldownReport();
     expect(callbackSpy).not.toHaveBeenCalled();
+  });
+
+  it('on change of props attribute, should set onRegisterApi attribute of gridOptions', function () {
+    expect(ddController.props.table.gridOptions.onRegisterApi).not.toBeDefined();
+    ddController.$doCheck();
+    expect(ddController.props.table.gridOptions.onRegisterApi).toBeDefined();
   });
 });

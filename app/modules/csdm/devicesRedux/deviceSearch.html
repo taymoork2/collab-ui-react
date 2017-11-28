@@ -1,45 +1,51 @@
-<div class="search-filters-redux searchFilter">
+<div class="search-filters-redux">
   <form ng-submit="dctrl.onInputSubmit()" ng-class="{ 'active': dctrl.inputActive}">
-    <div class="searchbox" onclick="angular.element('#searchFilterInput').focus();">
-      <div class="searchinput" ng-class="{'searcherror': dctrl.searchObject.hasError}">
+    <div class="bulleted-searchbox" onclick="angular.element('#searchFilterInput').focus();">
+      <div class="bulleted-searchinput"
+           ng-class="{'searcherror': dctrl.searchObject.hasError}">
         <i class="icon icon-search"></i>
+        <device-search-bullet ng-repeat="bullet in dctrl.getBullets()" search-element="bullet"
+                              bullet-container="dctrl"></device-search-bullet>
         <input
           autocomplete="off"
           autocorrect="off"
           autocapitalize="off"
           spellcheck="false"
           id="searchFilterInput"
-          cs-expandinginput
           ng-model="dctrl.searchInput"
           ng-change="dctrl.onInputChange()"
+          ng-keydown="dctrl.onSearchInputKeyDown($event)"
           type="text"
-          placeholder="{{::'common.search' | translate}}"
-          ng-focus="searchFilterInput.inputFocus = true; dctrl.inputActive=true; searchFilterInput.expand()"
-          ng-blur="searchFilterInput.inputFocus = true; dctrl.inputActive=false"
-          focus-width="150"
-          style="width: 1px; min-width: 1px; max-width: 200px;"
-          cs-expandinginput-minwidth="1px"
-          class="form-control ng-valid ng-isolate-scope ng-dirty ng-valid-parse ng-touched ng-empty"
-        >
-        <i class="icon icon-exit-outline clear" ng-click="dctrl.clearSearchInput();"></i>
+          placeholder="{{::'spacesPage.deviceSearchPlaceholder' | translate}}"
+          ng-focus="dctrl.inputActive=true"
+          ng-blur="dctrl.inputActive=false">
+
+        <i class="icon icon-exit-outline clear" ng-click="dctrl.clearSearchInput();"
+           ng-if="dctrl.searchObject.hasAnyBulletOrEditedText()"></i>
+      </div>
+      <div class="dropdown-positioner">
+        <div class="suggestions-dropdown" ng-mouseleave="dctrl.suggestions.setFirstActive()"
+             ng-show="dctrl.showSuggestions || dctrl.startSelecting" ng-mousedown="dctrl.startSelecting = true"
+             ng-mouseup="dctrl.selectSuggestion(dctrl.suggestions.getActiveSuggestion());dctrl.startSelecting = false">
+          <ul>
+            <li
+              ng-repeat="suggestion in dctrl.suggestions.uiSuggestions track by $index"
+              ng-class="{active: dctrl.suggestions.isSuggestionActive($index)}"
+              ng-mouseenter="dctrl.suggestions.setActiveSuggestion($index)">
+              <div class="field"><i ng-bind-html="suggestion.field | highlight:dctrl.searchInput"></i></div>
+              <div class="text" ng-bind-html="suggestion.text | highlight:dctrl.searchInput"></div>
+              <div class="count" ng-if="suggestion.count > 0 || suggestion.count === 0">({{suggestion.count}})</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="search-error-box" ng-class="{'warning': dctrl.searchObject.hasError}">
+      <div class="cs-input__messages">
+        <div class="message" translate="spacesPage.searchError"></div>
       </div>
     </div>
   </form>
-  <span class="search-filters-only">
-    <cs-searchfilter filters="dctrl.searchFilters"
-                     search-item-fn="dctrl.setCurrentSearch(searchStr)"
-                     set-filter-fn="dctrl.setCurrentFilterValue(filter.filterValue)"
-                     ng-class="{'searcherror': dctrl.searchObject.hasError}">
-    </cs-searchfilter>
-  </span>
-</div>
-<div class="bullets">
-  <span class="bullet" ng-if="!bullet.isBeingEdited()" ng-repeat="bullet in dctrl.getBullets()"
-        ng-dblclick="dctrl.editBullet(bullet)">
-    <span class="field-descriptor" ng-if="bullet.field">{{bullet.getQueryPrefix()}} </span>
-    <span>{{bullet.getQueryWithoutField()}}</span>
-    <i class="icon icon-close" ng-click="dctrl.removeBullet(bullet)"/>
-  </span>
 </div>
 
 <!--Enable this to see the final query for debugging:-->

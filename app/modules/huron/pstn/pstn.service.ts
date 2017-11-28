@@ -157,7 +157,7 @@ export class PstnService {
   }
 
   public listResellerCarriers(): ng.IPromise<any[]> {
-    return this.TerminusService.resellerCarrier().query({
+    return this.TerminusService.resellerCarrierV2().query({
       resellerId: this.Authinfo.getCallPartnerOrgId(),
     }).$promise.then((response) => this.getCarrierDetails(response));
   }

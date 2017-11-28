@@ -4,6 +4,7 @@ interface IRoleStates {
   Application: string[];
   Compliance_User: string[];
   CUSTOMER_PARTNER: string[];
+  Device_Admin: string[];
   Full_Admin: string[];
   Help_Desk: string[];
   Readonly_Admin?: string[];
@@ -18,6 +19,7 @@ interface IRoleStates {
   WX2_SquaredInviter: string[];
   WX2_Support: string[];
   WX2_User: string[];
+  User_Admin: string[];
 }
 
 type EnvType = 'dev' | 'cfe' | 'integration' | 'prod';
@@ -203,6 +205,8 @@ export class Config {
     ciscouc_ces: 'ciscouc.ces',
     readonly_admin: 'id_readonly_admin',
     tech_support: 'atlas-portal.cisco.techsupport',
+    user_admin: 'id_user_admin',
+    device_admin: 'atlas-portal.deviceadmin',
   };
 
   public readonly roles = {
@@ -220,6 +224,8 @@ export class Config {
     readonly_admin: 'Readonly_Admin',
     compliance_user: 'Compliance_User',
     tech_support: 'Tech_Support',
+    user_admin: 'User_Admin',
+    device_admin: 'Device_Admin',
   };
 
   public readonly roleState = {
@@ -480,6 +486,7 @@ export class Config {
       'context-fieldset-modal',
       'context-fieldsets-sidepanel',
       'context-resources',
+      'context-cluster',
       'context-cluster-sidepanel',
       'add-resource',
       'context-fields-sidepanel',
@@ -533,6 +540,8 @@ export class Config {
       'cdrladderdiagram',
       'cdrsupport',
       'customerprofile',
+      'dgc',
+      'dgc-panel',
       'domainmanagement',
       'dr-login-forward',
       'editService',
@@ -552,7 +561,7 @@ export class Config {
       'users',
       'customerPstnOrdersOverview',
     ],
-    Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
+    Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'webexReportsPanel'],
     Tech_Support: ['gss'],
     WX2_User: ['overview', 'support', 'activateProduct'],
     WX2_Support: ['overview', 'reports', 'support'],
@@ -575,11 +584,14 @@ export class Config {
       'reports.webex',
       'webex-reports-iframe',
       'services-overview',
+      'account-linking',
     ],
     Application: ['organizations', 'organization-overview'],
     Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch', 'provisioning', 'order-details'],
     Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports'],
     Partner_Management: ['partnerManagement'],
+    User_Admin: ['user-overview', 'userprofile', 'users', 'userRedirect', 'editService', 'addDeviceFlow'],
+    Device_Admin: ['device-overview', 'devices', 'addDeviceFlow', 'devices-redux', 'place-overview', 'places'],
   };
 
   private readonly TEST_ENV_CONFIG: string = 'TEST_ENV_CONFIG';

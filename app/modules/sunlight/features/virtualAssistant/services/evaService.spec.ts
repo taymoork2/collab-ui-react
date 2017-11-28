@@ -9,6 +9,7 @@ describe('Care Expert Virtual Assistant Service', function () {
   const TEST_EXPERT_VA_ID = 'ANOTHER-UUID-VALUE';
   const TEST_EMAIL = 'test@cisco.com';
   const TEST_ICON_URL = 'iconUrl';
+  const DEFAULT_SPACE_ID = 'TEST-SPACE-ID';
   let EvaService: EvaService, $httpBackend, $state;
 
   const spiedUrlConfig = {
@@ -30,6 +31,7 @@ describe('Care Expert Virtual Assistant Service', function () {
     EvaService = _EvaService_;
     $httpBackend = _$httpBackend_;
     $state = _$state_;
+    installPromiseMatchers();
   }));
 
   afterEach(function () {
@@ -53,7 +55,6 @@ describe('Care Expert Virtual Assistant Service', function () {
         items: [{
           id: '7cc2966d-e697-4c32-8be9-413c1bfae585',
           name: 'HI',
-          queueId: '7cc2966d-e697-4c32-8be9-413c1bfae585',
         }],
       },
     };
@@ -72,7 +73,6 @@ describe('Care Expert Virtual Assistant Service', function () {
       data: {
         id: '7cc2966d-e697-4c32-8be9-413c1bfae585',
         name: 'HI',
-        queueId: '7cc2966d-e697-4c32-8be9-413c1bfae585',
       },
     };
     $httpBackend.expectGET(url).respond(200, expected);
@@ -115,10 +115,10 @@ describe('Care Expert Virtual Assistant Service', function () {
     $httpBackend.expectPUT(url, {
       name: TEST_EXPERT_VA_NAME,
       email: TEST_EMAIL,
-      queueId: TEST_ORG_ID,
       icon: TEST_ICON_URL,
+      defaultSpaceId: DEFAULT_SPACE_ID,
     }).respond(200);
-    EvaService.updateExpertAssistant(TEST_EXPERT_VA_ID, TEST_EXPERT_VA_NAME, TEST_ORG_ID, TEST_EMAIL, TEST_ICON_URL);
+    EvaService.updateExpertAssistant(TEST_EXPERT_VA_ID, TEST_EXPERT_VA_NAME, TEST_ORG_ID, TEST_EMAIL, DEFAULT_SPACE_ID, TEST_ICON_URL);
     $httpBackend.flush();
   });
 
@@ -130,13 +130,13 @@ describe('Care Expert Virtual Assistant Service', function () {
         name: TEST_EXPERT_VA_NAME,
         icon: TEST_ICON_URL,
         email: TEST_EMAIL,
-        queueId: TEST_ORG_ID,
+        defaultSpaceId: DEFAULT_SPACE_ID,
       }) // respond with a 201, no data, but the location header of the stated form.
       .respond(201, {}, {
         location: 'organization/' + TEST_ORG_ID + '/expert-assistant/' + TEST_EXPERT_VA_ID,
       });
     let result = { };
-    EvaService.addExpertAssistant(TEST_EXPERT_VA_NAME, TEST_ORG_ID, TEST_EMAIL, TEST_ICON_URL)
+    EvaService.addExpertAssistant(TEST_EXPERT_VA_NAME, TEST_ORG_ID, TEST_EMAIL, DEFAULT_SPACE_ID, TEST_ICON_URL)
       .then(function (response) {
         result = { expertAssistantId: response.expertAssistantId };
       });

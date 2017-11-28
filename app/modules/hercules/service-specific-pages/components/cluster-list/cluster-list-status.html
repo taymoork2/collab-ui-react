@@ -1,12 +1,16 @@
-<div class="ui-grid-cell-contents" style="padding-top: 1.5rem" ng-if="grid.appScope.$ctrl.serviceId !== 'ept'">
+<div class="ui-grid-cell-contents service-status-content" ng-if="grid.appScope.$ctrl.serviceId !== 'ept'">
   <span ng-if="row.entity.extendedProperties.isEmpty && row.entity.extendedProperties.allowedRedirectTarget">
     <cs-statusindicator ng-model="disabled"></cs-statusindicator>
     <span translate="hercules.fusion.list.complete-registration"></span>
   </span>
-  <span ng-if="row.entity.extendedProperties.isEmpty && !row.entity.extendedProperties.allowedRedirectTarget">
+  <span ng-if="row.entity.extendedProperties.isEmpty && !row.entity.extendedProperties.allowedRedirectTarget && !row.entity.extendedProperties.registrationTimedOut">
       <cs-statusindicator ng-model="disabled"></cs-statusindicator>
       <span translate="hercules.status.no_nodes_registered"></span>
-    </span>
+  </span>
+  <span ng-if="row.entity.extendedProperties.registrationTimedOut">
+      <cs-statusindicator ng-model="disabled"></cs-statusindicator>
+      <span translate="hercules.status.registrationTimeout"></span>
+  </span>
   <span ng-if="!row.entity.extendedProperties.isEmpty">
     <span ng-hide="row.entity.extendedProperties.maintenanceMode === 'on' || row.entity.extendedProperties.maintenanceMode === 'pending'">
       <cs-statusindicator ng-model="row.entity.extendedProperties.servicesStatus.state.cssClass"></cs-statusindicator>
@@ -18,7 +22,7 @@
   <span ng-if="row.entity.extendedProperties.maintenanceMode === 'pending'" class="badge" translate="hercules.nodesPage.maintenancePending"></span>
   <span ng-if="row.entity.extendedProperties.servicesStatus.state.name === 'not_configured'"> | <span translate="hercules.notifications.configure-connector.action-in-grid"></span></span>
 </div>
-<div class="ui-grid-cell-contents" style="padding-top: 1.5rem" ng-if="grid.appScope.$ctrl.serviceId === 'ept'">
+<div class="ui-grid-cell-contents service-status-content" ng-if="grid.appScope.$ctrl.serviceId === 'ept'">
   <cs-statusindicator ng-model="row.entity.extendedProperties.servicesStatus.state.cssClass"></cs-statusindicator>
   <span translate="{{'servicesOverview.cardStatus.' + row.entity.extendedProperties.servicesStatus.state.name}}"></span>
 </div>

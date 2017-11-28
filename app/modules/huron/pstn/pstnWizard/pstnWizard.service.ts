@@ -53,7 +53,6 @@ export class PstnWizardService {
     private Orgservice,
     private FeatureToggleService,
     private Authinfo,
-    private Auth,
   ) {
     this.PORTING_NUMBERS = this.$translate.instant('pstnSetup.portNumbersLabel');
     this.STEP_TITLE = {
@@ -319,10 +318,10 @@ export class PstnWizardService {
   }
 
   private createCustomerV2(): ng.IPromise<boolean> {
-    return this.Auth.getCustomerAccount(this.PstnModel.getCustomerId())
+    return this.Orgservice.getAdminOrgUsage(this.PstnModel.getCustomerId())
     .then((org) => {
       let isTrial: boolean = true;
-      const customer: IAuthCustomer = _.get<IAuthCustomer>(org, 'data.customers[0]');
+      const customer: IAuthCustomer = _.get<IAuthCustomer>(org, 'data[0]');
       if (customer) {
         isTrial = this.isTrialCallOrRoom(customer.licenses);
       }

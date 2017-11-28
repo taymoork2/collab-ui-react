@@ -1,10 +1,8 @@
 <div ng-if="!row.entity.timeoutDetected" class="ui-grid-cell-contents">
   <div ng-if="!row.entity.isDone">
      <div>
-       <span>{{'ediscovery.reportStates.' + row.entity.state | translate}}...</span>
-       <span class="progressbar-progress">{{row.entity.progress}}%</span>
+      <span translate="ediscovery.reportsList.generating"></span>
      </div>
-     <progressbar class="progress-striped" value="row.entity.progress"></progressbar>
   </div>
   <div ng-if="row.entity.isDone" ng-switch on="row.entity.state">
     <div ng-switch-when="FAILED"

@@ -137,6 +137,7 @@ describe('cell-template-action', function () {
   });
 
   describe('info symbol', function () {
+    // Cancel report modal will now pop up so won't need the info symbol
     it('displays if report is not done', function () {
       $scope.row = {
         entity: {
@@ -145,7 +146,7 @@ describe('cell-template-action', function () {
       };
       compileHtml();
       var info_icon_class = view.find('.icon-info-outline');
-      expect(info_icon_class.length).toBeGreaterThan(0);
+      expect(info_icon_class.length).toBe(0);
     });
 
     it('does not display if report is done', function () {

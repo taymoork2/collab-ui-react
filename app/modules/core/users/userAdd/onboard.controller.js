@@ -7,6 +7,8 @@ require('./_user-add.scss');
   angular.module('Core')
     .controller('OnboardCtrl', OnboardCtrl);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /*@ngInject*/
   function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, Config, FeatureToggleService, DialPlanService, Log, LogMetricsService, MessengerInteropService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, LocationsService, NumberService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
     var vm = this;
@@ -110,10 +112,6 @@ require('./_user-add.scss');
     var currentUserHasCall = false;
     $scope.currentUserEnablesCall = false;
     $scope.currentUserCommFeature = $scope.selectedCommFeature = null;
-
-    $scope.isCareAndCDCEnabled = Authinfo.isCareAndCDC();
-    $scope.isCareAndCVCEnabled = Authinfo.isCareVoiceAndCVC();
-    $scope.isCareEnabled = $scope.isCareAndCDCEnabled || $scope.isCareAndCVCEnabled;
 
     $scope.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
     $scope.convertUsersReadOnly = $stateParams.readOnly || $scope.isDirSyncEnabled;
@@ -302,6 +300,14 @@ require('./_user-add.scss');
         return LocationsService.getLocationList()
           .then(function (locationOptions) {
             $scope.locationOptions = locationOptions;
+            // enable mapDidToDn only when we have 1 location(default)
+            if ($scope.locationOptions.length === 1) {
+              $scope.isMapped = false;
+              $scope.isMapEnabled = true;
+            } else {
+              $scope.isMapped = true;
+              $scope.isMapEnabled = false;
+            }
             _.forEach(locationOptions, function (result) {
               if (result.defaultLocation === true) {
                 _.forEach($scope.usrlist, function (data) {
@@ -387,6 +393,20 @@ require('./_user-add.scss');
           if (externalNumberMappings[i].directoryNumber !== null) {
             $scope.usrlist[i].externalNumber = externalNumberMappings[i];
             $scope.usrlist[i].assignedDn = externalNumberMappings[i].directoryNumber;
+            if ($scope.ishI1484) {
+              $scope.usrlist[i].assignedDn.internal = externalNumberMappings[i].directoryNumber.pattern;
+              // update the siteTosite for I1484 labelField
+              // Use the routingPrefix from default location since mapping is only enabled with 1 location for now
+              if (!_.isUndefined($scope.locationOptions[0].routingPrefix) && $scope.locationOptions[0].routingPrefix !== null) {
+                $scope.usrlist[i].assignedDn.siteToSite = $scope.locationOptions[0].routingPrefix + externalNumberMappings[i].directoryNumber.pattern;
+              } else {
+                $scope.usrlist[i].assignedDn.siteToSite = externalNumberMappings[i].directoryNumber.pattern;
+              }
+            } else {
+              // fix a bug with non multilocation Internal Extension
+              $scope.usrlist[i].assignedDn.number = externalNumberMappings[i].directoryNumber.pattern;
+              $scope.usrlist[i].assignedDn.internal = externalNumberMappings[i].directoryNumber.pattern;
+            }
           } else {
             $scope.usrlist[i].externalNumber = externalNumberMappings[i];
             $scope.usrlist[i].didDnMapMsg = 'usersPage.noExtMappingAvail';
@@ -581,20 +601,6 @@ require('./_user-add.scss');
       this.features = Config.getDefaultEntitlements();
     }
 
-    $scope.confirmAdditionalServiceSetup = function () {
-      $modal.open({
-        type: 'dialog',
-        template: require('modules/core/users/userAdd/confirmLeavingDialog.tpl.html'),
-      }).result.then(function () {
-        $state.go('firsttimewizard');
-      });
-    };
-
-    $scope.disableCommFeatureAssignment = function () {
-      // disable the communication feature assignment unless the UserAdd is part of the First Time Setup Wizard work flow
-      return (!Authinfo.isSetupDone() && ((typeof $state.current.data === 'undefined') || (!$state.current.data.firstTimeSetup)));
-    };
-
     function checkSite() {
       ServiceSetup.listSites().then(function () {
         $scope.hasSite = (ServiceSetup.sites.length !== 0);
@@ -614,11 +620,9 @@ require('./_user-add.scss');
     $scope.licenses = [];
     $scope.licenseStatus = [];
     $scope.populateConf = populateConf;
-    $scope.disableCheckbox = disableCheckbox;
     $scope.populateConfInvitations = populateConfInvitations;
     $scope.getAccountLicenses = getAccountLicenses;
     $scope.setCareService = setCareService;
-    $scope.checkMessageVisibility = checkMessageVisibility;
     var convertUsersCount = 0;
     var convertStartTime = 0;
     var convertCancelled = false;
@@ -650,25 +654,6 @@ require('./_user-add.scss');
       userLicenseIds = $scope.currentUser.licenseID;
       userInvites = $scope.currentUser.invitations;
       $scope.hybridCallServiceAware = userEnts && userEnts.indexOf('squared-fusion-uc') > -1;
-    }
-
-    function checkMessageVisibility(licenses, selectedSubscription) {
-      if (licenses.length === 1) {
-        var license = licenses[0];
-        if (license.billingServiceId && selectedSubscription) {
-          return license.billingServiceId === selectedSubscription;
-        }
-        return true;
-      }
-      return false;
-    }
-
-    function disableCheckbox(lic) {
-      if (_.isArray(lic)) {
-        return _.get(lic[0], 'status') === 'DISABLED';
-      } else {
-        return _.get(lic, 'status') === 'DISABLED';
-      }
     }
 
     function populateConf() {
@@ -787,13 +772,6 @@ require('./_user-add.scss');
       };
     }
 
-    $scope.checkCMR = function (cfLic, cmrLics) {
-      if (cfLic.offerName === 'MC' || cfLic.offerName === 'EE') {
-        cmrLics.forEach(function (cmrLic) {
-          cmrLic.cmrModel = cfLic.confModel;
-        });
-      }
-    };
 
     $scope.updateCmrLicensesForMetric = function (cmrModel, licenseId) {
       $scope.cmrLicensesForMetric[licenseId] = !cmrModel;
@@ -882,36 +860,8 @@ require('./_user-add.scss');
         }
       });
 
-      $scope.hasBasicLicenses = !_.isEmpty($scope.basicLicenses);
-      $scope.hasAdvancedLicenses = !_.isEmpty($scope.advancedLicenses);
-
       populateConf();
       populateConfInvitations();
-    };
-
-    /* TODO: Refactor this functions into MultipleSubscriptions Controller */
-    $scope.selectedSubscriptionHasBasicLicenses = function (subscriptionId) {
-      if (subscriptionId && subscriptionId !== Config.subscriptionState.trial) {
-        return _.some($scope.basicLicenses, function (service) {
-          if (_.get(service, 'billing') === subscriptionId) {
-            return !_.has(service, 'site');
-          }
-        });
-      } else {
-        return $scope.hasBasicLicenses;
-      }
-    };
-
-    /* TODO: Refactor this functions into MultipleSubscriptions Controller */
-    $scope.selectedSubscriptionHasAdvancedLicenses = function (subscriptionId) {
-      var advancedLicensesInSubscription = _.filter($scope.advancedLicenses, { confLic: [{ billing: subscriptionId }] });
-      if (subscriptionId && subscriptionId !== Config.subscriptionState.trial) {
-        return _.some(advancedLicensesInSubscription, function (service) {
-          return _.has(service, 'site');
-        });
-      } else {
-        return $scope.hasAdvancedLicenses;
-      }
     };
 
     $scope.isSharedMeetingsLicense = function (license) {
@@ -928,25 +878,6 @@ require('./_user-add.scss');
 
     $scope.generateLicenseTranslation = function (license) {
       return $scope.isSharedMeetingsLicense(license) ? $translate.instant('firstTimeWizard.sharedLicenseTooltip') : $translate.instant('firstTimeWizard.namedLicenseTooltip');
-    };
-
-    $scope.careTooltip = function () {
-      return '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.careTooltip') + '</div>';
-    };
-
-    $scope.isSubscribeable = function (license) {
-      if (license.status === 'ACTIVE' || license.status === 'PENDING') {
-        return (license.volume > 0);
-      }
-      return false;
-    };
-
-    $scope.hasAssignableMessageItems = MessengerInteropService.hasAssignableMessageItems.bind(MessengerInteropService);
-    $scope.showMessengerInteropToggle = function () {
-      if (!_.get($state, 'current.data.showMessengerInteropToggle')) {
-        return false;
-      }
-      return MessengerInteropService.hasAssignableMessageOrgEntitlement();
     };
 
     var getAccountServices = function () {
@@ -1077,7 +1008,10 @@ require('./_user-add.scss');
       if ($scope.isMapped) {
         $scope.isMapped = false;
       } else {
-        $scope.isMapEnabled = true;
+        // For I1484 feature, turn on map only when location count is 1 (default)
+        if (!$scope.ishI1484 || ($scope.ishI1484 && $scope.locationOptions.length === 1)) {
+          $scope.isMapEnabled = true;
+        }
       }
 
       if ($scope.isReset) {
@@ -1336,7 +1270,7 @@ require('./_user-add.scss');
           } else if (_.startsWith(licenseId, Config.offerCodes.CVC)) {
             removeCareLicence($scope.cdcCareFeature, licenseList);
           }
-        } else if (action === 'patch') { // will get invoked when None is selected in care radio
+        } else if (action === 'patch' && $scope.careRadioValue.NONE !== $scope.radioStates.initialCareRadioState) { // will get invoked when None is selected in care radio and  previous state was not none
           removeCareLicence($scope.cdcCareFeature, licenseList);
           removeCareLicence($scope.cvcCareFeature, licenseList);
         }
@@ -1377,8 +1311,8 @@ require('./_user-add.scss');
     }
 
     // Hybrid Services entitlements
-    var getExtensionEntitlements = function (action) {
-      return _.chain($scope.extensionEntitlements)
+    var getHybridServicesEntitlements = function (action) {
+      return _.chain($scope.hybridServicesEntitlements)
         .filter(function (entry) {
           return action === 'add' && entry.entitlementState === 'ACTIVE';
         })
@@ -1696,7 +1630,7 @@ require('./_user-add.scss');
     };
 
     $scope.onEnterKey = function (keyEvent) {
-      if (keyEvent.which === 13) {
+      if (keyEvent.which === KeyCodes.ENTER) {
         $scope.addToUsersfield();
       }
     };
@@ -1955,7 +1889,7 @@ require('./_user-add.scss');
             : [];
         }
 
-        entitleList = entitleList.concat(getExtensionEntitlements('add'));
+        entitleList = entitleList.concat(getHybridServicesEntitlements('add'));
 
         $scope.numAddedUsers = 0;
         $scope.numUpdatedUsers = 0;
@@ -1974,13 +1908,18 @@ require('./_user-add.scss');
       return deferred.promise;
     }
 
-    $scope.extensionEntitlements = [];
-    $scope.updateExtensionEntitlements = function (entitlements) {
+    /* Used by the hybrid services component, because you need at least one paid license to enable hybrid services  */
+    $scope.userIsLicensed = function () {
+      return !_.isEmpty(getAccountLicenses());
+    };
+
+    $scope.hybridServicesEntitlements = [];
+    $scope.updateHybridServicesEntitlements = function (entitlements) {
       $scope.hybridCallServiceAware = _.some(entitlements, {
         entitlementName: 'squaredFusionUC',
         entitlementState: 'ACTIVE',
       });
-      $scope.extensionEntitlements = entitlements;
+      $scope.hybridServicesEntitlements = entitlements;
     };
 
     function entitleUserCallback(data, status, method, headers) {
@@ -2394,7 +2333,7 @@ require('./_user-add.scss');
           } else {
             entitleList = getEntitlements('add');
           }
-          entitleList = entitleList.concat(getExtensionEntitlements('add'));
+          entitleList = entitleList.concat(getHybridServicesEntitlements('add'));
           convertPending = false;
           Userservice.updateUsers(successMovedUsers, licenseList, entitleList, 'convertUser', entitleUserCallback);
         } else {
@@ -2658,7 +2597,7 @@ require('./_user-add.scss');
           entitlementName: 'ciscoUC',
         });
       }
-      entitleList = entitleList.concat(getExtensionEntitlements('add'));
+      entitleList = entitleList.concat(getHybridServicesEntitlements('add'));
 
       function onboardCsvUsers(startIndex, userArray, entitlementArray, licenseArray, csvPromise) {
         return csvPromise.then(function () {

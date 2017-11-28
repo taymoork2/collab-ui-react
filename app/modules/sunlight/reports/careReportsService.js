@@ -4,14 +4,16 @@
   angular.module('Sunlight')
     .service('CareReportsService', CareReportsService);
 
+  var ChartColors = require('modules/core/config/chartColors').ChartColors;
+
   /* @ngInject */
-  function CareReportsService($translate, CareReportsGraphService, chartColors) {
+  function CareReportsService($translate, CareReportsGraphService) {
     var today = true;
 
     function dummifyGraph(chartConfig) {
-      var dummyColors = [chartColors.grayLightOne, chartColors.grayLightTwo];
+      var dummyColors = [ChartColors.grayLightOne, ChartColors.grayLightTwo];
       if (today) {
-        dummyColors = [chartColors.grayLightOne, chartColors.grayLightTwo, chartColors.grayLightThree, chartColors.grayLightFour];
+        dummyColors = [ChartColors.grayLightOne, ChartColors.grayLightTwo, ChartColors.grayLightThree, ChartColors.grayLightFour];
       }
 
       var dummyGraphs = _.map(chartConfig.graphs, function (graph, i) {
@@ -29,21 +31,31 @@
       return chartConfig;
     }
 
-    function showTaskIncomingGraph(div, data, categoryAxisTitle, title, isToday) {
-      var chartConfig = getTaskIncomingGraphConfig(data, categoryAxisTitle, title, isToday);
-      return AmCharts.makeChart(div, chartConfig);
+    function showTaskIncomingGraph(taskIncomingdiv, taskIncomingBreakdowndiv, data, categoryAxisTitle, title) {
+      var incomingChartConfig = getTaskIncomingGraphConfig(data, categoryAxisTitle, title, false, 'abandoned',
+        'handled', 'numTasksAbandonedState', 'numTasksHandledState', ChartColors.alertsBase);
+      var incomingBreakdownChartConfig = getTaskIncomingGraphConfig(data, categoryAxisTitle, title, true, 'chatWithVideo',
+        'chat', 'numWebcallTasksHandled', 'numChatTasksHandled', ChartColors.primaryBase);
+
+      return [AmCharts.makeChart(taskIncomingdiv, incomingChartConfig),
+        AmCharts.makeChart(taskIncomingBreakdowndiv, incomingBreakdownChartConfig)];
     }
 
-    function showTaskIncomingDummy(div, data, categoryAxisTitle, title, isToday) {
-      var chartConfig = getTaskIncomingGraphConfig(data, categoryAxisTitle, title, isToday);
+    function showTaskIncomingDummy(taskIncomingdiv, taskIncomingBreakdowndiv, data, categoryAxisTitle, title) {
+      var incomingChartConfig = getTaskIncomingGraphConfig(data, categoryAxisTitle, title, false, 'abandoned',
+        'handled', 'numTasksAbandonedState', 'numTasksHandledState');
+      var incomingBreakdownChartConfig = getTaskIncomingGraphConfig(data, categoryAxisTitle, title, true,
+        'chatWithVideo', 'chat', 'numTasksAbandonedState', 'numTasksHandledState');
 
-      dummifyGraph(chartConfig);
+      dummifyGraph(incomingChartConfig);
+      dummifyGraph(incomingBreakdownChartConfig);
 
-      return AmCharts.makeChart(div, chartConfig);
+      return [AmCharts.makeChart(taskIncomingdiv, incomingChartConfig),
+        AmCharts.makeChart(taskIncomingBreakdowndiv, incomingBreakdownChartConfig)];
     }
 
-    function getTaskIncomingGraphConfig(data, categoryAxisTitle, title, isToday) {
-      today = isToday;
+    function getTaskIncomingGraphConfig(data, categoryAxisTitle, title, isBreakdown, upperGraphTitle, lowerGraphTitle,
+      upperGraphValue, lowerGraphValue, lineColor) {
       var exportReport = CareReportsGraphService.getBaseVariable('export');
       exportReport.enabled = true;
 
@@ -61,27 +73,26 @@
       categoryAxis.title = categoryAxisTitle;
 
       var legend = CareReportsGraphService.getBaseVariable('legend');
-      legend.equalWidths = !isToday;
+      legend.equalWidths = false;
 
       var valueAxes = [CareReportsGraphService.getBaseVariable('axis')];
       valueAxes[0].title = $translate.instant('careReportsPage.tasks');
 
-      var abandonedGraph = {
-        title: $translate.instant('careReportsPage.abandoned'),
-        lineColor: chartColors.alertsBase,
-        fillColors: chartColors.colorLightRedFill,
-        valueField: 'numTasksAbandonedState',
+      var upperGraph = {
+        title: $translate.instant('careReportsPage.' + upperGraphTitle),
+        lineColor: lineColor,
+        valueField: upperGraphValue,
         showBalloon: true,
-        balloonFunction: balloonTextForTaskVolume,
+        balloonFunction: isBreakdown ? balloonTextForTaskVolumeBreakdown : balloonTextForTaskVolume,
       };
 
-      var handledGraph = {
-        title: $translate.instant('careReportsPage.handled'),
-        lineColor: chartColors.ctaBase,
-        valueField: 'numTasksHandledState',
+      var lowerGraph = {
+        title: $translate.instant('careReportsPage.' + lowerGraphTitle),
+        lineColor: ChartColors.ctaBase,
+        valueField: lowerGraphValue,
       };
 
-      var graphsPartial = [handledGraph, abandonedGraph];
+      var graphsPartial = [lowerGraph, upperGraph];
       var graphs = _.map(graphsPartial, function (graph) {
         return _.defaults(graph, CareReportsGraphService.getBaseVariable('graph'));
       });
@@ -90,21 +101,20 @@
         'createdTime', categoryAxis, valueAxes, exportReport, titles);
     }
 
-    function showTaskOfferedGraph(div, data, categoryAxisTitle, title, isToday) {
-      var chartConfig = getTaskOfferedGraphConfig(data, categoryAxisTitle, title, isToday);
+    function showTaskOfferedGraph(div, data, categoryAxisTitle, title) {
+      var chartConfig = getTaskOfferedGraphConfig(data, categoryAxisTitle, title);
       return AmCharts.makeChart(div, chartConfig);
     }
 
-    function showTaskOfferedDummy(div, data, categoryAxisTitle, title, isToday) {
-      var chartConfig = getTaskOfferedGraphConfig(data, categoryAxisTitle, title, isToday);
+    function showTaskOfferedDummy(div, data, categoryAxisTitle, title) {
+      var chartConfig = getTaskOfferedGraphConfig(data, categoryAxisTitle, title);
 
       dummifyGraph(chartConfig);
 
       return AmCharts.makeChart(div, chartConfig);
     }
 
-    function getTaskOfferedGraphConfig(data, categoryAxisTitle, title, isToday) {
-      today = isToday;
+    function getTaskOfferedGraphConfig(data, categoryAxisTitle, title) {
       var exportReport = CareReportsGraphService.getBaseVariable('export');
       exportReport.enabled = true;
 
@@ -122,7 +132,7 @@
       categoryAxis.title = categoryAxisTitle;
 
       var legend = CareReportsGraphService.getBaseVariable('legend');
-      legend.equalWidths = !isToday;
+      legend.equalWidths = false;
 
       var valueAxes = [CareReportsGraphService.getBaseVariable('axis')];
       valueAxes[0].title = $translate.instant('careReportsPage.percentage');
@@ -130,8 +140,8 @@
 
       var percentMissedGraph = {
         title: $translate.instant('careReportsPage.missed'),
-        lineColor: chartColors.alertsBase,
-        fillColors: chartColors.colorLightRedFill,
+        lineColor: ChartColors.alertsBase,
+        fillColors: ChartColors.colorLightRedFill,
         valueField: 'tasksMissed',
         showBalloon: true,
         balloonFunction: balloonTextForTaskOffered,
@@ -139,7 +149,7 @@
 
       var percentAcceptedGraph = {
         title: $translate.instant('careReportsPage.accepted'),
-        lineColor: chartColors.ctaBase,
+        lineColor: ChartColors.ctaBase,
         valueField: 'tasksAccepted',
       };
 
@@ -156,7 +166,16 @@
       var numTasksAbandonedState = _.get(graphDataItem, 'dataContext.numTasksAbandonedState', 0);
       var numTasksHandledState = _.get(graphDataItem, 'dataContext.numTasksHandledState', 0);
       var categoryRange = setCategoryRange(graph.categoryAxis.title, graphDataItem.category);
-      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.abandoned') + ' ' + numTasksAbandonedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.handled') + ' ' + numTasksHandledState + '</span>';
+      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.abandoned') + ': ' + numTasksAbandonedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.handled') + ': ' + numTasksHandledState + '</span>';
+
+      return categoryRange + balloonText;
+    }
+
+    function balloonTextForTaskVolumeBreakdown(graphDataItem, graph) {
+      var numChatTasksHandled = _.get(graphDataItem, 'dataContext.numChatTasksHandled', 0);
+      var numWebcallTasksHandled = _.get(graphDataItem, 'dataContext.numWebcallTasksHandled', 0);
+      var categoryRange = setCategoryRange(graph.categoryAxis.title, graphDataItem.category);
+      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.chat') + ': ' + numChatTasksHandled + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.chatWithVideo') + ': ' + numWebcallTasksHandled + '</span>';
 
       return categoryRange + balloonText;
     }
@@ -168,7 +187,7 @@
       var percentageTasksAccepted = tasksOffered > 0 ? Math.round((tasksAccepted / tasksOffered) * 100) : 0;
       var percentageTasksMissed = tasksOffered > 0 ? Math.min(Math.round((tasksMissed / tasksOffered) * 100), 100) : 0;
       var categoryRange = setCategoryRange(graph.categoryAxis.title, graphDataItem.category);
-      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.accepted') + ' ' + percentageTasksAccepted + '%' + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.missed') + ' ' + percentageTasksMissed + '%' + '</span>';
+      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.accepted') + ': ' + percentageTasksAccepted + '%' + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.missed') + ': ' + percentageTasksMissed + '%' + '</span>';
       return categoryRange + balloonText;
     }
 
@@ -177,7 +196,17 @@
       var avgTaskWaitTime = _.get(graphDataItem, 'dataContext.avgTaskWaitTime', 0);
       var avgTaskCloseTime = _.get(graphDataItem, 'dataContext.avgTaskCloseTime', 0);
       var categoryRange = setCategoryRange(graph.categoryAxis.title, graphDataItem.category);
-      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.avgQueueTime') + ' ' + millisToTime(avgTaskWaitTime * convertToMillis) + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.avgHandleTime') + ' ' + millisToTime(avgTaskCloseTime * convertToMillis) + '</span>';
+      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.avgQueueTime') + ': ' + millisToTime(avgTaskWaitTime * convertToMillis) + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.avgHandleTime') + ': ' + millisToTime(avgTaskCloseTime * convertToMillis) + '</span>';
+
+      return categoryRange + balloonText;
+    }
+
+    function balloonTextForTaskTimeBreakdown(graphDataItem, graph) {
+      var convertToMillis = 60 * 1000;
+      var avgChatTaskCloseTime = _.get(graphDataItem, 'dataContext.avgChatTaskCloseTime', 0);
+      var avgWebcallTaskCloseTime = _.get(graphDataItem, 'dataContext.avgWebcallTaskCloseTime', 0);
+      var categoryRange = setCategoryRange(graph.categoryAxis.title, graphDataItem.category);
+      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.chat') + ': ' + millisToTime(avgChatTaskCloseTime * convertToMillis) + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.chatWithVideo') + ': ' + millisToTime(avgWebcallTaskCloseTime * convertToMillis) + '</span>';
 
       return categoryRange + balloonText;
     }
@@ -186,7 +215,7 @@
       var numPendingTasks = _.get(graphDataItem, 'dataContext.numPendingTasks', 0);
       var numWorkingTasks = _.get(graphDataItem, 'dataContext.numWorkingTasks', 0);
       var categoryRange = setCategoryRange(graph.categoryAxis.title, graphDataItem.category);
-      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.in-queue') + ' ' + numPendingTasks + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.assigned') + ' ' + numWorkingTasks + '</span>';
+      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.in-queue') + ': ' + numPendingTasks + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.assigned') + ': ' + numWorkingTasks + '</span>';
 
       return categoryRange + balloonText;
     }
@@ -194,7 +223,16 @@
     function balloonTextForAvgCsat(graphDataItem, graph) {
       var avgCsatScores = _.get(graphDataItem, 'dataContext.avgCsatScores', 0);
       var categoryRange = setCategoryRange(graph.categoryAxis.title, graphDataItem.category);
-      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.avgCsat') + ' ' + avgCsatScores + '</span><br>';
+      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.avgCsat') + ': ' + avgCsatScores + '</span><br>';
+
+      return categoryRange + balloonText;
+    }
+
+    function balloonTextForAvgCsatBreakdown(graphDataItem, graph) {
+      var avgChatCsatScores = _.get(graphDataItem, 'dataContext.avgChatCsatScores', 0);
+      var avgWebcallCsatScores = _.get(graphDataItem, 'dataContext.avgWebcallCsatScores', 0);
+      var categoryRange = setCategoryRange(graph.categoryAxis.title, graphDataItem.category);
+      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.avgCsatChat') + ': ' + avgChatCsatScores + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.avgCsatWebcall') + ': ' + avgWebcallCsatScores + '</span>';
 
       return categoryRange + balloonText;
     }
@@ -235,20 +273,31 @@
       return categoryRange;
     }
 
-    function showTaskTimeGraph(div, data, categoryAxisTitle, title) {
-      var chartConfig = getTaskTimeGraphConfig(data, categoryAxisTitle, title);
-      return AmCharts.makeChart(div, chartConfig);
+    function showTaskTimeGraph(taskTimeDiv, taskTimeBreakdownDiv, data, categoryAxisTitle, title) {
+      var taskTimeChartConfig = getTaskTimeGraphConfig(data, categoryAxisTitle, title, false, 'queueTime', 'handleTime',
+        'avgTaskWaitTime', 'avgTaskCloseTime', ChartColors.attentionBase);
+      var taskTimeBreakdownChartConfig = getTaskTimeGraphConfig(data, categoryAxisTitle, title, true, 'chatWithVideo', 'chat',
+        'avgWebcallTaskCloseTime', 'avgChatTaskCloseTime', ChartColors.primaryBase);
+
+      return [AmCharts.makeChart(taskTimeDiv, taskTimeChartConfig),
+        AmCharts.makeChart(taskTimeBreakdownDiv, taskTimeBreakdownChartConfig)];
     }
 
-    function showTaskTimeDummy(div, data, categoryAxisTitle, title) {
-      var chartConfig = getTaskTimeGraphConfig(data, categoryAxisTitle, title);
+    function showTaskTimeDummy(taskTimeDiv, taskTimeBreakdownDiv, data, categoryAxisTitle, title) {
+      var taskTimeChartConfig = getTaskTimeGraphConfig(data, categoryAxisTitle, title, false, 'queueTime', 'handleTime',
+        'avgTaskWaitTime', 'avgTaskCloseTime');
+      var taskTimeBreakdownChartConfig = getTaskTimeGraphConfig(data, categoryAxisTitle, title, true, 'chatWithVideo', 'chat',
+        'avgTaskWaitTime', 'avgTaskCloseTime');
 
-      dummifyGraph(chartConfig);
+      dummifyGraph(taskTimeChartConfig);
+      dummifyGraph(taskTimeBreakdownChartConfig);
 
-      return AmCharts.makeChart(div, chartConfig);
+      return [AmCharts.makeChart(taskTimeDiv, taskTimeChartConfig),
+        AmCharts.makeChart(taskTimeBreakdownDiv, taskTimeBreakdownChartConfig)];
     }
 
-    function getTaskTimeGraphConfig(data, categoryAxisTitle, title) {
+    function getTaskTimeGraphConfig(data, categoryAxisTitle, title, isBreakdown, upperGraphTitle, lowerGraphTitle,
+      upperGraphValue, lowerGraphValue, lineColor) {
       var exportReport = CareReportsGraphService.getBaseVariable('export');
       exportReport.enabled = true;
 
@@ -266,6 +315,7 @@
       categoryAxis.title = categoryAxisTitle;
 
       var legend = CareReportsGraphService.getBaseVariable('legend');
+      legend.equalWidths = false;
 
       var valueAxes = [CareReportsGraphService.getBaseVariable('axis')];
       valueAxes[0].title = $translate.instant('careReportsPage.taskTimeLabel');
@@ -276,25 +326,30 @@
         height: 14,
       };
 
-      var queueGraph = {
-        title: $translate.instant('careReportsPage.queueTime'),
-        lineColor: chartColors.attentionBase,
-        fillColors: chartColors.attentionBase,
-        valueField: 'avgTaskWaitTime',
+      var upperGraph = isBreakdown ? {
+        title: $translate.instant('careReportsPage.' + upperGraphTitle),
+        lineColor: lineColor,
+        valueField: upperGraphValue,
+        showBalloon: true,
+        balloonFunction: balloonTextForTaskTimeBreakdown,
+      } : {
+        title: $translate.instant('careReportsPage.' + upperGraphTitle),
+        lineColor: lineColor,
+        valueField: upperGraphValue,
         dashLength: 2,
         fillAlphas: 1,
         pattern: pattern,
         showBalloon: true,
         balloonFunction: balloonTextForTaskTime,
       };
-      var handleGraph = {
-        title: $translate.instant('careReportsPage.handleTime'),
-        lineColor: chartColors.ctaBase,
-        fillColors: chartColors.colorLightGreenFill,
-        valueField: 'avgTaskCloseTime',
+
+      var lowerGraph = {
+        title: $translate.instant('careReportsPage.' + lowerGraphTitle),
+        lineColor: ChartColors.ctaBase,
+        valueField: lowerGraphValue,
       };
 
-      var graphsPartial = [handleGraph, queueGraph];
+      var graphsPartial = [lowerGraph, upperGraph];
       var graphs = _.map(graphsPartial, function (graph) {
         return _.defaults(graph, CareReportsGraphService.getBaseVariable('graph'));
       });
@@ -303,20 +358,21 @@
         'createdTime', categoryAxis, valueAxes, exportReport, titles);
     }
 
-    function showTaskAggregateGraph(div, data, categoryAxisTitle, title) {
-      var chartConfig = getTaskAggregateGraphConfig(data, categoryAxisTitle, title);
-      return AmCharts.makeChart(div, chartConfig);
+    function showTaskAggregateGraph(taskAggregateDiv, data, categoryAxisTitle, title) {
+      var taskAggregateChartConfig = getTaskAggregateGraphConfig(data, categoryAxisTitle, title, 'in-queue',
+        'assigned', 'numPendingTasks', 'numWorkingTasks', ChartColors.attentionBase, ChartColors.attentionBase);
+      return AmCharts.makeChart(taskAggregateDiv, taskAggregateChartConfig);
     }
 
-    function showTaskAggregateDummy(div, data, categoryAxisTitle, title) {
-      var chartConfig = getTaskAggregateGraphConfig(data, categoryAxisTitle, title);
-
-      dummifyGraph(chartConfig);
-
-      return AmCharts.makeChart(div, chartConfig);
+    function showTaskAggregateDummy(taskAggregateDiv, data, categoryAxisTitle, title) {
+      var taskAggregateChartConfig = getTaskAggregateGraphConfig(data, categoryAxisTitle, title,
+        'in-queue', 'assigned', 'numPendingTasks', 'numWorkingTasks');
+      dummifyGraph(taskAggregateChartConfig);
+      return AmCharts.makeChart(taskAggregateDiv, taskAggregateChartConfig);
     }
 
-    function getTaskAggregateGraphConfig(data, categoryAxisTitle, title) {
+    function getTaskAggregateGraphConfig(data, categoryAxisTitle, title, upperGraphTitle, lowerGraphTitle,
+      upperGraphValue, lowerGraphValue, upperGraphLineColor, lowerGraphLineColor) {
       var exportReport = CareReportsGraphService.getBaseVariable('export');
       exportReport.enabled = true;
 
@@ -334,6 +390,7 @@
       categoryAxis.title = categoryAxisTitle;
 
       var legend = CareReportsGraphService.getBaseVariable('legend');
+      legend.equalWidths = false;
 
       var valueAxes = [CareReportsGraphService.getBaseVariable('axis')];
       valueAxes[0].title = $translate.instant('careReportsPage.tasks');
@@ -344,11 +401,10 @@
         height: 14,
       };
 
-      var inQueueGraph = {
-        title: $translate.instant('careReportsPage.in-queue'),
-        lineColor: chartColors.attentionBase,
-        fillColors: chartColors.attentionBase,
-        valueField: 'numPendingTasks',
+      var upperGraph = {
+        title: $translate.instant('careReportsPage.' + upperGraphTitle),
+        lineColor: upperGraphLineColor,
+        valueField: upperGraphValue,
         dashLength: 2,
         fillAlphas: 1,
         pattern: pattern,
@@ -356,14 +412,13 @@
         balloonFunction: balloonTextForTaskAggregate,
       };
 
-      var assignedGraph = {
-        title: $translate.instant('careReportsPage.assigned'),
-        lineColor: chartColors.attentionBase,
-        fillColors: chartColors.colorLightYellowFill,
-        valueField: 'numWorkingTasks',
+      var lowerGraph = {
+        title: $translate.instant('careReportsPage.' + lowerGraphTitle),
+        lineColor: lowerGraphLineColor,
+        valueField: lowerGraphValue,
       };
 
-      var graphsPartial = [assignedGraph, inQueueGraph];
+      var graphsPartial = [lowerGraph, upperGraph];
       var graphs = _.map(graphsPartial, function (graph) {
         return _.defaults(graph, CareReportsGraphService.getBaseVariable('graph'));
       });
@@ -372,20 +427,31 @@
         'createdTime', categoryAxis, valueAxes, exportReport, titles);
     }
 
-    function showAverageCsatGraph(div, data, categoryAxisTitle, title) {
-      var chartConfig = getAverageCsatGraphConfig(data, categoryAxisTitle, title);
-      return AmCharts.makeChart(div, chartConfig);
+    function showAverageCsatGraph(avgCsatDiv, avgCsatBreakdownDiv, data, categoryAxisTitle, title) {
+      var avgCsatChartConfig = getAverageCsatGraphConfig(data, categoryAxisTitle, title, false, 'averageCsat', '',
+        'avgCsatScores', '', ChartColors.ctaBase);
+      var avgCsatBreakdownChartConfig = getAverageCsatGraphConfig(data, categoryAxisTitle, title, true, 'chatWithVideo',
+        'chat', 'avgWebcallCsatScores', 'avgChatCsatScores', ChartColors.primaryBase);
+
+      return [AmCharts.makeChart(avgCsatDiv, avgCsatChartConfig),
+        AmCharts.makeChart(avgCsatBreakdownDiv, avgCsatBreakdownChartConfig)];
     }
 
-    function showAverageCsatDummy(div, data, categoryAxisTitle, title) {
-      var chartConfig = getAverageCsatGraphConfig(data, categoryAxisTitle, title);
+    function showAverageCsatDummy(avgCsatDiv, avgCsatBreakdownDiv, data, categoryAxisTitle, title) {
+      var avgCsatChartConfig = getAverageCsatGraphConfig(data, categoryAxisTitle, title, false, 'averageCsat', '',
+        'avgCsatScores');
+      var avgCsatBreakdownChartConfig = getAverageCsatGraphConfig(data, categoryAxisTitle, title, true,
+        'chatWithVideo', 'chat', 'avgWebcallCsatScores', 'avgChatCsatScores');
 
-      dummifyGraph(chartConfig);
+      dummifyGraph(avgCsatChartConfig);
+      dummifyGraph(avgCsatBreakdownChartConfig);
 
-      return AmCharts.makeChart(div, chartConfig);
+      return [AmCharts.makeChart(avgCsatDiv, avgCsatChartConfig),
+        AmCharts.makeChart(avgCsatBreakdownDiv, avgCsatBreakdownChartConfig)];
     }
 
-    function getAverageCsatGraphConfig(data, categoryAxisTitle, title) {
+    function getAverageCsatGraphConfig(data, categoryAxisTitle, title, isBreakdown, upperGraphTitle, lowerGraphTitle,
+      upperGraphValue, lowerGraphValue, lineColor) {
       var exportReport = CareReportsGraphService.getBaseVariable('export');
       exportReport.enabled = true;
 
@@ -402,17 +468,26 @@
       categoryAxis.startOnAxis = true;
       categoryAxis.title = categoryAxisTitle;
 
-      var legend = '';
+      var legend = isBreakdown ? CareReportsGraphService.getBaseVariable('legend') : '';
+      if (legend) {
+        legend.equalWidths = false;
+      }
 
       var valueAxes = [CareReportsGraphService.getBaseVariable('axis')];
       valueAxes[0].title = $translate.instant('careReportsPage.csatRating');
       valueAxes[0].maximum = 5;
+      valueAxes[0].stackType = 'none';
 
-      var csatGraph = {
-        title: $translate.instant('careReportsPage.averageCsat'),
-        lineColor: chartColors.ctaBase,
-        fillColors: chartColors.brandWhite,
-        valueField: 'avgCsatScores',
+      var upperGraph = isBreakdown ? {
+        title: $translate.instant('careReportsPage.' + upperGraphTitle),
+        lineColor: lineColor,
+        fillColors: ChartColors.brandWhite,
+        valueField: upperGraphValue,
+      } : {
+        title: $translate.instant('careReportsPage.' + upperGraphTitle),
+        lineColor: lineColor,
+        fillColors: ChartColors.brandWhite,
+        valueField: upperGraphValue,
         showBalloon: true,
         balloonFunction: balloonTextForAvgCsat,
         bullet: 'circle',
@@ -420,13 +495,47 @@
         bulletBorderAlpha: 0,
         bulletSize: 2,
       };
-      var graphsPartial = [csatGraph];
+
+      var lowerGraph = {};
+      if (isBreakdown) {
+        lowerGraph = {
+          title: $translate.instant('careReportsPage.' + lowerGraphTitle),
+          lineColor: ChartColors.ctaBase,
+          fillColors: ChartColors.brandWhite,
+          valueField: lowerGraphValue,
+          showBalloon: true,
+          balloonFunction: balloonTextForAvgCsatBreakdown,
+        };
+      }
+
+      var graphsPartial = isBreakdown ? [lowerGraph, upperGraph] : [upperGraph];
       var graphs = _.map(graphsPartial, function (graph) {
         return _.defaults(graph, CareReportsGraphService.getBaseVariable('graph'));
       });
 
       return CareReportsGraphService.buildChartConfig(data, legend, graphs, chartCursor,
         'createdTime', categoryAxis, valueAxes, exportReport, titles);
+    }
+
+    function roundCSATAvg(value) {
+      return Math.round(value * 100) / 100;
+    }
+
+    function getWebcallDataStats(dataArr) {
+      var webcallData = dataArr.filter(function (data) { return data.mediaType === 'webcall'; });
+      var webcallStats = {
+        isNumHandledTaskPresent: false,
+        isAvgHandleTimePresent: false,
+        isAvgCSATPresent: false,
+      };
+
+      webcallData.forEach(function (data) {
+        webcallStats.isNumHandledTaskPresent = webcallStats.isNumHandledTaskPresent || Boolean(data.numWebcallTasksHandled);
+        webcallStats.isAvgHandleTimePresent = webcallStats.isAvgHandleTimePresent || Boolean(data.avgWebcallTaskCloseTime);
+        webcallStats.isAvgCSATPresent = webcallStats.isAvgCSATPresent || Boolean(data.avgWebcallCsatScores);
+      });
+
+      return webcallStats;
     }
 
     var service = {
@@ -445,7 +554,9 @@
       getTaskTimeGraphConfig: getTaskTimeGraphConfig,
       getAverageCsatGraphConfig: getAverageCsatGraphConfig,
       getTaskAggregateGraphConfig: getTaskAggregateGraphConfig,
+      getWebcallDataStats: getWebcallDataStats,
       millisToTime: millisToTime,
+      roundCSATAvg: roundCSATAvg,
     };
 
     return service;

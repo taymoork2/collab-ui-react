@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "Online",
-      "OnlineWithIssues": "On-line, com problemas",
-      "Offline": "Offline",
-      "OfflineExpired": "Desativado",
-      "Unknown": "Desconhecido"
+      "CONNECTED": "Online",
+      "CONNECTED_WITH_ISSUES": "On-line, com problemas",
+      "DISCONNECTED": "Offline",
+      "OFFLINE_EXPIRED": "Desativado",
+      "UNKNOWN": "Desconhecido"
     },
     "WithDevices": "Com dispositivos",
     "upgradeChannels": {
@@ -6678,23 +6678,23 @@
       "wlan": "Sem fio"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "Portas de rede bloqueadas",
         "message": "O firewall pode estar bloqueando a mídia no UDP. A qualidade da chamada pode ser afetada. Para obter informações sobre os requisitos de porta de rede, consulte o artigo <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls e requisitos de rede para o aplicativo Cisco Spark</a>."
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "Portas de rede bloqueadas",
         "message": "O firewall pode estar bloqueando a mídia no UDP. A qualidade da chamada pode ser afetada. Para obter informações sobre os requisitos de porta de rede, consulte o artigo <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls e requisitos de rede para o aplicativo Cisco Spark</a>."
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "Portas de rede bloqueadas",
         "message": "O firewall pode estar bloqueando a mídia no UDP e TCP. A qualidade da chamada pode ser afetada. Para obter informações sobre os requisitos de porta de rede, consulte o artigo <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls e requisitos de rede para o aplicativo Cisco Spark</a>."
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "Alta temperatura",
         "message": "A temperatura do sistema é demasiado elevada."
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "Visor principal não detectado",
         "message": "Verifique se o visor principal está ligado e conectado à saída do visor correto no sistema de vídeo."
       },
@@ -6702,35 +6702,35 @@
         "type": "Atualizações automáticas desativadas",
         "message": "O software do sistema não será atualizado."
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "Servidor de hora inacessível",
         "message": "Não foi possível estabelecer a conexão com um servidor NTP. A hora exibida em seu terminal pode estar errada."
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "Interferência de sinal de outros dispositivos",
         "message": "Há uma interferência de sinal de ultrassom nesta sala de outros dispositivos (ex: outros sistemas de vídeo) que pode impedir o emparelhamento entre o sistema de vídeo e seu telefone ou laptop."
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "Atraso de áudio",
         "message": "As configurações do monitor estão adicionando um atraso ao seu áudio. Altere as configurações do monitor para um modo adequado (ex: modo de jogo)."
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "Sem alto falante de ultrassom incorporado",
         "message": "Esta versão de hardware do SX10 não tem um alto falante de ultrassom incorporado."
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "Chave de opção de criptografia faltando",
         "message": "Adicione uma chave de opção de criptografia."
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "Configurada para automação de testes",
         "message": "Métricas e relatórios de registros são afetados."
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "Painel de toque necessário",
         "message": "Não há nenhum painel de toque conectado ao dispositivo da sala. Verifique o cabo que conecta o painel de toque no dispositivo da sala."
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "Perda de pacotes detectada",
         "message": "Durante a última chamada, detectamos um nível de perda de pacotes que pode ter afetado a qualidade da chamada. A perda de pacotes é tipicamente causada por congestionamento da rede."
       },
@@ -7332,25 +7332,25 @@
       "configOverview": {
         "title": "Identificação de marca e identidade",
         "desc": "Identificação de marca e identidade de bate-papo",
-        "boxTitle": "Crie um agente API.AI antes de criar seu Assistente virtual do cliente.",
-        "boxDesc": "Crie um agente automatizado no API.AI com um diálogo de linguagem natural. O Assistente virtual do cliente integrado usa o diálogo interno para interagir com seus clientes e escalar uma conversa para agentes ao vivo conforme necessário.",
-        "boxRadioOne": "Não, eu não tenho um agente API.AI pré-configurado",
+        "boxTitle": "Crie um agente Dialogflow antes de criar seu Assistente virtual do cliente.",
+        "boxDesc": "Crie um agente automatizado no Dialogflow com um diálogo de linguagem natural. O Assistente virtual do cliente integrado usa o diálogo interno para interagir com seus clientes e escalar uma conversa para agentes ao vivo conforme necessário.",
+        "boxRadioOne": "Não, eu não tenho um agente Dialogflow pré-configurado",
         "boxRadioOneDesc1": "Acesse ",
-        "boxRadioApiai": "API.AI",
+        "boxRadioDialogflow": "Dialogflow",
         "boxRadioOneDesc2": " para criar um agente. Para começar, veja a ",
-        "boxRadioApiaiDoc": "documentação API.AI",
-        "boxRadioTwo": "Sim, tenho um agente API.AI pré-configurado e estou pronto para prosseguir",
-        "boxRadioTwoDesc": "Clique na seta para continuar a integrar o agente API.AI com um Assistente virtual do cliente"
+        "boxRadioDialogflowDoc": "documentação Dialogflow",
+        "boxRadioTwo": "Sim, tenho um agente Dialogflow pré-configurado e estou pronto para prosseguir",
+        "boxRadioTwoDesc": "Clique na seta para continuar a integrar o agente Dialogflow com um Assistente virtual do cliente"
       },
       "dialogIntegration": {
         "title": "Configurar a integração de diálogo",
-        "desc": "Adicione uma Intenção de escalação pré-configurada para concluir a configuração do agente API.AI.",
+        "desc": "Adicione uma Intenção de escalação pré-configurada para concluir a configuração do agente Dialogflow.",
         "boxStepOne": "Baixe o arquivo JSON de Intenção de escalação pré-configurada.",
         "boxStepOneDesc": "Uma Intenção de escalação permite ao Assistente virtual do cliente escalar uma conversa para um agente.",
-        "boxStepTwo": "Carregue a Intenção de escalação ao agente API.AI.",
-        "boxStepTwoDesc": "Na página de Intenções do seu agente API.AI, clique nas reticências verticais (⋮) e escolha Carregar intenção. Carregue o arquivo escalation.json que você baixou.",
-        "boxStepThree": "Personalize a Intenção de escalação no API.AI.",
-        "boxStepThreeDesc": "Na página de Intenções do seu agente API.AI, escolha Intenção de escalação. Modifique os campos Usuário diz para alterar as expressões do usuário que desencadeiam a escalação. Todas as expressões do usuário devem:",
+        "boxStepTwo": "Carregue a Intenção de escalação ao agente Dialogflow.",
+        "boxStepTwoDesc": "Na página de Intenções do seu agente Dialogflow, clique nas reticências verticais (⋮) e escolha Carregar intenção. Carregue o arquivo escalation.json que você baixou.",
+        "boxStepThree": "Personalize a Intenção de escalação no Dialogflow.",
+        "boxStepThreeDesc": "Na página de Intenções do seu agente Dialogflow, escolha Intenção de escalação. Modifique os campos Usuário diz para alterar as expressões do usuário que desencadeiam a escalação. Todas as expressões do usuário devem:",
         "boxBulletOne": "Usar o modo de modelo",
         "boxBulletTwo": "Contém uma referência a @sys.any: tópico",
         "boxStepThreeDescCont": "O símbolo @ ao lado da expressão do usuário indica o modo de modelo. Clique no símbolo para alternar o modo. Não modifique a ação GetExpert.",
@@ -7361,11 +7361,11 @@
       "accessToken": {
         "title": "Concluir a integração do diálogo",
         "desc": "Conclua a integração para permitir o uso do diálogo natural nas interações do cliente",
-        "boxDesc": "Cada agente API.AI possui um token exclusivo de acesso ao cliente armazenado nas configurações do agente. Copie o token das definições do agente API.AI configuradas, insira-o aqui e clique em \"Validar\" para verificar o token antes de concluir a integração do diálogo.",
-        "inputLabel": "Token de acesso para cliente API.AI",
+        "boxDesc": "Cada agente Dialogflow possui um token exclusivo de acesso ao cliente armazenado nas configurações do agente. Copie o token das definições do agente Dialogflow configuradas, insira-o aqui e clique em \"Validar\" para verificar o token antes de concluir a integração do diálogo.",
+        "inputLabel": "Token de acesso para cliente Dialogflow",
         "validateButtonText": "Validar",
         "maxLengthError": "O token de acesso ao cliente não pode ter mais de 128 caracteres.",
-        "invalidTokenText": "Token de acesso ao cliente API.AI inválido. Verifique o token e tente novamente."
+        "invalidTokenText": "Token de acesso ao cliente Dialogflow inválido. Verifique o token e tente novamente."
       },
       "name": {
         "title": "Nome do assistente virtual do cliente",

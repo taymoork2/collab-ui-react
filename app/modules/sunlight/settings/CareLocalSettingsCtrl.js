@@ -7,7 +7,7 @@ var HttpStatus = require('http-status-codes');
     .controller('CareLocalSettingsCtrl', CareLocalSettingsCtrl);
 
   /* @ngInject */
-  function CareLocalSettingsCtrl($location, $interval, $q, $scope, $translate, Authinfo, HydraService, Log, Notification, SunlightConfigService, ModalService, FeatureToggleService, UrlConfig, URService) {
+  function CareLocalSettingsCtrl($location, $interval, $q, $scope, $translate, Authinfo, Log, Notification, SunlightUtilitiesService, SunlightConfigService, ModalService, FeatureToggleService, URService) {
     var vm = this;
 
     vm.ONBOARDED = 'onboarded';
@@ -121,8 +121,8 @@ var HttpStatus = require('http-status-codes');
       URService.getQueue(vm.defaultQueueId).then(function () {
         var updateQueueRequest = {
           queueName: 'DEFAULT',
-          notificationUrls: queueConfig.notificationUrls,
           routingType: queueConfig.routingType,
+          notificationUrls: queueConfig.notificationUrls,
         };
         URService.updateQueue(vm.defaultQueueId, updateQueueRequest).then(function (results) {
           vm.defaultQueueStatus = vm.status.SUCCESS;
@@ -211,11 +211,7 @@ var HttpStatus = require('http-status-codes');
     function getRoutingTypeFromView() {
       var queueConfig = {};
       queueConfig.routingType = vm.queueConfig.selectedRouting;
-      if (vm.queueConfig.selectedRouting === vm.RoutingType.PUSH) {
-        queueConfig.notificationUrls = [UrlConfig.getSunlightPushNotificationUrl()];
-      } else {
-        queueConfig.notificationUrls = [UrlConfig.getSunlightPickNotificationUrl()];
-      }
+      queueConfig.notificationUrls = [];
       return queueConfig;
     }
 
@@ -246,7 +242,6 @@ var HttpStatus = require('http-status-codes');
         vm.orgChatConfig.selectedVideoInChatToggle = vm.orgChatConfigDataModel.videoInChatToggle;
       }
     }
-
     function onboardCsAaAppToCare() {
       var promises = {};
       if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
@@ -277,20 +272,25 @@ var HttpStatus = require('http-status-codes');
         Log.debug('Care onboarding is success', results);
         startPolling();
       }, function (error) {
-        vm.state = vm.NOT_ONBOARDED;
-        Log.error('Care onboarding failed with error', error);
-        Notification.errorWithTrackingId(error, $translate.instant('firstTimeWizard.setUpCareFailure'));
+        // config throws 412 if on-boarding is already success, recover the failure.
+        if (error.status === 412) {
+          Log.debug('Care onboarding is already completed.', error);
+          startPolling();
+        } else {
+          vm.state = vm.NOT_ONBOARDED;
+          Log.error('Care onboarding failed with error', error);
+          Notification.errorWithTrackingId(error, $translate.instant('firstTimeWizard.setUpCareFailure'));
+        }
       });
     }
 
     vm.onboardToCare = function () {
       vm.state = vm.IN_PROGRESS;
-
       if (vm.defaultQueueStatus !== vm.status.SUCCESS) {
         var createQueueRequest = {
           queueId: Authinfo.getOrgId(),
           queueName: 'DEFAULT',
-          notificationUrls: [UrlConfig.getSunlightPickNotificationUrl()],
+          notificationUrls: [],
           routingType: 'pick',
         };
 
@@ -317,7 +317,6 @@ var HttpStatus = require('http-status-codes');
 
     function startPolling() {
       if (!_.isUndefined(poller)) return;
-
       vm.errorCount = 0;
       poller = $interval(processOnboardStatus, pollInterval, pollRetryCount);
       poller.then(processTimeout);
@@ -351,11 +350,12 @@ var HttpStatus = require('http-status-codes');
       $q.all(promises).then(function (result) {
         populateQueueConfigViewModel(result.getQueue);
         populateOrgChatConfigViewModel(result.getChatConfig);
-        var onboardingStatus = getOnboardingStatus(result.getChatConfig);
+        var onboardingStatus = getOnboardingStatus();
         switch (onboardingStatus) {
           case vm.status.SUCCESS:
             Notification.success($translate.instant('sunlightDetails.settings.setUpCareSuccess'));
             vm.state = vm.ONBOARDED;
+            SunlightUtilitiesService.removeCareSetupKey();
             stopPolling();
             break;
           case vm.status.FAILURE:
@@ -384,12 +384,8 @@ var HttpStatus = require('http-status-codes');
       Notification.error($translate.instant('sunlightDetails.settings.setUpCareFailure'));
     }
 
-    function getOnboardingStatus(result) {
-      var onboardingStatus = vm.status.UNKNOWN;
-      vm.csOnboardingStatus = _.get(result, 'data.csOnboardingStatus');
-      vm.aaOnboardingStatus = _.get(result, 'data.aaOnboardingStatus');
-      onboardingStatus = onboardingStatusDoneByAdminOrPartner();
-      return onboardingStatus;
+    function getOnboardingStatus() {
+      return onboardingStatusDoneByAdminOrPartner();
     }
 
     function onboardingStatusDoneByAdminOrPartner() {
@@ -440,12 +436,8 @@ var HttpStatus = require('http-status-codes');
       return status;
     }
 
-    function setAppOnboardingStatus(status) {
-      vm.appOnboardingStatus = status;
-    }
-
     function getOnboardStatusAndUpdateConfigIfRequired(result) {
-      var onboardingStatus = getOnboardingStatus(result);
+      var onboardingStatus = getOnboardingStatus();
       setViewModelState(onboardingStatus);
       if (result.data.orgName === '' || !(_.get(result, 'data.orgName'))) {
         result.data.orgName = Authinfo.getOrgName();
@@ -455,37 +447,10 @@ var HttpStatus = require('http-status-codes');
       }
     }
 
-    function enableSetupButtonForAppOnboarding(orgConfigResponse) {
-      var onboardingStatus = getOnboardingStatus(orgConfigResponse);
-      setViewModelState(onboardingStatus);
-      var requestPayload = _.cloneDeep(orgConfigResponse);
-      requestPayload.data.appOnboardStatus = vm.status.UNKNOWN;
-      SunlightConfigService.updateChatConfig(requestPayload.data).then(function (response) {
-        Log.debug('Successfully updated org config with appOnboardStatus as Unknown', response);
-      });
-    }
-
-    function getCsAaAppOnboardingStatus(result) {
-      if (result.data && result.data.appOnboardStatus === vm.status.SUCCESS && vm.careSetupDoneByOrgAdmin) {
-        HydraService.getHydraApplicationDetails(result.data.hydraAppId).then(function () {
-          setAppOnboardingStatus(vm.status.SUCCESS);
-          getOnboardStatusAndUpdateConfigIfRequired(result);
-        })
-          .catch(function (error) {
-            if (error.status === 403) {
-              setAppOnboardingStatus(vm.status.UNKNOWN);
-              enableSetupButtonForAppOnboarding(result);
-            }
-          });
-      } else {
-        getOnboardStatusAndUpdateConfigIfRequired(result);
-      }
-    }
-
     function getOnboardingStatusFromOrgChatConfig() {
       SunlightConfigService.getChatConfig().then(function (result) {
         populateOrgChatConfigViewModel(result, true);
-        getCsAaAppOnboardingStatus(result);
+        getOnboardStatusAndUpdateConfigIfRequired(result);
       }, function (error) {
         if (error.status === 404) {
           vm.state = vm.NOT_ONBOARDED;

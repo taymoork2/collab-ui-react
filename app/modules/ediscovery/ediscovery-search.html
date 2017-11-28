@@ -50,21 +50,23 @@
           </div>
           <div class="row">
             <div class="col-md-5 search-box">
-              <cs-datepicker required ng-model="ediscoverySearchCtrl.searchCriteria.startDate"
-              first-enabled-date="{{ediscoverySearchCtrl.firstEnabledDate}}"
-              last-enabled-date="{{ediscoverySearchCtrl.lastEnabledDate}}"
-              disabled-tooltip-text="{{ediscoverySearchCtrl.getProPackTooltip()}}"
-              view-format="YYYY-MM-DD">
+              <cs-datepicker required
+                ng-model="ediscoverySearchCtrl.searchCriteria.startDate"
+                first-enabled-date="{{ediscoverySearchCtrl.firstEnabledDate}}"
+                last-enabled-date="{{ediscoverySearchCtrl.lastEnabledDate}}"
+                disabled-tooltip-text="{{ediscoverySearchCtrl.getProPackTooltip()}}"
+                view-format="YYYY-MM-DD">
               </cs-datepicker>
             </div>
             <span class="col-md-2" translate="common.to"></span>
             <div class="col-md-5 search-box">
-            <cs-datepicker required  ng-model="ediscoverySearchCtrl.searchCriteria.endDate"
-              first-enabled-date="{{ediscoverySearchCtrl.firstEnabledDate}}"
-              last-enabled-date="{{ediscoverySearchCtrl.lastEnabledDate}}"
-              disabled-tooltip-text="{{ediscoverySearchCtrl.getProPackTooltip()}}"
-              view-format="YYYY-MM-DD">
-            </cs-datepicker>
+              <cs-datepicker required
+                ng-model="ediscoverySearchCtrl.searchCriteria.endDate"
+                first-enabled-date="{{ediscoverySearchCtrl.firstEnabledDate}}"
+                last-enabled-date="{{ediscoverySearchCtrl.lastEnabledDate}}"
+                disabled-tooltip-text="{{ediscoverySearchCtrl.getProPackTooltip()}}"
+                view-format="YYYY-MM-DD">
+              </cs-datepicker>
             </div>
           </div>
           <div class="row" ng-if="ediscoverySearchCtrl.dateValidationError">
@@ -125,6 +127,10 @@
       </div>
 
       <div ng-show="ediscoverySearchCtrl.searchingForRoom">
+        <div class="main-heading">
+          <h1 translate="ediscovery.searchingHeader"></h1>
+          <span translate="ediscovery.searchingSubheader"></span>
+        </div>
         <span class="search-spinner">
           <i class="icon icon-spinner"></i>
         </span>

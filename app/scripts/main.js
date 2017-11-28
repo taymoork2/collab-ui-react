@@ -15,7 +15,6 @@
     require('modules/core/modal').default,
     'core.body',
     require('modules/core/accessibility').default,
-    require('modules/core/config/chartColors').default,
     require('modules/core/controlHub').default,
     require('modules/core/l10n').default,
     'core.localize',
@@ -23,7 +22,9 @@
     'core.meeting-settings',
     require('modules/core/setupWizard/setup-wizard.service').default,
     require('modules/core/notifications').default,
-    require('modules/core/users/userAdd/onboard.module'),
+    require('modules/core/users/userAdd').default,
+    require('modules/core/users/userAdd/hybrid-services-entitlements-panel').default,
+    require('modules/core/users/userManage').default,
     'core.pageparam',
     'core.previousstate',
     'core.trackingId',
@@ -73,7 +74,7 @@
     require('modules/core/myCompany/mySubscriptions').default,
     require('modules/core/cards').default,
     require('modules/core/customerReports/sparkReports').default,
-    require('modules/core/customerReports/webexReports/search').default,
+    require('modules/core/customerReports/webexReports/diagnostic').default,
     require('modules/core/partnerReports/commonReportServices').default,
     require('modules/core/partnerReports/reportCard').default,
     require('modules/core/partnerReports/reportFilter').default,
@@ -95,6 +96,7 @@
     require('modules/core/customerReports').default,
     require('modules/core/partnerReports').default,
     require('modules/gemini/reports').default,
+    require('modules/account-linking/banner').default,
     require('modules/core/siteList/webex-site').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
@@ -150,19 +152,25 @@
     'ngTagsInput',
     require('modules/core/overview/notifications/allHybridCalendars.factory').default,
     require('modules/core/overview/notifications/hybridMessaging.factory').default,
-    require('modules/core/users/userAdd/onboard.module'),
+    require('modules/core/users/userAdd').default,
     require('modules/hercules/cluster-card').default,
     require('modules/hercules/connector-upgrade-modal/connector-upgrade-modal.controller').default,
     require('modules/hercules/google-calendar-settings/google-calendar-config-section/google-calendar-second-time-setup').default,
+    require('modules/hercules/hybrid-media-cluster-settings').default,
     require('modules/hercules/hybrid-services-cluster-list-with-cards').default,
     require('modules/hercules/hybrid-services-nodes-page').default,
     require('modules/hercules/private-trunk/private-trunk-overview-settings').default,
     require('modules/hercules/private-trunk/private-trunk-setup').default,
+    require('modules/hercules/user-sidepanel/hybrid-calendar-preferred-webex-site').default,
+    require('modules/hercules/user-sidepanel/hybrid-services-sidepanel-error-message').default,
     require('modules/hercules/user-sidepanel/hybrid-services-user-homed-cluster-and-hostname').default,
     require('modules/hercules/user-sidepanel/hybrid-services-user-sidepanel-section').default,
+    require('modules/hercules/rename-and-deregister-cluster-section').default,
     require('modules/hercules/resource-group-card').default,
+    require('modules/hercules/resource-settings/deactivate-service-on-expressway.controller').default,
     require('modules/hercules/service-settings/calendar-service-setup').default,
     require('modules/hercules/service-settings/call-service-settings-page').default,
+    require('modules/hercules/service-settings/sip-destination-settings-section').default,
     require('modules/hercules/service-specific-pages/components/cluster-list/hybrid-service-cluster-list.component').default,
     require('modules/hercules/services/calendar-cloud-connector.service').default,
     require('modules/hercules/services/cluster-service').default,
@@ -229,6 +237,11 @@
     require('modules/services-overview/new-hybrid/prerequisites-modals/on-premises-exchange-prerequisites').default,
   ]);
 
+  angular.module('AccountLinking', [
+    'Core',
+    require('modules/account-linking').default,
+  ]);
+
   module.exports = angular.module('Main', [
     'Core',
     'Squared',
@@ -247,6 +260,7 @@
     'Gemini',
     'Csdm',
     'ServicesOverview',
+    'AccountLinking',
   ]).config(require('./main.config'))
     .run(require('./main.run'))
     .name;

@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Care Feature Ctrl should ', function () {
-  var controller, $filter, $q, $rootScope, $state, $scope, Authinfo, CareFeatureList, CvaService,
-    Log, Notification, deferred, callbackDeferred, chatPlusCallbackDeferred, virtualAssistantDeferred, $translate;
+  var controller, $filter, $q, $rootScope, $state, $scope, Authinfo, CareFeatureList, CvaService, EvaService,
+    Log, Notification, deferred, callbackDeferred, chatPlusCallbackDeferred, cvaDeferred, evaDeferred, $translate;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('Test-Org-Id'),
     isMessageEntitled: jasmine.createSpy('isMessageEntitled').and.returnValue(true),
@@ -19,24 +19,44 @@ describe('Care Feature Ctrl should ', function () {
     });
   };
 
-  var listConfigsSuccess = function () {
+  var listCVAsSuccess = function () {
     return {
       items: [
         {
-          id: 'Virtual Assistant Dev Config',
+          id: 'Customer Virtual Assistant Dev Config',
           type: 'APIAI',
           config: { token: '22e724e0bc604e99b0cfd281cd6c282a' },
         },
         {
-          id: 'Virtual Assistant PR Config',
+          id: 'Customer Virtual Assistant PR Config',
           type: 'APIAI',
           config: { token: '22e724e0bc604e99b0cfd281cd6c282a' },
         },
         {
           id: 'SomeId',
-          name: 'Virtual Assistant Staging Config',
+          name: 'Customer Virtual Assistant Staging Config',
           type: 'APIAI',
           config: { token: '22e724e0bc604e99b0cfd281cd6c282a' },
+        },
+      ],
+    };
+  };
+
+  var listEVAsSuccess = function () {
+    return {
+      items: [
+        {
+          id: 'Expert Virtual Assistant Dev Config',
+          email: 'test1@cisco.com',
+        },
+        {
+          id: 'Expert Virtual Assistant PR Config',
+          email: 'test2@cisco.com',
+        },
+        {
+          id: 'SomeId',
+          name: 'Expert Virtual Assistant Staging Config',
+          email: 'test3@cisco.com',
         },
       ],
     };
@@ -61,7 +81,7 @@ describe('Care Feature Ctrl should ', function () {
     $provide.value('Authinfo', spiedAuthinfo);
   }));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$filter_, _$state_, _$q_, _Authinfo_, _CareFeatureList_, _Notification_, _Log_, _$translate_, _CvaService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$filter_, _$state_, _$q_, _Authinfo_, _CareFeatureList_, _Notification_, _Log_, _$translate_, _CvaService_, _EvaService_) {
     $rootScope = _$rootScope_;
     $filter = _$filter_;
     $q = _$q_;
@@ -71,6 +91,7 @@ describe('Care Feature Ctrl should ', function () {
     $translate = _$translate_;
     CareFeatureList = _CareFeatureList_;
     CvaService = _CvaService_;
+    EvaService = _EvaService_;
     Log = _Log_;
     Notification = _Notification_;
 
@@ -78,15 +99,19 @@ describe('Care Feature Ctrl should ', function () {
     deferred = $q.defer();
     callbackDeferred = $q.defer();
     chatPlusCallbackDeferred = $q.defer();
-    virtualAssistantDeferred = $q.defer();
+    cvaDeferred = $q.defer();
+    evaDeferred = $q.defer();
     spyOn(CareFeatureList, 'getChatTemplates').and.returnValue(deferred.promise);
     spyOn(CareFeatureList, 'getCallbackTemplates').and.returnValue(callbackDeferred.promise);
     spyOn(CareFeatureList, 'getChatPlusCallbackTemplates').and.returnValue(chatPlusCallbackDeferred.promise);
-    spyOn(CvaService.featureList, 'getFeature').and.returnValue(virtualAssistantDeferred.promise);
+    spyOn(CvaService.featureList, 'getFeature').and.returnValue(cvaDeferred.promise);
+    spyOn(EvaService.featureList, 'getFeature').and.returnValue(evaDeferred.promise);
     spyOn($state, 'go');
 
-    // Turned on virtual assistant enabled flag
+    // Turned on customer virtual assistant enabled flag
     $state.isVirtualAssistantEnabled = true;
+    // Turned on expert virtual assistant enabled flag
+    $state.isExpertVirtualAssistantEnabled = true;
 
     controller = $controller('CareFeaturesCtrl', {
       $scope: $scope,
@@ -98,6 +123,7 @@ describe('Care Feature Ctrl should ', function () {
       Notification: Notification,
       $translate: $translate,
       CvaService: CvaService,
+      EvaService: EvaService,
     });
   }));
 
@@ -105,7 +131,8 @@ describe('Care Feature Ctrl should ', function () {
     deferred.resolve(getTemplatesSuccess('chat', templateList));
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
     chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
-    virtualAssistantDeferred.resolve(listConfigsSuccess());
+    cvaDeferred.resolve(listCVAsSuccess());
+    evaDeferred.resolve(listEVAsSuccess());
   };
 
   it('initialize and get the list of templates and update pageState ', function () {
@@ -127,12 +154,13 @@ describe('Care Feature Ctrl should ', function () {
     deferred.resolve(getTemplatesSuccess('chat', emptyListOfCTs));
     callbackDeferred.resolve(getTemplatesSuccess('callback', emptyListOfCTs));
     chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', emptyListOfCTs));
-    virtualAssistantDeferred.resolve(getTemplatesSuccess('virtualAssistant', emptyListOfCTs));
+    cvaDeferred.resolve(getTemplatesSuccess('virtualAssistant', emptyListOfCTs));
+    evaDeferred.resolve(getTemplatesSuccess('virtualAssistant', emptyListOfCTs));
     $scope.$apply();
     expect(controller.pageState).toEqual('NewFeature');
   });
 
-  it('able to call delete function and inturn the $state service ', function () {
+  it('able to call delete function and in turn the $state service ', function () {
     deferred.resolve(getTemplatesSuccess('chat', templateList));
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
     chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
@@ -143,6 +171,7 @@ describe('Care Feature Ctrl should ', function () {
       deleteFeatureName: featureTobBeDeleted.name,
       deleteFeatureId: featureTobBeDeleted.templateId,
       deleteFeatureType: featureTobBeDeleted.featureType,
+      deleteQueueId: featureTobBeDeleted.queueId,
     });
   });
 
@@ -189,17 +218,20 @@ describe('Care Feature Ctrl should ', function () {
     getAllTemplatesDeferred();
     $scope.$apply();
     controller.setFilter('virtualAssistant');
-    expect(controller.filteredListOfFeatures.length).toEqual(3);
-    expect(controller.filteredListOfFeatures[0].name).toEqual('Virtual Assistant Dev Config');
-    expect(controller.filteredListOfFeatures[1].name).toEqual('Virtual Assistant PR Config');
-    expect(controller.filteredListOfFeatures[2].name).toEqual('Virtual Assistant Staging Config');
+    expect(controller.filteredListOfFeatures.length).toEqual(6);
+    expect(controller.filteredListOfFeatures[0].name).toEqual('Customer Virtual Assistant Dev Config');
+    expect(controller.filteredListOfFeatures[1].name).toEqual('Customer Virtual Assistant PR Config');
+    expect(controller.filteredListOfFeatures[2].name).toEqual('Customer Virtual Assistant Staging Config');
+    expect(controller.filteredListOfFeatures[3].name).toEqual('Expert Virtual Assistant Dev Config');
+    expect(controller.filteredListOfFeatures[4].name).toEqual('Expert Virtual Assistant PR Config');
+    expect(controller.filteredListOfFeatures[5].name).toEqual('Expert Virtual Assistant Staging Config');
   });
 
   it('should filter all the templates', function () {
     getAllTemplatesDeferred();
     $scope.$apply();
     controller.setFilter('all');
-    expect(controller.filteredListOfFeatures.length).toEqual(templateList.length + 3); // plus 3 for Virtual Assistants
+    expect(controller.filteredListOfFeatures.length).toEqual(templateList.length + 6); // plus 6 for Virtual Assistants
   });
 
   it('should filter the list of templates to zero length', function () {
@@ -213,28 +245,31 @@ describe('Care Feature Ctrl should ', function () {
     getAllTemplatesDeferred();
     $scope.$apply();
     controller.searchData('Dev');
-    expect(controller.filteredListOfFeatures.length).toEqual(4);
+    expect(controller.filteredListOfFeatures.length).toEqual(5);
     expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
     expect(controller.filteredListOfFeatures[1].name).toEqual('Sunlight Callback Dev Template');
     expect(controller.filteredListOfFeatures[2].name).toEqual('Sunlight Chat+Callback Dev Template');
-    expect(controller.filteredListOfFeatures[3].name).toEqual('Virtual Assistant Dev Config');
+    expect(controller.filteredListOfFeatures[3].name).toEqual('Customer Virtual Assistant Dev Config');
+    expect(controller.filteredListOfFeatures[4].name).toEqual('Expert Virtual Assistant Dev Config');
   });
 
   it('set the view to the searched data which is case insensitive and the chat template should come first and then callback template', function () {
     getAllTemplatesDeferred();
     $scope.$apply();
     controller.searchData('Dev');
-    expect(controller.filteredListOfFeatures.length).toEqual(4);
+    expect(controller.filteredListOfFeatures.length).toEqual(5);
     expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
     expect(controller.filteredListOfFeatures[1].name).toEqual('Sunlight Callback Dev Template');
     expect(controller.filteredListOfFeatures[2].name).toEqual('Sunlight Chat+Callback Dev Template');
-    expect(controller.filteredListOfFeatures[3].name).toEqual('Virtual Assistant Dev Config');
+    expect(controller.filteredListOfFeatures[3].name).toEqual('Customer Virtual Assistant Dev Config');
+    expect(controller.filteredListOfFeatures[4].name).toEqual('Expert Virtual Assistant Dev Config');
     controller.searchData('dev');
-    expect(controller.filteredListOfFeatures.length).toEqual(4);
+    expect(controller.filteredListOfFeatures.length).toEqual(5);
     expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
     expect(controller.filteredListOfFeatures[1].name).toEqual('Sunlight Callback Dev Template');
     expect(controller.filteredListOfFeatures[2].name).toEqual('Sunlight Chat+Callback Dev Template');
-    expect(controller.filteredListOfFeatures[3].name).toEqual('Virtual Assistant Dev Config');
+    expect(controller.filteredListOfFeatures[3].name).toEqual('Customer Virtual Assistant Dev Config');
+    expect(controller.filteredListOfFeatures[4].name).toEqual('Expert Virtual Assistant Dev Config');
   });
 
   it('should filter the searched data from the list of Customer Support Templates only', function () {
@@ -251,7 +286,8 @@ describe('Care Feature Ctrl should ', function () {
     $scope.$apply();
     controller.searchData('Dev');
     controller.setFilter('virtualAssistant');
-    expect(controller.filteredListOfFeatures.length).toEqual(1);
-    expect(controller.filteredListOfFeatures[0].name).toEqual('Virtual Assistant Dev Config');
+    expect(controller.filteredListOfFeatures.length).toEqual(2);
+    expect(controller.filteredListOfFeatures[0].name).toEqual('Customer Virtual Assistant Dev Config');
+    expect(controller.filteredListOfFeatures[1].name).toEqual('Expert Virtual Assistant Dev Config');
   });
 });

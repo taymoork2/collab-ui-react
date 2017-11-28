@@ -1,0 +1,26 @@
+{
+  "SuccessStatusResponse": {
+    "data": {
+      "orgName": "testOrg",
+      "aaOnboardingStatus": "Success",
+      "csOnboardingStatus": "Success",
+      "appOnboardStatus": "Success"
+      }
+  },
+  "appOnboardUnknown": {
+    "data": {
+      "orgName": "testOrg",
+      "aaOnboardingStatus": "Success",
+      "csOnboardingStatus": "Success",
+      "appOnboardStatus": "Unknown"
+      }
+  },
+  "csOnboardUnknown": {
+    "data": {
+      "orgName": "testOrg",
+      "aaOnboardingStatus": "Success",
+      "csOnboardingStatus": "Unknown",
+      "appOnboardStatus": "Unknown"
+      }
+  }
+}

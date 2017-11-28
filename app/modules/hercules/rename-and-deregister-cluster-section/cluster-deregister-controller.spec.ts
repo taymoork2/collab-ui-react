@@ -1,6 +1,8 @@
+import renameAndDeregisterClusterSection from './index';
+
 describe('ClusterDeregisterController', function () {
   beforeEach(function () {
-    this.initModules('Hercules');
+    this.initModules(renameAndDeregisterClusterSection);
     this.injectDependencies('$controller', '$q', '$scope', 'PrivateTrunkService', 'HybridServicesClusterService');
 
     spyOn(this.PrivateTrunkService, 'removePrivateTrunkResource').and.returnValue(this.$q.resolve({}));

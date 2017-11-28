@@ -44,7 +44,7 @@
                 </a>
               </li>
               <li class="feature" ng-if="$ctrl.showLanguage()">
-                <a ng-if="$ctrl.preferredLanguage" ng-click="$ctrl.openPreferredLanguage()">
+                <a href ng-if="$ctrl.preferredLanguage" ng-click="$ctrl.openPreferredLanguage()">
                   <span class="feature-name" translate="serviceSetupModal.preferredLanguage"></span>
                   <span class="feature-details feature-label">
                     {{$ctrl.preferredLanguage.label}}
@@ -63,7 +63,8 @@
       <cs-sp-section ng-if="$ctrl.showDeviceSettings">
         <uc-device-settings
           owner-type="place"
-          owner-id="$ctrl.currentPlace.id"
+          owner-id="$ctrl.currentPlace.cisUuid"
+          owner-display-name="$ctrl.currentPlace.displayName"
           device-list="$ctrl.currentPlace.devices">
         </uc-device-settings>
       </cs-sp-section>

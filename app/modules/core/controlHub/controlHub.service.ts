@@ -1,27 +1,31 @@
 export class ControlHubService {
-  private image: string;
-  private collapsed: { value: boolean, image: string };
+  private image = '/images/control-hub-logo.svg';
+  private collapsed = {
+    value: false,
+    image: '/images/spark-logo.svg',
+  };
+  private proPackIcon = 'icon-propack-solid-outline';
 
   /* @ngInject */
   constructor(
     private tabConfigControlHub,
+    private ProPackService,
     ) {
-    this.image =  '/images/control-hub-logo.svg';
-    this.collapsed = {
-      value: false,
-      image: '/images/spark-logo.svg',
-    };
   }
 
-  public getImage() {
+  public getImage(): string {
     return this.image;
   }
 
-  public getCollapsed() {
+  public getIcon(): string|undefined {
+    return this.ProPackService.showProBadge() ? this.proPackIcon : undefined;
+  }
+
+  public getCollapsed(): { value: boolean, image: string } {
     return this.collapsed;
   }
 
-  public getTabs() {
+  public getTabs(): any[] {
     return this.tabConfigControlHub;
   }
 }

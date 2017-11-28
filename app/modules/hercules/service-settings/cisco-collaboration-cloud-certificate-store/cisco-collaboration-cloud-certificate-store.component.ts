@@ -13,25 +13,18 @@ export class CiscoCollaborationCloudCertificateStoreCtrl implements ng.IComponen
   public isFirstTimeSetup: boolean;
   public certTitle: string;
   public certDesc: string;
-  public isCustomCertificateEnabled: boolean;
 
   /* @ngInject */
   constructor(
    private $scope: ng.IScope,
    private $translate: ng.translate.ITranslateService,
    private CiscoCollaborationCloudCertificateService: CiscoCollaborationCloudCertificateService,
-   private FeatureToggleService,
    ) {  }
 
   public $onInit(): void {
     this.$scope.$watch(() => this.file,
     file => this.onChangeFile(file),
     );
-    this.isCustomCertificateEnabled = false;
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.hf6932Certificate).then(result => {
-      this.isCustomCertificateEnabled = result;
-      this.formattedCertList = !this.isCustomCertificateEnabled ? [] : this.formattedCertList;
-    });
 
     this.certLabels = [
       this.$translate.instant('hercules.settings.call.certificatesEmailAddress'),
@@ -63,7 +56,7 @@ export class CiscoCollaborationCloudCertificateStoreCtrl implements ng.IComponen
   }
 
   public isCustomEnabled(): boolean {
-    return this.isCustomCertificateEnabled && !_.isEmpty(this.formattedCertList);
+    return !_.isEmpty(this.formattedCertList);
   }
 
   public setFormattedCertList(formattedCertList: IformattedCertificate[]): void {

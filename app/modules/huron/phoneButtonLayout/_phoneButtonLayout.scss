@@ -19,11 +19,11 @@
     letter-spacing: 0.02em;
     line-height: inherit;
   }
-  
+
   .phonebutton-description-next-line {
     margin-top: 1rem;
   }
-  
+
   .phonebutton-label {
     color: $gray-dark-2;
     @include vr-spacing(pb, 0.25);
@@ -88,6 +88,10 @@
     cursor: move;
     cursor: grab;
     font-size: 1.5rem;
+
+    &.selected {
+      color: $color-blue-base;
+    }
   }
 
   .phonebuttonlayout-container {

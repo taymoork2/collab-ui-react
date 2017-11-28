@@ -5,11 +5,11 @@
     </cs-page-sub-header-left>
     <cs-page-sub-header-right class="medium-6" ng-show="nav.selectEnable">
       <div class="medium-6 columns webexPage">
-        <cs-select ng-model="nav.webexSelected" options="nav.webexOptions" on-change-fn="nav.updateWebexMetrics()">
+        <cs-select ng-model="nav.metricsSelected" options="nav.metricsSiteOptions" on-change-fn="nav.updateWebexMetrics()">
         </cs-select>
       </div>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
 </div>
 
-<div class="webexMetricsContent metricsContent" ui-view="metricsContent"></div>
+<div class="metricsContent" ng-class="nav.iframeContainerClass" ui-view="metricsContent"></div>

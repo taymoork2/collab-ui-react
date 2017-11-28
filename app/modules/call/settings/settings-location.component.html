@@ -33,7 +33,12 @@
         <h4 class="section__title" translate="serviceSetupModal.internalDialing"></h4>
       </div>
       <div class="section__content">
-        <!-- routing Prefix length goes here  -->
+        <div class="sub-section">
+          <uc-routing-prefix-length
+            settings-data="$ctrl.callSettingsData"
+            routing-prefix-length-saved-fn="$ctrl.onRoutingPrefixLengthSaved()">
+          </uc-routing-prefix-length>
+        </div>
         <div class="sub-section">
           <uc-extension-length
             first-time-setup="$ctrl.ftsw"
@@ -54,7 +59,7 @@
         <h4 class="section__title" translate="serviceSetupModal.voicemail"></h4>
       </div>
       <div class="section__content">
-        <uc-location-company-voicemail
+        <uc-location-company-voicemail  ng-if="!$ctrl.avrilI1559"
           ftsw="false"
           voicemail-pilot-number="$ctrl.callSettingsData.defaultLocation.voicemailPilotNumber"
           features="$ctrl.callSettingsData.avrilCustomer.features"
@@ -64,6 +69,18 @@
           on-change-fn="$ctrl.onCompanyVoicemailChanged(companyVoicemailEnabled, voicemailPilotNumber, features)"
           on-number-filter="$ctrl.onCompanyVoicemailFilter(filter)">
         </uc-location-company-voicemail>
+        <div>
+          <uc-voicemail  ng-if="$ctrl.avrilI1559"
+            features="$ctrl.callSettingsData.avrilCustomer.features"
+            voicemail-pilot-number="$ctrl.callSettingsData.defaultLocation.voicemailPilotNumber"
+            dial-plan-country-code="$ctrl.settingsOptions.dialPlan.countryCode"
+            external-number-options="$ctrl.settingsOptions.companyVoicemailOptions"
+            company-voicemail-enabled="$ctrl.callSettingsData.customer.hasVoicemailService"
+            preferred-language="$ctrl.callSettingsData.defaultLocation.preferredLanguage"
+            on-change-fn="$ctrl.onCompanyVoicemailChanged(companyVoicemailEnabled, voicemailPilotNumber, features)"
+            on-number-filter="$ctrl.onCompanyVoicemailFilter(filter)">
+          </uc-voicemail>
+        </div>
       </div>
     </div>
 
@@ -82,8 +99,8 @@
           on-number-filter="$ctrl.onCompanyCallerIdFilter(filter)"
           on-change-fn="$ctrl.onCompanyCallerIdChanged(companyCallerId)">
         </uc-company-caller-id>
+        </div>
       </div>
-    </div>
 
   </form>
 </div>

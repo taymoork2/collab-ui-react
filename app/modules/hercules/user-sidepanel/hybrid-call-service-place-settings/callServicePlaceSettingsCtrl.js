@@ -149,6 +149,13 @@
             } else {
               $scope.domainVerificationError = false;
             }
+            if (userDiscovery.primaryDn && userDiscovery.telephoneNumber && userDiscovery.primaryDn !== userDiscovery.telephoneNumber) {
+              $scope.directoryNumbers = userDiscovery.primaryDn + ' ' + $translate.instant('common.or') + ' ' + userDiscovery.telephoneNumber;
+            } else if (userDiscovery.primaryDn) {
+              $scope.directoryNumbers = userDiscovery.primaryDn;
+            } else if (userDiscovery.telephoneNumber) {
+              $scope.directoryNumbers = userDiscovery.telephoneNumber;
+            }
           });
         }
       }).catch(function (response) {

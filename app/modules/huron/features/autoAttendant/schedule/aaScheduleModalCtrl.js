@@ -6,7 +6,6 @@
     .controller('AAScheduleModalCtrl', AAScheduleModalCtrl);
 
   /* @ngInject */
-
   function AAScheduleModalCtrl($modal, $modalInstance, $translate, Analytics, AAMetricNameService, sectionToToggle, AANotificationService, AACalendarService,
     AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService,
     $timeout) {
@@ -78,6 +77,7 @@
           vm.openhours[index].endtime = '05:00 PM';
         }
       });
+      resetFocus();
     }
 
     //check each hours form that exist in the DOM for validity
@@ -196,6 +196,7 @@
             holiday.endtime = '05:00 PM';
           }
         });
+        resetFocus();
       } else {
         vm.forceCheckHoliday();
       }
@@ -234,6 +235,12 @@
       vm.isDeleted = true;
       resetHolidayBehavior();
       vm.holidaysForm.$setDirty();
+    }
+
+    function resetFocus() {
+      $timeout(function () {
+        $('.icon.icon-trash.aa-schedule-trash:visible').last().focus();
+      });
     }
 
     function isOpenHoursAfterCloseHours(startTime, endTime) {

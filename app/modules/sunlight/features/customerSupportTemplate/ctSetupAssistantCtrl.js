@@ -8,7 +8,7 @@
     .directive('validateCharacters', validateCharactersDirective)
     .controller('CareSetupAssistantCtrl', CareSetupAssistantCtrl);
 
-  /* @ngInject */
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
   function CareSetupAssistantCtrl($modal, $scope, $state, $stateParams, $timeout, $translate, $window, Authinfo, CvaService, CTService, DomainManagementService, LogMetricsService, Notification, SunlightConfigService) {
     var vm = this;
@@ -87,7 +87,6 @@
     vm.setOverviewCards();
 
     vm.animationTimeout = 10;
-    vm.escapeKey = 27;
 
     // Template branding page related constants
     vm.orgName = Authinfo.getOrgName();
@@ -643,7 +642,7 @@
             enabled: true,
             fields: {
               callbackConfirmationMessage: {
-                displayText: 'Your callback request has been received.',
+                displayText: $translate.instant('careChatTpl.callbackConfirmationMsg'),
               },
             },
           },
@@ -897,7 +896,7 @@
             enabled: true,
             fields: {
               callbackConfirmationMessage: {
-                displayText: 'Your callback request has been received.',
+                displayText: $translate.instant('careChatTpl.callbackConfirmationMsg'),
               },
             },
           },
@@ -968,26 +967,28 @@
     };
 
     vm.populateVirtualAssistantInfo = function () {
-      if (!vm.template.configuration.virtualAssistant) {
+      if (!vm.template.configuration.virtualAssistant || !vm.template.configuration.virtualAssistant.config) {
         vm.template.configuration.virtualAssistant = _.cloneDeep(defaultVirtualAssistantConfig);
       }
       vm.selectedVA = vm.template.configuration.virtualAssistant.config;
 
       // update modified VA Name from the configured VA info
-      if (vm.selectedVA && vm.selectedVA.id && vm.hasConfiguredVirtualAssistantServices) {
-        var selectedVA = _.find(vm.configuredVirtualAssistantServices, {
+      if (vm.hasConfiguredVirtualAssistantServices) {
+        var selectedVAFound = _.find(vm.configuredVirtualAssistantServices, {
           id: vm.selectedVA.id,
         });
-
-        if (selectedVA) {
-          vm.selectedVA.name = selectedVA.name;
+        if (selectedVAFound) {
+          vm.selectedVA.name = selectedVAFound.name;
+          vm.selectedVA.icon = selectedVAFound.icon;
           vm.vaSelectionCommit();
+        } else {
+          vm.template.configuration.virtualAssistant = _.cloneDeep(defaultVirtualAssistantConfig);
+          vm.selectedVA = vm.template.configuration.virtualAssistant.config;
         }
-      }
-      if (!selectedVA) {
+      } else {
         vm.template.configuration.virtualAssistant = _.cloneDeep(defaultVirtualAssistantConfig);
+        vm.selectedVA = vm.template.configuration.virtualAssistant.config;
       }
-      vm.selectedVA = vm.template.configuration.virtualAssistant.config;
     };
 
     //Use the existing template fields when editing the template
@@ -997,6 +998,13 @@
       populateCustomerInformationField4();
       populateFeedbackInformation();
       populateProactivePromptInformation();
+      populateCallbackConfirmationMessage();
+    }
+
+    function populateCallbackConfirmationMessage() {
+      if (vm.template.configuration.pages.callbackConfirmation && vm.selectedMediaType != vm.mediaTypes.chat) {
+        vm.template.configuration.pages.callbackConfirmation.fields.callbackConfirmationMessage.displayText = $translate.instant('careChatTpl.callbackConfirmationMsg');
+      }
     }
 
     function populateCustomerInformationField4() {
@@ -1102,7 +1110,7 @@
 
     function evalKeyPress(keyCode) {
       switch (keyCode) {
-        case vm.escapeKey:
+        case KeyCodes.ESCAPE:
           cancelModal();
           break;
         default:
@@ -1502,7 +1510,7 @@
     };
 
     vm.onEnterKey = function (keyEvent) {
-      if (keyEvent.which === 13) {
+      if (keyEvent.which === KeyCodes.ENTER) {
         vm.addCategoryOption();
       }
     };
@@ -1686,7 +1694,7 @@
           } else if (vm.isEditFeature) {
             vm.populateVirtualAssistantInfo();
           }
-        }).catch(function (error) {
+        }, function (error) {
           vm.configuredVirtualAssistantServices = [];
           Notification.errorWithTrackingId(error, 'careChatTpl.getVirtualAssistantListError');
         });

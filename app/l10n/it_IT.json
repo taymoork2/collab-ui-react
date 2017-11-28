@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "Online",
-      "OnlineWithIssues": "Online, con problemi",
-      "Offline": "Offline",
-      "OfflineExpired": "Disattivato",
-      "Unknown": "Sconosciuto"
+      "CONNECTED": "Online",
+      "CONNECTED_WITH_ISSUES": "Online, con problemi",
+      "DISCONNECTED": "Offline",
+      "OFFLINE_EXPIRED": "Disattivato",
+      "UNKNOWN": "Sconosciuto"
     },
     "WithDevices": "Con dispositivi",
     "upgradeChannels": {
@@ -6678,23 +6678,23 @@
       "wlan": "Wireless"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "Porte di rete bloccate",
         "message": "Il firewall potrebbe bloccare il contenuto multimediale su UDP. La qualità della chiamata potrebbe risentirne. Per informazioni relative ai requisiti delle porte di rete, vedere l'articolo <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewall e requisiti di rete per l'app Cisco Spark</a>."
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "Porte di rete bloccate",
         "message": "Il firewall potrebbe bloccare il contenuto multimediale su UDP. La qualità della chiamata potrebbe risentirne. Per informazioni relative ai requisiti delle porte di rete, vedere l'articolo <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewall e requisiti di rete per l'app Cisco Spark</a>."
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "Porte di rete bloccate",
         "message": "Il firewall potrebbe bloccare il contenuto multimediale su UDP e TCP. La qualità della chiamata potrebbe risentirne. Per informazioni relative ai requisiti delle porte di rete, vedere l'articolo <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewall e requisiti di rete per l'app Cisco Spark</a>."
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "Temperatura elevata",
         "message": "Temperatura di sistema troppo elevata."
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "Display principale non rilevato",
         "message": "Verificare che il display principale sia acceso e connesso all'output del display corretto sul sistema video."
       },
@@ -6702,35 +6702,35 @@
         "type": "Aggiornamenti automatici disabilitati",
         "message": "Il software di sistema non verrà aggiornato."
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "Server dell'orario non raggiungibile",
         "message": "Impossibile stabilire la connessione con un server NTP. L'ora visualizzata sull'endpoint potrebbe essere errata."
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "Interferenza del segnale da altri dispositivi",
         "message": "Altri dispositivi (ad esempio, altri sistemi video) in questa sala provocano un'interferenza al segnale a ultrasuoni che potrebbe impedire l'accoppiamento tra il sistema video e il telefono o il portatile."
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "Ritardo audio",
         "message": "Le impostazioni del monitor generano un ritardo nell'audio. Modificare le impostazioni del monitor in una modalità adatta (ad esempio, modalità giochi)."
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "Nessun altoparlante a ultrasuoni incorporato",
         "message": "Questa versione hardware di SX10 non dispone di un altoparlante a ultrasuoni incorporato."
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "Chiave dell'opzione di crittografia mancante",
         "message": "Aggiungere una chiave dell'opzione di crittografia."
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "Configurato per l'automazione del test",
         "message": "Le metriche e il report di log ne saranno influenzati."
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "Pannello touch richiesto",
         "message": "Nessun pannello touch collegato al dispositivo di sala. Controllare il cavo che collega il pannello touch al dispositivo di sala."
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "Perdita pacchetti rilevata",
         "message": "Durante l'ultima chiamata è stato rilevato un livello di perdita di pacchetti che potrebbe avere un impatto sulla qualità della chiamata. La perdita di pacchetti solitamente è causata dal traffico di rete."
       },
@@ -7332,25 +7332,25 @@
       "configOverview": {
         "title": "Requisiti di configurazione dell'assistente virtuale cliente",
         "desc": "Esaminare i prerequisiti per la creazione di un assistente virtuale cliente",
-        "boxTitle": "Creare un agente API.AI prima di creare l'assistente virtuale cliente.",
-        "boxDesc": "Compilare un agente automatizzato in API.AI con un dialogo in linguaggio naturale. L'assistente virtuale cliente può utilizzare il dialogo incorporato per interagire con i clienti e inoltrare una conversazione con agenti in diretta, come necessario.",
-        "boxRadioOne": "No, non dispongo di un agente API.AI preconfigurato",
+        "boxTitle": "Creare un agente Dialogflow prima di creare l'assistente virtuale cliente.",
+        "boxDesc": "Compilare un agente automatizzato in Dialogflow con un dialogo in linguaggio naturale. L'assistente virtuale cliente può utilizzare il dialogo incorporato per interagire con i clienti e inoltrare una conversazione con agenti in diretta, come necessario.",
+        "boxRadioOne": "No, non dispongo di un agente Dialogflow preconfigurato",
         "boxRadioOneDesc1": "Vai a ",
-        "boxRadioApiai": "API.AI",
+        "boxRadioDialogflow": "Dialogflow",
         "boxRadioOneDesc2": " per creare un agente. Per iniziare, vedere la ",
-        "boxRadioApiaiDoc": "documentazione API.AI",
-        "boxRadioTwo": "Sì, dispongo di un agente API.AI preconfigurato e sono pronto a procedere",
-        "boxRadioTwoDesc": "Fare clic sulla freccia per continuare l'integrazione dell'agente API.AI con un assistente virtuale cliente"
+        "boxRadioDialogflowDoc": "documentazione Dialogflow",
+        "boxRadioTwo": "Sì, dispongo di un agente Dialogflow preconfigurato e sono pronto a procedere",
+        "boxRadioTwoDesc": "Fare clic sulla freccia per continuare l'integrazione dell'agente Dialogflow con un assistente virtuale cliente"
       },
       "dialogIntegration": {
         "title": "Configura integrazione dialogo",
-        "desc": "Aggiungere un motivo di escalation preconfigurato per completare la configurazione dell'agente API.AI",
+        "desc": "Aggiungere un motivo di escalation preconfigurato per completare la configurazione dell'agente Dialogflow",
         "boxStepOne": "Scaricare un file JSON di motivo di escalation.",
         "boxStepOneDesc": "Un motivo di escalation consente all'assistente virtuale cliente di inoltrare una conversazione a un agente.",
-        "boxStepTwo": "Caricare il motivo di escalation sull'agente API.AI.",
-        "boxStepTwoDesc": "Nella pagina dei motivi dell'agente API.AI, fare clic sui tre puntini in verticale (⋮) e scegliere Carica motivo. Caricare il file escalation.json scaricato",
-        "boxStepThree": "Personalizzare il motivo di escalation in API.AI.",
-        "boxStepThreeDesc": "Nella pagina dei motivi dell'agente API.AI, scegliere Motivo escalation. Modificare i campi Affermazione utente per modificare le espressioni dell'utente che attivano l'escalation. Tutte le espressioni dell'utente devono:",
+        "boxStepTwo": "Caricare il motivo di escalation sull'agente Dialogflow.",
+        "boxStepTwoDesc": "Nella pagina dei motivi dell'agente Dialogflow, fare clic sui tre puntini in verticale (⋮) e scegliere Carica motivo. Caricare il file escalation.json scaricato",
+        "boxStepThree": "Personalizzare il motivo di escalation in Dialogflow.",
+        "boxStepThreeDesc": "Nella pagina dei motivi dell'agente Dialogflow, scegliere Motivo escalation. Modificare i campi Affermazione utente per modificare le espressioni dell'utente che attivano l'escalation. Tutte le espressioni dell'utente devono:",
         "boxBulletOne": "Utilizzare una modalità modello",
         "boxBulletTwo": "Contenere un riferimento a @sys.any:Topic",
         "boxStepThreeDescCont": "Il simbolo @ accanto all'espressione utente indica la modalità modello. Fare clic sul simbolo per attivare la modalità. Non modificare l'azione GetExpert.",
@@ -7361,11 +7361,11 @@
       "accessToken": {
         "title": "Completa integrazione dialogo",
         "desc": "Completare l'integrazione per consentire l'uso del dialogo naturale nelle interazioni con i clienti",
-        "boxDesc": "Ciascun agente API.AI dispone di un token di accesso univoco al client memorizzato nelle impostazioni agente. Copiare il token dalle impostazioni dell'agente API.AI configurato, inserirlo qui, quindi fare clic su \"Convalida\" per controllare il token prima di completare l'integrazione del dialogo.",
-        "inputLabel": "Token di accesso al client API.AI",
+        "boxDesc": "Ciascun agente Dialogflow dispone di un token di accesso univoco al client memorizzato nelle impostazioni agente. Copiare il token dalle impostazioni dell'agente Dialogflow configurato, inserirlo qui, quindi fare clic su \"Convalida\" per controllare il token prima di completare l'integrazione del dialogo.",
+        "inputLabel": "Token di accesso al client Dialogflow",
         "validateButtonText": "Convalida",
         "maxLengthError": "Il token di accesso al client non può essere più lungo di 128 caratteri.",
-        "invalidTokenText": "Token di accesso al client API.AI non valido. Verificare il token e riprovare."
+        "invalidTokenText": "Token di accesso al client Dialogflow non valido. Verificare il token e riprovare."
       },
       "name": {
         "title": "Nome assistente virtuale cliente",

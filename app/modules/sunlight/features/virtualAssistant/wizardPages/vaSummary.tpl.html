@@ -1,22 +1,22 @@
 <div class="va-summary">
   <i class="icon icon-circle-check-mark-success icon-5x success-icon"></i>
   <div class="h4 description">
-    {{cvaSetupCtrl.getSummaryDescription()}}
+    {{$ctrl.getSummaryDescription()}}
   </div>
-  <div class="h4 description" ng-if="!cvaSetupCtrl.saveTemplateErrorOccurred">
-    {{cvaSetupCtrl.getCvaText('summary.descCont')}}
+  <div class="h4 description" ng-if="!$ctrl.saveTemplateErrorOccurred && !$ctrl.isEditFeature">
+    {{$ctrl.getText('summary.descCont')}}
   </div>
-  <button loading="cvaSetupCtrl.creatingTemplate"
+  <button loading="$ctrl.creatingTemplate"
           cs-btn
           id="vaSetupFinishBtn"
           class="btn btn--primary vaSetupFinishBtn"
-          ng-click="cvaSetupCtrl.submitFeature()">
-            {{cvaSetupCtrl.templateButtonText}}
+          ng-click="$ctrl.submitFeature()">
+            {{$ctrl.templateButtonText}}
   </button>
-  <div class="body-small edit-message" ng-if="cvaSetupCtrl.isEditFeature">
+  <div class="body-small edit-message" ng-if="$ctrl.isEditFeature">
   </div>
-  <div class="h6 retry-message" ng-if="cvaSetupCtrl.saveTemplateErrorOccurred && !cvaSetupCtrl.creatingTemplate">
+  <div class="h6 retry-message" ng-if="$ctrl.saveTemplateErrorOccurred && !$ctrl.creatingTemplate">
     <i class="icon icon-error"></i>
-    <span class="error-message">{{cvaSetupCtrl.getCvaText('summary.errorCreateTemplate')}}</span>
+    <span class="error-message">{{$ctrl.getText('summary.errorCreateTemplate')}}</span>
   </div>
 </div>

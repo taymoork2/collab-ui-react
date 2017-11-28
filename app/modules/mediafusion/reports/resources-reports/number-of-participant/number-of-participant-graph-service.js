@@ -2,8 +2,11 @@
   'use strict';
 
   angular.module('Mediafusion').service('NumberOfParticipantGraphService', NumberOfParticipantGraphService);
+
+  var ChartColors = require('modules/core/config/chartColors').ChartColors;
+
   /* @ngInject */
-  function NumberOfParticipantGraphService(CommonReportsGraphService, chartColors, $translate, $rootScope) {
+  function NumberOfParticipantGraphService(CommonReportsGraphService, $translate, $rootScope) {
     var numberOfParticipantdiv = 'numberOfParticipantdiv';
     var exportDiv = 'number-of-participant-div';
     var GUIDEAXIS = 'guideaxis';
@@ -52,7 +55,7 @@
         numberOfParticipantChart.chartCursor.valueLineEnabled = true;
         numberOfParticipantChart.chartCursor.categoryBalloonEnabled = true;
         numberOfParticipantChart.chartCursor.oneBalloonOnly = true;
-        numberOfParticipantChart.chartCursor.balloonColor = chartColors.grayLightTwo;
+        numberOfParticipantChart.chartCursor.balloonColor = ChartColors.grayLightTwo;
         numberOfParticipantChart.chartCursor.valueBalloonsEnabled = true;
         if (isDummy) {
           numberOfParticipantChart.chartCursor.valueLineBalloonEnabled = false;

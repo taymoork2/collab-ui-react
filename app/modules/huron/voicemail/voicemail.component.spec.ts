@@ -1,5 +1,5 @@
 
-describe ('component: voicemail', () => {
+describe ('component: userVoicemail', () => {
   const SAVE_BUTTON = '.button-container .btn--primary';
   const CANCEL_BUTTON = '.button-container button:not(.btn--primary)';
   const TOGGLE_VOICEMAIL = '.toggle-switch #enableVoicemail';
@@ -33,12 +33,12 @@ describe ('component: voicemail', () => {
     spyOn(this.HuronVoicemailService, 'isEnabledForUser').and.returnValue('true');
     spyOn(this.HuronVoicemailService, 'update').and.callThrough();
 
-    this.compileComponent('ucVoicemail', {
+    this.compileComponent('ucUserVoicemail', {
       ownerId: '12345',
     });
   });
 
-  it('should be able to Save voicemail', function () {
+  it('should be able to Save User voicemail', function () {
     expect(this.view.find(SAVE_BUTTON)).not.toExist();
     expect(this.view.find(TOGGLE_VOICEMAIL)).toExist();
     this.view.find(TOGGLE_VOICEMAIL).click();

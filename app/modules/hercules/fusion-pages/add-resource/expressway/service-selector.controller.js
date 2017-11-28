@@ -4,6 +4,8 @@
   angular.module('Hercules')
     .controller('ExpresswayServiceSelectorController', ExpresswayServiceSelectorController);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
   function ExpresswayServiceSelectorController($stateParams, $translate, Authinfo, Config, HybridServicesClusterService, hasImpSupportFeatureToggle) {
     var vm = this;
@@ -65,7 +67,7 @@
     }
 
     function handleKeypress(event) {
-      if (event.keyCode === 13 && canGoNext()) {
+      if (event.keyCode === KeyCodes.ENTER && canGoNext()) {
         next();
       }
     }

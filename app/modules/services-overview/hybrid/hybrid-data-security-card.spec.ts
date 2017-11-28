@@ -58,37 +58,25 @@ describe('ServicesOverviewHybridDataSecurityCard', () => {
       expect(card.display).toBe(true);
     });
 
-    it('should be displayed if we have roles + atlasHybridDataSecurityFT even without entitlements', () => {
+    it('should not be displayed if we have roles without entitlements', () => {
       Authinfo.isEnterpriseCustomer.and.returnValue(true);
       Authinfo.isFusionHDS.and.returnValue(false);
       Authinfo.getRoles.and.returnValue([Config.roles.full_admin]);
       card = new ServicesOverviewHybridDataSecurityCard($state, Authinfo, Config, HDSService, Notification);
-      card.hybridDataSecurityFeatureToggleEventHandler(true);
-      expect(card.display).toBe(true);
-    });
-
-    it('should be displayed if we have roles + entitlements even if atlasHybridDataSecurityFT is off', () => {
-      Authinfo.isEnterpriseCustomer.and.returnValue(true);
-      Authinfo.isFusionHDS.and.returnValue(true);
-      Authinfo.getRoles.and.returnValue([Config.roles.full_admin]);
-      card = new ServicesOverviewHybridDataSecurityCard($state, Authinfo, Config, HDSService, Notification);
-      card.hybridDataSecurityFeatureToggleEventHandler(false);
-      expect(card.display).toBe(true);
-    });
-
-    it('should NOT be displayed if we have roles but both entitlements and atlasHybridDataSecurityFT are off', () => {
-      Authinfo.isFusionHDS.and.returnValue(false);
-      Authinfo.getRoles.and.returnValue([Config.roles.full_admin]);
-      card = new ServicesOverviewHybridDataSecurityCard($state, Authinfo, Config, HDSService, Notification);
-      card.hybridDataSecurityFeatureToggleEventHandler(false);
       expect(card.display).toBe(false);
     });
 
-    it('should not be displayed if we don\'t have roles regardless of the feature toggle status', () => {
+    it('should NOT be displayed if we have roles but entitlements is off', () => {
+      Authinfo.isFusionHDS.and.returnValue(false);
+      Authinfo.getRoles.and.returnValue([Config.roles.full_admin]);
+      card = new ServicesOverviewHybridDataSecurityCard($state, Authinfo, Config, HDSService, Notification);
+      expect(card.display).toBe(false);
+    });
+
+    it('should not be displayed if we don\'t have roles', () => {
       Authinfo.isFusionHDS.and.returnValue(false);
       Authinfo.getRoles.and.returnValue([]);
       card = new ServicesOverviewHybridDataSecurityCard($state, Authinfo, Config, HDSService, Notification);
-      card.hybridDataSecurityFeatureToggleEventHandler(true);
       expect(card.display).toBe(false);
     });
   });
@@ -109,18 +97,11 @@ describe('ServicesOverviewHybridDataSecurityCard', () => {
     it('should stop loading once all three handlers are called', () => {
       card = new ServicesOverviewHybridDataSecurityCard($state, Authinfo, Config, HDSService, Notification);
       card.hybridStatusEventHandler([]);
-      card.hybridDataSecurityFeatureToggleEventHandler(false);
       card.proPackEventHandler({});
       expect(card.loading).toBe(false);
     });
-    it('should countinue loading if only hybridStatusEventHandler is called', () => {
-      card = new ServicesOverviewHybridDataSecurityCard($state, Authinfo, Config, HDSService, Notification);
-      card.hybridStatusEventHandler([]);
-      expect(card.loading).toBe(true);
-    });
     it('should countinue loading if only two handlers are called', () => {
       card = new ServicesOverviewHybridDataSecurityCard($state, Authinfo, Config, HDSService, Notification);
-      card.hybridDataSecurityFeatureToggleEventHandler(false);
       card.proPackEventHandler({});
       expect(card.loading).toBe(true);
     });

@@ -1,0 +1,43 @@
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/fonts';
+
+user-task-list-item {
+  display: block;
+
+  .task {
+    padding: 1rem;
+
+    &--active {
+      background: $gray-light-3;
+    }
+
+    &__row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    &__text,
+    &__subtext {
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    &__text {
+      font-family: $brand-font-light;
+      font-size: 14px;
+      color: $gray-dark-2;
+      &--right {
+        text-align: right;
+      }
+    }
+
+    &__subtext {
+      font-family: $brand-font-regular;
+      font-size: 12px;
+      color: $gray-light-1;
+      &--right {
+        text-align: right;
+      }
+    }
+  }
+}

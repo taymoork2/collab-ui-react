@@ -1,55 +1,28 @@
-<div class="modal-header">
-  <button type="button" class="close" ng-click="$ctrl.closeTaskManagerModal()"></button>
-  <h3 class="modal-title">{{::"userTaskManagerModal.title" | translate }}</h3>
-</div>
-<div class="modal-body">
-  <div class="modal-container">
-    <div class="tm-container" ng-if="$ctrl.loading">
-      <div class="tm-panel centered">
-        <i class="icon icon-spinner icon-3x"></i>
-      </div>
-    </div>
-    <div class="tm-container" ng-if="!$ctrl.loading && !$ctrl.uploadActionInProgress()">
-      <div class="tm-panel-left">
-        <div class="tm-panel-header">
-          <button type="button" class="btn btn--white" ng-class="{'active' : $ctrl.isModalAll()}" ng-click="$ctrl.setModal($ctrl.ModalView.ALL)" translate="common.all"></button>
-          <button type="button" class="btn btn--white" ng-class="{'active' : $ctrl.isModalActive()}" ng-click="$ctrl.setModal($ctrl.ModalView.ACTIVE)" translate="common.active"></button>
-        </div>
-        <hr class="tm-row-seperator" />
-        <div class="tm-panel-body" ng-show="$ctrl.isModalAll()">
-          <div class="row collapse" ng-class="{'active' : $ctrl.isActiveTask(task)}" ng-click="$ctrl.setActiveTask(task)" ng-repeat-start="task in $ctrl.allTaskList">
-            <div class="tm-rows">
-              <div class="tm-row-content">
-                <span class="task-text text-left nowrap">{{::task.jobInstanceId}}</span>
-                <span class="task-text text-right">{{::task.started}}</span>
-              </div>
-              <div class="tm-row-content">
-                <span class="task-subtext text-left nowrap">{{::task.status}}</span>
-                <span class="task-subtext text-right">{{::task.stopped}}</span>
-              </div>
-            </div>
-          </div>
-          <hr class="tm-row-seperator" ng-repeat-end />
-        </div>
-        <div class="tm-panel-body" ng-show="$ctrl.isModalActive()">
-          <div class="row collapse" ng-class="{'active' : $ctrl.isActiveTask(task)}" ng-click="$ctrl.setActiveTask(task)" ng-repeat-start="task in $ctrl.inProcessTaskList">
-            <div class="tm-rows">
-              <div class="tm-row-content">
-                <span class="task-text text-left nowrap">{{::task.jobInstanceId}}</span>
-                <span class="task-text text-right">{{::task.started}}</span>
-              </div>
-              <div class="tm-row-content">
-                <span class="task-subtext text-left nowrap">{{::task.status}}</span>
-                <span class="task-subtext text-right">{{::task.stopped}}</span>
-              </div>
-            </div>
-          </div>
-          <hr class="tm-row-seperator" ng-repeat-end />
-        </div>
-      </div>
-      <div class="tm-panel-right">
-        <csv-upload-results active-task="$ctrl.activeTask" on-cancel-import="$ctrl.onCancelImport()"></csv-upload-results>
-      </div>
-    </div>
+<multi-step-modal
+  l10n-title="userTaskManagerModal.title"
+  dismiss="$ctrl.dismissModal()">
+  <div class="loading-wrapper" ng-if="$ctrl.loading">
+    <i class="icon icon-spinner icon-3x"></i>
   </div>
-</div>
+  <task-container ng-if="!$ctrl.loading">
+    <task-container-panel-header>
+      <user-task-list-filter
+        filter="$ctrl.activeFilter"
+        on-filter-change="$ctrl.setActiveFilter(filter)">
+      </user-task-list-filter>
+    </task-container-panel-header>
+    <task-container-panel-list>
+      <user-task-list
+        task="$ctrl.activeTask"
+        task-list="$ctrl.taskList"
+        on-active-task-change="$ctrl.setActiveTask(task)">
+      </user-task-list>
+    </task-container-panel-list>
+    <task-container-details>
+      <csv-upload-results
+        active-task="$ctrl.activeTask"
+        on-cancel-import="$ctrl.onCancelImport()">
+      </csv-upload-results>
+    </task-container-details>
+  </task-container>
+</multi-step-modal>

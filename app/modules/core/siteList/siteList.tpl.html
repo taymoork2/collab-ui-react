@@ -1,8 +1,8 @@
 <div ng-if='siteList.showGridData' id="site-list">
-  <div class="page-sub-header" ng-if="siteList.isAdminPage && siteList.isShowAddSite">
+  <div class="page-sub-header" ng-if="siteList.isAdminPage && siteList.isShowAddSite && siteList.canAddSite">
     <div class="page-sub-header__right">
-      <a class="btn btn-primary"
-        ui-sref="site-list-add"
+      <a href class="btn btn-primary"
+        ng-click="siteList.addSite()"
         translate="firstTimeWizard.addSiteButton">
       </a>
     </div>

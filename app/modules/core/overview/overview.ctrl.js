@@ -1,5 +1,4 @@
 require('./_overview.scss');
-
 (function () {
   'use strict';
 
@@ -8,9 +7,8 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($q, $rootScope, $state, $scope, Authinfo, CardUtils, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, ProPackService, LearnMoreBannerService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SetupWizardService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
+  function OverviewCtrl($q, $rootScope, $state, $scope, Authinfo, CardUtils, SunlightUtilitiesService, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, ProPackService, LearnMoreBannerService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SetupWizardService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
     var vm = this;
-
     var PSTN_TOS_ACCEPT = require('modules/huron/pstn/pstnTermsOfService').PSTN_TOS_ACCEPT;
     var PSTN_ESA_DISCLAIMER_ACCEPT = require('modules/huron/pstn/pstn.const').PSTN_ESA_DISCLAIMER_ACCEPT;
 
@@ -45,7 +43,6 @@ require('./_overview.scss');
     vm.showUserTaskManagerModal = showUserTaskManagerModal;
 
     ////////////////////////////////
-
     $q.all({
       enabledNotPurchased: ProPackService.hasProPackEnabledAndNotPurchased(),
       purchased: ProPackService.hasProPackPurchased(),
@@ -130,7 +127,7 @@ require('./_overview.scss');
                 FeatureToggleService.supports(FeatureToggleService.features.atlasOffice365Support)
                   .then(function (supported) {
                     if (!supported) {
-                      vm.notifications.push(OverviewNotificationFactory.createGoogleCalendarNotification($state, HybridServicesFlagService, HybridServicesUtilsService));
+                      vm.notifications.push(OverviewNotificationFactory.createGoogleCalendarNotification($state, CloudConnectorService, HybridServicesFlagService, HybridServicesUtilsService));
                       resizeNotifications();
                     }
                   });
@@ -260,6 +257,15 @@ require('./_overview.scss');
       });
     }
 
+    if (Authinfo.isCare() && Authinfo.isCustomerAdmin()) {
+      SunlightUtilitiesService.isCareSetup().then(function (isOrgOnboarded) {
+        if (!isOrgOnboarded && SunlightUtilitiesService.showSetUpCareNotification()) {
+          vm.notifications.push(OverviewNotificationFactory.createCareNotSetupNotification());
+          resizeNotifications();
+        }
+      });
+    }
+
     function getTOSStatus() {
       //Don't allow the Parner to accept ToS for the customer
       if (Authinfo.isCustomerLaunchedFromPartner()) {
@@ -319,12 +325,18 @@ require('./_overview.scss');
         .then(function (clusters) {
           var connectorsToTest = ['c_mgmt', 'c_cal', 'c_ucmc', 'c_imp'];
           connectorsToTest.forEach(function (connectorType) {
-            var hasUrgentUpgrade = _.find(clusters, function (cluster) {
-              return _.some(cluster.provisioning, function (p) {
+            var shouldDisplayNotification = _.some(clusters, function (cluster) {
+              var urgentUpgrade = _.find(cluster.provisioning, function (p) {
                 return p.connectorType === connectorType && p.availablePackageIsUrgent;
               });
+              if (urgentUpgrade) {
+                return _.some(cluster.connectors, function (connector) {
+                  return connector.connectorType === connectorType && connector.runningVersion !== urgentUpgrade.availableVersion;
+                });
+              }
+              return false;
             });
-            if (hasUrgentUpgrade) {
+            if (shouldDisplayNotification) {
               vm.notifications.push(OverviewNotificationFactory.createUrgentUpgradeNotification(connectorType));
             }
           });
@@ -394,7 +406,9 @@ require('./_overview.scss');
 
     ReportsService.getOverviewMetrics(true);
 
-    SunlightReportService.getOverviewData();
+    if (Authinfo.isCare()) {
+      SunlightReportService.getOverviewData();
+    }
 
     var params = {
       disableCache: true,

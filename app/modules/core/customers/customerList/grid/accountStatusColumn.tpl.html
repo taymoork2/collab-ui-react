@@ -2,7 +2,7 @@
   ng-class="{'selected' : row.isSelected}"
   ng-click="grid.appScope.selectRow(grid, row)"
   >
-  <div ng-switch="grid.appScope.getAccountStatus(row.entity)">
+  <div ng-switch="row.entity.accountStatus">
     <div ng-switch-when="active">
       <i class="icon icon-circle status-indicator success"></i>
       <span translate="customerPage.purchased"></span>
@@ -14,6 +14,18 @@
     <div ng-switch-when="expired">
       <i class="icon icon-circle status-indicator danger"></i>
       <span translate="customerPage.expired"></span>
+    </div>
+    <div ng-switch-when="pending">
+      <i class="icon icon-circle status-indicator warning"></i>
+      <span translate="customerPage.pending"></span>
+    </div>
+    <div ng-switch-when="purchasedWithActive">
+      <i class="icon icon-circle status-indicator success"></i>
+      <span translate="customerPage.purchasedWithActive"></span>
+    </div>
+    <div ng-switch-when="purchasedWithExpired">
+      <i class="icon icon-circle status-indicator warning"></i>
+      <span translate="customerPage.purchasedWithExpired"></span>
     </div>
     <div ng-switch-default>
       <i class="icon icon-circle"></i>

@@ -11,7 +11,7 @@ export class CvaService {
    and a new create<type>ConfigObject() func should be created to create its config object.
    */
   public configurationTypes = {
-    apiai: 'apiai',
+    dialogflow: 'apiai',
   };
 
   // Service Card definition. describes how to render the top-level virtual assistant 'card' for care.
@@ -19,11 +19,10 @@ export class CvaService {
     id: 'customerVirtualAssistant',
     type: 'customerVirtualAssistant',
     mediaType: 'virtualAssistant', // for filter
-    code: this.getCvaMessageKey('featureText.virtualAssistantCode'),
-    label: this.getCvaMessageKey('featureText.customerVirtualAssistantType'),
-    description: this.getCvaMessageKey('featureText.selectCVADesc'),
-    icons: [],
-    image: '/images/cvaIcon.png',
+    code: this.getMessageKey('featureText.code'),
+    label: this.getMessageKey('featureText.type'),
+    description: this.getMessageKey('featureText.selectDesc'),
+    icons: ['icon-bot-three'],
     color: 'feature-va-color',
     disabled: false,
     goToService: this.goToService.bind(this),
@@ -43,7 +42,7 @@ export class CvaService {
   };
   // Feature List Filter definition. describes how to filter this feature
   public featureFilter = {
-    name: this.getCvaText('featureText.virtualAssistantMediaType'),
+    name: this.$translate.instant('careChatTpl.virtualAssistant.featureText.mediaType'),
     filterValue: this.cvaServiceCard.mediaType,
   };
 
@@ -59,15 +58,12 @@ export class CvaService {
   ) {
   }
 
-
   /**
-   * Function to obtain translated string off virtual-assistant's area for strings
-   * @param textIdExtension
+   * Get the feature name text
    * @returns {string}
    */
-  public getCvaText(textIdExtension: string): string {
-    const featureName = this.$translate.instant('careChatTpl.virtualAssistant.cva.featureName');
-    return this.$translate.instant('careChatTpl.virtualAssistant.cva.' + textIdExtension, { featureName });
+  public getFeatureName(): string {
+    return this.$translate.instant('careChatTpl.virtualAssistant.cva.featureText.name');
   }
 
   /**
@@ -75,7 +71,7 @@ export class CvaService {
    * @param textIdExtension
    * @returns {string}
    */
-  public getCvaMessageKey(textIdExtension: string): string {
+  public getMessageKey(textIdExtension: string): string {
     return 'careChatTpl.virtualAssistant.cva.' + textIdExtension;
   }
 
@@ -87,7 +83,7 @@ export class CvaService {
    * @returns {String} id of Service
    */
   private goToService($state: ng.ui.IStateService, params?: object): string {
-    $state.go('care.assistant', (<any>Object).assign({
+    $state.go('care.customerVirtualAssistant', _.assign({
       type: params,
     }, params));
     return this.cvaServiceCard.id;
@@ -166,7 +162,7 @@ export class CvaService {
   }
 
   /**
-   * update an identified APIAI configuration
+   * update an identified Dialogflow configuration
    * @param botServicesConfigId
    * @param type
    * @param name
@@ -184,16 +180,17 @@ export class CvaService {
         icon: iconURL,
       }).$promise;
   }
+
   /**
-   * test the apiai client access token to see if it works.
+   * test the Dialogflow client access token to see if it works.
    * @param token
    * returns promise resolving true on success, false on failure
    */
-  public isAPIAITokenValid(token: string): ng.IPromise<boolean> {
+  public isDialogflowTokenValid(token: string): ng.IPromise<boolean> {
     const result = this.$q.defer();
     const request = {
       method: 'POST',
-      url: 'https://api.api.ai/v1/query?v=20150910',
+      url: 'https://api.dialogflow.com/v1/query?v=20150910',
       headers: {
         Accept: 'application/json',
         Authorization: 'Bearer ' + token,
@@ -222,7 +219,6 @@ export class CvaService {
   /**
    * obtain resource for Virtual Assistant configuration API Rest calls.
    * @param orgId
-   * @param botServicesConfigId
    * @returns {*}
    */
   private getValidateResource(orgId?: string): IConfigurationResource {
@@ -240,7 +236,6 @@ export class CvaService {
    * Test the avatar file to see if it is within expected boundaries: PNG file, 1MB max
    *
    * @param orgId
-   * @param botServicesConfigId
    * @param iconURL
    * returns promise resolving true on success, false on failure
    */

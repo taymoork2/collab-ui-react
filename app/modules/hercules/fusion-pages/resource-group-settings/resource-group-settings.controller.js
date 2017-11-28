@@ -5,6 +5,8 @@
     .module('Hercules')
     .controller('ResourceGroupSettingsController', ResourceGroupSettingsController);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
   function ResourceGroupSettingsController($stateParams, ResourceGroupService, Notification, $state, HybridServicesClusterService, $modal) {
     var vm = this;
@@ -112,7 +114,7 @@
     }
 
     function handleKeypress(event) {
-      if (event.keyCode === 13) {
+      if (event.keyCode === KeyCodes.ENTER) {
         setGroupName(vm.newGroupName);
       }
     }

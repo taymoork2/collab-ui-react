@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "在线",
-      "OnlineWithIssues": "在线，有问题",
-      "Offline": "离线",
-      "OfflineExpired": "已停用",
-      "Unknown": "未知"
+      "CONNECTED": "在线",
+      "CONNECTED_WITH_ISSUES": "在线，有问题",
+      "DISCONNECTED": "离线",
+      "OFFLINE_EXPIRED": "已停用",
+      "UNKNOWN": "未知"
     },
     "WithDevices": "使用设备",
     "upgradeChannels": {
@@ -6678,23 +6678,23 @@
       "wlan": "无线"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "网络端口被阻止",
         "message": "防火墙可能会阻止 UDP 媒体，通话质量可能会因此受到影响。如需关于网络端口要求的信息，请参阅文章 <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Cisco Spark 应用程序的防火墙和网络要求</a>。"
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "网络端口被阻止",
         "message": "防火墙可能会阻止 UDP 媒体，通话质量可能会因此受到影响。如需关于网络端口要求的信息，请参阅文章 <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Cisco Spark 应用程序的防火墙和网络要求</a>。"
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "网络端口被阻止",
         "message": "防火墙可能会阻止 UDP 和TCP 媒体，通话质量可能会因此受到影响。如需关于网络端口要求的信息，请参阅文章 <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Cisco Spark 应用程序的防火墙和网络要求</a>。"
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "高温",
         "message": "系统温度过高。"
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "未检测到主显示屏",
         "message": "验证主显示屏已开启并且已连接至视频系统上的正确显示屏输出。"
       },
@@ -6702,35 +6702,35 @@
         "type": "禁用自动更新",
         "message": "系统软件将不进行更新。"
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "无法访问时间服务器",
         "message": "无法与 NTP 服务器建立连接。您的终端上显示的时间可能有误。"
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "来自其他设备的信号干扰",
         "message": "此协作室中有来自其他设备（例如其他视频系统）的超声波信号干扰，它可能妨碍视频系统与您的手机或笔记本电脑配对。"
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "音频延迟",
         "message": "您的显示器设置增加了音频的延迟。请将显示器设置更改为合适的模式（例如：游戏模式）。"
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "无嵌入式超声波扬声器",
         "message": "此硬件版本的 SX10 没有嵌入式超声波扬声器。"
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "缺少加密选项键",
         "message": "请添加加密选项键。"
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "已配置为自动执行测试",
         "message": "度量和日志报告会受到影响。"
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "需要触控面板",
         "message": "没有连接到协作室设备的触控面板。请检查将触控面板连接到协作室设备的电缆。"
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "检测到数据包丢失",
         "message": "在最近一次呼叫中我们检测到了一定程度的数据包丢失，这个问题可能已经影响到了通话质量。数据包丢失通常由网路阻塞所致。"
       },
@@ -7332,25 +7332,25 @@
       "configOverview": {
         "title": "客户虚拟助手配置要求",
         "desc": "查看创建客户虚拟助手的先决条件",
-        "boxTitle": "在创建客户虚拟助手之前创建一个 API.AI 客服。",
-        "boxDesc": "使用自然语言对话框在 API.AI 中构建自动化客服。集成的客户虚拟助手使用该内置对话框与客户进行交互，并根据需要将对话上报给真实客服。",
-        "boxRadioOne": "不，我没有预配置的 API.AI 客服",
+        "boxTitle": "在创建客户虚拟助手之前创建一个 Dialogflow 客服。",
+        "boxDesc": "使用自然语言对话框在 Dialogflow 中构建自动化客服。集成的客户虚拟助手使用该内置对话框与客户进行交互，并根据需要将对话上报给真实客服。",
+        "boxRadioOne": "不，我没有预配置的 Dialogflow 客服",
         "boxRadioOneDesc1": "转至 ",
-        "boxRadioApiai": "API.AI",
+        "boxRadioDialogflow": "Dialogflow",
         "boxRadioOneDesc2": " 以创建客服。要开始创建，请参阅 ",
-        "boxRadioApiaiDoc": "API.AI 文档",
-        "boxRadioTwo": "是的，我有预配置的 API.AI 客服并已做好继续操作的准备",
-        "boxRadioTwoDesc": "单击该箭头以继续集成 API.AI 客服与客户虚拟助手"
+        "boxRadioDialogflowDoc": "Dialogflow 文档",
+        "boxRadioTwo": "是的，我有预配置的 Dialogflow 客服并已做好继续操作的准备",
+        "boxRadioTwoDesc": "单击该箭头以继续集成 Dialogflow 客服与客户虚拟助手"
       },
       "dialogIntegration": {
         "title": "配置对话框集成",
-        "desc": "添加预配置的上报意图来完成 API.AI 客服配置",
+        "desc": "添加预配置的上报意图来完成 Dialogflow 客服配置",
         "boxStepOne": "下载预配置的上报意图 JSON 文件。",
         "boxStepOneDesc": "上报意图能让客户虚拟助手将对话上报给真实客服。",
-        "boxStepTwo": "将上报意图上传至 API.AI 客服。",
-        "boxStepTwoDesc": "在 API.AI 客服的“意图”页面上，单击垂直的省略号 (⋮) 并选择“上传意图”。上传刚才下载的 escalation.json 文件。",
-        "boxStepThree": "在 API.AI 中自定义上报意图",
-        "boxStepThreeDesc": "在 API.AI 客服的“意图”页面上，选择“上报意图”。修改“用户引言”字段来更改触发上报的用户表达式。所有用户表达式都必须：",
+        "boxStepTwo": "将上报意图上传至 Dialogflow 客服。",
+        "boxStepTwoDesc": "在 Dialogflow 客服的“意图”页面上，单击垂直的省略号 (⋮) 并选择“上传意图”。上传刚才下载的 escalation.json 文件。",
+        "boxStepThree": "在 Dialogflow 中自定义上报意图",
+        "boxStepThreeDesc": "在 Dialogflow 客服的“意图”页面上，选择“上报意图”。修改“用户引言”字段来更改触发上报的用户表达式。所有用户表达式都必须：",
         "boxBulletOne": "使用模板模式",
         "boxBulletTwo": "包含对“@sys.any:主题”的引用",
         "boxStepThreeDescCont": "用户表达式旁边的 @ 符号表示模板模式。单击该符号可切换模式。请勿修改 GetExpert 操作。",
@@ -7361,11 +7361,11 @@
       "accessToken": {
         "title": "完成对话框集成",
         "desc": "完成对话框集成以实现在客户交互中使用自然对话",
-        "boxDesc": "每个 API.AI 客服都有唯一的客户端访问令牌存储在客服设置中。在完成对话集成之前，从您配置的 API.AI 客服设置中复制该令牌，将它输入到这里，然后单击“验证”来检查令牌。",
-        "inputLabel": "API.AI 客户端访问令牌",
+        "boxDesc": "每个 Dialogflow 客服都有唯一的客户端访问令牌存储在客服设置中。在完成对话集成之前，从您配置的 Dialogflow 客服设置中复制该令牌，将它输入到这里，然后单击“验证”来检查令牌。",
+        "inputLabel": "Dialogflow 客户端访问令牌",
         "validateButtonText": "验证",
         "maxLengthError": "客户端访问令牌的长度不能超过 128 个字符。",
-        "invalidTokenText": "API.AI 客户端访问令牌无效。请验证令牌并重试。"
+        "invalidTokenText": "Dialogflow 客户端访问令牌无效。请验证令牌并重试。"
       },
       "name": {
         "title": "客户虚拟助手名称",

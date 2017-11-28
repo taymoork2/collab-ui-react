@@ -6,11 +6,22 @@
         name="{{row.entity.license.siteUrl}}_isNotCI">
 
     <a target="_blank"
-       href= "{{row.entity.siteAdminUrl}}"
+       href="{{row.entity.siteAdminUrl}}"
        id="{{row.entity.license.siteUrl}}_siteAdminUrl">
 
       {{::'siteList.siteAdminUrl' | translate}}
     </a>
+  </span>
+  <!-- delete and redistribute show show up regardless of ci flag -->
+  <span ng-if="grid.appScope.isShowAddSite && grid.appScope.isSubscriptionEnterprise(row.entity.license)">
+    <!-- redistribute licenses icon -->
+    <cr-site-actions-licenses-icon  can-modify="grid.appScope.canModify(row.entity.license)"
+      license="row.entity.license" on-click-fn="grid.appScope.redistributeLicenses(license)">
+    </cr-site-actions-licenses-icon>
+   <!-- delete icon -->
+   <cr-site-actions-delete-icon can-modify="grid.appScope.canModify(row.entity.license)"
+    license="row.entity.license"  on-click-fn="grid.appScope.deleteSite(license)">
+  </cr-site-actions-delete-icon>
   </span>
 
   <span ng-if="row.entity.isCI"
@@ -24,12 +35,6 @@
 
   <!-- CSV icon and results link -->
   <cr-site-actions-csv-icon></cr-site-actions-csv-icon>
-
-  <!-- redistribute licenses icon -->
- <cr-site-actions-licenses-icon ng-if="grid.appScope.isShowAddSite" license="row.entity.license" on-click-fn="grid.appScope.redistributeLicenses(license)"></cr-site-actions-licenses-icon>
-
- <!-- redistribute licenses icon -->
- <cr-site-actions-delete-icon ng-if="grid.appScope.isShowAddSite" can-delete="grid.appScope.canDeleteSite(row.entity.license)" license="row.entity.license"  on-click-fn="grid.appScope.deleteSite(license)"></cr-site-actions-licenses-icon>
 
   <!-- Start of Loading indication -->
   <span ng-if="!row.entity.isLinkedSite">

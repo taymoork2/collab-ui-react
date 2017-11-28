@@ -6,7 +6,7 @@
 <div class="modal-body" ng-transclude>
 </div>
 
-<div class="modal-footer">
+<div class="modal-footer" ng-if="::$ctrl.showFooter()">
   <button type="button" class="btn cancel"
     ng-if="$ctrl.cancel && !$ctrl.cancelRemoved"
     ng-disabled="$ctrl.cancelDisabled"

@@ -15,12 +15,17 @@ class LocationCallerIdCtrl implements ng.IComponentController {
   public locationCallerIdEnabled: boolean;
   public size: string;
   public keyPress: Function;
+  public origCallerId: LocationCallerId;
 
 
   /* @ngInject */
   constructor(
     private PhoneNumberService: PhoneNumberService,
   ) { }
+
+  public $onInit(): void {
+    this.origCallerId = _.cloneDeep(this.callerId);
+  }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const {
@@ -35,6 +40,7 @@ class LocationCallerIdCtrl implements ng.IComponentController {
     }
 
     if (callerId && callerId.currentValue) {
+      this.origCallerId = _.cloneDeep(this.callerId);
       this.locationCallerIdEnabled = true;
       this.selectedNumber = this.PhoneNumberService.getNationalFormat(callerId.currentValue.number);
     } else if (callerId && !callerId.currentValue) {
@@ -43,7 +49,9 @@ class LocationCallerIdCtrl implements ng.IComponentController {
   }
 
   public onLocationCallerIdToggled(value: boolean): void {
-    if (value) {
+    if (value && this.origCallerId) {
+      this.onChange(this.origCallerId);
+    } else if (value) {
       this.callerId = new LocationCallerId({
         name: this.companyName,
         number: '',
@@ -76,7 +84,7 @@ class LocationCallerIdCtrl implements ng.IComponentController {
   }
 
   public onChange(callerId: LocationCallerId | null): void {
-    if (callerId && callerId.uuid) {
+    if (callerId && callerId.uuid && !_.isEqual(callerId, this.origCallerId)) {
       callerId.uuid = undefined;
     }
     this.onChangeFn({

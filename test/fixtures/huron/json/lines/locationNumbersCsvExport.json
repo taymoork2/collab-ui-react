@@ -1,0 +1,26 @@
+[{
+  "internalNumber": "internalNumber",
+  "externalNumber": "externalNumber",
+  "userId": "userId",
+  "location": "TestLocation"
+}, {
+  "internalNumber": "1000",
+  "externalNumber": "+19725551000",
+  "userId": "asuna@sao.com",
+  "location": "TestLocation"
+}, {
+  "internalNumber": "1001",
+  "externalNumber": null,
+  "userId": "kirito@sao.com",
+  "location": "TestLocation"
+}, {
+  "internalNumber": "1002",
+  "externalNumber": null,
+  "userId": null,
+  "location": "TestLocation"
+}, {
+  "internalNumber": null,
+  "externalNumber": "+19725551001",
+  "userId": null,
+  "location": "TestLocation"
+}]

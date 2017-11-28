@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "Online",
-      "OnlineWithIssues": "Online, Dengan Masalah",
-      "Offline": "Offline",
-      "OfflineExpired": "Dinonaktifkan",
-      "Unknown": "Tidak Diketahui"
+      "CONNECTED": "Online",
+      "CONNECTED_WITH_ISSUES": "Online, Dengan Masalah",
+      "DISCONNECTED": "Offline",
+      "OFFLINE_EXPIRED": "Dinonaktifkan",
+      "UNKNOWN": "Tidak Diketahui"
     },
     "WithDevices": "Dengan Perangkat",
     "upgradeChannels": {
@@ -6678,23 +6678,23 @@
       "wlan": "Nirkabel"
     },
     "errorCodes": {
-      "mediaProtocol": {
+      "mediaprotocol": {
         "type": "Port Jaringan Diblokir",
         "message": "Firewall mungkin memblok media pada UDP. Kualitas panggilan mungkin terpengaruh. Untuk informasi mengenai persyaratan port jaringan lihat artikel <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Persyaratan Firewall dan Jaringan untuk Aplikasi Spark Cisco</a>."
       },
-      "TCPMediaFallback": {
+      "tcpmediafallback": {
         "type": "Port Jaringan Diblokir",
         "message": "Firewall mungkin memblok media pada UDP. Kualitas panggilan mungkin terpengaruh. Untuk informasi mengenai persyaratan port jaringan lihat artikel <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Persyaratan Firewall dan Jaringan untuk Aplikasi Spark Cisco</a>."
       },
-      "MediaBlockingDetected": {
+      "mediablockingdetected": {
         "type": "Port Jaringan Diblokir",
         "message": "Firewall mungkin memblok media pada UDP dan TCP. Kualitas panggilan mungkin terpengaruh. Untuk informasi mengenai persyaratan port jaringan lihat artikel <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Persyaratan Firewall dan Jaringan untuk Aplikasi Spark Cisco</a>."
       },
-      "TemperatureCheck": {
+      "temperaturecheck": {
         "type": "Suhu tinggi",
         "message": "Suhu sistem terlalu tinggi."
       },
-      "OSDVideoOutput": {
+      "osdvideooutput": {
         "type": "Layar Utama Tidak Terdeteksi",
         "message": "Verifikasi bahwa layar utama aktif dan tersambung ke output tampilan yang benar di sistem video."
       },
@@ -6702,35 +6702,35 @@
         "type": "Pembaruan Otomatis Dinonaktifkan",
         "message": "Perangkat lunak sistem tidak akan diperbarui."
       },
-      "NTPStatus": {
+      "ntpstatus": {
         "type": "Server Waktu Tidak Dapat Dijangkau",
         "message": "Koneksi ke server NTP tidak dapat terhubung. Waktu yang ditampilkan pada endpoint Anda mungkin salah."
       },
-      "AudioPairingInterference": {
+      "audiopairinginterference": {
         "type": "Gangguan sinyal dari perangkat lain",
         "message": "Terdapat gangguan sinyal ultrasonografi dalam ruangan ini dari perangkat lain (misalnya: sistem video lain) yang dapat mencegah penyandingan antara sistem video dan ponsel atau laptop Anda."
       },
-      "ECReferenceDelay": {
+      "ecreferencedelay": {
         "type": "Penundaan Audio",
         "message": "Pengaturan monitor Anda menyebabkan penundaan audio. Ubah pengaturan monitor ke mode yang sesuai (misalkan: mode Game)."
       },
-      "UltrasoundSpeakerAvailability": {
+      "ultrasoundspeakeravailability": {
         "type": "Tidak Ada Speaker Ultrasonografi Tertanam",
         "message": "Versi perangkat keras SX10 tidak memiliki speaker ultrasonografi tertanam."
       },
-      "MissingEncryptionKey": {
+      "missingencryptionkey": {
         "type": "Tidak ada tombol opsi enkripsi",
         "message": "Harap tambahkan tombol opsi enkripsi."
       },
-      "ConfiguredForTestAutomation": {
+      "configuredfortestautomation": {
         "type": "Dikonfigurasi untuk otomasi pengujian",
         "message": "Metrik dan laporan log terpengaruh."
       },
-      "TouchPanelConnection": {
+      "touchpanelconnection": {
         "type": "Diperlukan Panel Sentuh",
         "message": "Tidak ada panel sentuh yang terhubung ke perangkat kamar. Periksa kabel penghubung panel sentuh ke perangkat kamar."
       },
-      "NetworkQuality": {
+      "networkquality": {
         "type": "Hilangnya Paket Terdeteksi",
         "message": "Selama panggilan terakhir kami mendeteksi satu level hilangnya paket yang mungkin berdampak pada kualitas panggilan. Hilangnya paket umumnya disebabkan oleh macetnya jaringan."
       },
@@ -7332,25 +7332,25 @@
       "configOverview": {
         "title": "Persyaratan Konfigurasi Asisten Virtual Pelanggan",
         "desc": "Tinjau prasyarat untuk membuat Asisten Virtual Pelanggan",
-        "boxTitle": "Buat agen API.AI sebelum Anda membuat Asisten Virtual Pelanggan.",
-        "boxDesc": "Bangun agen otomatis di API.AI dengan dialog bahasa alami. Asisten Virtual Pelanggan terintegrasi Anda menggunakan dialog bawaan untuk berinteraksi dengan pelanggan dan mengeskalasikan percakapan ke agen jika dibutuhkan.",
-        "boxRadioOne": "Tidak, saya tidak memiliki agen API.AI yang telah dikonfigurasikan",
+        "boxTitle": "Buat agen Dialogflow sebelum Anda membuat Asisten Virtual Pelanggan.",
+        "boxDesc": "Bangun agen otomatis di Dialogflow dengan dialog bahasa alami. Asisten Virtual Pelanggan terintegrasi Anda menggunakan dialog bawaan untuk berinteraksi dengan pelanggan dan mengeskalasikan percakapan ke agen jika dibutuhkan.",
+        "boxRadioOne": "Tidak, saya tidak memiliki agen Dialogflow yang telah dikonfigurasikan",
         "boxRadioOneDesc1": "Buka ",
-        "boxRadioApiai": "API.AI",
+        "boxRadioDialogflow": "Dialogflow",
         "boxRadioOneDesc2": " untuk membuat agen. Untuk memulai, lihat ",
-        "boxRadioApiaiDoc": "dokumentasi API.AI",
-        "boxRadioTwo": "Ya, saya memiliki agen API.AI yang telah dikonfigurasikan dan siap untuk melanjutkan",
-        "boxRadioTwoDesc": "Klik tanda panah untuk melanjutkan integrasi agen API.AI Anda dengan Asisten Virtual Pelanggan"
+        "boxRadioDialogflowDoc": "dokumentasi Dialogflow",
+        "boxRadioTwo": "Ya, saya memiliki agen Dialogflow yang telah dikonfigurasikan dan siap untuk melanjutkan",
+        "boxRadioTwoDesc": "Klik tanda panah untuk melanjutkan integrasi agen Dialogflow Anda dengan Asisten Virtual Pelanggan"
       },
       "dialogIntegration": {
         "title": "Konfigurasikan Integrasi Dialog",
-        "desc": "Tambahkan Intent Eskalasi yang telah dikonfigurasikan untuk melengkapi konfigurasi agen API.AI",
+        "desc": "Tambahkan Intent Eskalasi yang telah dikonfigurasikan untuk melengkapi konfigurasi agen Dialogflow",
         "boxStepOne": "Unduh file JSON Intent Eskalasi yang telah dikonfigurasikan.",
         "boxStepOneDesc": "Intent Eskalasi memungkinkan Asisten Virtual Pelanggan mengeskalasikan percakapan ke seorang age.",
-        "boxStepTwo": "Unggah Intent Eskalasi ke Agen API.AI.",
-        "boxStepTwoDesc": "Di halaman Intent agen API.AI Anda, klik elipsis vertikal (⋮) lalu pilih Unggah Intent. Unggah file escalation.json yang telah diunduh.",
-        "boxStepThree": "Sesuaikan Intent Eskalasi di API.AI.",
-        "boxStepThreeDesc": "Di halaman Intent agen API.AI Anda, pilih Intent Eskalasi. Ubah bidang User Says untuk mengubah ekspresi pengguna yang memicu eskalasi. Semua ekspresi pengguna harus:",
+        "boxStepTwo": "Unggah Intent Eskalasi ke Agen Dialogflow.",
+        "boxStepTwoDesc": "Di halaman Intent agen Dialogflow Anda, klik elipsis vertikal (⋮) lalu pilih Unggah Intent. Unggah file escalation.json yang telah diunduh.",
+        "boxStepThree": "Sesuaikan Intent Eskalasi di Dialogflow.",
+        "boxStepThreeDesc": "Di halaman Intent agen Dialogflow Anda, pilih Intent Eskalasi. Ubah bidang User Says untuk mengubah ekspresi pengguna yang memicu eskalasi. Semua ekspresi pengguna harus:",
         "boxBulletOne": "Menggunakan mode templat",
         "boxBulletTwo": "Berisi rujukan ke @sys.any:Topic",
         "boxStepThreeDescCont": "Simbol @ di samping ekspresi pengguna menunjukkan mode templat. Klik simbol ini untuk beralih mode. Jangan ubah tindakan GetExpert.",
@@ -7361,11 +7361,11 @@
       "accessToken": {
         "title": "Selesaikan Integrasi Dialog",
         "desc": "Selesaikan integrasi Anda untuk memungkinkan penggunaan dialog alami dalam interaksi pelanggan",
-        "boxDesc": "Setiap agen API.AI memiliki token akses klien unik yag disimpan di pengaturan agen. Salin token dari pengaturan agen API.AI yang telah dikonfigurasikan, masukkan di sini, lalu klik \"Validasi\" untuk memeriksa token sebelum Anda menyelesaikan integrasi dialog.",
-        "inputLabel": "Token Akses Klien API.AI",
+        "boxDesc": "Setiap agen Dialogflow memiliki token akses klien unik yag disimpan di pengaturan agen. Salin token dari pengaturan agen Dialogflow yang telah dikonfigurasikan, masukkan di sini, lalu klik \"Validasi\" untuk memeriksa token sebelum Anda menyelesaikan integrasi dialog.",
+        "inputLabel": "Token Akses Klien Dialogflow",
         "validateButtonText": "Validasi",
         "maxLengthError": "Token Akses Klien tidak boleh lebih panjang dari 128 karakter.",
-        "invalidTokenText": "Token akses klien API.AI tidak valid. Verifikasi token dan coba lagi."
+        "invalidTokenText": "Token akses klien Dialogflow tidak valid. Verifikasi token dan coba lagi."
       },
       "name": {
         "title": "Nama Asisten Virtual Pelanggan",

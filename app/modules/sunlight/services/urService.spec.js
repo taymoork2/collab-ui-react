@@ -37,7 +37,7 @@ describe(' URService', function () {
   it('should update default queue for default queueId', function () {
     var updateQueueRequest = {
       queueName: 'DEFAULT',
-      notificationUrls: 'https://pqm.produs1.ciscoccservice.com/pqm/v1/publishState',
+      notificationUrls: [],
       routingType: 'push',
     };
     $httpBackend.whenPUT(sunlightURQueueURUrl + '/' + queueId, updateQueueRequest).respond(200, queueDetails);
@@ -68,7 +68,7 @@ describe(' URService', function () {
     var createQueueRequest = {
       queueId: orgId,
       queueName: 'DEFAULT',
-      notificationUrls: 'https://notifs.produs1.ciscoccservice.com/notifs/v1/publish',
+      notificationUrls: [],
       routingType: 'pick',
     };
     $httpBackend.whenPOST(sunlightURQueueURUrl).respond(201);
@@ -82,7 +82,7 @@ describe(' URService', function () {
     var createQueueRequest = {
       queueId: orgId,
       queueName: 'DEFAULT',
-      notificationUrls: 'https://notifs.produs1.ciscoccservice.com/notifs/v1/publish',
+      notificationUrls: [],
       routingType: 'pick',
     };
     $httpBackend.whenPOST(sunlightURQueueURUrl).respond(500, errorData);

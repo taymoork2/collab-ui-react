@@ -1,7 +1,7 @@
 [{
   "pattern": "+14084744532",
   "uuid": "3f51ef5b-584f-42db-9ad8-8810b5e9e9e3",
-  "directoryNumber": "4532"
+  "directoryNumber": { "pattern": "4532" }
 }, {
   "pattern": "+14084744543",
   "uuid": "0bd715e8-ddaf-4096-9be2-e6cbcdd12f74",

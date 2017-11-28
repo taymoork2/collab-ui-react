@@ -1,5 +1,6 @@
 import { CommonReportService } from '../../partnerReports/commonReportServices/commonReport.service';
 import { ReportConstants } from '../../partnerReports/commonReportServices/reportConstants.service';
+import { ChartColors } from 'modules/core/config/chartColors';
 import {
   IActiveUserData,
   ITimespan,
@@ -24,7 +25,6 @@ export class DummySparkDataService {
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
-    private chartColors,
     private CommonReportService: CommonReportService,
     private ReportConstants: ReportConstants,
   ) {}
@@ -280,12 +280,12 @@ export class DummySparkDataService {
         callCondition: this.$translate.instant('callMetrics.audioCalls'),
         numCalls: 1000,
         percentage: 10,
-        color: this.chartColors.grayLightThree,
+        color: ChartColors.grayLightThree,
       }, {
         callCondition: this.$translate.instant('callMetrics.videoCalls'),
         numCalls: 9000,
         percentage: 90,
-        color: this.chartColors.grayLightTwo,
+        color: ChartColors.grayLightTwo,
       }],
       displayData: undefined,
       dummy: true,
