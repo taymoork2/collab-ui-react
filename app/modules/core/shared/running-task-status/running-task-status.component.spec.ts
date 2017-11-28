@@ -3,7 +3,6 @@ import runningTaskStatusModuleName from '../index';
 describe('Component: runningTaskStatus', () => {
 
   const RTS = '.rts-container';
-  const ANCHOR = 'a';
   const SPAN = 'span';
 
   beforeEach(function () {
@@ -11,9 +10,10 @@ describe('Component: runningTaskStatus', () => {
     this.injectDependencies(
       '$scope',
     );
+    this.$scope.anchorText = 'Background tasks running...';
     this.$scope.clickCallback = jasmine.createSpy('clickCallback');
     this.compileComponent('runningTaskStatus', {
-      anchorText: 'Background tasks running...',
+      anchorText: 'anchorText',
       hasRunningTask: true,
       clickCallback: 'clickCallback()',
     });
@@ -28,7 +28,7 @@ describe('Component: runningTaskStatus', () => {
   });
 
   it('click anchor tag should call clickCallback', function () {
-    this.view.find(ANCHOR).get(0).click();
+    this.view.find(RTS).click();
     expect(this.$scope.clickCallback).toHaveBeenCalled();
   });
 });
