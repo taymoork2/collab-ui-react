@@ -21,8 +21,12 @@ export class SearchTranslator {
   private currentLanguage: string;
 
   private updateLanguageIfNeeded() {
-    if (this.$translate && this.$translate.proposedLanguage() !== this.currentLanguage) {
-      this.currentLanguage = this.$translate.proposedLanguage();
+    if (!this.$translate) {
+      return;
+    }
+    const currentLanguage = this.$translate.use() || this.$translate.proposedLanguage();
+    if (_.isEmpty(this.csdmPartOfTranslationTable) || currentLanguage !== this.currentLanguage) {
+      this.currentLanguage = currentLanguage;
       const csdmTranslationTable = _.pickBy(this.$translate.getTranslationTable(),
         (_value, key: string) => {
           return _.startsWith(key, 'CsdmStatus') && (_.split(key, '.').length > 2);
