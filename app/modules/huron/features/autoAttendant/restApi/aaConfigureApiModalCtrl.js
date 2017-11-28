@@ -390,6 +390,9 @@
     }
 
     function callTestRestApiConfigs() {
+      vm.restApiRequest = '';
+      vm.restApiResponse = '';
+      vm.tableData = [];
       return RestApiService.testRestApiConfigs(JSON.stringify(updateRequestBody()))
         .then(function (data) {
           vm.restApiRequest = JSON.stringify(JSON.parse(data.request), null, 2);
@@ -482,22 +485,34 @@
 
     function createAssignmentTable() {
       var tempTableData = [];
-      _.forEach(JSON.parse(vm.restApiResponse), function (value, key) {
-        if (_.isString(value)) {
-          var obj = {};
-          obj.responseKey = key;
-          obj.responseValue = value;
-          obj.options = sessionVarOptions;
-          _.forEach(vm.variableSet, function (set) {
-            if (_.isEqual(set.value, key)) {
-              obj.selected = set.variableName;
-            }
-          });
-          tempTableData.push(obj);
-        }
-      });
+      var validJsonResponse = isValidJson(vm.restApiResponse);
+      if (validJsonResponse) {
+        _.forEach(validJsonResponse, function (value, key) {
+          if (_.isString(value)) {
+            var obj = {};
+            obj.responseKey = key;
+            obj.responseValue = value;
+            obj.options = sessionVarOptions;
+            _.forEach(vm.variableSet, function (set) {
+              if (_.isEqual(set.value, key)) {
+                obj.selected = set.variableName;
+              }
+            });
+            tempTableData.push(obj);
+          }
+        });
+      }
       vm.tableData = tempTableData;
     }
+
+    function isValidJson(jsonData) {
+      try {
+        return JSON.parse(jsonData);
+      } catch (exception) {
+        return false;
+      }
+    }
+
 
     function init() {
       $scope.schedule = aa_schedule;

@@ -461,6 +461,13 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         controller.stepNext();
         expect(controller.tableData).toEqual(result);
       });
+
+      it('tableData should be empty when restApiResponse is not valid', function () {
+        controller.restApiResponse = '<div></div>';
+        result = [];
+        controller.stepNext();
+        expect(controller.tableData).toEqual(result);
+      });
     });
 
     describe('should test the api configure modal wizard', function () {
