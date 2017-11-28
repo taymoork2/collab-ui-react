@@ -2,7 +2,7 @@
   {{:: $ctrl.subscription.subscriptionId }}
   <i class="icon toggle"
     ng-class="$ctrl.showContent ? 'icon-chevron-up': 'icon-chevron-down'"
-    ng-click="$ctrl.showContent = !$ctrl.showContent;"></i>
+    ng-click="$ctrl.recvClick()"></i>
 </div>
 <div class="row full flex-row row-licenses subscription__content" ng-show="$ctrl.showContent">
   <div class="small-4 columns column-paid column__messaging">

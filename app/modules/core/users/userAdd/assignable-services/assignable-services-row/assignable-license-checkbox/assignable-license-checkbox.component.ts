@@ -5,11 +5,10 @@ class AssignableLicenseCheckboxController implements ng.IComponentController {
   private itemId: string;
   private license: ILicenseUsage;
   private stateData: any;  // TODO: better type
+  private onUpdate: Function;
   public formItemId: string;
   public isSelected = false;
   public isDisabled = false;
-
-  public onUpdate: Function;
 
   /* @ngInject */
   constructor(

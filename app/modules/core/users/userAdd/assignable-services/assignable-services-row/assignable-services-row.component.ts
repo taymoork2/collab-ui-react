@@ -1,9 +1,12 @@
-import { ILicenseUsage } from 'modules/core/users/userAdd/assignable-services/shared';
+import { AssignableServicesItemCategory, ILicenseUsage, ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
 
 class AssignableServicesRowController implements ng.IComponentController {
 
-  public showContent = true;
-  private subscription: any;  // TODO: better type
+  public showContent: boolean;
+  private static readonly itemCategory = AssignableServicesItemCategory.SUBSCRIPTION;
+  private subscription: ISubscription;
+  private stateData: any;  // TODO: better type
+  private onUpdate: Function;
   private licenses: ILicenseUsage[];
   private basicMeetingLicenses: ILicenseUsage[];
   private advancedMeetingLicenses: ILicenseUsage[];
@@ -19,6 +22,9 @@ class AssignableServicesRowController implements ng.IComponentController {
     this.basicMeetingLicenses = this.getBasicMeetingLicenses();
     this.advancedMeetingLicenses = this.getAdvancedMeetingLicenses();
     this.advancedMeetingSiteUrls = this.getAdvancedMeetingSiteUrls();
+
+    const stateDataKey = `${AssignableServicesRowController.itemCategory}["${this.subscription.subscriptionId}"]`;
+    this.showContent = _.get(this.stateData, `${stateDataKey}.showContent`, true);
   }
 
   private getBasicMeetingLicenses(): ILicenseUsage[] {
@@ -51,6 +57,19 @@ class AssignableServicesRowController implements ng.IComponentController {
 
   public getTotalLicenseVolume(offerName: string): number {
     return this.LicenseUsageUtilService.getTotalLicenseVolume(offerName, this.licenses);
+  }
+
+  public recvClick(): void {
+    this.showContent = !this.showContent;
+    this.onUpdate({
+      $event: {
+        itemId: this.subscription.subscriptionId,
+        itemCategory: AssignableServicesRowController.itemCategory,
+        item: {
+          showContent: this.showContent,
+        },
+      },
+    });
   }
 }
 

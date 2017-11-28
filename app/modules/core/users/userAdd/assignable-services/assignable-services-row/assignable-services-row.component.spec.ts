@@ -10,41 +10,58 @@ describe('Component: assignableServicesRow:', () => {
     this.$scope.fakeSubscription = {
       subscriptionId: 'fake-subscriptionId-1',
     };
+    this.$scope.fakeStateData = {
+      SUBSCRIPTION: {
+        'fake-subscriptionId-1': {
+          showContent: false,
+        },
+      },
+    };
   });
 
   describe('primary behaviors (view):', () => {
-    it('should render with a subscription id', function () {
-      this.compileComponent('assignableServicesRow', {
-        subscription: 'fakeSubscription',
+    describe('initial state (ie. no previous state data passed in):', () => {
+      beforeEach(function () {
+        this.compileComponent('assignableServicesRow', {
+          subscription: 'fakeSubscription',
+        });
       });
-      expect(this.view.find('.subscription__header').length).toBe(1);
-      expect(this.view.find('.subscription__header')).toContainText('fake-subscriptionId-1');
+
+      it('should render with a subscription id', function () {
+        expect(this.view.find('.subscription__header').length).toBe(1);
+        expect(this.view.find('.subscription__header')).toContainText('fake-subscriptionId-1');
+      });
+
+      it('should have a viewable content area toggled by an icon', function () {
+        expect(this.view.find('.subscription__header .icon.toggle').length).toBe(1);
+        expect(this.view.find('.subscription__header .icon.toggle')).toHaveClass('icon-chevron-up');
+        expect(this.view.find('.subscription__content')).not.toHaveClass('ng-hide');
+        this.view.find('.subscription__header .icon.toggle').click();
+        expect(this.view.find('.subscription__header .icon.toggle')).toHaveClass('icon-chevron-down');
+        expect(this.view.find('.subscription__content')).toHaveClass('ng-hide');
+      });
+
+      it('should have at least 3 columns (4 if "isCareEnabled" is true)', function () {
+        expect(this.view.find('.subscription__content .column-paid').length).toBe(3);
+
+        this.$scope.isCareEnabled = true;
+        this.compileComponent('assignableServicesRow', {
+          subscription: 'fakeSubscription',
+          isCareEnabled: 'isCareEnabled',
+        });
+        expect(this.view.find('.subscription__content .column-paid').length).toBe(4);
+      });
     });
 
-    it('should have a viewable content area toggled by an icon', function () {
-      this.compileComponent('assignableServicesRow', {
-        subscription: 'fakeSubscription',
+    describe('with previous state data passed in:', () => {
+      it('should render a collapsed row if previous state has "showContent" set to false', function () {
+        this.compileComponent('assignableServicesRow', {
+          subscription: 'fakeSubscription',
+          stateData: 'fakeStateData',
+        });
+        expect(this.view.find('.subscription__header .icon.toggle')).toHaveClass('icon-chevron-down');
+        expect(this.view.find('.subscription__content')).toHaveClass('ng-hide');
       });
-      expect(this.view.find('.subscription__header .icon.toggle').length).toBe(1);
-      expect(this.view.find('.subscription__header .icon.toggle')).toHaveClass('icon-chevron-up');
-      expect(this.view.find('.subscription__content')).not.toHaveClass('ng-hide');
-      this.view.find('.subscription__header .icon.toggle').click();
-      expect(this.view.find('.subscription__header .icon.toggle')).toHaveClass('icon-chevron-down');
-      expect(this.view.find('.subscription__content')).toHaveClass('ng-hide');
-    });
-
-    it('should have at least 3 columns (4 if "isCareEnabled" is true)', function () {
-      this.compileComponent('assignableServicesRow', {
-        subscription: 'fakeSubscription',
-      });
-      expect(this.view.find('.subscription__content .column-paid').length).toBe(3);
-
-      this.$scope.isCareEnabled = true;
-      this.compileComponent('assignableServicesRow', {
-        subscription: 'fakeSubscription',
-        isCareEnabled: 'isCareEnabled',
-      });
-      expect(this.view.find('.subscription__content .column-paid').length).toBe(4);
     });
   });
 
@@ -78,6 +95,12 @@ describe('Component: assignableServicesRow:', () => {
       expect(this.controller.basicMeetingLicenses.length).toBe(1);  // ['CF']
       expect(this.controller.advancedMeetingLicenses.length).toBe(2);  // ['MC', 'CMR']
       expect(this.controller.advancedMeetingSiteUrls.length).toBe(1);  // ['fake-site-1']
+
+      this.compileComponent('assignableServicesRow', {
+        subscription: 'fakeSubscription',
+        stateData: 'fakeStateData',
+      });
+      expect(this.controller.showContent).toBe(false);
     });
 
     it('should pass through its calls to respective LicenseUsageUtilService methods', function () {
