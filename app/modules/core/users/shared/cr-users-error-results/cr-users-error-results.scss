@@ -8,7 +8,7 @@
 }
 
 cr-users-error-results {
-  @include keep-flex(column);
+  @include keep-flex-container(column);
 
   .user-error-results {
     &__title {
@@ -32,8 +32,8 @@ cr-users-error-results {
   }
 
   .error-table {
-    display: flex;
-    flex-direction: column;
+    @include flex-container(column);
+    overflow-y: auto; // needed for IE flex item to shrink
     @include table-border(1px);
 
     &__header {

@@ -2,10 +2,10 @@
 
 csv-upload-results {
 
-  @include keep-flex(column);
+  @include keep-flex-container(column);
 
   .csv-upload-results {
-    @include keep-flex(column);
+    @include keep-flex-container(column);
     padding: 1rem;
 
     &__title {
