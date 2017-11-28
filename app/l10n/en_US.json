@@ -1603,6 +1603,7 @@
     "submit": "Submit",
     "test": "Test",
     "to": "to",
+    "toggleData": "Toggle Data",
     "total": "Total",
     "trackingId": "Tracking Id: {{trackingId}}.",
     "tryAgain": "Try Again",

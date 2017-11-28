@@ -8,6 +8,7 @@ import featureMemberService from 'modules/huron/features/services';
 import noDirtyOverride from 'modules/call/features/shared/no-dirty-override';
 import phoneNumberModule from 'modules/huron/phoneNumber';
 import cardUtilsModule from 'modules/core/cards';
+import accessibilityModule from 'modules/core/accessibility';
 
 export * from './call-feature-member';
 export { ComponentType };
@@ -17,6 +18,7 @@ export default angular
     require('collab-ui-ng').default,
     require('angular-translate'),
     require('dragular'),
+    accessibilityModule,
     phoneNumberModule,
     memberService,
     featureMemberService,

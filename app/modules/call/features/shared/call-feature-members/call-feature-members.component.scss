@@ -17,6 +17,9 @@
 }
 
 .call-feature-members {
+  .icon.icon-tables.selected {
+    color: $color-blue-base;
+  }
   .search-add {
     display: inline-flex;
     align-items: inherit;
