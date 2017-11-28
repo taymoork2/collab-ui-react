@@ -1,4 +1,4 @@
-class AssignableServiceItemCheckboxController implements ng.IComponentController {
+class AssignableLicenseCheckboxController implements ng.IComponentController {
   private serviceItemId: string;
   private stateData: any;  // TODO: better type
   public formItemId: string;
@@ -32,9 +32,9 @@ class AssignableServiceItemCheckboxController implements ng.IComponentController
   }
 }
 
-export class AssignableServiceItemCheckboxComponent implements ng.IComponentOptions {
-  public controller = AssignableServiceItemCheckboxController;
-  public template = require('./assignable-service-item-checkbox.html');
+export class AssignableLicenseCheckboxComponent implements ng.IComponentOptions {
+  public controller = AssignableLicenseCheckboxController;
+  public template = require('./assignable-license-checkbox.html');
   public transclude = true;
   public bindings = {
     serviceItemId: '<',

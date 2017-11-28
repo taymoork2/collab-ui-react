@@ -1,6 +1,6 @@
 import moduleName from './index';
 
-describe('Component: assignableServiceItemCheckbox:', () => {
+describe('Component: assignableLicenseCheckbox:', () => {
   beforeEach(function() {
     this.initModules(moduleName);
     this.injectDependencies(
@@ -21,14 +21,14 @@ describe('Component: assignableServiceItemCheckbox:', () => {
   function initComponent(_transcludeContent) {
     const transcludeContent = _transcludeContent || '';
     this.compileTemplate(`
-      <assignable-service-item-checkbox
+      <assignable-license-checkbox
         service-item-id="fakeServiceItemId"
         l10n-label="fake-label"
         on-update="onUpdate()"
         state-data="stateData">
         ${transcludeContent}
-      </assignable-service-item-checkbox>`);
-    this.controller = this.view.controller('assignableServiceItemCheckbox');
+      </assignable-license-checkbox>`);
+    this.controller = this.view.controller('assignableLicenseCheckbox');
   }
 
   describe('primary behaviors (view):', () => {
