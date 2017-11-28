@@ -90,8 +90,8 @@ require('./_customer-list.scss');
       },
 
       license: function (a, b, rowA, rowB) {
-        var rowAUnavailable = !isLicenseInfoAvailable(rowA.entity.licenseList);
-        var rowBUnavailable = !isLicenseInfoAvailable(rowB.entity.licenseList);
+        var rowAUnavailable = !isLicenseInfoAvailable(rowA.entity);
+        var rowBUnavailable = !isLicenseInfoAvailable(rowB.entity);
 
         if (rowAUnavailable && rowBUnavailable) {
           return 0;
@@ -678,8 +678,8 @@ require('./_customer-list.scss');
       }
     }
 
-    function isLicenseInfoAvailable(licenses) {
-      return PartnerService.isLicenseInfoAvailable(licenses);
+    function isLicenseInfoAvailable(rowData) {
+      return PartnerService.isLicenseInfoAvailable(rowData);
     }
 
     function getLicenseObj(rowData, licenseTypeField) {
@@ -687,16 +687,16 @@ require('./_customer-list.scss');
     }
 
     function isLicenseTypeActive(rowData, licenseTypeField) {
-      return isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseActive(getLicenseObj(rowData, licenseTypeField));
+      return isLicenseInfoAvailable(rowData) && PartnerService.isLicenseActive(getLicenseObj(rowData, licenseTypeField));
     }
 
     function isLicenseTypeFree(rowData, licenseTypeField) {
-      return (isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField)) &&
+      return (isLicenseInfoAvailable(rowData) && PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField)) &&
         _.includes(Config.freeLicenses, licenseTypeField));
     }
 
     function isNoLicense(rowData, licenseTypeField) {
-      return (isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField)) &&
+      return (isLicenseInfoAvailable(rowData) && PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField)) &&
         !_.includes(Config.freeLicenses, licenseTypeField));
     }
 
@@ -705,7 +705,7 @@ require('./_customer-list.scss');
     }
 
     function getLicenseCountColumnText(rowData) {
-      if (!isLicenseInfoAvailable(rowData.licenseList)) {
+      if (!isLicenseInfoAvailable(rowData)) {
         return $translate.instant('common.notAvailable');
       }
       return '' + rowData.totalLicenses; // was not displaying '0' without the `'' + ` preceding
