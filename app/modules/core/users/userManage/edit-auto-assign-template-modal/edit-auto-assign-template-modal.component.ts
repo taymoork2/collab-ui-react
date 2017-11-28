@@ -30,7 +30,6 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
         this.sortedSubscriptions = _.sortBy(subscriptions, 'subscriptionId');
         this.stateData = {
           subscriptions: this.sortedSubscriptions,
-          selected: {},
         };
       });
   }
