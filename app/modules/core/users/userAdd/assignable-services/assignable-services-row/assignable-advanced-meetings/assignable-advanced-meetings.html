@@ -6,14 +6,14 @@
       l10n-label="{{:: 'subscriptions.licenseTypes.' + license.offerName }}"
       on-update="$ctrl.onUpdate({ $event: $event })"
       state-data="$ctrl.stateData"
-      ng-class="license.offerName === 'CMR' ? 'cs-input--nested-1' : ''">
-      <div ng-if="license.offerName === 'CMR'">
+      ng-class="license.offerName === $ctrl.OFFER_NAME.CMR ? 'cs-input--nested-1' : ''">
+      <div ng-if="license.offerName === $ctrl.OFFER_NAME.CMR">
         <usage-line
-          usage="$ctrl.getTotalLicenseUsage('CMR')"
-          volume="$ctrl.getTotalLicenseVolume('CMR')">
+          usage="$ctrl.getTotalLicenseUsage($ctrl.OFFER_NAME.CMR)"
+          volume="$ctrl.getTotalLicenseVolume($ctrl.OFFER_NAME.CMR)">
         </usage-line>
       </div>
-      <div ng-if="license.offerName !== 'CMR'">
+      <div ng-if="license.offerName !== $ctrl.OFFER_NAME.CMR">
         <advanced-meeting-license-description is-cloud-shared-meeting="$ctrl.isSharedMeetingsLicense(license)">
         </advanced-meeting-license-description>
         <advanced-meeting-site-url site-url="{{::license.siteUrl}}"></advanced-meeting-site-url>

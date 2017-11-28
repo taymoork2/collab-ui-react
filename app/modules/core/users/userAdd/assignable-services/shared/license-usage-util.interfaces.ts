@@ -1,4 +1,5 @@
-export type MeetingOfferName = 'CF' | 'CMR' | 'EC' | 'EE' | 'MC' | 'TC';
+import { OfferNameEnum } from 'modules/core/shared';
+
 export enum AssignableServicesItemCategory {
   LICENSE = 'LICENSE',
   SUBSCRIPTION = 'SUBSCRIPTION',
@@ -7,7 +8,7 @@ export enum AssignableServicesItemCategory {
 export interface ILicenseUsage {
   billingServiceId: string;
   licenseId: string;
-  offerName: MeetingOfferName;
+  offerName: OfferNameEnum;
   siteUrl: string;
 }
 

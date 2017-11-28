@@ -41,7 +41,7 @@ describe('Component: assignableServicesRow:', () => {
         expect(this.view.find('.subscription__content')).toHaveClass('ng-hide');
       });
 
-      it('should have at least 3 columns (4 if "isCareEnabled" is true)', function () {
+      it('should have at least 3 columns initially and 4 if "isCareEnabled" is true', function () {
         expect(this.view.find('.subscription__content .column-paid').length).toBe(3);
 
         this.$scope.isCareEnabled = true;

@@ -16,7 +16,7 @@ class AssignableLicenseCheckboxController implements ng.IComponentController {
   ) {}
 
   public $onInit(): void {
-    const licenseId = this.license!.licenseId;
+    const licenseId = this.license.licenseId;
     this.itemId = licenseId;
     this.formItemId = this.LicenseUsageUtilService.sanitizeIdForJs(licenseId);
 

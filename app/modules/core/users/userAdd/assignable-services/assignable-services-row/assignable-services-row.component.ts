@@ -1,8 +1,8 @@
 import { AssignableServicesItemCategory, ILicenseUsage, ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
+import { OfferName } from 'modules/core/shared';
 
 class AssignableServicesRowController implements ng.IComponentController {
 
-  public showContent: boolean;
   private static readonly itemCategory = AssignableServicesItemCategory.SUBSCRIPTION;
   private subscription: ISubscription;
   private stateData: any;  // TODO: better type
@@ -11,6 +11,8 @@ class AssignableServicesRowController implements ng.IComponentController {
   private basicMeetingLicenses: ILicenseUsage[];
   private advancedMeetingLicenses: ILicenseUsage[];
   private advancedMeetingSiteUrls: string[];
+  public showContent: boolean;
+  public OFFER_NAME = OfferName;
 
   /* @ngInject */
   constructor (
