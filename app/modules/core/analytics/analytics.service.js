@@ -174,17 +174,10 @@
           MEETING_SETTINGS: 'Service Setup: Attempt to setup Meeting Settings',
           SKIPPED_MEETING_SETTINGS: 'Service Setup: Clicked on skip for Meeting Settings',
           TRIAL_EXISTING_SITES: 'Service Setup: Use existing site checkbox clicked',
-          CLIENT_VERSION_RADIO: 'Service Setup: Client version radio selection made',
-          INVALID_WEBEX_SITE: 'Service Setup: WebEx Shallow validation: invalid site',
-          DUPLICATE_WEBEX_SITE: 'Service Setup: WebEx Shallow validation: duplicate site',
           SEND_CUSTOMER_EMAIL: 'Service Setup: Send customer email checkbox changed',
           DO_NOT_PROVISION: 'Service Setup: Do Not Provision button clicked',
-          VALIDATE_SITE_URL: 'Service Setup: Validate Site Url button clicked',
-          VALIDATE_TRANSFER_CODE: 'Service Setup: Transfer code validated',
-          NEW_SITE_ADDED: 'Service Setup: A new site was added',
-          REMOVE_SITE: 'Service Setup: Removed validated site',
-          TRANSFER_SITE_ADDED: 'Service Setup: Transfer site was added to sites list',
-          INVALID_TRANSFER_CODE: 'Service Setup: Transfer code/siteUrl combination invalid',
+          VALIDATE_SITE_URL: 'Service Setup: Validate Site Url button clicked', // 11/27 algendel - not used?
+          VALIDATE_TRANSFER_CODE: 'Service Setup: Transfer code validated', // 11/27 algendel - not used?
           CCASP_VALIDATION_FAILURE: 'Service Setup: CCASP audio partner validation succeeded',
           CCASP_VALIDATION_SUCCESS: 'Service Setup: CCASP audio partner validation succeeded',
           AUDIO_PARTNER_SELECTED: 'Service Setup: Audio partner selection made',
@@ -194,6 +187,19 @@
           PROVISION_WITHOUT_MEETING_SETTINGS_SUCCESS: 'Service Setup: Provisioned without Meeting Settings setup',
           PROVISION_WITHOUT_MEETING_SETTINGS_FAILURE: 'Service Setup: Provision without Meeting Settings call failed',
           FINISH_BUTTON_CLICK: 'Service Setup: Finish button clicked',
+        },
+      },
+      WEBEX_SITE_MANAGEMENT: {
+        name: 'Webex Site Management',
+        eventNames: {
+          TRANSFER_SITE_ADDED: 'Transfer site was added to sites list',
+          INVALID_TRANSFER_CODE: 'Transfer code/siteUrl combination invalid',
+          TRANSFER_CODE_CALL_FAILED: 'Transfer code call failed',
+          NEW_SITE_ADDED: 'A new site was added',
+          DUPLICATE_WEBEX_SITE: 'WebEx Shallow validation: duplicate site',
+          INVALID_WEBEX_SITE: 'WebEx Shallow validation: invalid site',
+          REMOVE_SITE: 'Removed validated site',
+          CLIENT_VERSION_RADIO: 'Client version radio selection made',
         },
       },
       VIRTUAL_ASSISTANT: {
@@ -235,6 +241,7 @@
       trackPremiumEvent: trackPremiumEvent,
       trackEdiscoverySteps: trackEdiscoverySteps,
       trackServiceSetupSteps: trackServiceSetupSteps,
+      trackWebExMgmntSteps: trackWebExMgmntSteps,
       trackPartnerActions: trackPartnerActions,
       trackTrialSteps: trackTrialSteps,
       trackUserOnboarding: trackUserOnboarding,
@@ -371,13 +378,7 @@
       if (!_.isString(eventName)) {
         return $q.reject(NO_EVENT_NAME);
       }
-      var adminType = '';
-
-      if ((Authinfo.isPartner() && !Authinfo.isCustomerLaunchedFromPartner()) || Authinfo.isPartnerSalesAdmin()) {
-        adminType = 'Partner';
-      } else {
-        adminType = 'Customer';
-      }
+      var adminType = _getAdminType();
 
       var properties = {
         subscriptionId: _.get(adminProperties, 'subscriptionId', 'N/A'),
@@ -389,6 +390,27 @@
       _.assignIn(properties, adminProperties);
 
       return trackEvent(eventName, properties);
+    }
+
+    /**
+     * WebEx Site Management: add/delete/redistribute liacenses
+     */
+    function trackWebExMgmntSteps(eventName, adminProperties) {
+      if (!_.isString(eventName)) {
+        return $q.reject(NO_EVENT_NAME);
+      }
+      eventName = sections.WEBEX_SITE_MANAGEMENT.name + ': ' + eventName;
+      var adminType = _._getAdminType();
+
+      var properties = {
+        subscriptionId: _.get(adminProperties, 'subscriptionId', 'N/A'),
+        loggedInUser: getLoggedInUser(),
+        userId: Authinfo.getUserId(),
+        adminSettingUp: adminType,
+        userOrgId: Authinfo.getUserOrgId(),
+      };
+      _.assignIn(properties, adminProperties);
+      //TODO: algendel 11/27/17 - once we have actual requirements for tracking, revisit for correctness and return trackEvent(eventName, properties);
     }
 
     /**
@@ -624,6 +646,14 @@
         return Authinfo.getPrimaryEmail();
       } else if (_.includes(Authinfo.getCustomerAdminEmail(), '@')) {
         return Authinfo.getCustomerAdminEmail();
+      }
+    }
+
+    function _getAdminType() {
+      if ((Authinfo.isPartner() && !Authinfo.isCustomerLaunchedFromPartner()) || Authinfo.isPartnerSalesAdmin()) {
+        return 'Partner';
+      } else {
+        return 'Customer';
       }
     }
   }
