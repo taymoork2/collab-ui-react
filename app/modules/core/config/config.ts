@@ -146,12 +146,13 @@ export class Config {
 
   // These can be used to access object properties for trials
   public readonly licenseObjectNames = [
-    'messaging',
-    'communications',
-    'care',
     'advanceCare',
-    'roomSystems',
+    'care',
+    'communications',
     'conferencing',
+    'messaging',
+    'roomSystems',
+    'sparkBoard',
     'webexCMR',
     'webexEEConferencing',
     'webexEventCenter',
