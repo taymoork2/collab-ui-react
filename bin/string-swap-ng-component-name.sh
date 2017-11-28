@@ -75,9 +75,9 @@ function swap_html_element_name {
     local dest_html_element_name="$2"
     local start_dir="$3"
     local results
-    results="$(grep -l -R "<\b${src_html_element_name}\b[^-]" "$start_dir")"
+    results="$(grep -l -R "<\b${src_html_element_name}\b[^-]\?" "$start_dir")"
     if [ -n "$results" ]; then
-        echo "$results" | xargs sed -i -E "s,<\b${src_html_element_name}\b([^-]),<${dest_html_element_name}\1,g"
+        echo "$results" | xargs sed -i -E "s,<\b${src_html_element_name}\b([^-]?),<${dest_html_element_name}\1,g"
     fi
     results="$(grep -l -R "<\/\b${src_html_element_name}\b[^-]" "$start_dir")"
     if [ -n "$results" ]; then
