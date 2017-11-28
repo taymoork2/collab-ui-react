@@ -1,18 +1,23 @@
 import userTaskManagerModalModuleName from './index';
 
 describe('Component: csvUploadResults', () => {
-
-  const PANEL_HEADER = '.flex-container.base-margin';
-  const PANEL_TITLE = 'h4';
-  const PROGRESSBAR = '.progressbar';
-  const IMPORT_STATUS = '.flex-item-no-resize.upload-progress.upload-complete';
-  const NEW_USER_BLOCK = '.stat.new-users';
-  const UPDATED_USER_BLOCK = '.stat.updated-users';
-  const ERROR_USER_BLOCK = '.stat.error-users';
-  const ERROR_TABLE = '.flex-container.upload-errors';
+  const PANEL_TITLE = 'h4.csv-upload-results__title';
+  const PROGRESSBAR = 'cr-progressbar';
+  const IMPORT_STATUS = '.csv-upload-results__description';
+  const USERS_TILE_TOTALS = 'cr-users-tile-totals';
+  const ERROR_LINE_BREAK = '.csv-upload-results__line-break';
+  const ERROR_TABLE = 'cr-users-error-results';
 
   beforeEach(function() {
-    this.initModules(userTaskManagerModalModuleName);
+    this.crProgressbar = this.spyOnComponent('crProgressbar');
+    this.crUsersErrorResults = this.spyOnComponent('crUsersErrorResults');
+    this.crUsersTileTotals = this.spyOnComponent('crUsersTileTotals');
+    this.initModules(
+      userTaskManagerModalModuleName,
+      this.crProgressbar,
+      this.crUsersErrorResults,
+      this.crUsersTileTotals,
+    );
     this.injectDependencies(
       '$scope',
       '$q',
@@ -27,7 +32,7 @@ describe('Component: csvUploadResults', () => {
     spyOn(this.UserTaskManagerService, 'cancelTask').and.returnValue(this.$q.resolve());
     spyOn(this.UserTaskManagerService, 'getUserDisplayAndEmail').and.returnValue(this.$q.resolve('User Me (user.me@gmail.com)'));
 
-    this.aTask = require('./test-tasks.json').csvUploadResultsTasks;
+    this.aTask = _.cloneDeep(require('./test-tasks.json').csvUploadResultsTasks);
     this.$scope.activeTask = this.aTask;
 
     this.compileComponent('csvUploadResults', {
@@ -35,38 +40,52 @@ describe('Component: csvUploadResults', () => {
     });
   });
 
-  describe('CsvUploadResults panel at init', () => {
-    it('should have required tags presented', function () {
-      expect(this.view.find(PANEL_HEADER)).toExist();
-      expect(this.view.find(PANEL_TITLE).get(0)).toHaveText('userManage.bulk.import.status');
+  it('should have title', function () {
+    expect(this.view.find(PANEL_TITLE)).toHaveText('userManage.bulk.import.status');
+  });
+
+  it('should have import description', function () {
+    expect(this.view.find(IMPORT_STATUS)).toExist();
+    expect(this.controller.startedBy).toBe('User Me (user.me@gmail.com)');
+  });
+
+  describe('crUsersTileTotals', () => {
+    it('should bind data from the active task', function () {
+      expect(this.view.find(USERS_TILE_TOTALS)).toExist();
+      expect(this.crUsersTileTotals.bindings[0].newTotal).toBe(10);
+      expect(this.crUsersTileTotals.bindings[0].updatedTotal).toBe(10);
+      expect(this.crUsersTileTotals.bindings[0].errorTotal).toBe(10);
+    });
+  });
+
+  describe('crProgressbar', () => {
+    it('should conditionally show progress while processing', function () {
+      expect(this.view.find(PROGRESSBAR)).not.toExist();
+      expect(this.crProgressbar.bindings.length).toBe(0);
+      this.controller.isProcessing = true;
+      this.$scope.$apply();
       expect(this.view.find(PROGRESSBAR)).toExist();
-      expect(this.view.find(IMPORT_STATUS)).toExist();
-      expect(this.view.find(NEW_USER_BLOCK)).toExist();
-      expect(this.view.find(UPDATED_USER_BLOCK)).toExist();
-      expect(this.view.find(ERROR_USER_BLOCK)).toExist();
+      expect(this.crProgressbar.bindings[0].progressbarValue).toBe(30);
+      expect(this.crProgressbar.bindings[0].progressbarFilename).toBe('100Users.csv');
+      expect(this.crProgressbar.bindings[0].progressbarIsProcessing).toBe(true);
+      expect(this.crProgressbar.bindings[0].progressbarLabel).toBeUndefined();
+
+      this.crProgressbar.bindings[0].progressbarOnCancel();
+      this.$scope.$apply(); // resolve modal promise success
+      expect(this.UserTaskManagerService.cancelTask).toHaveBeenCalledWith(this.$scope.activeTask.jobInstanceId);
+      expect(this.crProgressbar.bindings[0].progressbarLabel).toBe('common.cancelingEllipsis');
+    });
+  });
+
+  describe('crUsersErrorResults', () => {
+    it('should only show if error array contains elements', function () {
+      expect(this.view.find(ERROR_LINE_BREAK)).not.toExist();
       expect(this.view.find(ERROR_TABLE)).not.toExist();
       this.controller.userErrorArray = [{}];
       this.$scope.$apply();
+      expect(this.view.find(ERROR_LINE_BREAK)).toExist();
       expect(this.view.find(ERROR_TABLE)).toExist();
-    });
-  });
-
-  describe('CsvUploadResults panel at init', () => {
-    it('should have controller variables set', function () {
-      expect(this.controller.numNewUsers).toEqual(10);
-      expect(this.controller.numUpdatedUsers).toEqual(10);
-      expect(this.controller.numErroredUsers).toEqual(10);
-      expect(this.controller.processProgress).toEqual(30);
-      expect(this.controller.startedBy).toEqual('User Me (user.me@gmail.com)');
-      expect(this.controller.fileName).toEqual('100Users.csv');
-    });
-  });
-
-  describe('CsvUploadResults cancel a task', () => {
-    it('should have called UserTaskManagerService.cancelTask', function () {
-      this.controller.onCancelImport();
-      this.$scope.$apply();
-      expect(this.UserTaskManagerService.cancelTask).toHaveBeenCalledWith(this.$scope.activeTask.jobInstanceId);
+      expect(this.crUsersErrorResults.bindings[0].userErrorArray).toEqual(this.controller.userErrorArray);
     });
   });
 });
