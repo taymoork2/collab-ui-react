@@ -17,7 +17,7 @@
           ng-change="dctrl.onInputChange()"
           ng-keydown="dctrl.onSearchInputKeyDown($event)"
           type="text"
-          placeholder="{{::'spacesPage.deviceSearchPlaceholder' | translate}}"
+          placeholder="{{dctrl.getSearchPlaceholder()}}"
           ng-focus="dctrl.inputActive=true"
           ng-blur="dctrl.inputActive=false">
 

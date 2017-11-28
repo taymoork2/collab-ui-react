@@ -109,6 +109,10 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     this.searchChange();
   }
 
+  public getSearchPlaceholder() {
+    return this.$translate.instant(_.isEmpty(this.getBullets()) ? 'spacesPage.deviceSearchPlaceholder' : '');
+  }
+
   public setFocusToInputField() {
     angular.element('#searchFilterInput').focus();
   }
