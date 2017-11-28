@@ -239,10 +239,7 @@ describe('Controller: AABuilderMainCtrl', function () {
 
       spyOn(this.AACommonService, 'isMultiSiteEnabled').and.returnValue(true);
       spyOn(this.AutoAttendantLocationService, 'getDefaultLocation').and.returnValue(this.$q.resolve(defaultLoc));
-      spyOn(AutoAttendantLocationService, 'listLocations').and.returnValue(this.$q.resolve(locationList));
-      this.AutoAttendantLocationService.getDefaultLocation().then(
-        successSpy
-      );
+      this.AutoAttendantLocationService.getDefaultLocation().then(successSpy);
       this.AANotificationService.error = jasmine.createSpy('error');
 
       this.controller.getSystemTimeZone();
@@ -250,6 +247,7 @@ describe('Controller: AABuilderMainCtrl', function () {
 
       var args = successSpy.calls.mostRecent().args;
       expect(args[0].timeZone).toBe(defaultLoc.timeZone);
+    });
 
     it('populateRouitngPrefix', function () {
       var locationList = {
