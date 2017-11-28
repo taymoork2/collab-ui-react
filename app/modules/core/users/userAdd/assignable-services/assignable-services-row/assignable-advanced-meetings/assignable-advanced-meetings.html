@@ -2,7 +2,7 @@
   <div translate="firstTimeWizard.advancedMeetings" class="license__category"></div>
   <div ng-repeat="license in $ctrl.licenses track by license.licenseId">
     <assignable-license-checkbox
-      service-item-id="license.licenseId"
+      license="license"
       l10n-label="{{:: 'subscriptions.licenseTypes.' + license.offerName }}"
       on-update="$ctrl.onUpdate({ $event: $event })"
       state-data="$ctrl.stateData"

@@ -1,5 +1,9 @@
+import { ILicenseUsage, AssignableServicesItemCategory } from 'modules/core/users/userAdd/assignable-services/shared';
+
 class AssignableLicenseCheckboxController implements ng.IComponentController {
-  private serviceItemId: string;
+  private static readonly itemCategory = AssignableServicesItemCategory.LICENSE;
+  private itemId: string;
+  private license: ILicenseUsage;
   private stateData: any;  // TODO: better type
   public formItemId: string;
   public isSelected = false;
@@ -13,20 +17,29 @@ class AssignableLicenseCheckboxController implements ng.IComponentController {
   ) {}
 
   public $onInit(): void {
-    this.formItemId = this.LicenseUsageUtilService.sanitizeIdForJs(this.serviceItemId);
+    const licenseId = this.license!.licenseId;
+    this.itemId = licenseId;
+    this.formItemId = this.LicenseUsageUtilService.sanitizeIdForJs(licenseId);
 
     // notes:
-    // - 'serviceItemId' can contain period chars ('.')
+    // - 'licenseId' can contain period chars ('.')
     // - so we wrap interpolated value in double-quotes to prevent unintended deep property creation
-    this.isSelected = _.get(this.stateData, `items["${this.serviceItemId}"].isSelected`);
-    this.isDisabled = _.get(this.stateData, `items["${this.serviceItemId}"].isDisabled`);
+    const stateDataKey = `${AssignableLicenseCheckboxController.itemCategory}["${licenseId}"]`;
+    this.isSelected = _.get(this.stateData, `${stateDataKey}.isSelected`);
+    this.isDisabled = _.get(this.stateData, `${stateDataKey}.isDisabled`);
   }
 
   public recvChange(): void {
     this.onUpdate({
       $event: {
-        itemId: this.serviceItemId,
-        item: _.pick(this, ['isSelected', 'isDisabled']),
+        itemId: this.itemId,
+        itemCategory: AssignableLicenseCheckboxController.itemCategory,
+
+        // notes:
+        // - for convenience, we include the 'license' property in the callback as well
+        // - this allows for observers looking only at the top-level 'stateData' property to know
+        //   which licenses were selected
+        item: _.pick(this, ['isSelected', 'isDisabled', 'license']),
       },
     });
   }
@@ -37,7 +50,7 @@ export class AssignableLicenseCheckboxComponent implements ng.IComponentOptions 
   public template = require('./assignable-license-checkbox.html');
   public transclude = true;
   public bindings = {
-    serviceItemId: '<',
+    license: '<',
     l10nLabel: '@',
     onUpdate: '&',
     stateData: '<',

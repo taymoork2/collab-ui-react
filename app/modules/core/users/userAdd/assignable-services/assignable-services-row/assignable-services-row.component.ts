@@ -37,16 +37,12 @@ class AssignableServicesRowController implements ng.IComponentController {
     return this.LicenseUsageUtilService.filterLicenses(filterOptions, this.licenses);
   }
 
-  public findLicenseIdForOfferName(offerName: string): string | undefined {
-    return this.LicenseUsageUtilService.findLicenseIdForOfferName(offerName, this.licenses);
+  public findLicenseForOfferName(offerName: string): ILicenseUsage | undefined {
+    return this.LicenseUsageUtilService.findLicense({ offerName }, this.licenses);
   }
 
   public hasLicensesWith(filterOptions: Object): boolean {
     return this.LicenseUsageUtilService.hasLicensesWith(filterOptions, this.licenses);
-  }
-
-  public hasLicenseWithAnyOfferName(offerNameOrOfferNames: string|string[]): boolean {
-    return this.LicenseUsageUtilService.hasLicenseWithAnyOfferName(offerNameOrOfferNames, this.licenses);
   }
 
   public getTotalLicenseUsage(offerName: string): number {

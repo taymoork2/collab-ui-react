@@ -86,7 +86,6 @@ describe('Component: assignableServicesRow:', () => {
       spyOn(this.LicenseUsageUtilService, 'getAdvancedMeetingSiteUrls');
       spyOn(this.LicenseUsageUtilService, 'filterLicenses');
       spyOn(this.LicenseUsageUtilService, 'hasLicensesWith');
-      spyOn(this.LicenseUsageUtilService, 'hasLicenseWithAnyOfferName');
       spyOn(this.LicenseUsageUtilService, 'getTotalLicenseUsage');
       spyOn(this.LicenseUsageUtilService, 'getTotalLicenseVolume');
       this.compileComponent('assignableServicesRow', {
@@ -107,9 +106,6 @@ describe('Component: assignableServicesRow:', () => {
 
       this.controller.hasLicensesWith({ foo: 'bar' });
       expect(this.LicenseUsageUtilService.hasLicensesWith).toHaveBeenCalledWith({ foo: 'bar' }, this.controller.licenses);
-
-      this.controller.hasLicenseWithAnyOfferName('foo');
-      expect(this.LicenseUsageUtilService.hasLicenseWithAnyOfferName).toHaveBeenCalledWith('foo', this.controller.licenses);
 
       this.controller.getTotalLicenseUsage('foo');
       expect(this.LicenseUsageUtilService.getTotalLicenseUsage).toHaveBeenCalledWith('foo', this.controller.licenses);

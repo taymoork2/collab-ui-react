@@ -1,4 +1,8 @@
 export type MeetingOfferName = 'CF' | 'CMR' | 'EC' | 'EE' | 'MC' | 'TC';
+export enum AssignableServicesItemCategory {
+  LICENSE = 'LICENSE',
+  SUBSCRIPTION = 'SUBSCRIPTION',
+}
 
 export interface ILicenseUsage {
   billingServiceId: string;
