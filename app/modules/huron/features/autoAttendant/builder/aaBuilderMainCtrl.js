@@ -894,6 +894,11 @@
         });
     }
 
+    function setLoadingAndFocus() {
+      setLoadingDone();
+      AccessibilityService.setFocus($element, '.aa-name-edit', 2000);
+    }
+
     //load the feature toggle prior to creating the elements
     function activate() {
       setUpFeatureToggles(false).then(assignFeatureToggles).finally(init);
@@ -926,12 +931,10 @@
         vm.aaModel.aaRecord = undefined;
         vm.selectAA(aaName);
         if (AACommonService.isMultiSiteEnabled()) {
-          populateRoutingLocation()
-            .then(setLoadingDone());
+          populateRoutingLocation().then(setLoadingAndFocus());
         } else {
-          setLoadingDone();
+          setLoadingAndFocus();
         }
-        AccessibilityService.setFocus($element, '.aa-name-edit', 2000);
       });
     }
 

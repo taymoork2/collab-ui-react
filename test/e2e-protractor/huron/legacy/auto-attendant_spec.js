@@ -42,7 +42,7 @@ describe('Huron Auto Attendant', function () {
     });
 
     // TEST CASES
-    it('should navigate to AA landing page and create AA', function () {
+    it('should navigate to AA landing page and create AA in a MultiSite enabled tenant', function () {
 
       // click new feature
       utils.click(autoattendant.newFeatureButton);
@@ -72,7 +72,7 @@ describe('Huron Auto Attendant', function () {
 
     }, 120000);
 
-    it('should add Dial By Extension via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+    it('should add Dial By Extension (in MultiSite Enabled tenant) via New Step action selection to the new auto attendant named' + deleteUtils.testAAName + '"', function () {
 
       // We are depending on menu order for this test, so if the Add New Step menu gets new steps or gets
       // rearranged this will break - but again it will fail immediately so it should be clear what's going on.
@@ -87,7 +87,6 @@ describe('Huron Auto Attendant', function () {
 
       autoattendant.scrollIntoView(autoattendant.dialByExtension);
 
-      // utils.expectIsDisplayed(autoattendant.dialByExtension);
 
       utils.click(autoattendant.dialByMessageOptions);
       utils.click(autoattendant.dialBySayMessageOption);
@@ -129,7 +128,7 @@ describe('Huron Auto Attendant', function () {
 
     }, 120000);
 
-    it('should close AA edit and return to landing page', function () {
+    it('should close AA (from the MultiSite enabled tenant) edit and return to landing page and then logout from this tenant', function () {
 
       utils.click(autoattendant.closeEditButton);
 
