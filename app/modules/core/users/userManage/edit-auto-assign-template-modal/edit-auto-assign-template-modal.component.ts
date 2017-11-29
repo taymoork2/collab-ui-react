@@ -30,7 +30,6 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
         this.sortedSubscriptions = _.sortBy(subscriptions, 'subscriptionId');
         this.stateData = {
           subscriptions: this.sortedSubscriptions,
-          selected: {},
         };
       });
   }
@@ -52,14 +51,15 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
 
   public recvUpdate($event): void {
     const itemId = _.get($event, 'itemId');
+    const itemCategory = _.get($event, 'itemCategory');
     const item = _.get($event, 'item');
-    if (!itemId || !item) {
+    if (!itemId || !itemCategory || !item) {
       return;
     }
     // notes:
     // - item id can contain potentially period chars ('.')
     // - so we wrap interpolated value in double-quotes to prevent unintended deep property creation
-    _.set(this.stateData, `items["${itemId}"]`, item);
+    _.set(this.stateData, `${itemCategory}["${itemId}"]`, item);
   }
 }
 

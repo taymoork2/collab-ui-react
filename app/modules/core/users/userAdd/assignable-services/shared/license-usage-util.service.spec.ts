@@ -141,21 +141,6 @@ describe('LicenseUsageUtilService:', () => {
     });
   });
 
-  describe('hasLicenseWithAnyOfferName(): ', () => {
-    it('should return true if any license is found with an "offerName" matching the first arg (or any value in the first arg if it is a list), false otherwise', function () {
-      const fakeLicenses = [{ offerName: 'foo' }];
-      let result = this.LicenseUsageUtilService.hasLicenseWithAnyOfferName('foo', fakeLicenses);
-      expect(result).toBe(true);
-
-      result = this.LicenseUsageUtilService.hasLicenseWithAnyOfferName('baz', fakeLicenses);
-      expect(result).toBe(false);
-
-      fakeLicenses.push({ offerName: 'bar' });
-      result = this.LicenseUsageUtilService.hasLicenseWithAnyOfferName(['baz', 'bar'], fakeLicenses);
-      expect(result).toBe(true);
-    });
-  });
-
   describe('getTotalLicenseUsage(): ', () => {
     it('should return sum total of the "usage" property for all licenses with matching "offerName" property', function () {
       const fakeLicenses = [{ offerName: 'foo', usage: 0 }];

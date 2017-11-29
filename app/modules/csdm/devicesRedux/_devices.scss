@@ -2,6 +2,7 @@
 @import '~collab-ui/scss/settings/typography';
 @import '~collab-ui/scss/tools/placeholders/page-layout';
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~collab-ui/scss/tools/mixins/easing';
 @import '../../../styles/variables';
 
 
@@ -34,9 +35,6 @@
       align-self: flex-start;
     }
     align-items: center;
-    device-search {
-      flex-grow: 1;
-    }
     .graphCarousel {
       position: relative;
       height: 160px;
@@ -100,6 +98,7 @@
     }
     .new-export {
       align-self: flex-start;
+      flex-grow: 1;
     }
   }
 
@@ -406,7 +405,7 @@
         border-radius: 4px;
         height: 100%;
         width: 430px;
-        padding-right: 32px;
+        padding: 4px 32px 4px 24px;
         margin-right: 1rem;
 
         > input {
@@ -420,9 +419,9 @@
           background: inherit;
           padding: 8px 1px 7px 0;
           margin-left: 4px;
-          margin-bottom: 3px;
+          margin-bottom: 0;
           border: none;
-          height: 32px;
+          height: 22px;
           display: inline-block;
           @include easing-transition(width, 500ms, $easeOutQuint);
           &:focus {
@@ -439,12 +438,15 @@
           margin-left: 8px;
         }
         > i.icon-search {
-          margin-right: 4px;
+          position: absolute;
+          left: 0;
+          top: 7px;
         }
         > i.clear {
           color: $gray-base;
           left: auto;
           right: 11px;
+          top:7px;
           position: absolute;
         }
       }
@@ -456,9 +458,8 @@
         color: $gray;
         i {
           font-size: 14px;
-          border: solid 1px;
           border-radius: 60%;
-          border-color: transparent;
+          border: 1px solid transparent;
           &:hover {
             border-color: $gray-light;
           }
@@ -524,35 +525,40 @@
 
     .bullet {
       display: inline-block;
-      background-color: $gray-dark-2;
-      border-radius: 0.3rem;
-      color: $gray-light;
-      font-size: 0.875rem;
-      line-height: 2;
+      background-color: $gray-light-3;
+      border-radius: 10px;
+      span {
+        font-size: 0.875rem;
+        line-height: 1rem;
+      }
+      color: $gray-dark-2;
       .field-descriptor {
-        color: $white;
+        color: $gray-dark-1;
       }
       .collection-operator {
-        color: $white;
-        padding: 0px;
+        color: $gray-dark-1;
+        padding: 0;
       }
-      .icon-remove {
-        top: -2px;
-        left: 5px;
+      .bullet-close {
+        margin-left: 8px;
+        margin-right: 2px;
+        align-self: center;
+        line-height: 0.75rem;
+        .icon-close {
+          font-size: 0.75rem;
+        }
       }
     }
     .bullet_toplevel {
-      display: block;
-      margin: 4px;
-      padding: 0 7px;
+      display: flex;
+      margin: 2px 4px;
+      padding: 3px 5px 1px 10px;
     }
     .bullet_edited {
       display: none;
       color: $black;
       background-color: $gray-light;
-      border-color: $gray-dark;
-      border-width: 2px;
-      border-style: dotted;
+      border: 2px dotted $gray-dark;
     }
   }
 

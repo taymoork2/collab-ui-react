@@ -1,4 +1,5 @@
 import { ILicenseRequestItem, IUserEntitlementRequestItem, IAutoAssignTemplateRequestPayload } from 'modules/core/users/shared';
+import { AssignableServicesItemCategory } from 'modules/core/users/userAdd/assignable-services/shared';
 import { LicenseChangeOperation } from 'modules/core/users/shared/onboard.interfaces';
 
 class EditSummaryAutoAssignTemplateModalController implements ng.IComponentController {
@@ -58,10 +59,10 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
   }
 
   private mkLicensesPayload(): ILicenseRequestItem[] {
-    if (_.isEmpty(this.stateData.items)) {
+    if (_.isEmpty(_.get(this.stateData, AssignableServicesItemCategory.LICENSE))) {
       return [];
     }
-    const selectedLicenses = _.get(this.stateData, 'items');
+    const selectedLicenses = _.get(this.stateData, AssignableServicesItemCategory.LICENSE);
     const result = _.map(_.keys(selectedLicenses), (licenseId: string) => {
       return <ILicenseRequestItem>{
         id: licenseId,
@@ -73,7 +74,7 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
   }
 
   private mkUserEntitlementsPayload(): IUserEntitlementRequestItem[] {
-    if (_.isEmpty(this.stateData.items)) {
+    if (_.isEmpty(_.get(this.stateData, AssignableServicesItemCategory.LICENSE))) {
       return [];
     }
 

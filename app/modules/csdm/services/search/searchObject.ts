@@ -90,6 +90,9 @@ export class SearchObject {
       this.from = 0;
       this.hasError = false;
       this.lastGoodQuery = _.cloneDeep(this.parsedQuery);
+      if (query === '' && !alreadyParsedQuery) {
+        this.workingElementText = '';
+      }
     } catch (error) {
       this.hasError = true;
     }
@@ -143,6 +146,7 @@ export class SearchObject {
         this.addParsedSearchElement(alreadyEdited, false);
       }
     }
+    this.workingElementText = '';
   }
 
   public static findFirstElementMatching(element: SearchElement, matchFunction: (se: SearchElement) => boolean): SearchElement | null {
