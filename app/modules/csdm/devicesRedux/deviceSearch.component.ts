@@ -142,17 +142,19 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     }, DeviceSearch.SEARCH_DELAY_MS);
   }
 
-  public selectSuggestion = (suggestion: ISuggestion) => {
+  public selectSuggestion(suggestion: ISuggestion | null) {
     if (suggestion) {
       this.searchObject.setWorkingElementText(suggestion.searchString);
       if (suggestion.isFieldSuggestion) {
         this.searchInput = suggestion.searchString;
-      } else {
-        this.searchObject.submitWorkingElement();
-        this.searchInput = '';
-        this.lastSearchInput = '';
+        this.searchChange();
+        this.suggestions.updateBasedOnInput(this.searchObject);
+        return;
       }
     }
+    this.searchObject.submitWorkingElement();
+    this.searchInput = '';
+    this.lastSearchInput = '';
     this.searchChange();
     this.suggestions.updateBasedOnInput(this.searchObject);
   }
@@ -176,9 +178,8 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
           this.showSuggestions = false;
           break;
         case KeyCodes.ENTER:
-          const activeSuggestion = this.suggestions.getActiveSuggestion();
-          if (activeSuggestion) {
-            this.selectSuggestion(activeSuggestion);
+          if (!this.searchObject.hasError) {
+            this.selectSuggestion(this.suggestions.getActiveSuggestion());
           }
       }
     }
