@@ -497,7 +497,7 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
 
         //valid url
         controller.url = { testURL: 'testURL' };
-        expect(controller.isNextDisabled()).toEqual(false);
+        expect(controller.isNextDisabled()).toEqual(true);
 
         //not empty but not valid url
         controller.url = '<br class="ng-scope">';
