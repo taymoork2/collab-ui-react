@@ -187,6 +187,7 @@
     require('modules/hercules/services/l2sip-service').default,
     require('modules/hercules/services/resource-group.service').default,
     require('modules/hercules/services/service-descriptor.service').default,
+    require('modules/hercules/services/uri-verification-service').default,
     require('modules/hercules/services/ucc-service').default,
     require('modules/hercules/services/uss.service').default,
   ]);

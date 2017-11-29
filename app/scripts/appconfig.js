@@ -2630,14 +2630,12 @@
           .state('place-overview.hybrid-services-squared-fusion-uc', {
             views: {
               'side-panel-container@place-overview': {
-                template: require('modules/hercules/user-sidepanel/hybrid-call-service-place-settings/callServicePlaceSettings.template.html'),
-                controller: 'CallServicePlaceSettingsCtrl',
+                template: require('modules/squared/places/overview/hybrid-call-service-place-settings/hybridCallServicePlaceSettings.template.html'),
+                controller: 'HybridCallServicePlaceSettingsCtrl',
               },
             },
             data: {},
             params: {
-              extensionId: {},
-              extensions: {},
               editService: {},
               getCurrentPlace: {},
             },
