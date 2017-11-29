@@ -235,18 +235,54 @@ describe('Controller: AABuilderMainCtrl', function () {
         callerIdNumber: null,
         callerId: null,
       };
-
       var successSpy = jasmine.createSpy('success');
 
       spyOn(this.AACommonService, 'isMultiSiteEnabled').and.returnValue(true);
       spyOn(this.AutoAttendantLocationService, 'getDefaultLocation').and.returnValue(this.$q.resolve(defaultLoc));
       this.AutoAttendantLocationService.getDefaultLocation().then(successSpy);
+      this.AANotificationService.error = jasmine.createSpy('error');
 
       this.controller.getSystemTimeZone();
       this.$scope.$apply();
 
       var args = successSpy.calls.mostRecent().args;
       expect(args[0].timeZone).toBe(defaultLoc.timeZone);
+    });
+
+    it('populateRouitngPrefix', function () {
+      var locationList = {
+        uuid: 'abc',
+        name: 'testLocation1',
+        locations: [{ routingPrefix: '6100' }],
+        defaultLocation: 'false',
+        userCount: 'null',
+        placeCount: 'null',
+        url: 'https://cmi.huron-int.com/api/v2/customers/abc/locations/abc',
+      };
+      spyOn(this.AACommonService, 'isMultiSiteEnabled').and.returnValue(true);
+      spyOn(this.AutoAttendantLocationService, 'listLocations').and.returnValue(this.$q.resolve(locationList));
+      this.controller.populateRoutingLocation();
+      this.$scope.$apply();
+      expect(this.controller.ui.routingPrefixOptions).toEqual(['6100']);
+    });
+  });
+
+  describe('Error Notification for while populating routing locations', function () {
+    it('populateRoutingLocation', function () {
+      var successSpy = jasmine.createSpy('success');
+      spyOn(this.AACommonService, 'isMultiSiteEnabled').and.returnValue(true);
+      spyOn(this.AutoAttendantLocationService, 'listLocations').and.returnValue(this.$q.reject({
+        statusText: 'server error',
+        status: 500,
+      }));
+      this.AutoAttendantLocationService.getDefaultLocation().then(
+        successSpy
+      );
+      this.AANotificationService.error = jasmine.createSpy('error');
+
+      this.controller.populateRoutingLocation();
+      this.$scope.$apply();
+      expect(this.AANotificationService.error).toHaveBeenCalled();
     });
   });
 
