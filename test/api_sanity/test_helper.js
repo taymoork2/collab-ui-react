@@ -155,7 +155,7 @@ var auth = {
   },
   'sqtest-admin': {
     user: 'sqtest-admin@squared.example.com',
-    pass: 'P@ssword123',
+    pass: 'C1sco123!!',
     org: '584cf4cd-eea7-4c8c-83ee-67d88fc6eab5',
   },
   'sso-e2e-test-org': {
