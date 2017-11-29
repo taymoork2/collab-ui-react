@@ -894,11 +894,6 @@
         });
     }
 
-    function setLoadingAndFocus() {
-      setLoadingDone();
-      AccessibilityService.setFocus($element, '.aa-name-edit', 2000);
-    }
-
     //load the feature toggle prior to creating the elements
     function activate() {
       setUpFeatureToggles(false).then(assignFeatureToggles).finally(init);
@@ -931,9 +926,13 @@
         vm.aaModel.aaRecord = undefined;
         vm.selectAA(aaName);
         if (AACommonService.isMultiSiteEnabled()) {
-          populateRoutingLocation().then(setLoadingAndFocus());
+          populateRoutingLocation().then(function () {
+            setLoadingDone();
+            AccessibilityService.setFocus($element, '.aa-name-edit', 2000);
+          });
         } else {
-          setLoadingAndFocus();
+          setLoadingDone();
+          AccessibilityService.setFocus($element, '.aa-name-edit', 2000);
         }
       });
     }
