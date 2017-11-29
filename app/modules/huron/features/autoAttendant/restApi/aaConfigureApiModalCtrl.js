@@ -81,6 +81,7 @@
     vm.tableData = [];
     vm.isDynamicsValueUpdated = isDynamicsValueUpdated;
     vm.onBasicAuthSlider = onBasicAuthSlider;
+    vm.displayWarning = displayWarning;
     /////////////////////
 
     $scope.$on('CE Updated', function () {
@@ -181,6 +182,17 @@
       } else {
         vm.username = lastSavedUsername;
       }
+    }
+
+    function displayWarning() {
+      // We have to bind the AuthButton status with the username
+      // field validation. It's required as the moment the
+      // authButton goes false, the username is set to empty which
+      // causes the warning red flag.
+      if (vm.basicAuthButton && vm.username !== '') {
+        return true;
+      }
+      return false;
     }
 
     function save() {
