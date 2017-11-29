@@ -1,6 +1,6 @@
 import { Notification } from 'modules/core/notifications';
 import { IToolkitModalService } from 'modules/core/modal';
-import { IConnectorAlarm, ICluster, ConnectorMaintenanceMode, ConnectorType, IHost, ClusterTargetType, ConnectorState, IExtendedClusterFusion, IConnectorExtendedProperties } from 'modules/hercules/hybrid-services.types';
+import { IConnectorAlarm, ICluster, ConnectorMaintenanceMode, ConnectorType, IHost, ClusterTargetType, ConnectorState, IExtendedClusterFusion, IConnectorExtendedProperties, IExtendedConnector } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
@@ -8,6 +8,7 @@ export interface ISimplifiedConnector {
   alarms: IConnectorAlarm[];
   connectorType: ConnectorType;
   hasUpgradeAvailable: boolean;
+  upgradesAutomatically: boolean;
   id: string;
   maintenanceMode: ConnectorMaintenanceMode;
   originalState: ConnectorState;
@@ -175,7 +176,8 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
               const simplifiedConnector: ISimplifiedConnector = {
                 alarms: connector.alarms,
                 connectorType: connector.connectorType,
-                hasUpgradeAvailable: connector.extendedProperties.hasUpgradeAvailable,
+                hasUpgradeAvailable: this.hasUpgradeAvailable(connector),
+                upgradesAutomatically: this.upgradesAutomatically(connector),
                 id: connector.id,
                 maintenanceMode: connector.extendedProperties.maintenanceMode,
                 originalState: connector.state,
@@ -208,6 +210,20 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
       .uniq()
       .value();
     return result;
+  }
+
+  private upgradesAutomatically(connector: IExtendedConnector): boolean {
+    return this.isHybridContextConnector(connector);
+  }
+
+  private hasUpgradeAvailable(connector: IExtendedConnector): boolean {
+    return !this.upgradesAutomatically(connector)
+      ? connector.extendedProperties.hasUpgradeAvailable
+      : false;
+  }
+
+  private isHybridContextConnector(connector: IExtendedConnector): boolean {
+    return (connector.connectorType === 'cs_mgmt' || connector.connectorType === 'cs_context');
   }
 }
 
