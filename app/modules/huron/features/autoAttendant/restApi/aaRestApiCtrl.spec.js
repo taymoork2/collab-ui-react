@@ -90,6 +90,7 @@ describe('Controller: AARestApiCtrl', function () {
         htmlModel: '%3Caa-insertion-element%20element-text%3D%22Original-Caller-Number%22%20read-as%3D%22%22%20element-id%3D%22configureApiUrl%22%20aa-Element-Type%3D%22REST%22%3E%3C%2Faa-insertion-element%3E',
       }];
       actionEntry.method = 'GET';
+      actionEntry.username = 'testUsername';
       aaUiModel[schedule].entries[0].addAction(actionEntry);
       var controller = $controller('AARestApiCtrl', {
         $scope: $scope,
@@ -100,6 +101,7 @@ describe('Controller: AARestApiCtrl', function () {
       $scope.$apply();
       expect(_.get(controller, 'dynamicValues[0].model', '')).toBe('Original-Caller-Number');
       expect(_.get(controller, 'dynamicValues[0].htmlModel', '')).not.toBeNull();
+      expect(_.get(controller, 'menuEntry.actions[0].username')).toBe('testUsername');
       expect(AACommonService.setRestApiStatus).toHaveBeenCalled();
       expect(AACommonService.setIsValid).toHaveBeenCalled();
     });

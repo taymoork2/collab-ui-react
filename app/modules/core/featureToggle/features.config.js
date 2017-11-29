@@ -121,6 +121,7 @@ module.exports = {
   huronAADynannounce: 'huron-aa-dynannounce',
   huronAAMediaUpload: 'huron-aa-mediaupload',
   huronAARestApi: 'huron-aa-restapi',
+  huronAARestApiPhase2: 'huron-aa-restapi-phase2',
   huronAAReturnCaller: 'huron-aa-returncaller',
   huronAARouteRoom: 'huron-aa-routeroom',
   huronClassOfService: 'COS',

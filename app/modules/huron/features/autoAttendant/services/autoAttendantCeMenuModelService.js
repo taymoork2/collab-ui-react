@@ -501,6 +501,7 @@
       action.restApiRequest = restBlock.testResponse.request;
       action.restApiResponse = restBlock.testResponse.response;
       action.dynamics = restBlock.testResponse.preTestActions;
+      action.username = restBlock.username;
     }
 
     function parseAction(menuEntry, inAction) {
@@ -1437,6 +1438,9 @@
                 method: menuEntry.actions[0].method,
                 testResponse: testResponse,
                 responseActions: createResponseBlock(menuEntry.actions[0]),
+                username: menuEntry.actions[0].username,
+                password: menuEntry.actions[0].password,
+                credentialId: menuEntry.actions[0].credentialId,
               };
               _.set(uiRestBlocks, restBlockId, overrideProps);
             }

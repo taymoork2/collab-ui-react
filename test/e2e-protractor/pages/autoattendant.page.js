@@ -336,6 +336,9 @@ var AutoAttendantPage = function () {
   this.restDynamicsValue = element(by.name('value'));
   this.configureApi = element(by.id('configureApi'));
   this.configureApiURL = element(by.css('.dynamic-prompt'));
+  this.authenticationToggleSwitch = element(by.name('BasicAuthToggle'));
+  this.usernameForAuthentication = element(by.id('userNameInput'));
+  this.passwordForAuthentication = element(by.id('passwordInput'));
   this.addDynamicFeature = element(by.id('addDynamicFeature'));
   this.addDynamicTextButton = element(by.css('.btn-primary'));
   this.dynamicVariable1 = element(by.css('#variableSelect select[name="variableSelect"] + div span.select-toggle'));

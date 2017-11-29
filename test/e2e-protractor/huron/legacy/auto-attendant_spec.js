@@ -892,6 +892,15 @@ describe('Huron Auto Attendant', function () {
       utils.wait(autoattendant.configureApiURL, 60000);
       utils.sendKeys(autoattendant.configureApiURL, "https://api.openweathermap.org/data/2.5/weather?zip=80202,us&appid=a422c31ba1d69122814ca7a900a85ab5");
       utils.expectIsEnabled(autoattendant.nextBtn);
+      utils.expectIsDisplayed(autoattendant.authenticationToggleSwitch);
+      utils.click(autoattendant.authenticationToggleSwitch);
+      utils.expectIsEnabled(autoattendant.usernameForAuthentication );
+      utils.expectIsEnabled(autoattendant.passwordForAuthentication);
+      utils.expectIsDisabled(autoattendant.nextBtn);
+      utils.sendKeys(autoattendant.usernameForAuthentication, "testUser");
+      utils.expectIsEnabled(autoattendant.nextBtn);
+      utils.sendKeys(autoattendant.passwordForAuthentication, "testPassword");
+      utils.expectIsEnabled(autoattendant.nextBtn);
       utils.click(autoattendant.nextBtn);
       utils.expectIsEnabled(autoattendant.testBtn);
       utils.click(autoattendant.testBtn);
