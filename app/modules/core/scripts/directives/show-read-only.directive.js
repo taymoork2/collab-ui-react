@@ -6,7 +6,7 @@ require('./_show-read-only.scss');
   /* @ngInject */
   function ShowReadOnly(Authinfo, $translate) {
     function link(scope, element) {
-      if (Authinfo.isReadOnlyAdmin()) {
+      if (Authinfo.isReadOnlyAdmin() || Authinfo.isPartnerReadOnlyAdmin()) {
         var IS_READ_ONLY_ADMIN = 'is-read-only-admin';
         var wrapper = angular.element('.wrapper');
         wrapper.css('padding-top', '6rem');
