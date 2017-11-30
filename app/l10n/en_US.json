@@ -2112,7 +2112,7 @@
     "addPlaceBtn": "New Place",
     "deviceSearchPlaceholder": "Find devices by status, type, and more",
     "searchError": "The search input is not recognized.",
-    "allDevices": "All devices",
+    "allDevices": "Anything",
     "containingQuery": "containing {{query}}",
     "alsoContainingQuery": "also containing {{query}}",
     "typeHeader": "Type",
