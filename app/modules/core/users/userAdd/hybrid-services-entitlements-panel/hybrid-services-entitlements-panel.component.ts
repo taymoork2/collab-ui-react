@@ -1,8 +1,9 @@
+import { CloudConnectorService, FeatureToggleService, IEntitlementNameAndState, ServiceDescriptorService } from './index';
+
 class HybridServicesEntitlementsPanelController implements ng.IComponentController {
 
   private isEnabled = false;
-  // TODO: add better TS type
-  private entitlements: any[] = [];
+  private entitlements: IEntitlementNameAndState[] = [];
   private showCalendarChoice: boolean;
   // TODO: add better TS type
   private services: any;
@@ -10,13 +11,14 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
 
   /* @ngInject */
   constructor (
-    private $q,
-    private $translate,
+    private $q: ng.IQService,
+    private $translate: ng.translate.ITranslateService,
     private Authinfo,
-    private CloudConnectorService,
-    private FeatureToggleService,
+    private CloudConnectorService: CloudConnectorService,
+    private FeatureToggleService: FeatureToggleService,
     private OnboardService,
-    private ServiceDescriptorService,
+    private ServiceDescriptorService: ServiceDescriptorService,
+
   ) {
     this.showCalendarChoice = this.Authinfo.isFusionGoogleCal();
     this.services = {
