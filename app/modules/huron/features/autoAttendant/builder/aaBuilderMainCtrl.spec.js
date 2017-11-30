@@ -83,6 +83,8 @@ describe('Controller: AABuilderMainCtrl', function () {
     this.uiRestBlocks['TEMP_0'] = {
       method: 'GET',
       url: 'test URL3',
+      username: 'testUser',
+      password: 'testPassword',
       responseActions: [{
         assignVar: {
           variableName: 'test var',

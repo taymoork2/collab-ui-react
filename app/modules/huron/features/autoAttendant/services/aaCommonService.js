@@ -23,6 +23,7 @@
     var uniqueId = 0;
     var restApiToggle = false;
     var aaRestApiStatus = false;
+    var restApiTogglePhase2 = false;
 
     var invalidList = {};
     var schedules = ['openHours', 'closedHours', 'Holidays'];
@@ -67,6 +68,8 @@
       setReturnedCallerToggle: setReturnedCallerToggle,
       setMultiSiteEnabledToggle: setMultiSiteEnabledToggle,
       isMultiSiteEnabled: isMultiSiteEnabled,
+      setRestApiTogglePhase2: setRestApiTogglePhase2,
+      isRestApiTogglePhase2: isRestApiTogglePhase2,
       isDynAnnounceToggle: isDynAnnounceToggle,
       isMediaUploadToggle: isMediaUploadToggle,
       isRouteSIPAddressToggle: isRouteSIPAddressToggle,
@@ -208,6 +211,14 @@
 
     function setRestApiToggle(status) {
       restApiToggle = status;
+    }
+
+    function setRestApiTogglePhase2(status) {
+      restApiTogglePhase2 = status;
+    }
+
+    function isRestApiTogglePhase2() {
+      return restApiTogglePhase2;
     }
 
     function isDynAnnounceToggle() {

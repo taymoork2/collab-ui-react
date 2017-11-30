@@ -276,12 +276,28 @@
       return dummyUrlObj;
     }
 
+    function createAuthenticationBlock(action) {
+      if (_.isEmpty(action.username)) {
+        return undefined;
+      }
+      var authenticationBlock = {
+        type: 'BASIC',
+        credentials: {
+          username: action.username,
+          password: action.password,
+          id: action.credentialId,
+        },
+      };
+      return authenticationBlock;
+    }
+
     function makeRestBodyForHttpPostOrPut(action) {
       var doRestBody = {
         url: getThirdPartyRestApiDynamicUrl(action),
         method: action.method,
         responseActions: action.responseActions,
         testResponse: action.testResponse,
+        authentication: createAuthenticationBlock(action),
       };
       return doRestBody;
     }
@@ -685,6 +701,8 @@
           if (restApiUrl) {
             _.set(overrideProps, 'url', restApiUrl);
           }
+          var username = _.get(response, 'authentication.credentials.username');
+          _.set(overrideProps, 'username', username);
           restBlocks[key] = overrideProps;
         });
         AARestModelService.setRestBlocks(restBlocks);
@@ -852,6 +870,7 @@
       AACommonService.setRouteSIPAddressToggle(featureToggleDefault);
       AACommonService.setDynAnnounceToggle(featureToggleDefault);
       AACommonService.setRestApiToggle(featureToggleDefault);
+      AACommonService.setRestApiTogglePhase2(featureToggleDefault);
       AACommonService.setReturnedCallerToggle(featureToggleDefault);
       AACommonService.setMultiSiteEnabledToggle(featureToggleDefault);
       return checkFeatureToggles();
@@ -862,6 +881,7 @@
         hasMediaUpload: FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload),
         hasRouteRoom: FeatureToggleService.supports(FeatureToggleService.features.huronAARouteRoom),
         hasRestApi: FeatureToggleService.supports(FeatureToggleService.features.huronAARestApi),
+        hasRestApiPhase2: FeatureToggleService.supports(FeatureToggleService.features.huronAARestApiPhase2),
         hasDynAnnounce: FeatureToggleService.supports(FeatureToggleService.features.huronAADynannounce),
         hasReturnedCaller: FeatureToggleService.supports(FeatureToggleService.features.huronAAReturnCaller),
         hasMultiSites: FeatureToggleService.supports(FeatureToggleService.features.huronMultiSite),
@@ -872,6 +892,7 @@
       AACommonService.setMediaUploadToggle(featureToggles.hasMediaUpload);
       AACommonService.setRouteSIPAddressToggle(featureToggles.hasRouteRoom);
       AACommonService.setRestApiToggle(featureToggles.hasRestApi);
+      AACommonService.setRestApiTogglePhase2(featureToggles.hasRestApiPhase2);
       AACommonService.setDynAnnounceToggle(featureToggles.hasDynAnnounce);
       AutoAttendantCeMenuModelService.setDynAnnounceToggle(featureToggles.hasDynAnnounce);
       AACommonService.setReturnedCallerToggle(featureToggles.hasReturnedCaller);
