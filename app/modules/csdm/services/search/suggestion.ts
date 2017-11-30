@@ -1,5 +1,5 @@
 import { Aggregations, SearchResult } from './searchResult';
-import { FieldQuery, SearchElement } from './searchElement';
+import { FieldQuery, OperatorAnd, SearchElement } from './searchElement';
 import { SearchObject } from './searchObject';
 import { SearchTranslator } from './searchTranslator';
 import { QueryParser } from './queryParser';
@@ -101,7 +101,26 @@ export class SuggestionDropdown implements ISuggestionDropdown {
               query: currentEditedElement.toQuery(),
             }),
         },
-        {
+      ];
+      if (currentEditedElement instanceof OperatorAnd && _.every(currentEditedElement.and, child => {
+        return child instanceof FieldQuery;
+      })) {
+        const phraseQuery = `"${_.map(currentEditedElement.and, e => {
+          return e.toQuery();
+        }).join(' ')}"`;
+        this.inputBasedSuggestions.push({
+          searchString: phraseQuery,
+          readableField: this.$translate.instant('spacesPage.allDevices'),
+          text: this.$translate.instant(_.filter(searchObject.getBullets(), (bullet) => {
+            return !bullet.isBeingEdited();
+          }).length > 0
+            ? 'spacesPage.alsoContainingQuery'
+            : 'spacesPage.containingQuery',
+            {
+              query: phraseQuery,
+            }),
+        });
+        this.inputBasedSuggestions.push({
           searchString: `${QueryParser.Field_Displayname}:${currentEditedElement.toQuery()}`,
           readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(QueryParser.Field_Displayname),
           field: QueryParser.Field_Displayname,
@@ -113,8 +132,8 @@ export class SuggestionDropdown implements ISuggestionDropdown {
             {
               query: currentEditedElement.toQuery(),
             }),
-        },
-      ];
+        });
+      }
       this.firstSuggestionIsDefault = true;
     } else if (currentEditedElement instanceof FieldQuery && currentEditedElement.getQueryWithoutField() !== '') {
       this.inputBasedSuggestions = [
