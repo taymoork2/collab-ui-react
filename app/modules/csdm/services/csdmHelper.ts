@@ -166,6 +166,10 @@ export class DeviceHelper {
     }
   }
 
+  public static translateConnectionStatusToColor(connectionStatus: string): string {
+    return DeviceHelper.getCssColorClass({ connectionStatus: connectionStatus });
+  }
+
   public static getCssColorClass(obj) {
     switch ((obj || {}).connectionStatus) {
       case 'CONNECTED':
