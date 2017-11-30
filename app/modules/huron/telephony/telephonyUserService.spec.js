@@ -1,7 +1,9 @@
 'use strict';
 
+var moduleName = require('./telephonyUserService');
+
 describe('Service: HuronUser', function () {
-  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module(moduleName));
 
   var $httpBackend, HuronConfig, HuronUser;
 

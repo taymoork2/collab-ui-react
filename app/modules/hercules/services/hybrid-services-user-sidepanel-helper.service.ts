@@ -1,4 +1,5 @@
-import { USSService, IUserStatusWithExtendedMessages } from 'modules/hercules/services/uss.service';
+import USSServiceModuleName, { USSService, IUserStatusWithExtendedMessages } from 'modules/hercules/services/uss.service';
+import * as userServiceModuleName from 'modules/core/scripts/services/user.service.js';
 
 export interface IEntitlementNameAndState {
   entitlementName: 'squaredFusionUC' | 'squaredFusionEC' | 'sparkHybridImpInterop' | 'squaredFusionCal' | 'squaredFusionGCal';
@@ -51,6 +52,9 @@ export class HybridServiceUserSidepanelHelperService {
 }
 
 export default angular
-  .module('Hercules')
+  .module('hercules.services.user-sidepanel-helper-service', [
+    USSServiceModuleName,
+    userServiceModuleName,
+  ])
   .service('HybridServiceUserSidepanelHelperService', HybridServiceUserSidepanelHelperService)
   .name;
