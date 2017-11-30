@@ -48,7 +48,6 @@ export class SuggestionDropdown implements ISuggestionDropdown {
 
   public activeSuggestion?: string;
   private activeSuggestionIndex: number | undefined;
-  private searchObject: SearchObject;
   private firstSuggestionIsDefault;
   private emptySearchSuggestions = _.map(SuggestionDropdown.fieldNamesForSuggestion, fieldName => {
     return {
@@ -93,7 +92,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
           count: totalCount,
           searchString: currentEditedElement.toQuery(),
           readableField: this.$translate.instant('spacesPage.allDevices'),
-          text: this.$translate.instant(_.filter(this.searchObject.getBullets(), (bullet) => {
+          text: this.$translate.instant(_.filter(searchObject.getBullets(), (bullet) => {
             return !bullet.isBeingEdited();
           }).length > 0
             ? 'spacesPage.alsoContainingQuery'
@@ -111,7 +110,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
           searchString: currentEditedElement.toQuery(),
           readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(currentEditedElement.getCommonField()),
           field: currentEditedElement.getCommonField(),
-          text: this.$translate.instant(_.filter(this.searchObject.getBullets(), (bullet) => {
+          text: this.$translate.instant(_.filter(searchObject.getBullets(), (bullet) => {
             return !bullet.isBeingEdited();
           }).length > 0
             ? 'spacesPage.alsoContainingQuery'
@@ -127,16 +126,13 @@ export class SuggestionDropdown implements ISuggestionDropdown {
       this.firstSuggestionIsDefault = false;
     }
 
-    this.searchObject = searchObject;
-
     if (updateUiSuggestions) {
-      this.removeIrrelevantSuggestions();
+      this.removeIrrelevantSuggestions(searchObject);
     }
   }
 
   public onSearchChanged(searchObject: SearchObject) {
-    this.searchObject = searchObject;
-    this.removeIrrelevantSuggestions();
+    this.removeIrrelevantSuggestions(searchObject);
   }
 
   public setActiveSuggestion(suggestionId: number): void {
@@ -226,7 +222,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
           }));
         }
       });
-      this.removeIrrelevantSuggestions();
+      this.removeIrrelevantSuggestions(searchObject);
       this.setFirstActive();
     }
   }
@@ -239,16 +235,16 @@ export class SuggestionDropdown implements ISuggestionDropdown {
     }
   }
 
-  private removeIrrelevantSuggestions() {
-    if (!this.searchObject) {
+  private removeIrrelevantSuggestions(searchObject: SearchObject) {
+    if (!searchObject) {
       return;
     }
 
     this.uiSuggestions =
       SuggestionDropdown.removeExistingQueries(
         SuggestionDropdown.filterSuggestion(
-          _.concat(this.inputBasedSuggestions, this.suggestions), this.searchObject),
-        _.filter(this.searchObject.getBullets(), (bullet) => {
+          _.concat(this.inputBasedSuggestions, this.suggestions), searchObject),
+        _.filter(searchObject.getBullets(), (bullet) => {
           return !bullet.isBeingEdited();
         }));
   }

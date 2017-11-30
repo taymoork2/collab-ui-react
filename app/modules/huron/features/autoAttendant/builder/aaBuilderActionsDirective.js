@@ -12,6 +12,7 @@
         schedule: '@aaSchedule',
         index: '=aaIndex',
         addAction: '&aaAddAction',
+        routingPrefixOptions: '=aaRoutingPrefixOptions',
       },
       controller: 'AABuilderActionsCtrl',
       controllerAs: 'actions',

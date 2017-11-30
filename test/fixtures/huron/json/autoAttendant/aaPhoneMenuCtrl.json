@@ -22,7 +22,7 @@
       "label": "autoAttendant.phoneMenuDialExt",
       "name": "phoneMenuDialExt",
       "action": "runActionsOnInput",
-      "inputType": 2
+      "inputType": [2, 5]
     }
   }],
   "selectedActionsPlaySubmenu": [{
@@ -139,6 +139,61 @@
         "name": "runActionsOnInput",
         "value": "",
         "inputType": 2,
+        "description": ""
+      }],
+      "timeout": "",
+      "username": "",
+      "password": "",
+      "type": "MENU_OPTION",
+      "url": ""
+    }, {
+      "type": "MENU_OPTION",
+      "headers": [],
+      "entries": [],
+      "id": "menu3",
+      "key": "3",
+      "attempts": 4
+    }],
+    "headers": [{
+      "description": "",
+      "type": "",
+      "key": "",
+      "actions": [{
+        "name": "",
+        "value": "say message",
+        "description": ""
+      }],
+      "timeout": "",
+      "username": "",
+      "password": "",
+      "type": "MENU_OPTION_ANNOUNCEMENT",
+      "url": ""
+    }]
+  },
+  "ceMenuDialByExtension": {
+    "type": "MENU_OPTION",
+    "attempts": 1,
+    "entries": [{
+      "description": "",
+      "key": "1",
+      "actions": [{
+        "name": "repeatActionsOnInput",
+        "value": "",
+        "description": "",
+        "level": 0
+      }],
+      "timeout": "",
+      "username": "",
+      "password": "",
+      "type": "MENU_OPTION",
+      "url": ""
+    }, {
+      "description": "",
+      "key": "2",
+      "actions": [{
+        "name": "runActionsOnInput",
+        "value": "",
+        "inputType": [2, 5],
         "description": ""
       }],
       "timeout": "",
