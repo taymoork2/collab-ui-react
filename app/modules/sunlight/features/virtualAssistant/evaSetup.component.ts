@@ -200,6 +200,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     durationInMillis = currentTimeInMillis - this.template.configuration.pages.evaOverview.startTimeInMillis;
     analyticProps = { durationInMillis: durationInMillis };
     this.Analytics.trackEvent(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_START_FINISH, analyticProps);
+    this.Analytics.trackEvent(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_CREATE_SUCCESS);
   }
 
   public submitFeature(): void {
@@ -236,6 +237,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
         controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.createConfigFailureText'), {
           featureName: controller.$translate.instant('careChatTpl.virtualAssistant.eva.featureText.name'),
         });
+        controller.Analytics.trackEvent(controller.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_CREATE_FAILURE);
       });
   }
 

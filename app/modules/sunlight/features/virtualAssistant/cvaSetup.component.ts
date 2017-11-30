@@ -298,6 +298,7 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
         controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.createConfigFailureText'), {
           featureName: controller.$translate.instant('careChatTpl.virtualAssistant.cva.featureText.name'),
         });
+        controller.Analytics.trackEvent(controller.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_CREATE_FAILURE);
       });
   }
 
@@ -312,6 +313,7 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     durationInMillis = currentTimeInMillis - this.template.configuration.pages.cvaConfigOverview.startTimeInMillis;
     analyticProps = { durationInMillis: durationInMillis };
     this.Analytics.trackEvent(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_START_FINISH, analyticProps);
+    this.Analytics.trackEvent(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_CREATE_SUCCESS);
   }
 
   /**
