@@ -251,7 +251,7 @@ export class SetupWizardService {
     return <ICCASPLicense>_.find(this.getActingSubscriptionLicenses(), { offerName: this.Config.offerCodes.CCASP });
   }
 
-  private getPendingAuthinfoSubscriptions() {
+  public getPendingAuthinfoSubscriptions() {
     return _.filter(this.Authinfo.getSubscriptions(), (subscription: IPendingOrderSubscription) => _.has(subscription, 'pendingServiceOrderUUID'));
   }
 
