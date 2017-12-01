@@ -1,4 +1,5 @@
 @import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/forms';
 @import '~collab-ui/scss/settings/typography';
 @import '~collab-ui/scss/tools/placeholders/page-layout';
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
@@ -408,6 +409,16 @@
         padding: 4px 32px 4px 24px;
         margin-right: 1rem;
 
+        &.focus, &.focus:hover {
+          background: $input-focus-bg-color;
+          border-color: $input-focus-border-color;
+          transition: border-color ease-in .15s, box-shadow ease-in .15s;
+        }
+
+        &:hover {
+          border-color: $input-hover-border-color;
+        }
+
         > input {
           position: relative;
           top: 1px;
@@ -477,12 +488,11 @@
         .suggestions-dropdown {
           user-select: none;
           position:absolute;
-          top: -1px;
           width: 430px;
           background-color: white;
           z-index: 1;
           border: 1px solid $gray-light-2;
-          border-radius: 2px;
+          border-radius: 4px;
           max-height: 300px;
           overflow-x: hidden;
           overflow-y: auto;
