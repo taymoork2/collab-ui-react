@@ -4,8 +4,8 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
 
   private prevState: string;
   private dismiss: Function;
-  public sortedSubscriptions: ISubscription[];
   private stateData: any;  // TODO: better type
+  public sortedSubscriptions: ISubscription[];
 
   /* @ngInject */
   constructor(
@@ -32,6 +32,12 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
           subscriptions: this.sortedSubscriptions,
         };
       });
+  }
+
+  public get hasAssignableLicenses(): boolean {
+    return _.some(this.sortedSubscriptions, (subscription) => {
+      return !_.isEmpty(subscription.licenses);
+    });
   }
 
   public dismissModal(): void {
