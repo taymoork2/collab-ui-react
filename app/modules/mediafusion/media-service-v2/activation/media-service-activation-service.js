@@ -162,6 +162,12 @@
         mediaFusionEnabledAt: moment().utc(),
       };
       Orgservice.setOrgSettings(Authinfo.getOrgId(), settings);
+      var payload = {
+        isMediaFusionEnabled: true,
+        updatedTime: moment().utc(),
+      };
+      var url = UrlConfig.getAthenaServiceUrl() + '/devops/organizations/' + Authinfo.getOrgId() + '/hms_org_activation';
+      $http.post(url, payload);
     };
 
     var disableMFOrgSettingsForDevOps = function () {
@@ -169,6 +175,12 @@
         isMediaFusionEnabled: false,
       };
       Orgservice.setOrgSettings(Authinfo.getOrgId(), settings);
+      var payload = {
+        isMediaFusionEnabled: false,
+        updatedTime: moment().utc(),
+      };
+      var url = UrlConfig.getAthenaServiceUrl() + '/devops/organizations/' + Authinfo.getOrgId() + '/hms_org_activation';
+      $http.post(url, payload);
     };
 
     return {
