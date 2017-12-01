@@ -63,9 +63,14 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
       return;
     }
     // notes:
-    // - item id can contain potentially period chars ('.')
+    // - item id can potentially contain period chars ('.')
     // - so we wrap interpolated value in double-quotes to prevent unintended deep property creation
     _.set(this.stateData, `${itemCategory}["${itemId}"]`, item);
+  }
+
+  // TODO: remove this callback once 'hybrid-services-entitlements-panel' can leverage 'onUpdate()' callbacks
+  public recvHybridServicesEntitlementsPayload(entitlements): void {
+    _.set(this.stateData, `USER_ENTITLEMENTS_PAYLOAD`, entitlements);
   }
 }
 

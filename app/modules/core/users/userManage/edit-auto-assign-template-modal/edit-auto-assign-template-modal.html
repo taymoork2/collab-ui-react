@@ -22,7 +22,7 @@
       state-data="$ctrl.stateData">
     </assignable-services>
     <hybrid-services-entitlements-panel
-      bind-entitlements="_.noop()"
+      entitlements-callback="$ctrl.recvHybridServicesEntitlementsPayload(entitlements)"
       has-assignable-licenses="$ctrl.hasAssignableLicenses">
     </hybrid-services-entitlements-panel>
   </div>
