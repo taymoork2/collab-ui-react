@@ -53,6 +53,9 @@
         font-size: .875rem;
         font-family: $brand-font-light;
         line-height: 1.5rem;
+        .selected {
+          color: $color-blue-base;
+        }
         > div {
           display: flex;
           align-items: baseline;

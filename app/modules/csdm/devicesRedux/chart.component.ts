@@ -3,6 +3,7 @@ import { IOnChangesObject } from 'angular';
 import { Aggregation, IBucketData, NamedAggregation, SearchResult } from '../services/search/searchResult';
 import { FieldQuery, SearchElement } from '../services/search/searchElement';
 import { DeviceHelper } from '../services/csdmHelper';
+import { SearchObject } from '../services/search/searchObject';
 
 class Chart implements ng.IComponentController {
   private currentAggregations: NamedAggregation[] = [];
@@ -17,6 +18,7 @@ class Chart implements ng.IComponentController {
   //bindings:
   public pieChartClicked: (e: { searchElement: SearchElement }) => {};
   public searchResult?: SearchResult;
+  public searchObject?: SearchObject;
 
   /* @ngInject */
   constructor(private $translate) {
@@ -48,7 +50,7 @@ class Chart implements ng.IComponentController {
 
   private updateGraph(incommingData?: BucketHolder, totalHits: number = 0, _titleField = 'name', valueField = 'value') {
     if (!incommingData) {
-      incommingData = { bucketName: '', buckets: [{ key: 'none', docCount: 1 }] };
+      incommingData = { bucketName: 'connectionStatus', buckets: [{ key: 'no_hits', docCount: 1 }] };
     } else if (_.isEmpty(incommingData.buckets)) {
       incommingData.buckets = [{ key: 'no_hits', docCount: 1 }];
     }
@@ -80,22 +82,7 @@ class Chart implements ng.IComponentController {
       fontSize: 10,
       fontFamily: 'CiscoSansTT Light',
       legend: {
-        divId: 'searchlegend',
         enabled: false,
-        align: 'left',
-        position: 'right',
-        forceWidth: true,
-        switchable: false,
-        valueText: '[[value]]',
-        markerSize: 6,
-        markerType: 'circle',
-        markerBorderColor: '#00F',
-        markerBorderThickness: 0,
-        labelWidth: 160,
-        fontSize: 14,
-        valueWidth: 12,
-        textClickEnabled: true,
-        autoMargins: false,
       },
       labelText: '[[title]]:[[value]]',
       labelsEnabled: false,
@@ -113,11 +100,11 @@ class Chart implements ng.IComponentController {
   }
 
   private colors = {
-    connected: this.Colors['$color-green-base'], //this.ChartColors.ctaBase,
-    disconnected: this.Colors['$color-red-base'], //this.ChartColors.negativeBase,
-    offline_expired: this.Colors['$gray'], //this.ChartColors.negativeDarker,
-    connected_with_issues: this.Colors['$color-yellow-base'], //this.ChartColors.attentionBase,
-    no_hits: '#FAFAFB', // this.Colors['$gray-light-4'],
+    connected: this.Colors['$color-green-base'],
+    disconnected: this.Colors['$color-red-base'],
+    offline_expired: this.Colors['$gray'],
+    connected_with_issues: this.Colors['$color-yellow-base'],
+    no_hits: '#FAFAFB',
   };
 
   public legendClick(legend: IBuckedDataChart) {
@@ -135,6 +122,7 @@ class Chart implements ng.IComponentController {
           bucketName: data.bucketName,
           docCount: bucket.docCount,
           color: DeviceHelper.translateConnectionStatusToColor(_.toUpper(bucket.key)),
+          selected: !!(this.searchObject && this.searchObject.containsElement(new FieldQuery(bucket.key, data.bucketName, FieldQuery.QueryTypeExact))),
         };
       }).value();
   }
@@ -221,6 +209,7 @@ interface IBuckedDataChart extends IBucketData {
   bucketName?: string;
   color?: string;
   visibleLegend?: boolean;
+  selected?: boolean;
 }
 
 export class ChartComponent implements ng.IComponentOptions {
@@ -228,6 +217,7 @@ export class ChartComponent implements ng.IComponentOptions {
   public bindings = {
     searchResult: '<',
     pieChartClicked: '&',
+    searchObject: '<',
   };
   public controllerAs = 'chart';
   public template = require('modules/csdm/devicesRedux/chart.html');
