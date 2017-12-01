@@ -408,7 +408,7 @@
         return $q.reject(NO_EVENT_NAME);
       }
       eventName = sections.WEBEX_SITE_MANAGEMENT.name + ': ' + eventName;
-      var adminType = _._getAdminType();
+      var adminType = _getAdminType();
 
       var properties = {
         subscriptionId: _.get(adminProperties, 'subscriptionId', 'N/A'),
