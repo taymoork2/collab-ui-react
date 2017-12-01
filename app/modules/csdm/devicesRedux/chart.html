@@ -10,15 +10,4 @@
       </div>
     </div>
   </div>
-  <div class="carousel" ng-if="chart.showCarousel">
-    <i class="icon icon-chevron-left large" ng-click="chart.cycleAggregateLeft()"/>
-    <i class="icon icon-circle" ng-class="{selected: chart.selectedAggregation.bucketName === aggregate.bucketName}"
-       ng-repeat="aggregate in chart.currentAggregations" title="{{aggregate.bucketName}}"
-       ng-click="chart.showAggregate(aggregate.bucketName)"/>
-    <!--<i class="icon icon-circle" title="super" ng-click="chart.selectCarousel()"/>-->
-    <!--<i class="icon icon-circle" title="super" ng-click="chart.selectCarousel()"/>-->
-    <!--<i class="icon icon-circle"/>-->
-    <!--<i class="icon icon-circle"/>-->
-    <i class="icon icon-chevron-right large" ng-click="chart.cycleAggregateRight()"/>
-  </div>
 </div>
