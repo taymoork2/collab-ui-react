@@ -202,7 +202,7 @@ export class EvaService {
    * @returns {*}
    */
   private getValidateResource(orgId?: string): IConfigurationResource {
-    const baseUrl = this.UrlConfig.getCvaServiceUrl();
+    const baseUrl = this.UrlConfig.getEvaServiceUrl();
     return <IConfigurationResource>this.$resource(baseUrl + 'validateIcon', {
       orgId: orgId,
     }, {
