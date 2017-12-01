@@ -2,7 +2,7 @@
   <form ng-class="{ 'active': dctrl.inputActive}">
     <div class="bulleted-searchbox" onclick="angular.element('#searchFilterInput').focus();">
       <div class="bulleted-searchinput"
-           ng-class="{'searcherror': dctrl.searchObject.hasError}">
+           ng-class="{'searcherror': dctrl.searchObject.hasError, 'focus': dctrl.inputActive}">
         <i class="icon icon-search"></i>
         <device-search-bullet ng-repeat="bullet in dctrl.getBullets()" search-element="bullet"
                               bullet-container="dctrl"></device-search-bullet>
