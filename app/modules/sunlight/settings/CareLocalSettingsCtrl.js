@@ -7,7 +7,7 @@ var HttpStatus = require('http-status-codes');
     .controller('CareLocalSettingsCtrl', CareLocalSettingsCtrl);
 
   /* @ngInject */
-  function CareLocalSettingsCtrl($location, $interval, $q, $scope, $translate, Authinfo, Log, Notification, SunlightUtilitiesService, SunlightConfigService, ModalService, FeatureToggleService, URService) {
+  function CareLocalSettingsCtrl($interval, $location, $q, $scope, $translate, AutoAttendantConfigService, Authinfo, FeatureToggleService, Log, Notification, ModalService, SunlightUtilitiesService, SunlightConfigService, URService) {
     var vm = this;
 
     vm.ONBOARDED = 'onboarded';
@@ -31,6 +31,7 @@ var HttpStatus = require('http-status-codes');
     vm.careSetupDoneByOrgAdmin = (Authinfo.getOrgId() === Authinfo.getUserOrgId());
 
     vm.state = vm.ONBOARDED;
+    vm.sunlightOnboardingState = vm.ONBOARDED;
     vm.errorCount = 0;
 
     vm.RoutingType = {
@@ -438,7 +439,7 @@ var HttpStatus = require('http-status-codes');
 
     function getOnboardStatusAndUpdateConfigIfRequired(result) {
       var onboardingStatus = getOnboardingStatus();
-      setViewModelState(onboardingStatus);
+      setSunlightConfigState(onboardingStatus);
       if (result.data.orgName === '' || !(_.get(result, 'data.orgName'))) {
         result.data.orgName = Authinfo.getOrgName();
         SunlightConfigService.updateChatConfig(result.data).then(function (result) {
@@ -447,18 +448,71 @@ var HttpStatus = require('http-status-codes');
       }
     }
 
+    function setSunlightConfigState(onboardingStatus) {
+      switch (onboardingStatus) {
+        case vm.status.SUCCESS:
+          vm.sunlightOnboardingState = vm.ONBOARDED;
+          break;
+        case vm.status.PENDING:
+          vm.sunlightOnboardingState = vm.IN_PROGRESS;
+          startPolling();
+          break;
+        default:
+          vm.sunlightOnboardingState = vm.NOT_ONBOARDED;
+      }
+    }
+
+
     function getOnboardingStatusFromOrgChatConfig() {
-      SunlightConfigService.getChatConfig().then(function (result) {
+      return SunlightConfigService.getChatConfig().then(function (result) {
         populateOrgChatConfigViewModel(result, true);
         getOnboardStatusAndUpdateConfigIfRequired(result);
       }, function (error) {
         if (error.status === 404) {
-          vm.state = vm.NOT_ONBOARDED;
+          vm.sunlightOnboardingState = vm.NOT_ONBOARDED;
         } else {
           Log.debug('Fetching Care setup status, on load, failed: ', error);
         }
       });
     }
+
+    function getAndUpdateOnboardingStatusFromAAConfig() {
+      if (vm.sunlightOnboardingState === vm.ONBOARDED) {
+        AutoAttendantConfigService.getConfig().then(function (result) {
+          var aaOnboardingStatus = _.get(result, 'data.csOnboardingStatus');
+          switch (aaOnboardingStatus) {
+            case vm.status.SUCCESS:
+              vm.state = vm.ONBOARDED;
+              break;
+            default:
+              vm.state = vm.NOT_ONBOARDED;
+          }
+        })
+          .catch(function (error) {
+            Log.debug('Failed getting Cs onboarding status for AA ', error);
+            vm.state = vm.NOT_ONBOARDED;
+          });
+      } else {
+        vm.state = vm.sunlightOnboardingState;
+      }
+    }
+
+    function setAAOnboardingStatus(sunlightPromise) {
+      sunlightPromise.then(function () {
+        FeatureToggleService.supports(FeatureToggleService.features.huronAAContextService).then(function (results) {
+          vm.huronAAContextService = results;
+          if (vm.huronAAContextService) {
+            getAndUpdateOnboardingStatusFromAAConfig();
+          } else {
+            vm.state = vm.sunlightOnboardingState;
+          }
+        })
+          .catch(function () {
+            vm.state = vm.sunlightOnboardingState;
+          });
+      });
+    }
+
 
     function init() {
       FeatureToggleService.atlasCareAutomatedRouteTrialsGetStatus().then(function (result) {
@@ -468,19 +522,23 @@ var HttpStatus = require('http-status-codes');
       FeatureToggleService.atlasCareChatToVideoTrialsGetStatus().then(function (result) {
         vm.featureToggles.chatToVideoFeatureToggle = result && Authinfo.isCare();
       });
+      var sunlightPromise;
       URService.getQueue(vm.defaultQueueId).then(function (result) {
         vm.defaultQueueStatus = vm.status.SUCCESS;
         populateQueueConfigViewModel(result, true);
-        getOnboardingStatusFromOrgChatConfig();
+        sunlightPromise = getOnboardingStatusFromOrgChatConfig();
+        setAAOnboardingStatus(sunlightPromise);
       }, function (error) {
-        getOnboardingStatusFromOrgChatConfig();
+        sunlightPromise = getOnboardingStatusFromOrgChatConfig();
         if (error.status === 404) {
           vm.state = vm.NOT_ONBOARDED;
         } else {
           Log.debug('Fetching default Queue status status, on load, failed: ', error);
         }
+        setAAOnboardingStatus(sunlightPromise);
       });
     }
+
     init();
   }
 })();

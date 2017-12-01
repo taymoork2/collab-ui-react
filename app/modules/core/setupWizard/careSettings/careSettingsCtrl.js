@@ -5,7 +5,7 @@ var HttpStatus = require('http-status-codes');
   angular.module('Core')
     .controller('CareSettingsCtrl', CareSettingsCtrl);
 
-  function CareSettingsCtrl($interval, $q, $scope, $translate, Authinfo, Log, Notification, SunlightConfigService, URService) {
+  function CareSettingsCtrl($interval, $q, $scope, $translate, Authinfo, AutoAttendantConfigService, FeatureToggleService, Log, Notification, SunlightConfigService, URService) {
     var vm = this;
 
     vm.status = {
@@ -28,6 +28,7 @@ var HttpStatus = require('http-status-codes');
     vm.careSetupDoneByAdmin = (Authinfo.getOrgId() === Authinfo.getUserOrgId());
 
     vm.state = vm.status.UNKNOWN;
+    vm.sunlightOnboardingState = vm.status.UNKNOWN;
     vm.errorCount = 0;
 
     function onboardCsAaAppToCare() {
@@ -217,45 +218,96 @@ var HttpStatus = require('http-status-codes');
     }
 
     function getOnboardingStatusFromOrgChatConfig() {
-      SunlightConfigService.getChatConfig().then(function (result) {
+      return SunlightConfigService.getChatConfig().then(function (result) {
         var onboardingStatus = getOnboardingStatus(result);
         switch (onboardingStatus) {
           case vm.status.PENDING:
-            vm.state = vm.IN_PROGRESS;
+            vm.sunlightOnboardingState = vm.IN_PROGRESS;
             startPolling();
             break;
           case vm.status.SUCCESS:
-            vm.state = vm.ONBOARDED;
-            enableNext();
+            vm.sunlightOnboardingState = vm.ONBOARDED;
             break;
           default:
-            vm.state = vm.NOT_ONBOARDED;
+            vm.sunlightOnboardingState = vm.NOT_ONBOARDED;
         }
       })
         .catch(function (error) {
           if (error.status === 404) {
-            vm.state = vm.NOT_ONBOARDED;
+            vm.sunlightOnboardingState = vm.NOT_ONBOARDED;
           } else {
             Log.debug('Fetching Care setup status, on load, failed: ', error);
           }
         });
     }
 
+    function getAndUpdateOnboardingStatusFromAAConfig() {
+      if (vm.sunlightOnboardingState === vm.ONBOARDED) {
+        AutoAttendantConfigService.getConfig().then(function (result) {
+          var aaOnboardingStatus = _.get(result, 'data.csOnboardingStatus');
+          switch (aaOnboardingStatus) {
+            case vm.status.SUCCESS:
+              vm.state = vm.ONBOARDED;
+              enableNext();
+              break;
+            default:
+              vm.state = vm.NOT_ONBOARDED;
+          }
+        })
+          .catch(function (error) {
+            Log.debug('Fetching cs onboarding status for AA, on load, failed:', error);
+            vm.state = vm.NOT_ONBOARDED;
+          });
+      } else {
+        setVmStateFromSunlightState();
+      }
+    }
+
+    function setVmStateFromSunlightState() {
+      vm.state = vm.sunlightOnboardingState;
+      if (vm.state === vm.ONBOARDED) {
+        enableNext();
+      }
+    }
+
+    function setAAOnboardingStatus(sunlightPromise) {
+      sunlightPromise.then(function () {
+        FeatureToggleService.supports(FeatureToggleService.features.huronAAContextService).then(function (results) {
+          vm.huronAAContextService = results;
+          if (vm.huronAAContextService) {
+            getAndUpdateOnboardingStatusFromAAConfig();
+          } else {
+            setVmStateFromSunlightState();
+          }
+        })
+          .catch(function () {
+            setVmStateFromSunlightState();
+          });
+      })
+        .catch(function () {
+          setVmStateFromSunlightState();
+        });
+    }
+
+
     function init() {
       disableNext();
-
+      var sunlightPromise;
       URService.getQueue(vm.defaultQueueId).then(function () {
         vm.defaultQueueStatus = vm.status.SUCCESS;
-        getOnboardingStatusFromOrgChatConfig();
+        sunlightPromise = getOnboardingStatusFromOrgChatConfig();
+        setAAOnboardingStatus(sunlightPromise);
       }, function (error) {
-        getOnboardingStatusFromOrgChatConfig();
+        sunlightPromise = getOnboardingStatusFromOrgChatConfig();
         if (error.status === 404) {
-          vm.state = vm.NOT_ONBOARDED;
+          vm.sunlightOnboardingState = vm.NOT_ONBOARDED;
         } else {
           Log.debug('Fetching default queue status, on load, failed: ', error);
         }
+        setAAOnboardingStatus(sunlightPromise);
       });
     }
+
     init();
   }
 })();
