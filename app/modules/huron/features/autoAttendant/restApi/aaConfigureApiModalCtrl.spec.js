@@ -727,7 +727,7 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         expect(controller.password).toBe('');
       });
 
-      it('should test calling of dynamicListUpdated broadcast', function() {
+      it('should test calling of dynamicListUpdated broadcast', function () {
         $rootScope.$broadcast('dynamicListUpdated');
         $scope.$apply();
         expect(controller.isDynamicsValueUpdated).toBeDefined();
