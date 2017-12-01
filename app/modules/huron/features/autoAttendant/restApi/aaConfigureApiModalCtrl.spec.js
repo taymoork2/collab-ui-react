@@ -726,6 +726,12 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         controller.passwordCheck();
         expect(controller.password).toBe('');
       });
+
+      it('should test calling of dynamicListUpdated broadcast', function() {
+        $rootScope.$broadcast('dynamicListUpdated');
+        $scope.$apply();
+        expect(controller.isDynamicsValueUpdated).toBeDefined();
+      });
     });
   });
 });

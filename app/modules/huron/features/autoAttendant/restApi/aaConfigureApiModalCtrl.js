@@ -617,6 +617,10 @@
       }
     }
 
+    $scope.$on('dynamicListUpdated', function () {
+      isDynamicsValueUpdated();
+    });
+
 
     function init() {
       $scope.schedule = aa_schedule;
