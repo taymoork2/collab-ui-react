@@ -515,7 +515,7 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
 
         //valid url
         controller.url = { testURL: 'testURL' };
-        expect(controller.isNextDisabled()).toEqual(false);
+        expect(controller.isNextDisabled()).toEqual(true);
 
         //not empty but not valid url
         controller.url = '<br class="ng-scope">';
@@ -623,14 +623,14 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         controller.username = 'testuser';
         controller.password = '';
         controller.isNextDisabled();
-        expect(controller.isNextDisabled()).toBe(false);
+        expect(controller.isNextDisabled()).toBe(true);
       });
       it('should test isNextDisabled when password is defined', function () {
         controller.url = { testURL: 'testURL' };
         controller.username = 'testuser';
         controller.password = 'testPass';
         controller.isNextDisabled();
-        expect(controller.isNextDisabled()).toBe(false);
+        expect(controller.isNextDisabled()).toBe(true);
       });
       it('should test stepBack function when phase 2 is on', function () {
         spyOn(AACommonService, 'isRestApiTogglePhase2').and.returnValue(true);

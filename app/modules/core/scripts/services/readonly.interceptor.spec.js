@@ -115,6 +115,36 @@ describe('ReadonlyInterceptor', function () {
       expect(this.Notification.notifyReadOnly.calls.count()).toBe(0);
     });
 
+    it('does not intercept global status service post operation', function () {
+      var config = {
+        method: 'POST',
+        url: 'https://statusbts.webex.com/status',
+      };
+      this.ReadonlyInterceptor.request(config);
+      expect(this.$q.reject.calls.count()).toBe(0);
+      expect(this.Notification.notifyReadOnly.calls.count()).toBe(0);
+    });
+
+    it('does not intercept global status service put operation', function () {
+      var config = {
+        method: 'PUT',
+        url: 'https://statusbts.webex.com/status',
+      };
+      this.ReadonlyInterceptor.request(config);
+      expect(this.$q.reject.calls.count()).toBe(0);
+      expect(this.Notification.notifyReadOnly.calls.count()).toBe(0);
+    });
+
+    it('does not intercept global status service delete operation', function () {
+      var config = {
+        method: 'DELETE',
+        url: 'https://statusbts.webex.com/status',
+      };
+      this.ReadonlyInterceptor.request(config);
+      expect(this.$q.reject.calls.count()).toBe(0);
+      expect(this.Notification.notifyReadOnly.calls.count()).toBe(0);
+    });
+
     it('does not intercept white-listed states', function () {
       var config = {
         data: 'x',

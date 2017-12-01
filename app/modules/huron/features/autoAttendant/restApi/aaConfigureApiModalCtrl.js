@@ -26,6 +26,7 @@
     var lastSavedUsername = '';
     var sessionVarOptions = [];
     var urlUpdated = false;
+    var hasSessionVarOptionsChecked = false;
     var passwordToBeDisplayed = '**********';
     CONSTANTS.idSelectorPrefix = '#';
 
@@ -415,6 +416,7 @@
           sessionVarOptions = data;
           sessionVarOptions.sort();
         }
+        hasSessionVarOptionsChecked = true;
       });
       getSessionVariablesOfDependentCe().finally(function () {
         getDynamicVariables();
@@ -485,9 +487,9 @@
 
     function isNextDisabled() {
       if (vm.basicAuthButton) {
-        return (_.isEmpty(vm.url) || vm.url === '<br class="ng-scope">' || !validatePassword() || !validateUserName());
+        return (_.isEmpty(vm.url) || vm.url === '<br class="ng-scope">' || !validatePassword() || !validateUserName() || !hasSessionVarOptionsChecked);
       }
-      return (_.isEmpty(vm.url) || vm.url === '<br class="ng-scope">');
+      return (_.isEmpty(vm.url) || vm.url === '<br class="ng-scope">' || !hasSessionVarOptionsChecked);
     }
 
     function callTestRestApiConfigs() {
@@ -596,7 +598,7 @@
             var obj = {};
             obj.responseKey = key;
             obj.responseValue = value;
-            obj.options = sessionVarOptions;
+            obj.options = _.cloneDeep(sessionVarOptions);
             _.forEach(vm.variableSet, function (set) {
               if (_.isEqual(set.value, key)) {
                 obj.selected = set.variableName;
