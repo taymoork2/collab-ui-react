@@ -6,7 +6,8 @@
   module.exports = Analytics;
 
   /* @ngInject */
-  function Analytics($q, $state, Authinfo, Config, Orgservice, TrialService, UrlConfig, UserListService) {
+  function Analytics($q, $state, Authinfo, Config, MetricsService, Orgservice, TrialService, UrlConfig, UserListService) {
+    var DiagnosticKey = require('../metrics').DiagnosticKey;
     var NO_EVENT_NAME = 'eventName not passed';
 
     var token = {
@@ -327,9 +328,11 @@
           properties[prefix + key] = value;
         }
       });
-      return _init().then(function () {
-        return service._track(eventName, properties);
-      });
+      _init()
+        .then(function () {
+          service._track(eventName, properties);
+        })
+        .catch(_.noop); // don't log error, legit reasons to fail
     }
 
     /**
@@ -337,7 +340,7 @@
      */
     function trackPremiumEvent(eventName, location) {
       if (_.isEmpty(eventName) || !_.isString(eventName)) {
-        return $q.reject(NO_EVENT_NAME);
+        return _logError('trackPremiumEvent', NO_EVENT_NAME);
       }
 
       var properties = {
@@ -360,7 +363,7 @@
       */
     function trackEdiscoverySteps(eventName, searchProperties) {
       if (!_.isString(eventName) || eventName.length === 0) {
-        return $q.reject(NO_EVENT_NAME);
+        return _logError('trackEdiscoverSteps', NO_EVENT_NAME);
       }
 
       var properties = {
@@ -384,7 +387,7 @@
      */
     function trackServiceSetupSteps(eventName, adminProperties) {
       if (!_.isString(eventName)) {
-        return $q.reject(NO_EVENT_NAME);
+        return _logError('trackServiceSetupSteps', NO_EVENT_NAME);
       }
       var adminType = _getAdminType();
 
@@ -405,7 +408,7 @@
      */
     function trackWebExMgmntSteps(eventName, adminProperties) {
       if (!_.isString(eventName)) {
-        return $q.reject(NO_EVENT_NAME);
+        return _logError('trackWebExMgmntSteps', NO_EVENT_NAME);
       }
       eventName = sections.WEBEX_SITE_MANAGEMENT.name + ': ' + eventName;
       var adminType = _getAdminType();
@@ -426,7 +429,7 @@
      */
     function trackTrialSteps(eventName, trialData, additionalPayload) {
       if (!eventName) {
-        return $q.reject(NO_EVENT_NAME);
+        return _logError('trackTrialSteps', NO_EVENT_NAME);
       }
 
       var properties = {
@@ -451,7 +454,7 @@
      */
     function trackPartnerActions(eventName, orgId, UUID) {
       if (!eventName || !UUID || !orgId) {
-        return $q.reject('eventName, uuid or orgId not passed');
+        return _logError('trackPartnerActions', 'eventName, uuid or orgId not passed');
       }
       var properties = {
         uuid: UUID,
@@ -466,7 +469,7 @@
     */
     function trackUserOnboarding(eventName, name, orgId, additionalData) {
       if (!eventName || !name || !orgId) {
-        return $q.reject('eventName, uuid or orgId not passed');
+        return _logError('trackUserOnboarding', 'eventName, uuid or orgId not passed');
       }
 
       var properties = {
@@ -477,7 +480,7 @@
 
       if (eventName === sections.USER_ONBOARDING.eventNames.CMR_CHECKBOX) {
         if (!additionalData.licenseId) {
-          return $q.reject('license id not passed');
+          return _logError('trackUserOnboarding', 'license id not passed');
         } else {
           properties.licenseId = additionalData.licenseId;
         }
@@ -491,7 +494,7 @@
     */
     function trackAddUsers(eventName, uploadMethod, additionalPayload) {
       if (!eventName) {
-        return $q.reject(NO_EVENT_NAME);
+        return _logError('trackAddUsers', NO_EVENT_NAME);
       }
       var properties = {
         from: _.get($state, '$current.name'),
@@ -522,7 +525,7 @@
      */
     function trackHSNavigation(eventName, payload) {
       if (!eventName) {
-        return $q.reject(NO_EVENT_NAME);
+        return _logError('trackHSNavigation', NO_EVENT_NAME);
       }
 
       var properties = _.extend({
@@ -537,7 +540,7 @@
      */
     function trackReportsEvent(eventName, payload) {
       if (!eventName) {
-        return $q.reject(NO_EVENT_NAME);
+        return _logError('trackReportsEvent', NO_EVENT_NAME);
       }
 
       var properties = _.extend({
@@ -663,6 +666,14 @@
       } else {
         return 'Customer';
       }
+    }
+
+    function _logError(method, msg) {
+      MetricsService.trackDiagnosticMetric(DiagnosticKey.ANALYTICS_FAILURE, {
+        method: method,
+        message: msg,
+      });
+      return msg;
     }
   }
 })();
