@@ -149,6 +149,16 @@ export class SearchObject {
     this.workingElementText = '';
   }
 
+  public containsElement(element: FieldQuery): boolean {
+    const found = SearchObject.findFirstElementMatching(this.parsedQuery, se => {
+      if (se instanceof CollectionOperator) {
+        return !!se.containsEffectOf(element);
+      }
+      return se.isEqual(element);
+    });
+    return !!found;
+  }
+
   public static findFirstElementMatching(element: SearchElement, matchFunction: (se: SearchElement) => boolean): SearchElement | null {
     if (!element) {
       return null;
