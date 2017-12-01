@@ -1,8 +1,9 @@
 import { IOverviewPageNotification } from 'modules/core/overview/overviewPage.types';
 
-export function OverviewAutoAssignNotificationFactory() {
+/* @ngInject */
+export function OverviewAutoAssignNotificationFactory($state: ng.ui.IStateService): any {
 
-  function createNotification($state: ng.ui.IStateService): IOverviewPageNotification {
+  function createNotification(): IOverviewPageNotification {
     return {
       badgeText: 'common.new',
       badgeType: 'success',
