@@ -623,14 +623,14 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         controller.username = 'testuser';
         controller.password = '';
         controller.isNextDisabled();
-        expect(controller.isNextDisabled()).toBe(false);
+        expect(controller.isNextDisabled()).toBe(true);
       });
       it('should test isNextDisabled when password is defined', function () {
         controller.url = { testURL: 'testURL' };
         controller.username = 'testuser';
         controller.password = 'testPass';
         controller.isNextDisabled();
-        expect(controller.isNextDisabled()).toBe(false);
+        expect(controller.isNextDisabled()).toBe(true);
       });
       it('should test stepBack function when phase 2 is on', function () {
         spyOn(AACommonService, 'isRestApiTogglePhase2').and.returnValue(true);
