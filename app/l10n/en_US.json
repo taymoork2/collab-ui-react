@@ -2112,7 +2112,7 @@
     "addPlaceBtn": "New Place",
     "deviceSearchPlaceholder": "Find devices by status, type, and more",
     "searchError": "The search input is not recognized.",
-    "allDevices": "All devices",
+    "allDevices": "Anything",
     "containingQuery": "containing {{query}}",
     "alsoContainingQuery": "also containing {{query}}",
     "typeHeader": "Type",
@@ -4446,7 +4446,7 @@
     "restApiResponseVar":"Response Variable",
     "restApiResponseVal":"Response Value",
     "restApiCustomVar":"Custom Variable",
-    "customVariablesAssignmentHelpText":"Select Customer Variables to assign the value of the Responses from the REST API to use in the call flow.",
+    "customVariablesAssignmentHelpText":"Select Custom Variables to assign the value of the Responses from the REST API to use in the call flow.",
     "Variables":"Variables",
     "value":"Value"
   },

@@ -26,6 +26,8 @@ export class UriVerificationService {
     });
   }
 }
-angular
-  .module('Hercules')
-  .service('UriVerificationService', UriVerificationService);
+
+export default angular
+  .module('hercules.uri-verification-service', [])
+  .service('UriVerificationService', UriVerificationService)
+  .name;

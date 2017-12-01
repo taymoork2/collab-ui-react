@@ -1,9 +1,22 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
-    .constant('NAME_DELIMITER', ' \u000B')
-    .service('Userservice', Userservice);
+  var authinfoModuleName = require('modules/core/scripts/services/authinfo');
+  var huronUserModuleName = require('modules/huron/telephony/telephonyUserService');
+  var sunlightServiceModuleName = require('modules/sunlight/services').default;
+  var phoneNumberModuleName = require('modules/huron/phoneNumber').default;
+  var urlConfigModuleName = require('modules/core/config/urlConfig');
+
+  // TODO: relocate this service into 'modules/core/users/shared'
+  module.exports = angular.module('core.user', [
+    authinfoModuleName,
+    huronUserModuleName,
+    phoneNumberModuleName,
+    sunlightServiceModuleName,
+    urlConfigModuleName,
+  ]).constant('NAME_DELIMITER', ' \u000B')
+    .service('Userservice', Userservice)
+    .name;
 
   /* @ngInject */
   function Userservice($http, $q, $rootScope, Authinfo, Config, HuronUser, Log, NAME_DELIMITER, Notification, SunlightConfigService, PhoneNumberService, UrlConfig) {

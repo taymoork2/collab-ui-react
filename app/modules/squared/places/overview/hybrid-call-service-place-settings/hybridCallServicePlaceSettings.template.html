@@ -1,18 +1,9 @@
-<cs-sp-buttons ng-if="showButtons">
-  <button id="btn-save" class="btn--primary btn-save"
-          cs-btn loading="saving"
-          ng-click="save()">
-    <span translate="common.save"></span>
-  </button>
-  <button id="btn-cancel" ng-disabled="saving" translate="common.cancel"
-          ng-click="reset()"></button>
-</cs-sp-buttons>
-<cs-sp-container ng-if="isPlace" cs-tabindex="showButtons ? -1 : 0">
-  <cs-sp-section ng-if="currentUser.sipUrl">
+<cs-sp-container>
+  <cs-sp-section ng-if="currentPlace.sipUrl">
     <section-title
       title-key="deviceOverviewPage.sipUrl">
     </section-title>
-    <p>{{currentUser.sipUrl}}</p>
+    <p>{{currentPlace.sipUrl}}</p>
   </cs-sp-section>
   <cs-sp-section ng-if="directoryNumbers">
     <section-title
@@ -31,21 +22,21 @@
         </div>
         <div class="columns small-7 normal-line-height">
           <span class="cloud-extension-label"
-                ng-if="callServiceAware.currentUserEntitled && callServiceAware.status && !savingAwareEntitlement"
+                ng-if="callServiceAware.currentPlaceEntitled && callServiceAware.status && !savingAwareEntitlement"
                 ng-class="'status-' + callServiceAware.status.state"
                 id="callServiceConnectPlaceStatus"
                 translate="hercules.activationStatus.{{getStatus(callServiceAware.status)}}"></span>
           <span class="cloud-extension-label last-state-change-timestamp"
-                ng-if="callServiceAware.currentUserEntitled && callServiceAware.status && callServiceAware.status.lastStateChangeText && !savingAwareEntitlement">
+                ng-if="callServiceAware.currentPlaceEntitled && callServiceAware.status && callServiceAware.status.lastStateChangeText && !savingAwareEntitlement">
             {{callServiceAware.status.lastStateChangeText}}
           </span>
           <span class="cloud-extension-label status-off"
-                ng-if="!callServiceAware.currentUserEntitled && !savingAwareEntitlement" translate="common.off"></span>
+                ng-if="!callServiceAware.currentPlaceEntitled && !savingAwareEntitlement" translate="common.off"></span>
           <span cs-loader
-                ng-if="savingAwareEntitlement || (!callServiceAware.status && callServiceAware.currentUserEntitled)"></span>
+                ng-if="savingAwareEntitlement || (!callServiceAware.status && callServiceAware.currentPlaceEntitled)"></span>
         </div>
         <div class="columns small-2">
-          <span ng-if="callServiceAware.currentUserEntitled && callServiceAware.status && !savingAwareEntitlement"
+          <span ng-if="callServiceAware.currentPlaceEntitled && callServiceAware.status && !savingAwareEntitlement"
                 class="cloud-extension-label right">
             <a ui-sref="place-overview.hybrid-services-squared-fusion-uc.uc-history"
                translate="hercules.userHistory.seeHistory"></a>
@@ -65,12 +56,12 @@
 
       <div class="row collapse">
         <div class="columns small-9 small-offset-3">
-          <user-status-messages ng-if="callServiceAware.currentUserEntitled && callServiceAware.status"
+          <user-status-messages ng-if="callServiceAware.currentPlaceEntitled && callServiceAware.status"
                                 messages="callServiceAware.status.messages"></user-status-messages>
         </div>
       </div>
 
-      <div class="row collapse" ng-if="callServiceAware.currentUserEntitled && callServiceAware.homedCluster">
+      <div class="row collapse" ng-if="callServiceAware.currentPlaceEntitled && callServiceAware.homedCluster">
         <div class="columns small-3">
           <span class="cloud-extension-label">{{::'cloudExtensions.cluster' | translate}}:</span>
         </div>
@@ -79,7 +70,7 @@
         </div>
       </div>
 
-      <div class="row collapse" ng-if="callServiceAware.currentUserEntitled && callServiceAware.homedConnector">
+      <div class="row collapse" ng-if="callServiceAware.currentPlaceEntitled && callServiceAware.homedConnector">
         <div class="columns small-3">
           <span class="cloud-extension-label">{{::'hercules.connectors.host_name' | translate}}:</span>
         </div>
@@ -111,34 +102,8 @@
 
     </div>
 
-    <cs-sp-section class="cloud-extensions" ng-if="resourceGroup.show">
-      <div class="section-title-row">
-        <span class="section-name" translate="hercules.resourceGroups.resourceGroupHeading"></span>
-      </div>
-      <div ng-if="!resourceGroup.cannotFindResouceGroup">
-        <p class="extension-description" translate="hercules.resourceGroups.setDescription"></p>
-        <cs-select
-          ng-model="resourceGroup.selected"
-          options="resourceGroup.options"
-          on-change-fn="selectedResourceGroupChanged()">
-        </cs-select>
-        <div class="warning-message" ng-if="resourceGroup.shouldWarn">
-          <i class="icon icon-warning"></i>
-          <p class="message"
-             translate="hercules.resourceGroups.groupIsEmptyWarning"
-             translate-values="{ConnectorName: localizedConnectorName}">
-          </p>
-        </div>
-      </div>
-      <div ng-if="resourceGroup.cannotFindResouceGroup" class="error-message">
-        <i class="icon icon-error"></i>
-        <p class="message"
-           translate="hercules.resourceGroups.groupHasBeenDeleted"></p>
-        <form>
-          <button class="btn" type="submit" ng-click="setResourceGroupOnUser('')">
-            <span translate="common.remove"></span>
-          </button>
-        </form>
-      </div>
-    </cs-sp-section>
+    <hybrid-services-resource-group-selector user-id="currentPlace.id"
+                                             service-id="'squared-fusion-uc'"
+                                             user-owned-by-c-c-c="false" ></hybrid-services-resource-group-selector>
+
 </cs-sp-container>

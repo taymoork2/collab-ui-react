@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Care Feature Delete Ctrl', function () {
-  var controller, $rootScope, $q, $scope, $stateParams, $timeout, $translate, CareFeatureList, CvaService, Log, Notification, Authinfo, EvaService;
+  var controller, $rootScope, $q, $scope, $stateParams, $timeout, $translate, CareFeatureList, CvaService, Log, Notification, Authinfo, EvaService, Analytics;
   var deferred, cvaDeferred, evaDeferred;
 
   var spiedAuthinfo = {
@@ -22,7 +22,7 @@ describe('Care Feature Delete Ctrl', function () {
     $provide.value('Authinfo', spiedAuthinfo);
   }));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$stateParams_, _$timeout_, _$translate_, _$q_, _Authinfo_, _CareFeatureList_, _CvaService_, _EvaService_, _Notification_, _Log_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$stateParams_, _$timeout_, _$translate_, _$q_, _Analytics_, _Authinfo_, _CareFeatureList_, _CvaService_, _EvaService_, _Log_, _Notification_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -36,6 +36,7 @@ describe('Care Feature Delete Ctrl', function () {
     controller = $controller;
     Authinfo = _Authinfo_;
     EvaService = _EvaService_;
+    Analytics = _Analytics_;
 
     deferred = $q.defer();
     cvaDeferred = $q.defer();
@@ -46,11 +47,12 @@ describe('Care Feature Delete Ctrl', function () {
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
     spyOn(Notification, 'errorWithTrackingId');
+    spyOn(Analytics, 'trackEvent');
     spyOn($rootScope, '$broadcast').and.callThrough();
   }));
 
   afterEach(function () {
-    controller = $rootScope = $q = $scope = $stateParams = $timeout = $translate = CareFeatureList = CvaService = Log = Notification = Authinfo = EvaService = deferred = cvaDeferred = evaDeferred = undefined;
+    controller = $rootScope = $q = $scope = $stateParams = $timeout = $translate = CareFeatureList = CvaService = Log = Notification = Authinfo = EvaService = deferred = cvaDeferred = evaDeferred = Analytics = undefined;
   });
 
   $stateParams = {
@@ -95,6 +97,7 @@ describe('Care Feature Delete Ctrl', function () {
     expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
       featureName: $stateParams.deleteFeatureName,
     });
+    expect(Analytics.trackEvent).not.toHaveBeenCalled();
   });
 
   it('should fail at deleting chat template', function () {
@@ -106,6 +109,7 @@ describe('Care Feature Delete Ctrl', function () {
     expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(failureResponse, jasmine.any(String), {
       featureName: $stateParams.deleteFeatureName,
     });
+    expect(Analytics.trackEvent).not.toHaveBeenCalled();
   });
 
   it('should delete CVA config successfully', function () {
@@ -118,6 +122,7 @@ describe('Care Feature Delete Ctrl', function () {
     expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
       featureName: cvaStateParams.deleteFeatureName,
     });
+    expect(Analytics.trackEvent).toHaveBeenCalledWith(Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_DELETE_SUCCESS);
   });
 
   it('should fail at deleting CVA config', function () {
@@ -129,6 +134,7 @@ describe('Care Feature Delete Ctrl', function () {
     expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(failureResponse, jasmine.any(String), {
       featureName: cvaStateParams.deleteFeatureName,
     });
+    expect(Analytics.trackEvent).toHaveBeenCalledWith(Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_DELETE_FAILURE);
   });
 
   it('should delete EVA config successfully', function () {
@@ -141,6 +147,7 @@ describe('Care Feature Delete Ctrl', function () {
     expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
       featureName: evaStateParams.deleteFeatureName,
     });
+    expect(Analytics.trackEvent).toHaveBeenCalledWith(Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_DELETE_SUCCESS);
   });
 
   it('should fail at deleting EVA config', function () {
@@ -152,5 +159,6 @@ describe('Care Feature Delete Ctrl', function () {
     expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(failureResponse, jasmine.any(String), {
       featureName: evaStateParams.deleteFeatureName,
     });
+    expect(Analytics.trackEvent).toHaveBeenCalledWith(Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_DELETE_FAILURE);
   });
 });

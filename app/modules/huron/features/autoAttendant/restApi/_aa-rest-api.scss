@@ -123,6 +123,10 @@
   }
 }
 
+label {
+  cursor: default;
+}
+
 .aa-rest-margin {
     @include vr-spacing(mt, 2);
 }
