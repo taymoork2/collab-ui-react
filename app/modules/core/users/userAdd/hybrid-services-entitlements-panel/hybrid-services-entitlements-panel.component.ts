@@ -82,8 +82,7 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
     });
   }
 
-  // TODO: add better TS types for args
-  public $onChanges(changes): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     if (changes.hasAssignableLicenses && !changes.hasAssignableLicenses.currentValue && changes.hasAssignableLicenses.previousValue) {
       this.clearSelectedHybridServicesEntitlements();
     }
