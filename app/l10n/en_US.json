@@ -7684,6 +7684,14 @@
       "chatPlusCallback": "Customer Support Template",
       "virtualAssistant": "Virtual Assistant"
     },
+    "featureCard": {
+      "spacesInUseText": "Expert Spaces: {{ numOfSpaces }}",
+      "unavailableSpacesInUseText": "Usage data unavailable",
+      "popoverMainHeader": "Expert Virtual Assistant Usage",
+      "popoverSpacesHeader": "Expert Spaces in Cisco Spark: {{ numOfSpaces }}",
+      "popoverDefaultSpace": "(Default Space)",
+      "popoverErrorMessage": "Cannot retrieve usage data for this Expert Virtual Assistant. Try again later."
+    },
     "ctValidation": {
       "errorChar250": "Character length cannot be more than 250.",
       "errorChar50": "Character length cannot be more than 50.",
