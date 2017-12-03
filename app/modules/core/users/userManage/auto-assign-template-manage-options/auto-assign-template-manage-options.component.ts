@@ -21,14 +21,14 @@ class AutoAssignTemplateManageOptionsController implements ng.IComponentControll
       btnType: 'alert',
     }).result.then(() => {
       const templateId = _.get(this.autoAssignTemplates, `${this.DEFAULT_AUTO_ASSIGN_TEMPLATE}.templateId`);
-      return this.AutoAssignTemplateService.deleteTemplate(templateId);
-    })
-    .then(() => {
-      this.Notification.success('userManage.org.deleteAutoAssignModal.deleteSuccess');
-      this.onDelete();
-    })
-    .catch((response) => {
-      this.Notification.errorResponse(response, 'userManage.org.deleteAutoAssignModal.deleteError');
+      return this.AutoAssignTemplateService.deleteTemplate(templateId)
+        .then(() => {
+          this.Notification.success('userManage.org.deleteAutoAssignModal.deleteSuccess');
+          this.onDelete();
+        })
+        .catch((response) => {
+          this.Notification.errorResponse(response, 'userManage.org.deleteAutoAssignModal.deleteError');
+        });
     });
   }
 }
