@@ -67,7 +67,7 @@ class Chart implements ng.IComponentController {
       visibleInLegendField: 'visibleLegend',
       outlineThickness: 2,
       outlineColor: totalHits === 0 ? this.Colors['$gray-light-4'] : this.Colors['$color-white'],
-      hoverAlpha: 0.5,
+      hoverAlpha: totalHits === 0 ? 1 : 0.5,
       labelRadius: 1,
       marginBottom: 0,
       marginLeft: 0,

@@ -18,10 +18,6 @@
       width: 35px;
     }
   }
-  .export-button {
-    font-size: 1.5rem;
-    padding-right: 2rem;
-  }
   .clipboard-button {
     padding-left: 10px;
   }
@@ -32,6 +28,10 @@
     display: flex;
     height: auto;
     flex-wrap: nowrap;
+    @media (max-width: 767px) {
+      flex-direction: column-reverse;
+      align-items: flex-start;
+    }
     .page-sub-header__right {
       align-self: flex-start;
     }
@@ -54,7 +54,7 @@
         font-size: .875rem;
         font-family: $brand-font-light;
         line-height: 1.5rem;
-        .selected {
+        .selected, :hover {
           color: $color-blue-base;
         }
         > div {
@@ -93,8 +93,34 @@
       }
     }
     .new-export {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
       align-self: flex-start;
       flex-grow: 1;
+      .export-button {
+        font-size: 1.5rem;
+        padding-right: 2rem;
+      }
+      @media (min-width: 991px) and (max-width: 1249px) {
+        flex-direction: column-reverse;
+        align-items: flex-end;
+        .export-button {
+          padding-right: 0;
+          line-height: 2;
+        }
+      }
+      @media (max-width: 991px) {
+        .export-button {
+          padding-right: 16px;
+        }
+      }
+      @media (max-width: 767px) {
+        flex-direction: row-reverse;
+        .export-button {
+          padding-left: 16px;
+        }
+      }
     }
   }
 
