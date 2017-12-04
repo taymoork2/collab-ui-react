@@ -103,12 +103,14 @@ describe('Component: WebexAddSiteModalComponent', function () {
           quantity: 0,
           centerType: '',
           isCIUnifiedSite: true,
+          keepExistingSite: true,
         },
         {
           siteUrl: 'trizettotraining',
           quantity: 0,
           centerType: '',
           isCIUnifiedSite: false,
+          keepExistingSite: true,
         },
       ];
       expect(this.controller.subscriptionList).toEqual([{ id: 'Sub100448', isPending: false }, { id: 'Sub100449', isPending: false }]);
