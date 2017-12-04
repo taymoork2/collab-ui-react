@@ -282,10 +282,7 @@ var HttpStatus = require('http-status-codes');
           .catch(function () {
             setVmStateFromSunlightState();
           });
-      })
-        .catch(function () {
-          setVmStateFromSunlightState();
-        });
+      });
     }
 
 
