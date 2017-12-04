@@ -1,4 +1,7 @@
-import { CloudConnectorService, FeatureToggleService, IEntitlementNameAndState, ServiceDescriptorService } from './index';
+import { CloudConnectorService } from 'modules/hercules/services/calendar-cloud-connector.service';
+import { FeatureToggleService } from 'modules/core/featureToggle';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
+import { IEntitlementNameAndState } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
 
 class HybridServicesEntitlementsPanelController implements ng.IComponentController {
 
