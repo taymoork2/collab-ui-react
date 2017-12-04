@@ -1,6 +1,5 @@
 import { ServicesOverviewHybridCard } from './services-overview-hybrid-card';
 import { ICardButton, CardType } from '../shared/services-overview-card';
-import { HDSService } from 'modules/hds/services/hds.service';
 import { Config } from 'modules/core/config/config';
 
 export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybridCard {
@@ -69,7 +68,7 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     private $state,
     private Authinfo,
     private Config: Config,
-    private HDSService: HDSService,
+    private HDSService,
     private Notification,
   ) {
     super({
