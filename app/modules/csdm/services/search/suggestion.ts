@@ -3,7 +3,6 @@ import { FieldQuery, OperatorAnd, SearchElement } from './searchElement';
 import { SearchObject } from './searchObject';
 import { SearchTranslator } from './searchTranslator';
 import { QueryParser } from './queryParser';
-import { NormalizeHelper } from 'modules/core/l10n/normalize.helper';
 
 export interface ISuggestion {
   searchString: string;
@@ -320,7 +319,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
     });
   }
 
-  public static filterSuggestion = (suggestions: ISuggestion[], searchObject: SearchObject): ISuggestion[] => {
+  public static filterSuggestion(suggestions: ISuggestion[], searchObject: SearchObject): ISuggestion[] {
     if (!searchObject) {
       return suggestions;
     }
@@ -328,16 +327,9 @@ export class SuggestionDropdown implements ISuggestionDropdown {
     if (!workingElement) {
       return suggestions;
     }
-    const specifiedMatch = workingElement instanceof FieldQuery ? NormalizeHelper.stripAccents(workingElement.getQueryWithoutField()) : '';
-    const rawInput = NormalizeHelper.stripAccents(searchObject.getWorkingElementRawText());
-    const specifiedField = workingElement.getCommonField();
 
     return _.filter(suggestions, (su) => {
-      const queryMatch = NormalizeHelper.stripAccents(su.text).toLowerCase().indexOf(specifiedMatch) > -1
-        || NormalizeHelper.stripAccents(su.text).toLowerCase().indexOf(rawInput) > -1;
-      const fieldMatch = _.toLower(su.field) === _.toLower(specifiedField);
-      return ((!specifiedMatch || queryMatch) && (!specifiedField || fieldMatch))
-        || (queryMatch && fieldMatch);
+      return workingElement.matches(su.text, su.field);
     });
   }
 }
