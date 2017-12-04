@@ -791,7 +791,7 @@ describe('CareSettingsCtrl', function () {
     });
 
     it('should check for CS onboarding for AA, if cs, app and aa are already onboarded, AA Feature Toggle resolve, AA Config returning 404', function () {
-      spyOn(this.AutoAttendantConfigService, 'getConfig').and.returnValue(this.$q.resolve('fake response'));
+      spyOn(this.AutoAttendantConfigService, 'getCSConfig').and.returnValue(this.$q.resolve('fake response'));
       initAAFeatureToggleSpies.call(this, true, true);
       initController.call(this);
       this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
@@ -807,7 +807,7 @@ describe('CareSettingsCtrl', function () {
           csOnboardingStatus: this.constants.status.SUCCESS,
         },
       };
-      spyOn(this.AutoAttendantConfigService, 'getConfig').and.returnValue(this.$q.resolve(fakeResponse));
+      spyOn(this.AutoAttendantConfigService, 'getCSConfig').and.returnValue(this.$q.resolve(fakeResponse));
       initAAFeatureToggleSpies.call(this, true, true);
       initController.call(this);
       this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
@@ -823,7 +823,7 @@ describe('CareSettingsCtrl', function () {
           aaOnboardingStatus: this.constants.status.SUCCESS,
         },
       };
-      spyOn(this.AutoAttendantConfigService, 'getConfig').and.returnValue(this.$q.resolve(fakeResponse));
+      spyOn(this.AutoAttendantConfigService, 'getCSConfig').and.returnValue(this.$q.resolve(fakeResponse));
       initAAFeatureToggleSpies.call(this, true, true);
       initController.call(this);
       this.controller.defaultQueueStatus = this.constants.status.SUCCESS;

@@ -476,11 +476,11 @@ var HttpStatus = require('http-status-codes');
       });
     }
 
-    function getAndUpdateOnboardingStatusFromAAConfig() {
+    function setViewModelStateFromCsConfigForAA() {
       if (vm.sunlightOnboardingState === vm.ONBOARDED) {
-        AutoAttendantConfigService.getConfig().then(function (result) {
-          var aaOnboardingStatus = _.get(result, 'data.csOnboardingStatus');
-          switch (aaOnboardingStatus) {
+        AutoAttendantConfigService.getCSConfig().then(function (result) {
+          var csOnboardingStatusForAA = _.get(result, 'data.csOnboardingStatus');
+          switch (csOnboardingStatusForAA) {
             case vm.status.SUCCESS:
               vm.state = vm.ONBOARDED;
               break;
@@ -493,26 +493,28 @@ var HttpStatus = require('http-status-codes');
             vm.state = vm.NOT_ONBOARDED;
           });
       } else {
-        vm.state = vm.sunlightOnboardingState;
+        setVmStateFromSunlightState();
       }
     }
 
-    function setAAOnboardingStatus(sunlightPromise) {
+    function setViewModelStateForAA(sunlightPromise) {
       sunlightPromise.then(function () {
         FeatureToggleService.supports(FeatureToggleService.features.huronAAContextService).then(function (results) {
-          vm.huronAAContextService = results;
-          if (vm.huronAAContextService) {
-            getAndUpdateOnboardingStatusFromAAConfig();
+          if (results) {
+            setViewModelStateFromCsConfigForAA();
           } else {
-            vm.state = vm.sunlightOnboardingState;
+            setVmStateFromSunlightState();
           }
         })
           .catch(function () {
-            vm.state = vm.sunlightOnboardingState;
+            setVmStateFromSunlightState();
           });
       });
     }
 
+    function setVmStateFromSunlightState() {
+      vm.state = vm.sunlightOnboardingState;
+    }
 
     function init() {
       FeatureToggleService.atlasCareAutomatedRouteTrialsGetStatus().then(function (result) {
@@ -527,7 +529,7 @@ var HttpStatus = require('http-status-codes');
         vm.defaultQueueStatus = vm.status.SUCCESS;
         populateQueueConfigViewModel(result, true);
         sunlightPromise = getOnboardingStatusFromOrgChatConfig();
-        setAAOnboardingStatus(sunlightPromise);
+        setViewModelStateForAA(sunlightPromise);
       }, function (error) {
         sunlightPromise = getOnboardingStatusFromOrgChatConfig();
         if (error.status === 404) {
@@ -535,7 +537,7 @@ var HttpStatus = require('http-status-codes');
         } else {
           Log.debug('Fetching default Queue status status, on load, failed: ', error);
         }
-        setAAOnboardingStatus(sunlightPromise);
+        setViewModelStateForAA(sunlightPromise);
       });
     }
 

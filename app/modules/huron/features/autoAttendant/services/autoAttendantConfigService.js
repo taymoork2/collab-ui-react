@@ -11,16 +11,14 @@
     var authInfoOrgId = Authinfo.getOrgId();
 
     var service = {
-      getConfig: getConfig,
+      getCSConfig: getCSConfig,
     };
 
     return service;
 
-    /////////////////////
-
-    function getConfig() {
-      var aaConfigUrl = HuronConfig.getCesUrl() + '/customers/' + authInfoOrgId + '/config/csOnboardingStatus';
-      return $http.get(aaConfigUrl);
+    function getCSConfig() {
+      var csConfigUrl = HuronConfig.getCesUrl() + '/customers/' + authInfoOrgId + '/config/csOnboardingStatus';
+      return $http.get(csConfigUrl);
     }
   }
 })();

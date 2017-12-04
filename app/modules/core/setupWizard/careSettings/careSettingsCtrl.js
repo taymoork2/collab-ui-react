@@ -241,11 +241,11 @@ var HttpStatus = require('http-status-codes');
         });
     }
 
-    function getAndUpdateOnboardingStatusFromAAConfig() {
+    function setViewModelStateFromCsConfigForAA() {
       if (vm.sunlightOnboardingState === vm.ONBOARDED) {
-        AutoAttendantConfigService.getConfig().then(function (result) {
-          var aaOnboardingStatus = _.get(result, 'data.csOnboardingStatus');
-          switch (aaOnboardingStatus) {
+        AutoAttendantConfigService.getCSConfig().then(function (result) {
+          var csOnboardingStatusForAA = _.get(result, 'data.csOnboardingStatus');
+          switch (csOnboardingStatusForAA) {
             case vm.status.SUCCESS:
               vm.state = vm.ONBOARDED;
               enableNext();
@@ -270,12 +270,11 @@ var HttpStatus = require('http-status-codes');
       }
     }
 
-    function setAAOnboardingStatus(sunlightPromise) {
+    function setViewModelStateForAA(sunlightPromise) {
       sunlightPromise.then(function () {
         FeatureToggleService.supports(FeatureToggleService.features.huronAAContextService).then(function (results) {
-          vm.huronAAContextService = results;
-          if (vm.huronAAContextService) {
-            getAndUpdateOnboardingStatusFromAAConfig();
+          if (results) {
+            setViewModelStateFromCsConfigForAA();
           } else {
             setVmStateFromSunlightState();
           }
@@ -296,7 +295,7 @@ var HttpStatus = require('http-status-codes');
       URService.getQueue(vm.defaultQueueId).then(function () {
         vm.defaultQueueStatus = vm.status.SUCCESS;
         sunlightPromise = getOnboardingStatusFromOrgChatConfig();
-        setAAOnboardingStatus(sunlightPromise);
+        setViewModelStateForAA(sunlightPromise);
       }, function (error) {
         sunlightPromise = getOnboardingStatusFromOrgChatConfig();
         if (error.status === 404) {
@@ -304,7 +303,7 @@ var HttpStatus = require('http-status-codes');
         } else {
           Log.debug('Fetching default queue status, on load, failed: ', error);
         }
-        setAAOnboardingStatus(sunlightPromise);
+        setViewModelStateForAA(sunlightPromise);
       });
     }
 
