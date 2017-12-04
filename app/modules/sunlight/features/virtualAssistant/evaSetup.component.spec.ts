@@ -136,6 +136,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       '$stateParams',
       '$modal',
       '$timeout',
+      '$translate',
       'CTService',
       'Analytics',
       'Authinfo',
@@ -168,6 +169,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     spyOn(this.SparkService, 'listRooms').and.returnValue(listRoomsDeferred.promise);
     spyOn(this.SparkService, 'getPerson').and.returnValue(getPersonDeferred.promise);
     spyOn(this.SparkService, 'listMemberships').and.returnValue(listMembershipsDeferred.promise);
+    spyOn(this.$translate, 'instant').and.callThrough();
 
     this.compileComponent('eva-setup', {
       dismiss: 'dismiss()',
@@ -211,6 +213,19 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       controller.template.configuration.pages.vaName.nameValue = 'testName';
       controller.getSummaryDescription();
       expect(controller.getText).toHaveBeenCalledWith('summary.evaDescEdit', { name: controller.template.configuration.pages.vaName.nameValue });
+    });
+
+    it('cancelModal', function () {
+      controller.cancelModal();
+      expect(this.$translate.instant).toHaveBeenCalledWith('careChatTpl.cancelCreateDialog',
+        { featureName: 'careChatTpl.virtualAssistant.eva.featureText.name' });
+    });
+
+    it('cancelModal with isEditFeature true', function () {
+      controller.isEditFeature = true;
+      controller.cancelModal();
+      expect(this.$translate.instant).toHaveBeenCalledWith('careChatTpl.cancelEditDialog',
+        { featureName: 'careChatTpl.virtualAssistant.eva.featureText.name' });
     });
   });
 
@@ -392,6 +407,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     beforeEach(function () {
       deferred = this.$q.defer();
       spyOn(this.EvaService, 'addExpertAssistant').and.returnValue(deferred.promise);
+      spyOn(this.EvaService, 'updateExpertAssistant').and.returnValue(deferred.promise);
     });
 
     it("When save template failed, the 'saveTemplateErrorOccurred' is set", function () {
@@ -405,6 +421,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       const featureNameObj = { featureName: 'careChatTpl.virtualAssistant.eva.featureText.name' };
       expect(controller.saveTemplateErrorOccurred).toBeTruthy();
       expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String), featureNameObj);
+      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_CREATE_FAILURE);
     });
 
     it('should submit template successfully', function () {
@@ -427,6 +444,49 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       expect(this.$state.go).toHaveBeenCalled();
       expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_SUMMARY_PAGE, { durationInMillis: 30 });
       expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_START_FINISH, { durationInMillis: 10 });
+      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_CREATE_SUCCESS);
+    });
+
+    it('should save successfully for Edit', function () {
+      //by default, this flag is false
+      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
+      controller.isEditFeature = true;
+      const testName = 'My Test EVA';
+      controller.template.configuration.pages.vaName.nameValue = testName;
+      spyOn(this.$state, 'go');
+      deferred.resolve({
+        success: true,
+        status: 200,
+      });
+      controller.submitFeature();
+      this.$scope.$apply();
+
+      expect(this.Notification.success).toHaveBeenCalledWith('careChatTpl.editSuccessText', {
+        featureName: testName,
+      });
+      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
+      expect(this.$state.go).toHaveBeenCalled();
+      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_SUMMARY_PAGE, { durationInMillis: 30 });
+      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_START_FINISH, { durationInMillis: 10 });
+    });
+
+    it('should show correct notification if save fails on Edit', function () {
+      //by default, this flag is false
+      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
+      controller.isEditFeature = true;
+      const failedData = {
+        success: false,
+        status: 403,
+        Errors: [{
+          errorCode: '100106',
+        }],
+      };
+      deferred.reject(failedData);
+      controller.submitFeature();
+      this.$scope.$apply();
+
+      expect(controller.saveTemplateErrorOccurred).toBeTruthy();
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String));
     });
   });
 });

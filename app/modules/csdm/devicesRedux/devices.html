@@ -19,7 +19,9 @@
                        is-searching="devices.issearching"
                        search-interaction="devices.searchInteraction"
                        search-result-changed="devices.searchResultChanged(result)"></device-search>
-        <device-chart search-result="devices.searchResult" pie-chart-clicked="devices.addToSearch(searchElement, true)"></device-chart>
+      <device-chart search-result="devices.searchResult"
+                    search-object="devices.searchObject"
+                    pie-chart-clicked="devices.addToSearch(searchElement, true)"></device-chart>
       <!--</cs-page-sub-header-left>-->
       <div class="new-export">
         <span

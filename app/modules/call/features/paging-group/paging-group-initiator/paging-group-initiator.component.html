@@ -7,7 +7,7 @@
   <div class="cs-radio-group">
     <input cs-input type="radio"
             ng-model="$ctrl.initiatorType"
-            name="allRadio"
+            name="initiatorRadio"
             ng-change="$ctrl.onInitiatorTypeChanged()"
             id="public"
             value="PUBLIC"
@@ -16,14 +16,14 @@
             ng-model="$ctrl.initiatorType"
             id="membersonly"
             ng-change="$ctrl.onInitiatorTypeChanged()"
-            name="allMembersRadio"
+            name="initiatorRadio"
             value="MEMBERS_ONLY"
             cs-input-label="{{:: 'pagingGroup.allMembers' | translate}}">
     <input cs-input type="radio"
             ng-model="$ctrl.initiatorType"
             id="custom"
             ng-change="$ctrl.onInitiatorTypeChanged()"
-            name="customRadio"
+            name="initiatorRadio"
             value="CUSTOM"
             cs-input-label="{{:: 'pagingGroup.custom' | translate}}">
   </div>
@@ -68,7 +68,9 @@
         cs-image="initiator.thumbnailSrc"
         on-update="$ctrl.onUpdateCardInitiator(id, data)"
         cs-remove-label="$ctrl.removeStr"
-        on-remove="$ctrl.unSelectInitiator(initiator)">
+        on-remove="$ctrl.unSelectInitiator(initiator)"
+        delete-aria-label="{{::'common.delete' | translate}}"
+        toggle-aria-label="{{::'common.toggleData' | translate}}">
       </cs-card-member>
     </div>
   </cs-card-layout>

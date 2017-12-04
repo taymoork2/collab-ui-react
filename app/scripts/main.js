@@ -23,7 +23,6 @@
     require('modules/core/setupWizard/setup-wizard.service').default,
     require('modules/core/notifications').default,
     require('modules/core/users/userAdd').default,
-    require('modules/core/users/userAdd/hybrid-services-entitlements-panel').default,
     require('modules/core/users/userManage').default,
     'core.pageparam',
     'core.previousstate',
@@ -66,6 +65,7 @@
     require('modules/core/scrollIndicator').default,
     require('modules/core/gridSpinner').default,
     require('modules/core/scripts/services/org.service'),
+    require('modules/core/scripts/services/user.service'),
     require('modules/core/scripts/services/userlist.service'),
     require('modules/core/scripts/services/brand.service'),
     require('modules/core/scripts/services/sparkDomainManagement.service'),
@@ -98,6 +98,7 @@
     require('modules/gemini/reports').default,
     require('modules/account-linking/banner').default,
     require('modules/core/siteList/webex-site').default,
+    require('modules/core/overview/notifications').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('addressparser', require('emailjs-addressparser'));
@@ -132,6 +133,7 @@
     require('modules/call/settings/settings-bulk-enable-vm').default,
     require('modules/huron/lineSettings/callerIdService'),
     require('modules/huron/telephony/telephonyConfig'),
+    require('modules/huron/telephony/telephonyUserService'),
     require('modules/huron/telephony/cmiServices'),
     require('modules/huron/autoAnswer').default,
     require('modules/huron/pstn').default,
@@ -183,9 +185,11 @@
     require('modules/hercules/services/hybrid-services-extras.service').default,
     require('modules/hercules/services/hybrid-services-i18n.service').default,
     require('modules/hercules/services/hybrid-services-utils.service').default,
+    require('modules/hercules/services/hybrid-services-user-sidepanel-helper.service').default,
     require('modules/hercules/services/l2sip-service').default,
     require('modules/hercules/services/resource-group.service').default,
     require('modules/hercules/services/service-descriptor.service').default,
+    require('modules/hercules/services/uri-verification-service').default,
     require('modules/hercules/services/ucc-service').default,
     require('modules/hercules/services/uss.service').default,
   ]);

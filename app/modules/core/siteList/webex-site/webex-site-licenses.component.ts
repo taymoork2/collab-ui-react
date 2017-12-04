@@ -17,6 +17,7 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
   public centerDetails: { centerType: string; volume: number; }[];
   public isHideDescription: boolean;
   public onDistributionChange: Function;
+  public onSendTracking: Function;
 
   public $onChanges(): void {
     if (this.sitesArray && this.conferenceLicensesInSubscription) {
@@ -209,6 +210,7 @@ export class WebexSiteLicensesComponent implements ng.IComponentOptions {
     conferenceLicensesInSubscription: '<',
     isHideDescription: '<?',
     onDistributionChange: '&',
+    onSendTracking: '&?',
   };
 }
 

@@ -461,6 +461,30 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         controller.stepNext();
         expect(controller.tableData).toEqual(result);
       });
+
+      it('when password doesnot change', function () {
+        controller.password = '**********';
+        controller.username = 'testuser';
+        controller.basicAuthButton = true;
+        controller.menuEntry.actions[0].dynamicList = [{
+          isDynamic: false,
+          action: {
+            eval: {
+              value: 'test',
+            },
+          },
+        }];
+        controller.stepNext();
+        expect(controller.currentStep).toBe(2);
+        expect(controller.dynamics.length).toBe(0);
+      });
+
+      it('tableData should be empty when restApiResponse is not valid', function () {
+        controller.restApiResponse = '<div></div>';
+        result = [];
+        controller.stepNext();
+        expect(controller.tableData).toEqual(result);
+      });
     });
 
     describe('should test the api configure modal wizard', function () {
@@ -473,6 +497,7 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
       });
 
       it('should test stepBack function', function () {
+        spyOn(AACommonService, 'isRestApiTogglePhase2').and.returnValue(true);
         controller.currentStep = 2;
         var action = {};
         action.variableSet = [{ a: 'a' }];
@@ -490,7 +515,7 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
 
         //valid url
         controller.url = { testURL: 'testURL' };
-        expect(controller.isNextDisabled()).toEqual(false);
+        expect(controller.isNextDisabled()).toEqual(true);
 
         //not empty but not valid url
         controller.url = '<br class="ng-scope">';
@@ -570,6 +595,141 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
 
       it('should test isDynamicsValueUpdated function', function () {
         controller.isDynamicsValueUpdated();
+        expect(controller.isDynamicsValueUpdated).toBeDefined();
+      });
+    });
+
+    describe('should test functionality when basicAuthButton is true', function () {
+      beforeEach(function () {
+        controller.basicAuthButton = true;
+      });
+      afterEach(function () {
+        controller.basicAuthButton = null;
+      });
+      it('should test isNextDisabled when url is empty', function () {
+        controller.url = '';
+        controller.isNextDisabled();
+        expect(controller.isNextDisabled()).toBe(true);
+      });
+      it('should test isNextDisabled when url is defined', function () {
+        controller.url = { testURL: 'testURL' };
+        controller.username = '';
+        controller.password = '';
+        controller.isNextDisabled();
+        expect(controller.isNextDisabled()).toBe(true);
+      });
+      it('should test isNextDisabled when username is defined', function () {
+        controller.url = { testURL: 'testURL' };
+        controller.username = 'testuser';
+        controller.password = '';
+        controller.isNextDisabled();
+        expect(controller.isNextDisabled()).toBe(true);
+      });
+      it('should test isNextDisabled when password is defined', function () {
+        controller.url = { testURL: 'testURL' };
+        controller.username = 'testuser';
+        controller.password = 'testPass';
+        controller.isNextDisabled();
+        expect(controller.isNextDisabled()).toBe(true);
+      });
+      it('should test stepBack function when phase 2 is on', function () {
+        spyOn(AACommonService, 'isRestApiTogglePhase2').and.returnValue(true);
+        controller.currentStep = 2;
+        var action = {};
+        action.variableSet = [{ a: 'a' }];
+        action.dynamics = [{ variablename: 'variable', value: 'vale' }];
+        action.restApiRequest = 'http://www.mocky.io';
+        action.restApiResponse = 'message: hellow';
+        controller.menuEntry.actions[0].username = 'testUser';
+        controller.stepBack();
+        expect(controller.currentStep).toBe(1);
+        expect(controller.username).toBe('testUser');
+      });
+      it('should test stepBack function when phase2 is off', function () {
+        spyOn(AACommonService, 'isRestApiTogglePhase2').and.returnValue(false);
+        controller.currentStep = 2;
+        var action = {};
+        action.variableSet = [{ a: 'a' }];
+        action.dynamics = [{ variablename: 'variable', value: 'vale' }];
+        action.restApiRequest = 'http://www.mocky.io';
+        action.restApiResponse = 'message: hellow';
+        action.username = '';
+        controller.stepBack();
+        expect(controller.currentStep).toBe(1);
+      });
+    });
+
+    describe('should test save function when RestApiTogglePhase2tApi is on', function () {
+      beforeEach(function () {
+        spyOn(AACommonService, 'isRestApiTogglePhase2').and.returnValue(true);
+      });
+      it('should test saveUpdatedVariableSet function when basicAuthButton is false', function () {
+        var result = [];
+        controller.variableSet = [];
+        controller.tableData = [{
+          selected: '',
+        }];
+        controller.username = '';
+        controller.basicAuthButton = false;
+        controller.save();
+        expect(controller.variableSet).toEqual(result);
+        expect(controller.menuEntry.actions[0].username).not.toBeDefined();
+      });
+      it('should test saveUpdatedVariableSet function when basicAuthButton is true', function () {
+        var result = [];
+        controller.variableSet = [];
+        controller.tableData = [{
+          selected: '',
+        }];
+        controller.username = 'testUser';
+        controller.basicAuthButton = true;
+        controller.save();
+        expect(controller.variableSet).toEqual(result);
+        expect(controller.menuEntry.actions[0].username).toBe('testUser');
+      });
+      it('should test saveUpdatedVariableSet function when password is not changed', function () {
+        var result = [];
+        controller.variableSet = [];
+        controller.tableData = [{
+          selected: '',
+        }];
+        controller.username = 'testUser';
+        controller.basicAuthButton = true;
+        controller.password = '**********';
+        controller.save();
+        expect(controller.variableSet).toEqual(result);
+        expect(controller.menuEntry.actions[0].username).toBe('testUser');
+        expect(controller.menuEntry.actions[0].credentialId).toBe(controller.menuEntry.actions[0].value);
+      });
+      it('should test callTestRestApiConfigs function when basicAuthButton is enable', function () {
+        controller.dynamics = [{
+          variableName: 'Static text',
+          value: '',
+        }];
+        controller.basicAuthButton = true;
+        controller.callTestRestApiConfigs();
+        expect(controller.dynamics[0].$$hashkey).not.toBeDefined();
+      });
+      it('should test basicAuthSlider function when basicAuthButton is enable', function () {
+        controller.basicAuthButton = true;
+        controller.onBasicAuthSlider();
+        expect(controller.username).toBe('');
+      });
+      it('should test basicAuthSlider function when basicAuthButton is disabled', function () {
+        controller.basicAuthButton = false;
+        controller.onBasicAuthSlider();
+        expect(controller.username).toBe('');
+        expect(controller.password).toBe('');
+      });
+      it('should test basicAuthSlider function when basicAuthButton is disabled', function () {
+        controller.password = '**********';
+        controller.passwordCheck();
+        expect(controller.password).toBe('');
+      });
+
+      it('should test calling of dynamicListUpdated broadcast', function () {
+        $rootScope.$broadcast('dynamicListUpdated');
+        $scope.$apply();
         expect(controller.isDynamicsValueUpdated).toBeDefined();
       });
     });

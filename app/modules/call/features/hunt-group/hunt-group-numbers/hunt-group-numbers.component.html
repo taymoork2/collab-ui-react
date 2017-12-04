@@ -41,7 +41,8 @@
       ng-repeat="number in $ctrl.numbers track by number.uuid"
       cs-id="number.uuid"
       cs-title="number.number"
-      on-remove-fn="$ctrl.removeNumber(number)">
+      on-remove-fn="$ctrl.removeNumber(number)"
+      delete-aria-label="{{::'common.delete' | translate}}">
     </cs-card-number>
   </cs-card-layout>
 </div>

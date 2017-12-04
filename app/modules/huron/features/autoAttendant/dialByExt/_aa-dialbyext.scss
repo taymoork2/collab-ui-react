@@ -1,3 +1,12 @@
+.aa-routing-text-dropdown {
+    width: 50%;
+  }
+
+.aa-phonemenu-helptext {
+    font-style: italic;
+    color: $gray-light-1;
+  }
+
 .aa-dial-by-message-panel {
   width: 100%;
 
@@ -20,6 +29,24 @@
     @include vr-spacing(pr, 0.75);
 
     resize: none;
+  }
+
+  .aa-routing-prefix-text {
+    @include vr-spacing(mt, 1);
+  }
+
+  .aa-helptext {
+    @include vr-spacing(mb, 4);
+    @include vr-spacing(pl, 2);
+    font-style: italic;
+  }
+
+  .aa-subtext {
+    @include vr-spacing(mt, -0.5);
+    @include vr-spacing(pl, 0);
+    @include vr-spacing(mb, 0.75);
+    color: $gray-light-1;
+    font-style: italic;
   }
 
   .aa-dial-by-message-select-list {

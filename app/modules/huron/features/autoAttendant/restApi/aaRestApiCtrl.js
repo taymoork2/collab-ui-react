@@ -136,6 +136,8 @@
         action.variables = [];
         action.restApiRequest = '';
         action.restApiResponse = '';
+        action.username = '';
+        action.password = '';
         vm.menuEntry.addAction(action);
         AACommonService.setRestApiStatus(false);
         AACommonService.setIsValid(vm.uniqueCtrlIdentifer, false);

@@ -189,6 +189,14 @@ describe('Service:AACommonService', function () {
       AACommonService.setQueueSettingsStatus(false);
       expect(AACommonService.isFormDirty()).toBeFalsy();
     });
+    it('setRestApiTogglePhase2 should set to false', function () {
+      AACommonService.setRestApiTogglePhase2(false);
+      expect(AACommonService.isRestApiTogglePhase2()).toBeFalsy();
+    });
+    it('setRestApiTogglePhase2 should set to true', function () {
+      AACommonService.setRestApiTogglePhase2(true);
+      expect(AACommonService.isRestApiTogglePhase2()).toBeTruthy();
+    });
   });
 
   describe('saveUiModel', function () {

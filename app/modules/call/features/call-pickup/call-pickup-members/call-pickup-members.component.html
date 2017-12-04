@@ -59,7 +59,9 @@
       cs-complex-card-type="checkbox"
       cs-checkboxes="member.checkboxes"
       cs-id="$index"
-      on-update ="$ctrl.updateNumbers(member)">
+      on-update ="$ctrl.updateNumbers(member)"
+      delete-aria-label="{{::'common.delete' | translate}}"
+      toggle-aria-label="{{::'common.toggleData' | translate}}">
     </cs-card-member>
   </cs-card-layout>
 </div>

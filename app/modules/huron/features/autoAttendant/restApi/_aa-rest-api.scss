@@ -122,3 +122,11 @@
     border-right: 0.01rem solid #aeaeaf;
   }
 }
+
+label {
+  cursor: default;
+}
+
+.aa-rest-margin {
+    @include vr-spacing(mt, 2);
+}

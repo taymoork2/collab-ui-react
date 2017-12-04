@@ -1377,7 +1377,7 @@ require('./_user-add.scss');
     //***
     //*********************************************************************
 
-    var Feature = require('./feature.model').default;
+    var Feature = require('modules/core/users/userAdd/shared/feature.model').default;
 
     function LicenseFeature(name, bAdd) {
       return {

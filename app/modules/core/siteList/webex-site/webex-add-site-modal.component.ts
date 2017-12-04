@@ -44,6 +44,7 @@ class WebexAddSiteModalController implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
+    private Analytics,
     private Notification: Notification,
     private SetupWizardService: SetupWizardService,
     private $rootScope: ng.IRootScopeService,
@@ -95,6 +96,12 @@ class WebexAddSiteModalController implements ng.IComponentController {
       this.changeCurrentSubscription(changes.subscriptionId.currentValue);
     }
   }
+
+  public sendMetrics(event, properties?) {
+    _.set(properties, 'subscriptionId', this.currentSubscriptionId);
+    this.Analytics.trackWebExMgmntSteps(event, properties);
+  }
+
 
   // wizard navigation logic
   public cancel(): void {

@@ -1,8 +1,10 @@
 import { ILicenseUsage } from 'modules/core/users/userAdd/assignable-services/shared';
+import { OfferName } from 'modules/core/shared';
 
 class AssignableAdvancedMeetingsController implements ng.IComponentController {
   private readonly ORDERED_OFFER_NAMES = ['CMR', 'EC', 'EE', 'MC', 'TC'];
   private licenses: ILicenseUsage[];
+  public OFFER_NAME = OfferName;
 
   /* @ngInject */
   constructor(

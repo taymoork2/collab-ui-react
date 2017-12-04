@@ -159,23 +159,22 @@
       function getServiceStatus(rowData, type) {
         // note that this logic is slightly different than the logic in getAccountStatus within PartnerService
         // This service status can include free, whereas account status cannot
-        var licenseList = rowData.licenseList;
         var serviceData = rowData[type];
 
-        if (checkForLicenseStatus(PartnerService.isLicenseActive, licenseList, serviceData)) {
+        if (checkForLicenseStatus(PartnerService.isLicenseActive, rowData, serviceData)) {
           return POSSIBLE_SERVICE_STATUSES.purchased;
-        } else if (checkForLicenseStatus(PartnerService.isLicenseFree, licenseList, serviceData)) {
+        } else if (checkForLicenseStatus(PartnerService.isLicenseFree, rowData, serviceData)) {
           return POSSIBLE_SERVICE_STATUSES.free;
         } else if (serviceData.daysLeft < 0) {
           return POSSIBLE_SERVICE_STATUSES.expired;
-        } else if (checkForLicenseStatus(PartnerService.isLicenseATrial, licenseList, serviceData)) {
+        } else if (checkForLicenseStatus(PartnerService.isLicenseATrial, rowData, serviceData)) {
           return POSSIBLE_SERVICE_STATUSES.trial;
         }
         return POSSIBLE_SERVICE_STATUSES.noInfo;
       }
 
-      function checkForLicenseStatus(licenseStatusFunction, licenseList, serviceData) {
-        return PartnerService.isLicenseInfoAvailable(licenseList) && licenseStatusFunction(serviceData);
+      function checkForLicenseStatus(licenseStatusFunction, rowData, serviceData) {
+        return PartnerService.isLicenseInfoAvailable(rowData) && licenseStatusFunction(serviceData);
       }
 
       function isServiceManaged() {

@@ -16,6 +16,7 @@ class WebexSiteNewCtrl implements ng.IComponentController {
   constructor(
     private $translate: ng.translate.ITranslateService,
     private $scope: ng.IScope,
+    private Analytics,
     private Config: Config,
     private TrialTimeZoneService: TrialTimeZoneService,
     private TrialWebexService: TrialWebexService,
@@ -38,6 +39,7 @@ class WebexSiteNewCtrl implements ng.IComponentController {
   public disableValidateButton = false;
   public onSitesAdd: Function;
   public onValidationStatusChange: Function;
+  public onSendTracking: Function;
   public sitesArray: IWebExSite[];
   public newSitesArray: IWebExSite[] = [];
   public audioPartnerName?: string;
@@ -48,10 +50,20 @@ class WebexSiteNewCtrl implements ng.IComponentController {
   }
 
   public removeSite(index: number): void {
+    const siteObj = this.newSitesArray[index];
     this.newSitesArray.splice(index, 1);
+    const properties = { siteUrl: _.get(siteObj, 'siteUrl') + this.Config.siteDomainUrl.webexUrl, timezone: _.get(siteObj, 'timezone') };
+    this.sendTracking(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.REMOVE_SITE, properties);
     this.onValidationStatusChange({ isValid: this.newSitesArray.length > 0 });
   }
 
+  public userManagementOptionChange() {
+    const clientVersion = this.siteModel.setupType === _.get(this.Config, 'setupTypes.legacy')
+      ? this.Config.userManagementService.webexSiteAdmin
+      : this.Config.userManagementService.sparkControlHub;
+    this.sendTracking(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.CLIENT_VERSION_RADIO, { clientVersionSelected: clientVersion });
+    this.clearError();
+  }
   public validateMeetingSite(): void {
     this.disableValidateButton = true;
     if (_.isEmpty(this.siteModel.siteUrl)) {
@@ -75,12 +87,19 @@ class WebexSiteNewCtrl implements ng.IComponentController {
           this.siteModel.isCIUnifiedSite = true;
         }
         this.addSite(_.clone(this.siteModel));
+        const properties = {
+          siteUrl: this.siteModel.siteUrl + this.Config.siteDomainUrl.webexUrl,
+          timezoneSelected: _.get(this.siteModel, 'timezone'),
+        };
         this.clearWebexSiteInputs();
+        this.sendTracking(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.NEW_SITE_ADDED, properties);
       } else {
         if (response.errorCode === 'duplicateSite') {
           this.showError(this.$translate.instant('firstTimeWizard.meetingSettingsError.duplicateSite'), this.siteErrorType.URL);
+          this.sendTracking(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.DUPLICATE_WEBEX_SITE, { webexSiteUrl: siteName });
         } else {
           this.showError(this.$translate.instant('firstTimeWizard.meetingSettingsError.enteredSiteNotValid'), this.siteErrorType.URL);
+          this.sendTracking(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.INVALID_WEBEX_SITE, { webexSiteUrl: siteName });
         }
         return;
       }
@@ -129,6 +148,15 @@ class WebexSiteNewCtrl implements ng.IComponentController {
     this.siteModel.isCIUnifiedSite = undefined;
   }
 
+  private sendTracking(event: string, properties: {}) {
+    if (typeof this.onSendTracking === 'function') {
+      this.onSendTracking({
+        event: event,
+        properties: properties,
+      });
+    }
+  }
+
   public getSitesAudioPackageDisplay() {
     if (!(this.audioPackage)) {
       return null;
@@ -154,6 +182,7 @@ export class WebexSiteNewComponent implements ng.IComponentOptions {
     sitesArray: '<',
     onSitesAdd: '&',
     onValidationStatusChange: '&',
+    onSendTracking: '&?',
     audioPackage: '<',
     audioPartnerName: '<',
   };

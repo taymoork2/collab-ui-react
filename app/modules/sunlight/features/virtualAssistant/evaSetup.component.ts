@@ -55,7 +55,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
             title: '',
             id: '',
           },
-          defaultSpaceOptions: [{}],
+          defaultSpaceOptions: [<any>{}],
           enabled: true,
           startTimeInMillis: 0,
           eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_DEFAULT_SPACE,
@@ -107,12 +107,17 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     if (this.$stateParams.isEditFeature) {
       this.isEditFeature = true;
       this.template.templateId = this.$stateParams.template.id;
+      this.template.configuration.pages.vaName.nameValue = this.$stateParams.template.name;
+      const emailAddress = this.$stateParams.template.email;
+      this.template.configuration.pages.evaEmail.value = emailAddress.substring(0, emailAddress.indexOf('@'));
+      this.template.configuration.pages.evaDefaultSpace.selectedDefaultSpace.id = this.$stateParams.template.defaultSpaceId;
 
       if (this.$stateParams.template.icon) {
         this.avatarUploadState = this.avatarState.PREVIEW;
         this.template.configuration.pages.vaAvatar.fileValue = this.$stateParams.template.icon;
       }
     }
+    this.loadDefaultSpaceOptions();
   }
 
   /**
@@ -138,51 +143,65 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     }
   }
 
+  private setSelectedDefaultSpace(): void {
+    //show selected space on edit
+    if (this.isEditFeature) {
+      const selectedSpace = _.find(this.template.configuration.pages.evaDefaultSpace.defaultSpaceOptions, {
+        id: this.$stateParams.template.defaultSpaceId,
+      });
+      if (selectedSpace) {
+        this.template.configuration.pages.evaDefaultSpace.selectedDefaultSpace.title = selectedSpace.title;
+      }
+    }
+  }
+
+  private loadDefaultSpaceOptions(): void {
+    // Load the default space options
+    const controller = this;
+    controller.SparkService.listRooms().then((response) => {
+      const allSpaces = response.items;
+      if (allSpaces && allSpaces.length > 0) {
+        controller.SparkService.getPerson('me').then((meResponse) => {
+          const meId = meResponse.id;
+          const spacesCreatedByThisUser = _.filter(allSpaces, { creatorId: meId });
+          // Find the left over spaces
+          const otherSpaces = _.pullAll(allSpaces, spacesCreatedByThisUser);
+          if (otherSpaces && otherSpaces.length > 0) {
+            controller.SparkService.listMemberships().then((membershipResponse) => {
+              const allMemberships = membershipResponse.items;
+              // Find all moderatored spaces
+              if (allMemberships && allMemberships.length > 0) {
+                // Find space Ids that is a moderator
+                const allModeratoredSpaceIds = allMemberships.map(function(item) {
+                  if (item.isModerator) {
+                    return item.rooomId;
+                  }
+                });
+                // Find all spaces that matched the moderator space id
+                const moderatoredSpaces = otherSpaces.filter(function (item) {
+                  return _.indexOf(allModeratoredSpaceIds, item.id) > 0;
+                });
+                // Combine the spaces created by this user and moderatored spaces
+                const defaultSpaces = _.concat(spacesCreatedByThisUser, moderatoredSpaces);
+                this.template.configuration.pages.evaDefaultSpace.defaultSpaceOptions = _.sortBy(defaultSpaces, 'title');
+                this.setSelectedDefaultSpace();
+              }
+            });
+          } else {
+            this.template.configuration.pages.evaDefaultSpace.defaultSpaceOptions = _.sortBy(spacesCreatedByThisUser, 'title');
+            this.setSelectedDefaultSpace();
+          }
+        });
+      } // end of if there are any spaces
+    });
+  }
+
   /**
    * called when page corresponding to newState is loaded event
    * @param {string} newState
    */
   public onPageLoaded(newState: string): void {
     this.template.configuration.pages[newState].startTimeInMillis = Date.now();
-
-    if (newState === 'evaDefaultSpace') {
-      // Load the default space options
-      const controller = this;
-      controller.SparkService.listRooms().then((response) => {
-        const allSpaces = response.items;
-        if (allSpaces && allSpaces.length > 0) {
-          controller.SparkService.getPerson('me').then((meResponse) => {
-            const meId = meResponse.id;
-            const spacesCreatedByThisUser = _.filter(allSpaces, { creatorId: meId });
-            // Find the left over spaces
-            const otherSpaces = _.pullAll(allSpaces, spacesCreatedByThisUser);
-            if (otherSpaces && otherSpaces.length > 0) {
-              controller.SparkService.listMemberships().then((membershipResponse) => {
-                const allMemberships = membershipResponse.items;
-                // Find all moderatored spaces
-                if (allMemberships && allMemberships.length > 0) {
-                  // Find space Ids that is a moderator
-                  const allModeratoredSpaceIds = allMemberships.map(function(item) {
-                    if (item.isModerator) {
-                      return item.rooomId;
-                    }
-                  });
-                  // Find all spaces that matched the moderator space id
-                  const moderatoredSpaces = otherSpaces.filter(function (item) {
-                    return _.indexOf(allModeratoredSpaceIds, item.id) > 0;
-                  });
-                  // Combine the spaces created by this user and moderatored spaces
-                  const defaultSpaces = _.concat(spacesCreatedByThisUser, moderatoredSpaces);
-                  this.template.configuration.pages.evaDefaultSpace.defaultSpaceOptions = _.sortBy(defaultSpaces, 'title');
-                }
-              });
-            } else {
-              this.template.configuration.pages.evaDefaultSpace.defaultSpaceOptions = _.sortBy(spacesCreatedByThisUser, 'title');
-            }
-          });
-        } // end of if there are any spaces
-      });
-    }
   }
 
   public isDefaultSpaceSelected(): boolean {
@@ -200,6 +219,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     durationInMillis = currentTimeInMillis - this.template.configuration.pages.evaOverview.startTimeInMillis;
     analyticProps = { durationInMillis: durationInMillis };
     this.Analytics.trackEvent(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_START_FINISH, analyticProps);
+    this.Analytics.trackEvent(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_CREATE_SUCCESS);
   }
 
   public submitFeature(): void {
@@ -236,6 +256,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
         controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.createConfigFailureText'), {
           featureName: controller.$translate.instant('careChatTpl.virtualAssistant.eva.featureText.name'),
         });
+        controller.Analytics.trackEvent(controller.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_CREATE_FAILURE);
       });
   }
 

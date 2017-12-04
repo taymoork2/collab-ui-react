@@ -1,5 +1,5 @@
-import { Aggregations, SearchResult } from './searchResult';
-import { SearchElement } from './searchElement';
+import { SearchResult } from './searchResult';
+import { FieldQuery, OperatorAnd, SearchElement } from './searchElement';
 import { SearchObject } from './searchObject';
 import { SearchTranslator } from './searchTranslator';
 import { QueryParser } from './queryParser';
@@ -7,15 +7,15 @@ import { NormalizeHelper } from 'modules/core/l10n/normalize.helper';
 
 export interface ISuggestion {
   searchString: string;
-  field: string;
+  readableField: string;
+  field?: string;
   text: string;
   count?: number;
+  isFieldSuggestion?: boolean;
 }
 
 export interface ISuggestionDropdown {
   uiSuggestions: ISuggestion[];
-
-  showEmpty(): void;
 
   setActiveSuggestion(suggestionId: number): void;
 
@@ -45,11 +45,20 @@ export class SuggestionDropdown implements ISuggestionDropdown {
   private suggestions: ISuggestion[] = [];
   public uiSuggestions: ISuggestion[] = this.suggestions;
   private inputBasedSuggestions: ISuggestion[] = [];
+  public initialSearchResult: SearchResult;
 
   public activeSuggestion?: string;
   private activeSuggestionIndex: number | undefined;
-  private searchObject: SearchObject;
-  private currentBullets: SearchElement[] = [];
+  private firstSuggestionIsDefault;
+  private emptySearchSuggestions = _.map(SuggestionDropdown.fieldNamesForSuggestion, fieldName => {
+    return {
+      searchString: this.searchTranslator.translateQueryField(fieldName) + ':',
+      readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(fieldName),
+      field: fieldName,
+      text: '',
+      isFieldSuggestion: true,
+    };
+  });
 
   private static fieldNamesForSuggestion = [QueryParser.Field_ActiveInterface,
     QueryParser.Field_UpgradeChannel,
@@ -58,11 +67,12 @@ export class SuggestionDropdown implements ISuggestionDropdown {
     QueryParser.Field_ErrorCodes,
     QueryParser.Field_Tag];
 
-  constructor(private searchTranslator: SearchTranslator) {
+  constructor(private searchTranslator: SearchTranslator, private $translate: ng.translate.ITranslateService) {
+    this.showEmpty();
   }
 
-  public showEmpty(): void {
-    this.suggestions = [];
+  private showEmpty(): void {
+    this.suggestions = this.emptySearchSuggestions;
     this.uiSuggestions = this.suggestions;
     this.resetActive();
   }
@@ -71,33 +81,86 @@ export class SuggestionDropdown implements ISuggestionDropdown {
 
     const currentEditedElement = searchObject.getWorkingElement();
 
-    if (!currentEditedElement) {
+    if (!currentEditedElement || searchObject.getWorkingElementRawText() === '') {
       this.inputBasedSuggestions = [];
+      this.showEmpty();
       return;
     }
 
-    this.inputBasedSuggestions = [
-      {
-        count: totalCount,
-        searchString: currentEditedElement.toQuery(),
-        field: 'All devices',
-        text: `containing ${currentEditedElement.toQuery()}`,
-      },
-    ];
-
-    this.searchObject = searchObject;
+    const numberOfSubmittedBullets = this.getSubmittedBullets(searchObject).length;
+    if (currentEditedElement.getCommonField() === '') {
+      this.inputBasedSuggestions = [
+        {
+          count: totalCount,
+          searchString: currentEditedElement.toQuery(),
+          readableField: this.$translate.instant('spacesPage.allDevices'),
+          text: this.$translate.instant(numberOfSubmittedBullets > 0
+            ? 'spacesPage.alsoContainingQuery'
+            : 'spacesPage.containingQuery',
+            {
+              query: currentEditedElement.toQuery(),
+            }),
+        },
+      ];
+      if (currentEditedElement instanceof OperatorAnd && _.every(currentEditedElement.and, child => {
+        return child instanceof FieldQuery;
+      })) {
+        const phraseQuery = `"${_.map(currentEditedElement.and, e => {
+          return e.toQuery();
+        }).join(' ')}"`;
+        this.inputBasedSuggestions.push({
+          searchString: phraseQuery,
+          readableField: this.$translate.instant('spacesPage.allDevices'),
+          text: this.$translate.instant(numberOfSubmittedBullets > 0
+            ? 'spacesPage.alsoContainingQuery'
+            : 'spacesPage.containingQuery',
+            {
+              query: phraseQuery,
+            }),
+        });
+        this.inputBasedSuggestions.push({
+          searchString: `${QueryParser.Field_Displayname}:${currentEditedElement.toQuery()}`,
+          readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(QueryParser.Field_Displayname),
+          field: QueryParser.Field_Displayname,
+          text: this.$translate.instant(numberOfSubmittedBullets > 0
+            ? 'spacesPage.alsoContainingQuery'
+            : 'spacesPage.containingQuery',
+            {
+              query: currentEditedElement.toQuery(),
+            }),
+        });
+      }
+      this.firstSuggestionIsDefault = true;
+    } else if (currentEditedElement instanceof FieldQuery && currentEditedElement.getQueryWithoutField() !== '') {
+      this.inputBasedSuggestions = [
+        {
+          count: totalCount,
+          searchString: currentEditedElement.toQuery(),
+          readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(currentEditedElement.getCommonField()),
+          field: currentEditedElement.getCommonField(),
+          text: this.$translate.instant(_.filter(searchObject.getBullets(), (bullet) => {
+            return !bullet.isBeingEdited();
+          }).length > 0
+            ? 'spacesPage.alsoContainingQuery'
+            : 'spacesPage.containingQuery',
+            {
+              query: (currentEditedElement as FieldQuery).getQueryWithoutField(),
+            }),
+        },
+      ];
+      this.firstSuggestionIsDefault = true;
+    } else {
+      this.inputBasedSuggestions = [];
+      this.firstSuggestionIsDefault = false;
+    }
 
     if (updateUiSuggestions) {
-      this.removeIrrelevantSuggestions();
+      this.removeIrrelevantSuggestions(searchObject);
     }
   }
 
   public onSearchChanged(searchObject: SearchObject) {
-    this.searchObject = searchObject;
-    this.currentBullets = searchObject ? _.filter(searchObject.getBullets(), (bullet) => {
-      return !bullet.isBeingEdited();
-    }) : [];
-    this.removeIrrelevantSuggestions();
+    this.removeIrrelevantSuggestions(searchObject);
   }
 
   public setActiveSuggestion(suggestionId: number): void {
@@ -157,59 +220,97 @@ export class SuggestionDropdown implements ISuggestionDropdown {
 
   public updateSuggestionsBasedOnSearchResult(searchResult: SearchResult,
                                               searchObject: SearchObject): void {
+    this.initialSearchResult = this.initialSearchResult || searchResult;
+    if (!searchObject || searchObject.getWorkingElementRawText() === '') {
+      return;
+    }
     this.updateBasedOnInput(searchObject, searchResult && searchResult.hits.total || 0, false);
     this.suggestions = [];
     if (searchResult) {
-      const sortedAggregations = _.fromPairs(_.sortBy(_.toPairs(searchResult.aggregations), (aggregationPair) => {
-        switch (aggregationPair[0]) {
-          case QueryParser.Field_Tag: return 1;
-          case QueryParser.Field_ConnectionStatus: return 2;
-          case QueryParser.Field_Product: return 3;
-          case QueryParser.Field_ErrorCodes: return 4;
-          case QueryParser.Field_UpgradeChannel: return 5;
-          case QueryParser.Field_ActiveInterface: return 6;
-          default: return 7;
-        }
-      })) as Aggregations;
+      const sortedAggregations = _.chain(this.initialSearchResult.aggregations)
+        .toPairs()
+        .sortBy(aggregationPair => {
+          switch (aggregationPair[0]) {
+            case QueryParser.Field_Tag:
+              return 1;
+            case QueryParser.Field_ConnectionStatus:
+              return 2;
+            case QueryParser.Field_Product:
+              return 3;
+            case QueryParser.Field_ErrorCodes:
+              return 4;
+            case QueryParser.Field_UpgradeChannel:
+              return 5;
+            case QueryParser.Field_ActiveInterface:
+              return 6;
+            default:
+              return 7;
+          }
+        })
+        .fromPairs()
+        .value();
+      const bullets = this.getSubmittedBullets(searchObject);
       _.forEach(sortedAggregations, (aggregation, aggregationName: string) => {
         if (_.includes(SuggestionDropdown.fieldNamesForSuggestion, _.toLower(aggregationName))) {
-          this.suggestions = _.concat(this.suggestions, _.map(aggregation.buckets, (bucket) => {
-            return {
-              searchString: `${aggregationName}="${bucket.key}"`,
-              field: this.searchTranslator.getTranslatedQueryFieldDisplayName(aggregationName),
-              text: this.searchTranslator.lookupTranslatedQueryValueDisplayName(bucket.key, aggregationName),
-              count: bucket.docCount,
-            };
-          }));
+          const suggestions = _.chain(aggregation.buckets)
+            .map((bucket) => {
+              let currentCount;
+              const currentBucket = _.find(searchResult.aggregations[aggregationName].buckets, b => {
+                return b.key === bucket.key;
+              });
+              if (currentBucket) {
+                currentCount = currentBucket.docCount;
+              } else if (bullets.every(b => {
+                  return b.getCommonField() !== _.toLower(aggregationName);
+                })) {
+                currentCount = 0;
+              }
+              return {
+                searchString: `${aggregationName}="${bucket.key}"`,
+                readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(aggregationName),
+                field: aggregationName,
+                text: this.searchTranslator.lookupTranslatedQueryValueDisplayName(bucket.key, aggregationName),
+                count: currentCount,
+              };
+            })
+            .compact()
+            .orderBy('count', 'desc')
+            .value();
+          this.suggestions = _.concat(this.suggestions, suggestions);
         }
       });
-      this.removeIrrelevantSuggestions();
+      this.removeIrrelevantSuggestions(searchObject);
       this.setFirstActive();
     }
   }
 
   public setFirstActive() {
-    if (this.uiSuggestions.length > 0 && this.searchObject && this.searchObject.getWorkingElementRawText() !== '') {
+    if (this.uiSuggestions.length > 0 && this.firstSuggestionIsDefault) {
       this.setActiveSuggestion(0);
     } else {
       this.resetActive();
     }
   }
 
-  private removeIrrelevantSuggestions() {
+  private getSubmittedBullets(searchObject: SearchObject) {
+    return _.filter(searchObject.getBullets(), (bullet) => {
+      return !bullet.isBeingEdited();
+    });
+  }
 
-    if (!this.searchObject) {
+  private removeIrrelevantSuggestions(searchObject: SearchObject) {
+    if (!searchObject) {
       return;
     }
 
     this.uiSuggestions =
       SuggestionDropdown.removeExistingQueries(
         SuggestionDropdown.filterSuggestion(
-          _.concat(this.inputBasedSuggestions, this.suggestions), this.searchObject),
-        this.currentBullets);
+          _.concat(this.inputBasedSuggestions, this.suggestions), searchObject), this.getSubmittedBullets(searchObject));
   }
 
-  public static removeExistingQueries = (suggestions: ISuggestion[], currentSearchBullets: SearchElement[]): ISuggestion[] => {
+  public static removeExistingQueries (suggestions: ISuggestion[], currentSearchBullets: SearchElement[]): ISuggestion[] {
+    //TODO: clean up filtering, don't remove duplicates perhaps
     if (!currentSearchBullets || currentSearchBullets.length === 0) {
       return suggestions;
     }
@@ -227,11 +328,16 @@ export class SuggestionDropdown implements ISuggestionDropdown {
     if (!workingElement) {
       return suggestions;
     }
-    const parsedInput = NormalizeHelper.stripAccents(workingElement.toQuery()).toLowerCase();
+    const specifiedMatch = workingElement instanceof FieldQuery ? NormalizeHelper.stripAccents(workingElement.getQueryWithoutField()) : '';
     const rawInput = NormalizeHelper.stripAccents(searchObject.getWorkingElementRawText());
+    const specifiedField = workingElement.getCommonField();
 
     return _.filter(suggestions, (su) => {
-      return su.text && (NormalizeHelper.stripAccents(su.text).toLowerCase().indexOf(parsedInput) > -1 || su.text.toLowerCase().indexOf(rawInput) > -1);
+      const queryMatch = NormalizeHelper.stripAccents(su.text).toLowerCase().indexOf(specifiedMatch) > -1
+        || NormalizeHelper.stripAccents(su.text).toLowerCase().indexOf(rawInput) > -1;
+      const fieldMatch = _.toLower(su.field) === _.toLower(specifiedField);
+      return ((!specifiedMatch || queryMatch) && (!specifiedField || fieldMatch))
+        || (queryMatch && fieldMatch);
     });
   }
 }

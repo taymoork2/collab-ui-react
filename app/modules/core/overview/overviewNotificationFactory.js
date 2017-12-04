@@ -6,7 +6,7 @@
     .factory('OverviewNotificationFactory', OverviewNotificationFactory);
 
   /* @ngInject */
-  function OverviewNotificationFactory(OverviewCrashLogNotification, OverviewSetupNotification, OverviewUrgentUpgradeNotification, OverviewCalendarNotification, OverviewGoogleCalendarNotification, OverviewCallConnectNotification, OverviewCallAwareNotification, OverviewCloudSipUriNotification, OverviewDevicesNotification, OverviewHybridMediaNotification, OverviewPMRNotification, OverviewDataSecurityNotification, OverviewPSTNToSNotification, OverviewCareLicenseNotification, OverviewPstnTermsOfServiceNotification, OverviewEsaDisclaimerNotification, CallServiceHighAvailability, OverviewHybridMessagingNotification, OverviewAllHybridCalendarsNotification, OverviewCareNotSetupNotification) {
+  function OverviewNotificationFactory(OverviewCrashLogNotification, OverviewSetupNotification, OverviewUrgentUpgradeNotification, OverviewCalendarNotification, OverviewGoogleCalendarNotification, OverviewCallConnectNotification, OverviewCallAwareNotification, OverviewCloudSipUriNotification, OverviewDevicesNotification, OverviewHybridMediaNotification, OverviewPMRNotification, OverviewDataSecurityNotification, OverviewPSTNToSNotification, OverviewCareLicenseNotification, OverviewPstnTermsOfServiceNotification, OverviewEsaDisclaimerNotification, CallServiceHighAvailability, OverviewHybridMessagingNotification, OverviewAllHybridCalendarsNotification, OverviewCareNotSetupNotification, OverviewAutoAssignNotificationFactory) {
     return {
       createCrashLogNotification: OverviewCrashLogNotification.createNotification,
       createSetupNotification: OverviewSetupNotification.createNotification,
@@ -28,6 +28,7 @@
       createEsaDisclaimerNotification: OverviewEsaDisclaimerNotification.createNotification,
       createCallServiceHighAvailability: CallServiceHighAvailability.createNotification,
       createCareNotSetupNotification: OverviewCareNotSetupNotification.createNotification,
+      createAutoAssignNotification: OverviewAutoAssignNotificationFactory.createNotification,
     };
   }
 })();

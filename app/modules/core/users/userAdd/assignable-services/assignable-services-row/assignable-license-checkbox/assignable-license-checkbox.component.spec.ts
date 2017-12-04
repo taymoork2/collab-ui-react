@@ -1,16 +1,18 @@
 import moduleName from './index';
 
-describe('Component: assignableServiceItemCheckbox:', () => {
+describe('Component: assignableLicenseCheckbox:', () => {
   beforeEach(function() {
     this.initModules(moduleName);
     this.injectDependencies(
       '$scope',
     );
-    this.$scope.fakeServiceItemId = 'fake-serviceItemId';
+    this.$scope.license = {
+      licenseId: 'fake-licenseId',
+    };
     this.$scope.onUpdate = jasmine.createSpy('onUpdate');
     this.$scope.stateData = {
-      items: {
-        'fake-serviceItemId': {
+      LICENSE: {
+        'fake-licenseId': {
           isSelected: false,
           isDisabled: false,
         },
@@ -21,22 +23,22 @@ describe('Component: assignableServiceItemCheckbox:', () => {
   function initComponent(_transcludeContent) {
     const transcludeContent = _transcludeContent || '';
     this.compileTemplate(`
-      <assignable-service-item-checkbox
-        service-item-id="fakeServiceItemId"
+      <assignable-license-checkbox
+        license="license"
         l10n-label="fake-label"
         on-update="onUpdate()"
         state-data="stateData">
         ${transcludeContent}
-      </assignable-service-item-checkbox>`);
-    this.controller = this.view.controller('assignableServiceItemCheckbox');
+      </assignable-license-checkbox>`);
+    this.controller = this.view.controller('assignableLicenseCheckbox');
   }
 
   describe('primary behaviors (view):', () => {
     it('should render an input[cs-input][type="checkbox"]', function () {
       initComponent.call(this);
       expect(this.view.find('input[cs-input][type="checkbox"]').length).toBe(1);
-      expect(this.view.find('input[cs-input][type="checkbox"][id="fake_serviceItemId"]').length).toBe(1);
-      expect(this.view.find('input[cs-input][type="checkbox"][name="fake_serviceItemId"]').length).toBe(1);
+      expect(this.view.find('input[cs-input][type="checkbox"][id="fake_licenseId"]').length).toBe(1);
+      expect(this.view.find('input[cs-input][type="checkbox"][name="fake_licenseId"]').length).toBe(1);
       expect(this.view.find('input[cs-input][type="checkbox"][cs-input-label="fake-label"]').length).toBe(1);
       expect(this.view.find('input[cs-input][type="checkbox"][ng-model="$ctrl.isSelected"]').length).toBe(1);
       expect(this.view.find('input[cs-input][type="checkbox"][ng-disabled="$ctrl.isDisabled"]').length).toBe(1);
@@ -55,11 +57,11 @@ describe('Component: assignableServiceItemCheckbox:', () => {
       expect(this.controller.isSelected).toBe(false);
       expect(this.controller.isDisabled).toBe(false);
 
-      _.set(this.$scope, 'stateData.items["fake-serviceItemId"].isSelected', true);
+      _.set(this.$scope, 'stateData.LICENSE["fake-licenseId"].isSelected', true);
       initComponent.call(this);
       expect(this.controller.isSelected).toBe(true);
 
-      _.set(this.$scope, 'stateData.items["fake-serviceItemId"].isDisabled', true);
+      _.set(this.$scope, 'stateData.LICENSE["fake-licenseId"].isDisabled', true);
       initComponent.call(this);
       expect(this.controller.isDisabled).toBe(true);
     });
