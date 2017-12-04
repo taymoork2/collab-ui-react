@@ -370,6 +370,7 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
           },
         ];
         controller.stepNext();
+        expect(controller.currentStep).toEqual(2);
         expect(action.url).toEqual(controller.menuEntry.actions[0].dynamicList);
       });
 
