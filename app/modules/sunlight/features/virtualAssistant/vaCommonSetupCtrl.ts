@@ -117,12 +117,29 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
   }
 
   /**
+   * obtain help text for name input
+   * @returns {*}
+   */
+  public getNameHint(): string {
+    const featureName = this.service.getFeatureName();
+    let msgKey = 'name.nameHint';
+    if (this.template.configuration.mediaType === 'expertVirtualAssistant') {
+      msgKey = 'name.nameHintEva';
+    }
+    return this.getText(msgKey, { featureName });
+  }
+
+  /**
    * open up the 'Cancel' modal with certain text.
    */
   public cancelModal(): void {
+    const featureName = this.service.getFeatureName();
+    const cancelDialogKey = this.isEditFeature ? 'careChatTpl.cancelEditDialog' : 'careChatTpl.cancelCreateDialog';
+    const cancelText = this.$translate.instant(cancelDialogKey, { featureName });
+
     this.cancelModalText = {
       cancelHeader: this.$translate.instant('careChatTpl.cancelHeader'),
-      cancelDialog: this.getText('cancelDialog'),
+      cancelDialog: cancelText,
       continueButton: this.$translate.instant('careChatTpl.continueButton'),
       confirmButton: this.$translate.instant('careChatTpl.confirmButton'),
     };
@@ -392,7 +409,7 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
   public handleFeatureUpdate(): void {
     this.creatingTemplate = false;
     this.$state.go('care.Features');
-    const successMsg = this.getMessageKey('messages.updateSuccessText');
+    const successMsg = 'careChatTpl.editSuccessText';
     this.Notification.success(successMsg, {
       featureName: this.template.configuration.pages.vaName.nameValue,
     });
@@ -405,8 +422,18 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
   public handleFeatureCreation(): void {
     this.creatingTemplate = false;
     this.$state.go('care.Features');
-    this.Notification.success(this.getMessageKey('messages.createSuccessText'), {
+    this.Notification.success('careChatTpl.createSuccessText', {
       featureName: this.template.configuration.pages.vaName.nameValue,
     });
   }
+
+  /**
+   *  Determine if edit warning message should be shown on summary page
+   *
+   * @returns {boolean}
+   */
+  public showEditWarning(): boolean {
+    return this.template.configuration.mediaType === 'expertVirtualAssistant' && this.isEditFeature && !this.saveTemplateErrorOccurred;
+  }
+
 }

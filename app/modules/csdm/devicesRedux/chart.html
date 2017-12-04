@@ -1,15 +1,14 @@
-<div class="graphCarousel hidden-sm hidden-xs">
-  <div id="chartTitle">{{chart.chartTitle}}</div>
-  <div id="chartArea"></div>
-  <div class="carousel" ng-if="chart.showCarousel">
-    <i class="icon icon-chevron-left large" ng-click="chart.cycleAggregateLeft()"/>
-    <i class="icon icon-circle" ng-class="{selected: chart.selectedAggregation.bucketName === aggregate.bucketName}"
-       ng-repeat="aggregate in chart.currentAggregations" title="{{aggregate.bucketName}}"
-       ng-click="chart.showAggregate(aggregate.bucketName)"/>
-    <!--<i class="icon icon-circle" title="super" ng-click="chart.selectCarousel()"/>-->
-    <!--<i class="icon icon-circle" title="super" ng-click="chart.selectCarousel()"/>-->
-    <!--<i class="icon icon-circle"/>-->
-    <!--<i class="icon icon-circle"/>-->
-    <i class="icon icon-chevron-right large" ng-click="chart.cycleAggregateRight()"/>
+<div class="graphCarousel">
+  <div id="chartArea" class="hidden-sm hidden-xs"></div>
+  <div class="titleleg">
+    <div id="chartTitle">{{chart.chartTitle}}</div>
+    <div class="legend">
+      <div ng-repeat="legend in chart.legend" ng-click="chart.legendClick(legend)"
+           ng-class="{selected: legend.selected}">
+        <i class="icon icon-circle status-indicator" ng-class="legend.color"></i>
+        <div class="text">{{legend.text}}</div>
+        <div class="value">{{legend.docCount}}</div>
+      </div>
+    </div>
   </div>
 </div>

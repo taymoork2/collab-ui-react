@@ -18,11 +18,6 @@ export class LicenseUsageUtilService {
     return _.find(licenses, findOptions);
   }
 
-  public findLicenseIdForOfferName(offerName: string, licenses: ILicenseUsage[]): string | undefined {
-    const result: ILicenseUsage = _.find(licenses, { offerName });
-    return _.get(result, 'licenseId');
-  }
-
   public hasLicensesWith(searchOptions: Object, licenses: ILicenseUsage[]): boolean {
     return _.some(licenses, searchOptions);
   }
@@ -40,16 +35,6 @@ export class LicenseUsageUtilService {
   public getAdvancedMeetingSiteUrls(licenses: ILicenseUsage[]): string[] {
     const advancedMeetingLicenses = this.getAdvancedMeetingLicenses(licenses);
     return _.sortBy(_.uniq(_.map(advancedMeetingLicenses, 'siteUrl')));
-  }
-
-  public hasLicenseWithAnyOfferName(offerNameOrOfferNames: string|string[], licenses: ILicenseUsage[]): boolean {
-    if (!_.isArray(offerNameOrOfferNames)) {
-      return !_.isEmpty(_.filter(licenses, { offerName: offerNameOrOfferNames }));
-    }
-    const results = _.filter(licenses, (license) => {
-      return _.includes(offerNameOrOfferNames, _.get(license, 'offerName'));
-    });
-    return !_.isEmpty(results);
   }
 
   public getTotalLicenseUsage(offerName: string, licenses: ILicenseUsage[]): number {

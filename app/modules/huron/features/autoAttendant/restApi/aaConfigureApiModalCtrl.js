@@ -23,30 +23,42 @@
     var lastSaveDynamicValueSet = [];
     var lastSavedApiRequest = '';
     var lastSavedApiResponse = '';
+    var lastSavedUsername = '';
     var sessionVarOptions = [];
     var urlUpdated = false;
+    var hasSessionVarOptionsChecked = false;
+    var passwordToBeDisplayed = '**********';
     CONSTANTS.idSelectorPrefix = '#';
 
     vm.url = '';
+    vm.username = '';
+    vm.password = '';
     vm.aaElementType = 'REST';
+    vm.basicAuthButton = false;
 
     vm.variableSet = [];
     vm.deletedSessionVariablesList = [];
+    vm.usernameMinLength = 1;
+    vm.usernameMaxLength = 128;
+    vm.passwordMaxLength = 128;
     vm.addElement = '<aa-insertion-element element-text="DynamicText" read-as="ReadAs" element-id="elementId" id="Id" aa-schedule="' + aa_schedule + '" aa-index="' + aa_index + '" aa-element-type="' + vm.aaElementType + '"></aa-insertion-element>';
 
     vm.dynamicTags = ['DYNAMIC-EXAMPLE'];
     vm.isDynamicToggle = isDynamicToggle;
+    vm.isRestApiTogglePhase2 = isRestApiTogglePhase2;
     vm.save = save;
     vm.cancel = cancel;
     vm.saveDynamicUi = saveDynamicUi;
     vm.isSaveDisabled = isSaveDisabled;
+    vm.passwordCheck = passwordCheck;
 
     vm.newVariable = $translate.instant('autoAttendant.newVariable');
-    vm.validationMsgs = {
-      maxlength: $translate.instant('autoAttendant.callerInputVariableTooLongMsg'),
-      minlength: $translate.instant('autoAttendant.callerInputVariableTooShortMsg'),
-      required: $translate.instant('autoAttendant.callerInputVariableRequiredMsg'),
-      pattern: $translate.instant('autoAttendant.invalidCharacter'),
+    vm.validationUsernameMsgs = {
+      maxlength: $translate.instant('autoAttendant.usernameTooLongMsg'),
+      required: $translate.instant('autoAttendant.usernameRequiredMsg'),
+    };
+    vm.validationPasswordMsgs = {
+      maxlength: $translate.instant('autoAttendant.passwordTooLongMsg'),
     };
     vm.toggleFullWarningMsg = toggleFullWarningMsg;
     vm.closeFullWarningMsg = closeFullWarningMsg;
@@ -69,6 +81,8 @@
     vm.showStep = showStep;
     vm.tableData = [];
     vm.isDynamicsValueUpdated = isDynamicsValueUpdated;
+    vm.onBasicAuthSlider = onBasicAuthSlider;
+    vm.displayWarning = displayWarning;
     /////////////////////
 
     $scope.$on('CE Updated', function () {
@@ -152,12 +166,56 @@
       });
     }
 
+    function isRestApiTogglePhase2() {
+      return AACommonService.isRestApiTogglePhase2();
+    }
+
+    function passwordCheck() {
+      if (_.isEqual(vm.password, passwordToBeDisplayed)) {
+        vm.password = '';
+      }
+    }
+
+    function onBasicAuthSlider() {
+      if (!vm.basicAuthButton) {
+        vm.username = '';
+        vm.password = '';
+      } else {
+        vm.username = lastSavedUsername;
+      }
+    }
+
+    function displayWarning() {
+      // We have to bind the AuthButton status with the username
+      // field validation. It's required as the moment the
+      // authButton goes false, the username is set to empty which
+      // causes the warning red flag.
+      if (vm.basicAuthButton && vm.username !== '') {
+        return true;
+      }
+      return false;
+    }
+
     function save() {
       //for now set method to GET as default
       action.method = GET;
       updateApiDetails();
       action.variableSet = saveUpdatedVariableSet();
       action.dynamics = saveDynamics(vm.dynamics);
+      if (isRestApiTogglePhase2()) {
+        if (vm.basicAuthButton) {
+          action.username = vm.username;
+          if (!_.isEqual(vm.password, passwordToBeDisplayed)) {
+            action.password = Buffer.from(vm.password).toString('base64');
+            action.credentialId = '';
+          } else {
+            if (!_.isEmpty(action.credentialId)) {
+              action.password = '';
+            }
+            action.credentialId = action.value;
+          }
+        }
+      }
       $modalInstance.close();
     }
 
@@ -177,6 +235,7 @@
       action.dynamics = saveDynamics(lastSaveDynamicValueSet);
       action.restApiRequest = lastSavedApiRequest;
       action.restApiResponse = lastSavedApiResponse;
+      action.username = lastSavedUsername;
     }
 
     function saveDynamicUi() {
@@ -201,6 +260,31 @@
         htmlModel: htmlModelValue,
       };
       return node;
+    }
+
+    function createAuthentication() {
+      var authenticationBlock = {
+        type: 'BASIC',
+        credentials: {
+          username: action.username,
+          password: action.password,
+          id: action.credentialId,
+        },
+      };
+      return authenticationBlock;
+    }
+
+    function populateBasicAuth(action) {
+      if (isRestApiTogglePhase2()) {
+        if (!_.isEmpty(action.username)) {
+          vm.basicAuthButton = true;
+          vm.username = action.username;
+          vm.password = passwordToBeDisplayed;
+        }
+        if (initialPageEnterCount === 0) {
+          lastSavedUsername = action.username;
+        }
+      }
     }
 
     function createDynamicList(dynamicList, finalDynamicList) {
@@ -301,6 +385,7 @@
         if (!_.isEmpty(action.restApiResponse)) {
           vm.restApiResponse = action.restApiResponse;
         }
+        populateBasicAuth(action);
         if (initialPageEnterCount === 0) {
           lastSavedVariableList = action.variableSet;
           lastSavedDynList = _.get(vm.menuEntry, 'actions[0].url');
@@ -331,6 +416,7 @@
           sessionVarOptions = data;
           sessionVarOptions.sort();
         }
+        hasSessionVarOptionsChecked = true;
       });
       getSessionVariablesOfDependentCe().finally(function () {
         getDynamicVariables();
@@ -355,6 +441,13 @@
         action.url = vm.menuEntry.actions[0].dynamicList;
       } else {
         action.url = vm.menuEntry.actions[0].url;
+      }
+      action.username = vm.username;
+      if (!_.isEqual(vm.password, passwordToBeDisplayed)) {
+        action.password = Buffer.from(vm.password).toString('base64');
+        action.credentialId = '';
+      } else {
+        action.credentialId = action.value;
       }
       if (vm.currentStep === 2) {
         updateDynamicsList(action.url);
@@ -384,9 +477,19 @@
       action.dynamics = saveDynamics(vm.dynamics);
     }
 
+    function validatePassword() {
+      return (_.lte(vm.password.length, vm.passwordMaxLength));
+    }
+
+    function validateUserName() {
+      return (!_.isEmpty(vm.username) && _.lte(vm.username.length, vm.usernameMaxLength));
+    }
 
     function isNextDisabled() {
-      return (_.isEmpty(vm.url) || vm.url === '<br class="ng-scope">');
+      if (vm.basicAuthButton) {
+        return (_.isEmpty(vm.url) || vm.url === '<br class="ng-scope">' || !validatePassword() || !validateUserName() || !hasSessionVarOptionsChecked);
+      }
+      return (_.isEmpty(vm.url) || vm.url === '<br class="ng-scope">' || !hasSessionVarOptionsChecked);
     }
 
     function callTestRestApiConfigs() {
@@ -422,6 +525,9 @@
       });
       _.set(req, 'url.action.concat.actions[0].dynamic.dynamicOperations', urlData);
       _.set(req, 'method', 'GET');
+      if (isRestApiTogglePhase2() && vm.basicAuthButton) {
+        _.set(req, 'authentication', createAuthentication());
+      }
       return req;
     }
 
@@ -492,7 +598,7 @@
             var obj = {};
             obj.responseKey = key;
             obj.responseValue = value;
-            obj.options = sessionVarOptions;
+            obj.options = _.cloneDeep(sessionVarOptions);
             _.forEach(vm.variableSet, function (set) {
               if (_.isEqual(set.value, key)) {
                 obj.selected = set.variableName;
@@ -512,6 +618,10 @@
         return false;
       }
     }
+
+    $scope.$on('dynamicListUpdated', function () {
+      isDynamicsValueUpdated();
+    });
 
 
     function init() {

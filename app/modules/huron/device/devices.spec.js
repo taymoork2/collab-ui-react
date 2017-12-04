@@ -72,30 +72,20 @@ describe('Controller: DevicesCtrlHuron', function () {
   });
 
   describe('device settings', function () {
-    it('should not be visible without "csdmPlaceUpgradeChannel" and "csdmPlaceGuiSettings" feature toggles', function () {
-      spyOn(FeatureToggleService, 'csdmPlaceUpgradeChannelGetStatus').and.returnValue($q.resolve(false));
+    it('should not be visible without "csdmPlaceGuiSettings" feature toggle and without channels', function () {
       spyOn(FeatureToggleService, 'csdmPlaceGuiSettingsGetStatus').and.returnValue($q.resolve(false));
       initController();
       expect(controller.showDeviceSettings).toBeFalsy();
     });
 
-    it('should not be visible with "csdmPlaceUpgradeChannel" feature toggle and without channels', function () {
-      spyOn(FeatureToggleService, 'csdmPlaceUpgradeChannelGetStatus').and.returnValue($q.resolve(true));
-      spyOn(FeatureToggleService, 'csdmPlaceGuiSettingsGetStatus').and.returnValue($q.resolve(false));
-      initController();
-      expect(controller.showDeviceSettings).toBeFalsy();
-    });
-
-    it('should be visible with "csdmPlaceUpgradeChannel" feature toggle and with channels', function () {
+    it('should be visible with channels', function () {
       CsdmUpgradeChannelService.getUpgradeChannelsPromise.and.returnValue($q.resolve(['a channel', 'and another']));
       spyOn(FeatureToggleService, 'csdmPlaceGuiSettingsGetStatus').and.returnValue($q.resolve(false));
-      spyOn(FeatureToggleService, 'csdmPlaceUpgradeChannelGetStatus').and.returnValue($q.resolve(true));
       initController();
       expect(controller.showDeviceSettings).toBeTruthy();
     });
 
     it('should be visible with "csdmPlaceGuiSettings" feature toggle', function () {
-      spyOn(FeatureToggleService, 'csdmPlaceUpgradeChannelGetStatus').and.returnValue($q.resolve(false));
       spyOn(FeatureToggleService, 'csdmPlaceGuiSettingsGetStatus').and.returnValue($q.resolve(true));
       initController();
       expect(controller.showDeviceSettings).toBeTruthy();

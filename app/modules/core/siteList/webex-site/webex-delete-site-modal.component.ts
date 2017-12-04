@@ -24,6 +24,8 @@ class WebexDeleteSiteModalController implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
+    private Analytics,
+    private $rootScope: ng.IRootScopeService,
     private Notification: Notification,
     private SetupWizardService: SetupWizardService,
     private WebExSiteService: WebExSiteService,
@@ -33,6 +35,11 @@ class WebexDeleteSiteModalController implements ng.IComponentController {
     if (changes.subscriptionId) {
       this.changeCurrentSubscription(changes.subscriptionId.currentValue);
     }
+  }
+
+  public sendMetrics(event, properties?) {
+    _.set(properties, 'subscriptionId', this.subscriptionId);
+    this.Analytics.trackWebExMgmntSteps(event, properties);
   }
 
   // wizard navigation logic
@@ -49,6 +56,7 @@ class WebexDeleteSiteModalController implements ng.IComponentController {
       this.saveData();
     } else {
       this.cancel();
+      this.$rootScope.$broadcast('EventNames.SITE_LIST_MODIFIED');
     }
   }
 

@@ -15,6 +15,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
       '$rootScope',
       '$scope',
       '$translate',
+      'Analytics',
       'Authinfo',
       'Config',
       'FeatureToggleService',
@@ -37,7 +38,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
     spyOn(this.Authinfo, 'getUserName').and.returnValue('ordersimp-somedude@mailinator.com');
     spyOn(this.Authinfo, 'getCustomerAdminEmail').and.returnValue('ordersimp-somedude2@mailinator.com');
     spyOn(this.FeatureToggleService, 'atlasSetupSiteUserManagementGetStatus').and.returnValue(this.$q.resolve(false));
-
+    spyOn(this.Analytics, 'trackServiceSetupSteps').and.returnValue(this.$q.resolve());
     this.savedDataFromMeetingSetup = savedDataFromMeetingSetup;
     this.actingSubscription = actingSubscription;
   });
@@ -153,7 +154,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
       this.controller.isShowUserManagement = false;
     });
 
-    it('should call validateWebexSiteUrl() and if VALID add the site the sitesArray', function () {
+    it('should call validateWebexSiteUrl() and if VALID add the site the sitesArray and call analytics appropriately', function () {
       const siteUrl = 'testSiteHere';
       this.controller.siteModel.siteUrl = siteUrl;
       this.controller.siteModel.timezone = 'someTimeZoneHere';
@@ -165,6 +166,9 @@ describe('Controller: MeetingSettingsCtrl', () => {
       expect(this.controller.validateWebexSiteUrl).toHaveBeenCalledWith(siteUrl.concat('.webex.com'));
       const hasAddedSite = _.some(this.controller.sitesArray, { siteUrl: siteUrl });
       expect(hasAddedSite).toBe(true);
+
+      expect(this.Analytics.trackServiceSetupSteps).toHaveBeenCalled();
+      expect(this.Analytics.trackServiceSetupSteps.calls.mostRecent().args[0]).toBe('Service Setup: A new site was added');
       expect(this.controller.disableValidateButton).toBe(false);
     });
 

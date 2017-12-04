@@ -13,6 +13,7 @@ import { WebExSiteService } from './webex-site.service';
 export default angular
   .module('core.webex-site', [
     require('collab-ui-ng').default,
+    require('modules/core/analytics'),
     require('angular-translate'),
     require('modules/core/notifications').default,
     require('modules/core/featureToggle').default,
@@ -21,6 +22,7 @@ export default angular
     require('modules/core/setupWizard/setup-wizard.service').default,
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/trials/trial.module'),
+    require('modules/core/scripts/services/utils'),
   ])
   .component('webexAddSiteModal', new WebexAddSiteModalComponent())
   .component('webexSiteLicenses', new WebexSiteLicensesComponent())

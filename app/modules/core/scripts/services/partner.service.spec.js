@@ -18,7 +18,7 @@ describe('Partner Service -', function () {
     PartnerService = _PartnerService_;
     UrlConfig = _UrlConfig_;
 
-    testData = getJSONFixture('core/json/partner/partner.service.json');
+    testData = _.cloneDeep(getJSONFixture('core/json/partner/partner.service.json'));
     spyOn(Authinfo, 'getOrgId').and.returnValue('12345');
     spyOn(Authinfo, 'getUserId').and.returnValue('123');
     spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('fake-primaryEmail');
@@ -68,9 +68,11 @@ describe('Partner Service -', function () {
   });
 
   it('should successfully return a boolean on whether or not a license is available from calling isLicenseInfoAvailable', function () {
-    var licenses = [];
-    expect(PartnerService.isLicenseInfoAvailable(licenses)).toBe(true);
-    expect(PartnerService.isLicenseInfoAvailable(testData.licenses)).toBe(true);
+    expect(PartnerService.isLicenseInfoAvailable(testData.customers[0])).toBe(true);
+    testData.customers[0].licenseList = [];
+    expect(PartnerService.isLicenseInfoAvailable(testData.customers[0])).toBe(true);
+    delete testData.customers[0].licenseList;
+    expect(PartnerService.isLicenseInfoAvailable(testData.customers[0])).toBe(false);
   });
 
   it('should successfully add sortOrder property to license from calling setServiceSortOrder', function () {
@@ -723,7 +725,7 @@ describe('Partner Service -', function () {
       });
     });
 
-    describe('Helper functions related to getFreeOrActiveServices ', function () {
+    describe('related to getFreeOrActiveServices ', function () {
       it('should createConferenceMapping with conferencing license type', function () {
         var result = PartnerService.helpers.createConferenceMapping();
         expect(result[Config.offerCodes.CF].licenseType).toBe(Config.licenseTypes.CONFERENCING);
@@ -980,7 +982,7 @@ describe('Partner Service -', function () {
       });
     });
 
-    describe('massage data helpers', function () {
+    describe('massage data', function () {
       it('should set the correct purchase status', function () {
         // ACTIVE
         expect(PartnerService.helpers.calculatePurchaseStatus(testData.customers[6])).toBe(true);
