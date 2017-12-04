@@ -14,6 +14,7 @@
         index: '=aaIndex',
         fromSubMenu: '@aaFromSubMenu',
         menuKeyIndex: '@aaKeyIndex',
+        routingPrefixOptions: '=aaRoutingPrefixOptions',
       },
       controller: 'AADialByExtCtrl',
       controllerAs: 'aaDialByExtCtrl',

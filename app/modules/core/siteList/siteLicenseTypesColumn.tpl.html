@@ -9,7 +9,7 @@
      id="{{row.entity.licenseTypeId}}"
      name="{{row.entity.licenseTypeId}}">
 
-    <div ng-if="row.entity.multipleWebexServicesLicensed">
+    <div ng-if="row.entity.multipleWebexServicesLicensed || row.entity.isPending">
       <p class="ui-grid-cell-contents multi-center-license"
         tabindex="0"
         tooltip-placement="top"
@@ -21,7 +21,7 @@
       </p>
     </div>
 
-    <div ng-if="!row.entity.multipleWebexServicesLicensed">
+    <div ng-if="!row.entity.multipleWebexServicesLicensed && !row.entity.isPending">
       <p class="ui-grid-cell-contents">
         {{row.entity.licenseTypeContentDisplay}}
       </p>

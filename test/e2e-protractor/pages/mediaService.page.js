@@ -25,8 +25,8 @@ var MediaServicePage = function () {
   this.utilizationTitle = element(by.cssContainingText('.report-section-header', 'Resource Utilization'));
   this.callVolumes = element(by.cssContainingText('.report-section-header', 'Total Calls'));
   this.availabilityOfCluster = element(by.cssContainingText('.report-section-header', 'Clusters in Service'));
-  this.resourceButton = element(by.css('section a[href="/mediaserviceV2"]'));
-  this.settingsButton = element(by.css('section a[href="/mediaserviceV2/settings"]'));
+  this.resourceButton = element(by.css('hybrid-media-active-card a[href="/mediaserviceV2"]'));
+  this.settingsButton = element(by.css('hybrid-media-active-card a[href="/mediaserviceV2/settings"]'));
   this.resourceTab = element(by.css('li a[href="/mediaserviceV2"]'));
   this.settingsTab = element(by.css('li a[href="/mediaserviceV2/settings"]'));
   this.addResourceButton = element(by.cssContainingText('button', 'Add Resource'));

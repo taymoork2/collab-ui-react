@@ -12,6 +12,11 @@ var auth = {
     pass: 'Cisc0123!',
     org: '7e0f0f48-0582-444e-ac75-908a36b29539',
   },
+  'aa-multisite-admin': {
+    user: 'AAIntPartner+Location1@gmail.com',
+    pass: 'Cisc0123!',
+    org: '82589e95-30c7-43de-94c5-04401747ebdd',
+  },
   'account-admin': {
     user: 'phtest77+acc2@gmail.com',
     pass: 'Cisco123!!!',
@@ -125,7 +130,7 @@ var auth = {
   },
   'partner-reports-sales-admin': {
     user: 'kingkuntauser4+1715@gmail.com',
-    pass: 'C1sco123!',
+    pass: 'C1sc0123!',
     org: 'ce8d17f8-1734-4a54-8510-fae65acc505e',
   },
   'partner-sales-user': {
@@ -150,7 +155,7 @@ var auth = {
   },
   'sqtest-admin': {
     user: 'sqtest-admin@squared.example.com',
-    pass: 'P@ssword123',
+    pass: 'C1sco123!!',
     org: '584cf4cd-eea7-4c8c-83ee-67d88fc6eab5',
   },
   'sso-e2e-test-org': {

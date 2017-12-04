@@ -1,4 +1,4 @@
-import { IEntitlementNameAndState, HybridServiceUserSidepanelHelperService } from './hybrid-services-user-sidepanel-helper.service';
+import hybridServiceUserSidepanelHelperServiceModuleName, { IEntitlementNameAndState, HybridServiceUserSidepanelHelperService } from './hybrid-services-user-sidepanel-helper.service';
 
 describe('HybridServiceUserSidepanelHelperService', () => {
 
@@ -15,7 +15,7 @@ describe('HybridServiceUserSidepanelHelperService', () => {
   }];
 
 
-  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(hybridServiceUserSidepanelHelperServiceModuleName));
   beforeEach(inject(dependencies));
 
   function dependencies(_$httpBackend_, _$q_, _HybridServiceUserSidepanelHelperService_) {

@@ -1,4 +1,5 @@
 import { ILicenseRequestItem, IUserEntitlementRequestItem, IAutoAssignTemplateRequestPayload } from 'modules/core/users/shared';
+import { AssignableServicesItemCategory } from 'modules/core/users/userAdd/assignable-services/shared';
 import { LicenseChangeOperation } from 'modules/core/users/shared/onboard.interfaces';
 
 class EditSummaryAutoAssignTemplateModalController implements ng.IComponentController {
@@ -58,10 +59,10 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
   }
 
   private mkLicensesPayload(): ILicenseRequestItem[] {
-    if (_.isEmpty(this.stateData.items)) {
+    if (_.isEmpty(_.get(this.stateData, AssignableServicesItemCategory.LICENSE))) {
       return [];
     }
-    const selectedLicenses = _.get(this.stateData, 'items');
+    const selectedLicenses = _.get(this.stateData, AssignableServicesItemCategory.LICENSE);
     const result = _.map(_.keys(selectedLicenses), (licenseId: string) => {
       return <ILicenseRequestItem>{
         id: licenseId,
@@ -73,16 +74,21 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
   }
 
   private mkUserEntitlementsPayload(): IUserEntitlementRequestItem[] {
-    if (_.isEmpty(this.stateData.items)) {
+    if (_.isEmpty(_.get(this.stateData, AssignableServicesItemCategory.LICENSE))) {
       return [];
     }
 
     // TODO: implement calculation of appropriate entitlements
-    const result: any[] = [];
+    let result: any[] = [];
     result.push({
       entitlementName: 'webExSquared',
       entitlementState: 'ACTIVE',
     });
+
+    // TODO: rm this logic once 'hybrid-services-entitlements-panel' propogates its UI state
+    //   and build this payload from UI state instead
+    const hybridUserEntitlements = _.get(this.stateData, 'USER_ENTITLEMENTS_PAYLOAD', []);
+    result = result.concat(hybridUserEntitlements);
 
     return result;
   }

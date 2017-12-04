@@ -35,6 +35,7 @@
       '/custportal/extensions/',
       '/users/report',
       '/devices/_search',
+      'webex.com/status',
     ];
 
     var allowedState = [

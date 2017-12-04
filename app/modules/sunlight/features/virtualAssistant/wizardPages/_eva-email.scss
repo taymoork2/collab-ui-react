@@ -11,14 +11,18 @@
     .extension {
       font-family: 'CiscoSansTT Thin';
       margin-left: 1rem;
-    }
 
-    .extension.valid-extension {
-        color: $color-green-darker;
-    }
+      &.valid-extension {
+          color: $color-green-darker;
+      }
 
-    .extension.invalid-extension {
-        color: $color-red-base;
+      &.invalid-extension {
+          color: $color-red-base;
+      }
+
+      &.disabled-extension {
+          color: $gray-light-1;
+      }
     }
 
     .icon-check {
@@ -92,5 +96,10 @@
 
   .message {
     margin: 0;
+  }
+
+  #disabledEmailInput {
+    color: $gray-light-1;
+    background: white; //need this for firefox
   }
 }

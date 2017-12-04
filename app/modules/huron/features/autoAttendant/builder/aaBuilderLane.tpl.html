@@ -15,7 +15,7 @@
   </div>
 </div>
 <div ng-repeat="action in aaLane.ui[aaLane.schedule].entries" class="aa-transition">
-  <aa-builder-actions aa-schedule="{{aaLane.schedule}}" aa-index="$index" aa-add-action="aaLane.addAction(index)"></aa-builder-actions>
+  <aa-builder-actions aa-schedule="{{aaLane.schedule}}" aa-index="$index" aa-add-action="aaLane.addAction(index)" aa-routing-prefix-options="aaLane.routingPrefixOptions"></aa-builder-actions>
 </div>
 <div class="aa-flex-container">
   <div class="aa-vertical-line"></div>

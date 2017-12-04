@@ -137,7 +137,7 @@ export class ServicesOverviewController implements ng.IComponentController {
           if (this.Authinfo.isFusionMedia() && _.some(this.Authinfo.getRoles(), (role) => role === this.Config.roles.full_admin || this.Config.roles.readonly_admin)) {
             this._servicesToDisplay.push('squared-fusion-media');
           }
-          if (this.Authinfo.isFusionHDS() && this.Authinfo.isEnterpriseCustomer() && _.some(this.Authinfo.getRoles(), (role) => role === this.Config.roles.full_admin || this.Config.roles.readonly_admin)) {
+          if (this.Authinfo.isEnterpriseCustomer() && _.some(this.Authinfo.getRoles(), (role) => role === this.Config.roles.full_admin || this.Config.roles.readonly_admin)) {
             this._servicesToDisplay.push('spark-hybrid-datasecurity');
           }
           if (this.Authinfo.isContactCenterContext()) {
@@ -254,7 +254,7 @@ export class ServicesOverviewController implements ng.IComponentController {
   }
 
   public hasOneOrMoreHybridEntitlements() {
-    return this.Authinfo.isFusion() || this.Authinfo.isFusionMedia() || this.Authinfo.isFusionUC() || this.Authinfo.isFusionCal() || this.Authinfo.isFusionHDS();
+    return this.Authinfo.isFusion() || this.Authinfo.isFusionMedia() || this.Authinfo.isFusionUC() || this.Authinfo.isFusionCal();
   }
 
   public getCloudCards() {

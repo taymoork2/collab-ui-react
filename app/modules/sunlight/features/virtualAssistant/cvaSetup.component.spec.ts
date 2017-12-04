@@ -78,6 +78,7 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
       '$stateParams',
       '$modal',
       '$timeout',
+      '$translate',
       'CTService',
       'Analytics',
       'Authinfo',
@@ -99,6 +100,7 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(OrgId);
     spyOn(this.Authinfo, 'getOrgName').and.returnValue(OrgName);
     spyOn(Date, 'now').and.returnValues(10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10);
+    spyOn(this.$translate, 'instant').and.callThrough();
 
     this.compileComponent('cva-setup', {
       dismiss: 'dismiss()',
@@ -150,6 +152,19 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
       controller.isEditFeature = true;
       controller.getSummaryDescription();
       expect(controller.getText).toHaveBeenCalledWith('summary.cvaDescEdit', { name: controller.template.configuration.pages.vaName.nameValue });
+    });
+
+    it('cancelModal', function () {
+      controller.cancelModal();
+      expect(this.$translate.instant).toHaveBeenCalledWith('careChatTpl.cancelCreateDialog',
+        { featureName: 'careChatTpl.virtualAssistant.cva.featureText.name' });
+    });
+
+    it('cancelModal with isEditFeature true', function () {
+      controller.isEditFeature = true;
+      controller.cancelModal();
+      expect(this.$translate.instant).toHaveBeenCalledWith('careChatTpl.cancelEditDialog',
+        { featureName: 'careChatTpl.virtualAssistant.cva.featureText.name' });
     });
   });
 
@@ -381,6 +396,7 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
       const featureNameObj = { featureName: 'careChatTpl.virtualAssistant.cva.featureText.name' };
       expect(controller.saveTemplateErrorOccurred).toBeTruthy();
       expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String), featureNameObj);
+      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_CREATE_FAILURE);
     });
 
     it('should submit template successfully', function () {
@@ -404,6 +420,7 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
       expect(this.$state.go).toHaveBeenCalled();
       expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_SUMMARY_PAGE, { durationInMillis: 10 });
       expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_START_FINISH, { durationInMillis: 0 });
+      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_CREATE_SUCCESS);
     });
 
     it('should submit template successfully for Edit', function () {

@@ -147,6 +147,7 @@ class WebexAddSiteModalController implements ng.IComponentController {
       }
     } else if (this.isResult()) {
       this.cancel();
+      this.$rootScope.$broadcast(EventNames.SITE_LIST_MODIFIED);
     } else {
       this.saveData();
     }

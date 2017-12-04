@@ -195,8 +195,13 @@
 
     vm.editCareFeature = function (feature, $event) {
       $event.stopImmediatePropagation();
-      // Ignore the EVA edit for now since it is not implemented
       if (feature.featureType === EvaService.evaServiceCard.id) {
+        EvaService.getExpertAssistant(feature.templateId).then(function (template) {
+          EvaService.evaServiceCard.goToService($state, {
+            isEditFeature: true,
+            template: template,
+          });
+        });
         return;
       }
       if (feature.featureType === CvaService.cvaServiceCard.id) {

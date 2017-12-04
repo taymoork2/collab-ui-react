@@ -6,6 +6,18 @@
   <div ng-if="aaDialByExtCtrl.isMediaUploadToggle()" id="dialByTextOnlyMedia" > 
     <aa-message-type aa-from-sub-menu={{fromSubMenu}} aa-menu-id={{menuId}} aa-key-index={{menuKeyIndex}} aa-index="index" aa-schedule="{{schedule}}"></aa-message-type>
   </div>
+  <div class="row" ng-if="aaDialByExtCtrl.checkBoxDisplayed">
+    <div class="aa-routing-prefix-text">
+      <cs-checkbox ckid="cnvt_chk_{{schedule + menuId + menuKeyIndex}}" ng-model="aaDialByExtCtrl.multiSiteState" label="{{:: 'autoAttendant.dialByExtensionRoutingPrefix' | translate }}" ng-click="aaDialByExtCtrl.determineDialByExtensionStatus()"></cs-checkbox>
+    </div>
+    <div class="aa-helptext">
+      <p class="small-12 columns aa-phonemenu-helptext" translate="autoAttendant.dialByExtensionRoutingPrefixHelpText"></p>
+    </div>
+    <div class="aa-routing-text-dropdown" ng-if="aaDialByExtCtrl.multiSiteState">
+      <label translate="autoAttendant.routingPrefix"></label>
+      <cs-select ng-model="aaDialByExtCtrl.selectedRoutingOption" options="aaDialByExtCtrl.routingPrefixOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" placeholder="aaDialByExtCtrl.selectRoutingPrefix" ng-change="aaDialByExtCtrl.saveUiModel()">
+      </cs-select>
+    </div>
   </div>
 </div>
 
@@ -50,6 +62,19 @@
     </div>
     <div class="row">
     <aa-message-type aa-index="index" aa-schedule="{{schedule}}"></aa-message-type>
+    </div>
+  </div>
+  <div class="row" ng-if="aaDialByExtCtrl.checkBoxDisplayed">
+    <div class="aa-routing-prefix-text">
+      <cs-checkbox id="ESNCheckBox" ckid="cnvt_chk_{{schedule + index}}" ng-model="aaDialByExtCtrl.multiSiteState" label="{{:: 'autoAttendant.dialByExtensionRoutingPrefix' | translate }}" ng-click="aaDialByExtCtrl.determineDialByExtensionStatus()"></cs-checkbox>
+    </div>
+    <div class="aa-helptext">
+      <p class="small-12 columns aa-subtext" translate="autoAttendant.dialByExtensionRoutingPrefixHelpText"></p>
+    </div>
+    <div class="aa-routing-text-dropdown" ng-if="aaDialByExtCtrl.multiSiteState">
+      <label translate="autoAttendant.routingPrefix"></label>
+      <cs-select id="routingPrefixDropdown" ng-model="aaDialByExtCtrl.selectedRoutingOption" options="aaDialByExtCtrl.routingPrefixOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" placeholder="aaDialByExtCtrl.selectRoutingPrefix" ng-change="aaDialByExtCtrl.saveUiModel()">
+      </cs-select>
     </div>
   </div>
   <div class="panel">

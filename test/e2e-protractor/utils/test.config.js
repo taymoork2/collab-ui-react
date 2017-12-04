@@ -29,6 +29,7 @@ var scopes = [
   // for Care Virtual Assistant
   'spark:messages_read',
   'spark:memberships_read',
+  'spark:memberships_write',
   'spark:rooms_read',
 ];
 var oauth2Scope = scopes.join(' ');
