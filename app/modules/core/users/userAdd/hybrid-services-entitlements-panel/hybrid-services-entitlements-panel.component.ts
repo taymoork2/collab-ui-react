@@ -82,9 +82,8 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
     });
   }
 
-  // TODO: add better TS types for args
-  public $onChanges(changes): void {
-    if (changes.userIsLicensed && !changes.userIsLicensed.currentValue && changes.userIsLicensed.previousValue) {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
+    if (changes.hasAssignableLicenses && !changes.hasAssignableLicenses.currentValue && changes.hasAssignableLicenses.previousValue) {
       this.clearSelectedHybridServicesEntitlements();
     }
   }
@@ -164,6 +163,6 @@ export class HybridServicesEntitlementsPanelComponent implements ng.IComponentOp
   public template = require('./hybrid-services-entitlements-panel.html');
   public bindings = {
     entitlementsCallback: '&',
-    userIsLicensed: '<',
+    hasAssignableLicenses: '<',
   };
 }
