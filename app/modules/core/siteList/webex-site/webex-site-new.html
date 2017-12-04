@@ -1,6 +1,6 @@
 <div ng-form="$ctrl.siteSetupForm">
   <div class="row"
-    ng-repeat="site in $ctrl.existingSitesArray">
+    ng-repeat="site in $ctrl.existingSitesArray track by $index">
     <webex-site-new-display site="site"
       is-show-user-management="true"
       can-remove-site="false"
@@ -8,7 +8,7 @@
     </webex-site-new-display>
   </div>
   <div class="row"
-    ng-repeat="site in $ctrl.newSitesArray">
+    ng-repeat="site in $ctrl.newSitesArray track by $index">
     <webex-site-new-display site="site"
       is-show-user-management="true"
       on-remove-site="$ctrl.removeSite(index)"

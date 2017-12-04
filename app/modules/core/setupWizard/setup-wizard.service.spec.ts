@@ -269,7 +269,7 @@ describe('Service: SetupWizard Service', function () {
       expect(this.SetupWizardService.validateTransferCodeBySubscriptionId).toHaveBeenCalled();
     });
 
-    it('should call "validateTransferCode" if subscriptionId is empty or underfined', function() {
+    it('should call "validateTransferCode" if subscriptionId is empty or undefined', function() {
       this.SetupWizardService.validateTransferCodeDecorator({
         siteUrl: 'www.somesite',
         transferCode: '123',
