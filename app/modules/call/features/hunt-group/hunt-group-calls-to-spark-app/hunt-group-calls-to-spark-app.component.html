@@ -5,6 +5,8 @@
     ng-model="$ctrl.sendToApp"
     cs-change="$ctrl.onCallsToSparkAppChange()"
     is-disabled="$ctrl.isToggleDisabled"
-    size="small">
+    size="small"
+    cs-aria-label="{{::'huronHuntGroup.callsToSparkAppLabel' | translate}}"
+    cs-keypress-fn="$ctrl.keypress($event)">
   </cs-toggle-switch>
 </div>

@@ -9,12 +9,14 @@ import callFeaturesName from 'modules/call/features/shared/call-feature-name';
 import pagingGroupNumber from 'modules/call/features/paging-group/paging-group-number';
 import pagingGroupInitiator from 'modules/call/features/paging-group/paging-group-initiator';
 import huronPlaceModule from 'modules/huron/places';
+import accessibilityModule from 'modules/core/accessibility';
 
 export default angular
   .module('call.features.paging-group', [
     require('collab-ui-ng').default,
     require('angular-translate'),
     require('modules/core/notifications').default,
+    accessibilityModule,
     pagingGroupService,
     featureMemberService,
     featureToggleService,

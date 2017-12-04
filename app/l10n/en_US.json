@@ -1603,6 +1603,7 @@
     "submit": "Submit",
     "test": "Test",
     "to": "to",
+    "toggleData": "Toggle Data",
     "total": "Total",
     "trackingId": "Tracking Id: {{trackingId}}.",
     "tryAgain": "Try Again",
@@ -7406,9 +7407,9 @@
     "deleteFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?",
     "deleteVaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?<br>Deleting the Customer Virtual Assistant removes it from all Customer Support Templates. Customers can no longer interact with the virtual assistant.",
     "deleteEvaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?<br>You can no longer escalate chat requests to Cisco Spark expert spaces.",
-    "createSuccessText": "{{ featureName }} template has been created successfully.",
+    "createSuccessText": "You have successfully created {{ featureName }}.",
     "createTemplateFailureText": "Failed to create Care template.",
-    "editSuccessText": "{{ featureName }} template has been updated successfully.",
+    "editSuccessText": "Changes to {{ featureName }} are successfully saved.",
     "editTemplateFailureText": "Failed to edit {{ featureName }} template.",
     "deleteSuccessText": "{{ featureName }} has been deleted successfully.",
     "deleteFailedText": "Failed to delete {{ featureName }}.",
@@ -7496,11 +7497,8 @@
     "cancelHeader": "Cancel",
     "ctCreation": "Creation",
     "ctEditing": "Editing",
-    "ctCreationBody": "template creation",
-    "ctEditBody": "editing this template",
-    "ctCreationMessage": "This template will not be saved.",
-    "ctEditMessage": "Changes will not be saved.",
-    "cancelDialog": "Are you sure you want to cancel {{bodyMessage}}? {{trailingMessage}}",
+    "cancelCreateDialog": "Do you want to discard your\n {{ featureName }}?",
+    "cancelEditDialog": "Do you want to discard changes to this\n {{ featureName }}?",
     "confirmButton": "Yes",
     "continueButton": "No",
     "preview": "Preview",
@@ -7784,7 +7782,8 @@
         "invalidEmailError": "The email you entered is invalid. Please enter a valid email.",
         "duplicateEmailError": "The email you entered already exists. Please enter a unique email.",
         "invalidNameError": "The Expert Virtual Assistant name is invalid. Please enter a valid name.",
-        "invalidAvatarError": "The Expert Virtual Assistant avatar is invalid. Please upload a valid avatar."
+        "invalidAvatarError": "The Expert Virtual Assistant avatar is invalid. Please upload a valid avatar.",
+        "editWarning": "There may be a delay before you can see changes to your Expert Virtual Assistant in Cisco Spark."
       },
       "overview": {
         "title": "{{ featureName }} Overview",
@@ -7799,7 +7798,8 @@
         "pending": "Checking {{ featureName }} email availability...",
         "duplicateError": "Email is already taken. Try again.",
         "errorChar63": "Email cannot exceed 63 characters.",
-        "badCharError": "Email cannot contain spaces or the following characters: <>:;[]+()\\”,@."
+        "badCharError": "Email cannot contain spaces or the following characters: <>:;[]+()\\”,@.",
+        "disabledTooltip": "You cannot edit the Expert Virtual Assistant email."
       },
       "defaultSpace": {
         "title": "Default Expert Space Configuration",
@@ -7825,8 +7825,6 @@
         "finalNote": "about these required {{ featureName }} configuration steps."
       },
       "messages": {
-        "createSuccessText": "You have successfully created {{ featureName }}.",
-        "updateSuccessText": "You have successfully updated {{ featureName }}.",
         "listConfigsFailureText": "Failed to list the {{ featureName }}s.",
         "getConfigFailureText": "Failed to load the {{ featureName }}.",
         "deleteConfigFailureText": "Failed to delete the {{ featureName }}.",

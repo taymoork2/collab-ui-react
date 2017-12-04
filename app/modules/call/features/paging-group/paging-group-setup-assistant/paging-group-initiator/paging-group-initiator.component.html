@@ -16,39 +16,39 @@
     </div>
   </div>
   <div class="cs-radio-group">
-    <input cs-input type="radio" 
-           ng-model="$ctrl.initiatorType" 
-           name="allRadio"
-           ng-change="$ctrl.onChange()" 
-           id="public" 
+    <input cs-input type="radio"
+           ng-model="$ctrl.initiatorType"
+           name="initiatorRadio"
+           ng-change="$ctrl.onChange()"
+           id="public"
            value="PUBLIC"
            cs-input-label="{{:: 'pagingGroup.all' | translate}}">
-    <input cs-input type="radio" 
-           ng-model="$ctrl.initiatorType" 
-           id="membersonly" 
-           ng-change="$ctrl.onChange()" 
-           name="allMembersRadio" 
+    <input cs-input type="radio"
+           ng-model="$ctrl.initiatorType"
+           id="membersonly"
+           ng-change="$ctrl.onChange()"
+           name="initiatorRadio"
            value="MEMBERS_ONLY"
            cs-input-label="{{:: 'pagingGroup.allMembers' | translate}}">
-    <input cs-input type="radio" 
-           ng-model="$ctrl.initiatorType" 
-           id="custom" 
+    <input cs-input type="radio"
+           ng-model="$ctrl.initiatorType"
+           id="custom"
            ng-change="$ctrl.onChange()"
-           name="customRadio" 
+           name="initiatorRadio"
            value="CUSTOM"
            cs-input-label="{{:: 'pagingGroup.custom' | translate}}">
   </div>
-  <input cs-input id="paging-group-initiator" 
-             type="text" 
+  <input cs-input id="paging-group-initiator"
+             type="text"
              ng-model="$ctrl.initiatorName"
              ng-disabled="$ctrl.initiatorType!=='CUSTOM'"
-             typeahead="mem as $ctrl.getDisplayNameInDropdown(mem) for mem in $ctrl.fetchInitiators($viewValue) | limitTo: 10" 
+             typeahead="mem as $ctrl.getDisplayNameInDropdown(mem) for mem in $ctrl.fetchInitiators($viewValue) | limitTo: 10"
              typeahead-template-url="userTemplate.html"
-             typeahead-on-select="$ctrl.selectInitiators($item)" 
+             typeahead-on-select="$ctrl.selectInitiators($item)"
              placeholder="{{:: 'pagingGroup.addInitiatorPlaceholder' | translate}}"
-             typeahead-min-length="3" 
+             typeahead-min-length="3"
              typeahead-wait-ms="200">
-  <div class="pg-header">             
+  <div class="pg-header">
     <span class="initiator-count" ng-show="$ctrl.showInitiatorCounts()">
         {{$ctrl.selectedInitiators.length + ('pagingGroup.initiators' | translate)}}
     </span>
@@ -63,7 +63,8 @@
         cs-title="$ctrl.getDisplayNameOnCard(member.member)"
         cs-subtitle="$ctrl.getUserName(member.member)"
         cs-image="$ctrl.getMembersPictures(member.member)"
-        on-remove="$ctrl.removeMembers(member)">
+        on-remove="$ctrl.removeMembers(member)"
+        delete-aria-label="{{::'common.delete' | translate}}">
     </cs-card-member>
   </cs-card-layout>
 </div>

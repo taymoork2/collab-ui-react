@@ -78,6 +78,7 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
       '$stateParams',
       '$modal',
       '$timeout',
+      '$translate',
       'CTService',
       'Analytics',
       'Authinfo',
@@ -99,6 +100,7 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(OrgId);
     spyOn(this.Authinfo, 'getOrgName').and.returnValue(OrgName);
     spyOn(Date, 'now').and.returnValues(10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10);
+    spyOn(this.$translate, 'instant').and.callThrough();
 
     this.compileComponent('cva-setup', {
       dismiss: 'dismiss()',
@@ -150,6 +152,19 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
       controller.isEditFeature = true;
       controller.getSummaryDescription();
       expect(controller.getText).toHaveBeenCalledWith('summary.cvaDescEdit', { name: controller.template.configuration.pages.vaName.nameValue });
+    });
+
+    it('cancelModal', function () {
+      controller.cancelModal();
+      expect(this.$translate.instant).toHaveBeenCalledWith('careChatTpl.cancelCreateDialog',
+        { featureName: 'careChatTpl.virtualAssistant.cva.featureText.name' });
+    });
+
+    it('cancelModal with isEditFeature true', function () {
+      controller.isEditFeature = true;
+      controller.cancelModal();
+      expect(this.$translate.instant).toHaveBeenCalledWith('careChatTpl.cancelEditDialog',
+        { featureName: 'careChatTpl.virtualAssistant.cva.featureText.name' });
     });
   });
 

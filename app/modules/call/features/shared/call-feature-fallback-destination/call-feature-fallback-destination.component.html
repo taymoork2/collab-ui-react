@@ -58,13 +58,15 @@
         cs-title="$ctrl.fallbackDestination.name"
         cs-subtitle="$ctrl.directoryNumber | callFeatureFallbackDestinationDirectoryNumberFilter"
         cs-image="$ctrl.thumbnailSrc"
-        on-remove="$ctrl.removeMember()">
+        on-remove="$ctrl.removeMember()"
+        delete-aria-label="{{::'common.delete' | translate}}">
       </cs-card-member>
       <cs-card-number
         ng-if="!$ctrl.fallbackDestination.memberUuid"
         cs-id="$ctrl.fallbackDestination.numberUuid"
         cs-title="$ctrl.fallbackDestination.number"
-        on-remove-fn="$ctrl.removeMember()">
+        on-remove-fn="$ctrl.removeMember()"
+        delete-aria-label="{{::'common.delete' | translate}}">
       </cs-card-number>
     </cs-card-layout>
     <div class="send-to-voicemail-chk" ng-if="!$ctrl.isNew">

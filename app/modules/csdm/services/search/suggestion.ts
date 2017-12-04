@@ -1,4 +1,4 @@
-import { Aggregations, SearchResult } from './searchResult';
+import { SearchResult } from './searchResult';
 import { FieldQuery, OperatorAnd, SearchElement } from './searchElement';
 import { SearchObject } from './searchObject';
 import { SearchTranslator } from './searchTranslator';
@@ -45,6 +45,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
   private suggestions: ISuggestion[] = [];
   public uiSuggestions: ISuggestion[] = this.suggestions;
   private inputBasedSuggestions: ISuggestion[] = [];
+  public initialSearchResult: SearchResult;
 
   public activeSuggestion?: string;
   private activeSuggestionIndex: number | undefined;
@@ -86,15 +87,14 @@ export class SuggestionDropdown implements ISuggestionDropdown {
       return;
     }
 
+    const numberOfSubmittedBullets = this.getSubmittedBullets(searchObject).length;
     if (currentEditedElement.getCommonField() === '') {
       this.inputBasedSuggestions = [
         {
           count: totalCount,
           searchString: currentEditedElement.toQuery(),
           readableField: this.$translate.instant('spacesPage.allDevices'),
-          text: this.$translate.instant(_.filter(searchObject.getBullets(), (bullet) => {
-            return !bullet.isBeingEdited();
-          }).length > 0
+          text: this.$translate.instant(numberOfSubmittedBullets > 0
             ? 'spacesPage.alsoContainingQuery'
             : 'spacesPage.containingQuery',
             {
@@ -111,9 +111,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
         this.inputBasedSuggestions.push({
           searchString: phraseQuery,
           readableField: this.$translate.instant('spacesPage.allDevices'),
-          text: this.$translate.instant(_.filter(searchObject.getBullets(), (bullet) => {
-            return !bullet.isBeingEdited();
-          }).length > 0
+          text: this.$translate.instant(numberOfSubmittedBullets > 0
             ? 'spacesPage.alsoContainingQuery'
             : 'spacesPage.containingQuery',
             {
@@ -124,9 +122,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
           searchString: `${QueryParser.Field_Displayname}:${currentEditedElement.toQuery()}`,
           readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(QueryParser.Field_Displayname),
           field: QueryParser.Field_Displayname,
-          text: this.$translate.instant(_.filter(searchObject.getBullets(), (bullet) => {
-            return !bullet.isBeingEdited();
-          }).length > 0
+          text: this.$translate.instant(numberOfSubmittedBullets > 0
             ? 'spacesPage.alsoContainingQuery'
             : 'spacesPage.containingQuery',
             {
@@ -224,34 +220,63 @@ export class SuggestionDropdown implements ISuggestionDropdown {
 
   public updateSuggestionsBasedOnSearchResult(searchResult: SearchResult,
                                               searchObject: SearchObject): void {
+    this.initialSearchResult = this.initialSearchResult || searchResult;
     if (!searchObject || searchObject.getWorkingElementRawText() === '') {
       return;
     }
     this.updateBasedOnInput(searchObject, searchResult && searchResult.hits.total || 0, false);
     this.suggestions = [];
     if (searchResult) {
-      const sortedAggregations = _.fromPairs(_.sortBy(_.toPairs(searchResult.aggregations), (aggregationPair) => {
-        switch (aggregationPair[0]) {
-          case QueryParser.Field_Tag: return 1;
-          case QueryParser.Field_ConnectionStatus: return 2;
-          case QueryParser.Field_Product: return 3;
-          case QueryParser.Field_ErrorCodes: return 4;
-          case QueryParser.Field_UpgradeChannel: return 5;
-          case QueryParser.Field_ActiveInterface: return 6;
-          default: return 7;
-        }
-      })) as Aggregations;
+      const sortedAggregations = _.chain(this.initialSearchResult.aggregations)
+        .toPairs()
+        .sortBy(aggregationPair => {
+          switch (aggregationPair[0]) {
+            case QueryParser.Field_Tag:
+              return 1;
+            case QueryParser.Field_ConnectionStatus:
+              return 2;
+            case QueryParser.Field_Product:
+              return 3;
+            case QueryParser.Field_ErrorCodes:
+              return 4;
+            case QueryParser.Field_UpgradeChannel:
+              return 5;
+            case QueryParser.Field_ActiveInterface:
+              return 6;
+            default:
+              return 7;
+          }
+        })
+        .fromPairs()
+        .value();
+      const bullets = this.getSubmittedBullets(searchObject);
       _.forEach(sortedAggregations, (aggregation, aggregationName: string) => {
         if (_.includes(SuggestionDropdown.fieldNamesForSuggestion, _.toLower(aggregationName))) {
-          this.suggestions = _.concat(this.suggestions, _.map(aggregation.buckets, (bucket) => {
-            return {
-              searchString: `${aggregationName}="${bucket.key}"`,
-              readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(aggregationName),
-              field: aggregationName,
-              text: this.searchTranslator.lookupTranslatedQueryValueDisplayName(bucket.key, aggregationName),
-              count: bucket.docCount,
-            };
-          }));
+          const suggestions = _.chain(aggregation.buckets)
+            .map((bucket) => {
+              let currentCount;
+              const currentBucket = _.find(searchResult.aggregations[aggregationName].buckets, b => {
+                return b.key === bucket.key;
+              });
+              if (currentBucket) {
+                currentCount = currentBucket.docCount;
+              } else if (bullets.every(b => {
+                  return b.getCommonField() !== _.toLower(aggregationName);
+                })) {
+                currentCount = 0;
+              }
+              return {
+                searchString: `${aggregationName}="${bucket.key}"`,
+                readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(aggregationName),
+                field: aggregationName,
+                text: this.searchTranslator.lookupTranslatedQueryValueDisplayName(bucket.key, aggregationName),
+                count: currentCount,
+              };
+            })
+            .compact()
+            .orderBy('count', 'desc')
+            .value();
+          this.suggestions = _.concat(this.suggestions, suggestions);
         }
       });
       this.removeIrrelevantSuggestions(searchObject);
@@ -267,6 +292,12 @@ export class SuggestionDropdown implements ISuggestionDropdown {
     }
   }
 
+  private getSubmittedBullets(searchObject: SearchObject) {
+    return _.filter(searchObject.getBullets(), (bullet) => {
+      return !bullet.isBeingEdited();
+    });
+  }
+
   private removeIrrelevantSuggestions(searchObject: SearchObject) {
     if (!searchObject) {
       return;
@@ -275,10 +306,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
     this.uiSuggestions =
       SuggestionDropdown.removeExistingQueries(
         SuggestionDropdown.filterSuggestion(
-          _.concat(this.inputBasedSuggestions, this.suggestions), searchObject),
-        _.filter(searchObject.getBullets(), (bullet) => {
-          return !bullet.isBeingEdited();
-        }));
+          _.concat(this.inputBasedSuggestions, this.suggestions), searchObject), this.getSubmittedBullets(searchObject));
   }
 
   public static removeExistingQueries (suggestions: ISuggestion[], currentSearchBullets: SearchElement[]): ISuggestion[] {

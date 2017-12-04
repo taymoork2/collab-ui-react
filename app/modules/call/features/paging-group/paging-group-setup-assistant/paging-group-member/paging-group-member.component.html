@@ -33,7 +33,8 @@
       cs-title="$ctrl.getDisplayNameOnCard(member.member)"
       cs-subtitle="$ctrl.getUserName(member.member)"
       cs-image="$ctrl.getMembersPictures(member.member)"
-      on-remove="$ctrl.removeMembers(member)">
+      on-remove="$ctrl.removeMembers(member)"
+      delete-aria-label="{{::'common.delete' | translate}}">
     </cs-card-member>
   </cs-card-layout>
 </div>
