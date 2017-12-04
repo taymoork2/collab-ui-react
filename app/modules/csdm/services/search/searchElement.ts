@@ -1,6 +1,7 @@
 import { SearchObject } from './searchObject';
 import { QueryParser } from './queryParser';
 import { isUndefined } from 'util';
+import { NormalizeHelper } from '../../../core/l10n/normalize.helper';
 
 export abstract class SearchElement {
 
@@ -63,6 +64,8 @@ export abstract class SearchElement {
       }
     }
   }
+
+  public abstract matches(value: string, field?: string): boolean;
 }
 
 export abstract class CollectionOperator extends SearchElement {
@@ -154,6 +157,15 @@ export class FieldQuery extends SearchElement {
     }
   }
 
+  public matches(value: string, field?: string): boolean {
+
+    if (this.field) {
+      return (!field || _.isEqual(_.toLower(NormalizeHelper.stripAccents(this.field)), _.toLower(NormalizeHelper.stripAccents(field))))
+        && _.includes(_.toLower(NormalizeHelper.stripAccents(value)), _.toLower(NormalizeHelper.stripAccents(this.query)));
+    }
+    return _.includes(_.toLower(value), _.toLower(this.query));
+  }
+
   public toQuery(): string {
     return this.getQueryPrefix() + this.getQueryWithoutField();
   }
@@ -184,6 +196,10 @@ export class OperatorAnd extends CollectionOperator {
 
   public getCommonMatchOperator(): string {
     return '';
+  }
+
+  public matches(value: string, field?: string): boolean {
+    return _.every(this.and, se => se.matches(value, field));
   }
 
   public containsEffectOf(element: SearchElement): SearchElement | undefined {
@@ -245,6 +261,10 @@ export class OperatorOr extends CollectionOperator {
     if (takeOwnerShip) {
       _.each(oredElements, s => s.setParent(this));
     }
+  }
+
+  public matches(value: string, field?: string): boolean {
+    return _.isEmpty(this.or) || _.some(this.or, se => se.matches(value, field));
   }
 
   public containsEffectOf(element: SearchElement): SearchElement | undefined {
