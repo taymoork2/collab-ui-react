@@ -7,7 +7,7 @@ assignable-services-row {
   .subscription__header {
     .icon.toggle {
       float: right;
-      font-size: 18px;
+      font-size: 1.125rem;
     }
   }
 
@@ -16,10 +16,10 @@ assignable-services-row {
       color: $gray-dark-2;
       font-family: $brand-font-light;
       font-weight: bold;
-      font-size: 14px;
-      line-height: 26px;
+      font-size: 0.875rem;
+      line-height: 1.625rem;
       margin-top: 0;
-      margin-bottom: .25rem;
+      margin-bottom: 0.25rem;
     }
 
     assignable-advanced-meetings {
