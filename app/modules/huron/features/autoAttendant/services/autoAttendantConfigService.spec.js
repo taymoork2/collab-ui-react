@@ -27,12 +27,12 @@ describe('autoAttendantConfigService', function () {
       expect(response.data.csConnString).toBe(csConnString);
     });
   });
-  
+
   it('should fail to get Chat Config for a give orgId', function () {
-	    $httpBackend.whenGET(aaCSOnboardingUrl).respond(500);
-	    autoAttendantConfigService.getCSConfig().then(function (response) {
-	    	expect(response.status).toBe(500);
-	    });
-	  });
+    $httpBackend.whenGET(aaCSOnboardingUrl).respond(500);
+    autoAttendantConfigService.getCSConfig().then(function (response) {
+      expect(response.status).toBe(500);
+    });
+  });
 });
 

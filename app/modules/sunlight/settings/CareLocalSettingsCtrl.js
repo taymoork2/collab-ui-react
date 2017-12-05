@@ -467,13 +467,14 @@ var HttpStatus = require('http-status-codes');
       return SunlightConfigService.getChatConfig().then(function (result) {
         populateOrgChatConfigViewModel(result, true);
         getOnboardStatusAndUpdateConfigIfRequired(result);
-      }, function (error) {
-        if (error.status === 404) {
-          vm.sunlightOnboardingState = vm.NOT_ONBOARDED;
-        } else {
-          Log.debug('Fetching Care setup status, on load, failed: ', error);
-        }
-      });
+      })
+        .catch(function (error) {
+          if (error.status === 404) {
+            vm.sunlightOnboardingState = vm.NOT_ONBOARDED;
+          } else {
+            Log.debug('Fetching Care setup status, on load, failed: ', error);
+          }
+        });
     }
 
     function setViewModelStateFromCsConfigForAA() {
