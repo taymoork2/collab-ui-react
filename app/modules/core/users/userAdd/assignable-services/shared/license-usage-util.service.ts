@@ -29,6 +29,10 @@ export class LicenseUsageUtilService {
     });
   }
 
+  public getCallLicenses(licenses: ILicenseUsage[]): ILicenseUsage[] {
+    return _.filter(licenses, { offerName: OfferName.CO });
+  }
+
   public getBasicMeetingLicenses(licenses: ILicenseUsage[]): ILicenseUsage[] {
     return _.filter(licenses, { offerName: OfferName.CF });
   }

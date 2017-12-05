@@ -49,13 +49,17 @@
   </div>
 
   <div class="small-4 columns column-paid column__communication">
-    <!-- call -->
-    <assignable-license-checkbox
-      license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CO)"
-      l10n-label="onboardModal.paidSparkCall"
-      on-update="$ctrl.onUpdate({ $event: $event })"
-      state-data="$ctrl.stateData">
-    </assignable-license-checkbox>
+    <div ng-if="$ctrl.callLicenses.length">
+      <div translate="onboardModal.call" class="license__category"></div>
+
+      <!-- call -->
+      <assignable-license-checkbox
+        license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CO)"
+        l10n-label="onboardModal.paidSparkCall"
+        on-update="$ctrl.onUpdate({ $event: $event })"
+        state-data="$ctrl.stateData">
+      </assignable-license-checkbox>
+    </div>
   </div>
 
   <div ng-if="$ctrl.isCareEnabled" class="small-4 columns column-paid column__care">

@@ -9,6 +9,7 @@ class AssignableServicesRowController implements ng.IComponentController {
   private onUpdate: Function;
   private licenses: ILicenseUsage[];
   private messageLicenses: ILicenseUsage[];
+  private callLicenses: ILicenseUsage[];
   private basicMeetingLicenses: ILicenseUsage[];
   private advancedMeetingLicenses: ILicenseUsage[];
   private advancedMeetingSiteUrls: string[];
@@ -23,6 +24,7 @@ class AssignableServicesRowController implements ng.IComponentController {
   public $onInit(): void {
     this.licenses = this.subscription.licenses;
     this.messageLicenses = this.getMessageLicenses();
+    this.callLicenses = this.getCallLicenses();
     this.basicMeetingLicenses = this.getBasicMeetingLicenses();
     this.advancedMeetingLicenses = this.getAdvancedMeetingLicenses();
     this.advancedMeetingSiteUrls = this.getAdvancedMeetingSiteUrls();
@@ -33,6 +35,10 @@ class AssignableServicesRowController implements ng.IComponentController {
 
   private getMessageLicenses(): ILicenseUsage[] {
     return this.LicenseUsageUtilService.getMessageLicenses(this.licenses);
+  }
+
+  private getCallLicenses(): ILicenseUsage[] {
+    return this.LicenseUsageUtilService.getCallLicenses(this.licenses);
   }
 
   private getBasicMeetingLicenses(): ILicenseUsage[] {
