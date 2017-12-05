@@ -6,5 +6,5 @@
     ng-href="{{row.entity.invoiceURL}}">
     <i class="icon icon-notes" style="vertical-align: middle;"></i>
   </a>
-  <span ng-class="{iconspacer: row.entity.isTrial}" ng-bind="row.entity.total | currency"></span>
+  <span ng-class="{iconspacer: row.entity.isTrial}">{{row.entity.total}}</span>
 </div>
