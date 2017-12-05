@@ -1,22 +1,22 @@
-import { ILicenseUsage, AssignableServicesItemCategory } from 'modules/core/users/userAdd/assignable-services/shared';
+import { ILicenseUsage, AssignableServicesItemCategory, LicenseUsageUtilService } from 'modules/core/users/userAdd/assignable-services/shared';
 
 class AssignableItemCheckboxController implements ng.IComponentController {
+  public formItemId: string | undefined;
+  public isSelected = false;
+  public isDisabled = false;
   private static readonly itemCategory = AssignableServicesItemCategory.LICENSE;
   private itemId: string;
   private license: ILicenseUsage;
   private stateData: any;  // TODO: better type
   private onUpdate: Function;
-  public formItemId: string;
-  public isSelected = false;
-  public isDisabled = false;
 
   /* @ngInject */
   constructor(
-    private LicenseUsageUtilService,
+    private LicenseUsageUtilService: LicenseUsageUtilService,
   ) {}
 
   public $onInit(): void {
-    const licenseId = this.license.licenseId;
+    const licenseId: string = this.license.licenseId;
     this.itemId = licenseId;
     this.formItemId = this.LicenseUsageUtilService.sanitizeIdForJs(licenseId);
 
