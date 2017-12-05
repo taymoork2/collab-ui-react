@@ -1,9 +1,10 @@
 import { ILicenseUsage } from './license-usage-util.interfaces';
 import { Config } from 'modules/core/config/config';
+import { OfferName } from 'modules/core/shared';
 
 export class LicenseUsageUtilService {
 
-  public static readonly ADVANCED_MEETING_OFFER_NAMES = ['CMR', 'EC', 'EE', 'MC', 'TC'];
+  public static readonly ADVANCED_MEETING_OFFER_NAMES = [OfferName.CMR, OfferName.EC, OfferName.EE, OfferName.MC, OfferName.TC];
 
   /* @ngInject */
   constructor(
@@ -23,7 +24,7 @@ export class LicenseUsageUtilService {
   }
 
   public getBasicMeetingLicenses(licenses: ILicenseUsage[]): ILicenseUsage[] {
-    return _.filter(licenses, { offerName: 'CF' });
+    return _.filter(licenses, { offerName: OfferName.CF });
   }
 
   public getAdvancedMeetingLicenses(licenses: ILicenseUsage[]): ILicenseUsage[] {
@@ -38,13 +39,13 @@ export class LicenseUsageUtilService {
   }
 
   public getTotalLicenseUsage(offerName: string, licenses: ILicenseUsage[]): number {
-    const filteredLicenses = _.filter(licenses, { offerName: offerName });
+    const filteredLicenses = _.filter(licenses, { offerName });
     const sum = _.sumBy(filteredLicenses, 'usage');
     return (sum < 0) ? 0 : sum;
   }
 
   public getTotalLicenseVolume(offerName: string, licenses: ILicenseUsage[]): number {
-    const filteredLicenses = _.filter(licenses, { offerName: offerName });
+    const filteredLicenses = _.filter(licenses, { offerName });
     return _.sumBy(filteredLicenses, 'volume');
   }
 
