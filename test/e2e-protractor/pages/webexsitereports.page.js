@@ -1,14 +1,14 @@
 'use strict';
 
 var WebExSiteReportsPage = function () {
-  var webexTabLink = element(by.css('a[href="#/reports/webexMetrics"]'));
-  var webexClassicLink = element(by.css('a[href="#/reports/webexMetrics/classic"]'));
-  var webexReportsLink = element(by.css('a[href="#/reports/webex"]'));
+  var webexTabLink = element(by.css('a[href="/reports/webexMetrics"]'));
+  var webexClassicLink = element(by.css('a[href="/reports/webexMetrics/classic"]'));
+  var webexReportsLink = element(by.css('a[href="/reports/webex"]'));
 
   this.webexReportCrumb1 = element(by.id('webexReportIFrameCrumb1'));
   this.webexReportCrumb2 = element(by.id('webexReportIFrameCrumb2'));
 
-  this.conferencing = element(by.css('a[href="#/site-list"]'));
+  this.conferencing = element(by.css('a[href="/site-list"]'));
   this.webexSiteReportsPanel = element(by.css('#reportsPanel'));
   this.webexCommonMeetingUsageLink = element(by.id('meeting_usage'));
   this.webexCommonMeetingsInProgressLink = element(by.id('meeting_in_progess'));
@@ -30,7 +30,7 @@ var WebExSiteReportsPage = function () {
   this.lastSyncElement = element(by.id('reportsRefreshData'));
 
   this.clickWebexReports = function () {
-    var isWebexMetricsPresent = element(by.css('a[href="#/reports/webexMetrics"]')).isPresent();
+    var isWebexMetricsPresent = element(by.css('a[href="/reports/webexMetrics"]')).isPresent();
     isWebexMetricsPresent.then(function (result) {
       if (result) {
         utils.expectIsDisplayed(webexTabLink);

@@ -34,7 +34,7 @@ describe('Remove partner trials from partner org page', function () {
             if ((id[0] !== undefined) && (id[0].length > 0) && (id[0] !== 'Atlas Test Partner Organization My Organization')) {
               var a = element(by.css("li[id='" + id[0] + "LaunchCustomerButton']"));
               a.getAttribute('innerHTML').then(function (inner) {
-                var patt = /href="#\/login\/\s*(.*?)\s*\//;
+                var patt = /href="\/login\/\s*(.*?)\s*\//;
                 var result = patt.exec(inner);
                 if (result.length == 2) {
                   //if ( id[0] === "ABC1" )

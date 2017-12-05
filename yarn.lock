@@ -2175,6 +2175,10 @@ connect-history-api-fallback@^1.1.0, connect-history-api-fallback@^1.2.0, connec
   version "1.3.0"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/connect-history-api-fallback/-/connect-history-api-fallback-1.3.0.tgz#e51d17f8f0ef0db90a64fdb47de3051556e9f169"
 
+connect-history-api-fallback@^1.5.0:
+  version "1.5.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/connect-history-api-fallback/-/connect-history-api-fallback-1.5.0.tgz#b06873934bc5e344fef611a196a6faae0aee015a"
+
 connect-logger@0.0.1:
   version "0.0.1"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/connect-logger/-/connect-logger-0.0.1.tgz#4d999978a1d20bb4608e7cd434d741652255174b"
