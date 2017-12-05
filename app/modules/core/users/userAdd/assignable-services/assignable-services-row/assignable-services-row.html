@@ -25,7 +25,7 @@
 
   <div class="small-4 columns column-paid column__meeting">
     <!-- basic meeting (25 party) -->
-    <div ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CF)" class="basic-meetings">
+    <div ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CF)">
       <div translate="firstTimeWizard.basicMeetings" class="license__category"></div>
       <assignable-license-checkbox
         license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CF)"
