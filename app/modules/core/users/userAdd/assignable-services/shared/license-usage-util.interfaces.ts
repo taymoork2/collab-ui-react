@@ -35,3 +35,7 @@ export interface IAssignableItemChange {
   itemCategory: AssignableServicesItemCategory;
   item: IAssignableItemCheckboxState;
 }
+
+export interface IOnUpdateParam {
+  $event: IAssignableItemChange;
+}
