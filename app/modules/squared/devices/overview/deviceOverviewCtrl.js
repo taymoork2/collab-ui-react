@@ -106,12 +106,9 @@
 
       deviceOverview.deviceHasInformation = deviceOverview.currentDevice.ip || deviceOverview.currentDevice.mac || deviceOverview.currentDevice.serial || deviceOverview.currentDevice.software || deviceOverview.currentDevice.hasRemoteSupport;
 
-      var featureTogglePromise = FeatureToggleService.csdmPlaceUpgradeChannelGetStatus().then(function (feature) {
-        var placeUpgradeChannelSupported = feature && deviceOverview.currentDevice.productFamily === 'Cloudberry';
-        deviceOverview.canChangeUpgradeChannel = channels.length > 1 && !deviceOverview.currentDevice.isHuronDevice && deviceOverview.currentDevice.isOnline && !placeUpgradeChannelSupported;
-        deviceOverview.shouldShowUpgradeChannel = channels.length > 1 && !deviceOverview.currentDevice.isHuronDevice && (!deviceOverview.currentDevice.isOnline || placeUpgradeChannelSupported);
-      });
-      promises.push(featureTogglePromise);
+      var placeUpgradeChannelSupported = deviceOverview.currentDevice.productFamily === 'Cloudberry' || deviceOverview.currentDevice.productFamily === 'Novum';
+      deviceOverview.canChangeUpgradeChannel = channels.length > 1 && !deviceOverview.currentDevice.isHuronDevice && deviceOverview.currentDevice.isOnline && !placeUpgradeChannelSupported;
+      deviceOverview.shouldShowUpgradeChannel = channels.length > 1 && !deviceOverview.currentDevice.isHuronDevice && (!deviceOverview.currentDevice.isOnline || placeUpgradeChannelSupported);
 
       deviceOverview.upgradeChannelOptions = _.map(channels, getUpgradeChannelObject);
 

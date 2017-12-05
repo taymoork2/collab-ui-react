@@ -174,12 +174,12 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
                 // Find space Ids that is a moderator
                 const allModeratoredSpaceIds = allMemberships.map(function(item) {
                   if (item.isModerator) {
-                    return item.rooomId;
+                    return item.roomId;
                   }
                 });
                 // Find all spaces that matched the moderator space id
                 const moderatoredSpaces = otherSpaces.filter(function (item) {
-                  return _.indexOf(allModeratoredSpaceIds, item.id) > 0;
+                  return _.indexOf(allModeratoredSpaceIds, item.id) >= 0;
                 });
                 // Combine the spaces created by this user and moderatored spaces
                 const defaultSpaces = _.concat(spacesCreatedByThisUser, moderatoredSpaces);

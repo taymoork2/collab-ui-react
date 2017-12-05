@@ -1,4 +1,7 @@
-import { CloudConnectorService, FeatureToggleService, IEntitlementNameAndState, ServiceDescriptorService } from './index';
+import { CloudConnectorService } from 'modules/hercules/services/calendar-cloud-connector.service';
+import { FeatureToggleService } from 'modules/core/featureToggle';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
+import { IEntitlementNameAndState } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
 
 class HybridServicesEntitlementsPanelController implements ng.IComponentController {
 
@@ -82,9 +85,8 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
     });
   }
 
-  // TODO: add better TS types for args
-  public $onChanges(changes): void {
-    if (changes.userIsLicensed && !changes.userIsLicensed.currentValue && changes.userIsLicensed.previousValue) {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
+    if (changes.hasAssignableLicenses && !changes.hasAssignableLicenses.currentValue && changes.hasAssignableLicenses.previousValue) {
       this.clearSelectedHybridServicesEntitlements();
     }
   }
@@ -164,6 +166,6 @@ export class HybridServicesEntitlementsPanelComponent implements ng.IComponentOp
   public template = require('./hybrid-services-entitlements-panel.html');
   public bindings = {
     entitlementsCallback: '&',
-    userIsLicensed: '<',
+    hasAssignableLicenses: '<',
   };
 }

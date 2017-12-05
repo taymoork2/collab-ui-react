@@ -29,7 +29,6 @@ describe('ServicesOverviewController', () => {
   let isFusionCal: jasmine.Spy;
   let isFusionGoogleCal: jasmine.Spy;
   let isFusionMedia: jasmine.Spy;
-  let isFusionHDS: jasmine.Spy;
   let isEnterpriseCustomer: jasmine.Spy;
   let isContactCenterContext: jasmine.Spy;
   let isSquaredUC: jasmine.Spy;
@@ -51,7 +50,6 @@ describe('ServicesOverviewController', () => {
     isFusionCal = spyOn(Authinfo, 'isFusionCal').and.returnValue(false);
     isFusionGoogleCal = spyOn(Authinfo, 'isFusionGoogleCal').and.returnValue(false);
     isFusionMedia = spyOn(Authinfo, 'isFusionMedia').and.returnValue(false);
-    isFusionHDS = spyOn(Authinfo, 'isFusionHDS').and.returnValue(false);
     isEnterpriseCustomer = spyOn(Authinfo, 'isEnterpriseCustomer').and.returnValue(false);
     isContactCenterContext = spyOn(Authinfo, 'isContactCenterContext').and.returnValue(false);
     isSquaredUC = spyOn(Authinfo, 'isSquaredUC').and.returnValue(false);
@@ -173,8 +171,7 @@ describe('ServicesOverviewController', () => {
       expect(ctrl._servicesInactive).toEqual(['squared-fusion-media']);
     });
 
-    it('should display Hybrid Data Security if the org is entitled to it and is an Enterprise Customer and the user is full_admin or readonly_admin', () => {
-      isFusionHDS.and.returnValue(true);
+    it('should display Hybrid Data Security if the org is an Enterprise Customer and the user is full_admin or readonly_admin', () => {
       isEnterpriseCustomer.and.returnValue(true);
       getRoles.and.returnValue(Config.roles.full_admin);
       initController(true);
@@ -240,7 +237,6 @@ describe('ServicesOverviewController', () => {
 
     it('should consider Hybrid Data Security active, if the service is setup', () => {
       getStatusForService.and.returnValue($q.resolve({ setup: true }));
-      isFusionHDS.and.returnValue(true);
       isEnterpriseCustomer.and.returnValue(true);
       getRoles.and.returnValue(Config.roles.full_admin);
       initController(true);

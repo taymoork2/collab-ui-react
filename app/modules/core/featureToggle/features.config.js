@@ -101,7 +101,6 @@ module.exports = {
   csdmMultipleDevicesPerPlace: 'csdm-multiple-devices-per-place',
   csdmPlaceCalendar: 'csdm-hybrid-calendar',
   csdmPlaceGuiSettings: 'csdm-place-gui-settings',
-  csdmPlaceUpgradeChannel: 'csdm-place-upgrade-channel',
   csdmT38: 'csdm-ata-t38',
   csdmApiAccess: 'csdm-api-access',
   deleteContent: 'delete-content',

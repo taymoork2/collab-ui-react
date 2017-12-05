@@ -109,10 +109,7 @@ describe('Service: Analytics', function () {
     });
 
     it('should fail if there is no eventName', function () {
-      this.Analytics.trackPremiumEvent().then(function (response) {
-        expect(response).toEqual(this.NO_EVENT_NAME);
-      });
-      this.$scope.$apply();
+      expect(this.Analytics.trackPremiumEvent()).toBe(this.NO_EVENT_NAME);
     });
   });
 

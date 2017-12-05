@@ -98,7 +98,7 @@ export class RateLimitService {
     const randomMultiplier = this.HAS_JITTER ? Math.random() + 1 : 1;
     const calculatedBackoff = Math.round(this.MIN_DELAY * randomMultiplier * config.retryConfig.baseMultiplier);
     config.retryConfig.baseMultiplier *= this.FACTOR;
-    if (calculatedBackoff > retryAfterInMillis) {
+    if (calculatedBackoff >= retryAfterInMillis) {
       return Math.min(this.MAX_DELAY, calculatedBackoff);
     } else {
       return this.calculateBackoffDelay(config, retryAfterInMillis);

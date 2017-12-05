@@ -25,6 +25,7 @@ class WebexDeleteSiteModalController implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private Analytics,
+    private $rootScope: ng.IRootScopeService,
     private Notification: Notification,
     private SetupWizardService: SetupWizardService,
     private WebExSiteService: WebExSiteService,
@@ -55,6 +56,7 @@ class WebexDeleteSiteModalController implements ng.IComponentController {
       this.saveData();
     } else {
       this.cancel();
+      this.$rootScope.$broadcast('EventNames.SITE_LIST_MODIFIED');
     }
   }
 

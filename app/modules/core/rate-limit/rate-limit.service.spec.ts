@@ -93,6 +93,33 @@ describe('RateLimitService', () => {
         }));
       });
 
+      it('should retry a request if the backoff delay exactly matches the Retry-after value', function () {
+        this.$httpBackend.expectGET(this.URL).respond(200);
+
+        const throttledResponse = {
+          config: {
+            method: 'GET',
+            url: this.URL,
+          },
+          status: 429,
+          headers: jasmine.createSpy('headers').and.returnValue('.8'), // 800ms
+        };
+
+        this.RateLimitService.HAS_JITTER = false; // reproduce exact backoff calculation
+        const delay = 800;
+        const response = this.RateLimitService.retryThrottledResponse(throttledResponse);
+        expect(throttledResponse.headers).toHaveBeenCalledWith('Retry-After');
+        this.$timeout.flush(delay - 1);
+        expect(this.$httpBackend.flush).toThrow(); // nothing to flush yet
+
+        this.$timeout.flush(1); // covered delay
+        expect(this.$httpBackend.flush).not.toThrow(); // retried request
+
+        expect(response).toBeResolvedWith(jasmine.objectContaining({
+          status: 200,
+        }));
+      });
+
       it('should retry a request with the MAX_DELAY if the Retry-After value is too large', function () {
         this.$httpBackend.expectGET(this.URL).respond(200);
 
