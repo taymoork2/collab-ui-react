@@ -2069,7 +2069,7 @@
             url: '/system',
             views: {
               metricsContent: {
-                template: '<div> To be continue...</div>',
+                template: '<metrics-frame></metrics-frame>',
               },
             },
           })

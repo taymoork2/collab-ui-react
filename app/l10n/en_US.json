@@ -742,7 +742,7 @@
       "title": "WebEx",
       "metrics": "Metrics",
       "MEI": "MEI",
-      "System": "System",
+      "system": "System",
       "diagnostics": "Diagnostics",
       "classic": "Classic",
       "webexClassic": "WebEx Classic",
