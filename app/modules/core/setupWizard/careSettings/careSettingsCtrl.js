@@ -293,15 +293,16 @@ var HttpStatus = require('http-status-codes');
         vm.defaultQueueStatus = vm.status.SUCCESS;
         sunlightPromise = getOnboardingStatusFromOrgChatConfig();
         setViewModelStateForAA(sunlightPromise);
-      }, function (error) {
-        sunlightPromise = getOnboardingStatusFromOrgChatConfig();
-        if (error.status === 404) {
-          vm.sunlightOnboardingState = vm.NOT_ONBOARDED;
-        } else {
-          Log.debug('Fetching default queue status, on load, failed: ', error);
-        }
-        setViewModelStateForAA(sunlightPromise);
-      });
+      })
+        .catch(function (error) {
+          sunlightPromise = getOnboardingStatusFromOrgChatConfig();
+          if (error.status === 404) {
+            vm.sunlightOnboardingState = vm.NOT_ONBOARDED;
+          } else {
+            Log.debug('Fetching default queue status, on load, failed: ', error);
+          }
+          setViewModelStateForAA(sunlightPromise);
+        });
     }
 
     init();
