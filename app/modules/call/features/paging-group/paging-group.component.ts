@@ -38,7 +38,9 @@ class PagingGroupComponentCtrl implements ng.IComponentController {
       this.$state.go(this.huronFeaturesUrl);
     } else {
       this.isLoading = true;
-      this.$q.resolve(this.initComponentData()).finally(() => this.isLoading = false);
+      this.$q.resolve(this.initComponentData()
+        .catch(_.noop)
+        .finally(() => this.isLoading = false));
     }
   }
 

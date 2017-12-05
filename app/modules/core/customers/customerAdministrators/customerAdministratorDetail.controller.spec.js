@@ -39,16 +39,6 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
       uuid: 'd3434d78-26452-445a2-845d8-4c1816565b3f0a',
     }];
     spyOn(CustomerAdministratorService, 'removeCustomerAdmin').and.returnValue($q.resolve({}));
-    spyOn(CustomerAdministratorService, 'getPartnerUsers').and.returnValue($q.reject({
-      data: {
-        Errors: [{
-          code: '403',
-          description: 'Organization has too many users.',
-          errorCode: '200046',
-        }],
-      },
-      status: 403,
-    }));
     spyOn(CustomerAdministratorService, 'getCustomerAdmins').and.returnValue($q.resolve({
       data: {
         Resources: [{
@@ -90,6 +80,19 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
     $scope.$apply();
   }
 
+  function rejectGetPartnerUsers() {
+    spyOn(CustomerAdministratorService, 'getPartnerUsers').and.returnValue($q.reject({
+      data: {
+        Errors: [{
+          code: '403',
+          description: 'Organization has too many users.',
+          errorCode: '200046',
+        }],
+      },
+      status: 403,
+    }));
+  }
+
   describe('getCustomerAdmins():', function () {
     beforeEach(initController);
 
@@ -107,6 +110,7 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
     beforeEach(initController);
 
     it('must display too many results error message', function () {
+      rejectGetPartnerUsers();
       controller.getPartnerUsers('a');
       $scope.$apply();
 

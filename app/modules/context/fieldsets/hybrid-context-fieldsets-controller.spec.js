@@ -45,11 +45,11 @@ describe('HybridContextFieldsetsCtrl', function () {
 
   function initSpies() {
     spyOn($state, 'go');
-    spyOn(ContextFieldsetsService, 'getFieldsets');
+    spyOn(ContextFieldsetsService, 'getFieldsets').and.returnValue($q.resolve([]));
     spyOn(Log, 'debug');
     spyOn(Notification, 'error');
     spyOn(Authinfo, 'getOrgName').and.returnValue('orgName');
-    spyOn(PropertyService, 'getProperty').and.returnValue($q.reject(undefined));
+    spyOn(PropertyService, 'getProperty').and.returnValue($q.resolve(PropertyConstants.MAX_FIELDSETS_DEFAULT_VALUE));
     spyOn(Authinfo, 'getOrgId').and.returnValue(MOCK_ORG_ID);
   }
 
@@ -64,7 +64,6 @@ describe('HybridContextFieldsetsCtrl', function () {
 
   describe('init controller', function () {
     it('should set the default value', function () {
-      ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([]));
       controller = initController();
       expect(controller.load).toEqual(true);
     });
@@ -267,7 +266,6 @@ describe('HybridContextFieldsetsCtrl', function () {
 
   describe('filterListBySearchStr', function () {
     it('should filter out the correct number of fieldsets when the search string is a number and is found in some columns', function (done) {
-      ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([]));
       controller = initController();
       $scope.$apply();
 
@@ -420,7 +418,6 @@ describe('HybridContextFieldsetsCtrl', function () {
     });
 
     it('should filter only when the search string is found case insensitive in the specified columns but not in unsearchable columns', function (done) {
-      ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([]));
       controller = initController();
       $scope.$apply();
 
@@ -535,7 +532,6 @@ describe('HybridContextFieldsetsCtrl', function () {
     });
 
     it('should filter by exact match with the search string despite the list contains the same text with different delimiters', function (done) {
-      ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([]));
       controller = initController();
       $scope.$apply();
 
@@ -654,7 +650,6 @@ describe('HybridContextFieldsetsCtrl', function () {
     });
 
     it('should return full list when search string is empty', function (done) {
-      ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([]));
       controller = initController();
       $scope.$apply();
 
@@ -776,7 +771,6 @@ describe('HybridContextFieldsetsCtrl', function () {
     });
 
     describe('max fieldsets allowed', function () {
-      var DEFAULT_MAX_FIELDSETS = PropertyConstants.MAX_FIELDSETS_DEFAULT_VALUE;
       var MAX_FIELDSETS_PROPERTY = PropertyConstants.MAX_FIELDSETS_PROP_NAME;
 
       beforeEach(function () {
@@ -828,7 +822,6 @@ describe('HybridContextFieldsetsCtrl', function () {
           refUrl: '/dictionary/fieldset/v1/id/ccc_custom_fieldset',
           id: 'ccc_custom_fieldset',
         }]));
-        controller = initController();
       });
 
       afterEach(function () {
@@ -836,17 +829,26 @@ describe('HybridContextFieldsetsCtrl', function () {
       });
 
       it('should have the default max fields', function () {
+        controller = initController();
         $scope.$apply();
-        expect(controller.maxFieldsetsAllowed).toBe(DEFAULT_MAX_FIELDSETS);
+        expect(controller.maxFieldsetsAllowed).toBe(PropertyConstants.MAX_FIELDSETS_DEFAULT_VALUE);
         expect(controller.showNew).toBe(true);
       });
 
       it('should overrides the max fields property and new is disabled', function () {
-        var maxFields = 2;
-        PropertyService.getProperty.and.returnValue($q.resolve(maxFields));
+        PropertyService.getProperty.and.returnValue($q.resolve(2));
+        controller = initController();
         $scope.$apply();
-        expect(controller.maxFieldsetsAllowed).toBe(maxFields);
+        expect(controller.maxFieldsetsAllowed).toBe(2);
         expect(controller.showNew).toBe(false);
+      });
+
+      it('should use default max fields allowed on reject', function () {
+        PropertyService.getProperty.and.returnValue($q.reject());
+        controller = initController();
+        $scope.$apply();
+        expect(controller.maxFieldsetsAllowed).toBe(PropertyConstants.MAX_FIELDSETS_DEFAULT_VALUE);
+        expect(controller.showNew).toBe(true);
       });
     });
   });
@@ -859,7 +861,6 @@ describe('HybridContextFieldsetsCtrl', function () {
         'FeatureToggleService'
       );
       this.featureSupportSpy = spyOn(this.FeatureToggleService, 'supports');
-      this.ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([]));
     });
 
     afterEach(function () {

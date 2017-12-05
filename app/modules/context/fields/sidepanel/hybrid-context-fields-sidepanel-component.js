@@ -117,7 +117,7 @@ var EnumDataTypeUtils = DataTypeDefinition.EnumDataTypeUtils;
           Notification.error('context.dictionary.fieldPage.fieldDeleteFailure');
           Analytics.trackEvent(Analytics.sections.CONTEXT.eventNames.CONTEXT_DELETE_FIELD_FAILURE);
         });
-      });
+      }).catch(_.noop);
     };
 
     vm.$onInit = function () {

@@ -19,8 +19,8 @@ class PagingInitiatorCtrl implements ng.IComponentController {
   }
 
   public fetchInitiators(): ng.IPromise<Member[]> {
-    return this.FeatureMemberService.getMemberSuggestions(this.initiatorName).then(
-      (data: Member[]) => {
+    return this.FeatureMemberService.getMemberSuggestions(this.initiatorName)
+      .then((data: Member[]) => {
         this.availableInitiators = _.reject(data, (mem) => {
           return _.some(this.selectedInitiators, (member) => {
             return _.get(member, 'member.uuid') === mem.uuid;
@@ -46,11 +46,12 @@ class PagingInitiatorCtrl implements ng.IComponentController {
           this.errorInitiatorInput = (this.availableInitiators && this.availableInitiators.length === 0);
           return this.availableInitiators;
         });
-
-      }, (response) => {
-      this.Notification.errorResponse(response, 'pagingGroup.initiatorFetchFailure');
-      return this.$q.reject(response);
-    });
+      })
+      .catch((response) => {
+        this.Notification.errorResponse(response, 'pagingGroup.initiatorFetchFailure');
+        // return empty array
+        return this.$q.resolve([]);
+      });
   }
 
   public selectInitiators(member: Member): void {
