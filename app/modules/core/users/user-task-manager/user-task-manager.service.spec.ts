@@ -1,5 +1,8 @@
 import userTaskManagerModuleName from './index';
 
+import 'moment';
+import 'moment-timezone';
+
 describe('Service: UserTaskManagerService', () => {
 
   beforeEach(function () {
@@ -20,6 +23,8 @@ describe('Service: UserTaskManagerService', () => {
     this.UPLOAD_URL = `${this.UrlConfig.getAdminServiceUrl()}csv/organizations/${this.Authinfo.getOrgId()}/uploadurl`;
 
     installPromiseMatchers();
+
+    moment.tz.setDefault('America/Los_Angeles');
   });
 
   afterEach(function () {
@@ -149,7 +154,7 @@ describe('Service: UserTaskManagerService', () => {
       const isoDate = '2017-10-06T20:54:22.535Z';
       const { date, time } = this.UserTaskManagerService.getDateAndTime(isoDate);
       expect(date).toBe('Oct 6, 2017');
-      expect(time).toBe('3:54 PM');
+      expect(time).toBe('1:54 PM');
     });
   });
 

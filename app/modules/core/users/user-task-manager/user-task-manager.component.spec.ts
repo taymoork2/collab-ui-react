@@ -1,6 +1,9 @@
 import userTaskManagerModalModule from './index';
 import { TaskListFilterType } from './user-task-manager.constants';
 
+import 'moment';
+import 'moment-timezone';
+
 describe('Component: userTaskManager', () => {
   const LOADING_SPINNER = '.loading-wrapper';
   const TASK_CONTAINER = 'task-container';
@@ -31,6 +34,8 @@ describe('Component: userTaskManager', () => {
 
     spyOn(this.UserTaskManagerService, 'submitCsvImportTask').and.returnValue(this.$q.resolve(this.taskList[1]));
     spyOn(this.UserTaskManagerService, 'initAllTaskListPolling');
+
+    moment.tz.setDefault('America/Los_Angeles');
   });
 
   function initComponent() {
@@ -81,7 +86,7 @@ describe('Component: userTaskManager', () => {
       expect(activeTask.statusTranslate).toBe('userTaskManagerModal.taskStatus.completed');
       expect(activeTask.jobInstanceId).toBe('CSV Import 1');
       expect(activeTask.createdDate).toBe('Oct 6, 2017');
-      expect(activeTask.createdTime).toBe('3:54 PM');
+      expect(activeTask.createdTime).toBe('1:54 PM');
     });
 
     it('should change result task on task list change', function () {
