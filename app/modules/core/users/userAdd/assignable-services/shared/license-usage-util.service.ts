@@ -33,6 +33,12 @@ export class LicenseUsageUtilService {
     return _.filter(licenses, { offerName: OfferName.CO });
   }
 
+  public getCareLicenses(licenses: ILicenseUsage[]): ILicenseUsage[] {
+    return _.filter(licenses, (license) => {
+      return _.includes([OfferName.CDC, OfferName.CVC], license.offerName);
+    });
+  }
+
   public getBasicMeetingLicenses(licenses: ILicenseUsage[]): ILicenseUsage[] {
     return _.filter(licenses, { offerName: OfferName.CF });
   }

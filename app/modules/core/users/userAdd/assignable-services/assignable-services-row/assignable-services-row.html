@@ -31,6 +31,7 @@
     <!-- basic meeting (25 party) -->
     <div ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CF)">
       <div translate="firstTimeWizard.basicMeetings" class="license__category"></div>
+
       <assignable-license-checkbox
         license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CF)"
         l10n-label="firstTimeWizard.meetingsInSpark"
@@ -63,20 +64,24 @@
   </div>
 
   <div ng-if="$ctrl.isCareEnabled" class="small-4 columns column-paid column__care">
-    <!-- care - K1 -->
-    <assignable-license-checkbox
-      license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CDC)"
-      l10n-label="onboardModal.paidCDC"
-      on-update="$ctrl.onUpdate({ $event: $event })"
-      state-data="$ctrl.stateData">
-    </assignable-license-checkbox>
+    <div ng-if="$ctrl.careLicenses.length">
+      <div translate="onboardModal.contactCenter" class="license__category"></div>
 
-    <!-- care - K2 -->
-    <assignable-license-checkbox
-      license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CVC)"
-      l10n-label="onboardModal.paidCVC"
-      on-update="$ctrl.onUpdate({ $event: $event })"
-      state-data="$ctrl.stateData">
-    </assignable-license-checkbox>
+      <!-- care - K1 -->
+      <assignable-license-checkbox
+        license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CDC)"
+        l10n-label="onboardModal.paidCDC"
+        on-update="$ctrl.onUpdate({ $event: $event })"
+        state-data="$ctrl.stateData">
+      </assignable-license-checkbox>
+
+      <!-- care - K2 -->
+      <assignable-license-checkbox
+        license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CVC)"
+        l10n-label="onboardModal.paidCVC"
+        on-update="$ctrl.onUpdate({ $event: $event })"
+        state-data="$ctrl.stateData">
+      </assignable-license-checkbox>
+    </div>
   </div>
 </div>
