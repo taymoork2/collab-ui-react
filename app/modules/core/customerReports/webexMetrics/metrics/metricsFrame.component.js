@@ -14,7 +14,6 @@
     vm.isIframeLoaded = false;
 
     $window.addEventListener('message', messageHandle, true);
-    var stateChangeStart = $rootScope.$on('$stateChangeStart', onStateChangeStart);
 
     $scope.$on('updateIframe', updateIframe);
     $scope.$on('unfreezeState', unfreezeState);
@@ -30,12 +29,6 @@
         },
         0
       );
-    }
-
-    function onStateChangeStart(event, toState) {
-      if (!vm.isIframeLoaded && toState.name.substr(0, 7) === 'reports') {
-        event.preventDefault();
-      }
     }
 
     function messageHandle(event) {
@@ -69,7 +62,6 @@
       if (vm.startLoadReportTimer) {
         $timeout.cancel(vm.startLoadReportTimer);
       }
-      stateChangeStart();
       $window.removeEventListener('message', messageHandle, true);
     };
   }

@@ -70,7 +70,6 @@
     vm.minVariableLength = 3;
     vm.isNextDisabled = isNextDisabled;
     vm.callTestRestApiConfigs = callTestRestApiConfigs;
-    vm.isDynamicListEmpty = isDynamicListEmpty;
     vm.dynamicData = [];
     vm.stepBack = stepBack;
     vm.stepNext = stepNext;
@@ -333,18 +332,6 @@
       return finalDynamicList;
     }
 
-    function isDynamicListEmpty() {
-      var status = true;
-      vm.menuEntry.actions[0].url = vm.menuEntry.actions[0].dynamicList;
-      var dynamicList = _.get(vm.menuEntry, 'actions[0].url');
-      _.forEach(dynamicList, function (dynamic) {
-        if (!_.isEmpty(_.get(dynamic, 'action.eval.value', ''))) {
-          status = false;
-        }
-      });
-      return status;
-    }
-
     function decodedValue(evalValue) {
       return decodeURIComponent(evalValue).trim();
     }
@@ -437,7 +424,7 @@
 
     function stepNext() {
       vm.currentStep++;
-      if (vm.menuEntry.actions[0].dynamicList) {
+      if (urlUpdated) {
         action.url = vm.menuEntry.actions[0].dynamicList;
       } else {
         action.url = vm.menuEntry.actions[0].url;

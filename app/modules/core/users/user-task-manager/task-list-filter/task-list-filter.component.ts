@@ -1,9 +1,5 @@
 import './task-list-filter.scss';
-
-export enum TaskListFilterType {
-  ALL,
-  ACTIVE,
-}
+import { TaskListFilterType } from '../user-task-manager.constants';
 
 class TaskListFilterController implements ng.IComponentController {
   public TaskListFilter = TaskListFilterType;

@@ -1,5 +1,4 @@
 import './task-list.scss';
-
 import { ITask } from '../user-task-manager.component';
 
 class TaskListController implements ng.IComponentController {
@@ -7,6 +6,10 @@ class TaskListController implements ng.IComponentController {
   public onActiveTaskChange: Function;
 
   private activeTask;
+
+  /* @ngInject */
+  constructor(
+  ) {}
 
   public $onChanges(changes: ng.IOnChangesObject) {
     if (changes.task) {

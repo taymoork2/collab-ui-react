@@ -1,0 +1,80 @@
+@import '~collab-ui/scss/settings/colors';
+@import 'styles/partials/mixins';
+
+@mixin table-border($border-width...) {
+  border-color: $gray-light-2;
+  border-style: solid;
+  border-width: $border-width;
+}
+
+cr-users-error-results {
+  @include keep-flex-container(column);
+
+  .user-error-results {
+    &__title {
+      margin-bottom: 0.5rem;
+    }
+
+    &__tooltip {
+      color: $gray-light-1;
+      vertical-align: middle;
+      margin-bottom: 0.75rem;
+
+      &:hover {
+        color: $color-primary-base;
+      }
+    }
+
+    &__export-csv {
+      align-self: flex-end;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  .error-table {
+    @include flex-container(column);
+    overflow-y: auto; // needed for IE flex item to shrink
+    @include table-border(1px);
+
+    &__header {
+      background-color: $gray-light-4;
+      color: $gray-dark-2;
+      @include table-border(0 0 1px);
+    }
+
+    &__body {
+      color: $gray-dark-1;
+      overflow-y: auto;
+    }
+
+    &__row {
+      display: flex;
+
+      + .error-table__row {
+        @include table-border(1px 0 0);
+      }
+    }
+
+    &__column-one,
+    &__column-two {
+      padding: 0.25rem 0.75rem;
+
+      &--header {
+        padding: 0.5rem 0.75rem 0.25rem;
+      }
+    }
+
+    &__column-one {
+      width: 100px;
+      text-align: center;
+    }
+
+    &__column-two {
+      flex: 1 0 0;
+      @include table-border(0 0 0 1px);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+}

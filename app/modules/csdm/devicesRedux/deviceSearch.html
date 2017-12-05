@@ -1,9 +1,9 @@
 <div class="search-filters-redux">
   <form ng-class="{ 'active': dctrl.inputActive}">
-    <div class="bulleted-searchbox" onclick="angular.element('#searchFilterInput').focus();">
+    <div class="bulleted-searchbox" ng-click="dctrl.setFocusToInputField()">
       <div class="bulleted-searchinput"
            ng-class="{'searcherror': dctrl.searchObject.hasError, 'focus': dctrl.inputActive}">
-        <i class="icon icon-search"></i>
+        <i class="icon icon-search" ng-click="dctrl.resetInputFieldCursor()"></i>
         <device-search-bullet ng-repeat="bullet in dctrl.getBullets()" search-element="bullet"
                               bullet-container="dctrl"></device-search-bullet>
         <input
@@ -16,6 +16,7 @@
           ng-model="dctrl.searchInput"
           ng-change="dctrl.onInputChange()"
           ng-keydown="dctrl.onSearchInputKeyDown($event)"
+          ng-keypress="dctrl.onSearchInputKeyPress($event)"
           type="text"
           placeholder="{{dctrl.getSearchPlaceholder()}}"
           ng-focus="dctrl.inputActive=true"

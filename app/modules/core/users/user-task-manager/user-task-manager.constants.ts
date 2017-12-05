@@ -1,0 +1,21 @@
+export enum TaskListFilterType {
+  ALL,
+  ACTIVE,
+}
+
+export enum TaskStatus {
+  CREATED = 'CREATED',
+  STARTING = 'STARTING',
+  STARTED = 'STARTED',
+  STOPPING = 'STOPPING',
+  STOPPED = 'STOPPED',
+  STOPPED_FOR_MAINTENANCE = 'STOPPED_FOR_MAINTENANCE',
+  COMPLETED = 'COMPLETED',
+  COMPLETED_WITH_ERRORS = 'COMPLETED_WITH_ERRORS',
+  FAILED = 'FAILED',
+  ABANDONED = 'ABANDONED',
+}
+
+export enum TaskType {
+  USERONBOARD = 'useronboard',
+}

@@ -447,6 +447,7 @@
           position: absolute;
           left: 0;
           top: 7px;
+          cursor: text;
         }
         > i.clear {
           color: $gray-base;
@@ -475,7 +476,7 @@
         }
       }
       &:hover {
-        cursor: pointer;
+        cursor: text;
       }
       .dropdown-positioner {
         position: relative;

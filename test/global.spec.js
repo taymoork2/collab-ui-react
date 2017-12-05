@@ -189,7 +189,30 @@ beforeEach(function () {
     }
     var componentString = '<' + component + componentParams + '></' + component + '>';
     return componentString;
-  }
+  };
+
+  // Inspired by https://velesin.io/2016/08/23/unit-testing-angular-1-5-components/
+  this.spyOnComponent = function (name) {
+    function componentSpy($provide) {
+      componentSpy.bindings = [];
+
+      $provide.decorator(name + 'Directive', function ($delegate) {
+        var component = $delegate[0];
+
+        if (_.isObjectLike(component.transclude)) {
+          component.transclude = true; // replace custom transcludes with single transclusion
+        }
+        component.template = component.transclude ? '<div ng-transclude></div>' : '';
+        component.controller = function () {
+          componentSpy.bindings.push(this);
+        };
+
+        return $delegate;
+      });
+    }
+
+    return componentSpy;
+  };
 });
 
 describe('Global Unit Test Config', function () {

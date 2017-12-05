@@ -46,7 +46,6 @@ class WebexReportsSearch implements ng.IComponentController {
   public $onInit(): void {
     this.initDateRange();
     this.setGridOptions();
-    this.$scope.$emit('selectEnable', false);
     this.Analytics.trackEvent(this.SearchService.featureName, {});
     if (this.searchStr) {
       this.startSearch();

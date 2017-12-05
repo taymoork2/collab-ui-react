@@ -78,12 +78,12 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
   };
 
   const dummyLogoUrl = 'https://www.example.com/logo.png';
-  const personId = 'personId';
+  const personId = { id: 'personId' };
   const listRoomsResponse = {
     items: [
       {
         id: 'roomId1',
-        title: 'room title 1',
+        title: 'title 1',
         creatorId: 'personId',
       },
       {
@@ -98,7 +98,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       },
       {
         id: 'roomId4',
-        title: 'room title 4',
+        title: 'a title 4',
         creatorId: 'random id 4',
       },
       {
@@ -121,6 +121,25 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       {
         isModerator: true,
         roomId: 'roomIdnotmatched',
+      },
+    ],
+  };
+  const expectedDefaultSpaces = {
+    items: [
+      {
+        id: 'roomId4',
+        title: 'a title 4',
+        creatorId: 'random id 4',
+      },
+      {
+        id: 'roomId3',
+        title: 'room title 3',
+        creatorId: 'personId',
+      },
+      {
+        id: 'roomId1',
+        title: 'title 1',
+        creatorId: 'personId',
       },
     ],
   };
@@ -241,6 +260,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
 
     it('should validate the states correlate to pages', function () {
       expect(controller.states).toEqual(expectedStates);
+      expect(controller.template.configuration.pages.evaDefaultSpace.defaultSpaceOptions).toEqual(expectedDefaultSpaces.items);
     });
 
     it('should validate the first state is initial state', function () {
