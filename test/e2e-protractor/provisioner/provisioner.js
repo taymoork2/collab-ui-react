@@ -55,11 +55,14 @@ export function provisionCustomerAndLogin(customer) {
 }
 
 export function tearDownAtlasCustomer(partnerName, customerName) {
+  let partnerToken = '';
   if (!provisionerKeepCustomer) {
     return provisionerHelper.getToken(partnerName)
       .then(token => {
+        partnerToken = token;
         return deleteAtlasCustomerIfFound(token, partnerName, customerName);
-      });
+      })
+      .then(() => deleteAtlasPartnerToken(partnerToken, partnerName));
   } else {
     console.log('provisionerKeepCustomer flag is true, skipping delete.');
     return Promise.resolve();
@@ -88,6 +91,13 @@ function deleteAtlasCustomerIfFound(token, partnerName, customerName) {
         return true;
       }
     });
+}
+
+function deleteAtlasPartnerToken(partnerToken, partnerName) {
+  console.log('Deleting token');
+  return atlasHelper.deleteAtlasPartnerToken(partnerToken, helper.auth[partnerName].org)
+    .then(() => console.log('Token Deleted'))
+    .catch(error => console.log(error));
 }
 
 export function loginPartner(partnerEmail) {
