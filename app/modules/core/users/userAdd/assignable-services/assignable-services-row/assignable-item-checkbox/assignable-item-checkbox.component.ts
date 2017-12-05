@@ -1,9 +1,7 @@
-import { ILicenseUsage, AssignableServicesItemCategory, LicenseUsageUtilService } from 'modules/core/users/userAdd/assignable-services/shared';
+import { AssignableServicesItemCategory, IAssignableItemCheckboxState, ILicenseUsage, LicenseStatus, LicenseUsageUtilService } from 'modules/core/users/userAdd/assignable-services/shared';
 
 class AssignableItemCheckboxController implements ng.IComponentController {
   public formItemId: string | undefined;
-  public isSelected = false;
-  public isDisabled = false;
   private static readonly itemCategory = AssignableServicesItemCategory.LICENSE;
   private itemId: string;
   private license: ILicenseUsage;
@@ -19,13 +17,13 @@ class AssignableItemCheckboxController implements ng.IComponentController {
     const licenseId: string = this.license.licenseId;
     this.itemId = licenseId;
     this.formItemId = this.LicenseUsageUtilService.sanitizeIdForJs(licenseId);
-
-    // notes:
-    // - 'licenseId' can contain period chars ('.')
-    // - so we wrap interpolated value in double-quotes to prevent unintended deep property creation
-    const stateDataKey = `${AssignableItemCheckboxController.itemCategory}["${licenseId}"]`;
-    this.isSelected = _.get(this.stateData, `${stateDataKey}.isSelected`);
-    this.isDisabled = _.get(this.stateData, `${stateDataKey}.isDisabled`);
+    if (!this.stateDataEntry) {
+      this.stateDataEntry = {
+        isSelected: false,
+        isDisabled: false,
+        license: this.license,
+      };
+    }
   }
 
   public recvChange(): void {
@@ -41,6 +39,39 @@ class AssignableItemCheckboxController implements ng.IComponentController {
         item: _.pick(this, ['isSelected', 'isDisabled', 'license']),
       },
     });
+  }
+
+  public get stateDataEntry(): IAssignableItemCheckboxState {
+    return _.get(this.stateData, `${AssignableItemCheckboxController.itemCategory}["${this.itemId}"]`);
+  }
+
+  public get isSelected(): boolean {
+    return !!_.get(this.stateDataEntry, `isSelected`);
+  }
+
+  public get isDisabled(): boolean {
+    return !!_.get(this.stateDataEntry, `isDisabled`) || !this.isLicenseStatusOk() || !this.hasVolume();
+  }
+
+  public set stateDataEntry(stateDataEntry: IAssignableItemCheckboxState) {
+    _.set(this.stateData, `${AssignableItemCheckboxController.itemCategory}["${this.itemId}"]`, stateDataEntry);
+  }
+
+  public set isSelected(isSelected: boolean) {
+    _.set(this.stateDataEntry, `isSelected`, isSelected);
+  }
+
+  public set isDisabled(isDisabled: boolean) {
+    _.set(this.stateDataEntry, `isDisabled`, isDisabled);
+  }
+
+  private isLicenseStatusOk(): boolean {
+    const licenseStatus: LicenseStatus | undefined = _.get(this.license, 'status');
+    return _.includes([LicenseStatus.ACTIVE, LicenseStatus.PENDING], licenseStatus);
+  }
+
+  private hasVolume(): boolean {
+    return _.get(this.license, 'volume', 0) > 0;
   }
 }
 
