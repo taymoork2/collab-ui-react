@@ -117,18 +117,18 @@ export class SuggestionDropdown implements ISuggestionDropdown {
               query: phraseQuery,
             }),
         });
-        this.inputBasedSuggestions.push({
-          searchString: `${QueryParser.Field_Displayname}:${currentEditedElement.toQuery()}`,
-          readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(QueryParser.Field_Displayname),
-          field: QueryParser.Field_Displayname,
-          text: this.$translate.instant(numberOfSubmittedBullets > 0
-            ? 'spacesPage.alsoContainingQuery'
-            : 'spacesPage.containingQuery',
-            {
-              query: currentEditedElement.toQuery(),
-            }),
-        });
       }
+      this.inputBasedSuggestions.push({
+        searchString: `${QueryParser.Field_Displayname}:${currentEditedElement.toQuery()}`,
+        readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(QueryParser.Field_Displayname),
+        field: QueryParser.Field_Displayname,
+        text: this.$translate.instant(numberOfSubmittedBullets > 0
+          ? 'spacesPage.alsoContainingQuery'
+          : 'spacesPage.containingQuery',
+          {
+            query: currentEditedElement.toQuery(),
+          }),
+      });
       this.firstSuggestionIsDefault = true;
     } else if (currentEditedElement instanceof FieldQuery && currentEditedElement.getQueryWithoutField() !== '') {
       this.inputBasedSuggestions = [
