@@ -875,7 +875,7 @@
     "siteUrlError": "Site URL is undefined.  Cannot retrieve shared meetings report.",
     "csvPageError": "Unable to retrieve the detailed report for download.",
     "downloadHref": "Download a <a href=\"{{href}}\" download=\"{{download}}\">detailed report</a> of shared meetings usage or a <a href=\"{{href2}}\" download=\"{{download2}}\">monthly report</a> of peak concurrent usage per month.",
-    "downloadClick": "Download a <a ng-click=\"{{onclick}}\">detailed report</a> of shared meetings usage.",
+    "downloadClick": "Download a <a href ng-click=\"{{onclick}}\">detailed report</a> of shared meetings usage.",
     "csvMeetingTopic": "Meeting Topic",
     "csvStartTime": "Start Time",
     "csvEndTime": "End Time",
@@ -2218,7 +2218,7 @@
     "page_title": "Connector Management",
     "domain-verification": {
       "domain-not-verified": "The domain for this Directory URI must be verified for this service to function properly. ",
-      "navigateToCallSettings": "Verify the domain in <a ng-click=\"{{onclick}}\">Call Service Settings</a>."
+      "navigateToCallSettings": "Verify the domain in <a href ng-click=\"{{onclick}}\">Call Service Settings</a>."
     },
     "sipExplanation": {
       "line1": "You can use one of the following address formats:",
@@ -2381,7 +2381,7 @@
       "refreshUserDidNoGood": "Unable to get the user status. Please contact support if the problem persists.",
       "couldNotReadConnectStatus": "Unable to read Call Service Connect organization status. Please contact support if the problem persists.",
       "notEnabledInOrg": "Not enabled in organization",
-      "enableAwareFirst": "Aware must be enabled before the user can be enabled for Connect. Enable it in the <a ng-click=\"{{onclick}}\">Call Service Aware panel</a>.",
+      "enableAwareFirst": "Aware must be enabled before the user can be enabled for Connect. Enable it in the <a href ng-click=\"{{onclick}}\">Call Service Aware panel</a>.",
       "disableAwareHeader": "Disable Services",
       "disableAwareMessage": "Are you sure? By disabling Call Service Aware, Call Service Connect will also be disabled for this user."
     },
@@ -2712,8 +2712,8 @@
         "line1": "Great! Google Calendar is correctly configured.",
         "line2": "You can now enable Hybrid Calendar for your users.",
         "line3": "To enable users, you can:",
-        "item1": "Enable them individually from the <a ng-click=\"{{onclick}}\">users page</a>.",
-        "item2": "Enable them in bulk using the <a ng-click=\"{{onclick}}\">CSV template</a>.",
+        "item1": "Enable them individually from the <a href ng-click=\"{{onclick}}\">users page</a>.",
+        "item2": "Enable them in bulk using the <a href ng-click=\"{{onclick}}\">CSV template</a>.",
         "line4": "Refer to <a href=\"http://www.cisco.com/go/hybrid-services-calendar\">documentation</a> if you need help enabling users."
       }
     },
@@ -2897,22 +2897,22 @@
       "no-notifications": "No notifications.",
       "callAware": {
         "title": "Enable Call Service Aware for Users",
-        "navigateToUsers": "Go to the <a ng-click=\"{{onclick}}\">Users</a> page to enable Call Service Aware for your users."
+        "navigateToUsers": "Go to the <a href ng-click=\"{{onclick}}\">Users</a> page to enable Call Service Aware for your users."
       },
       "calendar": {
         "title": "Enable Calendar Service for Users",
-        "navigateToUsers": "Go to the <a ng-click=\"{{onclick}}\">Users</a> page to enable Calendar Service for your users."
+        "navigateToUsers": "Go to the <a href ng-click=\"{{onclick}}\">Users</a> page to enable Calendar Service for your users."
       },
       "connect": {
         "title": "Enable Call Service Connect for Users",
-        "navigateToUsers": "You have successfully configured Call Service Connect. Go to the <a ng-click=\"{{onclick}}\">Users</a> page to enable Call Service Connect for your users. Make sure you selected the applicable method in Expressway to create CTI remote devices for your users. ",
+        "navigateToUsers": "You have successfully configured Call Service Connect. Go to the <a href ng-click=\"{{onclick}}\">Users</a> page to enable Call Service Connect for your users. Make sure you selected the applicable method in Expressway to create CTI remote devices for your users. ",
         "connectEnabled": "Call Service Connect has been enabled",
         "connectDisabled": "Call Service Connect has been disabled"
       },
       "scheduleUpgrade": {
         "title": "Acknowledge the Scheduled Upgrade",
         "description": "The clusters for this service have a default time set for a scheduled upgrade",
-        "action": "You must either <a ng-click=\"{{onclick}}\">change the time or confirm it.</a>"
+        "action": "You must either <a href ng-click=\"{{onclick}}\">change the time or confirm it.</a>"
       },
       "configure-connector": {
         "title": "Configure and Start the Connector",
@@ -2926,7 +2926,7 @@
       },
       "release-channel": {
         "title": "\"{{name}}\" Release Channel",
-        "description": "\"{{name}}\" is using a different release channel ({{current}}) than the default one ({{default}}). <a ng-click=\"{{onclick}}\">Change the release channel</a> to avoid inconsistencies with Hybrid Services."
+        "description": "\"{{name}}\" is using a different release channel ({{current}}) than the default one ({{default}}). <a href ng-click=\"{{onclick}}\">Change the release channel</a> to avoid inconsistencies with Hybrid Services."
       },
       "user-activation-errors": {
         "title": "Activation Error",
@@ -2938,7 +2938,7 @@
       },
       "add-SIP-destination": {
         "title": "Complete Call Service Connect Configuration",
-        "description": "Add the SIP Destination for call routing under <a ng-click=\"{{onclick}}\">Settings.</a>",
+        "description": "Add the SIP Destination for call routing under <a href ng-click=\"{{onclick}}\">Settings.</a>",
         "description-already-in-settings-page": "Add the SIP Destination for call routing below."
       },
       "no-fuse-yet": {
@@ -2946,7 +2946,7 @@
       },
       "add-call-service-connect": {
         "title": "Add Call Service Connect",
-        "description": "Activate Call Service Connect and add the SIP destination under <a ng-click=\"{{onclick}}\">Settings.</a>",
+        "description": "Activate Call Service Connect and add the SIP destination under <a href ng-click=\"{{onclick}}\">Settings.</a>",
         "description-already-in-settings-page": "Activate Call Service Connect and add the SIP Destination for call routing below."
       }
     },
@@ -2989,9 +2989,9 @@
         "hds": "Data Security",
         "cucm": "CUCM",
         "no-services": "No services",
-        "missing-clusters": "<a ng-click=\"{{onclick}}\">Assign clusters</a> and users to complete this group",
-        "missing-users": "<a ng-click=\"{{onclick}}\">Assign users</a> to complete this group",
-        "users-in-limbo": "Either <a ng-click=\"{{onclick}}\">remove</a> this group to reset user assignments or <a ng-click=\"{{onclick}}\">assign clusters</a> to restore services.",
+        "missing-clusters": "<a href ng-click=\"{{onclick}}\">Assign clusters</a> and users to complete this group",
+        "missing-users": "<a href ng-click=\"{{onclick}}\">Assign users</a> to complete this group",
+        "users-in-limbo": "Either <a href ng-click=\"{{onclick}}\">remove</a> this group to reset user assignments or <a href ng-click=\"{{onclick}}\">assign clusters</a> to restore services.",
         "complete-registration": "Go to your Expressway to complete the registration.",
         "registration-timeout": "The registration timed out. Please remove this cluster and register the Expressway again.",
         "registration-timeout-extended": "The registration timed out. Please remove this cluster and register the Expressway again in the Add Resource dialog.",
@@ -3110,7 +3110,7 @@
       "usersAssign": "Assign Users",
       "usersDescription1": "Choose users who you want to gain access to configuration in the resource group (for example, beta testers). You can:",
       "usersDescription2": "Assign them individually from the <a ui-sref='users.list'>users page</a>.",
-      "usersDescription3": "Assign them in bulk using the <a ng-click=\"{{onclick}}\">CSV template</a>.",
+      "usersDescription3": "Assign them in bulk using the <a href ng-click=\"{{onclick}}\">CSV template</a>.",
       "usersDescription4": "Refer to <a href='{{href}}' target='_blank'>documentation</a> if you need help.",
       "renameGroup": "Rename",
       "renameGroupDescription": "Rename the resource group",
@@ -3206,7 +3206,7 @@
       },
       "alertBannerNumber": "{count, plural, =1{Upgrade for connectors available!} other{Upgrades for connectors available!}}",
       "alertBannerTime": "{count, plural, =1{It} other{They}} will be applied on {date}.",
-      "alertBannerLink": "<a ng-click=\"{{onclick}}\">Upgrade {{service}} connectors now</a>.",
+      "alertBannerLink": "<a href ng-click=\"{{onclick}}\">Upgrade {{service}} connectors now</a>.",
       "instructions": "Instructions"
     },
     "hybridServicesConnectorSidepanel": {
@@ -5817,7 +5817,7 @@
     },
     "sparkCallConnect": {
       "editSettingsTitle": "Set up Hybrid Call Service Connect",
-      "step1": "In Cisco Unified Communications Manager, create a user account and an associated line. These items will represent this place. <a href='https://www.cisco.com/go/hybrid-services'>See the documentation for help.<a/>",
+      "step1": "In Cisco Unified Communications Manager, create a user account and an associated line. These items will represent this place. <a href='https://www.cisco.com/go/hybrid-services'>See the documentation for help.</a>",
       "step2": "Find the Mail ID for the user account.<br>a) Sign into Cisco Unified CM Administration<br>b) Choose User Management > End User, and then find and click the account.<br>The Mail ID is under ‘User Information’.",
       "step3": "Enter the Mail ID below to connect this place to the existing Unified CM account.<br>This Mail ID ensures that the correct user account is connected with this place for hybrid calling.",
       "mailId": "Mail ID"
@@ -7245,9 +7245,9 @@
     "featuresNotYetConfiguredPage": {
       "createCareTemplate": "Create a Care Template",
       "createCareTemplateDesc": "A Care template is what your customer uses to contact customer care.",
-      "MessageLicenseMissing": "Message is mandatory for Care templates. To enable Message, <a ng-click=\"{{onclick}}\">contact your partner or Cisco sales</a>",
-      "CallLicenseMissing": "Call is mandatory for voice-based templates. To enable Call, <a ng-click=\"{{onclick}}\">contact your partner or Cisco sales</a>",
-      "MessageAndCallLicenseMissing": "Message and Call are mandatory for chat-based and voice-based templates respectively. To enable Message and Call, <a ng-click=\"{{onclick}}\">contact your partner or Cisco sales</a>",
+      "MessageLicenseMissing": "Message is mandatory for Care templates. To enable Message, <a href ng-click=\"{{onclick}}\">contact your partner or Cisco sales</a>",
+      "CallLicenseMissing": "Call is mandatory for voice-based templates. To enable Call, <a href ng-click=\"{{onclick}}\">contact your partner or Cisco sales</a>",
+      "MessageAndCallLicenseMissing": "Message and Call are mandatory for chat-based and voice-based templates respectively. To enable Message and Call, <a href ng-click=\"{{onclick}}\">contact your partner or Cisco sales</a>",
       "new": "New"
     },
     "licensesMissing": {
@@ -9174,8 +9174,8 @@
     "title": "Enable users",
     "subtitle": "You can now enable {{service}} for your users.",
     "line1": "To enable users, you can:",
-    "item1": "Enable them individually from the <a ng-click=\"{{onclick}}\">users page</a>.",
-    "item2": "Enable them in bulk using the <a ng-click=\"{{onclick}}\">CSV template</a>.",
+    "item1": "Enable them individually from the <a href ng-click=\"{{onclick}}\">users page</a>.",
+    "item2": "Enable them in bulk using the <a href ng-click=\"{{onclick}}\">CSV template</a>.",
     "line2": "Refer to <a href=\"http://www.cisco.com/go/hybrid-services-calendar\" target=\"_blank\">documentation</a> if you need help enabling users."
   },
   "readOnlyModal": {

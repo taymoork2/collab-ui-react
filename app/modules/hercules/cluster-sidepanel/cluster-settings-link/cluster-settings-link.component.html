@@ -3,8 +3,8 @@
     <span class="section-name" translate="common.settings"></span>
   </div>
   <div class="feature-name">
-    <a ng-if="$ctrl.clusterType !== 'ept'" translate="hercules.softwareUpgrade.editSettingsLink" ng-click="$ctrl.goToClusterSettings()"></a>
-    <a ng-if="$ctrl.clusterType === 'ept'" translate="hercules.softwareUpgrade.editTrunkSettingsLink" ng-click="$ctrl.goToClusterSettings()"></a>
+    <a href ng-if="$ctrl.clusterType !== 'ept'" translate="hercules.softwareUpgrade.editSettingsLink" ng-click="$ctrl.goToClusterSettings()"></a>
+    <a href ng-if="$ctrl.clusterType === 'ept'" translate="hercules.softwareUpgrade.editTrunkSettingsLink" ng-click="$ctrl.goToClusterSettings()"></a>
   </div>
 </cs-sp-section>
 

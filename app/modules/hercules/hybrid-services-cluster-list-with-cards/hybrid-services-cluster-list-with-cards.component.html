@@ -25,8 +25,10 @@
             <i class="icon icon-cog"></i>
           </button>
           <ul cs-dropdown-menu class="dropdown-menu dropdown-primary">
-            <li ng-if="$ctrl.hasMultipleReleaseChannelOptions"><a ng-click="$ctrl.setDefaultReleaseChannel()" translate="hercules.fusion.list.set-default-release-channel"></a></li>
-            <li><a ng-click="$ctrl.addResourceGroup()" translate="hercules.fusion.list.add-resource-group"></a></li>
+            <li ng-if="$ctrl.hasMultipleReleaseChannelOptions" ng-click="$ctrl.setDefaultReleaseChannel()">
+              <a translate="hercules.fusion.list.set-default-release-channel"></a>
+            </li>
+            <li ng-click="$ctrl.addResourceGroup()"><a translate="hercules.fusion.list.add-resource-group"></a></li>
           </ul>
         </span></h5>
         <p class="no-clusters" ng-if="$ctrl.displayedGroups[0].groups.length === 0 && $ctrl.displayedGroups[0].unassigned.length === 0" translate="hercules.fusion.list.empty"></p>
