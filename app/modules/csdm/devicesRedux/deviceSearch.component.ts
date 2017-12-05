@@ -29,7 +29,6 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
   set inputActive(value: boolean) {
     this._inputActive = value;
     this.showSuggestions = value && this.interactedWithSearch;
-    this.interactedWithSearch = this.interactedWithSearch || value;
   }
 
   public suggestions: ISuggestionDropdown;
@@ -117,11 +116,17 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     return this.$translate.instant(_.isEmpty(this.getBullets()) ? 'spacesPage.deviceSearchPlaceholder' : '');
   }
 
-  public setFocusToInputField() {
+  public userSetFocusToInputField() {
+    this.interactedWithSearch = true;
+    this.setFocusToInputField();
+  }
+
+  private setFocusToInputField() {
     angular.element('#searchFilterInput').focus();
   }
 
   public resetInputFieldCursor() {
+    this.interactedWithSearch = true;
     const inputField = angular.element('#searchFilterInput');
     inputField.focus();
     (inputField[0] as HTMLInputElement).setSelectionRange(0, 0);
@@ -211,6 +216,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
 
   public onSearchInputKeyPress($keyEvent: KeyboardEvent) {
     if ($keyEvent && $keyEvent.which) {
+      this.interactedWithSearch = true;
       const target = $keyEvent.target;
       switch ($keyEvent.key) {
         case '"':
