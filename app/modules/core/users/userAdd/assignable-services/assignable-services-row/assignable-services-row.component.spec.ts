@@ -104,6 +104,9 @@ describe('Component: assignableServicesRow:', () => {
     });
 
     it('should pass through its calls to respective LicenseUsageUtilService methods', function () {
+      spyOn(this.LicenseUsageUtilService, 'getMessageLicenses');
+      spyOn(this.LicenseUsageUtilService, 'getCallLicenses');
+      spyOn(this.LicenseUsageUtilService, 'getCareLicenses');
       spyOn(this.LicenseUsageUtilService, 'getBasicMeetingLicenses');
       spyOn(this.LicenseUsageUtilService, 'getAdvancedMeetingLicenses');
       spyOn(this.LicenseUsageUtilService, 'getAdvancedMeetingSiteUrls');
@@ -114,6 +117,15 @@ describe('Component: assignableServicesRow:', () => {
       this.compileComponent('assignableServicesRow', {
         subscription: 'fakeSubscriptionWithLicenses',
       });
+
+      this.controller.getMessageLicenses();
+      expect(this.LicenseUsageUtilService.getMessageLicenses).toHaveBeenCalledWith(this.controller.licenses);
+
+      this.controller.getCallLicenses();
+      expect(this.LicenseUsageUtilService.getCallLicenses).toHaveBeenCalledWith(this.controller.licenses);
+
+      this.controller.getCareLicenses();
+      expect(this.LicenseUsageUtilService.getCareLicenses).toHaveBeenCalledWith(this.controller.licenses);
 
       this.controller.getBasicMeetingLicenses();
       expect(this.LicenseUsageUtilService.getBasicMeetingLicenses).toHaveBeenCalledWith(this.controller.licenses);
