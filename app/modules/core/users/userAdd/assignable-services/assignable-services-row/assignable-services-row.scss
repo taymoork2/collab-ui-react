@@ -11,7 +11,6 @@ assignable-services-row {
     }
   }
 
-  // TODO: mv this to sub-component
   .subscription__content {
     .license__category {
       color: $gray-dark-2;
@@ -19,11 +18,13 @@ assignable-services-row {
       font-weight: bold;
       font-size: 14px;
       line-height: 26px;
-      margin-top: .625rem;
+      margin-top: 0;
       margin-bottom: .25rem;
+    }
 
-      &:first-of-type {
-        margin-top: 0;
+    assignable-advanced-meetings {
+      .license__category {
+        margin-top: 0.625rem;
       }
     }
   }
