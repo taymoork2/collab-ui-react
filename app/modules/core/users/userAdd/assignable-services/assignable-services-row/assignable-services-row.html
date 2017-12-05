@@ -6,21 +6,25 @@
 </div>
 <div class="row full flex-row row-licenses subscription__content" ng-show="$ctrl.showContent">
   <div class="small-4 columns column-paid column__messaging">
-    <!-- messaging -->
-    <assignable-license-checkbox
-      license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.MS)"
-      l10n-label="onboardModal.paidCiscoSparkMessaging"
-      on-update="$ctrl.onUpdate({ $event: $event })"
-      state-data="$ctrl.stateData">
-    </assignable-license-checkbox>
+    <div ng-if="$ctrl.messageLicenses.length">
+      <div translate="onboardModal.message" class="license__category"></div>
 
-    <!-- messenger -->
-    <assignable-license-checkbox
-      license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.MSGR)"
-      l10n-label="onboardModal.ciscoSparkJabberInterop"
-      on-update="$ctrl.onUpdate({ $event: $event })"
-      state-data="$ctrl.stateData">
-    </assignable-license-checkbox>
+      <!-- messaging -->
+      <assignable-license-checkbox
+        license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.MS)"
+        l10n-label="onboardModal.paidCiscoSparkMessaging"
+        on-update="$ctrl.onUpdate({ $event: $event })"
+        state-data="$ctrl.stateData">
+      </assignable-license-checkbox>
+
+      <!-- messenger -->
+      <assignable-license-checkbox
+        license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.MSGR)"
+        l10n-label="onboardModal.ciscoSparkJabberInterop"
+        on-update="$ctrl.onUpdate({ $event: $event })"
+        state-data="$ctrl.stateData">
+      </assignable-license-checkbox>
+    </div>
   </div>
 
   <div class="small-4 columns column-paid column__meeting">

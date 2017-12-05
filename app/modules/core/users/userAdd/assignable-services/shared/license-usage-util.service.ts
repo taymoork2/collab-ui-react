@@ -23,6 +23,12 @@ export class LicenseUsageUtilService {
     return _.some(licenses, searchOptions);
   }
 
+  public getMessageLicenses(licenses: ILicenseUsage[]): ILicenseUsage[] {
+    return _.filter(licenses, (license) => {
+      return _.includes([OfferName.MS, OfferName.MSGR], license.offerName);
+    });
+  }
+
   public getBasicMeetingLicenses(licenses: ILicenseUsage[]): ILicenseUsage[] {
     return _.filter(licenses, { offerName: OfferName.CF });
   }
