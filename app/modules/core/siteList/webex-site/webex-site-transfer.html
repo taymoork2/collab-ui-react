@@ -1,24 +1,7 @@
-<div class="meeting-settings">
-  <p translate="{{ $ctrl.introCopy }}"></p>
-  <div ng-if="!$ctrl.hasTrialSites">
+  <div ng-if="$ctrl.introCopy">
+    <p translate="{{ $ctrl.introCopy }}"></p>
     <h4 class="element-spacing" translate="firstTimeWizard.haveExistingWebExSite"></h4>
     <p class="element-spacing" translate="firstTimeWizard.existingWebExSiteDescription"></p>
-  </div>
-  <div ng-if="$ctrl.hasTrialSites" >
-    <h4 class="element-spacing" translate="firstTimeWizard.keepExistingWebexSites"></h4>
-    <p class="element-spacing" translate="firstTimeWizard.existingWebExTrialSites"></p>
-    <div class="keep-existing-trials element-spacing" ng-repeat="site in $ctrl.existingSites">
-      <p class="existing-sites">{{site.siteUrl}}<span translate="firstTimeWizard.pmrSiteURLDomain"></span></p>
-      <input
-        cs-input
-        type="checkbox"
-        id="existing-trial{{$index}}"
-        name="existing-trial{{$index}}"
-        ng-model="site.keepExistingSite"
-        ng-init="$ctrl.addOrRemoveExistingWebExSite(site)"
-        ng-change="$ctrl.addOrRemoveExistingWebExSite(site)"
-        cs-input-label="{{::'firstTimeWizard.yesKeepSite' | translate}}">
-    </div>
   </div>
   <div>
     <input
@@ -62,4 +45,3 @@
       </div>
     </div>
   </div>
-</div>

@@ -37,6 +37,14 @@
     padding-top: 0px;
   }
 
+  .input-block--transfer-code {
+    .cs-input-group > .cs-input-group {
+      margin-bottom: 0;
+    }
+    .input-block__help-link {
+      font-size: .8em;
+    }
+  }
 
   .count {
     color: $color-primary-base;

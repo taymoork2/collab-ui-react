@@ -42,7 +42,21 @@ class WebexSiteNewCtrl implements ng.IComponentController {
   public onSendTracking: Function;
   public sitesArray: IWebExSite[];
   public newSitesArray: IWebExSite[] = [];
+  public existingSitesArray: IWebExSite[] = [];
   public audioPartnerName?: string;
+
+  public $onInit(): void {
+    this.timeZoneOptions = this.TrialTimeZoneService.getTimeZones();
+    this.$scope.$on(EventNames.ADD_SITES, () => {
+      this.onSitesAdd({ sites: this.newSitesArray, isValid: true });
+    });
+    // existingSitesArray has list of sites that can no be deleted: preexisting sites in subscription,
+    // trial, or transferred sites
+    this.existingSitesArray = _.cloneDeep(this.sitesArray);
+    this.newSitesArray = _.remove(this.existingSitesArray, function(site) {
+      return site.setupType !== 'TRANSFER' &&  ! _.get(site, 'keepExistingSite');
+    });
+  }
 
   public addSite(site) {
     this.newSitesArray.push(site);
@@ -107,13 +121,6 @@ class WebexSiteNewCtrl implements ng.IComponentController {
       this.clearWebexSiteInputs();
     }).finally(() => {
       this.disableValidateButton = false;
-    });
-  }
-
-  public $onInit(): void {
-    this.timeZoneOptions = this.TrialTimeZoneService.getTimeZones();
-    this.$scope.$on(EventNames.ADD_SITES, () => {
-      this.onSitesAdd({ sites: this.newSitesArray, isValid: true });
     });
   }
 

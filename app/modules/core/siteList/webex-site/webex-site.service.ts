@@ -40,6 +40,7 @@ export class WebExSiteService {
         quantity: 0,
         centerType: '',
         isCIUnifiedSite: site.isCIUnifiedSite,
+        keepExistingSite: true,
       };
     }).value();
   }
