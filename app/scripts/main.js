@@ -112,6 +112,7 @@
     require('modules/squared/devices/services/CsdmCacheUpdater'),
     require('modules/squared/devices/services/CsdmPoller'),
     require('modules/squared/helpdesk').default,
+    require('modules/squared/helpdesk/components/hybrid-calendar-user-info').default,
     require('modules/squared/partner-management').default,
     require('modules/squared/provisioning-console').default,
   ]);
