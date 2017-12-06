@@ -12,7 +12,7 @@
       <label translate="autoAttendant.url"></label>
     </div>
     <div class="large-10 medium-10 small-10 column aa-rest-api-block">
-      <span ng-repeat="dynamicValue in aaRestApiCtrl.dynamicValues">
+      <span class="aa-rest-spacing" ng-repeat="dynamicValue in aaRestApiCtrl.dynamicValues" ng-if="dynamicValue.model != ''">
         <span class="aa-url aa-dynamic-var" ng-if="dynamicValue.isDynamic">{{dynamicValue.label}}</span>
         <span class="aa-static-var" ng-if="!dynamicValue.isDynamic">{{dynamicValue.model}}</span>
       </span>
