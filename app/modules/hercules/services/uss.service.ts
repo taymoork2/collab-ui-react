@@ -52,6 +52,7 @@ interface IUserStatus {
   serviceId: HybridServiceId;
   state: UserStatus;
   userId: string;
+  owner?: string;
 }
 
 export interface IMessage {
@@ -191,6 +192,9 @@ export class USSService {
   }
 
   public getAllStatuses(serviceId: HybridServiceId, state?: UserStatus): ng.IPromise<IUserStatusWithExtendedMessages[]> {
+    if (serviceId === 'squared-fusion-o365') {
+      serviceId = 'squared-fusion-cal';
+    }
     return this.recursivelyReadStatuses(`${this.USSUrl}/orgs/${this.Authinfo.getOrgId()}/userStatuses?includeMessages=true&${this.statusesParameterRequestString(serviceId, state, 10000)}`)
       .then(this.extractAndTweakUserStatuses);
   }
@@ -305,10 +309,20 @@ export class USSService {
       .then((res) => {
         this.cachedUserStatusSummary  = _.get(res, 'data.countsByState');
         const o365 = _.get<IStatusSummaryForAService>(res, 'data.countsByOwnerAndState.squared-fusion-cal.ccc');
-        const onPremExchange = _.get<IStatusSummaryForAService>(res, 'data.countsByOwnerAndState.squared-fusion-cal.uss');
+        // res.data.countsByOwnerAndState.squared-fusion-cal.uss will be undefined if the org doesn't have any on-premise Exchange configured
+        const onPremExchange = _.get<IStatusSummaryForAService>(res, 'data.countsByOwnerAndState.squared-fusion-cal.uss', {
+          total:	0,
+          notActivated:	0,
+          notActivatedWithWarning:	0,
+          activated:	0,
+          activatedWithWarning:	0,
+          error:	0,
+        });
+        // Add an entry to the cache for Office 365
         if (o365) {
           this.cachedUserStatusSummary['squared-fusion-o365'] = o365;
         }
+        // Override `squared-fusion-cal` by the value for on-premise Exchange (otherwise it's the sum of on-premise Exchange + Office 365)
         this.cachedUserStatusSummary['squared-fusion-cal'] = onPremExchange;
       });
   }
@@ -319,6 +333,9 @@ export class USSService {
     const result = _.chain(userStatuses)
       .map((userStatus) => {
         userStatus.messages = this.sortAndTweakUserMessages(userStatus.messages);
+        if (userStatus.serviceId === 'squared-fusion-cal' && userStatus.owner === 'ccc') {
+          userStatus.serviceId = 'squared-fusion-o365';
+        }
         return userStatus;
       })
       .value();

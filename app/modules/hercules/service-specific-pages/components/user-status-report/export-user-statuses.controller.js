@@ -13,7 +13,10 @@
     vm.exportingUserStatusReport = false;
     vm.includeResourceGroupColumn = false;
     vm.progress = {
-      total: 0, current: 0, message: $translate.instant('hercules.export.readingUserStatuses'), exportCanceled: false,
+      total: 0,
+      current: 0,
+      message: $translate.instant('hercules.export.readingUserStatuses'),
+      exportCanceled: false,
     };
 
     vm.statusTypes = getStatusTypes();

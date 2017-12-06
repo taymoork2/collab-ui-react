@@ -2420,7 +2420,9 @@
     },
     "hybridServiceNames": {
       "squared-fusion-mgmt": "Hybrid Management Service",
+      "squared-fusion-ec": "Hybrid Call Service Connect",
       "squared-fusion-uc": "Hybrid Call Service",
+      "squared-fusion-uc.full": "Hybrid Call Service Aware",
       "squared-fusion-cal": "Hybrid Calendar Service",
       "squared-fusion-gcal": "Hybrid Calendar (Google)",
       "squared-fusion-o365": "Hybrid Calendar (Office 365)",
