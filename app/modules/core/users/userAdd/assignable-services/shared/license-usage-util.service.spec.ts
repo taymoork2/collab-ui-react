@@ -71,6 +71,50 @@ describe('LicenseUsageUtilService:', () => {
     });
   });
 
+  describe('getMessageLicenses(): ', () => {
+    it('should filter licenses with "offerName" any of ["MS", "MSGR"]', function () {
+      const fakeLicenses = [{ offerName: 'foo' }];
+      let result = this.LicenseUsageUtilService.getMessageLicenses(fakeLicenses);
+      expect(result.length).toBe(0);
+
+      fakeLicenses.push({ offerName: 'MS' });
+      result = this.LicenseUsageUtilService.getMessageLicenses(fakeLicenses);
+      expect(result.length).toBe(1);
+
+      fakeLicenses.push({ offerName: 'MSGR' });
+      result = this.LicenseUsageUtilService.getMessageLicenses(fakeLicenses);
+      expect(result.length).toBe(2);
+    });
+  });
+
+  describe('getCallLicenses(): ', () => {
+    it('should filter licenses with "offerName" of "CO"', function () {
+      const fakeLicenses = [{ offerName: 'foo' }];
+      let result = this.LicenseUsageUtilService.getCallLicenses(fakeLicenses);
+      expect(result.length).toBe(0);
+
+      fakeLicenses.push({ offerName: 'CO' });
+      result = this.LicenseUsageUtilService.getCallLicenses(fakeLicenses);
+      expect(result.length).toBe(1);
+    });
+  });
+
+  describe('getCareLicenses(): ', () => {
+    it('should filter licenses with "offerName" any of ["CDC", "CVC"]', function () {
+      const fakeLicenses = [{ offerName: 'foo' }];
+      let result = this.LicenseUsageUtilService.getCareLicenses(fakeLicenses);
+      expect(result.length).toBe(0);
+
+      fakeLicenses.push({ offerName: 'CDC' });
+      result = this.LicenseUsageUtilService.getCareLicenses(fakeLicenses);
+      expect(result.length).toBe(1);
+
+      fakeLicenses.push({ offerName: 'CVC' });
+      result = this.LicenseUsageUtilService.getCareLicenses(fakeLicenses);
+      expect(result.length).toBe(2);
+    });
+  });
+
   describe('getBasicMeetingLicenses(): ', () => {
     it('should filter licenses with "offerName" of "CF"', function () {
       const result = this.LicenseUsageUtilService.getBasicMeetingLicenses(this.fixtures.fakeLicensesWithBasicMeeting);

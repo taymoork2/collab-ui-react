@@ -65,6 +65,7 @@
       })
         .then(function () {
           ApiCacheManagementService.warmUpOnInterval();
+          $location.search({});
 
           if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
             $state.go('firsttimewizard');

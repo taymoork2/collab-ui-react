@@ -3,7 +3,7 @@
   <div class="row element-spacing" ng-repeat="site in meetingCtrl.sitesArray">
     <div class="site-heading">{{site.siteUrl}}.webex.com</div>
     <p ng-if="site.timezone" class="time-zone" translate-values="{label: site.timezone.label}" translate="firstTimeWizard.timeZoneSetTo"></p>
-    <p ng-if="site.quantity" class="time-zone" translate-values="{quantity: meetingCtrl.getLicensesForSite(site.siteUrl)}" translate="firstTimeWizard.licenseCountEquals"></p>
+    <p class="time-zone" translate-values="{quantity: meetingCtrl.getLicensesForSite(site.siteUrl)}" translate="firstTimeWizard.licenseCountEquals"></p>
     <div ng-if="meetingCtrl.isShowUserManagement && site.isCIUnifiedSite" class="time-zone" translate="firstTimeWizard.userManagementViaSpark"></div>
     <div ng-if="meetingCtrl.isShowUserManagement && !site.isCIUnifiedSite" class="time-zone" translate="firstTimeWizard.userManagementViaWebex"></div>
     <p ng-if="meetingCtrl.getSitesAudioPackageDisplay()"> {{:: meetingCtrl.getSitesAudioPackageDisplay()}}</p>

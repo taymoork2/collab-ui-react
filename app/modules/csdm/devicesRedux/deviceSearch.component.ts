@@ -5,9 +5,9 @@ import { Caller, CsdmSearchService } from '../services/csdmSearch.service';
 import { Notification } from '../../core/notifications/notification.service';
 import { SearchElement } from '../services/search/searchElement';
 import { SearchTranslator } from 'modules/csdm/services/search/searchTranslator';
-import { KeyCodes } from 'collab-ui-ng/src/directives/dropdown/keyCodes';
 import { ISuggestion, ISuggestionDropdown, SuggestionDropdown } from '../services/search/suggestion';
 import { IBulletContainer } from './deviceSearchBullet.component';
+import { KeyCodes } from '../../core/accessibility/accessibility.service';
 
 export class DeviceSearch implements ng.IComponentController, ISearchHandler, IBulletContainer {
 
@@ -29,7 +29,6 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
   set inputActive(value: boolean) {
     this._inputActive = value;
     this.showSuggestions = value && this.interactedWithSearch;
-    this.interactedWithSearch = this.interactedWithSearch || value;
   }
 
   public suggestions: ISuggestionDropdown;
@@ -55,6 +54,10 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
 
   public $onInit(): void {
     this.performSearch(this.searchObject);
+    this.$timeout(() => {
+      //DOM has finished rendering
+      this.setFocusToInputField();
+    });
     this.searchInteraction.receiver = this;
   }
 
@@ -113,8 +116,20 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     return this.$translate.instant(_.isEmpty(this.getBullets()) ? 'spacesPage.deviceSearchPlaceholder' : '');
   }
 
-  public setFocusToInputField() {
+  public userSetFocusToInputField() {
+    this.interactedWithSearch = true;
+    this.setFocusToInputField();
+  }
+
+  private setFocusToInputField() {
     angular.element('#searchFilterInput').focus();
+  }
+
+  public resetInputFieldCursor() {
+    this.interactedWithSearch = true;
+    const inputField = angular.element('#searchFilterInput');
+    inputField.focus();
+    (inputField[0] as HTMLInputElement).setSelectionRange(0, 0);
   }
 
   public removeBullet(bullet: SearchElement) {
@@ -164,8 +179,22 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
       switch ($keyEvent.keyCode) {
         case KeyCodes.BACKSPACE:
           const target = $keyEvent.target;
-          if (target instanceof HTMLInputElement && target.selectionEnd === 0) {
-            this.deleteLastBullet();
+          if (target instanceof HTMLInputElement) {
+            if (target.selectionEnd === 0) {
+              this.deleteLastBullet();
+            } else if (target.selectionStart === target.selectionEnd
+              && target.value[target.selectionEnd] === '"'
+              && target.value[target.selectionEnd - 1] === '"') {
+              const selectionEnd = target.selectionEnd;
+              target.value = [target.value.slice(0, selectionEnd), target.value.slice(selectionEnd + 1)].join('');
+              target.selectionEnd = selectionEnd;
+            } else if (target.selectionStart === target.selectionEnd
+              && target.value[target.selectionEnd] === ')'
+              && target.value[target.selectionEnd - 1] === '(') {
+              const selectionEnd = target.selectionEnd;
+              target.value = [target.value.slice(0, selectionEnd), target.value.slice(selectionEnd + 1)].join('');
+              target.selectionEnd = selectionEnd;
+            }
           }
           break;
         case KeyCodes.DOWN:
@@ -181,6 +210,44 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
           if (!this.searchObject.hasError) {
             this.selectSuggestion(this.suggestions.getActiveSuggestion());
           }
+      }
+    }
+  }
+
+  public onSearchInputKeyPress($keyEvent: KeyboardEvent) {
+    if ($keyEvent && $keyEvent.which) {
+      this.interactedWithSearch = true;
+      const target = $keyEvent.target;
+      switch ($keyEvent.key) {
+        case '"':
+          if (target instanceof HTMLInputElement) {
+            if (!target.value[target.selectionEnd]) {
+              const selectionStart = target.selectionStart;
+              target.value = [target.value.slice(0, selectionStart), '"', target.value.slice(target.selectionEnd)].join('');
+              target.selectionEnd = selectionStart;
+            } else if (target.value[target.selectionEnd] === '"') {
+              target.selectionEnd += 1;
+              return false;
+            }
+          }
+          break;
+        case '(':
+          if (target instanceof HTMLInputElement) {
+            if (!target.value[target.selectionEnd]) {
+              const selectionStart = target.selectionStart;
+              target.value = [target.value.slice(0, selectionStart), ')', target.value.slice(target.selectionEnd)].join('');
+              target.selectionEnd = selectionStart;
+            }
+          }
+          break;
+        case ')':
+          if (target instanceof HTMLInputElement) {
+            if (target.value[target.selectionEnd] === ')') {
+              target.selectionEnd += 1;
+              return false;
+            }
+          }
+          break;
       }
     }
   }

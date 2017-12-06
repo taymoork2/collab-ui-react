@@ -1,0 +1,34 @@
+<h4 class="user-error-results__title"
+  translate="userManage.bulk.errorUsers"></h4>
+<p>
+  <span translate="userManage.bulk.import.errorResolveInstructions"></span>
+  <i class="icon icon-info user-error-results__tooltip"
+    tooltip="{{::'userManage.bulk.import.errorResolveTooltip' | translate}}"
+    tooltip-placement="top"
+    tooltip-trigger="focus mouseenter"
+    tabindex="0"></i>
+</p>
+<csv-download
+  class="user-error-results__export-csv"
+  type="error"
+  filename="errors.csv"
+  no-icon="false"
+  analytics-eventname="{{$ctrl.DOWNLOAD_ERRORS}}"
+  anchor-text="{{::'userManage.bulk.import.exportErrors'|translate}}">
+</csv-download>
+
+<div class="error-table" ng-if="$ctrl.userErrorArray.length > 0">
+  <div class="error-table__header">
+    <div class="error-table__row">
+      <span class="error-table__column-one error-table__column-one--header" translate="userManage.bulk.import.headerRow"></span>
+      <span class="error-table__column-two error-table__column-two--header" translate="userManage.bulk.import.headerErrorMessage"></span>
+    </div>
+  </div>
+
+  <div class="error-table__body">
+    <div class="error-table__row" ng-repeat="data in $ctrl.userErrorArray track by $index">
+      <span class="error-table__column-one">{{::data.itemNumber}}</span>
+      <span class="error-table__column-two">{{::data.errorMessage}}</span>
+    </div>
+  </div>
+</div>

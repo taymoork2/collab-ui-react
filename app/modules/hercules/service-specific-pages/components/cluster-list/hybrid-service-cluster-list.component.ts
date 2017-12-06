@@ -2,20 +2,17 @@ import ClusterServiceModuleName, { ClusterService } from 'modules/hercules/servi
 import { ConnectorType, HybridServiceId, IExtendedCluster, IExtendedClusterServiceStatus } from 'modules/hercules/hybrid-services.types';
 import EnterprisePrivateTrunkServiceModuleName, { EnterprisePrivateTrunkService, IPrivateTrunkResourceWithStatus } from 'modules/hercules/services/enterprise-private-trunk-service';
 import HybridServicesUtilsServiceModuleName, { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
-
+import GridModule, { GridCellService } from 'modules/core/csgrid';
 import './_hybrid-service-cluster-list.scss';
 import HybridServicesClusterStatesServiceModuleName, { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 import { HighLevelStatusForService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
-export interface IGridApiScope extends ng.IScope {
-  gridApi?: any;
-}
-
 export class HybridServiceClusterListCtrl implements ng.IComponentController {
 
-  public clusterList: any = {};
-  public clusterListGridOptions = {};
+  public clusterListGridOptions: uiGrid.IGridOptions;
   public firstLoad = true;
+  public gridApi: uiGrid.IGridApi;
+  public state: string;
 
   private serviceId: HybridServiceId;
   private connectorType: ConnectorType | undefined;
@@ -23,10 +20,11 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private $scope: IGridApiScope,
+    private $scope: ng.IScope,
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
     private ClusterService: ClusterService,
+    private GridCellService: GridCellService,
     private EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private HybridServicesUtilsService: HybridServicesUtilsService,
@@ -102,20 +100,19 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
 
   public $onInit() {
     this.connectorType = this.HybridServicesUtilsService.serviceId2ConnectorType(this.serviceId);
-    if (this.serviceId !== 'ept' && this.connectorType !== undefined) {
-      this.clusterList = this._keepOnlyRelevantServiceStatus(this.ClusterService.getClustersByConnectorType(this.connectorType));
-    } else {
-      this.clusterList = this._keepOnlyRelevantServiceStatus(this.convertTrunkResourceToCluster(this.EnterprisePrivateTrunkService.getAllResources()));
-    }
 
     this.clusterListGridOptions = {
-      data: '$ctrl.clusterList',
-      enableSorting: false,
-      multiSelect: false,
-      enableRowHeaderSelection: false,
-      enableColumnResize: true,
-      enableColumnMenus: false,
+      enableRowSelection: true,
       rowHeight: 75,
+      appScopeProvider: {
+        goToSidepanel: (row: uiGrid.IGridRow) => {
+          this.goToSidepanel(row.entity.id);
+        },
+        keypressSidepanel: (grid: uiGrid.IGridInstance, row: uiGrid.IGridRow) => {
+          this.GridCellService.selectRow(grid, row);
+          this.goToSidepanel(row.entity.id);
+        },
+      },
       columnDefs: [{
         field: 'name',
         displayName: this.$translate.instant(`hercules.clusterListComponent.clusters-title-${this.serviceId}`),
@@ -128,15 +125,19 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
         width: '65%',
       }],
       onRegisterApi: (gridApi) => {
-        this.$scope.gridApi = gridApi;
-        gridApi.selection.on.rowSelectionChanged(this.$scope, (row) => {
-          this.goToSidepanel(row.entity.id);
-        });
+        this.gridApi = gridApi;
         if (!_.isUndefined(this.clusterId) && this.clusterId !== null) {
           this.goToSidepanel(this.clusterId);
         }
       },
     };
+
+    if (this.serviceId !== 'ept' && this.connectorType !== undefined) {
+      this.clusterListGridOptions.data = this._keepOnlyRelevantServiceStatus(this.ClusterService.getClustersByConnectorType(this.connectorType));
+    } else {
+      this.clusterListGridOptions.data = this._keepOnlyRelevantServiceStatus(this.convertTrunkResourceToCluster(this.EnterprisePrivateTrunkService.getAllResources()));
+    }
+
     if (this.serviceId === 'ept') {
       this.updateTrunks();
       this.EnterprisePrivateTrunkService.subscribe('data', this.updateTrunks, {
@@ -152,7 +153,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
 
   private updateTrunks() {
     if (this.serviceId === 'ept') {
-      this.clusterList = this._keepOnlyRelevantServiceStatus((this.convertTrunkResourceToCluster(this.EnterprisePrivateTrunkService.getAllResources())));
+      this.clusterListGridOptions.data = this._keepOnlyRelevantServiceStatus((this.convertTrunkResourceToCluster(this.EnterprisePrivateTrunkService.getAllResources())));
     }
     this.firstLoad = false;
   }
@@ -162,7 +163,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
       this.firstLoad = false;
       return;
     }
-    this.clusterList = this._keepOnlyRelevantServiceStatus(this.ClusterService.getClustersByConnectorType(this.connectorType));
+    this.clusterListGridOptions.data = this._keepOnlyRelevantServiceStatus(this.ClusterService.getClustersByConnectorType(this.connectorType));
     this.firstLoad = false;
   }
 
@@ -201,6 +202,7 @@ export class HybridServiceClusterListComponent implements ng.IComponentOptions {
   public bindings = {
     serviceId: '<',
     clusterId: '<',
+    state: '@?',
   };
 }
 
@@ -209,6 +211,7 @@ export default angular
     require('angular-ui-router'),
     require('angular-translate'),
     ClusterServiceModuleName,
+    GridModule,
     EnterprisePrivateTrunkServiceModuleName,
     HybridServicesClusterStatesServiceModuleName,
     HybridServicesUtilsServiceModuleName,

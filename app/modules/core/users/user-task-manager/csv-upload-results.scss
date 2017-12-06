@@ -1,214 +1,33 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/settings/fonts';
-@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import 'styles/partials/mixins';
 
 csv-upload-results {
 
-  .base-margin {
-    margin: 1em;
-  }
+  @include keep-flex-container(column);
 
-  .flex-container {
-    display: flex;
-    height: 100%;
-    flex-grow: 1;
-    flex-direction: column;
-  }
+  .csv-upload-results {
+    @include keep-flex-container(column);
+    padding: 1rem;
 
-  &.modal-body .flex-container {
-    flex-shrink: 1;
-  }
+    &__title {
+      margin-top: 0.25rem;
+    }
 
-  .flex-item-resize {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
-    min-height: 0;
-  }
+    &__description {
+      margin-top: 0.5rem;
+    }
 
-  .flex-item-no-resize {
-    display: flex;
-    flex-direction: column;
-    flex: 0 0 auto;
-  }
-
-  .scroller {
-    overflow-y: scroll;
-  }
-
-  // csv upload pane in dialog
-  .upload-progress {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    .csv-process-content {
-      @include vr-spacing(mt, 1);
-
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      width: 85%;
-
-      .progressbar {
-        @include vr-spacing(mb, 2.25);
-        width: 100%;
-      }
-
-      .csv-filename {
-        @include vr-spacing(mt, 0.25);
-        font-size: small;
-      }
-
-      .close-button {
-        @include vr-spacing(ml, 1);
-        @include vr-spacing(mt, -1.5);
-        font-size: medium;
-
-        a {
-          color: $gray-light-1;
-          &:hover {
-            color: $color-primary-base;
-          }
-        }
-      }
-
-      .progressbar-label span {
-        font-size: inherit;
-      }
+    &__line-break {
+      margin-top: 2.25rem;
+      margin-bottom: 1.25rem;
     }
   }
 
-  .upload-complete {
-    align-items: flex-start;
-    @include vr-spacing(mv, 0.5);
+  cr-progressbar {
+    margin: 2.25rem 2.25rem 0;
   }
 
-  // boxes containing counts of added, updated, retry, and error users
-  .upload-stats {
-    @include vr-spacing(mb, 1);
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    height: 5rem;
-    .stat {
-      flex: 1 1 auto;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background-color: $gray-light-4;
-      position: relative;
-
-      + .stat {
-        @include vr-spacing(ml, 1);
-      }
-
-      .total {
-        font-size: 2rem;
-        line-height: 1;
-        font-family: $brand-font-thin;
-      }
-
-      .total-title {
-        @include vr-spacing(mb, 0.1);
-
-        font-size: 0.75rem;
-      }
-
-      &.disabled {
-        color: $gray-light-1;
-      }
-
-      &.new-users:not(.disabled) .total {
-        color: $color-cta-base;
-      }
-
-      &.updated-users:not(.disabled) .total {
-        color: $color-primary-base;
-      }
-
-      &.error-users:not(.disabled) .total {
-        color: $color-negative-light;
-      }
-
-      &.retry-users:not(.disabled) .total {
-        color: $brand-warning;
-      }
-    }
+  cr-users-tile-totals {
+    margin-top: 2.25rem;
   }
 
-  // Timer display
-  .upload-timer {
-    @include vr-spacing(mv, 1);
-    @include vr-spacing(mh, 0);
-
-    text-align: center;
-  }
-
-  // Error display
-  .upload-errors {
-    background-color: transparent;
-
-    .error-download {
-      display: flex;
-      justify-content: flex-end;
-      flex-direction: row;
-    }
-
-    .csv-download {
-      font-size: small;
-      margin: 0;
-    }
-
-    p {
-      .icon {
-        color: $gray-light-1;
-        top: 0.1rem;
-
-        &:hover {
-          color: $color-primary-base;
-        }
-      }
-    }
-
-    .row {
-      border-color: $gray-dark;
-      border-style: solid;
-      border-width: thin thin 0;
-      display: flex;
-    }
-
-    div.row:last-child {
-      border-bottom-width: thin;
-    }
-
-    .error-row {
-      padding: 0.5rem 1rem;
-      overflow-x: hidden;
-    }
-
-    .error-desc {
-      border-color: $gray-dark;
-      border-style: solid;
-      border-width: 0 0 0 thin;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-      padding: 0.5rem 1rem;
-    }
-
-    .table-header {
-      background-color: $gray-light-4;
-      color: $gray-dark;
-      text-align: left;
-      font-weight: bold;
-    }
-
-    .table-body {
-      color: $gray-base;
-    }
-  }
 }
