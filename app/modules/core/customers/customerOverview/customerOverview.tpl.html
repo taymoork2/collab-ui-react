@@ -9,7 +9,7 @@
       </div>
     </div>
   </cs-sp-header>
-  <div class="banner-info" ng-if="customerOverview.showContractIncomplete">
+  <div class="banner-info" ng-if="customerOverview.showContractIncompleteFn()">
     <div class="banner-top-stripe"></div>
     <div class="side-panel-header">
       <span translate="customerPage.pstnContractIncomplete"></span>
@@ -90,7 +90,7 @@
           </ul>
         </div>
       </cs-sp-section>
-      <uc-external-number-overview ng-if="customerOverview.isSquaredUC" show-contract-incomplete="customerOverview.showContractIncomplete"></uc-external-number-overview>
+      <uc-external-number-overview ng-if="customerOverview.isSquaredUC" show-contract-incomplete="customerOverview.showContractIncompleteFn()"></uc-external-number-overview>
       <cs-sp-section>
         <div class="section-title-row">
           <span class="section-name" translate="customerPage.branding"></span>

@@ -262,7 +262,7 @@ export class PstnService {
     }
   }
 
-  public releaseCarrierInventoryV2(customerId: string, reservationId: string | undefined, numbers: string[], isCustomerExists: boolean): ng.IPromise<any> {
+  public releaseCarrierInventoryV2(customerId: string, reservationId: string | undefined, numbers: string | string[], isCustomerExists: boolean): ng.IPromise<any> {
     if (!_.isArray(numbers)) {
       numbers = [numbers];
     }
@@ -285,7 +285,7 @@ export class PstnService {
     }
   }
 
-  public releaseCarrierTollFreeInventory(customerId: string, _carrierId: string, numbers: string[], reservationId: string | undefined, isCustomerExists: boolean): ng.IPromise<any> {
+  public releaseCarrierTollFreeInventory(customerId: string, _carrierId: string, numbers: string | string[], reservationId: string | undefined, isCustomerExists: boolean): ng.IPromise<any> {
     if (!_.isArray(numbers)) {
       numbers = [numbers];
     }
@@ -308,7 +308,7 @@ export class PstnService {
     }
   }
 
-  public reserveCarrierTollFreeInventory(customerId: string, carrierId: string, numbers: string[], isCustomerExists: boolean): ng.IPromise<any> {
+  public reserveCarrierTollFreeInventory(customerId: string, carrierId: string, numbers: string | string[], isCustomerExists: boolean): ng.IPromise<any> {
     if (!_.isArray(numbers)) {
       numbers = [numbers];
     }
@@ -353,7 +353,9 @@ export class PstnService {
     });
   }
 
-  public orderBlock(customerId: string, _carrierId: string, npa: string, quantity: string, isSequential: boolean, nxx: string): ng.IPromise<any> {
+  public orderBlock(
+    customerId: string,  _carrierId: string, npa: undefined | string,
+    quantity: number, isSequential: undefined | boolean,  nxx: undefined | string): ng.IPromise<any> {
     const payload = {
       npa: npa,
       quantity: quantity,
@@ -370,7 +372,9 @@ export class PstnService {
     }, payload).$promise;
   }
 
-  public orderTollFreeBlock(customerId: string, _carrierId: string, npa: string, quantity: number): ng.IPromise<any> {
+  public orderTollFreeBlock(
+    customerId: string, _carrierId: string, npa: undefined | string,
+    quantity: number): ng.IPromise<any> {
     const payload = {
       npa: npa,
       quantity: quantity,

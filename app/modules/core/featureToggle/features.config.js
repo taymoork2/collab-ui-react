@@ -223,4 +223,5 @@ module.exports = {
   winProximityDeviceSelection: 'win-proximity-device-selection',
   winTeams: 'win-teams',
   zeroTouchMeeting: 'zero-touch-meeting',
+  hI1635: 'h-i1635', //PSTN Porting
 };
