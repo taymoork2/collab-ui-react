@@ -2,6 +2,13 @@ import { Member, MemberService } from 'modules/huron/members';
 import { IMember, IPickupGroup, IMemberNumber, ICallPickupNumbers, CallPickupGroupService } from 'modules/call/features/call-pickup/shared';
 import { Notification } from 'modules/core/notifications';
 import { IToolkitModalService } from 'modules/core/modal';
+import { CardUtils } from 'modules/core/cards';
+
+interface IModalScope extends ng.IScope {
+  member?: string;
+  lines?: string[];
+  names?: string[];
+}
 
 class CallPickupMembersCtrl implements ng.IComponentController {
   public memberList: Member[] = [];
@@ -16,14 +23,15 @@ class CallPickupMembersCtrl implements ng.IComponentController {
   public savedCallPickup: IPickupGroup;
   /* @ngInject */
   constructor(
-    private Notification: Notification,
-    private MemberService: MemberService,
-    private FeatureMemberService,
-    private $translate: ng.translate.ITranslateService,
-    private CallPickupGroupService: CallPickupGroupService,
+    private $element: ng.IRootElementService,
     private $modal: IToolkitModalService,
-    private $scope,
-    private $element,
+    private $scope: ng.IScope,
+    private $translate: ng.translate.ITranslateService,
+    private CardUtils: CardUtils,
+    private CallPickupGroupService: CallPickupGroupService,
+    private FeatureMemberService,
+    private MemberService: MemberService,
+    private Notification: Notification,
   ) { }
 
   public fetchMembers(memberName: string): void | IPromise<Member[]> {
@@ -40,6 +48,10 @@ class CallPickupMembersCtrl implements ng.IComponentController {
         return this.memberList;
       });
     }
+  }
+
+  public refreshCards(): void {
+    this.CardUtils.resize();
   }
 
   public selectMember(member: Member): void {
@@ -66,6 +78,7 @@ class CallPickupMembersCtrl implements ng.IComponentController {
             member: this.selectedMembers,
             isValidMember: isValid,
           });
+          this.refreshCards();
         });
       });
     } else {
@@ -90,7 +103,7 @@ class CallPickupMembersCtrl implements ng.IComponentController {
       return;
     }
 
-    const modalScope = this.$scope.$new();
+    const modalScope: IModalScope = this.$scope.$new();
     const member = this.getActiveMember();
 
     evt.stopPropagation();
@@ -103,8 +116,8 @@ class CallPickupMembersCtrl implements ng.IComponentController {
         _.forEach(numbers, num => {
           this.CallPickupGroupService.isLineInPickupGroup(num.internal)
           .then((name: string) => {
-            modalScope.lines.push(num.internal);
-            modalScope.names.push(name);
+            modalScope.lines!.push(num.internal);
+            modalScope.names!.push(name);
           });
         });
       });
@@ -167,6 +180,7 @@ class CallPickupMembersCtrl implements ng.IComponentController {
       member: this.selectedMembers,
       isValidMember: this.CallPickupGroupService.verifyLineSelected(this.selectedMembers),
     });
+    this.refreshCards();
   }
 
   public getMemberType(member: Member): string {
@@ -193,6 +207,7 @@ class CallPickupMembersCtrl implements ng.IComponentController {
         this.updateExistingCallPickup('remove');
       }
     }
+    this.refreshCards();
   }
 
   public getUserName(member: Member) {

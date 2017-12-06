@@ -8,6 +8,9 @@ class AssignableServicesRowController implements ng.IComponentController {
   private stateData: any;  // TODO: better type
   private onUpdate: Function;
   private licenses: ILicenseUsage[];
+  private messageLicenses: ILicenseUsage[];
+  private callLicenses: ILicenseUsage[];
+  private careLicenses: ILicenseUsage[];
   private basicMeetingLicenses: ILicenseUsage[];
   private advancedMeetingLicenses: ILicenseUsage[];
   private advancedMeetingSiteUrls: string[];
@@ -21,12 +24,27 @@ class AssignableServicesRowController implements ng.IComponentController {
 
   public $onInit(): void {
     this.licenses = this.subscription.licenses;
+    this.messageLicenses = this.getMessageLicenses();
+    this.callLicenses = this.getCallLicenses();
+    this.careLicenses = this.getCareLicenses();
     this.basicMeetingLicenses = this.getBasicMeetingLicenses();
     this.advancedMeetingLicenses = this.getAdvancedMeetingLicenses();
     this.advancedMeetingSiteUrls = this.getAdvancedMeetingSiteUrls();
 
     const stateDataKey = `${AssignableServicesRowController.itemCategory}["${this.subscription.subscriptionId}"]`;
     this.showContent = _.get(this.stateData, `${stateDataKey}.showContent`, true);
+  }
+
+  private getMessageLicenses(): ILicenseUsage[] {
+    return this.LicenseUsageUtilService.getMessageLicenses(this.licenses);
+  }
+
+  private getCallLicenses(): ILicenseUsage[] {
+    return this.LicenseUsageUtilService.getCallLicenses(this.licenses);
+  }
+
+  private getCareLicenses(): ILicenseUsage[] {
+    return this.LicenseUsageUtilService.getCareLicenses(this.licenses);
   }
 
   private getBasicMeetingLicenses(): ILicenseUsage[] {

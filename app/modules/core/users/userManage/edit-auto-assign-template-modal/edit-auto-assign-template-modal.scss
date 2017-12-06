@@ -1,7 +1,7 @@
 @import 'styles/partials/mixins';
 
 edit-auto-assign-template-modal {
-  @include keep-flex(column);
+  @include keep-flex-container(column);
 }
 
 .modal-content__assignable-services {

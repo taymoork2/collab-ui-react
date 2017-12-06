@@ -7,8 +7,14 @@
   }
 }
 
-@mixin keep-flex($flex-direction: column, $flex-grow: 1) {
+@mixin flex-container($flex-direction: column) {
   display: flex;
   flex-direction: $flex-direction;
-  flex-grow: $flex-grow;
+  min-width: 0;
+  min-height: 0;
+}
+
+@mixin keep-flex-container($direction: column, $flex-grow: 1, $flex-shrink: 1, $flex-basis: 0px) {
+  @include flex-container($direction);
+  flex: $flex-grow $flex-shrink $flex-basis;
 }

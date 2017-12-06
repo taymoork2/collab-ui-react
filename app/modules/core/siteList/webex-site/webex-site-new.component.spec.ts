@@ -10,6 +10,7 @@ describe('Component: WebexSiteNewComponent', function () {
       sitesArray: [{
         siteUrl: 'abc.dmz.webex.com',
         timezone: '1',
+        keepExistingSite: true,
       }, {
         siteUrl: 'site2.dmz.webex.com',
         timezone: '1',
@@ -26,6 +27,7 @@ describe('Component: WebexSiteNewComponent', function () {
       sitesArray: this.$scope.fixtures.sitesArray,
       onSitesAdd: 'onSitesAddFn(sites, isValid)',
       onValidationStatusChange: 'onValidationStatusChangeFn(isValid)',
+      onSendTracking: 'onSendTrackingFn(event, properties)',
       audioPartnerName: 'fixtures.audioPartnerName',
     });
   });
@@ -66,6 +68,7 @@ describe('Component: WebexSiteNewComponent', function () {
       const hasAddedSite = _.some(this.controller.newSitesArray, { siteUrl: siteUrl });
       expect(hasAddedSite).toBe(true);
       expect(this.controller.disableValidateButton).toBe(false);
+      expect(this.$scope.onSendTrackingFn).toHaveBeenCalledWith('A new site was added', { siteUrl: 'testSiteHere.webex.com', timezoneSelected: 'someTimeZoneHere' });
     });
 
     it('should call validateWebexSiteUrl() and if INVALID isError  should be TRUE and site should not be added', function () {

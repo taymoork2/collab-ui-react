@@ -55,6 +55,10 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
 
   public $onInit(): void {
     this.performSearch(this.searchObject);
+    this.$timeout(() => {
+      //DOM has finished rendering
+      this.setFocusToInputField();
+    });
     this.searchInteraction.receiver = this;
   }
 

@@ -1,7 +1,7 @@
 <div ng-if="$ctrl.hasAdvancedMeetings()" class="advanced-meetings">
   <div translate="firstTimeWizard.advancedMeetings" class="license__category"></div>
   <div ng-repeat="license in $ctrl.licenses track by license.licenseId">
-    <assignable-license-checkbox
+    <assignable-item-checkbox
       license="license"
       l10n-label="{{:: 'subscriptions.licenseTypes.' + license.offerName }}"
       on-update="$ctrl.onUpdate({ $event: $event })"
@@ -22,6 +22,6 @@
           volume="$ctrl.getTotalLicenseVolume(offerName)">
         </usage-line>
       </div>
-    </assignable-license-checkbox>
+    </assignable-item-checkbox>
   </div>
 </div>

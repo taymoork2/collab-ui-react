@@ -349,16 +349,16 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         controller.restApiResponse = '';
       });
 
-      it('url should be equate to URL when dynamicList is empty', function () {
+      it('url should be equate to URL when urlUpdated flag is false', function () {
         controller.currentStep = 0;
-        controller.menuEntry.actions[0].dynamicList = '';
         controller.menuEntry.actions[0].url = [{ testURL: 'test' }];
         controller.stepNext();
         expect(controller.currentStep).toEqual(1);
         expect(action.url).toEqual(controller.menuEntry.actions[0].url);
       });
 
-      it('url should be equate to dynamicList when dynamicList is not empty', function () {
+      it('url should be equate to dynamicList when urlUpdated flag is true', function () {
+        controller.isDynamicsValueUpdated();
         controller.menuEntry.actions[0].dynamicList = [
           {
             isDynamic: true,
@@ -369,14 +369,13 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
             },
           },
         ];
-
         controller.stepNext();
         expect(controller.currentStep).toEqual(2);
         expect(action.url).toEqual(controller.menuEntry.actions[0].dynamicList);
       });
 
       it('dynamics should be empty when there is no dynamic text', function () {
-        controller.menuEntry.actions[0].dynamicList = [
+        controller.menuEntry.actions[0].url = [
           {
             isDynamic: false,
             action: {
@@ -393,7 +392,7 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
       });
 
       it('dynamics should be updated when there is dynamic text', function () {
-        controller.menuEntry.actions[0].dynamicList = [
+        controller.menuEntry.actions[0].url = [
           {
             isDynamic: true,
             action: {
@@ -466,7 +465,7 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         controller.password = '**********';
         controller.username = 'testuser';
         controller.basicAuthButton = true;
-        controller.menuEntry.actions[0].dynamicList = [{
+        controller.menuEntry.actions[0].url = [{
           isDynamic: false,
           action: {
             eval: {

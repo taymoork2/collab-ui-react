@@ -1,5 +1,5 @@
 @import 'styles/partials/mixins';
 
 multi-step-modal {
-  @include keep-flex(column);
+  @include keep-flex-container(column);
 }

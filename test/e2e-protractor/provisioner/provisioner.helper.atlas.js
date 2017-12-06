@@ -25,6 +25,18 @@ export function deleteAtlasCustomer(token, customerId) {
   return provisionerHelper.makeRequest(options);
 }
 
+export function deleteAtlasPartnerToken(token, partnerOrgId) {
+  const options = {
+    method: 'DELETE',
+    uri: `${config.oauth2Url}tokens?orgid=${partnerOrgId}&clientid=${config.oauthClientRegistration.id}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    json: true,
+  };
+  return provisionerHelper.makeRequest(options);
+}
+
 export function findAtlasCustomer(token, orgId, customerName) {
   const options = {
     method: 'GET',
