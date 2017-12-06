@@ -99,6 +99,13 @@ export class DevicesController {
       },
     }, {
       count: 0,
+      name: $translate.instant('CsdmStatus.connectionStatus.OFFLINE_EXPIRED'),
+      filterValue: 'expired',
+      passes: function (item: IDevice) {
+        return item.state.key === 'OFFLINE_EXPIRED';
+      },
+    }, {
+      count: 0,
       name: $translate.instant('CsdmStatus.connectionStatus.CONNECTED'),
       filterValue: 'online',
       passes: function (item: IDevice) {

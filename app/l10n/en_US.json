@@ -5667,6 +5667,8 @@
     "sipUrl": "SIP Address",
     "issues": "Issues",
     "lastSeen": "since:",
+    "offlineLong": "(offline for over 8 weeks)",
+    "reactivate": "Reactivate",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time",
     "logUploadWarning": "When you report an issue, device logs will be sent to Cisco.",
@@ -7000,7 +7002,7 @@
       "CONNECTED": "Online",
       "CONNECTED_WITH_ISSUES": "Online, With Issues",
       "DISCONNECTED": "Offline",
-      "OFFLINE_EXPIRED": "Requires Activation",
+      "OFFLINE_EXPIRED": "Expired",
       "UNKNOWN": "Unknown"
     },
     "WithDevices": "With Devices",
