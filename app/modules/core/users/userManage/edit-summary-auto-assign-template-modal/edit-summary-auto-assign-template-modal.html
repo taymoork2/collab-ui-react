@@ -6,7 +6,9 @@
   save-loading="$ctrl.saveLoading">
   <h4 translate="userManage.autoAssignTemplate.editSummary.header"></h4>
   <p translate="userManage.autoAssignTemplate.editSummary.description"></p>
-  <div class="license-summary" style="border:1px solid red; height: 400px; margin-top: 25px;">
-    **TODO: f3745 - populate with licenses summary**
-  </div>
+
+  <license-summary
+    state-data="$ctrl.stateData">
+  </license-summary>
+
 </multi-step-modal>
