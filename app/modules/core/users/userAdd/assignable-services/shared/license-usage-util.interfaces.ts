@@ -1,4 +1,4 @@
-import { OfferNameEnum } from 'modules/core/shared';
+import { OfferName } from 'modules/core/shared';
 
 export enum AssignableServicesItemCategory {
   LICENSE = 'LICENSE',
@@ -14,7 +14,7 @@ export enum LicenseStatus {
 export interface ILicenseUsage {
   billingServiceId: string;
   licenseId: string;
-  offerName: OfferNameEnum;
+  offerName: OfferName;
   siteUrl: string;
   status: LicenseStatus;
 }
