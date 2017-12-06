@@ -10,7 +10,7 @@ declare namespace csdm {
     canDelete: boolean;
     canReportProblem: boolean;
     supportsCustomTags: boolean;
-    state: { readableState: string };
+    state: { key: string, readableState: string };
     cssColorClass: string;
     photos: string[];
     product: string;

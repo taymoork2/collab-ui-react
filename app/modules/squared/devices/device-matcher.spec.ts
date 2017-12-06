@@ -29,7 +29,7 @@ describe('Service: DeviceMatcher', function () {
       tags: ['qqq'],
       url: 'rrr',
       photos: ['sss'],
-      state: { readableState: 'ttt' },
+      state: { key: 'vvv', readableState: 'ttt' },
       readableActiveInterface: 'uuu',
     };
   };
