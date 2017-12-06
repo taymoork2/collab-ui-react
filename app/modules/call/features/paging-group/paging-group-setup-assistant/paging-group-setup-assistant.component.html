@@ -3,11 +3,14 @@
                     overlay-title="{{::'pagingGroup.createTitle' | translate}}" close="$ctrl.cancelModal()"
                     ng-keyup="$ctrl.evalKeyPress($event.keyCode)"
                     ng-keypress="$ctrl.enterNextPage($event.keyCode)">
-    <cs-setup-assistant previous="$ctrl.previousButton()"
-                        next="$ctrl.nextButton()"
-                        next-text="$ctrl.nextText()"
-                        previous-fn="$ctrl.previousPage()"
-                        next-fn="$ctrl.nextPage()">
+    <cs-setup-assistant
+      previous="$ctrl.previousButton()"
+      next="$ctrl.nextButton()"
+      next-text="$ctrl.nextText()"
+      previous-fn="$ctrl.previousPage()"
+      next-fn="$ctrl.nextPage()"
+      next-aria-label="{{::'common.next' | translate}}"
+      previous-aria-label="{{::'common.previous' | translate}}">
 
       <pg-name
            ng-if="$ctrl.getPageIndex() === 0"

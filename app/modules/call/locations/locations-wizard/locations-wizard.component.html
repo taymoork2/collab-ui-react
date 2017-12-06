@@ -8,12 +8,15 @@
       <i class="icon icon-spinner"></i>
     </div>
 
-    <cs-setup-assistant ng-if="!$ctrl.loading"
+    <cs-setup-assistant
+      ng-if="!$ctrl.loading"
       previous="$ctrl.previousButton()"
       next="$ctrl.nextButton()"
       next-text="$ctrl.nextText()"
       previous-fn="$ctrl.previousPage()"
-      next-fn="$ctrl.nextPage()">
+      next-fn="$ctrl.nextPage()"
+      next-aria-label="{{::'common.next' | translate}}"
+      previous-aria-label="{{::'common.previous' | translate}}">
 
       <form novalidate class="cs-form" name="$ctrl.form" role="form">
         <!-- Location Name -->
