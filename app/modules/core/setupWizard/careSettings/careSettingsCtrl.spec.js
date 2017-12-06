@@ -2,7 +2,7 @@
 
 describe('CareSettingsCtrl', function () {
   function initDependencies() {
-    this.injectDependencies('$controller', '$httpBackend', '$interval', '$q', '$scope', 'Authinfo', 'Notification', 'SunlightConfigService', 'UrlConfig', 'URService');
+    this.injectDependencies('$controller', '$httpBackend', '$interval', '$q', '$scope', 'Authinfo', 'AutoAttendantConfigService', 'FeatureToggleService', 'Notification', 'HuronConfig', 'SunlightConfigService', 'UrlConfig', 'URService');
     this.$scope.wizard = {};
     this.$scope.wizard.isNextDisabled = false;
     this.orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
@@ -32,6 +32,15 @@ describe('CareSettingsCtrl', function () {
     spyOn(this, '$interval').and.callThrough();
 
     this.sunlightChatConfigUrl = this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/chat';
+    this.aaCSOnboardingUrl = this.HuronConfig.getCesUrl() + '/customers/' + this.Authinfo.getOrgId() + '/config/csOnboardingStatus';
+  }
+
+  function initAAFeatureToggleSpies(isFeatureToggleEnable, shouldResolve) {
+    if (shouldResolve) {
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(isFeatureToggleEnable));
+    } else {
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.reject());
+    }
   }
 
   function initController(_controllerLocals) {
@@ -58,6 +67,7 @@ describe('CareSettingsCtrl', function () {
     beforeEach(initDependencies);
     beforeEach(function () {
       initSpies.call(this, this.userOrgId, false);
+      initAAFeatureToggleSpies.call(this, false, true);
     });
 
     describe('CareSettings - Init', function () {
@@ -259,6 +269,7 @@ describe('CareSettingsCtrl', function () {
     beforeEach(initDependencies);
     beforeEach(function () {
       initSpies.call(this, this.userOrgId, true);
+      initAAFeatureToggleSpies.call(this, false, true);
     });
 
     it('should show enabled setup care button and disabled next button, if Org is not onboarded already.', function () {
@@ -401,6 +412,7 @@ describe('CareSettingsCtrl', function () {
     beforeEach(initDependencies);
     beforeEach(function () {
       initSpies.call(this, this.orgId, false);
+      initAAFeatureToggleSpies.call(this, false, true);
     });
 
     describe('CareSettings - Init', function () {
@@ -581,6 +593,7 @@ describe('CareSettingsCtrl', function () {
     beforeEach(initDependencies);
     beforeEach(function () {
       initSpies.call(this, this.orgId, true);
+      initAAFeatureToggleSpies.call(this, false, true);
     });
 
     it('should show enabled setup care button and disabled next button, if Org is not onboarded already.', function () {
@@ -714,6 +727,7 @@ describe('CareSettingsCtrl', function () {
     beforeEach(initDependencies);
     beforeEach(function () {
       initSpies.call(this, this.orgId, true);
+      initAAFeatureToggleSpies.call(this, false, true);
     });
 
     it('should not show error notification and disable setup care button, if org is already onboarded', function () {
@@ -736,6 +750,87 @@ describe('CareSettingsCtrl', function () {
       this.$httpBackend.flush();
       expect(this.controller.state).toBe(this.constants.ONBOARDED);
       expect(this.Notification.success).toHaveBeenCalled();
+    });
+  });
+
+  describe('AA CS Onboarding ', function () {
+    beforeEach(function () {
+      this.initModules(
+        'Sunlight'
+      );
+    });
+    beforeEach(initDependencies);
+    beforeEach(function () {
+      initSpies.call(this, this.orgId, true);
+      this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
+        .respond(200, {
+          csOnboardingStatus: this.constants.status.SUCCESS,
+          appOnboardStatus: this.constants.status.SUCCESS,
+          aaOnboardingStatus: this.constants.status.SUCCESS,
+        });
+    });
+
+    it('should check for CS onboarding for AA, if cs, app and aa are already onboarded, AA Feature Toggle error condition', function () {
+      initAAFeatureToggleSpies.call(this, true, false);
+      initController.call(this);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      expect(this.controller.state).toBe(this.constants.status.UNKNOWN);
+      this.$httpBackend.flush();
+      expect(this.controller.state).toBe(this.constants.ONBOARDED);
+      expect(this.$scope.wizard.isNextDisabled).toBe(false);
+    });
+
+    it('should check for CS onboarding for AA, if cs, app and aa are already onboarded, AA Feature Toggle resolve, AA Config not set', function () {
+      initAAFeatureToggleSpies.call(this, true, true);
+      initController.call(this);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      expect(this.controller.state).toBe(this.constants.status.UNKNOWN);
+      this.$httpBackend.flush();
+      expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+      expect(this.$scope.wizard.isNextDisabled).toBe(true);
+    });
+
+    it('should check for CS onboarding for AA, if cs, app and aa are already onboarded, AA Feature Toggle resolve, AA Config returning 404', function () {
+      spyOn(this.AutoAttendantConfigService, 'getCSConfig').and.returnValue(this.$q.resolve('fake response'));
+      initAAFeatureToggleSpies.call(this, true, true);
+      initController.call(this);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      expect(this.controller.state).toBe(this.constants.status.UNKNOWN);
+      this.$httpBackend.flush();
+      expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+      expect(this.$scope.wizard.isNextDisabled).toBe(true);
+    });
+
+    it('should check for CS onboarding for AA, if cs, app and aa are already onboarded, AA Feature Toggle resolve, AA Config returning 200', function () {
+      var fakeResponse = {
+        data: {
+          csOnboardingStatus: this.constants.status.SUCCESS,
+        },
+      };
+      spyOn(this.AutoAttendantConfigService, 'getCSConfig').and.returnValue(this.$q.resolve(fakeResponse));
+      initAAFeatureToggleSpies.call(this, true, true);
+      initController.call(this);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      expect(this.controller.state).toBe(this.constants.status.UNKNOWN);
+      this.$httpBackend.flush();
+      expect(this.controller.state).toBe(this.constants.ONBOARDED);
+      expect(this.$scope.wizard.isNextDisabled).toBe(false);
+    });
+
+    it('should check for CS onboarding for AA, if cs, app and aa are already onboarded, AA Feature Toggle resolve, AA Config returning 200 with invalid response', function () {
+      var fakeResponse = {
+        data: {
+          aaOnboardingStatus: this.constants.status.SUCCESS,
+        },
+      };
+      spyOn(this.AutoAttendantConfigService, 'getCSConfig').and.returnValue(this.$q.resolve(fakeResponse));
+      initAAFeatureToggleSpies.call(this, true, true);
+      initController.call(this);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      expect(this.controller.state).toBe(this.constants.status.UNKNOWN);
+      this.$httpBackend.flush();
+      expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+      expect(this.$scope.wizard.isNextDisabled).toBe(true);
     });
   });
 });

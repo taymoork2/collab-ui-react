@@ -122,6 +122,7 @@ module.exports = {
   huronAARestApi: 'huron-aa-restapi',
   huronAARestApiPhase2: 'huron-aa-restapi-phase2',
   huronAAReturnCaller: 'huron-aa-returncaller',
+  huronAAContextService: 'huron-aa-context-service',
   huronAARouteRoom: 'huron-aa-routeroom',
   huronClassOfService: 'COS',
   huronEnterprisePrivateTrunking: 'huron-i387-enterprise-private-trunking',
