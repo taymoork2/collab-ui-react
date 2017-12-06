@@ -8655,6 +8655,9 @@
     "care": "Care",
     "hybridImp": {
       "hybridImp": "Hybrid Message"
+    },
+    "hybridCalendarMicrosoft": {
+      "title": "Calendar (Exchange/Office 365)"
     }
   },
   "partnerManagement": {
