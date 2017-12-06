@@ -1,6 +1,6 @@
 <div class="search-filters-redux">
   <form ng-class="{ 'active': dctrl.inputActive}">
-    <div class="bulleted-searchbox" ng-click="dctrl.setFocusToInputField()">
+    <div class="bulleted-searchbox" ng-click="dctrl.userSetFocusToInputField()">
       <div class="bulleted-searchinput"
            ng-class="{'searcherror': dctrl.searchObject.hasError, 'focus': dctrl.inputActive}">
         <i class="icon icon-search" ng-click="dctrl.resetInputFieldCursor()"></i>
