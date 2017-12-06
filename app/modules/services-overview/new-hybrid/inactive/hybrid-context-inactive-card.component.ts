@@ -5,7 +5,7 @@ class HybridContextInactiveCardController implements ng.IComponentController {
   ) {}
 
   public openSetUp(): void {
-    this.$state.go('add-resource.context');
+    this.$state.go('context-resources');
   }
 }
 

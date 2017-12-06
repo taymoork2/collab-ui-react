@@ -33,6 +33,11 @@
         <span class="instructions-link" translate="hercules.nodesPage.instructions"></span>
       </a>
     </li>
+    <li ng-if="$ctrl.displayDisabledRemoveNodeMenuItem($ctrl.targetType, $ctrl.node, $ctrl.numberOfClusterNodes)">
+      <a class="unclickable">
+        <span translate="hercules.nodesPage.removeNode" class="disabled-link"></span>
+      </a>
+    </li>
     <li ng-if="$ctrl.displayDisabledRemoveNodeMenuItemWithDeregisterInfo($ctrl.targetType, $ctrl.numberOfClusterNodes)">
       <a class="unclickable">
         <span translate="hercules.nodesPage.removeNode" class="disabled-link"></span>

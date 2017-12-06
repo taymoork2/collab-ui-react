@@ -2999,6 +2999,7 @@
         "upgrade": "Upgrade available",
         "upgrading": "Installing upgrade",
         "pending": "Pending upgrade",
+        "upgradesAutomatically": "Upgrades automatically",
         "alarms": "Alarms",
         "maintenance": "Maintenance",
         "pendingMaintenance": "Pending maintenance"
