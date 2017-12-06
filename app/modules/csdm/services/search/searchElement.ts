@@ -62,6 +62,9 @@ export abstract class SearchElement {
       if (this.parent.getExpressions().length === 0 && this.parent.parent) {
         this.parent.removeFromParent();
       }
+      if (this.parent.getExpressions().length === 1 && this.parent.parent) {
+        this.parent.replaceWith(this.parent.getExpressions()[0]);
+      }
     }
   }
 
