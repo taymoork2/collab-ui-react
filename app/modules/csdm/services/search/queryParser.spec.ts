@@ -64,9 +64,9 @@ describe('QueryParser', () => {
   });
 
   it('should detect field starts correctly', () => {
-    expect(new QueryParser(new SearchTranslator(translate)).startsField('product:')).toBeTruthy();
-    expect(new QueryParser(new SearchTranslator(translate)).startsField('products:')).toBeFalsy();
-    expect(new QueryParser(new SearchTranslator(translate)).startsField('translated.spacesPage.statusHeader=')).toBeTruthy();
+    expect(new QueryParser(new SearchTranslator(translate, null)).startsField('product:')).toBeTruthy();
+    expect(new QueryParser(new SearchTranslator(translate, null)).startsField('products:')).toBeFalsy();
+    expect(new QueryParser(new SearchTranslator(translate, null)).startsField('translated.spacesPage.statusHeader=')).toBeTruthy();
   });
 
   it('should parse a field query', () => {
@@ -146,7 +146,7 @@ describe('QueryParser', () => {
   });
 
   function expectLookupByTranslatedField(translationValue: string, expectedField: string) {
-    expect(new QueryParser(new SearchTranslator(translate)).getUniversalFieldName(translationValue)).toEqual(expectedField);
+    expect(new QueryParser(new SearchTranslator(translate, null)).getUniversalFieldName(translationValue)).toEqual(expectedField);
   }
 
   it('should allow the translated field names case insensitive', () => {
@@ -154,21 +154,21 @@ describe('QueryParser', () => {
   });
 
   it('should not allow unknown field names', () => {
-    expect(new QueryParser(new SearchTranslator(translate)).getUniversalFieldName('proXduct')).toBeUndefined();
-    expect(new QueryParser(new SearchTranslator(translate)).getUniversalFieldName('maXc')).toBeUndefined();
-    expect(new QueryParser(new SearchTranslator(translate)).getUniversalFieldName('proXduct')).toBeUndefined();
+    expect(new QueryParser(new SearchTranslator(translate, null)).getUniversalFieldName('proXduct')).toBeUndefined();
+    expect(new QueryParser(new SearchTranslator(translate, null)).getUniversalFieldName('maXc')).toBeUndefined();
+    expect(new QueryParser(new SearchTranslator(translate, null)).getUniversalFieldName('proXduct')).toBeUndefined();
   });
 
   function expectQueryToThrow(query: string) {
     try {
-      new QueryParser(new SearchTranslator(translate)).parseQueryString(query);
+      new QueryParser(new SearchTranslator(translate, null)).parseQueryString(query);
       fail('Query did not throw:' + query);
     } catch (e) {
     }
   }
 
   function expectQueryToParseTo(query: string, expectedObject: any) {
-    const parsedQuery = new QueryParser(new SearchTranslator(translate)).parseQueryString(query);
+    const parsedQuery = new QueryParser(new SearchTranslator(translate, null)).parseQueryString(query);
     expect(JSON.stringify(parsedQuery)).toEqual(JSON.stringify(expectedObject));
   }
 });
