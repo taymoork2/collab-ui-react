@@ -3871,6 +3871,7 @@
     "hasTransferCode": "I have a Transfer Code to transfer my existing sites to this subscription.",
     "dontHaveTransferCode": "Don't have a transfer code?",
     "transferCodeInvalidError": "The transfer code and site name do not match. Please enter a valid site name and transfer code combination.",
+    "transferCodeInvalidSite": "The WebEx sites associated with this TransferCode may have a problem. Contact your Cisco representative for further investigation.",
     "haveExistingWebExSite": "Do you have an existing WebEx site that you are transferring to this subscription?",
     "existingWebExSiteDescription": "If you have an existing WebEx site that you want to transfer to this subscription you can enter the Transfer Code.",
     "transferCode": "Transfer Code",
