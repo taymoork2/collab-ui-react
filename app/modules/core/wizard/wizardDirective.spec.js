@@ -46,7 +46,7 @@ describe('Controller: WizardCtrl', function () {
     controller: 'EnterpriseSettingsCtrl',
     steps: [{
       name: 'enterpriseSipUrl',
-      template: 'modules/core/setupWizard/enterprise.setSipDomain.tpl.html',
+      template: 'modules/core/setupWizard/enterprise.setSipDomainSparkAssistant.tpl.html',
     }, {
       name: 'init',
       template: 'modules/core/setupWizard/enterprise.init.tpl.html',

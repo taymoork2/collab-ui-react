@@ -72,6 +72,7 @@ module.exports = {
   atlasSuppressOnboardingEmail: 'atlas-suppress-onboarding-email',
   atlasTrialsShipDevices: 'atlasTrialsShipDevices',
   atlasVirtualAssistantEnable: 'atlas-virtual-assistant-enable',
+  atlasSparkAssistant: 'atlas-spark-assistant',
   atlasWebexAddSite: 'atlas-webex-add-site',
   atMentions: 'at-mentions',
   audioPairing: 'audio-pairing',
