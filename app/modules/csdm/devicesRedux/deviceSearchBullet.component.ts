@@ -74,7 +74,7 @@ export class DeviceSearchBullet implements ng.IComponentController {
       return '';
     }
 
-    return this.DeviceSearchTranslator.translateQueryField(searchElement.getCommonField() + '') + searchElement.getCommonMatchOperator();
+    return this.DeviceSearchTranslator.getTranslatedQueryFieldDisplayName(searchElement.getCommonField() + '') + searchElement.getCommonMatchOperator();
   }
 }
 
