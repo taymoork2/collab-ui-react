@@ -157,7 +157,6 @@ function print_component_scss {
 
 ${html_element_name} {
   // TODO: use as-appropriate
-  display: block;
   // @include keep-flex();
 }
 _EOF
