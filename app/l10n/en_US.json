@@ -2132,7 +2132,6 @@
     "searchError": "The search input is not recognized.",
     "allDevices": "Anything",
     "containingQuery": "containing {{query}}",
-    "alsoContainingQuery": "also containing {{query}}",
     "typeHeader": "Type",
     "nameHeader": "Belongs to",
     "statusHeader": "Status",

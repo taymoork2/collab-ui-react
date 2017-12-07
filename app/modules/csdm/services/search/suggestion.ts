@@ -86,16 +86,13 @@ export class SuggestionDropdown implements ISuggestionDropdown {
       return;
     }
 
-    const numberOfSubmittedBullets = this.getSubmittedBullets(searchObject).length;
     if (currentEditedElement.getCommonField() === '') {
       this.inputBasedSuggestions = [
         {
           count: totalCount,
           searchString: currentEditedElement.toQuery(),
           readableField: this.$translate.instant('spacesPage.allDevices'),
-          text: this.$translate.instant(numberOfSubmittedBullets > 0
-            ? 'spacesPage.alsoContainingQuery'
-            : 'spacesPage.containingQuery',
+          text: this.$translate.instant('spacesPage.containingQuery',
             {
               query: currentEditedElement.toQuery(),
             }),
@@ -110,9 +107,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
         this.inputBasedSuggestions.push({
           searchString: phraseQuery,
           readableField: this.$translate.instant('spacesPage.allDevices'),
-          text: this.$translate.instant(numberOfSubmittedBullets > 0
-            ? 'spacesPage.alsoContainingQuery'
-            : 'spacesPage.containingQuery',
+          text: this.$translate.instant('spacesPage.containingQuery',
             {
               query: phraseQuery,
             }),
@@ -122,9 +117,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
         searchString: `${QueryParser.Field_Displayname}:${currentEditedElement.toQuery()}`,
         readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(QueryParser.Field_Displayname),
         field: QueryParser.Field_Displayname,
-        text: this.$translate.instant(numberOfSubmittedBullets > 0
-          ? 'spacesPage.alsoContainingQuery'
-          : 'spacesPage.containingQuery',
+        text: this.$translate.instant('spacesPage.containingQuery',
           {
             query: currentEditedElement.toQuery(),
           }),
@@ -137,11 +130,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
           searchString: currentEditedElement.toQuery(),
           readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(currentEditedElement.getCommonField()),
           field: currentEditedElement.getCommonField(),
-          text: this.$translate.instant(_.filter(searchObject.getBullets(), (bullet) => {
-            return !bullet.isBeingEdited();
-          }).length > 0
-            ? 'spacesPage.alsoContainingQuery'
-            : 'spacesPage.containingQuery',
+          text: this.$translate.instant('spacesPage.containingQuery',
             {
               query: (currentEditedElement as FieldQuery).getQueryWithoutField(),
             }),
