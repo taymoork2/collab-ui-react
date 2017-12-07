@@ -84,7 +84,8 @@ describe('Huron Functional: add call pickup', () => {
       utils.click(callPaging.closeModal);
     });
     it('should delete newly created pg', () => {
-      utils.click(callFeatures.closeBtn);
+      utils.waitForPresence(callFeatures.deleteFeature);
+      utils.click(callFeatures.deleteFeature);
       utils.click(callFeatures.confirmDelete);
     });
     it('should click on call paging button', () => {

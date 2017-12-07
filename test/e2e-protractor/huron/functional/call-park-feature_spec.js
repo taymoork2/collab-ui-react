@@ -453,7 +453,8 @@ describe('Huron Functional: call-park-feature', () => {
     });
 
     it('should click delete button', () => {
-      utils.click(callParkFeature.btnClose);
+      utils.waitForPresence(callFeatures.deleteFeature);
+      utils.click(callFeatures.deleteFeature);
       utils.expectIsDisplayed(callParkFeature.deleteCP);
       utils.expectIsDisplayed(callParkFeature.cancelDeleteFeature);
       utils.expectIsDisplayed(callParkFeature.deleteFeature);
