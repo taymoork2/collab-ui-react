@@ -49,15 +49,8 @@ export class SuggestionDropdown implements ISuggestionDropdown {
   public activeSuggestion?: string;
   private activeSuggestionIndex: number | undefined;
   private firstSuggestionIsDefault;
-  private emptySearchSuggestions = _.map(SuggestionDropdown.fieldNamesForSuggestion, fieldName => {
-    return {
-      searchString: this.searchTranslator.translateQueryField(fieldName) + ':',
-      readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(fieldName),
-      field: fieldName,
-      text: '',
-      isFieldSuggestion: true,
-    };
-  });
+  private emptySearchSuggestions;
+  private upgradeChannelsAvailable;
 
   private static fieldNamesForSuggestion = [QueryParser.Field_ActiveInterface,
     QueryParser.Field_UpgradeChannel,
@@ -66,8 +59,34 @@ export class SuggestionDropdown implements ISuggestionDropdown {
     QueryParser.Field_ErrorCodes,
     QueryParser.Field_Tag];
 
-  constructor(private searchTranslator: SearchTranslator, private $translate: ng.translate.ITranslateService) {
+  constructor(private searchTranslator: SearchTranslator,
+              private $translate: ng.translate.ITranslateService,
+              private upgradeChannelsAvailablePromise: IPromise<boolean>) {
+    this.emptySearchSuggestions = this.mapFieldNamesForSuggestion();
     this.showEmpty();
+    this.upgradeChannelsAvailablePromise.then(upgradeChannelsAvailable => {
+      this.upgradeChannelsAvailable = upgradeChannelsAvailable;
+      this.emptySearchSuggestions = this.mapFieldNamesForSuggestion();
+      this.showEmpty();
+    });
+  }
+
+  private mapFieldNamesForSuggestion() {
+    return _.map(this.getFilteredFieldNamesForSuggestion(), fieldName => {
+      return {
+        searchString: this.searchTranslator.translateQueryField(fieldName) + ':',
+        readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(fieldName),
+        field: fieldName,
+        text: '',
+        isFieldSuggestion: true,
+      };
+    });
+  }
+
+  private getFilteredFieldNamesForSuggestion() {
+    return _.filter(SuggestionDropdown.fieldNamesForSuggestion, fieldName => {
+      return fieldName !== QueryParser.Field_UpgradeChannel || this.upgradeChannelsAvailable;
+    });
   }
 
   private showEmpty(): void {
@@ -250,7 +269,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
         .value();
       const bullets = this.getSubmittedBullets(searchObject);
       _.forEach(sortedAggregations, (aggregation, aggregationName: string) => {
-        if (_.includes(SuggestionDropdown.fieldNamesForSuggestion, _.toLower(aggregationName))) {
+        if (_.includes(this.getFilteredFieldNamesForSuggestion(), _.toLower(aggregationName))) {
           const suggestions = _.chain(aggregation.buckets)
             .map((bucket) => {
               let currentCount;
