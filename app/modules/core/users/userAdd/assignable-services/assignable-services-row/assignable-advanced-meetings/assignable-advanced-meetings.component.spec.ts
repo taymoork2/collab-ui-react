@@ -130,26 +130,6 @@ describe('Component: assignableAdvancedMeetings:', () => {
       expect(_.get(this.controller.licenses, '[4].offerName')).toBe(OfferName.TC);
     });
 
-    describe('hasAdvancedMeetings():', () => {
-      it('should return true if at least 1 license is present in binding', function () {
-        this.$scope.licenses = [];
-        this.compileComponent('assignableAdvancedMeetings', {
-          licenses: 'licenses',
-        });
-        expect(this.controller.hasAdvancedMeetings()).toBe(false);
-
-        this.$scope.licenses = [{
-          licenseId: 'fake-license-id-1',
-          siteUrl: 'fake-site-url-1',
-          offerName: OfferName.EC,
-        }];
-        this.compileComponent('assignableAdvancedMeetings', {
-          licenses: 'licenses',
-        });
-        expect(this.controller.hasAdvancedMeetings()).toBe(true);
-      });
-    });
-
     describe('sortLicenses():', () => {
       it('should sort licenses according to their ordinal position as defined by "ORDERED_OFFER_NAMES"', function () {
         let licenses = [{
@@ -247,31 +227,51 @@ describe('Component: assignableAdvancedMeetings:', () => {
       });
     });
 
-    it('should pass through its calls to respective LicenseUsageUtilService methods', function () {
-      spyOn(this.LicenseUsageUtilService, 'getTotalLicenseUsage');
-      spyOn(this.LicenseUsageUtilService, 'getTotalLicenseVolume');
-      spyOn(this.LicenseUsageUtilService, 'isSharedMeetingsLicense');
-      this.$scope.licenses = [{
-        licenseId: 'fake-license-id-1',
-        siteUrl: 'fake-site-url-1',
-        offerName: OfferName.EC,
-      }];
-      this.$scope.siteUrls = [
-        'fake-site-url-1',
-      ];
-      this.compileComponent('assignableAdvancedMeetings', {
-        licenses: 'licenses',
-        siteUrls: 'siteUrls',
+    describe('hasAdvancedMeetings():', () => {
+      it('should return true if at least 1 license is present in binding', function () {
+        this.$scope.licenses = [];
+        this.compileComponent('assignableAdvancedMeetings', {
+          licenses: 'licenses',
+        });
+        expect(this.controller.hasAdvancedMeetings()).toBe(false);
+
+        this.$scope.licenses = [{
+          licenseId: 'fake-license-id-1',
+          siteUrl: 'fake-site-url-1',
+          offerName: OfferName.EC,
+        }];
+        this.compileComponent('assignableAdvancedMeetings', {
+          licenses: 'licenses',
+        });
+        expect(this.controller.hasAdvancedMeetings()).toBe(true);
       });
+    });
 
-      this.controller.getTotalLicenseUsage('foo');
-      expect(this.LicenseUsageUtilService.getTotalLicenseUsage).toHaveBeenCalledWith('foo', this.controller.licenses);
+    describe('getTotalLicenseUsage():', () => {
+      it('should return the value of the "usage" property, or 0 if falsey', function () {
+        this.compileComponent('assignableAdvancedMeetings');
+        expect(this.controller.getTotalLicenseUsage({ usage: 3 })).toBe(3);
+        expect(this.controller.getTotalLicenseUsage({ usage: undefined })).toBe(0);
+        expect(this.controller.getTotalLicenseUsage({})).toBe(0);
+      });
+    });
 
-      this.controller.getTotalLicenseVolume('foo');
-      expect(this.LicenseUsageUtilService.getTotalLicenseVolume).toHaveBeenCalledWith('foo', this.controller.licenses);
+    describe('getTotalLicenseVolume():', () => {
+      it('should return the value of the "volume" property, or 0 if falsey', function () {
+        this.compileComponent('assignableAdvancedMeetings');
+        expect(this.controller.getTotalLicenseVolume({ volume: 3 })).toBe(3);
+        expect(this.controller.getTotalLicenseVolume({ volume: undefined })).toBe(0);
+        expect(this.controller.getTotalLicenseVolume({})).toBe(0);
+      });
+    });
 
-      this.controller.isSharedMeetingsLicense({ foo: 'bar' });
-      expect(this.LicenseUsageUtilService.isSharedMeetingsLicense).toHaveBeenCalledWith({ foo: 'bar' });
+    describe('isSharedMeetingsLicense():', () => {
+      it('should pass through its call to respective LicenseUsageUtilService methods', function () {
+        spyOn(this.LicenseUsageUtilService, 'isSharedMeetingsLicense');
+        this.compileComponent('assignableAdvancedMeetings');
+        this.controller.isSharedMeetingsLicense({ foo: 'bar' });
+        expect(this.LicenseUsageUtilService.isSharedMeetingsLicense).toHaveBeenCalledWith({ foo: 'bar' });
+      });
     });
 
     describe('getBuddyLicenseFor():', () => {

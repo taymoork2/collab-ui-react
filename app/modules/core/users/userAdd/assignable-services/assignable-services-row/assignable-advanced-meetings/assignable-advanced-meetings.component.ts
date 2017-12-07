@@ -73,12 +73,12 @@ class AssignableAdvancedMeetingsController implements ng.IComponentController {
     return !_.isEmpty(this.licenses);
   }
 
-  public getTotalLicenseUsage(offerName: string): number {
-    return this.LicenseUsageUtilService.getTotalLicenseUsage(offerName, this.licenses);
+  public getTotalLicenseUsage(license: ILicenseUsage): number {
+    return _.get(license, 'usage', 0);
   }
 
-  public getTotalLicenseVolume(offerName: string): number {
-    return this.LicenseUsageUtilService.getTotalLicenseVolume(offerName, this.licenses);
+  public getTotalLicenseVolume(license: ILicenseUsage): number {
+    return _.get(license, 'volume', 0);
   }
 
   public isSharedMeetingsLicense(license: ILicenseUsage): boolean {
