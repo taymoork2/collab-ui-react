@@ -3,11 +3,10 @@ import { SearchObject } from './search/searchObject';
 import { Caller } from './csdmSearch.service';
 import { SearchTranslator } from './search/searchTranslator';
 import { QueryParser } from './search/queryParser';
-import translateModule from '../../core/scripts/services/missing-translation-handler.factory';
 
 describe('CsdmSearchService', () => {
   beforeEach(function () {
-    this.initModules(searchModule, translateModule);
+    this.initModules(searchModule);
     this.injectDependencies('$httpBackend', 'CsdmSearchService', 'UrlConfig', 'Authinfo');
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('--org--');
   });

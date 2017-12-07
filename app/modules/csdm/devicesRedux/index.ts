@@ -11,6 +11,7 @@ export default angular
     require('angular-resource'),
     require('angular-translate'),
     require('angular-sanitize'),
+    require('modules/core/scripts/services/missing-translation-handler.factory').default,
   ])
   .component('deviceSearchBullet', new DeviceSearchBulletComponent())
   .component('deviceSearch', new DeviceSearchComponent())
