@@ -46,8 +46,12 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
               private $translate: ng.translate.ITranslateService,
               private Notification,
               private $timeout: ng.ITimeoutService,
-              private DeviceSearchTranslator: SearchTranslator) {
-    this.suggestions = new SuggestionDropdown(this.DeviceSearchTranslator, this.$translate);
+              private DeviceSearchTranslator: SearchTranslator,
+              private CsdmUpgradeChannelService) {
+    const upgradeChannelsAvailable = this.CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(channels => {
+      return channels.length > 1;
+    });
+    this.suggestions = new SuggestionDropdown(this.DeviceSearchTranslator, this.$translate, upgradeChannelsAvailable);
 
     this.suggestions.updateSuggestionsBasedOnSearchResult(undefined, this.searchObject);
   }
