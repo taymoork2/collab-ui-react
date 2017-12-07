@@ -19,5 +19,6 @@ export class CallPagingPage {
     this.customRadio = element(by.css('label[for="custom"]'));
     this.deleteLastCard = element.all(by.css('i.icon-exit')).last();
     this.searchInitiator = element(by.css('input#search-initiator-box'));
+    this.cancelFeatureCreation = element(by.css('button.close#close-panel'));
   }
 };

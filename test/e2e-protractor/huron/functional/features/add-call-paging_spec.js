@@ -120,7 +120,7 @@ describe('Huron Functional: add call pickup', () => {
       utils.click(callFeatures.nextButton);
     });
     it('should click `X` to cancel creation', () => {
-      utils.click(callFeatures.closeBtn);
+      utils.click(callPaging.cancelFeatureCreation);
       utils.click(callFeatures.confirmDelete);
     });
   });
