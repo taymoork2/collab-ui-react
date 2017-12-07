@@ -98,7 +98,7 @@
       enabled: true,
     }, {
       name: 'trial.call',
-      trials: [vm.callTrial, vm.roomSystemTrial],
+      trials: [vm.callTrial, vm.roomSystemTrial, vm.sparkBoardTrial],
       enabled: true,
     }, {
       name: 'trial.pstnDeprecated',
@@ -318,7 +318,12 @@
     }
 
     function isPstn() {
-      return (((!vm.preset.call && hasEnabledCallTrial()) || (!vm.preset.roomSystems && hasEnabledRoomSystemTrial())) && !vm.preset.pstn);
+      if (vm.preset.pstn) {
+        return false;
+      }
+      return ((!vm.preset.call && hasEnabledCallTrial())
+      || (!vm.preset.roomSystems && hasEnabledRoomSystemTrial())
+      || (!vm.preset.sparkBoard && hasEnabledSparkBoardTrial()));
     }
 
     function toggleTrial() {
@@ -644,7 +649,7 @@
     }
 
     function hasEnabledSparkBoardTrial(vmSparkBoardTrial, vmPreset) {
-      var trial = vmSparkBoardTrial || vm.roomSystemTrial;
+      var trial = vmSparkBoardTrial || vm.sparkBoardTrial;
       var preset = vmPreset || vm.preset;
       return hasEnabled(trial.enabled, preset.sparkBoard);
     }
@@ -922,13 +927,12 @@
         if (vm.pstnTrial.enabled) {
           _.set(initResults, 'preset.pstn', results.hasSetupPstn);
         }
-        if (initResults.callTrial.enabled || initResults.roomSystemTrial.enabled) {
+        if (initResults.callTrial.enabled || initResults.roomSystemTrial.enabled || initResults.sparkBoardTrial.enabled) {
           _.set(initResults, 'details.country', preset.countryCode);
         }
       }
       return initResults;
     }
-
 
     // save trial helpers
 
@@ -967,7 +971,7 @@
 
     function saveTrialPstn(customerOrgId, customerName, customerEmail, country) {
       var newOrgCondition = vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled;
-      var existingOrgCondition = ((vm.callTrial.enabled && !vm.preset.call) || (vm.roomSystemTrial.enabled && !vm.preset.roomSystems));
+      var existingOrgCondition = ((vm.callTrial.enabled && !vm.preset.call) || (vm.roomSystemTrial.enabled && !vm.preset.roomSystems) || (vm.sparkBoardTrial.enabled && !vm.preset.sparkBoardTrial));
       var hasValueChanged = !isExistingOrg() ? newOrgCondition : existingOrgCondition;
       var countryCode;
 
