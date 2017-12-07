@@ -1,15 +1,15 @@
 <div class="modal-header">
   <button type="button" class="close" ng-click="$ctrl.dismiss()" aria-label="{{::'common.close' | translate}}"></button>
-  <h1 class="modal-title">Hybrid Calendar setup</h1>
+  <h1 class="modal-title" translate="hercules.office365SetupModal.title"></h1>
 </div>
 <div class="modal-body">
-  <h2>Office 365 setup</h2>
-  <p>The Hybrid Calendar Service needs permission to access Office 365 on behalf of your users.</p>
-  <p>Click <strong>Authorize</strong> to sign in to Microsoft and accept permissions for the service.</p>
-  <p>After you accept, your browser should redirect you back here. If you’re not redirected shortly, return to <a href="https://admin.ciscospark.com">admin.ciscospark.com</a> and start this process again.</p>
+  <h2 translate="hercules.office365SetupModal.subtitle"></h2>
+  <p translate="hercules.office365SetupModal.line1"></p>
+  <p translate="hercules.office365SetupModal.line2"></p>
+  <p translate="hercules.office365SetupModal.line3" translate-compile></p>
 </div>
 <div class="modal-footer">
   <button cs-btn class="btn btn-primary" ng-click="$ctrl.authorize()" loading="$ctrl.redirecting">
-    <span>Authorize</span>
+    <span translate="common.authorize"></span>
   </button>
 </div>

@@ -1,9 +1,9 @@
 <div class="modal-header">
   <button type="button" class="close" ng-click="$ctrl.dismiss()" aria-label="{{::'common.close' | translate}}"></button>
-  <h1 class="modal-title">Hybrid Calendar setup</h1>
+  <h1 class="modal-title" translate="hercules.office365SetupModal.title"></h1>
 </div>
 <div class="modal-body" ng-if="!$ctrl.success">
-  <h2>Test Account</h2>
+  <h2 translate="hercules.office365SuccessModal.test.subtitle"></h2>
   <div ng-form="$ctrl.emailTestingForm" novalidate>
     <div class="row">
       <div class="cs-input-group medium-12 columns">
@@ -13,7 +13,7 @@
           type="email"
           name="email"
           cs-input-group-size="medium-10"
-          cs-input-label="Enter the Office 365 account you want to use to test the connection with Exchange Online."
+          cs-input-label="{{$ctrl.inputLabel}}"
           cs-input-messages="$ctrl.validationMessages"
           ng-keypress="$ctrl.handleKeypress($event)"
           ng-required="true"
@@ -23,20 +23,20 @@
   </div>
 </div>
 <div class="modal-body" ng-if="$ctrl.success">
-  <h2>Setup complete</h2>
-  <p>You're ready to enable the Hybrid Calendar Service for your Office 365 users:</p>
+  <h2 translate="hercules.office365SuccessModal.success.subtitle"></h2>
+  <p translate="hercules.office365SuccessModal.success.line1"></p>
   <ul>
-    <li>Individually from the <a ng-click="$ctrl.goToUsers()">users page</a>.</li>
-    <li>In bulk using the <a  ng-click="$ctrl.manageUsers()">CSV template</a>.</li>
+    <li translate="hercules.office365SuccessModal.success.line2" translate-value-onclick="$ctrl.goToUsers()" translate-compile></li>
+    <li translate="hercules.office365SuccessModal.success.line3" translate-value-onclick="$ctrl.manageUsers()" translate-compile></li>
   </ul>
-  <p>For more information, go to <a href="https://collaborationhelp.cisco.com" target="_blank">Collaboration Help</a>.</p>
+  <p translate="hercules.office365SuccessModal.success.line4" translate-compile></p>
 </div>
 <div class="modal-footer" ng-if="!$ctrl.success">
   <button cs-btn class="btn btn-default" ng-click="$ctrl.dismiss()">
-    <span>Cancel</span>
+    <span translate="common.cancel"></span>
   </button>
   <button cs-btn class="btn btn-primary" ng-disabled="!$ctrl.emailTestingForm.$valid" loading="$ctrl.loading" ng-click="$ctrl.test($ctrl.email)">
-    <span>Test</span>
+    <span translate="common.test"></span>
   </button>
 </div>
 <div class="modal-footer" ng-if="$ctrl.success">

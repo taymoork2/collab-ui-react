@@ -82,9 +82,9 @@ describe('CloudConnectorService', () => {
   describe(' error handling ', () => {
 
     it('should map a valid error code to a translation key', () => {
-      const errorCode = 1;
+      const errorCode = 11;
       const returnedTranslationKey = CloudConnectorService.getProvisioningResultTranslationKey(errorCode);
-      expect(returnedTranslationKey).toBe('hercules.settings.googleCalendar.provisioningResults.INVALID_API_ACCESS_KEY');
+      expect(returnedTranslationKey).toBe('hercules.settings.googleCalendar.provisioningResults.INVALID_SESSION_ID');
     });
 
     it('should default to the general error if the error code is not in the enum', () => {

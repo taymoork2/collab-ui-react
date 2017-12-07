@@ -1,11 +1,16 @@
+import { CloudConnectorService } from 'modules/hercules/services/calendar-cloud-connector.service';
+
 import './office-365-fail-modal.scss';
 
 class Office365FailModalController implements ng.IComponentController {
   public close: Function;
   public dismiss: Function;
+  public reason: number;
+  public reasonKey: string = this.CloudConnectorService.getProvisioningResultTranslationKey(this.reason);
 
   /* @ngInject */
   constructor(
+    private CloudConnectorService: CloudConnectorService,
   ) {}
 }
 

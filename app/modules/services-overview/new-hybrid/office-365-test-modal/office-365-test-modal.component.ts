@@ -11,6 +11,7 @@ class Office365TestModalController implements ng.IComponentController {
     required: this.$translate.instant('common.invalidRequired'),
     email: this.$translate.instant('common.invalidEmail'),
   };
+  public inputLabel = this.$translate.instant('hercules.office365SuccessModal.test.inputLabel');
   public emailTestingForm: ng.IFormController;
   public email: string;
   public loading = false;

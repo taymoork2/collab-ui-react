@@ -201,11 +201,11 @@ export class CloudConnectorService {
   }
 
   public getProvisioningResultTranslationKey(provisioningResultCode: number): string {
-
-    if (_.isUndefined(ProvisioningResult[provisioningResultCode])) {
+    // All other result codes than below are convidering "generic errors" because the admin can't
+    // do anything to fix them
+    if (!_.includes([0, 6, 7, 11, 12], provisioningResultCode)) {
       provisioningResultCode = 6;
     }
-
     return `hercules.settings.googleCalendar.provisioningResults.${ProvisioningResult[provisioningResultCode]}`;
   }
 
