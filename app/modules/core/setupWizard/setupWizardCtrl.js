@@ -7,13 +7,12 @@ require('./_setup-wizard.scss');
   var planReviewInitTemplatePath = require('ngtemplate-loader?module=Core!./planReview/planReview.tpl.html');
   var planReviewSelectSubscriptionTemplatePath = require('ngtemplate-loader?module=Core!./planReview/select-subscription.html');
 
-  var enterpriseSetSipDomainTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.setSipDomain.tpl.html');
+  var enterpriseSetSipDomainTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.setSipDomainSparkAssistant.tpl.html');
   var enterpriseInitTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.init.tpl.html');
   var enterpriseExportMetadataTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.exportMetadata.tpl.html');
   var enterpriseImportIdpTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.importIdp.tpl.html');
   var enterpriseTestSSOTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.testSSO.tpl.html');
   var enterprisePmrSetupTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.pmrSetup.tpl.html');
-
   var meetingSettingsMigrateTrialTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-migrate-trial.html');
   var meetingSettingsSiteSetupTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-site-setup.html');
   var meetingSettingsLicenseDistributionTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-license-distribution.html');
