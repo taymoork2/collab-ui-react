@@ -59,12 +59,12 @@ export class SuggestionDropdown implements ISuggestionDropdown {
     };
   });
 
-  private static fieldNamesForSuggestion = [QueryParser.Field_ActiveInterface,
-    QueryParser.Field_UpgradeChannel,
-    QueryParser.Field_Product,
+  private static fieldNamesForSuggestion = [QueryParser.Field_Tag,
     QueryParser.Field_ConnectionStatus,
+    QueryParser.Field_Product,
     QueryParser.Field_ErrorCodes,
-    QueryParser.Field_Tag];
+    QueryParser.Field_UpgradeChannel,
+    QueryParser.Field_ActiveInterface];
 
   constructor(private searchTranslator: SearchTranslator, private $translate: ng.translate.ITranslateService) {
     this.showEmpty();
