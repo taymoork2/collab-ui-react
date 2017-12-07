@@ -4,6 +4,7 @@ import * as ngTranslateModuleName from 'angular-translate';
 
 import { mockData } from './mock-data';
 import * as LicenseService from 'modules/squared/helpdesk/license.service';  // TODO: allow JS module resolution for relative import
+import * as HelpdeskExtendedInfoDialogController from 'modules/squared/helpdesk/helpdesk-extended-info-dialog.controller.js';
 
 export default angular
   .module('squared.helpdesk', [
@@ -13,4 +14,5 @@ export default angular
   ])
   .constant('HelpdeskMockData', mockData)
   .service('LicenseService', LicenseService)
+  .controller('HelpdeskExtendedInfoDialogController', HelpdeskExtendedInfoDialogController)
   .name;
