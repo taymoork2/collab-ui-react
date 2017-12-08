@@ -7,7 +7,7 @@ describe('Service: AACesOnboardHelperService', function () {
   };
 
   var aaCesOnBoardingStatus = {
-    'csOnboardingStatus':'SUCCESS'
+    csOnboardingStatus: 'SUCCESS',
   };
 
   var successSpy;
@@ -37,7 +37,7 @@ describe('Service: AACesOnboardHelperService', function () {
 
   describe('isCesOnBoarded', function () {
     it('should list all call experiences', function () {
-      $httpBackend.whenGET(url).respond(200 , aaCesOnBoardingStatus);
+      $httpBackend.whenGET(url).respond(200, aaCesOnBoardingStatus);
       AACesOnboardHelperService.isCesOnBoarded().then(
         successSpy,
         failureSpy

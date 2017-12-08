@@ -130,7 +130,9 @@ describe('Controller: AADecisionCtrl', function () {
     describe('activate', function () {
       beforeEach(inject(function () {
         spyOn(aaCommonService, 'isReturnedCallerToggle').and.returnValue(true);
-        spyOn(AACesOnboardHelperService, 'isCesOnBoarded').and.returnValue(q.resolve({'csOnboardingStatus':'SUCCESS'}));
+        spyOn(AACesOnboardHelperService, 'isCesOnBoarded').and.returnValue(q.resolve({
+          csOnboardingStatus: 'SUCCESS',
+        }));
       }));
 
       it('should add decision action object menuEntry and have 6 if options and 5 then options', function () {
@@ -229,7 +231,9 @@ describe('Controller: AADecisionCtrl', function () {
 
     it('should set the action entry from the ifOption buffer', function () {
       spyOn(aaCommonService, 'isReturnedCallerToggle').and.returnValue(true);
-      spyOn(AACesOnboardHelperService, 'isCesOnBoarded').and.returnValue(q.resolve({'csOnboardingStatus':'SUCCESS'}));
+      spyOn(AACesOnboardHelperService, 'isCesOnBoarded').and.returnValue(q.resolve({
+        csOnboardingStatus: 'SUCCESS',
+      }));
       var c;
       action.if = {};
       action.if.leftCondition = 'callerReturned';
@@ -256,7 +260,9 @@ describe('Controller: AADecisionCtrl', function () {
     it('should returnCallerToggle to false when ces onboarding is initializing', function () {
       spyOn(aaCommonService, 'isReturnedCallerToggle').and.returnValue(true);
       // In case when return caller toggle is true and ces onboarding is on initializing state
-      spyOn(AACesOnboardHelperService, 'isCesOnBoarded').and.returnValue(q.resolve({'csOnboardingStatus':'INITIALZING'}));
+      spyOn(AACesOnboardHelperService, 'isCesOnBoarded').and.returnValue(q.resolve({
+        csOnboardingStatus: 'INITIALZING',
+      }));
       var c;
 
       c = controller('AADecisionCtrl', {
@@ -269,7 +275,9 @@ describe('Controller: AADecisionCtrl', function () {
 
     it('should set returnCallerToggle to false when ces onboarding is successful but returnCaller toggle is false', function () {
       spyOn(aaCommonService, 'isReturnedCallerToggle').and.returnValue(false);
-      spyOn(AACesOnboardHelperService, 'isCesOnBoarded').and.returnValue(q.resolve({'csOnboardingStatus':'SUCCESS'}));
+      spyOn(AACesOnboardHelperService, 'isCesOnBoarded').and.returnValue(q.resolve({
+        csOnboardingStatus: 'SUCCESS',
+      }));
       var c;
 
       c = controller('AADecisionCtrl', {
