@@ -1,14 +1,35 @@
-import userTaskManagerModalModule from './index';
+import userTaskManagerModalModuleName, {
+  UserTaskManagerService,
+} from './index';
+import { UserTaskManagerModalCtrl } from './user-task-manager.component';
 import { TaskListFilterType } from './user-task-manager.constants';
+import { MultiStepModalComponent } from 'modules/core/shared/multi-step-modal/multi-step-modal.component';
+import { TaskContainerComponent } from 'modules/core/shared/task-container/task-container.component';
+import { TaskListFilterComponent } from './task-list-filter/task-list-filter.component';
+import { TaskListComponent } from './task-list/task-list.component';
+import { CsvUploadResultsComponent } from './csv-upload-results.component';
 
 import 'moment';
 import 'moment-timezone';
+
+type Test = atlas.test.IComponentTest<UserTaskManagerModalCtrl, {
+  $stateParams: ng.ui.IStateParamsService;
+  UserTaskManagerService: UserTaskManagerService;
+}, {
+  components: {
+    multiStepModal: atlas.test.IComponentSpy<MultiStepModalComponent>;
+    taskContainer: atlas.test.IComponentSpy<TaskContainerComponent>;
+    userTaskListFilter: atlas.test.IComponentSpy<TaskListFilterComponent>;
+    userTaskList: atlas.test.IComponentSpy<TaskListComponent>;
+    csvUploadResults: atlas.test.IComponentSpy<CsvUploadResultsComponent>;
+  };
+}>;
 
 describe('Component: userTaskManager', () => {
   const LOADING_SPINNER = '.loading-wrapper';
   const TASK_CONTAINER = 'task-container';
 
-  beforeEach(function() {
+  beforeEach(function (this: Test) {
     this.components = {
       multiStepModal: this.spyOnComponent('multiStepModal'),
       taskContainer: this.spyOnComponent('taskContainer'),
@@ -16,8 +37,9 @@ describe('Component: userTaskManager', () => {
       userTaskList: this.spyOnComponent('userTaskList'),
       csvUploadResults: this.spyOnComponent('csvUploadResults'),
     };
+
     this.initModules(
-      userTaskManagerModalModule,
+      userTaskManagerModalModuleName,
       this.components.multiStepModal,
       this.components.taskContainer,
       this.components.userTaskListFilter,
@@ -25,9 +47,7 @@ describe('Component: userTaskManager', () => {
       this.components.csvUploadResults,
     );
     this.injectDependencies(
-      '$scope',
       '$stateParams',
-      '$q',
       'UserTaskManagerService',
     );
     this.taskList = _.cloneDeep(require('./test-tasks.json').taskManagerTasks);
@@ -38,13 +58,13 @@ describe('Component: userTaskManager', () => {
     moment.tz.setDefault('America/Los_Angeles');
   });
 
-  function initComponent() {
+  function initComponent(this: Test) {
     this.compileComponent('userTaskManagerModal', {});
   }
 
   describe('initial state', () => {
     beforeEach(initComponent);
-    it('should have title and dismiss functionality', function () {
+    it('should have title and dismiss functionality', function (this: Test) {
       expect(this.components.multiStepModal.bindings[0].l10nTitle).toBe('userTaskManagerModal.title');
 
       spyOn(this.controller, 'dismiss');
@@ -52,15 +72,15 @@ describe('Component: userTaskManager', () => {
       expect(this.controller.dismiss).toHaveBeenCalled();
     });
 
-    it('should have started polling', function () {
+    it('should have started polling', function (this: Test) {
       expect(this.UserTaskManagerService.initAllTaskListPolling).toHaveBeenCalled();
     });
 
-    it('should show loading spinner until the first interval callback', function () {
+    it('should show loading spinner until the first interval callback', function (this: Test) {
       expect(this.view.find(LOADING_SPINNER)).toExist();
       expect(this.view.find(TASK_CONTAINER)).not.toExist();
 
-      this.controller.intervalCallback();
+      this.controller['intervalCallback']();
       this.$scope.$apply();
 
       expect(this.view.find(LOADING_SPINNER)).not.toExist();
@@ -70,12 +90,12 @@ describe('Component: userTaskManager', () => {
 
   describe('component behavior', () => {
     beforeEach(initComponent);
-    beforeEach(function () {
-      this.controller.intervalCallback(this.taskList);
+    beforeEach(function (this: Test) {
+      this.controller['intervalCallback'](this.taskList);
       this.$scope.$apply();
     });
 
-    it('should initialize filter, task list, and results', function () {
+    it('should initialize filter, task list, and results', function (this: Test) {
       expect(this.components.userTaskListFilter.bindings[0].filter).toBe(TaskListFilterType.ALL);
       expect(this.components.userTaskList.bindings[0].task).toEqual(this.taskList[0]);
       expect(this.components.userTaskList.bindings[0].taskList).toEqual(this.taskList);
@@ -89,7 +109,7 @@ describe('Component: userTaskManager', () => {
       expect(activeTask.createdTime).toBe('1:54 PM');
     });
 
-    it('should change result task on task list change', function () {
+    it('should change result task on task list change', function (this: Test) {
       this.components.userTaskList.bindings[0].onActiveTaskChange({
         task: this.taskList[2],
       });
@@ -99,7 +119,7 @@ describe('Component: userTaskManager', () => {
       expect(this.components.csvUploadResults.bindings[0].inputActiveTask).toEqual(this.taskList[2]);
     });
 
-    it('should change active filter and task on filter change', function () {
+    it('should change active filter and task on filter change', function (this: Test) {
       this.components.userTaskListFilter.bindings[0].onFilterChange({
         filter: TaskListFilterType.ACTIVE,
       });
@@ -111,7 +131,7 @@ describe('Component: userTaskManager', () => {
       expect(this.components.csvUploadResults.bindings[0].inputActiveTask).toEqual(this.taskList[1]);
     });
 
-    it('should update the active task status', function () {
+    it('should update the active task status', function (this: Test) {
       expect(this.components.userTaskList.bindings[0].taskList[0].status).toBe('COMPLETED');
 
       this.components.csvUploadResults.bindings[0].onStatusUpdate({
@@ -124,7 +144,7 @@ describe('Component: userTaskManager', () => {
   });
 
   describe('submit a new task', () => {
-    beforeEach(function () {
+    beforeEach(function (this: Test) {
       this.$stateParams.job = {
         fileName: 'AllSparkCall.csv',
         fileData: 'CSV content',
@@ -132,12 +152,12 @@ describe('Component: userTaskManager', () => {
       };
     });
     beforeEach(initComponent);
-    beforeEach(function () {
-      this.controller.intervalCallback(this.taskList);
+    beforeEach(function (this: Test) {
+      this.controller['intervalCallback'](this.taskList);
       this.$scope.$apply();
     });
 
-    it('the task should be added and set as active', function() {
+    it('the task should be added and set as active', function (this: Test) {
       expect(this.UserTaskManagerService.submitCsvImportTask)
         .toHaveBeenCalledWith('AllSparkCall.csv', 'CSV content', true);
 
