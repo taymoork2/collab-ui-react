@@ -17,7 +17,7 @@ export interface IErrorItem {
   error: IError;
   trackingId: string;
   itemNumber: number;
-  errorMessage; string;
+  errorMessage: string;
 }
 
 export class CsvUploadResultsCtrl implements ng.IComponentController {
