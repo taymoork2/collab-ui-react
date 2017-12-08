@@ -4141,6 +4141,7 @@
     "queueSettings": "Queue Settings",
     "maxWaitTime": "Maximum Wait Time",
     "periodicTime": "Frequency of Periodic Announcements",
+    "errorReadDoRestCredential": "Failed to read {{name}}: One or more REST API credentials are missing.",
     "errorReadCe": "Failed to read {{name}}: {{statusText}} ({{status}}).",
     "successCreateCe": "{{name}} created successfully.",
     "successDeleteCe": "{{name}} deleted successfully.",

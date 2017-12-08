@@ -656,6 +656,22 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         controller.stepBack();
         expect(controller.currentStep).toBe(1);
       });
+
+      it('should test stepBack function password is changed', function () {
+        spyOn(AACommonService, 'isRestApiTogglePhase2').and.returnValue(true);
+        controller.currentStep = 2;
+        var action = {};
+        action.variableSet = [{ a: 'a' }];
+        action.dynamics = [{ variablename: 'variable', value: 'vale' }];
+        action.restApiRequest = 'http://www.mocky.io';
+        action.restApiResponse = 'message: hellow';
+        controller.menuEntry.actions[0].username = 'testUser';
+        controller.menuEntry.actions[0].password = 'password';
+        controller.password = 'password';
+        controller.stepBack();
+        expect(controller.currentStep).toBe(1);
+        expect(controller.username).toBe('testUser');
+      });
     });
 
     describe('should test save function when RestApiTogglePhase2tApi is on', function () {
@@ -694,11 +710,11 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         }];
         controller.username = 'testUser';
         controller.basicAuthButton = true;
-        controller.password = '**********';
+        controller.password = '';
         controller.save();
         expect(controller.variableSet).toEqual(result);
         expect(controller.menuEntry.actions[0].username).toBe('testUser');
-        expect(controller.menuEntry.actions[0].credentialId).toBe(controller.menuEntry.actions[0].value);
+        expect(controller.menuEntry.actions[0].password).toBe('');
       });
       it('should test callTestRestApiConfigs function when basicAuthButton is enable', function () {
         controller.dynamics = [{
@@ -730,6 +746,23 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         $rootScope.$broadcast('dynamicListUpdated');
         $scope.$apply();
         expect(controller.isDynamicsValueUpdated).toBeDefined();
+      });
+      it('should test displayWarning function when basicAuthButton is disabled', function () {
+        controller.basicAuthButton = false;
+        expect(controller.displayWarning()).toBe(false);
+      });
+      it('should test displayWarning function when basicAuthButton is enabled', function () {
+        controller.basicAuthButton = true;
+        controller.username = 'testUser';
+        expect(controller.displayWarning()).toBe(true);
+      });
+
+      describe('should test isBasicCredentialUpdated function', function () {
+        it('should test isBasicCredentialUpdated function is defined', function () {
+          $scope.$apply();
+          controller.isBasicCredentialUpdated();
+          expect(controller.isDynamicsValueUpdated).toBeDefined();
+        });
       });
     });
   });
