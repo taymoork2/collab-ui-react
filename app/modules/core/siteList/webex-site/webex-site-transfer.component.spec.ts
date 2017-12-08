@@ -124,12 +124,34 @@ describe('Component: WebexSiteTransferComponent', function () {
       expect(this.$scope.onSitesReceivedFn).toHaveBeenCalledWith(null, null, false);
     });
 
-    it('should display an error if the call returns 400', function () {
-      const rejectResponse = { status: 400, errorCode: '400304' };
+    it('should display a notification error if api returns an error with no matching error code', function () {
+      const rejectResponse = {
+        data: { status: 400, errorCode: null },
+      };
       this.SetupWizardService.validateTransferCodeBySubscriptionId.and.returnValue(this.$q.reject(rejectResponse));
       this.controller.processNext();
       this.$scope.$digest();
-      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(rejectResponse, 'firstTimeWizard.transferCodeInvalidSite');
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(rejectResponse, 'firstTimeWizard.transferCodeError');
+    });
+
+    it('should display a "site invalid" error by the input if the error code equals 400304', function () {
+      const rejectResponse = {
+        data: { status: 400, errorCode: 400304 },
+      };
+      this.SetupWizardService.validateTransferCodeBySubscriptionId.and.returnValue(this.$q.reject(rejectResponse));
+      this.controller.processNext();
+      this.$scope.$digest();
+      expect(this.controller.error.errorMsg).toBe('firstTimeWizard.transferCodeInvalidSite');
+    });
+
+    it('should display a "code invalid" error by the input if the error code equals 400303', function () {
+      const rejectResponse = {
+        data: { status: 400, errorCode: 400303 },
+      };
+      this.SetupWizardService.validateTransferCodeBySubscriptionId.and.returnValue(this.$q.reject(rejectResponse));
+      this.controller.processNext();
+      this.$scope.$digest();
+      expect(this.controller.error.errorMsg).toBe('firstTimeWizard.transferCodeInvalidError');
     });
   });
 });
