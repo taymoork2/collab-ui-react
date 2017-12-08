@@ -62,7 +62,9 @@ beforeEach(function () {
    * Inject each argument and assign to this context
    */
   this.injectDependencies = function () {
-    var dependencies = _.toArray(arguments);
+    var argumentDependencies = _.toArray(arguments);
+    var commonDependencies = ['$http', '$httpBackend', '$q', '$scope'];
+    var dependencies = _.union(argumentDependencies, commonDependencies);
     return inject(function ($injector) {
       _.forEach(dependencies, _.bind(function (dependency) {
         // skip if we already have this dependency
