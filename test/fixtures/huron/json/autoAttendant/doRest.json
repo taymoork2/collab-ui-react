@@ -18,6 +18,12 @@
   }
   },
   "method": "GET",
+  "authentication": {
+    "credentials": {
+      "username": "testUser",
+      "password": "password"
+    }
+  },
   "responseActions": [{
     "assignVar": {
       "variableName": "Language",

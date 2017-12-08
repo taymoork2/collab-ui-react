@@ -354,6 +354,7 @@ var AutoAttendantPage = function () {
   this.saveBtn = element(by.id('saveBtn'));
   this.nextBtn = element(by.id('nextBtn'));
   this.testBtn = element(by.id('testBtn'));
+  this.backBtn = element(by.id('backBtn'));
   this.assignmentTab = element(by.id('assignmentTab'));
   this.restApiUrlLabel = element(by.css('.aa-rest-api-url'));
   this.restApiVariableLabel1 = element.all(by.css('.aa-rest-api-variables')).get(0);

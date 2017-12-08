@@ -39,6 +39,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     this.ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
     this.aCe = getJSONFixture('huron/json/autoAttendant/aCallExperience.json');
     this.doRest = getJSONFixture('huron/json/autoAttendant/doRest.json');
+    this.doRestWithoutCredentials = getJSONFixture('huron/json/autoAttendant/doRestWithoutCredentials.json');
     this.a3LaneCe = getJSONFixture('huron/json/autoAttendant/a3LaneCe.json');
     this.combinedMenus = getJSONFixture('huron/json/autoAttendant/combinedMenu.json');
 
@@ -866,6 +867,20 @@ describe('Controller: AABuilderMainCtrl', function () {
       this.$scope.$apply();
       expect(this.AAModelService.getNewAARecord).not.toHaveBeenCalled();
       expect(this.AANotificationService.errorResponse).toHaveBeenCalled();
+      expect(this.controller.populateUiModel).toHaveBeenCalled();
+      expect(_.get(this.controller.aaModel.aaRecord.actionSets[0], 'actions').length).toBe(4);
+      expect(_.get(this.controller.aaModel.aaRecord.actionSets[0], 'actions[1].doREST.id')).toBe(this.restId);
+    });
+
+    it('should return an error when one REST block gets successfully read but other REST block read doesnot get username in authentication block', function () {
+      this.readCe.and.returnValue(this.$q.resolve(this.aCe));
+      this.readDoRestSpy.and.returnValue(this.$q.resolve(this.doRestWithoutCredentials));
+      this.controller.aaModel = {};
+      this.controller.aaModel.aaRecords = this.ces;
+      this.controller.selectAA('AAA3');
+      this.$scope.$apply();
+      expect(this.AAModelService.getNewAARecord).not.toHaveBeenCalled();
+      expect(this.AANotificationService.error).toHaveBeenCalled();
       expect(this.controller.populateUiModel).toHaveBeenCalled();
       expect(_.get(this.controller.aaModel.aaRecord.actionSets[0], 'actions').length).toBe(4);
       expect(_.get(this.controller.aaModel.aaRecord.actionSets[0], 'actions[1].doREST.id')).toBe(this.restId);
