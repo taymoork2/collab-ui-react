@@ -325,12 +325,13 @@
             label: $translate.instant('autoAttendant.callerReturnedOneMonth'),
             value: 43200 * 60,
           }];
-        }
-        if (AACommonService.isReturnedCallerToggle()) {
           vm.returnedCallerToggle = true;
         } else {
           vm.returnedCallerToggle = false;
         }
+      }).catch(function () {
+        // failure
+        vm.returnedCallerToggle = false;
       });
     }
 
