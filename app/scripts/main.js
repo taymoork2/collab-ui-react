@@ -241,6 +241,7 @@
     require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-call-prerequisites-modal/hybrid-call-prerequisites.controller').default,
     require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-media-prerequisites/hybrid-media-prerequisites.controller').default,
     require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-services-prerequisites-helper.service').default,
+    require('modules/services-overview/new-hybrid/prerequisites-modals/office-365-prerequisites').default,
     require('modules/services-overview/new-hybrid/prerequisites-modals/on-premises-exchange-prerequisites').default,
   ]);
 
