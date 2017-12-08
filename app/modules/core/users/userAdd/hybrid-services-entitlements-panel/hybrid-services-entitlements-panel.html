@@ -27,10 +27,10 @@
       <div>
         <input type="checkbox"
                ng-model="$ctrl.services.calendarEntitled"
-               id="{{$ctrl.services.calendarExchange.id}}"
+               id="{{$ctrl.services.calendarExchangeOrOffice365.id}}"
                ng-disabled="!$ctrl.hasAssignableLicenses"
                ng-change="$ctrl.setEntitlements()"/>
-        <label class="cs-checkbox" for="{{$ctrl.services.calendarExchange.id}}">
+        <label class="cs-checkbox" for="{{$ctrl.services.calendarExchangeOrOffice365.id}}">
           <span translate="hercules.serviceNames.squared-fusion-cal"></span>
         </label>
         <div class="indented" ng-if="$ctrl.showCalendarChoice">
@@ -41,10 +41,10 @@
             name="selectedType"
             value="squared-fusion-cal"
             id="selectedType_exchange"
-            ng-disabled="!$ctrl.services.calendarEntitled || !$ctrl.services.calendarExchange"
+            ng-disabled="!$ctrl.services.calendarEntitled || !$ctrl.services.calendarExchangeOrOffice365"
             ng-change="$ctrl.setEntitlements()"
             cs-input-label="{{::'hercules.cloudExtensions.exchange' | translate}}"
-            cs-input-help-text="{{$ctrl.services.calendarExchange ? '' : $ctrl.services.notSetupText}}">
+            cs-input-help-text="{{$ctrl.services.calendarExchangeOrOffice365 ? '' : $ctrl.services.notSetupText}}">
           <input
             cs-input
             type="radio"
