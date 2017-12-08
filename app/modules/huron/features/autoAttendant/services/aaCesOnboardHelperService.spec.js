@@ -45,7 +45,7 @@ describe('Service: AACesOnboardHelperService', function () {
       $httpBackend.flush();
       expect(successSpy).toHaveBeenCalled();
       var args = successSpy.calls.mostRecent().args;
-      expect(angular.equals(args[0], aaCesOnBoardingStatus)).toEqual(true);
+      expect(angular.equals(args[0], aaCesOnBoardingStatus)).toBe(true);
       expect(failureSpy).not.toHaveBeenCalled();
     });
 

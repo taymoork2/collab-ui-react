@@ -263,14 +263,14 @@ describe('Controller: AADecisionCtrl', function () {
       spyOn(AACesOnboardHelperService, 'isCesOnBoarded').and.returnValue(q.resolve({
         csOnboardingStatus: 'INITIALZING',
       }));
-      var c;
+      var ctrl;
 
-      c = controller('AADecisionCtrl', {
+      ctrl = controller('AADecisionCtrl', {
         $scope: $scope,
       });
 
       $scope.$apply();
-      expect(c.returnedCallerToggle).toEqual(false);
+      expect(ctrl.returnedCallerToggle).toEqual(false);
     });
 
     it('should set returnCallerToggle to false when ces onboarding is successful but returnCaller toggle is false', function () {
@@ -278,14 +278,14 @@ describe('Controller: AADecisionCtrl', function () {
       spyOn(AACesOnboardHelperService, 'isCesOnBoarded').and.returnValue(q.resolve({
         csOnboardingStatus: 'SUCCESS',
       }));
-      var c;
+      var ctrl;
 
-      c = controller('AADecisionCtrl', {
+      ctrl = controller('AADecisionCtrl', {
         $scope: $scope,
       });
 
       $scope.$apply();
-      expect(c.returnedCallerToggle).toEqual(false);
+      expect(ctrl.returnedCallerToggle).toEqual(false);
     });
 
     it('should the conditional from ifOption value', function () {
