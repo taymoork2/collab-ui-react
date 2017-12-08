@@ -303,7 +303,8 @@ export class Helper {
   }
 
   public static getIsOnline(obj) {
-    return (obj.status || {}).connectionStatus === 'CONNECTED';
+    const conStatus = (obj.status || {}).connectionStatus;
+    return conStatus === 'CONNECTED' || conStatus === 'CONNECTED_WITH_ISSUES';
   }
 
   public static getLastConnectionTime(obj) {
