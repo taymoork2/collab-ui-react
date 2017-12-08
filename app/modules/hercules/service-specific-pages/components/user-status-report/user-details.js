@@ -1,9 +1,16 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Hercules')
-    .service('UserDetails', UserDetails);
+  var urlConfigModuleName = require('modules/core/config/urlConfig');
+  var USSServiceModuleName = require('modules/hercules/services/uss.service').default;
+
+  module.exports = angular
+    .module('hercules.service-specific-pages.components.user-status-report.user-details', [
+      urlConfigModuleName,
+      USSServiceModuleName,
+    ])
+    .service('UserDetails', UserDetails)
+    .name;
 
   /* @ngInject  */
   function UserDetails($http, $translate, UrlConfig, USSService, $q) {
@@ -100,7 +107,7 @@
         $translate.instant('hercules.activationStatus.' + USSService.decorateWithStatus(status)),
         flattenMessages(status.messages),
         status.userId,
-        status.serviceId === 'squared-fusion-uc' ? $translate.instant('hercules.serviceNames.squared-fusion-uc.full') : $translate.instant('hercules.serviceNames.' + status.serviceId),
+        status.serviceId === 'squared-fusion-uc' ? $translate.instant('hercules.hybridServiceNames.squared-fusion-uc.full') : $translate.instant('hercules.hybridServiceNames.' + status.serviceId),
       ];
       if (includeResourceGroupColumn) {
         row.splice(3, 0, status.resourceGroup ? status.resourceGroup.name : '');
@@ -139,7 +146,9 @@
     }
 
     function getClusterAndHost(status) {
-      if (!status.cluster) {
+      if (status.serviceId === 'squared-fusion-o365') {
+        return $translate.instant('common.ciscoCollaborationCloud');
+      } else if (!status.cluster) {
         return '';
       }
       return status.cluster.name + (status.connector && status.connector.hostname ? ' (' + status.connector.hostname + ')' : '');

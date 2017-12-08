@@ -37,12 +37,23 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
         const orderDetail: IOrderDetail = {
           externalOrderId: origOrderDetail.externalOrderId,
           orderDate: origOrderDetail.orderDate,
+          displayDate: origOrderDetail.orderDate,
           total: origOrderDetail.total,
           productDescriptionList: _.map<string, string>(origOrderDetail.productList, 'description').join(', '),
           isTrial: false,
           status: this.$translate.instant('myCompanyOrders.pending'),
           invoiceURL: '',
         };
+        let lang = this.$translate.use();
+        if (lang) {
+          // Get the current locale and convert to <language>-<country>
+          lang = _.toLower(_.replace(lang, '_', '-'));
+          // Display the currency symbol based on the order. Default to USD.
+          orderDetail.total = origOrderDetail.total.toLocaleString(lang, { style: 'currency',
+            currency: origOrderDetail.currency || 'USD' });
+          // Display date according to locale
+          orderDetail.displayDate = moment(origOrderDetail.orderDate).format('ll');
+        }
         if (_.includes(orderDetail.productDescriptionList, TRIAL) ||
             _.includes(orderDetail.productDescriptionList, FREE)) {
           // trial orders don't display a price
@@ -96,7 +107,7 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
         displayName: this.$translate.instant('myCompanyOrders.descriptionHeader'),
         width: '*',
       }, {
-        name: 'orderDate',
+        name: 'displayDate',
         displayName: this.$translate.instant('myCompanyOrders.dateHeader'),
         cellFilter: 'date',
         width: '14%',

@@ -31,6 +31,11 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
 
   private timeZoneOptions;
 
+  private errorCodes = {
+    400303: 'firstTimeWizard.transferCodeInvalidError',
+    400304: 'firstTimeWizard.transferCodeInvalidSite',
+  };
+
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
@@ -125,7 +130,8 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
       }
     }).catch((response) => {
       if (response) {
-        this.Notification.errorWithTrackingId(response, 'firstTimeWizard.transferCodeError');
+        const errorMessage = this.errorCodes[response.errorCode] || 'firstTimeWizard.transferCodeError';
+        this.Notification.errorWithTrackingId(response, errorMessage);
         const properties = _.assignIn(transferSiteDetails , { trackingId: this.Utils.extractTrackingIdFromResponse(response) });
         this.sendTracking(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.TRANSFER_CODE_CALL_FAILED, properties);
       }

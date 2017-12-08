@@ -8,9 +8,10 @@
   var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
   /* @ngInject */
-  function DeviceOverviewCtrl($element, $interval, $q, $state, $stateParams, $scope, $timeout, $translate, $window, AccessibilityService, AtaDeviceModal, Authinfo, ConfirmAtaRebootModal, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, channels, DeviceOverviewService, EmergencyServicesService, FeatureToggleService, FeedbackService, KemService, LaunchAdvancedSettingsModal, Notification, PstnModel, PstnService, RemDeviceModal, RemoteSupportModal, ResetDeviceModal, ServiceSetup, TerminusService, Utils) {
+  function DeviceOverviewCtrl($element, $interval, $q, $state, $stateParams, $scope, $timeout, $translate, $window, AccessibilityService, AtaDeviceModal, Authinfo, ConfirmAtaRebootModal, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, channels, DeviceOverviewService, EmergencyServicesService, FeatureToggleService, FeedbackService, KemService, LaunchAdvancedSettingsModal, Notification, PstnModel, PstnService, RemDeviceModal, RemoteSupportModal, ResetDeviceModal, ServiceSetup, TerminusService, Utils, Userservice, WizardFactory) {
     var deviceOverview = this;
     var huronDeviceService = $stateParams.huronDeviceService;
+    var adminUserDetails;
     deviceOverview.linesAreLoaded = false;
     deviceOverview.tzIsLoaded = false;
     deviceOverview.countryIsLoaded = false;
@@ -38,6 +39,7 @@
       displayDevice($stateParams.currentDevice);
 
       fetchT38Visibility();
+      fetchDetailsForLoggedInUser();
 
       CsdmDataModelService.reloadItem($stateParams.currentDevice).then(function (updatedDevice) {
         displayDevice(updatedDevice);
@@ -45,6 +47,21 @@
     }
 
     init();
+
+    function fetchDetailsForLoggedInUser() {
+      Userservice.getUser('me', function (data) {
+        if (data.success) {
+          adminUserDetails = {
+            firstName: data.name && data.name.givenName,
+            lastName: data.name && data.name.familyName,
+            displayName: data.displayName,
+            userName: data.userName,
+            cisUuid: data.id,
+            organizationId: data.meta.organizationID,
+          };
+        }
+      });
+    }
 
     function fetchT38Visibility() {
       if (deviceOverview.currentDevice.isATA) {
@@ -115,6 +132,38 @@
       resetSelectedChannel();
       return $q.all(promises);
     }
+
+    deviceOverview.reactivateRoomDevice = function () {
+      var wizardState = {
+        data: {
+          function: 'showCode',
+          admin: adminUserDetails,
+          account: {
+            type: deviceOverview.currentDevice.accountType === 'MACHINE' ? 'shared' : 'personal',
+            deviceType: 'cloudberry',
+            cisUuid: deviceOverview.currentDevice.cisUuid,
+            name: deviceOverview.currentDevice.displayName,
+            organizationId: Authinfo.getOrgId(),
+          },
+          recipient: {
+            cisUuid: Authinfo.getUserId(),
+            email: Authinfo.getPrimaryEmail(),
+            displayName: adminUserDetails.displayName,
+            organizationId: adminUserDetails.organizationId,
+          },
+          title: 'addDeviceWizard.newCode',
+        },
+        history: [],
+        currentStateName: 'addDeviceFlow.showActivationCode',
+        wizardState: {
+          'addDeviceFlow.showActivationCode': {},
+        },
+      };
+      var wizard = WizardFactory.create(wizardState);
+      $state.go('addDeviceFlow.showActivationCode', {
+        wizard: wizard,
+      });
+    };
 
     function getCurrentAtaSettings() {
       deviceOverview.updatingT38Settings = true;

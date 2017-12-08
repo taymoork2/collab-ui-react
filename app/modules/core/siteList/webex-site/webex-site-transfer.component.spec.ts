@@ -9,7 +9,7 @@ describe('Component: WebexSiteTransferComponent', function () {
 
   beforeEach(function () {
     this.initModules(module);
-    this.injectDependencies('$componentController', '$q', '$rootScope', '$scope', 'SetupWizardService');
+    this.injectDependencies('$componentController', '$q', '$rootScope', '$scope', 'Notification', 'SetupWizardService');
     this.$scope.fixtures = {
       introCopy: 'some Copy',
       currentSubscription: 'sub123',
@@ -32,6 +32,7 @@ describe('Component: WebexSiteTransferComponent', function () {
     spyOn(this.SetupWizardService, 'validateTransferCodeBySubscriptionId').and.returnValue(this.$q.resolve({ data: transferCodeResponse } ));
     spyOn(this.SetupWizardService, 'validateTransferCode').and.returnValue(this.$q.resolve({ data: transferCodeResponse } ));
     spyOn(this.SetupWizardService, 'validateTransferCodeDecorator').and.callThrough();
+    spyOn(this.Notification, 'errorWithTrackingId');
   }
 
   describe('When first opened', () => {
@@ -121,6 +122,14 @@ describe('Component: WebexSiteTransferComponent', function () {
       }, 'sub123', undefined);
       expect(this.controller.sitesArray.length).toBe(0);
       expect(this.$scope.onSitesReceivedFn).toHaveBeenCalledWith(null, null, false);
+    });
+
+    it('should display an error if the call returns 400', function () {
+      const rejectResponse = { status: 400, errorCode: '400304' };
+      this.SetupWizardService.validateTransferCodeBySubscriptionId.and.returnValue(this.$q.reject(rejectResponse));
+      this.controller.processNext();
+      this.$scope.$digest();
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(rejectResponse, 'firstTimeWizard.transferCodeInvalidSite');
     });
   });
 });

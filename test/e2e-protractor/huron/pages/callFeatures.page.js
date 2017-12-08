@@ -8,6 +8,7 @@ export class CallFeaturesPage {
     this.cpFeatureButton = element(by.css('h4.feature-label-container-CP'));
     this.piFeatureButton = element(by.css('h4.feature-label-container-PI'));
     this.pgFeatureButton = element(by.css('h4.feature-label-container-PG'));
+    this.deleteFeature = element(by.css('button.close[ng-click="huronFeaturesCtrl.deleteHuronFeature((huronFeature), $event)"]'));
     this.closeBtn = element(by.css('button.close'));
     this.pageTitle = element(by.css('h2.page-header__title'));
     this.callLines = element(by.css('a[href="/services/call-lines"]'));

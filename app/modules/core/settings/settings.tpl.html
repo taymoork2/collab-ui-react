@@ -27,6 +27,10 @@
       <sipdomain-setting show-save-button="true"></sipdomain-setting>
     </setting-section>
 
+    <setting-section setting="settingsCtrl.sparkAssistant" ng-if="settingsCtrl.sparkAssistant">
+      <spark-assistant-setting></spark-assistant-setting>
+    </setting-section>
+
     <setting-section setting="settingsCtrl.dirsync" ng-if="settingsCtrl.dirsync">
       <dirsync-setting></dirsync-setting>
     </setting-section>

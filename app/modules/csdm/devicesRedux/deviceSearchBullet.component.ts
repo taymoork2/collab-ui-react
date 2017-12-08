@@ -51,7 +51,18 @@ export class DeviceSearchBullet implements ng.IComponentController {
   public getTranslatedQueryValue() {
     const searchElement = this.searchElement;
     if (searchElement instanceof FieldQuery) {
-      return this.DeviceSearchTranslator.translateQueryValue(searchElement);
+      const value = searchElement.query;
+
+      if (searchElement.type !== FieldQuery.QueryTypeExact) {
+        return value;
+      }
+
+      const field = searchElement.field;
+      if (!field) {
+        return value;
+      }
+
+      return this.DeviceSearchTranslator.lookupTranslatedQueryValueDisplayName(value, field);
     }
     return '';
   }
@@ -63,7 +74,7 @@ export class DeviceSearchBullet implements ng.IComponentController {
       return '';
     }
 
-    return this.DeviceSearchTranslator.translateQueryField(searchElement.getCommonField() + '') + searchElement.getCommonMatchOperator();
+    return this.DeviceSearchTranslator.getTranslatedQueryFieldDisplayName(searchElement.getCommonField() + '') + searchElement.getCommonMatchOperator();
   }
 }
 

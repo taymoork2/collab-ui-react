@@ -20,6 +20,12 @@ enum XhrStatus {
   ABORT = 'abort',
 }
 
+export interface INotificationOptions {
+  errorKey?: string;
+  errorParams?: Object;
+  allowHtml?: boolean;
+}
+
 export class Notification {
   public readonly type = NotificationType;
   private static readonly MESSAGES = 'messages';
@@ -58,10 +64,32 @@ export class Notification {
     this.notify(this.$translate.instant(messageKey, messageParams), NotificationType.ERROR, this.getTitle(titleKey), allowHtml);
   }
 
-  public errorWithTrackingId(response: ng.IHttpResponse<any>, errorKey?: string, errorParams?: Object): void {
+  public errorWithTrackingId(response: ng.IHttpResponse<any>, errorKey?: string, errorParams?: Object);
+  public errorWithTrackingId(response: ng.IHttpResponse<any>, options: INotificationOptions);
+  public errorWithTrackingId(response: ng.IHttpResponse<any>, arg2?, arg3?): void {
+
+    let errorKey: string = '';
+    let errorParams: Object = {};
+    let allowHtml: boolean = false;
+
+    if (typeof arg2 === 'string') {
+      errorKey = arg2;
+    }
+    if (!_.isUndefined(arg2) && arg2.hasOwnProperty('errorKey')) {
+      errorKey = arg2.errorKey;
+    }
+    if (!_.isUndefined(arg3)) {
+      errorParams = arg3;
+    }
+    if (!_.isUndefined(arg2) && arg2.hasOwnProperty('errorParams')) {
+      errorParams = arg2.errorParams;
+    }
+    if (!_.isUndefined(arg2) && arg2.hasOwnProperty('allowHtml')) {
+      allowHtml = arg2.allowHtml;
+    }
     let errorMsg = this.getErrorMessage(errorKey, errorParams);
     errorMsg = this.addResponseMessage(errorMsg, response, false);
-    this.notifyHttpErrorResponse(errorMsg, response);
+    this.notifyHttpErrorResponse(errorMsg, response, allowHtml);
   }
 
   public processErrorResponse(response: ng.IHttpResponse<any>, errorKey?: string, errorParams?: Object): string {
@@ -74,13 +102,13 @@ export class Notification {
     this.notifyHttpErrorResponse(errorMsg, response);
   }
 
-  private notifyHttpErrorResponse(errorMsg: string, response: ng.IHttpResponse<any>): void {
+  private notifyHttpErrorResponse(errorMsg: string, response: ng.IHttpResponse<any>, allowHtml: boolean = false): void {
     if (!this.isAbortResponse(response)) {
       const headers = _.get(response, 'headers');
       this.popToast({
         notifications: errorMsg,
         type: NotificationType.ERROR,
-        allowHtml: false,
+        allowHtml: allowHtml,
         httpStatus: _.get(response, 'status'),
         requestMethod: _.get(response, 'config.method'),
         requestUrl: _.get(response, 'config.url'),

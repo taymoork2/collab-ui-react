@@ -351,4 +351,96 @@ describe('Service: Notification', function () {
       expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(undefined, 'error', notifyMessage, 0));
     });
   });
+
+  describe('errorWithTrackingId overloading', () => {
+
+    const processedErrorMessage = 'foo';
+
+    beforeEach(function() {
+      Notification.getErrorMessage = jasmine.createSpy('getErrorMessage').and.returnValue(processedErrorMessage);
+      Notification.addResponseMessage = jasmine.createSpy('addResponseMessage').and.returnValue(processedErrorMessage);
+      Notification.notifyHttpErrorResponse = jasmine.createSpy('notifyHttpErrorResponse');
+    });
+
+    it('should handle a string errorKey', () => {
+      const httpResponse = {};
+      const errorKey = 'some.thing';
+      Notification.errorWithTrackingId(httpResponse, errorKey);
+      expect(Notification.getErrorMessage).toHaveBeenCalledWith(errorKey, jasmine.any(Object));
+      expect(Notification.addResponseMessage).toHaveBeenCalledWith(processedErrorMessage, httpResponse, false);
+      expect(Notification.notifyHttpErrorResponse).toHaveBeenCalledWith(processedErrorMessage, httpResponse, false);
+    });
+
+    it('should handle a string errorKey and errorParams', () => {
+      const httpResponse = {};
+      const errorKey = 'some.thing';
+      const errorParams = {
+        params: 'are here',
+      };
+      Notification.errorWithTrackingId(httpResponse, errorKey, errorParams);
+      expect(Notification.getErrorMessage).toHaveBeenCalledWith(errorKey, errorParams);
+      expect(Notification.addResponseMessage).toHaveBeenCalledWith(processedErrorMessage, httpResponse, false);
+      expect(Notification.notifyHttpErrorResponse).toHaveBeenCalledWith(processedErrorMessage, httpResponse, false);
+    });
+
+    it('should handle an INotificationOptions object containing an errorKey', () => {
+      const httpResponse = {};
+      const errorKey = 'some.thing';
+      const options = {
+        errorKey: errorKey,
+      };
+      Notification.errorWithTrackingId(httpResponse, options);
+      expect(Notification.getErrorMessage).toHaveBeenCalledWith(errorKey, jasmine.any(Object));
+      expect(Notification.addResponseMessage).toHaveBeenCalledWith(processedErrorMessage, httpResponse, false);
+      expect(Notification.notifyHttpErrorResponse).toHaveBeenCalledWith(processedErrorMessage, httpResponse, false);
+    });
+
+    it('should handle an INotificationOptions object containing an errorKey and errorParams', () => {
+      const httpResponse = {};
+      const errorKey = 'some.thing';
+      const errorParams = {
+        params: 'are here',
+      };
+      const options = {
+        errorKey: errorKey,
+        errorParams: errorParams,
+      };
+      Notification.errorWithTrackingId(httpResponse, options);
+      expect(Notification.getErrorMessage).toHaveBeenCalledWith(errorKey, errorParams);
+      expect(Notification.addResponseMessage).toHaveBeenCalledWith(processedErrorMessage, httpResponse, false);
+      expect(Notification.notifyHttpErrorResponse).toHaveBeenCalledWith(processedErrorMessage, httpResponse, false);
+    });
+
+    it('should handle an INotificationOptions object containing allowHtml: true', () => {
+      const httpResponse = {};
+      const errorKey = 'some.thing';
+      const options = {
+        errorKey: errorKey,
+        allowHtml: true,
+      };
+      Notification.errorWithTrackingId(httpResponse, options);
+      expect(Notification.getErrorMessage).toHaveBeenCalledWith(errorKey, jasmine.any(Object));
+      expect(Notification.addResponseMessage).toHaveBeenCalledWith(processedErrorMessage, httpResponse, false);
+      expect(Notification.notifyHttpErrorResponse).toHaveBeenCalledWith(processedErrorMessage, httpResponse, true);
+    });
+
+    it('should still pop a notification, even when the programmer provides invalid input', () => {
+      const httpResponse = 'obviously not a valid https response';
+      const errorKey = () => 'obviously not an errorKey';
+      Notification.errorWithTrackingId(httpResponse, errorKey);
+      expect(Notification.getErrorMessage).toHaveBeenCalledWith('', jasmine.any(Object));
+      expect(Notification.addResponseMessage).toHaveBeenCalledWith(processedErrorMessage, httpResponse, false);
+      expect(Notification.notifyHttpErrorResponse).toHaveBeenCalledWith(processedErrorMessage, httpResponse, false);
+    });
+
+    it('should still pop a notification, even when the programmer forgets to provide an errorKey', () => {
+      const httpResponse = {};
+      Notification.errorWithTrackingId(httpResponse);
+      expect(Notification.getErrorMessage).toHaveBeenCalledWith('', jasmine.any(Object));
+      expect(Notification.addResponseMessage).toHaveBeenCalledWith(processedErrorMessage, httpResponse, false);
+      expect(Notification.notifyHttpErrorResponse).toHaveBeenCalledWith(processedErrorMessage, httpResponse, false);
+    });
+
+  });
+
 });

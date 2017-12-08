@@ -49,25 +49,44 @@ export class SuggestionDropdown implements ISuggestionDropdown {
   public activeSuggestion?: string;
   private activeSuggestionIndex: number | undefined;
   private firstSuggestionIsDefault;
-  private emptySearchSuggestions = _.map(SuggestionDropdown.fieldNamesForSuggestion, fieldName => {
-    return {
-      searchString: this.searchTranslator.translateQueryField(fieldName) + ':',
-      readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(fieldName),
-      field: fieldName,
-      text: '',
-      isFieldSuggestion: true,
-    };
-  });
+  private emptySearchSuggestions;
+  private upgradeChannelsAvailable;
 
-  private static fieldNamesForSuggestion = [QueryParser.Field_ActiveInterface,
-    QueryParser.Field_UpgradeChannel,
-    QueryParser.Field_Product,
+  private static fieldNamesForSuggestion = [QueryParser.Field_Tag,
     QueryParser.Field_ConnectionStatus,
+    QueryParser.Field_Product,
     QueryParser.Field_ErrorCodes,
-    QueryParser.Field_Tag];
+    QueryParser.Field_UpgradeChannel,
+    QueryParser.Field_ActiveInterface];
 
-  constructor(private searchTranslator: SearchTranslator, private $translate: ng.translate.ITranslateService) {
+  constructor(private searchTranslator: SearchTranslator,
+              private $translate: ng.translate.ITranslateService,
+              private upgradeChannelsAvailablePromise: IPromise<boolean>) {
+    this.emptySearchSuggestions = this.mapFieldNamesForSuggestion();
     this.showEmpty();
+    this.upgradeChannelsAvailablePromise.then(upgradeChannelsAvailable => {
+      this.upgradeChannelsAvailable = upgradeChannelsAvailable;
+      this.emptySearchSuggestions = this.mapFieldNamesForSuggestion();
+      this.showEmpty();
+    });
+  }
+
+  private mapFieldNamesForSuggestion() {
+    return _.map(this.getFilteredFieldNamesForSuggestion(), fieldName => {
+      return {
+        searchString: this.searchTranslator.translateQueryField(fieldName) + ':',
+        readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(fieldName),
+        field: fieldName,
+        text: '',
+        isFieldSuggestion: true,
+      };
+    });
+  }
+
+  private getFilteredFieldNamesForSuggestion() {
+    return _.filter(SuggestionDropdown.fieldNamesForSuggestion, fieldName => {
+      return fieldName !== QueryParser.Field_UpgradeChannel || this.upgradeChannelsAvailable;
+    });
   }
 
   private showEmpty(): void {
@@ -86,16 +105,13 @@ export class SuggestionDropdown implements ISuggestionDropdown {
       return;
     }
 
-    const numberOfSubmittedBullets = this.getSubmittedBullets(searchObject).length;
     if (currentEditedElement.getCommonField() === '') {
       this.inputBasedSuggestions = [
         {
           count: totalCount,
           searchString: currentEditedElement.toQuery(),
           readableField: this.$translate.instant('spacesPage.allDevices'),
-          text: this.$translate.instant(numberOfSubmittedBullets > 0
-            ? 'spacesPage.alsoContainingQuery'
-            : 'spacesPage.containingQuery',
+          text: this.$translate.instant('spacesPage.containingQuery',
             {
               query: currentEditedElement.toQuery(),
             }),
@@ -110,9 +126,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
         this.inputBasedSuggestions.push({
           searchString: phraseQuery,
           readableField: this.$translate.instant('spacesPage.allDevices'),
-          text: this.$translate.instant(numberOfSubmittedBullets > 0
-            ? 'spacesPage.alsoContainingQuery'
-            : 'spacesPage.containingQuery',
+          text: this.$translate.instant('spacesPage.containingQuery',
             {
               query: phraseQuery,
             }),
@@ -122,9 +136,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
         searchString: `${QueryParser.Field_Displayname}:${currentEditedElement.toQuery()}`,
         readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(QueryParser.Field_Displayname),
         field: QueryParser.Field_Displayname,
-        text: this.$translate.instant(numberOfSubmittedBullets > 0
-          ? 'spacesPage.alsoContainingQuery'
-          : 'spacesPage.containingQuery',
+        text: this.$translate.instant('spacesPage.containingQuery',
           {
             query: currentEditedElement.toQuery(),
           }),
@@ -137,11 +149,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
           searchString: currentEditedElement.toQuery(),
           readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(currentEditedElement.getCommonField()),
           field: currentEditedElement.getCommonField(),
-          text: this.$translate.instant(_.filter(searchObject.getBullets(), (bullet) => {
-            return !bullet.isBeingEdited();
-          }).length > 0
-            ? 'spacesPage.alsoContainingQuery'
-            : 'spacesPage.containingQuery',
+          text: this.$translate.instant('spacesPage.containingQuery',
             {
               query: (currentEditedElement as FieldQuery).getQueryWithoutField(),
             }),
@@ -250,7 +258,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
         .value();
       const bullets = this.getSubmittedBullets(searchObject);
       _.forEach(sortedAggregations, (aggregation, aggregationName: string) => {
-        if (_.includes(SuggestionDropdown.fieldNamesForSuggestion, _.toLower(aggregationName))) {
+        if (_.includes(this.getFilteredFieldNamesForSuggestion(), _.toLower(aggregationName))) {
           const suggestions = _.chain(aggregation.buckets)
             .map((bucket) => {
               let currentCount;

@@ -1,9 +1,7 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Squared')
-    .controller('HelpdeskExtendedInfoDialogController', HelpdeskExtendedInfoDialogController);
+  module.exports = HelpdeskExtendedInfoDialogController;
 
   /* @ngInject */
   function HelpdeskExtendedInfoDialogController(title, data, $timeout, $scope, $log, Notification) {

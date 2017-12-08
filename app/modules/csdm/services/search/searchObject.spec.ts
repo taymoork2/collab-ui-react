@@ -20,13 +20,13 @@ describe('converting search string', () => {
   });
 
   it('product:sx10 should give searchObjectWith product=sx10', function () {
-    const s = SearchObject.createWithQuery(new QueryParser(new SearchTranslator(null)), 'product:sx10');
+    const s = SearchObject.createWithQuery(new QueryParser(new SearchTranslator(null, null)), 'product:sx10');
     expect(_.get(s, 'parsedQuery.query')).toBe('sx10');
     expect(_.get(s, 'parsedQuery.field')).toBe('product');
   });
 
   it('invalid query should set hasError', function () {
-    const s = SearchObject.createWithQuery(new QueryParser(new SearchTranslator(null)), 'sx10 (');
+    const s = SearchObject.createWithQuery(new QueryParser(new SearchTranslator(null, null)), 'sx10 (');
     expect(s.hasError).toBeTruthy();
   });
 
@@ -34,7 +34,7 @@ describe('converting search string', () => {
 
     it('adding search element element to empty so should set it', () => {
       const fq = new FieldQuery('Added one');
-      const so = SearchObject.createWithQuery(new QueryParser(new SearchTranslator(null)), '');
+      const so = SearchObject.createWithQuery(new QueryParser(new SearchTranslator(null, null)), '');
       so.addParsedSearchElement(fq, false);
 
       expect(so.getBullets().length).toBe(1);
@@ -47,7 +47,7 @@ describe('converting search string', () => {
       const fq3 = new FieldQuery('added one', QueryParser.Field_UpgradeChannel);
       const fq4 = new FieldQuery('added one', QueryParser.Field_UpgradeChannel, FieldQuery.QueryTypeExact);
 
-      const so = SearchObject.createWithQuery(new QueryParser(new SearchTranslator(null)), '');
+      const so = SearchObject.createWithQuery(new QueryParser(new SearchTranslator(null, null)), '');
       so.addParsedSearchElement(fq1, false);
       so.addParsedSearchElement(fq2, false);
       expect(so.getBullets().length).toBe(2);
@@ -69,7 +69,7 @@ describe('converting search string', () => {
       const fq1c = new FieldQuery('added one');
       const fq1d = new FieldQuery('added one', '');
 
-      const so = SearchObject.createWithQuery(new QueryParser(new SearchTranslator(null)), '');
+      const so = SearchObject.createWithQuery(new QueryParser(new SearchTranslator(null, null)), '');
       so.addParsedSearchElement(fq1a, false);
 
       so.addParsedSearchElement(fq1b, false);
@@ -91,7 +91,7 @@ describe('converting search string', () => {
       const fq1c = new FieldQuery('added one');
       const fq1d = new FieldQuery('added one', '');
 
-      const so = SearchObject.createWithQuery(new QueryParser(new SearchTranslator(null)), '');
+      const so = SearchObject.createWithQuery(new QueryParser(new SearchTranslator(null, null)), '');
       so.addParsedSearchElement(fq1a, true);
       expect(so.getBullets().length).toBe(1);
       expect(fq1a.isEqual(so.getBullets()[0])).toBe(true);
@@ -122,7 +122,7 @@ describe('converting search string', () => {
       const fq2 = new FieldQuery(val2, field, FieldQuery.QueryTypeExact);
       const fq3 = new FieldQuery(val3, field, FieldQuery.QueryTypeExact);
 
-      const so = SearchObject.createWithQuery(new QueryParser(new SearchTranslator(null)), '');
+      const so = SearchObject.createWithQuery(new QueryParser(new SearchTranslator(null, null)), '');
       so.addParsedSearchElement(fq1a, false);
       so.addParsedSearchElement(fq1b, false);
 

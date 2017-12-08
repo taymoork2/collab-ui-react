@@ -378,6 +378,7 @@
 
     .bulleted-searchbox {
       text-decoration: none;
+      margin-right: 1rem;
 
       .bulleted-searchinput.searcherror {
         background-color: $color-attention-lighter !important;
@@ -402,7 +403,6 @@
         height: 100%;
         width: 430px;
         padding: 4px 32px 4px 24px;
-        margin-right: 1rem;
 
         &.focus, &.focus:hover {
           background: $input-focus-bg-color;
@@ -540,6 +540,7 @@
       color: $gray-dark-2;
       .field-descriptor {
         color: $gray-dark-1;
+        white-space:pre;
       }
       .collection-operator {
         color: $gray-dark-1;

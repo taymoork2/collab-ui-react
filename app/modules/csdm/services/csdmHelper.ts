@@ -153,11 +153,10 @@ export class DeviceHelper {
       case 'OFFLINE_EXPIRED':
         return {
           readableState: this.t('CsdmStatus.connectionStatus.OFFLINE_EXPIRED'),
-          priority: '2',
+          priority: '3',
         };
       case 'DISCONNECTED':
       case 'UNKNOWN':
-
       default:
         return {
           readableState: this.t('CsdmStatus.connectionStatus.DISCONNECTED'),
@@ -181,6 +180,8 @@ export class DeviceHelper {
         return 'warning';
       case 'OFFLINE_EXPIRED':
         return 'expired';
+      case 'DISCONNECTED':
+      case 'UNKNOWN':
       default:
         return 'danger';
     }

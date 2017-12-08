@@ -2132,7 +2132,6 @@
     "searchError": "The search input is not recognized.",
     "allDevices": "Anything",
     "containingQuery": "containing {{query}}",
-    "alsoContainingQuery": "also containing {{query}}",
     "typeHeader": "Type",
     "nameHeader": "Belongs to",
     "statusHeader": "Status",
@@ -2420,7 +2419,9 @@
     },
     "hybridServiceNames": {
       "squared-fusion-mgmt": "Hybrid Management Service",
+      "squared-fusion-ec": "Hybrid Call Service Connect",
       "squared-fusion-uc": "Hybrid Call Service",
+      "squared-fusion-uc.full": "Hybrid Call Service Aware",
       "squared-fusion-cal": "Hybrid Calendar Service",
       "squared-fusion-gcal": "Hybrid Calendar (Google)",
       "squared-fusion-o365": "Hybrid Calendar (Office 365)",
@@ -2999,6 +3000,7 @@
         "upgrade": "Upgrade available",
         "upgrading": "Installing upgrade",
         "pending": "Pending upgrade",
+        "upgradesAutomatically": "Upgrades automatically",
         "alarms": "Alarms",
         "maintenance": "Maintenance",
         "pendingMaintenance": "Pending maintenance"
@@ -3868,6 +3870,7 @@
     "hasTransferCode": "I have a Transfer Code to transfer my existing sites to this subscription.",
     "dontHaveTransferCode": "Don't have a transfer code?",
     "transferCodeInvalidError": "The transfer code and site name do not match. Please enter a valid site name and transfer code combination.",
+    "transferCodeInvalidSite": "The WebEx sites associated with this TransferCode may have a problem. Contact your Cisco representative for further investigation.",
     "haveExistingWebExSite": "Do you have an existing WebEx site that you are transferring to this subscription?",
     "existingWebExSiteDescription": "If you have an existing WebEx site that you want to transfer to this subscription you can enter the Transfer Code.",
     "transferCode": "Transfer Code",
@@ -4091,6 +4094,12 @@
       "overCapacity": "Capacity exceeded for data center, please contact Cisco T.A.C. for further assistance.",
       "capacityFail": "Failed to activate and check capacity"
     }
+  },
+  "sparkAssistant": {
+    "title": "Cisco Spark Assistant",
+    "enableAssistant": "Enable Cisco Spark Assistant",
+    "description": "Allows users to perform various actions such as, make calls, start meetings, using their voice",
+    "termOfService": "Spark Assistant terms of service "
   },
   "reports": {
     "title": "Reports",
@@ -5667,6 +5676,8 @@
     "sipUrl": "SIP Address",
     "issues": "Issues",
     "lastSeen": "since:",
+    "offlineLong": "(offline for over 8 weeks)",
+    "reactivate": "Reactivate",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time",
     "logUploadWarning": "When you report an issue, device logs will be sent to Cisco.",
@@ -7000,7 +7011,7 @@
       "CONNECTED": "Online",
       "CONNECTED_WITH_ISSUES": "Online, With Issues",
       "DISCONNECTED": "Offline",
-      "OFFLINE_EXPIRED": "Requires Activation",
+      "OFFLINE_EXPIRED": "Expired",
       "UNKNOWN": "Unknown"
     },
     "WithDevices": "With Devices",
@@ -7042,7 +7053,7 @@
       },
       "soontobedeactivated": {
         "type": "Device will soon be deactivated",
-        "message": "This device has been offline for over six weeks. Make sure it comes online within {{expireInDays}} days to avoid deactivation."
+        "message": "This device has been offline for several weeks. Make sure it comes online within {{expireInDays}} days to avoid deactivation."
       },
       "ntpstatus": {
         "type": "Time Server Not Reachable",
@@ -8212,6 +8223,12 @@
       "subsectionLabel": "Cisco Spark Client Security",
       "description": "Users can only launch the Cisco Spark app on mobile devices protected with lock screens."
     },
+    "sparkAssistant": {
+      "title": "Cisco Spark Assistant",
+      "subsectionLabel": "Enable Cisco Spark Assistant",
+      "description": "Allows users to perform various actions such as, make calls, start meetings, using their voice",
+      "termsOfService": "Cisco Spark Assistant terms of service "
+    },
     "externalCommunication": {
       "title": "External Communication",
       "subsectionLabel": "Messaging",
@@ -8652,6 +8669,14 @@
     "care": "Care",
     "hybridImp": {
       "hybridImp": "Hybrid Message"
+    },
+    "hybridCalendarMicrosoft": {
+      "title": "Calendar (Exchange/Office 365)"
+    },
+    "hybridServicesOrganization": {
+      "fmsError": "Could not read organization's on-premises-based hybrid services statuses. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation.",
+      "office365Error": "Could not read organization's cloud-based Office 365 status. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation.",
+      "googleCalendarError": "Could not read organization's Google Calendar status. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation."
     }
   },
   "partnerManagement": {

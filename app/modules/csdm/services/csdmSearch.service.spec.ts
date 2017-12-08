@@ -3,10 +3,11 @@ import { SearchObject } from './search/searchObject';
 import { Caller } from './csdmSearch.service';
 import { SearchTranslator } from './search/searchTranslator';
 import { QueryParser } from './search/queryParser';
+import translateModule from '../../core/scripts/services/missing-translation-handler.factory';
 
 describe('CsdmSearchService', () => {
   beforeEach(function () {
-    this.initModules(searchModule);
+    this.initModules(searchModule, translateModule);
     this.injectDependencies('$httpBackend', 'CsdmSearchService', 'UrlConfig', 'Authinfo');
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('--org--');
   });
@@ -21,7 +22,7 @@ describe('CsdmSearchService', () => {
   });
   describe('perform empty search', () => {
     it('should return a data object', function () {
-      const searchObj = SearchObject.createWithQuery(new QueryParser(new SearchTranslator(null)), '');
+      const searchObj = SearchObject.createWithQuery(new QueryParser(new SearchTranslator(null, null)), '');
       const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search';
       this.$httpBackend.expectPOST(url, this.CsdmSearchService.constructSearchRequest(searchObj)).respond(200);
       this.CsdmSearchService.search(searchObj);
@@ -31,7 +32,7 @@ describe('CsdmSearchService', () => {
 
   describe('perform type search', () => {
     it('should return a data object', function () {
-      const searchObj = SearchObject.createWithQuery(new QueryParser(new SearchTranslator(null)), 'cloudberry');
+      const searchObj = SearchObject.createWithQuery(new QueryParser(new SearchTranslator(null, null)), 'cloudberry');
       const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search';
       this.$httpBackend.expectPOST(url, this.CsdmSearchService.constructSearchRequest(searchObj)).respond(200);
       this.CsdmSearchService.search(searchObj);
@@ -41,7 +42,7 @@ describe('CsdmSearchService', () => {
 
   describe('perform type and any search', () => {
     it('should return a data object', function () {
-      const searchObj = SearchObject.createWithQuery(new QueryParser(new SearchTranslator(null)), 'product:sx10,any:test');
+      const searchObj = SearchObject.createWithQuery(new QueryParser(new SearchTranslator(null, null)), 'product:sx10,any:test');
       const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search';
       this.$httpBackend.expectPOST(url, this.CsdmSearchService.constructSearchRequest(searchObj)).respond(200);
       this.CsdmSearchService.search(searchObj);
@@ -51,7 +52,7 @@ describe('CsdmSearchService', () => {
 
   describe('perform two consequtive search', () => {
     it('should cancel the first request', function () {
-      const searchObj = SearchObject.createWithQuery(new QueryParser(new SearchTranslator(null)), '');
+      const searchObj = SearchObject.createWithQuery(new QueryParser(new SearchTranslator(null, null)), '');
       const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search';
       this.$httpBackend.expectPOST(url, this.CsdmSearchService.constructSearchRequest(searchObj)).respond(200);
       this.$httpBackend.expectPOST(url, this.CsdmSearchService.constructSearchRequest(searchObj)).respond(200);
@@ -75,7 +76,7 @@ describe('CsdmSearchService', () => {
 
   describe('perform two consequtive search with different caller', () => {
     it('should allow both requests', function () {
-      const searchObj = SearchObject.createWithQuery(new QueryParser(new SearchTranslator(null)), '');
+      const searchObj = SearchObject.createWithQuery(new QueryParser(new SearchTranslator(null, null)), '');
       const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search';
       this.$httpBackend.expectPOST(url, this.CsdmSearchService.constructSearchRequest(searchObj)).respond(200);
       this.$httpBackend.expectPOST(url, this.CsdmSearchService.constructSearchRequest(searchObj)).respond(200);

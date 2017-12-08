@@ -24,7 +24,8 @@ describe('Service: MyCompanyOrdersService', () => {
 
     const purchaseOrdersList: IOrderDetail[] = [{
       externalOrderId: '123',
-      orderDate: new Date(),
+      orderDate: new Date('2018-01-01T12:00:00.000Z'),
+      displayDate: 'Jan 1, 2018',
       status: 'COMPLETED',
       total: 15.95,
       productDescriptionList: '',
