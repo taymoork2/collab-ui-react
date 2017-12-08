@@ -138,6 +138,7 @@
         action.restApiResponse = '';
         action.username = '';
         action.password = '';
+        action.credentialId = '';
         vm.menuEntry.addAction(action);
         AACommonService.setRestApiStatus(false);
         AACommonService.setIsValid(vm.uniqueCtrlIdentifer, false);

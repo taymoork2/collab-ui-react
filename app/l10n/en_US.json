@@ -4141,6 +4141,7 @@
     "queueSettings": "Queue Settings",
     "maxWaitTime": "Maximum Wait Time",
     "periodicTime": "Frequency of Periodic Announcements",
+    "errorReadDoRestCredential": "Failed to read {{name}}: One or more REST API credentials are missing.",
     "errorReadCe": "Failed to read {{name}}: {{statusText}} ({{status}}).",
     "successCreateCe": "{{name}} created successfully.",
     "successDeleteCe": "{{name}} deleted successfully.",
@@ -8947,6 +8948,14 @@
           "matchingEmails": "User email addresses that are exact matches in Cisco Spark, WebEx, and Google.",
           "aclAdminAccount": "(Optional) If you use room resources, an authorized access control list (ACL) admin account.",
           "removeHangouts": "(Optional) Remove Google Hangouts in Meeting Events"
+        },
+        "office365Prerequisites": {
+          "title": "Hybrid Calendar (Office) Prerequisites",
+          "intro": "Use this checklist alongside the Office 365 deployment documentation. Make sure you complete all the prerequisites necessary for deploying Hybrid Calendar in your Office 365 organization.",
+          "officeOrganization": "An Office 365 organization with Exchange Online accounts for users in the organization. During setup, you must be able to sign in as a Global administrator to grant application permissions",
+          "webExSite": "For @webex scheduling, a Cisco WebEx site on WBS31 or later",
+          "sparkOrganization": "A Cisco Spark organization with a minimum of Basic Meetings and Business Messaging (M1)",
+          "matchingEmails": "Users must have activated Cisco Spark accounts, with email addresses that are exact matches in Cisco Spark, WebEx, and Exchange Online"
         }
       },
       "hybridCall": {

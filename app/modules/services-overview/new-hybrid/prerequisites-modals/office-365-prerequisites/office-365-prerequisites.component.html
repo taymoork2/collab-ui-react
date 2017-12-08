@@ -1,0 +1,61 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <button class="close" ng-click="$ctrl.dismiss()" type="button" aria-label="{{::'common.close' | translate}}"></button>
+    <h5 class="modal-title" translate="servicesOverview.cards.hybridCalendar.office365Prerequisites.title"></h5>
+  </div>
+  <div class="modal-body hybrid-service-prerequisites">
+
+    <div class="intro">
+      <p translate="servicesOverview.cards.hybridCalendar.office365Prerequisites.intro"></p>
+      <button class="btn btn--primary" ng-click="$ctrl.openDocumentation()">
+        <span translate="servicesOverview.commonPrerequisites.openDocumentation"></span>
+      </button>
+    </div>
+
+    <div class="steps-list">
+      <h5 translate="servicesOverview.commonPrerequisites.steps"></h5>
+
+      <input
+          cs-input
+          type="checkbox"
+          ng-model="$ctrl.checkboxes.officeOrganization"
+          id="checkboxOffice365-1"
+          name="checkboxOffice365-1"
+          ng-change="$ctrl.processChange('officeOrganization', $ctrl.checkboxes.officeOrganization)"
+          cs-input-label="{{:: 'servicesOverview.cards.hybridCalendar.office365Prerequisites.officeOrganization' | translate}}">
+
+      <input
+          cs-input
+          type="checkbox"
+          ng-model="$ctrl.checkboxes.webExSite"
+          id="checkboxOffice365-2"
+          name="checkboxOffice365-2"
+          ng-change="$ctrl.processChange('webExSite', $ctrl.checkboxes.webExSite)"
+          cs-input-label="{{:: 'servicesOverview.cards.hybridCalendar.office365Prerequisites.webExSite' | translate}}">
+
+      <input
+          cs-input
+          type="checkbox"
+          ng-model="$ctrl.checkboxes.sparkOrganization"
+          id="checkboxOffice365-3"
+          name="checkboxOffice365-3"
+          ng-change="$ctrl.processChange('sparkOrganization', $ctrl.checkboxes.sparkOrganization)"
+          cs-input-label="{{:: 'servicesOverview.cards.hybridCalendar.office365Prerequisites.sparkOrganization' | translate}}">
+
+      <input
+          cs-input
+          type="checkbox"
+          ng-model="$ctrl.checkboxes.matchingEmails"
+          id="checkboxOffice365-4"
+          name="checkboxOffice365-4"
+          ng-change="$ctrl.processChange('matchingEmails', $ctrl.checkboxes.matchingEmails)"
+          cs-input-label="{{:: 'servicesOverview.cards.hybridCalendar.office365Prerequisites.matchingEmails' | translate}}">
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="$ctrl.close()">
+      <span translate="common.close"></span>
+    </button>
+  </div>
+</div>
