@@ -7,21 +7,15 @@
       on-update="$ctrl.recvUpdate($event)"
       state-data="$ctrl.stateData"
       ng-class="license.offerName === $ctrl.OFFER_NAME.CMR ? 'cs-input--nested-1' : ''">
-      <div ng-if="license.offerName === $ctrl.OFFER_NAME.CMR">
-        <usage-line
-          usage="$ctrl.getTotalLicenseUsage($ctrl.OFFER_NAME.CMR)"
-          volume="$ctrl.getTotalLicenseVolume($ctrl.OFFER_NAME.CMR)">
-        </usage-line>
-      </div>
       <div ng-if="license.offerName !== $ctrl.OFFER_NAME.CMR">
         <advanced-meeting-license-description is-cloud-shared-meeting="$ctrl.isSharedMeetingsLicense(license)">
         </advanced-meeting-license-description>
         <advanced-meeting-site-url site-url="{{::license.siteUrl}}"></advanced-meeting-site-url>
-        <usage-line
-          usage="$ctrl.getTotalLicenseUsage(offerName)"
-          volume="$ctrl.getTotalLicenseVolume(offerName)">
-        </usage-line>
       </div>
+      <usage-line
+        usage="$ctrl.getTotalLicenseUsage(license)"
+        volume="$ctrl.getTotalLicenseVolume(license)">
+      </usage-line>
     </assignable-item-checkbox>
   </div>
 </div>

@@ -456,14 +456,16 @@ describe('Huron Functional: adding-huntgroup', () => {
       });
 
       it('should click close btn', () => {
-        utils.click(addHuntGroup.btnClose);
+        utils.waitForPresence(callFeatures.deleteFeature);
+        utils.click(callFeatures.deleteFeature);
         utils.expectIsDisplayed(addHuntGroup.deleteHG);
         utils.expectIsDisplayed(addHuntGroup.cancelDeleteFeature);
         utils.expectIsDisplayed(addHuntGroup.deleteFeature);
       });
       it('should click cancel', () => {
         utils.click(addHuntGroup.cancelDeleteFeature);
-        utils.click(addHuntGroup.btnClose);
+        utils.waitForPresence(callFeatures.deleteFeature);
+        utils.click(callFeatures.deleteFeature);
       });
       it('should click delete', () => {
         utils.click(addHuntGroup.deleteFeature);

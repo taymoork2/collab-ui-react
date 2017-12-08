@@ -1,6 +1,7 @@
 export interface IOrderDetail {
   externalOrderId: string;
   orderDate: Date;
+  displayDate: string;
   status: string;
   total: number;
   productDescriptionList: string;

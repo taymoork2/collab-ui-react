@@ -4095,6 +4095,12 @@
       "capacityFail": "Failed to activate and check capacity"
     }
   },
+  "sparkAssistant": {
+    "title": "Cisco Spark Assistant",
+    "enableAssistant": "Enable Cisco Spark Assistant",
+    "description": "Allows users to perform various actions such as, make calls, start meetings, using their voice",
+    "termOfService": "Spark Assistant terms of service "
+  },
   "reports": {
     "title": "Reports",
     "engagementTab": "Engagement",
@@ -7048,7 +7054,7 @@
       },
       "soontobedeactivated": {
         "type": "Device will soon be deactivated",
-        "message": "This device has been offline for over six weeks. Make sure it comes online within {{expireInDays}} days to avoid deactivation."
+        "message": "This device has been offline for several weeks. Make sure it comes online within {{expireInDays}} days to avoid deactivation."
       },
       "ntpstatus": {
         "type": "Time Server Not Reachable",
@@ -8217,6 +8223,12 @@
       "title": "Security",
       "subsectionLabel": "Cisco Spark Client Security",
       "description": "Users can only launch the Cisco Spark app on mobile devices protected with lock screens."
+    },
+    "sparkAssistant": {
+      "title": "Cisco Spark Assistant",
+      "subsectionLabel": "Enable Cisco Spark Assistant",
+      "description": "Allows users to perform various actions such as, make calls, start meetings, using their voice",
+      "termsOfService": "Cisco Spark Assistant terms of service "
     },
     "externalCommunication": {
       "title": "External Communication",
