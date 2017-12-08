@@ -8,8 +8,6 @@ export class FileSharingControlSetting extends ProPackSettingSection {
   public constructor(proPackPurchased: boolean) {
     super('fileSharingControl', proPackPurchased);
     this.description = 'globalSettings.fileSharingControl.description';
-    this.subsectionLabel = '';
-    this.subsectionDescription = '';
   }
 }
 
