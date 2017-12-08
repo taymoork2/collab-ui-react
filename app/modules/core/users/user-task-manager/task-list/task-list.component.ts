@@ -1,7 +1,7 @@
 import './task-list.scss';
 import { ITask } from '../user-task-manager.component';
 
-class TaskListController implements ng.IComponentController {
+export class TaskListController implements ng.IComponentController {
   public taskList: ITask[];
   public onActiveTaskChange: Function;
 
