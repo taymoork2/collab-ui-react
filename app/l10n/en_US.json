@@ -7053,7 +7053,7 @@
       },
       "soontobedeactivated": {
         "type": "Device will soon be deactivated",
-        "message": "This device has been offline for over six weeks. Make sure it comes online within {{expireInDays}} days to avoid deactivation."
+        "message": "This device has been offline for several weeks. Make sure it comes online within {{expireInDays}} days to avoid deactivation."
       },
       "ntpstatus": {
         "type": "Time Server Not Reachable",
