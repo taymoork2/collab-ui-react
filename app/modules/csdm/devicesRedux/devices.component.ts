@@ -9,7 +9,7 @@ import { SearchElement } from '../services/search/searchElement';
 
 require('./_devices.scss');
 
-export class DevicesCtrl {
+export class DevicesCtrl implements ng.IComponentController {
   public anyDevicesOrCodesLoaded = true; //TODO remove
   public searchInteraction = new SearchInteraction();
   public issearching = false;
@@ -399,4 +399,10 @@ export class DevicesCtrl {
   }
 
   //TODO end this is a duplicate from devices.controller.ts in squared
+}
+
+export class DevicesComponent implements ng.IComponentOptions {
+  public controller = DevicesCtrl;
+  public controllerAs = 'devices';
+  public template = require('modules/csdm/devicesRedux/devices.html');
 }

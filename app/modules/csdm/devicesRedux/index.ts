@@ -1,4 +1,4 @@
-import { DevicesCtrl } from './devices.controller';
+import { DevicesComponent, DevicesCtrl } from './devices.component';
 import { DeviceSearchBulletComponent } from './deviceSearchBullet.component';
 import { DeviceSearchComponent } from './deviceSearch.component';
 import { DeviceListComponent } from './deviceList.component';
@@ -15,5 +15,6 @@ export default angular
   .component('deviceList', new DeviceListComponent())
   .component('deviceChart', new ChartComponent())
   .controller('DevicesReduxCtrl', DevicesCtrl)
+  .component('devicesRedux', new DevicesComponent())
   .filter('highlight', highlightFilter)
   .name;

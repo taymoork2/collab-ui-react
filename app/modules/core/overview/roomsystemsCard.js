@@ -24,7 +24,7 @@
         card.notEnabledFooter = 'overview.contactPartner';
         card.currentTitle = 'overview.cards.roomSystem.currentTitle';
         card.previousTitle = 'overview.cards.roomSystem.previousTitle';
-        card.settingsUrl = '#/devices';
+        card.settingsUrl = '/devices';
         card.helper = OverviewHelper;
         card.showHealth = true;
         card.isCSB = Authinfo.isCSB();
@@ -67,7 +67,7 @@
         function fetchToggleAndSetLink() {
           FeatureToggleService.csdmDevRedGetStatus().then(function (toggle) {
             if (toggle) {
-              card.settingsUrl = '#/devices-redux';
+              card.settingsUrl = '/devices';
             }
           });
         }

@@ -17,8 +17,8 @@ describe('OverviewUsersCard', () => {
       this.card = this.OverviewRoomSystemsCard.createCard();
       this.$rootScope.$apply();
     });
-    it('should set the link to redux', function () {
-      expect(this.card.settingsUrl).toBe('#/devices-redux');
+    it('should also set the link to devices', function () {
+      expect(this.card.settingsUrl).toBe('/devices');
     });
   });
   describe('without csdm redux toggle', () => {
@@ -27,8 +27,8 @@ describe('OverviewUsersCard', () => {
       this.card = this.OverviewRoomSystemsCard.createCard();
       this.$rootScope.$apply();
     });
-    it('should not set the link to redux', function () {
-      expect(this.card.settingsUrl).toBe('#/devices');
+    it('should set the link to devices', function () {
+      expect(this.card.settingsUrl).toBe('/devices');
     });
   });
 });
