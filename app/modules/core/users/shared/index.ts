@@ -5,6 +5,7 @@ import crUsersErrorResultsModuleName from './cr-users-error-results';
 import crUsersTileTotalsModuleName from './cr-users-tile-totals';
 import * as authinfoModuleName from 'modules/core/scripts/services/authinfo';
 import * as urlConfigModuleName from 'modules/core/config/urlConfig';
+import crCheckboxItemModuleName from './cr-checkbox-item';
 
 export default angular.module('core.users.shared', [
   require('angular-translate'),
@@ -13,6 +14,7 @@ export default angular.module('core.users.shared', [
   crUsersErrorResultsModuleName,
   crUsersTileTotalsModuleName,
   urlConfigModuleName,
+  crCheckboxItemModuleName,
 ])
   .service('AutoAssignTemplateService', AutoAssignTemplateService)
   .name;

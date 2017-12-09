@@ -1,7 +1,7 @@
 assignable-services {
   display: block;
 
-  assignable-item-checkbox {
+  cr-checkbox-item {
     input[type="checkbox"] + label:before {
       align-self: flex-start;
     }
