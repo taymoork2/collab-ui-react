@@ -31,17 +31,25 @@ export class SunlightUtilitiesService {
     return (this.Authinfo.getOrgId() === this.Authinfo.getUserOrgId());
   }
 
+  public getAAOnboardStatus(aaOnboarded) {
+    let aaOnboardStatus = this.SunlightConstantsService.status.SUCCESS;
+    if (this.Authinfo.isCareVoice()) {
+      aaOnboardStatus = aaOnboarded;
+    }
+    return aaOnboardStatus;
+  }
+
   public getCareOnboardStatusForAdmin(csOnboarded, appOnboarded, aaOnboarded) {
-    const success = this.SunlightConstantsService.successStatus;
+    const success = this.SunlightConstantsService.status.SUCCESS;
     return (this.isOrgAdmin() && csOnboarded === success
     && appOnboarded === success
-    && aaOnboarded === success);
+    && this.getAAOnboardStatus(aaOnboarded) === success);
   }
 
   public getCareOnboardStatusForPartner(csOnboarded, aaOnboarded) {
-    const success = this.SunlightConstantsService.successStatus;
+    const success = this.SunlightConstantsService.status.SUCCESS;
     return (!this.isOrgAdmin() && csOnboarded === success
-    && aaOnboarded === success);
+    && this.getAAOnboardStatus(aaOnboarded) === success);
   }
 
   public getCareSetupNotificationText() {

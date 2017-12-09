@@ -1,9 +1,14 @@
 export class SunlightConstantsService {
   public notificationSnoozeHours;
-  public successStatus;
+  public status;
 
   constructor() {
     this.notificationSnoozeHours = 48;
-    this.successStatus = 'Success';
+    this.status = {
+      UNKNOWN: 'Unknown',
+      PENDING: 'Pending',
+      SUCCESS: 'Success',
+      FAILURE: 'Failure',
+    };
   }
 }
