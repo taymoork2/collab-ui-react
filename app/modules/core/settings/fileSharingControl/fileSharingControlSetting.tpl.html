@@ -1,7 +1,5 @@
 <div class="setting">
   <div class="sub-section">
-    <h5 class="sub-section__label" translate='globalSettings.fileSharingControl.subsectionLabel'></h5>
-    <p translate="globalSettings.fileSharingControl.subsectionDescription"></p>
     <p class="sub-section__description" translate="globalSettings.fileSharingControl.downloadSubsectionLabelDescription"></p>
     <input
       cs-input
@@ -33,7 +31,16 @@
       ng-disabled="$ctrl.isCheckboxDisabled()"/>
   </div>
   <div class="sub-section">
-    <h5 class="sub-section__label" translate="globalSettings.fileSharingControl.uploadSubsectionLabel"></h5>
+    <h5 class="sub-section__label">
+      {{::'globalSettings.fileSharingControl.uploadSubsectionLabel' | translate }}&nbsp;
+      <cr-pro-pack-icon ng-if="! $ctrl.isProPackPurchased"
+        tooltip="{{::'common.proPackTooltip' | translate}}"
+        tooltip-append-to-body="true"
+        tooltip-placement="right"
+        tooltip-trigger="focus mouseenter"
+        tabindex="0" aria-label="{{::'common.proPackTooltip' | translate}}">
+      </cr-pro-pack-icon>
+    </h5>
     <p class="sub-section__description" translate="globalSettings.fileSharingControl.uploadSubsectionLabelDescription"></p>
     <input
       cs-input
