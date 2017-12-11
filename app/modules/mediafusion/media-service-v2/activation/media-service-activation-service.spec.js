@@ -6,7 +6,7 @@ describe('MediaServiceActivationV2', function () {
   beforeEach(angular.mock.module('Hercules'));
 
   // instantiate service
-  var Service, $q, $httpBackend, authinfo, Notification, HybridServicesClusterService, ServiceDescriptorService;
+  var Service, $q, $httpBackend, $timeout, authinfo, Notification, HybridServicesClusterService, ServiceDescriptorService;
   //var serviceId = "squared-fusion-media";
   var mediaAgentOrgIds = ['mediafusion'];
   var serviceId = 'squared-fusion-media';
@@ -21,12 +21,13 @@ describe('MediaServiceActivationV2', function () {
     });
   });
 
-  beforeEach(inject(function (_$q_, _Notification_, $injector, _MediaServiceActivationV2_, _HybridServicesClusterService_, _ServiceDescriptorService_) {
+  beforeEach(inject(function (_$q_, _Notification_, $injector, _MediaServiceActivationV2_, _HybridServicesClusterService_, _ServiceDescriptorService_, _$timeout_) {
     //$rootScope = _$rootScope_;
     Service = _MediaServiceActivationV2_;
     ServiceDescriptorService = _ServiceDescriptorService_;
     HybridServicesClusterService = _HybridServicesClusterService_;
     $q = _$q_;
+    $timeout = _$timeout_;
     $httpBackend = $injector.get('$httpBackend');
     Notification = _Notification_;
   }));

@@ -5,7 +5,7 @@
     .service('MediaServiceActivationV2', MediaServiceActivationV2);
 
   /* @ngInject */
-  function MediaServiceActivationV2($http, UrlConfig, Authinfo, Notification, $q, HybridServicesClusterService, ServiceDescriptorService, Orgservice) {
+  function MediaServiceActivationV2($http, UrlConfig, Authinfo, Notification, $q, HybridServicesClusterService, ServiceDescriptorService, Orgservice, $timeout) {
     var vm = this;
     vm.mediaServiceId = 'squared-fusion-media';
 
@@ -83,8 +83,15 @@
     var addUserIdentityToMediaAgentOrgMapping = function (mediaAgentOrgIdsArray) {
       setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
         function success() {},
-        function error(errorResponse) {
-          Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaMicroserviceFailure');
+        function error() {
+          $timeout(function () {
+            setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
+              function success() {},
+              function error(errorResponse) {
+                logUserIdentityOrgToMediaAgentOrgMapping(errorResponse);
+                Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaMicroserviceFailure');
+              });
+          }, 20000);
         });
     };
 
@@ -181,6 +188,30 @@
       };
       var url = UrlConfig.getAthenaServiceUrl() + '/devops/organizations/' + Authinfo.getOrgId() + '/hms_org_activation';
       $http.post(url, payload);
+    };
+
+    var logUserIdentityOrgToMediaAgentOrgMapping = function (response) {
+      var status = response.status;
+      var statusText = response.statusText;
+      var message = 'statusCode: ' + status + ', statusText: ' + statusText;
+      var headers = _.get(response, 'headers');
+      var trackingId = _.isFunction(headers) && headers('TrackingID'); // exposed via CORS headers
+      if (!trackingId) {
+        trackingId = _.get(response, 'data.trackingId'); // for CCATG API spec
+      }
+      if (!trackingId) {
+        trackingId = _.get(response, 'data.error.trackingId'); // fallback to old data structure
+      }
+      if (!trackingId) {
+        trackingId = _.get(response, 'config.headers.TrackingID'); // fallback for when request could not be made
+      }
+      var payload = {
+        serviceName: 'Orpheus',
+        message: message,
+        trackingId: trackingId,
+      };
+      var url = UrlConfig.getAthenaServiceUrl() + '/devops/organizations/' + Authinfo.getOrgId() + '/log_message';
+      return $http.post(url, payload);
     };
 
     return {
