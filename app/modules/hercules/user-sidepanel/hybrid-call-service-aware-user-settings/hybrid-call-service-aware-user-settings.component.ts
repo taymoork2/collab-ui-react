@@ -91,7 +91,14 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
       })
       .catch((error) => {
         this.couldNotReadUser = true;
-        this.Notification.errorWithTrackingId(error, 'hercules.userSidepanel.readUserStatusFailed');
+        if (this.HybridServiceUserSidepanelHelperService.isPartnerAdminAndGot403Forbidden(error)) {
+          this.Notification.errorWithTrackingId(error, {
+            errorKey: 'hercules.userSidepanel.errorMessages.cannotReadDeviceDataFromUSSPartnerAdmin',
+            allowHtml: true,
+          });
+        } else {
+          this.Notification.errorWithTrackingId(error, 'hercules.userSidepanel.errorMessages.cannotReadUserDataFromUSS');
+        }
       })
       .finally(() => {
         this.loadingPage = false;
