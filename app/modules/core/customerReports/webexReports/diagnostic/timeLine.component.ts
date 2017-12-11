@@ -22,7 +22,6 @@ class TimeLine implements ng.IComponentController {
       domain: [],
       endTime: 0,
       startTime: 0,
-      joinsLine: {},
       xAxisFormat: '%I:%M %p',
       gridVerticalLineNum: 12,
       gridHorizontalLineNum: 7,
@@ -36,15 +35,74 @@ class TimeLine implements ng.IComponentController {
     this.axis();
     this.gridVerticalLine();
     this.gridHorizontalLine();
-    this.timeLine();
+    this.drawLine();
     this.showUser();
     this.legend();
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
-    const { lineColor, circleColor } = changes;
-    const color = lineColor ? lineColor : circleColor;
-    this.setColor(_.get(color, 'currentValue'));
+    const { circleColor, lineColor, otherPara } = changes;
+    _.debounce(() => {
+      if (_.get(lineColor, 'currentValue')) {
+        d3.selectAll('.lineQos').remove();
+        this.setLineColor(_.get(lineColor, 'currentValue'));
+      }
+
+      if (_.get(circleColor, 'currentValue')) {
+        this.setCircleColor(_.get(circleColor, 'currentValue'));
+      }
+
+      if (_.get(otherPara, 'currentValue')) { // TODO, will discuss with backend to optimize the response data
+        const arr = _.get(otherPara, 'currentValue');
+        let arrLine = [];
+        _.forEach(this.data.data, (item) => {
+          if (arr[item.nodeId]) {
+            let startx = 0;
+            _.forEach(arr[item.nodeId], (item_) => {
+              if ( item_.endTime > item.leaveTime) {
+                return true;
+              }
+
+              item_.y = item.y;
+              item_.end = this.time2line(this.timestampToDate(item_.timestamp));
+              item_.endTime_ = this.time2line(this.timestampToDate(item_.endTime));
+              item_.startTime_ = this.time2line(this.timestampToDate(item_.startTime));
+
+              if (!startx || (startx < item_.startTime_ && startx > item_.endTime_)) {
+                item_.start = item_.startTime_;
+              } else {
+                item_.start = startx;
+              }
+              arrLine = _.concat(arrLine, item_);
+              startx = item_.end;
+            });
+          }
+        });
+
+        const g = this.svg.append('g').attr('class', 'timeLine pstn');
+        g.selectAll('.pstn')
+          .data(arrLine)
+          .enter()
+          .append('svg:line')
+          .attr('x1', item => this.coordinate.x + item.start)
+          .attr('y1', item => item.y)
+          .attr('x2', item => this.coordinate.x + item.end)
+          .attr('y2', item => item.y)
+          .attr('id', item => `myPstn${item.nodeId}`)
+          .on('mouseover', (item) => {
+            const msgArr = [
+              { key: `${item.type} Quality:`, value: item.audioMos },
+              { key: `Call Type: `, value: item.callType },
+              { key: 'Caller: ', value: item.caller },
+              { key: 'Packet Bad: ', value: item.packetBad },
+              { key: 'Packet Lost: ', value: item.packetLost },
+              { key: 'rxPackets: ', value: item.rxPackets },
+            ];
+            this.makeTips({ arr: msgArr });
+          })
+          .on('mouseout', () => this.tip.transition().duration(500).style('opacity', 0));
+      }
+    }, 500)();
   }
 
   private initParameters(): void {
@@ -56,7 +114,8 @@ class TimeLine implements ng.IComponentController {
 
     this.coordinate = {
       x: this.option.paddingLeft,
-      y: this.option.height - this.option.paddingButtom,
+      y: this.option.paddingTop,
+      endY: this.option.height - this.option.paddingButtom,
       endX: this.option.width - this.option.paddingRight,
     };
     this.option.gridWidth = (this.coordinate.endX - this.coordinate.x) / this.data.gridVerticalLineNum;
@@ -71,15 +130,14 @@ class TimeLine implements ng.IComponentController {
       .style('opacity', 0);
 
     this.legendInfo = {
-      line: ['Good', 'Bad', 'N/A'],
+      line: ['Good', 'Poor', 'N/A'],
       circle: ['Good', 'Fair', 'Poor', 'N/A'],
     };
   }
 
   private getGridHorizontalLineHum(): number {
-    return this.sourceData.lines.length + 2 > this.data.gridHorizontalLineNum ? this.sourceData.lines.length + 2 : this.data.gridHorizontalLineNum;
+    return this.sourceData.lines.length + 1 > this.data.gridHorizontalLineNum ? this.sourceData.lines.length + 1 : this.data.gridHorizontalLineNum;
   }
-
 
   private getCanvasWidth(): number {
     const width = this.$element.find('.timelineSvg').width();
@@ -105,10 +163,10 @@ class TimeLine implements ng.IComponentController {
 
   private gridHorizontalLine(): void {
     const data: Object[] = [];
-    let y = this.coordinate.y + this.option.gridHeight;
-    while (y > 0) {
-      y  -= this.option.gridHeight;
+    let y = this.coordinate.y;
+    while (y <= this.coordinate.endY) {
       data.push({ x1: this.coordinate.x, y1: y, x2: this.coordinate.endX, y2: y });
+      y  += this.option.gridHeight;
     }
     this.dataToline({ data: data, append: 'svg:line', class: 'gridHorizontalLine' });
   }
@@ -118,7 +176,7 @@ class TimeLine implements ng.IComponentController {
     let x = this.coordinate.x - this.option.gridWidth;
     while ( x < this.coordinate.endX) {
       x += this.option.gridWidth;
-      data.push({ x1: x, y1: 0, x2: x, y2: this.coordinate.y });
+      data.push({ x1: x, y1: this.coordinate.y, x2: x, y2: this.coordinate.endY });
     }
     this.dataToline({ data: data, append: 'svg:line', class: 'gridVerticalLine' });
   }
@@ -128,7 +186,7 @@ class TimeLine implements ng.IComponentController {
       .domain(this.data.domain)
       .range([0, this.coordinate.endX - this.coordinate.x]);
     this.time2line = timeRange;
-    this.setLine();
+    this.preData();
 
     const xAxis = d3.svg.axis()
       .scale(timeRange)
@@ -139,117 +197,79 @@ class TimeLine implements ng.IComponentController {
 
     this.svg.append('g')
       .attr('class', 'axis')
-      .attr('transform', `translate(${this.coordinate.x}, ${this.coordinate.y})`)
+      .attr('transform', `translate(${this.coordinate.x}, ${this.coordinate.endY})`)
       .call(xAxis);
   }
 
-  private setLine(): void {
-    this.data.joinsLine = _.map(this.sourceData.lines, (item: any) => {
-      item.leaveTime = item.leaveTime || this.sourceData.endTime;
-      const end = this.time2line(this.timestampToDate(item.leaveTime));
-      const end_ = this.coordinate.endX - this.coordinate.x;
-      return _.assignIn({}, item, {
-        end: end > end_ ? end_ : end,
-        userName_: _.truncate(item.userName, { length: 12 }),
-        start: this.time2line(this.timestampToDate(item.joinTime)),
+  private preData(): void {
+    let y = this.coordinate.y;
+    let data: any = [];
+    _.map(this.sourceData.lines, (item: any, key) => {
+      y += this.option.gridHeight;
+      const arr = _.map(item, (item_: any) => {
+        return _.assignIn({}, item_, {
+          y: y,
+          filterId: key,
+          end: this.time2line(this.timestampToDate(item_.leaveTime)),
+          start: this.time2line(this.timestampToDate(item_.joinTime)),
+        });
       });
+      data = _.concat(data, arr);
     });
+    this.data.data = data;
   }
 
-  private timeLine(): void {
-    let y = 0;
-    const data = _.map(this.data.joinsLine, (item: any) => {
-      y += this.option.gridHeight;
-      return _.assignIn({}, item, { y: y });
-    });
+  private drawLine(): void {
+    const lines = this.data.data;
     const g = this.svg.append('g').attr('class', 'timeLine');
     g.selectAll('.timeLine')
-      .data(data)
+      .data(lines)
       .enter()
       .append('svg:line')
       .attr('x1', item => this.coordinate.x + item.start)
       .attr('y1', item => item.y)
       .attr('x2', item => this.coordinate.x + item.end)
       .attr('y2', item => item.y)
-      .attr('id', item => `myLine${item.guestId}-${item.userId}-${item.joinTime}`);
+      .attr('id', item => `myLine${item.nodeId}`);
 
     this.drawCircle();
   }
 
   private drawCircle(): void {
-    let y = 0;
-    const data = _.map(this.data.joinsLine, (item: any) => {
-      y += this.coordinate.y / this.data.gridHorizontalLineNum;
-      return _.assignIn({}, item, { x: this.coordinate.x + item.start, y: y });
-    });
-
+    const circles = this.data.data;
     const g = this.svg.append('g').attr('class', 'circleStart');
     g.selectAll('.circleStart')
-      .data(data)
+      .data(circles)
       .enter()
       .append('circle')
       .attr('class', 'myDot')
       .attr('r', 9)
-      .attr('cx', item => item.x )
+      .attr('cx', item => this.coordinate.x + item.start + 8 )
       .attr('cy', item => item.y )
-      .attr('id', item => `myDot${item.guestId}-${item.userId}-${item.joinTime}`);
-    this.toolTip();
-  }
+      .attr('id', item => `myDot${item.guestId}-${item.userId}-${item.joinTime}`)
+      .on('mouseover', item => {
+        const circleId = `#myDot${item.guestId}-${item.userId}-${item.joinTime}`;
+        const endpoint = item.browser_ + ' on ' + item.platform_;
+        const jmtQuality = this.$element.find(circleId).attr('jmtQuality');
+        const joinMeetingTime = this.$element.find(circleId).attr('joinMeetingTime');
+        const key = jmtQuality ? `${jmtQuality} ` : '';
+        const msgArr = [
+          { key: key + 'Join Meeting Time: ', value: joinMeetingTime ? `${joinMeetingTime} Seconds` : 'N/A' },
+          { key: 'Endpoint: ', value: endpoint },
+        ];
+        const top = item.y + this.$element.find('.timelineSvg').offset().top;
+        const left = this.coordinate.x + item.start + this.$element.find('.timelineSvg').offset().left;
 
-  private toolTip(): void {
-    let y = 0;
-    const data = _.map(this.data.joinsLine, (item: any) => {
-      y += this.option.gridHeight;
-      return _.assignIn({}, item, { x: this.coordinate.x + item.start, y: y });
-    });
-
-    _.forEach(data, (item) => {
-      const lineId = `#myLine${item.guestId}-${item.userId}-${item.joinTime}`;
-      const circleId = `#myDot${item.guestId}-${item.userId}-${item.joinTime}`;
-      const textId = `#myText${item.guestId}-${item.userId}-${item.joinTime}`;
-      d3.select(circleId)
-        .on('mouseover', () => {
-          const class_ = _.lowerCase(this.legendInfo.circle[item.jmtQuality]) + 'Circle';
-          const msgArr = [{ key: 'Join Meeting Time', value: item.joinMeetingTime ? `${item.joinMeetingTime}s` : 'N/A', class: class_ }];
-          const top = item.y + this.$element.find('.timelineSvg').offset().top;
-          const left = item.x + this.$element.find('.timelineSvg').offset().left;
-
-          this.makeTips({ arr: msgArr }, { top: top, left: left });
-        })
-        .on('mouseout', () => this.tip.transition().duration(500).style('opacity', 0));
-
-      d3.select(lineId)
-        .on('mouseover', () => {
-          const msg = {
-            des: _.upperFirst(moment.duration(item.duration * 1000).humanize(true)),
-            arr: [
-              { key: 'Client IP', value: item.clientIP },
-              { key: 'Gateway IP', value: item.gatewayIP },
-            ],
-          };
-          this.makeTips(msg);
-        })
-        .on('mouseout', () => this.tip.transition().duration(500).style('opacity', 0));
-
-
-      d3.select(textId)
-        .on('mouseover', () => {
-          const msgArr = [
-            { key: 'User Name', value: item.userName },
-            { key: 'Platform', value: item.platform_ },
-          ];
-          this.makeTips({ arr: msgArr });
-        })
-        .on('mouseout', () => this.tip.transition().duration(500).style('opacity', 0));
-    });
+        this.makeTips({ arr: msgArr }, { top: top, left: left });
+      })
+      .on('mouseout', () => this.tip.transition().duration(500).style('opacity', 0));
   }
 
   private makeTips(msg, option: Object|undefined = undefined) {
     let template: string = '';
     this.tip.classed('Tooltip-bottom', true);
-    template += msg.des ? `<p><span>${msg.des}</span></p>` : '';
     _.forEach(msg.arr, (item) => {
-      template += `<p class="${item.class ? item.class : ''}"><span>${item.key}:</span> ${item.value}</p>`;
+      template += `<p class="${item.class ? item.class : ''}"><span>${item.key}</span> ${item.value}</p>`;
     });
     this.tip.html(template);
 
@@ -268,25 +288,29 @@ class TimeLine implements ng.IComponentController {
   }
 
   private showUser(): void {
-    let y = 0;
-    const data = _.map(this.data.joinsLine, (item: any) => {
-      y += this.option.gridHeight;
-      return _.assignIn({}, item, { y: y });
-    });
+    const data = _.uniqBy(this.data.data, 'filterId');
     const g = this.svg.append('g').attr('class', 'showUser');
     g.selectAll('.showUser')
       .data(data)
       .enter()
       .append('text')
-      .text(item => item.userName_)
-      .attr('id', item => `myText${item.guestId}-${item.userId}-${item.joinTime}`)
-      .attr('transform', item => `translate(${this.coordinate.x - 9} , ${item.y})`);
+      .text(item => _.truncate(item.userName, { length: 12 }))
+      .attr('id', item => `myUser${item.nodeId}`)
+      .attr('transform', item => `translate(${this.coordinate.x - 9} , ${item.y})`)
+      .on('mouseover', item => {
+        const msgArr = [
+          { key: 'User Name: ', value: item.userName },
+          { key: 'Platform: ', value: item.platform_ },
+        ];
+        this.makeTips({ arr: msgArr });
+      })
+      .on('mouseout', () => this.tip.transition().duration(500).style('opacity', 0));
   }
 
   private legend(): void {
     let xStart = 0;
     const x = this.coordinate.x;
-    const y = this.coordinate.y + 9;
+    const y = this.coordinate.endY + 9;
     const colorG = this.svg.append('g')
       .attr('class', 'legend')
       .attr('transform', `translate(130 , 0)`)
@@ -311,7 +335,7 @@ class TimeLine implements ng.IComponentController {
 
   private lineMsgTips(): void {
     const colorG = this.svg.select('.legend').append('g').attr('class', 'line');
-    const y = this.coordinate.y + 38;
+    const y = this.coordinate.endY + 38;
 
     let xStart = 430;
     colorG.append('text')
@@ -333,37 +357,63 @@ class TimeLine implements ng.IComponentController {
     });
   }
 
-  private setColor(color): void {
-    if (!color) {
-      return;
-    }
-    let key;
-    const colorObj = {};
-    _.forEach(color, (item) => {
-      key = `${item.guestId}-${item.userId}-${item.joinTime}`;
-      colorObj[key] = item;
+  private setCircleColor(data) {
+    _.forEach(data, (item) => {
+      const dotId = `${item.guestId}-${item.userId}-${item.joinTime}`;
+      const classKey = _.parseInt(item.jmtQuality) - 1;
+      const class_ = this.legendInfo.circle[classKey] === 'N/A' ? '' : _.lowerCase(this.legendInfo.circle[classKey]) + 'Circle';
+      d3.select(`#myDot${dotId}`)
+      .attr('class', class_)
+      .attr('joinMeetingTime', item.joinMeetingTime)
+      .attr('jmtQuality', this.legendInfo.circle[_.parseInt(item.jmtQuality) - 1]);
     });
-    _.forEach(this.data.joinsLine, (item) => {
-      key = `${item.guestId}-${item.userId}-${item.joinTime}`;
-      _.assignIn(item, colorObj[key]);
-      if (!colorObj[key]) {
+  }
+
+  private setLineColor(data) {
+    let arr: any = [];
+    _.forEach(this.data.data, (item) => {
+      if (data[item.nodeId]) {
+        arr = _.concat(arr, this.getQosData(data[item.nodeId], item.start + 20, item.y));
+      }
+    });
+    const g = this.svg.append('g').attr('class', 'timeLine lineQos');
+    g.selectAll('.timeLine')
+    .data(arr)
+    .enter()
+    .append('svg:line')
+    .attr('x1', item => this.coordinate.x + item.start)
+    .attr('y1', item => item.y)
+    .attr('x2', item => this.coordinate.x + item.end)
+    .attr('y2', item => item.y)
+    .attr('class', item => item.class_)
+    .attr('id', item => `${item.qosId}`)
+    .on('mouseover', (item) => {
+      const msgArr = [
+        { key: `${item.type} Quality:`, value: this.legendInfo.line[_.parseInt(item.dataQuality) - 1] },
+        { key: `Latency:`, value: item.latency },
+        { key: 'Packet Loss:', value: _.round(item.packageLossRate * 100, 2) + ` %` },
+      ];
+      this.makeTips({ arr: msgArr });
+    })
+    .on('mouseout', () => this.tip.transition().duration(500).style('opacity', 0));
+  }
+
+  private getQosData(data, startx, y) {
+    let data_: any = [];
+    _.forEach(data, (item) => {
+      const end = this.time2line(this.timestampToDate(item.timeStamp));
+      if (end < startx) {
         return true;
       }
+      const classKey = _.parseInt(item.dataQuality) - 1;
+      const class_ = this.legendInfo.line[classKey] === 'N/A' ? '' : _.lowerCase(this.legendInfo.line[classKey]) + 'Line';
+      const newItem = _.assign(item, { start: startx, end: end, y: y, class_: class_, qosId: `qosId${item.nodeId}-${startx}-${end}` });
+      data_ = _.concat(data_, newItem);
 
-      if (colorObj[key]['jmtQuality']) {
-        item.jmtQuality = _.parseInt(colorObj[key]['jmtQuality']) - 1;
-        const class_ = this.legendInfo.circle[item.jmtQuality] === 'N/A' ? '' : _.lowerCase(this.legendInfo.circle[item.jmtQuality]) + 'Circle';
-        d3.select(`#myDot${key}`).attr('class', class_);
-      }
-
-      if (colorObj[key]['dataQuality']) {
-        item.dataQuality = _.parseInt(colorObj[key]['dataQuality']) - 1;
-        const class_ = this.legendInfo.line[item.dataQuality] === 'N/A' ? '' : _.lowerCase(this.legendInfo.line[item.dataQuality]) + 'Line';
-        d3.select(`#myLine${key}`).attr('class', class_);
-      }
+      startx = end;
     });
 
-    this.toolTip();
+    return data_;
   }
 
   private setRuler(time): number {
@@ -409,5 +459,5 @@ class TimeLine implements ng.IComponentController {
 export class DgcTimeLineComponent implements ng.IComponentOptions {
   public controller = TimeLine;
   public template = '<div class="timelineSvg"></div>';
-  public bindings = { sourceData: '<', lineColor: '<', circleColor: '<' };
+  public bindings = { sourceData: '<', lineColor: '<', circleColor: '<', otherPara: '<' };
 }

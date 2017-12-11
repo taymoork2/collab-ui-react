@@ -1,5 +1,15 @@
 <div class="timeline">
-  <dgc-time-line source-data="$ctrl.dataSet" circle-color="$ctrl.circleColor" line-color="$ctrl.lineColor" ng-if="!$ctrl.loading"></dgc-time-line>
+  <tabset type="pills" class="timeline-tab">
+    <tab heading="Audio" ng-click="$ctrl.onChangeQOS('voip')"></tab>
+    <tab heading="Video" ng-click="$ctrl.onChangeQOS('video')"></tab>
+  </tabset>
+
+  <dgc-time-line
+    source-data="$ctrl.dataSet"
+    other-para="$ctrl.otherPara"    
+    line-color="$ctrl.lineColor"
+    circle-color="$ctrl.circleColor"
+    ng-if="!$ctrl.loading"></dgc-time-line>
   <div ng-if="$ctrl.loading" class="loading">
     <i class="icon icon-spinner icon-3x"></i>
   </div>
@@ -20,8 +30,8 @@
     </li>
     <li>
       <h6 translate="webexReports.searchGridHeader.endTime"></h6>
-      <p>{{$ctrl.overview.endTime_}}</p>
-      <p>{{$ctrl.overview.duration_}}</p>
+      <p ng-if="$ctrl.overview.status === 2">{{$ctrl.overview.endTime_}}</p>
+      <p ng-if="$ctrl.overview.status === 2">{{$ctrl.overview.duration_}}</p>
     </li>
     <li>
       <h6 translate="webexReports.site"></h6>
@@ -52,8 +62,8 @@
       <span>{{::'webexReports.sessionInfo' | translate}}</span>
     </h4>
 
-    <div class="info-box" ng-if="$ctrl.showInfo">
-      <h6 class="note">Features and connections status for this meeting session <i class="icon icon-info-outline"></i></h6>
+    <div class="info-box" ng-if="$ctrl.showInfo"><!-- According the UE design, this section will delete in next sprint -->
+      <h6 class="note">Features and connections status for this meeting session</h6>
       <div class="row showgrid">
         <cs-card class="medium" ng-repeat="val in $ctrl.featAndconn">
           <article>

@@ -31,8 +31,18 @@ export class SearchService {
     return this.$http.get(url).then(this.extractData);
   }
 
+  public getUniqueParticipants(conferenceID) {
+    const url = `${this.url}meetings/${conferenceID}/unique-participants`;
+    return this.$http.get(url).then(this.extractData);
+  }
+
   public getParticipants(conferenceID) {
     const url = `${this.url}meetings/${conferenceID}/participants`;
+    return this.$http.get(url).then(this.extractData);
+  }
+
+  public getQOS(conferenceID, nodeID, qosName) {
+    const url = `${this.url}meetings/${conferenceID}/${qosName}?nodeIds=${nodeID}`;
     return this.$http.get(url).then(this.extractData);
   }
 
@@ -43,6 +53,16 @@ export class SearchService {
 
   public getJoinMeetingQuality(conferenceID) {
     const url = `${this.url}meetings/${conferenceID}/participants/join-meeting-quality`;
+    return this.$http.get(url).then(this.extractData);
+  }
+
+  public getParticipantDetailInfo(conferenceID, nodeId) {
+    const url = `${this.url}meetings/${conferenceID}/node-ids/${nodeId}/call-legs`;
+    return this.$http.get(url).then(this.extractData);
+  }
+
+  public getServerTime() {
+    const url = `${this.url}server`;
     return this.$http.get(url).then(this.extractData);
   }
 
@@ -88,14 +108,15 @@ export class SearchService {
   }
 
   public timestampToDate(timestamp, format): string {
-    const timeZone = this.getStorage('timeZone');
+    const tz = this.getStorage('timeZone');
+    const timeZone: any = tz ? tz : moment.tz.guess();
     const offset = this.getOffset(timeZone);
     return moment(timestamp).utc().utcOffset(offset).format(format);
   }
 
   public getBrowser(num) {
     const arr = ['Netscape', 'IE', 'Stand alone application', 'MOZILLA', 'FIREFOX', 'SAFARI', 'CHROME'];
-    return arr[num] ? arr[num] : 'Other';
+    return arr[_.parseInt(num)] ? arr[_.parseInt(num)] : 'Other';
   }
 
   public getPlartform(obj): string {
@@ -108,8 +129,7 @@ export class SearchService {
   }
 
   public getParticipantEndReson(endReson) {
-    const status = this.getStorage('webexOneMeeting.overview.status');
-    if (status === 1) {
+    if (endReson === null) {
       return '';
     }
     return endReson ? 'Normal' : 'Abnormal';
