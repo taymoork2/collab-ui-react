@@ -81,17 +81,18 @@
     };
 
     var addUserIdentityToMediaAgentOrgMapping = function (mediaAgentOrgIdsArray) {
-      setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
-        function success() {},
+      setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).catch(
         function error() {
           $timeout(function () {
-            setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
-              function success() {},
+            //Adding a 3 sec timeout here so that on failure this API will be retried.
+            //As per the flow when this call is being executed, user will will be redirected to a new tab to continue registering the node to the cloud.
+            //Hence the tab won’t be closed in the given timeout period.
+            setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).catch(
               function error(errorResponse) {
                 logUserIdentityOrgToMediaAgentOrgMapping(errorResponse);
                 Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaMicroserviceFailure');
               });
-          }, 20000);
+          }, 3000);
         });
     };
 
@@ -194,17 +195,7 @@
       var status = response.status;
       var statusText = response.statusText;
       var message = 'statusCode: ' + status + ', statusText: ' + statusText;
-      var headers = _.get(response, 'headers');
-      var trackingId = _.isFunction(headers) && headers('TrackingID'); // exposed via CORS headers
-      if (!trackingId) {
-        trackingId = _.get(response, 'data.trackingId'); // for CCATG API spec
-      }
-      if (!trackingId) {
-        trackingId = _.get(response, 'data.error.trackingId'); // fallback to old data structure
-      }
-      if (!trackingId) {
-        trackingId = _.get(response, 'config.headers.TrackingID'); // fallback for when request could not be made
-      }
+      var trackingId = Notification.getTrackingId(response);
       var payload = {
         serviceName: 'Orpheus',
         message: message,

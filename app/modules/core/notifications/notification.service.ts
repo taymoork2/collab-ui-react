@@ -313,6 +313,14 @@ export class Notification {
   }
 
   private addTrackingId(errorMsg: string, response: ng.IHttpResponse<any>): string {
+    const trackingId = this.getTrackingId(response);
+    if (_.isString(trackingId) && trackingId.length) {
+      errorMsg = `${this.addTrailingPeriod(errorMsg)} TrackingID: ${trackingId}`;
+    }
+    return errorMsg;
+  }
+
+  public getTrackingId(response: ng.IHttpResponse<any>): string {
     const headers = _.get(response, 'headers');
     let trackingId = _.isFunction(headers) && headers('TrackingID');  // exposed via CORS headers
     if (!trackingId) {
@@ -324,10 +332,7 @@ export class Notification {
     if (!trackingId) {
       trackingId = _.get(response, 'config.headers.TrackingID');  // fallback for when request could not be made
     }
-    if (_.isString(trackingId) && trackingId.length) {
-      errorMsg = `${this.addTrailingPeriod(errorMsg)} TrackingID: ${trackingId}`;
-    }
-    return errorMsg;
+    return trackingId;
   }
 
   private addTrailingPeriod(message?: string): string {
