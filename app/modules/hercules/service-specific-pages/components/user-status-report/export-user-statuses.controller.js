@@ -143,7 +143,12 @@
         .map(function (tuple) {
           return USSService.getAllStatuses(tuple.service, tuple.type)
             .then(function (userStatuses) {
-              return userStatuses;
+              return userStatuses.map(function (userStatus) {
+                if (userStatus.serviceId === 'squared-fusion-cal' && userStatus.owner === 'ccc') {
+                  userStatus.serviceId = 'squared-fusion-o365';
+                }
+                return userStatus;
+              });
             });
         })
         .flatten()
