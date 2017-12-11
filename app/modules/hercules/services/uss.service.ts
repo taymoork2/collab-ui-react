@@ -333,9 +333,6 @@ export class USSService {
     const result = _.chain(userStatuses)
       .map((userStatus) => {
         userStatus.messages = this.sortAndTweakUserMessages(userStatus.messages);
-        if (userStatus.serviceId === 'squared-fusion-cal' && userStatus.owner === 'ccc') {
-          userStatus.serviceId = 'squared-fusion-o365';
-        }
         return userStatus;
       })
       .value();
