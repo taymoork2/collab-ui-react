@@ -27,7 +27,6 @@ describe('MediaServiceActivationV2', function () {
     ServiceDescriptorService = _ServiceDescriptorService_;
     HybridServicesClusterService = _HybridServicesClusterService_;
     $q = _$q_;
-    //$timeout = _$timeout_;
     $httpBackend = $injector.get('$httpBackend');
     Notification = _Notification_;
   }));
