@@ -7,7 +7,7 @@
     .controller('HybridCloudberrySectionCtrl', HybridCloudberrySectionCtrl);
 
   /* @ngInject */
-  function HybridCloudberrySectionCtrl($scope, $rootScope, $timeout, Authinfo, USSService, HybridServicesUtilsService, ServiceDescriptorService, Notification, Userservice, CloudConnectorService, FeatureToggleService) {
+  function HybridCloudberrySectionCtrl($scope, $rootScope, $timeout, Authinfo, USSService, HybridServicesUtilsService, HybridServiceUserSidepanelHelperService, ServiceDescriptorService, Notification, Userservice, CloudConnectorService, FeatureToggleService) {
     if (!Authinfo.isFusion()) {
       return;
     }
@@ -182,8 +182,15 @@
             });
             delayedUpdateStatusForUser();
           })
-          .catch(function (response) {
-            Notification.errorWithTrackingId(response, 'hercules.userSidepanel.readUserStatusFailed');
+          .catch(function (error) {
+            if (HybridServiceUserSidepanelHelperService.isPartnerAdminAndGot403Forbidden(error)) {
+              Notification.errorWithTrackingId(error, {
+                errorKey: 'hercules.userSidepanel.errorMessages.cannotReadDeviceDataFromUSSPartnerAdmin',
+                allowHtml: true,
+              });
+            } else {
+              Notification.errorWithTrackingId(error, 'hercules.userSidepanel.errorMessages.cannotReadDeviceDataFromUSS');
+            }
           })
           .finally(function () {
             vm.userStatusLoaded = true;
