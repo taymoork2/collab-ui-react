@@ -529,6 +529,13 @@ describe('HybridContextFieldsCtrl', function () {
         expect(controller.maxFieldsAllowed).toBe(maxFields);
         expect(controller.showNew).toBe(false);
       });
+
+      it('should use default max fields allowed on reject', function () {
+        PropertyService.getProperty.and.returnValue($q.reject());
+        $scope.$apply();
+        expect(controller.maxFieldsAllowed).toBe(PropertyConstants.MAX_FIELDS_DEFAULT_VALUE);
+        expect(controller.showNew).toBe(true);
+      });
     });
   });
 

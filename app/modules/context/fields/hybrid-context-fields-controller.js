@@ -303,7 +303,7 @@ var momentFilter = require('../filters/momentFilter').Moment;
         .catch(function (err) {
           Log.error('unable to get max fields allowed property', err);
         })
-        .finally(function () {
+        .then(function () {
           return vm.maxFieldsAllowed;
         });
     }
