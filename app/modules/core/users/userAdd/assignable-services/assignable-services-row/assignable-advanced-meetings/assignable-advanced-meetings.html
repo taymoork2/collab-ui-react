@@ -1,12 +1,13 @@
 <div ng-if="$ctrl.hasAdvancedMeetings()" class="advanced-meetings">
   <div translate="firstTimeWizard.advancedMeetings" class="license__category"></div>
   <div ng-repeat="license in $ctrl.licenses track by license.licenseId">
-    <assignable-item-checkbox
+    <assignable-license-checkbox
       license="license"
       l10n-label="{{:: 'subscriptions.licenseTypes.' + license.offerName }}"
       on-update="$ctrl.recvUpdate($event)"
       state-data="$ctrl.stateData"
-      ng-class="license.offerName === $ctrl.OFFER_NAME.CMR ? 'cs-input--nested-1' : ''">
+      ng-class="license.offerName === $ctrl.OFFER_NAME.CMR ? 'cs-input--nested-1' : ''"
+      >
       <div ng-if="license.offerName !== $ctrl.OFFER_NAME.CMR">
         <advanced-meeting-license-description is-cloud-shared-meeting="$ctrl.isSharedMeetingsLicense(license)">
         </advanced-meeting-license-description>
@@ -16,6 +17,6 @@
         usage="$ctrl.getTotalLicenseUsage(license)"
         volume="$ctrl.getTotalLicenseVolume(license)">
       </usage-line>
-    </assignable-item-checkbox>
+    </assignable-license-checkbox>
   </div>
 </div>
