@@ -8309,7 +8309,9 @@
       "desktopApps": "Desktop apps",
       "webApp": "Web app",
       "mobileApps": "Mobile apps",
-      "bots": "Bots"
+      "bots": "Bots",
+      "disableWhiteboardsTitle": "Disable Whiteboard",
+      "disableWhiteboardsDescription": "Restricting file share controls will also disable whiteboards"
     },
     "support": {
       "title": "Support",
