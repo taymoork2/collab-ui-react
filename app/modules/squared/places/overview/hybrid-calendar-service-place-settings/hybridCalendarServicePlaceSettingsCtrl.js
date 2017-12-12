@@ -1,12 +1,10 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Hercules')
-    .controller('HybridCloudberryCalendarCtrl', HybridCloudberryCalendarCtrl);
+  module.exports = HybridCalendarServicePlaceSettingsCtrl;
 
   /*@ngInject*/
-  function HybridCloudberryCalendarCtrl($scope, $state, $stateParams, Authinfo, Userservice, Orgservice, Notification, USSService, $translate, ResourceGroupService, FeatureToggleService, HybridServicesI18NService) {
+  function HybridCalendarServicePlaceSettingsCtrl($scope, $state, $stateParams, Authinfo, Userservice, Orgservice, Notification, USSService, $translate, ResourceGroupService, FeatureToggleService, HybridServicesI18NService) {
     $scope.entitlementNames = {
       'squared-fusion-cal': 'squaredFusionCal',
       'squared-fusion-gcal': 'squaredFusionGCal',

@@ -2,6 +2,7 @@ import './placeOverview.scss';
 
 import { PlaceOverviewComponent } from './placeOverview.component';
 import * as HybridCallServicePlaceSettingsCtrl from 'modules/squared/places/overview/hybrid-call-service-place-settings/hybridCallServicePlaceSettingsCtrl.js';
+import * as HybridCalendarServicePlaceSettingsCtrl from 'modules/squared/places/overview/hybrid-calendar-service-place-settings/hybridCalendarServicePlaceSettingsCtrl.js';
 
 import placeCallOverviewServiceModule from 'modules/squared/places/callOverview';
 import preferredLanguageModule from 'modules/huron/preferredLanguage';
@@ -27,5 +28,6 @@ export default angular
     URIVerificationServiceModuleName,
   ])
   .component('placeOverview', new PlaceOverviewComponent())
+  .controller('HybridCalendarServicePlaceSettingsCtrl', HybridCalendarServicePlaceSettingsCtrl)
   .controller('HybridCallServicePlaceSettingsCtrl', HybridCallServicePlaceSettingsCtrl)
   .name;
