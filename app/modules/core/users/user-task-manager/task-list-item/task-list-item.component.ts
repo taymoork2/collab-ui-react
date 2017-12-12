@@ -2,7 +2,7 @@ import './task-list-item.scss';
 import { ITask } from '../user-task-manager.component';
 import { UserTaskManagerService } from '../user-task-manager.service';
 
-class TaskListItemController implements ng.IComponentController {
+export class TaskListItemController implements ng.IComponentController {
   public task: ITask;
 
   /* @ngInject */

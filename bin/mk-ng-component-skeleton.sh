@@ -104,7 +104,7 @@ _EOF
 
 function print_component_ts {
     cat << _EOF
-class $js_controller_name implements ng.IComponentController {
+export class $js_controller_name implements ng.IComponentController {
 }
 
 export class $js_component_name implements ng.IComponentOptions {
@@ -118,9 +118,12 @@ _EOF
 function print_component_spec_ts {
     cat << _EOF
 import moduleName from './index';
+import { $js_controller_name } from './${js_component_file_no_ext}';
+
+type Test = atlas.test.IComponentTest<$js_controller_name, {}, {}>;
 
 describe('Component: ${js_directive_name}:', () => {
-  beforeEach(function() {
+  beforeEach(function (this: Test) {
     this.initModules(moduleName);
     this.injectDependencies(
       // TODO: add dependencies here
@@ -128,19 +131,19 @@ describe('Component: ${js_directive_name}:', () => {
   });
 
   // TODO: use as-appropriate
-  beforeEach(function () {
+  beforeEach(function (this: Test) {
     // this.compileTemplate('<${html_element_name}></${html_element_name}>');
-    // this.compileComponent('${js_directive_name}', { ... });
+    // this.compileComponent('${js_directive_name}', {});
   });
 
   describe('primary behaviors (view):', () => {
-    it('...', function () {
+    it('...', function (this: Test) {
       // TODO: implement
     });
   });
 
   describe('primary behaviors (controller):', () => {
-    it('...', function () {
+    it('...', function (this: Test) {
       // TODO: implement
     });
   });
