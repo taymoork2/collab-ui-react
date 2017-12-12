@@ -3910,11 +3910,22 @@
     "addAnotherSite": "Add another site",
     "meetingSettings": "Meeting Settings",
     "meetingSettingsDescription": "This step of Service Setup will help create one or more new WebEx sites. If you already have existing sites and would not like to setup any new ones, just click Next to proceed.",
-    "meetingCenterLicensesRemaining": "Meeting Center Licenses Remaining",
-    "enterpriseEditionLicensesRemaining": "Enterprise Edition Licenses Remaining",
-    "eventCenterLicensesRemaining": "Event Center Licenses Remaining",
-    "trainingCenterLicensesRemaining": "Training Center Licenses Remaining",
-    "supportCenterLicensesRemaining": "Support Center Licenses Remaining",
+    "centerTypes": {
+      "EE": "Enterprise Edition",
+      "MC": "Meeting Center",
+      "EC": "Event Center",
+      "TC": "Training Center",
+      "SC": "Support Center"
+    },
+    "centerTypesInits": {
+      "EE": "EE",
+      "MC": "MC",
+      "EC": "EC",
+      "TC": "TC",
+      "SC": "SC"
+    },
+    "centerTypeLicensesRemaining": "{{centerType}} licenses remaining",
+    "centerTypeLicenses": "{{centerType}} licenses",
     "tspPartnerRequired": "You have purchased TSP for your audio plan. A partner is required to provide this service.",
     "chooseTSPPartner": "Choose TSP Provider",
     "conferencingAudioProvided": "Conferencing Audio: {{service}} provided by {{partner}}",
@@ -6986,6 +6997,10 @@
     "redistributeLicenses": "Redistribute Licenses",
     "redistributeLicensesDesc": "Please indicate how many licenses to put on each site",
     "redistributeLicensesDesc2": "You must assign all the licenses and each site must have at least one license.",
+    "redistributeLicensesValidMessages": {
+      "allLicensesAssigned": "All licenses are assigned.",
+      "allSitesHaveLicense": "Each site has at least one license."
+    },
     "redistributeLicensesDelete": "<strong>To finish deleting site:</strong> The WebEx site <strong>{{siteUrl}}</strong> is ready to be deleted. First you must reassign the licenses from it to the remaining sites in this subscription.",
     "redistributeRejectModalTitle": "Cannot Redistribute Licenses",
     "redistributeRejectModalBodyOnlySite": "You cannot redistribute licenses between sites because there is only one site.",
