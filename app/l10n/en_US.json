@@ -1500,6 +1500,7 @@
     "apply": "Apply",
     "assign": "Assign",
     "assigned": "Assigned",
+    "authorize": "Authorize",
     "back": "Back",
     "begin": "Begin",
     "cancel": "Cancel",
@@ -1582,6 +1583,7 @@
     "pending": "Pending",
     "play": "Play",
     "postpone": "Postpone",
+    "previous": "Previous",
     "primary": "Primary",
     "proceed": "Proceed",
     "processingEllipsis": "Processing...",
@@ -2375,14 +2377,21 @@
       "not-updated": "Licenses could not be updated for {{userName}}.",
       "not-updated-specific": "Licenses could not be updated for {{userName}}. The server returned the following error message: {{error}}.",
       "readResourceGroupsFailed": "Could not read Resource Groups. Try again later.",
-      "readUserStatusFailed": "Unable to read the current user status. Please try again later.",
       "refreshUserFailed": "Unable to refresh the user status. Please try again later.",
       "refreshUserDidNoGood": "Unable to get the user status. Please contact support if the problem persists.",
       "couldNotReadConnectStatus": "Unable to read Call Service Connect organization status. Please contact support if the problem persists.",
       "notEnabledInOrg": "Not enabled in organization",
       "enableAwareFirst": "Aware must be enabled before the user can be enabled for Connect. Enable it in the <a href ng-click=\"{{onclick}}\">Call Service Aware panel</a>.",
       "disableAwareHeader": "Disable Services",
-      "disableAwareMessage": "Are you sure? By disabling Call Service Aware, Call Service Connect will also be disabled for this user."
+      "disableAwareMessage": "Are you sure? By disabling Call Service Aware, Call Service Connect will also be disabled for this user.",
+      "errorMessages": {
+        "cannotReadDeviceDataFromUSS": "Unable to read device's activation status.",
+        "cannotReadDeviceDataFromUSSPartnerAdmin": "Unable to read device's activation status. This could indicate a caching problem, try logging out and in again to clear the user cache. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation.",
+        "cannotReadUserDataFromUSS": "Unable to read user's activation status.",
+        "cannotReadUserDataFromUSSPartnerAdmin": "Unable to read user's activation status. This could indicate a caching problem, try logging out and in again to clear the user cache. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation.",
+        "cannotReadOrgDataFromFMS": "Unable to read organization's Expressway-based Hybrid Services data.",
+        "cannotReadOrgDataFromFMSPartnerAdmin": "Unable to read organization's Expressway-based Hybrid Services data. This could indicate a caching problem, try logging out and in again to clear the user cache. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation."
+      }
     },
     "placeSidepanel": {
       "hybridCallNotActivated": "We're checking for the user account in Cisco Unified Communications Manager. This can take up to 30 minutes. Check back later for the status.",
@@ -2857,14 +2866,11 @@
         "description": "If you need to update or restore your G Suite API client access, retrieve the client name and scope by clicking the button below.",
         "cta": "Update",
         "provisioningResults": {
-          "OK": "Google Calendar is integrated with Hybrid Calendar Service.",
-          "BAD_API_ACCESS_SETTINGS": "The site verification API is not enabled. Go to console.developers.google.com to enable it.",
-          "DATABASE_ERROR": "Can't connect to the internal database. Try again later.",
-          "SITE_VERIFICATION_FAILURE": "The domain verification step failed. Make sure you followed the domain verification steps in the documentation.",
-          "SECURITY_FAILURE": "Security failure.",
-          "INPUT_PARSING_FAILURE": "The private data key cannot be parsed. Regenerate one for your project at console.developers.google.com and try again.",
-          "GENERAL_ERROR": "An unexpected error occurred. Contact support if this error recurs.",
-          "INVALID_CREDENTIALS": "The service account credentials are invalid."
+          "OK": "The Hybrid Calendar Service is successfully set up with your Office 365 organization.",
+          "GENERAL_ERROR": "An unexpected error occurred.",
+          "TEST_ACCOUNT_NONEXISTENT": "The test account credentials didn't work. Retest with a licensed Office 365 user with an Exchange Online mailbox.",
+          "INVALID_SESSION_ID": "Invalid session id. Please re-authorize Office 365 from the settings page.",
+          "BAD_ADMIN_CONSENT": "We hit an authorization error with your Office 365 organization. Go to the Hybrid Calendar Office 365 Settings page and reauthorize."
         }
       },
       "hybridCalendarCommon": {
@@ -3333,6 +3339,31 @@
           "description": "No cluster assigned to the user's resource group. Check the cluster configuration and then try again."
         }
       }
+    },
+    "office365SetupModal": {
+      "title": "Hybrid Calendar setup",
+      "subtitle": "Office 365 setup",
+      "line1": "The Hybrid Calendar Service needs permission to access Office 365 on behalf of your users.",
+      "line2": "Click <strong>Authorize</strong> to sign in to Microsoft and accept permissions for the service.",
+      "line3": "After you accept, your browser should redirect you back here. If you’re not redirected shortly, return to <a target=\"_blank\" href=\"https://admin.ciscospark.com\">admin.ciscospark.com</a> and start this process again."
+    },
+    "office365SuccessModal": {
+      "test": {
+        "subtitle": "Test Account",
+        "inputLabel": "Enter the Office 365 account you want to use to test the connection with Exchange Online."
+      },
+      "success": {
+        "subtitle": "Setup complete",
+        "line1": "You're ready to enable the Hybrid Calendar Service for your Office 365 users:",
+        "line2": "Enable them individually from the <a href ng-click=\"{{onclick}}\">users page</a>.",
+        "line3": "Enable them in bulk using the <a href ng-click=\"{{onclick}}\">CSV template</a>.",
+        "line4": "For more information, go to <a href=\"https://collaborationhelp.cisco.com\" target=\"_blank\">Collaboration Help</a>."
+      }
+    },
+    "office365FailureModal": {
+      "subtitle": "An error occured during the authorization",
+      "feedback": "If the error remains, click your admin username, and then click <strong>Feedback</strong> to open a case for further investigation.",
+      "errorCode": "Error Code: {{code}}."
     }
   },
   "context": {

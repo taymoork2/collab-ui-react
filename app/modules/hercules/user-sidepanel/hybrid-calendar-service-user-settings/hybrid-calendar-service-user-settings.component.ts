@@ -74,9 +74,6 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
     return this.getDataFromUSS()
       .then(this.getDataFromCCC)
       .then(this.getDataFromFMS)
-      .catch((error) => {
-        this.Notification.errorWithTrackingId(error, 'hercules.userSidepanel.readUserStatusFailed');
-      })
       .finally(() => {
         this.processFetchedData();
         this.loadingPage = false;
@@ -97,6 +94,16 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
         }
         if (this.userStatus && this.userStatus.owner === 'ccc') {
           this.userOwnedByCCC = true;
+        }
+      })
+      .catch((error) => {
+        if (this.HybridServiceUserSidepanelHelperService.isPartnerAdminAndGot403Forbidden(error)) {
+          this.Notification.errorWithTrackingId(error, {
+            errorKey: 'hercules.userSidepanel.errorMessages.cannotReadDeviceDataFromUSSPartnerAdmin',
+            allowHtml: true,
+          });
+        } else {
+          this.Notification.errorWithTrackingId(error, 'hercules.userSidepanel.errorMessages.cannotReadUserDataFromUSS');
         }
       });
   }
@@ -124,6 +131,16 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
     return this.HybridServicesClusterService.serviceIsSetUp('squared-fusion-cal')
       .then((isSetup) => {
         this.orgHasExpresswayBasedCalendarEnabled = isSetup;
+      })
+      .catch((error) => {
+        if (this.HybridServiceUserSidepanelHelperService.isPartnerAdminAndGot403Forbidden(error)) {
+          this.Notification.errorWithTrackingId(error, {
+            errorKey: 'hercules.userSidepanel.errorMessages.cannotReadOrgDataFromFMSPartnerAdmin',
+            allowHtml: true,
+          });
+        } else {
+          this.Notification.errorWithTrackingId(error, 'hercules.userSidepanel.errorMessages.cannotReadOrgDataFromFMS');
+        }
       });
   }
 

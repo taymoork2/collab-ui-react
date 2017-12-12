@@ -6,6 +6,8 @@ class CallPickupNameCtrl implements ng.IComponentController {
   private onUpdate: Function;
   private listOfCallPickups: ng.IPromise<IPickupGroup[]> ;
   public isNew: boolean;
+  public ucKeyup?: Function;
+  public ucKeypress?: Function;
 
   /* @ngInject */
   constructor(
@@ -33,6 +35,18 @@ class CallPickupNameCtrl implements ng.IComponentController {
       return (_.findIndex(callPickups, { name : name.toLowerCase() }) === -1) ?  true : false;
     });
   }
+
+  public keyup($event: KeyboardEvent) {
+    if (_.isFunction(this.ucKeyup)) {
+      this.ucKeyup({ $event: $event });
+    }
+  }
+
+  public keypress($event: KeyboardEvent) {
+    if (_.isFunction(this.ucKeypress)) {
+      this.ucKeypress({ $event: $event });
+    }
+  }
 }
 
 export class CallPickupNameComponent implements ng.IComponentOptions {
@@ -42,5 +56,7 @@ export class CallPickupNameComponent implements ng.IComponentOptions {
     onUpdate: '&',
     callPickupName: '<',
     isNew: '<',
+    ucKeyup: '&?',
+    ucKeypress: '&?',
   };
 }

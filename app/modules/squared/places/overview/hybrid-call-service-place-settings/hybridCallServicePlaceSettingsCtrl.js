@@ -4,7 +4,7 @@
   module.exports = HybridCallServicePlaceSettingsCtrl;
 
   /*@ngInject*/
-  function HybridCallServicePlaceSettingsCtrl($scope, $stateParams, Notification, USSService, HybridServicesClusterService, UriVerificationService, DomainManagementService, $translate, UCCService, HybridServicesI18NService) {
+  function HybridCallServicePlaceSettingsCtrl($scope, $stateParams, Notification, USSService, HybridServicesClusterService, HybridServiceUserSidepanelHelperService, UriVerificationService, DomainManagementService, $translate, UCCService, HybridServicesI18NService) {
     $scope.saveLoading = false;
     $scope.domainVerificationError = false;
     $scope.currentPlace = $stateParams.getCurrentPlace();
@@ -67,8 +67,15 @@
             }
           });
         }
-      }).catch(function (response) {
-        Notification.errorWithTrackingId(response, 'hercules.userSidepanel.readUserStatusFailed');
+      }).catch(function (error) {
+        if (HybridServiceUserSidepanelHelperService.isPartnerAdminAndGot403Forbidden(error)) {
+          Notification.errorWithTrackingId(error, {
+            errorKey: 'hercules.userSidepanel.errorMessages.cannotReadDeviceDataFromUSSPartnerAdmin',
+            allowHtml: true,
+          });
+        } else {
+          Notification.errorWithTrackingId(error, 'hercules.userSidepanel.errorMessages.cannotReadDeviceDataFromUSS');
+        }
       }).finally(function () {
         $scope.updatingStatus = false;
       });

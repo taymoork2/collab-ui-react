@@ -1,13 +1,14 @@
 <div class="modal-header">
     <button type="button" class="close" ng-click="$ctrl.dismiss()" aria-label="{{::'common.close' | translate}}"></button>
-    <h1 class="modal-title">Hybrid Calendar setup</h1>
+    <h1 class="modal-title" translate="hercules.office365SetupModal.title"></h1>
   </div>
   <div class="modal-body">
-    <h2>Error</h2>
-    <p>Oh no: <code>{{$ctrl.reason}}</code></p>
+    <h4 translate="hercules.office365FailureModal.subtitle"></h4>
+    <p><span translate="{{$ctrl.reasonKey}}"></span> <span translate="hercules.office365FailureModal.errorCode" translate-value-code="{{$ctrl.reason}}"></span></p>
+    <p translate="hercules.office365FailureModal.feedback"></p>
   </div>
   <div class="modal-footer">
     <button cs-btn class="btn btn-primary" ng-click="$ctrl.dismiss()">
-      <span>Close</span>
+      <span translate="common.close"></span>
     </button>
   </div>
