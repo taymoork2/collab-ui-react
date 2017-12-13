@@ -1,5 +1,7 @@
 export class SunlightConstantsService {
   public notificationSnoozeHours;
+  public successStatus;
+  public routingLabels;
   public status;
 
   constructor() {
@@ -9,6 +11,12 @@ export class SunlightConstantsService {
       PENDING: 'Pending',
       SUCCESS: 'Success',
       FAILURE: 'Failure',
+    };
+    this.successStatus = 'Success';
+    this.routingLabels = {
+      AGENT: 'agent',
+      EXPERT: 'expert',
+      AGENTPLUSEXPERT: 'agentplusexpert',
     };
   }
 }
