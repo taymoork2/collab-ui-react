@@ -3,6 +3,7 @@ describe('Component: myCompanyOrders', () => {
     this.initModules('Core');
     this.injectDependencies(
       '$q',
+      'Authinfo',
       'Config',
       'DigitalRiverService',
       'MyCompanyOrdersService',
@@ -14,6 +15,7 @@ describe('Component: myCompanyOrders', () => {
       orderDate: new Date(),
       status: 'COMPLETED',
       total: 15.95,
+      buyerEmail: 'admin@cisco.com',
       productList: [
         { description: 'first description' },
       ],
@@ -51,7 +53,9 @@ describe('Component: myCompanyOrders', () => {
     this.getOrderDetailsDefer = this.$q.defer();
     this.getDigitalRiverOrderHistoryUrlDefer = this.$q.defer();
 
+    spyOn(this.Authinfo, 'getCustomerAdminEmail').and.returnValue('admin@cisco.com');
     spyOn(this.MyCompanyOrdersService, 'getOrderDetails').and.returnValue(this.getOrderDetailsDefer.promise);
+    spyOn(this.MyCompanyOrdersService, 'getUserId').and.returnValue(this.$q.resolve('123'));
     spyOn(this.Notification, 'errorWithTrackingId');
 
     spyOn(this.DigitalRiverService, 'logout').and.returnValue(this.$q.resolve());
