@@ -78,6 +78,16 @@ describe('Test sunlight Util Service for admin profile', function () {
       this.$scope.$digest();
     });
 
+    it('should get isCareSetup for jwtApp not onboarded', function () {
+      this.Authinfo.getUserOrgId.and.returnValue(partnerOrgId);
+      const careSetupResponse = this.SunlightUtilitiesService.isCareSetup();
+      deferredRes.resolve(dummyResponse.jwtAppOnboardUnknown);
+      careSetupResponse.then(function (res) {
+        expect(res).toBe(true);
+      });
+      this.$scope.$digest();
+    });
+
     it('should get getAAOnboardStatus for non care voice entitled org', function () {
       this.Authinfo.getUserOrgId.and.returnValue(partnerOrgId);
       this.Authinfo.isCareVoice.and.returnValue(false);
@@ -129,19 +139,19 @@ describe('Test sunlight Util Service for admin profile', function () {
     });
 
     it('should get CareOnboardStatusForAdmin positive', function () {
-      expect(this.SunlightUtilitiesService.getCareOnboardStatusForAdmin(this.status.SUCCESS,
-        this.status.SUCCESS, this.status.SUCCESS)).toBe(true);
+      expect(this.SunlightUtilitiesService.getCareOnboardStatusForAdmin(this.status.SUCCESS, this.status.SUCCESS, this.status.SUCCESS,
+      this.status.SUCCESS)).toBe(true);
     });
 
     it('should get CareOnboardStatusForAdmin when careVoice not enabled', function () {
       this.Authinfo.isCareVoice.and.returnValue(false);
       expect(this.SunlightUtilitiesService.getCareOnboardStatusForAdmin(this.status.SUCCESS,
-        this.status.SUCCESS , this.status.UNKNOWN)).toBe(true);
+      this.status.SUCCESS , this.status.UNKNOWN, this.status.SUCCESS)).toBe(true);
     });
 
     it('should get getCareOnboardStatusForAdmin negative', function () {
       expect(this.SunlightUtilitiesService.getCareOnboardStatusForAdmin(this.status.UNKNOWN,
-        this.status.SUCCESS, this.status.SUCCESS)).toBe(false);
+        this.status.SUCCESS, this.status.SUCCESS, this.status.SUCCESS)).toBe(false);
     });
 
     it('should get getAAOnboardStatus for non care voice entitled org', function () {
@@ -183,6 +193,15 @@ describe('Test sunlight Util Service for admin profile', function () {
     it('should get isCareSetup for app not onboarded', function () {
       const careSetupResponse = this.SunlightUtilitiesService.isCareSetup();
       deferredRes.resolve(dummyResponse.appOnboardUnknown);
+      careSetupResponse.then(function (res) {
+        expect(res).toBe(false);
+      });
+      this.$scope.$digest();
+    });
+
+    it('should get isCareSetup for jwtApp not onboarded', function () {
+      const careSetupResponse = this.SunlightUtilitiesService.isCareSetup();
+      deferredRes.resolve(dummyResponse.jwtAppOnboardUnknown);
       careSetupResponse.then(function (res) {
         expect(res).toBe(false);
       });

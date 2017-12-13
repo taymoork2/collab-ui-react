@@ -26,6 +26,7 @@ var HttpStatus = require('http-status-codes');
     vm.csOnboardingStatus = vm.status.UNKNOWN;
     vm.aaOnboardingStatus = vm.status.UNKNOWN;
     vm.appOnboardingStatus = vm.status.UNKNOWN;
+    vm.jwtAppOnboardingStatus = vm.status.UNKNOWN;
 
     vm.defaultQueueId = Authinfo.getOrgId();
     vm.careSetupDoneByOrgAdmin = (Authinfo.getOrgId() === Authinfo.getUserOrgId());
@@ -234,6 +235,7 @@ var HttpStatus = require('http-status-codes');
       vm.csOnboardingStatus = _.get(result, 'data.csOnboardingStatus');
       vm.aaOnboardingStatus = _.get(result, 'data.aaOnboardingStatus');
       vm.appOnboardingStatus = _.get(result, 'data.appOnboardStatus');
+      vm.jwtAppOnboardingStatus = _.get(result, 'data.jwtAppOnboardingStatus');
 
       if (isCalledOnInit) {
         vm.orgChatConfigDataModel.chatCount = _.get(result, 'data.maxChatCount', maxChatCount);
@@ -243,7 +245,7 @@ var HttpStatus = require('http-status-codes');
         vm.orgChatConfig.selectedVideoInChatToggle = vm.orgChatConfigDataModel.videoInChatToggle;
       }
     }
-    function onboardCsAaAppToCare() {
+    function onboardCareWithOtherApps() {
       var promises = {};
       if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
         promises.onBoardCS = SunlightConfigService.onBoardCare();
@@ -261,13 +263,23 @@ var HttpStatus = require('http-status-codes');
           }
         });
       }
-      if (vm.careSetupDoneByOrgAdmin && vm.appOnboardingStatus !== vm.status.SUCCESS) {
-        promises.onBoardBotApp = SunlightConfigService.onboardCareBot();
-        promises.onBoardBotApp.then(function (result) {
-          if (result.status === HttpStatus.NO_CONTENT) {
-            vm.appOnboardingStatus = vm.status.SUCCESS;
-          }
-        });
+      if (vm.careSetupDoneByOrgAdmin) {
+        if (vm.appOnboardingStatus !== vm.status.SUCCESS) {
+          promises.onBoardBotApp = SunlightConfigService.onboardCareBot();
+          promises.onBoardBotApp.then(function (result) {
+            if (result.status === HttpStatus.NO_CONTENT) {
+              vm.appOnboardingStatus = vm.status.SUCCESS;
+            }
+          });
+        }
+        if (vm.jwtAppOnboardingStatus !== vm.status.SUCCESS) {
+          promises.onBoardJwtApp = SunlightConfigService.onboardJwtApp();
+          promises.onBoardJwtApp.then(function (result) {
+            if (result.status === HttpStatus.NO_CONTENT) {
+              vm.jwtAppOnboardingStatus = vm.status.SUCCESS;
+            }
+          });
+        }
       }
       $q.all(promises).then(function (results) {
         Log.debug('Care onboarding is success', results);
@@ -297,13 +309,13 @@ var HttpStatus = require('http-status-codes');
 
         URService.createQueue(createQueueRequest).then(function () {
           vm.defaultQueueStatus = vm.status.SUCCESS;
-          onboardCsAaAppToCare();
+          onboardCareWithOtherApps();
         })
           .catch(function (error) {
             Log.debug('default queue creation is unsuccessful,' + error);
           });
       } else {
-        onboardCsAaAppToCare();
+        onboardCareWithOtherApps();
       }
     };
 
@@ -401,16 +413,18 @@ var HttpStatus = require('http-status-codes');
 
     function onboardingDoneByAdminStatus() {
       var onboardingDoneByAdminStatus = vm.status.UNKNOWN;
+      var aaOnboarded = onboardingStatusForAA();
       if (vm.defaultQueueStatus !== vm.status.SUCCESS) {
         onboardingDoneByAdminStatus = vm.defaultQueueStatus;
-      } else if (vm.csOnboardingStatus === vm.status.SUCCESS && vm.appOnboardingStatus === vm.status.SUCCESS) {
-        onboardingDoneByAdminStatus = onboardingStatusWhenCareVoiceEnabled();
+      } else if (vm.csOnboardingStatus === vm.status.SUCCESS && vm.appOnboardingStatus === vm.status.SUCCESS
+        && aaOnboarded === vm.status.SUCCESS) {
+        onboardingDoneByAdminStatus = vm.jwtAppOnboardingStatus;
+      } else if (aaOnboarded !== vm.status.SUCCESS) {
+        onboardingDoneByAdminStatus = aaOnboarded;
       } else if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
         onboardingDoneByAdminStatus = vm.csOnboardingStatus;
       } else if (vm.appOnboardingStatus !== vm.status.SUCCESS) {
         onboardingDoneByAdminStatus = vm.appOnboardingStatus;
-      } else {
-        onboardingDoneByAdminStatus = vm.status.UNKNOWN;
       }
       return onboardingDoneByAdminStatus;
     }
@@ -420,14 +434,14 @@ var HttpStatus = require('http-status-codes');
       if (vm.defaultQueueStatus !== vm.status.SUCCESS) {
         onboardingDoneByPartnerStatus = vm.defaultQueueStatus;
       } else if (vm.csOnboardingStatus === vm.status.SUCCESS) {
-        onboardingDoneByPartnerStatus = onboardingStatusWhenCareVoiceEnabled();
+        onboardingDoneByPartnerStatus = onboardingStatusForAA();
       } else if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
         onboardingDoneByPartnerStatus = vm.csOnboardingStatus;
       }
       return onboardingDoneByPartnerStatus;
     }
 
-    function onboardingStatusWhenCareVoiceEnabled() {
+    function onboardingStatusForAA() {
       var status;
       if (Authinfo.isCareVoice()) {
         status = vm.aaOnboardingStatus;
