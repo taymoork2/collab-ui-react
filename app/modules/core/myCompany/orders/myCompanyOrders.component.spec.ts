@@ -17,36 +17,44 @@ describe('Component: myCompanyOrders', () => {
       total: 15.95,
       buyerEmail: 'admin@cisco.com',
       productList: [
-        { description: 'first description' },
+        { description: 'Cisco WebEx 25 Monthly', sku: 'MC25-SPK-ONL-US-M' },
       ],
     }, {
       externalOrderId: '2',
       orderDate: new Date(),
       status: 'PROVISIONING',
-      total: 15.95,
+      total: 0,
       productList: [
-        { description: 'fourth description' },
-        { description: 'fifth description' },
+        { description: 'Cisco Spark Trial', sku: 'A-SPK-M1ONL-TRIAL' },
       ],
       invoiceURL: '',
     }, {
       externalOrderId: '3',
       orderDate: new Date(),
       status: this.Config.webexSiteStatus.PENDING_PARM,
-      total: 15.95,
+      total: 0,
       productList: [
-        { description: 'second description' },
+        { description: 'Cisco WebEx Trial', sku: 'MC25-SPK-ONL-US-TRIAL' },
       ],
       invoiceURL: '',
     }, {
       externalOrderId: '4',
       orderDate: new Date(),
       status: 'CLOSED',
-      total: 15.95,
+      total: 240,
       productList: [
-        { description: 'closed description' },
+        { description: 'Cisco WebEx 8 Annual', sku: 'MC8-SPK-ONL-US-A' },
       ],
       invoiceURL: '',
+    }, {
+      externalOrderId: '5',
+      orderDate: new Date(),
+      status: 'COMPLETED',
+      total: 15.95,
+      buyerEmail: 'admin@cisco.com',
+      productList: [
+        { description: 'Enterprise', sku: 'M1-SPK-CCW' },
+      ],
     }];
 
     this.purchaseOrdersList = purchaseOrdersList;
@@ -102,13 +110,13 @@ describe('Component: myCompanyOrders', () => {
     it('should load data on orderDetailList', function () {
       expect(this.controller.orderDetailList).toEqual(jasmine.any(Array));
       expect(this.controller.orderDetailList.length).toBe(3);
-      expect(this.controller.orderDetailList[0].productDescriptionList).toEqual('first description');
-      expect(this.controller.orderDetailList[1].productDescriptionList).toEqual('fourth description, fifth description');
-      expect(this.controller.orderDetailList[2].productDescriptionList).toEqual('second description');
-      expect(this.controller.orderDetailList[0].status).toEqual('myCompanyOrders.completed');
-      expect(this.controller.orderDetailList[1].status).toEqual('myCompanyOrders.pending');
-      expect(this.controller.orderDetailList[2].status).toEqual('myCompanyOrders.pendingActivation');
-      expect(this.controller.orderDetailList[0].invoiceURL).toEqual('invoice.com');
+      expect(this.controller.orderDetailList[0].productDescriptionList).toBe('Cisco WebEx 25 Monthly');
+      expect(this.controller.orderDetailList[1].productDescriptionList).toBe('Cisco Spark Trial');
+      expect(this.controller.orderDetailList[0].status).toBe('myCompanyOrders.completed');
+      expect(this.controller.orderDetailList[1].status).toBe('myCompanyOrders.pending');
+      expect(this.controller.orderDetailList[2].status).toBe('myCompanyOrders.pendingActivation');
+      expect(this.controller.orderDetailList[0].invoiceURL).toBe('invoice.com');
+      expect(this.controller.orderDetailList[1].invoiceURL).toBe('');
     });
 
     it('should have a data row and no loading icon', function () {
@@ -118,8 +126,8 @@ describe('Component: myCompanyOrders', () => {
 
     // TODO investigate more on unit testing ui-grid sorting
     xit('should concat descriptions into single column', function () {
-      expect(this.view.find('.ui-grid-row: first .ui-grid-cell-contents: nth(1)')).toHaveText('first description');
-      expect(this.view.find('.ui-grid-row: last .ui-grid-cell-contents: nth(1)')).toHaveText('fourth description, fifth description');
+      expect(this.view.find('.ui-grid-row: first .ui-grid-cell-contents: nth(1)')).toHaveText('Cisco WebEx 25 Monthly');
+      expect(this.view.find('.ui-grid-row: last .ui-grid-cell-contents: nth(1)')).toHaveText('Cisco WebEx Trial');
     });
 
     xit('should sort on order number', function () {
