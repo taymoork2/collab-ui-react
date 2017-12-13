@@ -79,8 +79,8 @@ class AssignableServicesRowController implements ng.IComponentController {
     return this.LicenseUsageUtilService.getTotalLicenseVolume(offerName, this.licenses);
   }
 
-  public recvClick(): void {
-    this.showContent = !this.showContent;
+  public recvUpdate($event): void {
+    this.showContent = $event.item.showContent;
     this.onUpdate({
       $event: {
         itemId: this.subscription.subscriptionId,
