@@ -11,9 +11,11 @@ describe('Component: crCollapsibleRow:', () => {
   beforeEach(function () {
     this.$scope.fakeRowId = 'fake-rowId';
     this.$scope.showContent = true;
+    this.$scope.onUpdateFn = jasmine.createSpy('onUpdate');
     this.compileComponent('crCollapsibleRow', {
       rowId: 'fakeRowId',
       showContent: 'showContent',
+      onUpdate: 'onUpdateFn($event)',
     });
   });
 
@@ -26,33 +28,21 @@ describe('Component: crCollapsibleRow:', () => {
       expect(this.view.find('.row__header .icon.toggle')).toHaveClass('icon-chevron-down');
       expect(this.view.find('.row__content')).toHaveClass('ng-hide');
     });
+
+    it('should call "onUpdate()" output binding when toggled', function () {
+      this.view.find('.row__header .icon.toggle').click();
+      expect(this.$scope.onUpdateFn).toHaveBeenCalledWith({
+        itemId: 'fake-rowId',
+        item: {
+          showContent: false,
+        },
+      });
+    });
   });
 
   describe('primary behaviors (controller):', () => {
     it('should initialize "rowTitle" as "rowId" if not set', function () {
       expect(this.controller.rowTitle).toBe('fake-rowId');
-    });
-
-    describe('toggleContent', () => {
-      it('should toggle "showContent" property', function () {
-        expect(this.controller.showContent).toBe(true);
-        this.controller.toggleContent();
-        expect(this.controller.showContent).toBe(false);
-      });
-
-      it('should call "onUpdate()" output binding', function () {
-        expect(this.controller.showContent).toBe(true);
-        spyOn(this.controller, 'onUpdate');
-        this.controller.toggleContent();
-        expect(this.controller.onUpdate).toHaveBeenCalledWith({
-          $event: {
-            itemId: 'fake-rowId',
-            item: {
-              showContent: false,
-            },
-          },
-        });
-      });
     });
   });
 });
