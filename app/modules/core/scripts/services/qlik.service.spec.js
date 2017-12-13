@@ -48,16 +48,15 @@ describe('Service: QlikService', function () {
       });
     });
 
-    it('should return appId and ticket if call getQBSInfo API', function () {
-      var promise = QlikService.getQBSInfo('spark', 'Basic', testData.postParam);
+    it('should return spark appId and ticket if call getQBSInfo API', function () {
+      var promise = QlikService.getQBSInfo('spark', 'Basic', testData.postParam, 'dev');
       $httpBackend.flush();
       var res = promise.$$state.value;
       expect(Object.keys(res.data)).toContain('ticket');
     });
 
-    it('should return appId and ticket if call getQBSInfo API', function () {
+    it('should return webex appId and ticket if call getProdToBTSQBSInfo API', function () {
       var promise = QlikService.getProdToBTSQBSInfo('webex', 'Basic', testData.postParam);
-
       $httpBackend.flush();
       var res = promise.$$state.value;
       expect(Object.keys(res.data)).toContain('ticket');

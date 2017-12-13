@@ -254,18 +254,6 @@
       integration: 'https://int-expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
       prod: 'https://expert-assistant.produs1.ciscoccservice.com/expert-assistant/v1/',
     },
-    WebExReportAppforMEIUrl: {
-      dev: 'https://%s/custportal/extensions/MEI/MEI.html',
-      cfe: 'https://%s/custportal/extensions/MEI/MEI.html',
-      integration: 'https://%s/custportal/extensions/MEI/MEI.html',
-      prod: 'https://%s/custportal/extensions/MEI/MEI.html',
-    },
-    SparkReportAppforMEIUrl: {
-      dev: 'https://%s/custportal/extensions/MEI/MEI.html',
-      cfe: 'https://%s/custportal/extensions/MEI/MEI.html',
-      integration: 'https://%s/custportal/extensions/MEI/MEI.html',
-      prod: 'https://%s/custportal/extensions/MEI/MEI.html',
-    },
     AdminBatchServiceUrl: {
       dev: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
       cfe: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',

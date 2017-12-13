@@ -40,19 +40,9 @@
       return $http.post(url, data).then(extractData).catch(catchError);
     }
 
-    function getQBSInfo(reportType, viewType, data, env) {
-      var specifyEnv = {};
-      if (!_.isUndefined(env)) {
-        specifyEnv.env = env;
-      }
-      var QBSUrl = getQlikServiceUrl(reportType, viewType, env);
-      return getQlikServiceData(QBSUrl, data);
-    }
-
     function getQlikMashupUrl(qrp, reportType, viewType) { //qlik_reverse_proxy
       var reportsAppUrl = UrlConfig.getQlikReportAppUrl(qrp);
       var paramType = reportType + viewType;
-      $log.log(_.get(QlikUrlParams, paramType));
       var mashupApp = QlikUrlParams[paramType][1];
       var mashupAppUrl = mashupApp + '/' + mashupApp + '.html';
       return reportsAppUrl + mashupAppUrl;
@@ -66,11 +56,11 @@
       return $q.reject(error);
     }
 
-    function specifyReportQBS(isError, result, reportType, viewType, data, specifyEnv) {
+    function specifyReportQBS(isError, result, reportType, viewType, data, env) {
       var resultData = _.get(result, 'data', '');
       var siteId = _.get(resultData, 'siteId', '');
 
-      if (Config.getEnv() === 'prod' && (_.get(specifyEnv, 'env', '') !== 'integration') && (isError || siteId === '')) {
+      if (Config.getEnv() === 'prod' && (env !== 'integration') && (isError || siteId === '')) {
         $log.log('turns to call QBS BTS');
         return callReportQBSBTS(reportType, viewType, data);
       }
@@ -86,17 +76,26 @@
       return getQBSInfo(reportType, viewType, data, 'integration');
     }
 
-    function getProdToBTSQBSInfo(reportType, viewType, data, env) {
+    function getServiceUrl(reportType, viewType, env) {
       var specifyEnv = {};
       if (!_.isUndefined(env)) {
         specifyEnv.env = env;
       }
-      var QBSUrl = getQlikServiceUrl(reportType, viewType, env);
+      return getQlikServiceUrl(reportType, viewType, specifyEnv);
+    }
+
+    function getQBSInfo(reportType, viewType, data, env) {
+      var QBSUrl = getServiceUrl(reportType, viewType, env);
+      return getQlikServiceData(QBSUrl, data);
+    }
+
+    function getProdToBTSQBSInfo(reportType, viewType, data, env) {
+      var QBSUrl = getServiceUrl(reportType, viewType, env);
 
       return $http.post(QBSUrl, data).then(function (response) {
-        return specifyReportQBS(false, response, reportType, viewType, data, specifyEnv);
+        return specifyReportQBS(false, response, reportType, viewType, data, env);
       }).catch(function (error) {
-        return specifyReportQBS(true, error, reportType, viewType, data, specifyEnv);
+        return specifyReportQBS(true, error, reportType, viewType, data, env);
       });
     }
   }
