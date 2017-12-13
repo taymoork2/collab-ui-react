@@ -172,7 +172,7 @@
     require('modules/hercules/service-settings/call-service-settings-page').default,
     require('modules/hercules/service-settings/sip-destination-settings-section').default,
     require('modules/hercules/service-specific-pages/components/cluster-list/hybrid-service-cluster-list.component').default,
-    require('modules/hercules/service-specific-pages/components/user-status-report/user-details'),
+    require('modules/hercules/service-specific-pages/components/user-status-report').default,
     require('modules/hercules/services/calendar-cloud-connector.service').default,
     require('modules/hercules/services/cluster-service').default,
     require('modules/hercules/services/enterprise-private-trunk-service').default,
