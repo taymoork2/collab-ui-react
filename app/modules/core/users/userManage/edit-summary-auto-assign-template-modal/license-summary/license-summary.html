@@ -92,5 +92,21 @@
         </license-summary-item>
       </td>
     </tr>
+
+    <!-- HYBRID SERVICES ROW  -->
+    <!-- TODO: add logic for checking 'hybrid message' after enabling it for test org 'Atlas_Test_int--ft--atlas-f3745-auto-assign-licenses' -->
+    <tr ng-if="$ctrl.findHybridUserEntitlement($ctrl.ENTITLEMENT_NAME.SQUARED_FUSION_UC) || $ctrl.findHybridUserEntitlement($ctrl.ENTITLEMENT_NAME.SQUARED_FUSION_CAL)">
+      <th class="medium-1">
+        <h5 class="title-offer-name" translate="onboardModal.hybridServices"></h5>
+      </th>
+
+      <td ng-if="$ctrl.findHybridUserEntitlement($ctrl.ENTITLEMENT_NAME.SQUARED_FUSION_CAL)">
+        <h6 translate="hercules.cloudExtensions.exchange"></h6>
+      </td>
+
+      <td ng-if="$ctrl.findHybridUserEntitlement($ctrl.ENTITLEMENT_NAME.SQUARED_FUSION_UC)">
+        <h6 translate="hercules.serviceNames.squared-fusion-uc.full"></h6>
+      </td>
+    </tr>
   </tbody>
 </table>

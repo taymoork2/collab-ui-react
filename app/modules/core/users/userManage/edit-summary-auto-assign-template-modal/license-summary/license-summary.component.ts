@@ -1,10 +1,12 @@
 import { ILicenseUsage } from 'modules/core/users/userAdd/assignable-services/shared';
+import { IUserEntitlementRequestItem, UserEntitlementName } from 'modules/core/users/shared';
 import { OfferName } from 'modules/core/shared';
 
 class LicenseSummaryController implements ng.IComponentController {
   private advancedMeetingLicenses: ILicenseUsage[];
   private advancedMeetingSiteUrls: string[];
   private stateData: any; //TODO add a better type
+  public readonly ENTITLEMENT_NAME = UserEntitlementName;
   public OFFER_NAME = OfferName;
 
   /* @ngInject */
@@ -29,6 +31,11 @@ class LicenseSummaryController implements ng.IComponentController {
     return this.LicenseUsageUtilService.getAdvancedMeetingSiteUrls(this.getSelectedLicenses());
   }
 
+  // TODO: 'USER_ENTITLEMENTS_PAYLOAD' is a temporary key, replace with proper key when no longer needed
+  private getHybridUserEntitlements(): IUserEntitlementRequestItem[] {
+    return _.get(this.stateData, 'USER_ENTITLEMENTS_PAYLOAD', []);
+  }
+
   public findLicenseForOfferName(offerName: string): ILicenseUsage | undefined {
     return this.LicenseUsageUtilService.findLicense({ offerName }, this.getSelectedLicenses());
   }
@@ -39,6 +46,10 @@ class LicenseSummaryController implements ng.IComponentController {
 
   public getTotalLicenseVolume(offerName: string): number {
     return this.LicenseUsageUtilService.getTotalLicenseVolume(offerName, this.getSelectedLicenses());
+  }
+
+  public findHybridUserEntitlement(entitlementName: string): IUserEntitlementRequestItem | undefined {
+    return _.find(this.getHybridUserEntitlements(), { entitlementName });
   }
 }
 

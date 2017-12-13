@@ -125,5 +125,19 @@ describe('Component: licenseSummary:', () => {
       this.controller.getTotalLicenseVolume('CF');
       expect(this.LicenseUsageUtilService.getTotalLicenseVolume).toHaveBeenCalled();
     });
+
+    it('should find the appropriate hybrid service user entitlements', function () {
+      this.$scope.fakeStateData = [{
+        USER_ENTITLEMENTS_PAYLOAD: {
+          entitlementName: 'squaredFusionCal',
+        },
+      }];
+      this.compileComponent('licenseSummary', {
+        stateData: 'fakeStateData',
+      });
+      spyOn(this.controller, 'getHybridUserEntitlements').and.returnValue(this.$scope.fakeStateData.USER_ENTITLEMENTS_PAYLOAD);
+
+      expect(this.controller.findHybridUserEntitlement('squaredFusionCal')).toEqual(this.$scope.fakeStateData.USER_ENTITLEMENTS_PAYLOAD);
+    });
   });
 });
