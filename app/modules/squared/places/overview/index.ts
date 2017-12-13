@@ -13,10 +13,12 @@ import DomainManagementServiceModuleName from 'modules/core/domainManagement';
 import UCCServiceModuleName from 'modules/hercules/services/ucc-service';
 import URIVerificationServiceModuleName from 'modules/hercules/services/uri-verification-service';
 import hybridServiceUserSidepanelHelperServiceModuleName from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
+import clusterServiceModuleName from 'modules/hercules/services/cluster-service';
 
 export default angular
   .module('huron.place-overview', [
     require('angular-ui-router'),
+    clusterServiceModuleName,
     hybridServiceUserSidepanelHelperServiceModuleName,
     preferredLanguageModule,
     placeCallOverviewServiceModule,
