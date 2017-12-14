@@ -5,8 +5,9 @@
   module.exports = UserManageOrgController;
 
   /* @ngInject */
-  function UserManageOrgController($q, $state, Analytics, AutoAssignTemplateService, DirSyncService, FeatureToggleService, Notification, OnboardService, Orgservice, UserCsvService) {
+  function UserManageOrgController($q, $state, $window, Analytics, AutoAssignTemplateService, DirSyncService, FeatureToggleService, Notification, OnboardService, Orgservice, UserCsvService) {
     var DEFAULT_AUTO_ASSIGN_TEMPLATE = 'Default';
+    var ENABLE_DIR_SYNC_URL = 'https://www.cisco.com/go/hybrid-services-directory';
     var vm = this;
 
     vm.ManageType = require('./userManage.keys').ManageType;
@@ -15,14 +16,16 @@
     vm.manageType = 'manual';
     vm.maxUsersInCSV = UserCsvService.maxUsersInCSV;
     vm.maxUsersInManual = OnboardService.maxUsersInManual;
-    vm.onNext = onNext;
-    vm.cancelModal = cancelModal;
     vm.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
+    vm.recvDelete = recvDelete;
+    vm.cancelModal = cancelModal;
+    vm.onNext = onNext;
+    vm.handleDirSyncService = handleDirSyncService;
+    vm.isAutoAssignTemplateEnabled = isAutoAssignTemplateEnabled;
     vm.convertableUsers = false;
     vm.isAtlasF3745AutoAssignToggle = false;
     vm.autoAssignTemplates = {};
-    vm.isAutoAssignTemplateEnabled = isAutoAssignTemplateEnabled;
-    vm.recvDelete = recvDelete;
+    vm.dirSyncText = vm.isDirSyncEnabled ? 'globalSettings.dirsync.turnOffDirSync' : 'globalSettings.dirsync.turnOnDirSync';
 
     vm.initFeatureToggles = initFeatureToggles;
     vm.initConvertableUsers = initConvertableUsers;
@@ -93,6 +96,20 @@
     function cancelModal() {
       $state.modal.dismiss();
       Analytics.trackAddUsers(Analytics.eventNames.CANCEL_MODAL);
+    }
+
+    function handleDirSyncService() {
+      if (vm.isDirSyncEnabled) {
+        // - because we're in a modal, chain the transition to 'settings' after dismissing the modal
+        $state.modal.closed.then(function () {
+          $state.go('settings', {
+            showSettings: 'dirsync',
+          });
+        });
+        $state.modal.dismiss();
+      } else {
+        $window.open(ENABLE_DIR_SYNC_URL, '_blank');
+      }
     }
 
     function goToAutoAssignTemplate() {

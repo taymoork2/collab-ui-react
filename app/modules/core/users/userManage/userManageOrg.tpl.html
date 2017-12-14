@@ -79,7 +79,7 @@
     <div class="columns medium-4 manage-modal-header">
       <h4 translate="userManage.org.activeDirectory"></h4>
     </div>
-    <div class="columns medium-3 manage-modal-label sync-status">
+    <div class="columns medium-8 manage-modal-label sync-status">
       <h5 translate="userManage.org.directorySynchronization"></h5>
       <span class="manage-modal-detail ds-sync">
         <i class="icon icon-circle icon-circle-manage"
@@ -88,21 +88,10 @@
         <h6 ng-if="umoc.isDirSyncEnabled" translate="userManage.org.enabled"></h6>
         <h6 ng-if="!umoc.isDirSyncEnabled" translate="userManage.org.disabled"></h6>
       </span>
-    </div>
-    <div class="columns medium-5 manage-modal-dots">
-      <span cs-dropdown class="actions-menu">
-        <button cs-dropdown-toggle class="btn--none dropdown-toggle icon icon-three-dots"
-          ng-click="$event.stopPropagation()">
-        </button>
-        <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
-          <li ng-if="!umoc.isDirSyncEnabled" class="menu-item">
-            <a href ng-click="umoc.onNext(ManageType.ADVANCED_NO_DS)" translate="userManage.org.directorySynchronizationEnableLabel"></a>
-          </li>
-          <li ng-if="umoc.isDirSyncEnabled" class="menu-item">
-            <a href ng-click="umoc.onNext(ManageType.ADVANCED_NO_DS)" translate="userManage.org.directorySynchronizationDisableLabel"></a>
-          </li>
-        </ul>
-      </span>
+      <h6 class="manage-modal-detail--link"
+        ng-click="umoc.handleDirSyncService()"
+        translate="{{:: umoc.dirSyncText }}">
+      </h6>
     </div>
   </div>
   <hr>
