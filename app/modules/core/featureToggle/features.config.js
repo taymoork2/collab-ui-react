@@ -66,7 +66,6 @@ module.exports = {
   atlasSendEmailViaBMMP: 'atlas-send-email-via-bmmp',
   atlasServicesOverviewRefresh: 'atlas-services-overview-refresh',
   atlasSetupSiteUserManagement: 'atlas-setup-site-user-management',
-  atlasSharedMeetingsReports: 'atlas-shared-meetings-reports',
   atlasSipUriDomain: 'atlas-sip-uri-domain',
   atlasSubdomainUpdate: 'atlas-subdomain-update',
   atlasSuppressOnboardingEmail: 'atlas-suppress-onboarding-email',
