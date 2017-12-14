@@ -36,7 +36,7 @@
       '/users/report',
       '/devices/_search',
       'webex.com/status',
-      'ciscospark.com/status',
+      'collaborationhelp.cisco.com/status',
     ];
 
     var allowedState = [
