@@ -1,3 +1,5 @@
+import './edit-summary-auto-assign-template-modal.scss';
+
 import * as analyticsModuleName from 'modules/core/analytics';
 import * as authInfoModuleName from 'modules/core/scripts/services/authinfo';
 import multiStepModalModuleName from 'modules/core/shared/multi-step-modal';
