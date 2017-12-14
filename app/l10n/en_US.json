@@ -5519,6 +5519,7 @@
     "domains": "Domains",
     "quantityWithValue": "Qty: {{quantity}}",
     "anotherPartner": "(Another Partner)",
+    "customerOrdered": "(Customer Provisioned)",
     "filters": {
       "placeholder": "Select a filter...",
       "filter": "Filter",
