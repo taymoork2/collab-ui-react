@@ -55,6 +55,7 @@
     require('modules/bmmp/learn-more-banner').default,
     require('modules/core/account').default,
     require('modules/core/banner').default,
+    require('modules/core/auth/read-only').default,
     require('modules/core/csgrid').default,
     require('modules/core/users/userOverview').default,
     require('modules/core/analytics'),
