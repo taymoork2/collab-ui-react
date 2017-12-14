@@ -36,6 +36,7 @@
       '/users/report',
       '/devices/_search',
       'webex.com/status',
+      'ciscospark.com/status',
     ];
 
     var allowedState = [
