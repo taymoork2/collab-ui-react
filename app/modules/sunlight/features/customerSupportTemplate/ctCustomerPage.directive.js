@@ -9,6 +9,8 @@
     .directive('selectable', Selectable)
     .directive('ctCustomerForm', CustomerForm);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /**
    * Handles special rendering for selected element. It supports highlighting elements as well as container
    * with the ct-selectable-element and ct-selectable-container css classes resp
@@ -74,7 +76,7 @@
     return {
       restrict: 'AE',
       template: require('modules/sunlight/features/customerSupportTemplate/wizardPages/ctCustomerForm.tpl.html'),
-      controller: ['$scope', CustomerFormController],
+      controller: ['$element', '$scope', CustomerFormController],
       scope: {
         fields: '=',
         ignoreFields: '@',
@@ -89,7 +91,7 @@
     };
   }
 
-  function CustomerFormController($scope) {
+  function CustomerFormController($element, $scope) {
     $scope.getLabel = function (field) {
       return getAttribute(field, $scope.labelAttr || 'label');
     };
@@ -113,6 +115,15 @@
     $scope.setActiveItem = function (field, fieldName) {
       $scope.ctModel.activeItemName = fieldName;
       $scope.ctModel.activeItem = field;
+    };
+
+    $scope.goToActiveItems = function ($event) {
+      switch ($event.which) {
+        case KeyCodes.ENTER:
+        case KeyCodes.SPACE:
+          angular.element('[name="requiredOptions"]').focus();
+          break;
+      }
     };
 
     $scope.getMediaTypeAttr = function () {

@@ -10,7 +10,7 @@
 
   var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
-  function CareSetupAssistantCtrl($modal, $scope, $state, $stateParams, $timeout, $translate, $window, Authinfo, CvaService, CTService, DomainManagementService, LogMetricsService, Notification, SunlightConfigService, EvaService, SunlightConstantsService) {
+  function CareSetupAssistantCtrl($element, $modal, $scope, $state, $stateParams, $timeout, $translate, $window, AccessibilityService, Authinfo, CvaService, CTService, DomainManagementService, LogMetricsService, Notification, SunlightConfigService, EvaService, SunlightConstantsService) {
     var vm = this;
     $scope.controller = vm; // used by ctCancelModal to not be tied to 1 controller.
 
@@ -34,6 +34,8 @@
     vm.evalKeyPress = evalKeyPress;
 
     // Setup assistant controller functions
+    vm.enterNextPage = enterNextPage;
+    vm.getLabel = getLabel;
     vm.nextPage = nextPage;
     vm.previousPage = previousPage;
     vm.nextButton = nextButton;
@@ -1367,33 +1369,58 @@
       return !(vm.InvalidCharacters.test(input));
     };
 
+    var pageFocus = {};
+    function setFocus(page, locator) {
+      var element = $element.find(locator);
+      if (!pageFocus[page] && element.length > 0) {
+        AccessibilityService.setFocus($element, locator);
+
+        _.forEach(pageFocus, function (_value, key) {
+          pageFocus[key] = false;
+        });
+        pageFocus[page] = true;
+      }
+    }
+
     function nextButton() {
       switch (vm.currentState) {
         case 'summary':
+          setFocus('summary', '#chatSetupFinishBtn');
           return 'hidden';
         case 'offHours':
+          setFocus('offHours', '#offHoursTextArea');
           return isOffHoursPageValid();
         case 'name':
           return vm.isNamePageValid();
         case 'proactivePrompt':
+          setFocus('proactivePrompt', '#promptSelect #selectMain');
           return isProactivePromptPageValid();
         case 'customerInformation':
         case 'customerInformationChat':
         case 'customerInformationCallback':
+          setFocus('customerInformation', '#customerHeader');
           return isCustomerInformationPageValid();
         case 'profile':
+          setFocus('profile', '[name="profileList"]');
           return isProfilePageValid();
         case 'agentUnavailable':
+          setFocus('agentUnavailable', '#agentUnavailableMessageField');
           return isAgentUnavailablePageValid();
-
         case 'feedback':
         case 'feedbackCallback':
+          setFocus('feedback', '#label');
           return isFeedbackPageValid();
         case 'chatStatusMessages':
+          setFocus('chatStatusMessages', '#waiting');
           return isStatusMessagesPageValid();
         case 'overview':
+          var cardName = _.get(vm.overviewCards[0], 'name');
+          if (!_.isUndefined(cardName)) {
+            setFocus('overview', '#' + cardName);
+          }
           return true;
         case 'virtualAssistant':
+          setFocus('virtualAssistant', '#virtualAssistantSelect #selectMain');
           return isVirtualAssistantPageValid();
         case 'chatEscalationBehavior':
           return isChatEscalationBehaviorPageValid();
@@ -1448,6 +1475,14 @@
         vm.currentState = getAdjacentEnabledState(getPageIndex(), 1);
         navigationHandler();
       }, vm.animationTimeout);
+    }
+
+    function enterNextPage($event) {
+      switch ($event.which) {
+        case KeyCodes.ENTER:
+          vm.nextPage();
+          break;
+      }
     }
 
     function previousPage() {
@@ -1511,6 +1546,19 @@
     vm.setActiveItem = function (val) {
       vm.activeItem = vm.getFieldByName(val.toString());
     };
+
+    function getLabel(attributeName) {
+      switch (attributeName) {
+        case 'header':
+          return 'careChatTpl.windowTitleLabel';
+        case 'label':
+          return 'careChatTpl.label';
+        case 'hintText':
+          return 'careChatTpl.hintText';
+        case 'type':
+          return 'careChatTpl.type';
+      }
+    }
 
     vm.isSecondFieldForCallBack = function () {
       return (vm.selectedMediaType === vm.mediaTypes.callback ||
