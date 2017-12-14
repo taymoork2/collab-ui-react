@@ -586,15 +586,6 @@
 
 $search-header-height: 185px;
 @media (max-width:991px) {
-  .is-read-only-admin .devices-redux .result-pane {
-    .gridStyle {
-      height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + #{$read-only-banner-height}));
-    }
-    .grid-container {
-      height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + 48rem + #{$read-only-banner-height}));
-    }
-  }
-
   .devices-redux .result-pane {
     .gridStyle {
       height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height}));
@@ -606,15 +597,6 @@ $search-header-height: 185px;
 }
 
 @media (min-width:992px) {
-  .is-read-only-admin .devices-redux .result-pane {
-    .gridStyle {
-      height: calc(100vh - (#{$page-header-height} + #{$search-header-height} + #{$read-only-banner-height}));
-    }
-    .grid-container {
-      height: calc(100vh - (#{$page-header-height} + #{$search-header-height} + 48rem + #{$read-only-banner-height}));
-    }
-  }
-
   .devices-redux .result-pane {
     .gridStyle {
       height: calc(100vh - (#{$page-header-height} + #{$search-header-height}));

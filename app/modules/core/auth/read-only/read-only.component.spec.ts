@@ -1,8 +1,9 @@
 import moduleName from './index';
 import { ReadonlyController } from './read-only.component';
+import { IToolkitModalService } from 'modules/core/modal';
 
 type Test = atlas.test.IComponentTest<ReadonlyController, {
-  ModalService;
+  ModalService: IToolkitModalService;
   Authinfo;
 }, {}>;
 
