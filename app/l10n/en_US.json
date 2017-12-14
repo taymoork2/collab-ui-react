@@ -7800,7 +7800,7 @@
           "type": "Expert <br> Virtual Assistant",
           "selectDesc": "Create a virtual assistant who connects subject matter experts in Cisco Spark spaces to customers with chat requests.",
           "disabledTooltip": "You can only have one Expert Virtual Assistant for your organization. To change the settings of your existing Expert Virtual Assistant, edit it from the Features page.",
-          "nonAdminEditDeleteWarning": "You are not authorized to edit or delete this virtual assistant. Contact the owner {{owner}} to request one of these actions."
+          "nonAdminEditDeleteWarning": "You are not authorized to edit or delete this virtual assistant. Contact the owner, {{owner}}, to request one of these actions."
         }
       },
       "createTitle": "Create {{ featureName }}",
