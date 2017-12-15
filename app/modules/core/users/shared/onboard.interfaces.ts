@@ -26,8 +26,7 @@ export enum UserEntitlementName {
 
 export enum UserEntitlementState {
   ACTIVE = 'ACTIVE',
-  PENDING = 'PENDING',
-  DISABLED = 'DISABLED',
+  INACTIVE = 'INACTIVE',
 }
 
 export enum LicenseChangeOperation {
