@@ -2,15 +2,6 @@
 
 .meeting-settings {
 
-  .error input[type=radio]+label:before {
-    border-color: #e74a3e;
-  }
-
-  .site-preview {
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
-
   .time-zone {
     font-size: 14px;
     color: $gray-base;
@@ -21,16 +12,11 @@
     color: $color-cta-base;
   }
 
-  .site-description,
-  .distribute-licenses-heading,
   .element-spacing {
     margin-top: 20px;
     margin-bottom: 20px;
   }
 
-  .delete-site {
-    font-size: 24px;
-  }
   .small {
     span {
       font-size: .75rem;
@@ -59,18 +45,6 @@
     font-weight: bolder;
   }
 
-  .align-license-count {
-    text-align: right;
-  }
-
-  .align-license-count-total {
-    text-align: end;
-  }
-
-  .notice {
-    font-size: 18px;
-  }
-
   .adjust-card-margin {
     margin-left: -7px;
   }
@@ -81,18 +55,6 @@
       font-size: .8rem;
     }
   }
-  .icon-help {
-    color: $color-blue-darker;
-  }
-
-  .input-block--transfer-code {
-    .cs-input-group > .cs-input-group {
-      margin-bottom: 0;
-    }
-    .input-block__help-link {
-      font-size: .8em;
-    }
-  }
 
   .ccasp-partner__confirmation {
     margin-left: 0;
@@ -100,8 +62,5 @@
       vertical-align: middle;
       padding-right: .5rem;
     }
-  }
-  .license_distrib__row--site {
-    word-break: break-all;
   }
 }

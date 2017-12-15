@@ -4,7 +4,7 @@ import { FieldQuery, OperatorAnd, OperatorOr, SearchElement } from './searchElem
 
 export class SearchTranslator {
   /* @ngInject */
-  constructor(private $translate: ng.translate.ITranslateService | any) {
+  constructor(private $translate: ng.translate.ITranslateService | any, private missingTranslationHandler) {
     this.updateLanguageIfNeeded();
   }
 
@@ -21,8 +21,12 @@ export class SearchTranslator {
   private currentLanguage: string;
 
   private updateLanguageIfNeeded() {
-    if (this.$translate && this.$translate.proposedLanguage() !== this.currentLanguage) {
-      this.currentLanguage = this.$translate.proposedLanguage();
+    if (!this.$translate) {
+      return;
+    }
+    const currentLanguage = this.$translate.use() || this.$translate.proposedLanguage();
+    if (_.isEmpty(this.csdmPartOfTranslationTable) || currentLanguage !== this.currentLanguage) {
+      this.currentLanguage = currentLanguage;
       const csdmTranslationTable = _.pickBy(this.$translate.getTranslationTable(),
         (_value, key: string) => {
           return _.startsWith(key, 'CsdmStatus') && (_.split(key, '.').length > 2);
@@ -238,23 +242,6 @@ export class SearchTranslator {
       .replace(new RegExp('[\:\=]', 'g'), '');
   }
 
-  public translateQueryValue(searchElement: FieldQuery): string {
-
-    const value = searchElement.getQueryWithoutField();
-
-    if (searchElement.type !== FieldQuery.QueryTypeExact) {
-      return value;
-    }
-
-    const translationMatch = _.isEmpty(searchElement.field) ? null : SearchTranslator.fieldNameTranslations[_.toLower(searchElement.field)];
-    if (!translationMatch || translationMatch.getValueTranslationKey === undefined) {
-      return value;
-    }
-    const translatedQueryValue = this.$translate.instant(translationMatch.getValueTranslationKey(value));
-
-    return (!translatedQueryValue || translatedQueryValue === value) ? value : translatedQueryValue;
-  }
-
   public getLocalizedFieldnames(): string[] {
     this.updateLanguageIfNeeded();
 
@@ -317,7 +304,11 @@ export class SearchTranslator {
       return queryValue;
     }
     const possibleTransKey = translatedFieldInfo.getValueTranslationKey(queryValue);
+    const translatedDispname = this.$translate.instant(possibleTransKey);
 
-    return this.$translate.instant(possibleTransKey);
+    if ((!translatedDispname) || (this.missingTranslationHandler && this.missingTranslationHandler(possibleTransKey) === translatedDispname)) {
+      return queryValue;
+    }
+    return translatedDispname;
   }
 }

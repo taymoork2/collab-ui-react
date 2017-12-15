@@ -8,22 +8,6 @@
     <i class='icon icon-spinner'></i>
   </div>
   <form novalidate class="cs-form content-container" name="$ctrl.form" role="form" ng-if="!$ctrl.isLoading">
-    <div class="save-section" ng-class="{invisible: !$ctrl.form.$dirty}">
-      <p translate="common.saveLabel"></p>
-      <button
-        cs-btn
-        ng-click="$ctrl.onCancel()">
-        <span translate="common.cancel"></span>
-      </button>
-      <button
-        cs-btn
-        class="btn btn--primary"
-        loading="$ctrl.saveInProcess"
-        ng-click="$ctrl.save()"
-        ng-disabled="$ctrl.form.$invalid || $ctrl.saveInProcess">
-        <span translate="common.save"></span>
-      </button>
-    </div>
     <div class="cs-form__section">
       <div class="section__info">
         <h4 class="section__title" translate="huronHuntGroup.settingsTitle"></h4>
@@ -149,5 +133,21 @@
       </div>
     </div>
 
+    <div class="save-section" ng-class="{invisible: !$ctrl.form.$dirty}">
+      <p translate="common.saveLabel"></p>
+      <button
+        cs-btn
+        ng-click="$ctrl.onCancel()">
+        <span translate="common.cancel"></span>
+      </button>
+      <button
+        cs-btn
+        class="btn btn--primary"
+        loading="$ctrl.saveInProcess"
+        ng-click="$ctrl.save()"
+        ng-disabled="$ctrl.form.$invalid || $ctrl.saveInProcess">
+        <span translate="common.save"></span>
+      </button>
+    </div>
   </form>
 </div>

@@ -20,6 +20,7 @@
     var orgIds = [];
 
     vm.sparkReports = {};
+    vm.viewType = 'Partner';
 
     init();
 
@@ -40,13 +41,13 @@
         email: Authinfo.getPrimaryEmail(),
       };
 
-      var getSparkPartnerReportData = _.get(QlikService, 'getSparkReportQBSforPartnerUrl');
+      var getSparkPartnerReportData = _.get(QlikService, 'getQBSInfo');
 
       if (!_.isFunction(getSparkPartnerReportData)) {
         return;
       }
 
-      getSparkPartnerReportData(userInfo).then(function (data) {
+      getSparkPartnerReportData('spark', vm.viewType, userInfo).then(function (data) {
         vm.sparkReports.appData = {
           QlikTicket: data.ticket,
           appName: 'partner_spark_v1',
@@ -55,7 +56,7 @@
           persistent: false,
           vID: data.vid,
         };
-        var QlikMashupChartsUrl = _.get(QlikService, 'getSparkReportAppforPartnerUrl')(vm.sparkReports.appData.qrp);
+        var QlikMashupChartsUrl = _.get(QlikService, 'getQlikMashupUrl')(vm.sparkReports.appData.qrp, 'spark', vm.viewType);
         vm.sparkReports.appData.url = QlikMashupChartsUrl;
         updateIframe();
       })

@@ -62,8 +62,11 @@ class HelpDeskHybridServicesOrgCardComponentCtrl implements ng.IComponentControl
           }
         });
       })
-      .catch((response) => {
-        this.Notification.errorResponse(response, 'helpdesk.unexpectedError');
+      .catch((error) => {
+        this.Notification.errorWithTrackingId(error, {
+          errorKey: 'helpdesk.hybridServicesOrganization.fmsError',
+          allowHtml: true,
+        });
       });
     }
 
@@ -73,8 +76,24 @@ class HelpDeskHybridServicesOrgCardComponentCtrl implements ng.IComponentControl
         .then((service) => {
           hybridServicesCard.services.push(service);
         })
-        .catch((response) => {
-          this.Notification.errorResponse(response, 'helpdesk.unexpectedError');
+        .catch((error) => {
+          this.Notification.errorWithTrackingId(error, {
+            errorKey: 'helpdesk.hybridServicesOrganization.googleCalendarError',
+            allowHtml: true,
+          });
+        });
+    }
+
+    if (this.LicenseService.orgIsEntitledTo(org, 'squared-fusion-cal')) {
+      this.CloudConnectorService.getService('squared-fusion-o365', org.id)
+        .then((service) => {
+          hybridServicesCard.services.push(service);
+        })
+        .catch((error) => {
+          this.Notification.errorWithTrackingId(error, {
+            errorKey: 'helpdesk.hybridServicesOrganization.office365Error',
+            allowHtml: true,
+          });
         });
     }
 
@@ -87,14 +106,11 @@ class HelpDeskHybridServicesOrgCardComponentCtrl implements ng.IComponentControl
       .then((hsData) => {
         this.$modal.open({
           template: require('modules/squared/helpdesk/helpdesk-extended-information.html'),
-          controller: 'HelpdeskExtendedInfoDialogController as modal',
+          controller: 'HelpdeskExtendedInfoDialogController',
+          controllerAs: 'modal',
           resolve: {
-            title: () => {
-              return 'helpdesk.hybridServicesDetails';
-            },
-            data: () => {
-              return hsData;
-            },
+            title: () => 'helpdesk.hybridServicesDetails',
+            data: () => hsData,
           },
         });
       })

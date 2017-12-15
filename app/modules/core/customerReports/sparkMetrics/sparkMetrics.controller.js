@@ -23,7 +23,7 @@
 
     vm.sparkMetrics.views = [
       {
-        view: 'Base',
+        view: 'Basic',
         appName: 'basic_spark_v1',
       },
       {
@@ -77,21 +77,26 @@
 
       var viewType = _.get(vm, 'reportView.view');
 
-      var getSparkReportData = _.get(QlikService, 'getSparkReportQBSfor' + viewType + 'Url');
+      // var getSparkReportData = _.get(QlikService, 'getSparkReportQBSfor' + viewType + 'Url');
+      var getSparkReportData = _.get(QlikService, 'getQBSInfo');
 
       if (!_.isFunction(getSparkReportData)) {
         return;
       }
-      getSparkReportData(userInfo).then(function (data) {
+      getSparkReportData('spark', viewType, userInfo).then(function (data) {
         vm.sparkMetrics.appData = {
           ticket: data.ticket,
-          appId: vm.reportView.appName, //TODO changes to data.appName, if QBS can handle this parameter
+          appId: data.appName,
           node: data.host,
           qrp: data.qlik_reverse_proxy,
-          persistent: false, //TODO changes to data.isPersistent, if QBS can handle this parameter
+          persistent: data.isPersistent,
           vID: Authinfo.getOrgId(),
         };
-        var QlikMashupChartsUrl = _.get(QlikService, 'getSparkReportAppfor' + viewType + 'Url')(vm.sparkMetrics.appData.qrp);
+        //TODO remove this 'if' segment, if QBS can handle this parameter
+        if (vm.sparkMetrics.appData.persistent === 'false') {
+          vm.sparkMetrics.appData.appId = vm.reportView.appName;
+        }
+        var QlikMashupChartsUrl = _.get(QlikService, 'getQlikMashupUrl')(vm.sparkMetrics.appData.qrp, 'spark', viewType);
         vm.sparkMetrics.appData.url = QlikMashupChartsUrl;
 
         updateIframe();

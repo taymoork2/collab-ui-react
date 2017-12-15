@@ -294,7 +294,7 @@
     // end series of fn's
 
     function isLicenseTypeAny(customerData, licenseTypeField) {
-      if (!isLicenseInfoAvailable(customerData.licenseList)) {
+      if (!isLicenseInfoAvailable(customerData)) {
         return false;
       }
       if (licenseTypeField === 'webex') {
@@ -317,8 +317,8 @@
       return (offers.length === 0) ? {} : offers;
     }
 
-    function isLicenseInfoAvailable(licenses) {
-      return _.isArray(licenses);
+    function isLicenseInfoAvailable(rowData) {
+      return _.isArray(_.get(rowData, 'licenseList'));
     }
 
     function setServiceSortOrder(license) {
@@ -337,13 +337,17 @@
       }
     }
 
+    function hasTrialLicenses(rowData) {
+      return _.some(Config.licenseObjectNames, function (type) {
+        return isLicenseInfoAvailable(rowData) && isLicenseATrial(getLicenseObj(rowData, type));
+      });
+    }
+
     function getAccountStatus(rowData) {
       var status = 'active';
-      var isTrial = _.some(Config.licenseObjectNames, function (type) {
-        return isLicenseInfoAvailable(rowData.licenseList) && isLicenseATrial(getLicenseObj(rowData, type));
-      });
+      var hasTrial = hasTrialLicenses(rowData);
 
-      if (isTrial) {
+      if (hasTrial) {
         if (rowData.purchased) {
           status = (rowData.daysLeft < 0) ? 'purchasedWithExpired' : 'purchasedWithActive';
         } else {
@@ -359,13 +363,13 @@
     function setNotesSortOrder(rowData) {
       var notes = {};
       var key = 'licenseInfoNotAvailable';
-      var hasTrialLicenses = _.some(rowData.licenseList, 'isTrial');
+      var hasTrial = hasTrialLicenses(rowData);
 
       notes.daysLeft = rowData.daysLeft;
-      if (isLicenseInfoAvailable(rowData.licenseList)) {
+      if (isLicenseInfoAvailable(rowData)) {
         if (rowData.status === 'CANCELED') {
           key = 'suspended';
-        } else if (rowData.purchased && !hasTrialLicenses) {
+        } else if (rowData.purchased && !hasTrial) {
           key = 'purchased';
         } else if (rowData.customerOrgId === Authinfo.getOrgId()) {
           key = 'myOrganization';
@@ -381,7 +385,9 @@
             if (rowData.accountStatus === 'pending') {
               key = 'needsSetup';
             } else if (rowData.startDate && _.inRange(rowData.daysLeft, 0, Config.trialGracePeriod)) {
-              key = 'expiredWithGracePeriod';
+              notes.text = $translate.instant('customerPage.expiredWithGracePeriod', {
+                count: rowData.daysLeft - Config.trialGracePeriod,
+              }, 'messageformat');
             } else {
               key = 'expired';
             }

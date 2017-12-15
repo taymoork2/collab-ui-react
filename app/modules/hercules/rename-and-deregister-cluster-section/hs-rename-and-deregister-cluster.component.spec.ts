@@ -36,8 +36,8 @@ describe('Component: hsRenameAndDeregisterClusterSection', function () {
 
       this.initController = (): void => {
         this.controller = this.$componentController('hsRenameAndDeregisterClusterSection', null, {
-          serviceId: 'squared-fusion-foobar',
           cluster: {
+            targetType: 'c_mgmt',
             provisioning: [{
               connectorType: 'c_cal',
               provisionedVersion: '8.7-1.0.3402',
@@ -90,8 +90,8 @@ describe('Component: hsRenameAndDeregisterClusterSection', function () {
       this.controller = this.$componentController('hsRenameAndDeregisterClusterSection', null, {
         cluster: {
           name: 'Private Trunk Cluster',
+          targetType: 'ept',
         },
-        serviceId: 'ept',
         onNameUpdate: () => {},
       });
       this.controller.$onInit();
@@ -106,8 +106,8 @@ describe('Component: hsRenameAndDeregisterClusterSection', function () {
       this.controller = this.$componentController('hsRenameAndDeregisterClusterSection', {}, {
         cluster: {
           name: 'Not a Private Trunk Cluster',
+          targetType: 'c_mgmt',
         },
-        serviceId: 'not_ept',
         onNameUpdate: () => {},
       });
       this.controller.$onInit();

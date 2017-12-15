@@ -14,7 +14,7 @@ var IncidentPage = function () {
   this.deleteSuccessAlertMsg = 'Incident ' + this.updateIncidentName + ' delete succeed.';
   this.confirmMsg = 'DELETE';
 
-  this.incidentTabLink = element(by.css('a[href="#/gss/incidents"]'));
+  this.incidentTabLink = element(by.css('a[href="/gss/incidents"]'));
   this.newIncidentBtn = element(by.id('newIncidentBtn'));
   this.serviceSelector = element(by.id('serviceSelector'));
   this.serviceSelector1stChild = element(by.css('.gss-iframe .select-options li:first-child a'));

@@ -64,7 +64,6 @@ describe('deviceList component', () => {
       });
 
       it('should show actions when there are devices and multiple cloudberry devices are allowed', () => {
-        spyOn(FeatureToggleService, 'csdmPlaceUpgradeChannelGetStatus').and.returnValue($q.resolve(true));
         const controller = initController();
         $scope.$apply();
         const deviceList = [{}];

@@ -19,6 +19,7 @@
   <webex-site-transfer current-subscription="$ctrl.currentSubscriptionId"
     on-sites-received="$ctrl.addTransferredSites(sites, transferCode, isValid)"
     on-validation-status-change="$ctrl.setNextEnabled(isValid)"
+    on-send-tracking="$ctrl.sendMetrics(event, properties)"
     intro-copy="'webexSiteManagement.transferSitesCopy'"
     ng-if="$ctrl.currentStep===1">
   </webex-site-transfer>
@@ -27,11 +28,13 @@
     audio-partner-name="$ctrl.audioPartnerName"
     on-sites-add="$ctrl.addNewSites(sites, isValid)"
     on-validation-status-change="$ctrl.setNextEnabled(isValid)"
+    on-send-tracking="$ctrl.sendMetrics(event, properties)"
     ng-if="$ctrl.currentStep===2">
   </webex-site-new>
   <webex-site-licenses sites-array="$ctrl.sitesArray"
     conference-licenses-in-subscription="$ctrl.conferenceLicensesInSubscription"
     on-distribution-change="$ctrl.updateSitesWithNewDistribution(sites, isValid)"
+    on-send-tracking="$ctrl.sendMetrics(event, properties)"
     ng-if="$ctrl.currentStep===3">
   </webex-site-licenses>
   <webex-site-result-display  ng-if="$ctrl.isResult()" action="$ctrl.isLicenseRedistribution() ? 'redistribute' : 'addSite'" is-success="$ctrl.isSuccess"></webex-site-result-display>

@@ -42,6 +42,16 @@ describe('CsdmConverterSpec', function () {
     expect(converter.convertHuronDevices(arr)[0].isOnline).toBeTruthy();
   });
 
+  it('should set isOnline when status is CONNECTED_WITH_ISSUES', function () {
+    var arr = [{
+      status: {
+        connectionStatus: 'CONNECTED_WITH_ISSUES',
+      },
+    }];
+    expect(converter.convertCloudberryDevices(arr)[0].isOnline).toBeTruthy();
+    expect(converter.convertHuronDevices(arr)[0].isOnline).toBeTruthy();
+  });
+
   it('should not set isOnline when status isnt CONNECTED', function () {
     var arr = [{
       status: {

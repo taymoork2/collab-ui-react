@@ -23,30 +23,46 @@
     var lastSaveDynamicValueSet = [];
     var lastSavedApiRequest = '';
     var lastSavedApiResponse = '';
+    var lastSavedUsername = '';
+    var lastSavedPassword = '';
+    var lastSavedCredentialId = '';
     var sessionVarOptions = [];
     var urlUpdated = false;
+    var hasSessionVarOptionsChecked = false;
+    var basicCredentialUpdated = false;
+    CONSTANTS.passwordToBeDisplayed = '**********';
     CONSTANTS.idSelectorPrefix = '#';
 
     vm.url = '';
+    vm.username = '';
+    vm.password = '';
     vm.aaElementType = 'REST';
+    vm.basicAuthButton = false;
 
     vm.variableSet = [];
     vm.deletedSessionVariablesList = [];
+    vm.usernameMinLength = 1;
+    vm.usernameMaxLength = 128;
+    vm.passwordMaxLength = 128;
     vm.addElement = '<aa-insertion-element element-text="DynamicText" read-as="ReadAs" element-id="elementId" id="Id" aa-schedule="' + aa_schedule + '" aa-index="' + aa_index + '" aa-element-type="' + vm.aaElementType + '"></aa-insertion-element>';
 
     vm.dynamicTags = ['DYNAMIC-EXAMPLE'];
     vm.isDynamicToggle = isDynamicToggle;
+    vm.isRestApiTogglePhase2 = isRestApiTogglePhase2;
     vm.save = save;
     vm.cancel = cancel;
     vm.saveDynamicUi = saveDynamicUi;
     vm.isSaveDisabled = isSaveDisabled;
+    vm.passwordCheck = passwordCheck;
+    vm.isBasicCredentialUpdated = isBasicCredentialUpdated;
 
     vm.newVariable = $translate.instant('autoAttendant.newVariable');
-    vm.validationMsgs = {
-      maxlength: $translate.instant('autoAttendant.callerInputVariableTooLongMsg'),
-      minlength: $translate.instant('autoAttendant.callerInputVariableTooShortMsg'),
-      required: $translate.instant('autoAttendant.callerInputVariableRequiredMsg'),
-      pattern: $translate.instant('autoAttendant.invalidCharacter'),
+    vm.validationUsernameMsgs = {
+      maxlength: $translate.instant('autoAttendant.usernameTooLongMsg'),
+      required: $translate.instant('autoAttendant.usernameRequiredMsg'),
+    };
+    vm.validationPasswordMsgs = {
+      maxlength: $translate.instant('autoAttendant.passwordTooLongMsg'),
     };
     vm.toggleFullWarningMsg = toggleFullWarningMsg;
     vm.closeFullWarningMsg = closeFullWarningMsg;
@@ -58,7 +74,6 @@
     vm.minVariableLength = 3;
     vm.isNextDisabled = isNextDisabled;
     vm.callTestRestApiConfigs = callTestRestApiConfigs;
-    vm.isDynamicListEmpty = isDynamicListEmpty;
     vm.dynamicData = [];
     vm.stepBack = stepBack;
     vm.stepNext = stepNext;
@@ -69,6 +84,8 @@
     vm.showStep = showStep;
     vm.tableData = [];
     vm.isDynamicsValueUpdated = isDynamicsValueUpdated;
+    vm.onBasicAuthSlider = onBasicAuthSlider;
+    vm.displayWarning = displayWarning;
     /////////////////////
 
     $scope.$on('CE Updated', function () {
@@ -152,12 +169,61 @@
       });
     }
 
+    function isRestApiTogglePhase2() {
+      return AACommonService.isRestApiTogglePhase2();
+    }
+
+    function passwordCheck() {
+      basicCredentialUpdated = true;
+      if (_.isEqual(vm.password, CONSTANTS.passwordToBeDisplayed)) {
+        vm.password = '';
+      }
+    }
+
+    function onBasicAuthSlider() {
+      basicCredentialUpdated = true;
+      if (!vm.basicAuthButton) {
+        vm.username = '';
+        vm.password = '';
+      } else {
+        vm.username = lastSavedUsername;
+        if (_.isUndefined(lastSavedUsername)) {
+          vm.username = '';
+        } else {
+          vm.username = lastSavedUsername;
+        }
+      }
+    }
+
+    function displayWarning() {
+      // We have to bind the AuthButton status with the username
+      // field validation. It's required as the moment the
+      // authButton goes false, the username is set to empty which
+      // causes the warning red flag.
+      if (vm.basicAuthButton && vm.username !== '') {
+        return true;
+      }
+      return false;
+    }
+
     function save() {
       //for now set method to GET as default
       action.method = GET;
       updateApiDetails();
       action.variableSet = saveUpdatedVariableSet();
       action.dynamics = saveDynamics(vm.dynamics);
+      if (isRestApiTogglePhase2()) {
+        if (vm.basicAuthButton) {
+          action.username = vm.username;
+          if (!_.isEqual(vm.password, CONSTANTS.passwordToBeDisplayed)) {
+            action.password = Buffer.from(vm.password).toString('base64');
+            action.credentialId = '';
+          } else {
+            action.credentialId = lastSavedCredentialId;
+            action.password = lastSavedPassword;
+          }
+        }
+      }
       $modalInstance.close();
     }
 
@@ -177,6 +243,9 @@
       action.dynamics = saveDynamics(lastSaveDynamicValueSet);
       action.restApiRequest = lastSavedApiRequest;
       action.restApiResponse = lastSavedApiResponse;
+      action.username = lastSavedUsername;
+      action.password = lastSavedPassword;
+      action.credentialId = lastSavedCredentialId;
     }
 
     function saveDynamicUi() {
@@ -201,6 +270,37 @@
         htmlModel: htmlModelValue,
       };
       return node;
+    }
+
+    function createAuthentication() {
+      var authenticationBlock = {
+        type: 'BASIC',
+        credentials: {
+          username: action.username,
+          password: action.password,
+          id: action.credentialId,
+        },
+      };
+      return authenticationBlock;
+    }
+
+    function populateBasicAuth(action) {
+      if (isRestApiTogglePhase2()) {
+        if (!_.isEmpty(action.username)) {
+          vm.basicAuthButton = true;
+          vm.username = action.username;
+          if (_.isEmpty(vm.password) || _.isEqual(vm.password, CONSTANTS.passwordToBeDisplayed)) {
+            vm.password = CONSTANTS.passwordToBeDisplayed;
+          } else {
+            vm.password = Buffer.from(action.password, 'base64').toString();
+          }
+        }
+        if (initialPageEnterCount === 0) {
+          lastSavedUsername = action.username;
+          lastSavedPassword = action.password;
+          lastSavedCredentialId = action.credentialId;
+        }
+      }
     }
 
     function createDynamicList(dynamicList, finalDynamicList) {
@@ -249,18 +349,6 @@
       return finalDynamicList;
     }
 
-    function isDynamicListEmpty() {
-      var status = true;
-      vm.menuEntry.actions[0].url = vm.menuEntry.actions[0].dynamicList;
-      var dynamicList = _.get(vm.menuEntry, 'actions[0].url');
-      _.forEach(dynamicList, function (dynamic) {
-        if (!_.isEmpty(_.get(dynamic, 'action.eval.value', ''))) {
-          status = false;
-        }
-      });
-      return status;
-    }
-
     function decodedValue(evalValue) {
       return decodeURIComponent(evalValue).trim();
     }
@@ -301,6 +389,7 @@
         if (!_.isEmpty(action.restApiResponse)) {
           vm.restApiResponse = action.restApiResponse;
         }
+        populateBasicAuth(action);
         if (initialPageEnterCount === 0) {
           lastSavedVariableList = action.variableSet;
           lastSavedDynList = _.get(vm.menuEntry, 'actions[0].url');
@@ -331,6 +420,7 @@
           sessionVarOptions = data;
           sessionVarOptions.sort();
         }
+        hasSessionVarOptionsChecked = true;
       });
       getSessionVariablesOfDependentCe().finally(function () {
         getDynamicVariables();
@@ -351,10 +441,18 @@
 
     function stepNext() {
       vm.currentStep++;
-      if (vm.menuEntry.actions[0].dynamicList) {
+      if (urlUpdated) {
         action.url = vm.menuEntry.actions[0].dynamicList;
       } else {
         action.url = vm.menuEntry.actions[0].url;
+      }
+      action.username = vm.username;
+      if (!_.isEqual(vm.password, CONSTANTS.passwordToBeDisplayed)) {
+        action.password = Buffer.from(vm.password).toString('base64');
+        action.credentialId = '';
+      } else {
+        action.credentialId = lastSavedCredentialId;
+        action.password = lastSavedPassword;
       }
       if (vm.currentStep === 2) {
         updateDynamicsList(action.url);
@@ -384,18 +482,32 @@
       action.dynamics = saveDynamics(vm.dynamics);
     }
 
+    function validatePassword() {
+      return (!_.isUndefined(vm.password));
+    }
+
+    function validateUserName() {
+      return !_.isEmpty(vm.username);
+    }
 
     function isNextDisabled() {
-      return (_.isEmpty(vm.url) || vm.url === '<br class="ng-scope">');
+      if (vm.basicAuthButton) {
+        return (_.isEmpty(vm.url) || vm.url === '<br class="ng-scope">' || !validatePassword() || !validateUserName() || !hasSessionVarOptionsChecked);
+      }
+      return (_.isEmpty(vm.url) || vm.url === '<br class="ng-scope">' || !hasSessionVarOptionsChecked);
     }
 
     function callTestRestApiConfigs() {
+      vm.restApiRequest = '';
+      vm.restApiResponse = '';
+      vm.tableData = [];
       return RestApiService.testRestApiConfigs(JSON.stringify(updateRequestBody()))
         .then(function (data) {
           vm.restApiRequest = JSON.stringify(JSON.parse(data.request), null, 2);
           if (data.responseCode === '200') {
             vm.restApiResponse = data.response;
             urlUpdated = false;
+            basicCredentialUpdated = false;
             createAssignmentTable();
           } else {
             vm.restApiResponse = data.responseCode + ': ' + data.response;
@@ -419,6 +531,9 @@
       });
       _.set(req, 'url.action.concat.actions[0].dynamic.dynamicOperations', urlData);
       _.set(req, 'method', 'GET');
+      if (isRestApiTogglePhase2() && vm.basicAuthButton) {
+        _.set(req, 'authentication', createAuthentication());
+      }
       return req;
     }
 
@@ -453,17 +568,21 @@
       urlUpdated = true;
     }
 
+    function isBasicCredentialUpdated() {
+      basicCredentialUpdated = true;
+    }
+
     function isSaveDisabled() {
       var isDisabled = true;
       if (!_.isEmpty(vm.tableData)) {
         _.forEach(vm.tableData, function (data) {
           if (!_.isEmpty(data.selected)) {
             isDisabled = false;
-            return isDisabled || urlUpdated;
+            return isDisabled || urlUpdated || basicCredentialUpdated;
           }
         });
       }
-      return isDisabled || urlUpdated;
+      return isDisabled || urlUpdated || basicCredentialUpdated;
     }
 
     function saveUpdatedVariableSet() {
@@ -482,22 +601,38 @@
 
     function createAssignmentTable() {
       var tempTableData = [];
-      _.forEach(JSON.parse(vm.restApiResponse), function (value, key) {
-        if (_.isString(value)) {
-          var obj = {};
-          obj.responseKey = key;
-          obj.responseValue = value;
-          obj.options = sessionVarOptions;
-          _.forEach(vm.variableSet, function (set) {
-            if (_.isEqual(set.value, key)) {
-              obj.selected = set.variableName;
-            }
-          });
-          tempTableData.push(obj);
-        }
-      });
+      var validJsonResponse = isValidJson(vm.restApiResponse);
+      if (validJsonResponse) {
+        _.forEach(validJsonResponse, function (value, key) {
+          if (_.isString(value)) {
+            var obj = {};
+            obj.responseKey = key;
+            obj.responseValue = value;
+            obj.options = _.cloneDeep(sessionVarOptions);
+            _.forEach(vm.variableSet, function (set) {
+              if (_.isEqual(set.value, key)) {
+                obj.selected = set.variableName;
+              }
+            });
+            tempTableData.push(obj);
+          }
+        });
+      }
       vm.tableData = tempTableData;
     }
+
+    function isValidJson(jsonData) {
+      try {
+        return JSON.parse(jsonData);
+      } catch (exception) {
+        return false;
+      }
+    }
+
+    $scope.$on('dynamicListUpdated', function () {
+      isDynamicsValueUpdated();
+    });
+
 
     function init() {
       $scope.schedule = aa_schedule;

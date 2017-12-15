@@ -179,12 +179,13 @@ require('./_user-csv.scss');
 
     vm.startUpload = function () {
       if (isAtlasCsvImportTaskManagerToggled) {
-        // TO-DO
-        // * do the CSV pre-check validation, if CSV is valid, continue.
-        // * send the file to the file server and get a file location URL
-        // * submit the file URL to CLCP and get a job ID
-        // * then open the task dialog
-        $state.go('users.csv.task-manager');
+        $state.go('users.csv.task-manager', {
+          job: {
+            fileName: vm.model.fileName,
+            fileData: vm.model.file,
+            exactMatchCsv: vm.model.enableRemove,
+          },
+        });
       } else {
         Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.CSV_UPLOAD);
         beforeSubmitCsv().then(function () {

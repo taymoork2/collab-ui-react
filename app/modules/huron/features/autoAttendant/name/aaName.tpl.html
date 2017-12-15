@@ -1,5 +1,11 @@
 <div class="aa-setup-assistant" ng-controller="aaBuilderNameCtrl as nameCtrl">
-  <cs-setup-assistant previous="nameCtrl.previousButton()" next="nameCtrl.nextButton()" next-fn="nameCtrl.nextPage()">
+  <cs-setup-assistant
+    previous="nameCtrl.previousButton()"
+    next="nameCtrl.nextButton()"
+    next-fn="nameCtrl.nextPage()"
+    next-aria-label="{{::'common.next' | translate}}"
+    previous-aria-label="{{::'common.previous' | translate}}">
+
     <ng-form id="nameForm">
       <div class="typeahead-large typeahead-large__no-icon">
         <input id="aa-name-detail" name="aaName"

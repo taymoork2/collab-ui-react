@@ -51,7 +51,7 @@ var AutoAttendantPage = function () {
 
   this.searchBox = element(by.id('searchFilter'));
   this.aaTitle = element(by.tagName('aa-builder-name-edit'));
-  this.autoAttendantDevLink = element(by.css('a[href*="#/hurondetails/features"]'));
+  this.autoAttendantDevLink = element(by.css('a[href*="/hurondetails/features"]'));
   this.newFeatureButton = element(by.css('.new-feature-button'));
   this.callFeature = '#/services/call-features';
   this.featureTypeAA = element(by.css('.feature-icon-color-AA'));
@@ -336,6 +336,9 @@ var AutoAttendantPage = function () {
   this.restDynamicsValue = element(by.name('value'));
   this.configureApi = element(by.id('configureApi'));
   this.configureApiURL = element(by.css('.dynamic-prompt'));
+  this.authenticationToggleSwitch = element(by.name('BasicAuthToggle'));
+  this.usernameForAuthentication = element(by.id('userNameInput'));
+  this.passwordForAuthentication = element(by.id('passwordInput'));
   this.addDynamicFeature = element(by.id('addDynamicFeature'));
   this.addDynamicTextButton = element(by.css('.btn-primary'));
   this.dynamicVariable1 = element(by.css('#variableSelect select[name="variableSelect"] + div span.select-toggle'));
@@ -351,6 +354,7 @@ var AutoAttendantPage = function () {
   this.saveBtn = element(by.id('saveBtn'));
   this.nextBtn = element(by.id('nextBtn'));
   this.testBtn = element(by.id('testBtn'));
+  this.backBtn = element(by.id('backBtn'));
   this.assignmentTab = element(by.id('assignmentTab'));
   this.restApiUrlLabel = element(by.css('.aa-rest-api-url'));
   this.restApiVariableLabel1 = element.all(by.css('.aa-rest-api-variables')).get(0);
@@ -370,6 +374,10 @@ var AutoAttendantPage = function () {
   this.callerInputMessageOptions = element(by.css('div.aa-panel-body[name="Caller Input"]')).element(by.css('select[name="messageSelect"] + div span.select-toggle'));
 
   this.dialBySayMessageOption = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).last();
+  this.dialByESNCheckBox = element(by.id('ESNCheckBox'));
+  this.dialByESNRoutingPrefixText = element(by.css('.aa-routing-text-dropdown'));
+  this.dialByESNDropDown = element(by.id('routingPrefixDropdown'));
+  this.selectedESN = this.dialByESNDropDown.element(by.css('div.dropdown-menu')).all(by.tagName('li')).last();
   this.callerInputSayMessageOption = element(by.css('div.aa-panel-body[name="Caller Input"]')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).last();
 
   this.dialByMessageInput = element(by.css('div.aa-panel-body[name="Dial by Extension"] aa-message-type [name="messageInput"]'));
@@ -403,13 +411,13 @@ var AutoAttendantPage = function () {
   this.date = element(by.css('cs-datepicker div.cs-datapicker-normal'));
   this.starttime = element(by.id('starttime0'));
   this.endtime = element(by.id('endtime0'));
-  this.day1 = element(by.cssContainingText('cs-checkbox', 'Monday'));
-  this.day2 = element(by.cssContainingText('cs-checkbox', 'Tuesday'));
-  this.day3 = element(by.cssContainingText('cs-checkbox', 'Wednesday'));
-  this.day4 = element(by.cssContainingText('cs-checkbox', 'Thursday'));
-  this.day5 = element(by.cssContainingText('cs-checkbox', 'Friday'));
-  this.day6 = element(by.cssContainingText('cs-checkbox', 'Saturday'));
-  this.day7 = element(by.cssContainingText('cs-checkbox', 'Sunday'));
+  this.day1 = element(by.css("label[for='chk_0_0']"));
+  this.day2 = element(by.css("label[for='chk_0_1']"));
+  this.day3 = element(by.css("label[for='chk_0_2']"));
+  this.day4 = element(by.css("label[for='chk_0_3']"));
+  this.day5 = element(by.css("label[for='chk_0_4']"));
+  this.day6 = element(by.css("label[for='chk_0_5']"));
+  this.day7 = element(by.css("label[for='chk_0_6']"));
   this.holidayBehaviour = element(by.cssContainingText('.cs-checkbox', 'Holidays Follow Closed Behavior'));
   this.scheduletrash = element.all(by.css('.aa-schedule-trash')).first();
   this.modalsave = element(by.id('saveOpenClosedBtn'));

@@ -1,3 +1,5 @@
+import './assignable-services.scss';
+
 import { AssignableServicesComponent } from './assignable-services.component';
 import * as orgServiceModuleName from 'modules/core/scripts/services/org.service';
 import sharedModuleName from './shared';

@@ -2,7 +2,7 @@ import searchModule from '../index';
 import { SearchTranslator } from './searchTranslator';
 import { QueryParser } from './queryParser';
 import { isNull, isUndefined } from 'util';
-import { FieldQuery, OperatorOr, SearchElement } from './searchElement';
+import { OperatorOr, SearchElement } from './searchElement';
 
 const keyMock = {
   'CsdmStatus.connectionStatus.CONNECTED': 'Online',
@@ -54,12 +54,13 @@ const keyMock = {
 };
 
 describe('SearchTranslator', () => {
-  let transMock;
+  let transMock, missingTrans;
 
   beforeEach(function () {
     this.initModules(searchModule);
     this.injectDependencies('$translate');
     transMock = this.$translate;
+    missingTrans = () => 'missing trans...';
     spyOn(this.$translate, 'getTranslationTable').and.returnValue(keyMock);
     spyOn(this.$translate, 'proposedLanguage').and.returnValue('nb_NO');
   });
@@ -134,7 +135,7 @@ describe('SearchTranslator', () => {
     });
 
     function expectQueryToFindTranslation(query: string, expectedQuery: string | null, maxResult: number = 2) {
-      const searchTranslator = new SearchTranslator(transMock);
+      const searchTranslator = new SearchTranslator(transMock, missingTrans);
       const parsedQuery = new QueryParser(searchTranslator).parseQueryString(query);
       const translatedQueries = searchTranslator.findTranslations(parsedQuery, maxResult);
 
@@ -206,7 +207,7 @@ describe('SearchTranslator', () => {
     });
 
     function expectQueryToTranslateTo(query: string, expectedQuery: string | null) {
-      const searchTranslator = new SearchTranslator(transMock);
+      const searchTranslator = new SearchTranslator(transMock, missingTrans);
       const parsedQuery = new QueryParser(searchTranslator).parseQueryString(query);
       const translatedQuery = searchTranslator.translateQuery(parsedQuery);
       expect(_.toLower(translatedQuery.toQuery())).toBe(_.toLower(expectedQuery || ''));
@@ -252,7 +253,7 @@ describe('SearchTranslator', () => {
     });
 
     function expectFieldToTranslateTo(fieldInQuery: string, expectedLocalizedField: string) {
-      const searchTranslator = new SearchTranslator(transMock);
+      const searchTranslator = new SearchTranslator(transMock, missingTrans);
       const translatedQueryField = searchTranslator.translateQueryField(fieldInQuery);
       expect(translatedQueryField).toBe(expectedLocalizedField);
     }
@@ -297,7 +298,7 @@ describe('SearchTranslator', () => {
     });
 
     function expectFieldToTranslateToDisplayName(fieldInQuery: string, expectedLocalizedField: string) {
-      const searchTranslator = new SearchTranslator(transMock);
+      const searchTranslator = new SearchTranslator(transMock, missingTrans);
       const translatedQueryField = searchTranslator.getTranslatedQueryFieldDisplayName(fieldInQuery);
       expect(translatedQueryField).toBe(expectedLocalizedField);
     }
@@ -332,7 +333,7 @@ describe('SearchTranslator', () => {
     });
 
     function expectLookupByTranslatedField(localizedField: string, expectedField: string | undefined) {
-      const searchTranslator = new SearchTranslator(transMock);
+      const searchTranslator = new SearchTranslator(transMock, missingTrans);
       const field = searchTranslator.getFieldName(localizedField);
       if (isUndefined(expectedField)) {
         expect(field).toBeUndefined();
@@ -342,7 +343,7 @@ describe('SearchTranslator', () => {
     }
   });
 
-  describe('translateQueryValue', () => {
+  describe('lookupTranslatedQueryValueDisplayName', () => {
 
     beforeEach(function () {
       spyOn(transMock, 'instant').and.callFake(key => 'translated.' + key);
@@ -367,7 +368,7 @@ describe('SearchTranslator', () => {
 
     //Not supported unless we reverse-lookup in the translation table.
     xit('should lookup a single value for active interface', function () {
-      const searchTranslator = new SearchTranslator(transMock);
+      const searchTranslator = new SearchTranslator(transMock, missingTrans);
       const fieldValueLookedup = searchTranslator.lookupTranslatedQueryValue('translated.CsdmStatus.activeInterface.wlan', 'activeinterface');
       expect(fieldValueLookedup).toBe('wlan');
     });
@@ -382,22 +383,14 @@ describe('SearchTranslator', () => {
       expectQueryValueToTranslateTo('activeinterface', 'Unknown', 'translated.common.unknown');
     });
 
-    it('should not translate when not exact search', function () {
-      const searchTranslator = new SearchTranslator(transMock);
-      const queryElement = new FieldQuery('translated.CsdmStatus.activeInterface.wlan', 'actiVeinteRface');
-      const translatedQueryValue = searchTranslator.translateQueryValue(queryElement);
-      expect(translatedQueryValue).toBe('translated.CsdmStatus.activeInterface.wlan');
-    });
-
     function expectQueryValueToTranslateTo(fieldInQuery: string, fieldValue: string, expectedLocalizedValue: string) {
-      const searchTranslator = new SearchTranslator(transMock);
-      const queryElement = new FieldQuery(fieldValue, fieldInQuery, FieldQuery.QueryTypeExact);
-      const translatedQueryValue = searchTranslator.translateQueryValue(queryElement);
+      const searchTranslator = new SearchTranslator(transMock, missingTrans);
+      const translatedQueryValue = searchTranslator.lookupTranslatedQueryValueDisplayName(fieldValue, fieldInQuery);
       expect(translatedQueryValue).toBe(expectedLocalizedValue);
     }
 
     it('should not lookup unknown translated value', function () {
-      const searchTranslator = new SearchTranslator(transMock);
+      const searchTranslator = new SearchTranslator(transMock, missingTrans);
       const translatedQueryValue = searchTranslator.lookupTranslatedQueryValue('translated.CsdmStatus.activeInterface.wlanXX', 'activeinterface');
       expect(translatedQueryValue).toBeUndefined();
     });
@@ -432,17 +425,9 @@ describe('SearchTranslator', () => {
       expectQueryValueToTranslateBothWays('qwertyX', 'qwerty', 'qwerty');
     });
 
-    it('should not translate when not exact search', function () {
-      const searchTranslator = new SearchTranslator(transMock);
-      const queryElement = new FieldQuery('Trådløst', 'activeinterface');
-      const translatedQueryValue = searchTranslator.translateQueryValue(queryElement);
-      expect(translatedQueryValue).toBe('Trådløst');
-    });
-
     function expectQueryValueToTranslateBothWays(fieldInQuery: string, fieldValue: string, expectedLocalizedValue: string) {
-      const searchTranslator = new SearchTranslator(transMock);
-      const queryElement = new FieldQuery(fieldValue, fieldInQuery, FieldQuery.QueryTypeExact);
-      const translatedQueryValue = searchTranslator.translateQueryValue(queryElement);
+      const searchTranslator = new SearchTranslator(transMock, () => 'we have no missing trans provider');
+      const translatedQueryValue = searchTranslator.lookupTranslatedQueryValueDisplayName(fieldValue, fieldInQuery);
       expect(translatedQueryValue).toBe(expectedLocalizedValue);
 
       const fieldValueLookedup = searchTranslator.lookupTranslatedQueryValue(expectedLocalizedValue, fieldInQuery);

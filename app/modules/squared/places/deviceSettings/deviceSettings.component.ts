@@ -69,27 +69,25 @@ class DeviceSettings implements ng.IComponentController {
     this.BotAuthorizationsModal.open(this.ownerId, this.ownerDisplayName);
   }
   private fetchAsyncSettings(): void {
-    this.FeatureToggleService.csdmPlaceUpgradeChannelGetStatus().then(placeUpgradeChannel => {
-      if (placeUpgradeChannel) {
-        const firstUnsupportedDevice = _.find(this.deviceList || [], (d: any) => d.productFamily !== 'Cloudberry');
-        if (firstUnsupportedDevice) {
-          this.unsupportedDeviceTypeForUpgradeChannel = firstUnsupportedDevice.product;
-        }
-        this.CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(channels => {
-          this.shouldShowUpgradeChannel = channels.length > 1;
-          if (this.shouldShowUpgradeChannel) {
-            this.upgradeChannelOptions = _.map(channels, (channel: string) => {
-              return this.getUpgradeChannelObject(channel);
-            });
-            this.resetSelectedUpgradeChannel();
-          }
+    const firstUnsupportedDevice = _.find(this.deviceList || [], (d: any) =>
+          d.productFamily !== 'Cloudberry' && d.productFamily !== 'Novum');
+    if (firstUnsupportedDevice) {
+      this.unsupportedDeviceTypeForUpgradeChannel = firstUnsupportedDevice.product;
+    }
+    this.CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(channels => {
+      this.shouldShowUpgradeChannel = channels.length > 1;
+      if (this.shouldShowUpgradeChannel) {
+        this.upgradeChannelOptions = _.map(channels, (channel: string) => {
+          return this.getUpgradeChannelObject(channel);
         });
+        this.resetSelectedUpgradeChannel();
       }
     });
 
     this.FeatureToggleService.csdmPlaceGuiSettingsGetStatus().then(placeGuiSettings => {
       if (placeGuiSettings) {
-        const firstUnsupportedDevice = _.find(this.deviceList || [], (d: any) => d.productFamily !== 'Cloudberry');
+        const firstUnsupportedDevice = _.find(this.deviceList || [], (d: any) =>
+          d.productFamily !== 'Cloudberry' && d.productFamily !== 'Novum');
         if (firstUnsupportedDevice) {
           this.unsupportedDeviceTypeForSettingsLockDown = firstUnsupportedDevice.product;
         }

@@ -1,4 +1,5 @@
 import { LocalStorageService } from 'modules/core/storage/localStorage.service';
+import { OfferName } from 'modules/core/shared';
 
 interface IRoleStates {
   Application: string[];
@@ -51,11 +52,7 @@ export class Config {
 
   public readonly feedbackUrl = 'https://conv-a.wbx2.com/conversation/api/v1/users/deskFeedbackUrl';
   public readonly helpUrl = 'https://collaborationhelp.cisco.com';
-  public readonly ssoUrl = 'https://collaborationhelp.cisco.com';
-  public readonly rolesUrl = 'https://collaborationhelp.cisco.com';
-  public readonly supportUrl = 'https://collaborationhelp.cisco.com';
   public readonly webexSiteMigrationUrl = 'http://try.webex.com/mk/get/ciscowebexmigration';
-  public readonly partnerSupportUrl = 'https://collaborationhelp.cisco.com';
 
   public readonly usersperpage = 100;
   public readonly orgsPerPage = 100;
@@ -146,12 +143,13 @@ export class Config {
 
   // These can be used to access object properties for trials
   public readonly licenseObjectNames = [
-    'messaging',
-    'communications',
-    'care',
     'advanceCare',
-    'roomSystems',
+    'care',
+    'communications',
     'conferencing',
+    'messaging',
+    'roomSystems',
+    'sparkBoard',
     'webexCMR',
     'webexEEConferencing',
     'webexEventCenter',
@@ -248,25 +246,7 @@ export class Config {
     CO: 'onboardModal.communication',
   };
 
-  public readonly offerCodes = {
-    MS: 'MS', // Messaging
-    CF: 'CF', // Conferencing
-    EE: 'EE', // Enterprise Edition (WebEx)
-    MC: 'MC', // Meeting Center (WebEx)
-    SC: 'SC', // Support Center (WebEx)
-    TC: 'TC', // Training Center (WebEx)
-    EC: 'EC', // Event Center (WebEx)
-    CO: 'CO', // Communication
-    SD: 'SD', // Spark Room System
-    SB: 'SB', // Spark Board
-    CMR: 'CMR', // Collaboration Meeting Room (WebEx)
-    CDC: 'CDC', // Care Digital Channel
-    CVC: 'CVC', // Care Voice Channel
-    MSGR: 'MSGR', // WebEx Messenger (as of 2017-05-17, managed externally and not managed by Atlas)
-    MGMTPRO: 'MGMTPRO', // IT Pro Pack
-    TSP: 'TSP', // Telephony Service Provider
-    CCASP: 'CCASP', //Cloud Connected Audio - Service Partners
-  };
+  public readonly offerCodes = OfferName;
 
   public readonly orderingTool = {
     online: 'CISCO_ONLINE_OPC',
@@ -561,7 +541,7 @@ export class Config {
       'users',
       'customerPstnOrdersOverview',
     ],
-    Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'webexReportsPanel'],
+    Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'dgc', 'dgc-panel'],
     Tech_Support: ['gss'],
     WX2_User: ['overview', 'support', 'activateProduct'],
     WX2_Support: ['overview', 'reports', 'support'],

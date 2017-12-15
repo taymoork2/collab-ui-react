@@ -189,8 +189,8 @@ class CallPickupCtrl implements ng.IComponentController {
     return this.createLabel;
   }
 
-  public evalKeyPress(keyCode: number): void {
-    switch (keyCode) {
+  public evalKeyPress($event: KeyboardEvent): void {
+    switch ($event.which) {
       case KeyCodes.ESCAPE:
         this.cancelModal();
         break;
@@ -209,8 +209,8 @@ class CallPickupCtrl implements ng.IComponentController {
     }
   }
 
-  public enterNextPage(keyCode: number): void {
-    if (keyCode === KeyCodes.ENTER && this.nextButton() === true) {
+  public enterNextPage($event: KeyboardEvent): void {
+    if ($event.which === KeyCodes.ENTER && this.nextButton() === true) {
       this.nextPage();
     }
   }

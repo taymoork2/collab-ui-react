@@ -17,19 +17,19 @@ export class Aggregations {
 }
 export class Aggregation {
 
-  constructor(public buckets: List<BucketData>) {
+  constructor(public buckets: List<IBucketData>) {
   }
 }
 export class NamedAggregation extends Aggregation {
   public bucketName: string;
 
-  constructor(name, { buckets: buckets }: { buckets: List<BucketData> }) {
+  constructor(name, { buckets: buckets }: { buckets: List<IBucketData> }) {
     super(buckets);
     this.bucketName = name;
   }
 }
 
-export class BucketData {
-  public key: string;
-  public docCount: number;
+export interface IBucketData {
+  key: string;
+  docCount: number;
 }

@@ -17,7 +17,12 @@
               ng-class="deviceOverview.currentDevice.cssColorClass">
             </i>
             <span>{{deviceOverview.currentDevice.state.readableState}}</span>
+            <span ng-show="deviceOverview.currentDevice.state.key == 'OFFLINE_EXPIRED'">
+              <i><span translate="deviceOverviewPage.offlineLong"></span></i><br>
+              <span translate="CsdmStatus.connectionStatus.DISCONNECTED"></span>
+            </span>
             <span ng-hide="deviceOverview.currentDevice.isOnline || !deviceOverview.currentDevice.lastConnectionTime">{{'deviceOverviewPage.lastSeen' | translate}} {{deviceOverview.currentDevice.lastConnectionTime}}</span>
+            <span ng-show="deviceOverview.currentDevice.state.key == 'OFFLINE_EXPIRED'"><br><a href ng-click="deviceOverview.reactivateRoomDevice()" translate="deviceOverviewPage.reactivate"></a></span>
           </div>
         </div>
         <div ng-show="deviceOverview.currentDevice.supportsCustomTags">

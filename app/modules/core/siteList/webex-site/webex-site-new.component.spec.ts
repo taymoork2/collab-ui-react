@@ -10,6 +10,7 @@ describe('Component: WebexSiteNewComponent', function () {
       sitesArray: [{
         siteUrl: 'abc.dmz.webex.com',
         timezone: '1',
+        keepExistingSite: true,
       }, {
         siteUrl: 'site2.dmz.webex.com',
         timezone: '1',
@@ -26,6 +27,7 @@ describe('Component: WebexSiteNewComponent', function () {
       sitesArray: this.$scope.fixtures.sitesArray,
       onSitesAdd: 'onSitesAddFn(sites, isValid)',
       onValidationStatusChange: 'onValidationStatusChangeFn(isValid)',
+      onSendTracking: 'onSendTrackingFn(event, properties)',
       audioPartnerName: 'fixtures.audioPartnerName',
     });
   });
@@ -33,6 +35,7 @@ describe('Component: WebexSiteNewComponent', function () {
   function initSpies() {
     this.$scope.onSitesAddFn = jasmine.createSpy('onSitesAddFn');
     this.$scope.onValidationStatusChangeFn = jasmine.createSpy('onValidationStatusChangeFn');
+    this.$scope.onSendTrackingFn = jasmine.createSpy('onSendTrackingFn');
     spyOn(this.TrialWebexService, 'validateSiteUrl').and.returnValue(this.$q.resolve(this.$q.resolve({ isValid: true, errorCode: 'validSite' })));
     spyOn(this.$translate, 'instant').and.callThrough();
   }
@@ -65,6 +68,7 @@ describe('Component: WebexSiteNewComponent', function () {
       const hasAddedSite = _.some(this.controller.newSitesArray, { siteUrl: siteUrl });
       expect(hasAddedSite).toBe(true);
       expect(this.controller.disableValidateButton).toBe(false);
+      expect(this.$scope.onSendTrackingFn).toHaveBeenCalledWith('A new site was added', { siteUrl: 'testSiteHere.webex.com', timezoneSelected: 'someTimeZoneHere' });
     });
 
     it('should call validateWebexSiteUrl() and if INVALID isError  should be TRUE and site should not be added', function () {
@@ -147,6 +151,31 @@ describe('Component: WebexSiteNewComponent', function () {
       this.controller.removeSite(0);
       expect(this.controller.newSitesArray.length).toBe(0);
       expect(this.$scope.onValidationStatusChangeFn).toHaveBeenCalledWith(false);
+    });
+  });
+
+  describe('analytics', () => {
+    it('should call analytics upon succesfull validation', function() {
+      this.compileComponent('webexSiteNew', {
+        audioPackage: 'fixtures.audioPackage',
+        sitesArray: this.$scope.fixtures.sitesArray,
+        onSitesAdd: 'onSitesAddFn(sites, isValid)',
+        onValidationStatusChange: 'onValidationStatusChangeFn(isValid)',
+        onSendTracking: 'onSendTrackingFn(event, properties)',
+        audioPartnerName: 'fixtures.audioPartnerName',
+      });
+
+      const siteUrl = 'testSiteHere';
+      this.controller.newSitesArray = [];
+      this.controller.siteModel.siteUrl = siteUrl;
+      this.controller.siteModel.timezone = 'someTimeZoneHere';
+      this.controller.siteModel.setupType = 'undefined';
+      $(this.view.find('button')).click().trigger('change');
+      this.$scope.$digest();
+      expect(this.TrialWebexService.validateSiteUrl).toHaveBeenCalledWith(siteUrl.concat('.webex.com'), 'ATLAS_SERVICE_SETUP');
+      expect(this.TrialWebexService.validateSiteUrl).toHaveBeenCalledWith(siteUrl.concat('.webex.com'), 'ATLAS_SERVICE_SETUP');
+      expect(this.$scope.onSendTrackingFn).toHaveBeenCalledWith('A new site was added', { siteUrl: 'testSiteHere.webex.com', timezoneSelected: 'someTimeZoneHere' });
+
     });
   });
 

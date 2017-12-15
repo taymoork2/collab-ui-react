@@ -1,53 +1,44 @@
-<div class="column-subsription-header paid subscription__header">
-  {{:: $ctrl.subscription.subscriptionId }}
-  <i class="icon toggle"
-    ng-class="$ctrl.showContent ? 'icon-chevron-up': 'icon-chevron-down'"
-    ng-click="$ctrl.showContent = !$ctrl.showContent;"></i>
-</div>
-<div class="row full flex-row row-licenses subscription__content" ng-show="$ctrl.showContent">
+<cr-collapsible-row
+  header-class="column-subsription-header paid subscription__header"
+  content-class="row-licenses subscription__content"
+  row-id="$ctrl.subscription.subscriptionId"
+  row-title="$ctrl.subscription.subscriptionId"
+  on-update="$ctrl.recvUpdate($event)"
+  show-content="$ctrl.showContent"
+  >
   <div class="small-4 columns column-paid column__messaging">
-    <!-- messaging -->
-    <assignable-service-item-checkbox ng-if="$ctrl.hasLicenseWithAnyOfferName('MS')"
-      service-item-id="$ctrl.findLicenseIdForOfferName('MS')"
-      l10n-label="onboardModal.paidCiscoSparkMessaging"
-      on-update="$ctrl.onUpdate({ $event: $event })"
-      state-data="$ctrl.stateData">
-      <div translate="firstTimeWizard.namedLicense"></div>
-      <usage-line
-        usage="$ctrl.getTotalLicenseUsage('MS')"
-        volume="$ctrl.getTotalLicenseVolume('MS')">
-      </usage-line>
-    </assignable-service-item-checkbox>
+    <div ng-if="$ctrl.messageLicenses.length">
+      <div translate="onboardModal.message" class="license__category"></div>
 
-    <!-- messenger -->
-    <assignable-service-item-checkbox ng-if="$ctrl.hasLicenseWithAnyOfferName('MSGR')"
-      service-item-id="$ctrl.findLicenseIdForOfferName('MSGR')"
-      l10n-label="onboardModal.ciscoSparkJabberInterop"
-      on-update="$ctrl.onUpdate({ $event: $event })"
-      state-data="$ctrl.stateData">
-      <div translate="firstTimeWizard.namedLicense"></div>
-      <usage-line
-        usage="$ctrl.getTotalLicenseUsage('MSGR')"
-        volume="$ctrl.getTotalLicenseVolume('MSGR')">
-      </usage-line>
-    </assignable-service-item-checkbox>
+      <!-- messaging -->
+      <assignable-license-checkbox
+        license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.MS)"
+        l10n-label="onboardModal.paidCiscoSparkMessaging"
+        on-update="$ctrl.onUpdate({ $event: $event })"
+        state-data="$ctrl.stateData">
+      </assignable-license-checkbox>
+
+      <!-- messenger -->
+      <assignable-license-checkbox
+        license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.MSGR)"
+        l10n-label="onboardModal.ciscoSparkJabberInterop"
+        on-update="$ctrl.onUpdate({ $event: $event })"
+        state-data="$ctrl.stateData">
+      </assignable-license-checkbox>
+    </div>
   </div>
 
   <div class="small-4 columns column-paid column__meeting">
     <!-- basic meeting (25 party) -->
-    <div ng-if="$ctrl.hasLicenseWithAnyOfferName('CF')" class="basic-meetings">
+    <div ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CF)">
       <div translate="firstTimeWizard.basicMeetings" class="license__category"></div>
-      <assignable-service-item-checkbox ng-if="$ctrl.hasLicenseWithAnyOfferName('CF')"
-        service-item-id="$ctrl.findLicenseIdForOfferName('CF')"
+
+      <assignable-license-checkbox
+        license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CF)"
         l10n-label="firstTimeWizard.meetingsInSpark"
         on-update="$ctrl.onUpdate({ $event: $event })"
         state-data="$ctrl.stateData">
-        <div translate="firstTimeWizard.namedLicense"></div>
-        <usage-line
-          usage="$ctrl.getTotalLicenseUsage('CF')"
-          volume="$ctrl.getTotalLicenseVolume('CF')">
-        </usage-line>
-      </assignable-service-item-checkbox>
+      </assignable-license-checkbox>
     </div>
 
     <!-- advanced meeting (webex variants) -->
@@ -60,45 +51,38 @@
   </div>
 
   <div class="small-4 columns column-paid column__communication">
-    <!-- call -->
-    <assignable-service-item-checkbox ng-if="$ctrl.hasLicenseWithAnyOfferName('CO')"
-      service-item-id="$ctrl.findLicenseIdForOfferName('CO')"
-      l10n-label="onboardModal.paidSparkCall"
-      on-update="$ctrl.onUpdate({ $event: $event })"
-      state-data="$ctrl.stateData">
-      <div translate="firstTimeWizard.namedLicense"></div>
-      <usage-line
-        usage="$ctrl.getTotalLicenseUsage('CO')"
-        volume="$ctrl.getTotalLicenseVolume('CO')">
-      </usage-line>
-    </assignable-service-item-checkbox>
+    <div ng-if="$ctrl.callLicenses.length">
+      <div translate="onboardModal.call" class="license__category"></div>
+
+      <!-- call -->
+      <assignable-license-checkbox
+        license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CO)"
+        l10n-label="onboardModal.paidSparkCall"
+        on-update="$ctrl.onUpdate({ $event: $event })"
+        state-data="$ctrl.stateData">
+      </assignable-license-checkbox>
+    </div>
   </div>
 
   <div ng-if="$ctrl.isCareEnabled" class="small-4 columns column-paid column__care">
-    <!-- care - K1 -->
-    <assignable-service-item-checkbox ng-if="$ctrl.hasLicenseWithAnyOfferName('CDC')"
-      service-item-id="$ctrl.findLicenseIdForOfferName('CDC')"
-      l10n-label="onboardModal.paidCDC"
-      on-update="$ctrl.onUpdate({ $event: $event })"
-      state-data="$ctrl.stateData">
-      <div translate="firstTimeWizard.namedLicense"></div>
-      <usage-line
-        usage="$ctrl.getTotalLicenseUsage('CDC')"
-        volume="$ctrl.getTotalLicenseVolume('CDC')">
-      </usage-line>
-    </assignable-service-item-checkbox>
+    <div ng-if="$ctrl.careLicenses.length">
+      <div translate="onboardModal.contactCenter" class="license__category"></div>
 
-    <!-- care - K2 -->
-    <assignable-service-item-checkbox ng-if="$ctrl.hasLicenseWithAnyOfferName('CVC')"
-      service-item-id="$ctrl.findLicenseIdForOfferName('CVC')"
-      l10n-label="onboardModal.paidCVC"
-      on-update="$ctrl.onUpdate({ $event: $event })"
-      state-data="$ctrl.stateData">
-      <div translate="firstTimeWizard.namedLicense"></div>
-      <usage-line
-        usage="$ctrl.getTotalLicenseUsage('CVC')"
-        volume="$ctrl.getTotalLicenseVolume('CVC')">
-      </usage-line>
-    </assignable-service-item-checkbox>
+      <!-- care - K1 -->
+      <assignable-license-checkbox
+        license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CDC)"
+        l10n-label="onboardModal.paidCDC"
+        on-update="$ctrl.onUpdate({ $event: $event })"
+        state-data="$ctrl.stateData">
+      </assignable-license-checkbox>
+
+      <!-- care - K2 -->
+      <assignable-license-checkbox
+        license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CVC)"
+        l10n-label="onboardModal.paidCVC"
+        on-update="$ctrl.onUpdate({ $event: $event })"
+        state-data="$ctrl.stateData">
+      </assignable-license-checkbox>
+    </div>
   </div>
-</div>
+</cr-collapsible-row>

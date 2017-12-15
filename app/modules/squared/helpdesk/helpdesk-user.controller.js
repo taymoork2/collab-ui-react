@@ -8,7 +8,7 @@
   var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
   /* @ngInject */
-  function HelpdeskUserController($modal, $q, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, HybridServicesI18NService, HybridServicesClusterService, Userservice, ResourceGroupService, UCCService) {
+  function HelpdeskUserController($modal, $q, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, HybridServicesI18NService, HybridServicesClusterService, ResourceGroupService, UCCService) {
     var vm = this;
     var SUPPRESSED_STATE = {
       LOADING: 'loading',
@@ -391,7 +391,6 @@
             switch (status.serviceId) {
               case 'squared-fusion-cal':
                 vm.hybridServicesCard.cal.status = status;
-                vm.hybridServicesCard.cal.preferredWebExSiteName = Userservice.getPreferredWebExSiteForCalendaring(vm.user);
                 break;
               case 'squared-fusion-gcal':
                 vm.hybridServicesCard.gcal.status = status;

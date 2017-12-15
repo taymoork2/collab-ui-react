@@ -9,30 +9,53 @@ require('./_site-list.scss');
 
   /*@ngInject*/
 
-  function WebExSiteRowCtrl($log, $modal, $scope, $sce, $state, $stateParams, $timeout, $translate, accountLinkingPhase2, ModalService, Notification, SetupWizardService, TokenService, WebExUtilsFact, WebExSiteRowService, WebExSiteService, Utils) {
+  function WebExSiteRowCtrl(
+    $log,
+    $modal,
+    $scope,
+    $sce,
+    $state,
+    $stateParams,
+    $timeout,
+    $translate,
+    accountLinkingPhase2,
+    Auth,
+    Authinfo,
+    ModalService,
+    Notification,
+    SetupWizardService,
+    TokenService,
+    WebExUtilsFact,
+    WebExSiteRowService,
+    WebExSiteService, Utils) {
     var vm = this;
-    vm.showGridData = false;
-    vm.isShowAddSite = false;
-    vm.canAddSite = WebExSiteRowService.canAddSite();
-    vm.isAdminPage = Utils.isAdminPage();
     var showSiteMgmntEmailPattern = '^ordersimp-.*@mailinator.com';
     var actions = {
       ADD: 'add',
       DELETE: 'delete',
       REDISTRIBUTE: 'redistribute',
     };
+    var dontShowLinkedSites = accountLinkingPhase2;
+
+    vm.init = function () {
+      vm.isShowAddSite = false;
+      vm.showGridData = false;
+      vm.canAddSite = WebExSiteRowService.canAddSite();
+      vm.isAdminPage = Utils.isAdminPage();
+      WebExSiteRowService.shouldShowSiteManagement(showSiteMgmntEmailPattern).then(function (result) {
+        vm.isShowAddSite = result;
+      });
+      vm.initializeData();
+    };
+
+    vm.initializeData = function () {
+      WebExSiteRowService.initSiteRows(dontShowLinkedSites);
+      vm.gridOptions = WebExSiteRowService.getGridOptions();
+      vm.gridOptions.appScopeProvider = vm;
+      vm.showGridData = true;
+    };
 
     $log.debug('StateParams in sitreRowCrtl', $stateParams);
-
-    var dontShowLinkedSites = accountLinkingPhase2;
-    WebExSiteRowService.shouldShowSiteManagement(showSiteMgmntEmailPattern).then(function (result) {
-      vm.isShowAddSite = result;
-    });
-
-    WebExSiteRowService.initSiteRows(dontShowLinkedSites);
-    vm.gridOptions = WebExSiteRowService.getGridOptions();
-
-    vm.gridOptions.appScopeProvider = vm;
 
     vm.linkToReports = function (siteUrl) {
       $state.go('reports.webex-metrics', { siteUrl: siteUrl });
@@ -99,13 +122,8 @@ require('./_site-list.scss');
         showRejectionModal(actions.DELETE, isOnlySiteInSubscription(entity));
       }
     };
-    vm.showGridData = true;
 
-    // kill the csv poll when navigating away from the site list page
-    $scope.$on('$destroy', function () {
-      WebExSiteRowService.stopPolling();
-      WebExSiteRowService.initSiteRowsObj(); // this will allow re-entry to this page to use fresh content
-    });
+    vm.init();
 
     function deleteSite(subscriptionId, siteUrl) {
       var sites = WebExSiteRowService.getLicensesInSubscriptionGroupedBySites(subscriptionId);
@@ -120,6 +138,7 @@ require('./_site-list.scss');
             };
             ModalService.open(params);
             Notification.success('webexSiteManagement.deleteSiteSuccessToaster');
+            refreshSiteListData();
           })
           .catch(function (response) {
             Notification.errorWithTrackingId(response, 'webexSiteManagement.deleteSiteFailureToaster');
@@ -190,24 +209,12 @@ require('./_site-list.scss');
       });
     }
 
-    // notes:
-    // - it has been observed that when trying to launch setup wizard modal from add site modal, the
-    //   setup wizard modal comes up blank
-    // - this is possibly related to redirecting from a modal state to a modal state
-    // - as a workaround, we:
-    //   - emit an event
-    //   - close the modal
-    //   - 'siteRowCtrl' catches the event (since it's not a modal), and launches the setup wizard
-    // - in order to avoid conflicting animations (one modal closing, another one opening), we insert
-    //   an 800ms delay
-    // 11/15/17 we are temporarily taking out the setup launch. This should be brought back within a week.
-
-    $scope.$on('core::launchMeetingSetup', function () {
-      $timeout(function () {
-        goToMeetingSetup();
-      }, 800);
-    });
-
+    function refreshSiteListData() {
+      Auth.getCustomerAccount(Authinfo.getOrgId()).then(function (response) {
+        Authinfo.updateAccountInfo(response.data);
+        vm.initializeData();
+      });
+    }
 
     function showRejectionModal(action, isOnlySite) {
       /*  algendel 11/13/17. We are working on implementation where in certain instances of pending setup
@@ -249,5 +256,30 @@ require('./_site-list.scss');
         }
       });
     }
+
+    // kill the csv poll when navigating away from the site list page
+    $scope.$on('$destroy', function () {
+      WebExSiteRowService.stopPolling();
+      WebExSiteRowService.initSiteRowsObj(); // this will allow re-entry to this page to use fresh content
+    });
+
+    // notes:
+    // - it has been observed that when trying to launch setup wizard modal from add site modal, the
+    //   setup wizard modal comes up blank
+    // - this is possibly related to redirecting from a modal state to a modal state
+    // - as a workaround, we:
+    //   - emit an event
+    //   - close the modal
+    //   - 'siteRowCtrl' catches the event (since it's not a modal), and launches the setup wizard
+    // - in order to avoid conflicting animations (one modal closing, another one opening), we insert
+    //   an 800ms delay
+    // 11/15/17 we are temporarily taking out the setup launch. This should be brought back within a week.
+    $scope.$on('core::launchMeetingSetup', function () {
+      $timeout(function () {
+        goToMeetingSetup();
+      }, 800);
+    });
+
+    $scope.$on('core::siteListModified', refreshSiteListData);
   } // WebExSiteRowCtrl()
 })(); // top level function

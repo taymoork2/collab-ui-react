@@ -4,7 +4,8 @@
       "orgName": "testOrg",
       "aaOnboardingStatus": "Success",
       "csOnboardingStatus": "Success",
-      "appOnboardStatus": "Success"
+      "appOnboardStatus": "Success",
+      "jwtAppOnboardingStatus" : "Success"
       }
   },
   "appOnboardUnknown": {
@@ -12,15 +13,26 @@
       "orgName": "testOrg",
       "aaOnboardingStatus": "Success",
       "csOnboardingStatus": "Success",
-      "appOnboardStatus": "Unknown"
+      "appOnboardStatus": "Unknown",
+      "jwtAppOnboardingStatus" : "Success"
       }
+  },
+  "jwtAppOnboardUnknown": {
+    "data": {
+      "orgName": "testOrg",
+      "aaOnboardingStatus": "Success",
+      "csOnboardingStatus": "Success",
+      "appOnboardStatus": "Success",
+      "jwtAppOnboardingStatus" : "Unknown"
+    }
   },
   "csOnboardUnknown": {
     "data": {
       "orgName": "testOrg",
       "aaOnboardingStatus": "Success",
       "csOnboardingStatus": "Unknown",
-      "appOnboardStatus": "Unknown"
+      "appOnboardStatus": "Success",
+      "jwtAppOnboardingStatus" : "Success"
       }
   }
 }

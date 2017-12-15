@@ -3,7 +3,7 @@
   <div class="h4 description">
     {{$ctrl.getSummaryDescription()}}
   </div>
-  <div class="h4 description" ng-if="!$ctrl.saveTemplateErrorOccurred">
+  <div class="h4 description" ng-if="!$ctrl.saveTemplateErrorOccurred && !$ctrl.isEditFeature">
     {{$ctrl.getText('summary.descCont')}}
   </div>
   <button loading="$ctrl.creatingTemplate"
@@ -13,7 +13,13 @@
           ng-click="$ctrl.submitFeature()">
             {{$ctrl.templateButtonText}}
   </button>
-  <div class="body-small edit-message" ng-if="$ctrl.isEditFeature">
+  <div class="body-small edit-message" ng-if="$ctrl.showEditWarning()">
+    <div class="warning-sign">
+      <i class="icon icon-lg icon-warning"></i>
+    </div>
+    <div>
+      <div>{{$ctrl.getText('summary.editWarning')}}</div>
+    </div>
   </div>
   <div class="h6 retry-message" ng-if="$ctrl.saveTemplateErrorOccurred && !$ctrl.creatingTemplate">
     <i class="icon icon-error"></i>

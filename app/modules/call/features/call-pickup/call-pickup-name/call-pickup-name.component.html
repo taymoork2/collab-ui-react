@@ -8,6 +8,8 @@
          ng-model="$ctrl.callPickupName"
          ng-change="$ctrl.onChange()"
          autocomplete="off"
+         data-ng-keypress="$ctrl.keypress($event)"
+         ng-keyup="$ctrl.keyup($event)"
          focus-on>
     <p class="input-description" translate="callPickup.nameHint"></p>
   </div>
@@ -22,6 +24,9 @@
       placeholder="{{:: 'callPickup.namePlaceholder' | translate}}"
       ng-model="$ctrl.callPickupName"
       ng-change="$ctrl.onChange()"
-      ng-required="$ctrl.isRequired">
+      ng-required="$ctrl.isRequired"
+      ng-keypress="$ctrl.keypress($event)"
+      ng-keyup="$ctrl.keyup($event)"
+      focus-on>
   </div>
 </div>

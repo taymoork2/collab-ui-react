@@ -50,7 +50,7 @@ export class AutoAttendantPage {
 
     this.searchBox = element(by.id('searchFilter'));
     this.aaTitle = element(by.tagName('aa-builder-name-edit'));
-    this.autoAttendantDevLink = element(by.css('a[href*="#/hurondetails/features"]'));
+    this.autoAttendantDevLink = element(by.css('a[href*="/hurondetails/features"]'));
     this.newFeatureButton = element(by.css('.new-feature-button'));
     this.callFeature = '#/services/call-features';
     this.featureTypeAA = element(by.css('.feature-icon-color-AA'));

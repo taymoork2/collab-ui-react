@@ -15,7 +15,7 @@
             <aa-route-to-user ng-switch-when="phoneMenuRouteMailbox" voicemail=true aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-user>
             <aa-route-to-aa ng-switch-when="phoneMenuRouteAA" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-aa>
             <aa-route-to-hg ng-switch-when="phoneMenuRouteHunt" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-hg>
-            <aa-dial-by-ext ng-switch-when="phoneMenuDialExt" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-dial-by-ext>
+            <aa-dial-by-ext ng-switch-when="phoneMenuDialExt" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}" aa-routing-prefix-options="aaPhoneMenu.routingPrefixOptions"></aa-dial-by-ext>
             <aa-route-to-ext-num ng-switch-when="phoneMenuRouteToExtNum" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-ext-num>
             <aa-say-message ng-switch-when="phoneMenuSayMessage" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-say-message>
             <!--- submenu is not handled by switch statement; see ng-if on row below -->
@@ -29,7 +29,7 @@
       </div>
       <div class="row" ng-if="keyAction.action.name === 'phoneMenuPlaySubmenu'">
         <div class="small-10 small-offset-2 columns">
-          <aa-submenu aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}" aa-queues="{{aaPhoneMenu.queues}}"></aa-submenu>
+          <aa-submenu aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}" aa-queues="{{aaPhoneMenu.queues}}" aa-routing-prefix-options="aaPhoneMenu.routingPrefixOptions"></aa-submenu>
         </div>
       </div>
     </div>

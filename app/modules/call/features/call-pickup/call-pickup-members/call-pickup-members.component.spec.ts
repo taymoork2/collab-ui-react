@@ -14,16 +14,16 @@ describe('Component: callPickupMembers', () => {
   beforeEach(function () {
     this.initModules(callPickupMembersModule);
     this.injectDependencies(
+      '$httpBackend',
+      '$modal',
       '$scope',
       '$q',
-      'FeatureMemberService',
-      'Notification',
-      '$httpBackend',
       'Authinfo',
-      'HuronConfig',
-      'UserNumberService',
       'CallPickupGroupService',
-      '$modal',
+      'FeatureMemberService',
+      'HuronConfig',
+      'Notification',
+      'UserNumberService',
     );
 
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
@@ -34,6 +34,8 @@ describe('Component: callPickupMembers', () => {
     this.$scope.savedCallpickup = {};
     this.$scope.$apply();
     this.$scope.isNew = true;
+    this.$scope.ucInputKeyup = jasmine.createSpy('ucInputKeyup');
+    this.$scope.ucInputKeypress = jasmine.createSpy('ucInputKeypress');
 
     this.getMemberSuggestionsByLimitDefer = this.$q.defer();
     spyOn(this.FeatureMemberService, 'getMemberSuggestionsByLimit').and.returnValue(this.getMemberSuggestionsByLimitDefer.promise);
@@ -66,12 +68,29 @@ describe('Component: callPickupMembers', () => {
       isNew: 'isNew',
       onEditUpdate: 'onEditUpdate(savedCallpickup)',
       savedCallpickup: 'savedCallpickup',
+      ucInputKeyup: 'ucInputKeyup($event)',
+      ucInputKeypress: 'ucInputKeypress($event)',
     });
     this.$scope.$apply();
   }
 
-  describe('member Test', () => {
+  describe('keyboard Test', () => {
+    beforeEach(initComponent);
 
+    it('should call ucInputKeyup on inputKeyup', function () {
+      const event = { which: KeyCodes.ENTER };
+      this.controller.inputKeyup(event);
+      expect(this.$scope.ucInputKeyup).toHaveBeenCalledWith(event);
+    });
+
+    it('should call ucInputKeypress on inputKeypress', function () {
+      const event = { which: KeyCodes.ENTER };
+      this.controller.inputKeypress(event);
+      expect(this.$scope.ucInputKeypress).toHaveBeenCalledWith(event);
+    });
+  });
+
+  describe('member Test', () => {
     beforeEach(initComponent);
 
     it('should fetch a list of members', function () {

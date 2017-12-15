@@ -82,6 +82,7 @@
     function activate() {
       vm.aaModel = AAModelService.getAAModel();
       vm.ui = AAUiModelService.getUiModel();
+      vm.routingPrefixOptions = vm.ui.routingPrefixOptions;
       setUpStyle();
     }
 

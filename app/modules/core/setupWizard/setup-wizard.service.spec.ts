@@ -26,6 +26,8 @@ describe('Service: SetupWizard Service', function () {
     this.noWebexTrial = _.clone(getJSONFixture('core/json/authInfo/complexCustomerCases/customerWithCCASP.json'));
     spyOn(this.Authinfo, 'getSubscriptions').and.returnValue(this.authinfoPendingSubscriptions);
     spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(this.conferenceServices);
+    spyOn(this.SetupWizardService, 'validateTransferCode').and.callThrough();
+    spyOn(this.SetupWizardService, 'validateTransferCodeBySubscriptionId').and.callThrough();
   });
 
   afterEach(function () {
@@ -258,6 +260,32 @@ describe('Service: SetupWizard Service', function () {
     });
   });
 
+  describe('validateTransferCodeDecorator', function () {
+    it('should call "validateTransferCodeBySubscriptionId" if subscriptionId is defined and not empty', function() {
+      this.SetupWizardService.validateTransferCodeDecorator({
+        siteUrl: 'www.somesite',
+        transferCode: '123',
+      }, 'someSubId');
+      expect(this.SetupWizardService.validateTransferCodeBySubscriptionId).toHaveBeenCalled();
+    });
+
+    it('should call "validateTransferCode" if subscriptionId is empty or undefined', function() {
+      this.SetupWizardService.validateTransferCodeDecorator({
+        siteUrl: 'www.somesite',
+        transferCode: '123',
+      });
+      expect(this.SetupWizardService.validateTransferCodeBySubscriptionId).not.toHaveBeenCalled();
+      expect(this.SetupWizardService.validateTransferCode).toHaveBeenCalled();
+
+      this.SetupWizardService.validateTransferCodeDecorator({
+        siteUrl: 'www.somesite',
+        transferCode: '123',
+      }, '');
+      expect(this.SetupWizardService.validateTransferCodeBySubscriptionId).not.toHaveBeenCalled();
+      expect(this.SetupWizardService.validateTransferCode).toHaveBeenCalled();
+    });
+  });
+
   describe('validateTransferCodeBySubscriptionId', function () {
     it('should call backend correctly and return the approriate data', function () {
       const payload = {
@@ -267,7 +295,10 @@ describe('Service: SetupWizard Service', function () {
         orderUuid: undefined,
       };
       const url = `${this.UrlConfig.getAdminServiceUrl()}subscriptions/site/verifytransfercode`;
-      this.SetupWizardService.validateTransferCodeBySubscriptionId('www.somesite', '123', 's_id123')
+      this.SetupWizardService.validateTransferCodeBySubscriptionId({
+        siteUrl: 'www.somesite',
+        transferCode: '123',
+      }, 's_id123')
         .then(result => {
           expect(result.data.siteList).toEqual(['www.somesite']);
           expect(result.status).toBe(200);

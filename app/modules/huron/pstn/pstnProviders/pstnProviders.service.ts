@@ -33,14 +33,14 @@ export class PstnProvidersService {
   //Get all static carrier informantion
   public getCarriersStatic(): ng.IPromise<any[]> {
     return this.getCarriersJson().then(carriers => {
-      const pstnCarrierStatics: IPstnCarrierStatic[] = new Array<IPstnCarrierStatic>();
-      carriers.forEach((carrier: IPstnCarrierStatic) => {
-        //translate the feature strings
-        for (let i: number = 0; i < carrier.features.length; i++) {
-          carrier.features[i] = this.$translate.instant(carrier.features[i]);
+      const pstnCarrierStatics: IPstnCarrierStatic[] = _.map(carriers, (carrier: IPstnCarrierStatic) => {
+        const carrierObject = _.cloneDeep(carrier);
+        for (let i: number = 0; i < carrierObject .features.length; i++) {
+          //translate the feature strings
+          carrierObject.features[i] = this.$translate.instant(carrierObject.features[i]);
         }
-        carrier.note = this.$translate.instant(carrier.note);
-        pstnCarrierStatics.push(carrier);
+        carrierObject.note = this.$translate.instant(carrierObject.note);
+        return carrierObject;
       });
       return pstnCarrierStatics;
     });

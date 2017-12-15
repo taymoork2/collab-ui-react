@@ -6,7 +6,7 @@
     .controller('AADecisionCtrl', AADecisionCtrl);
 
   /* @ngInject */
-  function AADecisionCtrl($scope, $translate /*, QueueHelperService*/, AACommonService, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AASessionVariableService) {
+  function AADecisionCtrl($scope, $translate /*, QueueHelperService*/, AACesOnboardHelperService, AACommonService, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AASessionVariableService) {
     var vm = this;
 
     var actionName = 'conditional';
@@ -287,47 +287,52 @@
     */
 
     function setReturnedCallerBasedOnToggle() {
-      if (AACommonService.isReturnedCallerToggle()) {
-        vm.ifOptions.splice(0, 0, {
-          label: $translate.instant('autoAttendant.decisionCallerReturned'),
-          value: 'callerReturned',
-          buffer: {
+      AACesOnboardHelperService.isCesOnBoarded().then(function (result) {
+        if (_.isEqual(result.csOnboardingStatus.toLowerCase(), 'success') && AACommonService.isReturnedCallerToggle()) {
+          vm.ifOptions.splice(0, 0, {
+            label: $translate.instant('autoAttendant.decisionCallerReturned'),
+            value: 'callerReturned',
+            buffer: {
+              label: $translate.instant('autoAttendant.callerReturnedOneWeek'),
+              value: 10080 * 60,
+            },
+          });
+
+          vm.callerReturnedOption = {
             label: $translate.instant('autoAttendant.callerReturnedOneWeek'),
             value: 10080 * 60,
-          },
-        });
+          };
 
-        vm.callerReturnedOption = {
-          label: $translate.instant('autoAttendant.callerReturnedOneWeek'),
-          value: 10080 * 60,
-        };
-
-        vm.callerReturnedOptions = [{
-          label: $translate.instant('autoAttendant.callerReturned1Min'),
-          value: 1 * 60,
-        }, {
-          label: $translate.instant('autoAttendant.callerReturned5Mins'),
-          value: 5 * 60,
-        }, {
-          label: $translate.instant('autoAttendant.callerReturned30Mins'),
-          value: 30 * 60,
-        }, {
-          label: $translate.instant('autoAttendant.callerReturned1Hour'),
-          value: 60 * 60,
-        }, {
-          label: $translate.instant('autoAttendant.callerReturnedOneDay'),
-          value: 1440 * 60,
-        }, {
-          label: $translate.instant('autoAttendant.callerReturnedOneWeek'),
-          value: 10080 * 60,
-        }, {
-          label: $translate.instant('autoAttendant.callerReturnedOneMonth'),
-          value: 43200 * 60,
-        }];
-        vm.returnedCallerToggle = true;
-      } else {
+          vm.callerReturnedOptions = [{
+            label: $translate.instant('autoAttendant.callerReturned1Min'),
+            value: 1 * 60,
+          }, {
+            label: $translate.instant('autoAttendant.callerReturned5Mins'),
+            value: 5 * 60,
+          }, {
+            label: $translate.instant('autoAttendant.callerReturned30Mins'),
+            value: 30 * 60,
+          }, {
+            label: $translate.instant('autoAttendant.callerReturned1Hour'),
+            value: 60 * 60,
+          }, {
+            label: $translate.instant('autoAttendant.callerReturnedOneDay'),
+            value: 1440 * 60,
+          }, {
+            label: $translate.instant('autoAttendant.callerReturnedOneWeek'),
+            value: 10080 * 60,
+          }, {
+            label: $translate.instant('autoAttendant.callerReturnedOneMonth'),
+            value: 43200 * 60,
+          }];
+          vm.returnedCallerToggle = true;
+        } else {
+          vm.returnedCallerToggle = false;
+        }
+      }).catch(function () {
+        // failure
         vm.returnedCallerToggle = false;
-      }
+      });
     }
 
 

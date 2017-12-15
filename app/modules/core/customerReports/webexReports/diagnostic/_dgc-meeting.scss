@@ -152,8 +152,45 @@
     }
 
     .timeline {
-      margin-top: 34px;
+      margin-top: 10px;
       padding: 0 2rem;
+      .nav-pills {
+        margin-bottom: 10px;
+        padding-right: 25px;
+      }
+      .nav-pills>li {
+        float: right !important;
+      }
+      .tab-content {
+        border: 0;
+      }
+      .timeline-tab {
+        .nav-pills {
+          > li {
+            box-sizing: border-box;
+            margin-left: 1rem;
+
+            > a {
+              border: 1px solid $color-blue-darker;
+              border-radius: 4px;
+              background: $white;
+              color: $color-blue-darker;
+
+              &:hover {
+                background-color: $color-blue-darker;
+                color: $white;
+              }
+            }
+
+            &.active {
+              > a {
+                color: $white;
+                background-color: $color-blue-darker;
+              }
+            }
+          }
+        }
+      }
     }
 
     .meeting-overview {
@@ -240,7 +277,7 @@
 
       .info-box {
         display: inline-block;
-        width: 50%;
+        width: 70%;
 
         .note {
           padding: 1rem 0 1.5rem 1.2rem;
@@ -289,7 +326,7 @@
     }
 
     .loading {
-        margin-top: 5rem;
+        margin: 4rem 0;
         text-align: center;
     }
 

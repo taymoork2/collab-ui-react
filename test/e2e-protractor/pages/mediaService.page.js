@@ -12,7 +12,7 @@ var MediaServicePage = function () {
   this.closeSidePanel = element(by.css('.panel-close'));
   this.hostDetails = element(by.binding('ecp.hosts[0].host_name'));
   this.hostTitle = element(by.binding('hostDetails.connector.host.host_name'));
-  this.mediaserviceTab = element(by.css('a[href="#/reports/mediaservice"]'));
+  this.mediaserviceTab = element(by.css('a[href="/reports/mediaservice"]'));
   this.total_calls = element(by.cssContainingText('.metrics-header', 'Total Calls'));
   this.averageutilization = element(by.cssContainingText('.metrics-header', 'Average Utilization'));
   this.clusteravailability = element(by.cssContainingText('.metrics-header', 'Clusters in Service'));
@@ -25,10 +25,10 @@ var MediaServicePage = function () {
   this.utilizationTitle = element(by.cssContainingText('.report-section-header', 'Resource Utilization'));
   this.callVolumes = element(by.cssContainingText('.report-section-header', 'Total Calls'));
   this.availabilityOfCluster = element(by.cssContainingText('.report-section-header', 'Clusters in Service'));
-  this.resourceButton = element(by.css('section a[href="#/mediaserviceV2"]'));
-  this.settingsButton = element(by.css('section a[href="#/mediaserviceV2/settings"]'));
-  this.resourceTab = element(by.css('li a[href="#/mediaserviceV2"]'));
-  this.settingsTab = element(by.css('li a[href="#/mediaserviceV2/settings"]'));
+  this.resourceButton = element(by.css('hybrid-media-active-card a[href="/mediaserviceV2"]'));
+  this.settingsButton = element(by.css('hybrid-media-active-card a[href="/mediaserviceV2/settings"]'));
+  this.resourceTab = element(by.css('li a[href="/mediaserviceV2"]'));
+  this.settingsTab = element(by.css('li a[href="/mediaserviceV2/settings"]'));
   this.addResourceButton = element(by.cssContainingText('button', 'Add Resource'));
   this.mediaCluster = element(by.cssContainingText('.ui-grid-header-cell-label', 'Media Clusters'));
   this.serviceStatus = element(by.cssContainingText('.ui-grid-header-cell-label', 'Service Status'));

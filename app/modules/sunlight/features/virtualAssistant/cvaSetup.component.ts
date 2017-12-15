@@ -1,6 +1,6 @@
 import { IToolkitModalService } from 'modules/core/modal';
-import { KeyCodes } from 'modules/core/accessibility';
 import * as _ from 'lodash';
+import { VaCommonSetupCtrl } from './vaCommonSetupCtrl';
 
 export interface IScopeWithController extends ng.IScope {
   controller?: any;
@@ -14,42 +14,11 @@ requireContext.keys().map(key => requireContext(key));
 /**
  * CustomerVirtualAssistantSetupCtrl
  */
-class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
+class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
 
-  private animationTimeout = 10;
-
-  public animation = '';
-  public maxNameLength = 50;
   public maxTokenLength = 128;
-  public service = this.CvaService;
-  public logoUrl = '';
-  public logoFile = '';
-  public logoUploaded = false;
-  public isEditFeature = false;
-  public orgName = this.Authinfo.getOrgName();
-  public orgId = this.Authinfo.getOrgId();
-  public creatingTemplate = false;
-  public templateButtonText = this.$translate.instant('common.finish');
-  public saveTemplateErrorOccurred = false;
-  public cancelModalText = {};
-  public nameForm: ng.IFormController;
   public tokenForm: ng.IFormController;
   private tokenFormErrors = {};
-  private escalationIntentUrl: string;
-
-  public NameMessages = {
-    DUPLICATE_ERROR: 'duplicate_error',
-    ERROR_CHAR_50: 'error_char_50',
-    PROCESSING: 'processing',
-  };
-
-  // Avatar file error
-  public avatarErrorType = {
-    NO_ERROR: 'None',
-    FILE_TYPE_ERROR: 'FileTypeError',
-    FILE_SIZE_ERROR: 'FileSizeError',
-    FILE_UPLOAD_ERROR: 'FileUploadError',
-  };
 
   public template = {
     templateId: '',
@@ -89,6 +58,7 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
           fileValue: '',
           avatarError: this.avatarErrorType.NO_ERROR,
           uploadCanceled: false,
+          avatarImageSrc: '/images/vaAvatarDefaultIcon.png',
           startTimeInMillis: 0,
           eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_AVATAR_PAGE,
         },
@@ -101,35 +71,28 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
       },
     },
   };
-  // states == pages in order as found in storage template
-  public states = Object.keys(this.template.configuration.pages);
-  public currentState = this.states[0];
-
-  // Avatar file load progress states
-  public avatarState = {
-    SELECT: 'SELECT',
-    LOADING: 'LOADING',
-    PREVIEW: 'PREVIEW',
-  };
-  public avatarUploadState = this.avatarState.SELECT;
-  public MAX_AVATAR_FILE_SIZE = 1048576; // 1MB
 
   /* @ngInject*/
   constructor(
-    private $scope: ng.IScope,
-    private $state: ng.ui.IStateService,
-    private $stateParams: ng.ui.IStateParamsService,
-    private $modal: IToolkitModalService,
-    private $translate: ng.translate.ITranslateService,
-    private $timeout: ng.ITimeoutService,
-    private $window: ng.IWindowService,
-    private CvaService,
-    private Authinfo,
-    private CTService,
-    private Analytics,
-    private Notification,
-    private UrlConfig,
+    public $scope: ng.IScope,
+    public $state: ng.ui.IStateService,
+    public $stateParams: ng.ui.IStateParamsService,
+    public $modal: IToolkitModalService,
+    public $translate: ng.translate.ITranslateService,
+    public $timeout: ng.ITimeoutService,
+    public $window: ng.IWindowService,
+    public CvaService,
+    public Authinfo,
+    public CTService,
+    public Analytics,
+    public Notification,
+    public UrlConfig,
   ) {
+    super($scope, $state, $modal, $translate, $timeout, Authinfo, Analytics, Notification, UrlConfig, CTService, $window);
+    this.service = this.CvaService;
+    // states == pages in order as found in storage template
+    this.states = Object.keys(this.template.configuration.pages);
+    this.currentState = this.states[0];
   }
 
   /**
@@ -151,85 +114,6 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
         this.template.configuration.pages.vaAvatar.fileValue = this.$stateParams.template.icon;
       }
     }
-
-    const controller = this;
-    (<IScopeWithController>this.$scope).controller = controller; // used by ctCancelModal to not be tied to 1 controller.
-    controller.CTService.getLogoUrl().then(function (url) {
-      controller.logoUrl = url;
-    });
-    controller.CTService.getLogo().then(function (data) {
-      controller.logoFile = 'data:image/png;base64,' + controller.$window.btoa(String.fromCharCode.apply(null, new Uint8Array(data.data)));
-      controller.logoUploaded = true;
-    });
-    this.escalationIntentUrl = this.UrlConfig.getEscalationIntentUrl();
-  }
-
-  /**
-   * Obtain title for this series of modal pages
-   * @returns {{[p: string]: string}|string|*}
-   */
-  public getTitle(): string {
-    if (this.isEditFeature) {
-      return this.getText('editTitle');
-    } else {
-      return this.getText('createTitle');
-    }
-  }
-
-  /**
-   * obtain description for summary page
-   * @returns {*}
-   */
-  public getSummaryDescription(): string {
-    if (this.isEditFeature) {
-      return this.getText('summary.editDesc');
-    } else {
-      return this.getText('summary.desc');
-    }
-  }
-
-  /**
-   * open up the 'Cancel' modal with certain text.
-   */
-  public cancelModal(): void {
-    this.cancelModalText = {
-      cancelHeader: this.$translate.instant('careChatTpl.cancelHeader'),
-      cancelDialog: this.getText('cancelDialog'),
-      continueButton: this.$translate.instant('careChatTpl.continueButton'),
-      confirmButton: this.$translate.instant('careChatTpl.confirmButton'),
-    };
-    this.$modal.open({
-      template: require('modules/sunlight/features/customerSupportTemplate/wizardPages/ctCancelModal.tpl.html'),
-      type: 'dialog',
-      scope: this.$scope,
-    });
-  }
-  /**
-   * evaluate the passed keyCode to trip a condition.
-   * @param keyCode
-   */
-  public evalKeyPress(keyCode: number): void {
-    switch (keyCode) {
-      case KeyCodes.ESCAPE:
-        this.cancelModal();
-        break;
-      default:
-        break;
-    }
-  }
-
-  /**
-   * should previous button be rendered.
-   * @returns {boolean}
-   */
-  public previousButton(): any {
-    if (0 === this.getPageIndex()) {
-      return 'hidden';
-    }
-    if (this.creatingTemplate) {
-      return false;
-    }
-    return (this.getPageIndex() > 0 && !this.isAvatarUploading());
   }
 
   /**
@@ -252,14 +136,12 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
         return 'hidden';
     }
   }
-  public onPageLoad(): void {
-    this.onPageLoaded(this.currentState);
-  }
+
   /**
    * called when page corresponding to newState is loaded event
    * @param {string} newState
    */
-  private onPageLoaded(newState: string): void {
+  public onPageLoaded(newState: string): void {
     if (newState === 'cvaAccessToken' &&
       this.isAccessTokenInvalid() &&
       !_.isEmpty(this.tokenFormErrors) &&
@@ -276,30 +158,12 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
 
     this.template.configuration.pages[newState].startTimeInMillis = Date.now();
   }
-  /**
-   * Move forward to next page in modal series.
-   */
-  public nextPage(): void {
-    // This is to clear a possible error issued during image loading. For instance one attempts to drag-drop a JPG,
-    // the file is invalid, the message is displayed, and it must be cleared when toggling between pages.
-    this.template.configuration.pages.vaAvatar.avatarError = this.avatarErrorType.NO_ERROR;
-
-    const controller = this;
-    const durationInMillis = Date.now() -
-      controller.template.configuration.pages[controller.currentState].startTimeInMillis;
-    const analyticProps = { durationInMillis: durationInMillis };
-    controller.Analytics.trackEvent(controller.template.configuration.pages[controller.currentState].eventName, analyticProps);
-    controller.animation = 'slide-left';
-    controller.$timeout(function () {
-      controller.currentState = controller.getAdjacentEnabledState(controller.getPageIndex(), 1);
-    }, controller.animationTimeout);
-  }
 
   /**
    * conduct certain actions for the just before moving to previous page from another.
    * @param {string} currentState State before moving to previous page.
    */
-  private beforePreviousPage(currentState: string): void {
+  public beforePreviousPage(currentState: string): void {
     if (currentState === 'cvaAccessToken' &&
       this.isAccessTokenInvalid() &&
       !_.isEmpty(this.tokenForm)) {
@@ -320,43 +184,17 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
   }
 
   /**
-   * Move backwards to previous page in modal series.
-   */
-  public previousPage(): void {
-    // This is to clear a possible error issued during image loading. For instance one attempts to drag-drop a JPG,
-    // the file is invalid, the message is displayed, and it must be cleared when toggling between pages.
-    this.template.configuration.pages.vaAvatar.avatarError = this.avatarErrorType.NO_ERROR;
-
-    const controller = this;
-    controller.animation = 'slide-right';
-    controller.saveTemplateErrorOccurred = false;
-    controller.templateButtonText = this.$translate.instant('common.finish');
-    controller.$timeout(function () {
-      controller.beforePreviousPage(controller.currentState);
-      controller.currentState = controller.getAdjacentEnabledState(controller.getPageIndex(), -1);
-    }, controller.animationTimeout);
-  }
-
-  /**
-   * Return full path for current page template html.
-   * @returns {string}
-   */
-  public getCurrentPage(): string {
-    return `modules/sunlight/features/virtualAssistant/wizardPages/${this.currentState}.tpl.html`;
-  }
-
-  /**
    * submit the collected template of data for storage.
    */
   public submitFeature(): void {
     const name = this.template.configuration.pages.vaName.nameValue.trim();
     const config = this.createConfigurationObject(); // Note: this is our point of extensibility as other types besides dialogflow are supported.
     this.creatingTemplate = true;
-    const avatarDataURL = this.template.configuration.pages.vaAvatar.fileValue;
+    const avatarDataUrl = this.template.configuration.pages.vaAvatar.fileValue;
     if (this.isEditFeature) {
-      this.updateFeature(this.template.templateId, this.template.configuration.pages.cvaConfigOverview.configurationType, name, config, this.orgId, avatarDataURL);
+      this.updateFeature(this.template.templateId, this.template.configuration.pages.cvaConfigOverview.configurationType, name, config, this.orgId, avatarDataUrl);
     } else {
-      this.createFeature(this.template.configuration.pages.cvaConfigOverview.configurationType, name, config, this.orgId, avatarDataURL);
+      this.createFeature(this.template.configuration.pages.cvaConfigOverview.configurationType, name, config, this.orgId, avatarDataUrl);
     }
   }
 
@@ -405,7 +243,6 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
       && !this.template.configuration.pages.cvaAccessToken.needsValidation
       && !this.template.configuration.pages.cvaAccessToken.invalidToken;
   }
-
   public isNameValid(): boolean {
     const name = (this.template.configuration.pages.vaName.nameValue || '').trim();
     return this.isNameLengthValid(name) && this.isUniqueName(name);
@@ -416,167 +253,42 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
     return name !== '' && this.isNameValid();
   }
 
-  /**
-   *  Determines if some avatar error occurred
-   *
-   * @returns {boolean} return true if error occurred; otherwise false
-   */
-  public isAvatarError(): boolean {
-    return this.template.configuration.pages.vaAvatar.avatarError !== this.avatarErrorType.NO_ERROR;
-  }
+  private isNameLengthValid (name): boolean {
+    const isLengthValid = (_.get(name, 'length', 0) <= this.maxNameLength);
 
-  private isAvatarUploading(): boolean {
-    return this.avatarUploadState === this.avatarState.LOADING;
-  }
-
-  private changeAvatarUploadState(): void {
-    this.avatarUploadState = _.isEmpty(this.template.configuration.pages.vaAvatar.fileValue) ? this.avatarState.SELECT : this.avatarState.PREVIEW;
-  }
-
-  /**
-   *  Avatar uploading interrupted
-   */
-  public avatarStopLoad(): void {
-    if (this.isAvatarUploading()) {
-      this.changeAvatarUploadState();
-      this.template.configuration.pages.vaAvatar.uploadCanceled = true;
+    if (this.nameForm && name) {
+      this.nameForm.nameInput.$setValidity(this.NameErrorMessages.ERROR_CHAR_50, isLengthValid);
     }
+    return isLengthValid;
   }
 
-  /**
-   *  Image file name has to carry extension PNG.
-   *  Note: original functionality called for JPG, and SVG as well - this can be extended by addign to the array
-   *
-   * @param {string} fileName
-   * @returns {boolean}
-   */
-  private isImageFileName(fileName: string): boolean {
-    if ((fileName || '').trim().length > 0) {
-      const lowerCaseExt = fileName.trim().toLocaleLowerCase().split('.');
-      return lowerCaseExt.length >= 2 && ['png'].indexOf(lowerCaseExt[lowerCaseExt.length - 1]) >= 0;
+  private isUniqueName(name): boolean {
+    const controller = this;
+    if (this.nameForm && name) {
+      this.nameForm.nameInput.$setValidity(this.NameErrorMessages.PROCESSING, true);
     }
-    return false;
-  }
 
-  /**
-   * Validate the avatar image file
-   * @param {any} fileSelected
-   * @returns {boolean} return true if the image file is valid; otherwise return false
-   */
-  private validateAvatarFile(fileSelected: any): boolean {
-    if (!this.isImageFileName(fileSelected.name)) {
-      this.template.configuration.pages.vaAvatar.avatarError = this.avatarErrorType.FILE_TYPE_ERROR;
-    } else if (fileSelected.size > this.MAX_AVATAR_FILE_SIZE || fileSelected.size <= 0) {
-      this.template.configuration.pages.vaAvatar.avatarError = this.avatarErrorType.FILE_SIZE_ERROR;
-    }
-    return !this.isAvatarError();
-  }
-
-  /**
-   *  Avatar file name is valid, then, upload it.
-   *
-   * @param fileSelected (via drag-and-drop or file select)
-   */
-  public uploadAvatar(fileSelected: any): void {
-    this.template.configuration.pages.vaAvatar.avatarError = this.avatarErrorType.NO_ERROR;
-    this.template.configuration.pages.vaAvatar.uploadCanceled = false;
-    if (fileSelected && ('name' in fileSelected)) {
-      if (this.validateAvatarFile(fileSelected)) {
-        this.avatarUploadState = this.avatarState.LOADING;
-        this.service.getFileDataUrl(fileSelected)
-          .then((avatardataURL) => {
-            this.service.isAvatarFileValid(this.orgId, avatardataURL)
-              .then(() => {
-                if (!this.template.configuration.pages.vaAvatar.uploadCanceled) {
-                  this.template.configuration.pages.vaAvatar.fileValue = avatardataURL; // update the stored config
-                  this.changeAvatarUploadState();
-                }
-              })
-              .catch(() => {
-                this.handleAvatarFileUploadError();
-              });
-          })
-          .catch(() => {
-            this.handleAvatarFileUploadError();
-          })
-          .finally(() => {
-            this.changeAvatarUploadState();
-          });
-      }
-    }
-  }
-
-  private handleAvatarFileUploadError() {
-    if (!this.template.configuration.pages.vaAvatar.uploadCanceled) {
-      this.template.configuration.pages.vaAvatar.avatarError = this.avatarErrorType.FILE_UPLOAD_ERROR;
-    }
-  }
-
-  public getText(textIdExtension: string, params?: object): string {
-    return this.service.getText(textIdExtension, params);
-  }
-
-  public getMessageKey(textIdExtension: string): string {
-    return this.service.getMessageKey(textIdExtension);
-  }
-
-
-  /**
-   * obtain the current index of the page associated with the current state.
-   * @returns {number|Number}
-   */
-  private getPageIndex(): number {
-    return this.states.indexOf(this.currentState);
-  }
-
-  /**
-   * Obtain the state 'jump' places away from the 'current' position
-   * @param current
-   * @param jump
-   * @returns {*}
-   */
-  private getAdjacentEnabledState(current: number, jump: number): string {
-    const next = current + jump;
-    const last = this.states.length - 1;
-    if (next > last) {
-      return this.states[last];
-    } else {
-      return this.states[next];
-    }
-  }
-
-  /**
-   * handle template create/edit error.
-   */
-  private handleFeatureError(): void {
-    this.creatingTemplate = false;
-    this.saveTemplateErrorOccurred = true;
-    this.templateButtonText = this.$translate.instant('common.retry');
-  }
-
-  /**
-   * handle result of successful feature create and store
-   * @param headers
-   */
-  private handleFeatureCreation(): void {
-    this.creatingTemplate = false;
-    this.$state.go('care.Features');
-    this.Notification.success(this.getMessageKey('messages.createSuccessText'), {
-      featureName: this.template.configuration.pages.vaName.nameValue,
+    const list = this.service.featureList.data;
+    //will return undefined if no name found,  !undefined = true
+    const isUnique = !_.find(list, function (cva: any) {
+      return cva.id !== controller.template.templateId && cva.name.toLowerCase() === name.toLowerCase();
     });
+    if (this.nameForm && name) {
+      this.nameForm.nameInput.$setValidity(this.NameErrorMessages.DUPLICATE_ERROR, isUnique);
+    }
+    return isUnique;
   }
-
   /**
    * create and store the current feature
    * @param type
    * @param name
    * @param config
    * @param orgId
-   * @param avatarDataURL optional
+   * @param avatarDataUrl optional
    */
-  private createFeature(type: string, name: string, config: any, orgId: string, avatarDataURL?: string): void {
+  private createFeature(type: string, name: string, config: any, orgId: string, avatarDataUrl?: string): void {
     const controller = this;
-    controller.service.addConfig(type, name, config, orgId, avatarDataURL)
+    controller.service.addConfig(type, name, config, orgId, avatarDataUrl)
       .then(function () {
         controller.handleFeatureCreation();
         controller.writeMetrics();
@@ -586,6 +298,7 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
         controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.createConfigFailureText'), {
           featureName: controller.$translate.instant('careChatTpl.virtualAssistant.cva.featureText.name'),
         });
+        controller.Analytics.trackEvent(controller.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_CREATE_FAILURE);
       });
   }
 
@@ -600,20 +313,7 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
     durationInMillis = currentTimeInMillis - this.template.configuration.pages.cvaConfigOverview.startTimeInMillis;
     analyticProps = { durationInMillis: durationInMillis };
     this.Analytics.trackEvent(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_START_FINISH, analyticProps);
-  }
-
-  /**
-   * handle the result of successful feature update and store
-   * @param response
-   * @param templateId
-   */
-  private handleFeatureUpdate(): void {
-    this.creatingTemplate = false;
-    this.$state.go('care.Features');
-    const successMsg = this.getMessageKey('messages.updateSuccessText');
-    this.Notification.success(successMsg, {
-      featureName: this.template.configuration.pages.vaName.nameValue,
-    });
+    this.Analytics.trackEvent(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_CREATE_SUCCESS);
   }
 
   /**
@@ -625,9 +325,9 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
    * @param orgId
    * @param avatarDataURl optional
    */
-  private updateFeature(templateId: string, type: string, name: string, config: any, orgId: string, avatarDataURL?: string): void {
+  private updateFeature(templateId: string, type: string, name: string, config: any, orgId: string, avatarDataUrl?: string): void {
     const controller = this;
-    controller.service.updateConfig(templateId, type, name, config, orgId, avatarDataURL)
+    controller.service.updateConfig(templateId, type, name, config, orgId, avatarDataUrl)
       .then(function () {
         controller.handleFeatureUpdate();
         controller.writeMetrics();
@@ -654,32 +354,6 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
 
   private isValidTokenLength(): boolean {
     return (this.template.configuration.pages.cvaAccessToken.accessTokenValue || '').trim().length <= this.maxTokenLength;
-  }
-
-  private isNameLengthValid (name): boolean {
-    const isLengthValid = (_.get(name, 'length', 0) <= this.maxNameLength);
-
-    if (this.nameForm && name) {
-      this.nameForm.nameInput.$setValidity(this.NameMessages.ERROR_CHAR_50, isLengthValid);
-    }
-    return isLengthValid;
-  }
-
-  private isUniqueName(name): boolean {
-    const controller = this;
-    if (this.nameForm && name) {
-      this.nameForm.nameInput.$setValidity(this.NameMessages.PROCESSING, true);
-    }
-
-    const list = this.service.featureList.data;
-    //will return undefined if no name found,  !undefined = true
-    const isUnique = !_.find(list, function (cva: any) {
-      return cva.id !== controller.template.templateId && cva.name.toLowerCase() === name.toLowerCase();
-    });
-    if (this.nameForm && name) {
-      this.nameForm.nameInput.$setValidity(this.NameMessages.DUPLICATE_ERROR, isUnique);
-    }
-    return isUnique;
   }
 }
 /**

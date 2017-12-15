@@ -18,10 +18,11 @@
     <p class="sub-section__description" translate="hercules.settings.emailUserNotification"></p>
     <div class="medium-1">
       <cs-toggle-switch ng-model="$ctrl.enableEmailSendingToUser"
-                        ng-click="$ctrl.setEnableEmailSendingToUser()"
+                        cs-change="$ctrl.setEnableEmailSendingToUser()"
                         toggle-id="toggleEnableEmailSendingToUser"
                         name="toggleEnableEmailSendingToUser"
-                        size="small">
+                        size="small"
+                        cs-aria-label="{{::'hercules.settings.emailUserNotification' | translate}}">
       </cs-toggle-switch>
     </div>
   </div>

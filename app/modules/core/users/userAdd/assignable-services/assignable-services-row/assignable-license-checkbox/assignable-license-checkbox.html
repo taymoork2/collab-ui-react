@@ -1,0 +1,15 @@
+<cr-checkbox-item ng-if="$ctrl.license"
+  is-selected="$ctrl.isSelected"
+  is-disabled="$ctrl.isDisabled"
+  item-id="$ctrl.itemId"
+  l10n-label="{{:: $ctrl.l10nLabel }}"
+  on-update="$ctrl.recvChange($event)"
+  >
+  <div ng-transclude>
+    <div translate="firstTimeWizard.namedLicense"></div>
+    <usage-line
+      usage="$ctrl.getTotalLicenseUsage()"
+      volume="$ctrl.getTotalLicenseVolume()">
+    </usage-line>
+  </div>
+</cr-checkbox-item>

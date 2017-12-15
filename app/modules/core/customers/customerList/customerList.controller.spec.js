@@ -663,8 +663,9 @@ describe('Controller: CustomerListCtrl', function () {
 
         // expired in grace vs. expired in grace (same bucket)
         d.entity.startDate = new Date();
-        expect(cs.notes(b, d, b, d)).toBe(0);
-        expect(cs.notes(d, b, d, b)).toBe(0);
+        expect(cs.notes(b, d, b, d)).toBeGreaterThan(0);
+        expect(cs.notes(b, b, b, b)).toBe(0);
+        expect(cs.notes(d, b, d, b)).toBeLessThan(0);
       });
 
       it('should sort by mixed alpa and date types', function () {

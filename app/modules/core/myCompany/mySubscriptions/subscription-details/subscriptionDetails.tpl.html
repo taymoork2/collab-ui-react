@@ -11,8 +11,8 @@
 
   <div class="pro-pack-column" ng-if="$ctrl.getProPackStatus()">
     <div class="detail" ng-class="{'tooltip-present': !$ctrl.getView()}" tooltip-html-unsafe="{{::$ctrl.subscription.proPack.tooltip}}" tooltip-enable="!$ctrl.getView() && $ctrl.subscription.proPack.tooltip" tooltip-placement="top-left" tooltip-class="subscription-tooltip" tooltip-append-to-body="true">
-      <i class="icon icon-certified icon-detail"></i>
       <span class="h6">{{::$ctrl.getLicenseName($ctrl.subscription.proPack.offerName)}}</span>
+      <cr-pro-pack-icon></cr-pro-pack-icon>
       <div class="detail-break match-icon" ng-if="$ctrl.getView()">
         <span class="h6" translate="subscriptions.usage"></span>
         <span class="h6" ng-class="{'warning': $ctrl.getWarning($ctrl.subscription.proPack) }">{{$ctrl.getUsage($ctrl.subscription.proPack)}}</span>

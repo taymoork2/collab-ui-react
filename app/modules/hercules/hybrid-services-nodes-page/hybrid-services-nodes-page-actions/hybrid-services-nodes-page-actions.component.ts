@@ -54,7 +54,7 @@ class HybridServicesNodesPageActionsComponentCtrl implements ng.IComponentContro
   }
 
   public displayGoToNodeMenuItem(targetType: ClusterTargetType): boolean {
-    return !_.includes(<ConnectorType[]>['mf_mgmt'], targetType);
+    return !_.includes(<ConnectorType[]>['mf_mgmt', 'cs_mgmt', 'cs_context'], targetType);
   }
 
   public displayMoveNodeMenuItem(targetType: ClusterTargetType): boolean {
@@ -79,11 +79,19 @@ class HybridServicesNodesPageActionsComponentCtrl implements ng.IComponentContro
     return targetType === 'c_mgmt' && numberOfClusterNodes < 2;
   }
 
+  public displayDisabledRemoveNodeMenuItem(targetType: ClusterTargetType, node: ISimplifiedNode, numberOfClusterNodes: number): boolean {
+    if (_.isUndefined(node)  || _.isUndefined(numberOfClusterNodes)) {
+      return false;
+    }
+    return targetType === 'cs_mgmt' && (numberOfClusterNodes === 1 || !_.find(node.connectors, (connector) => connector.originalState === 'offline'));
+  }
+
   public displayActiveRemoveNodeMenuItem(targetType: ClusterTargetType, node: ISimplifiedNode, numberOfClusterNodes: number): boolean {
     if (_.isUndefined(node)  || _.isUndefined(numberOfClusterNodes)) {
       return false;
     }
-    return targetType === 'c_mgmt' && !!_.find(node.connectors, (connector) => this.hasOfflineManagementConnector(connector)) && numberOfClusterNodes > 1;
+    return (targetType === 'c_mgmt' && !!_.find(node.connectors, (connector) => this.hasOfflineManagementConnector(connector)) && numberOfClusterNodes > 1) ||
+      (targetType === 'cs_mgmt' && !!_.find(node.connectors, (connector) => connector.originalState === 'offline') && numberOfClusterNodes > 1);
   }
 
   private hasOfflineManagementConnector(connector: ISimplifiedConnector) {

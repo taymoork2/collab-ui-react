@@ -6,7 +6,8 @@
   module.exports = Analytics;
 
   /* @ngInject */
-  function Analytics($q, $state, Authinfo, Config, Orgservice, TrialService, UrlConfig, UserListService) {
+  function Analytics($q, $state, Authinfo, Config, MetricsService, Orgservice, TrialService, UrlConfig, UserListService) {
+    var DiagnosticKey = require('../metrics').DiagnosticKey;
     var NO_EVENT_NAME = 'eventName not passed';
 
     var token = {
@@ -174,17 +175,10 @@
           MEETING_SETTINGS: 'Service Setup: Attempt to setup Meeting Settings',
           SKIPPED_MEETING_SETTINGS: 'Service Setup: Clicked on skip for Meeting Settings',
           TRIAL_EXISTING_SITES: 'Service Setup: Use existing site checkbox clicked',
-          CLIENT_VERSION_RADIO: 'Service Setup: Client version radio selection made',
-          INVALID_WEBEX_SITE: 'Service Setup: WebEx Shallow validation: invalid site',
-          DUPLICATE_WEBEX_SITE: 'Service Setup: WebEx Shallow validation: duplicate site',
           SEND_CUSTOMER_EMAIL: 'Service Setup: Send customer email checkbox changed',
           DO_NOT_PROVISION: 'Service Setup: Do Not Provision button clicked',
-          VALIDATE_SITE_URL: 'Service Setup: Validate Site Url button clicked',
-          VALIDATE_TRANSFER_CODE: 'Service Setup: Transfer code validated',
-          NEW_SITE_ADDED: 'Service Setup: A new site was added',
-          REMOVE_SITE: 'Service Setup: Removed validated site',
-          TRANSFER_SITE_ADDED: 'Service Setup: Transfer site was added to sites list',
-          INVALID_TRANSFER_CODE: 'Service Setup: Transfer code/siteUrl combination invalid',
+          VALIDATE_SITE_URL: 'Service Setup: Validate Site Url button clicked', // 11/27 algendel - not used?
+          VALIDATE_TRANSFER_CODE: 'Service Setup: Transfer code validated', // 11/27 algendel - not used?
           CCASP_VALIDATION_FAILURE: 'Service Setup: CCASP audio partner validation succeeded',
           CCASP_VALIDATION_SUCCESS: 'Service Setup: CCASP audio partner validation succeeded',
           AUDIO_PARTNER_SELECTED: 'Service Setup: Audio partner selection made',
@@ -194,6 +188,19 @@
           PROVISION_WITHOUT_MEETING_SETTINGS_SUCCESS: 'Service Setup: Provisioned without Meeting Settings setup',
           PROVISION_WITHOUT_MEETING_SETTINGS_FAILURE: 'Service Setup: Provision without Meeting Settings call failed',
           FINISH_BUTTON_CLICK: 'Service Setup: Finish button clicked',
+        },
+      },
+      WEBEX_SITE_MANAGEMENT: {
+        name: 'Webex Site Management',
+        eventNames: {
+          TRANSFER_SITE_ADDED: 'Transfer site was added to sites list',
+          INVALID_TRANSFER_CODE: 'Transfer code/siteUrl combination invalid',
+          TRANSFER_CODE_CALL_FAILED: 'Transfer code call failed',
+          NEW_SITE_ADDED: 'A new site was added',
+          DUPLICATE_WEBEX_SITE: 'WebEx Shallow validation: duplicate site',
+          INVALID_WEBEX_SITE: 'WebEx Shallow validation: invalid site',
+          REMOVE_SITE: 'Removed validated site',
+          CLIENT_VERSION_RADIO: 'Client version radio selection made',
         },
       },
       VIRTUAL_ASSISTANT: {
@@ -206,12 +213,22 @@
           CVA_AVATAR_PAGE: 'Customer VA Avatar',
           CVA_SUMMARY_PAGE: 'Customer VA Summary',
           CVA_START_FINISH: 'Customer VA the entire wizard',
+          CVA_CREATE_SUCCESS: 'Customer VA created',
+          CVA_CREATE_FAILURE: 'Customer VA creation failed',
+          CVA_DELETE_SUCCESS: 'Customer VA deleted',
+          CVA_DELETE_FAILURE: 'Customer VA deletion failed',
           EVA_OVERVIEW_PAGE: 'Expert VA Overview',
           EVA_NAME_PAGE: 'Expert VA Name',
           EVA_EMAIL_PAGE: 'Expert VA Email',
           EVA_AVATAR_PAGE: 'Expert VA Avatar',
+          EVA_DEFAULT_SPACE: 'Expert VA Default Space',
+          EVA_CONFIGURATION_STEPS_PAGE: 'Expert VA Configuration Steps',
           EVA_SUMMARY_PAGE: 'Expert VA Summary',
           EVA_START_FINISH: 'Expert VA the entire wizard',
+          EVA_CREATE_SUCCESS: 'Expert VA created',
+          EVA_CREATE_FAILURE: 'Expert VA creation failed',
+          EVA_DELETE_SUCCESS: 'Expert VA deleted',
+          EVA_DELETE_FAILURE: 'Expert VA deletion failed',
         },
       },
     };
@@ -233,6 +250,7 @@
       trackPremiumEvent: trackPremiumEvent,
       trackEdiscoverySteps: trackEdiscoverySteps,
       trackServiceSetupSteps: trackServiceSetupSteps,
+      trackWebExMgmntSteps: trackWebExMgmntSteps,
       trackPartnerActions: trackPartnerActions,
       trackTrialSteps: trackTrialSteps,
       trackUserOnboarding: trackUserOnboarding,
@@ -310,9 +328,11 @@
           properties[prefix + key] = value;
         }
       });
-      return _init().then(function () {
-        return service._track(eventName, properties);
-      });
+      _init()
+        .then(function () {
+          service._track(eventName, properties);
+        })
+        .catch(_.noop); // don't log error, legit reasons to fail
     }
 
     /**
@@ -320,7 +340,7 @@
      */
     function trackPremiumEvent(eventName, location) {
       if (_.isEmpty(eventName) || !_.isString(eventName)) {
-        return $q.reject(NO_EVENT_NAME);
+        return _logError('trackPremiumEvent', NO_EVENT_NAME);
       }
 
       var properties = {
@@ -343,7 +363,7 @@
       */
     function trackEdiscoverySteps(eventName, searchProperties) {
       if (!_.isString(eventName) || eventName.length === 0) {
-        return $q.reject(NO_EVENT_NAME);
+        return _logError('trackEdiscoverSteps', NO_EVENT_NAME);
       }
 
       var properties = {
@@ -367,15 +387,9 @@
      */
     function trackServiceSetupSteps(eventName, adminProperties) {
       if (!_.isString(eventName)) {
-        return $q.reject(NO_EVENT_NAME);
+        return _logError('trackServiceSetupSteps', NO_EVENT_NAME);
       }
-      var adminType = '';
-
-      if ((Authinfo.isPartner() && !Authinfo.isCustomerLaunchedFromPartner()) || Authinfo.isPartnerSalesAdmin()) {
-        adminType = 'Partner';
-      } else {
-        adminType = 'Customer';
-      }
+      var adminType = _getAdminType();
 
       var properties = {
         subscriptionId: _.get(adminProperties, 'subscriptionId', 'N/A'),
@@ -390,11 +404,32 @@
     }
 
     /**
+     * WebEx Site Management: add/delete/redistribute liacenses
+     */
+    function trackWebExMgmntSteps(eventName, adminProperties) {
+      if (!_.isString(eventName)) {
+        return _logError('trackWebExMgmntSteps', NO_EVENT_NAME);
+      }
+      eventName = sections.WEBEX_SITE_MANAGEMENT.name + ': ' + eventName;
+      var adminType = _getAdminType();
+
+      var properties = {
+        subscriptionId: _.get(adminProperties, 'subscriptionId', 'N/A'),
+        loggedInUser: getLoggedInUser(),
+        userId: Authinfo.getUserId(),
+        adminSettingUp: adminType,
+        userOrgId: Authinfo.getUserOrgId(),
+      };
+      _.assignIn(properties, adminProperties);
+      //TODO: algendel 11/27/17 - once we have actual requirements for tracking, revisit for correctness and return trackEvent(eventName, properties);
+    }
+
+    /**
      * Trial Events
      */
     function trackTrialSteps(eventName, trialData, additionalPayload) {
       if (!eventName) {
-        return $q.reject(NO_EVENT_NAME);
+        return _logError('trackTrialSteps', NO_EVENT_NAME);
       }
 
       var properties = {
@@ -419,7 +454,7 @@
      */
     function trackPartnerActions(eventName, orgId, UUID) {
       if (!eventName || !UUID || !orgId) {
-        return $q.reject('eventName, uuid or orgId not passed');
+        return _logError('trackPartnerActions', 'eventName, uuid or orgId not passed');
       }
       var properties = {
         uuid: UUID,
@@ -434,7 +469,7 @@
     */
     function trackUserOnboarding(eventName, name, orgId, additionalData) {
       if (!eventName || !name || !orgId) {
-        return $q.reject('eventName, uuid or orgId not passed');
+        return _logError('trackUserOnboarding', 'eventName, uuid or orgId not passed');
       }
 
       var properties = {
@@ -445,7 +480,7 @@
 
       if (eventName === sections.USER_ONBOARDING.eventNames.CMR_CHECKBOX) {
         if (!additionalData.licenseId) {
-          return $q.reject('license id not passed');
+          return _logError('trackUserOnboarding', 'license id not passed');
         } else {
           properties.licenseId = additionalData.licenseId;
         }
@@ -459,7 +494,7 @@
     */
     function trackAddUsers(eventName, uploadMethod, additionalPayload) {
       if (!eventName) {
-        return $q.reject(NO_EVENT_NAME);
+        return _logError('trackAddUsers', NO_EVENT_NAME);
       }
       var properties = {
         from: _.get($state, '$current.name'),
@@ -490,7 +525,7 @@
      */
     function trackHSNavigation(eventName, payload) {
       if (!eventName) {
-        return $q.reject(NO_EVENT_NAME);
+        return _logError('trackHSNavigation', NO_EVENT_NAME);
       }
 
       var properties = _.extend({
@@ -505,7 +540,7 @@
      */
     function trackReportsEvent(eventName, payload) {
       if (!eventName) {
-        return $q.reject(NO_EVENT_NAME);
+        return _logError('trackReportsEvent', NO_EVENT_NAME);
       }
 
       var properties = _.extend({
@@ -623,6 +658,22 @@
       } else if (_.includes(Authinfo.getCustomerAdminEmail(), '@')) {
         return Authinfo.getCustomerAdminEmail();
       }
+    }
+
+    function _getAdminType() {
+      if ((Authinfo.isPartner() && !Authinfo.isCustomerLaunchedFromPartner()) || Authinfo.isPartnerSalesAdmin()) {
+        return 'Partner';
+      } else {
+        return 'Customer';
+      }
+    }
+
+    function _logError(method, msg) {
+      MetricsService.trackDiagnosticMetric(DiagnosticKey.ANALYTICS_FAILURE, {
+        method: method,
+        message: msg,
+      });
+      return msg;
     }
   }
 })();

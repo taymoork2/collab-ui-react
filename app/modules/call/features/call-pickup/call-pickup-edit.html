@@ -6,22 +6,6 @@
 <div class="loading-container" ng-if="$ctrl.isLoading">
   <i class='icon icon-spinner'></i>
 </div>
-<div class="save-section call-pickup-save" ng-class="{invisible: !$ctrl.form.$dirty}">
-  <p translate="common.saveLabel"></p>
-  <button
-    cs-btn
-    ng-click="$ctrl.onCancel()">
-    <span translate="common.cancel"></span>
-  </button>
-  <button
-    cs-btn
-    class="btn btn--primary"
-    loading="$ctrl.saveInProcess"
-    ng-click="$ctrl.updateCallPickup()"
-    ng-disabled="$ctrl.form.$invalid || $ctrl.saveInProcess">
-    <span translate="common.save"></span>
-  </button>
-</div>
 <form novalidate class="cs-form pi-edit" name="$ctrl.form" role="form" ng-if="!$ctrl.isLoading">
   <div class="cs-form__section cs-form__section-first">
     <div class="section__info">
@@ -82,3 +66,19 @@
     </div>
   </div>
 </form>
+<div class="save-section call-pickup-save" ng-class="{invisible: !$ctrl.form.$dirty}">
+  <p translate="common.saveLabel"></p>
+  <button
+    cs-btn
+    ng-click="$ctrl.onCancel()">
+    <span translate="common.cancel"></span>
+  </button>
+  <button
+    cs-btn
+    class="btn btn--primary"
+    loading="$ctrl.saveInProcess"
+    ng-click="$ctrl.updateCallPickup()"
+    ng-disabled="$ctrl.form.$invalid || $ctrl.saveInProcess">
+    <span translate="common.save"></span>
+  </button>
+</div>

@@ -42,7 +42,7 @@ export class CvaService {
   };
   // Feature List Filter definition. describes how to filter this feature
   public featureFilter = {
-    name: this.getText('featureText.mediaType'),
+    name: this.$translate.instant('careChatTpl.virtualAssistant.featureText.mediaType'),
     filterValue: this.cvaServiceCard.mediaType,
   };
 
@@ -58,15 +58,12 @@ export class CvaService {
   ) {
   }
 
-
   /**
-   * Function to obtain translated string off virtual-assistant's area for strings
-   * @param textIdExtension
+   * Get the feature name text
    * @returns {string}
    */
-  public getText(textIdExtension: string): string {
-    const featureName = this.$translate.instant('careChatTpl.virtualAssistant.cva.featureText.name');
-    return this.$translate.instant('careChatTpl.virtualAssistant.cva.' + textIdExtension, { featureName });
+  public getFeatureName(): string {
+    return this.$translate.instant('careChatTpl.virtualAssistant.cva.featureText.name');
   }
 
   /**
@@ -222,7 +219,6 @@ export class CvaService {
   /**
    * obtain resource for Virtual Assistant configuration API Rest calls.
    * @param orgId
-   * @param botServicesConfigId
    * @returns {*}
    */
   private getValidateResource(orgId?: string): IConfigurationResource {
@@ -240,7 +236,6 @@ export class CvaService {
    * Test the avatar file to see if it is within expected boundaries: PNG file, 1MB max
    *
    * @param orgId
-   * @param botServicesConfigId
    * @param iconURL
    * returns promise resolving true on success, false on failure
    */

@@ -5,6 +5,7 @@ import featureMemberService from 'modules/huron/features/services';
 import callPickupGroupService from 'modules/call/features/call-pickup/shared';
 import focusModule from 'modules/core/focus';
 import membersModule from 'modules/huron/members';
+import cardUtilsModule from 'modules/core/cards';
 
 export default angular
   .module('call.call-pickup.members', [
@@ -15,6 +16,7 @@ export default angular
     require('modules/core/scripts/services/authinfo'),
     memberService,
     callPickupGroupService,
+    cardUtilsModule,
     notifications,
     featureMemberService,
     focusModule,

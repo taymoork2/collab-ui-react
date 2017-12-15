@@ -1,6 +1,5 @@
 import './my-subscription.scss';
 import digitalRiverModule from 'modules/online/digitalRiver/index';
-import featureToggle from 'modules/core/featureToggle/index';
 import notificationModule from 'modules/core/notifications/index';
 import onlineUpgradeModule from 'modules/online/upgrade/index';
 import proPackModule from 'modules/core/proPack/index';
@@ -13,7 +12,6 @@ import { SubscriptionDetailsComponent } from './subscription-details/subscriptio
 export default angular
   .module('myCompany.subscriptions', [
     digitalRiverModule,
-    featureToggle,
     notificationModule,
     onlineUpgradeModule,
     proPackModule,

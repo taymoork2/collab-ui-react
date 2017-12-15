@@ -22,6 +22,7 @@ class WebexSiteSubscriptionCtrl implements ng.IComponentController {
   //public subscriptionList
   public onSubscriptionChange: Function;
   public onValidationStatusChange: Function;
+  public onSendTracking: Function;
   public isPending = false;
   public noSubscription = false;
 
@@ -55,6 +56,7 @@ export class WebexSiteSubscriptionComponent implements ng.IComponentOptions {
     onSubscriptionChange: '&',
     currentSubscriptionId: '<',
     onValidationStatusChange: '&',
+    onSendTracking: '&?',
   };
 }
 

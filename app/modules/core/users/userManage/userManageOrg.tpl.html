@@ -127,7 +127,7 @@
   </div>
   <hr>
   <div class="row">
-    <h4 class="manage-modal-header" translate="userManage.org.modifyUsers"></h4>
+    <h4 class="columns manage-modal-header" translate="userManage.org.modifyUsers"></h4>
     <div class="columns medium-4 modify-users-section" ng-click="umoc.onNext(umoc.ManageType.MANUAL)">
       <h4 class="modify-users-section--label" translate="userManage.org.manualLabelNew"></h4>
       <h6 class="modify-users-section--details" translate="userManage.org.manualDetailsNew" translate-values="{maxUsersInManual: umoc.maxUsersInManual}"></h6>
@@ -142,13 +142,16 @@
         </cr-user-csv-export>
       </p>
     </div>
-    <div ng-if="umoc.convertableUsers" class="columns medium-4 modify-users-section" ng-click="umoc.onNext(umoc.ManageType.CONVERT)">
+    <div ng-if="umoc.convertableUsers" class="columns medium-4 modify-users-section modify-users-section--right-box" 
+      ng-click="umoc.onNext(umoc.ManageType.CONVERT)">
       <h4 class="modify-users-section--label" translate="userManage.org.convertLabel" ></h4>
       <h6 class="modify-users-section--details" translate="userManage.org.convertDetails"></h6>
     </div>
-    <div ng-if="!umoc.convertableUsers" class="columns medium-4 modify-users-section">
-      <h4 class="modify-users-section--label modify-users-section--disabled" translate="userManage.org.convertLabel" ></h4>
-      <h6 class="modify-users-section--disabled" translate="userManage.org.convertUnavailable"></h6>
+    <div class="modify-users-section--right-box">
+      <div ng-if="!umoc.convertableUsers" class="columns medium-4 modify-users-section">
+        <h4 class="modify-users-section--label modify-users-section--disabled" translate="userManage.org.convertLabel" ></h4>
+        <h6 class="modify-users-section--disabled" translate="userManage.org.convertUnavailable"></h6>
+      </div>
     </div>
   </div>
 </div>

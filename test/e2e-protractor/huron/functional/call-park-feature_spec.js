@@ -60,7 +60,8 @@ describe('Huron Functional: call-park-feature', () => {
     });
 
     it('should be able to edit call park name and cancel', () => {
-      utils.sendKeys(callParkFeature.editName, 'edit');
+      utils.clear(callParkFeature.editName);
+      utils.sendKeys(callParkFeature.editName, `${customer.name}_test_callparkedit`);
       utils.expectIsEnabled(callParkFeature.editCancel);
       utils.expectIsEnabled(callParkFeature.editSave);
       utils.click(callParkFeature.editCancel);
@@ -162,7 +163,8 @@ describe('Huron Functional: call-park-feature', () => {
 
     describe('Edit multiple call park fields and save', () => {
       it('should be able to edit call park name', () => {
-        utils.sendKeys(callParkFeature.editName, 'edit');
+        utils.clear(callParkFeature.editName);
+        utils.sendKeys(callParkFeature.editName, `${customer.name}_test_callparkedit`);
       });
 
       it('should be able to edit call park range and cancel', () => {
@@ -451,7 +453,8 @@ describe('Huron Functional: call-park-feature', () => {
     });
 
     it('should click delete button', () => {
-      utils.click(callParkFeature.btnClose);
+      utils.waitForPresence(callFeatures.deleteFeature);
+      utils.click(callFeatures.deleteFeature);
       utils.expectIsDisplayed(callParkFeature.deleteCP);
       utils.expectIsDisplayed(callParkFeature.cancelDeleteFeature);
       utils.expectIsDisplayed(callParkFeature.deleteFeature);

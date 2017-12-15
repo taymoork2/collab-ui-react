@@ -7,7 +7,7 @@ var HttpStatus = require('http-status-codes');
     .controller('CareLocalSettingsCtrl', CareLocalSettingsCtrl);
 
   /* @ngInject */
-  function CareLocalSettingsCtrl($location, $interval, $q, $scope, $translate, Authinfo, Log, Notification, SunlightUtilitiesService, SunlightConfigService, ModalService, FeatureToggleService, URService) {
+  function CareLocalSettingsCtrl($interval, $location, $q, $scope, $translate, AutoAttendantConfigService, Authinfo, FeatureToggleService, Log, Notification, ModalService, SunlightUtilitiesService, SunlightConfigService, URService) {
     var vm = this;
 
     vm.ONBOARDED = 'onboarded';
@@ -26,11 +26,13 @@ var HttpStatus = require('http-status-codes');
     vm.csOnboardingStatus = vm.status.UNKNOWN;
     vm.aaOnboardingStatus = vm.status.UNKNOWN;
     vm.appOnboardingStatus = vm.status.UNKNOWN;
+    vm.jwtAppOnboardingStatus = vm.status.UNKNOWN;
 
     vm.defaultQueueId = Authinfo.getOrgId();
     vm.careSetupDoneByOrgAdmin = (Authinfo.getOrgId() === Authinfo.getUserOrgId());
 
     vm.state = vm.ONBOARDED;
+    vm.sunlightOnboardingState = vm.ONBOARDED;
     vm.errorCount = 0;
 
     vm.RoutingType = {
@@ -233,6 +235,7 @@ var HttpStatus = require('http-status-codes');
       vm.csOnboardingStatus = _.get(result, 'data.csOnboardingStatus');
       vm.aaOnboardingStatus = _.get(result, 'data.aaOnboardingStatus');
       vm.appOnboardingStatus = _.get(result, 'data.appOnboardStatus');
+      vm.jwtAppOnboardingStatus = _.get(result, 'data.jwtAppOnboardingStatus');
 
       if (isCalledOnInit) {
         vm.orgChatConfigDataModel.chatCount = _.get(result, 'data.maxChatCount', maxChatCount);
@@ -242,7 +245,7 @@ var HttpStatus = require('http-status-codes');
         vm.orgChatConfig.selectedVideoInChatToggle = vm.orgChatConfigDataModel.videoInChatToggle;
       }
     }
-    function onboardCsAaAppToCare() {
+    function onboardCareWithOtherApps() {
       var promises = {};
       if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
         promises.onBoardCS = SunlightConfigService.onBoardCare();
@@ -260,13 +263,23 @@ var HttpStatus = require('http-status-codes');
           }
         });
       }
-      if (vm.careSetupDoneByOrgAdmin && vm.appOnboardingStatus !== vm.status.SUCCESS) {
-        promises.onBoardBotApp = SunlightConfigService.onboardCareBot();
-        promises.onBoardBotApp.then(function (result) {
-          if (result.status === HttpStatus.NO_CONTENT) {
-            vm.appOnboardingStatus = vm.status.SUCCESS;
-          }
-        });
+      if (vm.careSetupDoneByOrgAdmin) {
+        if (vm.appOnboardingStatus !== vm.status.SUCCESS) {
+          promises.onBoardBotApp = SunlightConfigService.onboardCareBot();
+          promises.onBoardBotApp.then(function (result) {
+            if (result.status === HttpStatus.NO_CONTENT) {
+              vm.appOnboardingStatus = vm.status.SUCCESS;
+            }
+          });
+        }
+        if (vm.jwtAppOnboardingStatus !== vm.status.SUCCESS) {
+          promises.onBoardJwtApp = SunlightConfigService.onboardJwtApp();
+          promises.onBoardJwtApp.then(function (result) {
+            if (result.status === HttpStatus.NO_CONTENT) {
+              vm.jwtAppOnboardingStatus = vm.status.SUCCESS;
+            }
+          });
+        }
       }
       $q.all(promises).then(function (results) {
         Log.debug('Care onboarding is success', results);
@@ -296,13 +309,13 @@ var HttpStatus = require('http-status-codes');
 
         URService.createQueue(createQueueRequest).then(function () {
           vm.defaultQueueStatus = vm.status.SUCCESS;
-          onboardCsAaAppToCare();
+          onboardCareWithOtherApps();
         })
           .catch(function (error) {
             Log.debug('default queue creation is unsuccessful,' + error);
           });
       } else {
-        onboardCsAaAppToCare();
+        onboardCareWithOtherApps();
       }
     };
 
@@ -400,16 +413,18 @@ var HttpStatus = require('http-status-codes');
 
     function onboardingDoneByAdminStatus() {
       var onboardingDoneByAdminStatus = vm.status.UNKNOWN;
+      var aaOnboarded = onboardingStatusForAA();
       if (vm.defaultQueueStatus !== vm.status.SUCCESS) {
         onboardingDoneByAdminStatus = vm.defaultQueueStatus;
-      } else if (vm.csOnboardingStatus === vm.status.SUCCESS && vm.appOnboardingStatus === vm.status.SUCCESS) {
-        onboardingDoneByAdminStatus = onboardingStatusWhenCareVoiceEnabled();
+      } else if (vm.csOnboardingStatus === vm.status.SUCCESS && vm.appOnboardingStatus === vm.status.SUCCESS
+        && aaOnboarded === vm.status.SUCCESS) {
+        onboardingDoneByAdminStatus = vm.jwtAppOnboardingStatus;
+      } else if (aaOnboarded !== vm.status.SUCCESS) {
+        onboardingDoneByAdminStatus = aaOnboarded;
       } else if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
         onboardingDoneByAdminStatus = vm.csOnboardingStatus;
       } else if (vm.appOnboardingStatus !== vm.status.SUCCESS) {
         onboardingDoneByAdminStatus = vm.appOnboardingStatus;
-      } else {
-        onboardingDoneByAdminStatus = vm.status.UNKNOWN;
       }
       return onboardingDoneByAdminStatus;
     }
@@ -419,14 +434,14 @@ var HttpStatus = require('http-status-codes');
       if (vm.defaultQueueStatus !== vm.status.SUCCESS) {
         onboardingDoneByPartnerStatus = vm.defaultQueueStatus;
       } else if (vm.csOnboardingStatus === vm.status.SUCCESS) {
-        onboardingDoneByPartnerStatus = onboardingStatusWhenCareVoiceEnabled();
+        onboardingDoneByPartnerStatus = onboardingStatusForAA();
       } else if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
         onboardingDoneByPartnerStatus = vm.csOnboardingStatus;
       }
       return onboardingDoneByPartnerStatus;
     }
 
-    function onboardingStatusWhenCareVoiceEnabled() {
+    function onboardingStatusForAA() {
       var status;
       if (Authinfo.isCareVoice()) {
         status = vm.aaOnboardingStatus;
@@ -438,7 +453,7 @@ var HttpStatus = require('http-status-codes');
 
     function getOnboardStatusAndUpdateConfigIfRequired(result) {
       var onboardingStatus = getOnboardingStatus();
-      setViewModelState(onboardingStatus);
+      setSunlightConfigState(onboardingStatus);
       if (result.data.orgName === '' || !(_.get(result, 'data.orgName'))) {
         result.data.orgName = Authinfo.getOrgName();
         SunlightConfigService.updateChatConfig(result.data).then(function (result) {
@@ -447,17 +462,73 @@ var HttpStatus = require('http-status-codes');
       }
     }
 
+    function setSunlightConfigState(onboardingStatus) {
+      switch (onboardingStatus) {
+        case vm.status.SUCCESS:
+          vm.sunlightOnboardingState = vm.ONBOARDED;
+          break;
+        case vm.status.PENDING:
+          vm.sunlightOnboardingState = vm.IN_PROGRESS;
+          startPolling();
+          break;
+        default:
+          vm.sunlightOnboardingState = vm.NOT_ONBOARDED;
+      }
+    }
+
+
     function getOnboardingStatusFromOrgChatConfig() {
-      SunlightConfigService.getChatConfig().then(function (result) {
+      return SunlightConfigService.getChatConfig().then(function (result) {
         populateOrgChatConfigViewModel(result, true);
         getOnboardStatusAndUpdateConfigIfRequired(result);
-      }, function (error) {
-        if (error.status === 404) {
-          vm.state = vm.NOT_ONBOARDED;
-        } else {
-          Log.debug('Fetching Care setup status, on load, failed: ', error);
-        }
+      })
+        .catch(function (error) {
+          if (error.status === 404) {
+            vm.sunlightOnboardingState = vm.NOT_ONBOARDED;
+          } else {
+            Log.debug('Fetching Care setup status, on load, failed: ', error);
+          }
+        });
+    }
+
+    function setViewModelStateFromCsConfigForAA() {
+      if (vm.sunlightOnboardingState === vm.ONBOARDED) {
+        AutoAttendantConfigService.getCSConfig().then(function (result) {
+          var csOnboardingStatusForAA = _.get(result, 'data.csOnboardingStatus');
+          switch (csOnboardingStatusForAA) {
+            case vm.status.SUCCESS:
+              vm.state = vm.ONBOARDED;
+              break;
+            default:
+              vm.state = vm.NOT_ONBOARDED;
+          }
+        })
+          .catch(function (error) {
+            Log.debug('Failed getting Cs onboarding status for AA ', error);
+            vm.state = vm.NOT_ONBOARDED;
+          });
+      } else {
+        setVmStateFromSunlightState();
+      }
+    }
+
+    function setViewModelStateForAA(sunlightPromise) {
+      sunlightPromise.then(function () {
+        FeatureToggleService.supports(FeatureToggleService.features.huronAAContextService).then(function (results) {
+          if (results) {
+            setViewModelStateFromCsConfigForAA();
+          } else {
+            setVmStateFromSunlightState();
+          }
+        })
+          .catch(function () {
+            setVmStateFromSunlightState();
+          });
       });
+    }
+
+    function setVmStateFromSunlightState() {
+      vm.state = vm.sunlightOnboardingState;
     }
 
     function init() {
@@ -468,19 +539,24 @@ var HttpStatus = require('http-status-codes');
       FeatureToggleService.atlasCareChatToVideoTrialsGetStatus().then(function (result) {
         vm.featureToggles.chatToVideoFeatureToggle = result && Authinfo.isCare();
       });
+      var sunlightPromise;
       URService.getQueue(vm.defaultQueueId).then(function (result) {
         vm.defaultQueueStatus = vm.status.SUCCESS;
         populateQueueConfigViewModel(result, true);
-        getOnboardingStatusFromOrgChatConfig();
-      }, function (error) {
-        getOnboardingStatusFromOrgChatConfig();
-        if (error.status === 404) {
-          vm.state = vm.NOT_ONBOARDED;
-        } else {
-          Log.debug('Fetching default Queue status status, on load, failed: ', error);
-        }
-      });
+        sunlightPromise = getOnboardingStatusFromOrgChatConfig();
+        setViewModelStateForAA(sunlightPromise);
+      })
+        .catch(function (error) {
+          sunlightPromise = getOnboardingStatusFromOrgChatConfig();
+          if (error.status === 404) {
+            vm.state = vm.NOT_ONBOARDED;
+          } else {
+            Log.debug('Fetching default Queue status status, on load, failed: ', error);
+          }
+          setViewModelStateForAA(sunlightPromise);
+        });
     }
+
     init();
   }
 })();

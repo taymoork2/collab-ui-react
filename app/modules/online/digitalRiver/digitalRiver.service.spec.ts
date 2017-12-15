@@ -38,7 +38,7 @@ describe('Service: DigitalRiverService', () => {
   it('should get digital river subscriptions url', function () {
     this.DigitalRiverService.getSubscriptionsUrl().then(response => {
       expect(this.$document.prop).toHaveBeenCalledWith(this.cookie, this.webexToken);
-      expect(response).toEqual('https://buy.ciscospark.com/store/ciscoctg/en_US/DisplaySelfServiceSubscriptionHistoryListPage?DRL=abc%2B123');
+      expect(response).toEqual('https://buy.webex.com/store/ciscoctg/en_US/DisplaySelfServiceSubscriptionHistoryListPage?DRL=abc%2B123');
     });
     this.$httpBackend.flush();
   });
@@ -46,15 +46,14 @@ describe('Service: DigitalRiverService', () => {
   it('should get digital river billing url', function () {
     this.DigitalRiverService.getBillingUrl().then(response => {
       expect(this.$document.prop).toHaveBeenCalledWith(this.cookie, this.webexToken);
-      expect(response).toEqual('https://buy.ciscospark.com/DRHM/store?Action=DisplayAddEditPaymentPage&SiteID=ciscoctg&ThemeID=4805888100&DRL=abc%2B123');
+      expect(response).toEqual('https://buy.webex.com/DRHM/store?Action=DisplayAddEditPaymentPage&SiteID=ciscoctg&ThemeID=4805888100&DRL=abc%2B123');
     });
-    this.$httpBackend.flush();
   });
 
   it('should get digital river order invoice url', function () {
     this.DigitalRiverService.getInvoiceUrl('123456', this.Config.onlineProducts.webex).then(response => {
       expect(this.$document.prop).toHaveBeenCalledWith(this.cookie, this.webexToken);
-      expect(response).toEqual('https://buy.ciscospark.com/store/ciscoctg/en_US/DisplayInvoicePage?requisitionID=123456&ThemeID=4777108300&DRL=abc%2B123');
+      expect(response).toEqual('https://buy.webex.com/store/ciscoctg/en_US/DisplayInvoicePage?requisitionID=123456&ThemeID=4777108300&DRL=abc%2B123');
     });
     this.$httpBackend.flush();
   });

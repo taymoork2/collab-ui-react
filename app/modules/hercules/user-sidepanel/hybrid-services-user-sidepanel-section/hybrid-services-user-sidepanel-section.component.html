@@ -5,33 +5,109 @@
   <p ng-if="!$ctrl.isLicensed" translate="hercules.cloudExtensions.noLicensedServices"></p>
   <div class="feature-list cloud-extensions" ng-if="$ctrl.isLicensed">
     <ul>
-      <li class="feature" ng-repeat="service in $ctrl.allServicesinOrg | filter: $ctrl.allEnabledServicesExceptUcFilter">
-        <a href id="link_{{service.id}}"
-           ng-hide="service.id === 'spark-hybrid-impinterop' && !$ctrl.atlasHybridImpFeatureToggle"
-           ui-sref="user-overview.hybrid-services-{{service.id}}({ userUpdatedCallback: $ctrl.userUpdatedCallback })">
-          <i class="feature-icon" ng-class="$ctrl.serviceIcon(service.id)"></i>
-          <span class="feature-name" translate="hercules.serviceNames.{{service.id}}"></span>
-          <span class="feature-status has-warnings-icon" ng-if="service.userIsEntitled && service.status && service.status.hasWarnings"><i class="icon icon-warning"></i></span>
-          <span class="feature-status" ng-class="service.status ? 'status-' + $ctrl.getStatus(service.status) : ''"
-                ng-if="service.status && service.userIsEntitled"
-                id="{{service.id}}-status"
-                translate="hercules.activationStatus.{{$ctrl.getStatus(service.status)}}"></span>
-          <span class="feature-status" ng-if="!service.userIsEntitled" translate="common.off"></span>
-          <span class="feature-status" ng-if="!service.status && service.userIsEntitled && $ctrl.userStatusLoaded" translate="hercules.activationStatus.notFound"></span>
-          <span cs-loader class="feature-list-loader" ng-if="!service.status && service.userIsEntitled && !$ctrl.userStatusLoaded"></span>
-          <i class="feature-arrow"></i>
+
+      <!-- Hybrid Calendar -->
+      <li ng-if="$ctrl.showService('squared-fusion-cal') || $ctrl.showService('squared-fusion-gcal')" class="feature">
+        <a href
+           id="link_squared-fusion-cal"
+           ng-click="$ctrl.drillDown('squared-fusion-cal')">
+          <i class="feature-icon" ng-class="$ctrl.serviceIcon('squared-fusion-cal')"></i>
+          <span class="feature-name" translate="hercules.serviceNames.squared-fusion-cal"></span>
+          <span cs-loader
+                class="feature-list-loader"
+                ng-if="$ctrl.loadingPage"></span>
+          <span ng-if="!$ctrl.loadingPage">
+            <span ng-if="$ctrl.bothCalendarTypesWarning" translate="hercules.cloudExtensions.entitledToBothCalendarsShort" class="feature-status status-error"></span>
+            <span ng-if="!$ctrl.bothCalendarTypesWarning">
+              <span ng-if="!$ctrl.serviceIsOnForUser('squared-fusion-cal') && !$ctrl.serviceIsOnForUser('squared-fusion-gcal') && ($ctrl.userHasEntitlement('squared-fusion-cal') || $ctrl.userHasEntitlement('squared-fusion-gcal'))"
+                    class="feature-status"
+                    translate="hercules.activationStatus.notFound"></span>
+              <span ng-if="!$ctrl.serviceIsOnForUser('squared-fusion-cal') && !$ctrl.serviceIsOnForUser('squared-fusion-gcal') && !($ctrl.userHasEntitlement('squared-fusion-cal') || $ctrl.userHasEntitlement('squared-fusion-gcal'))"
+                    class="feature-status"
+                    translate="common.off"></span>
+              <span ng-if="$ctrl.serviceIsOnForUser('squared-fusion-cal')"
+                    class="feature-status"
+                    ng-class="$ctrl.getStatus('squared-fusion-cal') ? 'status-' + $ctrl.getStatus('squared-fusion-cal') : ''"
+                    translate="hercules.activationStatus.{{$ctrl.getStatus('squared-fusion-cal')}}"></span>
+              <span ng-if="$ctrl.serviceIsOnForUser('squared-fusion-gcal')"
+                    class="feature-status"
+                    ng-class="$ctrl.getStatus('squared-fusion-gcal') ? 'status-' + $ctrl.getStatus('squared-fusion-gcal') : ''"
+                    translate="hercules.activationStatus.{{$ctrl.getStatus('squared-fusion-gcal')}}"></span>
+            </span>
+          </span>
+          <i class="feature-arrow" ng-if="!$ctrl.loadingPage"></i>
         </a>
       </li>
+
+      <!-- Hybrid Call -->
+      <li ng-if="$ctrl.showService('squared-fusion-uc')" class="feature">
+        <a href
+           id="link_squared-fusion-uc"
+           ng-class="{'no-services': $ctrl.userIsEnabledForHuron }"
+           ng-click="$ctrl.drillDown('squared-fusion-uc')">
+          <i class="feature-icon" ng-class="$ctrl.serviceIcon('squared-fusion-uc')"></i>
+          <span class="feature-name" translate="hercules.serviceNames.squared-fusion-uc"></span>
+          <span cs-loader
+                class="feature-list-loader"
+                ng-if="$ctrl.loadingPage"></span>
+          <span ng-if="!$ctrl.loadingPage">
+            <span ng-if="$ctrl.userIsEnabledForHuron"
+                  class="feature-status status-off"
+                  translate="hercules.cloudExtensions.entitledToHuron"></span>
+            <span ng-if="!$ctrl.serviceIsOnForUser('squared-fusion-uc') && $ctrl.userHasEntitlement('squared-fusion-uc') && !$ctrl.userIsEnabledForHuron"
+                  class="feature-status"
+                  translate="hercules.activationStatus.notFound"></span>
+            <span ng-if="!$ctrl.serviceIsOnForUser('squared-fusion-uc') && !$ctrl.userHasEntitlement('squared-fusion-uc') && !$ctrl.userIsEnabledForHuron"
+                  class="feature-status"
+                  translate="common.off"></span>
+            <span ng-if="$ctrl.serviceIsOnForUser('squared-fusion-uc') && !$ctrl.userIsEnabledForHuron"
+                  class="feature-status"
+                  ng-class="$ctrl.getStatus('squared-fusion-uc') ? 'status-' + $ctrl.getStatus('squared-fusion-uc') : ''"
+                  translate="hercules.activationStatus.{{$ctrl.getStatus('squared-fusion-uc')}}"></span>
+          </span>
+          <i class="feature-arrow" ng-if="!$ctrl.userIsEnabledForHuron && !$ctrl.loadingPage"></i>
+        </a>
+      </li>
+
+      <!-- Hybrid Message -->
+      <li ng-if="$ctrl.showService('spark-hybrid-impinterop') && $ctrl.atlasHybridImpFeatureToggle" class="feature">
+        <a href
+           id="link_spark-hybrid-impinterop"
+           ng-click="$ctrl.drillDown('spark-hybrid-impinterop')">
+          <i class="feature-icon" ng-class="$ctrl.serviceIcon('spark-hybrid-impinterop')"></i>
+          <span class="feature-name" translate="hercules.serviceNames.spark-hybrid-impinterop"></span>
+          <span cs-loader
+                class="feature-list-loader"
+                ng-if="$ctrl.loadingPage"></span>
+          <span ng-if="!$ctrl.loadingPage">
+            <span ng-if="!$ctrl.serviceIsOnForUser('spark-hybrid-impinterop') && $ctrl.userHasEntitlement('spark-hybrid-impinterop')"
+                  class="feature-status"
+                  translate="hercules.activationStatus.notFound"></span>
+            <span ng-if="!$ctrl.serviceIsOnForUser('spark-hybrid-impinterop') && !$ctrl.userHasEntitlement('spark-hybrid-impinterop')"
+                  class="feature-status"
+                  translate="common.off"></span>
+            <span ng-if="$ctrl.serviceIsOnForUser('spark-hybrid-impinterop')"
+                  class="feature-status"
+                  ng-class="$ctrl.getStatus('spark-hybrid-impinterop') ? 'status-' + $ctrl.getStatus('spark-hybrid-impinterop') : ''"
+                  translate="hercules.activationStatus.{{$ctrl.getStatus('spark-hybrid-impinterop')}}"></span>
+          </span>
+          <i class="feature-arrow" ng-if="!$ctrl.loadingPage"></i>
+        </a>
+      </li>
+
     </ul>
   </div>
-  <p ng-if="$ctrl.googleCalendarError" class="cloud-extensions">
-    <i class="icon icon-error status-error"></i>
-    <span class="small" translate="hercules.settings.googleCalendar.couldNotReadGoogleCalendarStatus"></span>
-    <span ng-if="$ctrl.googleCalendarError.config.headers.TrackingID" class="small" translate="common.trackingId" translate-values="{ trackingId: $ctrl.googleCalendarError.config.headers.TrackingID }"></span>
-  </p>
-  <p ng-if="$ctrl.office365Error" class="cloud-extensions">
-    <i class="icon icon-error status-error"></i>
-    <span class="small" translate="hercules.settings.office365.couldNotReadOffice365Status"></span>
-    <span ng-if="$ctrl.office365Error.config.headers.TrackingID" class="small" translate="common.trackingId" translate-values="{ trackingId: $ctrl.office365Error.config.headers.TrackingID }"></span>
-  </p>
+
+  <hybrid-services-sidepanel-error-message ng-if="$ctrl.couldNotReadOffice365Status"
+                                           translation-key="'hercules.cloudExtensions.couldNotReadOffice365Status'">
+  </hybrid-services-sidepanel-error-message>
+
+  <hybrid-services-sidepanel-error-message ng-if="$ctrl.couldNotReadGoogleCalendarStatus"
+                                           translation-key="'hercules.cloudExtensions.couldNotReadGoogleCalendarStatus'">
+  </hybrid-services-sidepanel-error-message>
+
+  <hybrid-services-sidepanel-error-message ng-if="$ctrl.couldNotReadStatusesFromFMS"
+                                           translation-key="'hercules.cloudExtensions.couldNotReadFMSStatus'">
+  </hybrid-services-sidepanel-error-message>
+
 </cs-sp-section>

@@ -1,22 +1,24 @@
 <div class="search-filters-redux">
-  <form ng-submit="dctrl.onInputSubmit()" ng-class="{ 'active': dctrl.inputActive}">
-    <div class="bulleted-searchbox" onclick="angular.element('#searchFilterInput').focus();">
+  <form ng-class="{ 'active': dctrl.inputActive}">
+    <div class="bulleted-searchbox" ng-click="dctrl.userSetFocusToInputField()">
       <div class="bulleted-searchinput"
-           ng-class="{'searcherror': dctrl.searchObject.hasError}">
-        <i class="icon icon-search"></i>
+           ng-class="{'searcherror': dctrl.searchObject.hasError, 'focus': dctrl.inputActive}">
+        <i class="icon icon-search" ng-click="dctrl.resetInputFieldCursor()"></i>
         <device-search-bullet ng-repeat="bullet in dctrl.getBullets()" search-element="bullet"
                               bullet-container="dctrl"></device-search-bullet>
         <input
           autocomplete="off"
           autocorrect="off"
           autocapitalize="off"
+          autofocus="true"
           spellcheck="false"
           id="searchFilterInput"
           ng-model="dctrl.searchInput"
           ng-change="dctrl.onInputChange()"
           ng-keydown="dctrl.onSearchInputKeyDown($event)"
+          ng-keypress="dctrl.onSearchInputKeyPress($event)"
           type="text"
-          placeholder="{{::'spacesPage.deviceSearchPlaceholder' | translate}}"
+          placeholder="{{dctrl.getSearchPlaceholder()}}"
           ng-focus="dctrl.inputActive=true"
           ng-blur="dctrl.inputActive=false">
 
@@ -25,14 +27,14 @@
       </div>
       <div class="dropdown-positioner">
         <div class="suggestions-dropdown" ng-mouseleave="dctrl.suggestions.setFirstActive()"
-             ng-show="dctrl.showSuggestions || dctrl.startSelecting" ng-mousedown="dctrl.startSelecting = true"
-             ng-mouseup="dctrl.selectSuggestion(dctrl.suggestions.getActiveSuggestion());dctrl.startSelecting = false">
+             ng-show="dctrl.showSuggestions || dctrl.startSelecting" ng-mousedown="dctrl.startSelecting = true">
           <ul>
             <li
               ng-repeat="suggestion in dctrl.suggestions.uiSuggestions track by $index"
               ng-class="{active: dctrl.suggestions.isSuggestionActive($index)}"
-              ng-mouseenter="dctrl.suggestions.setActiveSuggestion($index)">
-              <div class="field"><i ng-bind-html="suggestion.field | highlight:dctrl.searchInput"></i></div>
+              ng-mouseenter="dctrl.suggestions.setActiveSuggestion($index)"
+              ng-mouseup="dctrl.selectSuggestion(suggestion);dctrl.startSelecting = false">
+              <div class="field"><i ng-bind-html="suggestion.readableField"></i></div>
               <div class="text" ng-bind-html="suggestion.text | highlight:dctrl.searchInput"></div>
               <div class="count" ng-if="suggestion.count > 0 || suggestion.count === 0">({{suggestion.count}})</div>
             </li>

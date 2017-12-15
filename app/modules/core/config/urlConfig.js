@@ -236,80 +236,11 @@
       integration: 'https://lyra-intb.ciscospark.com/lyra/api/v1',
       prod: 'https://lyra-a.wbx2.com/lyra/api/v1',
     },
-    WebExReportQBSforBaseUrl: {
-      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_webex_v1',
-      cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_webex_v1',
-      integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_webex_v1',
-      prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_webex_v1',
-    },
-    SparkReportQBSforBaseUrl: {
-      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_spark_v1',
-      cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_spark_v1',
-      integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_spark_v1',
-      prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_spark_v1',
-    },
-    WebExReportQBSforPremiumUrl: {
-      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_webex_v1',
-      cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_webex_v1',
-      integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_webex_v1',
-      prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_webex_v1',
-    },
-    SparkReportQBSforPremiumUrl: {
-      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
-      cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
-      integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
-      prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
-    },
-    SparkReportQBSforPartnerUrl: {
-      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1', //dfw-qlickbts
-      cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
-      integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
-      prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
-    },
-    WebExReportQBSforMEIUrl: {
-      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
-      cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
-      integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
-      prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
-    },
-    SparkReportQBSforMEIUrl: {
-      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
-      cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
-      integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
-      prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
-    },
-    //for Qlik mashup application Server. Currently, it's https://sjc-ngxbts.webex.com
-    //qlik_reverse_proxy is populated after an API response
-    //sjc-ngx.webex.com dfw-ngx.webex.com
-    WebExReportAppforBaseUrl: {
-      dev: 'https://%s/custportal/extensions/webex-report-basic/webex-report-basic.html',
-      cfe: 'https://%s/custportal/extensions/webex-report-basic/webex-report-basic.html',
-      integration: 'https://%s/custportal/extensions/webex-report-basic/webex-report-basic.html',
-      prod: 'https://%s/custportal/extensions/webex-report-basic/webex-report-basic.html',
-    },
-    SparkReportAppforBaseUrl: {
-      dev: 'https://%s/custportal/extensions/spark-report-basic/spark-report-basic.html',
-      cfe: 'https://%s/custportal/extensions/spark-report-basic/spark-report-basic.html',
-      integration: 'https://%s/custportal/extensions/spark-report-basic/spark-report-basic.html',
-      prod: 'https://%s/custportal/extensions/spark-report-basic/spark-report-basic.html',
-    },
-    WebExReportAppforPremiumUrl: {
-      dev: 'https://%s/custportal/extensions/webex-report-premium/webex-report-premium.html',
-      cfe: 'https://%s/custportal/extensions/webex-report-premium/webex-report-premium.html',
-      integration: 'https://%s/custportal/extensions/webex-report-premium/webex-report-premium.html',
-      prod: 'https://%s/custportal/extensions/webex-report-premium/webex-report-premium.html',
-    },
-    SparkReportAppforPremiumUrl: {
-      dev: 'https://%s/custportal/extensions/spark-report-premium/spark-report-premium.html',
-      cfe: 'https://%s/custportal/extensions/spark-report-premium/spark-report-premium.html',
-      integration: 'https://%s/custportal/extensions/spark-report-premium/spark-report-premium.html',
-      prod: 'https://%s/custportal/extensions/spark-report-premium/spark-report-premium.html',
-    },
-    SparkReportAppforPartnerUrl: {
-      dev: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
-      cfe: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
-      integration: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
-      prod: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
+    QlikServiceUrl: {
+      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/%s',
+      cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/%s',
+      integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/%s',
+      prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/%s',
     },
     CvaServiceUrl: {
       dev: 'https://int-virtual-assistant.appstaging.ciscoccservice.com/virtual-assistant/v1/',
@@ -323,26 +254,13 @@
       integration: 'https://int-expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
       prod: 'https://expert-assistant.produs1.ciscoccservice.com/expert-assistant/v1/',
     },
-    WebExReportAppforMEIUrl: {
-      dev: 'https://%s/custportal/extensions/MEI/MEI.html',
-      cfe: 'https://%s/custportal/extensions/MEI/MEI.html',
-      integration: 'https://%s/custportal/extensions/MEI/MEI.html',
-      prod: 'https://%s/custportal/extensions/MEI/MEI.html',
-    },
-    SparkReportAppforMEIUrl: {
-      dev: 'https://%s/custportal/extensions/MEI/MEI.html',
-      cfe: 'https://%s/custportal/extensions/MEI/MEI.html',
-      integration: 'https://%s/custportal/extensions/MEI/MEI.html',
-      prod: 'https://%s/custportal/extensions/MEI/MEI.html',
-    },
     AdminBatchServiceUrl: {
       dev: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
       cfe: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
       integration: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
       prod: 'https://admin-batch-service.wbx2.com/api/v1',
     },
-    // urls same for all environments
-
+    QlikReportAppUrl: 'https://%s/custportal/extensions/',
     ProdAdminServiceUrl: 'https://atlas-a.wbx2.com/admin/api/v1/',
     WebexAdvancedEditUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage',
     WebexAdvancedHomeUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
@@ -374,9 +292,10 @@
       service['get' + key] = function (specifyEnv) {
         var env = Config.getEnv();
         var args = _.toArray(arguments);
-
-        if (_.get(specifyEnv, 'env', '')) {
-          env = specifyEnv.env;
+        if (_.isObject(specifyEnv)) {
+          if (_.get(specifyEnv, 'env', '')) {
+            env = specifyEnv.env;
+          }
           args.shift();
         }
         var resolvedUrl = _.isString(urlMapping) ? urlMapping : urlMapping[env];

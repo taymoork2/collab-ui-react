@@ -20,8 +20,8 @@
     </task-container-panel-list>
     <task-container-details>
       <csv-upload-results
-        active-task="$ctrl.activeTask"
-        on-cancel-import="$ctrl.onCancelImport()">
+        input-active-task="$ctrl.activeTask"
+        on-status-update="$ctrl.updateActiveTaskStatus(status)">
       </csv-upload-results>
     </task-container-details>
   </task-container>

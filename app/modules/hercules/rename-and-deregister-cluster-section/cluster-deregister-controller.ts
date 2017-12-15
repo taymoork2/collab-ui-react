@@ -8,7 +8,7 @@ export class ClusterDeregisterController {
 
   /* @ngInject */
   constructor(
-    private $modalInstance,
+    private $modalInstance: ng.ui.bootstrap.IModalInstanceService,
     private cluster: ICluster,
     private HybridServicesClusterService: HybridServicesClusterService,
     private PrivateTrunkService: PrivateTrunkService,
@@ -46,7 +46,3 @@ export class ClusterDeregisterController {
     });
   }
 }
-
-angular
-  .module('Hercules')
-  .controller('ClusterDeregisterController', ClusterDeregisterController);

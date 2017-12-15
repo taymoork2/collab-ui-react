@@ -17,7 +17,7 @@
         <aa-route-to-user ng-switch-when="phoneMenuRouteMailbox" voicemail=true aa-schedule="{{schedule}}" aa-menu-id="{{aaSubmenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-user>
         <aa-route-to-aa ng-switch-when="phoneMenuRouteAA" aa-schedule="{{schedule}}" aa-menu-id="{{aaSubmenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-aa>
         <aa-route-to-hg ng-switch-when="phoneMenuRouteHunt"  aa-schedule="{{schedule}}" aa-menu-id="{{aaSubmenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-hg>
-        <aa-dial-by-ext ng-switch-when="phoneMenuDialExt" aa-schedule="{{schedule}}" aa-from-sub-menu="true" aa-menu-id="{{aaSubmenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-dial-by-ext>
+        <aa-dial-by-ext ng-switch-when="phoneMenuDialExt" aa-schedule="{{schedule}}" aa-from-sub-menu="true" aa-menu-id="{{aaSubmenu.menuId}}" aa-index="index" aa-key-index="{{$index}}" aa-routing-prefix-options="aaSubmenu.routingPrefixOptions"></aa-dial-by-ext>
         <aa-route-to-ext-num ng-switch-when="phoneMenuRouteToExtNum" aa-schedule="{{schedule}}" aa-menu-id="{{aaSubmenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-ext-num>
         <aa-say-message ng-switch-when="phoneMenuSayMessage" aa-schedule="{{schedule}}" aa-from-sub-menu="true" aa-menu-id="{{aaSubmenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-say-message>
         <aa-route-to-queue ng-switch-when="phoneMenuRouteQueue" aa-schedule="{{schedule}}" aa-menu-id="{{aaSubmenu.menuId}}" aa-index="index" aa-key-index="{{$index}}" aa-queues="{{aaSubmenu.queues}}"></aa-route-to-queue>

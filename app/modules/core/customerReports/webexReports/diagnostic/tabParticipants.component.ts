@@ -17,7 +17,6 @@ class Participants implements ng.IComponentController {
   public constructor(
     private $scope: IGridApiScope,
     private Notification: Notification,
-    private $state: ng.ui.IStateService,
     private SearchService: SearchService,
     private $stateParams: ng.ui.IStateParamsService,
   ) {
@@ -33,10 +32,12 @@ class Participants implements ng.IComponentController {
     this.SearchService.getParticipants(this.conferenceID)
       .then((res) => {
         _.forEach(res, (item) => {
+          const browser = this.SearchService.getBrowser(item.browser);
+          const platform = this.SearchService.getPlartform({ platform: item.platform, sessionType: item.sessionType });
           item.Duration = moment.duration(item.duration * 1000).humanize();
           item.endReason = this.SearchService.getParticipantEndReson(item.reason);
-          item.startDate = this.SearchService.timestampToDate(item.joinTime, 'YYYY.MM.DD HH:mm:ss');
-          item.platform_ = this.SearchService.getPlartform({ platform: item.platform, sessionType: item.sessionType });
+          item.startDate = this.SearchService.timestampToDate(item.joinTime, 'MMMM Do, YYYY h:mm:ss A');
+          item.platform_ = browser ? `${browser} on ${platform}` : platform;
         });
         this.gridData = res;
         this.loading = false;
@@ -48,22 +49,12 @@ class Participants implements ng.IComponentController {
       });
   }
 
-  public showDetail(item) {
-    this.SearchService.setStorage('aaa', item); // TODO, Will do next sprint
-    this.$state.go('dgc-panel');
-  }
-
-  private setGridOptions(): void {
+  private setGridOptions(): void { // TODO , will translate next time
     const columnDefs = [{
       sortable: true,
       cellTooltip: true,
       field: 'userName',
       displayName: 'User Name',
-    }, {
-      sortable: true,
-      field: 'callerID',
-      cellClass: 'text-right',
-      displayName: 'Caller ID',
     }, {
       field: 'startDate',
       displayName: 'Start Date',
@@ -73,7 +64,7 @@ class Participants implements ng.IComponentController {
     }, {
       field: 'platform_',
       cellTooltip: true,
-      displayName: 'Platform',
+      displayName: 'Endpoint',
     }, {
       field: 'clientIP',
       cellTooltip: true,
@@ -98,9 +89,6 @@ class Participants implements ng.IComponentController {
       enableRowHeaderSelection: false,
       onRegisterApi: (gridApi) => {
         this.$scope.gridApi = gridApi;
-        gridApi.selection.on.rowSelectionChanged(this.$scope, (row) => {
-          this.showDetail(row.entity);
-        });
       },
     };
   }

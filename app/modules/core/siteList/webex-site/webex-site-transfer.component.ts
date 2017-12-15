@@ -8,8 +8,6 @@ import { EventNames } from './webex-site.constants';
 class WebexSiteTransferCtrl implements ng.IComponentController {
 
   public currentSubscription;
-  public existingSites;
-  public hasTrialSites;
   public showTransferCodeInput;
   public transferSiteCode;
   public migrateSiteUrl;
@@ -22,6 +20,7 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
   public sitesArray: IWebExSite[] = [];
   public onValidationStatusChange: Function;
   public onSitesReceived: Function;
+  public onSendTracking: Function;
 
   public siteModel: IWebExSite = {
     siteUrl: '',
@@ -32,22 +31,29 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
 
   private timeZoneOptions;
 
+  private errorCodes = {
+    400303: 'firstTimeWizard.transferCodeInvalidError',
+    400304: 'firstTimeWizard.transferCodeInvalidSite',
+  };
+
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
     private $scope: ng.IScope,
     private $translate: ng.translate.ITranslateService,
+    private Analytics,
     private Config: Config,
     private Notification: Notification,
     private SetupWizardService: SetupWizardService,
     private TrialTimeZoneService: TrialTimeZoneService,
+    private Utils,
   ) {
     this.migrateSiteUrl = this.Config.webexSiteMigrationUrl;
   }
 
   public $onInit() {
-    this.hasTrialSites = this.SetupWizardService.hasWebexMeetingTrial();
     this.timeZoneOptions = this.TrialTimeZoneService.getTimeZones();
+    this.showTransferCodeInput = !_.isEmpty(this.transferSiteCode) &&  !_.isEmpty(this.transferSiteUrl);
     this.$scope.$on(EventNames.VALIDATE_TRANSFER_SITE, () => {
       this.processNext();
     });
@@ -72,7 +78,12 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
 
   public processNext() {
     this.migrateTrialNext().then(() => {
-      this.onSitesReceived({ sites: this.sitesArray, transferCode: this.transferSiteCode, isValid: true });
+      this.onSitesReceived({
+        sites: this.sitesArray,
+        transferCode: this.transferSiteCode,
+        isValid: true,
+        transferSiteUrl: this.transferSiteUrl,
+      });
     })
       .catch(() => {
         this.onValidationStatusChange({ isValid: false });
@@ -82,7 +93,7 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
 
   public migrateTrialNext(): ng.IPromise<any> {
     if (_.isEmpty(this.transferSiteUrl) && _.isEmpty(this.transferSiteCode)) {
-      this.stripTransferredSitesFromSitesArray();
+      this.sitesArray = [];
       return this.$q.resolve();
     }
     const transferSiteDetails = {
@@ -92,14 +103,12 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
     if (!(_.endsWith(transferSiteDetails.siteUrl, this.Config.siteDomainUrl.webexUrl))) {
       transferSiteDetails.siteUrl += this.Config.siteDomainUrl.webexUrl;
     }
-    return this.SetupWizardService.validateTransferCodeBySubscriptionId(this.transferSiteUrl, this.transferSiteCode, this.currentSubscription)
-    .then((response) => {
+
+    return this.SetupWizardService.validateTransferCodeDecorator(transferSiteDetails,  this.currentSubscription).then((response) => {
       const status = _.get(response, 'data.status');
       if (!status || status !== 'INVALID') {
         // if transferred sites have already been added and the back button clicked, strip old sites.
-        if (!_.isEmpty(this.sitesArray)) {
-          this.stripTransferredSitesFromSitesArray();
-        }
+        this.sitesArray = [];
         const transferredSitesArray = _.get(response, 'data.siteList');
         _.forEach(transferredSitesArray, (site) => {
           if (!(_.some(this.sitesArray, { siteUrl: site.siteUrl }))) {
@@ -108,19 +117,34 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
             transferredSiteModel.timezone = this.findTimezoneObject(site.timezone);
             transferredSiteModel.setupType = this.Config.setupTypes.transfer;
             this.sitesArray.push(transferredSiteModel);
+            const properties = _.assignIn({}, transferSiteDetails , { trackingId: this.Utils.extractTrackingIdFromResponse(response) });
+            this.sendTracking(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.TRANSFER_SITE_ADDED, properties);
           }
         });
         return this.$q.resolve();
       } else {
-        this.showError(this.$translate.instant('firstTimeWizard.transferCodeInvalidError'));
+        this.showAndTrackValidationError({ apiResponse: response, details: transferSiteDetails, msg: 'firstTimeWizard.transferCodeInvalidError' });
         return this.$q.reject();
       }
     }).catch((response) => {
-      if (response) {
-        this.Notification.errorWithTrackingId(response, 'firstTimeWizard.transferCodeError');
+      if (_.get(response, 'data')) {
+        const errorMessage = this.errorCodes[response.data.errorCode] || 'firstTimeWizard.transferCodeError';
+        if (errorMessage !== 'firstTimeWizard.transferCodeError') {
+          this.showAndTrackValidationError({ apiResponse: response, details: transferSiteDetails, msg: errorMessage });
+        } else {
+          this.Notification.errorWithTrackingId(response, errorMessage);
+          const properties = _.assignIn(transferSiteDetails , { trackingId: this.Utils.extractTrackingIdFromResponse(response) });
+          this.sendTracking(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.TRANSFER_CODE_CALL_FAILED, properties);
+        }
       }
       return this.$q.reject();
     });
+  }
+
+  private showAndTrackValidationError(errorDetails: { apiResponse: Object, details: Object, msg: string }) {
+    this.showError(this.$translate.instant(errorDetails.msg));
+    const properties = _.assignIn({}, errorDetails.details , { trackingId: this.Utils.extractTrackingIdFromResponse(errorDetails.apiResponse) });
+    this.sendTracking(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.INVALID_TRANSFER_CODE, properties);
   }
 
   private findTimezoneObject(timezoneId) {
@@ -132,17 +156,19 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
     this.error.errorMsg = msg;
   }
 
-
-  private stripTransferredSitesFromSitesArray() {
-    this.sitesArray = _.filter(this.sitesArray, (site) => {
-      return site.setupType !== this.Config.setupTypes.transfer;
-    });
-  }
-
   private clearError(): void {
     this.error.isError = false;
     this.error.errorMsg = '';
     delete this.error.errorType;
+  }
+
+  private sendTracking(event: string, properties: {}) {
+    if (typeof this.onSendTracking === 'function') {
+      this.onSendTracking({
+        event: event,
+        properties: properties,
+      });
+    }
   }
 }
 
@@ -152,7 +178,10 @@ export class WebexSiteTransferComponent implements ng.IComponentOptions {
   public bindings = {
     onSitesReceived: '&',
     onValidationStatusChange: '&',
-    currentSubscription: '<',
+    onSendTracking: '&?',
+    currentSubscription: '<?',
     introCopy: '<',
+    transferSiteCode: '<?',
+    transferSiteUrl: '<?',
   };
 }

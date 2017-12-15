@@ -228,9 +228,11 @@ describe('Controller: AAInsertionElementCtrl', function () {
         htmlModel: encodeURIComponent(ele),
       }];
       menuEntry.addAction(action);
+      spyOn($rootScope, '$broadcast');
       controller.closeClickFn();
       expect(controller.elementText).toBe('');
       expect(controller.readAs).toBe('');
+      expect($rootScope.$broadcast).toHaveBeenCalledWith('dynamicListUpdated');
     });
 
     it('should clear out elementText and readAs upon calling of closeClickFn from REST CTRL', function () {

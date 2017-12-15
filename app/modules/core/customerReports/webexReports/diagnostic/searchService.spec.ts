@@ -3,7 +3,7 @@ import testModule from './index';
 describe('Service: searchService', () => {
   beforeAll(function () {
     this.conferenceID = '65241608473282200';
-
+    this.nodeId = '2454212';
   });
 
   beforeEach(function () {
@@ -103,6 +103,21 @@ describe('Service: searchService', () => {
     this.$httpBackend.expectGET(url).respond(200, mockData);
     this.SearchService.getJoinMeetingQuality(this.conferenceID).then((res) => {
       expect(res[0].userId).toBeDefined();
+    });
+    this.$httpBackend.flush();
+  });
+
+  it('should get correct data when call getParticipantDetailInfo', function () {
+    const mockData = {
+      videoInfo: [],
+      voIPInfo: [],
+      pstnInfo: [],
+      cmrInfo: [],
+    };
+    const url = `${this.UrlConfig.getGeminiUrl()}meetings/${this.conferenceID}/node-ids/${this.nodeId}/call-legs`;
+    this.$httpBackend.expectGET(url).respond(200, mockData);
+    this.SearchService.getParticipantDetailInfo(this.conferenceID, this.nodeId).then((res) => {
+      expect(res.videoInfo).toBeDefined();
     });
     this.$httpBackend.flush();
   });

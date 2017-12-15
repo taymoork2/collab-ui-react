@@ -67,7 +67,7 @@ describe('Care admin should be able to', function () {
 
   it('validate create save', function () {
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
-    validateContentsOfSummaryPage(careChatTemplateSetupPage.randomChatTemplateName + ' template has been created successfully.', createSummaryMessage);
+    validateContentsOfSummaryPage('You have successfully created ' + careChatTemplateSetupPage.randomChatTemplateName + '.', createSummaryMessage);
     validateDismissOfCTSetupWizard();
     validateDisplayEmbedCodeModal();
     validateDismissOfEmbedCodeModal();
@@ -80,7 +80,7 @@ describe('Care admin should be able to', function () {
 
   it('validate edit save', function () {
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
-    validateContentsOfSummaryPage(careChatTemplateSetupPage.randomChatTemplateName + 'edit template has been updated successfully.', editSummaryMessage);
+    validateContentsOfSummaryPage('Changes to ' + careChatTemplateSetupPage.randomChatTemplateName + 'edit are successfully saved.', editSummaryMessage);
     validateDismissOfCTSetupWizard();
     validateDisplayEmbedCodeModal();
     validateDismissOfEmbedCodeModal();

@@ -68,13 +68,13 @@
         var displayName = $translate.instant('helpdesk.licenseDisplayNames.' + l.offerCode, {
           capacity: l.capacity,
         });
-        var key = l.offerCode + '#' + (l.capacity || 0) + (l.siteUrl ? '#' + l.siteUrl : '');
+        var key = l.offerCode;
         var aggregate = _.find(aggregatedLics, {
           key: key,
         });
         if (aggregate) {
           aggregate.totalVolume += l.volume;
-          aggregate.totalUsage = (l.usage || 0);
+          aggregate.totalUsage += (l.usage || 0);
           aggregate.licenses.push(l);
         } else {
           aggregate = {

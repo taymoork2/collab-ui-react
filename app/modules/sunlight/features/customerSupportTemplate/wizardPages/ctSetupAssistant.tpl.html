@@ -2,7 +2,14 @@
     <cs-overlay-panel class="care-chat overlay-panel typeahead-group"
                       overlay-title={{careSetupAssistant.getTitle()}}
                       close="careSetupAssistant.cancelModal()" ng-keyup="careSetupAssistant.evalKeyPress($event.keyCode)">
-    <cs-setup-assistant previous="careSetupAssistant.previousButton()" next="careSetupAssistant.nextButton()" previous-fn="careSetupAssistant.previousPage()" next-fn="careSetupAssistant.nextPage()">
+    <cs-setup-assistant
+      previous="careSetupAssistant.previousButton()"
+      next="careSetupAssistant.nextButton()"
+      previous-fn="careSetupAssistant.previousPage()"
+      next-fn="careSetupAssistant.nextPage()"
+      next-aria-label="{{::'common.next' | translate}}"
+      previous-aria-label="{{::'common.previous' | translate}}">
+
       <form name="careChatSetupForm" class="sa-form">
       <div ng-switch on="careSetupAssistant.currentState">
         <div ct-name
@@ -59,6 +66,10 @@
 
         <div ct-summary
           ng-switch-when = "summary"
+          ng-class="careChatSA.animation"></div>
+
+        <div ct-chat-escalation-behavior 
+          ng-switch-when = "chatEscalationBehavior"
           ng-class="careChatSA.animation"></div>
 
       </div>

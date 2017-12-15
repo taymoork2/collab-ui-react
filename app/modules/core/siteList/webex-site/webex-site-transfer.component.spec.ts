@@ -9,7 +9,7 @@ describe('Component: WebexSiteTransferComponent', function () {
 
   beforeEach(function () {
     this.initModules(module);
-    this.injectDependencies('$componentController', '$q', '$rootScope', '$scope', 'SetupWizardService');
+    this.injectDependencies('$componentController', '$q', '$rootScope', '$scope', 'Notification', 'SetupWizardService');
     this.$scope.fixtures = {
       introCopy: 'some Copy',
       currentSubscription: 'sub123',
@@ -30,6 +30,9 @@ describe('Component: WebexSiteTransferComponent', function () {
     this.$scope.onValidationChangedFn = jasmine.createSpy('onValidationChangedFn');
     this.$scope.onSitesReceivedFn = jasmine.createSpy('onSitesReceivedFn');
     spyOn(this.SetupWizardService, 'validateTransferCodeBySubscriptionId').and.returnValue(this.$q.resolve({ data: transferCodeResponse } ));
+    spyOn(this.SetupWizardService, 'validateTransferCode').and.returnValue(this.$q.resolve({ data: transferCodeResponse } ));
+    spyOn(this.SetupWizardService, 'validateTransferCodeDecorator').and.callThrough();
+    spyOn(this.Notification, 'errorWithTrackingId');
   }
 
   describe('When first opened', () => {
@@ -77,11 +80,33 @@ describe('Component: WebexSiteTransferComponent', function () {
       this.controller.sitesArray = [];
     });
 
+    it('should call SetupWizardService.validateTransferCodeBySubscriptionId() when there is a subscription', function (){
+      this.controller.processNext();
+      this.$scope.$digest();
+      expect(this.SetupWizardService.validateTransferCodeBySubscriptionId).toHaveBeenCalledWith({
+        siteUrl: 'mywebexsite.webex.com',
+        transferCode: '12345678',
+      }, 'sub123', undefined);
+      expect(this.SetupWizardService.validateTransferCode).not.toHaveBeenCalled();
+    });
+    it('should call SetupWizardService.validateTransferCode() when there is no subscription', function (){
+      this.controller.currentSubscription = null;
+      this.controller.processNext();
+      this.$scope.$digest();
+      expect(this.SetupWizardService.validateTransferCodeBySubscriptionId).not.toHaveBeenCalled();
+      expect(this.SetupWizardService.validateTransferCode).toHaveBeenCalledWith({
+        siteUrl: 'mywebexsite.webex.com',
+        transferCode: '12345678',
+      });
+    });
+
     it('should pass the returned sites in the callback function when the code is valid', function () {
       this.controller.processNext();
       this.$scope.$digest();
-      expect(this.SetupWizardService.validateTransferCodeBySubscriptionId).toHaveBeenCalledWith('mywebexsite.webex.com',
-        '12345678', 'sub123');
+      expect(this.SetupWizardService.validateTransferCodeBySubscriptionId).toHaveBeenCalledWith({
+        siteUrl: 'mywebexsite.webex.com',
+        transferCode: '12345678',
+      }, 'sub123', undefined);
       expect(this.controller.sitesArray.length).toBe(1);
       expect(this.controller.sitesArray[0].setupType).toBe('TRANSFER');
       expect(this.$scope.onSitesReceivedFn).toHaveBeenCalledWith(this.controller.sitesArray, this.controller.transferSiteCode, true);
@@ -91,10 +116,42 @@ describe('Component: WebexSiteTransferComponent', function () {
       this.SetupWizardService.validateTransferCodeBySubscriptionId.and.returnValue(this.$q.resolve({ data: { status: 'INVALID' } }));
       this.controller.processNext();
       this.$scope.$digest();
-      expect(this.SetupWizardService.validateTransferCodeBySubscriptionId).toHaveBeenCalledWith('mywebexsite.webex.com',
-        '12345678', 'sub123');
+      expect(this.SetupWizardService.validateTransferCodeBySubscriptionId).toHaveBeenCalledWith({
+        siteUrl: 'mywebexsite.webex.com',
+        transferCode: '12345678',
+      }, 'sub123', undefined);
       expect(this.controller.sitesArray.length).toBe(0);
       expect(this.$scope.onSitesReceivedFn).toHaveBeenCalledWith(null, null, false);
+    });
+
+    it('should display a notification error if api returns an error with no matching error code', function () {
+      const rejectResponse = {
+        data: { status: 400, errorCode: null },
+      };
+      this.SetupWizardService.validateTransferCodeBySubscriptionId.and.returnValue(this.$q.reject(rejectResponse));
+      this.controller.processNext();
+      this.$scope.$digest();
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(rejectResponse, 'firstTimeWizard.transferCodeError');
+    });
+
+    it('should display a "site invalid" error by the input if the error code equals 400304', function () {
+      const rejectResponse = {
+        data: { status: 400, errorCode: 400304 },
+      };
+      this.SetupWizardService.validateTransferCodeBySubscriptionId.and.returnValue(this.$q.reject(rejectResponse));
+      this.controller.processNext();
+      this.$scope.$digest();
+      expect(this.controller.error.errorMsg).toBe('firstTimeWizard.transferCodeInvalidSite');
+    });
+
+    it('should display a "code invalid" error by the input if the error code equals 400303', function () {
+      const rejectResponse = {
+        data: { status: 400, errorCode: 400303 },
+      };
+      this.SetupWizardService.validateTransferCodeBySubscriptionId.and.returnValue(this.$q.reject(rejectResponse));
+      this.controller.processNext();
+      this.$scope.$digest();
+      expect(this.controller.error.errorMsg).toBe('firstTimeWizard.transferCodeInvalidError');
     });
   });
 });

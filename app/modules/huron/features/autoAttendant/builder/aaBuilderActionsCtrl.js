@@ -46,7 +46,7 @@
       help: $translate.instant('autoAttendant.actionDialByExtensionHelp'),
       metric: 'Dial-By-Extension-Title',
       showHelpLink: false,
-      type: [2], // to flag that this is not phonemenu, see setOption
+      type: [2, 5], // 2 goes for dialByExtension whereas 5 for dialByEsn
       actions: ['runActionsOnInput'],
     }, {
       title: $translate.instant('autoAttendant.actionRouteCall'),

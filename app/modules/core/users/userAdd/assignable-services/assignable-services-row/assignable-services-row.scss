@@ -4,26 +4,20 @@
 assignable-services-row {
   display: block;
 
-  .subscription__header {
-    .icon.toggle {
-      float: right;
-      font-size: 18px;
-    }
-  }
-
-  // TODO: mv this to sub-component
   .subscription__content {
     .license__category {
       color: $gray-dark-2;
       font-family: $brand-font-light;
       font-weight: bold;
-      font-size: 14px;
-      line-height: 26px;
-      margin-top: .625rem;
-      margin-bottom: .25rem;
+      font-size: 0.875rem;
+      line-height: 1.625rem;
+      margin-top: 0;
+      margin-bottom: 0.25rem;
+    }
 
-      &:first-of-type {
-        margin-top: 0;
+    assignable-advanced-meetings {
+      .license__category {
+        margin-top: 0.625rem;
       }
     }
   }

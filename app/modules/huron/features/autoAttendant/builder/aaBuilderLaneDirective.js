@@ -10,6 +10,7 @@
       restrict: 'E',
       scope: {
         schedule: '@aaSchedule',
+        routingPrefixOptions: '=aaRoutingPrefixOptions',
       },
       controller: 'AABuilderLaneCtrl',
       controllerAs: 'aaLane',

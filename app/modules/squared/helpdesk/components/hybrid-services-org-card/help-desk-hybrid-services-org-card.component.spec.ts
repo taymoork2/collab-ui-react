@@ -1,19 +1,17 @@
-import helpDeskHybridServicesOrgCard from './index';
+import moduleName from './index';
 
 describe('HelpDeskHybridServicesOrgCardComponentCtrl', () => {
 
   let $componentController, $scope, $q, CloudConnectorService, LicenseService, HybridServicesClusterService, ctrl;
 
-  beforeEach(angular.mock.module('Squared'));
-
   beforeEach(function () {
-    this.initModules(helpDeskHybridServicesOrgCard);
+    this.initModules(moduleName);
   });
 
   function initSpies() {
     spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve(getJSONFixture('hercules/fusion-cluster-service-test-clusters.json')));
     spyOn(HybridServicesClusterService, 'getStatusForService');
-    spyOn(CloudConnectorService, 'getService').and.returnValue($q.resolve({ serviceId: 'squared-fusion-gcal', setup: true, status: 'OK', cssClass: 'success' }));
+    spyOn(CloudConnectorService, 'getService');
     spyOn(LicenseService, 'orgIsEntitledTo').and.callThrough();
   }
 
@@ -40,7 +38,7 @@ describe('HelpDeskHybridServicesOrgCardComponentCtrl', () => {
     });
   }
 
-  it('should return correct hybrid service card for org with only calendar setup', () => {
+  it('should return correct hybrid service card for org with only Expressway-based calendar setup', () => {
 
     const calendarOrg = {
       id: '1234-5678',
@@ -53,13 +51,13 @@ describe('HelpDeskHybridServicesOrgCardComponentCtrl', () => {
       status: 'operational',
       cssClass: 'success',
     });
+    CloudConnectorService.getService.and.returnValues($q.resolve({ serviceId: 'squared-fusion-o365', setup: false }));
 
     ctrl = initController(calendarOrg);
     ctrl.$onInit();
     $scope.$apply();
 
     expect(ctrl.hybridServicesCard.entitled).toBe(true);
-    expect(ctrl.hybridServicesCard.services.length).toBe(1);
     expect(ctrl.hybridServicesCard.services[0].serviceId).toBe('squared-fusion-cal');
     expect(ctrl.hybridServicesCard.services[0].cssClass).toBe('success');
   });
@@ -88,6 +86,7 @@ describe('HelpDeskHybridServicesOrgCardComponentCtrl', () => {
         };
       }
     });
+    CloudConnectorService.getService.and.returnValue($q.reject({}));
 
     ctrl = initController(calendarOrg);
     ctrl.$onInit();
@@ -117,6 +116,7 @@ describe('HelpDeskHybridServicesOrgCardComponentCtrl', () => {
     const org = {
       services: ['squared-fusion-mgmt', 'squared-fusion-gcal'],
     };
+    CloudConnectorService.getService.and.returnValue($q.resolve({ serviceId: 'squared-fusion-gcal', setup: true, status: 'OK', cssClass: 'success' }));
     ctrl = initController(org);
     ctrl.$onInit();
     $scope.$apply();
@@ -128,6 +128,28 @@ describe('HelpDeskHybridServicesOrgCardComponentCtrl', () => {
     expect(ctrl.hybridServicesCard.services[0].status).toEqual('OK');
     expect(ctrl.hybridServicesCard.services[0].setup).toBeTruthy();
     expect(ctrl.hybridServicesCard.services[0].cssClass).toEqual('success');
+  });
+
+  it('should show ccc-based Office 365, also when Expressway-based calendar is not enabled', () => {
+    const org = {
+      services: ['squared-fusion-mgmt', 'squared-fusion-cal'],
+    };
+    HybridServicesClusterService.getStatusForService.and.returnValue({
+      setup: false,
+      serviceId: 'squared-fusion-cal',
+      cssClass: 'disabled',
+    });
+    CloudConnectorService.getService.and.returnValue($q.resolve({ serviceId: 'squared-fusion-o365', setup: true, status: 'OK', cssClass: 'success' }));
+    ctrl = initController(org);
+    ctrl.$onInit();
+    $scope.$apply();
+
+    expect(ctrl.hybridServicesCard.entitled).toBeTruthy();
+    expect(ctrl.hybridServicesCard.services[0].setup).toBeFalsy();
+    expect(ctrl.hybridServicesCard.services[1].serviceId).toEqual('squared-fusion-o365');
+    expect(ctrl.hybridServicesCard.services[1].status).toEqual('OK');
+    expect(ctrl.hybridServicesCard.services[1].setup).toBeTruthy();
+    expect(ctrl.hybridServicesCard.services[1].cssClass).toEqual('success');
   });
 
   it('should get and display Hybrid IM and Presence status if the organization is entitled', () => {

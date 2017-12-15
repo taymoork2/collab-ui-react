@@ -76,16 +76,16 @@ export class CardUsersSummaryComponent implements ng.IComponentOptions {
       <div class="active-card_title" translate="servicesOverview.userStatusesSummary.users"></div>
       <div ng-switch="$ctrl.state">
         <div ng-switch-when="error" class="active-card_action">
-          <a ng-click="$ctrl.openUserStatusReportModal()"><span class="badge badge--outline badge--round">{{$ctrl.sum.error}}</span> <span translate="servicesOverview.userStatusesSummary.inError"></span></a>
+          <a href ng-click="$ctrl.openUserStatusReportModal()"><span class="badge badge--outline badge--round">{{$ctrl.sum.error}}</span> <span translate="servicesOverview.userStatusesSummary.inError"></span></a>
         </div>
         <div ng-switch-when="pending" class="active-card_action">
-          <a ng-click="$ctrl.openUserStatusReportModal()"><span class="badge badge--outline badge--round">{{$ctrl.sum.notActivated}}</span> <span translate="servicesOverview.userStatusesSummary.inPending"></span></a>
+          <a href ng-click="$ctrl.openUserStatusReportModal()"><span class="badge badge--outline badge--round">{{$ctrl.sum.notActivated}}</span> <span translate="servicesOverview.userStatusesSummary.inPending"></span></a>
         </div>
         <div ng-switch-when="activated" class="active-card_action">
-          <a ng-click="$ctrl.openUserStatusReportModal()"><span class="badge badge--outline badge--round">{{$ctrl.sum.activated}}</span> <span translate="servicesOverview.userStatusesSummary.active"></span></a>
+          <a href ng-click="$ctrl.openUserStatusReportModal()"><span class="badge badge--outline badge--round">{{$ctrl.sum.activated}}</span> <span translate="servicesOverview.userStatusesSummary.active"></span></a>
         </div>
         <div ng-switch-when="noUsers" class="active-card_action">
-          <a ng-click="$ctrl.openEnableUsersModal()"><span translate="servicesOverview.userStatusesSummary.enableUsers"></span></a>
+          <a href ng-click="$ctrl.openEnableUsersModal()"><span translate="servicesOverview.userStatusesSummary.enableUsers"></span></a>
         </div>
       </div>
     </div>

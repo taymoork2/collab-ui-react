@@ -30,6 +30,7 @@
 
   .manage-modal-header {
     @include vr-spacing(mt, 2.1875);
+    @include vr-spacing(pl, 0);
   }
 
   .manage-modal-label {
@@ -58,16 +59,10 @@
 
   .modify-users-section {
     @include vr-spacing(mt, 1.5);
-
-    background-color: $gray-light-4;
-    width: 287px;
-    height: 208px;
+    
+    height: 13rem;
     text-align: center;
-
-    &--middle-box {
-      @include vr-spacing(ml, 0.75);
-      @include vr-spacing(mr, 0.75);
-    }
+    background-color: $gray-light-4;
 
     &--label {
       @include vr-spacing(mv, 2);
@@ -83,6 +78,38 @@
 
     &--disabled {
       color: $gray-light-1;
+    }
+  }
+
+  @media only screen and (min-width: 1441px) {
+    .modify-users-section {
+      width: 17.75rem;
+
+      &--middle-box {
+        @include vr-spacing(ml, 1.5);
+        @include vr-spacing(mr, 1.5);
+      }
+    }
+  }
+
+  @media only screen and (min-width: 641px) {
+    .modify-users-section {
+      width: 18rem;
+
+      &--middle-box {
+        @include vr-spacing(ml, 1);
+        @include vr-spacing(mr, 1);
+      }
+    }
+  }
+
+  @media only screen and (max-width: 641px) {
+    .modify-users-section {
+      width: 17.75rem;
+
+      &--right-box {
+        float: left;
+      }
     }
   }
 

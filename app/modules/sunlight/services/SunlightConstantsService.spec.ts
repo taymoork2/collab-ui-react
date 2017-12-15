@@ -13,7 +13,7 @@ describe('SunlightConstantsService', function () {
     });
 
     it('should test the success constant value set', function () {
-      expect(this.SunlightConstantsService.successStatus).toEqual('Success');
+      expect(this.SunlightConstantsService.status.SUCCESS).toEqual('Success');
     });
   });
 });

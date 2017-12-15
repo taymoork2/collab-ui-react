@@ -6,7 +6,7 @@ var GSSComponentPage = function () {
   this.updatedGroupName = 'e2e-gss-group-updated';
   this.componentMain = element(by.css('.component-page'));
   this.serviceSelector = element(by.css('#serviceSelector'));
-  this.tabLink = element(by.css('a[href="#/gss/components"]'));
+  this.tabLink = element(by.css('a[href="/gss/components"]'));
   this.serviceSelectorFirstChild = element(by.css('.gss-iframe .select-options li a'));
   this.addComponentBtn = element(by.cssContainingText('button', 'Add A Component'));
   this.addComponent = element(by.css('.add-component'));

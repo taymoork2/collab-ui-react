@@ -2,6 +2,7 @@ class CustomerReportsHeaderCtrl {
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
+    private $scope: ng.IScope,
     private $state,
     private Authinfo,
     private FeatureToggleService,
@@ -84,6 +85,7 @@ class CustomerReportsHeaderCtrl {
           this.WebexMetricsService.hasClassicEnabled().then((hasClassicSite: any) => {
             if (hasClassicSite) {
               this.isWebexClassicEnabled = true;
+              this.$scope.$broadcast('classicEnabled', this.isWebexMetricsEnabled);
               if (!isSupported) {
                 this.headerTabs.push({
                   title: this.$translate.instant('reportsPage.webexMetrics.title'),

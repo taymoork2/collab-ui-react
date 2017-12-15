@@ -13,7 +13,10 @@
     vm.exportingUserStatusReport = false;
     vm.includeResourceGroupColumn = false;
     vm.progress = {
-      total: 0, current: 0, message: $translate.instant('hercules.export.readingUserStatuses'), exportCanceled: false,
+      total: 0,
+      current: 0,
+      message: $translate.instant('hercules.export.readingUserStatuses'),
+      exportCanceled: false,
     };
 
     vm.statusTypes = getStatusTypes();
@@ -140,7 +143,12 @@
         .map(function (tuple) {
           return USSService.getAllStatuses(tuple.service, tuple.type)
             .then(function (userStatuses) {
-              return userStatuses;
+              return userStatuses.map(function (userStatus) {
+                if (userStatus.serviceId === 'squared-fusion-cal' && userStatus.owner === 'ccc') {
+                  userStatus.serviceId = 'squared-fusion-o365';
+                }
+                return userStatus;
+              });
             });
         })
         .flatten()

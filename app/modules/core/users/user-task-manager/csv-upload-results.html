@@ -1,86 +1,32 @@
-<div class="flex-container base-margin">
-  <h4 translate="userManage.bulk.import.status"></h4>
+<div class="csv-upload-results" ng-if="$ctrl.activeTask !== undefined">
+  <h4 class="csv-upload-results__title"
+    translate="userManage.bulk.import.status"></h4>
 
-  <!-- progress bar -->
-  <div class="flex-item-no-resize upload-progress" ng-show="$ctrl.isProcessing">
-    <div class="csv-process-content">
-      <div class="progressbar">
-        <div class="progressbar-info">
-          <span class="progressbar-label"
-                ng-if="$ctrl.processProgress < 100 && !$ctrl.isCancelledByUser"
-                translate="firstTimeWizard.processing"></span>
-          <span class="progressbar-label" ng-if="$ctrl.isCancelledByUser"
-                translate="firstTimeWizard.canceling"></span>
-          <span class="progressbar-progress">{{$ctrl.processProgress}}%</span>
-        </div>
-        <progressbar animate="false" class="progress-striped active" value="$ctrl.processProgress"
-                      type="primary"></progressbar>
-        <div class="csv-filename">{{$ctrl.fileName}}</div>
-      </div>
-      <div ng-if="$ctrl.isProcessing" class="close-button">
-        <a href class="icon icon-close" ng-click="$ctrl.onCancelImport()" aria-label="{{::'common.close' | translate}}"></a>
-      </div>
-    </div>
-  </div>
+  <p class="csv-upload-results__description"
+    ng-if="$ctrl.startedTime && $ctrl.startedDate && $ctrl.startedBy"
+    translate="userTaskManagerModal.startedAt"
+    translate-values="{ time: $ctrl.startedTime, date: $ctrl.startedDate, person: $ctrl.startedBy }"></p>
 
-  <!-- done import status -->
-  <div class="flex-item-no-resize upload-progress upload-complete" ng-show="$ctrl.processProgress == 100">
-      <span class="progressbar-label">
-        <span class="progressbar-label" translate="userManage.bulk.import.completedAt"
-              translate-values="{ filename: $ctrl.fileName }"></span>
-        <span class="progressbar-label">{{$ctrl.importCompletedAt | date:'short'}}</span>
-      </span>
-  </div>
+  <cr-progressbar ng-if="$ctrl.isProcessing"
+    progressbar-label="$ctrl.progressbarLabel"
+    progressbar-filename="$ctrl.fileName"
+    progressbar-value="$ctrl.processProgress"
+    progressbar-is-processing="$ctrl.isProcessing"
+    progressbar-on-cancel="$ctrl.onCancelImport()"
+    >
+  </cr-progressbar>
 
-  <!-- display the results stats -->
-  <div class="flex-item-no-resize upload-stats">
-    <div class="stat new-users" ng-class="{disabled: $ctrl.numNewUsers === 0}" ng-if="!$ctrl.isDirSyncEnabled">
-      <div class="total">{{$ctrl.numNewUsers}}</div>
-      <h4 class="total-title" translate="userManage.bulk.newUsers"></h4>
-    </div>
-    <div class="stat updated-users" ng-class="{disabled: $ctrl.numUpdatedUsers === 0}">
-      <div class="total">{{$ctrl.numUpdatedUsers}}</div>
-      <h4 class="total-title" translate="userManage.bulk.existingUsers"></h4>
-    </div>
-    <div class="stat error-users" ng-class="{disabled: $ctrl.numErroredUsers === 0}">
-      <div class="total">{{$ctrl.numErroredUsers}}</div>
-      <h4 class="total-title" translate="userManage.bulk.errorUsers"></h4>
-    </div>
-  </div>
+  <cr-users-tile-totals
+   new-total="$ctrl.numNewUsers"
+   updated-total="$ctrl.numUpdatedUsers"
+   error-total="$ctrl.numErroredUsers">
+  </cr-users-tile-totals>
 
-  <!-- display the error details -->
-  <div class="flex-item-resize">
-    <div class="flex-container upload-errors" ng-if="$ctrl.userErrorArray.length > 0">
+  <hr class="csv-upload-results__line-break"
+    ng-if="$ctrl.userErrorArray.length > 0">
 
-      <div class="flex-item-no-resize">
-        <h5 translate="userManage.bulk.errorUsers"></h5>
-        <p>
-          <span translate="userManage.bulk.import.errorResolveInstructions"></span>
-          <span class="icon icon-info" tooltip="{{::'userManage.bulk.import.errorResolveTooltip' | translate}}"
-                tooltip-placement="top"></span>
-        </p>
-        <div class="error-download" ng-disabled="$ctrl.isProcessing">
-          <csv-download type="error" filename="errors.csv" no-icon="false" analytics-eventname="{{$ctrl.DOWNLOAD_ERRORS}}"
-                        anchor-text="{{::'userManage.bulk.import.exportErrors'|translate}}"></csv-download>
-        </div>
-      </div>
-
-      <div class="flex-item-no-resize table-header">
-        <div class="row">
-          <span class="columns small-2 center error-row" translate="userManage.bulk.import.headerRow"></span>
-          <span class="columns small-10 error-desc" translate="userManage.bulk.import.headerErrorMessage"></span>
-        </div>
-      </div>
-
-      <div class="flex-item-resize table-body">
-        <div class="scroller">
-          <div ng-repeat="data in $ctrl.userErrorArray" class="row">
-            <span class="columns small-2 center error-row">{{::data.row}}</span>
-            <span class="columns small-10 error-desc">{{::data.error}}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <cr-users-error-results ng-if="$ctrl.userErrorArray.length > 0"
+    user-error-array="$ctrl.userErrorArray">
+  </cr-users-error-results>
 
 </div>

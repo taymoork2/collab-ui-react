@@ -1,94 +1,13 @@
-<div class="meeting-settings" ng-init="meetingCtrl.enableOrDisableNext(meetingCtrl.steps.SITES_SETUP)">
+<div class="add-webex-site meeting-settings" ng-init="meetingCtrl.enableOrDisableNextForSiteSetup()">
   <h4 translate="firstTimeWizard.setupYourSites"></h4>
   <div class="element-spacing">
     <p ng-if="meetingCtrl.sitesArray.length === 0" translate="firstTimeWizard.meetingSettingsDescription"></p>
     <p ng-if="meetingCtrl.sitesArray.length === 1" translate="firstTimeWizard.thisWillBeYourWebExSite"></p>
     <p ng-if="meetingCtrl.sitesArray.length > 1" translate-values="{siteCount: meetingCtrl.sitesArray.length}" translate="firstTimeWizard.theseWillBeYourWebExSites"></p>
   </div>
-  <div class="row" ng-repeat="site in meetingCtrl.sitesArray">
-    <div class="site-description">
-      <div class="col-lg-1">
-        <i class="icon icon-check verified-check"></i>
-      </div>
-      <div class="col-lg-5">
-        <b><div>{{site.siteUrl}}<span translate="firstTimeWizard.pmrSiteURLDomain"></span></div></b>
-        <div ng-if="site.timezone" class="time-zone" translate-values="{label: site.timezone.label}" translate="firstTimeWizard.timeZoneSetTo"></div>
-        <div ng-if="meetingCtrl.isShowUserManagement && site.isCIUnifiedSite" class="time-zone" translate="firstTimeWizard.userManagementViaSpark"></div>
-        <div ng-if="meetingCtrl.isShowUserManagement && !site.isCIUnifiedSite" class="time-zone" translate="firstTimeWizard.userManagementViaWebex"></div>
-      </div>
-      <div class="col-lg-1" ng-if="!(site.setupType === 'TRANSFER' || site.keepExistingSite)">
-        <i class="icon icon-delete delete-site" ng-click="meetingCtrl.removeSite($index)"></i>
-      </div>
-    </div>
-  </div>
-  <div class="site-preview">
-    <b><div ng-if="meetingCtrl.siteModel.siteUrl !== ''">{{meetingCtrl.siteModel.siteUrl}}.webex.com</div></b>
-  </div>
-  <div class="element-spacing">
-    <!-- TODO (shrazzac): refactor label elements into one using ng-pluralize -->
-    <label ng-if="meetingCtrl.sitesArray.length > 0">{{::'firstTimeWizard.addAnotherSite' | translate}}</label>
-    <label ng-if="meetingCtrl.sitesArray.length === 0">{{::'firstTimeWizard.siteName' | translate}}</label>
-    <div class="row">
-      <div class="col-lg-4">
-        <div class="cs-input-group" ng-class="{'error': meetingCtrl.error.isError && meetingCtrl.error.errorType !== meetingCtrl.siteErrorType.USER_MGMT}">
-          <input cs-input type="text" id="add-webex-site" name="add-webex-site" cs-input-size="medium-12" placeholder="{{::'firstTimeWizard.enterSiteNamePlaceholder' | translate}}"
-            ng-change="meetingCtrl.clearError()" ng-model="meetingCtrl.siteModel.siteUrl">
-          <div class="cs-input__messages error-msg-spacing" role="alert" ng-if="meetingCtrl.error.isError">
-            <div class="message">{{meetingCtrl.error.errorMsg}}</div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-4">
-        <div class="cs-input-group"  ng-class="{'error': meetingCtrl.error.isError && meetingCtrl.error.errorType === meetingCtrl.siteErrorType.TIME_ZONE}">
-        <cs-select id="selectTimeZone" name="selectTimeZone" ng-model="meetingCtrl.siteModel.timezone" options="meetingCtrl.timeZoneOptions"
-          placeholder="meetingCtrl.selectTimeZonePlaceholder" ng-change="meetingCtrl.clearError()">
-        </cs-select>
-        </div>
-      </div>
-      <div class="col-lg-4">
-        <button ng-click="meetingCtrl.validateMeetingSite()" class="btn--cta" translate="common.validate" ng-disabled="meetingCtrl.disableValidateButton"></button>
-      </div>
-    </div>
-    <div ng-if="meetingCtrl.isShowUserManagement">
-      <div class="row">
-        <h5 translate="firstTimeWizard.userManagement"></h5>
-        <div class="col-lg-6 small"><span translate="firstTimeWizard.userManagementWhere"></span></div>
-        <div class="col-lg-6">
-          <div class="validation-messages info">
-          <div class="cs-input__messages">
-            <div class="message"><a href="http://www.cisco.com/c/dam/en/us/td/docs/collaboration/webex_centers/esp/Choosing_the_Right_Cisco_WebEx_Admin_Tool.pdf" target="_blank"><span translate="firstTimeWizard.userManagementHelp"></span></a></div>
-          </div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-12 element-spacing">
-          <div class="cs-radio-group" ng-class="{'error': meetingCtrl.error.isError &&  meetingCtrl.error.errorType === meetingCtrl.siteErrorType.USER_MGMT}">
-            <input
-              cs-input
-              type="radio"
-              required
-              ng-model="meetingCtrl.siteModel.setupType"
-              ng-change="meetingCtrl.userManagementOptionChange()"
-              id="addWebexUsers1"
-              name="addWebexUsers1"
-              value="undefined"
-              cs-input-label="{{::'firstTimeWizard.userManagementSpark' | translate }}">
-            <input
-              cs-input
-              type="radio"
-              required
-              ng-model="meetingCtrl.siteModel.setupType"
-              ng-change="meetingCtrl.userManagementOptionChange()"
-              id="addWebexUsers2"
-              name="addWebexUsers2"
-              value="{{meetingCtrl.setupTypeLegacy}}"
-              cs-input-label="{{::'firstTimeWizard.userManagementWebEx' | translate }}">
-            <div class="cs-input__messages error-msg-spacing" role="alert" ng-if="meetingCtrl.error.isError && meetingCtrl.error.errorType === meetingCtrl.siteErrorType.USER_MGMT">
-              <div class="message">{{meetingCtrl.error.errorMsg}}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <webex-site-new sites-array="meetingCtrl.sitesArray"
+    on-sites-add="meetingCtrl.addNewSites(sites, isValid)"
+    on-validation-status-change="meetingCtrl.setNextDisableStatus(!isValid)"
+    on-send-tracking="meetingCtrl.onSendTracking(event, properties)">
+</webex-site-new>
+</div>
