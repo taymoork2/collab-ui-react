@@ -71,6 +71,7 @@
         .catch(function (response) {
           // 404's when fetching auto-assign templates will be fairly common
           if (response.status === 404) {
+            _.set(vm.autoAssignTemplates, DEFAULT_AUTO_ASSIGN_TEMPLATE, undefined);
             return;
           }
           Notification.errorResponse(response);
