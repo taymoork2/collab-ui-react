@@ -78,16 +78,10 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
       return [];
     }
 
-    // TODO: implement calculation of appropriate entitlements
-    let result: any[] = [];
-    result.push({
-      entitlementName: 'webExSquared',
-      entitlementState: 'ACTIVE',
-    });
-
+    let result: IUserEntitlementRequestItem[] = [];
     // TODO: rm this logic once 'hybrid-services-entitlements-panel' propogates its UI state
     //   and build this payload from UI state instead
-    const hybridUserEntitlements = _.get(this.stateData, 'USER_ENTITLEMENTS_PAYLOAD', []);
+    const hybridUserEntitlements: IUserEntitlementRequestItem[] = _.get(this.stateData, 'USER_ENTITLEMENTS_PAYLOAD', []);
     result = result.concat(hybridUserEntitlements);
 
     return result;
