@@ -37,7 +37,6 @@ export enum LicenseChangeOperation {
 export interface IUserEntitlementRequestItem {
   entitlementName: UserEntitlementName;
   entitlementState: UserEntitlementState;
-  properties: Object;
 }
 
 export interface ILicenseRequestItem {
