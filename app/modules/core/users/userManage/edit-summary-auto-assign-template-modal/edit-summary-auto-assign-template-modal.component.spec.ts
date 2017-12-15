@@ -2,7 +2,11 @@ import moduleName from './index';
 
 describe('Component: editSummaryAutoAssignTemplateModal:', () => {
   beforeEach(function() {
-    this.initModules(moduleName);
+    this.licenseSummary = this.spyOnComponent('licenseSummary');
+    this.initModules(
+      moduleName,
+      this.licenseSummary,
+    );
     this.injectDependencies(
       '$scope',
       '$state',

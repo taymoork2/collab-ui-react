@@ -118,8 +118,7 @@
     }
 
     function bindEvents() {
-      hasClassicEnabled = $scope.$on('classicEnabled', function (isWebexClassicEnabled) {
-        $log.log('get webex controller hasclassicenabled.');
+      hasClassicEnabled = $scope.$on('classicEnabled', function (event, isWebexClassicEnabled) {
         vm.isWebexClassicEnabled = isWebexClassicEnabled;
         checkClassic(vm.isWebexClassicEnabled);
       });
@@ -128,11 +127,7 @@
     }
 
     function checkClassic() {
-      $log.log('get webex controller hasclassicenabled. checking...');
-      $log.log(vm.isWebexClassicEnabled);
       FeatureToggleService.webexMetricsGetStatus().then(function (isMetricsOn) {
-        $log.log('get webex controller hasclassicenabled. true true');
-        $log.log(isMetricsOn);
         if (isMetricsOn && vm.isWebexClassicEnabled) {
           pushClassicTab();
           if (!_.isNull(vm.features) && vm.webexOptions.length === 1) {
@@ -176,7 +171,6 @@
 
     function goMetricsInitState() {
       if (checkStatePermission($state.current.name)) {
-        $log.log('goMetricsInitState, checkStatePermission --- true');
         return;
       }
       if (vm.metricsOptions.length > 0) {
@@ -236,7 +230,10 @@
       };
 
       var viewType = _.get(reportView, 'view');
-      var getWebExReportData = _.get(QlikService, 'getProdToBTSQBSInfo');
+      var getWebExReportData = _.get(QlikService, 'getQBSInfo');
+      if (vm.selectEnable) {
+        getWebExReportData = _.get(QlikService, 'getProdToBTSQBSInfo');
+      }
 
       if (!_.isFunction(getWebExReportData)) {
         return;
@@ -363,7 +360,6 @@
       };
       $q.all(promises).then(function (features) {
         vm.features = features;
-        $log.log('SetupSubTabs: ');
         if (features.isSystemOn) {
           vm.metricsOptions.splice(0, 0, vm.webexMetrics.states.system);
         }
@@ -374,6 +370,7 @@
           vm.metricsOptions.push(vm.webexMetrics.states.mei);
         }
         if ($scope.header.isWebexClassicEnabled) {
+          vm.isWebexClassicEnabled = true;
           pushClassicTab();
         }
         $timeout(goMetricsInitState, 0);

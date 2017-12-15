@@ -1,10 +1,5 @@
-// TODO: use as-appropriate
-// @import '~collab-ui/scss/settings/typography';
-// @import '~collab-ui/scss/settings/colors';
-// @import 'styles/partials/mixins';  // <- for 'keep-flex()'
+@import 'styles/partials/mixins';
 
 edit-summary-auto-assign-template-modal {
-  // TODO: use as-appropriate
-  display: block;
-  // @include keep-flex();
+  @include keep-flex-container(column);
 }

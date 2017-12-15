@@ -1,10 +1,11 @@
-<div class="column-subsription-header paid subscription__header">
-  {{:: $ctrl.subscription.subscriptionId }}
-  <i class="icon toggle"
-    ng-class="$ctrl.showContent ? 'icon-chevron-up': 'icon-chevron-down'"
-    ng-click="$ctrl.recvClick()"></i>
-</div>
-<div class="row full flex-row row-licenses subscription__content" ng-show="$ctrl.showContent">
+<cr-collapsible-row
+  header-class="column-subsription-header paid subscription__header"
+  content-class="row-licenses subscription__content"
+  row-id="$ctrl.subscription.subscriptionId"
+  row-title="$ctrl.subscription.subscriptionId"
+  on-update="$ctrl.recvUpdate($event)"
+  show-content="$ctrl.showContent"
+  >
   <div class="small-4 columns column-paid column__messaging">
     <div ng-if="$ctrl.messageLicenses.length">
       <div translate="onboardModal.message" class="license__category"></div>
@@ -84,4 +85,4 @@
       </assignable-license-checkbox>
     </div>
   </div>
-</div>
+</cr-collapsible-row>

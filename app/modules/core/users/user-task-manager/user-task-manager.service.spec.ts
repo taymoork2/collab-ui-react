@@ -1,14 +1,22 @@
 import userTaskManagerModuleName from './index';
+import { UserTaskManagerService } from './user-task-manager.service';
 
 import 'moment';
 import 'moment-timezone';
 
+type Test = atlas.test.IServiceTest<{
+  $interval: ng.IIntervalService;
+  $rootScope: ng.IRootScopeService;
+  Authinfo;
+  UrlConfig;
+  UserTaskManagerService: UserTaskManagerService;
+}>;
+
 describe('Service: UserTaskManagerService', () => {
 
-  beforeEach(function () {
+  beforeEach(function (this: Test) {
     this.initModules(userTaskManagerModuleName);
     this.injectDependencies(
-      '$httpBackend',
       '$interval',
       '$rootScope',
       'Authinfo',
@@ -27,32 +35,32 @@ describe('Service: UserTaskManagerService', () => {
     moment.tz.setDefault('America/Los_Angeles');
   });
 
-  afterEach(function () {
+  afterEach(function (this: Test) {
     this.$httpBackend.verifyNoOutstandingExpectation();
     this.$httpBackend.verifyNoOutstandingRequest();
   });
 
   describe('Task Management', () => {
-    it('should get all tasks', function () {
+    it('should get all tasks', function (this: Test) {
       this.$httpBackend.expectGET(this.URL).respond({
         items: this.taskList,
       });
       expect(this.UserTaskManagerService.getTasks()).toBeResolvedWith(this.taskList);
     });
 
-    it('should get in process tasks', function () {
+    it('should get in process tasks', function (this: Test) {
       this.$httpBackend.expectGET(`${this.URL}?status=CREATED,STARTING,STARTED,STOPPING`).respond({
         items: this.taskList,
       });
       expect(this.UserTaskManagerService.getInProcessTasks()).toBeResolvedWith(this.taskList);
     });
 
-    it('should get a specific task', function () {
+    it('should get a specific task', function (this: Test) {
       this.$httpBackend.expectGET(`${this.URL}/456`).respond(this.taskList[0]);
       expect(this.UserTaskManagerService.getTask('456')).toBeResolvedWith(this.taskList[0]);
     });
 
-    it('should submit a csv import task', function () {
+    it('should submit a csv import task', function (this: Test) {
       const myFilename = 'myFilename';
       const fileData = 'fileData';
       const exactMatch = true;
@@ -74,7 +82,7 @@ describe('Service: UserTaskManagerService', () => {
       expect(promise).toBeResolvedWith(this.taskList[0]);
     });
 
-    it('should get task errors', function () {
+    it('should get task errors', function (this: Test) {
       const errors = [{
         error: {
           key: 'error-key',
@@ -90,22 +98,22 @@ describe('Service: UserTaskManagerService', () => {
       expect(this.UserTaskManagerService.getTaskErrors('456')).toBeResolvedWith(errors);
     });
 
-    it('should cancel task', function () {
+    it('should cancel task', function (this: Test) {
       this.$httpBackend.expectPOST(`${this.URL}/456/actions/abandon/invoke`).respond(200);
       expect(this.UserTaskManagerService.cancelTask('456')).toBeResolved();
     });
 
-    it('should pause task', function () {
+    it('should pause task', function (this: Test) {
       this.$httpBackend.expectPOST(`${this.URL}/456/actions/pause/invoke`).respond(200);
       expect(this.UserTaskManagerService.pauseTask('456')).toBeResolved();
     });
 
-    it('should resume task', function () {
+    it('should resume task', function (this: Test) {
       this.$httpBackend.expectPOST(`${this.URL}/456/actions/resume/invoke`).respond(200);
       expect(this.UserTaskManagerService.resumeTask('456')).toBeResolved();
     });
 
-    it('should get user display and email', function () {
+    it('should get user display and email', function (this: Test) {
       this.$httpBackend.expectGET(`${this.UrlConfig.getScimUrl(this.Authinfo.getOrgId())}/456`).respond({
         displayName: 'John Smith',
         userName: 'jsmith',
@@ -117,40 +125,40 @@ describe('Service: UserTaskManagerService', () => {
   });
 
   describe('Task Status', () => {
-    it('should show pending task', function () {
+    it('should show pending task', function (this: Test) {
       expect(this.UserTaskManagerService.isTaskPending('CREATED')).toBe(true);
       expect(this.UserTaskManagerService.isTaskPending('STARTED')).toBe(true);
       expect(this.UserTaskManagerService.isTaskPending('STARTING')).toBe(true);
       expect(this.UserTaskManagerService.isTaskPending('STOPPING')).toBe(true);
     });
 
-    it('should show processing task', function () {
+    it('should show processing task', function (this: Test) {
       expect(this.UserTaskManagerService.isTaskInProcess('STARTED')).toBe(true);
       expect(this.UserTaskManagerService.isTaskInProcess('STARTING')).toBe(true);
       expect(this.UserTaskManagerService.isTaskInProcess('STOPPING')).toBe(true);
     });
 
-    it('should show error task', function () {
+    it('should show error task', function (this: Test) {
       expect(this.UserTaskManagerService.isTaskError('COMPLETED_WITH_ERRORS')).toBe(true);
       expect(this.UserTaskManagerService.isTaskError('FAILED')).toBe(true);
     });
 
-    it('should show canceled task', function () {
+    it('should show canceled task', function (this: Test) {
       expect(this.UserTaskManagerService.isTaskCanceled('ABANDONED')).toBe(true);
     });
   });
 
   describe('Date and Time', () => {
-    beforeEach(function () {
+    beforeEach(function (this: Test) {
       jasmine.clock().install();
       jasmine.clock().mockDate();
     });
 
-    afterEach(function () {
+    afterEach(function (this: Test) {
       jasmine.clock().uninstall();
     });
 
-    it('should format correctly', function () {
+    it('should format correctly', function (this: Test) {
       const isoDate = '2017-10-06T20:54:22.535Z';
       const { date, time } = this.UserTaskManagerService.getDateAndTime(isoDate);
       expect(date).toBe('Oct 6, 2017');
@@ -159,7 +167,7 @@ describe('Service: UserTaskManagerService', () => {
   });
 
   describe('Intervals', () => {
-    beforeEach(function () {
+    beforeEach(function (this: Test) {
       jasmine.clock().install();
       jasmine.clock().mockDate();
 
@@ -172,11 +180,11 @@ describe('Service: UserTaskManagerService', () => {
       };
     });
 
-    afterEach(function () {
+    afterEach(function (this: Test) {
       jasmine.clock().uninstall();
     });
 
-    it('should get task list on interval', function () {
+    it('should get task list on interval', function (this: Test) {
       this.$httpBackend.whenGET(this.URL).respond({
         items: this.taskList,
       });
@@ -197,7 +205,7 @@ describe('Service: UserTaskManagerService', () => {
       expect(() => this.$httpBackend.flush(1)).toThrow(); // nothing to flush because interval was destroyed
     });
 
-    it('should manually cleanup interval', function () {
+    it('should manually cleanup interval', function (this: Test) {
       this.$httpBackend.whenGET(this.URL).respond({
         items: this.taskList,
       });
@@ -218,7 +226,7 @@ describe('Service: UserTaskManagerService', () => {
       expect(() => this.$httpBackend.flush(1)).toThrow(); // nothing to flush because interval was destroyed
     });
 
-    it('should handle multiple callbacks of the same interval', function () {
+    it('should handle multiple callbacks of the same interval', function (this: Test) {
       this.$httpBackend.whenGET(this.URL).respond({
         items: this.taskList,
       });
@@ -262,7 +270,7 @@ describe('Service: UserTaskManagerService', () => {
       expect(() => this.$httpBackend.flush(1)).toThrow(); // nothing to flush because interval was destroyed
     });
 
-    it('should handle interval delay change on existing interval', function () {
+    it('should handle interval delay change on existing interval', function (this: Test) {
       this.$httpBackend.whenGET(this.URL).respond({
         items: this.taskList,
       });

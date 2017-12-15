@@ -30,6 +30,7 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
   public currentState = '';
   public template;
   public states;
+  public userHasAccess = true;
 
   public NameErrorMessages = {
     DUPLICATE_ERROR: 'duplicate_error',
@@ -402,6 +403,16 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
   }
 
   /**
+   * handle template edit error for user who does not have access.
+   */
+  public handleUserAccessForEditError(): void {
+    this.creatingTemplate = false;
+    this.saveTemplateErrorOccurred = false;
+    this.userHasAccess = false;
+    this.templateButtonText = this.$translate.instant('common.finish');
+  }
+
+  /**
    * handle the result of successful feature update and store
    * @param response
    * @param templateId
@@ -433,7 +444,14 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
    * @returns {boolean}
    */
   public showEditWarning(): boolean {
-    return this.template.configuration.mediaType === 'expertVirtualAssistant' && this.isEditFeature && !this.saveTemplateErrorOccurred;
+    if (this.template.configuration.mediaType === 'expertVirtualAssistant' && this.isEditFeature ) {
+      if (!this.userHasAccess) {
+        return false;
+      } else if (!this.saveTemplateErrorOccurred) {
+        return true;
+      }
+    }
+    return false;
   }
 
 }

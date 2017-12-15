@@ -85,6 +85,12 @@
                 $state.isCareAssistantEnabled = isEnabled;
               });
           },
+          isEvaFlagEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
+            return FeatureToggleService.supports(FeatureToggleService.features.atlasExpertVirtualAssistantEnable)
+              .then(function (isEnabled) {
+                $state.isEvaFlagEnabled = isEnabled;
+              });
+          },
         },
       })
       .state('care.customerVirtualAssistant', {

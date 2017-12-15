@@ -4,6 +4,8 @@ import runningTaskStatusModuleName from './running-task-status';
 import taskContainerModuleName from './task-container';
 import usageLineModuleName from './usage-line';
 
+import { StringUtilService } from './string-util.service';
+export { StringUtilService };
 export { OfferName } from './offer-name.keys';
 
 export default angular
@@ -14,4 +16,5 @@ export default angular
     taskContainerModuleName,
     usageLineModuleName,
   ])
+  .service('StringUtilService', StringUtilService)
   .name;

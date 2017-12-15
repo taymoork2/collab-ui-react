@@ -44,6 +44,8 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
   const expectedPageTemplate = {
     templateId: jasmine.any(String),
     name: jasmine.any(String),
+    ownerId: jasmine.any(String),
+    ownerDetails: jasmine.any(Object),
     configuration: {
       mediaType: 'virtualAssistant',
       pages: {
@@ -78,13 +80,13 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
   };
 
   const dummyLogoUrl = 'https://www.example.com/logo.png';
-  const personId = { id: 'personId' };
+  const personId = 'personId';
   const listRoomsResponse = {
     items: [
       {
         id: 'roomId1',
         title: 'title 1',
-        creatorId: 'personId',
+        creatorId: personId,
       },
       {
         id: 'roomId2',
@@ -94,7 +96,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       {
         id: 'roomId3',
         title: 'room title 3',
-        creatorId: 'personId',
+        creatorId: personId,
       },
       {
         id: 'roomId4',
@@ -134,17 +136,18 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       {
         id: 'roomId3',
         title: 'room title 3',
-        creatorId: 'personId',
+        creatorId: personId,
       },
       {
         id: 'roomId1',
         title: 'title 1',
-        creatorId: 'personId',
+        creatorId: personId,
       },
     ],
   };
 
-  let getLogoDeferred, getLogoUrlDeferred, controller, listRoomsDeferred, getPersonDeferred, listMembershipsDeferred;
+  let getLogoDeferred, getLogoUrlDeferred, controller, listRoomsDeferred, listMembershipsDeferred;
+  let warningIfNotOwnerResult;
 
   beforeEach(function () {
     this.initModules('Sunlight', evaSetupModule);
@@ -165,30 +168,31 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     );
 
     afterEach(function () {
-      getLogoDeferred = getLogoUrlDeferred = controller = listRoomsDeferred = getPersonDeferred = listMembershipsDeferred = undefined;
+      getLogoDeferred = getLogoUrlDeferred = controller = listRoomsDeferred = listMembershipsDeferred = undefined;
     });
 
     //create mock deferred object which will be used to return promises
     getLogoDeferred = this.$q.defer();
     getLogoUrlDeferred = this.$q.defer();
     listRoomsDeferred = this.$q.defer();
-    getPersonDeferred = this.$q.defer();
     listMembershipsDeferred = this.$q.defer();
-
+    warningIfNotOwnerResult = { valid: true };
     spyOn(this.$modal, 'open');
     spyOn(this.CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
     spyOn(this.CTService, 'getLogoUrl').and.returnValue(getLogoUrlDeferred.promise);
     spyOn(this.Notification, 'success');
     spyOn(this.Notification, 'error');
     spyOn(this.Notification, 'errorWithTrackingId');
+    spyOn(this.Notification, 'warning');
     spyOn(this.Analytics, 'trackEvent');
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(OrgId);
     spyOn(this.Authinfo, 'getOrgName').and.returnValue(OrgName);
     spyOn(Date, 'now').and.returnValues(10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190);
+    spyOn(this.SparkService, 'getMyPersonId').and.returnValue(personId);
     spyOn(this.SparkService, 'listRooms').and.returnValue(listRoomsDeferred.promise);
-    spyOn(this.SparkService, 'getPerson').and.returnValue(getPersonDeferred.promise);
     spyOn(this.SparkService, 'listMemberships').and.returnValue(listMembershipsDeferred.promise);
     spyOn(this.$translate, 'instant').and.callThrough();
+    spyOn(this.EvaService, 'getWarningIfNotOwner').and.callFake(() => warningIfNotOwnerResult);
 
     this.compileComponent('eva-setup', {
       dismiss: 'dismiss()',
@@ -253,7 +257,6 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       getLogoDeferred.resolve(getDummyLogo('abcd'));
       getLogoUrlDeferred.resolve(dummyLogoUrl);
       listRoomsDeferred.resolve(listRoomsResponse);
-      getPersonDeferred.resolve(personId);
       listMembershipsDeferred.resolve(listMembershipsResponse);
       this.$scope.$apply();
     });
@@ -507,6 +510,26 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
 
       expect(controller.saveTemplateErrorOccurred).toBeTruthy();
       expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String));
+    });
+
+    it('should show correct notification if user does not have access for edit Edit', function () {
+      //by default, this flag is false
+      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
+      controller.isEditFeature = true;
+      const expectedWarningMessage = {
+        message: 'careChatTpl.virtualAssistant.eva.featureText.nonAdminEditDeleteWarning',
+        args: { owner: 'Some Owner' },
+      };
+      warningIfNotOwnerResult = {
+        valid: false,
+        warning: expectedWarningMessage,
+      };
+      controller.submitFeature();
+      this.$scope.$apply();
+
+      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
+      expect(controller.userHasAccess).toBeFalsy();
+      expect(this.Notification.warning).toHaveBeenCalledWith(expectedWarningMessage.message, expectedWarningMessage.args);
     });
   });
 });

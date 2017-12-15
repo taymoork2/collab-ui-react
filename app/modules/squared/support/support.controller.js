@@ -14,8 +14,6 @@ require('./_support.scss');
     $scope.helpHandler = $translate.instant('supportPage.byCisco');
     $scope.reportingUrl = null;
     $scope.helpUrl = Config.helpUrl;
-    $scope.ssoUrl = Config.ssoUrl;
-    $scope.rolesUrl = Config.rolesUrl;
     $scope.statusPageUrl = UrlConfig.getStatusPageUrl();
     $scope.searchInput = 'none';
     $scope.showCdrCallFlowLink = false;

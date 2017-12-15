@@ -1,13 +1,20 @@
+import { Authinfo } from 'modules/core/scripts/services/authinfo';
 import { Config } from 'modules/core/config/config';
 import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
 import { IOrderDetail } from './myCompanyOrders.service';
 import { Notification } from 'modules/core/notifications';
 import { MyCompanyOrdersService } from './myCompanyOrders.service';
 
-const COMPLETED = 'COMPLETED';
-const CLOSED = 'CLOSED';
-const TRIAL = 'Trial';
-const FREE = 'Free';
+enum OrderStatus {
+  COMPLETED = 'COMPLETED',
+  CLOSED = 'CLOSED',
+}
+enum OrderType {
+  ONLINE_SPARK = 'A-SPK-M',
+  ONLINE_WEBEX = '-ONL-',
+  TRIAL = 'Trial',
+  FREE = 'Free',
+}
 
 class MyCompanyOrdersCtrl implements ng.IComponentController {
 
@@ -16,12 +23,10 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
   public logoutLoading: boolean = true;
   public orderDetailList: IOrderDetail[] = [];
 
-  public digitalRiverOrderHistoryUrl: string;
-  public digitalRiverLogoutUrl: string;
-
   /* @ngInject */
   constructor(
     private $translate: angular.translate.ITranslateService,
+    private Authinfo: Authinfo,
     private Config: Config,
     private DigitalRiverService: DigitalRiverService,
     private Notification: Notification,
@@ -33,7 +38,7 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
     this.initGridOptions();
     this.MyCompanyOrdersService.getOrderDetails().then(orderDetails => {
       // create a modified version of the order details to display in the table, excluding closed orders
-      _.map(_.filter(orderDetails, orderDetail => orderDetail.status !== CLOSED), (origOrderDetail: any) => {
+      _.map(_.filter(orderDetails, orderDetail => orderDetail.status !== OrderStatus.CLOSED), (origOrderDetail: any) => {
         const orderDetail: IOrderDetail = {
           externalOrderId: origOrderDetail.externalOrderId,
           orderDate: origOrderDetail.orderDate,
@@ -44,6 +49,12 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
           status: this.$translate.instant('myCompanyOrders.pending'),
           invoiceURL: '',
         };
+        const skuList = _.map<string, string>(origOrderDetail.productList, 'sku').join(', ');
+        // We only care about Online orders
+        if (!_.includes(skuList, OrderType.ONLINE_WEBEX) &&
+            !_.includes(skuList, OrderType.ONLINE_SPARK)) {
+          return;
+        }
         let lang = this.$translate.use();
         if (lang) {
           // Get the current locale and convert to <language>-<country>
@@ -54,23 +65,31 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
           // Display date according to locale
           orderDetail.displayDate = moment(origOrderDetail.orderDate).format('ll');
         }
-        if (_.includes(orderDetail.productDescriptionList, TRIAL) ||
-            _.includes(orderDetail.productDescriptionList, FREE)) {
-          // trial orders don't display a price
-          orderDetail.isTrial = true;
-        } else {
-          // generate the URL to display the Digital River invoice
-          const product = _.includes(orderDetail.productDescriptionList, this.Config.onlineProducts.webex)
-            ? this.Config.onlineProducts.webex : this.Config.onlineProducts.spark;
-          this.DigitalRiverService.getInvoiceUrl(orderDetail.externalOrderId, product)
-            .then((invoiceUrl: string): void => {
-              orderDetail.invoiceURL = invoiceUrl;
-            });
-        }
-        if (COMPLETED === origOrderDetail.status) {
+        if (OrderStatus.COMPLETED === origOrderDetail.status) {
           orderDetail.status = this.$translate.instant('myCompanyOrders.completed');
         } else if (this.Config.webexSiteStatus.PENDING_PARM === origOrderDetail.status) {
           orderDetail.status = this.$translate.instant('myCompanyOrders.pendingActivation');
+        }
+        if (_.includes(orderDetail.productDescriptionList, OrderType.TRIAL) ||
+            _.includes(orderDetail.productDescriptionList, OrderType.FREE)) {
+          // trial orders don't display a price
+          orderDetail.isTrial = true;
+        } else {
+          // We need the ID of the admin that placed the order.
+          let adminEmail = this.Authinfo.getCustomerAdminEmail();
+          const buyerEmail = origOrderDetail.buyerEmail;
+          if (buyerEmail !== adminEmail) {
+            adminEmail = buyerEmail;
+          }
+          this.MyCompanyOrdersService.getUserId(adminEmail).then(userId => {
+            // generate the URL to display the Digital River invoice
+            const product = _.includes(orderDetail.productDescriptionList, this.Config.onlineProducts.webex)
+              ? this.Config.onlineProducts.webex : this.Config.onlineProducts.spark;
+            this.DigitalRiverService.getInvoiceUrl(orderDetail.externalOrderId, product, userId)
+              .then((invoiceUrl: string): void => {
+                orderDetail.invoiceURL = invoiceUrl;
+              });
+          });
         }
         this.orderDetailList.push(orderDetail);
       });
@@ -87,6 +106,11 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
     }).finally(() => {
       this.loading = false;
     });
+  }
+
+  // Log out from Digital River. Called by the template when the user clicks the link.
+  public drLogout(): void {
+    this.DigitalRiverService.logout();
   }
 
   private initGridOptions(): void {

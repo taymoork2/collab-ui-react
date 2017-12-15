@@ -1,8 +1,8 @@
 import { Config } from 'modules/core/config/config';
 export class DigitalRiverService {
   private readonly DIGITAL_RIVER_URL = {
-    store: 'https://buy.ciscospark.com/store/ciscoctg/en_US/',
-    billing: 'https://buy.ciscospark.com/DRHM/store?Action=DisplayAddEditPaymentPage&SiteID=ciscoctg&ThemeID=4805888100&',
+    store: 'https://buy.webex.com/store/ciscoctg/en_US/',
+    billing: 'https://buy.webex.com/DRHM/store?Action=DisplayAddEditPaymentPage&SiteID=ciscoctg&ThemeID=4805888100&',
   };
 
   private readonly DIGITAL_RIVER_COOKIE = 'webexToken';
@@ -22,23 +22,26 @@ export class DigitalRiverService {
   }
 
   public getBillingUrl(): ng.IPromise<string> {
-    return this.getDigitalRiverUrl('', 'billing');
+    return this.logout().then(() => {
+      return this.getDigitalRiverUrl('', 'billing');
+    });
   }
 
-  public getInvoiceUrl(reqId: string, product: string): ng.IPromise<string> {
+  public getInvoiceUrl(reqId: string, product: string, userId: string): ng.IPromise<string> {
     let invoicePath = 'DisplayInvoicePage?requisitionID=' + reqId + '&';
     if (_.includes(product, this.Config.onlineProducts.webex)) {
       invoicePath += 'ThemeID=4777108300&';
     }
-    return this.getDigitalRiverUrl(invoicePath, 'store');
+    return this.getDigitalRiverUrl(invoicePath, 'store', userId);
   }
 
-  public logout(env: string): ng.IHttpPromise<any> {
-    return this.$http.jsonp(this.$sce.trustAsResourceUrl(`${_.get(this.DIGITAL_RIVER_URL, env)}remoteLogout`));
+  public logout(): ng.IHttpPromise<any> {
+    return this.$http.jsonp(this.$sce.trustAsResourceUrl(`https://buy.webex.com/store/ciscoctg/en_US/remoteLogout`));
   }
 
-  public getDigitalRiverToken(): ng.IPromise<string> {
-    return this.$http.get<string>(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/users/authtoken')
+  public getDigitalRiverToken(userId: string = ''): ng.IPromise<string> {
+    const adminIdParam = _.isEmpty(userId) ? '' : ('?adminId=' + userId);
+    return this.$http.get<string>(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/users/authtoken' + adminIdParam)
       .then(response => response.data)
       .then(authToken => this.setDRCookie(authToken));
   }
@@ -47,8 +50,8 @@ export class DigitalRiverService {
     return this.$http.get(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/' + subId);
   }
 
-  private getDigitalRiverUrl(path: string, env: string): ng.IPromise<string> {
-    return this.getDigitalRiverToken()
+  private getDigitalRiverUrl(path: string, env: string, userId: string = ''): ng.IPromise<string> {
+    return this.getDigitalRiverToken(userId)
       .then((response) => {
         const queryParams = 'DRL=';
         return _.get(this.DIGITAL_RIVER_URL, env) + path + queryParams + encodeURIComponent(response);

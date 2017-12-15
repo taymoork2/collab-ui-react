@@ -93,7 +93,7 @@
       }
     });
 
-    $scope.supportUrl = (Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin()) ? Config.partnerSupportUrl : Config.supportUrl;
+    $scope.supportUrl = Config.helpUrl;
 
     $scope.collapsed = ControlHubService.getCollapsed();
   }

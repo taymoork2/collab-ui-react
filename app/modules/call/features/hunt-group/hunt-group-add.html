@@ -10,7 +10,10 @@
       next="$ctrl.nextButton($ctrl.pageIndex)"
       previous-fn="$ctrl.previousPage()"
       next-fn="$ctrl.nextPage()"
-      next-text="$ctrl.createHelpText()">
+      next-text="$ctrl.createHelpText()"
+      next-aria-label="{{::'common.next' | translate}}"
+      previous-aria-label="{{::'common.previous' | translate}}">
+
       <div ng-class="{'cs-fallback-content': ($ctrl.pageIndex === 4)}">
         <form novalidate name="$ctrl.form" role="form">
           <uc-call-feature-name

@@ -1,7 +1,7 @@
 import './task-list-filter.scss';
 import { TaskListFilterType } from '../user-task-manager.constants';
 
-class TaskListFilterController implements ng.IComponentController {
+export class TaskListFilterController implements ng.IComponentController {
   public TaskListFilter = TaskListFilterType;
   public filter: TaskListFilterType;
   public onFilterChange: Function;

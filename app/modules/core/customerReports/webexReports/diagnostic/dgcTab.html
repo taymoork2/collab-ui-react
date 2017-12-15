@@ -50,8 +50,7 @@
             </cs-card>
             <cs-card class="medium header-border meeting-time">
             <article>
-                <header>
-                <h4 ng-hide="$ctrl.details.status === 1">{{::'webexReports.end' | translate}}</h4></header>
+                <header><h4 ng-hide="$ctrl.details.status === 1" translate="webexReports.end"></h4></header>
                 <section>
                 <p ng-bind="$ctrl.details.endTime_" ng-show="$ctrl.details.status === 2"></p>
                 <p ng-show="$ctrl.details.status === 1">{{::'webexReports.meetingStatus.inProcess' | translate}}<i cs-loader class="loader-example--small"></i></p>

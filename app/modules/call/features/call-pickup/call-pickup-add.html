@@ -1,15 +1,16 @@
 <div>
   <cs-overlay-panel
     class="callpickup overlay-panel typeahead-group"
-    overlay-title="{{::'callPickup.createTitle' | translate}}" close="$ctrl.cancelModal()"
-    ng-keyup="$ctrl.evalKeyPress($event.keyCode)"
-    ng-keypress="$ctrl.enterNextPage($event.keyCode)">
+    overlay-title="{{::'callPickup.createTitle' | translate}}" close="$ctrl.cancelModal()">
 
-    <cs-setup-assistant previous="$ctrl.previousButton()"
+    <cs-setup-assistant
+      previous="$ctrl.previousButton()"
       next="$ctrl.nextButton()"
       next-text="$ctrl.nextText()"
       previous-fn="$ctrl.previousPage()"
-      next-fn="$ctrl.nextPage()">
+      next-fn="$ctrl.nextPage()"
+      next-aria-label="{{::'common.next' | translate}}"
+      previous-aria-label="{{::'common.previous' | translate}}">
 
       <form novalidate name="$ctrl.form" role="form">
         <uc-call-pickup-name
@@ -17,7 +18,9 @@
           on-update="$ctrl.onUpdateName(name, isValid)"
           call-pickup-name="$ctrl.name"
           is-new="true"
-          ng-class="$ctrl.animation">
+          ng-class="$ctrl.animation"
+          uc-keyup="$ctrl.evalKeyPress($event)"
+          uc-keypress="$ctrl.enterNextPage($event)">
         </uc-call-pickup-name>
 
         <uc-call-pickup-members
@@ -25,7 +28,9 @@
           on-update="$ctrl.onUpdateMember(member, isValidMember)"
           selected-members="$ctrl.selectedMembers"
           ng-class="$ctrl.animation"
-          is-new="true">
+          is-new="true"
+          uc-input-keyup="$ctrl.evalKeyPress($event)"
+          uc-input-keypress="$ctrl.enterNextPage($event)">
         </uc-call-pickup-members>
       </form>
     </cs-setup-assistant>

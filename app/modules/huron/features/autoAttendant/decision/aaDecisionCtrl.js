@@ -288,7 +288,7 @@
 
     function setReturnedCallerBasedOnToggle() {
       AACesOnboardHelperService.isCesOnBoarded().then(function (result) {
-        if (_.isEqual(result.csOnboardingStatus, 'SUCCESS') && AACommonService.isReturnedCallerToggle()) {
+        if (_.isEqual(result.csOnboardingStatus.toLowerCase(), 'success') && AACommonService.isReturnedCallerToggle()) {
           vm.ifOptions.splice(0, 0, {
             label: $translate.instant('autoAttendant.decisionCallerReturned'),
             value: 'callerReturned',

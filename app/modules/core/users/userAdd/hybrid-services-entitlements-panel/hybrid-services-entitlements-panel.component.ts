@@ -25,11 +25,13 @@ interface IHybridServices {
 
 class HybridServicesEntitlementsPanelController implements ng.IComponentController {
 
+  private static readonly HYBRID_SERVICES = 'hybridServices';
   private isEnabled = false;
   private entitlements: IEntitlementNameAndState[] = [];
   private showCalendarChoice: boolean;
   private services: IHybridServices;
   private entitlementsCallback: Function;
+  private stateData: any;  // TODO: better type
 
   /* @ngInject */
   constructor (
@@ -88,6 +90,22 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
   }
 
   public $onInit(): void {
+    if (!this.stateData) {
+      this.stateData = {};
+    }
+    this.initHybridServices(this.stateData);
+  }
+
+  private initHybridServices(stateData) {
+    // restore from 'stateData' if present
+    const previousServices: IHybridServices = _.get(stateData, HybridServicesEntitlementsPanelController.HYBRID_SERVICES);
+    if (previousServices) {
+      this.services = previousServices;
+      this.initIsEnabled();
+      return;
+    }
+
+    // otherwise initialize as per usual, and store in 'stateData'
     this.$q.all({
       servicesFromFms: this.ServiceDescriptorService.getServices(),
       gcalService: this.CloudConnectorService.getService('squared-fusion-gcal'),
@@ -101,8 +119,17 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
       if (response.hasHybridMessageFeatureToggle) {
         this.services.hybridMessage = this.getServiceIfEnabledInFMS(response.servicesFromFms, 'spark-hybrid-impinterop');
       }
-      this.isEnabled = this.services.hasCalendarService() || this.services.hasCallService() || this.services.hasHybridMessageService();
+      _.set(stateData, HybridServicesEntitlementsPanelController.HYBRID_SERVICES, this.services);
+      this.initIsEnabled();
     });
+  }
+
+  private initIsEnabled() {
+    if (!this.services) {
+      this.isEnabled = false;
+      return;
+    }
+    this.isEnabled = this.services.hasCalendarService() || this.services.hasCallService() || this.services.hasHybridMessageService();
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
@@ -199,5 +226,7 @@ export class HybridServicesEntitlementsPanelComponent implements ng.IComponentOp
   public bindings = {
     entitlementsCallback: '&',
     hasAssignableLicenses: '<',
+    onUpdate: '&?',
+    stateData: '<?',
   };
 }

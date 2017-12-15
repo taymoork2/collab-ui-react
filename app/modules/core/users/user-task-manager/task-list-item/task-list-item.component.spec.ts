@@ -1,4 +1,7 @@
 import userTaskManagerModuleName from '../index';
+import { TaskListItemController } from './task-list-item.component';
+
+type Test = atlas.test.IComponentTest<TaskListItemController>;
 
 describe('Component: userTaskListItem', () => {
 
@@ -10,7 +13,7 @@ describe('Component: userTaskListItem', () => {
   const TASK_SUBTEXT_RIGHT_CLASS = 'task__subtext--right';
   const ACTIVE_CLASS = 'task--active';
 
-  beforeEach(function () {
+  beforeEach(function (this: Test) {
     this.initModules(userTaskManagerModuleName);
     this.compileComponent('userTaskListItem', {
       isActiveTask: false,
@@ -23,14 +26,14 @@ describe('Component: userTaskListItem', () => {
     });
   });
 
-  it('should show active task', function () {
+  it('should show active task', function (this: Test) {
     expect(this.view.find(TASK)).not.toHaveClass(ACTIVE_CLASS);
     this.$scope.isActiveTask = true;
     this.$scope.$apply();
     expect(this.view.find(TASK)).toHaveClass(ACTIVE_CLASS);
   });
 
-  it('should render task data', function () {
+  it('should render task data', function (this: Test) {
     expect(this.view.find(TASK__ROW).eq(0).find(TASK__TEXT).eq(0)).toHaveText('CSV Import');
     expect(this.view.find(TASK__ROW).eq(0).find(TASK__TEXT).eq(1)).toHaveText('10:00 AM');
     expect(this.view.find(TASK__ROW).eq(0).find(TASK__TEXT).eq(1)).toHaveClass(TASK_TEXT_RIGHT_CLASS);

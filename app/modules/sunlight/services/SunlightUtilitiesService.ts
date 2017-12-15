@@ -31,17 +31,26 @@ export class SunlightUtilitiesService {
     return (this.Authinfo.getOrgId() === this.Authinfo.getUserOrgId());
   }
 
-  public getCareOnboardStatusForAdmin(csOnboarded, appOnboarded, aaOnboarded) {
-    const success = this.SunlightConstantsService.successStatus;
+  public getAAOnboardStatus(aaOnboarded) {
+    let aaOnboardStatus = this.SunlightConstantsService.status.SUCCESS;
+    if (this.Authinfo.isCareVoice()) {
+      aaOnboardStatus = aaOnboarded;
+    }
+    return aaOnboardStatus;
+  }
+
+  public getCareOnboardStatusForAdmin(csOnboarded, appOnboarded, aaOnboarded, jwtOnboarded) {
+    const success = this.SunlightConstantsService.status.SUCCESS;
     return (this.isOrgAdmin() && csOnboarded === success
     && appOnboarded === success
-    && aaOnboarded === success);
+    && this.getAAOnboardStatus(aaOnboarded) === success
+    && jwtOnboarded === success);
   }
 
   public getCareOnboardStatusForPartner(csOnboarded, aaOnboarded) {
-    const success = this.SunlightConstantsService.successStatus;
+    const success = this.SunlightConstantsService.status.SUCCESS;
     return (!this.isOrgAdmin() && csOnboarded === success
-    && aaOnboarded === success);
+    && this.getAAOnboardStatus(aaOnboarded) === success);
   }
 
   public getCareSetupNotificationText() {
@@ -62,7 +71,8 @@ export class SunlightUtilitiesService {
     const csOnboarded = _.get(result, 'data.csOnboardingStatus');
     const appOnboarded = _.get(result, 'data.appOnboardStatus');
     const aaOnboarded = _.get(result, 'data.aaOnboardingStatus');
-    if (this.getCareOnboardStatusForAdmin(csOnboarded, appOnboarded, aaOnboarded) ||
+    const jwtOnboarded = _.get(result, 'data.jwtAppOnboardingStatus');
+    if (this.getCareOnboardStatusForAdmin(csOnboarded, appOnboarded, aaOnboarded, jwtOnboarded) ||
       this.getCareOnboardStatusForPartner(csOnboarded, aaOnboarded)) {
       isCareOnboarded = true;
     }

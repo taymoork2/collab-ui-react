@@ -11,13 +11,13 @@ describe('component: MakeDefaultLocationComponent', () => {
     );
     this.$scope.close = jasmine.createSpy('close');
     spyOn(this.LocationsService, 'createLocation');
-    spyOn(this.LocationsService, 'updateLocation').and.returnValue(this.$q.resolve());
     this.compileComponent('ucMakeDefaultLocation', {
       close: 'close()',
     });
   });
 
   it('should update', function() {
+    spyOn(this.LocationsService, 'updateLocation').and.returnValue(this.$q.resolve());
     this.view.find('button.btn--primary').click();
     const placeHolder = true;
     expect(placeHolder).toEqual(true);
@@ -26,11 +26,10 @@ describe('component: MakeDefaultLocationComponent', () => {
   });
 
   describe('Negative test', () => {
-    beforeEach(function() {
-      spyOn(this.Notification, 'errorResponse');
-      this.LocationsService.updateLocation.and.returnValue(this.$q.reject());
-    });
     it('should throw an error', function() {
+      spyOn(this.Notification, 'errorResponse');
+      spyOn(this.LocationsService, 'updateLocation').and.returnValue(this.$q.reject());
+
       this.view.find('button.btn--primary').click();
       const placeHolder = true;
       expect(placeHolder).toEqual(true);

@@ -11,12 +11,13 @@
   /* @ngInject */
   function metricsFrameController($log, $rootScope, $scope, $timeout, $window, LoadingTimeout) {
     var vm = this;
+    var eventListeners = [];
     vm.isIframeLoaded = false;
+    vm.messageHandle = messageHandle;
 
     $window.addEventListener('message', messageHandle, true);
 
-    $scope.$on('updateIframe', updateIframe);
-    $scope.$on('unfreezeState', unfreezeState);
+    eventListeners.push($scope.$on('updateIframe', updateIframe), $scope.$on('unfreezeState', unfreezeState));
 
     function updateIframe(event, iframeUrl, data) {
       vm.data = data;
@@ -61,6 +62,9 @@
     this.$onDestroy = function () {
       if (vm.startLoadReportTimer) {
         $timeout.cancel(vm.startLoadReportTimer);
+      }
+      while (!_.isEmpty(eventListeners)) {
+        _.attempt(eventListeners.pop());
       }
       $window.removeEventListener('message', messageHandle, true);
     };

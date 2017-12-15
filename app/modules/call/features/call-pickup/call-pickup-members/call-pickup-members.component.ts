@@ -21,6 +21,9 @@ class CallPickupMembersCtrl implements ng.IComponentController {
   public readonly removeText = this.$translate.instant('callPickup.removeMember');
   public isNew: boolean;
   public savedCallPickup: IPickupGroup;
+  public ucInputKeyup?: Function;
+  public ucInputKeypress?: Function;
+
   /* @ngInject */
   constructor(
     private $element: ng.IRootElementService,
@@ -221,6 +224,18 @@ class CallPickupMembersCtrl implements ng.IComponentController {
   public getDisplayNameOnCard(member: Member) {
     return this.FeatureMemberService.getDisplayNameFromMember(member);
   }
+
+
+  public inputKeyup($event: KeyboardEvent) {
+    if (_.isFunction(this.ucInputKeyup)) {
+      this.ucInputKeyup({ $event: $event });
+    }
+  }
+  public inputKeypress($event: KeyboardEvent) {
+    if (_.isFunction(this.ucInputKeypress)) {
+      this.ucInputKeypress({ $event: $event });
+    }
+  }
 }
 
 export class CallPickupMembersComponent implements ng.IComponentOptions {
@@ -232,5 +247,7 @@ export class CallPickupMembersComponent implements ng.IComponentOptions {
     isNew: '<',
     savedCallPickup: '<',
     onEditUpdate: '&',
+    ucInputKeyup: '&?',
+    ucInputKeypress: '&?',
   };
 }

@@ -10,7 +10,7 @@ export class EPTActiveCardComponent implements ng.IComponentOptions {
     <article>
       <div class="active-card_header">
         <h4 translate="servicesOverview.cards.privateTrunk.title"></h4>
-        <i class="icon icon-question-circle" tooltip="{{::'servicesOverview.cards.privateTrunk.description' | translate}}" tooltip-placement="bottom-right"></i>
+        <i class="icon icon-question-circle" tooltip="{{::'servicesOverview.cards.privateTrunk.description' | translate}}" tooltip-placement="bottom-right" tabindex="0" tooltip-trigger="focus mouseenter"></i>
       </div>
       <div class="active-card_content">
         <div class="active-card_section">

@@ -10,6 +10,7 @@ export class HybridServiceUserSidepanelHelperService {
 
   /* @ngInject */
   constructor(
+    private Authinfo,
     private USSService: USSService,
     private Userservice,
   ) {}
@@ -46,6 +47,10 @@ export class HybridServiceUserSidepanelHelperService {
 
   public getPreferredWebExSiteName(userObject, orgObject): string | undefined {
     return this.Userservice.getPreferredWebExSiteForCalendaring(userObject) || _.get(orgObject, 'orgSettings.calSvcpreferredWebExSite', undefined);
+  }
+
+  public isPartnerAdminAndGot403Forbidden(response: ng.IHttpResponse<any>): boolean {
+    return this.Authinfo.isCustomerLaunchedFromPartner() && response.status === 403;
   }
 
 

@@ -50,17 +50,23 @@
 
     function rejectOnNotRead(config) {
       // injected manually to get around circular dependency problem with $translateProvider
-      var Authinfo = $injector.get('Authinfo');
       var Notification = $injector.get('Notification');
       var $state = $injector.get('$state');
       var currentState = _.get($state, 'current.name');
-      if (_.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin() && isWriteOp(config.method) && !isInAllowedList(config.url) && !isInAllowedState(currentState)) {
+      if (isReadOnly() && isWriteOp(config.method) && !isInAllowedList(config.url) && !isInAllowedState(currentState)) {
         Notification.notifyReadOnly(config);
         $log.warn('Intercepting request in read-only mode: ', config);
         return $q.reject(config);
       } else {
         return config;
       }
+    }
+
+    function isReadOnly() {
+      var Authinfo = $injector.get('Authinfo');
+      var isReadOnlyAdmin = _.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin();
+      var isPartnerReadOnlyAdmin = _.isFunction(Authinfo.isPartnerReadOnlyAdmin) && Authinfo.isPartnerReadOnlyAdmin();
+      return isReadOnlyAdmin || isPartnerReadOnlyAdmin;
     }
 
     function isWriteOp(method) {
