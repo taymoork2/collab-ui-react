@@ -185,6 +185,11 @@ header > p > span.badge {
   @include vr-spacing(pb, 2);
   @include vr-spacing(pl, 1);
 
+  .tooltip {
+    @include vr-spacing(ml, -15);
+    pointer-events: none;
+  }
+
   div.feature-card-container {
     // The button options in the body.
     display: flex;
