@@ -28,8 +28,7 @@
     <div>
       <p class="hybrid-service-description">{{'hercules.cloudExtensions.serviceDescriptions.spark-hybrid-impinterop' | translate}}</p>
 
-      <div class="row collapse"
-           ng-if="$ctrl.userStatus">
+      <div class="row collapse">
         <div class="columns small-3">
           <span class="hybrid-services-label">{{::'cloudExtensions.status' | translate}}:</span>
         </div>
@@ -45,13 +44,17 @@
                 ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatus && $ctrl.lastStateChangeText">
             {{$ctrl.lastStateChangeText}}
             </span>
+          
+          <span class="hybrid-services-label status-off"
+                ng-if="$ctrl.isInvitePending"
+                translate="hercules.activationStatus.accountNotActivated"></span>
 
           <span class="hybrid-services-label status-off"
-                ng-if="!$ctrl.userIsCurrentlyEntitled && !$ctrl.couldNotReadUser"
+                ng-if="!$ctrl.userIsCurrentlyEntitled && !$ctrl.couldNotReadUser && !$ctrl.isInvitePending"
                 translate="common.off"></span>
 
           <span class="hybrid-services-label status-off"
-                ng-if="!$ctrl.userIsCurrentlyEntitled && $ctrl.couldNotReadUser"
+                ng-if="!$ctrl.userIsCurrentlyEntitled && $ctrl.couldNotReadUser && !$ctrl.isInvitePending"
                 translate="common.unknown"></span>
 
         </div>
@@ -80,6 +83,8 @@
         </div>
 
       </div>
+
+      <hs-is-invite-pending-warning ng-if="$ctrl.isInvitePending"></hs-is-invite-pending-warning>
 
     </div>
   </cs-sp-section>

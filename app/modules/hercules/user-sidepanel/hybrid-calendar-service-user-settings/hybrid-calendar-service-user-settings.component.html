@@ -49,6 +49,8 @@
       <span cs-loader class="hybrid-services-label loader-example--small"></span>
     </div>
 
+    <hs-is-invite-pending-warning ng-if="$ctrl.isInvitePending"></hs-is-invite-pending-warning>
+
     <div class="row collapse"
          ng-if="$ctrl.userStatus">
 

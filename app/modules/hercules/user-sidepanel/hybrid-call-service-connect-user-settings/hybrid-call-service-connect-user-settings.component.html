@@ -46,15 +46,19 @@
             {{$ctrl.lastStateChangeText}}
             </span>
 
+          <span class="hybrid-services-label"
+                ng-if="$ctrl.isInvitePending"
+                translate="hercules.activationStatus.accountNotActivated"></span>
+
           <span class="hybrid-services-label status-off"
-                ng-if="!$ctrl.userIsCurrentlyEntitled && !$ctrl.couldNotReadUser"
+                ng-if="!$ctrl.userIsCurrentlyEntitled && !$ctrl.couldNotReadUser && !$ctrl.isInvitePending"
                 translate="common.off"></span>
 
           <span class="hybrid-services-label status-off"
-                ng-if="!$ctrl.userIsCurrentlyEntitled && $ctrl.couldNotReadUser"
+                ng-if="!$ctrl.userIsCurrentlyEntitled && $ctrl.couldNotReadUser && !$ctrl.isInvitePending"
                 translate="common.unknown"></span>
-
         </div>
+
         <div class="columns small-7 normal-line-height"
              ng-if="$ctrl.loadingPage">
           <span cs-loader class="hybrid-services-label loader-example--small"></span>
@@ -78,6 +82,9 @@
         </div>
 
       </div>
+
+      <hs-is-invite-pending-warning ng-if="$ctrl.isInvitePending"></hs-is-invite-pending-warning>
+
       <div ng-if="!$ctrl.userIsCurrentlyEntitled && !$ctrl.userStatusAware && !$ctrl.loadingPage">
         <p translate="hercules.userSidepanel.enableAwareFirst"
            translate-value-onclick="$ctrl.goToAwarePanel()"

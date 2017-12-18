@@ -2389,7 +2389,7 @@
       "connected": "Connected"
     },
     "userSidepanel": {
-      "warningInvitePending": "This user has not yet accepted the invitation to join Cisco Spark. You can still enable {{ServiceName}}, but activation will not succeed until the user signs in.",
+      "warningInvitePendingActivation": "Hybrid Services activation will start after this user accepts its invitation to join Cisco Spark.",
       "entitlements-dont-exist": "Service licenses for {{userName}} do not exist.",
       "previously-updated": "Could not save licenses. They are allocated somewhere else.",
       "not-updated": "Licenses could not be updated for {{userName}}.",
@@ -2429,7 +2429,8 @@
       "activated": "Activated",
       "error": "Error",
       "unknown": "Unknown",
-      "notFound": "Status not found"
+      "notFound": "Status not found",
+      "accountNotActivated": "Account Not Activated"
     },
     "serviceNames": {
       "squared-fusion-uc": "Call Service",

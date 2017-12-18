@@ -6,13 +6,16 @@
     <div class="feature-list">
       <ul>
         <li class="feature">
-          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.aware-settings({userId: $ctrl.userId, userEmailAddress: $ctrl.userEmailAddress, onEntitlementChange: $ctrl.onEntitlementChanges})">
+          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.aware-settings({userId: $ctrl.userId, userEmailAddress: $ctrl.userEmailAddress, onEntitlementChange: $ctrl.onEntitlementChanges, isInvitePending: $ctrl.isInvitePending })">
             <span class="feature-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-uc"></span>
             <span class="feature-status"
                   ng-if="$ctrl.callServiceAware && !$ctrl.loadingPage"
                   ng-class="$ctrl.callServiceAware ? 'status-' + $ctrl.getStatus($ctrl.callServiceAware) : ''"
                   translate="hercules.activationStatus.{{$ctrl.getStatus($ctrl.callServiceAware)}}"></span>
-            <span ng-if="!$ctrl.callServiceAware && !$ctrl.loadingPage"
+            <span ng-if="!$ctrl.callServiceAware && !$ctrl.loadingPage && $ctrl.isInvitePending"
+                  class="feature-status status-warning"
+                  translate="hercules.activationStatus.accountNotActivated"></span>
+            <span ng-if="!$ctrl.callServiceAware && !$ctrl.loadingPage && !$ctrl.isInvitePending"
                   class="feature-status status-off"
                   translate="common.off"></span>
             <span cs-loader
@@ -23,13 +26,16 @@
         </li>
         <li class="feature"
             ng-hide="!$ctrl.callServiceConnectEnabledForOrg">
-          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.connect-settings({userId: $ctrl.userId, userEmailAddress: $ctrl.userEmailAddress, onEntitlementChange: $ctrl.onEntitlementChanges, })">
+          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.connect-settings({userId: $ctrl.userId, userEmailAddress: $ctrl.userEmailAddress, onEntitlementChange: $ctrl.onEntitlementChanges, isInvitePending: $ctrl.isInvitePending })">
             <span class="feature-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-ec"></span>
             <span class="feature-status"
                   ng-if="$ctrl.callServiceConnect && !$ctrl.loadingPage"
                   ng-class="$ctrl.callServiceConnect ? 'status-' + $ctrl.getStatus($ctrl.callServiceConnect) : ''"
                   translate="hercules.activationStatus.{{$ctrl.getStatus($ctrl.callServiceConnect)}}"></span>
-            <span ng-if="!$ctrl.callServiceConnect && !$ctrl.loadingPage"
+            <span ng-if="!$ctrl.callServiceConnect && !$ctrl.loadingPage && $ctrl.isInvitePending"
+                  class="feature-status status-warning"
+                  translate="hercules.activationStatus.accountNotActivated"></span>
+            <span ng-if="!$ctrl.callServiceConnect && !$ctrl.loadingPage && !$ctrl.isInvitePending"
                   class="feature-status status-off"
                   translate="common.off"></span>
             <span cs-loader

@@ -45,13 +45,19 @@
             {{$ctrl.lastStateChangeText}}
             </span>
 
+            <span class="hybrid-services-label"
+                  ng-if="$ctrl.isInvitePending"
+                  translate="hercules.activationStatus.accountNotActivated"></span>
+
             <span class="hybrid-services-label status-off"
-                  ng-if="!$ctrl.userIsCurrentlyEntitled && !$ctrl.couldNotReadUser"
+                  ng-if="!$ctrl.userIsCurrentlyEntitled && !$ctrl.couldNotReadUser && !$ctrl.isInvitePending"
                   translate="common.off"></span>
 
             <span class="hybrid-services-label status-off"
-                  ng-if="!$ctrl.userIsCurrentlyEntitled && $ctrl.couldNotReadUser"
-                  translate="common.unknown"></span>
+                  ng-if="!$ctrl.userIsCurrentlyEntitled && $ctrl.couldNotReadUser && !$ctrl.isInvitePending"
+                  translate="common.unknown">
+            </span>
+
           </div>
 
           <div class="columns small-7 normal-line-height"
@@ -92,6 +98,8 @@
                   translate="common.notFound"></span>
           </div>
         </div>
+
+        <hs-is-invite-pending-warning ng-if="$ctrl.isInvitePending"></hs-is-invite-pending-warning>
 
         <div ng-if="$ctrl.domainVerificationError" class="hybrid-services-error-message">
           <i class="icon icon-error"></i>

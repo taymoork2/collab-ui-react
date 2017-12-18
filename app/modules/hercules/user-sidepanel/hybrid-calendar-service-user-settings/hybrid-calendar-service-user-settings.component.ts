@@ -15,6 +15,7 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
   private userEmailAddress: string;
   private userUpdatedCallback: Function;
   private preferredWebExSiteName: string;
+  public isInvitePending: boolean;
 
   public userOwnedByCCC: boolean;
   public userHasBothCalendarEntitlements: boolean;
@@ -53,7 +54,7 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
   ) { }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
-    const { userId, userEmailAddress,  userUpdatedCallback, preferredWebExSiteName } = changes;
+    const { userId, userEmailAddress,  userUpdatedCallback, preferredWebExSiteName, isInvitePending } = changes;
     if (userId && userId.currentValue) {
       this.userId = userId.currentValue;
       this.loadUserData();
@@ -66,6 +67,9 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
     }
     if (preferredWebExSiteName && preferredWebExSiteName.currentValue) {
       this.preferredWebExSiteName = preferredWebExSiteName.currentValue;
+    }
+    if (isInvitePending && isInvitePending.currentValue) {
+      this.isInvitePending = isInvitePending.currentValue;
     }
   }
 
@@ -255,5 +259,6 @@ export class HybridCalendarServiceUserSettingsComponent implements ng.IComponent
     userEmailAddress: '<',
     userUpdatedCallback: '&',
     preferredWebExSiteName: '<',
+    isInvitePending: '<',
   };
 }

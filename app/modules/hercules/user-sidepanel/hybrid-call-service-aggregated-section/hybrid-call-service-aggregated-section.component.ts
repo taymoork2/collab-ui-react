@@ -14,6 +14,7 @@ class HybridCallServiceAggregatedSectionCtrl implements ng.IComponentController 
 
   public userId: string;
   public userEmailAddress: string;
+  public isInvitePending: boolean;
   public callServiceAware: IUserStatusWithExtendedMessages | undefined;
   public callServiceConnect: IUserStatusWithExtendedMessages | undefined;
   public callServiceConnectEnabledForOrg: boolean;
@@ -93,5 +94,6 @@ export class HybridCallServiceAggregatedSectionComponent implements ng.IComponen
     userId: '<',
     userEmailAddress: '<',
     userUpdatedCallback: '&',
+    isInvitePending: '<',
   };
 }
