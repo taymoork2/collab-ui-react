@@ -7274,9 +7274,10 @@
     "failedToSaveChanges": "Failed to save changes to place. Reason:",
     "failedToDelete": "Failed to delete place. Reason:",
     "botAuthorizations": {
-      "title": "Places APIs access",
+      "title": "API access",
       "header": "Current access for devices belonging to '{{ placeName }}'",
       "subHeader": "The following bots and users are authorized to access the device APIs. Full access provides control over all devices belonging to this place. Make sure you trust the source.",
+      "subHeaderUser": "The following bots and users are authorized to access the device APIs. Full access provides control over all devices belonging to this user. Make sure you trust the source.",
       "table": {
         "name": "Authorized To",
         "role": "Access Level",

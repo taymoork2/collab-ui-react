@@ -60,16 +60,16 @@ describe('Controller: BotAuthorizationsController', () => {
 
     describe('list authorizations', () => {
       it('should show result', () => {
-        expect(controller.showResults()).toBeTruthy();
+        expect(controller.showResults()).toBe(true);
       });
       it('should show two authorizations.', () => {
-        expect(controller.authorizations.length).toEqual(2);
+        expect(controller.authorizations.length).toBe(2);
       });
       it('should show add button', () => {
-        expect(controller.showAdd()).toBeTruthy();
+        expect(controller.showAdd()).toBe(true);
       });
       it('should not show add row', () => {
-        expect(controller.isCollapsed).toBeTruthy();
+        expect(controller.isCollapsed).toBe(true);
       });
     });
 
@@ -78,10 +78,10 @@ describe('Controller: BotAuthorizationsController', () => {
         controller.startAdding();
       });
       it('should show add row', () => {
-        expect(controller.isCollapsed).toBeFalsy();
+        expect(controller.isCollapsed).toBe(false);
       });
       it('should not show add button', () => {
-        expect(controller.showAdd()).toBeFalsy();
+        expect(controller.showAdd()).toBe(false);
       });
     });
 
@@ -91,17 +91,17 @@ describe('Controller: BotAuthorizationsController', () => {
         controller.cancelAdding();
       });
       it('should not show add row', () => {
-        expect(controller.isCollapsed).toBeTruthy();
+        expect(controller.isCollapsed).toBe(true);
       });
       it('should show add button', () => {
-        expect(controller.showAdd()).toBeTruthy();
+        expect(controller.showAdd()).toBe(true);
       });
     });
 
     describe('delete authorization', () => {
       it('should show one authorization.', () => {
         controller.delete('1').then(() => {
-          expect(controller.authorizations.length).toEqual(1);
+          expect(controller.authorizations.length).toBe(1);
         });
       });
     });

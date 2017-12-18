@@ -66,7 +66,7 @@ class DeviceSettings implements ng.IComponentController {
       });
   }
   public startManageApiAccessFlow() {
-    this.BotAuthorizationsModal.open(this.ownerId, this.ownerDisplayName);
+    this.BotAuthorizationsModal.open(this.ownerId, this.ownerDisplayName, this.ownerType);
   }
   private fetchAsyncSettings(): void {
     this.FeatureToggleService.csdmPlaceUpgradeChannelGetStatus().then(placeUpgradeChannel => {

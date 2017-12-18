@@ -12,7 +12,8 @@
 
 <div class="modal-body remote-support-modal-body bot-auth">
   <h4 translate="placesPage.botAuthorizations.header" translate-values="{placeName: vm.accountDisplayName}"></h4>
-  <p class="subHeader" translate="placesPage.botAuthorizations.subHeader"></p>
+  <p ng-if="vm.ownerType === 'place'" class="subHeader" translate="placesPage.botAuthorizations.subHeader"></p>
+  <p ng-if="vm.ownerType !== 'place'" class="subHeader" translate="placesPage.botAuthorizations.subHeaderUser"></p>
 
   <span ng-show="vm.showLoading()" cs-loader class="loader-example--large"></span>
   <div ng-show="vm.showNoResults()" class="no_found">
