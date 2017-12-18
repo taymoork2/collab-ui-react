@@ -112,11 +112,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
           count: totalCount,
           searchString: currentEditedElement.toQuery(),
           readableField: this.$translate.instant('spacesPage.allDevices'),
-          text: this.$translate.instant('spacesPage.containingQuery',
-            {
-              query: currentEditedElement.toQuery(),
-            }),
-          translatableText: numberOfSubmittedBullets > 0 ? 'spacesPage.alsoContainingQuery' : 'spacesPage.containingQuery',
+          translatableText: 'spacesPage.containingQuery',
           translateParams: { query: currentEditedElement.toQuery() },
         },
       ];
@@ -129,13 +125,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
         this.inputBasedSuggestions.push({
           searchString: phraseQuery,
           readableField: this.$translate.instant('spacesPage.allDevices'),
-          text: this.$translate.instant('spacesPage.containingQuery',
-            {
-              query: phraseQuery,
-            }),
-          translatableText: numberOfSubmittedBullets > 0
-            ? 'spacesPage.alsoContainingQuery'
-            : 'spacesPage.containingQuery',
+          translatableText: 'spacesPage.containingQuery',
           translateParams: { query: phraseQuery },
         });
       }
@@ -143,13 +133,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
         searchString: `${QueryParser.Field_Displayname}:${currentEditedElement.toQuery()}`,
         readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(QueryParser.Field_Displayname),
         field: QueryParser.Field_Displayname,
-        text: this.$translate.instant('spacesPage.containingQuery',
-          {
-            query: currentEditedElement.toQuery(),
-          }),
-        translatableText: numberOfSubmittedBullets > 0
-          ? 'spacesPage.alsoContainingQuery'
-          : 'spacesPage.containingQuery',
+        translatableText: 'spacesPage.containingQuery',
         translateParams: { query: currentEditedElement.toQuery() },
       });
       this.firstSuggestionIsDefault = true;
@@ -160,13 +144,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
           searchString: currentEditedElement.toQuery(),
           readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(currentEditedElement.getCommonField()),
           field: currentEditedElement.getCommonField(),
-          text: this.$translate.instant('spacesPage.containingQuery',
-            {
-              query: (currentEditedElement as FieldQuery).getQueryWithoutField(),
-            }),
-          translatableText: numberOfSubmittedBullets > 0
-            ? 'spacesPage.alsoContainingQuery'
-            : 'spacesPage.containingQuery',
+          translatableText: 'spacesPage.containingQuery',
           translateParams: { query: (currentEditedElement as FieldQuery).getQueryWithoutField() },
         },
       ];
