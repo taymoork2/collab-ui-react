@@ -7365,7 +7365,7 @@
     "failedToSaveChanges": "Failed to save changes to place. Reason:",
     "failedToDelete": "Failed to delete place. Reason:",
     "botAuthorizations": {
-      "title": "API access",
+      "title": "Device APIs Access",
       "header": "Current access for devices belonging to '{{ placeName }}'",
       "subHeader": "The following bots and users are authorized to access the device APIs. Full access provides control over all devices belonging to this place. Make sure you trust the source.",
       "subHeaderUser": "The following bots and users are authorized to access the device APIs. Full access provides control over all devices belonging to this user. Make sure you trust the source.",
@@ -10141,7 +10141,7 @@
     "settingsLock": "Settings Lock",
     "settingsLockUpdated": "Settings Lock updated",
     "settingsLockTooltip": "Turn the settings lock on to prevent unintended changes on the device. Certain settings won’t be accessible.",
-    "deviceApis": "Device APIs",
+    "deviceApis": "Device APIs Access",
     "deviceApiViewEdit": "View/Edit Access"
   },
   "mediaMgrModal": {
