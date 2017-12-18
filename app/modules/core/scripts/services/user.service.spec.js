@@ -1,14 +1,13 @@
 'use strict';
 
+var moduleName = require('./user.service');
+
 describe('User Service', function () {
   var orgId, testData, needsHttpFlush;
 
   beforeEach(function () {
     // modules
-    this.initModules(
-      'Core',
-      'Huron'
-    );
+    this.initModules(moduleName);
 
     // dependencies
     this.injectDependencies('$httpBackend', '$rootScope', 'Authinfo', 'Config', 'UrlConfig');

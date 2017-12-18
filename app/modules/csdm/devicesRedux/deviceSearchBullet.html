@@ -18,9 +18,10 @@
       </span>
       <span ng-if="bctrl.getQueryField()" class="collection-operator">)</span>
   </span>
-
-  <i ng-if=!bctrl.isSubLevel class="icon icon-remove"
+  <div class="bullet-close">
+  <i ng-if=!bctrl.isSubLevel class="icon icon-close"
      ng-click="bctrl.bulletContainer.removeBullet(bctrl.searchElement)"/>
+  </div>
 
 </div>
 

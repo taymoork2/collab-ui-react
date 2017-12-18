@@ -14,6 +14,7 @@ import { PrivacySetting } from './privacySection/privacySettings.component';
 import { DirSyncSetting } from './dirsync/dirSyncSetting.component';
 import { DeviceBrandingSetting } from './branding/device-branding-setting.component';
 import { WebexVersionSetting } from './webexVersion/webex-version.component';
+import { SparkAssistantSetting } from './spark-assistant/spark-assistant-setting.component';
 
 export class SettingsCtrl {
 
@@ -31,6 +32,7 @@ export class SettingsCtrl {
   public fileSharingControl: SettingSection;
   public dirsync: SettingSection;
   public webexVersion: SettingSection;
+  public sparkAssistant: SettingSection;
 
   // Footer and broadcast controls
   public saveCancelFooter: boolean = false;
@@ -73,6 +75,7 @@ export class SettingsCtrl {
       this.privacy = new PrivacySetting();
       this.sipDomain = new SipDomainSetting();
       this.dirsync = new DirSyncSetting();
+      this.initSparkAssistant();
       if (this.Authinfo.isEnterpriseCustomer()) {
         this.initSecurity();
         this.initBlockExternalCommunication();
@@ -184,7 +187,7 @@ export class SettingsCtrl {
 
     this.$q.all(promises).then((result) => {
       if (result.fileSharingControlToggle) {
-        this.fileSharingControl = new FileSharingControlSetting(true);
+        this.fileSharingControl = new FileSharingControlSetting(result.proPackPurchased);
       }
     });
   }
@@ -206,6 +209,14 @@ export class SettingsCtrl {
     this.FeatureToggleService.atlasEmailSuppressGetStatus().then((toggle) => {
       if (toggle) {
         this.email = new EmailSetting();
+      }
+    });
+  }
+
+  private initSparkAssistant() {
+    this.FeatureToggleService.atlasSparkAssistantGetStatus().then((toggle) => {
+      if (toggle) {
+        this.sparkAssistant = new SparkAssistantSetting();
       }
     });
   }

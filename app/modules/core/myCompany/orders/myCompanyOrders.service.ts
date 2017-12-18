@@ -1,6 +1,7 @@
 export interface IOrderDetail {
   externalOrderId: string;
   orderDate: Date;
+  displayDate: string;
   status: string;
   total: number;
   productDescriptionList: string;
@@ -14,6 +15,7 @@ export interface IOrderList {
 
 export class MyCompanyOrdersService {
   private ordersService: ng.resource.IResourceClass<ng.resource.IResource<IOrderList>>;
+  private userIdURL: ng.resource.IResourceClass<ng.resource.IResource<IOrderList>>;
 
   /* @ngInject */
   constructor(
@@ -22,6 +24,7 @@ export class MyCompanyOrdersService {
     private UrlConfig,
   ) {
     this.ordersService = this.$resource(this.UrlConfig.getAdminServiceUrl() + 'commerce/purchaseorders/customer/:customerId');
+    this.userIdURL = this.$resource(this.UrlConfig.getAdminServiceUrl() + 'user?email=:emailAddress');
   }
 
   public getOrderDetails(): ng.IPromise<any[]> {
@@ -35,6 +38,15 @@ export class MyCompanyOrdersService {
     }).$promise
       .then(orderList => {
         return _.get<IOrderDetail[]>(orderList, 'commerceOrderList', []);
+      });
+  }
+
+  public getUserId(emailAddress: string): ng.IPromise<string> {
+    return this.userIdURL.get({
+      emailAddress: emailAddress,
+    }).$promise
+      .then(userRecord => {
+        return _.get<string>(userRecord, 'id', '');
       });
   }
 }

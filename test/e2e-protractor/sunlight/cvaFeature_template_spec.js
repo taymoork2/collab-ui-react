@@ -169,7 +169,7 @@ describe('CVA feature setup', function () {
 
   it('Edit: Save/Finish', function () {
     utils.click(careVirtualAssistantTemplateSetupPage.finishBtn);
-    notifications.assertSuccess('You have successfully updated ' + RenamedDialogflowTestAgentName + '.');
+    notifications.assertSuccess('Changes to ' + RenamedDialogflowTestAgentName + ' are successfully saved.');
   });
 
   it('Find edited template', function () {

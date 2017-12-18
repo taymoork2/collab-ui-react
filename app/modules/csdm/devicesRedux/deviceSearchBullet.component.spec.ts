@@ -11,7 +11,7 @@ describe('deviceSearchBullet', () => {
   beforeEach(function () {
     this.initModules(searchModule, devicesReduxModule);
     this.injectDependencies('$translate');
-    translator = new SearchTranslator(this.$translate);
+    translator = new SearchTranslator(this.$translate, null);
     spyOn(this.$translate, 'instant').and.callFake(key => 'translated.' + key);
     spyOn(this.$translate, 'proposedLanguage').and.returnValue('nb_NO');
   });

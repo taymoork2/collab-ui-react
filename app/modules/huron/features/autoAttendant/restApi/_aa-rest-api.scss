@@ -8,6 +8,10 @@
   white-space: inline;
 }
 
+.aa-rest-spacing {
+  @include vr-spacing(mr, -0.35);
+}
+
 .aa-text-overflow.aa-text-overflow {
   display: inline-block;
   width: 100%;
@@ -51,7 +55,7 @@
 .aa-static-var {
   margin-top: 0.2rem;
   line-height: 1.5rem;
-  word-wrap: break-word;
+  word-break: break-all;
 }
 
 .aa-url {
@@ -121,4 +125,12 @@
   th, td {
     border-right: 0.01rem solid #aeaeaf;
   }
+}
+
+label {
+  cursor: default;
+}
+
+.aa-rest-margin {
+    @include vr-spacing(mt, 2);
 }

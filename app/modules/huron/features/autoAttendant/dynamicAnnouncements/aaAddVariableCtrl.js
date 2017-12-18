@@ -6,7 +6,7 @@
     .controller('AAAddVariableCtrl', AAAddVariableCtrl);
 
   /* @ngInject */
-  function AAAddVariableCtrl($scope, $modal, AADynaAnnounceService, AAUiModelService, AACommonService, AutoAttendantCeMenuModelService) {
+  function AAAddVariableCtrl($scope, $rootScope, $modal, AADynaAnnounceService, AAUiModelService, AACommonService, AutoAttendantCeMenuModelService) {
     var vm = this;
 
     var CONSTANTS = {};
@@ -45,6 +45,7 @@
             //replacing id
             elementHtml = elementHtml.replace('Id', myId);
             dispatchElementInsertion(id, elementHtml, range);
+            $rootScope.$broadcast('dynamicListUpdated');
           }, function () {
             cancelledDynamicModal();
           })

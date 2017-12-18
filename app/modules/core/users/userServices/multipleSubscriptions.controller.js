@@ -21,6 +21,9 @@
     function init() {
       Orgservice.getInternallyManagedSubscriptions().then(function (subscriptions) {
         vm.subscriptionOptions = _.uniq(_.map(subscriptions, 'subscriptionId'));
+        vm.subscriptionOptions = _.sortBy(vm.subscriptionOptions, function (o) {
+          return o === 'Trial' ? 1 : -1;
+        });
         vm.selectedSubscription = _.head(vm.subscriptionOptions);
         vm.oneBilling = _.size(vm.subscriptionOptions) === 1;
         vm.roomSystemsExist = _.some(_.flatten(_.uniq(_.map(subscriptions, 'licenses'))), {

@@ -9,6 +9,7 @@
 
   /* @ngInject */
   function WebExSiteRowService(
+    $http,
     $interval,
     $log,
     $q,
@@ -34,6 +35,7 @@
       if (!dontShowLinkedServices) {
         _this.getLinkedConferenceServices();
       }
+      this.getPendingSiteUrls();
       _this.configureGrid();
     }; // initSiteRows()
 
@@ -246,6 +248,53 @@
       }
     }; // getLinkedConferenceServices()
 
+    this.getPendingSiteUrls = function () {
+      var pendingSubscriptionsServicesPromises = _.map(SetupWizardService.getPendingAuthinfoSubscriptions(), function (subscription) {
+        return _this.getPendingOrderServiceStatusDetails(subscription);
+      });
+      $q.all(pendingSubscriptionsServicesPromises).then(function (pendingSubscriptionServiceStatusArray) {
+        var pendingSitesInCurrentStatusArray = _.flatMap(pendingSubscriptionServiceStatusArray, function (serviceStatuses) {
+          return _.filter(serviceStatuses, function (service) {
+            return !_.isUndefined(service.license) && !_.isUndefined(service.siteUrl) && service.license.status !== 'PROVISIONED';
+          });
+        });
+        _.forEach(pendingSitesInCurrentStatusArray, function (site) {
+          site.isLinkedSite = false;
+          site.showLicenseTypes = true;
+          site.isPending = true;
+          site.licenseTypeContentDisplay = $translate.instant('siteList.unavailable');
+          site.licenseTooltipDisplay = $translate.instant('siteList.licenseUnavailableTooltip');
+          var siteDuplicate = _.find(_this.siteRows.gridData, { siteUrl: site.siteUrl });
+          if (siteDuplicate) {
+            siteDuplicate.isPending = true;
+          }
+        });
+        var uniquSites = _.reject(_.uniqBy(pendingSitesInCurrentStatusArray, 'siteUrl'), function (site) {
+          return _.some(_this.siteRows.gridData, { siteUrl: site.siteUrl });
+        });
+        _.forEach(uniquSites, function (site) {
+          _this.addSiteRow(site);
+        });
+      });
+    };
+
+    this.getPendingOrderServiceStatusDetails = function (subscription) {
+      var subscriptionId = subscription.externalSubscriptionId;
+      var pendingServiceOrderUrl = UrlConfig.getAdminServiceUrl() + 'orders/' + subscription.pendingServiceOrderUUID;
+      return $http.get(pendingServiceOrderUrl).then(function (response) {
+        var serviceStatus = _.get(response, 'data.serviceStatus');
+        return _.map(serviceStatus, function (service) {
+          return {
+            siteUrl: service.siteUrl,
+            license: {
+              billingServiceId: subscriptionId,
+              status: service.status,
+            },
+          };
+        });
+      });
+    };
+
     this.updateConferenceServices = function () {
       // var funcName = "updateConferenceServices()";
       // var logMsg = "";
@@ -299,6 +348,9 @@
               var siteUrl = siteRow.license.siteUrl;
               var count = 0;
               siteRow.licenseTooltipDisplay = '';
+              if (siteRow.isPending) {
+                siteRow.licenseTooltipDisplay = $translate.instant('siteList.licenseUnavailableTooltip');
+              }
 
               //Get the site's MC, EC, SC, TC, CMR license information
               //MC
@@ -505,7 +557,7 @@
                 siteRow.multipleWebexServicesLicensed = true;
                 siteRow.licenseTypeContentDisplay = $translate.instant('siteList.multipleLicenses');
                 siteRow.licenseTooltipDisplay = _.replace(siteRow.licenseTooltipDisplay, '<br>', '');
-              } else {
+              } else if (!siteRow.isPending) {
                 siteRow.multipleWebexServicesLicensed = false;
                 siteRow.licenseTooltipDisplay = null;
               }

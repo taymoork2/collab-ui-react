@@ -4,6 +4,8 @@ import { GridCellService } from './cs-grid-cell/gridCell.service';
 import './cs-grid.scss';
 import './cs-grid-cell/cs-grid-cell.scss';
 
+export { GridCellService };
+
 // TODO: migrate to the toolkit (tech debt item)
 export default angular
   .module('core.grid', [

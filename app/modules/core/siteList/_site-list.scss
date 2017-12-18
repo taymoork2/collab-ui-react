@@ -10,6 +10,9 @@
     &:hover {
       background-color: transparent;
     }
+    .badge.primary.ui-grid-cell-contents__badge--pending {
+      margin-left: 20px;
+    }
   }
 
   .multi-center-license {

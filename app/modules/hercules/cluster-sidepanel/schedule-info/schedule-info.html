@@ -1,6 +1,7 @@
 <cs-sp-section>
 
-  <div class="section-title-row feature-inline">
+  <div ng-if="!$ctrl.isHybridContextCluster()"
+       class="section-title-row feature-inline">
     <span class="section-name"
           translate="common.releaseChannel"></span>
     <span class="feature-name">{{$ctrl.releaseChannelName}}</span>

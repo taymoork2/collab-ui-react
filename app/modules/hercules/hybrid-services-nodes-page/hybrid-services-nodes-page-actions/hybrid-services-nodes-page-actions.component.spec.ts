@@ -116,6 +116,110 @@ describe('HybridServicesNodesPageActionsComponentCtrl', () => {
 
   });
 
+  describe('actions for removing Context nodes ', () => {
+
+    it('should be able to remove node if context connector is offline, but it is not the last node', () => {
+      const targetType = 'cs_mgmt';
+      const numberOfNodes = 3;
+      const node = {
+        connectors: [{
+          connectorType: 'cs_context',
+          originalState: 'offline',
+        }],
+      };
+      initController(node, numberOfNodes, Function(), targetType);
+      expect(ctrl.displayDisabledRemoveNodeMenuItem(targetType, node, numberOfNodes)).toBeFalsy();
+      expect(ctrl.displayActiveRemoveNodeMenuItem(targetType, node, numberOfNodes)).toBeTruthy();
+    });
+
+    it('should be able to remove node if context management connector is offline, but it is not the last node', () => {
+      const targetType = 'cs_mgmt';
+      const numberOfNodes = 3;
+      const node = {
+        connectors: [{
+          connectorType: 'cs_mgmt',
+          originalState: 'offline',
+        }],
+      };
+      initController(node, numberOfNodes, Function(), targetType);
+      expect(ctrl.displayDisabledRemoveNodeMenuItem(targetType, node, numberOfNodes)).toBeFalsy();
+      expect(ctrl.displayActiveRemoveNodeMenuItem(targetType, node, numberOfNodes)).toBeTruthy();
+    });
+
+    it('should not allow the admin to remove node if context connector is running', () => {
+      const targetType = 'cs_mgmt';
+      const numberOfNodes = 3;
+      const node = {
+        connectors: [{
+          connectorType: 'cs_mgmt',
+          originalState: 'running',
+        }, {
+          connectorType: 'cs_context',
+          originalState: 'running',
+        }],
+      };
+      initController(node, numberOfNodes, Function(), targetType);
+      expect(ctrl.displayDisabledRemoveNodeMenuItem(targetType, node, numberOfNodes)).toBeTruthy();
+      expect(ctrl.displayActiveRemoveNodeMenuItem(targetType, node, numberOfNodes)).toBeFalsy();
+    });
+
+    it('should not allow the admin to remove node if context connector is running and it is the last node', () => {
+      const targetType = 'cs_mgmt';
+      const numberOfNodes = 1;
+      const node = {
+        connectors: [{
+          connectorType: 'cs_context',
+          originalState: 'running',
+        }],
+      };
+      initController(node, numberOfNodes, Function(), targetType);
+      expect(ctrl.displayDisabledRemoveNodeMenuItem(targetType, node, numberOfNodes)).toBeTruthy();
+      expect(ctrl.displayActiveRemoveNodeMenuItem(targetType, node, numberOfNodes)).toBeFalsy();
+    });
+
+    it('should not allow the admin to remove if there is only one node left, and it is offline', () => {
+      const targetType = 'cs_mgmt';
+      const numberOfNodes = 1;
+      const node = {
+        connectors: [{
+          connectorType: 'cs_mgmt',
+          originalState: 'offline',
+        }],
+      };
+      initController(node, numberOfNodes, Function(), targetType);
+      expect(ctrl.displayDisabledRemoveNodeMenuItem(targetType, node, numberOfNodes)).toBeTruthy();
+      expect(ctrl.displayActiveRemoveNodeMenuItem(targetType, node, numberOfNodes)).toBeFalsy();
+    });
+
+    it('should not allow the admin to remove if there is only one node left, and it is offline', () => {
+      const targetType = 'cs_mgmt';
+      const numberOfNodes = 1;
+      const node = {
+        connectors: [{
+          connectorType: 'cs_context',
+          originalState: 'offline',
+        }],
+      };
+      initController(node, numberOfNodes, Function(), targetType);
+      expect(ctrl.displayDisabledRemoveNodeMenuItem(targetType, node, numberOfNodes)).toBeTruthy();
+      expect(ctrl.displayActiveRemoveNodeMenuItem(targetType, node, numberOfNodes)).toBeFalsy();
+    });
+
+    it('should not show disabled remove node for Expressway Clusters', () => {
+      const targetType = 'c_mgmt';
+      const numberOfNodes = 2;
+      const node = {
+        connectors: [{
+          connectorType: 'mf_mgmt',
+          originalState: 'offline',
+        }],
+      };
+      initController(node, numberOfNodes, Function(), targetType);
+      expect(ctrl.displayDisabledRemoveNodeMenuItem(targetType, node, numberOfNodes)).toBeFalsy();
+    });
+
+  });
+
   describe('actions for deregistering ECP nodes', () => {
 
     it('should show for Hybrid Media nodes', () => {

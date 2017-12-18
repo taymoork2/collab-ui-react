@@ -27,7 +27,7 @@ class HsEnableDisableCallServiceConnectComponentCtrl implements ng.IComponentCon
   }
 
   public $onInit() {
-    this.FeatureToggleService.hasFeatureToggleOrIsTestOrg(this.FeatureToggleService.features.atlasServicesOverviewRefresh)
+    this.FeatureToggleService.hasFeatureToggleOrIsTestOrg(this.FeatureToggleService.features.atlasHybridPrerequisites)
       .then((result) => {
         this.showPrerequisitesButton = result;
       });

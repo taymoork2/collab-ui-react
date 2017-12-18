@@ -271,13 +271,16 @@ export class CTService {
     return cards;
   }
 
-  public getStatesBasedOnType(mediaType: string, isProactiveFlagEnabled: Boolean) {
+  public getStatesBasedOnType(mediaType: string, featureFlags: any) {
     const states: string[] = [];
     switch (mediaType) {
       case 'chat':
         states.push('name');
+        if (featureFlags.isEvaFlagEnabled) {
+          states.push('chatEscalationBehavior');
+        }
         states.push('overview');
-        if (isProactiveFlagEnabled) {
+        if (featureFlags.isProactiveFlagEnabled) {
           states.push('proactivePrompt');
         }
         states.push('customerInformation');
@@ -299,8 +302,11 @@ export class CTService {
         break;
       case 'chatPlusCallback':
         states.push('name');
+        if (featureFlags.isEvaFlagEnabled) {
+          states.push('chatEscalationBehavior');
+        }
         states.push('overview');
-        if (isProactiveFlagEnabled) {
+        if (featureFlags.isProactiveFlagEnabled) {
           states.push('proactivePrompt');
         }
         states.push('customerInformationChat');
@@ -318,6 +324,37 @@ export class CTService {
         return states;
     }
     return states;
+  }
+
+  public getEvaDataModel(evaConfig, routingLabels, $translate) {
+    return [{
+      label: $translate.instant('careChatTpl.chatEscalatioAgent'),
+      value: routingLabels.AGENT,
+      name: 'RadioEVA',
+      id: 'agent',
+      desc: $translate.instant('careChatTpl.chatEscalatioAgentDesc'),
+      hasInfo: true,
+      isDisabled: false,
+      tooltipHtml: $translate.instant('careChatTpl.chatEscalatioAgentTooltip'),
+    }, {
+      label: $translate.instant('careChatTpl.chatEscalatioExpert'),
+      value: routingLabels.EXPERT,
+      name: 'RadioEVA',
+      id: 'expert',
+      desc: $translate.instant('careChatTpl.chatEscalatioExpertDesc'),
+      hasInfo: false,
+      isDisabled: !evaConfig.isEvaConfigured,
+      tooltipHtml: $translate.instant('careChatTpl.chatEscalatioExpertTooltip'),
+    }, {
+      label: $translate.instant('careChatTpl.chatEscalatioAgentPlusExpert'),
+      value: routingLabels.AGENTPLUSEXPERT,
+      name: 'RadioEVA',
+      id: 'agentplusexpert',
+      desc: $translate.instant('careChatTpl.chatEscalatioAgentPlusExpertDesc'),
+      hasInfo: false,
+      isDisabled: !evaConfig.isEvaConfigured,
+      tooltipHtml: $translate.instant('careChatTpl.chatEscalatioAgentPlusExpertTooltip'),
+    }];
   }
 }
 

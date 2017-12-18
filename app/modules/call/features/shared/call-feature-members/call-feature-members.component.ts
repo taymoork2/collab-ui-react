@@ -4,6 +4,7 @@ import { FeatureMemberService } from 'modules/huron/features/services';
 import { Line } from 'modules/huron/lines/services/line';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 import { CardUtils } from 'modules/core/cards';
+import { DraggableService, DraggableInstance } from 'modules/core/accessibility';
 
 export enum ComponentType {
   CALL_PARK = 'CALL_PARK',
@@ -32,19 +33,19 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
   public selectedMember: Member | undefined;
   public errorMemberInput: boolean = false;
   public searchStr: string;
-  public reordering: boolean = false;
-  public dragularInstance;
+  public draggableInstance: DraggableInstance;
   public location;
   public memberSearchTemplate: string;
 
   /* @ngInject */
   constructor(
+    private $element: ng.IRootElementService,
     private MemberService: MemberService,
     private FeatureMemberService: FeatureMemberService,
     private $translate: ng.translate.ITranslateService,
     private PhoneNumberService: PhoneNumberService,
     private CardUtils: CardUtils,
-    private dragularService,
+    private DraggableService: DraggableService,
   ) {
     switch (this.componentType) {
       case ComponentType.PAGING_GROUP:
@@ -69,7 +70,6 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
   }
 
   private processMemberChanges(memberChanges: ng.IChangesObject<any>): void {
-    this.reordering = false;
     this.displayedMembers = _.take<CallFeatureMember>(memberChanges.currentValue, CallFeatureMembersCtrl.DISPLAYED_MEMBER_SIZE);
     this.CardUtils.resize();
   }
@@ -279,30 +279,59 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
 
   public onReorderClicked(): void {
     this.searchStr = '';
-    this.reordering = true;
     this.displayedMembers = _.cloneDeep(this.members);
-    this.dragularInstance = this.dragularService('#membersContainer', {
-      containersModel: [this.displayedMembers],
-      moves: () => {
-        return this.reordering;
-      },
-    });
+
+    if (_.isUndefined(this.draggableInstance)) {
+      this.draggableInstance = this.DraggableService.createDraggableInstance({
+        elem: this.$element,
+        identifier: '#membersContainer',
+        transitClass: 'upper-panel',
+        itemIdentifier: '#cardReorder',
+        list: this.displayedMembers,
+      });
+    } else {
+      this.draggableInstance.reordering = true;
+      this.draggableInstance.refreshDragularInstance(this.displayedMembers);
+    }
   }
 
   public onApplyReorderClicked(): void {
-    this.reordering = false;
-    this.dragularInstance.destroy();
+    this.deactivateDraggable();
     this.onMembersChanged(this.displayedMembers);
   }
 
   public onCancelReorderClicked(): void {
-    this.reordering = false;
-    this.dragularInstance.destroy();
+    this.deactivateDraggable();
     this.resetDisplayedMembers();
+  }
+
+  public itemKeypress($event: KeyboardEvent, id: string) {
+    if (!this.isReordering) {
+      return;
+    } else if (_.get(this.draggableInstance, 'keyPress')) {
+      const member = _.find(this.displayedMembers, ['uuid', id]);
+      this.draggableInstance.keyPress($event, member);
+      this.displayedMembers = this.draggableInstance.list;
+    }
+  }
+
+  get isReordering() {
+    return _.get(this.draggableInstance, 'reordering', false);
+  }
+
+  public isSelectedItem(item) {
+    return item === _.get(this.draggableInstance, 'selectedItem');
   }
 
   private resetDisplayedMembers(): void {
     this.displayedMembers = _.take(this.members, CallFeatureMembersCtrl.DISPLAYED_MEMBER_SIZE);
+  }
+
+  private deactivateDraggable() {
+    if (!_.isUndefined(this.draggableInstance)) {
+      this.draggableInstance.selectedItem = undefined;
+      this.draggableInstance.reordering = false;
+    }
   }
 }
 

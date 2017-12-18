@@ -12,35 +12,35 @@ var Navigation = function () {
   this.placesTab = element(by.css('li.placeTab > a'))
   this.usersTab = element(by.css('li.userTab > a'));
   this.accountTab = element(by.css('li.accountTab > a'));
-  this.orgTab = element(by.css('a[href="#organizations"]'));
+  this.orgTab = element(by.css('a[href="organizations"]'));
   this.orgAddTab = element(by.css('#addOrganizations'));
-  this.callRoutingTab = element(by.css('a[href="#callrouting"]'));
-  this.autoAttendantPage = element(by.css('a[href="#/hurondetails/features"]'));
-  this.callSettings = element(by.css('a[href="#/services/call-settings"]'));
-  this.fusionTab = element(by.css('a[href="#fusion"]'));
+  this.callRoutingTab = element(by.css('a[href="callrouting"]'));
+  this.autoAttendantPage = element(by.css('a[href="/hurondetails/features"]'));
+  this.callSettings = element(by.css('a[href="/services/call-settings"]'));
+  this.fusionTab = element(by.css('a[href="fusion"]'));
   this.reportsTab = element(by.css('li.reportTab > a'));
   this.careReportsTab = element(by.cssContainingText('.nav-link', 'Care'));
   this.supportTab = element(by.css('li.supportTab > a'));
-  this.cdrTab = element(by.css('a[href="#cdrsupport"]'));
-  this.logsTab = element(by.css('a[href="#support"]'));
+  this.cdrTab = element(by.css('a[href="cdrsupport"]'));
+  this.logsTab = element(by.css('a[href="support"]'));
   this.logsPage = element(by.cssContainingText('.nav-link', 'Logs'));
 
-  this.billingTab = element(by.css('a[href="#orderprovisioning"]'));
+  this.billingTab = element(by.css('a[href="orderprovisioning"]'));
   this.devicesTab = element(by.css('li.deviceTab > a'));
   this.customersTab = element(by.css('li.customerTab > a'));
   this.developmentTab = element(by.css('li.developmentTab > a'));
   this.servicesTab = element(by.css('li.servicesTab > a'));
-  this.meetingsTab = element(by.css('a[href="#meetings"]'));
-  this.mediaServiceMgmtTab = element(by.css('a[href="#mediaservice"]'));
-  this.enterpriseResourcesTab = element(by.css('a[href="#vts"]'));
-  this.utilizationTab = element(by.css('a[href="#utilization"]'));
+  this.meetingsTab = element(by.css('a[href="meetings"]'));
+  this.mediaServiceMgmtTab = element(by.css('a[href="mediaservice"]'));
+  this.enterpriseResourcesTab = element(by.css('a[href="vts"]'));
+  this.utilizationTab = element(by.css('a[href="utilization"]'));
   this.gssTab = element(by.css('li.gssTab > a'));
 
   // hybrid services
   this.activateService = element(by.id('activateService'));
   this.deactivateService = element(by.id('deactivateService'));
-  this.calendarServicePage = element(by.css('a[href="#services/calendar"]'));
-  this.callServicePage = element(by.css('a[href="#services/call"]'));
+  this.calendarServicePage = element(by.css('a[href="services/calendar"]'));
+  this.callServicePage = element(by.css('a[href="services/call"]'));
   this.serviceResources = element(by.cssContainingText('.nav-link', 'Resources'));
   this.serviceSettings = element(by.cssContainingText('.nav-link', 'Settings'));
   this.ecToggler = element(by.id('squaredFusionEc-toggler'));
@@ -210,11 +210,19 @@ var Navigation = function () {
     });
   };
 
+  // html5Mode - strip leading hashes
+  function removeUrlHash(urls) {
+    return _.map(urls, function (url) {
+      return (url[0] === '#') ? url.slice(1) : url;
+    });
+  }
+
   function doesCurrentUrlContainValues(urlArray) {
+    var urls = removeUrlHash(urlArray);
     return function (currentUrl) {
-      log('Expecting ' + currentUrl + ' to contain ' + urlArray.join(' or '));
-      // See if currentUrl contains one of the urlArray values
-      return _.some(urlArray, _.partial(_.includes, currentUrl));
+      log('Expecting ' + currentUrl + ' to contain ' + urls.join(' or '));
+      // See if currentUrl contains one of the url values
+      return _.some(urls, _.partial(_.includes, currentUrl));
     };
   }
 

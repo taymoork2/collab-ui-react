@@ -2,14 +2,14 @@
 @import '~collab-ui/scss/settings/colors';
 
 task-container {
-  @include keep-flex(column);
+  @include keep-flex-container(column);
 
   .task-container {
-    @include keep-flex(row);
+    @include keep-flex-container(row);
 
     &__panel {
-      @include keep-flex(column, 1);
-      flex-basis: 0;
+      @include keep-flex-container(column);
+      flex-grow: 1;
       min-width: 0;
       border-right: 1px solid $gray-light;
 
@@ -24,10 +24,14 @@ task-container {
     }
 
     &__details {
-      @include keep-flex(column, 2);
-      flex-basis: 0;
+      @include keep-flex-container(column);
+      flex-grow: 2;
       min-width: 0;
       overflow-y: auto;
+
+      task-container-details {
+        @include keep-flex-container(column);
+      }
     }
   }
 }

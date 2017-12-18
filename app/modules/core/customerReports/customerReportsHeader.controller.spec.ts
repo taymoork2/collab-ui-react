@@ -70,6 +70,7 @@ describe('Controller: Customer Reports Ctrl', function () {
 
       this.controller = this.$controller('CustomerReportsHeaderCtrl', {
         $q: this.$q,
+        $scope: this.$scope,
         WebexReportService: WebexReportService,
         WebexMetricsService: this.WebexMetricsService,
         FeatureToggleService: this.FeatureToggleService,
@@ -98,6 +99,7 @@ describe('Controller: Customer Reports Ctrl', function () {
 
       this.controller = this.$controller('CustomerReportsHeaderCtrl', {
         $q: this.$q,
+        $scope: this.$scope,
         WebexReportService: WebexReportService,
         WebexMetricsService: this.WebexMetricsService,
         FeatureToggleService: this.FeatureToggleService,

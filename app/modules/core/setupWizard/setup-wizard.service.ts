@@ -251,7 +251,7 @@ export class SetupWizardService {
     return <ICCASPLicense>_.find(this.getActingSubscriptionLicenses(), { offerName: this.Config.offerCodes.CCASP });
   }
 
-  private getPendingAuthinfoSubscriptions() {
+  public getPendingAuthinfoSubscriptions() {
     return _.filter(this.Authinfo.getSubscriptions(), (subscription: IPendingOrderSubscription) => _.has(subscription, 'pendingServiceOrderUUID'));
   }
 
@@ -396,13 +396,20 @@ export class SetupWizardService {
     return this.$http.post(url, payload);
   }
 
-  public validateTransferCodeBySubscriptionId(siteUrl: string, transferCode: string, externalSubscriptionId: string, orderUuid?: string) {
-    const payload = {
-      siteUrl: siteUrl,
-      transferCode: transferCode,
-      serviceId: externalSubscriptionId,
-      orderUuid: orderUuid,
-    };
+
+  public validateTransferCodeDecorator(payload: { siteUrl: string, transferCode: string } , externalSubscriptionId?: string,  orderUuid?: string): ng.IPromise<any> {
+    if (!_.isEmpty(externalSubscriptionId)) {
+      return this.validateTransferCodeBySubscriptionId(payload, externalSubscriptionId, orderUuid);
+    } else {
+      return this.validateTransferCode(payload);
+    }
+  }
+
+  public validateTransferCodeBySubscriptionId(payload: { siteUrl: string, transferCode: string }, externalSubscriptionId: string = '', orderUuid?: string) {
+    _.set(payload, 'serviceId', externalSubscriptionId);
+    if (orderUuid) {
+      _.set(payload, 'orderUuid', orderUuid);
+    }
     const url = `${this.UrlConfig.getAdminServiceUrl()}subscriptions/site/verifytransfercode`;
     return this.$http.post(url, payload);
   }

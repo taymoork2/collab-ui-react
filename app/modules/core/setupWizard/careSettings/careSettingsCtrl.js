@@ -5,7 +5,7 @@ var HttpStatus = require('http-status-codes');
   angular.module('Core')
     .controller('CareSettingsCtrl', CareSettingsCtrl);
 
-  function CareSettingsCtrl($interval, $q, $scope, $translate, Authinfo, Log, Notification, SunlightConfigService, URService) {
+  function CareSettingsCtrl($interval, $q, $scope, $translate, Authinfo, AutoAttendantConfigService, FeatureToggleService, Log, Notification, SunlightConfigService, URService) {
     var vm = this;
 
     vm.status = {
@@ -23,14 +23,16 @@ var HttpStatus = require('http-status-codes');
     vm.csOnboardingStatus = vm.status.UNKNOWN;
     vm.aaOnboardingStatus = vm.status.UNKNOWN;
     vm.appOnboardingStatus = vm.status.UNKNOWN;
+    vm.jwtAppOnboardingStatus = vm.status.UNKNOWN;
 
     vm.defaultQueueId = Authinfo.getOrgId();
     vm.careSetupDoneByAdmin = (Authinfo.getOrgId() === Authinfo.getUserOrgId());
 
     vm.state = vm.status.UNKNOWN;
+    vm.sunlightOnboardingState = vm.status.UNKNOWN;
     vm.errorCount = 0;
 
-    function onboardCsAaAppToCare() {
+    function onboardCareWithOtherApps() {
       var promises = {};
       if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
         promises.onBoardCS = SunlightConfigService.onBoardCare();
@@ -48,13 +50,23 @@ var HttpStatus = require('http-status-codes');
           }
         });
       }
-      if (vm.careSetupDoneByAdmin && vm.appOnboardingStatus !== vm.status.SUCCESS) {
-        promises.onBoardBotApp = SunlightConfigService.onboardCareBot();
-        promises.onBoardBotApp.then(function (result) {
-          if (result.status === HttpStatus.NO_CONTENT) {
-            vm.appOnboardingStatus = vm.status.SUCCESS;
-          }
-        });
+      if (vm.careSetupDoneByAdmin) {
+        if (vm.appOnboardingStatus !== vm.status.SUCCESS) {
+          promises.onBoardBotApp = SunlightConfigService.onboardCareBot();
+          promises.onBoardBotApp.then(function (result) {
+            if (result.status === HttpStatus.NO_CONTENT) {
+              vm.appOnboardingStatus = vm.status.SUCCESS;
+            }
+          });
+        }
+        if (vm.jwtAppOnboardingStatus !== vm.status.SUCCESS) {
+          promises.onBoardJwtApp = SunlightConfigService.onboardJwtApp();
+          promises.onBoardJwtApp.then(function (result) {
+            if (result.status === HttpStatus.NO_CONTENT) {
+              vm.jwtAppOnboardingStatus = vm.status.SUCCESS;
+            }
+          });
+        }
       }
       $q.all(promises).then(function (results) {
         Log.debug('Care onboarding is success', results);
@@ -84,7 +96,7 @@ var HttpStatus = require('http-status-codes');
 
         URService.createQueue(createQueueRequest).then(function () {
           vm.defaultQueueStatus = vm.status.SUCCESS;
-          onboardCsAaAppToCare();
+          onboardCareWithOtherApps();
         })
           .catch(function (error) {
             vm.state = vm.NOT_ONBOARDED;
@@ -92,7 +104,7 @@ var HttpStatus = require('http-status-codes');
             Notification.errorWithTrackingId(error, $translate.instant('firstTimeWizard.setUpCareFailure'));
           });
       } else {
-        onboardCsAaAppToCare();
+        onboardCareWithOtherApps();
       }
     };
 
@@ -171,17 +183,20 @@ var HttpStatus = require('http-status-codes');
 
     function onboardingDoneByAdminStatus(result) {
       var onboardingDoneByAdminStatus = vm.status.UNKNOWN;
+      var aaOnboarded = onboardingStatusForAA();
       vm.appOnboardingStatus = _.get(result, 'data.appOnboardStatus');
+      vm.jwtAppOnboardingStatus = _.get(result, 'data.jwtAppOnboardingStatus');
       if (vm.defaultQueueStatus !== vm.status.SUCCESS) {
         onboardingDoneByAdminStatus = vm.defaultQueueStatus;
-      } else if (vm.csOnboardingStatus === vm.status.SUCCESS && vm.appOnboardingStatus === vm.status.SUCCESS) {
-        onboardingDoneByAdminStatus = onboardingStatusWhenCareVoiceEnabled();
+      } else if (vm.csOnboardingStatus === vm.status.SUCCESS && vm.appOnboardingStatus === vm.status.SUCCESS
+        && aaOnboarded === vm.status.SUCCESS) {
+        onboardingDoneByAdminStatus = vm.jwtAppOnboardingStatus;
+      } else if (aaOnboarded !== vm.status.SUCCESS) {
+        onboardingDoneByAdminStatus = aaOnboarded;
       } else if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
         onboardingDoneByAdminStatus = vm.csOnboardingStatus;
       } else if (vm.appOnboardingStatus !== vm.status.SUCCESS) {
         onboardingDoneByAdminStatus = vm.appOnboardingStatus;
-      } else {
-        onboardingDoneByAdminStatus = vm.status.UNKNOWN;
       }
       return onboardingDoneByAdminStatus;
     }
@@ -191,14 +206,14 @@ var HttpStatus = require('http-status-codes');
       if (vm.defaultQueueStatus !== vm.status.SUCCESS) {
         onboardingDoneByPartnerStatus = vm.defaultQueueStatus;
       } else if (vm.csOnboardingStatus === vm.status.SUCCESS) {
-        onboardingDoneByPartnerStatus = onboardingStatusWhenCareVoiceEnabled();
+        onboardingDoneByPartnerStatus = onboardingStatusForAA();
       } else if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
         onboardingDoneByPartnerStatus = vm.csOnboardingStatus;
       }
       return onboardingDoneByPartnerStatus;
     }
 
-    function onboardingStatusWhenCareVoiceEnabled() {
+    function onboardingStatusForAA() {
       var status;
       if (Authinfo.isCareVoice()) {
         status = vm.aaOnboardingStatus;
@@ -217,45 +232,93 @@ var HttpStatus = require('http-status-codes');
     }
 
     function getOnboardingStatusFromOrgChatConfig() {
-      SunlightConfigService.getChatConfig().then(function (result) {
+      return SunlightConfigService.getChatConfig().then(function (result) {
         var onboardingStatus = getOnboardingStatus(result);
         switch (onboardingStatus) {
           case vm.status.PENDING:
-            vm.state = vm.IN_PROGRESS;
+            vm.sunlightOnboardingState = vm.IN_PROGRESS;
             startPolling();
             break;
           case vm.status.SUCCESS:
-            vm.state = vm.ONBOARDED;
-            enableNext();
+            vm.sunlightOnboardingState = vm.ONBOARDED;
             break;
           default:
-            vm.state = vm.NOT_ONBOARDED;
+            vm.sunlightOnboardingState = vm.NOT_ONBOARDED;
         }
       })
         .catch(function (error) {
           if (error.status === 404) {
-            vm.state = vm.NOT_ONBOARDED;
+            vm.sunlightOnboardingState = vm.NOT_ONBOARDED;
           } else {
             Log.debug('Fetching Care setup status, on load, failed: ', error);
           }
         });
     }
 
-    function init() {
-      disableNext();
+    function setViewModelStateFromCsConfigForAA() {
+      if (vm.sunlightOnboardingState === vm.ONBOARDED) {
+        AutoAttendantConfigService.getCSConfig().then(function (result) {
+          var csOnboardingStatusForAA = _.get(result, 'data.csOnboardingStatus');
+          switch (csOnboardingStatusForAA) {
+            case vm.status.SUCCESS:
+              vm.state = vm.ONBOARDED;
+              enableNext();
+              break;
+            default:
+              vm.state = vm.NOT_ONBOARDED;
+          }
+        })
+          .catch(function (error) {
+            Log.debug('Fetching cs onboarding status for AA, on load, failed:', error);
+            vm.state = vm.NOT_ONBOARDED;
+          });
+      } else {
+        setVmStateFromSunlightState();
+      }
+    }
 
-      URService.getQueue(vm.defaultQueueId).then(function () {
-        vm.defaultQueueStatus = vm.status.SUCCESS;
-        getOnboardingStatusFromOrgChatConfig();
-      }, function (error) {
-        getOnboardingStatusFromOrgChatConfig();
-        if (error.status === 404) {
-          vm.state = vm.NOT_ONBOARDED;
-        } else {
-          Log.debug('Fetching default queue status, on load, failed: ', error);
-        }
+    function setVmStateFromSunlightState() {
+      vm.state = vm.sunlightOnboardingState;
+      if (vm.state === vm.ONBOARDED) {
+        enableNext();
+      }
+    }
+
+    function setViewModelStateForAA(sunlightPromise) {
+      sunlightPromise.then(function () {
+        FeatureToggleService.supports(FeatureToggleService.features.huronAAContextService).then(function (results) {
+          if (results) {
+            setViewModelStateFromCsConfigForAA();
+          } else {
+            setVmStateFromSunlightState();
+          }
+        })
+          .catch(function () {
+            setVmStateFromSunlightState();
+          });
       });
     }
+
+
+    function init() {
+      disableNext();
+      var sunlightPromise;
+      URService.getQueue(vm.defaultQueueId).then(function () {
+        vm.defaultQueueStatus = vm.status.SUCCESS;
+        sunlightPromise = getOnboardingStatusFromOrgChatConfig();
+        setViewModelStateForAA(sunlightPromise);
+      })
+        .catch(function (error) {
+          sunlightPromise = getOnboardingStatusFromOrgChatConfig();
+          if (error.status === 404) {
+            vm.sunlightOnboardingState = vm.NOT_ONBOARDED;
+          } else {
+            Log.debug('Fetching default queue status, on load, failed: ', error);
+          }
+          setViewModelStateForAA(sunlightPromise);
+        });
+    }
+
     init();
   }
 })();

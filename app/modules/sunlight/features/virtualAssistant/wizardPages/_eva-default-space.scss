@@ -1,0 +1,35 @@
+.eva-default-space-box {
+  @include vr-spacing(mb, 1.5);
+  @include vr-spacing(pt, 1.625);
+  @include vr-spacing(pb, 1.625);
+  @include vr-spacing(pl, 1.625);
+  @include vr-spacing(pr, 3.5);
+  width: rem-calc(650px);
+
+  .row {
+    @include vr-spacing(pt, 2.0);
+    @include vr-spacing(pr, 5.0);
+  }
+
+  .select-options > li > a {
+    color: $gray-dark;
+  }
+
+  .placeholder {
+    color: $gray-light-2;
+  }
+
+  .note-info {
+    @include vr-spacing(mt, 3.0);
+    @include vr-spacing(pr, 5.5);
+    color: $color-blue-dark;
+    line-height: 1.5;
+    display: inline-flex;
+    font-size: smaller;
+
+    .icon {
+      @include vr-spacing(mr, 0.5);
+      @include vr-spacing(pt, 0.125);
+    }
+  }
+}

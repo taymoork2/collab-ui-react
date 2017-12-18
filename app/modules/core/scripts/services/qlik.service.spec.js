@@ -1,6 +1,6 @@
 'use strict';
 
-xdescribe('Service: QlikService', function () {
+describe('Service: QlikService', function () {
   beforeEach(angular.mock.module('Core'));
 
   var $httpBackend, QlikService, UrlConfig;
@@ -17,7 +17,8 @@ xdescribe('Service: QlikService', function () {
       appUrl: 'https://qlik-loader/custportal/sense/app/7799d0da-e138-4e21-a9ad-0a5f2cee053a/?QlikTicket=acOEkuE_YU4WFUQL',
       ticket: 'acOEkuE_YU4WFUQL',
     },
-    qlikMashupUrl: 'qlik-loader',
+    qbsUrl: 'qlik-engine/api/v1/report/session/',
+    qlikMashupUrl: 'qlik-loader/',
   };
 
   afterEach(function () {
@@ -47,49 +48,15 @@ xdescribe('Service: QlikService', function () {
       });
     });
 
-    it('should return appId and ticket if call Webex base API', function () {
-      var promise = QlikService.getWebExReportQBSforBaseUrl(testData.postParam);
-
+    it('should return spark appId and ticket if call getQBSInfo API', function () {
+      var promise = QlikService.getQBSInfo('spark', 'Basic', testData.postParam, 'dev');
       $httpBackend.flush();
       var res = promise.$$state.value;
       expect(Object.keys(res.data)).toContain('ticket');
     });
 
-    it('should return appId and ticket if call Webex premium API', function () {
-      var promise = QlikService.getWebExReportQBSforPremiumUrl(testData.postParam);
-
-      $httpBackend.flush();
-      var res = promise.$$state.value;
-      expect(Object.keys(res.data)).toContain('ticket');
-    });
-
-    it('should return appId and ticket if call Webex MEI API', function () {
-      var promise = QlikService.getWebExReportQBSforMEIUrl(testData.postParam);
-
-      $httpBackend.flush();
-      var res = promise.$$state.value;
-      expect(Object.keys(res.data)).toContain('ticket');
-    });
-
-    it('should return appId and ticket if call Spark base API', function () {
-      var promise = QlikService.getSparkReportQBSforBaseUrl(testData.postParam);
-
-      $httpBackend.flush();
-      var res = promise.$$state.value;
-      expect(Object.keys(res.data)).toContain('ticket');
-    });
-
-    it('should return appId and ticket if call Spark premium API', function () {
-      var promise = QlikService.getSparkReportQBSforPremiumUrl(testData.postParam);
-
-      $httpBackend.flush();
-      var res = promise.$$state.value;
-      expect(Object.keys(res.data)).toContain('ticket');
-    });
-
-    it('should return appId and ticket if call Spark MEI API', function () {
-      var promise = QlikService.getSparkReportQBSforMEIUrl(testData.postParam);
-
+    it('should return webex appId and ticket if call getProdToBTSQBSInfo API', function () {
+      var promise = QlikService.getProdToBTSQBSInfo('webex', 'Basic', testData.postParam);
       $httpBackend.flush();
       var res = promise.$$state.value;
       expect(Object.keys(res.data)).toContain('ticket');
@@ -97,32 +64,11 @@ xdescribe('Service: QlikService', function () {
   });
 
   describe('WebEx/Spark report Qlik mashup address', function () {
-    beforeEach(function () {
-      spyOn(UrlConfig, 'getWebExReportAppforBaseUrl');
-      spyOn(UrlConfig, 'getWebExReportAppforPremiumUrl');
-      spyOn(UrlConfig, 'getWebExReportAppforMEIUrl');
-      spyOn(UrlConfig, 'getSparkReportAppforBaseUrl');
-      spyOn(UrlConfig, 'getSparkReportAppforPremiumUrl');
-      spyOn(UrlConfig, 'getSparkReportAppforMEIUrl');
-    });
     it('should return Qlik mashup address if error code not exist', function () {
-      UrlConfig.getWebExReportAppforBaseUrl.and.returnValue(testData.qlikMashupUrl);
-      UrlConfig.getWebExReportAppforPremiumUrl.and.returnValue(testData.qlikMashupUrl);
-      UrlConfig.getWebExReportAppforMEIUrl.and.returnValue(testData.qlikMashupUrl);
-      UrlConfig.getSparkReportAppforBaseUrl.and.returnValue(testData.qlikMashupUrl);
-      UrlConfig.getSparkReportAppforPremiumUrl.and.returnValue(testData.qlikMashupUrl);
-      UrlConfig.getSparkReportAppforMEIUrl.and.returnValue(testData.qlikMashupUrl);
-      var appUrls = [
-        QlikService.getWebExReportAppforBaseUrl(),
-        QlikService.getWebExReportAppforPremiumUrl(),
-        QlikService.getWebExReportAppforMEIUrl(),
-        QlikService.getSparkReportAppforBaseUrl(),
-        QlikService.getSparkReportAppforPremiumUrl(),
-        QlikService.getSparkReportAppforMEIUrl(),
-      ];
-      _.each(appUrls, function (appUrl) {
-        expect(appUrl).toEqual('qlik-loader');
-      });
+      spyOn(UrlConfig, 'getQlikReportAppUrl');
+      UrlConfig.getQlikReportAppUrl.and.returnValue(testData.qlikMashupUrl);
+      var appUrl = QlikService.getQlikMashupUrl(testData.qlikMashupUrl, 'spark', 'Basic');
+      expect(appUrl).toEqual('qlik-loader/spark-report-basic/spark-report-basic.html');
     });
   });
 });

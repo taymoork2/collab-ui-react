@@ -42,7 +42,8 @@
     }
 
     function getCarriersStatic() {
-      getCarriersJson().then(function (carriers) {
+      getCarriersJson().then(function (carriersResponse) {
+        var carriers = _.cloneDeep(carriersResponse);
         carriers.forEach(function (carrier) {
           //translate the feature strings
           for (var i = 0; i < carrier.features.length; i++) {

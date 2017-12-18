@@ -47,12 +47,12 @@ describe('Controller: Spark partner report Ctrl', function () {
     var _this = this;
     spyOn(this.Notification, 'errorWithTrackingId');
     spyOn(this.Authinfo, 'getPrimaryEmail').and.returnValue(this.testData.testEmail);
-    spyOn(this.QlikService, 'getSparkReportQBSforPartnerUrl').and.returnValue(this.$q.resolve(function () {
+    spyOn(this.QlikService, 'getQBSInfo').and.returnValue(this.$q.resolve(function () {
       return {
         data: _this.testData.postResult,
       };
     }));
-    spyOn(this.QlikService, 'getSparkReportAppforPartnerUrl').and.returnValue(_this.testData.postAppResult);
+    spyOn(this.QlikService, 'getQlikMashupUrl').and.returnValue(_this.testData.postAppResult);
     spyOn(this.ReportService, 'getCustomerList').and.returnValue(this.$q.resolve(function () {
       return _this.testData.org_ids;
     }));

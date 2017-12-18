@@ -23,16 +23,16 @@
         card.enabled = false;
         card.notEnabledText = 'overview.cards.call.notEnabledText';
         card.notEnabledFooter = 'overview.contactPartner';
-        card.settingsUrl = '#/services/call-settings';
+        card.settingsUrl = '/services/call-settings';
         card.helper = OverviewHelper;
         card.showHealth = true;
 
         FeatureToggleService.supports(FeatureToggleService.features.hI1484)
           .then(function (supported) {
             if (supported) {
-              card.settingsUrl = '#/services/call-settings-location';
+              card.settingsUrl = '/services/call-settings-location';
             } else {
-              card.settingsUrl = '#/services/call-settings';
+              card.settingsUrl = '/services/call-settings';
             }
           });
 

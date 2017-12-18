@@ -1,11 +1,11 @@
 export class CallLinesPage {
   constructor() {
-    this.callLines = element(by.css('a[href="#/services/call-lines"]'));
+    this.callLines = element(by.css('a[href="/services/call-lines"]'));
     this.iconGoBack = element(by.css('i.icon.icon-arrow-back'));
     this.pageTitleCall = element(by.cssContainingText('h2.page-header__title', 'Call'));
-    this.callLinesHRef = element(by.css('a[href="#/services/call-lines"]'));
-    this.callFeaturesHRef = element(by.css('a[href="#/services/call-features"]'));
-    this.callSettingsHRef = element(by.css('a[href="#/services/call-settings"]'));
+    this.callLinesHRef = element(by.css('a[href="/services/call-lines"]'));
+    this.callFeaturesHRef = element(by.css('a[href="/services/call-features"]'));
+    this.callSettingsHRef = element(by.css('a[href="/services/call-settings"]'));
     this.orderHistory = element(by.css('span.order-history'));
     this.iconSearch = element(by.css('i.icon.icon-search'));
     this.internalExt = element(by.cssContainingText('.ui-grid-header-cell-label', 'Internal Extension'));

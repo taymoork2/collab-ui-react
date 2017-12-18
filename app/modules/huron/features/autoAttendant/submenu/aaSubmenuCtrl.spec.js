@@ -178,9 +178,9 @@ describe('Controller: AASubmenuCtrl', function () {
     });
 
     it('should change Repeat-Menu to Dial-by-Extension action in the model', function () {
-      var ceMenu = _.cloneDeep(data.ceMenu);
-      var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
-      var expectEntry2 = raw2MenuEntry(ceMenu.entries[1]);
+      var ceMenuDialByExtension = _.cloneDeep(data.ceMenuDialByExtension);
+      var expectEntry = raw2MenuEntry(ceMenuDialByExtension.entries[0]);
+      var expectEntry2 = raw2MenuEntry(ceMenuDialByExtension.entries[1]);
       var phoneMenu = {
         type: 'MENU_OPTION',
         entries: [],

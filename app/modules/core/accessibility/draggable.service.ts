@@ -91,6 +91,12 @@ export class DraggableInstance {
     }
   }
 
+  public refreshDragularInstance(list: any[]) {
+    this.dragularInstance.destroy();
+    this.list = list;
+    this.dragularInstance = this.createDragularInstance();
+  }
+
   private createDragularInstance() {
     return this.dragularService(this.identifier, {
       classes: {

@@ -31,19 +31,15 @@
       });
       fetchDetailsForLoggedInUser();
 
-      $q.all([
-        FeatureToggleService.csdmPlaceUpgradeChannelGetStatus(),
-        FeatureToggleService.csdmPlaceGuiSettingsGetStatus(),
-      ])
-        .then(function (features) {
-          if (features[1]) {
-            vm.showDeviceSettings = true;
-          } else if (features[0]) {
-            CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(function (channels) {
-              vm.showDeviceSettings = channels.length > 1;
-            });
-          }
-        });
+      FeatureToggleService.csdmPlaceGuiSettingsGetStatus().then(function (result) {
+        if (result) {
+          vm.showDeviceSettings = true;
+        } else {
+          CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(function (channels) {
+            vm.showDeviceSettings = channels.length > 1;
+          });
+        }
+      });
     }
 
     function fetchDetailsForLoggedInUser() {

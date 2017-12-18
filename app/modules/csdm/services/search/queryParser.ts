@@ -51,8 +51,9 @@ export class QueryParser {
   public static readonly Field_ActiveInterface = 'activeinterface';
   public static readonly Field_ConnectionStatus = 'connectionstatus';
   public static readonly Field_Tag = 'tag';
+  public static readonly Field_Displayname = 'displayname';
 
-  private static validFieldNames = ['displayname',
+  private static validFieldNames = [QueryParser.Field_Displayname,
     'cisuuid',
     'accounttype',
     QueryParser.Field_ActiveInterface,

@@ -252,6 +252,12 @@ require('./_overview.scss');
         });
       });
 
+      FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus().then(function (toggle) {
+        if (toggle) {
+          vm.notifications.push(OverviewNotificationFactory.createAutoAssignNotification());
+        }
+      });
+
       TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
         vm.trialDaysLeft = daysLeft;
       });

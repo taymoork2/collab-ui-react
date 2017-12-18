@@ -39,6 +39,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     this.ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
     this.aCe = getJSONFixture('huron/json/autoAttendant/aCallExperience.json');
     this.doRest = getJSONFixture('huron/json/autoAttendant/doRest.json');
+    this.doRestWithoutCredentials = getJSONFixture('huron/json/autoAttendant/doRestWithoutCredentials.json');
     this.a3LaneCe = getJSONFixture('huron/json/autoAttendant/a3LaneCe.json');
     this.combinedMenus = getJSONFixture('huron/json/autoAttendant/combinedMenu.json');
 
@@ -83,6 +84,8 @@ describe('Controller: AABuilderMainCtrl', function () {
     this.uiRestBlocks['TEMP_0'] = {
       method: 'GET',
       url: 'test URL3',
+      username: 'testUser',
+      password: 'testPassword',
       responseActions: [{
         assignVar: {
           variableName: 'test var',
@@ -235,18 +238,54 @@ describe('Controller: AABuilderMainCtrl', function () {
         callerIdNumber: null,
         callerId: null,
       };
-
       var successSpy = jasmine.createSpy('success');
 
       spyOn(this.AACommonService, 'isMultiSiteEnabled').and.returnValue(true);
       spyOn(this.AutoAttendantLocationService, 'getDefaultLocation').and.returnValue(this.$q.resolve(defaultLoc));
       this.AutoAttendantLocationService.getDefaultLocation().then(successSpy);
+      this.AANotificationService.error = jasmine.createSpy('error');
 
       this.controller.getSystemTimeZone();
       this.$scope.$apply();
 
       var args = successSpy.calls.mostRecent().args;
       expect(args[0].timeZone).toBe(defaultLoc.timeZone);
+    });
+
+    it('populateRouitngPrefix', function () {
+      var locationList = {
+        uuid: 'abc',
+        name: 'testLocation1',
+        locations: [{ routingPrefix: '6100' }],
+        defaultLocation: 'false',
+        userCount: 'null',
+        placeCount: 'null',
+        url: 'https://cmi.huron-int.com/api/v2/customers/abc/locations/abc',
+      };
+      spyOn(this.AACommonService, 'isMultiSiteEnabled').and.returnValue(true);
+      spyOn(this.AutoAttendantLocationService, 'listLocations').and.returnValue(this.$q.resolve(locationList));
+      this.controller.populateRoutingLocation();
+      this.$scope.$apply();
+      expect(this.controller.ui.routingPrefixOptions).toEqual(['6100']);
+    });
+  });
+
+  describe('Error Notification for while populating routing locations', function () {
+    it('populateRoutingLocation', function () {
+      var successSpy = jasmine.createSpy('success');
+      spyOn(this.AACommonService, 'isMultiSiteEnabled').and.returnValue(true);
+      spyOn(this.AutoAttendantLocationService, 'listLocations').and.returnValue(this.$q.reject({
+        statusText: 'server error',
+        status: 500,
+      }));
+      this.AutoAttendantLocationService.getDefaultLocation().then(
+        successSpy
+      );
+      this.AANotificationService.error = jasmine.createSpy('error');
+
+      this.controller.populateRoutingLocation();
+      this.$scope.$apply();
+      expect(this.AANotificationService.error).toHaveBeenCalled();
     });
   });
 
@@ -828,6 +867,20 @@ describe('Controller: AABuilderMainCtrl', function () {
       this.$scope.$apply();
       expect(this.AAModelService.getNewAARecord).not.toHaveBeenCalled();
       expect(this.AANotificationService.errorResponse).toHaveBeenCalled();
+      expect(this.controller.populateUiModel).toHaveBeenCalled();
+      expect(_.get(this.controller.aaModel.aaRecord.actionSets[0], 'actions').length).toBe(4);
+      expect(_.get(this.controller.aaModel.aaRecord.actionSets[0], 'actions[1].doREST.id')).toBe(this.restId);
+    });
+
+    it('should return an error when one REST block gets successfully read but other REST block read doesnot get username in authentication block', function () {
+      this.readCe.and.returnValue(this.$q.resolve(this.aCe));
+      this.readDoRestSpy.and.returnValue(this.$q.resolve(this.doRestWithoutCredentials));
+      this.controller.aaModel = {};
+      this.controller.aaModel.aaRecords = this.ces;
+      this.controller.selectAA('AAA3');
+      this.$scope.$apply();
+      expect(this.AAModelService.getNewAARecord).not.toHaveBeenCalled();
+      expect(this.AANotificationService.error).toHaveBeenCalled();
       expect(this.controller.populateUiModel).toHaveBeenCalled();
       expect(_.get(this.controller.aaModel.aaRecord.actionSets[0], 'actions').length).toBe(4);
       expect(_.get(this.controller.aaModel.aaRecord.actionSets[0], 'actions[1].doREST.id')).toBe(this.restId);

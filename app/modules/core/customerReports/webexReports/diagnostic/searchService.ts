@@ -11,9 +11,9 @@ export class SearchService {
     this.url = `${this.UrlConfig.getGeminiUrl()}`;
   }
 
-  public getMeeting(conferenceID) {
-    const url = `${this.url}meetings/${conferenceID}`;
-    return this.$http.get(url).then(this.extractData);
+  public getMeetings(data) {
+    const url = `${this.url}meetings`;
+    return this.$http.post(url, data).then(this.extractData);
   }
 
   public getMeetingDetail(conferenceID) {
@@ -21,13 +21,8 @@ export class SearchService {
     return this.$http.get(url).then(this.extractData);
   }
 
-  public getMeetings(data) {
-    const url = `${this.url}meetings`;
-    return this.$http.post(url, data).then(this.extractData);
-  }
-
-  public getMeetingSession(conferenceID) {
-    const url = `${this.url}meetings/${conferenceID}/session`;
+  public getUniqueParticipants(conferenceID) {
+    const url = `${this.url}meetings/${conferenceID}/unique-participants`;
     return this.$http.get(url).then(this.extractData);
   }
 
@@ -36,23 +31,24 @@ export class SearchService {
     return this.$http.get(url).then(this.extractData);
   }
 
+  public getQOS(conferenceID, nodeID, qosName) {
+    const url = `${this.url}meetings/${conferenceID}/${qosName}?nodeIds=${nodeID}`;
+    return this.$http.get(url).then(this.extractData);
+  }
+
   public getJoinMeetingTime(conferenceID) {
     const url = `${this.url}meetings/${conferenceID}/participants/join-meeting-time`;
     return this.$http.get(url).then(this.extractData);
   }
 
-  public getJoinMeetingQuality(conferenceID) {
-    const url = `${this.url}meetings/${conferenceID}/participants/join-meeting-quality`;
+  public getServerTime() {
+    const url = `${this.url}server`;
     return this.$http.get(url).then(this.extractData);
   }
 
   public getStatus(num) {
     const statusArr = ['inProcess', 'ended'];
     return this.$translate.instant('webexReports.meetingStatus.' + statusArr[num - 1]);
-  }
-
-  private extractData(response) {
-    return _.get(response, 'data');
   }
 
   public setStorage(key, val) {
@@ -69,14 +65,14 @@ export class SearchService {
       return '';
     }
     const tz = this.getStorage('timeZone');
-    const timeZone: any = tz ? tz : moment.tz.guess();
+    const timeZone = tz ? tz : moment.tz.guess();
     const offset = this.getOffset(timeZone);
     return moment.utc(date).utcOffset(offset).format('MMMM Do, YYYY h:mm:ss A');
   }
 
   public getOffset(timeZone) {
     const tz = timeZone ? timeZone : moment.tz.guess();
-    return timeZone === 'ut18' ? '' : moment().tz(tz).format('Z');
+    return moment().tz(tz).format('Z');
   }
 
   public getGuess(tz) {
@@ -88,14 +84,15 @@ export class SearchService {
   }
 
   public timestampToDate(timestamp, format): string {
-    const timeZone = this.getStorage('timeZone');
+    const tz = this.getStorage('timeZone');
+    const timeZone: any = tz ? tz : moment.tz.guess();
     const offset = this.getOffset(timeZone);
     return moment(timestamp).utc().utcOffset(offset).format(format);
   }
 
   public getBrowser(num) {
     const arr = ['Netscape', 'IE', 'Stand alone application', 'MOZILLA', 'FIREFOX', 'SAFARI', 'CHROME'];
-    return arr[num] ? arr[num] : 'Other';
+    return arr[_.parseInt(num)] ? arr[_.parseInt(num)] : 'Other';
   }
 
   public getPlartform(obj): string {
@@ -108,10 +105,13 @@ export class SearchService {
   }
 
   public getParticipantEndReson(endReson) {
-    const status = this.getStorage('webexOneMeeting.overview.status');
-    if (status === 1) {
+    if (endReson === null) {
       return '';
     }
     return endReson ? 'Normal' : 'Abnormal';
+  }
+
+  private extractData(response) {
+    return _.get(response, 'data');
   }
 }

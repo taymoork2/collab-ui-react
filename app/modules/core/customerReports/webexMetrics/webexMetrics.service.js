@@ -5,7 +5,7 @@
 
   /* @ngInject */
   function WebexMetricsService($http, $log, $q, Authinfo, Config, FeatureToggleService, UrlConfig, WebExApiGatewayService) {
-    var metricsSites = [];
+    var metricsSites = [], hasClassic = null;
 
     var service = {
       getMetricsSites: getMetricsSites,
@@ -114,11 +114,14 @@
     }
 
     function hasClassicEnabled() {
-      var siteUrls = getConferenceServicesWithoutSiteUrls() || [];
-      var webexSiteUrls = filterSiteList(siteUrls) || [];
-      return $q.all(_.map(webexSiteUrls, isSiteSupported)).then(function (isSupported) {
-        return _.some(isSupported);
-      });
+      if (_.isNull(hasClassic)) {
+        var siteUrls = getConferenceServicesWithoutSiteUrls() || [];
+        var webexSiteUrls = filterSiteList(siteUrls) || [];
+        return $q.all(_.map(webexSiteUrls, isSiteSupported)).then(function (isSupported) {
+          return _.some(isSupported);
+        });
+      }
+      return hasClassic;
     }
 
     function isSiteSupported(siteUrls) {

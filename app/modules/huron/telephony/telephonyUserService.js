@@ -1,9 +1,18 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Huron')
-    .factory('HuronUser', HuronUser);
+  var userServiceCommonModuleName = require('./cmiServices');
+  var logMetricsServiceModuleName = require('modules/core/scripts/services/logmetricsservice');
+  var notificationModuleName = require('modules/core/notifications').default;
+
+  module.exports = angular
+    .module('huron.huron-user', [
+      userServiceCommonModuleName,
+      logMetricsServiceModuleName,
+      notificationModuleName,
+    ])
+    .factory('HuronUser', HuronUser)
+    .name;
 
   /* @ngInject */
   function HuronUser(Authinfo, UserServiceCommon, HuronEmailService, UserDirectoryNumberService, IdentityOTPService, LogMetricsService, Notification) {

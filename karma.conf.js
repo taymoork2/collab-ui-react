@@ -40,7 +40,23 @@ module.exports = function (config) {
     {
       pattern: shimFile,
       watched: false,
+    },
+    {
+      pattern: './app/images/*.svg',
+      included: false,
+      watched: false,
+      served: true,
+    },
+    {
+      pattern: './app/images/*.png',
+      included: false,
+      watched: false,
+      served: true,
     }],
+
+    proxies: {
+      '/images/': '/base/app/images/',
+    },
 
     exclude: [],
 

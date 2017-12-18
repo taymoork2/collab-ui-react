@@ -356,7 +356,21 @@
   "userTaskManagerModal": {
     "title": "Tasks",
     "viewAllTasks": "View all tasks",
-    "getTaskListError": "An error occurred obtaining the list of task. Please refresh to try again."
+    "submitCsvError": "An error occurred submitting the CSV file.",
+    "cancelCsvError": "An error occurred canceling the CSV import.",
+    "csvImport": "CSV Import",
+    "backgroundTasksRunning": "Background tasks running...",
+    "startedAt": "Started at {{time}} on {{date}} by {{person}}",
+    "taskStatus": {
+      "canceled": "Canceled",
+      "completed": "Completed",
+      "completedWithErrors": "Completed with Errors",
+      "created": "Created",
+      "failed": "Failed",
+      "stopped": "Stopped",
+      "stoppedForMaintenance": "Stopped for Maintenance",
+      "processing": "Processing..."
+    }
   },
   "onboardModal": {
     "ciscoSparkJabberInterop": "Cisco Spark / Jabber Interop",
@@ -742,7 +756,7 @@
       "title": "WebEx",
       "metrics": "Metrics",
       "MEI": "MEI",
-      "System": "System",
+      "system": "System",
       "diagnostics": "Diagnostics",
       "classic": "Classic",
       "webexClassic": "WebEx Classic",
@@ -861,7 +875,7 @@
     "siteUrlError": "Site URL is undefined.  Cannot retrieve shared meetings report.",
     "csvPageError": "Unable to retrieve the detailed report for download.",
     "downloadHref": "Download a <a href=\"{{href}}\" download=\"{{download}}\">detailed report</a> of shared meetings usage or a <a href=\"{{href2}}\" download=\"{{download2}}\">monthly report</a> of peak concurrent usage per month.",
-    "downloadClick": "Download a <a ng-click=\"{{onclick}}\">detailed report</a> of shared meetings usage.",
+    "downloadClick": "Download a <a href ng-click=\"{{onclick}}\">detailed report</a> of shared meetings usage.",
     "csvMeetingTopic": "Meeting Topic",
     "csvStartTime": "Start Time",
     "csvEndTime": "End Time",
@@ -1190,11 +1204,8 @@
     "externally": "externally",
     "reportingUrl": "Reporting URL:",
     "help": "Help",
-    "faqs": "FAQs",
     "helpUrl": "Help URL:",
     "sendFeedback": "Cisco Feedback",
-    "sso": "SSO",
-    "roles": "Roles",
     "readOnlyHeader": "Read-Only",
     "readOnlyAccessNotEnabled": "Help Desk Read-Only access is not enabled. You can change this in your account settings",
     "downloadLogFailed": "Failed to download log",
@@ -1486,13 +1497,16 @@
     "apply": "Apply",
     "assign": "Assign",
     "assigned": "Assigned",
+    "authorize": "Authorize",
     "back": "Back",
     "begin": "Begin",
     "cancel": "Cancel",
+    "cancelingEllipsis": "Canceling...",
     "ciscoCollaborationCloud": "Cisco Collaboration Cloud",
     "clear": "Clear",
     "close": "Close",
     "cluster": "Cluster",
+    "completed": "Completed",
     "confirm": "Confirm",
     "continue": "Continue",
     "copyToClipboard": "Copy to Clipboard",
@@ -1524,6 +1538,7 @@
     "hideAllAdminUsers": "Hide administrators",
     "history": "History",
     "id": "ID",
+    "ifErrorRemains": "If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation.",
     "incorrectFormat": "Incorrect format",
     "info": "Info",
     "invalidEmail": "This is not a valid Email Address.",
@@ -1566,8 +1581,10 @@
     "pending": "Pending",
     "play": "Play",
     "postpone": "Postpone",
+    "previous": "Previous",
     "primary": "Primary",
     "proceed": "Proceed",
+    "processingEllipsis": "Processing...",
     "proPackTooltip": "This premium feature is available with Pro Pack. Contact your partner to learn more.",
     "provision": "Provision",
     "quantity": "Qty",
@@ -1603,6 +1620,7 @@
     "submit": "Submit",
     "test": "Test",
     "to": "to",
+    "toggleData": "Toggle Data",
     "total": "Total",
     "trackingId": "Tracking Id: {{trackingId}}.",
     "tryAgain": "Try Again",
@@ -1737,7 +1755,9 @@
     "setUpAllCalendarsNoneIsSetup": "Use it with Exchange, Google Calendar or Office365.",
     "setUpCarePrimaryNotification": "Your Organization is enabled for Cisco Spark Care.",
     "setUpCareSecondaryNotification": "Looks like you haven’t set up Cisco Spark Care yet!",
-    "setUpCareLinkText": "Setup Care Service"
+    "setUpCareLinkText": "Setup Care Service",
+    "autoAssignText": "Manage your licenses in a productive way with the Auto-Assign template.",
+    "autoAssignLink": "Set Up Now"
   },
   "inviteModal": {
     "title": "Service Entitlement",
@@ -2110,6 +2130,8 @@
     "addPlaceBtn": "New Place",
     "deviceSearchPlaceholder": "Find devices by status, type, and more",
     "searchError": "The search input is not recognized.",
+    "allDevices": "Anything",
+    "containingQuery": "containing {{query}}",
     "typeHeader": "Type",
     "nameHeader": "Belongs to",
     "statusHeader": "Status",
@@ -2195,7 +2217,7 @@
     "page_title": "Connector Management",
     "domain-verification": {
       "domain-not-verified": "The domain for this Directory URI must be verified for this service to function properly. ",
-      "navigateToCallSettings": "Verify the domain in <a ng-click=\"{{onclick}}\">Call Service Settings</a>."
+      "navigateToCallSettings": "Verify the domain in <a href ng-click=\"{{onclick}}\">Call Service Settings</a>."
     },
     "sipExplanation": {
       "line1": "You can use one of the following address formats:",
@@ -2228,7 +2250,7 @@
       "modalText2": "Select the type of information that you want included in the report:",
       "modalNote": "Note: The more users included, the longer the report takes to generate.",
       "modalCTA": "Export to CSV",
-      "guesstimate": "Selection estimated to {{minutes}}min {{seconds}}s",
+      "noUsersFound": "No users found. Please wait a few minutes and then try again.",
       "userNotFound": "Not found",
       "readingUserStatuses": "Reading user statuses…",
       "readingConnectors": "Reading cluster assignments…",
@@ -2353,14 +2375,21 @@
       "not-updated": "Licenses could not be updated for {{userName}}.",
       "not-updated-specific": "Licenses could not be updated for {{userName}}. The server returned the following error message: {{error}}.",
       "readResourceGroupsFailed": "Could not read Resource Groups. Try again later.",
-      "readUserStatusFailed": "Unable to read the current user status. Please try again later.",
       "refreshUserFailed": "Unable to refresh the user status. Please try again later.",
       "refreshUserDidNoGood": "Unable to get the user status. Please contact support if the problem persists.",
       "couldNotReadConnectStatus": "Unable to read Call Service Connect organization status. Please contact support if the problem persists.",
       "notEnabledInOrg": "Not enabled in organization",
-      "enableAwareFirst": "Aware must be enabled before the user can be enabled for Connect. Enable it in the <a ng-click=\"{{onclick}}\">Call Service Aware panel</a>.",
+      "enableAwareFirst": "Aware must be enabled before the user can be enabled for Connect. Enable it in the <a href ng-click=\"{{onclick}}\">Call Service Aware panel</a>.",
       "disableAwareHeader": "Disable Services",
-      "disableAwareMessage": "Are you sure? By disabling Call Service Aware, Call Service Connect will also be disabled for this user."
+      "disableAwareMessage": "Are you sure? By disabling Call Service Aware, Call Service Connect will also be disabled for this user.",
+      "errorMessages": {
+        "cannotReadDeviceDataFromUSS": "Unable to read device's activation status.",
+        "cannotReadDeviceDataFromUSSPartnerAdmin": "Unable to read device's activation status. This could indicate a caching problem, try logging out and in again to clear the user cache. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation.",
+        "cannotReadUserDataFromUSS": "Unable to read user's activation status.",
+        "cannotReadUserDataFromUSSPartnerAdmin": "Unable to read user's activation status. This could indicate a caching problem, try logging out and in again to clear the user cache. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation.",
+        "cannotReadOrgDataFromFMS": "Unable to read organization's Expressway-based Hybrid Services data.",
+        "cannotReadOrgDataFromFMSPartnerAdmin": "Unable to read organization's Expressway-based Hybrid Services data. This could indicate a caching problem, try logging out and in again to clear the user cache. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation."
+      }
     },
     "placeSidepanel": {
       "hybridCallNotActivated": "We're checking for the user account in Cisco Unified Communications Manager. This can take up to 30 minutes. Check back later for the status.",
@@ -2397,7 +2426,9 @@
     },
     "hybridServiceNames": {
       "squared-fusion-mgmt": "Hybrid Management Service",
+      "squared-fusion-ec": "Hybrid Call Service Connect",
       "squared-fusion-uc": "Hybrid Call Service",
+      "squared-fusion-uc.full": "Hybrid Call Service Aware",
       "squared-fusion-cal": "Hybrid Calendar Service",
       "squared-fusion-gcal": "Hybrid Calendar (Google)",
       "squared-fusion-o365": "Hybrid Calendar (Office 365)",
@@ -2451,16 +2482,14 @@
       "c_serab": "Serviceability Connector",
       "c_imp": "Message Service"
     },
-    "clusterTypeFromServiceId": {
-      "squared-fusion-mgmt": "Expressway",
-      "squared-fusion-cal": "Expressway",
-      "squared-fusion-uc": "Expressway",
-      "spark-hybrid-impinterop": "Expressway",
-      "squared-fusion-media": "Hybrid Media",
-      "spark-hybrid-datasecurity": "Hybrid Data Security",
-      "squared-fusion-khaos": "Cisco Unified CM"
+    "platformNameFromTargetType": {
+      "c_mgmt": "Expressway",
+      "mf_mgmt": "Hybrid Media",
+      "hds_app": "Hybrid Data Security",
+      "ucm_mgmt": "Cisco Unified CM",
+      "cs_mgmt": "Context Service",
+      "ept": "Private Trunk"
     },
-
     "serviceDescriptions": {
       "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Spark clients while on a call. Call Service Connect lets your users answer calls to their work phones and to place calls to other work phones, on their Cisco Spark client.",
       "squared-fusion-cal": "Calendar Service helps your users to collaborate instantly. Just add @spark to create a Cisco Spark room. Add @webex to attach a WebEx link to your invitation.",
@@ -2509,9 +2538,12 @@
       "notSetup": "Not currently set up",
       "sinceTime": "since {{timestamp}}",
       "noLicensedServices": "This user must have one or more licensed services to be configured for Hybrid Services.",
+      "entitledToBothCalendarsShort": "Multiple Calendar Entitlements",
       "entitledToBothCalendars": "This user is currently entitled to both calendar types. To clear the error, disable calendar service for the user and then enable it again.",
       "couldNotReadOffice365Status": "Could not read organization's Office 365 configuration. The information above might be incomplete.",
-      "couldNotReadGoogleCalendarStatus": "Could not read organization's Google Calendar configuration. The information above might be incomplete."
+      "couldNotReadGoogleCalendarStatus": "Could not read organization's Google Calendar configuration. The information above might be incomplete.",
+      "couldNotReadFMSStatus": "Could not read organization's Expressway-based Hybrid Services configuration. The information above might be incomplete.",
+      "entitledToHuron": "Licensed for Spark Call"
     },
     "alarms": {
       "affectedNodes": "Affected Nodes",
@@ -2688,8 +2720,8 @@
         "line1": "Great! Google Calendar is correctly configured.",
         "line2": "You can now enable Hybrid Calendar for your users.",
         "line3": "To enable users, you can:",
-        "item1": "Enable them individually from the <a ng-click=\"{{onclick}}\">users page</a>.",
-        "item2": "Enable them in bulk using the <a ng-click=\"{{onclick}}\">CSV template</a>.",
+        "item1": "Enable them individually from the <a href ng-click=\"{{onclick}}\">users page</a>.",
+        "item2": "Enable them in bulk using the <a href ng-click=\"{{onclick}}\">CSV template</a>.",
         "line4": "Refer to <a href=\"http://www.cisco.com/go/hybrid-services-calendar\">documentation</a> if you need help enabling users."
       }
     },
@@ -2832,18 +2864,12 @@
         "description": "If you need to update or restore your G Suite API client access, retrieve the client name and scope by clicking the button below.",
         "cta": "Update",
         "provisioningResults": {
-          "OK": "Google Calendar is integrated with Hybrid Calendar Service.",
-          "BAD_API_ACCESS_SETTINGS": "The site verification API is not enabled. Go to console.developers.google.com to enable it.",
-          "DATABASE_ERROR": "Can't connect to the internal database. Try again later.",
-          "SITE_VERIFICATION_FAILURE": "The domain verification step failed. Make sure you followed the domain verification steps in the documentation.",
-          "SECURITY_FAILURE": "Security failure.",
-          "INPUT_PARSING_FAILURE": "The private data key cannot be parsed. Regenerate one for your project at console.developers.google.com and try again.",
-          "GENERAL_ERROR": "An unexpected error occurred. Contact support if this error recurs.",
-          "INVALID_CREDENTIALS": "The service account credentials are invalid."
+          "OK": "The Hybrid Calendar Service is successfully set up with your Office 365 organization.",
+          "GENERAL_ERROR": "An unexpected error occurred.",
+          "TEST_ACCOUNT_NONEXISTENT": "The test account credentials didn't work. Retest with a licensed Office 365 user with an Exchange Online mailbox.",
+          "INVALID_SESSION_ID": "Invalid session id. Please re-authorize Office 365 from the settings page.",
+          "BAD_ADMIN_CONSENT": "We hit an authorization error with your Office 365 organization. Go to the Hybrid Calendar Office 365 Settings page and reauthorize."
         }
-      },
-      "office365": {
-        "couldNotReadOffice365Status": "Could not read Office 365 status."
       },
       "hybridCalendarCommon": {
         "hybridCalendarSetUp": "Hybrid Calendar setup",
@@ -2876,22 +2902,22 @@
       "no-notifications": "No notifications.",
       "callAware": {
         "title": "Enable Call Service Aware for Users",
-        "navigateToUsers": "Go to the <a ng-click=\"{{onclick}}\">Users</a> page to enable Call Service Aware for your users."
+        "navigateToUsers": "Go to the <a href ng-click=\"{{onclick}}\">Users</a> page to enable Call Service Aware for your users."
       },
       "calendar": {
         "title": "Enable Calendar Service for Users",
-        "navigateToUsers": "Go to the <a ng-click=\"{{onclick}}\">Users</a> page to enable Calendar Service for your users."
+        "navigateToUsers": "Go to the <a href ng-click=\"{{onclick}}\">Users</a> page to enable Calendar Service for your users."
       },
       "connect": {
         "title": "Enable Call Service Connect for Users",
-        "navigateToUsers": "You have successfully configured Call Service Connect. Go to the <a ng-click=\"{{onclick}}\">Users</a> page to enable Call Service Connect for your users. Make sure you selected the applicable method in Expressway to create CTI remote devices for your users. ",
+        "navigateToUsers": "You have successfully configured Call Service Connect. Go to the <a href ng-click=\"{{onclick}}\">Users</a> page to enable Call Service Connect for your users. Make sure you selected the applicable method in Expressway to create CTI remote devices for your users. ",
         "connectEnabled": "Call Service Connect has been enabled",
         "connectDisabled": "Call Service Connect has been disabled"
       },
       "scheduleUpgrade": {
         "title": "Acknowledge the Scheduled Upgrade",
         "description": "The clusters for this service have a default time set for a scheduled upgrade",
-        "action": "You must either <a ng-click=\"{{onclick}}\">change the time or confirm it.</a>"
+        "action": "You must either <a href ng-click=\"{{onclick}}\">change the time or confirm it.</a>"
       },
       "configure-connector": {
         "title": "Configure and Start the Connector",
@@ -2905,7 +2931,7 @@
       },
       "release-channel": {
         "title": "\"{{name}}\" Release Channel",
-        "description": "\"{{name}}\" is using a different release channel ({{current}}) than the default one ({{default}}). <a ng-click=\"{{onclick}}\">Change the release channel</a> to avoid inconsistencies with Hybrid Services."
+        "description": "\"{{name}}\" is using a different release channel ({{current}}) than the default one ({{default}}). <a href ng-click=\"{{onclick}}\">Change the release channel</a> to avoid inconsistencies with Hybrid Services."
       },
       "user-activation-errors": {
         "title": "Activation Error",
@@ -2917,7 +2943,7 @@
       },
       "add-SIP-destination": {
         "title": "Complete Call Service Connect Configuration",
-        "description": "Add the SIP Destination for call routing under <a ng-click=\"{{onclick}}\">Settings.</a>",
+        "description": "Add the SIP Destination for call routing under <a href ng-click=\"{{onclick}}\">Settings.</a>",
         "description-already-in-settings-page": "Add the SIP Destination for call routing below."
       },
       "no-fuse-yet": {
@@ -2925,7 +2951,7 @@
       },
       "add-call-service-connect": {
         "title": "Add Call Service Connect",
-        "description": "Activate Call Service Connect and add the SIP destination under <a ng-click=\"{{onclick}}\">Settings.</a>",
+        "description": "Activate Call Service Connect and add the SIP destination under <a href ng-click=\"{{onclick}}\">Settings.</a>",
         "description-already-in-settings-page": "Activate Call Service Connect and add the SIP Destination for call routing below."
       }
     },
@@ -2968,9 +2994,9 @@
         "hds": "Data Security",
         "cucm": "CUCM",
         "no-services": "No services",
-        "missing-clusters": "<a ng-click=\"{{onclick}}\">Assign clusters</a> and users to complete this group",
-        "missing-users": "<a ng-click=\"{{onclick}}\">Assign users</a> to complete this group",
-        "users-in-limbo": "Either <a ng-click=\"{{onclick}}\">remove</a> this group to reset user assignments or <a ng-click=\"{{onclick}}\">assign clusters</a> to restore services.",
+        "missing-clusters": "<a href ng-click=\"{{onclick}}\">Assign clusters</a> and users to complete this group",
+        "missing-users": "<a href ng-click=\"{{onclick}}\">Assign users</a> to complete this group",
+        "users-in-limbo": "Either <a href ng-click=\"{{onclick}}\">remove</a> this group to reset user assignments or <a href ng-click=\"{{onclick}}\">assign clusters</a> to restore services.",
         "complete-registration": "Go to your Expressway to complete the registration.",
         "registration-timeout": "The registration timed out. Please remove this cluster and register the Expressway again.",
         "registration-timeout-extended": "The registration timed out. Please remove this cluster and register the Expressway again in the Add Resource dialog.",
@@ -2978,6 +3004,7 @@
         "upgrade": "Upgrade available",
         "upgrading": "Installing upgrade",
         "pending": "Pending upgrade",
+        "upgradesAutomatically": "Upgrades automatically",
         "alarms": "Alarms",
         "maintenance": "Maintenance",
         "pendingMaintenance": "Pending maintenance"
@@ -3089,7 +3116,7 @@
       "usersAssign": "Assign Users",
       "usersDescription1": "Choose users who you want to gain access to configuration in the resource group (for example, beta testers). You can:",
       "usersDescription2": "Assign them individually from the <a ui-sref='users.list'>users page</a>.",
-      "usersDescription3": "Assign them in bulk using the <a ng-click=\"{{onclick}}\">CSV template</a>.",
+      "usersDescription3": "Assign them in bulk using the <a href ng-click=\"{{onclick}}\">CSV template</a>.",
       "usersDescription4": "Refer to <a href='{{href}}' target='_blank'>documentation</a> if you need help.",
       "renameGroup": "Rename",
       "renameGroupDescription": "Rename the resource group",
@@ -3185,7 +3212,7 @@
       },
       "alertBannerNumber": "{count, plural, =1{Upgrade for connectors available!} other{Upgrades for connectors available!}}",
       "alertBannerTime": "{count, plural, =1{It} other{They}} will be applied on {date}.",
-      "alertBannerLink": "<a ng-click=\"{{onclick}}\">Upgrade {{service}} connectors now</a>.",
+      "alertBannerLink": "<a href ng-click=\"{{onclick}}\">Upgrade {{service}} connectors now</a>.",
       "instructions": "Instructions"
     },
     "hybridServicesConnectorSidepanel": {
@@ -3310,6 +3337,31 @@
           "description": "No cluster assigned to the user's resource group. Check the cluster configuration and then try again."
         }
       }
+    },
+    "office365SetupModal": {
+      "title": "Hybrid Calendar setup",
+      "subtitle": "Office 365 setup",
+      "line1": "The Hybrid Calendar Service needs permission to access Office 365 on behalf of your users.",
+      "line2": "Click <strong>Authorize</strong> to sign in to Microsoft and accept permissions for the service.",
+      "line3": "After you accept, your browser should redirect you back here. If you’re not redirected shortly, return to <a target=\"_blank\" href=\"https://admin.ciscospark.com\">admin.ciscospark.com</a> and start this process again."
+    },
+    "office365SuccessModal": {
+      "test": {
+        "subtitle": "Test Account",
+        "inputLabel": "Enter the Office 365 account you want to use to test the connection with Exchange Online."
+      },
+      "success": {
+        "subtitle": "Setup complete",
+        "line1": "You're ready to enable the Hybrid Calendar Service for your Office 365 users:",
+        "line2": "Enable them individually from the <a href ng-click=\"{{onclick}}\">users page</a>.",
+        "line3": "Enable them in bulk using the <a href ng-click=\"{{onclick}}\">CSV template</a>.",
+        "line4": "For more information, go to <a href=\"https://collaborationhelp.cisco.com\" target=\"_blank\">Collaboration Help</a>."
+      }
+    },
+    "office365FailureModal": {
+      "subtitle": "An error occured during the authorization",
+      "feedback": "If the error remains, click your admin username, and then click <strong>Feedback</strong> to open a case for further investigation.",
+      "errorCode": "Error Code: {{code}}."
     }
   },
   "context": {
@@ -3847,6 +3899,7 @@
     "hasTransferCode": "I have a Transfer Code to transfer my existing sites to this subscription.",
     "dontHaveTransferCode": "Don't have a transfer code?",
     "transferCodeInvalidError": "The transfer code and site name do not match. Please enter a valid site name and transfer code combination.",
+    "transferCodeInvalidSite": "The WebEx sites associated with this TransferCode may have a problem. Contact your Cisco representative for further investigation.",
     "haveExistingWebExSite": "Do you have an existing WebEx site that you are transferring to this subscription?",
     "existingWebExSiteDescription": "If you have an existing WebEx site that you want to transfer to this subscription you can enter the Transfer Code.",
     "transferCode": "Transfer Code",
@@ -3855,11 +3908,22 @@
     "addAnotherSite": "Add another site",
     "meetingSettings": "Meeting Settings",
     "meetingSettingsDescription": "This step of Service Setup will help create one or more new WebEx sites. If you already have existing sites and would not like to setup any new ones, just click Next to proceed.",
-    "meetingCenterLicensesRemaining": "Meeting Center Licenses Remaining",
-    "enterpriseEditionLicensesRemaining": "Enterprise Edition Licenses Remaining",
-    "eventCenterLicensesRemaining": "Event Center Licenses Remaining",
-    "trainingCenterLicensesRemaining": "Training Center Licenses Remaining",
-    "supportCenterLicensesRemaining": "Support Center Licenses Remaining",
+    "centerTypes": {
+      "EE": "Enterprise Edition",
+      "MC": "Meeting Center",
+      "EC": "Event Center",
+      "TC": "Training Center",
+      "SC": "Support Center"
+    },
+    "centerTypesInits": {
+      "EE": "EE",
+      "MC": "MC",
+      "EC": "EC",
+      "TC": "TC",
+      "SC": "SC"
+    },
+    "centerTypeLicensesRemaining": "{{centerType}} licenses remaining",
+    "centerTypeLicenses": "{{centerType}} licenses",
     "tspPartnerRequired": "You have purchased TSP for your audio plan. A partner is required to provide this service.",
     "chooseTSPPartner": "Choose TSP Provider",
     "conferencingAudioProvided": "Conferencing Audio: {{service}} provided by {{partner}}",
@@ -4071,6 +4135,12 @@
       "capacityFail": "Failed to activate and check capacity"
     }
   },
+  "sparkAssistant": {
+    "title": "Cisco Spark Assistant",
+    "enableAssistant": "Enable Cisco Spark Assistant",
+    "description": "Allows users to perform various actions such as, make calls, start meetings, using their voice",
+    "termOfService": "Spark Assistant terms of service "
+  },
   "reports": {
     "title": "Reports",
     "engagementTab": "Engagement",
@@ -4111,6 +4181,7 @@
     "queueSettings": "Queue Settings",
     "maxWaitTime": "Maximum Wait Time",
     "periodicTime": "Frequency of Periodic Announcements",
+    "errorReadDoRestCredential": "Failed to read {{name}}: One or more REST API credentials are missing.",
     "errorReadCe": "Failed to read {{name}}: {{statusText}} ({{status}}).",
     "successCreateCe": "{{name}} created successfully.",
     "successDeleteCe": "{{name}} deleted successfully.",
@@ -4137,6 +4208,10 @@
     "actionCallerInputHint": "Store information that the caller supplies.",
     "actionCallerInputHelp": "Store information that the caller supplies.",
     "invalidCharacter": "Invalid character entered.",
+    "dialByExtensionRoutingPrefix" : "Limit to Routing Prefix",
+    "routingPrefix" : "Routing Prefix",
+    "dialByExtensionRoutingPrefixHelpText" : "If not selected, users must enter the routing prefix plus the extension.",
+    "selectRoutingPrefix" : "Select",
     "callerInputCnvtDigit": "Convert digit input to text string value.",
     "callerInputMaxLenStr": "Max Length of String",
     "varNamesDependenciesTitle": "Variable Dependencies",
@@ -4145,6 +4220,12 @@
     "callerInputVariableTooShortMsg": "Variable name is too short.",
     "callerInputVariableRequiredMsg": "Variable name is required.",
     "callerInputVariableDuplicateMsg": "Variable is used in this or another AA. Might be overwritten.",
+    "usernameRequiredMsg": "Username is required.",
+    "usernameTooLongMsg": "Username exceeded its maximum length of 128 characters.",
+    "passwordTooLongMsg": "Password exceeded its maximum length of 128 characters",
+    "configureApiAuthentication": "Use Basic Authentication" ,
+    "restApiUserName":"Username",
+    "restApiPassword":"Password",
     "callerInputValue": "Input Value",
     "callerInputLabel": "Name",
     "callerInputNamePlaceHolder": "Name Variable",
@@ -4417,6 +4498,7 @@
     "errorNumbersCESOnly": "Number(s) are in Auto Attendant but are not assigned: {{phoneNumbers}}",
     "errorInvalidTemplate": "Failed to load template: {{template}}.",
     "errorInvalidTemplateDef": "Invalid template definition for template: {{template}}.",
+    "errorReadLocations": "Unable to read site(s) routing prefix(es).",
     "routeExtNumPlaceHolder": "Enter Number",
     "newAAText": "Create New Auto Attendant",
     "AABasic": "Basic",
@@ -4432,7 +4514,7 @@
     "restApiResponseVar":"Response Variable",
     "restApiResponseVal":"Response Value",
     "restApiCustomVar":"Custom Variable",
-    "customVariablesAssignmentHelpText":"Select Customer Variables to assign the value of the Responses from the REST API to use in the call flow.",
+    "customVariablesAssignmentHelpText":"Select Custom Variables to assign the value of the Responses from the REST API to use in the call flow.",
     "Variables":"Variables",
     "value":"Value"
   },
@@ -5392,7 +5474,7 @@
     "daysLeftToRenew": "{count, plural, =1{# day} other{# days}} left to renew",
     "expiringToday": "Expiring today",
     "expired": "Expired",
-    "expiredWithGracePeriod": "Expired. Purchase now",
+    "expiredWithGracePeriod": "Purchase Now: {count, plural, =0{Last day} =1{# day} other {# days}} before trial licenses are removed.",
     "needsSetup": "Setup Required",
     "suspended": "This account has been suspended.",
     "licenseInfoNotAvailable": "No license information available.",
@@ -5635,6 +5717,8 @@
     "sipUrl": "SIP Address",
     "issues": "Issues",
     "lastSeen": "since:",
+    "offlineLong": "(offline for over 8 weeks)",
+    "reactivate": "Reactivate",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time",
     "logUploadWarning": "When you report an issue, device logs will be sent to Cisco.",
@@ -5785,7 +5869,7 @@
     },
     "sparkCallConnect": {
       "editSettingsTitle": "Set up Hybrid Call Service Connect",
-      "step1": "In Cisco Unified Communications Manager, create a user account and an associated line. These items will represent this place. <a href='https://www.cisco.com/go/hybrid-services'>See the documentation for help.<a/>",
+      "step1": "In Cisco Unified Communications Manager, create a user account and an associated line. These items will represent this place. <a href='https://www.cisco.com/go/hybrid-services'>See the documentation for help.</a>",
       "step2": "Find the Mail ID for the user account.<br>a) Sign into Cisco Unified CM Administration<br>b) Choose User Management > End User, and then find and click the account.<br>The Mail ID is under ‘User Information’.",
       "step3": "Enter the Mail ID below to connect this place to the existing Unified CM account.<br>This Mail ID ensures that the correct user account is connected with this place for hybrid calling.",
       "mailId": "Mail ID"
@@ -6901,19 +6985,26 @@
     "checkingServices": "Checking services...",
     "linkedSiteAdminTool": "Launch Site Admin Tool",
     "LinkedSiteProgress": "Account linking progress",
-    "deleteSiteTooltip": "Delete Site"
+    "deleteSiteTooltip": "Delete Site",
+    "pendingActionBadge": "Pending action",
+    "unavailable": "Unavailable",
+    "licenseUnavailableTooltip": "License information is unavailable while site action is pending"
   },
   "webexSiteManagement": {
     "transferSitesCopy": "You can create one or more WebEx sites",
     "redistributeLicenses": "Redistribute Licenses",
     "redistributeLicensesDesc": "Please indicate how many licenses to put on each site",
     "redistributeLicensesDesc2": "You must assign all the licenses and each site must have at least one license.",
+    "redistributeLicensesValidMessages": {
+      "allLicensesAssigned": "All licenses are assigned.",
+      "allSitesHaveLicense": "Each site has at least one license."
+    },
     "redistributeLicensesDelete": "<strong>To finish deleting site:</strong> The WebEx site <strong>{{siteUrl}}</strong> is ready to be deleted. First you must reassign the licenses from it to the remaining sites in this subscription.",
     "redistributeRejectModalTitle": "Cannot Redistribute Licenses",
     "redistributeRejectModalBodyOnlySite": "You cannot redistribute licenses between sites because there is only one site.",
     "redistributeRejectModalBodyPending": "You cannot redistribute licenses in this subscription since provisioning for the previous action on this subscription is still pending. You will be able to redistribute licenses once provisioning is complete",
-    "redistributeSuccessModalTitle": "Licenses successfully distributed.",
-    "redistributeSuccessToaster": "Licenses successfully distributed.",
+    "redistributeSuccessModalTitle": "License redistribute process initiated.",
+    "redistributeSuccessToaster": "License redistribute process initiated.",
     "redistributeSuccessModalBody": "License redistribution can take up to 24 hours be processed and be reflected in Spark Control Hub.",
     "redistributeFailureModalTitle": "Licenses redistribution failed",
     "redistributeFailureModalBody": "Attempt to redistribute licenses failed, please try again later.",
@@ -6925,18 +7016,18 @@
     "deleteSiteRejectModalTitle": "Cannot Delete Site",
     "deleteSiteRejectModalBodyOnlySite": "You cannot delete the last site in a subscription",
     "deleteSiteRejectModalBodyPending": "You cannot delete this site since provisioning for the previous action on this subscription is still pending. You will be able to delete this site once provisioning is complete",
-    "deleteSiteSuccessModalTitle": "Site deleted successfully",
+    "deleteSiteSuccessModalTitle": "Site delete process initiated.",
     "deleteSiteSuccessModalBody": "Sites that were deleted will not be removed immediately. It may take up to 24 hours for the sites to no longer appear in the WebEx sites list inside Spark Control Hub.",
     "deleteSiteFailureModalTitle": "Site was not deleted",
     "deleteSiteFailureModalBody": "Attempt to delete site failed, please try again later.",
-    "deleteSiteSuccessToaster": "Site deleted successfully",
+    "deleteSiteSuccessToaster": "Site delete process initiated.",
     "deleteSiteFailureToaster": "Attempt to delete site failed, please try again later.",
     "addSiteRejectModalTitle": "Cannot Add Site",
     "addSiteRejectNoSubscription": "You cannot add site because you have no active WebEx subscriptions",
     "addSiteRejectPending": "You cannot add another site since provisioning for the previous action on this subscription is still pending. You will be able to add another site once provisioning is complete",
     "addSiteSelectPending": "You cannot add another site since provisioning for the previous action on this subscription is still pending. You will be able to add another site once provisioning is complete",
-    "addSiteSuccessToaster": "Site(s) added successfully",
-    "addSiteSuccessModalTitle": "Site added successfully",
+    "addSiteSuccessToaster": "Site add process initiated.",
+    "addSiteSuccessModalTitle": "Site add process initiated.",
     "addSiteSuccessModalBody": "Sites that were added will not be available immediately. It may take up to 24 hours for the sites to be provisioned and appear in the WebEx sites list inside Spark Control Hub.",
     "addSiteFailureToaster": "Attempt to add site failed, please try again later.",
     "addSiteFailureModalTitle": "Site was not added",
@@ -6965,7 +7056,7 @@
       "CONNECTED": "Online",
       "CONNECTED_WITH_ISSUES": "Online, With Issues",
       "DISCONNECTED": "Offline",
-      "OFFLINE_EXPIRED": "Requires Activation",
+      "OFFLINE_EXPIRED": "Expired",
       "UNKNOWN": "Unknown"
     },
     "WithDevices": "With Devices",
@@ -7007,7 +7098,7 @@
       },
       "soontobedeactivated": {
         "type": "Device will soon be deactivated",
-        "message": "This device has been offline for over six weeks. Make sure it comes online within {{expireInDays}} days to avoid deactivation."
+        "message": "This device has been offline for several weeks. Make sure it comes online within {{expireInDays}} days to avoid deactivation."
       },
       "ntpstatus": {
         "type": "Time Server Not Reachable",
@@ -7210,9 +7301,9 @@
     "featuresNotYetConfiguredPage": {
       "createCareTemplate": "Create a Care Template",
       "createCareTemplateDesc": "A Care template is what your customer uses to contact customer care.",
-      "MessageLicenseMissing": "Message is mandatory for Care templates. To enable Message, <a ng-click=\"{{onclick}}\">contact your partner or Cisco sales</a>",
-      "CallLicenseMissing": "Call is mandatory for voice-based templates. To enable Call, <a ng-click=\"{{onclick}}\">contact your partner or Cisco sales</a>",
-      "MessageAndCallLicenseMissing": "Message and Call are mandatory for chat-based and voice-based templates respectively. To enable Message and Call, <a ng-click=\"{{onclick}}\">contact your partner or Cisco sales</a>",
+      "MessageLicenseMissing": "Message is mandatory for Care templates. To enable Message, <a href ng-click=\"{{onclick}}\">contact your partner or Cisco sales</a>",
+      "CallLicenseMissing": "Call is mandatory for voice-based templates. To enable Call, <a href ng-click=\"{{onclick}}\">contact your partner or Cisco sales</a>",
+      "MessageAndCallLicenseMissing": "Message and Call are mandatory for chat-based and voice-based templates respectively. To enable Message and Call, <a href ng-click=\"{{onclick}}\">contact your partner or Cisco sales</a>",
       "new": "New"
     },
     "licensesMissing": {
@@ -7391,11 +7482,11 @@
   "careChatTpl": {
     "editAction": "Edit",
     "deleteFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?",
-    "deleteVaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?<br>Deleting the Customer Virtual Assistant removes it from all Customer Support Templates. Customers can no longer interact with the virtual assistant.",
-    "deleteEvaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?<br>You can no longer escalate chat requests to Cisco Spark expert spaces.",
-    "createSuccessText": "{{ featureName }} template has been created successfully.",
+    "deleteVaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}? Deleting the Customer Virtual Assistant removes it from all Customer Support Templates. Customers can no longer interact with the virtual assistant.",
+    "deleteEvaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}? You can no longer escalate chat requests to Cisco Spark expert spaces.",
+    "createSuccessText": "You have successfully created {{ featureName }}.",
     "createTemplateFailureText": "Failed to create Care template.",
-    "editSuccessText": "{{ featureName }} template has been updated successfully.",
+    "editSuccessText": "Changes to {{ featureName }} are successfully saved.",
     "editTemplateFailureText": "Failed to edit {{ featureName }} template.",
     "deleteSuccessText": "{{ featureName }} has been deleted successfully.",
     "deleteFailedText": "Failed to delete {{ featureName }}.",
@@ -7417,6 +7508,20 @@
     "profile_chat": "Branding and Identity",
     "profile_callback": "Branding and Identity",
     "profile_chatPlusCallback": "Chat Branding and Identity",
+    "chatEscalationBehavior_chat": "Chat Escalation Behavior",
+    "chatEscalationBehavior_callback": "chat Escalation Behavior",
+    "chatEscalationBehavior_chatPlusCallback": "Chat Escalation Behavior",
+    "chatEscalatioAgent": "Agents only",
+    "chatEscalatioExpert": "Experts only",
+    "chatEscalatioAgentPlusExpert": "Agents and Experts",
+    "chatEscalatioAgentDesc": "Chat requests offered to agents using Cisco Spark Care Desktop.",
+    "chatEscalatioExpertDesc": "Chat requests offered to Cisco Spark users working in expert spaces.",
+    "chatEscalatioAgentPlusExpertDesc": "Chat requests simultaneously offered to agents and experts.",
+    "chatEscalatioAgentTooltip": "The routing method configured <br> on the Care Settings page <br> determines how the escalation <br> selects agents.",
+    "chatEscalatioExpertTooltip": "The Expert Virtual Assistant <br> manages escalation to Cisco <br> Spark. Configure the assistant <br> from the Care Features page.",
+    "chatEscalatioAgentPlusExpertTooltip": "An accepted chat request is <br> removed from all queues and cannot be escalated again. <br> <br> The routing method configured <br> on the Care Settings page <br> determines agent selection. The Expert Virtual Assistant chooses one expert space to escalate to in Cisco Spark.",
+    "learnMoreLink": "Learn more",
+    "evaTemplateHeader": "Choose who to escalate requests from this chat to:",
     "ctVirtualAssistantPageTitle": "Customer Virtual Assistant",
     "overview": "Template Overview",
     "chatStatusMessages_chat": "Status Messages",
@@ -7447,6 +7552,7 @@
     "profile_agent_info": "Use unique profiles to represent the different agents in your organization.",
     "profile_org_info_cva": "Use a single profile to represent the Customer Virtual Assistant and all agents in your organization.",
     "profile_agent_info_cva": "Use unique profiles for your Customer Virtual Assistant and agents that change during a chat. ",
+    "chatEscalationBehaviorDesc": "Define where your customer chat requests are escalated to.",
     "default_cva_name": "Virtual Assistant",
     "overviewDesc_chat": "Toggle cards to customize what screens you want your customer to see when requesting a chat from customer care",
     "overviewDesc_callback": "Toggle cards to customize what screens you want your customer to see when requesting a callback from customer care",
@@ -7483,11 +7589,8 @@
     "cancelHeader": "Cancel",
     "ctCreation": "Creation",
     "ctEditing": "Editing",
-    "ctCreationBody": "template creation",
-    "ctEditBody": "editing this template",
-    "ctCreationMessage": "This template will not be saved.",
-    "ctEditMessage": "Changes will not be saved.",
-    "cancelDialog": "Are you sure you want to cancel {{bodyMessage}}? {{trailingMessage}}",
+    "cancelCreateDialog": "Do you want to discard your\n {{ featureName }}?",
+    "cancelEditDialog": "Do you want to discard changes to this\n {{ featureName }}?",
     "confirmButton": "Yes",
     "continueButton": "No",
     "preview": "Preview",
@@ -7541,6 +7644,8 @@
     "image": "Image",
     "displayText": "Display Text",
     "orgSettingInfo": "You can change the organization logo on the Settings page.",
+    "evaSettingInfo": "To enable escalation to experts, create an Expert Virtual Assistant from the Care Features page.",
+    "evaEnabledSettingInfo": "about configuring chat escalation behavior.",
     "agentSettingInfo": "You cannot change the default agent avatar seen in the Preview.",
     "agentMsg": "Hi, I need help with the MFI key.",
     "agentMsgTime": "10:10 AM",
@@ -7678,147 +7783,149 @@
     "virtualAssistant": {
       "featureText": {
         "selectDesc": "Create virtual assistants that can provide automated chat support to customers, or manage escalated chat requests in Cisco Spark.",
-        "virtualAssistant": "Virtual Assistant"
+        "virtualAssistant": "Virtual Assistant",
+        "mediaType": "Virtual Assistants"
       },
       "cva": {
-        "createTitle": "Create {{ featureName }}",
-        "editTitle": "Edit {{ featureName }}",
-        "cancelDialog": "Do you want to discard your\n {{ featureName }}?",
         "featureText": {
           "name": "Customer Virtual Assistant",
           "code": "cva",
-          "mediaType": "Virtual Assistants",
           "type": "Customer <br> Virtual Assistant",
           "selectDesc": "Create a virtual assistant who provides automated chat support and escalates issues as needed."
-        },
-        "configOverview": {
-          "title": "{{ featureName }} Configuration Requirements",
-          "desc": "Review the prerequisites for creating a {{ featureName }}",
-          "boxTitle": "Create an Dialogflow agent before you create your {{ featureName }}.",
-          "boxDesc": "Build an automated agent in Dialogflow with a natural language dialogue. Your integrated {{ featureName }} uses the built-in dialogue to interact with your customers and escalate a conversation to live agents as needed.",
-          "boxRadioOne": "No, I don’t have a preconfigured Dialogflow agent",
-          "boxRadioOneDesc1": "Go to ",
-          "boxRadioDialogflow": "Dialogflow",
-          "boxRadioOneDesc2": " to create an agent. To get started, see the ",
-          "boxRadioDialogflowDoc": "Dialogflow documentation",
-          "boxRadioTwo": "Yes, I have a preconfigured Dialogflow agent and am ready to proceed",
-          "boxRadioTwoDesc": "Click the arrow to continue to integrate your Dialogflow agent with a {{ featureName }}"
-        },
-        "dialogIntegration": {
-          "title": "Configure Dialogue Integration",
-          "desc": "Add a preconfigured Escalation Intent to complete your Dialogflow agent configuration",
-          "boxStepOne": "Download preconfigured Escalation Intent JSON file.",
-          "boxStepOneDesc": "An Escalation Intent allows your {{ featureName }} to escalate a conversation to an agent.",
-          "boxStepTwo": "Upload Escalation Intent to Dialogflow Agent.",
-          "boxStepTwoDesc": "On your Dialogflow agent’s Intents page, click the vertical ellipsis (⋮) and choose Upload Intent. Upload the escalation.json file you downloaded.",
-          "boxStepThree": "Customize Escalation Intent in Dialogflow.",
-          "boxStepThreeDesc": "On your Dialogflow agent’s Intents page, choose Escalation Intent. Modify the User Says fields to change the user expressions that trigger escalation. All user expressions must:",
-          "boxBulletOne": "Use template mode",
-          "boxBulletTwo": "Contain a reference to @sys.any:Topic",
-          "boxStepThreeDescCont": "The @ symbol next to the user expression indicates the template mode. Click the symbol to toggle the mode. Do not modify the GetExpert action.",
-          "downloadButtonText": "Download Escalation Intent",
-          "learnMoreLink": "Learn more",
-          "finalNote": "about integrating {{ featureName }}s."
-        },
-        "accessToken": {
-          "title": "Complete Dialogue Integration",
-          "desc": "Complete your integration to enable the use of natural dialogue in your customer interactions",
-          "boxDesc": "Each Dialogflow agent has a unique client access token stored in the agent settings. Copy the token from your configured Dialogflow agent settings, enter it here, and click \"Validate\" to check the token before you complete the dialogue integration.",
-          "inputLabel": "Dialogflow Client Access Token",
-          "validateButtonText": "Validate",
-          "maxLengthError": "Client Access Token cannot be longer than 128 characters.",
-          "invalidTokenText": "Invalid Dialogflow client access token. Verify token and try again."
-        },
-        "name": {
-          "namePlaceholder": "Enter {{ featureName }} Name",
-          "nameHint": "Specify the name your customers see when they interact with your {{ featureName }}.",
-          "errorChar50": "Name cannot exceed 50 characters.",
-          "duplicateError": "{{ featureName }} must have a unique name.",
-          "processing": "Checking {{ featureName }} name availability…"
-        },
-        "avatar": {
-          "title": "{{ featureName }} Avatar",
-          "desc": "Choose the avatar your customers see in their chat window, when they interact with your {{ featureName }}",
-          "upload": "Upload Avatar",
-          "preview": "Avatar Preview",
-          "fileBrowser": "file browser",
-          "uploadingImage": "Uploading image...",
-          "uploadDesc": "Upload an image of maximum 1MB. Supported file type is PNG.",
-          "previewDesc": "To edit, upload a new image of maximum 1MB. Supported file type is PNG.",
-          "defaultAvatar": "If no image is uploaded, this default image is used.",
-          "uploadBestResults": "For best results make sure that your image has a transparent background with no padding.",
-          "dragDropDesc": "Drag and drop a file or use the ",
-          "errorUnsupportedFile": "Cannot upload unsupported file. Supported file type is PNG.",
-          "errorOverMaxFileSizeLimit": "The image file size must be less than 1 MB.",
-          "errorUploadFile": "Cannot upload image. Try again."
-        },
-        "summary": {
-          "desc": "You have configured your {{ featureName }}. To use the assisted service feature in your organization's chat application, add your assistant to a {{ featureName }}.",
-          "editDesc": "You have edited your {{ featureName }}. To use the assisted service feature in your organization’s chat application, add your assistant to a {{ featureName }}.",
-          "descCont": "Click Finish to save the configuration.",
-          "errorCreateTemplate": "Cannot save {{ featureName }}. Try again."
-        },
-        "messages": {
-          "createSuccessText": "You have successfully created {{ featureName }}.",
-          "updateSuccessText": "You have successfully updated {{ featureName }}.",
-          "listConfigsFailureText": "Failed to list the {{ featureName }}s.",
-          "getConfigFailureText": "Failed to load the {{ featureName }}.",
-          "deleteConfigFailureText": "Failed to delete the {{ featureName }}.",
-          "createConfigFailureText": "Failed to save {{ featureName }}.",
-          "updateConfigFailureText": "Failed to save {{ featureName }}."
         }
       },
       "eva": {
-        "createTitle": "Create {{ featureName }}",
-        "editTitle": "Edit {{ featureName }}",
-        "cancelDialog": "Do you want to discard your\n {{ featureName }}?",
         "featureText": {
           "name": "Expert Virtual Assistant",
           "code": "eva",
-          "mediaType": "Virtual Assistants",
           "type": "Expert <br> Virtual Assistant",
           "selectDesc": "Create a virtual assistant who connects subject matter experts in Cisco Spark spaces to customers with chat requests.",
-          "disabledTooltip": "You can only have one Expert Virtual Assistant for your organization. To change the settings of your existing Expert Virtual Assistant, edit it from the Features page."
-        },
-        "overview": {
-          "title": "{{ featureName }} Overview",
-          "desc": "An {{ featureName }} acts as a liaison between customers and experts in Cisco Spark.",
-          "boxTitle": "Escalations Using an {{ featureName }}",
-          "boxDesc": "See how an {{ featureName }} enables smart escalations, ensuring quick and effective handling of customer issues.",
-          "learnMoreLink": "Learn More"
-        },
-        "name": {
-          "namePlaceholder": "Enter {{ featureName }} Name",
-          "nameHint": "Specify the name Cisco Spark users in your organization see when they interact with your {{ featureName }} in expert spaces.",
-          "errorChar50": "Name cannot exceed 50 characters."
-        },
-        "email": {
-          "namePlaceholder": "Create {{ featureName }} Email",
-          "nameHint": "Create the email you use to add your {{ featureName }} to Cisco Spark expert spaces.",
-          "pending": "Checking {{ featureName }} email availability...",
-          "duplicateError": "Email is already taken. Try again.",
-          "errorChar63": "Email cannot exceed 63 characters.",
-          "badCharError": "Email cannot contain spaces or the following characters: <>:;[]+()\\”,@."
-        },
-        "summary": {
-          "desc": "You configured {{ name }}. To enable escalation to Cisco Spark, add your Expert Virtual Assistant to your Customer Support Templates and expert spaces.",
-          "descCont": "Click Finish to save the configuration.",
-          "errorCreateTemplate": "Cannot save {{ featureName }}. Try again.",
-          "invalidEmailError": "The email you entered is invalid. Please enter a valid email.",
-          "duplicateEmailError": "The email you entered already exists. Please enter a unique email.",
-          "invalidNameError": "The Expert Virtual Assistant name is invalid. Please enter a valid name.",
-          "invalidAvatarError": "The Expert Virtual Assistant avatar is invalid. Please upload a valid avatar."
-        },
-        "messages": {
-          "createSuccessText": "You have successfully created {{ featureName }}.",
-          "updateSuccessText": "You have successfully updated {{ featureName }}.",
-          "listConfigsFailureText": "Failed to list the {{ featureName }}s.",
-          "getConfigFailureText": "Failed to load the {{ featureName }}.",
-          "deleteConfigFailureText": "Failed to delete the {{ featureName }}.",
-          "createConfigFailureText": "Failed to save {{ featureName }}.",
-          "createSpecificFailureText": "Failed to save {{ featureName }} {{ inputItem }}.",
-          "updateConfigFailureText": "Failed to save {{ featureName }}."
+          "disabledTooltip": "You can only have one Expert Virtual Assistant for your organization. To change the settings of your existing Expert Virtual Assistant, edit it from the Features page.",
+          "nonAdminEditDeleteWarning": "You are not authorized to edit or delete this virtual assistant. Contact the owner, {{owner}}, to request one of these actions."
         }
+      },
+      "createTitle": "Create {{ featureName }}",
+      "editTitle": "Edit {{ featureName }}",
+      "cancelDialog": "Do you want to discard your\n {{ featureName }}?",
+      "configOverview": {
+        "title": "{{ featureName }} Configuration Requirements",
+        "desc": "Review the prerequisites for creating a {{ featureName }}",
+        "boxTitle": "Create a Dialogflow agent before you create your {{ featureName }}.",
+        "boxDesc": "Build an automated agent in Dialogflow with a natural language dialogue. Your integrated {{ featureName }} uses the built-in dialogue to interact with your customers and escalate a conversation to live agents as needed.",
+        "boxRadioOne": "No, I don’t have a preconfigured Dialogflow agent",
+        "boxRadioOneDesc1": "Go to ",
+        "boxRadioDialogflow": "Dialogflow",
+        "boxRadioOneDesc2": " to create an agent. To get started, see the ",
+        "boxRadioDialogflowDoc": "Dialogflow documentation",
+        "boxRadioTwo": "Yes, I have a preconfigured Dialogflow agent and am ready to proceed",
+        "boxRadioTwoDesc": "Click the arrow to continue to integrate your Dialogflow agent with a {{ featureName }}"
+      },
+      "dialogIntegration": {
+        "title": "Configure Dialogue Integration",
+        "desc": "Add a preconfigured Escalation Intent to complete your Dialogflow agent configuration",
+        "boxStepOne": "Download preconfigured Escalation Intent JSON file.",
+        "boxStepOneDesc": "An Escalation Intent allows your {{ featureName }} to escalate a conversation to an agent.",
+        "boxStepTwo": "Upload Escalation Intent to Dialogflow Agent.",
+        "boxStepTwoDesc": "On your Dialogflow agent’s Intents page, click the vertical ellipsis (⋮) and choose Upload Intent. Upload the escalation.json file you downloaded.",
+        "boxStepThree": "Customize Escalation Intent in Dialogflow.",
+        "boxStepThreeDesc": "On your Dialogflow agent’s Intents page, choose Escalation Intent. Modify the User Says fields to change the user expressions that trigger escalation. All user expressions must:",
+        "boxBulletOne": "Use template mode",
+        "boxBulletTwo": "Contain a reference to @sys.any:Topic",
+        "boxStepThreeDescCont": "The @ symbol next to the user expression indicates the template mode. Click the symbol to toggle the mode. Do not modify the GetExpert action.",
+        "downloadButtonText": "Download Escalation Intent",
+        "learnMoreLink": "Learn more",
+        "finalNote": "about integrating {{ featureName }}s."
+      },
+      "accessToken": {
+        "title": "Complete Dialogue Integration",
+        "desc": "Complete your integration to enable the use of natural dialogue in your customer interactions",
+        "boxDesc": "Each Dialogflow agent has a unique client access token stored in the agent settings. Copy the token from your configured Dialogflow agent settings, enter it here, and click \"Validate\" to check the token before you complete the dialogue integration.",
+        "inputLabel": "Dialogflow Client Access Token",
+        "validateButtonText": "Validate",
+        "maxLengthError": "Client Access Token cannot be longer than 128 characters.",
+        "invalidTokenText": "Invalid Dialogflow client access token. Verify token and try again."
+      },
+      "name": {
+        "namePlaceholder": "Enter {{ featureName }} Name",
+        "nameHint": "Specify the name your customers see when they interact with your {{ featureName }}.",
+        "nameHintEva": "Specify the name Cisco Spark users in your organization see when they interact with your {{ featureName }} in expert spaces.",
+        "errorChar50": "Name cannot exceed 50 characters.",
+        "duplicateError": "{{ featureName }} must have a unique name.",
+        "processing": "Checking {{ featureName }} name availability…"
+      },
+      "avatar": {
+        "title": "{{ featureName }} Avatar",
+        "desc": "Choose the avatar your customers see in their chat window, when they interact with your {{ featureName }}",
+        "descEva": "Choose the avatar Cisco Spark users in your organization see when they interact with your {{ featureName }} in expert spaces.",
+        "upload": "Upload Avatar",
+        "preview": "Avatar Preview",
+        "fileBrowser": "file browser",
+        "uploadingImage": "Uploading image...",
+        "uploadDesc": "Upload a PNG of maximum 1MB. For best results make sure that your image has a transparent background with no padding.",
+        "dragDropDesc": "Drag and drop a file or use the ",
+        "errorUnsupportedFile": "Cannot upload unsupported file. Supported file type is PNG.",
+        "errorOverMaxFileSizeLimit": "The image file size must be less than 1 MB.",
+        "errorUploadFile": "Cannot upload image. Try again."
+      },
+      "summary": {
+        "cvaDesc": "You have configured {{ name }}. To use the assisted service feature in your organization's chat application, add your assistant to a Customer Support Template.",
+        "cvaDescEdit": "You have edited {{ name }}. Click Finish to save the configuration so customers can interact with this updated {{ featureName }} during chats with your organization.",
+        "descCont": "Click Finish to save the configuration.",
+        "evaDesc": "You have configured {{ name }}. To enable escalation to Cisco Spark, add your Expert Virtual Assistant to your Customer Support Templates and expert spaces.",
+        "evaDescEdit": "You have edited {{ name }}. Click Finish to save the configuration so Cisco Spark users from your organization working in expert spaces can interact with this updated {{ featureName }}.",
+        "errorCreateTemplate": "Cannot save {{ featureName }}. Try again.",
+        "invalidEmailError": "The email you entered is invalid. Please enter a valid email.",
+        "duplicateEmailError": "The email you entered already exists. Please enter a unique email.",
+        "invalidNameError": "The Expert Virtual Assistant name is invalid. Please enter a valid name.",
+        "invalidAvatarError": "The Expert Virtual Assistant avatar is invalid. Please upload a valid avatar.",
+        "editWarning": "There may be a delay before you can see changes to your Expert Virtual Assistant in Cisco Spark."
+      },
+      "overview": {
+        "title": "{{ featureName }} Overview",
+        "desc": "An {{ featureName }} acts as a liaison between customers and experts in Cisco Spark.",
+        "boxTitle": "Escalations Using an {{ featureName }}",
+        "boxDesc": "See how an {{ featureName }} enables smart escalations, ensuring quick and effective handling of customer issues.",
+        "learnMoreLink": "Learn More"
+      },
+      "email": {
+        "namePlaceholder": "Create {{ featureName }} Email",
+        "nameHint": "Create the email you use to add your {{ featureName }} to Cisco Spark expert spaces.",
+        "pending": "Checking {{ featureName }} email availability...",
+        "duplicateError": "Email is already taken. Try again.",
+        "errorChar63": "Email cannot exceed 63 characters.",
+        "badCharError": "Email cannot contain spaces or the following characters: <>:;[]+()\\”,@.",
+        "disabledTooltip": "You cannot edit the Expert Virtual Assistant email."
+      },
+      "defaultSpace": {
+        "title": "Default Expert Space Configuration",
+        "desc": "Define a fallback Cisco Spark expert space for your {{ featureName }} escalations.",
+        "boxDesc": "The {{ featureName }} uses the default space as a fallback to escalate requests that are not matched with any other expert space topics. Ensure that users who can respond to customer requests are in this space.",
+        "learnMoreLink": "Learn more",
+        "placeHolder": "Search and select an existing Cisco Spark space",
+        "noteInfo": "If the space you want to use is not in this list, create the space in Cisco Spark. Then restart the wizard to see and select the new space in the list."
+      },
+      "configurationSteps": {
+        "title": "Required Configuration in Cisco Spark",
+        "desc": "Set up expert spaces in Cisco Spark where you can add your {{ featureName }}.",
+        "boxTitle": "To enable your Expert Virtual Assistant to escalate requests to the right people in Cisco Spark:",
+        "boxStepOne": "Create more expert spaces in Cisco Spark.",
+        "boxStepOneTooltip": "Give each space a unique topic name that helps the {{ featureName }} match keywords from a chat to the space.",
+        "boxStepTwo": "Add the Expert Virtual Assistant to the expert spaces.",
+        "boxStepTwoTooltip": "After you configure the {{ featureName }}, use the @sparkbot.io email you specified to add the assistant to your expert spaces.",
+        "boxStepThree": "Add users to the expert spaces you create.",
+        "boxStepThreeTooltip": "Add appropriate users who can answer customer questions about the expert space topics.",
+        "boxStepFour": "Configure chat escalation to Cisco Spark in your Customer Support Templates.",
+        "boxStepFourTooltip": "Enable chat escalation to Cisco Spark in Customer Support Templates. Go to the Care Features page to create a new template or to edit an existing one.",
+        "learnMoreLink": "Learn more",
+        "finalNote": "about these required {{ featureName }} configuration steps."
+      },
+      "messages": {
+        "listConfigsFailureText": "Failed to list the {{ featureName }}s.",
+        "getConfigFailureText": "Failed to load the {{ featureName }}.",
+        "deleteConfigFailureText": "Failed to delete the {{ featureName }}.",
+        "createConfigFailureText": "Failed to save {{ featureName }}.",
+        "createSpecificFailureText": "Failed to save {{ featureName }} {{ inputItem }}.",
+        "updateConfigFailureText": "Failed to save {{ featureName }}."
       }
     }
   },
@@ -8180,6 +8287,12 @@
       "subsectionLabel": "Cisco Spark Client Security",
       "description": "Users can only launch the Cisco Spark app on mobile devices protected with lock screens."
     },
+    "sparkAssistant": {
+      "title": "Cisco Spark Assistant",
+      "subsectionLabel": "Enable Cisco Spark Assistant",
+      "description": "Allows users to perform various actions such as, make calls, start meetings, using their voice",
+      "termsOfService": "Cisco Spark Assistant terms of service "
+    },
     "externalCommunication": {
       "title": "External Communication",
       "subsectionLabel": "Messaging",
@@ -8198,7 +8311,9 @@
       "desktopApps": "Desktop apps",
       "webApp": "Web app",
       "mobileApps": "Mobile apps",
-      "bots": "Bots"
+      "bots": "Bots",
+      "disableWhiteboardsTitle": "Disable Whiteboard",
+      "disableWhiteboardsDescription": "Restricting file share controls will also disable whiteboards"
     },
     "support": {
       "title": "Support",
@@ -8620,6 +8735,14 @@
     "care": "Care",
     "hybridImp": {
       "hybridImp": "Hybrid Message"
+    },
+    "hybridCalendarMicrosoft": {
+      "title": "Calendar (Exchange/Office 365)"
+    },
+    "hybridServicesOrganization": {
+      "fmsError": "Could not read organization's on-premises-based hybrid services statuses. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation.",
+      "office365Error": "Could not read organization's cloud-based Office 365 status. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation.",
+      "googleCalendarError": "Could not read organization's Google Calendar status. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation."
     }
   },
   "partnerManagement": {
@@ -8890,6 +9013,14 @@
           "matchingEmails": "User email addresses that are exact matches in Cisco Spark, WebEx, and Google.",
           "aclAdminAccount": "(Optional) If you use room resources, an authorized access control list (ACL) admin account.",
           "removeHangouts": "(Optional) Remove Google Hangouts in Meeting Events"
+        },
+        "office365Prerequisites": {
+          "title": "Hybrid Calendar (Office) Prerequisites",
+          "intro": "Use this checklist alongside the Office 365 deployment documentation. Make sure you complete all the prerequisites necessary for deploying Hybrid Calendar in your Office 365 organization.",
+          "officeOrganization": "An Office 365 organization with Exchange Online accounts for users in the organization. During setup, you must be able to sign in as a Global administrator to grant application permissions",
+          "webExSite": "For @webex scheduling, a Cisco WebEx site on WBS31 or later",
+          "sparkOrganization": "A Cisco Spark organization with a minimum of Basic Meetings and Business Messaging (M1)",
+          "matchingEmails": "Users must have activated Cisco Spark accounts, with email addresses that are exact matches in Cisco Spark, WebEx, and Exchange Online"
         }
       },
       "hybridCall": {
@@ -9142,12 +9273,13 @@
     "title": "Enable users",
     "subtitle": "You can now enable {{service}} for your users.",
     "line1": "To enable users, you can:",
-    "item1": "Enable them individually from the <a ng-click=\"{{onclick}}\">users page</a>.",
-    "item2": "Enable them in bulk using the <a ng-click=\"{{onclick}}\">CSV template</a>.",
+    "item1": "Enable them individually from the <a href ng-click=\"{{onclick}}\">users page</a>.",
+    "item2": "Enable them in bulk using the <a href ng-click=\"{{onclick}}\">CSV template</a>.",
     "line2": "Refer to <a href=\"http://www.cisco.com/go/hybrid-services-calendar\" target=\"_blank\">documentation</a> if you need help enabling users."
   },
   "readOnlyModal": {
-    "banner": "You are in read-only mode"
+    "title": "Read-only Mode",
+    "message": "You are viewing the application in Read-only mode. No changes will be accepted."
   },
   "readOnlyMessages": {
     "notAllowed": "Not allowed in read-only mode. Operation not executed."

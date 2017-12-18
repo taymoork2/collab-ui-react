@@ -2,6 +2,7 @@ export enum DiagnosticKey {
   LICENSE_MAP_ERROR = 'atlas_license_map_error',
   LOGIN_FAILURE = 'atlas_login_failure',
   NOTIFICATION = 'atlas_notification',
+  ANALYTICS_FAILURE = 'atlas_analytics_failure',
 }
 
 export enum OperationalKey {

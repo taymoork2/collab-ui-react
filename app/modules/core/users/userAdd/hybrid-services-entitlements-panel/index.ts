@@ -1,21 +1,16 @@
-import { hybridServicesEntitlementsPanelCtrl } from 'modules/core/users/userAdd/hybrid-services-entitlements-panel/hybrid-services-entitlements-panel.component.js';
-import userAddModuleName from 'modules/core/users/userAdd';
-import serviceDescriptorModuleName from 'modules/hercules/services/service-descriptor.service';
+import './hybrid-services-entitlements-panel.scss';
+
+import { HybridServicesEntitlementsPanelComponent } from './hybrid-services-entitlements-panel.component';
 import calendarCloudConnectorServiceModuleName from 'modules/hercules/services/calendar-cloud-connector.service';
 import featureToggleModuleName from 'modules/core/featureToggle';
+import serviceDescriptorModuleName from 'modules/hercules/services/service-descriptor.service';
+import userAddSharedModuleName from 'modules/core/users/userAdd/shared';
 
-export default angular.module('core.users.userAdd.hybrid-services-entitlements', [
-  userAddModuleName,
-  serviceDescriptorModuleName,
+export default angular.module('core.users.userAdd.hybrid-services-entitlements-panel', [
   calendarCloudConnectorServiceModuleName,
   featureToggleModuleName,
+  serviceDescriptorModuleName,
+  userAddSharedModuleName,
 ])
-  .component('hybridServicesEntitlementsPanel', {
-    bindings: {
-      entitlementsCallback: '&',
-      userIsLicensed: '<',
-    },
-    controller: hybridServicesEntitlementsPanelCtrl,
-    template: require('./hybrid-services-entitlements-panel.html'),
-  })
+  .component('hybridServicesEntitlementsPanel', new HybridServicesEntitlementsPanelComponent())
   .name;

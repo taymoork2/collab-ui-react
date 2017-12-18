@@ -27,7 +27,8 @@ export class DeviceHelper {
   }
 
   public static getIsOnline(obj) {
-    return (obj.status || {}).connectionStatus === 'CONNECTED';
+    const conStatus = (obj.status || {}).connectionStatus;
+    return conStatus === 'CONNECTED' || conStatus === 'CONNECTED_WITH_ISSUES';
   }
 
   public static getLastConnectionTime(obj) {
@@ -153,17 +154,20 @@ export class DeviceHelper {
       case 'OFFLINE_EXPIRED':
         return {
           readableState: this.t('CsdmStatus.connectionStatus.OFFLINE_EXPIRED'),
-          priority: '2',
+          priority: '3',
         };
       case 'DISCONNECTED':
       case 'UNKNOWN':
-
       default:
         return {
           readableState: this.t('CsdmStatus.connectionStatus.DISCONNECTED'),
           priority: '2',
         };
     }
+  }
+
+  public static translateConnectionStatusToColor(connectionStatus: string): string {
+    return DeviceHelper.getCssColorClass({ connectionStatus: connectionStatus });
   }
 
   public static getCssColorClass(obj) {
@@ -177,6 +181,8 @@ export class DeviceHelper {
         return 'warning';
       case 'OFFLINE_EXPIRED':
         return 'expired';
+      case 'DISCONNECTED':
+      case 'UNKNOWN':
       default:
         return 'danger';
     }

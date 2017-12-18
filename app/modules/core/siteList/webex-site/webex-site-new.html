@@ -1,6 +1,6 @@
 <div ng-form="$ctrl.siteSetupForm">
   <div class="row"
-    ng-repeat="site in $ctrl.sitesArray">
+    ng-repeat="site in $ctrl.existingSitesArray track by $index">
     <webex-site-new-display site="site"
       is-show-user-management="true"
       can-remove-site="false"
@@ -8,7 +8,7 @@
     </webex-site-new-display>
   </div>
   <div class="row"
-    ng-repeat="site in $ctrl.newSitesArray">
+    ng-repeat="site in $ctrl.newSitesArray track by $index">
     <webex-site-new-display site="site"
       is-show-user-management="true"
       on-remove-site="$ctrl.removeSite(index)"
@@ -84,6 +84,7 @@
               id="add-webex-users-1"
               name="addWebexUsers1"
               value="undefined"
+              ng-change="meetingCtrl.userManagementOptionChange()"
               ng-required="$ctrl.siteModel.siteUrl"
               cs-input-label="{{::'firstTimeWizard.userManagementSpark' | translate }}">
             <input cs-input
@@ -93,6 +94,7 @@
               ng-model="$ctrl.siteModel.setupType"
               id="add-webex-users-2"
               name="addWebexUsers2"
+              ng-change="meetingCtrl.userManagementOptionChange()"
               value="{{$ctrl.setupTypeLegacy}}"
               cs-input-label="{{::'firstTimeWizard.userManagementWebEx' | translate }}">
             <div class="cs-input__messages error-msg-spacing"

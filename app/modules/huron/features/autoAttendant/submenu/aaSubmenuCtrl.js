@@ -55,7 +55,7 @@
       label: $translate.instant('autoAttendant.phoneMenuDialExt'),
       name: 'phoneMenuDialExt',
       action: 'runActionsOnInput',
-      inputType: 2,
+      inputType: [2, 5], // 2 goes for dialByExtension whereas 5 for dialByEsn
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
       name: 'phoneMenuRouteHunt',
@@ -259,6 +259,7 @@
       var menu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
       vm.menuEntry = menu.entries[$scope.keyIndex];
       vm.menuId = vm.menuEntry.id;
+      vm.routingPrefixOptions = $scope.routingPrefixOptions;
 
       toggleRouteToQueueFeature();
 

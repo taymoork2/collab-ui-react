@@ -55,7 +55,7 @@
       label: $translate.instant('autoAttendant.phoneMenuDialExt'),
       name: 'phoneMenuDialExt',
       action: 'runActionsOnInput',
-      inputType: 2,
+      inputType: [2, 5],
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
       name: 'phoneMenuRouteHunt',
@@ -225,7 +225,7 @@
                 if (!_.isUndefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
                   keyAction.action = _.find(vm.keyActions, _.bind(function (keyAction) {
                     if (_.has(this, 'inputType')) {
-                      return this.name === keyAction.action && this.inputType === keyAction.inputType;
+                      return this.name === keyAction.action && (this.inputType === keyAction.inputType[0] || this.inputType === keyAction.inputType[1]);
                     } else if (!_.has(keyAction, 'inputType')) {
                       if (this.name === keyAction.action) {
                         return true;
@@ -324,6 +324,7 @@
      */
     function init() {
       vm.schedule = $scope.schedule;
+      vm.routingPrefixOptions = $scope.routingPrefixOptions;
       var ui = AAUiModelService.getUiModel();
       vm.uiMenu = ui[vm.schedule];
       vm.entries = vm.uiMenu.entries;

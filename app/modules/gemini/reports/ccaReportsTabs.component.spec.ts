@@ -66,7 +66,7 @@ describe('Component: ccaReports', () => {
 
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('ReportsChartService', '$q');
+    this.injectDependencies('ReportsChartService', 'Analytics', '$q');
     initSpies.apply(this);
 
   });
@@ -77,6 +77,7 @@ describe('Component: ccaReports', () => {
   }
 
   function initSpies() {
+    spyOn(this.Analytics, 'trackEvent');
     spyOn(this.ReportsChartService, 'getkPIData').and.returnValue({});
     spyOn(this.ReportsChartService, 'getChartData').and.returnValue({});
     spyOn(this.ReportsChartService, 'getFilterData').and.returnValue({});

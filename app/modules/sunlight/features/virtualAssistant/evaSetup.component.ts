@@ -1,10 +1,8 @@
 import { IToolkitModalService } from 'modules/core/modal';
 import { UniqueEmailValidator } from './uniqueEmailValidator.directive';
 import * as _ from 'lodash';
+import { VaCommonSetupCtrl } from './vaCommonSetupCtrl';
 
-export interface IScopeWithController extends ng.IScope {
-  controller?: any;
-}
 
 // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
 // preserve the ng-include module paths
@@ -14,44 +12,17 @@ requireContext.keys().map(key => requireContext(key));
 /**
  * ExpertVirtualAssistantSetupCtrl
  */
-class ExpertVirtualAssistantSetupCtrl implements ng.IComponentController {
+class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
 
-  private animationTimeout = 10;
-  private escapeKey = 27;
-
-  public animation = '';
-  public maxNameLength = 50;
   public maxEmailLength = 63;
   public validateEmailChars = /^([A-Za-z0-9-._~/|?%^&{}!#$'`*=]+)$/;
-  public service = this.EvaService;
-  public logoUrl = '';
-  public logoFile = '';
-  public logoUploaded = false;
-  public isEditFeature = false;
-  public orgName = this.Authinfo.getOrgName();
-  public orgId = this.Authinfo.getOrgId();
-  public creatingTemplate = false;
-  public templateButtonText = this.$translate.instant('common.finish');
-  public saveTemplateErrorOccurred = false;
-  public cancelModalText = {};
-  public nameForm: ng.IFormController;
   public emailForm: ng.IFormController;
-
-  public NameErrorMessages = {
-    DUPLICATE_ERROR: 'duplicate_error',
-    ERROR_CHAR_50: 'error_char_50',
-  };
-
-  public avatarErrorType = {
-    NO_ERROR: 'None',
-    FILE_TYPE_ERROR: 'FileTypeError',
-    FILE_SIZE_ERROR: 'FileSizeError',
-    FILE_UPLOAD_ERROR: 'FileUploadError',
-  };
 
   public template = {
     templateId: '',
     name: '',
+    ownerId: '',
+    ownerDetails: {},
     configuration: {
       mediaType: this.EvaService.evaServiceCard.type,
       pages: {
@@ -72,6 +43,30 @@ class ExpertVirtualAssistantSetupCtrl implements ng.IComponentController {
           startTimeInMillis: 0,
           eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_EMAIL_PAGE,
         },
+        vaAvatar: {
+          enabled: true,
+          fileValue: '',
+          avatarError: this.avatarErrorType.NO_ERROR,
+          uploadCanceled: false,
+          avatarImageSrc: '/images/evaAvatarDefaultIcon.png',
+          startTimeInMillis: 0,
+          eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_AVATAR_PAGE,
+        },
+        evaDefaultSpace: {
+          selectedDefaultSpace: {
+            title: '',
+            id: '',
+          },
+          defaultSpaceOptions: [<any>{}],
+          enabled: true,
+          startTimeInMillis: 0,
+          eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_DEFAULT_SPACE,
+        },
+        evaConfigurationSteps: {
+          enabled: true,
+          startTimeInMillis: 0,
+          eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_CONFIGURATION_STEPS_PAGE,
+        },
         vaSummary: {
           enabled: true,
           visibleError: false,
@@ -81,114 +76,52 @@ class ExpertVirtualAssistantSetupCtrl implements ng.IComponentController {
       },
     },
   };
-  // states == pages in order as found in storage template
-  public states = Object.keys(this.template.configuration.pages);
-  public currentState = this.states[0];
-
-  // Avatar file load progress states
-  public avatarState = {
-    SELECT: 'SELECT',
-    LOADING: 'LOADING',
-    PREVIEW: 'PREVIEW',
-  };
-  public avatarUploadState = this.avatarState.SELECT;
-  public MAX_AVATAR_FILE_SIZE = 1048576; // 1MB
 
   /* @ngInject*/
   constructor(
-    private $scope: ng.IScope,
-    private $state: ng.ui.IStateService,
-    private $modal: IToolkitModalService,
-    private $translate: ng.translate.ITranslateService,
-    private $timeout: ng.ITimeoutService,
-    private $window: ng.IWindowService,
+    public $scope: ng.IScope,
+    public $state: ng.ui.IStateService,
+    public $stateParams: ng.ui.IStateParamsService,
+    public $modal: IToolkitModalService,
+    public $translate: ng.translate.ITranslateService,
+    public $timeout: ng.ITimeoutService,
     private EvaService,
-    private Authinfo,
-    private CTService,
-    private Analytics,
-    private Notification,
+    private SparkService,
+    public Authinfo,
+    public Analytics,
+    public Notification,
+    public UrlConfig,
+    public CTService,
+    public $window,
   ) {
-
-    const controller = this;
-    (<IScopeWithController>this.$scope).controller = controller; // used by ctCancelModal to not be tied to 1 controller.
-    controller.CTService.getLogoUrl().then(function (url) {
-      controller.logoUrl = url;
-    });
-    controller.CTService.getLogo().then(function (data) {
-      controller.logoFile = 'data:image/png;base64,' + controller.$window.btoa(String.fromCharCode.apply(null, new Uint8Array(data.data)));
-      controller.logoUploaded = true;
-    });
+    super($scope, $state, $modal, $translate, $timeout, Authinfo, Analytics, Notification, UrlConfig, CTService, $window);
+    this.service = this.EvaService;
+    // states == pages in order as found in storage template
+    this.states = Object.keys(this.template.configuration.pages);
+    this.currentState = this.states[0];
   }
 
   /**
-   * Obtain title for this series of modal pages
-   * @returns {{[p: string]: string}|string|*}
+   * Initialize the controller
    */
-  public getTitle(): string {
-    if (this.isEditFeature) {
-      return this.getText('editTitle');
-    } else {
-      return this.getText('createTitle');
-    }
-  }
+  public $onInit() {
+    this.template.configuration.pages.evaOverview.startTimeInMillis = Date.now();
+    if (this.$stateParams.isEditFeature) {
+      this.isEditFeature = true;
+      this.template.templateId = this.$stateParams.template.id;
+      this.template.configuration.pages.vaName.nameValue = this.$stateParams.template.name;
+      const emailAddress = this.$stateParams.template.email;
+      this.template.configuration.pages.evaEmail.value = emailAddress.substring(0, emailAddress.indexOf('@'));
+      this.template.configuration.pages.evaDefaultSpace.selectedDefaultSpace.id = this.$stateParams.template.defaultSpaceId;
+      this.template.ownerId = this.$stateParams.template.ownerId;
+      this.template.ownerDetails = this.$stateParams.template.ownerDetails;
 
-  /**
-   * obtain description for summary page
-   * @returns {*}
-   */
-  public getSummaryDescription(): string {
-    if (this.isEditFeature) {
-      return this.getText('summary.editDesc', { name: this.template.configuration.pages.vaName.nameValue });
-    } else {
-      return this.getText('summary.desc', { name: this.template.configuration.pages.vaName.nameValue });
+      if (this.$stateParams.template.icon) {
+        this.avatarUploadState = this.avatarState.PREVIEW;
+        this.template.configuration.pages.vaAvatar.fileValue = this.$stateParams.template.icon;
+      }
     }
-  }
-
-  /**
-   * open up the 'Cancel' modal with certain text.
-   */
-  public cancelModal(): void {
-    this.cancelModalText = {
-      cancelHeader: this.$translate.instant('careChatTpl.cancelHeader'),
-      cancelDialog: this.getText('cancelDialog'),
-      continueButton: this.$translate.instant('careChatTpl.continueButton'),
-      confirmButton: this.$translate.instant('careChatTpl.confirmButton'),
-    };
-    this.$modal.open({
-      template: require('modules/sunlight/features/customerSupportTemplate/wizardPages/ctCancelModal.tpl.html'),
-      type: 'dialog',
-      scope: this.$scope,
-    });
-  }
-  /**
-   * evaluate the passed keyCode to trip a condition.
-   * @param keyCode
-   */
-  public evalKeyPress(keyCode: number): void {
-    switch (keyCode) {
-      case this.escapeKey:
-        this.cancelModal();
-        break;
-      default:
-        break;
-    }
-  }
-
-  /**
-   * should previous button be rendered.
-   * @returns {boolean}
-   */
-  public previousButton(): any {
-    if (this.currentState === 'evaEmail') {
-      return !_.get(this, 'emailForm.input.$pending', false);
-    }
-    if (this.creatingTemplate) {
-      return false;
-    }
-    if (0 === this.getPageIndex()) {
-      return 'hidden';
-    }
-    return (this.getPageIndex() > 0);
+    this.loadDefaultSpaceOptions();
   }
 
   /**
@@ -203,59 +136,77 @@ class ExpertVirtualAssistantSetupCtrl implements ng.IComponentController {
         return this.isNamePageValid();
       case 'evaEmail':
         return this.isEmailPageValid();
+      case 'vaAvatar':
+        return !this.isAvatarUploading();
+      case 'evaDefaultSpace':
+        return this.isDefaultSpaceSelected();
+      case 'evaConfigurationSteps':
+        return true;
       case 'vaSummary':
         return 'hidden';
     }
   }
-  public onPageLoad(): void {
-    this.onPageLoaded(this.currentState);
+  private setSelectedDefaultSpace(): void {
+    //show selected space on edit
+    if (this.isEditFeature) {
+      const selectedSpace = _.find(this.template.configuration.pages.evaDefaultSpace.defaultSpaceOptions, {
+        id: this.$stateParams.template.defaultSpaceId,
+      });
+      if (selectedSpace) {
+        this.template.configuration.pages.evaDefaultSpace.selectedDefaultSpace.title = selectedSpace.title;
+      }
+    }
+  }
+
+  private loadDefaultSpaceOptions(): void {
+    // Load the default space options
+    const controller = this;
+    controller.SparkService.listRooms().then((response) => {
+      const allSpaces = response.items;
+      if (allSpaces && allSpaces.length > 0) {
+        const meId = controller.SparkService.getMyPersonId();
+        const spacesCreatedByThisUser = _.filter(allSpaces, { creatorId: meId });
+        // Find the left over spaces
+        const otherSpaces = _.pullAll(allSpaces, spacesCreatedByThisUser);
+        if (otherSpaces && otherSpaces.length > 0) {
+          controller.SparkService.listMemberships().then((membershipResponse) => {
+            const allMemberships = membershipResponse.items;
+            // Find all moderatored spaces
+            if (allMemberships && allMemberships.length > 0) {
+              // Find space Ids that is a moderator
+              const allModeratoredSpaceIds = allMemberships.map(function(item) {
+                if (item.isModerator) {
+                  return item.roomId;
+                }
+              });
+              // Find all spaces that matched the moderator space id
+              const moderatoredSpaces = otherSpaces.filter(function (item) {
+                return _.indexOf(allModeratoredSpaceIds, item.id) >= 0;
+              });
+              // Combine the spaces created by this user and moderatored spaces
+              const defaultSpaces = _.concat(spacesCreatedByThisUser, moderatoredSpaces);
+              this.template.configuration.pages.evaDefaultSpace.defaultSpaceOptions = _.sortBy(defaultSpaces, 'title');
+              this.setSelectedDefaultSpace();
+            }
+          });
+        } else {
+          this.template.configuration.pages.evaDefaultSpace.defaultSpaceOptions = _.sortBy(spacesCreatedByThisUser, 'title');
+          this.setSelectedDefaultSpace();
+        }
+      } // end of if there are any spaces
+    });
   }
 
   /**
    * called when page corresponding to newState is loaded event
    * @param {string} newState
    */
-  private onPageLoaded(newState: string): void {
+  public onPageLoaded(newState: string): void {
     this.template.configuration.pages[newState].startTimeInMillis = Date.now();
   }
 
-  /**
-   * Move forward to next page in modal series.
-   */
-  public nextPage(): void {
-    const controller = this;
-    const durationInMillis = Date.now() -
-      controller.template.configuration.pages[controller.currentState].startTimeInMillis;
-    const analyticProps = { durationInMillis: durationInMillis };
-    controller.Analytics.trackEvent(controller.template.configuration.pages[controller.currentState].eventName, analyticProps);
-    controller.animation = 'slide-left';
-    controller.$timeout(function () {
-      controller.currentState = controller.getAdjacentEnabledState(controller.getPageIndex(), 1);
-    }, controller.animationTimeout);
-  }
-
-  /**
-   * Move backwards to previous page in modal series.
-   */
-  public previousPage(): void {
-    // This is to clear a possible error issued during image loading. For instance one attempts to drag-drop a JPG,
-    // the file is invalid, the message is displayed, and it must be cleared when toggling between pages.
-
-    const controller = this;
-    controller.animation = 'slide-right';
-    controller.saveTemplateErrorOccurred = false;
-    controller.templateButtonText = this.$translate.instant('common.finish');
-    controller.$timeout(function () {
-      controller.currentState = controller.getAdjacentEnabledState(controller.getPageIndex(), -1);
-    }, controller.animationTimeout);
-  }
-
-  /**
-   * Return full path for current page template html.
-   * @returns {string}
-   */
-  public getCurrentPage(): string {
-    return `modules/sunlight/features/virtualAssistant/wizardPages/${this.currentState}.tpl.html`;
+  public isDefaultSpaceSelected(): boolean {
+    return !_.isEmpty(this.template.configuration.pages.evaDefaultSpace.selectedDefaultSpace.id);
   }
 
   /**
@@ -269,40 +220,40 @@ class ExpertVirtualAssistantSetupCtrl implements ng.IComponentController {
     durationInMillis = currentTimeInMillis - this.template.configuration.pages.evaOverview.startTimeInMillis;
     analyticProps = { durationInMillis: durationInMillis };
     this.Analytics.trackEvent(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_START_FINISH, analyticProps);
+    this.Analytics.trackEvent(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_CREATE_SUCCESS);
+  }
+
+  public submitFeature(): void {
+    const name = this.template.configuration.pages.vaName.nameValue.trim();
+    const emailPrefix = this.template.configuration.pages.evaEmail.value.trim();
+    const email = `${emailPrefix}@sparkbot.io`;
+    this.creatingTemplate = true;
+    const avatarDataUrl = this.template.configuration.pages.vaAvatar.fileValue;
+    const defaultSpaceId = this.template.configuration.pages.evaDefaultSpace.selectedDefaultSpace.id;
+    if (this.isEditFeature) {
+      const result = this.EvaService.getWarningIfNotOwner(this.template);
+      if (!result.valid) {
+        this.handleUserAccessForEditError();
+        this.Notification.warning(result.warning.message, result.warning.args);
+      } else {
+        this.updateFeature(this.template.templateId, name, this.orgId, email, defaultSpaceId, avatarDataUrl);
+      }
+    } else {
+      this.createFeature(name, this.orgId, email, defaultSpaceId, avatarDataUrl);
+    }
   }
 
   /**
-   * handle template create/edit error.
+   * create and store the current feature
+   * @param name
+   * @param orgId
+   * @param email
+   * @param defaultSpaceId
+   * @param avatarDataUrl optional
    */
-  private handleFeatureError(): void {
-    this.creatingTemplate = false;
-    this.saveTemplateErrorOccurred = true;
-    this.templateButtonText = this.$translate.instant('common.retry');
-  }
-
-  /**
-   * handle result of successful feature create and store
-   * @param headers
-   */
-  private handleFeatureCreation(): void {
-    this.creatingTemplate = false;
-    this.$state.go('care.Features');
-    this.Notification.success(this.getMessageKey('messages.createSuccessText'), {
-      featureName: this.template.configuration.pages.vaName.nameValue,
-    });
-  }
-
-  /**
-  * create and store the current feature
-  * @param type
-  * @param name
-  * @param config
-  * @param orgId
-  * @param avatarDataURL optional
-  */
-  private createFeature(name: string, orgId: string, email: string): void {
+  private createFeature(name: string, orgId: string, email: string, defaultSpaceId: string, avatarDataUrl?: string): void {
     const controller = this;
-    controller.service.addExpertAssistant(name, orgId, email)
+    controller.service.addExpertAssistant(name, orgId, email, defaultSpaceId, avatarDataUrl)
       .then(function () {
         controller.handleFeatureCreation();
         controller.writeMetrics();
@@ -312,23 +263,8 @@ class ExpertVirtualAssistantSetupCtrl implements ng.IComponentController {
         controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.createConfigFailureText'), {
           featureName: controller.$translate.instant('careChatTpl.virtualAssistant.eva.featureText.name'),
         });
+        controller.Analytics.trackEvent(controller.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_CREATE_FAILURE);
       });
-  }
-
-  public submitFeature(): void {
-    const name = this.template.configuration.pages.vaName.nameValue.trim();
-    const emailPrefix = this.template.configuration.pages.evaEmail.value.trim();
-    const email = `${emailPrefix}@sparkbot.io`;
-    this.creatingTemplate = true;
-    this.createFeature(name, this.orgId, email);
-  }
-
-  public getText(textIdExtension: string, params?: object): string {
-    return this.service.getText(textIdExtension, params);
-  }
-
-  public getMessageKey(textIdExtension: string): string {
-    return this.service.getMessageKey(textIdExtension);
   }
 
   public isNameValid(): boolean {
@@ -353,27 +289,25 @@ class ExpertVirtualAssistantSetupCtrl implements ng.IComponentController {
   }
 
   /**
-   * obtain the current index of the page associated with the current state.
-   * @returns {number|Number}
+   * update and store the current feature
+   * @param templateId
+   * @param name
+   * @param orgId
+   * @param email
+   * @param defaultSpaceId
+   * @param avatarDataURl optional
    */
-  private getPageIndex(): number {
-    return this.states.indexOf(this.currentState);
-  }
-
-  /**
-   * Obtain the state 'jump' places away from the 'current' position
-   * @param current
-   * @param jump
-   * @returns {*}
-   */
-  private getAdjacentEnabledState(current: number, jump: number): string {
-    const next = current + jump;
-    const last = this.states.length - 1;
-    if (next > last) {
-      return this.states[last];
-    } else {
-      return this.states[next];
-    }
+  private updateFeature(templateId: string, name: string, orgId: string, email: string, defaultSpaceId: string, avatarDataUrl?: string): void {
+    const controller = this;
+    controller.service.updateExpertAssistant(templateId, name, orgId, email, defaultSpaceId, avatarDataUrl)
+      .then(function () {
+        controller.handleFeatureUpdate();
+        controller.writeMetrics();
+      })
+      .catch(function (response) {
+        controller.handleFeatureError();
+        controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.updateConfigFailureText'));
+      });
   }
 }
 

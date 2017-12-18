@@ -7,81 +7,183 @@
 
   /* @ngInject */
   function WebExMetricsCtrl(
+    $log,
     $q,
+    $rootScope,
     $sce,
     $scope,
+    $state,
     $stateParams,
     $timeout,
-    $rootScope,
-    $state,
     Analytics,
     Authinfo,
-    LocalStorage,
+    FeatureToggleService,
     Notification,
+    LocalStorage,
     ProPackService,
     QlikService,
-    FeatureToggleService,
-    WebexMetricsService
-  ) {
+    WebexMetricsService) {
     var vm = this;
 
-    vm.metrics = 'metrics';
-    vm.search = 'search';
-    vm.MEI = 'MEI';
-    vm.metricsSiteOptions = [];
+    //varibles
     vm.metricsOptions = [];
+    vm.metricsSiteOptions = [];
     vm.metricsSelected = '';
-    vm.webexMetrics = {};
-    vm.isNoData = false;
+
     vm.selectEnable = false;
-    vm.reportType = 'WebEx';
-    vm.env = {
-      int: 'integration',
-      prod: 'prod',
+    vm.isWebexClassicEnabled = false;
+    vm.hasClassicTab = false;
+
+    vm.isNoData = false;
+    vm.reportType = 'webex';
+    vm.features = null;
+    vm.isStateReady = false;
+    vm.webexMetricsState = 'reports.webex-metrics';
+    vm.iframeContainerClass = 'webexMetricsContent';
+
+    vm.webexMetricsViews = '';
+    vm.isMetricsInit = false;
+    vm.viewType = 'basic';
+    vm.webexMetrics = {
+      views: {
+        metrics: {
+          basic: {
+            view: 'Basic',
+            appName: 'basic_webex_v1',
+          },
+          premium: {
+            view: 'Premium',
+            appName: 'premium_webex_v1',
+          },
+        },
+        mei: {
+          view: 'MEI',
+          appName: 'mei',
+        },
+        system: {
+          view: 'System',
+          appName: 'system',
+        },
+      },
+      states: {
+        metrics: {
+          title: 'reportsPage.webexMetrics.metrics',
+          state: 'reports.webex-metrics.metrics',
+          initialed: false,
+        },
+        diagnostics: {
+          title: 'reportsPage.webexMetrics.diagnostics',
+          state: 'reports.webex-metrics.diagnostics',
+          initialed: true,
+        },
+        mei: {
+          title: 'reportsPage.webexMetrics.MEI',
+          state: 'reports.webex-metrics.MEI',
+          initialed: true,
+        },
+        system: {
+          title: 'reportsPage.webexMetrics.system',
+          state: 'reports.webex-metrics.system',
+          initialed: true,
+        },
+        classic: {
+          title: 'reportsPage.webexMetrics.classic',
+          state: 'reports.webex-metrics.classic',
+          initialed: true,
+        },
+      },
     };
-
-    vm.webexMetrics.views = [
-      {
-        view: 'Base',
-        appName: 'basic_webex_v1',
-      },
-      {
-        view: 'MEI',
-        appName: 'mei',
-      },
-    ];
-    vm.reportView = vm.webexMetrics.views[0];
-
-    var selectEnable = $scope.$on('selectEnable', function (data) {
-      vm.selectEnable = data.defaultPrevented;
-    });
-    var $stateChangeStart = $rootScope.$on('$stateChangeStart', onStateChangeStart);
-    var $stateChangeSuccess = $rootScope.$on('$stateChangeSuccess', onStateChangeSuccess);
-    $scope.$on('$destroy', onDestory);
 
     vm.$state = $state;
     vm.init = init;
+    vm.checkStatePermission = checkStatePermission;
     vm.goMetricsInitState = goMetricsInitState;
-    vm.generateMetrics = generateMetrics;
     vm.loadMetricsReport = loadMetricsReport;
     vm.onStateChangeStart = onStateChangeStart;
     vm.onStateChangeSuccess = onStateChangeSuccess;
     vm.updateWebexMetrics = updateWebexMetrics;
     vm.updateIframe = updateIframe;
-    vm.features = [];
+
+    var hasClassicEnabled = null;
+    var $stateChangeStart = null;
+    var $stateChangeSuccess = null;
+    $scope.$on('$destroy', onDestory);
 
     init();
 
-    function initialSites(isUsedState) {
-      WebexMetricsService.getMetricsSites().then(function (sites) {
-        var webexSiteUrls = sites;
-        vm.metricsSiteOptions = webexSiteUrls;
+    function init() {
+      setViewHeight();
+      bindEvents();
+      setupSubTabs();
+    }
 
-        promisChainDone(isUsedState);
+    function bindEvents() {
+      hasClassicEnabled = $scope.$on('classicEnabled', function (event, isWebexClassicEnabled) {
+        vm.isWebexClassicEnabled = isWebexClassicEnabled;
+        checkClassic(vm.isWebexClassicEnabled);
+      });
+      $stateChangeStart = $rootScope.$on('$stateChangeStart', onStateChangeStart);
+      $stateChangeSuccess = $rootScope.$on('$stateChangeSuccess', onStateChangeSuccess);
+    }
+
+    function checkClassic() {
+      FeatureToggleService.webexMetricsGetStatus().then(function (isMetricsOn) {
+        if (isMetricsOn && vm.isWebexClassicEnabled) {
+          pushClassicTab();
+          if (!_.isNull(vm.features) && vm.webexOptions.length === 1) {
+            $timeout(goMetricsInitState, 0);
+          }
+        }
       });
     }
 
-    function promisChainDone(isUsedState) {
+    function checkStatePermission(toState) {
+      var isRedirected = false;
+      var stateName = $state.current.name;
+      if (!_.isUndefined(toState)) {
+        stateName = toState.name;
+      }
+      if (!vm.features.isMetricsOn) {
+        isRedirected = true;
+        goLogin();
+      }
+      if (!vm.features.hasMetricsSite && _.isEqual(stateName, vm.webexMetrics.states.metrics.state)) {
+        isRedirected = true;
+      }
+      if (!vm.features.hasMetricsSite && _.isEqual(stateName, vm.webexMetrics.states.diagnostics.state)) {
+        isRedirected = true;
+      }
+      if (!vm.features.isSystemOn && _.isEqual(stateName, vm.webexMetrics.states.system.state)) {
+        isRedirected = true;
+      }
+      if (!vm.features.isMEIOn && _.isEqual(stateName, vm.webexMetrics.states.mei.state)) {
+        isRedirected = true;
+      }
+      if (!vm.isWebexClassicEnabled && _.isEqual(stateName, vm.webexMetrics.states.classic.state)) {
+        isRedirected = true;
+      }
+      return isRedirected;
+    }
+
+    function goLogin() {
+      $state.go('login');
+    }
+
+    function goMetricsInitState() {
+      if (checkStatePermission($state.current.name)) {
+        return;
+      }
+      if (vm.metricsOptions.length > 0) {
+        var metricsDefaultLink = vm.metricsOptions[0].state;
+        if ($state.is(vm.webexMetricsState)) {
+          $state.go(metricsDefaultLink);
+        } else if (!vm.isStateReady) {
+          $state.reload($state.current.name);
+        }
+      }
+    }
+
+    function initSiteUrl() {
       var stateParamsSiteUrl = $stateParams.siteUrl;
       var stateParamsSiteUrlIndex = vm.metricsSiteOptions.indexOf(stateParamsSiteUrl);
 
@@ -97,136 +199,28 @@
         metricsSelected = vm.metricsSiteOptions[0];
       }
       vm.metricsSelected = metricsSelected;
-      if (isUsedState) {
-        goMetricsState();
-      } else {
-        updateWebexMetrics();
-      }
+      vm.webexMetrics.states.metrics.initialed = true;
+      updateMetricsView();
     }
 
-    function init() {
-      setViewHeight();
-      var promises = {
-        isMetricsOn: FeatureToggleService.webexMetricsGetStatus(),
-        // hasClassicSite: WebexMetricsService.hasClassicEnabled(),
-        hasMetricsSite: WebexMetricsService.hasMetricsSites(),
-        isMEIOn: FeatureToggleService.webexMEIGetStatus(),
-        isSystemOn: FeatureToggleService.webexSystemGetStatus(),
-      };
-      $q.all(promises).then(function (features) {
-        vm.features = features;
-        if (features.isMetricsOn && features.hasMetricsSite) {
-          vm.metricsOptions.push({
-            title: 'reportsPage.webexMetrics.metrics',
-            state: 'reports.webex-metrics.metrics',
-          },
-          {
-            title: 'reportsPage.webexMetrics.diagnostics',
-            state: 'reports.webex-metrics.diagnostics',
-          });
-        }
-        if (features.isMEIOn) {
-          vm.metricsOptions.push({
-            title: 'reportsPage.webexMetrics.MEI',
-            state: 'reports.webex-metrics.MEI',
-          });
-        }
-        if (features.isSystemOn) {
-          vm.metricsOptions.push({
-            title: 'reportsPage.webexMetrics.System',
-            state: 'reports.webex-metrics.system',
-          });
-        }
-        /*$log.log('-----------webexMetricsController features ------------------');
-        $log.log(features);
-        if (features.isMetricsOn && features.hasClassicSite) {
-          vm.metricsOptions.push({
-            title: 'reportsPage.webexMetrics.classic',
-            state: 'reports.webex-metrics.classic',
-          });
-        }*/
-        if (features.isMetricsOn && $scope.header.isWebexClassicEnabled) {
-          vm.metricsOptions.push({
-            title: 'reportsPage.webexMetrics.classic',
-            state: 'reports.webex-metrics.classic',
-          });
-        }
-        $timeout(goMetricsInitState);
-      });
-
-      Analytics.trackReportsEvent(Analytics.sections.REPORTS.eventNames.CUST_WEBEX_REPORT);
-    }
-
-    function generateMetrics(isUsedState) {
-      checkProPackPurchased().then(function () {
-        initialSites(isUsedState);
-      });
-    }
-
-    function setViewHeight() {
-      if (Authinfo.isReadOnlyAdmin()) {
-        vm.iframeContainerClass = 'webexMetricsContentWithReadOnly';
-      } else {
-        vm.iframeContainerClass = 'webexMetricsContent';
-      }
-    }
-
-    function checkProPackPurchased() {
-      var deferred = $q.defer();
+    function initViewsAndSites() {
       ProPackService.hasProPackPurchased().then(function (isPurchased) {
         if (isPurchased) {
-          vm.webexMetrics.views[0] = {
-            view: 'Premium',
-            appName: 'premium_webex_v1',
-          };
-          vm.reportView = vm.webexMetrics.views[0];
+          vm.viewType = 'premium';
         }
-        deferred.resolve(isPurchased);
-      },
-      function (response) {
-        deferred.reject(response);
+        return WebexMetricsService.getMetricsSites();
+      }).then(function (sites) {
+        var webexSiteUrls = sites;
+        vm.metricsSiteOptions = webexSiteUrls;
+
+        $timeout(initSiteUrl, 0);
       });
-      return deferred.promise;
-    }
-
-    function setStorageSite(siteUrl) {
-      var storageMetricsSiteUrl = LocalStorage.get('webexMetricsSiteUrl');
-
-      if (siteUrl !== storageMetricsSiteUrl) {
-        LocalStorage.put('webexMetricsSiteUrl', siteUrl);
-      }
-    }
-
-    function resetSiteSelector() {
-      var storageMetricsSiteUrl = LocalStorage.get('webexMetricsSiteUrl');
-      var metricsSelected = vm.metricsSelected;
-
-      if (metricsSelected !== storageMetricsSiteUrl && !_.isEmpty(storageMetricsSiteUrl)) {
-        vm.metricsSelected = storageMetricsSiteUrl;
-      }
-    }
-
-    function updateWebexMetrics() {
-      $scope.$broadcast('unfreezeState', false);
-
-      if (vm.selectEnable && (_.isNull(vm.metricsSelected) || _.isUndefined(vm.metricsSelected))) {
-        vm.isNoData = true;
-        $scope.$broadcast('unfreezeState', true);
-      } else {
-        vm.loadMetricsReport();
-      }
     }
 
     function loadMetricsReport() {
-      function loadUrlAndIframe(url) {
-        vm.metricsOptions[0].url = url;
-        updateIframe();
-      }
-
-      if ($state.current.name === 'reports.webex-metrics.MEI') {
-        vm.reportView = vm.webexMetrics.views[1];
-      } else {
-        vm.reportView = vm.webexMetrics.views[0];
+      var reportView = vm.webexMetrics.views[vm.webexMetricsViews];
+      if (vm.webexMetricsViews === 'metrics') {
+        reportView = vm.webexMetrics.views[vm.webexMetricsViews][vm.viewType];
       }
 
       var userInfo = {
@@ -235,8 +229,11 @@
         email: Authinfo.getPrimaryEmail(),
       };
 
-      var viewType = _.get(vm, 'reportView.view');
-      var getWebExReportData = _.get(QlikService, 'getReportQBSUrl');
+      var viewType = _.get(reportView, 'view');
+      var getWebExReportData = _.get(QlikService, 'getQBSInfo');
+      if (vm.selectEnable) {
+        getWebExReportData = _.get(QlikService, 'getProdToBTSQBSInfo');
+      }
 
       if (!_.isFunction(getWebExReportData)) {
         return;
@@ -253,12 +250,12 @@
           };
           //TODO remove this 'if' segment, if QBS can handle this parameter
           if (vm.webexMetrics.appData.persistent === 'false') {
-            vm.webexMetrics.appData.appId = vm.reportView.appName;
+            vm.webexMetrics.appData.appId = reportView.appName;
           }
-          var QlikMashupChartsUrl = _.get(QlikService, 'getWebExReportAppfor' + viewType + 'Url')(vm.webexMetrics.appData.qrp);
+          var QlikMashupChartsUrl = _.get(QlikService, 'getQlikMashupUrl')(vm.webexMetrics.appData.qrp, vm.reportType, viewType);
           vm.webexMetrics.appData.url = QlikMashupChartsUrl;
           setStorageSite(vm.metricsSelected);
-          loadUrlAndIframe(QlikMashupChartsUrl);
+          updateIframe();
         }
       })
         .catch(function (error) {
@@ -266,6 +263,118 @@
           $scope.$broadcast('unfreezeState', true);
           Notification.errorWithTrackingId(error, 'reportsPage.webexMetrics.errorRequest');
         });
+    }
+
+    function onDestory() {
+      hasClassicEnabled();
+      $stateChangeStart();
+      $stateChangeSuccess();
+    }
+
+    function onStateChangeStart(event, toState, toParams, fromState) {
+      vm.isStateReady = true;
+      var isSubState = fromState.name.indexOf('reports.webex-metrics.') === 0;
+
+      $log.log('onStateChangeStart: checkStatePermission -----------');
+      if (/*isSubState &&*/_.startsWith(toState.name, vm.webexMetricsState) && checkStatePermission(toState)) {
+        event.preventDefault();
+        if (!isSubState) {
+          $state.go(fromState);
+        }
+      }
+
+      if (isSubState && toState.name === vm.webexMetricsState) {
+        event.preventDefault();
+      }
+    }
+
+    function onStateChangeSuccess(event, toState) {
+      switch (toState.name) {
+        case vm.webexMetrics.states.metrics.state:
+          vm.webexMetricsViews = 'metrics';
+          if (!vm.webexMetrics.states.metrics.initialed) {
+            initViewsAndSites();
+          } else {
+            updateMetricsView();
+          }
+          break;
+        case vm.webexMetrics.states.diagnostics.state:
+          vm.webexMetricsViews = 'diagnostics';
+          vm.selectEnable = false;
+          break;
+        case vm.webexMetrics.states.mei.state:
+          vm.webexMetricsViews = 'mei';
+          vm.selectEnable = false;
+          vm.updateWebexMetrics();
+          break;
+        case vm.webexMetrics.states.system.state:
+          vm.webexMetricsViews = 'system';
+          vm.selectEnable = false;
+          vm.updateWebexMetrics();
+          break;
+        case vm.webexMetrics.states.classic.state:
+          vm.webexMetricsViews = 'classic';
+          vm.selectEnable = false;
+          break;
+      }
+      Analytics.trackReportsEvent(Analytics.sections.REPORTS.eventNames.CUST_WEBEX_REPORT);
+    }
+
+    function pushClassicTab() {
+      if (!vm.hasClassicTab) {
+        vm.hasClassicTab = true;
+        vm.metricsOptions.push(vm.webexMetrics.states.classic);
+      }
+    }
+
+    function resetSiteSelector() {
+      var storageMetricsSiteUrl = LocalStorage.get('webexMetricsSiteUrl');
+      var metricsSelected = vm.metricsSelected;
+
+      if (metricsSelected !== storageMetricsSiteUrl && !_.isEmpty(storageMetricsSiteUrl)) {
+        vm.metricsSelected = storageMetricsSiteUrl;
+      }
+    }
+
+    function setStorageSite(siteUrl) {
+      var storageMetricsSiteUrl = LocalStorage.get('webexMetricsSiteUrl');
+
+      if (siteUrl !== storageMetricsSiteUrl) {
+        LocalStorage.put('webexMetricsSiteUrl', siteUrl);
+      }
+    }
+
+    function setViewHeight() {
+      if (Authinfo.isReadOnlyAdmin()) {
+        vm.iframeContainerClass = 'webexMetricsContentWithReadOnly';
+      }
+    }
+
+    function setupSubTabs() {
+      var promises = {
+        isMetricsOn: FeatureToggleService.webexMetricsGetStatus(),
+        // hasClassicSite: WebexMetricsService.hasClassicEnabled(),
+        hasMetricsSite: WebexMetricsService.hasMetricsSites(),
+        isMEIOn: FeatureToggleService.webexMEIGetStatus(),
+        isSystemOn: FeatureToggleService.webexSystemGetStatus(),
+      };
+      $q.all(promises).then(function (features) {
+        vm.features = features;
+        if (features.isSystemOn) {
+          vm.metricsOptions.splice(0, 0, vm.webexMetrics.states.system);
+        }
+        if (features.isMetricsOn && features.hasMetricsSite) {
+          vm.metricsOptions.push(vm.webexMetrics.states.metrics, vm.webexMetrics.states.diagnostics);
+        }
+        if (features.isMEIOn) {
+          vm.metricsOptions.push(vm.webexMetrics.states.mei);
+        }
+        if ($scope.header.isWebexClassicEnabled) {
+          vm.isWebexClassicEnabled = true;
+          pushClassicTab();
+        }
+        $timeout(goMetricsInitState, 0);
+      });
     }
 
     function updateIframe() {
@@ -281,47 +390,20 @@
       $scope.$broadcast('updateIframe', iframeUrl, data);
     }
 
-    function onStateChangeStart(event, toState, toParams, fromState) {
-      var isSubState = fromState.name.indexOf('reports.webex-metrics.') === 0;
-
-      if (isSubState && toState.name === 'reports.webex-metrics') {
-        event.preventDefault();
-      }
+    function updateMetricsView() {
+      vm.selectEnable = true;
+      vm.updateWebexMetrics();
     }
 
-    function onStateChangeSuccess(event, toState, toParams, fromState) {
-      if (toState.name === 'reports.webex-metrics.metrics') {
-        vm.selectEnable = true;
-        if (fromState.name.indexOf('reports.webex-metrics.classic') === 0) {
-          vm.generateMetrics(false);
-        } else {
-          vm.updateWebexMetrics();
-        }
-      } else if (toState.name === 'reports.webex-metrics.MEI') {
-        vm.selectEnable = false;
-        vm.updateWebexMetrics();
-      } else if (toState.name === 'reports.webex-metrics.classic') {
-        vm.selectEnable = false;
-      }
-    }
+    function updateWebexMetrics() {
+      $scope.$broadcast('unfreezeState', false);
 
-    function goMetricsInitState() {
-      var metricsDefaultLink = vm.metricsOptions[0].state;
-      if (_.endsWith(metricsDefaultLink, '.metrics')) {
-        generateMetrics(true);
+      if (vm.selectEnable && (_.isNull(vm.metricsSelected) || _.isUndefined(vm.metricsSelected))) {
+        vm.isNoData = true;
+        $scope.$broadcast('unfreezeState', true);
       } else {
-        $state.go(metricsDefaultLink);
+        vm.loadMetricsReport();
       }
-    }
-
-    function goMetricsState() {
-      $state.go('reports.webex-metrics.metrics');
-    }
-
-    function onDestory() {
-      selectEnable();
-      $stateChangeStart();
-      $stateChangeSuccess();
     }
   }
 })();

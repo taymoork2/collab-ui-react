@@ -36,7 +36,7 @@
     vm.templateName = $stateParams.aaTemplate;
     vm.saveAANumberAssignmentWithErrorDetail = saveAANumberAssignmentWithErrorDetail;
     vm.areAssignedResourcesDifferent = areAssignedResourcesDifferent;
-
+    vm.populateRoutingLocation = populateRoutingLocation;
     vm.getSystemTimeZone = getSystemTimeZone;
     vm.getTimeZoneOptions = getTimeZoneOptions;
     vm.save8To5Schedule = save8To5Schedule;
@@ -276,12 +276,28 @@
       return dummyUrlObj;
     }
 
+    function createAuthenticationBlock(action) {
+      if (_.isEmpty(action.username)) {
+        return undefined;
+      }
+      var authenticationBlock = {
+        type: 'BASIC',
+        credentials: {
+          username: action.username,
+          password: action.password,
+          id: action.credentialId,
+        },
+      };
+      return authenticationBlock;
+    }
+
     function makeRestBodyForHttpPostOrPut(action) {
       var doRestBody = {
         url: getThirdPartyRestApiDynamicUrl(action),
         method: action.method,
         responseActions: action.responseActions,
         testResponse: action.testResponse,
+        authentication: createAuthenticationBlock(action),
       };
       return doRestBody;
     }
@@ -390,6 +406,8 @@
                 var doRestId = _.get(action, 'doREST.id', '');
                 if (doRestId) {
                   _.set(vm, 'ui.' + scheduleName + '.entries[' + index + '].actions[0].value', doRestId);
+                  _.set(vm, 'ui.' + scheduleName + '.entries[' + index + '].actions[0].credentialId', doRestId);
+                  _.set(vm, 'ui.' + scheduleName + '.entries[' + index + '].actions[0].password', '');
                 }
               });
             }
@@ -685,6 +703,17 @@
           if (restApiUrl) {
             _.set(overrideProps, 'url', restApiUrl);
           }
+
+          // Error Notification if credential block is Empty
+          if (!_.isUndefined(_.get(response, 'authentication'))) {
+            if (_.isEmpty(_.get(response, 'authentication.credentials.username'))) {
+              AANotificationService.error('autoAttendant.errorReadDoRestCredential', {
+                name: vm.aaModel.aaName,
+              });
+            }
+            var username = _.get(response, 'authentication.credentials.username', '');
+            _.set(overrideProps, 'username', username);
+          }
           restBlocks[key] = overrideProps;
         });
         AARestModelService.setRestBlocks(restBlocks);
@@ -852,6 +881,7 @@
       AACommonService.setRouteSIPAddressToggle(featureToggleDefault);
       AACommonService.setDynAnnounceToggle(featureToggleDefault);
       AACommonService.setRestApiToggle(featureToggleDefault);
+      AACommonService.setRestApiTogglePhase2(featureToggleDefault);
       AACommonService.setReturnedCallerToggle(featureToggleDefault);
       AACommonService.setMultiSiteEnabledToggle(featureToggleDefault);
       return checkFeatureToggles();
@@ -862,6 +892,7 @@
         hasMediaUpload: FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload),
         hasRouteRoom: FeatureToggleService.supports(FeatureToggleService.features.huronAARouteRoom),
         hasRestApi: FeatureToggleService.supports(FeatureToggleService.features.huronAARestApi),
+        hasRestApiPhase2: FeatureToggleService.supports(FeatureToggleService.features.huronAARestApiPhase2),
         hasDynAnnounce: FeatureToggleService.supports(FeatureToggleService.features.huronAADynannounce),
         hasReturnedCaller: FeatureToggleService.supports(FeatureToggleService.features.huronAAReturnCaller),
         hasMultiSites: FeatureToggleService.supports(FeatureToggleService.features.huronMultiSite),
@@ -872,10 +903,27 @@
       AACommonService.setMediaUploadToggle(featureToggles.hasMediaUpload);
       AACommonService.setRouteSIPAddressToggle(featureToggles.hasRouteRoom);
       AACommonService.setRestApiToggle(featureToggles.hasRestApi);
+      AACommonService.setRestApiTogglePhase2(featureToggles.hasRestApiPhase2);
       AACommonService.setDynAnnounceToggle(featureToggles.hasDynAnnounce);
       AutoAttendantCeMenuModelService.setDynAnnounceToggle(featureToggles.hasDynAnnounce);
       AACommonService.setReturnedCallerToggle(featureToggles.hasReturnedCaller);
       AACommonService.setMultiSiteEnabledToggle(featureToggles.hasMultiSites);
+    }
+
+    function populateRoutingLocation() {
+      return AutoAttendantLocationService.listLocations()
+        .then(function (routingLocations) {
+          _.forEach(routingLocations.locations, function (location) {
+            if (!_.isEmpty(location.routingPrefix)) {
+              vm.ui.routingPrefixOptions.push(location.routingPrefix);
+            }
+          });
+          return $q.resolve();
+        })
+        .catch(function () {
+          AANotificationService.error('autoAttendant.errorReadLocations');
+          return $q.reject();
+        });
     }
 
     //load the feature toggle prior to creating the elements
@@ -893,6 +941,7 @@
       vm.ui.ceInfo.name = aaName;
       vm.ui.builder = {};
       vm.ui.aaTemplate = $stateParams.aaTemplate;
+      vm.ui.routingPrefixOptions = [];
 
       // Define vm.ui.builder.ceInfo_name for editing purpose.
       vm.ui.builder.ceInfo_name = _.cloneDeep(vm.ui.ceInfo.name);
@@ -908,9 +957,15 @@
         vm.aaModel = AAModelService.getAAModel();
         vm.aaModel.aaRecord = undefined;
         vm.selectAA(aaName);
-        setLoadingDone();
-        // wait for page to finish loading, then set focus
-        AccessibilityService.setFocus($element, '.aa-name-edit', 2000);
+        if (AACommonService.isMultiSiteEnabled()) {
+          populateRoutingLocation().then(function () {
+            setLoadingDone();
+            AccessibilityService.setFocus($element, '.aa-name-edit', 2000);
+          });
+        } else {
+          setLoadingDone();
+          AccessibilityService.setFocus($element, '.aa-name-edit', 2000);
+        }
       });
     }
 

@@ -94,49 +94,9 @@
         </div>
       </header>
       <section>
-        <div ng-if="helpdeskUserCtrl.hybridServicesCard.cal.entitled" class="hybrid-service-section">
-          <h5 translate="overview.cards.hybrid.services.squared-fusion-cal"></h5>
-          <div class="row collapse">
-            <div class="columns small-4 details-heading">
-              <span>{{::'cloudExtensions.status' | translate}}:</span>
-            </div>
-            <div class="columns small-8 details-value">
-              <span ng-if="!helpdeskUserCtrl.hybridServicesCard.cal.status" translate="common.on"></span>
-              <span ng-if="helpdeskUserCtrl.hybridServicesCard.cal.status"
-                    ng-class="helpdeskUserCtrl.hybridServicesCard.cal.status.state === 'error' ? 'helpdesk-red' : ''"
-                    translate="hercules.activationStatus.{{helpdeskUserCtrl.hybridServicesCard.cal.status.collapsedState}}"></span>
-              <span ng-if="helpdeskUserCtrl.hybridServicesCard.cal.status.lastStateChangeText">{{helpdeskUserCtrl.hybridServicesCard.cal.status.lastStateChangeText}}</span>
-              <div ng-if="helpdeskUserCtrl.hybridServicesCard.cal.status" ng-repeat="message in helpdeskUserCtrl.hybridServicesCard.cal.status.messages" ng-class="{'last-status-message': $last}">
-                <span ng-if="message.title"><i class="icon" ng-class="message.iconClass"></i> {{::message.title}} - </span>
-                <span><i ng-if="!message.title" class="icon" ng-class="message.iconClass"></i> {{::message.description}}</span>
-              </div>
-            </div>
-          </div>
-          <div class="row collapse" ng-if="helpdeskUserCtrl.hybridServicesCard.cal.status.homedCluster">
-            <div class="columns small-4 details-heading">
-              <span>{{::'cloudExtensions.cluster' | translate}}:</span>
-            </div>
-            <div class="columns small-8 details-value">
-              <span>{{helpdeskUserCtrl.hybridServicesCard.cal.status.homedCluster.name}} ({{helpdeskUserCtrl.hybridServicesCard.cal.status.homedConnector.hostname}})</span>
-            </div>
-          </div>
-          <div class="row collapse" ng-if="helpdeskUserCtrl.hybridServicesCard.cal.status.resourceGroup">
-            <div class="columns small-4 details-heading">
-              <span>{{::'hercules.resourceGroups.resourceGroupHeading' | translate}}:</span>
-            </div>
-            <div class="columns small-8 details-value">
-              <span>{{helpdeskUserCtrl.hybridServicesCard.cal.status.resourceGroup.name}}</span>
-            </div>
-          </div>
-          <div class="row collapse" ng-if="helpdeskUserCtrl.hybridServicesCard.cal.preferredWebExSiteName">
-            <div class="columns small-4 details-heading">
-              <span>{{::'hercules.cloudExtensions.preferredWebExSite' | translate}}:</span>
-            </div>
-            <div class="columns small-8 details-value">
-              <span>{{helpdeskUserCtrl.hybridServicesCard.cal.preferredWebExSiteName}}</span>
-            </div>
-          </div>
-        </div>
+
+        <help-desk-hybrid-calendar-user-info user="helpdeskUserCtrl.user" status="helpdeskUserCtrl.hybridServicesCard.cal.status">
+        </help-desk-hybrid-calendar-user-info>
 
         <div ng-if="helpdeskUserCtrl.hybridServicesCard.gcal.entitled" class="hybrid-service-section">
           <h5 translate="overview.cards.hybrid.services.squared-fusion-gcal"></h5>

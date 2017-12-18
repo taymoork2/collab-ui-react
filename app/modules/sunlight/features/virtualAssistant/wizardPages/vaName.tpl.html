@@ -8,7 +8,7 @@
            autocomplete="off"
            focus-on>
     <p class="ct-input-hint" ng-class="$ctrl.isNameValid() ? 'ct-input-valid-border' : 'ct-input-invalid-border'">
-      {{$ctrl.getText('name.nameHint')}}
+      {{$ctrl.getNameHint()}}
     </p>
     <div class="ct-input-error-wrapper" ng-messages="$ctrl.nameForm.nameInput.$error">
       <div class="message small ct-input-error" ng-message="duplicate_error">

@@ -4,15 +4,20 @@
   var TimingKey = require('../metrics').TimingKey;
   var DiagnosticKey = require('../metrics').DiagnosticKey;
   var KeyCodes = require('modules/core/accessibility').KeyCodes;
+  var LanguageConfigs = require('../l10n/languages').languageConfigs;
 
   /* @ngInject */
   function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $translate, ApiCacheManagementService, Auth, Authinfo, Log, LocalStorage, LogMetricsService, MetricsService, PageParam, SessionStorage, StorageKeys, TokenService, Utils) {
     MetricsService.startTimer(TimingKey.LOGIN_DURATION);
     var queryParams = SessionStorage.popObject(StorageKeys.REQUESTED_QUERY_PARAMS);
-    var language = LocalStorage.get(StorageKeys.LANGUAGE);
 
     $scope.message = LocalStorage.get(StorageKeys.LOGIN_MESSAGE);
 
+    if ($stateParams.lang && _.some(LanguageConfigs, { value: $stateParams.lang })) {
+      // Force a language rather than rely on the browser's default
+      LocalStorage.put('language', $stateParams.lang);
+    }
+    var language = LocalStorage.get('language');
     if (language) {
       $translate.use(language).then(function () {
         moment.locale(language);
@@ -65,6 +70,7 @@
       })
         .then(function () {
           ApiCacheManagementService.warmUpOnInterval();
+          $location.search({});
 
           if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
             $state.go('firsttimewizard');

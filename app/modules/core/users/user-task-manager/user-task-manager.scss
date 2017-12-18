@@ -1,7 +1,8 @@
+@import '~collab-ui/scss/settings/colors';
 @import 'styles/partials/mixins';
 
 user-task-manager-modal {
-  @include keep-flex(column);
+  @include keep-flex-container(column);
 
   .reveal-modal.full & .modal-body {
     padding: 0;
@@ -11,8 +12,12 @@ user-task-manager-modal {
   }
 
   .loading-wrapper {
-    @include keep-flex();
+    @include keep-flex-container(row);
     align-items: center;
     justify-content: center;
+  }
+
+  .alert {
+    color: $color-alerts;
   }
 }

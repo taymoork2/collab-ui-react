@@ -21,6 +21,21 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       nextButtonState: false,
     },
     {
+      name: 'vaAvatar',
+      previousButtonState: true,
+      nextButtonState: true,
+    },
+    {
+      name: 'evaDefaultSpace',
+      previousButtonState: true,
+      nextButtonState: false,
+    },
+    {
+      name: 'evaConfigurationSteps',
+      previousButtonState: true,
+      nextButtonState: true,
+    },
+    {
       name: 'vaSummary',
       previousButtonState: true,
       nextButtonState: 'hidden',
@@ -29,6 +44,8 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
   const expectedPageTemplate = {
     templateId: jasmine.any(String),
     name: jasmine.any(String),
+    ownerId: jasmine.any(String),
+    ownerDetails: jasmine.any(Object),
     configuration: {
       mediaType: 'virtualAssistant',
       pages: {
@@ -63,8 +80,74 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
   };
 
   const dummyLogoUrl = 'https://www.example.com/logo.png';
+  const personId = 'personId';
+  const listRoomsResponse = {
+    items: [
+      {
+        id: 'roomId1',
+        title: 'title 1',
+        creatorId: personId,
+      },
+      {
+        id: 'roomId2',
+        title: 'room title 2',
+        creatorId: 'random id 2',
+      },
+      {
+        id: 'roomId3',
+        title: 'room title 3',
+        creatorId: personId,
+      },
+      {
+        id: 'roomId4',
+        title: 'a title 4',
+        creatorId: 'random id 4',
+      },
+      {
+        id: 'roomId5',
+        title: 'room title 5',
+        creatorId: 'random id 5',
+      },
+    ],
+  };
+  const listMembershipsResponse = {
+    items: [
+      {
+        isModerator: true,
+        roomId: 'roomId4',
+      },
+      {
+        isModerator: false,
+        roomId: 'roomId5',
+      },
+      {
+        isModerator: true,
+        roomId: 'roomIdnotmatched',
+      },
+    ],
+  };
+  const expectedDefaultSpaces = {
+    items: [
+      {
+        id: 'roomId4',
+        title: 'a title 4',
+        creatorId: 'random id 4',
+      },
+      {
+        id: 'roomId3',
+        title: 'room title 3',
+        creatorId: personId,
+      },
+      {
+        id: 'roomId1',
+        title: 'title 1',
+        creatorId: personId,
+      },
+    ],
+  };
 
-  let getLogoDeferred, getLogoUrlDeferred, controller;
+  let getLogoDeferred, getLogoUrlDeferred, controller, listRoomsDeferred, listMembershipsDeferred;
+  let warningIfNotOwnerResult;
 
   beforeEach(function () {
     this.initModules('Sunlight', evaSetupModule);
@@ -75,6 +158,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       '$stateParams',
       '$modal',
       '$timeout',
+      '$translate',
       'CTService',
       'Analytics',
       'Authinfo',
@@ -83,21 +167,32 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       'SparkService',
     );
 
+    afterEach(function () {
+      getLogoDeferred = getLogoUrlDeferred = controller = listRoomsDeferred = listMembershipsDeferred = undefined;
+    });
+
     //create mock deferred object which will be used to return promises
     getLogoDeferred = this.$q.defer();
     getLogoUrlDeferred = this.$q.defer();
-
+    listRoomsDeferred = this.$q.defer();
+    listMembershipsDeferred = this.$q.defer();
+    warningIfNotOwnerResult = { valid: true };
     spyOn(this.$modal, 'open');
     spyOn(this.CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
     spyOn(this.CTService, 'getLogoUrl').and.returnValue(getLogoUrlDeferred.promise);
     spyOn(this.Notification, 'success');
     spyOn(this.Notification, 'error');
     spyOn(this.Notification, 'errorWithTrackingId');
+    spyOn(this.Notification, 'warning');
     spyOn(this.Analytics, 'trackEvent');
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(OrgId);
     spyOn(this.Authinfo, 'getOrgName').and.returnValue(OrgName);
-    spyOn(Date, 'now').and.returnValues(10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10);
-
+    spyOn(Date, 'now').and.returnValues(10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190);
+    spyOn(this.SparkService, 'getMyPersonId').and.returnValue(personId);
+    spyOn(this.SparkService, 'listRooms').and.returnValue(listRoomsDeferred.promise);
+    spyOn(this.SparkService, 'listMemberships').and.returnValue(listMembershipsDeferred.promise);
+    spyOn(this.$translate, 'instant').and.callThrough();
+    spyOn(this.EvaService, 'getWarningIfNotOwner').and.callFake(() => warningIfNotOwnerResult);
 
     this.compileComponent('eva-setup', {
       dismiss: 'dismiss()',
@@ -133,14 +228,27 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     it('getSummaryDescription', function () {
       controller.template.configuration.pages.vaName.nameValue = 'testName';
       controller.getSummaryDescription();
-      expect(controller.getText).toHaveBeenCalledWith('summary.desc', { name: controller.template.configuration.pages.vaName.nameValue });
+      expect(controller.getText).toHaveBeenCalledWith('summary.evaDesc', { name: controller.template.configuration.pages.vaName.nameValue });
     });
 
     it('getSummaryDescription with isEditFeature true', function () {
       controller.isEditFeature = true;
       controller.template.configuration.pages.vaName.nameValue = 'testName';
       controller.getSummaryDescription();
-      expect(controller.getText).toHaveBeenCalledWith('summary.editDesc', { name: controller.template.configuration.pages.vaName.nameValue });
+      expect(controller.getText).toHaveBeenCalledWith('summary.evaDescEdit', { name: controller.template.configuration.pages.vaName.nameValue });
+    });
+
+    it('cancelModal', function () {
+      controller.cancelModal();
+      expect(this.$translate.instant).toHaveBeenCalledWith('careChatTpl.cancelCreateDialog',
+        { featureName: 'careChatTpl.virtualAssistant.eva.featureText.name' });
+    });
+
+    it('cancelModal with isEditFeature true', function () {
+      controller.isEditFeature = true;
+      controller.cancelModal();
+      expect(this.$translate.instant).toHaveBeenCalledWith('careChatTpl.cancelEditDialog',
+        { featureName: 'careChatTpl.virtualAssistant.eva.featureText.name' });
     });
   });
 
@@ -148,33 +256,36 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     beforeEach(function () {
       getLogoDeferred.resolve(getDummyLogo('abcd'));
       getLogoUrlDeferred.resolve(dummyLogoUrl);
+      listRoomsDeferred.resolve(listRoomsResponse);
+      listMembershipsDeferred.resolve(listMembershipsResponse);
       this.$scope.$apply();
     });
 
-    it('States correlate to pages', function () {
+    it('should validate the states correlate to pages', function () {
       expect(controller.states).toEqual(expectedStates);
+      expect(controller.template.configuration.pages.evaDefaultSpace.defaultSpaceOptions).toEqual(expectedDefaultSpaces.items);
     });
 
-    it('First state is initial state', function () {
+    it('should validate the first state is initial state', function () {
       expect(controller.currentState).toEqual(controller.states[0]);
     });
 
-    it('keyboard functionality', function () {
+    it('should validate the keyboard functionality', function () {
       controller.evalKeyPress(escapeKey);
       expect(this.$modal.open).toHaveBeenCalled();
     });
 
-    it('Walk pages forward in order ', function () {
+    it('should walk pages forward in order ', function () {
       for (let i = 0; i < controller.states.length; i++) {
         expect(controller.currentState).toEqual(controller.states[i]);
         controller.nextPage();
-        expect(this.Analytics.trackEvent).toHaveBeenCalledWith(controller.template.configuration.pages[controller.currentState].eventName, { durationInMillis: 0 });
+        expect(this.Analytics.trackEvent).toHaveBeenCalledWith(controller.template.configuration.pages[controller.currentState].eventName, { durationInMillis: 10 });
         this.Analytics.trackEvent.calls.reset();
         this.$timeout.flush();
       }
     });
 
-    it('Walk pages Backward in order ', function () {
+    it('should walk pages Backward in order ', function () {
       controller.currentState = controller.states[controller.states.length - 1];
       for (let i = (controller.states.length - 1); 0 <= i; i--) {
         expect(controller.currentState).toEqual(controller.states[i]);
@@ -194,6 +305,56 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
         controller.currentState = controller.states[index];
         expect(controller.getCurrentPage()).toEqual(expectedPageFilename);
       });
+    });
+
+  });
+
+  describe('Field Checks on All Pages with fields', function () {
+    const AVATAR_PAGE_INDEX = 3;
+
+    it('should disable Next and Back button on Avatar Page when avatar file is loading', function () {
+      controller.avatarUploadState = controller.avatarState.LOADING;
+      checkStateOfNavigationButtons(AVATAR_PAGE_INDEX, false, false);
+    });
+
+    it('should enable Next button on Default Space Page after select something', function () {
+      controller.template.configuration.pages.evaDefaultSpace.selectedDefaultSpace.id = 'something';
+      checkStateOfNavigationButtons(AVATAR_PAGE_INDEX, true, true);
+    });
+  });
+
+  describe('Avatar Page', function () {
+    let deferredFileDataUrl;
+    beforeEach(function() {
+      deferredFileDataUrl = this.$q.defer();
+      spyOn(this.EvaService, 'getFileDataUrl').and.returnValue(deferredFileDataUrl.promise);
+    });
+
+    it('should validate avatar file type', function () {
+      deferredFileDataUrl.resolve('');
+      const size = 1000;
+      controller.template.configuration.pages.vaAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
+      controller.uploadAvatar({ name: 'abc.jpeg', size });
+      expect(controller.template.configuration.pages.vaAvatar.avatarError).toEqual(controller.avatarErrorType.FILE_TYPE_ERROR);
+
+      controller.template.configuration.pages.vaAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
+      controller.uploadAvatar({ name: 'abc.png', size });
+      expect(controller.template.configuration.pages.vaAvatar.avatarError).toEqual(controller.avatarErrorType.NO_ERROR);
+    });
+
+    it('should validate avatar file size', function () {
+      deferredFileDataUrl.resolve('');
+      controller.template.configuration.pages.vaAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
+      controller.uploadAvatar({ name: 'abc.png' , size: controller.MAX_AVATAR_FILE_SIZE + 1 });
+      expect(controller.template.configuration.pages.vaAvatar.avatarError).toEqual(controller.avatarErrorType.FILE_SIZE_ERROR);
+
+      controller.template.configuration.pages.vaAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
+      controller.uploadAvatar({ name: 'abc.png' , size: 0 });
+      expect(controller.template.configuration.pages.vaAvatar.avatarError).toEqual(controller.avatarErrorType.FILE_SIZE_ERROR);
+
+      controller.template.configuration.pages.vaAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
+      controller.uploadAvatar({ name: 'abc.png' , size: controller.MAX_AVATAR_FILE_SIZE });
+      expect(controller.template.configuration.pages.vaAvatar.avatarError).toEqual(controller.avatarErrorType.NO_ERROR);
     });
   });
 
@@ -269,6 +430,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     beforeEach(function () {
       deferred = this.$q.defer();
       spyOn(this.EvaService, 'addExpertAssistant').and.returnValue(deferred.promise);
+      spyOn(this.EvaService, 'updateExpertAssistant').and.returnValue(deferred.promise);
     });
 
     it("When save template failed, the 'saveTemplateErrorOccurred' is set", function () {
@@ -282,6 +444,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       const featureNameObj = { featureName: 'careChatTpl.virtualAssistant.eva.featureText.name' };
       expect(controller.saveTemplateErrorOccurred).toBeTruthy();
       expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String), featureNameObj);
+      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_CREATE_FAILURE);
     });
 
     it('should submit template successfully', function () {
@@ -291,10 +454,9 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       spyOn(this.$state, 'go');
       deferred.resolve({
         success: true,
-        botServicesConfigId: 'AnExpertAssistantId',
+        expertAssistantId: 'AnExpertAssistantId',
         status: 201,
       });
-
       controller.submitFeature();
       this.$scope.$apply();
 
@@ -303,8 +465,71 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       });
       expect(controller.saveTemplateErrorOccurred).toBeFalsy();
       expect(this.$state.go).toHaveBeenCalled();
-      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_SUMMARY_PAGE, { durationInMillis: 10 });
-      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_START_FINISH, { durationInMillis: 0 });
+      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_SUMMARY_PAGE, { durationInMillis: 30 });
+      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_START_FINISH, { durationInMillis: 10 });
+      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_CREATE_SUCCESS);
+    });
+
+    it('should save successfully for Edit', function () {
+      //by default, this flag is false
+      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
+      controller.isEditFeature = true;
+      const testName = 'My Test EVA';
+      controller.template.configuration.pages.vaName.nameValue = testName;
+      spyOn(this.$state, 'go');
+      deferred.resolve({
+        success: true,
+        status: 200,
+      });
+      controller.submitFeature();
+      this.$scope.$apply();
+
+      expect(this.Notification.success).toHaveBeenCalledWith('careChatTpl.editSuccessText', {
+        featureName: testName,
+      });
+      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
+      expect(this.$state.go).toHaveBeenCalled();
+      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_SUMMARY_PAGE, { durationInMillis: 30 });
+      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_START_FINISH, { durationInMillis: 10 });
+    });
+
+    it('should show correct notification if save fails on Edit', function () {
+      //by default, this flag is false
+      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
+      controller.isEditFeature = true;
+      const failedData = {
+        success: false,
+        status: 403,
+        Errors: [{
+          errorCode: '100106',
+        }],
+      };
+      deferred.reject(failedData);
+      controller.submitFeature();
+      this.$scope.$apply();
+
+      expect(controller.saveTemplateErrorOccurred).toBeTruthy();
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String));
+    });
+
+    it('should show correct notification if user does not have access for edit Edit', function () {
+      //by default, this flag is false
+      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
+      controller.isEditFeature = true;
+      const expectedWarningMessage = {
+        message: 'careChatTpl.virtualAssistant.eva.featureText.nonAdminEditDeleteWarning',
+        args: { owner: 'Some Owner' },
+      };
+      warningIfNotOwnerResult = {
+        valid: false,
+        warning: expectedWarningMessage,
+      };
+      controller.submitFeature();
+      this.$scope.$apply();
+
+      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
+      expect(controller.userHasAccess).toBeFalsy();
+      expect(this.Notification.warning).toHaveBeenCalledWith(expectedWarningMessage.message, expectedWarningMessage.args);
     });
   });
 });

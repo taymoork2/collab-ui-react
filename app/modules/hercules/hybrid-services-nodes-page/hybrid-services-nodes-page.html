@@ -69,6 +69,7 @@
         <td>
           {{::connector.version}}
           <span class="badge info" ng-if="connector.hasUpgradeAvailable" translate="hercules.fusion.list.upgrade"></span>
+          <span class="badge info" ng-if="connector.upgradesAutomatically" translate="hercules.fusion.list.upgradesAutomatically"></span>
           <span ng-hide="connector.maintenanceMode === 'on' && connector.connectorType === 'mf_mgmt'">
             <span class="badge" ng-if="connector.upgradeState === 'upgrading'" translate="hercules.fusion.list.upgrading"></span>
           </span>

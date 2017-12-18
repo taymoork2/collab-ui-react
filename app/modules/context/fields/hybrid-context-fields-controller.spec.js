@@ -49,7 +49,7 @@ describe('HybridContextFieldsCtrl', function () {
     spyOn(Notification, 'error');
     spyOn(LogMetricsService, 'logMetrics');
     spyOn(Authinfo, 'getOrgName').and.returnValue('orgName');
-    spyOn(PropertyService, 'getProperty').and.returnValue($q.reject(undefined));
+    spyOn(PropertyService, 'getProperty').and.returnValue($q.resolve(PropertyConstants.MAX_FIELDS_DEFAULT_VALUE));
   }
 
   function initController() {
@@ -528,6 +528,13 @@ describe('HybridContextFieldsCtrl', function () {
         $scope.$apply();
         expect(controller.maxFieldsAllowed).toBe(maxFields);
         expect(controller.showNew).toBe(false);
+      });
+
+      it('should use default max fields allowed on reject', function () {
+        PropertyService.getProperty.and.returnValue($q.reject());
+        $scope.$apply();
+        expect(controller.maxFieldsAllowed).toBe(PropertyConstants.MAX_FIELDS_DEFAULT_VALUE);
+        expect(controller.showNew).toBe(true);
       });
     });
   });

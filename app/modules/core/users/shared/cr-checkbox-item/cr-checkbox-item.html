@@ -1,0 +1,12 @@
+<div>
+  <input
+    cs-input
+    type="checkbox"
+    id="{{$ctrl.formItemId}}"
+    name="{{$ctrl.formItemId}}"
+    cs-input-label="{{:: $ctrl.l10nLabel | translate}}"
+    ng-model="$ctrl.isSelected"
+    ng-disabled="$ctrl.isDisabled"
+    ng-change="$ctrl.recvChange()">
+</div>
+<div class="assignable_item_checkbox__description" ng-transclude></div>

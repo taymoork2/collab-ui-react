@@ -5,8 +5,8 @@
     </span>
   </div>
   <div ng-if="!$ctrl.firstLoad">
-    <div ng-if="$ctrl.clusterList.length !== 0" class="gridStyle" ui-grid="$ctrl.clusterListGridOptions" ui-grid-selection></div>
-    <div ng-if="$ctrl.clusterList.length === 0">
+    <cs-grid ng-if="$ctrl.clusterListGridOptions.data.length !== 0" grid-api="$ctrl.gridApi" grid-options="$ctrl.clusterListGridOptions" spinner="false" state="{{::$ctrl.state}}"></cs-grid>
+    <div ng-if="$ctrl.clusterListGridOptions.data.length === 0">
       <div ng-if="$ctrl.serviceId !== 'contact-center-context' && $ctrl.serviceId !== 'ept'" class="centered-info-pane">
         <h3 translate="hercules.clusters.listing.no_clusters_heading"></h3>
         <p translate="hercules.clusters.listing.no_clusters_text"></p>

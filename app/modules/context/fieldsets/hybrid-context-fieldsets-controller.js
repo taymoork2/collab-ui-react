@@ -68,7 +68,7 @@ var momentFilter = require('../filters/momentFilter').Moment;
 
       $q.all(promises).then(function () {
         initializeListeners();
-        return getFieldsetsList();
+        getFieldsetsList().catch(_.noop);
       });
     }
 

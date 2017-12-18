@@ -12,6 +12,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
   var index = '0';
   var menuId = 'menu1';
   var attempts = 4;
+  var routingPrefixOptions = [];
   var queueName = 'Sunlight Queue 1';
   var queues = [{
     queueName: queueName,
@@ -97,6 +98,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     $scope.index = index;
     $scope.menuId = menuId;
     $scope.queues = queues;
+    $scope.routingPrefixOptions = routingPrefixOptions;
 
     var menu = AutoAttendantCeMenuModelService.newCeMenu();
     menu.type = 'MENU_OPTION';
@@ -186,9 +188,9 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     });
 
     it('should change Repeat-Menu to Dial-by-Extension action in the model', function () {
-      var ceMenu = _.cloneDeep(data.ceMenu);
-      var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
-      var expectEntry2 = raw2MenuEntry(ceMenu.entries[1]);
+      var ceMenuDialByExtension = _.cloneDeep(data.ceMenuDialByExtension);
+      var expectEntry = raw2MenuEntry(ceMenuDialByExtension.entries[0]);
+      var expectEntry2 = raw2MenuEntry(ceMenuDialByExtension.entries[1]);
       var phoneMenu = {
         type: 'MENU_OPTION',
         entries: [],

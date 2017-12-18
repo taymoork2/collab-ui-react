@@ -1,3 +1,5 @@
+import { KeyCodes } from 'modules/core/accessibility';
+
 class HuntGroupCallsToSparkAppCtrl implements ng.IComponentController {
   public sendToApp: boolean;
   public onChangeFn: Function;
@@ -14,6 +16,16 @@ class HuntGroupCallsToSparkAppCtrl implements ng.IComponentController {
 
   public onCallsToSparkAppChange(): void {
     this.onChangeFn();
+  }
+
+  public keypress($event) {
+    // prevent jumping to non-existant/hidden location on ENTER
+    switch ($event.which) {
+      case KeyCodes.ENTER:
+        $event.preventDefault();
+        $event.stopPropagation();
+        break;
+    }
   }
 }
 

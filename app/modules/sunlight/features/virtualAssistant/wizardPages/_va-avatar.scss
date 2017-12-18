@@ -15,7 +15,14 @@
   }
 
   .va-input-messages {
-    @include vr-spacing(mt, 0.5);
+    @include vr-spacing(mt, 1.0);
+    color: $gray-dark-2;
+  }
+
+  .va-upload-desc {
+    text-align: center;
+    @include vr-spacing(ml, 6.5);
+    @include vr-spacing(mr, 6.5);
   }
 
   .header3 {

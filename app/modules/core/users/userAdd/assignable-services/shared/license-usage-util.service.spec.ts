@@ -71,6 +71,50 @@ describe('LicenseUsageUtilService:', () => {
     });
   });
 
+  describe('getMessageLicenses(): ', () => {
+    it('should filter licenses with "offerName" any of ["MS", "MSGR"]', function () {
+      const fakeLicenses = [{ offerName: 'foo' }];
+      let result = this.LicenseUsageUtilService.getMessageLicenses(fakeLicenses);
+      expect(result.length).toBe(0);
+
+      fakeLicenses.push({ offerName: 'MS' });
+      result = this.LicenseUsageUtilService.getMessageLicenses(fakeLicenses);
+      expect(result.length).toBe(1);
+
+      fakeLicenses.push({ offerName: 'MSGR' });
+      result = this.LicenseUsageUtilService.getMessageLicenses(fakeLicenses);
+      expect(result.length).toBe(2);
+    });
+  });
+
+  describe('getCallLicenses(): ', () => {
+    it('should filter licenses with "offerName" of "CO"', function () {
+      const fakeLicenses = [{ offerName: 'foo' }];
+      let result = this.LicenseUsageUtilService.getCallLicenses(fakeLicenses);
+      expect(result.length).toBe(0);
+
+      fakeLicenses.push({ offerName: 'CO' });
+      result = this.LicenseUsageUtilService.getCallLicenses(fakeLicenses);
+      expect(result.length).toBe(1);
+    });
+  });
+
+  describe('getCareLicenses(): ', () => {
+    it('should filter licenses with "offerName" any of ["CDC", "CVC"]', function () {
+      const fakeLicenses = [{ offerName: 'foo' }];
+      let result = this.LicenseUsageUtilService.getCareLicenses(fakeLicenses);
+      expect(result.length).toBe(0);
+
+      fakeLicenses.push({ offerName: 'CDC' });
+      result = this.LicenseUsageUtilService.getCareLicenses(fakeLicenses);
+      expect(result.length).toBe(1);
+
+      fakeLicenses.push({ offerName: 'CVC' });
+      result = this.LicenseUsageUtilService.getCareLicenses(fakeLicenses);
+      expect(result.length).toBe(2);
+    });
+  });
+
   describe('getBasicMeetingLicenses(): ', () => {
     it('should filter licenses with "offerName" of "CF"', function () {
       const result = this.LicenseUsageUtilService.getBasicMeetingLicenses(this.fixtures.fakeLicensesWithBasicMeeting);
@@ -141,21 +185,6 @@ describe('LicenseUsageUtilService:', () => {
     });
   });
 
-  describe('hasLicenseWithAnyOfferName(): ', () => {
-    it('should return true if any license is found with an "offerName" matching the first arg (or any value in the first arg if it is a list), false otherwise', function () {
-      const fakeLicenses = [{ offerName: 'foo' }];
-      let result = this.LicenseUsageUtilService.hasLicenseWithAnyOfferName('foo', fakeLicenses);
-      expect(result).toBe(true);
-
-      result = this.LicenseUsageUtilService.hasLicenseWithAnyOfferName('baz', fakeLicenses);
-      expect(result).toBe(false);
-
-      fakeLicenses.push({ offerName: 'bar' });
-      result = this.LicenseUsageUtilService.hasLicenseWithAnyOfferName(['baz', 'bar'], fakeLicenses);
-      expect(result).toBe(true);
-    });
-  });
-
   describe('getTotalLicenseUsage(): ', () => {
     it('should return sum total of the "usage" property for all licenses with matching "offerName" property', function () {
       const fakeLicenses = [{ offerName: 'foo', usage: 0 }];
@@ -199,15 +228,6 @@ describe('LicenseUsageUtilService:', () => {
       const cloudSharedMeeting = this.Config.licenseModel.cloudSharedMeeting;
       expect(this.LicenseUsageUtilService.isSharedMeetingsLicense({ licenseModel: 'foo' })).toBe(false);
       expect(this.LicenseUsageUtilService.isSharedMeetingsLicense({ licenseModel: cloudSharedMeeting })).toBe(true);
-    });
-  });
-
-  describe('sanitizeIdForJs(): ', () => {
-    it('should transform input string to replace characters invalid for a JS variable name with underscore', function () {
-      expect(this.LicenseUsageUtilService.sanitizeIdForJs('')).toBe(undefined);
-      expect(this.LicenseUsageUtilService.sanitizeIdForJs('foo.bar')).toBe('foo_bar');
-      expect(this.LicenseUsageUtilService.sanitizeIdForJs('foo-bar')).toBe('foo_bar');
-      expect(this.LicenseUsageUtilService.sanitizeIdForJs('foo.bar-baz')).toBe('foo_bar_baz');
     });
   });
 });

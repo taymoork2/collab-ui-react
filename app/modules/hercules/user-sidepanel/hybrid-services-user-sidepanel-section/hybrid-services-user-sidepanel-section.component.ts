@@ -1,40 +1,50 @@
-import { FeatureToggleService } from 'modules/core/featureToggle';
 import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
+import { FeatureToggleService } from 'modules/core/featureToggle';
 import { IServiceDescription, ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
-import { IMessage, IUserStatusWithExtendedMessages, USSService } from 'modules/hercules/services/uss.service';
-import { IUser } from 'modules/core/auth/user/user';
 import { CloudConnectorService } from 'modules/hercules/services/calendar-cloud-connector.service';
+import { IUserStatusWithExtendedMessages, USSService } from 'modules/hercules/services/uss.service';
 import { Notification } from 'modules/core/notifications';
+import { HybridServiceUserSidepanelHelperService } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
 
 interface IServiceSetupStatus {
   id: HybridServiceId;
-  userIsEntitled: boolean;
-  enabled?: boolean;
-  isSetup?: boolean;
-  status: IUserStatusWithExtendedMessages;
+  status?: IUserStatusWithExtendedMessages;
 }
 
 class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentController {
 
-  public user: IUser;
-  public readonly allHybridServiceIds: HybridServiceId[] = ['squared-fusion-cal', 'squared-fusion-gcal', 'squared-fusion-uc', 'squared-fusion-ec', 'spark-hybrid-impinterop'];
-  private readonly callServicesinOrgerviceIds: HybridServiceId[] = ['squared-fusion-uc', 'squared-fusion-ec'];
-  private allServicesinOrg: IServiceSetupStatus[] = [];
-  public atlasHybridImpFeatureToggle = false;
-  public userStatusLoaded = false;
+  private userId: string;
+  private userEntitlements: string[];
+  private userLicenseIDs: string[];
+
+  private readonly allHybridServiceIds: HybridServiceId[] = ['squared-fusion-cal', 'squared-fusion-gcal', 'squared-fusion-uc', 'squared-fusion-ec', 'spark-hybrid-impinterop'];
+
+  public isLicensed: boolean;
+  public atlasHybridImpFeatureToggle: boolean;
+
+  private servicesOrgIsEntitledTo: HybridServiceId[];
+  private servicesUserCanBeEnabledFor: HybridServiceId[] = [];
+  public servicesWithStatuses: IServiceSetupStatus[] = [];
+
+  public couldNotReadStatusesFromFMS: boolean;
+  public couldNotReadOffice365Status: boolean;
+  public couldNotReadGoogleCalendarStatus: boolean;
+  public userIsEnabledForHuron: boolean;
+  public bothCalendarTypesWarning: boolean;
+
+  public loadingPage = false;
   private userSubscriptionTimer: ng.IPromise<void>;
-  public isLicensed;
-  public googleCalendarError: string;
-  public office365Error: string;
 
   /* @ngInject */
   constructor(
+    private $state: ng.ui.IStateService,
     private $timeout: ng.ITimeoutService,
     private Authinfo,
     private CloudConnectorService: CloudConnectorService,
     private FeatureToggleService: FeatureToggleService,
     private HybridServicesUtilsService: HybridServicesUtilsService,
+    private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
     private Notification: Notification,
     private ServiceDescriptorService: ServiceDescriptorService,
     private USSService: USSService,
@@ -43,10 +53,19 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
     const { user } = changes;
     if (user && user.currentValue) {
-      this.user = user.currentValue;
-      this.isLicensed = this.userIsLicensed();
-      this.init();
+      this.userId = user.currentValue.id;
+      this.userEntitlements = user.currentValue.entitlements;
+      this.userLicenseIDs = user.currentValue.licenseID;
     }
+    this.isLicensed = this.userIsLicensed();
+    this.init();
+  }
+
+  public $onInit() {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridImp)
+      .then((supported) => {
+        this.atlasHybridImpFeatureToggle = supported;
+      });
   }
 
   public $onDestroy() {
@@ -55,59 +74,34 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
     }
   }
 
-  private init(): void {
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridImp)
-      .then((supported) => {
-        this.atlasHybridImpFeatureToggle = supported;
-      });
-    this.allServicesinOrg = this.getServicesOrgIsEntitledTo();
-    this.filterOnAllServicesInOrg();
-    this.updateStatusForUser();
-  }
+  private init() {
+    this.loadingPage = true;
+    this.findServicesOrgIsEntitledTo();
 
-  private filterOnAllServicesInOrg(): void {
-    // Filter out services that are not enabled in FMS
-    this.ServiceDescriptorService.getServices()
-      .then((services: IServiceDescription[]) => {
-        if (services) {
-          _.forEach(this.allServicesinOrg, (service) => {
-            service.enabled = this.ServiceDescriptorService.filterEnabledServices(services).some((s) => {
-              return service.id === s.id && service.id !== 'squared-fusion-gcal';
-            });
-            service.isSetup = service.enabled;
+    const promises: ng.IPromise<any>[] = [
+      this.findServicesEnabledInFMS(),
+      this.findServicesEnabledInCCC(),
+    ];
 
-            // Can't have Huron (ciscouc) and Hybrid Call at the same time
-            if (service.id === 'squared-fusion-uc' && this.userHasEntitlement('ciscouc')) {
-              service.enabled = false;
-            }
-          });
-        }
-      })
+    this.HybridServicesUtilsService.allSettled(promises)
       .then(() => {
-        // If the org is entitled to either Office365 or Google Calendar, check with the Cloud Calendar Service as well
-        const expresswayBasedCalendarStatus = this.getService('squared-fusion-cal'); // We let 'squared-fusion-cal' represent only Expressway-based calendar
-        const cloudBasedCalendarStatus = this.getService('squared-fusion-gcal'); // We let 'squared-fusion-gcal' represent cloud calendars in general, not only Google
-        if (expresswayBasedCalendarStatus || cloudBasedCalendarStatus) {
-          return this.checkCloudCalendarService(expresswayBasedCalendarStatus, cloudBasedCalendarStatus);
-        }
-      })
-      .catch((error) => {
-        this.Notification.errorWithTrackingId(error, 'hercules.userSidepanel.readUserStatusFailed');
-      });
-  }
+        this.loadingPage = true;
 
-  private updateStatusForUser(): ng.IPromise<void> {
-    return this.USSService.getStatusesForUser(this.user.id)
-      .then(this.calculateStatusesAndWarnings)
-      .then(this.subscribeToUserStatusUpdates)
-      .catch((error) => {
-        if (error !== 'canceled') { // just the $timeout.cancel returning. Not something to tell the user about.
-          this.Notification.errorWithTrackingId(error, 'hercules.userSidepanel.readUserStatusFailed');
-        }
+        // Some serviceIds could have been enabled both places. Kill duplicates now, and starting building up data structures for the template.
+        this.servicesUserCanBeEnabledFor = _.uniq(this.servicesUserCanBeEnabledFor);
+        this.servicesWithStatuses = _.map(this.servicesUserCanBeEnabledFor, (serviceId) => {
+          return {
+            id: serviceId,
+          };
+        });
       })
+      .then(this.getStatusesInUSS)
+      .then(this.checkInvalidCombinations)
+      .then(this.subscribeToUserStatusUpdates)
       .finally(() => {
-        this.userStatusLoaded = true;
+        this.loadingPage = false;
       });
+
   }
 
   private userIsLicensed(): boolean {
@@ -115,110 +109,47 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
   }
 
   private hasCaaSLicense(): boolean {
-    const licenseIDs: string[] = _.get(this.user, 'licenseID', []);
+    const licenseIDs: string[] = this.userLicenseIDs || [];
     const offerCodes: string[] = _.map(licenseIDs, (licenseString) => {
       return licenseString.split('_')[0];
     });
     return offerCodes.length > 0;
   }
 
-  private calculateStatusesAndWarnings = (userStatuses: IUserStatusWithExtendedMessages[]): void => {
-    _.forEach(this.allServicesinOrg, (service: IServiceSetupStatus) => {
-      service.status = _.find(userStatuses, (status) => {
-        return service.id === status.serviceId;
-      });
-      if (service.status && service.status.messages && service.status.state !== 'error') {
-        service.status.hasWarnings = _.some(service.status.messages, (message: IMessage) => {
-          return message.severity === 'warning';
-        });
-      }
+
+  public serviceIsOnForUser(serviceId: HybridServiceId): boolean {
+    return _.some(this.servicesWithStatuses, (serviceWithStatus) => {
+      return serviceId === serviceWithStatus.id && _.get(serviceWithStatus, 'status.entitled');
     });
   }
 
+  public showService = (serviceId: HybridServiceId): boolean => _.includes(this.servicesUserCanBeEnabledFor, serviceId);
+
+  public orgHasOneOrMoreServicesEnabled = (): boolean => this.servicesUserCanBeEnabledFor.length > 0;
+
+  private userHasEntitlement = (entitlement: HybridServiceId | 'ciscouc'): boolean => this.userEntitlements && this.userEntitlements.indexOf(entitlement) > -1;
+
+  public serviceIcon = (serviceId: HybridServiceId): string => this.HybridServicesUtilsService.serviceId2Icon(serviceId);
+
   private subscribeToUserStatusUpdates = (): ng.IPromise<void> => {
+    this.loadingPage = false;
     return this.userSubscriptionTimer = this.$timeout(() => {
-      this.updateStatusForUser();
+      this.init();
     }, 10000);
   }
 
-  private checkCloudCalendarService = (expresswayBasedCalendar: IServiceSetupStatus, cloudBasedCalendar: IServiceSetupStatus): ng.IPromise<void> => {
+  public getStatus(serviceId: HybridServiceId): 'unknown' | 'not_entitled' | 'error' | 'pending_activation' | 'activated' {
 
-    const promises: ng.IPromise<any>[] = [];
-    if (cloudBasedCalendar) {
-      promises.push(this.CloudConnectorService.getService('squared-fusion-gcal'));
-    }
-    if (expresswayBasedCalendar) {
-      promises.push(this.CloudConnectorService.getService('squared-fusion-o365'));
-    }
+    let serviceWithStatus: IServiceSetupStatus = _.find(this.servicesWithStatuses, (serviceWithStatus) => {
+      return serviceWithStatus.id === serviceId;
+    });
 
-    return this.HybridServicesUtilsService.allSettled(promises)
-      .then((results) => {
-        if (results[0] && results[0].status === 'fulfilled' || results[1] && results[1].status === 'fulfilled') {
-          const cloudServiceIsSetup: boolean = _.get(results[0], 'value.setup', false) || _.get(results[1], 'value.setup', false);
-          // We only want to show *one* link to Calendar in the sidepanel.
-          // If both Exchange/Office365-based and Google are enabled, we need to "cheat" and pretend one of them is not.
-          const ignoreCloudService = _.isUndefined(cloudBasedCalendar) || (expresswayBasedCalendar.enabled && !expresswayBasedCalendar.userIsEntitled && !cloudBasedCalendar.userIsEntitled);
-          if (cloudServiceIsSetup && (!expresswayBasedCalendar.enabled || !expresswayBasedCalendar.userIsEntitled) && !ignoreCloudService) {
-            cloudBasedCalendar.enabled = true;
-            expresswayBasedCalendar.enabled = false;
-            if (!this.userSubscriptionTimer) {
-              this.updateStatusForUser();
-            }
-          }
-        }
-        if (results[0] && results[0].status === 'rejected') {
-          this.googleCalendarError = results[0].reason;
-        }
-        if (results[1] && results[1].status === 'rejected') {
-          this.office365Error = results[1].reason;
-        }
-      });
-  }
-
-  private getServicesOrgIsEntitledTo(): IServiceSetupStatus[] {
-    return _.compact(_.map(this.allHybridServiceIds, (service: HybridServiceId) => {
-      if (this.Authinfo.isEntitled(service)) {
-        return {
-          id: service,
-          userIsEntitled: this.userHasEntitlement(service),
-        };
-      }
-    })) as IServiceSetupStatus[];
-  }
-
-  private userHasEntitlement(entitlement: HybridServiceId | 'ciscouc'): boolean {
-    if (_.isUndefined(this.user)) {
-      return false;
-    }
-    return this.user.entitlements && this.user.entitlements.indexOf(entitlement) > -1;
-  }
-
-  public allEnabledServicesExceptUcFilter = (item: IServiceSetupStatus): boolean => {
-    return item && item.enabled === true && item.id !== 'squared-fusion-ec';
-  }
-
-  public serviceIcon = (id: HybridServiceId): string => {
-    return this.HybridServicesUtilsService.serviceId2Icon(id);
-  }
-
-  public getStatus(status: IUserStatusWithExtendedMessages): 'unknown' | 'not_entitled' | 'error' | 'pending_activation' | 'activated' {
     // for Hybrid Call, we need to aggregate the status from Aware and Connect
-    let mostSignificantStatus = status;
-    if (status) {
-      if (_.includes(this.callServicesinOrgerviceIds, status.serviceId)) {
-        const callServicesinOrgtatuses: IServiceSetupStatus[] = this.getCallServicesinOrg();
-        mostSignificantStatus = this.getMostSignificantStatus(callServicesinOrgtatuses).status;
-      }
+    if (serviceWithStatus && serviceId === 'squared-fusion-uc') {
+      const connectStatus = _.find(this.servicesWithStatuses, (serviceWithStatus) => serviceWithStatus.id === 'squared-fusion-ec');
+      serviceWithStatus = this.getMostSignificantStatus([serviceWithStatus, connectStatus]);
     }
-    return this.USSService.decorateWithStatus(mostSignificantStatus);
-  }
-
-  private getCallServicesinOrg(): IServiceSetupStatus[] {
-    return _.compact(_.map(this.allServicesinOrg, (service: IServiceSetupStatus) => {
-      if (_.includes(this.callServicesinOrgerviceIds, service.id)) {
-        return service;
-      }
-    })) as IServiceSetupStatus[];
+    return this.USSService.decorateWithStatus(serviceWithStatus.status);
   }
 
   private getMostSignificantStatus(statuses: IServiceSetupStatus[]): IServiceSetupStatus {
@@ -229,67 +160,144 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
     });
   }
 
-  private getService(id: HybridServiceId): IServiceSetupStatus {
-    return _.find(this.allServicesinOrg, (extension) => {
-      return extension.id === id;
-    });
+  private findServicesOrgIsEntitledTo(): void {
+    this.servicesOrgIsEntitledTo = _.filter(this.allHybridServiceIds, (service) => this.Authinfo.isEntitled(service));
   }
 
-  public orgHasOneOrMoreServicesEnabled(): boolean {
-    return _.some(this.allServicesinOrg, (service) => service.enabled);
+  private findServicesEnabledInFMS(): ng.IPromise<void> {
+    return this.ServiceDescriptorService.getServices()
+      .then((servicesInFMS: IServiceDescription[]) => {
+        const enabledServices = this.ServiceDescriptorService.filterEnabledServices(servicesInFMS);
+        _.forEach(this.servicesOrgIsEntitledTo, (service) => {
+          if (_.some(enabledServices, (s) => s.id === service)) {
+            this.servicesUserCanBeEnabledFor.push(service);
+          }
+        });
+      })
+      .catch(() => {
+        this.couldNotReadStatusesFromFMS = true;
+      });
+  }
+
+  private findServicesEnabledInCCC(): ng.IPromise<void> {
+    const promises: ng.IPromise<any>[] = [
+      this.CloudConnectorService.getService('squared-fusion-o365'),
+      this.CloudConnectorService.getService('squared-fusion-gcal'),
+    ];
+    return this.HybridServicesUtilsService.allSettled(promises)
+      .then((response) => {
+        if (_.get(response[0], 'status') === 'fulfilled' && _.get(response[0], 'value.provisioned')) {
+          this.servicesUserCanBeEnabledFor.push('squared-fusion-cal');
+        }
+        if (_.get(response[1], 'status') === 'fulfilled' && _.get(response[1], 'value.provisioned')) {
+          this.servicesUserCanBeEnabledFor.push('squared-fusion-gcal');
+        }
+        if (_.get(response[0], 'status') === 'rejected') {
+          this.couldNotReadOffice365Status = true;
+        }
+        if (_.get(response[1], 'status') === 'rejected') {
+          this.couldNotReadGoogleCalendarStatus = true;
+        }
+      });
+  }
+
+  private getStatusesInUSS = (): ng.IPromise<void> => {
+    return this.USSService.getStatusesForUser(this.userId)
+      .then((userStatuses: IUserStatusWithExtendedMessages[]) => {
+        _.forEach(this.servicesWithStatuses, (service: IServiceSetupStatus) => {
+          service.status = _.find(userStatuses, (status) => {
+            return service.id === status.serviceId;
+          });
+        });
+      })
+      .catch((error) => {
+        if (this.HybridServiceUserSidepanelHelperService.isPartnerAdminAndGot403Forbidden(error)) {
+          this.Notification.errorWithTrackingId(error, {
+            errorKey: 'hercules.userSidepanel.errorMessages.cannotReadUserDataFromUSSPartnerAdmin',
+            allowHtml: true,
+          });
+        } else {
+          this.Notification.errorWithTrackingId(error, 'hercules.userSidepanel.errorMessages.cannotReadUserDataFromUSS');
+        }
+      });
+  }
+
+  private checkInvalidCombinations = (): void => {
+    // Calling will not work if a user is enabled for Huron and Hybrid Call at the same time. Just disable the Hybrid Call section.
+    if (this.userHasEntitlement('ciscouc') && _.includes(this.servicesUserCanBeEnabledFor, 'squared-fusion-uc')) {
+      this.userIsEnabledForHuron = true;
+    }
+
+    // Being entitled to both hybrid calendar types will give very strange results. We must warn.
+    if (this.userHasEntitlement('squared-fusion-cal') && this.userHasEntitlement('squared-fusion-gcal') &&
+      _.includes(this.servicesUserCanBeEnabledFor, 'squared-fusion-cal') && _.includes(this.servicesUserCanBeEnabledFor, 'squared-fusion-gcal')) {
+      this.bothCalendarTypesWarning = true;
+    }
   }
 
   public userUpdatedCallback = (options) => {
     if (!_.isUndefined(options.callServiceAware)) {
       if (!options.callServiceAware) {
-        _.remove(this.user.entitlements, (e) => e === 'squared-fusion-uc');
+        _.pull(this.userEntitlements, 'squared-fusion-uc');
       } else {
-        if (!_.some(this.user.entitlements, (e) => e === 'squared-fusion-uc')) {
-          this.user.entitlements.push('squared-fusion-uc');
+        if (!_.includes(this.userEntitlements, 'squared-fusion-uc')) {
+          this.userEntitlements.push('squared-fusion-uc');
         }
       }
     }
     if (!_.isUndefined(options.callServiceConnect)) {
       if (!options.callServiceConnect) {
-        _.remove(this.user.entitlements, (e) => e === 'squared-fusion-ec');
+        _.pull(this.userEntitlements, 'squared-fusion-ec');
       } else {
-        if (!_.some(this.user.entitlements, (e) => e === 'squared-fusion-ec')) {
-          this.user.entitlements.push('squared-fusion-ec');
+        if (!_.includes(this.userEntitlements, 'squared-fusion-ec')) {
+          this.userEntitlements.push('squared-fusion-ec');
         }
       }
     }
     if (!_.isUndefined(options.hybridMessaging)) {
       if (!options.hybridMessaging) {
-        _.remove(this.user.entitlements, (e) => e === 'spark-hybrid-impinterop');
+        _.pull(this.userEntitlements, 'spark-hybrid-impinterop');
       } else {
-        if (!_.some(this.user.entitlements, (e) => e === 'spark-hybrid-impinterop')) {
-          this.user.entitlements.push('spark-hybrid-impinterop');
+        if (!_.includes(this.userEntitlements, 'spark-hybrid-impinterop')) {
+          this.userEntitlements.push('spark-hybrid-impinterop');
         }
       }
     }
     if (!_.isUndefined(options.calendarServiceEntitled)) {
       if (!options.calendarServiceEntitled) {
-        _.remove(this.user.entitlements, (e) => e === 'squared-fusion-cal');
-        _.remove(this.user.entitlements, (e) => e === 'squared-fusion-gcal');
+        _.pull(this.userEntitlements, 'squared-fusion-cal');
+        _.pull(this.userEntitlements, 'squared-fusion-gcal');
       } else {
-        if (options.calendarType === 'squared-fusion-cal' && !_.some(this.user.entitlements, (e) => e === 'squared-fusion-cal')) {
-          this.user.entitlements.push('squared-fusion-cal');
+        if (options.calendarType === 'squared-fusion-cal' && !_.includes(this.userEntitlements, 'squared-fusion-cal')) {
+          this.userEntitlements.push('squared-fusion-cal');
         }
-        if (options.calendarType === 'squared-fusion-gcal' && !_.some(this.user.entitlements, (e) => e === 'squared-fusion-gcal')) {
-          this.user.entitlements.push('squared-fusion-gcal');
+        if (options.calendarType === 'squared-fusion-gcal' && !_.includes(this.userEntitlements, 'squared-fusion-gcal')) {
+          this.userEntitlements.push('squared-fusion-gcal');
         }
       }
     }
     if (options.refresh) {
+      if (!_.isUndefined(this.userSubscriptionTimer)) {
+        this.$timeout.cancel(this.userSubscriptionTimer);
+      }
       this.init();
     }
+  }
+
+  public drillDown(serviceId: HybridServiceId) {
+    if (this.userIsEnabledForHuron && serviceId === 'squared-fusion-uc') {
+      return;
+    }
+    this.$state.go(`user-overview.hybrid-services-${serviceId}`, {
+      userUpdatedCallback: this.userUpdatedCallback,
+    });
   }
 
 }
 
 export class HybridServicesUserSidepanelSectionComponent implements ng.IComponentOptions {
   public controller = HybridServicesUserSidepanelSectionComponentCtrl;
-  public template = require('modules/hercules/user-sidepanel/hybrid-services-user-sidepanel-section/hybrid-services-user-sidepanel-section.component.html');
+  public template = require('./hybrid-services-user-sidepanel-section.component.html');
   public bindings = {
     user: '<',
   };

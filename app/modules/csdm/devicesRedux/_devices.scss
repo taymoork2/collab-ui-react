@@ -1,7 +1,9 @@
 @import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/forms';
 @import '~collab-ui/scss/settings/typography';
 @import '~collab-ui/scss/tools/placeholders/page-layout';
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~collab-ui/scss/tools/mixins/easing';
 @import '../../../styles/variables';
 
 
@@ -34,72 +36,65 @@
       align-self: flex-start;
     }
     align-items: center;
-    device-search {
-      flex-grow: 1;
-    }
     .graphCarousel {
       position: relative;
       height: 160px;
-
-      margin-right: 16px;
-      margin-left: 16px;
+      padding: 10px 0;
+      display: flex;
+      margin-right: 1rem;
+      margin-left: 2rem;
       #chartTitle {
-        position: absolute;
-        left: 190px;
+        line-height: 1.125rem;
       }
-      @media (min-width: 1225px) {
-        width: 360px;
-        #chartArea {
-          width: 360px;
+      .titleleg {
+        margin-left: 1.5rem;
+      }
+      .legend {
+        margin-top: .5rem;
+        font-size: .875rem;
+        font-family: $brand-font-light;
+        line-height: 1.5rem;
+        .selected {
+          color: $color-blue-base;
+        }
+        > div {
+          display: flex;
+          align-items: baseline;
+          div {
+            padding: 0 8px;
+          }
+        }
+        .text {
+          flex-grow: 1;
+        }
+        .number {
+          min-width: 50px;
+          text-align: right;
         }
       }
-      @media (max-width: 1224px) {
-        width: 160px;
-        #chartArea {
-          width: 200px;
-        }
-        #chartTitle {
+      @media (max-width: 1249px) {
+        .legend {
           display: none;
         }
         .amcharts-legend-div {
           display: none;
         }
       }
-      #chartArea {
-        position: absolute;
-        height: 160px;
-
-        //margin: auto;
+      @media (max-width: 991px) {
+        height: auto;
+        margin-left: 0;
+        .titleleg {
+          margin-left: 0;
+        }
       }
-
-      .carousel {
-        .title {
-          flex-basis: 100%;
-          font-size: 1.2rem;
-        }
-        .large {
-          font-size: 2rem;
-        }
-        .selected {
-          font-size: 0.9rem;
-        }
-        .icon {
-          line-height: 1rem;
-        }
-
-        font-size: 0.6rem;
-        justify-content: center;
-        text-align: center;
-        display: flex;
-        flex-wrap: wrap;
-        position: absolute;
-        bottom: 0;
-        margin: 0 35%;
-        width: 30%;
+      #chartArea {
+        height: 140px;
+        width: 140px;
       }
     }
     .new-export {
       align-self: flex-start;
+      flex-grow: 1;
     }
   }
 
@@ -145,7 +140,7 @@
     color: $brand-success;
   }
   .expired {
-    color: $brand-danger-darker;
+    color: $gray;
   }
 
   .device-card {
@@ -175,7 +170,7 @@
 
     h4,
     h4 span {
-      font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-family: $brand-font-light;
       font-size: 1rem;
     }
 
@@ -228,7 +223,7 @@
 
   strong,
   strong span {
-    font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: $brand-font-light;
     font-weight: 700;
   }
 
@@ -383,6 +378,7 @@
 
     .bulleted-searchbox {
       text-decoration: none;
+      margin-right: 1rem;
 
       .bulleted-searchinput.searcherror {
         background-color: $color-attention-lighter !important;
@@ -406,8 +402,17 @@
         border-radius: 4px;
         height: 100%;
         width: 430px;
-        padding-right: 32px;
-        margin-right: 1rem;
+        padding: 4px 32px 4px 24px;
+
+        &.focus, &.focus:hover {
+          background: $input-focus-bg-color;
+          border-color: $input-focus-border-color;
+          transition: border-color ease-in .15s, box-shadow ease-in .15s;
+        }
+
+        &:hover {
+          border-color: $input-hover-border-color;
+        }
 
         > input {
           position: relative;
@@ -420,9 +425,9 @@
           background: inherit;
           padding: 8px 1px 7px 0;
           margin-left: 4px;
-          margin-bottom: 3px;
+          margin-bottom: 0;
           border: none;
-          height: 32px;
+          height: 22px;
           display: inline-block;
           @include easing-transition(width, 500ms, $easeOutQuint);
           &:focus {
@@ -439,12 +444,16 @@
           margin-left: 8px;
         }
         > i.icon-search {
-          margin-right: 4px;
+          position: absolute;
+          left: 0;
+          top: 7px;
+          cursor: text;
         }
         > i.clear {
           color: $gray-base;
           left: auto;
           right: 11px;
+          top:7px;
           position: absolute;
         }
       }
@@ -456,9 +465,8 @@
         color: $gray;
         i {
           font-size: 14px;
-          border: solid 1px;
           border-radius: 60%;
-          border-color: transparent;
+          border: 1px solid transparent;
           &:hover {
             border-color: $gray-light;
           }
@@ -468,7 +476,7 @@
         }
       }
       &:hover {
-        cursor: pointer;
+        cursor: text;
       }
       .dropdown-positioner {
         position: relative;
@@ -476,12 +484,11 @@
         .suggestions-dropdown {
           user-select: none;
           position:absolute;
-          top: -1px;
           width: 430px;
           background-color: white;
           z-index: 1;
           border: 1px solid $gray-light-2;
-          border-radius: 2px;
+          border-radius: 4px;
           max-height: 300px;
           overflow-x: hidden;
           overflow-y: auto;
@@ -524,35 +531,42 @@
 
     .bullet {
       display: inline-block;
-      background-color: $gray-dark-2;
-      border-radius: 0.3rem;
-      color: $gray-light;
-      font-size: 0.875rem;
-      line-height: 2;
+      background-color: $gray-light-3;
+      border-radius: 10px;
+      span {
+        font-size: 0.875rem;
+        line-height: 1rem;
+      }
+      color: $gray-dark-2;
       .field-descriptor {
-        color: $white;
+        color: $gray-dark-1;
+        white-space:pre;
       }
       .collection-operator {
-        color: $white;
-        padding: 0px;
+        color: $gray-dark-1;
+        padding: 0;
       }
-      .icon-remove {
-        top: -2px;
-        left: 5px;
+      .bullet-close {
+        margin-left: 8px;
+        margin-right: 2px;
+        margin-top: 1px;
+        align-self: flex-start;
+        line-height: 1rem;
+        .icon-close {
+          font-size: 0.75rem;
+        }
       }
     }
     .bullet_toplevel {
-      display: block;
-      margin: 4px;
-      padding: 0 7px;
+      display: flex;
+      margin: 2px 4px;
+      padding: 3px 5px 1px 10px;
     }
     .bullet_edited {
       display: none;
       color: $black;
       background-color: $gray-light;
-      border-color: $gray-dark;
-      border-width: 2px;
-      border-style: dotted;
+      border: 2px dotted $gray-dark;
     }
   }
 
@@ -560,7 +574,7 @@
     a {
       font-size: .9rem;
       padding-right: 40px;
-      font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-family: $brand-font-light;
     }
   }
 
@@ -572,15 +586,6 @@
 
 $search-header-height: 185px;
 @media (max-width:991px) {
-  .is-read-only-admin .devices-redux .result-pane {
-    .gridStyle {
-      height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + #{$read-only-banner-height}));
-    }
-    .grid-container {
-      height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + 48rem + #{$read-only-banner-height}));
-    }
-  }
-
   .devices-redux .result-pane {
     .gridStyle {
       height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height}));
@@ -592,15 +597,6 @@ $search-header-height: 185px;
 }
 
 @media (min-width:992px) {
-  .is-read-only-admin .devices-redux .result-pane {
-    .gridStyle {
-      height: calc(100vh - (#{$page-header-height} + #{$search-header-height} + #{$read-only-banner-height}));
-    }
-    .grid-container {
-      height: calc(100vh - (#{$page-header-height} + #{$search-header-height} + 48rem + #{$read-only-banner-height}));
-    }
-  }
-
   .devices-redux .result-pane {
     .gridStyle {
       height: calc(100vh - (#{$page-header-height} + #{$search-header-height}));

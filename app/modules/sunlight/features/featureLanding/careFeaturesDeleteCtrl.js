@@ -6,7 +6,7 @@
     .controller('CareFeaturesDeleteCtrl', CareFeaturesDeleteCtrl);
 
   /* @ngInject */
-  function CareFeaturesDeleteCtrl($rootScope, $scope, $stateParams, $timeout, CardUtils, CareFeatureList, CvaService, EvaService, Log, Notification) {
+  function CareFeaturesDeleteCtrl($rootScope, $scope, $stateParams, $timeout, Analytics, CardUtils, CareFeatureList, CvaService, EvaService, Log, Notification) {
     var vm = this;
     vm.deleteFeature = deleteFeature;
     vm.deleteBtnDisabled = false;
@@ -25,15 +25,21 @@
     function deleteFeature() {
       vm.deleteBtnDisabled = true;
       var deleteFunc = CareFeatureList.deleteTemplate;
+      var deleteSuccessEvent;
+      var deleteFailureEvent;
       if (vm.featureType === CvaService.cvaServiceCard.id) {
         deleteFunc = CvaService.deleteConfig.bind(CvaService);
+        deleteSuccessEvent = Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_DELETE_SUCCESS;
+        deleteFailureEvent = Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_DELETE_FAILURE;
       } else if (vm.featureType === EvaService.evaServiceCard.id) {
         deleteFunc = EvaService.deleteExpertAssistant.bind(EvaService);
+        deleteSuccessEvent = Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_DELETE_SUCCESS;
+        deleteFailureEvent = Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_DELETE_FAILURE;
       }
       deleteFunc(vm.featureId).then(function () {
-        deleteSuccess();
+        deleteSuccess(deleteSuccessEvent);
       }, function (response) {
-        deleteError(response);
+        deleteError(response, deleteFailureEvent);
       });
     }
 
@@ -41,8 +47,13 @@
       CardUtils.resize();
     }
 
-    function deleteSuccess() {
+    function deleteSuccess(deleteSuccessEvent) {
       vm.deleteBtnDisabled = false;
+
+      // Writing metrics into mixpanel
+      if (deleteSuccessEvent) {
+        Analytics.trackEvent(deleteSuccessEvent);
+      }
 
       if (_.isFunction($scope.$dismiss)) {
         $scope.$dismiss();
@@ -57,8 +68,13 @@
       }, 250);
     }
 
-    function deleteError(response) {
+    function deleteError(response, deleteFailureEvent) {
       vm.deleteBtnDisabled = false;
+
+      // Writing metrics into mixpanel
+      if (deleteFailureEvent) {
+        Analytics.trackEvent(deleteFailureEvent);
+      }
 
       if (_.isFunction($scope.$dismiss)) {
         $scope.$dismiss();

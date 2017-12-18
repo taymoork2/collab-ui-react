@@ -1,0 +1,9 @@
+assignable-services {
+  display: block;
+
+  cr-checkbox-item {
+    input[type="checkbox"] + label:before {
+      align-self: flex-start;
+    }
+  }
+}

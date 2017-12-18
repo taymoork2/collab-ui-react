@@ -10,13 +10,18 @@
 
   var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
-  function CareSetupAssistantCtrl($modal, $scope, $state, $stateParams, $timeout, $translate, $window, Authinfo, CvaService, CTService, DomainManagementService, LogMetricsService, Notification, SunlightConfigService) {
+  function CareSetupAssistantCtrl($modal, $scope, $state, $stateParams, $timeout, $translate, $window, Authinfo, CvaService, CTService, DomainManagementService, LogMetricsService, Notification, SunlightConfigService, EvaService, SunlightConstantsService) {
     var vm = this;
     $scope.controller = vm; // used by ctCancelModal to not be tied to 1 controller.
 
     vm.selectedMediaType = $stateParams.type;
     vm.isCareAssistantEnabled = $state.isCareAssistantEnabled;
     vm.isCareProactiveChatTrialsEnabled = $state.isCareProactiveChatTrialsEnabled;
+    vm.evaConfig = {
+      isEvaFlagEnabled: $state.isEvaFlagEnabled,
+      isEvaConfigured: false,
+    };
+    vm.evaService = EvaService;
     vm.mediaTypes = {
       chat: 'chat',
       callback: 'callback',
@@ -57,6 +62,8 @@
     vm.hasConfiguredVirtualAssistantServices = false;
     vm.brandingPageTooltipText = brandingPageTooltipText;
     vm.careVirtualAssistantName = careVirtualAssistantName;
+    vm.setEvaTemplateData = setEvaTemplateData;
+    vm.evaLearnMoreLink = 'https://www.cisco.com/go/create-template';
 
     //chat assistant utils
     vm.isAgentProfileWithCVA = function () {
@@ -75,7 +82,11 @@
     vm.states = {};
 
     vm.setStates = function () {
-      vm.states = CTService.getStatesBasedOnType(vm.selectedMediaType, vm.isCareProactiveChatTrialsEnabled);
+      var featureFlags = {
+        isProactiveFlagEnabled: vm.isCareProactiveChatTrialsEnabled,
+        isEvaFlagEnabled: vm.evaConfig.isEvaFlagEnabled,
+      };
+      vm.states = CTService.getStatesBasedOnType(vm.selectedMediaType, featureFlags);
       vm.currentState = vm.states[0];
     };
     vm.setStates();
@@ -85,6 +96,13 @@
       vm.overviewCards = CTService.getOverviewPageCards(vm.selectedMediaType, vm.isCareProactiveChatTrialsEnabled, vm.isCareAssistantEnabled);
     };
     vm.setOverviewCards();
+
+    vm.setEvaDataModel = function () {
+      vm.evaDataModel = CTService.getEvaDataModel(vm.evaConfig, SunlightConstantsService.routingLabels, $translate);
+    };
+    vm.setEvaDataModel();
+
+    vm.setEvaTemplateData();
 
     vm.animationTimeout = 10;
 
@@ -344,6 +362,7 @@
             },
           },
         },
+        routingLabel: SunlightConstantsService.routingLabels.AGENT,
         virtualAssistant: _.cloneDeep(defaultVirtualAssistantConfig),
         pages: {
           customerInformation: {
@@ -672,6 +691,7 @@
             },
           },
         },
+        routingLabel: SunlightConstantsService.routingLabels.AGENT,
         virtualAssistant: _.cloneDeep(defaultVirtualAssistantConfig),
         pages: {
           customerInformationChat: {
@@ -1084,20 +1104,11 @@
     }
 
     function cancelModal() {
-      var modelText = $stateParams.isEditFeature ? {
-        bodyMessage: $translate.instant('careChatTpl.ctEditBody'),
-        trailingMessage: $translate.instant('careChatTpl.ctEditMessage'),
-      } : {
-        bodyMessage: $translate.instant('careChatTpl.ctCreationBody'),
-        trailingMessage: $translate.instant('careChatTpl.ctCreationMessage'),
-      };
-
+      var featureType = $translate.instant('sunlightDetails.newFeatures.' + vm.selectedMediaType + 'Type');
+      var cancelDialogKey = $stateParams.isEditFeature ? 'careChatTpl.cancelEditDialog' : 'careChatTpl.cancelCreateDialog';
       vm.cancelModalText = {
         cancelHeader: $translate.instant('careChatTpl.cancelHeader'),
-        cancelDialog: $translate.instant('careChatTpl.cancelDialog', {
-          bodyMessage: modelText.bodyMessage,
-          trailingMessage: modelText.trailingMessage,
-        }),
+        cancelDialog: $translate.instant(cancelDialogKey, { featureName: featureType }),
         continueButton: $translate.instant('careChatTpl.continueButton'),
         confirmButton: $translate.instant('careChatTpl.confirmButton'),
       };
@@ -1344,6 +1355,14 @@
         vm.template.configuration.virtualAssistant.config.id.length > 0;
     }
 
+    function isChatEscalationBehaviorPageValid() {
+      if (vm.evaConfig.isEvaConfigured) {
+        return vm.template.configuration.routingLabel && _.includes(SunlightConstantsService.routingLabels, vm.template.configuration.routingLabel);
+      } else {
+        return vm.template.configuration.routingLabel && !_.includes(SunlightConstantsService.evaOptions, vm.template.configuration.routingLabel);
+      }
+    }
+
     vm.isInputValid = function (input) {
       return !(vm.InvalidCharacters.test(input));
     };
@@ -1376,6 +1395,8 @@
           return true;
         case 'virtualAssistant':
           return isVirtualAssistantPageValid();
+        case 'chatEscalationBehavior':
+          return isChatEscalationBehaviorPageValid();
         default:
           return 'hidden';
       }
@@ -1777,6 +1798,20 @@
         case 'virtualAssistant': return vm.hasConfiguredVirtualAssistantServices;
         default: return true;
       }
+    }
+
+    //to disable Expert Only and Agents and Experts radio boxes if there is no EVA configured.
+    function setEvaTemplateData() {
+      EvaService.listExpertAssistants().then(function (data) {
+        if (data && data.items && data.items.length >= 1) {
+          vm.evaConfig.isEvaConfigured = true;
+          _.forEach(vm.evaDataModel, function (evaData) {
+            if (evaData.id !== 'agent') {
+              evaData.isDisabled = false;
+            }
+          });
+        }
+      });
     }
   }
 

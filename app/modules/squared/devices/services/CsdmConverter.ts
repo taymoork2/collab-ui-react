@@ -82,7 +82,7 @@ export class CsdmConverter {
 }
 
 class CloudberryDevice implements IDevice {
-  public state: { readableState: string };
+  public state: { key: string, readableState: string };
   public isATA: boolean;
   public serial: string;
   public isOnline: boolean;
@@ -157,7 +157,7 @@ class CloudberryDevice implements IDevice {
 }
 
 class HuronDevice implements IDevice {
-  public state: { readableState: string };
+  public state: { key: string, readableState: string };
   public diagnosticsEvents: csdm.IDeviceDiagnosticEvent[];
   public upgradeChannel: csdm.IDeviceUpgradeChannel;
   public hasIssues: boolean;
@@ -303,7 +303,8 @@ export class Helper {
   }
 
   public static getIsOnline(obj) {
-    return (obj.status || {}).connectionStatus === 'CONNECTED';
+    const conStatus = (obj.status || {}).connectionStatus;
+    return conStatus === 'CONNECTED' || conStatus === 'CONNECTED_WITH_ISSUES';
   }
 
   public static getLastConnectionTime(obj) {
@@ -405,20 +406,38 @@ export class Helper {
   }
 
   public getState(obj) {
-    switch ((obj.status || {}).connectionStatus) {
+    const state = (obj.status || {}).connectionStatus;
+    switch (state) {
+      case 'CONNECTED_WITH_ISSUES':
+        return {
+          key: state,
+          readableState: this.t('CsdmStatus.connectionStatus.CONNECTED_WITH_ISSUES'),
+          priority: '1',
+        };
       case 'CONNECTED':
         if (Helper.hasIssues(obj)) {
           return {
+            key: 'CONNECTED_WITH_ISSUES',
             readableState: this.t('CsdmStatus.connectionStatus.CONNECTED_WITH_ISSUES'),
             priority: '1',
           };
         }
         return {
+          key: state,
           readableState: this.t('CsdmStatus.connectionStatus.CONNECTED'),
           priority: '5',
         };
+      case 'OFFLINE_EXPIRED':
+        return {
+          key: 'OFFLINE_EXPIRED',
+          readableState: this.t('CsdmStatus.connectionStatus.OFFLINE_EXPIRED'),
+          priority: '3',
+        };
+      case 'DISCONNECTED':
+      case 'UNKNOWN':
       default:
         return {
+          key: state,
           readableState: this.t('CsdmStatus.connectionStatus.DISCONNECTED'),
           priority: '2',
         };
@@ -432,6 +451,12 @@ export class Helper {
           return 'warning';
         }
         return 'success';
+      case 'CONNECTED_WITH_ISSUES':
+        return 'warning';
+      case 'OFFLINE_EXPIRED':
+        return 'expired';
+      case 'DISCONNECTED':
+      case 'UNKNOWN':
       default:
         return 'danger';
     }

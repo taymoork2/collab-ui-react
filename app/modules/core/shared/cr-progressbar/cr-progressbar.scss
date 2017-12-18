@@ -1,0 +1,31 @@
+@import '~collab-ui/scss/settings/colors';
+
+cr-progressbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  flex-shrink: 0;
+
+  .progressbar-info,
+  .progressbar-filename {
+    flex: 1 0 100%;
+
+    &--processing {
+      padding-right: 30px;
+    }
+  }
+
+  .progress {
+    flex: 1 0 1px;
+    margin-bottom: 0;
+  }
+
+  .progressbar-cancel {
+    font-size: 14px;
+    margin-left: 13px;
+    color: $gray-light-1;
+    &:hover, &:focus {
+      color: $color-primary-base;
+    }
+  }
+}

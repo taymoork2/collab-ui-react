@@ -16,18 +16,19 @@ class AutoAssignTemplateManageOptionsController implements ng.IComponentControll
     return this.ModalService.open({
       title: this.$translate.instant('userManage.org.deleteAutoAssignModal.title'),
       message: this.$translate.instant('userManage.org.deleteAutoAssignModal.description'),
-      close: this.$translate.instant('common.yes'),
-      dismiss: this.$translate.instant('common.no'),
+      close: this.$translate.instant('common.delete'),
+      dismiss: this.$translate.instant('common.cancel'),
+      btnType: 'alert',
     }).result.then(() => {
       const templateId = _.get(this.autoAssignTemplates, `${this.DEFAULT_AUTO_ASSIGN_TEMPLATE}.templateId`);
-      return this.AutoAssignTemplateService.deleteTemplate(templateId);
-    })
-    .then(() => {
-      this.Notification.success('userManage.org.deleteAutoAssignModal.deleteSuccess');
-      this.onDelete();
-    })
-    .catch((response) => {
-      this.Notification.errorResponse(response, 'userManage.org.deleteAutoAssignModal.deleteError');
+      return this.AutoAssignTemplateService.deleteTemplate(templateId)
+        .then(() => {
+          this.Notification.success('userManage.org.deleteAutoAssignModal.deleteSuccess');
+          this.onDelete();
+        })
+        .catch((response) => {
+          this.Notification.errorResponse(response, 'userManage.org.deleteAutoAssignModal.deleteError');
+        });
     });
   }
 }

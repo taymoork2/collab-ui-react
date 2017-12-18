@@ -1,6 +1,6 @@
 export class CallFeaturesPage {
   constructor() {
-    this.callFeatures = element(by.css('a[href="#/services/call-features"]'));
+    this.callFeatures = element(by.css('a[href="/services/call-features"]'));
     this.newFeatureButton = element(by.buttonText('New'));
     this.createNewFeatureModalTitle = element(by.cssContainingText('.modal-title', 'Create New Feature'));
     this.aaFeatureButton = element(by.css('h4.feature-label-container-AA'));
@@ -8,10 +8,11 @@ export class CallFeaturesPage {
     this.cpFeatureButton = element(by.css('h4.feature-label-container-CP'));
     this.piFeatureButton = element(by.css('h4.feature-label-container-PI'));
     this.pgFeatureButton = element(by.css('h4.feature-label-container-PG'));
+    this.deleteFeature = element(by.css('button.close[ng-click="huronFeaturesCtrl.deleteHuronFeature((huronFeature), $event)"]'));
     this.closeBtn = element(by.css('button.close'));
     this.pageTitle = element(by.css('h2.page-header__title'));
-    this.callLines = element(by.css('a[href="#/services/call-lines"]'));
-    this.callSettings = element(by.css('a[href="#/services/call-settings"]'));
+    this.callLines = element(by.css('a[href="/services/call-lines"]'));
+    this.callSettings = element(by.css('a[href="/services/call-settings"]'));
     this.searchBox = element(by.css('i.icon.icon-search'));
     this.all = element(by.cssContainingText('span.name', 'All'));
     this.autoAttendant = element(by.cssContainingText('span.name', 'Auto Attendant'));

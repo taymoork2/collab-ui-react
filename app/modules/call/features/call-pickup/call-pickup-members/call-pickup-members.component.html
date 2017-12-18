@@ -19,6 +19,8 @@
     typeahead-min-length="3"
     typeahead-wait-ms="200"
     autocomplete="off"
+    ng-keyup="$ctrl.inputKeyup($event)"
+    ng-keypress="$ctrl.inputKeypress($event)"
     focus-on>
   <p class="input-description" translate="callPickup.memberHint"></p>
   <div class="warning">
@@ -43,6 +45,8 @@
     typeahead-wait-ms="200"
     cs-input-size="small-12"
     autocomplete="off"
+    ng-keyup="$ctrl.inputKeyup($event)"
+    ng-keypress="$ctrl.inputKeypress($event)"
     no-dirty>
 </div>
 <div id="cs-card-members">
@@ -59,7 +63,10 @@
       cs-complex-card-type="checkbox"
       cs-checkboxes="member.checkboxes"
       cs-id="$index"
-      on-update ="$ctrl.updateNumbers(member)">
+      on-update="$ctrl.updateNumbers(member)"
+      on-toggled="$ctrl.refreshCards()"
+      delete-aria-label="{{::'common.delete' | translate}}"
+      toggle-aria-label="{{::'common.toggleData' | translate}}">
     </cs-card-member>
   </cs-card-layout>
 </div>

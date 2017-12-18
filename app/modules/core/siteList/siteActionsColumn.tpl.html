@@ -1,7 +1,7 @@
 
 <p ng-if="!row.entity.isLinkedSite"
   class="ui-grid-cell-contents">
-  <span ng-if="!row.entity.isCI"
+  <span ng-if="!row.entity.isCI && !row.entity.isPending"
         id="{{row.entity.license.siteUrl}}_isNotCI"
         name="{{row.entity.license.siteUrl}}_isNotCI">
 
@@ -59,7 +59,7 @@
   <!-- End of Loading indication -->
 
   <!-- Start of Error/warning indication -->
-  <span ng-if="row.entity.showSiteLinks && row.entity.isError"
+  <span ng-if="row.entity.showSiteLinks && row.entity.isError && !row.entity.isPending"
         id="{{row.entity.license.siteUrl}}_error"
         name="{{row.entity.license.siteUrl}}_error">
 
@@ -88,6 +88,7 @@
   </span>
   <!-- End of Error/warning indication -->
   </span>
+  <span class="badge primary ui-grid-cell-contents__badge--pending" ng-if="row.entity.isPending" translate="siteList.pendingActionBadge"></span>
 </p>
 
 <p ng-if="row.entity.isLinkedSite"

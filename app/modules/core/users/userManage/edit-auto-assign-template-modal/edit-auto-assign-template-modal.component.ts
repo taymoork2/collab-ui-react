@@ -4,8 +4,8 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
 
   private prevState: string;
   private dismiss: Function;
-  public sortedSubscriptions: ISubscription[];
   private stateData: any;  // TODO: better type
+  public sortedSubscriptions: ISubscription[];
 
   /* @ngInject */
   constructor(
@@ -25,14 +25,19 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
       return;
     }
 
+    // otherwise use default initialization
+    this.stateData = {};
     this.Orgservice.getLicensesUsage()
       .then((subscriptions) => {
         this.sortedSubscriptions = _.sortBy(subscriptions, 'subscriptionId');
-        this.stateData = {
-          subscriptions: this.sortedSubscriptions,
-          selected: {},
-        };
+        this.stateData.subscriptions = this.sortedSubscriptions;
       });
+  }
+
+  public get hasAssignableLicenses(): boolean {
+    return _.some(this.sortedSubscriptions, (subscription) => {
+      return !_.isEmpty(subscription.licenses);
+    });
   }
 
   public dismissModal(): void {
@@ -52,14 +57,20 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
 
   public recvUpdate($event): void {
     const itemId = _.get($event, 'itemId');
+    const itemCategory = _.get($event, 'itemCategory');
     const item = _.get($event, 'item');
-    if (!itemId || !item) {
+    if (!itemId || !itemCategory || !item) {
       return;
     }
     // notes:
-    // - item id can contain potentially period chars ('.')
+    // - item id can potentially contain period chars ('.')
     // - so we wrap interpolated value in double-quotes to prevent unintended deep property creation
-    _.set(this.stateData, `items["${itemId}"]`, item);
+    _.set(this.stateData, `${itemCategory}["${itemId}"]`, item);
+  }
+
+  // TODO: remove this callback once 'hybrid-services-entitlements-panel' can leverage 'onUpdate()' callbacks
+  public recvHybridServicesEntitlementsPayload(entitlements): void {
+    _.set(this.stateData, `USER_ENTITLEMENTS_PAYLOAD`, entitlements);
   }
 }
 

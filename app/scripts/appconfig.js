@@ -130,7 +130,7 @@
           })
           .state('login', {
             parent: 'loginLazyLoad',
-            url: '/login?bmmp_env&email&customerOrgId&partnerOrgId&subscriptionId',
+            url: '/login?bmmp_env&email&customerOrgId&partnerOrgId&subscriptionId&lang',
             views: {
               'main@': {
                 template: '<login/>',
@@ -1118,6 +1118,11 @@
               },
             },
             params: {
+              job: {
+                fileName: undefined,
+                fileData: undefined,
+                exactMatchCsv: undefined,
+              },
               task: undefined,
             },
           })
@@ -1609,39 +1614,6 @@
               serviceId: {},
             },
           })
-          .state('user-overview.hybrid-services-squared-fusion-gcal', {
-            template: '<hybrid-calendar-service-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)"></hybrid-calendar-service-user-settings>',
-            data: {},
-            params: {
-              userUpdatedCallback: _.noop,
-            },
-            resolve: {
-              userId: /* @ngInject */ function ($stateParams) {
-                return $stateParams.currentUser.id;
-              },
-              userName: /* @ngInject */ function ($stateParams) {
-                return $stateParams.currentUser.userName;
-              },
-              userUpdatedCallback: /* @ngInject */ function ($stateParams) {
-                return $stateParams.userUpdatedCallback;
-              },
-              displayName: translateDisplayName('hercules.serviceNames.squared-fusion-cal'),
-            },
-          })
-          .state('user-overview.hybrid-services-squared-fusion-gcal.history', {
-            views: {
-              'side-panel-container@user-overview': {
-                template: '<user-status-history service-id="\'squared-fusion-gcal\'"></user-status-history>',
-              },
-            },
-            data: {},
-            resolve: {
-              displayName: translateDisplayName('sidePanelBreadcrumb.statusHistory'),
-            },
-            params: {
-              serviceId: {},
-            },
-          })
           .state('user-overview.hybrid-services-squared-fusion-uc', {
             template: '<hybrid-call-service-aggregated-section user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)"></hybrid-call-service-aggregated-section>',
             data: {},
@@ -2102,7 +2074,7 @@
             url: '/system',
             views: {
               metricsContent: {
-                template: '<div> To be continue...</div>',
+                template: '<metrics-frame></metrics-frame>',
               },
             },
           })
@@ -2128,11 +2100,6 @@
           .state('dgc.tab.participants', {
             url: '/diagnostics/participants/:cid',
             views: { tabContent: { template: '<dgc-tab-participants></dgc-tab-participants>' } },
-          })
-          .state('dgc-panel', {
-            data: {},
-            parent: 'sidepanel',
-            views: { 'sidepanel@': { template: '<dgc-panel-participant></dgc-panel-participant>' } },
           })
           .state('reports.webex-metrics.classic', {
             url: '/classic',
@@ -2663,14 +2630,12 @@
           .state('place-overview.hybrid-services-squared-fusion-uc', {
             views: {
               'side-panel-container@place-overview': {
-                template: require('modules/hercules/user-sidepanel/hybrid-call-service-place-settings/callServicePlaceSettings.template.html'),
-                controller: 'CallServicePlaceSettingsCtrl',
+                template: require('modules/squared/places/overview/hybrid-call-service-place-settings/hybridCallServicePlaceSettings.template.html'),
+                controller: 'HybridCallServicePlaceSettingsCtrl',
               },
             },
             data: {},
             params: {
-              extensionId: {},
-              extensions: {},
               editService: {},
               getCurrentPlace: {},
             },

@@ -6,7 +6,7 @@
   <div class="method-container row">
     <ul class="select-method medium-block-grid-2 large-block-grid-4" ng-class="{'medium-centered medium-9 columns': $ctrl.isNew}">
       <li class="hgmethod" ng-class="{current: $ctrl.huntMethod === 'DA_LONGEST_IDLE_TIME'}">
-        <a href ng-click="$ctrl.setHuntMethod('DA_LONGEST_IDLE_TIME')">
+        <a href id="firstHuntMethod" ng-click="$ctrl.setHuntMethod('DA_LONGEST_IDLE_TIME')">
           <i class="icon icon-circle-clock-hands"></i>
           <div translate="huronHuntGroup.hgMethods.longestIdle.name" ></div>
           <p ng-if="$ctrl.isNew" translate="huronHuntGroup.hgMethods.longestIdle.desc"></p>
@@ -35,5 +35,4 @@
       </li>
     </ul>
   </div>
-
 </div>

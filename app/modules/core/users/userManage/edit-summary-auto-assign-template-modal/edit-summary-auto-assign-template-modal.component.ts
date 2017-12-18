@@ -1,4 +1,5 @@
 import { ILicenseRequestItem, IUserEntitlementRequestItem, IAutoAssignTemplateRequestPayload } from 'modules/core/users/shared';
+import { AssignableServicesItemCategory, IAssignableLicenseCheckboxState } from 'modules/core/users/userAdd/assignable-services/shared';
 import { LicenseChangeOperation } from 'modules/core/users/shared/onboard.interfaces';
 
 class EditSummaryAutoAssignTemplateModalController implements ng.IComponentController {
@@ -58,13 +59,11 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
   }
 
   private mkLicensesPayload(): ILicenseRequestItem[] {
-    if (_.isEmpty(this.stateData.items)) {
-      return [];
-    }
-    const selectedLicenses = _.get(this.stateData, 'items');
-    const result = _.map(_.keys(selectedLicenses), (licenseId: string) => {
+    const licenseItems = this.stateData[AssignableServicesItemCategory.LICENSE];
+    const selectedItems: IAssignableLicenseCheckboxState[] = _.filter(licenseItems, { isSelected: true });
+    const result = _.map(selectedItems, (selectedItem) => {
       return <ILicenseRequestItem>{
-        id: licenseId,
+        id: selectedItem.license.licenseId,
         idOperation: LicenseChangeOperation.ADD,
         properties: {},
       };
@@ -73,16 +72,15 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
   }
 
   private mkUserEntitlementsPayload(): IUserEntitlementRequestItem[] {
-    if (_.isEmpty(this.stateData.items)) {
+    if (_.isEmpty(_.get(this.stateData, AssignableServicesItemCategory.LICENSE))) {
       return [];
     }
 
-    // TODO: implement calculation of appropriate entitlements
-    const result: any[] = [];
-    result.push({
-      entitlementName: 'webExSquared',
-      entitlementState: 'ACTIVE',
-    });
+    let result: IUserEntitlementRequestItem[] = [];
+    // TODO: rm this logic once 'hybrid-services-entitlements-panel' propogates its UI state
+    //   and build this payload from UI state instead
+    const hybridUserEntitlements: IUserEntitlementRequestItem[] = _.get(this.stateData, 'USER_ENTITLEMENTS_PAYLOAD', []);
+    result = result.concat(hybridUserEntitlements);
 
     return result;
   }

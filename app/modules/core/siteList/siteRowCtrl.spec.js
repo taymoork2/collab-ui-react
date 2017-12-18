@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: WebExSiteRowCtrl', function () {
-  var controller, $controller, $modal, $scope, $q, FeatureToggleService, SetupWizardService, WebExSiteRowService, WebExSiteService, TokenService, state;
+  var controller, $controller, $modal, $scope, $q, Auth, Authinfo, FeatureToggleService, SetupWizardService, WebExSiteRowService, WebExSiteService, TokenService, rootScope, state;
   var fakeShowGridData = true;
   var fakeGridData = {
     siteUrl: 'abc.webex.com',
@@ -26,9 +26,12 @@ describe('Controller: WebExSiteRowCtrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('WebExApp'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$modal_, _$q_, $state, _FeatureToggleService_, _SetupWizardService_, _WebExSiteService_, _WebExSiteRowService_, _TokenService_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$modal_, _$q_, $state, _Auth_, _Authinfo_, _FeatureToggleService_, _SetupWizardService_, _WebExSiteService_, _WebExSiteRowService_, _TokenService_) {
+    rootScope = $rootScope;
     $scope = $rootScope.$new();
     $controller = _$controller_;
+    Auth = _Auth_;
+    Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
     WebExSiteRowService = _WebExSiteRowService_;
     WebExSiteService = _WebExSiteService_;
@@ -40,6 +43,8 @@ describe('Controller: WebExSiteRowCtrl', function () {
 
     spyOn(state, 'go');
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
+    spyOn(Auth, 'getCustomerAccount').and.returnValue($q.resolve(true));
+    spyOn(Authinfo, 'updateAccountInfo');
     spyOn(WebExSiteRowService, 'shouldShowSiteManagement').and.returnValue($q.resolve(true));
     spyOn(WebExSiteRowService, 'getConferenceServices');
     spyOn(WebExSiteRowService, 'configureGrid');
@@ -50,7 +55,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
     spyOn(SetupWizardService, 'isSubscriptionPending').and.returnValue(false);
     spyOn(SetupWizardService, 'isSubscriptionEnterprise').and.returnValue(true);
     spyOn(SetupWizardService, 'getEnterpriseSubscriptionListWithStatus').and.returnValue([{}]);
-    spyOn(WebExSiteService, 'deleteSite');
+    spyOn(WebExSiteService, 'deleteSite').and.returnValue($q.resolve(true));
     spyOn(TokenService, 'getAccessToken').and.returnValue(accessToken);
     spyOn($modal, 'open').and.returnValue({ result: $q.resolve() });
   }));
@@ -232,6 +237,8 @@ describe('Controller: WebExSiteRowCtrl', function () {
         $scope.$digest();
         var deleteSiteArgs = WebExSiteService.deleteSite.calls.mostRecent().args;
         expect(_.isEqual(deleteSiteArgs[1], expectedResult)).toBeTruthy();
+        expect(Auth.getCustomerAccount).toHaveBeenCalled();
+        expect(Authinfo.updateAccountInfo).toHaveBeenCalled();
       });
     });
 
@@ -294,6 +301,14 @@ describe('Controller: WebExSiteRowCtrl', function () {
       var modalCallArgs = $modal.open.calls.mostRecent().args[0];
       expect(modalCallArgs.template.indexOf(expectedModalTitle) > -1);
       expect(state.go).not.toHaveBeenCalled();
+    });
+  });
+  describe('When a site is added or deleted', function () {
+    it('should refresh the site list data', function () {
+      rootScope.$broadcast('core::siteListModified');
+      $scope.$digest();
+      expect(Auth.getCustomerAccount).toHaveBeenCalled();
+      expect(Authinfo.updateAccountInfo).toHaveBeenCalled();
     });
   });
 });

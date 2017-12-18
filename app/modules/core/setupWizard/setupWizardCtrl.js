@@ -7,13 +7,12 @@ require('./_setup-wizard.scss');
   var planReviewInitTemplatePath = require('ngtemplate-loader?module=Core!./planReview/planReview.tpl.html');
   var planReviewSelectSubscriptionTemplatePath = require('ngtemplate-loader?module=Core!./planReview/select-subscription.html');
 
-  var enterpriseSetSipDomainTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.setSipDomain.tpl.html');
+  var enterpriseSetSipDomainTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.setSipDomainSparkAssistant.tpl.html');
   var enterpriseInitTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.init.tpl.html');
   var enterpriseExportMetadataTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.exportMetadata.tpl.html');
   var enterpriseImportIdpTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.importIdp.tpl.html');
   var enterpriseTestSSOTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.testSSO.tpl.html');
   var enterprisePmrSetupTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.pmrSetup.tpl.html');
-
   var meetingSettingsMigrateTrialTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-migrate-trial.html');
   var meetingSettingsSiteSetupTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-site-setup.html');
   var meetingSettingsLicenseDistributionTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-license-distribution.html');
@@ -33,7 +32,7 @@ require('./_setup-wizard.scss');
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Analytics, Authinfo, Config, FeatureToggleService, Orgservice, SessionStorage, SetupWizardService, StorageKeys, Notification, CustomerCommonService) {
+  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Analytics, ApiCacheManagementService, Authinfo, Config, FeatureToggleService, Orgservice, SessionStorage, SetupWizardService, StorageKeys, Notification, CustomerCommonService) {
     var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
     var isITDecouplingFlow = false;
     var shouldRemoveSSOSteps = false;
@@ -104,6 +103,7 @@ require('./_setup-wizard.scss');
       getPendingSubscriptionFlags();
       var tabs = getInitTabs();
 
+      initHybridServicesCaches();
       initPlanReviewTab(tabs);
       initEnterpriseSettingsTab(tabs);
       initMeetingSettingsTab(tabs);
@@ -455,6 +455,12 @@ require('./_setup-wizard.scss');
       }
 
       return filteredTabs;
+    }
+
+    function initHybridServicesCaches() {
+      if (Authinfo.isCustomerLaunchedFromPartner()) {
+        ApiCacheManagementService.invalidateHybridServicesCaches();
+      }
     }
   }
 })();

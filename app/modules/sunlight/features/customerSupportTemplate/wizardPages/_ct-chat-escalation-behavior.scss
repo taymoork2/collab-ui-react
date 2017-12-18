@@ -1,0 +1,122 @@
+.ct-chat-escalation-behavior{
+
+    .cs-card .ct-article{
+      height: 100%;
+
+      @include vr-spacing(pt, .5);
+      @include vr-spacing(pl, 2.5);
+      @include vr-spacing(pr, 1);
+      @include vr-spacing(pb, 1);
+    }
+
+    .cs-input-radio.cs-input-group{
+      @include vr-spacing(m, 0);
+    }
+
+    .chat-escalation-wrapper{
+      align-content: center;
+      width:rem-calc(612px);
+      height: rem-calc(315px);
+      margin-top: rem-calc(129px);
+
+      @include vr-spacing(ml, 0);
+      @include vr-spacing(p, 0);
+    }
+
+    .cs-radio{
+      @include vr-spacing(m, 0);
+    }
+
+    .ct-content-radio{
+        display: flex;
+    }
+
+    .content-header{
+      @include vr-spacing(pt, 1);
+    }
+
+    .content-header span{
+      color: $gray-dark-2;
+    }
+
+    .ct-info-disabled{
+      color: $gray-light-1;
+
+      @include vr-spacing(p, 0);
+      @include vr-spacing(ml, 1.9);
+      @include vr-spacing(mr, 1.9);
+    }
+
+    .ct-info-icon{
+      line-height: rem-calc(22px);
+
+      @include vr-spacing(mt, 0.2);
+      @include vr-spacing(ml, 0.2);
+    }
+
+    .ct-info{
+      color: $gray-base;
+
+      @include vr-spacing(p, 0);
+      @include vr-spacing(ml, 1.9);
+      @include vr-spacing(mr, 1.9);
+
+    }
+
+    .org-setting-info{
+      position: absolute;
+      bottom: rem-calc(16px);
+      color: $color-blue-base;
+      display: flex;
+
+      @include vr-spacing(pl, 0.3);
+
+      .setting-info{
+        margin-top: rem-calc(2px);
+        margin-left: rem-calc(5px);
+      }
+
+      .icon-wrapper{
+        font-size: rem-calc(16px);
+      }
+    }
+
+    .content-row{
+      @include vr-spacing(mt, 1.2);
+      @include vr-spacing(mb, 1.2);
+    }
+
+    .eva-enabled-info {
+      position: absolute;
+      bottom: rem-calc(16px);
+
+      .msg{
+        @include vr-spacing(pl,0.2);
+      }
+    }
+
+    .ct-info-icon {
+
+      .icon-info{
+        color: $gray-light-1;
+
+        &:hover{
+          color: $color-blue-base;
+        }
+
+      }
+
+      .tooltip{
+        background: $gray-dark-3;
+        border-radius: rem-calc(2px);
+        @include vr-spacing(p, 0);
+
+        .c-nub{
+          color: $white;
+          font-size: rem-calc(12px);
+          line-height: rem-calc(16px);
+          padding: rem-calc(16px);
+        }
+      }
+    }
+}

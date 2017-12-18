@@ -5,7 +5,7 @@
     </span>
   </div>
   <h6 class="h6 ct-title-desc">
-    {{$ctrl.getText('avatar.desc')}}
+    {{$ctrl.getAvatarDescText()}}
   </h6>
   <div ng-switch="$ctrl.avatarUploadState" block-view="true">
 
@@ -13,12 +13,11 @@
         <span ng-if="$ctrl.avatarUploadState == 'SELECT'">
           <div>
             <div class="va-img-circle">
-              <img class="va-img" src="/images/vaAvatarDefaultIcon.png"></img>
+              <img class="va-img" ngf-src="$ctrl.template.configuration.pages.vaAvatar.avatarImageSrc"></img>
             </div>
           </div>
           <h3 id="avatarUpload" class="header3 ct-title">{{$ctrl.getText('avatar.upload')}}</h3>
-          <p class="ct-title-desc">{{$ctrl.getText('avatar.uploadDesc')}}</p>
-          <p class="ct-title-desc">{{$ctrl.getText('avatar.defaultAvatar')}}</p>
+          <p class="va-upload-desc">{{$ctrl.getText('avatar.uploadDesc')}}</p>
         </span>
 
         <span ng-if="$ctrl.avatarUploadState == 'PREVIEW'">
@@ -28,10 +27,9 @@
             </div>
           </div>
           <h3 id="avatarPreview" class="header3 ct-title">{{$ctrl.getText('avatar.preview')}}</h3>
-          <p class="ct-title-desc">{{$ctrl.getText('avatar.previewDesc')}}</p>
+          <p class="va-upload-desc">{{$ctrl.getText('avatar.uploadDesc')}}</p>
         </span>
 
-        <p class="ct-title-desc">{{$ctrl.getText('avatar.uploadBestResults')}}</p>
         <div ngf-select="$ctrl.uploadAvatar($file)" ngf-accept="'image/png'" ngf-multiple="false">
           <p class="ct-title-desc va-input-messages">{{$ctrl.getText('avatar.dragDropDesc')}}<label class="va-input-label">{{$ctrl.getText('avatar.fileBrowser')}}</label></p>
         </div>

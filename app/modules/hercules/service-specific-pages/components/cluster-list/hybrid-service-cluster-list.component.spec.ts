@@ -286,32 +286,26 @@ describe('HybridServiceClusterList controller', () => {
     });
 
     describe('interfacing ng-grid', () => {
-
       it('should add a gridApi to the $scope', () => {
         spyOn(gridApiMock.selection.on, 'rowSelectionChanged');
         ctrl = initController('squared-fusion-media', undefined);
         ctrl.$onInit();
         ctrl.clusterListGridOptions.onRegisterApi(gridApiMock);
-        expect(ctrl.$scope.gridApi).toBe(gridApiMock);
-        expect(gridApiMock.selection.on.rowSelectionChanged).toHaveBeenCalled();
+        expect(ctrl.gridApi).toBe(gridApiMock);
       });
 
       it('should provide data and templates', () => {
         ctrl = initController('squared-fusion-media', undefined);
         ctrl.$onInit();
-        expect(ctrl.clusterListGridOptions.data).toBe('$ctrl.clusterList');
+        expect(ctrl.clusterListGridOptions.data).toEqual([]);
         expect(ctrl.clusterListGridOptions.columnDefs[0].cellTemplate).toBe(require('modules/hercules/service-specific-pages/components/cluster-list/cluster-list-display-name.html'));
         expect(ctrl.clusterListGridOptions.columnDefs[1].cellTemplate).toBe(require('modules/hercules/service-specific-pages/components/cluster-list/cluster-list-status.html'));
       });
-
     });
-
   });
-
 });
 
 describe('HybridServiceClusterList template', () => {
-
   beforeEach(function () {
     this.initModules(hybridServiceClusterList);
     this.injectDependencies(

@@ -14,6 +14,7 @@
         index: '=aaIndex',
         keyIndex: '@aaKeyIndex',
         queues: '@aaQueues',
+        routingPrefixOptions: '=aaRoutingPrefixOptions',
       },
       controller: 'AASubmenuCtrl',
       controllerAs: 'aaSubmenu',

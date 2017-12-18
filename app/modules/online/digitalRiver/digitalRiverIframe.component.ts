@@ -17,7 +17,7 @@ class DigitalRiverIframe implements ng.IComponentController {
     const iframeSrcChange = changes['iframeSrc'];
     if (iframeSrcChange) {
       if (iframeSrcChange.isFirstChange) {
-        this.logoutPromise = this.DigitalRiverService.logout('store');
+        this.logoutPromise = this.DigitalRiverService.logout();
       }
       if (iframeSrcChange.currentValue) {
         this.logoutPromise.finally(() => {

@@ -18,28 +18,30 @@ describe('Controller: Spark Metrics Ctrl', function () {
       'Userservice'
     );
 
-    this.base = 'Base';
+    this.base = 'Basic';
     this.premium = 'Premium';
-    this.testData = 'qlik-loader/custportal';
+    this.testMashupUrl = 'qlik-loader/custportal';
+    this.testQBSData = {
+      ticket: '0Ibh4usd9bERRzLR',
+      host: 'qlik-loader',
+      qlik_reverse_proxy: 'qlik-loader',
+      appName: 'basic_spark_v1__qvadmin@cisco.com',
+      isPersistent: 'true',
+    };
+    this.testQBSBasicData = {
+      ticket: '0Ibh4usd9bERRzL2',
+      host: 'qlik-loader',
+      qlik_reverse_proxy: 'qlik-loader',
+      appName: 'basic_spark_v1__qvadmin@cisco.com',
+      isPersistent: 'false',
+      appDefaultName: 'basic_spark_v1',
+    };
 
     spyOn(this.Analytics, 'trackReportsEvent');
     spyOn(this.Authinfo, 'setEmails');
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(true));
-    spyOn(this.QlikService, 'getSparkReportQBSforPremiumUrl').and.callFake(function () {
-      return {
-        then: function (callback) {
-          callback({
-            data: {
-              ticket: '0Ibh4usd9bERRzLR',
-              host: 'qlik-loader',
-              qlik_reverse_proxy: 'qlik-loader',
-              appname: 'basic_spark_v1__qvadmin@cisco.com',
-            },
-          });
-        },
-      };
-    });
-    spyOn(this.QlikService, 'getSparkReportAppforPremiumUrl').and.returnValue(this.testData);
+    spyOn(this.QlikService, 'getQBSInfo').and.returnValue(this.$q.resolve(this.testQBSData));
+    spyOn(this.QlikService, 'getQlikMashupUrl').and.returnValue(this.testMashupUrl);
     spyOn(this.Userservice, 'getUser').and.callFake(function (user, callback) {
       expect(user).toBe('me');
       callback({
@@ -70,16 +72,23 @@ describe('Controller: Spark Metrics Ctrl', function () {
     expect(this.Analytics.trackReportsEvent).toHaveBeenCalledWith(this.Analytics.sections.REPORTS.eventNames.CUST_SPARK_REPORT);
   });
 
-  it('should turn to premium view', function () {
+  it('should get the right Qlik mashup url', function () {
+    expect(this.controller.sparkMetrics.appData.url).toBe(this.testMashupUrl);
+  });
+
+  it('should get the right parameters', function () {
+    expect(this.controller.sparkMetrics.appData.appId).toBe(this.testQBSData.appName);
+  });
+
+  it('should turn to premium view, and to base view after ProPack perchased', function () {
     expect(this.controller.reportView.view).toBe(this.premium);
 
     this.ProPackService.hasProPackPurchased.and.returnValue(this.$q.resolve(false));
+    this.QlikService.getQBSInfo.and.returnValue(this.$q.resolve(this.testQBSBasicData));
     this.initController();
     expect(this.controller.reportView.view).toBe(this.base);
-  });
 
-  it('initial state, isIframeLoaded should be false, currentFilter should be metrics', function () {
-    expect(this.controller.sparkMetrics.appData.url).toBe(this.testData);
+    expect(this.controller.sparkMetrics.appData.appId).toBe(this.testQBSBasicData.appDefaultName);
   });
 });
 

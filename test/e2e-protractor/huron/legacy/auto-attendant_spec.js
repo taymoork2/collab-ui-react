@@ -20,28 +20,29 @@ describe('Huron Auto Attendant', function () {
   var flow;
 
   var ceInfos = require('./aaE2ETest.json');
-  beforeAll(function () {
 
-    deleteUtils.testAAName = deleteUtils.testAAName + "_" + Date.now();
+  describe('Multisite enabled tenant', function () {
+    beforeAll(function () {
 
-    testAAName = element(by.css('p[title="' + deleteUtils.testAAName + '"]'));
-    testCardClick = testAAName.element(by.xpath('ancestor::article')).element(by.css('.card-body'));
-    testCardClose = testAAName.element(by.xpath('ancestor::article')).element(by.css('.header-with-right-icon')).element(by.css('.card-icon-div')).element(by.css('.close'));
+      deleteUtils.testAAName = deleteUtils.testAAName + "_" + Date.now();
 
-    browser.setFileDetector(new remote.FileDetector());
+      testAAName = element(by.css('p[title="' + deleteUtils.testAAName + '"]'));
+      testCardClick = testAAName.element(by.xpath('ancestor::article')).element(by.css('.card-body'));
+      testCardClose = testAAName.element(by.xpath('ancestor::article')).element(by.css('.header-with-right-icon')).element(by.css('.card-icon-div')).element(by.css('.close'));
 
-    login.login('aa-admin', autoattendant.callFeature);
-  }, 120000);
-  
-  afterAll(function () {
-    flow = protractor.promise.controlFlow();
-    return flow.execute(deleteUtils.findAndDeleteTestAA);
-  });
+      browser.setFileDetector(new remote.FileDetector());
 
-  describe('Create and Delete AA', function () {
+      login.login('aa-multisite-admin', autoattendant.callFeature);
+    }, 120000);
+
+    afterAll(function () {
+      flow = protractor.promise.controlFlow();
+      flow.execute(deleteUtils.findAndDeleteTestAA);
+      return navigation.logout();
+    });
 
     // TEST CASES
-    it('should navigate to AA landing page and create AA', function () {
+    it('should navigate to AA landing page and create AA in a MultiSite enabled tenant', function () {
 
       // click new feature
       utils.click(autoattendant.newFeatureButton);
@@ -70,6 +71,152 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisplayed(autoattendant.sayMessage);
 
     }, 120000);
+
+    it('should add Dial By Extension (in MultiSite Enabled tenant) via New Step action selection to the new auto attendant named' + deleteUtils.testAAName + '"', function () {
+
+      // We are depending on menu order for this test, so if the Add New Step menu gets new steps or gets
+      // rearranged this will break - but again it will fail immediately so it should be clear what's going on.
+      autoattendant.scrollIntoView(autoattendant.addStepLast);
+      utils.click(autoattendant.addStepLast);
+      utils.expectIsDisplayed(autoattendant.newStep);
+      utils.click(autoattendant.newStepMenu);
+      // 3rd menu option is Dial By Extension
+      utils.click(autoattendant.newStepSelectDialByExt);
+
+      utils.wait(autoattendant.dialByExtension, 120000);
+
+      autoattendant.scrollIntoView(autoattendant.dialByExtension);
+
+
+      utils.click(autoattendant.dialByMessageOptions);
+      utils.click(autoattendant.dialBySayMessageOption);
+
+      // say message
+      utils.click(autoattendant.dialByMessageInput);
+      utils.sendKeys(autoattendant.dialByMessageInput, "Enter the Extension");
+      utils.click(autoattendant.dialByExtensionDynamicButton);
+      utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.click(autoattendant.dynamicVariable);
+      utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.click(autoattendant.variable);
+      utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.click(autoattendant.readAs);
+      utils.click(autoattendant.readAsVariable);
+       utils.click(autoattendant.okButton);
+       utils.wait(autoattendant.okButton, 1200);
+
+       // language
+       utils.click(autoattendant.dialByMessageLanguage);
+       utils.click(autoattendant.dialBylanguageDropDownOptions);
+
+       // voice
+       utils.click(autoattendant.dialByMessageVoice);
+       utils.click(autoattendant.dialByMessageVoiceOptions);
+
+       //ESN checkbox
+       utils.click(autoattendant.dialByESNCheckBox);
+       utils.wait(autoattendant.dialByESNCheckBox, 120000);
+       utils.expectIsDisplayed(autoattendant.dialByESNRoutingPrefixText);
+       utils.click(autoattendant.dialByESNDropDown);
+       utils.wait(autoattendant.dialByESNDropDown, 120000);
+       utils.click(autoattendant.selectedESN);
+
+       // and save
+       // utils.expectIsEnabled(autoattendant.saveButton);
+       utils.click(autoattendant.saveButton);
+       utils.wait(autoattendant.saveButton, 120000);
+
+    }, 120000);
+
+    it('should close AA (from the MultiSite enabled tenant) edit and return to landing page and then logout from this tenant', function () {
+
+      utils.click(autoattendant.closeEditButton);
+
+    }, 120000);
+    it('should find new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
+      utils.wait(testAAName);
+
+      utils.expectIsEnabled(testAAName);
+
+      utils.click(testCardClick);
+      utils.wait(autoattendant.addAANumbers, 20000);
+
+      autoattendant.scrollIntoView(autoattendant.dialByExtension);
+
+      utils.expectIsDisplayed(autoattendant.dialByExtension);
+
+      utils.click(autoattendant.closeEditButton);
+
+    }, 120000);
+
+    it('should delete new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
+      // click delete X on the AA card for e2e test AA
+      utils.click(testCardClose);
+
+      // confirm dialog with e2e AA test name in it is there, then agree to delete
+      utils.expectText(autoattendant.deleteModalConfirmText, 'Are you sure you want to delete the ' + deleteUtils.testAAName + ' Auto Attendant?').then(function () {
+        utils.click(autoattendant.deleteModalConfirmButton);
+        autoattendant.assertDeleteSuccess(deleteUtils.testAAName);
+      });
+
+    }, 120000);
+  });
+
+  describe('MultiSite disabled tenant', function () {
+    beforeAll(function () {
+
+      deleteUtils.testAAName = deleteUtils.testAAName + "_" + Date.now();
+
+      testAAName = element(by.css('p[title="' + deleteUtils.testAAName + '"]'));
+      testCardClick = testAAName.element(by.xpath('ancestor::article')).element(by.css('.card-body'));
+      testCardClose = testAAName.element(by.xpath('ancestor::article')).element(by.css('.header-with-right-icon')).element(by.css('.card-icon-div')).element(by.css('.close'));
+
+      browser.setFileDetector(new remote.FileDetector());
+
+      login.login('aa-admin', autoattendant.callFeature);
+    }, 120000);
+
+    afterAll(function () {
+      flow = protractor.promise.controlFlow();
+      return flow.execute(deleteUtils.findAndDeleteTestAA);
+    });
+
+    //describe('Create and Delete AA', function () {
+
+    // TEST CASES
+    it('should navigate to AA landing page and create AA', function () {
+
+      autoattendant.clearNotifications().then(function () {
+      // click new feature
+      utils.click(autoattendant.newFeatureButton);
+      browser.driver.sleep(1000);
+
+      // select AA
+      utils.wait(autoattendant.featureTypeAA, 20000);
+
+      utils.click(autoattendant.featureTypeAA);
+
+      utils.wait(autoattendant.basicAA, 120000);
+      utils.click(autoattendant.basicAA);
+
+      utils.wait(autoattendant.newAAname, 120000);
+      // enter AA name
+      utils.sendKeys(autoattendant.newAAname, deleteUtils.testAAName);
+      utils.wait(autoattendant.newAAname, 120000);
+      utils.sendKeys(autoattendant.newAAname, protractor.Key.ENTER);
+
+      // assert we see the create successful message
+      autoattendant.assertCreateSuccess(deleteUtils.testAAName);
+
+      // we should see the AA edit page now
+      utils.wait(autoattendant.addAANumbers, 120000);
+      utils.expectIsDisplayed(autoattendant.addAANumbers);
+      autoattendant.scrollIntoView(autoattendant.sayMessage);
+      utils.wait(autoattendant.sayMessage, 120000);
+      utils.expectIsDisplayed(autoattendant.sayMessage);
+      });
+
+    }, 2600000);
 
     it('should add a single phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
@@ -517,7 +664,6 @@ describe('Huron Auto Attendant', function () {
     return aaGetCeUtils.validateCesDefinition(ceInfos.Test4.actionSets);
        });
       utils.wait(autoattendant.saveButton, 120000);
-
       autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
     }, 120000);
@@ -771,9 +917,26 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.configureApiURL);
       utils.expectIsDisabled(autoattendant.nextBtn);
       utils.wait(autoattendant.configureApiURL, 60000);
-      utils.sendKeys(autoattendant.configureApiURL, "http://www.mocky.io/v2/5a04217b310000422d916c1a");
+      utils.sendKeys(autoattendant.configureApiURL, "https://api.openweathermap.org/data/2.5/weather?zip=80202,us&appid=a422c31ba1d69122814ca7a900a85ab5");
+      utils.expectIsEnabled(autoattendant.nextBtn);
+      utils.expectIsDisplayed(autoattendant.authenticationToggleSwitch);
+      utils.click(autoattendant.authenticationToggleSwitch);
+      utils.expectIsEnabled(autoattendant.usernameForAuthentication );
+      utils.expectIsEnabled(autoattendant.passwordForAuthentication);
+      utils.expectIsDisabled(autoattendant.nextBtn);
+      utils.sendKeys(autoattendant.usernameForAuthentication, "testUser");
+      utils.expectIsEnabled(autoattendant.nextBtn);
+      utils.sendKeys(autoattendant.passwordForAuthentication, "testPassword");
       utils.expectIsEnabled(autoattendant.nextBtn);
       utils.click(autoattendant.nextBtn);
+      utils.expectIsEnabled(autoattendant.testBtn);
+      utils.click(autoattendant.testBtn);
+      utils.wait(autoattendant.saveBtn, 60000);
+      utils.click(autoattendant.backBtn);
+      utils.sendKeys(autoattendant.usernameForAuthentication, "name");
+      utils.expectIsEnabled(autoattendant.nextBtn);
+      utils.click(autoattendant.nextBtn);
+      utils.expectIsDisabled(autoattendant.saveBtn);
       utils.expectIsEnabled(autoattendant.testBtn);
       utils.click(autoattendant.testBtn);
       utils.wait(autoattendant.saveBtn, 60000);
@@ -783,36 +946,40 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.sessionVarComboOptions1);
       utils.click(autoattendant.saveBtn);
       utils.expectIsDisplayed(autoattendant.restApiUrlLabel);
-      utils.waitForText(autoattendant.restApiUrlLabel, "http://www.mocky.io/v2/5a04217b310000422d916c1a");
+      utils.waitForText(autoattendant.restApiUrlLabel, "https://api.openweathermap.org/data/2.5/weather?zip=80202,us&appid=a422c31ba1d69122814ca7a900a85ab5");
       utils.expectIsDisplayed(autoattendant.restApiVariableLabel1);
       utils.waitForText(autoattendant.restApiVariableLabel1, "named Variable");
     });
 
     it('should click configureApi hyperlink again and add dynamic text "' + deleteUtils.testAAName + '"', function () {
+      autoattendant.scrollIntoView(autoattendant.restApi);
       utils.click(autoattendant.configureApi);
       utils.expectIsDisplayed(autoattendant.configureApiURL);
       utils.click(autoattendant.configureApiURL);
-      utils.sendKeys(autoattendant.configureApiURL, "/test");
+      utils.clear(autoattendant.configureApiURL);
+      utils.sendKeys(autoattendant.configureApiURL, "https://api.openweathermap.org/data/2.5/weather?zip=80202,us&appid=");
       utils.expectIsDisplayed(autoattendant.addDynamicTextButton);
       utils.click(autoattendant.addDynamicTextButton);
 
       utils.wait(autoattendant.dynamicVariable1, 320000);
       utils.click(autoattendant.dynamicVariable1);
-      utils.wait(autoattendant.dynamicVariable1, 320000);
+      //utils.wait(autoattendant.dynamicVariable1, 320000);
       utils.click(autoattendant.variable1);
       utils.wait(autoattendant.dynamicVariable1, 320000);
 
       utils.expectIsEnabled(autoattendant.dynamicModalOkButton);
       utils.click(autoattendant.dynamicModalOkButton);
       utils.wait(autoattendant.dynamicModalOkButton, 20000);
-
       utils.expectIsEnabled(autoattendant.nextBtn);
       utils.click(autoattendant.nextBtn);
+
       utils.expectIsDisplayed(autoattendant.testBtn);
       utils.expectIsDisabled(autoattendant.testBtn);
       utils.expectIsDisabled(autoattendant.saveBtn);
-      utils.sendKeys(autoattendant.restDynamicsValue, '123');
+      utils.sendKeys(autoattendant.restDynamicsValue, 'a422c31ba1d69122814ca7a900a85ab5');
       utils.wait(autoattendant.restDynamicsValue, 6000);
+      utils.expectIsEnabled(autoattendant.testBtn);
+      utils.click(autoattendant.testBtn);
       utils.expectIsEnabled(autoattendant.testBtn);
       utils.click(autoattendant.testBtn);
       utils.click(autoattendant.saveBtn);
@@ -865,7 +1032,6 @@ describe('Huron Auto Attendant', function () {
       });
 
     }, 120000);
-    
   });
 
 });

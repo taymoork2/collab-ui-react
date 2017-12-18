@@ -172,6 +172,7 @@ describe('Controller: AAAddVariableCtrl', function () {
         var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
         action.dynamicList = [];
         menuEntry.addAction(action);
+        spyOn($rootScope, '$broadcast');
         controller.dynamicAdd($scope.dynamicElement, $scope.elementId);
         expect($modal.open).toHaveBeenCalled();
         modal.resolve(result);
@@ -179,6 +180,7 @@ describe('Controller: AAAddVariableCtrl', function () {
         expect(controller.menuEntry.actions[0].dynamicList.length).toEqual(2);
         expect(controller.menuEntry.actions[0].dynamicList[0].say.value).toEqual('this is test say message');
         expect(controller.menuEntry.actions[0].dynamicList[1].isDynamic).toEqual(true);
+        expect($rootScope.$broadcast).toHaveBeenCalledWith('dynamicListUpdated');
       });
 
       it('should create/update dynamicList in actions under menuEntry when called from REST block', function () {

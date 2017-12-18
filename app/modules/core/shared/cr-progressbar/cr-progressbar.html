@@ -1,0 +1,17 @@
+<div class="progressbar-info"
+  ng-class="{'progressbar-info--processing': $ctrl.canCancel }">
+  <span class="progressbar-label"
+    ng-bind="$ctrl.label"></span>
+  <span class="progressbar-progress"
+    ng-bind="$ctrl.progress"></span>
+</div>
+<progressbar animate="false" class="progress-striped active" value="$ctrl.progressbarValue" max="$ctrl.max"
+  type="{{::$ctrl.type}}"></progressbar>
+<a href
+  class="icon icon-close progressbar-cancel"
+  ng-if="$ctrl.canCancel"
+  ng-click="$ctrl.cancel()"
+  aria-label="{{::'common.cancel' | translate}}"></a>
+<div class="progressbar-filename"
+  ng-if="$ctrl.progressbarFilename"
+  ng-bind="::$ctrl.progressbarFilename"></div>

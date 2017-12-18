@@ -1,10 +1,10 @@
-<div class="meeting-settings">
+<div class="meeting-settings add-webex-site">
   <p translate="firstTimeWizard.meetingSettingsDescription"></p>
   <div ng-if="!meetingCtrl.hasTrialSites">
     <h4 class="element-spacing" translate="firstTimeWizard.haveExistingWebExSite"></h4>
     <p class="element-spacing" translate="firstTimeWizard.existingWebExSiteDescription"></p>
   </div>
-  <div ng-if="meetingCtrl.hasTrialSites" >
+  <div ng-if="meetingCtrl.hasTrialSites">
     <h4 class="element-spacing" translate="firstTimeWizard.keepExistingWebexSites"></h4>
     <p class="element-spacing" translate="firstTimeWizard.existingWebExTrialSites"></p>
     <div class="keep-existing-trials element-spacing" ng-repeat="site in meetingCtrl.existingTrialSites">
@@ -20,46 +20,11 @@
         cs-input-label="{{::'firstTimeWizard.yesKeepSite' | translate}}">
     </div>
   </div>
-  <div>
-    <input
-      cs-input
-      type="checkbox"
-      id="has-transfer-code"
-      name="has-transfer-code"
-      ng-change="meetingCtrl.checkValidTransferData()"
-      ng-model="meetingCtrl.showTransferCodeInput"
-      cs-input-label="{{::'firstTimeWizard.hasTransferCode' | translate}}">
-  </div>
-  <div ng-if="meetingCtrl.showTransferCodeInput">
-    <div class="col-lg-12 input-block--transfer-code">
-      <div class="cs-input-group" ng-class="{'error': meetingCtrl.error.isError}">
-        <label class="cs-input__label" translate="firstTimeWizard.transferCode"></label>
-        <input
-          cs-input
-          type="text"
-          cs-input-size="medium-4"
-          ng-change="meetingCtrl.checkValidTransferData()"
-          ng-model="meetingCtrl.transferSiteCode">
-          <a class="input-block__help-link" ng-href="{{:: meetingCtrl.migrateSiteUrl }}" translate="firstTimeWizard.dontHaveTransferCode" target="_blank"></a>
-      </div>
-    </div>
-    <div class="col-lg-12">
-      <div class="cs-input-group" ng-class="{'error': meetingCtrl.error.isError}">
-        <label class="cs-input__label" translate="firstTimeWizard.siteName"></label>
-        <input
-          cs-input
-          type="text"
-          cs-input-size="medium-4"
-          cs-input-secondary-label="{{::'firstTimeWizard.pmrSiteURLDomain' | translate}}"
-          ng-change="meetingCtrl.checkValidTransferData()"
-          ng-model="meetingCtrl.transferSiteUrl">
-        <div class="cs-input__messages error-msg-spacing" role="alert" ng-if="meetingCtrl.error.isError">
-          <div class="message">{{meetingCtrl.error.errorMsg}}</div>
-        </div>
-        <i tooltip-html-unsafe="{{'helpdesk.help.webExSiteTooltip' | translate}}" tooltip-placement="right"
-        tooltip-trigger="mouseenter"
-        class="icon icon-help icon-lg"></i>
-      </div>
-    </div>
-  </div>
+  <webex-site-transfer
+    transfer-site-url="meetingCtrl.transferSiteUrl"
+    transfer-site-code="meetingCtrl.transferSiteCode"
+    on-sites-received="meetingCtrl.addTransferredSites(sites, transferCode, isValid, transferSiteUrl)"
+    on-validation-status-change="meetingCtrl.setNextDisableStatus(!isValid)"
+    on-send-tracking="meetingCtrl.onSendTracking(event, properties)">
+  </webex-site-transfer>
 </div>

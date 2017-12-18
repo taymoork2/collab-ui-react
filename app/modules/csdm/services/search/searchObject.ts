@@ -90,6 +90,9 @@ export class SearchObject {
       this.from = 0;
       this.hasError = false;
       this.lastGoodQuery = _.cloneDeep(this.parsedQuery);
+      if (query === '' && !alreadyParsedQuery) {
+        this.workingElementText = '';
+      }
     } catch (error) {
       this.hasError = true;
     }
@@ -143,6 +146,17 @@ export class SearchObject {
         this.addParsedSearchElement(alreadyEdited, false);
       }
     }
+    this.workingElementText = '';
+  }
+
+  public containsElement(element: FieldQuery): boolean {
+    const found = SearchObject.findFirstElementMatching(this.parsedQuery, se => {
+      if (se instanceof CollectionOperator) {
+        return !!se.containsEffectOf(element);
+      }
+      return se.isEqual(element);
+    });
+    return !!found;
   }
 
   public static findFirstElementMatching(element: SearchElement, matchFunction: (se: SearchElement) => boolean): SearchElement | null {

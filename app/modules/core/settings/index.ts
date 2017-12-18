@@ -15,6 +15,7 @@ import fileSharingControlModule from './fileSharingControl';
 import sipDomainModule from './sipDomain';
 import supportSectionModule from './supportSection';
 import webexVersionModule from './webexVersion';
+import sparkAssistantModule from './spark-assistant';
 
 export default angular.module('core.settings', [
   require('angular-cache'),
@@ -33,6 +34,7 @@ export default angular.module('core.settings', [
   sipDomainModule,
   supportSectionModule,
   webexVersionModule,
+  sparkAssistantModule,
 ])
   .controller('SettingsCtrl', SettingsCtrl)
   .name;

@@ -1,10 +1,24 @@
 import { HuntMethod } from 'modules/call/features/hunt-group';
+import { AccessibilityService } from 'modules/core/accessibility';
 
 class HuntGroupMethodCtrl implements ng.IComponentController {
   public huntMethod: HuntMethod;
   public isNew: boolean;
   public onChangeFn: Function;
   public onKeyPressFn: Function;
+  public setFocus: boolean;
+
+  /* @ngInject */
+  constructor(
+    private $element: ng.IRootElementService,
+    private AccessibilityService: AccessibilityService,
+  ) {  }
+
+  public $onInit() {
+    if (this.setFocus) {
+      this.AccessibilityService.setFocus(this.$element, '#firstHuntMethod', 100);
+    }
+  }
 
   public setHuntMethod(method: HuntMethod): void {
     this.huntMethod = method;
@@ -28,5 +42,6 @@ export class HuntGroupMethodComponent implements ng.IComponentOptions {
     isNew: '<',
     onChangeFn: '&',
     onKeyPressFn: '&',
+    setFocus: '<?',
   };
 }
