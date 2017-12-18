@@ -24,7 +24,7 @@ describe('Component: care feature modal', () => {
     expect(this.controller.features.length).toEqual(2);
   });
 
-  it('atlasHybid Enabled feature list to have care - Customer Support Template, Auto Attendant and Virtual Assistant', function () {
+  it('atlasHybrid Enabled feature list to have care - Customer Support Template, Auto Attendant and Virtual Assistant', function () {
     this.$state.isHybridEnabled = true;
     this.compileComponent('care-feature-modal', { dismiss: 'dismiss()' });
     expect(this.controller.features.length).toEqual(3);
