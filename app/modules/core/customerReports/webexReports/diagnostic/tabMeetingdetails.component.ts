@@ -31,7 +31,19 @@ class Meetingdetails implements ng.IComponentController {
   }
 
   public $onInit() {
-    this.getEndTime();
+    const status = this.SearchService.getStorage('webexOneMeeting.overview.status');
+    if (status === 1) {
+      this.SearchService.getServerTime()
+      .then( res => {
+        this.SearchService.setStorage('webexOneMeeting.endTime', _.get(res, 'dateLong'));
+        this.initParameter();
+      });
+    } else {
+      this.initParameter();
+    }
+  }
+
+  public initParameter() {
     this.overview = this.SearchService.getStorage('webexOneMeeting.overview');
     this.featAndconn = this.SearchService.getStorage('webexOneMeeting.featAndconn');
     this.conferenceID = _.get(this.$stateParams, 'cid');
@@ -87,7 +99,8 @@ class Meetingdetails implements ng.IComponentController {
     this.SearchService.getQOS(this.conferenceID, ids, 'pstn-qos')
     .then((res: any) => {
       const obj = {};
-      _.map(res, (item: any, key) => {
+      _.map(res, (item: any, key: any) => {
+        obj[key] = [];
         _.forEach(item.items, (item_) => {
           const data = _.cloneDeep(item_);
           const arr_ = data.tahoeQuality;
@@ -97,10 +110,12 @@ class Meetingdetails implements ng.IComponentController {
             const obj__ = _.assignIn({ type: 'PSTN', nodeId: key }, item__, data);
             arr__.push(obj__);
           });
-          obj[key] = arr__;
+
+          obj[key] = _.concat(obj[key], arr__);
         });
       });
       this.data.pstn = obj;
+      this.otherPara = _.get(this.data, 'currentQos') === 'voip' ? this.data.pstn : this.otherPara;
     });
   }
 
@@ -111,14 +126,6 @@ class Meetingdetails implements ng.IComponentController {
       item.browser_ = this.SearchService.getBrowser(_.parseInt(item.browser));
       item.platform_ = this.SearchService.getPlartform({ platform: item.platform, sessionType: item.sessionType });
     });
-  }
-
-  private getEndTime() {
-    const status = this.SearchService.getStorage('webexOneMeeting.overview.status');
-    if (status === 1) {
-      this.SearchService.getServerTime()
-      .then( res => this.SearchService.setStorage('webexOneMeeting.endTime', _.get(res, 'dateLong')));
-    }
   }
 
   private getAllIds(lines) {
@@ -149,7 +156,7 @@ class Meetingdetails implements ng.IComponentController {
       fun(_.join(retryIds));
     }
     _.assignIn(this.data[qosName], obj);
-    this.lineColor = _.get(this.data, 'currentQos') === 'video' ? this.data[qosName] : this.lineColor;
+    this.lineColor = _.get(this.data, 'currentQos') === qosName ? this.data[qosName] : this.lineColor;
   }
 }
 

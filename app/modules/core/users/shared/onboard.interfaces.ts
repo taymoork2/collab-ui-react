@@ -26,8 +26,7 @@ export enum UserEntitlementName {
 
 export enum UserEntitlementState {
   ACTIVE = 'ACTIVE',
-  PENDING = 'PENDING',
-  DISABLED = 'DISABLED',
+  INACTIVE = 'INACTIVE',
 }
 
 export enum LicenseChangeOperation {
@@ -38,7 +37,6 @@ export enum LicenseChangeOperation {
 export interface IUserEntitlementRequestItem {
   entitlementName: UserEntitlementName;
   entitlementState: UserEntitlementState;
-  properties: Object;
 }
 
 export interface ILicenseRequestItem {

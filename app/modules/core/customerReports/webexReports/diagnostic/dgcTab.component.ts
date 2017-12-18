@@ -75,7 +75,7 @@ class DgcTab implements ng.IComponentController {
         overview: overview,
         featAndconn: featAndconn,
         startTime: mbi.startTime,
-        endTime: mbi.status === 2 ? mbi.endTime : this.getEndTime(),
+        endTime: mbi.status === 2 ? mbi.endTime : null,
       });
       this.SearchService.setStorage('webexOneMeeting', this.data);
       this.details = details;
@@ -86,14 +86,6 @@ class DgcTab implements ng.IComponentController {
   private timestampToDate(timestamp, format): string {
     const offset = this.SearchService.getOffset(this.timeZone);
     return moment(timestamp).utc().utcOffset(offset).format(format);
-  }
-
-  private getEndTime() {
-    return this.SearchService.getServerTime().then((res) => {
-      //this.$log.info('res', res);
-      //this.$log.info('endTime:', _.get(res, 'dateLong'));
-      return _.get(res, 'dateLong');
-    });
   }
 }
 

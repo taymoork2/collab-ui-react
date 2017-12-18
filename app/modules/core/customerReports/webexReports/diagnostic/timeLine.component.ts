@@ -59,17 +59,30 @@ class TimeLine implements ng.IComponentController {
           if (arr[item.nodeId]) {
             let startx = 0;
             _.forEach(arr[item.nodeId], (item_) => {
-              if ( item_.endTime > item.leaveTime) {
+              const endZone = this.time2line(this.timestampToDate(item_.endTime));
+              const endPoint = this.time2line(this.timestampToDate(item_.timestamp));
+              const startZone = this.time2line(this.timestampToDate(item_.startTime));
+              if ( item.leaveTime < item_.endTime  || endPoint < item.start + 19 ) {
                 return true;
               }
+              let classKey = 3;
+              const audioMos = _.parseInt(item_.audioMos);
+              if ( audioMos > 3 ) {
+                classKey = 0;
+              } else if ( audioMos < 3 && audioMos > 0 ) {
+                classKey = 2;
+              }
+              const class_ = this.legendInfo.line[classKey] === 'N/A' ? '' : _.lowerCase(this.legendInfo.line[classKey]) + 'Line';
 
               item_.y = item.y;
-              item_.end = this.time2line(this.timestampToDate(item_.timestamp));
-              item_.endTime_ = this.time2line(this.timestampToDate(item_.endTime));
-              item_.startTime_ = this.time2line(this.timestampToDate(item_.startTime));
+              item_.class = class_;
+              item_.end = endPoint;
+              item_.endZone = endZone;
+              item_.startZone = startZone;
+              item_.quality = this.legendInfo.line[classKey];
 
-              if (!startx || (startx < item_.startTime_ && startx > item_.endTime_)) {
-                item_.start = item_.startTime_;
+              if (!startx || (startx < item_.startZone && startx > item_.endZone)) {
+                item_.start = item_.startZone + 19;
               } else {
                 item_.start = startx;
               }
@@ -84,19 +97,18 @@ class TimeLine implements ng.IComponentController {
           .data(arrLine)
           .enter()
           .append('svg:line')
-          .attr('x1', item => this.coordinate.x + item.start)
+          .attr('x1', item => item.start)
           .attr('y1', item => item.y)
-          .attr('x2', item => this.coordinate.x + item.end)
+          .attr('x2', item => item.end)
           .attr('y2', item => item.y)
+          .attr('class', item => item.class)
           .attr('id', item => `myPstn${item.nodeId}`)
           .on('mouseover', (item) => {
             const msgArr = [
-              { key: `${item.type} Quality:`, value: item.audioMos },
+              { key: `${item.type} Quality: `, value: item.quality },
+              { key: `MOS score: `, value: item.audioMos },
               { key: `Call Type: `, value: item.callType },
-              { key: 'Caller: ', value: item.caller },
-              { key: 'Packet Bad: ', value: item.packetBad },
-              { key: 'Packet Lost: ', value: item.packetLost },
-              { key: 'rxPackets: ', value: item.rxPackets },
+              { key: 'Packet Loss: ', value: item.packetLost },
             ];
             this.makeTips({ arr: msgArr });
           })
@@ -125,12 +137,12 @@ class TimeLine implements ng.IComponentController {
       .append('svg:svg')
       .attr('width', this.option.width)
       .attr('height', this.option.height);
-    this.tip = d3.select('body').append('div')
+    this.tip = d3.select('.timelineSvg').append('div')
       .attr('class', 'timelineTooltip')
       .style('opacity', 0);
 
     this.legendInfo = {
-      line: ['Good', 'Poor', 'N/A'],
+      line: ['Good', 'Fair', 'Poor', 'N/A'],
       circle: ['Good', 'Fair', 'Poor', 'N/A'],
     };
   }
@@ -184,7 +196,7 @@ class TimeLine implements ng.IComponentController {
   private axis(): void {
     const timeRange = d3.time.scale()
       .domain(this.data.domain)
-      .range([0, this.coordinate.endX - this.coordinate.x]);
+      .range([this.coordinate.x, this.coordinate.endX]);
     this.time2line = timeRange;
     this.preData();
 
@@ -197,7 +209,7 @@ class TimeLine implements ng.IComponentController {
 
     this.svg.append('g')
       .attr('class', 'axis')
-      .attr('transform', `translate(${this.coordinate.x}, ${this.coordinate.endY})`)
+      .attr('transform', `translate(0, ${this.coordinate.endY})`)
       .call(xAxis);
   }
 
@@ -226,9 +238,9 @@ class TimeLine implements ng.IComponentController {
       .data(lines)
       .enter()
       .append('svg:line')
-      .attr('x1', item => this.coordinate.x + item.start)
+      .attr('x1', item => item.start)
       .attr('y1', item => item.y)
-      .attr('x2', item => this.coordinate.x + item.end)
+      .attr('x2', item => item.end)
       .attr('y2', item => item.y)
       .attr('id', item => `myLine${item.nodeId}`);
 
@@ -244,7 +256,7 @@ class TimeLine implements ng.IComponentController {
       .append('circle')
       .attr('class', 'myDot')
       .attr('r', 9)
-      .attr('cx', item => this.coordinate.x + item.start + 8 )
+      .attr('cx', item => item.start + 8 )
       .attr('cy', item => item.y )
       .attr('id', item => `myDot${item.guestId}-${item.userId}-${item.joinTime}`)
       .on('mouseover', item => {
@@ -258,7 +270,7 @@ class TimeLine implements ng.IComponentController {
           { key: 'Endpoint: ', value: endpoint },
         ];
         const top = item.y + this.$element.find('.timelineSvg').offset().top;
-        const left = this.coordinate.x + item.start + this.$element.find('.timelineSvg').offset().left;
+        const left = item.start + this.$element.find('.timelineSvg').offset().left;
 
         this.makeTips({ arr: msgArr }, { top: top, left: left });
       })
@@ -381,9 +393,9 @@ class TimeLine implements ng.IComponentController {
     .data(arr)
     .enter()
     .append('svg:line')
-    .attr('x1', item => this.coordinate.x + item.start)
+    .attr('x1', item => item.start)
     .attr('y1', item => item.y)
-    .attr('x2', item => this.coordinate.x + item.end)
+    .attr('x2', item => item.end)
     .attr('y2', item => item.y)
     .attr('class', item => item.class_)
     .attr('id', item => `${item.qosId}`)

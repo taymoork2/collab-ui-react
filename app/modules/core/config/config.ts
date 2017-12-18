@@ -541,7 +541,7 @@ export class Config {
       'users',
       'customerPstnOrdersOverview',
     ],
-    Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'dgc', 'dgc-panel'],
+    Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'dgc'],
     Tech_Support: ['gss'],
     WX2_User: ['overview', 'support', 'activateProduct'],
     WX2_Support: ['overview', 'reports', 'support'],
