@@ -286,53 +286,48 @@
     }
     */
 
-    function setReturnedCallerBasedOnToggle() {
-      AACesOnboardHelperService.isCesOnBoarded().then(function (result) {
-        if (_.isEqual(result.csOnboardingStatus.toLowerCase(), 'success') && AACommonService.isReturnedCallerToggle()) {
-          vm.ifOptions.splice(0, 0, {
-            label: $translate.instant('autoAttendant.decisionCallerReturned'),
-            value: 'callerReturned',
-            buffer: {
-              label: $translate.instant('autoAttendant.callerReturnedOneWeek'),
-              value: 10080 * 60,
-            },
-          });
-
-          vm.callerReturnedOption = {
+    function setReturnedCallerBasedOnToggle(result) {
+      if (_.isEqual(result.csOnboardingStatus.toLowerCase(), 'success')) {
+        vm.ifOptions.splice(0, 0, {
+          label: $translate.instant('autoAttendant.decisionCallerReturned'),
+          value: 'callerReturned',
+          buffer: {
             label: $translate.instant('autoAttendant.callerReturnedOneWeek'),
             value: 10080 * 60,
-          };
+          },
+        });
 
-          vm.callerReturnedOptions = [{
-            label: $translate.instant('autoAttendant.callerReturned1Min'),
-            value: 1 * 60,
-          }, {
-            label: $translate.instant('autoAttendant.callerReturned5Mins'),
-            value: 5 * 60,
-          }, {
-            label: $translate.instant('autoAttendant.callerReturned30Mins'),
-            value: 30 * 60,
-          }, {
-            label: $translate.instant('autoAttendant.callerReturned1Hour'),
-            value: 60 * 60,
-          }, {
-            label: $translate.instant('autoAttendant.callerReturnedOneDay'),
-            value: 1440 * 60,
-          }, {
-            label: $translate.instant('autoAttendant.callerReturnedOneWeek'),
-            value: 10080 * 60,
-          }, {
-            label: $translate.instant('autoAttendant.callerReturnedOneMonth'),
-            value: 43200 * 60,
-          }];
-          vm.returnedCallerToggle = true;
-        } else {
-          vm.returnedCallerToggle = false;
-        }
-      }).catch(function () {
-        // failure
+        vm.callerReturnedOption = {
+          label: $translate.instant('autoAttendant.callerReturnedOneWeek'),
+          value: 10080 * 60,
+        };
+
+        vm.callerReturnedOptions = [{
+          label: $translate.instant('autoAttendant.callerReturned1Min'),
+          value: 1 * 60,
+        }, {
+          label: $translate.instant('autoAttendant.callerReturned5Mins'),
+          value: 5 * 60,
+        }, {
+          label: $translate.instant('autoAttendant.callerReturned30Mins'),
+          value: 30 * 60,
+        }, {
+          label: $translate.instant('autoAttendant.callerReturned1Hour'),
+          value: 60 * 60,
+        }, {
+          label: $translate.instant('autoAttendant.callerReturnedOneDay'),
+          value: 1440 * 60,
+        }, {
+          label: $translate.instant('autoAttendant.callerReturnedOneWeek'),
+          value: 10080 * 60,
+        }, {
+          label: $translate.instant('autoAttendant.callerReturnedOneMonth'),
+          value: 43200 * 60,
+        }];
+        vm.returnedCallerToggle = true;
+      } else {
         vm.returnedCallerToggle = false;
-      });
+      }
     }
 
 
@@ -342,7 +337,6 @@
     }
 
     function activate() {
-      setReturnedCallerBasedOnToggle();
       setActionEntry();
       sortAndSetActionType();
 
@@ -367,14 +361,26 @@
     }
 
     function init() {
-      getSessionVariables().finally(function () {
-        /* no support for Queues as of this story.
-         * if (AACommonService.isRouteQueueToggle()) {
-         *
-         * getQueues().finally(activate);
-         * } else {
-         */
-        activate();
+      getSessionVariables().then(function () {
+        if (AACommonService.isReturnedCallerToggle()) {
+          AACesOnboardHelperService.isCesOnBoarded().then(function (result) {
+            setReturnedCallerBasedOnToggle(result);
+            activate();
+          }).catch(function () {
+            vm.returnedCallerToggle = false;
+            activate();
+          });
+        } else {
+          vm.returnedCallerToggle = false;
+          activate();
+        }
+        /*}).finally(function () {
+        no support for Queues as of this story.
+        * if (AACommonService.isRouteQueueToggle()) {
+        *
+        * getQueues().finally(activate);
+        * } else {
+        */
         /* } */
       });
     }
