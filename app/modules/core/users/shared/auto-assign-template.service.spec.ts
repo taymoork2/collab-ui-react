@@ -59,5 +59,58 @@ describe('Service: AutoAssignTemplateService:', () => {
       expect(this.$http.delete).toHaveBeenCalledWith(`${this.endpointUrl}/fake-template-id-1`);
     });
   });
+
+  describe('mkPayload():', function () {
+    it('should return a payload composed of a license payload, and a user-entitlements payload', function () {
+      this.injectDependencies('AutoAssignTemplateService');
+      spyOn(this.AutoAssignTemplateService, 'mkLicensesPayload').and.returnValue(['fake-licenses-payload']);
+      spyOn(this.AutoAssignTemplateService, 'mkUserEntitlementsPayload').and.returnValue(['fake-user-entitlements-payload']);
+      const payload = this.AutoAssignTemplateService.mkPayload({});
+      expect(this.AutoAssignTemplateService.mkLicensesPayload).toHaveBeenCalled();
+      expect(this.AutoAssignTemplateService.mkUserEntitlementsPayload).toHaveBeenCalled();
+      expect(payload).toEqual({
+        name: 'Default',
+        licenses: ['fake-licenses-payload'],
+        userEntitlements: ['fake-user-entitlements-payload'],
+      });
+    });
+  });
+
+  describe('mkLicensesPayload():', function () {
+    it('should filter only selected licenses from "stateData" property', function () {
+      this.injectDependencies('AutoAssignTemplateService');
+      const stateData = {
+        LICENSE: {
+          'fake-license-id-1': {
+            isSelected: true,
+            license: {
+              licenseId: 'fake-license-id-1',
+            },
+          },
+          'fake-license-id-2': {
+            isSelected: true,
+            license: {
+              licenseId: 'fake-license-id-2',
+            },
+          },
+          'fake-license-id-3': {
+            isSelected: false,
+            license: {
+              licenseId: 'fake-license-id-3',
+            },
+          },
+        },
+      };
+      expect(this.AutoAssignTemplateService.mkLicensesPayload(stateData)).toEqual([{
+        id: 'fake-license-id-1',
+        idOperation: 'ADD',
+        properties: {},
+      }, {
+        id: 'fake-license-id-2',
+        idOperation: 'ADD',
+        properties: {},
+      }]);
+    });
+  });
 });
 
