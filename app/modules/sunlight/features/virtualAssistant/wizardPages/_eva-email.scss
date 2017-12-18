@@ -1,16 +1,15 @@
 .eva-email {
-  display: flex;
-  position: absolute;
-  top: 50%;
-  left: 25%;
-  width: 50%;
 
   .email-form {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 40px);
 
     .extension {
-      font-family: 'CiscoSansTT Thin';
+      font-family: $brand-font-thin;
       margin-left: 1rem;
+      margin-top: -3.5rem;
 
       &.valid-extension {
           color: $color-green-darker;
@@ -27,8 +26,8 @@
 
     .icon-check {
       color: $color-green-darker;
-      margin-top: .4rem;
-      margin-left: .5rem;
+      @include vr-spacing(mt, 4, 0px, true);
+      @include vr-spacing(ml,0.5);
       order: 3;
     }
 
@@ -38,6 +37,11 @@
 
     .icon-check.visibe {
       visibility: visible;
+    }
+
+    .input-section {
+      min-height: 10rem;
+      @include vr-spacing(mt, 3.5);
     }
   }
 
