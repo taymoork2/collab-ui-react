@@ -27,6 +27,7 @@ module.exports = {
   atlasEdiscovery: 'atlas-ediscovery',
   atlasEmailStatus: 'atlas-email-status',
   atlasEmailSuppress: 'atlas-email-suppress',
+  atlasHybridEnable: 'huron-i387-enterprise-private-trunking',
   atlasExpertVirtualAssistantEnable: 'atlas-expert-virtual-assistant-enable',
   atlasF2993NewUserAndDeviceRoles: 'atlas-f2993-new-user-and-device-roles',
   atlasF3745AutoAssignLicenses: 'atlas-f3745-auto-assign-licenses',

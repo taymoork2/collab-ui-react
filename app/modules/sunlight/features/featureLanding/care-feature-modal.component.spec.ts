@@ -24,6 +24,12 @@ describe('Component: care feature modal', () => {
     expect(this.controller.features.length).toEqual(2);
   });
 
+  it('atlasHybid Enabled feature list to have care - Customer Support Template, Auto Attendant and Virtual Assistant', function () {
+    this.$state.isHybridEnabled = true;
+    this.compileComponent('care-feature-modal', { dismiss: 'dismiss()' });
+    expect(this.controller.features.length).toEqual(3);
+  });
+
   it('ok function call for for customer support template results in initiating state call and then closing the care new feature Modal with the value chosen.', function () {
     this.controller.ok('customerSupportTemplate');
     expect(this.$scope.dismiss).toHaveBeenCalledWith();

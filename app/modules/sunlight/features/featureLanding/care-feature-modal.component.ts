@@ -30,6 +30,17 @@ class CareFeatureModalCtrl implements ng.IComponentController {
       disabled: false,
     });
 
+    if (this.$state.isHybridEnabled) {
+      serviceCards.push({ //AutoAttendant
+        id: 'AA',
+        label: 'autoAttendant.title',
+        description: 'autoAttendant.modalDescription',
+        code: 'autoAttendant.code',
+        color: 'feature-aa-color',
+        disabled: false,
+      });
+    }
+
     if (this.$state.isVirtualAssistantEnabled) {
       serviceCards.push({ //Virtual Assistant
         id: 'virtualAssistant',
@@ -51,10 +62,18 @@ class CareFeatureModalCtrl implements ng.IComponentController {
     if (featureId === 'virtualAssistant') {
       templateStr = '<virtual-assistant-modal dismiss="$dismiss()" class="care-modal"></virtual-assistant-modal>';
     }
-    this.$modal.open({
-      template: templateStr,
-    });
-    this.dismiss();
+    if (featureId === 'AA') {
+      this.$modal.open({
+        template: require('modules/huron/features/newFeature/aatype-select-modal.html'),
+        controller: 'AATypeSelectCtrl',
+        size: 'lg',
+      });
+    } else {
+      this.$modal.open({
+        template: templateStr,
+      });
+      this.dismiss();
+    }
   }
 
   public purchaseLink(): void {

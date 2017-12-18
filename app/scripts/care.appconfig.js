@@ -54,6 +54,12 @@
                 $state.isVirtualAssistantEnabled = isEnabled;
               });
           },
+          isHybridEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
+            return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridEnable)
+              .then(function (isEnabled) {
+                $state.isAtlasHybridEnable = isEnabled;
+              });
+          },
           isExpertCareAssistantEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
             return FeatureToggleService.supports(FeatureToggleService.features.atlasExpertVirtualAssistantEnable)
               .then(function (isEnabled) {
