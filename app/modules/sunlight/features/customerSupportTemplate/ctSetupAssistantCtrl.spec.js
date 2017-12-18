@@ -379,6 +379,15 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.nextButton()).toEqual(true);
     });
 
+    it('next button should be disabled when expert is deleted and routing label is as expert or agentplusexpert', function () {
+      inject(intializeCtrl('chat'));
+      resolveTogglePromise();
+      controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
+      controller.template.name = templateName;
+      controller.template.configuration.routingLabel = 'expert';
+      expect(controller.nextButton()).toEqual(false);
+    });
+
     it('agent should be selected by default when creating a new template', function () {
       inject(intializeCtrl('chat'));
       resolveTogglePromise();
