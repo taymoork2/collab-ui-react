@@ -4,6 +4,8 @@ import { IServiceDescription, ServiceDescriptorService } from 'modules/hercules/
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 import { CloudConnectorService } from 'modules/hercules/services/calendar-cloud-connector.service';
 import { IUserStatusWithExtendedMessages, USSService } from 'modules/hercules/services/uss.service';
+import { Notification } from 'modules/core/notifications';
+import { HybridServiceUserSidepanelHelperService } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
 
 interface IServiceSetupStatus {
   id: HybridServiceId;
@@ -42,6 +44,8 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
     private CloudConnectorService: CloudConnectorService,
     private FeatureToggleService: FeatureToggleService,
     private HybridServicesUtilsService: HybridServicesUtilsService,
+    private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
+    private Notification: Notification,
     private ServiceDescriptorService: ServiceDescriptorService,
     private USSService: USSService,
   ) { }
@@ -205,6 +209,16 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
             return service.id === status.serviceId;
           });
         });
+      })
+      .catch((error) => {
+        if (this.HybridServiceUserSidepanelHelperService.isPartnerAdminAndGot403Forbidden(error)) {
+          this.Notification.errorWithTrackingId(error, {
+            errorKey: 'hercules.userSidepanel.errorMessages.cannotReadUserDataFromUSSPartnerAdmin',
+            allowHtml: true,
+          });
+        } else {
+          this.Notification.errorWithTrackingId(error, 'hercules.userSidepanel.errorMessages.cannotReadUserDataFromUSS');
+        }
       });
   }
 

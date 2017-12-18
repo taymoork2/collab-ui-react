@@ -20,6 +20,22 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
   public onDistributionChange: Function;
   public onSendTracking: Function;
 
+  private readonly centerTypes = {
+    EE: this.$translate.instant('firstTimeWizard.centerTypes.EE'),
+    MC: this.$translate.instant('firstTimeWizard.centerTypes.MC'),
+    EC: this.$translate.instant('firstTimeWizard.centerTypes.EC'),
+    TC: this.$translate.instant('firstTimeWizard.centerTypes.TC'),
+    SC: this.$translate.instant('firstTimeWizard.centerTypes.SC'),
+  };
+
+  private centerTypesInits = {
+    EE: this.$translate.instant('firstTimeWizard.centerTypesInits.EE'),
+    MC: this.$translate.instant('firstTimeWizard.centerTypesInits.MC'),
+    EC: this.$translate.instant('firstTimeWizard.centerTypesInits.EC'),
+    TC: this.$translate.instant('firstTimeWizard.centerTypesInits.TC'),
+    SC: this.$translate.instant('firstTimeWizard.centerTypesInits.SC'),
+  };
+
   public licenseDistributionErrors = {
     required: this.$translate.instant('firstTimeWizard.required'),
     min: this.$translate.instant('firstTimeWizard.meetingSettingsError.invalidLicense'),
@@ -79,12 +95,20 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
     });
   }
 
-  public validateData(): void {
+  public hasTotalLicensesRemaining () {
+    return this.getTotalLicensesRemaining() > 0;
+  }
+
+  private getTotalLicensesRemaining () {
     let licensesRemaining = 0;
     _.forEach(this.centerDetails, (center) => {
       licensesRemaining += this.calculateLicensesRemaining(center.centerType);
     });
+    return licensesRemaining;
+  }
 
+  public validateData(): void {
+    const licensesRemaining = this.getTotalLicensesRemaining();
     const sitesWithoutLicenses = this.hasSitesWithoutLicensesAssigned();
     _.forEach(this.licenseDistributionForm.$$controls, (control) => { control.$validate(); });
     const invalidData = this.licenseDistributionForm.$invalid || licensesRemaining !== 0 || sitesWithoutLicenses;
@@ -95,7 +119,7 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
     }
   }
 
-  private hasSitesWithoutLicensesAssigned() {
+  public hasSitesWithoutLicensesAssigned() {
     let result = false;
     _.forEach(this.sitesArray, (site) => {
       if (this.getLicensesForSite(site.siteUrl) === 0) {
@@ -105,21 +129,12 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
     return result;
   }
 
-  public offerCodeToCenterTypeString(offerCode: string) {
-    switch (offerCode) {
-      case this.Config.offerCodes.EE:
-        return this.$translate.instant('firstTimeWizard.enterpriseEditionLicensesRemaining');
-      case this.Config.offerCodes.MC:
-        return this.$translate.instant('firstTimeWizard.meetingCenterLicensesRemaining');
-      case this.Config.offerCodes.EC:
-        return this.$translate.instant('firstTimeWizard.eventCenterLicensesRemaining');
-      case this.Config.offerCodes.TC:
-        return this.$translate.instant('firstTimeWizard.trainingCenterLicensesRemaining');
-      case this.Config.offerCodes.SC:
-        return this.$translate.instant('firstTimeWizard.supportCenterLicensesRemaining');
-      default:
-        return this.$translate.instant('firstTimeWizard.invalidCenterType');
-    }
+  public getCenterTypeString(offerCode: string) {
+    return this.centerTypes[offerCode];
+  }
+
+  public getCenterTypeInits(offerCode: string) {
+    return this.centerTypesInits[offerCode];
   }
 
   public getLicensesForSite(siteUrl) {

@@ -502,6 +502,8 @@
       action.restApiResponse = restBlock.testResponse.response;
       action.dynamics = restBlock.testResponse.preTestActions;
       action.username = restBlock.username;
+      action.password = '';
+      action.credentialId = action.value;
     }
 
     function parseAction(menuEntry, inAction) {

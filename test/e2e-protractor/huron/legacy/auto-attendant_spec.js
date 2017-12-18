@@ -133,6 +133,33 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.closeEditButton);
 
     }, 120000);
+    it('should find new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
+      utils.wait(testAAName);
+
+      utils.expectIsEnabled(testAAName);
+
+      utils.click(testCardClick);
+      utils.wait(autoattendant.addAANumbers, 20000);
+
+      autoattendant.scrollIntoView(autoattendant.dialByExtension);
+
+      utils.expectIsDisplayed(autoattendant.dialByExtension);
+
+      utils.click(autoattendant.closeEditButton);
+
+    }, 120000);
+
+    it('should delete new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
+      // click delete X on the AA card for e2e test AA
+      utils.click(testCardClose);
+
+      // confirm dialog with e2e AA test name in it is there, then agree to delete
+      utils.expectText(autoattendant.deleteModalConfirmText, 'Are you sure you want to delete the ' + deleteUtils.testAAName + ' Auto Attendant?').then(function () {
+        utils.click(autoattendant.deleteModalConfirmButton);
+        autoattendant.assertDeleteSuccess(deleteUtils.testAAName);
+      });
+
+    }, 120000);
   });
 
   describe('MultiSite disabled tenant', function () {
@@ -902,6 +929,14 @@ describe('Huron Auto Attendant', function () {
       utils.sendKeys(autoattendant.passwordForAuthentication, "testPassword");
       utils.expectIsEnabled(autoattendant.nextBtn);
       utils.click(autoattendant.nextBtn);
+      utils.expectIsEnabled(autoattendant.testBtn);
+      utils.click(autoattendant.testBtn);
+      utils.wait(autoattendant.saveBtn, 60000);
+      utils.click(autoattendant.backBtn);
+      utils.sendKeys(autoattendant.usernameForAuthentication, "name");
+      utils.expectIsEnabled(autoattendant.nextBtn);
+      utils.click(autoattendant.nextBtn);
+      utils.expectIsDisabled(autoattendant.saveBtn);
       utils.expectIsEnabled(autoattendant.testBtn);
       utils.click(autoattendant.testBtn);
       utils.wait(autoattendant.saveBtn, 60000);

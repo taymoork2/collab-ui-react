@@ -106,7 +106,7 @@
 
     .gridStyle {
       margin-top: 20px;
-      height: calc(100vh - 266px) !important;
+      height: calc(100vh - 236px) !important;
 
       .ui-grid-header-cell {
         height: 40px !important;
@@ -115,6 +115,19 @@
           display: flex;
           display: -webkit-flex;
           align-items: center;
+        }
+      }
+
+      .ui-grid-top-panel {
+        border-bottom: none;
+
+        .ui-grid-header-cell-primary-focus {
+          box-shadow: none;
+
+          i {
+            top: 50%;
+            margin-top: -14px;
+          }
         }
       }
     }

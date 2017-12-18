@@ -308,8 +308,15 @@ export class USSService {
       .get(`${this.USSUrl}/orgs/${this.Authinfo.getOrgId()}/userStatuses/summary`)
       .then((res) => {
         this.cachedUserStatusSummary  = _.get(res, 'data.countsByState');
-        const o365 = _.get<IStatusSummaryForAService>(res, 'data.countsByOwnerAndState.squared-fusion-cal.ccc');
-        // res.data.countsByOwnerAndState.squared-fusion-cal.uss will be undefined if the org doesn't have any on-premise Exchange configured
+        // res.data.countsByOwnerAndState.squared-fusion-cal.XXX can be undefined
+        const o365 = _.get<IStatusSummaryForAService>(res, 'data.countsByOwnerAndState.squared-fusion-cal.ccc', {
+          total:	0,
+          notActivated:	0,
+          notActivatedWithWarning:	0,
+          activated:	0,
+          activatedWithWarning:	0,
+          error:	0,
+        });
         const onPremExchange = _.get<IStatusSummaryForAService>(res, 'data.countsByOwnerAndState.squared-fusion-cal.uss', {
           total:	0,
           notActivated:	0,
@@ -333,9 +340,6 @@ export class USSService {
     const result = _.chain(userStatuses)
       .map((userStatus) => {
         userStatus.messages = this.sortAndTweakUserMessages(userStatus.messages);
-        if (userStatus.serviceId === 'squared-fusion-cal' && userStatus.owner === 'ccc') {
-          userStatus.serviceId = 'squared-fusion-o365';
-        }
         return userStatus;
       })
       .value();

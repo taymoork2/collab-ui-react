@@ -90,21 +90,6 @@ function phase_1 {
 function phase_2 {
     set -e
 
-    # notes:
-    # - building the prod-version of webpack takes 5+ min.
-    # - start it in the background at the beginning to leverage concurrency
-    #   - it is single-threaded, so will not monopolize all the available cpu
-    #   - capture the pid, so we can wait on it before proceeding to e2e tests
-    (
-        set +e
-        # - 'typings' seems to be required for webpack to succeed
-        yarn typings
-        time nice -10 yarn build --env.nolint --env.noprogress --env.nocacheloader --devtool source-map
-        echo $? > ./.cache/webpack_exit_code
-        set -e
-    ) &
-    webpack_pid=$!
-
     # run linting tasks in parallel
     parallel yarn ::: eslint tslint stylelint
 
@@ -114,17 +99,12 @@ function phase_2 {
     # generate a plain-text file defining custom HTTP headers for use by nginx (CSP-related headers currently)
     node ./utils/printCustomHttpHeaders.js | tee ./headers.txt
 
+    # - 'typings' seems to be required for webpack to succeed
+    yarn typings
+    time nice -10 yarn build --env.nolint --env.noprogress --env.nocacheloader --devtool source-map
+
     nice -15 yarn test --env.noprogress
     set +e
-
-
-    # webpack must complete before running e2e tests
-    set -x
-    wait "$webpack_pid"
-    read -r webpack_exit_code < ./.cache/webpack_exit_code
-    [ "$webpack_exit_code" -eq 0 ] || exit "$webpack_exit_code"
-    set +x
-
 
     # e2e tests
     ./e2e.sh | tee ./.cache/e2e-sauce-logs

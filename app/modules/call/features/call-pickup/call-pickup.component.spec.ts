@@ -1,4 +1,5 @@
 import callPickupModule from './index';
+import { KeyCodes } from 'modules/core/accessibility/accessibility.service';
 
 describe('Component: callPickup', () => {
 
@@ -110,7 +111,6 @@ describe('Component: callPickup', () => {
       this.controller.index++;
       expect(this.controller.getPageIndex()).toEqual(1);
     });
-
   });
 
   describe('previousButton', () => {
@@ -221,35 +221,35 @@ describe('Component: callPickup', () => {
 
     it('escape key should call cancelModal', function () {
       spyOn(this.controller, 'cancelModal');
-      this.controller.evalKeyPress(27);
+      this.controller.evalKeyPress({ which: KeyCodes.ESCAPE });
       expect(this.controller.cancelModal).toHaveBeenCalled();
     });
 
     it('right arrow key and next button invalid should not call nextPage', function () {
       spyOn(this.controller, 'nextPage');
       spyOn(this.controller, 'nextButton').and.returnValue(false);
-      this.controller.evalKeyPress(39);
+      this.controller.evalKeyPress({ which: KeyCodes.RIGHT });
       expect(this.controller.nextPage).not.toHaveBeenCalled();
     });
 
     it('right arrow key and next button valid should call nextPage', function () {
       spyOn(this.controller, 'nextPage');
       spyOn(this.controller, 'nextButton').and.returnValue(true);
-      this.controller.evalKeyPress(39);
+      this.controller.evalKeyPress({ which: KeyCodes.RIGHT });
       expect(this.controller.nextPage).toHaveBeenCalled();
     });
 
     it('left arrow key and previous button invalid should not call previousPage', function () {
       spyOn(this.controller, 'previousPage');
       spyOn(this.controller, 'previousButton').and.returnValue(false);
-      this.controller.evalKeyPress(37);
+      this.controller.evalKeyPress({ which: KeyCodes.LEFT });
       expect(this.controller.previousPage).not.toHaveBeenCalled();
     });
 
     it('left arrow key and previous button valid should call previousPage', function () {
       spyOn(this.controller, 'previousPage');
       spyOn(this.controller, 'previousButton').and.returnValue(true);
-      this.controller.evalKeyPress(37);
+      this.controller.evalKeyPress({ which: KeyCodes.LEFT });
       expect(this.controller.previousPage).toHaveBeenCalled();
     });
 
@@ -257,7 +257,7 @@ describe('Component: callPickup', () => {
       spyOn(this.controller, 'previousPage');
       spyOn(this.controller, 'nextPage');
       spyOn(this.controller, 'cancelModal');
-      this.controller.evalKeyPress(23);
+      this.controller.evalKeyPress({ which: 42 });
       expect(this.controller.previousPage).not.toHaveBeenCalled();
       expect(this.controller.nextPage).not.toHaveBeenCalled();
       expect(this.controller.cancelModal).not.toHaveBeenCalled();
@@ -326,7 +326,7 @@ describe('Component: callPickup', () => {
     it('should call next page is next button is true', function() {
       spyOn(this.controller, 'nextPage');
       spyOn(this.controller, 'nextButton').and.returnValue(true);
-      this.controller.enterNextPage(13);
+      this.controller.enterNextPage({ which: KeyCodes.ENTER });
       expect(this.controller.nextPage).toHaveBeenCalled();
     });
   });

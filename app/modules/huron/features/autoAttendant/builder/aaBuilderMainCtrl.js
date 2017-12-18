@@ -406,6 +406,8 @@
                 var doRestId = _.get(action, 'doREST.id', '');
                 if (doRestId) {
                   _.set(vm, 'ui.' + scheduleName + '.entries[' + index + '].actions[0].value', doRestId);
+                  _.set(vm, 'ui.' + scheduleName + '.entries[' + index + '].actions[0].credentialId', doRestId);
+                  _.set(vm, 'ui.' + scheduleName + '.entries[' + index + '].actions[0].password', '');
                 }
               });
             }
@@ -701,8 +703,17 @@
           if (restApiUrl) {
             _.set(overrideProps, 'url', restApiUrl);
           }
-          var username = _.get(response, 'authentication.credentials.username');
-          _.set(overrideProps, 'username', username);
+
+          // Error Notification if credential block is Empty
+          if (!_.isUndefined(_.get(response, 'authentication'))) {
+            if (_.isEmpty(_.get(response, 'authentication.credentials.username'))) {
+              AANotificationService.error('autoAttendant.errorReadDoRestCredential', {
+                name: vm.aaModel.aaName,
+              });
+            }
+            var username = _.get(response, 'authentication.credentials.username', '');
+            _.set(overrideProps, 'username', username);
+          }
           restBlocks[key] = overrideProps;
         });
         AARestModelService.setRestBlocks(restBlocks);

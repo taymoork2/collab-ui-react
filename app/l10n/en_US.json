@@ -1204,11 +1204,8 @@
     "externally": "externally",
     "reportingUrl": "Reporting URL:",
     "help": "Help",
-    "faqs": "FAQs",
     "helpUrl": "Help URL:",
     "sendFeedback": "Cisco Feedback",
-    "sso": "SSO",
-    "roles": "Roles",
     "readOnlyHeader": "Read-Only",
     "readOnlyAccessNotEnabled": "Help Desk Read-Only access is not enabled. You can change this in your account settings",
     "downloadLogFailed": "Failed to download log",
@@ -1500,6 +1497,7 @@
     "apply": "Apply",
     "assign": "Assign",
     "assigned": "Assigned",
+    "authorize": "Authorize",
     "back": "Back",
     "begin": "Begin",
     "cancel": "Cancel",
@@ -1540,6 +1538,7 @@
     "hideAllAdminUsers": "Hide administrators",
     "history": "History",
     "id": "ID",
+    "ifErrorRemains": "If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation.",
     "incorrectFormat": "Incorrect format",
     "info": "Info",
     "invalidEmail": "This is not a valid Email Address.",
@@ -1582,6 +1581,7 @@
     "pending": "Pending",
     "play": "Play",
     "postpone": "Postpone",
+    "previous": "Previous",
     "primary": "Primary",
     "proceed": "Proceed",
     "processingEllipsis": "Processing...",
@@ -2250,7 +2250,7 @@
       "modalText2": "Select the type of information that you want included in the report:",
       "modalNote": "Note: The more users included, the longer the report takes to generate.",
       "modalCTA": "Export to CSV",
-      "guesstimate": "Selection estimated to {{minutes}}min {{seconds}}s",
+      "noUsersFound": "No users found. Please wait a few minutes and then try again.",
       "userNotFound": "Not found",
       "readingUserStatuses": "Reading user statuses…",
       "readingConnectors": "Reading cluster assignments…",
@@ -2375,14 +2375,21 @@
       "not-updated": "Licenses could not be updated for {{userName}}.",
       "not-updated-specific": "Licenses could not be updated for {{userName}}. The server returned the following error message: {{error}}.",
       "readResourceGroupsFailed": "Could not read Resource Groups. Try again later.",
-      "readUserStatusFailed": "Unable to read the current user status. Please try again later.",
       "refreshUserFailed": "Unable to refresh the user status. Please try again later.",
       "refreshUserDidNoGood": "Unable to get the user status. Please contact support if the problem persists.",
       "couldNotReadConnectStatus": "Unable to read Call Service Connect organization status. Please contact support if the problem persists.",
       "notEnabledInOrg": "Not enabled in organization",
       "enableAwareFirst": "Aware must be enabled before the user can be enabled for Connect. Enable it in the <a href ng-click=\"{{onclick}}\">Call Service Aware panel</a>.",
       "disableAwareHeader": "Disable Services",
-      "disableAwareMessage": "Are you sure? By disabling Call Service Aware, Call Service Connect will also be disabled for this user."
+      "disableAwareMessage": "Are you sure? By disabling Call Service Aware, Call Service Connect will also be disabled for this user.",
+      "errorMessages": {
+        "cannotReadDeviceDataFromUSS": "Unable to read device's activation status.",
+        "cannotReadDeviceDataFromUSSPartnerAdmin": "Unable to read device's activation status. This could indicate a caching problem, try logging out and in again to clear the user cache. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation.",
+        "cannotReadUserDataFromUSS": "Unable to read user's activation status.",
+        "cannotReadUserDataFromUSSPartnerAdmin": "Unable to read user's activation status. This could indicate a caching problem, try logging out and in again to clear the user cache. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation.",
+        "cannotReadOrgDataFromFMS": "Unable to read organization's Expressway-based Hybrid Services data.",
+        "cannotReadOrgDataFromFMSPartnerAdmin": "Unable to read organization's Expressway-based Hybrid Services data. This could indicate a caching problem, try logging out and in again to clear the user cache. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation."
+      }
     },
     "placeSidepanel": {
       "hybridCallNotActivated": "We're checking for the user account in Cisco Unified Communications Manager. This can take up to 30 minutes. Check back later for the status.",
@@ -2857,14 +2864,11 @@
         "description": "If you need to update or restore your G Suite API client access, retrieve the client name and scope by clicking the button below.",
         "cta": "Update",
         "provisioningResults": {
-          "OK": "Google Calendar is integrated with Hybrid Calendar Service.",
-          "BAD_API_ACCESS_SETTINGS": "The site verification API is not enabled. Go to console.developers.google.com to enable it.",
-          "DATABASE_ERROR": "Can't connect to the internal database. Try again later.",
-          "SITE_VERIFICATION_FAILURE": "The domain verification step failed. Make sure you followed the domain verification steps in the documentation.",
-          "SECURITY_FAILURE": "Security failure.",
-          "INPUT_PARSING_FAILURE": "The private data key cannot be parsed. Regenerate one for your project at console.developers.google.com and try again.",
-          "GENERAL_ERROR": "An unexpected error occurred. Contact support if this error recurs.",
-          "INVALID_CREDENTIALS": "The service account credentials are invalid."
+          "OK": "The Hybrid Calendar Service is successfully set up with your Office 365 organization.",
+          "GENERAL_ERROR": "An unexpected error occurred.",
+          "TEST_ACCOUNT_NONEXISTENT": "The test account credentials didn't work. Retest with a licensed Office 365 user with an Exchange Online mailbox.",
+          "INVALID_SESSION_ID": "Invalid session id. Please re-authorize Office 365 from the settings page.",
+          "BAD_ADMIN_CONSENT": "We hit an authorization error with your Office 365 organization. Go to the Hybrid Calendar Office 365 Settings page and reauthorize."
         }
       },
       "hybridCalendarCommon": {
@@ -3333,6 +3337,31 @@
           "description": "No cluster assigned to the user's resource group. Check the cluster configuration and then try again."
         }
       }
+    },
+    "office365SetupModal": {
+      "title": "Hybrid Calendar setup",
+      "subtitle": "Office 365 setup",
+      "line1": "The Hybrid Calendar Service needs permission to access Office 365 on behalf of your users.",
+      "line2": "Click <strong>Authorize</strong> to sign in to Microsoft and accept permissions for the service.",
+      "line3": "After you accept, your browser should redirect you back here. If you’re not redirected shortly, return to <a target=\"_blank\" href=\"https://admin.ciscospark.com\">admin.ciscospark.com</a> and start this process again."
+    },
+    "office365SuccessModal": {
+      "test": {
+        "subtitle": "Test Account",
+        "inputLabel": "Enter the Office 365 account you want to use to test the connection with Exchange Online."
+      },
+      "success": {
+        "subtitle": "Setup complete",
+        "line1": "You're ready to enable the Hybrid Calendar Service for your Office 365 users:",
+        "line2": "Enable them individually from the <a href ng-click=\"{{onclick}}\">users page</a>.",
+        "line3": "Enable them in bulk using the <a href ng-click=\"{{onclick}}\">CSV template</a>.",
+        "line4": "For more information, go to <a href=\"https://collaborationhelp.cisco.com\" target=\"_blank\">Collaboration Help</a>."
+      }
+    },
+    "office365FailureModal": {
+      "subtitle": "An error occured during the authorization",
+      "feedback": "If the error remains, click your admin username, and then click <strong>Feedback</strong> to open a case for further investigation.",
+      "errorCode": "Error Code: {{code}}."
     }
   },
   "context": {
@@ -3879,11 +3908,22 @@
     "addAnotherSite": "Add another site",
     "meetingSettings": "Meeting Settings",
     "meetingSettingsDescription": "This step of Service Setup will help create one or more new WebEx sites. If you already have existing sites and would not like to setup any new ones, just click Next to proceed.",
-    "meetingCenterLicensesRemaining": "Meeting Center Licenses Remaining",
-    "enterpriseEditionLicensesRemaining": "Enterprise Edition Licenses Remaining",
-    "eventCenterLicensesRemaining": "Event Center Licenses Remaining",
-    "trainingCenterLicensesRemaining": "Training Center Licenses Remaining",
-    "supportCenterLicensesRemaining": "Support Center Licenses Remaining",
+    "centerTypes": {
+      "EE": "Enterprise Edition",
+      "MC": "Meeting Center",
+      "EC": "Event Center",
+      "TC": "Training Center",
+      "SC": "Support Center"
+    },
+    "centerTypesInits": {
+      "EE": "EE",
+      "MC": "MC",
+      "EC": "EC",
+      "TC": "TC",
+      "SC": "SC"
+    },
+    "centerTypeLicensesRemaining": "{{centerType}} licenses remaining",
+    "centerTypeLicenses": "{{centerType}} licenses",
     "tspPartnerRequired": "You have purchased TSP for your audio plan. A partner is required to provide this service.",
     "chooseTSPPartner": "Choose TSP Provider",
     "conferencingAudioProvided": "Conferencing Audio: {{service}} provided by {{partner}}",
@@ -4141,6 +4181,7 @@
     "queueSettings": "Queue Settings",
     "maxWaitTime": "Maximum Wait Time",
     "periodicTime": "Frequency of Periodic Announcements",
+    "errorReadDoRestCredential": "Failed to read {{name}}: One or more REST API credentials are missing.",
     "errorReadCe": "Failed to read {{name}}: {{statusText}} ({{status}}).",
     "successCreateCe": "{{name}} created successfully.",
     "successDeleteCe": "{{name}} deleted successfully.",
@@ -6954,6 +6995,10 @@
     "redistributeLicenses": "Redistribute Licenses",
     "redistributeLicensesDesc": "Please indicate how many licenses to put on each site",
     "redistributeLicensesDesc2": "You must assign all the licenses and each site must have at least one license.",
+    "redistributeLicensesValidMessages": {
+      "allLicensesAssigned": "All licenses are assigned.",
+      "allSitesHaveLicense": "Each site has at least one license."
+    },
     "redistributeLicensesDelete": "<strong>To finish deleting site:</strong> The WebEx site <strong>{{siteUrl}}</strong> is ready to be deleted. First you must reassign the licenses from it to the remaining sites in this subscription.",
     "redistributeRejectModalTitle": "Cannot Redistribute Licenses",
     "redistributeRejectModalBodyOnlySite": "You cannot redistribute licenses between sites because there is only one site.",
@@ -7053,7 +7098,7 @@
       },
       "soontobedeactivated": {
         "type": "Device will soon be deactivated",
-        "message": "This device has been offline for over six weeks. Make sure it comes online within {{expireInDays}} days to avoid deactivation."
+        "message": "This device has been offline for several weeks. Make sure it comes online within {{expireInDays}} days to avoid deactivation."
       },
       "ntpstatus": {
         "type": "Time Server Not Reachable",
@@ -7436,8 +7481,8 @@
   "careChatTpl": {
     "editAction": "Edit",
     "deleteFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?",
-    "deleteVaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?<br>Deleting the Customer Virtual Assistant removes it from all Customer Support Templates. Customers can no longer interact with the virtual assistant.",
-    "deleteEvaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?<br>You can no longer escalate chat requests to Cisco Spark expert spaces.",
+    "deleteVaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}? Deleting the Customer Virtual Assistant removes it from all Customer Support Templates. Customers can no longer interact with the virtual assistant.",
+    "deleteEvaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}? You can no longer escalate chat requests to Cisco Spark expert spaces.",
     "createSuccessText": "You have successfully created {{ featureName }}.",
     "createTemplateFailureText": "Failed to create Care template.",
     "editSuccessText": "Changes to {{ featureName }} are successfully saved.",
@@ -7462,6 +7507,20 @@
     "profile_chat": "Branding and Identity",
     "profile_callback": "Branding and Identity",
     "profile_chatPlusCallback": "Chat Branding and Identity",
+    "chatEscalationBehavior_chat": "Chat Escalation Behavior",
+    "chatEscalationBehavior_callback": "chat Escalation Behavior",
+    "chatEscalationBehavior_chatPlusCallback": "Chat Escalation Behavior",
+    "chatEscalatioAgent": "Agents only",
+    "chatEscalatioExpert": "Experts only",
+    "chatEscalatioAgentPlusExpert": "Agents and Experts",
+    "chatEscalatioAgentDesc": "Chat requests offered to agents using Cisco Spark Care Desktop.",
+    "chatEscalatioExpertDesc": "Chat requests offered to Cisco Spark users working in expert spaces.",
+    "chatEscalatioAgentPlusExpertDesc": "Chat requests simultaneously offered to agents and experts.",
+    "chatEscalatioAgentTooltip": "The routing method configured <br> on the Care Settings page <br> determines how the escalation <br> selects agents.",
+    "chatEscalatioExpertTooltip": "The Expert Virtual Assistant <br> manages escalation to Cisco <br> Spark. Configure the assistant <br> from the Care Features page.",
+    "chatEscalatioAgentPlusExpertTooltip": "An accepted chat request is <br> removed from all queues and cannot be escalated again. <br> <br> The routing method configured <br> on the Care Settings page <br> determines agent selection. The Expert Virtual Assistant chooses one expert space to escalate to in Cisco Spark.",
+    "learnMoreLink": "Learn more",
+    "evaTemplateHeader": "Choose who to escalate requests from this chat to:",
     "ctVirtualAssistantPageTitle": "Customer Virtual Assistant",
     "overview": "Template Overview",
     "chatStatusMessages_chat": "Status Messages",
@@ -7492,6 +7551,7 @@
     "profile_agent_info": "Use unique profiles to represent the different agents in your organization.",
     "profile_org_info_cva": "Use a single profile to represent the Customer Virtual Assistant and all agents in your organization.",
     "profile_agent_info_cva": "Use unique profiles for your Customer Virtual Assistant and agents that change during a chat. ",
+    "chatEscalationBehaviorDesc": "Define where your customer chat requests are escalated to.",
     "default_cva_name": "Virtual Assistant",
     "overviewDesc_chat": "Toggle cards to customize what screens you want your customer to see when requesting a chat from customer care",
     "overviewDesc_callback": "Toggle cards to customize what screens you want your customer to see when requesting a callback from customer care",
@@ -7583,6 +7643,8 @@
     "image": "Image",
     "displayText": "Display Text",
     "orgSettingInfo": "You can change the organization logo on the Settings page.",
+    "evaSettingInfo": "To enable escalation to experts, create an Expert Virtual Assistant from the Care Features page.",
+    "evaEnabledSettingInfo": "about configuring chat escalation behavior.",
     "agentSettingInfo": "You cannot change the default agent avatar seen in the Preview.",
     "agentMsg": "Hi, I need help with the MFI key.",
     "agentMsgTime": "10:10 AM",
@@ -7737,7 +7799,8 @@
           "code": "eva",
           "type": "Expert <br> Virtual Assistant",
           "selectDesc": "Create a virtual assistant who connects subject matter experts in Cisco Spark spaces to customers with chat requests.",
-          "disabledTooltip": "You can only have one Expert Virtual Assistant for your organization. To change the settings of your existing Expert Virtual Assistant, edit it from the Features page."
+          "disabledTooltip": "You can only have one Expert Virtual Assistant for your organization. To change the settings of your existing Expert Virtual Assistant, edit it from the Features page.",
+          "nonAdminEditDeleteWarning": "You are not authorized to edit or delete this virtual assistant. Contact the owner, {{owner}}, to request one of these actions."
         }
       },
       "createTitle": "Create {{ featureName }}",
@@ -7746,7 +7809,7 @@
       "configOverview": {
         "title": "{{ featureName }} Configuration Requirements",
         "desc": "Review the prerequisites for creating a {{ featureName }}",
-        "boxTitle": "Create an Dialogflow agent before you create your {{ featureName }}.",
+        "boxTitle": "Create a Dialogflow agent before you create your {{ featureName }}.",
         "boxDesc": "Build an automated agent in Dialogflow with a natural language dialogue. Your integrated {{ featureName }} uses the built-in dialogue to interact with your customers and escalate a conversation to live agents as needed.",
         "boxRadioOne": "No, I don’t have a preconfigured Dialogflow agent",
         "boxRadioOneDesc1": "Go to ",
@@ -7847,7 +7910,7 @@
         "boxStepOne": "Create more expert spaces in Cisco Spark.",
         "boxStepOneTooltip": "Give each space a unique topic name that helps the {{ featureName }} match keywords from a chat to the space.",
         "boxStepTwo": "Add the Expert Virtual Assistant to the expert spaces.",
-        "boxStepTwoTooltip": "After you configure the {{ featureName }}, use the @sparkbot.io email you specified to the add the assistant to your expert spaces.",
+        "boxStepTwoTooltip": "After you configure the {{ featureName }}, use the @sparkbot.io email you specified to add the assistant to your expert spaces.",
         "boxStepThree": "Add users to the expert spaces you create.",
         "boxStepThreeTooltip": "Add appropriate users who can answer customer questions about the expert space topics.",
         "boxStepFour": "Configure chat escalation to Cisco Spark in your Customer Support Templates.",
@@ -8247,7 +8310,9 @@
       "desktopApps": "Desktop apps",
       "webApp": "Web app",
       "mobileApps": "Mobile apps",
-      "bots": "Bots"
+      "bots": "Bots",
+      "disableWhiteboardsTitle": "Disable Whiteboard",
+      "disableWhiteboardsDescription": "Restricting file share controls will also disable whiteboards"
     },
     "support": {
       "title": "Support",
@@ -8947,6 +9012,14 @@
           "matchingEmails": "User email addresses that are exact matches in Cisco Spark, WebEx, and Google.",
           "aclAdminAccount": "(Optional) If you use room resources, an authorized access control list (ACL) admin account.",
           "removeHangouts": "(Optional) Remove Google Hangouts in Meeting Events"
+        },
+        "office365Prerequisites": {
+          "title": "Hybrid Calendar (Office) Prerequisites",
+          "intro": "Use this checklist alongside the Office 365 deployment documentation. Make sure you complete all the prerequisites necessary for deploying Hybrid Calendar in your Office 365 organization.",
+          "officeOrganization": "An Office 365 organization with Exchange Online accounts for users in the organization. During setup, you must be able to sign in as a Global administrator to grant application permissions",
+          "webExSite": "For @webex scheduling, a Cisco WebEx site on WBS31 or later",
+          "sparkOrganization": "A Cisco Spark organization with a minimum of Basic Meetings and Business Messaging (M1)",
+          "matchingEmails": "Users must have activated Cisco Spark accounts, with email addresses that are exact matches in Cisco Spark, WebEx, and Exchange Online"
         }
       },
       "hybridCall": {
@@ -9204,7 +9277,8 @@
     "line2": "Refer to <a href=\"http://www.cisco.com/go/hybrid-services-calendar\" target=\"_blank\">documentation</a> if you need help enabling users."
   },
   "readOnlyModal": {
-    "banner": "You are in read-only mode"
+    "title": "Read-only Mode",
+    "message": "You are viewing the application in Read-only mode. No changes will be accepted."
   },
   "readOnlyMessages": {
     "notAllowed": "Not allowed in read-only mode. Operation not executed."

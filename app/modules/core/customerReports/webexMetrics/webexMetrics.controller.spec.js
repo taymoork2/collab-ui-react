@@ -50,6 +50,14 @@ describe('Controller: WebEx Metrics Ctrl', function () {
       },
     },
   };
+  var testMashupUrl = 'qlik-loader/custportal';
+  var testQBSData = {
+    ticket: '0Ibh4usd9bERRzLR',
+    host: 'qlik-loader',
+    qlik_reverse_proxy: 'qlik-loader',
+    appName: 'basic_webex_v1__qvadmin@cisco.com',
+    isPersistent: 'false',
+  };
   beforeEach(function () {
     this.initModules('Core', 'core.customer-reports', 'WebExApp');
     this.injectDependencies(
@@ -81,6 +89,10 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     spyOn(this.FeatureToggleService, 'webexMetricsGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'webexMEIGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'webexSystemGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.QlikService, 'getProdToBTSQBSInfo').and.returnValue(this.$q.resolve(testQBSData));
+    spyOn(this.QlikService, 'getQlikMashupUrl').and.returnValue(testMashupUrl);
+    spyOn(this.$scope, '$broadcast').and.callThrough();
+
     this.initController = function () {
       var $state = {
         current: { },
@@ -141,6 +153,34 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     expect(this.controller.$state.go).toHaveBeenCalledWith('reports.webex-metrics.classic');
   });
 
+  it('should check classic when classicEnabled event fired', function () {
+    this.$scope.$broadcast('classicEnabled', false);
+    expect(this.controller.isWebexClassicEnabled).toBeFalsy();
+  });
+
+  it('should check classic and push the tab when classicEnabled event fired with true', function () {
+    this.$scope.$broadcast('classicEnabled', true);
+    expect(this.controller.isWebexClassicEnabled).toBeTruthy();
+  });
+
+  it('should broadcast the event when updateWebexMetrics called', function () {
+    this.controller.webexMetricsViews = 'metrics';
+    this.controller.selectEnable = true;
+    this.controller.metricsSelected = 'go.webex.com';
+    this.controller.updateWebexMetrics();
+    this.$scope.$apply();
+    expect(this.controller.webexMetrics.appData.url).toBe(testMashupUrl);
+  });
+
+  it('should broadcast the event to true when updateWebexMetrics called with no site selected', function () {
+    this.controller.selectEnable = true;
+    this.controller.metricsSelected = undefined;
+    this.controller.updateWebexMetrics();
+    this.$scope.$apply();
+    expect(this.controller.isNoData).toBeTruthy();
+    expect(this.$scope.$broadcast).toHaveBeenCalledTimes(2);
+  });
+
   it('should not go to reports.webex-metrics when at reports.webex-metrics sub state', function () {
     var event = jasmine.createSpyObj('event', ['preventDefault']);
     this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics' }, {}, { name: 'reports.webex-metrics.metrics' });
@@ -162,7 +202,7 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     expect(this.controller.$state.go).toHaveBeenCalledWith('login');
 
     this.controller.features.isMEIOn = false;
-    this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics.mei' }, {}, { name: 'reports.webex-metrics.system' });
+    this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics.MEI' }, {}, { name: 'reports.webex-metrics.system' });
     expect(event.preventDefault).toHaveBeenCalled();
 
     this.controller.features.isSystemOn = false;

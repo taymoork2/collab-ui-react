@@ -7,6 +7,7 @@ describe('Controller: AADecisionCtrl', function () {
   var controller;
   var AAUiModelService, AAModelService, AutoAttendantCeMenuModelService;
   var AASessionVariableService;
+  var AACesOnboardHelperService;
   var customVarJson = getJSONFixture('huron/json/autoAttendant/aaCustomVariables.json');
   var $rootScope, $scope;
 
@@ -47,7 +48,7 @@ describe('Controller: AADecisionCtrl', function () {
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($controller, _$rootScope_, $q, _AAUiModelService_, _AAModelService_, _AASessionVariableService_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_, _AACommonService_, _QueueHelperService_) {
+  beforeEach(inject(function ($controller, _$rootScope_, $q, _AAUiModelService_, _AAModelService_, _AASessionVariableService_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_, _AACommonService_, _QueueHelperService_, _AACesOnboardHelperService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     q = $q;
@@ -78,6 +79,7 @@ describe('Controller: AADecisionCtrl', function () {
 
     featureToggleService = _FeatureToggleService_;
     aaCommonService = _AACommonService_;
+    AACesOnboardHelperService = _AACesOnboardHelperService_;
     aaQueueService = _QueueHelperService_;
     AASessionVariableService = _AASessionVariableService_;
 
@@ -117,6 +119,7 @@ describe('Controller: AADecisionCtrl', function () {
     aaUiModel = null;
     menu = null;
     action = null;
+    AACesOnboardHelperService = null;
   });
 
   describe('Conditional tests', function () {
@@ -127,6 +130,9 @@ describe('Controller: AADecisionCtrl', function () {
     describe('activate', function () {
       beforeEach(inject(function () {
         spyOn(aaCommonService, 'isReturnedCallerToggle').and.returnValue(true);
+        spyOn(AACesOnboardHelperService, 'isCesOnBoarded').and.returnValue(q.resolve({
+          csOnboardingStatus: 'SUCCESS',
+        }));
       }));
 
       it('should add decision action object menuEntry and have 6 if options and 5 then options', function () {
@@ -225,6 +231,9 @@ describe('Controller: AADecisionCtrl', function () {
 
     it('should set the action entry from the ifOption buffer', function () {
       spyOn(aaCommonService, 'isReturnedCallerToggle').and.returnValue(true);
+      spyOn(AACesOnboardHelperService, 'isCesOnBoarded').and.returnValue(q.resolve({
+        csOnboardingStatus: 'SUCCESS',
+      }));
       var c;
       action.if = {};
       action.if.leftCondition = 'callerReturned';
@@ -246,6 +255,37 @@ describe('Controller: AADecisionCtrl', function () {
 
       expect(c.actionEntry.if.rightCondition).toEqual(b.buffer.value);
       expect(c.isWarn).toEqual(false);
+    });
+
+    it('should returnCallerToggle to false when ces onboarding is initializing', function () {
+      spyOn(aaCommonService, 'isReturnedCallerToggle').and.returnValue(true);
+      // In case when return caller toggle is true and ces onboarding is on initializing state
+      spyOn(AACesOnboardHelperService, 'isCesOnBoarded').and.returnValue(q.resolve({
+        csOnboardingStatus: 'INITIALZING',
+      }));
+      var ctrl;
+
+      ctrl = controller('AADecisionCtrl', {
+        $scope: $scope,
+      });
+
+      $scope.$apply();
+      expect(ctrl.returnedCallerToggle).toEqual(false);
+    });
+
+    it('should set returnCallerToggle to false when ces onboarding is successful but returnCaller toggle is false', function () {
+      spyOn(aaCommonService, 'isReturnedCallerToggle').and.returnValue(false);
+      spyOn(AACesOnboardHelperService, 'isCesOnBoarded').and.returnValue(q.resolve({
+        csOnboardingStatus: 'SUCCESS',
+      }));
+      var ctrl;
+
+      ctrl = controller('AADecisionCtrl', {
+        $scope: $scope,
+      });
+
+      $scope.$apply();
+      expect(ctrl.returnedCallerToggle).toEqual(false);
     });
 
     it('should the conditional from ifOption value', function () {

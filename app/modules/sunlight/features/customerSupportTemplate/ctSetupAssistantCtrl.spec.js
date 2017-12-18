@@ -4,18 +4,19 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
 describe('Care Setup Assistant Ctrl', function () {
   var controller, $scope, $modal, $q, CTService, getLogoDeferred, getTogglePromise, getLogoUrlDeferred, SunlightConfigService, $state, $stateParams, LogMetricsService;
-  var Notification, $translate, _scomUrl, $httpBackend, CvaService;
+  var Notification, $translate, _scomUrl, $httpBackend, CvaService, EvaService;
 
   var templateName = 'Atlas UT Template';
   var NAME_PAGE_INDEX = 0;
-  var OVERVIEW_PAGE_INDEX = 1;
-  var PROACTIVE_PROMPT_PAGE_INDEX = 2;
-  var AGENT_UNAVAILABLE_PAGE_INDEX = 5;
-  var OFF_HOURS_PAGE_INDEX = 6;
-  var FEEDBACK_PAGE_INDEX = 7;
-  var PROFILE_PAGE_INDEX = 8;
-  var CHAT_STATUS_MESSAGES_PAGE_INDEX = 9;
-  var EMBED_CODE_PAGE_INDEX = 10;
+  var CHAT_ESCALATION_BEHAVIOR = 1;
+  var OVERVIEW_PAGE_INDEX = 2;
+  var PROACTIVE_PROMPT_PAGE_INDEX = 3;
+  var AGENT_UNAVAILABLE_PAGE_INDEX = 6;
+  var OFF_HOURS_PAGE_INDEX = 7;
+  var FEEDBACK_PAGE_INDEX = 8;
+  var PROFILE_PAGE_INDEX = 9;
+  var CHAT_STATUS_MESSAGES_PAGE_INDEX = 10;
+  var EMBED_CODE_PAGE_INDEX = 11;
   var OrgName = 'Test-Org-Name';
   var OrgId = 'Test-Org-Id';
   var businessHours = getJSONFixture('sunlight/json/features/chatTemplateCreation/businessHoursSchedule.json');
@@ -187,7 +188,7 @@ describe('Care Setup Assistant Ctrl', function () {
 
   afterEach(function () {
     controller = $scope = $modal = $q = CTService = getLogoDeferred = getTogglePromise = getLogoUrlDeferred = SunlightConfigService = $state = $stateParams = LogMetricsService = undefined;
-    Notification = $translate = CvaService = undefined;
+    Notification = $translate = CvaService = EvaService = undefined;
   });
 
   afterAll(function () {
@@ -200,14 +201,14 @@ describe('Care Setup Assistant Ctrl', function () {
     $provide.value('Authinfo', spiedAuthinfo);
   }));
 
-  var intializeCtrl = function (mediaType, template, isEditFeature, isCareProactiveChatTrialsFt, isCareAssistantFt) {
-    return function (_$rootScope_, $controller, _$modal_, _$q_, _$translate_,
-      _$window_, _CvaService_, _CTService_, _SunlightConfigService_, _$state_, _Notification_, _$stateParams_, _LogMetricsService_, UrlConfig, _$httpBackend_) {
+  var intializeCtrl = function (mediaType, template, isEditFeature, isCareProactiveChatTrialsFt, isCareAssistantFt, isEvaFlagEnabled) {
+    return function (_$rootScope_, $controller, _$modal_, _$q_, _$translate_, _$window_, _CvaService_, _EvaService_, _CTService_, _SunlightConfigService_, _$state_, _Notification_, _$stateParams_, _LogMetricsService_, UrlConfig, _$httpBackend_) {
       $scope = _$rootScope_.$new();
       $modal = _$modal_;
       $q = _$q_;
       $translate = _$translate_;
       CvaService = _CvaService_;
+      EvaService = _EvaService_;
       CTService = _CTService_;
       SunlightConfigService = _SunlightConfigService_;
       $state = _$state_;
@@ -243,12 +244,26 @@ describe('Care Setup Assistant Ctrl', function () {
         defered.resolve(result);
         return defered.promise;
       });
+
+      spyOn(EvaService, 'listExpertAssistants').and.callFake(function () {
+        var defered = $q.defer();
+        var result = {
+          items: isEditFeature ? [
+            'Jhon Doe',
+            'Trudy',
+          ] : [],
+        };
+        defered.resolve(result);
+        return defered.promise;
+      });
+
       spyOn(Notification, 'success');
       spyOn(Notification, 'errorWithTrackingId');
       spyOn(LogMetricsService, 'logMetrics').and.callFake(function () {});
       spyOn(SunlightConfigService, 'updateChatConfig');
       $state['isCareProactiveChatTrialsEnabled'] = isCareProactiveChatTrialsFt || true;
       $state['isCareAssistantEnabled'] = isCareAssistantFt || true;
+      $state['isEvaFlagEnabled'] = isEvaFlagEnabled || true;
       $stateParams = {
         template: template || undefined,
         isEditFeature: isEditFeature || false,
@@ -351,6 +366,91 @@ describe('Care Setup Assistant Ctrl', function () {
     it('next button should be disabled when name has invalid character and length exceeds 250 chars', function () {
       controller.template.name = getStringOfLength(250) + '<';
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, 'hidden', false);
+    });
+  });
+
+  describe('Chat Escalation Page', function () {
+    it('next and previous buttons should be enabled by default', function () {
+      inject(intializeCtrl('chat'));
+      resolveTogglePromise();
+      controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
+      controller.template.name = templateName;
+      expect(controller.previousButton()).toEqual(true);
+      expect(controller.nextButton()).toEqual(true);
+    });
+
+    it('next button should be disabled when expert is deleted and routing label is as expert or agentplusexpert', function () {
+      inject(intializeCtrl('chat'));
+      resolveTogglePromise();
+      controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
+      controller.template.name = templateName;
+      controller.template.configuration.routingLabel = 'expert';
+      expect(controller.nextButton()).toEqual(false);
+    });
+
+    it('agent should be selected by default when creating a new template', function () {
+      inject(intializeCtrl('chat'));
+      resolveTogglePromise();
+      controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
+      controller.template.name = templateName;
+      expect(controller.template.configuration.routingLabel).toEqual('agent');
+    });
+
+    it('state should have chatEscalationBehavior when EVA is enabled for org', function () {
+      inject(intializeCtrl('chat'));
+      resolveTogglePromise();
+      controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
+      controller.template.name = templateName;
+      expect(controller.states).toEqual([
+        'name',
+        'chatEscalationBehavior',
+        'overview',
+        'proactivePrompt',
+        'customerInformation',
+        'virtualAssistant',
+        'agentUnavailable',
+        'offHours',
+        'feedback',
+        'profile',
+        'chatStatusMessages',
+        'summary',
+      ]);
+    });
+
+    it('on modify radio button of respective state should button be prefilled', function () {
+      var configMock = Object.assign({}, existingTemplateData, {
+        configuration: Object.assign({}, existingTemplateData.configuration, {
+          routingLabel: 'expert',
+        }),
+      });
+      inject(intializeCtrl('chat', configMock, true));
+      resolveTogglePromise();
+      controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
+      controller.template.name = templateName;
+      expect(controller.template.configuration.routingLabel).toEqual('expert');
+    });
+
+    it('expert and agentplusexpert radio button should be enabled when expert is persent for the org', function () {
+      var configMock = Object.assign({}, existingTemplateData, {
+        configuration: Object.assign({}, existingTemplateData.configuration, {
+          routingLabel: 'expert',
+        }),
+      });
+      inject(intializeCtrl('chat', configMock, true));
+      resolveTogglePromise();
+      controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
+      controller.template.name = templateName;
+      expect(controller.evaConfig.isEvaConfigured).toEqual(true);
+      expect(controller.evaDataModel[1].isDisabled).toEqual(false);
+      expect(controller.evaDataModel[2].isDisabled).toEqual(false);
+    });
+
+    it('expert and agentplusexpert radio button should be disabled when expert is not persent for the org', function () {
+      inject(intializeCtrl('chat'));
+      resolveTogglePromise();
+      controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
+      controller.template.name = templateName;
+      expect(controller.evaConfig.isEvaConfigured).toEqual(false);
     });
   });
 
@@ -1308,6 +1408,7 @@ describe('Care Setup Assistant Ctrl', function () {
     it('the page order should be as expected', function () {
       expect(controller.states).toEqual([
         'name',
+        'chatEscalationBehavior',
         'overview',
         'proactivePrompt',
         'customerInformationChat',

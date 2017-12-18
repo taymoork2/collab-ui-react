@@ -1,9 +1,10 @@
 import testModule from './index';
+import * as moment from 'moment-timezone';
 
 describe('Service: searchService', () => {
   beforeAll(function () {
     this.conferenceID = '65241608473282200';
-
+    this.nodeId = '2454212';
   });
 
   beforeEach(function () {
@@ -16,140 +17,151 @@ describe('Service: searchService', () => {
     this.$httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should get correct data when call getMeetings', function () {
-    const mockData = [{
-      conferenceID: 50190706068695610,
-      meetingType: 'PRO',
-      siteID: 700243772,
-    }];
+  it('should get correct data when call getMeetings for searching', function () {
+    const mockData = [{ conferenceID: '50190706068695610', meetingNumber: '341662314', meetingName: 'Felix Cao' }];
     const url = `${this.UrlConfig.getGeminiUrl()}meetings`;
     this.$httpBackend.expectPOST(url).respond(200, mockData);
 
-    this.SearchService.getMeetings().then((res) => {
-      expect(res.length).toBe(1);
-    });
-    this.$httpBackend.flush();
-  });
-
-  it('should get correct data when call getMeeting detail', function () {
-    const mockData = {
-      overview: {
-        meetingName: 'fn lns Personal Room',
-        meetingNumber: '213595523',
-        meetingType: 'MC',
-        status: 0,
-      },
-      session: {
-        createTime: '2067-12-31 09:00:00',
-        startTime: '2017-06-20 03:09:06',
-        endTime: '2017-06-20 03:10:00',
-      },
-    };
-    const url = `${this.UrlConfig.getGeminiUrl()}meetings/${this.conferenceID}`;
-
-    this.$httpBackend.expectGET(url).respond(200, mockData);
-    this.SearchService.getMeeting(this.conferenceID).then((res) => {
-      expect(res.overview).toBeDefined();
-    });
+    this.SearchService.getMeetings().then( res => expect(res.length).toBe(1) );
     this.$httpBackend.flush();
   });
 
   it('should get correct data when call getMeetingDetail', function () {
-    const mockData = {
-      overview: { status: 1, participantsSize: 1, conferenceID: '65168195997140080' },
-    };
+    const mockData = { meetingBasicInfo: {}, features: {}, connection: {}, sessions: {} };
     const url = `${this.UrlConfig.getGeminiUrl()}meetings/${this.conferenceID}/meeting-detail`;
     this.$httpBackend.expectGET(url).respond(200, mockData);
-    this.SearchService.getMeetingDetail(this.conferenceID).then((res) => {
-      expect(res.overview).toBeDefined();
-    });
+    this.SearchService.getMeetingDetail(this.conferenceID)
+      .then( res => expect(res.features).toBeDefined() );
+
+    this.$httpBackend.flush();
+  });
+
+  it('should get correct data when call getUniqueParticipants', function () {
+    const mockData = [{ userName: 'Felix Cao1', participants: [] }, { userName: 'Felix Cao2', participants: [] }];
+    const url = `${this.UrlConfig.getGeminiUrl()}meetings/${this.conferenceID}/unique-participants`;
+    this.$httpBackend.expectGET(url).respond(200, mockData);
+
+    this.SearchService.getUniqueParticipants(this.conferenceID)
+    .then( res => expect(_.size(res)).toBe(2) );
+
     this.$httpBackend.flush();
   });
 
   it('should get correct data when call getParticipants', function () {
-    const mockData = [{
-      joinTime: 1499389211000,
-      leaveTime: 1499399838000,
-      conferenceID: '66735067305608980',
-    }];
+    const mockData = [{ joinTime: 1499389211000, leaveTime: 1499399838000, conferenceID: '66735067305608980' }];
     const url = `${this.UrlConfig.getGeminiUrl()}meetings/${this.conferenceID}/participants`;
     this.$httpBackend.expectGET(url).respond(200, mockData);
-    this.SearchService.getParticipants(this.conferenceID).then((res) => {
-      expect(res[0].joinTime).toBeDefined();
-    });
+    this.SearchService.getParticipants(this.conferenceID)
+      .then( res => expect(res[0].joinTime).toBeDefined());
+
     this.$httpBackend.flush();
   });
 
+  it('should get correct data when call getQOS', function () {
+    const qosName = 'pstn';
+    const mockData = { 2454212: { completed: true, items: [] } };
+    const url = `${this.UrlConfig.getGeminiUrl()}meetings/${this.conferenceID}/${qosName}?nodeIds=${this.nodeId}`;
+    this.$httpBackend.expectGET(url).respond(200, mockData);
+    this.SearchService.getQOS(this.conferenceID, this.nodeId, qosName)
+      .then( res => expect(res[this.nodeId]).toBeDefined());
+
+    this.$httpBackend.flush();
+  });
 
   it('should get correct data when call getJoinMeetingTime', function () {
-    const mockData = [{
-      userId: '52887',
-      userName: '"cisqsite07 admin"',
-    }];
+    const mockData = [{ userId: '52887', userName: 'cisqsite07 admin' }];
     const url = `${this.UrlConfig.getGeminiUrl()}meetings/${this.conferenceID}/participants/join-meeting-time`;
     this.$httpBackend.expectGET(url).respond(200, mockData);
-    this.SearchService.getJoinMeetingTime(this.conferenceID).then((res) => {
-      expect(res[0].userId).toBeDefined();
-    });
+    this.SearchService.getJoinMeetingTime(this.conferenceID)
+      .then( res => expect(res[0].userId).toBeDefined());
+
     this.$httpBackend.flush();
   });
 
-  it('should get correct data when call getJoinMeetingQuality', function () {
-    const mockData = [{
-      userId: '52887',
-      userName: '"cisqsite07 admin"',
-    }];
-    const url = `${this.UrlConfig.getGeminiUrl()}meetings/${this.conferenceID}/participants/join-meeting-quality`;
+  it('should get correct service GMT time when call getServerTime', function () {
+    const mockData = { dateLong: '2017-12-12' };
+    const url = `${this.UrlConfig.getGeminiUrl()}server`;
     this.$httpBackend.expectGET(url).respond(200, mockData);
-    this.SearchService.getJoinMeetingQuality(this.conferenceID).then((res) => {
-      expect(res[0].userId).toBeDefined();
-    });
+    this.SearchService.getServerTime()
+      .then( res => expect(res.dateLong).toBe('2017-12-12'));
+
     this.$httpBackend.flush();
   });
 
-  it('should get correct data when call meeting status', function () {
+  it('should get correct data when call getStatus to get meeting Status', function () {
     spyOn(this.$translate, 'instant').and.returnValue('Ended');
     const status = this.SearchService.getStatus(2);
     expect(status).toEqual('Ended');
   });
 
-  it('should get correct data when call meeting setStorage', function () {
-    const item = {
-      conferenceID: 50190706068695610,
-      meetingNumber: 355602502,
-      status: 'Ended',
-      siteID: 700243772,
-    };
-    const status = this.SearchService.setStorage('webexMeeting', item).conferenceID;
-    expect(status).toEqual(50190706068695610);
-    const wm: any = this.SearchService.getStorage('webexMeeting');
+  it('should get correct data when call setStorage', function () {
+    const item = { conferenceID: 50190706068695610, meetingNumber: 355602502, status: 'Ended', siteID: 700243772 };
+    const conferenceID = this.SearchService.setStorage('webexMeeting', item).conferenceID;
+    expect(conferenceID).toEqual(50190706068695610);
+
+    const wm = this.SearchService.getStorage('webexMeeting', {});
     expect(wm.status).toEqual('Ended');
   });
 
-  it('should get correct data when call meeting utcDateByTimezone', function () {
-    let data = '2017-08-02 07:44:30.0';
-    const timeZone = 'Asia/Shanghai';
-    spyOn(this.SearchService, 'getOffset').and.returnValue('+08:00');
-    this.SearchService.setStorage('timeZone', timeZone);
-    let _data = this.SearchService.utcDateByTimezone(data);
-    expect(_data).toBeDefined();
-    data = '';
-    _data = this.SearchService.utcDateByTimezone(data);
-    expect(_data).toBeDefined();
+  it('should get correct data when call utcDateByTimezone', function () {
+    const data = '2017-08-02 07:44:30.0';
+    moment.tz.setDefault('America/Chicago');
+    this.SearchService.setStorage('timeZone', 'America/Chicago');
+    const data_ = this.SearchService.utcDateByTimezone(data);
+    expect(data_).toBe('August 2nd, 2017 1:44:30 AM');
   });
 
-  it('should get correct data when call meeting getOffset', function () {
-    const data = this.SearchService.getOffset('ut18');
-    expect(data).toEqual('');
+  it('should get correct data when call getOffset', function () {
+    moment.tz.setDefault('America/Chicago');
+    const data = this.SearchService.getOffset('America/Chicago');
+    expect(data).toEqual('-06:00');
   });
 
-  it('should get correct data when call meeting getGuess', function () {
+  it('should get correct data when call getGuess', function () {
     const data = this.SearchService.getGuess(12);
     expect(data).toEqual('');
   });
 
-  it('should get correct data when call meeting getNames', function () {
+  it('should get correct data when call getNames', function () {
     const data = this.SearchService.getNames(12);
     expect(data).toEqual('');
+  });
+
+  it('should get correct data when call timestampToDate', function () {
+    const timestamp = 1512543365000;
+    moment.tz.setDefault('America/Chicago');
+    this.SearchService.setStorage('timeZone', 'America/Chicago');
+    const data_ = this.SearchService.timestampToDate(timestamp, 'hh:mm');
+    expect(data_).toBe('12:56');
+  });
+
+  it('should get correct data when call getBrowser', function () {
+    let brow = this.SearchService.getBrowser(6);
+    expect(brow).toBe('CHROME');
+
+    brow = this.SearchService.getBrowser();
+    expect(brow).toBe('Other');
+  });
+
+  it('should get correct data when call getPlartform', function () {
+    let platform = this.SearchService.getPlartform({ platform: 1, sessionType: 0 });
+    expect(platform).toBe('MAC');
+
+    platform = this.SearchService.getPlartform({ platform: 1, sessionType: 25 });
+    expect(platform).toBe('PSTN');
+
+    platform = this.SearchService.getPlartform({ platform: 22, sessionType: 0 });
+    expect(platform).toBe('Other');
+  });
+
+  it('should get correct data when call getParticipantEndReson', function () {
+    let reson = this.SearchService.getParticipantEndReson('a');
+    expect(reson).toBe('Normal');
+
+    reson = this.SearchService.getParticipantEndReson(null);
+    expect(reson).toBe('');
+
+    reson = this.SearchService.getParticipantEndReson('');
+    expect(reson).toBe('Abnormal');
   });
 });

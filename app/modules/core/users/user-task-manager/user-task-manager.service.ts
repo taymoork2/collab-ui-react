@@ -219,7 +219,7 @@ export class UserTaskManagerService {
       .then(response => response.data);
   }
 
-  public getTaskErrors(jobInstanceId: string, cancelPromise: ng.IPromise<void>): ng.IPromise<IErrorItem[]> {
+  public getTaskErrors(jobInstanceId: string, cancelPromise?: ng.IPromise<void>): ng.IPromise<IErrorItem[]> {
     return this.$http<IGetTaskErrorsResponse>({
       method: 'GET',
       url: this.getJobSpecificUrl(jobInstanceId, '/errors'),

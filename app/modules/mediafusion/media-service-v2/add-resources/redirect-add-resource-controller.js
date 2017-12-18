@@ -42,11 +42,11 @@
               //call the rest of the services which needs to be enabled
               AddResourceCommonServiceV2.enableMediaService();
               AddResourceCommonServiceV2.redirectPopUpAndClose(hostName, enteredCluster);
-            }, function () {
-              $state.go('services-overview');
+            }).then(function () {
+              $state.go('media-service-v2.list');
             });
           } else {
-            $state.go('services-overview');
+            $state.go('services-overview', {}, { reload: true });
           }
         });
       } else {

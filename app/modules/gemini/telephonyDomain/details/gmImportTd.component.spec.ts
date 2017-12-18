@@ -39,9 +39,7 @@ describe('Component: gmImportTd', () => {
     spyOn(this.Notification, 'errorResponse');
     this.$scope.close = jasmine.createSpy('close');
     this.$scope.dismiss = jasmine.createSpy('dismiss');
-    spyOn(this.gemService, 'getStorage').and.returnValue(this.currentTelephonyDomain);
     spyOn(this.TelephonyDomainService, 'getNumbers').and.returnValue(this.$q.resolve());
-    spyOn(this.TelephonyDomainService, 'getRegionDomains').and.returnValue(this.$q.resolve());
   }
 
   function initComponent() {
@@ -55,17 +53,24 @@ describe('Component: gmImportTd', () => {
   }
 
   describe('$onInit', () => {
-    it('should call Notification.errorResponse when the http status is 404', function () {
-      this.TelephonyDomainService.getRegionDomains.and.returnValue(this.$q.reject({ status: 404 }));
+    beforeEach(function () {
+      spyOn(this.gemService, 'getStorage').and.returnValue(this.currentTelephonyDomain);
+      initComponent.call(this);
+    });
 
-      initComponent.apply(this);
+    it('should call Notification.errorResponse when the http status is 404', function () {
+      spyOn(this.TelephonyDomainService, 'getRegionDomains').and.returnValue(this.$q.reject({ status: 404 }));
+
+      this.controller.$onInit();
+      this.$scope.$apply();
       expect(this.Notification.errorResponse).toHaveBeenCalled();
     });
 
     it('should return correct data when call TelephonyDomainService.getRegionDomains', function () {
-      this.TelephonyDomainService.getRegionDomains.and.returnValue(this.$q.resolve(this.regions));
+      spyOn(this.TelephonyDomainService, 'getRegionDomains').and.returnValue(this.$q.resolve(this.regions));
 
-      initComponent.apply(this);
+      this.controller.$onInit();
+      this.$scope.$apply();
       expect(this.controller.options.length).toBe(3);
     });
   });
@@ -73,10 +78,14 @@ describe('Component: gmImportTd', () => {
 
   describe('View: ', () => {
     it('should show grid data when selected one option and click select all checkbox then the Import button should be availabe', function () {
-      this.gemService.getStorage.and.returnValue({ countryId2NameMapping: { 1: 'Albania', 2: 'Algeria' } });
-      this.TelephonyDomainService.getNumbers.and.returnValue(this.$q.resolve(this.numbers));
-      this.TelephonyDomainService.getRegionDomains.and.returnValue(this.$q.resolve(this.regions));
+      spyOn(this.gemService, 'getStorage').and.returnValue({ countryId2NameMapping: { 1: 'Albania', 2: 'Algeria' } });
       initComponent.call(this);
+
+      this.TelephonyDomainService.getNumbers.and.returnValue(this.$q.resolve(this.numbers));
+      spyOn(this.TelephonyDomainService, 'getRegionDomains').and.returnValue(this.$q.resolve(this.regions));
+
+      this.controller.$onInit();
+      this.$scope.$apply();
 
       expect(this.view.find(this.button)).toBeDisabled();
 
@@ -84,6 +93,7 @@ describe('Component: gmImportTd', () => {
       this.view.find(this.selectGrid).get(0).click();
       this.view.find(this.selectGrid).get(1).click();
       this.view.find(this.button).click();
+      this.$scope.$apply();
 
       expect(this.view.find(this.button)).not.toBeDisabled();
       expect(this.controller.selectedGridLinesLength).toBe(1);

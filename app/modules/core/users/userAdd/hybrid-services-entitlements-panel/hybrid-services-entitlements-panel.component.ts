@@ -1,16 +1,37 @@
-import { CloudConnectorService } from 'modules/hercules/services/calendar-cloud-connector.service';
+import { CloudConnectorService, ICCCService } from 'modules/hercules/services/calendar-cloud-connector.service';
 import { FeatureToggleService } from 'modules/core/featureToggle';
-import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
+import { IServiceDescription, ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 import { IEntitlementNameAndState } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
+import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
+
+interface IExtendedServiceDescription extends IServiceDescription {
+  entitled?: boolean;
+}
+
+interface IHybridServices {
+  calendarEntitled: boolean;
+  selectedCalendarType: HybridServiceId | null;
+  hybridMessage: IExtendedServiceDescription | null;
+  calendarExchangeOrOffice365: IExtendedServiceDescription | null;
+  calendarGoogle: IExtendedServiceDescription | null;
+  callServiceAware: IExtendedServiceDescription | null;
+  callServiceConnect: IExtendedServiceDescription | null;
+  notSetupText: string;
+  hasHybridMessageService: Function;
+  hasCalendarService: Function;
+  hasCallService: Function;
+  setSelectedCalendarEntitlement: Function;
+}
 
 class HybridServicesEntitlementsPanelController implements ng.IComponentController {
 
+  private static readonly HYBRID_SERVICES = 'hybridServices';
   private isEnabled = false;
   private entitlements: IEntitlementNameAndState[] = [];
   private showCalendarChoice: boolean;
-  // TODO: add better TS type
-  private services: any;
+  private services: IHybridServices;
   private entitlementsCallback: Function;
+  private stateData: any;  // TODO: better type
 
   /* @ngInject */
   constructor (
@@ -28,35 +49,35 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
       calendarEntitled: false,
       selectedCalendarType: null,
       hybridMessage: null,
-      calendarExchange: null,
+      calendarExchangeOrOffice365: null,
       calendarGoogle: null,
       callServiceAware: null,
       callServiceConnect: null,
       notSetupText: this.$translate.instant('hercules.cloudExtensions.notSetup'),
-      hasHybridMessageService: () => {
+      hasHybridMessageService: (): boolean => {
         return this.services.hybridMessage !== null;
       },
-      hasCalendarService: () => {
-        return this.services.calendarExchange !== null || this.services.calendarGoogle !== null;
+      hasCalendarService: (): boolean => {
+        return this.services.calendarExchangeOrOffice365 !== null || this.services.calendarGoogle !== null;
       },
-      hasCallService: () => {
+      hasCallService: (): boolean => {
         return this.services.callServiceAware !== null;
       },
-      setSelectedCalendarEntitlement: () => {
+      setSelectedCalendarEntitlement: (): void => {
         if (this.services.calendarEntitled) {
           let selectedCalendarService;
           let previousCalendarService;
           if (!this.services.selectedCalendarType) {
             // Set one of them entitled (preferring Exchange over Google) if none selected yet
-            selectedCalendarService = this.services.calendarExchange || this.services.calendarGoogle;
+            selectedCalendarService = this.services.calendarExchangeOrOffice365 || this.services.calendarGoogle;
             this.services.selectedCalendarType = selectedCalendarService.id;
           } else {
             if (this.services.selectedCalendarType === 'squared-fusion-cal') {
-              selectedCalendarService = this.services.calendarExchange;
+              selectedCalendarService = this.services.calendarExchangeOrOffice365;
               previousCalendarService = this.services.calendarGoogle;
             } else {
               selectedCalendarService = this.services.calendarGoogle;
-              previousCalendarService = this.services.calendarExchange;
+              previousCalendarService = this.services.calendarExchangeOrOffice365;
             }
           }
           selectedCalendarService.entitled = true;
@@ -69,20 +90,46 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
   }
 
   public $onInit(): void {
+    if (!this.stateData) {
+      this.stateData = {};
+    }
+    this.initHybridServices(this.stateData);
+  }
+
+  private initHybridServices(stateData) {
+    // restore from 'stateData' if present
+    const previousServices: IHybridServices = _.get(stateData, HybridServicesEntitlementsPanelController.HYBRID_SERVICES);
+    if (previousServices) {
+      this.services = previousServices;
+      this.initIsEnabled();
+      return;
+    }
+
+    // otherwise initialize as per usual, and store in 'stateData'
     this.$q.all({
       servicesFromFms: this.ServiceDescriptorService.getServices(),
       gcalService: this.CloudConnectorService.getService('squared-fusion-gcal'),
+      office365: this.CloudConnectorService.getService('squared-fusion-o365'),
       hasHybridMessageFeatureToggle: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridImp),
     }).then((response) => {
-      this.services.calendarExchange = this.getServiceIfEnabled(response.servicesFromFms, 'squared-fusion-cal');
-      this.services.callServiceAware = this.getServiceIfEnabled(response.servicesFromFms, 'squared-fusion-uc');
-      this.services.callServiceConnect = this.getServiceIfEnabled(response.servicesFromFms, 'squared-fusion-ec');
-      this.services.calendarGoogle = (response.gcalService && response.gcalService.setup) ? response.gcalService : null;
+      this.services.calendarExchangeOrOffice365 = this.getServiceIfEnabledInFMS(response.servicesFromFms, 'squared-fusion-cal') || this.getServiceIfEnabledInCCC(response.office365);
+      this.services.callServiceAware = this.getServiceIfEnabledInFMS(response.servicesFromFms, 'squared-fusion-uc');
+      this.services.callServiceConnect = this.getServiceIfEnabledInFMS(response.servicesFromFms, 'squared-fusion-ec');
+      this.services.calendarGoogle = this.getServiceIfEnabledInCCC(response.gcalService);
       if (response.hasHybridMessageFeatureToggle) {
-        this.services.hybridMessage = this.getServiceIfEnabled(response.servicesFromFms, 'spark-hybrid-impinterop');
+        this.services.hybridMessage = this.getServiceIfEnabledInFMS(response.servicesFromFms, 'spark-hybrid-impinterop');
       }
-      this.isEnabled = this.services.hasCalendarService() || this.services.hasCallService() || this.services.hasHybridMessageService();
+      _.set(stateData, HybridServicesEntitlementsPanelController.HYBRID_SERVICES, this.services);
+      this.initIsEnabled();
     });
+  }
+
+  private initIsEnabled() {
+    if (!this.services) {
+      this.isEnabled = false;
+      return;
+    }
+    this.isEnabled = this.services.hasCalendarService() || this.services.hasCallService() || this.services.hasHybridMessageService();
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
@@ -91,10 +138,8 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
     }
   }
 
-  // TODO: add better TS types for args
-  public getServiceIfEnabled(services, id): any {
-    // TODO: add better TS type
-    const service: any = _.find(services, {
+  private getServiceIfEnabledInFMS(services: IServiceDescription[], id: HybridServiceId): IExtendedServiceDescription | null {
+    const service: IExtendedServiceDescription = _.find(services, {
       id: id,
       enabled: true,
     });
@@ -106,12 +151,26 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
     }
   }
 
+  private getServiceIfEnabledInCCC(service: ICCCService): IExtendedServiceDescription | null {
+    if (service.setup) {
+      return<IExtendedServiceDescription> {
+        id: service.serviceId,
+        enabled: true,
+        entitled: false,
+        emailSubscribers: '',
+        url: '',
+      };
+    } else {
+      return null;
+    }
+  }
+
   public setEntitlements(): void {
     // US8209 says to only add entitlements, not remove them. Allowing INACTIVE would remove entitlement when users are patched.
     this.entitlements = [];
     if (this.services.calendarEntitled) {
       this.services.setSelectedCalendarEntitlement();
-      if (_.get(this.services, 'calendarExchange.entitled')) {
+      if (_.get(this.services, 'calendarExchangeOrOffice365.entitled')) {
         this.entitlements.push({ entitlementState: 'ACTIVE', entitlementName: 'squaredFusionCal' });
       } else if (_.get(this.services, 'calendarGoogle.entitled')) {
         this.entitlements.push({ entitlementState: 'ACTIVE', entitlementName: 'squaredFusionGCal' });
@@ -167,5 +226,7 @@ export class HybridServicesEntitlementsPanelComponent implements ng.IComponentOp
   public bindings = {
     entitlementsCallback: '&',
     hasAssignableLicenses: '<',
+    onUpdate: '&?',
+    stateData: '<?',
   };
 }

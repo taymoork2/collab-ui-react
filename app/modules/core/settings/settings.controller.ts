@@ -187,7 +187,7 @@ export class SettingsCtrl {
 
     this.$q.all(promises).then((result) => {
       if (result.fileSharingControlToggle) {
-        this.fileSharingControl = new FileSharingControlSetting(true);
+        this.fileSharingControl = new FileSharingControlSetting(result.proPackPurchased);
       }
     });
   }

@@ -1,4 +1,5 @@
 import callPickupNameModule from './index';
+import { KeyCodes } from 'modules/core/accessibility';
 
 describe('Component: callPickupName', () => {
   const NAME_INPUT = 'input#nameInput';
@@ -11,6 +12,8 @@ describe('Component: callPickupName', () => {
       'CallPickupGroupService',
     );
     this.$scope.onUpdate = jasmine.createSpy('onUpdate');
+    this.$scope.ucKeyup = jasmine.createSpy('ucKeyup');
+    this.$scope.ucKeypress = jasmine.createSpy('ucKeypress');
     this.getListOfPickupGroups = this.$q.defer();
     spyOn(this.CallPickupGroupService, 'getListOfPickupGroups').and.returnValue(this.getListOfPickupGroups.promise);
   });
@@ -20,11 +23,29 @@ describe('Component: callPickupName', () => {
       onUpdate: 'onUpdate(name, isValid)',
       callPickupName: 'callPickupName',
       isNew: 'isNew',
+      ucKeyup: 'ucKeyup($event)',
+      ucKeypress: 'ucKeypress($event)',
     });
     this.$scope.isNew = true;
     this.$scope.callPickupName = '';
     this.$scope.$apply();
   }
+
+  describe('keyboard Test', () => {
+    beforeEach(initComponent);
+
+    it('should call ucKeyup on keyup', function () {
+      const event = { which: KeyCodes.ENTER };
+      this.controller.keyup(event);
+      expect(this.$scope.ucKeyup).toHaveBeenCalledWith(event);
+    });
+
+    it('should call ucKeypress on keypress', function () {
+      const event = { which: KeyCodes.ENTER };
+      this.controller.keypress(event);
+      expect(this.$scope.ucKeypress).toHaveBeenCalledWith(event);
+    });
+  });
 
   describe('unique name', () => {
     beforeEach(initComponent);

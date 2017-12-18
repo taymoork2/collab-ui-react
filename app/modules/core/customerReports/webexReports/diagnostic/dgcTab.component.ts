@@ -56,15 +56,27 @@ class DgcTab implements ng.IComponentController {
         startTime_: this.SearchService.utcDateByTimezone(mbi.startTime),
         createTime_: this.SearchService.utcDateByTimezone(mbi.createdTime),
       });
+      const sessions = _.map(res.sessions, (item: any) => {
+        return {
+          class: true,
+          val: 'Duration ' + moment.duration(item.duration * 1000).humanize(),
+          key: this.$translate.instant('webexReports.sessionType.sessionType_' + item.sessionType),
+        };
+      });
       const features = _.map(res.features, (val: string, key: string) => {
         const val_ = val ? 'yes' : 'no';
         return { key: this.$translate.instant('webexReports.meetingFeatures.' + key), val: this.$translate.instant('common.' + val_), class: val_ === 'yes' };
       });
-      const connection = _.map(res.connection, (val: string, key: string) => {
+      const connections = _.map(res.connection, (val: string, key: string) => {
         return { key: this.$translate.instant('webexReports.connectionFields.' + key), val: this.$translate.instant('common.' + val), class: val === 'yes' };
       });
-      const featAndconn = _.assignIn(features, connection);
-      this.data = _.assignIn({}, { overview: overview, featAndconn: featAndconn, startTime: mbi.startTime, endTime: mbi.endTime });
+      const featAndconn = _.concat(sessions, features, connections);
+      this.data = _.assignIn({}, {
+        overview: overview,
+        featAndconn: featAndconn,
+        startTime: mbi.startTime,
+        endTime: mbi.status === 2 ? mbi.endTime : null,
+      });
       this.SearchService.setStorage('webexOneMeeting', this.data);
       this.details = details;
       this.loading = false;

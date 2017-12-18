@@ -123,20 +123,28 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
         });
         return this.$q.resolve();
       } else {
-        this.showError(this.$translate.instant('firstTimeWizard.transferCodeInvalidError'));
-        const properties = _.assignIn({}, transferSiteDetails , { trackingId: this.Utils.extractTrackingIdFromResponse(response) });
-        this.sendTracking(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.INVALID_TRANSFER_CODE, properties);
+        this.showAndTrackValidationError({ apiResponse: response, details: transferSiteDetails, msg: 'firstTimeWizard.transferCodeInvalidError' });
         return this.$q.reject();
       }
     }).catch((response) => {
-      if (response) {
-        const errorMessage = this.errorCodes[response.errorCode] || 'firstTimeWizard.transferCodeError';
-        this.Notification.errorWithTrackingId(response, errorMessage);
-        const properties = _.assignIn(transferSiteDetails , { trackingId: this.Utils.extractTrackingIdFromResponse(response) });
-        this.sendTracking(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.TRANSFER_CODE_CALL_FAILED, properties);
+      if (_.get(response, 'data')) {
+        const errorMessage = this.errorCodes[response.data.errorCode] || 'firstTimeWizard.transferCodeError';
+        if (errorMessage !== 'firstTimeWizard.transferCodeError') {
+          this.showAndTrackValidationError({ apiResponse: response, details: transferSiteDetails, msg: errorMessage });
+        } else {
+          this.Notification.errorWithTrackingId(response, errorMessage);
+          const properties = _.assignIn(transferSiteDetails , { trackingId: this.Utils.extractTrackingIdFromResponse(response) });
+          this.sendTracking(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.TRANSFER_CODE_CALL_FAILED, properties);
+        }
       }
       return this.$q.reject();
     });
+  }
+
+  private showAndTrackValidationError(errorDetails: { apiResponse: Object, details: Object, msg: string }) {
+    this.showError(this.$translate.instant(errorDetails.msg));
+    const properties = _.assignIn({}, errorDetails.details , { trackingId: this.Utils.extractTrackingIdFromResponse(errorDetails.apiResponse) });
+    this.sendTracking(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.INVALID_TRANSFER_CODE, properties);
   }
 
   private findTimezoneObject(timezoneId) {

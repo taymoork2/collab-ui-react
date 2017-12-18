@@ -24,10 +24,13 @@
     var lastSavedApiRequest = '';
     var lastSavedApiResponse = '';
     var lastSavedUsername = '';
+    var lastSavedPassword = '';
+    var lastSavedCredentialId = '';
     var sessionVarOptions = [];
     var urlUpdated = false;
     var hasSessionVarOptionsChecked = false;
-    var passwordToBeDisplayed = '**********';
+    var basicCredentialUpdated = false;
+    CONSTANTS.passwordToBeDisplayed = '**********';
     CONSTANTS.idSelectorPrefix = '#';
 
     vm.url = '';
@@ -51,6 +54,7 @@
     vm.saveDynamicUi = saveDynamicUi;
     vm.isSaveDisabled = isSaveDisabled;
     vm.passwordCheck = passwordCheck;
+    vm.isBasicCredentialUpdated = isBasicCredentialUpdated;
 
     vm.newVariable = $translate.instant('autoAttendant.newVariable');
     vm.validationUsernameMsgs = {
@@ -170,17 +174,24 @@
     }
 
     function passwordCheck() {
-      if (_.isEqual(vm.password, passwordToBeDisplayed)) {
+      basicCredentialUpdated = true;
+      if (_.isEqual(vm.password, CONSTANTS.passwordToBeDisplayed)) {
         vm.password = '';
       }
     }
 
     function onBasicAuthSlider() {
+      basicCredentialUpdated = true;
       if (!vm.basicAuthButton) {
         vm.username = '';
         vm.password = '';
       } else {
         vm.username = lastSavedUsername;
+        if (_.isUndefined(lastSavedUsername)) {
+          vm.username = '';
+        } else {
+          vm.username = lastSavedUsername;
+        }
       }
     }
 
@@ -204,14 +215,12 @@
       if (isRestApiTogglePhase2()) {
         if (vm.basicAuthButton) {
           action.username = vm.username;
-          if (!_.isEqual(vm.password, passwordToBeDisplayed)) {
+          if (!_.isEqual(vm.password, CONSTANTS.passwordToBeDisplayed)) {
             action.password = Buffer.from(vm.password).toString('base64');
             action.credentialId = '';
           } else {
-            if (!_.isEmpty(action.credentialId)) {
-              action.password = '';
-            }
-            action.credentialId = action.value;
+            action.credentialId = lastSavedCredentialId;
+            action.password = lastSavedPassword;
           }
         }
       }
@@ -235,6 +244,8 @@
       action.restApiRequest = lastSavedApiRequest;
       action.restApiResponse = lastSavedApiResponse;
       action.username = lastSavedUsername;
+      action.password = lastSavedPassword;
+      action.credentialId = lastSavedCredentialId;
     }
 
     function saveDynamicUi() {
@@ -278,10 +289,16 @@
         if (!_.isEmpty(action.username)) {
           vm.basicAuthButton = true;
           vm.username = action.username;
-          vm.password = passwordToBeDisplayed;
+          if (_.isEmpty(vm.password) || _.isEqual(vm.password, CONSTANTS.passwordToBeDisplayed)) {
+            vm.password = CONSTANTS.passwordToBeDisplayed;
+          } else {
+            vm.password = Buffer.from(action.password, 'base64').toString();
+          }
         }
         if (initialPageEnterCount === 0) {
           lastSavedUsername = action.username;
+          lastSavedPassword = action.password;
+          lastSavedCredentialId = action.credentialId;
         }
       }
     }
@@ -430,11 +447,12 @@
         action.url = vm.menuEntry.actions[0].url;
       }
       action.username = vm.username;
-      if (!_.isEqual(vm.password, passwordToBeDisplayed)) {
+      if (!_.isEqual(vm.password, CONSTANTS.passwordToBeDisplayed)) {
         action.password = Buffer.from(vm.password).toString('base64');
         action.credentialId = '';
       } else {
-        action.credentialId = action.value;
+        action.credentialId = lastSavedCredentialId;
+        action.password = lastSavedPassword;
       }
       if (vm.currentStep === 2) {
         updateDynamicsList(action.url);
@@ -465,11 +483,11 @@
     }
 
     function validatePassword() {
-      return (_.lte(vm.password.length, vm.passwordMaxLength));
+      return (!_.isUndefined(vm.password));
     }
 
     function validateUserName() {
-      return (!_.isEmpty(vm.username) && _.lte(vm.username.length, vm.usernameMaxLength));
+      return !_.isEmpty(vm.username);
     }
 
     function isNextDisabled() {
@@ -489,6 +507,7 @@
           if (data.responseCode === '200') {
             vm.restApiResponse = data.response;
             urlUpdated = false;
+            basicCredentialUpdated = false;
             createAssignmentTable();
           } else {
             vm.restApiResponse = data.responseCode + ': ' + data.response;
@@ -549,17 +568,21 @@
       urlUpdated = true;
     }
 
+    function isBasicCredentialUpdated() {
+      basicCredentialUpdated = true;
+    }
+
     function isSaveDisabled() {
       var isDisabled = true;
       if (!_.isEmpty(vm.tableData)) {
         _.forEach(vm.tableData, function (data) {
           if (!_.isEmpty(data.selected)) {
             isDisabled = false;
-            return isDisabled || urlUpdated;
+            return isDisabled || urlUpdated || basicCredentialUpdated;
           }
         });
       }
-      return isDisabled || urlUpdated;
+      return isDisabled || urlUpdated || basicCredentialUpdated;
     }
 
     function saveUpdatedVariableSet() {
@@ -577,6 +600,9 @@
     }
 
     function createAssignmentTable() {
+      var selectedVariables = [];
+      var nonSelectedVariables = [];
+      var tableWithSortedVariables = [];
       var tempTableData = [];
       var validJsonResponse = isValidJson(vm.restApiResponse);
       if (validJsonResponse) {
@@ -594,8 +620,16 @@
             tempTableData.push(obj);
           }
         });
+        _.forEach(tempTableData, function (tempData) {
+          if (tempData.hasOwnProperty('selected')) {
+            selectedVariables.push(tempData);
+          } else {
+            nonSelectedVariables.push(tempData);
+          }
+        });
+        tableWithSortedVariables = _.concat(_.orderBy(selectedVariables, ['responseKey'], ['asc']), _.orderBy(nonSelectedVariables, ['responseKey'], ['asc']));
       }
-      vm.tableData = tempTableData;
+      vm.tableData = tableWithSortedVariables;
     }
 
     function isValidJson(jsonData) {

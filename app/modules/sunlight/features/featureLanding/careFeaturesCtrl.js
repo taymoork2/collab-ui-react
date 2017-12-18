@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 (function () {
   'use strict';
 
@@ -36,6 +38,7 @@
     vm.hasCall = Authinfo.isSquaredUC();
     vm.tooltip = '';
     vm.purchaseLink = purchaseLink;
+    vm.userHasAccess = userHasAccess;
 
     /* LIST OF FEATURES
      *
@@ -221,6 +224,17 @@
         });
       });
     };
+
+    function userHasAccess(feature) {
+      if (feature.featureType === EvaService.evaServiceCard.id) {
+        var result = EvaService.getWarningIfNotOwner(feature);
+        if (!result.valid) {
+          $scope.warning = $translate.instant(result.warning.message, result.warning.args);
+        }
+        return result.valid;
+      }
+      return true;
+    }
 
     function deleteCareFeature(feature, $event) {
       $event.preventDefault();

@@ -6,7 +6,7 @@
     .controller('AADecisionCtrl', AADecisionCtrl);
 
   /* @ngInject */
-  function AADecisionCtrl($scope, $translate /*, QueueHelperService*/, AACommonService, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AASessionVariableService) {
+  function AADecisionCtrl($scope, $translate /*, QueueHelperService*/, AACesOnboardHelperService, AACommonService, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AASessionVariableService) {
     var vm = this;
 
     var actionName = 'conditional';
@@ -286,8 +286,8 @@
     }
     */
 
-    function setReturnedCallerBasedOnToggle() {
-      if (AACommonService.isReturnedCallerToggle()) {
+    function setReturnedCallerBasedOnToggle(result) {
+      if (_.isEqual(result.csOnboardingStatus.toLowerCase(), 'success')) {
         vm.ifOptions.splice(0, 0, {
           label: $translate.instant('autoAttendant.decisionCallerReturned'),
           value: 'callerReturned',
@@ -337,7 +337,6 @@
     }
 
     function activate() {
-      setReturnedCallerBasedOnToggle();
       setActionEntry();
       sortAndSetActionType();
 
@@ -362,14 +361,26 @@
     }
 
     function init() {
-      getSessionVariables().finally(function () {
-        /* no support for Queues as of this story.
-         * if (AACommonService.isRouteQueueToggle()) {
-         *
-         * getQueues().finally(activate);
-         * } else {
-         */
-        activate();
+      getSessionVariables().then(function () {
+        if (AACommonService.isReturnedCallerToggle()) {
+          AACesOnboardHelperService.isCesOnBoarded().then(function (result) {
+            setReturnedCallerBasedOnToggle(result);
+            activate();
+          }).catch(function () {
+            vm.returnedCallerToggle = false;
+            activate();
+          });
+        } else {
+          vm.returnedCallerToggle = false;
+          activate();
+        }
+        /*}).finally(function () {
+        no support for Queues as of this story.
+        * if (AACommonService.isRouteQueueToggle()) {
+        *
+        * getQueues().finally(activate);
+        * } else {
+        */
         /* } */
       });
     }

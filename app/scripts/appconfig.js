@@ -2100,11 +2100,6 @@
             url: '/diagnostics/participants/:cid',
             views: { tabContent: { template: '<dgc-tab-participants></dgc-tab-participants>' } },
           })
-          .state('dgc-panel', {
-            data: {},
-            parent: 'sidepanel',
-            views: { 'sidepanel@': { template: '<dgc-panel-participant></dgc-panel-participant>' } },
-          })
           .state('reports.webex-metrics.classic', {
             url: '/classic',
             views: {

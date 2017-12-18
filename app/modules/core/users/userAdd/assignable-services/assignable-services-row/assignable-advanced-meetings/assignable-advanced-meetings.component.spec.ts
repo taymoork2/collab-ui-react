@@ -18,7 +18,7 @@ describe('Component: assignableAdvancedMeetings:', () => {
       expect(this.view.find('.advanced-meetings').length).toBe(0);
     });
 
-    it('should render "assignable-item-checkbox" instances for valid advanced meetings', function () {
+    it('should render "assignable-license-checkbox" instances for valid advanced meetings', function () {
       this.$scope.licenses = [{
         licenseId: 'fake-license-id-1',
         siteUrl: 'fake-site-url-1',
@@ -33,11 +33,11 @@ describe('Component: assignableAdvancedMeetings:', () => {
       });
       expect(this.view.find('.advanced-meetings').length).toBe(1);
       expect(this.view.find('.license__category[translate="firstTimeWizard.advancedMeetings"]').length).toBe(1);
-      expect(this.view.find('assignable-item-checkbox[l10n-label="subscriptions.licenseTypes.EC"]').length).toBe(1);
-      expect(this.view.find('assignable-item-checkbox advanced-meeting-license-description').length).toBe(1);
-      expect(this.view.find('assignable-item-checkbox usage-line').length).toBe(1);
-      expect(this.view.find('assignable-item-checkbox[state-data]').length).toBe(1);
-      expect(this.view.find('assignable-item-checkbox[on-update]').length).toBe(1);
+      expect(this.view.find('assignable-license-checkbox[l10n-label="subscriptions.licenseTypes.EC"]').length).toBe(1);
+      expect(this.view.find('assignable-license-checkbox advanced-meeting-license-description').length).toBe(1);
+      expect(this.view.find('assignable-license-checkbox usage-line').length).toBe(1);
+      expect(this.view.find('assignable-license-checkbox[state-data]').length).toBe(1);
+      expect(this.view.find('assignable-license-checkbox[on-update]').length).toBe(1);
 
       this.$scope.licenses = [{
         licenseId: 'fake-license-id-1',
@@ -63,15 +63,15 @@ describe('Component: assignableAdvancedMeetings:', () => {
         licenses: 'licenses',
         siteUrls: 'siteUrls',
       });
-      expect(this.view.find('assignable-item-checkbox[l10n-label="subscriptions.licenseTypes.EC"]').length).toBe(1);
-      expect(this.view.find('assignable-item-checkbox[l10n-label="subscriptions.licenseTypes.EE"]').length).toBe(1);
-      expect(this.view.find('assignable-item-checkbox[l10n-label="subscriptions.licenseTypes.MC"]').length).toBe(1);
-      expect(this.view.find('assignable-item-checkbox[l10n-label="subscriptions.licenseTypes.TC"]').length).toBe(1);
-      expect(this.view.find('assignable-item-checkbox advanced-meeting-license-description').length).toBe(4);
-      expect(this.view.find('assignable-item-checkbox usage-line').length).toBe(4);
+      expect(this.view.find('assignable-license-checkbox[l10n-label="subscriptions.licenseTypes.EC"]').length).toBe(1);
+      expect(this.view.find('assignable-license-checkbox[l10n-label="subscriptions.licenseTypes.EE"]').length).toBe(1);
+      expect(this.view.find('assignable-license-checkbox[l10n-label="subscriptions.licenseTypes.MC"]').length).toBe(1);
+      expect(this.view.find('assignable-license-checkbox[l10n-label="subscriptions.licenseTypes.TC"]').length).toBe(1);
+      expect(this.view.find('assignable-license-checkbox advanced-meeting-license-description').length).toBe(4);
+      expect(this.view.find('assignable-license-checkbox usage-line').length).toBe(4);
     });
 
-    it('should render an "assignable-item-checkbox" of "CMR"-type as nested', function () {
+    it('should render an "assignable-license-checkbox" of "CMR"-type as nested', function () {
       this.$scope.licenses = [{
         licenseId: 'fake-license-id-2',
         siteUrl: 'fake-site-url-1',
@@ -88,7 +88,7 @@ describe('Component: assignableAdvancedMeetings:', () => {
         licenses: 'licenses',
         siteUrls: 'siteUrls',
       });
-      expect(this.view.find('assignable-item-checkbox[l10n-label$=".CMR"]')).toHaveClass('cs-input--nested-1');
+      expect(this.view.find('assignable-license-checkbox[l10n-label$=".CMR"]')).toHaveClass('cs-input--nested-1');
     });
   });
 

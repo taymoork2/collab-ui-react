@@ -55,6 +55,7 @@
     require('modules/bmmp/learn-more-banner').default,
     require('modules/core/account').default,
     require('modules/core/banner').default,
+    require('modules/core/auth/read-only').default,
     require('modules/core/csgrid').default,
     require('modules/core/users/userOverview').default,
     require('modules/core/analytics'),
@@ -172,7 +173,7 @@
     require('modules/hercules/service-settings/call-service-settings-page').default,
     require('modules/hercules/service-settings/sip-destination-settings-section').default,
     require('modules/hercules/service-specific-pages/components/cluster-list/hybrid-service-cluster-list.component').default,
-    require('modules/hercules/service-specific-pages/components/user-status-report/user-details'),
+    require('modules/hercules/service-specific-pages/components/user-status-report').default,
     require('modules/hercules/services/calendar-cloud-connector.service').default,
     require('modules/hercules/services/cluster-service').default,
     require('modules/hercules/services/enterprise-private-trunk-service').default,
@@ -241,6 +242,7 @@
     require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-call-prerequisites-modal/hybrid-call-prerequisites.controller').default,
     require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-media-prerequisites/hybrid-media-prerequisites.controller').default,
     require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-services-prerequisites-helper.service').default,
+    require('modules/services-overview/new-hybrid/prerequisites-modals/office-365-prerequisites').default,
     require('modules/services-overview/new-hybrid/prerequisites-modals/on-premises-exchange-prerequisites').default,
   ]);
 

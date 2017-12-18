@@ -24,7 +24,7 @@ export interface ISubscription {
   licenses: ILicenseUsage[];
 }
 
-export interface IAssignableItemCheckboxState {
+export interface IAssignableLicenseCheckboxState {
   isSelected: boolean;
   isDisabled: boolean;
   license: ILicenseUsage;
@@ -33,7 +33,7 @@ export interface IAssignableItemCheckboxState {
 export interface IAssignableItemChange {
   itemId: string;
   itemCategory: AssignableServicesItemCategory;
-  item: IAssignableItemCheckboxState;
+  item: IAssignableLicenseCheckboxState;
 }
 
 export interface IOnUpdateParam {

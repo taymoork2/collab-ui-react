@@ -13,6 +13,7 @@
     'ctOffHours',
     'ctChatStatusMessages',
     'ctSummary',
+    'ctChatEscalationBehavior',
   ];
 
   pageDirectiveNames.forEach(function (directiveName) {

@@ -1,8 +1,9 @@
 'use strict';
 
+var moduleName = require('./index').default;
+
 describe('ExportUserStatusesController', function () {
-  beforeEach(angular.mock.module('Core'));
-  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(moduleName));
 
   var vm, Authinfo, scope, $httpBackend, $q, $rootScope, UserDetails, USSService, HybridServicesClusterService, ExcelService, ResourceGroupService;
 

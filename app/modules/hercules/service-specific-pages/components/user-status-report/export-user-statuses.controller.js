@@ -1,9 +1,7 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Hercules')
-    .controller('ExportUserStatusesController', ExportUserStatusesController);
+  module.exports = ExportUserStatusesController;
 
   /* @ngInject */
   function ExportUserStatusesController($scope, $q, $translate, $modalInstance, userStatusSummary, Authinfo, UserDetails, USSService, HybridServicesClusterService, ExcelService, ResourceGroupService) {
@@ -143,7 +141,12 @@
         .map(function (tuple) {
           return USSService.getAllStatuses(tuple.service, tuple.type)
             .then(function (userStatuses) {
-              return userStatuses;
+              return userStatuses.map(function (userStatus) {
+                if (userStatus.serviceId === 'squared-fusion-cal' && userStatus.owner === 'ccc') {
+                  userStatus.serviceId = 'squared-fusion-o365';
+                }
+                return userStatus;
+              });
             });
         })
         .flatten()
