@@ -63,6 +63,7 @@
     vm.brandingPageTooltipText = brandingPageTooltipText;
     vm.careVirtualAssistantName = careVirtualAssistantName;
     vm.setEvaTemplateData = setEvaTemplateData;
+    vm.evaLearnMoreLink = 'https://www.cisco.com/go/create-template';
 
     //chat assistant utils
     vm.isAgentProfileWithCVA = function () {
@@ -1355,7 +1356,11 @@
     }
 
     function isChatEscalationBehaviorPageValid() {
-      return vm.template.configuration.routingLabel && _.includes(SunlightConstantsService.routingLabels, vm.template.configuration.routingLabel);
+      if (vm.evaConfig.isEvaConfigured) {
+        return vm.template.configuration.routingLabel && _.includes(SunlightConstantsService.routingLabels, vm.template.configuration.routingLabel);
+      } else {
+        return vm.template.configuration.routingLabel && !_.includes(SunlightConstantsService.evaOptions, vm.template.configuration.routingLabel);
+      }
     }
 
     vm.isInputValid = function (input) {
