@@ -426,17 +426,20 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
   });
 
   describe('Summary Page', function () {
-    let deferred;
+    let deferred, listEvasDeferred;
     beforeEach(function () {
       deferred = this.$q.defer();
+      listEvasDeferred = this.$q.defer();
       spyOn(this.EvaService, 'addExpertAssistant').and.returnValue(deferred.promise);
       spyOn(this.EvaService, 'updateExpertAssistant').and.returnValue(deferred.promise);
+      spyOn(this.EvaService, 'listExpertAssistants').and.returnValue(listEvasDeferred.promise);
     });
 
-    it("When save template failed, the 'saveTemplateErrorOccurred' is set", function () {
+    it("should fail to submit Expert Virtual Assistant when the 'saveTemplateErrorOccurred' is set", function () {
       //by default, this flag is false
       expect(controller.saveTemplateErrorOccurred).toBeFalsy();
       deferred.reject(failedData);
+      listEvasDeferred.resolve({});
 
       controller.submitFeature();
       this.$scope.$apply();
@@ -447,11 +450,33 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_CREATE_FAILURE);
     });
 
+    it('should fail to submit Expert Virtual Assistant because there is one existed already', function () {
+      //by default, this flag is false
+      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
+      expect(controller.evaAlreadyExisted).toBeFalsy();
+      const evaList = {
+        items: [{
+          id: 'random id',
+          name: 'HI',
+          ownerId: 'test Owner Id',
+        }],
+      };
+      listEvasDeferred.resolve(evaList);
+
+      controller.submitFeature();
+      this.$scope.$apply();
+
+      expect(controller.saveTemplateErrorOccurred).toBeTruthy();
+      expect(controller.evaAlreadyExisted).toBeTruthy();
+      expect(this.Notification.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
     it('should submit template successfully', function () {
       //by default, this flag is false
       expect(controller.saveTemplateErrorOccurred).toBeFalsy();
 
       spyOn(this.$state, 'go');
+      listEvasDeferred.resolve({});
       deferred.resolve({
         success: true,
         expertAssistantId: 'AnExpertAssistantId',

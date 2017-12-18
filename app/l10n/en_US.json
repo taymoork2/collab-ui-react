@@ -7961,6 +7961,7 @@
         "getConfigFailureText": "Failed to load the {{ featureName }}.",
         "deleteConfigFailureText": "Failed to delete the {{ featureName }}.",
         "createConfigFailureText": "Failed to save {{ featureName }}.",
+        "createEvaFailureText": "Cannot save Expert Virtual Assistant. You can have only one Expert Virtual Assistant per organization. You can edit the existing Expert Virtual Assistant from the Features page.",
         "createSpecificFailureText": "Failed to save {{ featureName }} {{ inputItem }}.",
         "updateConfigFailureText": "Failed to save {{ featureName }}."
       }
