@@ -600,6 +600,9 @@
     }
 
     function createAssignmentTable() {
+      var selectedVariables = [];
+      var nonSelectedVariables = [];
+      var tableWithSortedVariables = [];
       var tempTableData = [];
       var validJsonResponse = isValidJson(vm.restApiResponse);
       if (validJsonResponse) {
@@ -617,8 +620,16 @@
             tempTableData.push(obj);
           }
         });
+        _.forEach(tempTableData, function (tempData) {
+          if (tempData.hasOwnProperty('selected')) {
+            selectedVariables.push(tempData);
+          } else {
+            nonSelectedVariables.push(tempData);
+          }
+        });
+        tableWithSortedVariables = _.concat(_.orderBy(selectedVariables, ['responseKey'], ['asc']), _.orderBy(nonSelectedVariables, ['responseKey'], ['asc']));
       }
-      vm.tableData = tempTableData;
+      vm.tableData = tableWithSortedVariables;
     }
 
     function isValidJson(jsonData) {

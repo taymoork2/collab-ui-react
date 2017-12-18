@@ -461,6 +461,63 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         expect(controller.tableData).toEqual(result);
       });
 
+      it('tableData should be populated in the ascending order of Response variable', function () {
+        var restApiResponse = { str: 'response1', abc: 'response2', hij: 'response3' };
+        controller.restApiResponse = JSON.stringify(restApiResponse);
+        controller.variableSet = [];
+        result = [
+          {
+            options: [],
+            responseKey: 'abc',
+            responseValue: 'response2',
+          }, {
+            options: [],
+            responseKey: 'hij',
+            responseValue: 'response3',
+          }, {
+            options: [],
+            responseKey: 'str',
+            responseValue: 'response1',
+          },
+        ];
+        controller.stepNext();
+        expect(controller.tableData).toEqual(result);
+      });
+
+      it('tableData should be populated in sorted order with selected variables on the top followed by nonSelected Variables', function () {
+        var restApiResponse = {
+          str: 'response1',
+          abc: 'response2',
+          hij: 'response3',
+          xyz: 'response4',
+        };
+        controller.restApiResponse = JSON.stringify(restApiResponse);
+        controller.variableSet = [{ value: 'str', variableName: 'selectedVariable1' }, { value: 'xyz', variableName: 'selectedVariable2' }];
+        result = [
+          {
+            options: [],
+            responseKey: 'str',
+            responseValue: 'response1',
+            selected: 'selectedVariable1',
+          }, {
+            options: [],
+            responseKey: 'xyz',
+            responseValue: 'response4',
+            selected: 'selectedVariable2',
+          }, {
+            options: [],
+            responseKey: 'abc',
+            responseValue: 'response2',
+          }, {
+            options: [],
+            responseKey: 'hij',
+            responseValue: 'response3',
+          },
+        ];
+        controller.stepNext();
+        expect(controller.tableData).toEqual(result);
+      });
+
       it('when password doesnot change', function () {
         controller.password = '**********';
         controller.username = 'testuser';

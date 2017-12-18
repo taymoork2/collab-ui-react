@@ -49,6 +49,7 @@ describe('Component: editSummaryAutoAssignTemplateModal:', () => {
       });
     });
 
+    // TODO: relocate this to service
     describe('mkPayload():', function () {
       it('should return a payload composed of a license payload, and a user-entitlements payload', function () {
         this.compileComponent('editSummaryAutoAssignTemplateModal');
@@ -62,6 +63,47 @@ describe('Component: editSummaryAutoAssignTemplateModal:', () => {
           licenses: ['fake-licenses-payload'],
           userEntitlements: ['fake-user-entitlements-payload'],
         });
+      });
+    });
+
+    // TODO: relocate this to service
+    describe('mkLicensesPayload():', function () {
+      it('should filter only selected licenses from "stateData" property', function () {
+        _.set(this.$state, 'params.stateData', {
+          LICENSE: {
+            'fake-license-id-1': {
+              isSelected: true,
+              license: {
+                licenseId: 'fake-license-id-1',
+              },
+            },
+            'fake-license-id-2': {
+              isSelected: true,
+              license: {
+                licenseId: 'fake-license-id-2',
+              },
+            },
+            'fake-license-id-3': {
+              isSelected: false,
+              license: {
+                licenseId: 'fake-license-id-3',
+              },
+            },
+          },
+        });
+        this.compileComponent('editSummaryAutoAssignTemplateModal', {
+          dismiss: 'dismiss',
+        });
+        const foo = this.controller.mkLicensesPayload();
+        expect(foo).toEqual([{
+          id: 'fake-license-id-1',
+          idOperation: 'ADD',
+          properties: {},
+        }, {
+          id: 'fake-license-id-2',
+          idOperation: 'ADD',
+          properties: {},
+        }]);
       });
     });
   });

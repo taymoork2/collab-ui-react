@@ -44,6 +44,9 @@
                     </span>
                     <span class="body-small setting-info ng-binding" translate="careChatTpl.evaSettingInfo"></span>
                   </div>
+                  <div class="h6 eva-enabled-info" ng-if="careSetupAssistant.evaConfig.isEvaConfigured">
+                    <a ng-href="{{careSetupAssistant.evaLearnMoreLink}}" translate="careChatTpl.learnMoreLink" target="_blank"></a><span  class="msg" translate="careChatTpl.evaEnabledSettingInfo"></span>
+                  </div>
               </section>
           </article>
         </cs-card>
