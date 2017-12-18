@@ -1,4 +1,3 @@
-import { FeatureToggleService } from 'modules/core/featureToggle';
 import { IToolkitModalService } from 'modules/core/modal';
 import { HybridServicesI18NService } from 'modules/hercules/services/hybrid-services-i18n.service';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
@@ -9,7 +8,6 @@ export class ClusterCardController implements ng.IComponentController {
   public formatTimeAndDate = this.HybridServicesI18NService.formatTimeAndDate;
   public getLocalizedReleaseChannel = this.HybridServicesI18NService.getLocalizedReleaseChannel;
   public hybridServicesComparator = this.HybridServicesUtilsService.hybridServicesComparator;
-  public showLinkToNodesForContext = false;
 
   /* @ngInject */
   constructor(
@@ -18,15 +16,7 @@ export class ClusterCardController implements ng.IComponentController {
     private $window: ng.IWindowService,
     private HybridServicesI18NService: HybridServicesI18NService,
     private HybridServicesUtilsService: HybridServicesUtilsService,
-    private FeatureToggleService: FeatureToggleService,
   ) { }
-
-  public $onInit() {
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasContextNodesPage)
-      .then((support) => {
-        this.showLinkToNodesForContext = support;
-      });
-  }
 
   public countHosts() {
     return _.chain(this.cluster.connectors)
@@ -179,8 +169,7 @@ export class ClusterCardController implements ng.IComponentController {
   public showLinkToNodesPage(): boolean {
     // Doesn't make sense for empty Expressways and EPT
     return !(this.cluster.extendedProperties.isEmpty && this.cluster.targetType === 'c_mgmt')
-      && this.cluster.targetType !== 'ept'
-      && !(this.cluster.targetType === 'cs_mgmt' && !this.showLinkToNodesForContext);
+      && this.cluster.targetType !== 'ept';
   }
 }
 
