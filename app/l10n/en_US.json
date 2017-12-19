@@ -517,6 +517,7 @@
     "deviceTab": "Devices",
     "placeTab": "Places",
     "reportTab": "Reports",
+    "taasOverviewTab": "TaaS",
     "supportTab": "Support",
     "logsTab": "Logs",
     "logsTabDesc": "View user logs",
@@ -8422,6 +8423,7 @@
     "hybridDataSecurity": "Hybrid Data Security",
     "less": "Less",
     "licenses": "Licenses:",
+    "licensing": "HCS",
     "licenseSummary": "License Summary",
     "licenseSummaryEnterprise": "License Summary for Enterprise",
     "licenseSummaryOnline": "License Summary for {{name}}",
@@ -9069,6 +9071,10 @@
           "sparkOrganization": "A Cisco Spark organization with a minimum of Basic Meetings and Business Messaging (M1)",
           "matchingEmails": "Users must have activated Cisco Spark accounts, with email addresses that are exact matches in Cisco Spark, WebEx, and Exchange Online"
         }
+      },
+      "hybridTesting": {
+        "title": "Hybrid Testing",
+        "description": "Run various test suites or tests to verify endpoints are working"
       },
       "hybridCall": {
         "title": "Hybrid Call",
@@ -10299,6 +10305,70 @@
           "manualLabelHelp": "Cisco will send invitation email when you invite users to Cisco Spark"
         }
       }
+    }
+  },
+  "hcs": {
+     "taas": {
+        "overviewPage": {
+          "title": "TaaS Overview",
+          "customerNameHeader": "Customer Name",
+          "allCustomers": "All Customers",
+          "testDate": "Last Ran Test",
+          "testResult": "Test Result",
+          "totalResources": "Resources",
+          "actionHeader": "Actions",
+          "editSuite": "Edit Suite",
+          "editTest": "Edit Tests",
+          "deleteAll": "Delete All Suites"
+        },
+        "testState": {
+          "good": "Passed",
+          "failed": "Failed",
+          "running": "Running..."
+        },
+        "suite": {
+          "title": "Suites",
+          "addSuite": "Create Suite",
+          "runSuite": "Run Suite",
+          "editSuite": "Edit",
+          "copySuite": "Copy",
+          "scheduleSuite": "Schedule",
+          "deleteSuite": "Delete",
+          "resources": "Resources",
+          "results": "Get last test run results",
+          "schedule": "Scheduling",
+          "successTitle": "Your test is running!",
+          "successRun": "You should go catch it...",
+          "errorRun": "Something went wrong with scheduling"
+        },
+        "test": {
+          "title": "Tests",
+          "addTest": "Create Test",
+          "editTest": "Edit",
+          "copyTest": "Copy",
+          "deleteTest": "Delete"
+        },
+        "addSuiteModal": {
+          "title": "Add a suite",
+          "suiteName": "Suite name"
+        },
+        "schedulerModal": {
+          "title": "Schedule a Test"
+        },
+        "scheduleView": {
+          "title": "Schedules",
+          "scheduleName": "Schedule Name",
+          "scheduledDate": "Date, Time",
+          "scheduledSuite": "Scheduled Suites",
+          "actionHeader": "Actions",
+          "runSchedule": "Run Now",
+          "copySchedule": "Copy schedule",
+          "editSchedule": "Edit Schedule",
+          "deleteSchedule": "Delete this schedule"
+        },
+        "resourceCreate": {
+          "title": "Create a resource"
+        }
     }
   }
 }

@@ -1,0 +1,149 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$ctrl.dismiss()" aria-label="{{::'common.close' | translate}}"></button>
+    <span class="sr-only">Close</span>
+  </button>
+  <div class="modal-title" translate="hcs.taas.resourceCreate.title"></div>
+</div>
+<div class="modal-body">
+  <form name="formResource" class="cs-form">
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title">Create a resource</h4>
+        <p class="section__description">Use this form to create a resource to be used for testing. Can be an IP phone, Camelot, MMR, etc.</p>
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <h5 class="sub-section__label">Resource name</h5>
+          <div class="row">
+            <input
+              cs-input type="text"
+              id="resourceName"
+              placeholder="Name the resource"
+              ng-model="$ctrl.resourceLabel"
+              cs-input-group-size="medium-8"
+              cs-input-label="Label"
+              cs-input-help-text="Provide a name for the resource to be used">
+          </div>
+          <br>
+          <h5 class="sub-section__label">Resource Details</h5>
+          <div class="row">
+            <div class="cs-radio-group">
+              <input
+                cs-input type="radio"
+                id="ipPhone"
+                name="ipPhoneRadio"
+                value="ipPhone"
+                ng-model="$ctrl.deviceType"
+                ng-change="$ctrl.onIpPhoneSelect()"
+                cs-input-label="IP Phone"
+                cs-input-help-text="Select this to set up an IP Phone">
+              <div class="row" ng-if="$ctrl.deviceType === 'ipPhone'">
+                <input
+                  cs-input type="text"
+                  name="nestedParamName"
+                  id="ipParamName"
+                  placeholder="IP Phone Name"
+                  ng-model="$ctrl.ipParamName"
+                  cs-input-nested="1"
+                  cs-input-group-size="medium-8"
+                  ng-required="$ctrl.deviceType === 'ipPhone'"
+                  cs-input-messages="forms.messages">
+                <input
+                  cs-input type="text"
+                  name="nestedParamName"
+                  id="ipParamIpAddress"
+                  placeholder="IP Phone Address"
+                  ng-model="$ctrl.ipParamIpAddress"
+                  cs-input-nested="1"
+                  cs-input-group-size="medium-8"
+                  ng-required="$ctrl.deviceType === 'ipPhone'"
+                  cs-input-messages="forms.messages">
+                <input
+                  cs-input type="text"
+                  name="nestedParamType"
+                  id="ipParamType"
+                  placeholder="IP Phone Type"
+                  ng-model="$ctrl.ipParamType"
+                  cs-input-nested="1"
+                  cs-input-group-size="medium-8"
+                  ng-required="$ctrl.deviceType === 'ipPhone'"
+                  cs-input-messages="forms.messages">
+                <input
+                  cs-input type="text"
+                  name="nestedParamUserName"
+                  id="ipParamUserName"
+                  placeholder="IP Phone User Name"
+                  ng-model="$ctrl.ipParamUserName"
+                  cs-input-nested="1"
+                  cs-input-group-size="medium-8"
+                  ng-required="$ctrl.deviceType === 'ipPhone'"
+                  cs-input-messages="forms.messages">
+                <div class="end">
+                  <input
+                    cs-input type="text"
+                    name="nestedParamPassword"
+                    id="ipParamPassword"
+                    placeholder="IP Phone Password"
+                    ng-model="$ctrl.ipParamPassword"
+                    cs-input-nested="1"
+                    cs-input-group-size="medium-8"
+                    ng-required="$ctrl.deviceType === 'ipPhone'"
+                    cs-input-messages="forms.messages">
+                </div>
+              </div>
+              <input
+                cs-input type="radio"
+                id="camelot"
+                name="camelotRadio"
+                value="camelot"
+                ng-model="$ctrl.deviceType"
+                ng-change="$ctrl.onCamelotSelect()"
+                cs-input-label="Camelot"
+                cs-input-help-text="Select this to set up a camelot resource">
+              <div class="row" ng-if="$ctrl.deviceType === 'camelot'">
+                <input
+                  cs-input type="text"
+                  name="nestedParamName"
+                  id="camelotParamName"
+                  placeholder="Camelot Phone Name"
+                  ng-model="$ctrl.camelotParamName"
+                  cs-input-nested="1"
+                  cs-input-group-size="medium-8"
+                  ng-required="$ctrl.deviceType === 'camelot'"
+                  cs-input-messages="forms.messages">
+                <input
+                  cs-input type="text"
+                  name="nestedParamName"
+                  id="camelotParamTftpAddress"
+                  placeholder="Camelot TFTP Address"
+                  ng-model="$ctrl.camelotParamTftpAddress"
+                  cs-input-nested="1"
+                  cs-input-group-size="medium-8"
+                  ng-required="$ctrl.deviceType === 'camelot'"
+                  cs-input-messages="forms.messages">
+                <div class="end">
+                  <input
+                    cs-input type="text"
+                    name="nestedParamType"
+                    id="camelotParamContainer"
+                    placeholder="Camelot Container"
+                    ng-model="$ctrl.camelotParamContainer"
+                    cs-input-nested="1"
+                    cs-input-group-size="medium-8"
+                    ng-required="$ctrl.deviceType === 'camelot'"
+                    cs-input-messages="forms.messages">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default"  ng-click="$ctrl.dismiss()" translate="common.cancel">
+  <button class="btn btn-primary" ng-click="$ctrl.createResource()">
+    <span translate="common.save"></span>
+  </button>
+</div>

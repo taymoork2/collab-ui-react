@@ -2952,6 +2952,84 @@
               filter: null,
             },
           })
+          .state('taasSuites', {
+            parent: 'main',
+            url: '/taasSuite',
+            template: '<taas-suite-view></tass-suite-view>',
+          })
+          .state('taasTest', {
+            parent: 'main',
+            url: '/taasTest',
+            template: '<taas-test-view suite="$resolve.suite"></taas-test-view>',
+            params: {
+              suite: {},
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/hcs/test-manager/testView/taasTestView.component'));
+                }, 'taas-test-view');
+              }),
+              suite: /* @ngInject */ function ($stateParams) {
+                return $stateParams.suite;
+              },
+            },
+          })
+          .state('taasResource', {
+            parent: 'main',
+            url: '/taasResource',
+            template: '<taas-resource-view></taas-resource-view>',
+          })
+          .state('taasSchedule', {
+            parent: 'main',
+            url: '/taasSchedule',
+            template: '<taas-schedule-view></taas-schedule-view>',
+          })
+          .state('taasScheduleView.list', {
+            url: '/taasScheduleView',
+            template: '<taas-schedule-view></taas-schedule-view>',
+            params: {
+              filter: null,
+            },
+          })
+          .state('taasServiceManager', {
+            abstract: true,
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                template: '<div ui-view></div>',
+              },
+            },
+          })
+          .state('taasServiceManager.scheduler', {
+            parent: 'taasServiceManager',
+            params: {
+              suite: {},
+              customerId: '',
+            },
+            views: {
+              'modal@': {
+                template: '<tsm-modal suite="$resolve.suite" customerId="$resolve.customerId"  class="modal-content" style="margin:initial" dismiss="$dismiss()" close="$close()"></tsm-modal>',
+              },
+            },
+            resolve: {
+              suite: /* @ngInject */ function ($stateParams) {
+                return $stateParams.suite;
+              },
+              customerId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerId;
+              },
+            },
+          })
+          .state('taasServiceManager.resourceCreate', {
+            parent: 'modal',
+            params: {},
+            views: {
+              'modal@': {
+                template: '<resource-create-modal class="modal-content" style="margin:initial" dismiss="$dismiss()" close="$close()"></resource-create-modal>',
+              },
+            },
+          })
           .state('customer-overview', {
             parent: 'sidepanel',
             views: {

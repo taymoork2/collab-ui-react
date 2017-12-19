@@ -222,4 +222,5 @@ module.exports = {
   winTeams: 'win-teams',
   zeroTouchMeeting: 'zero-touch-meeting',
   hI1635: 'h-i1635', //PSTN Porting
+  hI1638: 'h-i1638', //TaaS
 };

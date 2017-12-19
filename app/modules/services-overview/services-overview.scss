@@ -342,6 +342,9 @@ services-overview {
     background-color: $gray-light-4;
 
     a {
+      &.service-operational {
+        cursor: default
+      }
       color: inherit;
       display: flex;
       align-items: center;
