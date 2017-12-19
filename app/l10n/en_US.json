@@ -2636,6 +2636,11 @@
       "deregisterConfirmationText": "You are about to deregister <strong>{{clusterName}}</strong> from Cisco Collaboration Cloud.",
       "deregisterConfirmPopup": "{{clusterName}} was removed successfully from Cisco Collaboration Cloud."
     },
+    "office365ReAuthorizationComponent": {
+      "title": "Authorization",
+      "label": "Re-Authorize Office 365",
+      "description": "If you removed Cisco Spark Control Hub authorization from your Office 365 environment, click Authorize to reset the read and write permissions."
+    },
     "deactivateServiceComponent": {
       "deactivateServiceLabel": "Deactivate {{serviceName}}",
       "deactivateServiceCommon": "Deactivating {{serviceName}} removes all service-related features for users.",
@@ -3346,6 +3351,7 @@
     "office365SetupModal": {
       "title": "Hybrid Calendar setup",
       "subtitle": "Office 365 setup",
+      "subtitleReAuth": "Office 365 re-authorization",
       "line1": "The Hybrid Calendar Service needs permission to access Office 365 on behalf of your users.",
       "line2": "Click <strong>Authorize</strong> to sign in to Microsoft and accept permissions for the service.",
       "line3": "After you accept, your browser should redirect you back here. If you’re not redirected shortly, return to <a target=\"_blank\" href=\"https://admin.ciscospark.com\">admin.ciscospark.com</a> and start this process again."
