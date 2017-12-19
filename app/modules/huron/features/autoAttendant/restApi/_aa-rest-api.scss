@@ -12,6 +12,9 @@
   @include vr-spacing(mr, -0.35);
 }
 
+.aa-toggle {
+  width: fit-content;
+}
 .aa-text-overflow.aa-text-overflow {
   display: inline-block;
   width: 100%;
