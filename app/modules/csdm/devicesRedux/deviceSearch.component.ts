@@ -165,7 +165,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     if (suggestion) {
       this.searchObject.setWorkingElementText(suggestion.searchString);
       if (suggestion.isFieldSuggestion) {
-        this.searchInput = suggestion.searchString;
+        this.searchInput = this.lastSearchInput = suggestion.searchString;
         this.searchChange();
         this.suggestions.updateBasedOnInput(this.searchObject);
         return;
