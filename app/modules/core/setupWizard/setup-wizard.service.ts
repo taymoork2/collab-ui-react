@@ -7,6 +7,7 @@ interface IPendingSubscription {
   externalSubscriptionId: string;
   licenses: IPendingLicense[];
   orderId: string;
+  orderingTool?: string;
   pendingLicenses: IPendingLicense[];
   pendingServiceOrderUUID: string;
   subscriptionId: string;
@@ -78,6 +79,12 @@ export class SetupWizardService {
 
   public hasPendingSubscriptionOptions(): boolean {
     return this.pendingSubscriptions.length > 1;
+  }
+
+  public hasPendingCCWSubscriptions(): boolean {
+    return this.hasPendingServiceOrder() && _.some(this.pendingSubscriptions, function (sub) {
+      return sub.orderingTool && _.includes(['CCW', 'CCW_CSB', 'ATLAS_SITE_MGMT'], sub.orderingTool);
+    });
   }
 
   public getPendingSubscriptionOptions(): IOption[] {
@@ -272,6 +279,7 @@ export class SetupWizardService {
           licenses: pendingSubscription.licenses,
           pendingServiceOrderUUID: pendingSubscription.pendingServiceOrderUUID!,
           subscriptionId: pendingSubscription.subscriptionId!,
+          orderingTool: pendingSubscription.orderingTool,
         });
       });
       if (!_.isEmpty(this.pendingSubscriptions)) {
