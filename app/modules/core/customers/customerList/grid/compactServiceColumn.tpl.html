@@ -9,6 +9,9 @@
     <ng-repeat ng-repeat="type in row.entity.orderedServices.servicesManagedByAnotherPartner">
       <cr-service-column-icon row="row.entity" type={{type}}></cr-service-column-icon>
     </ng-repeat>
+    <ng-repeat ng-repeat="type in row.entity.orderedServices.servicesManagedByCustomer">
+      <cr-service-column-icon row="row.entity" type={{type}}></cr-service-column-icon>
+    </ng-repeat>
   </div>
   <span ng-if="!grid.appScope.isLicenseInfoAvailable(row.entity)" translate="common.notAvailable"></span>
 </div>
