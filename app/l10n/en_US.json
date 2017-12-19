@@ -7851,6 +7851,12 @@
           "nonAdminEditDeleteWarning": "You are not authorized to edit or delete this virtual assistant. Contact the owner, {{owner}}, to request one of these actions."
         }
       },
+      "invalidInput" : {
+        "invalidAccessToken": "The Dialogflow client access token is invalid.\nClick the back arrow to return to the Dialogue Integration page and enter a valid token.",
+        "duplicateName": "The {{ featureName }} must have a unique name.\nClick the back arrow to return to the Name page and enter a valid name.",
+        "invalidName": "The {{ featureName }} name is invalid.\nClick the back arrow to return to the Name page and enter a valid name.",
+        "invalidIcon": "The {{ featureName }} avatar is invalid.\nClick the back arrow to return to the Avatar page and upload a valid avatar."
+      },
       "createTitle": "Create {{ featureName }}",
       "editTitle": "Edit {{ featureName }}",
       "cancelDialog": "Do you want to discard your\n {{ featureName }}?",
@@ -7923,8 +7929,6 @@
         "errorCreateTemplate": "Cannot save {{ featureName }}. Try again.",
         "invalidEmailError": "The email you entered is invalid. Please enter a valid email.",
         "duplicateEmailError": "The email you entered already exists. Please enter a unique email.",
-        "invalidNameError": "The Expert Virtual Assistant name is invalid. Please enter a valid name.",
-        "invalidAvatarError": "The Expert Virtual Assistant avatar is invalid. Please upload a valid avatar.",
         "editWarning": "There may be a delay before you can see changes to your Expert Virtual Assistant in Cisco Spark."
       },
       "overview": {

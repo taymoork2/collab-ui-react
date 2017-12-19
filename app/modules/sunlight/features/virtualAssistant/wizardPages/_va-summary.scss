@@ -30,14 +30,15 @@
     @include vr-spacing(mt, 1);
     color: $color-alerts-base;
     display: inline-block;
+    text-align: center;
 
     .icon-error {
-      @include vr-spacing(mt, 0.1875);
-      float: left;
+      vertical-align: middle;
       font-size: rem-calc(16px);
     }
     .error-message {
       @include vr-spacing(ml, 0.5);
+      white-space: pre-wrap;
     }
   }
 

@@ -266,7 +266,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
             controller.writeMetrics();
           })
           .catch(function (response) {
-            controller.handleFeatureError();
+            controller.handleFeatureError(response);
             controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.createConfigFailureText'), {
               featureName: controller.$translate.instant('careChatTpl.virtualAssistant.eva.featureText.name'),
             });
@@ -314,7 +314,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
         controller.writeMetrics();
       })
       .catch(function (response) {
-        controller.handleFeatureError();
+        controller.handleFeatureError(response);
         controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.updateConfigFailureText'));
       });
   }
