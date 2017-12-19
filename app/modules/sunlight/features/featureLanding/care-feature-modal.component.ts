@@ -25,21 +25,10 @@ class CareFeatureModalCtrl implements ng.IComponentController {
       id: 'customerSupportTemplate',
       label: 'common.customerSupportTemplate',
       description: 'sunlightDetails.newFeatures.selectCSTDesc',
-      icons: ['icon-picture-in-picture'],
+      icons: ['icon-headset'],
       color: 'feature-cst-color',
       disabled: false,
     });
-
-    if (this.$state.isHybridEnabled) {
-      serviceCards.push({ //AutoAttendant
-        id: 'AA',
-        label: 'autoAttendant.title',
-        description: 'autoAttendant.modalDescription',
-        code: 'autoAttendant.code',
-        color: 'feature-aa-color',
-        disabled: false,
-      });
-    }
 
     if (this.$state.isVirtualAssistantEnabled) {
       serviceCards.push({ //Virtual Assistant
@@ -59,21 +48,17 @@ class CareFeatureModalCtrl implements ng.IComponentController {
 
   public ok(featureId): void {
     let templateStr = '<customer-support-template-modal dismiss="$dismiss()" class="care-modal"></customer-support-template-modal>';
+    if (this.$state.isHybridEnabled) {
+      templateStr = '<care-hybrid-feature-modal dismiss="$dismiss()" class="care-modal"></care-hybrid-feature-modal>';
+    }
     if (featureId === 'virtualAssistant') {
       templateStr = '<virtual-assistant-modal dismiss="$dismiss()" class="care-modal"></virtual-assistant-modal>';
     }
-    if (featureId === 'AA') {
-      this.$modal.open({
-        template: require('modules/huron/features/newFeature/aatype-select-modal.html'),
-        controller: 'AATypeSelectCtrl',
-        size: 'lg',
-      });
-    } else {
-      this.$modal.open({
-        template: templateStr,
-      });
-      this.dismiss();
-    }
+
+    this.$modal.open({
+      template: templateStr,
+    });
+    this.dismiss();
   }
 
   public purchaseLink(): void {
