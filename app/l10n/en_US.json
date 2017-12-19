@@ -454,6 +454,9 @@
     },
     "enableCareInformationText": "Select Message to enable Care."
   },
+  "onboardSummaryForAutoAssignModal": {
+    "title": "Assign Licenses Automatically"
+  },
   "usersPreview": {
     "groupPreview": "Group:",
     "servicesPreview": "Services",
