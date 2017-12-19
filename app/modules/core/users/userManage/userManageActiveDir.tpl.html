@@ -14,8 +14,15 @@
         <div class="details">
           <h6 translate="userManage.ad.adStatus"></h6>
           <p translate="userManage.ad.adStatusDetails"></p>
-          <a class="p" ng-click="umadc.onTurnOffDS()" translate="userManage.ad.turnOffDS" tooltip="{{::'userManage.ad.turnOffDSToolTip'|translate}}"
-            tooltip-placement="bottom"></a>
+          <a href class="p"
+            ng-if="!umadc.isUserAdmin()"
+            ng-click="umadc.onTurnOffDS()"
+            translate="userManage.ad.turnOffDS"
+            tooltip="{{::'userManage.ad.turnOffDSToolTip'|translate}}"
+            tooltip-placement="bottom"
+            tooltip-trigger="mouseover focus"
+            aria-label="{{:: 'userManage.ad.turnOffDS' | translate}} {{::'userManage.ad.turnOffDSToolTip' | translate}}"
+            tabindex="0"></a>
         </div>
       </div>
     </div>
@@ -32,19 +39,19 @@
           <div class="cs-radio-group">
             <ul>
               <li>
-                <input cs-input
-                  type="radio"
+                <input cs-input type="radio"
                   ng-model="umadc.manageType"
                   id="ad-manual"
+                  name="manageUsers"
                   ng-value="umadc.ManageType.MANUAL"
                   cs-input-label="{{::'userManage.ad.manualLabel'|translate}}"
                   cs-input-help-text="{{'userManage.ad.manualDetails'|translate: {maxUsersInManual: umadc.maxUsersInManual} }}">
               </li>
               <li>
-                <input cs-input
-                  type="radio"
+                <input cs-input type="radio"
                   ng-model="umadc.manageType"
                   id="ad-bulk"
+                  name="manageUsers"
                   ng-value="umadc.ManageType.BULK"
                   cs-input-label="{{::'userManage.ad.bulkLabel'|translate}}"
                   cs-input-help-text="{{'userManage.ad.bulkDetails'|translate: {maxUsersInCSV: umadc.maxUsersInCSV} }}">
@@ -56,10 +63,10 @@
                 </p>
               </li>
               <li>
-                <input cs-input
-                  type="radio"
+                <input cs-input type="radio"
                   ng-model="umadc.manageType"
                   id="ad-advanced"
+                  name="manageUsers"
                   ng-value="umadc.ManageType.ADVANCED_DS"
                   cs-input-label="{{::'userManage.ad.advancedLabel'|translate}}"
                   cs-input-help-text="{{::'userManage.ad.advancedDetails'|translate}}">

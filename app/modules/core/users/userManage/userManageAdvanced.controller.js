@@ -7,10 +7,10 @@ require('./_user-manage.scss');
     .controller('UserManageAdvancedController', UserManageAdvancedController);
 
   /* @ngInject */
-  function UserManageAdvancedController($modal, $previousState, $rootScope, $scope, $state, $timeout, $translate,
-    Analytics, DirSyncService, Notification) {
+  function UserManageAdvancedController($modal, $previousState, $rootScope, $scope, $state, $timeout, $translate, Analytics, Authinfo, DirSyncService, Notification) {
     var vm = this;
 
+    vm.isUserAdmin = isUserAdmin;
     vm.onInit = onInit;
     vm.onBack = onBack;
     vm.onNext = onNext;
@@ -84,6 +84,10 @@ require('./_user-manage.scss');
         next: 'users.list',
       },
     };
+
+    function isUserAdmin() {
+      return Authinfo.isUserAdminUser();
+    }
 
     function onCancelImport() {
       if (isCsvProcessing()) {
