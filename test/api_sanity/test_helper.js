@@ -160,7 +160,7 @@ var auth = {
   },
   'sso-e2e-test-org': {
     user: 'fakegmuser+ssotestorg@gmail.com',
-    pass: 'C1sc0123!',
+    pass: 'C1sc01234!',
     org: '3aa8a8a2-b953-4905-b678-0ae0a3f489f8',
   },
   'sso-e2e-test-org-mailsac': {
