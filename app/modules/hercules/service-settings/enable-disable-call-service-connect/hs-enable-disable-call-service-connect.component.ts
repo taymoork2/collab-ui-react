@@ -1,19 +1,16 @@
-import { FeatureToggleService } from 'modules/core/featureToggle';
 import { Notification } from 'modules/core/notifications/notification.service';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 class HsEnableDisableCallServiceConnectComponentCtrl implements ng.IComponentController {
 
   public serviceIsEnabled;
+  public saving = false;
   private onCallServiceConnectEnabled: Function;
   private onCallServiceConnectDisabled: Function;
-  public showPrerequisitesButton = false;
-  private saving = false;
 
   /* @ngInject */
   constructor(
     private $modal,
-    private FeatureToggleService: FeatureToggleService,
     private Notification: Notification,
     private ServiceDescriptorService: ServiceDescriptorService,
   ) {}
@@ -24,13 +21,6 @@ class HsEnableDisableCallServiceConnectComponentCtrl implements ng.IComponentCon
     if (serviceIsEnabled && serviceIsEnabled.currentValue) {
       this.serviceIsEnabled = serviceIsEnabled.currentValue;
     }
-  }
-
-  public $onInit() {
-    this.FeatureToggleService.hasFeatureToggleOrIsTestOrg(this.FeatureToggleService.features.atlasHybridPrerequisites)
-      .then((result) => {
-        this.showPrerequisitesButton = result;
-      });
   }
 
   public flipStatus(): void {
