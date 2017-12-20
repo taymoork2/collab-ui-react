@@ -3,6 +3,10 @@ import { Office365SettingsPageComponent } from './office-365-settings-page.compo
 require('./office-365-settings-page.scss');
 
 export default angular
-  .module('Hercules')
+  .module('hercules.office-365-settings-page', [
+    require('angular-translate'),
+    require('collab-ui-ng').default,
+    require('modules/hercules/services/uss.service').default,
+  ])
   .component('office365SettingsPage', new Office365SettingsPageComponent())
   .name;
