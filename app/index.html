@@ -23,7 +23,7 @@
     <%   }
        } %>
   </head>
-  <body ng-controller="BodyCtrl as bodyCtrl" ng-class="{inverse: bodyCtrl.partner}" class="{{$root.bodyClass}}" cs-breakpoint="{0:'screen-xs', 769:'screen-sm', 993:'screen-md', 1201:'screen-lg'}">
+  <body ng-controller="BodyCtrl as bodyCtrl" ng-class="{inverse: bodyCtrl.partner}" class="cs-admin {{$root.bodyClass}}" cs-breakpoint="{0:'screen-xs', 769:'screen-sm', 993:'screen-md', 1201:'screen-lg'}">
     <toaster-container></toaster-container>
     <div ui-view="main" ng-cloak></div>
 
