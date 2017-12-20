@@ -57,7 +57,7 @@
             return l.siteUrl;
           });
 
-          card.settingsUrl = hasSites ? '#/site-list' : '';
+          card.settingsUrl = hasSites ? '/site-list' : '';
 
           if (filterLicenses(licenses).length > 0) {
             card.enabled = true; //don't disable if no licenses in case test org..
