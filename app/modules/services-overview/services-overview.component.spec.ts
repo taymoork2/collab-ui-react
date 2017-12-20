@@ -94,26 +94,11 @@ describe('ServicesOverviewController', () => {
       expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.care.title' }).length).toBe(1);
     });
 
-    it('should create 8 hybrid cards', () => {
-      initController();
-      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.clusterList.title' }).length).toBe(1);
-      // 2 Hybrid Calendar cards (sharing the same title) but never displayed at the same time
-      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridCalendar.title' }).length).toBe(2);
-      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridCall.title' }).length).toBe(1);
-      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridMedia.title' }).length).toBe(1);
-      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridDataSecurity.title' }).length).toBe(1);
-      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridContext.title' }).length).toBe(1);
-      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.privateTrunk.title' }).length).toBe(1);
-      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridImp.title' }).length).toBe(1);
-    });
-
     it('should load the webex site list', () => {
       initController();
       expect(Authinfo.getConferenceServicesWithoutSiteUrl).toHaveBeenCalled();
       expect(Authinfo.getConferenceServicesWithLinkedSiteUrl).toHaveBeenCalled();
     });
-
-    // it('should PropackPromises', () => {});
 
     it('should leave servicesToDisplay empty', () => {
       expect(ctrl._servicesToDisplay.length).toBe(0);

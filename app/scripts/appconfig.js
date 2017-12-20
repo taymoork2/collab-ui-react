@@ -3948,12 +3948,9 @@
         $stateProvider
           .state('services-overview', {
             url: '/services?office365&reason',
-            template: '<services-overview has-services-overview-refresh-toggle="$resolve.atlasServicesOverviewRefresh" url-params="$resolve.urlParams"></services-overview>',
+            template: '<services-overview url-params="$resolve.urlParams"></services-overview>',
             parent: 'main',
             resolve: {
-              atlasServicesOverviewRefresh: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.hasFeatureToggleOrIsTestOrg(FeatureToggleService.features.atlasServicesOverviewRefresh);
-              },
               urlParams: /* @ngInject */ function ($stateParams) {
                 return $stateParams;
               },
