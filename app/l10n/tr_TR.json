@@ -2754,8 +2754,7 @@
         "headingDoc": "Belge",
         "headingSoftware": "Yazılım",
         "help": "{{localizedServiceName}} hakkında daha fazla bilgi edinmek için <a href=\"{{helpLink}}\" target=\"_blank\">Yardım Merkezi</a>’ni ziyaret edin.",
-        "downloadExpressway": "
-          <a href=\"{{downloadLink}}\" target=\"_blank\">software.cisco.com</a> adresinden Cisco Expressway yazılımını indirin.",
+        "downloadExpressway": "<a href=\"{{downloadLink}}\" target=\"_blank\">software.cisco.com</a> adresinden Cisco Expressway yazılımını indirin.",
         "downloadECP": "<a href=\"{{downloadLink}}\" target=\"_blank\">{{serviceName}} yazılımını indirin</a>.",
         "downloadDemoHybridMedia": "<a href=\"{{downloadLink}}\" target=\"_blank\">Tam Yazılım Görüntüsünü İndirin</a><br> (Tam kapasite ve Karma Ortam üretim dağıtımları için kullanılır)<br> <a href=\"{{downloadDemoLink}}\" target=\"_blank\">Demo Yazılım Görüntüsünü İndirin</a> <br>(Sınırlı kapasite, 90 günlük kullanım ömrü ve yalnızca Karma Ortam demoları için kullanılır)"
       },
@@ -2940,8 +2939,7 @@
       },
       "add-SIP-destination": {
         "title": "Çağrı Hizmeti Bağlantısı Yapılandırmasını Tamamla",
-        "description": "
-          <a href ng-click=\"{{onclick}}\">Ayarlar altında çağrı yönlendirme için SIP Hedefi ekleyin.</a>",
+        "description": "<a href ng-click=\"{{onclick}}\">Ayarlar altında çağrı yönlendirme için SIP Hedefi ekleyin.</a>",
         "description-already-in-settings-page": "Aşağıda çağrı yönlendirme için SIP Hedefi ekleyin."
       },
       "no-fuse-yet": {
@@ -3113,10 +3111,8 @@
       "usersHeader": "Kullanıcılar",
       "usersAssign": "Kullanıcıları Ata",
       "usersDescription1": "Kaynak grubundaki yapılandırmaya erişebilmesini istediğiniz kullanıcıları seçin (örneğin, beta testi yapanlar). Şunları yapabilirsiniz:",
-      "usersDescription2": "
-          <a ui-sref='users.list'>Kullanıcılar sayfasından</a> kullanıcıları tek tek atama.",
-      "usersDescription3": "
-          <a href ng-click=\"{{onclick}}\">CSV şablonu</a> kullanarak kullanıcıları toplu olarak atama.",
+      "usersDescription2": "<a ui-sref='users.list'>Kullanıcılar sayfasından</a> kullanıcıları tek tek atama.",
+      "usersDescription3": "<a href ng-click=\"{{onclick}}\">CSV şablonu</a> kullanarak kullanıcıları toplu olarak atama.",
       "usersDescription4": "Yardım gerekirse <a href='{{href}}' target='_blank'>belgelere</a> bakın.",
       "renameGroup": "Adını değiştir",
       "renameGroupDescription": "Kaynak grubunu yeniden adlandırın",
@@ -5855,10 +5851,8 @@
   },
   "generateActivationCodeModal": {
     "title": "Etkinleştirme Kodu",
-    "activateBody": "
-          <b>{{belongsTo}}</b> adlı kişiye ait masa telefonunu takın ve istendiğinde etkinleştirme kodunu girin veya mümkünse QR kodunu taratmak için cihaz kamerasını kullanın. Bu kodun süresi dolduktan sonra Kullanıcılar sayfasından yeni bir etkinleştirme kodu oluşturulabilir.",
-    "activateBodyExtra": "
-          <b>{{belongsTo}}</b> adlı kişiye ait masa telefonunu veya analog telefon bağdaştırıcısını takın ve istendiğinde etkinleştirme kodunu girin ya da mümkünse QR kodunu taramak için cihaz kamerasını kullanın. Bu kodun süresi dolduktan sonra Kullanıcılar sayfasından yeni bir etkinleştirme kodu oluşturulabilir.",
+    "activateBody": "<b>{{belongsTo}}</b> adlı kişiye ait masa telefonunu takın ve istendiğinde etkinleştirme kodunu girin veya mümkünse QR kodunu taratmak için cihaz kamerasını kullanın. Bu kodun süresi dolduktan sonra Kullanıcılar sayfasından yeni bir etkinleştirme kodu oluşturulabilir.",
+    "activateBodyExtra": "<b>{{belongsTo}}</b> adlı kişiye ait masa telefonunu veya analog telefon bağdaştırıcısını takın ve istendiğinde etkinleştirme kodunu girin ya da mümkünse QR kodunu taramak için cihaz kamerasını kullanın. Bu kodun süresi dolduktan sonra Kullanıcılar sayfasından yeni bir etkinleştirme kodu oluşturulabilir.",
     "emailCode": "E-posta",
     "copyToClipboard": "Kopyala",
     "print": "Yazdır",
@@ -9151,8 +9145,7 @@
         "certificateTitle": "Sertifikalar",
         "certificateDescription": "Cisco İş Birliği varsayılan güven listesi tarafından sağlanan sertifikaları kullanmayı veya kendi sertifikanızı yüklemeyi seçin.",
         "certificateDescriptionNew": "Cisco İş Birliği Bulut varsayılan güven listesi tarafından sağlanan sertifikaları kullanmayı veya kendi sertifikanızı yüklemeyi seçin.",
-        "certDescNew": "
-          <a href=\"{{href}}\" target=\"_blank\">Cisco İş Birliği Bulutu varsayılan güven listesi tarafından sağlanan sertifikaları kullanın</a>",
+        "certDescNew": "<a href=\"{{href}}\" target=\"_blank\">Cisco İş Birliği Bulutu varsayılan güven listesi tarafından sağlanan sertifikaları kullanın</a>",
         "upload": "veya kendi sertifikanızı yükleyin. Kendi sertifikanızı kullanırsanız ana bilgisayar adları etki alanında doğrulanır",
         "click": ". Yardım için <a href=\"{{href}}\" target=\"_blank\">buraya tıklayın</a>.",
         "certificateDefault": "Varsayılan Cisco Sertifikaları",
