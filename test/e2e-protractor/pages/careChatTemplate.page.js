@@ -64,7 +64,7 @@ var ChatTemplateCreation = function () {
   this.offHoursMessage = element(by.css('.offhours-message textarea'));
   this.days = element.all(by.css('.day-picker .day'));
   this.wednesday = element.all(by.css('.day-picker .day')).get(3);
-  this.open24Hours = element(by.css('.time-and-timezone-picker [ckid=ctOpen24Hours]'));
+  this.open24Hours = element(by.css('.time-and-timezone-picker [for=ctOpen24Hours]'));
   this.timePicker = element(by.css('.time-picker'));
   this.timezonePicker = element(by.css('.timezone-picker'));
   this.startTimeDropDown = element(by.css('.time-picker .start-time'));

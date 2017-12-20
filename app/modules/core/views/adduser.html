@@ -7,24 +7,47 @@
       </h3>
     </div>
     <div ui-sref="users.list">
-      <span><i id='closeAddUser' class="icon icon-close add-user-close pull-right"></i></span>
+      <span><i id="closeAddUser" class="icon icon-close add-user-close pull-right"></i></span>
     </div>
   </div>
   <div class="panel-body">
     <form role="form">
       <div class="form-group">
-        <label for="inputEmail3" translate="usersPage.email"></label>
-        <input class="form-control" type="text" id="usersfield" placeholder="Enter email addresses separated by commas or semi-colons" />
+        <label for="usersfield" translate="usersPage.email"></label>
+        <input cs-input type="text" class="form-control" id="usersfield" placeholder="Enter email addresses separated by commas or semi-colons" />
         <br>
         <div class="entitle-check-grp" ng-repeat="(service, val) in entitlements" ng-if="service!=='webExSquared' && isServiceAllowed(service)">
-          <cs-checkbox ckid="{{'chk_'+service}}" ng-model="entitlements[service]" label="{{getServiceName(service)}}"></cs-checkbox>
+          <input cs-input type="checkbox"
+            id="{{'chk_'+service}}"
+            cs-input-label="{{getServiceName(service)}}"
+            ng-model="entitlements[service]">
         </div>
       </div>
       <div class="form-group">
         <div id="btn-cancel" class="btn btn--link pull-right" ng-click="clearPanel()"><span translate="usersPage.clear"></span></div>
-        <button type="button" id="btnAdd" cs-btn loading="btnAddLoad" class="btn btn--primary pull-right" ng-show="isAddEnabled()" ng-click="addUsers()"><span translate="usersPage.add"></span></button>
-        <button type="button" id="btnEntitle" cs-btn loading="btnEntitleLoad" class="btn btn--primary pull-right" ng-click="entitleUsers()"><span translate="usersPage.entitle"></span></button>
-        <button type="button" id="btnInvite" cs-btn loading="btnInviteLoad" class="btn btn--primary pull-right" ng-disabled="!isSquaredInviter()" ng-click="inviteUsers()"><span translate="usersPage.invite"></span></button>
+        <button cs-btn type="button"
+          id="btnAdd"
+          loading="btnAddLoad"
+          class="btn btn--primary pull-right"
+          ng-show="isAddEnabled()"
+          ng-click="addUsers()">
+          <span translate="usersPage.add"></span>
+        </button>
+        <button cs-btn type="button"
+          id="btnEntitle"
+          loading="btnEntitleLoad"
+          class="btn btn--primary pull-right"
+          ng-click="entitleUsers()">
+          <span translate="usersPage.entitle"></span>
+        </button>
+        <button cs-btn type="button"
+          id="btnInvite"
+          loading="btnInviteLoad"
+          class="btn btn--primary pull-right"
+          ng-disabled="!isSquaredInviter()"
+          ng-click="inviteUsers()">
+          <span translate="usersPage.invite"></span>
+        </button>
       </div>
     </form>
   </div>

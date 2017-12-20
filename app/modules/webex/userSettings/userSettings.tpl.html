@@ -1,21 +1,19 @@
 <cs-sp-buttons ng-if="userSettingsView.form.$dirty">
-  <button id="saveBtn"
-          name="saveBtn"
-          class="btn btn--primary"
-          cs-btn
-          loading="loading.saveBtn"
-          type="submit"
-          ng-click="btnSave(userSettingsView.form)"
-          ng-disabled="userSettingsModel.disableSave">
+  <button cs-btn id="saveBtn"
+    name="saveBtn"
+    class="btn btn--primary"
+    loading="loading.saveBtn"
+    type="submit"
+    ng-click="btnSave(userSettingsView.form)"
+    ng-disabled="userSettingsModel.disableSave">
     <span translate="common.save"></span>
   </button>
 
-  <button id="resetBtn"
-          name="resetBtn"
-          cs-btn
-          loading="loading.resetBtn"
-          ng-click="btnReset(userSettingsView.form)"
-          ng-disabled="userSettingsModel.disableCancel">
+  <button cs-btn id="resetBtn"
+    name="resetBtn"
+    loading="loading.resetBtn"
+    ng-click="btnReset(userSettingsView.form)"
+    ng-disabled="userSettingsModel.disableCancel">
     <span translate="common.cancel"></span>
   </button>
 </cs-sp-buttons>
@@ -24,18 +22,14 @@
   <cs-sp-container cs-tabindex="userSettingsView.form.$dirty ? -1 : 0">
     <cs-sp-section>
       <div ng-if="!userSettingsModel.hasLoadError && !userSettingsModel.viewReady"
-           id="spinnerSection",
-           name="spinnerSection"
-           class="center" >
-
-        <br>
-        <br>
+        id="spinnerSection",
+        name="spinnerSection"
+        class="center">
+        <br><br>
         <i class="icon icon-spinner icon-2x"></i>
       </div>
 
-      <div ng-if="userSettingsModel.hasLoadError"
-           id="errSection"
-           name="errSection">
+      <div ng-if="userSettingsModel.hasLoadError" id="errSection" name="errSection">
 
         <div class="center">
           <div class="nodata-icon">
@@ -47,27 +41,24 @@
           </div>
 
           <button id="cancelBtn"
-                  name="cancelBtn"
-                  translate="webexUserSettings.cancel"
-                  class="btn wiz-onboard-btn"
-                  ui-sref="user-overview.conferencing">
+            name="cancelBtn"
+            translate="webexUserSettings.cancel"
+            class="btn wiz-onboard-btn"
+            ui-sref="user-overview.conferencing">
           </button>
 
-          <button id="reloadBtn"
-                  name="reloadBtn"
-                  cs-btn
-                  loading="loading.reloadBtn"
-                  class="btn btn--people wiz-onboard-btn"
-                  ng-if="userSettingsModel.allowRetry"
-                  ng-click="btnReload()">
+          <button cs-btn id="reloadBtn"
+            name="reloadBtn"
+            loading="loading.reloadBtn"
+            class="btn btn--people wiz-onboard-btn"
+            ng-if="userSettingsModel.allowRetry"
+            ng-click="btnReload()">
             <span translate="webexUserSettings.reload"></span>
           </button>
         </div>
       </div>
 
-      <div ng-if="userSettingsModel.viewReady"
-           id="webexUserSettingsPage">
-
+      <div ng-if="userSettingsModel.viewReady" id="webexUserSettingsPage">
         <h4 class="list-group-item-heading">
           &nbsp;
         </h4>
@@ -75,23 +66,19 @@
         <!-- Start of Meeting Center -->
         <div ng-if="userSettingsModel.meetingCenter.isSiteEnabled && userSettingsModel.meetingCenter.isEntitledOnWebEx">
           <p><b>{{userSettingsModel.meetingCenter.label}}</b><p>
-
-          <table class="wx-table" id="MC"
-                 name="MC">
+          <table class="wx-table" id="MC" name="MC">
 
             <tr class="wx-tr" valign="top"
-                ng-repeat="sessionType in userSettingsModel.sessionTypes"
-                ng-if="sessionType.meetingCenterApplicable">
+              ng-repeat="sessionType in userSettingsModel.sessionTypes"
+              ng-if="sessionType.meetingCenterApplicable">
               <td class="wx-td">
-                <cs-checkbox ckid={{sessionType.id}}
-                             name={{sessionType.id}}
-                             ng-model="sessionType.sessionEnabled"
-                             label={{sessionType.sessionName}}>
-                </cs-checkbox>
+                <input cs-input type="checkbox"
+                  id="{{sessionType.id}}"
+                  name="{{sessionType.id}}"
+                  cs-input-label="{{sessionType.sessionName}}"
+                  ng-model="sessionType.sessionEnabled">
               </td>
               <td class="wx-td">
-
-
                 {{sessionType.sessionDescription}}
               </td>
             </tr>
@@ -103,22 +90,19 @@
         <!-- Start of Event Center -->
         <div ng-if="userSettingsModel.eventCenter.isSiteEnabled && userSettingsModel.eventCenter.isEntitledOnWebEx">
           <p><b>{{userSettingsModel.eventCenter.label}}</b></p>
-          <table class="wx-table" id="EC"
-                 name="EC">
+          <table class="wx-table" id="EC" name="EC">
 
             <tr class="wx-tr" valign="top"
                 ng-repeat="sessionType in userSettingsModel.sessionTypes"
                 ng-if="sessionType.eventCenterApplicable">
               <td class="wx-td">
-                <cs-checkbox ckid={{sessionType.id}}
-                             name={{sessionType.id}}
-                             ng-model="sessionType.sessionEnabled"
-                             label={{sessionType.sessionName}}>
-                </cs-checkbox>
+                <input cs-input type="checkbox"
+                  id="{{sessionType.id}}"
+                  name="{{sessionType.id}}"
+                  cs-input-label="{{sessionType.sessionName}}"
+                  ng-model="sessionType.sessionEnabled">
               </td>
               <td class="wx-td">
-
-
                 {{sessionType.sessionDescription}}
               </td>
             </tr>
@@ -130,22 +114,19 @@
         <!-- Start of Support Center -->
         <div ng-if="userSettingsModel.supportCenter.isSiteEnabled && userSettingsModel.supportCenter.isEntitledOnWebEx">
           <p><b>{{userSettingsModel.supportCenter.label}}</p></b>
-          <table class="wx-table" id="SC"
-                 name="SC">
+          <table class="wx-table" id="SC" name="SC">
 
             <tr class="wx-tr" valign="top"
                 ng-repeat="sessionType in userSettingsModel.sessionTypes"
                 ng-if="sessionType.supportCenterApplicable">
               <td class="wx-td">
-                <cs-checkbox ckid={{sessionType.id}}
-                             name={{sessionType.id}}
-                             ng-model="sessionType.sessionEnabled"
-                             label={{sessionType.sessionName}}>
-                </cs-checkbox>
+                <input cs-input type="checkbox"
+                  id="{{sessionType.id}}"
+                  name="{{sessionType.id}}"
+                  cs-input-label="{{sessionType.sessionName}}"
+                  ng-model="sessionType.sessionEnabled">
               </td>
               <td class="wx-td">
-
-
                 {{sessionType.sessionDescription}}
               </td>
             </tr>
@@ -157,23 +138,19 @@
         <!-- Start of Training Center -->
         <div ng-if="userSettingsModel.trainingCenter.isSiteEnabled && userSettingsModel.trainingCenter.isEntitledOnWebEx">
           <p><b>{{userSettingsModel.trainingCenter.label}}</b></p>
-          <table class="wx-table"
-                 id="TC"
-                 name="TC">
+          <table class="wx-table" id="TC" name="TC">
 
             <tr class="wx-tr" valign="top"
                 ng-repeat="sessionType in userSettingsModel.sessionTypes"
                 ng-if="sessionType.trainingCenterApplicable">
               <td class="wx-td">
-                <cs-checkbox ckid={{sessionType.id}}
-                             name={{sessionType.id}}
-                             ng-model="sessionType.sessionEnabled"
-                             label={{sessionType.sessionName}}>
-                </cs-checkbox>
+                <input cs-input type="checkbox"
+                  id="{{sessionType.id}}"
+                  name="{{sessionType.id}}"
+                  cs-input-label="{{sessionType.sessionName}}"
+                  ng-model="sessionType.sessionEnabled">
               </td>
               <td class="wx-td">
-
-
                 {{sessionType.sessionDescription}}
               </td>
             </tr>
@@ -182,21 +159,12 @@
         </div>
         <!-- End of Training Center -->
 
-        <div ng-if="!userSettingsView.form.$dirty"
-             id="privLinkSection"
-             name="privLinkSection">
-
+        <div ng-if="!userSettingsView.form.$dirty" id="privLinkSection" name="privLinkSection">
           <div class="feature-list" ng-binding>
             <ul>
               <li class="feature">
-                <a href id="webex-user-privs"
-                   ui-sref="user-overview.conferencing.webex.webex2">
-
-                  <span class="feature-name"
-                        translate="webexUserSettingLabels.userPriviligesLabel"
-                        ng-binding>
-                  </span>
-
+                <a href id="webex-user-privs" ui-sref="user-overview.conferencing.webex.webex2">
+                  <span class="feature-name" translate="webexUserSettingLabels.userPriviligesLabel" ng-binding></span>
                   <i class="feature-arrow"></i>
                 </a>
               </li>
