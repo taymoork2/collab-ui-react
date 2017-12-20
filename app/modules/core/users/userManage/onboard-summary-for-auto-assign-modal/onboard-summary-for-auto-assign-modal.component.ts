@@ -1,20 +1,20 @@
-import { IAutoAssignTemplateRequestPayload } from 'modules/core/users/shared';
-
-class EditSummaryAutoAssignTemplateModalController implements ng.IComponentController {
+export class OnboardSummaryForAutoAssignModalController implements ng.IComponentController {
   private dismiss: Function;
   private stateData: any;  // TODO: better type
+  private userList: any; // TODO: better type
   public saveLoading = false;
 
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
-    private Notification,
     private Analytics,
-    private AutoAssignTemplateService,
+    private Notification,
+    private Userservice,
   ) {}
 
   public $onInit(): void {
     this.stateData = _.get(this.$state, 'params.stateData');
+    this.userList = _.get(this.$state, 'params.userList');
   }
 
   public dismissModal(): void {
@@ -23,15 +23,16 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
   }
 
   public back(): void {
-    this.$state.go('users.manage.edit-auto-assign-template-modal', {
+    this.$state.go('users.add', {
       stateData: this.stateData,
     });
   }
 
   public save(): void {
     this.saveLoading = true;
-    const payload: IAutoAssignTemplateRequestPayload = this.AutoAssignTemplateService.stateDataToPayload(this.stateData);
-    this.AutoAssignTemplateService.saveTemplate(payload)
+    const licenses = [];
+    const userEntitlements = [];
+    this.Userservice.onboardUsersV2(this.userList, licenses, userEntitlements)
       .then(() => {
         this.Notification.success('userManage.autoAssignTemplate.editSummary.saveSuccess');
         this.$state.go('users.list');
@@ -45,9 +46,9 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
   }
 }
 
-export class EditSummaryAutoAssignTemplateModalComponent implements ng.IComponentOptions {
-  public controller = EditSummaryAutoAssignTemplateModalController;
-  public template = require('./edit-summary-auto-assign-template-modal.html');
+export class OnboardSummaryForAutoAssignModalComponent implements ng.IComponentOptions {
+  public controller = OnboardSummaryForAutoAssignModalController;
+  public template = require('./onboard-summary-for-auto-assign-modal.html');
   public bindings = {
     dismiss: '&?',
   };

@@ -5,7 +5,9 @@
     tabindex="0"
     tooltip-append-to-body="true"
     tooltip="{{::'webexSiteManagement.redistributeLicenses' | translate}}"
+    aria-label="{{::'webexSiteManagement.redistributeLicenses' | translate}}"
     ng-click="$ctrl.redistributeLicenses($ctrl.license)"
-    tooltip-trigger="mouseenter">
+    tooltip-trigger="mouseenter focus"
+    tabindex="0">
   </i>
 </span>

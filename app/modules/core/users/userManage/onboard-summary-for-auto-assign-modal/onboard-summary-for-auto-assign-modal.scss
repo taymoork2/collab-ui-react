@@ -1,0 +1,5 @@
+@import 'styles/partials/mixins';
+
+onboard-summary-for-auto-assign-modal {
+  @include keep-flex-container(column);
+}

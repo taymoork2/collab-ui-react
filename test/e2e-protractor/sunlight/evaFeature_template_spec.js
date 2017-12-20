@@ -34,10 +34,10 @@ describe('EVA feature setup', function () {
     utils.expectIsDisplayed(careFeatureLandingPage.createExpertVirtualAssistantTemplateButton);
   });
 
-  it('Start Creating Expert Virtual Assistant: empty page', function () {
+  it('Start Creating Expert Virtual Assistant: Overview page', function () {
+    utils.expectIsEnabled(careFeatureLandingPage.createExpertVirtualAssistantTemplateButton);
     utils.click(careFeatureLandingPage.createExpertVirtualAssistantTemplateButton);
     utils.expectIsNotDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
-
 
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.title);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.titleDesc);

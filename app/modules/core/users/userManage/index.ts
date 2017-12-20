@@ -9,6 +9,7 @@ import featureToggleModuleName from 'modules/core/featureToggle';
 import * as orgServiceModuleName from 'modules/core/scripts/services/org.service';
 import userAddModuleName from 'modules/core/users/userAdd';
 import * as userCsvServiceModuleName from 'modules/core/users/userCsv/userCsv.service';
+import onboardSummaryForAutoAssignModalModuleName from './onboard-summary-for-auto-assign-modal';
 
 export default angular
   .module('core.users.userManage', [
@@ -23,6 +24,7 @@ export default angular
     orgServiceModuleName,
     userAddModuleName,
     userCsvServiceModuleName,
+    onboardSummaryForAutoAssignModalModuleName,
   ])
   .controller('UserManageOrgController', require('./userManageOrg.controller'))
   .name;

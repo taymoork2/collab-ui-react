@@ -22,7 +22,13 @@
         <p>
           <span translate="trialModal.call.deviceTrialLimitReachedA"></span>
           <span>
-            <a ng-href translate="trialModal.call.activeDeviceTrial" tooltip="{{::'trialModal.call.activeDeviceTrialTip' | translate}}" tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-animation="false"></a>
+            <a ng-href
+              translate="trialModal.call.activeDeviceTrial"
+              tooltip="{{::'trialModal.call.activeDeviceTrialTip' | translate}}"
+              tooltip-trigger="mouseenter focus"
+              tooltip-placement="top"
+              aria-label="{{::'trialModal.call.activeDeviceTrialTip' | translate}}"
+              tooltip-animation="false"></a>
           </span>
           <span translate="trialModal.call.deviceTrialLimitReachedB" translate-values="{number: callTrial.maxTrials}"></span>
         </p>

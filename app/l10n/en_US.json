@@ -214,8 +214,6 @@
       "directorySynchronization": "Directory Synchronization",
       "directorySynchronizationEnableLabel": "Enable Directory Synchronization",
       "directorySynchronizationDisableLabel": "Disable Directory Synchronization",
-      "enabled": "Enabled",
-      "disabled": "Disabled",
       "licenses": "Licenses",
       "autoAssignLicenses": "Auto-Assign Licenses",
       "setUpAutoAssignTemplate": "Set up Auto-Assign Template",
@@ -455,6 +453,9 @@
       "other": "not entitled, status: {{status}}"
     },
     "enableCareInformationText": "Select Message to enable Care."
+  },
+  "onboardSummaryForAutoAssignModal": {
+    "title": "Assign Licenses Automatically"
   },
   "usersPreview": {
     "groupPreview": "Group:",
@@ -1551,6 +1552,10 @@
     "invalidUrl": "This is not a valid URL.",
     "invalidZipCode": "Incorrect Zip Code",
     "ipAddress": "IP Address",
+    "keys": {
+      "activated": "Activated",
+      "deactivated": "Deactivated"
+    },
     "language": "Language",
     "lastName": "Last Name",
     "learnMore": "Learn More",
@@ -5573,6 +5578,7 @@
     "domains": "Domains",
     "quantityWithValue": "Qty: {{quantity}}",
     "anotherPartner": "(Another Partner)",
+    "customerOrdered": "(Customer Provisioned)",
     "filters": {
       "placeholder": "Select a filter...",
       "filter": "Filter",
@@ -7683,6 +7689,14 @@
       "callback": "Customer Support Template",
       "chatPlusCallback": "Customer Support Template",
       "virtualAssistant": "Virtual Assistant"
+    },
+    "featureCard": {
+      "spacesInUseText": "Expert Spaces: {{ numOfSpaces }}",
+      "unavailableSpacesInUseText": "Usage data unavailable",
+      "popoverMainHeader": "Expert Virtual Assistant Usage",
+      "popoverSpacesHeader": "Expert Spaces in Cisco Spark: {{ numOfSpaces }}",
+      "popoverDefaultSpace": "(Default Space)",
+      "popoverErrorMessage": "Cannot retrieve usage data for this Expert Virtual Assistant. Try again later."
     },
     "ctValidation": {
       "errorChar250": "Character length cannot be more than 250.",

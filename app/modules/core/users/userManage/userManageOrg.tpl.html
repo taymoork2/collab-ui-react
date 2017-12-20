@@ -85,8 +85,8 @@
         <i class="icon icon-circle icon-circle-manage"
           ng-class="{'working': umoc.isDirSyncEnabled, 'disabled': !umoc.isDirSyncEnabled}">
         </i>
-        <h6 ng-if="umoc.isDirSyncEnabled" translate="userManage.org.enabled"></h6>
-        <h6 ng-if="!umoc.isDirSyncEnabled" translate="userManage.org.disabled"></h6>
+        <h6 ng-if="umoc.isDirSyncEnabled" translate="common.enabled"></h6>
+        <h6 ng-if="!umoc.isDirSyncEnabled" translate="common.disabled"></h6>
       </span>
       <h6 class="manage-modal-detail--link"
         ng-click="umoc.handleDirSyncService()"
@@ -99,9 +99,17 @@
     <div class="columns medium-4 manage-modal-header">
       <h4 translate="userManage.org.licenses"></h4>
     </div>
-    <div class="columns manage-modal-label"
+    <div class="columns manage-modal-label sync-status"
       ng-class="{'medium-3': umoc.isAutoAssignTemplateEnabled(), 'medium-8': !umoc.isAutoAssignTemplateEnabled()}">
       <h5 translate="userManage.org.autoAssignLicenses"></h5>
+      <span class="manage-modal-detail ds-sync">
+        <i class="icon icon-circle icon-circle-manage"
+          ng-class="{'working': umoc.isAutoAssignTemplateEnabled(),
+          'disabled': !umoc.isAutoAssignTemplateEnabled()}">
+        </i>
+        <h6 ng-if="umoc.isAutoAssignTemplateEnabled()" translate="common.keys.activated"></h6>
+        <h6 ng-if="!umoc.isAutoAssignTemplateEnabled()" translate="common.keys.deactivated"></h6>
+      </span>
       <h6 ng-if="!umoc.isAutoAssignTemplateEnabled()"
         ng-click="umoc.onNext(umoc.ManageType.AUTO_ASSIGN_TEMPLATE)"
         class="manage-modal-detail manage-modal-detail--link"
@@ -131,7 +139,7 @@
         </cr-user-csv-export>
       </p>
     </div>
-    <div ng-if="umoc.convertableUsers" class="columns medium-4 modify-users-section modify-users-section--right-box" 
+    <div ng-if="umoc.convertableUsers" class="columns medium-4 modify-users-section modify-users-section--right-box"
       ng-click="umoc.onNext(umoc.ManageType.CONVERT)">
       <h4 class="modify-users-section--label" translate="userManage.org.convertLabel" ></h4>
       <h6 class="modify-users-section--details" translate="userManage.org.convertDetails"></h6>

@@ -90,7 +90,14 @@
                   <span translate="subscriptions.usage"></span>
                   <span ng-class="{ 'warning': mcpSub.proPackData.usage > mcpSub.proPackData.volume }">{{::mcpSub.proPackData.usage}}/{{::mcpSub.proPackData.volume}}</span>
                   <span>
-                    <i class="icon icon-information premium-info" tooltip="{{::mcpSub.premiumTooltip}}" tooltip-placement="right" tooltip-trigger="mouseenter" tooltip-animation="true" tooltip-append-to-body="true"></i>
+                    <i class="icon icon-information premium-info"
+                      tooltip="{{::mcpSub.premiumTooltip}}"
+                      aria-label="{{::mcpSub.premiumTooltip}}"
+                      tooltip-placement="right"
+                      tooltip-trigger="mouseenter focus"
+                      tooltip-animation="true"
+                      tooltip-append-to-body="true"
+                      tabindex="0"></i>
                   </span>
                 </div>
               </div>

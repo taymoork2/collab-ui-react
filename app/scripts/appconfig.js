@@ -1044,6 +1044,13 @@
               stateData: null,
             },
           })
+          .state('users.manage.onboard-summary-for-auto-assign-modal', {
+            template: '<onboard-summary-for-auto-assign-modal dismiss="$dismiss()"></onboard-summary-for-auto-assign-modal>',
+            params: {
+              stateData: null,
+              userList: null,
+            },
+          })
 
           //////////////////
 
