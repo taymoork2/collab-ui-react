@@ -484,6 +484,38 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         expect(controller.tableData).toEqual(result);
       });
 
+      it('tableData should be populated in the ascending order of Response variable', function () {
+        var restApiResponse = {
+          USD: '999',
+          error: false,
+          status: 200,
+          BTC: 0.06080007,
+        };
+        controller.restApiResponse = JSON.stringify(restApiResponse);
+        controller.variableSet = [];
+        result = [
+          {
+            options: [],
+            responseKey: 'BTC',
+            responseValue: 0.06080007,
+          }, {
+            options: [],
+            responseKey: 'USD',
+            responseValue: '999',
+          }, {
+            options: [],
+            responseKey: 'error',
+            responseValue: false,
+          }, {
+            options: [],
+            responseKey: 'status',
+            responseValue: 200,
+          },
+        ];
+        controller.stepNext();
+        expect(controller.tableData).toEqual(result);
+      });
+
       it('tableData should be populated in sorted order with selected variables on the top followed by nonSelected Variables', function () {
         var restApiResponse = {
           str: 'response1',

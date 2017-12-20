@@ -607,7 +607,7 @@
       var validJsonResponse = isValidJson(vm.restApiResponse);
       if (validJsonResponse) {
         _.forEach(validJsonResponse, function (value, key) {
-          if (_.isString(value)) {
+          if (_.isString(value) || _.isNumber(value) || _.isBoolean(value)) {
             var obj = {};
             obj.responseKey = key;
             obj.responseValue = value;
