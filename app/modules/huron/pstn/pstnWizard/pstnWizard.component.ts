@@ -72,6 +72,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   private did: DirectInwardDialing = new DirectInwardDialing();
   private ftI387PrivateTrunking: boolean;
   private ftLocation: boolean;
+  public ftHI1635: boolean = false;
 
   /* @ngInject */
   constructor(private PstnModel: PstnModel,
@@ -107,6 +108,9 @@ export class PstnWizardCtrl implements ng.IComponentController {
     this.PstnWizardService.init().then(() => this.enableCarriers = true);
     this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking).then((enabled) => {
       this.ftI387PrivateTrunking = enabled;
+    });
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484).then((enabled) => {
+      this.ftHI1635 = enabled;
     });
     this.FeatureToggleService.getCallFeatureForCustomer(this.PstnModel.getCustomerId(), this.FeatureToggleService.features.hI1484).then((enabled) => {
       this.ftLocation = enabled;
@@ -565,4 +569,5 @@ export class PstnWizardCtrl implements ng.IComponentController {
     this.PstnWizardService.setSwivelOrder([]);
     this.step = 10;
   }
+
 }

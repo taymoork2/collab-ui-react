@@ -18,6 +18,6 @@
   }
 
   img {
-    margin-top: 3rem;
+    @include vr-spacing(mt, 2);
   }
 }

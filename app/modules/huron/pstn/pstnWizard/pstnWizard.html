@@ -111,7 +111,9 @@
     </uc-pstn-swivel-numbers>
   </div>
   <div ng-if="$ctrl.step == 6" class="pstn-review">
-    <div class="review-container">
+    <uc-pstn-review ng-if="$ctrl.ftHI1635">
+    </uc-pstn-review>
+    <div class="review-container" ng-if="!$ctrl.ftHI1635">
       <i class="icon icon-circle-call"></i>
       <h1 class="title" translate="pstnSetup.reviewAndOrder"></h1>
       <div class="review-details">
@@ -217,5 +219,3 @@
     <span ng-if="$ctrl.step == 10 && $ctrl.swivelNumbers.length !== 0" translate="pstnSetup.importNumbers"></span>
   </button>
 </div>
-
-

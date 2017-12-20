@@ -214,8 +214,6 @@
       "directorySynchronization": "Directory Synchronization",
       "directorySynchronizationEnableLabel": "Enable Directory Synchronization",
       "directorySynchronizationDisableLabel": "Disable Directory Synchronization",
-      "enabled": "Enabled",
-      "disabled": "Disabled",
       "licenses": "Licenses",
       "autoAssignLicenses": "Auto-Assign Licenses",
       "setUpAutoAssignTemplate": "Set up Auto-Assign Template",
@@ -455,6 +453,9 @@
       "other": "not entitled, status: {{status}}"
     },
     "enableCareInformationText": "Select Message to enable Care."
+  },
+  "onboardSummaryForAutoAssignModal": {
+    "title": "Assign Licenses Automatically"
   },
   "usersPreview": {
     "groupPreview": "Group:",
@@ -1551,6 +1552,10 @@
     "invalidUrl": "This is not a valid URL.",
     "invalidZipCode": "Incorrect Zip Code",
     "ipAddress": "IP Address",
+    "keys": {
+      "activated": "Activated",
+      "deactivated": "Deactivated"
+    },
     "language": "Language",
     "lastName": "Last Name",
     "learnMore": "Learn More",
@@ -2631,6 +2636,11 @@
       "deregisterConfirmationText": "You are about to deregister <strong>{{clusterName}}</strong> from Cisco Collaboration Cloud.",
       "deregisterConfirmPopup": "{{clusterName}} was removed successfully from Cisco Collaboration Cloud."
     },
+    "office365ReAuthorizationComponent": {
+      "title": "Authorization",
+      "label": "Re-Authorize Office 365",
+      "description": "If you removed Cisco Spark Control Hub authorization from your Office 365 environment, click Authorize to reset the read and write permissions."
+    },
     "deactivateServiceComponent": {
       "deactivateServiceLabel": "Deactivate {{serviceName}}",
       "deactivateServiceCommon": "Deactivating {{serviceName}} removes all service-related features for users.",
@@ -3341,6 +3351,7 @@
     "office365SetupModal": {
       "title": "Hybrid Calendar setup",
       "subtitle": "Office 365 setup",
+      "subtitleReAuth": "Office 365 re-authorization",
       "line1": "The Hybrid Calendar Service needs permission to access Office 365 on behalf of your users.",
       "line2": "Click <strong>Authorize</strong> to sign in to Microsoft and accept permissions for the service.",
       "line3": "After you accept, your browser should redirect you back here. If you’re not redirected shortly, return to <a target=\"_blank\" href=\"https://admin.ciscospark.com\">admin.ciscospark.com</a> and start this process again."
@@ -4994,7 +5005,14 @@
     "privatePstnTrunk": "Private PSTN Trunk",
     "setupService": "Set Up PSTN Service",
     "setupNumbers": "Set Up PSTN Numbers",
+    "orderSummary": "Order Summary",
     "addPhoneNumbers": "Add Phone Numbers",
+    "prPortParagraph": "The authorized signatory from the company will receive an email asking for a Letter of Agency to be submitted.  The information in this letter must match the information the old carrier has.  For example, the address listed in the letter should be the billing address on record with the losing carrier.",
+    "prPortDate": "The date requested for the numbers to be ported is {{date}}",
+    "prPortCarrier": "An email will be sent with the firm order commitment (FOC) date that the numbers will be ported.  Contact {{carrier}} if you need to negotiate a different port date.",
+    "prPortNumbers": "The following {{count}} numbers will be ported from the losing carrier:",
+    "prDIDNumbers": "The following {{count}} numbers will be added:",
+    "prTollNumbers": "The following {{count}} toll free will be added:",
     "placeOrder": "Place Order",
     "orderBlock": "Order Block Numbers",
     "newNumbersTab": "Standard Numbers",
@@ -5566,6 +5584,7 @@
     "domains": "Domains",
     "quantityWithValue": "Qty: {{quantity}}",
     "anotherPartner": "(Another Partner)",
+    "customerOrdered": "(Customer Provisioned)",
     "filters": {
       "placeholder": "Select a filter...",
       "filter": "Filter",
@@ -7677,6 +7696,14 @@
       "callback": "Customer Support Template",
       "chatPlusCallback": "Customer Support Template",
       "virtualAssistant": "Virtual Assistant"
+    },
+    "featureCard": {
+      "spacesInUseText": "Expert Spaces: {{ numOfSpaces }}",
+      "unavailableSpacesInUseText": "Usage data unavailable",
+      "popoverMainHeader": "Expert Virtual Assistant Usage",
+      "popoverSpacesHeader": "Expert Spaces in Cisco Spark: {{ numOfSpaces }}",
+      "popoverDefaultSpace": "(Default Space)",
+      "popoverErrorMessage": "Cannot retrieve usage data for this Expert Virtual Assistant. Try again later."
     },
     "ctValidation": {
       "errorChar250": "Character length cannot be more than 250.",

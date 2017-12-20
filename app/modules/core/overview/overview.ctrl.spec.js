@@ -99,6 +99,7 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(this.ReportsService, 'healthMonitor').and.callFake(_.noop);
     spyOn(this.SunlightReportService, 'getOverviewData').and.returnValue({});
     spyOn(this.SetupWizardService, 'hasPendingServiceOrder').and.returnValue(true);
+    spyOn(this.SetupWizardService, 'hasPendingCCWSubscriptions').and.returnValue(true);
     spyOn(this.SetupWizardService, 'getActingSubscriptionServiceOrderUUID').and.returnValue('someServiceOrderUUID');
     spyOn(this.SetupWizardService, 'populatePendingSubscriptions').and.callThrough();
     spyOn(this.SetupWizardService, 'getPendingOrderStatusDetails').and.returnValue(this.$q.resolve());
@@ -228,6 +229,16 @@ describe('Controller: OverviewCtrl', function () {
     });
   });
 
+  describe('Meeting Card with provisioning Event: If no pending subscriptions have CCW ordering tool, ', function () {
+    beforeEach(function () {
+      this.SetupWizardService.hasPendingCCWSubscriptions.and.returnValue(false);
+      this.initController();
+    });
+
+    it('should not initialize provisioning event handler', function () {
+      expect(this.SetupWizardService.getActingSubscriptionServiceOrderUUID).not.toHaveBeenCalled();
+    });
+  });
 
   describe('Notifications', function () {
     beforeEach(function () {

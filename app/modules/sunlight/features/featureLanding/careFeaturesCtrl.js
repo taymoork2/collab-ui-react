@@ -33,6 +33,8 @@ var _ = require('lodash');
     vm.filterText = '';
     vm.template = null;
     vm.openNewCareFeatureModal = openNewCareFeatureModal;
+    vm.spacesInUseText = spacesInUseText;
+    vm.generateHtmlPopover = generateHtmlPopover;
     vm.setFilter = setFilter;
     vm.hasMessage = Authinfo.isMessageEntitled();
     vm.hasCall = Authinfo.isSquaredUC();
@@ -122,10 +124,37 @@ var _ = require('lodash');
       }
     }
 
+    function generateHtmlPopover(feature) {
+      var spacesList = _.get(feature, 'spaces', []);
+
+      if (spacesList.length < 1) {
+        return '<div class="feature-card-popover-error">' + $translate.instant('careChatTpl.featureCard.popoverErrorMessage') + '</div>';
+      }
+
+      var popoverMainHeader = $translate.instant('careChatTpl.featureCard.popoverMainHeader');
+      var spacesHeader = $translate.instant('careChatTpl.featureCard.popoverSpacesHeader', {
+        numOfSpaces: spacesList.length,
+      });
+
+      var htmlString = '<div class="feature-card-popover"><h3 class="header">' + popoverMainHeader + '</h3>';
+      htmlString += '<h3 class="sub-header">' + spacesHeader + '</h3><ul class="spaces-list">';
+
+      _.forEach(spacesList, function (expertSpace) {
+        htmlString += '<li>' + expertSpace.title;
+        if (expertSpace.default) {
+          htmlString += ' ' + $translate.instant('careChatTpl.featureCard.popoverDefaultSpace');
+        }
+        htmlString += '</li>';
+      });
+
+      htmlString += '</ul></div>';
+      return htmlString;
+    }
+
     function handleFeaturePromises(promises) {
       _.forEach(vm.features, function (feature, index) {
         promises[index].then(function (data) {
-          handleFeatureData(data, feature);
+          return handleFeatureData(data, feature);
         }, function (response) {
           handleFailures(response, feature);
         });
@@ -137,6 +166,20 @@ var _ = require('lodash');
       if (list.length > 0) {
         feature.data = list;
         feature.isEmpty = false;
+
+        if (feature.name === 'expertVirtualAssistant') {
+          _.forEach(feature.data, function (eva, index) {
+            return EvaService.getExpertAssistantSpaces(eva.id)
+              .then(function (result) {
+                feature.data[index].spaces = result.items;
+                feature.data[index].htmlPopover = vm.generateHtmlPopover(feature.data[index]);
+              })
+              .catch(function () {
+                feature.data[index].spaces = [];
+                feature.data[index].htmlPopover = vm.generateHtmlPopover(feature.data[index]);
+              });
+          });
+        }
       } else {
         feature.isEmpty = true;
         showReloadPageIfNeeded();
@@ -252,6 +295,18 @@ var _ = require('lodash');
       $event.preventDefault();
       $event.stopImmediatePropagation();
       CTService.openEmbedCodeModal(feature.templateId, feature.name);
+    }
+
+    function spacesInUseText(feature) {
+      var numOfSpaces = _.get(feature, 'spaces.length', 0);
+
+      if (numOfSpaces > 0) {
+        return $translate.instant('careChatTpl.featureCard.spacesInUseText', {
+          numOfSpaces: numOfSpaces,
+        });
+      }
+
+      return $translate.instant('careChatTpl.featureCard.unavailableSpacesInUseText');
     }
 
     function openNewCareFeatureModal() {

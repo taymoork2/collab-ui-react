@@ -164,6 +164,8 @@
     require('modules/hercules/hybrid-media-cluster-settings').default,
     require('modules/hercules/hybrid-services-cluster-list-with-cards').default,
     require('modules/hercules/hybrid-services-nodes-page').default,
+    require('modules/hercules/office-365-settings/office-365-re-authorization-section').default,
+    require('modules/hercules/office-365-settings/office-365-settings-page').default,
     require('modules/hercules/private-trunk/private-trunk-overview-settings').default,
     require('modules/hercules/private-trunk/private-trunk-setup').default,
     require('modules/hercules/rename-and-deregister-cluster-section').default,
