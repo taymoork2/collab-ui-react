@@ -2,7 +2,14 @@
   <article>
     <header>
       <span class='report-section-header' translate="{{::$ctrl.options.headerTitle}}"></span>
-      <i ng-if="$ctrl.isPopover()" class='icon icon-information' tooltip="{{::$ctrl.getPopoverText()}}" tooltip-trigger="mouseenter" tooltip-placement="bottom" tooltip-animation="true"></i>
+      <i ng-if="$ctrl.isPopover()"
+        class='icon icon-information'
+        tooltip="{{::$ctrl.getPopoverText()}}"
+        aria-label="{{::$ctrl.getPopoverText()}}"
+        tooltip-trigger="mouseenter focus"
+        tooltip-placement="bottom"
+        tooltip-animation="true"
+        tabindex="0"></i>
       <div ng-if="$ctrl.exportDropdown" class="grid-filter dropdown pull-right">
         <a href ng-click="$ctrl.toggleExportMenu()">
           <i class='icon icon-three-dots export-dots'></i>
@@ -53,7 +60,12 @@
       <div class="row" ng-if="$ctrl.lowerTooltip && $ctrl.isSet() && $ctrl.labels">
         <div class="columns tooltip-column">
           <span class="tooltip-title" translate="{{::$ctrl.lowerTooltip.title}}"></span>
-          <i class="icon icon-information tooltip-icon" tooltip="{{::$ctrl.getTranslation($ctrl.lowerTooltip.text)}}" tooltip-trigger="mouseenter" tooltip-animation="true"></i>
+          <i class="icon icon-information tooltip-icon"
+            tooltip="{{::$ctrl.getTranslation($ctrl.lowerTooltip.text)}}"
+            aria-label="{{::$ctrl.getTranslation($ctrl.lowerTooltip.text)}}"
+            tooltip-trigger="mouseenter focus"
+            tooltip-animation="true"
+            tabindex="0"></i>
         </div>
       </div>
 
