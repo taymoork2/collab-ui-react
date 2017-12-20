@@ -54,7 +54,7 @@
                 $state.isVirtualAssistantEnabled = isEnabled;
               });
           },
-          isHybridEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
+          isHybridToggleEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
             return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridEnable)
               .then(function (isEnabled) {
                 $state.isAtlasHybridEnable = isEnabled;

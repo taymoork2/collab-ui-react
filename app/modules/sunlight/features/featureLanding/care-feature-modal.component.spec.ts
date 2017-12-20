@@ -41,7 +41,7 @@ describe('Component: care feature modal', () => {
   });
 
    it('ok function call for customer support template with hybrid enabled results in initiating state call and then closing the care new feature Modal with the value chosen.', function () {
-    this.$state.isHybridEnabled = true;
+    this.$state.isHybridToggleEnabled = true;
     this.controller.ok('customerSupportTemplate');
     expect(this.$scope.dismiss).toHaveBeenCalledWith();
     expect(this.$modal.open).toHaveBeenCalledWith({

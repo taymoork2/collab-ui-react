@@ -1,3 +1,5 @@
+@import 'app/modules/huron/features/featureLanding/_feature-landing';
+
 .care-no-features {
   @extend %content-header;
 }
@@ -238,7 +240,7 @@ header > p > span.badge {
     }
 
     .feature-aa-color {
-      color: #0393c9;
+      color: $toolkit-primary;
     }
 
     .feature-icon-disabled {
