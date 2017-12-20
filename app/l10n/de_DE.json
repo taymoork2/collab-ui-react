@@ -204,7 +204,7 @@
       "bulkLabel": "Benutzer mit einer CSV-Datei exportieren und importieren",
       "bulkLabelNew": "Benutzer per Sammelaktion hinzufügen oder ändern",
       "bulkDetails": "Dies ist die beste Methode, um bis zu {{maxUsersInCSV}} Benutzer gleichzeitig hinzuzufügen und zu bearbeiten.",
-      "bulkDetailsNew": "Fügen Sie mit einer CSV-Datei bis zu {{maxUsersInManual}} Benutzer hinzu oder ändern Sie diese.",
+      "bulkDetailsNew": "Fügen Sie mit einer CSV-Datei bis zu {{maxUsersInCSV}} Benutzer hinzu oder ändern Sie diese.",
       "advancedLabel": "Verzeichnissynchronisierung aktivieren",
       "advancedDetails": "Synchronisieren Sie Benutzer aus Active Directory.",
       "convertLabel": "Benutzer konvertieren",

@@ -1069,7 +1069,7 @@
     "drilldownSearchPlaceholder": "Rechercher"
   },
   "taskOffered": {
-    "title": "{{médiaType}} offert(s)",
+    "title": "{{mediaType}} offert(s)",
     "description": "Ce tableau décrit les tâches acceptées et ignorées par rapport au total des tâches offertes par routage automatisé {{time}}. Survolez le tableau pour voir les détails des tâches acceptées et ignorées.",
     "desc": "Ce tableau représente le(s) {{mediaType}} accepté(s) et ignoré(s) en relation avec le total de(s) {{mediaType}} offert(s) via le routage automatique {{time}}. Survolez le tableau pour voir les détails.",
     "drilldownShow": "Afficher les utilisateurs les plus actifs",
@@ -3660,7 +3660,7 @@
       "invalidEmailLimit": "Saisissez un maximum de 5 adresses électroniques",
       "invalidSpaceIdLimit": "Saisissez uniquement jusqu'à 5 identifiants d'espaces.",
       "noMatchesFound": "Aucune correspondance n'a été trouvée",
-      "requestFailed": "La demande a échoué : ID de suivi {{trackingID}}",
+      "requestFailed": "La demande a échoué : ID de suivi {{trackingId}}",
       "504RequestFailed": "La recherche a expiré : ID de suivi {{trackingId}}"
     },
     "encryption": {
@@ -4646,7 +4646,7 @@
     "errorSaveMemberPartial": "Le groupe de radiomessagerie « {{pagingGroupName}} » a été créé avec succès mais les ID des membres suivants n'ont pas été ajoutés : « {{message}} »",
     "errorSaveInitiatorPartial": "Le groupe de radiomessagerie « {{pagingGroupName}} » a été créé avec succès mais les ID des initiateurs suivants n'ont pas été ajoutés : « {{message}} »",
     "sayInvalidChar": "Caractère non valide. Les caractères [],;&amp;^&lt;&gt;\/'\" ne sont pas autorisés.",
-    "errorGetNumber": "{{count}} Initiators",
+    "errorGetNumber": "'{{pagingGroupName}}' paging group was not able to get the number assigned to this group. Please contact the support team.",
     "loadError": "Une erreur lors du chargement des groupes de radiomessagerie.",
     "initiatorCount": "{{count}} initiateurs"
   },

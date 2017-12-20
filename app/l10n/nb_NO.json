@@ -1105,7 +1105,7 @@
     "title": "Kundetilfredshet",
     "description": "Diagrammet viser vurdering av kundetilfredshet {{time}}. Hold pekeren over trendlinjen for å få vite den gjennomsnittlige vurderingen av kundetilfredshet i løpet av {{interval}}.",
     "desc": "Dette diagrammet viser kundenes gjennomsnittlige grad av tilfredshet {{time}}. Hold musepekeren over diagrammet for å se detaljer.",
-    "breakdownDescription": "Dette diagrammet viser en oversikt over alle {{mediaType}} og den gjennomsnittlige kundetilfredsheten {{tid}}. Hold musepekeren over diagrammet for å se detaljer.",
+    "breakdownDescription": "Dette diagrammet viser en oversikt over alle {{mediaType}} og den gjennomsnittlige kundetilfredsheten {{time}}. Hold musepekeren over diagrammet for å se detaljer.",
     "drilldownShow": "Vis brukere med best CSAT",
     "drilldownHide": "Skjul brukere med best CSAT",
     "drilldownTitle": "Høyest vurderte brukere {{time}}",
@@ -1975,7 +1975,7 @@
         "description": "Du har valgt en lengre rutingprefiks. Angi sifre som skal settes inn før rutingprefikset.",
         "saveSuccess": "Lengde på rutingprefiks lagret.",
         "saveFail": "Kunne ikke oppdatere lengde på rutingprefiks.",
-        "example": "Eksempel: Rutingprefiks {{currentPrefix}} endres til {{prefiks}}{{currentPrefix}}"
+        "example": "Eksempel: Rutingprefiks {{currentPrefix}} endres til {{prefix}}{{currentPrefix}}"
       }
     },
     "externalTransfer": {
@@ -3887,7 +3887,7 @@
     "tspPartnerRequired": "Du har kjøpt TPS for lydplanen din. Det kreves en partner for å levere denne tjenesten.",
     "chooseTSPPartner": "Velg-TSP Provider",
     "conferencingAudioProvided": "Konferanselyd: {{service}} levert av {{partner}}",
-    "conferencingAudioProvidedShort": "{{tjeneste}} levert av {{partner}}",
+    "conferencingAudioProvidedShort": "{{service}} levert av {{partner}}",
     "ccasp": {
       "ccaspSubheading": "Oppsett av konferanselyd",
       "ccaspDescription": "Du har kjøpt lyd fra en lydpartner. Vennligst angi lydleverandørens abonnements-ID-nummer. Hvis du ikke har et, må du kontakte partneren du kjøpte abonnementet fra",
@@ -5433,7 +5433,7 @@
     "daysLeftToRenew": "{count, plural, =1{# dag} other{# dager}} igjen for å fornye",
     "expiringToday": "Utløper i dag",
     "expired": "Utløpt",
-    "expiredWithGracePeriod": "Kjøp nå: {count, plural, =0{Last day} =1{# day} flere {# days}} før prøvelisensene fjernes.",
+    "expiredWithGracePeriod": "Kjøp nå: {count, plural, =0{Last day} =1{# day} other {# days}} før prøvelisensene fjernes.",
     "needsSetup": "Oppsett påkrevd",
     "suspended": "Denne kontoen har blitt suspendert.",
     "licenseInfoNotAvailable": "Ingen lisensinformasjon tilgjengelig.",
@@ -7128,7 +7128,7 @@
     "getLocationNumberRangesFailed:": "Kunne ikke finne internnummerområder.",
     "getCustomerFailed": "Kunne ikke finne kunde.",
     "updateFailed": "Kunne ikke oppdatere sted.",
-    "voicemailPilotUpdateFailed": "Nummeret {{nummer}} brukes som et Nødnummer. Det kan ikke tilordnes som talepost-pilot. Velg et annet nummer.",
+    "voicemailPilotUpdateFailed": "Nummeret {{number}} brukes som et Nødnummer. Det kan ikke tilordnes som talepost-pilot. Velg et annet nummer.",
     "updateLocationCosFailed": "Kunne ikke oppdatere oppringningsrestriksjoner.",
     "updateExtensionLengthFailed": "Kunne ikke lagre lengden på internnummer.",
     "saveSuccess": "Stedsinnstillinger ble lagret.",

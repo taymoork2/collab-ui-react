@@ -204,7 +204,7 @@
       "bulkLabel": "Exporter et importer des utilisateurs avec un fichier CSV",
       "bulkLabelNew": "Ajouter ou modifier des utilisateurs en masse",
       "bulkDetails": "La meilleure méthode pour ajouter et modifier jusqu’à {{maxUsersInCSV}} utilisateurs en même temps.",
-      "bulkDetailsNew": "Ajouter ou modifier jusqu’à {{maxUsersInManual}} utilisateurs avec un fichier CSV.",
+      "bulkDetailsNew": "Ajouter ou modifier jusqu’à {{maxUsersInCSV}} utilisateurs avec un fichier CSV.",
       "advancedLabel": "Activer la synchronisation du répertoire",
       "advancedDetails": "Synchroniser les utilisateurs depuis Active Directory.",
       "convertLabel": "Convertir des utilisateurs",
@@ -360,7 +360,7 @@
     "cancelCsvError": "Une erreur s’est produite lors de l’annulation de l’importation du fichier CSV.",
     "csvImport": "Importation du fichier CSV",
     "backgroundTasksRunning": "Tâches de fond en cours...",
-    "startedAt": "Commencée à {{TIME}} le {{date}} par {{person}}",
+    "startedAt": "Commencée à {{time}} le {{date}} par {{person}}",
     "taskStatus": {
       "canceled": "Annulée",
       "completed": "Terminée",

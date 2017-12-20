@@ -2725,7 +2725,7 @@
       "success": "Snyggt! Google Kalender har konfigurerats korrekt."
     },
     "settings": {
-      "deactivateServiceHeading": "Inaktivera {{serviceName}}",
+      "deactivateServiceHeading": "Inaktivera {{ServiceName}}",
       "deactivateService": "Genom att avaktivera {{ServiceName}} avinstalleras {{ConnectorName}} från dina Expressway-kluster och tjänsten avaktiveras för användarna.",
       "deactivate": "Inaktivera",
       "emailNotificationsHeading": "E-postaviseringar",
@@ -7321,7 +7321,7 @@
     "failedToDelete": "Kunde inte ta bort plats. Orsak:",
     "botAuthorizations": {
       "title": "Platser med API-åtkomst",
-      "header": "Aktuell åtkomst för enheter som tillhör ”{{ placename }}”",
+      "header": "Aktuell åtkomst för enheter som tillhör ”{{ placeName }}”",
       "subHeader": "Följande bottar och användare har behörighet att komma åt enheternas API:er. Fullständig åtkomst ger kontroll över alla enheter som tillhör den här platsen. Försäkra dig om att du litar på källan.",
       "table": {
         "name": "Behörig att",
