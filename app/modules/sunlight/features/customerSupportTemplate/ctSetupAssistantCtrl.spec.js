@@ -270,6 +270,9 @@ describe('Care Setup Assistant Ctrl', function () {
         type: mediaType || 'chat',
       };
       controller = $controller('CareSetupAssistantCtrl', {
+        $element: {
+          find: function () { return []; },
+        },
         $scope: $scope,
         $stateParams: $stateParams,
       });

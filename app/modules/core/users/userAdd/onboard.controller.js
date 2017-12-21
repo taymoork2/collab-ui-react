@@ -2475,28 +2475,6 @@ require('./_user-add.scss');
       });
     };
 
-    $scope.syncStatusNext = function () {
-      return $q(function (resolve, reject) {
-        if (!$scope.wizard.isLastStep()) {
-          userArray = [];
-          if ($scope.userList && $scope.userList.length > 0) {
-            userArray = $scope.userList.map(function (user) {
-              return user.Email;
-            });
-          }
-          if (userArray.length === 0) {
-            Notification.error('firstTimeWizard.uploadDirSyncEmpty');
-            reject();
-          } else {
-            $scope.model.numMaxUsers = userArray.length;
-            resolve();
-          }
-        } else {
-          resolve();
-        }
-      });
-    };
-
     // hack to allow adding services when exiting the users.manage.advanced.add.ob.syncStatus state
     $scope.dirsyncInitForServices = function () {
       userArray = [];

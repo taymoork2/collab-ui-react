@@ -1,27 +1,25 @@
 <div class="ct-summary">
-    <i class="icon icon-circle-check-mark-success icon-5x success-icon"></i>
-    <div class="h4 description">
-        {{
-        (careSetupAssistant.isEditFeature ?
-        'careChatTpl.editSummaryDesc' : 'careChatTpl.summaryDesc') | translate
-        }}
-    </div>
-    <button loading="careSetupAssistant.creatingChatTemplate"
-            cs-btn
-            id="chatSetupFinishBtn"
-            class="btn btn--primary"
-            ng-click="careSetupAssistant.submitChatTemplate()">{{careSetupAssistant.ChatTemplateButtonText}}
-    </button>
-    <div class="body-small edit-message" ng-if="careSetupAssistant.isEditFeature">
-      <div class="warning-sign">
+  <i class="icon icon-circle-check-mark-success icon-5x success-icon"></i>
+  <div class="h4 description">
+    {{ (careSetupAssistant.isEditFeature ? 'careChatTpl.editSummaryDesc' : 'careChatTpl.summaryDesc') | translate }}
+  </div>
+  <button cs-btn
+    loading="careSetupAssistant.creatingChatTemplate"
+    id="chatSetupFinishBtn"
+    class="btn btn--primary"
+    ng-click="careSetupAssistant.submitChatTemplate()">
+    {{careSetupAssistant.ChatTemplateButtonText}}
+  </button>
+  <div class="body-small edit-message" ng-if="careSetupAssistant.isEditFeature">
+    <div class="warning-sign">
       <i class="icon icon-warning"></i>
-      </div>
-      <div>
-        <div>{{:: 'careChatTpl.editCodeWarnMsg2Line1' | translate }}</div>
-        <div>{{:: 'careChatTpl.editCodeWarnMsg2Line2' | translate }}</div>
-      </div>
     </div>
-    <div class="h6 retry-message" ng-if="careSetupAssistant.saveCTErrorOccurred">
-        {{:: 'careChatTpl.errorCreateChatTemplate' | translate }}
+    <div>
+      <div>{{:: 'careChatTpl.editCodeWarnMsg2Line1' | translate }}</div>
+      <div>{{:: 'careChatTpl.editCodeWarnMsg2Line2' | translate }}</div>
     </div>
+  </div>
+  <div class="h6 retry-message" ng-if="careSetupAssistant.saveCTErrorOccurred">
+    {{:: 'careChatTpl.errorCreateChatTemplate' | translate }}
+  </div>
 </div>

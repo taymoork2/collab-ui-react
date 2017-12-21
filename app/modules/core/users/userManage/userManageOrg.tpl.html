@@ -14,19 +14,19 @@
       <div class="cs-radio-group">
         <ul>
           <li>
-            <input cs-input
-              type="radio"
+            <input cs-input type="radio"
               ng-model="umoc.manageType"
               id="org-manual"
+              name="importUsers"
               ng-value="umoc.ManageType.MANUAL"
               cs-input-label="{{::'userManage.org.manualLabel'|translate}}"
               cs-input-help-text="{{::'userManage.org.manualDetails'|translate: {maxUsersInManual: umoc.maxUsersInManual} }}">
           </li>
           <li>
-            <input cs-input
-              type="radio"
+            <input cs-input type="radio"
               ng-model="umoc.manageType"
               id="org-bulk"
+              name="importUsers"
               ng-value="umoc.ManageType.BULK"
               cs-input-label="{{::'userManage.org.bulkLabel'|translate}}"
               cs-input-help-text="{{::'userManage.org.bulkDetails'|translate: {maxUsersInCSV: umoc.maxUsersInCSV} }}">
@@ -38,26 +38,28 @@
             </p>
           </li>
           <li>
-            <input cs-input
-              type="radio"
+            <input cs-input type="radio"
               ng-model="umoc.manageType"
               id="org-advanced"
+              name="importUsers"
               ng-value="umoc.ManageType.ADVANCED_NO_DS"
               cs-input-label="{{::'userManage.org.advancedLabel'|translate}}"
               cs-input-help-text="{{::'userManage.org.advancedDetails'|translate}}">
           </li>
           <li>
-            <input cs-input ng-if="umoc.convertableUsers"
-              type="radio"
+            <input cs-input type="radio"
+              ng-if="umoc.convertableUsers"
               ng-model="umoc.manageType"
               id="org-convert"
+              name="importUsers"
               ng-value="umoc.ManageType.CONVERT"
               cs-input-label="{{::'userManage.org.convertLabel'|translate}}"
               cs-input-help-text="{{::'userManage.org.convertDetails'|translate}}">
-            <input cs-input ng-if="!umoc.convertableUsers" disabled
-              type="radio"
+            <input cs-input type="radio" disabled
+              ng-if="!umoc.convertableUsers"
               ng-model="umoc.manageType"
               id="org-convert"
+              name="importUsers"
               ng-value="'convert'"
               cs-input-label="{{::'userManage.org.convertLabel'|translate}}"
               cs-input-help-text="{{::'userManage.org.convertUnavailable'|translate}}">
