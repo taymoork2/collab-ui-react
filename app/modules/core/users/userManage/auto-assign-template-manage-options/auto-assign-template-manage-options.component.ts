@@ -3,6 +3,8 @@ class AutoAssignTemplateManageOptionsController implements ng.IComponentControll
   private readonly DEFAULT_AUTO_ASSIGN_TEMPLATE = 'Default';
   private autoAssignTemplates: any;  // TODO: better type
   private onDelete: Function;
+  private onActivateToggle: Function;
+  public isActivated: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -11,6 +13,38 @@ class AutoAssignTemplateManageOptionsController implements ng.IComponentControll
     private ModalService,
     private Notification,
   ) {}
+
+  public activateAutoAssignTemplate() {
+    this.AutoAssignTemplateService.activateTemplate()
+      .then(() => {
+        this.Notification.success('userManage.org.activateAutoAssign.activateSuccess');
+        this.isActivated = true;
+        this.onActivateToggle({ isActivated: this.isActivated });
+      })
+      .catch((response) => {
+        this.Notification.errorResponse(response, 'userManage.org.activate.activateError');
+      });
+  }
+
+  public deactivateAutoAssignTemplate() {
+    return this.ModalService.open({
+      title: this.$translate.instant('userManage.org.moreOptions.deactivateAutoAssign'),
+      message: this.$translate.instant('userManage.org.deactivateAutoAssign.description'),
+      close: this.$translate.instant('common.deactivate'),
+      dismiss: this.$translate.instant('common.cancel'),
+      btnType: 'alert',
+    }).result.then(() => {
+      return this.AutoAssignTemplateService.deactivateTemplate()
+      .then(() => {
+        this.Notification.success('userManage.org.deactivateAutoAssign.deactivateSuccess');
+        this.isActivated = false;
+        this.onActivateToggle({ isActivated: this.isActivated });
+      })
+      .catch((response) => {
+        this.Notification.errorResponse(response, 'userManage.org.deactivate.deactivateError');
+      });
+    });
+  }
 
   public deleteAutoAssignTemplate() {
     return this.ModalService.open({
@@ -39,5 +73,6 @@ export class AutoAssignTemplateManageOptionsComponent implements ng.IComponentOp
   public bindings = {
     autoAssignTemplates: '<',
     onDelete: '&?',
+    onActivateToggle: '&?',
   };
 }

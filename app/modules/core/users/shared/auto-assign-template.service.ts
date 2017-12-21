@@ -16,9 +16,17 @@ export class AutoAssignTemplateService {
   private get autoAssignTemplateUrl(): string {
     return `${this.UrlConfig.getAdminServiceUrl()}organizations/${this.Authinfo.getOrgId()}/templates`;
   }
+  // as of 2017-12-21, this endpoint returns `data` property as a JSON string, which is uncommon behavior
+  private get autoAssignSettingsUrl(): string {
+    return `${this.UrlConfig.getAdminServiceUrl()}organizations/${this.Authinfo.getOrgId()}/settings`;
+  }
 
   public getTemplates(): ng.IPromise<any> {
     return this.$http.get(this.autoAssignTemplateUrl).then(response => response.data);
+  }
+
+  public getSettings(): ng.IPromise<any> {
+    return this.$http.get(this.autoAssignSettingsUrl).then(response => JSON.parse(response.data['orgSettings']));
   }
 
   public saveTemplate(payload: IAutoAssignTemplateRequestPayload): ng.IPromise<any> {
@@ -27,6 +35,14 @@ export class AutoAssignTemplateService {
 
   public updateTemplate(payload: IAutoAssignTemplateRequestPayload): ng.IPromise<any> {
     return this.$http.patch(this.autoAssignTemplateUrl, payload);
+  }
+
+  public activateTemplate(): ng.IPromise<any> {
+    return this.$http.post(`${this.autoAssignSettingsUrl}/autoLicenseAssignment`, { enabled: true });
+  }
+
+  public deactivateTemplate(): ng.IPromise<any> {
+    return this.$http.post(`${this.autoAssignSettingsUrl}/autoLicenseAssignment`, { enabled: false });
   }
 
   public deleteTemplate(templateId: string): ng.IPromise<any> {
