@@ -4528,7 +4528,10 @@
     "restApiCustomVar":"Custom Variable",
     "customVariablesAssignmentHelpText":"Select Custom Variables to assign the value of the Responses from the REST API to use in the call flow.",
     "Variables":"Variables",
-    "value":"Value"
+    "value":"Value",
+    "restApiUrlHelperText":"Enter the secure URL of the REST API to invoke. Click the 'Add Dynamic text' to insert variables in the URL.",
+    "completeHttpsError":"Enter the complete URL including the protocol, HTTPS.",
+    "secureHttpsError":"Enter only secure HTTPS URLs."
   },
   "callPark": {
     "code": "CP",

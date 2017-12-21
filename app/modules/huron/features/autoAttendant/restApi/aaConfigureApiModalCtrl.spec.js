@@ -349,31 +349,6 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         controller.restApiResponse = '';
       });
 
-      it('url should be equate to URL when urlUpdated flag is false', function () {
-        controller.currentStep = 0;
-        controller.menuEntry.actions[0].url = [{ testURL: 'test' }];
-        controller.stepNext();
-        expect(controller.currentStep).toEqual(1);
-        expect(action.url).toEqual(controller.menuEntry.actions[0].url);
-      });
-
-      it('url should be equate to dynamicList when urlUpdated flag is true', function () {
-        controller.isDynamicsValueUpdated();
-        controller.menuEntry.actions[0].dynamicList = [
-          {
-            isDynamic: true,
-            action: {
-              eval: {
-                value: 'this is test value',
-              },
-            },
-          },
-        ];
-        controller.stepNext();
-        expect(controller.currentStep).toEqual(2);
-        expect(action.url).toEqual(controller.menuEntry.actions[0].dynamicList);
-      });
-
       it('dynamics should be empty when there is no dynamic text', function () {
         controller.menuEntry.actions[0].url = [
           {
@@ -851,6 +826,214 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
           $scope.$apply();
           controller.isBasicCredentialUpdated();
           expect(controller.isDynamicsValueUpdated).toBeDefined();
+        });
+      });
+
+      describe('should test https error message scenarios', function () {
+        it('should test getUrlErrorMessages function when url starts with https://', function () {
+          controller.menuEntry = {
+            actions: [
+              {
+                url: [
+                  {
+                    isDynamic: false,
+                    action: {
+                      eval: {
+                        value: 'https://www.google.com',
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          };
+          controller.getUrlErrorMessages();
+          expect(controller.showSecureUrlErrorMessage).toBe(false);
+          expect(controller.showFullErrorMessage).toBe(false);
+        });
+
+        it('should test getUrlErrorMessages function when url starts with http://', function () {
+          controller.menuEntry = {
+            actions: [
+              {
+                url: [
+                  {
+                    isDynamic: false,
+                    action: {
+                      eval: {
+                        value: 'http://www.google.com',
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          };
+          controller.getUrlErrorMessages();
+          expect(controller.showSecureUrlErrorMessage).toBe(true);
+          expect(controller.showFullErrorMessage).toBe(false);
+        });
+
+        it('should test getUrlErrorMessages function when url does not start with https or http', function () {
+          controller.menuEntry = {
+            actions: [
+              {
+                url: [
+                  {
+                    isDynamic: false,
+                    action: {
+                      eval: {
+                        value: 'www.google.com',
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          };
+          controller.getUrlErrorMessages();
+          expect(controller.showSecureUrlErrorMessage).toBe(false);
+          expect(controller.showFullErrorMessage).toBe(true);
+        });
+
+        it('should test getUrlErrorMessages function when url begins with a dynamic value', function () {
+          controller.menuEntry = {
+            actions: [
+              {
+                url: [
+                  {
+                    isDynamic: true,
+                    action: {
+                      eval: {
+                        value: 'www.google.com',
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          };
+          controller.getUrlErrorMessages();
+          expect(controller.showSecureUrlErrorMessage).toBe(false);
+          expect(controller.showFullErrorMessage).toBe(true);
+        });
+
+        it('should test checkUrl function when urlUpdated flag is true', function () {
+          controller.isDynamicsValueUpdated();
+          controller.menuEntry = {
+            actions: [
+              {
+                dynamicList: [
+                  {
+                    isDynamic: true,
+                    action: {
+                      eval: {
+                        value: 'www.google.com',
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          };
+          controller.getUrlErrorMessages();
+          expect(controller.showFullErrorMessage).toBe(true);
+          expect(controller.showSecureUrlErrorMessage).toBe(false);
+        });
+
+        it('should test onUrlBoxFocus function', function () {
+          controller.onUrlBoxFocus();
+          expect(controller.urlBoxFocussed).toBe(true);
+        });
+
+        it('should test validateUrl function url consists https://', function () {
+          controller.basicAuthButton = false;
+          controller.url = 'https://www.google.com';
+          controller.menuEntry = {
+            actions: [
+              {
+                url: [
+                  {
+                    isDynamic: false,
+                    action: {
+                      eval: {
+                        value: 'https://www.google.com',
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          };
+          expect(controller.isNextDisabled()).toBe(true);
+        });
+
+        it('should test validateUrl function url does not consist https://', function () {
+          controller.basicAuthButton = false;
+          controller.url = 'www.google.com';
+          controller.menuEntry = {
+            actions: [
+              {
+                url: [
+                  {
+                    isDynamic: false,
+                    action: {
+                      eval: {
+                        value: 'www.google.com',
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          };
+          expect(controller.isNextDisabled()).toBe(true);
+        });
+
+        it('should test validateUrl function when url begins with a dynamic value', function () {
+          controller.basicAuthButton = false;
+          controller.url = 'www.google.com';
+          controller.menuEntry = {
+            actions: [
+              {
+                url: [
+                  {
+                    isDynamic: true,
+                    action: {
+                      eval: {
+                        value: ' ',
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          };
+          expect(controller.isNextDisabled()).toBe(true);
+        });
+
+        it('should test validateUrl function with authentication on', function () {
+          controller.basicAuthButton = true;
+          controller.username = 'administrator';
+          controller.password = 'administrator';
+          controller.url = 'www.google.com';
+          controller.menuEntry = {
+            actions: [
+              {
+                url: [
+                  {
+                    isDynamic: false,
+                    action: {
+                      eval: {
+                        value: 'https://www.google.com',
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          };
+          expect(controller.isNextDisabled()).toBe(true);
         });
       });
     });

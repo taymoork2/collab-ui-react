@@ -45,7 +45,6 @@
             //replacing id
             elementHtml = elementHtml.replace('Id', myId);
             dispatchElementInsertion(id, elementHtml, range);
-            $rootScope.$broadcast('dynamicListUpdated');
           }, function () {
             cancelledDynamicModal();
           })
@@ -91,6 +90,7 @@
           }
         }
         AACommonService.setSayMessageStatus(true);
+        $rootScope.$broadcast('dynamicListUpdated');
       }
     }
 
