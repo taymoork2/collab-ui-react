@@ -9,7 +9,7 @@ export default angular
     notificationModule,
     require('angular-translate'),
     require('modules/core/config/urlConfig'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('modules/core/partnerReports/commonReportServices').default,
   ])
   .component('sharedMeetingReport', new SharedMeetingComponent())

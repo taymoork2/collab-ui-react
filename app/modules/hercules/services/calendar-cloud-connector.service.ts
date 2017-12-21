@@ -243,7 +243,7 @@ export class CloudConnectorService {
 
 export default angular
   .module('hercules.cloud-connector', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('modules/core/scripts/services/authinfo'),
     require('modules/hercules/services/service-descriptor.service').default,
     require('modules/core/config/urlConfig'),

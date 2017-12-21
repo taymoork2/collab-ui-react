@@ -4,7 +4,7 @@ import { CrCollapsibleRowComponent } from './cr-collapsible-row.component';
 
 export default angular.module('core.users.shared.cr-collapsible-row', [
   require('angular-translate'),
-  require('collab-ui-ng').default,
+  require('@collabui/collab-ui-ng').default,
 ])
   .component('crCollapsibleRow', new CrCollapsibleRowComponent())
   .name;

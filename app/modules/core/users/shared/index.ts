@@ -10,7 +10,7 @@ import crCollapsibleRowModuleName from './cr-collapsible-row';
 
 export default angular.module('core.users.shared', [
   require('angular-translate'),
-  require('collab-ui-ng').default,
+  require('@collabui/collab-ui-ng').default,
   authinfoModuleName,
   crUsersErrorResultsModuleName,
   crUsersTileTotalsModuleName,

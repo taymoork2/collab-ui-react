@@ -6,7 +6,7 @@ export default angular
   .module('core.csvDownload.csvSimpleExport', [
     require('angular-sanitize'),
     require('ng-csv/build/ng-csv'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
   ])
   .component('csvSimpleExport', new CsvSimpleExportComponent())
   .name;

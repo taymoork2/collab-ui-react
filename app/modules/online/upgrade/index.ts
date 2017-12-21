@@ -11,7 +11,7 @@ export * from './upgrade.service';
 
 export default angular
   .module('online.upgrade', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     analytics,
     subscriptionUpgradeButtonModule,
     require('angular-resource'),

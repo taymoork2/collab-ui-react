@@ -11,7 +11,7 @@ export default angular
     require('angular-resource'),
     require('modules/core/cards').default,
     require('angular-translate'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('modules/core/config/config').default,
     hcsTestManagertServiceModule,
     notifications,

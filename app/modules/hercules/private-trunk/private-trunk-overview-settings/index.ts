@@ -7,7 +7,7 @@ import privateTrunkDomain from 'modules/hercules/private-trunk/private-trunk-dom
 
 export default angular
   .module('hercules.private-trunk-overview-settings', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     privateTrunkPrereq,
     privateTrunkCertificate,

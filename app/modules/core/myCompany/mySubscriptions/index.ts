@@ -21,7 +21,7 @@ export default angular
     require('modules/core/scripts/services/authinfo'),
     require('modules/hercules/services/service-descriptor.service').default,
     require('modules/hercules/services/hybrid-services-utils.service').default,
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
   ])
   .controller('MySubscriptionCtrl', MySubscriptionCtrl)
   .component('subscriptionRow', new SubscriptionRowComponent())

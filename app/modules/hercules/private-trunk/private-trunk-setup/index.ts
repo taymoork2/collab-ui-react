@@ -11,7 +11,7 @@ export * from './private-trunk-setup';
 
 export default angular
   .module('hercules.private-trunk-setup', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     require('modules/hercules/services/uss.service').default,
     require('modules/hercules/services/cert-service').default,

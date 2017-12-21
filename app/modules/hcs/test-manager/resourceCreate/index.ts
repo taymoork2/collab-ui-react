@@ -8,7 +8,7 @@ export * from 'modules/hcs/test-manager/shared';
 export default angular
   .module('hcs.taas.resourceCreate', [
     require('angular-translate'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('modules/core/config/config').default,
     hcsTestManagertServiceModule,
   ])

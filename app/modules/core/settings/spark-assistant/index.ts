@@ -7,7 +7,7 @@ export * from './spark-assistant-setting.service';
 export default angular.module('core.settings.sparkAssistant', [
   require('angular-cache'),
   require('angular-translate'),
-  require('collab-ui-ng').default,
+  require('@collabui/collab-ui-ng').default,
   require('modules/core/config/config').default,
   require('modules/hercules/services/service-descriptor.service').default,
   notificationModule,

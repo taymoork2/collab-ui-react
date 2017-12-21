@@ -6,7 +6,7 @@ import './_user-csv.scss';
 
 export default angular
   .module('core.users.userCsv', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     csvDownloadModule,
     // TODO - This is NOT a complete set of dependencies! Must detangle from csvDownload module first.
   ])

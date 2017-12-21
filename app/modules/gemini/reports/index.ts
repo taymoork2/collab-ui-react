@@ -7,7 +7,7 @@ import { SearchService } from 'modules/core/customerReports/webexReports/diagnos
 export default angular
   .module('gemini.services.reports', [
     require('angular-translate'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('modules/core/analytics'),
     require('modules/core/config/urlConfig'),
   ])

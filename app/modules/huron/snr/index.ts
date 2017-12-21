@@ -9,7 +9,7 @@ export * from './snr.service';
 
 export default angular
   .module('huron.snr', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     'call.shared.call-destination-translate',
     customerServiceModule,

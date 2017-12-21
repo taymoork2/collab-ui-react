@@ -7,7 +7,7 @@ import notificationModuleName from 'modules/core/notifications';
 
 export default angular.module('core.users.userManage.auto-assign-template-manage-options', [
   require('angular-translate'),
-  require('collab-ui-ng').default,
+  require('@collabui/collab-ui-ng').default,
   usersSharedModuleName,
   modalModuleName,
   notificationModuleName,

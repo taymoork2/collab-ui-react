@@ -116,10 +116,10 @@ a[href='http://www.amcharts.com/javascript-charts/'] {
 }
 
 .messagebox-backdrop {
-  background-image: url('~collab-ui/images/Spaceballs_BG.jpg');
+  background-image: url('~@collabui/collab-ui/images/Spaceballs_BG.jpg');
 
   .message-box::before {
-    background-image: url('~collab-ui/images/Spaceballs_BG.jpg');
+    background-image: url('~@collabui/collab-ui/images/Spaceballs_BG.jpg');
   }
 }
 

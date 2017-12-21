@@ -7,7 +7,7 @@ export { PhoneButtonLayoutService, IPhoneButton } from './phoneButtonLayout.serv
 
 export default angular
   .module('huron.phone-button-layout', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     require('modules/core/accessibility').default,
     require('modules/core/scripts/services/authinfo'),

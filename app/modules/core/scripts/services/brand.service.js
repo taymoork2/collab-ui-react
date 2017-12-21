@@ -4,7 +4,7 @@
   module.exports = angular.module('core.service.brand', [
     require('angular-cache'),
     require('ng-file-upload'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('modules/core/scripts/services/org.service'),
     require('modules/core/notifications').default,
     require('modules/core/config/urlConfig'),

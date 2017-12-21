@@ -11,7 +11,7 @@ export default angular
   .module('reports.webex.search', [
     notifications,
     require('angular-translate'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('modules/core/analytics'),
     require('modules/core/config/urlConfig'),
   ])
