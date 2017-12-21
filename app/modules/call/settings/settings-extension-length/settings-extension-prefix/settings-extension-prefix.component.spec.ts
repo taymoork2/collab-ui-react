@@ -23,7 +23,6 @@ describe('Component: extensionPrefix', () => {
     this.$scope.onChangeFn = jasmine.createSpy('dismiss');
 
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('1');
-    //this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/1/v1/Users/me').respond(200);
 
     this.initComponent = () => {
       this.compileComponent('ucExtensionPrefixModal', {
@@ -63,7 +62,7 @@ describe('Component: extensionPrefix', () => {
     });
 
     it('should have called customerConfig and test resolve ExtensionLength', function() {
-      spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.resolve({status: 200}));
+      spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.resolve({ status: 200 }));
       spyOn(this.ExtensionLengthService, 'saveExtensionLength').and.returnValue(this.$q.resolve());
       spyOn(this.Notification, 'success');
       this.initComponent();
@@ -77,7 +76,7 @@ describe('Component: extensionPrefix', () => {
     });
 
     it('should use org countryCode if provided and test reject ExtensionLength', function() {
-      spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.resolve({data: {countryCode: 'myCountry'}, status: 200}));
+      spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.resolve({ data: { countryCode: 'myCountry' }, status: 200 }));
       spyOn(this.Notification, 'errorWithTrackingId');
       this.initComponent();
       this.$scope.$apply();
