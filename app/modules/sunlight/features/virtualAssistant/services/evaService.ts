@@ -276,11 +276,10 @@ export class EvaService {
         item.name = item.templateId;
       }
       item.mediaType = service.evaServiceCard.mediaType;
-      // CA-115: indicates that item.status should not be visible until UX defines the value to be set when "In use"
-      // item.status = 'Not in use';
       item.featureType = feature.name;
       item.color = feature.color;
       item.icons = feature.icons;
+      item.templates = [];
       return item;
     });
     return _.sortBy(formattedList, function (item: any) {

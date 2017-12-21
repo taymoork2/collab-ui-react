@@ -13,7 +13,6 @@
     vm.featureId = $stateParams.deleteFeatureId;
     vm.featureName = $stateParams.deleteFeatureName;
     vm.featureType = $stateParams.deleteFeatureType;
-    vm.queueId = $stateParams.deleteQueueId;
     vm.confirmationText = 'careChatTpl.deleteFeatureTextConfirmation';
 
     if (vm.featureType === CvaService.cvaServiceCard.id) {

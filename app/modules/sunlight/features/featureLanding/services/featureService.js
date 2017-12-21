@@ -6,7 +6,7 @@
     .service('CareFeatureList', CareFeatureList);
 
   /* @ngInject */
-  function CareFeatureList(Authinfo, ConfigTemplateService, CvaService) {
+  function CareFeatureList(Authinfo, ConfigTemplateService) {
     var filterConstants = {
       customerSupport: 'customerSupport',
       virtualAssistant: 'virtualAssistant',
@@ -19,7 +19,6 @@
       getTemplate: getTemplate,
       formatTemplates: formatTemplates,
       deleteTemplate: deleteTemplate,
-      deleteVirtualAssistantConfig: deleteVirtualAssistantConfig,
       filterCards: filterCards,
       filterConstants: filterConstants,
     };
@@ -52,10 +51,6 @@
         orgId: Authinfo.getOrgId(),
         templateId: templateId,
       }).$promise;
-    }
-
-    function deleteVirtualAssistantConfig(configId) {
-      return CvaService.delete(configId, Authinfo.getOrgId()).$promise;
     }
 
     function getTemplate(templateId) {
@@ -107,7 +102,6 @@
         tpl.featureType = feature.name;
         tpl.color = feature.color;
         tpl.icons = feature.icons;
-        tpl.templateOrConfig = 'template';
         return tpl;
       });
       return orderByCardName(formattedList);

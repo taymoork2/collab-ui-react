@@ -7725,11 +7725,14 @@
     },
     "featureCard": {
       "spacesInUseText": "Expert Spaces: {{ numOfSpaces }}",
+      "templatesInUseText": "Templates: {{ numOfTemplates }}",
       "unavailableSpacesInUseText": "Usage data unavailable",
-      "popoverMainHeader": "Expert Virtual Assistant Usage",
+      "evaPopoverMainHeader": "Expert Virtual Assistant Usage",
       "popoverSpacesHeader": "Expert Spaces in Cisco Spark: {{ numOfSpaces }}",
       "popoverDefaultSpace": "(Default Space)",
-      "popoverErrorMessage": "Cannot retrieve usage data for this Expert Virtual Assistant. Try again later."
+      "popoverErrorMessage": "Cannot retrieve usage data for this Expert Virtual Assistant. Try again later.",
+      "cvaPopoverMainHeader": "Customer Virtual Assistant Usage",
+      "popoverTemplatesHeader": "Customer Support Templates: {{ numOfTemplates }}"
     },
     "ctValidation": {
       "errorChar250": "Character length cannot be more than 250.",

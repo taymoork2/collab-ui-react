@@ -26,8 +26,13 @@
         </section>
         <footer class="card-footer">
           <div class="embed-code-txt h6 left ellipsis">
+            <div class="usage" ng-if="careFeature.featureType === 'customerVirtualAssistant'">
+              <span class="usage-text">{{careFeaturesCtrl.templatesInUseText(careFeature)}}</span>
+              <button ng-click="$event.stopPropagation()" popover-html="careFeature.htmlPopover" popover-placement="auto right" popover-append-to-body="false" class="icon icon-question-circle"></button>
+            </div>
             <div class="email" ng-if="careFeature.email">{{careFeature.email}}</div>
             <div class="usage" ng-if="careFeature.featureType === 'expertVirtualAssistant'">
+              <span class="usage-text usage-text-space">{{careFeaturesCtrl.templatesInUseText(careFeature)}},</span>
               <span ng-class="careFeature.spaces ? 'usage-text' : 'usage-text usage-warning'">{{careFeaturesCtrl.spacesInUseText(careFeature)}}</span>
               <button ng-click="$event.stopPropagation()" popover-html="careFeature.htmlPopover" popover-placement="auto right" popover-append-to-body="false" class="icon icon-question-circle"></button>
             </div>
