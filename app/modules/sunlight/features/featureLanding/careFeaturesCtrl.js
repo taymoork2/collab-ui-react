@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
 (function () {
   'use strict';
@@ -30,7 +31,9 @@ var _ = require('lodash');
     var featureToBeDeleted = {};
     vm.searchData = searchData;
     vm.deleteCareFeature = deleteCareFeature;
+    vm.deleteCareFeatureKeypress = deleteCareFeatureKeypress;
     vm.openEmbedCodeModal = openEmbedCodeModal;
+    vm.openEmbedCodeModalKeypress = openEmbedCodeModalKeypress;
     vm.filteredListOfFeatures = [];
     vm.pageState = pageStates.loading;
     vm.cardColor = {};
@@ -384,10 +387,32 @@ var _ = require('lodash');
       });
     }
 
+    function deleteCareFeatureKeypress(feature, $event) {
+      switch ($event.which) {
+        case KeyCodes.ENTER:
+        case KeyCodes.SPACE:
+          $event.preventDefault();
+          $event.stopImmediatePropagation();
+          deleteCareFeature(feature, $event);
+          break;
+      }
+    }
+
     function openEmbedCodeModal(feature, $event) {
       $event.preventDefault();
       $event.stopImmediatePropagation();
       CTService.openEmbedCodeModal(feature.templateId, feature.name);
+    }
+
+    function openEmbedCodeModalKeypress(feature, $event) {
+      switch ($event.which) {
+        case KeyCodes.ENTER:
+        case KeyCodes.SPACE:
+          $event.preventDefault();
+          $event.stopImmediatePropagation();
+          openEmbedCodeModal(feature, $event);
+          break;
+      }
     }
 
     function spacesInUseText(feature) {

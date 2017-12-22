@@ -7891,10 +7891,7 @@
         "boxTitle": "Create a Dialogflow agent before you create your {{ featureName }}.",
         "boxDesc": "Build an automated agent in Dialogflow with a natural language dialogue. Your integrated {{ featureName }} uses the built-in dialogue to interact with your customers and escalate a conversation to live agents as needed.",
         "boxRadioOne": "No, I don’t have a preconfigured Dialogflow agent",
-        "boxRadioOneDesc1": "Go to ",
-        "boxRadioDialogflow": "Dialogflow",
-        "boxRadioOneDesc2": " to create an agent. To get started, see the ",
-        "boxRadioDialogflowDoc": "Dialogflow documentation",
+        "boxRadioOneDesc": "Go to <a href=\"https://dialogflow.com\" target=\"_blank\">Dialogflow</a> to create an agent. To get started, see the <a href=\"https://dialogflow.com/docs/getting-started/basics\" target=\"_blank\">Dialogflow documentation</a>",
         "boxRadioTwo": "Yes, I have a preconfigured Dialogflow agent and am ready to proceed",
         "boxRadioTwoDesc": "Click the arrow to continue to integrate your Dialogflow agent with a {{ featureName }}"
       },
