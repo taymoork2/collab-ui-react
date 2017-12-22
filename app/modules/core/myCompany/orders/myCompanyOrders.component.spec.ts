@@ -3,6 +3,7 @@ describe('Component: myCompanyOrders', () => {
     this.initModules('Core');
     this.injectDependencies(
       '$q',
+      'Analytics',
       'Authinfo',
       'Config',
       'DigitalRiverService',
@@ -61,6 +62,7 @@ describe('Component: myCompanyOrders', () => {
     this.getOrderDetailsDefer = this.$q.defer();
     this.getDigitalRiverOrderHistoryUrlDefer = this.$q.defer();
 
+    spyOn(this.Analytics, 'trackEvent');
     spyOn(this.Authinfo, 'getCustomerAdminEmail').and.returnValue('admin@cisco.com');
     spyOn(this.MyCompanyOrdersService, 'getOrderDetails').and.returnValue(this.getOrderDetailsDefer.promise);
     spyOn(this.MyCompanyOrdersService, 'getUserId').and.returnValue(this.$q.resolve('123'));
@@ -122,6 +124,12 @@ describe('Component: myCompanyOrders', () => {
     it('should have a data row and no loading icon', function () {
       expect(this.view).toContainElement('.ui-grid-row');
       expect(this.view).not.toContainElement('.grid-spinner');
+    });
+
+    it('should create metric and log out of DR when viewing invoice', function () {
+      this.controller.viewInvoice(this.controller.orderDetailList[0]);
+      expect(this.Analytics.trackEvent).toHaveBeenCalled();
+      expect(this.DigitalRiverService.logout).toHaveBeenCalled();
     });
 
     // TODO investigate more on unit testing ui-grid sorting

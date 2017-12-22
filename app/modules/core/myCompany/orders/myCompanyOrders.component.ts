@@ -1,3 +1,4 @@
+import { Analytics } from 'modules/core/analytics';
 import { Authinfo } from 'modules/core/scripts/services/authinfo';
 import { Config } from 'modules/core/config/config';
 import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
@@ -26,6 +27,7 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $translate: angular.translate.ITranslateService,
+    private Analytics: Analytics,
     private Authinfo: Authinfo,
     private Config: Config,
     private DigitalRiverService: DigitalRiverService,
@@ -108,8 +110,11 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
     });
   }
 
-  // Log out from Digital River. Called by the template when the user clicks the link.
-  public drLogout(): void {
+  // Called by the template when the user clicks the link.
+  public viewInvoice(row: IOrderDetail): void {
+    this.Analytics.trackEvent(this.Analytics.sections.ONLINE_ORDER.eventNames.VIEW_INVOICE, {
+      orderId: row.externalOrderId,
+    });
     this.DigitalRiverService.logout();
   }
 
