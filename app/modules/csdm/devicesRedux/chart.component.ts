@@ -60,6 +60,7 @@ class Chart implements ng.IComponentController {
     this.updateLegend(transformedData);
     const chartData = {
       type: 'pie',
+      addClassNames: true,
       startDuration: 0,
       titleField: 'name',
       valueField: valueField,
@@ -74,7 +75,7 @@ class Chart implements ng.IComponentController {
       marginRight: 0,
       marginTop: 0,
       autoMargins: false,
-      pullOutRadius: '1%',
+      pullOutRadius: '0%',
       innerRadius: '32%',
       theme: 'light',
       allLabels: [],
