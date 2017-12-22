@@ -20,6 +20,7 @@ var HttpStatus = require('http-status-codes');
       PENDING: 'Pending',
       SUCCESS: 'Success',
       FAILURE: 'Failure',
+      INITIALIZING: 'Initializing',
     };
 
     vm.defaultQueueStatus = vm.status.UNKNOWN;
@@ -27,6 +28,7 @@ var HttpStatus = require('http-status-codes');
     vm.aaOnboardingStatus = vm.status.UNKNOWN;
     vm.appOnboardingStatus = vm.status.UNKNOWN;
     vm.jwtAppOnboardingStatus = vm.status.UNKNOWN;
+    vm.cesOnboardingStatus = vm.status.UNKNOWN;
 
     vm.defaultQueueId = Authinfo.getOrgId();
     vm.careSetupDoneByOrgAdmin = (Authinfo.getOrgId() === Authinfo.getUserOrgId());
@@ -334,6 +336,12 @@ var HttpStatus = require('http-status-codes');
       poller = $interval(processOnboardStatus, pollInterval, pollRetryCount);
       poller.then(processTimeout);
     }
+    function startPollingForAA() {
+      if (!_.isUndefined(poller)) return;
+      vm.errorCount = 0;
+      poller = $interval(setViewModelStateForAAOnboardToCare, pollInterval, pollRetryCount);
+      poller.then(processTimeout);
+    }
 
     function stopPolling() {
       if (!_.isUndefined(poller)) {
@@ -355,7 +363,35 @@ var HttpStatus = require('http-status-codes');
           vm.state = vm.NOT_ONBOARDED;
       }
     }
-
+    function onboardAAToCare() {
+      FeatureToggleService.supports(FeatureToggleService.features.huronAAContextService).then(function (results) {
+        if (results) {
+          AutoAttendantConfigService.cesOnboard().then(function (result) {
+            if (result.status === HttpStatus.NO_CONTENT) {
+              startPollingForAA();
+            } else if (result.status === 226) {
+              Notification.success($translate.instant('sunlightDetails.settings.setUpCareSuccess'));
+              vm.state = vm.ONBOARDED;
+            }
+          })
+            .catch(function (error) {
+              if (error.status === 409) {
+                startPollingForAA();
+              } else {
+                vm.state = vm.NOT_ONBOARDED;
+                Notification.errorWithTrackingId($translate.instant('sunlightDetails.settings.setUpCareFailure'));
+              }
+            });
+        } else {
+          Notification.success($translate.instant('sunlightDetails.settings.setUpCareSuccess'));
+          vm.state = vm.ONBOARDED;
+        }
+      })
+        .catch(function () {
+          Notification.errorWithTrackingId($translate.instant('sunlightDetails.settings.setUpCareFailure'));
+          vm.state = vm.NOT_ONBOARDED;
+        });
+    }
     function processOnboardStatus() {
       var promises = {};
       promises.getQueue = URService.getQueue(vm.defaultQueueId);
@@ -366,10 +402,9 @@ var HttpStatus = require('http-status-codes');
         var onboardingStatus = getOnboardingStatus();
         switch (onboardingStatus) {
           case vm.status.SUCCESS:
-            Notification.success($translate.instant('sunlightDetails.settings.setUpCareSuccess'));
-            vm.state = vm.ONBOARDED;
             SunlightUtilitiesService.removeCareSetupKey();
             stopPolling();
+            onboardAAToCare();
             break;
           case vm.status.FAILURE:
             Notification.errorWithTrackingId(result, $translate.instant('sunlightDetails.settings.setUpCareFailure'));
@@ -381,7 +416,6 @@ var HttpStatus = require('http-status-codes');
         }
       }, function (error) {
         if (error.status !== 404) {
-          Log.debug('Fetching Care setup or queue setup status failed: ', error);
           if (vm.errorCount++ >= pollErrorCount) {
             vm.state = vm.NOT_ONBOARDED;
             Notification.errorWithTrackingId(error, $translate.instant('sunlightDetails.settings.setUpCareFailure'));
@@ -494,7 +528,7 @@ var HttpStatus = require('http-status-codes');
     function setViewModelStateFromCsConfigForAA() {
       if (vm.sunlightOnboardingState === vm.ONBOARDED) {
         AutoAttendantConfigService.getCSConfig().then(function (result) {
-          var csOnboardingStatusForAA = _.get(result, 'data.csOnboardingStatus');
+          var csOnboardingStatusForAA = _.get(result, 'data.csOnboardingStatus', vm.status.UNKNOWN);
           switch (csOnboardingStatusForAA) {
             case vm.status.SUCCESS:
               vm.state = vm.ONBOARDED;
@@ -510,6 +544,41 @@ var HttpStatus = require('http-status-codes');
       } else {
         setVmStateFromSunlightState();
       }
+    }
+
+    function setViewModelStateForAAOnboardToCare() {
+      AutoAttendantConfigService.getCSConfig().then(function (result) {
+        var csOnboardingStatusForAA = _.get(result, 'data.csOnboardingStatus', vm.status.UNKNOWN);
+        switch (csOnboardingStatusForAA) {
+          case vm.status.SUCCESS:
+            vm.state = vm.ONBOARDED;
+            Notification.success($translate.instant('sunlightDetails.settings.setUpCareSuccess'));
+            stopPolling();
+            break;
+          case vm.status.FAILURE:
+            vm.state = vm.NOT_ONBOARDED;
+            Notification.errorWithTrackingId($translate.instant('sunlightDetails.settings.setUpCareFailure'));
+            stopPolling();
+            break;
+          case vm.status.INITIALIZING:
+            vm.state = vm.IN_PROGRESS;
+            break;
+          default:
+            Notification.errorWithTrackingId($translate.instant('sunlightDetails.settings.setUpCareFailure'));
+            vm.state = vm.NOT_ONBOARDED;
+            stopPolling();
+        }
+      })
+        .catch(function (error) {
+          if (error.status !== 404) {
+            Log.debug('Fetching Care setup status failed for AA: ', error);
+            if (vm.errorCount++ >= pollErrorCount) {
+              vm.state = vm.NOT_ONBOARDED;
+              Notification.errorWithTrackingId(error, $translate.instant('sunlightDetails.settings.setUpCareFailure'));
+              stopPolling();
+            }
+          }
+        });
     }
 
     function setViewModelStateForAA(sunlightPromise) {
