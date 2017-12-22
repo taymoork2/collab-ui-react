@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Component: metricsFrame', function () {
+describe('Component: sparkMetricsFrame', function () {
   var $q, $scope, $timeout, controller, $componentCtrl;
   var iframeUrl = 'qlik-load';
   var testData = {
@@ -30,7 +30,7 @@ describe('Component: metricsFrame', function () {
   }
 
   function initController() {
-    controller = $componentCtrl('metricsFrame', { $scope: $scope });
+    controller = $componentCtrl('sparkMetricsFrame', { $scope: $scope });
   }
 
   it('should set the iframeLoaded state to false when send the unfreezeState with false', function () {

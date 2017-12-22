@@ -8,6 +8,7 @@
   /* @ngInject */
   function WebExMetricsCtrl(
     $log,
+    $location,
     $q,
     $rootScope,
     $sce,
@@ -64,6 +65,18 @@
           view: 'System',
           appName: 'system',
         },
+        dashboard: {
+          view: 'Dashboard',
+          appName: 'dashboard_webex_v1',
+        },
+        jms: {
+          view: 'JMS',
+          appName: 'jms_webex_v1',
+        },
+        jmt: {
+          view: 'JMT',
+          appName: 'jmt_webex_v1',
+        },
       },
       states: {
         metrics: {
@@ -91,16 +104,33 @@
           state: 'reports.webex-metrics.classic',
           initialed: true,
         },
+        dashboard: {
+          title: 'reportsPage.webexMetrics.dashboard',
+          state: 'reports.webex-metrics.main({reportType: \'dashboard\'})',
+          initialed: true,
+        },
+        jms: {
+          title: 'reportsPage.webexMetrics.JMS',
+          state: 'reports.webex-metrics.main({reportType: \'JMS\'})',
+          initialed: true,
+        },
+        jmt: {
+          title: 'reportsPage.webexMetrics.JMT',
+          state: 'reports.webex-metrics.main({reportType: \'JMT\'})',
+          initialed: true,
+        },
       },
     };
 
     vm.$state = $state;
     vm.init = init;
+    vm.checkClassic = checkClassic;
     vm.checkStatePermission = checkStatePermission;
     vm.goMetricsInitState = goMetricsInitState;
     vm.loadMetricsReport = loadMetricsReport;
     vm.onStateChangeStart = onStateChangeStart;
     vm.onStateChangeSuccess = onStateChangeSuccess;
+    vm.pushClassicTab = pushClassicTab;
     vm.updateWebexMetrics = updateWebexMetrics;
     vm.updateIframe = updateIframe;
 
@@ -120,7 +150,7 @@
     function bindEvents() {
       hasClassicEnabled = $scope.$on('classicEnabled', function (event, isWebexClassicEnabled) {
         vm.isWebexClassicEnabled = isWebexClassicEnabled;
-        checkClassic(vm.isWebexClassicEnabled);
+        vm.checkClassic(vm.isWebexClassicEnabled);
       });
       $stateChangeStart = $rootScope.$on('$stateChangeStart', onStateChangeStart);
       $stateChangeSuccess = $rootScope.$on('$stateChangeSuccess', onStateChangeSuccess);
@@ -129,7 +159,7 @@
     function checkClassic() {
       FeatureToggleService.webexMetricsGetStatus().then(function (isMetricsOn) {
         if (isMetricsOn && vm.isWebexClassicEnabled) {
-          pushClassicTab();
+          vm.pushClassicTab();
           if (!_.isNull(vm.features) && vm.webexOptions.length === 1) {
             $timeout(goMetricsInitState, 0);
           }
@@ -154,6 +184,15 @@
         isRedirected = true;
       }
       if (!vm.features.isSystemOn && _.isEqual(stateName, vm.webexMetrics.states.system.state)) {
+        isRedirected = true;
+      }
+      if (!vm.features.isSystemOn && _.isEqual(stateName, vm.webexMetrics.states.dashboard.state)) {
+        isRedirected = true;
+      }
+      if (!vm.features.isSystemOn && _.isEqual(stateName, vm.webexMetrics.states.jms.state)) {
+        isRedirected = true;
+      }
+      if (!vm.features.isSystemOn && _.isEqual(stateName, vm.webexMetrics.states.jmt.state)) {
         isRedirected = true;
       }
       if (!vm.features.isMEIOn && _.isEqual(stateName, vm.webexMetrics.states.mei.state)) {
@@ -181,6 +220,16 @@
           $state.reload($state.current.name);
         }
       }
+    }
+
+    function getReportType() {
+      var urlPath = $location.path();
+      urlPath = urlPath.split('/');
+      var reportType = '';
+      if (urlPath.length > 0) {
+        reportType = urlPath[urlPath.length - 1];
+      }
+      return reportType;
     }
 
     function initSiteUrl() {
@@ -231,7 +280,7 @@
 
       var viewType = _.get(reportView, 'view');
       var getWebExReportData = _.get(QlikService, 'getQBSInfo');
-      if (vm.selectEnable) {
+      if (vm.webexMetricsViews === 'metrics') {
         getWebExReportData = _.get(QlikService, 'getProdToBTSQBSInfo');
       }
 
@@ -275,6 +324,7 @@
       vm.isStateReady = true;
       var isSubState = fromState.name.indexOf('reports.webex-metrics.') === 0;
 
+
       $log.log('onStateChangeStart: checkStatePermission -----------');
       if (/*isSubState &&*/_.startsWith(toState.name, vm.webexMetricsState) && checkStatePermission(toState)) {
         event.preventDefault();
@@ -311,6 +361,13 @@
           vm.webexMetricsViews = 'system';
           vm.selectEnable = false;
           vm.updateWebexMetrics();
+          break;
+        case 'reports.webex-metrics.main':
+          vm.selectEnable = false;
+          vm.webexMetricsViews = _.toLower(getReportType());
+          if (vm.webexMetricsViews) {
+            vm.updateWebexMetrics();
+          }
           break;
         case vm.webexMetrics.states.classic.state:
           vm.webexMetricsViews = 'classic';
@@ -362,6 +419,7 @@
         vm.features = features;
         if (features.isSystemOn) {
           vm.metricsOptions.splice(0, 0, vm.webexMetrics.states.system);
+          vm.metricsOptions.push(vm.webexMetrics.states.dashboard, vm.webexMetrics.states.jms, vm.webexMetrics.states.jmt);
         }
         if (features.isMetricsOn && features.hasMetricsSite) {
           vm.metricsOptions.push(vm.webexMetrics.states.metrics, vm.webexMetrics.states.diagnostics);

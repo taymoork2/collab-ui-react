@@ -17,6 +17,12 @@
       sparkPartner: ['basic_webex_v1', 'spark-report-partner'],
       webexMEI: ['mei', 'MEI'],
       webexSystem: ['system_webex_v1', 'webex-report-system'],
+      /*webexDashboard: ['dashboard_webex_v1', 'webex-report-dashboard'],
+      webexJMS: ['jms_webex_v1', 'webex-report-jms'],
+      webexJMT: ['jmt_webex_v1', 'webex-report-jmt'],*/
+      webexDashboard: ['system_webex_v1', 'webex-report-dashboard'],
+      webexJMS: ['system_webex_v1', 'webex-report-jms'],
+      webexJMT: ['system_webex_v1', 'webex-report-jmt'],
     };
     var service = {
       getQBSInfo: getQBSInfo,
@@ -29,7 +35,7 @@
     function getQlikServiceUrl(reportType, viewType, env) {
       var paramType = reportType + viewType;
       var qbsParam = QlikUrlParams[paramType][0];
-      if (_.isUndefined(env)) {
+      if (_.isUndefined(env) || _.isEmpty(env)) {
         return UrlConfig.getQlikServiceUrl(qbsParam);
       } else {
         return UrlConfig.getQlikServiceUrl(env, qbsParam);

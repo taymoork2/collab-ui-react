@@ -43,6 +43,21 @@ describe('Controller: WebEx Metrics Ctrl', function () {
         state: 'reports.webex-metrics.system',
         initialed: true,
       },
+      dashboard: {
+        title: 'reportsPage.webexMetrics.dashboard',
+        state: 'reports.webex-metrics.main({reportType: \'dashboard\'})',
+        initialed: true,
+      },
+      jms: {
+        title: 'reportsPage.webexMetrics.JMS',
+        state: 'reports.webex-metrics.main({reportType: \'JMS\'})',
+        initialed: true,
+      },
+      jmt: {
+        title: 'reportsPage.webexMetrics.JMT',
+        state: 'reports.webex-metrics.main({reportType: \'JMT\'})',
+        initialed: true,
+      },
       classic: {
         title: 'reportsPage.webexMetrics.classic',
         state: 'reports.webex-metrics.classic',
@@ -62,6 +77,7 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     this.initModules('Core', 'core.customer-reports', 'WebExApp');
     this.injectDependencies(
       '$controller',
+      '$location',
       '$q',
       '$sce',
       '$scope',
@@ -103,6 +119,7 @@ describe('Controller: WebEx Metrics Ctrl', function () {
         isWebexClassicEnabled: true,
       };
       this.controller = this.$controller('WebExMetricsCtrl', {
+        $location: this.$location,
         $sce: this.$sce,
         $scope: this.$scope,
         $stateParams: this.$stateParams,
@@ -130,6 +147,9 @@ describe('Controller: WebEx Metrics Ctrl', function () {
   it('should set the metrics tab depends on the rules', function () {
     var testMetricsOptions = [
       testWebexMetrics.states.system,
+      testWebexMetrics.states.dashboard,
+      testWebexMetrics.states.jms,
+      testWebexMetrics.states.jmt,
       testWebexMetrics.states.metrics,
       testWebexMetrics.states.diagnostics,
       testWebexMetrics.states.mei,
@@ -156,11 +176,15 @@ describe('Controller: WebEx Metrics Ctrl', function () {
   it('should check classic when classicEnabled event fired', function () {
     this.$scope.$broadcast('classicEnabled', false);
     expect(this.controller.isWebexClassicEnabled).toBeFalsy();
+    expect(this.FeatureToggleService.webexMetricsGetStatus).toHaveBeenCalled();
+    // this.FeatureToggleService.webexMetricsGetStatus.and.returnValue(this.$q.resolve(false));
   });
 
   it('should check classic and push the tab when classicEnabled event fired with true', function () {
     this.$scope.$broadcast('classicEnabled', true);
     expect(this.controller.isWebexClassicEnabled).toBeTruthy();
+    expect(this.FeatureToggleService.webexMetricsGetStatus).toHaveBeenCalled();
+    // expect(this.controller.pushClassicTab).toHaveBeenCalled();
   });
 
   it('should broadcast the event when updateWebexMetrics called', function () {
@@ -209,6 +233,18 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics.system' }, {}, { name: 'reports.webex-metrics.classic' });
     expect(event.preventDefault).toHaveBeenCalled();
 
+    this.controller.features.isSystemOn = false;
+    this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics.main({reportType: \'dashboard\'})' }, {}, { name: 'reports.webex-metrics.metrics' });
+    expect(event.preventDefault).toHaveBeenCalled();
+
+    this.controller.features.isSystemOn = false;
+    this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics.main({reportType: \'JMS\'})' }, {}, { name: 'reports.webex-metrics.classic' });
+    expect(event.preventDefault).toHaveBeenCalled();
+
+    this.controller.features.isSystemOn = false;
+    this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics.main({reportType: \'JMT\'})' }, {}, { name: 'reports.webex-metrics.classic' });
+    expect(event.preventDefault).toHaveBeenCalled();
+
     this.controller.isWebexClassicEnabled = false;
     this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics.classic' }, {}, { name: 'reports.webex-metrics.system' });
     expect(event.preventDefault).toHaveBeenCalled();
@@ -228,6 +264,30 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     spyOn(this.controller, 'updateWebexMetrics');
     this.controller.onStateChangeSuccess(event, { name: 'reports.webex-metrics.system' });
     expect(this.controller.webexMetricsViews).toBe('system');
+    expect(this.controller.selectEnable).toBeFalsy();
+    expect(this.controller.updateWebexMetrics).toHaveBeenCalled();
+
+    this.$location.path = function () {
+      return 'testDNS/reports/webexMetrics/main/dashboard';
+    };
+    this.controller.onStateChangeSuccess(event, { name: 'reports.webex-metrics.main' });
+    expect(this.controller.webexMetricsViews).toBe('dashboard');
+    expect(this.controller.selectEnable).toBeFalsy();
+    expect(this.controller.updateWebexMetrics).toHaveBeenCalled();
+
+    this.$location.path = function () {
+      return 'testDNS/reports/webexMetrics/main/JMS';
+    };
+    this.controller.onStateChangeSuccess(event, { name: 'reports.webex-metrics.main' });
+    expect(this.controller.webexMetricsViews).toBe('jms');
+    expect(this.controller.selectEnable).toBeFalsy();
+    expect(this.controller.updateWebexMetrics).toHaveBeenCalled();
+
+    this.$location.path = function () {
+      return 'testDNS/reports/webexMetrics/main/JMT';
+    };
+    this.controller.onStateChangeSuccess(event, { name: 'reports.webex-metrics.main' });
+    expect(this.controller.webexMetricsViews).toBe('jmt');
     expect(this.controller.selectEnable).toBeFalsy();
     expect(this.controller.updateWebexMetrics).toHaveBeenCalled();
 

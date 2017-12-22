@@ -2084,6 +2084,17 @@
               },
             },
           })
+          .state('reports.webex-metrics.main', {
+            url: '/main/:reportType',
+            views: {
+              metricsContent: {
+                template: '<metrics-frame></metrics-frame>',
+              },
+            },
+            params: {
+              reportType: null,
+            },
+          })
           .state('reports.webex-metrics.diagnostics', {
             url: '/diagnostics',
             views: {
