@@ -159,7 +159,7 @@ var HttpStatus = require('http-status-codes');
                 startPollingForAA();
               } else {
                 vm.state = vm.NOT_ONBOARDED;
-                Notification.errorWithTrackingId($translate.instant('sunlightDetails.settings.setUpCareFailure'));
+                Notification.errorWithTrackingId($translate.instant('firstTimeWizard.setUpCareFailure'));
               }
             });
         } else {
@@ -169,7 +169,7 @@ var HttpStatus = require('http-status-codes');
         }
       })
         .catch(function () {
-          Notification.errorWithTrackingId($translate.instant('sunlightDetails.settings.setUpCareFailure'));
+          Notification.errorWithTrackingId($translate.instant('firstTimeWizard.setUpCareFailure'));
           vm.state = vm.NOT_ONBOARDED;
         });
     }
