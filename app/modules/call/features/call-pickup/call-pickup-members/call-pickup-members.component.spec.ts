@@ -22,6 +22,7 @@ describe('Component: callPickupMembers', () => {
       'CallPickupGroupService',
       'FeatureMemberService',
       'HuronConfig',
+      'MemberService',
       'Notification',
       'UserNumberService',
     );
@@ -51,6 +52,8 @@ describe('Component: callPickupMembers', () => {
 
     this.areAllLinesInPickupGroupDefer = this.$q.defer();
     spyOn(this.CallPickupGroupService, 'areAllLinesInPickupGroup').and.returnValue(this.areAllLinesInPickupGroupDefer.promise);
+
+    spyOn(this.MemberService, 'getMemberList').and.returnValue(this.$q.resolve(membersList));
 
     spyOn(this.Notification, 'success');
     spyOn(this.Notification, 'error');
