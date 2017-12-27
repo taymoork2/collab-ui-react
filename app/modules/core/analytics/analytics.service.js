@@ -231,6 +231,13 @@
           EVA_DELETE_FAILURE: 'Expert VA deletion failed',
         },
       },
+      ONLINE_ORDER: {
+        name: 'Online Orders',
+        eventNames: {
+          FREEMIUM: 'Online: Downgrade to Freemium',
+          VIEW_INVOICE: 'Online: View Invoice',
+        },
+      },
     };
 
     var service = {

@@ -1,3 +1,4 @@
+import * as analytics from 'modules/core/analytics';
 import { OnlineUpgradeComponent } from './upgradeModal.component';
 import { OnlineUpgradeService } from './upgrade.service';
 import digitalRiverModule from 'modules/online/digitalRiver/index';
@@ -11,6 +12,7 @@ export * from './upgrade.service';
 export default angular
   .module('online.upgrade', [
     require('collab-ui-ng').default,
+    analytics,
     subscriptionUpgradeButtonModule,
     require('angular-resource'),
     require('modules/core/auth/auth'),

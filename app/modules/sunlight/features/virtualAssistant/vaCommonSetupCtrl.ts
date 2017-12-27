@@ -31,6 +31,8 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
   public template;
   public states;
   public userHasAccess = true;
+  public evaAlreadyExisted = false;
+  public retryButtonDisabled = false;
 
   public NameErrorMessages = {
     DUPLICATE_ERROR: 'duplicate_error',
@@ -400,6 +402,10 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
     this.creatingTemplate = false;
     this.saveTemplateErrorOccurred = true;
     this.templateButtonText = this.$translate.instant('common.retry');
+  }
+
+  public displayGenericErrorMessage(): boolean {
+    return this.saveTemplateErrorOccurred && !this.creatingTemplate && !this.evaAlreadyExisted;
   }
 
   /**

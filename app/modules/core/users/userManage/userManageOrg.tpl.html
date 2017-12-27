@@ -102,26 +102,27 @@
       <h4 translate="userManage.org.licenses"></h4>
     </div>
     <div class="columns manage-modal-label sync-status"
-      ng-class="{'medium-3': umoc.isAutoAssignTemplateEnabled(), 'medium-8': !umoc.isAutoAssignTemplateEnabled()}">
+      ng-class="{'medium-3': umoc.hasDefaultAutoAssignTemplate(), 'medium-8': !umoc.hasDefaultAutoAssignTemplate()}">
       <h5 translate="userManage.org.autoAssignLicenses"></h5>
       <span class="manage-modal-detail ds-sync">
         <i class="icon icon-circle icon-circle-manage"
-          ng-class="{'working': umoc.isAutoAssignTemplateEnabled(),
-          'disabled': !umoc.isAutoAssignTemplateEnabled()}">
+          ng-class="{'working': umoc.isDefaultAutoAssignTemplateActivated(),
+          'disabled': !umoc.isDefaultAutoAssignTemplateActivated()}">
         </i>
-        <h6 ng-if="umoc.isAutoAssignTemplateEnabled()" translate="common.keys.activated"></h6>
-        <h6 ng-if="!umoc.isAutoAssignTemplateEnabled()" translate="common.keys.deactivated"></h6>
+        <h6 ng-if="umoc.isDefaultAutoAssignTemplateActivated()" translate="common.keys.activated"></h6>
+        <h6 ng-if="!umoc.isDefaultAutoAssignTemplateActivated()" translate="common.keys.deactivated"></h6>
       </span>
-      <h6 ng-if="!umoc.isAutoAssignTemplateEnabled()"
+      <h6 ng-if="!umoc.hasDefaultAutoAssignTemplate()"
         ng-click="umoc.onNext(umoc.ManageType.AUTO_ASSIGN_TEMPLATE)"
         class="manage-modal-detail manage-modal-detail--link"
         translate="userManage.org.setUpAutoAssignTemplate">
       </h6>
     </div>
     <auto-assign-template-manage-options
-      ng-if="umoc.isAutoAssignTemplateEnabled()"
+      ng-if="umoc.hasDefaultAutoAssignTemplate()"
       auto-assign-templates="umoc.autoAssignTemplates"
-      on-delete="umoc.recvDelete()">
+      on-delete="umoc.recvDelete()"
+      on-activate-toggle="umoc.toggleActivateForDefaultAutoAssignTemplate(isActivated)">
     </auto-assign-template-manage-options>
   </div>
   <hr>
