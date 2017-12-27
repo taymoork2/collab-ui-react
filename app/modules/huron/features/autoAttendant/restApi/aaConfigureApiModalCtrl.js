@@ -399,7 +399,7 @@
         populateBasicAuth(action);
         if (initialPageEnterCount === 0) {
           lastSavedVariableList = action.variableSet;
-          lastSavedDynList = _.get(vm.menuEntry, 'actions[0].url');
+          lastSavedDynList = _.cloneDeep(_.get(vm.menuEntry, 'actions[0].url'));
           lastSaveDynamicValueSet = vm.dynamics;
           lastSavedApiRequest = vm.restApiRequest;
           lastSavedApiResponse = vm.restApiResponse;
