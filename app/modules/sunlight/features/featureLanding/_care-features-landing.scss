@@ -8,7 +8,9 @@
   @extend %content-subheader;
 
   .cs-card article {
-    height: rem-calc(170);
+    section {
+      @include vr-spacing(pb, 1);
+    }
   }
 
   .cs-card article header {
@@ -22,36 +24,67 @@
     color: $gray-light-1;
   }
 
-  .care-badge {
-    @include vr-spacing(pt, 0.25);
-    display: block;
-    float: left;
+  .care-sub-header {
+    display: inline-flex;
+    flex-wrap: wrap;
+
+    .care-badge {
+      @include vr-spacing(pt, 0.5);
+    }
+
+    .care-icon {
+      @include vr-spacing(pt, 0.5);
+      display: inline-flex;
+
+      .people {
+        color: $color-mint-darker;
+      }
+      .cta {
+        color: $color-violet-darker;
+      }
+      .icon {
+        @include vr-spacing(pl, 0.5);
+        display: block;
+        padding-top: rem-calc(3); // vr-spacing isn't specific enough
+      }
+    }
   }
 
-  .care-icon {
-    @include vr-spacing(pt, 0.5);
-    @include vr-spacing(ml, 0.25);
-    display: block;
-    float: left;
+  .warning-sign {
+    @include vr-spacing(ph, 1.5);
+    display: flex;
+    color: $color-yellow-darker;
+    max-width: rem-calc(400);
 
-    .people {
-      color: $color-mint-darker;
-    }
-    .cta {
-      color: $color-violet-darker;
-    }
-    .icon {
-      @include vr-spacing(ml, 0.25);
+    .warning-text{
+      @include vr-spacing(pl, 0.25);
+      font-family: CiscoSans;
+      letter-spacing: 0px;
+      font-size: rem-calc(10);
+      line-height: rem-calc(14);
+      color: $color-yellow-darker;
     }
   }
+
   .cs-card.hoverable {
     article {
       &.hover,
       &:focus {
+        .badge {
+          @include vr-spacing(pb, 0.25);
+        }
+        .warning-text {
+          color: $color-white;
+        }
         .embed-code-txt {
           color: $color-white;
           .email {
             color: $color-white;
+          }
+          .usage {
+            .usage-text {
+              color: $color-white;
+            }
           }
         }
         .card-icons-inline,
@@ -63,23 +96,63 @@
     }
   }
 
+  .card-header {
+    height: rem-calc(110);
+  }
+
   .card-footer {
     width: 100%;
+    height: rem-calc(56);
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
     align-items: flex-end;
 
     @include vr-spacing(ph, 1);
-    @include vr-spacing(pt, 1.5);
-    @include vr-spacing(pb, 0.5);
+    @include vr-spacing(pt, 0);
+    @include vr-spacing(pb, 1);
     @include vr-spacing(pl, 1.5);
 
     .embed-code-txt {
-      @include vr-spacing(pt, 1.5);
       color: $gray-base;
+
       .email {
+        @include vr-spacing(pb, 0.5);
         color: $gray-dark-4;
+        font-family: $brand-font-light;
+        font-size: rem-calc(12);
+        letter-spacing: 0;
+        line-height: rem-calc(16);
+      }
+
+      .usage {
+        display: flex;
+        line-height: rem-calc(16);
+
+        .usage-text {
+          font-family: $brand-font-regular;
+          font-size: rem-calc(12);
+          color: $gray-light-1;
+          letter-spacing: 0;
+        }
+
+        .usage-warning {
+          font-size: rem-calc(10);
+        }
+
+        .icon-question-circle {
+          @include vr-spacing(p, 0);
+          @include vr-spacing(ph, 0.25);
+          background: none;
+          color: $gray-light-1;
+          font-size: rem-calc(15);
+          min-width: 0;
+          padding-bottom: rem-calc(1);
+
+          &:hover {
+            color: $color-violet-light;
+          }
+        }
       }
     }
 
@@ -88,7 +161,6 @@
       color: $gray-light-1;
 
       @include vr-spacing(ml, 0.5);
-      @include vr-spacing(pt, 1.5);
     }
   }
 
@@ -170,6 +242,11 @@ header > p > span.badge {
   @include vr-spacing(pr, 1);
   @include vr-spacing(pb, 2);
   @include vr-spacing(pl, 1);
+
+  .tooltip {
+    @include vr-spacing(ml, -15);
+    pointer-events: none;
+  }
 
   div.feature-card-container {
     // The button options in the body.
@@ -316,6 +393,55 @@ header > p > span.badge {
     .badge {
       border-color: $color-mint-darker;
       color: $color-mint-darker;
+    }
+  }
+}
+
+.popover-content {
+  @include vr-spacing(ph, 0.875);
+  @include vr-spacing(pt, 0.625);
+  @include vr-spacing(pb, 0.25);
+
+  color: $gray-dark-1;
+  line-height: rem-calc(16);
+  white-space: pre-wrap;
+  width: rem-calc(224);
+
+  .feature-card-popover-error {
+    @include vr-spacing(pb, .625);
+    font-size: rem-calc(12);
+    word-break: break-word;
+  }
+
+  .feature-card-popover {
+    word-break: break-word;
+
+    .header,
+    .sub-header {
+      @include vr-spacing(mb, .25);
+      @include vr-spacing(mh, 0);
+
+      font-family: $brand-font-regular;
+      font-size: rem-calc(12);
+    }
+
+    .header {
+      @include vr-spacing(mb, .5);
+    }
+
+    .sub-header {
+      font-family: $brand-font-light;
+    }
+
+    .spaces-list {
+      @include vr-spacing(p, 0);
+      @include vr-spacing(pl, .625);
+      font-family: $brand-font-light;
+      font-size: rem-calc(12);
+
+      li:last-child {
+        @include vr-spacing(pb, 0.5);
+      }
     }
   }
 }

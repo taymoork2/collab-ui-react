@@ -64,9 +64,11 @@ describe('Service: LocationsService', () => {
   });
 
   it('should get a user location', function() {
+    this.$httpBackend.expectGET(/users/).respond(200, { location: locationsList[0] });
     this.LocationsService.getUserLocation(locationsList[0].uuid).then(response => {
       expect(response).toEqual(locationsList[0]);
     });
+    this.$httpBackend.flush();
   });
 
   it('should return all locations if Empty search string ', function () {

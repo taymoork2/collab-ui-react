@@ -151,6 +151,7 @@ describe('Huron Auto Attendant', function () {
 
     it('should delete new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
       // click delete X on the AA card for e2e test AA
+      autoattendant.clearNotifications().then(function () {
       utils.click(testCardClose);
 
       // confirm dialog with e2e AA test name in it is there, then agree to delete
@@ -158,7 +159,7 @@ describe('Huron Auto Attendant', function () {
         utils.click(autoattendant.deleteModalConfirmButton);
         autoattendant.assertDeleteSuccess(deleteUtils.testAAName);
       });
-
+    });
     }, 120000);
   });
 
@@ -917,10 +918,14 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.configureApiURL);
       utils.expectIsDisabled(autoattendant.nextBtn);
       utils.wait(autoattendant.configureApiURL, 60000);
+      utils.sendKeys(autoattendant.configureApiURL, "http://api.openweathermap.org/data/2.5/weather?zip=80202,us&appid=a422c31ba1d69122814ca7a900a85ab5");
+      utils.expectIsDisabled(autoattendant.nextBtn);
+      utils.click(autoattendant.authenticationToggleSwitch);
+      utils.click(autoattendant.authenticationToggleSwitch);
+      utils.expectIsDisplayed(autoattendant.restApiError);
+      utils.clear(autoattendant.configureApiURL);
       utils.sendKeys(autoattendant.configureApiURL, "https://api.openweathermap.org/data/2.5/weather?zip=80202,us&appid=a422c31ba1d69122814ca7a900a85ab5");
       utils.expectIsEnabled(autoattendant.nextBtn);
-      utils.expectIsDisplayed(autoattendant.authenticationToggleSwitch);
-      utils.click(autoattendant.authenticationToggleSwitch);
       utils.expectIsEnabled(autoattendant.usernameForAuthentication );
       utils.expectIsEnabled(autoattendant.passwordForAuthentication);
       utils.expectIsDisabled(autoattendant.nextBtn);

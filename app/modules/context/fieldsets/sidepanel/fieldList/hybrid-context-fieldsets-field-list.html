@@ -10,8 +10,16 @@
   <div class="section-wrapper">
     <div ng-repeat="field in contextFieldsetsSidepanelFieldListCtrl.fields">
       <div class="btn btn--primary btn--expand field-list-item" disabled>
-        <span class="column-one" tooltip-class="context-tooltip" tooltip-trigger="mouseenter" tooltip-placement="bottom"
-              tooltip-animation="true" tooltip="{{field.id}}">{{field.id}}</span>
+        <span class="column-one"
+          tooltip-class="context-tooltip"
+          tooltip-trigger="mouseenter focus"
+          tooltip-placement="bottom"
+          tooltip-animation="true"
+          tooltip="{{field.id}}"
+          aria-label="{{field.id}}"
+          tabindex="0">
+          {{field.id}}
+        </span>
         <span class="column-two">{{field.fieldInfo}}</span>
       </div>
     </div>

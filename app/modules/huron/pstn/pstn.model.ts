@@ -1,11 +1,19 @@
 import { PstnCarrier } from './pstnProviders/pstnCarrier';
 import { Address } from './shared/pstn-address';
 
+
+export interface IOrderData {
+  numbers: string | string[];
+  areaCode?: string;
+  consecutive?: boolean;
+  nxx?: string;
+}
+
 export interface IOrder {
   orderType: string;
-  data: any;
-  reservationId?: string;
-  numberType?: string;
+  data: IOrderData;
+  reservationId?: string; //Will exist based on orderType
+  numberType?: string;    //Will exist based on orderType
 }
 
 export interface IAuthLicense {

@@ -40,7 +40,6 @@ module.exports = {
   atlasHybridCallUserTestTool: 'atlas-hybrid-call-user-test-tool',
   atlasHybridCucmSupport: 'atlas-hybrid-cucm-support',
   atlasHybridImp: 'atlas-hybrid-imp',
-  atlasHybridPrerequisites: 'atlas-hybrid-prerequisites',
   atlasITProPack: 'atlas-it-pro-pack',
   atlasITProPackPurchased: 'atlas-it-pro-pack-purchased',
   atlasJabberInterop: 'atlas-jabber-interop',
@@ -65,9 +64,7 @@ module.exports = {
   atlasReadOnlyAdmin: 'atlas-read-only-admin',
   atlasReportsUpdate: 'atlas-reports-update',
   atlasSendEmailViaBMMP: 'atlas-send-email-via-bmmp',
-  atlasServicesOverviewRefresh: 'atlas-services-overview-refresh',
   atlasSetupSiteUserManagement: 'atlas-setup-site-user-management',
-  atlasSharedMeetingsReports: 'atlas-shared-meetings-reports',
   atlasSipUriDomain: 'atlas-sip-uri-domain',
   atlasSubdomainUpdate: 'atlas-subdomain-update',
   atlasSuppressOnboardingEmail: 'atlas-suppress-onboarding-email',
@@ -225,4 +222,5 @@ module.exports = {
   winProximityDeviceSelection: 'win-proximity-device-selection',
   winTeams: 'win-teams',
   zeroTouchMeeting: 'zero-touch-meeting',
+  hI1635: 'h-i1635', //PSTN Porting
 };

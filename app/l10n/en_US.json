@@ -214,16 +214,24 @@
       "directorySynchronization": "Directory Synchronization",
       "directorySynchronizationEnableLabel": "Enable Directory Synchronization",
       "directorySynchronizationDisableLabel": "Disable Directory Synchronization",
-      "enabled": "Enabled",
-      "disabled": "Disabled",
       "licenses": "Licenses",
       "autoAssignLicenses": "Auto-Assign Licenses",
       "setUpAutoAssignTemplate": "Set up Auto-Assign Template",
       "modifyUsers": "Modify Users",
       "moreOptions": {
         "modifyAutoAssign": "Modify Auto-Assign Template",
+        "activateAutoAssign": "Activate Auto-Assign",
         "deactivateAutoAssign": "Deactivate Auto-Assign",
         "deleteAutoAssign": "Delete Auto-Assign Template"
+      },
+      "activateAutoAssign": {
+        "activateSuccess": "You've activated the Auto-Assign License Template",
+        "activateError": "Templated failed to activate"
+      },
+      "deactivateAutoAssign": {
+        "description": "Licenses won't be assigned to new users automatically. Existing users' licenses won't be affected. Do you want to continue?",
+        "deactivateSuccess": "You've deactivated the Auto-Assign License Template",
+        "deactivateError": "Template failed to deactivate"
       },
       "deleteAutoAssignModal": {
         "title": "Delete Auto-Assign Template",
@@ -455,6 +463,9 @@
       "other": "not entitled, status: {{status}}"
     },
     "enableCareInformationText": "Select Message to enable Care."
+  },
+  "onboardSummaryForAutoAssignModal": {
+    "title": "Assign Licenses Automatically"
   },
   "usersPreview": {
     "groupPreview": "Group:",
@@ -1204,11 +1215,8 @@
     "externally": "externally",
     "reportingUrl": "Reporting URL:",
     "help": "Help",
-    "faqs": "FAQs",
     "helpUrl": "Help URL:",
     "sendFeedback": "Cisco Feedback",
-    "sso": "SSO",
-    "roles": "Roles",
     "readOnlyHeader": "Read-Only",
     "readOnlyAccessNotEnabled": "Help Desk Read-Only access is not enabled. You can change this in your account settings",
     "downloadLogFailed": "Failed to download log",
@@ -1541,6 +1549,7 @@
     "hideAllAdminUsers": "Hide administrators",
     "history": "History",
     "id": "ID",
+    "ifErrorRemains": "If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation.",
     "incorrectFormat": "Incorrect format",
     "info": "Info",
     "invalidEmail": "This is not a valid Email Address.",
@@ -1553,12 +1562,17 @@
     "invalidUrl": "This is not a valid URL.",
     "invalidZipCode": "Incorrect Zip Code",
     "ipAddress": "IP Address",
+    "keys": {
+      "activated": "Activated",
+      "deactivated": "Deactivated"
+    },
     "language": "Language",
     "lastName": "Last Name",
     "learnMore": "Learn More",
     "leave": "Leave",
     "memberCount": "{{count}} Members",
     "members": "Members",
+    "message": "Message",
     "metrics": "Metrics",
     "modal": "Modal",
     "modify": "Modify",
@@ -2252,7 +2266,7 @@
       "modalText2": "Select the type of information that you want included in the report:",
       "modalNote": "Note: The more users included, the longer the report takes to generate.",
       "modalCTA": "Export to CSV",
-      "guesstimate": "Selection estimated to {{minutes}}min {{seconds}}s",
+      "noUsersFound": "No users found. Please wait a few minutes and then try again.",
       "userNotFound": "Not found",
       "readingUserStatuses": "Reading user statuses…",
       "readingConnectors": "Reading cluster assignments…",
@@ -2632,6 +2646,11 @@
       "deregisterConfirmRemoval": "Confirm Removal",
       "deregisterConfirmationText": "You are about to deregister <strong>{{clusterName}}</strong> from Cisco Collaboration Cloud.",
       "deregisterConfirmPopup": "{{clusterName}} was removed successfully from Cisco Collaboration Cloud."
+    },
+    "office365ReAuthorizationComponent": {
+      "title": "Authorization",
+      "label": "Re-Authorize Office 365",
+      "description": "If you removed Cisco Spark Control Hub authorization from your Office 365 environment, click Authorize to reset the read and write permissions."
     },
     "deactivateServiceComponent": {
       "deactivateServiceLabel": "Deactivate {{serviceName}}",
@@ -3343,6 +3362,7 @@
     "office365SetupModal": {
       "title": "Hybrid Calendar setup",
       "subtitle": "Office 365 setup",
+      "subtitleReAuth": "Office 365 re-authorization",
       "line1": "The Hybrid Calendar Service needs permission to access Office 365 on behalf of your users.",
       "line2": "Click <strong>Authorize</strong> to sign in to Microsoft and accept permissions for the service.",
       "line3": "After you accept, your browser should redirect you back here. If you’re not redirected shortly, return to <a target=\"_blank\" href=\"https://admin.ciscospark.com\">admin.ciscospark.com</a> and start this process again."
@@ -4518,7 +4538,10 @@
     "restApiCustomVar":"Custom Variable",
     "customVariablesAssignmentHelpText":"Select Custom Variables to assign the value of the Responses from the REST API to use in the call flow.",
     "Variables":"Variables",
-    "value":"Value"
+    "value":"Value",
+    "restApiUrlHelperText":"Enter the secure URL of the REST API to invoke. Click the 'Add Dynamic text' to insert variables in the URL.",
+    "completeHttpsError":"Enter the complete URL including the protocol, HTTPS.",
+    "secureHttpsError":"Enter only secure HTTPS URLs."
   },
   "callPark": {
     "code": "CP",
@@ -4996,7 +5019,14 @@
     "privatePstnTrunk": "Private PSTN Trunk",
     "setupService": "Set Up PSTN Service",
     "setupNumbers": "Set Up PSTN Numbers",
+    "orderSummary": "Order Summary",
     "addPhoneNumbers": "Add Phone Numbers",
+    "prPortParagraph": "The authorized signatory from the company will receive an email asking for a Letter of Agency to be submitted.  The information in this letter must match the information the old carrier has.  For example, the address listed in the letter should be the billing address on record with the losing carrier.",
+    "prPortDate": "The date requested for the numbers to be ported is {{date}}",
+    "prPortCarrier": "An email will be sent with the firm order commitment (FOC) date that the numbers will be ported.  Contact {{carrier}} if you need to negotiate a different port date.",
+    "prPortNumbers": "The following {{count}} numbers will be ported from the losing carrier:",
+    "prDIDNumbers": "The following {{count}} numbers will be added:",
+    "prTollNumbers": "The following {{count}} toll free will be added:",
     "placeOrder": "Place Order",
     "orderBlock": "Order Block Numbers",
     "newNumbersTab": "Standard Numbers",
@@ -5568,6 +5598,7 @@
     "domains": "Domains",
     "quantityWithValue": "Qty: {{quantity}}",
     "anotherPartner": "(Another Partner)",
+    "customerOrdered": "(Customer Provisioned)",
     "filters": {
       "placeholder": "Select a filter...",
       "filter": "Filter",
@@ -7486,8 +7517,8 @@
   "careChatTpl": {
     "editAction": "Edit",
     "deleteFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?",
-    "deleteVaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?<br>Deleting the Customer Virtual Assistant removes it from all Customer Support Templates. Customers can no longer interact with the virtual assistant.",
-    "deleteEvaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?<br>You can no longer escalate chat requests to Cisco Spark expert spaces.",
+    "deleteVaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}? Deleting the Customer Virtual Assistant removes it from all Customer Support Templates. Customers can no longer interact with the virtual assistant.",
+    "deleteEvaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}? You can no longer escalate chat requests to Cisco Spark expert spaces.",
     "createSuccessText": "You have successfully created {{ featureName }}.",
     "createTemplateFailureText": "Failed to create Care template.",
     "editSuccessText": "Changes to {{ featureName }} are successfully saved.",
@@ -7524,6 +7555,7 @@
     "chatEscalatioAgentTooltip": "The routing method configured <br> on the Care Settings page <br> determines how the escalation <br> selects agents.",
     "chatEscalatioExpertTooltip": "The Expert Virtual Assistant <br> manages escalation to Cisco <br> Spark. Configure the assistant <br> from the Care Features page.",
     "chatEscalatioAgentPlusExpertTooltip": "An accepted chat request is <br> removed from all queues and cannot be escalated again. <br> <br> The routing method configured <br> on the Care Settings page <br> determines agent selection. The Expert Virtual Assistant chooses one expert space to escalate to in Cisco Spark.",
+    "learnMoreLink": "Learn more",
     "evaTemplateHeader": "Choose who to escalate requests from this chat to:",
     "ctVirtualAssistantPageTitle": "Customer Virtual Assistant",
     "overview": "Template Overview",
@@ -7648,6 +7680,7 @@
     "displayText": "Display Text",
     "orgSettingInfo": "You can change the organization logo on the Settings page.",
     "evaSettingInfo": "To enable escalation to experts, create an Expert Virtual Assistant from the Care Features page.",
+    "evaEnabledSettingInfo": "about configuring chat escalation behavior.",
     "agentSettingInfo": "You cannot change the default agent avatar seen in the Preview.",
     "agentMsg": "Hi, I need help with the MFI key.",
     "agentMsgTime": "10:10 AM",
@@ -7679,6 +7712,14 @@
       "callback": "Customer Support Template",
       "chatPlusCallback": "Customer Support Template",
       "virtualAssistant": "Virtual Assistant"
+    },
+    "featureCard": {
+      "spacesInUseText": "Expert Spaces: {{ numOfSpaces }}",
+      "unavailableSpacesInUseText": "Usage data unavailable",
+      "popoverMainHeader": "Expert Virtual Assistant Usage",
+      "popoverSpacesHeader": "Expert Spaces in Cisco Spark: {{ numOfSpaces }}",
+      "popoverDefaultSpace": "(Default Space)",
+      "popoverErrorMessage": "Cannot retrieve usage data for this Expert Virtual Assistant. Try again later."
     },
     "ctValidation": {
       "errorChar250": "Character length cannot be more than 250.",
@@ -7802,7 +7843,8 @@
           "code": "eva",
           "type": "Expert <br> Virtual Assistant",
           "selectDesc": "Create a virtual assistant who connects subject matter experts in Cisco Spark spaces to customers with chat requests.",
-          "disabledTooltip": "You can only have one Expert Virtual Assistant for your organization. To change the settings of your existing Expert Virtual Assistant, edit it from the Features page."
+          "disabledTooltip": "You can only have one Expert Virtual Assistant for your organization. To change the settings of your existing Expert Virtual Assistant, edit it from the Features page.",
+          "nonAdminEditDeleteWarning": "You are not authorized to edit or delete this virtual assistant. Contact the owner, {{owner}}, to request one of these actions."
         }
       },
       "createTitle": "Create {{ featureName }}",
@@ -7811,7 +7853,7 @@
       "configOverview": {
         "title": "{{ featureName }} Configuration Requirements",
         "desc": "Review the prerequisites for creating a {{ featureName }}",
-        "boxTitle": "Create an Dialogflow agent before you create your {{ featureName }}.",
+        "boxTitle": "Create a Dialogflow agent before you create your {{ featureName }}.",
         "boxDesc": "Build an automated agent in Dialogflow with a natural language dialogue. Your integrated {{ featureName }} uses the built-in dialogue to interact with your customers and escalate a conversation to live agents as needed.",
         "boxRadioOne": "No, I don’t have a preconfigured Dialogflow agent",
         "boxRadioOneDesc1": "Go to ",
@@ -7912,7 +7954,7 @@
         "boxStepOne": "Create more expert spaces in Cisco Spark.",
         "boxStepOneTooltip": "Give each space a unique topic name that helps the {{ featureName }} match keywords from a chat to the space.",
         "boxStepTwo": "Add the Expert Virtual Assistant to the expert spaces.",
-        "boxStepTwoTooltip": "After you configure the {{ featureName }}, use the @sparkbot.io email you specified to the add the assistant to your expert spaces.",
+        "boxStepTwoTooltip": "After you configure the {{ featureName }}, use the @sparkbot.io email you specified to add the assistant to your expert spaces.",
         "boxStepThree": "Add users to the expert spaces you create.",
         "boxStepThreeTooltip": "Add appropriate users who can answer customer questions about the expert space topics.",
         "boxStepFour": "Configure chat escalation to Cisco Spark in your Customer Support Templates.",
@@ -7925,6 +7967,7 @@
         "getConfigFailureText": "Failed to load the {{ featureName }}.",
         "deleteConfigFailureText": "Failed to delete the {{ featureName }}.",
         "createConfigFailureText": "Failed to save {{ featureName }}.",
+        "createEvaFailureText": "Cannot save Expert Virtual Assistant. You can have only one Expert Virtual Assistant per organization. You can edit the existing Expert Virtual Assistant from the Features page.",
         "createSpecificFailureText": "Failed to save {{ featureName }} {{ inputItem }}.",
         "updateConfigFailureText": "Failed to save {{ featureName }}."
       }
@@ -8312,7 +8355,9 @@
       "desktopApps": "Desktop apps",
       "webApp": "Web app",
       "mobileApps": "Mobile apps",
-      "bots": "Bots"
+      "bots": "Bots",
+      "disableWhiteboardsTitle": "Disable Whiteboard",
+      "disableWhiteboardsDescription": "Restricting file share controls will also disable whiteboards"
     },
     "support": {
       "title": "Support",
@@ -9277,7 +9322,8 @@
     "line2": "Refer to <a href=\"http://www.cisco.com/go/hybrid-services-calendar\" target=\"_blank\">documentation</a> if you need help enabling users."
   },
   "readOnlyModal": {
-    "banner": "You are in read-only mode"
+    "title": "Read-only Mode",
+    "message": "You are viewing the application in Read-only mode. No changes will be accepted."
   },
   "readOnlyMessages": {
     "notAllowed": "Not allowed in read-only mode. Operation not executed."

@@ -9,7 +9,7 @@
     .factory('OverviewRoomSystemsCard', OverviewRoomSystemsCard);
 
   /* @ngInject */
-  function OverviewRoomSystemsCard(Authinfo, FeatureToggleService, OverviewHelper) {
+  function OverviewRoomSystemsCard(Authinfo, OverviewHelper) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -24,7 +24,7 @@
         card.notEnabledFooter = 'overview.contactPartner';
         card.currentTitle = 'overview.cards.roomSystem.currentTitle';
         card.previousTitle = 'overview.cards.roomSystem.previousTitle';
-        card.settingsUrl = '#/devices';
+        card.settingsUrl = '/devices';
         card.helper = OverviewHelper;
         card.showHealth = true;
         card.isCSB = Authinfo.isCSB();
@@ -64,22 +64,11 @@
           });
         }
 
-        function fetchToggleAndSetLink() {
-          FeatureToggleService.csdmDevRedGetStatus().then(function (toggle) {
-            if (toggle) {
-              card.settingsUrl = '#/devices-redux';
-            }
-          });
-        }
-
-        //list: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-service/blob/master/common/src/main/java/com/cisco/wx2/atlas/common/bean/order/OfferCode.java
-
         card.orgEventHandler = function (data) {
           if (data.success && data.isTestOrg && card.allLicenses && card.allLicenses.length === 0) {
             card.enabled = true; //If we are a test org and allLicenses is empty, enable the card.
           }
         };
-        fetchToggleAndSetLink();
         return card;
       },
     };

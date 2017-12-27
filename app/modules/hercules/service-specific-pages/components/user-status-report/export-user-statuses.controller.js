@@ -1,9 +1,7 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Hercules')
-    .controller('ExportUserStatusesController', ExportUserStatusesController);
+  module.exports = ExportUserStatusesController;
 
   /* @ngInject */
   function ExportUserStatusesController($scope, $q, $translate, $modalInstance, userStatusSummary, Authinfo, UserDetails, USSService, HybridServicesClusterService, ExcelService, ResourceGroupService) {

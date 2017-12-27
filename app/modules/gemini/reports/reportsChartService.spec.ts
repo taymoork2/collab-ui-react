@@ -124,7 +124,7 @@ describe('Service: ReportsChartService', () => {
     this.$httpBackend.expectPOST(url).respond(200, this.getkPIData);
 
     this.ReportsChartService.getkPIData().then((res) => {
-      expect(res.chart.length).toBe(2);
+      expect(res.length).toBe(2);
     });
     this.$httpBackend.flush();
   });

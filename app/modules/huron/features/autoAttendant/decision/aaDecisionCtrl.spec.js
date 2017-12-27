@@ -254,7 +254,7 @@ describe('Controller: AADecisionCtrl', function () {
       c.update('callerReturned');
 
       expect(c.actionEntry.if.rightCondition).toEqual(b.buffer.value);
-      expect(c.isWarn).toEqual(true);
+      expect(c.isWarn).toEqual(false);
     });
 
     it('should returnCallerToggle to false when ces onboarding is initializing', function () {

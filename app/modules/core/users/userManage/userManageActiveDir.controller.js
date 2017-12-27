@@ -7,9 +7,10 @@ require('./_user-manage.scss');
     .controller('UserManageActiveDirController', UserManageActiveDirController);
 
   /* @ngInject */
-  function UserManageActiveDirController(FeatureToggleService, OnboardService, $state, $timeout, UserCsvService) {
+  function UserManageActiveDirController(Authinfo, FeatureToggleService, OnboardService, $state, $timeout, UserCsvService) {
     var vm = this;
 
+    vm.isUserAdmin = isUserAdmin;
     vm.onInit = onInit;
     vm.onNext = onNext;
     vm.onTurnOffDS = onTurnOffDS;
@@ -26,6 +27,10 @@ require('./_user-manage.scss');
       FeatureToggleService.atlasEmailSuppressGetStatus().then(function (toggle) {
         isAtlasEmailSuppressToggle = toggle;
       });
+    }
+
+    function isUserAdmin() {
+      return Authinfo.isUserAdminUser();
     }
 
     function onTurnOffDS() {

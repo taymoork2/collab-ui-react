@@ -1,23 +1,12 @@
-import { FeatureToggleService } from 'modules/core/featureToggle';
 import { CloudConnectorService } from 'modules/hercules/services/calendar-cloud-connector.service';
 import { IToolkitModalService } from 'modules/core/modal/index';
 
 class HybridCalendarGoogleInactiveCardController implements ng.IComponentController {
-  public showPrerequisitesButton = false;
-
   /* @ngInject */
   constructor(
     private $modal: IToolkitModalService,
     private CloudConnectorService: CloudConnectorService,
-    private FeatureToggleService: FeatureToggleService,
   ) {}
-
-  public $onInit(): void {
-    this.FeatureToggleService.hasFeatureToggleOrIsTestOrg(this.FeatureToggleService.features.atlasHybridPrerequisites)
-      .then(support => {
-        this.showPrerequisitesButton = support;
-      });
-  }
 
   public openPrerequisites(): void {
     this.$modal.open({
@@ -42,7 +31,7 @@ export class HybridCalendarGoogleInactiveCardComponent implements ng.IComponentO
         <p translate="servicesOverview.cards.hybridCalendar.description"></p>
       </div>
       <div class="inactive-card_footer">
-        <p ng-if="$ctrl.showPrerequisitesButton"><button class="btn btn--link" ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></button></p>
+        <p><button class="btn btn--link" ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></button></p>
         <p><button class="btn btn--primary" ng-click="$ctrl.openSetUp()" translate="servicesOverview.genericButtons.setup"></button></p>
       </div>
     </article>

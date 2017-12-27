@@ -58,6 +58,7 @@
       getTrialMeetingServices: getTrialMeetingServices,
       canAdminTrial: canAdminTrial,
       isServiceManagedByCurrentPartner: isServiceManagedByCurrentPartner,
+      isServiceManagedByCustomer: isServiceManagedByCustomer,
       updateOrgForCustomerView: updateOrgForCustomerView,
       helpers: helpers,
     };
@@ -458,7 +459,7 @@
       dataObj.unmodifiedLicenses = _.cloneDeep(customer.licenses);
       dataObj.licenseList = customer.licenses;
 
-      var premiumLicenses = _.filter(customer.licenses, function (license) {
+      var premiumLicenses = _.filter(dataObj.licenseList, function (license) {
         return license.offerName === Config.offerCodes.MGMTPRO;
       });
       dataObj.isPremium = _.some(premiumLicenses);
@@ -479,19 +480,19 @@
       };
 
       // havent figured out what this is doing yet...
-      dataObj.sparkConferencing = initializeService(customer.licenses, Config.offerCodes.CF, serviceEntry);
-      dataObj.communications = initializeService(customer.licenses, Config.offerCodes.CO, serviceEntry);
-      dataObj.webexEventCenter = initializeService(customer.licenses, Config.offerCodes.EC, serviceEntry);
-      dataObj.webexEEConferencing = initializeService(customer.licenses, Config.offerCodes.EE, serviceEntry);
-      dataObj.webexMeetingCenter = initializeService(customer.licenses, Config.offerCodes.MC, serviceEntry);
-      dataObj.messaging = initializeService(customer.licenses, Config.offerCodes.MS, serviceEntry);
-      dataObj.webexSupportCenter = initializeService(customer.licenses, Config.offerCodes.SC, serviceEntry);
-      dataObj.roomSystems = initializeService(customer.licenses, Config.offerCodes.SD, serviceEntry);
-      dataObj.sparkBoard = initializeService(customer.licenses, Config.offerCodes.SB, serviceEntry);
-      dataObj.webexTrainingCenter = initializeService(customer.licenses, Config.offerCodes.TC, serviceEntry);
-      dataObj.webexCMR = initializeService(customer.licenses, Config.offerCodes.CMR, serviceEntry);
-      dataObj.care = initializeService(customer.licenses, Config.offerCodes.CDC, serviceEntry);
-      dataObj.advanceCare = initializeService(customer.licenses, Config.offerCodes.CVC, serviceEntry);
+      dataObj.sparkConferencing = initializeService(dataObj.licenseList, Config.offerCodes.CF, serviceEntry);
+      dataObj.communications = initializeService(dataObj.licenseList, Config.offerCodes.CO, serviceEntry);
+      dataObj.webexEventCenter = initializeService(dataObj.licenseList, Config.offerCodes.EC, serviceEntry);
+      dataObj.webexEEConferencing = initializeService(dataObj.licenseList, Config.offerCodes.EE, serviceEntry);
+      dataObj.webexMeetingCenter = initializeService(dataObj.licenseList, Config.offerCodes.MC, serviceEntry);
+      dataObj.messaging = initializeService(dataObj.licenseList, Config.offerCodes.MS, serviceEntry);
+      dataObj.webexSupportCenter = initializeService(dataObj.licenseList, Config.offerCodes.SC, serviceEntry);
+      dataObj.roomSystems = initializeService(dataObj.licenseList, Config.offerCodes.SD, serviceEntry);
+      dataObj.sparkBoard = initializeService(dataObj.licenseList, Config.offerCodes.SB, serviceEntry);
+      dataObj.webexTrainingCenter = initializeService(dataObj.licenseList, Config.offerCodes.TC, serviceEntry);
+      dataObj.webexCMR = initializeService(dataObj.licenseList, Config.offerCodes.CMR, serviceEntry);
+      dataObj.care = initializeService(dataObj.licenseList, Config.offerCodes.CDC, serviceEntry);
+      dataObj.advanceCare = initializeService(dataObj.licenseList, Config.offerCodes.CVC, serviceEntry);
 
       // 12/17/2015 - Timothy Trinh
       // setting conferencing to sparkConferencing for now to preserve how
@@ -520,6 +521,7 @@
       };
       var servicesManagedByCurrentPartner = [];
       var servicesManagedByAnotherPartner = [];
+      var servicesManagedByCustomer = [];
 
       _.forEach(servicesToProcess, function (service) {
         var serviceToAdd = service;
@@ -529,7 +531,9 @@
 
         var careServiceEnabledPropertyName = careServices[service];
         if (!careServices[service] || _.get(options, careServiceEnabledPropertyName, true)) {
-          if (isServiceManagedByCurrentPartner(data[service])) {
+          if (isServiceManagedByCustomer(data[service])) {
+            servicesManagedByCustomer.push(serviceToAdd);
+          } else if (isServiceManagedByCurrentPartner(data[service])) {
             servicesManagedByCurrentPartner.push(serviceToAdd);
           } else {
             servicesManagedByAnotherPartner.push(serviceToAdd);
@@ -540,21 +544,20 @@
       return {
         servicesManagedByCurrentPartner: servicesManagedByCurrentPartner,
         servicesManagedByAnotherPartner: servicesManagedByAnotherPartner,
+        servicesManagedByCustomer: servicesManagedByCustomer,
       };
     }
 
     function isServiceManagedByCurrentPartner(serviceObj) {
-      var currentPartnerId = Authinfo.getPrimaryEmail();
-      var currentPartnerOrgId = Authinfo.getOrgId();
+      return (serviceObj.partnerOrgId === Authinfo.getOrgId()) ||
+        (serviceObj.partnerEmail === Authinfo.getPrimaryEmail()) ||
+        _isServiceNotLicensed(serviceObj);
+    }
 
-      var isInCurrentPartnerOrg = serviceObj.partnerOrgId === currentPartnerOrgId;
-      var isCurrentPartnerId = serviceObj.partnerEmail === currentPartnerId;
-      var isNotLicensed = _isServiceNotLicensed(serviceObj);
-      if (isInCurrentPartnerOrg || isCurrentPartnerId || isNotLicensed) {
-        return true;
-      }
-
-      return false;
+    function isServiceManagedByCustomer(serviceObj) {
+      return _.isUndefined(serviceObj.partnerOrgId) &&
+      _.isUndefined(serviceObj.partnerEmail) &&
+      !isLicenseFree(serviceObj);
     }
 
     // Services that are not licensed will not have the usual properties associated with a license. The volume property is a

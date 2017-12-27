@@ -37,18 +37,6 @@
     @include vr-spacing(mt, 2.6875);
   }
 
-  .manage-modal-dots {
-    @include vr-spacing(mt, 2.25);
-
-    .dropdown-menu {
-      right: auto;
-
-      .menu-item {
-        padding-bottom: 0;
-      }
-    }
-  }
-
   .manage-modal-detail {
     @include vr-spacing(mt, 0.75);
 
@@ -59,7 +47,7 @@
 
   .modify-users-section {
     @include vr-spacing(mt, 1.5);
-    
+
     height: 13rem;
     text-align: center;
     background-color: $gray-light-4;

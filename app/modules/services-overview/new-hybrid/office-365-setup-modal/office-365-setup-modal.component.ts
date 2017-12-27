@@ -4,8 +4,6 @@ import { Notification } from 'modules/core/notifications';
 import './office-365-setup-modal.scss';
 
 class Office365SetupModalController implements ng.IComponentController {
-  public close: Function;
-  public dismiss: Function;
   public redirecting = false;
 
   /* @ngInject */
@@ -34,5 +32,6 @@ export class Office365SetupModalComponent implements ng.IComponentOptions {
   public bindings = {
     close: '&',
     dismiss: '&',
+    firstTime: '<',
   };
 }

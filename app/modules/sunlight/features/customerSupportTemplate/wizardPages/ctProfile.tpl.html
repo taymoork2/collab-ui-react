@@ -1,122 +1,126 @@
 <div>
-    <div class="ct-title">
-      <span class="h3">{{careSetupAssistant.getLocalisedText('careChatTpl.profile')}}</span>
-    </div>
-    <div class="h5 ct-title-desc" translate="careChatTpl.profileDesc"></div>
+  <div class="ct-title">
+    <span class="h3">{{careSetupAssistant.getLocalisedText('careChatTpl.profile')}}</span>
+  </div>
+  <div class="h5 ct-title-desc" translate="careChatTpl.profileDesc"></div>
   <div class="cs-card-container ct-profile ct-sa-content">
-      <cs-card-layout block-view="true" class="ct-card-center">
-        <cs-card class="ct-card">
-          <div class="preview-agent-bot h4 ct-card-info">
-            <span class="h4 ct-card-info" translate="careChatTpl.preview"></span>
-            <span class="agent-bot" ng-if="careSetupAssistant.isAgentProfileWithCVA()">
-              <i class="bot icon-bot-four icon-lg"
-                 ng-class="{active: careSetupAssistant.selectedAvater === 'bot'}"
-                 ng-click="careSetupAssistant.toggleBotAgentSelection('bot')"
-                 tooltip="{{::careSetupAssistant.brandingPageTooltipText('bot')}}"
-                 tooltip-trigger="mouseenter"
-                 tooltip-placement="top"
-                 tooltip-animation="false"></i>
-              <i class="agent icon-user-chat icon-lg"
-                 ng-class="{active: careSetupAssistant.selectedAvater === 'agent'}"
-                 ng-click="careSetupAssistant.toggleBotAgentSelection('agent')"
-                 tooltip="{{::careSetupAssistant.brandingPageTooltipText('agent')}}"
-                 tooltip-trigger="mouseenter"
-                 tooltip-placement="top"
-                 tooltip-animation="false"></i>
-            </span>
-          </div>
-          <article class="profile-preview ct-article">
-            <header>
-              <div class="img" ng-switch = "careSetupAssistant.displaySelectedProfileAttribute()">
-                <div ng-switch-when="org">
-                  <i class="icon icon-circle-computer-blank icon-3x" ng-hide="careSetupAssistant.logoUploaded"></i>
-                  <img class="uploded-org-img" ngf-size="{{careSetupAssistant.imgDetails.imageDim}}" ng-src="{{careSetupAssistant.logoFile}}"
-                       ng-show="careSetupAssistant.logoUploaded"/>
-                </div>
-
-                <div class="agent" ng-switch-when="agent">
-                  <i class="icon icon-user-chat icon-2x"></i>
-                </div>
-
-                <div ng-switch-default>
-                  <img ng-if="careSetupAssistant.selectedVA.icon" class="uploded-org-img"
-                    ng-src="{{careSetupAssistant.selectedVA.icon}}"/>
-                  <div class="bot" ng-if="!careSetupAssistant.selectedVA.icon">
-                    <i class="icon icon-bot-four icon-2x"></i>
-                  </div>
-                </div>
-
+    <cs-card-layout block-view="true" class="ct-card-center">
+      <cs-card class="ct-card">
+        <div class="preview-agent-bot h4 ct-card-info">
+          <span class="h4 ct-card-info" translate="careChatTpl.preview"></span>
+          <span class="agent-bot" ng-if="careSetupAssistant.isAgentProfileWithCVA()">
+            <i class="bot icon-bot-four icon-lg"
+              ng-class="{active: careSetupAssistant.selectedAvater === 'bot'}"
+              ng-click="careSetupAssistant.toggleBotAgentSelection('bot')"
+              tooltip="{{::careSetupAssistant.brandingPageTooltipText('bot')}}"
+              tooltip-trigger="mouseenter focus"
+              tooltip-placement="top"
+              tooltip-animation="false"
+              aria-label="{{::careSetupAssistant.brandingPageTooltipText('bot')}}"
+              tabindex="0"></i>
+            <i class="agent icon-user-chat icon-lg"
+              ng-class="{active: careSetupAssistant.selectedAvater === 'agent'}"
+              ng-click="careSetupAssistant.toggleBotAgentSelection('agent')"
+              tooltip="{{::careSetupAssistant.brandingPageTooltipText('agent')}}"
+              tooltip-trigger="mouseenter focus"
+              tooltip-placement="top"
+              tooltip-animation="false"
+              aria-label="{{::careSetupAssistant.brandingPageTooltipText('agent')}}"
+              tabindex="0"></i>
+          </span>
+        </div>
+        <article class="profile-preview ct-article">
+          <header>
+            <div class="img" ng-switch="careSetupAssistant.displaySelectedProfileAttribute()">
+              <div ng-switch-when="org">
+                <i class="icon icon-circle-computer-blank icon-3x" ng-hide="careSetupAssistant.logoUploaded"></i>
+                <img
+                  class="uploded-org-img"
+                  ngf-size="{{careSetupAssistant.imgDetails.imageDim}}"
+                  ng-src="{{careSetupAssistant.logoFile}}"
+                  ng-show="careSetupAssistant.logoUploaded"/>
               </div>
-              <div class="h5 profile-name" ng-switch = "careSetupAssistant.displaySelectedProfileAttribute()">
-                <div class="disp-text" ng-switch-when="org">
-                  {{careSetupAssistant.getAttributeParam('value', 'organization', 'welcomeHeader')}}
-                </div>
-                <div class="disp-text" ng-switch-when="agent">
-                  {{careSetupAssistant.agentNamePreview | translate}}
-                </div>
-                <div class="disp-text" ng-switch-default>
-                  {{::careSetupAssistant.careVirtualAssistantName()}}
+              <div class="agent" ng-switch-when="agent">
+                <i class="icon icon-user-chat icon-2x"></i>
+              </div>
+              <div ng-switch-default>
+                <img ng-if="careSetupAssistant.selectedVA.icon" class="uploded-org-img" ng-src="{{careSetupAssistant.selectedVA.icon}}"/>
+                <div class="bot" ng-if="!careSetupAssistant.selectedVA.icon">
+                  <i class="icon icon-bot-four icon-2x"></i>
                 </div>
               </div>
-              <div class="right actions">
-                <i class="icon icon-minus"></i>
-                <i class="icon icon-close"></i>
+            </div>
+
+            <div class="h5 profile-name" ng-switch = "careSetupAssistant.displaySelectedProfileAttribute()">
+              <div class="disp-text" ng-switch-when="org">
+                {{careSetupAssistant.getAttributeParam('value', 'organization', 'welcomeHeader')}}
               </div>
-            </header>
-            <section>
-              <div class="customer-details">
-                <span class="customer-message" translate="careChatTpl.agentMsg"></span>
-                <span class="speech-bubble"><span class="top right"></span></span>
-                <div class="body-smallest time" translate="careChatTpl.agentMsgTime"></div>
+              <div class="disp-text" ng-switch-when="agent">
+                {{careSetupAssistant.agentNamePreview}}
               </div>
-              <div class="agent-message-details">
-                <span class="speech-bubble"><span class="top left"></span></span>
-                <span class="message" translate="careChatTpl.customerMsg"></span>
-                <div class="body-smallest time" translate="careChatTpl.agentMsgTime"></div>
-                <em class="body-smallest agent-status" ng-if="careSetupAssistant.selectedAvater !== 'bot'" translate="careChatTpl.agentEnteredStatus"></em>
+              <div class="disp-text" ng-switch-default>
+                {{::careSetupAssistant.careVirtualAssistantName()}}
               </div>
-            </section>
-            <footer class="h6 footer" translate="careChatTpl.typeNewMsg"></footer>
-          </article>
-        </cs-card>
-        <cs-card class="ct-card">
-          <div class="h4 ct-card-info" translate="careChatTpl.attributes"></div>
-          <article class="profile-attributes ct-article">
-            <section>
-              <div class="h4 subheader-text" translate="careChatTpl.profileSelector"></div>
-
-
-                <input
-                        ng-repeat ="profile in careSetupAssistant.profileList"
-                        cs-input
-                        type="radio"
-                        ng-model="careSetupAssistant.selectedTemplateProfile"
-                        id="{{profile.header}}"
-                        value="{{profile.value}}"
-                        cs-input-label="{{profile.header}}"
-                        cs-input-help-text="{{profile.label}}">
-
-
-
-              <div class="profile-image" ng-if="careSetupAssistant.selectedTemplateProfile === careSetupAssistant.profiles.agent">
-                <div class="h4 ct-display-txt" translate="careChatTpl.displayText"></div>
-                <div focus-on class="agent-name-options">
-                  <cs-radio ng-repeat="(key, name) in careSetupAssistant.agentNames" label="name" value="name" name="{{name}}"
-                            id="name" ng-model="careSetupAssistant.selectedAgentProfile"
-                            class="ct-agent-name-options"
-                            ng-click="careSetupAssistant.setAgentProfile()"></cs-radio>
-                </div>
+            </div>
+            <div class="right actions">
+              <i class="icon icon-minus"></i>
+              <i class="icon icon-close"></i>
+            </div>
+          </header>
+          <section>
+            <div class="customer-details">
+              <span class="customer-message" translate="careChatTpl.agentMsg"></span>
+              <span class="speech-bubble"><span class="top right"></span></span>
+              <div class="body-smallest time" translate="careChatTpl.agentMsgTime"></div>
+            </div>
+            <div class="agent-message-details">
+              <span class="speech-bubble"><span class="top left"></span></span>
+              <span class="message" translate="careChatTpl.customerMsg"></span>
+              <div class="body-smallest time" translate="careChatTpl.agentMsgTime"></div>
+              <em class="body-smallest agent-status" ng-if="careSetupAssistant.selectedAvater !== 'bot'" translate="careChatTpl.agentEnteredStatus"></em>
+            </div>
+          </section>
+          <footer class="h6 footer" translate="careChatTpl.typeNewMsg"></footer>
+        </article>
+      </cs-card>
+      <cs-card class="ct-card">
+        <div class="h4 ct-card-info" translate="careChatTpl.attributes"></div>
+        <article class="profile-attributes ct-article">
+          <section>
+            <div class="h4 subheader-text" translate="careChatTpl.profileSelector"></div>
+              <input cs-input type="radio"
+                ng-repeat="profile in careSetupAssistant.profileList"
+                ng-model="careSetupAssistant.selectedTemplateProfile"
+                id="{{profile.header}}"
+                name="profileList"
+                value="{{profile.value}}"
+                cs-input-label="{{profile.header}}"
+                cs-input-help-text="{{profile.label}}"
+                ng-keypress="careSetupAssistant.enterNextPage($event)">
+            <div class="profile-image" ng-if="careSetupAssistant.selectedTemplateProfile === careSetupAssistant.profiles.agent">
+              <div class="h4 ct-display-txt" translate="careChatTpl.displayText"></div>
+              <div focus-on class="agent-name-options">
+                <input cs-input type="radio"
+                  ng-repeat="(key, name) in careSetupAssistant.agentNames"
+                  ng-model="careSetupAssistant.selectedAgentProfile"
+                  id="{{name}}"
+                  name="agentList"
+                  value="{{name}}"
+                  cs-input-label="{{name}}"
+                  ng-click="careSetupAssistant.setAgentProfile()"
+                  ng-keypress="careSetupAssistant.enterNextPage($event)">
               </div>
-              <div class="org-setting-info">
-                <span>
-                 <i class="icon icon-info"></i>
-                </span>
-                <span class="setting-info">{{careSetupAssistant.profileSettingInfo()}}</span>
-              </div>
+            </div>
+            <div class="org-setting-info">
+              <span>
+                <i class="icon icon-info"></i>
+              </span>
+              <span class="setting-info">{{careSetupAssistant.profileSettingInfo()}}</span>
+            </div>
 
-            </section>
-          </article>
-        </cs-card>
-      </cs-card-layout>
+          </section>
+        </article>
+      </cs-card>
+    </cs-card-layout>
   </div>
 </div>

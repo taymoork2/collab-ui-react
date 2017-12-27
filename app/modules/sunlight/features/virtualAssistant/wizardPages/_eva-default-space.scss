@@ -21,7 +21,7 @@
 
   .note-info {
     @include vr-spacing(mt, 3.0);
-    @include vr-spacing(pr, 5.5);
+    @include vr-spacing(pr, 2.5);
     color: $color-blue-dark;
     line-height: 1.5;
     display: inline-flex;

@@ -16,16 +16,20 @@
   </div>
   <div class="row collapse-both block" ng-if="!$ctrl.simple">
     <div class="search-options">
-      <input
-        cs-input
-        type="checkbox"
+      <input cs-input type="checkbox"
         ng-model="$ctrl.model.block"
         id="blockChk{{$ctrl.numberType}}"
         name="blockChk{{$ctrl.numberType}}"
         ng-click="$ctrl.onBlockClick()"
         cs-input-label="{{::'pstnSetup.block' | translate}}">
 
-      <i class="icon icon-info" tooltip="{{::'pstnSetup.advancedOrder.blockTooltip' | translate}}" tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></i>
+      <i class="icon icon-info"
+        tooltip="{{::'pstnSetup.advancedOrder.blockTooltip' | translate}}"
+        aria-label="{{::'pstnSetup.advancedOrder.blockTooltip' | translate}}"
+        tooltip-trigger="mouseenter focus"
+        tooltip-placement="right"
+        tooltip-animation="false"
+        tabindex="0"></i>
     </div>
     <div class="medium-4 columns" ng-if="$ctrl.model.block">
       <input
@@ -43,20 +47,19 @@
       </div>
     </div>
     <div class="search-options" ng-if="$ctrl.model.block">
-      <input
-          cs-input
-          type="checkbox"
-          ng-model="$ctrl.model.consecutive"
-          ng-disabled="!$ctrl.model.block"
-          id="consecutiveChk{{$ctrl.numberType}}"
-          name="consecutiveChk{{$ctrl.numberType}}"
-          cs-input-label="{{::'pstnSetup.consecutive' | translate}}">
+      <input cs-input type="checkbox"
+        ng-model="$ctrl.model.consecutive"
+        ng-disabled="!$ctrl.model.block"
+        id="consecutiveChk{{$ctrl.numberType}}"
+        name="consecutiveChk{{$ctrl.numberType}}"
+        cs-input-label="{{::'pstnSetup.consecutive' | translate}}">
       <i class="icon icon-info"
-          tooltip="{{::'pstnSetup.advancedOrder.consecutiveTooltip' | translate}}"
-          tooltip-trigger="mouseenter"
-          tooltip-placement="right"
-          tooltip-animation="false"
-      ></i>
+        tooltip="{{::'pstnSetup.advancedOrder.consecutiveTooltip' | translate}}"
+        aria-label="{{::'pstnSetup.advancedOrder.consecutiveTooltip' | translate}}"
+        tooltip-trigger="mouseenter focus"
+        tooltip-placement="right"
+        tooltip-animation="false"
+        tabindex="0"></i>
     </div>
   </div>
 </form>

@@ -26,14 +26,22 @@
       stroke-width: 4;
       stroke-linecap: round;
       stroke: $gray-light-1;
+      stroke-dasharray: 15, 10, 5, 10;
     }
 
     .goodLine {
+      stroke-dasharray: 0;
       stroke: $color-green-base;
     }
 
-    .poorLine {
+    .fairLine {
+      stroke-dasharray: 0;
       stroke: $color-yellow-base;
+    }
+
+    .poorLine {
+      stroke: #FF503C;
+      stroke-dasharray: 1, 7;
     }
   }
 
