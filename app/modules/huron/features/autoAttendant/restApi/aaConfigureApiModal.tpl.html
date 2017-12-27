@@ -31,7 +31,7 @@
           <div class="large-12 medium-12 small-12 columns aa-rest-url-helper-text">
             <label class ="cs-input__help-text" translate = "autoAttendant.restApiUrlHelperText"></label>
           </div>
-          <div class = "aa-rest-url-error-message large-12 medium-12 small-12 columns" 
+          <div id = "aaRestErrorMessage" class = "aa-rest-url-error-message large-12 medium-12 small-12 columns" 
           ng-if = "aaConfigureApiModal.showFullErrorMessage || aaConfigureApiModal.showSecureUrlErrorMessage">
             <div class="aa-rest-error-icon"></div>
             <div class = "aa-rest-url-error" ng-if = "aaConfigureApiModal.showFullErrorMessage" translate = "autoAttendant.completeHttpsError"></div>
