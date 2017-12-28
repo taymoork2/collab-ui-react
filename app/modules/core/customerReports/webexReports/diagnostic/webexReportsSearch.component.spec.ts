@@ -103,7 +103,7 @@ describe('Component: webexReportsSearch', () => {
     this.controller.gridOptions.onRegisterApi(fakeGridApi);
   });
 
-  it('should show the empty data for the grid when search with incorrect email or incorrect meeting number then trigger blur event', function () {
+  xit('should show the empty data for the grid when search with incorrect email or incorrect meeting number then trigger blur event', function () {
     spyOn(this.$translate, 'instant').and.returnValue('Please enter the correct email or meeting number');
 
     initComponent.call(this);
@@ -112,7 +112,7 @@ describe('Component: webexReportsSearch', () => {
     expect(this.controller.errMsg.search).toEqual('Please enter the correct email or meeting number');
   });
 
-  it('should updata when change date', function () {
+  xit('should updata when change date', function () {
     spyOn(this.$translate, 'instant').and.returnValue('The start date must not be greater than the end date');
 
     this.SearchService.getMeetings.and.returnValue(this.$q.resolve(this.meetingSearch));

@@ -83,7 +83,7 @@ class WebexReportsSearch implements ng.IComponentController {
     this.storeData.endDate = this.endDate;
     this.storeData.startDate = this.startDate;
     if (moment(this.startDate).unix() > moment(this.endDate).unix()) {
-      this.errMsg.datePicker = this.$translate.instant('webexReports.end-date-tooltip');
+      this.errMsg.datePicker = '<i class="icon icon-warning"></i> ' + this.$translate.instant('webexReports.end-date-tooltip');
     }
     this.startSearch();
   }
@@ -121,7 +121,7 @@ class WebexReportsSearch implements ng.IComponentController {
     this.storeData.searchStr = this.searchStr;
 
     if ((!emailReg.test(this.searchStr) && !digitaReg.test(this.searchStr)) || this.searchStr === '') {
-      this.errMsg.search = this.$translate.instant('webexReports.searchError');
+      this.errMsg.search = '<i class="icon icon-warning"></i> ' + this.$translate.instant('webexReports.searchError');
       return ;
     }
 
@@ -158,7 +158,7 @@ class WebexReportsSearch implements ng.IComponentController {
       .then((res) => {
         _.forEach(res, (item) => {
           item.status_ = this.SearchService.getStatus(item.status);
-          item.Duration = item.duration ? moment.duration(item.duration * 1000).humanize() : '';
+          item.Duration = this.SearchService.getDuration(item.duration);
           item.endTime_ = this.SearchService.utcDateByTimezone(item.endTime) ;
           item.startTime_ = this.SearchService.utcDateByTimezone(item.startTime);
         });
@@ -173,12 +173,12 @@ class WebexReportsSearch implements ng.IComponentController {
 
   private setGridOptions(): void {
     const columnDefs = [{
-      width: '12%',
+      width: '13%',
       cellTooltip: true,
       field: 'conferenceID',
       displayName: this.$translate.instant('webexReports.searchGridHeader.conferenceID'),
     }, {
-      width: '11%',
+      width: '14%',
       field: 'meetingNumber',
       displayName: this.$translate.instant('webexReports.meetingNumber'),
     }, {
@@ -186,16 +186,18 @@ class WebexReportsSearch implements ng.IComponentController {
       field: 'meetingName',
       displayName: this.$translate.instant('webexReports.searchGridHeader.meetingName'),
     }, {
-      width: '18%',
+      width: '16%',
       sortable: true,
       cellTooltip: true,
       field: 'startTime_',
       displayName: this.$translate.instant('webexReports.searchGridHeader.startTime'),
     }, {
-      width: '10%',
+      width: '9%',
       field: 'Duration',
+      cellClass: 'text-right',
       displayName: this.$translate.instant('webexReports.duration'),
     }, {
+      width: '12%',
       field: 'hostName',
       displayName: this.$translate.instant('webexReports.hostName'),
     }, {
