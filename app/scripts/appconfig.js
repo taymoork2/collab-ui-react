@@ -2568,8 +2568,8 @@
           .state('place-overview.hybrid-services-squared-fusion-cal', {
             views: {
               'side-panel-container@place-overview': {
-                template: require('modules/hercules/user-sidepanel/calendarServicePreview.tpl.html'),
-                controller: 'HybridCloudberryCalendarCtrl',
+                template: require('modules/squared/places/overview/hybrid-calendar-service-place-settings/hybridCalendarServicePlaceSettings.template.html'),
+                controller: 'HybridCalendarServicePlaceSettingsCtrl',
               },
             },
             data: {},
@@ -2604,8 +2604,8 @@
 
             views: {
               'side-panel-container@place-overview': {
-                template: require('modules/hercules/user-sidepanel/calendarServicePreview.tpl.html'),
-                controller: 'HybridCloudberryCalendarCtrl',
+                template: require('modules/squared/places/overview/hybrid-calendar-service-place-settings/hybridCalendarServicePlaceSettings.template.html'),
+                controller: 'HybridCalendarServicePlaceSettingsCtrl',
               },
             },
             data: {},
