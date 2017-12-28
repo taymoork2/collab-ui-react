@@ -37,7 +37,6 @@ export class ServicesOverviewController implements ng.IComponentController {
     private $modal: IToolkitModalService,
     private $q: ng.IQService,
     private $state: ng.ui.IStateService,
-    private Analytics,
     private Auth,
     private Authinfo,
     private CloudConnectorService: CloudConnectorService,
@@ -148,25 +147,6 @@ export class ServicesOverviewController implements ng.IComponentController {
               } else {
                 this._servicesInactive.push(serviceId);
               }
-            });
-            this.Analytics.trackEvent(this.Analytics.sections.HS_NAVIGATION.eventNames.VISIT_SERVICES_OVERVIEW, {
-              'All Clusters is clickable': this.clusters ? this.clusters.length > 0 : false,
-              'Call is setup': servicesStatuses[0].setup,
-              'Call status': servicesStatuses[0].status,
-              'Calendar is setup': servicesStatuses[1].setup,
-              'Calendar status': servicesStatuses[1].status,
-              'Office 365 is setup': servicesStatuses[2].setup,
-              'Office 365 status': servicesStatuses[2].status,
-              'Google Calendar is setup': servicesStatuses[3].setup,
-              'Google Calendar status': servicesStatuses[3].status,
-              'Media is setup': servicesStatuses[4].setup,
-              'Media status': servicesStatuses[4].status,
-              'Context is setup': servicesStatuses[5].setup,
-              'Context status': servicesStatuses[5].status,
-              'Private Trunking is setup': servicesStatuses[6].setup,
-              'Private Trunking status': servicesStatuses[6].status,
-              'Message is setup': servicesStatuses[7].setup,
-              'Message status': servicesStatuses[7].status,
             });
           })
           .finally(() => {
