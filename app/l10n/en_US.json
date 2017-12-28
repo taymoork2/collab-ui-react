@@ -828,7 +828,7 @@
     },
     "meetingStatus": {
       "ended": "Ended",
-      "inProcess": "In Process"
+      "inProgress": "In Progress"
     },
     "connectionFields": {
       "voIP": "VoIP",

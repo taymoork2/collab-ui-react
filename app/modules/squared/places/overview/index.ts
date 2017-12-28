@@ -2,6 +2,7 @@ import './placeOverview.scss';
 
 import { PlaceOverviewComponent } from './placeOverview.component';
 import * as HybridCallServicePlaceSettingsCtrl from 'modules/squared/places/overview/hybrid-call-service-place-settings/hybridCallServicePlaceSettingsCtrl.js';
+import * as HybridCalendarServicePlaceSettingsCtrl from 'modules/squared/places/overview/hybrid-calendar-service-place-settings/hybridCalendarServicePlaceSettingsCtrl.js';
 
 import placeCallOverviewServiceModule from 'modules/squared/places/callOverview';
 import preferredLanguageModule from 'modules/huron/preferredLanguage';
@@ -12,10 +13,12 @@ import DomainManagementServiceModuleName from 'modules/core/domainManagement';
 import UCCServiceModuleName from 'modules/hercules/services/ucc-service';
 import URIVerificationServiceModuleName from 'modules/hercules/services/uri-verification-service';
 import hybridServiceUserSidepanelHelperServiceModuleName from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
+import clusterServiceModuleName from 'modules/hercules/services/cluster-service';
 
 export default angular
   .module('huron.place-overview', [
     require('angular-ui-router'),
+    clusterServiceModuleName,
     hybridServiceUserSidepanelHelperServiceModuleName,
     preferredLanguageModule,
     placeCallOverviewServiceModule,
@@ -27,5 +30,6 @@ export default angular
     URIVerificationServiceModuleName,
   ])
   .component('placeOverview', new PlaceOverviewComponent())
+  .controller('HybridCalendarServicePlaceSettingsCtrl', HybridCalendarServicePlaceSettingsCtrl)
   .controller('HybridCallServicePlaceSettingsCtrl', HybridCallServicePlaceSettingsCtrl)
   .name;

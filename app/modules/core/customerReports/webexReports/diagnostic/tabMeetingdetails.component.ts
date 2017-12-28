@@ -25,29 +25,15 @@ class Meetingdetails implements ng.IComponentController {
       voip: {},
       video: {},
       voipReqtimes: 0,
-      videoRetimes: 0,
+      videoReqtimes: 0,
       currentQos: 'voip',
     };
   }
 
   public $onInit() {
-    const status = this.SearchService.getStorage('webexOneMeeting.overview.status');
-    if (status === 1) {
-      this.SearchService.getServerTime()
-      .then( res => {
-        this.SearchService.setStorage('webexOneMeeting.endTime', _.get(res, 'dateLong'));
-        this.initParameter();
-      });
-    } else {
-      this.initParameter();
-    }
-  }
-
-  public initParameter() {
     this.overview = this.SearchService.getStorage('webexOneMeeting.overview');
     this.featAndconn = this.SearchService.getStorage('webexOneMeeting.featAndconn');
     this.conferenceID = _.get(this.$stateParams, 'cid');
-
     this.getParticipants();
   }
 
@@ -105,12 +91,8 @@ class Meetingdetails implements ng.IComponentController {
           const data = _.cloneDeep(item_);
           const arr_ = data.tahoeQuality;
           _.unset(data, 'tahoeQuality');
-          const arr__: any = [];
-          _.forEach(arr_, (item__) => {
-            const obj__ = _.assignIn({ type: 'PSTN', nodeId: key }, item__, data);
-            arr__.push(obj__);
-          });
 
+          const arr__ = _.map(arr_, item__ => _.assignIn({ type: 'PSTN', nodeId: key }, item__, data));
           obj[key] = _.concat(obj[key], arr__);
         });
       });
@@ -122,9 +104,16 @@ class Meetingdetails implements ng.IComponentController {
   private formateLine(lines) {
     const wom = this.SearchService.getStorage('webexOneMeeting');
     return _.forEach(lines, (item) => {
+      const device = this.SearchService.getDevice({ platform: item.platform, browser: item.browser, sessionType: item.sessionType });
+      const platform_ = this.SearchService.getPlartform({ platform: item.platform, sessionType: item.sessionType });
+      item.joinTime_ = this.SearchService.timestampToDate(item.joinTime, 'h:mm A');
       item.leaveTime = item.leaveTime || _.get(wom, 'endTime');
       item.browser_ = this.SearchService.getBrowser(_.parseInt(item.browser));
-      item.platform_ = this.SearchService.getPlartform({ platform: item.platform, sessionType: item.sessionType });
+      item.mobile = _.includes(['7', '8', '11', '12', '13', '14'], item.platform) ? platform_ : '';
+      item.duration = item.duration ? item.duration : _.round((item.leaveTime - item.joinTime) / 1000);
+      item.device = device.name;
+      item.platform_ = platform_;
+      item.deviceIcon = device.icon;
     });
   }
 
@@ -134,29 +123,26 @@ class Meetingdetails implements ng.IComponentController {
     return _.join(_.map(arr, (item) => _.get(item, 'nodeId')));
   }
 
-  private getLineCircleData(res, qosName) { // TODO, will discuss with backend to optimize the response data.
+  private getLineCircleData(res, qosName) {
     const obj = {};
     const retryIds: String[] = [];
+
     _.forEach(res, (item: any, key: string) => {
       if (!item.completed) {
         retryIds.push(key);
-      } else {
-        _.forEach(item.items, (oneItem) => {
-          oneItem.type = _.capitalize(qosName);
-        });
-        obj[key] = item.items;
+        return true;
       }
+
+      obj[key] = _.map(item.items, (oneItem) => _.assign({}, oneItem, { type: _.capitalize(qosName) }) );
     });
-    if (_.size(retryIds)) {
-      if (this.data[`${qosName}Reqtimes`] > 5) {
-        return false;
-      }
-      this.data[`${qosName}Reqtimes`] += 1;
-      const fun = this[`${qosName}QOS`];
-      fun(_.join(retryIds));
-    }
+
     _.assignIn(this.data[qosName], obj);
     this.lineColor = _.get(this.data, 'currentQos') === qosName ? this.data[qosName] : this.lineColor;
+
+    if (_.size(retryIds) && this.data[`${qosName}Reqtimes`] < 5) {
+      this.data[`${qosName}Reqtimes`] += 1;
+      qosName === 'voip' ? this.voipQOS(_.join(retryIds)) : this.voipQOS(_.join(retryIds));
+    }
   }
 }
 

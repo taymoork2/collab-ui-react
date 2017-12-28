@@ -108,7 +108,7 @@ describe('Service: searchService', () => {
     moment.tz.setDefault('America/Chicago');
     this.SearchService.setStorage('timeZone', 'America/Chicago');
     const data_ = this.SearchService.utcDateByTimezone(data);
-    expect(data_).toBe('August 2nd, 2017 1:44:30 AM');
+    expect(data_).toBe('2017-08-02 01:44:30');
   });
 
   it('should get correct data when call getOffset', function () {
