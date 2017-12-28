@@ -3,7 +3,7 @@
 describe('Controller:MediaServiceMetricsContoller', function () {
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var controller, $scope, httpMock, $stateParams, $q, $translate, $timeout, $interval, Log, Config, MediaClusterServiceV2, Notification, DummyMetricsReportService, MetricsReportService, MetricsGraphService;
+  var controller, $scope, httpMock, $stateParams, $q, $translate, $timeout, $interval, Log, Config, HybridServicesClusterService, Notification, DummyMetricsReportService, MetricsReportService, MetricsGraphService;
 
   var dummydata = getJSONFixture('mediafusion/json/metrics-graph-report/UtilizationGraphData.json');
 
@@ -32,13 +32,13 @@ describe('Controller:MediaServiceMetricsContoller', function () {
   var allClusters = 'mediaFusion.metrics.allclusters';
   var sampleClusters = 'mediaFusion.metrics.samplecluster';
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$stateParams_, _$timeout_, _$translate_, _MediaClusterServiceV2_, _$q_, _MetricsReportService_, _Notification_, _MetricsGraphService_, _DummyMetricsReportService_, _$interval_, _Log_, _Config_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$stateParams_, _$timeout_, _$translate_, _HybridServicesClusterService_, _$q_, _MetricsReportService_, _Notification_, _MetricsGraphService_, _DummyMetricsReportService_, _$interval_, _Log_, _Config_) {
     $scope = $rootScope.$new();
 
     $stateParams = _$stateParams_;
     $timeout = _$timeout_;
     $translate = _$translate_;
-    MediaClusterServiceV2 = _MediaClusterServiceV2_;
+    HybridServicesClusterService = _HybridServicesClusterService_;
     $q = _$q_;
     httpMock = _$httpBackend_;
     Log = _Log_;
@@ -66,7 +66,7 @@ describe('Controller:MediaServiceMetricsContoller', function () {
     spyOn(MetricsReportService, 'getAvailabilityData').and.returnValue($q.resolve(clusteravailabilityData));
     spyOn(MetricsReportService, 'getUtilizationData').and.returnValue($q.resolve(dummydata));
     spyOn(MetricsReportService, 'getClusterAvailabilityData').and.returnValue($q.resolve(clusteravailabilityData));
-    spyOn(MediaClusterServiceV2, 'getAll').and.callThrough();
+    spyOn(HybridServicesClusterService, 'getAll').and.callThrough();
 
     controller = $controller('MediaServiceMetricsContoller', {
       $scope: $scope,
@@ -74,7 +74,7 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       $timeout: $timeout,
       $translate: $translate,
       httpMock: httpMock,
-      MediaClusterServiceV2: MediaClusterServiceV2,
+      HybridServicesClusterService: HybridServicesClusterService,
       $q: $q,
       MetricsReportService: MetricsReportService,
       Notification: Notification,
