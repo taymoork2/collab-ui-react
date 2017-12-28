@@ -5901,7 +5901,8 @@
       "exchangeHelp": "This is enabling exchange calendar",
       "googleTitle": "Google calendar",
       "googleHelp": "This is enabling google calendar",
-      "calendarEmail": "Email address of the calendar mailbox"
+      "calendarEmail": "Email address of the calendar mailbox",
+      "calendarEmailHelp": "This should not be an email address already used on another place, and should not belong to a user."
     },
     "editCalendarService": {
       "title": "Set up Hybrid Calendar Service",
@@ -5912,7 +5913,8 @@
       "step1": "In Cisco Unified Communications Manager, create a user account and an associated line. These items will represent this place. <a href='https://www.cisco.com/go/hybrid-services'>See the documentation for help.</a>",
       "step2": "Find the Mail ID for the user account.<br>a) Sign into Cisco Unified CM Administration<br>b) Choose User Management > End User, and then find and click the account.<br>The Mail ID is under ‘User Information’.",
       "step3": "Enter the Mail ID below to connect this place to the existing Unified CM account.<br>This Mail ID ensures that the correct user account is connected with this place for hybrid calling.",
-      "mailId": "Mail ID"
+      "mailId": "Mail ID",
+      "mailIdHelp": "This should not be a Mail ID already used on another place, and should not be an email address that belongs to a user."
     },
     "showActivationCode": {
       "activationCode": "Activation Code",
