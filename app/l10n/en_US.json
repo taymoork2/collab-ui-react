@@ -9261,8 +9261,6 @@
         "hybridDestination": "Use one or more Expressway-E configured for Hybrid Call Connect ",
         "addSipDestination": "Add SIP destination",
         "certificateTitle": "Certificates",
-        "certificateDescription": "Choose whether you want to use the certificates provided by the Cisco Collaboration default trust list or upload your own.",
-        "certificateDescriptionNew": "Choose whether you want to use the certificates provided by the Cisco Collaboration Cloud default trust list or upload your own.",
         "certDescNew": "Use certificates provided from the <a href=\"{{href}}\" target=\"_blank\">Cisco Collaboration Cloud default trust list</a>",
         "upload": "or upload your own. If you use your own, make sure the hostnames are on a verified domain",
         "click": ". For help, <a href=\"{{href}}\" target=\"_blank\">click here</a>.",
