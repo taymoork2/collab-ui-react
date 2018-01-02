@@ -7,7 +7,7 @@
   function HybridCalendarServicePlaceSettingsCtrl($scope, $state, $stateParams, Notification, USSService, $translate, HybridServicesI18NService) {
     $scope.currentPlace = $stateParams.getCurrentPlace();
     $scope.currentStateName = $state.current.name;
-    $scope.serviceId = $stateParams.extensionId;
+    $scope.serviceId = $stateParams.serviceId;
 
     if ($scope.serviceId === 'squared-fusion-cal') {
       $scope.calendarType = $translate.instant('hercules.cloudExtensions.exchange');
