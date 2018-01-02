@@ -225,13 +225,15 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
       switch ($keyEvent.key) {
         case '"':
           if (target instanceof HTMLInputElement) {
-            if (!target.value[target.selectionEnd]) {
-              const selectionStart = target.selectionStart;
-              target.value = [target.value.slice(0, selectionStart), '"', target.value.slice(target.selectionEnd)].join('');
-              target.selectionEnd = selectionStart;
-            } else if (target.value[target.selectionEnd] === '"') {
-              target.selectionEnd += 1;
-              return false;
+            if (!this.searchObject.hasError) {
+              if (!target.value[target.selectionEnd]) {
+                const selectionStart = target.selectionStart;
+                target.value = [target.value.slice(0, selectionStart), '"', target.value.slice(target.selectionEnd)].join('');
+                target.selectionEnd = selectionStart;
+              } else if (target.value[target.selectionEnd] === '"') {
+                target.selectionEnd += 1;
+                return false;
+              }
             }
           }
           break;
