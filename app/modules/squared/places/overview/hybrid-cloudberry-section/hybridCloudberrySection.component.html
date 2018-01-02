@@ -1,0 +1,20 @@
+<div class="feature-list cloud-extensions" ng-if="$ctrl.isAnyServicesEnabled">
+  <ul>
+    <li class="feature" ng-repeat="hybridService in $ctrl.hybridServices | filter: $ctrl.placeFilter">
+      <a href
+         ui-sref="place-overview.hybrid-services-{{hybridService.id}}({serviceId: hybridService.id, editService: $ctrl.editService, getCurrentPlace: $ctrl.place})">
+        <i class="feature-icon" ng-class="$ctrl.serviceIcon(hybridService.id)"></i>
+        <span class="feature-name" translate="hercules.serviceNames.{{hybridService.id}}"></span>
+        <span class="feature-status" ng-class="hybridService.status ? 'status-' + $ctrl.getStatus(hybridService.status) : ''"
+              ng-show="hybridService.status && hybridService.entitled"
+
+              translate="hercules.activationStatus.{{$ctrl.getStatus(hybridService.status)}}"></span>
+        <span class="feature-status" ng-if="!hybridService.entitled" translate="common.off"></span>
+
+        <span class="feature-status" ng-if="!hybridService.status && hybridService.entitled && $ctrl.placeStatusLoaded" translate="hercules.activationStatus.notFound"></span>
+        <span cs-loader class="feature-list-loader" ng-if="!hybridService.status && hybridService.entitled && !$ctrl.placeStatusLoaded"></span>
+        <i class="feature-arrow"></i>
+      </a>
+    </li>
+  </ul>
+</div>

@@ -19,7 +19,7 @@ describe('Controller: HybridCalendarServicePlaceSettingsCtrl', function () {
     var userStatuses = [{
       userId: '1234', state: 'notActivated', serviceId: 'squared-fusion-cal', entitled: true,
     }];
-    $stateParams.extensionId = 'squared-fusion-cal';
+    $stateParams.serviceId = 'squared-fusion-cal';
     $stateParams.getCurrentPlace = function () {
       return {
         id: '1234',

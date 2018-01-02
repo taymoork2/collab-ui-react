@@ -2577,8 +2577,7 @@
               displayName: translateDisplayName('hercules.serviceNames.squared-fusion-cal'),
             },
             params: {
-              extensionId: {},
-              extensions: {},
+              serviceId: {},
               parentState: 'place-overview',
               editService: {},
               getCurrentPlace: {},
@@ -2613,8 +2612,7 @@
               displayName: translateDisplayName('hercules.serviceNames.squared-fusion-cal'),
             },
             params: {
-              extensionId: {},
-              extensions: {},
+              serviceId: {},
               editService: {},
               getCurrentPlace: {},
             },
