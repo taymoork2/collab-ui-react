@@ -9,6 +9,7 @@ describe('UserManageOrgController', () => {
       '$q',
       '$scope',
       '$state',
+      '$window',
       'Analytics',
       'AutoAssignTemplateService',
       'DirSyncService',
@@ -21,11 +22,13 @@ describe('UserManageOrgController', () => {
     this.$state = {
       modal: {
         dismiss: jasmine.createSpy('dismiss').and.returnValue(true),
+        closed: this.$q.resolve(),
       },
       go: jasmine.createSpy('go'),
     };
 
     spyOn(this.Analytics, 'trackAddUsers');
+    spyOn(this.$window, 'open');
   }
 
   function initController() {
@@ -60,6 +63,12 @@ describe('UserManageOrgController', () => {
   function initControllerAndAutoAssignFeatureToggleOn() {
     spyOn(this.FeatureToggleService, 'atlasEmailSuppressGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(true));
+
+    initController.apply(this);
+  }
+
+  function initControllerAndDirSyncEnabled() {
+    spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(true);
 
     initController.apply(this);
   }
@@ -193,6 +202,24 @@ describe('UserManageOrgController', () => {
     expect(this.$state.go).toHaveBeenCalledWith('users.manage.edit-auto-assign-template-modal', {
       prevState: 'users.manage.picker',
     });
+  });
+
+  it('should go to settings page if isDirSyncEnabled is true', function () {
+    initControllerAndDirSyncEnabled.apply(this);
+    this.controller.handleDirSyncService();
+    this.$scope.$apply();
+
+    expect(this.$state.go).toHaveBeenCalledWith('settings', {
+      showSettings: 'dirsync',
+    });
+    expect(this.$state.modal.dismiss).toHaveBeenCalled();
+  });
+
+  it('should go to an external link if isDirSyncEnabled is false', function () {
+    initControllerAndDefaults.apply(this);
+    this.controller.handleDirSyncService();
+
+    expect(this.$window.open).toHaveBeenCalled();
   });
 
   describe('initFeatureToggles():', function () {

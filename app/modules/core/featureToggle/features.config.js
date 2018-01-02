@@ -27,6 +27,7 @@ module.exports = {
   atlasEdiscovery: 'atlas-ediscovery',
   atlasEmailStatus: 'atlas-email-status',
   atlasEmailSuppress: 'atlas-email-suppress',
+  atlasHybridEnable: 'huron-i387-enterprise-private-trunking',
   atlasExpertVirtualAssistantEnable: 'atlas-expert-virtual-assistant-enable',
   atlasF2993NewUserAndDeviceRoles: 'atlas-f2993-new-user-and-device-roles',
   atlasF3745AutoAssignLicenses: 'atlas-f3745-auto-assign-licenses',
@@ -39,7 +40,6 @@ module.exports = {
   atlasHybridCallUserTestTool: 'atlas-hybrid-call-user-test-tool',
   atlasHybridCucmSupport: 'atlas-hybrid-cucm-support',
   atlasHybridImp: 'atlas-hybrid-imp',
-  atlasHybridPrerequisites: 'atlas-hybrid-prerequisites',
   atlasITProPack: 'atlas-it-pro-pack',
   atlasITProPackPurchased: 'atlas-it-pro-pack-purchased',
   atlasJabberInterop: 'atlas-jabber-interop',
@@ -64,7 +64,6 @@ module.exports = {
   atlasReadOnlyAdmin: 'atlas-read-only-admin',
   atlasReportsUpdate: 'atlas-reports-update',
   atlasSendEmailViaBMMP: 'atlas-send-email-via-bmmp',
-  atlasServicesOverviewRefresh: 'atlas-services-overview-refresh',
   atlasSetupSiteUserManagement: 'atlas-setup-site-user-management',
   atlasSipUriDomain: 'atlas-sip-uri-domain',
   atlasSubdomainUpdate: 'atlas-subdomain-update',
@@ -223,4 +222,5 @@ module.exports = {
   winProximityDeviceSelection: 'win-proximity-device-selection',
   winTeams: 'win-teams',
   zeroTouchMeeting: 'zero-touch-meeting',
+  hI1635: 'h-i1635', //PSTN Porting
 };

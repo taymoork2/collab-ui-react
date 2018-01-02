@@ -3,7 +3,7 @@
 describe('Service: QlikService', function () {
   beforeEach(angular.mock.module('Core'));
 
-  var $httpBackend, QlikService, UrlConfig;
+  var $httpBackend, Config, QlikService, UrlConfig;
 
   var regex = /.*\/report\.*/;
 
@@ -22,15 +22,16 @@ describe('Service: QlikService', function () {
   };
 
   afterEach(function () {
-    $httpBackend = QlikService = UrlConfig = undefined;
+    $httpBackend = Config = QlikService = UrlConfig = undefined;
   });
 
   afterAll(function () {
     regex = undefined;
   });
 
-  beforeEach(inject(function (_$httpBackend_, _QlikService_, _UrlConfig_) {
+  beforeEach(inject(function (_$httpBackend_, _Config_, _QlikService_, _UrlConfig_) {
     $httpBackend = _$httpBackend_;
+    Config = _Config_;
     QlikService = _QlikService_;
     UrlConfig = _UrlConfig_;
   }));
@@ -49,7 +50,7 @@ describe('Service: QlikService', function () {
     });
 
     it('should return spark appId and ticket if call getQBSInfo API', function () {
-      var promise = QlikService.getQBSInfo('spark', 'Basic', testData.postParam, 'dev');
+      var promise = QlikService.getQBSInfo('spark', 'Basic', testData.postParam);
       $httpBackend.flush();
       var res = promise.$$state.value;
       expect(Object.keys(res.data)).toContain('ticket');
@@ -60,6 +61,16 @@ describe('Service: QlikService', function () {
       $httpBackend.flush();
       var res = promise.$$state.value;
       expect(Object.keys(res.data)).toContain('ticket');
+    });
+
+    it('should return webex appId and ticket on integration if call getProdToBTSQBSInfo API without siteId', function () {
+      spyOn(Config, 'getEnv').and.returnValue('prod');
+      spyOn(UrlConfig, 'getQlikServiceUrl').and.returnValue(testData.qbsUrl);
+      var promise = QlikService.getProdToBTSQBSInfo('webex', 'Premium', testData.postParam);
+      promise.then(function (data) {
+        expect(data).toContain('ticket');
+      });
+      $httpBackend.flush();
     });
   });
 

@@ -27,6 +27,7 @@ require('./_customer-overview.scss');
     vm.hasSubviews = hasSubviews;
     vm.hasSubview = hasSubview;
     vm.goToSubview = goToSubview;
+    vm.showContractIncompleteFn = showContractIncompleteFn;
 
     vm.uuid = '';
     vm.logoOverride = false;
@@ -42,7 +43,10 @@ require('./_customer-overview.scss');
     vm.isProPackEnabled = false;
     vm.isMediaFusionEnabled = false;
     vm.isNewPatchFlow = false;
-    vm.showContractIncomplete = false;
+
+    //Feature Toggle -- HI1635
+    vm.showContractIncomplete = true;
+    vm.isHI1635Enabled = false;
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
@@ -68,6 +72,7 @@ require('./_customer-overview.scss');
       FeatureToggleService.atlasCareInboundTrialsGetStatus(),
       FeatureToggleService.atlasITProPackGetStatus(),
       FeatureToggleService.atlasJira2126UseAltEndpointGetStatus(),
+      FeatureToggleService.hI1635GetStatus(),
     ]).then(function (results) {
       if (_.find(vm.currentCustomer.offers, {
         id: Config.offerTypes.roomSystems,
@@ -76,11 +81,15 @@ require('./_customer-overview.scss');
       }
       var isCareEnabled = results[0];
       var isAdvanceCareEnabled = results[1];
+      setOffers(isCareEnabled, isAdvanceCareEnabled);
       vm.isProPackEnabled = results[2];
       vm.isNewPatchFlow = results[3];
-      setOffers(isCareEnabled, isAdvanceCareEnabled);
+      vm.isHI1635Enabled = results[4];
     });
 
+    function showContractIncompleteFn() {
+      return vm.isHI1635Enabled && vm.showContractIncomplete;
+    }
 
     function setOffers(isCareEnabled, isAdvanceCareEnabled) {
       var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, {

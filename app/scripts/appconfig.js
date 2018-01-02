@@ -65,7 +65,6 @@
         function SidePanelLargeClose($window) {
           $window.document.querySelector('.side-panel').classList.remove('large');
         }
-
         //Add blob to the default angular whitelist
         $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|tel|file|blob):/);
 
@@ -1043,6 +1042,13 @@
             template: '<edit-summary-auto-assign-template-modal dismiss="$dismiss()"></edit-summary-auto-assign-template-modal>',
             params: {
               stateData: null,
+            },
+          })
+          .state('users.manage.onboard-summary-for-auto-assign-modal', {
+            template: '<onboard-summary-for-auto-assign-modal dismiss="$dismiss()"></onboard-summary-for-auto-assign-modal>',
+            params: {
+              stateData: null,
+              userList: null,
             },
           })
 
@@ -2078,6 +2084,17 @@
               },
             },
           })
+          .state('reports.webex-metrics.main', {
+            url: '/main/:reportType',
+            views: {
+              metricsContent: {
+                template: '<metrics-frame></metrics-frame>',
+              },
+            },
+            params: {
+              reportType: null,
+            },
+          })
           .state('reports.webex-metrics.diagnostics', {
             url: '/diagnostics',
             views: {
@@ -2100,11 +2117,6 @@
           .state('dgc.tab.participants', {
             url: '/diagnostics/participants/:cid',
             views: { tabContent: { template: '<dgc-tab-participants></dgc-tab-participants>' } },
-          })
-          .state('dgc-panel', {
-            data: {},
-            parent: 'sidepanel',
-            views: { 'sidepanel@': { template: '<dgc-panel-participant></dgc-panel-participant>' } },
           })
           .state('reports.webex-metrics.classic', {
             url: '/classic',
@@ -2567,8 +2579,8 @@
           .state('place-overview.hybrid-services-squared-fusion-cal', {
             views: {
               'side-panel-container@place-overview': {
-                template: require('modules/hercules/user-sidepanel/calendarServicePreview.tpl.html'),
-                controller: 'HybridCloudberryCalendarCtrl',
+                template: require('modules/squared/places/overview/hybrid-calendar-service-place-settings/hybridCalendarServicePlaceSettings.template.html'),
+                controller: 'HybridCalendarServicePlaceSettingsCtrl',
               },
             },
             data: {},
@@ -2603,8 +2615,8 @@
 
             views: {
               'side-panel-container@place-overview': {
-                template: require('modules/hercules/user-sidepanel/calendarServicePreview.tpl.html'),
-                controller: 'HybridCloudberryCalendarCtrl',
+                template: require('modules/squared/places/overview/hybrid-calendar-service-place-settings/hybridCalendarServicePlaceSettings.template.html'),
+                controller: 'HybridCalendarServicePlaceSettingsCtrl',
               },
             },
             data: {},
@@ -2662,30 +2674,20 @@
               displayName: translateDisplayName('sidePanelBreadcrumb.awareStatusHistory'),
             },
           })
-          .state('devices-redux', {
-            // abstract: true,
-            template: require('modules/csdm/devicesRedux/devices.html'),
-            controller: 'DevicesReduxCtrl',
-            controllerAs: 'devices',
+          .state('devices', {
+            url: '/devices',
+            template: '<devices-redux ng-if="$resolve.hasDevicesReduxFeatureToggle"></devices-redux><devices-page ng-if="!$resolve.hasDevicesReduxFeatureToggle"></devices-page>',
             parent: 'main',
-          })
-          .state('devices-redux.search', {
-            url: '/devices-redux',
-            views: {
-              leftPanel: {
-                template: require('modules/csdm/devicesRedux/list.html'),
+            resolve: {
+              hasDevicesReduxFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.csdmDevRed);
               },
             },
           })
-          .state('devices', {
-            url: '/devices',
-            template: require('modules/squared/devices/devices.html'),
-            controller: 'DevicesCtrl',
-            controllerAs: 'sc',
+          .state('devices-redux', {
+            url: '/devices-redux',
+            template: '<devices-redux></devices-redux>',
             parent: 'main',
-            data: {
-              bodyClass: 'devices-page',
-            },
           })
           .state('device-overview', {
             parent: 'sidepanel',
@@ -3957,12 +3959,9 @@
         $stateProvider
           .state('services-overview', {
             url: '/services?office365&reason',
-            template: '<services-overview has-services-overview-refresh-toggle="$resolve.atlasServicesOverviewRefresh" url-params="$resolve.urlParams"></services-overview>',
+            template: '<services-overview url-params="$resolve.urlParams"></services-overview>',
             parent: 'main',
             resolve: {
-              atlasServicesOverviewRefresh: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.hasFeatureToggleOrIsTestOrg(FeatureToggleService.features.atlasServicesOverviewRefresh);
-              },
               urlParams: /* @ngInject */ function ($stateParams) {
                 return $stateParams;
               },

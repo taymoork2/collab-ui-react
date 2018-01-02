@@ -203,7 +203,7 @@ export class CallLocationSettingsService {
   private getLocationMedia(locationId: string): ng.IPromise<string> {
     return this.MediaOnHoldService.getLocationMedia(locationId)
       .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohGetError'));
+        this.errors.push(this.Notification.processErrorResponse(error, 'mediaOnHold.mohGetError'));
         return this.$q.reject();
       });
   }
@@ -211,7 +211,7 @@ export class CallLocationSettingsService {
   private updateMediaOnHold(mediaId: string, locationId?: string): ng.IPromise<void> {
     return this.MediaOnHoldService.updateMediaOnHold(mediaId, 'Location', locationId)
       .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohUpdateError'));
+        this.errors.push(this.Notification.processErrorResponse(error, 'mediaOnHold.mohUpdateError'));
         return this.$q.reject();
       });
   }
@@ -219,7 +219,7 @@ export class CallLocationSettingsService {
   private unassignMediaOnHold(locationId?: string): ng.IPromise<void> {
     return this.MediaOnHoldService.unassignMediaOnHold('Location', locationId)
       .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohUpdateError'));
+        this.errors.push(this.Notification.processErrorResponse(error, 'mediaOnHold.mohUpdateError'));
         return this.$q.reject();
       });
   }

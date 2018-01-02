@@ -48,9 +48,13 @@ class CareFeatureModalCtrl implements ng.IComponentController {
 
   public ok(featureId): void {
     let templateStr = '<customer-support-template-modal dismiss="$dismiss()" class="care-modal"></customer-support-template-modal>';
+    if (this.$state.isHybridToggleEnabled) {
+      templateStr = '<care-hybrid-feature-modal dismiss="$dismiss()" class="care-modal"></care-hybrid-feature-modal>';
+    }
     if (featureId === 'virtualAssistant') {
       templateStr = '<virtual-assistant-modal dismiss="$dismiss()" class="care-modal"></virtual-assistant-modal>';
     }
+
     this.$modal.open({
       template: templateStr,
     });

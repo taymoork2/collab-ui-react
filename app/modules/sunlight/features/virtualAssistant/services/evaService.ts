@@ -123,6 +123,27 @@ export class EvaService {
     });
   }
   /**
+   * obtain resource for Expert Virtual Assistant Stats API Rest calls.
+   * @param orgId
+   * @param expertAssistantId
+   * @returns {IConfigurationResource}
+   */
+  private getExpertAssistantStatsResource(orgId: string, expertAssistantId?: string): IConfigurationResource {
+    const  baseUrl = this.UrlConfig.getEvaServiceUrl();
+    return <IConfigurationResource>this.$resource(baseUrl + 'config/organization/:orgId/expert-assistant/stats/:expertAssistantId', {
+      orgId: orgId,
+      expertAssistantId: expertAssistantId,
+    }, {
+      update: {
+        method: 'PUT',
+      },
+      save: {
+        method: 'POST',
+      },
+    });
+  }
+
+  /**
    * list all Expert Virtual Assistants for orgId
    * @param orgId
    * returns {ng.IPromise<any>} promise resolving to JSON array of configurations or empty array on error
@@ -212,6 +233,17 @@ export class EvaService {
   }
 
   /**
+   * get a list of expert virutal assistant spaces
+   * @param expertAssistantId
+   * @param orgId
+   * returns {ng.IPromise<any>} promise
+   */
+  public getExpertAssistantSpaces(expertAssistantId: string, orgId: string): ng.IPromise<any> {
+    return this.getExpertAssistantStatsResource(orgId || this.Authinfo.getOrgId(), expertAssistantId)
+      .get().$promise;
+  }
+
+  /**
    * Check passed feature: if user isn't owner then indicate invalid with warning
    *  otherwise indicate valid
    * @param feature
@@ -229,6 +261,7 @@ export class EvaService {
       },
     };
   }
+
   /**
    * Return formatted list to render as cards on CareFeatures page
    * @param list

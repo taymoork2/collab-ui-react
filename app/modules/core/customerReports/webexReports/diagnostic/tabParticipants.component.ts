@@ -32,12 +32,11 @@ class Participants implements ng.IComponentController {
     this.SearchService.getParticipants(this.conferenceID)
       .then((res) => {
         _.forEach(res, (item) => {
-          const browser = this.SearchService.getBrowser(item.browser);
-          const platform = this.SearchService.getPlartform({ platform: item.platform, sessionType: item.sessionType });
-          item.Duration = moment.duration(item.duration * 1000).humanize();
+          const device = this.SearchService.getDevice({ platform: item.platform, browser: item.browser, sessionType: item.sessionType });
+          item.Duration = this.SearchService.getDuration(item.duration);
           item.endReason = this.SearchService.getParticipantEndReson(item.reason);
-          item.startDate = this.SearchService.timestampToDate(item.joinTime, 'MMMM Do, YYYY h:mm:ss A');
-          item.platform_ = browser ? `${browser} on ${platform}` : platform;
+          item.startDate = this.SearchService.timestampToDate(item.joinTime, 'YYYY-MM-DD hh:mm:ss');
+          item.platform_ = device.name;
         });
         this.gridData = res;
         this.loading = false;
@@ -51,14 +50,16 @@ class Participants implements ng.IComponentController {
 
   private setGridOptions(): void { // TODO , will translate next time
     const columnDefs = [{
-      sortable: true,
+      width: '14%',
       cellTooltip: true,
       field: 'userName',
       displayName: 'User Name',
     }, {
+      width: '16%',
       field: 'startDate',
       displayName: 'Start Date',
     }, {
+      width: '10%',
       field: 'Duration',
       displayName: 'Duration',
     }, {

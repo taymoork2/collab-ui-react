@@ -34,7 +34,6 @@
 
       .icon-information {
         color: $gray-light-1;
-        font-size: rem-calc(15px);
         cursor: pointer;
       }
 
@@ -42,11 +41,6 @@
         color: $color-blue-dark;
       }
 
-      .tooltip[popup-class="smaller-font"] .c-nub {
-        font-size: x-small;
-        width: 188px;
-        max-width: 188px;
-      }
     }
   }
 

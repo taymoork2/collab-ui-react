@@ -168,7 +168,7 @@ class LineOverview implements ng.IComponentController {
           .then(mediaList => {
             this.lineMediaOptions = mediaList;
           })
-          .catch(error => this.Notification.errorResponse(error, 'serviceSetupModal.mohGetOptionsError'));
+          .catch(error => this.Notification.errorResponse(error, 'mediaOnHold.mohGetOptionsError'));
         }
       });
   }

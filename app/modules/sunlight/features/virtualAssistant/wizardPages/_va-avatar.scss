@@ -78,5 +78,9 @@
   @include vr-spacing(mt, 0.75);
   text-align: center;
   color: $color-red-base;
+
+  .icon {
+    vertical-align: middle;
+  }
 }
 

@@ -11,23 +11,13 @@ export class SearchService {
     this.url = `${this.UrlConfig.getGeminiUrl()}`;
   }
 
-  public getMeeting(conferenceID) {
-    const url = `${this.url}meetings/${conferenceID}`;
-    return this.$http.get(url).then(this.extractData);
-  }
-
-  public getMeetingDetail(conferenceID) {
-    const url = `${this.url}meetings/${conferenceID}/meeting-detail`;
-    return this.$http.get(url).then(this.extractData);
-  }
-
   public getMeetings(data) {
     const url = `${this.url}meetings`;
     return this.$http.post(url, data).then(this.extractData);
   }
 
-  public getMeetingSession(conferenceID) {
-    const url = `${this.url}meetings/${conferenceID}/session`;
+  public getMeetingDetail(conferenceID) {
+    const url = `${this.url}meetings/${conferenceID}/meeting-detail`;
     return this.$http.get(url).then(this.extractData);
   }
 
@@ -51,28 +41,14 @@ export class SearchService {
     return this.$http.get(url).then(this.extractData);
   }
 
-  public getJoinMeetingQuality(conferenceID) {
-    const url = `${this.url}meetings/${conferenceID}/participants/join-meeting-quality`;
-    return this.$http.get(url).then(this.extractData);
-  }
-
-  public getParticipantDetailInfo(conferenceID, nodeId) {
-    const url = `${this.url}meetings/${conferenceID}/node-ids/${nodeId}/call-legs`;
-    return this.$http.get(url).then(this.extractData);
-  }
-
   public getServerTime() {
     const url = `${this.url}server`;
     return this.$http.get(url).then(this.extractData);
   }
 
   public getStatus(num) {
-    const statusArr = ['inProcess', 'ended'];
+    const statusArr = ['inProgress', 'ended'];
     return this.$translate.instant('webexReports.meetingStatus.' + statusArr[num - 1]);
-  }
-
-  private extractData(response) {
-    return _.get(response, 'data');
   }
 
   public setStorage(key, val) {
@@ -89,14 +65,14 @@ export class SearchService {
       return '';
     }
     const tz = this.getStorage('timeZone');
-    const timeZone: any = tz ? tz : moment.tz.guess();
+    const timeZone = tz ? tz : moment.tz.guess();
     const offset = this.getOffset(timeZone);
-    return moment.utc(date).utcOffset(offset).format('MMMM Do, YYYY h:mm:ss A');
+    return moment.utc(date).utcOffset(offset).format('YYYY-MM-DD hh:mm:ss');
   }
 
   public getOffset(timeZone) {
     const tz = timeZone ? timeZone : moment.tz.guess();
-    return timeZone === 'ut18' ? '' : moment().tz(tz).format('Z');
+    return moment().tz(tz).format('Z');
   }
 
   public getGuess(tz) {
@@ -133,5 +109,38 @@ export class SearchService {
       return '';
     }
     return endReson ? 'Normal' : 'Abnormal';
+  }
+
+  public getDevice(obj) {
+    let device = { icon: '', name: '' };
+    if (obj.sessionType === '25' || obj.platform === '9') {
+      return { icon: 'icon-phone', name: 'PSTN' };
+    } else if (obj.platform === '10') {
+      device = { icon: 'icon-devices', name: 'TP Device' };
+    } else if (obj.browser === '2') {
+      device = { icon: 'icon-application', name: 'Client' };
+    } else if (_.includes(['7', '8', '11', '12', '13', '14'], obj.platform)) {
+      device = { icon: 'icon-mobile-phone', name: 'Mobile' };
+    } else if (_.parseInt(obj.platform) < 7) {
+      device = { icon: 'icon-browser', name: 'Browser' };
+    }
+    return device;
+  }
+
+  public getDuration(duration) {
+    if (!duration) {
+      return '';
+    }
+    const hours = moment.duration(duration * 1000).get('hours');
+    let minutes: any = moment.duration(duration * 1000).get('minutes');
+    let seconds: any = moment.duration(duration * 1000).get('seconds');
+    minutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+    seconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+
+    return hours ? `${hours}:${minutes}:${seconds}` : `${minutes}:${seconds}`;
+  }
+
+  private extractData(response) {
+    return _.get(response, 'data');
   }
 }

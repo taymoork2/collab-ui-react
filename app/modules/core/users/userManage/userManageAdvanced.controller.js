@@ -7,10 +7,10 @@ require('./_user-manage.scss');
     .controller('UserManageAdvancedController', UserManageAdvancedController);
 
   /* @ngInject */
-  function UserManageAdvancedController($modal, $previousState, $rootScope, $scope, $state, $timeout, $translate,
-    Analytics, DirSyncService, Notification) {
+  function UserManageAdvancedController($modal, $previousState, $rootScope, $scope, $state, $timeout, $translate, Analytics, Authinfo, DirSyncService, Notification) {
     var vm = this;
 
+    vm.isUserAdmin = isUserAdmin;
     vm.onInit = onInit;
     vm.onBack = onBack;
     vm.onNext = onNext;
@@ -50,10 +50,13 @@ require('./_user-manage.scss');
         vm.dirSyncStatusMessage = $translate.instant('userManage.ad.dirSyncSuccess');
       });
 
+      // The dir-sync call will always be an error for User Admins, but they should be able to try to update dir-sync users regardless
       $rootScope.$on('add-user-dirsync-error', function () {
-        vm.isNextDisabled = true;
-        vm.dirSyncStatusMessage = $translate.instant('userManage.ad.dirSyncError');
-        Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.SYNC_ERROR, null, { error: 'Directory Sync Error' });
+        if (!vm.isUserAdmin) {
+          vm.isNextDisabled = true;
+          vm.dirSyncStatusMessage = $translate.instant('userManage.ad.dirSyncError');
+          Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.SYNC_ERROR, null, { error: 'Directory Sync Error' });
+        }
       });
 
       // adapt so we an use the userCsvResults page since we want the DirSync results to look the same
@@ -84,6 +87,10 @@ require('./_user-manage.scss');
         next: 'users.list',
       },
     };
+
+    function isUserAdmin() {
+      return Authinfo.isUserAdminUser();
+    }
 
     function onCancelImport() {
       if (isCsvProcessing()) {

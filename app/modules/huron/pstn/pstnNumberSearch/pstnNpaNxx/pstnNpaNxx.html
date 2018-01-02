@@ -70,7 +70,13 @@
         ng-click="$ctrl.onBlockClick()"
         cs-input-label="{{::'pstnSetup.block' | translate}}">
 
-      <i class="icon icon-info" tooltip="{{::'pstnSetup.advancedOrder.blockTooltip' | translate}}" tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></i>
+      <i class="icon icon-info"
+        tooltip="{{::'pstnSetup.advancedOrder.blockTooltip' | translate}}"
+        tooltip-trigger="mouseenter focus"
+        tooltip-placement="right"
+        tooltip-animation="false"
+        aria-label="{{::'pstnSetup.advancedOrder.blockTooltip' | translate}}"
+        tabindex="0"></i>
     </div>
     <div class="medium-4 columns" ng-if="$ctrl.model.block">
       <input
@@ -88,20 +94,19 @@
       </div>
     </div>
     <div class="search-options" ng-if="$ctrl.model.block">
-      <input
-          cs-input
-          type="checkbox"
-          ng-model="$ctrl.model.consecutive"
-          ng-disabled="!$ctrl.model.block"
-          id="consecutiveChk{{$ctrl.numberType}}"
-          name="consecutiveChk{{$ctrl.numberType}}"
-          cs-input-label="{{::'pstnSetup.consecutive' | translate}}">
+      <input cs-input type="checkbox"
+        ng-model="$ctrl.model.consecutive"
+        ng-disabled="!$ctrl.model.block"
+        id="consecutiveChk{{$ctrl.numberType}}"
+        name="consecutiveChk{{$ctrl.numberType}}"
+        cs-input-label="{{::'pstnSetup.consecutive' | translate}}">
       <i class="icon icon-info"
-          tooltip="{{::'pstnSetup.advancedOrder.consecutiveTooltip' | translate}}"
-          tooltip-trigger="mouseenter"
-          tooltip-placement="right"
-          tooltip-animation="false"
-      ></i>
+        tooltip="{{::'pstnSetup.advancedOrder.consecutiveTooltip' | translate}}"
+        tooltip-trigger="mouseenter focus"
+        tooltip-placement="right"
+        tooltip-animation="false"
+        aria-label="{{::'pstnSetup.advancedOrder.consecutiveTooltip' | translate}}"
+        tabindex="0"></i>
     </div>
   </div>
   </form>

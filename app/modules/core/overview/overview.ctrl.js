@@ -380,7 +380,7 @@ require('./_overview.scss');
     }
 
     function initializeProvisioningEventHandler() {
-      if (SetupWizardService.hasPendingServiceOrder()) {
+      if (SetupWizardService.hasPendingCCWSubscriptions()) {
         var pendingServiceOrderUUID = SetupWizardService.getActingSubscriptionServiceOrderUUID();
 
         SetupWizardService.getPendingOrderStatusDetails(pendingServiceOrderUUID).then(function (productProvStatus) {

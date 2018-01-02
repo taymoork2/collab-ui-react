@@ -17,7 +17,11 @@ class CustomerSupportTemplateModalCtrl implements ng.IComponentController {
   public $onInit() {
 
     this.hasCall = this.Authinfo.isSquaredUC();
-    this.title = 'sunlightDetails.newFeatures.newCustomerSupportTemplateModalTitle';
+    if (this.$state.isHybridToggleEnabled) {
+      this.title = 'sunlightDetails.newFeatures.newWebTemplateModalTitle';
+    } else {
+      this.title = 'sunlightDetails.newFeatures.newCustomerSupportTemplateModalTitle';
+    }
 
     const callbackServiceDescription = this.hasCall ? 'sunlightDetails.newFeatures.selectCADesc'
       : 'sunlightDetails.featuresNotYetConfiguredPage.CallLicenseMissing';

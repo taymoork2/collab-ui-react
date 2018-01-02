@@ -9,6 +9,7 @@ import esaDisclaimer from './esaDisclaimer';
 import pstnNumberSearchModule from './pstnNumberSearch';
 import pstnAreaServiceModule from './pstnAreaService';
 import pstnAddressServiceModule from './shared/pstn-address';
+import pstnReviewModule from './pstn-review';
 
 export * from './pstn.const';
 export * from './pstn.model';
@@ -32,4 +33,5 @@ export default angular
     pstnNumberSearchModule,
     pstnAreaServiceModule,
     pstnAddressServiceModule,
+    pstnReviewModule,
   ]).name;

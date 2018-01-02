@@ -32,7 +32,7 @@ require('./_setup-wizard.scss');
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Analytics, Authinfo, Config, FeatureToggleService, Orgservice, SessionStorage, SetupWizardService, StorageKeys, Notification, CustomerCommonService) {
+  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Analytics, ApiCacheManagementService, Authinfo, Config, FeatureToggleService, Orgservice, SessionStorage, SetupWizardService, StorageKeys, Notification, CustomerCommonService) {
     var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
     var isITDecouplingFlow = false;
     var shouldRemoveSSOSteps = false;
@@ -103,6 +103,7 @@ require('./_setup-wizard.scss');
       getPendingSubscriptionFlags();
       var tabs = getInitTabs();
 
+      initHybridServicesCaches();
       initPlanReviewTab(tabs);
       initEnterpriseSettingsTab(tabs);
       initMeetingSettingsTab(tabs);
@@ -454,6 +455,12 @@ require('./_setup-wizard.scss');
       }
 
       return filteredTabs;
+    }
+
+    function initHybridServicesCaches() {
+      if (Authinfo.isCustomerLaunchedFromPartner()) {
+        ApiCacheManagementService.invalidateHybridServicesCaches();
+      }
     }
   }
 })();

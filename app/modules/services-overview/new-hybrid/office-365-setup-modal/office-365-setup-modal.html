@@ -3,7 +3,8 @@
   <h1 class="modal-title" translate="hercules.office365SetupModal.title"></h1>
 </div>
 <div class="modal-body">
-  <h2 translate="hercules.office365SetupModal.subtitle"></h2>
+  <h2 translate="hercules.office365SetupModal.subtitle" ng-if="!$ctrl.firstTime"></h2>
+  <h2 translate="hercules.office365SetupModal.subtitleReAuth" ng-if="$ctrl.firstTime"></h2>
   <p translate="hercules.office365SetupModal.line1"></p>
   <p translate="hercules.office365SetupModal.line2"></p>
   <p translate="hercules.office365SetupModal.line3" translate-compile></p>

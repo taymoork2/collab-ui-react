@@ -12,6 +12,7 @@ describe('SetupWizardCtrl', function () {
       '$state',
       '$stateParams',
       'Analytics',
+      'ApiCacheManagementService',
       'Authinfo',
       'FeatureToggleService',
       'Orgservice',
@@ -525,6 +526,25 @@ describe('SetupWizardCtrl', function () {
 
     it('should create customer', function () {
       this.$httpBackend.expectPOST('/customers').respond(200);
+    });
+  });
+
+  describe('hybrid services cache invalidation', function () {
+    beforeEach(function () {
+      spyOn(this.Authinfo, 'isCustomerLaunchedFromPartner');
+      spyOn(this.ApiCacheManagementService, 'invalidateHybridServicesCaches');
+    });
+
+    it('should call the cache invalidation service if the user is a partner who is setting up a customer org', function () {
+      this.Authinfo.isCustomerLaunchedFromPartner.and.returnValue(true);
+      this.initController();
+      expect(this.ApiCacheManagementService.invalidateHybridServicesCaches.calls.count()).toBe(1);
+    });
+
+    it('should *not* call the cache invalidation service if the user is *not* a partner who is setting up a customer org', function () {
+      this.Authinfo.isCustomerLaunchedFromPartner.and.returnValue(false);
+      this.initController();
+      expect(this.ApiCacheManagementService.invalidateHybridServicesCaches).not.toHaveBeenCalled();
     });
   });
 });
