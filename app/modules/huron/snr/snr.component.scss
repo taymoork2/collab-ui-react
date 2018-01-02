@@ -1,0 +1,34 @@
+$flagsImagePath: '../../images/' !default;
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
+
+.snr-panel {
+
+  .loading-container {
+    font-size: 3rem;
+    text-align: center;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  .section-title-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .toggle-switch {
+      margin-bottom: 0;
+    }
+  }
+
+  .form-group-wrapper {
+    padding-top: 10px;
+  }
+
+  .snr-remote-destination-number {
+    margin-top: 8px;
+    width: 330px;
+  }
+}

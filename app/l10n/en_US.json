@@ -1632,6 +1632,7 @@
     "service": "Service",
     "settings": "Settings",
     "setUp": "Set Up",
+    "shared": "Shared",
     "showAllAdminUsers": "Show all {{numUsers}} administrators",
     "showLess": "Show Less",
     "showMore": "Show More",
@@ -4886,12 +4887,11 @@
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
     "description": "Single Number Reach (SNR) enables you to have incoming calls ring the extension and other lines that you specify here at the same time.",
-    "description2": "Turn on Single Number Reach and specify the lines that you want to ring at the same time.",
     "snrOffDescription": "Single Number Reach is currently disabled. The Destination is set to ",
     "deleteConfirmMsg": "Are you sure you want to delete?",
     "confirmDelete": "Confirm Delete",
     "remove": "Remove",
-    "snrRemoteDestinationNumber": "When the line is called, the following phone number will ring at the same time:",
+    "snrRemoteDestinationNumber": "When the lines chosen above are called, the following phone number will ring at the same time:",
     "snrRemoteDestinationNumberPlaceholder": "Enter Number",
     "snrWaitSeconds": "Indicate how long you want all lines to ring before the call is forwarded to your work voicemail.",
     "toggle": "Single Number Reach",
@@ -4900,7 +4900,8 @@
     "removeSuccess": "Single Number Reach configuration removed successfully",
     "error": "Single Number Reach configuration failed.",
     "unitedStates": "United States of America",
-    "austrailia": "Austrailia"
+    "austrailia": "Austrailia",
+    "chooseLines": "Choose the lines to ring:"
   },
   "speedDials": {
     "title": "Speed Dial Numbers",
