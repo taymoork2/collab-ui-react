@@ -57,7 +57,7 @@
           isHybridToggleEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
             return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridEnable)
               .then(function (isEnabled) {
-                $state.isAtlasHybridEnable = isEnabled;
+                $state.isHybridToggleEnabled = isEnabled;
               });
           },
           isExpertCareAssistantEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
