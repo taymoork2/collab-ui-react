@@ -238,7 +238,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       } else {
         //get the users I am searching for
         UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order,
-          function (data, status, searchStr) {
+          function (data, status, searchStr, fullResponse) {
             $scope.tooManyUsers = false;
             if (data.success) {
               if ($scope.searchStr === searchStr) {
@@ -299,10 +299,10 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
                 $scope.tooManyUsers = tooManyUsers;
               } else if (tooManyResults) {
                 Log.debug('Query existing users yielded too many search results. Status: ' + status);
-                Notification.error('usersPage.tooManyResultsError');
+                Notification.errorWithTrackingId(fullResponse, 'usersPage.tooManyResultsError');
               } else {
                 Log.debug('Query existing users failed. Status: ' + status);
-                Notification.error('usersPage.userListError');
+                Notification.errorWithTrackingId(fullResponse, 'usersPage.userListError');
               }
               deferred.reject(data);
             }

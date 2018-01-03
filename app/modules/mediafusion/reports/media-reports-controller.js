@@ -511,9 +511,10 @@
         vm.availabilityTooltipOptions = MediaSneekPeekResourceService.getClusterAvailabilitySneekPeekValues(response, vm.Map, vm.clusterAvailability, vm.clusterId);
         vm.tooltipText = vm.availabilityTooltipOptions.values[0];
         vm.availabilityTooltipOptions['tooltipClickHandler'] = clusterUpdateFromTooltip;
-      }, function () {
-        Notification.error('mediaFusion.genericError');
-      });
+      })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'mediaFusion.genericError');
+        });
     }
 
     function setUtilizationData() {
