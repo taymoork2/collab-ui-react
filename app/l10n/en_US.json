@@ -5105,6 +5105,11 @@
     "tollFreeTitle": "Search and add toll-free phone numbers by entering a valid area code. Valid toll-free area codes include {{areaCodes}}",
     "unableToAddTollFreeNumbers": "Unable to add toll-free numbers because the customer PSTN contract is incomplete. Please remind your customer to sign and submit their contract.",
     "unableToAddPortedNumbers": "Unable to add ported numbers because the customer PSTN contract is incomplete. Please remind your customer to sign and submit their contract.",
+    "unableToAddTollFreeNumbersShort": "Unable to add toll-free numbers because the customer PSTN contract is incomplete.",
+    "unableToAddPortedNumbersShort": "Unable to add ported numbers because the customer PSTN contract is incomplete.",
+    "initContract": "Initiate the contract signing process with {{carrier}}",
+    "initContractTitle": "Initiate Contract",
+    "initContractReview": "You have not added any numbers, you can initiate the contract signing process with {{carrier}} by placing this order.  Once the contract is signed you can port numbers or add Toll Free numbers",
     "pstnSelector": {
       "searchPlaceholder": "Enter area code and/or number prefix",
       "searchDesc": "e.g. 972 or 972867",
