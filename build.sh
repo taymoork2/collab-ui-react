@@ -99,8 +99,6 @@ function phase_2 {
     # generate a plain-text file defining custom HTTP headers for use by nginx (CSP-related headers currently)
     node ./utils/printCustomHttpHeaders.js | tee ./headers.txt
 
-    # - 'typings' seems to be required for webpack to succeed
-    yarn typings
     time nice -10 yarn build --env.nolint --env.noprogress --env.nocacheloader --devtool source-map
 
     nice -15 yarn test --env.noprogress

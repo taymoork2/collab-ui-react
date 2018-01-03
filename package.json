@@ -10,9 +10,6 @@
     "type": "git",
     "url": "git@sqbu-github.cisco.com:WebExSquared/wx2-admin-web-client.git"
   },
-  "//scripts": [
-    "TODO: remove typings script after a short transition period"
-  ],
   "scripts": {
     "analyze": "yarn build --env.analyze",
     "build": "yarn clean-dist && node --max-old-space-size=2048 ./node_modules/.bin/webpack --bail --profile",
@@ -32,7 +29,7 @@
     "ktest-watch": "./bin/ktest --no-parallel --no-single-run --auto-watch",
     "languages-verify": "node ./utils/languages-verify.js",
     "lint": "yarn eslint && yarn tslint && yarn stylelint",
-    "postinstall": "yarn ts-spec-delete && yarn typings",
+    "postinstall": "yarn ts-spec-delete",
     "posttest": "yarn coverage-report",
     "preinstall": "node ./utils/version-check.js",
     "prestart": "yarn",
@@ -49,7 +46,6 @@
     "test": "yarn ktest-all",
     "ts-spec-delete": "node ./utils/ts-spec-delete.js",
     "tslint": "tsc --noEmit && tslint --format stylish --project ./tsconfig.json",
-    "typings": "rimraf ./typings",
     "webdriver": "webdriver-manager update"
   },
   "dependencies": {
@@ -128,7 +124,6 @@
   },
   "//devDependencies": [
     "TODO: upgrade @types/lodash and refactor for undefined return types",
-    "TODO: remove typings dependency after collab-ui-ng removes postinstall script",
     "TODO: upgrade @types/jquery@^3.x after it removes es2015 library dependencies",
     "TODO: upgrade typescript and allow minor versions after fixing breaking changes"
   ],
@@ -236,7 +231,6 @@
     "tslint-jasmine-rules": "^1.3.0",
     "tslint-loader": "^3.3.0",
     "typescript": "~2.5.3",
-    "typings": "^2.1.0",
     "unparse-args": "^1.1.0",
     "webpack": "^3.6.0",
     "webpack-bundle-analyzer": "^2.3.1",
