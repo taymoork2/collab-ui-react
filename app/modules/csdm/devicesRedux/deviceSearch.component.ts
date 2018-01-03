@@ -222,36 +222,33 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     if ($keyEvent && $keyEvent.which) {
       this.interactedWithSearch = true;
       const target = $keyEvent.target;
+      if (!(target instanceof HTMLInputElement)) {
+        return;
+      }
       switch ($keyEvent.key) {
         case '"':
-          if (target instanceof HTMLInputElement) {
-            if (!this.searchObject.hasError) {
-              if (!target.value[target.selectionEnd]) {
-                const selectionStart = target.selectionStart;
-                target.value = [target.value.slice(0, selectionStart), '"', target.value.slice(target.selectionEnd)].join('');
-                target.selectionEnd = selectionStart;
-              } else if (target.value[target.selectionEnd] === '"') {
-                target.selectionEnd += 1;
-                return false;
-              }
+          if (!this.searchObject.hasError) {
+            if (!target.value[target.selectionEnd]) {
+              const selectionStart = target.selectionStart;
+              target.value = [target.value.slice(0, selectionStart), '"', target.value.slice(target.selectionEnd)].join('');
+              target.selectionEnd = selectionStart;
+            } else if (target.value[target.selectionEnd] === '"') {
+              target.selectionEnd += 1;
+              return false;
             }
           }
           break;
         case '(':
-          if (target instanceof HTMLInputElement) {
-            if (!target.value[target.selectionEnd]) {
-              const selectionStart = target.selectionStart;
-              target.value = [target.value.slice(0, selectionStart), ')', target.value.slice(target.selectionEnd)].join('');
-              target.selectionEnd = selectionStart;
-            }
+          if (!target.value[target.selectionEnd]) {
+            const selectionStart = target.selectionStart;
+            target.value = [target.value.slice(0, selectionStart), ')', target.value.slice(target.selectionEnd)].join('');
+            target.selectionEnd = selectionStart;
           }
           break;
         case ')':
-          if (target instanceof HTMLInputElement) {
-            if (target.value[target.selectionEnd] === ')') {
-              target.selectionEnd += 1;
-              return false;
-            }
+          if (target.value[target.selectionEnd] === ')') {
+            target.selectionEnd += 1;
+            return false;
           }
           break;
       }
@@ -301,9 +298,9 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
 
   public static ShowSearchError(Notification: Notification, trackingId) {
     Notification.error('spacesPage.searchFailedDetails',
-        { trackingID: trackingId },
-        'spacesPage.searchFailedTitle',
-        true);
+      { trackingID: trackingId },
+      'spacesPage.searchFailedTitle',
+      true);
   }
 
   public getBullets(): SearchElement[] {
