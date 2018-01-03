@@ -1452,7 +1452,7 @@ require('./_user-add.scss');
         var value = _.replace(e.attrs.value, /\s*\([^)]*\)\s*/g, ' ');
         e.attrs.value = value;
         isDuplicate = false;
-        if (isEmailAlreadyPresent(e.attrs.value)) {
+        if (OnboardService.isEmailAlreadyPresent(e.attrs.value)) {
           isDuplicate = true;
         }
       },
@@ -1484,37 +1484,6 @@ require('./_user-add.scss');
         });
       },
     };
-
-    function isEmailAlreadyPresent(input) {
-      var inputEmail = getEmailAddress(input).toLowerCase();
-      if (inputEmail) {
-        var userEmails = getTokenEmailArray();
-        var userEmailsLower = [];
-        for (var i = 0; i < userEmails.length; i++) {
-          userEmailsLower[i] = userEmails[i].toLowerCase();
-        }
-        return userEmailsLower.indexOf(inputEmail) >= 0;
-      } else {
-        return false;
-      }
-    }
-
-    function getTokenEmailArray() {
-      var tokens = angular.element('#usersfield').tokenfield('getTokens');
-      return tokens.map(function (token) {
-        return getEmailAddress(token.value);
-      });
-    }
-
-    function getEmailAddress(input) {
-      var retString = '';
-      input.split(' ').forEach(function (str) {
-        if (str.indexOf('@') >= 0) {
-          retString = str;
-        }
-      });
-      return retString;
-    }
 
     function removeEmailFromTokenfield(email) {
       $scope.model.userList = $scope.model.userList.split(', ').filter(function (token) {

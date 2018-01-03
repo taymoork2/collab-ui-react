@@ -73,4 +73,36 @@ export default class OnboardService {
     });
     return result;
   }
+
+  public isEmailAlreadyPresent(input: string) {
+    const inputEmail = this.getEmailAddress(input).toLowerCase();
+    if (inputEmail) {
+      const userEmails = this.getTokenEmailArray();
+      // TODO (mipark2): use _.find() here instead
+      const userEmailsLower: any = [];
+      for (let i = 0; i < userEmails.length; i++) {
+        userEmailsLower[i] = userEmails[i].toLowerCase();
+      }
+      return userEmailsLower.indexOf(inputEmail) >= 0;
+    } else {
+      return false;
+    }
+  }
+
+  private getTokenEmailArray() {
+    const tokens = (angular.element('#usersfield') as any).tokenfield('getTokens');
+    return tokens.map((token) => {
+      return this.getEmailAddress(token.value);
+    });
+  }
+
+  private getEmailAddress(input: string) {
+    let retString = '';
+    input.split(' ').forEach(function (str) {
+      if (str.indexOf('@') >= 0) {
+        retString = str;
+      }
+    });
+    return retString;
+  }
 }
