@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function AddResourceCommonServiceV2(Notification, $translate, $q, MediaClusterServiceV2, $window, MediaServiceActivationV2) {
+  function AddResourceCommonServiceV2($translate, $q, $window, HybridServicesClusterService, HybridServicesExtrasService, MediaServiceActivationV2, MediaClusterServiceV2, Notification) {
     var vm = this;
     vm.clusters = null;
     vm.onlineNodeList = [];
@@ -18,7 +18,7 @@
       vm.onlineNodeList = [];
       vm.offlineNodeList = [];
       var deferred = $q.defer();
-      MediaClusterServiceV2.getAll()
+      HybridServicesClusterService.getAll()
         .then(function (clusters) {
           vm.clusters = _.filter(clusters, {
             targetType: 'mf_mgmt',
@@ -65,9 +65,9 @@
       });
       if (vm.clusterDetail == null) {
         var deferred = $q.defer();
-        MediaClusterServiceV2.createClusterV2(enteredCluster, 'stable')
+        HybridServicesClusterService.preregisterCluster(enteredCluster, 'stable', 'mf_mgmt')
           .then(function (resp) {
-            vm.selectedClusterId = resp.data.id;
+            vm.selectedClusterId = resp.id;
             // Add the created cluster to property set
             MediaClusterServiceV2.getPropertySets()
               .then(function (propertySets) {
@@ -101,7 +101,7 @@
     }
 
     function whiteListHost(hostName, clusterId) {
-      return MediaClusterServiceV2.addRedirectTarget(hostName, clusterId);
+      return HybridServicesExtrasService.addPreregisteredClusterToAllowList(hostName, clusterId);
     }
 
     function redirectPopUpAndClose(hostName, enteredCluster) {
@@ -118,9 +118,9 @@
 
     function createFirstTimeSetupCluster(hostName, enteredCluster) {
       var deferred = $q.defer();
-      MediaClusterServiceV2.createClusterV2(enteredCluster, 'stable').then(function (result) {
+      HybridServicesClusterService.preregisterCluster(enteredCluster, 'stable', 'mf_mgmt').then(function (result) {
         deferred.resolve();
-        vm.selectedClusterId = result.data.id;
+        vm.selectedClusterId = result.id;
         // Cluster created, now creating a property set for video quality
         var payLoad = {
           type: 'mf.group',

@@ -2,8 +2,8 @@
 
 describe('Controller: ReassignClusterControllerV2', function () {
   beforeEach(angular.mock.module('Mediafusion'));
-  var connector, controller, cluster, MediaClusterServiceV2, $q, $translate, modalInstanceMock, windowMock, clusterList, httpMock, Notification;
-  beforeEach(inject(function ($controller, _MediaClusterServiceV2_, _Notification_, _$q_, _$translate_, _$httpBackend_) {
+  var connector, controller, cluster, MediaClusterServiceV2, $q, $translate, modalInstanceMock, windowMock, clusterList, httpMock, Notification, HybridServicesClusterService;
+  beforeEach(inject(function ($controller, _MediaClusterServiceV2_, _Notification_, _$q_, _$translate_, _$httpBackend_, _HybridServicesClusterService_) {
     connector = {
       hostname: 'hostname',
       id: 'id',
@@ -28,6 +28,7 @@ describe('Controller: ReassignClusterControllerV2', function () {
     }];
 
     MediaClusterServiceV2 = _MediaClusterServiceV2_;
+    HybridServicesClusterService = _HybridServicesClusterService_;
     Notification = _Notification_;
     httpMock = _$httpBackend_;
     httpMock.when('GET', /^\w+.*/).respond({});
@@ -39,7 +40,7 @@ describe('Controller: ReassignClusterControllerV2', function () {
     windowMock = {
       open: jasmine.createSpy('open'),
     };
-    spyOn(MediaClusterServiceV2, 'getAll').and.returnValue($q.resolve(clusterList));
+    spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve(clusterList));
 
     controller = $controller('ReassignClusterControllerV2', {
       cluster: cluster,
@@ -55,30 +56,30 @@ describe('Controller: ReassignClusterControllerV2', function () {
   it('check if ReassignClusterControllerV2 is Defined', function () {
     expect(controller).toBeDefined();
   });
-  it('check if moveV2Host is called with  clusterId', function () {
+  it('check if HybridServicesClusterService.moveEcpNode is called with  clusterId', function () {
     httpMock.when('POST', /^\w+.*/).respond({});
     controller.clusterDetail = {
       id: 'id',
     };
-    spyOn(MediaClusterServiceV2, 'moveV2Host').and.returnValue($q.resolve({}));
+    spyOn(HybridServicesClusterService, 'moveEcpNode').and.returnValue($q.resolve({}));
     controller.reassign();
     httpMock.verifyNoOutstandingExpectation();
     expect(controller.saving).toBe(true);
-    expect(MediaClusterServiceV2.moveV2Host).toHaveBeenCalled();
+    expect(HybridServicesClusterService.moveEcpNode).toHaveBeenCalled();
   });
-  it('should notify error when moveV2Host call fails', function () {
+  it('should notify error when HybridServicesClusterService.moveEcpNode call fails', function () {
     httpMock.when('POST', /^\w+.*/).respond(500, null);
     controller.clusterDetail = {
       id: 'id',
     };
     controller.selectedCluster = 'testCluster1';
-    spyOn(MediaClusterServiceV2, 'moveV2Host').and.returnValue($q.reject());
+    spyOn(HybridServicesClusterService, 'moveEcpNode').and.returnValue($q.reject());
     controller.reassign();
     httpMock.verifyNoOutstandingExpectation();
-    expect(MediaClusterServiceV2.moveV2Host).toHaveBeenCalled();
+    expect(HybridServicesClusterService.moveEcpNode).toHaveBeenCalled();
     expect(controller.error).toBe('mediaFusion.reassign.reassignErrorMessage');
   });
-  it('check if createClusterV2 is called with  clusterId', function () {
+  it('check if HybridServicesClusterService.preregisterCluster is called with  clusterId', function () {
     httpMock.when('POST', /^\w+.*/).respond({});
     controller.clusterDetail = null;
     controller.selectModel = {
@@ -89,19 +90,17 @@ describe('Controller: ReassignClusterControllerV2', function () {
       id: 'a050fcc7-9ade-4790-a06d-cca596910421',
       name: 'MFA_TEST2',
     }];
-    spyOn(MediaClusterServiceV2, 'createClusterV2').and.returnValue($q.resolve({
-      data: '',
-    }));
+    spyOn(HybridServicesClusterService, 'preregisterCluster').and.returnValue($q.resolve({}));
     controller.reassign();
     httpMock.verifyNoOutstandingExpectation();
     expect(controller.saving).toBe(true);
-    expect(MediaClusterServiceV2.createClusterV2).toHaveBeenCalled();
+    expect(HybridServicesClusterService.preregisterCluster).toHaveBeenCalled();
   });
-  it('should notify error when createClusterV2 call fails', function () {
+  it('should notify error when preregisterCluster call fails', function () {
     httpMock.when('POST', /^\w+.*/).respond(500, null);
     controller.clusterDetail = null;
     spyOn(Notification, 'error');
-    spyOn(MediaClusterServiceV2, 'createClusterV2').and.returnValue($q.reject());
+    spyOn(HybridServicesClusterService, 'preregisterCluster').and.returnValue($q.reject());
     controller.reassign();
     httpMock.verifyNoOutstandingExpectation();
     expect(Notification.error).toHaveBeenCalled();
@@ -110,13 +109,13 @@ describe('Controller: ReassignClusterControllerV2', function () {
     httpMock.verifyNoOutstandingExpectation();
     expect(controller.options.length).toBe(1);
   });
-  it('canContinue should enable continue button when the feild is filled', function () {
+  it('canContinue should enable continue button when the field is filled', function () {
     controller.selectedCluster = 'testCluster1';
     controller.selectPlaceholder = 'testCluster2';
     controller.canContinue();
     expect(controller.canContinue()).toBeTruthy();
   });
-  it('canContinue should disable continue button when the feild is empty', function () {
+  it('canContinue should disable continue button when the field is empty', function () {
     controller.selectedCluster = '';
     controller.selectPlaceholder = 'testCluster2';
     controller.canContinue();
