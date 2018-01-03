@@ -29,7 +29,6 @@
     "ktest-watch": "./bin/ktest --no-parallel --no-single-run --auto-watch",
     "languages-verify": "node ./utils/languages-verify.js",
     "lint": "yarn eslint && yarn tslint && yarn stylelint",
-    "postinstall": "yarn ts-spec-delete",
     "posttest": "yarn coverage-report",
     "preinstall": "node ./utils/version-check.js",
     "prestart": "yarn",
@@ -44,7 +43,6 @@
     "stats": "yarn clean-dist && webpack --progress --profile --json > stats.json",
     "stylelint": "stylelint './app/**/**/*.scss'",
     "test": "yarn ktest-all",
-    "ts-spec-delete": "node ./utils/ts-spec-delete.js",
     "tslint": "tsc --noEmit && tslint --format stylish --project ./tsconfig.json",
     "webdriver": "webdriver-manager update"
   },
