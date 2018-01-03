@@ -7898,7 +7898,7 @@
       "accessToken": {
         "title": "Complete Dialogue Integration",
         "desc": "Complete your integration to enable the use of natural dialogue in your customer interactions",
-        "boxDesc": "Each Dialogflow agent has a unique client access token stored in the agent settings. Copy the token from your configured Dialogflow agent settings, enter it here, and click \"Validate\" to check the token before you complete the dialogue integration.",
+        "boxDesc": "Each Dialogflow agent has a unique client access token stored in the agent settings. After completing your Dialogflow configuration, copy the client access token from the settings for your agent and enter it here to complete the integration.",
         "inputLabel": "Dialogflow Client Access Token",
         "validateButtonText": "Validate",
         "maxLengthError": "Client Access Token cannot be longer than 128 characters.",

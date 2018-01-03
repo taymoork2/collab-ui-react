@@ -24,7 +24,7 @@
               ng-disabled="$ctrl.template.configuration.pages.cvaAccessToken.validatingToken">
             <i class="icon icon-check token-check-mark" ng-hide="!($ctrl.template.configuration.pages.cvaAccessToken.invalidToken == false)"></i>
             <button cs-btn class="btn btn--primary validate-button"
-                ng-disabled="!($ctrl.template.configuration.pages.cvaAccessToken.accessTokenValue)"
+                ng-disabled="$ctrl.isValidateButtonDisabled()"
                 loading="$ctrl.template.configuration.pages.cvaAccessToken.validatingToken"
                 ng-click="$ctrl.validateDialogflowToken()">
                 {{$ctrl.getText('accessToken.validateButtonText')}}
