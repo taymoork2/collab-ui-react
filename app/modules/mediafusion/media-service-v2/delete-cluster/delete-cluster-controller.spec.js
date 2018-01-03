@@ -17,7 +17,7 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     spyOn(this.HybridServicesClusterService, 'getAll').and.returnValue({ then: _.noop });
     spyOn(this.HybridServicesClusterService, 'moveEcpNode').and.returnValue(this.$q.resolve({}));
     spyOn(this.HybridServicesClusterService, 'preregisterCluster').and.returnValue(this.$q.resolve({}));
-    spyOn(this.HybridServicesClusterService, 'deleteCluster').and.returnValue(this.$q.resolve({}));
+    spyOn(this.HybridServicesClusterService, 'deregisterCluster').and.returnValue(this.$q.resolve({}));
     spyOn(this.$state, 'go');
 
     this.$modalInstance = {
@@ -100,7 +100,7 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     expect(this.HybridServicesClusterService.moveEcpNode.calls.count()).toEqual(0);
   });
 
-  it('check if the deleteCluster of HybridServicesClusterService is invoked for empty cluster', function () {
+  it('check if the deregisterCluster of HybridServicesClusterService is invoked for empty cluster', function () {
     this.controller.cluster = _.cloneDeep(this.jsonData.cluster);
     this.controller.hosts = [];
     this.controller.selectPlaceholder = this.selectString;
@@ -114,11 +114,11 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     this.controller.continue();
     this.$scope.$apply();
     expect(this.controller.isMove).toBe(true);
-    expect(this.HybridServicesClusterService.deleteCluster).toHaveBeenCalled();
-    expect(this.HybridServicesClusterService.deleteCluster.calls.count()).toEqual(1);
+    expect(this.HybridServicesClusterService.deregisterCluster).toHaveBeenCalled();
+    expect(this.HybridServicesClusterService.deregisterCluster.calls.count()).toEqual(1);
   });
 
-  it('check if the deleteCluster of HybridServicesClusterService is invoked when errorCount is present', function () {
+  it('check if the deregisterCluster of HybridServicesClusterService is invoked when errorCount is present', function () {
     this.controller.cluster = _.cloneDeep(this.jsonData.cluster);
     this.controller.hosts = [];
     this.controller.failedToDelete = false;
@@ -135,7 +135,7 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
 
     this.controller.continue();
     expect(this.controller.isMove).toBe(true);
-    expect(this.HybridServicesClusterService.deleteCluster).not.toHaveBeenCalled();
+    expect(this.HybridServicesClusterService.deregisterCluster).not.toHaveBeenCalled();
     expect(this.controller.failedToDelete).toBe(true);
   });
 

@@ -174,7 +174,7 @@
 
     function deleteCluster() {
       if (vm.successCount == vm.noOfHost) {
-        HybridServicesClusterService.deleteCluster(vm.cluster.id).then(function () {
+        HybridServicesClusterService.deregisterCluster(vm.cluster.id).then(function () {
           vm.success = $translate.instant('mediaFusion.clusters.clusterdeleteSuccess', {
             clustername: vm.cluster.name,
           });

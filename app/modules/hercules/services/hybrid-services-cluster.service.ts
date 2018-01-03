@@ -79,17 +79,6 @@ export class HybridServicesClusterService {
   }
 
   public deregisterCluster(clusterId: string): ng.IPromise<''> {
-    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/actions/deregisterCluster/invoke?clusterId=${clusterId}`;
-    return this.$http.post<''>(url, null)
-      .then(this.extractDataFromResponse)
-      .then((res) => {
-        this.clearCache();
-        return res;
-      });
-  }
-
-  // TODO: Why do we have both the deregisterCluster and deleteCluster functions? Is one redundant?
-  public deleteCluster(clusterId: string): ng.IPromise<''> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}`;
     return this.$http.delete<''>(url)
       .then(this.extractDataFromResponse)
