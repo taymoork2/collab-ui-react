@@ -9081,7 +9081,8 @@
       },
       "hybridTesting": {
         "title": "Hybrid Testing",
-        "description": "Run various test suites or tests to verify endpoints are working"
+        "description": "Run various test suites or tests to verify endpoints are working",
+        "edit": "Edit Suites"
       },
       "hybridCall": {
         "title": "Hybrid Call",

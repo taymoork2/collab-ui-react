@@ -7,14 +7,6 @@ class HybridTestingActiveCardController implements ng.IComponentController {
   public $onInit() {
   }
 
-  // public editTaasTest(customer) {
-  //   this.$state.go('taas.test', { customerId: customer.id });
-  // }
-
-  // public deleteTaasSuite() {
-  //   alert('All Suites have been deleted');
-  // }
-
 }
 export class HybridTestingActiveCardComponent implements ng.IComponentOptions {
   public controller = HybridTestingActiveCardController;
@@ -27,7 +19,7 @@ export class HybridTestingActiveCardComponent implements ng.IComponentOptions {
         <div class="active-card_content">
           <div class="active-card_section">
             <div class="active-card_title" translate="servicesOverview.cards.shared.service"></div>
-            <div class="active-card_action"><a ui-sref="taasSuites">Edit Suites</a></div>
+            <div class="active-card_action"><a ui-sref="taasSuites"><p translate="servicesOverview.cards.hybridTesting.edit"></p></a></div>
           </div>
         </div>
         <div class="active-card_footer">

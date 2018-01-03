@@ -8,6 +8,14 @@ const STATE_SHOW_SUITES: string = 'STATE_SHOW_SUITES';
 const STATE_RELOAD: string = 'STATE_RELOAD';
 const STATE_NEW_SUITE: string = 'STATE_NEW_SUITE';
 
+
+export class TaasSuiteViewComponent implements ng.IComponentOptions {
+  public controller = TaasSuiteViewCtrl;
+  public template = require('./taasSuiteView.component.html');
+  public bindings = {
+    suiteId: '<',
+  };
+}
 export class TaasSuiteViewCtrl implements ng.IComponentController {
   public suites: HtmSuite[] = [];
   public pageState: string = STATE_LOADING;
@@ -23,8 +31,9 @@ export class TaasSuiteViewCtrl implements ng.IComponentController {
     public CardUtils: CardUtils,
     public $state: ng.ui.IStateService,
     public $modal: IToolkitModalService,
-    private Notification: Notification,
     public $q: ng.IQService,
+
+    private Notification: Notification,
     private Authinfo,
     ) {}
 
@@ -113,12 +122,3 @@ export class TaasSuiteViewCtrl implements ng.IComponentController {
     this.reload();
   }
 }
-
-export class TaasSuiteViewComponent implements ng.IComponentOptions {
-  public controller = TaasSuiteViewCtrl;
-  public template = require('./taasSuiteView.component.html');
-  public bindings = {
-    suiteId: '<',
-  };
-}
-

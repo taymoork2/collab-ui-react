@@ -2979,7 +2979,7 @@
           .state('taasSuites', {
             parent: 'main',
             url: '/taasSuite',
-            template: '<taas-suite-view></tass-suite-view>',
+            template: '<taas-suite-view></taas-suite-view>',
           })
           .state('taasTest', {
             parent: 'main',
