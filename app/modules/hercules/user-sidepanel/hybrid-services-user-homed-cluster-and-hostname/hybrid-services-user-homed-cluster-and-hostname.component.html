@@ -1,24 +1,24 @@
 <div class="row collapse">
   <div class="columns small-3">
-    <span class="cloud-extension-label">{{::'cloudExtensions.cluster' | translate}}:</span>
+    <span class="hybrid-services-label">{{::'cloudExtensions.cluster' | translate}}:</span>
   </div>
   <div class="columns small-9">
     <span cs-loader
-          class="cloud-extension-label loader-example--small"
+          class="hybrid-services-label loader-example--small"
           ng-if="$ctrl.loading"></span>
-    <span class="cloud-extension-label" ng-if="!$ctrl.loading">{{$ctrl.clustername}}</span>
+    <span class="hybrid-services-label" ng-if="!$ctrl.loading">{{$ctrl.clustername}}</span>
   </div>
 </div>
 
 <div class="row collapse">
   <div class="columns small-3">
-    <span class="cloud-extension-label">{{::'hercules.connectors.host_name' | translate}}:</span>
+    <span class="hybrid-services-label">{{::'hercules.connectors.host_name' | translate}}:</span>
   </div>
   <div class="columns small-9">
     <span cs-loader
-          class="cloud-extension-label loader-example--small"
+          class="hybrid-services-label loader-example--small"
           ng-if="$ctrl.loading"></span>
-    <span class="cloud-extension-label" ng-if="!$ctrl.loading">
+    <span class="hybrid-services-label" ng-if="!$ctrl.loading">
       <a href="https://{{$ctrl.hostname}}" target="_blank">{{$ctrl.hostname}}</a>
     </span>
   </div>

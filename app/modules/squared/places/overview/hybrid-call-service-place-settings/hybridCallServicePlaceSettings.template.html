@@ -11,46 +11,46 @@
     </section-title>
     <p>{{directoryNumbers}}</p>
   </cs-sp-section>
-  <cs-sp-section class="cloud-extensions">
+  <cs-sp-section class="hybrid-services-user-sidepanel">
     <div class="section-title-row">
       <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-ec-place"></span>
     </div>
     <div>
       <div class="row collapse">
         <div class="columns small-3">
-          <span class="cloud-extension-label">{{::'cloudExtensions.status' | translate}}:</span>
+          <span class="hybrid-services-label">{{::'cloudExtensions.status' | translate}}:</span>
         </div>
         <div class="columns small-7 normal-line-height">
-          <span class="cloud-extension-label"
+          <span class="hybrid-services-label"
                 ng-if="callServiceAware.currentPlaceEntitled && callServiceAware.status && !savingAwareEntitlement"
                 ng-class="'status-' + callServiceAware.status.state"
                 id="callServiceConnectPlaceStatus"
                 translate="hercules.activationStatus.{{getStatus(callServiceAware.status)}}"></span>
-          <span class="cloud-extension-label last-state-change-timestamp"
+          <span class="hybrid-services-label last-state-change-timestamp"
                 ng-if="callServiceAware.currentPlaceEntitled && callServiceAware.status && callServiceAware.status.lastStateChangeText && !savingAwareEntitlement">
             {{callServiceAware.status.lastStateChangeText}}
           </span>
-          <span class="cloud-extension-label status-off"
+          <span class="hybrid-services-label status-off"
                 ng-if="!callServiceAware.currentPlaceEntitled && !savingAwareEntitlement" translate="common.off"></span>
           <span cs-loader
                 ng-if="savingAwareEntitlement || (!callServiceAware.status && callServiceAware.currentPlaceEntitled)"></span>
         </div>
         <div class="columns small-2">
           <span ng-if="callServiceAware.currentPlaceEntitled && callServiceAware.status && !savingAwareEntitlement"
-                class="cloud-extension-label right">
+                class="hybrid-services-label right">
             <a ui-sref="place-overview.hybrid-services-squared-fusion-uc.uc-history"
                translate="hercules.userHistory.seeHistory"></a>
           </span>
         </div>
       </div>
 
-      <div class="row collapse cloud-extension-label normal-line-height placeStatus">
+      <div class="row collapse hybrid-services-label normal-line-height hybrid-services-place-status">
         <span ng-if="callServiceAware.status.state === 'notActivated'" translate="hercules.placeSidepanel.hybridCallNotActivated"></span>
       </div>
-      <div class="row collapse cloud-extension-label normal-line-height mailid">
+      <div class="row collapse hybrid-services-label normal-line-height hybrid-services-place-mail-id">
         <div class="columns small-12"><span translate="addDeviceWizard.sparkCallConnect.mailId"></span><span>: {{mailID}}</span></div>
       </div>
-      <div class="row collapse cloud-extension-label normal-line-height">{{'hercules.placeSidepanel.mail-id-explanation-part1' | translate}}
+      <div class="row collapse hybrid-services-label normal-line-height">{{'hercules.placeSidepanel.mail-id-explanation-part1' | translate}}
         <a ng-click="editCloudberryServices(callServiceAware.id)">{{'hercules.placeSidepanel.mail-id-explanation-part2' | translate}}</a>
       </div>
 
@@ -63,19 +63,19 @@
 
       <div class="row collapse" ng-if="callServiceAware.currentPlaceEntitled && callServiceAware.homedCluster">
         <div class="columns small-3">
-          <span class="cloud-extension-label">{{::'cloudExtensions.cluster' | translate}}:</span>
+          <span class="hybrid-services-label">{{::'cloudExtensions.cluster' | translate}}:</span>
         </div>
         <div class="columns small-9">
-          <span class="cloud-extension-label">{{callServiceAware.homedCluster.name}}</span>
+          <span class="hybrid-services-label">{{callServiceAware.homedCluster.name}}</span>
         </div>
       </div>
 
       <div class="row collapse" ng-if="callServiceAware.currentPlaceEntitled && callServiceAware.homedConnector">
         <div class="columns small-3">
-          <span class="cloud-extension-label">{{::'hercules.connectors.host_name' | translate}}:</span>
+          <span class="hybrid-services-label">{{::'hercules.connectors.host_name' | translate}}:</span>
         </div>
         <div class="columns small-9">
-          <span class="cloud-extension-label">
+          <span class="hybrid-services-label">
             <a href="https://{{callServiceAware.homedConnector.hostname}}" target="_blank">{{callServiceAware.homedConnector.hostname}}</a>
           </span>
         </div>
@@ -84,16 +84,16 @@
       <div class="row collapse"
            ng-if="callServiceAware.directoryUri || (callServiceAware.status.state === 'error' || callServiceAware.status.state === 'activated')">
         <div class="columns small-3">
-          <span class="cloud-extension-label">{{::'cloudExtensions.sipUri' | translate}}:</span>
+          <span class="hybrid-services-label">{{::'cloudExtensions.sipUri' | translate}}:</span>
         </div>
         <div class="columns small-9">
-          <span class="cloud-extension-label">{{callServiceAware.directoryUri}}</span>
+          <span class="hybrid-services-label">{{callServiceAware.directoryUri}}</span>
         </div>
       </div>
 
-      <div ng-if="domainVerificationError" class="error-message">
+      <div ng-if="domainVerificationError" class="hybrid-services-error-message">
         <i class="icon icon-error"></i>
-        <p class="message">
+        <p class="hybrid-services-message">
           <span translate="hercules.domain-verification.domain-not-verified"/>
           <span translate="hercules.domain-verification.navigateToCallSettings"
                 translate-value-onclick="navigateToCallSettings()" translate-compile></span>
