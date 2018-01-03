@@ -166,7 +166,7 @@ describe('Component: callPickupMembers', () => {
       expect(this.controller.memberName).toBe('');
     });
 
-    it('should create checkboxes for all numbers', function(){
+    it('should create checkboxes for all numbers', function() {
       this.isLineInPickupGroupDefer.resolve('');
       this.areAllLinesInPickupGroupDefer.resolve(false);
       this.CallPickupGroupService.createCheckboxes(memberData, allNumbers['numbers']).then(() => {

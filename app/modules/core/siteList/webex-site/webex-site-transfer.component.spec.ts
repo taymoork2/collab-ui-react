@@ -80,7 +80,7 @@ describe('Component: WebexSiteTransferComponent', function () {
       this.controller.sitesArray = [];
     });
 
-    it('should call SetupWizardService.validateTransferCodeBySubscriptionId() when there is a subscription', function (){
+    it('should call SetupWizardService.validateTransferCodeBySubscriptionId() when there is a subscription', function () {
       this.controller.processNext();
       this.$scope.$digest();
       expect(this.SetupWizardService.validateTransferCodeBySubscriptionId).toHaveBeenCalledWith({
@@ -89,7 +89,7 @@ describe('Component: WebexSiteTransferComponent', function () {
       }, 'sub123', undefined);
       expect(this.SetupWizardService.validateTransferCode).not.toHaveBeenCalled();
     });
-    it('should call SetupWizardService.validateTransferCode() when there is no subscription', function (){
+    it('should call SetupWizardService.validateTransferCode() when there is no subscription', function () {
       this.controller.currentSubscription = null;
       this.controller.processNext();
       this.$scope.$digest();

@@ -31,7 +31,7 @@ describe('Component: mediaOnHold', () => {
     this.$scope.$apply();
   });
 
-  it('should have a select element with options', function(){
+  it('should have a select element with options', function() {
     expect(this.view).toContainElement(MEDIA_ON_HOLD_SELECT);
     expect(this.view.find(MEDIA_ON_HOLD_SELECT).find(DROPDOWN_OPTIONS).get(0)).toHaveText('sample-media-1');
     expect(this.view.find(MEDIA_ON_HOLD_SELECT).find(DROPDOWN_OPTIONS).get(1)).toHaveText('sample-media-2');

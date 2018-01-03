@@ -280,7 +280,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
         this.step = this.prevStep === 8 ? 8 : 9;
       }
       return;
-    }else if (!this.isSwivel() && this.step === 6) {
+    } else if (!this.isSwivel() && this.step === 6) {
       this.step -= 1;
     }
 
