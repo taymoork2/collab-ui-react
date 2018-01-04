@@ -20,6 +20,7 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
 
   private readonly allHybridServiceIds: HybridServiceId[] = ['squared-fusion-cal', 'squared-fusion-gcal', 'squared-fusion-uc', 'squared-fusion-ec', 'spark-hybrid-impinterop'];
 
+  public isInvitePending: boolean;
   public isLicensed: boolean;
   public atlasHybridImpFeatureToggle: boolean;
 
@@ -47,6 +48,7 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
     private Notification: Notification,
     private ServiceDescriptorService: ServiceDescriptorService,
+    private Userservice,
     private USSService: USSService,
   ) { }
 
@@ -56,6 +58,7 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
       this.userId = user.currentValue.id;
       this.userEntitlements = user.currentValue.entitlements;
       this.userLicenseIDs = user.currentValue.licenseID;
+      this.isInvitePending = this.Userservice.isInvitePending(user.currentValue);
     }
     this.isLicensed = this.userIsLicensed();
     this.init();
@@ -290,6 +293,8 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
     }
     this.$state.go(`user-overview.hybrid-services-${serviceId}`, {
       userUpdatedCallback: this.userUpdatedCallback,
+      allUserEntitlements: this.userEntitlements,
+      isInvitePending: this.isInvitePending,
     });
   }
 
