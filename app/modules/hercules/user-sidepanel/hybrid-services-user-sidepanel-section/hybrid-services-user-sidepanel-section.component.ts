@@ -293,6 +293,7 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
     }
     this.$state.go(`user-overview.hybrid-services-${serviceId}`, {
       userUpdatedCallback: this.userUpdatedCallback,
+      allUserEntitlements: this.userEntitlements,
       isInvitePending: this.isInvitePending,
     });
   }

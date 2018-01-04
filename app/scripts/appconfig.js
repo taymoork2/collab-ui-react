@@ -1629,10 +1629,11 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-uc', {
-            template: '<hybrid-call-service-aggregated-section user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)" is-invite-pending="$resolve.isInvitePending"></hybrid-call-service-aggregated-section>',
+            template: '<hybrid-call-service-aggregated-section user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)" all-user-entitlements="$resolve.allUserEntitlements" is-invite-pending="$resolve.isInvitePending"></hybrid-call-service-aggregated-section>',
             data: {},
             params: {
               userUpdatedCallback: _.noop,
+              allUserEntitlements: null,
               isInvitePending: null,
             },
             resolve: {
@@ -1641,6 +1642,9 @@
               },
               userName: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentUser.userName;
+              },
+              allUserEntitlements: /* @ngInject */ function ($stateParams) {
+                return $stateParams.allUserEntitlements;
               },
               userUpdatedCallback: /* @ngInject */ function ($stateParams) {
                 return $stateParams.userUpdatedCallback;

@@ -2389,7 +2389,8 @@
       "connected": "Connected"
     },
     "userSidepanel": {
-      "warningInvitePendingActivation": "Hybrid Services activation will start after this user accepts its invitation to join Cisco Spark.",
+      "warningInvitePendingNotEntitled": "The user has not yet accepted the invitation to join Cisco Spark. You can still enable {{ServiceName}}, but service activation will wait until the invitation has been accepted.",
+      "warningInvitePendingActivation": "Hybrid Services activation will start after the user accepts the invitation to join Cisco Spark.",
       "entitlements-dont-exist": "Service licenses for {{userName}} do not exist.",
       "previously-updated": "Could not save licenses. They are allocated somewhere else.",
       "not-updated": "Licenses could not be updated for {{userName}}.",
