@@ -246,7 +246,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
           }
           break;
         case ')':
-          if (target.value[target.selectionEnd] === ')') {
+          if (target.value.length >= 2 && target.value[target.selectionEnd - 1] === '(' && target.value[target.selectionEnd] === ')') {
             target.selectionEnd += 1;
             return false;
           }
