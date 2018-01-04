@@ -1636,7 +1636,7 @@ require('./_user-add.scss');
         $scope.wizard.goToStep('manualEntry');
       } else {
         Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.GO_BACK_FIX, null, createPropertiesForAnalyltics());
-        $state.go('users.add');
+        $state.go('users.add.manual');
       }
     };
 

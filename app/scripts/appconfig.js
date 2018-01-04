@@ -901,12 +901,17 @@
           })
           .state('users.add', {
             parent: 'modal',
+            abstract: true,
             views: {
               'modal@': {
                 controller: 'OnboardCtrl',
                 controllerAs: 'obc',
                 template: '<div ui-view="usersAdd"></div>',
               },
+            },
+          })
+          .state('users.add.manual', {
+            views: {
               'usersAdd@users.add': {
                 template: require('modules/core/users/userAdd/onboardUsersModal.tpl.html'),
                 resolve: {

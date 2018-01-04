@@ -127,7 +127,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     function bind() {
       $timeout(function () {
         if ($state.params.showAddUsers === 'add') {
-          $state.go('users.add');
+          $state.go('users.add.manual');
         }
       }, 0);
 
