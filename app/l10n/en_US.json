@@ -4167,7 +4167,7 @@
   "sparkAssistant": {
     "title": "Cisco Spark Assistant",
     "enableAssistant": "Enable Cisco Spark Assistant",
-    "description": "Allows users to perform various actions such as, make calls, start meetings, using their voice",
+    "description": "Allows users to perform various actions such as, make calls, start meetings, using their voice.",
     "termOfService": "Spark Assistant terms of service "
   },
   "reports": {
@@ -8346,7 +8346,9 @@
       "title": "Cisco Spark Assistant",
       "subsectionLabel": "Enable Cisco Spark Assistant",
       "description": "Allows users to perform various actions such as, make calls, start meetings, using their voice",
-      "termsOfService": "Cisco Spark Assistant terms of service "
+      "termsOfService": "Cisco Spark Assistant terms of service ",
+      "success": "Successfully updated Spark Assistant",
+      "failure": "Spark Assistant update failed"
     },
     "externalCommunication": {
       "title": "External Communication",

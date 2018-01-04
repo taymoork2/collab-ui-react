@@ -1,22 +1,23 @@
+import { SparkAssistantService } from 'modules/core/settings/spark-assistant';
+import { Notification } from 'modules/core/notifications';
 
 export class SparkAssistantSettingController {
-  public hasSparkAssistantToggle: boolean = false;
   public ftsw: boolean;
-  public value: boolean;
   public label: string;
+  private _sparkAssistantEnabled: boolean = false;
   /* @ngInject */
   constructor(
-    private FeatureToggleService,
     private $translate: ng.translate.ITranslateService,
-
+    private SparkAssistantService: SparkAssistantService,
+    private Notification: Notification,
   ) {
-    this.FeatureToggleService.supports(FeatureToggleService.features.sparkAssistant).then(supports => {
-      this.hasSparkAssistantToggle = supports;
-    });
   }
 
   public $onInit() {
-    this.value = this.ftsw;
+    this.SparkAssistantService.getSpeechServiceOptIn()
+      .then(response => {
+        this._sparkAssistantEnabled = _.get<boolean>(response, 'optIn');
+      });
     this.setInputLabel();
   }
 
@@ -24,7 +25,24 @@ export class SparkAssistantSettingController {
     this.label = this.ftsw ? this.$translate.instant('globalSettings.sparkAssistant.subsectionLabel') : this.$translate.instant('globalSettings.sparkAssistant.description');
   }
 
-  public onChange(toggleValue) {
-    this.hasSparkAssistantToggle = !toggleValue;
+  get sparkAssistantEnabled(): boolean {
+    return this._sparkAssistantEnabled;
+  }
+
+  set sparkAssistantEnabled(value: boolean) {
+    this._sparkAssistantEnabled = value;
+    this.updateSparkAssistantEnabled();
+  }
+
+  public updateSparkAssistantEnabled() {
+    if (this._sparkAssistantEnabled !== undefined) {
+      this.SparkAssistantService.updateSpeechService(this._sparkAssistantEnabled)
+        .then(() => {
+          this.Notification.success('globalSettings.sparkAssistant.success');
+        })
+        .catch((response) => {
+          this.Notification.errorWithTrackingId(response, 'globalSettings.sparkAssistant.failure');
+        });
+    }
   }
 }

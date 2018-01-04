@@ -2,13 +2,11 @@
   <input
     cs-input
     type="checkbox"
-    ng-model="ctrl.value"
+    ng-model="$ctrl.sparkAssistantEnabled"
     id="sparkAssistant"
-    name="sparkAssistant"
-    ng-change=""
-    cs-input-label="{{ctrl.label}}">
+    cs-input-label="{{$ctrl.label}}">
   <div>
-    <p ng-if="ctrl.ftsw" class="margin-tos" translate="globalSettings.sparkAssistant.description"></p>
+    <p ng-if="$ctrl.ftsw" class="margin-tos" translate="globalSettings.sparkAssistant.description"></p>
   </div>
     <a href class="primary" ng-click="" translate="globalSettings.sparkAssistant.termsOfService" id="tos"></a>
 </div>
