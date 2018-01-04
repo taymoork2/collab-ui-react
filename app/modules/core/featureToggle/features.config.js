@@ -207,6 +207,7 @@ module.exports = {
   webexMEI: 'webex-MEI',
   webexSystem: 'webex-system',
   webexMetrics: 'webex-metrics',
+  webexInternal: 'webex-internal',
   webGuestCall: 'web-guest-call',
   webHuronCalls: 'web-huron-calls',
   webManualPairing: 'web-manual-pairing',
