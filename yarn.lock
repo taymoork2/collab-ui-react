@@ -385,21 +385,25 @@ ampersand-version@^1.0.0, ampersand-version@^1.0.2:
     find-root "^0.1.1"
     through2 "^0.6.3"
 
-angular-animate@^1.5.0, angular-animate@^1.5.8, angular-animate@~1.6.5:
+angular-animate@1.6.6:
+  version "1.6.6"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/angular-animate/-/angular-animate-1.6.6.tgz#6925647b141a040d241bf125040f1a150fcd8a70"
+
+angular-animate@^1.5.0, angular-animate@^1.5.8:
   version "1.6.8"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/angular-animate/-/angular-animate-1.6.8.tgz#f38554c9c68770c9588b39c49920bc24e0d6f98a"
 
-angular-aria@~1.6.5:
-  version "1.6.8"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/angular-aria/-/angular-aria-1.6.8.tgz#f5dfcdd69c0dddcb8b691749285613caa7e6cca5"
+angular-aria@1.6.6:
+  version "1.6.6"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/angular-aria/-/angular-aria-1.6.6.tgz#58dd748e09564bc8409f739bde57b35fbee5b6a5"
 
 angular-cache@^4.6.0:
   version "4.6.0"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/angular-cache/-/angular-cache-4.6.0.tgz#5cc90ad1273fb150205dc1c71b8141ae39e48bff"
 
-angular-cookies@~1.6.5:
-  version "1.6.8"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/angular-cookies/-/angular-cookies-1.6.8.tgz#97b559ed797dd6545e4aafd14ba7a42dd3c6b40f"
+angular-cookies@1.6.6:
+  version "1.6.6"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/angular-cookies/-/angular-cookies-1.6.6.tgz#311642dafdbc4ff7cd69220b8925b88359fba148"
 
 angular-formly@~7.3.0:
   version "7.3.9"
@@ -409,21 +413,25 @@ angular-ical@~1.1.0:
   version "1.1.0"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/angular-ical/-/angular-ical-1.1.0.tgz#b3a34e889d547181f09d415a7b577a0708a63f1c"
 
-angular-messages@^1.5.0, angular-messages@~1.6.5:
+angular-messages@1.6.6:
+  version "1.6.6"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/angular-messages/-/angular-messages-1.6.6.tgz#a9bb3fc5f971d745cd3a3bdbaabc6f1f4deb13f3"
+
+angular-messages@^1.5.0:
   version "1.6.8"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/angular-messages/-/angular-messages-1.6.8.tgz#4f1090b6ee38081fd073c5dfb7576016d18fc458"
 
-angular-mocks@~1.6.5:
-  version "1.6.8"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/angular-mocks/-/angular-mocks-1.6.8.tgz#ba2120057b4edaa56492d8789ddfbc8f18afa3c5"
+angular-mocks@1.6.6:
+  version "1.6.6"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/angular-mocks/-/angular-mocks-1.6.6.tgz#c93018e7838c6dc5ceaf1a6bcf9be13c830ea515"
 
-angular-resource@~1.6.5:
-  version "1.6.8"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/angular-resource/-/angular-resource-1.6.8.tgz#cc2172f8ec4a3a8340c43c600a5fed543e4168af"
+angular-resource@1.6.6:
+  version "1.6.6"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/angular-resource/-/angular-resource-1.6.6.tgz#430660e969c3e7cf40c5e247e5e690f06d6efc61"
 
-angular-sanitize@~1.6.5:
-  version "1.6.8"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/angular-sanitize/-/angular-sanitize-1.6.8.tgz#68175a1a5853a6439fffcb251a88a538a44a8e70"
+angular-sanitize@1.6.6:
+  version "1.6.6"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/angular-sanitize/-/angular-sanitize-1.6.6.tgz#0fd065a19931517fbece66596d325d72b6e06041"
 
 angular-timer@~1.3.3:
   version "1.3.5"
@@ -460,11 +468,15 @@ angular-ui-router@^0.3.1:
   dependencies:
     angular "^1.0.8"
 
+angular@1.6.6:
+  version "1.6.6"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/angular/-/angular-1.6.6.tgz#fd5a3cfb437ce382d854ee01120797978527cb64"
+
 "angular@>=1.2.16 1.4.x":
   version "1.4.14"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/angular/-/angular-1.4.14.tgz#9d0feaf60ce6e52ce50f49ee328656d1e1875c37"
 
-"angular@>=1.2.26 <=1.6", "angular@>=1.5.0 || >=1.6.0", angular@^1.0.8, angular@^1.4.0, angular@^1.5.0, angular@~1.6.5:
+"angular@>=1.2.26 <=1.6", "angular@>=1.5.0 || >=1.6.0", angular@^1.0.8, angular@^1.4.0, angular@^1.5.0:
   version "1.6.8"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/angular/-/angular-1.6.8.tgz#5be378a58be91a5489e78b59c4518cd9fd273ffb"
 

@@ -330,11 +330,6 @@ describe('Controller: OverviewCtrl', function () {
       this.SunlightUtilitiesService.removeCareSetupKey();
       this.initController();
     });
-    afterAll(function () {
-      this.SunlightUtilitiesService.isCareSetup.and.returnValue(this.$q.resolve(true));
-      this.Authinfo.isCare.and.returnValue(true);
-      this.Authinfo.isCustomerAdmin.and.returnValue(true);
-    });
 
     it('should show CareNotSetup notification and dismiss it', function () {
       //dismiss the notification
