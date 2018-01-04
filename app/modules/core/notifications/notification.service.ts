@@ -24,6 +24,7 @@ export interface INotificationOptions {
   errorKey?: string;
   errorParams?: Object;
   allowHtml?: boolean;
+  feedbackInstructions?: boolean;
 }
 
 export class Notification {
@@ -71,6 +72,7 @@ export class Notification {
     let errorKey: string = '';
     let errorParams: Object = {};
     let allowHtml: boolean = false;
+    let feedbackInstructions: boolean = false;
 
     if (typeof arg2 === 'string') {
       errorKey = arg2;
@@ -87,8 +89,16 @@ export class Notification {
     if (!_.isUndefined(arg2) && arg2.hasOwnProperty('allowHtml')) {
       allowHtml = arg2.allowHtml;
     }
-    let errorMsg = this.getErrorMessage(errorKey, errorParams);
+    if (!_.isUndefined(arg2) && arg2.hasOwnProperty('feedbackInstructions')) {
+      feedbackInstructions = arg2.feedbackInstructions;
+      allowHtml = true; // The feedback instructions contain html, so we need to override its value
+    }
+    let errorMsg: string = this.getErrorMessage(errorKey, errorParams);
     errorMsg = this.addResponseMessage(errorMsg, response, false);
+
+    if (feedbackInstructions) {
+      errorMsg = `${errorMsg}<br />${this.$translate.instant('common.ifErrorRemains')}`;
+    }
     this.notifyHttpErrorResponse(errorMsg, response, allowHtml);
   }
 

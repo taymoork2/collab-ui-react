@@ -2407,11 +2407,11 @@
       "disableAwareMessage": "Are you sure? By disabling Call Service Aware, Call Service Connect will also be disabled for this user.",
       "errorMessages": {
         "cannotReadDeviceDataFromUSS": "Unable to read device's activation status.",
-        "cannotReadDeviceDataFromUSSPartnerAdmin": "Unable to read device's activation status. This could indicate a caching problem, try logging out and in again to clear the user cache. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation.",
+        "cannotReadDeviceDataFromUSSPartnerAdmin": "Unable to read device's activation status. This could indicate a caching problem, try logging out and in again to clear the user cache.",
         "cannotReadUserDataFromUSS": "Unable to read user's activation status.",
-        "cannotReadUserDataFromUSSPartnerAdmin": "Unable to read user's activation status. This could indicate a caching problem, try logging out and in again to clear the user cache. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation.",
+        "cannotReadUserDataFromUSSPartnerAdmin": "Unable to read user's activation status. This could indicate a caching problem, try logging out and in again to clear the user cache.",
         "cannotReadOrgDataFromFMS": "Unable to read organization's Expressway-based Hybrid Services data.",
-        "cannotReadOrgDataFromFMSPartnerAdmin": "Unable to read organization's Expressway-based Hybrid Services data. This could indicate a caching problem, try logging out and in again to clear the user cache. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation."
+        "cannotReadOrgDataFromFMSPartnerAdmin": "Unable to read organization's Expressway-based Hybrid Services data. This could indicate a caching problem, try logging out and in again to clear the user cache."
       }
     },
     "placeSidepanel": {
@@ -3390,7 +3390,6 @@
     },
     "office365FailureModal": {
       "subtitle": "An error occured during the authorization",
-      "feedback": "If the error remains, click your admin username, and then click <strong>Feedback</strong> to open a case for further investigation.",
       "errorCode": "Error Code: {{code}}."
     }
   },
@@ -8797,9 +8796,9 @@
       "title": "Calendar (Exchange/Office 365)"
     },
     "hybridServicesOrganization": {
-      "fmsError": "Could not read organization's on-premises-based hybrid services statuses. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation.",
-      "office365Error": "Could not read organization's cloud-based Office 365 status. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation.",
-      "googleCalendarError": "Could not read organization's Google Calendar status. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation."
+      "fmsError": "Could not read organization's on-premises-based hybrid services statuses.",
+      "office365Error": "Could not read organization's cloud-based Office 365 status.",
+      "googleCalendarError": "Could not read organization's Google Calendar status."
     }
   },
   "partnerManagement": {

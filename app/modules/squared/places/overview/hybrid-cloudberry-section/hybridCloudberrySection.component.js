@@ -110,7 +110,7 @@
             if (HybridServiceUserSidepanelHelperService.isPartnerAdminAndGot403Forbidden(error)) {
               Notification.errorWithTrackingId(error, {
                 errorKey: 'hercules.userSidepanel.errorMessages.cannotReadDeviceDataFromUSSPartnerAdmin',
-                allowHtml: true,
+                feedbackInstructions: true,
               });
             } else {
               Notification.errorWithTrackingId(error, 'hercules.userSidepanel.errorMessages.cannotReadDeviceDataFromUSS');
