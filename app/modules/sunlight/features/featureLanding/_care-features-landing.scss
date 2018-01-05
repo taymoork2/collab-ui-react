@@ -1,3 +1,5 @@
+@import 'app/modules/huron/features/featureLanding/_feature-landing';
+
 .care-no-features {
   @extend %content-header;
 }
@@ -312,6 +314,10 @@ header > p > span.badge {
 
     .feature-cst-color {
       color: $color-people-base;
+    }
+
+    .feature-aa-color {
+      color: $toolkit-primary;
     }
 
     .feature-icon-disabled {

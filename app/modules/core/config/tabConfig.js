@@ -70,6 +70,12 @@
     state: 'partnerreports',
     link: '/partner/reports',
   }, {
+    tab: 'taasOverviewTab',
+    icon: 'icon-outline',
+    title: 'tabs.taasOverviewTab',
+    state: 'taas',
+    link: '/partner/taas',
+  }, {
     tab: 'supportTab',
     icon: 'icon-support',
     title: 'tabs.supportTab',

@@ -5,7 +5,7 @@
       <th class="medium-1">
         <h5 class="title-offer-name" translate="onboardModal.message"></h5>
       </th>
-      
+
       <!-- Message License -->
       <td ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.MS)">
         <license-summary-item
@@ -47,12 +47,12 @@
             l10n-title="{{:: 'subscriptions.licenseTypes.' + license.offerName }}"
             total-usage="$ctrl.getTotalLicenseUsage(license.offerName)"
             total-volume="$ctrl.getTotalLicenseVolume(license.offerName)"
-            site-url="{{ license.offerName === $ctrl.OFFER_NAME.CMR ? '' : license.siteUrl }}">        
+            site-url="{{ license.offerName === $ctrl.OFFER_NAME.CMR ? '' : license.siteUrl }}">
           </license-summary-item>
         </div>
       </td>
     </tr>
-    
+
     <!-- CALL ROW -->
     <tr ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CO)">
       <th class="medium-1">

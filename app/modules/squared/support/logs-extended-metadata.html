@@ -1,0 +1,27 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()" aria-label="{{::'common.close' | translate}}"></button>
+  <div class="modal-title">{{modal.title | translate}}</div>
+</div>
+
+<div class="modal-body">
+  <div ng-if="!modal.loading">
+    <p><pre id="helpdesk-extended-data-modal-content">{{modal.data}}</pre></p>
+  </div>
+  <div ng-if="modal.loading" class="helpdesk-dialog-progress">
+    <i class="icon icon-spinner"></i>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <span class="copy-status" ng-if="modal.copied" translate="helpdesk.extended-data-dialog.copiedToClipboard"></span>
+  <button ng-disabled="modal.loading"
+    class="btn btn--primary"
+    ngclipboard data-clipboard-target="#helpdesk-extended-data-modal-content"
+    ngclipboard-success="modal.clipboardSuccess(e)"
+    ngclipboard-error="modal.clipboardError(e)"
+    focus-on>
+    <span translate="helpdesk.extended-data-dialog.copy">
+    </span>
+  </button>
+</div>
+

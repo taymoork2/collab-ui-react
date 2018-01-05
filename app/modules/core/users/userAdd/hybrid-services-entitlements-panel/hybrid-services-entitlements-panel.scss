@@ -1,3 +1,45 @@
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+
 hybrid-services-entitlements-panel {
   display: block;
+
+  .hs-section {
+    margin-top: 3px;
+    background-color: $gray-lightest;
+    font-family: $brand-font-light;
+    font-size: 14px;
+    color: $gray-darkest;
+  }
+
+  .hs-header {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 6px;
+  }
+
+  .indented {
+    margin-left: 1.5rem;
+  }
+
+  .column-padded {
+    padding: 1.5rem;
+  }
+
+  .column-header {
+    text-align: left;
+    padding: 15px 20px 0 40px;
+    display: flex;
+
+    h3 {
+      font-family: $brand-font-cisco-TT-Extra-Light;
+      padding-left: 12px;
+    }
+
+    .icon {
+      font-size: 35px;
+      display: inline-block;
+    }
+  }
+
 }

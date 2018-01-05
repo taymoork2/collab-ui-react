@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function ReassignClusterControllerV2(cluster, connector, MediaClusterServiceV2, $translate, $modalInstance, Notification) {
+  function ReassignClusterControllerV2(cluster, connector, MediaClusterServiceV2, $translate, $modalInstance, Notification, HybridServicesClusterService) {
     var vm = this;
 
     vm.options = [];
@@ -13,7 +13,7 @@
     vm.clusterDetail = null;
 
     vm.getClusters = function () {
-      MediaClusterServiceV2.getAll()
+      HybridServicesClusterService.getAll()
         .then(function (clusters) {
           vm.clusters = _.filter(clusters, { targetType: 'mf_mgmt' });
           vm.options = _.map(vm.clusters, 'name');
@@ -48,8 +48,8 @@
       });
 
       if (vm.clusterDetail == null) {
-        MediaClusterServiceV2.createClusterV2(vm.selectedCluster, 'stable').then(function (res) {
-          vm.clusterDetail = res.data;
+        HybridServicesClusterService.preregisterCluster(vm.selectedCluster, 'stable', 'mf_mgmt').then(function (res) {
+          vm.clusterDetail = res;
           // Add the created cluster to property set
           MediaClusterServiceV2.getPropertySets()
             .then(function (propertySets) {
@@ -79,10 +79,10 @@
     };
 
     function moveHost() {
-      MediaClusterServiceV2.moveV2Host(connector.id, cluster.id, vm.clusterDetail.id).then(function () {
+      HybridServicesClusterService.moveEcpNode(connector.id, cluster.id, vm.clusterDetail.id).then(function () {
         $modalInstance.close();
         Notification.success('mediaFusion.moveHostSuccess');
-      }, function (err) {
+      }).catch(function (err) {
         vm.error = $translate.instant('mediaFusion.reassign.reassignErrorMessage', {
           hostName: vm.selectedCluster,
         });

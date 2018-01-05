@@ -12,9 +12,9 @@
       is-disabled="$ctrl.isDisabled()">
     </cs-select>
   </div>
-  <div ng-if="$ctrl.showResetSection && $ctrl.type === 'resource-group'" class="error-message">
+  <div ng-if="$ctrl.showResetSection && $ctrl.type === 'resource-group'" class="hybrid-services-error-message">
     <i class="icon icon-error"></i>
-    <p class="message"
+    <p class="hybrid-services-message"
       translate="hercules.releaseChannelSection.orgHasNoAccessToChannel"
       translate-values="{currentReleaseChannel: $ctrl.localizedCurrentChannelName, stableReleaseChannel: $ctrl.localizedStableChannelName}"></p>
     <form>
@@ -24,9 +24,9 @@
       </button>
     </form>
   </div>
-  <div ng-if="$ctrl.showResetSection && $ctrl.type === 'cluster'" class="error-message">
+  <div ng-if="$ctrl.showResetSection && $ctrl.type === 'cluster'" class="hybrid-services-error-message">
     <i class="icon icon-error"></i>
-    <p class="message"
+    <p class="hybrid-services-message"
       translate="hercules.releaseChannelSection.clusterHasNotTheDefault"
       translate-values="{releaseChannel: $ctrl.localizedDefaultChannelName}"></p>
     <form>

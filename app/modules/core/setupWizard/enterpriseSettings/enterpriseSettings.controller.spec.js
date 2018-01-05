@@ -8,30 +8,35 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     this.initModules('Core', 'Huron');
     this.injectDependencies(
       '$controller',
+      '$httpBackend',
+      '$modal',
       '$rootScope',
       '$scope',
       '$q',
+      '$timeout',
       'Authinfo',
-      'Orgservice',
-      'Notification',
-      'ServiceSetup',
       'FeatureToggleService',
-      '$modal',
-      '$timeout'
+      'Notification',
+      'Orgservice',
+      'SSOService',
+      'ServiceSetup',
+      'UrlConfig'
     );
 
     this.$scope.wizard = { nextTab: jasmine.createSpy('nextTab') };
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('bcd7afcd-839d-4c61-a7a8-31c6c7f016d7');
+    spyOn(this.UrlConfig, 'getSSOSetupUrl').and.returnValue('https://idbroker.webex.com/idb/idbconfig/');
     spyOn(this.FeatureToggleService, 'atlasSubdomainUpdateGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.ServiceSetup, 'getTimeZones').and.returnValue(this.$q.resolve());
     spyOn(this.ServiceSetup, 'getTranslatedTimeZones').and.returnValue(['1', '2', '3']);
-    spyOn(this.Notification, 'error');
+    spyOn(this.Notification, 'errorWithTrackingId').and.callThrough();
     spyOn(this.Orgservice, 'validateSiteUrl').and.returnValue(this.$q.resolve({ isValid: true }));
     spyOn(this.Orgservice, 'getOrg').and.callFake(function (callback) {
       callback(orgServiceJSONFixture.getOrg, getOrgStatus);
     });
     spyOn(this.Orgservice, 'getAdminOrgAsPromise').and.returnValue(this.$q.resolve({ data: { success: true, isOnBoardingEmailSuppressed: true, licenses: [{ licenseId: 'CO_1234' }] } }));
     spyOn(this.Orgservice, 'setOrgEmailSuppress').and.returnValue(this.$q.reject());
+    spyOn(this.SSOService, 'getMetaInfo').and.callThrough();
     spyOn(this.$modal, 'open').and.returnValue({ result: this.$q.resolve() });
 
     installPromiseMatchers();
@@ -56,6 +61,18 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       this.$scope.updateSSO();
       this.$scope.$apply();
       expect(this.$scope.ssoEnabled).toEqual(true);
+    });
+
+    it('should have testSSONext call Notification.errorWithTrackingId on failure', function () {
+      this.$httpBackend.when('GET', 'https://idbroker.webex.com/idb/idbconfig/bcd7afcd-839d-4c61-a7a8-31c6c7f016d7/v1/samlmetadata/remote/idp?attributes=id&attributes=entityId').respond(500, {});
+      this.$scope.options.enableSSORadioOption = 0;
+      this.$scope.testSSONext();
+      this.$scope.$apply();
+      this.$httpBackend.flush();
+      expect(this.SSOService.getMetaInfo).toHaveBeenCalled();
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
+      var response = this.Notification.errorWithTrackingId.calls.mostRecent().args[0];
+      expect(response.status).toBe(500);
     });
 
     it('should set ssoEnabled field to false in the scope', function () {

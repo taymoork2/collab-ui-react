@@ -31,6 +31,9 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
   public template;
   public states;
   public userHasAccess = true;
+  public evaAlreadyExisted = false;
+  public retryButtonDisabled = false;
+  public summaryErrorMessage: string;
 
   public NameErrorMessages = {
     DUPLICATE_ERROR: 'duplicate_error',
@@ -44,6 +47,7 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
     FILE_TYPE_ERROR: 'FileTypeError',
     FILE_SIZE_ERROR: 'FileSizeError',
     FILE_UPLOAD_ERROR: 'FileUploadError',
+    INVALID_FILE: 'InvalidFile',
   };
 
   // Avatar file load progress states
@@ -228,14 +232,11 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
    * Move backwards to previous page in modal series.
    */
   public previousPage(): void {
-    // This is to clear a possible error issued during image loading. For instance one attempts to drag-drop a JPG,
-    // the file is invalid, the message is displayed, and it must be cleared when toggling between pages.
-    this.template.configuration.pages.vaAvatar.avatarError = this.avatarErrorType.NO_ERROR;
-
     const controller = this;
     controller.animation = 'slide-right';
     controller.saveTemplateErrorOccurred = false;
     controller.templateButtonText = this.$translate.instant('common.finish');
+    controller.retryButtonDisabled = false;
     controller.$timeout(function () {
       controller.beforePreviousPage(controller.currentState);
       controller.currentState = controller.getAdjacentEnabledState(controller.getPageIndex(), -1);
@@ -393,13 +394,45 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
     }
   }
 
+  private translateWithFallback(messageKey: string, fallbackText: string, translateReplacements?: object): string {
+    const translationKey = this.getMessageKey(messageKey);
+    const translation = this.$translate.instant(translationKey, translateReplacements);
+    //if key doesn't exist will return "Translation for <translationKey> doesn't exist", so return fallback string instead
+    return _.includes(translation, translationKey) ? fallbackText : translation;
+  }
+
   /**
    * handle template create/edit error.
    */
-  public handleFeatureError(): void {
+  public handleFeatureError(response?: ng.IHttpResponse<any>): void {
+    const errorType = response && response.data ? response.data.type : null;
+    const featureName = this.service.getFeatureName();
+    const fallback = this.getText('summary.errorCreateTemplate');
+    this.summaryErrorMessage = this.translateWithFallback(errorType, fallback, { featureName });
     this.creatingTemplate = false;
     this.saveTemplateErrorOccurred = true;
     this.templateButtonText = this.$translate.instant('common.retry');
+
+    if (errorType) {
+      this.retryButtonDisabled = true; //user has to go to previous pages to fix issue
+      //set error flag so error message shows up on correct page when user clicks back
+      switch (errorType) {
+        case 'invalidInput.duplicateName':
+          //save current name so we can check against it when user goes back to name page to change the name
+          this.template.configuration.pages.vaName.nameWithError = this.template.configuration.pages.vaName.nameValue;
+          break;
+        case 'invalidInput.invalidIcon':
+          this.template.configuration.pages.vaAvatar.avatarError = this.avatarErrorType.INVALID_FILE;
+          break;
+        case 'invalidInput.invalidAccessToken':
+          this.template.configuration.pages.cvaAccessToken.invalidToken = true;
+          this.template.configuration.pages.cvaAccessToken.needsValidation = false;
+      }
+    }
+  }
+
+  public displayGenericErrorMessage(): boolean {
+    return this.saveTemplateErrorOccurred && !this.creatingTemplate && !this.evaAlreadyExisted;
   }
 
   /**

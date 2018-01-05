@@ -7,6 +7,7 @@ class HybridMessagingUserSettingsComponentCtrl implements ng.IComponentControlle
 
   public userId;
   public userEmailAddress;
+  public isInvitePending: boolean;
 
   public loadingPage = true;
   public savingPage = false;
@@ -31,13 +32,16 @@ class HybridMessagingUserSettingsComponentCtrl implements ng.IComponentControlle
   ) { }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
-    const { userId, userEmailAddress } = changes;
+    const { userId, userEmailAddress, isInvitePending } = changes;
     if (userId && userId.currentValue) {
       this.userId = userId.currentValue;
       this.getDataFromUSS(this.userId);
     }
     if (userEmailAddress && userEmailAddress.currentValue) {
       this.userEmailAddress = userEmailAddress.currentValue;
+    }
+    if (isInvitePending && isInvitePending.currentValue) {
+      this.isInvitePending = isInvitePending.currentValue;
     }
   }
 
@@ -67,7 +71,7 @@ class HybridMessagingUserSettingsComponentCtrl implements ng.IComponentControlle
         if (this.HybridServiceUserSidepanelHelperService.isPartnerAdminAndGot403Forbidden(error)) {
           this.Notification.errorWithTrackingId(error, {
             errorKey: 'hercules.userSidepanel.errorMessages.cannotReadUserDataFromUSSPartnerAdmin',
-            allowHtml: true,
+            feedbackInstructions: true,
           });
         } else {
           this.Notification.errorWithTrackingId(error, 'hercules.userSidepanel.errorMessages.cannotReadUserDataFromUSS');
@@ -143,5 +147,6 @@ export class HybridMessagingUserSettingsComponent implements ng.IComponentOption
     userId: '<',
     userEmailAddress: '<',
     userUpdatedCallback: '&',
+    isInvitePending: '<',
   };
 }

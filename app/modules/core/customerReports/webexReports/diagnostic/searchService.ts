@@ -47,7 +47,7 @@ export class SearchService {
   }
 
   public getStatus(num) {
-    const statusArr = ['inProcess', 'ended'];
+    const statusArr = ['inProgress', 'ended'];
     return this.$translate.instant('webexReports.meetingStatus.' + statusArr[num - 1]);
   }
 
@@ -67,7 +67,7 @@ export class SearchService {
     const tz = this.getStorage('timeZone');
     const timeZone = tz ? tz : moment.tz.guess();
     const offset = this.getOffset(timeZone);
-    return moment.utc(date).utcOffset(offset).format('MMMM Do, YYYY h:mm:ss A');
+    return moment.utc(date).utcOffset(offset).format('YYYY-MM-DD hh:mm:ss');
   }
 
   public getOffset(timeZone) {
@@ -109,6 +109,35 @@ export class SearchService {
       return '';
     }
     return endReson ? 'Normal' : 'Abnormal';
+  }
+
+  public getDevice(obj) {
+    let device = { icon: '', name: '' };
+    if (obj.sessionType === '25' || obj.platform === '9') {
+      return { icon: 'icon-phone', name: 'PSTN' };
+    } else if (obj.platform === '10') {
+      device = { icon: 'icon-devices', name: 'TP Device' };
+    } else if (obj.browser === '2') {
+      device = { icon: 'icon-application', name: 'Client' };
+    } else if (_.includes(['7', '8', '11', '12', '13', '14'], obj.platform)) {
+      device = { icon: 'icon-mobile-phone', name: 'Mobile' };
+    } else if (_.parseInt(obj.platform) < 7) {
+      device = { icon: 'icon-browser', name: 'Browser' };
+    }
+    return device;
+  }
+
+  public getDuration(duration) {
+    if (!duration) {
+      return '';
+    }
+    const hours = moment.duration(duration * 1000).get('hours');
+    let minutes: any = moment.duration(duration * 1000).get('minutes');
+    let seconds: any = moment.duration(duration * 1000).get('seconds');
+    minutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+    seconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+
+    return hours ? `${hours}:${minutes}:${seconds}` : `${minutes}:${seconds}`;
   }
 
   private extractData(response) {

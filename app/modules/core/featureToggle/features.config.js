@@ -17,7 +17,6 @@ module.exports = {
   atlasCareProactiveChatTrials: 'atlas-care-proactiveChat-trials',
   atlasCareTrials: 'atlas-care-trials',
   atlasComplianceRole: 'atlas-compliance-role',
-  atlasContextNodesPage: 'atlas-context-nodes-page',
   atlasContextServiceOnboarding: 'context-onboarding-trials',
   atlasCsvImportTaskManager: 'atlas-csv-import-task-manager',
   atlasDarling: 'atlas-darling',
@@ -27,6 +26,7 @@ module.exports = {
   atlasEdiscovery: 'atlas-ediscovery',
   atlasEmailStatus: 'atlas-email-status',
   atlasEmailSuppress: 'atlas-email-suppress',
+  atlasHybridEnable: 'huron-i387-enterprise-private-trunking',
   atlasExpertVirtualAssistantEnable: 'atlas-expert-virtual-assistant-enable',
   atlasF2993NewUserAndDeviceRoles: 'atlas-f2993-new-user-and-device-roles',
   atlasF3745AutoAssignLicenses: 'atlas-f3745-auto-assign-licenses',
@@ -207,6 +207,7 @@ module.exports = {
   webexMEI: 'webex-MEI',
   webexSystem: 'webex-system',
   webexMetrics: 'webex-metrics',
+  webexInternal: 'webex-internal',
   webGuestCall: 'web-guest-call',
   webHuronCalls: 'web-huron-calls',
   webManualPairing: 'web-manual-pairing',
@@ -222,4 +223,5 @@ module.exports = {
   winTeams: 'win-teams',
   zeroTouchMeeting: 'zero-touch-meeting',
   hI1635: 'h-i1635', //PSTN Porting
+  hI1638: 'h-i1638', //TaaS
 };

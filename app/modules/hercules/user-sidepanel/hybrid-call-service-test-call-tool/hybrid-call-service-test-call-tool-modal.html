@@ -51,7 +51,7 @@
         <h5 ng-if="vm.caller.userId"
            class="name-field">{{vm.caller.displayName}}</h5>
         <p ng-if="vm.caller.userId"
-           class="name-field cloud-extensions">
+           class="name-field hybrid-services-user-sidepanel">
           <span class="status-line" translate="hercules.hybridCallServiceTestCallTool.modal.hybridCallConnectStatus"></span>
           <span ng-if="vm.caller.ussStatus"
                 class="status-line"
@@ -81,7 +81,7 @@
         <h5 ng-if="vm.callee.userId"
             class="name-field">{{vm.callee.displayName}}</h5>
         <p ng-if="vm.callee.userId"
-           class="name-field cloud-extensions">
+           class="name-field hybrid-services-user-sidepanel">
           <span class="status-line" translate="hercules.hybridCallServiceTestCallTool.modal.hybridCallConnectStatus"></span>
           <span ng-if="vm.callee.ussStatus"
                 class="status-line"
@@ -103,21 +103,21 @@
 
     <div class="warning-container">
       <!-- Caller:  -->
-      <div class="warning-box cloud-extensions">
+      <div class="warning-box hybrid-services-user-sidepanel">
 
       </div>
 
       <!-- Callee:  -->
-      <div class="warning-box cloud-extensions">
-        <div ng-if="vm.warnAboutPhonesRinging()" class="warning-message">
+      <div class="warning-box hybrid-services-user-sidepanel">
+        <div ng-if="vm.warnAboutPhonesRinging()" class="hybrid-services-warning-message">
           <i class="icon icon-warning"></i>
-          <p class="message"
+          <p class="hybrid-services-message"
                 translate="hercules.hybridCallServiceTestCallTool.modal.warnings.warnAboutPhonesRinging"
                 translate-values="{ caller: vm.caller.displayName, callee: vm.callee.displayName }"></p>
         </div>
-        <div ng-if="vm.callerAndCalleeAreTheSame()" class="error-message">
+        <div ng-if="vm.callerAndCalleeAreTheSame()" class="hybrid-services-error-message">
           <i class="icon icon-error"></i>
-          <p class="message"
+          <p class="hybrid-services-message"
              translate="hercules.hybridCallServiceTestCallTool.modal.warnings.callerAndCalleeTheSame"></p>
         </div>
       </div>

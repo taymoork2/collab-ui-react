@@ -23,7 +23,7 @@
         card.enabled = false;
         card.notEnabledText = 'overview.cards.care.notEnabledText';
         card.notEnabledFooter = 'overview.contactPartner';
-        card.settingsUrl = '#/services/careDetails/settings';
+        card.settingsUrl = '/services/careDetails/settings';
         card.helper = OverviewHelper;
         card.showHealth = true;
 

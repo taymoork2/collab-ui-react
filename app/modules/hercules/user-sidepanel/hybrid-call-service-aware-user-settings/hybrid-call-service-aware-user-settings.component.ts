@@ -14,6 +14,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
 
   private userId: string;
   private userEmailAddress: string;
+  public isInvitePending: boolean;
 
   public entitledToggle: boolean;
   public userIsCurrentlyEntitled: boolean;
@@ -50,7 +51,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
   }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
-    const { userId, userEmailAddress,  entitlementUpdatedCallback } = changes;
+    const { userId, userEmailAddress,  entitlementUpdatedCallback, isInvitePending } = changes;
     if (userId && userId.currentValue) {
       this.userId = userId.currentValue;
       this.getDataFromUSS(this.userId);
@@ -60,6 +61,9 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
     }
     if (entitlementUpdatedCallback && entitlementUpdatedCallback.currentValue) {
       this.entitlementUpdatedCallback = entitlementUpdatedCallback.currentValue;
+    }
+    if (isInvitePending && isInvitePending.currentValue) {
+      this.isInvitePending = isInvitePending.currentValue;
     }
   }
 
@@ -93,8 +97,8 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
         this.couldNotReadUser = true;
         if (this.HybridServiceUserSidepanelHelperService.isPartnerAdminAndGot403Forbidden(error)) {
           this.Notification.errorWithTrackingId(error, {
-            errorKey: 'hercules.userSidepanel.errorMessages.cannotReadDeviceDataFromUSSPartnerAdmin',
-            allowHtml: true,
+            errorKey: 'hercules.userSidepanel.errorMessages.cannotReadUserDataFromUSSPartnerAdmin',
+            feedbackInstructions: true,
           });
         } else {
           this.Notification.errorWithTrackingId(error, 'hercules.userSidepanel.errorMessages.cannotReadUserDataFromUSS');
@@ -216,5 +220,6 @@ export class HybridCallServiceAwareUserSettingsComponent implements ng.IComponen
     userId: '<',
     userEmailAddress: '<',
     entitlementUpdatedCallback: '&',
+    isInvitePending: '<',
   };
 }

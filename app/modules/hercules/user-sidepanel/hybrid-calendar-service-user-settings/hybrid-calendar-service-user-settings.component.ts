@@ -15,6 +15,7 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
   private userEmailAddress: string;
   private userUpdatedCallback: Function;
   private preferredWebExSiteName: string;
+  public isInvitePending: boolean;
 
   public userOwnedByCCC: boolean;
   public userHasBothCalendarEntitlements: boolean;
@@ -53,7 +54,7 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
   ) { }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
-    const { userId, userEmailAddress,  userUpdatedCallback, preferredWebExSiteName } = changes;
+    const { userId, userEmailAddress,  userUpdatedCallback, preferredWebExSiteName, isInvitePending } = changes;
     if (userId && userId.currentValue) {
       this.userId = userId.currentValue;
       this.loadUserData();
@@ -66,6 +67,9 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
     }
     if (preferredWebExSiteName && preferredWebExSiteName.currentValue) {
       this.preferredWebExSiteName = preferredWebExSiteName.currentValue;
+    }
+    if (isInvitePending && isInvitePending.currentValue) {
+      this.isInvitePending = isInvitePending.currentValue;
     }
   }
 
@@ -99,8 +103,8 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
       .catch((error) => {
         if (this.HybridServiceUserSidepanelHelperService.isPartnerAdminAndGot403Forbidden(error)) {
           this.Notification.errorWithTrackingId(error, {
-            errorKey: 'hercules.userSidepanel.errorMessages.cannotReadDeviceDataFromUSSPartnerAdmin',
-            allowHtml: true,
+            errorKey: 'hercules.userSidepanel.errorMessages.cannotReadUserDataFromUSSPartnerAdmin',
+            feedbackInstructions: true,
           });
         } else {
           this.Notification.errorWithTrackingId(error, 'hercules.userSidepanel.errorMessages.cannotReadUserDataFromUSS');
@@ -136,7 +140,7 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
         if (this.HybridServiceUserSidepanelHelperService.isPartnerAdminAndGot403Forbidden(error)) {
           this.Notification.errorWithTrackingId(error, {
             errorKey: 'hercules.userSidepanel.errorMessages.cannotReadOrgDataFromFMSPartnerAdmin',
-            allowHtml: true,
+            feedbackInstructions: true,
           });
         } else {
           this.Notification.errorWithTrackingId(error, 'hercules.userSidepanel.errorMessages.cannotReadOrgDataFromFMS');
@@ -255,5 +259,6 @@ export class HybridCalendarServiceUserSettingsComponent implements ng.IComponent
     userEmailAddress: '<',
     userUpdatedCallback: '&',
     preferredWebExSiteName: '<',
+    isInvitePending: '<',
   };
 }

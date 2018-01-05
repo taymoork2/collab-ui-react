@@ -101,7 +101,6 @@
       var id = $scope.elementId;
       var idSelectorPrefix = '#';
       angular.element(idSelectorPrefix.concat(id)).remove();
-      $rootScope.$broadcast('dynamicListUpdated');
 
       populateUiModel(id);
       var dynaList = actionEntry.actions[0].dynamicList;
@@ -129,6 +128,7 @@
           node.isDynamic = false;
           node.htmlModel = '';
           $rootScope.$broadcast('CE Updated');
+          $rootScope.$broadcast('dynamicListUpdated');
         }
       });
     }

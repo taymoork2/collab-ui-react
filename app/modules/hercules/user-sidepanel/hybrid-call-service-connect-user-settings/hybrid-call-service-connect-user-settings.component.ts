@@ -11,6 +11,7 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
   private userId: string;
   private userEmailAddress: string;
   private entitlementUpdatedCallback: Function;
+  public isInvitePending: boolean;
 
   public userStatusAware: IUserStatusWithExtendedMessages | undefined;
   private userStatusConnect: IUserStatusWithExtendedMessages | undefined;
@@ -38,7 +39,7 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
   }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
-    const { userId, userEmailAddress,  entitlementUpdatedCallback } = changes;
+    const { userId, userEmailAddress,  entitlementUpdatedCallback, isInvitePending } = changes;
     if (userId && userId.currentValue) {
       this.userId = userId.currentValue;
       this.getDataFromUSS(this.userId);
@@ -48,6 +49,9 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
     }
     if (entitlementUpdatedCallback && entitlementUpdatedCallback.currentValue) {
       this.entitlementUpdatedCallback = entitlementUpdatedCallback.currentValue;
+    }
+    if (isInvitePending && isInvitePending.currentValue) {
+      this.isInvitePending = isInvitePending.currentValue;
     }
   }
 
@@ -74,7 +78,7 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
         if (this.HybridServiceUserSidepanelHelperService.isPartnerAdminAndGot403Forbidden(error)) {
           this.Notification.errorWithTrackingId(error, {
             errorKey: 'hercules.userSidepanel.errorMessages.cannotReadUserDataFromUSSPartnerAdmin',
-            allowHtml: true,
+            feedbackInstructions: true,
           });
         } else {
           this.Notification.errorWithTrackingId(error, 'hercules.userSidepanel.errorMessages.cannotReadUserDataFromUSS');
@@ -167,5 +171,6 @@ export class HybridCallServiceConnectUserSettingsComponent implements ng.ICompon
     userEmailAddress: '<',
     entitlementUpdatedCallback: '&',
     userTestToolFeatureToggled: '<',
+    isInvitePending: '<',
   };
 }

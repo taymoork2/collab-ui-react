@@ -11,6 +11,7 @@ describe('Component: extensionPrefix', () => {
       '$scope',
       'FeatureToggleService',
       'CustomerConfigService',
+      'Orgservice',
       '$q',
     );
     this.initComponent = () => {
@@ -26,14 +27,15 @@ describe('Component: extensionPrefix', () => {
   describe('increase extension length from 3 to 7', () => {
     beforeEach(function() {
       spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
-      this.initComponent();
       this.$scope.oldRoutingPrefixLength = '3';
       this.$scope.newRoutingPrefixLength = '7';
+      this.initComponent();
       this.$scope.$apply();
     });
 
     it('should have an input box', function() {
       expect(this.view).toContainElement(PREFIX_INPUT);
+      expect(this.controller.prefixLength).toBe(4);  // newExt - oldExt
     });
 
     it('should display an error when less than 4 digits are entered', function() {
@@ -46,7 +48,8 @@ describe('Component: extensionPrefix', () => {
   describe('customerConfig for Toggle ON', () => {
     beforeEach(function() {
       spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
-      spyOn(this.CustomerConfigService, 'createCompanyLevelCustomerConfig').and.callThrough();
+      spyOn(this.CustomerConfigService, 'createCompanyLevelCustomerConfig');
+      spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.resolve({ status: 200 }));
       this.initComponent();
       this.$scope.$apply();
     });

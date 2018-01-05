@@ -37,4 +37,21 @@ describe('OnboardService:', () => {
       expect(result[0].properties).toEqual({});
     });
   });
+
+  // TODO (f3745): relocate 'isEmailAlreadyPresent()' once 'users.add' UI state is decoupled from 'OnboardCtrl'
+  describe('isEmailAlreadyPresent():', () => {
+    it('should return true if a provided email exists in in a list provided by "getTokenEmailArray()" method', function () {
+      spyOn(this.OnboardService, 'getTokenEmailArray').and.returnValue(['user1@example.com']);
+      expect(this.OnboardService.isEmailAlreadyPresent('user1@example.com')).toBe(true);
+      expect(this.OnboardService.isEmailAlreadyPresent('user2@example.com')).toBe(false);
+
+      this.OnboardService.getTokenEmailArray.and.returnValue([]);
+      expect(this.OnboardService.isEmailAlreadyPresent('user1@example.com')).toBe(false);
+    });
+
+    it('should return false if no email-like token is present', function () {
+      expect(this.OnboardService.isEmailAlreadyPresent('foo')).toBe(false);
+      expect(this.OnboardService.isEmailAlreadyPresent('')).toBe(false);
+    });
+  });
 });

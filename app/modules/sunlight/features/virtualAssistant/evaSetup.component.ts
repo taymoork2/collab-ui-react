@@ -253,18 +253,27 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
    */
   private createFeature(name: string, orgId: string, email: string, defaultSpaceId: string, avatarDataUrl?: string): void {
     const controller = this;
-    controller.service.addExpertAssistant(name, orgId, email, defaultSpaceId, avatarDataUrl)
-      .then(function () {
-        controller.handleFeatureCreation();
-        controller.writeMetrics();
-      })
-      .catch(function (response) {
+    controller.service.listExpertAssistants().then(function (data: any) {
+      if (data && data.items && data.items.length >= 1) {
+        controller.evaAlreadyExisted = true;
+        controller.retryButtonDisabled = true;
         controller.handleFeatureError();
-        controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.createConfigFailureText'), {
-          featureName: controller.$translate.instant('careChatTpl.virtualAssistant.eva.featureText.name'),
-        });
-        controller.Analytics.trackEvent(controller.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_CREATE_FAILURE);
-      });
+        controller.Notification.error(controller.getMessageKey('messages.createEvaFailureText'));
+      } else {
+        controller.service.addExpertAssistant(name, orgId, email, defaultSpaceId, avatarDataUrl)
+          .then(function () {
+            controller.handleFeatureCreation();
+            controller.writeMetrics();
+          })
+          .catch(function (response) {
+            controller.handleFeatureError(response);
+            controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.createConfigFailureText'), {
+              featureName: controller.$translate.instant('careChatTpl.virtualAssistant.eva.featureText.name'),
+            });
+            controller.Analytics.trackEvent(controller.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_CREATE_FAILURE);
+          });
+      }
+    });
   }
 
   public isNameValid(): boolean {
@@ -305,7 +314,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
         controller.writeMetrics();
       })
       .catch(function (response) {
-        controller.handleFeatureError();
+        controller.handleFeatureError(response);
         controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.updateConfigFailureText'));
       });
   }

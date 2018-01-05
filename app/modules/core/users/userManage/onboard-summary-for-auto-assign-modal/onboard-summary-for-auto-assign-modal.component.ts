@@ -23,7 +23,7 @@ export class OnboardSummaryForAutoAssignModalController implements ng.IComponent
   }
 
   public back(): void {
-    this.$state.go('users.add', {
+    this.$state.go('users.add.manual', {
       stateData: this.stateData,
     });
   }

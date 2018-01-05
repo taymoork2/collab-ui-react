@@ -90,6 +90,19 @@
       #chartArea {
         height: 140px;
         width: 140px;
+
+        .amcharts-pie-slice {
+          transform: scale(1);
+          transform-origin: 50% 50%;
+          transition-property: all;
+          transition-duration: 0.3s;
+          transition-timing-function: ease-out;
+          cursor: pointer;
+        }
+
+        .amcharts-pie-slice:hover {
+          transform: scale(1.02);
+        }
       }
     }
     .new-export {

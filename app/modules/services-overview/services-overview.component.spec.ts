@@ -9,7 +9,6 @@ import { Config } from 'modules/core/config/config';
 describe('ServicesOverviewController', () => {
 
   let $componentController: ng.IComponentControllerService;
-  let $httpBackend: ng.IHttpBackendService;
   let $q: ng.IQService;
   let $scope: ng.IScope;
   let ctrl: ServicesOverviewController;
@@ -61,9 +60,8 @@ describe('ServicesOverviewController', () => {
     getStatusForService = spyOn(HybridServicesClusterService, 'getStatusForService').and.returnValue($q.resolve({}));
   });
 
-  function dependencies(_$componentController_, _$httpBackend_, _$q_, _$rootScope_, _Authinfo_, _CloudConnectorService_, _Config_, _EnterprisePrivateTrunkService_, _FeatureToggleService_, _HybridServicesClusterService_) {
+  function dependencies(_$componentController_, _$q_, _$rootScope_, _Authinfo_, _CloudConnectorService_, _Config_, _EnterprisePrivateTrunkService_, _FeatureToggleService_, _HybridServicesClusterService_) {
     $componentController = _$componentController_;
-    $httpBackend = _$httpBackend_;
     $q = _$q_;
     $scope = _$rootScope_.$new();
     Authinfo = _Authinfo_;

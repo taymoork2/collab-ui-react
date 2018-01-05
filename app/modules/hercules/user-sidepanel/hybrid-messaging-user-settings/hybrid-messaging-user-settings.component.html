@@ -12,7 +12,7 @@
   </button>
 </cs-sp-buttons>
 <cs-sp-container cs-tabindex="$ctrl.showSaveButton() ? -1 : 0">
-  <cs-sp-section class="cloud-extensions">
+  <cs-sp-section class="hybrid-services-user-sidepanel">
     <div class="section-title-row">
       <span class="section-name" translate="hercules.hybridServiceNames.spark-hybrid-impinterop"></span>
       <cs-toggle-switch toggle-id="impEntitledToggle"
@@ -22,46 +22,49 @@
                         is-disabled="!$ctrl.loadingPage && $ctrl.couldNotReadUser">
       </cs-toggle-switch>
       <span cs-loader
-            class="cloud-extension-label loader-example--small"
+            class="hybrid-services-label loader-example--small"
             ng-if="$ctrl.loadingPage"></span>
     </div>
     <div>
-      <p class="extension-description">{{'hercules.cloudExtensions.serviceDescriptions.spark-hybrid-impinterop' | translate}}</p>
+      <p class="hybrid-service-description">{{'hercules.cloudExtensions.serviceDescriptions.spark-hybrid-impinterop' | translate}}</p>
 
-      <div class="row collapse"
-           ng-if="$ctrl.userStatus">
+      <div class="row collapse">
         <div class="columns small-3">
-          <span class="cloud-extension-label">{{::'cloudExtensions.status' | translate}}:</span>
+          <span class="hybrid-services-label">{{::'cloudExtensions.status' | translate}}:</span>
         </div>
         <div class="columns small-7 normal-line-height"
              ng-if="!$ctrl.loadingPage">
-            <span class="cloud-extension-label"
+            <span class="hybrid-services-label"
                   ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatus"
                   ng-class="'status-' + $ctrl.userStatus.state"
                   id="userStatus"
                   translate="hercules.activationStatus.{{$ctrl.getStatus($ctrl.userStatus)}}"></span>
 
-          <span class="cloud-extension-label last-state-change-timestamp"
+          <span class="hybrid-services-label last-state-change-timestamp"
                 ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatus && $ctrl.lastStateChangeText">
             {{$ctrl.lastStateChangeText}}
             </span>
 
-          <span class="cloud-extension-label status-off"
-                ng-if="!$ctrl.userIsCurrentlyEntitled && !$ctrl.couldNotReadUser"
+          <span class="hybrid-services-label status-off"
+                ng-if="$ctrl.isInvitePending"
+                translate="hercules.activationStatus.accountNotActivated"></span>
+
+          <span class="hybrid-services-label status-off"
+                ng-if="!$ctrl.userIsCurrentlyEntitled && !$ctrl.couldNotReadUser && !$ctrl.isInvitePending"
                 translate="common.off"></span>
 
-          <span class="cloud-extension-label status-off"
-                ng-if="!$ctrl.userIsCurrentlyEntitled && $ctrl.couldNotReadUser"
+          <span class="hybrid-services-label status-off"
+                ng-if="!$ctrl.userIsCurrentlyEntitled && $ctrl.couldNotReadUser && !$ctrl.isInvitePending"
                 translate="common.unknown"></span>
 
         </div>
         <div class="columns small-7 normal-line-height"
              ng-if="$ctrl.loadingPage">
-          <span cs-loader class="cloud-extension-label loader-example--small"></span>
+          <span cs-loader class="hybrid-services-label loader-example--small"></span>
         </div>
         <div class="columns small-2">
             <span ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatus"
-                  class="cloud-extension-label right">
+                  class="hybrid-services-label right">
               <a ui-sref="user-overview.hybrid-services-spark-hybrid-impinterop.history"
                  translate="hercules.userHistory.seeHistory"></a>
             </span>
@@ -80,6 +83,8 @@
         </div>
 
       </div>
+
+      <hs-is-invite-pending-warning ng-if="$ctrl.isInvitePending"></hs-is-invite-pending-warning>
 
     </div>
   </cs-sp-section>

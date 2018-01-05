@@ -10,6 +10,7 @@ describe('Service: AutoAssignTemplateService:', () => {
       'UrlConfig',
     );
     this.endpointUrl = 'fake-admin-service-url/organizations/fake-org-id/templates';
+    this.settingsUrl = 'fake-admin-service-url/organizations/fake-org-id/settings';
   });
 
   beforeEach(function () {
@@ -49,6 +50,22 @@ describe('Service: AutoAssignTemplateService:', () => {
       this.injectDependencies('AutoAssignTemplateService');
       this.AutoAssignTemplateService.updateTemplate({ foo: 'bar' });
       expect(this.$http.patch).toHaveBeenCalledWith(this.endpointUrl, { foo: 'bar' });
+    });
+  });
+
+  describe('activateTemplate():', () => {
+    it('should call POST on the internal settings url with an empty payload and enabled=true', function () {
+      this.injectDependencies('AutoAssignTemplateService');
+      this.AutoAssignTemplateService.activateTemplate();
+      expect(this.$http.post).toHaveBeenCalledWith(`${this.settingsUrl}/autoLicenseAssignment`, { enabled: true });
+    });
+  });
+
+  describe('deactivateTemplate():', () => {
+    it('should call POST on the internal settings url with an empty payload and enabled=false', function () {
+      this.injectDependencies('AutoAssignTemplateService');
+      this.AutoAssignTemplateService.deactivateTemplate();
+      expect(this.$http.post).toHaveBeenCalledWith(`${this.settingsUrl}/autoLicenseAssignment`, { enabled: false });
     });
   });
 

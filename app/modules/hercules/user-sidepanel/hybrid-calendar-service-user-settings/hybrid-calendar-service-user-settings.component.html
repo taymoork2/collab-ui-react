@@ -6,7 +6,7 @@
 
 <cs-sp-container cs-tabindex="$ctrl.showSaveButton() ? -1 : 0">
 
-  <cs-sp-section class="cloud-extensions">
+  <cs-sp-section class="hybrid-services-user-sidepanel">
     <div class="section-title-row">
       <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-cal"></span>
       <cs-toggle-switch ng-if="!$ctrl.loadingPage"
@@ -17,13 +17,13 @@
                         is-disabled="$ctrl.savingPage">
       </cs-toggle-switch>
       <span cs-loader
-            class="cloud-extension-label loader-example--small"
+            class="hybrid-services-label loader-example--small"
             ng-if="$ctrl.loadingPage"></span>
     </div>
-    <p class="extension-description" translate="hercules.cloudExtensions.serviceDescriptions.squared-fusion-cal"></p>
+    <p class="hybrid-service-description" translate="hercules.cloudExtensions.serviceDescriptions.squared-fusion-cal"></p>
 
     <div ng-if="!$ctrl.loadingPage">
-      <span class="cloud-extension-label" translate="hercules.cloudExtensions.calendarType"></span>
+      <span class="hybrid-services-label" translate="hercules.cloudExtensions.calendarType"></span>
       <input
         cs-input
         type="radio"
@@ -46,34 +46,36 @@
         cs-input-help-text="{{:: $ctrl.googleHelpText}}">
     </div>
     <div ng-if="$ctrl.loadingPage">
-      <span cs-loader class="cloud-extension-label loader-example--small"></span>
+      <span cs-loader class="hybrid-services-label loader-example--small"></span>
     </div>
+
+    <hs-is-invite-pending-warning ng-if="$ctrl.isInvitePending"></hs-is-invite-pending-warning>
 
     <div class="row collapse"
          ng-if="$ctrl.userStatus">
 
       <div class="columns small-3">
-        <span class="cloud-extension-label" translate="cloudExtensions.status"></span><span>:</span>
+        <span class="hybrid-services-label" translate="cloudExtensions.status"></span><span>:</span>
       </div>
 
       <div class="columns small-7 normal-line-height"
            ng-if="!$ctrl.loadingPage">
-        <span class="cloud-extension-label"
+        <span class="hybrid-services-label"
               ng-if="$ctrl.originalEntitledToggle && $ctrl.userStatus"
               ng-class="'status-' + $ctrl.userStatus.state"
               id="userStatus"
               translate="hercules.activationStatus.{{$ctrl.getStatus($ctrl.userStatus)}}"></span>
 
-        <span class="cloud-extension-label last-state-change-timestamp"
+        <span class="hybrid-services-label last-state-change-timestamp"
               ng-if="$ctrl.originalEntitledToggle && $ctrl.userStatus && $ctrl.lastStateChangeText">
             {{$ctrl.lastStateChangeText}}
             </span>
 
-        <span class="cloud-extension-label status-off"
+        <span class="hybrid-services-label status-off"
               ng-if="!$ctrl.originalEntitledToggle && !$ctrl.couldNotReadUser"
               translate="common.off"></span>
 
-        <span class="cloud-extension-label status-off"
+        <span class="hybrid-services-label status-off"
               ng-if="!$ctrl.originalEntitledToggle && $ctrl.couldNotReadUser"
               translate="common.unknown"></span>
 
@@ -81,12 +83,12 @@
 
       <div class="columns small-7 normal-line-height"
            ng-if="$ctrl.loadingPage">
-        <span cs-loader class="cloud-extension-label loader-example--small"></span>
+        <span cs-loader class="hybrid-services-label loader-example--small"></span>
       </div>
 
       <div class="columns small-2">
             <span ng-if="$ctrl.originalEntitledToggle && $ctrl.userStatus"
-                  class="cloud-extension-label right">
+                  class="hybrid-services-label right">
               <a ui-sref="user-overview.hybrid-services-squared-fusion-cal.history"
                  translate="hercules.userHistory.seeHistory"></a>
             </span>
@@ -94,22 +96,22 @@
 
       <div class="row collapse" ng-if="$ctrl.userStatus.messages.length">
         <div class="columns small-3">
-          <span class="cloud-extension-label">{{'cloudExtensions.details' | translate}}:</span>
+          <span class="hybrid-services-label">{{'cloudExtensions.details' | translate}}:</span>
         </div>
         <div class="columns small-9" ng-if="!$ctrl.loadingPage">
-          <user-status-messages class="cloud-extension-label" messages="$ctrl.userStatus.messages"></user-status-messages>
+          <user-status-messages class="hybrid-services-label" messages="$ctrl.userStatus.messages"></user-status-messages>
         </div>
         <div class="columns small-9" ng-if="$ctrl.loadingPage">
-          <span cs-loader class="cloud-extension-label loader-example--small"></span>
+          <span cs-loader class="hybrid-services-label loader-example--small"></span>
         </div>
       </div>
 
       <div class="row collapse" ng-if="$ctrl.userOwnedByCCC">
         <div class="columns small-3">
-          <span class="cloud-extension-label" translate="cloudExtensions.cluster"></span><span>:</span>
+          <span class="hybrid-services-label" translate="cloudExtensions.cluster"></span><span>:</span>
         </div>
         <div class="columns small-9">
-          <span class="cloud-extension-label" translate="common.ciscoCollaborationCloud"></span>
+          <span class="hybrid-services-label" translate="common.ciscoCollaborationCloud"></span>
         </div>
       </div>
 

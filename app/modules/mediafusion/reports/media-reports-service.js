@@ -361,7 +361,7 @@
 
     function returnErrorCheck(error, message, returnItem) {
       if (error.status === 401 || error.status === 403) {
-        Notification.error('reportsPage.unauthorizedError');
+        Notification.errorWithTrackingId(error, 'reportsPage.unauthorizedError');
         return returnItem;
       } else if ((error.status !== 0) || (error.config.timeout.$$state.status === 0)) {
         Notification.errorWithTrackingId(error, message);

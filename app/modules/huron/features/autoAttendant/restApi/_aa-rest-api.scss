@@ -137,3 +137,30 @@ label {
 .aa-rest-margin {
     @include vr-spacing(mt, 2);
 }
+
+.aa-rest-url-error-message {
+  color: $color-red-base;
+  @include vr-spacing(pl, 0);
+  @include vr-spacing(pr, 0);
+
+  .aa-rest-url-error {
+    @include vr-spacing(ml, 1.5);
+    @include vr-spacing(mb, 1);
+    @include vr-spacing(pt, 0.4);
+    line-height: 1rem;
+    font-size: .875rem;
+    max-width: 36rem;
+  }
+}
+
+.aa-rest-error-icon::before {
+  content: '\F1B7';
+  font-family: collab-ui-icons;
+  float: left;
+  font-size: 1rem;
+}
+
+.aa-rest-url-helper-text {
+  @include vr-spacing(pl, 0);
+  @include vr-spacing(pr, 0);
+}

@@ -72,6 +72,7 @@ describe('Component: linkedSites', () => {
     });
     it('read from service and convert to format suitable for grid', function () {
       spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
+      spyOn(this.$state, 'go');
       this.filterSitesDeferred.resolve(this.sites);
       this.controller.$onInit();
       this.$scope.$apply();

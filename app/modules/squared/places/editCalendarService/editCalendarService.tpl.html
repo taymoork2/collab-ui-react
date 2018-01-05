@@ -49,17 +49,17 @@
               options="editCalendarService.resourceGroup.options"
               on-change-fn="editCalendarService.selectedResourceGroupChanged()">
             </cs-select>
-            <div class="warning-message" ng-if="editCalendarService.resourceGroup.shouldWarn">
+            <div class="hybrid-services-warning-message" ng-if="editCalendarService.resourceGroup.shouldWarn">
               <i class="icon icon-warning"></i>
-              <p class="message"
+              <p class="hybrid-services-message"
                  translate="hercules.resourceGroups.groupIsEmptyWarning"
                  translate-values="{ConnectorName: localizedConnectorName}">
               </p>
             </div>
           </div>
-          <div ng-if="editCalendarService.resourceGroup.cannotFindResouceGroup" class="error-message">
+          <div ng-if="editCalendarService.resourceGroup.cannotFindResouceGroup" class="hybrid-services-error-message">
             <i class="icon icon-error"></i>
-            <p class="message"
+            <p class="hybrid-services-message"
                translate="hercules.resourceGroups.groupHasBeenDeleted"></p>
             <form>
               <button class="btn" type="submit" ng-click="editCalendarService.setResourceGroupOnUser('')">

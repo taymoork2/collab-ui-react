@@ -16,6 +16,7 @@ class OnlineUpgrade {
   constructor(
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
+    private Analytics,
     private Auth,
     private Authinfo,
     private Notification: Notification,
@@ -54,6 +55,9 @@ class OnlineUpgrade {
 
   public cancel(): void {
     this.cancelLoading = true;
+    this.Analytics.trackEvent(this.Analytics.sections.ONLINE_ORDER.eventNames.FREEMIUM, {
+      subscriptionId: this.bmmpAttr.subscriptionId,
+    });
     this.OnlineUpgradeService.cancelSubscriptions()
       .then(() => {
         this.Notification.success('onlineUpgradeModal.cancelSuccess');

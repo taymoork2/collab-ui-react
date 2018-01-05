@@ -44,11 +44,10 @@ class DgcTab implements ng.IComponentController {
       const mbi = res.meetingBasicInfo;
       const details = _.assign({}, mbi, {
         status_: this.SearchService.getStatus(mbi.status),
-        startTime_: this.timestampToDate(mbi.startTime, 'hh:mm'),
-        duration_: moment.duration(mbi.duration * 1000).humanize(),
-        startDate: this.timestampToDate(mbi.startTime, 'MMMM Do, YYYY'),
-        endTime_: mbi.endTime ? this.timestampToDate(mbi.endTime, 'hh:mm') : '',
-        endDate: mbi.endTime ? this.timestampToDate(mbi.endTime, 'MMMM Do, YYYY') : '',
+        startTime_: this.timestampToDate(mbi.startTime, 'h:mm A'),
+        startDate: this.timestampToDate(mbi.startTime, 'YYYY-MM-DD'),
+        endTime_: mbi.endTime ? this.timestampToDate(mbi.endTime, 'h:mm A') : '',
+        endDate: mbi.endTime ? this.timestampToDate(mbi.endTime, 'YYYY-MM-DD') : '',
       });
       const overview = _.assignIn({}, mbi, {
         duration_: moment.duration(mbi.duration * 1000).humanize(),
@@ -79,7 +78,19 @@ class DgcTab implements ng.IComponentController {
       });
       this.SearchService.setStorage('webexOneMeeting', this.data);
       this.details = details;
-      this.loading = false;
+
+      if (mbi.status === 1) {
+        this.SearchService.getServerTime()
+        .then( res => {
+          mbi.endTime = _.get(res, 'dateLong');
+          this.SearchService.setStorage('webexOneMeeting.endTime', mbi.endTime);
+          details.duration_ = _.round((mbi.endTime - mbi.startTime) / 1000 / 60) + ` Min`;
+          this.loading = false;
+        });
+      } else {
+        details.duration_ = _.round(mbi.duration / 60) + ` Min`;
+        this.loading = false;
+      }
     });
   }
 
