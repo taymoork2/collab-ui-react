@@ -1548,7 +1548,7 @@
           .state('user-overview.hybrid-services-spark-hybrid-impinterop', {
             views: {
               'side-panel-container@user-overview': {
-                template: '<hybrid-messaging-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)" is-invite-pending="$resolve.isInvitePending"></hybrid-messaging-user-settings>',
+                template: '<hybrid-message-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)" is-invite-pending="$resolve.isInvitePending" all-user-entitlements="$resolve.allUserEntitlements"></hybrid-message-user-settings>',
               },
             },
             data: {},
@@ -1565,13 +1565,15 @@
               isInvitePending: /* @ngInject */ function ($stateParams) {
                 return $stateParams.isInvitePending;
               },
+              allUserEntitlements: /* @ngInject */ function ($stateParams) {
+                return $stateParams.allUserEntitlements;
+              },
               displayName: translateDisplayName('hercules.hybridServiceNames.spark-hybrid-impinterop'),
             },
             params: {
-              extensionId: {},
-              extensions: {},
               userUpdatedCallback: _.noop,
               isInvitePending: null,
+              allUserEntitlements: null,
             },
           })
           .state('user-overview.hybrid-services-spark-hybrid-impinterop.history', {
@@ -1589,11 +1591,12 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-cal', {
-            template: '<hybrid-calendar-service-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)" preferred-web-ex-site-name="$resolve.preferredWebExSiteName" is-invite-pending="$resolve.isInvitePending"></hybrid-calendar-service-user-settings>',
+            template: '<hybrid-calendar-service-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)" preferred-web-ex-site-name="$resolve.preferredWebExSiteName" all-user-entitlements="$resolve.allUserEntitlements" is-invite-pending="$resolve.isInvitePending"></hybrid-calendar-service-user-settings>',
             data: {},
             params: {
               userUpdatedCallback: _.noop,
               isInvitePending: null,
+              allUserEntitlements: null,
             },
             resolve: {
               userId: /* @ngInject */ function ($stateParams) {
@@ -1604,6 +1607,9 @@
               },
               userUpdatedCallback: /* @ngInject */ function ($stateParams) {
                 return $stateParams.userUpdatedCallback;
+              },
+              allUserEntitlements: /* @ngInject */ function ($stateParams) {
+                return $stateParams.allUserEntitlements;
               },
               preferredWebExSiteName: /* @ngInject */ function ($stateParams, HybridServiceUserSidepanelHelperService) {
                 return HybridServiceUserSidepanelHelperService.getPreferredWebExSiteName($stateParams.currentUser, $stateParams.orgInfo);
@@ -1629,11 +1635,10 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-uc', {
-            template: '<hybrid-call-service-aggregated-section user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)" all-user-entitlements="$resolve.allUserEntitlements" is-invite-pending="$resolve.isInvitePending"></hybrid-call-service-aggregated-section>',
+            template: '<hybrid-call-service-aggregated-section user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)" is-invite-pending="$resolve.isInvitePending"></hybrid-call-service-aggregated-section>',
             data: {},
             params: {
               userUpdatedCallback: _.noop,
-              allUserEntitlements: null,
               isInvitePending: null,
             },
             resolve: {
@@ -1642,9 +1647,6 @@
               },
               userName: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentUser.userName;
-              },
-              allUserEntitlements: /* @ngInject */ function ($stateParams) {
-                return $stateParams.allUserEntitlements;
               },
               userUpdatedCallback: /* @ngInject */ function ($stateParams) {
                 return $stateParams.userUpdatedCallback;
@@ -1658,7 +1660,7 @@
           .state('user-overview.hybrid-services-squared-fusion-uc.aware-settings', {
             views: {
               'side-panel-container@user-overview': {
-                template: '<hybrid-call-service-aware-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)" is-invite-pending="$resolve.isInvitePending"></hybrid-call-service-aware-user-settings>',
+                template: '<hybrid-call-service-aware-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)" is-invite-pending="$resolve.isInvitePending" all-user-entitlements="$resolve.allUserEntitlements"></hybrid-call-service-aware-user-settings>',
               },
             },
             data: {},
@@ -1667,6 +1669,7 @@
               userEmailAddress: '',
               onEntitlementChange: Function,
               isInvitePending: null,
+              allUserEntitlements: null,
             },
             resolve: {
               userId: /* @ngInject */ function ($stateParams) {
@@ -1681,6 +1684,9 @@
               },
               isInvitePending: /* @ngInject */ function ($stateParams) {
                 return $stateParams.isInvitePending;
+              },
+              allUserEntitlements: /* @ngInject */ function ($stateParams) {
+                return $stateParams.allUserEntitlements;
               },
             },
           })
@@ -1701,7 +1707,7 @@
           .state('user-overview.hybrid-services-squared-fusion-uc.connect-settings', {
             views: {
               'side-panel-container@user-overview': {
-                template: '<hybrid-call-service-connect-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)" user-test-tool-feature-toggled="$resolve.userTestToolFeatureToggled" is-invite-pending="$resolve.isInvitePending"></hybrid-call-service-connect-user-settings>',
+                template: '<hybrid-call-service-connect-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)" user-test-tool-feature-toggled="$resolve.userTestToolFeatureToggled" is-invite-pending="$resolve.isInvitePending" all-user-entitlements="$resolve.allUserEntitlements"></hybrid-call-service-connect-user-settings>',
               },
             },
             data: {},
@@ -1710,6 +1716,7 @@
               userEmailAddress: '',
               onEntitlementChange: Function,
               isInvitePending: null,
+              allUserEntitlements: null,
             },
             resolve: {
               displayName: translateDisplayName('sidePanelBreadcrumb.connect'),
@@ -1727,6 +1734,9 @@
               },
               isInvitePending: /* @ngInject */ function ($stateParams) {
                 return $stateParams.isInvitePending;
+              },
+              allUserEntitlements: /* @ngInject */ function ($stateParams) {
+                return $stateParams.allUserEntitlements;
               },
             },
           })

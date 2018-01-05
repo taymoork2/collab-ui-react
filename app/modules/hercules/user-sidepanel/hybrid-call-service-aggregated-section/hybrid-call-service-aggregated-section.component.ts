@@ -5,8 +5,8 @@ import { USSService, IUserStatusWithExtendedMessages } from 'modules/hercules/se
 import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
 
 interface IOptions {
-  callServiceAware: any;
-  callServiceConnect: any;
+  entitledToAware?: boolean;
+  entitledToConnect?: boolean;
 }
 
 class HybridCallServiceAggregatedSectionCtrl implements ng.IComponentController {
@@ -27,14 +27,16 @@ class HybridCallServiceAggregatedSectionCtrl implements ng.IComponentController 
 
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
     private Notification: Notification,
     private ServiceDescriptorService: ServiceDescriptorService,
+    private Userservice,
     private USSService: USSService,
   ) { }
 
   public $onInit() {
-    this.getUserFromUSS(this.userId);
+    this.getUserData(this.userId);
     this.isConnectSetUp();
   }
 
@@ -48,14 +50,17 @@ class HybridCallServiceAggregatedSectionCtrl implements ng.IComponentController 
       });
   }
 
-  private getUserFromUSS(userId) {
+  private getUserData(userId) {
     this.loadingPage = true;
-    this.HybridServiceUserSidepanelHelperService.getDataFromUSS(userId)
-      .then(([userStatusAware, userStatusConnect]) => {
+    const promises: ng.IPromise<any>[] = [
+      this.Userservice.getUserAsPromise(userId),
+      this.HybridServiceUserSidepanelHelperService.getDataFromUSS(userId),
+    ];
+    this.$q.all(promises)
+      .then(([commonIdentityData, [userStatusAware, userStatusConnect]]) => {
+        this.allUserEntitlements = commonIdentityData.data.entitlements;
         this.callServiceAware = userStatusAware;
         this.callServiceConnect = userStatusConnect;
-      })
-      .then(() => {
         if (this.callServiceAware && this.callServiceAware.resourceGroupId) {
           this.resourceGroupId = this.callServiceAware.resourceGroupId;
         }
@@ -75,16 +80,12 @@ class HybridCallServiceAggregatedSectionCtrl implements ng.IComponentController 
   public userHasEntitlement = (entitlement: HybridServiceId): boolean => this.allUserEntitlements && this.allUserEntitlements.indexOf(entitlement) > -1;
 
   public onEntitlementChanges = (changes: IOptions) => {
-    this.callServiceAware = changes.callServiceAware;
-    this.callServiceConnect = changes.callServiceConnect;
-    if (this.callServiceAware && this.callServiceAware.resourceGroupId) {
-      this.resourceGroupId = this.callServiceAware.resourceGroupId;
-    }
+    this.getUserData(this.userId);
     this.userUpdatedCallback({
       options: {
         refresh: true,
-        callServiceAware: _.get(this.callServiceAware, 'entitled', false),
-        callServiceConnect: _.get(this.callServiceConnect, 'entitled', false),
+        callServiceAware: changes.entitledToAware,
+        callServiceConnect: changes.entitledToConnect,
       },
     });
   }
@@ -96,7 +97,6 @@ export class HybridCallServiceAggregatedSectionComponent implements ng.IComponen
   public template = require('modules/hercules/user-sidepanel/hybrid-call-service-aggregated-section/hybrid-call-service-aggregated-section.component.html');
   public bindings = {
     userId: '<',
-    allUserEntitlements: '<',
     userEmailAddress: '<',
     userUpdatedCallback: '&',
     isInvitePending: '<',

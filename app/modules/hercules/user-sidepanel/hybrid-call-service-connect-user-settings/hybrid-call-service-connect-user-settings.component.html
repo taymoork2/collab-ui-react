@@ -19,7 +19,7 @@
                         ng-model="$ctrl.entitledToggle"
                         cs-change="$ctrl.changeEntitlement(toggleValue)"
                         size="small"
-                        is-disabled="!$ctrl.loadingPage && !$ctrl.userStatusAware || $ctrl.couldNotReadUser">
+                        is-disabled="!$ctrl.loadingPage && !$ctrl.userHasEntitlement('squared-fusion-uc') || $ctrl.couldNotReadUser">
       </cs-toggle-switch>
       <span cs-loader
             class="hybrid-services-label loader-example--small"
@@ -83,9 +83,13 @@
 
       </div>
 
-      <hs-is-invite-pending-warning ng-if="$ctrl.isInvitePending"></hs-is-invite-pending-warning>
+      <hs-is-invite-pending-warning ng-if="$ctrl.isInvitePending"
+                                    is-entitled="$ctrl.entitledToggle"
+                                    was-entitled="$ctrl.userIsCurrentlyEntitled"
+                                    service-id="'squared-fusion-ec.full'">
+      </hs-is-invite-pending-warning>
 
-      <div ng-if="!$ctrl.userIsCurrentlyEntitled && !$ctrl.userStatusAware && !$ctrl.loadingPage">
+      <div ng-if="!$ctrl.userIsCurrentlyEntitled && !$ctrl.userHasEntitlement('squared-fusion-uc') && !$ctrl.loadingPage">
         <p translate="hercules.userSidepanel.enableAwareFirst"
            translate-value-onclick="$ctrl.goToAwarePanel()"
            translate-compile
