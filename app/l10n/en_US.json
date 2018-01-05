@@ -6402,7 +6402,7 @@
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaMicroserviceFailure": "Because of a service connection issue, Hybrid Media Service routing was not enabled for your organization. Open a case through admin.ciscospark.com if the issue persists.",
-    "mediaNetworkFailure": "Because of a network connection issue, Hybrid Media Service was not enabled for your organization. Open a case through admin.ciscospark.com if the issue persists.",
+    "mediaEntitlementEnablementFailure": "Hybrid Media Service was not enabled for your organization, because the required licenses are not applied to your organization. Open a case through admin.ciscospark.com to get the issue corrected.",
     "delete": "Delete",
     "cancel": "Cancel",
     "actionsHeader": "Actions",
