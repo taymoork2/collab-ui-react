@@ -123,8 +123,14 @@ describe('Component: PstnTrialSetupComponent', () => {
         this.controller.disableNextButton.and.returnValue(false);
       });
 
-      it ('should be disabled if the form is invalid', function () {
+      it ('should NOT be disabled if the form is invalid and disableNextButton is false', function () {
         this.controller.trialForm.$invalid = true;
+        expect(this.controller.isDisabled()).toEqual(false);
+      });
+
+      it ('should be disabled if the form is invalid and disableNextButton is true', function () {
+        this.controller.trialForm.$invalid = true;
+        this.controller.disableNextButton.and.returnValue(true);
         expect(this.controller.isDisabled()).toEqual(true);
       });
 
