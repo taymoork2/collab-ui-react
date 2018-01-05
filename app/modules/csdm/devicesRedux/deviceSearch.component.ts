@@ -2,12 +2,13 @@ import { Device } from '../services/deviceSearchConverter';
 import { SearchObject } from '../services/search/searchObject';
 import { SearchResult } from '../services/search/searchResult';
 import { Caller, CsdmSearchService } from '../services/csdmSearch.service';
-import { Notification } from '../../core/notifications/notification.service';
+import { Notification } from '../../core/notifications';
 import { SearchElement } from '../services/search/searchElement';
 import { SearchTranslator } from 'modules/csdm/services/search/searchTranslator';
-import { ISuggestion, ISuggestionDropdown, SuggestionDropdown } from '../services/search/suggestion';
+import { ISuggestion } from '../services/search/suggestion';
 import { IBulletContainer } from './deviceSearchBullet.component';
-import { KeyCodes } from '../../core/accessibility/accessibility.service';
+import { KeyCodes } from '../../core/accessibility';
+import { ISuggestionDropdown, SuggestionDropdown } from '../services/search/suggestionDropdown';
 
 export class DeviceSearch implements ng.IComponentController, ISearchHandler, IBulletContainer {
 
@@ -179,6 +180,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
   }
 
   public onSearchInputKeyDown($keyEvent: KeyboardEvent) {
+    this.showSuggestions = true;
     if ($keyEvent && $keyEvent.keyCode) {
       switch ($keyEvent.keyCode) {
         case KeyCodes.BACKSPACE:
@@ -202,17 +204,17 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
           }
           break;
         case KeyCodes.DOWN:
-          this.suggestions.nextSuggestion();
+          this.suggestions.setNextActiveByKeyboard();
           break;
         case KeyCodes.UP:
-          this.suggestions.previousSuggestion();
+          this.suggestions.setPreviousActiveByKeyboard();
           break;
         case KeyCodes.ESCAPE:
           this.showSuggestions = false;
           break;
         case KeyCodes.ENTER:
           if (!this.searchObject.hasError) {
-            this.selectSuggestion(this.suggestions.getActiveSuggestion());
+            this.selectSuggestion(this.suggestions.getActiveSuggestionByKeyboard());
           }
       }
     }
