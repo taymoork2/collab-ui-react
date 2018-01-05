@@ -4238,10 +4238,10 @@
     "actionCallerInputHint": "Store information that the caller supplies.",
     "actionCallerInputHelp": "Store information that the caller supplies.",
     "invalidCharacter": "Invalid character entered.",
-    "dialByExtensionRoutingPrefix" : "Limit to Routing Prefix",
-    "routingPrefix" : "Routing Prefix",
-    "dialByExtensionRoutingPrefixHelpText" : "If not selected, users must enter the routing prefix plus the extension.",
-    "selectRoutingPrefix" : "Select",
+    "dialByExtensionRoutingPrefix": "Limit to Routing Prefix",
+    "routingPrefix": "Routing Prefix",
+    "dialByExtensionRoutingPrefixHelpText": "If not selected, users must enter the routing prefix plus the extension.",
+    "selectRoutingPrefix": "Select",
     "callerInputCnvtDigit": "Convert digit input to text string value.",
     "callerInputMaxLenStr": "Max Length of String",
     "varNamesDependenciesTitle": "Variable Dependencies",
@@ -4253,9 +4253,9 @@
     "usernameRequiredMsg": "Username is required.",
     "usernameTooLongMsg": "Username exceeded its maximum length of 128 characters.",
     "passwordTooLongMsg": "Password exceeded its maximum length of 128 characters",
-    "configureApiAuthentication": "Use Basic Authentication" ,
-    "restApiUserName":"Username",
-    "restApiPassword":"Password",
+    "configureApiAuthentication": "Use Basic Authentication",
+    "restApiUserName": "Username",
+    "restApiPassword": "Password",
     "callerInputValue": "Input Value",
     "callerInputLabel": "Name",
     "callerInputNamePlaceHolder": "Name Variable",
@@ -4538,18 +4538,18 @@
     "AABusinessHours": "Business Hours",
     "AABusinessHoursDesc": "Simple open/closed schedule with custom actions.",
     "variables": "Variables:",
-    "configureApiHeading":"Request Test and Response Assignment",
-    "configureApiHeadingHelperText":"Provide test data for the variables defined in the url to test the connection and response to your REST API.",
-    "configureApiHelpertext":"Values below will be entered into the URL for testing and response assignment only.",
-    "restApiResponseVar":"Response Variable",
-    "restApiResponseVal":"Response Value",
-    "restApiCustomVar":"Custom Variable",
-    "customVariablesAssignmentHelpText":"Select Custom Variables to assign the value of the Responses from the REST API to use in the call flow.",
-    "Variables":"Variables",
-    "value":"Value",
-    "restApiUrlHelperText":"Enter the secure URL of the REST API to invoke. Click the 'Add Dynamic text' to insert variables in the URL.",
-    "completeHttpsError":"Enter the complete URL including the protocol, HTTPS.",
-    "secureHttpsError":"Enter only secure HTTPS URLs."
+    "configureApiHeading": "Request Test and Response Assignment",
+    "configureApiHeadingHelperText": "Provide test data for the variables defined in the url to test the connection and response to your REST API.",
+    "configureApiHelpertext": "Values below will be entered into the URL for testing and response assignment only.",
+    "restApiResponseVar": "Response Variable",
+    "restApiResponseVal": "Response Value",
+    "restApiCustomVar": "Custom Variable",
+    "customVariablesAssignmentHelpText": "Select Custom Variables to assign the value of the Responses from the REST API to use in the call flow.",
+    "Variables": "Variables",
+    "value": "Value",
+    "restApiUrlHelperText": "Enter the secure URL of the REST API to invoke. Click the 'Add Dynamic text' to insert variables in the URL.",
+    "completeHttpsError": "Enter the complete URL including the protocol, HTTPS.",
+    "secureHttpsError": "Enter only secure HTTPS URLs."
   },
   "callPark": {
     "code": "CP",
@@ -6401,7 +6401,7 @@
       "meeting-duration-title": "Meeting Duration"
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
-    "mediaMicroserviceFailure": "Because of a service connection issue, Hybrid Media Service routing was not enabled for your organization. Open a case through admin.ciscospark.com if the issue persists.",
+    "mediaMicroserviceFailure": "Hybrid Media Service was not enabled for your organization, because enabling Hybrid Media Service routing failed. Open a case through admin.ciscospark.com to get the issue corrected.",
     "mediaEntitlementEnablementFailure": "Hybrid Media Service was not enabled for your organization, because the required licenses are not applied to your organization. Open a case through admin.ciscospark.com to get the issue corrected.",
     "delete": "Delete",
     "cancel": "Cancel",
@@ -7457,10 +7457,10 @@
     "deleteNumberTextBase": "Are you sure you want to delete this phone number? {{ isApiImplementationSwivel }}.",
     "deleteNumberTextStandard": "It will be permanently removed. Review billing changes with the PSTN provider",
     "deleteNumberTextBYOP": "The number will be returned to you immediately",
-    "headerLabelInternalNumber":"internalNumber",
-    "headerLabelExternalNumber":"phoneNumber",
-    "headerLabelUserId":"assignedTo",
-    "headerLabelLocation":"location"
+    "headerLabelInternalNumber": "internalNumber",
+    "headerLabelExternalNumber": "phoneNumber",
+    "headerLabelUserId": "assignedTo",
+    "headerLabelLocation": "location"
   },
   "messengerCiSync": {
     "orgInfoSection": {
@@ -7855,7 +7855,7 @@
           "nonAdminEditDeleteWarning": "You are not authorized to edit or delete this virtual assistant. Contact the owner, {{owner}}, to request one of these actions."
         }
       },
-      "invalidInput" : {
+      "invalidInput": {
         "invalidAccessToken": "The Dialogflow client access token is invalid.\nClick the back arrow to return to the Dialogue Integration page and enter a valid token.",
         "duplicateName": "The {{ featureName }} must have a unique name.\nClick the back arrow to return to the Name page and enter a valid name.",
         "invalidName": "The {{ featureName }} name is invalid.\nClick the back arrow to return to the Name page and enter a valid name.",
@@ -10316,67 +10316,67 @@
     }
   },
   "hcs": {
-     "taas": {
-        "overviewPage": {
-          "title": "TaaS Overview",
-          "customerNameHeader": "Customer Name",
-          "allCustomers": "All Customers",
-          "testDate": "Last Ran Test",
-          "testResult": "Test Result",
-          "totalResources": "Resources",
-          "actionHeader": "Actions",
-          "editSuite": "Edit Suite",
-          "editTest": "Edit Tests",
-          "deleteAll": "Delete All Suites"
-        },
-        "testState": {
-          "good": "Passed",
-          "failed": "Failed",
-          "running": "Running..."
-        },
-        "suite": {
-          "title": "Suites",
-          "addSuite": "Create Suite",
-          "runSuite": "Run Suite",
-          "editSuite": "Edit",
-          "copySuite": "Copy",
-          "scheduleSuite": "Schedule",
-          "deleteSuite": "Delete",
-          "resources": "Resources",
-          "results": "Get last test run results",
-          "schedule": "Scheduling",
-          "successTitle": "Your test is running!",
-          "successRun": "You should go catch it...",
-          "errorRun": "Something went wrong with scheduling"
-        },
-        "test": {
-          "title": "Tests",
-          "addTest": "Create Test",
-          "editTest": "Edit",
-          "copyTest": "Copy",
-          "deleteTest": "Delete"
-        },
-        "addSuiteModal": {
-          "title": "Add a suite",
-          "suiteName": "Suite name"
-        },
-        "schedulerModal": {
-          "title": "Schedule a Test"
-        },
-        "scheduleView": {
-          "title": "Schedules",
-          "scheduleName": "Schedule Name",
-          "scheduledDate": "Date, Time",
-          "scheduledSuite": "Scheduled Suites",
-          "actionHeader": "Actions",
-          "runSchedule": "Run Now",
-          "copySchedule": "Copy schedule",
-          "editSchedule": "Edit Schedule",
-          "deleteSchedule": "Delete this schedule"
-        },
-        "resourceCreate": {
-          "title": "Create a resource"
-        }
+    "taas": {
+      "overviewPage": {
+        "title": "TaaS Overview",
+        "customerNameHeader": "Customer Name",
+        "allCustomers": "All Customers",
+        "testDate": "Last Ran Test",
+        "testResult": "Test Result",
+        "totalResources": "Resources",
+        "actionHeader": "Actions",
+        "editSuite": "Edit Suite",
+        "editTest": "Edit Tests",
+        "deleteAll": "Delete All Suites"
+      },
+      "testState": {
+        "good": "Passed",
+        "failed": "Failed",
+        "running": "Running..."
+      },
+      "suite": {
+        "title": "Suites",
+        "addSuite": "Create Suite",
+        "runSuite": "Run Suite",
+        "editSuite": "Edit",
+        "copySuite": "Copy",
+        "scheduleSuite": "Schedule",
+        "deleteSuite": "Delete",
+        "resources": "Resources",
+        "results": "Get last test run results",
+        "schedule": "Scheduling",
+        "successTitle": "Your test is running!",
+        "successRun": "You should go catch it...",
+        "errorRun": "Something went wrong with scheduling"
+      },
+      "test": {
+        "title": "Tests",
+        "addTest": "Create Test",
+        "editTest": "Edit",
+        "copyTest": "Copy",
+        "deleteTest": "Delete"
+      },
+      "addSuiteModal": {
+        "title": "Add a suite",
+        "suiteName": "Suite name"
+      },
+      "schedulerModal": {
+        "title": "Schedule a Test"
+      },
+      "scheduleView": {
+        "title": "Schedules",
+        "scheduleName": "Schedule Name",
+        "scheduledDate": "Date, Time",
+        "scheduledSuite": "Scheduled Suites",
+        "actionHeader": "Actions",
+        "runSchedule": "Run Now",
+        "copySchedule": "Copy schedule",
+        "editSchedule": "Edit Schedule",
+        "deleteSchedule": "Delete this schedule"
+      },
+      "resourceCreate": {
+        "title": "Create a resource"
+      }
     }
   }
 }
