@@ -174,13 +174,9 @@
       }).finally(function () {
         FeatureToggleService.supports(FeatureToggleService.features.atlasHybridEnable)
           .then(function (results) {
-            if (results) {
-              if ($rootScope.isCare == true) {
-                $state.go('carefeatures');
-                $rootScope.isCare = false;
-              } else {
-                $state.go('huronfeatures');
-              }
+            if (results && $rootScope.isCare == true) {
+              $state.go('carefeatures');
+              $rootScope.isCare = false;
             } else {
               $state.go('huronfeatures');
             }
