@@ -8,10 +8,6 @@
                         cluster-type="$ctrl.clusterType"
                         ng-if="!($ctrl.isExpresswayCluster() && !$ctrl.hasConnectors())">></schedule-info-section>
 
-  <mf-upgrade-section cluster-id="$ctrl.cluster.id"
-                      connector-type="$ctrl.connectorType"
-                      ng-if="$ctrl.showMediaUpgradeSection()"></mf-upgrade-section>
-
   <hds-upgrade-section cluster-id="$ctrl.cluster.id"
                       ng-if="$ctrl.isHDSCluster() && $ctrl.hasConnectors()"></hds-upgrade-section>
 
