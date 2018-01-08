@@ -99,7 +99,11 @@
           </div>
         </div>
 
-        <hs-is-invite-pending-warning ng-if="$ctrl.isInvitePending"></hs-is-invite-pending-warning>
+        <hs-is-invite-pending-warning ng-if="$ctrl.isInvitePending"
+                                      is-entitled="$ctrl.entitledToggle"
+                                      was-entitled="$ctrl.userIsCurrentlyEntitled"
+                                      service-id="'squared-fusion-uc.full'">
+        </hs-is-invite-pending-warning>
 
         <div ng-if="$ctrl.domainVerificationError" class="hybrid-services-error-message">
           <i class="icon icon-error"></i>

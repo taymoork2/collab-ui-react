@@ -273,9 +273,11 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
       } else {
         if (options.calendarType === 'squared-fusion-cal' && !_.includes(this.userEntitlements, 'squared-fusion-cal')) {
           this.userEntitlements.push('squared-fusion-cal');
+          _.pull(this.userEntitlements, 'squared-fusion-gcal');
         }
         if (options.calendarType === 'squared-fusion-gcal' && !_.includes(this.userEntitlements, 'squared-fusion-gcal')) {
           this.userEntitlements.push('squared-fusion-gcal');
+          _.pull(this.userEntitlements, 'squared-fusion-cal');
         }
       }
     }

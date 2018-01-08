@@ -5,6 +5,7 @@ import { UriVerificationService } from 'modules/hercules/services/uri-verificati
 import { HybridServiceUserSidepanelHelperService, IEntitlementNameAndState } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
 import { Notification } from 'modules/core/notifications/notification.service';
 import { USSService, IUserStatusWithExtendedMessages } from 'modules/hercules/services/uss.service';
+import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
 
 class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController {
 
@@ -15,9 +16,10 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
   private userId: string;
   private userEmailAddress: string;
   public isInvitePending: boolean;
+  private allUserEntitlements: HybridServiceId[];
 
-  public entitledToggle: boolean;
-  public userIsCurrentlyEntitled: boolean;
+  public entitledToggle: boolean = false;
+  public userIsCurrentlyEntitled: boolean = false;
   public newEntitlementValue: boolean | undefined;
 
   public userStatusAware: IUserStatusWithExtendedMessages | undefined;
@@ -51,7 +53,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
   }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
-    const { userId, userEmailAddress,  entitlementUpdatedCallback, isInvitePending } = changes;
+    const { userId, userEmailAddress,  entitlementUpdatedCallback, isInvitePending, allUserEntitlements } = changes;
     if (userId && userId.currentValue) {
       this.userId = userId.currentValue;
       this.getDataFromUSS(this.userId);
@@ -65,7 +67,13 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
     if (isInvitePending && isInvitePending.currentValue) {
       this.isInvitePending = isInvitePending.currentValue;
     }
+    if (allUserEntitlements && allUserEntitlements.currentValue) {
+      this.allUserEntitlements = allUserEntitlements.currentValue;
+      this.entitledToggle = this.userIsCurrentlyEntitled = this.userHasEntitlement('squared-fusion-uc');
+    }
   }
+
+  private userHasEntitlement = (entitlement: HybridServiceId): boolean => this.allUserEntitlements && this.allUserEntitlements.indexOf(entitlement) > -1;
 
   private getDataFromUSS(userId: string): ng.IPromise<void> {
     this.loadingPage = true;
@@ -75,12 +83,6 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
         this.userStatusConnect = userStatusConnect;
       })
       .then(() => {
-        if (this.userStatusAware && this.userStatusAware.entitled) {
-          this.entitledToggle = this.userIsCurrentlyEntitled = this.userStatusAware.entitled;
-        } else {
-          this.entitledToggle = this.userIsCurrentlyEntitled = false;
-        }
-
         if (this.userStatusAware && this.userStatusAware.connectorId) {
           this.connectorId = this.userStatusAware.connectorId;
         }
@@ -149,7 +151,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
       entitlementState: this.newEntitlementValue === true ? 'ACTIVE' : 'INACTIVE',
     }];
 
-    if (this.newEntitlementValue === false && this.userStatusConnect && this.userStatusConnect.entitled) {
+    if (this.newEntitlementValue === false && this.userHasEntitlement('squared-fusion-ec')) {
       entitlements.push({
         entitlementName: 'squaredFusionEC',
         entitlementState: 'INACTIVE',
@@ -165,8 +167,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
           .then(() => {
             this.entitlementUpdatedCallback({
               options: {
-                callServiceAware: this.userStatusAware,
-                callServiceConnect: this.userStatusConnect,
+                entitledToAware: this.userIsCurrentlyEntitled,
               },
             });
           });
@@ -188,7 +189,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
   }
 
   public save() {
-    if (this.userStatusConnect && this.userStatusConnect.entitled) {
+    if (!this.entitledToggle && this.userHasEntitlement('squared-fusion-ec')) {
       this.confirmBecauseConnectIsEnabled();
     } else {
       this.saveData();
@@ -221,5 +222,6 @@ export class HybridCallServiceAwareUserSettingsComponent implements ng.IComponen
     userEmailAddress: '<',
     entitlementUpdatedCallback: '&',
     isInvitePending: '<',
+    allUserEntitlements: '<',
   };
 }

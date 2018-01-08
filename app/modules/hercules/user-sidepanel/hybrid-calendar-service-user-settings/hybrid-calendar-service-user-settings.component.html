@@ -49,10 +49,7 @@
       <span cs-loader class="hybrid-services-label loader-example--small"></span>
     </div>
 
-    <hs-is-invite-pending-warning ng-if="$ctrl.isInvitePending"></hs-is-invite-pending-warning>
-
-    <div class="row collapse"
-         ng-if="$ctrl.userStatus">
+    <div class="row collapse">
 
       <div class="columns small-3">
         <span class="hybrid-services-label" translate="cloudExtensions.status"></span><span>:</span>
@@ -72,11 +69,15 @@
             </span>
 
         <span class="hybrid-services-label status-off"
-              ng-if="!$ctrl.originalEntitledToggle && !$ctrl.couldNotReadUser"
+              ng-if="$ctrl.isInvitePending"
+              translate="hercules.activationStatus.accountNotActivated"></span>
+
+        <span class="hybrid-services-label status-off"
+              ng-if="!$ctrl.originalEntitledToggle && !$ctrl.couldNotReadUser && !$ctrl.isInvitePending"
               translate="common.off"></span>
 
         <span class="hybrid-services-label status-off"
-              ng-if="!$ctrl.originalEntitledToggle && $ctrl.couldNotReadUser"
+              ng-if="!$ctrl.originalEntitledToggle && $ctrl.couldNotReadUser && !$ctrl.isInvitePending"
               translate="common.unknown"></span>
 
       </div>
@@ -120,20 +121,25 @@
 
       <hybrid-calendar-preferred-webex-site preferred-web-ex-site-name="$ctrl.preferredWebExSiteName" ng-if="$ctrl.originalEntitledToggle"></hybrid-calendar-preferred-webex-site>
 
-      <hybrid-services-sidepanel-error-message ng-if="$ctrl.userHasBothCalendarEntitlements"
-                                               translation-key="'hercules.cloudExtensions.entitledToBothCalendars'">
-      </hybrid-services-sidepanel-error-message>
-
-      <hybrid-services-sidepanel-error-message ng-if="$ctrl.couldNotReadOffice365Status"
-                                               translation-key="'hercules.cloudExtensions.couldNotReadOffice365Status'">
-      </hybrid-services-sidepanel-error-message>
-
-      <hybrid-services-sidepanel-error-message ng-if="$ctrl.couldNotReadGoogleCalendarStatus"
-                                               translation-key="'hercules.cloudExtensions.couldNotReadGoogleCalendarStatus'">
-      </hybrid-services-sidepanel-error-message>
-
     </div>
 
+    <hs-is-invite-pending-warning ng-if="$ctrl.isInvitePending"
+                                  is-entitled="$ctrl.selectedEntitledToggle"
+                                  was-entitled="$ctrl.originalEntitledToggle"
+                                  service-id="'squared-fusion-cal'">
+    </hs-is-invite-pending-warning>
+
+    <hybrid-services-sidepanel-error-message ng-if="$ctrl.userHasBothCalendarEntitlements"
+                                             translation-key="'hercules.cloudExtensions.entitledToBothCalendars'">
+    </hybrid-services-sidepanel-error-message>
+
+    <hybrid-services-sidepanel-error-message ng-if="$ctrl.couldNotReadOffice365Status"
+                                             translation-key="'hercules.cloudExtensions.couldNotReadOffice365Status'">
+    </hybrid-services-sidepanel-error-message>
+
+    <hybrid-services-sidepanel-error-message ng-if="$ctrl.couldNotReadGoogleCalendarStatus"
+                                             translation-key="'hercules.cloudExtensions.couldNotReadGoogleCalendarStatus'">
+    </hybrid-services-sidepanel-error-message>
 
   </cs-sp-section>
 
