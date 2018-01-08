@@ -3,10 +3,7 @@ import { HcsTestManagerService, HtmSuite, HtmTest, HtmSchedule } from 'modules/h
 import { CardUtils } from 'modules/core/cards';
 import { Notification } from 'modules/core/notifications';
 import { IRSuiteMap } from 'modules/hcs/test-manager';
-const STATE_LOADING: string = 'STATE_LOADING';
-const STATE_SHOW_SUITES: string = 'STATE_SHOW_SUITES';
-const STATE_RELOAD: string = 'STATE_RELOAD';
-const STATE_NEW_SUITE: string = 'STATE_NEW_SUITE';
+import { State } from 'modules/hcs/test-manager/taskManager.const';
 
 
 export class TaasSuiteViewComponent implements ng.IComponentOptions {
@@ -17,8 +14,12 @@ export class TaasSuiteViewComponent implements ng.IComponentOptions {
   };
 }
 export class TaasSuiteViewCtrl implements ng.IComponentController {
+  public readonly STATE_NEW = State.New;
+  public readonly STATE_LOADING = State.Loading;
+  public readonly STATE_RELOAD = State.Reload;
+  public readonly STATE_SHOW = State.Show;
   public suites: HtmSuite[] = [];
-  public pageState: string = STATE_LOADING;
+  public pageState: State = State.Loading;
   public currentSuite: HtmSuite;
   public tests: HtmTest[] = [];
   public backState = 'services-overview';
@@ -42,9 +43,9 @@ export class TaasSuiteViewCtrl implements ng.IComponentController {
       this.suites = suites;
       this.customerId = this.Authinfo.getOrgId();
       if (this.suites.length === 0) {
-        this.pageState = STATE_NEW_SUITE;
+        this.pageState = State.New;
       } else {
-        this.pageState = STATE_SHOW_SUITES;
+        this.pageState = State.Show;
       }
       this.reInstantiateMasonry();
     }).catch(() => this.handleFailures());
@@ -55,8 +56,8 @@ export class TaasSuiteViewCtrl implements ng.IComponentController {
   }
 
   public showReloadPageIfNeeded(): void {
-    if (this.pageState === STATE_LOADING && this.suites.length === 0) {
-      this.pageState = STATE_RELOAD;
+    if (this.pageState === State.Loading && this.suites.length === 0) {
+      this.pageState = State.Reload;
     }
   }
 

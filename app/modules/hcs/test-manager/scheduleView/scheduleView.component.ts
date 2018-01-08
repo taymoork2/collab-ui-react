@@ -1,6 +1,7 @@
 import { IToolkitModalService } from 'modules/core/modal';
 import { HcsTestManagerService, HtmSchedule } from '../shared';
 import { Notification } from 'modules/core/notifications';
+import { State } from 'modules/hcs/test-manager/taskManager.const';
 
 export class TaasScheduleViewComponent implements ng.IComponentOptions {
   public controller = TaasScheduleViewCtrl;
@@ -8,27 +9,27 @@ export class TaasScheduleViewComponent implements ng.IComponentOptions {
 }
 
 export class TaasScheduleViewCtrl implements ng.IComponentController {
-  public readonly STATE_NEW: string     = 'NEW';
-  public readonly STATE_LOADING: string = 'LOADING';
-  public readonly STATE_SHOW: string    = 'SHOW';
-  public readonly STATE_RELOAD: string  = 'RELOAD';
-
+  public readonly STATE_NEW = State.New;
+  public readonly STATE_LOADING = State.Loading;
+  public readonly STATE_RELOAD = State.Reload;
+  public readonly STATE_SHOW = State.Show;
   public gridOptions;
   public gridColumns;
-  public pageState: string = this.STATE_LOADING;
+  public pageState: State = State.Loading;
   public backState = 'taasSuites';
   public schedule: HtmSchedule[] = [];
   private scheduleListData;
 
   /* @ngInject */
   constructor(
-    private HcsTestManagerService: HcsTestManagerService,
-    private Notification: Notification,
-    private $state: ng.ui.IStateService,
-    private $log: ng.ILogService,
+    public HcsTestManagerService: HcsTestManagerService,
     public $modal: IToolkitModalService,
+    private $state: ng.ui.IStateService,
     public $translate: ng.translate.ITranslateService,
     public $q: ng.IQService,
+
+    private Notification: Notification,
+    private $log: ng.ILogService,
     ) {}
 
   public $onInit(): void {
@@ -37,9 +38,9 @@ export class TaasScheduleViewCtrl implements ng.IComponentController {
     this.HcsTestManagerService.getSchedules()
     .then(schedules => {
       if (schedules.length === 0) {
-        this.pageState = this.STATE_NEW;
+        this.pageState = State.New;
       } else {
-        this.pageState = this.STATE_SHOW;
+        this.pageState = State.Show;
         for (const i of schedules) {
           const cronVal = i.schedule;
           let cronValArray = [] as string[];
@@ -123,8 +124,8 @@ export class TaasScheduleViewCtrl implements ng.IComponentController {
   }
 
   public showReloadPageIfNeeded(): void {
-    if (this.pageState === this.STATE_LOADING) {
-      this.pageState = this.STATE_RELOAD;
+    if (this.pageState === State.Loading) {
+      this.pageState = State.Reload;
     }
   }
 

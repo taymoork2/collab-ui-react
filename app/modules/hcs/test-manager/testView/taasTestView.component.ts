@@ -1,10 +1,7 @@
 import { IToolkitModalService } from 'modules/core/modal';
 import { HcsTestManagerService, HtmBuildingBlocks, HtmSuite, HtmTest, HtmSchedule } from 'modules/hcs/test-manager/shared';
 import { CardUtils } from 'modules/core/cards';
-const STATE_LOADING: string = 'STATE_LOADING';
-const STATE_SHOW_TESTS: string = 'STATE_SHOW_TESTS';
-const STATE_RELOAD: string = 'STATE_RELOAD';
-const STATE_NEW_TEST: string = 'STATE_NEW_TEST';
+import { State } from 'modules/hcs/test-manager/taskManager.const';
 
 export class TaasTestViewComponent implements ng.IComponentOptions {
   public controller = TaasTestViewCtrl;
@@ -15,8 +12,12 @@ export class TaasTestViewComponent implements ng.IComponentOptions {
 }
 
 export class TaasTestViewCtrl implements ng.IComponentController {
+  public readonly STATE_NEW = State.New;
+  public readonly STATE_LOADING = State.Loading;
+  public readonly STATE_RELOAD = State.Reload;
+  public readonly STATE_SHOW = State.Show;
   public tests: HtmTest[] = [];
-  public pageState: string = STATE_LOADING;
+  public pageState: State = State.Loading;
   public currentTest: HtmTest;
   public suite: HtmSuite;
   public backState= 'taasSuites';
@@ -36,21 +37,20 @@ export class TaasTestViewCtrl implements ng.IComponentController {
     ) {}
 
   public $onInit(): void {
-    this.tests = this.$stateParams.suite.tests;
     this.suite = this.$stateParams.suite;
 
-    if (_.isEmpty(this.tests)) {
-      this.pageState = STATE_NEW_TEST;
-    } else {
-      this.pageState = STATE_SHOW_TESTS;
-      const promises: IPromise<HtmTest>[] = [];
-      for (let i: number = 0; i < this.tests.length; i++) {
-        const promise: IPromise<HtmTest> = this.HcsTestManagerService.getTest(this.suite, this.tests[i]);
-        promises.push(promise);
+    this.HcsTestManagerService.getTests(this.suite).then((tests: HtmTest[]) => {
+      this.tests = tests;
+      if (_.isEmpty(this.tests)) {
+        this.pageState = State.New;
+      } else {
+        this.pageState = State.Show;
+        for (let i: number = 0; i < this.tests.length; i++) {
+          this.HcsTestManagerService.getTest(this.suite, this.tests[i]);
+        }
       }
-      this.$q.all(promises);
-    }
-    this.reInstantiateMasonry();
+      this.reInstantiateMasonry();
+    }).catch(() => this.handleFailures());
 
     this.HcsTestManagerService.getSchedules().then((schedules: HtmSchedule[]) => {
       this.schedules = schedules;
@@ -65,8 +65,8 @@ export class TaasTestViewCtrl implements ng.IComponentController {
   }
 
   public showReloadPageIfNeeded(): void {
-    if (this.pageState === STATE_LOADING && this.tests.length === 0) {
-      this.pageState = STATE_RELOAD;
+    if (this.pageState === State.Loading && this.tests.length === 0) {
+      this.pageState = State.Reload;
     }
   }
 
