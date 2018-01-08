@@ -12,12 +12,22 @@ describe('Component: autoAssignTemplateManageOptions:', () => {
     this.injectDependencies(
       '$q',
       '$scope',
+      '$state',
       'AutoAssignTemplateService',
       'ModalService',
       'Notification',
     );
     this.$scope.onActivateToggleSpy = jasmine.createSpy('onActivateToggle');
     this.$scope.onDeleteSpy = jasmine.createSpy('onDelete');
+    this.$scope.autoAssignTemplates = {
+      Default: {
+        templateId: 'fake-template-id',
+      },
+    };
+    this.$scope.onDelete = _.noop;
+    this.stateData = {};
+    _.set(this.stateData, 'LICENSE', {});
+    _.set(this.stateData, 'USER_ENTITLEMENTS_PAYLOAD', undefined);
   });
 
   beforeEach(function () {

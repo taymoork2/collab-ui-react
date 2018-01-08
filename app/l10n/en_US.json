@@ -224,14 +224,17 @@
         "deactivateAutoAssign": "Deactivate Auto-Assign",
         "deleteAutoAssign": "Delete Auto-Assign Template"
       },
+      "modifyAutoAssign": {
+        "modifyError": "Template failed to load."
+      },
       "activateAutoAssign": {
         "activateSuccess": "You've activated the Auto-Assign License Template",
-        "activateError": "Templated failed to activate"
+        "activateError": "Templated failed to activate."
       },
       "deactivateAutoAssign": {
         "description": "Licenses won't be assigned to new users automatically. Existing users' licenses won't be affected. Do you want to continue?",
         "deactivateSuccess": "You've deactivated the Auto-Assign License Template",
-        "deactivateError": "Template failed to deactivate"
+        "deactivateError": "Template failed to deactivate."
       },
       "deleteAutoAssignModal": {
         "title": "Delete Auto-Assign Template",

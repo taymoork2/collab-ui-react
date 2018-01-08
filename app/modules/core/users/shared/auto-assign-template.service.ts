@@ -1,5 +1,5 @@
 import { ILicenseRequestItem, IUserEntitlementRequestItem, IAutoAssignTemplateRequestPayload } from 'modules/core/users/shared';
-import { AssignableServicesItemCategory, IAssignableLicenseCheckboxState } from 'modules/core/users/userAdd/assignable-services/shared';
+import { AssignableServicesItemCategory, IAssignableLicenseCheckboxState, ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
 import { LicenseChangeOperation } from 'modules/core/users/shared';
 
 export class AutoAssignTemplateService {
@@ -10,6 +10,7 @@ export class AutoAssignTemplateService {
   constructor(
     private $http: ng.IHttpService,
     private Authinfo,
+    private Orgservice,
     private UrlConfig,
   ) {}
 
@@ -59,6 +60,23 @@ export class AutoAssignTemplateService {
 
   public stateDataToPayload(stateData): any {
     return this.mkPayload(stateData);
+  }
+
+  public convertDefaultTemplateToStateData(response): any {
+    const stateData: any = {};
+    const licenses: any = {};
+    _.forEach(response[0].licenses, function (license) {
+      const id = license.id;
+      _.set(licenses, id, { isSelected: true });
+    });
+    _.set(stateData, 'LICENSE', licenses);
+    _.set(stateData, `USER_ENTITLEMENTS_PAYLOAD`, response[0].userEntitlements);
+    return stateData;
+  }
+
+  public getSortedSubscriptions(): ISubscription[] {
+    return this.Orgservice.getLicensesUsage()
+      .then((subscriptions) => _.sortBy(subscriptions, 'subscriptionId'));
   }
 
   private mkPayload(stateData): IAutoAssignTemplateRequestPayload {

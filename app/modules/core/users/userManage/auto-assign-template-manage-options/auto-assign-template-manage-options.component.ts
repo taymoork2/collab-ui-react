@@ -4,14 +4,39 @@ class AutoAssignTemplateManageOptionsController implements ng.IComponentControll
   private autoAssignTemplates: any;  // TODO: better type
   private onDelete: Function;
   private onActivateToggle: Function;
+  private stateData: any;
 
   /* @ngInject */
   constructor(
+    private $state: ng.ui.IStateService,
     private $translate,
     private AutoAssignTemplateService,
     private ModalService,
     private Notification,
   ) {}
+
+  public $onInit(): void {
+    this.stateData = {};
+
+    this.AutoAssignTemplateService.getSortedSubscriptions().then((sortedSubscriptions) => {
+      _.set(this.stateData, 'subscriptions', sortedSubscriptions);
+    });
+  }
+
+  public modifyAutoAssignTemplate() {
+    this.AutoAssignTemplateService.getTemplates()
+      .then((response) => {
+        const convertedStateData = this.AutoAssignTemplateService.convertDefaultTemplateToStateData(response);
+        _.merge(this.stateData, convertedStateData);
+        this.$state.go('users.manage.edit-auto-assign-template-modal', {
+          prevState: 'users.manage.picker',
+          stateData: this.stateData,
+        });
+      })
+      .catch((response) => {
+        this.Notification.errorResponse(response, 'userManage.org.modifyAutoAssign.modifyError');
+      });
+  }
 
   public activateAutoAssignTemplate() {
     this.AutoAssignTemplateService.activateTemplate()

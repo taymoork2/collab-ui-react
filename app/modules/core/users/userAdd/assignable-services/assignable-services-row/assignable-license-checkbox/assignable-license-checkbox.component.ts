@@ -13,13 +13,11 @@ class AssignableLicenseCheckboxController implements ng.IComponentController {
     }
     const licenseId: string = this.license.licenseId;
     this.itemId = licenseId;
-    if (!this.stateDataEntry) {
-      this.stateDataEntry = {
-        isSelected: false,
-        isDisabled: false,
-        license: this.license,
-      };
-    }
+    this.stateDataEntry = _.assignIn({
+      isSelected: false,
+      isDisabled: false,
+      license: this.license,
+    }, this.stateDataEntry);
   }
 
   public getTotalLicenseUsage(): number {
