@@ -16,6 +16,7 @@ module.exports = {
   atlasCareInboundTrials: 'atlas-care-inbound-trials',
   atlasCareProactiveChatTrials: 'atlas-care-proactiveChat-trials',
   atlasCareTrials: 'atlas-care-trials',
+  atlasCareCvcToCdcMigration: 'atlas-care-cvc-to-cdc-migration',
   atlasComplianceRole: 'atlas-compliance-role',
   atlasContextServiceOnboarding: 'context-onboarding-trials',
   atlasCsvImportTaskManager: 'atlas-csv-import-task-manager',
