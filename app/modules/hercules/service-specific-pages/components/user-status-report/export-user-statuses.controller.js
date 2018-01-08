@@ -19,6 +19,7 @@
 
     vm.statusTypes = getStatusTypes();
     vm.nothingToExport = nothingToExport;
+    vm.ussCacheIsEmpty = ussCacheIsEmpty;
     vm.cancelExport = cancelExport;
     vm.exportCSV = exportCSV;
 
@@ -193,6 +194,15 @@
         })
         .every(function (status) {
           return !status.selected;
+        })
+        .value();
+    }
+
+    function ussCacheIsEmpty() {
+      return !_.chain(vm.statusTypes)
+        .flatten()
+        .sumBy(function (n) {
+          return n.count;
         })
         .value();
     }
