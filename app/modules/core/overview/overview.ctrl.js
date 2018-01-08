@@ -7,7 +7,7 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($q, $rootScope, $state, $scope, Authinfo, CardUtils, SunlightUtilitiesService, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, ProPackService, LearnMoreBannerService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SetupWizardService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
+  function OverviewCtrl($q, $rootScope, $state, $scope, Authinfo, CardUtils, SunlightUtilitiesService, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, ProPackService, LearnMoreBannerService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SetupWizardService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService, PrivateTrunkService, ServiceDescriptorService) {
     var vm = this;
     var PSTN_TOS_ACCEPT = require('modules/huron/pstn/pstnTermsOfService').PSTN_TOS_ACCEPT;
     var PSTN_ESA_DISCLAIMER_ACCEPT = require('modules/huron/pstn/pstn.const').PSTN_ESA_DISCLAIMER_ACCEPT;
@@ -185,8 +185,16 @@ require('./_overview.scss');
         disableCache: true,
       };
 
-      Orgservice.getOrg(_.noop, Authinfo.getOrgId(), params).then(function (response) {
-        vm.orgData = response.data;
+      $q.all({
+        orgDetails: Orgservice.getOrg(_.noop, Authinfo.getOrgId(), params),
+        featureToggle: FeatureToggleService.supports(FeatureToggleService.features.hybridCare),
+        pt: PrivateTrunkService.getPrivateTrunk(),
+        ept: ServiceDescriptorService.getServiceStatus('ept'),
+      }).then(function (response) {
+        vm.orgData = response.orgDetails.data;
+        vm.careToggle = response.featureToggle;
+        vm.pt = response.pt.resources.length !== 0;
+        vm.ept = response.ept.state !== 'unknown';
 
         getTOSStatus();
         getEsaDisclaimerStatus();
@@ -206,9 +214,12 @@ require('./_overview.scss');
           } else if (!hasMessage) {
             vm.notifications.push(OverviewNotificationFactory
               .createCareLicenseNotification('homePage.careLicenseMsgMissingText', 'homePage.careLicenseLinkText'));
-          } else if (!hasCall) {
+          } else if (!hasCall && !vm.careToggle) {
             vm.notifications.push(OverviewNotificationFactory
               .createCareLicenseNotification('homePage.careLicenseCallMissingText', 'homePage.careLicenseLinkText'));
+          } else if (!hasCall && (!vm.pt && !vm.ept) && vm.careToggle) {
+            vm.notifications.push(OverviewNotificationFactory
+              .createCareLicenseNotification('homePage.careLicenseCallMissingTextToggle', 'careChatTpl.learnMoreLink'));
           }
         }
       }).catch(function (response) {

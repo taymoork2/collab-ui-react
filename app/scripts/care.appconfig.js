@@ -34,6 +34,11 @@
           },
         },
       })
+      .state('care.numbers', {
+        url: '/numbers',
+        parent: 'care.Details',
+        template: '<care-numbers-component></care-numbers-component>',
+      })
       .state('care.Settings', {
         url: '/settings',
         parent: 'care.Details',
