@@ -1,5 +1,5 @@
 var merge = require('webpack-merge');
-var cspProdConfig = require('./csp-prod.config');
+var cspIntConfig = require('./csp-int.config');
 
 var cspDevConfig = {
   defaultSrc: [],
@@ -60,7 +60,7 @@ var cspDevConfig = {
   ],
 };
 
-// smart merging prod dependencies with dev dependencies
-cspDevConfig = merge.smart(cspProdConfig, cspDevConfig);
+// smart merging integration and production environemnt CSP dependencies with development environment CSP dependencies
+cspDevConfig = merge.smart(cspIntConfig, cspDevConfig);
 
 module.exports = cspDevConfig;
