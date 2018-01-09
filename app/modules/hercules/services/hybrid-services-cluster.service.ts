@@ -365,6 +365,10 @@ export class HybridServicesClusterService {
       // no_nodes_registered or not_registered if _.size(connectors) === 0
       if (isClusterEmpty && cluster.targetType === 'c_mgmt') {
         return this.HybridServicesExtrasService.getPreregisteredClusterAllowList(cluster.id)
+          .catch(() => {
+            /* An error here is not critical. Missing redirect target data in FMS should not block us from adding the other extended properties */
+            return [];
+          })
           .then((allowList: IAllowedRegistrationHost[]) => {
             return {
               ...cluster,
