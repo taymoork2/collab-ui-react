@@ -1420,18 +1420,6 @@ require('./_user-add.scss');
       }
     }
 
-    $scope.getNumUsersInTokenField = function () {
-      return angular.element('#usersfield').tokenfield('getTokens').length;
-    };
-
-    $scope.hasErrors = function () {
-      var haserr = ($scope.invalidcount > 0);
-      if ($scope.getNumUsersInTokenField() >= vm.maxUsersInManual) {
-        haserr = true;
-      }
-      return haserr;
-    };
-
     $scope.tokenmethods = {
       createtoken: function (e) {
         //Removing anything in brackets from user data
@@ -1511,52 +1499,6 @@ require('./_user-add.scss');
 
     var getUsersList = function () {
       return addressparser.parse($scope.model.userList);
-    };
-
-    $scope.validateTokensBtn = function () {
-      var usersListLength = angular.element('.token-label').length;
-      $scope.validateTokens().then(function () {
-        if ($scope.invalidcount === 0 && usersListLength > 0) {
-          $scope.currentUserCount = usersListLength;
-          Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.MANUAL_EMAIL,
-            Analytics.sections.ADD_USERS.uploadMethods.MANUAL, {
-              emailEntryMethod: Analytics.sections.ADD_USERS.manualMethods[$scope.model.userInputOption.toString()],
-            }
-          );
-          $state.go('users.add.services');
-        } else if (usersListLength === 0) {
-          Log.debug('No users entered.');
-          Notification.error('usersPage.noUsersInput');
-          Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.MANUAL_EMAIL,
-            Analytics.sections.ADD_USERS.uploadMethods.MANUAL, {
-              emailEntryMethod: Analytics.sections.ADD_USERS.manualMethods[$scope.model.userInputOption.toString()],
-              error: 'no users',
-            }
-          );
-        } else {
-          Log.debug('Invalid users entered.');
-          Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.MANUAL_EMAIL,
-            Analytics.sections.ADD_USERS.uploadMethods.MANUAL, {
-              emailEntryMethod: Analytics.sections.ADD_USERS.manualMethods[$scope.model.userInputOption.toString()],
-              error: 'invalid users',
-            }
-          );
-          Notification.error('usersPage.validEmailInput');
-        }
-      });
-    };
-
-    $scope.allowNext = function () {
-      return ($scope.model.userList && !$scope.hasErrors());
-    };
-
-    $scope.validateTokens = function () {
-      wizardNextText();
-      return $timeout(function () {
-        //reset the invalid count
-        $scope.invalidcount = 0;
-        angular.element('#usersfield').tokenfield('setTokens', $scope.model.userList);
-      }, 100);
     };
 
     $scope.addToUsersfield = function () {
