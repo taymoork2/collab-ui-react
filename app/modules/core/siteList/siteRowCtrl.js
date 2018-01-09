@@ -136,9 +136,8 @@ require('./_site-list.scss');
               message: $translate.instant('webexSiteManagement.deleteSiteSuccessModalBody'),
               hideDismiss: true,
             };
-            ModalService.open(params);
+            ModalService.open(params).result.then(refreshSiteListData);
             Notification.success('webexSiteManagement.deleteSiteSuccessToaster');
-            refreshSiteListData();
           })
           .catch(function (response) {
             Notification.errorWithTrackingId(response, 'webexSiteManagement.deleteSiteFailureToaster');

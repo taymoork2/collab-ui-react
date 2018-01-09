@@ -1,13 +1,17 @@
 import { Notification } from 'modules/core/notifications/notification.service';
+import { PhoneNumberService } from 'modules/huron/phoneNumber';
 import { PstnWizardService } from './pstnWizard.service';
 import { DirectInwardDialing } from './directInwardDialing';
 import { TokenMethods } from '../pstnSwivelNumbers';
-import { TOKEN_FIELD_ID } from '../pstn.const';
+import {
+  TOKEN_FIELD_ID, TOLLFREE_ORDERING_CAPABILITY,
+} from '../pstn.const';
 import { PstnService } from '../pstn.service';
 import { PstnModel, IOrder } from '../pstn.model';
 import { NumberModel, INumbersModel } from '../pstnNumberSearch';
 import { PstnAddressService, Address } from '../shared/pstn-address';
-import { PhoneNumberService } from 'modules/huron/phoneNumber';
+import { PstnCarrier } from '../pstnProviders';
+import { ContractStatus } from 'modules/huron/pstn';
 
 export class PstnWizardComponent implements ng.IComponentOptions {
   public controller = PstnWizardCtrl;
@@ -29,6 +33,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public emergencyAcknowledge: boolean = false;
   public swivelNumbers: string[] = [];
   public showCarriers: boolean;
+  public carrierName: string = '';
   public placeOrderLoad: boolean;
   public totalPortNumbers: number;
   public totalNewAdvancedOrder: number;
@@ -70,8 +75,8 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public prevStep: number = 1;
   public loggedInPartnerPortal: boolean = false;
   private did: DirectInwardDialing = new DirectInwardDialing();
-  private ftI387PrivateTrunking: boolean;
-  private ftLocation: boolean;
+  private ftI387PrivateTrunking: boolean = false;
+  private ftLocation: boolean = false;
   public ftHI1635: boolean = false;
 
   /* @ngInject */
@@ -80,7 +85,6 @@ export class PstnWizardCtrl implements ng.IComponentController {
               private PstnAddressService: PstnAddressService, //Location Based
               private Notification: Notification,
               private $state: ng.ui.IStateService,
-              private $stateParams: ng.ui.IStateParamsService,
               private $window: ng.IWindowService,
               private $timeout: ng.ITimeoutService,
               private PstnService: PstnService,
@@ -90,9 +94,10 @@ export class PstnWizardCtrl implements ng.IComponentController {
               private FeatureToggleService,
               ) {
     this.contact = this.PstnWizardService.getContact();
-    this.address = _.cloneDeep(PstnModel.getServiceAddress());
-    this.countryCode = PstnModel.getCountryCode();
-    this.isTrial = PstnModel.getIsTrial();
+    this.address = _.cloneDeep(this.PstnModel.getServiceAddress());
+    this.countryCode = this.PstnModel.getCountryCode();
+    this.carrierName = this.PstnModel.getProvider().displayName;
+    this.isTrial = this.PstnModel.getIsTrial();
     this.showPortNumbers = !this.isTrial;
     this.PORTING_NUMBERS = this.$translate.instant('pstnSetup.portNumbersLabel');
     this.tokenmethods = new TokenMethods(this.createToken.bind(this), this.createdToken.bind(this), this.editToken.bind(this), this.removeToken.bind(this));
@@ -101,7 +106,6 @@ export class PstnWizardCtrl implements ng.IComponentController {
     if ($state['modal'] && $state['modal'].result) {
       $state['modal'].result.finally(PstnModel.clear);
     }
-    this.showContractIncomplete = _.get<boolean>(this.$stateParams, 'showContractIncomplete');
   }
 
   public $onInit(): void {
@@ -109,12 +113,26 @@ export class PstnWizardCtrl implements ng.IComponentController {
     this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking).then((enabled) => {
       this.ftI387PrivateTrunking = enabled;
     });
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484).then((enabled) => {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1635).then((enabled) => {
       this.ftHI1635 = enabled;
+    }).finally(() => {
+      if (this.ftHI1635) {
+        if (this.PstnModel.getContractStatus() === ContractStatus.UnSigned) {
+          this.showContractIncomplete = true;
+        }
+      }
     });
     this.FeatureToggleService.getCallFeatureForCustomer(this.PstnModel.getCustomerId(), this.FeatureToggleService.features.hI1484).then((enabled) => {
       this.ftLocation = enabled;
     });
+  }
+
+  public customerExists(): boolean {
+    return this.PstnModel.isCustomerExists();
+  }
+
+  public sendContract(): void {
+    this.step = 6;
   }
 
   public getCapabilities(): void {
@@ -258,6 +276,13 @@ export class PstnWizardCtrl implements ng.IComponentController {
   }
 
   public onProviderChange(): void {
+    const pstnProvider: PstnCarrier = this.PstnModel.getProvider();
+    if (!this.isTrial) {
+      if (pstnProvider.getCapability(TOLLFREE_ORDERING_CAPABILITY)) {
+        this.showTollFreeNumbers = true;
+      }
+    }
+    this.carrierName = pstnProvider.vendor;
     this.goToNumbers();
   }
 

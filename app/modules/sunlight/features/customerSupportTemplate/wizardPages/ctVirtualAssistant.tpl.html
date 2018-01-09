@@ -57,17 +57,17 @@
 
             <div class="h4 subheader-text" translate="careChatTpl.virtualAssistantWelcomeMessageLabel"></div>
             <div class="row ct-attribute-row">
-              <input cs-input type="text"
+              <textarea cs-input type="text"
                 name="virtualAssistantWelcomeText"
                 class="h5 inputField ct-attribute-field-textbox large-11"
                 ng-model="careSetupAssistant.template.configuration.virtualAssistant.welcomeMessage"
-                cs-input-messages="careSetupAssistant.singleLineValidationMessage50"
-                ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit50"
+                cs-input-messages="careSetupAssistant.multiLineValidationMessage"
+                ng-maxlength="careSetupAssistant.lengthConstants.multiLineMaxCharLimit"
                 validate-characters="careSetupAssistant.InvalidCharacters"
                 ng-model-options="{ allowInvalid: true }"
                 placeholder="{{::'careChatTpl.virtualAssistantWelcomeMessageLabel' | translate}}"
                 ng-keypress="careSetupAssistant.enterNextPage($event)">
-              </input>
+              </textarea>
             </div>
             <p class="body-smallest bot-welcome-msg-help" translate="careChatTpl.virtualAssistantWelcomeMessageHelp"></p>
             <div class="setting-info">

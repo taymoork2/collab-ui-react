@@ -294,6 +294,10 @@
     var DIGITS_CHOICE = 4;
     var DIGITS_DIAL_BY_ESN = 5;
 
+    var CLOSED_HOURS_ACTION_SET_NAME = 'closedHours';
+    var HOLIDAYS_ACTION_SET_NAME = 'holidays';
+    var HOLIDAYS_SCHEDULE_EVENT = 'holiday';
+
     var dynAnnounceToggle = false;
 
     var service = {
@@ -1295,16 +1299,17 @@
     /*
      * Walk the ceRecord and return the actionSet actionSetName.
      */
-    function getActionSet(ceRecord, actionSetName) {
-      if (!_.isArray(ceRecord.actionSets)) {
-        return undefined;
-      }
-      for (var i = 0; i < ceRecord.actionSets.length; i++) {
-        if (!_.isUndefined(ceRecord.actionSets[i].name) && ceRecord.actionSets[i].name === actionSetName) {
-          return ceRecord.actionSets[i];
+    function getActionSet(ceRecord, _actionSetName) {
+      var holidayEventType = undefined;
+      if ((_actionSetName === HOLIDAYS_ACTION_SET_NAME) && (!_.isUndefined(ceRecord.scheduleEventTypeMap))) {
+        if (_.isEqual(ceRecord.scheduleEventTypeMap[HOLIDAYS_SCHEDULE_EVENT], CLOSED_HOURS_ACTION_SET_NAME)) {
+          holidayEventType = ceRecord.scheduleEventTypeMap[HOLIDAYS_SCHEDULE_EVENT];
         }
       }
-      return undefined;
+      return _.find(ceRecord.actionSets, function (actionSet) {
+        var actionSetName = _.get(actionSet, 'name');
+        return actionSetName === _actionSetName || actionSetName === holidayEventType;
+      });
     }
 
     /*
