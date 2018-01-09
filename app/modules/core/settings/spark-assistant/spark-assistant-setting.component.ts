@@ -2,12 +2,10 @@ import { SettingSection } from '../settingSection';
 import { SparkAssistantSettingController } from './spark-assistant-setting.controller';
 
 export class SparkAssistantSetting extends SettingSection {
-
   /* @ngInject */
   public constructor() {
     super('sparkAssistant');
     this.subsectionDescription = '';
-    this.subsectionLabel = 'globalSettings.sparkAssistant.subsectionLabel';
   }
 }
 

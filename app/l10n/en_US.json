@@ -4168,7 +4168,9 @@
     "title": "Cisco Spark Assistant",
     "enableAssistant": "Enable Cisco Spark Assistant",
     "description": "Allows users to perform various actions such as, make calls, start meetings, using their voice.",
-    "termOfService": "Spark Assistant terms of service "
+    "termOfService": "Spark Assistant terms of service",
+    "optout": "Spark Assistant Optout",
+    "optoutConfirm": "Are you sure to Opt Out of Spark Assistant? This will disable Spark Assistant Service."
   },
   "reports": {
     "title": "Reports",
