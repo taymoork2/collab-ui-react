@@ -4,7 +4,7 @@ require('./_user-add.scss');
   'use strict';
 
   angular.module('Core')
-    .directive('crOnboardUsers', crOnboardUsers);
+    .directive('crOnboardUsersXxx', crOnboardUsers);
 
   function crOnboardUsers() {
     return {
