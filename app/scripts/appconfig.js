@@ -913,13 +913,7 @@
           .state('users.add.manual', {
             views: {
               'usersAdd@users.add': {
-                template: require('modules/core/users/userAdd/onboardUsersModal.tpl.html'),
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'add-users';
-                    $state.params.modalId = 'modalContent';
-                  },
-                },
+                template: '<manual-add-users-modal dismiss="$dismiss()"></manual-add-users-modal>',
               },
             },
           })
