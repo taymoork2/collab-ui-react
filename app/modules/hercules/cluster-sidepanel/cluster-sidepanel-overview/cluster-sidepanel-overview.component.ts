@@ -76,10 +76,6 @@ export class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
     }
   }
 
-  public showMediaUpgradeSection(): boolean {
-    return this.isMediaCluster() && this.hasConnectors() && this.cluster.releaseChannel !== 'latest';
-  }
-
   public showButtonToNodesPage(): boolean {
     // Doesn't make sense for empty Expressways and EPT
     // Media doesn't really use the nodes page yet, they still have the node list on this sidepanel
