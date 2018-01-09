@@ -30,7 +30,7 @@ export class ManualAddUsersModalController implements ng.IComponentController {
     this.dismiss();
   }
 
-  public back(state): void {
+  public back(state?): void {
     // FIXME (mipark2):
     // - a user could use the 'Back' button from the 'users.add.services' state (which is actually a step FORWARD, not BACK)
     // - need to always force either 'users.manage.emailSuppress' OR 'users.manage.picker'
@@ -46,6 +46,7 @@ export class ManualAddUsersModalController implements ng.IComponentController {
   public validateTokensBtn(): void {
     const usersListLength = angular.element('.token-label').length;
     this.validateTokens().then(() => {
+      // TODO (mipark2): cleanup unneeded logic
       if (this.scopeData.invalidcount === 0 && usersListLength > 0) {
         this.scopeData.currentUserCount = usersListLength;
         this.Analytics.trackAddUsers(this.Analytics.sections.ADD_USERS.eventNames.MANUAL_EMAIL,
