@@ -1,5 +1,3 @@
-import { FeatureToggleService } from 'modules/core/featureToggle';
-
 class Tab {
   public title: string;
   public state: string;
@@ -14,9 +12,10 @@ class DetailsHeaderCtrl implements ng.IComponentController {
   public back: boolean = false;
   public tabs: Tab[] = [];
 
+  /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
-    private FeatureToggleService: FeatureToggleService,
+    private FeatureToggleService,
   ) {}
 
   public $onInit() {
@@ -30,6 +29,8 @@ class DetailsHeaderCtrl implements ng.IComponentController {
   }
 }
 
-export default angular
-  .module('CareDetails')
-  .controller('DetailsHeaderCtrl', DetailsHeaderCtrl);
+export class DetailsHeaderComponent implements ng.IComponentOptions {
+  public controller = DetailsHeaderCtrl;
+  public template = require('modules/sunlight/details/detailsHeader.tpl.html');
+  public bindings = {};
+}

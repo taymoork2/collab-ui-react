@@ -25,9 +25,7 @@
         parent: 'care.DetailsBase',
         views: {
           header: {
-            template: require('modules/sunlight/details/detailsHeader.tpl.html'),
-            controller: 'DetailsHeaderCtrl',
-            controllerAs: 'header',
+            template: '<details-header-component></details-header-component>',
           },
           main: {
             template: '<div ui-view></div>',
