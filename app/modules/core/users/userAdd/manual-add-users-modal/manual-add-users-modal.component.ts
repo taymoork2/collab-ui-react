@@ -12,13 +12,14 @@ export class ManualAddUsersModalController implements ng.IComponentController {
     private $previousState,
     private $state: ng.ui.IStateService,
     private Analytics,
+    private DirSyncService,
     public Notification,
     private OnboardService,
     private OnboardStore,
   ) {
     // TODO: rm use of 'OnboardStore' once shared references in '$scope' in 'OnboardCtrl' are removed
     this.scopeData = this.OnboardStore[OnboardCtrlBoundUIStates.USERS_ADD_MANUAL];
-    this.isDirSyncEnabled = this.scopeData.isDirSyncEnabled;
+    this.isDirSyncEnabled = this.DirSyncService.isDirSyncEnabled();
     this.model = this.scopeData.model;
 
     this.maxUsersInManual = this.OnboardService.maxUsersInManual;

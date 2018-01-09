@@ -102,7 +102,7 @@ require('./_user-add.scss');
     $scope.currentUserEnablesCall = false;
     $scope.currentUserCommFeature = $scope.selectedCommFeature = null;
 
-    $scope.isDirSyncEnabled = OnboardStore['users.add.manual'].isDirSyncEnabled;
+    $scope.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
     $scope.convertUsersReadOnly = $stateParams.readOnly || $scope.isDirSyncEnabled;
 
     $scope.controlMsg = controlMsg;

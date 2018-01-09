@@ -32,13 +32,14 @@ export class CrOnboardUsersController implements ng.IComponentController {
   constructor(
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
+    private DirSyncService,
     private OnboardService,
     private OnboardStore,
     private UserListService,
   ) {
     // TODO: rm use of 'OnboardStore' once shared references in '$scope' in 'OnboardCtrl' are removed
     this.scopeData = this.OnboardStore[OnboardCtrlBoundUIStates.USERS_ADD_MANUAL];
-    this.isDirSyncEnabled = this.scopeData.isDirSyncEnabled;
+    this.isDirSyncEnabled = this.DirSyncService.isDirSyncEnabled();
     this.model = this.scopeData.model;
     this.strFirstName = this.$translate.instant('usersPage.firstNamePlaceHolder');
     this.strLastName = this.$translate.instant('usersPage.lastNamePlaceHolder');

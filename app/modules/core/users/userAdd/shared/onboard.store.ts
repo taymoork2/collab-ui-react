@@ -9,7 +9,6 @@ export interface IOnboardScopeForUsersAdd {
   currentUserCount: number;
   invalidcount: number;
   invalidDirSyncUsersCount: number;
-  isDirSyncEnabled: boolean;
   model: {
     emailAddress?: string;
     firstName?: any;
@@ -32,7 +31,6 @@ export default class OnboardStore {
 
   /* @ngInject */
   constructor(
-    private DirSyncService,
   ) {
     this.resetForState(OnboardCtrlBoundUIStates.USERS_ADD_MANUAL);
   }
@@ -48,7 +46,6 @@ export default class OnboardStore {
       currentUserCount: 0,
       invalidcount: 0,
       invalidDirSyncUsersCount: 0,
-      isDirSyncEnabled: this.DirSyncService.isDirSyncEnabled(),
       model: {
         emailAddress: undefined,
         firstName: undefined,
