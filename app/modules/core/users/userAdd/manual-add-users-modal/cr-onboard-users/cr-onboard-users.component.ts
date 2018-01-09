@@ -45,8 +45,47 @@ export class CrOnboardUsersController implements ng.IComponentController {
     this.strEmailAddress = this.$translate.instant('usersPage.emailAddressPlaceHolder');
     this.strNameAndEmailAdress = this.$translate.instant('usersPage.nameAndEmailAddress');
     this.tokenfieldid = 'usersfield';
-    // TODO (mipark2): port from 'OnboardCtrl'
-    this.tokenmethods = undefined;
+    let isDuplicate;
+    this.tokenmethods = {
+      createtoken: (e) => {
+        //Removing anything in brackets from user data
+        const value = _.replace(e.attrs.value, /\s*\([^)]*\)\s*/g, ' ');
+        e.attrs.value = value;
+        isDuplicate = false;
+        if (OnboardService.isEmailAlreadyPresent(e.attrs.value)) {
+          isDuplicate = true;
+        }
+      },
+      createdtoken: (e) => {
+        if (!this.OnboardService.validateEmail(e.attrs.value) || isDuplicate) {
+          this.setInvalidToken(e);
+        } else {
+          this.validateDirSyncUser(e);
+        }
+        this.sortTokens();
+        // TODO (f3745): rm this if determined not-needed
+        // wizardNextText();
+        this.checkPlaceholder();
+      },
+      edittoken: (e) => {
+        if (angular.element(e.relatedTarget).hasClass('invalid')) {
+          this.scopeData.invalidcount--;
+        }
+      },
+      removedtoken: () => {
+        // Reset the token list and validate all tokens
+        this.$timeout(() => {
+          this.scopeData.invalidcount = 0;
+          this.scopeData.invalidDirSyncUsersCount = 0;
+          (angular.element('#usersfield') as any).tokenfield('setTokens', this.model.userList);
+        }).then(() => {
+          this.sortTokens();
+          // TODO (f3745): rm this if determined not-needed
+          // wizardNextText();
+          this.checkPlaceholder();
+        });
+      },
+    };
     this.tokenoptions = {
       delimiter: [',', ','],
       createTokensOnBlur: true,
