@@ -10,8 +10,13 @@ require('./_user-add.scss');
   var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
   /*@ngInject*/
-  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, Config, FeatureToggleService, DialPlanService, Log, LogMetricsService, MessengerInteropService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, LocationsService, NumberService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, Config, FeatureToggleService, DialPlanService, Log, LogMetricsService, MessengerInteropService, NAME_DELIMITER, Notification, OnboardService, OnboardStore, Orgservice, TelephonyInfoService, LocationsService, NumberService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
     var vm = this;
+
+    // reset corresponding scope properties in OnboardStore each time this controller initializes
+    OnboardStore.resetForState('users.add.manual');
+
+    $scope.model = OnboardStore['users.add.manual'].model;
 
     $scope.hasAccount = Authinfo.hasAccount();
     $scope.usrlist = [];
@@ -19,7 +24,7 @@ require('./_user-add.scss');
     $scope.externalNumberPool = [];
     $scope.telephonyInfo = {};
     $scope.cmrLicensesForMetric = {};
-    $scope.currentUserCount = 0;
+    $scope.currentUserCount = OnboardStore['users.add.manual'].currentUserCount;
 
     $scope.locationOptions = [];
     $scope.location = '';
@@ -81,29 +86,13 @@ require('./_user-add.scss');
     $scope.editServicesFlow = false;
     $scope.hasSite = false;
 
-    // model can be removed after switching to controllerAs
-    $scope.model = {
-      userInputOption: 0,
-      uploadProgress: 0,
-    };
-
-    $scope.strFirstName = $translate.instant('usersPage.firstNamePlaceHolder');
-    $scope.strLastName = $translate.instant('usersPage.lastNamePlaceHolder');
-    $scope.strEmailAddress = $translate.instant('usersPage.emailAddressPlaceHolder');
-    var strNameAndEmailAdress = $translate.instant('usersPage.nameAndEmailAddress');
+    $scope.strFirstName = OnboardStore['users.add.manual'].strFirstName;
+    $scope.strLastName = OnboardStore['users.add.manual'].strLastName;
+    $scope.strEmailAddress = OnboardStore['users.add.manual'].strEmailAddress;
+    var strNameAndEmailAdress = OnboardStore['users.add.manual'].strNameAndEmailAdress;
     $scope.placeholder = $translate.instant('directoryNumberPanel.chooseNumber');
     $scope.inputPlaceholder = $translate.instant('directoryNumberPanel.searchNumber');
-    $scope.userInputOptions = [{
-      label: $scope.strEmailAddress,
-      value: 0,
-      name: 'radioOption',
-      id: 'radioEmail',
-    }, {
-      label: strNameAndEmailAdress,
-      value: 1,
-      name: 'radioOption',
-      id: 'radioNamesAndEmail',
-    }];
+    $scope.userInputOptions = OnboardStore['users.add.manual'].userInputOptions;
 
     OnboardService.huronCallEntitlement = false;
 
@@ -113,7 +102,7 @@ require('./_user-add.scss');
     $scope.currentUserEnablesCall = false;
     $scope.currentUserCommFeature = $scope.selectedCommFeature = null;
 
-    $scope.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
+    $scope.isDirSyncEnabled = OnboardStore['users.add.manual'].isDirSyncEnabled;
     $scope.convertUsersReadOnly = $stateParams.readOnly || $scope.isDirSyncEnabled;
 
     $scope.controlMsg = controlMsg;
@@ -1408,14 +1397,11 @@ require('./_user-add.scss');
       $scope.$emit('wizardNextText', action);
     };
 
-    $scope.invalidcount = 0;
-    $scope.invalidDirSyncUsersCount = 0;
-    $scope.tokenfieldid = 'usersfield';
-    $scope.tokenplaceholder = $translate.instant('usersPage.userInput');
-    $scope.tokenoptions = {
-      delimiter: [',', ';'],
-      createTokensOnBlur: true,
-    };
+    $scope.invalidcount = OnboardStore['users.add.manual'].invalidcount;
+    $scope.invalidDirSyncUsersCount = OnboardStore['users.add.manual'].invalidDirSyncUsersCount;
+    $scope.tokenfieldid = OnboardStore['users.add.manual'].tokenfieldid;
+    $scope.tokenplaceholder = OnboardStore['users.add.manual'].tokenplaceholder;
+    $scope.tokenoptions = OnboardStore['users.add.manual'].tokenoptions;
     var isDuplicate = false;
 
     function setInvalidToken(token) {
