@@ -7,6 +7,7 @@ export default class OnboardService {
 
   /* @ngInject */
   constructor(
+    public $timeout: ng.ITimeoutService,
     public $translate: ng.translate.ITranslateService,
   ) {
   }
@@ -119,4 +120,34 @@ export default class OnboardService {
     angular.element('.tokenfield.form-control #usersfield-tokenfield').attr('placeholder', placeholder);
   }
 
+  public hasErrors(scopeData): boolean {
+    let haserr = (scopeData.invalidcount > 0);
+    if (this.getNumUsersInTokenField() >= this.maxUsersInManual) {
+      haserr = true;
+    }
+    return haserr;
+  }
+
+  public getNumUsersInTokenField(): number {
+    return (angular.element('#usersfield') as any).tokenfield('getTokens').length;
+  }
+
+  public validateTokens(scopeData): ng.IPromise<void> {
+    // TODO (f3745): rm this if determined not-needed
+    // wizardNextText();
+
+    return this.$timeout(() => {
+      //reset the invalid count
+      scopeData.invalidcount = 0;
+      (angular.element('#usersfield') as any).tokenfield('setTokens', scopeData.model.userList);
+    }, 100);
+  }
+
+  public resetUsersfield(scopeData): void {
+    (angular.element('#usersfield') as any).tokenfield('setTokens', ' ');
+    scopeData.model.userList = '';
+    this.checkPlaceholder();
+    scopeData.invalidcount = 0;
+    scopeData.invalidDirSyncUsersCount = 0;
+  }
 }

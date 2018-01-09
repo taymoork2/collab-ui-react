@@ -1583,13 +1583,10 @@ require('./_user-add.scss');
     };
 
     var resetUsersfield = function () {
-      angular.element('#usersfield').tokenfield('setTokens', ' ');
-      $scope.model.userList = '';
-      checkPlaceholder();
-      $scope.invalidcount = 0;
-      $scope.invalidDirSyncUsersCount = 0;
+      return OnboardService.resetUsersfield($scope);
     };
 
+    // TODO (mipark2): rm this if no longer needed:
     $scope.clearPanel = function () {
       resetUsersfield();
       initResults();

@@ -11,7 +11,6 @@ export class ManualAddUsersModalController implements ng.IComponentController {
   constructor(
     private $previousState,
     private $state: ng.ui.IStateService,
-    private $timeout: ng.ITimeoutService,
     private Analytics,
     public Notification,
     private OnboardService,
@@ -72,14 +71,7 @@ export class ManualAddUsersModalController implements ng.IComponentController {
   }
 
   private validateTokens(): ng.IPromise<void> {
-    // TODO (f3745): rm this if determined not-needed
-    // this.wizardNextText();
-
-    return this.$timeout(() => {
-      //reset the invalid count
-      this.scopeData.invalidcount = 0;
-      (angular.element('#usersfield') as any).tokenfield('setTokens', this.model.userList);
-    }, 100);
+    return this.OnboardService.validateTokens(this.scopeData);
   }
 
   public allowNext(): boolean {
@@ -87,15 +79,11 @@ export class ManualAddUsersModalController implements ng.IComponentController {
   }
 
   public hasErrors(): boolean {
-    let haserr = (this.scopeData.invalidcount > 0);
-    if (this.getNumUsersInTokenField() >= this.maxUsersInManual) {
-      haserr = true;
-    }
-    return haserr;
+    return this.OnboardService.hasErrors(this.scopeData);
   }
 
   public getNumUsersInTokenField(): number {
-    return (angular.element('#usersfield') as any).tokenfield('getTokens').length;
+    return this.OnboardService.getNumUsersInTokenField();
   }
 }
 

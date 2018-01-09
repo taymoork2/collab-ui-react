@@ -104,30 +104,12 @@ export class CrOnboardUsersController implements ng.IComponentController {
     }];
   }
 
-  // TODO: refactor - mv this to 'OnboardService'
   public hasErrors(): boolean {
-    let haserr = (this.scopeData.invalidcount > 0);
-    if (this.getNumUsersInTokenField() >= this.OnboardService.maxUsersInManual) {
-      haserr = true;
-    }
-    return haserr;
+    return this.OnboardService.hasErrors(this.scopeData);
   }
 
-  // TODO: refactor - mv this to 'OnboardService'
-  public getNumUsersInTokenField(): number {
-    return (angular.element('#usersfield') as any).tokenfield('getTokens').length;
-  }
-
-  // TODO: refactor - mv this to 'OnboardService'
   public validateTokens(): ng.IPromise<void> {
-    // TODO (f3745): rm this if determined not-needed
-    // wizardNextText();
-
-    return this.$timeout(() => {
-      //reset the invalid count
-      this.scopeData.invalidcount = 0;
-      (angular.element('#usersfield') as any).tokenfield('setTokens', this.model.userList);
-    }, 100);
+    return this.OnboardService.validateTokens(this.scopeData);
   }
 
   public clearPanel(): void {
@@ -137,11 +119,7 @@ export class CrOnboardUsersController implements ng.IComponentController {
   };
 
   private resetUsersfield(): void {
-    (angular.element('#usersfield') as any).tokenfield('setTokens', ' ');
-    this.model.userList = '';
-    this.checkPlaceholder();
-    this.scopeData.invalidcount = 0;
-    this.scopeData.invalidDirSyncUsersCount = 0;
+    return this.OnboardService.resetUsersfield(this.scopeData);
   };
 
   private checkPlaceholder(): void {
