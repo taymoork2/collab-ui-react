@@ -86,13 +86,8 @@ require('./_user-add.scss');
     $scope.editServicesFlow = false;
     $scope.hasSite = false;
 
-    $scope.strFirstName = OnboardStore['users.add.manual'].strFirstName;
-    $scope.strLastName = OnboardStore['users.add.manual'].strLastName;
-    $scope.strEmailAddress = OnboardStore['users.add.manual'].strEmailAddress;
-    var strNameAndEmailAdress = OnboardStore['users.add.manual'].strNameAndEmailAdress;
     $scope.placeholder = $translate.instant('directoryNumberPanel.chooseNumber');
     $scope.inputPlaceholder = $translate.instant('directoryNumberPanel.searchNumber');
-    $scope.userInputOptions = OnboardStore['users.add.manual'].userInputOptions;
 
     OnboardService.huronCallEntitlement = false;
 
@@ -570,13 +565,6 @@ require('./_user-add.scss');
     //***
     //***
     //***********************************************************************************/
-
-    function clearNameAndEmailFields() {
-      $scope.model.firstName = '';
-      $scope.model.lastName = '';
-      $scope.model.emailAddress = '';
-      $scope.model.userInfoValid = false;
-    }
 
     function ServiceFeature(label, value, name, license) {
       this.label = label;
@@ -1397,67 +1385,8 @@ require('./_user-add.scss');
       $scope.$emit('wizardNextText', action);
     };
 
+    // TODO (mipark2): rm this if determined no longer needed (see: '$scope.manualEntryNext()')
     $scope.invalidcount = OnboardStore['users.add.manual'].invalidcount;
-    $scope.invalidDirSyncUsersCount = OnboardStore['users.add.manual'].invalidDirSyncUsersCount;
-    $scope.tokenfieldid = OnboardStore['users.add.manual'].tokenfieldid;
-    $scope.tokenplaceholder = OnboardStore['users.add.manual'].tokenplaceholder;
-    $scope.tokenoptions = OnboardStore['users.add.manual'].tokenoptions;
-    var isDuplicate = false;
-
-    function setInvalidToken(token) {
-      angular.element(token.relatedTarget).addClass('invalid');
-      $scope.invalidcount++;
-    }
-
-    function validateDirSyncUser(e) {
-      if ($scope.isDirSyncEnabled) {
-        UserListService.queryUser(e.attrs.value)
-          .catch(function () {
-            setInvalidToken(e);
-            sortTokens();
-            $scope.invalidDirSyncUsersCount++;
-          });
-      }
-    }
-
-    $scope.tokenmethods = {
-      createtoken: function (e) {
-        //Removing anything in brackets from user data
-        var value = _.replace(e.attrs.value, /\s*\([^)]*\)\s*/g, ' ');
-        e.attrs.value = value;
-        isDuplicate = false;
-        if (OnboardService.isEmailAlreadyPresent(e.attrs.value)) {
-          isDuplicate = true;
-        }
-      },
-      createdtoken: function (e) {
-        if (!validateEmail(e.attrs.value) || isDuplicate) {
-          setInvalidToken(e);
-        } else {
-          validateDirSyncUser(e);
-        }
-        sortTokens();
-        wizardNextText();
-        checkPlaceholder();
-      },
-      edittoken: function (e) {
-        if (angular.element(e.relatedTarget).hasClass('invalid')) {
-          $scope.invalidcount--;
-        }
-      },
-      removedtoken: function () {
-        // Reset the token list and validate all tokens
-        $timeout(function () {
-          $scope.invalidcount = 0;
-          $scope.invalidDirSyncUsersCount = 0;
-          angular.element('#usersfield').tokenfield('setTokens', $scope.model.userList);
-        }).then(function () {
-          sortTokens();
-          wizardNextText();
-          checkPlaceholder();
-        });
-      },
-    };
 
     function removeEmailFromTokenfield(email) {
       $scope.model.userList = $scope.model.userList.split(', ').filter(function (token) {
@@ -1470,58 +1399,8 @@ require('./_user-add.scss');
       return OnboardService.checkPlaceholder();
     }
 
-    // sort the token list so that error tokens appear first in the list
-    function sortTokens() {
-      // this is just a sh*tty way of sorting this.  The only info we have
-      // if a token has an error is if it has an 'invalid' class on the element.
-      // the model.userList SHOULD contain this info, but it doesn't.  So,
-      // in order to sort all of the invalid tokens to the front of the list,
-      // we need to do this in the DOM directly. Thankfully, tokenfield doesn't
-      // break when we do this.
-      var start = $(angular.element('.tokenfield input[type=text]')[0]);
-      if (start.length > 0) {
-        var tokens = start.siblings('.token');
-        tokens.sort(function (a, b) {
-          var ainvalid = $(a).hasClass('invalid');
-          var binvalid = $(b).hasClass('invalid');
-          if (ainvalid && !binvalid) {
-            return -1;
-          } else if (!ainvalid && binvalid) {
-            return 1;
-          } else {
-            return 0;
-          }
-        });
-
-        tokens.detach().insertAfter(start);
-      }
-    }
-
     var getUsersList = function () {
       return addressparser.parse($scope.model.userList);
-    };
-
-    $scope.addToUsersfield = function () {
-      if ($scope.model.userForm.$valid && $scope.model.userInfoValid) {
-        var userInfo = $scope.model.firstName + NAME_DELIMITER + $scope.model.lastName + ' ' + $scope.model.emailAddress;
-        angular.element('#usersfield').tokenfield('createToken', userInfo);
-        clearNameAndEmailFields();
-        angular.element('#firstName').focus();
-      }
-    };
-
-    $scope.validateEmailField = function () {
-      if ($scope.model.emailAddress) {
-        $scope.model.userInfoValid = validateEmail($scope.model.emailAddress);
-      } else {
-        $scope.model.userInfoValid = false;
-      }
-    };
-
-    $scope.onEnterKey = function (keyEvent) {
-      if (keyEvent.which === KeyCodes.ENTER) {
-        $scope.addToUsersfield();
-      }
     };
 
     var resetUsersfield = function () {
