@@ -42,4 +42,14 @@ describe('Component: dgcTab', () => {
 
     expect(this.view.find(this.nameSection)).toHaveText('Felix cao');
   });
+
+  it('Should get Server time when the meeting status eq 1', function () {
+    this.meetingDetail.meetingBasicInfo.status = 1;
+    this.SearchService.getMeetingDetail.and.returnValue(this.$q.resolve(this.meetingDetail));
+    spyOn(this.SearchService, 'getServerTime').and.returnValue(this.$q.resolve({ dateLong: 1513319154000 }));
+    initComponent.call(this);
+
+    const oneM = this.SearchService.getStorage('webexOneMeeting');
+    expect(oneM.endTime).toBe(1513319154000);
+  });
 });

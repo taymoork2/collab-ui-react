@@ -164,4 +164,31 @@ describe('Service: searchService', () => {
     reson = this.SearchService.getParticipantEndReson('');
     expect(reson).toBe('Abnormal');
   });
+
+  it('should get correct device name and the icon when call getDevice', function () {
+    let obj: any = { browser: 2, platform: 6 };
+    let device = this.SearchService.getDevice(obj);
+    expect(device.icon).toBe('icon-application');
+
+    obj = { sessionType: '25', platform: '9' };
+    device = this.SearchService.getDevice(obj);
+    expect(device.name).toBe('PSTN');
+
+    obj = { platform: '10' };
+    device = this.SearchService.getDevice(obj);
+    expect(device.icon).toBe('icon-devices');
+
+    obj = { platform: '8' };
+    device = this.SearchService.getDevice(obj);
+    expect(device.icon).toBe('icon-mobile-phone');
+
+    obj = { platform: '6' };
+    device = this.SearchService.getDevice(obj);
+    expect(device.name).toBe('Browser');
+  });
+
+  it('', function () {
+    const hms = this.SearchService.getDuration(8071);
+    expect(hms).toBe('2:14:31');
+  });
 });

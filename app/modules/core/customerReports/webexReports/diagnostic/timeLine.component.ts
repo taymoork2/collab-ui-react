@@ -42,10 +42,9 @@ class TimeLine implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
-    const { circleColor, lineColor, otherPara } = changes;
+    const { circleColor, lineColor, pstnData, cmrData } = changes;
     _.debounce(() => {
       if (_.get(lineColor, 'currentValue')) {
-        d3.selectAll('.lineQos').remove();
         this.setLineColor(_.get(lineColor, 'currentValue'));
       }
 
@@ -53,87 +52,52 @@ class TimeLine implements ng.IComponentController {
         this.updateGraph(_.get(circleColor, 'currentValue'));
       }
 
-      if (_.get(otherPara, 'currentValue')) { // TODO, will discuss with backend to optimize the response data
-        const arr = _.get(otherPara, 'currentValue');
-        let arrLine = [];
-        _.forEach(this.data.data, (item) => {
-          if (arr[item.nodeId]) {
-            let startx = 0;
-            _.forEach(arr[item.nodeId], (item_) => {
-              let classKey = 3;
-              const audioMos = _.parseInt(item_.audioMos);
-              if ( audioMos > 3 ) {
-                classKey = 0;
-              } else if ( audioMos < 3 && audioMos > 0 ) {
-                classKey = 2;
-              }
-              if (classKey === 3) {
-                return true;
-              }
-              const class_ = _.lowerCase(this.legendInfo.line[classKey]) + 'Line';
-              const endZone = this.time2line(this.timestampToDate(item_.endTime));
-              const endPoint = this.time2line(this.timestampToDate(item_.timestamp));
-              const startZone = this.time2line(this.timestampToDate(item_.startTime));
-              if ( item.leaveTime < item_.endTime  || endPoint < item.start + 19 ) {
-                return true;
-              }
+      if (_.get(pstnData, 'currentValue')) {
+        this.lineSegment(_.get(pstnData, 'currentValue'), 'pstn');
+      }
 
-              item_.y = item.y;
-              item_.class = class_;
-              item_.end = endPoint;
-              item_.endZone = endZone;
-              item_.startZone = startZone;
-              item_.quality = this.legendInfo.line[classKey];
-
-              if (!startx || (startx < item_.startZone && startx > item_.endZone)) {
-                item_.start = item_.startZone + 19;
-              } else {
-                item_.start = startx;
-              }
-              arrLine = _.concat(arrLine, item_);
-              startx = item_.end;
-            });
-          }
-        });
-
-        const g = this.svg.append('g').attr('class', 'timeLine pstn');
-        g.selectAll('.pstn')
-          .data(arrLine)
-          .enter()
-          .append('svg:line')
-          .attr('x1', item => item.start)
-          .attr('y1', item => item.y)
-          .attr('x2', item => item.end)
-          .attr('y2', item => item.y)
-          .attr('class', item => item.class)
-          .attr('id', item => `myPstn${item.nodeId}`)
-          .on('mouseover', (item) => {
-            const msgArr = [
-              { key: `${item.type} Quality: `, value: item.quality },
-              { key: `MOS score: `, value: item.audioMos },
-              { key: `Call Type: `, value: item.callType },
-            ];
-            this.makeTips({ arr: msgArr }, item.y - 8, item.start);
-          })
-          .on('mouseout', () => this.hideTips());
-
-        this.coverLine(arrLine);
+      if (_.get(cmrData, 'currentValue')) {
+        this.lineSegment(_.get(cmrData, 'currentValue'), 'cmr');
       }
     }, 500)();
   }
 
-  private coverLine(arrLine) {
-    d3.select('.circleStart').moveToFront();
-    const data =  _.filter(arrLine, (item: any) => item.quality === 'Poor' );
-    const g = d3.select('.timelineSvg svg').insert('g', '.pstn').attr('class', 'coverLine');
-    g.selectAll('.coverLine')
-      .data(data)
-      .enter()
-      .append('svg:line')
-      .attr('x1', item => item.start)
-      .attr('y1', item => item.y)
-      .attr('x2', item => item.end)
-      .attr('y2', item => item.y);
+  private preLineSegData(arr, type) { //TODO, will discuss with backend to optimize the response data
+    let arrLine = [];
+    _.forEach(arr, (item, key) => {
+      const data: any = _.find(this.data.data, { nodeId: key });
+      let startx = _.get(data, 'x1', 0) - 5;
+
+      _.map(item, (item_: any) => {
+        const endZone = this.time2line(this.timestampToDate(item_.endTime));
+        const endPoint = this.time2line(this.timestampToDate(item_.timestamp));
+        const startZone = this.time2line(this.timestampToDate(item_.startTime));
+
+        if ( _.get(data, 'leaveTime') < item_.endTime  || endPoint < _.get(data, 'x1', 0) + 14 ) { // out of the line
+          return true;
+        }
+        const lineSeg = _.assignIn({}, item_, { x1: startx, y1: _.get(data, 'y1', 0), x2: endPoint, y2: _.get(data, 'y2', 0), msgArr: this.setMsg(_.assign({}, item_, data), type), class: _.lowerFirst(`${item_.quality}Line`) });
+        if (startx < startZone || startx > endZone) {
+          lineSeg.x1 = startZone + 19;
+        }
+        arrLine = _.concat(arrLine, lineSeg);
+        startx = endPoint;
+      });
+    });
+    return arrLine;
+  }
+
+  private lineSegment(arr, type) {
+    const data = this.preLineSegData(arr, type);
+    const node = this.dataToline({ data: data, append: 'svg:line', class: type });
+    node.attr('class', item => item.class)
+      .attr('id', item => `my${type}${item.nodeId}`)
+      .on('mouseover', (item) => {
+        this.makeTips({ arr: item.msgArr }, item.y1 - 8, item.x1);
+      })
+      .on('mouseout', () => this.hideTips());
+
+    this.coverLine(data);
   }
 
   private initParameters(): void {
@@ -180,12 +144,6 @@ class TimeLine implements ng.IComponentController {
   }
 
   private setDomain(): void {
-    const duration = this.data.endTime - this.data.startTime;
-    const ruler: number = this.setRuler(duration / 1000) * 1000;
-    const tickNum = _.ceil(duration / ruler);
-
-    this.data.ruler = ruler;
-    this.data.ticks = this.setTicks(tickNum);
     this.data.domain = [this.timestampToDate(this.sourceData.startTime), this.timestampToDate(this.sourceData.endTime)];
   }
 
@@ -219,7 +177,7 @@ class TimeLine implements ng.IComponentController {
     const xAxis = d3.svg.axis()
       .scale(timeRange)
       .orient('bottom')
-      .ticks(6)
+      .ticks(7)
       .tickSize(3, 0)
       .tickFormat(d3.time.format(this.data.xAxisFormat));
 
@@ -237,9 +195,11 @@ class TimeLine implements ng.IComponentController {
       const arr = _.map(item, (item_: any) => {
         return _.assignIn({}, item_, {
           y: y,
+          y1: y,
+          y2: y,
           filterId: key,
-          end: this.time2line(this.timestampToDate(item_.leaveTime)),
-          start: this.time2line(this.timestampToDate(item_.joinTime)),
+          x2: this.time2line(this.timestampToDate(item_.leaveTime)),
+          x1: this.time2line(this.timestampToDate(item_.joinTime)) + 6,
         });
       });
       data = _.concat(data, arr);
@@ -248,30 +208,21 @@ class TimeLine implements ng.IComponentController {
   }
 
   private drawLines(): void {
-    const lines = this.data.data;
-    const g = this.svg.append('g').attr('class', 'timeLine');
-    g.selectAll('.timeLine')
-      .data(lines)
-      .enter()
-      .append('svg:line')
-      .attr('x1', item => item.start + 18)
-      .attr('y1', item => item.y)
-      .attr('x2', item => item.end)
-      .attr('y2', item => item.y)
-      .attr('id', item => `myLine${item.nodeId}`);
+    const node = this.dataToline({ data: this.data.data, append: 'svg:line', class: 'timeLine' });
+    node.attr('id', (item) => `myLine${item.nodeId}`);
 
     this.drawStartGraph();
   }
 
   private drawStartGraph(): void {
     const circles = this.data.data;
-    const g = this.svg.append('g').attr('class', 'circleStart');
-    g.selectAll('.circleStart')
+    const g = this.svg.append('g').attr('class', 'startPoint');
+    g.selectAll('.startPoint')
       .data(circles)
       .enter()
       .append('circle')
       .attr('r', 9)
-      .attr('transform', item => `translate(${item.start + 9}, ${item.y})`)
+      .attr('transform', item => `translate(${item.x1 + 3}, ${item.y1})`)
       .attr('nodeId', item => item.nodeId)
       .attr('id', item => `myDot${item.guestId}-${item.userId}-${item.joinTime}`)
       .on('mouseover', item => {
@@ -291,17 +242,18 @@ class TimeLine implements ng.IComponentController {
           { key: jmtVal },
         ];
 
-        this.makeTips({ arr: msgArr }, item.y - 16, item.start + 6);
+        this.makeTips({ arr: msgArr }, item.y1 - 16, item.x1);
       })
       .on('mouseout', () => this.hideTips());
   }
 
   private makeTips(msg, top: number|undefined = undefined, left: number|undefined = undefined) {
     let template: string = '';
-    this.tip.classed('Tooltip-bottom', true);
-    _.forEach(msg.arr, (item) => {
+    _.forEach(msg.arr, item => {
       template += `<p class="${item.class ? item.class : ''}"><span>${item.key}</span> ${item.value ? item.value : ''}</p>`;
     });
+
+    this.tip.classed('Tooltip-bottom', true);
     this.tip.html(template).style('display', 'block').style('z-index', 1500);
 
     const leftOffset = this.tip.style('width').replace('px', '');
@@ -331,6 +283,7 @@ class TimeLine implements ng.IComponentController {
         }
         msgArr.push({ key: 'Join Time: ', value: item.joinTime_ });
         msgArr.push({ key: 'Duration: ', value: _.round(item.duration / 60) + ' Min' });
+        msgArr.push({ key: 'Endpoint: ', value: item.device });
 
         this.makeTips({ arr: msgArr }, item.y - 15, this.option.paddingLeft - 40 );
       })
@@ -414,7 +367,7 @@ class TimeLine implements ng.IComponentController {
     g.append('p').text('Meeting Quality').append('i').attr('class', 'icon icon-info-outline')
     .on('mouseover', () => {
       const msgArr = [
-        { key: 'PSTN Quality is measured <br>with MOS Score. Score of<br>1-2 indicates poor quality.<br>VoIP and Video quality is<br>measured with latency and<br> packet loss. Either > 5%<br>packet loss or > 400ms<br>Latency indicates poor quality.' },
+        { key: `PSTN Quality is measured <br>with MOS Score. Score of<br>1-2 indicates poor quality.<br>VoIP and Video quality is<br>measured with latency and<br> packet loss. Either > 5%<br>packet loss or > 400ms<br>Latency indicates poor quality.<br>TP quality is measured <br>with packet loss and jitter.<br> Either > 5% package loss or > 20ms <br>jitter indicates poor quality.` },
       ];
       const pos = this.$element.find('.legend p i').last().position();
       this.makeTips({ arr: msgArr }, pos.top - 10, pos.left + 17);
@@ -423,14 +376,14 @@ class TimeLine implements ng.IComponentController {
   }
 
   private updateGraph(data) {
-    const node = d3.select('.circleStart');
+    const node = d3.select('.startPoint');
     node.moveToFront();
     _.forEach(data, (item) => {
       const classKey = _.parseInt(item.jmtQuality) - 1;
       const dotId = `#myDot${item.guestId}-${item.userId}-${item.joinTime}`;
-      const nodeData = _.find(this.data.data, { guestId: item.guestId, userId: item.userId, joinTime: item.joinTime });
-      const nodey = _.get(nodeData, 'y', 0);
-      const nodex = _.get(nodeData, 'start', 0);
+      const nodeData: any = _.find(this.data.data, { guestId: item.guestId, userId: item.userId, joinTime: item.joinTime });
+      const nodey = _.get(nodeData, 'y1', 0);
+      const nodex = _.get(nodeData, 'x1', 0);
 
       let newS: any = undefined;
       if (classKey === 0) {
@@ -440,10 +393,10 @@ class TimeLine implements ng.IComponentController {
         .attr('jmtQuality', this.legendInfo.circle[_.parseInt(item.jmtQuality) - 1]);
       } else if (classKey === 1) {
         d3.select(dotId).remove();
-        newS = this.drawTriangle(node, { x: nodex + 9, y: nodey - 9 });
+        newS = this.drawTriangle(node, { x: nodex + 3, y: nodey - 9 });
       } else if (classKey === 2) {
         d3.select(dotId).remove();
-        newS = this.drawSquare(node, { x: nodex + 9, y: nodey - 9 });
+        newS = this.drawSquare(node, { x: nodex - 6, y: nodey - 9 });
       }
 
       if (newS) {
@@ -455,7 +408,7 @@ class TimeLine implements ng.IComponentController {
             { key: item.joinMeetingTime ? `:${item.joinMeetingTime} Seconds` : 'Unavaliable' },
           ];
 
-          this.makeTips({ arr: msgArr }, nodey - 16, nodex + 6);
+          this.makeTips({ arr: msgArr }, nodey - 16, nodex);
         })
         .on('mouseout', () => this.hideTips());
       }
@@ -464,21 +417,13 @@ class TimeLine implements ng.IComponentController {
 
   private setLineColor(data) {
     let arr: any = [];
-    _.forEach(this.data.data, (item) => {
-      if (data[item.nodeId]) {
-        arr = _.concat(arr, this.getQosData(data[item.nodeId], item.start + 20, item.y));
-      }
+    _.forEach(data, (item, key) => {
+      const nodeData = _.find(this.data.data, { nodeId: key });
+      arr = _.concat(arr, this.getQosData(item, _.get(nodeData, 'x1', 0) + 14, _.get(nodeData, 'y1', 0)));
     });
-    const g = this.svg.append('g').attr('class', 'timeLine lineQos');
-    g.selectAll('.timeLine')
-    .data(arr)
-    .enter()
-    .append('svg:line')
-    .attr('x1', item => item.start)
-    .attr('y1', item => item.y)
-    .attr('x2', item => item.end)
-    .attr('y2', item => item.y)
-    .attr('class', item => item.class_)
+
+    const node = this.dataToline({ data: arr, append: 'svg:line', class: 'lineQos' });
+    node.attr('class', item => item.class_)
     .attr('id', item => `${item.qosId}`)
     .on('mouseover', item => {
       const msgArr = [
@@ -486,7 +431,7 @@ class TimeLine implements ng.IComponentController {
         { key: `Latency:`, value: item.latency },
         { key: 'Packet Loss:', value: _.round(item.packageLossRate * 100, 2) + ` %` },
       ];
-      this.makeTips({ arr: msgArr }, item.y - 10, item.start);
+      this.makeTips({ arr: msgArr }, item.y1 - 10, item.x1 + (item.x2 - item.x1) / 2);
     })
     .on('mouseout', () => this.hideTips());
   }
@@ -500,25 +445,13 @@ class TimeLine implements ng.IComponentController {
       }
       const classKey = _.parseInt(item.dataQuality) - 1;
       const class_ = this.legendInfo.line[classKey] === 'N/A' ? '' : _.lowerCase(this.legendInfo.line[classKey]) + 'Line';
-      const newItem = _.assign(item, { start: startx, end: end, y: y, class_: class_, qosId: `qosId${item.nodeId}-${startx}-${end}` });
+      const newItem = _.assign(item, { x1: startx, x2: end, y1: y, y2: y, class_: class_, qosId: `qosId${item.nodeId}-${startx}-${end}` });
       data_ = _.concat(data_, newItem);
 
       startx = end;
     });
 
     return data_;
-  }
-
-  private setRuler(time): number {
-    const rulerArr = [[1800, 0, 300], [10800, 1800, 900], [21600, 10800, 1800], [43200, 21600, 3600], [86400, 43200, 7200]];
-    let ruler = 300;
-    _.forEach(rulerArr, (item) => {
-      if (time <= item[0] && time > item[1]) {
-        ruler = item[2];
-        return false;
-      }
-    });
-    return ruler;
   }
 
   private timestampToDate(timestamp): Date {
@@ -528,17 +461,9 @@ class TimeLine implements ng.IComponentController {
     return moment(dateStr).toDate();
   }
 
-  private setTicks(tick: number): number {
-    let tickNum = 4;
-    if (tick > 4 ) {
-      tickNum = tick > 6 ? 12 : 6;
-    }
-    return tickNum;
-  }
-
-  private dataToline(option) {
-    const g = this.svg.append('g').attr('class', option.class);
-    g.selectAll(`.${option.class}`)
+  private dataToline(option, node = undefined) {
+    const g = node ? node : this.svg.append('g').attr('class', option.class);
+    return g.selectAll(`.${option.class}`)
       .data(option.data)
       .enter()
       .append(option.append)
@@ -552,18 +477,36 @@ class TimeLine implements ng.IComponentController {
     this.tip.transition().duration(500).style('opacity', 0);
   }
 
+  private coverLine(arrLine) {
+    d3.select('.startPoint').moveToFront();
+    const data =  _.filter(arrLine, (item: any) => item.quality === 'Poor' );
+    const coverLine = d3.select('.timelineSvg svg').insert('g', '.pstn').attr('class', 'coverLine');
+    this.dataToline({ data: data, append: 'svg:line', class: 'coverLine' }, coverLine);
+  }
+
+  private setMsg(item, type) {
+    let msgArr: Object[] = [];
+    if (type === 'cmr') {
+      msgArr = [
+        { key: `${item.type} Quality: `, value: item.quality },
+        { key: `Loss Rate: `, value: _.round(item.lossRate * 100, 2) + ` %` },
+        { key: 'Jitter: ', value: _.parseInt(item.jitter) === 1 ? `${item.jitter} Millisecond` : `${item.jitter} Milliseconds` },
+      ];
+    } else if (type === 'pstn') {
+      msgArr = [
+        { key: `${item.type} Quality: `, value: item.quality },
+        { key: `MOS Score: `, value: item.audioMos },
+        { key: `Call Type: `, value: item.callType },
+      ];
+    }
+
+    return msgArr;
+  }
+
   private addFnToD3() {
     d3.selection.prototype.moveToFront = function() {
-      return this.each(function() {
+      return this.each(function () {
         this.parentNode.appendChild(this);
-      });
-    };
-    d3.selection.prototype.moveToBack = function() {
-      return this.each(function() {
-        const firstChild = this.parentNode.firstChild;
-        if (firstChild) {
-          this.parentNode.insertBefore(this, firstChild);
-        }
       });
     };
   }
@@ -572,5 +515,5 @@ class TimeLine implements ng.IComponentController {
 export class DgcTimeLineComponent implements ng.IComponentOptions {
   public controller = TimeLine;
   public template = '<div class="timelineSvg"></div>';
-  public bindings = { sourceData: '<', lineColor: '<', circleColor: '<', otherPara: '<' };
+  public bindings = { sourceData: '<', lineColor: '<', circleColor: '<', pstnData: '<', cmrData: '<' };
 }

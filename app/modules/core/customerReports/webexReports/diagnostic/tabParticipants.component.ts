@@ -31,14 +31,15 @@ class Participants implements ng.IComponentController {
   private getParticipants() {
     this.SearchService.getParticipants(this.conferenceID)
       .then((res) => {
-        _.forEach(res, (item) => {
+        this.gridData = _.map(res, (item: any) => {
           const device = this.SearchService.getDevice({ platform: item.platform, browser: item.browser, sessionType: item.sessionType });
-          item.Duration = this.SearchService.getDuration(item.duration);
-          item.endReason = this.SearchService.getParticipantEndReson(item.reason);
-          item.startDate = this.SearchService.timestampToDate(item.joinTime, 'YYYY-MM-DD hh:mm:ss');
-          item.platform_ = device.name;
+          return _.assignIn({}, item, {
+            platform_: _.get(device, 'name'),
+            duration: this.SearchService.getDuration(item.duration),
+            endReason: this.SearchService.getParticipantEndReson(item.reason),
+            startDate: this.SearchService.timestampToDate(item.joinTime, 'YYYY-MM-DD hh:mm:ss'),
+          });
         });
-        this.gridData = res;
         this.loading = false;
         this.setGridOptions();
       })
@@ -60,7 +61,7 @@ class Participants implements ng.IComponentController {
       displayName: 'Start Date',
     }, {
       width: '10%',
-      field: 'Duration',
+      field: 'duration',
       displayName: 'Duration',
     }, {
       field: 'platform_',

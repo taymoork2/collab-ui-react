@@ -7,7 +7,6 @@
 
     <div class="content-container" ng-if="!$ctrl.loading">
         <div class="overview">
-            <h4>Meeting Details</h4>
             <div class="meeting-room-name">
                 <h3 ng-bind="$ctrl.details.meetingName"></h3>
                 <small class="detailInfo">{{::'webexReports.meetingNumber' | translate}}: <span ng-bind="$ctrl.details.meetingNumber"></span></small>
@@ -17,11 +16,11 @@
 
             <div class="room-information">
                 <h6>
-                  <span>{{::'webexReports.searchGridHeader.startTime' | translate}}</span>
+                  <span translate="webexReports.searchGridHeader.startTime"></span>
                   <span class="blue-color" ng-bind="$ctrl.details.startDate"></span>
                 </h6>
                 <h6>
-                  <span>{{::'webexReports.start' | translate}}</span>
+                  <span translate="webexReports.start"></span>
                   <span class="blue-color" ng-bind="$ctrl.details.startTime_"></span>
                 </h6>
                 <h6>
@@ -29,11 +28,11 @@
                   <span class="blue-color" ng-bind="$ctrl.details.endTime_" ng-show="$ctrl.details.status === 2"></span>
                 </h6>
                 <h6>
-                  <span>{{::'webexReports.duration' | translate}}</span>
+                  <span translate="webexReports.duration"></span>
                   <span class="blue-color" ng-bind="$ctrl.details.duration_"></span>
                 </h6>
                 <h6>
-                    <span>{{::'webexReports.participants' | translate}}</span>
+                    <span translate="webexReports.participants"></span>
                     <span class="blue-color" ng-bind="$ctrl.details.numberOfParticipants"></span>
                 </h6>
               </div>
