@@ -1477,17 +1477,9 @@ require('./_user-add.scss');
       }).join(', ');
     }
 
-    var setPlaceholder = function (placeholder) {
-      angular.element('.tokenfield.form-control #usersfield-tokenfield').attr('placeholder', placeholder);
-    };
-
     //placeholder logic
     function checkPlaceholder() {
-      if (angular.element('.token-label').length > 0) {
-        setPlaceholder('');
-      } else {
-        setPlaceholder($translate.instant('usersPage.userInput'));
-      }
+      return OnboardService.checkPlaceholder();
     }
 
     // sort the token list so that error tokens appear first in the list

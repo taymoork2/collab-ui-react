@@ -7,6 +7,7 @@ export default class OnboardService {
 
   /* @ngInject */
   constructor(
+    public $translate: ng.translate.ITranslateService,
   ) {
   }
 
@@ -105,4 +106,17 @@ export default class OnboardService {
     });
     return retString;
   }
+
+  public checkPlaceholder(): void {
+    if (angular.element('.token-label').length > 0) {
+      this.setPlaceholder('');
+    } else {
+      this.setPlaceholder(this.$translate.instant('usersPage.userInput'));
+    }
+  }
+
+  private setPlaceholder(placeholder): void {
+    angular.element('.tokenfield.form-control #usersfield-tokenfield').attr('placeholder', placeholder);
+  }
+
 }
