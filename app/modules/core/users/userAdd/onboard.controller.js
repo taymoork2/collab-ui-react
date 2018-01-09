@@ -1877,11 +1877,6 @@ require('./_user-add.scss');
       return deferred.promise;
     }
 
-    /* Used by the hybrid services component, because you need at least one paid license to enable hybrid services  */
-    $scope.userIsLicensed = function () {
-      return !_.isEmpty(getAccountLicenses());
-    };
-
     $scope.hybridServicesEntitlements = [];
     $scope.updateHybridServicesEntitlements = function (entitlements) {
       $scope.hybridCallServiceAware = _.some(entitlements, {
