@@ -1,4 +1,4 @@
-import serviceModule, { HybridServicesClusterService } from './hybrid-services-cluster.service';
+import serviceModule from './hybrid-services-cluster.service';
 
 // import { ConnectorType, IConnector, IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
 import { IExtendedClusterFusion, ConnectorType, IExtendedConnector } from 'modules/hercules/hybrid-services.types';
@@ -7,16 +7,18 @@ import { USSService } from 'modules/hercules/services/uss.service';
 describe('Service: HybridServicesClusterService', function () {
   let $httpBackend: ng.IHttpBackendService;
   let $q: ng.IQService;
-  let HybridServicesClusterService: HybridServicesClusterService;
+  let HybridServicesClusterService;
   let USSService: USSService;
+  let $scope;
 
   beforeEach(angular.mock.module(serviceModule));
   beforeEach(angular.mock.module(mockDependencies));
   beforeEach(inject(dependencies));
 
-  function dependencies(_$httpBackend_, _$q_, _HybridServicesClusterService_, _USSService_) {
+  function dependencies(_$httpBackend_, _$rootScope_, _$q_, _HybridServicesClusterService_, _USSService_) {
     $httpBackend = _$httpBackend_;
     $q = _$q_;
+    $scope = _$rootScope_.$new();
     HybridServicesClusterService = _HybridServicesClusterService_;
     USSService = _USSService_;
     spyOn(USSService, 'getUserPropsSummary').and.returnValue($q.resolve({
@@ -771,6 +773,44 @@ describe('Service: HybridServicesClusterService', function () {
           expect(isLast).toBe(false);
         });
       $httpBackend.flush();
+    });
+
+  });
+
+  describe('addExtendedPropertiesToClusters', () => {
+
+    it('should get a list of allowed redirect targets if the cluster is empty, and the cluster is an Expressway', () => {
+      const clusterId = 'Romelu Lukaku';
+      const clusters = [{
+        id: clusterId,
+        connectors: [],
+        targetType: 'c_mgmt',
+      }];
+      $httpBackend
+        .expectGET(`http://elg.no/organizations/0FF1C3/clusters/${clusterId}/allowedRegistrationHosts`)
+        .respond(200, {});
+      HybridServicesClusterService.addExtendedPropertiesToClusters(clusters);
+      $httpBackend.flush();
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('should not return a rejected promise when there is inconsistent data in FMS', function (done) {
+      const clusterId = 'Paul Pogba';
+      const clusters = [{
+        id: clusterId,
+        connectors: [],
+        targetType: 'c_mgmt',
+      }];
+      $httpBackend
+        .expectGET(`http://elg.no/organizations/0FF1C3/clusters/${clusterId}/allowedRegistrationHosts`)
+        .respond(404, {});
+
+      HybridServicesClusterService.addExtendedPropertiesToClusters(clusters)
+        .then(() => done())
+        .catch(() => fail('addExtendedPropertiesToClusters should not reject the promise'));
+      $httpBackend.flush();
+      $scope.$apply();
     });
 
   });
