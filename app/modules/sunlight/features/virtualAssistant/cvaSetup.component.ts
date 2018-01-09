@@ -200,10 +200,8 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
   }
 
   public onDialogflowTokenChange(): void {
-    const controller = this;
     this.template.configuration.pages.cvaAccessToken.invalidToken = true;
     this.template.configuration.pages.cvaAccessToken.needsValidation = true; //changed token needs validation
-    controller.tokenForm.tokenInput.$setValidity('invalidToken', true); // reset validation
   }
 
   /**
@@ -237,6 +235,14 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
       }
       return this.tokenForm.tokenInput.$error;
     }
+  }
+
+  /**
+   * validate button should be disabled if input is blank or if token already validated
+   * @returns {boolean} true if access token validate button should be disabled
+   */
+  public isValidateButtonDisabled(): boolean {
+    return !(this.template.configuration.pages.cvaAccessToken.accessTokenValue) || this.isAccessTokenValid();
   }
 
   /** Data Validation functions **/

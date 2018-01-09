@@ -134,7 +134,7 @@ describe('CVA feature setup', function () {
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.dialogflowClientAccessToken);
 
-    utils.click(careVirtualAssistantTemplateSetupPage.validateBtn);
+    utils.expectIsDisabled(careVirtualAssistantTemplateSetupPage.validateBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.checkMarkIcon);
   });
 

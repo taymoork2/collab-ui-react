@@ -344,6 +344,24 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
       expect(controller.template.configuration.pages.cvaAccessToken.needsValidation).toEqual(false);
     });
 
+    it('validate button should be enabled if validation fails', function () {
+      expect(controller.isValidateButtonDisabled()).toBeTruthy();  // disabled if input blank
+      controller.template.configuration.pages.cvaAccessToken.accessTokenValue = '123';
+      deferred.reject(false);
+      controller.validateDialogflowToken();
+      this.$scope.$apply();
+      expect(controller.isValidateButtonDisabled()).toBeFalsy(); // validation failed, button should be enabled
+    });
+
+    it('validate button should be disabled if token is already validated', function () {
+      controller.template.configuration.pages.cvaAccessToken.accessTokenValue = '123';
+      expect(controller.isValidateButtonDisabled()).toBeFalsy();  // disabled if not validated
+      deferred.resolve(true);
+      controller.validateDialogflowToken();
+      this.$scope.$apply();
+      expect(controller.isValidateButtonDisabled()).toBeTruthy(); // validation passed, button should be enabled
+    });
+
     it('getAccessTokenError should return correct error', function () {
       controller.template.configuration.pages.cvaAccessToken.invalidToken = true;
       controller.tokenForm.$valid = true;
