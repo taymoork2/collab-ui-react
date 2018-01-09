@@ -236,7 +236,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     });
   });
 
-  /*This test case is written to test the scenario where the closedHours and Holidays 
+  /*This test case is written to test the scenario where the closedHours and Holidays
    * follow the same lane. The Holidays lane will have the same actionSet as that of ClosedHours.*/
   describe('getWelcomeMenu with Closed Hours and holidays in same lane', function () {
     it('should return welcomeMenu from parsing ceWelcome3', function () {
