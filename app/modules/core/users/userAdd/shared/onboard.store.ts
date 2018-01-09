@@ -5,7 +5,7 @@
 // - this is a TEMPORARY MEASURE ONLY, do not continue dumping properties onto this singleton unless
 //   it is part of a plan to eliminate '$scope.*' properties altogether
 
-interface IOnboardScopeForUsersAdd {
+export interface IOnboardScopeForUsersAdd {
   currentUserCount: number;
   invalidcount: number;
   invalidDirSyncUsersCount: number;
@@ -30,7 +30,7 @@ interface IOnboardScopeForUsersAdd {
   userInputOptions?: any;
 }
 
-enum OnboardCtrlBoundUIStates {
+export enum OnboardCtrlBoundUIStates {
   USERS_ADD_MANUAL = 'users.add.manual',
 }
 
