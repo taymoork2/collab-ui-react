@@ -1,4 +1,4 @@
-import { HcsTestManagerService, HtmResource } from 'modules/hcs/test-manager/shared';
+import { TaskManagerService, HtmResource } from 'modules/hcs/test-manager/shared';
 import { Notification } from 'modules/core/notifications';
 
 export class ResourceCreateComponent implements ng.IComponentOptions {
@@ -27,7 +27,7 @@ class ResourceCreateController implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    public HcsTestManagerService: HcsTestManagerService,
+    public HcsTestManagerService: TaskManagerService,
     public Notification: Notification,
     public $stateParams: ng.ui.IStateParamsService,
     public $state: ng.ui.IStateService,

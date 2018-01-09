@@ -13,7 +13,7 @@ import { HybridServiceId, IExtendedClusterFusion } from 'modules/hercules/hybrid
 import { IToolkitModalService } from 'modules/core/modal';
 import { Notification } from 'modules/core/notifications';
 import { ProPackService }  from 'modules/core/proPack/proPack.service';
-import { HcsTestManagerService } from 'modules/hcs/test-manager/shared/hcs-test-manager.service';
+import { TaskManagerService } from 'modules/hcs/test-manager';
 
 export class ServicesOverviewController implements ng.IComponentController {
   private cards: ServicesOverviewCard[] = [
@@ -47,7 +47,7 @@ export class ServicesOverviewController implements ng.IComponentController {
     private HybridServicesClusterService: HybridServicesClusterService,
     private Notification: Notification,
     private ProPackService: ProPackService,
-    private HcsTestManagerService: HcsTestManagerService,
+    private HcsTestManagerService: TaskManagerService,
   ) {}
 
   public $onInit() {

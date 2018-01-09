@@ -1,5 +1,5 @@
 //import { IToolkitModalService } from 'modules/core/modal';
-import { HcsTestManagerService, HtmSuite, HtmSchedule } from 'modules/hcs/test-manager/shared';
+import { TaskManagerService, HtmSuite, HtmSchedule } from 'modules/hcs/test-manager/shared';
 import { DateObj } from 'modules/hcs/test-manager/scheduler';
 import { Notification } from 'modules/core/notifications';
 import { IRSuiteMap } from 'modules/hcs/test-manager';
@@ -24,7 +24,7 @@ class SchedulerController implements ng.IComponentController {
   /* @ngInject */
   constructor(
     //private $translate: ng.translate.ITranslateService,
-    public HcsTestManagerService: HcsTestManagerService,
+    public HcsTestManagerService: TaskManagerService,
     public Notification: Notification,
     public $stateParams: ng.ui.IStateParamsService,
     public $state: ng.ui.IStateService,

@@ -1,5 +1,5 @@
 import hcsTaasResources from './index';
-import { State } from 'modules/hcs/test-manager/taskManager.const';
+import { State } from '../shared';
 
 describe('Component: TaasResourceViewComponent',  () => {
 

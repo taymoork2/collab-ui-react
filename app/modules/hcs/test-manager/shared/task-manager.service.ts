@@ -8,7 +8,7 @@ import {
   IRHtmSuite, HtmSuite,
   IRHtmTestDefinition, HtmTestDefinition,
   SETUP_NOT_COMPLETE, SETUP_COMPLETE,
-} from './hcs-test-manager.const';
+} from './task-manager.const';
 
 //export const TAAS_ADDRESS: string = 'http://10.201.82.158:8082'; //Matt's Server
 export const TAAS_ADDRESS: string = 'http://rcdn6-vm81-32.cisco.com:8082';
@@ -51,7 +51,7 @@ const updateAction: ng.resource.IActionDescriptor = {
   method: 'PUT',
 };
 
-export class HcsTestManagerService {
+export class TaskManagerService {
   private customerId: string;
 
   /* @ngInject */

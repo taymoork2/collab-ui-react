@@ -1,5 +1,4 @@
-import { HtmSuite } from 'modules/hcs/test-manager/shared/hcs-test-manager.const';
-import { HcsTestManagerService } from 'modules/hcs/test-manager/shared/hcs-test-manager.service';
+import { HtmSuite, TaskManagerService } from '../shared';
 import { Notification } from 'modules/core/notifications';
 
 class AddSuiteController implements ng.IComponentController {
@@ -12,7 +11,7 @@ class AddSuiteController implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private Notification: Notification,
-    private HcsTestManagerService: HcsTestManagerService,
+    private HcsTestManagerService: TaskManagerService,
     private $state: ng.ui.IStateService,
   ) {}
 
@@ -36,15 +35,6 @@ class AddSuiteController implements ng.IComponentController {
 
   public finishAddingCustomer() {
     this.$state.go('test');
-    // this.HcsTestManagerService.getSuite(testId)
-    // .then((response) => {
-    //   if (response.length > 0) {
-    //     this.dismiss();
-    //   } else {
-    //     this.$state.go('test');
-    //   }
-    // })
-    // .catch(error => this.Notification.errorResponse(error, 'Error geting suite values'));
   }
 
 }

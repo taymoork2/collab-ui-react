@@ -340,3 +340,10 @@ export const SETUP_COMPLETE = {
   status: 'operational',
   cssClass: 'success',
 };
+
+export enum State {
+  Loading = 'LOADING',
+  Show = 'SHOW',
+  Reload = 'RELOAD',
+  New = 'NEW',
+}

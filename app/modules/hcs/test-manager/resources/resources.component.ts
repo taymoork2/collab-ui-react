@@ -1,7 +1,8 @@
 import { IToolkitModalService } from 'modules/core/modal';
-import { HcsTestManagerService, HtmResource } from '../shared';
 import { CardUtils } from 'modules/core/cards';
-import { State } from 'modules/hcs/test-manager/taskManager.const';
+import {
+  TaskManagerService, HtmResource, State,
+} from '../shared';
 
 export class TaasResourceViewComponent implements ng.IComponentOptions {
   public controller = TaasResourceViewCtrl;
@@ -19,7 +20,7 @@ export class TaasResourceViewCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private HcsTestManagerService: HcsTestManagerService,
+    private HcsTestManagerService: TaskManagerService,
     private CardUtils: CardUtils,
     private $state: ng.ui.IStateService,
     public $modal: IToolkitModalService,

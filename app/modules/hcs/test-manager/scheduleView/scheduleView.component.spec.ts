@@ -1,5 +1,5 @@
 import hcsTaasSchedule from './index';
-import { State } from 'modules/hcs/test-manager/taskManager.const';
+import { State } from '../shared';
 
 describe('Component: TaasScheduleViewComponent',  () => {
 

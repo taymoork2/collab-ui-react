@@ -1,7 +1,8 @@
 import { IToolkitModalService } from 'modules/core/modal';
-import { HcsTestManagerService, HtmSchedule } from '../shared';
 import { Notification } from 'modules/core/notifications';
-import { State } from 'modules/hcs/test-manager/taskManager.const';
+import {
+  TaskManagerService, HtmSchedule, State,
+} from '../shared';
 
 export class TaasScheduleViewComponent implements ng.IComponentOptions {
   public controller = TaasScheduleViewCtrl;
@@ -22,7 +23,7 @@ export class TaasScheduleViewCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    public HcsTestManagerService: HcsTestManagerService,
+    public HcsTestManagerService: TaskManagerService,
     public $modal: IToolkitModalService,
     private $state: ng.ui.IStateService,
     public $translate: ng.translate.ITranslateService,

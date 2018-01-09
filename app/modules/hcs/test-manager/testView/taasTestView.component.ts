@@ -1,7 +1,9 @@
 import { IToolkitModalService } from 'modules/core/modal';
-import { HcsTestManagerService, HtmBuildingBlocks, HtmSuite, HtmTest, HtmSchedule } from 'modules/hcs/test-manager/shared';
 import { CardUtils } from 'modules/core/cards';
-import { State } from 'modules/hcs/test-manager/taskManager.const';
+import {
+  TaskManagerService, HtmBuildingBlocks, HtmSuite, HtmTest,
+  HtmSchedule, State,
+} from 'modules/hcs/test-manager/shared';
 
 export class TaasTestViewComponent implements ng.IComponentOptions {
   public controller = TaasTestViewCtrl;
@@ -27,7 +29,7 @@ export class TaasTestViewCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    public HcsTestManagerService: HcsTestManagerService,
+    public HcsTestManagerService: TaskManagerService,
     public CardUtils: CardUtils,
     public $stateParams: ng.ui.IStateParamsService,
     public $state: ng.ui.IStateService,
