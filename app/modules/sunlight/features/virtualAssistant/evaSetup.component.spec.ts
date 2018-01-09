@@ -191,7 +191,6 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     spyOn(this.SparkService, 'getMyPersonId').and.returnValue(personId);
     spyOn(this.SparkService, 'listRooms').and.returnValue(listRoomsDeferred.promise);
     spyOn(this.SparkService, 'listMemberships').and.returnValue(listMembershipsDeferred.promise);
-    spyOn(this.$translate, 'instant').and.callThrough();
     spyOn(this.EvaService, 'getWarningIfNotOwner').and.callFake(() => warningIfNotOwnerResult);
 
     this.compileComponent('eva-setup', {
@@ -239,12 +238,14 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     });
 
     it('cancelModal', function () {
+      spyOn(this.$translate, 'instant').and.callThrough();
       controller.cancelModal();
       expect(this.$translate.instant).toHaveBeenCalledWith('careChatTpl.cancelCreateDialog',
         { featureName: 'careChatTpl.virtualAssistant.eva.featureText.name' });
     });
 
     it('cancelModal with isEditFeature true', function () {
+      spyOn(this.$translate, 'instant').and.callThrough();
       controller.isEditFeature = true;
       controller.cancelModal();
       expect(this.$translate.instant).toHaveBeenCalledWith('careChatTpl.cancelEditDialog',
@@ -555,6 +556,28 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       expect(controller.saveTemplateErrorOccurred).toBeFalsy();
       expect(controller.userHasAccess).toBeFalsy();
       expect(this.Notification.warning).toHaveBeenCalledWith(expectedWarningMessage.message, expectedWarningMessage.args);
+    });
+
+    it('should set proper error message, when save fails due to invalid email', function () {
+      const myTranslation = 'invalid email translation';
+      spyOn(this.$translate, 'instant').and.returnValue(myTranslation);
+
+      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
+      const failedEmailData = {
+        data: {
+          type: 'invalidInput.invalidEmail',
+          message: 'Error data received from Spark: { sparkErrorData: { statusCode: 400, message: The bot email exists already. } }',
+          code: 500,
+        },
+      };
+      deferred.reject(failedEmailData);
+      listEvasDeferred.resolve({});
+      controller.submitFeature();
+      this.$scope.$apply();
+
+      expect(this.$translate.instant).toHaveBeenCalledWith('careChatTpl.virtualAssistant.invalidInput.invalidEmail',
+        { featureName: jasmine.any(String) });
+      expect(controller.summaryErrorMessage).toBe(myTranslation);
     });
   });
 });
