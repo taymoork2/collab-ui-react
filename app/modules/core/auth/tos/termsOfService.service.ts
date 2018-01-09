@@ -40,17 +40,18 @@ export class TOSService {
   }
 
   public openTOSModal(): void {
-    this.dismissModal();
-    this.tosModal = this.$modal.open({
-      template: '<terms-of-service></terms-of-service>',
-      backdrop: 'static',
-      keyboard: false,
-      type: 'default',
-    });
+    if (_.isUndefined(this.tosModal)) {
+      this.tosModal = this.$modal.open({
+        template: '<terms-of-service></terms-of-service>',
+        backdrop: 'static',
+        keyboard: false,
+        type: 'default',
+      });
+    }
   }
 
   public dismissModal(): void {
-    if (this.tosModal) {
+    if (!_.isUndefined(this.tosModal)) {
       this.tosModal.dismiss();
     }
   }
