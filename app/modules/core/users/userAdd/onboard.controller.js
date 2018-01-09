@@ -7,10 +7,8 @@ require('./_user-add.scss');
   angular.module('Core')
     .controller('OnboardCtrl', OnboardCtrl);
 
-  var KeyCodes = require('modules/core/accessibility').KeyCodes;
-
   /*@ngInject*/
-  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, Config, FeatureToggleService, DialPlanService, Log, LogMetricsService, MessengerInteropService, NAME_DELIMITER, Notification, OnboardService, OnboardStore, Orgservice, TelephonyInfoService, LocationsService, NumberService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, Config, FeatureToggleService, DialPlanService, Log, LogMetricsService, MessengerInteropService, NAME_DELIMITER, Notification, OnboardService, OnboardStore, Orgservice, TelephonyInfoService, LocationsService, NumberService, Userservice, Utils, UserCsvService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
     var vm = this;
 
     // reset corresponding scope properties in OnboardStore each time this controller initializes
@@ -1372,19 +1370,6 @@ require('./_user-add.scss');
       return Authinfo.isEntitleUserEnabled();
     };
 
-    //email validation logic
-    var validateEmail = OnboardService.validateEmail;
-
-    var wizardNextText = function () {
-      var userCount = angular.element('.token-label').length;
-      var action = 'finish';
-      if (userCount > 0) {
-        $scope.currentUserCount = userCount;
-        action = 'next';
-      }
-      $scope.$emit('wizardNextText', action);
-    };
-
     // TODO (mipark2): rm this if determined no longer needed (see: '$scope.manualEntryNext()')
     $scope.invalidcount = OnboardStore['users.add.manual'].invalidcount;
 
@@ -1392,11 +1377,6 @@ require('./_user-add.scss');
       $scope.model.userList = $scope.model.userList.split(', ').filter(function (token) {
         return token.indexOf(email) === -1;
       }).join(', ');
-    }
-
-    //placeholder logic
-    function checkPlaceholder() {
-      return OnboardService.checkPlaceholder();
     }
 
     var getUsersList = function () {

@@ -117,11 +117,11 @@ export class CrOnboardUsersController implements ng.IComponentController {
     this.resetUsersfield();
     // TODO (f3745): rm this if determined not-needed
     //initResults();
-  };
+  }
 
   private resetUsersfield(): void {
     return this.OnboardService.resetUsersfield(this.scopeData);
-  };
+  }
 
   private checkPlaceholder(): void {
     return this.OnboardService.checkPlaceholder();

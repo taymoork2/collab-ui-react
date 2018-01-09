@@ -12,7 +12,7 @@ type Test = atlas.test.IComponentTest<ManualAddUsersModalController, {
   components: {
     multiStepModal: atlas.test.IComponentSpy<MultiStepModalComponent>;
     crOnboardUsers: atlas.test.IComponentSpy<CrOnboardUsersComponent>;
-  }
+  },
 }>;
 
 describe('Component: manualAddUsersModal:', () => {

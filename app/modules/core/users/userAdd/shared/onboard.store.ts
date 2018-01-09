@@ -18,7 +18,7 @@ export interface IOnboardScopeForUsersAdd {
     userInfoValid?: boolean;
     userInputOption: number;
     userList?: any[];
-  },
+  };
 }
 
 export enum OnboardCtrlBoundUIStates {

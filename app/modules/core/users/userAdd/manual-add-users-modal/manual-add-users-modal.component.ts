@@ -52,7 +52,7 @@ export class ManualAddUsersModalController implements ng.IComponentController {
         this.Analytics.trackAddUsers(this.Analytics.sections.ADD_USERS.eventNames.MANUAL_EMAIL,
           this.Analytics.sections.ADD_USERS.uploadMethods.MANUAL, {
             emailEntryMethod: this.Analytics.sections.ADD_USERS.manualMethods[this.model.userInputOption.toString()],
-          }
+          },
         );
         this.$state.go('users.add.services');
       } else if (usersListLength === 0) {
@@ -61,14 +61,14 @@ export class ManualAddUsersModalController implements ng.IComponentController {
           this.Analytics.sections.ADD_USERS.uploadMethods.MANUAL, {
             emailEntryMethod: this.Analytics.sections.ADD_USERS.manualMethods[this.model.userInputOption.toString()],
             error: 'no users',
-          }
+          },
         );
       } else {
         this.Analytics.trackAddUsers(this.Analytics.sections.ADD_USERS.eventNames.MANUAL_EMAIL,
           this.Analytics.sections.ADD_USERS.uploadMethods.MANUAL, {
             emailEntryMethod: this.Analytics.sections.ADD_USERS.manualMethods[this.model.userInputOption.toString()],
             error: 'invalid users',
-          }
+          },
         );
         this.Notification.error('usersPage.validEmailInput');
       }
