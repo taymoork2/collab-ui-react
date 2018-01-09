@@ -29,6 +29,7 @@ describe('UserManageOrgController', () => {
 
     spyOn(this.Analytics, 'trackAddUsers');
     spyOn(this.$window, 'open');
+    spyOn(this.AutoAssignTemplateService, 'isEnabled').and.returnValue(this.$q.resolve(false));
   }
 
   function initController() {
