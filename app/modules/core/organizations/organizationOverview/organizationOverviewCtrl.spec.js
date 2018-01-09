@@ -103,7 +103,9 @@ describe('Controller: organizationOverviewCtrl', function () {
 
   describe('test that setEftToggle function sets isEFT: ', function () {
     beforeEach(function () {
-      Orgservice.setEftSetting = jasmine.createSpy().and.returnValue($q.reject());
+      Orgservice.setEftSetting = jasmine.createSpy().and.callFake(function () {
+        return $q.reject();
+      });
       initController();
     });
 
