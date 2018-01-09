@@ -249,6 +249,7 @@
     require('modules/hcs/test-manager/resources').default,
     require('modules/hcs/test-manager/scheduleView').default,
     require('modules/hcs/test-manager/resourceCreate').default,
+    require('modules/hcs/test-manager/suite-create').default,
   ]);
 
   angular.module('ServicesOverview', [

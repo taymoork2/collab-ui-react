@@ -80,11 +80,8 @@ export class TaasSuiteViewCtrl implements ng.IComponentController {
     });
   }
 
-  public addSuite(): void {
-    const suite: HtmSuite = new HtmSuite();
-    suite.name = 'Aggie Suite';
-    this.HcsTestManagerService.createSuite(suite);
-    //this.$state.go('taasTest');
+  public createSuite(): void {
+    this.$state.go('taasServiceManager.suiteCreate');
   }
 
   // Run selected Test Suite.
@@ -119,7 +116,10 @@ export class TaasSuiteViewCtrl implements ng.IComponentController {
   // }
 
   public deleteSuite(suite: HtmSuite): void {
-    this.HcsTestManagerService.deleteSuite(suite);
-    this.reload();
+    this.HcsTestManagerService.deleteSuite(suite).then(() => {
+      this.reload();
+    });
   }
+  // TODO (shacasey): Create a validate for deleting a Suite
+
 }
