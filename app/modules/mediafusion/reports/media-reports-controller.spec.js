@@ -104,7 +104,6 @@ describe('Controller:MediaReportsController', function () {
       $interval: $interval,
       Log: Log,
       Config: Config,
-      hasHmsTwoDotFiveFeatureToggle: false,
     });
   }));
   it('controller should be defined', function () {

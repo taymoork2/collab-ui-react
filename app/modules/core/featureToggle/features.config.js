@@ -48,7 +48,6 @@ module.exports = {
   atlasMediaServiceMetricsMilestoneOne: 'atlas-media-service-metrics-milestone-one',
   atlasMediaServiceMetricsMilestoneTwo: 'atlas-media-service-metrics-milestone-two',
   atlasMediaServicePhaseTwo: 'atlas-media-service-phase-two',
-  atlasMediaServicePhaseTwoDotFive: 'atlas-media-service-phase-two-dot-five',
   atlasMediaServiceTrustedSIP: 'atlas-media-service-trusted-sip',
   atlasMediaServiceVideo: 'atlas-media-service-video',
   atlasMyCompanyBillingTab: 'atlas-my-company-billing-tab',

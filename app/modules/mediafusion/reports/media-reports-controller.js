@@ -5,7 +5,7 @@
     .module('Mediafusion')
     .controller('MediaReportsController', MediaReportsController);
   /* @ngInject */
-  function MediaReportsController($q, $scope, $translate, $interval, $timeout, HybridServicesClusterService, UtilizationResourceGraphService, MeetingLocationAdoptionGraphService, ParticipantDistributionResourceGraphService, NumberOfParticipantGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService, AdoptionCardService, hasHmsTwoDotFiveFeatureToggle, Orgservice) {
+  function MediaReportsController($q, $scope, $translate, $interval, $timeout, HybridServicesClusterService, UtilizationResourceGraphService, MeetingLocationAdoptionGraphService, ParticipantDistributionResourceGraphService, NumberOfParticipantGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService, AdoptionCardService, Orgservice) {
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
@@ -164,7 +164,6 @@
     vm.clientTypeText = vm.clientTypeSelected.label;
     vm.clientTypeOptions['tooltipClickHandler'] = clientTypeUpdateFromCard;
 
-    vm.hasHmsTwoDotFiveFeatureToggle = hasHmsTwoDotFiveFeatureToggle;
     setRefreshInterval();
     getCluster();
     timeUpdate();
