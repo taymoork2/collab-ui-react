@@ -1,26 +1,14 @@
-var merge = require('webpack-merge');
+/* eslint-env es6 */
+'use strict';
 
-var cspProdConfig = require('./csp-prod.config');
+const merge = require('webpack-merge');
+const cspProdConfig = require('./csp-prod.config');
+const mkCspConfig = require('../utils/mkCspConfig');
 
-var cspCfeConfig = {
-  defaultSrc: [],
-  // valid sources for web workers and nested browsing contexts loaded using elements such as <frame> and <iframe>
-  frameSrc: [],
-  // valid sources for the <object>, <embed>, and <applet> elements
-  objectSrc: [],
-  // valid URLs which can be loaded using script interfaces (Fetch, XMLHttpRequest, WebSocket, etc.)
-  connectSrc: [],
-  // valid sources for fonts loaded using @font-face
-  fontSrc: [],
-  // valid sources of images and favicons
-  imgSrc: [],
-  // valid sources for sources for JavaScript
-  scriptSrc: [],
-  // valid sources for sources for stylesheets
-  styleSrc: [],
-};
+// as of 2018-01-09, 'cfe' uses no additional directives
+let cspCfeConfig = mkCspConfig();
 
-// smart merging production environemnt CSP dependencies with integration environment CSP dependencies
+// start with prod CSP dependencies, and merge on top
 cspCfeConfig = merge.smart(cspProdConfig, cspCfeConfig);
 
 module.exports = cspCfeConfig;

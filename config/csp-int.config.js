@@ -1,28 +1,18 @@
-var merge = require('webpack-merge');
+/* eslint-env es6 */
+'use strict';
 
-var cspProdConfig = require('./csp-prod.config');
+const merge = require('webpack-merge');
+const cspProdConfig = require('./csp-prod.config');
+const mkCspConfig = require('../utils/mkCspConfig');
 
-var cspIntConfig = {
-  defaultSrc: [],
-  // valid sources for web workers and nested browsing contexts loaded using elements such as <frame> and <iframe>
-  frameSrc: [],
-  // valid sources for the <object>, <embed>, and <applet> elements
-  objectSrc: [],
-  // valid URLs which can be loaded using script interfaces (Fetch, XMLHttpRequest, WebSocket, etc.)
+// as of 2018-01-09, 'int' uses the following additional directives:
+let cspIntConfig = mkCspConfig({
   connectSrc: [
    'https://rcdn6-vm81-32.cisco.com:8082', // Test as a service DEMO
   ],
-  // valid sources for fonts loaded using @font-face
-  fontSrc: [],
-  // valid sources of images and favicons
-  imgSrc: [],
-  // valid sources for sources for JavaScript
-  scriptSrc: [],
-  // valid sources for sources for stylesheets
-  styleSrc: [],
-};
+});
 
-// smart merging production environemnt CSP dependencies with integration environment CSP dependencies
+// start with prod CSP dependencies, and merge on top
 cspIntConfig = merge.smart(cspProdConfig, cspIntConfig);
 
 module.exports = cspIntConfig;
