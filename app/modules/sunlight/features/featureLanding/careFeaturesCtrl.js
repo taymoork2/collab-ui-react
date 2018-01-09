@@ -5,10 +5,13 @@ var _ = require('lodash');
 
   angular
     .module('Sunlight')
-    .controller('CareFeaturesCtrl', CareFeaturesCtrl);
+    .controller('CareFeaturesCtrl', CareFeaturesCtrl)
+    .run(function ($rootScope) {
+      $rootScope.isCare = false;
+    });
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, CvaService, EvaService) {
+  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, $rootScope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, CvaService, EvaService) {
     var vm = this;
     vm.isVirtualAssistantEnabled = $state.isVirtualAssistantEnabled;
     vm.isExpertVirtualAssistantEnabled = $state.isExpertVirtualAssistantEnabled;
@@ -310,6 +313,7 @@ var _ = require('lodash');
     }
 
     function openNewCareFeatureModal() {
+      $rootScope.isCare = true;
       $modal.open({
         template: '<care-feature-modal dismiss="$dismiss()" class="care-modal"></care-feature-modal>',
       });

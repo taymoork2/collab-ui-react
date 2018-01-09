@@ -172,7 +172,18 @@
           });
         });
       }).finally(function () {
-        $state.go('huronfeatures');
+        FeatureToggleService.supports(FeatureToggleService.features.atlasHybridEnable)
+          .then(function (results) {
+            if (results && $rootScope.isCare === true) {
+              $state.go('care.Features');
+              $rootScope.isCare = false;
+            } else {
+              $state.go('huronfeatures');
+            }
+          })
+          .catch(function () {
+            $state.go('huronfeatures');
+          });
       });
     }
 

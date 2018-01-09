@@ -5082,7 +5082,7 @@
               host: null,
               hostSerial: null,
               // we inherit params from the parent, and because of management connectors we shouldn't override
-              // the parent connectorType param…
+              // the parent connectorType param&
               specificType: null,
             },
           })
