@@ -1353,7 +1353,7 @@
     }
 
     function isVirtualAssistantPageValid() {
-      return isValidField(vm.template.configuration.virtualAssistant.welcomeMessage, vm.lengthConstants.singleLineMaxCharLimit50) &&
+      return isValidField(vm.template.configuration.virtualAssistant.welcomeMessage, vm.lengthConstants.multiLineMaxCharLimit) &&
         vm.template.configuration.virtualAssistant.config.id.length > 0;
     }
 

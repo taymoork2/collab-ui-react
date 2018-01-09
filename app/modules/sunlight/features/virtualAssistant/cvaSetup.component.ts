@@ -151,7 +151,7 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
 
       const controller = this;
       controller.tokenForm.tokenInput.$setValidity('invalidToken', false);
-      _.keys(controller.tokenFormErrors).forEach( function (key){
+      _.keys(controller.tokenFormErrors).forEach( function (key) {
         controller.tokenForm.$error[key] = controller.tokenFormErrors[key];
       });
       controller.tokenFormErrors = {}; //Clear out as they've served their purpose

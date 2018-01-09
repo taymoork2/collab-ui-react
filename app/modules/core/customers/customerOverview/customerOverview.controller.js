@@ -3,12 +3,15 @@ require('./_customer-overview.scss');
 (function () {
   'use strict';
 
+  var CS_UnSigned = require('modules/huron/pstn').ContractStatus.UnSigned;
+  var CS_UnKnown = require('modules/huron/pstn').ContractStatus.UnKnown;
+
   angular
     .module('Core')
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, AccountOrgService, Analytics, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, PstnService, TrialPstnService, TrialService, Userservice) {
+  function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, AccountOrgService, Analytics, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, PstnService, PstnModel, TrialPstnService, TrialService, Userservice) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
     vm.customerName = vm.currentCustomer.customerName;
@@ -45,7 +48,7 @@ require('./_customer-overview.scss');
     vm.isNewPatchFlow = false;
 
     //Feature Toggle -- HI1635
-    vm.showContractIncomplete = true;
+    vm.showContractIncomplete = false;
     vm.isHI1635Enabled = false;
 
     vm.partnerOrgId = Authinfo.getOrgId();
@@ -165,13 +168,18 @@ require('./_customer-overview.scss');
 
     function initSignedContractStatus() {
       if (vm.currentCustomer.purchased) {
-        PstnService.getCustomerV2FetchFromCarrier(vm.currentCustomer.customerOrgId)
+        PstnService.getCustomerV2(vm.currentCustomer.customerOrgId, { deep: true })
           .then(function (response) {
-            var isContractSigned = _.get(response, 'isContractSigned');
-            var isTerminusTrialAccount = _.get(response, 'trial');
-            if (isContractSigned && !isTerminusTrialAccount) {
-              vm.showContractIncomplete = !isContractSigned;
+            var isTrialAccount = _.get(response, 'trial');
+            var contractStatus = _.get(response, 'contractStatus');
+            PstnModel.setContractStatus(contractStatus);
+            if (contractStatus === CS_UnSigned && !isTrialAccount) {
+              vm.showContractIncomplete = true;
             }
+          })
+          .catch(function () {
+            vm.showContractIncomplete = false; //Don't show if unknown
+            PstnModel.setContractStatus(CS_UnKnown);
           });
       }
     }

@@ -3,7 +3,7 @@
   <h4 class="modal-title" translate="hercules.export.modalTitle"></h4>
 </div>
 
-<div class="modal-body" ng-if="!exportUserStatusesCtrl.nothingToExport()">
+<div class="modal-body" ng-if="!exportUserStatusesCtrl.ussCacheIsEmpty()">
   <p><span translate="hercules.export.modalText1"></span> <span translate="hercules.export.modalText2"></span></p>
   <form name="userStatusesExport" class="userStatusesExport-form">
     <div class="cs-checkbox-group" ng-repeat="(serviceIndex, service) in exportUserStatusesCtrl.statusTypes">
@@ -30,7 +30,7 @@
     <progressbar max="exportUserStatusesCtrl.progress.total" value="exportUserStatusesCtrl.progress.current"></progressbar>
   </div>
 </div>
-<div class="modal-body" ng-if="exportUserStatusesCtrl.nothingToExport()">
+<div class="modal-body" ng-if="exportUserStatusesCtrl.ussCacheIsEmpty()">
   <p><span translate="hercules.export.noUsersFound"></span> <span translate="common.ifErrorRemains"></span></p>
 </div>
 

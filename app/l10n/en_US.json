@@ -5105,6 +5105,11 @@
     "tollFreeTitle": "Search and add toll-free phone numbers by entering a valid area code. Valid toll-free area codes include {{areaCodes}}",
     "unableToAddTollFreeNumbers": "Unable to add toll-free numbers because the customer PSTN contract is incomplete. Please remind your customer to sign and submit their contract.",
     "unableToAddPortedNumbers": "Unable to add ported numbers because the customer PSTN contract is incomplete. Please remind your customer to sign and submit their contract.",
+    "unableToAddTollFreeNumbersShort": "Unable to add toll-free numbers because the customer PSTN contract is incomplete.",
+    "unableToAddPortedNumbersShort": "Unable to add ported numbers because the customer PSTN contract is incomplete.",
+    "initContract": "Initiate the contract signing process with {{carrier}}",
+    "initContractTitle": "Initiate Contract",
+    "initContractReview": "You have not added any numbers, you can initiate the contract signing process with {{carrier}} by placing this order.  Once the contract is signed you can port numbers or add Toll Free numbers",
     "pstnSelector": {
       "searchPlaceholder": "Enter area code and/or number prefix",
       "searchDesc": "e.g. 972 or 972867",
@@ -5901,7 +5906,8 @@
       "exchangeHelp": "This is enabling exchange calendar",
       "googleTitle": "Google calendar",
       "googleHelp": "This is enabling google calendar",
-      "calendarEmail": "Email address of the calendar mailbox"
+      "calendarEmail": "Email address of the calendar mailbox",
+      "calendarEmailHelp": "This should not be an email address already used on another place, and should not belong to a user."
     },
     "editCalendarService": {
       "title": "Set up Hybrid Calendar Service",
@@ -5912,7 +5918,8 @@
       "step1": "In Cisco Unified Communications Manager, create a user account and an associated line. These items will represent this place. <a href='https://www.cisco.com/go/hybrid-services'>See the documentation for help.</a>",
       "step2": "Find the Mail ID for the user account.<br>a) Sign into Cisco Unified CM Administration<br>b) Choose User Management > End User, and then find and click the account.<br>The Mail ID is under ‘User Information’.",
       "step3": "Enter the Mail ID below to connect this place to the existing Unified CM account.<br>This Mail ID ensures that the correct user account is connected with this place for hybrid calling.",
-      "mailId": "Mail ID"
+      "mailId": "Mail ID",
+      "mailIdHelp": "This should not be a Mail ID already used on another place, and should not be an email address that belongs to a user."
     },
     "showActivationCode": {
       "activationCode": "Activation Code",
@@ -7408,9 +7415,10 @@
     "failedToSaveChanges": "Failed to save changes to place. Reason:",
     "failedToDelete": "Failed to delete place. Reason:",
     "botAuthorizations": {
-      "title": "Places APIs access",
+      "title": "Device APIs Access",
       "header": "Current access for devices belonging to '{{ placeName }}'",
       "subHeader": "The following bots and users are authorized to access the device APIs. Full access provides control over all devices belonging to this place. Make sure you trust the source.",
+      "subHeaderUser": "The following bots and users are authorized to access the device APIs. Full access provides control over all devices belonging to this user. Make sure you trust the source.",
       "table": {
         "name": "Authorized To",
         "role": "Access Level",
@@ -10204,7 +10212,7 @@
     "settingsLock": "Settings Lock",
     "settingsLockUpdated": "Settings Lock updated",
     "settingsLockTooltip": "Turn the settings lock on to prevent unintended changes on the device. Certain settings won’t be accessible.",
-    "deviceApis": "Device APIs",
+    "deviceApis": "Device APIs Access",
     "deviceApiViewEdit": "View/Edit Access"
   },
   "mediaMgrModal": {

@@ -26,7 +26,7 @@
             ng-if="$ctrl.loadingPage"></span>
     </div>
     <div>
-      <p class="hybrid-service-description">{{'hercules.cloudExtensions.serviceDescriptions.spark-hybrid-impinterop' | translate}}</p>
+      <p class="hybrid-service-description" translate="hercules.cloudExtensions.serviceDescriptions.spark-hybrid-impinterop"></p>
 
       <div class="row collapse">
         <div class="columns small-3">
@@ -84,7 +84,11 @@
 
       </div>
 
-      <hs-is-invite-pending-warning ng-if="$ctrl.isInvitePending"></hs-is-invite-pending-warning>
+      <hs-is-invite-pending-warning ng-if="$ctrl.isInvitePending"
+                                    is-entitled="$ctrl.entitledToggle"
+                                    was-entitled="$ctrl.userIsCurrentlyEntitled"
+                                    service-id="'spark-hybrid-impinterop'">
+      </hs-is-invite-pending-warning>
 
     </div>
   </cs-sp-section>

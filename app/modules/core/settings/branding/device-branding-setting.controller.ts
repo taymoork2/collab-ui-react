@@ -176,7 +176,7 @@ export class ImgFile {
     },
   };
 
-  get origUrl(): string | undefined{
+  get origUrl(): string | undefined {
     return this._origUrl;
   }
 
@@ -211,7 +211,7 @@ export class ImgFile {
     return !!(this.file || this.url);
   }
 
-  get url(): string | undefined{
+  get url(): string | undefined {
     return this._url;
   }
 

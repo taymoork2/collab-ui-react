@@ -1,15 +1,11 @@
-import hybridCallServiceConnectUserSettings from './index';
-// import { IUserStatus } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
-type IUserStatus = any;
+import hybridCallServiceConnectUserSettingsModuleName from './index';
 
 describe('hybridCallServiceConnectUserSettings', () => {
 
   let $componentController, $q, $scope, ctrl, HybridServiceUserSidepanelHelperService;
 
-  beforeEach(angular.mock.module('Hercules'));
-
   beforeEach(function () {
-    this.initModules(hybridCallServiceConnectUserSettings);
+    this.initModules(hybridCallServiceConnectUserSettingsModuleName);
   });
 
   beforeEach(inject(dependencies));
@@ -28,62 +24,39 @@ describe('hybridCallServiceConnectUserSettings', () => {
   }
 
   function initSpies() {
-    spyOn(HybridServiceUserSidepanelHelperService, 'getDataFromUSS');
-    spyOn(HybridServiceUserSidepanelHelperService, 'saveUserEntitlements');
+    spyOn(HybridServiceUserSidepanelHelperService, 'getDataFromUSS').and.returnValue($q.resolve([{}, {}]));
+    spyOn(HybridServiceUserSidepanelHelperService, 'saveUserEntitlements').and.returnValue($q.resolve({}));
   }
 
-  function initController(callback: Function = () => {}) {
+  function initController(callback: Function = _.noop, allUserEntitlements: string[] = ['squared-fusion-uc', 'squared-fusion-ec']) {
     ctrl = $componentController('hybridCallServiceConnectUserSettings', {}, {
       userId: '1234',
       userEmailAddress: 'test@example.org',
       entitlementUpdatedCallback: callback,
     });
     ctrl.$onInit();
+    ctrl.$onChanges({
+      allUserEntitlements: {
+        currentValue: allUserEntitlements,
+      },
+    });
     $scope.$apply();
   }
 
   it('should read the Connect status and update internal entitlement data when user is *not* entitled', () => {
-    const callServiceConnectExpectedStatus: IUserStatus = {
-      serviceId: 'squared-fusion-ec',
-      entitled: false,
-      lastStateChange: 1234,
-      lastStateChangeText: 'something',
-    };
-    HybridServiceUserSidepanelHelperService.getDataFromUSS.and.returnValue($q.resolve([{}, callServiceConnectExpectedStatus]));
-    initController();
-
+    initController(_.noop, ['']);
     expect(HybridServiceUserSidepanelHelperService.getDataFromUSS.calls.count()).toBe(1);
     expect(ctrl.userIsCurrentlyEntitled).toBe(false);
   });
 
   it('should read the Connect status and update internal entitlement data when user is entitled', () => {
-    const callServiceConnectExpectedStatus: IUserStatus = {
-      serviceId: 'squared-fusion-ec',
-      entitled: true,
-      lastStateChange: 1234,
-      lastStateChangeText: 'something',
-    };
-    HybridServiceUserSidepanelHelperService.getDataFromUSS.and.returnValue($q.resolve([{}, callServiceConnectExpectedStatus]));
-    initController();
-    ctrl.$onInit();
+    initController(_.noop, ['squared-fusion-ec']);
     $scope.$apply();
     expect(ctrl.userIsCurrentlyEntitled).toBe(true);
   });
 
   it('should not remove Aware when removing Connect', () => {
 
-    const callServiceAwareExpectedStatus: IUserStatus = {
-      serviceId: 'squared-fusion-uc',
-      entitled: true,
-      lastStateChange: 1234,
-      lastStateChangeText: 'something',
-    };
-    const callServiceConnectExpectedStatus: IUserStatus = {
-      serviceId: 'squared-fusion-ec',
-      entitled: false,
-      lastStateChange: 1234,
-      lastStateChangeText: 'something',
-    };
     const expectedEntitlements = [{
       entitlementName: 'squaredFusionUC',
       entitlementState: 'ACTIVE',
@@ -91,9 +64,6 @@ describe('hybridCallServiceConnectUserSettings', () => {
       entitlementName: 'squaredFusionEC',
       entitlementState: 'INACTIVE',
     }];
-    HybridServiceUserSidepanelHelperService.saveUserEntitlements.and.returnValue($q.resolve({}));
-    HybridServiceUserSidepanelHelperService.getDataFromUSS.and.returnValue($q.resolve([callServiceAwareExpectedStatus, callServiceConnectExpectedStatus]));
-
     initController();
 
     ctrl.newEntitlementValue = false;
@@ -106,25 +76,9 @@ describe('hybridCallServiceConnectUserSettings', () => {
 
     const callbackSpy = jasmine.createSpy('callback');
 
-    const callServiceConnectStatusBefore: IUserStatus = {
-      serviceId: 'squared-fusion-uc',
-      entitled: false,
-      lastStateChange: 1234,
-      lastStateChangeText: 'something',
-    };
+    initController(callbackSpy, []);
 
-    const callServiceConnectStatusAfter: IUserStatus = {
-      serviceId: 'squared-fusion-uc',
-      entitled: true,
-      lastStateChange: 1234,
-      lastStateChangeText: 'something',
-    };
-
-    HybridServiceUserSidepanelHelperService.saveUserEntitlements.and.returnValue($q.resolve({}));
-    HybridServiceUserSidepanelHelperService.getDataFromUSS.and.returnValues($q.resolve([{}, callServiceConnectStatusBefore]), $q.resolve([{}, callServiceConnectStatusAfter]));
-
-    initController(callbackSpy);
-
+    ctrl.newEntitlementValue = true;
     ctrl.saveData();
     $scope.$apply();
 
@@ -132,8 +86,7 @@ describe('hybridCallServiceConnectUserSettings', () => {
     expect(callbackSpy.calls.count()).toBe(1);
     expect(callbackSpy).toHaveBeenCalledWith({
       options: {
-        callServiceAware: {},
-        callServiceConnect: callServiceConnectStatusAfter,
+        entitledToConnect: true,
       },
     });
 

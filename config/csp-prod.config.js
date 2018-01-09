@@ -72,6 +72,7 @@ module.exports = {
   scriptSrc: [
     '\'self\'',
     '\'unsafe-eval\'',
+    'sha256-emX0qxoI3deAq+WOnuOPZ/DF/m2igVM5Nd3ezjSl3Js=', // TODO: Remove when Adobe DTM is removed
     'https://*.localytics.com',
     'https://*.webex.com',
     'https://api.mixpanel.com', // Mixpanel

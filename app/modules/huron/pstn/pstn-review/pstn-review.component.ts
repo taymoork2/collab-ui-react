@@ -56,6 +56,10 @@ class PstnReviewController implements ng.IComponentController {
     });
   }
 
+  public isOrdersEmpty(): boolean {
+    return this.PstnModel.getOrders().length === 0;
+  }
+
   public getPortDate(date_: Date = new Date()): string {
     const date: Date = _.cloneDeep(date_);
     date.setDate(date.getDate() + PORT_DATE_NUMBER_OF_DAYS_IN_THE_FUTURE);
