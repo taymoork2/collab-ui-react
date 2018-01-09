@@ -40,15 +40,29 @@ export class CrOnboardUsersController implements ng.IComponentController {
     this.scopeData = this.OnboardStore[OnboardCtrlBoundUIStates.USERS_ADD_MANUAL];
     this.isDirSyncEnabled = this.scopeData.isDirSyncEnabled;
     this.model = this.scopeData.model;
-    this.strEmailAddress = this.scopeData.strEmailAddress;
-    this.strFirstName = this.scopeData.strFirstName;
-    this.strLastName = this.scopeData.strLastName;
-    this.strNameAndEmailAdress = this.scopeData.strNameAndEmailAdress;
-    this.tokenfieldid = this.scopeData.tokenfieldid;
-    this.tokenoptions = this.scopeData.tokenoptions;
-    this.tokenmethods = this.scopeData.tokenmethods;
-    this.tokenplaceholder = this.scopeData.tokenplaceholder;
-    this.userInputOptions = this.scopeData.userInputOptions;
+    this.strFirstName = this.$translate.instant('usersPage.firstNamePlaceHolder');
+    this.strLastName = this.$translate.instant('usersPage.lastNamePlaceHolder');
+    this.strEmailAddress = this.$translate.instant('usersPage.emailAddressPlaceHolder');
+    this.strNameAndEmailAdress = this.$translate.instant('usersPage.nameAndEmailAddress');
+    this.tokenfieldid = 'usersfield';
+    // TODO (mipark2): port from 'OnboardCtrl'
+    this.tokenmethods = undefined;
+    this.tokenoptions = {
+      delimiter: [',', ','],
+      createTokensOnBlur: true,
+    };
+    this.tokenplaceholder = this.$translate.instant('usersPage.userInput');
+    this.userInputOptions = [{
+      label: this.strEmailAddress,
+      value: 0,
+      name: 'radioOption',
+      id: 'radioEmail',
+    }, {
+      label: this.strNameAndEmailAdress,
+      value: 1,
+      name: 'radioOption',
+      id: 'radioNamesAndEmail',
+    }];
   }
 
   // TODO: refactor - mv this to 'OnboardService'

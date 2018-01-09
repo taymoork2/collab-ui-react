@@ -20,14 +20,6 @@ export interface IOnboardScopeForUsersAdd {
     userInputOption: number;
     userList?: any[];
   },
-  strEmailAddress: string;
-  strFirstName: string;
-  strLastName: string;
-  strNameAndEmailAdress: string;
-  tokenfieldid: string;
-  tokenoptions: any;
-  tokenplaceholder: string;
-  userInputOptions?: any;
 }
 
 export enum OnboardCtrlBoundUIStates {
@@ -40,7 +32,6 @@ export default class OnboardStore {
 
   /* @ngInject */
   constructor(
-    private $translate: ng.translate.ITranslateService,
     private DirSyncService,
   ) {
     this.resetForState(OnboardCtrlBoundUIStates.USERS_ADD_MANUAL);
@@ -68,31 +59,7 @@ export default class OnboardStore {
         userInputOption: 0,
         userList: [],
       },
-      strFirstName: this.$translate.instant('usersPage.firstNamePlaceHolder'),
-      strLastName: this.$translate.instant('usersPage.lastNamePlaceHolder'),
-      strEmailAddress: this.$translate.instant('usersPage.emailAddressPlaceHolder'),
-      strNameAndEmailAdress: this.$translate.instant('usersPage.nameAndEmailAddress'),
-      tokenfieldid: 'usersfield',
-      // TODO (mipark2): port from 'OnboardCtrl'
-      tokenmethods: undefined,
-      tokenoptions: {
-        delimiter: [',', ','],
-        createTokensOnBlur: true,
-      },
-      tokenplaceholder: this.$translate.instant('usersPage.userInput'),
     };
-
-    result.userInputOptions = [{
-      label: result.strEmailAddress,
-      value: 0,
-      name: 'radioOption',
-      id: 'radioEmail',
-    }, {
-      label: result.strNameAndEmailAdress,
-      value: 1,
-      name: 'radioOption',
-      id: 'radioNamesAndEmail',
-    }];
 
     return result;
   }
