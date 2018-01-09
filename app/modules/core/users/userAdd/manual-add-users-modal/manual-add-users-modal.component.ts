@@ -31,6 +31,9 @@ export class ManualAddUsersModalController implements ng.IComponentController {
   }
 
   public back(state): void {
+    // FIXME (mipark2):
+    // - a user could use the 'Back' button from the 'users.add.services' state (which is actually a step FORWARD, not BACK)
+    // - need to always force either 'users.manage.emailSuppress' OR 'users.manage.picker'
     let rootState = this.$previousState.get().state.name;
     if (rootState === 'users.manage.emailSuppress') {
       rootState = 'users.manage.picker';
