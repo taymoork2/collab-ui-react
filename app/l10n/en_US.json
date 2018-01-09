@@ -6307,13 +6307,8 @@
     },
     "upgradeClusters": {
       "title": "Software Upgrade",
-      "text1": "During upgrade, this Hybrid Media Node will enter maintenance mode. After 2 hours, this node will be upgraded and any new calls will be redirected to an available node or the cloud.",
-      "text2": "After 2 hours the node will be upgraded.",
       "upgradeNow": "Upgrade Now",
-      "upToDate": "Software is up to date.",
       "installing": "Software is installing.",
-      "sw-upgrade-title": "Software Upgrade",
-      "sw-upgrade-text": "New software is available.",
       "upgradeWarning": "This cluster has one or more offline nodes. It is recommended to bring all nodes online before initiating an upgrade.",
       "pending": "Pending",
       "upgradingHost": "Upgrading {{host}} to {{version}}",
