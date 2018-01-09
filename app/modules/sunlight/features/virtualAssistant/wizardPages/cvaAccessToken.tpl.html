@@ -30,7 +30,7 @@
                 {{$ctrl.getText('accessToken.validateButtonText')}}
             </button>
             </div>
-            <div class="cs-input__messages" ng-messages="$ctrl.tokenForm.tokenInput.$error" ng-if="$ctrl.isAccessTokenInvalid()">
+            <div class="cs-input__messages" ng-messages="$ctrl.getAccessTokenError()" ng-if="$ctrl.isAccessTokenInvalid()">
               <div class="message" ng-message="maxlength">{{$ctrl.getText('accessToken.maxLengthError')}}</div>
               <div class="message" ng-message="invalidToken">{{$ctrl.getText('accessToken.invalidTokenText')}}</div>
             </div>

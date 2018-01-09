@@ -7,7 +7,7 @@ export class AuthorizationService {
   }
 
   public getAuthorizations(id: String): IPromise<any[]> {
-    return this.$http.get(this.authUrl + '?targetIdentity=' + id).then((res) => {
+    return this.$http.get(this.authUrl, { params: { targetIdentity: id } }).then((res) => {
       return res.data.items;
     });
   }

@@ -186,4 +186,43 @@ describe('ExportUserStatusesController', function () {
       expect(vm.exportingUserStatusReport).toBe(false);
     });
   });
+
+  describe('error handling', function () {
+    it('should not consider it an error if there is data in the uss cache', function () {
+      vm.statusTypes = [
+        {
+          stateType: 'activated',
+          count: 12,
+        }, {
+          stateType: 'notActivated',
+          count: 4,
+        }, {
+          stateType: 'error',
+          count: 2,
+        },
+      ];
+      expect(vm.ussCacheIsEmpty()).toBe(false);
+    });
+
+    it('should mark it as an error if the count is 0 for all stateTypes', function () {
+      vm.statusTypes = [
+        {
+          stateType: 'activated',
+          count: 0,
+        }, {
+          stateType: 'notActivated',
+          count: 0,
+        }, {
+          stateType: 'error',
+          count: 0,
+        },
+      ];
+      expect(vm.ussCacheIsEmpty()).toBe(true);
+    });
+
+    it('should mark it as an error if we have no data whatsoever', function () {
+      vm.statusTypes = undefined;
+      expect(vm.ussCacheIsEmpty()).toBe(true);
+    });
+  });
 });

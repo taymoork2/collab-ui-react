@@ -163,7 +163,7 @@
         switch (vm.manageType) {
           case vm.ManageType.MANUAL:
             Analytics.trackAddUsers(Analytics.eventNames.NEXT, Analytics.sections.ADD_USERS.uploadMethods.MANUAL);
-            $state.go('users.add');
+            $state.go('users.add.manual');
             break;
 
           case vm.ManageType.BULK:

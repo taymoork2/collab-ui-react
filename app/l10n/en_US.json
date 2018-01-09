@@ -18,7 +18,7 @@
     "agree": "Accept ",
     "ciscoSpark": "Cisco Spark",
     "version": "Version: {{version}}",
-    "copyright1": "Copyright &copy; 2017 Cisco Systems.",
+    "copyright1": "Copyright &copy; 2018 Cisco Systems.",
     "copyright2": "All rights reserved.",
     "description": "Cisco Spark is a collaboration application that provides messaging(IM), voice, and video calling capabilities.",
     "loggingOut": "Logging off..."
@@ -517,6 +517,7 @@
     "deviceTab": "Devices",
     "placeTab": "Places",
     "reportTab": "Reports",
+    "taasOverviewTab": "TaaS",
     "supportTab": "Support",
     "logsTab": "Logs",
     "logsTabDesc": "View user logs",
@@ -1172,8 +1173,9 @@
     "logLocusId": "Locus ID",
     "logCallStart": "Call Start Time",
     "logAction": "Client Logs",
-    "callflowLogsAction": "Call Logs",
-    "callflowAction": "Callflow Charts",
+    "feedbackId": "Feedback Id",
+    "correlationId": "Correlation Id",
+    "metadata": "Metadata",
     "errEmptyinput": "Search input cannot be empty.",
     "errLogQuery": "Failed to retrieve logs. Status: {{status}}",
     "inputPlaceholder": "Enter search term (Email address, user ID, Locus ID, etc.)",
@@ -1225,6 +1227,7 @@
     "downloadLogFailed": "Failed to download log",
     "callflowResultsFailed": "Failed to download the callflow results corresponding to logFile",
     "status": "Cisco Spark Status",
+    "extendedMetadata": "Log Metadata",
     "tabs": {
       "status": "Status",
       "logs": "Logs",
@@ -2388,7 +2391,8 @@
       "connected": "Connected"
     },
     "userSidepanel": {
-      "warningInvitePending": "This user has not yet accepted the invitation to join Cisco Spark. You can still enable {{ServiceName}}, but activation will not succeed until the user signs in.",
+      "warningInvitePendingNotEntitled": "The user has not yet accepted the invitation to join Cisco Spark. You can still enable {{ServiceName}}, but service activation will wait until the invitation has been accepted.",
+      "warningInvitePendingActivation": "Hybrid Services activation will start after the user accepts the invitation to join Cisco Spark.",
       "entitlements-dont-exist": "Service licenses for {{userName}} do not exist.",
       "previously-updated": "Could not save licenses. They are allocated somewhere else.",
       "not-updated": "Licenses could not be updated for {{userName}}.",
@@ -2403,11 +2407,11 @@
       "disableAwareMessage": "Are you sure? By disabling Call Service Aware, Call Service Connect will also be disabled for this user.",
       "errorMessages": {
         "cannotReadDeviceDataFromUSS": "Unable to read device's activation status.",
-        "cannotReadDeviceDataFromUSSPartnerAdmin": "Unable to read device's activation status. This could indicate a caching problem, try logging out and in again to clear the user cache. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation.",
+        "cannotReadDeviceDataFromUSSPartnerAdmin": "Unable to read device's activation status. This could indicate a caching problem, try logging out and in again to clear the user cache.",
         "cannotReadUserDataFromUSS": "Unable to read user's activation status.",
-        "cannotReadUserDataFromUSSPartnerAdmin": "Unable to read user's activation status. This could indicate a caching problem, try logging out and in again to clear the user cache. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation.",
+        "cannotReadUserDataFromUSSPartnerAdmin": "Unable to read user's activation status. This could indicate a caching problem, try logging out and in again to clear the user cache.",
         "cannotReadOrgDataFromFMS": "Unable to read organization's Expressway-based Hybrid Services data.",
-        "cannotReadOrgDataFromFMSPartnerAdmin": "Unable to read organization's Expressway-based Hybrid Services data. This could indicate a caching problem, try logging out and in again to clear the user cache. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation."
+        "cannotReadOrgDataFromFMSPartnerAdmin": "Unable to read organization's Expressway-based Hybrid Services data. This could indicate a caching problem, try logging out and in again to clear the user cache."
       }
     },
     "placeSidepanel": {
@@ -2428,7 +2432,8 @@
       "activated": "Activated",
       "error": "Error",
       "unknown": "Unknown",
-      "notFound": "Status not found"
+      "notFound": "Status not found",
+      "accountNotActivated": "Account Not Activated"
     },
     "serviceNames": {
       "squared-fusion-uc": "Call Service",
@@ -3385,7 +3390,6 @@
     },
     "office365FailureModal": {
       "subtitle": "An error occured during the authorization",
-      "feedback": "If the error remains, click your admin username, and then click <strong>Feedback</strong> to open a case for further investigation.",
       "errorCode": "Error Code: {{code}}."
     }
   },
@@ -4163,7 +4167,7 @@
   "sparkAssistant": {
     "title": "Cisco Spark Assistant",
     "enableAssistant": "Enable Cisco Spark Assistant",
-    "description": "Allows users to perform various actions such as, make calls, start meetings, using their voice",
+    "description": "Allows users to perform various actions such as, make calls, start meetings, using their voice.",
     "termOfService": "Spark Assistant terms of service "
   },
   "reports": {
@@ -4233,10 +4237,10 @@
     "actionCallerInputHint": "Store information that the caller supplies.",
     "actionCallerInputHelp": "Store information that the caller supplies.",
     "invalidCharacter": "Invalid character entered.",
-    "dialByExtensionRoutingPrefix" : "Limit to Routing Prefix",
-    "routingPrefix" : "Routing Prefix",
-    "dialByExtensionRoutingPrefixHelpText" : "If not selected, users must enter the routing prefix plus the extension.",
-    "selectRoutingPrefix" : "Select",
+    "dialByExtensionRoutingPrefix": "Limit to Routing Prefix",
+    "routingPrefix": "Routing Prefix",
+    "dialByExtensionRoutingPrefixHelpText": "If not selected, users must enter the routing prefix plus the extension.",
+    "selectRoutingPrefix": "Select",
     "callerInputCnvtDigit": "Convert digit input to text string value.",
     "callerInputMaxLenStr": "Max Length of String",
     "varNamesDependenciesTitle": "Variable Dependencies",
@@ -4248,9 +4252,9 @@
     "usernameRequiredMsg": "Username is required.",
     "usernameTooLongMsg": "Username exceeded its maximum length of 128 characters.",
     "passwordTooLongMsg": "Password exceeded its maximum length of 128 characters",
-    "configureApiAuthentication": "Use Basic Authentication" ,
-    "restApiUserName":"Username",
-    "restApiPassword":"Password",
+    "configureApiAuthentication": "Use Basic Authentication",
+    "restApiUserName": "Username",
+    "restApiPassword": "Password",
     "callerInputValue": "Input Value",
     "callerInputLabel": "Name",
     "callerInputNamePlaceHolder": "Name Variable",
@@ -4533,18 +4537,18 @@
     "AABusinessHours": "Business Hours",
     "AABusinessHoursDesc": "Simple open/closed schedule with custom actions.",
     "variables": "Variables:",
-    "configureApiHeading":"Request Test and Response Assignment",
-    "configureApiHeadingHelperText":"Provide test data for the variables defined in the url to test the connection and response to your REST API.",
-    "configureApiHelpertext":"Values below will be entered into the URL for testing and response assignment only.",
-    "restApiResponseVar":"Response Variable",
-    "restApiResponseVal":"Response Value",
-    "restApiCustomVar":"Custom Variable",
-    "customVariablesAssignmentHelpText":"Select Custom Variables to assign the value of the Responses from the REST API to use in the call flow.",
-    "Variables":"Variables",
-    "value":"Value",
-    "restApiUrlHelperText":"Enter the secure URL of the REST API to invoke. Click the 'Add Dynamic text' to insert variables in the URL.",
-    "completeHttpsError":"Enter the complete URL including the protocol, HTTPS.",
-    "secureHttpsError":"Enter only secure HTTPS URLs."
+    "configureApiHeading": "Request Test and Response Assignment",
+    "configureApiHeadingHelperText": "Provide test data for the variables defined in the url to test the connection and response to your REST API.",
+    "configureApiHelpertext": "Values below will be entered into the URL for testing and response assignment only.",
+    "restApiResponseVar": "Response Variable",
+    "restApiResponseVal": "Response Value",
+    "restApiCustomVar": "Custom Variable",
+    "customVariablesAssignmentHelpText": "Select Custom Variables to assign the value of the Responses from the REST API to use in the call flow.",
+    "Variables": "Variables",
+    "value": "Value",
+    "restApiUrlHelperText": "Enter the secure URL of the REST API to invoke. Click the 'Add Dynamic text' to insert variables in the URL.",
+    "completeHttpsError": "Enter the complete URL including the protocol, HTTPS.",
+    "secureHttpsError": "Enter only secure HTTPS URLs."
   },
   "callPark": {
     "code": "CP",
@@ -5101,6 +5105,11 @@
     "tollFreeTitle": "Search and add toll-free phone numbers by entering a valid area code. Valid toll-free area codes include {{areaCodes}}",
     "unableToAddTollFreeNumbers": "Unable to add toll-free numbers because the customer PSTN contract is incomplete. Please remind your customer to sign and submit their contract.",
     "unableToAddPortedNumbers": "Unable to add ported numbers because the customer PSTN contract is incomplete. Please remind your customer to sign and submit their contract.",
+    "unableToAddTollFreeNumbersShort": "Unable to add toll-free numbers because the customer PSTN contract is incomplete.",
+    "unableToAddPortedNumbersShort": "Unable to add ported numbers because the customer PSTN contract is incomplete.",
+    "initContract": "Initiate the contract signing process with {{carrier}}",
+    "initContractTitle": "Initiate Contract",
+    "initContractReview": "You have not added any numbers, you can initiate the contract signing process with {{carrier}} by placing this order.  Once the contract is signed you can port numbers or add Toll Free numbers",
     "pstnSelector": {
       "searchPlaceholder": "Enter area code and/or number prefix",
       "searchDesc": "e.g. 972 or 972867",
@@ -5151,7 +5160,7 @@
     },
     "tos": {
       "title": "terms of service",
-      "copyright": "Copyright 2017 Cisco Systems.  All rights reserved.",
+      "copyright": "Copyright 2018 Cisco Systems.  All rights reserved.",
       "info": "Cisco Spark is a collaboration application that provides messaging (IM), voice and video calling capabilities.",
       "noticeTitle": "IMPORTANT NOTICES AND DISCLAIMERS",
       "notice": "Please redirect to the following page and read the agreements from you carrier.  Your PSTN numbers will be released after you read and agree these agreements.",
@@ -5897,7 +5906,8 @@
       "exchangeHelp": "This is enabling exchange calendar",
       "googleTitle": "Google calendar",
       "googleHelp": "This is enabling google calendar",
-      "calendarEmail": "Email address of the calendar mailbox"
+      "calendarEmail": "Email address of the calendar mailbox",
+      "calendarEmailHelp": "This should not be an email address already used on another place, and should not belong to a user."
     },
     "editCalendarService": {
       "title": "Set up Hybrid Calendar Service",
@@ -5908,7 +5918,8 @@
       "step1": "In Cisco Unified Communications Manager, create a user account and an associated line. These items will represent this place. <a href='https://www.cisco.com/go/hybrid-services'>See the documentation for help.</a>",
       "step2": "Find the Mail ID for the user account.<br>a) Sign into Cisco Unified CM Administration<br>b) Choose User Management > End User, and then find and click the account.<br>The Mail ID is under ‘User Information’.",
       "step3": "Enter the Mail ID below to connect this place to the existing Unified CM account.<br>This Mail ID ensures that the correct user account is connected with this place for hybrid calling.",
-      "mailId": "Mail ID"
+      "mailId": "Mail ID",
+      "mailIdHelp": "This should not be a Mail ID already used on another place, and should not be an email address that belongs to a user."
     },
     "showActivationCode": {
       "activationCode": "Activation Code",
@@ -6396,8 +6407,8 @@
       "meeting-duration-title": "Meeting Duration"
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
-    "mediaMicroserviceFailure": "Because of a service connection issue, Hybrid Media Service routing was not enabled for your organization. Open a case through admin.ciscospark.com if the issue persists.",
-    "mediaNetworkFailure": "Because of a network connection issue, Hybrid Media Service was not enabled for your organization. Open a case through admin.ciscospark.com if the issue persists.",
+    "mediaMicroserviceFailure": "Hybrid Media Service was not enabled for your organization, because enabling Hybrid Media Service routing failed. Open a case through admin.ciscospark.com to get the issue corrected.",
+    "mediaEntitlementEnablementFailure": "Hybrid Media Service was not enabled for your organization, because the required licenses are not applied to your organization. Open a case through admin.ciscospark.com to get the issue corrected.",
     "delete": "Delete",
     "cancel": "Cancel",
     "actionsHeader": "Actions",
@@ -7404,9 +7415,10 @@
     "failedToSaveChanges": "Failed to save changes to place. Reason:",
     "failedToDelete": "Failed to delete place. Reason:",
     "botAuthorizations": {
-      "title": "Places APIs access",
+      "title": "Device APIs Access",
       "header": "Current access for devices belonging to '{{ placeName }}'",
       "subHeader": "The following bots and users are authorized to access the device APIs. Full access provides control over all devices belonging to this place. Make sure you trust the source.",
+      "subHeaderUser": "The following bots and users are authorized to access the device APIs. Full access provides control over all devices belonging to this user. Make sure you trust the source.",
       "table": {
         "name": "Authorized To",
         "role": "Access Level",
@@ -7452,10 +7464,10 @@
     "deleteNumberTextBase": "Are you sure you want to delete this phone number? {{ isApiImplementationSwivel }}.",
     "deleteNumberTextStandard": "It will be permanently removed. Review billing changes with the PSTN provider",
     "deleteNumberTextBYOP": "The number will be returned to you immediately",
-    "headerLabelInternalNumber":"internalNumber",
-    "headerLabelExternalNumber":"phoneNumber",
-    "headerLabelUserId":"assignedTo",
-    "headerLabelLocation":"location"
+    "headerLabelInternalNumber": "internalNumber",
+    "headerLabelExternalNumber": "phoneNumber",
+    "headerLabelUserId": "assignedTo",
+    "headerLabelLocation": "location"
   },
   "messengerCiSync": {
     "orgInfoSection": {
@@ -7850,6 +7862,12 @@
           "nonAdminEditDeleteWarning": "You are not authorized to edit or delete this virtual assistant. Contact the owner, {{owner}}, to request one of these actions."
         }
       },
+      "invalidInput": {
+        "invalidAccessToken": "The Dialogflow client access token is invalid.\nClick the back arrow to return to the Dialogue Integration page and enter a valid token.",
+        "duplicateName": "The {{ featureName }} must have a unique name.\nClick the back arrow to return to the Name page and enter a valid name.",
+        "invalidName": "The {{ featureName }} name is invalid.\nClick the back arrow to return to the Name page and enter a valid name.",
+        "invalidIcon": "The {{ featureName }} avatar is invalid.\nClick the back arrow to return to the Avatar page and upload a valid avatar."
+      },
       "createTitle": "Create {{ featureName }}",
       "editTitle": "Edit {{ featureName }}",
       "cancelDialog": "Do you want to discard your\n {{ featureName }}?",
@@ -7922,8 +7940,6 @@
         "errorCreateTemplate": "Cannot save {{ featureName }}. Try again.",
         "invalidEmailError": "The email you entered is invalid. Please enter a valid email.",
         "duplicateEmailError": "The email you entered already exists. Please enter a unique email.",
-        "invalidNameError": "The Expert Virtual Assistant name is invalid. Please enter a valid name.",
-        "invalidAvatarError": "The Expert Virtual Assistant avatar is invalid. Please upload a valid avatar.",
         "editWarning": "There may be a delay before you can see changes to your Expert Virtual Assistant in Cisco Spark."
       },
       "overview": {
@@ -8338,7 +8354,9 @@
       "title": "Cisco Spark Assistant",
       "subsectionLabel": "Enable Cisco Spark Assistant",
       "description": "Allows users to perform various actions such as, make calls, start meetings, using their voice",
-      "termsOfService": "Cisco Spark Assistant terms of service "
+      "termsOfService": "Cisco Spark Assistant terms of service ",
+      "success": "Successfully updated Spark Assistant",
+      "failure": "Spark Assistant update failed"
     },
     "externalCommunication": {
       "title": "External Communication",
@@ -8422,6 +8440,7 @@
     "hybridDataSecurity": "Hybrid Data Security",
     "less": "Less",
     "licenses": "Licenses:",
+    "licensing": "HCS",
     "licenseSummary": "License Summary",
     "licenseSummaryEnterprise": "License Summary for Enterprise",
     "licenseSummaryOnline": "License Summary for {{name}}",
@@ -8787,9 +8806,9 @@
       "title": "Calendar (Exchange/Office 365)"
     },
     "hybridServicesOrganization": {
-      "fmsError": "Could not read organization's on-premises-based hybrid services statuses. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation.",
-      "office365Error": "Could not read organization's cloud-based Office 365 status. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation.",
-      "googleCalendarError": "Could not read organization's Google Calendar status. If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation."
+      "fmsError": "Could not read organization's on-premises-based hybrid services statuses.",
+      "office365Error": "Could not read organization's cloud-based Office 365 status.",
+      "googleCalendarError": "Could not read organization's Google Calendar status."
     }
   },
   "partnerManagement": {
@@ -9069,6 +9088,11 @@
           "sparkOrganization": "A Cisco Spark organization with a minimum of Basic Meetings and Business Messaging (M1)",
           "matchingEmails": "Users must have activated Cisco Spark accounts, with email addresses that are exact matches in Cisco Spark, WebEx, and Exchange Online"
         }
+      },
+      "hybridTesting": {
+        "title": "Hybrid Testing",
+        "description": "Run various test suites or tests to verify endpoints are working",
+        "edit": "Edit Suites"
       },
       "hybridCall": {
         "title": "Hybrid Call",
@@ -10188,7 +10212,7 @@
     "settingsLock": "Settings Lock",
     "settingsLockUpdated": "Settings Lock updated",
     "settingsLockTooltip": "Turn the settings lock on to prevent unintended changes on the device. Certain settings won’t be accessible.",
-    "deviceApis": "Device APIs",
+    "deviceApis": "Device APIs Access",
     "deviceApiViewEdit": "View/Edit Access"
   },
   "mediaMgrModal": {
@@ -10298,6 +10322,70 @@
           "manualLabel": "Send Email",
           "manualLabelHelp": "Cisco will send invitation email when you invite users to Cisco Spark"
         }
+      }
+    }
+  },
+  "hcs": {
+    "taas": {
+      "overviewPage": {
+        "title": "TaaS Overview",
+        "customerNameHeader": "Customer Name",
+        "allCustomers": "All Customers",
+        "testDate": "Last Ran Test",
+        "testResult": "Test Result",
+        "totalResources": "Resources",
+        "actionHeader": "Actions",
+        "editSuite": "Edit Suite",
+        "editTest": "Edit Tests",
+        "deleteAll": "Delete All Suites"
+      },
+      "testState": {
+        "good": "Passed",
+        "failed": "Failed",
+        "running": "Running..."
+      },
+      "suite": {
+        "title": "Suites",
+        "addSuite": "Create Suite",
+        "runSuite": "Run Suite",
+        "editSuite": "Edit",
+        "copySuite": "Copy",
+        "scheduleSuite": "Schedule",
+        "deleteSuite": "Delete",
+        "resources": "Resources",
+        "results": "Get last test run results",
+        "schedule": "Scheduling",
+        "successTitle": "Your test is running!",
+        "successRun": "You should go catch it...",
+        "errorRun": "Something went wrong with scheduling"
+      },
+      "test": {
+        "title": "Tests",
+        "addTest": "Create Test",
+        "editTest": "Edit",
+        "copyTest": "Copy",
+        "deleteTest": "Delete"
+      },
+      "addSuiteModal": {
+        "title": "Add a suite",
+        "suiteName": "Suite name"
+      },
+      "schedulerModal": {
+        "title": "Schedule a Test"
+      },
+      "scheduleView": {
+        "title": "Schedules",
+        "scheduleName": "Schedule Name",
+        "scheduledDate": "Date, Time",
+        "scheduledSuite": "Scheduled Suites",
+        "actionHeader": "Actions",
+        "runSchedule": "Run Now",
+        "copySchedule": "Copy schedule",
+        "editSchedule": "Edit Schedule",
+        "deleteSchedule": "Delete this schedule"
+      },
+      "resourceCreate": {
+        "title": "Create a resource"
       }
     }
   }

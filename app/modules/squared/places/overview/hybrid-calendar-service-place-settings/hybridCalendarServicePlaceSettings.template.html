@@ -1,32 +1,32 @@
 <cs-sp-container>
-  <cs-sp-section class="cloud-extensions">
+  <cs-sp-section class="hybrid-services-user-sidepanel">
     <div class="section-title-row">
       <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-cal"></span>
     </div>
     <div>
-      <p class="extension-description" translate="hercules.cloudExtensions.serviceDescriptions.squared-fusion-cal-place"></p>
+      <p class="hybrid-service-description" translate="hercules.cloudExtensions.serviceDescriptions.squared-fusion-cal-place"></p>
 
       <div class="row collapse">
         <div class="columns small-3">
-          <span class="cloud-extension-label">{{'hercules.cloudExtensions.calendarType' | translate}}:</span>
+          <span class="hybrid-services-label">{{'hercules.cloudExtensions.calendarType' | translate}}:</span>
         </div>
         <div class="columns small-9">
-          <span class="cloud-extension-label">{{calendarType}}</span>
+          <span class="hybrid-services-label">{{calendarType}}</span>
         </div>
       </div>
 
       <div class="row collapse">
         <div class="columns small-3">
-          <span class="cloud-extension-label">{{::'cloudExtensions.status' | translate}}:</span>
+          <span class="hybrid-services-label">{{::'cloudExtensions.status' | translate}}:</span>
         </div>
         <div class="columns small-7 normal-line-height">
-          <span class="cloud-extension-label"
+          <span class="hybrid-services-label"
                 ng-class="'status-' + placeStatusInUSS.state"
                 translate="hercules.activationStatus.{{getStatus(placeStatusInUSS)}}"></span>
-          <span class="cloud-extension-label last-state-change-timestamp" ng-if="placeStatusInUSS && placeStatusInUSS.lastStateChangeText">{{placeStatusInUSS.lastStateChangeText}}</span>
+          <span class="hybrid-services-label last-state-change-timestamp" ng-if="placeStatusInUSS && placeStatusInUSS.lastStateChangeText">{{placeStatusInUSS.lastStateChangeText}}</span>
         </div>
         <div class="columns small-2">
-          <span ng-if="placeStatusInUSS" class="cloud-extension-label right">
+          <span ng-if="placeStatusInUSS" class="hybrid-services-label right">
             <a ui-sref="{{currentStateName}}.history" translate="hercules.userHistory.seeHistory"></a>
           </span>
         </div>
@@ -44,11 +44,11 @@
     </div>
   </cs-sp-section>
 
-  <cs-sp-section class="cloud-extensions">
-    <div class="row collapse cloud-extension-label normal-line-height mailid">
+  <cs-sp-section class="hybrid-services-user-sidepanel">
+    <div class="row collapse hybrid-services-label normal-line-height hybrid-services-place-mail-id">
       <div class="columns small-12"><span translate="addDeviceWizard.editServices.calendarEmail"></span><span>: {{emailOfMailbox}}</span></div>
     </div>
-    <div class="row collapse cloud-extension-label normal-line-height">{{'hercules.placeSidepanel.email-calendar-explanation-part1' | translate}}
+    <div class="row collapse hybrid-services-label normal-line-height">{{'hercules.placeSidepanel.email-calendar-explanation-part1' | translate}}
       <a ng-click="editCloudberryServices(serviceId)">{{'hercules.placeSidepanel.email-calendar-explanation-part2' | translate}}</a>
     </div>
   </cs-sp-section>

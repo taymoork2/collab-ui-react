@@ -1,5 +1,5 @@
 <cs-sp-container>
-  <cs-sp-section class="cloud-extensions" ng-repeat="entry in $ctrl.historyEntries">
+  <cs-sp-section class="hybrid-services-user-sidepanel" ng-repeat="entry in $ctrl.historyEntries">
     <div class="history-label">
       <span class="section-name" ng-if="entry.type === 'SetUserStatus'">{{'hercules.activationStatus.' + entry.status | translate}}</span>
       <span class="section-name" ng-if="entry.type !== 'SetUserStatus'">{{'hercules.userHistory.types.' + entry.type | translate}}</span>

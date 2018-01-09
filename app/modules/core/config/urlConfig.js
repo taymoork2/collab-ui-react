@@ -260,6 +260,12 @@
       integration: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
       prod: 'https://admin-batch-service.wbx2.com/api/v1',
     },
+    SpeechServiceUrl: {
+      dev: 'https://speech-services-manager.intb1.ciscospark.com/speech-services-manager/api/v1/',
+      cfe: 'https://speech-services-manager-loada1.ciscospark.com/speech-services-manager/api/v1/',
+      integration: 'https://speech-services-manager.intb1.ciscospark.com/speech-services-manager/api/v1/',
+      prod: 'https://speech-services-manager-a.wbx2.com/speech-services-manager/api/v1/',
+    },
     QlikReportAppUrl: 'https://%s/custportal/extensions/',
     ProdAdminServiceUrl: 'https://atlas-a.wbx2.com/admin/api/v1/',
     WebexAdvancedEditUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage',

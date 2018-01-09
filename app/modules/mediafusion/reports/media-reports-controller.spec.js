@@ -3,7 +3,7 @@
 describe('Controller:MediaReportsController', function () {
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var controller, $scope, httpMock, $stateParams, $q, $translate, $timeout, $interval, Log, Config, MediaClusterServiceV2, Notification, MeetingLocationAdoptionGraphService, ClientTypeAdoptionGraphService, UtilizationResourceGraphService, ParticipantDistributionResourceGraphService, MediaReportsService, MediaReportsDummyGraphService, AvailabilityResourceGraphService, CallVolumeResourceGraphService, MediaSneekPeekResourceService;
+  var controller, $scope, httpMock, $stateParams, $q, $translate, $timeout, $interval, Log, Config, Notification, MeetingLocationAdoptionGraphService, ClientTypeAdoptionGraphService, UtilizationResourceGraphService, ParticipantDistributionResourceGraphService, MediaReportsService, MediaReportsDummyGraphService, AvailabilityResourceGraphService, CallVolumeResourceGraphService, MediaSneekPeekResourceService;
 
   var callVolumeData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeData.json');
   var clusteravailabilityData = getJSONFixture('mediafusion/json/metrics-graph-report/availabilityResourceData.json');
@@ -42,13 +42,12 @@ describe('Controller:MediaReportsController', function () {
 
   var allClusters = 'mediaFusion.metrics.allclusters';
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$stateParams_, _$timeout_, _$translate_, _MediaClusterServiceV2_, _$q_, _MeetingLocationAdoptionGraphService_, _ClientTypeAdoptionGraphService_, _UtilizationResourceGraphService_, _ParticipantDistributionResourceGraphService_, _Notification_, _MediaReportsDummyGraphService_, _MediaReportsService_, _$interval_, _Log_, _Config_, _AvailabilityResourceGraphService_, _CallVolumeResourceGraphService_, _MediaSneekPeekResourceService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$stateParams_, _$timeout_, _$translate_, _$q_, _MeetingLocationAdoptionGraphService_, _ClientTypeAdoptionGraphService_, _UtilizationResourceGraphService_, _ParticipantDistributionResourceGraphService_, _Notification_, _MediaReportsDummyGraphService_, _MediaReportsService_, _$interval_, _Log_, _Config_, _AvailabilityResourceGraphService_, _CallVolumeResourceGraphService_, _MediaSneekPeekResourceService_) {
     $scope = $rootScope.$new();
 
     $stateParams = _$stateParams_;
     $timeout = _$timeout_;
     $translate = _$translate_;
-    MediaClusterServiceV2 = _MediaClusterServiceV2_;
     $q = _$q_;
     httpMock = _$httpBackend_;
     Log = _Log_;
@@ -91,7 +90,6 @@ describe('Controller:MediaReportsController', function () {
       $timeout: $timeout,
       $translate: $translate,
       httpMock: httpMock,
-      MediaClusterServiceV2: MediaClusterServiceV2,
       $q: $q,
       MediaReportsDummyGraphService: MediaReportsDummyGraphService,
       UtilizationResourceGraphService: UtilizationResourceGraphService,
@@ -214,11 +212,7 @@ describe('Controller:MediaReportsController', function () {
       expect(MediaReportsService.getTotalCallsData).toHaveBeenCalled();
       expect(MediaReportsService.getOverflowIndicator).toHaveBeenCalled();
       expect(controller.onprem).toBe(20);
-      expect(controller.cloudOverflow).toBe(30);
-      expect(controller.total).toBe(50);
-      expect(controller.second_card_value).toBe('30');
       expect(controller.cardIndicator).toBe(controller.increaseBy + ' ' + '2');
-      expect(controller.overflowPercentage).toBe(60);
     });
 
     it('overflowPercentage should not be NaN when total calls is 0', function () {

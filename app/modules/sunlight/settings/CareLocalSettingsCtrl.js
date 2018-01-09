@@ -58,6 +58,7 @@ var HttpStatus = require('http-status-codes');
     vm.featureToggles = {
       showRouterToggle: false,
       chatToVideoFeatureToggle: false,
+      cvcAsCdcFeatureToggle: true,
     };
 
     var maxChatCount = 5;
@@ -257,7 +258,7 @@ var HttpStatus = require('http-status-codes');
           }
         });
       }
-      if (Authinfo.isCareVoice() && vm.aaOnboardingStatus !== vm.status.SUCCESS) {
+      if ((vm.featureToggles.cvcAsCdcFeatureToggle || Authinfo.isCareVoice()) && vm.aaOnboardingStatus !== vm.status.SUCCESS) {
         promises.onBoardAA = SunlightConfigService.aaOnboard();
         promises.onBoardAA.then(function (result) {
           if (result.status === HttpStatus.NO_CONTENT) {
@@ -608,6 +609,11 @@ var HttpStatus = require('http-status-codes');
       FeatureToggleService.atlasCareChatToVideoTrialsGetStatus().then(function (result) {
         vm.featureToggles.chatToVideoFeatureToggle = result && Authinfo.isCare();
       });
+
+      FeatureToggleService.atlasCareCvcToCdcMigrationGetStatus().then(function (result) {
+        vm.featureToggles.cvcAsCdcFeatureToggle = result && Authinfo.isCare() && Authinfo.isCareAndCDC();
+      });
+
       var sunlightPromise;
       URService.getQueue(vm.defaultQueueId).then(function (result) {
         vm.defaultQueueStatus = vm.status.SUCCESS;

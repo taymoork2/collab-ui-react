@@ -209,6 +209,7 @@
 .support-logs .ui-grid-header-cell.header-call-flow-logs .ui-grid-cell-contents,
 .support-logs .ui-grid-header-cell.header-call-flow .ui-grid-cell-contents,
 .support-logs .ui-grid-header-cell.header-call-info .ui-grid-cell-contents,
+.support-logs .ui-grid-header-cell.header-metadata .ui-grid-cell-contents,
 .support-logs .ui-grid-header-cell.header-call-summary .ui-grid-cell-contents {
   text-align: center;
 }
@@ -258,4 +259,17 @@
 
 .support-btn-spacing {
   padding-top: 0.65rem;
+}
+
+#logs-extended-metadata-dialog {
+  .modal-body {
+    overflow: overlay;
+  }
+}
+
+.modal-footer {
+
+  .copy-status {
+    @include vr-spacing(pr, 1);
+  }
 }

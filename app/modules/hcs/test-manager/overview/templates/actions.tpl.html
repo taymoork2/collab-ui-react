@@ -1,0 +1,33 @@
+<div class="grid-contents" ng-class="{'selected' : row.isSelected}">
+    <span cs-dropdown class="actions-menu">
+      <button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle icon icon-three-dots"
+              ng-click="$event.stopPropagation();" ng-keydown="$event.stopPropagation();" ng-class="dropdown-toggle">
+      </button>
+      <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
+
+        <li id="viewReportOption">
+          <a href
+          ng-click="grid.appScope.editTaasSuite(row.entity)"
+          ng-keydown="grid.appScope.editTaasSuite()">
+            <span translate="hcs.taas.overviewPage.editSuite"></span>
+          </a>
+        </li>
+
+        <li id="editCustomerOption">
+          <a href data-toggle="modal"
+            ng-click="grid.appScope.editTaasTest(row.entity)"
+            ng-keydown="grid.appScope.editTaasTest()">
+            <span translate="hcs.taas.overviewPage.editTest"></span>
+          </a>
+        </li>
+
+        <li id="deleteCustomerOption">
+          <a href
+          ng-click="grid.appScope.deleteAll(row.entity)"
+          ng-keydown="grid.appScope.deleteAll()">
+            <span translate="hcs.taas.overviewPage.deleteAll"></span>
+          </a>
+        </li>
+      </ul>
+    </span>
+  </div>

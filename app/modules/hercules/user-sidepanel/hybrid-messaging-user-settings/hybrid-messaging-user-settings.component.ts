@@ -2,11 +2,13 @@ import { HybridServiceUserSidepanelHelperService, IEntitlementNameAndState } fro
 import { HybridServicesI18NService } from 'modules/hercules/services/hybrid-services-i18n.service';
 import { Notification } from 'modules/core/notifications/notification.service';
 import { USSService, IUserStatusWithExtendedMessages } from 'modules/hercules/services/uss.service';
+import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
 
-class HybridMessagingUserSettingsComponentCtrl implements ng.IComponentController {
+class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController {
 
   public userId;
   public userEmailAddress;
+  public isInvitePending: boolean;
 
   public loadingPage = true;
   public savingPage = false;
@@ -15,8 +17,8 @@ class HybridMessagingUserSettingsComponentCtrl implements ng.IComponentControlle
   public userStatus: IUserStatusWithExtendedMessages;
   public lastStateChangeText: string = '';
 
-  public entitledToggle: boolean;
-  public userIsCurrentlyEntitled: boolean;
+  public entitledToggle: boolean = false;
+  public userIsCurrentlyEntitled: boolean = false;
   public newEntitlementValue: boolean | undefined;
 
   private connectorId: string;
@@ -31,7 +33,7 @@ class HybridMessagingUserSettingsComponentCtrl implements ng.IComponentControlle
   ) { }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
-    const { userId, userEmailAddress } = changes;
+    const { userId, userEmailAddress, isInvitePending, allUserEntitlements } = changes;
     if (userId && userId.currentValue) {
       this.userId = userId.currentValue;
       this.getDataFromUSS(this.userId);
@@ -39,7 +41,15 @@ class HybridMessagingUserSettingsComponentCtrl implements ng.IComponentControlle
     if (userEmailAddress && userEmailAddress.currentValue) {
       this.userEmailAddress = userEmailAddress.currentValue;
     }
+    if (isInvitePending && isInvitePending.currentValue) {
+      this.isInvitePending = isInvitePending.currentValue;
+    }
+    if (allUserEntitlements && allUserEntitlements.currentValue) {
+      this.entitledToggle = this.userIsCurrentlyEntitled = this.userHasEntitlement('spark-hybrid-impinterop', allUserEntitlements.currentValue);
+    }
   }
+
+  private userHasEntitlement = (entitlement: HybridServiceId, allUserEntitlements: HybridServiceId[]): boolean => allUserEntitlements && allUserEntitlements.indexOf(entitlement) > -1;
 
   private getDataFromUSS = (userId: string) => {
     this.loadingPage = true;
@@ -48,12 +58,6 @@ class HybridMessagingUserSettingsComponentCtrl implements ng.IComponentControlle
         this.userStatus = _.find(statuses, { serviceId: 'spark-hybrid-impinterop' });
       })
       .then(() => {
-        if (this.userStatus && this.userStatus.entitled) {
-          this.entitledToggle = this.userIsCurrentlyEntitled = this.userStatus.entitled;
-        } else {
-          this.entitledToggle = this.userIsCurrentlyEntitled = false;
-        }
-
         if (this.userStatus && this.userStatus.connectorId) {
           this.connectorId = this.userStatus.connectorId;
         }
@@ -67,7 +71,7 @@ class HybridMessagingUserSettingsComponentCtrl implements ng.IComponentControlle
         if (this.HybridServiceUserSidepanelHelperService.isPartnerAdminAndGot403Forbidden(error)) {
           this.Notification.errorWithTrackingId(error, {
             errorKey: 'hercules.userSidepanel.errorMessages.cannotReadUserDataFromUSSPartnerAdmin',
-            allowHtml: true,
+            feedbackInstructions: true,
           });
         } else {
           this.Notification.errorWithTrackingId(error, 'hercules.userSidepanel.errorMessages.cannotReadUserDataFromUSS');
@@ -136,12 +140,14 @@ class HybridMessagingUserSettingsComponentCtrl implements ng.IComponentControlle
 
 }
 
-export class HybridMessagingUserSettingsComponent implements ng.IComponentOptions {
-  public controller = HybridMessagingUserSettingsComponentCtrl;
-  public template = require('modules/hercules/user-sidepanel/hybrid-messaging-user-settings/hybrid-messaging-user-settings.component.html');
+export class HybridMessageUserSettingsComponent implements ng.IComponentOptions {
+  public controller = HybridMessageUserSettingsComponentCtrl;
+  public template = require('./hybrid-messaging-user-settings.component.html');
   public bindings = {
     userId: '<',
     userEmailAddress: '<',
     userUpdatedCallback: '&',
+    isInvitePending: '<',
+    allUserEntitlements: '<',
   };
 }

@@ -1,0 +1,23 @@
+<div class="ui-grid-cell-contents align-left status-column"
+ng-class="{'selected' : row.isSelected}"
+ng-click="grid.appScope.selectRow(grid, row)"
+>
+<div ng-switch="row.entity.testState">
+  <div ng-switch-when="passed">
+    <i class="icon icon-circle status-indicator success"></i>
+    <span translate="hcs.taas.testState.good"></span>
+  </div>
+  <div ng-switch-when="failed">
+    <i class="icon icon-circle status-indicator warning"></i>
+    <span translate="hcs.taas.testState.failed"></span>
+  </div>
+  <div ng-switch-when="running">
+    <i class="icon icon-circle status-indicator danger"></i>
+    <span translate="hcs.taas.testState.running"></span>
+  </div> 
+  <div ng-switch-default>
+    <i class="icon icon-circle"></i>
+    <span translate="common.unknown"></span>
+  </div>
+</div>
+</div>

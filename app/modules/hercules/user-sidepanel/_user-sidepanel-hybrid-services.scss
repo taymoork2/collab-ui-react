@@ -1,4 +1,4 @@
-.cloud-extensions {
+.hybrid-services-user-sidepanel {
   .status-error {
     color: $brand-danger;
   }
@@ -49,69 +49,13 @@
     }
   }
 
-  .info-description {
-    font-family: $brand-font-light;
-    letter-spacing: 0.02em;
-    line-height: inherit;
-  }
-
-  .extension-description {
+  .hybrid-service-description {
     color: $gray-dark;
     font-family: $brand-font-light;
     font-size: 13.5px;
     letter-spacing: 0.02em;
     line-height: inherit;
     padding-bottom: 10px;
-  }
-
-  .row-hybrid {
-    background: $gray-lightest;
-    display: inline-flex;
-  }
-
-  .column-header {
-    text-align: left;
-    padding: 15px 20px 0px 40px;
-    display: flex;
-
-    h3 {
-      font-family: $brand-font-cisco-TT-Extra-Light;
-      padding-left: 12px;
-    }
-
-    .icon {
-      font-size: 35px;
-      display: inline-block;
-    }
-  }
-
-  &.hybrid-services-panel {
-    margin-top: 3px;
-    background-color: $gray-lightest;
-    font-family: $brand-font-light;
-    font-size: 14px;
-    color: $gray-darkest;
-
-    .hs-header {
-      display: flex;
-      justify-content: center;
-      padding-bottom: 6px;
-    }
-
-    .indented {
-      margin-left: 1.5rem;
-    }
-
-    .column-padded {
-      padding: 1.5rem;
-    }
-
-  }
-
-  .has-warnings-icon {
-    color: $brand-warning-dark;
-    position: relative;
-    top: 2px;
   }
 
   .last-state-change-timestamp {
@@ -122,62 +66,15 @@
   .normal-line-height {
     line-height: normal;
   }
-  .mailid {
-    margin-top: 2rem;
+
+  .hybrid-services-label {
+    font-weight: 500;
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 2.25rem;
+    font-family: $brand-font-light;
+    a {
+      color: $color-primary-base;
+    }
   }
-  .placeStatus {
-    margin-top: 0.5rem;
-  }
-}
-
-.cloud-extension-label {
-  font-weight: 500;
-  margin: 0;
-  font-size: 0.875rem;
-  line-height: 2.25rem;
-  font-family: $brand-font-light;
-  a {
-    color: $color-primary-base;
-  }
-}
-
-form {
-  margin-top: 15px;
-}
-
-.info-message {
-  position: relative;
-
-  .icon {
-    position: absolute;
-    color: $color-primary-base;
-    top: 3px;
-  }
-}
-
-.warning-message {
-  position: relative;
-  margin-top: 1rem;
-
-  .icon {
-    position: absolute;
-    color: $color-attention-base;
-    top: 3px;
-  }
-}
-
-.error-message {
-  position: relative;
-
-  .icon {
-    position: absolute;
-    color: $color-alerts-base;
-    top: 3px;
-  }
-}
-
-.message {
-  margin-left: 1.5rem;
-  font-size: 0.875rem;
-  max-width: 36rem;
 }

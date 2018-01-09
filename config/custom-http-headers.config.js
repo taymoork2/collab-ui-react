@@ -1,5 +1,7 @@
 'use strict';
 
+/* eslint-env es6 */
+
 var _ = require('lodash');
 var helmetCspConfig = require('./csp-prod.config');
 var cspHeaderValue = convertToHeaderValue(helmetCspConfig);
@@ -16,7 +18,7 @@ function convertToHeaderValue(directives) {
     directiveEntries.push(directiveEntry + ' ' + rulesAsStr);
   });
 
-  return directiveEntries.join('; ');
+  return `${directiveEntries.join('; ').concat(';')}`;
 }
 
 module.exports = customHttpHeaders;

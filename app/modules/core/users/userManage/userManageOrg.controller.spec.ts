@@ -150,7 +150,7 @@ describe('UserManageOrgController', () => {
     initControllerAndDefaults.apply(this);
 
     this.controller.onNext();
-    expect(this.$state.go).toHaveBeenCalledWith('users.add');
+    expect(this.$state.go).toHaveBeenCalledWith('users.add.manual');
     expect(this.Analytics.trackAddUsers).toHaveBeenCalledWith(this.Analytics.eventNames.NEXT, this.Analytics.sections.ADD_USERS.uploadMethods.MANUAL);
   });
 

@@ -22,6 +22,7 @@ export class BotAuthorizationsController {
     private AuthorizationService,
     private accountId: string,
     public accountDisplayName: string,
+    public ownerType: string,
     private Notification,
     private $q,
     private $translate,
@@ -32,19 +33,21 @@ export class BotAuthorizationsController {
   private loadAuthorizations(): void {
     let authorizations: any[] = [];
     const promises: any[] = [];
-    this.AuthorizationService.getAuthorizations(this.accountId).then(result => {
-      authorizations = result;
-      _.each(authorizations, (auth) => {
-        promises.push(this.enrichAuthData(auth));
-      });
-    }).catch(function (error) {
-      this.Notification.errorResponse(error, 'placesPage.botAuthorizations.failedToLoadAuthorizations');
-    }).finally(() => {
-      this.$q.all(promises).finally(() => {
+    this.AuthorizationService.getAuthorizations(this.accountId)
+      .then(result => {
+        authorizations = result;
+        _.forEach(authorizations, (auth) => {
+          promises.push(this.enrichAuthData(auth));
+        });
+      })
+      .catch((error) => {
+        this.Notification.errorResponse(error, 'placesPage.botAuthorizations.failedToLoadAuthorizations');
+      })
+      .then(() => this.$q.all(promises))
+      .then(() => {
         this.authorizations = authorizations;
         this.loadedAuthorizations = true;
       });
-    });
   }
 
   private enrichAuthData(auth): IPromise<boolean> {
@@ -173,15 +176,16 @@ angular
   .service('BotAuthorizationsModal',
     /* @ngInject */
     function ($modal) {
-      function open(accountId, accountDisplayName) {
+      function open(accountId, accountDisplayName, ownerType) {
         return $modal.open({
           resolve: {
             accountId: _.constant(accountId),
             accountDisplayName: _.constant(accountDisplayName),
+            ownerType: _.constant(ownerType),
           },
           controllerAs: 'vm',
           controller: 'BotAuthorizationsController',
-          template: require('modules/squared/places/botAuthorizations/botAuthorizations.tpl.html'),
+          template: require('modules/squared/places/bot-authorizations/botAuthorizations.tpl.html'),
           modalId: 'botAuthorizationsModal',
         }).result;
       }

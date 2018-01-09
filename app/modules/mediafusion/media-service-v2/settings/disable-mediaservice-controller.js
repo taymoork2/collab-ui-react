@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function DisableMediaServiceController(MediaClusterServiceV2, HybridServicesClusterService, $modalInstance, $q, $state, MediaServiceActivationV2, Notification, ServiceDescriptorService) {
+  function DisableMediaServiceController(HybridServicesClusterService, $modalInstance, $q, $state, MediaServiceActivationV2, Notification, ServiceDescriptorService) {
     var vm = this;
     vm.step = '1';
     var deferred = $q.defer();
@@ -35,29 +35,19 @@
       vm.step = '2';
       var loopPromises = deRegisterCluster();
       var promise = $q.all(loopPromises);
-      promise.then(function (response) {
-        _.each(response, function (resp) {
-          if (resp === undefined) {
-            vm.hadError = true;
-          } else if (resp.status !== 204) {
-            vm.hadError = true;
-          }
-        });
-        if (!vm.hadError) {
-          ServiceDescriptorService.disableService(vm.serviceId);
-          MediaServiceActivationV2.setisMediaServiceEnabled(false);
+      promise.then(function () {
+        ServiceDescriptorService.disableService(vm.serviceId);
+        MediaServiceActivationV2.setisMediaServiceEnabled(false);
 
-          MediaServiceActivationV2.disableOrpheusForMediaFusion();
-          MediaServiceActivationV2.deactivateHybridMedia();
-          MediaServiceActivationV2.disableMFOrgSettingsForDevOps();
-        } else {
+        MediaServiceActivationV2.disableOrpheusForMediaFusion();
+        MediaServiceActivationV2.deactivateHybridMedia();
+        MediaServiceActivationV2.disableMFOrgSettingsForDevOps();
+      })
+        .catch(function () {
+          vm.hadError = true;
           $modalInstance.close();
           Notification.error('mediaFusion.deactivate.error');
-        }
-      });
-    };
-    var recoverPromise = function () {
-      return undefined;
+        });
     };
 
     function getClusterList() {
@@ -74,8 +64,8 @@
     function deRegisterCluster() {
       var loopPromises = [];
       _.each(vm.clusterIds, function (id) {
-        var promise = MediaClusterServiceV2.deleteClusterWithConnector(id);
-        loopPromises.push(promise.catch(recoverPromise));
+        var promise = HybridServicesClusterService.deregisterCluster(id);
+        loopPromises.push(promise);
       });
       return loopPromises;
     }

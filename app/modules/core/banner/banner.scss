@@ -22,5 +22,11 @@ cr-banner {
       font-size: vr-adjust(16);
       top: rem-calc(2);
     }
+
+    .icon-info {
+      color: $color-blue-darker;
+      font-size: vr-adjust(16);
+      top: rem-calc(2.25);
+    }
   }
 }

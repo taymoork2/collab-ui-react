@@ -10,9 +10,6 @@
     "type": "git",
     "url": "git@sqbu-github.cisco.com:WebExSquared/wx2-admin-web-client.git"
   },
-  "//scripts": [
-    "TODO: remove typings script after a short transition period"
-  ],
   "scripts": {
     "analyze": "yarn build --env.analyze",
     "build": "yarn clean-dist && node --max-old-space-size=2048 ./node_modules/.bin/webpack --bail --profile",
@@ -32,7 +29,6 @@
     "ktest-watch": "./bin/ktest --no-parallel --no-single-run --auto-watch",
     "languages-verify": "node ./utils/languages-verify.js",
     "lint": "yarn eslint && yarn tslint && yarn stylelint",
-    "postinstall": "yarn ts-spec-delete && yarn typings",
     "posttest": "yarn coverage-report",
     "preinstall": "node ./utils/version-check.js",
     "prestart": "yarn",
@@ -47,11 +43,12 @@
     "stats": "yarn clean-dist && webpack --progress --profile --json > stats.json",
     "stylelint": "stylelint './app/**/**/*.scss'",
     "test": "yarn ktest-all",
-    "ts-spec-delete": "node ./utils/ts-spec-delete.js",
-    "tslint": "tslint --type-check --format stylish --project ./tsconfig.json",
-    "typings": "rimraf ./typings",
+    "tslint": "tsc --noEmit && tslint --format stylish --project ./tsconfig.json",
     "webdriver": "webdriver-manager update"
   },
+  "//dependencies": [
+    "TODO: upgrade angular@~1.6.8 after fixing ngMock $httpBackend unexpected failures"
+  ],
   "dependencies": {
     "@ciscospark/internal-plugin-encryption": "1.1.6",
     "@ciscospark/internal-plugin-metrics": "1.1.6",
@@ -59,16 +56,16 @@
     "@ciscospark/plugin-logger": "1.1.6",
     "@ciscospark/spark-core": "1.1.6",
     "acorn": "=5.0.3",
-    "angular": "~1.6.5",
-    "angular-animate": "~1.6.5",
-    "angular-aria": "~1.6.5",
+    "angular": "1.6.6",
+    "angular-animate": "1.6.6",
+    "angular-aria": "1.6.6",
     "angular-cache": "^4.6.0",
-    "angular-cookies": "~1.6.5",
+    "angular-cookies": "1.6.6",
     "angular-formly": "~7.3.0",
     "angular-ical": "~1.1.0",
-    "angular-messages": "~1.6.5",
-    "angular-resource": "~1.6.5",
-    "angular-sanitize": "~1.6.5",
+    "angular-messages": "1.6.6",
+    "angular-resource": "1.6.6",
+    "angular-sanitize": "1.6.6",
     "angular-timer": "~1.3.3",
     "angular-translate": "^2.11.1",
     "angular-translate-interpolation-messageformat": "^2.11.1",
@@ -128,8 +125,8 @@
   },
   "//devDependencies": [
     "TODO: upgrade @types/lodash and refactor for undefined return types",
-    "TODO: remove typings dependency after collab-ui-ng removes postinstall script",
-    "TODO: upgrade @types/jquery@^3.x after it removes es2015 library dependencies"
+    "TODO: upgrade @types/jquery@^3.x after it removes es2015 library dependencies",
+    "TODO: upgrade typescript and allow minor versions after fixing breaking changes"
   ],
   "devDependencies": {
     "@types/amcharts": "^0.0.39",
@@ -149,7 +146,7 @@
     "@types/ng-file-upload": "~12.2.0",
     "@types/node": "^6.0.0",
     "@types/ui-grid": "^0.0.35",
-    "angular-mocks": "~1.6.5",
+    "angular-mocks": "1.6.6",
     "autoprefixer": "^7.1.1",
     "awesome-typescript-loader": "^3.2.3",
     "babel-cli": "^6.24.1",
@@ -234,8 +231,7 @@
     "tslint-eslint-rules": "^4.0.0",
     "tslint-jasmine-rules": "^1.3.0",
     "tslint-loader": "^3.3.0",
-    "typescript": "^2.5.3",
-    "typings": "^2.1.0",
+    "typescript": "~2.5.3",
     "unparse-args": "^1.1.0",
     "webpack": "^3.6.0",
     "webpack-bundle-analyzer": "^2.3.1",

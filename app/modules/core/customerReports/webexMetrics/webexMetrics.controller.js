@@ -45,6 +45,7 @@
     vm.webexMetricsViews = '';
     vm.isMetricsInit = false;
     vm.viewType = 'basic';
+    vm.mainState = 'reports.webex-metrics.main';
     vm.webexMetrics = {
       views: {
         metrics: {
@@ -170,8 +171,12 @@
     function checkStatePermission(toState) {
       var isRedirected = false;
       var stateName = $state.current.name;
+      var stateMainParam = '';
       if (!_.isUndefined(toState)) {
         stateName = toState.name;
+        if (stateName === vm.mainState) {
+          stateMainParam = getReportType();
+        }
       }
       if (!vm.features.isMetricsOn) {
         isRedirected = true;
@@ -186,13 +191,13 @@
       if (!vm.features.isSystemOn && _.isEqual(stateName, vm.webexMetrics.states.system.state)) {
         isRedirected = true;
       }
-      if (!vm.features.isSystemOn && _.isEqual(stateName, vm.webexMetrics.states.dashboard.state)) {
+      if (!vm.features.isInternalOn && _.isEqual(stateName, vm.mainState) && _.isEqual(stateMainParam, 'dashboard')) {
         isRedirected = true;
       }
-      if (!vm.features.isSystemOn && _.isEqual(stateName, vm.webexMetrics.states.jms.state)) {
+      if (!vm.features.isInternalOn && _.isEqual(stateName, vm.mainState) && _.isEqual(stateMainParam, 'jms')) {
         isRedirected = true;
       }
-      if (!vm.features.isSystemOn && _.isEqual(stateName, vm.webexMetrics.states.jmt.state)) {
+      if (!vm.features.isInternalOn && _.isEqual(stateName, vm.mainState) && _.isEqual(stateMainParam, 'jmt')) {
         isRedirected = true;
       }
       if (!vm.features.isMEIOn && _.isEqual(stateName, vm.webexMetrics.states.mei.state)) {
@@ -229,7 +234,7 @@
       if (urlPath.length > 0) {
         reportType = urlPath[urlPath.length - 1];
       }
-      return reportType;
+      return _.toLower(reportType);
     }
 
     function initSiteUrl() {
@@ -330,6 +335,8 @@
         event.preventDefault();
         if (!isSubState) {
           $state.go(fromState);
+        } else {
+          goLogin();
         }
       }
 
@@ -364,7 +371,7 @@
           break;
         case 'reports.webex-metrics.main':
           vm.selectEnable = false;
-          vm.webexMetricsViews = _.toLower(getReportType());
+          vm.webexMetricsViews = getReportType();
           if (vm.webexMetricsViews) {
             vm.updateWebexMetrics();
           }
@@ -412,21 +419,24 @@
         isMetricsOn: FeatureToggleService.webexMetricsGetStatus(),
         // hasClassicSite: WebexMetricsService.hasClassicEnabled(),
         hasMetricsSite: WebexMetricsService.hasMetricsSites(),
-        isMEIOn: FeatureToggleService.webexMEIGetStatus(),
+        isMEIOn: false, //FeatureToggleService.webexMEIGetStatus(),
         isSystemOn: FeatureToggleService.webexSystemGetStatus(),
+        isInternalOn: FeatureToggleService.webexInternalGetStatus(),
       };
       $q.all(promises).then(function (features) {
         vm.features = features;
         if (features.isSystemOn) {
           vm.metricsOptions.splice(0, 0, vm.webexMetrics.states.system);
+        }
+        if (features.isInternalOn) {
           vm.metricsOptions.push(vm.webexMetrics.states.dashboard, vm.webexMetrics.states.jms, vm.webexMetrics.states.jmt);
         }
         if (features.isMetricsOn && features.hasMetricsSite) {
           vm.metricsOptions.push(vm.webexMetrics.states.metrics, vm.webexMetrics.states.diagnostics);
         }
-        if (features.isMEIOn) {
+        /*if (features.isMEIOn) {
           vm.metricsOptions.push(vm.webexMetrics.states.mei);
-        }
+        }*/
         if ($scope.header.isWebexClassicEnabled) {
           vm.isWebexClassicEnabled = true;
           pushClassicTab();

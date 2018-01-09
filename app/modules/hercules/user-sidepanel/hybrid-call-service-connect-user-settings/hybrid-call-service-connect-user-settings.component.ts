@@ -1,6 +1,7 @@
 import { HybridServicesI18NService } from 'modules/hercules/services/hybrid-services-i18n.service';
 import { HybridServiceUserSidepanelHelperService, IEntitlementNameAndState } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
 import { USSService, IUserStatusWithExtendedMessages } from 'modules/hercules/services/uss.service';
+import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
 
 class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentController {
 
@@ -11,13 +12,15 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
   private userId: string;
   private userEmailAddress: string;
   private entitlementUpdatedCallback: Function;
+  public isInvitePending: boolean;
+  private allUserEntitlements: HybridServiceId[];
 
   public userStatusAware: IUserStatusWithExtendedMessages | undefined;
   private userStatusConnect: IUserStatusWithExtendedMessages | undefined;
   public lastStateChangeText: string = '';
 
-  public entitledToggle: boolean;
-  public userIsCurrentlyEntitled: boolean;
+  public entitledToggle: boolean = false;
+  public userIsCurrentlyEntitled: boolean = false;
   public newEntitlementValue: boolean | undefined;
 
   public userTestToolFeatureToggled: boolean;
@@ -38,7 +41,7 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
   }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
-    const { userId, userEmailAddress,  entitlementUpdatedCallback } = changes;
+    const { userId, userEmailAddress,  entitlementUpdatedCallback, isInvitePending, allUserEntitlements } = changes;
     if (userId && userId.currentValue) {
       this.userId = userId.currentValue;
       this.getDataFromUSS(this.userId);
@@ -49,7 +52,16 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
     if (entitlementUpdatedCallback && entitlementUpdatedCallback.currentValue) {
       this.entitlementUpdatedCallback = entitlementUpdatedCallback.currentValue;
     }
+    if (isInvitePending && isInvitePending.currentValue) {
+      this.isInvitePending = isInvitePending.currentValue;
+    }
+    if (allUserEntitlements && allUserEntitlements.currentValue) {
+      this.allUserEntitlements = allUserEntitlements.currentValue;
+      this.entitledToggle = this.userIsCurrentlyEntitled = this.userHasEntitlement('squared-fusion-ec');
+    }
   }
+
+  public userHasEntitlement = (entitlement: HybridServiceId): boolean => this.allUserEntitlements && this.allUserEntitlements.indexOf(entitlement) > -1;
 
   private getDataFromUSS(userId: string) {
     this.loadingPage = true;
@@ -59,12 +71,6 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
         this.userStatusConnect = userStatusConnect;
       })
       .then(() => {
-        if (this.userStatusConnect && this.userStatusConnect.entitled) {
-          this.entitledToggle = this.userIsCurrentlyEntitled = this.userStatusConnect.entitled;
-        } else {
-          this.entitledToggle = this.userIsCurrentlyEntitled = false;
-        }
-
         if (this.userStatusConnect && this.userStatusConnect.lastStateChange) {
           this.lastStateChangeText = this.HybridServicesI18NService.getTimeSinceText(this.userStatusConnect.lastStateChange);
         }
@@ -74,7 +80,7 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
         if (this.HybridServiceUserSidepanelHelperService.isPartnerAdminAndGot403Forbidden(error)) {
           this.Notification.errorWithTrackingId(error, {
             errorKey: 'hercules.userSidepanel.errorMessages.cannotReadUserDataFromUSSPartnerAdmin',
-            allowHtml: true,
+            feedbackInstructions: true,
           });
         } else {
           this.Notification.errorWithTrackingId(error, 'hercules.userSidepanel.errorMessages.cannotReadUserDataFromUSS');
@@ -109,8 +115,7 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
           .then(() => {
             this.entitlementUpdatedCallback({
               options: {
-                callServiceAware: this.userStatusAware,
-                callServiceConnect: this.userStatusConnect,
+                entitledToConnect: this.userIsCurrentlyEntitled,
               },
             });
           });
@@ -154,6 +159,8 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
           options: arg,
         });
       },
+      isInvitePending: this.isInvitePending,
+      allUserEntitlements: this.allUserEntitlements,
     });
   }
 
@@ -167,5 +174,7 @@ export class HybridCallServiceConnectUserSettingsComponent implements ng.ICompon
     userEmailAddress: '<',
     entitlementUpdatedCallback: '&',
     userTestToolFeatureToggled: '<',
+    isInvitePending: '<',
+    allUserEntitlements: '<',
   };
 }

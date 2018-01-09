@@ -1,0 +1,99 @@
+import { IToolkitModalService } from 'modules/core/modal';
+import { HcsTestManagerService, HtmBuildingBlocks, HtmSuite, HtmTest, HtmSchedule } from 'modules/hcs/test-manager/shared';
+import { CardUtils } from 'modules/core/cards';
+const STATE_LOADING: string = 'STATE_LOADING';
+const STATE_SHOW_TESTS: string = 'STATE_SHOW_TESTS';
+const STATE_RELOAD: string = 'STATE_RELOAD';
+const STATE_NEW_TEST: string = 'STATE_NEW_TEST';
+
+export class TaasTestViewComponent implements ng.IComponentOptions {
+  public controller = TaasTestViewCtrl;
+  public template = require('./taasTestView.component.html');
+  public bindings: {
+    suite: '<',
+  };
+}
+
+export class TaasTestViewCtrl implements ng.IComponentController {
+  public tests: HtmTest[] = [];
+  public pageState: string = STATE_LOADING;
+  public currentTest: HtmTest;
+  public suite: HtmSuite;
+  public backState= 'taasSuites';
+  public schedules: HtmSchedule[] =  [];
+  public loadedTest: HtmTest[];
+  public blocks: HtmBuildingBlocks[] = [];
+
+  /* @ngInject */
+  constructor(
+    public HcsTestManagerService: HcsTestManagerService,
+    public CardUtils: CardUtils,
+    public $stateParams: ng.ui.IStateParamsService,
+    public $state: ng.ui.IStateService,
+    public $modal: IToolkitModalService,
+    public $q: ng.IQService,
+    public $log: ng.ILogService,
+    ) {}
+
+  public $onInit(): void {
+    this.tests = this.$stateParams.suite.tests;
+    this.suite = this.$stateParams.suite;
+
+    if (_.isEmpty(this.tests)) {
+      this.pageState = STATE_NEW_TEST;
+    } else {
+      this.pageState = STATE_SHOW_TESTS;
+      const promises: IPromise<HtmTest>[] = [];
+      for (let i: number = 0; i < this.tests.length; i++) {
+        const promise: IPromise<HtmTest> = this.HcsTestManagerService.getTest(this.suite, this.tests[i]);
+        promises.push(promise);
+      }
+      this.$q.all(promises);
+    }
+    this.reInstantiateMasonry();
+
+    this.HcsTestManagerService.getSchedules().then((schedules: HtmSchedule[]) => {
+      this.schedules = schedules;
+    });
+    this.HcsTestManagerService.getBlocks().then((blocks: HtmBuildingBlocks[]) => {
+      this.blocks = blocks;
+    });
+  }
+
+  public handleFailures(): void {
+    this.showReloadPageIfNeeded();
+  }
+
+  public showReloadPageIfNeeded(): void {
+    if (this.pageState === STATE_LOADING && this.tests.length === 0) {
+      this.pageState = STATE_RELOAD;
+    }
+  }
+
+  public reInstantiateMasonry(): void {
+    this.CardUtils.resize();
+  }
+
+  public reload(): void {
+    this.$state.go(this.$state.current, {}, {
+      reload: true,
+    });
+  }
+
+  public addTest(): void {
+    const test: HtmTest = new HtmTest();
+    test.name = 'Paul\'s Test';
+    test.index = 1;
+    this.HcsTestManagerService.createTest(this.suite, test).then(id => this.$log.info(id));
+  }
+
+  public runSuiteAction(test): void {
+    const schedule = new HtmSchedule;
+    if (test.id) {
+      schedule.testSuiteMap = test.id;
+      schedule.isImmediate = true;
+      schedule.name = test.name;
+    }
+    this.HcsTestManagerService.createSchedule(schedule);
+  }
+}
