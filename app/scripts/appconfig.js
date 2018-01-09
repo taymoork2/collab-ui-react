@@ -3925,17 +3925,6 @@
             controller: 'HuronFeaturesCtrl',
             controllerAs: 'huronFeaturesCtrl',
           })
-          .state('carefeatures', {
-            url: '/services/care-features',
-            parent: 'care.Details',
-            template: require('modules/sunlight/features/featureLanding/careFeatures.tpl.html'),
-            controller: 'CareFeaturesCtrl',
-            controllerAs: 'careFeaturesCtrl',
-            params: {
-              reauthorize: undefined,
-            },
-            authenticate: false,
-          })
           .state('huronfeatures.aabuilder', {
             parent: 'hurondetails',
             params: {
@@ -5177,6 +5166,7 @@
             },
             // If data not present, $state.current.data.displayName can't be changed
             data: {},
+            params: {
               alarm: null,
             },
             resolve: {

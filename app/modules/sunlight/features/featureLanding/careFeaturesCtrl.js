@@ -11,7 +11,7 @@ var _ = require('lodash');
     });
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, CvaService, EvaService, $rootScope) {
+  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, $rootScope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, CvaService, EvaService) {
     var vm = this;
     vm.isVirtualAssistantEnabled = $state.isVirtualAssistantEnabled;
     vm.isExpertVirtualAssistantEnabled = $state.isExpertVirtualAssistantEnabled;
