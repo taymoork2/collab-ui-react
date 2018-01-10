@@ -238,6 +238,7 @@
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(), //TODO add true for shipping testing.
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; }),
         huronPstn: FeatureToggleService.supports(FeatureToggleService.features.huronPstn),
+        ftCvcToCdcMigration: FeatureToggleService.atlasCareCvcToCdcMigrationGetStatus(),
       };
       if (!vm.isNewTrial()) {
         promises.tcHasService = TrialContextService.trialHasService(vm.currentTrial.customerOrgId);
@@ -260,7 +261,11 @@
           vm.devicesModal.enabled = vm.canSeeDevicePage;
           vm.defaultCountryList = results.huronCountryList;
           vm.huronPstn = results.huronPstn;
+          vm.cvcAsCdcFeatureToggle = results.ftCvcToCdcMigration;
 
+          if (vm.cvcAsCdcFeatureToggle) {
+            vm.validationMessages.care.max = $translate.instant('partnerHomePage.invalidProvisionedTrialCareQuantity');
+          }
           if (vm.huronPstn) {
             vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstn', 'trial.call'];
           }
@@ -704,8 +709,12 @@
     }
 
     function advanceCareLicenseInputDisabledExpression() {
-      vm.advanceCareTrial.details.quantity = (!vm.advanceCareTrial.enabled) ? 0 : (vm.advanceCareTrial.details.quantity || _careDefaultQuantity);
+      vm.advanceCareTrial.details.quantity = (!vm.advanceCareTrial.enabled || vm.cvcAsCdcFeatureToggle) ? 0 : (vm.advanceCareTrial.details.quantity || _careDefaultQuantity);
       return !vm.advanceCareTrial.enabled;
+    }
+
+    function getCareLicense(careTrial) {
+      return vm.cvcAsCdcFeatureToggle ? 0 : getCareLicenseCount(careTrial);
     }
 
     function getCareLicenseCount(careTrial) {
@@ -714,7 +723,7 @@
     }
 
     function getMinUserLicenseRequired() {
-      var totalCare = getCareLicenseCount(vm.careTrial) + getCareLicenseCount(vm.advanceCareTrial);
+      var totalCare = vm.cvcAsCdcFeatureToggle ? getCareLicenseCount(vm.careTrial) : getCareLicenseCount(vm.careTrial) + getCareLicenseCount(vm.advanceCareTrial);
       var paidMessageLicenseCount = _.get(vm.messageTrial, 'paid', 0);
       // Has no user services but might have purchased message licenses.
       // Care should validate against those licenses so 0 is OK.
@@ -735,7 +744,7 @@
       var careTrial = (careType === vm.careTypes.K2) ? vm.careTrial : vm.advanceCareTrial;
       var paidMessageLicenseCount = _.get(vm.messageTrial, 'paid', 0);
       var messageLicenseCount = (vm.messageTrial.enabled) ? vm.details.licenseCount : paidMessageLicenseCount;
-      var max = messageLicenseCount - getCareLicenseCount(careTrial);
+      var max = messageLicenseCount - getCareLicense(careTrial);
       return Math.min(max, vm.validationData.careMax);
     }
 
@@ -882,6 +891,8 @@
 
     function getNewOrgInitResults(results, hasCallEntitlement, stateDefaults) {
       var initResults = {};
+      var advanceCareTrailDetailsQuantity = vm.cvcAsCdcFeatureToggle ? 0 : stateDefaults.advanceCareDefault;
+
       _.set(initResults, 'roomSystemTrial.enabled', true);
       _.set(initResults, 'sparkBoardTrial.enabled', results.atlasDarling);
       _.set(initResults, 'webexTrial.enabled', true);
@@ -893,12 +904,16 @@
       _.set(initResults, 'careTrial.enabled', results.ftCareTrials);
       _.set(initResults, 'careTrial.details.quantity', stateDefaults.careDefault);
       _.set(initResults, 'advanceCareTrial.enabled', results.ftAdvanceCareTrials);
-      _.set(initResults, 'advanceCareTrial.details.quantity', stateDefaults.advanceCareDefault);
+      _.set(initResults, 'advanceCareTrial.details.quantity', advanceCareTrailDetailsQuantity);
       return initResults;
     }
 
     function getExistingOrgInitResults(results, hasCallEntitlement, preset, paidServices) {
       var initResults = {};
+      var allCareLicenses = (preset.careLicenseValue || paidServices.care.qty) + (preset.advanceCareLicenseValue || paidServices.advanceCare.qty);
+      var careTrailDetailsQuantity = vm.cvcAsCdcFeatureToggle ? Math.min(allCareLicenses, 50) : preset.careLicenseValue || paidServices.care.qty;
+      var advanceCareTrailDetailsQuantity = vm.cvcAsCdcFeatureToggle ? 0 : preset.advanceCareLicenseValue || paidServices.advanceCare.qty;
+
       _.set(initResults, 'roomSystemTrial.enabled', preset.roomSystems);
       _.set(initResults, 'roomSystemTrial.paid', paidServices.roomSystems.qty);
       _.set(initResults, 'sparkBoardTrial.enabled', preset.sparkBoard);
@@ -915,10 +930,10 @@
       _.set(initResults, 'sparkBoardTrial.details.quantity', preset.sparkBoardValue || paidServices.sparkBoard.qty);
       _.set(initResults, 'careTrial.enabled', preset.care);
       _.set(initResults, 'careTrial.paid', paidServices.care.qty);
-      _.set(initResults, 'careTrial.details.quantity', preset.careLicenseValue || paidServices.care.qty);
+      _.set(initResults, 'careTrial.details.quantity', careTrailDetailsQuantity);
       _.set(initResults, 'advanceCareTrial.enabled', preset.advanceCare);
       _.set(initResults, 'advanceCareTrial.paid', paidServices.advanceCare.qty);
-      _.set(initResults, 'advanceCareTrial.details.quantity', preset.advanceCareLicenseValue || paidServices.advanceCare.qty);
+      _.set(initResults, 'advanceCareTrial.details.quantity', advanceCareTrailDetailsQuantity);
       if (isEditTrial()) {
         _.set(initResults, 'contextTrial.enabled', results.tcHasService);
         _.set(initResults, 'preset.context', results.tcHasService);
