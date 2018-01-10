@@ -70,7 +70,7 @@
           <div class="warning-container">
           <span translate="mediaFusion.clusters.deactivateWarning"></span>
           <div class="cs-input-group cs-input-checkbox">
-            <input type="checkbox" id="deactivateCheckbox" ng-model="deleteClust.checkboxModel">
+            <input type="checkbox" id="deactivateCheckbox" ng-model="deleteClust.lastClusterCheckboxModel">
             <label for="deactivateCheckbox">
               <span translate="mediaFusion.clusters.iUnderstand"></span>
             </label>
@@ -112,7 +112,7 @@
     </button>
   </div>
   <div ng-show=" deleteClust.radioModel == '2' ">
-    <button class="btn btn--negative pull-right" id="convertActionButton" ng-click="deleteClust.deleteCluster()" ng-disabled="!deleteClust.checkboxModel || deleteClust.ngDisable">
+    <button class="btn btn--negative pull-right" id="convertActionButton" ng-click="deleteClust.deleteCluster()" ng-disabled="!deleteClust.checkboxModel || !deleteClust.lastClusterCheckboxModel">
       <span ng-hide="saving" translate="mediaFusion.clusters.deletecluster">
     </span>
       <span ng-show="saving">

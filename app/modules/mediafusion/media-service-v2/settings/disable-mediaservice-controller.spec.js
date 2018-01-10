@@ -1,11 +1,12 @@
 'use strict';
 
 describe('Controller: DisableMediaServiceController', function () {
-
   beforeEach(angular.mock.module('Mediafusion'));
   beforeEach(angular.mock.module('Hercules'));
 
-  var controller, HybridServicesClusterService, $q, Notification, httpMock, DeactivateHybridMediaService;
+  var controller, HybridServicesClusterService, $q, Notification, httpMock, DeactivateMediaService;
+
+  // var serviceId = "squared-fusion-media";
   var modalInstance = {
     dismiss: jasmine.createSpy('dismiss'),
     close: jasmine.createSpy('close'),
@@ -16,12 +17,11 @@ describe('Controller: DisableMediaServiceController', function () {
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value('Authinfo', authInfo);
   }));
-
-  beforeEach(inject(function ($state, $controller, _$q_, _Notification_, _HybridServicesClusterService_, _$httpBackend_, _DeactivateHybridMediaService_) {
+  beforeEach(inject(function (_$q_, _$httpBackend_, $state, $controller, _DeactivateMediaService_, _HybridServicesClusterService_, _Notification_) {
     $q = _$q_;
     Notification = _Notification_;
     HybridServicesClusterService = _HybridServicesClusterService_;
-    DeactivateHybridMediaService = _DeactivateHybridMediaService_;
+    DeactivateMediaService = _DeactivateMediaService_;
     spyOn($state, 'go');
     httpMock = _$httpBackend_;
     httpMock.when('GET', /^\w+.*/).respond({});
@@ -29,11 +29,14 @@ describe('Controller: DisableMediaServiceController', function () {
       $state: $state,
       $q: $q,
       $modalInstance: modalInstance,
-
       Notification: Notification,
       HybridServicesClusterService: HybridServicesClusterService,
     });
   }));
+
+  afterEach(function () {
+    $q = httpMock = DeactivateMediaService = HybridServicesClusterService = Notification = undefined;
+  });
 
   it('controller should be defined', function () {
     expect(controller).toBeDefined();
@@ -53,32 +56,13 @@ describe('Controller: DisableMediaServiceController', function () {
     expect(modalInstance.close).toHaveBeenCalled();
     expect(Notification.success).toHaveBeenCalled();
   });
-
-  it('should call the deactivateMediaService for deactivate', function () {
-    spyOn(DeactivateHybridMediaService, 'deactivateMediaService');
+  it('should call HybridServicesClusterService.deregisterCluster for deactivate', function () {
+    spyOn(HybridServicesClusterService, 'deregisterCluster').and.returnValue($q.resolve({}));
     spyOn(controller, 'step');
-    controller.clusterIds = ['cluster1', 'cluster2'];
+    spyOn(DeactivateMediaService, 'deactivateHybridMediaService');
     controller.deactivate();
     httpMock.verifyNoOutstandingExpectation();
     expect(controller.step).toBe('2');
-    expect(DeactivateHybridMediaService.deactivateMediaService).toHaveBeenCalled();
-  });
-
-  it('HybridServicesClusterService getAll should be called for getClusterList', function () {
-    var clusters = [{
-      id: 'a050fcc7-9ade-4790-a06d-cca596910421',
-      name: 'MFA_TEST2',
-      targetType: 'mf_mgmt',
-      connectors: [{
-        state: 'running',
-        hostname: 'doesnothavecalendar.example.org',
-      }],
-    }];
-    spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve(
-      clusters
-    ));
-    controller.getClusterList();
-    httpMock.verifyNoOutstandingExpectation();
-    expect(HybridServicesClusterService.getAll).toHaveBeenCalled();
+    expect(DeactivateMediaService.deactivateHybridMediaService).toHaveBeenCalled();
   });
 });

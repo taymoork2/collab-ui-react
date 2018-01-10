@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function DeleteClusterSettingControllerV2($filter, $modalInstance, $q, $state, $translate, cluster, HybridServicesClusterService, Notification) {
+  function DeleteClusterSettingControllerV2($filter, $modalInstance, $q, $state, $translate, cluster, HybridServicesClusterService, Notification, DeactivateMediaService) {
     var vm = this;
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
     vm.options = [];
@@ -72,7 +72,7 @@
         defuseHost(vm.hosts[i]);
       }
       if (vm.clusters.length === 1) {
-        DeactivateHybridMediaService.deactivateMediaService();
+        DeactivateMediaService.deactivateHybridMediaService();
         $modalInstance.close();
       }
     };
@@ -185,7 +185,9 @@
           });
           Notification.success(vm.success);
           $modalInstance.close();
-          $state.go('media-service-v2.list');
+          if (vm.clusters.length > 1) {
+            $state.go('media-service-v2.list');
+          }
         }, function (err) {
           vm.error = $translate.instant('mediaFusion.deleteGroup.errorMessage', {
             groupName: vm.cluster.name,
