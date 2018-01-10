@@ -102,6 +102,7 @@
         tpl.featureType = feature.name;
         tpl.color = feature.color;
         tpl.icons = feature.icons;
+        tpl.featureIcons = feature.featureIcons;
         return tpl;
       });
       return orderByCardName(formattedList);

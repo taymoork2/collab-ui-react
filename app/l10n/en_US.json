@@ -7719,6 +7719,7 @@
     "helpTextWaitingVirtualAssistant": "If you are using a Customer Virtual Assistant, this message indicates transition from automated support to human interaction.",
     "helpTextChatting": "Customers see this if they minimize the chat window during an ongoing interaction.",
     "helpTextLeaveRoom": "Customers see this when an agent exits the chat and ends the interaction.",
+    "assistantTooltip" : "The {{assistantType}} {{assistantName}} is used in this template.",
     "filterType": {
       "chat": "Customer Support Template",
       "callback": "Customer Support Template",

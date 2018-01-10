@@ -33,6 +33,14 @@ var _ = require('lodash');
     vm.filteredListOfFeatures = [];
     vm.pageState = pageStates.loading;
     vm.cardColor = {};
+    vm.featureToolTip = function (type, name) {
+      var assistantType = {
+        cva: $translate.instant('careChatTpl.virtualAssistant.cva.featureText.name'),
+        eva: $translate.instant('careChatTpl.virtualAssistant.eva.featureText.name'),
+      };
+      return $translate.instant('careChatTpl.assistantTooltip',
+        { assistantType: assistantType[type], assistantName: name });
+    };
     vm.placeholder = {
       name: 'Search',
     };
@@ -65,6 +73,7 @@ var _ = require('lodash');
       isEmpty: false,
       color: 'people',
       icons: ['icon-message'],
+      featureIcons: { eva: EvaService.featureList.icons[0], cva: CvaService.featureList.icons[0] },
       data: [],
     }, {
       name: 'Ca',
@@ -83,6 +92,7 @@ var _ = require('lodash');
       isEmpty: false,
       color: 'people',
       icons: ['icon-message', 'icon-phone'],
+      featureIcons: { eva: EvaService.featureList.icons[0], cva: CvaService.featureList.icons[0] },
       data: [],
     }];
     vm.filters = [{
