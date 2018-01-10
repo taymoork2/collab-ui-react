@@ -249,11 +249,36 @@ describe('Care Setup Assistant Ctrl', function () {
         var defered = $q.defer();
         var result = {
           items: isEditFeature ? [
-            'Jhon Doe',
-            'Trudy',
+            {
+              name: 'Jhon Doe',
+              id: '007',
+              orgId: '12345',
+            }, {
+              name: 'Trudy',
+              id: '005',
+              orgId: '12345',
+            },
           ] : [],
         };
         defered.resolve(result);
+        return defered.promise;
+      });
+
+      spyOn(EvaService, 'getExpertAssistantSpaces').and.callFake(function () {
+        var defered = $q.defer();
+        var space = {
+          items: isEditFeature ? [
+            {
+              title: 'Spark Care room 1',
+              default: true,
+            },
+            {
+              title: 'HR help room',
+              default: false,
+            },
+          ] : [],
+        };
+        defered.resolve(space);
         return defered.promise;
       });
 
@@ -431,6 +456,86 @@ describe('Care Setup Assistant Ctrl', function () {
       controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
       controller.template.name = templateName;
       expect(controller.template.configuration.routingLabel).toEqual('expert');
+    });
+
+    it('isExpertEscalationSelected should give correct value if feature flag is disabled for org', function () {
+      var configMock = Object.assign({}, existingTemplateData, {
+        configuration: Object.assign({}, existingTemplateData.configuration, {
+          routingLabel: 'expert',
+        }),
+      });
+      inject(intializeCtrl('chat', configMock, true));
+      resolveTogglePromise();
+      controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
+      controller.template.name = templateName;
+      controller.evaConfig.isEvaFlagEnabled = false;
+      expect(controller.isExpertEscalationSelected()).toEqual(false);
+    });
+
+    it('correct details for expert space should be set when expert is persent for the org and agent is selected', function () {
+      var configMock = Object.assign({}, existingTemplateData, {
+        configuration: Object.assign({}, existingTemplateData.configuration, {
+          routingLabel: 'agent',
+        }),
+      });
+      inject(intializeCtrl('chat', configMock, true));
+      resolveTogglePromise();
+      controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
+      controller.template.name = templateName;
+      expect(controller.evaConfig.isEvaFlagEnabled).toEqual(true);
+      expect(controller.evaConfig.isEvaConfigured).toEqual(true);
+      expect(controller.template.configuration.routingLabel).toEqual('agent');
+      expect(controller.isExpertEscalationSelected()).toEqual(false);
+      expect(controller.evaSpaceTooltipData.indexOf('Jhon Doe') !== -1);
+      expect(controller.evaSpaceTooltipData.indexOf('Spark Care room 1') !== -1);
+      expect(controller.evaSpaceTooltipData.indexOf('HR help room') !== -1);
+    });
+
+    it('correct details for expert space should be set when expert is persent for the org and expert is selected', function () {
+      var configMock = Object.assign({}, existingTemplateData, {
+        configuration: Object.assign({}, existingTemplateData.configuration, {
+          routingLabel: 'expert',
+        }),
+      });
+      inject(intializeCtrl('chat', configMock, true));
+      resolveTogglePromise();
+      controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
+      controller.template.name = templateName;
+      expect(controller.evaConfig.isEvaFlagEnabled).toEqual(true);
+      expect(controller.evaConfig.isEvaConfigured).toEqual(true);
+      expect(controller.template.configuration.routingLabel).toEqual('expert');
+      expect(controller.isExpertEscalationSelected()).toEqual(true);
+      expect(controller.evaSpaceTooltipData.indexOf('Jhon Doe') !== -1);
+      expect(controller.evaSpaceTooltipData.indexOf('Spark Care room 1') !== -1);
+      expect(controller.evaSpaceTooltipData.indexOf('HR help room') !== -1);
+    });
+
+    it('correct details for expert space should be set when expert is persent for the org and agentplusexpert is selected', function () {
+      var configMock = Object.assign({}, existingTemplateData, {
+        configuration: Object.assign({}, existingTemplateData.configuration, {
+          routingLabel: 'agentplusexpert',
+        }),
+      });
+      inject(intializeCtrl('chat', configMock, true));
+      resolveTogglePromise();
+      controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
+      controller.template.name = templateName;
+      expect(controller.evaConfig.isEvaFlagEnabled).toEqual(true);
+      expect(controller.evaConfig.isEvaConfigured).toEqual(true);
+      expect(controller.template.configuration.routingLabel).toEqual('agentplusexpert');
+      expect(controller.isExpertEscalationSelected()).toEqual(true);
+      expect(controller.evaSpaceTooltipData.indexOf('Jhon Doe') !== -1);
+      expect(controller.evaSpaceTooltipData.indexOf('Spark Care room 1') !== -1);
+      expect(controller.evaSpaceTooltipData.indexOf('HR help room') !== -1);
+    });
+
+    it('correct details for expert space should be set when expert is deleted', function () {
+      inject(intializeCtrl('chat'));
+      resolveTogglePromise();
+      controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
+      controller.template.name = templateName;
+      expect(controller.evaSpaceTooltipData).toEqual('');
+      expect(controller.isExpertEscalationSelected()).toEqual(false);
     });
 
     it('expert and agentplusexpert radio button should be enabled when expert is persent for the org', function () {
