@@ -2,18 +2,19 @@ var HttpStatus = require('http-status-codes');
 (function () {
   'use strict';
 
+  // TODO: no console logging should remain in production code
+
   angular
     .module('Sunlight')
     .controller('CareLocalSettingsCtrl', CareLocalSettingsCtrl);
 
   /* @ngInject */
-  function CareLocalSettingsCtrl($interval, $location, $q, $scope, $translate, AutoAttendantConfigService, Authinfo, FeatureToggleService, Log, Notification, ModalService, SunlightUtilitiesService, SunlightConfigService, URService) {
+  function CareLocalSettingsCtrl($element, $interval, $location, $q, $scope, $translate, AccessibilityService, AutoAttendantConfigService, Authinfo, FeatureToggleService, Log, Notification, ModalService, SunlightUtilitiesService, SunlightConfigService, URService) {
     var vm = this;
 
     vm.ONBOARDED = 'onboarded';
     vm.NOT_ONBOARDED = 'notOnboarded';
     vm.IN_PROGRESS = 'inProgress';
-
 
     vm.status = {
       UNKNOWN: 'Unknown',
@@ -620,16 +621,24 @@ var HttpStatus = require('http-status-codes');
         populateQueueConfigViewModel(result, true);
         sunlightPromise = getOnboardingStatusFromOrgChatConfig();
         setViewModelStateForAA(sunlightPromise);
-      })
-        .catch(function (error) {
-          sunlightPromise = getOnboardingStatusFromOrgChatConfig();
-          if (error.status === 404) {
-            vm.state = vm.NOT_ONBOARDED;
-          } else {
-            Log.debug('Fetching default Queue status status, on load, failed: ', error);
-          }
-          setViewModelStateForAA(sunlightPromise);
-        });
+        return sunlightPromise;
+      }).catch(function (error) {
+        sunlightPromise = getOnboardingStatusFromOrgChatConfig();
+        if (error.status === 404) {
+          vm.state = vm.NOT_ONBOARDED;
+        } else {
+          Log.debug('Fetching default Queue status, on load, failed: ', error);
+        }
+        setViewModelStateForAA(sunlightPromise);
+        return sunlightPromise;
+      }).finally(function () {
+        // set the initial page focus
+        if (vm.state === vm.IN_PROGRESS || vm.state === vm.ONBOARDED) {
+          AccessibilityService.setFocus($element, '[name="selectedRouting"]');
+        } else {
+          AccessibilityService.setFocus($element, '#ccfsBtn');
+        }
+      });
     }
 
     init();
