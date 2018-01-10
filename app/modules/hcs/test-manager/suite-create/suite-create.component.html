@@ -5,7 +5,7 @@
 <div class="modal-body suite-create-modal">
   <div ng-form="$ctrl.suiteCreateForm">
     <div class="row">
-      <div ng-if="!$ctrl.showConfirmation" class="columns medium-8">
+      <div class="columns medium-8">
         <div class="addSuiteInput" class="cs-input-group medium-6 columns" ng-class="{'error': $ctrl.suiteCreateForm.customerName.$invalid && $ctrl.suiteCreateForm.customerName.$touched}">
           <label translate="hcs.taas.createSuiteModal.suiteName"> </label>
           <input
@@ -26,16 +26,12 @@
     </div>
   </div>
 </div>
-<div class="modal-footer" ng-if="!$ctrl.showConfirmation">
+<div class="modal-footer" >
 <button class="btn btn-default"  ng-click="$ctrl.dismiss()"
   translate="common.cancel">
 </button>
 <button class="btn btn-primary" ng-click="$ctrl.validateAndContinue()" translate="common.continue" ng-disabled="$ctrl.suiteCreateForm.$invalid">
 </button>
 </div>
-<div class="modal-footer" ng-if="$ctrl.showConfirmation">
-<button class="btn btn-primary"  ng-click="$ctrl.finishAddingCustomer()"
-  translate="common.finish">
-</button>
-</div>
+
 
