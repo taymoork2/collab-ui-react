@@ -3063,6 +3063,14 @@
               },
             },
           })
+          .state('taasServiceManager.suiteCreate', {
+            parent: 'taasServiceManager',
+            views: {
+              'modal@': {
+                template: '<suite-create-modal class="modal-content" style="margin:initial" dismiss="$dismiss()" close="$close()"></suite-create-modal>',
+              },
+            },
+          })
           .state('customer-overview', {
             parent: 'sidepanel',
             views: {

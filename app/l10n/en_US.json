@@ -10350,7 +10350,7 @@
       },
       "suite": {
         "title": "Suites",
-        "addSuite": "Create Suite",
+        "createSuite": "Create Suite",
         "runSuite": "Run Suite",
         "editSuite": "Edit",
         "copySuite": "Copy",
@@ -10370,7 +10370,7 @@
         "copyTest": "Copy",
         "deleteTest": "Delete"
       },
-      "addSuiteModal": {
+      "createSuiteModal": {
         "title": "Add a suite",
         "suiteName": "Suite name"
       },

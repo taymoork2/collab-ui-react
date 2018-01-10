@@ -6,3 +6,4 @@ export * from './scheduler';
 export * from './resources';
 export * from './scheduleView';
 export * from './resourceCreate';
+export * from './suite-create';
