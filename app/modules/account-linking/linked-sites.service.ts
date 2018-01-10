@@ -1,11 +1,15 @@
-import { IACSiteInfo } from './account-linking.interface';
-import { mockSiteList } from './sites-list-mock';
+import { IACSiteInfo, IACLinkingStatus, IACWebexSiteinfoResponse } from './account-linking.interface';
+import { Notification } from 'modules/core/notifications';
 
 export class LinkedSitesService {
 
   /* @ngInject */
-  constructor(private Authinfo: any,
-              private Userservice) {
+  constructor(private $log: ng.ILogService,
+              private Authinfo: any,
+              private Userservice,
+              private LinkedSitesWebExService,
+              private LinkedSitesMockService,
+              private Notification: Notification) {
   }
 
   public init(): void {
@@ -15,17 +19,58 @@ export class LinkedSitesService {
     const userId = this.Authinfo.getUserId();
     //TODO: Explore unhappy cases. Currently only handling happy cases !
     return this.Userservice.getUserAsPromise(userId).then((response) => {
+      this.$log.debug('getUserAsPromise resolved', response);
       const adminTrainSiteNames =  response.data.adminTrainSiteNames;
       const conferenceServicesWithLinkedSiteUrl = this.Authinfo.getConferenceServicesWithLinkedSiteUrl();
       const sites: IACSiteInfo[] = _.map(conferenceServicesWithLinkedSiteUrl, (serviceFeature: any) => {
-        return {
+        return <IACSiteInfo>{
           linkedSiteUrl: serviceFeature.license.linkedSiteUrl,
-          accountLinkingStatus: 'Unknown',
-          usersLinked: undefined,
           isSiteAdmin: _.includes(adminTrainSiteNames, serviceFeature.license.linkedSiteUrl),
+          webexInfo: {
+            siteInfoPromise: this.getSiteInfo(serviceFeature.license.linkedSiteUrl),
+            ciAccountSyncPromise: this.getCiAccountSync(serviceFeature.license.linkedSiteUrl),
+            domainsPromise: this.getDomains(serviceFeature.license.linkedSiteUrl),
+          },
         };
       });
-      return sites.concat(mockSiteList);
+      this.$log.debug('return realSites', sites);
+
+      return sites.concat(this.LinkedSitesMockService.getMockSites());
+    });
+  }
+
+  public setCiSiteLinking(linkedSiteUrl, mode) {
+    return this.LinkedSitesWebExService.setCiSiteLinking(linkedSiteUrl, mode);
+  }
+
+  // TODO Add interface for data returned
+  private getSiteInfo(siteUrl: string): ng.IPromise<IACWebexSiteinfoResponse> {
+    return this.LinkedSitesWebExService.getCiSiteLinking(siteUrl).then((si: IACWebexSiteinfoResponse) => {
+      this.$log.debug('getSiteInfo', si);
+      return si;
+    }).catch((error) => {
+      this.$log.debug('error', error);
+      this.Notification.error('accountLinking.errors.getCiSiteLinkingError', { message: error.data.errorMsg });
+    });
+  }
+
+  private getCiAccountSync(siteUrl: string): ng.IPromise<IACLinkingStatus> {
+    return this.LinkedSitesWebExService.getCiAccountSync(siteUrl).then((as: IACLinkingStatus) => {
+      this.$log.debug('getCiAccountSync', as);
+      return as;
+    }).catch((error) => {
+      this.$log.debug('error', error);
+      this.Notification.error('accountLinking.errors.getCiAccountSyncError', { message: error.data.errorMsg });
+    });
+  }
+
+  private getDomains(siteUrl: string): ng.IPromise<any> {
+    return this.LinkedSitesWebExService.getDomainsWithRetry(siteUrl).then((domains) => {
+      this.$log.debug('LinkedSitesService.getDomains', domains);
+      return domains;
+    }).catch((error) => {
+      this.$log.debug('error', error);
+      this.Notification.error('accountLinking.errors.getDomainsError', { message: error.data.errorMsg });
     });
   }
 }

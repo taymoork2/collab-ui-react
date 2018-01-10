@@ -1918,7 +1918,7 @@
             },
           })
           .state('site-list.linked', {
-            url: '/linked',
+            url: '/services/linked',
             views: {
               tabContent: {
                 template: '<linked-sites></linked-sites>',
@@ -1932,26 +1932,58 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<linked-sites-details></linked-sites-details>',
+                template: '<linked-sites-details selected-site-info="$resolve.selectedSiteInfo" show-wizard-fn="$resolve.showWizardFn(siteInfo)" launch-webex-fn="$resolve.launchWebexFn(site, useHomepage)"></linked-sites-details>',
               },
             },
             params: {
-              siteInfo: null,
+              selectedSiteInfo: null,
+              showWizardFn: null,
+              launchWebexFn: null,
             },
             data: {},
             resolve: {
               displayName: translateDisplayName('accountLinking.siteDetails.breadCrumb'),
+              selectedSiteInfo: /*@ngInject */ function ($stateParams) {
+                return $stateParams['selectedSiteInfo'];
+              },
+              showWizardFn: /*@ngInject */ function ($stateParams) {
+                return $stateParams['showWizardFn'];
+              },
+              launchWebexFn: /*@ngInject */ function ($stateParams) {
+                return $stateParams['launchWebexFn'];
+              },
             },
           })
           .state('site-list.linked.details.wizard', {
             views: {
               'modal@': {
-                template: '<account-linking-wizard></account-linking-wizard>',
+                template: '<account-linking-wizard dismiss="$dismiss()" site-info="$resolve.siteInfo" operation="$resolve.operation" launch-webex-fn="$resolve.launchWebexFn(site, useHomepage)" set-account-linking-mode-fn="$resolve.setAccountLinkingModeFn(siteUrl, mode)"></account-linking-wizard>',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'account-linking-wizard-custom';
+                  },
+                },
               },
             },
             params: {
               siteInfo: null,
               operation: null,
+              launchWebexFn: null,
+              setAccountLinkingModeFn: null,
+            },
+            resolve: {
+              siteInfo: /*@ngInject */ function ($stateParams) {
+                return $stateParams['siteInfo'];
+              },
+              operation: /*@ngInject */ function ($stateParams) {
+                return $stateParams['operation'];
+              },
+              launchWebexFn: /*@ngInject */ function ($stateParams) {
+                return $stateParams['launchWebexFn'];
+              },
+              setAccountLinkingModeFn: /*@ngInject */ function ($stateParams) {
+                return $stateParams['setAccountLinkingModeFn'];
+              },
             },
             onEnter: modalOnEnter({
               type: 'full',

@@ -1,4 +1,5 @@
 import { LinkingOperation } from './../account-linking.interface';
+import { IACSiteInfo } from './../account-linking.interface';
 
 class LinkedSitesGridComponentCtrl implements ng.IComponentController {
   public gridApi;
@@ -8,7 +9,7 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
 
   public sitesInfo: any;
   public onSiteSelectedFn: Function;
-
+  public launchWebexFn: Function;
   public webexPage;
 
   private selectedRow;
@@ -16,10 +17,12 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $log: ng.ILogService,
-    private $state,
+    private $state: ng.ui.IStateService,
+    //private $rootScope: ng.IRootScopeService,
+    private $translate,
+    private uiGridConstants,
   ) {
     this.$log.debug('LinkedSitesGridComponentCtrl constructor, sitesInfo:', this.sitesInfo);
-    this.createGridConfig();
   }
 
   public $onChanges = (ch: {[bindings: string]: ng.IChangesObject<any>}) => {
@@ -27,35 +30,67 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
       this.sitesInfo = ch.sitesInfo.currentValue;
       this.gridConfig.data = this.sitesInfo;
       this.loading = !this.loading;
+      this.gridApi.core.notifyDataChange(this.uiGridConstants.dataChange.ALL);
     }
   }
 
   public $onInit = () => {
     this.$log.debug('$onInit');
     this.$log.debug('onInit LinkedSitesGridComponentCtrl, sitesInfo:', this.sitesInfo);
+    this.createGridConfig();
   }
 
   private createGridConfig() {
     this.gridConfig = { excludeProperties: '__metadata' };
-    this.gridConfig.enableRowHeaderSelection = false,
-      this.gridConfig.enableFullRowSelection = true;
+    this.gridConfig.enableRowHeaderSelection = false;
+    this.gridConfig.enableFullRowSelection = true;
     this.gridConfig.enableColumnMenus = false;
     this.gridConfig.enableRowSelection = true;
     this.gridConfig.enableSorting = true;
     this.gridConfig.appScopeProvider = this;
     this.gridConfig.data = [];
-    //TODO: Include i18n when final columns and content is decided
     this.gridConfig.columnDefs = [
-      { field: 'linkedSiteUrl', displayName: 'Site URL', enableColumnMenu: false },
-      { field: 'accountLinkingStatus', displayName: 'Account Linking Status', enableColumnMenu: false },
-      { field: 'usersLinked', displayName: 'Users Linked', enableColumnMenu: false },
+      {
+        field: 'linkedSiteUrl',
+        displayName: this.$translate.instant('accountLinking.grid.header.siteUrl'),
+        enableColumnMenu: false,
+        sort: {
+          direction: this.uiGridConstants.ASC,
+          priority: 0,
+        },
+      },
+      {
+        field: 'linkingMode',
+        displayName: this.$translate.instant('accountLinking.grid.header.accountLinkingMode'),
+        enableColumnMenu: false,
+        cellTemplate: require('./linking-mode.tpl.html'),
+        sort: {
+          direction: this.uiGridConstants.ASC,
+          priority: 1,
+        },
+      },
+      {
+        field: 'usersLinkedToTotal',
+        displayName: this.$translate.instant('accountLinking.grid.header.linkedAccounts'),
+        cellTemplate: require('./linked-accounts.tpl.html'),
+        enableColumnMenu: false,
+        sortingAlgorithm: (a: any, b: any, rowA: any, rowB: any, dir: any): number => {
+          return this.sortLinkedAccounts(a, b, rowA, rowB, dir);
+        },
+        sort: {
+          direction: this.uiGridConstants.ASC,
+          priority: 2,
+          ignoreSort: true,
+        },
+      },
+      {
+        field: 'action',
+        displayName: this.$translate.instant('accountLinking.grid.header.action'),
+        cellTemplate: require('./actions.tpl.html'),
+        enableColumnMenu: false,
+        enableSorting: false,
+      },
     ];
-
-    this.gridConfig.columnDefs.push({
-      field: 'action',
-      displayName: 'Action',
-      cellTemplate: require('./actions.tpl.html'),
-    });
 
     this.gridConfig.rowHeight = 45,
     this.gridConfig.multiSelect = false;
@@ -73,7 +108,6 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
       });
       this.gridApi.selection.on.rowSelectionChanged.call(this, null, this.showDetails);
     }.bind(this);
-    // this.gridConfig.data = this.sitesInfo;
   }
 
   public showDetails = (selectedRow) => {
@@ -81,46 +115,51 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
     this.selectedRow = selectedRow;
   }
 
-  public modifyLinkingMethod(siteUrl) {
-    this.$state.go('site-list.linked.details.wizard', { siteInfo: siteUrl, operation: LinkingOperation.Modify });
+  public modifyLinkingMethod(siteInfo) {
+    this.$state.go('site-list.linked.details.wizard', {
+      siteInfo: siteInfo, //TODO: url or the whole object ????
+      operation: LinkingOperation.Modify,
+      launchWebexFn: this.launchWebexFn,
+    });
   }
 
-  public gotoWebexListSitesPage(siteUrl) {
-    this.$log.debug('selected site:', siteUrl);
-    this.prepareLaunchButton(siteUrl, true);
+  public allowModifyingLinkingMode(selectedRowInfo: IACSiteInfo): boolean {
+    return selectedRowInfo.isSiteAdmin === true;
   }
 
-  public gotoWebexHomePage(siteUrl) {
-    this.$log.debug('selected site:', siteUrl);
-    this.prepareLaunchButton(siteUrl, false);
+  public gotoWebexListSitesPage(siteInfo) {
+    this.$log.info('Launch Webex site admin from grid list for site', siteInfo);
+    this.launchWebexFn({ site: siteInfo, useHomepage: false });
   }
 
-  public showReports(siteUrl) {
-    this.$state.go('reports.webex-metrics', { siteUrl: siteUrl });
+  public gotoWebexHomePage(siteInfo) {
+    this.$log.debug('selected site:', siteInfo);
+    this.launchWebexFn({
+      site: siteInfo,
+      useHomepage: true,
+      launchWebexFn: this.launchWebexFn,
+    });
   }
 
-  private prepareLaunchButton(siteUrl, toSiteListPage) {
-
-    this.webexPage = {
-      siteUrl: siteUrl,
-      toSiteListPage: toSiteListPage,
-    };
-
-    this.$log.debug(' webexPage', this.webexPage);
+  public showReports(siteInfo) {
+    this.$state.go('reports.webex-metrics', { siteUrl: siteInfo.siteUrl });
   }
 
-  public readyToLaunch(buttonId) {
-    this.$log.debug('ready to launch with buttonId', buttonId);
-    angular.element('#' + buttonId).click();
+  private sortLinkedAccounts(_a: any, _b: any, rowA: any, rowB: any, _dir: any): number {
+    const aCalc: number = rowA.entity.linkingStatus.accountsLinked / rowA.entity.linkingStatus.totalWebExAccounts;
+    const bCalc: number = rowB.entity.linkingStatus.accountsLinked / rowB.entity.linkingStatus.totalWebExAccounts;
+    if (aCalc < bCalc) {
+      return -1;
+    }
+    if (aCalc === bCalc) {
+      return 0;
+    }
+    return 1;
   }
 
 }
 
 export class LinkedSitesGridComponent implements ng.IComponentOptions {
-
-  /* @ngInject */
-  constructor() {
-  }
 
   public controller = LinkedSitesGridComponentCtrl;
   public template = require('modules/account-linking/sites-list/linked-sites-grid.component.html');
@@ -128,5 +167,6 @@ export class LinkedSitesGridComponent implements ng.IComponentOptions {
   public bindings = {
     sitesInfo: '<',
     onSiteSelectedFn: '&',
+    launchWebexFn: '&',
   };
 }

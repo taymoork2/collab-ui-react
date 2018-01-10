@@ -1,5 +1,5 @@
 import linkedSites from './index';
-import { LinkingOperation } from './account-linking.interface';
+import { LinkingOperation, IACSiteInfo, IACLinkingStatus, IACWebexSiteinfoResponse, IACWebexPromises } from './account-linking.interface';
 
 describe('Component: linkedSites', () => {
 
@@ -17,7 +17,6 @@ describe('Component: linkedSites', () => {
     };
     $provide.value('Userservice', Userservice);
   }
-
   beforeEach(function () {
     this.initModules(linkedSites);
 
@@ -28,30 +27,37 @@ describe('Component: linkedSites', () => {
       '$state',
       '$q',
       'FeatureToggleService',
+      'Notification',
       '$scope');
   });
 
   beforeEach(function () {
+    spyOn(this.$state, 'go');
+
+    this.siteInfoDefer = <ng.IPromise<IACWebexSiteinfoResponse>>this.$q.defer();
+    this.ciAccountSyncDefer = <ng.IPromise<IACLinkingStatus>>this.$q.defer();
+    this.domainsDefer = <ng.IPromise<ng.IPromise<any>>>this.$q.defer();
+
+    this.webexInfo = <IACWebexPromises> {
+      siteInfoPromise: this.siteInfoDefer.promise,
+      ciAccountSyncPromise: this.ciAccountSyncDefer.promise,
+      domainsPromise: this.domainsDefer.promise,
+    };
+
+    this.sites = <IACSiteInfo[]>[
+      {
+        linkedSiteUrl: 'CoolSiteUrl',
+        webexInfo: <IACWebexPromises> this.webexInfo,
+      },
+      {
+        linkedSiteUrl: 'anotherCoolSiteUrl',
+        webexInfo: <IACWebexPromises> this.webexInfo,
+      },
+    ];
+
     this.filterSitesDeferred = this.$q.defer();
     spyOn(this.LinkedSitesService, 'filterSites').and.returnValue(this.filterSitesDeferred.promise);
-    this.sites =
-    [{
-      label: 'whatever1',
-      name: 'whatever1',
-      license: { linkedSiteUrl: 'CoolSiteUrl' },
-      isCustomerPartner: false,
-      value: 'whatever',
-    }, {
-      label: 'whatever2',
-      name: 'whatever2',
-      license: { linkedSiteUrl: 'anotherCoolSiteUrl' },
-      isCustomerPartner: true,
-      value: 'whatever',
-    }];
-    this.sites = [
-      { linkedSiteUrl: 'CoolSiteUrl', accountLinkingStatus: 'Unknown', usersLinked: 'Unknown' },
-      { linkedSiteUrl: 'anotherCoolSiteUrl', accountLinkingStatus: 'Unknown', usersLinked: 'Unknown' },
-    ];
+
   });
 
   describe('at startup', () => {
@@ -62,55 +68,71 @@ describe('Component: linkedSites', () => {
         $state: this.$state,
         $stateParams: { originator: 'Banner' },
       }, {});
-    });
-    it('prevent data mining if feature toggle not set', function() {
-      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
-      this.filterSitesDeferred.resolve(this.sites);
-      this.controller.$onInit();
-      this.$scope.$apply();
-      expect(this.controller.sitesInfo).toBeUndefined();
-    });
-    it('read from service and convert to format suitable for grid', function () {
-      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
-      spyOn(this.$state, 'go');
-      this.filterSitesDeferred.resolve(this.sites);
-      this.controller.$onInit();
-      this.$scope.$apply();
-      expect(this.controller.sitesInfo).toEqual([
-        {
-          linkedSiteUrl: 'CoolSiteUrl',
-          accountLinkingStatus: 'Unknown',
-          usersLinked: 'Unknown',
-        }, {
-          linkedSiteUrl: 'anotherCoolSiteUrl',
-          accountLinkingStatus: 'Unknown',
-          usersLinked: 'Unknown',
-        }]);
+
     });
 
-    it('show wizard directly if entering page from the banner', function () {
-      this.controller = this.$componentController('linkedSites', {
-        LinkedSitesService: this.LinkedSitesService,
-        $state: this.$state,
-        $stateParams: { originator: 'Banner' },
+    describe('feature toggle not set', () => {
+      it('prevent data mining if feature toggle not set', function() {
+        spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
+        this.filterSitesDeferred.resolve(this.sites);
+        this.controller.$onInit();
+        this.$scope.$apply();
+        expect(this.controller.sitesInfo).toBeUndefined();
+      });
+    });
+
+    describe('feature toggle set', () => {
+      beforeEach(function () {
+        spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
       });
 
-      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
-      spyOn(this.$state, 'go');
-      this.filterSitesDeferred.resolve(this.sites);
-      this.controller.$onInit();
-      this.$scope.$apply();
-      expect(this.$state.go).toHaveBeenCalledWith(
-        'site-list.linked.details.wizard',
-        {
-          siteInfo: { linkedSiteUrl: 'CoolSiteUrl', accountLinkingStatus: 'Unknown', usersLinked: 'Unknown' },
-          operation: LinkingOperation.New,
-        },
-      );
+      it('get webex sites list', function () {
+        this.controller.$onInit();
+        this.filterSitesDeferred.resolve(this.sites);
+        this.$scope.$apply();
+        expect(this.controller.sitesInfo[0].linkedSiteUrl).toEqual('CoolSiteUrl');
+
+      });
+
+      it('get async response from related webex site', function () {
+        this.controller.$onInit();
+        this.filterSitesDeferred.resolve(this.sites);
+        this.$scope.$apply();
+        expect(this.controller.sitesInfo[0].linkedSiteUrl).toEqual('CoolSiteUrl');
+        this.siteInfoDefer.resolve(<IACWebexSiteinfoResponse>{
+        });
+
+        this.ciAccountSyncDefer.resolve(<IACLinkingStatus>{
+          accountsLinked: 10,
+          totalWebExAccounts: 20,
+        });
+
+        this.domainsDefer.resolve(<ng.IPromise<any>>{
+        });
+        this.$scope.$apply();
+
+        expect(this.controller.sitesInfo[0].linkingStatus).toEqual({
+          accountsLinked: 10,
+          totalWebExAccounts: 20,
+        });
+      });
+
+      it('go to wizard with relevant parameters if entering page from the banner', function () {
+        this.filterSitesDeferred.resolve(this.sites);
+        this.controller.$onInit();
+        this.$scope.$apply();
+        expect(this.$state.go).toHaveBeenCalledWith(
+          'site-list.linked.details.wizard',
+          {
+            siteInfo: jasmine.any(Object),
+            operation: LinkingOperation.New,
+            launchWebexFn: jasmine.any(Function),
+            setAccountLinkingModeFn: jasmine.any(Function),
+          },
+        );
+      });
     });
-
   });
-
 
   describe('View: ', () => {
 

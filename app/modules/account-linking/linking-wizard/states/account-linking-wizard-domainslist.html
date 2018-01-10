@@ -1,0 +1,59 @@
+<div class="modal-body">
+
+  <div class="row">
+    <div class="columns medium-4">
+      <h4>Webex Domains</h4>
+      <p>
+        Cisco will link accounts in these domains, without sending any emails.
+      </p>
+    </div>
+    <div class="columns medium-5 medium-offset-1">
+      <div class="align-top">
+        <h5>Public Domains</h5>
+        <div class="row">
+          <div class="columns medium-6">
+            <p ng-repeat="d in $ctrl.getDomains(0,10)" class="domain">
+              {{d}}
+            </p>
+          </div>
+          <div class="columns medium-6">
+            <p ng-repeat="d in $ctrl.getDomains(10,20)" class="domain domain-right">
+              {{d}}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="columns medium-2"></div>
+  </div>
+  <hr/>
+  <div class="row">
+    <div class="columns medium-4">
+      <h4>Public Domains</h4>
+      <p>
+        The following domains are claimed by other organizations that will not be included in the agreement.
+        Cisco will have to send an email to the user to prove they own the email address.
+      </p>
+    </div>
+    <div class="columns medium-5 medium-offset-1">
+      <div class="align-top">
+        <h5>Public Consumer Domains</h5>
+        <p>gmail.com</p>
+        <p>yahoo.com</p>
+      </div>
+    </div>
+    <div class="columns medium-2"></div>
+  </div>
+
+</div>
+
+<div class="modal-footer">
+  <button class="btn"
+          ng-click="$ctrl.backFunc()"
+          translate="common.back">
+  </button>
+  <button class="btn btn--primary"
+          ng-click="$ctrl.next()"
+          translate="common.next">
+  </button>
+</div>

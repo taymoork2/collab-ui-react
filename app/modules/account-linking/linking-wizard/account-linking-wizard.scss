@@ -3,8 +3,9 @@
 .linking-wizard {
   .site-url {
     padding: 0.4rem;
-    color: #fff;
+    /* color: #fff; */
   }
+
 
   .final-icon {
     text-align: center;
@@ -22,8 +23,10 @@
     margin-bottom: 1rem;
     font-size: 1.1rem;
   }
-  .intro, .agreement {
-    padding-left: 1rem;
+
+  .domains {
+    margin-left: 2px;
+    list-style: none;
   }
 
   .info {
@@ -31,8 +34,12 @@
     margin: 2rem auto;
   }
 
+  .align-top {
+    margin-top: 1rem;
+  }
+
   .agreement-accept {
-    padding-left: 1rem;
+    /* padding-left: 1rem;*/
     margin-top: 1rem;
     label {
       font-weight: bolder;

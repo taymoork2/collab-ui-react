@@ -10281,6 +10281,37 @@
       "link": "Link your users",
       "post": "to Cisco Spark - A new way to experience WebEx meetings"
     },
+    "notification": {
+      "linkText": "Get Started",
+      "infoText": "Link your accounts to Cisco Spark - A new way to experience WebEx meetings"
+    },
+    "errors": {
+      "setAccountLinkingModeError": "Setting Account Linking Mode Failed with : {{message}}",
+      "getCiSiteLinkingError": "Failed getting linking info with : {{message}}",
+      "getCiAccountSyncError": "Failed getting account sync with : {{message}}",
+      "getDomainsError": "Failed getting domains with : {{message}}"
+    },
+    "grid": {
+      "header": {
+        "siteUrl": "Site URL",
+        "accountLinkingStatus": "Status",
+        "accountLinkingMode": "Mode",
+        "linkedAccounts": "Linked Accounts",
+        "action": "Action"
+      },
+      "actions": {
+        "launchWebExSiteAdmin": "Launch WebEx Site Admin",
+        "webExReports": "WebEx Reports",
+        "accountLinkingProgress": "Account Linking Progress",
+        "changeLinkingMethod": "Change Linking Method"
+      }
+    },
+    "linkingMode": {
+      "unset": "Unset",
+      "manual": "Manual",
+      "auto_agreement": "Agreement",
+      "auto_verifiedDomain": "Domain Verified"
+    },
     "siteDetails": {
       "breadCrumb": "Overview",
       "siteInfo": "Site Info",
@@ -10288,43 +10319,18 @@
       "licenseType": "License Type",
       "modify": "Modify",
       "linkingMode": "Linking Mode",
-      "linkedUsers": "Linked Users",
+      "linkedAccounts": "Linked Accounts",
       "siteUsageReports": "Site Usage Reports",
       "viewReports": "View Reports",
-      "readOnly": "You don't have administrative privileges for this site.",
+      "dontHaveAdminRights": "You don't have administrative privileges for this site.",
       "legacyWebexLicense": "Legacy WebEx License",
       "launchWebexSiteAdmin": "Launch WebEx Site Admin"
     },
     "wizard": {
-      "title": "WebEx Users Link Mode",
+      "title": "WebEx Accounts Linking Mode",
       "siteName": "Site Name: {{siteName}}",
-      "mode": {
-        "automatic": {
-          "title": "Automatic",
-          "intro": "Invited users will NOT receive any invitation email, their Cisco Spark account will be pre-verified. Potentional impacts.",
-          "agreementLabel": "No Email - Via Agreement",
-          "agreementLabelHelp": "Cisco can link your users on behalf of you without sending eny email, so you can skip a lot of steps. You'll sign an agreement in the next step.",
-          "verifyDomainLabel": "No Email - Verified Domain",
-          "verifyDomainLabelHelp": "You must have your domains verified, or enable SSO and Directory Sync.",
-          "agreementTitle": "Cisco Spark Agreement",
-          "agreementInfo": "Please read the agreement thoroughly and accept on the bottom",
-          "agreementIntro": "Cisco will verify all the domains on your site. Some domains will NOT be verified such as : gmail.com, yahoo.com",
-          "agreementText": "",
-          "agreementAcceptLabel": "I have read read and accept the agreement.",
-          "agreementAcceptTitle": "Automatic Linking, No email via Agreement",
-          "agreementAcceptInfo": "User linking may take up to 24 hours to complete. Go to the Services > WebEx Site List to see progress. Once complete, your users can use Cisco Spark and experience the best meeting quality.",
-          "verifyDomainTitle": "Automatic Linking, No email - Verified Domain",
-          "verifyDomainInfo": "You must verify your domain or enable SSO and Directory Sync",
-          "verifyDomainButton": "Verify Domain"
-        },
-        "manual": {
-          "title": "Manual",
-          "intro": "Invited users will receive an invitation email to activate their Cisco Spark account.",
-          "info": "Cisco will send out invitation email when you invite users to Cisco Spark. Now, login to WebEx Site Admin and invite users to Cisco Spark",
-          "manualLabel": "Send Email",
-          "manualLabelHelp": "Cisco will send invitation email when you invite users to Cisco Spark"
-        }
-      }
+      "enrolledWebexSiteName": "Enrolled WebEx Site Name",
+      "webexSite": "WebEx Site"
     }
   },
   "hcs": {
