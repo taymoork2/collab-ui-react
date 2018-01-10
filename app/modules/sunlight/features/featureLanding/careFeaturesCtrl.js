@@ -11,11 +11,12 @@ var _ = require('lodash');
     });
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, $rootScope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, CvaService, EvaService) {
+  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, $rootScope, AutoAttendantCeInfoModelService, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, CvaService, EvaService, FeatureToggleService) {
     var vm = this;
     vm.isVirtualAssistantEnabled = $state.isVirtualAssistantEnabled;
     vm.isExpertVirtualAssistantEnabled = $state.isExpertVirtualAssistantEnabled;
     vm.init = init;
+    vm.getCeList = getCeList;
     var pageStates = {
       newFeature: 'NewFeature',
       showFeatures: 'ShowFeatures',
@@ -113,9 +114,21 @@ var _ = require('lodash');
       vm.features.push(EvaService.featureList);
     }
 
+    /**
+     * Function to get Ce info so that getAAModel() can gets its value to proceed
+     * further in aaBuilder under care features.
+     */
+    function getCeList() {
+      FeatureToggleService.supports(FeatureToggleService.features.atlasHybridEnable).then(function (results) {
+        if (results) {
+          AutoAttendantCeInfoModelService.getCeInfosList();
+        }
+      });
+    }
     init();
 
     function init() {
+      vm.getCeList();
       vm.pageState = pageStates.loading;
       var featuresPromises = getListOfFeatures();
 

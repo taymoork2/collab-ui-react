@@ -2,7 +2,7 @@
 
 describe('Care Feature Ctrl should', function () {
   var controller, $filter, $q, $rootScope, $state, $scope, Authinfo, CareFeatureList, CvaService, EvaService,
-    Log, Notification, deferred, callbackDeferred, chatPlusCallbackDeferred, cvaDeferred, evaDeferred, evaSpacesDeferred, $translate, SparkService, getPersonDeferred;
+    Log, Notification, deferred, callbackDeferred, chatPlusCallbackDeferred, cvaDeferred, evaDeferred, evaSpacesDeferred, $translate, SparkService, getPersonDeferred, FeatureToggleService, AutoAttendantCeInfoModelService;
 
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('Test-Org-Id'),
@@ -44,7 +44,16 @@ describe('Care Feature Ctrl should', function () {
       ],
     };
   };
-
+  var ceInfosList = function () {
+    return {
+      items: [
+        {
+          key: 'key response',
+          value: 'value response',
+        },
+      ],
+    };
+  };
   var listEVAsSuccess = function () {
     return {
       items: [
@@ -106,7 +115,7 @@ describe('Care Feature Ctrl should', function () {
     $provide.value('Authinfo', spiedAuthinfo);
   }));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$filter_, _$state_, _$q_, _Authinfo_, _CareFeatureList_, _Notification_, _Log_, _$translate_, _CvaService_, _EvaService_, _SparkService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$filter_, _$state_, _$q_, _Authinfo_, _CareFeatureList_, _Notification_, _Log_, _$translate_, _CvaService_, _EvaService_, _SparkService_, _AutoAttendantCeInfoModelService_, _FeatureToggleService_) {
     $rootScope = _$rootScope_;
     $filter = _$filter_;
     $q = _$q_;
@@ -120,6 +129,8 @@ describe('Care Feature Ctrl should', function () {
     Log = _Log_;
     Notification = _Notification_;
     SparkService = _SparkService_;
+    AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
+    FeatureToggleService = _FeatureToggleService_;
 
     //create mock deferred object which will be used to return promises
     deferred = $q.defer();
@@ -157,6 +168,7 @@ describe('Care Feature Ctrl should', function () {
       CvaService: CvaService,
       EvaService: EvaService,
       SparkService: SparkService,
+      AutoAttendantCeInfoModelService: AutoAttendantCeInfoModelService,
     });
   }));
 
@@ -168,7 +180,6 @@ describe('Care Feature Ctrl should', function () {
     evaDeferred.resolve(listEVAsSuccess());
     getPersonDeferred.resolve(ownerDetails);
   };
-
   it('initialize and get the list of templates and update pageState ', function () {
     expect(controller.pageState).toEqual('Loading');
     getAllTemplatesDeferred();
@@ -460,5 +471,23 @@ describe('Care Feature Ctrl should', function () {
     var htmlString = controller.generateHtmlPopover(evaFeature);
     expect($translate.instant).toHaveBeenCalledWith('careChatTpl.featureCard.popoverErrorMessage');
     expect(htmlString).toEqual('<div class="feature-card-popover-error">messageKey</div>');
+  });
+  describe('Invoke getCeInfosList: Care Features - based on toggle atlasHybridEnable ', function () {
+    beforeEach(function () {
+      spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue(deferred.promise);
+      deferred.resolve(ceInfosList());
+    });
+    it('initialize CeInfolist and get its return value when toggle atlasHybridEnable is enabled ', function () {
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
+      controller.getCeList();
+      $scope.$apply();
+      expect(AutoAttendantCeInfoModelService.getCeInfosList).toHaveBeenCalled();
+    });
+    it('No need to initialize CeInfolist when toggle atlasHybridEnable is disabled  ', function () {
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
+      controller.getCeList();
+      $scope.$apply();
+      expect(AutoAttendantCeInfoModelService.getCeInfosList).not.toHaveBeenCalled();
+    });
   });
 });
