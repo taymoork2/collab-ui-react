@@ -36,11 +36,12 @@
               <textarea cs-input type="text"
                 class="h6 message-area"
                 id="offHoursTextArea"
+                name="offHoursMessage"
                 ng-maxlength="careSetupAssistant.lengthConstants.multiLineMaxCharLimit"
                 validate-characters="careSetupAssistant.InvalidCharacters"
                 cs-input-messages="careSetupAssistant.multiLineValidationMessage"
                 ng-model="careSetupAssistant.template.configuration.pages.offHours.message"
-                ng-model-options="{ allowInvalid: true }" name="offHoursMessage"
+                ng-model-options="{ allowInvalid: true }"
                 ng-class="{'no-message': !careSetupAssistant.isOffHoursMessageValid}"
                 placeholder="{{::'careChatTpl.offHoursDefaultMessage' | translate}}"/>
               </textarea>
@@ -59,12 +60,12 @@
                 <div class="ct-error-icon"><i class="icon icon-error icon-lg"></i></div>
                 <div>{{:: 'careChatTpl.ctValidation.businessDaysSelection' | translate}}</div>
               </div>
-              <div class="time-and-timezone-picker">
-                <cs-checkbox class="h5"
-                  ckid="ctOpen24Hours"
-                  isdisabled="careSetupAssistant.isBusinessHoursDisabled"
+              <div class="time-and-timezone-picker h5">
+                <input cs-input type="checkbox"
+                  id="ctOpen24Hours"
+                  cs-input-label="{{:: 'careChatTpl.open24Hours' | translate}}"
                   ng-model="careSetupAssistant.template.configuration.pages.offHours.schedule.open24Hours"
-                  label="{{:: 'careChatTpl.open24Hours' | translate}}"></cs-checkbox>
+                  ng-disabled="careSetupAssistant.isBusinessHoursDisabled">
                 <div ng-if="!careSetupAssistant.template.configuration.pages.offHours.schedule.open24Hours && !careSetupAssistant.isBusinessHoursDisabled">
                   <div class="time-picker">
                     <div class="start-time">
@@ -103,7 +104,7 @@
             </div>
           </section>
         </article>
-      </cs-card >
+      </cs-card>
     </cs-card-layout>
   </div>
 </div>

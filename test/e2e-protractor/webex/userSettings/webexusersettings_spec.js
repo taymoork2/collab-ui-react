@@ -144,7 +144,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
     if (webExCommon.testInfo.testType == 'T30') {
       it('should allow edit and save in panel 3', function () {
         if (setup) {
-          utils.wait(webExUserSettings.mcAuoCheckbox);
+          utils.wait(webExUserSettings.mcAuo);
           utils.click(webExUserSettings.mcAuo);
 
           utils.click(element(by.id('saveBtn')));

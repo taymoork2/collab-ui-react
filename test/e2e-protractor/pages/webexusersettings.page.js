@@ -13,11 +13,8 @@ var WebExUserSettingsPage = function () {
   this.ec = element(by.id('EC'));
   this.tc = element(by.id('TC'));
 
-  this.mcPro = this.mc.element(by.css('[ckid="sessionType-214"]'));
-  this.mcProCheckbox = this.mcPro.element(by.css('input'));
-
-  this.mcAuo = this.mc.element(by.css('[ckid="sessionType-16"]'));
-  this.mcAuoCheckbox = this.mcAuo.element(by.css('input'));
+  this.mcPro = this.mc.element(by.css('[for="sessionType-214"]'));
+  this.mcAuo = this.mc.element(by.css('[for="sessionType-16"]'));
 
   this.userPrivilegesPanel = element(by.id('webexUserSettingsPage2'));
   this.telephonyPrivileges = element(by.id('telephonyPrivileges'));
