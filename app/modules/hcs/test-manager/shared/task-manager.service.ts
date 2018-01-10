@@ -11,7 +11,7 @@ import {
 } from './task-manager.const';
 
 //export const TAAS_ADDRESS: string = 'http://10.201.82.158:8082'; //Matt's Server
-export const TAAS_ADDRESS: string = 'http://rcdn6-vm81-32.cisco.com:8082';
+export const TAAS_ADDRESS: string = 'https://taasapi.cisco.com:8082';
 //CRUD Resources
 export const PATH_RESOURCE: string = '/api/v1/customers/:customerId/resources/:resourceId';
 //Read Test Building Blocks
