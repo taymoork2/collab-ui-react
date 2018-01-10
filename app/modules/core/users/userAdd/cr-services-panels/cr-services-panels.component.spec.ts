@@ -9,6 +9,7 @@ describe('Component: crServicesPanels:', () => {
       '$state',
       '$translate',
       'Authinfo',
+      'FeatureToggleService',
       'MessengerInteropService',
     );
 
@@ -16,6 +17,8 @@ describe('Component: crServicesPanels:', () => {
     this.mock.getConferenceServices = getJSONFixture('core/json/authInfo/confServices.json');
     this.mock.basicLicenses = require('./fake--OnboardCtrl--scope--basicLicenses.json');
     this.mock.advancedLicenses = require('./fake--OnboardCtrl--scope--advancedLicenses.json');
+
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
   });
 
   describe('primary behaviors (controller):', () => {
