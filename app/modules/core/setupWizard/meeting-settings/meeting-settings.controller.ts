@@ -209,7 +209,7 @@ export class MeetingSettingsCtrl {
     this.sitesArray = this.sitesArray.concat(_.map(_.uniqBy(existingWebexSites, 'siteUrl'), (site) => {
       return new ExistingWebExSite({
         siteUrl: _.replace(_.get<string>(site, 'siteUrl'), this.Config.siteDomainUrl.webexUrl, ''),
-        quantity: 1,
+        quantity: site.quantity || 1,
         centerType: '',
         keepExistingSite: true,
         setupType: site.setupType,
