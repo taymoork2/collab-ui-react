@@ -4,7 +4,7 @@ import { DetailsHeaderComponent } from 'modules/sunlight/details/detailsHeaderCt
 export default angular
   .module('CareDetails', [
     featuresModule,
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
   ])
   .component('detailsHeaderComponent', new DetailsHeaderComponent())
   .name;
