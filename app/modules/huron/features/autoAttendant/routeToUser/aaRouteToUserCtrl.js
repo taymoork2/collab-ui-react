@@ -250,7 +250,6 @@
                   // when user has selected route to user and org has hybrid enabled
                   if (!_.isEmpty(aUser.entitlements) && (_.indexOf(aUser.entitlements, CONSTANTS.spark) > -1)) {
                     var sparkCallUser = (_.indexOf(aUser.entitlements, CONSTANTS.ciscouc) > -1);
-
                     if (!sparkCallUser && checkIfUsersLengthLessThanFullLoad()) {
                       // appends (spark) in place of extension in case of callFreeUsers
                       updateUserData(aUser, CONSTANTS.spark);
