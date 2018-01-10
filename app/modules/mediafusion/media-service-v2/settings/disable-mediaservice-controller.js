@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function DisableMediaServiceController(HybridServicesClusterService, $modalInstance, $state, Notification, DeactivateMediaService) {
+  function DisableMediaServiceController($modalInstance, $state, HybridServicesClusterService, Notification, DeactivateMediaService) {
     var vm = this;
     vm.step = '1';
     vm.checkboxModel = false;

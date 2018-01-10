@@ -51,9 +51,13 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
     const { clusterId } = changes;
     if (clusterId && clusterId.currentValue) {
       this.clusterId = clusterId.currentValue;
-      this.getClusterList();
-      this.loadCluster(clusterId.currentValue);
-      this.getProperties(clusterId.currentValue);
+      this.getClusterList()
+        .then(() => {
+          this.loadCluster(clusterId.currentValue);
+        })
+        .then(() => {
+          this.getProperties(clusterId.currentValue);
+        });
     }
   }
 

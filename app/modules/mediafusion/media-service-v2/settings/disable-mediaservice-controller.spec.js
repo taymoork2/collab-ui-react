@@ -4,7 +4,7 @@ describe('Controller: DisableMediaServiceController', function () {
   beforeEach(angular.mock.module('Mediafusion'));
   beforeEach(angular.mock.module('Hercules'));
 
-  var controller, HybridServicesClusterService, $q, Notification, httpMock, DeactivateMediaService;
+  var $q, httpMock, controller, DeactivateMediaService, HybridServicesClusterService, Notification;
 
   // var serviceId = "squared-fusion-media";
   var modalInstance = {
