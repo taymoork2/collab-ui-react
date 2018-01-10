@@ -11,13 +11,14 @@ import { FeatureToggleService } from 'modules/core/featureToggle';
 import { HybridServicesClusterService, IServiceStatusWithSetup } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { HybridServiceId, IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
 import { IToolkitModalService } from 'modules/core/modal';
+import MessengerInteropService from 'modules/core/users/userAdd/shared/messenger-interop.service';
 import { Notification } from 'modules/core/notifications';
 import { ProPackService }  from 'modules/core/proPack/proPack.service';
 import { TaskManagerService } from 'modules/hcs/test-manager';
 
 export class ServicesOverviewController implements ng.IComponentController {
   private cards: ServicesOverviewCard[] = [
-    new ServicesOverviewMessageCard(this.Authinfo),
+    new ServicesOverviewMessageCard(this.Authinfo, this.MessengerInteropService),
     new ServicesOverviewMeetingCard(this.Authinfo),
     new ServicesOverviewCallCard(this.Authinfo, this.Config),
     new ServicesOverviewCareCard(this.Authinfo),
@@ -45,6 +46,7 @@ export class ServicesOverviewController implements ng.IComponentController {
     private EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
     private FeatureToggleService: FeatureToggleService,
     private HybridServicesClusterService: HybridServicesClusterService,
+    private MessengerInteropService: MessengerInteropService,
     private Notification: Notification,
     private ProPackService: ProPackService,
     private HcsTestManagerService: TaskManagerService,
