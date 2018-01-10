@@ -231,6 +231,7 @@
     'CareDetails',
     'Sunlight.pagination',
     require('modules/sunlight/services').default,
+    require('modules/sunlight/numbers').default,
   ]);
 
   angular.module('Context', ['Core']);

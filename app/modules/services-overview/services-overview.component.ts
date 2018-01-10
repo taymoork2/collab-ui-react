@@ -70,6 +70,7 @@ export class ServicesOverviewController implements ng.IComponentController {
       hI802: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI802),
       huronEnterprisePrivateTrunking: this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking),
       hI1638: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1638),
+      hybridCare: this.FeatureToggleService.supports(this.FeatureToggleService.features.hybridCare),
     });
 
     features
@@ -78,6 +79,8 @@ export class ServicesOverviewController implements ng.IComponentController {
         if (response.atlasPMRonM2) {
           this.getPMRStatus();
         }
+
+        this.forwardEvent('hybridCareToggleEventHandler', response.hybridCare);
         this.forwardEvent('hI1484FeatureToggleEventhandler', response.hI1484);
         this.forwardEvent('sparkCallCdrReportingFeatureToggleEventhandler', response.hI802);
 
@@ -103,7 +106,7 @@ export class ServicesOverviewController implements ng.IComponentController {
         if (this.Authinfo.isContactCenterContext()) {
           this._servicesToDisplay.push('contact-center-context');
         }
-        if (response.huronEnterprisePrivateTrunking && this.Authinfo.isSquaredUC()) {
+        if (response.huronEnterprisePrivateTrunking && (this.Authinfo.isSquaredUC() || response.hybridCare)) {
           this._servicesToDisplay.push('ept');
         }
         if (response.atlasHybridImp && this.Authinfo.isFusionIMP()) {
