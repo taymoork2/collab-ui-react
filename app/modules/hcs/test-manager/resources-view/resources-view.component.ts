@@ -6,7 +6,7 @@ import {
 
 export class TaasResourceViewComponent implements ng.IComponentOptions {
   public controller = TaasResourceViewCtrl;
-  public template = require('./resources.component.html');
+  public template = require('./resources-view.component.html');
 }
 
 export class TaasResourceViewCtrl implements ng.IComponentController {
@@ -61,7 +61,7 @@ export class TaasResourceViewCtrl implements ng.IComponentController {
   }
 
   public createResource(): void {
-    this.$state.go('taasServiceManager.resourceCreate');
+    this.$state.go('taasServiceManager.resourcesCreate');
   }
 
 }

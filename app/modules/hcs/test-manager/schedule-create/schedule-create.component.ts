@@ -1,10 +1,19 @@
-//import { IToolkitModalService } from 'modules/core/modal';
 import { TaskManagerService, HtmSuite, HtmSchedule } from 'modules/hcs/test-manager/shared';
-import { DateObj } from 'modules/hcs/test-manager/scheduler';
 import { Notification } from 'modules/core/notifications';
 import { IRSuiteMap } from 'modules/hcs/test-manager';
 
-class SchedulerController implements ng.IComponentController {
+export class ScheduleCreateComponent implements ng.IComponentOptions {
+  public controller = ScheduleCreateController;
+  public template = require('modules/hcs/test-manager/schedule-create/schedule-create.component.html');
+  public bindings = {
+    suite: '<',
+    customerId: '<',
+    dismiss: '&',
+    close: '&',
+  };
+}
+
+class ScheduleCreateController implements ng.IComponentController {
   public suite: HtmSuite;
   public customerId: '';
   public schedules: HtmSchedule[] = [];
@@ -15,7 +24,6 @@ class SchedulerController implements ng.IComponentController {
   public onChangeFn: Function;
   public scheduleType: string;
   public scheduleForm: ng.IFormController;
-  public dateObj: DateObj;
 
   public runDate: string;
   public runTime: string;
@@ -67,16 +75,4 @@ class SchedulerController implements ng.IComponentController {
     })
     .catch(error => this.Notification.errorResponse(error.data.error.message, 'Recieved an Error'));
   }
-}
-
-
-export class SchedulerComponent implements ng.IComponentOptions {
-  public controller = SchedulerController;
-  public template = require('modules/hcs/test-manager/scheduler/scheduler.component.html');
-  public bindings = {
-    suite: '<',
-    customerId: '<',
-    dismiss: '&',
-    close: '&',
-  };
 }

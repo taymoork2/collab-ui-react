@@ -5,9 +5,7 @@
       </cs-page-sub-header-left>
       <cs-page-sub-header-right>
         <!-- Add Nav tabs here -->
-        <button class="btn btn--people" ng-click="$ctrl.createResource()">
-          <span>Create Resource</span>
-        </button>
+        <button class="btn btn--people" ng-click="$ctrl.createResource()" translate="hcs.taas.resourcesView.createResource"></button>
       </cs-page-sub-header-right>
     </cs-page-sub-header>
     <div ng-if="$ctrl.pageState != $ctrl.STATE_NEW" class="suite-content content-container">
@@ -16,7 +14,7 @@
         <div class="features-reload">
           <p class="h4" translate="huronFeatureDetails.sorryMessage"></p>
           <div class="h2" translate="huronFeatureDetails.reloadMessage"></div>
-          <button type="button" class="btn btn--link" ng-click="$ctrl.reload()">Reload</button>
+          <button type="button" class="btn btn--link" ng-click="$ctrl.reload()" translate="common.reload"></button>
         </div>
       </div>
 

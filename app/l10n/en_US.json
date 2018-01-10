@@ -1622,6 +1622,7 @@
     "resources": "Resources",
     "result": "Result",
     "retry": "Retry",
+    "reload": "Reload",
     "save": "Save",
     "saveLabel": "Do you want to save your changes?",
     "search": "Search",
@@ -10346,24 +10347,12 @@
   },
   "hcs": {
     "taas": {
-      "overviewPage": {
-        "title": "TaaS Overview",
-        "customerNameHeader": "Customer Name",
-        "allCustomers": "All Customers",
-        "testDate": "Last Ran Test",
-        "testResult": "Test Result",
-        "totalResources": "Resources",
-        "actionHeader": "Actions",
-        "editSuite": "Edit Suite",
-        "editTest": "Edit Tests",
-        "deleteAll": "Delete All Suites"
-      },
       "testState": {
         "good": "Passed",
         "failed": "Failed",
         "running": "Running..."
       },
-      "suite": {
+      "suiteView": {
         "title": "Suites",
         "createSuite": "Create Suite",
         "runSuite": "Run Suite",
@@ -10378,7 +10367,7 @@
         "successRun": "You should go catch it...",
         "errorRun": "Something went wrong with scheduling"
       },
-      "test": {
+      "taskView": {
         "title": "Tests",
         "addTest": "Create Test",
         "editTest": "Edit",
@@ -10389,7 +10378,7 @@
         "title": "Add a suite",
         "suiteName": "Suite name"
       },
-      "schedulerModal": {
+      "scheduleCreateModal": {
         "title": "Schedule a Test"
       },
       "scheduleView": {
@@ -10401,10 +10390,17 @@
         "runSchedule": "Run Now",
         "copySchedule": "Copy schedule",
         "editSchedule": "Edit Schedule",
-        "deleteSchedule": "Delete this schedule"
+        "deleteSchedule": "Delete this schedule",
+        "scheduleCreate": "Create Schedule"
       },
-      "resourceCreate": {
-        "title": "Create a resource"
+      "resourcesView":{
+        "createResource": "Create Resource"
+      },
+      "resourcesCreateModal": {
+        "title": "Create a resource",
+        "instructions": "Use this form to create a resource to be used for testing. Can be an IP phone, Camelot, MMR, etc.",
+        "resourceName": "Resource name",
+        "resourceDetails": "Resource Details"
       }
     }
   }

@@ -1,11 +1,11 @@
 <div class="partner-test-view">
-    <cs-page-header title-name="{{'hcs.taas.test.title' | translate}}" back="true" back-url="$ctrl.backState"></cs-page-header>
+    <cs-page-header title-name="{{'hcs.taas.taskView.title' | translate}}" back="true" back-url="$ctrl.backState"></cs-page-header>
     <cs-page-sub-header>
         <cs-page-sub-header-left>
         </cs-page-sub-header-left>
         <cs-page-sub-header-right>
             <button class="btn btn--people" ng-click="$ctrl.addTest()" ng-disabled="true">
-                <span translate="hcs.taas.test.addTest"></span>
+                <span translate="hcs.taas.taskView.addTest"></span>
             </button>
         </cs-page-sub-header-right>
     </cs-page-sub-header>
@@ -35,9 +35,9 @@
                           <i class="icon icon-three-dots"></i>
                         </button>
                         <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-                          <li ng-click="$ctrl.editTest()"><a translate="hcs.taas.test.editTest"></a></li>
-                          <li ng-click="$ctrl.copyTest()"><a translate="hcs.taas.test.copyTest"></a></li>
-                          <li ng-click="$ctrl.deleteTest()"><a translate="hcs.taas.test.deleteTest"></a></li>
+                          <li ng-click="$ctrl.editTest()"><a translate="hcs.taas.taskVieweditTest"></a></li>
+                          <li ng-click="$ctrl.copyTest()"><a translate="hcs.taas.taskViewcopyTest"></a></li>
+                          <li ng-click="$ctrl.deleteTest()"><a translate="hcs.taas.taskViewdeleteTest"></a></li>
                         </ul>
                       </span>
                     </div>
