@@ -48,6 +48,24 @@
         padding-top: rem-calc(3); // vr-spacing isn't specific enough
       }
     }
+
+  }
+
+  .care-features-icon {
+    @include vr-spacing(pt, 0.5);
+    display: flex;
+    .cta {
+      color: $gray-light-1;
+    }
+
+    .icon {
+      display: block;
+      padding-top: rem-calc(3); // vr-spacing isn't specific enough
+    }
+
+    span{
+      @include vr-spacing(pr, 0.5);
+    }
   }
 
   .warning-sign {
