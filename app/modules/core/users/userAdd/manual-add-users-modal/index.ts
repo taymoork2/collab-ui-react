@@ -11,7 +11,7 @@ import { ManualAddUsersModalComponent } from './manual-add-users-modal.component
 
 export default angular.module('core.users.userAdd.manual-add-users-modal', [
   require('angular-translate'),
-  require('collab-ui-ng').default,
+  require('@collabui/collab-ui-ng').default,
   require('ct-ui-router-extras.previous').default,
   analyticsModuleName,
   coreSharedModuleName,
