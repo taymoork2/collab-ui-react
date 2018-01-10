@@ -41,7 +41,7 @@ export default class OnboardStore {
     }
   }
 
-  public initUsersAdd(): IOnboardScopeForUsersAdd {
+  private initUsersAdd(): IOnboardScopeForUsersAdd {
     const result: IOnboardScopeForUsersAdd = {
       currentUserCount: 0,
       invalidcount: 0,

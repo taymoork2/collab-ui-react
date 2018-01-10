@@ -1,10 +1,12 @@
 import { IOnboardScopeForUsersAdd, OnboardCtrlBoundUIStates } from 'modules/core/users/userAdd/shared/onboard.store';
+import OnboardService from 'modules/core/users/userAdd/shared/onboard.service';
+import OnboardStore from 'modules/core/users/userAdd/shared/onboard.store';
 
 export class ManualAddUsersModalController implements ng.IComponentController {
   public isDirSyncEnabled: boolean;
   public maxUsersInManual: number;
   public model: any;
-  private dismiss: Function;
+  private dismiss?: Function;
   private scopeData: IOnboardScopeForUsersAdd;
 
   /* @ngInject */
@@ -14,8 +16,8 @@ export class ManualAddUsersModalController implements ng.IComponentController {
     private Analytics,
     private DirSyncService,
     public Notification,
-    private OnboardService,
-    private OnboardStore,
+    private OnboardService: OnboardService,
+    private OnboardStore: OnboardStore,
   ) {
     // TODO: rm use of 'OnboardStore' once shared references in '$scope' in 'OnboardCtrl' are removed
     this.scopeData = this.OnboardStore[OnboardCtrlBoundUIStates.USERS_ADD_MANUAL];
@@ -27,7 +29,9 @@ export class ManualAddUsersModalController implements ng.IComponentController {
 
   public dismissModal(): void {
     this.Analytics.trackAddUsers(this.Analytics.eventNames.CANCEL_MODAL);
-    this.dismiss();
+    if (_.isFunction(this.dismiss)) {
+      this.dismiss();
+    }
   }
 
   public back(state?): void {
