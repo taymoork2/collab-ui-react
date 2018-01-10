@@ -7,7 +7,7 @@ import notificationModule from 'modules/core/notifications';
 
 export default angular.module('core.settings.privacy', [
   require('angular-cache'),
-  require('collab-ui-ng').default,
+  require('@collabui/collab-ui-ng').default,
   require('modules/core/scripts/services/authinfo'),
   require('modules/core/scripts/services/org.service'),
   notificationModule,

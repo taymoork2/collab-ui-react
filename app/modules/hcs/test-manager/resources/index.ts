@@ -9,7 +9,7 @@ export default angular
     require('angular-resource'),
     require('angular-translate'),
     require('modules/core/cards').default,
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('modules/core/config/config').default,
     hcsTestManagertServiceModule,
     notifications,

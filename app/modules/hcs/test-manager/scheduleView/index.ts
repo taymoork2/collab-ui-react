@@ -8,7 +8,7 @@ export default angular
   .module('hcs.taas.schedule', [
     require('angular-resource'),
     require('angular-translate'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('modules/core/config/config').default,
     hcsTestManagertServiceModule,
     notifications,

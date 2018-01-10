@@ -19,7 +19,7 @@ import sparkAssistantModule from './spark-assistant';
 
 export default angular.module('core.settings', [
   require('angular-cache'),
-  require('collab-ui-ng').default,
+  require('@collabui/collab-ui-ng').default,
   require('angular-translate'),
   authenticationModule,
   emailModule,

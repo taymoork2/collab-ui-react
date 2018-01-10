@@ -8,7 +8,7 @@ export * from './locations-user-details.component';
 
 export default angular
   .module('call.locations.locations-user-details', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     notifications,
     callLocationsModule,
     usersModule,

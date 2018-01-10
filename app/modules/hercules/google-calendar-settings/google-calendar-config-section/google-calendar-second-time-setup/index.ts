@@ -4,7 +4,7 @@ import './_google-calendar-second-time-setup.scss';
 
 export default angular
   .module('hercules.google-calendar-second-time-setup', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     featureToggle,
   ])

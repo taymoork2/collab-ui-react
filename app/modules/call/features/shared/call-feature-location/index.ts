@@ -4,7 +4,7 @@ import featureToggleServiceModule from 'modules/core/featureToggle';
 
 export default angular
   .module('call.features.shared.location', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     featureToggleServiceModule,
   ])

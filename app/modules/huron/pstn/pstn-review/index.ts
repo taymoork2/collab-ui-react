@@ -5,7 +5,7 @@ import pstnModelModule from '../pstn.model';
 
 export default angular
 .module('huron.pstn.pstn-review', [
-  require('collab-ui-ng').default,
+  require('@collabui/collab-ui-ng').default,
   require('angular-translate'),
   pstnModelModule,
 ])

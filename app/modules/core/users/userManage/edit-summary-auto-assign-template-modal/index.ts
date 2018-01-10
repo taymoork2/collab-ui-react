@@ -12,7 +12,7 @@ import userManageSharedModuleName from 'modules/core/users/userManage/shared';
 
 export default angular.module('core.users.userManage.edit-summary-auto-assign-template-modal', [
   require('angular-translate'),
-  require('collab-ui-ng').default,
+  require('@collabui/collab-ui-ng').default,
   analyticsModuleName,
   authInfoModuleName,
   multiStepModalModuleName,

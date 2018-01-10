@@ -12,7 +12,7 @@ import { WebExSiteService } from './webex-site.service';
 
 export default angular
   .module('core.webex-site', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('modules/core/analytics'),
     require('angular-translate'),
     require('modules/core/notifications').default,

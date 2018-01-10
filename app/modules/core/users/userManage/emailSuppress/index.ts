@@ -6,7 +6,7 @@ export default angular.module('core.users.userManage.emailSuppress', [
   require('angular-cache'),
   require('angular-ui-router'),
   require('angular-translate'),
-  require('collab-ui-ng').default,
+  require('@collabui/collab-ui-ng').default,
   require('modules/core/analytics'),
   require('modules/core/scripts/services/org.service'),
 ])

@@ -23,7 +23,7 @@ export default angular
     reportFilter,
     reportServices,
     reportSlider,
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     require('modules/core/config/urlConfig'),
     require('modules/core/scripts/services/authinfo'),

@@ -9,7 +9,7 @@ export * from './primaryLine';
 
 export default angular
   .module('huron.primaryLine', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-resource'),
     Notification,
     featureToggleModule,

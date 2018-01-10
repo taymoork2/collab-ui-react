@@ -4,7 +4,7 @@ import serviceAddressModule from 'modules/huron/serviceAddress';
 
 export default angular
   .module('call.settings.emergency-service-address', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     notifications,
     serviceAddressModule,

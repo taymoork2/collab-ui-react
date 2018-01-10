@@ -7,7 +7,7 @@ import primaryLineModule from 'modules/huron/primaryLine';
 
 export default angular
   .module('huron', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     serviceModule,
     dialingModule,

@@ -7,7 +7,7 @@ import advancedMeetingSiteUrlModuleName from './advanced-meeting-site-url';
 
 export default angular.module('core.users.userAdd.assignable-services.assignable-services-row.assignable-advanced-meetings', [
   require('angular-translate'),
-  require('collab-ui-ng').default,
+  require('@collabui/collab-ui-ng').default,
   sharedModuleName,
   advancedMeetingLicenseDescriptionModuleName,
   advancedMeetingSiteUrlModuleName,

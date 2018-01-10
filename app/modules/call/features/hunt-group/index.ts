@@ -19,7 +19,7 @@ export * from './hunt-group.service';
 
 export default angular
   .module('call.features.hunt-group', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     huntGroupNumbers,
     huntGroupMethod,
