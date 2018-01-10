@@ -7698,7 +7698,7 @@
     "orgSettingInfo": "You can change the organization logo on the Settings page.",
     "evaSettingInfo": "To enable escalation to experts, create an Expert Virtual Assistant from the Care Features page.",
     "evaEnabledSettingInfo": "about configuring chat escalation behavior.",
-    "escalationEnabledRequiredInfo": "Requiring this field with the Category Type supports better request escalation to Cisco spark expert spaces. ",
+    "escalationEnabledRequiredInfo": "Requiring this field with the Category Type supports better request escalation to Cisco Spark expert spaces. ",
     "escalationEnabledCategoryInfo": "Add category options that contain keywords from the names of your Expert Virtual Assistant spaces. ",
     "escalationDetailsDefaultSpace": "(Default Space)",
     "agentSettingInfo": "You cannot change the default agent avatar seen in the Preview.",

@@ -50,7 +50,7 @@
     vm.isEditFeature = $stateParams.isEditFeature;
     vm.getCustomerInformationFormFields = getCustomerInformationFormFields;
     vm.getLocalisedText = getLocalisedText;
-    vm.getLocalisedTextWithExcalation = getLocalisedTextWithExcalation;
+    vm.getLocalisedTextWithEscalation = getLocalisedTextWithEscalation;
     vm.getLocalisedFeedbackText = getLocalisedFeedbackText;
     vm.getFeedbackDesc = getFeedbackDesc;
     vm.getFeedbackModel = getFeedbackModel;
@@ -1396,8 +1396,8 @@
         if (attribute.name === 'required') {
           attribute.value = radioButtonValue;
         }
-        defaultChatTemplate.configuration.pages.customerInformation.fields.field3.attributes = defaultChatAttributes;
       });
+      defaultChatTemplate.configuration.pages.customerInformation.fields.field3.attributes = defaultChatAttributes;
     }
 
     function setRequiredValueChatPlusCallback(radioButtonValue) {
@@ -1406,8 +1406,8 @@
         if (attribute.name === 'required') {
           attribute.value = radioButtonValue;
         }
-        defaultChatPlusCallBackTemplate.configuration.pages.customerInformationChat.fields.field3.attributes = defaultChatPlusCallackAttributes;
       });
+      defaultChatPlusCallBackTemplate.configuration.pages.customerInformationChat.fields.field3.attributes = defaultChatPlusCallackAttributes;
     }
 
     function setRequiredValue() {
@@ -1847,7 +1847,7 @@
       return $translate.instant(name + '_' + type);
     }
 
-    function getLocalisedTextWithExcalation(name) {
+    function getLocalisedTextWithEscalation(name) {
       var type = (vm.cardMode) ? vm.cardMode : vm.selectedMediaType;
       if (isExpertEscalationSelected()) {
         return $translate.instant(name + '_' + type + '_' + 'expert');
