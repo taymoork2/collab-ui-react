@@ -157,11 +157,15 @@ var _ = require('lodash');
      * Generate the template count for both CVA and EVA and Space count for EVA only
      */
     function generateTemplateCountAndSpaceUsage() {
-      var listOfVaFeatures = listOfCvaFeatures.concat(listOfEvaFeatures);
       _.forEach(listOfNonVaFeatures, function (item) {
         _.forEach(item.features, function (featureItem) {
-          if (!_.isEmpty(featureItem.id)) {
-            var va = _.find(listOfVaFeatures, function (vaFeature) {
+          // for eva, we don't know the id, so will add the count to all eva's
+          if (featureItem.featureType === 'eva') {
+            _.forEach(listOfEvaFeatures, function (evaItem) {
+              evaItem.templates.push(item.name);
+            });
+          } else if (!_.isEmpty(featureItem.id)) {
+            var va = _.find(listOfCvaFeatures, function (vaFeature) {
               return vaFeature.id === featureItem.id;
             });
 
@@ -175,13 +179,13 @@ var _ = require('lodash');
       // Generate the template html popover for CVA
       _.forEach(listOfCvaFeatures, function (item) {
         var popoverMainHeader = $translate.instant('careChatTpl.featureCard.cvaPopoverMainHeader');
-        item.htmlPopover = generateTemplateCountHtmlPopover(popoverMainHeader, item);
+        item.templatesHtmlPopover = generateTemplateCountHtmlPopover(popoverMainHeader, item);
       });
 
       // Generate the template html popover for EVA
       _.forEach(listOfEvaFeatures, function (item) {
         var popoverMainHeader = $translate.instant('careChatTpl.featureCard.evaPopoverMainHeader');
-        item.htmlPopover = generateTemplateCountHtmlPopover(popoverMainHeader, item) + '<br>' + item.htmlPopover;
+        item.templatesHtmlPopover = generateTemplateCountHtmlPopover(popoverMainHeader, item);
       });
     }
 
@@ -249,11 +253,11 @@ var _ = require('lodash');
             return EvaService.getExpertAssistantSpaces(eva.id)
               .then(function (result) {
                 feature.data[index].spaces = result.items;
-                feature.data[index].htmlPopover = vm.generateHtmlPopover(feature.data[index]);
+                feature.data[index].spacesHtmlPopover = vm.generateHtmlPopover(feature.data[index]);
               })
               .catch(function () {
                 feature.data[index].spaces = [];
-                feature.data[index].htmlPopover = vm.generateHtmlPopover(feature.data[index]);
+                feature.data[index].spacesHtmlPopover = vm.generateHtmlPopover(feature.data[index]);
               });
           });
         }
