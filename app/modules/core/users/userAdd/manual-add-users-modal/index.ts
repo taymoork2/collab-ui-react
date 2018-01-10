@@ -9,14 +9,10 @@ import crOnboardUsersModuleName from './cr-onboard-users';
 
 import { ManualAddUsersModalComponent } from './manual-add-users-modal.component';
 
-// notes:
-// - include 'ui-router-extras' for use of '$previousState' in spec
-require('ui-router-extras');
-
 export default angular.module('core.users.userAdd.manual-add-users-modal', [
   require('angular-translate'),
   require('collab-ui-ng').default,
-  'ct.ui.router.extras.previous',
+  require('ct-ui-router-extras.previous').default,
   analyticsModuleName,
   coreSharedModuleName,
   dirSyncServiceModuleName,
