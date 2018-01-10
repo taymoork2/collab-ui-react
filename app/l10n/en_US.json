@@ -7534,6 +7534,13 @@
     "dirsyncStatusHeading": "Common Identity Directory Synchronization",
     "dirsyncStatusTooltip": "To access Cisco Spark platform capabilities, WebEx Messenger users need to be synchronized with the Common Identity service."
   },
+  "careAddNumberTpl": {
+    "emergencyAcknowledge": "I understand that dialing emergency numbers may not work on an enterprise class IP telephony network.",
+    "addNumbers": "Add Numbers",
+    "pstnNumbers": "PSTN Numbers",
+    "internalDialing": "Internal Dialing",
+    "duplicateNumber": "{{number}} is a duplicate number."
+  },
   "careChatTpl": {
     "editAction": "Edit",
     "deleteFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?",
