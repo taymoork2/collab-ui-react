@@ -309,7 +309,7 @@ describe('EditServicesCtrl: Ctrl', function () {
         expect($stateParams.wizard.next).toHaveBeenCalled();
         var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
         expect(wizardState.account.entitlements).toEqual(['something', 'ciscouc']);
-        expect(wizardState.account.enableCalService).toEqual(true);
+        expect(wizardState.account.enableCalService).toBe(true);
       });
 
       it('selecting sparkOnly and Calendar should pass on all fields required by the next step including no call entitlement', function () {
@@ -336,7 +336,7 @@ describe('EditServicesCtrl: Ctrl', function () {
         expect($stateParams.wizard.next).toHaveBeenCalled();
         var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
         expect(wizardState.account.entitlements).toEqual(['something']);
-        expect(wizardState.account.enableCalService).toEqual(true);
+        expect(wizardState.account.enableCalService).toBe(true);
       });
 
       it('selecting sparkCallConnect should pass on all fields required by the next step including the two callConnect entitlements', function () {
@@ -361,7 +361,7 @@ describe('EditServicesCtrl: Ctrl', function () {
         expect($stateParams.wizard.next).toHaveBeenCalled();
         var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
         expect(wizardState.account.entitlements).toEqual(['something', 'squared-fusion-ec', 'squared-fusion-uc']);
-        expect(wizardState.account.enableCalService).toEqual(false);
+        expect(wizardState.account.enableCalService).toBe(false);
       });
 
       it('selecting sparkCallConnect and calendar should pass on all fields required by the next step including the two callConnect entitlements', function () {
@@ -387,7 +387,7 @@ describe('EditServicesCtrl: Ctrl', function () {
         expect($stateParams.wizard.next).toHaveBeenCalled();
         var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
         expect(wizardState.account.entitlements).toEqual(['something', 'squared-fusion-ec', 'squared-fusion-uc']);
-        expect(wizardState.account.enableCalService).toEqual(true);
+        expect(wizardState.account.enableCalService).toBe(true);
       });
 
       it('selecting sparkCallConnect and disabling calendar should pass on all fields required by the next step including the two callConnect entitlements', function () {
@@ -395,7 +395,7 @@ describe('EditServicesCtrl: Ctrl', function () {
           return {
             data: {
               account: {
-                entitlements: ['something'],
+                entitlements: ['something', 'squared-fusion-cal'],
                 externalLinkedAccounts: [
                   { providerID: 'squared-fusion-cal', accountGUID: 'example0@example.com' },
                   { providerID: 'squared-fusion-gcal', accountGUID: 'example1@example.com' },
@@ -417,19 +417,15 @@ describe('EditServicesCtrl: Ctrl', function () {
         expect($stateParams.wizard.next).toHaveBeenCalled();
         var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
         expect(wizardState.account.entitlements).toEqual(['something', 'squared-fusion-ec', 'squared-fusion-uc']);
-        expect(wizardState.account.enableCalService).toEqual(false);
+        expect(wizardState.account.enableCalService).toBe(false);
       });
 
-      it('deselecting sparkCallConnect and enabling calendar should pass on all fields required by the next step including the two callConnect entitlements', function () {
+      it('deselecting sparkCallConnect and enabling calendar should pass on all fields required by the next step excluding the two callConnect entitlements', function () {
         state = function () {
           return {
             data: {
               account: {
                 entitlements: ['something'],
-                externalLinkedAccounts: [
-                  { providerID: 'squared-fusion-cal', accountGUID: 'example0@example.com' },
-                  { providerID: 'squared-fusion-gcal', accountGUID: 'example1@example.com' },
-                  { providerID: 'squared-fusion-uc', accountGUID: 'example2@example.com', operation: 'delete' }],
               },
             },
           };
@@ -447,7 +443,37 @@ describe('EditServicesCtrl: Ctrl', function () {
         expect($stateParams.wizard.next).toHaveBeenCalled();
         var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
         expect(wizardState.account.entitlements).toEqual(['something', 'ciscouc']);
-        expect(wizardState.account.enableCalService).toEqual(true);
+        expect(wizardState.account.enableCalService).toBe(true);
+      });
+
+      it('selecting sparkCallConnect when calendar was already enabled, should pass on all fields required by the next step including the two callConnect entitlements', function () {
+        state = function () {
+          return {
+            data: {
+              account: {
+                entitlements: ['something', 'squared-fusion-cal'],
+                externalLinkedAccounts: [
+                  { providerID: 'squared-fusion-cal', accountGUID: 'example0@example.com' },
+                  { providerID: 'squared-fusion-gcal', accountGUID: 'example1@example.com' },
+                  { providerID: 'squared-fusion-uc', accountGUID: 'example2@example.com' }],
+              },
+            },
+          };
+        };
+        $stateParams.wizard = {
+          state: state,
+          next: function () {
+          },
+        };
+        spyOn($stateParams.wizard, 'next');
+        initController();
+        controller.service = 'sparkCallConnect';
+        controller.enableCalService = true;
+        controller.next();
+        expect($stateParams.wizard.next).toHaveBeenCalled();
+        var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
+        expect(wizardState.account.entitlements).toEqual(['something', 'squared-fusion-ec', 'squared-fusion-uc', 'squared-fusion-cal']);
+        expect(wizardState.account.enableCalService).toBe(false);
       });
     });
 

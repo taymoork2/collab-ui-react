@@ -4,6 +4,7 @@ import { IWebExSite, IConferenceLicense } from 'modules/core/setupWizard/meeting
 import { SetupWizardService } from 'modules/core/setupWizard/setup-wizard.service';
 import { WebExSiteService, Actions } from './webex-site.service';
 import { Notification } from 'modules/core/notifications';
+import { EventNames } from './webex-site.constants';
 
 class WebexDeleteSiteModalController implements ng.IComponentController {
 
@@ -56,7 +57,7 @@ class WebexDeleteSiteModalController implements ng.IComponentController {
       this.saveData();
     } else {
       this.cancel();
-      this.$rootScope.$broadcast('EventNames.SITE_LIST_MODIFIED');
+      this.$rootScope.$broadcast(EventNames.SITE_LIST_MODIFIED);
     }
   }
 

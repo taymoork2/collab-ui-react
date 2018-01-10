@@ -7,7 +7,7 @@ export { SpeedDialService, ISpeedDial } from './speedDial.service';
 
 export default angular
   .module('huron.speed-dial', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     require('modules/core/accessibility').default,
     require('modules/core/scripts/services/authinfo'),

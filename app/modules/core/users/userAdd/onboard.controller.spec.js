@@ -181,7 +181,7 @@ describe('OnboardCtrl: Ctrl', function () {
     describe('process and save users', function () {
       beforeEach(function () {
         this.$scope.userList = validUserList;
-        this.$scope.syncStatusNext();
+        this.$scope.dirsyncInitForServices();
         this.$scope.$apply();
         this.$timeout.flush();
       });

@@ -3,5 +3,5 @@
 
   /* global Image */
   var preload = new Image();
-  preload.src = require('../../node_modules/collab-ui/images/Spaceballs_BG.jpg');
+  preload.src = require('../../node_modules/@collabui/collab-ui/images/Spaceballs_BG.jpg');
 })();

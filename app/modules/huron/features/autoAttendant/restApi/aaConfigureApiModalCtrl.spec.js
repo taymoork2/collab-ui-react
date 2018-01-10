@@ -349,31 +349,6 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         controller.restApiResponse = '';
       });
 
-      it('url should be equate to URL when urlUpdated flag is false', function () {
-        controller.currentStep = 0;
-        controller.menuEntry.actions[0].url = [{ testURL: 'test' }];
-        controller.stepNext();
-        expect(controller.currentStep).toEqual(1);
-        expect(action.url).toEqual(controller.menuEntry.actions[0].url);
-      });
-
-      it('url should be equate to dynamicList when urlUpdated flag is true', function () {
-        controller.isDynamicsValueUpdated();
-        controller.menuEntry.actions[0].dynamicList = [
-          {
-            isDynamic: true,
-            action: {
-              eval: {
-                value: 'this is test value',
-              },
-            },
-          },
-        ];
-        controller.stepNext();
-        expect(controller.currentStep).toEqual(2);
-        expect(action.url).toEqual(controller.menuEntry.actions[0].dynamicList);
-      });
-
       it('dynamics should be empty when there is no dynamic text', function () {
         controller.menuEntry.actions[0].url = [
           {
@@ -457,6 +432,95 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         var restApiResponse = { mesage: {} };
         controller.restApiResponse = JSON.stringify(restApiResponse);
         result = [];
+        controller.stepNext();
+        expect(controller.tableData).toEqual(result);
+      });
+
+      it('tableData should be populated in the ascending order of Response variable', function () {
+        var restApiResponse = { str: 'response1', abc: 'response2', hij: 'response3' };
+        controller.restApiResponse = JSON.stringify(restApiResponse);
+        controller.variableSet = [];
+        result = [
+          {
+            options: [],
+            responseKey: 'abc',
+            responseValue: 'response2',
+          }, {
+            options: [],
+            responseKey: 'hij',
+            responseValue: 'response3',
+          }, {
+            options: [],
+            responseKey: 'str',
+            responseValue: 'response1',
+          },
+        ];
+        controller.stepNext();
+        expect(controller.tableData).toEqual(result);
+      });
+
+      it('tableData should be populated in the ascending order of Response variable', function () {
+        var restApiResponse = {
+          USD: '999',
+          error: false,
+          status: 200,
+          BTC: 0.06080007,
+        };
+        controller.restApiResponse = JSON.stringify(restApiResponse);
+        controller.variableSet = [];
+        result = [
+          {
+            options: [],
+            responseKey: 'BTC',
+            responseValue: 0.06080007,
+          }, {
+            options: [],
+            responseKey: 'USD',
+            responseValue: '999',
+          }, {
+            options: [],
+            responseKey: 'error',
+            responseValue: false,
+          }, {
+            options: [],
+            responseKey: 'status',
+            responseValue: 200,
+          },
+        ];
+        controller.stepNext();
+        expect(controller.tableData).toEqual(result);
+      });
+
+      it('tableData should be populated in sorted order with selected variables on the top followed by nonSelected Variables', function () {
+        var restApiResponse = {
+          str: 'response1',
+          abc: 'response2',
+          hij: 'response3',
+          xyz: 'response4',
+        };
+        controller.restApiResponse = JSON.stringify(restApiResponse);
+        controller.variableSet = [{ value: 'str', variableName: 'selectedVariable1' }, { value: 'xyz', variableName: 'selectedVariable2' }];
+        result = [
+          {
+            options: [],
+            responseKey: 'str',
+            responseValue: 'response1',
+            selected: 'selectedVariable1',
+          }, {
+            options: [],
+            responseKey: 'xyz',
+            responseValue: 'response4',
+            selected: 'selectedVariable2',
+          }, {
+            options: [],
+            responseKey: 'abc',
+            responseValue: 'response2',
+          }, {
+            options: [],
+            responseKey: 'hij',
+            responseValue: 'response3',
+          },
+        ];
         controller.stepNext();
         expect(controller.tableData).toEqual(result);
       });
@@ -762,6 +826,214 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
           $scope.$apply();
           controller.isBasicCredentialUpdated();
           expect(controller.isDynamicsValueUpdated).toBeDefined();
+        });
+      });
+
+      describe('should test https error message scenarios', function () {
+        it('should test getUrlErrorMessages function when url starts with https://', function () {
+          controller.menuEntry = {
+            actions: [
+              {
+                url: [
+                  {
+                    isDynamic: false,
+                    action: {
+                      eval: {
+                        value: 'https://www.google.com',
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          };
+          controller.getUrlErrorMessages();
+          expect(controller.showSecureUrlErrorMessage).toBe(false);
+          expect(controller.showFullErrorMessage).toBe(false);
+        });
+
+        it('should test getUrlErrorMessages function when url starts with http://', function () {
+          controller.menuEntry = {
+            actions: [
+              {
+                url: [
+                  {
+                    isDynamic: false,
+                    action: {
+                      eval: {
+                        value: 'http://www.google.com',
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          };
+          controller.getUrlErrorMessages();
+          expect(controller.showSecureUrlErrorMessage).toBe(true);
+          expect(controller.showFullErrorMessage).toBe(false);
+        });
+
+        it('should test getUrlErrorMessages function when url does not start with https or http', function () {
+          controller.menuEntry = {
+            actions: [
+              {
+                url: [
+                  {
+                    isDynamic: false,
+                    action: {
+                      eval: {
+                        value: 'www.google.com',
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          };
+          controller.getUrlErrorMessages();
+          expect(controller.showSecureUrlErrorMessage).toBe(false);
+          expect(controller.showFullErrorMessage).toBe(true);
+        });
+
+        it('should test getUrlErrorMessages function when url begins with a dynamic value', function () {
+          controller.menuEntry = {
+            actions: [
+              {
+                url: [
+                  {
+                    isDynamic: true,
+                    action: {
+                      eval: {
+                        value: 'www.google.com',
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          };
+          controller.getUrlErrorMessages();
+          expect(controller.showSecureUrlErrorMessage).toBe(false);
+          expect(controller.showFullErrorMessage).toBe(true);
+        });
+
+        it('should test checkUrl function when urlUpdated flag is true', function () {
+          controller.isDynamicsValueUpdated();
+          controller.menuEntry = {
+            actions: [
+              {
+                dynamicList: [
+                  {
+                    isDynamic: true,
+                    action: {
+                      eval: {
+                        value: 'www.google.com',
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          };
+          controller.getUrlErrorMessages();
+          expect(controller.showFullErrorMessage).toBe(true);
+          expect(controller.showSecureUrlErrorMessage).toBe(false);
+        });
+
+        it('should test onUrlBoxFocus function', function () {
+          controller.onUrlBoxFocus();
+          expect(controller.urlBoxFocussed).toBe(true);
+        });
+
+        it('should test validateUrl function url consists https://', function () {
+          controller.basicAuthButton = false;
+          controller.url = 'https://www.google.com';
+          controller.menuEntry = {
+            actions: [
+              {
+                url: [
+                  {
+                    isDynamic: false,
+                    action: {
+                      eval: {
+                        value: 'https://www.google.com',
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          };
+          expect(controller.isNextDisabled()).toBe(true);
+        });
+
+        it('should test validateUrl function url does not consist https://', function () {
+          controller.basicAuthButton = false;
+          controller.url = 'www.google.com';
+          controller.menuEntry = {
+            actions: [
+              {
+                url: [
+                  {
+                    isDynamic: false,
+                    action: {
+                      eval: {
+                        value: 'www.google.com',
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          };
+          expect(controller.isNextDisabled()).toBe(true);
+        });
+
+        it('should test validateUrl function when url begins with a dynamic value', function () {
+          controller.basicAuthButton = false;
+          controller.url = 'www.google.com';
+          controller.menuEntry = {
+            actions: [
+              {
+                url: [
+                  {
+                    isDynamic: true,
+                    action: {
+                      eval: {
+                        value: ' ',
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          };
+          expect(controller.isNextDisabled()).toBe(true);
+        });
+
+        it('should test validateUrl function with authentication on', function () {
+          controller.basicAuthButton = true;
+          controller.username = 'administrator';
+          controller.password = 'administrator';
+          controller.url = 'www.google.com';
+          controller.menuEntry = {
+            actions: [
+              {
+                url: [
+                  {
+                    isDynamic: false,
+                    action: {
+                      eval: {
+                        value: 'https://www.google.com',
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          };
+          expect(controller.isNextDisabled()).toBe(true);
         });
       });
     });

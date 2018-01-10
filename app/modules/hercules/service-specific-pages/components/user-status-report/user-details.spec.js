@@ -1,6 +1,6 @@
 'use strict';
 
-var moduleName = require('./user-details');
+var moduleName = require('./index').default;
 
 describe('Service: UserDetails', function () {
   beforeEach(angular.mock.module(moduleName));

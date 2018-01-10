@@ -1,4 +1,4 @@
-@import '~collab-ui/scss/tools/placeholders/page-layout';
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 
 .sq-places-page {
   @extend %grid-subheader;
@@ -35,7 +35,7 @@
       color: $brand-white;
     }
   }
-  .subHeader {
+  .sub-header {
     padding: 4px 200px 30px 0px;
   }
   .successfullyAdded {

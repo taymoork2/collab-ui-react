@@ -7,7 +7,8 @@ class Meetingdetails implements ng.IComponentController {
   public data: any;
   public dataSet: Object;
   public overview: Object;
-  public otherPara: Object;
+  public cmrData: Object;
+  public pstnData: Object;
   public lineColor: Object;
   public circleColor: Object;
   public featAndconn: Object;
@@ -25,17 +26,15 @@ class Meetingdetails implements ng.IComponentController {
       voip: {},
       video: {},
       voipReqtimes: 0,
-      videoRetimes: 0,
+      videoReqtimes: 0,
       currentQos: 'voip',
     };
   }
 
   public $onInit() {
-    this.getEndTime();
     this.overview = this.SearchService.getStorage('webexOneMeeting.overview');
     this.featAndconn = this.SearchService.getStorage('webexOneMeeting.featAndconn');
     this.conferenceID = _.get(this.$stateParams, 'cid');
-
     this.getParticipants();
   }
 
@@ -43,7 +42,10 @@ class Meetingdetails implements ng.IComponentController {
     this.loading = true;
     this.data.currentQos = qos;
     this.lineColor = this.data[qos];
-    this.otherPara = qos === 'voip' ? this.data.pstn : undefined;
+    this.pstnData = qos === 'voip' ? this.data.pstn : undefined;
+    if (this.data.cmr) {
+      this.cmrData = qos === 'voip' ? this.data.cmr.audio : this.data.cmr.video;
+    }
     this.$timeout(() => this.loading = false, 200);
   }
 
@@ -57,10 +59,13 @@ class Meetingdetails implements ng.IComponentController {
         this.dataSet = { lines: lines, endTime: _.get(wom, 'endTime'), startTime: _.get(wom, 'startTime'), offset: this.SearchService.getOffset(timeZone) };
 
         const ids = this.getAllIds(lines);
+        const pstnIds = this.getFilterIds(res);
+        const cmrIds = this.getFilterIds(res, 'cmr');
         this.getJoinMeetingTime();
         this.voipQOS(ids);
         this.videoQOS(ids);
-        this.pstnQOS(ids);
+        this.pstnQOS(pstnIds);
+        this.cmrQOS(cmrIds);
       })
       .catch((err) => {
         this.loading = true;
@@ -84,40 +89,115 @@ class Meetingdetails implements ng.IComponentController {
   }
 
   private pstnQOS(ids) { // TODO, will discuss with backend to optimize the response data.
+    if (!_.size(ids)) {
+      return;
+    }
+
     this.SearchService.getQOS(this.conferenceID, ids, 'pstn-qos')
     .then((res: any) => {
       const obj = {};
       _.map(res, (item: any, key) => {
+        obj[key] = [];
         _.forEach(item.items, (item_) => {
           const data = _.cloneDeep(item_);
           const arr_ = data.tahoeQuality;
           _.unset(data, 'tahoeQuality');
-          const arr__: any = [];
-          _.forEach(arr_, (item__) => {
-            const obj__ = _.assignIn({ type: 'PSTN', nodeId: key }, item__, data);
-            arr__.push(obj__);
-          });
-          obj[key] = arr__;
+
+          const arr__ = _.map(arr_, item__ => _.assignIn({ type: 'PSTN', nodeId: key, quality: this.getPSTNQuality(item__) }, item__, data));
+          obj[key] = _.concat(obj[key], arr__);
         });
       });
       this.data.pstn = obj;
+      this.pstnData = _.get(this.data, 'currentQos') === 'voip' ? this.data.pstn : this.pstnData;
     });
+  }
+
+  private cmrQOS(ids) {
+    if (!_.size(ids)) {
+      return;
+    }
+
+    this.SearchService.getQOS(this.conferenceID, ids, 'cmr-qos')
+    .then((res: any) => {
+      const obj = { audio: {}, video: {} };
+      _.forEach(res, (item: any, key: any) => {
+        obj.audio[key] = [];
+        obj.video[key] = [];
+        _.forEach(item.items, (item_) => {
+          const data = _.cloneDeep(item_);
+          const audioQos = data.audioQos;
+          const videoQos = data.videoQos;
+          _.unset(data, 'audioQos');
+          _.unset(data, 'videoQos');
+          const audioArr = _.map(audioQos.VCS, item__ => _.assignIn({ type: 'Audio', nodeId: key, quality: this.getCMRQuality(item__) }, item__, data));
+          const videoArr = _.map(videoQos.VCS, item__ => _.assignIn({ type: 'Video', nodeId: key, quality: this.getCMRQuality(item__) }, item__, data));
+
+          obj.audio[key] = _.concat(obj.audio[key], audioArr);
+          obj.video[key] = _.concat(obj.video[key], videoArr);
+        });
+      });
+      this.data.cmr = obj;
+      this.cmrData = _.get(this.data, 'currentQos') === 'voip' ? obj.audio : obj.video;
+    });
+  }
+
+  private getCMRQuality(item) {
+    const jitQOS = _.parseInt(item.jitter) > 20 ? -1 : 1; // TODO, need to discuss, 1 -- good, -1 -- bad
+    const lossRatQOS = _.parseInt(item.lossRate) > 0.05 ? -1 : 1; // TODO, need to discuss, 1 -- good, -1 -- bad
+    const qos = jitQOS + lossRatQOS; // TODO, need to discuss, good+good = good, good+bad=fair, bad+bad=bad.
+    let quality = 'Fair';
+    quality = qos < 0 ? 'Poor' : quality;
+    quality = qos > 0 ? 'Good' : quality;
+
+    return quality;
+  }
+
+  private getPSTNQuality(item) {
+    let quality = 'Fair';
+    const audioMos = _.parseInt(item.audioMos);
+    if ( audioMos > 3 ) {
+      quality = 'Good';
+    } else if ( audioMos < 3 && audioMos > 0 ) {
+      quality = 'Poor';
+    }
+    return quality;
   }
 
   private formateLine(lines) {
     const wom = this.SearchService.getStorage('webexOneMeeting');
     return _.forEach(lines, (item) => {
+      const device = this.SearchService.getDevice({ platform: item.platform, browser: item.browser, sessionType: item.sessionType });
+      const platform_ = this.SearchService.getPlartform({ platform: item.platform, sessionType: item.sessionType });
+      item.joinTime_ = this.SearchService.timestampToDate(item.joinTime, 'h:mm A');
       item.leaveTime = item.leaveTime || _.get(wom, 'endTime');
       item.browser_ = this.SearchService.getBrowser(_.parseInt(item.browser));
-      item.platform_ = this.SearchService.getPlartform({ platform: item.platform, sessionType: item.sessionType });
+      item.mobile = _.includes(['7', '8', '11', '12', '13', '14'], item.platform) ? platform_ : '';
+      item.duration = item.duration ? item.duration : _.round((item.leaveTime - item.joinTime) / 1000);
+      item.device = _.get(device, 'name');
+      item.platform_ = platform_;
+      item.deviceIcon = _.get(device, 'icon');
     });
   }
 
-  private getEndTime() {
-    const status = this.SearchService.getStorage('webexOneMeeting.overview.status');
-    if (status === 1) {
-      this.SearchService.getServerTime()
-      .then( res => this.SearchService.setStorage('webexOneMeeting.endTime', _.get(res, 'dateLong')));
+  private getLineCircleData(res, qosName) {
+    const obj = {};
+    const retryIds: String[] = [];
+
+    _.forEach(res, (item: any, key: string) => {
+      if (!item.completed) {
+        retryIds.push(key);
+        return true;
+      }
+
+      obj[key] = _.map(item.items, (oneItem) => _.assign({}, oneItem, { type: _.capitalize(qosName) }) );
+    });
+
+    _.assignIn(this.data[qosName], obj);
+    this.lineColor = _.get(this.data, 'currentQos') === qosName ? this.data[qosName] : this.lineColor;
+
+    if (_.size(retryIds) && this.data[`${qosName}Reqtimes`] < 5) {
+      this.data[`${qosName}Reqtimes`] += 1;
+      qosName === 'voip' ? this.voipQOS(_.join(retryIds)) : this.videoQOS(_.join(retryIds));
     }
   }
 
@@ -127,29 +207,12 @@ class Meetingdetails implements ng.IComponentController {
     return _.join(_.map(arr, (item) => _.get(item, 'nodeId')));
   }
 
-  private getLineCircleData(res, qosName) { // TODO, will discuss with backend to optimize the response data.
-    const obj = {};
-    const retryIds: String[] = [];
-    _.forEach(res, (item: any, key: string) => {
-      if (!item.completed) {
-        retryIds.push(key);
-      } else {
-        _.forEach(item.items, (oneItem) => {
-          oneItem.type = _.capitalize(qosName);
-        });
-        obj[key] = item.items;
-      }
-    });
-    if (_.size(retryIds)) {
-      if (this.data[`${qosName}Reqtimes`] > 5) {
-        return false;
-      }
-      this.data[`${qosName}Reqtimes`] += 1;
-      const fun = this[`${qosName}QOS`];
-      fun(_.join(retryIds));
-    }
-    _.assignIn(this.data[qosName], obj);
-    this.lineColor = _.get(this.data, 'currentQos') === 'video' ? this.data[qosName] : this.lineColor;
+  private getFilterIds(res, type: string = 'pstn') {
+    const arr = type === 'pstn' ?
+    _.filter(res, (item: any) => !(_.parseInt(item.sessionType) === 0 && _.parseInt(item.platform) === 10))
+    : _.filter(res, (item: any) => _.parseInt(item.sessionType) === 0 && _.parseInt(item.platform) === 10);
+    const lines = _.map(arr, (item) => this.formateLine(_.get(item, 'participants')));
+    return this.getAllIds(lines);
   }
 }
 

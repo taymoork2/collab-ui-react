@@ -7,58 +7,36 @@
 
     <div class="content-container" ng-if="!$ctrl.loading">
         <div class="overview">
-            <h4>Meeting Details</h4>
             <div class="meeting-room-name">
                 <h3 ng-bind="$ctrl.details.meetingName"></h3>
-                <small><i class="icon icon-circle status-indicator"></i><span ng-bind="$ctrl.details.status_"></span></small>
+                <small class="detailInfo">{{::'webexReports.meetingNumber' | translate}}: <span ng-bind="$ctrl.details.meetingNumber"></span></small>
+								<small class="detailInfo">{{::'webexReports.searchGridHeader.conferenceID' | translate}}: <span ng-bind="$ctrl.details.conferenceId"></span></small>
+								<small ng-if="$ctrl.details.status === 1"><span class="badge badge--outline success" translate="webexReports.meetingStatus.inProgress"></span></small>
             </div>
 
             <div class="room-information">
                 <h6>
-                    <span translate="webexReports.meetingNumber"></span><span>: {{$ctrl.details.meetingNumber}}</span>
+                  <span translate="webexReports.searchGridHeader.startTime"></span>
+                  <span class="blue-color" ng-bind="$ctrl.details.startDate"></span>
                 </h6>
                 <h6>
-                    <span translate="webexReports.searchGridHeader.conferenceID"></span><span>: {{$ctrl.details.conferenceId}}</span>
+                  <span translate="webexReports.start"></span>
+                  <span class="blue-color" ng-bind="$ctrl.details.startTime_"></span>
                 </h6>
                 <h6>
-                    <span translate="webexReports.hostName"></span><span>: {{$ctrl.details.hostName}}</span>
+                  <span ng-hide="$ctrl.details.status === 1" translate="webexReports.end"></span>
+                  <span class="blue-color" ng-bind="$ctrl.details.endTime_" ng-show="$ctrl.details.status === 2"></span>
                 </h6>
-            </div>
-        </div>
-
-        <cs-card-layout>
-            <cs-card class="medium header-border meeting-time">
-            <article>
-                <header>
-                <h4>{{::'webexReports.start' | translate}}</h4></header>
-                <section>
-                <p ng-bind="$ctrl.details.startTime_"></p>
-                </section>
-                <span ng-bind="$ctrl.details.startDate"></span>
-            </article>
-            </cs-card>
-            <cs-card class="medium header-border meeting-time">
-            <article>
-                <header>
-                <h4>{{::'webexReports.duration' | translate}}</h4></header>
-                <section>
-                <p>{{$ctrl.details.duration_}}</p>
-                </section>
-                <span ng-if="$ctrl.details.numberOfParticipants === 1">{{$ctrl.details.numberOfParticipants}} {{::'webexReports.participant' | translate}}</span>
-                <span ng-if="$ctrl.details.numberOfParticipants !== 1">{{$ctrl.details.numberOfParticipants}} {{::'webexReports.participants' | translate}}</span>
-            </article>
-            </cs-card>
-            <cs-card class="medium header-border meeting-time">
-            <article>
-                <header><h4 ng-hide="$ctrl.details.status === 1" translate="webexReports.end"></h4></header>
-                <section>
-                <p ng-bind="$ctrl.details.endTime_" ng-show="$ctrl.details.status === 2"></p>
-                <p ng-show="$ctrl.details.status === 1">{{::'webexReports.meetingStatus.inProcess' | translate}}<i cs-loader class="loader-example--small"></i></p>
-                </section>
-                <span ng-hide="$ctrl.details.status === 1" ng-bind="$ctrl.details.endDate"></span>
-            </article>
-            </cs-card>
-        </cs-card-layout>
+                <h6>
+                  <span translate="webexReports.duration"></span>
+                  <span class="blue-color" ng-bind="$ctrl.details.duration_"></span>
+                </h6>
+                <h6>
+                    <span translate="webexReports.participants"></span>
+                    <span class="blue-color" ng-bind="$ctrl.details.numberOfParticipants"></span>
+                </h6>
+              </div>
+          </div>
         <div ui-view="tabContent" class="tabContent"></div>
     </div>
 </div>

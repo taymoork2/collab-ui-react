@@ -8,7 +8,8 @@ export interface ISuggestion {
   searchString: string;
   readableField: string;
   field?: string;
-  text: string;
+  translatableText: string;
+  translateParams: { [key: string]: string } | null;
   count?: number;
   isFieldSuggestion?: boolean;
 }
@@ -111,10 +112,8 @@ export class SuggestionDropdown implements ISuggestionDropdown {
           count: totalCount,
           searchString: currentEditedElement.toQuery(),
           readableField: this.$translate.instant('spacesPage.allDevices'),
-          text: this.$translate.instant('spacesPage.containingQuery',
-            {
-              query: currentEditedElement.toQuery(),
-            }),
+          translatableText: 'spacesPage.containingQuery',
+          translateParams: { query: currentEditedElement.toQuery() },
         },
       ];
       if (currentEditedElement instanceof OperatorAnd && _.every(currentEditedElement.and, child => {
@@ -126,20 +125,16 @@ export class SuggestionDropdown implements ISuggestionDropdown {
         this.inputBasedSuggestions.push({
           searchString: phraseQuery,
           readableField: this.$translate.instant('spacesPage.allDevices'),
-          text: this.$translate.instant('spacesPage.containingQuery',
-            {
-              query: phraseQuery,
-            }),
+          translatableText: 'spacesPage.containingQuery',
+          translateParams: { query: phraseQuery },
         });
       }
       this.inputBasedSuggestions.push({
         searchString: `${QueryParser.Field_Displayname}:${currentEditedElement.toQuery()}`,
         readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(QueryParser.Field_Displayname),
         field: QueryParser.Field_Displayname,
-        text: this.$translate.instant('spacesPage.containingQuery',
-          {
-            query: currentEditedElement.toQuery(),
-          }),
+        translatableText: 'spacesPage.containingQuery',
+        translateParams: { query: currentEditedElement.toQuery() },
       });
       this.firstSuggestionIsDefault = true;
     } else if (currentEditedElement instanceof FieldQuery && currentEditedElement.getQueryWithoutField() !== '') {
@@ -149,10 +144,8 @@ export class SuggestionDropdown implements ISuggestionDropdown {
           searchString: currentEditedElement.toQuery(),
           readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(currentEditedElement.getCommonField()),
           field: currentEditedElement.getCommonField(),
-          text: this.$translate.instant('spacesPage.containingQuery',
-            {
-              query: (currentEditedElement as FieldQuery).getQueryWithoutField(),
-            }),
+          translatableText: 'spacesPage.containingQuery',
+          translateParams: { query: (currentEditedElement as FieldQuery).getQueryWithoutField() },
         },
       ];
       this.firstSuggestionIsDefault = true;
@@ -276,7 +269,8 @@ export class SuggestionDropdown implements ISuggestionDropdown {
                 searchString: `${aggregationName}="${bucket.key}"`,
                 readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(aggregationName),
                 field: aggregationName,
-                text: this.searchTranslator.lookupTranslatedQueryValueDisplayName(bucket.key, aggregationName),
+                translatableText: this.searchTranslator.lookupTranslatedQueryValueDisplayName(bucket.key, aggregationName),
+                translateParams: null,
                 count: currentCount,
               };
             })
@@ -317,7 +311,6 @@ export class SuggestionDropdown implements ISuggestionDropdown {
   }
 
   public static removeExistingQueries (suggestions: ISuggestion[], currentSearchBullets: SearchElement[]): ISuggestion[] {
-    //TODO: clean up filtering, don't remove duplicates perhaps
     if (!currentSearchBullets || currentSearchBullets.length === 0) {
       return suggestions;
     }
@@ -337,7 +330,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
     }
 
     return _.filter(suggestions, (su) => {
-      return workingElement.matches(su.text, su.field);
+      return workingElement.matches(su.searchString, su.field);
     });
   }
 }

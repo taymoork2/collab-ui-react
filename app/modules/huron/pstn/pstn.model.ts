@@ -1,11 +1,19 @@
 import { PstnCarrier } from './pstnProviders/pstnCarrier';
 import { Address } from './shared/pstn-address';
+import { ContractStatus } from './pstn.const';
+
+export interface IOrderData {
+  numbers: string | string[];
+  areaCode?: string;
+  consecutive?: boolean;
+  nxx?: string;
+}
 
 export interface IOrder {
   orderType: string;
-  data: any;
-  reservationId?: string;
-  numberType?: string;
+  data: IOrderData;
+  reservationId?: string; //Will exist based on orderType
+  numberType?: string;    //Will exist based on orderType
 }
 
 export interface IAuthLicense {
@@ -43,6 +51,7 @@ export class PstnModel {
   private countryCode: string;
   private esaSigned: boolean;
   private esaDisclaimerAgreed: boolean;
+  private contractStatus: ContractStatus;
 
   public constructor() {
     this.clear();
@@ -77,6 +86,7 @@ export class PstnModel {
     this.countryCode = 'US';
     this.esaSigned = false;
     this.esaDisclaimerAgreed = false;
+    this.contractStatus = ContractStatus.UnKnown;
   }
 
   public clearProviderSpecificData(): void {
@@ -259,6 +269,14 @@ export class PstnModel {
 
   public setEsaDisclaimerAgreed(_esaDisclaimerAgreed: boolean): void {
     this.esaDisclaimerAgreed = _esaDisclaimerAgreed;
+  }
+
+  public getContractStatus(): ContractStatus {
+    return this.contractStatus;
+  }
+
+  public setContractStatus(contractStatus: ContractStatus): void {
+    this.contractStatus = contractStatus;
   }
 }
 

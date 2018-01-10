@@ -1,4 +1,4 @@
-@import '~collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/colors';
 
 verify-sip-destination {
   margin-left: 10px;
@@ -48,7 +48,7 @@ verify-sip-destination {
 }
 
 .verify-sip-destination-modal {
-  .warning-message {
+  .hybrid-services-warning-message {
     margin-top: 10px;
 
     span {

@@ -5,8 +5,9 @@
   module.exports = UserManageOrgController;
 
   /* @ngInject */
-  function UserManageOrgController($q, $state, Analytics, AutoAssignTemplateService, DirSyncService, FeatureToggleService, Notification, OnboardService, Orgservice, UserCsvService) {
+  function UserManageOrgController($q, $state, $window, Analytics, AutoAssignTemplateService, DirSyncService, FeatureToggleService, Notification, OnboardService, Orgservice, UserCsvService) {
     var DEFAULT_AUTO_ASSIGN_TEMPLATE = 'Default';
+    var ENABLE_DIR_SYNC_URL = 'https://www.cisco.com/go/hybrid-services-directory';
     var vm = this;
 
     vm.ManageType = require('./userManage.keys').ManageType;
@@ -15,14 +16,20 @@
     vm.manageType = 'manual';
     vm.maxUsersInCSV = UserCsvService.maxUsersInCSV;
     vm.maxUsersInManual = OnboardService.maxUsersInManual;
-    vm.onNext = onNext;
-    vm.cancelModal = cancelModal;
     vm.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
+    vm.hasDefaultAutoAssignTemplate = hasDefaultAutoAssignTemplate;
+    vm.getDefaultSettingsForAutoAssignTemplate = getDefaultSettingsForAutoAssignTemplate;
+    vm.toggleActivateForDefaultAutoAssignTemplate = toggleActivateForDefaultAutoAssignTemplate;
+    vm.isDefaultAutoAssignTemplateActivated = isDefaultAutoAssignTemplateActivated;
+    vm.recvDelete = recvDelete;
+    vm.cancelModal = cancelModal;
+    vm.handleDirSyncService = handleDirSyncService;
+    vm.onNext = onNext;
+    vm.isDefaultAutoAssignActivated = false;
     vm.convertableUsers = false;
     vm.isAtlasF3745AutoAssignToggle = false;
     vm.autoAssignTemplates = {};
-    vm.isAutoAssignTemplateEnabled = isAutoAssignTemplateEnabled;
-    vm.recvDelete = recvDelete;
+    vm.dirSyncText = vm.isDirSyncEnabled ? 'globalSettings.dirsync.turnOffDirSync' : 'globalSettings.dirsync.turnOnDirSync';
 
     vm.initFeatureToggles = initFeatureToggles;
     vm.initConvertableUsers = initConvertableUsers;
@@ -38,6 +45,7 @@
       initFeatureToggles()
         .then(function () {
           initDefaultAutoAssignTemplate();
+          getDefaultSettingsForAutoAssignTemplate();
         });
     }
 
@@ -71,6 +79,7 @@
         .catch(function (response) {
           // 404's when fetching auto-assign templates will be fairly common
           if (response.status === 404) {
+            _.set(vm.autoAssignTemplates, DEFAULT_AUTO_ASSIGN_TEMPLATE, undefined);
             return;
           }
           Notification.errorResponse(response);
@@ -81,8 +90,30 @@
       return _.get(vm.autoAssignTemplates, DEFAULT_AUTO_ASSIGN_TEMPLATE);
     }
 
-    function isAutoAssignTemplateEnabled() {
+    function hasDefaultAutoAssignTemplate() {
       return !!getAutoAssignTemplate();
+    }
+
+    /* Used to check if autoLicenseAssignment property exists and is set to true
+    currently isn't set to TRUE 12/21/17
+    */
+    function getDefaultSettingsForAutoAssignTemplate() {
+      AutoAssignTemplateService.getSettings().then(function (response) {
+        vm.isDefaultAutoAssignActivated = response.autoLicenseAssignment;
+      });
+    }
+
+    function toggleActivateForDefaultAutoAssignTemplate(isActivated) {
+      vm.isDefaultAutoAssignActivated = isActivated;
+    }
+
+    /* There are two levels of enablement for a template (i.e. what is known as "activation")
+    1 - at the org-level
+    2 - at the template-level (currently not implemented)
+    Once 2 is implemented, logic will most likely change 12/21/17
+    */
+    function isDefaultAutoAssignTemplateActivated() {
+      return hasDefaultAutoAssignTemplate() && vm.isDefaultAutoAssignActivated;
     }
 
     function recvDelete() {
@@ -92,6 +123,20 @@
     function cancelModal() {
       $state.modal.dismiss();
       Analytics.trackAddUsers(Analytics.eventNames.CANCEL_MODAL);
+    }
+
+    function handleDirSyncService() {
+      if (vm.isDirSyncEnabled) {
+        // - because we're in a modal, chain the transition to 'settings' after dismissing the modal
+        $state.modal.closed.then(function () {
+          $state.go('settings', {
+            showSettings: 'dirsync',
+          });
+        });
+        $state.modal.dismiss();
+      } else {
+        $window.open(ENABLE_DIR_SYNC_URL, '_blank');
+      }
     }
 
     function goToAutoAssignTemplate() {
@@ -118,7 +163,7 @@
         switch (vm.manageType) {
           case vm.ManageType.MANUAL:
             Analytics.trackAddUsers(Analytics.eventNames.NEXT, Analytics.sections.ADD_USERS.uploadMethods.MANUAL);
-            $state.go('users.add');
+            $state.go('users.add.manual');
             break;
 
           case vm.ManageType.BULK:

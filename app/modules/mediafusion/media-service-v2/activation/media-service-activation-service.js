@@ -30,7 +30,7 @@
     };
 
     function recoverProm(errorResponse) {
-      Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaNetworkFailure');
+      Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaEntitlementEnablementFailure');
       return undefined;
     }
 

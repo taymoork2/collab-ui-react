@@ -330,6 +330,7 @@ export class AutoAttendantPage {
       .get(9);
 
     this.restApi = element(by.css('div.aa-panel-body[name="REST API"]'));
+    this.restApiError = element(by.id('aaRestErrorMessage'));
     this.configureApi = element(by.id('configureApi'));
     this.configureApiURL = element(by.id('configureApiUrl'));
     this.addDynamicFeature = element(by.id('addDynamicFeature'));

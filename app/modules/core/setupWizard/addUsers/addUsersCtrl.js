@@ -5,7 +5,7 @@
     .controller('AddUserCtrl', AddUserCtrl);
 
   /* @ngInject */
-  function AddUserCtrl($filter, $location, $q, $rootScope, $scope, $translate, addressparser, Analytics, DirSyncServiceOld, Log, Notification,
+  function AddUserCtrl($filter, $location, $q, $rootScope, $scope, $translate, addressparser, Analytics, Authinfo, DirSyncServiceOld, Log, Notification,
     UserListService, Userservice, LogMetricsService, Config) {
     $scope.maxUsers = 1100;
     var getStatusCount = 0;
@@ -304,9 +304,11 @@
         } else {
           Log.debug('Failed to retrieve directory sync status. Status: ' + status);
           $rootScope.$emit('add-user-dirsync-error');
-          Notification.error('dirsyncModal.getStatusFailed', {
-            status: status,
-          });
+          if (!Authinfo.isUserAdminUser()) { // should not notify on this error as User Admin, since they don't have authorization for the API
+            Notification.error('dirsyncModal.getStatusFailed', {
+              status: status,
+            });
+          }
           Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.SYNC_REFRESH, null, { result: 'error', clicks: getStatusCount });
         }
       });

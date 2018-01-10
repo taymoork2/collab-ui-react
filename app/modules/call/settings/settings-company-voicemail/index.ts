@@ -6,7 +6,7 @@ import phoneNumberModule from 'modules/huron/phoneNumber';
 
 export default angular
   .module('call.settings.company-voicemail', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     serviceSetup,
     phoneNumberModule,

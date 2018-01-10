@@ -10,8 +10,16 @@
       </div>
       <div class="large-8 medium-8 small-12 columns">
         <div class="row">
-          <div  ng-if="aaConfigureApiModal.isDynamicToggle()" class="aa-dynamic-prompt aa-message-width aa-message-only-type large-11 medium-11 small-11 columns">
-            <dynamic-prompt class="small-12 columns dynamic-prompt aa-message-height" ng-model="aaConfigureApiModal.url" dynamic-tags="aaConfigureApiModal.dynamicTags" model-values="aaConfigureApiModal.dynamicValues" insert-element="insertElement" aa-change ng-keyup = "aaConfigureApiModal.saveDynamicUi()" id="configureApiUrl{{schedule + index}}" name="url" data-placeholder="{{:: aaConfigureApiModal.messageInputPlaceholder}}"></dynamic-prompt>
+          <div  ng-if="aaConfigureApiModal.isDynamicToggle()" class="aa-dynamic-prompt aa-message-only-type large-11 medium-11 small-11 columns">
+            <dynamic-prompt class="small-12 columns dynamic-prompt aa-message-height" ng-model="aaConfigureApiModal.url" 
+            dynamic-tags="aaConfigureApiModal.dynamicTags" model-values="aaConfigureApiModal.dynamicValues" 
+            insert-element="insertElement" aa-change ng-keyup = "aaConfigureApiModal.saveDynamicUi()" 
+            id="configureApiUrl{{schedule + index}}" name="url" 
+            data-placeholder="{{:: aaConfigureApiModal.messageInputPlaceholder}}"
+            ng-blur = "aaConfigureApiModal.getUrlErrorMessages()"
+            ng-class = "{'aa-rest-url-box-error' : aaConfigureApiModal.showFullErrorMessage || aaConfigureApiModal.showSecureUrlErrorMessage,
+            'aa-rest-url-box-focussed': aaConfigureApiModal.urlBoxFocussed}"
+            ng-focus = "aaConfigureApiModal.onUrlBoxFocus()"></dynamic-prompt>
           <div ng-if="aaConfigureApiModal.getWarning()">
             <br></br>
             <div class="columns small-12 aa-div-click" ng-click="aaConfigureApiModal.toggleFullWarningMsg()" ng-blur="aaConfigureApiModal.closeFullWarningMsg()">
@@ -19,6 +27,15 @@
               <span class="aa-text-overflow" data-ng-bind="aaConfigureApiModal.deletedSessionVariablesListAlongWithWarning"></span>
               <div ng-if = "aaConfigureApiModal.fullWarningMsgValue" class="aa-full-warning" data-ng-bind = "aaConfigureApiModal.deletedSessionVariablesListAlongWithWarning"></div>
             </div>
+          </div>
+          <div class="large-12 medium-12 small-12 columns aa-rest-url-helper-text">
+            <label class ="cs-input__help-text" translate = "autoAttendant.restApiUrlHelperText"></label>
+          </div>
+          <div id = "aaRestErrorMessage" class = "aa-rest-url-error-message large-12 medium-12 small-12 columns" 
+          ng-if = "aaConfigureApiModal.showFullErrorMessage || aaConfigureApiModal.showSecureUrlErrorMessage">
+            <div class="aa-rest-error-icon"></div>
+            <div class = "aa-rest-url-error" ng-if = "aaConfigureApiModal.showFullErrorMessage" translate = "autoAttendant.completeHttpsError"></div>
+            <div class = "aa-rest-url-error" ng-if = "aaConfigureApiModal.showSecureUrlErrorMessage" translate = "autoAttendant.secureHttpsError"></div>
           </div>
             <aa-add-variable dynamic-prompt-id="configureApiUrl{{schedule + index}}" aa-schedule="{{schedule}}" aa-index="index" dynamic-element-string="aaConfigureApiModal.addElement" aa-element-type="{{aaConfigureApiModal.aaElementType}}"></aa-add-variable>
           </div>
@@ -34,7 +51,7 @@
           <label class="h4" translate="autoAttendant.configureApiAuthentication"></label>
         </div>
         <div class="large-4 medium-4 small-12 columns">
-          <cs-toggle-switch ng-model="aaConfigureApiModal.basicAuthButton" ng-click="aaConfigureApiModal.onBasicAuthSlider()" toggle-id="BasicAuthToggle" name="BasicAuthToggle" size="small"></cs-toggle-switch>
+          <cs-toggle-switch class="aa-toggle" ng-model="aaConfigureApiModal.basicAuthButton" ng-click="aaConfigureApiModal.onBasicAuthSlider()" toggle-id="BasicAuthToggle" name="BasicAuthToggle" size="small"></cs-toggle-switch>
         </div>
       </div>
       <div class="row aa-rest-margin">

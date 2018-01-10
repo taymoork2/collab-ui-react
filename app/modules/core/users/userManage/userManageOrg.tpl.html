@@ -14,19 +14,19 @@
       <div class="cs-radio-group">
         <ul>
           <li>
-            <input cs-input
-              type="radio"
+            <input cs-input type="radio"
               ng-model="umoc.manageType"
               id="org-manual"
+              name="importUsers"
               ng-value="umoc.ManageType.MANUAL"
               cs-input-label="{{::'userManage.org.manualLabel'|translate}}"
               cs-input-help-text="{{::'userManage.org.manualDetails'|translate: {maxUsersInManual: umoc.maxUsersInManual} }}">
           </li>
           <li>
-            <input cs-input
-              type="radio"
+            <input cs-input type="radio"
               ng-model="umoc.manageType"
               id="org-bulk"
+              name="importUsers"
               ng-value="umoc.ManageType.BULK"
               cs-input-label="{{::'userManage.org.bulkLabel'|translate}}"
               cs-input-help-text="{{::'userManage.org.bulkDetails'|translate: {maxUsersInCSV: umoc.maxUsersInCSV} }}">
@@ -38,26 +38,28 @@
             </p>
           </li>
           <li>
-            <input cs-input
-              type="radio"
+            <input cs-input type="radio"
               ng-model="umoc.manageType"
               id="org-advanced"
+              name="importUsers"
               ng-value="umoc.ManageType.ADVANCED_NO_DS"
               cs-input-label="{{::'userManage.org.advancedLabel'|translate}}"
               cs-input-help-text="{{::'userManage.org.advancedDetails'|translate}}">
           </li>
           <li>
-            <input cs-input ng-if="umoc.convertableUsers"
-              type="radio"
+            <input cs-input type="radio"
+              ng-if="umoc.convertableUsers"
               ng-model="umoc.manageType"
               id="org-convert"
+              name="importUsers"
               ng-value="umoc.ManageType.CONVERT"
               cs-input-label="{{::'userManage.org.convertLabel'|translate}}"
               cs-input-help-text="{{::'userManage.org.convertDetails'|translate}}">
-            <input cs-input ng-if="!umoc.convertableUsers" disabled
-              type="radio"
+            <input cs-input type="radio" disabled
+              ng-if="!umoc.convertableUsers"
               ng-model="umoc.manageType"
               id="org-convert"
+              name="importUsers"
               ng-value="'convert'"
               cs-input-label="{{::'userManage.org.convertLabel'|translate}}"
               cs-input-help-text="{{::'userManage.org.convertUnavailable'|translate}}">
@@ -79,30 +81,19 @@
     <div class="columns medium-4 manage-modal-header">
       <h4 translate="userManage.org.activeDirectory"></h4>
     </div>
-    <div class="columns medium-3 manage-modal-label sync-status">
+    <div class="columns medium-8 manage-modal-label sync-status">
       <h5 translate="userManage.org.directorySynchronization"></h5>
       <span class="manage-modal-detail ds-sync">
         <i class="icon icon-circle icon-circle-manage"
           ng-class="{'working': umoc.isDirSyncEnabled, 'disabled': !umoc.isDirSyncEnabled}">
         </i>
-        <h6 ng-if="umoc.isDirSyncEnabled" translate="userManage.org.enabled"></h6>
-        <h6 ng-if="!umoc.isDirSyncEnabled" translate="userManage.org.disabled"></h6>
+        <h6 ng-if="umoc.isDirSyncEnabled" translate="common.enabled"></h6>
+        <h6 ng-if="!umoc.isDirSyncEnabled" translate="common.disabled"></h6>
       </span>
-    </div>
-    <div class="columns medium-5 manage-modal-dots">
-      <span cs-dropdown class="actions-menu">
-        <button cs-dropdown-toggle class="btn--none dropdown-toggle icon icon-three-dots"
-          ng-click="$event.stopPropagation()">
-        </button>
-        <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
-          <li ng-if="!umoc.isDirSyncEnabled" class="menu-item">
-            <a href ng-click="umoc.onNext(ManageType.ADVANCED_NO_DS)" translate="userManage.org.directorySynchronizationEnableLabel"></a>
-          </li>
-          <li ng-if="umoc.isDirSyncEnabled" class="menu-item">
-            <a href ng-click="umoc.onNext(ManageType.ADVANCED_NO_DS)" translate="userManage.org.directorySynchronizationDisableLabel"></a>
-          </li>
-        </ul>
-      </span>
+      <h6 class="manage-modal-detail--link"
+        ng-click="umoc.handleDirSyncService()"
+        translate="{{:: umoc.dirSyncText }}">
+      </h6>
     </div>
   </div>
   <hr>
@@ -110,19 +101,28 @@
     <div class="columns medium-4 manage-modal-header">
       <h4 translate="userManage.org.licenses"></h4>
     </div>
-    <div class="columns manage-modal-label"
-      ng-class="{'medium-3': umoc.isAutoAssignTemplateEnabled(), 'medium-8': !umoc.isAutoAssignTemplateEnabled()}">
+    <div class="columns manage-modal-label sync-status"
+      ng-class="{'medium-3': umoc.hasDefaultAutoAssignTemplate(), 'medium-8': !umoc.hasDefaultAutoAssignTemplate()}">
       <h5 translate="userManage.org.autoAssignLicenses"></h5>
-      <h6 ng-if="!umoc.isAutoAssignTemplateEnabled()"
+      <span class="manage-modal-detail ds-sync">
+        <i class="icon icon-circle icon-circle-manage"
+          ng-class="{'working': umoc.isDefaultAutoAssignTemplateActivated(),
+          'disabled': !umoc.isDefaultAutoAssignTemplateActivated()}">
+        </i>
+        <h6 ng-if="umoc.isDefaultAutoAssignTemplateActivated()" translate="common.keys.activated"></h6>
+        <h6 ng-if="!umoc.isDefaultAutoAssignTemplateActivated()" translate="common.keys.deactivated"></h6>
+      </span>
+      <h6 ng-if="!umoc.hasDefaultAutoAssignTemplate()"
         ng-click="umoc.onNext(umoc.ManageType.AUTO_ASSIGN_TEMPLATE)"
         class="manage-modal-detail manage-modal-detail--link"
         translate="userManage.org.setUpAutoAssignTemplate">
       </h6>
     </div>
     <auto-assign-template-manage-options
-      ng-if="umoc.isAutoAssignTemplateEnabled()"
+      ng-if="umoc.hasDefaultAutoAssignTemplate()"
       auto-assign-templates="umoc.autoAssignTemplates"
-      on-delete="umoc.recvDelete()">
+      on-delete="umoc.recvDelete()"
+      on-activate-toggle="umoc.toggleActivateForDefaultAutoAssignTemplate(isActivated)">
     </auto-assign-template-manage-options>
   </div>
   <hr>
@@ -142,7 +142,7 @@
         </cr-user-csv-export>
       </p>
     </div>
-    <div ng-if="umoc.convertableUsers" class="columns medium-4 modify-users-section modify-users-section--right-box" 
+    <div ng-if="umoc.convertableUsers" class="columns medium-4 modify-users-section modify-users-section--right-box"
       ng-click="umoc.onNext(umoc.ManageType.CONVERT)">
       <h4 class="modify-users-section--label" translate="userManage.org.convertLabel" ></h4>
       <h6 class="modify-users-section--details" translate="userManage.org.convertDetails"></h6>

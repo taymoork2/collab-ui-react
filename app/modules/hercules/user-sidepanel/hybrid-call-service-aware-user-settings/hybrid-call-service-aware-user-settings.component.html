@@ -12,7 +12,7 @@
   </button>
 </cs-sp-buttons>
 <cs-sp-container cs-tabindex="$ctrl.showSaveButton() ? -1 : 0">
-    <cs-sp-section class="cloud-extensions">
+    <cs-sp-section class="hybrid-services-user-sidepanel">
       <div class="section-title-row">
         <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-uc"></span>
         <cs-toggle-switch toggle-id="callServiceAwareEntitledToggle"
@@ -22,46 +22,52 @@
                           is-disabled="!$ctrl.loadingPage && $ctrl.couldNotReadUser">
         </cs-toggle-switch>
         <span cs-loader
-              class="cloud-extension-label loader-example--small"
+              class="hybrid-services-label loader-example--small"
               ng-if="$ctrl.loadingPage"></span>
       </div>
       <div>
-      <p class="extension-description">{{'hercules.cloudExtensions.serviceDescriptions.squared-fusion-uc' | translate}}</p>
+      <p class="hybrid-service-description">{{'hercules.cloudExtensions.serviceDescriptions.squared-fusion-uc' | translate}}</p>
 
         <div class="row collapse">
           <div class="columns small-3">
-            <span class="cloud-extension-label">{{::'cloudExtensions.status' | translate}}:</span>
+            <span class="hybrid-services-label">{{::'cloudExtensions.status' | translate}}:</span>
           </div>
           <div class="columns small-7 normal-line-height"
                ng-if="!$ctrl.loadingPage">
-            <span class="cloud-extension-label"
+            <span class="hybrid-services-label"
                   ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatusAware"
                   ng-class="'status-' + $ctrl.userStatusAware.state"
                   id="callServiceAwareStatus"
                   translate="hercules.activationStatus.{{$ctrl.getStatus($ctrl.userStatusAware)}}"></span>
 
-            <span class="cloud-extension-label last-state-change-timestamp"
+            <span class="hybrid-services-label last-state-change-timestamp"
                   ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatusAware && $ctrl.lastStateChangeText">
             {{$ctrl.lastStateChangeText}}
             </span>
 
-            <span class="cloud-extension-label status-off"
-                  ng-if="!$ctrl.userIsCurrentlyEntitled && !$ctrl.couldNotReadUser"
+            <span class="hybrid-services-label"
+                  ng-if="$ctrl.isInvitePending"
+                  translate="hercules.activationStatus.accountNotActivated"></span>
+
+            <span class="hybrid-services-label status-off"
+                  ng-if="!$ctrl.userIsCurrentlyEntitled && !$ctrl.couldNotReadUser && !$ctrl.isInvitePending"
                   translate="common.off"></span>
 
-            <span class="cloud-extension-label status-off"
-                  ng-if="!$ctrl.userIsCurrentlyEntitled && $ctrl.couldNotReadUser"
-                  translate="common.unknown"></span>
+            <span class="hybrid-services-label status-off"
+                  ng-if="!$ctrl.userIsCurrentlyEntitled && $ctrl.couldNotReadUser && !$ctrl.isInvitePending"
+                  translate="common.unknown">
+            </span>
+
           </div>
 
           <div class="columns small-7 normal-line-height"
                ng-if="$ctrl.loadingPage">
-            <span cs-loader class="cloud-extension-label loader-example--small"></span>
+            <span cs-loader class="hybrid-services-label loader-example--small"></span>
           </div>
 
           <div class="columns small-2">
             <span ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatusAware"
-                  class="cloud-extension-label right">
+                  class="hybrid-services-label right">
               <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.aware-settings.uc-history"
                  translate="hercules.userHistory.seeHistory"></a>
             </span>
@@ -82,20 +88,26 @@
 
         <div class="row collapse" ng-if="$ctrl.directoryUri || ($ctrl.userStatusAware.state === 'error' || $ctrl.userStatusAware.state === 'activated')">
           <div class="columns small-3">
-            <span class="cloud-extension-label">{{::'cloudExtensions.sipUri' | translate}}:</span>
+            <span class="hybrid-services-label">{{::'cloudExtensions.sipUri' | translate}}:</span>
           </div>
           <div class="columns small-9">
             <span ng-if="$ctrl.directoryUri"
-                  class="cloud-extension-label">{{$ctrl.directoryUri}}</span>
+                  class="hybrid-services-label">{{$ctrl.directoryUri}}</span>
             <span ng-if="!$ctrl.directoryUri"
-                  class="cloud-extension-label status-error"
+                  class="hybrid-services-label status-error"
                   translate="common.notFound"></span>
           </div>
         </div>
 
-        <div ng-if="$ctrl.domainVerificationError" class="error-message">
+        <hs-is-invite-pending-warning ng-if="$ctrl.isInvitePending"
+                                      is-entitled="$ctrl.entitledToggle"
+                                      was-entitled="$ctrl.userIsCurrentlyEntitled"
+                                      service-id="'squared-fusion-uc.full'">
+        </hs-is-invite-pending-warning>
+
+        <div ng-if="$ctrl.domainVerificationError" class="hybrid-services-error-message">
           <i class="icon icon-error"></i>
-          <p class="message">
+          <p class="hybrid-services-message">
             <span translate="hercules.domain-verification.domain-not-verified"></span>
             <span translate="hercules.domain-verification.navigateToCallSettings"
                   translate-value-onclick="$ctrl.navigateToCallSettings()" translate-compile></span>

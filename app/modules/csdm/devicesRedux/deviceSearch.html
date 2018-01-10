@@ -35,7 +35,7 @@
               ng-mouseenter="dctrl.suggestions.setActiveSuggestion($index)"
               ng-mouseup="dctrl.selectSuggestion(suggestion);dctrl.startSelecting = false">
               <div class="field"><i ng-bind-html="suggestion.readableField"></i></div>
-              <div class="text" ng-bind-html="suggestion.text | highlight:dctrl.searchInput"></div>
+              <div class="text" ng-bind-html="suggestion.translatableText | highlightSearchAndTranslate:suggestion.translateParams:dctrl.searchObject"></div>
               <div class="count" ng-if="suggestion.count > 0 || suggestion.count === 0">({{suggestion.count}})</div>
             </li>
           </ul>

@@ -52,11 +52,7 @@ export class Config {
 
   public readonly feedbackUrl = 'https://conv-a.wbx2.com/conversation/api/v1/users/deskFeedbackUrl';
   public readonly helpUrl = 'https://collaborationhelp.cisco.com';
-  public readonly ssoUrl = 'https://collaborationhelp.cisco.com';
-  public readonly rolesUrl = 'https://collaborationhelp.cisco.com';
-  public readonly supportUrl = 'https://collaborationhelp.cisco.com';
   public readonly webexSiteMigrationUrl = 'http://try.webex.com/mk/get/ciscowebexmigration';
-  public readonly partnerSupportUrl = 'https://collaborationhelp.cisco.com';
 
   public readonly usersperpage = 100;
   public readonly orgsPerPage = 100;
@@ -544,13 +540,18 @@ export class Config {
       'userprofile',
       'users',
       'customerPstnOrdersOverview',
+      'taasSuites',
+      'taasTest',
+      'taasResource',
+      'taasSchedule',
+      'taasServiceManager',
     ],
-    Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'dgc', 'dgc-panel'],
+    Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'dgc'],
     Tech_Support: ['gss'],
     WX2_User: ['overview', 'support', 'activateProduct'],
     WX2_Support: ['overview', 'reports', 'support'],
     WX2_SquaredInviter: [],
-    PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'gem', 'gemOverview', 'gemReports', 'gemCbgDetails', 'gmTdDetails', 'gmTdNumbersRequest', 'customer-overview', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'profile', 'pstn', 'pstnSetup', 'pstnWizard', 'video', 'settings'],
+    PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'gem', 'gemOverview', 'gemReports', 'gemCbgDetails', 'gmTdDetails', 'gmTdNumbersRequest', 'customer-overview', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'profile', 'pstn', 'pstnSetup', 'pstnWizard', 'video', 'settings', 'taas', 'taasSuits'],
     PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'pstn', 'pstnSetup', 'pstnWizard', 'video'],
     CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
     //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.

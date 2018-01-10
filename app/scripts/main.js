@@ -5,7 +5,7 @@
 
   angular.module('Core', [
     'angular-cache',
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     'cisco.formly',
     require('modules/core/shared').default,
     require('modules/core/auth/tos').default,
@@ -55,6 +55,7 @@
     require('modules/bmmp/learn-more-banner').default,
     require('modules/core/account').default,
     require('modules/core/banner').default,
+    require('modules/core/auth/read-only').default,
     require('modules/core/csgrid').default,
     require('modules/core/users/userOverview').default,
     require('modules/core/analytics'),
@@ -163,6 +164,8 @@
     require('modules/hercules/hybrid-media-cluster-settings').default,
     require('modules/hercules/hybrid-services-cluster-list-with-cards').default,
     require('modules/hercules/hybrid-services-nodes-page').default,
+    require('modules/hercules/office-365-settings/office-365-re-authorization-section').default,
+    require('modules/hercules/office-365-settings/office-365-settings-page').default,
     require('modules/hercules/private-trunk/private-trunk-overview-settings').default,
     require('modules/hercules/private-trunk/private-trunk-setup').default,
     require('modules/hercules/rename-and-deregister-cluster-section').default,
@@ -172,7 +175,7 @@
     require('modules/hercules/service-settings/call-service-settings-page').default,
     require('modules/hercules/service-settings/sip-destination-settings-section').default,
     require('modules/hercules/service-specific-pages/components/cluster-list/hybrid-service-cluster-list.component').default,
-    require('modules/hercules/service-specific-pages/components/user-status-report/user-details'),
+    require('modules/hercules/service-specific-pages/components/user-status-report').default,
     require('modules/hercules/services/calendar-cloud-connector.service').default,
     require('modules/hercules/services/cluster-service').default,
     require('modules/hercules/services/enterprise-private-trunk-service').default,
@@ -192,6 +195,11 @@
     require('modules/hercules/services/uri-verification-service').default,
     require('modules/hercules/services/uss.service').default,
     require('modules/hercules/user-sidepanel/hybrid-calendar-preferred-webex-site').default,
+    require('modules/hercules/user-sidepanel/hybrid-calendar-service-user-settings').default,
+    require('modules/hercules/user-sidepanel/hybrid-call-service-aggregated-section').default,
+    require('modules/hercules/user-sidepanel/hybrid-call-service-aware-user-settings').default,
+    require('modules/hercules/user-sidepanel/hybrid-call-service-connect-user-settings').default,
+    require('modules/hercules/user-sidepanel/hybrid-messaging-user-settings').default,
     require('modules/hercules/user-sidepanel/hybrid-services-sidepanel-error-message').default,
     require('modules/hercules/user-sidepanel/hybrid-services-user-homed-cluster-and-hostname').default,
     require('modules/hercules/user-sidepanel/hybrid-services-user-sidepanel-section').default,
@@ -231,6 +239,18 @@
 
   angular.module('Gemini', ['Core']);
 
+  angular.module('HCS', [
+    'Core',
+    require('modules/hcs/test-manager').default,
+    require('modules/hcs/test-manager/overview').default,
+    require('modules/hcs/test-manager/suiteView').default,
+    require('modules/hcs/test-manager/testView').default,
+    require('modules/hcs/test-manager/scheduler').default,
+    require('modules/hcs/test-manager/resources').default,
+    require('modules/hcs/test-manager/scheduleView').default,
+    require('modules/hcs/test-manager/resourceCreate').default,
+  ]);
+
   angular.module('ServicesOverview', [
     require('modules/services-overview').default,
     require('modules/services-overview/new-hybrid/prerequisites-modals/basic-expressway-prerequisites').default,
@@ -269,6 +289,7 @@
     'Csdm',
     'ServicesOverview',
     'AccountLinking',
+    'HCS',
   ]).config(require('./main.config'))
     .run(require('./main.run'))
     .name;

@@ -209,7 +209,6 @@ export class MySubscriptionCtrl implements ng.IController {
   private subscriptionRetrieval(): void {
     this.Orgservice.getInternallyManagedSubscriptions().then((subscriptions: any[]): void => {
       const authinfoSubscriptions = this.Authinfo.getSubscriptions();
-
       _.forEach(subscriptions, (subscription: any, subIndex: number): void => {
         const newSubscription: ISubscription = {
           licenses: [],

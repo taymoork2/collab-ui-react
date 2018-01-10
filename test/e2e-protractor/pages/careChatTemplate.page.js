@@ -19,11 +19,11 @@ var ChatTemplateCreation = function () {
   this.namePreview = element.all(by.css('.profile-name div')).first();
   this.profileInfoMsg = element.all(by.css('.org-setting-info span')).last();
   this.OrgName = element(by.css('.cs-input-group.cs-input-text input'));
-  this.agentNameRadio = element.all(by.css('.agent-name-options cs-radio')).first();
-  this.agentAliasRadio = element.all(by.css('.agent-name-options cs-radio')).last();
+  this.agentNameRadio = element.all(by.css('.agent-name-options label span')).first();
+  this.agentAliasRadio = element.all(by.css('.agent-name-options label span')).last();
   this.agentToggle = element(by.css('.agent.icon-user-chat'));
   this.botAgentToggle = element(by.css('.preview-agent-bot .agent-bot'));
-  this.botWelcomeMessage = element(by.css('.cs-input-group.cs-input-text input'));
+  this.botWelcomeMessage = element(by.css('.cs-input-group.cs-input-text textarea'));
   this.botWelcomeMessagePreview = element(by.css('label.bot-message-text'));
   this.botNamePreview = element(by.css('.profile-preview .profile-name'))
   this.agentPreviewIcon = element(by.css('.img  .icon-user-chat'));
@@ -64,7 +64,7 @@ var ChatTemplateCreation = function () {
   this.offHoursMessage = element(by.css('.offhours-message textarea'));
   this.days = element.all(by.css('.day-picker .day'));
   this.wednesday = element.all(by.css('.day-picker .day')).get(3);
-  this.open24Hours = element(by.css('.time-and-timezone-picker [ckid=ctOpen24Hours]'));
+  this.open24Hours = element(by.css('.time-and-timezone-picker [for=ctOpen24Hours]'));
   this.timePicker = element(by.css('.time-picker'));
   this.timezonePicker = element(by.css('.timezone-picker'));
   this.startTimeDropDown = element(by.css('.time-picker .start-time'));

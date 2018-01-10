@@ -1,7 +1,9 @@
 <div class="careChatSetup">
     <cs-overlay-panel class="care-chat overlay-panel typeahead-group"
-                      overlay-title={{careSetupAssistant.getTitle()}}
-                      close="careSetupAssistant.cancelModal()" ng-keyup="careSetupAssistant.evalKeyPress($event.keyCode)">
+      overlay-title={{careSetupAssistant.getTitle()}}
+      close="careSetupAssistant.cancelModal()"
+      ng-keyup="careSetupAssistant.evalKeyPress($event.keyCode)">
+
     <cs-setup-assistant
       previous="careSetupAssistant.previousButton()"
       next="careSetupAssistant.nextButton()"
@@ -13,7 +15,7 @@
       <form name="careChatSetupForm" class="sa-form">
       <div ng-switch on="careSetupAssistant.currentState">
         <div ct-name
-          ng-switch-when = "name"
+          ng-switch-when="name"
           ng-class="careChatSA.animation"></div>
 
         <div ct-virtual-assistant

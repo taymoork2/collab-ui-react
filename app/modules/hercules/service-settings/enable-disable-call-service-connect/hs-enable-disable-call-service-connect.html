@@ -9,7 +9,7 @@
     <span ng-if="!$ctrl.serviceIsEnabled" translate="common.activate"></span>
     <span ng-if="$ctrl.serviceIsEnabled" translate="common.deactivate"></span>
   </button>
-  <button ng-show="!$ctrl.serviceIsEnabled && $ctrl.showPrerequisitesButton"
+  <button ng-show="!$ctrl.serviceIsEnabled"
           type="button"
           class="btn"
           ng-click="$ctrl.openPrerequisites()">

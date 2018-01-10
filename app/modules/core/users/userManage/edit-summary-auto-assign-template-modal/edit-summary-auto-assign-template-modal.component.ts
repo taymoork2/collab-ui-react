@@ -1,11 +1,8 @@
-import { ILicenseRequestItem, IUserEntitlementRequestItem, IAutoAssignTemplateRequestPayload } from 'modules/core/users/shared';
-import { AssignableServicesItemCategory } from 'modules/core/users/userAdd/assignable-services/shared';
-import { LicenseChangeOperation } from 'modules/core/users/shared/onboard.interfaces';
+import { IAutoAssignTemplateRequestPayload } from 'modules/core/users/shared';
 
 class EditSummaryAutoAssignTemplateModalController implements ng.IComponentController {
   private dismiss: Function;
   private stateData: any;  // TODO: better type
-  private readonly DEFAULT_TEMPLATE_NAME = 'Default';
   public saveLoading = false;
 
   /* @ngInject */
@@ -33,7 +30,7 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
 
   public save(): void {
     this.saveLoading = true;
-    const payload: IAutoAssignTemplateRequestPayload = this.mkPayload();
+    const payload: IAutoAssignTemplateRequestPayload = this.AutoAssignTemplateService.stateDataToPayload(this.stateData);
     this.AutoAssignTemplateService.saveTemplate(payload)
       .then(() => {
         this.Notification.success('userManage.autoAssignTemplate.editSummary.saveSuccess');
@@ -45,52 +42,6 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
       .finally(() => {
         this.saveLoading = false;
       });
-  }
-
-  private mkPayload(): IAutoAssignTemplateRequestPayload {
-    const licensesPayload = this.mkLicensesPayload();
-    const userEntitlementsPayload = this.mkUserEntitlementsPayload();
-    const result = {
-      name: this.DEFAULT_TEMPLATE_NAME,
-      userEntitlements: userEntitlementsPayload,
-      licenses: licensesPayload,
-    };
-    return result;
-  }
-
-  private mkLicensesPayload(): ILicenseRequestItem[] {
-    if (_.isEmpty(_.get(this.stateData, AssignableServicesItemCategory.LICENSE))) {
-      return [];
-    }
-    const selectedLicenses = _.get(this.stateData, AssignableServicesItemCategory.LICENSE);
-    const result = _.map(_.keys(selectedLicenses), (licenseId: string) => {
-      return <ILicenseRequestItem>{
-        id: licenseId,
-        idOperation: LicenseChangeOperation.ADD,
-        properties: {},
-      };
-    });
-    return result;
-  }
-
-  private mkUserEntitlementsPayload(): IUserEntitlementRequestItem[] {
-    if (_.isEmpty(_.get(this.stateData, AssignableServicesItemCategory.LICENSE))) {
-      return [];
-    }
-
-    // TODO: implement calculation of appropriate entitlements
-    let result: any[] = [];
-    result.push({
-      entitlementName: 'webExSquared',
-      entitlementState: 'ACTIVE',
-    });
-
-    // TODO: rm this logic once 'hybrid-services-entitlements-panel' propogates its UI state
-    //   and build this payload from UI state instead
-    const hybridUserEntitlements = _.get(this.stateData, 'USER_ENTITLEMENTS_PAYLOAD', []);
-    result = result.concat(hybridUserEntitlements);
-
-    return result;
   }
 }
 

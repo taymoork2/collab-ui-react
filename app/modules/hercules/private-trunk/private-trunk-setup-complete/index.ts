@@ -2,7 +2,7 @@ import { PrivateTrunkSetupCompleteComponent } from './private-trunk-setup-comple
 
 export default angular
   .module('hercules.private-trunk-setup-complete', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
   ])
   .component('privateTrunkSetupComplete', new PrivateTrunkSetupCompleteComponent())

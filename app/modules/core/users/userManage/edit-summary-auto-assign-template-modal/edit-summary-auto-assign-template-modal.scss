@@ -1,0 +1,5 @@
+@import 'styles/partials/mixins';
+
+edit-summary-auto-assign-template-modal {
+  @include keep-flex-container(column);
+}

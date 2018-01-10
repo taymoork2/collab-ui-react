@@ -6,7 +6,7 @@ import multiStepModalModuleName from 'modules/core/shared/multi-step-modal';
 export default angular.module('core.users.userManage.edit-auto-assign-template-modal', [
   require('angular-ui-router'),
   require('angular-translate'),
-  require('collab-ui-ng').default,
+  require('@collabui/collab-ui-ng').default,
   require('modules/core/analytics'),
   multiStepModalModuleName,
 ])

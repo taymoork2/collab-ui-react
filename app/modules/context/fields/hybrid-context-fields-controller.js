@@ -147,7 +147,6 @@ var momentFilter = require('../filters/momentFilter').Moment;
           Log.debug('CS fields search failed. Status: ' + err);
           Notification.error('context.dictionary.fieldPage.fieldReadFailed');
           vm.fetchFailed = true;
-          return $q.reject(err);
         });
 
       var promises = {
@@ -305,7 +304,7 @@ var momentFilter = require('../filters/momentFilter').Moment;
           Log.error('unable to get max fields allowed property', err);
         })
         .then(function () {
-          return vm.maxFieldsetsAllowed;
+          return vm.maxFieldsAllowed;
         });
     }
   }

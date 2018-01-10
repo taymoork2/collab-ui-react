@@ -2,6 +2,7 @@ import {
   PSTN, NUMTYPE_DID, NXX, NPA, GROUP_BY, NUMTYPE_TOLLFREE, TATA, BLOCK_ORDER, NUMBER_ORDER,
   PORT_ORDER, AUDIT, UPDATE, DELETE, ADD, PROVISIONED, CANCELLED, PENDING, QUEUED, TYPE_PORT,
   ORDER, ADMINTYPE_PARTNER, ADMINTYPE_CUSTOMER, PSTN_CARRIER_ID, E911_SIGNEE, SWIVEL,
+  ContractStatus,
 } from './pstn.const';
 import {
   PstnModel,
@@ -112,17 +113,20 @@ export class PstnService {
     }).$promise;
   }
 
-  public getCustomerV2(customerId: string): ng.IPromise<any> {
-    return this.TerminusService.customerV2().get({
-      customerId: customerId,
-    }).$promise;
-  }
-
-  public getCustomerV2FetchFromCarrier(customerId: string): ng.IPromise<any> {
-    return this.TerminusService.customerV2().get({
-      customerId: customerId,
-      deep: true,
-    }).$promise;
+  public getCustomerV2(customerId: string, params: any = {}): ng.IPromise<any> {
+    params['customerId'] = customerId;
+    return this.TerminusService.customerV2().get(params).$promise.then(result => {
+      result['contractStatus'] = ContractStatus.UnKnown;
+      if (_.get(params, 'deep') === true) {
+        const isContractSigned: boolean | undefined = _.get(result, 'isContractSigned');
+        if (isContractSigned !== undefined) {
+          result.contractStatus = isContractSigned ? ContractStatus.Signed : ContractStatus.UnSigned;
+        } else {
+          result.contractStatus = ContractStatus.NotImplemented;
+        }
+      }
+      return result;
+    });
   }
 
   public getCustomerTrialV2(customerId: string): ng.IPromise<any> {
@@ -262,7 +266,7 @@ export class PstnService {
     }
   }
 
-  public releaseCarrierInventoryV2(customerId: string, reservationId: string | undefined, numbers: string[], isCustomerExists: boolean): ng.IPromise<any> {
+  public releaseCarrierInventoryV2(customerId: string, reservationId: string | undefined, numbers: string | string[], isCustomerExists: boolean): ng.IPromise<any> {
     if (!_.isArray(numbers)) {
       numbers = [numbers];
     }
@@ -285,7 +289,7 @@ export class PstnService {
     }
   }
 
-  public releaseCarrierTollFreeInventory(customerId: string, _carrierId: string, numbers: string[], reservationId: string | undefined, isCustomerExists: boolean): ng.IPromise<any> {
+  public releaseCarrierTollFreeInventory(customerId: string, _carrierId: string, numbers: string | string[], reservationId: string | undefined, isCustomerExists: boolean): ng.IPromise<any> {
     if (!_.isArray(numbers)) {
       numbers = [numbers];
     }
@@ -308,7 +312,7 @@ export class PstnService {
     }
   }
 
-  public reserveCarrierTollFreeInventory(customerId: string, carrierId: string, numbers: string[], isCustomerExists: boolean): ng.IPromise<any> {
+  public reserveCarrierTollFreeInventory(customerId: string, carrierId: string, numbers: string | string[], isCustomerExists: boolean): ng.IPromise<any> {
     if (!_.isArray(numbers)) {
       numbers = [numbers];
     }
@@ -353,7 +357,9 @@ export class PstnService {
     });
   }
 
-  public orderBlock(customerId: string, _carrierId: string, npa: string, quantity: string, isSequential: boolean, nxx: string): ng.IPromise<any> {
+  public orderBlock(
+    customerId: string,  _carrierId: string, npa: undefined | string,
+    quantity: number, isSequential: undefined | boolean,  nxx: undefined | string): ng.IPromise<any> {
     const payload = {
       npa: npa,
       quantity: quantity,
@@ -370,7 +376,9 @@ export class PstnService {
     }, payload).$promise;
   }
 
-  public orderTollFreeBlock(customerId: string, _carrierId: string, npa: string, quantity: number): ng.IPromise<any> {
+  public orderTollFreeBlock(
+    customerId: string, _carrierId: string, npa: undefined | string,
+    quantity: number): ng.IPromise<any> {
     const payload = {
       npa: npa,
       quantity: quantity,

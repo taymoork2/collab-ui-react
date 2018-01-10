@@ -109,7 +109,7 @@ describe('Component: webexReportsSearch', () => {
     initComponent.call(this);
     this.controller.errMsg = {};
     this.view.find(this.input).val('23423432ad').change().triggerHandler('blur');
-    expect(this.controller.errMsg.search).toEqual('Please enter the correct email or meeting number');
+    expect(this.controller.errMsg.search).toEqual('<i class="icon icon-warning"></i> Please enter the correct email or meeting number');
   });
 
   it('should updata when change date', function () {
@@ -139,7 +139,7 @@ describe('Component: webexReportsSearch', () => {
     this.controller.onChangeDate();
     this.controller.searchStr = '355602502';
     this.controller.startSearch();
-    expect(this.controller.errMsg.datePicker).toEqual('The start date must not be greater than the end date');
+    expect(this.controller.errMsg.datePicker).toEqual('<i class="icon icon-warning"></i> The start date must not be greater than the end date');
   });
 
   it('should notify in message for non 200 http status', function() {

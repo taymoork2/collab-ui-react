@@ -1,12 +1,11 @@
-import hybridCalendarServiceUserSettings from './index';
+import hybridCalendarServiceUserSettingsModuleName from './index';
 
 describe('HybridCalendarServiceUserSettingsCtrl', () => {
 
   let $componentController, $q, $scope, CloudConnectorService, HybridServicesClusterService, HybridServiceUserSidepanelHelperService, USSService;
 
-  beforeEach(angular.mock.module('Hercules'));
   beforeEach(function () {
-    this.initModules(hybridCalendarServiceUserSettings);
+    this.initModules(hybridCalendarServiceUserSettingsModuleName);
   });
 
   beforeEach(inject(dependencies));
@@ -34,29 +33,20 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
     spyOn(HybridServiceUserSidepanelHelperService, 'saveUserEntitlements').and.returnValue($q.resolve({}));
   }
 
-  function initController(userId: string, userEmailAddress: string = 'someting@example.org', userUpdatedCallback: Function = jasmine.createSpy('defaultSpy')) {
+  function initController(userId: string, userEmailAddress: string = 'someting@example.org', userUpdatedCallback: Function = _.noop, allUserEntitlements?: string[]) {
     const ctrl = $componentController('hybridCalendarServiceUserSettings', {}, {});
     ctrl.$onChanges({
       userId: {
-        previousValue: undefined,
         currentValue: userId,
-        isFirstChange() {
-          return true;
-        },
       },
       userEmailAddress: {
-        previousValue: undefined,
         currentValue: userEmailAddress,
-        isFirstChange() {
-          return true;
-        },
       },
       userUpdatedCallback: {
-        previousValue: undefined,
         currentValue: userUpdatedCallback,
-        isFirstChange() {
-          return true;
-        },
+      },
+      allUserEntitlements: {
+        currentValue: allUserEntitlements || ['squared-fusion-cal'],
       },
     });
     $scope.$apply();
@@ -124,9 +114,7 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
   });
 
   it('should select Exchange/Office as the calendar type if the user is entitled to squared-fusion-cal', () => {
-    USSService.getStatusesForUser.and.returnValue($q.resolve([{
-      serviceId: 'squared-fusion-cal',
-    }]));
+    USSService.getStatusesForUser.and.returnValue($q.resolve({}));
     CloudConnectorService.getService.and.returnValues($q.resolve({
       provisioned: true,
     }), $q.resolve({
@@ -134,15 +122,12 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
     }));
     HybridServicesClusterService.serviceIsSetUp.and.returnValue($q.resolve(true));
 
-    const ctrl = initController('something');
-
+    const ctrl = initController('something', '', () => {}, ['squared-fusion-cal']);
     expect(ctrl.originalCalendarType).toBe('squared-fusion-cal');
   });
 
   it('should select Google as the calendar type if the user is entitled to squared-fusion-gcal', () => {
-    USSService.getStatusesForUser.and.returnValue($q.resolve([{
-      serviceId: 'squared-fusion-gcal',
-    }]));
+    USSService.getStatusesForUser.and.returnValue($q.resolve({}));
     CloudConnectorService.getService.and.returnValues($q.resolve({
       provisioned: true,
     }), $q.resolve({
@@ -150,16 +135,12 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
     }));
     HybridServicesClusterService.serviceIsSetUp.and.returnValue($q.resolve(true));
 
-    const ctrl = initController('something');
+    const ctrl = initController('something', '', () => {}, ['squared-fusion-gcal']);
     expect(ctrl.originalCalendarType).toBe('squared-fusion-gcal');
   });
 
   it('should select Exchange/Office as the calendar type if the user is entitled to both, but also give a warning', () => {
-    USSService.getStatusesForUser.and.returnValue($q.resolve([{
-      serviceId: 'squared-fusion-gcal',
-    }, {
-      serviceId: 'squared-fusion-cal',
-    }]));
+    USSService.getStatusesForUser.and.returnValue($q.resolve({}));
     CloudConnectorService.getService.and.returnValues($q.resolve({
       provisioned: true,
     }), $q.resolve({
@@ -167,22 +148,20 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
     }));
     HybridServicesClusterService.serviceIsSetUp.and.returnValue($q.resolve(true));
 
-    const ctrl = initController('something');
+    const ctrl = initController('something', '', () => {}, ['squared-fusion-cal', 'squared-fusion-gcal']);
     expect(ctrl.originalCalendarType).toBe('squared-fusion-cal');
     expect(ctrl.userHasBothCalendarEntitlements).toBe(true);
   });
 
   it('should save the Exchange/Office365 entitlement if the "Exchange/Office365" has been selected, and disentitle Google Calendar if previously entitled', () => {
-    USSService.getStatusesForUser.and.returnValue($q.resolve([{
-      serviceId: 'squared-fusion-gcal',
-    }]));
+    USSService.getStatusesForUser.and.returnValue($q.resolve({}));
     CloudConnectorService.getService.and.returnValue($q.resolve());
     HybridServicesClusterService.serviceIsSetUp.and.returnValue($q.resolve(true));
 
     const expectedUserId = 'ree2k';
     const expectedEmailAddress = 'kjetil@r.ee';
 
-    const ctrl = initController(expectedUserId, expectedEmailAddress);
+    const ctrl = initController(expectedUserId, expectedEmailAddress, () => {}, ['squared-fusion-gcal']);
     ctrl.selectedCalendarType = 'squared-fusion-cal';
     ctrl.save();
     $scope.$apply();
@@ -196,16 +175,14 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
   });
 
   it('should save the Google Calendar entitlement if the "Google Calendar" has been selected, and disentitle Exchange/Office365 if previously entitled', () => {
-    USSService.getStatusesForUser.and.returnValue($q.resolve([{
-      serviceId: 'squared-fusion-cal',
-    }]));
+    USSService.getStatusesForUser.and.returnValue($q.resolve({}));
     CloudConnectorService.getService.and.returnValue($q.resolve());
     HybridServicesClusterService.serviceIsSetUp.and.returnValue($q.resolve(true));
 
     const expectedUserId = 'ree2k';
     const expectedEmailAddress = 'kjetil@r.ee';
 
-    const ctrl = initController(expectedUserId, expectedEmailAddress);
+    const ctrl = initController(expectedUserId, expectedEmailAddress, () => {}, ['squared-fusion-cal']);
     ctrl.selectedCalendarType = 'squared-fusion-gcal';
     ctrl.save();
     $scope.$apply();

@@ -1,7 +1,7 @@
-@import '~collab-ui/scss/settings/fonts';
-@import '~collab-ui/scss/settings/typography';
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/settings/fonts';
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 .call-feature-edit {
   .typeahead .dropdown-menu {
@@ -27,10 +27,10 @@
       color: $color-primary-base;
       font-family: $brand-font-thin;
       font-size: $h1-font-size;
-  
+
       @include vr-spacing(pt, 3);
     }
-  
+
     .desc {
       @include vr-spacing(pt, 1);
       @include vr-spacing(pb, 2.5);

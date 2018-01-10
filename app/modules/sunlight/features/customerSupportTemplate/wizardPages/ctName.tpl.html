@@ -1,9 +1,10 @@
 <div class="ct-name ">
   <input class="h3 ct-input ct-input-no-border ct-input-no-focus"
-         placeholder="{{:: 'careChatTpl.namePlaceholder' | translate}}"
-         ng-model="careSetupAssistant.template.name"
-         ng-change="careSetupAssistant.isNamePageValid() && careSetupAssistant.isInputValid(careSetupAssistant.template.name)"
-         focus-on>
+    placeholder="{{:: 'careChatTpl.namePlaceholder' | translate}}"
+    ng-model="careSetupAssistant.template.name"
+    ng-change="careSetupAssistant.isNamePageValid() && careSetupAssistant.isInputValid(careSetupAssistant.template.name)"
+    ng-keypress="careSetupAssistant.enterNextPage($event)"
+    focus-on>
   <p ng-class="careSetupAssistant.validateNameLength() && careSetupAssistant.isInputValid(careSetupAssistant.template.name) ? 'ct-input-hint ct-input-valid-border' : 'ct-input-hint ct-input-invalid-border'">
     {{:: 'careChatTpl.nameHint' | translate}}
   </p>

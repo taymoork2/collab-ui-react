@@ -32,15 +32,6 @@ describe('Component: assignableServicesRow:', () => {
         expect(this.view.find('.subscription__header')).toContainText('fake-subscriptionId-1');
       });
 
-      it('should have a viewable content area toggled by an icon', function () {
-        expect(this.view.find('.subscription__header .icon.toggle').length).toBe(1);
-        expect(this.view.find('.subscription__header .icon.toggle')).toHaveClass('icon-chevron-up');
-        expect(this.view.find('.subscription__content')).not.toHaveClass('ng-hide');
-        this.view.find('.subscription__header .icon.toggle').click();
-        expect(this.view.find('.subscription__header .icon.toggle')).toHaveClass('icon-chevron-down');
-        expect(this.view.find('.subscription__content')).toHaveClass('ng-hide');
-      });
-
       it('should have at least 3 columns initially and 4 if "isCareEnabled" is true', function () {
         expect(this.view.find('.subscription__content .column-paid').length).toBe(3);
 

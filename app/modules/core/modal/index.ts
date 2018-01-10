@@ -33,7 +33,7 @@ export { IToolkitModalService, IToolkitModalSettings, IToolkitModalServiceInstan
 
 export default angular
   .module('core.modal', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     require('angular-sanitize'),
   ])

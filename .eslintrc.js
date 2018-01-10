@@ -2,10 +2,10 @@ module.exports = {
   // we have to use the legacy flavor because we use ES5
   extends: [
     'airbnb-base/legacy',
-    'plugin:atlas-ui/recommended',
+    'plugin:@atlas/atlas-ui/recommended',
   ],
   plugins: [
-    'atlas-ui',
+    '@atlas/eslint-plugin-atlas-ui',
     'lodash',
     'promise',
   ],

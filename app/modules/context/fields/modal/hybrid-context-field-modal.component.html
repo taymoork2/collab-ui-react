@@ -1,8 +1,15 @@
 <div class="modal-header">
   <button type="button" class="close" ng-click="$ctrl.dismiss()" aria-label="{{::'common.close' | translate}}"></button>
   <h3 ng-if="$ctrl.createMode" class="modal-title" translate="context.dictionary.fieldPage.createNew"></h3>
-  <h3 ng-if="!$ctrl.createMode" class="modal-title" tooltip-class="context-tooltip" tooltip-trigger="mouseenter"
-      tooltip-placement="bottom" tooltip-animation="true" tooltip="{{$ctrl.fieldData.id}}">
+  <h3 ng-if="!$ctrl.createMode"
+    class="modal-title"
+    tooltip-class="context-tooltip"
+    tooltip-trigger="mouseenter focus"
+    tooltip-placement="bottom"
+    tooltip-animation="true"
+    tooltip="{{$ctrl.fieldData.id}}"
+    aria-label="{{$ctrl.fieldData.id}}"
+    tabindex="0">
     <span translate="context.dictionary.update"></span>
     <span>{{$ctrl.fieldData.id}}</span>
   </h3>
@@ -13,9 +20,7 @@
       <!-- ID -->
       <div class="cs-input-group">
         <p class="cs-input-label" translate="context.dictionary.fieldPage.fieldId"></p>
-        <input
-          cs-input
-          type="text"
+        <input cs-input type="text"
           id="fieldId"
           name="fieldId"
           placeholder="{{::'context.dictionary.fieldPage.fieldIdPlaceholder' | translate}}"
@@ -30,9 +35,7 @@
       <!-- EN_US LABEL -->
       <div class="cs-input-group">
         <p class="cs-input-label" translate="context.dictionary.fieldPage.label"></p>
-        <input
-          cs-input
-          type="text"
+        <input cs-input type="text"
           id="fieldLabel"
           placeholder="{{::'context.dictionary.fieldPage.labelPlaceholder' | translate}}"
           ng-model="$ctrl.fieldData.translations.en_US"
@@ -76,19 +79,21 @@
 
           <div class="options-container">
             <div id="optionList">
-              <div ng-repeat="option in $ctrl.optionsListCopy"
-                   ng-class="{'options-reorder': $ctrl.reorderEnumOptions}"
-              >
+              <div ng-repeat="option in $ctrl.optionsListCopy" ng-class="{'options-reorder': $ctrl.reorderEnumOptions}">
                 <div ng-if="!option.edit && !$ctrl.setDefaultEnumOption" class="options-readonly-wrapper">
                   <div class="option-name-readonly">
                     {{option.value}}
-                    <span ng-if="$ctrl.isDefaultOption(option) && $ctrl.showDefaultFlag()" class="badge"
-                          translate="common.default"></span>
+                    <span ng-if="$ctrl.isDefaultOption(option) && $ctrl.showDefaultFlag()" class="badge" translate="common.default"></span>
                   </div>
                   <div ng-if="$ctrl.showEditOptionIcons()">
                     <!-- if disabled due to being in-use, disable edit mode for this option, and also don't show the edit-icon (by not setting the icon-edit class... we still need to take up the space) -->
-                    <a ng-attr-id="{{'edit-option-' + option.index}}" ng-disabled="$ctrl.isDisabledWhenInUse()" ng-class="['icon', $ctrl.isDisabledWhenInUse() ? '' : 'icon-edit', 'options-spacing-edit']" ng-click="$ctrl.setEdit(option, true)"></a>
-                    <a ng-attr-id="{{'delete-option-' + option.index}}" class="icon icon-trash" ng-click="$ctrl.deleteOption(option, forms.newFieldForm)"></a>
+                    <a href ng-attr-id="{{'edit-option-' + option.index}}"
+                      ng-disabled="$ctrl.isDisabledWhenInUse()"
+                      ng-class="['icon', $ctrl.isDisabledWhenInUse() ? '' : 'icon-edit', 'options-spacing-edit']"
+                      ng-click="$ctrl.setEdit(option, true)"></a>
+                    <a href ng-attr-id="{{'delete-option-' + option.index}}"
+                      class="icon icon-trash"
+                      ng-click="$ctrl.deleteOption(option, forms.newFieldForm)"></a>
                   </div>
                   <div ng-if="$ctrl.reorderEnumOptions">
                     <a class="icon icon-tables"></a>
@@ -97,24 +102,21 @@
                 <div ng-if="option.edit && !$ctrl.addEnumOption" class="options-edit-wrapper">
                   <div class="options-spacing-input row">
                     <span class="option-text-input">
-                      <input
+                      <input cs-input type="text"
                         id="editOption"
                         name="editOption"
-                        cs-input
-                        type="text"
                         ng-model="$ctrl.newOption"
                         ng-required="true"
                         placeholder="{{::'context.dictionary.fieldPage.enumOptionPlaceholder' | translate}}"
                         cs-input-messages="$ctrl.optionValidationMessages"
                         cs-input-validators="$ctrl.optionValidators"
-                        focus-on
-                      >
+                        focus-on>
                     </span>
                     <button class="btn btn--circle btn--small btn--primary icon icon-check pull-right"
-                            ng-click="$ctrl.saveOption()"
-                            ng-disabled="!$ctrl.saveOptionButtonEnabled()"></button>
+                      ng-click="$ctrl.saveOption()"
+                      ng-disabled="!$ctrl.saveOptionButtonEnabled()"></button>
                     <button class="btn btn--circle btn--small btn--white icon icon-close pull-right"
-                            ng-click="$ctrl.cancelEditOption()"></button>
+                      ng-click="$ctrl.cancelEditOption()"></button>
                   </div>
                 </div>
               </div>
@@ -122,45 +124,39 @@
             <!-- Add option -->
             <div ng-if="$ctrl.showAddButton()" class="add-button">
               <button type="button" class="btn btn--link " translate="context.dictionary.fieldPage.enumOptionsAdd"
-                      ng-click="$ctrl.setAddEnumOptions()"></button>
+                ng-click="$ctrl.setAddEnumOptions()"></button>
             </div>
             <div ng-if="$ctrl.addEnumOption" class="options-edit-wrapper">
               <div class="options-spacing-input row">
                 <span class="option-text-input">
-                  <input
+                  <input cs-input type="text"
                     id="addOption"
                     name="addOption"
-                    cs-input
-                    type="text"
                     ng-model="$ctrl.newOption"
                     ng-required="true"
                     placeholder="{{::'context.dictionary.fieldPage.enumOptionPlaceholder' | translate}}"
                     cs-input-messages="$ctrl.optionValidationMessages"
                     cs-input-validators="$ctrl.optionValidators"
-                    focus-on
-                  >
+                    focus-on>
                 </span>
                 <button class="btn btn--circle btn--small btn--primary icon icon-check pull-right"
-                        ng-click="$ctrl.saveOption()"
-                        ng-disabled="!$ctrl.saveOptionButtonEnabled()"></button>
+                  ng-click="$ctrl.saveOption()"
+                  ng-disabled="!$ctrl.saveOptionButtonEnabled()"></button>
                 <button class="btn btn--circle btn--small btn--white icon icon-close pull-right"
-                        ng-click="$ctrl.cancelAddOption()"></button>
+                  ng-click="$ctrl.cancelAddOption()"></button>
               </div>
             </div>
 
             <!-- Set default -->
             <div ng-if="$ctrl.setDefaultEnumOption" class="options-row-wrapper">
               <div class="cs-radio-group">
-                <input
-                  cs-input
-                  type="radio"
+                <input cs-input type="radio"
                   ng-model="$ctrl.defaultOption"
                   id="'{{'radio-'+radio.id}}"
-                  name="{{'radio'+radio.id}}"
+                  name="enumOptions"
                   ng-value="::radio.value"
                   cs-input-label="{{radio.label}}"
-                  ng-repeat="radio in $ctrl.optionRadios"
-                >
+                  ng-repeat="radio in $ctrl.optionRadios">
               </div>
             </div>
           </div>
@@ -184,10 +180,8 @@
       </div>
 
       <!-- SEARCHABLE -->
-      <input
-        cs-input
+      <input cs-input type="checkbox"
         ng-disabled="$ctrl.isDisabledWhenInUse()"
-        type="checkbox"
         ng-model="$ctrl.fieldData.searchable"
         id="fieldSearchable"
         name="fieldSearchable"

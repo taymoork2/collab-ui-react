@@ -5,7 +5,7 @@
     .module('Mediafusion')
     .controller('MediaReportsController', MediaReportsController);
   /* @ngInject */
-  function MediaReportsController($q, $scope, $translate, $interval, $timeout, MediaClusterServiceV2, UtilizationResourceGraphService, MeetingLocationAdoptionGraphService, ParticipantDistributionResourceGraphService, NumberOfParticipantGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService, AdoptionCardService, hasHmsTwoDotFiveFeatureToggle, Orgservice) {
+  function MediaReportsController($q, $scope, $translate, $interval, $timeout, HybridServicesClusterService, UtilizationResourceGraphService, MeetingLocationAdoptionGraphService, ParticipantDistributionResourceGraphService, NumberOfParticipantGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService, AdoptionCardService, Orgservice) {
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
@@ -164,7 +164,6 @@
     vm.clientTypeText = vm.clientTypeSelected.label;
     vm.clientTypeOptions['tooltipClickHandler'] = clientTypeUpdateFromCard;
 
-    vm.hasHmsTwoDotFiveFeatureToggle = hasHmsTwoDotFiveFeatureToggle;
     setRefreshInterval();
     getCluster();
     timeUpdate();
@@ -281,7 +280,7 @@
     }
 
     function getCluster() {
-      MediaClusterServiceV2.getAll()
+      HybridServicesClusterService.getAll()
         .then(function (clusters) {
           vm.clusterOptions.length = 0;
           vm.Map = {};
@@ -511,9 +510,10 @@
         vm.availabilityTooltipOptions = MediaSneekPeekResourceService.getClusterAvailabilitySneekPeekValues(response, vm.Map, vm.clusterAvailability, vm.clusterId);
         vm.tooltipText = vm.availabilityTooltipOptions.values[0];
         vm.availabilityTooltipOptions['tooltipClickHandler'] = clusterUpdateFromTooltip;
-      }, function () {
-        Notification.error('mediaFusion.genericError');
-      });
+      })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'mediaFusion.genericError');
+        });
     }
 
     function setUtilizationData() {

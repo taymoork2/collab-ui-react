@@ -5,7 +5,7 @@ export * from './cisco-collaboration-cloud-certificate.service';
 
 export default angular
   .module('hercules.cisco-collaboration-cloud-certificates', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     require('modules/hercules/services/cert-service').default,
     require('modules/hercules/services/certificate-formatter-service').default,

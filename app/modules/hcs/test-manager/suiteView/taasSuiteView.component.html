@@ -1,0 +1,75 @@
+<div class="partner-suite-view">
+  <cs-page-header title-name="{{'hcs.taas.suite.title' | translate}}" back="true" back-url="$ctrl.backState"></cs-page-header>
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+    </cs-page-sub-header-left>
+    <cs-page-sub-header-right>
+      <button class="btn btn--people" ng-click="$ctrl.addSuite()" ng-disabled="true">
+        <span translate="hcs.taas.suite.addSuite"></span>
+      </button>
+      <button class="btn btn--people" ng-click="$ctrl.resources()">
+        <span translate="hcs.taas.suite.resources"></span>
+      </button>
+      <button class="btn btn--people" ng-click="$ctrl.viewSchedule()">
+        <span translate="hcs.taas.suite.schedule"></span>
+      </button>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+  <div ng-if="$ctrl.pageState != $ctrl.STATE_NEW" class="suite-content content-container">
+    <!-- Show Reload page when all location requests fail-->
+    <div ng-if="$ctrl.pageState == $ctrl.STATE_RELOAD">
+      <div class="features-reload">
+        <p class="h4" translate="huronFeatureDetails.sorryMessage"></p>
+        <div class="h2" translate="huronFeatureDetails.reloadMessage"></div>
+        <button type="button" class="btn btn--link" ng-click="$ctrl.reload()">{{'suite.reload' | translate}}</button>
+      </div>
+    </div>
+    <!--Show Spinner Icon until controller receives data from back-end-->
+    <div grid-spinner="$ctrl.pageState == $ctrl.STATE_LOADING"></div>
+
+    <!-- Show Cards whenever data is received by controller-->
+    <div ng-if="$ctrl.pageState == $ctrl.STATE_SHOW">
+      <div class="cs-card-container">
+        <cs-card-layout>
+          <cs-card ng-repeat="suite in $ctrl.suites" class="small header-bar primary overview-card primary">
+            <article>
+              <header>
+                <div class="header-with-right-icon">
+                  <p class="h4 ellipsis" title="{{suite.name}}">{{suite.name}}</p>
+                  <span cs-dropdown class="actions-menu dropdown pull-right">
+                   <button cs-dropdown-toggle class="btn-none card-action-btn" >
+                    <i class="icon icon-three-dots"></i>
+                   </button>
+                   <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
+                    <li ng-click="$ctrl.runSuiteAction(suite)"><a translate="hcs.taas.suite.runSuite"></a></li>
+                    <li ng-click="$ctrl.editSuite(suite)"><a translate="hcs.taas.suite.editSuite"></a></li>
+                    <li ng-click="$ctrl.copySuite(suite)" ng-disabled="true"><a translate="hcs.taas.suite.copySuite"></a></li>
+                    <li ng-click="$ctrl.scheduler(suite, $ctrl.customerId)"><a translate="hcs.taas.suite.scheduleSuite"></a></li>
+                    <li ng-click="$ctrl.deleteSuite(suite)"><a translate="hcs.taas.suite.deleteSuite"></a></li>
+                  </ul>
+                  </span>
+                </div>
+              </header>
+              <section class="card-body">
+                <div class="card-section text-left">
+                  <ul>
+                    <li ng-repeat="test in suite.tests">{{test.name}}</li>
+                  </ul>
+                  <!--<p ng-repeat="schedule in $ctrl.schedules">Last run: {{schedule.name}}</p>-->
+                  <p><a href="http://10.89.81.76/testreports/?test_category=Basic%20Sanity&test_venue=TaaS%20Joe%20%20Widget%20Shop" target="_blank">Go to results</a></p>
+              </section>
+              <footer class="text-right">
+              </footer>
+            </article>
+          </cs-card>
+        </cs-card-layout>
+      </div>
+
+    </div>
+  </div>
+
+<div class="features-loading" ng-if="$ctrl.loading">
+  <i class="icon icon-spinner"></i>
+</div>
+
+</div>

@@ -382,14 +382,18 @@
           return true;
         }
 
-        // if the state is in the allowed list of one or the user's service, all good
-        var stateAllowedByAService = _.some(services, function (service) {
-          return _.chain(Config.serviceStates)
-            .get(service.ciName)
-            .includes(parentState)
-            .value();
-        });
-        return !!stateAllowedByAService;
+        // if the state is in the allowed list of one or the user's service, and the user is not
+        // a User_Admin or Device_Admin, all good
+        if (!this.isUserAdminUser() && !this.isDeviceAdminUser()) {
+          var stateAllowedByAService = _.some(services, function (service) {
+            return _.chain(Config.serviceStates)
+              .get(service.ciName)
+              .includes(parentState)
+              .value();
+          });
+          return !!stateAllowedByAService;
+        }
+        return false;
       },
       isInitialized: function () {
         return authData.isInitialized;

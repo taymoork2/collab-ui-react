@@ -59,7 +59,8 @@
   "externalSubscriptionId": "Sub-os090944",
   "licenses": [],
 	"pendingServiceOrderUUID": "56f28ee2-ce5d-4b10-8077-4a170fcb1493",
-	"subscriptionId": "d98a5a59-4f37-4b2e-acd0-81b7a1f13558"
+	"subscriptionId": "d98a5a59-4f37-4b2e-acd0-81b7a1f13558",
+	"orderingTool": "CCW"
 }, {
 	"orderId": "wo-os090945",
 	"pendingLicenses": [{
@@ -99,5 +100,6 @@
   "externalSubscriptionId": "Sub-os090945",
   "licenses": [],
 	"pendingServiceOrderUUID": "c414b051-61b9-4e2d-9427-9366b3370195",
-	"subscriptionId": "9fc29d2c-c5a6-46c9-aec9-111fa3359b40"
+	"subscriptionId": "9fc29d2c-c5a6-46c9-aec9-111fa3359b40",
+	"orderingTool": "CCW"
 }]

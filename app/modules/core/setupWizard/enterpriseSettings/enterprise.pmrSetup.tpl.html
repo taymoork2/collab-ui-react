@@ -1,42 +1,45 @@
 <div class="enterprise-pmr-setup">
-    <h3 id="pmrSiteNameSetupTitle" translate="firstTimeWizard.setPMRSSetupTitle"></h3>
-    <div class="title space-flow">
-        <p class="paragraphSpacing"></p>
-    </div>
-    <div class="row-fluid">
-        <form name="pmrSiteUrlForm" novalidate>
-            <div class="row">
-                <label for= "siteURLSetup" translate="firstTimeWizard.setPMRSiteURL"></label>
-                <div class="cs-input-group col-lg-5 columns" ng-class="{'error': entprCtrl.validatePmrSiteUrl()}">
-                    <input id= "siteURLSetup"
-                        name="siteURLInput"
-                        type="text"
-                        ng-model="entprCtrl.pmrField.inputValue"
-                        ng-disabled="entprCtrl.pmrField.isDisabled"
-                        ng-change="entprCtrl.onPmrInputChange(entprCtrl.pmrField.inputValue)">
-                    <div class="cs-input__messages error-msg-spacing" role="alert" ng-if="entprCtrl.validatePmrSiteUrl()">
-                        <div class="message">{{entprCtrl.pmrField.errorMsg}}</div>
-                    </div>
-                </div>
-                <div class="col-lg-7">
-                    <button id="checkAvailabilityBtn" class="space btn--cta" ng-click="entprCtrl.checkPMRSiteUrlAvailability()" translate="firstTimeWizard.setSipDomainCheckAvailability" ng-disabled="vm.isButtonDisabled"></button>
-                </div>
-            </div>
-            <div class="domain-check-space url-examples-style">
-                <span class="url-domain-font">{{entprCtrl.pmrField.inputValue}}</span>
-                <span class="url-domain-font" translate="firstTimeWizard.pmrSiteURLDomain"></span>
-                <i ng-if="entprCtrl.pmrField.isAvailable" class="green-check space icon icon-checkbox"></i>
-                <i ng-if="entprCtrl.pmrField.isError" class="red-error-icon space icon icon-error"></i>
-                <i ng-if="entprCtrl.pmrField.isLoading" class="space icon icon-spinner"></i>
-            </div>
-        </form>
-        <br>
-        <formly-form class="url-domain-padding" model="entprCtrl.model" fields="entprCtrl.timeZoneSelection"></formly-form>
-        <br>
-        <div class="row-fluid" ng-if="entprCtrl.pmrField.isAvailable">
-            <div class="confirm-box">
-                <cs-checkbox ckid="confirmSaveCheckBox" ng-model="entprCtrl.pmrField.isConfirmed" label="{{:: 'firstTimeWizard.setSipDomainConfirmText' | translate}}"></cs-checkbox>
-            </div>
+  <h3 id="pmrSiteNameSetupTitle" translate="firstTimeWizard.setPMRSSetupTitle"></h3>
+  <div class="title space-flow">
+    <p class="paragraphSpacing"></p>
+  </div>
+  <div class="row-fluid">
+    <form name="pmrSiteUrlForm" novalidate>
+      <div class="row">
+        <label for= "siteURLSetup" translate="firstTimeWizard.setPMRSiteURL"></label>
+        <div class="cs-input-group col-lg-5 columns" ng-class="{'error': entprCtrl.validatePmrSiteUrl()}">
+          <input cs-input type="text"
+            id="siteURLSetup"
+            name="siteURLInput"
+            ng-model="entprCtrl.pmrField.inputValue"
+            ng-disabled="entprCtrl.pmrField.isDisabled"
+            ng-change="entprCtrl.onPmrInputChange(entprCtrl.pmrField.inputValue)">
+          <div class="cs-input__messages error-msg-spacing" role="alert" ng-if="entprCtrl.validatePmrSiteUrl()">
+            <div class="message">{{entprCtrl.pmrField.errorMsg}}</div>
+          </div>
         </div>
+        <div class="col-lg-7">
+          <button id="checkAvailabilityBtn" class="space btn--cta" ng-click="entprCtrl.checkPMRSiteUrlAvailability()" translate="firstTimeWizard.setSipDomainCheckAvailability" ng-disabled="vm.isButtonDisabled"></button>
+        </div>
+      </div>
+      <div class="domain-check-space url-examples-style">
+        <span class="url-domain-font">{{entprCtrl.pmrField.inputValue}}</span>
+        <span class="url-domain-font" translate="firstTimeWizard.pmrSiteURLDomain"></span>
+        <i ng-if="entprCtrl.pmrField.isAvailable" class="green-check space icon icon-checkbox"></i>
+        <i ng-if="entprCtrl.pmrField.isError" class="red-error-icon space icon icon-error"></i>
+        <i ng-if="entprCtrl.pmrField.isLoading" class="space icon icon-spinner"></i>
+      </div>
+    </form>
+    <br>
+    <formly-form class="url-domain-padding" model="entprCtrl.model" fields="entprCtrl.timeZoneSelection"></formly-form>
+    <br>
+    <div class="row-fluid" ng-if="entprCtrl.pmrField.isAvailable">
+      <div class="confirm-box">
+        <input cs-input type="checkbox"
+          id="confirmSaveCheckBox"
+          cs-input-label="{{::'firstTimeWizard.setSipDomainConfirmText' | translate}}"
+          ng-model="entprCtrl.pmrField.isConfirmed">
+      </div>
     </div>
+  </div>
 </div>

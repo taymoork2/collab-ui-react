@@ -3,6 +3,8 @@ import { OfferName } from 'modules/core/shared';
 
 class AssignableServicesRowController implements ng.IComponentController {
 
+  public OFFER_NAME = OfferName;
+  public showContent: boolean;
   private static readonly itemCategory = AssignableServicesItemCategory.SUBSCRIPTION;
   private subscription: ISubscription;
   private stateData: any;  // TODO: better type
@@ -14,8 +16,6 @@ class AssignableServicesRowController implements ng.IComponentController {
   private basicMeetingLicenses: ILicenseUsage[];
   private advancedMeetingLicenses: ILicenseUsage[];
   private advancedMeetingSiteUrls: string[];
-  public showContent: boolean;
-  public OFFER_NAME = OfferName;
 
   /* @ngInject */
   constructor (
@@ -79,8 +79,8 @@ class AssignableServicesRowController implements ng.IComponentController {
     return this.LicenseUsageUtilService.getTotalLicenseVolume(offerName, this.licenses);
   }
 
-  public recvClick(): void {
-    this.showContent = !this.showContent;
+  public recvUpdate($event): void {
+    this.showContent = $event.item.showContent;
     this.onUpdate({
       $event: {
         itemId: this.subscription.subscriptionId,

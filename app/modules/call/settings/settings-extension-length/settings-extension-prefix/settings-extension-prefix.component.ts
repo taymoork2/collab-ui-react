@@ -34,11 +34,7 @@ class ExtensionPrefixCtrl implements ng.IComponentController {
       this.isHI1484 = isSupported;
       if (isSupported) {
         this.Orgservice.getOrg(_.noop, null, { basicInfo: true }).then( response => {
-          if (response.data.countryCode) {
-            this.countryCode = response.data.countryCode;
-          } else {
-            this.countryCode = 'US';
-          }
+          this.countryCode = _.get<string>(response, 'data.countryCode', 'US');
         });
       }
     });

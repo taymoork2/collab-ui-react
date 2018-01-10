@@ -21,7 +21,7 @@
             </p>
           </div>
       </section>
-      <div ng-class="{'no-display': $ctrl.headername !== $ctrl.parentcntrl.client_types || $ctrl.parentcntrl.hasHmsTwoDotFiveFeatureToggle == false || $ctrl.parentcntrl.hasHmsTwoDotFiveFeatureToggle == undefined}" class="footer-section">
+      <div ng-class="{'no-display': $ctrl.headername !== $ctrl.parentcntrl.client_types}" class="footer-section">
         <cs-select class='client-type-filter' ng-model="$ctrl.tooltipOptions.tooltipModel" options="$ctrl.tooltipOptions" on-change-fn="$ctrl.tooltipOptions.tooltipClickHandler()"></cs-select>
       </div>
       <i class='icon icon-info-outline media-flip-icon' ng-click="isFlipped=true"></i>

@@ -3,12 +3,15 @@ require('./_customer-overview.scss');
 (function () {
   'use strict';
 
+  var CS_UnSigned = require('modules/huron/pstn').ContractStatus.UnSigned;
+  var CS_UnKnown = require('modules/huron/pstn').ContractStatus.UnKnown;
+
   angular
     .module('Core')
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, AccountOrgService, Analytics, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, PstnService, TrialPstnService, TrialService, Userservice) {
+  function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, AccountOrgService, Analytics, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, PstnService, PstnModel, TrialPstnService, TrialService, Userservice) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
     vm.customerName = vm.currentCustomer.customerName;
@@ -27,6 +30,9 @@ require('./_customer-overview.scss');
     vm.hasSubviews = hasSubviews;
     vm.hasSubview = hasSubview;
     vm.goToSubview = goToSubview;
+    vm.showContractIncompleteFn = showContractIncompleteFn;
+    vm.getCareDetailsQuantity = getCareDetailsQuantity;
+    vm.getCareDetailsSub = getCareDetailsSub;
 
     vm.uuid = '';
     vm.logoOverride = false;
@@ -42,7 +48,10 @@ require('./_customer-overview.scss');
     vm.isProPackEnabled = false;
     vm.isMediaFusionEnabled = false;
     vm.isNewPatchFlow = false;
+
+    //Feature Toggle -- HI1635
     vm.showContractIncomplete = false;
+    vm.isHI1635Enabled = false;
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
@@ -68,6 +77,8 @@ require('./_customer-overview.scss');
       FeatureToggleService.atlasCareInboundTrialsGetStatus(),
       FeatureToggleService.atlasITProPackGetStatus(),
       FeatureToggleService.atlasJira2126UseAltEndpointGetStatus(),
+      FeatureToggleService.hI1635GetStatus(),
+      FeatureToggleService.atlasCareCvcToCdcMigrationGetStatus(),
     ]).then(function (results) {
       if (_.find(vm.currentCustomer.offers, {
         id: Config.offerTypes.roomSystems,
@@ -76,11 +87,42 @@ require('./_customer-overview.scss');
       }
       var isCareEnabled = results[0];
       var isAdvanceCareEnabled = results[1];
+      vm.cvcAsCdcFeatureToggle = results[5];
+      setOffers(isCareEnabled, isAdvanceCareEnabled);
       vm.isProPackEnabled = results[2];
       vm.isNewPatchFlow = results[3];
-      setOffers(isCareEnabled, isAdvanceCareEnabled);
+      vm.isHI1635Enabled = results[4];
     });
 
+    function showContractIncompleteFn() {
+      return vm.isHI1635Enabled && vm.showContractIncomplete;
+    }
+
+    function getCareDetailsQuantity(trialService) {
+      return (vm.cvcAsCdcFeatureToggle ? Math.min(50, trialService.qty) : trialService.qty);
+    }
+
+    function getCareDetailsSub(trialServiceSub) {
+      var featureList = [];
+
+      var careAdvanceFeatureData = _.filter(trialServiceSub, function (feature) {
+        return feature.offerTypes === 'CAREVOICE';
+      });
+
+      var careFeatureData = _.filter(trialServiceSub, function (feature) {
+        return feature.offerTypes === 'CARE';
+      });
+
+
+      if (vm.cvcAsCdcFeatureToggle && careAdvanceFeatureData.length >= 0) {
+        careFeatureData[0].name = careAdvanceFeatureData[0].name;
+        careFeatureData[0].qty = Math.min(50, careFeatureData[0].qty + careAdvanceFeatureData[0].qty);
+        featureList = careFeatureData;
+      } else {
+        featureList = trialServiceSub;
+      }
+      return featureList;
+    }
 
     function setOffers(isCareEnabled, isAdvanceCareEnabled) {
       var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, {
@@ -93,8 +135,9 @@ require('./_customer-overview.scss');
         .get('trialServices')
         .map(function (trialService) {
           return _.assign({}, trialService, {
-            detail: trialService.qty + ' ' + QTY,
+            detail: (trialService.isSparkCare ? getCareDetailsQuantity(trialService) : trialService.qty) + ' ' + QTY,
             actionAvailable: hasSubview(trialService),
+            sub: trialService.isSparkCare ? getCareDetailsSub(trialService.sub) : trialService.sub,
           });
         })
         .value();
@@ -156,13 +199,18 @@ require('./_customer-overview.scss');
 
     function initSignedContractStatus() {
       if (vm.currentCustomer.purchased) {
-        PstnService.getCustomerV2FetchFromCarrier(vm.currentCustomer.customerOrgId)
+        PstnService.getCustomerV2(vm.currentCustomer.customerOrgId, { deep: true })
           .then(function (response) {
-            var isContractSigned = _.get(response, 'isContractSigned');
-            var isTerminusTrialAccount = _.get(response, 'trial');
-            if (isContractSigned && !isTerminusTrialAccount) {
-              vm.showContractIncomplete = !isContractSigned;
+            var isTrialAccount = _.get(response, 'trial');
+            var contractStatus = _.get(response, 'contractStatus');
+            PstnModel.setContractStatus(contractStatus);
+            if (contractStatus === CS_UnSigned && !isTrialAccount) {
+              vm.showContractIncomplete = true;
             }
+          })
+          .catch(function () {
+            vm.showContractIncomplete = false; //Don't show if unknown
+            PstnModel.setContractStatus(CS_UnKnown);
           });
       }
     }

@@ -1,47 +1,19 @@
 ## Notice to all contributors:
 
-We are switching to `yarn` for managing our npm dependencies going forward. If
-you haven't already done so you'll want to take a moment to do that now before
-you continue on with your regularly scheduled programming.
+The toolkit packages are moving to the collab-npm repository, and will be
+published to the `@collabui` namespace.
 
-#### How do I install it?
+If you are seeing this message AND you have a live PR open currently, please
+ensure that your changeset uses the updated namespace:
 
-Install it by either running:
-
+e.g. update `require(...)` statements
 ```
-./setup.sh
-```
-
-...or if you prefer to install it directly, upstream-provided instructions can
-be found here:
-
-https://yarnpkg.com/lang/en/docs/install/
-
-IMPORTANT: please make sure you are using the latest version of node 6.x
-
-#### Okay I've installed it, now what?
-
-Use `yarn` where you used to use `npm`. Here are some examples:
-
-```
-# re-sync npm dependencies
-yarn  # <= npm install
-
-# start the dev server
-yarn serve  # <= npm run serve
-
-# run lint
-yarn lint  # <= npm run lint
-
-# run unit-tests
-yarn test  # <= npm run test
-
-# run protractor tests
-yarn protractor  # <= npm run protractor
+require('collab-ui-ng')            // <- old
+require('@collabui/collab-ui-ng')  // <- new
 ```
 
-More commands can be found at: './docs/npm-scripts.md'
-
-#### I've got more questions!
-
-Sure thing, feel free to ask them in the 'Atlas UI Dev Team' room.
+e.g. update `@import ...` statements
+```
+@import '~collab-ui/scss/...'            // <- old
+@import '~@collabui/collab-ui/scss/...'  // <- new
+```

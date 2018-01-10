@@ -1,4 +1,4 @@
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 .ct-virtual-assistant {
   align-items: center;
@@ -35,8 +35,9 @@
     }
 
     font-family: 'CiscoSansTT Light';
+    resize: none;
     width: 100%;
-    height: 2rem;
+    height: 5rem;
   }
 
   .cs-card article.profile-preview {

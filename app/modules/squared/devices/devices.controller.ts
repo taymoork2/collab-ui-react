@@ -8,7 +8,7 @@ import { DeviceMatcher } from './device-matcher';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 import { CsdmPlaceService } from 'modules/squared/devices/services/CsdmPlaceService';
 
-export class DevicesController {
+export class DevicesLegacyController implements ng.IComponentController {
   public exporting: boolean;
   public filteredView: FilteredView<IDevice>;
   public addDeviceIsDisabled: boolean = true;
@@ -149,7 +149,7 @@ export class DevicesController {
       }, {
         field: 'displayName',
         displayName: $translate.instant('spacesPage.nameHeader'),
-        sortingAlgorithm: DevicesController.sortFn,
+        sortingAlgorithm: DevicesLegacyController.sortFn,
         sort: {
           direction: 'asc',
           priority: 1,
@@ -160,7 +160,7 @@ export class DevicesController {
         field: 'state',
         displayName: $translate.instant('spacesPage.statusHeader'),
         cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showDeviceDetails(row.entity)" cell-icon-css="icon-circle status-indicator {{row.entity.cssColorClass}}" cell-value="row.entity.state.readableState"></cs-grid-cell>',
-        sortingAlgorithm: DevicesController.sortStateFn,
+        sortingAlgorithm: DevicesLegacyController.sortStateFn,
         sort: {
           direction: 'asc',
           priority: 0,
@@ -169,7 +169,7 @@ export class DevicesController {
         field: 'product',
         displayName: $translate.instant('spacesPage.typeHeader'),
         cellTemplate: require('./templates/_productTpl.html'),
-        sortingAlgorithm: DevicesController.sortFn,
+        sortingAlgorithm: DevicesLegacyController.sortFn,
       }],
     };
   }
@@ -490,6 +490,13 @@ export class DevicesController {
   }
 }
 
+export class DevicesComponent implements ng.IComponentOptions {
+  public controller = 'devicesLegacyController';
+  public controllerAs = 'sc';
+  public template = require('modules/squared/devices/devices.html');
+}
+
 angular
   .module('Squared')
-  .controller('DevicesCtrl', DevicesController);
+  .controller('devicesLegacyController', DevicesLegacyController)
+  .component('devicesPage', new DevicesComponent());

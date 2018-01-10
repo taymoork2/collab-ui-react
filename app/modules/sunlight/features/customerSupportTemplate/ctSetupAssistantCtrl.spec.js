@@ -270,6 +270,9 @@ describe('Care Setup Assistant Ctrl', function () {
         type: mediaType || 'chat',
       };
       controller = $controller('CareSetupAssistantCtrl', {
+        $element: {
+          find: function () { return []; },
+        },
         $scope: $scope,
         $stateParams: $stateParams,
       });
@@ -377,6 +380,15 @@ describe('Care Setup Assistant Ctrl', function () {
       controller.template.name = templateName;
       expect(controller.previousButton()).toEqual(true);
       expect(controller.nextButton()).toEqual(true);
+    });
+
+    it('next button should be disabled when expert is deleted and routing label is as expert or agentplusexpert', function () {
+      inject(intializeCtrl('chat'));
+      resolveTogglePromise();
+      controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
+      controller.template.name = templateName;
+      controller.template.configuration.routingLabel = 'expert';
+      expect(controller.nextButton()).toEqual(false);
     });
 
     it('agent should be selected by default when creating a new template', function () {
@@ -980,10 +992,10 @@ describe('Care Setup Assistant Ctrl', function () {
       controller.currentState = 'virtualAssistant';
 
       controller.template.configuration.virtualAssistant.config.id = 'something';
-      controller.template.configuration.virtualAssistant.welcomeMessage = getStringOfLength(51);
+      controller.template.configuration.virtualAssistant.welcomeMessage = getStringOfLength(251);
       expect(controller.nextButton()).toEqual(false);
 
-      controller.template.configuration.virtualAssistant.welcomeMessage = getStringOfLength(50);
+      controller.template.configuration.virtualAssistant.welcomeMessage = getStringOfLength(250);
       expect(controller.nextButton()).toEqual(true);
     });
 
