@@ -252,10 +252,6 @@
                     var sparkCallUser = (_.indexOf(aUser.entitlements, CONSTANTS.ciscouc) > -1);
                     var hybridUser = (_.indexOf(aUser.entitlements, CONSTANTS.squareFusionEc) > -1);
 
-                    if (hybridUser) {
-                      updateUserData(aUser, '');
-                    }
-
                     if (!sparkCallUser && checkIfUsersLengthLessThanFullLoad()) {
                       // appends (spark) in place of extension in case of callFreeUsers
                       updateUserData(aUser, CONSTANTS.spark);
