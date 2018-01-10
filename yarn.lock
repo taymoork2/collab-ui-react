@@ -400,8 +400,8 @@ ampersand-class-extend@^2.0.0:
     lodash "^4.11.1"
 
 ampersand-collection@^2.0.0:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/ampersand-collection/-/ampersand-collection-2.0.1.tgz#41ce5b81fc075949cab229fffddb8d9cfbb533cc"
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/ampersand-collection/-/ampersand-collection-2.0.2.tgz#7e19374f677b9abd1e2e977a784566a8f7b15302"
   dependencies:
     ampersand-class-extend "^2.0.0"
     ampersand-events "^2.0.1"
