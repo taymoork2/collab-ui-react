@@ -7,79 +7,86 @@ describe('Service: AutoAssignTemplateService:', () => {
       '$http',
       '$q',
       'Authinfo',
+      'AutoAssignTemplateService',
       'UrlConfig',
     );
     this.endpointUrl = 'fake-admin-service-url/organizations/fake-org-id/templates';
-    this.settingsUrl = 'fake-admin-service-url/organizations/fake-org-id/settings';
+    this.settingsUrl = 'fake-admin-service-url/organizations/fake-org-id/settings/autoLicenseAssignment';
   });
 
   beforeEach(function () {
     spyOn(this.UrlConfig, 'getAdminServiceUrl').and.returnValue('fake-admin-service-url/');
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('fake-org-id');
-    spyOn(this.$http, 'get').and.returnValue(this.$q.resolve());
-    spyOn(this.$http, 'post').and.returnValue(this.$q.resolve());
-    spyOn(this.$http, 'patch').and.returnValue(this.$q.resolve());
-    spyOn(this.$http, 'delete').and.returnValue(this.$q.resolve());
+  });
+
+  afterEach(function () {
+    this.$httpBackend.verifyNoOutstandingExpectation();
+    this.$httpBackend.verifyNoOutstandingRequest();
   });
 
   describe('primary behaviors:', () => {
     it('should initialize its "autoAssignTemplateUrl" property', function () {
-      this.injectDependencies('AutoAssignTemplateService');
       expect(this.AutoAssignTemplateService.autoAssignTemplateUrl).toBe(this.endpointUrl);
     });
   });
 
   describe('getTemplates():', () => {
     it('should call GET on the internal endpoint url', function () {
-      this.injectDependencies('AutoAssignTemplateService');
+      this.$httpBackend.expectGET(this.endpointUrl);
       this.AutoAssignTemplateService.getTemplates();
-      expect(this.$http.get).toHaveBeenCalledWith(this.endpointUrl);
+    });
+  });
+
+  describe('isEnabled():', () => {
+    it('should reflect the status of orgSettings.autoLicenseAssignment', function (done) {
+      this.$httpBackend.expectGET(this.settingsUrl).respond({
+        autoLicenseAssignment: true,
+      });
+      this.AutoAssignTemplateService.isEnabled().then(isEnabled => {
+        expect(isEnabled).toBe(true);
+        _.defer(done);
+      });
+      this.$httpBackend.flush();
     });
   });
 
   describe('saveTemplate():', () => {
     it('should call POST on the internal endpoint url with the given payload', function () {
-      this.injectDependencies('AutoAssignTemplateService');
+      this.$httpBackend.expectPOST(this.endpointUrl, { foo: 'bar' });
       this.AutoAssignTemplateService.saveTemplate({ foo: 'bar' });
-      expect(this.$http.post).toHaveBeenCalledWith(this.endpointUrl, { foo: 'bar' });
     });
   });
 
   describe('updateTemplate():', () => {
     it('should call PATCH on the internal endpoint url with the given payload', function () {
-      this.injectDependencies('AutoAssignTemplateService');
+      this.$httpBackend.expectPATCH(this.endpointUrl, { foo: 'bar' });
       this.AutoAssignTemplateService.updateTemplate({ foo: 'bar' });
-      expect(this.$http.patch).toHaveBeenCalledWith(this.endpointUrl, { foo: 'bar' });
     });
   });
 
   describe('activateTemplate():', () => {
     it('should call POST on the internal settings url with an empty payload and enabled=true', function () {
-      this.injectDependencies('AutoAssignTemplateService');
+      this.$httpBackend.expectPOST(`${this.settingsUrl}?enabled=true`);
       this.AutoAssignTemplateService.activateTemplate();
-      expect(this.$http.post).toHaveBeenCalledWith(`${this.settingsUrl}/autoLicenseAssignment`, { enabled: true });
     });
   });
 
   describe('deactivateTemplate():', () => {
     it('should call POST on the internal settings url with an empty payload and enabled=false', function () {
-      this.injectDependencies('AutoAssignTemplateService');
+      this.$httpBackend.expectPOST(`${this.settingsUrl}?enabled=false`);
       this.AutoAssignTemplateService.deactivateTemplate();
-      expect(this.$http.post).toHaveBeenCalledWith(`${this.settingsUrl}/autoLicenseAssignment`, { enabled: false });
     });
   });
 
   describe('deleteTemplate():', () => {
     it('should call DELETE on the internal endpoint url with the given payload', function () {
-      this.injectDependencies('AutoAssignTemplateService');
+      this.$httpBackend.expectDELETE(`${this.endpointUrl}/fake-template-id-1`);
       this.AutoAssignTemplateService.deleteTemplate('fake-template-id-1');
-      expect(this.$http.delete).toHaveBeenCalledWith(`${this.endpointUrl}/fake-template-id-1`);
     });
   });
 
   describe('mkPayload():', function () {
     it('should return a payload composed of a license payload, and a user-entitlements payload', function () {
-      this.injectDependencies('AutoAssignTemplateService');
       spyOn(this.AutoAssignTemplateService, 'mkLicensesPayload').and.returnValue(['fake-licenses-payload']);
       spyOn(this.AutoAssignTemplateService, 'mkUserEntitlementsPayload').and.returnValue(['fake-user-entitlements-payload']);
       const payload = this.AutoAssignTemplateService.mkPayload({});
@@ -95,7 +102,6 @@ describe('Service: AutoAssignTemplateService:', () => {
 
   describe('mkLicensesPayload():', function () {
     it('should filter only selected licenses from "stateData" property', function () {
-      this.injectDependencies('AutoAssignTemplateService');
       const stateData = {
         LICENSE: {
           'fake-license-id-1': {

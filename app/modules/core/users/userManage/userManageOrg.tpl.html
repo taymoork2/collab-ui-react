@@ -122,7 +122,8 @@
       ng-if="umoc.hasDefaultAutoAssignTemplate()"
       auto-assign-templates="umoc.autoAssignTemplates"
       on-delete="umoc.recvDelete()"
-      on-activate-toggle="umoc.toggleActivateForDefaultAutoAssignTemplate(isActivated)">
+      on-activate-toggle="umoc.toggleActivateForDefaultAutoAssignTemplate(isActivated)"
+      is-template-active="umoc.isDefaultAutoAssignActivated">
     </auto-assign-template-manage-options>
   </div>
   <hr>

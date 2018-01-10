@@ -18,15 +18,15 @@ export class AutoAssignTemplateService {
   }
   // as of 2017-12-21, this endpoint returns `data` property as a JSON string, which is uncommon behavior
   private get autoAssignSettingsUrl(): string {
-    return `${this.UrlConfig.getAdminServiceUrl()}organizations/${this.Authinfo.getOrgId()}/settings`;
+    return `${this.UrlConfig.getAdminServiceUrl()}organizations/${this.Authinfo.getOrgId()}/settings/autoLicenseAssignment`;
   }
 
   public getTemplates(): ng.IPromise<any> {
     return this.$http.get(this.autoAssignTemplateUrl).then(response => response.data);
   }
 
-  public getSettings(): ng.IPromise<any> {
-    return this.$http.get(this.autoAssignSettingsUrl).then(response => JSON.parse(response.data['orgSettings']));
+  public isEnabled(): ng.IPromise<boolean> {
+    return this.$http.get<{autoLicenseAssignment: boolean}>(this.autoAssignSettingsUrl).then(response => response.data.autoLicenseAssignment);
   }
 
   public saveTemplate(payload: IAutoAssignTemplateRequestPayload): ng.IPromise<any> {
@@ -37,12 +37,20 @@ export class AutoAssignTemplateService {
     return this.$http.patch(this.autoAssignTemplateUrl, payload);
   }
 
+  private setTemplateEnabled(enabled: boolean): ng.IPromise<any> {
+    return this.$http.post(this.autoAssignSettingsUrl, {}, {
+      params: {
+        enabled,
+      },
+    });
+  }
+
   public activateTemplate(): ng.IPromise<any> {
-    return this.$http.post(`${this.autoAssignSettingsUrl}/autoLicenseAssignment`, { enabled: true });
+    return this.setTemplateEnabled(true);
   }
 
   public deactivateTemplate(): ng.IPromise<any> {
-    return this.$http.post(`${this.autoAssignSettingsUrl}/autoLicenseAssignment`, { enabled: false });
+    return this.setTemplateEnabled(false);
   }
 
   public deleteTemplate(templateId: string): ng.IPromise<any> {
