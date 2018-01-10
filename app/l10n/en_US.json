@@ -7826,7 +7826,8 @@
     "downloadEmbedCode": "Download Embed Code",
     "embed-code": {
       "no-verified-domains": {
-        "warn": "There are no verified domains for your organization. Care templates work on any domains by default. Go to Settings page to add and verify domains in order to restrict them to work only for your organization's domains."
+        "warn": "There are no verified domains for your organization. Care templates work on any domains by default. Go to Settings page to add and verify domains in order to restrict them to work only for your organization's domains.",
+        "warn_v1": "There are no verified domains for your organization. Care templates work on any domains by default. Go to global organizations settings page to add and verify domains in order to restrict them to work only for your organization's domains."
       },
       "verified-domains": {
         "info": "These are the verified domains for your organization:",
@@ -7834,7 +7835,8 @@
       },
       "domain-fetch-error": {
         "info": "There was an error while loading the verified domains for your organization. Please try again.",
-        "warn": "Care templates work on any domains by default. Go to Settings page to add and verify domains in order to restrict them to work only for your organization's domains."
+        "warn": "Care templates work on any domains by default. Go to Settings page to add and verify domains in order to restrict them to work only for your organization's domains.",
+        "warn_v1": "Care templates work on any domains by default. Go to global organizations settings page to add and verify domains in order to restrict them to work only for your organization's domains."
       }
     },
     "embedCodeFor": "Embed Code for ",
