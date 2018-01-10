@@ -67,7 +67,7 @@ export class SearchService {
     const tz = this.getStorage('timeZone');
     const timeZone = tz ? tz : moment.tz.guess();
     const offset = this.getOffset(timeZone);
-    return moment.utc(date).utcOffset(offset).format('YYYY-MM-DD hh:mm:ss');
+    return moment.utc(date).utcOffset(offset).format('YYYY-MM-DD HH:mm:ss');
   }
 
   public getOffset(timeZone) {
@@ -112,19 +112,24 @@ export class SearchService {
   }
 
   public getDevice(obj) {
-    let device = { icon: '', name: '' };
-    if (obj.sessionType === '25' || obj.platform === '9') {
-      return { icon: 'icon-phone', name: 'PSTN' };
-    } else if (obj.platform === '10') {
-      device = { icon: 'icon-devices', name: 'TP Device' };
-    } else if (obj.browser === '2') {
-      device = { icon: 'icon-application', name: 'Client' };
-    } else if (_.includes(['7', '8', '11', '12', '13', '14'], obj.platform)) {
-      device = { icon: 'icon-mobile-phone', name: 'Mobile' };
-    } else if (_.parseInt(obj.platform) < 7) {
-      device = { icon: 'icon-browser', name: 'Browser' };
+    const browser = _.parseInt(obj.browser);
+    const platform = _.parseInt(obj.platform);
+    const sessionType = _.parseInt(obj.sessionType);
+    if (_.includes([7, 8, 11, 12, 13, 14], platform)) {
+      return { icon: 'icon-mobile-phone', name: 'Mobile' };
     }
-    return device;
+
+    if (platform === 10) {
+      return { icon: 'icon-devices', name: 'TP Device' };
+    }
+
+    if (sessionType === 25 || platform === 9) {
+      return { icon: 'icon-phone', name: 'PSTN' };
+    }
+
+    if (platform < 7) {
+      return browser === 2 ? { icon: 'icon-application', name: 'Client' } : { icon: 'icon-browser', name: 'Browser' };
+    }
   }
 
   public getDuration(duration) {

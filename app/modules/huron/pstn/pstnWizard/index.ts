@@ -12,7 +12,7 @@ export * from './directInwardDialing';
 
 export default angular
   .module('huron.pstn.pstn-wizard', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     require('modules/huron/pstnSetup/pstnServiceAddress/pstnServiceAddress.service'),
     require('modules/core/auth/auth'),

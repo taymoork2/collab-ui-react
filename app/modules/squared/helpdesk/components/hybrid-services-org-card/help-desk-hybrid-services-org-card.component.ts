@@ -65,7 +65,7 @@ class HelpDeskHybridServicesOrgCardComponentCtrl implements ng.IComponentControl
       .catch((error) => {
         this.Notification.errorWithTrackingId(error, {
           errorKey: 'helpdesk.hybridServicesOrganization.fmsError',
-          allowHtml: true,
+          feedbackInstructions: true,
         });
       });
     }
@@ -79,7 +79,7 @@ class HelpDeskHybridServicesOrgCardComponentCtrl implements ng.IComponentControl
         .catch((error) => {
           this.Notification.errorWithTrackingId(error, {
             errorKey: 'helpdesk.hybridServicesOrganization.googleCalendarError',
-            allowHtml: true,
+            feedbackInstructions: true,
           });
         });
     }
@@ -92,7 +92,7 @@ class HelpDeskHybridServicesOrgCardComponentCtrl implements ng.IComponentControl
         .catch((error) => {
           this.Notification.errorWithTrackingId(error, {
             errorKey: 'helpdesk.hybridServicesOrganization.office365Error',
-            allowHtml: true,
+            feedbackInstructions: true,
           });
         });
     }

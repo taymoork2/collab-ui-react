@@ -8,7 +8,7 @@ import phoneNumberModule from 'modules/huron/phoneNumber';
 
 export default angular
   .module('huron.pstn.pstn-trial-setup', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     require('modules/core/trials/trial.module'),
     require('modules/core/analytics'),

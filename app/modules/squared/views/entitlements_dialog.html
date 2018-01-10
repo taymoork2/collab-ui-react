@@ -1,15 +1,18 @@
 <!-- This is the modal for the entitlement window -->
 <div class="modal-header dialog-header-confirm">
-  <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="cancel()">&times;</button>
+  <button type="button" class="close" data-dismiss="modal" ng-click="cancel()" aria-label="{{::'common.cancel' | translate}}"></button>
   <h4 class="modal-title"><span class="glyphicon glyphicon-edit"></span> {{'entitlementPage.title' | translate}}</h4>
 </div>
 <div class="modal-body">
   <h5 class="dialog-subtitle">{{'entitlementPage.heading' | translate}} {{username}}:</h5>
   <div class="entitle-check-grp" ng-repeat="(service, val) in entitlements">
-    <cs-checkbox ckid="{{'chk_'+service}}" ng-model="entitlements[service]" label="{{getServiceName(service)}}"></cs-checkbox>
+    <input cs-input type="checkbox"
+      id="{{'chk_'+service}}"
+      cs-input-label="{{getServiceName(service)}}"
+      ng-model="entitlements[service]">
   </div>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn" data-dismiss="modal" ng-click="cancel()">{{'common.cancel' | translate}}</button>
-  <button type="button" class="btn btn--primary" ng-click="save()">{{'common.save' | translate}}</button>
+  <button type="button" class="btn" data-dismiss="modal" ng-click="cancel()" translate="common.cancel"></button>
+  <button type="button" class="btn btn--primary" ng-click="save()" translate="common.save"></button>
 </div>

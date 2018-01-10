@@ -14,7 +14,7 @@ import onboardSummaryForAutoAssignModalModuleName from './onboard-summary-for-au
 export default angular
   .module('core.users.userManage', [
     require('angular-ui-router'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     analyticsModuleName,
     autoAssignTemplateManageOptionsModuleName,
     emailSuppressModuleName,

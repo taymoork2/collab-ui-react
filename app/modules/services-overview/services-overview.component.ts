@@ -13,6 +13,7 @@ import { HybridServiceId, IExtendedClusterFusion } from 'modules/hercules/hybrid
 import { IToolkitModalService } from 'modules/core/modal';
 import { Notification } from 'modules/core/notifications';
 import { ProPackService }  from 'modules/core/proPack/proPack.service';
+import { TaskManagerService } from 'modules/hcs/test-manager';
 
 export class ServicesOverviewController implements ng.IComponentController {
   private cards: ServicesOverviewCard[] = [
@@ -46,6 +47,7 @@ export class ServicesOverviewController implements ng.IComponentController {
     private HybridServicesClusterService: HybridServicesClusterService,
     private Notification: Notification,
     private ProPackService: ProPackService,
+    private HcsTestManagerService: TaskManagerService,
   ) {}
 
   public $onInit() {
@@ -67,6 +69,7 @@ export class ServicesOverviewController implements ng.IComponentController {
       hI1484: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484),
       hI802: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI802),
       huronEnterprisePrivateTrunking: this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking),
+      hI1638: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1638),
     });
 
     features
@@ -106,6 +109,9 @@ export class ServicesOverviewController implements ng.IComponentController {
         if (response.atlasHybridImp && this.Authinfo.isFusionIMP()) {
           this._servicesToDisplay.push('spark-hybrid-impinterop');
         }
+        if (response.hI1638 && this.Authinfo.isCustomerLaunchedFromPartner()) {
+          this._servicesToDisplay.push('spark-hybrid-testing');
+        }
       })
       .then(() => {
         // Now let's get all clusters, needed to do some computation (like finding the status for the services to display)
@@ -136,6 +142,12 @@ export class ServicesOverviewController implements ng.IComponentController {
                 serviceId: serviceId,
                 setup: false,
               }));
+          } else if (serviceId === 'spark-hybrid-testing') {
+            return this.HcsTestManagerService.getServiceStatus(serviceId)
+            .catch(() => ({
+              serviceId: serviceId,
+              setup: false,
+            }));
           }
         });
         return this.$q.all<any[]>(promises)

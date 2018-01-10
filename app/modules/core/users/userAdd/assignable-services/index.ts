@@ -7,7 +7,7 @@ import assignableServicesRowModuleName from './assignable-services-row';
 
 export default angular.module('core.users.userAdd.assignable-services', [
   require('angular-translate'),
-  require('collab-ui-ng').default,
+  require('@collabui/collab-ui-ng').default,
   orgServiceModuleName,
   sharedModuleName,
   assignableServicesRowModuleName,

@@ -28,6 +28,10 @@
         code: 'BE',
       },
       {
+        country: 'Brazil',
+        code: 'BR',
+      },
+      {
         country: 'Bulgaria',
         code: 'BG',
       },
@@ -164,6 +168,9 @@
       ROLLOUT2: ['United States', 'Canada'],
     };
 
+    /* ROLLOUT3 = ROLLOUT1 + Brazil */
+    _countries.ROLLOUT3 = _.concat(_countries.ROLLOUT1, ['Brazil']).sort();
+
     var _deviceLimit = {
       roomSystems: {
         min: 1,
@@ -241,7 +248,7 @@
     var countryListTypes = {
       US_ONLY: 'US',
       CISCO_SX10: 'ROLLOUT1',
-      CISCO_DX80: 'ROLLOUT1',
+      CISCO_DX80: 'ROLLOUT3',
       CISCO_MX300: 'US',
       CISCO_8865: 'ROLLOUT2',
       CISCO_8845: 'ROLLOUT2',

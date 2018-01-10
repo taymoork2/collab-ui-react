@@ -3,7 +3,7 @@ import phoneNumberModule from 'modules/huron/phoneNumber';
 
 export default angular
   .module('call.settings.emergency-service-number', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     phoneNumberModule,
   ])

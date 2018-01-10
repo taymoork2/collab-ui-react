@@ -16,9 +16,9 @@ class HybridServicesSidepanelErrorMessageCtrl implements ng.IComponentController
 
 export class HybridServicesSidepanelErrorMessageComponent implements ng.IComponentOptions {
   public controller = HybridServicesSidepanelErrorMessageCtrl;
-  public template = `<div class="error-message">
+  public template = `<div class="hybrid-services-error-message">
         <i class="icon icon-error"></i>
-        <p class="message">{{:: $ctrl.localizedErrorMessage }}</p>
+        <p class="hybrid-services-message">{{:: $ctrl.localizedErrorMessage }}</p>
       </div>`;
   public bindings = {
     translationKey: '<',

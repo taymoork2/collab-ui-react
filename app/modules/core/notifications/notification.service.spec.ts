@@ -424,6 +424,20 @@ describe('Service: Notification', function () {
       expect(Notification.notifyHttpErrorResponse).toHaveBeenCalledWith(processedErrorMessage, httpResponse, true);
     });
 
+    it('should add the default feedback mechanism if the INotificationOptions object contains feedbackInstructions: true, and override the allowHtml flag', () => {
+      const httpResponse = {};
+      const errorKey = 'some.thing';
+      const options = {
+        errorKey: errorKey,
+        allowHtml: false,
+        feedbackInstructions: true,
+      };
+      Notification.errorWithTrackingId(httpResponse, options);
+      expect(Notification.getErrorMessage).toHaveBeenCalledWith(errorKey, jasmine.any(Object));
+      expect(Notification.addResponseMessage).toHaveBeenCalledWith(processedErrorMessage, httpResponse, false);
+      expect(Notification.notifyHttpErrorResponse).toHaveBeenCalledWith(`${processedErrorMessage}<br />common.ifErrorRemains`, httpResponse, true);
+    });
+
     it('should still pop a notification, even when the programmer provides invalid input', () => {
       const httpResponse = 'obviously not a valid https response';
       const errorKey = () => 'obviously not an errorKey';

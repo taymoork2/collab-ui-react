@@ -5,7 +5,7 @@ require('modules/core/reports/amcharts-export.scss');
 
   angular.module('Mediafusion').controller('MediaServiceMetricsContoller', MediaServiceMetricsContoller);
   /* @ngInject */
-  function MediaServiceMetricsContoller($translate, MediaClusterServiceV2, $q, MetricsReportService, Notification, MetricsGraphService, DummyMetricsReportService, $interval, $scope, CardUtils) {
+  function MediaServiceMetricsContoller($translate, $q, MetricsReportService, Notification, MetricsGraphService, DummyMetricsReportService, $interval, $scope, CardUtils, HybridServicesClusterService) {
     var vm = this;
     vm.ABORT = 'ABORT';
     vm.REFRESH = 'refresh';
@@ -93,7 +93,7 @@ require('modules/core/reports/amcharts-export.scss');
     }
 
     function getCluster() {
-      MediaClusterServiceV2.getAll()
+      HybridServicesClusterService.getAll()
         .then(function (clusters) {
           vm.clusters = _.filter(clusters, { targetType: 'mf_mgmt' });
           _.each(clusters, function (cluster) {

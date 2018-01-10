@@ -105,6 +105,7 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     spyOn(this.FeatureToggleService, 'webexMetricsGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'webexMEIGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'webexSystemGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'webexInternalGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.QlikService, 'getProdToBTSQBSInfo').and.returnValue(this.$q.resolve(testQBSData));
     spyOn(this.QlikService, 'getQlikMashupUrl').and.returnValue(testMashupUrl);
     spyOn(this.$scope, '$broadcast').and.callThrough();
@@ -152,7 +153,7 @@ describe('Controller: WebEx Metrics Ctrl', function () {
       testWebexMetrics.states.jmt,
       testWebexMetrics.states.metrics,
       testWebexMetrics.states.diagnostics,
-      testWebexMetrics.states.mei,
+      // testWebexMetrics.states.mei, for hiding the MEI tab
       testWebexMetrics.states.classic,
     ];
     expect(this.controller.metricsOptions).toEqual(testMetricsOptions);
@@ -233,15 +234,15 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics.system' }, {}, { name: 'reports.webex-metrics.classic' });
     expect(event.preventDefault).toHaveBeenCalled();
 
-    this.controller.features.isSystemOn = false;
+    this.controller.features.isInternalOn = false;
     this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics.main({reportType: \'dashboard\'})' }, {}, { name: 'reports.webex-metrics.metrics' });
     expect(event.preventDefault).toHaveBeenCalled();
 
-    this.controller.features.isSystemOn = false;
+    this.controller.features.isInternalOn = false;
     this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics.main({reportType: \'JMS\'})' }, {}, { name: 'reports.webex-metrics.classic' });
     expect(event.preventDefault).toHaveBeenCalled();
 
-    this.controller.features.isSystemOn = false;
+    this.controller.features.isInternalOn = false;
     this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics.main({reportType: \'JMT\'})' }, {}, { name: 'reports.webex-metrics.classic' });
     expect(event.preventDefault).toHaveBeenCalled();
 

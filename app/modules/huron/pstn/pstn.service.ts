@@ -2,6 +2,7 @@ import {
   PSTN, NUMTYPE_DID, NXX, NPA, GROUP_BY, NUMTYPE_TOLLFREE, TATA, BLOCK_ORDER, NUMBER_ORDER,
   PORT_ORDER, AUDIT, UPDATE, DELETE, ADD, PROVISIONED, CANCELLED, PENDING, QUEUED, TYPE_PORT,
   ORDER, ADMINTYPE_PARTNER, ADMINTYPE_CUSTOMER, PSTN_CARRIER_ID, E911_SIGNEE, SWIVEL,
+  ContractStatus,
 } from './pstn.const';
 import {
   PstnModel,
@@ -112,17 +113,20 @@ export class PstnService {
     }).$promise;
   }
 
-  public getCustomerV2(customerId: string): ng.IPromise<any> {
-    return this.TerminusService.customerV2().get({
-      customerId: customerId,
-    }).$promise;
-  }
-
-  public getCustomerV2FetchFromCarrier(customerId: string): ng.IPromise<any> {
-    return this.TerminusService.customerV2().get({
-      customerId: customerId,
-      deep: true,
-    }).$promise;
+  public getCustomerV2(customerId: string, params: any = {}): ng.IPromise<any> {
+    params['customerId'] = customerId;
+    return this.TerminusService.customerV2().get(params).$promise.then(result => {
+      result['contractStatus'] = ContractStatus.UnKnown;
+      if (_.get(params, 'deep') === true) {
+        const isContractSigned: boolean | undefined = _.get(result, 'isContractSigned');
+        if (isContractSigned !== undefined) {
+          result.contractStatus = isContractSigned ? ContractStatus.Signed : ContractStatus.UnSigned;
+        } else {
+          result.contractStatus = ContractStatus.NotImplemented;
+        }
+      }
+      return result;
+    });
   }
 
   public getCustomerTrialV2(customerId: string): ng.IPromise<any> {

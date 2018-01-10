@@ -48,6 +48,24 @@
         padding-top: rem-calc(3); // vr-spacing isn't specific enough
       }
     }
+
+  }
+
+  .care-features-icon {
+    @include vr-spacing(pt, 0.5);
+    display: flex;
+    .cta {
+      color: $gray-light-1;
+    }
+
+    .icon {
+      display: block;
+      padding-top: rem-calc(3); // vr-spacing isn't specific enough
+    }
+
+    span{
+      @include vr-spacing(pr, 0.5);
+    }
   }
 
   .warning-sign {
@@ -127,13 +145,16 @@
 
       .usage {
         display: flex;
-        line-height: rem-calc(16);
 
         .usage-text {
           font-family: $brand-font-regular;
           font-size: rem-calc(12);
           color: $gray-light-1;
           letter-spacing: 0;
+        }
+
+        .usage-text-space {
+          @include vr-spacing(mr, 0.25);
         }
 
         .usage-warning {
@@ -147,7 +168,6 @@
           color: $gray-light-1;
           font-size: rem-calc(15);
           min-width: 0;
-          padding-bottom: rem-calc(1);
 
           &:hover {
             color: $color-violet-light;
@@ -410,11 +430,11 @@ header > p > span.badge {
   .feature-card-popover-error {
     @include vr-spacing(pb, .625);
     font-size: rem-calc(12);
-    word-break: break-word;
+    word-break: normal;
   }
 
   .feature-card-popover {
-    word-break: break-word;
+    word-break: normal;
 
     .header,
     .sub-header {

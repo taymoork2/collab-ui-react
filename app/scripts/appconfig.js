@@ -901,20 +901,19 @@
           })
           .state('users.add', {
             parent: 'modal',
+            abstract: true,
             views: {
               'modal@': {
                 controller: 'OnboardCtrl',
                 controllerAs: 'obc',
                 template: '<div ui-view="usersAdd"></div>',
               },
+            },
+          })
+          .state('users.add.manual', {
+            views: {
               'usersAdd@users.add': {
-                template: require('modules/core/users/userAdd/onboardUsersModal.tpl.html'),
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'add-users';
-                    $state.params.modalId = 'modalContent';
-                  },
-                },
+                template: '<manual-add-users-modal dismiss="$dismiss()"></manual-add-users-modal>',
               },
             },
           })
@@ -1548,7 +1547,7 @@
           .state('user-overview.hybrid-services-spark-hybrid-impinterop', {
             views: {
               'side-panel-container@user-overview': {
-                template: '<hybrid-messaging-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)"></hybrid-messaging-user-settings>',
+                template: '<hybrid-message-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)" is-invite-pending="$resolve.isInvitePending" all-user-entitlements="$resolve.allUserEntitlements"></hybrid-message-user-settings>',
               },
             },
             data: {},
@@ -1562,12 +1561,18 @@
               userUpdatedCallback: /* @ngInject */ function ($stateParams) {
                 return $stateParams.userUpdatedCallback;
               },
+              isInvitePending: /* @ngInject */ function ($stateParams) {
+                return $stateParams.isInvitePending;
+              },
+              allUserEntitlements: /* @ngInject */ function ($stateParams) {
+                return $stateParams.allUserEntitlements;
+              },
               displayName: translateDisplayName('hercules.hybridServiceNames.spark-hybrid-impinterop'),
             },
             params: {
-              extensionId: {},
-              extensions: {},
               userUpdatedCallback: _.noop,
+              isInvitePending: null,
+              allUserEntitlements: null,
             },
           })
           .state('user-overview.hybrid-services-spark-hybrid-impinterop.history', {
@@ -1585,10 +1590,12 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-cal', {
-            template: '<hybrid-calendar-service-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)" preferred-web-ex-site-name="$resolve.preferredWebExSiteName"></hybrid-calendar-service-user-settings>',
+            template: '<hybrid-calendar-service-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)" preferred-web-ex-site-name="$resolve.preferredWebExSiteName" all-user-entitlements="$resolve.allUserEntitlements" is-invite-pending="$resolve.isInvitePending"></hybrid-calendar-service-user-settings>',
             data: {},
             params: {
               userUpdatedCallback: _.noop,
+              isInvitePending: null,
+              allUserEntitlements: null,
             },
             resolve: {
               userId: /* @ngInject */ function ($stateParams) {
@@ -1600,8 +1607,14 @@
               userUpdatedCallback: /* @ngInject */ function ($stateParams) {
                 return $stateParams.userUpdatedCallback;
               },
+              allUserEntitlements: /* @ngInject */ function ($stateParams) {
+                return $stateParams.allUserEntitlements;
+              },
               preferredWebExSiteName: /* @ngInject */ function ($stateParams, HybridServiceUserSidepanelHelperService) {
                 return HybridServiceUserSidepanelHelperService.getPreferredWebExSiteName($stateParams.currentUser, $stateParams.orgInfo);
+              },
+              isInvitePending: /* @ngInject */ function ($stateParams) {
+                return $stateParams.isInvitePending;
               },
               displayName: translateDisplayName('hercules.serviceNames.squared-fusion-cal'),
             },
@@ -1621,10 +1634,11 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-uc', {
-            template: '<hybrid-call-service-aggregated-section user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)"></hybrid-call-service-aggregated-section>',
+            template: '<hybrid-call-service-aggregated-section user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)" is-invite-pending="$resolve.isInvitePending"></hybrid-call-service-aggregated-section>',
             data: {},
             params: {
               userUpdatedCallback: _.noop,
+              isInvitePending: null,
             },
             resolve: {
               userId: /* @ngInject */ function ($stateParams) {
@@ -1636,13 +1650,16 @@
               userUpdatedCallback: /* @ngInject */ function ($stateParams) {
                 return $stateParams.userUpdatedCallback;
               },
+              isInvitePending: /* @ngInject */ function ($stateParams) {
+                return $stateParams.isInvitePending;
+              },
               displayName: translateDisplayName('hercules.serviceNames.squared-fusion-uc'),
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-uc.aware-settings', {
             views: {
               'side-panel-container@user-overview': {
-                template: '<hybrid-call-service-aware-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)"></hybrid-call-service-aware-user-settings>',
+                template: '<hybrid-call-service-aware-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)" is-invite-pending="$resolve.isInvitePending" all-user-entitlements="$resolve.allUserEntitlements"></hybrid-call-service-aware-user-settings>',
               },
             },
             data: {},
@@ -1650,6 +1667,8 @@
               userId: '',
               userEmailAddress: '',
               onEntitlementChange: Function,
+              isInvitePending: null,
+              allUserEntitlements: null,
             },
             resolve: {
               userId: /* @ngInject */ function ($stateParams) {
@@ -1661,6 +1680,12 @@
               },
               onEntitlementChange: /* @ngInject */ function ($stateParams) {
                 return $stateParams.onEntitlementChange;
+              },
+              isInvitePending: /* @ngInject */ function ($stateParams) {
+                return $stateParams.isInvitePending;
+              },
+              allUserEntitlements: /* @ngInject */ function ($stateParams) {
+                return $stateParams.allUserEntitlements;
               },
             },
           })
@@ -1681,7 +1706,7 @@
           .state('user-overview.hybrid-services-squared-fusion-uc.connect-settings', {
             views: {
               'side-panel-container@user-overview': {
-                template: '<hybrid-call-service-connect-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)" user-test-tool-feature-toggled="$resolve.userTestToolFeatureToggled"></hybrid-call-service-connect-user-settings>',
+                template: '<hybrid-call-service-connect-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)" user-test-tool-feature-toggled="$resolve.userTestToolFeatureToggled" is-invite-pending="$resolve.isInvitePending" all-user-entitlements="$resolve.allUserEntitlements"></hybrid-call-service-connect-user-settings>',
               },
             },
             data: {},
@@ -1689,6 +1714,8 @@
               userId: '',
               userEmailAddress: '',
               onEntitlementChange: Function,
+              isInvitePending: null,
+              allUserEntitlements: null,
             },
             resolve: {
               displayName: translateDisplayName('sidePanelBreadcrumb.connect'),
@@ -1703,6 +1730,12 @@
               },
               userTestToolFeatureToggled: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCallUserTestTool);
+              },
+              isInvitePending: /* @ngInject */ function ($stateParams) {
+                return $stateParams.isInvitePending;
+              },
+              allUserEntitlements: /* @ngInject */ function ($stateParams) {
+                return $stateParams.allUserEntitlements;
               },
             },
           })
@@ -2588,8 +2621,7 @@
               displayName: translateDisplayName('hercules.serviceNames.squared-fusion-cal'),
             },
             params: {
-              extensionId: {},
-              extensions: {},
+              serviceId: {},
               parentState: 'place-overview',
               editService: {},
               getCurrentPlace: {},
@@ -2624,8 +2656,7 @@
               displayName: translateDisplayName('hercules.serviceNames.squared-fusion-cal'),
             },
             params: {
-              extensionId: {},
-              extensions: {},
+              serviceId: {},
               editService: {},
               getCurrentPlace: {},
             },
@@ -2952,6 +2983,92 @@
             controllerAs: 'customerList',
             params: {
               filter: null,
+            },
+          })
+          .state('taasSuites', {
+            parent: 'main',
+            url: '/taasSuite',
+            template: '<taas-suite-view></taas-suite-view>',
+          })
+          .state('taasTest', {
+            parent: 'main',
+            url: '/taasTest',
+            template: '<taas-test-view suite="$resolve.suite"></taas-test-view>',
+            params: {
+              suite: {},
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/hcs/test-manager/testView/taasTestView.component'));
+                }, 'taas-test-view');
+              }),
+              suite: /* @ngInject */ function ($stateParams) {
+                return $stateParams.suite;
+              },
+            },
+          })
+          .state('taasResource', {
+            parent: 'main',
+            url: '/taasResource',
+            template: '<taas-resource-view></taas-resource-view>',
+          })
+          .state('taasSchedule', {
+            parent: 'main',
+            url: '/taasSchedule',
+            template: '<taas-schedule-view></taas-schedule-view>',
+          })
+          .state('taasScheduleView.list', {
+            url: '/taasScheduleView',
+            template: '<taas-schedule-view></taas-schedule-view>',
+            params: {
+              filter: null,
+            },
+          })
+          .state('taasServiceManager', {
+            abstract: true,
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                template: '<div ui-view></div>',
+              },
+            },
+          })
+          .state('taasServiceManager.scheduler', {
+            parent: 'taasServiceManager',
+            params: {
+              suite: {},
+              customerId: '',
+            },
+            views: {
+              'modal@': {
+                template: '<tsm-modal suite="$resolve.suite" customerId="$resolve.customerId"  class="modal-content" style="margin:initial" dismiss="$dismiss()" close="$close()"></tsm-modal>',
+              },
+            },
+            resolve: {
+              suite: /* @ngInject */ function ($stateParams) {
+                return $stateParams.suite;
+              },
+              customerId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerId;
+              },
+            },
+          })
+          .state('taasServiceManager.resourceCreate', {
+            parent: 'modal',
+            params: {},
+            views: {
+              'modal@': {
+                template: '<resource-create-modal class="modal-content" style="margin:initial" dismiss="$dismiss()" close="$close()"></resource-create-modal>',
+              },
+            },
+          })
+          .state('taasServiceManager.suiteCreate', {
+            parent: 'taasServiceManager',
+            views: {
+              'modal@': {
+                template: '<suite-create-modal class="modal-content" style="margin:initial" dismiss="$dismiss()" close="$close()"></suite-create-modal>',
+              },
             },
           })
           .state('customer-overview', {
@@ -4967,7 +5084,7 @@
               host: null,
               hostSerial: null,
               // we inherit params from the parent, and because of management connectors we shouldn't override
-              // the parent connectorType param…
+              // the parent connectorType param&
               specificType: null,
             },
           })

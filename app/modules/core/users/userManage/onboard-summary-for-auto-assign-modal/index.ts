@@ -4,7 +4,7 @@ import { OnboardSummaryForAutoAssignModalComponent } from './onboard-summary-for
 
 export default angular.module('core.users.userManage.onboard-summary-for-auto-assign-modal', [
   require('angular-translate'),
-  require('collab-ui-ng').default,
+  require('@collabui/collab-ui-ng').default,
 ])
   .component('onboardSummaryForAutoAssignModal', new OnboardSummaryForAutoAssignModalComponent())
   .name;

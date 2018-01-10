@@ -95,7 +95,7 @@ import { $js_component_name } from './${js_component_file_no_ext}';
 
 export default angular.module('${ng_module_name}', [
   require('angular-translate'),
-  require('collab-ui-ng').default,
+  require('@collabui/collab-ui-ng').default,
 ])
   .component('${js_directive_name}', new ${js_component_name}())
   .name;
@@ -154,8 +154,8 @@ _EOF
 function print_component_scss {
     cat << _EOF
 // TODO: use as-appropriate
-// @import '~collab-ui/scss/settings/typography';
-// @import '~collab-ui/scss/settings/colors';
+// @import '~@collabui/collab-ui/scss/settings/typography';
+// @import '~@collabui/collab-ui/scss/settings/colors';
 // @import 'styles/partials/mixins';  // <- for 'keep-flex()'
 
 ${html_element_name} {

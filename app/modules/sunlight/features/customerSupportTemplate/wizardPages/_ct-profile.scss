@@ -89,8 +89,6 @@
         }
 
         .agent {
-          @include vr-spacing(mb, 0.5);
-
           height: 3rem;
           width: 3rem;
           border-radius: 50%;
@@ -136,28 +134,34 @@
       }
     }
 
+
     > section {
+
       .customer-details {
         float: right;
+        font-size: 0rem;
 
         .customer-message {
-          @include vr-spacing(p, 0.75);
-
-          color: $white;
-          border-radius: 2px 2px 0px;
+          border-radius: 5px 5px 0px;
           background-color: $color-people-base;
+          color: $white;
+          display: inline-block;
+          @include vr-spacing(p, 0.5);
+          @include vr-spacing(mb, 0);
         }
 
         .time {
-          @include vr-spacing(mt, 0.5);
-          @include vr-spacing(ml, 10);
+          text-align: right;
+          background-color: $white;
+          position: relative;
+          @include vr-spacing(ml, 1.5);
+          @include vr-spacing(mr, 1.5);
         }
 
         .speech-bubble {
-          top: 0.9375rem;
-          right: 0.3125rem;
-          width: 1.875rem;
-          height: 1.875rem;
+          top: 1.1rem;
+          width: 2.0rem;
+          height: 2.5rem;
           position: relative;
           overflow: hidden;
           display: inline-block;
@@ -165,45 +169,46 @@
 
           > span {
             position: absolute;
-            width: 3rem;
-            height: 3rem;
+            width: 3.75rem;
+            height: 3.75rem;
             border-radius: 100%;
             background-color: $white;
           }
 
           .top {
-            top: -14px;
+            top: -16px;
           }
 
           .right {
-            right: -14px;
+            right: -21px;
           }
         }
       }
 
-      .agent-message-details {
+      .agent-details {
         float: left;
-
-        @include vr-spacing(mt, 1);
+        font-size: 0rem;
 
         .message {
-          @include vr-spacing(p, 0.75);
-          @include vr-spacing(m, 0);
-          border-radius: 2px 2px 2px 0px;
+          border-radius: 5px 5px 5px 0px;
           background-color: $gray-light-3;
+          display: inline-block;
+          @include vr-spacing(p, 0.5);
         }
 
         .time {
-          @include vr-spacing(mt, 0.5);
-          @include vr-spacing(mb, 8.5);
-          @include vr-spacing(pr, 9.5);
+          text-align: left;
+          background-color: $white;
+          position: relative;
+          @include vr-spacing(ml, 1.5);
+          @include vr-spacing(mr, 2);
+          @include vr-spacing(mb, -2);
         }
 
         .speech-bubble {
-          top: 0.9375rem;
-          left: 0.3125rem;
-          width: 1.875rem;
-          height: 1.875rem;
+          top: 1.0rem;
+          width: 2.0rem;
+          height: 2.5rem;
           position: relative;
           overflow: hidden;
           display: inline-block;
@@ -211,23 +216,19 @@
 
           > span {
             position: absolute;
-            width: 3rem;
-            height: 3rem;
+            width: 3.75rem;
+            height: 3.75rem;
             border-radius: 100%;
             background-color: $white;
           }
 
           .top {
-            top: -14px;
+            top: -15px;
           }
 
           .left {
-            left: -14px;
+            left: -20px;
           }
-        }
-
-        .agent-status {
-          @include vr-spacing(pr, 6);
         }
       }
     }

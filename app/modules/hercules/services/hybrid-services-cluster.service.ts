@@ -79,8 +79,8 @@ export class HybridServicesClusterService {
   }
 
   public deregisterCluster(clusterId: string): ng.IPromise<''> {
-    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/actions/deregisterCluster/invoke?clusterId=${clusterId}`;
-    return this.$http.post<''>(url, null)
+    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}`;
+    return this.$http.delete<''>(url)
       .then(this.extractDataFromResponse)
       .then((res) => {
         this.clearCache();
@@ -90,6 +90,16 @@ export class HybridServicesClusterService {
 
   public deregisterEcpNode(connectorId: string): ng.IPromise<''> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/actions/deregister/invoke?managementConnectorId=${connectorId}`;
+    return this.$http.post<''>(url, null)
+      .then(this.extractDataFromResponse)
+      .then((res) => {
+        this.clearCache();
+        return res;
+      });
+  }
+
+  public moveEcpNode(connectorId: string, fromClusterId: string, toClusterId: string): ng.IPromise<''> {
+    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/actions/moveNodeByManagementConnectorId/invoke?managementConnectorId=${connectorId}&fromClusterId=${fromClusterId}&toClusterId=${toClusterId}`;
     return this.$http.post<''>(url, null)
       .then(this.extractDataFromResponse)
       .then((res) => {
@@ -355,6 +365,10 @@ export class HybridServicesClusterService {
       // no_nodes_registered or not_registered if _.size(connectors) === 0
       if (isClusterEmpty && cluster.targetType === 'c_mgmt') {
         return this.HybridServicesExtrasService.getPreregisteredClusterAllowList(cluster.id)
+          .catch(() => {
+            /* An error here is not critical. Missing redirect target data in FMS should not block us from adding the other extended properties */
+            return [];
+          })
           .then((allowList: IAllowedRegistrationHost[]) => {
             return {
               ...cluster,

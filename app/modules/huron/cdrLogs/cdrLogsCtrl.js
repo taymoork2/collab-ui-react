@@ -8,7 +8,7 @@ require('./_cdr-logs.scss');
     .controller('CdrLogsCtrl', CdrLogsCtrl);
 
   /* @ngInject */
-  function CdrLogsCtrl($scope, $state, $translate, formlyConfig, CdrService, Notification) {
+  function CdrLogsCtrl($scope, $state, $translate, CdrService, Notification) {
     var vm = this;
     var ABORT = 'ABORT';
     vm.SEARCH = 1;
@@ -24,18 +24,11 @@ require('./_cdr-logs.scss');
     var dateLogstashFormat = 'YYYY.MM.DD';
     var dateLogstashNodaysFormat = 'YYYY.MM.*';
 
-    var filetype = 'text/json, application/json';
+
     var errorStatus = [16, 19, 393216, 0, 17, 1, 21];
     var today = moment().format(dateFormat);
     vm.logstashPath = '';
-
-    formlyConfig.setType({
-      name: 'custom-file',
-      template: require('modules/huron/cdrLogs/formly-field-custom-file.tpl.html'),
-      wrapper: ['ciscoWrapper'],
-      overwriteOk: true,
-    });
-
+    vm.filetype = 'text/json, application/json';
     vm.gridData = [];
     vm.dataState = null;
     vm.selectedCDR = null;
@@ -50,6 +43,11 @@ require('./_cdr-logs.scss');
       hitSize: 50,
     };
     vm.updateLogstashPath = updateLogstashPath;
+    vm.fileTypeError = fileTypeError;
+    vm.maxSizeError = maxSizeError;
+    vm.hideUpload = hideUpload;
+    vm.uploadDisabled = uploadDisabled;
+    vm.uploadFile = uploadFile;
 
     //TODO: remove this once the ng-change is availabe with cs-datepicker directive!!
     $scope.cdr = {
@@ -203,72 +201,6 @@ require('./_cdr-logs.scss');
       },
     };
 
-    var expression = {
-      hideUpload: function (viewValue, modelValue, scope) {
-        return scope.model.searchUpload !== vm.UPLOAD;
-      },
-      uploadDisabled: function (viewValue, modelValue, scope) {
-        return _.isUndefined(scope.model.uploadFile);
-      },
-    };
-
-    vm.fields = [{
-      fieldGroup: [{
-        key: 'uploadFile',
-        type: 'custom-file',
-        className: 'upload-display',
-        templateOptions: {
-          label: $translate.instant('cdrLogs.uploadDescription'),
-          filename: 'filename',
-          maxSize: 10,
-          maxSizeError: function () {
-            $scope.$apply(function () {
-              Notification.error('cdrLogs.jsonSizeError');
-            });
-          },
-          fileType: filetype,
-          fileTypeError: function () {
-            $scope.$apply(function () {
-              Notification.error('cdrLogs.jsonTypeError');
-            });
-          },
-          fileSuffix: 'json',
-        },
-        hideExpression: 'expression.hideUpload',
-      }, {
-        key: 'uploadBtn',
-        type: 'button',
-        className: 'form-button',
-        templateOptions: {
-          btnClass: 'btn btn--primary search-button',
-          label: $translate.instant('cdrLogs.upload'),
-          onClick: function (options, scope) {
-            vm.selectedCDR = null;
-            vm.dataState = 1;
-            try {
-              var jsonData = JSON.parse(scope.model.uploadFile);
-              vm.gridData = [];
-              if (_.isArray(jsonData.cdrs) && _.isArray(jsonData.cdrs[0])) {
-                vm.gridData.push(addNames(jsonData.cdrs));
-              } else if (_.isArray(jsonData.cdrs)) {
-                vm.gridData.push(addNames([jsonData.cdrs]));
-              } else {
-                vm.dataState = 0;
-                Notification.error('cdrLogs.jsonAllowedFormatError');
-              }
-            } catch (SyntaxError) {
-              vm.dataState = 0;
-              Notification.error('cdrLogs.jsonSyntaxError');
-            }
-          },
-        },
-        hideExpression: 'expression.hideUpload',
-        expressionProperties: {
-          'templateOptions.disabled': expression.uploadDisabled,
-        },
-      }],
-    }];
-
     vm.statusAvalibility = statusAvalibility;
     vm.getAccordionHeader = getAccordionHeader;
     vm.selectCDR = selectCDR;
@@ -333,6 +265,46 @@ require('./_cdr-logs.scss');
         header += ' ' + $translate.instant('cdrLogs.sparkCall');
       }
       return header;
+    }
+
+    function uploadFile() {
+      vm.selectedCDR = null;
+      vm.dataState = 1;
+      try {
+        var jsonData = JSON.parse(vm.model.uploadFile);
+        vm.gridData = [];
+        if (_.isArray(jsonData.cdrs) && _.isArray(jsonData.cdrs[0])) {
+          vm.gridData.push(addNames(jsonData.cdrs));
+        } else if (_.isArray(jsonData.cdrs)) {
+          vm.gridData.push(addNames([jsonData.cdrs]));
+        } else {
+          vm.dataState = 0;
+          Notification.error('cdrLogs.jsonAllowedFormatError');
+        }
+      } catch (SyntaxError) {
+        vm.dataState = 0;
+        Notification.error('cdrLogs.jsonSyntaxError');
+      }
+    }
+
+    function hideUpload() {
+      return vm.model.searchUpload !== vm.UPLOAD;
+    }
+
+    function uploadDisabled() {
+      return _.isUndefined(vm.model.uploadFile);
+    }
+
+    function fileTypeError() {
+      $scope.$apply(function () {
+        Notification.error('cdrLogs.jsonTypeError');
+      });
+    }
+
+    function maxSizeError() {
+      $scope.$apply(function () {
+        Notification.error('cdrLogs.jsonSizeError');
+      });
     }
 
     function selectCDR(selectedCDR, call) {

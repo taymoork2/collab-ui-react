@@ -51,7 +51,7 @@ require('./_user-manage.scss');
       } else {
         switch (vm.manageType) {
           case vm.ManageType.MANUAL:
-            $state.go('users.add');
+            $state.go('users.add.manual');
             break;
 
           case vm.ManageType.BULK:

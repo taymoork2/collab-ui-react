@@ -1,0 +1,70 @@
+<div class="partner-suite-view">
+    <cs-page-header title-name="Test Resources" back="true" back-url="$ctrl.backState"></cs-page-header>
+    <cs-page-sub-header>
+      <cs-page-sub-header-left>
+      </cs-page-sub-header-left>
+      <cs-page-sub-header-right>
+        <!-- Add Nav tabs here -->
+        <button class="btn btn--people" ng-click="$ctrl.createResource()">
+          <span>Create Resource</span>
+        </button>
+      </cs-page-sub-header-right>
+    </cs-page-sub-header>
+    <div ng-if="$ctrl.pageState != $ctrl.STATE_NEW" class="suite-content content-container">
+      <!-- Show Reload page when all location requests fail-->
+      <div ng-if="$ctrl.pageState === $ctrl.STATE_RELOAD">
+        <div class="features-reload">
+          <p class="h4" translate="huronFeatureDetails.sorryMessage"></p>
+          <div class="h2" translate="huronFeatureDetails.reloadMessage"></div>
+          <button type="button" class="btn btn--link" ng-click="$ctrl.reload()">Reload</button>
+        </div>
+      </div>
+
+      <!--Show Spinner Icon until controller receives data from back-end-->
+      <div grid-spinner="$ctrl.pageState === $ctrl.STATE_LOADING"></div>
+
+      <!-- Show Cards whenever data is received by controller-->
+      <div ng-if="$ctrl.pageState === $ctrl.STATE_SHOW">
+        <div class="cs-card-container">
+          <cs-card-layout>
+            <cs-card ng-repeat="resource in $ctrl.resources" class="small header-bar attention overview-card attention">
+              <article>
+                <header>
+                  <div class="header-with-right-icon">
+                    <p class="h4 ellipsis" title="{{suite.name}}">{{resource.name}}</p>
+                  </div>
+                </header>
+                <section class="card-body">
+                  <div class="card-section text-left">
+                    <h5>{{resource.type}}</h5>
+                    <ul ng-if="resource.analytics">
+                      <li>Host: {{resource.analytics.Host}}</li>
+                      <li>Port: {{resource.analytics.Port}}</li>
+                      <li> </li>
+                    </ul>
+                    <ul ng-if="resource.camelot">
+                      <li>Name: {{resource.camelot.Name}}</li>
+                      <li>TFTP: {{resource.camelot.TFTP}}</li>
+                      <li>Container: {{resource.camelot.camelotContainerIp}}</li>
+                    </ul>
+                    <ul ng-if="resource.ipPhone">
+                      <li>Name: {{resource.ipPhone.Name}}</li>
+                      <li>IP: {{resource.ipPhone.IP}}</li>
+                      <li>Type: {{resource.ipPhone.device_type}}</li>
+                    </ul>
+                  </div>
+                </section>
+                <footer class="text-right">
+                </footer>
+              </article>
+            </cs-card>
+          </cs-card-layout>
+        </div>
+      </div>
+    </div>
+
+  <div class="features-loading" ng-if="$ctrl.pageState === $ctrl.STATE_LOADING">
+    <i class="icon icon-spinner"></i>
+  </div>
+
+  </div>

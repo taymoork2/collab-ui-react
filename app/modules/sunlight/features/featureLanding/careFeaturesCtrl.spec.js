@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Care Feature Ctrl should ', function () {
+describe('Care Feature Ctrl should', function () {
   var controller, $filter, $q, $rootScope, $state, $scope, Authinfo, CareFeatureList, CvaService, EvaService,
     Log, Notification, deferred, callbackDeferred, chatPlusCallbackDeferred, cvaDeferred, evaDeferred, evaSpacesDeferred, $translate, SparkService, getPersonDeferred;
 
@@ -36,7 +36,7 @@ describe('Care Feature Ctrl should ', function () {
           config: { token: '22e724e0bc604e99b0cfd281cd6c282a' },
         },
         {
-          id: 'SomeId',
+          id: 'CVA ID 3',
           name: 'Customer Virtual Assistant Staging Config',
           type: 'APIAI',
           config: { token: '22e724e0bc604e99b0cfd281cd6c282a' },
@@ -177,6 +177,27 @@ describe('Care Feature Ctrl should ', function () {
     expect(controller.pageState).toEqual('ShowFeatures');
   });
 
+  it('initialize and populate template counts under customerVirtualAssistant feature', function () {
+    expect(controller.pageState).toEqual('Loading');
+    getAllTemplatesDeferred();
+    evaSpacesDeferred.resolve(listEvaSpacesSuccess());
+    $scope.$apply();
+    expect(controller.pageState).toEqual('ShowFeatures');
+
+    var cvaFeature = _.find(controller.filteredListOfFeatures, function (feature) {
+      return feature.templateId === 'CVA ID 3';
+    });
+
+    expect(cvaFeature.templates.length).toEqual(1);
+    expect(cvaFeature.htmlPopover).toContain('Sunlight Staging Template');
+
+    var cvaFeature2 = _.find(controller.filteredListOfFeatures, function (feature) {
+      return feature.templateId === 'Customer Virtual Assistant PR Config';
+    });
+
+    expect(cvaFeature2.templates.length).toEqual(0);
+  });
+
   it('initialize and show error page when get templates fails ', function () {
     expect(controller.pageState).toEqual('Loading');
     deferred.reject(getTemplateFailure);
@@ -213,7 +234,7 @@ describe('Care Feature Ctrl should ', function () {
     return _.forEach(evaFeatures.data, function (evaFeature) {
       expect(controller.generateHtmlPopover).toHaveBeenCalledWith(evaFeature);
       expect(evaFeature.spaces).toEqual(listEvaSpaces);
-      expect(evaFeature.htmlPopover).toEqual('aHtmlString');
+      expect(evaFeature.htmlPopover).toEqual('<div class="feature-card-popover"><h3 class="header">messageKey</h3><h3 class="sub-header">messageKey</h3><ul class="spaces-list"></ul></div><br>aHtmlString');
     });
   });
 
@@ -234,7 +255,7 @@ describe('Care Feature Ctrl should ', function () {
     return _.forEach(evaFeatures.data, function (evaFeature) {
       expect(controller.generateHtmlPopover).toHaveBeenCalledWith(evaFeature);
       expect(evaFeature.spaces).toEqual([]);
-      expect(evaFeature.htmlPopover).toEqual('aHtmlString');
+      expect(evaFeature.htmlPopover).toEqual('<div class="feature-card-popover"><h3 class="header">messageKey</h3><h3 class="sub-header">messageKey</h3><ul class="spaces-list"></ul></div><br>aHtmlString');
     });
   });
 
@@ -249,7 +270,6 @@ describe('Care Feature Ctrl should ', function () {
       deleteFeatureName: featureTobBeDeleted.name,
       deleteFeatureId: featureTobBeDeleted.templateId,
       deleteFeatureType: featureTobBeDeleted.featureType,
-      deleteQueueId: featureTobBeDeleted.queueId,
     });
   });
 
@@ -412,13 +432,12 @@ describe('Care Feature Ctrl should ', function () {
     };
 
     var htmlString = controller.generateHtmlPopover(evaFeature);
-    expect($translate.instant).toHaveBeenCalledWith('careChatTpl.featureCard.popoverMainHeader');
     expect($translate.instant).toHaveBeenCalledWith('careChatTpl.featureCard.popoverSpacesHeader', {
       numOfSpaces: _.get(evaFeature, 'spaces.length', 0),
     });
     expect($translate.instant).toHaveBeenCalledWith('careChatTpl.featureCard.popoverDefaultSpace');
 
-    var htmlExpected = '<div class="feature-card-popover"><h3 class="header">messageKey</h3><h3 class="sub-header">messageKey</h3><ul class="spaces-list">';
+    var htmlExpected = '<div class="feature-card-popover"><h3 class="sub-header">messageKey</h3><ul class="spaces-list">';
     _.forEach(evaFeature.spaces, function (space) {
       htmlExpected += '<li>' + space.title;
       if (space.default) {

@@ -44,7 +44,7 @@
   .download-button {
     @include vr-spacing(ml, 2.8125);
     @include vr-spacing(mv, 0.625);
-    background: #14A792;
+    background: $color-mint-base;
     border-radius: rem-calc(2px);
     color: $white;
     font-family: 'CiscoSansTT Light';
@@ -53,6 +53,10 @@
     letter-spacing: 0;
     line-height: rem-calc(20px);
     width: rem-calc(240px);
+
+    &:hover {
+      background: $color-mint-dark;
+    }
   }
 
   .learn-more-row {

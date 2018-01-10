@@ -295,7 +295,7 @@
           data = _.isObject(data) ? data : {};
           data.success = true;
           Log.debug('Callback with search=' + searchStr);
-          callback(data, response.status, searchStr);
+          callback(data, response.status, searchStr, response);
           return response;
         })
         .catch(function (response) {
@@ -303,7 +303,7 @@
           data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = response.status;
-          callback(data, response.status, searchStr);
+          callback(data, response.status, searchStr, response);
           return $q.reject(response);
         });
     }

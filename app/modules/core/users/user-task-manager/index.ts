@@ -18,7 +18,7 @@ export * from './user-task-manager.service';
 
 export default angular
   .module('core.users.user-task-manager', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/users/userCsv/userCsv.service'),

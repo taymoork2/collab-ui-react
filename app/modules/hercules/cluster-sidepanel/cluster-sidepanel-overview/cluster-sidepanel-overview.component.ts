@@ -1,6 +1,5 @@
 import { ClusterService } from 'modules/hercules/services/cluster-service';
 import { IExtendedCluster, ConnectorType, ClusterTargetType } from 'modules/hercules/hybrid-services.types';
-import { FeatureToggleService } from 'modules/core/featureToggle';
 
 export class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
 
@@ -11,7 +10,6 @@ export class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
 
   public clusterType: ClusterTargetType;
   public connectorType: ConnectorType;
-  public showLinkToNodesForContext = false;
 
   /* @ngInject */
   constructor(
@@ -20,7 +18,6 @@ export class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
     private ClusterService: ClusterService,
-    private FeatureToggleService: FeatureToggleService,
   ) {}
 
   public $onInit() {
@@ -33,10 +30,6 @@ export class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
         this.cluster = newValue;
       }, true);
     }
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasContextNodesPage)
-      .then((support) => {
-        this.showLinkToNodesForContext = support;
-      });
   }
 
   public isExpresswayCluster() {
@@ -75,7 +68,7 @@ export class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
         id: this.clusterId,
         backState: 'hds.list',
       });
-    } else if (this.cluster.targetType === 'cs_mgmt') {
+    } else if (this.isContextCluster()) {
       this.$state.go('context-cluster.nodes', {
         id: this.clusterId,
         backState: 'context-resources',
@@ -83,16 +76,11 @@ export class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
     }
   }
 
-  public showMediaUpgradeSection(): boolean {
-    return this.isMediaCluster() && this.hasConnectors() && this.cluster.releaseChannel !== 'latest';
-  }
-
   public showButtonToNodesPage(): boolean {
     // Doesn't make sense for empty Expressways and EPT
     // Media doesn't really use the nodes page yet, they still have the node list on this sidepanel
     return !(this.isExpresswayCluster() && !this.hasConnectors())
-      && !this.isMediaCluster()
-      && !(this.isContextCluster() && !this.showLinkToNodesForContext);
+      && !this.isMediaCluster();
   }
 }
 

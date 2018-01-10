@@ -3,15 +3,13 @@
   search="$ctrl.searchFn(value, block, quantity, consecutive, stateAbbreviation)"
   simple="$ctrl.isTrial"
   number-type="$ctrl.numberType"
-  country-code="$ctrl.countryCode"
->
+  country-code="$ctrl.countryCode">
 </uc-pstn-npa-nxx>
 <uc-pstn-selector ng-if="!$ctrl.isDetailSearchEnabled()"
   model="$ctrl.model"
   search="$ctrl.searchFn(value, block, quantity, consecutive)"
   simple="$ctrl.isTrial"
-  number-type="$ctrl.numberType"
->
+  number-type="$ctrl.numberType">
 </uc-pstn-selector>
 <section ng-if="$ctrl.model.searchResults.length > 0">
   <div class="provider-flex">
@@ -20,8 +18,7 @@
       class="btn btn--people"
       ng-click="$ctrl.onAddToCart('NUMBER_ORDER')"
       ng-disabled="$ctrl.model.addDisabled"
-      loading="$ctrl.model.addLoading"
-    >
+      loading="$ctrl.model.addLoading">
       <span translate="common.add"></span>
     </button>
   </div>
@@ -32,24 +29,21 @@
       </div>
     </div>
     <li ng-repeat="searchResult in $ctrl.model.searchResults | startFrom: $ctrl.model.paginateOptions.currentPage*$ctrl.model.paginateOptions.pageSize | limitTo: $ctrl.model.paginateOptions.pageSize">
-      <cs-checkbox
-        ckid="searchResult{{$ctrl.numberType}}{{$index}}"
+      <input cs-input type="checkbox"
+        id="searchResult{{$ctrl.numberType}}{{$index}}"
+        cs-input-label="{{::$ctrl.formatTelephoneNumber(searchResult)}}"
         ng-model="$ctrl.model.searchResultsModel[$index]"
-        ng-click="$ctrl.searchResultChange()"
-        label="{{::$ctrl.formatTelephoneNumber(searchResult)}}"
-      ></cs-checkbox>
+        ng-click="$ctrl.searchResultChange()">
     </li>
   </ul>
   <div class="provider-flex">
-    <button
-      type="button"
+    <button type="button"
       class="btn--circle btn--primary icon icon-chevron-left"
       ng-click="$ctrl.previousPage()"
       ng-class="{invisible: $ctrl.showPreviousButton()}"
       aria-label="{{::'common.back' | translate}}">
     </button>
-    <button
-      type="button"
+    <button type="button"
       class="btn--circle btn--primary icon icon-chevron-right"
       ng-click="$ctrl.nextPage()"
       ng-class="{invisible: $ctrl.showNextButton()}"
@@ -66,20 +60,17 @@
   </section>
   <section>
     <div class="order-inline right-margin">
-        <input
-          cs-input type="text"
-          class="input-width text-center"
-          id="advanceQuantityInput"
-          ng-model="$ctrl.quant"
-          cs-input-label="{{::'pstnSetup.quantity' | translate}}"
-        >
+      <input cs-input type="text"
+        class="input-width text-center"
+        id="advanceQuantityInput"
+        ng-model="$ctrl.quant"
+        cs-input-label="{{::'pstnSetup.quantity' | translate}}">
     </div>
-    <button
-      type="button"
+    <button type="button"
       class="btn btn--people btn--large order-inline"
       ng-click="$ctrl.onAddToCart('BLOCK_ORDER')"
-      translate="pstnSetup.advancedOrder.addNumbers"
-    ></button>
+      translate="pstnSetup.advancedOrder.addNumbers">
+    </button>
   </section>
 </section>
 <section ng-if="$ctrl.model.showNoResult" translate="pstnSetup.pstnSelector.noResults"></section>

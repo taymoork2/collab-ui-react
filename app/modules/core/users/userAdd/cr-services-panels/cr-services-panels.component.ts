@@ -56,7 +56,13 @@ class CrServicesPanelsController implements ng.IComponentController {
   }
 
   public showMessengerInteropToggle(): boolean {
-    return this.MessengerInteropService.hasAssignableMessageOrgEntitlement();
+    // notes:
+    // - as of 2018-01-09, this component can be used both when onboarding new users, or when editing
+    //   services for an individual user
+    // - because we implement control of the `MSGR`-license assignment through a sub-menu in 'Message'
+    //   (in the user-overview), we only allow showing the toggle when in the appropriate UI state
+    //   ('users.add.services')
+    return this.$state.current.name === 'users.add.services' && this.MessengerInteropService.hasAssignableMessageOrgEntitlement();
   }
 
   public checkCMR(cfLic, cmrLics): void {

@@ -992,10 +992,10 @@ describe('Care Setup Assistant Ctrl', function () {
       controller.currentState = 'virtualAssistant';
 
       controller.template.configuration.virtualAssistant.config.id = 'something';
-      controller.template.configuration.virtualAssistant.welcomeMessage = getStringOfLength(51);
+      controller.template.configuration.virtualAssistant.welcomeMessage = getStringOfLength(251);
       expect(controller.nextButton()).toEqual(false);
 
-      controller.template.configuration.virtualAssistant.welcomeMessage = getStringOfLength(50);
+      controller.template.configuration.virtualAssistant.welcomeMessage = getStringOfLength(250);
       expect(controller.nextButton()).toEqual(true);
     });
 

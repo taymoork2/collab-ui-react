@@ -1,5 +1,5 @@
-@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 cr-banner {
   &.header-adjust .header-banner {
@@ -21,6 +21,12 @@ cr-banner {
       color: $color-alerts-base;
       font-size: vr-adjust(16);
       top: rem-calc(2);
+    }
+
+    .icon-info {
+      color: $color-blue-darker;
+      font-size: vr-adjust(16);
+      top: rem-calc(2.25);
     }
   }
 }

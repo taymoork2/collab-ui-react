@@ -1,13 +1,11 @@
-import hybridMessagingUserSettings from './index';
+import hybridMessageUserSettingsModuleName from './index';
 
-describe('hybridImpUserSettings', () => {
+describe('HybridMessageUserSettings', () => {
 
   let $componentController, $q, $scope, ctrl, HybridServiceUserSidepanelHelperService, USSService;
 
-  beforeEach(angular.mock.module('Hercules'));
-
   beforeEach(function () {
-    this.initModules(hybridMessagingUserSettings);
+    this.initModules(hybridMessageUserSettingsModuleName);
   });
 
   beforeEach(inject(dependencies));
@@ -27,29 +25,22 @@ describe('hybridImpUserSettings', () => {
   }
 
   function initSpies() {
-    spyOn(USSService, 'getStatusesForUser').and.returnValue($q.resolve([{
-      entitled: true,
-      serviceId: 'spark-hybrid-impinterop',
-    }, {
-      entitled: false,
-      serviceId: 'spark-hybrid-somethingelse',
-    }]));
+    spyOn(USSService, 'getStatusesForUser').and.returnValue($q.resolve([{}, {}]));
     spyOn(HybridServiceUserSidepanelHelperService, 'saveUserEntitlements').and.returnValue($q.resolve({}));
   }
 
-  function initController(userId, emailAddress) {
-    ctrl = $componentController('hybridMessagingUserSettings', {}, {
+  function initController(userId, emailAddress, allUserEntitlements: string[] = ['spark-hybrid-impinterop']) {
+    ctrl = $componentController('hybridMessageUserSettings', {}, {
       userId: undefined,
       userEmailAddress: emailAddress,
-      userUpdatedCallback: function () {},
+      userUpdatedCallback: _.noop,
     });
     ctrl.$onChanges({
       userId: {
-        previousValue: undefined,
         currentValue: userId,
-        isFirstChange() {
-          return true;
-        },
+      },
+      allUserEntitlements: {
+        currentValue: allUserEntitlements,
       },
     });
 

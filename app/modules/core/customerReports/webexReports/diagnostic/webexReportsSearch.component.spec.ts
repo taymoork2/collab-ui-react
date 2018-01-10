@@ -103,16 +103,16 @@ describe('Component: webexReportsSearch', () => {
     this.controller.gridOptions.onRegisterApi(fakeGridApi);
   });
 
-  xit('should show the empty data for the grid when search with incorrect email or incorrect meeting number then trigger blur event', function () {
+  it('should show the empty data for the grid when search with incorrect email or incorrect meeting number then trigger blur event', function () {
     spyOn(this.$translate, 'instant').and.returnValue('Please enter the correct email or meeting number');
 
     initComponent.call(this);
     this.controller.errMsg = {};
     this.view.find(this.input).val('23423432ad').change().triggerHandler('blur');
-    expect(this.controller.errMsg.search).toEqual('Please enter the correct email or meeting number');
+    expect(this.controller.errMsg.search).toEqual('<i class="icon icon-warning"></i> Please enter the correct email or meeting number');
   });
 
-  xit('should updata when change date', function () {
+  it('should updata when change date', function () {
     spyOn(this.$translate, 'instant').and.returnValue('The start date must not be greater than the end date');
 
     this.SearchService.getMeetings.and.returnValue(this.$q.resolve(this.meetingSearch));
@@ -139,7 +139,7 @@ describe('Component: webexReportsSearch', () => {
     this.controller.onChangeDate();
     this.controller.searchStr = '355602502';
     this.controller.startSearch();
-    expect(this.controller.errMsg.datePicker).toEqual('The start date must not be greater than the end date');
+    expect(this.controller.errMsg.datePicker).toEqual('<i class="icon icon-warning"></i> The start date must not be greater than the end date');
   });
 
   it('should notify in message for non 200 http status', function() {

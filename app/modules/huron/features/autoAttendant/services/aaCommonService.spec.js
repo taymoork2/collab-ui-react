@@ -197,6 +197,14 @@ describe('Service:AACommonService', function () {
       AACommonService.setRestApiTogglePhase2(true);
       expect(AACommonService.isRestApiTogglePhase2()).toBeTruthy();
     });
+    it('setHybridToggle should set to true', function () {
+      AACommonService.setHybridToggle(true);
+      expect(AACommonService.isHybridEnabledOnOrg()).toBeTruthy();
+    });
+    it('setHybridToggle should set to false', function () {
+      AACommonService.setHybridToggle(false);
+      expect(AACommonService.isHybridEnabledOnOrg()).toBeFalsy();
+    });
   });
 
   describe('saveUiModel', function () {

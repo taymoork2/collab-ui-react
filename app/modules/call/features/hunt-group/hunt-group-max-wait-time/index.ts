@@ -3,7 +3,7 @@ import { HuntGroupMaxWaitTimeComponent } from './hunt-group-max-wait-time.compon
 
 export default angular
   .module('huron.hunt-group-max-wait-time', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
   ])
   .component('ucHuntGroupMaxWaitTime', new HuntGroupMaxWaitTimeComponent())

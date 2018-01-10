@@ -5,7 +5,7 @@ import fallbackDestModule from 'modules/call/features/shared/call-feature-fallba
 export default angular
   .module('call.hunt-group.fallback-destination', [
     require('angular-resource'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     fallbackDestModule,
   ])

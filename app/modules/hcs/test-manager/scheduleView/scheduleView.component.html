@@ -1,0 +1,41 @@
+<div class="partner-suite-view">
+    <cs-page-header title-name="Test Schedule" back="true" back-url="$ctrl.backState"></cs-page-header>
+    <cs-page-sub-header>
+      <cs-page-sub-header-left>
+      </cs-page-sub-header-left>
+      <cs-page-sub-header-right>
+        <button class="btn btn--people" ng-click="$ctrl.createSchedule()" ng-disabled="true">
+          <span>Create Schedule</span>
+        </button>
+      </cs-page-sub-header-right>
+    </cs-page-sub-header>
+    <div ng-if="$ctrl.pageState != $ctrl.STATE_NEW" class="suite-content content-container">
+      <!-- Show Reload page when all location requests fail-->
+      <div ng-if="$ctrl.pageState === $ctrl.STATE_RELOAD">
+        <div class="features-reload">
+          <p class="h4" translate="huronFeatureDetails.sorryMessage"></p>
+          <div class="h2" translate="huronFeatureDetails.reloadMessage"></div>
+          <button type="button" class="btn btn--link" ng-click="$ctrl.reload()">Reload</button>
+        </div>
+      </div>
+
+      <!--Show Spinner Icon until controller receives data from back-end-->
+      <div grid-spinner="$ctrl.pageState === $ctrl.STATE_LOADING"></div>
+
+      <!-- Show Cards whenever data is received by controller-->
+      <div class="row full collapse">
+        <div ui-view class = "ng-scope">
+          <div class = "user-list ng-scope">
+            <div ng-if="$ctrl.pageState === $ctrl.STATE_SHOW">
+              <cs-grid name="partnerListPane" grid-api="$ctrl.gridApi" grid-options="$ctrl.gridOptions" spinner="customerList.showManagedOrgsRefresh" state="taasScheduleView.list"></cs-grid>
+            </div>
+          </div>
+        </div>
+    </div>
+    </div>
+
+  <div class="features-loading" ng-if="$ctrl.pageState === $ctrl.STATE_LOADING">
+    <i class="icon icon-spinner"></i>
+  </div>
+
+  </div>

@@ -3,7 +3,7 @@ import './account-linking-wizard.scss';
 
 export default angular
   .module('account-linking.wizard', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
   ])
   .component('accountLinkingWizardComponent', new AccountLinkingWizardComponent())
