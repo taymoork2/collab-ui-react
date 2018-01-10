@@ -89,4 +89,8 @@ module.exports = {
     '\'self\'',
     '\'unsafe-inline\'',
   ],
+  workerSrc: [
+    'blob:',
+    '\'self\'',
+  ],
 };
