@@ -6,7 +6,7 @@
     <span class="h3" ng-if="!(careSetupAssistant.selectedMediaType === careSetupAssistant.mediaTypes.chatPlusCallback)" translate='careChatTpl.customerInformation'>
     </span>
   </div>
-  <div class="h5 ct-title-desc">{{careSetupAssistant.getLocalisedText('careChatTpl.customerInfoDesc')}}</div>
+  <div class="h5 ct-title-desc">{{careSetupAssistant.getLocalisedTextWithExcalation('careChatTpl.customerInfoDesc')}}</div>
 
   <div class="ct-customer ct-sa-content">
     <cs-card-layout block-view="true" class="customer-card-layout">
@@ -66,15 +66,19 @@
                 ng-keypress="careSetupAssistant.enterNextPage($event)"/>
 
               <div ng-if="attribute.name === 'required'" class="h6 cs-radio-group ct-attribute-field-radio">
+                <div class="no-margin" ng-repeat="option in careSetupAssistant.requiredOptions">
                 <input cs-input type="radio"
                   ng-disabled="careSetupAssistant.isSecondFieldForCallBack()"
-                  ng-repeat="option in careSetupAssistant.requiredOptions"
                   ng-model="attribute.value"
                   id="{{option.id}}"
                   name="requiredOptions"
                   value="{{option.id}}"
                   cs-input-label="{{option.text}}"
                   ng-keypress="careSetupAssistant.enterNextPage($event)"/>
+                  <div class="escalation-required-info" ng-if="careSetupAssistant.isExpertEscalationSelected() && option.id == 'required' && careSetupAssistant.checkIfTypeCategory(careSetupAssistant.activeItem.attributes)">
+                    <span  class="msg" translate="careChatTpl.escalationEnabledRequiredInfo"></span><a ng-href="{{careSetupAssistant.evaLearnMoreLink}}" translate="careChatTpl.learnMoreLink" target="_blank"></a>
+                  </div>
+                  </div>
               </div>
 
               <div ng-if="attribute.name === 'type'">
@@ -98,6 +102,17 @@
                 </div>
               </div>
               <div class="row ct-attribute-row ct-customer-info-category-input right-inner-addon" ng-if="attribute.name == 'type' && attribute.value.id == 'category'">
+                <div class="escalation-required-info escalation-required-info-category" ng-if="careSetupAssistant.isExpertEscalationSelected()">
+                  <span  class="msg" translate="careChatTpl.escalationEnabledCategoryInfo"></span>
+                  <span popover-html="careSetupAssistant.evaSpaceTooltipData"
+                        popover-placement="auto right"
+                        popover-trigger="click"
+                        popover-append-to-body="false"
+                        class="icon icon-question-circle icon-eva-details"
+                        ng-class="{'icon-eva-details-toggle': careSetupAssistant.isPopoverActive}"
+                        ng-click="careSetupAssistant.popoverClicked()">
+                  </span>
+                </div>
                 <i class="icon icon-add-contain ct-add-contain" ng-click="careSetupAssistant.addCategoryOption()"></i>
                 <input cs-input type="text"
                   ng-readonly="{{!careSetupAssistant.validateType(attribute.value)}}"

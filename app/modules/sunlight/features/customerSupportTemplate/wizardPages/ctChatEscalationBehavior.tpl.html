@@ -24,6 +24,7 @@
                           cs-input-label="{{evaData.label}}"
                           ng-change="careSetupAssistant.onEVAOptionChange()"
                           ng-disabled="evaData.isDisabled"
+                          ng-click="careSetupAssistant.setRequiredValue()"
                           >
                           <span class="ct-info-icon" ng-if="!evaData.isDisabled">
                             <i tooltip-html-unsafe={{evaData.tooltipHtml}}
