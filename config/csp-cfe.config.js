@@ -1,4 +1,5 @@
 /* eslint-env es6 */
+
 'use strict';
 
 const merge = require('webpack-merge');
