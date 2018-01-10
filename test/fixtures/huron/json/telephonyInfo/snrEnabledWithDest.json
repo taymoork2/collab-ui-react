@@ -6,6 +6,9 @@
       "uuid": "123456",
       "pattern": "555"
     }],
-    "answerTooLateTimer": "20000"
+    "answerTooLateTimer": "20000",
+    "patterns": {
+      "pattern": ["7654321", "9182736", "6574839"]
+    }
   }
 }
