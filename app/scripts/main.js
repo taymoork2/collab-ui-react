@@ -248,7 +248,7 @@
     require('modules/hcs/test-manager/resources-create').default,
     require('modules/hcs/test-manager/schedule-view').default,
     require('modules/hcs/test-manager/schedule-create').default,
-    require('modules/hcs/test-manager/suiteView').default,
+    require('modules/hcs/test-manager/suite-view').default,
     require('modules/hcs/test-manager/suite-create').default,
   ]);
 

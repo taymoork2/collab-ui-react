@@ -1,7 +1,7 @@
 import hcsTaasSuiteView from './index';
 import { State } from '../shared';
 
-describe('Component: TaasSuiteViewComponent',  () => {
+describe('Component: SuiteViewComponent',  () => {
 
   beforeEach(function() {
     this.initModules(hcsTaasSuiteView);
@@ -27,7 +27,7 @@ describe('Component: TaasSuiteViewComponent',  () => {
   });
 });
 
-describe('Component: TaasSuiteViewComponent',  () => {
+describe('Component: SuiteViewComponent',  () => {
 
   beforeEach(function() {
     this.initModules(hcsTaasSuiteView);
@@ -49,7 +49,7 @@ describe('Component: TaasSuiteViewComponent',  () => {
   });
 });
 
-describe('Component: TaasSuiteViewComponent',  () => {
+describe('Component: SuiteViewComponent',  () => {
   const SUCCESS_DATA = [{
     customerId: '123',
     id: '456',
