@@ -18,14 +18,13 @@
     vm.maxUsersInManual = OnboardService.maxUsersInManual;
     vm.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
     vm.hasDefaultAutoAssignTemplate = hasDefaultAutoAssignTemplate;
-    vm.getDefaultSettingsForAutoAssignTemplate = getDefaultSettingsForAutoAssignTemplate;
+    vm.initDefaultAutoAssignTemplate = initDefaultAutoAssignTemplate;
     vm.toggleActivateForDefaultAutoAssignTemplate = toggleActivateForDefaultAutoAssignTemplate;
     vm.isDefaultAutoAssignTemplateActivated = isDefaultAutoAssignTemplateActivated;
     vm.recvDelete = recvDelete;
     vm.cancelModal = cancelModal;
     vm.handleDirSyncService = handleDirSyncService;
     vm.onNext = onNext;
-    vm.isDefaultAutoAssignActivated = false;
     vm.convertableUsers = false;
     vm.isAtlasF3745AutoAssignToggle = false;
     vm.autoAssignTemplates = {};
@@ -33,9 +32,9 @@
 
     vm.initFeatureToggles = initFeatureToggles;
     vm.initConvertableUsers = initConvertableUsers;
-    vm.initDefaultAutoAssignTemplate = initDefaultAutoAssignTemplate;
 
     var isAtlasEmailSuppressToggle = false;
+    var isOrgEnabledForAutoAssignTemplates = false;
 
     vm.onInit();
 
@@ -45,7 +44,7 @@
       initFeatureToggles()
         .then(function () {
           initDefaultAutoAssignTemplate();
-          getDefaultSettingsForAutoAssignTemplate();
+          initOrgSettingForAutoAssignTemplates();
         });
     }
 
@@ -80,25 +79,24 @@
         });
     }
 
-    function getAutoAssignTemplate() {
-      return _.get(vm.autoAssignTemplates, DEFAULT_AUTO_ASSIGN_TEMPLATE);
+    function initOrgSettingForAutoAssignTemplates() {
+      if (!vm.isAtlasF3745AutoAssignToggle) {
+        return;
+      }
+      isOrgEnabledForAutoAssignTemplates = false;
+      AutoAssignTemplateService.isEnabledForOrg()
+        .catch(_.noop)
+        .then(function (isEnabled) {
+          isOrgEnabledForAutoAssignTemplates = isEnabled;
+        });
     }
 
     function hasDefaultAutoAssignTemplate() {
-      return !!getAutoAssignTemplate();
-    }
-
-    /* Used to check if autoLicenseAssignment property exists and is set to true
-    currently isn't set to TRUE 12/21/17
-    */
-    function getDefaultSettingsForAutoAssignTemplate() {
-      AutoAssignTemplateService.isEnabledForOrg().then(function (isEnabledForOrg) {
-        vm.isDefaultAutoAssignActivated = isEnabledForOrg;
-      });
+      return !!_.get(vm.autoAssignTemplates, DEFAULT_AUTO_ASSIGN_TEMPLATE);
     }
 
     function toggleActivateForDefaultAutoAssignTemplate(isActivated) {
-      vm.isDefaultAutoAssignActivated = isActivated;
+      isOrgEnabledForAutoAssignTemplates = isActivated;
     }
 
     /* There are two levels of enablement for a template (i.e. what is known as "activation")
@@ -107,7 +105,7 @@
     Once 2 is implemented, logic will most likely change 12/21/17
     */
     function isDefaultAutoAssignTemplateActivated() {
-      return hasDefaultAutoAssignTemplate() && vm.isDefaultAutoAssignActivated;
+      return hasDefaultAutoAssignTemplate() && isOrgEnabledForAutoAssignTemplates;
     }
 
     function recvDelete() {
