@@ -361,6 +361,10 @@
         "description": "The following licenses will automatically be assigned to new users.",
         "saveSuccess": "Your license template has been set up successfully. Licenses will be assigned to new users automatically.",
         "saveError": "An error occurred while saving your license template. Please try again."
+      },
+      "csv": {
+        "warningTitle": "Auto Assign CSV Rules",
+        "warningMessage": "Leave the license fields blank if you want to apply the auto assign template to a new user. Or specify licenses by typing True or False and the auto assign template isn't applied. Existing users are not impacted by the auto assign template."
       }
     }
   },
