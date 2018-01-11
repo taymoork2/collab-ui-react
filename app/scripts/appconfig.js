@@ -2073,16 +2073,6 @@
               },
             },
           })
-          .state('reports.metrics', {
-            url: '/metrics',
-            views: {
-              tabContent: {
-                controllerAs: 'nav',
-                controller: 'MediaServiceMetricsContoller',
-                template: require('modules/mediafusion/metrics-graph-report/mediaServiceMetricsReports.tpl.html'),
-              },
-            },
-          })
           .state('reports.webex-metrics', {
             url: '/webexMetrics',
             views: {
@@ -2164,16 +2154,6 @@
               siteUrl: null,
             },
           })
-          .state('reports.media', {
-            url: '/media',
-            views: {
-              tabContent: {
-                controllerAs: 'nav',
-                controller: 'MediaReportsController',
-                template: require('modules/mediafusion/reports/media-reports.html'),
-              },
-            },
-          })
           .state('reports.mediaservice', {
             url: '/mediaservice',
             views: {
@@ -2181,11 +2161,6 @@
                 controllerAs: 'nav',
                 controller: 'MediaReportsController',
                 template: require('modules/mediafusion/reports/media-reports-phase-two.html'),
-              },
-            },
-            resolve: {
-              hasHmsTwoDotFiveFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwoDotFive);
               },
             },
           })
@@ -5215,11 +5190,6 @@
             },
             controller: /* @ngInject */ function (Analytics) {
               return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_SETTINGS);
-            },
-            resolve: {
-              hasMFVIdeoFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceVideo);
-              },
             },
           });
 
