@@ -9,17 +9,9 @@ describe('Component: editAutoAssignTemplateModal:', () => {
       '$scope',
       '$state',
       'Analytics',
-      'Orgservice',
+      'AutoAssignTemplateService',
     );
     this.$scope.dismiss = _.noop;
-    this.fixtures = {};
-    this.fixtures.fakeLicenseUsage = [{
-      subscriptionId: 'fake-subscriptionId-2',
-    }, {
-      subscriptionId: 'fake-subscriptionId-3',
-    }, {
-      subscriptionId: 'fake-subscriptionId-1',
-    }];
   });
 
   afterEach(function () {
@@ -57,17 +49,10 @@ describe('Component: editAutoAssignTemplateModal:', () => {
       spyOn(this.$state, 'go');
       _.set(this.$state, 'params.prevState', 'fake-previous-state');
       spyOn(this.Analytics, 'trackAddUsers');
-      spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.fixtures.fakeLicenseUsage));
+      spyOn(this.AutoAssignTemplateService, 'getSortedSubscriptions');
       this.compileComponent('editAutoAssignTemplateModal', {
         dismiss: 'dismiss',
       });
-    });
-
-    it('should initialize "sortedSubscription" property', function () {
-      expect(this.controller.sortedSubscriptions.length).toBe(3);
-      expect(_.get(this.controller, 'sortedSubscriptions[0].subscriptionId')).toBe('fake-subscriptionId-1');
-      expect(_.get(this.controller, 'sortedSubscriptions[1].subscriptionId')).toBe('fake-subscriptionId-2');
-      expect(_.get(this.controller, 'sortedSubscriptions[2].subscriptionId')).toBe('fake-subscriptionId-3');
     });
 
     it('should navigate to previous state when back button is clicked', function () {

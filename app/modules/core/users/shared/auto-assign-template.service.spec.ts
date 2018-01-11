@@ -6,17 +6,32 @@ describe('Service: AutoAssignTemplateService:', () => {
     this.injectDependencies(
       '$http',
       '$q',
+      '$scope',
       'Authinfo',
       'AutoAssignTemplateService',
+      'Orgservice',
       'UrlConfig',
     );
     this.endpointUrl = 'fake-admin-service-url/organizations/fake-org-id/templates';
     this.settingsUrl = 'fake-admin-service-url/organizations/fake-org-id/settings/autoLicenseAssignment';
+    this.fixtures = {};
+    this.fixtures.fakeLicenseUsage = [{
+      subscriptionId: 'fake-subscriptionId-2',
+    }, {
+      subscriptionId: 'fake-subscriptionId-3',
+    }, {
+      subscriptionId: 'fake-subscriptionId-1',
+    }];
+    this.stateData = {};
+    _.set(this.stateData, 'subscriptions', undefined);
+    _.set(this.stateData, 'LICENSE', { subscriptionId: 'fake-subscriptionId-1' });
+    _.set(this.stateData, 'USER_ENTITLEMENTS_PAYLOAD', undefined);
   });
 
   beforeEach(function () {
     spyOn(this.UrlConfig, 'getAdminServiceUrl').and.returnValue('fake-admin-service-url/');
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('fake-org-id');
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.fixtures.fakeLicenseUsage));
   });
 
   afterEach(function () {
@@ -82,6 +97,28 @@ describe('Service: AutoAssignTemplateService:', () => {
     it('should call DELETE on the internal endpoint url with the given payload', function () {
       this.$httpBackend.expectDELETE(`${this.endpointUrl}/fake-template-id-1`);
       this.AutoAssignTemplateService.deleteTemplate('fake-template-id-1');
+    });
+  });
+
+  describe('convertDefaultTemplateToStateData():', () => {
+    it('should convert state data given the default template payload', function () {
+      spyOn(this.AutoAssignTemplateService, 'convertDefaultTemplateToStateData').and.returnValue(this.stateData);
+      expect(_.get(this.AutoAssignTemplateService.convertDefaultTemplateToStateData(), 'LICENSE')).toEqual({ subscriptionId: 'fake-subscriptionId-1' });
+      expect(_.get(this.AutoAssignTemplateService.convertDefaultTemplateToStateData(), 'USER_ENTITLEMENTS_PAYLOAD')).toBe(undefined);
+      expect(_.get(this.AutoAssignTemplateService.convertDefaultTemplateToStateData(), 'subscriptions')).toBe(undefined);
+    });
+  });
+
+  describe('getSortedSubscriptions():', () => {
+    it('should initialize "sortedSubscription" property', function (done) {
+      this.AutoAssignTemplateService.getSortedSubscriptions().then(sortedSubscriptions => {
+        expect(sortedSubscriptions.length).toBe(3);
+        expect(_.get(sortedSubscriptions[0], 'subscriptionId')).toBe('fake-subscriptionId-1');
+        expect(_.get(sortedSubscriptions[1], 'subscriptionId')).toBe('fake-subscriptionId-2');
+        expect(_.get(sortedSubscriptions[2], 'subscriptionId')).toBe('fake-subscriptionId-3');
+        _.defer(done);
+      });
+      this.$scope.$apply();
     });
   });
 
