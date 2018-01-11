@@ -17,7 +17,6 @@ class SuiteCreateController implements ng.IComponentController {
   public close: Function;
   public dismiss: Function;
   public suiteObject: HtmSuite;
-  public showConfirmation: boolean;
   public suiteName: string;
   /* @ngInject */
   constructor(
@@ -38,10 +37,10 @@ class SuiteCreateController implements ng.IComponentController {
     //Call service to validate and save
     const suite = new HtmSuite;
     suite.name = this.suiteName;
-    this.HcsTestManagerService.createSuite(suite).then((response) => {
-      suite.id = response;
-      this.showConfirmation = true;
-    }).then(() => this.$state.go('taasTests', { suite: suite }))
+    this.HcsTestManagerService.createSuite(suite).then((suiteId: string) => {
+      suite.id = suiteId;
+      this.$state.go('taasTest', { suite: suite });
+    })
     .catch(error => this.Notification.errorResponse(error.data.error.message, 'Recevied an Error'));
   }
 

@@ -31,9 +31,6 @@ export const PATH_CUSTOMERS: string = '/api/v1/customers/:customerId';
 // R Test Definitions
 export const PATH_TESTDEFINITIONS: string = '/api/v1/customers/:customerId/testdefinitions/:testdefinitionsId';
 
-//Temp: always use this customer ID
-//const CUSTOMER_ID: string = 'c7504886-2ffd-4f49-a81c-9ce23e1ba8ae'; //Customer Joe
-
 interface IResource<T> extends ng.resource.IResourceClass<T & ng.resource.IResource<T>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
@@ -153,7 +150,7 @@ export class TaskManagerService {
 
 //Schedules
   public createSchedule(schedule: HtmSchedule): ng.IPromise<string> {
-    let scheduleId: string;
+    let scheduleId: string = '';
     if (_.isEmpty(schedule)) {
       return this.$q.reject();
     }
@@ -163,7 +160,9 @@ export class TaskManagerService {
     }, schedule.getRSchedule(),
     (_response, headers) => {
       const locationHeader = headers(LOCATION_HEADER);
-      scheduleId = _.last(locationHeader.split('/'));
+      if (!_.isEmpty(locationHeader)) {
+        scheduleId = _.last(locationHeader.split('/'));
+      }
     }).$promise
     .then(() => scheduleId);
   }
@@ -262,16 +261,30 @@ export class TaskManagerService {
     if (_.isEmpty(suite)) {
       return this.$q.reject();
     }
-    let suiteId: string;
+    let suiteId: string = '';
     const resource = <IResource<IRHtmSuite>>this.$resource(`${TAAS_ADDRESS}${PATH_SUITES}`, {}, { save: saveAction });
     return resource.save({
       customerId: this.customerId,
     }, suite.getRSuite(),
     (_response, headers) => {
       const locationHeader = headers(LOCATION_HEADER);
-      suiteId = _.last(locationHeader.split('/'));
+      if (!_.isEmpty(locationHeader)) {
+        suiteId = _.last(locationHeader.split('/'));
+      }
     }).$promise
-    .then(() => suiteId);
+    .then(() => {
+      suiteId = '';
+      return this.getSuites().then(suites => {
+        for (let i: number = 0; i < suites.length; i++) {
+          if (suites[i].name === suite.name) {
+            if (!_.isEmpty(suites[i].id)) {
+              return suites[i].id!;
+            }
+          }
+        }
+        return suiteId;
+      });
+    });
   }
 
   public getSuite(suite: IRHtmSuite): ng.IPromise<HtmSuite> {
@@ -339,7 +352,7 @@ export class TaskManagerService {
     if (_.isEmpty(test)) {
       return this.$q.reject();
     }
-    let testId: string;
+    let testId: string = '';
     const resource = <IResource<IRHtmSchedule>>this.$resource(`${TAAS_ADDRESS}${PATH_TESTS}`, {}, { save: saveAction });
     return resource.save({
       customerId: this.customerId,
@@ -347,7 +360,9 @@ export class TaskManagerService {
     }, test.getRTest(),
     (_response, headers) => {
       const locationHeader = headers(LOCATION_HEADER);
-      testId = _.last(locationHeader.split('/'));
+      if (!_.isEmpty(locationHeader)) {
+        testId = _.last(locationHeader.split('/'));
+      }
     }).$promise
     .then(() => testId);
   }
