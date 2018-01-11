@@ -30,22 +30,10 @@ class CustomerReportsHeaderCtrl {
         });
       }
       if (features.isMfEnabled) {
-        if (features.mf) {
-          this.headerTabs.push({
-            title: this.$translate.instant('mediaFusion.report.title'),
-            state: 'reports.media',
-          });
-        } else if (features.mfMilestoneTwo) {
-          this.headerTabs.push({
-            title: this.$translate.instant('mediaFusion.report.title'),
-            state: 'reports.mediaservice',
-          });
-        } else {
-          this.headerTabs.push({
-            title: this.$translate.instant('mediaFusion.report.title'),
-            state: 'reports.metrics',
-          });
-        }
+        this.headerTabs.push({
+          title: this.$translate.instant('mediaFusion.report.title'),
+          state: 'reports.mediaservice',
+        });
       }
       this.headerTabs.push({
         title: this.$translate.instant('reportsPage.usageReports.usageReportTitle'),
@@ -63,8 +51,6 @@ class CustomerReportsHeaderCtrl {
   public headerTabs = new Array<any>();
 
   private promises: any = {
-    mf: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneOneGetStatus(),
-    mfMilestoneTwo: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneTwoGetStatus(),
     isMfEnabled: this.MediaServiceActivationV2.getMediaServiceState(),
     webexMetrics: this.FeatureToggleService.webexMetricsGetStatus(),
     proPackEnabled: this.ProPackService.hasProPackEnabled(),
