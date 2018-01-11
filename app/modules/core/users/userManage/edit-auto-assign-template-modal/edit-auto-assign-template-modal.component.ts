@@ -27,7 +27,11 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
 
     // otherwise use default initialization
     this.stateData = {};
-    _.set(this.stateData, 'subscriptions', this.AutoAssignTemplateService.getSortedSubscriptions());
+    this.AutoAssignTemplateService.getSortedSubscriptions()
+      .then(sortedSubscriptions => {
+        this.sortedSubscriptions = sortedSubscriptions;
+        this.stateData.subscriptions = sortedSubscriptions;
+      });
   }
 
   public dismissModal(): void {
