@@ -1,10 +1,10 @@
-import hcsTaasTestView from './index';
+import TaskView from './index';
 import { State } from '../shared';
 
-describe('Component: TaasTestViewComponent',  () => {
+describe('Component: TaskViewComponent',  () => {
 
   beforeEach(function() {
-    this.initModules(hcsTaasTestView);
+    this.initModules(TaskView);
     this.injectDependencies(
       'HcsTestManagerService',
       'CardUtils',
@@ -27,7 +27,7 @@ describe('Component: TaasTestViewComponent',  () => {
 
     spyOn(this.HcsTestManagerService, 'getTest').and.returnValue(this.$q.reject());
     spyOn(this.$state, 'go');
-    this.compileComponent('taasTestView', {});
+    this.compileComponent('taasTaskView', {});
   });
 
   it('should have pageState equal RELOAD', function() {
@@ -40,10 +40,10 @@ describe('Component: TaasTestViewComponent',  () => {
   });
 });
 
-describe('Component: TaasTestViewComponent',  () => {
+describe('Component: TaskViewComponent',  () => {
 
   beforeEach(function() {
-    this.initModules(hcsTaasTestView);
+    this.initModules(TaskView);
     this.injectDependencies(
       'HcsTestManagerService',
       'CardUtils',
@@ -66,7 +66,7 @@ describe('Component: TaasTestViewComponent',  () => {
 
     spyOn(this.HcsTestManagerService, 'getTests');
     this.HcsTestManagerService.getTests.and.returnValue(this.$q.resolve([]));
-    this.compileComponent('taasTestView', {});
+    this.compileComponent('taasTaskView', {});
   });
 
   it('should have pageState equal NEW', function() {
@@ -75,7 +75,7 @@ describe('Component: TaasTestViewComponent',  () => {
   });
 });
 
-describe('Component: TaasTestViewComponent',  () => {
+describe('Component: TaskViewComponent',  () => {
   const SUCCESS_DATA = [{
     customerId: '123',
     id: '456',
@@ -85,7 +85,7 @@ describe('Component: TaasTestViewComponent',  () => {
   }];
 
   beforeEach(function() {
-    this.initModules(hcsTaasTestView);
+    this.initModules(TaskView);
     this.injectDependencies(
       'HcsTestManagerService',
       'CardUtils',
@@ -109,7 +109,7 @@ describe('Component: TaasTestViewComponent',  () => {
     spyOn(this.HcsTestManagerService, 'getTests');
     spyOn(this.HcsTestManagerService, 'filterTests');
     this.HcsTestManagerService.getTests.and.returnValue(this.$q.resolve(SUCCESS_DATA));
-    this.compileComponent('taasTestView', {});
+    this.compileComponent('taasTaskView', {});
   });
 
   it('should have pageState equal SHOW', function() {

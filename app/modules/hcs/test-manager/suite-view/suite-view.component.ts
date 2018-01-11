@@ -101,7 +101,7 @@ export class SuiteViewCtrl implements ng.IComponentController {
   }
 
   public editSuite(suite: HtmSuite): void {
-    this.$state.go('taasTest', { suite: suite });
+    this.$state.go('taasTaskView', { suite: suite });
   }
 
   public viewSchedule(): void {

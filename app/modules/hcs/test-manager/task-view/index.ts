@@ -1,10 +1,8 @@
-import { TaasTestViewComponent } from './taasTestView.component';
-import './_taasTestView.scss';
+import { TaskViewComponent } from './task-view.component';
+import './_task-view.scss';
 
-import hcsTestManagertServiceModule from 'modules/hcs/test-manager/shared';
 import notifications from 'modules/core/notifications';
-
-export * from 'modules/hcs/test-manager/shared';
+import hcsTestManagertServiceModule from '../shared';
 
 export default angular
   .module('hcs.taas.testView', [
@@ -13,8 +11,8 @@ export default angular
     require('angular-translate'),
     require('@collabui/collab-ui-ng').default,
     require('modules/core/config/config').default,
-    hcsTestManagertServiceModule,
     notifications,
+    hcsTestManagertServiceModule,
   ])
-.component('taasTestView', new TaasTestViewComponent())
+.component('taasTaskView', new TaskViewComponent())
 .name;

@@ -243,7 +243,7 @@
   angular.module('HCS', [
     'Core',
     require('modules/hcs/test-manager').default,
-    require('modules/hcs/test-manager/testView').default,
+    require('modules/hcs/test-manager/task-view').default,
     require('modules/hcs/test-manager/resources-view').default,
     require('modules/hcs/test-manager/resources-create').default,
     require('modules/hcs/test-manager/schedule-view').default,
