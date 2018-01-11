@@ -6,7 +6,7 @@
 
   /* @ngInject */
   function UserManageOrgController($q, $state, $window, Analytics, AutoAssignTemplateService, DirSyncService, FeatureToggleService, Notification, OnboardService, Orgservice, UserCsvService) {
-    var DEFAULT_AUTO_ASSIGN_TEMPLATE = 'Default';
+    var DEFAULT_AUTO_ASSIGN_TEMPLATE = AutoAssignTemplateService.DEFAULT;
     var ENABLE_DIR_SYNC_URL = 'https://www.cisco.com/go/hybrid-services-directory';
     var vm = this;
 
@@ -71,17 +71,11 @@
       if (!vm.isAtlasF3745AutoAssignToggle) {
         return;
       }
-      AutoAssignTemplateService.getTemplates()
-        .then(function (templates) {
-          var foundTemplate = _.find(templates, { name: DEFAULT_AUTO_ASSIGN_TEMPLATE });
-          _.set(vm.autoAssignTemplates, DEFAULT_AUTO_ASSIGN_TEMPLATE, foundTemplate);
+      AutoAssignTemplateService.getDefaultTemplate()
+        .then(function (defaultTemplate) {
+          _.set(vm.autoAssignTemplates, DEFAULT_AUTO_ASSIGN_TEMPLATE, defaultTemplate);
         })
         .catch(function (response) {
-          // 404's when fetching auto-assign templates will be fairly common
-          if (response.status === 404) {
-            _.set(vm.autoAssignTemplates, DEFAULT_AUTO_ASSIGN_TEMPLATE, undefined);
-            return;
-          }
           Notification.errorResponse(response);
         });
     }
