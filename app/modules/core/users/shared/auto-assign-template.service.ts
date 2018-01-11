@@ -38,7 +38,7 @@ export class AutoAssignTemplateService {
       });
   }
 
-  public isEnabled(): ng.IPromise<boolean> {
+  public isEnabledForOrg(): ng.IPromise<boolean> {
     return this.$http.get<{autoLicenseAssignment: boolean}>(this.autoAssignSettingsUrl).then(response => response.data.autoLicenseAssignment);
   }
 

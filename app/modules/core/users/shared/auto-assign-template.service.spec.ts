@@ -74,12 +74,12 @@ describe('Service: AutoAssignTemplateService:', () => {
     });
   });
 
-  describe('isEnabled():', () => {
+  describe('isEnabledForOrg():', () => {
     it('should reflect the status of orgSettings.autoLicenseAssignment', function (done) {
       this.$httpBackend.expectGET(this.settingsUrl).respond({
         autoLicenseAssignment: true,
       });
-      this.AutoAssignTemplateService.isEnabled().then(isEnabled => {
+      this.AutoAssignTemplateService.isEnabledForOrg().then(isEnabled => {
         expect(isEnabled).toBe(true);
         _.defer(done);
       });

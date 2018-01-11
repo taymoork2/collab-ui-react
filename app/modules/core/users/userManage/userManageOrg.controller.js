@@ -92,8 +92,8 @@
     currently isn't set to TRUE 12/21/17
     */
     function getDefaultSettingsForAutoAssignTemplate() {
-      AutoAssignTemplateService.isEnabled().then(function (isEnabled) {
-        vm.isDefaultAutoAssignActivated = isEnabled;
+      AutoAssignTemplateService.isEnabledForOrg().then(function (isEnabledForOrg) {
+        vm.isDefaultAutoAssignActivated = isEnabledForOrg;
       });
     }
 
