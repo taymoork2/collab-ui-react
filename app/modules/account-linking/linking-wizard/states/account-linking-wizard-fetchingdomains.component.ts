@@ -7,8 +7,8 @@ class AccountLinkingWizardFetchingdomainsComponentCtrl implements ng.IComponentC
   private backFunc: Function;
   public siteinfo: IACSiteInfo;
 
-  private pollTimer;
-  private noOfPolls;
+  private pollTimer: ng.IIntervalService;
+  private noOfPolls: number;
 
   /* @ngInject */
   constructor(private $log: ng.ILogService,
@@ -19,7 +19,7 @@ class AccountLinkingWizardFetchingdomainsComponentCtrl implements ng.IComponentC
     this.$log.info('init AccountLinkingWizardFetchingdomainsComponentCtrl');
   }
 
-  public $onChanges(changes: any): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     if (changes.state && changes.state.currentValue) {
       if (changes.state.currentValue === WizardState.fetchingDomains) {
         this.fetchDomains();
@@ -66,7 +66,7 @@ class AccountLinkingWizardFetchingdomainsComponentCtrl implements ng.IComponentC
 export class AccountLinkingWizardFetchingdomainsComponent implements ng.IComponentOptions {
 
   public controller = AccountLinkingWizardFetchingdomainsComponentCtrl;
-  public template = require('modules/account-linking/linking-wizard/states/account-linking-wizard-fetchingdomains.html');
+  public template = require('./account-linking-wizard-fetchingdomains.html');
   public bindings = {
     state: '<',
     nextFunc: '&',

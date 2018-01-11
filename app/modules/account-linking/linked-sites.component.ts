@@ -1,35 +1,36 @@
 import { LinkedSitesService } from './linked-sites.service';
-import { IACSiteInfo, LinkingOriginator, LinkingOperation, IACLinkingStatus, IACWebexSiteinfoResponse, LinkingMode } from './account-linking.interface';
+import { IACWebexDomainsResponse, IGotoWebex, IACSiteInfo, LinkingOriginator, LinkingOperation, IACLinkingStatus, IACWebexSiteinfoResponse, LinkingMode } from './account-linking.interface';
+import { FeatureToggleService } from 'modules/core/featureToggle';
+import { Notification } from 'modules/core/notifications/notification.service';
 
 class LinkedSitesComponentCtrl implements ng.IComponentController {
-  // public gridOptions;
-  public gridApi;
+  public gridApi: uiGrid.IGridApi;
   public sitesInfo: IACSiteInfo[];
 
   private modeDisplayNameLookup = {};
 
   public webexSiteLaunchDetails;
+  public originator: LinkingOriginator;
 
   /* @ngInject */
   constructor(
     private $log: ng.ILogService,
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
-    private $stateParams: any,
     private LinkedSitesService: LinkedSitesService,
-    private FeatureToggleService,
-    private Notification,
+    private FeatureToggleService: FeatureToggleService,
+    private Notification: Notification,
 
   ) {
-    this.$log.debug('LinkedSitesComponentCtrl constructor, stateParams:', this.$stateParams);
+    this.$log.debug('LinkedSitesComponentCtrl constructor, stateParams:');
   }
 
   public $onInit = () => {
     this.initModeTranslations();
     this.$log.debug('LinkedSitesComponentCtrl $onInit');
 
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasAccountLinkingPhase2).then( (feature) => {
-      if (feature === false) {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasAccountLinkingPhase2).then( (supported) => {
+      if (supported === false) {
         this.$log.warn('Illegal state');
       } else {
         this.LinkedSitesService.filterSites().then((sites: IACSiteInfo[]) => {
@@ -42,7 +43,7 @@ class LinkedSitesComponentCtrl implements ng.IComponentController {
               this.updateWebexDetailsWhenAvailable(site);
             });
 
-            this.showWizardIfRequired(this.$stateParams.originator);
+            this.showWizardIfRequired(this.originator);
           } else {
             // TODO: Handle this case in the UI
             this.$log.warn('No linked sites');
@@ -76,12 +77,12 @@ class LinkedSitesComponentCtrl implements ng.IComponentController {
       });
     }
     if (site.webexInfo.ciAccountSyncPromise) {
-      site.webexInfo.ciAccountSyncPromise.then((as: IACLinkingStatus) => {
-        site.linkingStatus = as;
+      site.webexInfo.ciAccountSyncPromise.then((status: IACLinkingStatus) => {
+        site.linkingStatus = status;
       });
     }
     if (site.webexInfo.domainsPromise) {
-      site.webexInfo.domainsPromise.then((domainBlob: any) => {
+      site.webexInfo.domainsPromise.then((domainBlob: IACWebexDomainsResponse) => {
         site.domains = domainBlob.emailDomains;
       });
     }
@@ -160,7 +161,7 @@ class LinkedSitesComponentCtrl implements ng.IComponentController {
   private injectSiteinfoInWebexLaunchButton(siteInfo, toSiteListPage) {
     this.$log.debug(' injectSiteinfoInWebexLaunchButton', siteInfo);
 
-    this.webexSiteLaunchDetails = {
+    this.webexSiteLaunchDetails = <IGotoWebex> {
       siteUrl: siteInfo.linkedSiteUrl,
       toSiteListPage: toSiteListPage,
     };
@@ -171,5 +172,7 @@ class LinkedSitesComponentCtrl implements ng.IComponentController {
 export class LinkedSitesComponent implements ng.IComponentOptions {
   public controller = LinkedSitesComponentCtrl;
   public template = require('./linked-sites.component.html');
-  public bindings = { };
+  public bindings = {
+    originator: '<',
+  };
 }

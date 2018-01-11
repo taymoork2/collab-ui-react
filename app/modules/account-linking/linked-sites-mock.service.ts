@@ -5,7 +5,7 @@ export class LinkedSitesMockService {
 
   /* @ngInject */
   constructor(
-    private $timeout) {
+    private $timeout: ng.ITimeoutService) {
   }
   private domains: string[] = [
     'abc.com',
@@ -47,6 +47,7 @@ export class LinkedSitesMockService {
         },
         isSiteAdmin: false,
         supportAgreementLinkingMode: true,
+        domains: [],
       },
       {
         linkedSiteUrl: 'mock2.webex.com_NOT_SITE_ADMIN',
@@ -68,6 +69,7 @@ export class LinkedSitesMockService {
         },
         isSiteAdmin: false,
         supportAgreementLinkingMode: true,
+        domains: [],
       },
       {
         linkedSiteUrl: 'mock3.webex.com',
@@ -89,6 +91,7 @@ export class LinkedSitesMockService {
         },
         isSiteAdmin: true,
         supportAgreementLinkingMode: false,
+        domains: [],
       },
       {
         linkedSiteUrl: 'mock4.webex.com',
@@ -110,6 +113,7 @@ export class LinkedSitesMockService {
         },
         isSiteAdmin: true,
         supportAgreementLinkingMode: false,
+        domains: [],
       },
       {
         linkedSiteUrl: 'mock5_many_domains.webex.com',
@@ -132,6 +136,7 @@ export class LinkedSitesMockService {
         },
         isSiteAdmin: true,
         supportAgreementLinkingMode: true,
+        domains: [],
       },
       {
         linkedSiteUrl: 'mock6_unset',
@@ -154,6 +159,7 @@ export class LinkedSitesMockService {
         },
         isSiteAdmin: true,
         supportAgreementLinkingMode: true,
+        domains: [],
       },
       { // TODO: How to simulate 'old' api...
         linkedSiteUrl: 'mock7_not_supporting_new_api',
@@ -176,6 +182,7 @@ export class LinkedSitesMockService {
         },
         isSiteAdmin: true,
         supportAgreementLinkingMode: false,
+        domains: [],
       },
     ];
   }

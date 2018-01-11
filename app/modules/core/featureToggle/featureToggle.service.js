@@ -157,6 +157,10 @@
 
     function supports(feature) {
       return $q(function (resolve) {
+        // Fake feature toggle support for linking phase 2
+        if (feature === 'atlas-account-linking-phase2') {
+          resolve(true);
+        }
         if (!_.isUndefined(toggles[feature])) {
           resolve(toggles[feature]);
         } else {

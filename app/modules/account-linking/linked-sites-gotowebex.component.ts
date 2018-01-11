@@ -1,18 +1,18 @@
 import { IGotoWebex } from './account-linking.interface';
 
 class LinkedSitesGotoWebexComponentCtrl implements ng.IComponentController {
-  public trustSrc;
-  public accessToken;
-  public webexSiteLaunchDetails;
-  public buttonId;
+  public trustSrc: String;
+  public accessToken: String;
+  public webexSiteLaunchDetails: IGotoWebex;
+  public buttonId: String;
 
   /* @ngInject */
   constructor(
     private $log: ng.ILogService,
     private WebExUtilsFact,
     private TokenService,
-    private $sce,
-    private $timeout,
+    private $sce: ng.ISCEService,
+    private $timeout: ng.ITimeoutService,
   ) {
   }
 

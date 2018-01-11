@@ -5,7 +5,7 @@ export interface IACSiteInfo {
   linkingMode?: LinkingMode;
   linkingModeDisplay?: string;
   linkingStatus?: IACLinkingStatus;
-  domains?: string[];
+  domains: string[];
   webexInfo: IACWebexPromises;
   supportAgreementLinkingMode?: boolean;
 }
@@ -19,6 +19,10 @@ export interface IACWebexPromises {
 export interface IACLinkingStatus {
   accountsLinked?: number;
   totalWebExAccounts?: number;
+}
+
+export interface IACWebexDomainsResponse {
+  emailDomains: string[];
 }
 
 export interface IACWebexSiteinfoResponse {

@@ -1921,11 +1921,16 @@
             url: '/services/linked',
             views: {
               tabContent: {
-                template: '<linked-sites></linked-sites>',
+                template: '<linked-sites originator="$resolve.originator"></linked-sites>',
               },
             },
             params: {
               originator: 'Menu',
+            },
+            resolve: {
+              originator: /*@ngInject */ function ($stateParams) {
+                return $stateParams['originator'];
+              },
             },
           })
           .state('site-list.linked.details', {

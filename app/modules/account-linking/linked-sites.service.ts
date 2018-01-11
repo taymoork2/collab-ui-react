@@ -55,9 +55,9 @@ export class LinkedSitesService {
   }
 
   private getCiAccountSync(siteUrl: string): ng.IPromise<IACLinkingStatus> {
-    return this.LinkedSitesWebExService.getCiAccountSync(siteUrl).then((as: IACLinkingStatus) => {
-      this.$log.debug('getCiAccountSync', as);
-      return as;
+    return this.LinkedSitesWebExService.getCiAccountSync(siteUrl).then((status: IACLinkingStatus) => {
+      this.$log.debug('getCiAccountSync', status);
+      return status;
     }).catch((error) => {
       this.$log.debug('error', error);
       this.Notification.error('accountLinking.errors.getCiAccountSyncError', { message: error.data.errorMsg });

@@ -13,6 +13,7 @@ describe('Component: accountLinkingWizardComponent', () => {
       domainsPromise: {},
       siteInfoPromise: {},
     },
+    domains: [],
   };
 
   beforeEach(function () {

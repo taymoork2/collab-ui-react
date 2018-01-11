@@ -23,7 +23,7 @@ class AccountLinkingWizardAgreementacceptedComponentCtrl implements ng.IComponen
 export class AccountLinkingWizardAgreementacceptedComponent implements ng.IComponentOptions {
 
   public controller = AccountLinkingWizardAgreementacceptedComponentCtrl;
-  public template = require('modules/account-linking/linking-wizard/states/account-linking-wizard-agreementaccepted.html');
+  public template = require('./account-linking-wizard-agreementaccepted.html');
   public bindings = {
     nextFunc: '&',
     backFunc: '&',

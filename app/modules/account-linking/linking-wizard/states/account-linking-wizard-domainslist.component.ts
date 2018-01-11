@@ -29,7 +29,7 @@ class AccountLinkingWizardDomainslistComponentCtrl implements ng.IComponentContr
 export class AccountLinkingWizardDomainslistComponent implements ng.IComponentOptions {
 
   public controller = AccountLinkingWizardDomainslistComponentCtrl;
-  public template = require('modules/account-linking/linking-wizard/states/account-linking-wizard-domainslist.html');
+  public template = require('./account-linking-wizard-domainslist.html');
   public bindings = {
     nextFunc: '&',
     backFunc: '&',

@@ -20,7 +20,7 @@ class AccountLinkingWizardVerifydomainComponentCtrl implements ng.IComponentCont
 export class AccountLinkingWizardVerifydomainComponent implements ng.IComponentOptions {
 
   public controller = AccountLinkingWizardVerifydomainComponentCtrl;
-  public template = require('modules/account-linking/linking-wizard/states/account-linking-wizard-verifydomain.html');
+  public template = require('./account-linking-wizard-verifydomain.html');
   public bindings = {
     nextFunc: '&',
     backFunc: '&',

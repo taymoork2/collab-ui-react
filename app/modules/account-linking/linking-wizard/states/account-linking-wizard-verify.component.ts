@@ -3,8 +3,7 @@ import { WizardEvent } from './../account-linking-wizard.component';
 class AccountLinkingWizardVerifyComponentCtrl implements ng.IComponentController {
 
   private nextFunc: Function;
-
-  public selection;
+  public selection: string;
 
   /* @ngInject */
   constructor(private $log: ng.ILogService) {
@@ -36,7 +35,7 @@ class AccountLinkingWizardVerifyComponentCtrl implements ng.IComponentController
 export class AccountLinkingWizardVerifyComponent implements ng.IComponentOptions {
 
   public controller = AccountLinkingWizardVerifyComponentCtrl;
-  public template = require('modules/account-linking/linking-wizard/states/account-linking-wizard-verify.html');
+  public template = require('./account-linking-wizard-verify.html');
   public bindings = {
     nextFunc: '&',
     backFunc: '&',

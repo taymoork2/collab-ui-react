@@ -26,7 +26,7 @@ class AccountLinkingWizardEntryComponentCtrl implements ng.IComponentController 
 export class AccountLinkingWizardEntryComponent implements ng.IComponentOptions {
 
   public controller = AccountLinkingWizardEntryComponentCtrl;
-  public template = require('modules/account-linking/linking-wizard/states/account-linking-wizard-entry.html');
+  public template = require('./account-linking-wizard-entry.html');
   public bindings = {
     nextFunc: '&',
     backFunc: '&',

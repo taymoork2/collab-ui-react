@@ -12,12 +12,10 @@ class LinkedSitesDetailsComponentCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(private $log: ng.ILogService,
-              private $stateParams: ng.ui.IStateParamsService,
               private $state: ng.ui.IStateService,
               //private $rootScope: ng.IRootScopeService,
   ) {
-    this.$log.debug('LinkedSitesDetailsComponentCtrl constructor, stateParams:', this.$stateParams);
-
+    this.$log.debug('LinkedSitesDetailsComponentCtrl constructor, stateParams:');
   }
 
   public $onInit() {
@@ -44,14 +42,6 @@ class LinkedSitesDetailsComponentCtrl implements ng.IComponentController {
   public isAutomaticMode(): boolean {
     return (this.selectedSiteInfo.linkingMode === LinkingMode.AUTO_AGREEMENT ||
     this.selectedSiteInfo.linkingMode === LinkingMode.AUTO_VERIFY_DOMAIN);
-  }
-
-  public usersLinked(): string {
-    if (this.selectedSiteInfo.linkingStatus) {
-      return this.selectedSiteInfo.linkingStatus.accountsLinked ? <string>this.selectedSiteInfo.linkingStatus.accountsLinked.toString() : '0';
-    } else {
-      return '-';
-    }
   }
 
 }

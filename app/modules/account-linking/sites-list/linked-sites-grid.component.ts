@@ -20,7 +20,7 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     //private $rootScope: ng.IRootScopeService,
     private $translate,
-    private uiGridConstants,
+    private uiGridConstants: uiGrid.IUiGridConstants,
   ) {
     this.$log.debug('LinkedSitesGridComponentCtrl constructor, sitesInfo:', this.sitesInfo);
   }
@@ -74,8 +74,8 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
         displayName: this.$translate.instant('accountLinking.grid.header.linkedAccounts'),
         cellTemplate: require('./linked-accounts.tpl.html'),
         enableColumnMenu: false,
-        sortingAlgorithm: (a: any, b: any, rowA: any, rowB: any, dir: any): number => {
-          return this.sortLinkedAccounts(a, b, rowA, rowB, dir);
+        sortingAlgorithm: (_a: any, _b: any, rowA: any, rowB: any, dir: any): number => {
+          return this.sortLinkedAccounts(rowA, rowB, dir);
         },
         sort: {
           direction: this.uiGridConstants.ASC,
@@ -145,7 +145,7 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
     this.$state.go('reports.webex-metrics', { siteUrl: siteInfo.siteUrl });
   }
 
-  private sortLinkedAccounts(_a: any, _b: any, rowA: any, rowB: any, _dir: any): number {
+  private sortLinkedAccounts(rowA: any, rowB: any, _dir: any): number {
     const aCalc: number = rowA.entity.linkingStatus.accountsLinked / rowA.entity.linkingStatus.totalWebExAccounts;
     const bCalc: number = rowB.entity.linkingStatus.accountsLinked / rowB.entity.linkingStatus.totalWebExAccounts;
     if (aCalc < bCalc) {

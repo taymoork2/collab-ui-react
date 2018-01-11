@@ -21,9 +21,7 @@ export class LinkedSitesWebExService {
   public getTicket(siteUrl: string): ng.IPromise<any> {
     // TODO Add .dmz on site url
     this.$log.debug('getTicket', siteUrl);
-    return this.WebExXmlApiFact.getSessionTicket(siteUrl, this.WebExUtilsFact.getSiteName(siteUrl)).then((ticket) => {
-      return ticket;
-    });
+    return this.WebExXmlApiFact.getSessionTicket(siteUrl, this.WebExUtilsFact.getSiteName(siteUrl));
   }
 
   // TODO Handle error situations
@@ -37,7 +35,7 @@ export class LinkedSitesWebExService {
       }).then((response) => {
         this.$log.debug('getCiSiteLinking', response);
         return response.data;
-      }, (error) => {
+      }).catch ((error) => {
         this.$log.debug('getCiSiteLinking', error);
         throw error;
       });
@@ -127,7 +125,7 @@ export class LinkedSitesWebExService {
     });
   }
 
-  // TODO Should only be uesed for webex sites in dmz
+  // TODO Should only be used for webex sites in dmz
   private patchSiteForDevEnv(siteApiHost: string): string {
     //return siteApiHost;
     const pos: number = siteApiHost.indexOf('.');
@@ -137,7 +135,10 @@ export class LinkedSitesWebExService {
   private getSiteApiUrl(siteUrl: string) {
     const apiHost: string = this.WebExUtilsFact.getSiteName(siteUrl) + '.webex.com';
     this.$log.debug('apiUrl', this.patchSiteForDevEnv(apiHost));
-    // TODO Revert uncommmented code
+    // TODO: WebEx test sites are currently within a DMZ.
+    //       We need to hack the "correct" address with a .dmz.
+    //       To be removed when there are sites available outside the .dmz.
+    //
     // return 'https://' + this.WebExUtilsFact.getSiteName(siteUrl) + '.webex.com';
     return 'https://' + this.patchSiteForDevEnv(apiHost);
   }
