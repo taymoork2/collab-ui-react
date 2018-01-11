@@ -25,14 +25,17 @@
         parent: 'care.DetailsBase',
         views: {
           header: {
-            template: require('modules/sunlight/details/detailsHeader.tpl.html'),
-            controller: 'DetailsHeaderCtrl',
-            controllerAs: 'header',
+            template: '<details-header-component></details-header-component>',
           },
           main: {
             template: '<div ui-view></div>',
           },
         },
+      })
+      .state('care.numbers', {
+        url: '/numbers',
+        parent: 'care.Details',
+        template: '<care-numbers-component></care-numbers-component>',
       })
       .state('care.Settings', {
         url: '/settings',

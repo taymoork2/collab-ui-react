@@ -98,8 +98,8 @@
     currently isn't set to TRUE 12/21/17
     */
     function getDefaultSettingsForAutoAssignTemplate() {
-      AutoAssignTemplateService.getSettings().then(function (response) {
-        vm.isDefaultAutoAssignActivated = response.autoLicenseAssignment;
+      AutoAssignTemplateService.isEnabled().then(function (isEnabled) {
+        vm.isDefaultAutoAssignActivated = isEnabled;
       });
     }
 

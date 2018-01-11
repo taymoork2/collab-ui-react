@@ -895,6 +895,7 @@
       AACommonService.setRestApiTogglePhase2(featureToggleDefault);
       AACommonService.setReturnedCallerToggle(featureToggleDefault);
       AACommonService.setMultiSiteEnabledToggle(featureToggleDefault);
+      AACommonService.setHybridToggle(featureToggleDefault);
       return checkFeatureToggles();
     }
 
@@ -907,6 +908,7 @@
         hasDynAnnounce: FeatureToggleService.supports(FeatureToggleService.features.huronAADynannounce),
         hasReturnedCaller: FeatureToggleService.supports(FeatureToggleService.features.huronAAReturnCaller),
         hasMultiSites: FeatureToggleService.supports(FeatureToggleService.features.huronMultiSite),
+        isHybridOrg: FeatureToggleService.supports(FeatureToggleService.features.atlasHybridEnable),
       });
     }
 
@@ -919,6 +921,7 @@
       AutoAttendantCeMenuModelService.setDynAnnounceToggle(featureToggles.hasDynAnnounce);
       AACommonService.setReturnedCallerToggle(featureToggles.hasReturnedCaller);
       AACommonService.setMultiSiteEnabledToggle(featureToggles.hasMultiSites);
+      AACommonService.setHybridToggle(featureToggles.isHybridOrg);
     }
 
     function populateRoutingLocation() {

@@ -224,14 +224,17 @@
         "deactivateAutoAssign": "Deactivate Auto-Assign",
         "deleteAutoAssign": "Delete Auto-Assign Template"
       },
+      "modifyAutoAssign": {
+        "modifyError": "Template failed to load."
+      },
       "activateAutoAssign": {
         "activateSuccess": "You've activated the Auto-Assign License Template",
-        "activateError": "Templated failed to activate"
+        "activateError": "Templated failed to activate."
       },
       "deactivateAutoAssign": {
         "description": "Licenses won't be assigned to new users automatically. Existing users' licenses won't be affected. Do you want to continue?",
         "deactivateSuccess": "You've deactivated the Auto-Assign License Template",
-        "deactivateError": "Template failed to deactivate"
+        "deactivateError": "Template failed to deactivate."
       },
       "deleteAutoAssignModal": {
         "title": "Delete Auto-Assign Template",
@@ -434,6 +437,7 @@
     "careServices": "Chat and Callback",
     "careVoiceServices": "Chat, Callback and Inbound Call",
     "enableCallInfo": "Cisco Spark Call is required for voice-based interactions.",
+    "enableCallInfoToggle": "You must have Cisco Spark Call or Hybrid Call to use Spark Care voice features.",
     "paidContactCenterVoice": "Chat, Callback and Inbound Call",
     "paidContactCenter": "Chat and Callback",
     "enterpriseEdition": "Enterprise Edition {{capacity}}",
@@ -1632,6 +1636,7 @@
     "service": "Service",
     "settings": "Settings",
     "setUp": "Set Up",
+    "shared": "Shared",
     "showAllAdminUsers": "Show all {{numUsers}} administrators",
     "showLess": "Show Less",
     "showMore": "Show More",
@@ -1763,6 +1768,7 @@
     "setUpHybridDataSecurity": "Create an on-premises security realm with Hybrid Data Security.",
     "careLicenseMsgMissingText": "Message is mandatory for Care services. To enable Message,",
     "careLicenseCallMissingText": "Call is mandatory for voice-based Care services. To enable Call,",
+    "careLicenseCallMissingTextToggle": "To use Spark Care voice features, contact partner to enable Spark Call or Setup Hybrid Call and Enterprise SIP Trunking.",
     "careLicenseMsgAndCallMissingText": "Message and Call are mandatory for Care services like chat and voice interaction respectively. To enable Message and Call,",
     "careLicenseLinkText": "contact your partner or Cisco sales.",
     "proPackNotification": "Unleash the full power of the Spark Control Hub with Pro Pack.",
@@ -4006,6 +4012,7 @@
     "sharedLicenseTooltip": "Each Shared Meetings license allows up to 250 users to be entitled as meeting hosts. Shared Meetings hosts can hold unlimited meetings but not exceed 1 concurrent meeting per Shared Meetings license.",
     "namedLicenses": "Named User Licenses",
     "careTooltip": "All Care users require Cisco Spark Messaging license as a prerequisite. Additionally, they require Cisco Spark Call license for voice-based interactions.",
+    "careTooltipToggle": "You must have Cisco Spark Messaging license to use Spark Care. For voice features, you also need Cisco Spark Call or Hybrid Call license.",
     "partnerProvidedAudio": "Partner-provided Audio",
     "webexProvidedAudio": "WebEx-provided Audio",
     "meetingsInSpark": "Cisco Spark 25 party Meetings",
@@ -4886,12 +4893,11 @@
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
     "description": "Single Number Reach (SNR) enables you to have incoming calls ring the extension and other lines that you specify here at the same time.",
-    "description2": "Turn on Single Number Reach and specify the lines that you want to ring at the same time.",
     "snrOffDescription": "Single Number Reach is currently disabled. The Destination is set to ",
     "deleteConfirmMsg": "Are you sure you want to delete?",
     "confirmDelete": "Confirm Delete",
     "remove": "Remove",
-    "snrRemoteDestinationNumber": "When the line is called, the following phone number will ring at the same time:",
+    "snrRemoteDestinationNumber": "When the lines chosen above are called, the following phone number will ring at the same time:",
     "snrRemoteDestinationNumberPlaceholder": "Enter Number",
     "snrWaitSeconds": "Indicate how long you want all lines to ring before the call is forwarded to your work voicemail.",
     "toggle": "Single Number Reach",
@@ -4900,7 +4906,8 @@
     "removeSuccess": "Single Number Reach configuration removed successfully",
     "error": "Single Number Reach configuration failed.",
     "unitedStates": "United States of America",
-    "austrailia": "Austrailia"
+    "austrailia": "Austrailia",
+    "chooseLines": "Choose the lines to ring:"
   },
   "speedDials": {
     "title": "Speed Dial Numbers",
@@ -7272,6 +7279,7 @@
   "sunlightDetails": {
     "title": "Care",
     "status": "Status: ",
+    "numberTitle": "Numbers",
     "settingsTitle": "Settings",
     "featuresTitle": "Features",
     "sorryMessage": "Sorry, something went wrong ",
@@ -7347,6 +7355,7 @@
       "routingChangeWarnMsgLine3": "Users are required to sign in again to receive tasks as per the new routing."
     },
     "featuresNotYetConfiguredPage": {
+      "addNumbers": "Add Numbers",
       "createCareTemplate": "Create a Care Template",
       "createCareTemplateDesc": "A Care template is what your customer uses to contact customer care.",
       "MessageLicenseMissing": "Message is mandatory for Care templates. To enable Message, <a href ng-click=\"{{onclick}}\">contact your partner or Cisco sales</a>",
@@ -7606,7 +7615,11 @@
     "overviewDesc_callback": "Toggle cards to customize what screens you want your customer to see when requesting a callback from customer care",
     "overviewDesc_chatPlusCallback": "Toggle cards to customize what screens you want your customer to see when requesting a chat or callback from customer care",
     "customerInfoDesc_chat": "This is the screen a customer fills in to start chat with an agent",
+    "customerInfoDesc_chat_expert": "Use these attributes to collect customer information and to facilitate escalation to a Cisco Spark\n expert space by identifying the topic of the customer's request.",
     "customerInfoDesc_callback": "This is the screen a customer fills in to request a callback from an agent",
+    "evaSpaceDetailsText": ", your Expert Virtual Assistant, is in {{numberOfEvaSpaces}} Expert Spaces in Cisco Spark:",
+    "evaSpaceDetailsTextOneSpace": ", your Expert Virtual Assistant, is in 1 Expert Space in Cisco Spark:",
+    "evaDefaultName": "EVA",
     "customerInfoToggleTooltipMessage": "This screen is required for this template and cannot be disabled.",
     "virtualAssistantToggleTooltipMessage": "Configure a Customer Virtual Assistant from the Features page before you enable this. You can also configure your assistant and enable this feature at a later time.",
     "getVirtualAssistantListError": "Error in getting list of configured virtual assistant.",
@@ -7694,6 +7707,9 @@
     "orgSettingInfo": "You can change the organization logo on the Settings page.",
     "evaSettingInfo": "To enable escalation to experts, create an Expert Virtual Assistant from the Care Features page.",
     "evaEnabledSettingInfo": "about configuring chat escalation behavior.",
+    "escalationEnabledRequiredInfo": "Requiring this field with the Category Type supports better request escalation to Cisco Spark expert spaces. ",
+    "escalationEnabledCategoryInfo": "Add category options that contain keywords from the names of your Expert Virtual Assistant spaces. ",
+    "escalationDetailsDefaultSpace": "(Default Space)",
     "agentSettingInfo": "You cannot change the default agent avatar seen in the Preview.",
     "agentMsg": "Hi, I need help with the MFI key.",
     "agentMsgTime": "10:10 AM",
@@ -7826,7 +7842,8 @@
     "downloadEmbedCode": "Download Embed Code",
     "embed-code": {
       "no-verified-domains": {
-        "warn": "There are no verified domains for your organization. Care templates work on any domains by default. Go to Settings page to add and verify domains in order to restrict them to work only for your organization's domains."
+        "warn": "There are no verified domains for your organization. Care templates work on any domains by default. Go to Settings page to add and verify domains in order to restrict them to work only for your organization's domains.",
+        "warn_v1": "There are no verified domains for your organization. Care templates work on any domains by default. Go to global organizations settings page to add and verify domains in order to restrict them to work only for your organization's domains."
       },
       "verified-domains": {
         "info": "These are the verified domains for your organization:",
@@ -7834,7 +7851,8 @@
       },
       "domain-fetch-error": {
         "info": "There was an error while loading the verified domains for your organization. Please try again.",
-        "warn": "Care templates work on any domains by default. Go to Settings page to add and verify domains in order to restrict them to work only for your organization's domains."
+        "warn": "Care templates work on any domains by default. Go to Settings page to add and verify domains in order to restrict them to work only for your organization's domains.",
+        "warn_v1": "Care templates work on any domains by default. Go to global organizations settings page to add and verify domains in order to restrict them to work only for your organization's domains."
       }
     },
     "embedCodeFor": "Embed Code for ",
@@ -9025,6 +9043,7 @@
         "title": "Care",
         "description": "Customer Care channel configurations for your organization.",
         "buttons": {
+          "numbers": "Numbers",
           "features": "Features",
           "settings": "Settings"
         }
@@ -10354,7 +10373,7 @@
       },
       "suite": {
         "title": "Suites",
-        "addSuite": "Create Suite",
+        "createSuite": "Create Suite",
         "runSuite": "Run Suite",
         "editSuite": "Edit",
         "copySuite": "Copy",
@@ -10374,7 +10393,7 @@
         "copyTest": "Copy",
         "deleteTest": "Delete"
       },
-      "addSuiteModal": {
+      "createSuiteModal": {
         "title": "Add a suite",
         "suiteName": "Suite name"
       },

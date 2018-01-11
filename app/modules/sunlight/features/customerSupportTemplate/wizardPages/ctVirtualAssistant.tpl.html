@@ -22,8 +22,8 @@
           </header>
           <section>
             <div class="bot-message" ng-if="careSetupAssistant.template.configuration.virtualAssistant.welcomeMessage.length > 0">
-              <label class="bot-message-text" ng-bind="careSetupAssistant.template.configuration.virtualAssistant.welcomeMessage"></label>
-              <div class="speech-bubble"><span class="top left"></span></div>
+              <span class="speech-bubble"><span class="top left"></span></span>
+              <span class="message" ng-bind="careSetupAssistant.template.configuration.virtualAssistant.welcomeMessage"></span>
               <div class="body-smallest time" translate="careChatTpl.agentMsgTime"></div>
             </div>
             <div class="customer-details">

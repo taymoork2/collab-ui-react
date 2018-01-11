@@ -22,6 +22,16 @@ export class ServicesOverviewCareCard extends ServicesOverviewCard {
     return [];
   }
 
+  public hybridCareToggleEventHandler(hasFeature: boolean) {
+    if (hasFeature) {
+      this._buttons.splice(0, 0, {
+        name: 'servicesOverview.cards.care.buttons.numbers',
+        routerState: 'care.numbers',
+        buttonClass: 'btn-link',
+      });
+    }
+  }
+
   /* @ngInject */
   public constructor(Authinfo) {
     super({

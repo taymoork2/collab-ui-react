@@ -11,13 +11,14 @@ import { FeatureToggleService } from 'modules/core/featureToggle';
 import { HybridServicesClusterService, IServiceStatusWithSetup } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { HybridServiceId, IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
 import { IToolkitModalService } from 'modules/core/modal';
+import MessengerInteropService from 'modules/core/users/userAdd/shared/messenger-interop.service';
 import { Notification } from 'modules/core/notifications';
 import { ProPackService }  from 'modules/core/proPack/proPack.service';
 import { TaskManagerService } from 'modules/hcs/test-manager';
 
 export class ServicesOverviewController implements ng.IComponentController {
   private cards: ServicesOverviewCard[] = [
-    new ServicesOverviewMessageCard(this.Authinfo),
+    new ServicesOverviewMessageCard(this.Authinfo, this.MessengerInteropService),
     new ServicesOverviewMeetingCard(this.Authinfo),
     new ServicesOverviewCallCard(this.Authinfo, this.Config),
     new ServicesOverviewCareCard(this.Authinfo),
@@ -45,6 +46,7 @@ export class ServicesOverviewController implements ng.IComponentController {
     private EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
     private FeatureToggleService: FeatureToggleService,
     private HybridServicesClusterService: HybridServicesClusterService,
+    private MessengerInteropService: MessengerInteropService,
     private Notification: Notification,
     private ProPackService: ProPackService,
     private HcsTestManagerService: TaskManagerService,
@@ -70,6 +72,7 @@ export class ServicesOverviewController implements ng.IComponentController {
       hI802: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI802),
       huronEnterprisePrivateTrunking: this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking),
       hI1638: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1638),
+      hybridCare: this.FeatureToggleService.supports(this.FeatureToggleService.features.hybridCare),
     });
 
     features
@@ -78,6 +81,8 @@ export class ServicesOverviewController implements ng.IComponentController {
         if (response.atlasPMRonM2) {
           this.getPMRStatus();
         }
+
+        this.forwardEvent('hybridCareToggleEventHandler', response.hybridCare);
         this.forwardEvent('hI1484FeatureToggleEventhandler', response.hI1484);
         this.forwardEvent('sparkCallCdrReportingFeatureToggleEventhandler', response.hI802);
 
@@ -103,7 +108,7 @@ export class ServicesOverviewController implements ng.IComponentController {
         if (this.Authinfo.isContactCenterContext()) {
           this._servicesToDisplay.push('contact-center-context');
         }
-        if (response.huronEnterprisePrivateTrunking && this.Authinfo.isSquaredUC()) {
+        if (response.huronEnterprisePrivateTrunking && (this.Authinfo.isSquaredUC() || response.hybridCare)) {
           this._servicesToDisplay.push('ept');
         }
         if (response.atlasHybridImp && this.Authinfo.isFusionIMP()) {

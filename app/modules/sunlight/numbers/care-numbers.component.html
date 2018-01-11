@@ -1,0 +1,19 @@
+<div ng-switch on="$ctrl.pageState">
+  <div class="care-no-features">
+    <div ng-if="$ctrl.loading" class="spinner-icon content-container">
+      <i class='icon icon-spinner icon-2x'></i>
+    </div>
+    <div ng-if="!$ctrl.hasCall && (!$ctrl.trunks && !$ctrl.eptStatus) && !$ctrl.loading" class="no-features content-container">
+      <i class="icon icon-circle-contact-centre"></i>
+      <div class="h2" translate="sunlightDetails.featuresNotYetConfiguredPage.addNumbers"></div>
+      <div class="h5 ct-desc">
+        <span translate="homePage.careLicenseCallMissingTextToggle"/>
+      </div>
+      <div class="new-btn">
+        <button type="button" class="btn--primary"
+          ui-sref="services-overview"
+          translate="servicesOverview.genericButtons.learnMore"></button>
+      </div>
+    </div>
+  </div>
+</div>
