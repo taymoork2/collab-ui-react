@@ -106,8 +106,14 @@
       var name;
       if (!_.isUndefined(user.displayName)) {
         name = user.displayName;
-      } else {
+      } else if (_.isEmpty(_.get(user.name, 'givenName')) && _.isEmpty(_.get(user.name, 'familyName'))) {
         name = user.userName;
+      } else {
+        if (_.isEmpty(_.get(user.name, 'givenName'))) {
+          name = _.get(user.name, 'familyName');
+        } else {
+          name = _.get(user.name, 'givenName') + ' ' + _.get(user.name, 'familyName');
+        }
       }
 
       if (!_.isUndefined(extension) && extension.length > 0) {
