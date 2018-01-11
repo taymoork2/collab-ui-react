@@ -1,0 +1,24 @@
+<div class="row dirsync-row">
+  <div class="columns medium-8">
+    <p>{{::$ctrl.domainName}}</p>
+    <div ng-repeat="connector in $ctrl.connectors">
+      <cs-statusindicator ng-model="connector.status"></cs-statusindicator>
+      <span>{{::connector.name}}</span>
+    </div>
+  </div>
+  <span class="columns medium-4">
+    <cs-statusindicator ng-model="$ctrl.siteStatus"></cs-statusindicator>
+    <span translate="{{::$ctrl.getStatus()}}"></span>
+    <div cs-dropdown class="actions-menu">
+      <button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle icon icon-three-dots" aria-label="globalSettings.multiDirsync.toggleMenu"></button>
+      <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
+        <li ng-click="$ctrl.deleteSite()">
+          <a translate="globalSettings.multiDirsync.turnOff" translate-values="{ siteName: $ctrl.domainName }"></a>
+        </li>
+        <li ng-repeat="connector in $ctrl.connectors" ng-click="$ctrl.deactivateConnector(connector)">
+          <a translate="globalSettings.multiDirsync.deactivate" translate-values="{ connectorName: connector.name }"></a>
+        </li>
+      </ul>
+    </span>
+  </div>
+</div>

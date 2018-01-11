@@ -7,6 +7,7 @@ import emailModule from './email';
 import brandingModule from './branding';
 import domainsModule from './domain';
 import dirSyncModule from './dirsync';
+import multiDirSyncModule from './multi-dirsync-setting';
 import privacySectionModule from './privacySection';
 import retentionModule from './retention';
 import securityModule from './security';
@@ -35,6 +36,7 @@ export default angular.module('core.settings', [
   supportSectionModule,
   webexVersionModule,
   sparkAssistantModule,
+  multiDirSyncModule,
 ])
   .controller('SettingsCtrl', SettingsCtrl)
   .name;

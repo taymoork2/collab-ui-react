@@ -1,0 +1,32 @@
+<div class="cs-form__section">
+  <div class="section__info">
+    <h4 class="section__title" translate="globalSettings.multiDirsync.title"></h4>
+    <p class="section__description" translate="globalSettings.multiDirsync.description"></p>
+    <p class="section__description">
+      <a href ng-if="$ctrl.dirSyncEnabled && !$ctrl.updatingStatus"
+        ng-click="$ctrl.deleteAll()"
+        translate="globalSettings.multiDirsync.turnOffDirSync"></a>
+      <a ng-if="!$ctrl.dirSyncEnabled && !$ctrl.updatingStatus"
+        href="https://www.cisco.com/go/hybrid-services-directory" target="_blank"
+        translate="globalSettings.multiDirsync.turnOnDirSync"></a>
+    </p>
+  </div>
+  <div class="section__content">
+    <div class="sub-section">
+      <h5 class="sub-section__label" translate="globalSettings.multiDirsync.title"></h5>
+      <div id="dirsyncUpdating" ng-if="$ctrl.updatingStatus">
+        <span translate="globalSettings.multiDirsync.loading"></span>
+        <i class="space icon icon-spinner"></i>
+      </div>
+
+      <div id="dirsyncDisabled" ng-if="!$ctrl.dirSyncEnabled && !$ctrl.updatingStatus">
+        <cs-statusindicator ng-model="disabled"></cs-statusindicator>
+        <span translate="common.disabled"></span>
+      </div>
+
+      <div id="dirsyncEnabled" ng-if="$ctrl.dirSyncEnabled && !$ctrl.updatingStatus" ng-repeat="dirsync in $ctrl.dirSyncArray">
+        <dirsync-row dirsync="dirsync" delete-site-fn="$ctrl.deleteSite(site)" deactivate-connector-fn="$ctrl.deactivateConnector(connector)"></dirsync-row>
+      </div>
+    </div>
+  </div>
+</div>

@@ -8438,6 +8438,27 @@
       "deregisterWarning": "Please uninstall the Directory Connector before deregistering.",
       "deregisterSuccess": "Directory Connector '{{name}}' successfully deregistered.",
       "deregisterFailed": "Failed to deregister Directory Connector '{{name}}'."
+    },
+    "multiDirsync": {
+      "loading": "Updating Status",
+      "title": "Directory Synchronization",
+      "connectorError": "There was an error while deactivating {{connectorName}}.",
+      "description": "New users will be automatically added from your directory when it synchronizes.  Updates can be made directly in Cisco Directory Connector.",
+      "deactivate": "Deactivate {{connectorName}}",
+      "deactivateConnectorMessage": "Once you deactivate the server, you'll no longer receive a health report. The cloud syncrhonization will stop if this is the last active working server. Are you sure you want to deactivate this server?",
+      "degraded": "Degraded",
+      "deleteAllError": "There was an error while deactivating all Directory Connector.",
+      "deleteError": "There was an error while deactivating {{siteName}}.",
+      "domainsError": "There was a problem retrieving the Directory Synchronization data.",
+      "operational": "Operational",
+      "outage": "Outage",
+      "toggleMenu": "toggle site action menu",
+      "turnOff": "Turn Off {{siteName}}",
+      "turnOffAllMessage": "This step turns off all synchronization from Directory Connector. Once the synchronization is disabled, you can only manage users manually and they won't appear in Active Directory.  Are you sure you want to turn off all sychronization?",
+      "turnOffAllTitle": "Turn Off All Synchronization",
+      "turnOffSiteMessage": "Once the domain is turned off, the cloud synchronization will stop.  You must enable the synchronization from Directory Connector.  Are You sure you want to turn it off?",
+      "turnOffDirSync": "Turn off All Directory Synchronizations",
+      "turnOnDirSync": "How to Turn On Directory Synchronization"
     }
   },
   "my-company": {
