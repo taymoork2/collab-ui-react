@@ -75,30 +75,23 @@ export class AutoAssignTemplateService {
   }
 
   private getAllLicenses(subscriptions: ISubscription[]): ILicenseUsageMap {
-    const licensesList = _.flatten(_.map<ISubscription, ILicenseUsage[]>(subscriptions, 'licenses'));
+    const licensesList: ILicenseUsage[] = _.flatMap(subscriptions, subscription => subscription.licenses);
     return _.reduce(licensesList, (result, license) => {
-      // notes:
-      // - because a license id can contain period chars, interpolate using bracket-notation to
-      //   ensure keys use the entire license id value
-      _.set(result, `["${license.licenseId}"]`, license);
+      result[license.licenseId] = license;
       return result;
     }, {});
   }
 
   private mkLicensesStateData(assignedLicenses: { id: string }[], allLicenses: ILicenseUsageMap) {
-    const result: any = {};
-    _.forEach(assignedLicenses, function (assignedLicense) {
-      const id: string = assignedLicense.id;
+    return _.reduce(assignedLicenses, (result, assignedLicense) => {
+      const id = assignedLicense.id;
       const originalLicense = _.get(allLicenses, id);
-      // notes:
-      // - because a license id can contain period chars, interpolate using bracket-notation to
-      //   ensure keys use the entire license id value
-      _.set(result, `["${id}"]`, {
+      result[id] = {
         isSelected: true,
         license: originalLicense,
-      });
-    });
-    return result;
+      };
+      return result;
+    }, {});
   }
 
   public toStateData(template, subscriptions): any {
