@@ -473,7 +473,9 @@
     "enableCareInformationText": "Select Message to enable Care."
   },
   "onboardSummaryForAutoAssignModal": {
-    "title": "Assign Licenses Automatically"
+    "title": "Assign Licenses Automatically",
+    "header": "License Summary",
+    "description": "You've enabled Auto-Assign. New users will be assigned the following licenses automatically."
   },
   "usersPreview": {
     "groupPreview": "Group:",
