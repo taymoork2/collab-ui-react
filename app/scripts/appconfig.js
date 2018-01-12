@@ -2155,6 +2155,30 @@
               reportType: null,
             },
           })
+          .state('reports.webex-metrics.dashboard', {
+            url: '/dashboard',
+            views: {
+              metricsContent: {
+                template: '<metrics-frame></metrics-frame>',
+              },
+            },
+          })
+          .state('reports.webex-metrics.jms', {
+            url: '/jms',
+            views: {
+              metricsContent: {
+                template: '<metrics-frame></metrics-frame>',
+              },
+            },
+          })
+          .state('reports.webex-metrics.jmt', {
+            url: '/jmt',
+            views: {
+              metricsContent: {
+                template: '<metrics-frame></metrics-frame>',
+              },
+            },
+          })
           .state('reports.webex-metrics.diagnostics', {
             url: '/diagnostics',
             views: {
