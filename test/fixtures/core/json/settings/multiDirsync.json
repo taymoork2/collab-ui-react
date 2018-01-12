@@ -1,5 +1,15 @@
 {
+  "dirsyncConnectors": [{
+    "isInService": true,
+    "name": "WIN2K12R2-96-1",
+    "status": "primary"
+  }, {
+    "isInService": true,
+    "name": "WIN2K12R2-96-2",
+    "status": "primary"
+  }],
   "dirsyncRow": {
+    "serviceMode": "ENABLED",
     "domains": [{
       "domainName": "win2k12r2-96.com"
     }],
@@ -11,13 +21,17 @@
       "name": "WIN2K12R2-96-2"
     }]
   },
-  "dirsyncConnectors": [{
-    "isInService": true,
-    "name": "WIN2K12R2-96-1",
-    "status": "primary"
-  }, {
-    "isInService": true,
-    "name": "WIN2K12R2-96-2",
-    "status": "primary"
-  }]
+  "dirsyncRowDisabled": {
+    "serviceMode": "DISABLED",
+    "domains": [{
+      "domainName": "huron.com"
+    }],
+    "connectors": [{
+      "isInService": true,
+      "name": "huron-1"
+    }, {
+      "isInService": true,
+      "name": "huron-2"
+    }]
+  }
 }

@@ -1,4 +1,5 @@
-import testModule from '../index';
+import testModule from './index';
+import { IDirectorySync } from './multiDirsyncSetting.component';
 
 describe('MultiDirsyncSetting Component:', function () {
   const DELETE_ALL_ERROR = 'globalSettings.multiDirsync.deleteAllError';
@@ -28,14 +29,17 @@ describe('MultiDirsyncSetting Component:', function () {
     );
 
     this.fixture = getJSONFixture('core/json/settings/multiDirsync.json');
-
+    const directorySyncResponseBeans: IDirectorySync[] = [
+      _.cloneDeep(this.fixture.dirsyncRow),
+      _.cloneDeep(this.fixture.dirsyncRowDisabled),
+    ];
     spyOn(this.ModalService, 'open').and.returnValue({
       result: this.$q.resolve(true),
     });
 
     spyOn(this.MultiDirSyncSettingService, 'getDomains').and.returnValue(this.$q.resolve({
       data: {
-        directorySyncResponseBeans: [_.cloneDeep(this.fixture.dirsyncRow)],
+        directorySyncResponseBeans: directorySyncResponseBeans,
       },
     }));
     spyOn(this.MultiDirSyncSettingService, 'deleteConnector').and.returnValue(this.$q.resolve(true));
@@ -110,21 +114,35 @@ describe('MultiDirsyncSetting Component:', function () {
   });
 
   describe('Negative Tests -', function () {
+    const ERROR_FOUR_HUNDRED = { status: 400 };
+    const ERROR_FIVE_HUNDRED = { status: 500 };
+
     it('should load with expected defaults when the domains API returns error', function () {
-      this.MultiDirSyncSettingService.getDomains.and.returnValue(this.$q.reject({}));
+      this.MultiDirSyncSettingService.getDomains.and.returnValue(this.$q.reject(ERROR_FIVE_HUNDRED));
       this.initComponent();
 
       expect(this.view).not.toContainElement(DIRSYNC_ROW);
       expect(this.view.find(SECTION_DESCRIPTION_LINK).html()).toEqual(TURN_ON_DIRSYNC_TEXT);
       expect(this.view).toContainElement(DISABLED_STATE_INDICATOR);
       expect(this.view.find(DISABLED_STATE_TEXT).html()).toEqual(DISABLED_TEXT);
-      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith({}, DOMAIN_ERROR);
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(ERROR_FIVE_HUNDRED, DOMAIN_ERROR);
+    });
+
+    it('should skip error notification when getDomains returns a 400 error status', function () {
+      this.MultiDirSyncSettingService.getDomains.and.returnValue(this.$q.reject(ERROR_FOUR_HUNDRED));
+      this.initComponent();
+
+      expect(this.view).not.toContainElement(DIRSYNC_ROW);
+      expect(this.view.find(SECTION_DESCRIPTION_LINK).html()).toEqual(TURN_ON_DIRSYNC_TEXT);
+      expect(this.view).toContainElement(DISABLED_STATE_INDICATOR);
+      expect(this.view.find(DISABLED_STATE_TEXT).html()).toEqual(DISABLED_TEXT);
+      expect(this.Notification.errorWithTrackingId).not.toHaveBeenCalled();
     });
 
     describe('should call error notification when MultiDirSyncSettingService returns in error when', function () {
       beforeEach(function () {
-        this.MultiDirSyncSettingService.deleteConnector.and.returnValue(this.$q.reject({}));
-        this.MultiDirSyncSettingService.deactivateDomain.and.returnValue(this.$q.reject({}));
+        this.MultiDirSyncSettingService.deleteConnector.and.returnValue(this.$q.reject(ERROR_FIVE_HUNDRED));
+        this.MultiDirSyncSettingService.deactivateDomain.and.returnValue(this.$q.reject(ERROR_FIVE_HUNDRED));
         this.initComponent();
       });
 
@@ -135,7 +153,7 @@ describe('MultiDirsyncSetting Component:', function () {
         this.$scope.$apply();
 
         expect(this.MultiDirSyncSettingService.deactivateDomain).toHaveBeenCalledWith(undefined);
-        expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith({}, DELETE_ALL_ERROR, {
+        expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(ERROR_FIVE_HUNDRED, DELETE_ALL_ERROR, {
           domainName: undefined,
         });
       });
@@ -149,7 +167,7 @@ describe('MultiDirsyncSetting Component:', function () {
 
         const domainName = this.fixture.dirsyncRow.domains[0].domainName;
         expect(this.MultiDirSyncSettingService.deactivateDomain).toHaveBeenCalledWith(domainName);
-        expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith({}, DELETE_DOMAIN_ERROR, {
+        expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(ERROR_FIVE_HUNDRED, DELETE_DOMAIN_ERROR, {
           domainName: domainName,
         });
       });
@@ -163,7 +181,7 @@ describe('MultiDirsyncSetting Component:', function () {
 
         const connectorName = this.fixture.dirsyncRow.connectors[1].name;
         expect(this.MultiDirSyncSettingService.deleteConnector).toHaveBeenCalledWith(connectorName);
-        expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith({}, DELETE_CONNECTOR_ERROR, {
+        expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(ERROR_FIVE_HUNDRED, DELETE_CONNECTOR_ERROR, {
           connectorName: connectorName,
         });
       });

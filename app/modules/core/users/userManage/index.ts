@@ -6,6 +6,7 @@ import emailSuppressModuleName from './emailSuppress';
 import editAutoAssignTemplateModalModuleName from './edit-auto-assign-template-modal';
 import editSummaryAutoAssignTemplateModalModuleName from './edit-summary-auto-assign-template-modal';
 import featureToggleModuleName from 'modules/core/featureToggle';
+import multiDirSyncModuleName from 'modules/core/settings/multi-dirsync-setting';
 import * as orgServiceModuleName from 'modules/core/scripts/services/org.service';
 import userAddModuleName from 'modules/core/users/userAdd';
 import * as userCsvServiceModuleName from 'modules/core/users/userCsv/userCsv.service';
@@ -21,6 +22,7 @@ export default angular
     editAutoAssignTemplateModalModuleName,
     editSummaryAutoAssignTemplateModalModuleName,
     featureToggleModuleName,
+    multiDirSyncModuleName,
     orgServiceModuleName,
     userAddModuleName,
     userCsvServiceModuleName,

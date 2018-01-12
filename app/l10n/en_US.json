@@ -8453,16 +8453,19 @@
       "degraded": "Degraded",
       "deleteAllError": "There was an error while deactivating all Directory Connector.",
       "deleteError": "There was an error while deactivating {{domainName}}.",
+      "dirsyncDisabled": "Directory synchronization is currently disabled.",
       "domainsError": "There was a problem retrieving the Directory Synchronization data.",
       "operational": "Operational",
       "outage": "Outage",
+      "seeAllDomains": "See All Registered Domains",
       "toggleMenu": "toggle domain action menu",
       "turnOff": "Turn Off {{domainName}}",
       "turnOffAllMessage": "This step turns off all synchronization from Directory Connector. Once the synchronization is disabled, you can only manage users manually and they won't appear in Active Directory.  Are you sure you want to turn off all sychronization?",
       "turnOffAllTitle": "Turn Off All Synchronization",
       "turnOffDomainMessage": "Once the domain is turned off, the cloud synchronization will stop.  You must enable the synchronization from Directory Connector.  Are You sure you want to turn it off?",
       "turnOffDirSync": "Turn off All Directory Synchronizations",
-      "turnOnDirSync": "How to Turn On Directory Synchronization"
+      "turnOnDirSync": "How to Turn On Directory Synchronization",
+      "turnOnDirSyncAlt": "Turn on Directory Synchonization"
     }
   },
   "my-company": {

@@ -31,6 +31,7 @@ module.exports = {
   atlasExpertVirtualAssistantEnable: 'atlas-expert-virtual-assistant-enable',
   atlasF2993NewUserAndDeviceRoles: 'atlas-f2993-new-user-and-device-roles',
   atlasF6980MultiDirSync: 'atlas-f6980-multi-dir-sync',
+  atlasF6980MultiDirSyncManageUsers: 'atlas-f6980-multi-dir-sync-manage-users',
   atlasF3745AutoAssignLicenses: 'atlas-f3745-auto-assign-licenses',
   atlasFileSharingControlSettings: 'atlas-file-sharing-control-settings',
   atlasHelpDeskExt: 'atlas-helpdesk-extended-information',

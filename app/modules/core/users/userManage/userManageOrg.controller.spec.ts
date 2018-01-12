@@ -1,4 +1,5 @@
 import moduleName from './index';
+import { IDirectorySync } from 'modules/core/settings/multi-dirsync-setting/multiDirsyncSetting.component';
 
 describe('UserManageOrgController', () => {
   ///////////////////
@@ -10,11 +11,15 @@ describe('UserManageOrgController', () => {
       '$scope',
       '$state',
       '$window',
+      'Authinfo',
       'Analytics',
       'AutoAssignTemplateModel',
       'AutoAssignTemplateService',
       'DirSyncService',
       'FeatureToggleService',
+      'ModalService',
+      'MultiDirSyncSettingService',
+      'Notification',
       'OnboardService',
       'Orgservice',
       'UserCsvService',
@@ -57,6 +62,7 @@ describe('UserManageOrgController', () => {
     spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(false);
     spyOn(this.FeatureToggleService, 'atlasEmailSuppressGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'atlasF6980MultiDirSyncManageUsersGetStatus').and.returnValue(this.$q.resolve(false));
 
     initController.apply(this);
   }
@@ -74,9 +80,44 @@ describe('UserManageOrgController', () => {
     } = spies;
     spyOn(this.FeatureToggleService, 'atlasEmailSuppressGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'atlasF6980MultiDirSyncManageUsersGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.AutoAssignTemplateService, 'isEnabledForOrg').and.returnValue(isEnabledForOrg);
     spyOn(this.AutoAssignTemplateService, 'getTemplates').and.returnValue(getTemplates);
 
+    initController.apply(this);
+  }
+
+  function multiDirSyncSpies() {
+    spyOn(this.FeatureToggleService, 'atlasEmailSuppressGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'atlasF6980MultiDirSyncManageUsersGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.AutoAssignTemplateService, 'isEnabledForOrg').and.returnValue(this.$q.resolve(true));
+    spyOn(this.AutoAssignTemplateService, 'getTemplates').and.returnValue(this.$q.resolve([{
+      name: 'Default',
+      foo: 'bar',
+    }]));
+
+    this.fixture = getJSONFixture('core/json/settings/multiDirsync.json');
+    const directorySyncResponseBeans: IDirectorySync[] = [
+      _.cloneDeep(this.fixture.dirsyncRow),
+      _.cloneDeep(this.fixture.dirsyncRowDisabled),
+    ];
+
+    spyOn(this.MultiDirSyncSettingService, 'getDomains').and.returnValue(this.$q.resolve({
+      data: {
+        directorySyncResponseBeans: directorySyncResponseBeans,
+      },
+    }));
+    spyOn(this.MultiDirSyncSettingService, 'deactivateDomain').and.returnValue(this.$q.resolve(true));
+
+    spyOn(this.Notification, 'errorWithTrackingId');
+    spyOn(this.ModalService, 'open').and.returnValue({
+      result: this.$q.resolve(true),
+    });
+  }
+
+  function initControllerAndMultiDirSyncFeatureToggleOn() {
+    multiDirSyncSpies.apply(this);
     initController.apply(this);
   }
 
@@ -107,6 +148,7 @@ describe('UserManageOrgController', () => {
     });
     spyOn(this.FeatureToggleService, 'atlasEmailSuppressGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'atlasF6980MultiDirSyncManageUsersGetStatus').and.returnValue(this.$q.resolve(false));
 
     initController.apply(this);
   }
@@ -301,6 +343,76 @@ describe('UserManageOrgController', () => {
 
       expect(this.controller.isDefaultAutoAssignTemplateActivated()).toBe(false);
       expect(this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated).toBe(false);
+    });
+  });
+
+  describe('multi-site dirsync', function () {
+    it('should make calls to MultiDirsyncService to populate the domains list and delete a domain', function () {
+      initControllerAndMultiDirSyncFeatureToggleOn.call(this);
+      const site = _.cloneDeep(this.fixture.dirsyncRow);
+      site.siteStatus = 'success';
+
+      expect(this.controller.dirSyncArray).toEqual([site]);
+      expect(this.controller.multiDirSyncEnabled).toEqual(true);
+      expect(this.controller.multiDirSyncUpdating).toEqual(false);
+      expect(this.controller.isUserAdminUser).toEqual(false);
+      expect(this.MultiDirSyncSettingService.getDomains).toHaveBeenCalledTimes(1);
+
+      this.controller.deleteDomain(site);
+      this.$scope.$apply();
+
+      expect(this.MultiDirSyncSettingService.deactivateDomain).toHaveBeenCalledWith(site.domains[0].domainName);
+      expect(this.MultiDirSyncSettingService.getDomains).toHaveBeenCalledTimes(2);
+    });
+
+    it('should send notification on domain delete error', function () {
+      initControllerAndMultiDirSyncFeatureToggleOn.call(this);
+      this.MultiDirSyncSettingService.deactivateDomain.and.returnValue(this.$q.reject(false));
+      this.controller.deleteDomain(this.fixture.dirsyncRow);
+      this.$scope.$apply();
+
+      const domainName = this.fixture.dirsyncRow.domains[0].domainName;
+      expect(this.MultiDirSyncSettingService.deactivateDomain).toHaveBeenCalledWith(domainName);
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(false, 'globalSettings.multiDirsync.deleteError', {
+        domainName: domainName,
+      });
+    });
+
+    it('should go to settings page when goToSettings is called', function () {
+      initControllerAndMultiDirSyncFeatureToggleOn.call(this);
+      this.controller.goToSettings();
+      this.$scope.$apply();
+
+      expect(this.$state.go).toHaveBeenCalledWith('settings', {
+        showSettings: 'dirsync',
+      });
+    });
+
+    it('should not show multi-site dir-sync for User Admins', function () {
+      spyOn(this.Authinfo, 'isUserAdminUser').and.returnValue(true);
+      initControllerAndMultiDirSyncFeatureToggleOn.call(this);
+
+      expect(this.MultiDirSyncSettingService.getDomains).not.toHaveBeenCalled();
+    });
+
+    it('should notify on getDomains error', function () {
+      multiDirSyncSpies.call(this);
+      this.MultiDirSyncSettingService.getDomains.and.returnValue(this.$q.reject({ status: 500 }));
+      initController.call(this);
+
+      expect(this.controller.multiDirSyncEnabled).toEqual(false);
+      expect(this.controller.multiDirSyncUpdating).toEqual(false);
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith({ status: 500 }, 'globalSettings.multiDirsync.domainsError');
+    });
+
+    it('should not notify on getDomains 400 error', function () {
+      multiDirSyncSpies.call(this);
+      this.MultiDirSyncSettingService.getDomains.and.returnValue(this.$q.reject({ status: 400 }));
+      initController.call(this);
+
+      expect(this.controller.multiDirSyncEnabled).toEqual(false);
+      expect(this.controller.multiDirSyncUpdating).toEqual(false);
+      expect(this.Notification.errorWithTrackingId).not.toHaveBeenCalled();
     });
   });
 });

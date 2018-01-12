@@ -204,7 +204,9 @@
   }
 
   li {
-    @include vr-spacing(pb, 1);
+    &:not(.dropdown-item) {
+      @include vr-spacing(pb, 1);
+    }
 
     list-style-type: none;
 

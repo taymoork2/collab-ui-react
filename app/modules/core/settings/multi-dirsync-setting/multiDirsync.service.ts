@@ -1,4 +1,6 @@
 export class MultiDirSyncSettingService {
+  public readonly ENABLED = 'ENABLED';
+
   /* @ngInject */
   public constructor(
     private $http: ng.IHttpService,

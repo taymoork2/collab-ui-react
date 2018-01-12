@@ -8,6 +8,7 @@ export interface IDirectoryConnector {
 }
 
 export interface IDirectorySync {
+  serviceMode: String;
   domains: IDomain[];
   connectors: IDirectoryConnector[];
 }
@@ -90,7 +91,11 @@ export class MultiDirSyncSettingController {
     this.updatingStatus = true;
     this.MultiDirSyncSettingService.getDomains().then((result: any) => {
       this.updatingStatus = false;
-      this.dirSyncArray = result.data.directorySyncResponseBeans;
+
+      const responseArray: IDirectorySync[] = _.get(result, 'data.directorySyncResponseBeans', []);
+      this.dirSyncArray = _.filter(responseArray, (site: IDirectorySync) => {
+        return site.serviceMode === this.MultiDirSyncSettingService.ENABLED;
+      });
 
       if (this.dirSyncArray.length > 0) {
         this.dirSyncEnabled = true;
@@ -99,7 +104,11 @@ export class MultiDirSyncSettingController {
     .catch((error) => {
       this.updatingStatus = false;
       this.dirSyncEnabled = false;
-      this.Notification.errorWithTrackingId(error, 'globalSettings.multiDirsync.domainsError');
+
+      // Bad Request is returned when the customer has no domains; error should be quietly hidden as 'no domains' is a valid state.
+      if (_.get(error, 'status') !== 400) {
+        this.Notification.errorWithTrackingId(error, 'globalSettings.multiDirsync.domainsError');
+      }
     });
   }
 }
