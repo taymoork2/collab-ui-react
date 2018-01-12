@@ -231,8 +231,9 @@ describe('UserManageOrgController', () => {
   it('should go to an external link if isDirSyncEnabled is false', function () {
     initControllerAndDefaults.apply(this);
     this.controller.handleDirSyncService();
+    this.$scope.$apply();
 
-    expect(this.$window.open).toHaveBeenCalled();
+    expect(this.$state.go).toHaveBeenCalledWith('users.manage.advanced.add.ob.installConnector');
   });
 
   describe('initFeatureToggles():', function () {

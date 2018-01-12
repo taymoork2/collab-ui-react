@@ -5,9 +5,8 @@
   module.exports = UserManageOrgController;
 
   /* @ngInject */
-  function UserManageOrgController($q, $state, $window, Analytics, AutoAssignTemplateModel, AutoAssignTemplateService, DirSyncService, FeatureToggleService, Notification, OnboardService, Orgservice, UserCsvService) {
+  function UserManageOrgController($q, $state, Analytics, AutoAssignTemplateModel, AutoAssignTemplateService, DirSyncService, FeatureToggleService, Notification, OnboardService, Orgservice, UserCsvService) {
     var DEFAULT_AUTO_ASSIGN_TEMPLATE = AutoAssignTemplateService.DEFAULT;
-    var ENABLE_DIR_SYNC_URL = 'https://www.cisco.com/go/hybrid-services-directory';
     var vm = this;
 
     vm.ManageType = require('./userManage.keys').ManageType;
@@ -28,7 +27,12 @@
     vm.convertableUsers = false;
     vm.isAtlasF3745AutoAssignToggle = false;
     vm.autoAssignTemplates = {};
-    vm.dirSyncText = vm.isDirSyncEnabled ? 'globalSettings.dirsync.turnOffDirSync' : 'globalSettings.dirsync.turnOnDirSync';
+
+    Object.defineProperty(vm, 'dirSyncText', {
+      get: function () {
+        return vm.isDirSyncEnabled ? 'userManage.ad.turnOffDS' : 'userManage.org.turnOnDirSync';
+      },
+    });
 
     vm.initFeatureToggles = initFeatureToggles;
     vm.initConvertableUsers = initConvertableUsers;
@@ -128,7 +132,7 @@
         });
         $state.modal.dismiss();
       } else {
-        $window.open(ENABLE_DIR_SYNC_URL, '_blank');
+        onNext(vm.ManageType.ADVANCED_NO_DS);
       }
     }
 
