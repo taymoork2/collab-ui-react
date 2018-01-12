@@ -1,7 +1,7 @@
 import { IToolkitModalService } from 'modules/core/modal';
 import { CardUtils } from 'modules/core/cards';
 import { Notification } from 'modules/core/notifications';
-import { IRSuiteMap } from 'modules/hcs/test-manager';
+import { IRSuiteMap } from 'modules/hcs/task-manager';
 import {
   TaskManagerService, HtmSuite, HtmTest, HtmSchedule, State,
 } from '../shared';

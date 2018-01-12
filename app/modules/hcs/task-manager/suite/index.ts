@@ -1,10 +1,9 @@
 import { SuiteViewComponent } from './suite-view.component';
-import './_suite-view.scss';
+import { SuiteCreateComponent } from './suite-create.component';
+import './_suite.scss';
 
 import hcsTestManagertServiceModule from '../shared';
 import notifications from 'modules/core/notifications';
-
-export * from '../shared';
 
 export default angular
   .module('hcs.taas.suiteView', [
@@ -18,4 +17,5 @@ export default angular
     notifications,
   ])
 .component('taasSuiteView', new SuiteViewComponent())
+.component('suiteCreateModal', new SuiteCreateComponent())
 .name;

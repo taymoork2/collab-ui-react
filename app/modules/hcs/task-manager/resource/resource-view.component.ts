@@ -6,7 +6,7 @@ import {
 
 export class ResourceViewComponent implements ng.IComponentOptions {
   public controller = ResourceViewCtrl;
-  public template = require('./resources-view.component.html');
+  public template = require('./resource-view.component.html');
 }
 
 export class ResourceViewCtrl implements ng.IComponentController {

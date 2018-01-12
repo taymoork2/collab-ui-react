@@ -1,10 +1,9 @@
-import { TaskManagerService, HtmSuite, HtmSchedule } from 'modules/hcs/test-manager/shared';
 import { Notification } from 'modules/core/notifications';
-import { IRSuiteMap } from 'modules/hcs/test-manager';
+import { TaskManagerService, HtmSuite, HtmSchedule, IRSuiteMap } from '../shared';
 
 export class ScheduleCreateComponent implements ng.IComponentOptions {
   public controller = ScheduleCreateController;
-  public template = require('modules/hcs/test-manager/schedule-create/schedule-create.component.html');
+  public template = require('./schedule-create.component.html');
   public bindings = {
     suite: '<',
     customerId: '<',

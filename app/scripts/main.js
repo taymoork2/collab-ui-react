@@ -242,14 +242,11 @@
 
   angular.module('HCS', [
     'Core',
-    require('modules/hcs/test-manager').default,
-    require('modules/hcs/test-manager/task-view').default,
-    require('modules/hcs/test-manager/resources-view').default,
-    require('modules/hcs/test-manager/resources-create').default,
-    require('modules/hcs/test-manager/schedule-view').default,
-    require('modules/hcs/test-manager/schedule-create').default,
-    require('modules/hcs/test-manager/suite-view').default,
-    require('modules/hcs/test-manager/suite-create').default,
+    require('modules/hcs/task-manager').default,
+    require('modules/hcs/task-manager/resource').default,
+    require('modules/hcs/task-manager/schedule').default,
+    require('modules/hcs/task-manager/suite').default,
+    require('modules/hcs/task-manager/task').default,
   ]);
 
   angular.module('ServicesOverview', [

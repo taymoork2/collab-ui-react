@@ -3036,7 +3036,7 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/hcs/test-manager/task-view/task-view.component'));
+                  done(require('modules/hcs/task-manager/task/task-view.component'));
                 }, 'taas-test-view');
               }),
               suite: /* @ngInject */ function ($stateParams) {

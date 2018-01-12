@@ -1,16 +1,16 @@
 import { TaskManagerService, HtmResource } from '../shared';
 import { Notification } from 'modules/core/notifications';
 
-export class ResourcesCreateComponent implements ng.IComponentOptions {
-  public controller = ResourcesCreateController;
-  public template = require('./resources-create.component.html');
+export class ResourceCreateComponent implements ng.IComponentOptions {
+  public controller = ResourceCreateController;
+  public template = require('./resource-create.component.html');
   public bindings = {
     dismiss: '&',
     close: '&',
   };
 }
 
-class ResourcesCreateController implements ng.IComponentController {
+class ResourceCreateController implements ng.IComponentController {
   public resources: HtmResource[] = [];
   public close: Function;
   public dismiss: Function;

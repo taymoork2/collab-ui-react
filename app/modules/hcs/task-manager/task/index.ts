@@ -1,5 +1,5 @@
 import { TaskViewComponent } from './task-view.component';
-import './_task-view.scss';
+import './_task.scss';
 
 import notifications from 'modules/core/notifications';
 import hcsTestManagertServiceModule from '../shared';

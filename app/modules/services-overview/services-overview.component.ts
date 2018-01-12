@@ -14,7 +14,7 @@ import { IToolkitModalService } from 'modules/core/modal';
 import MessengerInteropService from 'modules/core/users/userAdd/shared/messenger-interop.service';
 import { Notification } from 'modules/core/notifications';
 import { ProPackService }  from 'modules/core/proPack/proPack.service';
-import { TaskManagerService } from 'modules/hcs/test-manager';
+import { TaskManagerService } from 'modules/hcs/task-manager';
 
 export class ServicesOverviewController implements ng.IComponentController {
   private cards: ServicesOverviewCard[] = [

@@ -1,8 +1,9 @@
-import { ResourceViewComponent } from './resources-view.component';
-import './_resources-view.scss';
+import { ResourceViewComponent } from './resource-view.component';
+import { ResourceCreateComponent } from './resource-create.component';
+import './_resource.scss';
 
-import hcsTestManagertServiceModule from '../shared';
 import notifications from 'modules/core/notifications';
+import hcsTestManagertServiceModule from '../shared';
 
 export default angular
   .module('hcs.taas.resources', [
@@ -15,4 +16,5 @@ export default angular
     notifications,
   ])
 .component('taasResourceView', new ResourceViewComponent())
+.component('resourceCreateModal', new ResourceCreateComponent())
 .name;
