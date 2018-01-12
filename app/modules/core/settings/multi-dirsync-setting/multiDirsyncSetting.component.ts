@@ -62,24 +62,24 @@ export class MultiDirSyncSettingController {
     options.message = this.$translate.instant('globalSettings.multiDirsync.turnOffAllMessage');
 
     this.ModalService.open(options).result.then(() => {
-      this.deleteDomain('globalSettings.multiDirsync.deleteAllError');
+      this.turnOffDomain('globalSettings.multiDirsync.deleteAllError');
     });
   }
 
-  public deleteSite(site: any): void {
+  public deleteDomain(domain: IDomain): void {
     const options: IToolkitModalSettings = _.cloneDeep(this.baseOptions);
-    options.title = this.$translate.instant('globalSettings.multiDirsync.turnOff', { siteName: site.domainName });
-    options.message = this.$translate.instant('globalSettings.multiDirsync.turnOffSiteMessage');
+    options.title = this.$translate.instant('globalSettings.multiDirsync.turnOff', { domainName: domain.domainName });
+    options.message = this.$translate.instant('globalSettings.multiDirsync.turnOffDomainMessage');
 
     this.ModalService.open(options).result.then(() => {
-      this.deleteDomain('globalSettings.multiDirsync.deleteError', site.domainName);
+      this.turnOffDomain('globalSettings.multiDirsync.deleteError', domain.domainName);
     });
   }
 
-  private deleteDomain(errorMessage: string, domain?: string) {
+  private turnOffDomain(errorMessage: string, domain?: string) {
     this.MultiDirSyncSettingService.deactivateDomain(domain).catch((error) => {
       this.Notification.errorWithTrackingId(error, errorMessage, {
-        siteName: domain,
+        domainName: domain,
       });
     }).finally(() => {
       this.refresh();
@@ -106,5 +106,5 @@ export class MultiDirSyncSettingController {
 
 export class MultiDirSyncSettingComponent implements ng.IComponentOptions {
   public controller = MultiDirSyncSettingController;
-  public template = require('modules/core/settings/multi-dirsync-setting/multiDirsyncSetting.tpl.html');
+  public template = require('./multiDirsyncSetting.tpl.html');
 }

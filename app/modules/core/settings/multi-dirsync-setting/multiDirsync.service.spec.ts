@@ -19,7 +19,6 @@ describe('MultiDirSyncSettingService - ', function () {
     this.$httpBackend.verifyNoOutstandingRequest();
   });
 
-  // TODO: Update based on what the real API returns
   it('getDomains should return all domains or a single domain depending on if a domainName is passed in', function () {
     this.$httpBackend.expectGET(`${this.baseURL}configurations/domains`).respond(200, { directorySyncResponseBeans: [ this.fixture.dirsyncRow ] });
 

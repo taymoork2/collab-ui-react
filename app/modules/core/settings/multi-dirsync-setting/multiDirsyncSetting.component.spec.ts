@@ -136,7 +136,7 @@ describe('MultiDirsyncSetting Component:', function () {
 
         expect(this.MultiDirSyncSettingService.deactivateDomain).toHaveBeenCalledWith(undefined);
         expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith({}, DELETE_ALL_ERROR, {
-          siteName: undefined,
+          domainName: undefined,
         });
       });
 
@@ -150,7 +150,7 @@ describe('MultiDirsyncSetting Component:', function () {
         const domainName = this.fixture.dirsyncRow.domains[0].domainName;
         expect(this.MultiDirSyncSettingService.deactivateDomain).toHaveBeenCalledWith(domainName);
         expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith({}, DELETE_DOMAIN_ERROR, {
-          siteName: domainName,
+          domainName: domainName,
         });
       });
 

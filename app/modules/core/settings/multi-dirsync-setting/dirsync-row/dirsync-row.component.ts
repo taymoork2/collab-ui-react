@@ -2,56 +2,53 @@ import { IDirectoryConnector, IDirectorySync } from '../multiDirsyncSetting.comp
 
 type StatusType = 'success' | 'warning' | 'danger';
 
-interface IConnector extends IDirectoryConnector {
-  status: 'primary' | 'disabled';
-}
 
 export class DirsyncRowController {
   public dirsync: IDirectorySync;
-  public deleteSiteFn: Function;
+  public deleteDomainFn: Function;
   public deactivateConnectorFn: Function;
 
-  public connectors: IConnector[] = [];
-  public siteStatus: StatusType;
+  public connectors: any[] = [];
+  public domainStatus: StatusType;
 
   /* @ngInject */
   public constructor() {}
 
   public $onInit() {
-    _.forEach(this.dirsync.connectors, (connector: IDirectoryConnector) => {
-      this.connectors.push({
+    this.connectors = _.map(this.dirsync.connectors, (connector: IDirectoryConnector) => {
+      return {
         isInService: connector.isInService,
         name: connector.name,
         status: connector.isInService ? 'primary' : 'disabled',
-      });
+      };
     });
 
     const isInService = { isInService: true };
-    this.siteStatus = 'success';
+    this.domainStatus = 'success';
 
     if (!_.every(this.dirsync.connectors, isInService)) {
       if (_.some(this.dirsync.connectors, isInService)) {
-        this.siteStatus = 'warning';
+        this.domainStatus = 'warning';
       } else {
-        this.siteStatus = 'danger';
+        this.domainStatus = 'danger';
       }
     }
   }
 
   public get domainName(): string {
-    return this.dirsync.domains[0].domainName; // should only be one domain per dirsync site
+    return _.get(this.dirsync, 'domains[0].domainName'); // should only be one domain per dirsync site
   }
 
   public deactivateConnector(connector: IDirectoryConnector): void {
     this.deactivateConnectorFn({ connector: connector });
   }
 
-  public deleteSite(): void {
-    this.deleteSiteFn({ site: this.dirsync.domains[0] });
+  public deleteDomain(): void {
+    this.deleteDomainFn({ domain: this.dirsync.domains[0] });
   }
 
   public getStatus(): string {
-    switch (this.siteStatus) {
+    switch (this.domainStatus) {
       case 'success':
         return 'globalSettings.multiDirsync.operational';
       case 'warning':
@@ -64,10 +61,10 @@ export class DirsyncRowController {
 
 export class DirsyncRowComponent implements ng.IComponentOptions {
   public controller = DirsyncRowController;
-  public template = require('modules/core/settings/multi-dirsync-setting/dirsync-row/dirsyncRow.tpl.html');
+  public template = require('./dirsync-row.tpl.html');
   public bindings = {
     dirsync: '<',
-    deleteSiteFn: '&',
+    deleteDomainFn: '&',
     deactivateConnectorFn: '&',
   };
 }

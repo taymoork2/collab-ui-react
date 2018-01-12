@@ -1,6 +1,4 @@
 export class MultiDirSyncSettingService {
-  private readonly baseUrl = `${this.UrlConfig.getAdminServiceUrl()}organization/${this.Authinfo.getOrgId()}/dirsync/`;
-
   /* @ngInject */
   public constructor(
     private $http: ng.IHttpService,
@@ -17,8 +15,10 @@ export class MultiDirSyncSettingService {
     return this.$http.get(URL);
   }
 
-  public deleteConnector(connector: string) {
-    return this.$http.delete(`${this.baseUrl}connector?name=${connector}`);
+  public deleteConnector(name: string) {
+    return this.$http.delete(`${this.baseUrl}connector`, {
+      params: { name },
+    });
   }
 
   public deactivateDomain(domain?: string) {
@@ -27,6 +27,14 @@ export class MultiDirSyncSettingService {
       URL += `/domains/${domain}`;
     }
 
-    return this.$http.patch(`${URL}?enabled=false`, {});
+    return this.$http.patch(URL, {}, {
+      params: {
+        enabled: false,
+      },
+    });
+  }
+
+  private get baseUrl() {
+    return `${this.UrlConfig.getAdminServiceUrl()}organization/${this.Authinfo.getOrgId()}/dirsync/`;
   }
 }

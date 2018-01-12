@@ -1,3 +1,4 @@
+<!-- TODO: refactor settings-section to allow for multiple transcludes -->
 <div class="cs-form__section">
   <div class="section__info">
     <h4 class="section__title" translate="globalSettings.multiDirsync.title"></h4>
@@ -24,8 +25,8 @@
         <span translate="common.disabled"></span>
       </div>
 
-      <div id="dirsyncEnabled" ng-if="$ctrl.dirSyncEnabled && !$ctrl.updatingStatus" ng-repeat="dirsync in $ctrl.dirSyncArray">
-        <dirsync-row dirsync="dirsync" delete-site-fn="$ctrl.deleteSite(site)" deactivate-connector-fn="$ctrl.deactivateConnector(connector)"></dirsync-row>
+      <div id="dirsyncEnabled" ng-if="$ctrl.dirSyncEnabled && !$ctrl.updatingStatus" ng-repeat="dirsync in $ctrl.dirSyncArray track by $index">
+        <dirsync-row dirsync="dirsync" delete-domain-fn="$ctrl.deleteDomain(domain)" deactivate-connector-fn="$ctrl.deactivateConnector(connector)"></dirsync-row>
       </div>
     </div>
   </div>
