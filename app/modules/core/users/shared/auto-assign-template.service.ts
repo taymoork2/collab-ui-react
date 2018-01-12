@@ -86,7 +86,7 @@ export class AutoAssignTemplateService {
     return stateData;
   }
 
-  public getSortedSubscriptions(): ISubscription[] {
+  public getSortedSubscriptions(): ng.IPromise<ISubscription[]> {
     return this.Orgservice.getLicensesUsage()
       .then((subscriptions) => _.sortBy(subscriptions, 'subscriptionId'));
   }
