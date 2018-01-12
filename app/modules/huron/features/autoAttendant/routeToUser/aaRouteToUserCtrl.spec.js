@@ -509,7 +509,7 @@ describe('Controller: AARouteToUserCtrl', function () {
       expect(controller.users[0].description).toEqual(result);
     });
 
-    it('should show user email id when dispalyName, firstname and lasname are empty' , function () {
+    it('should show user email id when dispalyName, firstname and lasname are empty', function () {
       var result = 'user@gmail.com (spark)';
       cmiCompleteUserGet.respond(404);
 
@@ -528,7 +528,7 @@ describe('Controller: AARouteToUserCtrl', function () {
       expect(controller.users[2].description).toEqual(result);
     });
 
-    it('should show user lastname when dispalyName and firstName is empty' , function () {
+    it('should show user lastname when dispalyName and firstName is empty', function () {
       var result = 'Super Admin (spark)';
       cmiCompleteUserGet.respond(404);
 
