@@ -34,7 +34,7 @@ export class OnboardSummaryForAutoAssignModalController implements ng.IComponent
     const userEntitlements = [];
 
     // TODO: transition to onboard summary state instead of notifying success and jumping to 'users.list'
-    this.Userservice.onboardUsersV2({
+    this.Userservice.onboardUsers({
       users: this.userList,
       licenses: licenses,
       userEntitlements: userEntitlements,

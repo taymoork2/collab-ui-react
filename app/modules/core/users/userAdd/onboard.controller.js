@@ -1327,7 +1327,7 @@ require('./_user-add.scss');
         }
       });
 
-      Userservice.onboardUsers(users, null, getAccountLicenses('patch'))
+      Userservice.onboardUsersLegacy(users, null, getAccountLicenses('patch'))
         .then(successCallback)
         .catch(errorCallback);
 
@@ -1636,7 +1636,7 @@ require('./_user-add.scss');
         $scope.numUpdatedUsers = 0;
         for (var i = 0; i < usersList.length; i += chunk) {
           tempUserArray = usersList.slice(i, i + chunk);
-          Userservice.onboardUsers(tempUserArray, entitleList, licenseList)
+          Userservice.onboardUsersLegacy(tempUserArray, entitleList, licenseList)
             .then(successCallback)
             .catch(errorCallback);
         }
@@ -2318,7 +2318,7 @@ require('./_user-add.scss');
         return csvPromise.then(function () {
           return $q(function (resolve) {
             if (userArray.length > 0) {
-              Userservice.onboardUsers(userArray, entitlementArray, licenseArray, cancelDeferred.promise).then(function (response) {
+              Userservice.onboardUsersLegacy(userArray, entitlementArray, licenseArray, cancelDeferred.promise).then(function (response) {
                 successCallback(response, (startIndex - userArray.length) + 1, userArray.length);
               }).catch(function (response) {
                 errorCallback(response, (startIndex - userArray.length) + 1, userArray.length);

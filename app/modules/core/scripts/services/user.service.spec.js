@@ -93,12 +93,12 @@ describe('User Service', function () {
     });
   });
 
-  describe('onboardUsersV2():', function () {
+  describe('onboardUsers():', function () {
     it('should build an appropriate payload with "mkOnboardUsersPayload()" and call through to "mkOnboardUsersPayload()"', function () {
       needsHttpFlush = false;
       spyOn(this.Userservice._helpers, 'mkOnboardUsersPayload').and.returnValue('fake-mkOnboardUsersPayload-result');
       spyOn(this.Userservice._helpers, 'onboardUsersAPI').and.returnValue('fake-onboardUsersAPI-result');
-      var result = this.Userservice.onboardUsersV2({
+      var result = this.Userservice.onboardUsers({
         users: 'fake-users-arg',
         licenses: 'fake-licenses-arg',
         userEntitlements: 'fake-userEntitlements-arg',
@@ -158,7 +158,7 @@ describe('User Service', function () {
       this.$httpBackend.expectPATCH(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId).respond(200);
       this.$httpBackend.expectPUT(this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + this.Authinfo.getOrgId() +
         '/user' + '/' + userId).respond(200);
-      this.Userservice.onboardUsers(testData.usersDataArray, testData.entitlements, [testData.sunlight_K1_license]);
+      this.Userservice.onboardUsersLegacy(testData.usersDataArray, testData.entitlements, [testData.sunlight_K1_license]);
     });
 
     it('onboardUsers success with sunlight K2 license should send PUT request to Sunlight Config', function () {
@@ -170,7 +170,7 @@ describe('User Service', function () {
       this.$httpBackend.expectPATCH(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId).respond(200);
       this.$httpBackend.expectPUT(this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + this.Authinfo.getOrgId() +
         '/user' + '/' + userId).respond(200);
-      this.Userservice.onboardUsers(testData.usersDataArray, testData.entitlements, [testData.sunlight_K2_license]);
+      this.Userservice.onboardUsersLegacy(testData.usersDataArray, testData.entitlements, [testData.sunlight_K2_license]);
     });
 
     it('onboardUsers success with sunlight license should send PUT request to Sunlight Config for Adding (MSG, K2 and Call) licenses and Removing CDC license in payload', function () {
@@ -182,7 +182,7 @@ describe('User Service', function () {
       this.$httpBackend.expectPATCH(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId, testData.carevoice_user_patch_payload).respond(200);
       this.$httpBackend.expectPUT(this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + this.Authinfo.getOrgId() +
         '/user' + '/' + userId).respond(200);
-      this.Userservice.onboardUsers(testData.usersDataArray, testData.entitlements, testData.carevoice_user_license_payload);
+      this.Userservice.onboardUsersLegacy(testData.usersDataArray, testData.entitlements, testData.carevoice_user_license_payload);
     });
 
     it('checkAndPatchSunlightRolesAndEntitlements failure should not send PUT request to Sunlight Config for K1 license', function () {
@@ -192,7 +192,7 @@ describe('User Service', function () {
       var userId = testData.onboard_success_response.userResponse[0].uuid;
       this.$httpBackend.expectGET(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId).respond(200);
       this.$httpBackend.expectPATCH(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId).respond(500);
-      this.Userservice.onboardUsers(testData.usersDataArray, testData.entitlements, [testData.sunlight_K1_license]);
+      this.Userservice.onboardUsersLegacy(testData.usersDataArray, testData.entitlements, [testData.sunlight_K1_license]);
     });
 
     it('checkAndPatchSunlightRolesAndEntitlements failure should not send PUT request to Sunlight Config for K2 license', function () {
@@ -202,21 +202,21 @@ describe('User Service', function () {
       var userId = testData.onboard_success_response.userResponse[0].uuid;
       this.$httpBackend.expectGET(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId).respond(200);
       this.$httpBackend.expectPATCH(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId).respond(500);
-      this.Userservice.onboardUsers(testData.usersDataArray, testData.entitlements, [testData.sunlight_K2_license]);
+      this.Userservice.onboardUsersLegacy(testData.usersDataArray, testData.entitlements, [testData.sunlight_K2_license]);
     });
 
     it('onboardUsers failure with sunlight license should not send PUT request to Sunlight Config', function () {
       this.$httpBackend
         .expectPOST(this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/users/onboard')
         .respond(201, testData.onboard_failure_response);
-      this.Userservice.onboardUsers(testData.usersDataArray, testData.entitlements, [testData.sunlight_K1_license]);
+      this.Userservice.onboardUsersLegacy(testData.usersDataArray, testData.entitlements, [testData.sunlight_K1_license]);
     });
 
     it('onboardUsers success without sunlight license should not send PUT request to Sunlight Config', function () {
       this.$httpBackend
         .expectPOST(this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/users/onboard')
         .respond(200, testData.onboard_success_response);
-      this.Userservice.onboardUsers(testData.usersDataArray, testData.entitlements, [testData.non_sunlight_license]);
+      this.Userservice.onboardUsersLegacy(testData.usersDataArray, testData.entitlements, [testData.non_sunlight_license]);
     });
 
     it('onboardUsers modify without sunlight license should send DELETE request to Sunlight Config', function () {
@@ -227,7 +227,7 @@ describe('User Service', function () {
       var userId = testData.onboard_success_response.userResponse[0].uuid;
       this.$httpBackend.expectDELETE(this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + this.Authinfo.getOrgId() +
         '/user' + '/' + userId).respond(200);
-      this.Userservice.onboardUsers(testData.usersDataArray, testData.entitlements, testData.non_sunlight_license_payload);
+      this.Userservice.onboardUsersLegacy(testData.usersDataArray, testData.entitlements, testData.non_sunlight_license_payload);
     });
   });
 

@@ -32,8 +32,8 @@
       getUsersEmailStatus: getUsersEmailStatus,
       patchUserRoles: patchUserRoles,
       migrateUsers: migrateUsers,
+      onboardUsersLegacy: onboardUsersLegacy,
       onboardUsers: onboardUsers,
-      onboardUsersV2: onboardUsersV2,
       bulkOnboardUsers: bulkOnboardUsers,
       deactivateUser: deactivateUser,
       isHuronUser: isHuronUser,
@@ -171,7 +171,7 @@
 
     // DEPRECATED
     // - update all callers of this method to use 'getUserAsPromise()' instead, before removing
-    //   this implementataion
+    //   this implementation
     // - 'getUserAsPromise()' can then assume this name after all callers use promise-style
     //   chaining
     function getUser(userid, noCache, callback) {
@@ -381,10 +381,11 @@
         });
     }
 
-    /**
-     * Onboard users that share the same set of entitlements and licenses
-     */
-    function onboardUsers(usersDataArray, entitlements, licenses, cancelPromise) {
+    // DEPRECATED
+    // - 'onboardUsers()' should be able to satisfy the behavior requirements of this function, but
+    //   this needs to be verified
+    // - once all callers have been replaced, rm this
+    function onboardUsersLegacy(usersDataArray, entitlements, licenses, cancelPromise) {
       // bind the licenses and entitlements that are shared by all users
       var getUserPayload = getUserPayloadForOnboardAPI.bind({
         licenses: licenses,
@@ -394,7 +395,16 @@
       return onboardUsersAPI(userPayload, cancelPromise);
     }
 
-    function onboardUsersV2(options) {
+    /**
+     * Onboard users that share the same set of entitlements and licenses
+     */
+    // notes:
+    // - as of 2018-01-12, 'licenses' and 'userEntitlements' are optional properties now (they will
+    //   default to empty lists used in the request payload if left undefined)
+    // - if both 'licenses' and 'userEntitlements' are empty lists, onboard API will apply
+    //   appropriate logic (the default auto-assign template is applied if one is defined and the
+    //   org has been enabled to use it)
+    function onboardUsers(options) {
       var users = options.users;
       var licenses = options.licenses;
       var userEntitlements = options.userEntitlements;
