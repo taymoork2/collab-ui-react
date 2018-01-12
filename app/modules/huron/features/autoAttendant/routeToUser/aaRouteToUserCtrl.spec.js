@@ -491,12 +491,7 @@ describe('Controller: AARouteToUserCtrl', function () {
     });
 
     it('should show user with extension response as 404 for call free users', function () {
-      var result = [
-        {
-          description: 'Test Admin (spark)',
-          id: '47026507-4F83-0B5B-9C1D-8DBA89F2E01C',
-        },
-      ];
+      var result = 'Super Admin (spark)';
       cmiCompleteUserGet.respond(404);
 
       var controller = $controller('AARouteToUserCtrl', {
@@ -510,9 +505,48 @@ describe('Controller: AARouteToUserCtrl', function () {
       $httpBackend.flush();
 
       $scope.$apply();
-      expect(controller.users.length).toEqual(1);
-      expect(controller.users).toEqual(result);
+      expect(controller.users.length).toEqual(4);
+      expect(controller.users[0].description).toEqual(result);
     });
+
+    it('should show user email id when dispalyName, firstname and lasname are empty' , function () {
+      var result = 'user@gmail.com (spark)';
+      cmiCompleteUserGet.respond(404);
+
+      var controller = $controller('AARouteToUserCtrl', {
+        $scope: $scope,
+      });
+
+      controller.sort.fullLoad = 8;
+
+      controller.getUsers();
+
+      $httpBackend.flush();
+
+      $scope.$apply();
+      expect(controller.users.length).toEqual(4);
+      expect(controller.users[2].description).toEqual(result);
+    });
+
+    it('should show user lastname when dispalyName and firstName is empty' , function () {
+      var result = 'Super Admin (spark)';
+      cmiCompleteUserGet.respond(404);
+
+      var controller = $controller('AARouteToUserCtrl', {
+        $scope: $scope,
+      });
+
+      controller.sort.fullLoad = 8;
+
+      controller.getUsers();
+
+      $httpBackend.flush();
+
+      $scope.$apply();
+      expect(controller.users.length).toEqual(4);
+      expect(controller.users[0].description).toEqual(result);
+    });
+
 
     it('when user has selected route to voicemail and extension response is 404, it should omit that user', function () {
       $scope.voicemail = true;
