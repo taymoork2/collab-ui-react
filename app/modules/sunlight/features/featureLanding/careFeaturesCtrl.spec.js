@@ -189,7 +189,7 @@ describe('Care Feature Ctrl should', function () {
     });
 
     expect(cvaFeature.templates.length).toEqual(1);
-    expect(cvaFeature.htmlPopover).toContain('Sunlight Staging Template');
+    expect(cvaFeature.templatesHtmlPopover).toContain('Sunlight Staging Template');
 
     var cvaFeature2 = _.find(controller.filteredListOfFeatures, function (feature) {
       return feature.templateId === 'Customer Virtual Assistant PR Config';
@@ -234,7 +234,8 @@ describe('Care Feature Ctrl should', function () {
     return _.forEach(evaFeatures.data, function (evaFeature) {
       expect(controller.generateHtmlPopover).toHaveBeenCalledWith(evaFeature);
       expect(evaFeature.spaces).toEqual(listEvaSpaces);
-      expect(evaFeature.htmlPopover).toEqual('<div class="feature-card-popover"><h3 class="header">messageKey</h3><h3 class="sub-header">messageKey</h3><ul class="spaces-list"></ul></div><br>aHtmlString');
+      expect(evaFeature.templatesHtmlPopover).toEqual('<div class="feature-card-popover"><h3 class="header">messageKey</h3><h3 class="sub-header">messageKey</h3><ul class="spaces-list"></ul></div>');
+      expect(evaFeature.spacesHtmlPopover).toEqual('aHtmlString');
     });
   });
 
@@ -255,7 +256,8 @@ describe('Care Feature Ctrl should', function () {
     return _.forEach(evaFeatures.data, function (evaFeature) {
       expect(controller.generateHtmlPopover).toHaveBeenCalledWith(evaFeature);
       expect(evaFeature.spaces).toEqual([]);
-      expect(evaFeature.htmlPopover).toEqual('<div class="feature-card-popover"><h3 class="header">messageKey</h3><h3 class="sub-header">messageKey</h3><ul class="spaces-list"></ul></div><br>aHtmlString');
+      expect(evaFeature.templatesHtmlPopover).toEqual('<div class="feature-card-popover"><h3 class="header">messageKey</h3><h3 class="sub-header">messageKey</h3><ul class="spaces-list"></ul></div>');
+      expect(evaFeature.spacesHtmlPopover).toEqual('aHtmlString');
     });
   });
 
