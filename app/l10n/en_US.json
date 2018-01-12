@@ -1597,6 +1597,7 @@
     "off": "Off",
     "offline": "Offline",
     "ok": "Ok",
+    "OK": "OK",
     "on": "On",
     "online": "Online",
     "open": "Open",
@@ -4175,8 +4176,8 @@
     "enableAssistant": "Enable Cisco Spark Assistant",
     "description": "Allows users to perform various actions such as, make calls, start meetings, using their voice.",
     "termOfService": "Spark Assistant terms of service",
-    "optout": "Spark Assistant Optout",
-    "optoutConfirm": "Are you sure to Opt Out of Spark Assistant? This will disable Spark Assistant Service."
+    "optout": "Disable Cisco Spark Assistant",
+    "optoutConfirm": "If you disable the Cisco Spark Assistant, you won't be able to use voice commands on any of the supported devices."
   },
   "reports": {
     "title": "Reports",
