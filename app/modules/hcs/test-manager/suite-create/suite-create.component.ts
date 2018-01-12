@@ -39,7 +39,7 @@ class SuiteCreateController implements ng.IComponentController {
     suite.name = this.suiteName;
     this.HcsTestManagerService.createSuite(suite).then((suiteId: string) => {
       suite.id = suiteId;
-      this.$state.go('taasTest', { suite: suite });
+      this.$state.go('taasTaskView', { suite: suite });
     })
     .catch(error => this.Notification.errorResponse(error.data.error.message, 'Recevied an Error'));
   }

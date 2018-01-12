@@ -3,26 +3,28 @@ import { CardUtils } from 'modules/core/cards';
 import {
   TaskManagerService, HtmBuildingBlocks, HtmSuite, HtmTest,
   HtmSchedule, State,
-} from 'modules/hcs/test-manager/shared';
+} from '../shared';
 
-export class TaasTestViewComponent implements ng.IComponentOptions {
-  public controller = TaasTestViewCtrl;
-  public template = require('./taasTestView.component.html');
+export class TaskViewComponent implements ng.IComponentOptions {
+  public controller = TaskViewCtrl;
+  public template = require('./task-view.component.html');
   public bindings: {
     suite: '<',
   };
 }
 
-export class TaasTestViewCtrl implements ng.IComponentController {
-  public readonly STATE_NEW = State.New;
-  public readonly STATE_LOADING = State.Loading;
-  public readonly STATE_RELOAD = State.Reload;
-  public readonly STATE_SHOW = State.Show;
+export class TaskViewCtrl implements ng.IComponentController {
+  //Readonly Defines are used in the HTML template
+  public readonly STATE_NEW: State = State.New;
+  public readonly STATE_LOADING: State = State.Loading;
+  public readonly STATE_RELOAD: State = State.Reload;
+  public readonly STATE_SHOW: State = State.Show;
+
   public tests: HtmTest[] = [];
   public pageState: State = State.Loading;
   public currentTest: HtmTest;
   public suite: HtmSuite;
-  public backState= 'taasSuites';
+  public backState: string = 'taasSuites';
   public schedules: HtmSchedule[] =  [];
   public loadedTest: HtmTest[];
   public blocks: HtmBuildingBlocks[] = [];

@@ -3002,17 +3002,17 @@
             url: '/taasSuite',
             template: '<taas-suite-view></taas-suite-view>',
           })
-          .state('taasTest', {
+          .state('taasTaskView', {
             parent: 'main',
-            url: '/taasTest',
-            template: '<taas-test-view suite="$resolve.suite"></taas-test-view>',
+            url: '/taasTaskView',
+            template: '<taas-task-view suite="$resolve.suite"></taas-task-view>',
             params: {
               suite: {},
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/hcs/test-manager/testView/taasTestView.component'));
+                  done(require('modules/hcs/test-manager/task-view/task-view.component'));
                 }, 'taas-test-view');
               }),
               suite: /* @ngInject */ function ($stateParams) {
