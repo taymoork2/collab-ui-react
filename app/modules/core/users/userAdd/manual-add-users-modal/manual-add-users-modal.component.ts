@@ -1,3 +1,4 @@
+import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template.service';
 import { IOnboardScopeForUsersAdd, OnboardCtrlBoundUIStates } from 'modules/core/users/userAdd/shared/onboard.store';
 import OnboardService from 'modules/core/users/userAdd/shared/onboard.service';
 import OnboardStore from 'modules/core/users/userAdd/shared/onboard.store';
@@ -8,22 +9,40 @@ export class ManualAddUsersModalController implements ng.IComponentController {
   public model: any;
   private dismiss?: Function;
   private scopeData: IOnboardScopeForUsersAdd;
+  public stateData: any;  // TODO: better type
+  public useDefaultAutoAssignTemplate = false;
 
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
     private $state: ng.ui.IStateService,
     private Analytics,
+    private AutoAssignTemplateService: AutoAssignTemplateService,
     private DirSyncService,
     public Notification,
     private OnboardService: OnboardService,
     private OnboardStore: OnboardStore,
   ) {
+  }
+
+  public $onInit(): void {
     // TODO: rm use of 'OnboardStore' once shared references in '$scope' in 'OnboardCtrl' are removed
     this.scopeData = this.OnboardStore[OnboardCtrlBoundUIStates.USERS_ADD_MANUAL];
     this.isDirSyncEnabled = this.DirSyncService.isDirSyncEnabled();
     this.model = this.scopeData.model;
-
     this.maxUsersInManual = this.OnboardService.maxUsersInManual;
+
+    this.$q.all({
+      defaultAutoAssignTemplate: this.AutoAssignTemplateService.getDefaultTemplate(),
+      isOrgEnabledForAutoAssignTemplates: this.AutoAssignTemplateService.isEnabledForOrg(),
+      subscriptions: this.AutoAssignTemplateService.getSortedSubscriptions(),
+    }).then((results) => {
+      if (!results.isOrgEnabledForAutoAssignTemplates || !results.defaultAutoAssignTemplate) {
+        return;
+      }
+      this.stateData = this.AutoAssignTemplateService.toStateData(results.defaultAutoAssignTemplate, results.subscriptions);
+      this.useDefaultAutoAssignTemplate = true;
+    });
   }
 
   public dismissModal(): void {
@@ -43,8 +62,23 @@ export class ManualAddUsersModalController implements ng.IComponentController {
     this.$state.go(goToState);
   }
 
+  private getUsersList() {
+    return this.OnboardService.getUsersList(this.model.userList);
+  }
+
+  private goToNextState(useDefaultAutoAssignTemplate): void {
+    if (!useDefaultAutoAssignTemplate) {
+      this.$state.go('users.add.services');
+      return;
+    }
+    this.$state.go('users.manage.onboard-summary-for-auto-assign-modal', {
+      stateData: this.stateData,
+      userList: this.getUsersList(),
+    });
+  }
+
   public validateTokensBtn(): void {
-    const usersListLength = angular.element('.token-label').length;
+    const usersListLength = _.size(this.getUsersList());
     this.validateTokens().then(() => {
       // TODO (mipark2): cleanup unneeded logic
       if (this.scopeData.invalidcount === 0 && usersListLength > 0) {
@@ -54,7 +88,7 @@ export class ManualAddUsersModalController implements ng.IComponentController {
             emailEntryMethod: this.Analytics.sections.ADD_USERS.manualMethods[this.model.userInputOption.toString()],
           },
         );
-        this.$state.go('users.add.services');
+        this.goToNextState(this.useDefaultAutoAssignTemplate);
       } else if (usersListLength === 0) {
         this.Notification.error('usersPage.noUsersInput');
         this.Analytics.trackAddUsers(this.Analytics.sections.ADD_USERS.eventNames.MANUAL_EMAIL,

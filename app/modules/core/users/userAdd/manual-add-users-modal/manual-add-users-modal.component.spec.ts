@@ -6,6 +6,7 @@ import { CrOnboardUsersComponent } from './cr-onboard-users/cr-onboard-users.com
 type Test = atlas.test.IComponentTest<ManualAddUsersModalController, {
   $state;
   Analytics;
+  AutoAssignTemplateService;
   OnboardService;
 }, {
   components: {
@@ -26,10 +27,16 @@ describe('Component: manualAddUsersModal:', () => {
       this.components.crOnboardUsers,
     );
     this.injectDependencies(
+      '$q',
       '$state',
       'Analytics',
+      'AutoAssignTemplateService',
       'OnboardService',
     );
+
+    spyOn(this.AutoAssignTemplateService, 'getDefaultTemplate').and.returnValue(this.$q.resolve());
+    spyOn(this.AutoAssignTemplateService, 'isEnabledForOrg').and.returnValue(this.$q.resolve());
+    spyOn(this.AutoAssignTemplateService, 'getSortedSubscriptions').and.returnValue(this.$q.resolve());
   });
 
   function initComponent(this: Test) {
@@ -44,6 +51,20 @@ describe('Component: manualAddUsersModal:', () => {
       spyOn(this.controller, 'dismissModal');
       this.components.multiStepModal.bindings[0].dismiss();
       expect(this.controller.dismissModal).toHaveBeenCalled();
+    });
+
+    it('should have stateData if a default auto-assign template exists, the org is enabled for it, and subscriptions exist', function (this: Test) {
+      expect(this.controller.stateData).toBe(undefined);
+      expect(this.controller.useDefaultAutoAssignTemplate).toBe(false);
+
+      this.AutoAssignTemplateService.getDefaultTemplate.and.returnValue(this.$q.resolve('fake-getDefaultTemplate-result'));
+      this.AutoAssignTemplateService.isEnabledForOrg.and.returnValue(this.$q.resolve(true));
+      this.AutoAssignTemplateService.getSortedSubscriptions.and.returnValue(this.$q.resolve('fake-getSortedSubscriptions-result'));
+      spyOn(this.AutoAssignTemplateService, 'toStateData').and.returnValue('fake-toStateData-result');
+      initComponent.call(this);
+
+      expect(this.controller.stateData).toBe('fake-toStateData-result');
+      expect(this.controller.useDefaultAutoAssignTemplate).toBe(true);
     });
   });
 
