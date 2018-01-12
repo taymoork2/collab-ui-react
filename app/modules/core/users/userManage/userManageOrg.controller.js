@@ -5,7 +5,7 @@
   module.exports = UserManageOrgController;
 
   /* @ngInject */
-  function UserManageOrgController($q, $state, $window, Analytics, AutoAssignTemplateService, DirSyncService, FeatureToggleService, Notification, OnboardService, Orgservice, UserCsvService) {
+  function UserManageOrgController($q, $state, $window, Analytics, AutoAssignTemplateModel, AutoAssignTemplateService, DirSyncService, FeatureToggleService, Notification, OnboardService, Orgservice, UserCsvService) {
     var DEFAULT_AUTO_ASSIGN_TEMPLATE = AutoAssignTemplateService.DEFAULT;
     var ENABLE_DIR_SYNC_URL = 'https://www.cisco.com/go/hybrid-services-directory';
     var vm = this;
@@ -105,7 +105,8 @@
     Once 2 is implemented, logic will most likely change 12/21/17
     */
     function isDefaultAutoAssignTemplateActivated() {
-      return hasDefaultAutoAssignTemplate() && isOrgEnabledForAutoAssignTemplates;
+      AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = hasDefaultAutoAssignTemplate() && isOrgEnabledForAutoAssignTemplates;
+      return AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated;
     }
 
     function recvDelete() {
