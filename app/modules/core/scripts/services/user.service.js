@@ -33,6 +33,7 @@
       patchUserRoles: patchUserRoles,
       migrateUsers: migrateUsers,
       onboardUsers: onboardUsers,
+      onboardUsersV2: onboardUsersV2,
       bulkOnboardUsers: bulkOnboardUsers,
       deactivateUser: deactivateUser,
       isHuronUser: isHuronUser,
@@ -47,10 +48,14 @@
       getUserLicence: getUserLicence,
       getPreferredWebExSiteForCalendaring: getPreferredWebExSiteForCalendaring,
       updateUserData: updateUserData,
+      _helpers: {
+        mkOnboardUsersPayload: mkOnboardUsersPayload,
+        onboardUsersAPI: onboardUsersAPI,
+      },
     };
 
     // TODO: migrate these helpers to 'SunlightUserService'
-    var _helpers = {
+    var _sunlightHelpers = {
       licenseUpdateRequired: licenseUpdateRequired,
       removeCESRoleforUser: removeCESRoleforUser,
       getUserLicence: getUserLicence,
@@ -389,6 +394,15 @@
       return onboardUsersAPI(userPayload, cancelPromise);
     }
 
+    function onboardUsersV2(options) {
+      var users = options.users;
+      var licenses = options.licenses;
+      var userEntitlements = options.userEntitlements;
+      var cancelPromise = options.cancelPromise;
+      var payload = service._helpers.mkOnboardUsersPayload(users, licenses, userEntitlements);
+      return service._helpers.onboardUsersAPI(payload, cancelPromise);
+    }
+
     /**
      * Onboard users with each user specifiying their own set of licenses and entitlements
      */
@@ -399,6 +413,51 @@
 
     function deactivateUser(userData) {
       return $http.delete(userUrl + 'organization/' + Authinfo.getOrgId() + '/user?email=' + encodeURIComponent(userData.email));
+    }
+
+    function mkOnboardUsersPayload(users, _licenses, _userEntitlements) {
+      // default 'licenses' and 'userEntitlements' to empty lists if falsey
+      var licenses = _licenses || [];
+      var userEntitlements = _userEntitlements || [];
+
+      var usersPayload = _.map(users, function (user) {
+        // early-out if email is falsey
+        var userEmail = _.trim(user.address);
+        if (!userEmail) {
+          return;
+        }
+
+        var sanitizedUser = {};
+        _.set(sanitizedUser, 'email', userEmail);
+        _.set(sanitizedUser, 'licenses', licenses);
+        _.set(sanitizedUser, 'userEntitlements', userEntitlements);
+
+        // set 'name' property only if both 'givenName' or 'familyName' are truthy
+        _.set(sanitizedUser, 'name', tokenParseFirstLastName(user.name));
+        if (!sanitizedUser.name.givenName && !sanitizedUser.name.familyName) {
+          delete sanitizedUser.name;
+        }
+
+        // set 'displayName' if truthy
+        if (user.displayName) {
+          _.set(sanitizedUser, 'displayName', user.displayName);
+        }
+
+        if (_.size(licenses)) {
+          sanitizedUser.licenses = buildUserSpecificProperties(user, licenses);
+        }
+        if (_.size(userEntitlements)) {
+          sanitizedUser.userEntitlements = buildUserSpecificProperties(user, userEntitlements);
+        }
+
+        return sanitizedUser;
+      });
+
+      // prune out falsey values and return
+      usersPayload = _.compact(usersPayload);
+      return {
+        users: usersPayload,
+      };
     }
 
     /**
@@ -528,13 +587,13 @@
         return response.status === 200;
       });
       _.each(userResponseSuccess, function (userResponseSuccess) {
-        var userLicenses = _helpers.getUserLicence(userResponseSuccess.email, users);
+        var userLicenses = _sunlightHelpers.getUserLicence(userResponseSuccess.email, users);
         var userId = userResponseSuccess.uuid;
-        if ((_helpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CO, 'REMOVE')) || (_helpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CVC, 'REMOVE'))) {
-          _helpers.removeCESRoleforUser(userId);
+        if ((_sunlightHelpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CO, 'REMOVE')) || (_sunlightHelpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CVC, 'REMOVE'))) {
+          _sunlightHelpers.removeCESRoleforUser(userId);
         }
-        if ((_helpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CDC, 'ADD')) || (_helpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CVC, 'ADD'))) {
-          var sunlightUserData = _helpers.createUserData();
+        if ((_sunlightHelpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CDC, 'ADD')) || (_sunlightHelpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CVC, 'ADD'))) {
+          var sunlightUserData = _sunlightHelpers.createUserData();
           // Get user to check for roles and entitlements
           getUserAsPromise(userId)
             .then(function (ciUserData) {
@@ -544,7 +603,7 @@
                 checkRolesAndOnboardSunlightUser(userId, ciUserData, sunlightUserData, checkCesRole);
               }
             });
-        } else if (_helpers.isCareFeatureGettingRemoved(userLicenses)) {
+        } else if (_sunlightHelpers.isCareFeatureGettingRemoved(userLicenses)) {
           SunlightConfigService.deleteUser(userId)
             .catch(function (response) {
               Notification.errorWithTrackingId(response, 'usersPage.careDeleteUserError');

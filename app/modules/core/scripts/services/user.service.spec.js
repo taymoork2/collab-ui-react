@@ -93,6 +93,61 @@ describe('User Service', function () {
     });
   });
 
+  describe('onboardUsersV2():', function () {
+    it('should build an appropriate payload with "mkOnboardUsersPayload()" and call through to "mkOnboardUsersPayload()"', function () {
+      needsHttpFlush = false;
+      spyOn(this.Userservice._helpers, 'mkOnboardUsersPayload').and.returnValue('fake-mkOnboardUsersPayload-result');
+      spyOn(this.Userservice._helpers, 'onboardUsersAPI').and.returnValue('fake-onboardUsersAPI-result');
+      var result = this.Userservice.onboardUsersV2({
+        users: 'fake-users-arg',
+        licenses: 'fake-licenses-arg',
+        userEntitlements: 'fake-userEntitlements-arg',
+        cancelPromise: 'fake-cancelPromise-arg',
+      });
+      expect(this.Userservice._helpers.mkOnboardUsersPayload).toHaveBeenCalledWith('fake-users-arg', 'fake-licenses-arg', 'fake-userEntitlements-arg');
+      expect(this.Userservice._helpers.onboardUsersAPI).toHaveBeenCalledWith('fake-mkOnboardUsersPayload-result', 'fake-cancelPromise-arg');
+      expect(result).toBe('fake-onboardUsersAPI-result');
+    });
+  });
+
+  describe('mkOnboardUsersPayload():', function () {
+    it('should build an appropriate payload, given a list of users', function () {
+      needsHttpFlush = false;
+      var fakeUsers = [{
+        name: '',
+        address: 'user1@example.com',
+      }];
+      expect(this.Userservice._helpers.mkOnboardUsersPayload(fakeUsers)).toEqual({
+        users: [{
+          email: 'user1@example.com',
+          licenses: [],
+          userEntitlements: [],
+        }],
+      });
+
+      // add a second user with a name
+      fakeUsers.push({
+        name: 'john doe',
+        address: 'user2@example.com',
+      });
+      expect(this.Userservice._helpers.mkOnboardUsersPayload(fakeUsers)).toEqual({
+        users: [{
+          email: 'user1@example.com',
+          licenses: [],
+          userEntitlements: [],
+        }, {
+          name: {
+            givenName: 'john',
+            familyName: 'doe',
+          },
+          email: 'user2@example.com',
+          licenses: [],
+          userEntitlements: [],
+        }],
+      });
+    });
+  });
+
   describe('onboardUsers():', function () {
     it('onboardUsers success with sunlight K1 license should send PUT request to Sunlight Config', function () {
       this.$httpBackend
