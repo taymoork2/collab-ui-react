@@ -1,11 +1,4 @@
 import Feature from './feature.model';
-// TODO (mipark2):
-// - currently we define 'addressparser' as a constant from within 'main.js'
-// - the problem is, injecting 'addressparser' requires setting a dependency on
-//   the 'Core' module, which has a big performance cost on KTEST__MODULAR
-//   unit-test runs
-// - maybe we should consider splitting out a new angular module for registering
-//   thirdparty node modules like this?
 import * as addressParser from 'emailjs-addressparser';
 import { IUserNameAndEmail } from 'modules/core/users/shared/onboard.interfaces';
 
