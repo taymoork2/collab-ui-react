@@ -153,7 +153,7 @@ export default class OnboardService {
     scopeData.invalidDirSyncUsersCount = 0;
   }
 
-  public getUsersList(userList: string): IUserNameAndEmail[] {
+  public parseUsersList(userList: string): IUserNameAndEmail[] {
     return addressParser.parse(userList);
   }
 }

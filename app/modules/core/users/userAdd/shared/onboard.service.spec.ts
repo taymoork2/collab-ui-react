@@ -55,14 +55,14 @@ describe('OnboardService:', () => {
     });
   });
 
-  describe('getUsersList():', () => {
+  describe('parseUsersList():', () => {
     it('should return a parsed list of user objects with "address" and "name" properties', function () {
-      expect(this.OnboardService.getUsersList('user1@example.com')).toEqual([{
+      expect(this.OnboardService.parseUsersList('user1@example.com')).toEqual([{
         address: 'user1@example.com',
         name: '',
       }]);
 
-      expect(this.OnboardService.getUsersList('user1@example.com, user2@example.com')).toEqual([{
+      expect(this.OnboardService.parseUsersList('user1@example.com, user2@example.com')).toEqual([{
         address: 'user1@example.com',
         name: '',
       }, {
@@ -70,7 +70,7 @@ describe('OnboardService:', () => {
         name: '',
       }]);
 
-      expect(this.OnboardService.getUsersList('john doe user1@example.com, jane doe user2@example.com')).toEqual([{
+      expect(this.OnboardService.parseUsersList('john doe user1@example.com, jane doe user2@example.com')).toEqual([{
         address: 'user1@example.com',
         name: 'john doe',
       }, {

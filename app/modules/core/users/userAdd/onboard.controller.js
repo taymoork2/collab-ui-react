@@ -973,7 +973,7 @@ require('./_user-add.scss');
 
     $scope.$watch('model.userList', function (newVal, oldVal) {
       if (newVal !== oldVal) {
-        $scope.usrlist = OnboardService.getUsersList($scope.model.userList);
+        $scope.usrlist = OnboardService.parseUsersList($scope.model.userList);
       }
     });
 
@@ -1415,7 +1415,7 @@ require('./_user-add.scss');
     function onboardUsers(optionalOnboard) {
       var deferred = $q.defer();
       initResults();
-      usersList = OnboardService.getUsersList($scope.model.userList);
+      usersList = OnboardService.parseUsersList($scope.model.userList);
       Log.debug('Entitlements: ', usersList);
 
       var successCallback = function (response) {
@@ -1831,7 +1831,7 @@ require('./_user-add.scss');
       isFTW = true;
       var deferred = $q.defer();
 
-      var userList = OnboardService.getUsersList($scope.model.userList);
+      var userList = OnboardService.parseUsersList($scope.model.userList);
       if (userList.length === 0) {
         $q.resolve($scope.wizard.nextTab()).then(function () {
           deferred.reject();

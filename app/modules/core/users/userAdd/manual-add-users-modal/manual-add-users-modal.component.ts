@@ -63,7 +63,7 @@ export class ManualAddUsersModalController implements ng.IComponentController {
   }
 
   private getUsersList() {
-    return this.OnboardService.getUsersList(this.model.userList);
+    return this.OnboardService.parseUsersList(this.model.userList);
   }
 
   private goToNextState(useDefaultAutoAssignTemplate): void {
