@@ -54,4 +54,29 @@ describe('OnboardService:', () => {
       expect(this.OnboardService.isEmailAlreadyPresent('')).toBe(false);
     });
   });
+
+  describe('getUsersList():', () => {
+    it('should return a parsed list of user objects with "address" and "name" properties', function () {
+      expect(this.OnboardService.getUsersList('user1@example.com')).toEqual([{
+        address: 'user1@example.com',
+        name: '',
+      }]);
+
+      expect(this.OnboardService.getUsersList('user1@example.com, user2@example.com')).toEqual([{
+        address: 'user1@example.com',
+        name: '',
+      }, {
+        address: 'user2@example.com',
+        name: '',
+      }]);
+
+      expect(this.OnboardService.getUsersList('john doe user1@example.com, jane doe user2@example.com')).toEqual([{
+        address: 'user1@example.com',
+        name: 'john doe',
+      }, {
+        address: 'user2@example.com',
+        name: 'jane doe',
+      }]);
+    });
+  });
 });

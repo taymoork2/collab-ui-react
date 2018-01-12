@@ -8,7 +8,7 @@ require('./_user-add.scss');
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, Config, FeatureToggleService, DialPlanService, Log, LogMetricsService, MessengerInteropService, NAME_DELIMITER, Notification, OnboardService, OnboardStore, Orgservice, TelephonyInfoService, LocationsService, NumberService, Userservice, Utils, UserCsvService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, Analytics, Authinfo, Config, FeatureToggleService, DialPlanService, Log, LogMetricsService, MessengerInteropService, NAME_DELIMITER, Notification, OnboardService, OnboardStore, Orgservice, TelephonyInfoService, LocationsService, NumberService, Userservice, Utils, UserCsvService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
     var vm = this;
 
     // reset corresponding scope properties in OnboardStore each time this controller initializes
@@ -973,7 +973,7 @@ require('./_user-add.scss');
 
     $scope.$watch('model.userList', function (newVal, oldVal) {
       if (newVal !== oldVal) {
-        $scope.usrlist = addressparser.parse($scope.model.userList);
+        $scope.usrlist = OnboardService.getUsersList($scope.model.userList);
       }
     });
 
@@ -1379,10 +1379,6 @@ require('./_user-add.scss');
       }).join(', ');
     }
 
-    var getUsersList = function () {
-      return addressparser.parse($scope.model.userList);
-    };
-
     var resetUsersfield = function () {
       return OnboardService.resetUsersfield($scope);
     };
@@ -1419,7 +1415,7 @@ require('./_user-add.scss');
     function onboardUsers(optionalOnboard) {
       var deferred = $q.defer();
       initResults();
-      usersList = getUsersList();
+      usersList = OnboardService.getUsersList($scope.model.userList);
       Log.debug('Entitlements: ', usersList);
 
       var successCallback = function (response) {
@@ -1835,7 +1831,8 @@ require('./_user-add.scss');
       isFTW = true;
       var deferred = $q.defer();
 
-      if (getUsersList().length === 0) {
+      var userList = OnboardService.getUsersList($scope.model.userList);
+      if (userList.length === 0) {
         $q.resolve($scope.wizard.nextTab()).then(function () {
           deferred.reject();
         });

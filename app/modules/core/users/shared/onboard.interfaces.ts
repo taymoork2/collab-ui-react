@@ -50,3 +50,8 @@ export interface IAutoAssignTemplateRequestPayload {
   licenses: ILicenseRequestItem[];
   userEntitlements: IUserEntitlementRequestItem[];
 }
+
+export interface IUserNameAndEmail {
+  address: string;
+  name: string;
+}
