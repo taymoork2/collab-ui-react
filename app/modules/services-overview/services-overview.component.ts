@@ -39,7 +39,6 @@ export class ServicesOverviewController implements ng.IComponentController {
     private $modal: IToolkitModalService,
     private $q: ng.IQService,
     private $state: ng.ui.IStateService,
-    private Auth,
     private Authinfo,
     private CloudConnectorService: CloudConnectorService,
     private Config: Config,
@@ -67,7 +66,6 @@ export class ServicesOverviewController implements ng.IComponentController {
     const features = this.$q.all({
       atlasHybridImp: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridImp),
       atlasOffice365Support: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasOffice365Support),
-      atlasPMRonM2: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasPMRonM2),
       hI1484: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484),
       hI802: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI802),
       huronEnterprisePrivateTrunking: this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking),
@@ -78,10 +76,6 @@ export class ServicesOverviewController implements ng.IComponentController {
     features
       .then((response) => {
         // Used by cloud cards
-        if (response.atlasPMRonM2) {
-          this.getPMRStatus();
-        }
-
         this.forwardEvent('hybridCareToggleEventHandler', response.hybridCare);
         this.forwardEvent('hI1484FeatureToggleEventhandler', response.hI1484);
         this.forwardEvent('sparkCallCdrReportingFeatureToggleEventhandler', response.hI802);
@@ -244,10 +238,6 @@ export class ServicesOverviewController implements ng.IComponentController {
     this.forwardEvent('updateWebexSiteList', siteList);
   }
 
-  private getPMRStatus() {
-    const customerAccount = this.Auth.getCustomerAccount(this.Authinfo.getOrgId());
-    this.forwardEvent('updatePMRStatus', customerAccount);
-  }
 }
 
 export class ServicesOverviewComponent implements ng.IComponentOptions {

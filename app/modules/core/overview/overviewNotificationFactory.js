@@ -6,7 +6,7 @@
     .factory('OverviewNotificationFactory', OverviewNotificationFactory);
 
   /* @ngInject */
-  function OverviewNotificationFactory(OverviewCrashLogNotification, OverviewSetupNotification, OverviewUrgentUpgradeNotification, OverviewCalendarNotification, OverviewGoogleCalendarNotification, OverviewCallConnectNotification, OverviewCallAwareNotification, OverviewCloudSipUriNotification, OverviewDevicesNotification, OverviewHybridMediaNotification, OverviewPMRNotification, OverviewDataSecurityNotification, OverviewPSTNToSNotification, OverviewCareLicenseNotification, OverviewPstnTermsOfServiceNotification, OverviewEsaDisclaimerNotification, CallServiceHighAvailability, OverviewHybridMessagingNotification, OverviewAllHybridCalendarsNotification, OverviewCareNotSetupNotification, OverviewAutoAssignNotificationFactory) {
+  function OverviewNotificationFactory(OverviewCrashLogNotification, OverviewSetupNotification, OverviewUrgentUpgradeNotification, OverviewCalendarNotification, OverviewGoogleCalendarNotification, OverviewCallConnectNotification, OverviewCallAwareNotification, OverviewCloudSipUriNotification, OverviewDevicesNotification, OverviewHybridMediaNotification, OverviewDataSecurityNotification, OverviewPSTNToSNotification, OverviewCareLicenseNotification, OverviewPstnTermsOfServiceNotification, OverviewEsaDisclaimerNotification, CallServiceHighAvailability, OverviewHybridMessagingNotification, OverviewAllHybridCalendarsNotification, OverviewCareNotSetupNotification, OverviewAutoAssignNotificationFactory) {
     return {
       createCrashLogNotification: OverviewCrashLogNotification.createNotification,
       createSetupNotification: OverviewSetupNotification.createNotification,
@@ -19,7 +19,6 @@
       createCloudSipUriNotification: OverviewCloudSipUriNotification.createNotification,
       createDevicesNotification: OverviewDevicesNotification.createNotification,
       createHybridMediaNotification: OverviewHybridMediaNotification.createNotification,
-      createPMRNotification: OverviewPMRNotification.createNotification,
       createHybridDataSecurityNotification: OverviewDataSecurityNotification.createNotification,
       createHybridMessagingNotification: OverviewHybridMessagingNotification.createNotification,
       createPSTNToSNotification: OverviewPSTNToSNotification.createNotification,

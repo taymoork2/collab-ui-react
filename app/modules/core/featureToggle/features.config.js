@@ -55,7 +55,6 @@ module.exports = {
   atlasOrderProvisioningConsole: 'atlas-order-provisioning-console',
   atlasPartnerManagement: 'atlas-partner-management',
   atlasPartnerSparkReports: 'atlas-partner-spark-reports',
-  atlasPMRonM2: 'atlas-pmr-on-m2',
   atlasReadOnlyAdmin: 'atlas-read-only-admin',
   atlasReportsUpdate: 'atlas-reports-update',
   atlasSendEmailViaBMMP: 'atlas-send-email-via-bmmp',
