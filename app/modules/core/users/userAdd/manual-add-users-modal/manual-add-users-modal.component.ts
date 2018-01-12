@@ -11,7 +11,6 @@ export class ManualAddUsersModalController implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private $previousState,
     private $state: ng.ui.IStateService,
     private Analytics,
     private DirSyncService,
@@ -35,13 +34,10 @@ export class ManualAddUsersModalController implements ng.IComponentController {
   }
 
   public back(state?): void {
-    // FIXME (mipark2):
-    // - a user could use the 'Back' button from the 'users.add.services' state (which is actually a step FORWARD, not BACK)
-    // - need to always force either 'users.manage.emailSuppress' OR 'users.manage.picker'
-    let rootState = this.$previousState.get().state.name;
-    if (rootState === 'users.manage.emailSuppress') {
-      rootState = 'users.manage.picker';
-    }
+    // notes:
+    // - as of 2018-01-11, stepping back from the 'users.add.manual' state should always go to 'users.manage.picker'
+    // - contact @mipark2 if edge-cases exist that require otherwise
+    const rootState = 'users.manage.picker';
     const goToState = state || rootState;
     this.Analytics.trackAddUsers(this.Analytics.eventNames.BACK, this.Analytics.sections.ADD_USERS.uploadMethods.MANUAL, { emailEntryMethod: this.Analytics.sections.ADD_USERS.manualMethods[this.model.userInputOption.toString()] });
     this.$state.go(goToState);

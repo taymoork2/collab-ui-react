@@ -3054,7 +3054,7 @@
             },
             views: {
               'modal@': {
-                template: '<tsm-modal suite="$resolve.suite" customerId="$resolve.customerId"  class="modal-content" style="margin:initial" dismiss="$dismiss()" close="$close()"></tsm-modal>',
+                template: '<schedule-create-modal suite="$resolve.suite" customerId="$resolve.customerId"  class="modal-content" style="margin:initial" dismiss="$dismiss()" close="$close()"></tsm-modal>',
               },
             },
             resolve: {
@@ -3066,12 +3066,12 @@
               },
             },
           })
-          .state('taasServiceManager.resourceCreate', {
+          .state('taasServiceManager.resourcesCreate', {
             parent: 'modal',
             params: {},
             views: {
               'modal@': {
-                template: '<resource-create-modal class="modal-content" style="margin:initial" dismiss="$dismiss()" close="$close()"></resource-create-modal>',
+                template: '<resources-create-modal class="modal-content" style="margin:initial" dismiss="$dismiss()" close="$close()"></resource-create-modal>',
               },
             },
           })

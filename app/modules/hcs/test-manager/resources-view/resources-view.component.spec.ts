@@ -1,10 +1,10 @@
-import hcsTaasSuiteView from './index';
+import hcsTaasResources from './index';
 import { State } from '../shared';
 
-describe('Component: TaasSuiteViewComponent',  () => {
+describe('Component: ResourceViewComponent',  () => {
 
   beforeEach(function() {
-    this.initModules(hcsTaasSuiteView);
+    this.initModules(hcsTaasResources);
     this.injectDependencies(
       'HcsTestManagerService',
       'CardUtils',
@@ -12,9 +12,9 @@ describe('Component: TaasSuiteViewComponent',  () => {
       '$modal',
       '$q',
     );
-    spyOn(this.HcsTestManagerService, 'getTests').and.returnValue(this.$q.reject());
+    spyOn(this.HcsTestManagerService, 'getResources').and.returnValue(this.$q.reject());
     spyOn(this.$state, 'go');
-    this.compileComponent('taasSuiteView', {});
+    this.compileComponent('taasResourceView', {});
   });
 
   it('should have pageState equal RELOAD', function() {
@@ -27,10 +27,10 @@ describe('Component: TaasSuiteViewComponent',  () => {
   });
 });
 
-describe('Component: TaasSuiteViewComponent',  () => {
+describe('Component: ResourceViewComponent',  () => {
 
   beforeEach(function() {
-    this.initModules(hcsTaasSuiteView);
+    this.initModules(hcsTaasResources);
     this.injectDependencies(
       'HcsTestManagerService',
       'CardUtils',
@@ -38,9 +38,9 @@ describe('Component: TaasSuiteViewComponent',  () => {
       '$modal',
       '$q',
     );
-    spyOn(this.HcsTestManagerService, 'getSuites');
-    this.HcsTestManagerService.getSuites.and.returnValue(this.$q.resolve([]));
-    this.compileComponent('taasSuiteView', {});
+    spyOn(this.HcsTestManagerService, 'getResources');
+    this.HcsTestManagerService.getResources.and.returnValue(this.$q.resolve([]));
+    this.compileComponent('taasResourceView', {});
   });
 
   it('should have pageState equal NEW', function() {
@@ -49,15 +49,12 @@ describe('Component: TaasSuiteViewComponent',  () => {
   });
 });
 
-describe('Component: TaasSuiteViewComponent',  () => {
+describe('Component: ResourceViewComponent',  () => {
   const SUCCESS_DATA = [{
-    customerId: '123',
-    id: '456',
-    name: 'Testing 123',
   }];
 
   beforeEach(function() {
-    this.initModules(hcsTaasSuiteView);
+    this.initModules(hcsTaasResources);
     this.injectDependencies(
       'HcsTestManagerService',
       'CardUtils',
@@ -65,10 +62,9 @@ describe('Component: TaasSuiteViewComponent',  () => {
       '$modal',
       '$q',
     );
-    spyOn(this.HcsTestManagerService, 'getSuites');
-    spyOn(this.HcsTestManagerService, 'filterSuites');
-    this.HcsTestManagerService.getSuites.and.returnValue(this.$q.resolve(SUCCESS_DATA));
-    this.compileComponent('taasSuiteView', {});
+    spyOn(this.HcsTestManagerService, 'getResources');
+    this.HcsTestManagerService.getResources.and.returnValue(this.$q.resolve(SUCCESS_DATA));
+    this.compileComponent('taasResourceView', {});
   });
 
   it('should have pageState equal SHOW', function() {

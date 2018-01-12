@@ -405,7 +405,6 @@
     "call": "Call",
     "subscriptionIdError": "An error occurred loading your subscription ids",
     "hybridServices": "Hybrid Services",
-    "hybridServicesWarning": "Assign at least one license to enable Hybrid Services for the user",
     "freeCollab": "Free Public Collaboration Services",
     "licCollab": "Licensed Collaboration Services",
     "siteAdminUrl": "Sign-in to manage",
@@ -1623,6 +1622,7 @@
     "resources": "Resources",
     "result": "Result",
     "retry": "Retry",
+    "reload": "Reload",
     "save": "Save",
     "saveLabel": "Do you want to save your changes?",
     "search": "Search",
@@ -2567,7 +2567,6 @@
       "google": "Google Calendar",
       "notSetup": "Not currently set up",
       "sinceTime": "since {{timestamp}}",
-      "noLicensedServices": "This user must have one or more licensed services to be configured for Hybrid Services.",
       "entitledToBothCalendarsShort": "Multiple Calendar Entitlements",
       "entitledToBothCalendars": "This user is currently entitled to both calendar types. To clear the error, disable calendar service for the user and then enable it again.",
       "couldNotReadOffice365Status": "Could not read organization's Office 365 configuration. The information above might be incomplete.",
@@ -10354,24 +10353,12 @@
   },
   "hcs": {
     "taas": {
-      "overviewPage": {
-        "title": "TaaS Overview",
-        "customerNameHeader": "Customer Name",
-        "allCustomers": "All Customers",
-        "testDate": "Last Ran Test",
-        "testResult": "Test Result",
-        "totalResources": "Resources",
-        "actionHeader": "Actions",
-        "editSuite": "Edit Suite",
-        "editTest": "Edit Tests",
-        "deleteAll": "Delete All Suites"
-      },
       "testState": {
         "good": "Passed",
         "failed": "Failed",
         "running": "Running..."
       },
-      "suite": {
+      "suiteView": {
         "title": "Suites",
         "createSuite": "Create Suite",
         "runSuite": "Run Suite",
@@ -10386,7 +10373,7 @@
         "successRun": "You should go catch it...",
         "errorRun": "Something went wrong with scheduling"
       },
-      "test": {
+      "taskView": {
         "title": "Tests",
         "addTest": "Create Test",
         "editTest": "Edit",
@@ -10397,7 +10384,7 @@
         "title": "Add a suite",
         "suiteName": "Suite name"
       },
-      "schedulerModal": {
+      "scheduleCreateModal": {
         "title": "Schedule a Test"
       },
       "scheduleView": {
@@ -10409,10 +10396,17 @@
         "runSchedule": "Run Now",
         "copySchedule": "Copy schedule",
         "editSchedule": "Edit Schedule",
-        "deleteSchedule": "Delete this schedule"
+        "deleteSchedule": "Delete this schedule",
+        "scheduleCreate": "Create Schedule"
       },
-      "resourceCreate": {
-        "title": "Create a resource"
+      "resourcesView":{
+        "createResource": "Create Resource"
+      },
+      "resourcesCreateModal": {
+        "title": "Create a resource",
+        "instructions": "Use this form to create a resource to be used for testing. Can be an IP phone, Camelot, MMR, etc.",
+        "resourceName": "Resource name",
+        "resourceDetails": "Resource Details"
       }
     }
   }

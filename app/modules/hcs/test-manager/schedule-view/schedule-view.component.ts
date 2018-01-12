@@ -6,7 +6,7 @@ import {
 
 export class TaasScheduleViewComponent implements ng.IComponentOptions {
   public controller = TaasScheduleViewCtrl;
-  public template = require('./scheduleView.component.html');
+  public template = require('./schedule-view.component.html');
 }
 
 export class TaasScheduleViewCtrl implements ng.IComponentController {
@@ -30,7 +30,6 @@ export class TaasScheduleViewCtrl implements ng.IComponentController {
     public $q: ng.IQService,
 
     private Notification: Notification,
-    private $log: ng.ILogService,
     ) {}
 
   public $onInit(): void {
@@ -137,7 +136,7 @@ export class TaasScheduleViewCtrl implements ng.IComponentController {
   }
 
   public createSchedule(): void {
-    this.$log.info('');
+    // TODO: create a scheduling wizard
   }
 
   public runSchedule(scheduled: HtmSchedule): void {

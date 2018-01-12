@@ -4,11 +4,12 @@ import { LicenseChangeOperation } from 'modules/core/users/shared';
 
 export class AutoAssignTemplateService {
 
-  private readonly DEFAULT_TEMPLATE_NAME = 'Default';
+  public readonly DEFAULT = 'Default';
 
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
+    private $q: ng.IQService,
     private Authinfo,
     private Orgservice,
     private UrlConfig,
@@ -26,7 +27,18 @@ export class AutoAssignTemplateService {
     return this.$http.get(this.autoAssignTemplateUrl).then(response => response.data);
   }
 
-  public isEnabled(): ng.IPromise<boolean> {
+  public getDefaultTemplate(): ng.IPromise<any> {
+    return this.getTemplates()
+      .then(templates => {
+        return _.find(templates, { name: this.DEFAULT });
+      })
+      .catch(response => {
+        // resolve with undefined for 404s (will be fairly common when fetching auto-assign templates)
+        return (response.status === 404) ? undefined : this.$q.reject(response);
+      });
+  }
+
+  public isEnabledForOrg(): ng.IPromise<boolean> {
     return this.$http.get<{autoLicenseAssignment: boolean}>(this.autoAssignSettingsUrl).then(response => response.data.autoLicenseAssignment);
   }
 
@@ -83,7 +95,7 @@ export class AutoAssignTemplateService {
     const licensesPayload = this.mkLicensesPayload(stateData);
     const userEntitlementsPayload = this.mkUserEntitlementsPayload(stateData);
     const result = {
-      name: this.DEFAULT_TEMPLATE_NAME,
+      name: this.DEFAULT,
       userEntitlements: userEntitlementsPayload,
       licenses: licensesPayload,
     };

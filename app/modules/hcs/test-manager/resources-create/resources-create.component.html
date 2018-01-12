@@ -2,18 +2,18 @@
   <button type="button" class="close" ng-click="$ctrl.dismiss()" aria-label="{{::'common.close' | translate}}"></button>
     <span class="sr-only">Close</span>
   </button>
-  <div class="modal-title" translate="hcs.taas.resourceCreate.title"></div>
+  <div class="modal-title" translate="hcs.taas.resourcesCreateModal.title"></div>
 </div>
 <div class="modal-body">
   <form name="formResource" class="cs-form">
     <div class="cs-form__section">
       <div class="section__info">
-        <h4 class="section__title">Create a resource</h4>
-        <p class="section__description">Use this form to create a resource to be used for testing. Can be an IP phone, Camelot, MMR, etc.</p>
+        <h4 class="section__title" translate="hcs.taas.resourcesCreateModal.title"></h4>
+        <p class="section__description" translate="hcs.taas.resourcesCreateModal.instructions"></p>
       </div>
       <div class="section__content">
         <div class="sub-section">
-          <h5 class="sub-section__label">Resource name</h5>
+          <h5 class="sub-section__label" translate="hcs.taas.resourcesCreateModal.resourceName"></h5>
           <div class="row">
             <input
               cs-input type="text"
@@ -25,7 +25,7 @@
               cs-input-help-text="Provide a name for the resource to be used">
           </div>
           <br>
-          <h5 class="sub-section__label">Resource Details</h5>
+          <h5 class="sub-section__label" translate="hcs.taas.resourcesCreateModal.resourceDetails"></h5>
           <div class="row">
             <div class="cs-radio-group">
               <input

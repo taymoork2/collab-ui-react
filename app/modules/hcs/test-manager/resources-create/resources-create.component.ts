@@ -1,16 +1,16 @@
-import { TaskManagerService, HtmResource } from 'modules/hcs/test-manager/shared';
+import { TaskManagerService, HtmResource } from '../shared';
 import { Notification } from 'modules/core/notifications';
 
-export class ResourceCreateComponent implements ng.IComponentOptions {
-  public controller = ResourceCreateController;
-  public template = require('./resourceCreate.component.html');
+export class ResourcesCreateComponent implements ng.IComponentOptions {
+  public controller = ResourcesCreateController;
+  public template = require('./resources-create.component.html');
   public bindings = {
     dismiss: '&',
     close: '&',
   };
 }
 
-class ResourceCreateController implements ng.IComponentController {
+class ResourcesCreateController implements ng.IComponentController {
   public resources: HtmResource[] = [];
   public close: Function;
   public dismiss: Function;

@@ -49,7 +49,7 @@ describe('Component: editAutoAssignTemplateModal:', () => {
       spyOn(this.$state, 'go');
       _.set(this.$state, 'params.prevState', 'fake-previous-state');
       spyOn(this.Analytics, 'trackAddUsers');
-      spyOn(this.AutoAssignTemplateService, 'getSortedSubscriptions');
+      spyOn(this.AutoAssignTemplateService, 'getSortedSubscriptions').and.returnValue(this.$q.resolve([]));
       this.compileComponent('editAutoAssignTemplateModal', {
         dismiss: 'dismiss',
       });

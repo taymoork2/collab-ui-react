@@ -1,7 +1,7 @@
-import { TaasScheduleViewComponent } from './scheduleView.component';
-import './_scheduleView.scss';
+import { TaasScheduleViewComponent } from './schedule-view.component';
+import './_schedule-view.scss';
 
-import hcsTestManagertServiceModule from 'modules/hcs/test-manager/shared';
+import hcsTestManagertServiceModule from '../shared';
 import notifications from 'modules/core/notifications';
 
 export default angular

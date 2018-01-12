@@ -52,12 +52,34 @@ describe('Service: AutoAssignTemplateService:', () => {
     });
   });
 
-  describe('isEnabled():', () => {
+  describe('getDefaultTemplate():', () => {
+    it('should call "getTemplates()" and return the default template', function (done) {
+      const fakeValidResponse = [{
+        name: 'Default',
+      }];
+      spyOn(this.AutoAssignTemplateService, 'getTemplates').and.returnValue(this.$q.resolve(fakeValidResponse));
+      this.AutoAssignTemplateService.getDefaultTemplate().then(template => {
+        expect(template).toEqual({
+          name: 'Default',
+        });
+      });
+      this.$scope.$apply();
+
+      this.AutoAssignTemplateService.getTemplates.and.returnValue(this.$q.reject({ status: 404 }));
+      this.AutoAssignTemplateService.getDefaultTemplate().then(template => {
+        expect(template).toBe(undefined);
+        _.defer(done);
+      });
+      this.$scope.$apply();
+    });
+  });
+
+  describe('isEnabledForOrg():', () => {
     it('should reflect the status of orgSettings.autoLicenseAssignment', function (done) {
       this.$httpBackend.expectGET(this.settingsUrl).respond({
         autoLicenseAssignment: true,
       });
-      this.AutoAssignTemplateService.isEnabled().then(isEnabled => {
+      this.AutoAssignTemplateService.isEnabledForOrg().then(isEnabled => {
         expect(isEnabled).toBe(true);
         _.defer(done);
       });
