@@ -1,5 +1,5 @@
 import { ILicenseRequestItem, IUserEntitlementRequestItem, IAutoAssignTemplateRequestPayload } from 'modules/core/users/shared';
-import { AssignableServicesItemCategory, IAssignableLicenseCheckboxState, ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
+import { AssignableServicesItemCategory, IAssignableLicenseCheckboxState, ILicenseUsage, ILicenseUsageMap, ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
 import { LicenseChangeOperation } from 'modules/core/users/shared';
 
 export class AutoAssignTemplateService {
@@ -74,15 +74,40 @@ export class AutoAssignTemplateService {
     return this.mkPayload(stateData);
   }
 
-  public convertDefaultTemplateToStateData(response): any {
-    const stateData: any = {};
-    const licenses: any = {};
-    _.forEach(response[0].licenses, function (license) {
-      const id = license.id;
-      _.set(licenses, id, { isSelected: true });
+  private getAllLicenses(subscriptions: ISubscription[]): ILicenseUsageMap {
+    const licensesList = _.flatten(_.map<ISubscription, ILicenseUsage[]>(subscriptions, 'licenses'));
+    return _.reduce(licensesList, (result, license) => {
+      // notes:
+      // - because a license id can contain period chars, interpolate using bracket-notation to
+      //   ensure keys use the entire license id value
+      _.set(result, `["${license.licenseId}"]`, license);
+      return result;
+    }, {});
+  }
+
+  private mkLicensesStateData(assignedLicenses: { id: string }[], allLicenses: ILicenseUsageMap) {
+    const result: any = {};
+    _.forEach(assignedLicenses, function (assignedLicense) {
+      const id: string = assignedLicense.id;
+      const originalLicense = _.get(allLicenses, id);
+      // notes:
+      // - because a license id can contain period chars, interpolate using bracket-notation to
+      //   ensure keys use the entire license id value
+      _.set(result, `["${id}"]`, {
+        isSelected: true,
+        license: originalLicense,
+      });
     });
-    _.set(stateData, 'LICENSE', licenses);
-    _.set(stateData, `USER_ENTITLEMENTS_PAYLOAD`, response[0].userEntitlements);
+    return result;
+  }
+
+  public toStateData(template, subscriptions): any {
+    const stateData: any = {};
+    const assignedLicenses = template.licenses;
+    const allLicenses = this.getAllLicenses(subscriptions);
+    stateData.LICENSE = this.mkLicensesStateData(assignedLicenses, allLicenses);
+    stateData.USER_ENTITLEMENTS_PAYLOAD = template.userEntitlements;
+    stateData.subscriptions = subscriptions;
     return stateData;
   }
 
