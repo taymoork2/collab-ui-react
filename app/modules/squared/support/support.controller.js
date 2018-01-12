@@ -432,18 +432,12 @@ require('./_support.scss');
     };
 
     $scope.openExtendedMetadata = function (metadata) {
+      var scope = $scope.$new();
+      scope.metadata = metadata;
+
       $modal.open({
-        template: require('modules/squared/support/logs-extended-metadata.html'),
-        controller: 'LogsExtendedMetadataController as modal',
-        modalId: 'logs-extended-metadata-dialog',
-        resolve: {
-          title: function () {
-            return 'supportPage.extendedMetadata';
-          },
-          data: function () {
-            return metadata;
-          },
-        },
+        template: '<logs-extended-metadata metadata="metadata" dismiss="$dismiss()"></logs-extended-metadata>',
+        scope: scope,
       });
     };
 

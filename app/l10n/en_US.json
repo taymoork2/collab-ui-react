@@ -1536,6 +1536,8 @@
     "completed": "Completed",
     "confirm": "Confirm",
     "continue": "Continue",
+    "copy": "Copy",
+    "copiedToClipboard": "Data copied to clipboard",
     "copyToClipboard": "Copy to Clipboard",
     "create": "Create",
     "dateRange": "Date Range",
@@ -1662,6 +1664,7 @@
     "trySearchAgain": "Try another search.",
     "turnOff": "Turn Off",
     "type": "Type",
+    "unableToCopy": "Unable to copy data to clipboard",
     "unassigned": "Unassigned",
     "unknown": "Unknown",
     "update": "Update",
@@ -8758,11 +8761,6 @@
       "nohistory": "No Search History",
       "singlematch": "match",
       "matches": "matches"
-    },
-    "extended-data-dialog": {
-      "copy": "Copy",
-      "copiedToClipboard": "Data copied to clipboard",
-      "unableToCopy": "Unable to copy data to clipboard"
     },
     "verification": "Verification",
     "resend": "Resend Invite",
