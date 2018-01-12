@@ -4,16 +4,16 @@ import { Notification } from 'modules/core/notifications';
 import { IRSuiteMap } from 'modules/hcs/test-manager';
 import {
   TaskManagerService, HtmSuite, HtmTest, HtmSchedule, State,
-} from 'modules/hcs/test-manager/shared';
+} from '../shared';
 
-export class TaasSuiteViewComponent implements ng.IComponentOptions {
-  public controller = TaasSuiteViewCtrl;
-  public template = require('./taasSuiteView.component.html');
+export class SuiteViewComponent implements ng.IComponentOptions {
+  public controller = SuiteViewCtrl;
+  public template = require('./suite-view.component.html');
   public bindings = {
     suiteId: '<',
   };
 }
-export class TaasSuiteViewCtrl implements ng.IComponentController {
+export class SuiteViewCtrl implements ng.IComponentController {
   public readonly STATE_NEW = State.New;
   public readonly STATE_LOADING = State.Loading;
   public readonly STATE_RELOAD = State.Reload;
@@ -112,7 +112,7 @@ export class TaasSuiteViewCtrl implements ng.IComponentController {
     this.$state.go('taasServiceManager.scheduler', { suite: suite, customerId: customerId });
   }
 
-  // public copySuite(suite: HtmSuite): void {
+  // TODO: public copySuite(suite: HtmSuite): void {
   // }
 
   public deleteSuite(suite: HtmSuite): void {

@@ -1,4 +1,4 @@
-import { TaasResourceViewComponent } from './resources-view.component';
+import { ResourceViewComponent } from './resources-view.component';
 import './_resources-view.scss';
 
 import hcsTestManagertServiceModule from '../shared';
@@ -14,5 +14,5 @@ export default angular
     hcsTestManagertServiceModule,
     notifications,
   ])
-.component('taasResourceView', new TaasResourceViewComponent())
+.component('taasResourceView', new ResourceViewComponent())
 .name;

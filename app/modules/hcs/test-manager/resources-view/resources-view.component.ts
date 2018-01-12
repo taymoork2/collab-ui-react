@@ -4,12 +4,12 @@ import {
   TaskManagerService, HtmResource, State,
 } from '../shared';
 
-export class TaasResourceViewComponent implements ng.IComponentOptions {
-  public controller = TaasResourceViewCtrl;
+export class ResourceViewComponent implements ng.IComponentOptions {
+  public controller = ResourceViewCtrl;
   public template = require('./resources-view.component.html');
 }
 
-export class TaasResourceViewCtrl implements ng.IComponentController {
+export class ResourceViewCtrl implements ng.IComponentController {
   public readonly STATE_NEW = State.New;
   public readonly STATE_LOADING = State.Loading;
   public readonly STATE_RELOAD = State.Reload;

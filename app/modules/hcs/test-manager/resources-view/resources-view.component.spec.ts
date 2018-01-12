@@ -1,7 +1,7 @@
 import hcsTaasResources from './index';
 import { State } from '../shared';
 
-describe('Component: TaasResourceViewComponent',  () => {
+describe('Component: ResourceViewComponent',  () => {
 
   beforeEach(function() {
     this.initModules(hcsTaasResources);
@@ -27,7 +27,7 @@ describe('Component: TaasResourceViewComponent',  () => {
   });
 });
 
-describe('Component: TaasResourceViewComponent',  () => {
+describe('Component: ResourceViewComponent',  () => {
 
   beforeEach(function() {
     this.initModules(hcsTaasResources);
@@ -49,7 +49,7 @@ describe('Component: TaasResourceViewComponent',  () => {
   });
 });
 
-describe('Component: TaasResourceViewComponent',  () => {
+describe('Component: ResourceViewComponent',  () => {
   const SUCCESS_DATA = [{
   }];
 
