@@ -6,6 +6,7 @@ import { CrOnboardUsersComponent } from './cr-onboard-users/cr-onboard-users.com
 type Test = atlas.test.IComponentTest<ManualAddUsersModalController, {
   $state;
   Analytics;
+  AutoAssignTemplateModel;
   AutoAssignTemplateService;
   OnboardService;
 }, {
@@ -30,6 +31,7 @@ describe('Component: manualAddUsersModal:', () => {
       '$q',
       '$state',
       'Analytics',
+      'AutoAssignTemplateModel',
       'AutoAssignTemplateService',
       'OnboardService',
     );
@@ -57,12 +59,13 @@ describe('Component: manualAddUsersModal:', () => {
       expect(this.controller.stateData).toBe(undefined);
       expect(this.controller.useDefaultAutoAssignTemplate).toBe(false);
 
+      this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = true;
       this.AutoAssignTemplateService.getDefaultTemplate.and.returnValue(this.$q.resolve('fake-getDefaultTemplate-result'));
-      this.AutoAssignTemplateService.isEnabledForOrg.and.returnValue(this.$q.resolve(true));
       this.AutoAssignTemplateService.getSortedSubscriptions.and.returnValue(this.$q.resolve('fake-getSortedSubscriptions-result'));
       spyOn(this.AutoAssignTemplateService, 'toStateData').and.returnValue('fake-toStateData-result');
       initComponent.call(this);
 
+      expect(this.AutoAssignTemplateService.toStateData).toHaveBeenCalledWith('fake-getDefaultTemplate-result', 'fake-getSortedSubscriptions-result');
       expect(this.controller.stateData).toBe('fake-toStateData-result');
       expect(this.controller.useDefaultAutoAssignTemplate).toBe(true);
     });

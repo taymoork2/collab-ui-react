@@ -1,5 +1,6 @@
 import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template.service';
 import { IOnboardScopeForUsersAdd, OnboardCtrlBoundUIStates } from 'modules/core/users/userAdd/shared/onboard.store';
+import { AutoAssignTemplateModel } from 'modules/core/users/shared/auto-assign-template.model';
 import OnboardService from 'modules/core/users/userAdd/shared/onboard.service';
 import OnboardStore from 'modules/core/users/userAdd/shared/onboard.store';
 
@@ -17,6 +18,7 @@ export class ManualAddUsersModalController implements ng.IComponentController {
     private $q: ng.IQService,
     private $state: ng.ui.IStateService,
     private Analytics,
+    private AutoAssignTemplateModel: AutoAssignTemplateModel,
     private AutoAssignTemplateService: AutoAssignTemplateService,
     private DirSyncService,
     public Notification,
@@ -34,10 +36,9 @@ export class ManualAddUsersModalController implements ng.IComponentController {
 
     this.$q.all({
       defaultAutoAssignTemplate: this.AutoAssignTemplateService.getDefaultTemplate(),
-      isOrgEnabledForAutoAssignTemplates: this.AutoAssignTemplateService.isEnabledForOrg(),
       subscriptions: this.AutoAssignTemplateService.getSortedSubscriptions(),
     }).then((results) => {
-      if (!results.isOrgEnabledForAutoAssignTemplates || !results.defaultAutoAssignTemplate) {
+      if (!this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated || !results.defaultAutoAssignTemplate) {
         return;
       }
       this.stateData = this.AutoAssignTemplateService.toStateData(results.defaultAutoAssignTemplate, results.subscriptions);
