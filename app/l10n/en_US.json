@@ -226,6 +226,8 @@
         "deleteAutoAssign": "Delete Auto-Assign Template"
       },
       "modifyAutoAssign": {
+        "title": "Modify Auto-Assign Template",
+        "modifySuccess": "Your license template has been modified successfully. Licenses will be assigned to new users automatically.",
         "modifyError": "Template failed to load."
       },
       "activateAutoAssign": {

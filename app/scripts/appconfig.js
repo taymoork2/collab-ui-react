@@ -1033,19 +1033,27 @@
             },
           })
           .state('users.manage.edit-auto-assign-template-modal', {
-            template: '<edit-auto-assign-template-modal dismiss="$dismiss()"></edit-auto-assign-template-modal>',
+            template: '<edit-auto-assign-template-modal dismiss="$dismiss()" prev-state="$resolve.prevState" is-edit-template-mode="$resolve.isEditTemplateMode" state-data="$resolve.stateData"></edit-auto-assign-template-modal>',
+            resolve: stateParamsToResolveParams({
+              prevState: 'users.manage.picker',
+              isEditTemplateMode: false,
+              stateData: null,
+            }),
             params: {
               prevState: 'users.manage.picker',
+              isEditTemplateMode: false,
               stateData: null,
             },
           })
           .state('users.manage.edit-summary-auto-assign-template-modal', {
-            template: '<edit-summary-auto-assign-template-modal dismiss="$dismiss()" state-data="$resolve.stateData"></edit-summary-auto-assign-template-modal>',
+            template: '<edit-summary-auto-assign-template-modal dismiss="$dismiss()" state-data="$resolve.stateData" is-edit-template-mode="$resolve.isEditTemplateMode"></edit-summary-auto-assign-template-modal>',
             resolve: stateParamsToResolveParams({
               stateData: null,
+              isEditTemplateMode: false,
             }),
             params: {
               stateData: null,
+              isEditTemplateMode: false,
             },
           })
           .state('users.manage.onboard-summary-for-auto-assign-modal', {
