@@ -57,6 +57,8 @@ describe('OnboardService:', () => {
 
   describe('parseUsersList():', () => {
     it('should return a parsed list of user objects with "address" and "name" properties', function () {
+      expect(this.OnboardService.parseUsersList(null)).toEqual([]);
+      expect(this.OnboardService.parseUsersList(undefined)).toEqual([]);
       expect(this.OnboardService.parseUsersList('user1@example.com')).toEqual([{
         address: 'user1@example.com',
         name: '',
