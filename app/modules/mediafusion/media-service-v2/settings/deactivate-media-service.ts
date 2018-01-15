@@ -12,8 +12,8 @@ export class DeactivateMediaService {
     private HybridServicesClusterService: HybridServicesClusterService,
     private ServiceDescriptorService: ServiceDescriptorService,
   ) {}
-  public clusterNames: any[];
-  public clusterIds: any[];
+  public clusterNames: string[];
+  public clusterIds: string[];
   public serviceId: any = 'squared-fusion-media';
 
   private getClusterList() {
@@ -47,8 +47,8 @@ export class DeactivateMediaService {
           this.MediaServiceActivationV2.deactivateHybridMedia();
           this.MediaServiceActivationV2.disableMFOrgSettingsForDevOps();
         })
-        .catch(() => {
-          this.Notification.error('mediaFusion.deactivate.error');
+        .catch((error) => {
+          this.Notification.errorWithTrackingId(error, 'mediaFusion.deactivate.error');
         })
         .finally(() => {
           this.$state.go('services-overview');

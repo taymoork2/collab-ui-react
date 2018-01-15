@@ -188,7 +188,7 @@
         updatedTime: moment().utc(),
       };
       var url = UrlConfig.getAthenaServiceUrl() + '/devops/organizations/' + Authinfo.getOrgId() + '/hms_org_activation';
-      $http.post(url, payload);
+      return $http.post(url, payload);
     };
 
     var logUserIdentityOrgToMediaAgentOrgMapping = function (response) {

@@ -2,22 +2,21 @@
   'use strict';
 
   /* @ngInject */
-  function DisableMediaServiceController($modalInstance, $state, HybridServicesClusterService, Notification, DeactivateMediaService) {
+  function DisableMediaServiceController($modalInstance, $state, DeactivateMediaService, HybridServicesClusterService, Notification) {
     var vm = this;
     vm.step = '1';
     vm.checkboxModel = false;
-
     vm.isLoading = false;
     vm.clusters = {};
 
     HybridServicesClusterService.getAll()
       .then(function (clusters) {
+        vm.isLoading = true;
         vm.clusters = _.filter(clusters, {
           targetType: 'mf_mgmt',
         });
         vm.clusterNames = _.map(vm.clusters, 'name');
         vm.clusterNames.sort();
-        vm.isLoading = true;
       });
 
     vm.cancel = function () {

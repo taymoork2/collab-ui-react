@@ -6,7 +6,6 @@ describe('Controller: DisableMediaServiceController', function () {
 
   var $q, httpMock, controller, DeactivateMediaService, HybridServicesClusterService, Notification;
 
-  // var serviceId = "squared-fusion-media";
   var modalInstance = {
     dismiss: jasmine.createSpy('dismiss'),
     close: jasmine.createSpy('close'),
@@ -22,9 +21,10 @@ describe('Controller: DisableMediaServiceController', function () {
     Notification = _Notification_;
     HybridServicesClusterService = _HybridServicesClusterService_;
     DeactivateMediaService = _DeactivateMediaService_;
-    spyOn($state, 'go');
     httpMock = _$httpBackend_;
-    httpMock.when('GET', /^\w+.*/).respond({});
+    spyOn($state, 'go');
+    spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve({}));
+    //httpMock.when('GET', /^\w+.*/).respond({});
     controller = $controller('DisableMediaServiceController', {
       $state: $state,
       $q: $q,

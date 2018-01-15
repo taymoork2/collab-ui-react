@@ -1576,6 +1576,7 @@
     "invalidUrl": "This is not a valid URL.",
     "invalidZipCode": "Incorrect Zip Code",
     "ipAddress": "IP Address",
+    "iUnderstand": "I Understand",
     "keys": {
       "activated": "Activated",
       "deactivated": "Deactivated"
@@ -2364,8 +2365,7 @@
       "intro": "You are about to remove {{serviceName}} from the Expressway cluster {{clusterName}}.",
       "settingsWillBeWiped": "This action will remove {{connectorName}} and delete all of the connector's local settings.",
       "notDeregistered": "{{clusterName}} will still be registered to Cisco Collaboration Cloud, and the Expressway cluster can still be used for hosting Hybrid Services.",
-      "lastClusterWarning": "This is the last cluster that's running {{connectorName}} for this organization. If you deactivate {{connectorName}}, the service will be unavailable for your users until you add more resources. To completely deactivate the service for this organization and its users, go to the {{serviceName}} settings page.",
-      "iUnderstand": "I understand"
+      "lastClusterWarning": "This is the last cluster that's running {{connectorName}} for this organization. If you deactivate {{connectorName}}, the service will be unavailable for your users until you add more resources. To completely deactivate the service for this organization and its users, go to the {{serviceName}} settings page."
     },
     "clusters": {
       "listing": {
@@ -5606,7 +5606,6 @@
     "deleteOrgConfirmMsg": "Are you sure you want to permanently delete customer '{{orgName}}'?",
     "deleteOrgHmsError": "For the customer '{{orgName}}' Hybrid Media Service is currently Active, please deactivate Hybrid Media Service before deleting the customer.",
     "deleteOrg": "Delete Customer",
-    "iUnderstand": "I Understand",
     "deleteOrgSuccess": "{{orgName}} successfully deleted",
     "deleteOrgError": "{{orgName}} was not deleted.",
     "pstnOrders": "PSTN Orders & Imports",
@@ -6319,8 +6318,7 @@
       "latest": "LATEST",
       "errorMsg": "Before you can delete this cluster, you must either move all nodes to another cluster or deregister all nodes.",
       "deregisterWarning": "All the nodes in this cluster will be deregistered automatically and the cluster will be moved permanently. This action can not be undone.",
-      "deactivateWarning": "This is the last cluster running Hybrid Media for this organization if you remove it, the service will be deactivated.",
-      "iUnderstand": "I understand"
+      "deactivateWarning": "This is the last Hybrid Media cluster for this organization. If you remove it, the service will be deactivated."
     },
     "upgradeClusters": {
       "title": "Software Upgrade",
@@ -6355,7 +6353,7 @@
       "confirmation_check": "By deactivating Hybrid Media Service, I understand that the above clusters will be deregistered and all further meetings will be hosted  in the cloud and that this action cannot be undone.",
       "button_deactivate": "Deactivate",
       "success": "Your Hybrid Media Services was deactivated successfully.",
-      "error": "Error in deregistering clusters. Please try again after sometime.",
+      "error": "Could not deactivate Hybrid Media Service.",
       "step": "Step ",
       "of": " of 2"
     },
