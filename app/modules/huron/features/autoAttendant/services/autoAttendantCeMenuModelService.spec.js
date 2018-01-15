@@ -245,6 +245,18 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     });
   });
 
+  /* This test case tests the scenario where AA is being updated that has holidays configured to behave as ClosedHours */
+  describe('getWelcomeMenu with Closed Hours and holidays in same lane', function () {
+    it('should test the updated JSON in case of closed hours and holidays in same lane', function () {
+      var _ceRecord = _.cloneDeep(ceWelcome3);
+      _ceRecord.callExperienceName = 'AA Combined';
+      _.set(_ceRecord.actionSets[1], 'actions[0].play.description', 'This is new welcome prompt for closedHours and holidays schedule');
+      var _combinedMenu = AutoAttendantCeMenuModelService.getCombinedMenu(_ceRecord, 'holidays');
+      AutoAttendantCeMenuModelService.updateCombinedMenu(_ceRecord, 'holidays', _combinedMenu);
+      expect(_.get(_combinedMenu['entries'][0], 'actions[0].description')).toBe('This is new welcome prompt for closedHours and holidays schedule');
+    });
+  });
+
   describe('getOptionMenu', function () {
     it('should return optionMenu from parsing ceOption', function () {
       var _optionMenu = AutoAttendantCeMenuModelService.getOptionMenu(ceOption, 'openHours');
