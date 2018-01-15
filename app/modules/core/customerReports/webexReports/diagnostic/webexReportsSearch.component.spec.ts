@@ -55,6 +55,7 @@ describe('Component: webexReportsSearch', () => {
   });
 
   function initSpies() {
+    spyOn(this.$state, 'go');
     spyOn(this.Notification, 'errorResponse');
     spyOn(this.SearchService, 'getMeetings').and.returnValue(this.$q.resolve());
   }
@@ -155,5 +156,11 @@ describe('Component: webexReportsSearch', () => {
     this.controller.gridData = this.meetingSearch;
     this.controller.onChangeTz('Asia/Shanghai');
     expect(this.controller.gridData[0].startTime_).toBeDefined();
+  });
+
+  it('should call $state.go', function () {
+    initComponent.call(this);
+    this.controller.showDetail({ id: 111 });
+    expect(this.$state.go).toHaveBeenCalled();
   });
 });
