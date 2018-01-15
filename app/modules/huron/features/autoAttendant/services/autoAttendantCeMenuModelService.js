@@ -1561,8 +1561,10 @@
       if (_.isUndefined(ceRecord.actionSets)) {
         ceRecord.actionSets = [];
       }
-
       var actionSet = getAndCreateActionSet(ceRecord, actionSetName);
+      if (actionSetName === HOLIDAYS_ACTION_SET_NAME && ceRecord.scheduleEventTypeMap[HOLIDAYS_SCHEDULE_EVENT] !== HOLIDAYS_ACTION_SET_NAME) {
+        return true;
+      }
       actionSet.actions = createWelcomeMenu(aaMenu);
 
       return true;
