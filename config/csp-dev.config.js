@@ -1,7 +1,13 @@
-var merge = require('webpack-merge');
-var cspProdConfig = require('./csp-prod.config');
+/* eslint-env es6 */
 
-var cspDevConfig = {
+'use strict';
+
+const merge = require('webpack-merge');
+const cspIntConfig = require('./csp-int.config');
+const mkCspConfig = require('../utils/mkCspConfig');
+
+// as of 2018-01-09, 'dev' uses the following additional directives:
+let cspDevConfig = mkCspConfig({
   defaultSrc: [],
   frameSrc: [
     'https://*.cisco.com:4244',
@@ -18,7 +24,7 @@ var cspDevConfig = {
   objectSrc: [],
   connectSrc: [
     'http://10.201.82.158:8082', //Test as a service DEMO -- Matt's server
-    'https://taasapi.cisco.com:8082', //Test as a service DEMO
+    'https://taasapi.cisco.com:8082', //Test as a Service temp server
     'http://127.0.0.1:8080', // Local Atlas Backend
     'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
     'http://localhost:8080', // Local Atlas Backend
@@ -58,9 +64,9 @@ var cspDevConfig = {
     'blob:', // Webpack Dev
     'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
   ],
-};
+});
 
-// smart merging prod dependencies with dev dependencies
-cspDevConfig = merge.smart(cspProdConfig, cspDevConfig);
+// start with int CSP dependencies, and merge on top
+cspDevConfig = merge.smart(cspIntConfig, cspDevConfig);
 
 module.exports = cspDevConfig;

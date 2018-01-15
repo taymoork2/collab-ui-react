@@ -56,6 +56,7 @@ describe('Component: accountLinkingBanner ', () => {
     spyOn($state, 'go');
     this.compileComponent('accountLinkingBanner');
     expect(this.view).toContainElement('a');
+
     this.view.find('a').click();
     expect($state.go).toHaveBeenCalledWith('site-list.linked', { originator: LinkingOriginator.Banner }, { reload: false });
   });

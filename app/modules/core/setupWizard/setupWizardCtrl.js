@@ -12,7 +12,6 @@ require('./_setup-wizard.scss');
   var enterpriseExportMetadataTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.exportMetadata.tpl.html');
   var enterpriseImportIdpTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.importIdp.tpl.html');
   var enterpriseTestSSOTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.testSSO.tpl.html');
-  var enterprisePmrSetupTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.pmrSetup.tpl.html');
   var meetingSettingsMigrateTrialTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-migrate-trial.html');
   var meetingSettingsSiteSetupTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-site-setup.html');
   var meetingSettingsLicenseDistributionTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-license-distribution.html');
@@ -40,7 +39,6 @@ require('./_setup-wizard.scss');
     var shouldShowMeetingsTab = false;
     var hasPendingCallLicenses = false;
     var hasPendingLicenses = false;
-    var supportsAtlasPMRonM2 = false;
     var supportsHI1484 = false;
     $scope.tabs = [];
     $scope.isTelstraCsbEnabled = false;
@@ -82,16 +80,10 @@ require('./_setup-wizard.scss');
         })
         .catch(_.noop);
 
-      var atlasPMRonM2Promise = FeatureToggleService.supports(FeatureToggleService.features.atlasPMRonM2)
-        .then(function (_supportsAtlasPMRonM2) {
-          supportsAtlasPMRonM2 = _supportsAtlasPMRonM2;
-        });
-
       var pendingSubscriptionsPromise = SetupWizardService.populatePendingSubscriptions();
 
       var promises = [
         adminOrgUsagePromise,
-        atlasPMRonM2Promise,
         hI1484Promise,
         pendingSubscriptionsPromise,
       ];
@@ -109,7 +101,6 @@ require('./_setup-wizard.scss');
       initMeetingSettingsTab(tabs);
       initCallSettingsTab(tabs);
       initCareTab(tabs);
-      initAtlasPMRonM2(tabs);
       initFinishTab(tabs);
       removeTabsWithEmptySteps(tabs);
       $scope.tabs = filterTabsByStateParams(tabs);
@@ -369,21 +360,6 @@ require('./_setup-wizard.scss');
           tabs.push(careTab);
         } else {
           tabs.splice(finishTabIndex, 0, careTab);
-        }
-      }
-    }
-
-    function initAtlasPMRonM2(tabs) {
-      if (supportsAtlasPMRonM2) {
-        var step = {
-          name: 'enterprisePmrSetup',
-          template: enterprisePmrSetupTemplatePath,
-        };
-        var enterpriseSettings = _.find(tabs, {
-          name: 'enterpriseSettings',
-        });
-        if (enterpriseSettings) {
-          enterpriseSettings.steps.splice(1, 0, step);
         }
       }
     }

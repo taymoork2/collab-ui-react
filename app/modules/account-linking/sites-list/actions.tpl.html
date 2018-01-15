@@ -7,29 +7,30 @@
 
       <li>
         <a href
-          ng-click="grid.appScope.gotoWebexHomePage(row.entity.linkedSiteUrl)">
-          Launch WebEx Site Admin
+          ng-click="grid.appScope.gotoWebexHomePage(row.entity)"
+          translate= "accountLinking.grid.actions.launchWebExSiteAdmin">
         </a>
       </li>
 
       <li>
         <a href
-           ng-click="grid.appScope.showReports(row.entity.linkedSiteUrl)">
-          WebEx Reports
+           ng-click="grid.appScope.showReports(row.entity)"
+           translate= "accountLinking.grid.actions.webExReports">
         </a>
       </li>
 
       <li>
         <a href
-           ng-click="grid.appScope.gotoWebexListSitesPage(row.entity.linkedSiteUrl)">
-          Account Linking Progress
+           ng-click="grid.appScope.gotoWebexListSitesPage(row.entity)"
+           translate= "accountLinking.grid.actions.accountLinkingProgress">
         </a>
       </li>
 
       <li>
         <a href
-           ng-click="grid.appScope.modifyLinkingMethod(row.entity.linkedSiteUrl)">
-          Change Linking Method
+           ng-if="grid.appScope.allowModifyingLinkingMode(row.entity)"
+           ng-click="grid.appScope.modifyLinkingMethod(row.entity)"
+           translate="accountLinking.grid.actions.changeLinkingMethod">
         </a>
       </li>
     </ul>

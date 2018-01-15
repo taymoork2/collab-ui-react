@@ -132,12 +132,6 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
     this.isEnabled = this.services.hasCalendarService() || this.services.hasCallService() || this.services.hasHybridMessageService();
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
-    if (changes.hasAssignableLicenses && !changes.hasAssignableLicenses.currentValue && changes.hasAssignableLicenses.previousValue) {
-      this.clearSelectedHybridServicesEntitlements();
-    }
-  }
-
   private getServiceIfEnabledInFMS(services: IServiceDescription[], id: HybridServiceId): IExtendedServiceDescription | null {
     const service: IExtendedServiceDescription = _.find(services, {
       id: id,
@@ -205,19 +199,6 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
     return this.OnboardService.huronCallEntitlement;
   }
 
-  public clearSelectedHybridServicesEntitlements(): void {
-    this.services.calendarEntitled = false;
-    if (this.services.callServiceAware) {
-      this.services.callServiceAware.entitled = false;
-    }
-    if (this.services.callServiceConnect) {
-      this.services.callServiceConnect.entitled = false;
-    }
-    if (this.services.hybridMessage) {
-      this.services.hybridMessage.entitled = false;
-    }
-    this.setEntitlements();
-  }
 }
 
 export class HybridServicesEntitlementsPanelComponent implements ng.IComponentOptions {
@@ -225,7 +206,6 @@ export class HybridServicesEntitlementsPanelComponent implements ng.IComponentOp
   public template = require('./hybrid-services-entitlements-panel.html');
   public bindings = {
     entitlementsCallback: '&',
-    hasAssignableLicenses: '<',
     onUpdate: '&?',
     stateData: '<?',
   };

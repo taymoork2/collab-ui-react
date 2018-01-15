@@ -413,7 +413,7 @@ describe('SetupWizardCtrl', function () {
       this.expectSubStepOrder('planReview', ['init']);
       this.expectSubStepOrder('serviceSetup', ['setupCallLocation']);
       this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'summary']);
-      this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'enterprisePmrSetup', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
+      this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
     });
   });
 

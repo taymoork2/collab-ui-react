@@ -46,7 +46,7 @@ export default angular
     require('modules/hercules/services/enterprise-private-trunk-service').default,
     require('modules/hercules/services/hybrid-services-cluster.service').default,
     require('modules/hercules/services/uss.service').default,
-    require('modules/hcs/test-manager/shared').default,
+    require('modules/hcs/task-manager/shared').default,
   ])
   .component('cardUsersSummary', new CardUsersSummaryComponent())
   .component('enableUsersModal', new EnableUsersModalComponent())

@@ -248,12 +248,6 @@ require('./_overview.scss');
           }
         });
 
-      FeatureToggleService.atlasPMRonM2GetStatus().then(function (toggle) {
-        if (toggle) {
-          vm.notifications.push(OverviewNotificationFactory.createPMRNotification());
-        }
-      });
-
       FeatureToggleService.supports(FeatureToggleService.features.huronPstn).then(function (result) {
         vm.ftHuronPstn = result;
 

@@ -1918,40 +1918,77 @@
             },
           })
           .state('site-list.linked', {
-            url: '/linked',
+            url: '/services/linked',
             views: {
               tabContent: {
-                template: '<linked-sites></linked-sites>',
+                template: '<linked-sites originator="$resolve.originator"></linked-sites>',
               },
             },
             params: {
               originator: 'Menu',
+            },
+            resolve: {
+              originator: /*@ngInject */ function ($stateParams) {
+                return $stateParams['originator'];
+              },
             },
           })
           .state('site-list.linked.details', {
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<linked-sites-details></linked-sites-details>',
+                template: '<linked-sites-details selected-site-info="$resolve.selectedSiteInfo" show-wizard-fn="$resolve.showWizardFn(siteInfo)" launch-webex-fn="$resolve.launchWebexFn(site, useHomepage)"></linked-sites-details>',
               },
             },
             params: {
-              siteInfo: null,
+              selectedSiteInfo: null,
+              showWizardFn: null,
+              launchWebexFn: null,
             },
             data: {},
             resolve: {
               displayName: translateDisplayName('accountLinking.siteDetails.breadCrumb'),
+              selectedSiteInfo: /*@ngInject */ function ($stateParams) {
+                return $stateParams['selectedSiteInfo'];
+              },
+              showWizardFn: /*@ngInject */ function ($stateParams) {
+                return $stateParams['showWizardFn'];
+              },
+              launchWebexFn: /*@ngInject */ function ($stateParams) {
+                return $stateParams['launchWebexFn'];
+              },
             },
           })
           .state('site-list.linked.details.wizard', {
             views: {
               'modal@': {
-                template: '<account-linking-wizard></account-linking-wizard>',
+                template: '<account-linking-wizard dismiss="$dismiss()" site-info="$resolve.siteInfo" operation="$resolve.operation" launch-webex-fn="$resolve.launchWebexFn(site, useHomepage)" set-account-linking-mode-fn="$resolve.setAccountLinkingModeFn(siteUrl, mode)"></account-linking-wizard>',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'account-linking-wizard-custom';
+                  },
+                },
               },
             },
             params: {
               siteInfo: null,
               operation: null,
+              launchWebexFn: null,
+              setAccountLinkingModeFn: null,
+            },
+            resolve: {
+              siteInfo: /*@ngInject */ function ($stateParams) {
+                return $stateParams['siteInfo'];
+              },
+              operation: /*@ngInject */ function ($stateParams) {
+                return $stateParams['operation'];
+              },
+              launchWebexFn: /*@ngInject */ function ($stateParams) {
+                return $stateParams['launchWebexFn'];
+              },
+              setAccountLinkingModeFn: /*@ngInject */ function ($stateParams) {
+                return $stateParams['setAccountLinkingModeFn'];
+              },
             },
             onEnter: modalOnEnter({
               type: 'full',
@@ -2116,6 +2153,30 @@
             },
             params: {
               reportType: null,
+            },
+          })
+          .state('reports.webex-metrics.dashboard', {
+            url: '/dashboard',
+            views: {
+              metricsContent: {
+                template: '<metrics-frame></metrics-frame>',
+              },
+            },
+          })
+          .state('reports.webex-metrics.jms', {
+            url: '/jms',
+            views: {
+              metricsContent: {
+                template: '<metrics-frame></metrics-frame>',
+              },
+            },
+          })
+          .state('reports.webex-metrics.jmt', {
+            url: '/jmt',
+            views: {
+              metricsContent: {
+                template: '<metrics-frame></metrics-frame>',
+              },
             },
           })
           .state('reports.webex-metrics.diagnostics', {
@@ -2965,17 +3026,17 @@
             url: '/taasSuite',
             template: '<taas-suite-view></taas-suite-view>',
           })
-          .state('taasTest', {
+          .state('taasTaskView', {
             parent: 'main',
-            url: '/taasTest',
-            template: '<taas-test-view suite="$resolve.suite"></taas-test-view>',
+            url: '/taasTaskView',
+            template: '<taas-task-view suite="$resolve.suite"></taas-task-view>',
             params: {
               suite: {},
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/hcs/test-manager/testView/taasTestView.component'));
+                  done(require('modules/hcs/task-manager/task/task-view.component'));
                 }, 'taas-test-view');
               }),
               suite: /* @ngInject */ function ($stateParams) {
@@ -3017,7 +3078,7 @@
             },
             views: {
               'modal@': {
-                template: '<tsm-modal suite="$resolve.suite" customerId="$resolve.customerId"  class="modal-content" style="margin:initial" dismiss="$dismiss()" close="$close()"></tsm-modal>',
+                template: '<schedule-create-modal suite="$resolve.suite" customerId="$resolve.customerId"  class="modal-content" style="margin:initial" dismiss="$dismiss()" close="$close()"></tsm-modal>',
               },
             },
             resolve: {
@@ -3029,12 +3090,12 @@
               },
             },
           })
-          .state('taasServiceManager.resourceCreate', {
+          .state('taasServiceManager.resourcesCreate', {
             parent: 'modal',
             params: {},
             views: {
               'modal@': {
-                template: '<resource-create-modal class="modal-content" style="margin:initial" dismiss="$dismiss()" close="$close()"></resource-create-modal>',
+                template: '<resources-create-modal class="modal-content" style="margin:initial" dismiss="$dismiss()" close="$close()"></resource-create-modal>',
               },
             },
           })

@@ -35,6 +35,7 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
 
   function initController(userId: string, userEmailAddress: string = 'someting@example.org', userUpdatedCallback: Function = _.noop, allUserEntitlements?: string[]) {
     const ctrl = $componentController('hybridCalendarServiceUserSettings', {}, {});
+    ctrl.$onInit();
     ctrl.$onChanges({
       userId: {
         currentValue: userId,
@@ -46,7 +47,7 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
         currentValue: userUpdatedCallback,
       },
       allUserEntitlements: {
-        currentValue: allUserEntitlements || ['squared-fusion-cal'],
+        currentValue: allUserEntitlements,
       },
     });
     $scope.$apply();
@@ -68,6 +69,14 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
     expect(CloudConnectorService.getService).toHaveBeenCalledWith('squared-fusion-gcal');
     expect(HybridServicesClusterService.serviceIsSetUp.calls.count()).toBe(1);
     expect(HybridServicesClusterService.serviceIsSetUp).toHaveBeenCalledWith('squared-fusion-cal');
+  });
+
+  it('should default the radio buttons to Microsoft calendar if the user has no entitlements whatsoever', () => {
+    USSService.getStatusesForUser.and.returnValue($q.resolve({}));
+    CloudConnectorService.getService.and.returnValue($q.resolve({}));
+    const ctrl = initController('something', 'something@example.org', _.noop, undefined);
+    expect(ctrl.originalCalendarType).toBe('squared-fusion-cal');
+    expect(ctrl.selectedCalendarType).toBe('squared-fusion-cal');
   });
 
   it('should gray out Google Calendar and explain why if it hasn\'t been set up', () => {
@@ -93,7 +102,7 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
     }));
     HybridServicesClusterService.serviceIsSetUp.and.returnValue($q.resolve(false));
 
-    const ctrl = initController('something');
+    const ctrl = initController('something', 'something@example.org', _.noop, ['squared-fusion-cal']);
 
     expect(ctrl.exchangeAndOffice365HelpText).toBeDefined();
   });
@@ -107,7 +116,7 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
     }));
     HybridServicesClusterService.serviceIsSetUp.and.returnValue($q.resolve(true));
 
-    const ctrl = initController('something');
+    const ctrl = initController('something', 'something@example.org', _.noop, ['squared-fusion-cal']);
 
     expect(ctrl.exchangeAndOffice365HelpText).not.toBeDefined();
     expect(ctrl.googleHelpText).not.toBeDefined();
@@ -202,7 +211,7 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
 
     const userId = '1234-5678-9988';
     const callbackFunction = jasmine.createSpy('callback');
-    const ctrl = initController(userId, 'something', callbackFunction);
+    const ctrl = initController(userId, 'something', callbackFunction, []);
     ctrl.selectedCalendarType = 'squared-fusion-cal';
     ctrl.selectedEntitledToggle = true;
     ctrl.save();
@@ -226,7 +235,7 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
 
     const userId = '1234-5678-9988';
     const callbackFunction = jasmine.createSpy('callback');
-    const ctrl = initController(userId, 'something', callbackFunction);
+    const ctrl = initController(userId, 'something', callbackFunction, []);
     ctrl.selectedCalendarType = 'squared-fusion-gcal';
     ctrl.selectedEntitledToggle = true;
     ctrl.save();
@@ -250,7 +259,7 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
 
     const userId = '1234-5678-9988';
     const callbackFunction = jasmine.createSpy('callback');
-    const ctrl = initController(userId, 'something', callbackFunction);
+    const ctrl = initController(userId, 'something', callbackFunction, []);
     ctrl.selectedCalendarType = 'squared-fusion-cal';
     ctrl.selectedEntitledToggle = false;
     ctrl.save();

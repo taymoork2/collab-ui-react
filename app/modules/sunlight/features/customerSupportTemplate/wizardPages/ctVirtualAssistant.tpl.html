@@ -65,8 +65,7 @@
                 ng-maxlength="careSetupAssistant.lengthConstants.multiLineMaxCharLimit"
                 validate-characters="careSetupAssistant.InvalidCharacters"
                 ng-model-options="{ allowInvalid: true }"
-                placeholder="{{::'careChatTpl.virtualAssistantWelcomeMessageLabel' | translate}}"
-                ng-keypress="careSetupAssistant.enterNextPage($event)">
+                placeholder="{{::'careChatTpl.virtualAssistantWelcomeMessageLabel' | translate}}">
               </textarea>
             </div>
             <p class="body-smallest bot-welcome-msg-help" translate="careChatTpl.virtualAssistantWelcomeMessageHelp"></p>
