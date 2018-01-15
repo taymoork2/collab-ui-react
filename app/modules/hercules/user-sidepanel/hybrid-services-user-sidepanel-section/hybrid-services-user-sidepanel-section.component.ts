@@ -16,12 +16,10 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
 
   private userId: string;
   private userEntitlements: string[];
-  private userLicenseIDs: string[];
 
   private readonly allHybridServiceIds: HybridServiceId[] = ['squared-fusion-cal', 'squared-fusion-gcal', 'squared-fusion-uc', 'squared-fusion-ec', 'spark-hybrid-impinterop'];
 
   public isInvitePending: boolean;
-  public isLicensed: boolean;
   public atlasHybridImpFeatureToggle: boolean;
 
   private servicesOrgIsEntitledTo: HybridServiceId[];
@@ -57,10 +55,8 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
     if (user && user.currentValue) {
       this.userId = user.currentValue.id;
       this.userEntitlements = user.currentValue.entitlements;
-      this.userLicenseIDs = user.currentValue.licenseID;
       this.isInvitePending = this.Userservice.isInvitePending(user.currentValue);
     }
-    this.isLicensed = this.userIsLicensed();
     this.init();
   }
 
@@ -106,19 +102,6 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
       });
 
   }
-
-  private userIsLicensed(): boolean {
-    return !(_.size(this.Authinfo.getLicenses()) > 0 && !this.hasCaaSLicense());
-  }
-
-  private hasCaaSLicense(): boolean {
-    const licenseIDs: string[] = this.userLicenseIDs || [];
-    const offerCodes: string[] = _.map(licenseIDs, (licenseString) => {
-      return licenseString.split('_')[0];
-    });
-    return offerCodes.length > 0;
-  }
-
 
   public serviceIsOnForUser(serviceId: HybridServiceId): boolean {
     return _.some(this.servicesWithStatuses, (serviceWithStatus) => {

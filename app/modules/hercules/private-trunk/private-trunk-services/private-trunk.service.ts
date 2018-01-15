@@ -48,6 +48,12 @@ export class PrivateTrunkService {
     return this.privateTrunkService.get({
       customerId: this.Authinfo.getOrgId(),
     }).$promise
+    .catch(() => {
+      return {
+        resources: [],
+        domains: undefined,
+      } as IPrivateTrunkInfo;
+    })
     .then((resp) => {
       return _.pick(resp, 'resources', 'domains');
     });

@@ -1,6 +1,6 @@
 describe('Controller: OverviewCtrl', function () {
   beforeEach(function () {
-    this.initModules('Core', 'Huron', 'Sunlight');
+    this.initModules('Core', 'Huron', 'Sunlight', 'Hercules');
     this.injectDependencies(
       '$controller',
       '$filter',
@@ -15,12 +15,14 @@ describe('Controller: OverviewCtrl', function () {
       'FeatureToggleService',
       'HybridServicesClusterService',
       'HybridServicesFlagService',
+      'PrivateTrunkService',
       'ProPackService',
       'LearnMoreBannerService',
       'Orgservice',
       'OverviewNotificationFactory',
       'PstnService',
       'ReportsService',
+      'ServiceDescriptorService',
       'SetupWizardService',
       'SunlightReportService',
       'SunlightUtilitiesService',
@@ -75,7 +77,6 @@ describe('Controller: OverviewCtrl', function () {
 
     spyOn(this.ProPackService, 'hasProPackEnabledAndNotPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(true));
-    spyOn(this.FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
     spyOn(this.LearnMoreBannerService, 'isElementVisible').and.returnValue(true);
@@ -105,6 +106,10 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(this.SetupWizardService, 'getPendingOrderStatusDetails').and.returnValue(this.$q.resolve());
     spyOn(this.TrialService, 'getDaysLeftForCurrentUser').and.returnValue(this.$q.resolve(1));
 
+    spyOn(this.PrivateTrunkService, 'getPrivateTrunk').and.returnValue(this.$q.resolve({ resources: [] }));
+    spyOn(this.ServiceDescriptorService, 'getServiceStatus').and.returnValue(this.$q.resolve({ state: 'unknown' }));
+
+
     this.initController = function () {
       this.controller = this.$controller('OverviewCtrl', {
         $q: this.$q,
@@ -117,12 +122,14 @@ describe('Controller: OverviewCtrl', function () {
         FeatureToggleService: this.FeatureToggleService,
         HybridServicesClusterService: this.HybridServicesClusterService,
         HybridServicesFlagService: this.HybridServicesFlagService,
+        PrivateTrunkService: this.PrivateTrunkService,
         ProPackService: this.ProPackService,
         LearnMoreBannerService: this.LearnMoreBannerService,
         Orgservice: this.Orgservice,
         OverviewNotificationFactory: this.OverviewNotificationFactory,
         PstnService: this.PstnService,
         ReportsService: this.ReportsService,
+        ServiceDescriptorService: this.ServiceDescriptorService,
         SunlightReportService: this.SunlightReportService,
         SunlightUtilitiesService: this.SunlightUtilitiesService,
         SunlightConfigService: this.SunlightConfigService,
@@ -242,7 +249,7 @@ describe('Controller: OverviewCtrl', function () {
 
   describe('Notifications', function () {
     beforeEach(function () {
-      this.TOTAL_NOTIFICATIONS = 9;
+      this.TOTAL_NOTIFICATIONS = 8;
       this.initController();
     });
 
@@ -254,14 +261,6 @@ describe('Controller: OverviewCtrl', function () {
       expect(this.controller.notifications.length).toEqual(this.TOTAL_NOTIFICATIONS);
 
       var notification = this.OverviewNotificationFactory.createCrashLogNotification();
-      this.controller.dismissNotification(notification);
-      expect(this.controller.notifications.length).toEqual(this.TOTAL_NOTIFICATIONS - 1);
-    });
-
-    it('should dismiss the PMR notification', function () {
-      expect(this.controller.notifications.length).toEqual(this.TOTAL_NOTIFICATIONS);
-
-      var notification = this.OverviewNotificationFactory.createPMRNotification();
       this.controller.dismissNotification(notification);
       expect(this.controller.notifications.length).toEqual(this.TOTAL_NOTIFICATIONS - 1);
     });
@@ -392,7 +391,7 @@ describe('Controller: OverviewCtrl', function () {
     });
 
     it('should call ESA check if logged in as a Partner', function () {
-      var TOTAL_NOTIFICATIONS = 10;
+      var TOTAL_NOTIFICATIONS = 9;
       expect(this.PstnService.isSwivelCustomerAndEsaUnsigned).toHaveBeenCalled();
       expect(this.controller.esaDisclaimerNotification).toBeTruthy();
       expect(this.controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
@@ -410,7 +409,7 @@ describe('Controller: OverviewCtrl', function () {
     });
 
     it('should not have ESA notification if isSwivelCustomerAndEsaUnsigned returned false', function () {
-      var TOTAL_NOTIFICATIONS = 9;
+      var TOTAL_NOTIFICATIONS = 8;
       expect(this.controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
       expect(this.controller.esaDisclaimerNotification).toBeFalsy();
     });
@@ -464,7 +463,7 @@ describe('Controller: OverviewCtrl', function () {
 
   describe('Auto Assign Notification - set up now', function () {
     it('should not display if atlasF3745AutoAssignLicenses is false', function () {
-      var TOTAL_NOTIFICATIONS = 8;
+      var TOTAL_NOTIFICATIONS = 7;
       this.FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus.and.returnValue(this.$q.resolve(false));
       this.initController();
       expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS);

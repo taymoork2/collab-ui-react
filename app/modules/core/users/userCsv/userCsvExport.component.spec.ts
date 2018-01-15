@@ -12,9 +12,9 @@ describe('crUserCsvExport Component', () => {
   function init() {
     this.initModules(testModule, 'Core', 'Huron', 'Sunlight');
     this.injectDependencies(
-      '$componentController', '$modal', '$q', '$scope', '$rootScope', '$timeout',
-      '$translate', '$httpBackend', 'Analytics', 'CsvDownloadService', 'Notification',
-      'UserListService', 'UrlConfig', 'Authinfo', 'FeatureToggleService');
+      '$componentController', '$httpBackend', '$modal', '$q', '$rootScope', '$scope', '$timeout', '$translate',
+      'Analytics', 'Authinfo', 'AutoAssignTemplateModel', 'CsvDownloadService', 'FeatureToggleService', 'ModalService', 'Notification', 'UrlConfig', 'UserListService',
+    );
 
     initMocks.apply(this);
     initDependencySpies.apply(this);
@@ -44,6 +44,23 @@ describe('crUserCsvExport Component', () => {
     spyOn(this.CsvDownloadService, 'getCsv').and.returnValue(this.$q.resolve(DATA_URL));
     spyOn(this.CsvDownloadService, 'cancelDownload');
     spyOn(this.$modal, 'open').and.returnValue(this.fakeModal);
+    spyOn(this.ModalService, 'open').and.callFake(() => {
+      this.autoAssignFakeModal = {
+        result: {
+          then: function (okCallback, cancelCallback) {
+            this.okCallback = okCallback;
+            this.cancelCallback = cancelCallback;
+          },
+        },
+        close: function (item) {
+          this.result.okCallback(item);
+        },
+        dismiss: function (type) {
+          this.result.cancelCallback(type);
+        },
+      };
+      return this.autoAssignFakeModal;
+    });
     spyOn(this.$translate, 'instant').and.returnValue(TRANSLATED_STRING);
     spyOn(this.$rootScope, '$emit');
     spyOn(this.Analytics, 'trackAddUsers').and.returnValue(this.$q.resolve({}));
@@ -346,6 +363,52 @@ describe('crUserCsvExport Component', () => {
       expect(this.controller.isDownloading).toBeFalsy();
       this.controller.downloadTemplate();
 
+      this.$scope.$apply(); // trigger warnAutoAssignTemplate() promise resolution
+
+      testDownloadTemplate.call(this);
+    });
+
+    it('should support downloadTemplate() after Auto Assign Template warning modal', function () {
+      this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = true;
+
+      expect(this.controller.isDownloading).toBeFalsy();
+      this.controller.downloadTemplate();
+
+      this.autoAssignFakeModal.close();
+      this.$scope.$apply(); // trigger warnAutoAssignTemplate() promise resolution
+
+      testDownloadTemplate.call(this);
+    });
+
+    it('should support exportCsv()', function () {
+
+      expect(this.controller.isDownloading).toBeFalsy();
+      this.controller.exportCsv();
+
+      this.$scope.$apply(); // trigger warnAutoAssignTemplate() promise resolution
+
+      testExportCsv.call(this);
+    });
+
+    it('should support exportCsv() after Auto Assign Template warning modal', function () {
+      this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = true;
+
+      expect(this.controller.isDownloading).toBeFalsy();
+      this.controller.exportCsv();
+
+      this.autoAssignFakeModal.close();
+      this.$scope.$apply(); // trigger warnAutoAssignTemplate() promise resolution
+
+      testExportCsv.call(this);
+    });
+
+    it('should support canceling download/export()', function () {
+      this.controller.cancelDownload();
+      expect(this.CsvDownloadService.cancelDownload).toHaveBeenCalled();
+      expect(this.Notification.warning).toHaveBeenCalledWith('userManage.bulk.canceledExport');
+    });
+
+    function testDownloadTemplate() {
       expect(this.$rootScope.$emit).toHaveBeenCalledWith('csv-download-request',
         jasmine.objectContaining({
           csvType: CsvDownloadTypes.TYPE_TEMPLATE,
@@ -371,14 +434,9 @@ describe('crUserCsvExport Component', () => {
       expect(this.bindings.onStatusChange).toHaveBeenCalledWith({
         isExporting: false,
       });
+    }
 
-    });
-
-    it('should support exportCsv()', function () {
-
-      expect(this.controller.isDownloading).toBeFalsy();
-      this.controller.exportCsv();
-
+    function testExportCsv() {
       expect(this.$rootScope.$emit).not.toHaveBeenCalledWith('csv-download-begin');
       this.fakeModal.close();
 
@@ -407,14 +465,7 @@ describe('crUserCsvExport Component', () => {
       expect(this.bindings.onStatusChange).toHaveBeenCalledWith({
         isExporting: false,
       });
-
-    });
-
-    it('should support canceling download/export()', function () {
-      this.controller.cancelDownload();
-      expect(this.CsvDownloadService.cancelDownload).toHaveBeenCalled();
-      expect(this.Notification.warning).toHaveBeenCalledWith('userManage.bulk.canceledExport');
-    });
+    }
   });
 
 });

@@ -1,0 +1,56 @@
+<div class="snr-panel">
+  <div class="loading-container" ng-if="$ctrl.loading">
+    <i class="icon icon-spinner"></i>
+  </div>
+  <form novalidate name="$ctrl.form" ng-if="!$ctrl.loading" novalidate role="form">
+    <cs-sp-buttons ng-show="$ctrl.form.$dirty">
+      <button cs-btn
+        class="btn btn--primary"
+        ng-click="$ctrl.save()"
+        ng-disabled="$ctrl.form.$invalid"
+        loading="$ctrl.processing">
+          <span translate="common.save"></span>
+      </button>
+      <button ng-click="$ctrl.onCancel()" translate="common.cancel"></button>
+    </cs-sp-buttons>
+    <cs-sp-container cs-tabindex="$ctrl.form.$dirty ? -1 : 0">
+      <cs-sp-section>
+        <div class="section-title-row">
+          <span class="section-name" translate="singleNumberReachPanel.title"></span>
+          <cs-toggle-switch ng-model="$ctrl.snrData.snr.enableMobileConnect" toggle-id="enableSnr" name="enableSnr" size="small"></cs-toggle-switch>
+        </div>
+        <p translate="singleNumberReachPanel.description"></p>
+        <div class="form-group-wrapper" ng-if="$ctrl.snrData.snr.enableMobileConnect">
+          <uc-snr-lines
+            lines="$ctrl.snrData.lines"
+            patterns="$ctrl.snrData.snr.patterns.pattern"
+            uuid="$ctrl.snrData.snr.uuid"
+            on-change-fn="$ctrl.onSnrLinesChanged(patterns)">
+          </uc-snr-lines>
+          <div class="cs-input-group">
+            <p translate="singleNumberReachPanel.snrRemoteDestinationNumber"></p>
+            <cs-call-destination
+              model="$ctrl.snrData.snr.destination"
+              size="medium-12"
+              inputs="$ctrl.callDestInputs"
+              select-type="select"
+              custom-number-translations="$ctrl.customTranslations"
+              custom-number-validation-pattern="$ctrl.customNumberValidationPatern"
+              input-translations="$ctrl.inputTranslations"
+              on-change-fn="$ctrl.setSnr(model)">
+            </cs-call-destination>
+          </div>
+          <uc-snr-wait-timer
+            answer-too-late-timer="$ctrl.snrData.snr.answerTooLateTimer"
+            on-change-fn="$ctrl.onAnswerTooLateTimerChanged(answerTooLateTimer)">
+          </uc-snr-wait-timer>
+        </div>
+        <div ng-if="$ctrl.snrData.snr.uuid && !$ctrl.snrData.snr.enableMobileConnect">
+          <p class="snr-description" translate="singleNumberReachPanel.snrOffDescription"></p>
+          <span class="snr-description"> {{$ctrl.snrData.snr.destination}}. </span>
+          <a id="remove" ng-click="$ctrl.remove()" translate="singleNumberReachPanel.remove"></a>
+        </div>
+      </cs-sp-section>
+    </cs-sp-container>
+  </form>
+</div>

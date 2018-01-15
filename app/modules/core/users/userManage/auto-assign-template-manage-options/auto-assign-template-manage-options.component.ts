@@ -4,22 +4,45 @@ class AutoAssignTemplateManageOptionsController implements ng.IComponentControll
   private autoAssignTemplates: any;  // TODO: better type
   private onDelete: Function;
   private onActivateToggle: Function;
-  public isActivated: boolean = false;
+  private stateData: any;
 
   /* @ngInject */
   constructor(
+    private $state: ng.ui.IStateService,
     private $translate,
     private AutoAssignTemplateService,
     private ModalService,
     private Notification,
   ) {}
 
+  public $onInit(): void {
+    this.stateData = {};
+
+    this.AutoAssignTemplateService.getSortedSubscriptions().then((sortedSubscriptions) => {
+      _.set(this.stateData, 'subscriptions', sortedSubscriptions);
+    });
+  }
+
+  public modifyAutoAssignTemplate() {
+    this.AutoAssignTemplateService.getTemplates()
+      .then((response) => {
+        const convertedStateData = this.AutoAssignTemplateService.convertDefaultTemplateToStateData(response);
+        _.merge(this.stateData, convertedStateData);
+        this.$state.go('users.manage.edit-auto-assign-template-modal', {
+          prevState: 'users.manage.picker',
+          stateData: this.stateData,
+        });
+      })
+      .catch((response) => {
+        this.Notification.errorResponse(response, 'userManage.org.modifyAutoAssign.modifyError');
+      });
+  }
+
   public activateAutoAssignTemplate() {
     this.AutoAssignTemplateService.activateTemplate()
       .then(() => {
         this.Notification.success('userManage.org.activateAutoAssign.activateSuccess');
-        this.isActivated = true;
-        this.onActivateToggle({ isActivated: this.isActivated });
+        this.onActivateToggle({ isActivated: true });
       })
       .catch((response) => {
         this.Notification.errorResponse(response, 'userManage.org.activate.activateError');
@@ -37,8 +60,7 @@ class AutoAssignTemplateManageOptionsController implements ng.IComponentControll
       return this.AutoAssignTemplateService.deactivateTemplate()
       .then(() => {
         this.Notification.success('userManage.org.deactivateAutoAssign.deactivateSuccess');
-        this.isActivated = false;
-        this.onActivateToggle({ isActivated: this.isActivated });
+        this.onActivateToggle({ isActivated: false });
       })
       .catch((response) => {
         this.Notification.errorResponse(response, 'userManage.org.deactivate.deactivateError');
@@ -72,7 +94,8 @@ export class AutoAssignTemplateManageOptionsComponent implements ng.IComponentOp
   public template = require('./auto-assign-template-manage-options.html');
   public bindings = {
     autoAssignTemplates: '<',
-    onDelete: '&?',
-    onActivateToggle: '&?',
+    isTemplateActive: '<',
+    onDelete: '&',
+    onActivateToggle: '&',
   };
 }

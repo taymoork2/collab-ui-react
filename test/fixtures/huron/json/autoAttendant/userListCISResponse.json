@@ -165,6 +165,81 @@
           "CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32"
         ],
         "avatarSyncEnabled": false
+      },
+      {
+        "userName": "user@gmail.com",
+        "name": {
+          "givenName": "",
+          "familyName": ""
+        },
+        "entitlements": [
+          "squared-call-initiation",
+          "webex-squared",
+          "spark"
+        ],
+        "id": "47026507-4F83-0B5B-9C1D-8DBA89F2E01C",
+        "meta": {
+          "created": "2015-11-16T16:40:54.084Z",
+          "lastModified": "2016-01-06T18:06:47.999Z",
+          "version": "19382735439",
+          "location": "https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b",
+          "organizationID": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2"
+        },
+        "displayName": "",
+        "active": true,
+        "licenseID": [
+          "CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32"
+        ],
+        "avatarSyncEnabled": false
+      },
+      {
+        "userName": "user@gmail.com",
+        "name": {
+          "givenName": "",
+          "familyName": "Super Admin"
+        },
+        "entitlements": [
+          "squared-call-initiation",
+          "webex-squared",
+          "spark"
+        ],
+        "id": "47026507-4F83-0B5B-9C1D-8DBA89F2E01C",
+        "meta": {
+          "created": "2015-11-16T16:40:54.084Z",
+          "lastModified": "2016-01-06T18:06:47.999Z",
+          "version": "19382735439",
+          "location": "https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b",
+          "organizationID": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2"
+        },
+        "displayName": "",
+        "active": true,
+        "licenseID": [
+          "CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32"
+        ],
+        "avatarSyncEnabled": false
+      },
+      {
+        "userName": "user@gmail.com",
+        "name": {},
+        "entitlements": [
+          "squared-call-initiation",
+          "webex-squared",
+          "spark"
+        ],
+        "id": "47026507-4F83-0B5B-9C1D-8DBA89F2E01C",
+        "meta": {
+          "created": "2015-11-16T16:40:54.084Z",
+          "lastModified": "2016-01-06T18:06:47.999Z",
+          "version": "19382735439",
+          "location": "https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b",
+          "organizationID": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2"
+        },
+        "displayName": "",
+        "active": true,
+        "licenseID": [
+          "CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32"
+        ],
+        "avatarSyncEnabled": false
       }
     ],
     "success": true

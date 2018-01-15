@@ -11,6 +11,7 @@ describe('UserManageOrgController', () => {
       '$state',
       '$window',
       'Analytics',
+      'AutoAssignTemplateModel',
       'AutoAssignTemplateService',
       'DirSyncService',
       'FeatureToggleService',
@@ -60,9 +61,21 @@ describe('UserManageOrgController', () => {
     initController.apply(this);
   }
 
-  function initControllerAndAutoAssignFeatureToggleOn() {
+  function initControllerAndAutoAssignFeatureToggleOn(spies: {
+    isEnabledForOrg?,
+    getTemplates?,
+  } = {}) {
+    const {
+      isEnabledForOrg = this.$q.resolve(true),
+      getTemplates = this.$q.resolve([{
+        name: 'Default',
+        foo: 'bar',
+      }]),
+    } = spies;
     spyOn(this.FeatureToggleService, 'atlasEmailSuppressGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.AutoAssignTemplateService, 'isEnabledForOrg').and.returnValue(isEnabledForOrg);
+    spyOn(this.AutoAssignTemplateService, 'getTemplates').and.returnValue(getTemplates);
 
     initController.apply(this);
   }
@@ -218,8 +231,9 @@ describe('UserManageOrgController', () => {
   it('should go to an external link if isDirSyncEnabled is false', function () {
     initControllerAndDefaults.apply(this);
     this.controller.handleDirSyncService();
+    this.$scope.$apply();
 
-    expect(this.$window.open).toHaveBeenCalled();
+    expect(this.$state.go).toHaveBeenCalledWith('users.manage.advanced.add.ob.installConnector');
   });
 
   describe('initFeatureToggles():', function () {
@@ -244,27 +258,49 @@ describe('UserManageOrgController', () => {
 
   describe('initDefaultAutoAssignTemplate():', function () {
     it('should call early out if "isAtlasF3745AutoAssignToggle" is not true', function () {
-      initController.call(this);
-      this.controller.isAtlasF3745AutoAssignToggle = false;
+      initControllerAndDefaults.call(this);
+
       expect(this.controller.initDefaultAutoAssignTemplate()).toBe(undefined);
     });
 
     it('should set "autoAssignTemplates" property if "AutoAssignTemplateService.getTemplates()" responds with appropriate data', function () {
-      initController.call(this);
-      this.controller.isAtlasF3745AutoAssignToggle = true;
-      spyOn(this.AutoAssignTemplateService, 'getTemplates').and.returnValue(this.$q.resolve([{
-        name: 'Default',
-        foo: 'bar',
-      }]));
+      initControllerAndAutoAssignFeatureToggleOn.call(this);
 
-      this.controller.initDefaultAutoAssignTemplate();
-      this.$scope.$apply();
       expect(this.controller.autoAssignTemplates).toEqual({
         Default: {
           name: 'Default',
           foo: 'bar',
         },
       });
+    });
+  });
+
+  describe('isDefaultAutoAssignTemplateActivated():', function () {
+    it('should set AutoAssignTemplateModel and be true if has a default template and is activated', function () {
+      initControllerAndAutoAssignFeatureToggleOn.call(this);
+
+      expect(this.controller.isDefaultAutoAssignTemplateActivated()).toBe(true);
+      expect(this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated).toBe(true);
+    });
+
+    it('should set AutoAssignTemplateModel and be false if does not have a default template', function () {
+      this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = true; // initial state to check against
+      initControllerAndAutoAssignFeatureToggleOn.call(this, {
+        getTemplates: this.$q.resolve([]),
+      });
+
+      expect(this.controller.isDefaultAutoAssignTemplateActivated()).toBe(false);
+      expect(this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated).toBe(false);
+    });
+
+    it('should set AutoAssignTemplateModel and be false if is not an activated template', function () {
+      this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = true; // initial state to check against
+      initControllerAndAutoAssignFeatureToggleOn.call(this, {
+        isEnabledForOrg: this.$q.resolve(false),
+      });
+
+      expect(this.controller.isDefaultAutoAssignTemplateActivated()).toBe(false);
+      expect(this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated).toBe(false);
     });
   });
 });

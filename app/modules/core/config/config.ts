@@ -541,7 +541,7 @@ export class Config {
       'users',
       'customerPstnOrdersOverview',
       'taasSuites',
-      'taasTest',
+      'taasTaskView',
       'taasResource',
       'taasSchedule',
       'taasServiceManager',

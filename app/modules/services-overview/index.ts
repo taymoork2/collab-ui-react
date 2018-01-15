@@ -38,6 +38,7 @@ export default angular
     require('modules/core/notifications').default,
     require('modules/core/proPack').default,
     require('modules/core/scripts/services/authinfo'),
+    require('modules/core/users/userAdd/shared').default,
     require('modules/hds/services/hds.service'),
     require('modules/services-overview/new-hybrid/prerequisites-modals/private-trunk-prereq').default,
     require('modules/hercules/private-trunk/private-trunk-services').default,
@@ -45,7 +46,7 @@ export default angular
     require('modules/hercules/services/enterprise-private-trunk-service').default,
     require('modules/hercules/services/hybrid-services-cluster.service').default,
     require('modules/hercules/services/uss.service').default,
-    require('modules/hcs/test-manager/shared').default,
+    require('modules/hcs/task-manager/shared').default,
   ])
   .component('cardUsersSummary', new CardUsersSummaryComponent())
   .component('enableUsersModal', new EnableUsersModalComponent())

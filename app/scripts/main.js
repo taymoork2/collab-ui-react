@@ -231,6 +231,7 @@
     'CareDetails',
     'Sunlight.pagination',
     require('modules/sunlight/services').default,
+    require('modules/sunlight/numbers').default,
   ]);
 
   angular.module('Context', ['Core']);
@@ -241,15 +242,11 @@
 
   angular.module('HCS', [
     'Core',
-    require('modules/hcs/test-manager').default,
-    require('modules/hcs/test-manager/overview').default,
-    require('modules/hcs/test-manager/suiteView').default,
-    require('modules/hcs/test-manager/testView').default,
-    require('modules/hcs/test-manager/scheduler').default,
-    require('modules/hcs/test-manager/resources').default,
-    require('modules/hcs/test-manager/scheduleView').default,
-    require('modules/hcs/test-manager/resourceCreate').default,
-    require('modules/hcs/test-manager/suite-create').default,
+    require('modules/hcs/task-manager').default,
+    require('modules/hcs/task-manager/resource').default,
+    require('modules/hcs/task-manager/schedule').default,
+    require('modules/hcs/task-manager/suite').default,
+    require('modules/hcs/task-manager/task').default,
   ]);
 
   angular.module('ServicesOverview', [

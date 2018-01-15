@@ -7,7 +7,7 @@ export default class MessengerInteropService {
     private Config: Config,
   ) {}
 
-  public hasAssignableMessageItems() {
+  public hasAssignableMessageItems(): boolean {
     const messageFeatures = this.Authinfo.getMessageServices({ assignableOnly: true });
     if (_.size(messageFeatures)) {
       return true;
@@ -16,7 +16,17 @@ export default class MessengerInteropService {
     return this.hasAssignableMessageOrgEntitlement();
   }
 
-  public hasAssignableMessageOrgEntitlement() {
+  public hasAssignableMessageOrgEntitlement(): boolean {
     return this.Authinfo.isEntitled(this.Config.entitlements.messenger_interop);
+  }
+
+  public hasMessengerLicense(): boolean {
+    const messageServices = this.Authinfo.getMessageServices();
+    const hasMessenger = _.find(messageServices, {
+      license: {
+        offerName: this.Config.offerCodes.MSGR,
+      },
+    });
+    return !!hasMessenger;
   }
 }

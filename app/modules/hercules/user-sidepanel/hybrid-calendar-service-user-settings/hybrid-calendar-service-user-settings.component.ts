@@ -56,6 +56,10 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
     private USSService: USSService,
   ) { }
 
+  public $onInit() {
+    this.processDataFromCommonIdentity();
+  }
+
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
     const { userId, userEmailAddress,  userUpdatedCallback, preferredWebExSiteName, isInvitePending, allUserEntitlements } = changes;
     if (userId && userId.currentValue) {

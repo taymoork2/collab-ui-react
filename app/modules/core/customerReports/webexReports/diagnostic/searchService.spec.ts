@@ -108,7 +108,7 @@ describe('Service: searchService', () => {
     moment.tz.setDefault('America/Chicago');
     this.SearchService.setStorage('timeZone', 'America/Chicago');
     const data_ = this.SearchService.utcDateByTimezone(data);
-    expect(data_).toBe('2017-08-02 01:44:30');
+    expect(data_).toBe('2017-08-02 01:44:30 AM');
   });
 
   it('should get correct data when call getOffset', function () {
@@ -137,7 +137,7 @@ describe('Service: searchService', () => {
 
   it('should get correct data when call getBrowser', function () {
     let brow = this.SearchService.getBrowser(6);
-    expect(brow).toBe('CHROME');
+    expect(brow).toBe('Chrome');
 
     brow = this.SearchService.getBrowser();
     expect(brow).toBe('Other');
@@ -145,7 +145,7 @@ describe('Service: searchService', () => {
 
   it('should get correct data when call getPlartform', function () {
     let platform = this.SearchService.getPlartform({ platform: 1, sessionType: 0 });
-    expect(platform).toBe('MAC');
+    expect(platform).toBe('Mac');
 
     platform = this.SearchService.getPlartform({ platform: 1, sessionType: 25 });
     expect(platform).toBe('PSTN');
@@ -172,7 +172,7 @@ describe('Service: searchService', () => {
 
     obj = { sessionType: '25', platform: '9' };
     device = this.SearchService.getDevice(obj);
-    expect(device.name).toBe('PSTN');
+    expect(device.name).toBe('IP Phone');
 
     obj = { platform: '10' };
     device = this.SearchService.getDevice(obj);
@@ -184,7 +184,7 @@ describe('Service: searchService', () => {
 
     obj = { platform: '6' };
     device = this.SearchService.getDevice(obj);
-    expect(device.name).toBe('Browser');
+    expect(device.name).toBe('Javascript: Other');
   });
 
   it('', function () {

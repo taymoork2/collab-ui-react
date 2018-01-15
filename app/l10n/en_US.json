@@ -214,6 +214,7 @@
       "directorySynchronization": "Directory Synchronization",
       "directorySynchronizationEnableLabel": "Enable Directory Synchronization",
       "directorySynchronizationDisableLabel": "Disable Directory Synchronization",
+      "turnOnDirSync": "Turn on Directory Synchronization",
       "licenses": "Licenses",
       "autoAssignLicenses": "Auto-Assign Licenses",
       "setUpAutoAssignTemplate": "Set up Auto-Assign Template",
@@ -224,14 +225,17 @@
         "deactivateAutoAssign": "Deactivate Auto-Assign",
         "deleteAutoAssign": "Delete Auto-Assign Template"
       },
+      "modifyAutoAssign": {
+        "modifyError": "Template failed to load."
+      },
       "activateAutoAssign": {
         "activateSuccess": "You've activated the Auto-Assign License Template",
-        "activateError": "Templated failed to activate"
+        "activateError": "Templated failed to activate."
       },
       "deactivateAutoAssign": {
         "description": "Licenses won't be assigned to new users automatically. Existing users' licenses won't be affected. Do you want to continue?",
         "deactivateSuccess": "You've deactivated the Auto-Assign License Template",
-        "deactivateError": "Template failed to deactivate"
+        "deactivateError": "Template failed to deactivate."
       },
       "deleteAutoAssignModal": {
         "title": "Delete Auto-Assign Template",
@@ -358,6 +362,10 @@
         "description": "The following licenses will automatically be assigned to new users.",
         "saveSuccess": "Your license template has been set up successfully. Licenses will be assigned to new users automatically.",
         "saveError": "An error occurred while saving your license template. Please try again."
+      },
+      "csv": {
+        "warningTitle": "Auto Assign CSV Rules",
+        "warningMessage": "Leave the license fields blank if you want to apply the auto assign template to a new user. Or specify licenses by typing True or False and the auto assign template isn't applied. Existing users are not impacted by the auto assign template."
       }
     }
   },
@@ -402,7 +410,6 @@
     "call": "Call",
     "subscriptionIdError": "An error occurred loading your subscription ids",
     "hybridServices": "Hybrid Services",
-    "hybridServicesWarning": "Assign at least one license to enable Hybrid Services for the user",
     "freeCollab": "Free Public Collaboration Services",
     "licCollab": "Licensed Collaboration Services",
     "siteAdminUrl": "Sign-in to manage",
@@ -434,6 +441,7 @@
     "careServices": "Chat and Callback",
     "careVoiceServices": "Chat, Callback and Inbound Call",
     "enableCallInfo": "Cisco Spark Call is required for voice-based interactions.",
+    "enableCallInfoToggle": "You must have Cisco Spark Call or Hybrid Call to use Spark Care voice features.",
     "paidContactCenterVoice": "Chat, Callback and Inbound Call",
     "paidContactCenter": "Chat and Callback",
     "enterpriseEdition": "Enterprise Edition {{capacity}}",
@@ -1594,6 +1602,7 @@
     "off": "Off",
     "offline": "Offline",
     "ok": "Ok",
+    "OK": "OK",
     "on": "On",
     "online": "Online",
     "open": "Open",
@@ -1619,6 +1628,7 @@
     "resources": "Resources",
     "result": "Result",
     "retry": "Retry",
+    "reload": "Reload",
     "save": "Save",
     "saveLabel": "Do you want to save your changes?",
     "search": "Search",
@@ -1632,6 +1642,7 @@
     "service": "Service",
     "settings": "Settings",
     "setUp": "Set Up",
+    "shared": "Shared",
     "showAllAdminUsers": "Show all {{numUsers}} administrators",
     "showLess": "Show Less",
     "showMore": "Show More",
@@ -1763,6 +1774,7 @@
     "setUpHybridDataSecurity": "Create an on-premises security realm with Hybrid Data Security.",
     "careLicenseMsgMissingText": "Message is mandatory for Care services. To enable Message,",
     "careLicenseCallMissingText": "Call is mandatory for voice-based Care services. To enable Call,",
+    "careLicenseCallMissingTextToggle": "To use Spark Care voice features, contact partner to enable Spark Call or Setup Hybrid Call and Enterprise SIP Trunking.",
     "careLicenseMsgAndCallMissingText": "Message and Call are mandatory for Care services like chat and voice interaction respectively. To enable Message and Call,",
     "careLicenseLinkText": "contact your partner or Cisco sales.",
     "proPackNotification": "Unleash the full power of the Spark Control Hub with Pro Pack.",
@@ -2561,7 +2573,6 @@
       "google": "Google Calendar",
       "notSetup": "Not currently set up",
       "sinceTime": "since {{timestamp}}",
-      "noLicensedServices": "This user must have one or more licensed services to be configured for Hybrid Services.",
       "entitledToBothCalendarsShort": "Multiple Calendar Entitlements",
       "entitledToBothCalendars": "This user is currently entitled to both calendar types. To clear the error, disable calendar service for the user and then enable it again.",
       "couldNotReadOffice365Status": "Could not read organization's Office 365 configuration. The information above might be incomplete.",
@@ -4006,6 +4017,7 @@
     "sharedLicenseTooltip": "Each Shared Meetings license allows up to 250 users to be entitled as meeting hosts. Shared Meetings hosts can hold unlimited meetings but not exceed 1 concurrent meeting per Shared Meetings license.",
     "namedLicenses": "Named User Licenses",
     "careTooltip": "All Care users require Cisco Spark Messaging license as a prerequisite. Additionally, they require Cisco Spark Call license for voice-based interactions.",
+    "careTooltipToggle": "You must have Cisco Spark Messaging license to use Spark Care. For voice features, you also need Cisco Spark Call or Hybrid Call license.",
     "partnerProvidedAudio": "Partner-provided Audio",
     "webexProvidedAudio": "WebEx-provided Audio",
     "meetingsInSpark": "Cisco Spark 25 party Meetings",
@@ -4169,8 +4181,8 @@
     "enableAssistant": "Enable Cisco Spark Assistant",
     "description": "Allows users to perform various actions such as, make calls, start meetings, using their voice.",
     "termOfService": "Spark Assistant terms of service",
-    "optout": "Spark Assistant Optout",
-    "optoutConfirm": "Are you sure to Opt Out of Spark Assistant? This will disable Spark Assistant Service."
+    "optout": "Disable Cisco Spark Assistant",
+    "optoutConfirm": "If you disable the Cisco Spark Assistant, you won't be able to use voice commands on any of the supported devices."
   },
   "reports": {
     "title": "Reports",
@@ -4886,12 +4898,11 @@
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
     "description": "Single Number Reach (SNR) enables you to have incoming calls ring the extension and other lines that you specify here at the same time.",
-    "description2": "Turn on Single Number Reach and specify the lines that you want to ring at the same time.",
     "snrOffDescription": "Single Number Reach is currently disabled. The Destination is set to ",
     "deleteConfirmMsg": "Are you sure you want to delete?",
     "confirmDelete": "Confirm Delete",
     "remove": "Remove",
-    "snrRemoteDestinationNumber": "When the line is called, the following phone number will ring at the same time:",
+    "snrRemoteDestinationNumber": "When the lines chosen above are called, the following phone number will ring at the same time:",
     "snrRemoteDestinationNumberPlaceholder": "Enter Number",
     "snrWaitSeconds": "Indicate how long you want all lines to ring before the call is forwarded to your work voicemail.",
     "toggle": "Single Number Reach",
@@ -4900,7 +4911,8 @@
     "removeSuccess": "Single Number Reach configuration removed successfully",
     "error": "Single Number Reach configuration failed.",
     "unitedStates": "United States of America",
-    "austrailia": "Austrailia"
+    "austrailia": "Austrailia",
+    "chooseLines": "Choose the lines to ring:"
   },
   "speedDials": {
     "title": "Speed Dial Numbers",
@@ -7274,6 +7286,7 @@
   "sunlightDetails": {
     "title": "Care",
     "status": "Status: ",
+    "numberTitle": "Numbers",
     "settingsTitle": "Settings",
     "featuresTitle": "Features",
     "sorryMessage": "Sorry, something went wrong ",
@@ -7349,6 +7362,7 @@
       "routingChangeWarnMsgLine3": "Users are required to sign in again to receive tasks as per the new routing."
     },
     "featuresNotYetConfiguredPage": {
+      "addNumbers": "Add Numbers",
       "createCareTemplate": "Create a Care Template",
       "createCareTemplateDesc": "A Care template is what your customer uses to contact customer care.",
       "MessageLicenseMissing": "Message is mandatory for Care templates. To enable Message, <a href ng-click=\"{{onclick}}\">contact your partner or Cisco sales</a>",
@@ -7608,7 +7622,11 @@
     "overviewDesc_callback": "Toggle cards to customize what screens you want your customer to see when requesting a callback from customer care",
     "overviewDesc_chatPlusCallback": "Toggle cards to customize what screens you want your customer to see when requesting a chat or callback from customer care",
     "customerInfoDesc_chat": "This is the screen a customer fills in to start chat with an agent",
+    "customerInfoDesc_chat_expert": "Use these attributes to collect customer information and to facilitate escalation to a Cisco Spark\n expert space by identifying the topic of the customer's request.",
     "customerInfoDesc_callback": "This is the screen a customer fills in to request a callback from an agent",
+    "evaSpaceDetailsText": ", your Expert Virtual Assistant, is in {{numberOfEvaSpaces}} Expert Spaces in Cisco Spark:",
+    "evaSpaceDetailsTextOneSpace": ", your Expert Virtual Assistant, is in 1 Expert Space in Cisco Spark:",
+    "evaDefaultName": "EVA",
     "customerInfoToggleTooltipMessage": "This screen is required for this template and cannot be disabled.",
     "virtualAssistantToggleTooltipMessage": "Configure a Customer Virtual Assistant from the Features page before you enable this. You can also configure your assistant and enable this feature at a later time.",
     "getVirtualAssistantListError": "Error in getting list of configured virtual assistant.",
@@ -7696,6 +7714,9 @@
     "orgSettingInfo": "You can change the organization logo on the Settings page.",
     "evaSettingInfo": "To enable escalation to experts, create an Expert Virtual Assistant from the Care Features page.",
     "evaEnabledSettingInfo": "about configuring chat escalation behavior.",
+    "escalationEnabledRequiredInfo": "Requiring this field with the Category Type supports better request escalation to Cisco Spark expert spaces. ",
+    "escalationEnabledCategoryInfo": "Add category options that contain keywords from the names of your Expert Virtual Assistant spaces. ",
+    "escalationDetailsDefaultSpace": "(Default Space)",
     "agentSettingInfo": "You cannot change the default agent avatar seen in the Preview.",
     "agentMsg": "Hi, I need help with the MFI key.",
     "agentMsgTime": "10:10 AM",
@@ -9029,6 +9050,7 @@
         "title": "Care",
         "description": "Customer Care channel configurations for your organization.",
         "buttons": {
+          "numbers": "Numbers",
           "features": "Features",
           "settings": "Settings"
         }
@@ -10285,6 +10307,37 @@
       "link": "Link your users",
       "post": "to Cisco Spark - A new way to experience WebEx meetings"
     },
+    "notification": {
+      "linkText": "Get Started",
+      "infoText": "Link your accounts to Cisco Spark - A new way to experience WebEx meetings"
+    },
+    "errors": {
+      "setAccountLinkingModeError": "Setting Account Linking Mode Failed with : {{message}}",
+      "getCiSiteLinkingError": "Failed getting linking info with : {{message}}",
+      "getCiAccountSyncError": "Failed getting account sync with : {{message}}",
+      "getDomainsError": "Failed getting domains with : {{message}}"
+    },
+    "grid": {
+      "header": {
+        "siteUrl": "Site URL",
+        "accountLinkingStatus": "Status",
+        "accountLinkingMode": "Mode",
+        "linkedAccounts": "Linked Accounts",
+        "action": "Action"
+      },
+      "actions": {
+        "launchWebExSiteAdmin": "Launch WebEx Site Admin",
+        "webExReports": "WebEx Reports",
+        "accountLinkingProgress": "Account Linking Progress",
+        "changeLinkingMethod": "Change Linking Method"
+      }
+    },
+    "linkingMode": {
+      "unset": "Unset",
+      "manual": "Manual",
+      "auto_agreement": "Agreement",
+      "auto_verifiedDomain": "Domain Verified"
+    },
     "siteDetails": {
       "breadCrumb": "Overview",
       "siteInfo": "Site Info",
@@ -10292,65 +10345,28 @@
       "licenseType": "License Type",
       "modify": "Modify",
       "linkingMode": "Linking Mode",
-      "linkedUsers": "Linked Users",
+      "linkedAccounts": "Linked Accounts",
       "siteUsageReports": "Site Usage Reports",
       "viewReports": "View Reports",
-      "readOnly": "You don't have administrative privileges for this site.",
+      "dontHaveAdminRights": "You don't have administrative privileges for this site.",
       "legacyWebexLicense": "Legacy WebEx License",
       "launchWebexSiteAdmin": "Launch WebEx Site Admin"
     },
     "wizard": {
-      "title": "WebEx Users Link Mode",
+      "title": "WebEx Accounts Linking Mode",
       "siteName": "Site Name: {{siteName}}",
-      "mode": {
-        "automatic": {
-          "title": "Automatic",
-          "intro": "Invited users will NOT receive any invitation email, their Cisco Spark account will be pre-verified. Potentional impacts.",
-          "agreementLabel": "No Email - Via Agreement",
-          "agreementLabelHelp": "Cisco can link your users on behalf of you without sending eny email, so you can skip a lot of steps. You'll sign an agreement in the next step.",
-          "verifyDomainLabel": "No Email - Verified Domain",
-          "verifyDomainLabelHelp": "You must have your domains verified, or enable SSO and Directory Sync.",
-          "agreementTitle": "Cisco Spark Agreement",
-          "agreementInfo": "Please read the agreement thoroughly and accept on the bottom",
-          "agreementIntro": "Cisco will verify all the domains on your site. Some domains will NOT be verified such as : gmail.com, yahoo.com",
-          "agreementText": "",
-          "agreementAcceptLabel": "I have read read and accept the agreement.",
-          "agreementAcceptTitle": "Automatic Linking, No email via Agreement",
-          "agreementAcceptInfo": "User linking may take up to 24 hours to complete. Go to the Services > WebEx Site List to see progress. Once complete, your users can use Cisco Spark and experience the best meeting quality.",
-          "verifyDomainTitle": "Automatic Linking, No email - Verified Domain",
-          "verifyDomainInfo": "You must verify your domain or enable SSO and Directory Sync",
-          "verifyDomainButton": "Verify Domain"
-        },
-        "manual": {
-          "title": "Manual",
-          "intro": "Invited users will receive an invitation email to activate their Cisco Spark account.",
-          "info": "Cisco will send out invitation email when you invite users to Cisco Spark. Now, login to WebEx Site Admin and invite users to Cisco Spark",
-          "manualLabel": "Send Email",
-          "manualLabelHelp": "Cisco will send invitation email when you invite users to Cisco Spark"
-        }
-      }
+      "enrolledWebexSiteName": "Enrolled WebEx Site Name",
+      "webexSite": "WebEx Site"
     }
   },
   "hcs": {
     "taas": {
-      "overviewPage": {
-        "title": "TaaS Overview",
-        "customerNameHeader": "Customer Name",
-        "allCustomers": "All Customers",
-        "testDate": "Last Ran Test",
-        "testResult": "Test Result",
-        "totalResources": "Resources",
-        "actionHeader": "Actions",
-        "editSuite": "Edit Suite",
-        "editTest": "Edit Tests",
-        "deleteAll": "Delete All Suites"
-      },
       "testState": {
         "good": "Passed",
         "failed": "Failed",
         "running": "Running..."
       },
-      "suite": {
+      "suiteView": {
         "title": "Suites",
         "createSuite": "Create Suite",
         "runSuite": "Run Suite",
@@ -10365,7 +10381,7 @@
         "successRun": "You should go catch it...",
         "errorRun": "Something went wrong with scheduling"
       },
-      "test": {
+      "taskView": {
         "title": "Tests",
         "addTest": "Create Test",
         "editTest": "Edit",
@@ -10376,7 +10392,7 @@
         "title": "Add a suite",
         "suiteName": "Suite name"
       },
-      "schedulerModal": {
+      "scheduleCreateModal": {
         "title": "Schedule a Test"
       },
       "scheduleView": {
@@ -10388,10 +10404,17 @@
         "runSchedule": "Run Now",
         "copySchedule": "Copy schedule",
         "editSchedule": "Edit Schedule",
-        "deleteSchedule": "Delete this schedule"
+        "deleteSchedule": "Delete this schedule",
+        "scheduleCreate": "Create Schedule"
       },
-      "resourceCreate": {
-        "title": "Create a resource"
+      "resourcesView":{
+        "createResource": "Create Resource"
+      },
+      "resourcesCreateModal": {
+        "title": "Create a resource",
+        "instructions": "Use this form to create a resource to be used for testing. Can be an IP phone, Camelot, MMR, etc.",
+        "resourceName": "Resource name",
+        "resourceDetails": "Resource Details"
       }
     }
   }

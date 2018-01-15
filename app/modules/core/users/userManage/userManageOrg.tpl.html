@@ -92,7 +92,7 @@
       </span>
       <h6 class="manage-modal-detail--link"
         ng-click="umoc.handleDirSyncService()"
-        translate="{{:: umoc.dirSyncText }}">
+        translate="{{ umoc.dirSyncText }}">
       </h6>
     </div>
   </div>
@@ -104,7 +104,7 @@
     <div class="columns manage-modal-label sync-status"
       ng-class="{'medium-3': umoc.hasDefaultAutoAssignTemplate(), 'medium-8': !umoc.hasDefaultAutoAssignTemplate()}">
       <h5 translate="userManage.org.autoAssignLicenses"></h5>
-      <span class="manage-modal-detail ds-sync">
+      <span ng-if="umoc.hasDefaultAutoAssignTemplate()" class="manage-modal-detail ds-sync">
         <i class="icon icon-circle icon-circle-manage"
           ng-class="{'working': umoc.isDefaultAutoAssignTemplateActivated(),
           'disabled': !umoc.isDefaultAutoAssignTemplateActivated()}">
@@ -122,7 +122,8 @@
       ng-if="umoc.hasDefaultAutoAssignTemplate()"
       auto-assign-templates="umoc.autoAssignTemplates"
       on-delete="umoc.recvDelete()"
-      on-activate-toggle="umoc.toggleActivateForDefaultAutoAssignTemplate(isActivated)">
+      on-activate-toggle="umoc.toggleActivateForDefaultAutoAssignTemplate(isActivated)"
+      is-template-active="umoc.isDefaultAutoAssignTemplateActivated()">
     </auto-assign-template-manage-options>
   </div>
   <hr>

@@ -90,8 +90,7 @@ class TimeLine implements ng.IComponentController {
   private lineSegment(arr, type) {
     const data = this.preLineSegData(arr, type);
     const node = this.dataToline({ data: data, append: 'svg:line', class: type });
-    node.attr('class', item => item.class)
-      .attr('id', item => `my${type}${item.nodeId}`)
+    node.attr('class', item => item.class).attr('id', item => `my${type}${item.nodeId}`)
       .on('mouseover', (item) => {
         this.makeTips({ arr: item.msgArr }, item.y1 - 8, item.x1);
       })
@@ -223,14 +222,12 @@ class TimeLine implements ng.IComponentController {
       .append('circle')
       .attr('r', 9)
       .attr('transform', item => `translate(${item.x1 + 3}, ${item.y1})`)
-      .attr('nodeId', item => item.nodeId)
       .attr('id', item => `myDot${item.guestId}-${item.userId}-${item.joinTime}`)
       .on('mouseover', item => {
         let jmtVal = '';
         const circleId = `#myDot${item.guestId}-${item.userId}-${item.joinTime}`;
         const jmtQuality = this.$element.find(circleId).attr('jmtQuality');
         const joinMeetingTime = this.$element.find(circleId).attr('joinMeetingTime');
-        const jmtKey = jmtQuality ? `${jmtQuality} ` : '';
         if (_.isUndefined(joinMeetingTime)) {
           jmtVal = 'Unavaliable';
         } else {
@@ -238,7 +235,7 @@ class TimeLine implements ng.IComponentController {
         }
 
         const msgArr = [
-          { key: jmtKey + 'Join Meeting Time' },
+          { key: (jmtQuality ? `${jmtQuality} ` : '') + 'Join Meeting Time' },
           { key: jmtVal },
         ];
 
@@ -253,8 +250,7 @@ class TimeLine implements ng.IComponentController {
       template += `<p class="${item.class ? item.class : ''}"><span>${item.key}</span> ${item.value ? item.value : ''}</p>`;
     });
 
-    this.tip.classed('Tooltip-bottom', true);
-    this.tip.html(template).style('display', 'block').style('z-index', 1500);
+    this.tip.html(template).classed('Tooltip-bottom', true).style('display', 'block').style('z-index', 1500);
 
     const leftOffset = this.tip.style('width').replace('px', '');
     const topOffset = this.tip.style('height').replace('px', '');
@@ -276,14 +272,12 @@ class TimeLine implements ng.IComponentController {
       .append('p')
       .attr('class', 'ellipsis')
       .on('mouseover', item => {
-        const msgArr: Object[] = [];
-        msgArr.push({ key: item.userName });
-        if (item.mobile) {
-          msgArr.push({ key: 'Mobile: ', value: item.mobile });
-        }
-        msgArr.push({ key: 'Join Time: ', value: item.joinTime_ });
-        msgArr.push({ key: 'Duration: ', value: _.round(item.duration / 60) + ' Min' });
-        msgArr.push({ key: 'Endpoint: ', value: item.device });
+        const msgArr = [
+          { key: item.userName },
+          { key: item.device },
+          { key: 'Join Time: ', value: item.joinTime_ },
+          { key: 'Duration: ', value: _.round(item.duration / 60) + ' Min' },
+        ];
 
         this.makeTips({ arr: msgArr }, item.y - 15, this.option.paddingLeft - 40 );
       })
@@ -353,12 +347,7 @@ class TimeLine implements ng.IComponentController {
     g.append('p').text('Join Meeting Time').append('i').attr('class', 'icon icon-info-outline')
     .on('mouseover', () => {
       const msgArr = [
-        { key: 'Join Meeting Time is' },
-        { key: 'calculated in seconds.' },
-        { key: 'Good: ', value: '< 6 seconds' },
-        { key: 'Fair: ', value: '7-10 seconds' },
-        { key: 'Poor: ', value: '> 10 seconds' },
-        { key: 'Not Available: ', value: 'No information' },
+        { key: `<p class="text-center">Join Meeting Time is<br>calculated in seconds.<br>Good: < 6 seconds<br>Fair: 7-10 seconds<br>Poor: > 10 seconds<br>Not Available: No information</p>` },
       ];
       const pos = this.$element.find('.legend p i').first().position();
       this.makeTips({ arr: msgArr }, pos.top - 10, pos.left + 17);
@@ -367,7 +356,7 @@ class TimeLine implements ng.IComponentController {
     g.append('p').text('Meeting Quality').append('i').attr('class', 'icon icon-info-outline')
     .on('mouseover', () => {
       const msgArr = [
-        { key: `PSTN Quality is measured <br>with MOS Score. Score of<br>1-2 indicates poor quality.<br>VoIP and Video quality is<br>measured with latency and<br> packet loss. Either > 5%<br>packet loss or > 400ms<br>Latency indicates poor quality.<br>TP quality is measured <br>with packet loss and jitter.<br> Either > 5% package loss or > 20ms <br>jitter indicates poor quality.` },
+        { key: `<p class="text-center">PSTN Quality is measured <br>with MOS Score. Score of<br>1-2 indicates poor quality.<br>VoIP and Video quality are<br>measured with latency and<br> packet loss. Either > 5%<br>packet loss or > 400ms<br>latency(and > 20ms jitter for <br>TPs) indicates poor quality.</p>` },
       ];
       const pos = this.$element.find('.legend p i').last().position();
       this.makeTips({ arr: msgArr }, pos.top - 10, pos.left + 17);
@@ -423,8 +412,7 @@ class TimeLine implements ng.IComponentController {
     });
 
     const node = this.dataToline({ data: arr, append: 'svg:line', class: 'lineQos' });
-    node.attr('class', item => item.class_)
-    .attr('id', item => `${item.qosId}`)
+    node.attr('class', item => item.class_).attr('id', item => `${item.qosId}`)
     .on('mouseover', item => {
       const msgArr = [
         { key: `${item.type} Quality:`, value: this.legendInfo.line[_.parseInt(item.dataQuality) - 1] },

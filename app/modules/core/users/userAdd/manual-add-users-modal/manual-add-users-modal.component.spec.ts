@@ -4,7 +4,6 @@ import { MultiStepModalComponent } from 'modules/core/shared/multi-step-modal/mu
 import { CrOnboardUsersComponent } from './cr-onboard-users/cr-onboard-users.component';
 
 type Test = atlas.test.IComponentTest<ManualAddUsersModalController, {
-  $previousState;
   $state;
   Analytics;
   OnboardService;
@@ -27,7 +26,6 @@ describe('Component: manualAddUsersModal:', () => {
       this.components.crOnboardUsers,
     );
     this.injectDependencies(
-      '$previousState',
       '$state',
       'Analytics',
       'OnboardService',
@@ -52,11 +50,6 @@ describe('Component: manualAddUsersModal:', () => {
   describe('primary behaviors (controller):', () => {
     describe('back():', () => {
       beforeEach(function (this: Test) {
-        spyOn(this.$previousState, 'get').and.returnValue({
-          state: {
-            name: 'fake-previous-state',
-          },
-        });
         spyOn(this.Analytics, 'trackAddUsers');
         spyOn(this.$state, 'go');
       });
@@ -64,17 +57,12 @@ describe('Component: manualAddUsersModal:', () => {
 
       it('should transition to the previous state by default', function (this: Test) {
         this.controller.back();
-        expect(this.$state.go).toHaveBeenCalledWith('fake-previous-state');
+        expect(this.$state.go).toHaveBeenCalledWith('users.manage.picker');
       });
 
-      it('should transition back to "users.manage.picker" if previous state was "users.manage.emailSuppress"', function (this: Test) {
-        this.$previousState.get.and.returnValue({
-          state: {
-            name: 'users.manage.emailSuppress',
-          },
-        });
-        this.controller.back();
-        expect(this.$state.go).toHaveBeenCalledWith('users.manage.picker');
+      it('should transition specified state if one was provided', function (this: Test) {
+        this.controller.back('fake-state');
+        expect(this.$state.go).toHaveBeenCalledWith('fake-state');
       });
 
       it('should track the "Back" action', function (this: Test) {

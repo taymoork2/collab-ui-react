@@ -1,118 +1,214 @@
-// TODO Check if mode can be changed i.e. if mode is manual or first time
-
-import { LinkingOperation, IACSiteInfo } from './../account-linking.interface';
-import { IWizardState, WizardState, WizardEvent, WizardFsm } from './account-linking-wizard-fsm';
+import { LinkingOperation, IACSiteInfo, LinkingMode, IGotoWebex } from './../account-linking.interface';
+import { WizardFsm, SpecialEvent, IFsmTransitionCallback } from './account-linking-wizard-fsm';
 
 enum AccountLinkingWizardState {
   Welcome = 'Welcome',
   Progress = 'Progress',
 }
 
-class AccountlinkingWizardComponentCtrl implements ng.IComponentController {
+export interface IOperatioButton {
+  text: string;
+  function: Function;
+}
+
+export enum WizardEvent {
+  next = 'next',
+  manual = 'manual',
+  receiveEmail = 'receiveEmail',
+  verify = 'verify',
+  signAgreement = 'signAgreement',
+  verifyNow = 'verifyNow',
+  domainsFetched = 'domainsFetched',
+}
+
+export enum WizardState {
+  uninitialized = 'uninitialized',
+  entry = 'entry',
+  receiveEmail = 'receiveEmail',
+  verify = 'verify',
+  fetchingDomains = 'fetchingDomains',
+  verifyDomain = 'verifyDomain',
+  domainsList = 'domainsList',
+  showAgreement = 'showAgreement',
+  agreementAccepted = 'agreementAccepted',
+}
+
+class AccountLinkingWizardComponentCtrl implements ng.IComponentController {
 
   public state: AccountLinkingWizardState = AccountLinkingWizardState.Welcome;
+
   public siteInfo: IACSiteInfo;
   public operation: LinkingOperation;
+  public launchWebexFn: Function;
+  public setAccountLinkingModeFn: Function;
+  public dismiss: Function;
 
-  public fsmState: IWizardState = { id: WizardState.entry, initial: true, final: false };
-  public lastState: IWizardState;
-  public event: string | undefined = undefined;
+  public fsmState: WizardState = WizardState.entry;
+  public event: string | undefined  = undefined;
   public final: boolean = false;
   public initial: boolean = true;
-  public noEmailAgreementAccepted: boolean = false;
 
-  private fsm: WizardFsm;
+  public webexPage: IGotoWebex;
+
+  public fsm: WizardFsm<WizardState, WizardEvent>;
+  public buttons: IOperatioButton[] = [];
+
+  public domainsList;
 
   /* @ngInject */
   constructor(
-    private $log,
-    private $state,
-    private $stateParams,
-
+    private $log: ng.ILogService,
+    private $state: ng.ui.IStateService,
   ) {
-    this.$log.debug('AccountlinkingWizardComponentCtrl constructor, stateParams:', this.$stateParams);
-    this.siteInfo = this.$stateParams.siteInfo;
-
     // TODO: Use this to distinguish between fresh linking or modified linking in the UI
     if (this.operation === null) {
       this.operation = LinkingOperation.Modify;
-    } else {
-      this.operation = this.$stateParams.operation;
     }
-
     this.buildFsm();
+    if (this.siteInfo && this.siteInfo.linkingMode === LinkingMode.MANUAL) {
+      this.event = WizardEvent.manual;
+    }
   }
 
   public $onInit() {
     // TODO Fetch possible existing mode (from webex ?)
     this.$log.debug('onInit AccountLinkingWizardStateController');
+    this.$log.debug('siteInfo:', this.siteInfo);
+    this.$log.debug('operation:', this.operation);
   }
 
   public hasEvent(): boolean {
     return this.event !== undefined;
   }
 
-  public next(event: string) {
-    if (this.noEmailAgreementAccepted) {
-      event = 'noEmailAgreementAccepted';
-    }
+  public next(event: WizardEvent) {
+
     this.event = event;
-    this.$log.debug('event 1', event);
-    this.$log.debug('event 2', WizardEvent[event]);
-    this.lastState = this.fsmState;
-    this.fsmState = this.fsm.transition(WizardEvent[event]);
-    this.final = this.fsm.isFinal();
-    this.initial = this.fsm.isInitial();
+    this.fsm.transition(event);
+
+    this.fsmState = this.fsm.getCurrState();
     this.$log.debug('fsmState', this.fsmState);
   }
 
   public back() {
-    this.fsmState = this.fsm.transition(WizardEvent.back);
-    this.final = this.fsm.isFinal();
-    this.initial = this.fsm.isInitial();
-    this.noEmailAgreementAccepted = false;
-  }
-
-  public confirm() {
-    // TODO do actions based on final state
-    this.closeModal();
-    this.$state.modal.result.then(() => {
-      // TODO do actions based on final state
-      this.$log.debug('DO STUFF BASED ON STATE', this.fsmState);
-    });
-  }
-
-  public verifyDomain() {
-    // TODO do actions bases on final state
-    this.closeModal();
-    this.$state.modal.result.then(() => {
-      // TODO do actions based on final state
-      this.$log.debug('DO STUFF BASED ON STATE', this.fsmState);
-      this.$state.go('settings', {
-        showSettings: 'domains',
-      });
-    });
+    this.fsm.transition(SpecialEvent.BACK);
+    this.fsmState = this.fsm.getCurrState();
   }
 
   public cancelModal() {
-    this.$state.modal.dismiss();
+    this.dismiss();
   }
 
   private closeModal() {
-    this.$state.modal.close();
+    this.dismiss();
+  }
+
+  public launchWebex() {
+    this.$log.info('Launch WebEx from wizard...');
+
+    this.launchWebexFn({ site: this.siteInfo, useHomepage: false });
+    this.closeModal();
+  }
+
+  private gotoDomainsSettings(): void {
+    this.$log.info('Goto domains settings page from wizard...');
+    this.$state.go('settings', {
+      showSettings: 'domains',
+    });
+  }
+
+  private setAccountLinkingMode(mode: LinkingMode) {
+    this.setAccountLinkingModeFn({ siteUrl: this.siteInfo.linkedSiteUrl, mode: mode });
   }
 
   private buildFsm() {
-    const entry: IWizardState = { id: WizardState.entry, initial: true, final: false };
-    this.fsm = new WizardFsm(entry, this.$log); // TODO Remove log argument
-    const manualSelected: IWizardState = { id: WizardState.manualSelected, initial: false, final: true };
-    this.fsm.from( entry, WizardEvent.manual).to(manualSelected, () => {} ).andBack();
-    const noEmailAgreementSelected: IWizardState = { id: WizardState.noEmailAgreementSelected, initial: false, final: false };
-    this.fsm.from(entry, WizardEvent.noEmailAgreement).to(noEmailAgreementSelected, () => {}).andBack();
-    const noEmailAgreementAcceptedOk: IWizardState = { id: WizardState.noEmailAgreementAcceptedOk, initial: false, final: true };
-    this.fsm.from(noEmailAgreementSelected, WizardEvent.noEmailAgreementAccepted).to(noEmailAgreementAcceptedOk, () => {}).andBack();
-    const noEmailVerifiedDomainSelected: IWizardState = { id: WizardState.noEmailVerifiedDomainSelected, initial: false, final: true };
-    this.fsm.from(entry, WizardEvent.noEmailVerifiedDomain).to(noEmailVerifiedDomainSelected, () => {}).andBack();
+    this.fsm = new WizardFsm<WizardState, WizardEvent>(WizardState.entry, this.transitionCallbackFunc);
+    this.fsm
+      .from(WizardState.uninitialized, SpecialEvent.ANY)
+      .action(function() {})
+      .to(WizardState.entry);
+    this.fsm
+      .from(WizardState.entry, WizardEvent.verify)
+      .action(function() {})
+      .to(WizardState.verify)
+      .andBack()
+      .action(function() {});
+    this.fsm
+      .from(WizardState.entry, WizardEvent.receiveEmail)
+      .to(WizardState.receiveEmail)
+      .andBack();
+    this.fsm
+      .from(WizardState.verify, WizardEvent.signAgreement)
+      .to(WizardState.fetchingDomains)
+      .andBack();
+    this.fsm
+      .from(WizardState.verify, WizardEvent.verifyNow)
+      .to(WizardState.verifyDomain)
+      .andBack();
+    this.fsm
+      .from(WizardState.fetchingDomains, WizardEvent.domainsFetched)
+      .to(WizardState.domainsList);
+    this.fsm
+      .from(WizardState.domainsList, WizardEvent.next)
+      .to(WizardState.showAgreement)
+      .andBack();
+    this.fsm
+      .from(WizardState.domainsList, SpecialEvent.BACK)
+      .to(WizardState.verify);
+    this.fsm
+      .from(WizardState.showAgreement, WizardEvent.next)
+      .to(WizardState.agreementAccepted)
+      .andBack();
+    this.fsm
+      .from(WizardState.agreementAccepted, WizardEvent.next)
+      .action(() => {
+        this.setAccountLinkingMode(LinkingMode.AUTO_AGREEMENT);
+        this.launchWebex();
+      });
+    this.fsm
+      .from(WizardState.receiveEmail, WizardEvent.next)
+      .action(() => {
+        this.setAccountLinkingMode(LinkingMode.MANUAL);
+        this.launchWebex();
+      });
+    this.fsm
+      .from(WizardState.verifyDomain, WizardEvent.next)
+      .action(() => {
+        this.setAccountLinkingMode(LinkingMode.AUTO_VERIFY_DOMAIN);
+        this.gotoDomainsSettings();
+      });
+    this.fsm.transition(SpecialEvent.ANY);
+    this.showTransitionList();
+  }
+
+  public showTransitionList() {
+    this.$log.debug('Registered transition list');
+    this.fsm.getTransitionList().forEach( (transition) => {
+      this.$log.debug('Entry:', transition);
+    });
+  }
+
+  public getCurrentState(): WizardState {
+    return this.fsm.getCurrState();
+  }
+
+  private transitionCallbackFunc = (info: IFsmTransitionCallback) => {
+    //TODO: Remove this debug info before release !
+    this.showTransitions(info);
+  }
+
+  private showTransitions = (info: IFsmTransitionCallback) => {
+    this.$log.debug('-----------------------------------------------------------------------');
+    this.$log.debug('Start@ ' + info.startTransition);
+    this.$log.debug('   state[' + info.from + ']----event:' + info.event + '--->state[', info.state + ']');
+    this.$log.debug('End@' + info.endTransition);
+    if (!_.isEmpty(info.problems)) {
+      this.$log.debug('Problems:');
+      info.problems.forEach((problem, i) => {
+        this.$log.debug(' ' + (i + 1) + ': ' + problem);
+      });
+    }
+    this.$log.debug('-----------------------------------------------------------------------');
   }
 }
 
@@ -122,9 +218,14 @@ export class AccountLinkingWizardComponent implements ng.IComponentOptions {
   constructor() {
   }
 
-  public controller = AccountlinkingWizardComponentCtrl;
+  public controller = AccountLinkingWizardComponentCtrl;
   public template = require('modules/account-linking/linking-wizard/account-linking-wizard.component.html');
 
   public bindings = {
+    siteInfo: '<',
+    operation: '<',
+    launchWebexFn: '&',
+    setAccountLinkingModeFn: '&',
+    dismiss: '&',
   };
 }

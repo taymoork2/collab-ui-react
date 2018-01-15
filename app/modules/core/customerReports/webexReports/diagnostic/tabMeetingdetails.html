@@ -22,17 +22,6 @@
     <li>
       <h6 translate="webexReports.created"></h6>
       <p><span ng-bind="$ctrl.overview.createTime_"></span></p>
-      <p>{{::'webexReports.scheduledFrom' | translate}} {{$ctrl.overview.scheduleFrom}}</p>
-    </li>
-    <li>
-      <h6 translate="webexReports.searchGridHeader.startTime"></h6>
-      <p>{{$ctrl.overview.startTime_}}</p>
-      <p>{{::'webexReports.startFrom' | translate}} {{$ctrl.overview.startFrom}}</p>
-    </li>
-    <li>
-      <h6 translate="webexReports.searchGridHeader.endTime"></h6>
-      <p ng-if="$ctrl.overview.status === 2">{{$ctrl.overview.endTime_}}</p>
-      <p ng-if="$ctrl.overview.status === 2">{{$ctrl.overview.duration_}}</p>
     </li>
     <li>
       <h6 translate="webexReports.site"></h6>
@@ -43,6 +32,8 @@
       <h6 translate="webexReports.meetingType"></h6>
       <p>{{$ctrl.overview.meetingType}}</p>
     </li>
+  </ul>
+  <ul class="overviewInfo">
     <li>
       <h6 translate="webexReports.hostID"></h6>
       <p>{{$ctrl.overview.hostId}}</p>
