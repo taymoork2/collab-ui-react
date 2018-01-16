@@ -7891,7 +7891,8 @@
         "invalidAccessToken": "The Dialogflow client access token is invalid.\nClick the back arrow to return to the Dialogue Integration page and enter a valid token.",
         "duplicateName": "The {{ featureName }} must have a unique name.\nClick the back arrow to return to the Name page and enter a valid name.",
         "invalidName": "The {{ featureName }} name is invalid.\nClick the back arrow to return to the Name page and enter a valid name.",
-        "invalidIcon": "The {{ featureName }} avatar is invalid.\nClick the back arrow to return to the Avatar page and upload a valid avatar."
+        "invalidIcon": "The {{ featureName }} avatar is invalid.\nClick the back arrow to return to the Avatar page and upload a valid avatar.",
+        "invalidEmail": "The email you entered is invalid.\nClick the back arrow to return to the Email page and enter a valid email."
       },
       "createTitle": "Create {{ featureName }}",
       "editTitle": "Edit {{ featureName }}",
