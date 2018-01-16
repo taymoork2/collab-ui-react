@@ -1,6 +1,6 @@
 import './inlineEditText.scss';
 import focusModuleName from 'modules/core/focus';
-import csInputModuleName from '@collabui/collab-ui-ng/dist/directives/input';
+import csInputModuleName from '@collabui/collab-ui-ng/bundles/directives/input';
 import proPackModuleName from 'modules/core/proPack';
 import { InlineEditTextComponent } from './inlineEditText.component';
 
