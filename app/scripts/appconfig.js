@@ -4290,7 +4290,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<context-fields-sidepanel field="$resolve.field" process="$resolve.process" callback="$resolve.callback"></context-fields-sidepanel>',
+                template: '<context-fields-sidepanel admin-authorization-status="$resolve.adminAuthorizationStatus" field="$resolve.field" process="$resolve.process" callback="$resolve.callback"></context-fields-sidepanel>',
               },
               'header@context-fields-sidepanel': {
                 template: require('modules/context/fields/sidepanel/hybrid-context-fields-sidepanel-header.html'),
@@ -4298,11 +4298,15 @@
             },
             data: {},
             params: {
+              adminAuthorizationStatus: {},
               field: {},
               process: function () {},
               callback: function () {},
             },
             resolve: {
+              adminAuthorizationStatus: /* @ngInject */ function ($stateParams) {
+                return $stateParams.adminAuthorizationStatus;
+              },
               field: /* @ngInject */ function ($stateParams) {
                 return $stateParams.field;
               },
@@ -4377,7 +4381,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<context-fieldsets-sidepanel fieldset="$resolve.fieldset" process="$resolve.process" callback="$resolve.callback" ></context-fieldsets-sidepanel>',
+                template: '<context-fieldsets-sidepanel admin-authorization-status="$resolve.adminAuthorizationStatus" fieldset="$resolve.fieldset" process="$resolve.process" callback="$resolve.callback" ></context-fieldsets-sidepanel>',
               },
               'header@context-fieldsets-sidepanel': {
                 template: require('modules/context/fieldsets/sidepanel/hybrid-context-fieldsets-sidepanel-header.html'),
@@ -4385,11 +4389,15 @@
             },
             data: {},
             params: {
+              adminAuthorizationStatus: {},
               fieldset: {},
               process: function () {},
               callback: function () {},
             },
             resolve: {
+              adminAuthorizationStatus: /* @ngInject */ function ($stateParams) {
+                return $stateParams.adminAuthorizationStatus;
+              },
               fieldset: /* @ngInject */ function ($stateParams) {
                 return $stateParams.fieldset;
               },

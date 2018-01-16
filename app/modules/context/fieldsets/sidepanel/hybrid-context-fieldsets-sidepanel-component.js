@@ -1,5 +1,7 @@
 require('./_fieldsets-sidepanel.scss');
 
+var AdminAuthorizationStatus = require('modules/context/services/context-authorization-service').AdminAuthorizationStatus;
+
 (function () {
   'use strict';
 
@@ -8,6 +10,7 @@ require('./_fieldsets-sidepanel.scss');
       controller: ContextFieldsetsSidepanelCtrl,
       template: require('modules/context/fieldsets/sidepanel/hybrid-context-fieldsets-sidepanel.html'),
       bindings: {
+        adminAuthorizationStatus: '<',
         fieldset: '<',
         process: '<',
         callback: '<',
@@ -70,11 +73,11 @@ require('./_fieldsets-sidepanel.scss');
     };
 
     vm.isEditable = function () {
-      return (!vm.publiclyAccessible);
+      return (!vm.publiclyAccessible && (vm.adminAuthorizationStatus === AdminAuthorizationStatus.AUTHORIZED));
     };
 
     vm.isDeletable = function () {
-      return (!vm.publiclyAccessible && !vm.inUse);
+      return (!vm.publiclyAccessible && !vm.inUse && (vm.adminAuthorizationStatus === AdminAuthorizationStatus.AUTHORIZED));
     };
 
     vm.openDeleteConfirmDialog = function () {

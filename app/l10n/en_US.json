@@ -3438,6 +3438,10 @@
       "actions": "Actions",
       "dateUpdated": "Date Updated",
       "update": "Edit",
+      "unknownAdminAuthorizationStatus": "Cannot retrieve registration status. Refresh your browser to try again.",
+      "resource": {
+        "notAuthorized": "You are not authorized to manage Hybrid Context resources for this organization."
+      },
       "fieldPage": {
         "associatedFieldsets": "Associated Fieldsets",
         "associatedFieldsetsError": "Unable to retrieve associated fieldsets.",
@@ -3490,7 +3494,8 @@
         "optionRequired": "This field is required.",
         "optionsLabelWithCount": "Options ({{count}})",
         "optionsLabel": "Options",
-        "optionsDetailLabel": "List of options in this single select field."
+        "optionsDetailLabel": "List of options in this single select field.",
+        "notAuthorized": "You are not authorized to manage Hybrid Context fields for this organization."
       },
       "fieldsetPage": {
         "fieldsetId": "Fieldset ID",
@@ -3521,7 +3526,8 @@
         "notInUseTooltip": "Fieldset not associated with any objects.",
         "limitReached": "Maximum fieldsets reached",
         "fieldMaxLimitReached": "Maximum fields in fieldset reached.",
-        "fieldsetLimitReadFailed": "Unable to retrieve fieldsets limit. Refresh your browser to try again"
+        "fieldsetLimitReadFailed": "Unable to retrieve fieldsets limit. Refresh your browser to try again",
+        "notAuthorized": "You are not authorized to manage Hybrid Context fieldsets for this organization."
       }
     }
   },
