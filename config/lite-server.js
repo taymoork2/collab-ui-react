@@ -22,4 +22,12 @@ module.exports = {
     scroll: false,
   },
   open: args.noopen ? false : 'external',
+  snippetOptions: {
+    rule: {
+      match: /<\/head>/i,
+      fn: function (snippet, match) {
+        return snippet.replace('id=', 'nonce="browser-sync-dev" id=') + match;
+      },
+    },
+  },
 };
