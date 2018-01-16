@@ -174,7 +174,8 @@ export class SettingsCtrl {
 
     this.$q.all(promises).then((result) => {
       if (result.blockExternalCommunicationToggle) {
-        this.externalCommunication = new ExternalCommunicationSetting(result.proPackPurchased);
+        //TODO: algendel 1/12/18. This temporarily replaces ExternalCommunicationSetting(proPackPurchased) to enable for all for GA
+        this.externalCommunication = new ExternalCommunicationSetting(true);
       }
     });
   }

@@ -45,17 +45,17 @@ describe('Controller: WebEx Metrics Ctrl', function () {
       },
       dashboard: {
         title: 'reportsPage.webexMetrics.dashboard',
-        state: 'reports.webex-metrics.main({reportType: \'dashboard\'})',
+        state: 'reports.webex-metrics.dashboard',
         initialed: true,
       },
       jms: {
         title: 'reportsPage.webexMetrics.JMS',
-        state: 'reports.webex-metrics.main({reportType: \'JMS\'})',
+        state: 'reports.webex-metrics.jms',
         initialed: true,
       },
       jmt: {
         title: 'reportsPage.webexMetrics.JMT',
-        state: 'reports.webex-metrics.main({reportType: \'JMT\'})',
+        state: 'reports.webex-metrics.jmt',
         initialed: true,
       },
       classic: {
@@ -235,15 +235,15 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     expect(event.preventDefault).toHaveBeenCalled();
 
     this.controller.features.isInternalOn = false;
-    this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics.main({reportType: \'dashboard\'})' }, {}, { name: 'reports.webex-metrics.metrics' });
+    this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics.dashboard' }, {}, { name: 'reports.webex-metrics.metrics' });
     expect(event.preventDefault).toHaveBeenCalled();
 
     this.controller.features.isInternalOn = false;
-    this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics.main({reportType: \'JMS\'})' }, {}, { name: 'reports.webex-metrics.classic' });
+    this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics.jms' }, {}, { name: 'reports.webex-metrics.classic' });
     expect(event.preventDefault).toHaveBeenCalled();
 
     this.controller.features.isInternalOn = false;
-    this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics.main({reportType: \'JMT\'})' }, {}, { name: 'reports.webex-metrics.classic' });
+    this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics.jmt' }, {}, { name: 'reports.webex-metrics.classic' });
     expect(event.preventDefault).toHaveBeenCalled();
 
     this.controller.isWebexClassicEnabled = false;
@@ -268,26 +268,17 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     expect(this.controller.selectEnable).toBeFalsy();
     expect(this.controller.updateWebexMetrics).toHaveBeenCalled();
 
-    this.$location.path = function () {
-      return 'testDNS/reports/webexMetrics/main/dashboard';
-    };
-    this.controller.onStateChangeSuccess(event, { name: 'reports.webex-metrics.main' });
+    this.controller.onStateChangeSuccess(event, { name: 'reports.webex-metrics.dashboard' });
     expect(this.controller.webexMetricsViews).toBe('dashboard');
     expect(this.controller.selectEnable).toBeFalsy();
     expect(this.controller.updateWebexMetrics).toHaveBeenCalled();
 
-    this.$location.path = function () {
-      return 'testDNS/reports/webexMetrics/main/JMS';
-    };
-    this.controller.onStateChangeSuccess(event, { name: 'reports.webex-metrics.main' });
+    this.controller.onStateChangeSuccess(event, { name: 'reports.webex-metrics.jms' });
     expect(this.controller.webexMetricsViews).toBe('jms');
     expect(this.controller.selectEnable).toBeFalsy();
     expect(this.controller.updateWebexMetrics).toHaveBeenCalled();
 
-    this.$location.path = function () {
-      return 'testDNS/reports/webexMetrics/main/JMT';
-    };
-    this.controller.onStateChangeSuccess(event, { name: 'reports.webex-metrics.main' });
+    this.controller.onStateChangeSuccess(event, { name: 'reports.webex-metrics.jmt' });
     expect(this.controller.webexMetricsViews).toBe('jmt');
     expect(this.controller.selectEnable).toBeFalsy();
     expect(this.controller.updateWebexMetrics).toHaveBeenCalled();

@@ -129,7 +129,7 @@ class Meetingdetails implements ng.IComponentController {
           const videoQos = data.videoQos;
           _.unset(data, 'audioQos');
           _.unset(data, 'videoQos');
-          const audioArr = _.map(audioQos.VCS, item__ => _.assignIn({ type: 'Audio', nodeId: key, quality: this.getCMRQuality(item__) }, item__, data));
+          const audioArr = _.map(audioQos.VCS, item__ => _.assignIn({ type: 'VoIP', nodeId: key, quality: this.getCMRQuality(item__) }, item__, data));
           const videoArr = _.map(videoQos.VCS, item__ => _.assignIn({ type: 'Video', nodeId: key, quality: this.getCMRQuality(item__) }, item__, data));
 
           obj.audio[key] = _.concat(obj.audio[key], audioArr);
@@ -166,16 +166,19 @@ class Meetingdetails implements ng.IComponentController {
   private formateLine(lines) {
     const wom = this.SearchService.getStorage('webexOneMeeting');
     return _.forEach(lines, (item) => {
+      const endTime = _.get(wom, 'endTime');
+      const leaveTime = (!item.leaveTime || item.leaveTime > endTime) ? endTime : item.leaveTime;
       const device = this.SearchService.getDevice({ platform: item.platform, browser: item.browser, sessionType: item.sessionType });
       const platform_ = this.SearchService.getPlartform({ platform: item.platform, sessionType: item.sessionType });
-      item.joinTime_ = this.SearchService.timestampToDate(item.joinTime, 'h:mm A');
-      item.leaveTime = item.leaveTime || _.get(wom, 'endTime');
+
+      item.leaveTime = leaveTime;
+      item.platform_ = platform_;
+      item.device = _.get(device, 'name');
+      item.deviceIcon = _.get(device, 'icon');
       item.browser_ = this.SearchService.getBrowser(_.parseInt(item.browser));
+      item.joinTime_ = this.SearchService.timestampToDate(item.joinTime, 'h:mm A');
       item.mobile = _.includes(['7', '8', '11', '12', '13', '14'], item.platform) ? platform_ : '';
       item.duration = item.duration ? item.duration : _.round((item.leaveTime - item.joinTime) / 1000);
-      item.device = _.get(device, 'name');
-      item.platform_ = platform_;
-      item.deviceIcon = _.get(device, 'icon');
     });
   }
 

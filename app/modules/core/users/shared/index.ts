@@ -1,5 +1,6 @@
 export * from './onboard.interfaces';
 
+import { AutoAssignTemplateModel } from './auto-assign-template.model';
 import { AutoAssignTemplateService } from './auto-assign-template.service';
 import crUsersErrorResultsModuleName from './cr-users-error-results';
 import crUsersTileTotalsModuleName from './cr-users-tile-totals';
@@ -20,5 +21,6 @@ export default angular.module('core.users.shared', [
   crCheckboxItemModuleName,
   crCollapsibleRowModuleName,
 ])
+  .service('AutoAssignTemplateModel', AutoAssignTemplateModel)
   .service('AutoAssignTemplateService', AutoAssignTemplateService)
   .name;

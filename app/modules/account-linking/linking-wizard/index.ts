@@ -1,10 +1,11 @@
 import { AccountLinkingWizardComponent } from './account-linking-wizard.component';
-import './account-linking-wizard.scss';
+import accountLinkingWizardStatesModule from './states';
 
 export default angular
   .module('account-linking.wizard', [
     require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
+    accountLinkingWizardStatesModule,
   ])
-  .component('accountLinkingWizardComponent', new AccountLinkingWizardComponent())
+  .component('accountLinkingWizard', new AccountLinkingWizardComponent())
   .name;

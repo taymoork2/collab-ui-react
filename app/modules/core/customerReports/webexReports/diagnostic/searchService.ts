@@ -67,7 +67,7 @@ export class SearchService {
     const tz = this.getStorage('timeZone');
     const timeZone = tz ? tz : moment.tz.guess();
     const offset = this.getOffset(timeZone);
-    return moment.utc(date).utcOffset(offset).format('YYYY-MM-DD HH:mm:ss');
+    return moment.utc(date).utcOffset(offset).format('YYYY-MM-DD hh:mm:ss A');
   }
 
   public getOffset(timeZone) {
@@ -91,7 +91,7 @@ export class SearchService {
   }
 
   public getBrowser(num) {
-    const arr = ['Netscape', 'IE', 'Stand alone application', 'MOZILLA', 'FIREFOX', 'SAFARI', 'CHROME'];
+    const arr = ['Netscape', 'IE', 'Stand alone application', 'Mozilia', 'Firefox', 'Safari', 'Chrome'];
     return arr[_.parseInt(num)] ? arr[_.parseInt(num)] : 'Other';
   }
 
@@ -100,7 +100,7 @@ export class SearchService {
       return 'PSTN';
     }
     const key = _.parseInt(obj.platform);
-    const arr = ['Windows', 'MAC', 'Solaris', 'Java', 'Linux', 'Flash', 'Javascript', 'IPHONE', 'MOBILE DEVICE', 'IP PHONE', 'Cisco TP', 'BlackBerry', 'WinMobile', 'Android', 'Nokia'];
+    const arr = ['Windows', 'Mac', 'Solaris', 'Java', 'Linux', 'Flash', 'Javascript', 'iOS', 'MOBILE DEVICE', 'IP Phone', 'Cisco TP', 'BlackBerry', 'WinMobile', 'Android', 'Nokia'];
     return arr[key] ? arr[key] : 'Other';
   }
 
@@ -115,21 +115,25 @@ export class SearchService {
     const browser = _.parseInt(obj.browser);
     const platform = _.parseInt(obj.platform);
     const sessionType = _.parseInt(obj.sessionType);
+    const browser_ = this.getBrowser(browser);
+    const platform_ = this.getPlartform(obj);
     if (_.includes([7, 8, 11, 12, 13, 14], platform)) {
-      return { icon: 'icon-mobile-phone', name: 'Mobile' };
+      return { icon: 'icon-mobile-phone', name: `Mobile: ${platform_}` };
     }
 
     if (platform === 10) {
-      return { icon: 'icon-devices', name: 'TP Device' };
+      return { icon: 'icon-devices', name: 'TelePresence' };
     }
 
     if (sessionType === 25 || platform === 9) {
-      return { icon: 'icon-phone', name: 'PSTN' };
+      return { icon: 'icon-phone', name: 'IP Phone' };
     }
 
     if (platform < 7) {
-      return browser === 2 ? { icon: 'icon-application', name: 'Client' } : { icon: 'icon-browser', name: 'Browser' };
+      return browser === 2 ? { icon: 'icon-application', name: 'Client' } : { icon: 'icon-browser', name: `${platform_}: ${browser_}` };
     }
+
+    return { icon: '', name: 'Other' };
   }
 
   public getDuration(duration) {

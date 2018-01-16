@@ -7,7 +7,6 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
   const defaultUser = {
     name: 'Julius Caesar',
     entitlements: [],
-    licenseID: ['something', 'and', 'more things'],
   };
 
   beforeEach(angular.mock.module(moduleName));
@@ -40,7 +39,6 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
 
     function mockDependencies($provide) {
       const Authinfo = {
-        getLicenses: jasmine.createSpy('getLicenses').and.returnValue(['license1', 'license2']),
         isEntitled: jasmine.createSpy('isEntitled').and.callFake(service => (service === 'squared-fusion-cal' || service === 'squared-fusion-uc' || service === 'spark-hybrid-impinterop')),
         getOrgId: jasmine.createSpy('getOrgId').and.returnValue('12'),
       };
@@ -74,22 +72,6 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
       spyOn(USSService, 'getStatusesForUser').and.returnValue($q.resolve({}));
     }
 
-    it('should not show the section if there are no licenses assigned to the user', () => {
-      const unlicensedUser = {
-        licenseID: [],
-      };
-      const controller = initController(unlicensedUser);
-      expect(controller.isLicensed).toBe(false);
-    });
-
-    it('should show the section if there is at least one paid license assigned to the user', () => {
-      const licensedUser = {
-        licenseID: ['This is a paid license'],
-      };
-      const controller = initController(licensedUser);
-      expect(controller.isLicensed).toBe(true);
-    });
-
     it('should only take into account the hybrid services an org is entitled to in CI if they are set up in either FMS or CCC', () => {
       const controller = initController();
       expect(controller.servicesWithStatuses.length).toBe(2);
@@ -107,7 +89,6 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
       const huronUser = {
         name: 'Caligula',
         entitlements: ['ciscouc'],
-        licenseID: ['ciscouc'],
       };
 
       const controller = initController(huronUser);
@@ -122,7 +103,6 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
 
     function mockDependencies($provide) {
       const Authinfo = {
-        getLicenses: jasmine.createSpy('getLicenses').and.returnValue(['license1', 'license2']),
         isEntitled: jasmine.createSpy('isEntitled').and.callFake((service) => {
           return (service === 'squared-fusion-gcal' || service === 'squared-fusion-cal');
         }),
@@ -184,7 +164,6 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
       }]));
       const userWithBothEntitlements = {
         entitlements: ['squared-fusion-gcal', 'squared-fusion-cal'],
-        licenseID: ['something', 'and', 'more things'],
       };
 
       const controller = initController(userWithBothEntitlements);
@@ -206,7 +185,6 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
       }]));
       const userWithNoGcal = {
         entitlements: ['squared-fusion-cal'],
-        licenseID: ['something', 'and', 'more things'],
       };
 
 
@@ -223,7 +201,6 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
 
     function mockDependencies($provide) {
       const Authinfo = {
-        getLicenses: jasmine.createSpy('getLicenses').and.returnValue(['license1', 'license2']),
         isEntitled: jasmine.createSpy('isEntitled').and.callFake(service => (service === 'squared-fusion-uc' || service === 'spark-hybrid-impinterop')),
         getOrgId: jasmine.createSpy('getOrgId').and.returnValue('12'),
       };
@@ -260,7 +237,6 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
         id: userId,
         name: 'Marcus Aurelius',
         entitlements: ['squared-fusion-uc'],
-        licenseID: ['something', 'and', 'more things'],
       };
       initController(user);
       expect(USSService.getStatusesForUser).toHaveBeenCalledWith(userId);
@@ -278,7 +254,6 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
         id: 'something',
         name: 'Nero',
         entitlements: ['squared-fusion-uc', 'spark-hybrid-impinterop'],
-        licenseID: ['something', 'and', 'more things'],
       };
       const controller = initController(user);
 
@@ -290,7 +265,6 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
       USSService.getStatusesForUser.and.returnValue($q.resolve({}));
       const user = {
         name: 'Claudius',
-        licenseID: ['something', 'and', 'more things'],
       };
       const controller = initController(user);
       expect(controller.userSubscriptionTimer).toBeDefined();
@@ -305,7 +279,6 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
       USSService.getStatusesForUser.and.returnValue($q.resolve({}));
       const user = {
         name: 'Claudius',
-        licenseID: ['something', 'and', 'more things'],
       };
       const controller = initController(user);
       expect(controller.userSubscriptionTimer).toBeDefined();
@@ -318,7 +291,6 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
       USSService.getStatusesForUser.and.returnValue($q.resolve({}));
       const user = {
         name: 'Galba',
-        licenseID: ['something', 'and', 'more things'],
       };
       const controller = initController(user);
       expect(USSService.getStatusesForUser.calls.count()).toBe(1);

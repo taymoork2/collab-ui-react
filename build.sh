@@ -97,7 +97,9 @@ function phase_2 {
     yarn languages-verify
 
     # generate a plain-text file defining custom HTTP headers for use by nginx (CSP-related headers currently)
-    node ./utils/printCustomHttpHeaders.js | tee ./headers.txt
+    node ./utils/printCustomHttpHeaders.js --env int | tee ./int-headers.txt
+    node ./utils/printCustomHttpHeaders.js --env cfe | tee ./cfe-headers.txt
+    node ./utils/printCustomHttpHeaders.js --env prod | tee ./prod-headers.txt
 
     time nice -10 yarn build --env.nolint --env.noprogress --env.nocacheloader --devtool source-map
 
