@@ -1,6 +1,7 @@
 import Feature from './feature.model';
 import * as addressParser from 'emailjs-addressparser';
-import { IUserNameAndEmail } from 'modules/core/users/shared/onboard.interfaces';
+import { IUserNameAndEmail, IOnboardedUserResult, IParsedOnboardedUserResult } from 'modules/core/users/shared/onboard.interfaces';
+import { Config } from 'modules/core/config/config';
 
 export default class OnboardService {
   public huronCallEntitlement = false;
@@ -11,6 +12,7 @@ export default class OnboardService {
   constructor(
     public $timeout: ng.ITimeoutService,
     public $translate: ng.translate.ITranslateService,
+    private Config: Config,
   ) {
   }
 
@@ -155,5 +157,152 @@ export default class OnboardService {
 
   public parseUsersList(userList: string): IUserNameAndEmail[] {
     return addressParser.parse(userList);
+  }
+
+  public parseOnboardedUsers(onboardedUsers: IOnboardedUserResult[]): {
+    resultList: IParsedOnboardedUserResult[],
+    numUpdatedUsers: number,
+    numAddedUsers: number,
+  } {
+    const result: any = {
+      resultList: [],      // list of parsed results for onboarding of each user
+      numUpdatedUsers: 0,  // count of users successfully modified
+      numAddedUsers: 0,    // count of new users successfully added
+    };
+
+    // notes:
+    // - build up list of parsed results for onboarding of each user
+    // - for each result with http status of 200, increment 'numUpdatedUsers'
+    // - for each result with http status of 201, increment 'numAddedUsers'
+    _.reduce(onboardedUsers, (_result, onboardedUser) => {
+      const userResult: IParsedOnboardedUserResult = {
+        email: onboardedUser.email,
+        message: undefined,
+        alertType: undefined,
+      };
+
+      const httpStatus = onboardedUser.httpStatus;
+
+      switch (httpStatus) {
+        case 200:
+        case 201: {
+          userResult.message = this.$translate.instant('usersPage.onboardSuccess', {
+            email: userResult.email,
+          });
+          userResult.alertType = 'success';
+          if (httpStatus === 200) {
+            result.numUpdatedUsers++;
+          } else {
+            result.numAddedUsers++;
+          }
+          if (onboardedUser.message === '700000') {
+            userResult.message = this.$translate.instant('usersPage.onboardedWithoutLicense', {
+              email: userResult.email,
+            });
+            userResult.alertType = 'warning';
+          }
+          break;
+        }
+        case 409: {
+          userResult.message = `${userResult.email} ${onboardedUser.message}`;
+          break;
+        }
+        case 403: {
+          switch (onboardedUser.message) {
+            case this.Config.messageErrors.userExistsError: {
+              userResult.message = this.$translate.instant('usersPage.userExistsError', {
+                email: userResult.email,
+              });
+              break;
+            }
+            case this.Config.messageErrors.userPatchError:
+            case this.Config.messageErrors.claimedDomainError: {
+              userResult.message = this.$translate.instant('usersPage.claimedDomainError', {
+                email: userResult.email,
+                domain: userResult.email.split('@')[1],
+              });
+              break;
+            }
+            case this.Config.messageErrors.userExistsInDiffOrgError: {
+              userResult.message = this.$translate.instant('usersPage.userExistsInDiffOrgError', {
+                email: userResult.email,
+              });
+              break;
+            }
+            case this.Config.messageErrors.notSetupForManUserAddError: {
+              userResult.message = this.$translate.instant('usersPage.notSetupForManUserAddError', {
+                email: userResult.email,
+              });
+              break;
+            }
+            case this.Config.messageErrors.userExistsDomainClaimError: {
+              userResult.message = this.$translate.instant('usersPage.userExistsDomainClaimError', {
+                email: userResult.email,
+              });
+              break;
+            }
+            case this.Config.messageErrors.unknownCreateUserError: {
+              userResult.message = this.$translate.instant('usersPage.unknownCreateUserError');
+              break;
+            }
+            case this.Config.messageErrors.unableToMigrateError: {
+              userResult.message = this.$translate.instant('usersPage.unableToMigrateError', {
+                email: userResult.email,
+              });
+              break;
+            }
+            case this.Config.messageErrors.insufficientEntitlementsError: {
+              userResult.message = this.$translate.instant('usersPage.insufficientEntitlementsError', {
+                email: userResult.email,
+              });
+              break;
+            }
+            default: {
+              userResult.message = this.$translate.instant('usersPage.accessDeniedError', {
+                email: userResult.email,
+              });
+              break;
+            }
+          }
+          break;
+        }
+        case 400: {
+          switch (onboardedUser.message) {
+            case this.Config.messageErrors.hybridServicesError: {
+              userResult.message = this.$translate.instant('usersPage.hybridServicesError');
+              break;
+            }
+            case this.Config.messageErrors.hybridServicesComboError: {
+              userResult.message = this.$translate.instant('usersPage.hybridServicesComboError');
+              break;
+            }
+            default: {
+              userResult.message = this.$translate.instant('usersPage.onboardError', {
+                email: userResult.email,
+                status: httpStatus,
+              });
+              break;
+            }
+          }
+          break;
+        }
+        default: {
+          userResult.message = this.$translate.instant('usersPage.onboardError', {
+            email: userResult.email,
+            status: httpStatus,
+          });
+          break;
+        }
+      }
+
+      if (httpStatus !== 200 && httpStatus !== 201) {
+        userResult.alertType = 'danger';
+      }
+
+      _result.resultList.push(userResult);
+      return _result;
+    }, result);
+
+    return result;
   }
 }

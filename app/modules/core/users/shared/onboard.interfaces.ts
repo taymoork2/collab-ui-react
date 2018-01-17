@@ -55,3 +55,15 @@ export interface IUserNameAndEmail {
   address: string;
   name: string;
 }
+
+export interface IOnboardedUserResult {
+  email: string;
+  message?: string;
+  httpStatus: number;
+}
+
+export interface IParsedOnboardedUserResult {
+  email: string;
+  message: string | undefined;
+  alertType: 'success' | 'warning' | 'danger' | undefined;
+}

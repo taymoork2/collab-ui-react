@@ -189,6 +189,8 @@ require('./_user-add.scss');
     }
 
     function initResults() {
+      $scope.numUpdatedUsers = 0;
+      $scope.numAddedUsers = 0;
       $scope.results = {
         resultList: [],
         errors: [],
@@ -1417,134 +1419,23 @@ require('./_user-add.scss');
       initResults();
       usersList = OnboardService.parseUsersList($scope.model.userList);
 
+      // notes (as of 2018-01-13):
+      // - 'Userservice.onboardUsersLegacy()' can be called multiple times given a large enough user
+      //   list (called once for each 'Config.batchSize' length of users)
+      // - each response is aggregated back into scope variables:
+      //   - 'numUpdatedUsers'
+      //   - 'numAddedUsers'
+      //   - 'results.resultList'
+      //   - 'results.warnings'
+      //   - 'results.errors'
       var successCallback = function (response) {
         $rootScope.$broadcast('USER_LIST_UPDATED');
-        _.forEach(response.data.userResponse, function (user) {
-          var userResult = {
-            email: user.email,
-            alertType: null,
-          };
 
-          var httpStatus = user.httpStatus;
-
-          switch (httpStatus) {
-            case 200:
-            case 201: {
-              userResult.message = $translate.instant('usersPage.onboardSuccess', {
-                email: userResult.email,
-              });
-              userResult.alertType = 'success';
-              if (httpStatus === 200) {
-                $scope.numUpdatedUsers++;
-              } else {
-                $scope.numAddedUsers++;
-              }
-              if (user.message === '700000') {
-                userResult.message = $translate.instant('usersPage.onboardedWithoutLicense', {
-                  email: userResult.email,
-                });
-                userResult.alertType = 'warning';
-              }
-              break;
-            }
-            case 409: {
-              userResult.message = userResult.email + ' ' + user.message;
-              break;
-            }
-            case 403: {
-              switch (user.message) {
-                case Config.messageErrors.userExistsError: {
-                  userResult.message = $translate.instant('usersPage.userExistsError', {
-                    email: userResult.email,
-                  });
-                  break;
-                }
-                case Config.messageErrors.userPatchError:
-                case Config.messageErrors.claimedDomainError: {
-                  userResult.message = $translate.instant('usersPage.claimedDomainError', {
-                    email: userResult.email,
-                    domain: userResult.email.split('@')[1],
-                  });
-                  break;
-                }
-                case Config.messageErrors.userExistsInDiffOrgError: {
-                  userResult.message = $translate.instant('usersPage.userExistsInDiffOrgError', {
-                    email: userResult.email,
-                  });
-                  break;
-                }
-                case Config.messageErrors.notSetupForManUserAddError: {
-                  userResult.message = $translate.instant('usersPage.notSetupForManUserAddError', {
-                    email: userResult.email,
-                  });
-                  break;
-                }
-                case Config.messageErrors.userExistsDomainClaimError: {
-                  userResult.message = $translate.instant('usersPage.userExistsDomainClaimError', {
-                    email: userResult.email,
-                  });
-                  break;
-                }
-                case Config.messageErrors.unknownCreateUserError: {
-                  userResult.message = $translate.instant('usersPage.unknownCreateUserError');
-                  break;
-                }
-                case Config.messageErrors.unableToMigrateError: {
-                  userResult.message = $translate.instant('usersPage.unableToMigrateError', {
-                    email: userResult.email,
-                  });
-                  break;
-                }
-                case Config.messageErrors.insufficientEntitlementsError: {
-                  userResult.message = $translate.instant('usersPage.insufficientEntitlementsError', {
-                    email: userResult.email,
-                  });
-                  break;
-                }
-                default: {
-                  userResult.message = $translate.instant('usersPage.accessDeniedError', {
-                    email: userResult.email,
-                  });
-                  break;
-                }
-              }
-              break;
-            }
-            case 400: {
-              switch (user.message) {
-                case Config.messageErrors.hybridServicesError: {
-                  userResult.message = $translate.instant('usersPage.hybridServicesError');
-                  break;
-                }
-                case Config.messageErrors.hybridServicesComboError: {
-                  userResult.message = $translate.instant('usersPage.hybridServicesComboError');
-                  break;
-                }
-                default: {
-                  userResult.message = $translate.instant('usersPage.onboardError', {
-                    email: userResult.email,
-                    status: httpStatus,
-                  });
-                  break;
-                }
-              }
-              break;
-            }
-            default: {
-              userResult.message = $translate.instant('usersPage.onboardError', {
-                email: userResult.email,
-                status: httpStatus,
-              });
-              break;
-            }
-          }
-
-          if (httpStatus !== 200 && httpStatus !== 201) {
-            userResult.alertType = 'danger';
-          }
-
-          $scope.results.resultList.push(userResult);
-        });
+        var userResponse = _.get(response, 'data.userResponse');
+        var onboardedUsers = OnboardService.parseOnboardedUsers(userResponse);
+        $scope.numUpdatedUsers += onboardedUsers.numUpdatedUsers;
+        $scope.numAddedUsers += onboardedUsers.numAddedUsers;
+        $scope.results.resultList = _.concat($scope.results.resultList, onboardedUsers.resultList);
 
         if ($scope.numAddedUsers > 0) {
           var msg = 'Invited ' + $scope.numAddedUsers + ' users';
@@ -1630,8 +1521,6 @@ require('./_user-add.scss');
 
         entitleList = entitleList.concat(getHybridServicesEntitlements('add'));
 
-        $scope.numAddedUsers = 0;
-        $scope.numUpdatedUsers = 0;
         for (var i = 0; i < usersList.length; i += chunk) {
           tempUserArray = usersList.slice(i, i + chunk);
           Userservice.onboardUsersLegacy(tempUserArray, entitleList, licenseList)
