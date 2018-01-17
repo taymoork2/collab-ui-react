@@ -1,4 +1,4 @@
-class OnPremisesActiveCardController implements ng.IComponentController {
+class OnPremisesCardController implements ng.IComponentController {
   public linkActive = false;
 
   /* @ngInject */
@@ -10,13 +10,13 @@ class OnPremisesActiveCardController implements ng.IComponentController {
       this.linkActive = changes.clusters.currentValue.length > 0;
     }
     if (changes.trunks && changes.trunks.currentValue) {
-      this.linkActive = changes.trunks.currentValue.length > 0;
+      this.linkActive = this.linkActive || changes.trunks.currentValue.length > 0;
     }
   }
 }
 
-export class OnPremisesActiveCardComponent implements ng.IComponentOptions {
-  public controller = OnPremisesActiveCardController;
+export class OnPremisesCardComponent implements ng.IComponentOptions {
+  public controller = OnPremisesCardController;
   public template = `
     <article>
       <div class="active-card_header">

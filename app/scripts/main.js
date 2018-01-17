@@ -254,6 +254,7 @@
 
   angular.module('ServicesOverview', [
     require('modules/services-overview').default,
+    require('modules/services-overview/new-hybrid/active').default,
     require('modules/services-overview/new-hybrid/prerequisites-modals/basic-expressway-prerequisites').default,
     require('modules/services-overview/new-hybrid/prerequisites-modals/call-service-aware-prerequisites').default,
     require('modules/services-overview/new-hybrid/prerequisites-modals/call-service-connect-prerequisites').default,
