@@ -1416,10 +1416,8 @@ require('./_user-add.scss');
       var deferred = $q.defer();
       initResults();
       usersList = OnboardService.parseUsersList($scope.model.userList);
-      Log.debug('Entitlements: ', usersList);
 
       var successCallback = function (response) {
-        Log.info('User onboard request returned:', response.data);
         $rootScope.$broadcast('USER_LIST_UPDATED');
         _.forEach(response.data.userResponse, function (user) {
           var userResult = {
@@ -1587,7 +1585,7 @@ require('./_user-add.scss');
       if (_.isArray(usersList) && usersList.length > 0) {
         $scope.btnOnboardLoading = true;
 
-        _.each(usersList, function (userItem) {
+        _.forEach(usersList, function (userItem) {
           var userAndDnObj = $scope.usrlist.filter(function (user) {
             return (user.address === userItem.address);
           });
