@@ -29,6 +29,7 @@ module.exports = {
   atlasEmailSuppress: 'atlas-email-suppress',
   atlasHybridEnable: 'huron-i387-enterprise-private-trunking',
   atlasExpertVirtualAssistantEnable: 'atlas-expert-virtual-assistant-enable',
+  atlasF281TrialRoomKit: 'atlas-f281-trial-room-kit',
   atlasF2993NewUserAndDeviceRoles: 'atlas-f2993-new-user-and-device-roles',
   atlasF6980MultiDirSync: 'atlas-f6980-multi-dir-sync',
   atlasF3745AutoAssignLicenses: 'atlas-f3745-auto-assign-licenses',

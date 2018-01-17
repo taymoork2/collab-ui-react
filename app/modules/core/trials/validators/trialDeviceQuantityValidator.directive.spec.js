@@ -42,6 +42,7 @@ describe('Validator: DeviceQuantityValidator:', function () {
       getTotalQuantity: function () { return 2; },
       sx10: this.controller.sx10,
       mx300: this.controller.mx300,
+      roomKit: this.controller.roomKit,
       phone7832: this.controller.phone7832,
       deviceLimit: this.controller.deviceLimit,
     };
@@ -51,6 +52,9 @@ describe('Validator: DeviceQuantityValidator:', function () {
         quantity: 2,
       },
       device_mx300: {
+        quantity: 2,
+      },
+      device_roomKit: {
         quantity: 2,
       },
       device_phone7832: {
@@ -64,6 +68,9 @@ describe('Validator: DeviceQuantityValidator:', function () {
       device_mx300: {
         trialDeviceQuantityValidator: '',
       },
+      device_roomKit: {
+        trialDeviceQuantityValidator: '',
+      },
       device_phone7832: {
         trialDeviceQuantityValidator: '',
       },
@@ -75,6 +82,8 @@ describe('Validator: DeviceQuantityValidator:', function () {
           'error-messages="validationMessages.device_sx10">' +
         '<input ng-model="model.device_mx300.quantity" name="device_mx300" trial-device-quantity-validator = "{type: \'roomSystems\', name: \'mx300\'}" ' +
           'error-messages="validationMessages.device_mx300">' +
+          '<input ng-model="model.device_roomKit.quantity" name="device_roomKit" trial-device-quantity-validator = "{type: \'roomSystems\', name: \'roomKit\'}" ' +
+          'error-messages="validationMessages.device_roomKit">' +
         '<input ng-model="model.device_phone7832.quantity" name="device_phone7832" trial-device-quantity-validator = "{type: \'callDevices\', name: \'phone7832\'}" ' +
           'error-messages="validationMessages.device_phone7832">' +
       '</form>'
@@ -106,12 +115,21 @@ describe('Validator: DeviceQuantityValidator:', function () {
       });
 
       it('should not validate quantity above 1 for mx300', function () {
-        var expectedError = this.$translate.instant('trialModal.call.invalidQuantityMx300', { min: this.controller.deviceLimit.CISCO_MX300.min });
+        var expectedError = this.$translate.instant('trialModal.call.invalidQuantitySingle', { min: this.controller.deviceLimit.CISCO_MX300.min });
         this.input = this.$scope.form.device_mx300;
         this.input.$setViewValue('2');
         this.$scope.$digest();
         expect(this.input.$valid).toBe(false);
         expect(this.$scope.validationMessages.device_mx300.trialDeviceQuantityValidator).toBe(expectedError);
+      });
+
+      it('should not validate quantity above 1 for Room Kit', function () {
+        var expectedError = this.$translate.instant('trialModal.call.invalidQuantitySingle', { min: this.controller.deviceLimit.CISCO_ROOM_KIT.min });
+        this.input = this.$scope.form.device_roomKit;
+        this.input.$setViewValue('2');
+        this.$scope.$digest();
+        expect(this.input.$valid).toBe(false);
+        expect(this.$scope.validationMessages.device_roomKit.trialDeviceQuantityValidator).toBe(expectedError);
       });
 
       it('should validate if device is disabled', function () {
