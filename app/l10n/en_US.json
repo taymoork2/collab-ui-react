@@ -6261,7 +6261,7 @@
       },
       "mobile": "Mobile",
       "cardDescription": {
-        "clientTypeDesc": "Summary of common categories of meeting clients that are used in an organization.<br><b>Cisco Spark Desktop</b> : Windows , MAC OSX, Web Browser<br> <b>Cisco Spark Mobile</b> : iPhone, Android, iPad.<br><b>Cisco Spark Devices</b> : Telepresence room device, Cisco Spark board.<br><b>Others</b> : Any unknown endpoints or clients that don’t fit the other categories.",
+        "clientTypeDesc": "Summary of common categories of meeting clients that are used in an organization.<br><b>Cisco Spark Desktop</b> : Windows, macOS, web bowser<br> <b>Cisco Spark Mobile</b> : iPhone, Android, iPad.<br><b>Cisco Spark Devices</b> : Cisco room device, Cisco Spark Board.<br><b>Others</b> : Any unknown endpoints or clients that don’t fit the other categories.",
         "totalCallsDesc": "<b>Cloud Calls</b> : Number of calls that could not utilize enterprise Hybrid Media Nodes, because of no connection to the enterprise network or being subject to enforced policy.<br> <b>Overflowed to Cloud</b> : Number of calls made within an enterprise but overflowed to a cloud cluster.<br> <b>On-Premises</b>: Number of calls hosted on any of the enterprise clusters.",
         "totalCallsClusterDesc": "<b>Redirected by this Cluster</b> : Number of calls that could not be hosted by this cluster and hence got redirected.<br><b>On-Premises</b> : Number of calls hosted on any of the enterprise clusters.",
         "meetsHostTypeDesc": "Summary of meetings based on where the organization’s calls were hosted.<br><b>On Premises</b> : Meeting and participants were hosted on the enterprise clusters<br><b>Cloud</b> : Meeting and participants were hosted on cloud clusters<br><b>Cloud and On-Premises</b> : Meeting and participants cascaded between enterprise and cloud clusters",
@@ -7156,8 +7156,8 @@
         "message": "System software will not be updated."
       },
       "soontobedeactivated": {
-        "type": "Device will soon be deactivated",
-        "message": "This device has been offline for several weeks. Make sure it comes online within {{expireInDays}} days to avoid deactivation."
+        "type": "Device credentials will soon expire",
+        "message": "This device has been offline for several weeks. Make sure it comes online within {{expireInDays}} days to avoid it losing its Spark activation."
       },
       "ntpstatus": {
         "type": "Time Server Not Reachable",
