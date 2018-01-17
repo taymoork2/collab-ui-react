@@ -1419,6 +1419,17 @@ require('./_user-add.scss');
       initResults();
       usersList = OnboardService.parseUsersList($scope.model.userList);
 
+      // early-out if user list is empty
+      if (_.isEmpty(usersList)) {
+        if (optionalOnboard) {
+          deferred.resolve();
+        } else {
+          Notification.error('usersPage.validEmailInput');
+          deferred.reject();
+        }
+        return deferred.promise;
+      }
+
       // notes (as of 2018-01-13):
       // - 'Userservice.onboardUsersLegacy()' can be called multiple times given a large enough user
       //   list (called once for each 'Config.batchSize' length of users)
@@ -1473,66 +1484,60 @@ require('./_user-add.scss');
         deferred.reject();
       };
 
-      if (_.isArray(usersList) && usersList.length > 0) {
-        $scope.btnOnboardLoading = true;
+      $scope.btnOnboardLoading = true;
 
-        _.forEach(usersList, function (userItem) {
-          var userAndDnObj = $scope.usrlist.filter(function (user) {
-            return (user.address === userItem.address);
-          });
-
-          if ($scope.ishI1484 && $scope.locationOptions.length > 1) {
-            userItem.location = userAndDnObj[0].selectedLocation.uuid;
-          }
-
-          if ($scope.ishI1484) {
-            if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.siteToSite.length > 0) {
-              userItem.internalExtension = userAndDnObj[0].assignedDn.internal;
-            }
-          } else {
-            if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.number.length > 0) {
-              userItem.internalExtension = userAndDnObj[0].assignedDn.number;
-            }
-          }
-
-          if (userAndDnObj[0].externalNumber && userAndDnObj[0].externalNumber.uuid !== 'none') {
-            userItem.directLine = userAndDnObj[0].externalNumber.pattern;
-          }
+      _.forEach(usersList, function (userItem) {
+        var userAndDnObj = $scope.usrlist.filter(function (user) {
+          return (user.address === userItem.address);
         });
 
-        var tempUserArray = [],
-          entitleList = [],
-          licenseList = [],
-          chunk = Config.batchSize;
-
-        // notes:
-        // - start with all enabled entitlements
-        entitleList = getEntitlements('add');
-
-        // - as of 2017-05-19, this conditional branch does not collect enabled entitlements
-        if (Authinfo.hasAccount()) {
-          licenseList = getAccountLicenses('additive');
-
-          // - so either isolate the messenger interop entitlement, or reset the list
-          entitleList = MessengerInteropService.hasAssignableMessageOrgEntitlement()
-            ? _.filter(entitleList, { entitlementName: 'messengerInterop' })
-            : [];
+        if ($scope.ishI1484 && $scope.locationOptions.length > 1) {
+          userItem.location = userAndDnObj[0].selectedLocation.uuid;
         }
 
-        entitleList = entitleList.concat(getHybridServicesEntitlements('add'));
-
-        for (var i = 0; i < usersList.length; i += chunk) {
-          tempUserArray = usersList.slice(i, i + chunk);
-          Userservice.onboardUsersLegacy(tempUserArray, entitleList, licenseList)
-            .then(successCallback)
-            .catch(errorCallback);
+        if ($scope.ishI1484) {
+          if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.siteToSite.length > 0) {
+            userItem.internalExtension = userAndDnObj[0].assignedDn.internal;
+          }
+        } else {
+          if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.number.length > 0) {
+            userItem.internalExtension = userAndDnObj[0].assignedDn.number;
+          }
         }
-      } else if (!optionalOnboard) {
-        Notification.error('usersPage.validEmailInput');
-        deferred.reject();
-      } else {
-        deferred.resolve();
+
+        if (userAndDnObj[0].externalNumber && userAndDnObj[0].externalNumber.uuid !== 'none') {
+          userItem.directLine = userAndDnObj[0].externalNumber.pattern;
+        }
+      });
+
+      var tempUserArray = [],
+        entitleList = [],
+        licenseList = [],
+        chunk = Config.batchSize;
+
+      // notes:
+      // - start with all enabled entitlements
+      entitleList = getEntitlements('add');
+
+      // - as of 2017-05-19, this conditional branch does not collect enabled entitlements
+      if (Authinfo.hasAccount()) {
+        licenseList = getAccountLicenses('additive');
+
+        // - so either isolate the messenger interop entitlement, or reset the list
+        entitleList = MessengerInteropService.hasAssignableMessageOrgEntitlement()
+          ? _.filter(entitleList, { entitlementName: 'messengerInterop' })
+          : [];
       }
+
+      entitleList = entitleList.concat(getHybridServicesEntitlements('add'));
+
+      for (var i = 0; i < usersList.length; i += chunk) {
+        tempUserArray = usersList.slice(i, i + chunk);
+        Userservice.onboardUsersLegacy(tempUserArray, entitleList, licenseList)
+          .then(successCallback)
+          .catch(errorCallback);
+      }
+
       return deferred.promise;
     }
 
