@@ -201,7 +201,7 @@ describe('OnboardService:', () => {
       expect(result.resultList[2].message).toBe('usersPage.onboardError');
     });
 
-    fit('should contain parsed user results with "warningMsg" and "errorMsg" properties if conditions apply', function () {
+    it('should contain parsed user results with "warningMsg" and "errorMsg" properties if conditions apply', function () {
       spyOn(this.UserCsvService, 'addErrorWithTrackingID').and.returnValue('fake-addErrorWithTrackingID-result');
       const fakeUserResults: IOnboardedUserResult[] = [];
       fakeUserResults.push({

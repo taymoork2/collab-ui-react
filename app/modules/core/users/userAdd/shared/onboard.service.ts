@@ -175,13 +175,10 @@ export default class OnboardService {
       return this.Userservice.onboardUsersLegacy(usersListChunk, entitleList, licenseList)
         .then((response) => {
           // add 'onboardedUsers' property and resolve
-          const userResponse: IOnboardedUserResult[] = _.get(response, 'data.userResponse');
+          const userResponse: IOnboardedUserResult[] = _.get(response, 'data.userResponse', []);
           const onboardedUsers = this.parseOnboardedUsers(userResponse, response);
           response.onboardedUsers = onboardedUsers;
           return response;
-        })
-        .catch((response) => {
-          return this.$q.reject(response);
         });
     });
 
@@ -193,10 +190,10 @@ export default class OnboardService {
     numUpdatedUsers: number,
     numAddedUsers: number,
   } {
-    const result: any = {
-      resultList: [],      // list of parsed results for onboarding of each user
-      numUpdatedUsers: 0,  // count of users successfully modified
-      numAddedUsers: 0,    // count of new users successfully added
+    const result = {
+      resultList: [] as IParsedOnboardedUserResult[],  // list of parsed results for onboarding of each user
+      numUpdatedUsers: 0,                              // count of users successfully modified
+      numAddedUsers: 0,                                // count of new users successfully added
     };
 
     // notes:

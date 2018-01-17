@@ -1488,7 +1488,7 @@ require('./_user-add.scss');
           // - potentially multiple 'Userservice.onboardUsersLegacy()' calls could have been made
           // - if any calls reject (or in the case of multiple calls, the first one rejects), we
           //   error notify and re-reject
-          this.Notification.errorResponse(rejectedResponse);
+          Notification.errorResponse(rejectedResponse);
           return $q.reject();
         })
         .then(function (responses) {
