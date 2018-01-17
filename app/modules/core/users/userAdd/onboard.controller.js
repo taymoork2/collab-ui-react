@@ -1428,48 +1428,6 @@ require('./_user-add.scss');
         }
       }
 
-      // notes (as of 2018-01-13):
-      // - 'Userservice.onboardUsersLegacy()' can be called multiple times given a large enough user
-      //   list (called once for each 'Config.batchSize' length of users)
-      // - each response is aggregated back into scope variables:
-      //   - 'numUpdatedUsers'
-      //   - 'numAddedUsers'
-      //   - 'results.resultList'
-      //   - 'results.warnings'
-      //   - 'results.errors'
-      var successCallback = function (response) {
-        $rootScope.$broadcast('USER_LIST_UPDATED');
-
-        var userResponse = _.get(response, 'data.userResponse');
-        var onboardedUsers = OnboardService.parseOnboardedUsers(userResponse);
-        $scope.numUpdatedUsers += onboardedUsers.numUpdatedUsers;
-        $scope.numAddedUsers += onboardedUsers.numAddedUsers;
-        $scope.results.resultList = _.concat($scope.results.resultList, onboardedUsers.resultList);
-
-        if ($scope.numAddedUsers > 0) {
-          var msg = 'Invited ' + $scope.numAddedUsers + ' users';
-          LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), $scope.numAddedUsers, null);
-        }
-
-        //concatenating the results in an array of strings for notify function
-        $scope.results.errors = [];
-        $scope.results.warnings = [];
-        _.forEach($scope.results.resultList, function (userResult) {
-          if (userResult.alertType === 'success' && userResult.email) {
-            removeEmailFromTokenfield(userResult.email);
-          } else if (userResult.alertType === 'warning' && userResult.email) {
-            $scope.results.warnings.push(UserCsvService.addErrorWithTrackingID(userResult.message, response));
-          } else {
-            $scope.results.errors.push(UserCsvService.addErrorWithTrackingID(userResult.message, response));
-          }
-        });
-      };
-
-      var errorCallback = function (response) {
-        Notification.errorResponse(response);
-        return $q.reject(response);
-      };
-
       $scope.btnOnboardLoading = true;
 
       _.forEach(usersList, function (userItem) {
@@ -1515,27 +1473,59 @@ require('./_user-add.scss');
 
       entitleList = entitleList.concat(getHybridServicesEntitlements('add'));
 
-      // notes:
-      // - split out users list into smaller list chunks
-      // - call 'Userservice.onboardUsersLegacy()' for each chunk
-      var usersListChunks = _.chunk(usersList, Config.batchSize);
-      var promises = _.map(usersListChunks, function (usersListChunk) {
-        return Userservice.onboardUsersLegacy(usersListChunk, entitleList, licenseList)
-          .then(successCallback)
-          .catch(errorCallback);
-      });
-      return $q.all(promises)
-        .then(function (results) {
-          $scope.btnOnboardLoading = false;
+      // notes (as of 2018-01-13):
+      // - 'Userservice.onboardUsersLegacy()' can be called multiple times given a large enough user
+      //   list (called once for each 'Config.batchSize' length of users)
+      // - each response is aggregated back into scope variables:
+      //   - 'numUpdatedUsers'
+      //   - 'numAddedUsers'
+      //   - 'results.resultList'
+      //   - 'results.warnings'
+      //   - 'results.errors'
+      return OnboardService.onboardUsersInChunks(usersList, entitleList, licenseList, Config.batchSize)
+        .catch(function (rejectedResponse) {
+          // notes:
+          // - potentially multiple 'Userservice.onboardUsersLegacy()' calls could have been made
+          // - if any calls reject (or in the case of multiple calls, the first one rejects), we
+          //   error notify and re-reject
+          this.Notification.errorResponse(rejectedResponse);
+          return $q.reject();
+        })
+        .then(function (responses) {
+          // TODO: rm this if determined no longer needed (onboarding user still in FTSW?)
           if (isFTW) {
-            return;
+            return $q.resolve();
+          }
+
+          // aggregate results
+          $scope.numUpdatedUsers = _.sumBy(responses, 'onboardedUsers.numUpdatedUsers');
+          $scope.numAddedUsers = _.sumBy(responses, 'onboardedUsers.numAddedUsers');
+          $scope.results.resultList = _.flatMap(responses, 'onboardedUsers.resultList');
+
+          // TODO (mipark2): revisit this
+          //concatenating the results in an array of strings for notify function
+          $scope.results.errors = [];
+          $scope.results.warnings = [];
+          _.forEach($scope.results.resultList, function (userResult) {
+            if (userResult.alertType === 'success' && userResult.email) {
+              removeEmailFromTokenfield(userResult.email);
+            } else if (userResult.alertType === 'warning' && userResult.email) {
+              $scope.results.warnings.push(UserCsvService.addErrorWithTrackingID(userResult.message, response));
+            } else {
+              $scope.results.errors.push(UserCsvService.addErrorWithTrackingID(userResult.message, response));
+            }
+          });
+
+          if ($scope.numAddedUsers > 0) {
+            var msg = 'Invited ' + $scope.numAddedUsers + ' users';
+            LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), $scope.numAddedUsers, null);
           }
           Analytics.trackAddUsers(Analytics.eventNames.SAVE, null, createPropertiesForAnalyltics());
           $state.go('users.add.results');
         })
-        .catch(function () {
+        .finally(function () {
+          $rootScope.$broadcast('USER_LIST_UPDATED');
           $scope.btnOnboardLoading = false;
-          return $q.reject();
         });
     }
 

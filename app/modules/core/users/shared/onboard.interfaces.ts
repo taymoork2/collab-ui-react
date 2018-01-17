@@ -67,3 +67,9 @@ export interface IParsedOnboardedUserResult {
   message: string | undefined;
   alertType: 'success' | 'warning' | 'danger' | undefined;
 }
+
+export interface IOnboardedUsersAggregateResult {
+  resultList: IParsedOnboardedUserResult[];
+  numUpdatedUsers: number;
+  numAddedUsers: number;
+}

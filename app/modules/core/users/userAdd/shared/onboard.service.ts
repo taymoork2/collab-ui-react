@@ -1,6 +1,6 @@
 import Feature from './feature.model';
 import * as addressParser from 'emailjs-addressparser';
-import { IUserNameAndEmail, IOnboardedUserResult, IParsedOnboardedUserResult } from 'modules/core/users/shared/onboard.interfaces';
+import { ILicenseRequestItem, IOnboardedUserResult, IParsedOnboardedUserResult, IUserEntitlementRequestItem, IUserNameAndEmail } from 'modules/core/users/shared/onboard.interfaces';
 import { Config } from 'modules/core/config/config';
 
 export default class OnboardService {
@@ -10,9 +10,12 @@ export default class OnboardService {
 
   /* @ngInject */
   constructor(
+    public $q: ng.IQService,
+    public $rootScope: ng.IRootScopeService,
     public $timeout: ng.ITimeoutService,
     public $translate: ng.translate.ITranslateService,
     private Config: Config,
+    public Userservice,
   ) {
   }
 
@@ -159,7 +162,29 @@ export default class OnboardService {
     return addressParser.parse(userList);
   }
 
-  public parseOnboardedUsers(onboardedUsers: IOnboardedUserResult[]): {
+  public onboardUsersInChunks(usersList: IUserNameAndEmail[], entitleList: IUserEntitlementRequestItem[], licenseList: ILicenseRequestItem[], chunkSize: number = this.Config.batchSize) {
+    // notes:
+    // - split out users list into smaller list chunks
+    // - call 'Userservice.onboardUsersLegacy()' for each chunk
+    const usersListChunks = _.chunk(usersList, chunkSize);
+    const promises = _.map(usersListChunks, (usersListChunk) => {
+      return this.Userservice.onboardUsersLegacy(usersListChunk, entitleList, licenseList)
+        .then((response) => {
+          // add 'onboardedUsers' property and resolve
+          const userResponse: IOnboardedUserResult[] = _.get(response, 'data.userResponse');
+          const onboardedUsers = this.parseOnboardedUsers(userResponse);
+          response.onboardedUsers = onboardedUsers;
+          return response;
+        })
+        .catch((response) => {
+          return this.$q.reject(response);
+        });
+    });
+
+    return this.$q.all(promises);
+  }
+
+  private parseOnboardedUsers(onboardedUsers: IOnboardedUserResult[]): {
     resultList: IParsedOnboardedUserResult[],
     numUpdatedUsers: number,
     numAddedUsers: number,

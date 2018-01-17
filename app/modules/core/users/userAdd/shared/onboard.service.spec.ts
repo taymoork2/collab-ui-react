@@ -1,10 +1,15 @@
+import { IOnboardedUserResult } from 'modules/core/users/shared/onboard.interfaces';
+
 import moduleName from './index';
 
 describe('OnboardService:', () => {
   beforeEach(function () {
     this.initModules(moduleName);
     this.injectDependencies(
+      '$q',
+      '$scope',
       'OnboardService',
+      'Userservice',
     );
   });
 
@@ -79,6 +84,120 @@ describe('OnboardService:', () => {
         address: 'user2@example.com',
         name: 'jane doe',
       }]);
+    });
+  });
+
+  describe('onboardUsersInChunks():', () => {
+    it('should create sub-lists of users and call "Userservice.onboardUsersLegacy()" for each sub-list as needed', function () {
+      spyOn(this.Userservice, 'onboardUsersLegacy').and.returnValue(this.$q.resolve({}));
+      spyOn(this.OnboardService, 'parseOnboardedUsers');
+      const fakeUsersList = ['fake-user-1'];
+      const fakeEntitlementsList = 'fake-entitlements-list';
+      const fakeLicensesList = 'fake-licenses-list';
+      let batchSize = 1;
+      this.OnboardService.onboardUsersInChunks(fakeUsersList, fakeEntitlementsList, fakeLicensesList, batchSize)
+        .then((results) => {
+          expect(results.length).toBe(1);
+          expect(this.Userservice.onboardUsersLegacy.calls.count()).toBe(1);
+        })
+        .then(() => {
+          // user list bigger than batch size (user list length: 2, batch size: 1)
+          fakeUsersList.push('fake-user-2');
+          this.Userservice.onboardUsersLegacy.calls.reset();
+          return this.OnboardService.onboardUsersInChunks(fakeUsersList, fakeEntitlementsList, fakeLicensesList, batchSize);
+        })
+        .then((results) => {
+          expect(results.length).toBe(2);
+          expect(this.Userservice.onboardUsersLegacy.calls.count()).toBe(2);
+        })
+        .then(() => {
+          // user list and batch size equal (user list length: 2, batch size: 2)
+          batchSize = 2;
+          this.Userservice.onboardUsersLegacy.calls.reset();
+          return this.OnboardService.onboardUsersInChunks(fakeUsersList, fakeEntitlementsList, fakeLicensesList, batchSize);
+        })
+        .then((results) => {
+          expect(results.length).toBe(1);
+          expect(this.Userservice.onboardUsersLegacy.calls.count()).toBe(1);
+        });
+      this.$scope.$apply();
+    });
+
+    it('should return a list of promises whose resolved values are objects with "onboardedUsers" properties', function () {
+      spyOn(this.Userservice, 'onboardUsersLegacy').and.returnValue(this.$q.resolve({}));
+      spyOn(this.OnboardService, 'parseOnboardedUsers').and.returnValue('fake-parseOnboardedUsers-result');
+      const fakeUsersList = ['fake-user-1'];
+      const fakeEntitlementsList = 'fake-entitlements-list';
+      const fakeLicensesList = 'fake-licenses-list';
+      const batchSize = 1;
+      this.OnboardService.onboardUsersInChunks(fakeUsersList, fakeEntitlementsList, fakeLicensesList, batchSize)
+        .then((results) => {
+          expect(results[0].onboardedUsers).toBe('fake-parseOnboardedUsers-result');
+        });
+      this.$scope.$apply();
+    });
+  });
+
+  describe('parseOnboardedUsers():', () => {
+    it('should return a results object that has aggregated counts of users added and users updated', function () {
+      const fakeUserResults: IOnboardedUserResult[] = [];
+      fakeUserResults.push({
+        email: 'fake-email-1',
+        httpStatus: 200,
+      });
+      let result = this.OnboardService.parseOnboardedUsers(fakeUserResults);
+      expect(result.numAddedUsers).toBe(0);
+      expect(result.numUpdatedUsers).toBe(1);
+
+      fakeUserResults.push({
+        email: 'fake-email-2',
+        httpStatus: 201,
+      });
+      result = this.OnboardService.parseOnboardedUsers(fakeUserResults);
+      expect(result.numAddedUsers).toBe(1);
+      expect(result.numUpdatedUsers).toBe(1);
+
+      // any http status that is not 200 or 201 does not add to counts
+      fakeUserResults.push({
+        email: 'fake-email-3',
+        httpStatus: 400,
+      });
+      result = this.OnboardService.parseOnboardedUsers(fakeUserResults);
+      expect(result.numAddedUsers).toBe(1);
+      expect(result.numUpdatedUsers).toBe(1);
+    });
+
+    it('should return a results object with a "resultList" property that is a list of parsed user results', function () {
+      const fakeUserResults: IOnboardedUserResult[] = [];
+      fakeUserResults.push({
+        email: 'fake-email-1',
+        httpStatus: 200,
+      });
+      let result = this.OnboardService.parseOnboardedUsers(fakeUserResults);
+      expect(result.resultList.length).toBe(1);
+
+      fakeUserResults.push({
+        email: 'fake-email-2',
+        httpStatus: 201,
+      });
+      fakeUserResults.push({
+        email: 'fake-email-3',
+        httpStatus: 400,
+      });
+      result = this.OnboardService.parseOnboardedUsers(fakeUserResults);
+      expect(result.resultList.length).toBe(3);
+      expect(result.resultList[0].email).toBe('fake-email-1');
+      expect(result.resultList[1].email).toBe('fake-email-2');
+      expect(result.resultList[2].email).toBe('fake-email-3');
+
+      expect(result.resultList[0].alertType).toBe('success');
+      expect(result.resultList[1].alertType).toBe('success');
+      expect(result.resultList[2].alertType).toBe('danger');
+
+      // these are technically not correct, as they are the result of '$translate.instant(...)'
+      expect(result.resultList[0].message).toBe('usersPage.onboardSuccess');
+      expect(result.resultList[1].message).toBe('usersPage.onboardSuccess');
+      expect(result.resultList[2].message).toBe('usersPage.onboardError');
     });
   });
 });
