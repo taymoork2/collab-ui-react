@@ -17,7 +17,7 @@ class CareNumbersCtrl implements ng.IComponentController {
   ) {}
 
   public $onInit() {
-    this.hasCall = this.Authinfo.isSquaredUC();
+    this.hasCall = this.Authinfo.hasCallLicense();
 
     this.loading = true;
 
