@@ -66,6 +66,8 @@ export interface IParsedOnboardedUserResult {
   email: string;
   message: string | undefined;
   alertType: 'success' | 'warning' | 'danger' | undefined;
+  warningMsg?: string;
+  errorMsg?: string;
 }
 
 export interface IOnboardedUsersAggregateResult {

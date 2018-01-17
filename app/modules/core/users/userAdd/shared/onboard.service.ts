@@ -3,6 +3,9 @@ import * as addressParser from 'emailjs-addressparser';
 import { ILicenseRequestItem, IOnboardedUserResult, IParsedOnboardedUserResult, IUserEntitlementRequestItem, IUserNameAndEmail } from 'modules/core/users/shared/onboard.interfaces';
 import { Config } from 'modules/core/config/config';
 
+// TODO: mv this to more appropriate location once more is known about message codes from onboard API
+const MAGIC_ERROR_CODE_FOR_ONBOARDED_USER_RESPONSE = '700000';
+
 export default class OnboardService {
   public huronCallEntitlement = false;
   public usersToOnboard = [];
@@ -15,6 +18,7 @@ export default class OnboardService {
     public $timeout: ng.ITimeoutService,
     public $translate: ng.translate.ITranslateService,
     private Config: Config,
+    public UserCsvService,
     public Userservice,
   ) {
   }
@@ -172,7 +176,7 @@ export default class OnboardService {
         .then((response) => {
           // add 'onboardedUsers' property and resolve
           const userResponse: IOnboardedUserResult[] = _.get(response, 'data.userResponse');
-          const onboardedUsers = this.parseOnboardedUsers(userResponse);
+          const onboardedUsers = this.parseOnboardedUsers(userResponse, response);
           response.onboardedUsers = onboardedUsers;
           return response;
         })
@@ -184,7 +188,7 @@ export default class OnboardService {
     return this.$q.all(promises);
   }
 
-  private parseOnboardedUsers(onboardedUsers: IOnboardedUserResult[]): {
+  private parseOnboardedUsers(onboardedUsers: IOnboardedUserResult[], response: ng.IHttpResponse<any>): {
     resultList: IParsedOnboardedUserResult[],
     numUpdatedUsers: number,
     numAddedUsers: number,
@@ -216,15 +220,18 @@ export default class OnboardService {
           });
           userResult.alertType = 'success';
           if (httpStatus === 200) {
-            result.numUpdatedUsers++;
+            _result.numUpdatedUsers++;
           } else {
-            result.numAddedUsers++;
+            _result.numAddedUsers++;
           }
-          if (onboardedUser.message === '700000') {
+          if (onboardedUser.message === MAGIC_ERROR_CODE_FOR_ONBOARDED_USER_RESPONSE) {
             userResult.message = this.$translate.instant('usersPage.onboardedWithoutLicense', {
               email: userResult.email,
             });
             userResult.alertType = 'warning';
+            if (onboardedUser.email) {
+              userResult.warningMsg = this.UserCsvService.addErrorWithTrackingID(userResult.message, response);
+            }
           }
           break;
         }
@@ -322,6 +329,7 @@ export default class OnboardService {
 
       if (httpStatus !== 200 && httpStatus !== 201) {
         userResult.alertType = 'danger';
+        userResult.errorMsg = this.UserCsvService.addErrorWithTrackingID(userResult.message, response);
       }
 
       _result.resultList.push(userResult);

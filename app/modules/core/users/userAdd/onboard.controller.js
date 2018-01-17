@@ -1502,17 +1502,18 @@ require('./_user-add.scss');
           $scope.numAddedUsers = _.sumBy(responses, 'onboardedUsers.numAddedUsers');
           $scope.results.resultList = _.flatMap(responses, 'onboardedUsers.resultList');
 
-          // TODO (mipark2): revisit this
           //concatenating the results in an array of strings for notify function
           $scope.results.errors = [];
           $scope.results.warnings = [];
           _.forEach($scope.results.resultList, function (userResult) {
             if (userResult.alertType === 'success' && userResult.email) {
               removeEmailFromTokenfield(userResult.email);
-            } else if (userResult.alertType === 'warning' && userResult.email) {
-              $scope.results.warnings.push(UserCsvService.addErrorWithTrackingID(userResult.message, response));
-            } else {
-              $scope.results.errors.push(UserCsvService.addErrorWithTrackingID(userResult.message, response));
+            }
+            if (userResult.warningMsg) {
+              $scope.results.warnings.push(userResult.warningMsg);
+            }
+            if (userResult.errorMsg) {
+              $scope.results.errors.push(userResult.errorMsg);
             }
           });
 

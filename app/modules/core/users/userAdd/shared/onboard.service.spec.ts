@@ -9,6 +9,7 @@ describe('OnboardService:', () => {
       '$q',
       '$scope',
       'OnboardService',
+      'UserCsvService',
       'Userservice',
     );
   });
@@ -198,6 +199,26 @@ describe('OnboardService:', () => {
       expect(result.resultList[0].message).toBe('usersPage.onboardSuccess');
       expect(result.resultList[1].message).toBe('usersPage.onboardSuccess');
       expect(result.resultList[2].message).toBe('usersPage.onboardError');
+    });
+
+    fit('should contain parsed user results with "warningMsg" and "errorMsg" properties if conditions apply', function () {
+      spyOn(this.UserCsvService, 'addErrorWithTrackingID').and.returnValue('fake-addErrorWithTrackingID-result');
+      const fakeUserResults: IOnboardedUserResult[] = [];
+      fakeUserResults.push({
+        email: 'fake-email-1',
+        httpStatus: 200,
+        message: '700000',  // <- magic error code from API (indicates user was onboarded without licenses)
+      });
+      fakeUserResults.push({
+        email: 'fake-email-2',
+        httpStatus: 400,    // <- any non-{200,201} status is an onboarding error
+      });
+      const result = this.OnboardService.parseOnboardedUsers(fakeUserResults);
+      expect(result.resultList[0].warningMsg).toBe('fake-addErrorWithTrackingID-result');
+      expect(result.resultList[0].errorMsg).not.toBeDefined();
+      expect(result.resultList[1].warningMsg).not.toBeDefined();
+      expect(result.resultList[1].errorMsg).toBe('fake-addErrorWithTrackingID-result');
+      expect(this.UserCsvService.addErrorWithTrackingID.calls.count()).toBe(2);
     });
   });
 });
