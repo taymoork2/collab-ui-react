@@ -1415,19 +1415,17 @@ require('./_user-add.scss');
     };
 
     function onboardUsers(optionalOnboard) {
-      var deferred = $q.defer();
       initResults();
       usersList = OnboardService.parseUsersList($scope.model.userList);
 
       // early-out if user list is empty
       if (_.isEmpty(usersList)) {
         if (optionalOnboard) {
-          deferred.resolve();
+          return $q.resolve();
         } else {
           Notification.error('usersPage.validEmailInput');
-          deferred.reject();
+          return $q.reject();
         }
-        return deferred.promise;
       }
 
       // notes (as of 2018-01-13):
@@ -1465,23 +1463,11 @@ require('./_user-add.scss');
             $scope.results.errors.push(UserCsvService.addErrorWithTrackingID(userResult.message, response));
           }
         });
-
-        //Displaying notifications
-        if ($scope.results.resultList.length === usersList.length) {
-          $scope.btnOnboardLoading = false;
-          if (isFTW) {
-            deferred.resolve();
-          } else {
-            Analytics.trackAddUsers(Analytics.eventNames.SAVE, null, createPropertiesForAnalyltics());
-            $state.go('users.add.results');
-          }
-        }
       };
 
       var errorCallback = function (response) {
         Notification.errorResponse(response);
-        $scope.btnOnboardLoading = false;
-        deferred.reject();
+        return $q.reject(response);
       };
 
       $scope.btnOnboardLoading = true;
@@ -1510,10 +1496,8 @@ require('./_user-add.scss');
         }
       });
 
-      var tempUserArray = [],
-        entitleList = [],
-        licenseList = [],
-        chunk = Config.batchSize;
+      var entitleList = [],
+        licenseList = [];
 
       // notes:
       // - start with all enabled entitlements
@@ -1531,14 +1515,28 @@ require('./_user-add.scss');
 
       entitleList = entitleList.concat(getHybridServicesEntitlements('add'));
 
-      for (var i = 0; i < usersList.length; i += chunk) {
-        tempUserArray = usersList.slice(i, i + chunk);
-        Userservice.onboardUsersLegacy(tempUserArray, entitleList, licenseList)
+      // notes:
+      // - split out users list into smaller list chunks
+      // - call 'Userservice.onboardUsersLegacy()' for each chunk
+      var usersListChunks = _.chunk(usersList, Config.batchSize);
+      var promises = _.map(usersListChunks, function (usersListChunk) {
+        return Userservice.onboardUsersLegacy(usersListChunk, entitleList, licenseList)
           .then(successCallback)
           .catch(errorCallback);
-      }
-
-      return deferred.promise;
+      });
+      return $q.all(promises)
+        .then(function (results) {
+          $scope.btnOnboardLoading = false;
+          if (isFTW) {
+            return;
+          }
+          Analytics.trackAddUsers(Analytics.eventNames.SAVE, null, createPropertiesForAnalyltics());
+          $state.go('users.add.results');
+        })
+        .catch(function () {
+          $scope.btnOnboardLoading = false;
+          return $q.reject();
+        });
     }
 
     $scope.hybridServicesEntitlements = [];
