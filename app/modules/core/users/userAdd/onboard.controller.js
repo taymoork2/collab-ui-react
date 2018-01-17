@@ -1445,15 +1445,15 @@ require('./_user-add.scss');
         //concatenating the results in an array of strings for notify function
         $scope.results.errors = [];
         $scope.results.warnings = [];
-        for (var idx in $scope.results.resultList) {
-          if ($scope.results.resultList[idx].alertType === 'success' && $scope.results.resultList[idx].email) {
-            removeEmailFromTokenfield($scope.results.resultList[idx].email);
-          } else if ($scope.results.resultList[idx].alertType === 'warning' && $scope.results.resultList[idx].email) {
-            $scope.results.warnings.push(UserCsvService.addErrorWithTrackingID($scope.results.resultList[idx].message, response));
+        _.forEach($scope.results.resultList, function (userResult) {
+          if (userResult.alertType === 'success' && userResult.email) {
+            removeEmailFromTokenfield(userResult.email);
+          } else if (userResult.alertType === 'warning' && userResult.email) {
+            $scope.results.warnings.push(UserCsvService.addErrorWithTrackingID(userResult.message, response));
           } else {
-            $scope.results.errors.push(UserCsvService.addErrorWithTrackingID($scope.results.resultList[idx].message, response));
+            $scope.results.errors.push(UserCsvService.addErrorWithTrackingID(userResult.message, response));
           }
-        }
+        });
 
         //Displaying notifications
         if ($scope.results.resultList.length === usersList.length) {
