@@ -118,6 +118,11 @@ export class PstnWizardCtrl implements ng.IComponentController {
     this.FeatureToggleService.getCallFeatureForCustomer(this.PstnModel.getCustomerId(), this.FeatureToggleService.features.hI1484).then((enabled) => {
       this.ftLocation = enabled;
     });
+    if (this.PstnModel.getContractStatus() === ContractStatus.UnKnown) {
+      this.PstnService.getCustomerV2(this.PstnModel.getCustomerId(), { deep: true }).then(customer => {
+        this.PstnModel.setContractStatus(customer.contractStatus);
+      });
+    }
   }
 
   public showOrderForm(): boolean {
