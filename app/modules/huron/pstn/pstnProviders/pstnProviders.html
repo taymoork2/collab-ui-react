@@ -1,6 +1,6 @@
 <div class="pstn-providers" ng-if="$ctrl.show">
   <cs-card-layout block-view="true">
-    <cs-card class="medium header-border pstn-provider-card" ng-repeat="pstnCarrier in $ctrl.pstnCarriers">
+    <cs-card class="cs-card--medium header-border pstn-provider-card" ng-repeat="pstnCarrier in $ctrl.pstnCarriers">
       <article ng-class="{'pstn-carrier-select': pstnCarrier.selected}">
         <header ng-switch="pstnCarrier.name !== 'BYO-PSTN'" class="align-center">
           <div ng-switch-when="true">
