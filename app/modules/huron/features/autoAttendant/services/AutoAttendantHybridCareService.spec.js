@@ -4,8 +4,7 @@ describe('Service: AutoAttendantHybridCareService', function () {
   var configureJson = getJSONFixture('huron/json/autoAttendant/aaOrgConfigure.json');
   var q;
   var Authinfo, AutoAttendantHybridCareService, PrivateTrunkService, ServiceDescriptorService;
-  var $scope, $rootScope;
-  var $timeout;
+  var $scope, $rootScope, $timeout;
   var notFoundResponse;
   var deferred;
   var isCare;
@@ -17,7 +16,7 @@ describe('Service: AutoAttendantHybridCareService', function () {
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($q, _Authinfo_, _AutoAttendantHybridCareService_, _$rootScope_, _$timeout_, _PrivateTrunkService_, _ServiceDescriptorService_) {
+  beforeEach(inject(function ($q, _$rootScope_, _$timeout_, _Authinfo_, _AutoAttendantHybridCareService_, _PrivateTrunkService_, _ServiceDescriptorService_) {
     AutoAttendantHybridCareService = _AutoAttendantHybridCareService_;
     Authinfo = _Authinfo_;
     PrivateTrunkService = _PrivateTrunkService_;

@@ -6,7 +6,7 @@
     .factory('AutoAttendantHybridCareService', AutoAttendantHybridCareService);
 
   /* @ngInject */
-  function AutoAttendantHybridCareService($q, Authinfo, ServiceDescriptorService, PrivateTrunkService) {
+  function AutoAttendantHybridCareService($q, Authinfo, PrivateTrunkService, ServiceDescriptorService) {
     var service = {
       isHybridCallConfigured: isHybridCallConfigured,
       isEPTConfigured: isEPTConfigured,
