@@ -2224,6 +2224,11 @@
                 template: require('modules/mediafusion/reports/media-reports-phase-two.html'),
               },
             },
+            resolve: {
+              hasMFMultipleInsightFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceMultipleInsights);
+              },
+            },
           })
           .state('reports.care', {
             url: '/care',

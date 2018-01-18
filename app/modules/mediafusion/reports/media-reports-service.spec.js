@@ -65,6 +65,7 @@ describe('Service: Media Reports Service', function () {
     vm.totalCallsCard = vm.baseUrl + '/total_calls/?relativeTime=4h';
     vm.availabilityCard = vm.baseUrl + '/agg_availability/?relativeTime=4h';
     vm.participantDistributionUrl = vm.baseUrl + '/clusters_call_volume_with_insights/?relativeTime=4h';
+    vm.participantDistributionMultipleInsightsUrl = vm.baseUrl + '/clusters_call_volume_with_multiple_insights/?relativeTime=4h';
     vm.clientTypeUrl = vm.baseUrl + '/client_type_trend/?relativeTime=4h';
     vm.meetingLcationUrl = vm.baseUrl + '/meeting_location_trend/?relativeTime=4h';
     vm.participant_change = vm.baseUrl + '/overflow_participant_change/?relativeTime=4h';
@@ -138,6 +139,23 @@ describe('Service: Media Reports Service', function () {
       expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(0);
 
       vm.MediaReportsService.getParticipantDistributionData(vm.timeFilter, vm.allClusters).then(function (response) {
+        expect(response).toEqual({
+          graphData: [],
+          graphs: [],
+        });
+        expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
+      });
+
+      vm.$httpBackend.flush();
+    });
+  });
+
+  describe('Participant Distribution:', function () {
+    it('should notify an error for Participant Distribution with Multiple Insights Call failure', function () {
+      vm.$httpBackend.whenGET(vm.participantDistributionMultipleInsightsUrl).respond(500, vm.error);
+      expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(0);
+
+      vm.MediaReportsService.getParticipantDistributionMultipleInsightData(vm.timeFilter, vm.allClusters).then(function (response) {
         expect(response).toEqual({
           graphData: [],
           graphs: [],

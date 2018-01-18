@@ -6193,6 +6193,7 @@
       "overallTotalNumberOfCallsError": "There was an error while loading Total Number of calls",
       "overallClientTypeGraphError": "There was an error while loading Client Type Data",
       "overallMeetingLocationGraphError": "There was an error while loading Meeting Location Data",
+      "overallParticipantDistributionGraphMultipleInsightError": "There was an error while loading call distribution data with multiple Insights",
       "total_calls": "Total Calls",
       "onpremcalls": "Hosted On-Premises",
       "cloudcalls": "Overflowed to Cloud",
@@ -6238,6 +6239,7 @@
       "hybridHeading": "Cloud and On-Premises",
       "othersHeading": "Others",
       "callsBallon": "Calls:",
+      "cloudconnectivityissues": "Cloud Connectivity Issues",
       "clientType": {
         "android": "Android",
         "blackberry": "BlackBerry",

@@ -47,6 +47,7 @@ module.exports = {
   atlasJira2126UseAltEndpoint: 'atlas-jira-2126-use-alt-endpoint',
   atlasMediaServicePhaseTwo: 'atlas-media-service-phase-two',
   atlasMediaServiceTrustedSIP: 'atlas-media-service-trusted-sip',
+  atlasMediaServiceMultipleInsights: 'atlas-media-service-multiple-insights',
   atlasMyCompanyBillingTab: 'atlas-my-company-billing-tab',
   atlasNewCiDataModel: 'atlas-new-ci-data-model',
   atlasNewRoomSystems: 'atlas-new-roomSystems',

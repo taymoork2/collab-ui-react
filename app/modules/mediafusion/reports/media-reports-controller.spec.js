@@ -104,6 +104,7 @@ describe('Controller:MediaReportsController', function () {
       $interval: $interval,
       Log: Log,
       Config: Config,
+      hasMFMultipleInsightFeatureToggle: false,
     });
   }));
   it('controller should be defined', function () {

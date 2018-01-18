@@ -5,11 +5,12 @@
     .module('Mediafusion')
     .controller('MediaReportsController', MediaReportsController);
   /* @ngInject */
-  function MediaReportsController($q, $scope, $translate, $interval, $timeout, HybridServicesClusterService, UtilizationResourceGraphService, MeetingLocationAdoptionGraphService, ParticipantDistributionResourceGraphService, NumberOfParticipantGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService, AdoptionCardService, Orgservice) {
+  function MediaReportsController($q, $scope, $translate, $interval, $timeout, HybridServicesClusterService, UtilizationResourceGraphService, MeetingLocationAdoptionGraphService, ParticipantDistributionResourceGraphService, NumberOfParticipantGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService, AdoptionCardService, Orgservice, hasMFMultipleInsightFeatureToggle) {
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
 
+    vm.hasMFMultipleInsightFeatureToggle = hasMFMultipleInsightFeatureToggle;
     vm.ABORT = 'ABORT';
     vm.EMPTY = 'empty';
     vm.REFRESH = 'refresh';
@@ -180,7 +181,11 @@
         setAvailabilityData();
         setClusterAvailability();
         setUtilizationData();
-        setParticipantDistributionData();
+        if (vm.hasMFMultipleInsightFeatureToggle) {
+          setParticipantDistributionDataWithMultipleInsights();
+        } else {
+          setParticipantDistributionData();
+        }
         setNumberOfParticipantData();
         setCallVolumeData();
       });
@@ -545,6 +550,28 @@
         } else {
           deferred.promise.then(function () {
             //set the participant distribution graphs here
+            if (_.isUndefined(setParticipantDistributionGraph(response))) {
+              setDummyParticipantDistribution();
+            } else {
+              vm.participantDistributionStatus = vm.SET;
+            }
+          }, function () {
+            //map is nor formed so we shoud show dummy graphs
+            setDummyParticipantDistribution();
+          });
+        }
+      }, function () {
+        setDummyParticipantDistribution();
+      });
+    }
+
+    function setParticipantDistributionDataWithMultipleInsights() {
+      MediaReportsService.getParticipantDistributionMultipleInsightData(vm.timeSelected, vm.clusterId).then(function (response) {
+        if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
+          setDummyParticipantDistribution();
+        } else {
+          deferred.promise.then(function () {
+            //set the participant distribution graphs with multiple insights here
             if (_.isUndefined(setParticipantDistributionGraph(response))) {
               setDummyParticipantDistribution();
             } else {

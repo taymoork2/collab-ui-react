@@ -205,6 +205,26 @@
       });
     }
 
+    function getParticipantDistributionMultipleInsightData(time, cluster) {
+      vm.callDistributionMultipleInsightsUrl = '/clusters_call_volume_with_multiple_insights';
+
+      var returnData = {
+        graphData: [],
+        graphs: [],
+      };
+      return $http.get(vm.urlBase + getQuerys(vm.callDistributionMultipleInsightsUrl, cluster, time)).then(function (response) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
+          returnData.graphData.push(response.data.chartData);
+          var adjustedData = adjustLineGraphData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
+          return InsightGraphService.getAdjustedInsightData(adjustedData);
+        } else {
+          return returnData;
+        }
+      }, function (error) {
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallParticipantDistributionGraphMultipleInsightError'), returnData);
+      });
+    }
+
     function getClientTypeData(time, clientType) {
       vm.clientTypeUrl = '/client_type_trend';
       clientType = formatClientType(clientType);
@@ -383,6 +403,7 @@
       getUtilizationData: getUtilizationData,
       getCallVolumeData: getCallVolumeData,
       getParticipantDistributionData: getParticipantDistributionData,
+      getParticipantDistributionMultipleInsightData: getParticipantDistributionMultipleInsightData,
       getAvailabilityData: getAvailabilityData,
       getClusterAvailabilityData: getClusterAvailabilityData,
       getTotalCallsData: getTotalCallsData,
