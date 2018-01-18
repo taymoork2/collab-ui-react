@@ -6143,21 +6143,11 @@
       "body2": "To make this node available again, you will need to reregister it."
     },
     "metrics": {
-      "titlev2": "Reports Phase 2 POC",
-      "historical": "Historical",
-      "realTime": "Real time",
       "today": "Last 24 Hours",
-      "today2": "Last 24 Hours",
       "last4Hours": "Last 4 Hours",
-      "yesterday": "Yesterday",
-      "yesterday2": "Yesterday",
       "week": "Last Week",
-      "week2": "last week",
       "month": "Last Month",
-      "month2": "last month",
       "threeMonths": "Last Three Months",
-      "threeMonths2": "last three months",
-      "lastRefresh": "Last Refreshed at",
       "clusterAvailability": "Cluster Availability for",
       "callVolumes": "Call Activity",
       "callLocal": "Calls on premise",
@@ -6219,8 +6209,6 @@
       "availabilityStatus": "Availability Status",
       "clusterTitle": "Cluster",
       "clusterNodeTitle": "Cluster/Node",
-      "lowAvailableClusters": "Low availability clusters",
-      "clusterTakingMoreCalls": "Clusters hosting more no of calls",
       "totalMeetings": "Total Number of Meetings",
       "meetOnPrem": "Resources Used for Meetings",
       "clientTypes": "Client Types",
@@ -7743,7 +7731,7 @@
     "helpTextWaitingVirtualAssistant": "If you are using a Customer Virtual Assistant, this message indicates transition from automated support to human interaction.",
     "helpTextChatting": "Customers see this if they minimize the chat window during an ongoing interaction.",
     "helpTextLeaveRoom": "Customers see this when an agent exits the chat and ends the interaction.",
-    "assistantTooltip" : "The {{assistantType}} {{assistantName}} is used in this template.",
+    "assistantTooltip": "The {{assistantType}} {{assistantName}} is used in this template.",
     "filterType": {
       "chat": "Customer Support Template",
       "callback": "Customer Support Template",
@@ -10429,7 +10417,7 @@
         "deleteSchedule": "Delete this schedule",
         "scheduleCreate": "Create Schedule"
       },
-      "resourcesView":{
+      "resourcesView": {
         "createResource": "Create Resource"
       },
       "resourcesCreateModal": {
