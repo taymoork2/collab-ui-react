@@ -385,6 +385,36 @@ describe('Controller: AABuilderMainCtrl', function () {
 
       expect(this.aaModel.aaRecord.assignedResources[0].uuid).toEqual('newUUID');
     });
+    it('should unassign Assigned and reAssign same number with new uuid', function () {
+        spyOn(this.Authinfo, 'getOrgId').and.returnValue('cuid');
+
+        this.$httpBackend.when('PUT', this.HuronConfig.getCmiV2Url() + '/customers/cuid/features/autoattendants/uuid/numbers').respond(function () {
+          return [200, 'good'];
+        });
+
+        this.$httpBackend.when('GET', this.HuronConfig.getCmiV2Url() + '/customers/cuid/features/autoattendants/uuid/numbers').respond(function () {
+          return [200, { numbers: [{ number: '1111111', uuid: 'newUUID' }] }];
+        });
+
+        var resource = this.AutoAttendantCeInfoModelService.newResource();
+        resource.setType(this.aCe.assignedResources.type);
+        resource.setUUID('00097a86-45ef-44a7-aa78-6d32a0ca1d3b');
+        resource.setId('1111111');
+        resource.setNumber('1111111');
+
+        this.aaModel.aaRecord = _.cloneDeep(this.aCe);
+
+        this.aaModel.aaRecordUUID = 'uuid';
+
+        this.controller.ui.ceInfo.addResource({ id: '00097a86-45ef-44a7-aa78-6d32a0ca1d3b', uuid: '4066bc8a-c1ae-4e89-a109-5ec891be0683' });
+        this.controller.close();
+
+        this.$httpBackend.flush();
+
+        this.$scope.$apply();
+
+        expect(this.aaModel.aaRecord.assignedResources[0].uuid).toEqual('newUUID');
+      });
   });
 
   describe('saveAANumberAssignmentWithErrorDetail', function () {
