@@ -33,9 +33,6 @@
       You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.
     </div>
     <![endif]-->
-    <% if (htmlWebpackPlugin.options.loadAdobeScripts) { %>
-    <script>if(typeof _satellite !== 'undefined'){_satellite.pageBottom();}</script>
-    <% } %>
     <% for (var chunk in htmlWebpackPlugin.options.bodyChunks) { %>
     <script src="<%= htmlWebpackPlugin.files.chunks[htmlWebpackPlugin.options.bodyChunks[chunk]].entry %>" type="text/javascript"></script>
     <% } %>
