@@ -24,9 +24,9 @@ class AutoAssignTemplateManageOptionsController implements ng.IComponentControll
   }
 
   public modifyAutoAssignTemplate() {
-    this.AutoAssignTemplateService.getTemplates()
-      .then((response) => {
-        const convertedStateData = this.AutoAssignTemplateService.convertDefaultTemplateToStateData(response);
+    this.AutoAssignTemplateService.getDefaultTemplate()
+      .then((defaultTemplate) => {
+        const convertedStateData = this.AutoAssignTemplateService.templateToStateData(defaultTemplate);
         _.merge(this.stateData, convertedStateData);
         this.$state.go('users.manage.edit-auto-assign-template-modal', {
           prevState: 'users.manage.picker',

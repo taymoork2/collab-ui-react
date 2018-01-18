@@ -49,11 +49,7 @@ let cspDevConfig = mkCspConfig({
     'http://*.d1.sc.omtrdc.net', // Adobe DTM Omniture
   ],
   scriptSrc: [
-    // During development, we only have 2 inline scripts: the one preloading the background image
-    // and the one injected by Browser Sync. We could whitelist the SHA1 of those 2 scripts
-    // but the one for Browser Sync changes too often (it contains the version number).
-    // We use 'unsafe-inline' instead, but it should never make it to production!
-    '\'unsafe-inline\'',
+    '\'nonce-browser-sync-dev\'', // browser-sync-dev nonce configured in ./lite-server.js
     '127.0.0.1',
     'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
     'http://assets.adobedtm.com', // Adobe DTM Omniture

@@ -1,0 +1,23 @@
+{
+  "dirsyncRow": {
+    "domains": [{
+      "domainName": "win2k12r2-96.com"
+    }],
+    "connectors": [{
+      "isInService": true,
+      "name": "WIN2K12R2-96-1"
+    }, {
+      "isInService": true,
+      "name": "WIN2K12R2-96-2"
+    }]
+  },
+  "dirsyncConnectors": [{
+    "isInService": true,
+    "name": "WIN2K12R2-96-1",
+    "status": "primary"
+  }, {
+    "isInService": true,
+    "name": "WIN2K12R2-96-2",
+    "status": "primary"
+  }]
+}

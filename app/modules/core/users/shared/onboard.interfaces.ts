@@ -50,3 +50,28 @@ export interface IAutoAssignTemplateRequestPayload {
   licenses: ILicenseRequestItem[];
   userEntitlements: IUserEntitlementRequestItem[];
 }
+
+export interface IUserNameAndEmail {
+  address: string;
+  name: string;
+}
+
+export interface IOnboardedUserResult {
+  email: string;
+  message?: string;
+  httpStatus: number;
+}
+
+export interface IParsedOnboardedUserResult {
+  email: string;
+  message: string | undefined;
+  alertType: 'success' | 'warning' | 'danger' | undefined;
+  warningMsg?: string;
+  errorMsg?: string;
+}
+
+export interface IOnboardedUsersAggregateResult {
+  resultList: IParsedOnboardedUserResult[];
+  numUpdatedUsers: number;
+  numAddedUsers: number;
+}

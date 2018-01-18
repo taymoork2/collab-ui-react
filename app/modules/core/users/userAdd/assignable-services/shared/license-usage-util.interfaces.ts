@@ -19,6 +19,10 @@ export interface ILicenseUsage {
   status: LicenseStatus;
 }
 
+export interface ILicenseUsageMap {
+  [key: string]: ILicenseUsage;
+}
+
 export interface ISubscription {
   subscriptionId: string;
   licenses: ILicenseUsage[];

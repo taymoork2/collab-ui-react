@@ -32,16 +32,21 @@ export class OnboardSummaryForAutoAssignModalController implements ng.IComponent
     this.saveLoading = true;
     const licenses = [];
     const userEntitlements = [];
-    this.Userservice.onboardUsersV2(this.userList, licenses, userEntitlements)
+
+    // TODO: transition to onboard summary state instead of notifying success and jumping to 'users.list'
+    this.Userservice.onboardUsers({
+      users: this.userList,
+      licenses: licenses,
+      userEntitlements: userEntitlements,
+    })
       .then(() => {
+        // TODO: rm this
         this.Notification.success('userManage.autoAssignTemplate.editSummary.saveSuccess');
-        this.$state.go('users.list');
-      })
-      .catch((response) => {
-        this.Notification.errorResponse(response, 'userManage.autoAssignTemplate.editSummary.saveError');
       })
       .finally(() => {
         this.saveLoading = false;
+        // TODO: change jump target to onboard results summary state
+        this.$state.go('users.list');
       });
   }
 }
