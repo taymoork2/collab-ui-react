@@ -7,7 +7,7 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($q, $rootScope, $state, $scope, Authinfo, CardUtils, SunlightUtilitiesService, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, ProPackService, LearnMoreBannerService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SetupWizardService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
+  function OverviewCtrl($q, $rootScope, $state, $scope, Authinfo, CardUtils, SunlightUtilitiesService, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, ProPackService, LearnMoreBannerService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SetupWizardService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService, PrivateTrunkService, ServiceDescriptorService) {
     var vm = this;
     var PSTN_TOS_ACCEPT = require('modules/huron/pstn/pstnTermsOfService').PSTN_TOS_ACCEPT;
     var PSTN_ESA_DISCLAIMER_ACCEPT = require('modules/huron/pstn/pstn.const').PSTN_ESA_DISCLAIMER_ACCEPT;
@@ -185,8 +185,16 @@ require('./_overview.scss');
         disableCache: true,
       };
 
-      Orgservice.getOrg(_.noop, Authinfo.getOrgId(), params).then(function (response) {
-        vm.orgData = response.data;
+      $q.all({
+        orgDetails: Orgservice.getOrg(_.noop, Authinfo.getOrgId(), params),
+        featureToggle: FeatureToggleService.supports(FeatureToggleService.features.hybridCare),
+        pt: PrivateTrunkService.getPrivateTrunk(),
+        ept: ServiceDescriptorService.getServiceStatus('ept'),
+      }).then(function (response) {
+        vm.orgData = response.orgDetails.data;
+        vm.careToggle = response.featureToggle;
+        vm.pt = response.pt.resources.length !== 0;
+        vm.ept = response.ept.state !== 'unknown';
 
         getTOSStatus();
         getEsaDisclaimerStatus();
@@ -199,16 +207,19 @@ require('./_overview.scss');
         }
         if (Authinfo.isCare() || Authinfo.isCareVoice()) {
           var hasMessage = Authinfo.isMessageEntitled();
-          var hasCall = Authinfo.isSquaredUC();
+          var hasCall = Authinfo.hasCallLicense();
           if (!hasMessage && !hasCall) {
             vm.notifications.push(OverviewNotificationFactory
               .createCareLicenseNotification('homePage.careLicenseMsgAndCallMissingText', 'homePage.careLicenseLinkText'));
           } else if (!hasMessage) {
             vm.notifications.push(OverviewNotificationFactory
               .createCareLicenseNotification('homePage.careLicenseMsgMissingText', 'homePage.careLicenseLinkText'));
-          } else if (!hasCall) {
+          } else if (!hasCall && !vm.careToggle) {
             vm.notifications.push(OverviewNotificationFactory
               .createCareLicenseNotification('homePage.careLicenseCallMissingText', 'homePage.careLicenseLinkText'));
+          } else if (!hasCall && (!vm.pt && !vm.ept) && vm.careToggle) {
+            vm.notifications.push(OverviewNotificationFactory
+              .createCareLicenseNotification('homePage.careLicenseCallMissingTextToggle', 'careChatTpl.learnMoreLink'));
           }
         }
       }).catch(function (response) {
@@ -236,12 +247,6 @@ require('./_overview.scss');
             setRoomSystemEnabledDevice(false);
           }
         });
-
-      FeatureToggleService.atlasPMRonM2GetStatus().then(function (toggle) {
-        if (toggle) {
-          vm.notifications.push(OverviewNotificationFactory.createPMRNotification());
-        }
-      });
 
       FeatureToggleService.supports(FeatureToggleService.features.huronPstn).then(function (result) {
         vm.ftHuronPstn = result;
@@ -380,7 +385,7 @@ require('./_overview.scss');
     }
 
     function initializeProvisioningEventHandler() {
-      if (SetupWizardService.hasPendingServiceOrder()) {
+      if (SetupWizardService.hasPendingCCWSubscriptions()) {
         var pendingServiceOrderUUID = SetupWizardService.getActingSubscriptionServiceOrderUUID();
 
         SetupWizardService.getPendingOrderStatusDetails(pendingServiceOrderUUID).then(function (productProvStatus) {

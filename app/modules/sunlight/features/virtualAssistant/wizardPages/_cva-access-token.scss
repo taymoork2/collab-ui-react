@@ -8,7 +8,6 @@
 
     input {
       @include vr-spacing(mt, 0.75);
-      @include vr-spacing(mb, 0);
       width: rem-calc(386px);
     }
   }
@@ -21,8 +20,8 @@
     @include vr-spacing(mb, 0);
   }
 
-  .cs-input__messages {
-    @include vr-spacing(mt, 0.5);
+  .cs-input__messages .message{
+    @include vr-spacing(mt, 0);
   }
 
   .token-check-mark {

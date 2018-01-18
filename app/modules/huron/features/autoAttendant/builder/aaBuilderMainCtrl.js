@@ -172,7 +172,18 @@
           });
         });
       }).finally(function () {
-        $state.go('huronfeatures');
+        FeatureToggleService.supports(FeatureToggleService.features.atlasHybridEnable)
+          .then(function (results) {
+            if (results && $rootScope.isCare === true) {
+              $state.go('care.Features');
+              $rootScope.isCare = false;
+            } else {
+              $state.go('huronfeatures');
+            }
+          })
+          .catch(function () {
+            $state.go('huronfeatures');
+          });
       });
     }
 
@@ -884,6 +895,7 @@
       AACommonService.setRestApiTogglePhase2(featureToggleDefault);
       AACommonService.setReturnedCallerToggle(featureToggleDefault);
       AACommonService.setMultiSiteEnabledToggle(featureToggleDefault);
+      AACommonService.setHybridToggle(featureToggleDefault);
       return checkFeatureToggles();
     }
 
@@ -896,6 +908,7 @@
         hasDynAnnounce: FeatureToggleService.supports(FeatureToggleService.features.huronAADynannounce),
         hasReturnedCaller: FeatureToggleService.supports(FeatureToggleService.features.huronAAReturnCaller),
         hasMultiSites: FeatureToggleService.supports(FeatureToggleService.features.huronMultiSite),
+        isHybridOrg: FeatureToggleService.supports(FeatureToggleService.features.atlasHybridEnable),
       });
     }
 
@@ -908,6 +921,7 @@
       AutoAttendantCeMenuModelService.setDynAnnounceToggle(featureToggles.hasDynAnnounce);
       AACommonService.setReturnedCallerToggle(featureToggles.hasReturnedCaller);
       AACommonService.setMultiSiteEnabledToggle(featureToggles.hasMultiSites);
+      AACommonService.setHybridToggle(featureToggles.isHybridOrg);
     }
 
     function populateRoutingLocation() {

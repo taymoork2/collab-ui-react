@@ -53,40 +53,52 @@
         </cs-tab>
         <cs-tab ng-if="$ctrl.showTollFreeNumbers">
           <cs-tab-heading translate="pstnSetup.newTollFreeTab"></cs-tab-heading>
-          <div ng-if="!$ctrl.showContractIncomplete">
-            <p>{{$ctrl.tollFreeTitle}}</p>
-            <uc-pstn-number-search
-              model="$ctrl.model.tollFree"
-              search="$ctrl.searchCarrierTollFreeInventory(value, block, quantity, consecutive)"
-              add-to-cart="$ctrl.addToCart(order_type, number_type, quantity, searchResultModel)"
-              country-code="$ctrl.countryCode"
-              number-type="TOLLFREE">
-            </uc-pstn-number-search>
+          <div class="numbers-new" ng-if="!$ctrl.showOrderForm()">
+            <div translate="pstnSetup.unableToAddTollFreeNumbersShort"></div>
+            <a translate="pstnSetup.initContract" translate-value-carrier="{{$ctrl.carrierName}}" ng-click="$ctrl.sendContract()"></a>
           </div>
-          <div ng-if="$ctrl.showContractIncomplete">
-            <span translate="pstnSetup.unableToAddTollFreeNumbers"></span>
+          <div ng-if="$ctrl.showOrderForm()">
+            <div ng-if="!$ctrl.showContractUnSigned()">
+              <p>{{$ctrl.tollFreeTitle}}</p>
+              <uc-pstn-number-search
+                model="$ctrl.model.tollFree"
+                search="$ctrl.searchCarrierTollFreeInventory(value, block, quantity, consecutive)"
+                add-to-cart="$ctrl.addToCart(order_type, number_type, quantity, searchResultModel)"
+                country-code="$ctrl.countryCode"
+                number-type="TOLLFREE">
+              </uc-pstn-number-search>
+            </div>
+            <div ng-if="$ctrl.showContractUnSigned()">
+              <span translate="pstnSetup.unableToAddTollFreeNumbers"></span>
+            </div>
           </div>
         </cs-tab>
         <cs-tab ng-if="$ctrl.showPortNumbers">
           <cs-tab-heading translate="pstnSetup.portNumbersTab"></cs-tab-heading>
-          <div ng-if="!$ctrl.showContractIncomplete">
-            <div class="provider-flex">
-              <p translate="pstnSetup.portNumbersPrompt"></p>
-              <button type="button" class="btn btn--people" ng-disabled="$ctrl.validCount < 1 || $ctrl.invalidCount > 0" ng-click="$ctrl.addToCart('PORT_ORDER')"><span translate="common.add"></span></button>
-            </div>
-            <cs-token-field class="port-numbers"
-              tokens="$ctrl.unsavedTokens"
-              tokenfieldid="$ctrl.tokenfieldId"
-              tokenplacehoder="$ctrl.tokenplacehoder"
-              tokenoptions="$ctrl.tokenoptions"
-              tokenmethods="$ctrl.tokenmethods">
-            </cs-token-field>
-            <div class="warning-message" ng-if="$ctrl.invalidCount > 0">
-              <span class="icon icon-error"></span><p translate="pstnSetup.invalidNumberPrompt"></p>
-            </div>
+          <div class="numbers-new" ng-if="!$ctrl.showOrderForm()">
+            <div translate="pstnSetup.unableToAddPortedNumbersShort"></div>
+            <a translate="pstnSetup.initContract" translate-value-carrier="{{$ctrl.carrierName}}" ng-click="$ctrl.sendContract()"></a>
           </div>
-          <div ng-if="$ctrl.showContractIncomplete">
-            <span translate="pstnSetup.unableToAddPortedNumbers"></span>
+          <div ng-if="$ctrl.showOrderForm()">
+            <div ng-if="!$ctrl.showContractUnSigned()">
+              <div class="provider-flex">
+                <p translate="pstnSetup.portNumbersPrompt"></p>
+                <button type="button" class="btn btn--people" ng-disabled="$ctrl.validCount < 1 || $ctrl.invalidCount > 0" ng-click="$ctrl.addToCart('PORT_ORDER')"><span translate="common.add"></span></button>
+              </div>
+              <cs-token-field class="port-numbers"
+                tokens="$ctrl.unsavedTokens"
+                tokenfieldid="$ctrl.tokenfieldId"
+                tokenplacehoder="$ctrl.tokenplacehoder"
+                tokenoptions="$ctrl.tokenoptions"
+                tokenmethods="$ctrl.tokenmethods">
+              </cs-token-field>
+              <div class="warning-message" ng-if="$ctrl.invalidCount > 0">
+                <span class="icon icon-error"></span><p translate="pstnSetup.invalidNumberPrompt"></p>
+              </div>
+            </div>
+            <div ng-if="$ctrl.showContractUnSigned()">
+              <span translate="pstnSetup.unableToAddPortedNumbers"></span>
+            </div>
           </div>
         </cs-tab>
       </cs-tabset>
@@ -111,7 +123,9 @@
     </uc-pstn-swivel-numbers>
   </div>
   <div ng-if="$ctrl.step == 6" class="pstn-review">
-    <div class="review-container">
+    <uc-pstn-review ng-if="$ctrl.ftHI1635">
+    </uc-pstn-review>
+    <div class="review-container" ng-if="!$ctrl.ftHI1635">
       <i class="icon icon-circle-call"></i>
       <h1 class="title" translate="pstnSetup.reviewAndOrder"></h1>
       <div class="review-details">
@@ -217,5 +231,3 @@
     <span ng-if="$ctrl.step == 10 && $ctrl.swivelNumbers.length !== 0" translate="pstnSetup.importNumbers"></span>
   </button>
 </div>
-
-

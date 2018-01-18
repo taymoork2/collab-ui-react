@@ -10,7 +10,7 @@
 
   var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
-  function CareSetupAssistantCtrl($modal, $scope, $state, $stateParams, $timeout, $translate, $window, Authinfo, CvaService, CTService, DomainManagementService, LogMetricsService, Notification, SunlightConfigService, EvaService, SunlightConstantsService) {
+  function CareSetupAssistantCtrl($element, $modal, $scope, $state, $stateParams, $timeout, $translate, $window, AccessibilityService, Authinfo, CvaService, CTService, DomainManagementService, LogMetricsService, Notification, SunlightConfigService, EvaService, SunlightConstantsService) {
     var vm = this;
     $scope.controller = vm; // used by ctCancelModal to not be tied to 1 controller.
 
@@ -34,6 +34,8 @@
     vm.evalKeyPress = evalKeyPress;
 
     // Setup assistant controller functions
+    vm.enterNextPage = enterNextPage;
+    vm.getLabel = getLabel;
     vm.nextPage = nextPage;
     vm.previousPage = previousPage;
     vm.nextButton = nextButton;
@@ -48,6 +50,7 @@
     vm.isEditFeature = $stateParams.isEditFeature;
     vm.getCustomerInformationFormFields = getCustomerInformationFormFields;
     vm.getLocalisedText = getLocalisedText;
+    vm.getLocalisedTextWithEscalation = getLocalisedTextWithEscalation;
     vm.getLocalisedFeedbackText = getLocalisedFeedbackText;
     vm.getFeedbackDesc = getFeedbackDesc;
     vm.getFeedbackModel = getFeedbackModel;
@@ -62,7 +65,17 @@
     vm.hasConfiguredVirtualAssistantServices = false;
     vm.brandingPageTooltipText = brandingPageTooltipText;
     vm.careVirtualAssistantName = careVirtualAssistantName;
+
     vm.setEvaTemplateData = setEvaTemplateData;
+    vm.evaLearnMoreLink = 'https://www.cisco.com/go/create-template';
+    vm.evaSpaceTooltipData = '';
+    vm.isExpertEscalationSelected = isExpertEscalationSelected;
+    vm.setRequiredValue = setRequiredValue;
+    vm.checkIfTypeCategory = checkIfTypeCategory;
+    vm.isPopoverActive = false;
+    vm.popoverClicked = function () {
+      vm.isPopoverActive = !vm.isPopoverActive;
+    };
 
     //chat assistant utils
     vm.isAgentProfileWithCVA = function () {
@@ -337,6 +350,7 @@
       vm.template.configuration.virtualAssistant.config.id = vm.selectedVA.id;
       vm.template.configuration.virtualAssistant.config.name = vm.selectedVA.name;
     };
+
 
     /* Templates */
     var defaultChatTemplate = {
@@ -1350,45 +1364,116 @@
     }
 
     function isVirtualAssistantPageValid() {
-      return isValidField(vm.template.configuration.virtualAssistant.welcomeMessage, vm.lengthConstants.singleLineMaxCharLimit50) &&
+      return isValidField(vm.template.configuration.virtualAssistant.welcomeMessage, vm.lengthConstants.multiLineMaxCharLimit) &&
         vm.template.configuration.virtualAssistant.config.id.length > 0;
     }
 
     function isChatEscalationBehaviorPageValid() {
-      return vm.template.configuration.routingLabel && _.includes(SunlightConstantsService.routingLabels, vm.template.configuration.routingLabel);
+      if (vm.evaConfig.isEvaConfigured) {
+        return vm.template.configuration.routingLabel && _.includes(SunlightConstantsService.routingLabels, vm.template.configuration.routingLabel);
+      } else {
+        return vm.template.configuration.routingLabel && !_.includes(SunlightConstantsService.evaOptions, vm.template.configuration.routingLabel);
+      }
+    }
+
+    function isExpertEscalationSelected() {
+      // if eva is configured AND escalation to expert selected
+      return !(vm.selectedMediaType === 'chatPlusCallback' && vm.cardMode === 'callback') &&
+        vm.evaConfig.isEvaFlagEnabled && vm.evaConfig.isEvaConfigured && vm.template.configuration.routingLabel &&
+        _.includes(SunlightConstantsService.evaOptions, vm.template.configuration.routingLabel);
+    }
+
+    function checkIfTypeCategory(attributes) {
+      var isCategoryType = _.find(attributes, function (attribute) {
+        return (attribute.name === 'type' && attribute.value.id === 'category');
+      });
+      return isCategoryType;
+    }
+
+    function setRequiredValueChat(radioButtonValue) {
+      var defaultChatAttributes = defaultChatTemplate.configuration.pages.customerInformation.fields.field3.attributes;
+      _.forEach(defaultChatAttributes, function (attribute) {
+        if (attribute.name === 'required') {
+          attribute.value = radioButtonValue;
+        }
+      });
+      defaultChatTemplate.configuration.pages.customerInformation.fields.field3.attributes = defaultChatAttributes;
+    }
+
+    function setRequiredValueChatPlusCallback(radioButtonValue) {
+      var defaultChatPlusCallackAttributes = defaultChatPlusCallBackTemplate.configuration.pages.customerInformationChat.fields.field3.attributes;
+      _.forEach(defaultChatPlusCallackAttributes, function (attribute) {
+        if (attribute.name === 'required') {
+          attribute.value = radioButtonValue;
+        }
+      });
+      defaultChatPlusCallBackTemplate.configuration.pages.customerInformationChat.fields.field3.attributes = defaultChatPlusCallackAttributes;
+    }
+
+    function setRequiredValue() {
+      var radioButtonValue = isExpertEscalationSelected() ? 'required' : 'optional';
+      switch (vm.selectedMediaType) {
+        case vm.mediaTypes.chat: setRequiredValueChat(radioButtonValue); break;
+        case vm.mediaTypes.chatPlusCallback: setRequiredValueChatPlusCallback(radioButtonValue); break;
+      }
     }
 
     vm.isInputValid = function (input) {
       return !(vm.InvalidCharacters.test(input));
     };
 
+    var pageFocus = {};
+    function setFocus(page, locator) {
+      var element = $element.find(locator);
+      if (!pageFocus[page] && element.length > 0) {
+        AccessibilityService.setFocus($element, locator);
+
+        _.forEach(pageFocus, function (_value, key) {
+          pageFocus[key] = false;
+        });
+        pageFocus[page] = true;
+      }
+    }
+
     function nextButton() {
       switch (vm.currentState) {
         case 'summary':
+          setFocus('summary', '#chatSetupFinishBtn');
           return 'hidden';
         case 'offHours':
+          setFocus('offHours', '#offHoursTextArea');
           return isOffHoursPageValid();
         case 'name':
           return vm.isNamePageValid();
         case 'proactivePrompt':
+          setFocus('proactivePrompt', '#promptSelect #selectMain');
           return isProactivePromptPageValid();
         case 'customerInformation':
         case 'customerInformationChat':
         case 'customerInformationCallback':
+          setFocus('customerInformation', '#customerHeader');
           return isCustomerInformationPageValid();
         case 'profile':
+          setFocus('profile', '[name="profileList"]');
           return isProfilePageValid();
         case 'agentUnavailable':
+          setFocus('agentUnavailable', '#agentUnavailableMessageField');
           return isAgentUnavailablePageValid();
-
         case 'feedback':
         case 'feedbackCallback':
+          setFocus('feedback', '#label');
           return isFeedbackPageValid();
         case 'chatStatusMessages':
+          setFocus('chatStatusMessages', '#waiting');
           return isStatusMessagesPageValid();
         case 'overview':
+          var cardName = _.get(vm.overviewCards[0], 'name');
+          if (!_.isUndefined(cardName)) {
+            setFocus('overview', '#' + cardName);
+          }
           return true;
         case 'virtualAssistant':
+          setFocus('virtualAssistant', '#virtualAssistantSelect #selectMain');
           return isVirtualAssistantPageValid();
         case 'chatEscalationBehavior':
           return isChatEscalationBehaviorPageValid();
@@ -1443,6 +1528,14 @@
         vm.currentState = getAdjacentEnabledState(getPageIndex(), 1);
         navigationHandler();
       }, vm.animationTimeout);
+    }
+
+    function enterNextPage($event) {
+      switch ($event.which) {
+        case KeyCodes.ENTER:
+          vm.nextPage();
+          break;
+      }
     }
 
     function previousPage() {
@@ -1506,6 +1599,19 @@
     vm.setActiveItem = function (val) {
       vm.activeItem = vm.getFieldByName(val.toString());
     };
+
+    function getLabel(attributeName) {
+      switch (attributeName) {
+        case 'header':
+          return 'careChatTpl.windowTitleLabel';
+        case 'label':
+          return 'careChatTpl.label';
+        case 'hintText':
+          return 'careChatTpl.hintText';
+        case 'type':
+          return 'careChatTpl.type';
+      }
+    }
 
     vm.isSecondFieldForCallBack = function () {
       return (vm.selectedMediaType === vm.mediaTypes.callback ||
@@ -1741,6 +1847,15 @@
       return $translate.instant(name + '_' + type);
     }
 
+    function getLocalisedTextWithEscalation(name) {
+      var type = (vm.cardMode) ? vm.cardMode : vm.selectedMediaType;
+      if (isExpertEscalationSelected()) {
+        return $translate.instant(name + '_' + type + '_' + 'expert');
+      } else {
+        return $translate.instant(name + '_' + type);
+      }
+    }
+
 
     function getFeedbackModel() {
       if (vm.currentState === 'feedback') {
@@ -1797,7 +1912,8 @@
 
     //to disable Expert Only and Agents and Experts radio boxes if there is no EVA configured.
     function setEvaTemplateData() {
-      EvaService.listExpertAssistants().then(function (data) {
+      var evaObj = EvaService.listExpertAssistants();
+      evaObj.then(function (data) {
         if (data && data.items && data.items.length >= 1) {
           vm.evaConfig.isEvaConfigured = true;
           _.forEach(vm.evaDataModel, function (evaData) {
@@ -1805,8 +1921,54 @@
               evaData.isDisabled = false;
             }
           });
+          var evaForOrg = data.items[0]; // first eva assuming only one as atlas doesnt allow
+          if (isEvaObjectValid(evaForOrg)) {
+            var listSpaces = EvaService.getExpertAssistantSpaces(evaForOrg.id, evaForOrg.orgId);
+            getEvaSpaceDetailsText(listSpaces, evaForOrg);
+          } else {
+            setSpaceDataAsError();
+          }
         }
       });
+    }
+
+    function getEvaSpaceDetailsText(listSpaces, evaForOrg) {
+      listSpaces.then(function (spaces) {
+        if (spaces && spaces.items && spaces.items.length >= 1) {
+          var numSpaces = spaces.items.length;
+          if (numSpaces === 1) {
+            vm.evaSpaceTooltipData = getEvaName(evaForOrg) + $translate.instant('careChatTpl.evaSpaceDetailsTextOneSpace');
+          } else {
+            vm.evaSpaceTooltipData = getEvaName(evaForOrg) + $translate.instant('careChatTpl.evaSpaceDetailsText', { numberOfEvaSpaces: numSpaces });
+          }
+          _.forEach(spaces.items, function (space) {
+            if (space.title) {
+              vm.evaSpaceTooltipData += '<li>' + space.title + '</li>';
+              if (space.default) {
+                vm.evaSpaceTooltipData += '<div>' + '    ' + $translate.instant('careChatTpl.escalationDetailsDefaultSpace') + '<div>';
+              }
+            }
+          });
+        } else {
+          setSpaceDataAsError();
+        }
+      });
+    }
+
+    function setSpaceDataAsError() {
+      vm.evaSpaceTooltipData = '<div class="feature-card-popover-error">' + $translate.instant('careChatTpl.featureCard.popoverErrorMessage') + '</div>';
+    }
+
+    function isEvaObjectValid(evaObj) {
+      return (evaObj.id && evaObj.orgId);
+    }
+
+    function getEvaName(evaObj) {
+      if (evaObj.name) {
+        return evaObj.name;
+      } else {
+        return $translate.instant('careChatTpl.evaDefaultName');
+      }
     }
   }
 

@@ -28,12 +28,16 @@
     </setting-section>
 
     <setting-section setting="settingsCtrl.sparkAssistant" ng-if="settingsCtrl.sparkAssistant">
-      <spark-assistant-setting></spark-assistant-setting>
+      <spark-assistant-setting ftsw="false"></spark-assistant-setting>
     </setting-section>
 
-    <setting-section setting="settingsCtrl.dirsync" ng-if="settingsCtrl.dirsync">
-      <dirsync-setting></dirsync-setting>
-    </setting-section>
+    <div class="setting-section" cr-feature-toggle feature-hide="atlas-f6980-multi-dir-sync" ng-if="settingsCtrl.dirsync">
+      <setting-section setting="settingsCtrl.dirsync">
+        <dirsync-setting></dirsync-setting>
+      </setting-section>
+    </div>
+
+    <multi-dirsync-setting cr-feature-toggle feature-show="atlas-f6980-multi-dir-sync" class="setting-section" ng-if="settingsCtrl.dirsync"></multi-dirsync-setting>
 
     <setting-section setting="settingsCtrl.authentication" ng-if="settingsCtrl.authentication">
       <authentication-setting></authentication-setting>

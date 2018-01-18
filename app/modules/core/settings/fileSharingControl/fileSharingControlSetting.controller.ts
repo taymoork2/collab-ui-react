@@ -23,14 +23,17 @@ export class FileSharingControlSettingController {
 
   public isFileSharingControlSettingLoaded = false;
   public isProPackPurchased = false;
+  private hasWarningDisplayed = false;
 
   private orgId: string;
 
   /* @ngInject */
   constructor(
     private $q,
+    private $translate,
     private AccountOrgService,
     private Authinfo,
+    private ModalService,
     private ProPackService,
     private Notification,
   ) {
@@ -77,12 +80,30 @@ export class FileSharingControlSettingController {
     return this._isBlockDesktopAppDownload;
   }
 
-  public set isBlockDesktopAppDownload(value: boolean) {
-    this._isBlockDesktopAppDownload = value;
-    if (this._isBlockDesktopAppDownload) {
-      this._isBlockDesktopAppUpload = value;
+  private getConfirmation(value: boolean): ng.IPromise<any> {
+    const deferred = this.$q.defer();
+    if (value && !this.hasWarningDisplayed) {
+      this.hasWarningDisplayed = true;
+      return this.ModalService.open({
+        title: this.$translate.instant('globalSettings.fileSharingControl.disableWhiteboardsTitle'),
+        message: this.$translate.instant('globalSettings.fileSharingControl.disableWhiteboardsDescription'),
+        close: this.$translate.instant('common.confirm'),
+        dismiss: this.$translate.instant('common.cancel'),
+      }).result;
+    } else {
+      deferred.resolve();
+      return deferred.promise;
     }
-    this.updateFileSharingControlSetting();
+  }
+
+  public set isBlockDesktopAppDownload(value: boolean) {
+    this.getConfirmation(value).then(() => {
+      this._isBlockDesktopAppDownload = value;
+      if (this._isBlockDesktopAppDownload) {
+        this._isBlockDesktopAppUpload = value;
+      }
+      this.updateFileSharingControlSetting();
+    });
   }
 
   public get isBlockWebAppDownload(): boolean {
@@ -90,11 +111,13 @@ export class FileSharingControlSettingController {
   }
 
   public set isBlockWebAppDownload(value: boolean) {
-    this._isBlockWebAppDownload = value;
-    if (this._isBlockWebAppDownload) {
-      this._isBlockWebAppUpload = value;
-    }
-    this.updateFileSharingControlSetting();
+    this.getConfirmation(value).then(() => {
+      this._isBlockWebAppDownload = value;
+      if (this._isBlockWebAppDownload) {
+        this._isBlockWebAppUpload = value;
+      }
+      this.updateFileSharingControlSetting();
+    });
   }
 
   public get isBlockMobileAppDownload(): boolean {
@@ -102,11 +125,13 @@ export class FileSharingControlSettingController {
   }
 
   public set isBlockMobileAppDownload(value: boolean) {
-    this._isBlockMobileAppDownload = value;
-    if (this._isBlockMobileAppDownload) {
-      this._isBlockMobileAppUpload = value;
-    }
-    this.updateFileSharingControlSetting();
+    this.getConfirmation(value).then(() => {
+      this._isBlockMobileAppDownload = value;
+      if (this._isBlockMobileAppDownload) {
+        this._isBlockMobileAppUpload = value;
+      }
+      this.updateFileSharingControlSetting();
+    });
   }
 
   public get isBlockBotsDownload(): boolean {
@@ -114,11 +139,13 @@ export class FileSharingControlSettingController {
   }
 
   public set isBlockBotsDownload(value: boolean) {
-    this._isBlockBotsDownload = value;
-    if (this._isBlockBotsDownload) {
-      this._isBlockBotsUpload = value;
-    }
-    this.updateFileSharingControlSetting();
+    this.getConfirmation(value).then(() => {
+      this._isBlockBotsDownload = value;
+      if (this._isBlockBotsDownload) {
+        this._isBlockBotsUpload = value;
+      }
+      this.updateFileSharingControlSetting();
+    });
   }
 
   public get isBlockDesktopAppUpload(): boolean {
@@ -126,8 +153,10 @@ export class FileSharingControlSettingController {
   }
 
   public set isBlockDesktopAppUpload(value: boolean) {
-    this._isBlockDesktopAppUpload = value;
-    this.updateFileSharingControlSetting();
+    this.getConfirmation(value).then(() => {
+      this._isBlockDesktopAppUpload = value;
+      this.updateFileSharingControlSetting();
+    });
   }
 
   public get isBlockWebAppUpload(): boolean {
@@ -135,8 +164,10 @@ export class FileSharingControlSettingController {
   }
 
   public set isBlockWebAppUpload(value: boolean) {
-    this._isBlockWebAppUpload = value;
-    this.updateFileSharingControlSetting();
+    this.getConfirmation(value).then(() => {
+      this._isBlockWebAppUpload = value;
+      this.updateFileSharingControlSetting();
+    });
   }
 
   public get isBlockMobileAppUpload(): boolean {
@@ -144,8 +175,10 @@ export class FileSharingControlSettingController {
   }
 
   public set isBlockMobileAppUpload(value: boolean) {
-    this._isBlockMobileAppUpload = value;
-    this.updateFileSharingControlSetting();
+    this.getConfirmation(value).then(() => {
+      this._isBlockMobileAppUpload = value;
+      this.updateFileSharingControlSetting();
+    });
   }
 
   public get isBlockBotsUpload(): boolean {
@@ -153,21 +186,23 @@ export class FileSharingControlSettingController {
   }
 
   public set isBlockBotsUpload(value: boolean) {
-    this._isBlockBotsUpload = value;
-    this.updateFileSharingControlSetting();
+    this.getConfirmation(value).then(() => {
+      this._isBlockBotsUpload = value;
+      this.updateFileSharingControlSetting();
+    });
   }
 
   public updateFileSharingControlSetting() {
     if (this.isFileSharingControlSettingLoaded) {
       this.AccountOrgService.setFileSharingControl(this.orgId, {
-        blockDesktopAppDownload : this._isBlockDesktopAppDownload,
-        blockWebAppDownload : this._isBlockWebAppDownload,
-        blockMobileAppDownload : this._isBlockMobileAppDownload,
-        blockBotsDownload : this._isBlockBotsDownload,
-        blockDesktopAppUpload : this._isBlockDesktopAppUpload,
-        blockWebAppUpload : this._isBlockWebAppUpload,
-        blockMobileAppUpload : this._isBlockMobileAppUpload,
-        blockBotsUpload : this._isBlockBotsUpload})
+        blockDesktopAppDownload: this._isBlockDesktopAppDownload,
+        blockWebAppDownload: this._isBlockWebAppDownload,
+        blockMobileAppDownload: this._isBlockMobileAppDownload,
+        blockBotsDownload: this._isBlockBotsDownload,
+        blockDesktopAppUpload: this._isBlockDesktopAppUpload,
+        blockWebAppUpload: this._isBlockWebAppUpload,
+        blockMobileAppUpload: this._isBlockMobileAppUpload,
+        blockBotsUpload: this._isBlockBotsUpload})
         .then(() => {
           this.Notification.success('firstTimeWizard.messengerFileSharingControlSuccess');
         })

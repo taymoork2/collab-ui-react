@@ -22,6 +22,7 @@ describe('Component: callPickupMembers', () => {
       'CallPickupGroupService',
       'FeatureMemberService',
       'HuronConfig',
+      'MemberService',
       'Notification',
       'UserNumberService',
     );
@@ -51,6 +52,8 @@ describe('Component: callPickupMembers', () => {
 
     this.areAllLinesInPickupGroupDefer = this.$q.defer();
     spyOn(this.CallPickupGroupService, 'areAllLinesInPickupGroup').and.returnValue(this.areAllLinesInPickupGroupDefer.promise);
+
+    spyOn(this.MemberService, 'getMemberList').and.returnValue(this.$q.resolve(membersList));
 
     spyOn(this.Notification, 'success');
     spyOn(this.Notification, 'error');
@@ -163,7 +166,7 @@ describe('Component: callPickupMembers', () => {
       expect(this.controller.memberName).toBe('');
     });
 
-    it('should create checkboxes for all numbers', function(){
+    it('should create checkboxes for all numbers', function() {
       this.isLineInPickupGroupDefer.resolve('');
       this.areAllLinesInPickupGroupDefer.resolve(false);
       this.CallPickupGroupService.createCheckboxes(memberData, allNumbers['numbers']).then(() => {

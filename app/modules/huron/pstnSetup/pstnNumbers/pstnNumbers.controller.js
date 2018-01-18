@@ -226,7 +226,7 @@
       }, {
         className: '',
         noFormControl: true,
-        template: '<i class="icon icon-info" tooltip="{{::\'pstnSetup.advancedOrder.blockTooltip\' | translate}}"  tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></i>',
+        template: '<i class="icon icon-info" tooltip="{{::\'pstnSetup.advancedOrder.blockTooltip\' | translate}}" aria-label="{{::\'pstnSetup.advancedOrder.blockTooltip\' | translate}}" tooltip-trigger="mouseenter focus" tooltip-placement="right" tooltip-animation="false" tabindex="0"></i>',
       }],
     }];
 

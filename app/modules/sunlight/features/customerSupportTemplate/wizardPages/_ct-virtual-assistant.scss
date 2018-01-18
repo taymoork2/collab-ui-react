@@ -1,4 +1,4 @@
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 .ct-virtual-assistant {
   align-items: center;
@@ -35,8 +35,9 @@
     }
 
     font-family: 'CiscoSansTT Light';
+    resize: none;
     width: 100%;
-    height: 2rem;
+    height: 5rem;
   }
 
   .cs-card article.profile-preview {
@@ -98,80 +99,84 @@
       }
     }
 
-    .bot-message {
-      text-align: left;
-      @include vr-spacing(mt, 1);
-      @include vr-spacing(ml, 1.5);
-      @include vr-spacing(mr, 2);
-      @include vr-spacing(mb, -2);
-
-      border-radius: 2px 2px 0px;
-
-      .bot-message-text {
-        background-color: $gray-light-3;
-        @include vr-spacing(mr, 2.5);
-        @include vr-spacing(p, 0.5);
-        word-wrap: break-word;
-      }
-
-      .time {
-        text-align: left;
-        background-color: $white;
-        position: relative;
-        top: -2.5rem;
-      }
-
-      .speech-bubble {
-        top: -34px;
-        left: -30px;
-        width: 1.875rem;
-        height: 1.875rem;
-        position: relative;
-        overflow: hidden;
-        display: inline-block;
-        background-color: $gray-light-3;
-
-        > span {
-          position: absolute;
-          width: 3rem;
-          height: 3rem;
-          border-radius: 100%;
-          background-color: $white;
-        }
-
-        .top {
-          top: -14px;
-        }
-
-        .left {
-          left: -14px;
-        }
-      }
-    }
-
     > section {
-      .customer-details {
-        float: right;
-        position: relative;
 
-        .customer-message {
-          @include vr-spacing(p, 0.75);
+      .bot-message {
+        float: left;
+        font-size: 0rem;
+        text-align: left;
+        @include vr-spacing(mt, 1);
 
-          color: $white;
-          border-radius: 2px 2px 0px;
-          background-color: $color-people-base;
+        .message {
+          border-radius: 5px 5px 5px 0px;
+          background-color: $gray-light-3;
+          display: inline-block;
+          max-width: 16rem;
+          @include vr-spacing(p, 0.5);
+          word-wrap: break-word;
         }
 
         .time {
-          @include vr-spacing(mt, 0.5);
-          @include vr-spacing(ml, 10);
+          background-color: $white;
+          position: relative;
+          @include vr-spacing(ml, 1.5);
+          @include vr-spacing(mr, 2);
+          @include vr-spacing(mb, -2);
         }
 
         .speech-bubble {
-          top: 0.9375rem;
-          right: 0.31rem;
-          width: 1.875rem;
-          height: 1.875rem;
+          top: 1.0rem;
+          width: 2.0rem;
+          height: 2.5rem;
+          position: relative;
+          overflow: hidden;
+          display: inline-block;
+          background-color: $gray-light-3;
+
+          > span {
+            position: absolute;
+            width: 3.75rem;
+            height: 3.75rem;
+            border-radius: 100%;
+            background-color: $white;
+          }
+
+          .top {
+            top: -15px;
+          }
+
+          .left {
+            left: -20px;
+          }
+        }
+      }
+
+      .customer-details {
+        float: right;
+        font-size: 0rem;
+        padding-top: 2rem;
+
+        .customer-message {
+          border-radius: 5px 5px 0px;
+          color: $white;
+          background-color: $color-people-base;
+          display: inline-block;
+          @include vr-spacing(p, 0.5);
+          @include vr-spacing(mb, 0);
+        }
+
+        .time {
+          text-align: right;
+          background-color: $white;
+          position: relative;
+          @include vr-spacing(ml, 1.5);
+          @include vr-spacing(mr, 1.5);
+        }
+
+        .speech-bubble {
+          top: 0.985rem;
+          width: 2.0rem;
+          height: 2.5rem;
           position: relative;
           overflow: hidden;
           display: inline-block;
@@ -179,18 +184,18 @@
 
           > span {
             position: absolute;
-            width: 3rem;
-            height: 3rem;
+            width: 3.75rem;
+            height: 3.75rem;
             border-radius: 100%;
             background-color: $white;
           }
 
           .top {
-            top: -14px;
+            top: -15px;
           }
 
           .right {
-            right: -14px;
+            right: -20px;
           }
         }
       }

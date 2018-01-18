@@ -7,8 +7,6 @@ describe('component: snr', () => {
   const INPUT_NUMBER = 'input[name="phoneinput"]';
   const SAVE_BUTTON = '.button-container .btn--primary';
   const INPUT_WAITTIME = 'select[name="snrWaitSeconds"]';
-  // const REMOVE_LINK = '#remove';
-
 
   beforeEach(function() {
     this.initModules(snrModule);

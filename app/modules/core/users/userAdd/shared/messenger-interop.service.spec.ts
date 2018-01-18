@@ -33,4 +33,16 @@ describe('MessengerInteropService', () => {
     this.MessengerInteropService.hasAssignableMessageOrgEntitlement();
     expect(this.Authinfo.isEntitled).toHaveBeenCalledWith(this.Config.entitlements.messenger_interop);
   });
+
+  it('hasMessengerLicense():', function () {
+    spyOn(this.Authinfo, 'getMessageServices').and.returnValue([]);
+    expect(this.MessengerInteropService.hasMessengerLicense()).toBe(false);
+
+    this.Authinfo.getMessageServices.and.returnValue([{
+      license: {
+        offerName: 'MSGR',
+      },
+    }]);
+    expect(this.MessengerInteropService.hasMessengerLicense()).toBe(true);
+  });
 });

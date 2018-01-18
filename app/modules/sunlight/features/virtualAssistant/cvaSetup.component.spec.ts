@@ -100,7 +100,6 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(OrgId);
     spyOn(this.Authinfo, 'getOrgName').and.returnValue(OrgName);
     spyOn(Date, 'now').and.returnValues(10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10);
-    spyOn(this.$translate, 'instant').and.callThrough();
 
     this.compileComponent('cva-setup', {
       dismiss: 'dismiss()',
@@ -155,12 +154,14 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
     });
 
     it('cancelModal', function () {
+      spyOn(this.$translate, 'instant').and.callThrough();
       controller.cancelModal();
       expect(this.$translate.instant).toHaveBeenCalledWith('careChatTpl.cancelCreateDialog',
         { featureName: 'careChatTpl.virtualAssistant.cva.featureText.name' });
     });
 
     it('cancelModal with isEditFeature true', function () {
+      spyOn(this.$translate, 'instant').and.callThrough();
       controller.isEditFeature = true;
       controller.cancelModal();
       expect(this.$translate.instant).toHaveBeenCalledWith('careChatTpl.cancelEditDialog',
@@ -342,6 +343,31 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
       expect(controller.template.configuration.pages.cvaAccessToken.invalidToken).toEqual(true);
       expect(controller.template.configuration.pages.cvaAccessToken.needsValidation).toEqual(false);
     });
+
+    it('validate button should be enabled if validation fails', function () {
+      expect(controller.isValidateButtonDisabled()).toBeTruthy();  // disabled if input blank
+      controller.template.configuration.pages.cvaAccessToken.accessTokenValue = '123';
+      deferred.reject(false);
+      controller.validateDialogflowToken();
+      this.$scope.$apply();
+      expect(controller.isValidateButtonDisabled()).toBeFalsy(); // validation failed, button should be enabled
+    });
+
+    it('validate button should be disabled if token is already validated', function () {
+      controller.template.configuration.pages.cvaAccessToken.accessTokenValue = '123';
+      expect(controller.isValidateButtonDisabled()).toBeFalsy();  // disabled if not validated
+      deferred.resolve(true);
+      controller.validateDialogflowToken();
+      this.$scope.$apply();
+      expect(controller.isValidateButtonDisabled()).toBeTruthy(); // validation passed, button should be enabled
+    });
+
+    it('getAccessTokenError should return correct error', function () {
+      controller.template.configuration.pages.cvaAccessToken.invalidToken = true;
+      controller.tokenForm.$valid = true;
+      controller.getAccessTokenError();
+      expect(controller.tokenForm.tokenInput.$setValidity).toHaveBeenCalledWith('invalidToken', false);
+    });
   });
   describe('Avatar Page', function () {
     let deferredFileDataUrl;
@@ -456,6 +482,50 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
       const featureNameObj = { featureName: 'careChatTpl.virtualAssistant.cva.featureText.name' };
       expect(controller.saveTemplateErrorOccurred).toBeTruthy();
       expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String), featureNameObj);
+    });
+
+    it('should set proper error message, when save fails due to invalid name', function () {
+      controller.template.configuration.pages.vaName.nameValue = 'testName';
+      const response = (<any>Object).assign({ data: { type: 'invalidInput.duplicateName' } }, failedData);
+      spyOn(this.$translate, 'instant').and.returnValue('some translation');
+
+      deferred.reject(response);
+      controller.submitFeature();
+      this.$scope.$apply();
+
+      expect(controller.template.configuration.pages.vaName.nameWithError).toBe('testName');
+      expect(this.$translate.instant).toHaveBeenCalledWith('careChatTpl.virtualAssistant.invalidInput.duplicateName',
+        { featureName: jasmine.any(String) });
+      expect(controller.summaryErrorMessage).toBe('some translation');
+    });
+
+    it('should set proper error, when save fails due to invalid icon', function () {
+      const response = (<any>Object).assign({ data: { type: 'invalidInput.invalidIcon' } }, failedData);
+      spyOn(this.$translate, 'instant').and.returnValue('some translation for invalid icon');
+
+      deferred.reject(response);
+      controller.submitFeature();
+      this.$scope.$apply();
+
+      expect(controller.template.configuration.pages.vaAvatar.avatarError).toBe(controller.avatarErrorType.INVALID_FILE);
+      expect(this.$translate.instant).toHaveBeenCalledWith('careChatTpl.virtualAssistant.invalidInput.invalidIcon',
+        { featureName: jasmine.any(String) });
+      expect(controller.summaryErrorMessage).toBe('some translation for invalid icon');
+    });
+
+    it('should set proper error, when save fails due to invalid access token', function () {
+      const response = (<any>Object).assign({ data: { type: 'invalidInput.invalidAccessToken' } }, failedData);
+      spyOn(this.$translate, 'instant').and.returnValue('some translation for invalid token');
+
+      deferred.reject(response);
+      controller.submitFeature();
+      this.$scope.$apply();
+
+      expect(controller.template.configuration.pages.cvaAccessToken.invalidToken).toBeTruthy();
+      expect(controller.template.configuration.pages.cvaAccessToken.needsValidation).toBeFalsy();
+      expect(this.$translate.instant).toHaveBeenCalledWith('careChatTpl.virtualAssistant.invalidInput.invalidAccessToken',
+        { featureName: jasmine.any(String) });
+      expect(controller.summaryErrorMessage).toBe('some translation for invalid token');
     });
   });
 });

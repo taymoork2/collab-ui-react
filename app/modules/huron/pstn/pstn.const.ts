@@ -49,3 +49,10 @@ export const PSTN_CARRIER_ID: string = 'pstnCarrierId';
 export const E911_SIGNEE: string = 'e911Signee';
 export const PSTN_ESA_DISCLAIMER_ACCEPT = 'pstn-esa-disclaimer-accept-event';
 export const PRIVATE_PSTN_TRUNK = 'Private PSTN Trunk';
+
+export enum ContractStatus {
+  UnKnown = 0, //The contract status wasn't asked for, or the Terminus customer doesn't exist.
+  NotImplemented, //The Carrier or Provider has not implemented the contract status
+  UnSigned,
+  Signed,
+}

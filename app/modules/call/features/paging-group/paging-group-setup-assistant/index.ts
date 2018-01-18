@@ -9,7 +9,7 @@ import pgInitiator from './paging-group-initiator';
 
 export default angular
   .module('call.features.paging-group-setup-assistant', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     pgName,
     pgNumber,

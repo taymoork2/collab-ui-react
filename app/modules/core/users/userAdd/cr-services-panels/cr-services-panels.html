@@ -207,8 +207,11 @@
       <div ng-if="$ctrl.isCareEnabled" class="small-4 columns column-paid">
         <span class="item-mtg-license" translate="onboardModal.contactCenter"></span>
         <span class="license-entity-tooltip">
-          <i class="icon icon-info icon-offset-l" tooltip-trigger="focus mouseenter" tooltip-placement="top" tooltip-animation="false"
+          <i ng-if="!$ctrl.hybridCareToggle" class="icon icon-info icon-offset-l" tooltip-trigger="focus mouseenter" tooltip-placement="top" tooltip-animation="false"
           tooltip-html-unsafe="{{::$ctrl.careTooltip()}}" tabindex="0" aria-label="{{::'firstTimeWizard.careTooltip' | translate}}">
+          </i>
+          <i ng-if="$ctrl.hybridCareToggle" class="icon icon-info icon-offset-l" tooltip-trigger="focus mouseenter" tooltip-placement="top" tooltip-animation="false"
+          tooltip-html-unsafe="{{::$ctrl.careTooltipToggle()}}" tabindex="0" aria-label="{{::'firstTimeWizard.careTooltipToggle' | translate}}">
           </i>
         </span>
         <div class="entitle-check-grp" ng-show="multipleSubscriptions.showCareLicenses($ctrl.careFeatures)">
@@ -238,7 +241,8 @@
                   <span ng-class="{false: 'license-entity-disable', true: 'license-entity'}[$ctrl.radioStates.msgRadio]" class="under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
                   <span ng-if="$ctrl.radioStates.careRadio === $ctrl.careRadioValue.K1 && !$ctrl.currentUserEnablesCall">
                     <div class="icon icon-warning"></div>
-                    <span class="body-smallest care-information-text under-label-caremsg-reposition" translate="onboardModal.enableCallInfo"></span>
+                    <span ng-if="!$ctrl.hybridCareToggle" class="body-smallest care-information-text under-label-caremsg-reposition" translate="onboardModal.enableCallInfo"></span>
+                    <span ng-if="$ctrl.hybridCareToggle" class="body-smallest care-information-text under-label-caremsg-reposition" translate="onboardModal.enableCallInfoToggle"></span>
                   </span>
                 </div>
 
@@ -254,8 +258,10 @@
                   <span ng-class="{false: 'license-entity-disable', true: 'license-entity'}[$ctrl.radioStates.msgRadio]" class="under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
                   <span ng-if="$ctrl.radioStates.careRadio === $ctrl.careRadioValue.K2 && !$ctrl.currentUserEnablesCall">
                     <div class="icon icon-warning"></div>
-                    <span class="body-smallest care-information-text under-label-caremsg-reposition" translate="
+                    <span ng-if="!$ctrl.hybridCareToggle" class="body-smallest care-information-text under-label-caremsg-reposition" translate="
                       onboardModal.enableCallInfo"></span>
+                    <span ng-if="$ctrl.hybridCareToggle" class="body-smallest care-information-text under-label-caremsg-reposition" translate="
+                      onboardModal.enableCallInfoToggle"></span>
                   </span>
                 </div>
               </fieldset>

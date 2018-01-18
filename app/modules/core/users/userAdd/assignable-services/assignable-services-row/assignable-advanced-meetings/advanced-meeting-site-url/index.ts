@@ -6,7 +6,7 @@ import { AdvancedMeetingSiteUrlComponent } from './advanced-meeting-site-url.com
 
 export default angular.module('core.users.userAdd.assignable-services.assignable-services-row.assignable-advanced-meetings.advanced-meeting-site-url', [
   require('angular-translate'),
-  require('collab-ui-ng').default,
+  require('@collabui/collab-ui-ng').default,
   utilsModuleName,
 ])
   .component('advancedMeetingSiteUrl', new AdvancedMeetingSiteUrlComponent())

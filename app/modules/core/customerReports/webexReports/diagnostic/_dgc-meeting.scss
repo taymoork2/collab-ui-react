@@ -1,5 +1,5 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/settings/page';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/page';
 
 .dgc-meeting {
     background-color: $white;
@@ -28,125 +28,51 @@
           display: inline-block;
         }
         small {
-          color: $gray-light-1;
-          margin-left: 15px;
+          margin-left: 20px;
+        }
+        .detailInfo {
+          color: $gray-base;
+          font-size: 14px;
+          font-weight: 300;
+          font-family: CiscoSans;
 
-          i {
-            padding-right: 10px;
-            color: $gray-light-1;
+          span {
+            font-size: 14px;
           }
         }
       }
 
       .room-information {
-        padding-bottom: 1.1rem;
+        width: 100%;
+        overflow: hidden;
+        padding-top: 0.5rem;
 
         h6 {
-          display: inline-block;
+          float: left;
+          width: 16%;
           margin: 0;
-          padding: 0 1.2rem 0 0;
-          color: $gray-base;
-        }
-      }
-    }
-
-    .medium.header-border {
-      header {
-        border-bottom: 0;
-        text-align: center;
-        padding-bottom: 0;
-      }
-
-      &.meeting-time {
-        text-align: center;
-
-        article {
-          box-shadow: none;
-
-          header {
-            padding-top: 0;
-            height: 31px;
-            h4 {
-              color: $gray-base;
-              font-size: 1rem;
-            }
-          }
-          section {
-            overflow: hidden;
-            margin: -24px 0;
-            padding: 0;
-          }
-
-          p {
-            color: $color-primary-base;
-            font-size: 30px;
-            font-weight: 300;
-            font-family: "CiscoSans";
-
-            .cs-loading {
-              display: inherit;
-              padding-left: .45rem;
-
-              span {
-                color: $color-primary-base;
-                font-size: 0.575rem;
-                font-family: "Cisco_Toolkit_Icons";
-              }
-            }
-          }
+          padding: 0 0.5rem 0 0;
+          color: $gray-dark-1;
+          box-sizing: border-box;
 
           span {
             font-size: 14px;
-            color: $gray-base;
-            font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            line-height: 16px;
+
+            &:first-child {
+              padding-bottom: 0.5rem;
+            }
+          }
+
+          &:last-child {
+            width: 20%;
+            padding: 0;
           }
         }
-      }
 
-      &.meeting-info {
-        width: 25%;
-        text-align: left;
-        margin-bottom: 10px;
-        article {
-          background: $gray-light-4;
-
-          header {
-            padding-top: 1rem;
-            padding-left: 1rem;
-            h4 {
-              font-size: 20px;
-              color: $gray-dark-3;
-              text-align: left;
-            }
-          }
-
-          p {
-            color: $gray-light-1;
-            padding-top: 0;
-            padding-left: 1rem;
-          }
-
-          footer {
-            display: flex;
-
-            .meeting-duration {
-              text-align: center;
-              flex: 1;
-              color: $gray-dark-1;
-              line-height: 20px;
-              font-size: 16px;
-
-              span {
-                display: block;
-                margin-bottom: 5px;
-              }
-
-              i {
-                color: $gray-light-1;
-                font-style: normal;
-              }
-            }
-          }
+        .blue-color {
+          padding-left: 8px;
+          color: $color-blue-darker;
         }
       }
     }
@@ -154,30 +80,40 @@
     .timeline {
       margin-top: 10px;
       padding: 0 2rem;
-      .nav-pills {
-        margin-bottom: 10px;
-        padding-right: 25px;
-      }
-      .nav-pills>li {
-        float: right !important;
-      }
+
       .tab-content {
         border: 0;
       }
       .timeline-tab {
+        position: relative;
+        width: 100%;
+        height: 35px;
+        margin-bottom: 1rem;
+
         .nav-pills {
+          position: absolute;
+          top: 0;
+          left: 50%;
+          margin-left: -70px;
+          text-align: center;
+          display: flex;
+
           > li {
-            box-sizing: border-box;
-            margin-left: 1rem;
+            display: inline-block;
+            float: none;
+            margin: 0;
+            padding: 0;
 
             > a {
-              border: 1px solid $color-blue-darker;
+              border: 1px solid $color-blue-base;
               border-radius: 4px;
               background: $white;
-              color: $color-blue-darker;
+              color: $color-blue-base;
+              padding: 1px 15px;
+              box-shadow: none;
 
               &:hover {
-                background-color: $color-blue-darker;
+                background-color: $color-blue-base;
                 color: $white;
               }
             }
@@ -185,7 +121,21 @@
             &.active {
               > a {
                 color: $white;
-                background-color: $color-blue-darker;
+                background-color: $color-blue-base;
+              }
+            }
+
+            &:first-child {
+              > a {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+              }
+            }
+
+            &:last-child {
+              > a {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
               }
             }
           }
@@ -196,7 +146,6 @@
     .meeting-overview {
       padding: 1.8rem 2rem 0rem;
       border-top: 1px solid $gray-light-3;
-      border-bottom: 1px solid $gray-light-3;
       margin-top: 1rem;
       background-color: $white;
 
@@ -226,11 +175,13 @@
 
           h6 {
             font-size: 0.8rem;
-            color: $gray-base;
+            color: $black;
             padding-bottom: 0.5rem;
+            font-family: "CiscoSans";          
           }
 
           p {
+            color: $gray-base;
             line-height:24px;
           }
         }
@@ -238,10 +189,11 @@
     }
 
     .sessionInfo {
-      border-bottom: 1px solid $gray-light-3;
-      padding: 1.8rem 2rem;
+      width: 100%;
+      padding: 0 2rem;
       background: $white;
-      margin-bottom: 5rem;
+      box-sizing: border-box;
+      overflow: hidden;
 
       .title {
         position: relative;
@@ -276,28 +228,22 @@
       }
 
       .info-box {
-        display: inline-block;
-        width: 70%;
+        width: 100%;
+        overflow: hidden;
 
-        .note {
-          padding: 1rem 0 1.5rem 1.2rem;
-          color: $gray-base;
+        ul {
+          margin: 0;
         }
-      }
 
-      .row {
-        max-width: none;
-      }
-
-      .cs-card>article {
-        box-shadow: none;
-
-        header {
-          padding: 0 0.79rem;
-          text-align: left;
+        li {
+          float: left;
+          width: 16.6666%;
+          height: 48px;
+          box-sizing: border-box;
+          list-style-type: none;
 
           .name {
-            color: $gray-base;
+            color: $black;
             line-height: 1;
             font-size: 0.8rem;
             font-family: "CiscoSans";
@@ -311,13 +257,15 @@
             color: $color-green-base;
           }
         }
+
+        .note {
+          padding-bottom: 1rem;
+          color: $gray-dark-1;
+        }
       }
+
+
     }
-
-  .sessionInfo.showInfo {
-    margin-bottom: 0;
-  }
-
     .participants {
         margin: 0;
         h5 {
@@ -332,7 +280,6 @@
 
     .tabContent {
       width: 100%;
-      overflow: hidden;
       background-color: $white;
     }
   }

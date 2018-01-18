@@ -298,7 +298,7 @@
 
     function initializeAuthinfo(authData) {
       Authinfo.initialize(authData);
-      if (Authinfo.isAdmin() || Authinfo.isReadOnlyAdmin() || Authinfo.isUserAdminUser()) {
+      if (Authinfo.isAdmin() || Authinfo.isReadOnlyAdmin() || Authinfo.isUserAdminUser() || Authinfo.isDeviceAdminUser()) {
         return AccountService.updateAuthinfoAccount().then(function () {
           return authData;
         });

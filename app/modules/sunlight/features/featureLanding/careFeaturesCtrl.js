@@ -1,16 +1,22 @@
+var _ = require('lodash');
+
 (function () {
   'use strict';
 
   angular
     .module('Sunlight')
-    .controller('CareFeaturesCtrl', CareFeaturesCtrl);
+    .controller('CareFeaturesCtrl', CareFeaturesCtrl)
+    .run(function ($rootScope) {
+      $rootScope.isCare = false;
+    });
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, CvaService, EvaService) {
+  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, $rootScope, AutoAttendantCeInfoModelService, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, CvaService, EvaService, FeatureToggleService) {
     var vm = this;
     vm.isVirtualAssistantEnabled = $state.isVirtualAssistantEnabled;
     vm.isExpertVirtualAssistantEnabled = $state.isExpertVirtualAssistantEnabled;
     vm.init = init;
+    vm.getCeList = getCeList;
     var pageStates = {
       newFeature: 'NewFeature',
       showFeatures: 'ShowFeatures',
@@ -18,6 +24,9 @@
       error: 'Error',
     };
     var listOfAllFeatures = [];
+    var listOfCvaFeatures = [];
+    var listOfEvaFeatures = [];
+    var listOfNonVaFeatures = [];
     var featureToBeDeleted = {};
     vm.searchData = searchData;
     vm.deleteCareFeature = deleteCareFeature;
@@ -25,17 +34,29 @@
     vm.filteredListOfFeatures = [];
     vm.pageState = pageStates.loading;
     vm.cardColor = {};
+    vm.featureToolTip = function (type, name) {
+      var assistantType = {
+        cva: $translate.instant('careChatTpl.virtualAssistant.cva.featureText.name'),
+        eva: $translate.instant('careChatTpl.virtualAssistant.eva.featureText.name'),
+      };
+      return $translate.instant('careChatTpl.assistantTooltip',
+        { assistantType: assistantType[type], assistantName: name });
+    };
     vm.placeholder = {
       name: 'Search',
     };
     vm.filterText = '';
     vm.template = null;
     vm.openNewCareFeatureModal = openNewCareFeatureModal;
+    vm.spacesInUseText = spacesInUseText;
+    vm.templatesInUseText = templatesInUseText;
+    vm.generateHtmlPopover = generateHtmlPopover;
     vm.setFilter = setFilter;
     vm.hasMessage = Authinfo.isMessageEntitled();
     vm.hasCall = Authinfo.isSquaredUC();
     vm.tooltip = '';
     vm.purchaseLink = purchaseLink;
+    vm.userHasAccess = userHasAccess;
 
     /* LIST OF FEATURES
      *
@@ -53,6 +74,7 @@
       isEmpty: false,
       color: 'people',
       icons: ['icon-message'],
+      featureIcons: { eva: EvaService.featureList.icons[0], cva: CvaService.featureList.icons[0] },
       data: [],
     }, {
       name: 'Ca',
@@ -71,6 +93,7 @@
       isEmpty: false,
       color: 'people',
       icons: ['icon-message', 'icon-phone'],
+      featureIcons: { eva: EvaService.featureList.icons[0], cva: CvaService.featureList.icons[0] },
       data: [],
     }];
     vm.filters = [{
@@ -91,9 +114,21 @@
       vm.features.push(EvaService.featureList);
     }
 
+    /**
+     * Function to get Ce info so that getAAModel() can gets its value to proceed
+     * further in aaBuilder under care features.
+     */
+    function getCeList() {
+      FeatureToggleService.supports(FeatureToggleService.features.atlasHybridEnable).then(function (results) {
+        if (results) {
+          AutoAttendantCeInfoModelService.getCeInfosList();
+        }
+      });
+    }
     init();
 
     function init() {
+      vm.getCeList();
       vm.pageState = pageStates.loading;
       var featuresPromises = getListOfFeatures();
 
@@ -104,7 +139,19 @@
       }).finally(function () {
         for (var i = 0; i < vm.features.length; i++) {
           listOfAllFeatures = listOfAllFeatures.concat(vm.features[i].data);
+          switch (vm.features[i].name) {
+            case 'customerVirtualAssistant':
+              listOfCvaFeatures = listOfCvaFeatures.concat(vm.features[i].data);
+              break;
+            case 'expertVirtualAssistant':
+              listOfEvaFeatures = listOfEvaFeatures.concat(vm.features[i].data);
+              break;
+            default:
+              listOfNonVaFeatures = listOfNonVaFeatures.concat(vm.features[i].data);
+              break;
+          }
         }
+        generateTemplateCountAndSpaceUsage();
         //by default "all" filter is the selected
         vm.filteredListOfFeatures = _.clone(listOfAllFeatures);
         if (listOfAllFeatures.length > 0) {
@@ -119,10 +166,89 @@
       }
     }
 
+    /**
+     * Generate the template count for both CVA and EVA and Space count for EVA only
+     */
+    function generateTemplateCountAndSpaceUsage() {
+      _.forEach(listOfNonVaFeatures, function (item) {
+        _.forEach(item.features, function (featureItem) {
+          // for eva, we don't know the id, so will add the count to all eva's
+          if (featureItem.featureType === 'eva') {
+            _.forEach(listOfEvaFeatures, function (evaItem) {
+              evaItem.templates.push(item.name);
+            });
+          } else if (!_.isEmpty(featureItem.id)) {
+            var va = _.find(listOfCvaFeatures, function (vaFeature) {
+              return vaFeature.id === featureItem.id;
+            });
+
+            if (va) {
+              va.templates.push(item.name);
+            }
+          }
+        });
+      });
+
+      // Generate the template html popover for CVA
+      _.forEach(listOfCvaFeatures, function (item) {
+        var popoverMainHeader = $translate.instant('careChatTpl.featureCard.cvaPopoverMainHeader');
+        item.templatesHtmlPopover = generateTemplateCountHtmlPopover(popoverMainHeader, item);
+      });
+
+      // Generate the template html popover for EVA
+      _.forEach(listOfEvaFeatures, function (item) {
+        var popoverMainHeader = $translate.instant('careChatTpl.featureCard.evaPopoverMainHeader');
+        item.templatesHtmlPopover = generateTemplateCountHtmlPopover(popoverMainHeader, item);
+      });
+    }
+
+    function generateTemplateCountHtmlPopover(popoverMainHeader, feature) {
+      var templatesList = _.get(feature, 'templates', []);
+
+      var templatesHeader = $translate.instant('careChatTpl.featureCard.popoverTemplatesHeader', {
+        numOfTemplates: templatesList.length,
+      });
+
+      var htmlString = '<div class="feature-card-popover"><h3 class="header">' + popoverMainHeader + '</h3>';
+      htmlString += '<h3 class="sub-header">' + templatesHeader + '</h3><ul class="spaces-list">';
+
+      _.forEach(templatesList, function (template) {
+        htmlString += '<li>' + template + '</li>';
+      });
+
+      htmlString += '</ul></div>';
+      return htmlString;
+    }
+
+    function generateHtmlPopover(feature) {
+      var spacesList = _.get(feature, 'spaces', []);
+
+      if (spacesList.length < 1) {
+        return '<div class="feature-card-popover-error">' + $translate.instant('careChatTpl.featureCard.popoverErrorMessage') + '</div>';
+      }
+
+      var spacesHeader = $translate.instant('careChatTpl.featureCard.popoverSpacesHeader', {
+        numOfSpaces: spacesList.length,
+      });
+
+      var htmlString = '<div class="feature-card-popover"><h3 class="sub-header">' + spacesHeader + '</h3><ul class="spaces-list">';
+
+      _.forEach(spacesList, function (expertSpace) {
+        htmlString += '<li>' + expertSpace.title;
+        if (expertSpace.default) {
+          htmlString += ' ' + $translate.instant('careChatTpl.featureCard.popoverDefaultSpace');
+        }
+        htmlString += '</li>';
+      });
+
+      htmlString += '</ul></div>';
+      return htmlString;
+    }
+
     function handleFeaturePromises(promises) {
       _.forEach(vm.features, function (feature, index) {
         promises[index].then(function (data) {
-          handleFeatureData(data, feature);
+          return handleFeatureData(data, feature);
         }, function (response) {
           handleFailures(response, feature);
         });
@@ -134,6 +260,20 @@
       if (list.length > 0) {
         feature.data = list;
         feature.isEmpty = false;
+
+        if (feature.name === 'expertVirtualAssistant') {
+          _.forEach(feature.data, function (eva, index) {
+            return EvaService.getExpertAssistantSpaces(eva.id)
+              .then(function (result) {
+                feature.data[index].spaces = result.items;
+                feature.data[index].spacesHtmlPopover = vm.generateHtmlPopover(feature.data[index]);
+              })
+              .catch(function () {
+                feature.data[index].spaces = [];
+                feature.data[index].spacesHtmlPopover = vm.generateHtmlPopover(feature.data[index]);
+              });
+          });
+        }
       } else {
         feature.isEmpty = true;
         showReloadPageIfNeeded();
@@ -222,6 +362,17 @@
       });
     };
 
+    function userHasAccess(feature) {
+      if (feature.featureType === EvaService.evaServiceCard.id) {
+        var result = EvaService.getWarningIfNotOwner(feature);
+        if (!result.valid) {
+          $scope.warning = $translate.instant(result.warning.message, result.warning.args);
+        }
+        return result.valid;
+      }
+      return true;
+    }
+
     function deleteCareFeature(feature, $event) {
       $event.preventDefault();
       $event.stopImmediatePropagation();
@@ -230,7 +381,6 @@
         deleteFeatureName: feature.name,
         deleteFeatureId: feature.templateId,
         deleteFeatureType: feature.featureType,
-        deleteQueueId: feature.queueId,
       });
     }
 
@@ -240,7 +390,28 @@
       CTService.openEmbedCodeModal(feature.templateId, feature.name);
     }
 
+    function spacesInUseText(feature) {
+      var numOfSpaces = _.get(feature, 'spaces.length', 0);
+
+      if (numOfSpaces > 0) {
+        return $translate.instant('careChatTpl.featureCard.spacesInUseText', {
+          numOfSpaces: numOfSpaces,
+        });
+      }
+
+      return $translate.instant('careChatTpl.featureCard.unavailableSpacesInUseText');
+    }
+
+    function templatesInUseText(feature) {
+      var numOfTemplates = _.get(feature, 'templates.length', 0);
+
+      return $translate.instant('careChatTpl.featureCard.templatesInUseText', {
+        numOfTemplates: numOfTemplates,
+      });
+    }
+
     function openNewCareFeatureModal() {
+      $rootScope.isCare = true;
       $modal.open({
         template: '<care-feature-modal dismiss="$dismiss()" class="care-modal"></care-feature-modal>',
       });

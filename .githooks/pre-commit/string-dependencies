@@ -6,7 +6,7 @@ function echo_underline {
 
 deps=(
   "'atlas.templates'|require('scripts/app.templates')"
-  "'collab.ui'|require('collab-ui-ng').default"
+  "'collab.ui'|require('@collabui/collab-ui-ng').default"
   "'pascalprecht.translate'|require('angular-translate')"
 )
 

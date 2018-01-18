@@ -52,6 +52,7 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
           nameValue: '',
           startTimeInMillis: 0,
           eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_NAME_PAGE,
+          nameWithError: '',
         },
         vaAvatar: {
           enabled: true,
@@ -150,7 +151,7 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
 
       const controller = this;
       controller.tokenForm.tokenInput.$setValidity('invalidToken', false);
-      _.keys(controller.tokenFormErrors).forEach( function (key){
+      _.keys(controller.tokenFormErrors).forEach( function (key) {
         controller.tokenForm.$error[key] = controller.tokenFormErrors[key];
       });
       controller.tokenFormErrors = {}; //Clear out as they've served their purpose
@@ -199,10 +200,8 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
   }
 
   public onDialogflowTokenChange(): void {
-    const controller = this;
     this.template.configuration.pages.cvaAccessToken.invalidToken = true;
     this.template.configuration.pages.cvaAccessToken.needsValidation = true; //changed token needs validation
-    controller.tokenForm.tokenInput.$setValidity('invalidToken', true); // reset validation
   }
 
   /**
@@ -225,6 +224,25 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
         controller.tokenForm.tokenInput.$setValidity('invalidToken', false); //mark input as invalid
         controller.template.configuration.pages.cvaAccessToken.validatingToken = false;
       });
+  }
+
+  public getAccessTokenError(): any {
+    if (!_.isEmpty(this.tokenForm)) {
+      if (this.template.configuration.pages.cvaAccessToken.invalidToken && this.tokenForm.$valid) {
+        // if token set as invalid outside of the form (ie when we tried to save at the end),
+        // then update form validity now that we have access to the form
+        this.tokenForm.tokenInput.$setValidity('invalidToken', false); //mark input as invalid
+      }
+      return this.tokenForm.tokenInput.$error;
+    }
+  }
+
+  /**
+   * validate button should be disabled if input is blank or if token already validated
+   * @returns {boolean} true if access token validate button should be disabled
+   */
+  public isValidateButtonDisabled(): boolean {
+    return !(this.template.configuration.pages.cvaAccessToken.accessTokenValue) || this.isAccessTokenValid();
   }
 
   /** Data Validation functions **/
@@ -270,9 +288,14 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
 
     const list = this.service.featureList.data;
     //will return undefined if no name found,  !undefined = true
-    const isUnique = !_.find(list, function (cva: any) {
+    let isUnique = !_.find(list, function (cva: any) {
       return cva.id !== controller.template.templateId && cva.name.toLowerCase() === name.toLowerCase();
     });
+    const nameWithError = this.template.configuration.pages.vaName.nameWithError;
+    if (!_.isEmpty(nameWithError)) {
+      //this can happen if we already tried to save to the server and got a duplicate name error that was not caught by the above check
+      isUnique = isUnique && name.toLowerCase() !== nameWithError;
+    }
     if (this.nameForm && name) {
       this.nameForm.nameInput.$setValidity(this.NameErrorMessages.DUPLICATE_ERROR, isUnique);
     }
@@ -294,7 +317,7 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
         controller.writeMetrics();
       })
       .catch(function (response) {
-        controller.handleFeatureError();
+        controller.handleFeatureError(response);
         controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.createConfigFailureText'), {
           featureName: controller.$translate.instant('careChatTpl.virtualAssistant.cva.featureText.name'),
         });
@@ -333,7 +356,7 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
         controller.writeMetrics();
       })
       .catch(function (response) {
-        controller.handleFeatureError();
+        controller.handleFeatureError(response);
         controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.updateConfigFailureText'), {
           featureName: controller.$translate.instant('careChatTpl.virtualAssistant.cva.featureText.name'),
         });

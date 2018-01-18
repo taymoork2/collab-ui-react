@@ -1,6 +1,5 @@
 import './my-subscription.scss';
 import digitalRiverModule from 'modules/online/digitalRiver/index';
-import featureToggle from 'modules/core/featureToggle/index';
 import notificationModule from 'modules/core/notifications/index';
 import onlineUpgradeModule from 'modules/online/upgrade/index';
 import proPackModule from 'modules/core/proPack/index';
@@ -13,7 +12,6 @@ import { SubscriptionDetailsComponent } from './subscription-details/subscriptio
 export default angular
   .module('myCompany.subscriptions', [
     digitalRiverModule,
-    featureToggle,
     notificationModule,
     onlineUpgradeModule,
     proPackModule,
@@ -23,7 +21,7 @@ export default angular
     require('modules/core/scripts/services/authinfo'),
     require('modules/hercules/services/service-descriptor.service').default,
     require('modules/hercules/services/hybrid-services-utils.service').default,
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
   ])
   .controller('MySubscriptionCtrl', MySubscriptionCtrl)
   .component('subscriptionRow', new SubscriptionRowComponent())

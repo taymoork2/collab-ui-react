@@ -26,6 +26,7 @@
     @include vr-spacing(mt, 5);
 
     width: rem-calc(414px);
+    height: rem-calc(532px);
     display: flex;
     flex-flow: column;
 
@@ -44,6 +45,17 @@
         background-color: $color-primary-lighter;
         cursor: pointer;
       }
+    }
+
+    .tooltip.popover {
+      top: 1rem !important;
+      left: 9.1rem !important;
+      word-wrap: inherit;
+      word-break: inherit;
+    }
+
+    .popover.right>.arrow {
+      top: 7% !important;
     }
   }
 
@@ -68,6 +80,44 @@
   .ct-article {
     box-shadow: none;
     border: 1px solid $gray-light-1;
+  }
+
+  .escalation-required-info {
+    font-size: rem-calc(10px);
+    padding-left: 1.7rem;
+    position: relative;
+    .msg {
+      color: $gray-dark-1;
+      font-size: rem-calc(10px);
+    }
+
+    .popover-content {
+      color: $gray-dark-2;
+      cursor: pointer;
+      font-family: 'CiscoSansTT Light';
+      font-size: rem-calc(11.2px);
+      line-height: rem-calc(16px);
+      padding: rem-calc(16px);
+      overflow: auto;
+      height: rem-calc(128px);
+      width: rem-calc(224px);
+      text-align: left;
+      padding-left: rem-calc(20px);
+    }
+
+    .icon-eva-details {
+      color: $gray-light-1;
+      cursor: pointer;
+      padding-left: rem-calc(1px);
+    }
+
+    .icon-eva-details-toggle {
+      color: $color-blue-base;
+    }
+  }
+
+  .escalation-required-info-category {
+    padding-left: 1.1rem;
   }
 
   .welcomeText {
@@ -456,5 +506,9 @@
   .select-toggle {
     padding-right: 0rem;
     margin-right: 0rem;
+  }
+
+  .no-margin {
+    margin-bottom: 0rem;
   }
 }

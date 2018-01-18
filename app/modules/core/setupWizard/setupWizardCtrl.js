@@ -12,7 +12,6 @@ require('./_setup-wizard.scss');
   var enterpriseExportMetadataTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.exportMetadata.tpl.html');
   var enterpriseImportIdpTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.importIdp.tpl.html');
   var enterpriseTestSSOTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.testSSO.tpl.html');
-  var enterprisePmrSetupTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.pmrSetup.tpl.html');
   var meetingSettingsMigrateTrialTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-migrate-trial.html');
   var meetingSettingsSiteSetupTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-site-setup.html');
   var meetingSettingsLicenseDistributionTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-license-distribution.html');
@@ -32,7 +31,7 @@ require('./_setup-wizard.scss');
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Analytics, Authinfo, Config, FeatureToggleService, Orgservice, SessionStorage, SetupWizardService, StorageKeys, Notification, CustomerCommonService) {
+  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Analytics, ApiCacheManagementService, Authinfo, Config, FeatureToggleService, Orgservice, SessionStorage, SetupWizardService, StorageKeys, Notification, CustomerCommonService) {
     var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
     var isITDecouplingFlow = false;
     var shouldRemoveSSOSteps = false;
@@ -40,7 +39,6 @@ require('./_setup-wizard.scss');
     var shouldShowMeetingsTab = false;
     var hasPendingCallLicenses = false;
     var hasPendingLicenses = false;
-    var supportsAtlasPMRonM2 = false;
     var supportsHI1484 = false;
     $scope.tabs = [];
     $scope.isTelstraCsbEnabled = false;
@@ -82,16 +80,10 @@ require('./_setup-wizard.scss');
         })
         .catch(_.noop);
 
-      var atlasPMRonM2Promise = FeatureToggleService.supports(FeatureToggleService.features.atlasPMRonM2)
-        .then(function (_supportsAtlasPMRonM2) {
-          supportsAtlasPMRonM2 = _supportsAtlasPMRonM2;
-        });
-
       var pendingSubscriptionsPromise = SetupWizardService.populatePendingSubscriptions();
 
       var promises = [
         adminOrgUsagePromise,
-        atlasPMRonM2Promise,
         hI1484Promise,
         pendingSubscriptionsPromise,
       ];
@@ -103,12 +95,12 @@ require('./_setup-wizard.scss');
       getPendingSubscriptionFlags();
       var tabs = getInitTabs();
 
+      initHybridServicesCaches();
       initPlanReviewTab(tabs);
       initEnterpriseSettingsTab(tabs);
       initMeetingSettingsTab(tabs);
       initCallSettingsTab(tabs);
       initCareTab(tabs);
-      initAtlasPMRonM2(tabs);
       initFinishTab(tabs);
       removeTabsWithEmptySteps(tabs);
       $scope.tabs = filterTabsByStateParams(tabs);
@@ -372,21 +364,6 @@ require('./_setup-wizard.scss');
       }
     }
 
-    function initAtlasPMRonM2(tabs) {
-      if (supportsAtlasPMRonM2) {
-        var step = {
-          name: 'enterprisePmrSetup',
-          template: enterprisePmrSetupTemplatePath,
-        };
-        var enterpriseSettings = _.find(tabs, {
-          name: 'enterpriseSettings',
-        });
-        if (enterpriseSettings) {
-          enterpriseSettings.steps.splice(1, 0, step);
-        }
-      }
-    }
-
     function initFinishTab(tabs) {
       if (!Authinfo.isSetupDone()) {
         var tab = {
@@ -454,6 +431,12 @@ require('./_setup-wizard.scss');
       }
 
       return filteredTabs;
+    }
+
+    function initHybridServicesCaches() {
+      if (Authinfo.isCustomerLaunchedFromPartner()) {
+        ApiCacheManagementService.invalidateHybridServicesCaches();
+      }
     }
   }
 })();

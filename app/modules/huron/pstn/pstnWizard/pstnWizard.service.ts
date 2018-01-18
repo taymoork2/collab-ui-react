@@ -4,7 +4,7 @@ import {
   TOLLFREE_ORDERING_CAPABILITY, TOKEN_FIELD_ID, SWIVEL_ORDER, SWIVEL,
 } from '../pstn.const';
 import {
-  PstnModel, IOrder, IAuthCustomer, IAuthLicense,
+  PstnModel, IOrder, IOrderData, IAuthCustomer, IAuthLicense,
 } from '../pstn.model';
 import { INumbersModel } from '../pstnNumberSearch/number.model';
 import { PstnService, TerminusLocation } from '../pstn.service';
@@ -61,7 +61,7 @@ export class PstnWizardService {
       3: $translate.instant('pstnSetup.setupPstn'),
       4: $translate.instant('pstnSetup.setupNumbers'),
       5: $translate.instant('pstnSetup.setupNumbers'),
-      6: $translate.instant('pstnSetup.setupService'),
+      6: $translate.instant('pstnSetup.orderSummary'),
       7: $translate.instant('pstnSetup.setupService'),
       8: $translate.instant('pstnSetup.setupService'),
       9: $translate.instant('pstnSetup.setupService'),
@@ -263,11 +263,18 @@ export class PstnWizardService {
     }
 
     _.forEach(this.advancedOrders, order => {
+      let quantity: number = 0;
       if (order.orderType === BLOCK_ORDER && order.numberType === NUMTYPE_DID) {
-        promise = this.PstnService.orderBlock(this.PstnModel.getCustomerId(), this.PstnModel.getProviderId(), order.data.areaCode, order.data.length, order.data.consecutive, order.data.nxx)
+        //Block Order
+        if (_.isArray(order.data)) {
+          quantity = (<any[]>order.data).length;
+        }
+        promise = this.PstnService.orderBlock(this.PstnModel.getCustomerId(), this.PstnModel.getProviderId(), order.data.areaCode, quantity, order.data.consecutive, order.data.nxx)
           .catch(pushErrorArray);
       } else if (order.orderType === BLOCK_ORDER && order.numberType === NUMTYPE_TOLLFREE) {
-        promise = this.PstnService.orderTollFreeBlock(this.PstnModel.getCustomerId(), this.PstnModel.getProviderId(), order.data.areaCode, order.data.length)
+        promise = this.PstnService.orderBlock(this.PstnModel.getCustomerId(), this.PstnModel.getProviderId(), order.data.areaCode, quantity, order.data.consecutive, order.data.nxx);
+        promises.push(promise);
+        promise = this.PstnService.orderTollFreeBlock(this.PstnModel.getCustomerId(), this.PstnModel.getProviderId(), order.data.areaCode, quantity)
           .catch(pushErrorArray);
       }
       promises.push(promise);
@@ -413,12 +420,12 @@ export class PstnWizardService {
     }
 
     if (this.portOrders.length > 0) {
-      totalPortNumbers = _.get(this.portOrders[0].data.numbers, 'length');
+      totalPortNumbers = this.getTotal(this.portOrders);
     }
     return { totalNewAdvancedOrder, totalPortNumbers };
   }
 
-  private getTotal(newOrders: IOrder[], advancedOrders: IOrder[]): number {
+  private getTotal(newOrders: IOrder[], advancedOrders?: IOrder[]): number {
     let total = 0;
     _.forEach(newOrders, order => {
       if (_.isString(order.data.numbers)) {
@@ -427,9 +434,13 @@ export class PstnWizardService {
         total += order.data.numbers.length;
       }
     });
-    _.forEach(advancedOrders, order => {
-      total += order.data.length;
-    });
+    if (advancedOrders) {
+      _.forEach(advancedOrders, order => {
+        if (_.isArray(order.data)) {
+          total += (<any[]>order.data).length;
+        }
+      });
+    }
     return total;
   }
 
@@ -487,7 +498,9 @@ export class PstnWizardService {
       case PORT_ORDER:
         return order.data.numbers.length;
       case BLOCK_ORDER:
-        return order.data.length;
+        if (_.isArray(order.data)) {
+          return (<any[]>order.data).length;
+        }
       case undefined:
         return undefined;
     }
@@ -612,9 +625,10 @@ export class PstnWizardService {
     const advancedOrder = {
       data: {
         areaCode: model.areaCode.code,
+        numbers: [],
         length: parseInt(model.quantity, 10),
         consecutive: model.consecutive,
-      },
+      } as IOrderData,
       numberType: numberType,
       orderType: BLOCK_ORDER,
     };

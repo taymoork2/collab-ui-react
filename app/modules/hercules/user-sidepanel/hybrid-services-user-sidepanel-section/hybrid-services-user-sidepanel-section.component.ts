@@ -16,11 +16,10 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
 
   private userId: string;
   private userEntitlements: string[];
-  private userLicenseIDs: string[];
 
   private readonly allHybridServiceIds: HybridServiceId[] = ['squared-fusion-cal', 'squared-fusion-gcal', 'squared-fusion-uc', 'squared-fusion-ec', 'spark-hybrid-impinterop'];
 
-  public isLicensed: boolean;
+  public isInvitePending: boolean;
   public atlasHybridImpFeatureToggle: boolean;
 
   private servicesOrgIsEntitledTo: HybridServiceId[];
@@ -47,6 +46,7 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
     private Notification: Notification,
     private ServiceDescriptorService: ServiceDescriptorService,
+    private Userservice,
     private USSService: USSService,
   ) { }
 
@@ -55,9 +55,8 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
     if (user && user.currentValue) {
       this.userId = user.currentValue.id;
       this.userEntitlements = user.currentValue.entitlements;
-      this.userLicenseIDs = user.currentValue.licenseID;
+      this.isInvitePending = this.Userservice.isInvitePending(user.currentValue);
     }
-    this.isLicensed = this.userIsLicensed();
     this.init();
   }
 
@@ -103,19 +102,6 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
       });
 
   }
-
-  private userIsLicensed(): boolean {
-    return !(_.size(this.Authinfo.getLicenses()) > 0 && !this.hasCaaSLicense());
-  }
-
-  private hasCaaSLicense(): boolean {
-    const licenseIDs: string[] = this.userLicenseIDs || [];
-    const offerCodes: string[] = _.map(licenseIDs, (licenseString) => {
-      return licenseString.split('_')[0];
-    });
-    return offerCodes.length > 0;
-  }
-
 
   public serviceIsOnForUser(serviceId: HybridServiceId): boolean {
     return _.some(this.servicesWithStatuses, (serviceWithStatus) => {
@@ -214,7 +200,7 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
         if (this.HybridServiceUserSidepanelHelperService.isPartnerAdminAndGot403Forbidden(error)) {
           this.Notification.errorWithTrackingId(error, {
             errorKey: 'hercules.userSidepanel.errorMessages.cannotReadUserDataFromUSSPartnerAdmin',
-            allowHtml: true,
+            feedbackInstructions: true,
           });
         } else {
           this.Notification.errorWithTrackingId(error, 'hercules.userSidepanel.errorMessages.cannotReadUserDataFromUSS');
@@ -270,9 +256,11 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
       } else {
         if (options.calendarType === 'squared-fusion-cal' && !_.includes(this.userEntitlements, 'squared-fusion-cal')) {
           this.userEntitlements.push('squared-fusion-cal');
+          _.pull(this.userEntitlements, 'squared-fusion-gcal');
         }
         if (options.calendarType === 'squared-fusion-gcal' && !_.includes(this.userEntitlements, 'squared-fusion-gcal')) {
           this.userEntitlements.push('squared-fusion-gcal');
+          _.pull(this.userEntitlements, 'squared-fusion-cal');
         }
       }
     }
@@ -290,6 +278,8 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
     }
     this.$state.go(`user-overview.hybrid-services-${serviceId}`, {
       userUpdatedCallback: this.userUpdatedCallback,
+      allUserEntitlements: this.userEntitlements,
+      isInvitePending: this.isInvitePending,
     });
   }
 

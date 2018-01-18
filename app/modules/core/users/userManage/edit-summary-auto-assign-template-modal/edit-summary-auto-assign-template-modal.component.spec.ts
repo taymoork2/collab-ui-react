@@ -48,21 +48,5 @@ describe('Component: editSummaryAutoAssignTemplateModal:', () => {
         },
       });
     });
-
-    describe('mkPayload():', function () {
-      it('should return a payload composed of a license payload, and a user-entitlements payload', function () {
-        this.compileComponent('editSummaryAutoAssignTemplateModal');
-        spyOn(this.controller, 'mkLicensesPayload').and.returnValue(['fake-licenses-payload']);
-        spyOn(this.controller, 'mkUserEntitlementsPayload').and.returnValue(['fake-user-entitlements-payload']);
-        const payload = this.controller.mkPayload();
-        expect(this.controller.mkLicensesPayload).toHaveBeenCalled();
-        expect(this.controller.mkUserEntitlementsPayload).toHaveBeenCalled();
-        expect(payload).toEqual({
-          name: 'Default',
-          licenses: ['fake-licenses-payload'],
-          userEntitlements: ['fake-user-entitlements-payload'],
-        });
-      });
-    });
   });
 });

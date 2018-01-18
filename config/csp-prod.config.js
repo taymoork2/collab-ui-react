@@ -72,6 +72,8 @@ module.exports = {
   scriptSrc: [
     '\'self\'',
     '\'unsafe-eval\'',
+    '\'sha256-emX0qxoI3deAq+WOnuOPZ/DF/m2igVM5Nd3ezjSl3Js=\'', // TODO: Remove when Adobe DTM is removed
+    '\'sha256-YllLHRtar0IQ3QT7XKv04yy985FgoG331hfzTbkk2Z4=\'', // Devices page advanced settings launch: ATLAS-2913
     'https://*.localytics.com',
     'https://*.webex.com',
     'https://api.mixpanel.com', // Mixpanel
@@ -87,5 +89,9 @@ module.exports = {
   styleSrc: [
     '\'self\'',
     '\'unsafe-inline\'',
+  ],
+  workerSrc: [
+    'blob:',
+    '\'self\'',
   ],
 };

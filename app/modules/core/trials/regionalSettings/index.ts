@@ -7,7 +7,7 @@ import FeatureToggleServices from 'modules/core/featureToggle';
 export default angular
   .module('trial.regionalSettings', [
     require('modules/core/trials/trial.module'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     HuronCountryService,
     FeatureToggleServices,

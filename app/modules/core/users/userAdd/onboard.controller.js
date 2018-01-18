@@ -7,11 +7,14 @@ require('./_user-add.scss');
   angular.module('Core')
     .controller('OnboardCtrl', OnboardCtrl);
 
-  var KeyCodes = require('modules/core/accessibility').KeyCodes;
-
   /*@ngInject*/
-  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, Config, FeatureToggleService, DialPlanService, Log, LogMetricsService, MessengerInteropService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, LocationsService, NumberService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, Analytics, Authinfo, Config, FeatureToggleService, DialPlanService, Log, LogMetricsService, MessengerInteropService, NAME_DELIMITER, Notification, OnboardService, OnboardStore, Orgservice, TelephonyInfoService, LocationsService, NumberService, Userservice, Utils, UserCsvService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
     var vm = this;
+
+    // reset corresponding scope properties in OnboardStore each time this controller initializes
+    OnboardStore.resetForState('users.add.manual');
+
+    $scope.model = OnboardStore['users.add.manual'].model;
 
     $scope.hasAccount = Authinfo.hasAccount();
     $scope.usrlist = [];
@@ -19,7 +22,7 @@ require('./_user-add.scss');
     $scope.externalNumberPool = [];
     $scope.telephonyInfo = {};
     $scope.cmrLicensesForMetric = {};
-    $scope.currentUserCount = 0;
+    $scope.currentUserCount = OnboardStore['users.add.manual'].currentUserCount;
 
     $scope.locationOptions = [];
     $scope.location = '';
@@ -81,29 +84,8 @@ require('./_user-add.scss');
     $scope.editServicesFlow = false;
     $scope.hasSite = false;
 
-    // model can be removed after switching to controllerAs
-    $scope.model = {
-      userInputOption: 0,
-      uploadProgress: 0,
-    };
-
-    $scope.strFirstName = $translate.instant('usersPage.firstNamePlaceHolder');
-    $scope.strLastName = $translate.instant('usersPage.lastNamePlaceHolder');
-    $scope.strEmailAddress = $translate.instant('usersPage.emailAddressPlaceHolder');
-    var strNameAndEmailAdress = $translate.instant('usersPage.nameAndEmailAddress');
     $scope.placeholder = $translate.instant('directoryNumberPanel.chooseNumber');
     $scope.inputPlaceholder = $translate.instant('directoryNumberPanel.searchNumber');
-    $scope.userInputOptions = [{
-      label: $scope.strEmailAddress,
-      value: 0,
-      name: 'radioOption',
-      id: 'radioEmail',
-    }, {
-      label: strNameAndEmailAdress,
-      value: 1,
-      name: 'radioOption',
-      id: 'radioNamesAndEmail',
-    }];
 
     OnboardService.huronCallEntitlement = false;
 
@@ -207,6 +189,8 @@ require('./_user-add.scss');
     }
 
     function initResults() {
+      $scope.numUpdatedUsers = 0;
+      $scope.numAddedUsers = 0;
       $scope.results = {
         resultList: [],
         errors: [],
@@ -581,13 +565,6 @@ require('./_user-add.scss');
     //***
     //***
     //***********************************************************************************/
-
-    function clearNameAndEmailFields() {
-      $scope.model.firstName = '';
-      $scope.model.lastName = '';
-      $scope.model.emailAddress = '';
-      $scope.model.userInfoValid = false;
-    }
 
     function ServiceFeature(label, value, name, license) {
       this.label = label;
@@ -998,7 +975,7 @@ require('./_user-add.scss');
 
     $scope.$watch('model.userList', function (newVal, oldVal) {
       if (newVal !== oldVal) {
-        $scope.usrlist = addressparser.parse($scope.model.userList);
+        $scope.usrlist = OnboardService.parseUsersList($scope.model.userList);
       }
     });
 
@@ -1352,7 +1329,7 @@ require('./_user-add.scss');
         }
       });
 
-      Userservice.onboardUsers(users, null, getAccountLicenses('patch'))
+      Userservice.onboardUsersLegacy(users, null, getAccountLicenses('patch'))
         .then(successCallback)
         .catch(errorCallback);
 
@@ -1395,126 +1372,8 @@ require('./_user-add.scss');
       return Authinfo.isEntitleUserEnabled();
     };
 
-    //email validation logic
-    var validateEmail = OnboardService.validateEmail;
-
-    var wizardNextText = function () {
-      var userCount = angular.element('.token-label').length;
-      var action = 'finish';
-      if (userCount > 0) {
-        $scope.currentUserCount = userCount;
-        action = 'next';
-      }
-      $scope.$emit('wizardNextText', action);
-    };
-
-    $scope.invalidcount = 0;
-    $scope.invalidDirSyncUsersCount = 0;
-    $scope.tokenfieldid = 'usersfield';
-    $scope.tokenplaceholder = $translate.instant('usersPage.userInput');
-    $scope.tokenoptions = {
-      delimiter: [',', ';'],
-      createTokensOnBlur: true,
-    };
-    var isDuplicate = false;
-
-    function setInvalidToken(token) {
-      angular.element(token.relatedTarget).addClass('invalid');
-      $scope.invalidcount++;
-    }
-
-    function validateDirSyncUser(e) {
-      if ($scope.isDirSyncEnabled) {
-        UserListService.queryUser(e.attrs.value)
-          .catch(function () {
-            setInvalidToken(e);
-            sortTokens();
-            $scope.invalidDirSyncUsersCount++;
-          });
-      }
-    }
-
-    $scope.getNumUsersInTokenField = function () {
-      return angular.element('#usersfield').tokenfield('getTokens').length;
-    };
-
-    $scope.hasErrors = function () {
-      var haserr = ($scope.invalidcount > 0);
-      if ($scope.getNumUsersInTokenField() >= vm.maxUsersInManual) {
-        haserr = true;
-      }
-      return haserr;
-    };
-
-    $scope.tokenmethods = {
-      createtoken: function (e) {
-        //Removing anything in brackets from user data
-        var value = _.replace(e.attrs.value, /\s*\([^)]*\)\s*/g, ' ');
-        e.attrs.value = value;
-        isDuplicate = false;
-        if (isEmailAlreadyPresent(e.attrs.value)) {
-          isDuplicate = true;
-        }
-      },
-      createdtoken: function (e) {
-        if (!validateEmail(e.attrs.value) || isDuplicate) {
-          setInvalidToken(e);
-        } else {
-          validateDirSyncUser(e);
-        }
-        sortTokens();
-        wizardNextText();
-        checkPlaceholder();
-      },
-      edittoken: function (e) {
-        if (angular.element(e.relatedTarget).hasClass('invalid')) {
-          $scope.invalidcount--;
-        }
-      },
-      removedtoken: function () {
-        // Reset the token list and validate all tokens
-        $timeout(function () {
-          $scope.invalidcount = 0;
-          $scope.invalidDirSyncUsersCount = 0;
-          angular.element('#usersfield').tokenfield('setTokens', $scope.model.userList);
-        }).then(function () {
-          sortTokens();
-          wizardNextText();
-          checkPlaceholder();
-        });
-      },
-    };
-
-    function isEmailAlreadyPresent(input) {
-      var inputEmail = getEmailAddress(input).toLowerCase();
-      if (inputEmail) {
-        var userEmails = getTokenEmailArray();
-        var userEmailsLower = [];
-        for (var i = 0; i < userEmails.length; i++) {
-          userEmailsLower[i] = userEmails[i].toLowerCase();
-        }
-        return userEmailsLower.indexOf(inputEmail) >= 0;
-      } else {
-        return false;
-      }
-    }
-
-    function getTokenEmailArray() {
-      var tokens = angular.element('#usersfield').tokenfield('getTokens');
-      return tokens.map(function (token) {
-        return getEmailAddress(token.value);
-      });
-    }
-
-    function getEmailAddress(input) {
-      var retString = '';
-      input.split(' ').forEach(function (str) {
-        if (str.indexOf('@') >= 0) {
-          retString = str;
-        }
-      });
-      return retString;
-    }
+    // TODO (mipark2): rm this if determined no longer needed (see: '$scope.manualEntryNext()')
+    $scope.invalidcount = OnboardStore['users.add.manual'].invalidcount;
 
     function removeEmailFromTokenfield(email) {
       $scope.model.userList = $scope.model.userList.split(', ').filter(function (token) {
@@ -1522,127 +1381,11 @@ require('./_user-add.scss');
       }).join(', ');
     }
 
-    var setPlaceholder = function (placeholder) {
-      angular.element('.tokenfield.form-control #usersfield-tokenfield').attr('placeholder', placeholder);
-    };
-
-    //placeholder logic
-    function checkPlaceholder() {
-      if (angular.element('.token-label').length > 0) {
-        setPlaceholder('');
-      } else {
-        setPlaceholder($translate.instant('usersPage.userInput'));
-      }
-    }
-
-    // sort the token list so that error tokens appear first in the list
-    function sortTokens() {
-      // this is just a sh*tty way of sorting this.  The only info we have
-      // if a token has an error is if it has an 'invalid' class on the element.
-      // the model.userList SHOULD contain this info, but it doesn't.  So,
-      // in order to sort all of the invalid tokens to the front of the list,
-      // we need to do this in the DOM directly. Thankfully, tokenfield doesn't
-      // break when we do this.
-      var start = $(angular.element('.tokenfield input[type=text]')[0]);
-      if (start.length > 0) {
-        var tokens = start.siblings('.token');
-        tokens.sort(function (a, b) {
-          var ainvalid = $(a).hasClass('invalid');
-          var binvalid = $(b).hasClass('invalid');
-          if (ainvalid && !binvalid) {
-            return -1;
-          } else if (!ainvalid && binvalid) {
-            return 1;
-          } else {
-            return 0;
-          }
-        });
-
-        tokens.detach().insertAfter(start);
-      }
-    }
-
-    var getUsersList = function () {
-      return addressparser.parse($scope.model.userList);
-    };
-
-    $scope.validateTokensBtn = function () {
-      var usersListLength = angular.element('.token-label').length;
-      $scope.validateTokens().then(function () {
-        if ($scope.invalidcount === 0 && usersListLength > 0) {
-          $scope.currentUserCount = usersListLength;
-          Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.MANUAL_EMAIL,
-            Analytics.sections.ADD_USERS.uploadMethods.MANUAL, {
-              emailEntryMethod: Analytics.sections.ADD_USERS.manualMethods[$scope.model.userInputOption.toString()],
-            }
-          );
-          $state.go('users.add.services');
-        } else if (usersListLength === 0) {
-          Log.debug('No users entered.');
-          Notification.error('usersPage.noUsersInput');
-          Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.MANUAL_EMAIL,
-            Analytics.sections.ADD_USERS.uploadMethods.MANUAL, {
-              emailEntryMethod: Analytics.sections.ADD_USERS.manualMethods[$scope.model.userInputOption.toString()],
-              error: 'no users',
-            }
-          );
-        } else {
-          Log.debug('Invalid users entered.');
-          Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.MANUAL_EMAIL,
-            Analytics.sections.ADD_USERS.uploadMethods.MANUAL, {
-              emailEntryMethod: Analytics.sections.ADD_USERS.manualMethods[$scope.model.userInputOption.toString()],
-              error: 'invalid users',
-            }
-          );
-          Notification.error('usersPage.validEmailInput');
-        }
-      });
-    };
-
-    $scope.allowNext = function () {
-      return ($scope.model.userList && !$scope.hasErrors());
-    };
-
-    $scope.validateTokens = function () {
-      wizardNextText();
-      return $timeout(function () {
-        //reset the invalid count
-        $scope.invalidcount = 0;
-        angular.element('#usersfield').tokenfield('setTokens', $scope.model.userList);
-      }, 100);
-    };
-
-    $scope.addToUsersfield = function () {
-      if ($scope.model.userForm.$valid && $scope.model.userInfoValid) {
-        var userInfo = $scope.model.firstName + NAME_DELIMITER + $scope.model.lastName + ' ' + $scope.model.emailAddress;
-        angular.element('#usersfield').tokenfield('createToken', userInfo);
-        clearNameAndEmailFields();
-        angular.element('#firstName').focus();
-      }
-    };
-
-    $scope.validateEmailField = function () {
-      if ($scope.model.emailAddress) {
-        $scope.model.userInfoValid = validateEmail($scope.model.emailAddress);
-      } else {
-        $scope.model.userInfoValid = false;
-      }
-    };
-
-    $scope.onEnterKey = function (keyEvent) {
-      if (keyEvent.which === KeyCodes.ENTER) {
-        $scope.addToUsersfield();
-      }
-    };
-
     var resetUsersfield = function () {
-      angular.element('#usersfield').tokenfield('setTokens', ' ');
-      $scope.model.userList = '';
-      checkPlaceholder();
-      $scope.invalidcount = 0;
-      $scope.invalidDirSyncUsersCount = 0;
+      return OnboardService.resetUsersfield($scope);
     };
 
+    // TODO (mipark2): rm this if no longer needed:
     $scope.clearPanel = function () {
       resetUsersfield();
       initResults();
@@ -1667,251 +1410,125 @@ require('./_user-add.scss');
         $scope.wizard.goToStep('manualEntry');
       } else {
         Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.GO_BACK_FIX, null, createPropertiesForAnalyltics());
-        $state.go('users.add');
+        $state.go('users.add.manual');
       }
     };
 
     function onboardUsers(optionalOnboard) {
-      var deferred = $q.defer();
       initResults();
-      usersList = getUsersList();
-      Log.debug('Entitlements: ', usersList);
+      usersList = OnboardService.parseUsersList($scope.model.userList);
 
-      var successCallback = function (response) {
-        Log.info('User onboard request returned:', response.data);
-        $rootScope.$broadcast('USER_LIST_UPDATED');
-        _.forEach(response.data.userResponse, function (user) {
-          var userResult = {
-            email: user.email,
-            alertType: null,
-          };
+      // early-out if user list is empty
+      if (_.isEmpty(usersList)) {
+        if (optionalOnboard) {
+          return $q.resolve();
+        } else {
+          Notification.error('usersPage.validEmailInput');
+          return $q.reject();
+        }
+      }
 
-          var httpStatus = user.httpStatus;
+      $scope.btnOnboardLoading = true;
 
-          switch (httpStatus) {
-            case 200:
-            case 201: {
-              userResult.message = $translate.instant('usersPage.onboardSuccess', {
-                email: userResult.email,
-              });
-              userResult.alertType = 'success';
-              if (httpStatus === 200) {
-                $scope.numUpdatedUsers++;
-              } else {
-                $scope.numAddedUsers++;
-              }
-              if (user.message === '700000') {
-                userResult.message = $translate.instant('usersPage.onboardedWithoutLicense', {
-                  email: userResult.email,
-                });
-                userResult.alertType = 'warning';
-              }
-              break;
-            }
-            case 409: {
-              userResult.message = userResult.email + ' ' + user.message;
-              break;
-            }
-            case 403: {
-              switch (user.message) {
-                case Config.messageErrors.userExistsError: {
-                  userResult.message = $translate.instant('usersPage.userExistsError', {
-                    email: userResult.email,
-                  });
-                  break;
-                }
-                case Config.messageErrors.userPatchError:
-                case Config.messageErrors.claimedDomainError: {
-                  userResult.message = $translate.instant('usersPage.claimedDomainError', {
-                    email: userResult.email,
-                    domain: userResult.email.split('@')[1],
-                  });
-                  break;
-                }
-                case Config.messageErrors.userExistsInDiffOrgError: {
-                  userResult.message = $translate.instant('usersPage.userExistsInDiffOrgError', {
-                    email: userResult.email,
-                  });
-                  break;
-                }
-                case Config.messageErrors.notSetupForManUserAddError: {
-                  userResult.message = $translate.instant('usersPage.notSetupForManUserAddError', {
-                    email: userResult.email,
-                  });
-                  break;
-                }
-                case Config.messageErrors.userExistsDomainClaimError: {
-                  userResult.message = $translate.instant('usersPage.userExistsDomainClaimError', {
-                    email: userResult.email,
-                  });
-                  break;
-                }
-                case Config.messageErrors.unknownCreateUserError: {
-                  userResult.message = $translate.instant('usersPage.unknownCreateUserError');
-                  break;
-                }
-                case Config.messageErrors.unableToMigrateError: {
-                  userResult.message = $translate.instant('usersPage.unableToMigrateError', {
-                    email: userResult.email,
-                  });
-                  break;
-                }
-                case Config.messageErrors.insufficientEntitlementsError: {
-                  userResult.message = $translate.instant('usersPage.insufficientEntitlementsError', {
-                    email: userResult.email,
-                  });
-                  break;
-                }
-                default: {
-                  userResult.message = $translate.instant('usersPage.accessDeniedError', {
-                    email: userResult.email,
-                  });
-                  break;
-                }
-              }
-              break;
-            }
-            case 400: {
-              switch (user.message) {
-                case Config.messageErrors.hybridServicesError: {
-                  userResult.message = $translate.instant('usersPage.hybridServicesError');
-                  break;
-                }
-                case Config.messageErrors.hybridServicesComboError: {
-                  userResult.message = $translate.instant('usersPage.hybridServicesComboError');
-                  break;
-                }
-                default: {
-                  userResult.message = $translate.instant('usersPage.onboardError', {
-                    email: userResult.email,
-                    status: httpStatus,
-                  });
-                  break;
-                }
-              }
-              break;
-            }
-            default: {
-              userResult.message = $translate.instant('usersPage.onboardError', {
-                email: userResult.email,
-                status: httpStatus,
-              });
-              break;
-            }
-          }
-
-          if (httpStatus !== 200 && httpStatus !== 201) {
-            userResult.alertType = 'danger';
-          }
-
-          $scope.results.resultList.push(userResult);
+      _.forEach(usersList, function (userItem) {
+        var userAndDnObj = $scope.usrlist.filter(function (user) {
+          return (user.address === userItem.address);
         });
 
-        if ($scope.numAddedUsers > 0) {
-          var msg = 'Invited ' + $scope.numAddedUsers + ' users';
-          LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), $scope.numAddedUsers, null);
+        if ($scope.ishI1484 && $scope.locationOptions.length > 1) {
+          userItem.location = userAndDnObj[0].selectedLocation.uuid;
         }
 
-        //concatenating the results in an array of strings for notify function
-        $scope.results.errors = [];
-        $scope.results.warnings = [];
-        for (var idx in $scope.results.resultList) {
-          if ($scope.results.resultList[idx].alertType === 'success' && $scope.results.resultList[idx].email) {
-            removeEmailFromTokenfield($scope.results.resultList[idx].email);
-          } else if ($scope.results.resultList[idx].alertType === 'warning' && $scope.results.resultList[idx].email) {
-            $scope.results.warnings.push(UserCsvService.addErrorWithTrackingID($scope.results.resultList[idx].message, response));
-          } else {
-            $scope.results.errors.push(UserCsvService.addErrorWithTrackingID($scope.results.resultList[idx].message, response));
+        if ($scope.ishI1484) {
+          if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.siteToSite.length > 0) {
+            userItem.internalExtension = userAndDnObj[0].assignedDn.internal;
+          }
+        } else {
+          if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.number.length > 0) {
+            userItem.internalExtension = userAndDnObj[0].assignedDn.number;
           }
         }
 
-        //Displaying notifications
-        if ($scope.results.resultList.length === usersList.length) {
-          $scope.btnOnboardLoading = false;
+        if (userAndDnObj[0].externalNumber && userAndDnObj[0].externalNumber.uuid !== 'none') {
+          userItem.directLine = userAndDnObj[0].externalNumber.pattern;
+        }
+      });
+
+      var entitleList = [],
+        licenseList = [];
+
+      // notes:
+      // - start with all enabled entitlements
+      entitleList = getEntitlements('add');
+
+      // - as of 2017-05-19, this conditional branch does not collect enabled entitlements
+      if (Authinfo.hasAccount()) {
+        licenseList = getAccountLicenses('additive');
+
+        // - so either isolate the messenger interop entitlement, or reset the list
+        entitleList = MessengerInteropService.hasAssignableMessageOrgEntitlement()
+          ? _.filter(entitleList, { entitlementName: 'messengerInterop' })
+          : [];
+      }
+
+      entitleList = entitleList.concat(getHybridServicesEntitlements('add'));
+
+      // notes (as of 2018-01-13):
+      // - 'Userservice.onboardUsersLegacy()' can be called multiple times given a large enough user
+      //   list (called once for each 'Config.batchSize' length of users)
+      // - each response is aggregated back into scope variables:
+      //   - 'numUpdatedUsers'
+      //   - 'numAddedUsers'
+      //   - 'results.resultList'
+      //   - 'results.warnings'
+      //   - 'results.errors'
+      return OnboardService.onboardUsersInChunks(usersList, entitleList, licenseList, Config.batchSize)
+        .catch(function (rejectedResponse) {
+          // notes:
+          // - potentially multiple 'Userservice.onboardUsersLegacy()' calls could have been made
+          // - if any calls reject (or in the case of multiple calls, the first one rejects), we
+          //   error notify and re-reject
+          Notification.errorResponse(rejectedResponse);
+          return $q.reject();
+        })
+        .then(function (responses) {
+          // TODO: rm this if determined no longer needed (onboarding user still in FTSW?)
           if (isFTW) {
-            deferred.resolve();
-          } else {
-            Analytics.trackAddUsers(Analytics.eventNames.SAVE, null, createPropertiesForAnalyltics());
-            $state.go('users.add.results');
+            return $q.resolve();
           }
-        }
-      };
 
-      var errorCallback = function (response) {
-        Notification.errorResponse(response);
-        $scope.btnOnboardLoading = false;
-        deferred.reject();
-      };
+          // aggregate results
+          $scope.numUpdatedUsers = _.sumBy(responses, 'onboardedUsers.numUpdatedUsers');
+          $scope.numAddedUsers = _.sumBy(responses, 'onboardedUsers.numAddedUsers');
+          $scope.results.resultList = _.flatMap(responses, 'onboardedUsers.resultList');
 
-      if (_.isArray(usersList) && usersList.length > 0) {
-        $scope.btnOnboardLoading = true;
-
-        _.each(usersList, function (userItem) {
-          var userAndDnObj = $scope.usrlist.filter(function (user) {
-            return (user.address === userItem.address);
+          //concatenating the results in an array of strings for notify function
+          $scope.results.errors = [];
+          $scope.results.warnings = [];
+          _.forEach($scope.results.resultList, function (userResult) {
+            if (userResult.alertType === 'success' && userResult.email) {
+              removeEmailFromTokenfield(userResult.email);
+            }
+            if (userResult.warningMsg) {
+              $scope.results.warnings.push(userResult.warningMsg);
+            }
+            if (userResult.errorMsg) {
+              $scope.results.errors.push(userResult.errorMsg);
+            }
           });
 
-          if ($scope.ishI1484 && $scope.locationOptions.length > 1) {
-            userItem.location = userAndDnObj[0].selectedLocation.uuid;
+          if ($scope.numAddedUsers > 0) {
+            var msg = 'Invited ' + $scope.numAddedUsers + ' users';
+            LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), $scope.numAddedUsers, null);
           }
-
-          if ($scope.ishI1484) {
-            if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.siteToSite.length > 0) {
-              userItem.internalExtension = userAndDnObj[0].assignedDn.internal;
-            }
-          } else {
-            if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.number.length > 0) {
-              userItem.internalExtension = userAndDnObj[0].assignedDn.number;
-            }
-          }
-
-          if (userAndDnObj[0].externalNumber && userAndDnObj[0].externalNumber.uuid !== 'none') {
-            userItem.directLine = userAndDnObj[0].externalNumber.pattern;
-          }
+          Analytics.trackAddUsers(Analytics.eventNames.SAVE, null, createPropertiesForAnalyltics());
+          $state.go('users.add.results');
+        })
+        .finally(function () {
+          $rootScope.$broadcast('USER_LIST_UPDATED');
+          $scope.btnOnboardLoading = false;
         });
-
-        var tempUserArray = [],
-          entitleList = [],
-          licenseList = [],
-          chunk = Config.batchSize;
-
-        // notes:
-        // - start with all enabled entitlements
-        entitleList = getEntitlements('add');
-
-        // - as of 2017-05-19, this conditional branch does not collect enabled entitlements
-        if (Authinfo.hasAccount()) {
-          licenseList = getAccountLicenses('additive');
-
-          // - so either isolate the messenger interop entitlement, or reset the list
-          entitleList = MessengerInteropService.hasAssignableMessageOrgEntitlement()
-            ? _.filter(entitleList, { entitlementName: 'messengerInterop' })
-            : [];
-        }
-
-        entitleList = entitleList.concat(getHybridServicesEntitlements('add'));
-
-        $scope.numAddedUsers = 0;
-        $scope.numUpdatedUsers = 0;
-        for (var i = 0; i < usersList.length; i += chunk) {
-          tempUserArray = usersList.slice(i, i + chunk);
-          Userservice.onboardUsers(tempUserArray, entitleList, licenseList)
-            .then(successCallback)
-            .catch(errorCallback);
-        }
-      } else if (!optionalOnboard) {
-        Notification.error('usersPage.validEmailInput');
-        deferred.reject();
-      } else {
-        deferred.resolve();
-      }
-      return deferred.promise;
     }
-
-    /* Used by the hybrid services component, because you need at least one paid license to enable hybrid services  */
-    $scope.userIsLicensed = function () {
-      return !_.isEmpty(getAccountLicenses());
-    };
 
     $scope.hybridServicesEntitlements = [];
     $scope.updateHybridServicesEntitlements = function (entitlements) {
@@ -2095,7 +1712,8 @@ require('./_user-add.scss');
       isFTW = true;
       var deferred = $q.defer();
 
-      if (getUsersList().length === 0) {
+      var userList = OnboardService.parseUsersList($scope.model.userList);
+      if (userList.length === 0) {
         $q.resolve($scope.wizard.nextTab()).then(function () {
           deferred.reject();
         });
@@ -2475,28 +2093,6 @@ require('./_user-add.scss');
       });
     };
 
-    $scope.syncStatusNext = function () {
-      return $q(function (resolve, reject) {
-        if (!$scope.wizard.isLastStep()) {
-          userArray = [];
-          if ($scope.userList && $scope.userList.length > 0) {
-            userArray = $scope.userList.map(function (user) {
-              return user.Email;
-            });
-          }
-          if (userArray.length === 0) {
-            Notification.error('firstTimeWizard.uploadDirSyncEmpty');
-            reject();
-          } else {
-            $scope.model.numMaxUsers = userArray.length;
-            resolve();
-          }
-        } else {
-          resolve();
-        }
-      });
-    };
-
     // hack to allow adding services when exiting the users.manage.advanced.add.ob.syncStatus state
     $scope.dirsyncInitForServices = function () {
       userArray = [];
@@ -2603,7 +2199,7 @@ require('./_user-add.scss');
         return csvPromise.then(function () {
           return $q(function (resolve) {
             if (userArray.length > 0) {
-              Userservice.onboardUsers(userArray, entitlementArray, licenseArray, cancelDeferred.promise).then(function (response) {
+              Userservice.onboardUsersLegacy(userArray, entitlementArray, licenseArray, cancelDeferred.promise).then(function (response) {
                 successCallback(response, (startIndex - userArray.length) + 1, userArray.length);
               }).catch(function (response) {
                 errorCallback(response, (startIndex - userArray.length) + 1, userArray.length);

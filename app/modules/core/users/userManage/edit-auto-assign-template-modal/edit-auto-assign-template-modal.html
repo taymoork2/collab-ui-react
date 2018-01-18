@@ -19,11 +19,13 @@
     <assignable-services
       subscriptions="$ctrl.sortedSubscriptions"
       on-update="$ctrl.recvUpdate($event)"
-      state-data="$ctrl.stateData">
+      state-data="$ctrl.stateData"
+      >
     </assignable-services>
     <hybrid-services-entitlements-panel
       entitlements-callback="$ctrl.recvHybridServicesEntitlementsPayload(entitlements)"
-      has-assignable-licenses="$ctrl.hasAssignableLicenses">
+      state-data="$ctrl.stateData"
+      >
     </hybrid-services-entitlements-panel>
   </div>
 </multi-step-modal>

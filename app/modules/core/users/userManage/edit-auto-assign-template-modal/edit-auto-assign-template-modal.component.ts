@@ -11,7 +11,7 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
   constructor(
     private $state: ng.ui.IStateService,
     private Analytics,
-    private Orgservice,
+    private AutoAssignTemplateService,
   ) {}
 
   public $onInit(): void {
@@ -25,19 +25,13 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
       return;
     }
 
-    this.Orgservice.getLicensesUsage()
-      .then((subscriptions) => {
-        this.sortedSubscriptions = _.sortBy(subscriptions, 'subscriptionId');
-        this.stateData = {
-          subscriptions: this.sortedSubscriptions,
-        };
+    // otherwise use default initialization
+    this.stateData = {};
+    this.AutoAssignTemplateService.getSortedSubscriptions()
+      .then(sortedSubscriptions => {
+        this.sortedSubscriptions = sortedSubscriptions;
+        this.stateData.subscriptions = sortedSubscriptions;
       });
-  }
-
-  public get hasAssignableLicenses(): boolean {
-    return _.some(this.sortedSubscriptions, (subscription) => {
-      return !_.isEmpty(subscription.licenses);
-    });
   }
 
   public dismissModal(): void {

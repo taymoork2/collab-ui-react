@@ -23,8 +23,7 @@
                 <span>{{careSetupAssistant.timings.endTime.label}}</span>
               </div>
             </div>
-            <button type="button" class="no-click offhours-closebtn"
-                    ng-class="{ 'no-business-hours': careSetupAssistant.isBusinessHoursDisabled }" translate="common.close"></button>
+            <button type="button" class="no-click offhours-closebtn" ng-class="{ 'no-business-hours': careSetupAssistant.isBusinessHoursDisabled }" translate="common.close" tabindex="-1"></button>
           </section>
         </article>
       </cs-card >
@@ -34,15 +33,17 @@
           <section>
             <div class="offhours-message">
               <div class="h4 message-label" translate="careChatTpl.offHoursMessage"></div>
-              <textarea cs-input
-                        class="h6 message-area"
-                        type="text"
-                        ng-maxlength="careSetupAssistant.lengthConstants.multiLineMaxCharLimit"
-                        validate-characters="careSetupAssistant.InvalidCharacters"
-                        cs-input-messages="careSetupAssistant.multiLineValidationMessage"
-                        ng-model="careSetupAssistant.template.configuration.pages.offHours.message"
-                        ng-model-options="{ allowInvalid: true }" name="offHoursMessage"
-                        ng-class="{'no-message': !careSetupAssistant.isOffHoursMessageValid}"/>
+              <textarea cs-input type="text"
+                class="h6 message-area"
+                id="offHoursTextArea"
+                name="offHoursMessage"
+                ng-maxlength="careSetupAssistant.lengthConstants.multiLineMaxCharLimit"
+                validate-characters="careSetupAssistant.InvalidCharacters"
+                cs-input-messages="careSetupAssistant.multiLineValidationMessage"
+                ng-model="careSetupAssistant.template.configuration.pages.offHours.message"
+                ng-model-options="{ allowInvalid: true }"
+                ng-class="{'no-message': !careSetupAssistant.isOffHoursMessageValid}"
+                placeholder="{{::'careChatTpl.offHoursDefaultMessage' | translate}}"/>
               </textarea>
             </div>
 
@@ -50,39 +51,39 @@
               <div class="h4 business-hours-message" translate="careChatTpl.businessHours"></div>
               <div class="day-picker">
                 <div class="day"
-                     ng-repeat=" dayObj in careSetupAssistant.days"
-                     ng-class="{ 'day-selected': dayObj.isSelected, 'day-unselected': !dayObj.isSelected }"
-                     ng-click="careSetupAssistant.setDay($index)">{{dayObj.day}}</div>
+                  ng-repeat="dayObj in careSetupAssistant.days"
+                  ng-class="{ 'day-selected': dayObj.isSelected, 'day-unselected': !dayObj.isSelected }"
+                  ng-click="careSetupAssistant.setDay($index)"
+                  aria-label="{{::dayObj.label}}">{{::dayObj.day}}</div>
               </div>
               <div class="small ct-input-error" ng-show="!careSetupAssistant.isBusinessDaySelected">
                 <div class="ct-error-icon"><i class="icon icon-error icon-lg"></i></div>
                 <div>{{:: 'careChatTpl.ctValidation.businessDaysSelection' | translate}}</div>
               </div>
-              <div class="time-and-timezone-picker">
-                <cs-checkbox class="h5"
-                             ckid="ctOpen24Hours"
-                             isdisabled="careSetupAssistant.isBusinessHoursDisabled"
-                             ng-model="careSetupAssistant.template.configuration.pages.offHours.schedule.open24Hours"
-                             label="{{:: 'careChatTpl.open24Hours' | translate}}"></cs-checkbox>
+              <div class="time-and-timezone-picker h5">
+                <input cs-input type="checkbox"
+                  id="ctOpen24Hours"
+                  cs-input-label="{{:: 'careChatTpl.open24Hours' | translate}}"
+                  ng-model="careSetupAssistant.template.configuration.pages.offHours.schedule.open24Hours"
+                  ng-disabled="careSetupAssistant.isBusinessHoursDisabled">
                 <div ng-if="!careSetupAssistant.template.configuration.pages.offHours.schedule.open24Hours && !careSetupAssistant.isBusinessHoursDisabled">
                   <div class="time-picker">
                     <div class="start-time">
                       <div class="h5" translate="careChatTpl.offHoursStartTime"></div>
-
                       <cs-select class="time"
-                                 labelfield="label"
-                                 valuefield="value"
-                                 ng-model="careSetupAssistant.timings.startTime"
-                                 options="careSetupAssistant.startTimeOptions"
-                                 on-change-fn="careSetupAssistant.setEndTimeOptions()"></cs-select>
+                        labelfield="label"
+                        valuefield="value"
+                        ng-model="careSetupAssistant.timings.startTime"
+                        options="careSetupAssistant.startTimeOptions"
+                        on-change-fn="careSetupAssistant.setEndTimeOptions()"></cs-select>
                     </div>
                     <div class="end-time">
                       <div class="h5" translate="careChatTpl.offHoursEndTime"></div>
                       <cs-select class="time"
-                                 labelfield="label"
-                                 valuefield="value"
-                                 ng-model="careSetupAssistant.timings.endTime"
-                                 options="careSetupAssistant.endTimeOptions"></cs-select>
+                        labelfield="label"
+                        valuefield="value"
+                        ng-model="careSetupAssistant.timings.endTime"
+                        options="careSetupAssistant.endTimeOptions"></cs-select>
                     </div>
                   </div>
                 </div>
@@ -103,7 +104,7 @@
             </div>
           </section>
         </article>
-      </cs-card >
+      </cs-card>
     </cs-card-layout>
   </div>
 </div>

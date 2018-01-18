@@ -8,7 +8,7 @@ export { RoutingPrefixLengthComponent };
 
 export default angular
   .module('call.settings.routing-prefix-length', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     routingPrefixModalModule,
     settingsServiceModule,

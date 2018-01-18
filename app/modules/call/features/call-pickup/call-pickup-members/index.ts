@@ -9,7 +9,7 @@ import cardUtilsModule from 'modules/core/cards';
 
 export default angular
   .module('call.call-pickup.members', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     require('modules/core/config/urlConfig'),
     require('modules/huron/telephony/cmiServices'),

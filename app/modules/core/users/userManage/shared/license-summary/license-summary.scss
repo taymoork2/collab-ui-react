@@ -1,0 +1,34 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+
+license-summary {
+  .license-summary {
+    border: 1px $gray-light-2 solid;
+    border-collapse: collapse;
+    display: inherit;
+
+    tbody {
+      display: inline-block;
+    }
+
+    tr {
+      display: block;
+      border-top: 1px $gray-light-2 solid;
+    }
+
+    tr:first-child {
+      border-top: none;
+      border-bottom: none;
+    }
+
+    th {
+      background-color: white;
+      border-right: 1px $gray-light-2 solid;
+    }
+
+    .title-offer-name {
+      margin-top: 1rem;
+      color: $gray-dark-2;
+      width: 4.5rem;
+    }
+  }
+}

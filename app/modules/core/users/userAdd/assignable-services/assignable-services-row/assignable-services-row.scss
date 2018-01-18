@@ -1,15 +1,8 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/typography';
 
 assignable-services-row {
   display: block;
-
-  .subscription__header {
-    .icon.toggle {
-      float: right;
-      font-size: 1.125rem;
-    }
-  }
 
   .subscription__content {
     .license__category {

@@ -49,7 +49,14 @@
 
     var fromRouteCall = false;
     var fromDecision = false;
+    var orgHasHybridEnabled = false;
+    var CONSTANTS = {};
 
+    //constants: squareFusionEc and squareFusionUc will used when we replace hybrid toggle with the hybrid api call
+    CONSTANTS.squareFusionEc = 'squared-fusion-ec';
+    CONSTANTS.squareFusionUc = 'squared-fusion-uc';
+    CONSTANTS.ciscouc = 'ciscouc';
+    CONSTANTS.spark = 'spark';
 
     /////////////////////
 
@@ -97,10 +104,16 @@
     // format name with extension
     function formatName(user, extension) {
       var name;
-      if (!_.isUndefined(user.displayName)) {
+      if (!_.isEmpty(_.get(user, 'displayName'))) {
         name = user.displayName;
+      } else if (_.isEmpty(_.get(user.name, 'givenName')) && _.isEmpty(_.get(user.name, 'familyName'))) {
+        name = _.get(user, 'userName');
       } else {
-        name = user.userName;
+        if (_.isEmpty(_.get(user.name, 'givenName'))) {
+          name = _.get(user.name, 'familyName');
+        } else {
+          name = _.get(user.name, 'givenName') + ' ' + _.get(user.name, 'familyName');
+        }
       }
 
       if (!_.isUndefined(extension) && extension.length > 0) {
@@ -185,16 +198,12 @@
         function () {
           // failure
           return null;
-        }
-      );
+        });
     }
     function addExtensionToUsers(aUser, extension) {
       _.forEach(extension, function (ext) {
-        if (_.size(vm.users) < vm.sort.fullLoad) {
-          vm.users.push({
-            description: formatName(aUser, ext),
-            id: aUser.id,
-          });
+        if (checkIfUsersLengthLessThanFullLoad()) {
+          updateUserData(aUser, ext);
         }
       });
     }
@@ -223,7 +232,6 @@
       UserListService.listUsers(startat, vm.sort.maxCount, vm.sort.by, vm.sort.order, function (data) {
         if (data.success) {
           var userInfoPromises = [];
-
           _.forEach(data.Resources, function (aUser) {
             userQuery.userId = aUser.id;
             userInfoPromises.push(getUserExtension(userQuery).then(function (extension) {
@@ -243,12 +251,20 @@
               }
             }).catch(function (error) {
               // if it's not found, there is no extension, don't add to list.
-              if (error.status != 404) {
+              if (error.status === 404) {
+                if (!$scope.voicemail && orgHasHybridEnabled) {
+                  // when user has selected route to user and org has hybrid enabled
+                  if (!_.isEmpty(aUser.entitlements) && (_.indexOf(aUser.entitlements, CONSTANTS.spark) > -1)) {
+                    var sparkCallUser = (_.indexOf(aUser.entitlements, CONSTANTS.ciscouc) > -1);
+                    if (!sparkCallUser && checkIfUsersLengthLessThanFullLoad()) {
+                      // appends (spark) in place of extension in case of callFreeUsers
+                      updateUserData(aUser, CONSTANTS.spark);
+                    }
+                  }
+                }
+              } else {
                 // if CMI user call otherwise failed, not immediately clear if user has extension or not, show just the user in the UI
-                vm.users.push({
-                  description: formatName(aUser, ''),
-                  id: aUser.id,
-                });
+                updateUserData(aUser, '');
               }
             }));
           });
@@ -257,7 +273,7 @@
             // try to offer a minimum amount of matches.
             // if enough users didn't make it past sanity checks,
             // and we're still getting results back, then get some more.
-            if (_.size(vm.users) < vm.sort.fullLoad && _.size(data.Resources) && !abortSearchPromise.promise.$$state.status) {
+            if (checkIfUsersLengthLessThanFullLoad() && _.size(data.Resources) && !abortSearchPromise.promise.$$state.status) {
               startat += vm.sort.maxCount;
               defer.resolve(getUsers(searchStr, startat));
             } else {
@@ -273,6 +289,18 @@
 
       return defer.promise;
     }
+
+    function checkIfUsersLengthLessThanFullLoad() {
+      return (_.size(vm.users) < vm.sort.fullLoad);
+    }
+
+    function updateUserData(user, extension) {
+      vm.users.push({
+        description: formatName(user, extension),
+        id: user.id,
+      });
+    }
+
     function checkForRouteToVU(action, routeToName) {
       // make sure action is V or U not External Number, User, etc
       if (!(action.getName() === routeToName)) {
@@ -328,6 +356,12 @@
             vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
             var action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToUserOrVM, '');
             vm.menuKeyEntry.addAction(action);
+          }
+        }
+        if (!$scope.voicemail) {
+          //TODO: Replace hybrid toggle with actual API call andd add check for whether enterprise trunking is enabled
+          if (AACommonService.isHybridEnabledOnOrg()) {
+            orgHasHybridEnabled = true;
           }
         }
       }

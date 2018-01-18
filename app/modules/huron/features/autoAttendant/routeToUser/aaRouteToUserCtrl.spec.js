@@ -123,120 +123,7 @@ describe('Controller: AARouteToUserCtrl', function () {
     }],
   };
 
-  var userListCISResponse = {
-    totalResults: '3',
-    itemsPerPage: '2',
-    startIndex: '1',
-    schemas: [
-      'urn:scim:schemas:core:1.0',
-      'urn:scim:schemas:extension:cisco:commonidentity:1.0',
-    ],
-    Resources: [{
-      userName: 'dudette@gmail.com',
-      name: {
-        givenName: 'some',
-        familyName: 'user',
-      },
-      entitlements: [
-        'ciscouc',
-        'squared-call-initiation',
-        'spark',
-        'webex-squared',
-      ],
-      id: '47026507-4F83-0B5B-9C1D-8DBA89F2E01C',
-      meta: {
-        created: '2015-11-16T16:40:54.084Z',
-        lastModified: '2016-01-06T18:06:47.999Z',
-        version: '19382735439',
-        location: 'https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b',
-        organizationID: '7e88d491-d6ca-4786-82ed-cbe9efb02ad2',
-      },
-      displayName: 'Super Admin',
-      active: true,
-      licenseID: [
-        'CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32',
-      ],
-      avatarSyncEnabled: false,
-    }, {
-      userName: 'dude@gmail.com',
-      name: {
-        givenName: 'inferior',
-        familyName: 'user',
-      },
-      entitlements: [
-        'ciscouc',
-        'squared-call-initiation',
-        'spark',
-        'webex-squared',
-      ],
-      id: '5FCF9B4A-4A44-943B-4A4A-A397974E97D4',
-      meta: {
-        created: '2015-11-16T16:40:54.084Z',
-        lastModified: '2016-01-06T18:06:47.999Z',
-        version: '19382735439',
-        location: 'https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b',
-        organizationID: '7e88d491-d6ca-4786-82ed-cbe9efb02ad2',
-      },
-      active: true,
-      licenseID: [
-        'CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32',
-      ],
-      avatarSyncEnabled: false,
-    }, {
-      userName: 'dudette@gmail.com',
-      name: {
-        givenName: 'some',
-        familyName: 'user',
-      },
-      entitlements: [
-        'ciscouc',
-        'squared-call-initiation',
-        'spark',
-        'webex-squared',
-      ],
-      id: '47026507-4F83-0B5B-9C1D-8DBA89F2E01C',
-      meta: {
-        created: '2015-11-16T16:40:54.084Z',
-        lastModified: '2016-01-06T18:06:47.999Z',
-        version: '19382735439',
-        location: 'https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b',
-        organizationID: '7e88d491-d6ca-4786-82ed-cbe9efb02ad2',
-      },
-      displayName: 'Test Admin',
-      active: true,
-      licenseID: [
-        'CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32',
-      ],
-      avatarSyncEnabled: false,
-    }, {
-      userName: 'dudette@gmail.com',
-      name: {
-        givenName: 'some',
-        familyName: 'user',
-      },
-      entitlements: [
-        'ciscouc',
-        'squared-call-initiation',
-        'spark',
-        'webex-squared',
-      ],
-      id: '47026507-4F83-0B5B-9C1D-8DBA89F2E01C',
-      meta: {
-        created: '2015-11-16T16:40:54.084Z',
-        lastModified: '2016-01-06T18:06:47.999Z',
-        version: '19382735439',
-        location: 'https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b',
-        organizationID: '7e88d491-d6ca-4786-82ed-cbe9efb02ad2',
-      },
-      displayName: 'AA Admin',
-      active: true,
-      licenseID: [
-        'CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32',
-      ],
-      avatarSyncEnabled: false,
-    }],
-    success: true,
-  };
+  var userListCISResponse = getJSONFixture('huron/json/autoAttendant/userListCISResponse.json');
 
   var userListCISResponse2 = {
     totalResults: '3',
@@ -390,6 +277,8 @@ describe('Controller: AARouteToUserCtrl', function () {
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
     aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
+
+    spyOn(aaCommonService, 'isHybridEnabledOnOrg').and.returnValue(true);
 
     var listUsersUrl = UrlConfig.getScimUrl(authinfo.getOrgId()) +
       '?' + '&' + listUsersProps.attributes +
@@ -601,17 +490,76 @@ describe('Controller: AARouteToUserCtrl', function () {
       expect(controller.users[1].description).toEqual(nameNumber);
     });
 
-    it('should omit user with 404 on extension', function () {
+    it('should show user with extension response as 404 for call free users', function () {
+      var result = 'Super Admin (spark)';
       cmiCompleteUserGet.respond(404);
 
       var controller = $controller('AARouteToUserCtrl', {
         $scope: $scope,
       });
 
-      controller.sort.fullLoad = 0;
+      controller.sort.fullLoad = 8;
 
       controller.getUsers();
 
+      $httpBackend.flush();
+
+      $scope.$apply();
+      expect(controller.users.length).toEqual(4);
+      expect(controller.users[0].description).toEqual(result);
+    });
+
+    it('should show user email id when dispalyName, firstname and lasname are empty', function () {
+      var result = 'user@gmail.com (spark)';
+      cmiCompleteUserGet.respond(404);
+
+      var controller = $controller('AARouteToUserCtrl', {
+        $scope: $scope,
+      });
+
+      controller.sort.fullLoad = 8;
+
+      controller.getUsers();
+
+      $httpBackend.flush();
+
+      $scope.$apply();
+      expect(controller.users.length).toEqual(4);
+      expect(controller.users[2].description).toEqual(result);
+    });
+
+    it('should show user lastname when dispalyName and firstName is empty', function () {
+      var result = 'Super Admin (spark)';
+      cmiCompleteUserGet.respond(404);
+
+      var controller = $controller('AARouteToUserCtrl', {
+        $scope: $scope,
+      });
+
+      controller.sort.fullLoad = 8;
+
+      controller.getUsers();
+
+      $httpBackend.flush();
+
+      $scope.$apply();
+      expect(controller.users.length).toEqual(4);
+      expect(controller.users[0].description).toEqual(result);
+    });
+
+
+    it('when user has selected route to voicemail and extension response is 404, it should omit that user', function () {
+      $scope.voicemail = true;
+      cmiCompleteUserGet.respond(404);
+      var controller = $controller('AARouteToUserCtrl', {
+        $scope: $scope,
+      });
+
+      // user with both display name and extension should have both
+
+      controller.sort.fullLoad = 8;
+      controller.sort.minOffered = 1;
+      controller.getUsers();
       $httpBackend.flush();
 
       $scope.$apply();

@@ -30,6 +30,8 @@
     var urlUpdated = false;
     var hasSessionVarOptionsChecked = false;
     var basicCredentialUpdated = false;
+    CONSTANTS.secureHttpProtocol = 'https://';
+    CONSTANTS.httpProtocol = 'http://';
     CONSTANTS.passwordToBeDisplayed = '**********';
     CONSTANTS.idSelectorPrefix = '#';
 
@@ -86,6 +88,11 @@
     vm.isDynamicsValueUpdated = isDynamicsValueUpdated;
     vm.onBasicAuthSlider = onBasicAuthSlider;
     vm.displayWarning = displayWarning;
+    vm.getUrlErrorMessages = getUrlErrorMessages;
+    vm.showFullErrorMessage = false;
+    vm.showSecureUrlErrorMessage = false;
+    vm.onUrlBoxFocus = onUrlBoxFocus;
+    vm.urlBoxFocussed = false;
     /////////////////////
 
     $scope.$on('CE Updated', function () {
@@ -392,7 +399,7 @@
         populateBasicAuth(action);
         if (initialPageEnterCount === 0) {
           lastSavedVariableList = action.variableSet;
-          lastSavedDynList = _.get(vm.menuEntry, 'actions[0].url');
+          lastSavedDynList = _.cloneDeep(_.get(vm.menuEntry, 'actions[0].url'));
           lastSaveDynamicValueSet = vm.dynamics;
           lastSavedApiRequest = vm.restApiRequest;
           lastSavedApiResponse = vm.restApiResponse;
@@ -441,11 +448,7 @@
 
     function stepNext() {
       vm.currentStep++;
-      if (urlUpdated) {
-        action.url = vm.menuEntry.actions[0].dynamicList;
-      } else {
-        action.url = vm.menuEntry.actions[0].url;
-      }
+      action.url = checkUrl();
       action.username = vm.username;
       if (!_.isEqual(vm.password, CONSTANTS.passwordToBeDisplayed)) {
         action.password = Buffer.from(vm.password).toString('base64');
@@ -492,9 +495,9 @@
 
     function isNextDisabled() {
       if (vm.basicAuthButton) {
-        return (_.isEmpty(vm.url) || vm.url === '<br class="ng-scope">' || !validatePassword() || !validateUserName() || !hasSessionVarOptionsChecked);
+        return (_.isEmpty(vm.url) || vm.url === '<br class="ng-scope">' || !validatePassword() || !validateUserName() || validateUrl() || !hasSessionVarOptionsChecked);
       }
-      return (_.isEmpty(vm.url) || vm.url === '<br class="ng-scope">' || !hasSessionVarOptionsChecked);
+      return (_.isEmpty(vm.url) || vm.url === '<br class="ng-scope">' || validateUrl() || !hasSessionVarOptionsChecked);
     }
 
     function callTestRestApiConfigs() {
@@ -600,11 +603,14 @@
     }
 
     function createAssignmentTable() {
+      var selectedVariables = [];
+      var nonSelectedVariables = [];
+      var tableWithSortedVariables = [];
       var tempTableData = [];
       var validJsonResponse = isValidJson(vm.restApiResponse);
       if (validJsonResponse) {
         _.forEach(validJsonResponse, function (value, key) {
-          if (_.isString(value)) {
+          if (_.isString(value) || _.isNumber(value) || _.isBoolean(value)) {
             var obj = {};
             obj.responseKey = key;
             obj.responseValue = value;
@@ -617,8 +623,16 @@
             tempTableData.push(obj);
           }
         });
+        _.forEach(tempTableData, function (tempData) {
+          if (tempData.hasOwnProperty('selected')) {
+            selectedVariables.push(tempData);
+          } else {
+            nonSelectedVariables.push(tempData);
+          }
+        });
+        tableWithSortedVariables = _.concat(_.orderBy(selectedVariables, ['responseKey'], ['asc']), _.orderBy(nonSelectedVariables, ['responseKey'], ['asc']));
       }
-      vm.tableData = tempTableData;
+      vm.tableData = tableWithSortedVariables;
     }
 
     function isValidJson(jsonData) {
@@ -631,8 +645,74 @@
 
     $scope.$on('dynamicListUpdated', function () {
       isDynamicsValueUpdated();
+      onUrlBoxFocus();
+      getUrlErrorMessages();
     });
 
+    function getUrlErrorMessages() {
+      // To show relevant error message when user enters incorrect url
+      var url = decodeUrl();
+      if (!_.isEmpty(url)) {
+        url = url.toLowerCase();
+        if (!_.startsWith(url, CONSTANTS.secureHttpProtocol)) {
+          if (_.startsWith(url, CONSTANTS.httpProtocol)) {
+            vm.showSecureUrlErrorMessage = true;
+            vm.showFullErrorMessage = false;
+          } else {
+            vm.showSecureUrlErrorMessage = false;
+            vm.showFullErrorMessage = true;
+          }
+        } else {
+          vm.showFullErrorMessage = false;
+          vm.showSecureUrlErrorMessage = false;
+        }
+      } else {
+        vm.showFullErrorMessage = true;
+        vm.showSecureUrlErrorMessage = false;
+      }
+      vm.urlBoxFocussed = false;
+    }
+
+    function decodeUrl() {
+      // decodes the url into a single string
+      var url = _.cloneDeep(checkUrl()),
+        result = '';
+      _.forEach(url, function (value) {
+        var decodedUrl = decodedValue(_.get(value.action.eval, 'value'));
+        if (!_.isEmpty(decodedUrl)) {
+          result = result.concat(decodedUrl);
+        }
+      });
+      return result;
+    }
+
+    function validateUrl() {
+      // validates whether url entered consists secure protocol or not
+      var url = decodeUrl();
+      if (!_.isEmpty(url)) {
+        url = url.toLowerCase();
+        if (!_.startsWith(url, CONSTANTS.secureHttpProtocol)) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return true;
+      }
+    }
+
+    function onUrlBoxFocus() {
+      // check updated when url box is on focus
+      vm.urlBoxFocussed = true;
+    }
+
+    function checkUrl() {
+      if (urlUpdated) {
+        return _.get(vm.menuEntry.actions[0], 'dynamicList');
+      } else {
+        return _.get(vm.menuEntry.actions[0], 'url');
+      }
+    }
 
     function init() {
       $scope.schedule = aa_schedule;

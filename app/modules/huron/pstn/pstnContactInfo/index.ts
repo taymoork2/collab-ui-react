@@ -4,7 +4,7 @@ import terminusServiceModule from 'modules/huron/pstn/terminus.service';
 
 export default angular
   .module('huron.pstn.pstn-contactInfo', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     notificationModule,
     terminusServiceModule,

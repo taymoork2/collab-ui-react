@@ -9,6 +9,7 @@ describe('Component: crServicesPanels:', () => {
       '$state',
       '$translate',
       'Authinfo',
+      'FeatureToggleService',
       'MessengerInteropService',
     );
 
@@ -16,6 +17,8 @@ describe('Component: crServicesPanels:', () => {
     this.mock.getConferenceServices = getJSONFixture('core/json/authInfo/confServices.json');
     this.mock.basicLicenses = require('./fake--OnboardCtrl--scope--basicLicenses.json');
     this.mock.advancedLicenses = require('./fake--OnboardCtrl--scope--advancedLicenses.json');
+
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
   });
 
   describe('primary behaviors (controller):', () => {
@@ -112,7 +115,17 @@ describe('Component: crServicesPanels:', () => {
     });
 
     describe('showMessengerInteropToggle():', () => {
-      it('should return the result of "MessengerInteropService.hasAssignableMessageOrgEntitlement()"', function () {
+      it('should always return false while in edit mode', function () {
+        _.set(this, '$state.current.name', 'editService');
+        spyOn(this.MessengerInteropService, 'hasAssignableMessageOrgEntitlement').and.returnValue(true);
+        this.compileComponent('crServicesPanels');
+        expect(this.controller.showMessengerInteropToggle()).toBe(false);
+        this.MessengerInteropService.hasAssignableMessageOrgEntitlement.and.returnValue(false);
+        expect(this.controller.showMessengerInteropToggle()).toBe(false);
+      });
+
+      it('should return the result of "MessengerInteropService.hasAssignableMessageOrgEntitlement()" while onboarding a user', function () {
+        _.set(this, '$state.current.name', 'users.add.services');
         spyOn(this.MessengerInteropService, 'hasAssignableMessageOrgEntitlement').and.returnValue(true);
         this.compileComponent('crServicesPanels');
         expect(this.controller.showMessengerInteropToggle()).toBe(true);

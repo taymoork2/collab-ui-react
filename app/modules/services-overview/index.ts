@@ -23,8 +23,9 @@ import { HybridMediaInactiveCardComponent } from 'modules/services-overview/new-
 import { Office365FailModalComponent } from 'modules/services-overview/new-hybrid/office-365-fail-modal/office-365-fail-modal.component';
 import { Office365SetupModalComponent } from 'modules/services-overview/new-hybrid/office-365-setup-modal/office-365-setup-modal.component';
 import { Office365TestModalComponent } from 'modules/services-overview/new-hybrid/office-365-test-modal/office-365-test-modal.component';
-import { OnPremisesActiveCardComponent } from 'modules/services-overview/new-hybrid/active/on-premises-card.component';
 import { ServicesOverviewComponent } from 'modules/services-overview/services-overview.component';
+import { HybridTestingInactiveCardComponent } from 'modules/services-overview/new-hybrid/inactive/hybrid-testing-inactive-card.component';
+import { HybridTestingActiveCardComponent } from 'modules/services-overview/new-hybrid/active/hybrid-testing-active-card.component';
 
 export default angular
   .module('services-overview', [
@@ -36,6 +37,7 @@ export default angular
     require('modules/core/notifications').default,
     require('modules/core/proPack').default,
     require('modules/core/scripts/services/authinfo'),
+    require('modules/core/users/userAdd/shared').default,
     require('modules/hds/services/hds.service'),
     require('modules/services-overview/new-hybrid/prerequisites-modals/private-trunk-prereq').default,
     require('modules/hercules/private-trunk/private-trunk-services').default,
@@ -43,6 +45,7 @@ export default angular
     require('modules/hercules/services/enterprise-private-trunk-service').default,
     require('modules/hercules/services/hybrid-services-cluster.service').default,
     require('modules/hercules/services/uss.service').default,
+    require('modules/hcs/task-manager/shared').default,
   ])
   .component('cardUsersSummary', new CardUsersSummaryComponent())
   .component('enableUsersModal', new EnableUsersModalComponent())
@@ -67,6 +70,7 @@ export default angular
   .component('office365FailModal', new Office365FailModalComponent())
   .component('office365SetupModal', new Office365SetupModalComponent())
   .component('office365TestModal', new Office365TestModalComponent())
-  .component('onPremisesCard', new OnPremisesActiveCardComponent())
   .component('servicesOverview', new ServicesOverviewComponent())
+  .component('hybridTestingInactiveCard', new HybridTestingInactiveCardComponent())
+  .component('hybridTestingActiveCard', new HybridTestingActiveCardComponent())
   .name;

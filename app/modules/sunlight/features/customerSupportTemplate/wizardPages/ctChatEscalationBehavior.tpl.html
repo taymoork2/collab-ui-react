@@ -24,6 +24,7 @@
                           cs-input-label="{{evaData.label}}"
                           ng-change="careSetupAssistant.onEVAOptionChange()"
                           ng-disabled="evaData.isDisabled"
+                          ng-click="careSetupAssistant.setRequiredValue()"
                           >
                           <span class="ct-info-icon" ng-if="!evaData.isDisabled">
                             <i tooltip-html-unsafe={{evaData.tooltipHtml}}
@@ -43,6 +44,9 @@
                      <i class="icon icon-info"></i>
                     </span>
                     <span class="body-small setting-info ng-binding" translate="careChatTpl.evaSettingInfo"></span>
+                  </div>
+                  <div class="h6 eva-enabled-info" ng-if="careSetupAssistant.evaConfig.isEvaConfigured">
+                    <a ng-href="{{careSetupAssistant.evaLearnMoreLink}}" translate="careChatTpl.learnMoreLink" target="_blank"></a><span  class="msg" translate="careChatTpl.evaEnabledSettingInfo"></span>
                   </div>
               </section>
           </article>

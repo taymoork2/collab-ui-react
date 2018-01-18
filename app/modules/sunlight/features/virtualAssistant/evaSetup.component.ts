@@ -21,6 +21,8 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
   public template = {
     templateId: '',
     name: '',
+    ownerId: '',
+    ownerDetails: {},
     configuration: {
       mediaType: this.EvaService.evaServiceCard.type,
       pages: {
@@ -111,6 +113,8 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
       const emailAddress = this.$stateParams.template.email;
       this.template.configuration.pages.evaEmail.value = emailAddress.substring(0, emailAddress.indexOf('@'));
       this.template.configuration.pages.evaDefaultSpace.selectedDefaultSpace.id = this.$stateParams.template.defaultSpaceId;
+      this.template.ownerId = this.$stateParams.template.ownerId;
+      this.template.ownerDetails = this.$stateParams.template.ownerDetails;
 
       if (this.$stateParams.template.icon) {
         this.avatarUploadState = this.avatarState.PREVIEW;
@@ -142,7 +146,6 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
         return 'hidden';
     }
   }
-
   private setSelectedDefaultSpace(): void {
     //show selected space on edit
     if (this.isEditFeature) {
@@ -161,37 +164,35 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     controller.SparkService.listRooms().then((response) => {
       const allSpaces = response.items;
       if (allSpaces && allSpaces.length > 0) {
-        controller.SparkService.getPerson('me').then((meResponse) => {
-          const meId = meResponse.id;
-          const spacesCreatedByThisUser = _.filter(allSpaces, { creatorId: meId });
-          // Find the left over spaces
-          const otherSpaces = _.pullAll(allSpaces, spacesCreatedByThisUser);
-          if (otherSpaces && otherSpaces.length > 0) {
-            controller.SparkService.listMemberships().then((membershipResponse) => {
-              const allMemberships = membershipResponse.items;
-              // Find all moderatored spaces
-              if (allMemberships && allMemberships.length > 0) {
-                // Find space Ids that is a moderator
-                const allModeratoredSpaceIds = allMemberships.map(function(item) {
-                  if (item.isModerator) {
-                    return item.roomId;
-                  }
-                });
-                // Find all spaces that matched the moderator space id
-                const moderatoredSpaces = otherSpaces.filter(function (item) {
-                  return _.indexOf(allModeratoredSpaceIds, item.id) >= 0;
-                });
-                // Combine the spaces created by this user and moderatored spaces
-                const defaultSpaces = _.concat(spacesCreatedByThisUser, moderatoredSpaces);
-                this.template.configuration.pages.evaDefaultSpace.defaultSpaceOptions = _.sortBy(defaultSpaces, 'title');
-                this.setSelectedDefaultSpace();
-              }
-            });
-          } else {
-            this.template.configuration.pages.evaDefaultSpace.defaultSpaceOptions = _.sortBy(spacesCreatedByThisUser, 'title');
-            this.setSelectedDefaultSpace();
-          }
-        });
+        const meId = controller.SparkService.getMyPersonId();
+        const spacesCreatedByThisUser = _.filter(allSpaces, { creatorId: meId });
+        // Find the left over spaces
+        const otherSpaces = _.pullAll(allSpaces, spacesCreatedByThisUser);
+        if (otherSpaces && otherSpaces.length > 0) {
+          controller.SparkService.listMemberships().then((membershipResponse) => {
+            const allMemberships = membershipResponse.items;
+            // Find all moderatored spaces
+            if (allMemberships && allMemberships.length > 0) {
+              // Find space Ids that is a moderator
+              const allModeratoredSpaceIds = allMemberships.map(function(item) {
+                if (item.isModerator) {
+                  return item.roomId;
+                }
+              });
+              // Find all spaces that matched the moderator space id
+              const moderatoredSpaces = otherSpaces.filter(function (item) {
+                return _.indexOf(allModeratoredSpaceIds, item.id) >= 0;
+              });
+              // Combine the spaces created by this user and moderatored spaces
+              const defaultSpaces = _.concat(spacesCreatedByThisUser, moderatoredSpaces);
+              this.template.configuration.pages.evaDefaultSpace.defaultSpaceOptions = _.sortBy(defaultSpaces, 'title');
+              this.setSelectedDefaultSpace();
+            }
+          });
+        } else {
+          this.template.configuration.pages.evaDefaultSpace.defaultSpaceOptions = _.sortBy(spacesCreatedByThisUser, 'title');
+          this.setSelectedDefaultSpace();
+        }
       } // end of if there are any spaces
     });
   }
@@ -230,7 +231,13 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     const avatarDataUrl = this.template.configuration.pages.vaAvatar.fileValue;
     const defaultSpaceId = this.template.configuration.pages.evaDefaultSpace.selectedDefaultSpace.id;
     if (this.isEditFeature) {
-      this.updateFeature(this.template.templateId, name, this.orgId, email, defaultSpaceId, avatarDataUrl);
+      const result = this.EvaService.getWarningIfNotOwner(this.template);
+      if (!result.valid) {
+        this.handleUserAccessForEditError();
+        this.Notification.warning(result.warning.message, result.warning.args);
+      } else {
+        this.updateFeature(this.template.templateId, name, this.orgId, email, defaultSpaceId, avatarDataUrl);
+      }
     } else {
       this.createFeature(name, this.orgId, email, defaultSpaceId, avatarDataUrl);
     }
@@ -246,18 +253,27 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
    */
   private createFeature(name: string, orgId: string, email: string, defaultSpaceId: string, avatarDataUrl?: string): void {
     const controller = this;
-    controller.service.addExpertAssistant(name, orgId, email, defaultSpaceId, avatarDataUrl)
-      .then(function () {
-        controller.handleFeatureCreation();
-        controller.writeMetrics();
-      })
-      .catch(function (response) {
+    controller.service.listExpertAssistants().then(function (data: any) {
+      if (data && data.items && data.items.length >= 1) {
+        controller.evaAlreadyExisted = true;
+        controller.retryButtonDisabled = true;
         controller.handleFeatureError();
-        controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.createConfigFailureText'), {
-          featureName: controller.$translate.instant('careChatTpl.virtualAssistant.eva.featureText.name'),
-        });
-        controller.Analytics.trackEvent(controller.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_CREATE_FAILURE);
-      });
+        controller.Notification.error(controller.getMessageKey('messages.createEvaFailureText'));
+      } else {
+        controller.service.addExpertAssistant(name, orgId, email, defaultSpaceId, avatarDataUrl)
+          .then(function () {
+            controller.handleFeatureCreation();
+            controller.writeMetrics();
+          })
+          .catch(function (response) {
+            controller.handleFeatureError(response);
+            controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.createConfigFailureText'), {
+              featureName: controller.$translate.instant('careChatTpl.virtualAssistant.eva.featureText.name'),
+            });
+            controller.Analytics.trackEvent(controller.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_CREATE_FAILURE);
+          });
+      }
+    });
   }
 
   public isNameValid(): boolean {
@@ -298,7 +314,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
         controller.writeMetrics();
       })
       .catch(function (response) {
-        controller.handleFeatureError();
+        controller.handleFeatureError(response);
         controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.updateConfigFailureText'));
       });
   }

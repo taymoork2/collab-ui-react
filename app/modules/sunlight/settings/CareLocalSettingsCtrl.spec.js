@@ -17,6 +17,7 @@ describe('CareLocalSettingsCtrl', function () {
       PENDING: 'Pending',
       SUCCESS: 'Success',
       FAILURE: 'Failure',
+      INITIALIZING: 'Initializing',
     };
     this.constants.RoutingType = {
       PICK: 'pick',
@@ -38,6 +39,7 @@ describe('CareLocalSettingsCtrl', function () {
     spyOn(this.Authinfo, 'isCareVoice').and.returnValue(isCareVoice);
     spyOn(this, '$interval').and.callThrough();
     spyOn(this.SunlightUtilitiesService, 'removeCareSetupKey').and.callFake(function () { });
+    spyOn(this.FeatureToggleService, 'atlasCareCvcToCdcMigrationGetStatus').and.returnValue(this.$q.resolve(false));
     this.sunlightChatConfigUrl = this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/chat';
     this.aaCSOnboardingUrl = this.HuronConfig.getCesUrl() + '/customers/' + this.Authinfo.getOrgId() + '/config/csOnboardingStatus';
   }
@@ -920,6 +922,285 @@ describe('CareLocalSettingsCtrl', function () {
       expect(this.controller.state).toBe(this.constants.ONBOARDED);
       this.$httpBackend.flush();
       expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+    });
+
+    it('should check for AA Onboarding, if CS is already Onboarded', function () {
+      var fakeResponse = {
+        data: {
+          csOnboardingStatus: this.constants.status.SUCCESS,
+        },
+      };
+      var cesPostResponse = {
+        status: 204,
+      };
+      initAAFeatureToggleSpies.call(this, true, true);
+      spyOn(this.AutoAttendantConfigService, 'getCSConfig').and.returnValue(this.$q.resolve(fakeResponse));
+      spyOn(this.SunlightConfigService, 'aaOnboard').and.returnValue(this.$q.resolve('fake aaOnboard response'));
+      spyOn(this.AutoAttendantConfigService, 'cesOnboard').and.returnValue(this.$q.resolve(cesPostResponse));
+      spyOn(this.Notification, 'success').and.returnValue(true);
+      initController.call(this);
+      this.$httpBackend.flush();
+      expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      this.controller.onboardToCare();
+      this.$scope.$apply();
+      this.$httpBackend.expectGET(this.urServiceUrlRegEx)
+        .respond(200, this.queueDetails);
+      this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
+        .respond(200, {
+          csOnboardingStatus: this.constants.status.SUCCESS,
+          appOnboardStatus: this.constants.status.SUCCESS,
+          aaOnboardingStatus: this.constants.status.SUCCESS,
+          jwtAppOnboardingStatus: this.constants.status.SUCCESS,
+        });
+      this.controller.sunlightOnboardingState = this.constants.ONBOARDED;
+      this.$interval.flush(10001);
+      this.$httpBackend.flush();
+      expect(this.SunlightUtilitiesService.removeCareSetupKey).toHaveBeenCalled();
+      this.$scope.$apply();
+      this.$interval.flush(10001);
+      expect(this.AutoAttendantConfigService.cesOnboard).toHaveBeenCalled();
+      expect(this.controller.state).toBe(this.constants.ONBOARDED);
+      expect(this.Notification.success).toHaveBeenCalled();
+    });
+
+    it('should check for AA and CS Onboarding, if CS and AA is already Onboarded', function () {
+      var cesPostResponse = {
+        status: 226,
+      };
+      initAAFeatureToggleSpies.call(this, true, true);
+      spyOn(this.SunlightConfigService, 'aaOnboard').and.returnValue(this.$q.resolve('fake aaOnboard response'));
+      spyOn(this.AutoAttendantConfigService, 'cesOnboard').and.returnValue(this.$q.resolve(cesPostResponse));
+      spyOn(this.Notification, 'success').and.returnValue(true);
+      initController.call(this);
+      this.$httpBackend.flush();
+      expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      this.controller.onboardToCare();
+      this.$scope.$apply();
+      this.$httpBackend.expectGET(this.urServiceUrlRegEx)
+        .respond(200, this.queueDetails);
+      this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
+        .respond(200, {
+          csOnboardingStatus: this.constants.status.SUCCESS,
+          appOnboardStatus: this.constants.status.SUCCESS,
+          aaOnboardingStatus: this.constants.status.SUCCESS,
+          jwtAppOnboardingStatus: this.constants.status.SUCCESS,
+        });
+      this.$interval.flush(10001);
+      this.$httpBackend.flush();
+      expect(this.SunlightUtilitiesService.removeCareSetupKey).toHaveBeenCalled();
+      expect(this.AutoAttendantConfigService.cesOnboard).toHaveBeenCalled();
+      expect(this.controller.state).toBe(this.constants.ONBOARDED);
+      expect(this.Notification.success).toHaveBeenCalled();
+    });
+  });
+
+  describe('AA CS Onboarding ', function () {
+    beforeEach(function () {
+      this.initModules(
+        'Sunlight'
+      );
+    });
+    beforeEach(initDependencies);
+    beforeEach(function () {
+      initSpies.call(this, this.orgId, true);
+      this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
+        .respond(200, {
+          csOnboardingStatus: this.constants.status.SUCCESS,
+          appOnboardStatus: this.constants.status.SUCCESS,
+          jwtAppOnboardingStatus: this.constants.status.SUCCESS,
+          aaOnboardingStatus: this.constants.status.SUCCESS,
+        });
+    });
+
+    it('should check for AA Onboarding, if CS is already Onboarded and catch is encountered for get', function () {
+      var cesPostResponse = {
+        status: 204,
+      };
+      initAAFeatureToggleSpies.call(this, true, true);
+      spyOn(this.AutoAttendantConfigService, 'getCSConfig').and.returnValue(this.$q.reject({
+        statusText: 'server error',
+        status: 500,
+      }));
+      spyOn(this.SunlightConfigService, 'aaOnboard').and.returnValue(this.$q.resolve('fake aaOnboard response'));
+      spyOn(this.AutoAttendantConfigService, 'cesOnboard').and.returnValue(this.$q.resolve(cesPostResponse));
+      spyOn(this.Notification, 'errorWithTrackingId').and.returnValue(true);
+      initController.call(this);
+      this.$httpBackend.flush();
+      expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      this.controller.onboardToCare();
+      this.$scope.$apply();
+      this.$httpBackend.expectGET(this.urServiceUrlRegEx)
+        .respond(200, this.queueDetails);
+      this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
+        .respond(200, {
+          csOnboardingStatus: this.constants.status.SUCCESS,
+          appOnboardStatus: this.constants.status.SUCCESS,
+          aaOnboardingStatus: this.constants.status.SUCCESS,
+          jwtAppOnboardingStatus: this.constants.status.SUCCESS,
+        });
+      this.controller.sunlightOnboardingState = this.constants.ONBOARDED;
+      this.$interval.flush(10001);
+      this.$httpBackend.flush();
+      this.controller.errorCount = 3;
+      this.$scope.$apply();
+      this.$interval.flush(10001);
+      expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
+    });
+    it('should check for AA Onboarding, if CS is already Onboarded and failure occurs', function () {
+      var fakeResponse = {
+        data: {
+          csOnboardingStatus: this.constants.status.FAILURE,
+        },
+      };
+      var cesPostResponse = {
+        status: 204,
+      };
+      initAAFeatureToggleSpies.call(this, true, true);
+      spyOn(this.AutoAttendantConfigService, 'getCSConfig').and.returnValue(this.$q.resolve(fakeResponse));
+      spyOn(this.SunlightConfigService, 'aaOnboard').and.returnValue(this.$q.resolve('fake aaOnboard response'));
+      spyOn(this.AutoAttendantConfigService, 'cesOnboard').and.returnValue(this.$q.resolve(cesPostResponse));
+      spyOn(this.Notification, 'errorWithTrackingId').and.returnValue(true);
+      initController.call(this);
+      this.$httpBackend.flush();
+      expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      this.controller.onboardToCare();
+      this.$scope.$apply();
+      this.$httpBackend.expectGET(this.urServiceUrlRegEx)
+        .respond(200, this.queueDetails);
+      this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
+        .respond(200, {
+          csOnboardingStatus: this.constants.status.SUCCESS,
+          appOnboardStatus: this.constants.status.SUCCESS,
+          aaOnboardingStatus: this.constants.status.SUCCESS,
+          jwtAppOnboardingStatus: this.constants.status.SUCCESS,
+        });
+      this.controller.sunlightOnboardingState = this.constants.ONBOARDED;
+      this.$interval.flush(10001);
+      this.$httpBackend.flush();
+      expect(this.SunlightUtilitiesService.removeCareSetupKey).toHaveBeenCalled();
+      this.$scope.$apply();
+      this.$interval.flush(10001);
+      expect(this.AutoAttendantConfigService.cesOnboard).toHaveBeenCalled();
+      expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
+    });
+
+    it('should check for AA Onboarding, if CS is already Onboarded and progress is the current status', function () {
+      var fakeResponse = {
+        data: {
+          csOnboardingStatus: this.constants.status.INITIALIZING,
+        },
+      };
+      var cesPostResponse = {
+        status: 204,
+      };
+      initAAFeatureToggleSpies.call(this, true, true);
+      spyOn(this.AutoAttendantConfigService, 'getCSConfig').and.returnValue(this.$q.resolve(fakeResponse));
+      spyOn(this.SunlightConfigService, 'aaOnboard').and.returnValue(this.$q.resolve('fake aaOnboard response'));
+      spyOn(this.AutoAttendantConfigService, 'cesOnboard').and.returnValue(this.$q.resolve(cesPostResponse));
+      initController.call(this);
+      this.$httpBackend.flush();
+      expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      this.controller.onboardToCare();
+      this.$scope.$apply();
+      this.$httpBackend.expectGET(this.urServiceUrlRegEx)
+        .respond(200, this.queueDetails);
+      this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
+        .respond(200, {
+          csOnboardingStatus: this.constants.status.SUCCESS,
+          appOnboardStatus: this.constants.status.SUCCESS,
+          aaOnboardingStatus: this.constants.status.SUCCESS,
+          jwtAppOnboardingStatus: this.constants.status.SUCCESS,
+        });
+      this.controller.sunlightOnboardingState = this.constants.ONBOARDED;
+      this.$interval.flush(10001);
+      this.$httpBackend.flush();
+      expect(this.SunlightUtilitiesService.removeCareSetupKey).toHaveBeenCalled();
+      this.$scope.$apply();
+      this.$interval.flush(10001);
+      expect(this.AutoAttendantConfigService.cesOnboard).toHaveBeenCalled();
+      expect(this.controller.state).toBe(this.constants.IN_PROGRESS);
+    });
+    it('should check for AA Onboarding, if CS is already Onboarded and catch is encountered for post', function () {
+      var fakeResponse = {
+        data: {
+          csOnboardingStatus: this.constants.status.SUCCESS,
+        },
+      };
+      initAAFeatureToggleSpies.call(this, true, true);
+      spyOn(this.AutoAttendantConfigService, 'getCSConfig').and.returnValue(this.$q.resolve(fakeResponse));
+      spyOn(this.SunlightConfigService, 'aaOnboard').and.returnValue(this.$q.resolve('fake aaOnboard response'));
+      spyOn(this.AutoAttendantConfigService, 'cesOnboard').and.returnValue(this.$q.reject({
+        statusText: 'server error',
+        status: 500,
+      }));
+      initController.call(this);
+      this.$httpBackend.flush();
+      expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      this.controller.onboardToCare();
+      this.$scope.$apply();
+      this.$httpBackend.expectGET(this.urServiceUrlRegEx)
+        .respond(200, this.queueDetails);
+      this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
+        .respond(200, {
+          csOnboardingStatus: this.constants.status.SUCCESS,
+          appOnboardStatus: this.constants.status.SUCCESS,
+          aaOnboardingStatus: this.constants.status.SUCCESS,
+          jwtAppOnboardingStatus: this.constants.status.SUCCESS,
+        });
+      this.controller.sunlightOnboardingState = this.constants.ONBOARDED;
+      this.$interval.flush(10001);
+      this.$httpBackend.flush();
+      this.controller.errorCount = 3;
+      this.$scope.$apply();
+      this.$interval.flush(10001);
+      expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+    });
+  });
+
+  describe('Care Settings - When with cvcToCdcMigration feature flag  ', function () {
+    beforeEach(function () {
+      this.initModules(
+        'Sunlight'
+      );
+    });
+    beforeEach(initDependencies);
+    beforeEach(function () {
+      initSpies.call(this, this.orgId, false, true);
+      initAAFeatureToggleSpies.call(this, false, true);
+      spyOn(this.Authinfo, 'isCareAndCDC').and.returnValue(true);
+      spyOn(this.SunlightConfigService, 'aaOnboard').and.returnValue(this.$q.resolve({ status: 204 }));
+    });
+
+    it('should on board aa when k1 enable and feature flag are true', function () {
+      initController.call(this);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      this.controller.csOnboardingStatus = this.constants.status.SUCCESS;
+      this.controller.careSetupDoneByOrgAdmin = false;
+      this.controller.featureToggles.cvcAsCdcFeatureToggle = true;
+
+      this.controller.onboardToCare();
+      this.$scope.$apply();
+      expect(this.controller.aaOnboardingStatus).toBe(this.constants.status.SUCCESS);
+    });
+
+    it('should not on board aa when k1 enable and feature flag are false', function () {
+      initController.call(this);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      this.controller.csOnboardingStatus = this.constants.status.SUCCESS;
+      this.controller.careSetupDoneByOrgAdmin = false;
+      this.controller.featureToggles.cvcAsCdcFeatureToggle = false;
+
+      this.controller.onboardToCare();
+      this.$scope.$apply();
+      expect(this.controller.aaOnboardingStatus).toBe(this.constants.status.UNKNOWN);
     });
   });
 });

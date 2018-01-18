@@ -27,13 +27,13 @@
       <a class="h6 link" translate="subscriptions.signIn" ng-click="$ctrl.nonCISignIn()"></a>
     </div>
   </div>
-  <div class="category-description category-detail site-detail" ng-if="$ctrl.isSharedMeetingsLicense() && $ctrl.isSharedMeetingsReportsEnabled">
+  <div class="category-description category-detail site-detail" ng-if="$ctrl.isSharedMeetingsLicense()">
     <div class="h5 license-detail" ng-class="{ 'warning': $ctrl.getWarning($ctrl.offer.usage) }" translate="sharedMeetingReports.hostsSharingLicenses" translate-values="{ usage: $ctrl.offer.usage }"></div>
     <div class="h5 license-detail" ng-class="{ 'warning': $ctrl.getWarning($ctrl.offer.totalUsage) }" translate="sharedMeetingReports.volumeOfLicenses" translate-values="{ volume: $ctrl.offer.volume }"></div>
     <span class="h6" translate="sharedMeetingReports.title"></span>
     <a class="name h6 link" ng-click="$ctrl.launchSharedMeetingsLicenseUsageReport()" translate="sharedMeetingReports.link"></a>
   </div>
-  <div class="category-description category-detail  site-detail" ng-if="$ctrl.isSharedMeetingsLicense() && $ctrl.isSharedMeetingsReportsEnabled">
+  <div class="category-description category-detail  site-detail" ng-if="$ctrl.isSharedMeetingsLicense()">
     <span class="h5 license-detail" translate="sharedMeetingReports.availableSharedLicenses"></span>
     <span class="h6">{{::$ctrl.offer.volume}}</span>
   </div>

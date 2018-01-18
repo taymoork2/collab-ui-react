@@ -153,7 +153,7 @@
               stateFound = false;
             }
             break;
-          case 'users.add':
+          case 'users.add.manual':
             msg = 'In invite users page';
             eType = this.getEventType('customerInviteUsersPage');
             break;

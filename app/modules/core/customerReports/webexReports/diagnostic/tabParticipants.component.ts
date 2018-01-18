@@ -31,15 +31,15 @@ class Participants implements ng.IComponentController {
   private getParticipants() {
     this.SearchService.getParticipants(this.conferenceID)
       .then((res) => {
-        _.forEach(res, (item) => {
-          const browser = this.SearchService.getBrowser(item.browser);
-          const platform = this.SearchService.getPlartform({ platform: item.platform, sessionType: item.sessionType });
-          item.Duration = moment.duration(item.duration * 1000).humanize();
-          item.endReason = this.SearchService.getParticipantEndReson(item.reason);
-          item.startDate = this.SearchService.timestampToDate(item.joinTime, 'MMMM Do, YYYY h:mm:ss A');
-          item.platform_ = browser ? `${browser} on ${platform}` : platform;
+        this.gridData = _.map(res, (item: any) => {
+          const device = this.SearchService.getDevice({ platform: item.platform, browser: item.browser, sessionType: item.sessionType });
+          return _.assignIn({}, item, {
+            platform_: _.get(device, 'name'),
+            duration: this.SearchService.getDuration(item.duration),
+            endReason: this.SearchService.getParticipantEndReson(item.reason),
+            startDate: this.SearchService.timestampToDate(item.joinTime, 'YYYY-MM-DD hh:mm:ss'),
+          });
         });
-        this.gridData = res;
         this.loading = false;
         this.setGridOptions();
       })
@@ -51,15 +51,17 @@ class Participants implements ng.IComponentController {
 
   private setGridOptions(): void { // TODO , will translate next time
     const columnDefs = [{
-      sortable: true,
+      width: '14%',
       cellTooltip: true,
       field: 'userName',
       displayName: 'User Name',
     }, {
+      width: '16%',
       field: 'startDate',
       displayName: 'Start Date',
     }, {
-      field: 'Duration',
+      width: '10%',
+      field: 'duration',
       displayName: 'Duration',
     }, {
       field: 'platform_',

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: DevicesCtrl', function () {
+describe('Controller: devicesLegacyController', function () {
   var $scope, $state, $controller, controller, $httpBackend, $timeout, $q;
   var UrlConfig, AccountOrgService, Authinfo, FeatureToggleService, Userservice, ServiceDescriptorService;
 
@@ -61,7 +61,7 @@ describe('Controller: DevicesCtrl', function () {
   }
 
   function initController() {
-    controller = $controller('DevicesCtrl', {
+    controller = $controller('devicesLegacyController', {
       $scope: $scope,
       $state: $state,
     });
@@ -166,7 +166,7 @@ describe('Controller: DevicesCtrl', function () {
 
   describe('Feature toggle loading', function () {
     it('should resolve toggle loading', function () {
-      controller = $controller('DevicesCtrl', {
+      controller = $controller('devicesLegacyController', {
         $scope: $scope,
         $state: $state,
         FeatureToggleService: FeatureToggleService,
@@ -179,7 +179,7 @@ describe('Controller: DevicesCtrl', function () {
     it('should resolve toggle loading if a promise fails', function () {
       var deferred = $q.defer();
       FeatureToggleService.csdmHybridCallGetStatus.and.returnValue(deferred.promise);
-      controller = $controller('DevicesCtrl', {
+      controller = $controller('devicesLegacyController', {
         $scope: $scope,
         $state: $state,
       });

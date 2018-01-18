@@ -100,7 +100,7 @@
     require('modules/core/window').default,
     require('modules/online/analytics').default,
     require('modules/online/upgrade').default,
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     'ct.ui.router.extras.sticky',
     'ct.ui.router.extras.previous',
     'ngAnimate',

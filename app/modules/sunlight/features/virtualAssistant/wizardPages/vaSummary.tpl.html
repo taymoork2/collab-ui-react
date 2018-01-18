@@ -8,6 +8,7 @@
   </div>
   <button loading="$ctrl.creatingTemplate"
           cs-btn
+          ng-disabled="$ctrl.retryButtonDisabled"
           id="vaSetupFinishBtn"
           class="btn btn--primary vaSetupFinishBtn"
           ng-click="$ctrl.submitFeature()">
@@ -21,8 +22,8 @@
       <div>{{$ctrl.getText('summary.editWarning')}}</div>
     </div>
   </div>
-  <div class="h6 retry-message" ng-if="$ctrl.saveTemplateErrorOccurred && !$ctrl.creatingTemplate">
+  <div class="h6 retry-message" ng-if="$ctrl.displayGenericErrorMessage()">
     <i class="icon icon-error"></i>
-    <span class="error-message">{{$ctrl.getText('summary.errorCreateTemplate')}}</span>
+    <span class="error-message">{{$ctrl.summaryErrorMessage}}</span>
   </div>
 </div>

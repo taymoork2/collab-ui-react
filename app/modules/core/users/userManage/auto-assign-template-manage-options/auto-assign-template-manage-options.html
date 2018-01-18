@@ -6,10 +6,13 @@
     </button>
     <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
       <li class="menu-item">
-        <a href ng-click="" translate="userManage.org.moreOptions.modifyAutoAssign"></a>
+        <a href ng-click="$ctrl.modifyAutoAssignTemplate()" translate="userManage.org.moreOptions.modifyAutoAssign"></a>
       </li>
       <li class="menu-item">
-        <a href ng-click="" translate="userManage.org.moreOptions.deactivateAutoAssign"></a>
+        <a href ng-if="$ctrl.isTemplateActive" ng-click="$ctrl.deactivateAutoAssignTemplate()"
+          translate="userManage.org.moreOptions.deactivateAutoAssign"></a>
+        <a href ng-if="!$ctrl.isTemplateActive" ng-click="$ctrl.activateAutoAssignTemplate()"
+          translate="userManage.org.moreOptions.activateAutoAssign"></a>
       </li>
       <li class="menu-item">
         <a href ng-click="$ctrl.deleteAutoAssignTemplate()" translate="userManage.org.moreOptions.deleteAutoAssign"></a>

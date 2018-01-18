@@ -55,7 +55,7 @@ export class UserManageEmailSuppressController implements ng.IComponentControlle
     switch (this.manageType) {
       case ManageType.MANUAL:
         this.Analytics.trackAddUsers(this.Analytics.eventNames.NEXT, this.Analytics.sections.ADD_USERS.uploadMethods.MANUAL);
-        this.$state.go('users.add');
+        this.$state.go('users.add.manual');
         break;
 
       case ManageType.BULK:

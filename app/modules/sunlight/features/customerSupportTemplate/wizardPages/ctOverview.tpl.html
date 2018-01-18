@@ -1,16 +1,16 @@
 <div>
   <div class="ct-title">
-    <span class="h2 ct-title-overview" translate='careChatTpl.overview'></span>
+    <span class="h3" translate='careChatTpl.overview'></span>
   </div>
-  <div class="h4 ct-title-desc">{{careSetupAssistant.getLocalisedText('careChatTpl.overviewDesc')}}</div>
+  <div class="h5 ct-title-desc">{{careSetupAssistant.getLocalisedText('careChatTpl.overviewDesc')}}</div>
 
   <div class="ct-sa-content overview-card-layout">
     <cs-card-layout block-view="true" class="ct-card-center">
       <cs-card ng-repeat="card in careSetupAssistant.overviewCards" class="medium">
         <article ng-class="{'ct-card-border-enabled': careSetupAssistant.getCardConfig(card.name).enabled,
-                 'ct-card-border-disabled': !careSetupAssistant.getCardConfig(card.name).enabled,
-                 'ct-card-disabled': !careSetupAssistant.isOverviewCardConfigurable(card.name) }"
-                 class="ct-card-overview">
+          'ct-card-border-disabled': !careSetupAssistant.getCardConfig(card.name).enabled,
+          'ct-card-disabled': !careSetupAssistant.isOverviewCardConfigurable(card.name) }"
+          class="ct-card-overview">
           <!--NOTE: Once we have card icons available, we should uncomment the below line-->
           <!--<i ng-class="['icon', 'icon-' + careChatSA.overview.{{card.name}},'icon-4x','ct-card-img']"></i>-->
           <div class="card-icons-inline card-media-icon">
@@ -23,22 +23,30 @@
             <div class="h6 ct-card-desc">
                  {{careSetupAssistant.getLocalisedText('careChatTpl.ctOverview.' + card.name + '.desc')}}
             </div>
-            <div class="ct-toggle-position"
-                 ng-switch on="(careSetupAssistant.shouldShowOverviewPageTooltip(card.name))">
+            <div class="ct-toggle-position" ng-switch on="(careSetupAssistant.shouldShowOverviewPageTooltip(card.name))">
               <div ng-switch-when="true">
                 <div tooltip="{{careSetupAssistant.overviewPageTooltipText(card.name)}}"
-                     tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-animation="false">
+                  tooltip-trigger="mouseenter focus"
+                  tooltip-placement="top"
+                  tooltip-animation="false"
+                  aria-label="{{careSetupAssistant.overviewPageTooltipText(card.name)}}"
+                  tabindex="0"
+                  ng-keypress="careSetupAssistant.enterNextPage($event)">
                   <cs-toggle-switch ng-model="careSetupAssistant.getCardConfig(card.name).enabled"
-                                    toggle-id={{card.name}}
-                                    is-disabled="true"
-                                    size="small">
+                    toggle-id={{card.name}}
+                    is-disabled="true"
+                    size="small"
+                    cs-aria-label="{{::careSetupAssistant.getLocalisedText('careChatTpl.ctOverview.' + card.name + '.desc') | translate}}"
+                    ng-keypress="careSetupAssistant.enterNextPage($event)">
                   </cs-toggle-switch>
                 </div>
               </div>
               <div ng-switch-default>
                 <cs-toggle-switch ng-model="careSetupAssistant.getCardConfig(card.name).enabled"
-                                  toggle-id={{card.name}}
-                                  size="small">
+                  toggle-id={{card.name}}
+                  size="small"
+                  cs-aria-label="{{::careSetupAssistant.getLocalisedText('careChatTpl.ctOverview.' + card.name + '.desc') | translate}}"
+                  ng-keypress="careSetupAssistant.enterNextPage($event)">
                 </cs-toggle-switch>
               </div>
             </div>
@@ -46,7 +54,6 @@
         </article>
       </cs-card>
     </cs-card-layout>
-    <div class="ct-sa-footer">
-    </div>
+    <div class="ct-sa-footer"></div>
   </div>
 </div>

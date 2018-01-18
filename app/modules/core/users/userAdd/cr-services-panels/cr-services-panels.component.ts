@@ -8,6 +8,7 @@ class CrServicesPanelsController implements ng.IComponentController {
   public isCareAndCVCEnabled = false;
   public basicLicenses: any[];
   public advancedLicenses: any[];
+  public hybridCareToggle: boolean = false;
 
   /* @ngInject */
   constructor (
@@ -17,12 +18,14 @@ class CrServicesPanelsController implements ng.IComponentController {
     private Authinfo,
     private Config: Config,
     private MessengerInteropService: MessengerInteropService,
+    private FeatureToggleService,
   ) {}
 
   public $onInit(): void {
     this.isCareAndCDCEnabled = this.Authinfo.isCareAndCDC();
     this.isCareAndCVCEnabled = this.Authinfo.isCareVoiceAndCVC();
     this.isCareEnabled = this.isCareAndCDCEnabled || this.isCareAndCVCEnabled;
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hybridCare).then((supports) => this.hybridCareToggle = supports);
   }
 
   public hasAssignableMessageItems(): boolean {
@@ -56,7 +59,13 @@ class CrServicesPanelsController implements ng.IComponentController {
   }
 
   public showMessengerInteropToggle(): boolean {
-    return this.MessengerInteropService.hasAssignableMessageOrgEntitlement();
+    // notes:
+    // - as of 2018-01-09, this component can be used both when onboarding new users, or when editing
+    //   services for an individual user
+    // - because we implement control of the `MSGR`-license assignment through a sub-menu in 'Message'
+    //   (in the user-overview), we only allow showing the toggle when in the appropriate UI state
+    //   ('users.add.services')
+    return this.$state.current.name === 'users.add.services' && this.MessengerInteropService.hasAssignableMessageOrgEntitlement();
   }
 
   public checkCMR(cfLic, cmrLics): void {
@@ -83,6 +92,10 @@ class CrServicesPanelsController implements ng.IComponentController {
 
   public careTooltip(): string {
     return '<div class="license-tooltip-html">' + this.$translate.instant('firstTimeWizard.careTooltip') + '</div>';
+  }
+
+  public careTooltipToggle() {
+    return '<div class="license-tooltip-html">' + this.$translate.instant('firstTimeWizard.careTooltipToggle') + '</div>';
   }
 
   public selectedSubscriptionHasBasicLicenses(subscriptionId: string): boolean {

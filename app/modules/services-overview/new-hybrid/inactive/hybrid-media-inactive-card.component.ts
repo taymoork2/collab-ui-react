@@ -1,21 +1,10 @@
-import { FeatureToggleService } from 'modules/core/featureToggle';
 import { IToolkitModalService } from 'modules/core/modal';
 
 class HybridMediaInactiveCardController implements ng.IComponentController {
-  public showPrerequisitesButton = false;
-
   /* @ngInject */
   constructor(
     private $modal: IToolkitModalService,
-    private FeatureToggleService: FeatureToggleService,
   ) {}
-
-  public $onInit(): void {
-    this.FeatureToggleService.hasFeatureToggleOrIsTestOrg(this.FeatureToggleService.features.atlasHybridPrerequisites)
-      .then(support => {
-        this.showPrerequisitesButton = support;
-      });
-  }
 
   public openPrerequisites(): void {
     this.$modal.open({
@@ -51,7 +40,7 @@ export class HybridMediaInactiveCardComponent implements ng.IComponentOptions {
         <p translate="servicesOverview.cards.hybridMedia.description"></p>
       </div>
       <div class="inactive-card_footer">
-        <p ng-if="$ctrl.showPrerequisitesButton"><button class="btn btn--link" ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></button></p>
+        <p><button class="btn btn--link" ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></button></p>
         <p><button class="btn btn--primary" ng-click="$ctrl.openSetUp()" translate="servicesOverview.genericButtons.setup"></button></p>
       </div>
     </article>

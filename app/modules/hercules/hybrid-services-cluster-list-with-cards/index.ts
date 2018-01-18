@@ -6,7 +6,7 @@ export default angular
   .module('hercules.hybrid-services-cluster-list-with-cards', [
     'Squared',
     require('angular-translate'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('modules/core/analytics'),
     require('modules/core/config/config').default,
     require('modules/core/notifications').default,

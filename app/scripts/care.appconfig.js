@@ -25,14 +25,17 @@
         parent: 'care.DetailsBase',
         views: {
           header: {
-            template: require('modules/sunlight/details/detailsHeader.tpl.html'),
-            controller: 'DetailsHeaderCtrl',
-            controllerAs: 'header',
+            template: '<details-header-component></details-header-component>',
           },
           main: {
             template: '<div ui-view></div>',
           },
         },
+      })
+      .state('care.numbers', {
+        url: '/numbers',
+        parent: 'care.Details',
+        template: '<care-numbers-component></care-numbers-component>',
       })
       .state('care.Settings', {
         url: '/settings',
@@ -52,6 +55,12 @@
             return FeatureToggleService.supports(FeatureToggleService.features.atlasVirtualAssistantEnable)
               .then(function (isEnabled) {
                 $state.isVirtualAssistantEnabled = isEnabled;
+              });
+          },
+          isHybridToggleEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
+            return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridEnable)
+              .then(function (isEnabled) {
+                $state.isHybridToggleEnabled = isEnabled;
               });
           },
           isExpertCareAssistantEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
@@ -140,7 +149,6 @@
           deleteFeatureName: null,
           deleteFeatureId: null,
           deleteFeatureType: null,
-          deleteQueueId: null,
         },
       });
   }

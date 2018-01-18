@@ -59,6 +59,7 @@ describe('Controller: TrialCtrl:', function () {
     spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'atlasCareCvcToCdcMigrationGetStatus').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
       return $q.resolve(_.includes(enabledFeatureToggles, param));
     });
@@ -609,6 +610,13 @@ describe('Controller: TrialCtrl:', function () {
             expect(helpers.advanceCareLicenseInputDisabledExpression()).toBeFalsy();
             expect(controller.advanceCareTrial.details.quantity).toEqual(CARE_LICENSE_COUNT_DEFAULT);
           });
+
+          it('advance care license count should be to 0 when cvcAsCdcFeatureToggle is enabled.', function () {
+            controller.advanceCareTrial.details.quantity = CARE_LICENSE_COUNT;
+            controller.cvcAsCdcFeatureToggle = true;
+            expect(helpers.advanceCareLicenseInputDisabledExpression()).toBeTruthy();
+            expect(controller.advanceCareTrial.details.quantity).toEqual(0);
+          });
         });
 
         describe('validateCareLicense:', function () {
@@ -619,6 +627,7 @@ describe('Controller: TrialCtrl:', function () {
             var max = controller._helpers.getCareMaxLicenseCount(controller.careTypes.K1);
             expect(max).toBe(50);
           });
+
           it('care license validation allows max value up to and including 50 with advance care enabled', function () {
             controller.details.licenseCount = 50;
             controller.careTrial.enabled = true;
@@ -627,11 +636,32 @@ describe('Controller: TrialCtrl:', function () {
             expect(max).toBe(50);
           });
 
+          it('care license validation allows value to be minimum of - sum of care license and advance care license  or 50 with cvcAsCdcFeatureToggle enabled', function () {
+            controller.cvcAsCdcFeatureToggle = true;
+            var presetData = {
+              careLicenseValue: 15,
+              advanceCareLicenseValue: 20,
+            };
+            var results = {};
+            var hasCallEntitlement = false;
+            var paidServices = controller.paidServices;
+            var result = controller._helpers.getExistingOrgInitResults(results, hasCallEntitlement, presetData, paidServices);
+            expect(result.careTrial.details.quantity).toBe(35);
+          });
+
           it('care license validation disallows value greater than details.licenseCount', function () {
             controller.details.licenseCount = CARE_LICENSE_COUNT - 1;
             controller.careTrial.enabled = true;
             var max = controller._helpers.getCareMaxLicenseCount(controller.careTypes.K1);
             expect(max).toBe(CARE_LICENSE_COUNT - 1);
+          });
+
+          it('care license validation allows max value up to and including 50 with cvcAsCdcFeatureToggle enabled', function () {
+            controller.details.licenseCount = 50;
+            controller.careTrial.enabled = true;
+            controller.cvcAsCdcFeatureToggle = true;
+            var max = controller._helpers.getCareMaxLicenseCount(controller.careTypes.K1);
+            expect(max).toBe(50);
           });
         });
 
@@ -644,13 +674,18 @@ describe('Controller: TrialCtrl:', function () {
             expect(max).toBe(50);
           });
 
-          it('advance care license validation allows max value up to and including 50 with advance care enabled', function () {
-            controller.details.licenseCount = 50;
+          it('advance care license validation allows value up to and including 50.', function () {
+            controller.details.licenseCount = 100;
             controller.advanceCareTrial.enabled = true;
-            controller.careTrial.details.quantity = 25;
-
-            var max = controller._helpers.getCareMaxLicenseCount(controller.careTypes.K1);
+            controller.careTrial.details.quantity = 0;
+            var max = controller._helpers.getCareMaxLicenseCount(controller.careTypes.K2);
             expect(max).toBe(50);
+          });
+
+          it('advance care license quantity should be 0 when cvcAsCdcFeatureToggle enabled', function () {
+            controller.advanceCareTrial.enabled = true;
+            controller.cvcAsCdcFeatureToggle = true;
+            expect(controller.advanceCareTrial.details.quantity).toBe(0);
           });
 
           it('advance care license validation disallows value greater than details.licenseCount', function () {
@@ -825,6 +860,7 @@ describe('Controller: TrialCtrl:', function () {
       });
     });
   });
+
   describe('start trial mode:', function () {
     beforeEach(function () {
       var stateParams = {
@@ -1219,6 +1255,15 @@ describe('Controller: TrialCtrl:', function () {
             expect(controller.advanceCareTrial.details.quantity).toEqual(0);
           });
 
+          it('advance care license count should be 0 when cvcAsCdcFeatureToggle enable.', function () {
+            controller.cvcAsCdcFeatureToggle = true;
+            var results = {};
+            var hasCallEntitlement = false;
+            var stateDefaults = controller.stateDefaults;
+            var result = controller._helpers.getNewOrgInitResults(results, hasCallEntitlement, stateDefaults);
+            expect(result.advanceCareTrial.details.quantity).toEqual(0);
+          });
+
           it('advance care license count shows default value when enabled.', function () {
             controller.advanceCareTrial.details.quantity = 0;
             controller.advanceCareTrial.enabled = true;
@@ -1273,6 +1318,10 @@ describe('Controller: TrialCtrl:', function () {
             controller.careTrial.enabled = false;
             var max = controller._helpers.getCareMaxLicenseCount(controller.careTypes.K2);
             expect(max).toBe(40);
+          });
+          it('advance care license field should be disable when cvcAsCdcFeatureToggle is enabled.', function () {
+            controller.cvcAsCdcFeatureToggle = true;
+            expect(controller.cvcAsCdcFeatureToggle).toBeTruthy();
           });
         });
       });

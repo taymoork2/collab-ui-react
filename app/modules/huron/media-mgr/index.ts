@@ -9,7 +9,7 @@ export * from './media-mgr.service';
 
 export default angular
   .module('huron.media-mgr', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     require('ng-file-upload'),
     require('modules/core/accessibility').default,

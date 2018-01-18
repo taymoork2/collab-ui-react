@@ -6,7 +6,7 @@
     <span class="h3" ng-if="!(careSetupAssistant.selectedMediaType === careSetupAssistant.mediaTypes.chatPlusCallback)" translate='careChatTpl.customerInformation'>
     </span>
   </div>
-  <div class="h5 ct-title-desc">{{careSetupAssistant.getLocalisedText('careChatTpl.customerInfoDesc')}}</div>
+  <div class="h5 ct-title-desc">{{careSetupAssistant.getLocalisedTextWithEscalation('careChatTpl.customerInfoDesc')}}</div>
 
   <div class="ct-customer ct-sa-content">
     <cs-card-layout block-view="true" class="customer-card-layout">
@@ -14,8 +14,7 @@
         <div class="h4 cardHeader1" translate="careChatTpl.preview"></div>
         <article class="customer-preview-article ct-article header-border header-background articleHeight">
 
-          <header class="customerHeader ct-selectable-container"
-                  selectable ng-click="careSetupAssistant.setActiveItem('welcomeHeader')" autofocus>
+          <header id="customerHeader" class="customerHeader ct-selectable-container" selectable ng-click="careSetupAssistant.setActiveItem('welcomeHeader')" autofocus>
             <label class="welcomeText textOverflow">{{careSetupAssistant.getAttributeParam('value', 'header', 'welcomeHeader')}}</label>
             <label class="orgText textOverflow">{{careSetupAssistant.getCustomerInformationFormFields().welcomeHeader.attributes[1].value}}</label>
           </header>
@@ -34,10 +33,7 @@
           </section>
 
           <div>
-            <a href="" class="btn btn--medium disabled ct-flex-center"
-            ng-class="careSetupAssistant.getCustomerInformationBtnClass()"
-            translate="{{careSetupAssistant.getLocalisedText('careChatTpl.customerInfoBtnText')}}">
-            </a>
+            <a href class="btn btn--medium disabled ct-flex-center" ng-class="careSetupAssistant.getCustomerInformationBtnClass()">{{careSetupAssistant.getLocalisedText('careChatTpl.customerInfoBtnText')}}</a>
           </div>
 
         </article>
@@ -51,66 +47,53 @@
           </section>
           <section class="ct-attribute-section ng-hide" ng-hide="careSetupAssistant.activeItem === undefined">
             <div class="row ct-attribute-row" ng-repeat="attribute in careSetupAssistant.activeItem.attributes">
-              <label
-                      ng-if="attribute.name === 'header'"
-                      class="cs-input__label ct-attribute-field-label  h4 large-11" translate="careChatTpl.windowTitleLabel">
-              </label>
-              <label
-                      ng-if="attribute.name === 'label'"
-                      class="cs-input__label ct-attribute-field-label  h4 large-11" translate="careChatTpl.label">
-              </label>
-              <label
-                      ng-if="attribute.name === 'hintText'"
-                      class="cs-input__label ct-attribute-field-label  h4 large-11" translate="careChatTpl.hintText">
-              </label>
-              <label
-                      ng-if="attribute.name === 'type'"
-                      class="cs-input__label ct-attribute-field-label  h4 large-11" translate="careChatTpl.type">
-              </label>
+              <label ng-if="attribute.name === 'type'|| attribute.name === 'header' || attribute.name === 'label' || attribute.name === 'hintText'"
+                class="cs-input__label ct-attribute-field-label h4 large-11"
+                translate="{{careSetupAssistant.getLabel(attribute.name)}}"></label>
 
-              <input
+              <input cs-input type="text"
                 ng-if="attribute.name === 'header' || attribute.name === 'label' || attribute.name === 'hintText'"
                 id="attribute.fieldName"
                 class="h5 inputField ct-attribute-field-textbox large-11"
-                type="text"
                 ng-model="attribute.value"
-                cs-input
-                name="{{attribute.name }}"
+                name="{{attribute.name}}"
                 cs-input-messages="careSetupAssistant.singleLineValidationMessage50"
                 ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit50"
                 validate-characters="careSetupAssistant.InvalidCharacters"
                 ng-model-options="{ allowInvalid: true }"
                 ng-disabled="careSetupAssistant.isSecondFieldForCallBack() && attribute.name === 'hintText'"
-              />
+                placeholder="{{careSetupAssistant.getLabel(attribute.name) | translate}}"
+                ng-keypress="careSetupAssistant.enterNextPage($event)"/>
+
               <div ng-if="attribute.name === 'required'" class="h6 cs-radio-group ct-attribute-field-radio">
-                <input
-                  cs-input
+                <div class="no-margin" ng-repeat="option in careSetupAssistant.requiredOptions">
+                <input cs-input type="radio"
                   ng-disabled="careSetupAssistant.isSecondFieldForCallBack()"
-                  ng-repeat="option in careSetupAssistant.requiredOptions"
-                  type="radio"
                   ng-model="attribute.value"
                   id="{{option.id}}"
-                  name="{{option.id}}"
+                  name="requiredOptions"
                   value="{{option.id}}"
                   cs-input-label="{{option.text}}"
-                />
+                  ng-keypress="careSetupAssistant.enterNextPage($event)"/>
+                  <div class="escalation-required-info" ng-if="careSetupAssistant.isExpertEscalationSelected() && option.id == 'required' && careSetupAssistant.checkIfTypeCategory(careSetupAssistant.activeItem.attributes)">
+                    <span  class="msg" translate="careChatTpl.escalationEnabledRequiredInfo"></span><a ng-href="{{careSetupAssistant.evaLearnMoreLink}}" translate="careChatTpl.learnMoreLink" target="_blank"></a>
+                  </div>
+                  </div>
               </div>
 
               <div ng-if="attribute.name === 'type'">
                 <cs-select
-                        ng-model="attribute.value"
-                        ng-init="careSetupAssistant.validateType(attribute.value)"
-                        ng-change="careSetupAssistant.validateType(attribute.value);"
-                        options="careSetupAssistant.typeOptions"
-                        labelfield="text"
-                        valuefield="id"
-                        is-disabled="careSetupAssistant.isSecondFieldForCallBack()"
-                        ng-class="careSetupAssistant.validateType(attribute.value) ? 'ct-attribute-field-textbox' : 'ct-attribute-field-textbox_error'"
-                        placeholder="attribute.defaultValue">
+                  ng-model="attribute.value"
+                  ng-init="careSetupAssistant.validateType(attribute.value)"
+                  ng-change="careSetupAssistant.validateType(attribute.value);"
+                  options="careSetupAssistant.typeOptions"
+                  labelfield="text"
+                  valuefield="id"
+                  is-disabled="careSetupAssistant.isSecondFieldForCallBack()"
+                  ng-class="careSetupAssistant.validateType(attribute.value) ? 'ct-attribute-field-textbox' : 'ct-attribute-field-textbox_error'"
+                  placeholder="attribute.defaultValue">
                 </cs-select>
-                <label
-                        ng-if="careSetupAssistant.isDefined(attribute.value, 'helpText')"
-                        class="cs-input__label ct-attribute-field-helptext large-11">
+                <label ng-if="careSetupAssistant.isDefined(attribute.value, 'helpText')" class="cs-input__label ct-attribute-field-helptext large-11">
                   <em>{{attribute.value.helpText}}</em>
                 </label>
                 <div class="small ct-input-error" ng-show="careSetupAssistant.isTypeDuplicate">
@@ -119,22 +102,30 @@
                 </div>
               </div>
               <div class="row ct-attribute-row ct-customer-info-category-input right-inner-addon" ng-if="attribute.name == 'type' && attribute.value.id == 'category'">
+                <div class="escalation-required-info escalation-required-info-category" ng-if="careSetupAssistant.isExpertEscalationSelected()">
+                  <span  class="msg" translate="careChatTpl.escalationEnabledCategoryInfo"></span>
+                  <span popover-html="careSetupAssistant.evaSpaceTooltipData"
+                        popover-placement="auto right"
+                        popover-trigger="click"
+                        popover-append-to-body="false"
+                        class="icon icon-question-circle icon-eva-details"
+                        ng-class="{'icon-eva-details-toggle': careSetupAssistant.isPopoverActive}"
+                        ng-click="careSetupAssistant.popoverClicked()">
+                  </span>
+                </div>
                 <i class="icon icon-add-contain ct-add-contain" ng-click="careSetupAssistant.addCategoryOption()"></i>
-                <input
-                        cs-input
-                        ng-readonly="{{!careSetupAssistant.validateType(attribute.value)}}"
-                        name="categoryTextBox"
-                        id="categoryTextBox"
-                        class="h5 inputField ct-attribute-field-textbox large-11 ng-pristine ng-valid ng-scope ng-not-empty ng-touched icon-add-contain"
-                        type="text"
-                        ng-keypress="careSetupAssistant.onEnterKey($event)"
-                        ng-model="careSetupAssistant.categoryOptionTag"
-                        cs-input-messages="careSetupAssistant.singleLineValidationMessage50"
-                        ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit50"
-                        validate-characters="careSetupAssistant.InvalidCharacters"
-                        placeholder="{{:: 'careChatTpl.categoryHintText' | translate}}"
-                        ng-model-options="{ allowInvalid: true }"
-                />
+                <input cs-input type="text"
+                  ng-readonly="{{!careSetupAssistant.validateType(attribute.value)}}"
+                  name="categoryTextBox"
+                  id="categoryTextBox"
+                  class="h5 inputField ct-attribute-field-textbox large-11 ng-pristine ng-valid ng-scope ng-not-empty ng-touched icon-add-contain"
+                  ng-keypress="careSetupAssistant.onEnterKey($event)"
+                  ng-model="careSetupAssistant.categoryOptionTag"
+                  cs-input-messages="careSetupAssistant.singleLineValidationMessage50"
+                  ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit50"
+                  validate-characters="careSetupAssistant.InvalidCharacters"
+                  placeholder="{{:: 'careChatTpl.categoryHintText' | translate}}"
+                  ng-model-options="{ allowInvalid: true }"/>
 
                 <label class="ct-attribute-field-label category-validation-warning" ng-if="careSetupAssistant.isCategoryWarningRequired()">
                   <span class="icon icon-warning no-data-warning"></span>
@@ -142,27 +133,24 @@
                 </label>
                 <div class="category-tokens">
                   <cs-token-field
-                          tokenfieldid="careSetupAssistant.categoryTokensId"
-                          tokens="attribute.categoryOptions"
-                          static="true"></cs-token-field>
+                    tokenfieldid="careSetupAssistant.categoryTokensId"
+                    tokens="attribute.categoryOptions"
+                    static="true"></cs-token-field>
                 </div>
               </div>
             </div>
-            <div ng-if="careSetupAssistant.getFieldByName('welcomeHeader') === careSetupAssistant.activeItem"
-                 class="row ct-attribute-row" >
-              <label class="cs-input__label ct-attribute-field-label  h4 large-11" translate="careChatTpl.defaultOrgLabel">
-              </label>
-               <input id="orgText"
-                      class="h5 inputField ct-attribute-field-textbox large-11"
-                      type="text"
-                      ng-model="careSetupAssistant.getCustomerInformationFormFields().welcomeHeader.attributes[1].value"
-                      cs-input
-                      name="orgText"
-                      cs-input-messages="careSetupAssistant.singleLineValidationMessage50"
-                      ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit50"
-                      validate-characters="careSetupAssistant.InvalidCharacters"
-                      ng-model-options="{ allowInvalid: true }"
-                />
+            <div ng-if="careSetupAssistant.getFieldByName('welcomeHeader') === careSetupAssistant.activeItem" class="row ct-attribute-row">
+              <label class="cs-input__label ct-attribute-field-label h4 large-11" translate="careChatTpl.defaultOrgLabel"></label>
+               <input cs-input type="text"
+                id="orgText"
+                class="h5 inputField ct-attribute-field-textbox large-11"
+                ng-model="careSetupAssistant.getCustomerInformationFormFields().welcomeHeader.attributes[1].value"
+                name="orgText"
+                cs-input-messages="careSetupAssistant.singleLineValidationMessage50"
+                ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit50"
+                validate-characters="careSetupAssistant.InvalidCharacters"
+                ng-model-options="{ allowInvalid: true }"
+                ng-keypress="careSetupAssistant.enterNextPage($event)"/>
               </div>
           </section>
         </article>

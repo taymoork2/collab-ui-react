@@ -28,6 +28,7 @@ describe('Component: upgradeModal', () => {
       '$q',
       '$scope',
       '$state',
+      'Analytics',
       'Auth',
       'Authinfo',
       'Notification',
@@ -35,6 +36,7 @@ describe('Component: upgradeModal', () => {
     );
 
     spyOn(this.$state, 'go');
+    spyOn(this.Analytics, 'trackEvent');
     spyOn(this.Auth, 'logout');
     spyOn(this.Notification, 'success');
     spyOn(this.OnlineUpgradeService, 'getSubscriptionId').and.returnValue(subscriptionId);
@@ -59,6 +61,7 @@ describe('Component: upgradeModal', () => {
     it('should successfuly cancel subscriptions', function () {
       this.view.find(CANCEL_BUTTON).click();
 
+      expect(this.Analytics.trackEvent).toHaveBeenCalled();
       expect(this.OnlineUpgradeService.cancelSubscriptions).toHaveBeenCalled();
       expect(this.Notification.success).toHaveBeenCalledWith('onlineUpgradeModal.cancelSuccess');
       expect(this.OnlineUpgradeService.dismissModal).toHaveBeenCalled();

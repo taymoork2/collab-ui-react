@@ -1,5 +1,5 @@
 import { BmmpService } from './bmmp.service';
-require('bmmp/cisco-bmmp.js');
+require('@atlas/bmmp/cisco-bmmp.js');
 
 export * from './bmmp.service';
 

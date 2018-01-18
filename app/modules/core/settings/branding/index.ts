@@ -14,7 +14,7 @@ export default angular.module('core.settings.branding', [
   require('modules/core/scripts/services/authinfo'),
   require('angular-ui-router'),
   require('angular-translate'),
-  require('collab-ui-ng').default,
+  require('@collabui/collab-ui-ng').default,
   require('modules/core/scripts/services/org.service'),
   require('modules/core/scripts/services/logmetricsservice'),
   require('modules/core/partnerProfile/branding').default,

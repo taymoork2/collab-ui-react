@@ -1,0 +1,16 @@
+<div ng-form="snrWaitTimerForm">
+  <div class="cs-input-group">
+    <p translate="singleNumberReachPanel.snrWaitSeconds"></p>
+    <div class="medium-2 snr-wait-seconds">
+      <cs-select
+        name="snrWaitSeconds"
+        ng-model="$ctrl.snrWaitSeconds"
+        options="$ctrl.snrWaitSecondsOptions"
+        labelfield="name"
+        valuefield="value"
+        ng-change="$ctrl.onAnswerTooLateTimerChanged()">
+      </cs-select>
+    </div>
+    <span class="snr-wait-seconds-label" translate="singleNumberReachPanel.snrSeconds"></span>
+  </div>
+</div>

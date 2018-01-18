@@ -11,23 +11,13 @@ export class SearchService {
     this.url = `${this.UrlConfig.getGeminiUrl()}`;
   }
 
-  public getMeeting(conferenceID) {
-    const url = `${this.url}meetings/${conferenceID}`;
-    return this.$http.get(url).then(this.extractData);
-  }
-
-  public getMeetingDetail(conferenceID) {
-    const url = `${this.url}meetings/${conferenceID}/meeting-detail`;
-    return this.$http.get(url).then(this.extractData);
-  }
-
   public getMeetings(data) {
     const url = `${this.url}meetings`;
     return this.$http.post(url, data).then(this.extractData);
   }
 
-  public getMeetingSession(conferenceID) {
-    const url = `${this.url}meetings/${conferenceID}/session`;
+  public getMeetingDetail(conferenceID) {
+    const url = `${this.url}meetings/${conferenceID}/meeting-detail`;
     return this.$http.get(url).then(this.extractData);
   }
 
@@ -51,28 +41,14 @@ export class SearchService {
     return this.$http.get(url).then(this.extractData);
   }
 
-  public getJoinMeetingQuality(conferenceID) {
-    const url = `${this.url}meetings/${conferenceID}/participants/join-meeting-quality`;
-    return this.$http.get(url).then(this.extractData);
-  }
-
-  public getParticipantDetailInfo(conferenceID, nodeId) {
-    const url = `${this.url}meetings/${conferenceID}/node-ids/${nodeId}/call-legs`;
-    return this.$http.get(url).then(this.extractData);
-  }
-
   public getServerTime() {
     const url = `${this.url}server`;
     return this.$http.get(url).then(this.extractData);
   }
 
   public getStatus(num) {
-    const statusArr = ['inProcess', 'ended'];
+    const statusArr = ['inProgress', 'ended'];
     return this.$translate.instant('webexReports.meetingStatus.' + statusArr[num - 1]);
-  }
-
-  private extractData(response) {
-    return _.get(response, 'data');
   }
 
   public setStorage(key, val) {
@@ -89,14 +65,14 @@ export class SearchService {
       return '';
     }
     const tz = this.getStorage('timeZone');
-    const timeZone: any = tz ? tz : moment.tz.guess();
+    const timeZone = tz ? tz : moment.tz.guess();
     const offset = this.getOffset(timeZone);
-    return moment.utc(date).utcOffset(offset).format('MMMM Do, YYYY h:mm:ss A');
+    return moment.utc(date).utcOffset(offset).format('YYYY-MM-DD hh:mm:ss A');
   }
 
   public getOffset(timeZone) {
     const tz = timeZone ? timeZone : moment.tz.guess();
-    return timeZone === 'ut18' ? '' : moment().tz(tz).format('Z');
+    return moment().tz(tz).format('Z');
   }
 
   public getGuess(tz) {
@@ -115,7 +91,7 @@ export class SearchService {
   }
 
   public getBrowser(num) {
-    const arr = ['Netscape', 'IE', 'Stand alone application', 'MOZILLA', 'FIREFOX', 'SAFARI', 'CHROME'];
+    const arr = ['Netscape', 'IE', 'Stand alone application', 'Mozilia', 'Firefox', 'Safari', 'Chrome'];
     return arr[_.parseInt(num)] ? arr[_.parseInt(num)] : 'Other';
   }
 
@@ -124,7 +100,7 @@ export class SearchService {
       return 'PSTN';
     }
     const key = _.parseInt(obj.platform);
-    const arr = ['Windows', 'MAC', 'Solaris', 'Java', 'Linux', 'Flash', 'Javascript', 'IPHONE', 'MOBILE DEVICE', 'IP PHONE', 'Cisco TP', 'BlackBerry', 'WinMobile', 'Android', 'Nokia'];
+    const arr = ['Windows', 'Mac', 'Solaris', 'Java', 'Linux', 'Flash', 'Javascript', 'iOS', 'MOBILE DEVICE', 'IP Phone', 'Cisco TP', 'BlackBerry', 'WinMobile', 'Android', 'Nokia'];
     return arr[key] ? arr[key] : 'Other';
   }
 
@@ -133,5 +109,47 @@ export class SearchService {
       return '';
     }
     return endReson ? 'Normal' : 'Abnormal';
+  }
+
+  public getDevice(obj) {
+    const browser = _.parseInt(obj.browser);
+    const platform = _.parseInt(obj.platform);
+    const sessionType = _.parseInt(obj.sessionType);
+    const browser_ = this.getBrowser(browser);
+    const platform_ = this.getPlartform(obj);
+    if (_.includes([7, 8, 11, 12, 13, 14], platform)) {
+      return { icon: 'icon-mobile-phone', name: `Mobile: ${platform_}` };
+    }
+
+    if (platform === 10) {
+      return { icon: 'icon-devices', name: 'TelePresence' };
+    }
+
+    if (sessionType === 25 || platform === 9) {
+      return { icon: 'icon-phone', name: 'IP Phone' };
+    }
+
+    if (platform < 7) {
+      return browser === 2 ? { icon: 'icon-application', name: 'Client' } : { icon: 'icon-browser', name: `${platform_}: ${browser_}` };
+    }
+
+    return { icon: '', name: 'Other' };
+  }
+
+  public getDuration(duration) {
+    if (!duration) {
+      return '';
+    }
+    const hours = moment.duration(duration * 1000).get('hours');
+    let minutes: any = moment.duration(duration * 1000).get('minutes');
+    let seconds: any = moment.duration(duration * 1000).get('seconds');
+    minutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+    seconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+
+    return hours ? `${hours}:${minutes}:${seconds}` : `${minutes}:${seconds}`;
+  }
+
+  private extractData(response) {
+    return _.get(response, 'data');
   }
 }

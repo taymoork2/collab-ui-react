@@ -9,7 +9,6 @@ import { Config } from 'modules/core/config/config';
 describe('ServicesOverviewController', () => {
 
   let $componentController: ng.IComponentControllerService;
-  let $httpBackend: ng.IHttpBackendService;
   let $q: ng.IQService;
   let $scope: ng.IScope;
   let ctrl: ServicesOverviewController;
@@ -61,9 +60,8 @@ describe('ServicesOverviewController', () => {
     getStatusForService = spyOn(HybridServicesClusterService, 'getStatusForService').and.returnValue($q.resolve({}));
   });
 
-  function dependencies(_$componentController_, _$httpBackend_, _$q_, _$rootScope_, _Authinfo_, _CloudConnectorService_, _Config_, _EnterprisePrivateTrunkService_, _FeatureToggleService_, _HybridServicesClusterService_) {
+  function dependencies(_$componentController_, _$q_, _$rootScope_, _Authinfo_, _CloudConnectorService_, _Config_, _EnterprisePrivateTrunkService_, _FeatureToggleService_, _HybridServicesClusterService_) {
     $componentController = _$componentController_;
-    $httpBackend = _$httpBackend_;
     $q = _$q_;
     $scope = _$rootScope_.$new();
     Authinfo = _Authinfo_;
@@ -94,26 +92,11 @@ describe('ServicesOverviewController', () => {
       expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.care.title' }).length).toBe(1);
     });
 
-    it('should create 8 hybrid cards', () => {
-      initController();
-      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.clusterList.title' }).length).toBe(1);
-      // 2 Hybrid Calendar cards (sharing the same title) but never displayed at the same time
-      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridCalendar.title' }).length).toBe(2);
-      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridCall.title' }).length).toBe(1);
-      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridMedia.title' }).length).toBe(1);
-      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridDataSecurity.title' }).length).toBe(1);
-      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridContext.title' }).length).toBe(1);
-      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.privateTrunk.title' }).length).toBe(1);
-      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridImp.title' }).length).toBe(1);
-    });
-
     it('should load the webex site list', () => {
       initController();
       expect(Authinfo.getConferenceServicesWithoutSiteUrl).toHaveBeenCalled();
       expect(Authinfo.getConferenceServicesWithLinkedSiteUrl).toHaveBeenCalled();
     });
-
-    // it('should PropackPromises', () => {});
 
     it('should leave servicesToDisplay empty', () => {
       expect(ctrl._servicesToDisplay.length).toBe(0);

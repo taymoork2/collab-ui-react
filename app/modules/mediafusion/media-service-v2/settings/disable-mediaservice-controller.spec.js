@@ -5,7 +5,7 @@ describe('Controller: DisableMediaServiceController', function () {
   beforeEach(angular.mock.module('Mediafusion'));
   beforeEach(angular.mock.module('Hercules'));
 
-  var controller, MediaClusterServiceV2, HybridServicesClusterService, $q, MediaServiceActivationV2, Notification, httpMock, ServiceDescriptorService;
+  var controller, HybridServicesClusterService, $q, MediaServiceActivationV2, Notification, httpMock, ServiceDescriptorService;
 
   // var serviceId = "squared-fusion-media";
   var modalInstance = {
@@ -20,12 +20,11 @@ describe('Controller: DisableMediaServiceController', function () {
     $provide.value('Authinfo', authInfo);
   }));
 
-  beforeEach(inject(function ($state, $controller, _$q_, $translate, _MediaServiceActivationV2_, _Notification_, _MediaClusterServiceV2_, _HybridServicesClusterService_, _$httpBackend_, _ServiceDescriptorService_) {
+  beforeEach(inject(function ($state, $controller, _$q_, $translate, _MediaServiceActivationV2_, _Notification_, _HybridServicesClusterService_, _$httpBackend_, _ServiceDescriptorService_) {
     $q = _$q_;
     MediaServiceActivationV2 = _MediaServiceActivationV2_;
     ServiceDescriptorService = _ServiceDescriptorService_;
     Notification = _Notification_;
-    MediaClusterServiceV2 = _MediaClusterServiceV2_;
     HybridServicesClusterService = _HybridServicesClusterService_;
     spyOn($state, 'go');
     httpMock = _$httpBackend_;
@@ -38,7 +37,6 @@ describe('Controller: DisableMediaServiceController', function () {
 
       MediaServiceActivationV2: MediaServiceActivationV2,
       Notification: Notification,
-      MediaClusterServiceV2: MediaClusterServiceV2,
       HybridServicesClusterService: HybridServicesClusterService,
     });
   }));
@@ -61,11 +59,11 @@ describe('Controller: DisableMediaServiceController', function () {
     expect(modalInstance.close).toHaveBeenCalled();
     expect(Notification.success).toHaveBeenCalled();
   });
-  it('should call the MediaClusterServiceV2 deleteClusterWithConnector for deactivate', function () {
+  it('should call HybridServicesClusterService.deregisterCluster for deactivate', function () {
     var respnse = {
       status: 204,
     };
-    spyOn(MediaClusterServiceV2, 'deleteClusterWithConnector').and.returnValue($q.resolve(respnse));
+    spyOn(HybridServicesClusterService, 'deregisterCluster').and.returnValue($q.resolve(respnse));
     spyOn(ServiceDescriptorService, 'disableService');
     spyOn(MediaServiceActivationV2, 'setisMediaServiceEnabled');
     spyOn(MediaServiceActivationV2, 'disableOrpheusForMediaFusion');
@@ -76,8 +74,8 @@ describe('Controller: DisableMediaServiceController', function () {
     controller.deactivate();
     httpMock.verifyNoOutstandingExpectation();
     expect(controller.step).toBe('2');
-    expect(MediaClusterServiceV2.deleteClusterWithConnector).toHaveBeenCalled();
-    expect(MediaClusterServiceV2.deleteClusterWithConnector.calls.count()).toEqual(2);
+    expect(HybridServicesClusterService.deregisterCluster).toHaveBeenCalled();
+    expect(HybridServicesClusterService.deregisterCluster.calls.count()).toEqual(2);
     expect(ServiceDescriptorService.disableService).toHaveBeenCalled();
     expect(MediaServiceActivationV2.setisMediaServiceEnabled).toHaveBeenCalled();
     expect(MediaServiceActivationV2.disableOrpheusForMediaFusion).toHaveBeenCalled();
@@ -85,14 +83,12 @@ describe('Controller: DisableMediaServiceController', function () {
     expect(MediaServiceActivationV2.disableMFOrgSettingsForDevOps).toHaveBeenCalled();
   });
   it('should notify error when deactivate call fails', function () {
-    spyOn(MediaClusterServiceV2, 'deleteClusterWithConnector').and.returnValue($q.resolve({
-      status: 500,
-    }));
+    spyOn(HybridServicesClusterService, 'deregisterCluster').and.returnValue($q.reject({}));
     spyOn(Notification, 'error');
     controller.clusterIds = ['cluster1', 'cluster2'];
     controller.deactivate();
     httpMock.verifyNoOutstandingExpectation();
-    expect(MediaClusterServiceV2.deleteClusterWithConnector).toHaveBeenCalled();
+    expect(HybridServicesClusterService.deregisterCluster).toHaveBeenCalled();
     expect(Notification.error).toHaveBeenCalled();
     expect(modalInstance.close).toHaveBeenCalled();
   });

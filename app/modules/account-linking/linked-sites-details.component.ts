@@ -1,53 +1,49 @@
-import { LinkingOperation, IACSiteInfo, IGotoWebex } from './account-linking.interface';
+import { IACSiteInfo, IGotoWebex, LinkingMode } from './account-linking.interface';
 
 class LinkedSitesDetailsComponentCtrl implements ng.IComponentController {
 
-  public selectedSite: IACSiteInfo;
+  public selectedSiteInfo: IACSiteInfo;
   public actionList;
-  public originator;
 
   public webexPage: IGotoWebex;
 
+  public showWizardFn: Function;
+  public launchWebexFn: Function;
+
   /* @ngInject */
   constructor(private $log: ng.ILogService,
-              private $stateParams: any,
-              private $state,
+              private $state: ng.ui.IStateService,
+              //private $rootScope: ng.IRootScopeService,
   ) {
-    this.$log.debug('LinkedSitesDetailsComponentCtrl constructor, stateParams:', this.$stateParams);
-    this.selectedSite = this.$stateParams.siteInfo;
-    this.originator = this.$stateParams.originator;
+    this.$log.debug('LinkedSitesDetailsComponentCtrl constructor, stateParams:');
   }
 
   public $onInit() {
-    this.$log.debug('LinkedSitesDetailsComponentCtrl $onInit');
+    this.$log.debug('LinkedSitesDetailsComponentCtrl $onInit, selectedSiteInfo:', this.selectedSiteInfo);
+    // this.$rootScope.$on('ACCOUNT_LINKING_CHANGE', (_event: angular.IAngularEvent, siteInfo, webexData): void => {
+    //   this.selectedSiteInfo.linkingMode = webexData.accountLinkingMode;
+    // });
   }
 
   public modifyLinkingMethod() {
-    this.$state.go('site-list.linked.details.wizard', { siteInfo: this.selectedSite, operation: LinkingOperation.Modify });
+    this.$log.info('Modify linking method by showingw wizard using siteinfo:', this.selectedSiteInfo);
+    this.showWizardFn({ siteInfo: this.selectedSiteInfo });
   }
 
   public showReports(siteUrl) {
     this.$state.go('reports.webex-metrics', { siteUrl: siteUrl });
   }
 
-  public launchSiteAdmin() {
-    this.prepareLaunchButton(this.selectedSite.linkedSiteUrl, true);
+  public launchSiteAdmin(siteUrl) {
+    this.$log.info('Launch Webex site admin from details for site', siteUrl);
+    this.launchWebexFn({ site: siteUrl, useHomepage: false });
   }
 
-  public readyToLaunch(buttonId) {
-    this.$log.debug('readyToLaunch', buttonId);
-    angular.element('#' + buttonId).click();
+  public isAutomaticMode(): boolean {
+    return (this.selectedSiteInfo.linkingMode === LinkingMode.AUTO_AGREEMENT ||
+    this.selectedSiteInfo.linkingMode === LinkingMode.AUTO_VERIFY_DOMAIN);
   }
 
-  private prepareLaunchButton(siteUrl, toSiteListPage) {
-
-    this.webexPage = {
-      siteUrl: siteUrl,
-      toSiteListPage: toSiteListPage,
-    };
-
-    this.$log.debug('webexPage', this.webexPage);
-  }
 }
 
 export class LinkedSitesDetailsComponent implements ng.IComponentOptions {
@@ -55,5 +51,8 @@ export class LinkedSitesDetailsComponent implements ng.IComponentOptions {
   public controller = LinkedSitesDetailsComponentCtrl;
   public template = require('./linked-sites-details.component.html');
   public bindings = {
+    selectedSiteInfo: '<',
+    showWizardFn: '&',
+    launchWebexFn: '&',
   };
 }

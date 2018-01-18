@@ -6,7 +6,7 @@ import settingSetupInitModule  from 'modules/call/settings/settings-setup-init';
 
 export default angular
   .module('call.locations.copy-location', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     notifications,
     locationsServiceModule,
     locationsNameModule,

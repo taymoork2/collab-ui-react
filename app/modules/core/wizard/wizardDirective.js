@@ -65,7 +65,7 @@ require('./_wizard.scss');
     vm.isCustomerPartner = isCustomerPartner;
     vm.isFromPartnerLaunch = isFromPartnerLaunch;
     vm.hasDefaultButtons = hasDefaultButtons;
-    vm.helpUrl = (Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin()) ? Config.partnerSupportUrl : Config.supportUrl;
+    vm.helpUrl = Config.helpUrl;
 
     vm.getTabController = getTabController;
     vm.getSubTabController = getSubTabController;
@@ -318,9 +318,6 @@ require('./_wizard.scss');
         if (getTab().name === 'enterpriseSettings') {
           if (getStep().name === 'enterpriseSipUrl') {
             $rootScope.$broadcast('wizard-enterprise-sip-url-event');
-          } else if (getStep().name === 'enterprisePmrSetup') {
-            $rootScope.$broadcast('wizard-enterprise-pmr-event');
-            nextStepSuccessful();
           } else {
             nextStepSuccessful();
           }
