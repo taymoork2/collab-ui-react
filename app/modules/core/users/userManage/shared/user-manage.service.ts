@@ -1,0 +1,91 @@
+import { ManageType } from '../userManage.keys';
+import { OnboardCtrlBoundUIStates } from 'modules/core/users/userAdd/shared/onboard.store';
+import * as FeatureConfig from 'modules/core/featureToggle/features.config';
+
+enum State {
+  USERS_ADD_MANUAL = 'users.add.manual',
+  USERS_AUTO_ASSIGN_TEMPLATE = 'users.manage.edit-auto-assign-template-modal',
+  USERS_CONVERT = 'users.convert',
+  USERS_CSV = 'users.csv',
+  USERS_DIR_SYNC_INSTALL = 'users.manage.advanced.add.ob.installConnector',
+  USERS_DIR_SYNC_STATUS = 'users.manage.advanced.add.ob.syncStatus',
+  USERS_EMAIL_SUPPRESS = 'users.manage.emailSuppress',
+  USERS_MANAGE_PICKER = 'users.manage.picker',
+}
+
+export class UserManageService {
+  /* @ngInject */
+  constructor(
+    private $q: ng.IQService,
+    private $state: ng.ui.IStateService,
+    private Analytics,
+    private FeatureToggleService,
+  ) {}
+
+  public gotoNextStateForManageType(manageType: ManageType): void {
+    this.featureTogglePromises.then(features => {
+      if (features.atlasEmailSuppress && !this.canSkipEmailSuppressState(manageType)) {
+        return this.gotoEmailSuppressStateForType(manageType);
+      }
+      return this.gotoStateForType(manageType);
+    });
+  }
+
+  public gotoNextStateForManageTypeAfterEmailSuppress(manageType: ManageType): void {
+    return this.gotoStateForType(manageType);
+  }
+
+  private get featureTogglePromises(): ng.IPromise<{atlasEmailSuppress: boolean}> {
+    return this.$q.all({
+      atlasEmailSuppress: this.FeatureToggleService.supports(FeatureConfig.atlasEmailSuppress),
+    });
+  }
+
+  private canSkipEmailSuppressState(manageType: ManageType): boolean {
+    return manageType === ManageType.AUTO_ASSIGN_TEMPLATE;
+  }
+
+  private gotoStateForType(manageType: ManageType): void {
+    switch (manageType) {
+      case ManageType.MANUAL:
+        this.Analytics.trackAddUsers(this.Analytics.eventNames.NEXT, this.Analytics.sections.ADD_USERS.uploadMethods.MANUAL);
+        this.$state.go(State.USERS_ADD_MANUAL, {
+          resetOnboardStoreStates: OnboardCtrlBoundUIStates.ALL,
+        });
+        break;
+
+      case ManageType.BULK:
+        this.Analytics.trackAddUsers(this.Analytics.sections.ADD_USERS.eventNames.CSV_UPLOAD, this.Analytics.sections.ADD_USERS.uploadMethods.CSV);
+        this.$state.go(State.USERS_CSV);
+        break;
+
+      case ManageType.ADVANCED_NO_DS:
+        this.Analytics.trackAddUsers(this.Analytics.sections.ADD_USERS.eventNames.INSTALL_CONNECTOR, this.Analytics.sections.ADD_USERS.uploadMethods.SYNC);
+        this.$state.go(State.USERS_DIR_SYNC_INSTALL);
+        break;
+
+      case ManageType.CONVERT:
+        this.$state.go(State.USERS_CONVERT, {
+          manageUsers: true,
+        });
+        break;
+
+      case ManageType.ADVANCED_DS:
+        this.$state.go(State.USERS_DIR_SYNC_STATUS);
+        break;
+
+      case ManageType.AUTO_ASSIGN_TEMPLATE:
+        this.$state.go(State.USERS_AUTO_ASSIGN_TEMPLATE, {
+          prevState: State.USERS_MANAGE_PICKER,
+        });
+        break;
+    }
+  }
+
+  private gotoEmailSuppressStateForType(manageType: ManageType): void {
+    this.$state.go(State.USERS_EMAIL_SUPPRESS, {
+      manageType: manageType,
+      prevState: State.USERS_MANAGE_PICKER,
+    });
+  }
+}
