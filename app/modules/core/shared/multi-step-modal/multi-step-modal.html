@@ -35,4 +35,12 @@
     loading="$ctrl.saveLoading"
     ><span translate="common.save"></span>
   </button>
+  <button type="button" class="btn btn--primary custom-finish"
+    ng-if="$ctrl.customFinish && !$ctrl.customFinishRemoved"
+    ng-disabled="$ctrl.customFinishDisabled"
+    ng-click="$ctrl.customFinish()"
+    cs-btn
+    loading="$ctrl.customFinishDisabled"
+    ><span translate="{{::$ctrl.customFinishL10nLabel}}"></span>
+  </button>
 </div>
