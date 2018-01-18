@@ -171,7 +171,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     });
   });
 
-  /*This case will test the scenario that prompts description should be populated 
+  /*This case will test the scenario that prompts description should be populated
    * when CE definition is saved while update in schedule.
    */
   describe('createAnnouncements for menuEntry with announcements with play and Description', function () {
@@ -180,7 +180,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceMenuWithAnnouncementsPlayWithoutValidDescription, 'openHours');
       _.set(welcomeMenu, 'entries[0].headers[0].actions[0].description', 'uploadFile');
       expect(AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'openHours', _welcomeMenu)).toBe(true);
-      expect(_.get(_ceRecord.actionSets[0],'actions[0].runActionsOnInput.prompts.description')).toBe('uploadFile');
+      expect(_.get(_ceRecord.actionSets[0], 'actions[0].runActionsOnInput.prompts.description')).toBe('uploadFile');
     });
   });
 
