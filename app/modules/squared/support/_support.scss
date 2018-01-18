@@ -260,16 +260,3 @@
 .support-btn-spacing {
   padding-top: 0.65rem;
 }
-
-#logs-extended-metadata-dialog {
-  .modal-body {
-    overflow: overlay;
-  }
-}
-
-.modal-footer {
-
-  .copy-status {
-    @include vr-spacing(pr, 1);
-  }
-}
