@@ -56,7 +56,7 @@
         </div>
 
         <div ng-if="helpdeskCtrl.currentSearch.userSearchResults.length > 0">
-          <cs-card class="full pointer"
+          <cs-card class="cs-card--full pointer"
                    ng-repeat="user in helpdeskCtrl.currentSearch.userSearchResults | limitTo:helpdeskCtrl.currentSearch.userLimit" id="user-card-{{$index}}" >
             <article tabindex="{{$index * 10 + 1}}"
                      ui-sref="helpdesk.user({user:user, id:user.id, orgId:user.organization.id})">
@@ -114,7 +114,7 @@
         </div>
 
         <div ng-if="helpdeskCtrl.currentSearch.orgSearchResults.length > 0">
-          <cs-card class="full pointer"
+          <cs-card class="cs-card--full pointer"
                    ng-repeat="org in helpdeskCtrl.currentSearch.orgSearchResults | limitTo:helpdeskCtrl.currentSearch.orgLimit">
             <article tabindex="{{$index * 10 + 2}}" ui-sref="helpdesk.org({org:org, id:org.id})">
               <header>
@@ -166,7 +166,7 @@
         </div>
 
         <div ng-if="helpdeskCtrl.currentSearch.deviceSearchResults.length > 0">
-          <cs-card class="full pointer"
+          <cs-card class="cs-card--full pointer"
                    ng-repeat="device in helpdeskCtrl.currentSearch.deviceSearchResults | limitTo:helpdeskCtrl.currentSearch.deviceLimit | filter:notFound">
             <article tabindex="{{$index * 10 + 3}}"
                      ui-sref="{{device.isHuronDevice ? 'helpdesk.huron-device({device:device, id:device.uuid, orgId:helpdeskCtrl.currentSearch.orgFilter.id})' : 'helpdesk.cloudberry-device({device:device, id:device.id, orgId:helpdeskCtrl.currentSearch.orgFilter.id})'}}">
@@ -222,7 +222,7 @@
         </div>
 
         <div ng-if="helpdeskCtrl.currentSearch.orderSearchResults.length > 0">
-          <cs-card class="full pointer"
+          <cs-card class="cs-card--full pointer"
                    ng-repeat="order in helpdeskCtrl.currentSearch.orderSearchResults | limitTo:helpdeskCtrl.currentSearch.orderLimit">
             <article tabindex="{{$index * 10 + 3}}" ui-sref="helpdesk.order({order:order})">
               <header>

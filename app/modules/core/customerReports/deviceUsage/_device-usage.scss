@@ -13,7 +13,7 @@
   }
 
   .cs-card.cs-card--large,
-  .cs-card.full {
+  .cs-card.cs-card--full {
     article {
       header {
         padding-left: 1rem;
@@ -164,7 +164,7 @@
   }
 
   .score-card {
-    .full.side-info-card.cs-card {
+    .cs-card--full.side-info-card.cs-card {
       display: block;
     }
   }
