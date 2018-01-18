@@ -8,6 +8,7 @@ export enum DiagnosticKey {
 export enum OperationalKey {
   NOTIFICATION = 'atlas_notification',
   RATE_LIMIT_RETRY = 'atlas_rate_limit_retry',
+  CSP_VIOLATION = 'atlas_content_security_policy_violation',
 }
 
 export enum TimingKey {

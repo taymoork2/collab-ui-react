@@ -53,6 +53,7 @@ module.exports = {
   // valid sources for fonts loaded using @font-face
   fontSrc: [
     '\'self\'',
+    'data:',
   ],
   // valid sources of images and favicons
   imgSrc: [
@@ -82,5 +83,8 @@ module.exports = {
   workerSrc: [
     'blob:',
     '\'self\'',
+  ],
+  mediaSrc: [
+    'https://*.webex.com',
   ],
 };

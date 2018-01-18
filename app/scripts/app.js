@@ -67,6 +67,7 @@
     require('modules/core/auth/tos').default,
     require('modules/core/auth/user').default,
     require('modules/core/auth/token.service'),
+    require('modules/core/auth/securitypolicyviolation.service').default,
     require('modules/core/auth/idle').default,
     require('modules/core/config/config').default,
 
