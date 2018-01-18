@@ -473,7 +473,9 @@
     "enableCareInformationText": "Select Message to enable Care."
   },
   "onboardSummaryForAutoAssignModal": {
-    "title": "Assign Licenses Automatically"
+    "title": "Assign Licenses Automatically",
+    "header": "License Summary",
+    "description": "You've enabled Auto-Assign. New users will be assigned the following licenses automatically."
   },
   "usersPreview": {
     "groupPreview": "Group:",
@@ -6141,21 +6143,11 @@
       "body2": "To make this node available again, you will need to reregister it."
     },
     "metrics": {
-      "titlev2": "Reports Phase 2 POC",
-      "historical": "Historical",
-      "realTime": "Real time",
       "today": "Last 24 Hours",
-      "today2": "Last 24 Hours",
       "last4Hours": "Last 4 Hours",
-      "yesterday": "Yesterday",
-      "yesterday2": "Yesterday",
       "week": "Last Week",
-      "week2": "last week",
       "month": "Last Month",
-      "month2": "last month",
       "threeMonths": "Last Three Months",
-      "threeMonths2": "last three months",
-      "lastRefresh": "Last Refreshed at",
       "clusterAvailability": "Cluster Availability for",
       "callVolumes": "Call Activity",
       "callLocal": "Calls on premise",
@@ -6217,8 +6209,6 @@
       "availabilityStatus": "Availability Status",
       "clusterTitle": "Cluster",
       "clusterNodeTitle": "Cluster/Node",
-      "lowAvailableClusters": "Low availability clusters",
-      "clusterTakingMoreCalls": "Clusters hosting more no of calls",
       "totalMeetings": "Total Number of Meetings",
       "meetOnPrem": "Resources Used for Meetings",
       "clientTypes": "Client Types",
@@ -6259,7 +6249,7 @@
       },
       "mobile": "Mobile",
       "cardDescription": {
-        "clientTypeDesc": "Summary of common categories of meeting clients that are used in an organization.<br><b>Cisco Spark Desktop</b> : Windows , MAC OSX, Web Browser<br> <b>Cisco Spark Mobile</b> : iPhone, Android, iPad.<br><b>Cisco Spark Devices</b> : Telepresence room device, Cisco Spark board.<br><b>Others</b> : Any unknown endpoints or clients that don’t fit the other categories.",
+        "clientTypeDesc": "Summary of common categories of meeting clients that are used in an organization.<br><b>Cisco Spark Desktop</b> : Windows, macOS, web bowser<br> <b>Cisco Spark Mobile</b> : iPhone, Android, iPad.<br><b>Cisco Spark Devices</b> : Cisco room device, Cisco Spark Board.<br><b>Others</b> : Any unknown endpoints or clients that don’t fit the other categories.",
         "totalCallsDesc": "<b>Cloud Calls</b> : Number of calls that could not utilize enterprise Hybrid Media Nodes, because of no connection to the enterprise network or being subject to enforced policy.<br> <b>Overflowed to Cloud</b> : Number of calls made within an enterprise but overflowed to a cloud cluster.<br> <b>On-Premises</b>: Number of calls hosted on any of the enterprise clusters.",
         "totalCallsClusterDesc": "<b>Redirected by this Cluster</b> : Number of calls that could not be hosted by this cluster and hence got redirected.<br><b>On-Premises</b> : Number of calls hosted on any of the enterprise clusters.",
         "meetsHostTypeDesc": "Summary of meetings based on where the organization’s calls were hosted.<br><b>On Premises</b> : Meeting and participants were hosted on the enterprise clusters<br><b>Cloud</b> : Meeting and participants were hosted on cloud clusters<br><b>Cloud and On-Premises</b> : Meeting and participants cascaded between enterprise and cloud clusters",
@@ -7154,8 +7144,8 @@
         "message": "System software will not be updated."
       },
       "soontobedeactivated": {
-        "type": "Device will soon be deactivated",
-        "message": "This device has been offline for several weeks. Make sure it comes online within {{expireInDays}} days to avoid deactivation."
+        "type": "Device credentials will soon expire",
+        "message": "This device has been offline for several weeks. Make sure it comes online within {{expireInDays}} days to avoid it losing its Spark activation."
       },
       "ntpstatus": {
         "type": "Time Server Not Reachable",
@@ -7741,7 +7731,7 @@
     "helpTextWaitingVirtualAssistant": "If you are using a Customer Virtual Assistant, this message indicates transition from automated support to human interaction.",
     "helpTextChatting": "Customers see this if they minimize the chat window during an ongoing interaction.",
     "helpTextLeaveRoom": "Customers see this when an agent exits the chat and ends the interaction.",
-    "assistantTooltip" : "The {{assistantType}} {{assistantName}} is used in this template.",
+    "assistantTooltip": "The {{assistantType}} {{assistantName}} is used in this template.",
     "filterType": {
       "chat": "Customer Support Template",
       "callback": "Customer Support Template",
@@ -7891,7 +7881,8 @@
         "invalidAccessToken": "The Dialogflow client access token is invalid.\nClick the back arrow to return to the Dialogue Integration page and enter a valid token.",
         "duplicateName": "The {{ featureName }} must have a unique name.\nClick the back arrow to return to the Name page and enter a valid name.",
         "invalidName": "The {{ featureName }} name is invalid.\nClick the back arrow to return to the Name page and enter a valid name.",
-        "invalidIcon": "The {{ featureName }} avatar is invalid.\nClick the back arrow to return to the Avatar page and upload a valid avatar."
+        "invalidIcon": "The {{ featureName }} avatar is invalid.\nClick the back arrow to return to the Avatar page and upload a valid avatar.",
+        "invalidEmail": "The email you entered is invalid.\nClick the back arrow to return to the Email page and enter a valid email."
       },
       "createTitle": "Create {{ featureName }}",
       "editTitle": "Edit {{ featureName }}",
@@ -8438,6 +8429,27 @@
       "deregisterWarning": "Please uninstall the Directory Connector before deregistering.",
       "deregisterSuccess": "Directory Connector '{{name}}' successfully deregistered.",
       "deregisterFailed": "Failed to deregister Directory Connector '{{name}}'."
+    },
+    "multiDirsync": {
+      "loading": "Updating Status",
+      "title": "Directory Synchronization",
+      "connectorError": "There was an error while deactivating {{connectorName}}.",
+      "description": "New users will be automatically added from your directory when it synchronizes.  Updates can be made directly in Cisco Directory Connector.",
+      "deactivate": "Deactivate {{connectorName}}",
+      "deactivateConnectorMessage": "Once you deactivate the server, you'll no longer receive a health report. The cloud syncrhonization will stop if this is the last active working server. Are you sure you want to deactivate this server?",
+      "degraded": "Degraded",
+      "deleteAllError": "There was an error while deactivating all Directory Connector.",
+      "deleteError": "There was an error while deactivating {{domainName}}.",
+      "domainsError": "There was a problem retrieving the Directory Synchronization data.",
+      "operational": "Operational",
+      "outage": "Outage",
+      "toggleMenu": "toggle domain action menu",
+      "turnOff": "Turn Off {{domainName}}",
+      "turnOffAllMessage": "This step turns off all synchronization from Directory Connector. Once the synchronization is disabled, you can only manage users manually and they won't appear in Active Directory.  Are you sure you want to turn off all sychronization?",
+      "turnOffAllTitle": "Turn Off All Synchronization",
+      "turnOffDomainMessage": "Once the domain is turned off, the cloud synchronization will stop.  You must enable the synchronization from Directory Connector.  Are You sure you want to turn it off?",
+      "turnOffDirSync": "Turn off All Directory Synchronizations",
+      "turnOnDirSync": "How to Turn On Directory Synchronization"
     }
   },
   "my-company": {
@@ -10405,7 +10417,7 @@
         "deleteSchedule": "Delete this schedule",
         "scheduleCreate": "Create Schedule"
       },
-      "resourcesView":{
+      "resourcesView": {
         "createResource": "Create Resource"
       },
       "resourcesCreateModal": {

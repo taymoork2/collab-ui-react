@@ -32,6 +32,7 @@
       getUsersEmailStatus: getUsersEmailStatus,
       patchUserRoles: patchUserRoles,
       migrateUsers: migrateUsers,
+      onboardUsersLegacy: onboardUsersLegacy,
       onboardUsers: onboardUsers,
       bulkOnboardUsers: bulkOnboardUsers,
       deactivateUser: deactivateUser,
@@ -47,10 +48,14 @@
       getUserLicence: getUserLicence,
       getPreferredWebExSiteForCalendaring: getPreferredWebExSiteForCalendaring,
       updateUserData: updateUserData,
+      _helpers: {
+        mkOnboardUsersPayload: mkOnboardUsersPayload,
+        onboardUsersAPI: onboardUsersAPI,
+      },
     };
 
     // TODO: migrate these helpers to 'SunlightUserService'
-    var _helpers = {
+    var _sunlightHelpers = {
       licenseUpdateRequired: licenseUpdateRequired,
       removeCESRoleforUser: removeCESRoleforUser,
       getUserLicence: getUserLicence,
@@ -166,7 +171,7 @@
 
     // DEPRECATED
     // - update all callers of this method to use 'getUserAsPromise()' instead, before removing
-    //   this implementataion
+    //   this implementation
     // - 'getUserAsPromise()' can then assume this name after all callers use promise-style
     //   chaining
     function getUser(userid, noCache, callback) {
@@ -376,10 +381,11 @@
         });
     }
 
-    /**
-     * Onboard users that share the same set of entitlements and licenses
-     */
-    function onboardUsers(usersDataArray, entitlements, licenses, cancelPromise) {
+    // DEPRECATED
+    // - 'onboardUsers()' should be able to satisfy the behavior requirements of this function, but
+    //   this needs to be verified
+    // - once all callers have been replaced, rm this
+    function onboardUsersLegacy(usersDataArray, entitlements, licenses, cancelPromise) {
       // bind the licenses and entitlements that are shared by all users
       var getUserPayload = getUserPayloadForOnboardAPI.bind({
         licenses: licenses,
@@ -387,6 +393,24 @@
       });
       var userPayload = getUserPayload(usersDataArray, true);
       return onboardUsersAPI(userPayload, cancelPromise);
+    }
+
+    /**
+     * Onboard users that share the same set of entitlements and licenses
+     */
+    // notes:
+    // - as of 2018-01-12, 'licenses' and 'userEntitlements' are optional properties now (they will
+    //   default to empty lists used in the request payload if left undefined)
+    // - if both 'licenses' and 'userEntitlements' are empty lists, onboard API will apply
+    //   appropriate logic (the default auto-assign template is applied if one is defined and the
+    //   org has been enabled to use it)
+    function onboardUsers(options) {
+      var users = options.users;
+      var licenses = options.licenses;
+      var userEntitlements = options.userEntitlements;
+      var cancelPromise = options.cancelPromise;
+      var payload = service._helpers.mkOnboardUsersPayload(users, licenses, userEntitlements);
+      return service._helpers.onboardUsersAPI(payload, cancelPromise);
     }
 
     /**
@@ -399,6 +423,51 @@
 
     function deactivateUser(userData) {
       return $http.delete(userUrl + 'organization/' + Authinfo.getOrgId() + '/user?email=' + encodeURIComponent(userData.email));
+    }
+
+    function mkOnboardUsersPayload(users, _licenses, _userEntitlements) {
+      // default 'licenses' and 'userEntitlements' to empty lists if falsey
+      var licenses = _licenses || [];
+      var userEntitlements = _userEntitlements || [];
+
+      var usersPayload = _.map(users, function (user) {
+        // early-out if email is falsey
+        var userEmail = _.trim(user.address);
+        if (!userEmail) {
+          return;
+        }
+
+        var sanitizedUser = {};
+        _.set(sanitizedUser, 'email', userEmail);
+        _.set(sanitizedUser, 'licenses', licenses);
+        _.set(sanitizedUser, 'userEntitlements', userEntitlements);
+
+        // set 'name' property only if both 'givenName' or 'familyName' are truthy
+        _.set(sanitizedUser, 'name', tokenParseFirstLastName(user.name));
+        if (!sanitizedUser.name.givenName && !sanitizedUser.name.familyName) {
+          delete sanitizedUser.name;
+        }
+
+        // set 'displayName' if truthy
+        if (user.displayName) {
+          _.set(sanitizedUser, 'displayName', user.displayName);
+        }
+
+        if (_.size(licenses)) {
+          sanitizedUser.licenses = buildUserSpecificProperties(user, licenses);
+        }
+        if (_.size(userEntitlements)) {
+          sanitizedUser.userEntitlements = buildUserSpecificProperties(user, userEntitlements);
+        }
+
+        return sanitizedUser;
+      });
+
+      // prune out falsey values and return
+      usersPayload = _.compact(usersPayload);
+      return {
+        users: usersPayload,
+      };
     }
 
     /**
@@ -528,13 +597,13 @@
         return response.status === 200;
       });
       _.each(userResponseSuccess, function (userResponseSuccess) {
-        var userLicenses = _helpers.getUserLicence(userResponseSuccess.email, users);
+        var userLicenses = _sunlightHelpers.getUserLicence(userResponseSuccess.email, users);
         var userId = userResponseSuccess.uuid;
-        if ((_helpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CO, 'REMOVE')) || (_helpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CVC, 'REMOVE'))) {
-          _helpers.removeCESRoleforUser(userId);
+        if ((_sunlightHelpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CO, 'REMOVE')) || (_sunlightHelpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CVC, 'REMOVE'))) {
+          _sunlightHelpers.removeCESRoleforUser(userId);
         }
-        if ((_helpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CDC, 'ADD')) || (_helpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CVC, 'ADD'))) {
-          var sunlightUserData = _helpers.createUserData();
+        if ((_sunlightHelpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CDC, 'ADD')) || (_sunlightHelpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CVC, 'ADD'))) {
+          var sunlightUserData = _sunlightHelpers.createUserData();
           // Get user to check for roles and entitlements
           getUserAsPromise(userId)
             .then(function (ciUserData) {
@@ -544,7 +613,7 @@
                 checkRolesAndOnboardSunlightUser(userId, ciUserData, sunlightUserData, checkCesRole);
               }
             });
-        } else if (_helpers.isCareFeatureGettingRemoved(userLicenses)) {
+        } else if (_sunlightHelpers.isCareFeatureGettingRemoved(userLicenses)) {
           SunlightConfigService.deleteUser(userId)
             .catch(function (response) {
               Notification.errorWithTrackingId(response, 'usersPage.careDeleteUserError');

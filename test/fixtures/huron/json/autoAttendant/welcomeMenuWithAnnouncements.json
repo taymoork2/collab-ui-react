@@ -158,7 +158,54 @@
 			}]
 		}]
 	},
-	
+	"ceWelcomeWithAnnouncementsPlayWithoutValidDescription": {
+		"callExperienceName": "AA Welcome",
+		"assignedResources": [{
+			"trigger": "incomingCall",
+			"type": "directoryNumber",
+			"id": "e7d68d8c-9e92-4330-a881-5fc9ace1f7d3"
+		}],
+		"defaultActionSet": "openHours",
+		"scheduleEventTypeMap": {
+			"open": "openHours"
+		},
+		"actionSets": [{
+			"name": "openHours",
+			"actions": [{
+
+				"runActionsOnInput": {
+					"description": "uploadFile",
+					"language": "",
+					"voice": "",
+					"prompts": {
+						"description": "uploadFile",
+						"playList": [],
+						"sayList": [],
+						"announcements": [{
+								"play": {
+									"deleteUrl": "https://clio-manager-intb.ciscospark.com/clio-manager/api/v1/recordings/2a16238c-6d11-11e7-bff9-024286d27e00?orgId=dec55d7a-9d08-4a12-a9a7-052939c29ae0",
+									"voice": "Vanessa",
+									"url": "https://clio-manager-intb.ciscospark.com/clio-manager/api/v1/recordings/2a16238c-6d11-11e7-bff9-024286d27e00?orgId=dec55d7a-9d08-4a12-a9a7-052939c29ae0",
+									"description": "uploaded media"
+								}
+							}]
+					},
+					"attempts": 2,
+					"inputs": [{
+						"description": "",
+						"input": "0",
+						"actions": [{
+							"repeatActionsOnInput": {
+								"level": 0
+							}
+						}]
+					}],
+					"incompleteInputActions": [],
+					"rawInputActions": []
+				}
+			}]
+		}]
+	},
 	"ceWelcomeWithAnnouncementsKeys": {
 		"type": "MENU_WELCOME",
 		"id": "menu0",
