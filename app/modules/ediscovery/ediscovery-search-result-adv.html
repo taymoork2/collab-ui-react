@@ -26,7 +26,7 @@
 				</section>
 			</article>
 		</cs-card>
-		<cs-card ng-if="ediscoverySearchCtrl.isReport" class="large">
+		<cs-card ng-if="ediscoverySearchCtrl.isReport" class="cs-card--large">
 			<article>
 				<header><h4 translate="ediscovery.searchResults.reportSummary"></h4></header>
 				<section class="row">
@@ -50,7 +50,7 @@
 			</article>
 		</cs-card>
 		<!-- Max Rooms (2500) error card -->
-		<cs-card ng-if="ediscoverySearchCtrl.isReportMaxRooms" class="large">
+		<cs-card ng-if="ediscoverySearchCtrl.isReportMaxRooms" class="cs-card--large">
 			<article>
 				<header><h4 translate="ediscovery.searchResults.maxRoomsReached"></h4></header>
 				<section>
@@ -66,7 +66,7 @@
 			</article>
 		</cs-card>
 		<!-- Report Size (5GB) max card -->
-		<cs-card ng-if="ediscoverySearchCtrl.isReportTooBig" class="large">
+		<cs-card ng-if="ediscoverySearchCtrl.isReportTooBig" class="cs-card--large">
 			<article>
 				<header><h4 translate="ediscovery.searchResults.reportSizeTooBig"></h4></header>
 				<section>
@@ -82,7 +82,7 @@
 			</article>
 		</cs-card>
 		<!-- Normal Report Generation Card -->
-		<cs-card ng-if="!ediscoverySearchCtrl.isReportMaxRooms && !ediscoverySearchCtrl.isReportTooBig" class="large">
+		<cs-card ng-if="!ediscoverySearchCtrl.isReportMaxRooms && !ediscoverySearchCtrl.isReportTooBig" class="cs-card--large">
 			<article>
 				<section class="report-section">
 					<!-- Generate Report Section -->
