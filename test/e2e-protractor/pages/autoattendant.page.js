@@ -178,6 +178,11 @@ var AutoAttendantPage = function () {
 
   this.callerInputRemoveAction = this.callerInput.all(by.css('div.aa-flex-row')).first().element(by.css('div.aa-action-delete'));
 
+  this.careFeature = '#/services/careDetails/features';
+  this.newCareFeatureButton = element(by.css('button.btn--people'));
+  this.customerSupportTemplate = element(by.css('div.feature-card-container'));
+  this.careFeatureTypeAA = element(by.css('h4.feature-aa-color'));
+
   // this.callerInputRemoveAction = element(by.css('div.aa-panel-body[name="Caller Input"]')).all(by.css('div.aa-flex-row')).first().element(by.css('div.aa-action-delete'));
 
   this.phoneMenuTimeout = element(by.css('div.aa-pm-timeout .icon-chevron-down'));
@@ -317,6 +322,17 @@ var AutoAttendantPage = function () {
     .all(by.tagName('li'))
     .get(6);
 
+  // For Hybrid tenant, items in dropdown are present at different indexes
+  this.newStepSelectRouteCallForHybrid = element.all(by.css('div.aa-panel[name="newStepForm"]'))
+    .filter(function (el) {
+      return el.isDisplayed();
+    })
+    .first()
+    .all(by.css('div.aa-flex-row'))
+    .last()
+    .all(by.tagName('li'))
+    .get(4);
+
   // since we added a Say Message via Add New Step, there should be more than 1 from now on.
   // Get them all so we can check:
 
@@ -368,6 +384,9 @@ var AutoAttendantPage = function () {
   this.routeCallChoose = this.routeCall.element(by.css('div.dropdown'));
   this.routeExternal = this.routeCall.element(by.css('div.dropdown-menu')).all(by.tagName('li')).last();
   this.routeQueueCall = this.routeCall.element(by.css('div.dropdown-menu')).all(by.tagName('li')).get(1);
+  this.routeToUserForHybridTenant = this.routeCall.element(by.css('div.dropdown-menu')).all(by.tagName('li')).get(3);
+  this.chooseRoutetoUserOption = this.routeCall.element(by.css('div.aa-route-action')).element(by.css('div.select-list'));
+  this.routeToUserDropdownOption = this.chooseRoutetoUserOption.element(by.css('div.dropdown-menu')).all(by.tagName('li')).last();
   this.dialByExtension = element(by.css('div.aa-panel-body[name="Dial by Extension"]'));
 
   this.dialByMessageOptions = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="messageSelect"] + div span.select-toggle'));

@@ -245,6 +245,11 @@ var auth = {
     pass: 'Cisco!23',
     org: 'b322c279-22d8-488f-a670-cdcb6380033e',
   },
+  'hybrid-org': {
+    user: 'shivani.hybrid0712+a@gmail.com',
+    pass: 'Cisco123!',
+    org: '5abae65f-3157-4d09-ad29-7187b5cfbba2',
+  },
 };
 
 var clientId = 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec';
