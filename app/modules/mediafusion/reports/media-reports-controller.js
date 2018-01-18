@@ -181,11 +181,7 @@
         setAvailabilityData();
         setClusterAvailability();
         setUtilizationData();
-        if (vm.hasMFMultipleInsightFeatureToggle) {
-          setParticipantDistributionDataWithMultipleInsights();
-        } else {
-          setParticipantDistributionData();
-        }
+        setParticipantDistributionData();
         setNumberOfParticipantData();
         setCallVolumeData();
       });
@@ -544,34 +540,12 @@
     }
 
     function setParticipantDistributionData() {
-      MediaReportsService.getParticipantDistributionData(vm.timeSelected, vm.clusterId).then(function (response) {
+      MediaReportsService.getParticipantDistributionData(vm.timeSelected, vm.clusterId, vm.hasMFMultipleInsightFeatureToggle).then(function (response) {
         if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
           setDummyParticipantDistribution();
         } else {
           deferred.promise.then(function () {
             //set the participant distribution graphs here
-            if (_.isUndefined(setParticipantDistributionGraph(response))) {
-              setDummyParticipantDistribution();
-            } else {
-              vm.participantDistributionStatus = vm.SET;
-            }
-          }, function () {
-            //map is nor formed so we shoud show dummy graphs
-            setDummyParticipantDistribution();
-          });
-        }
-      }, function () {
-        setDummyParticipantDistribution();
-      });
-    }
-
-    function setParticipantDistributionDataWithMultipleInsights() {
-      MediaReportsService.getParticipantDistributionMultipleInsightData(vm.timeSelected, vm.clusterId).then(function (response) {
-        if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
-          setDummyParticipantDistribution();
-        } else {
-          deferred.promise.then(function () {
-            //set the participant distribution graphs with multiple insights here
             if (_.isUndefined(setParticipantDistributionGraph(response))) {
               setDummyParticipantDistribution();
             } else {

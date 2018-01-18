@@ -138,7 +138,7 @@ describe('Service: Media Reports Service', function () {
       vm.$httpBackend.whenGET(vm.participantDistributionUrl).respond(500, vm.error);
       expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(0);
 
-      vm.MediaReportsService.getParticipantDistributionData(vm.timeFilter, vm.allClusters).then(function (response) {
+      vm.MediaReportsService.getParticipantDistributionData(vm.timeFilter, vm.allClusters, false).then(function (response) {
         expect(response).toEqual({
           graphData: [],
           graphs: [],
@@ -155,7 +155,7 @@ describe('Service: Media Reports Service', function () {
       vm.$httpBackend.whenGET(vm.participantDistributionMultipleInsightsUrl).respond(500, vm.error);
       expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(0);
 
-      vm.MediaReportsService.getParticipantDistributionMultipleInsightData(vm.timeFilter, vm.allClusters).then(function (response) {
+      vm.MediaReportsService.getParticipantDistributionData(vm.timeFilter, vm.allClusters, true).then(function (response) {
         expect(response).toEqual({
           graphData: [],
           graphs: [],
