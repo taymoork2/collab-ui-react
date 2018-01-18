@@ -19,6 +19,7 @@
     /////////////////////
 
     function isHybridCallConfigured() {
+      var isHybridConfigured = false;
       if (Authinfo.isCare() || Authinfo.isCareVoice()) {
         return ServiceDescriptorService.getServices().then(function (data) {
           if (data.length != 0) {
@@ -28,50 +29,43 @@
             var ucServices = _.filter(items, { id: 'squared-fusion-uc' });
             var ecServices = _.filter(items, { id: 'squared-fusion-ec' });
             if (ucServices.length > 0 && ecServices.length > 0) {
-              return true;
-            } else {
-              return false;
+              isHybridConfigured = true;
             }
-          } else {
-            return false;
           }
+          return isHybridConfigured;
         }).catch(function () {
-          return false;
+          return isHybridConfigured;
         });
       } else {
-        return false;
+        return isHybridConfigured;
       }
     }
 
     function isEPTConfigured() {
+      var isEPTConfigured = false;
       if (Authinfo.isCare() || Authinfo.isCareVoice()) {
         return PrivateTrunkService.getPrivateTrunk().then(function (data) {
           if (data.resources.length != 0) {
-            return true;
-          } else {
-            return false;
+            isEPTConfigured = true;
           }
+          return isEPTConfigured;
         }).catch(function () {
-          return false;
+          return isEPTConfigured;
         });
       } else {
-        return false;
+        return isEPTConfigured;
       }
     }
 
     function isHybridAndEPTConfigured() {
-      if (Authinfo.isCare() || Authinfo.isCareVoice()) {
-        return $q.all({
-          isHybridConfigured: isHybridCallConfigured(),
-          isEPTConfigured: isEPTConfigured(),
-        }).then(function (configuredStatus) {
-          return configuredStatus.isHybridConfigured && configuredStatus.isEPTConfigured;
-        }).catch(function () {
-          return false;
-        });
-      } else {
+      return $q.all({
+        isHybridConfigured: isHybridCallConfigured(),
+        isEPTConfigured: isEPTConfigured(),
+      }).then(function (configuredStatus) {
+        return configuredStatus.isHybridConfigured && configuredStatus.isEPTConfigured;
+      }).catch(function () {
         return false;
-      }
+      });
     }
 
     function isSparkCallConfigured() {

@@ -176,7 +176,9 @@ describe('Service: AutoAttendantHybridCareService', function () {
 
     it('should return false if care or voice isnot enabled', function () {
       isCare.and.returnValue(false);
-      expect(AutoAttendantHybridCareService.isHybridAndEPTConfigured()).toBe(false);
+      AutoAttendantHybridCareService.isHybridAndEPTConfigured().then(function (data) {
+        expect(data).toBe(false);
+      });
     });
   });
 
