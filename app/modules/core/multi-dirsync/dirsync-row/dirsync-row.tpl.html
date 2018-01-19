@@ -6,8 +6,8 @@
       <span>{{::connector.name}}</span>
     </div>
   </div>
-  <span class="columns medium-4">
-    <cs-statusindicator ng-model="$ctrl.domainStatus"></cs-statusindicator>
+  <div class="columns medium-4">
+    <cs-statusindicator ng-model="$ctrl.dirsync.siteStatus"></cs-statusindicator>
     <span translate="{{::$ctrl.getStatus()}}"></span>
     <div cs-dropdown class="actions-menu">
       <button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle icon icon-three-dots" aria-label="globalSettings.multiDirsync.toggleMenu"></button>

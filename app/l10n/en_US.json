@@ -8453,7 +8453,6 @@
       "degraded": "Degraded",
       "deleteAllError": "There was an error while deactivating all Directory Connector.",
       "deleteError": "There was an error while deactivating {{domainName}}.",
-      "dirsyncDisabled": "Directory synchronization is currently disabled.",
       "domainsError": "There was a problem retrieving the Directory Synchronization data.",
       "operational": "Operational",
       "outage": "Outage",
@@ -8464,8 +8463,7 @@
       "turnOffAllTitle": "Turn Off All Synchronization",
       "turnOffDomainMessage": "Once the domain is turned off, the cloud synchronization will stop.  You must enable the synchronization from Directory Connector.  Are You sure you want to turn it off?",
       "turnOffDirSync": "Turn off All Directory Synchronizations",
-      "turnOnDirSync": "How to Turn On Directory Synchronization",
-      "turnOnDirSyncAlt": "Turn on Directory Synchonization"
+      "turnOnDirSync": "How to Turn On Directory Synchronization"
     }
   },
   "my-company": {

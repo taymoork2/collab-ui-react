@@ -98,40 +98,7 @@
   </div>
 
   <div class="row" ng-if="umoc.multiDirSyncToggle && !umoc.isUserAdminUser">
-    <div class="columns medium-4 manage-modal-header">
-      <h4 translate="userManage.org.activeDirectory"></h4>
-    </div>
-    <div class="columns medium-8 manage-modal-label sync-status">
-      <h5>
-        {{::'userManage.org.directorySynchronization' | translate}}
-        <div cs-dropdown class="actions-menu" ng-if="!umoc.multiDirSyncUpdating && umoc.multiDirSyncEnabled">
-          <button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle icon icon-three-dots" aria-label="globalSettings.multiDirsync.toggleMenu"></button>
-          <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
-            <li class="dropdown-item" ng-repeat="dirsync in umoc.dirSyncArray" ng-click="umoc.deleteDomain(dirsync)">
-              <a translate="globalSettings.multiDirsync.turnOff" translate-values="{ domainName: dirsync.domains[0].domainName }"></a>
-            </li>
-            <li class="dropdown-item" ng-click="umoc.goToSettings()">
-              <a translate="globalSettings.multiDirsync.seeAllDomains"></a>
-            </li>
-          </ul>
-        </div>
-      </h5>
-
-      <div ng-if="umoc.multiDirSyncUpdating">
-        <span translate="globalSettings.multiDirsync.loading"></span>
-        <i class="space icon icon-spinner"></i>
-      </div>
-      <div ng-if="!umoc.multiDirSyncUpdating && !umoc.multiDirSyncEnabled">
-        <cs-statusindicator ng-model="disabled"></cs-statusindicator>
-        <span translate="common.disabled"></span>
-        <br>
-        <a class="p" href="https://www.cisco.com/go/hybrid-services-directory" target="_blank" translate="globalSettings.multiDirsync.turnOnDirSyncAlt"></a>
-      </div>
-      <div ng-if="!umoc.multiDirSyncUpdating && umoc.multiDirSyncEnabled" ng-repeat="dirsync in umoc.dirSyncArray">
-        <cs-statusindicator ng-model="dirsync.siteStatus"></cs-statusindicator>
-        <span>{{::dirsync.domains[0].domainName}}</span>
-      </div>
-    </div>
+    <multi-dirsync-section initialize-function="umoc.goToInitialize()"></multi-dirsync-section>
   </div>
 
   <hr>

@@ -1,7 +1,4 @@
-import { IDirectoryConnector, IDirectorySync } from '../multiDirsyncSetting.component';
-
-type StatusType = 'success' | 'warning' | 'danger';
-
+import { IDirectoryConnector, IDirectorySync } from '../index';
 
 export class DirsyncRowController {
   public dirsync: IDirectorySync;
@@ -9,7 +6,6 @@ export class DirsyncRowController {
   public deactivateConnectorFn: Function;
 
   public connectors: any[] = [];
-  public domainStatus: StatusType;
 
   /* @ngInject */
   public constructor() {}
@@ -22,17 +18,6 @@ export class DirsyncRowController {
         status: connector.isInService ? 'primary' : 'disabled',
       };
     });
-
-    const isInService = { isInService: true };
-    this.domainStatus = 'success';
-
-    if (!_.every(this.dirsync.connectors, isInService)) {
-      if (_.some(this.dirsync.connectors, isInService)) {
-        this.domainStatus = 'warning';
-      } else {
-        this.domainStatus = 'danger';
-      }
-    }
   }
 
   public get domainName(): string {
@@ -48,13 +33,13 @@ export class DirsyncRowController {
   }
 
   public getStatus(): string {
-    switch (this.domainStatus) {
-      case 'success':
-        return 'globalSettings.multiDirsync.operational';
-      case 'warning':
-        return 'globalSettings.multiDirsync.degraded';
+    switch (this.dirsync.siteStatus) {
       case 'danger':
         return 'globalSettings.multiDirsync.outage';
+      case 'warning':
+        return 'globalSettings.multiDirsync.degraded';
+      default: // default option is 'success'
+        return 'globalSettings.multiDirsync.operational';
     }
   }
 }

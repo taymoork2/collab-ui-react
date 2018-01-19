@@ -10,6 +10,7 @@
   }],
   "dirsyncRow": {
     "serviceMode": "ENABLED",
+    "siteStatus": "success",
     "domains": [{
       "domainName": "win2k12r2-96.com"
     }],
@@ -23,6 +24,7 @@
   },
   "dirsyncRowDisabled": {
     "serviceMode": "DISABLED",
+    "siteStatus": "success",
     "domains": [{
       "domainName": "huron.com"
     }],

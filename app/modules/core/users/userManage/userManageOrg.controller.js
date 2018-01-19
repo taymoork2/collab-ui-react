@@ -5,7 +5,7 @@
   module.exports = UserManageOrgController;
 
   /* @ngInject */
-  function UserManageOrgController($q, $state, $translate, $window, Analytics, Authinfo, AutoAssignTemplateModel, AutoAssignTemplateService, DirSyncService, FeatureToggleService, ModalService, MultiDirSyncSettingService, Notification, OnboardService, Orgservice, UserCsvService) {
+  function UserManageOrgController($q, $state, $window, Analytics, Authinfo, AutoAssignTemplateModel, AutoAssignTemplateService, DirSyncService, FeatureToggleService, Notification, OnboardService, Orgservice, UserCsvService) {
     var DEFAULT_AUTO_ASSIGN_TEMPLATE = 'Default';
     var vm = this;
 
@@ -36,12 +36,6 @@
 
     vm.initFeatureToggles = initFeatureToggles;
     vm.initConvertableUsers = initConvertableUsers;
-
-    vm.dirSyncArray = [];
-    vm.multiDirSyncEnabled = false;
-    vm.multiDirSyncUpdating = true;
-    vm.deleteDomain = deleteDomain;
-    vm.goToSettings = goToSettings;
     vm.isUserAdminUser = Authinfo.isUserAdminUser();
 
     var isAtlasEmailSuppressToggle = false;
@@ -56,9 +50,6 @@
         .then(function () {
           initDefaultAutoAssignTemplate();
           initOrgSettingForAutoAssignTemplates();
-          if (vm.multiDirSyncToggle && !vm.isUserAdminUser) {
-            refreshMultiDirSync();
-          }
         });
     }
 
@@ -136,7 +127,12 @@
 
     function handleDirSyncService() {
       if (vm.isDirSyncEnabled) {
-        vm.goToSettings();
+        $state.modal.closed.then(function () {
+          $state.go('settings', {
+            showSettings: 'dirsync',
+          });
+        });
+        $state.modal.dismiss();
       } else {
         onNext(vm.ManageType.ADVANCED_NO_DS);
       }
@@ -190,72 +186,6 @@
             break;
         }
       }
-    }
-
-    // Multi-site Dir-sync Functions
-    function refreshMultiDirSync() {
-      vm.multiDirSyncUpdating = true;
-      MultiDirSyncSettingService.getDomains().then(function (result) {
-        vm.multiDirSyncUpdating = false;
-
-        var responseArray = _.get(result, 'data.directorySyncResponseBeans', []);
-        vm.dirSyncArray = _.filter(responseArray, function (site) {
-          return site.serviceMode === MultiDirSyncSettingService.ENABLED;
-        });
-
-        _.forEach(vm.dirSyncArray, function (dirsync) {
-          var isInService = { isInService: true };
-          dirsync.siteStatus = 'success';
-
-          if (!_.every(dirsync.connectors, isInService)) {
-            if (_.some(dirsync.connectors, isInService)) {
-              dirsync.siteStatus = 'warning';
-            } else {
-              dirsync.siteStatus = 'danger';
-            }
-          }
-        });
-
-        if (vm.dirSyncArray.length > 0) {
-          vm.multiDirSyncEnabled = true;
-        }
-      }).catch(function (error) {
-        vm.multiDirSyncUpdating = false;
-        vm.multiDirSyncEnabled = false;
-
-        // Bad Request is returned when the customer has no domains; error should be quietly hidden as 'no domains' is a valid state.
-        if (_.get(error, 'status') !== 400) {
-          Notification.errorWithTrackingId(error, 'globalSettings.multiDirsync.domainsError');
-        }
-      });
-    }
-
-    function deleteDomain(site) {
-      var domainName = site.domains[0].domainName;
-      ModalService.open({
-        type: 'dialog',
-        close: $translate.instant('common.turnOff'),
-        dismiss: $translate.instant('common.cancel'),
-        title: $translate.instant('globalSettings.multiDirsync.turnOff', { domainName: domainName }),
-        message: $translate.instant('globalSettings.multiDirsync.turnOffDomainMessage'),
-      }).result.then(function () {
-        MultiDirSyncSettingService.deactivateDomain(domainName).catch(function (error) {
-          Notification.errorWithTrackingId(error, 'globalSettings.multiDirsync.deleteError', {
-            domainName: domainName,
-          });
-        }).finally(function () {
-          refreshMultiDirSync();
-        });
-      });
-    }
-
-    function goToSettings() {
-      $state.modal.closed.then(function () {
-        $state.go('settings', {
-          showSettings: 'dirsync',
-        });
-      });
-      $state.modal.dismiss();
     }
   }
 })();
