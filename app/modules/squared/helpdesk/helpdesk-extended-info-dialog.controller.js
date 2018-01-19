@@ -31,7 +31,7 @@
 
     vm.clipboardError = function (e) {
       $log.error('Unable to copy data to clipboard. Details:', e);
-      Notification.error('helpdesk.extended-data-dialog.unableToCopy');
+      Notification.error('common.unableToCopy');
       e.clearSelection();
     };
   }
