@@ -20,7 +20,7 @@ export class EmailSettingController {
     };
     this.Orgservice.getAdminOrgAsPromise(null, params).then((response: ng.IHttpResponse<IAdminOrgResponse>) => {
       this.getAdminOrgHandler(response.data);
-    });
+    }).catch(_.noop);
   }
 
   private getAdminOrgHandler(data: IAdminOrgResponse) {
