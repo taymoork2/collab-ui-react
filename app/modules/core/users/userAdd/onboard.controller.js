@@ -684,7 +684,7 @@ require('./_user-add.scss');
     }
 
 
-    function createPropertiesForAnalyltics() {
+    function createPropertiesForAnalytics() {
       return {
         numberOfErrors: $scope.results.errors.length,
         usersAdded: $scope.numAddedUsers,
@@ -1401,7 +1401,7 @@ require('./_user-add.scss');
 
     $scope.goToUsersPage = function () {
       $previousState.forget('modalMemo');
-      Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.FINISH, null, createPropertiesForAnalyltics());
+      Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.FINISH, null, createPropertiesForAnalytics());
       $state.go('users.list');
     };
 
@@ -1409,7 +1409,7 @@ require('./_user-add.scss');
       if (isFTW) {
         $scope.wizard.goToStep('manualEntry');
       } else {
-        Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.GO_BACK_FIX, null, createPropertiesForAnalyltics());
+        Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.GO_BACK_FIX, null, createPropertiesForAnalytics());
         $state.go('users.add.manual');
       }
     };
@@ -1521,7 +1521,7 @@ require('./_user-add.scss');
             var msg = 'Invited ' + $scope.numAddedUsers + ' users';
             LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), $scope.numAddedUsers, null);
           }
-          Analytics.trackAddUsers(Analytics.eventNames.SAVE, null, createPropertiesForAnalyltics());
+          Analytics.trackAddUsers(Analytics.eventNames.SAVE, null, createPropertiesForAnalytics());
           $state.go('users.add.results');
         })
         .finally(function () {
