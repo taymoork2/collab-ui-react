@@ -23,7 +23,11 @@
       <p class="feature-description-container" ng-class="{'feature-label-disabled': feature.disabled}">
         <span translate="{{feature.description}}" translate-compile />
       </p>
-    </div>
+      <div ng-if="feature.id == 'AA' && feature.disabled">
+        <i class="icon icon-information {{feature.color}}"></i>
+        <span translate="{{feature.warning}}"></span><a class="aa-learn-more" translate="careChatTpl.learnMoreLink"></a>
+      </div>
+  </div>
     <div ng-if="$ctrl.features.length === 0">
       <h4 translate="sunlightDetails.newFeatures.noCareFeatures"></h4>
     </div>

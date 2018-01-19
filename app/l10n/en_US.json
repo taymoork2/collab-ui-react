@@ -4220,6 +4220,7 @@
   "autoAttendant": {
     "code": "AA",
     "title": "Auto Attendant",
+    "warning": "Requires call service.",
     "modalDescription": "Auto attendants play customized prompts and provide callers with menu options for routing their calls through your system.",
     "namePlaceholder": "Name the Auto Attendant",
     "repeatMenu": "Repeat",
