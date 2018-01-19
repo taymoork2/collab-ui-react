@@ -42,6 +42,19 @@
     };
   }
 
+  function toResolveParam(paramName, defaultVal) {
+    return /* @ngInject */ function ($stateParams) {
+      return _.get($stateParams, paramName, defaultVal);
+    };
+  }
+
+  function stateParamsToResolveParams(stateParams) {
+    return _.reduce(stateParams, function (result, defaultVal, paramName) {
+      result[paramName] = toResolveParam(paramName, defaultVal);
+      return result;
+    }, {});
+  }
+
   angular
     .module('wx2AdminWebClientApp')
     .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider', 'languagesProvider',
@@ -1027,7 +1040,10 @@
             },
           })
           .state('users.manage.edit-summary-auto-assign-template-modal', {
-            template: '<edit-summary-auto-assign-template-modal dismiss="$dismiss()"></edit-summary-auto-assign-template-modal>',
+            template: '<edit-summary-auto-assign-template-modal dismiss="$dismiss()" state-data="$resolve.stateData"></edit-summary-auto-assign-template-modal>',
+            resolve: stateParamsToResolveParams({
+              stateData: null,
+            }),
             params: {
               stateData: null,
             },

@@ -13,10 +13,6 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
     private AutoAssignTemplateService,
   ) {}
 
-  public $onInit(): void {
-    this.stateData = _.get(this.$state, 'params.stateData');
-  }
-
   public dismissModal(): void {
     this.Analytics.trackAddUsers(this.Analytics.eventNames.CANCEL_MODAL);
     this.dismiss();
@@ -50,5 +46,6 @@ export class EditSummaryAutoAssignTemplateModalComponent implements ng.IComponen
   public template = require('./edit-summary-auto-assign-template-modal.html');
   public bindings = {
     dismiss: '&?',
+    stateData: '<',
   };
 }

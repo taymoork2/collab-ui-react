@@ -27,26 +27,4 @@ describe('Component: editSummaryAutoAssignTemplateModal:', () => {
       expect(this.Analytics.trackAddUsers).toHaveBeenCalledWith(this.Analytics.eventNames.CANCEL_MODAL);
     });
   });
-
-  describe('primary behaviors (controller):', () => {
-    it('should initialize its "stateData" property', function () {
-      _.set(this.$state, 'params.stateData', {
-        items: {
-          'fake-license-id-1': {},
-          'fake-license-id-2': {},
-          'fake-license-id-3': {},
-        },
-      });
-      this.compileComponent('editSummaryAutoAssignTemplateModal', {
-        dismiss: 'dismiss',
-      });
-      expect(this.controller.stateData).toEqual({
-        items: {
-          'fake-license-id-1': {},
-          'fake-license-id-2': {},
-          'fake-license-id-3': {},
-        },
-      });
-    });
-  });
 });
