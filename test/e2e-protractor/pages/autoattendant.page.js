@@ -183,8 +183,6 @@ var AutoAttendantPage = function () {
   this.customerSupportTemplate = element(by.css('div.feature-card-container'));
   this.careFeatureTypeAA = element(by.css('h4.feature-aa-color'));
 
-  // this.callerInputRemoveAction = element(by.css('div.aa-panel-body[name="Caller Input"]')).all(by.css('div.aa-flex-row')).first().element(by.css('div.aa-action-delete'));
-
   this.phoneMenuTimeout = element(by.css('div.aa-pm-timeout .icon-chevron-down'));
   this.phoneMenuTimeoutOptions = element(by.css('div.aa-pm-timeout div.dropdown-menu')).all(by.tagName('li')).first();
   this.submenuRepeatPlus = element.all(by.css('aa-submenu .icon-plus-circle'));
