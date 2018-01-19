@@ -107,6 +107,7 @@ module.exports = {
   flagMsg: 'flag-msg',
   gemServicesTab: 'gem-services-tab',
   geoHintEnabled: 'geo-hint-enabled',
+  gssWebexCHPEnabled: 'gss-webex-chp-enabled',
   hi1033: 'h-i1033',
   hI1484: 'h-i1484', // Multi-Location Support
   hI802: 'h-i802',
