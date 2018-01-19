@@ -19,8 +19,6 @@ describe('Huron Auto Attendant', function () {
   var testCardClose;
   var flow;
 
-  var ceInfos = require('./aaE2ETest.json');
-
   describe('Hybrid Enabled tenant', function () {
     beforeAll(function () {
 
@@ -33,7 +31,7 @@ describe('Huron Auto Attendant', function () {
       browser.setFileDetector(new remote.FileDetector());
 
       login.login('hybrid-org', autoattendant.careFeature);
-    }, 1200);
+    }, 120000);
 
     afterAll(function () {
       flow = protractor.promise.controlFlow();
