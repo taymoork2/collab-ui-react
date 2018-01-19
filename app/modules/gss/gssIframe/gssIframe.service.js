@@ -30,7 +30,7 @@
 
     function syncUp() {
       var syncUpUrl = url + '/syncUpFromAWS';
-      return $http.get(syncUpUrl)
+      return $http.post(syncUpUrl)
         .then(extractData);
     }
 

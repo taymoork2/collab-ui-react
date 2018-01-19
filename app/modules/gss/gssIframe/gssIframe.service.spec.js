@@ -1,30 +1,35 @@
 'use strict';
 
 describe('Service: GSSIframeService', function () {
-  var GSSIframeService, $q, featureToggleService, urlConfig;
+  var $httpBackend, GSSIframeService;
 
   beforeEach(angular.mock.module('GSS'));
   beforeEach(inject(dependencies));
 
   afterEach(function () {
-    $q = GSSIframeService = undefined;
+    $httpBackend = GSSIframeService = undefined;
   });
 
-  function dependencies(_$q_, _GSSIframeService_, _FeatureToggleService_, _UrlConfig_) {
-    $q = _$q_;
+  function dependencies(_$httpBackend_, _GSSIframeService_) {
+    $httpBackend = _$httpBackend_;
     GSSIframeService = _GSSIframeService_;
-    featureToggleService = _FeatureToggleService_;
-    urlConfig = _UrlConfig_;
   }
 
-  // it('getGssUrl, should return Webex CHP URL', function () {
-  //   spyOn(featureToggleService, 'gssWebexCHPEnabledGetStatus').and.returnValue(true);
-  //   spyOn(urlConfig, 'getGssUrlWebexCHP').and.returnValue('https://statusbts.webex.com/status');
-  //   expect(GSSIframeService.getGssUrl()).toEqual('https://statusbts.webex.com/status');
-  // });
+  it('compare version', function () {
+    $httpBackend.expectGET(/.*\/compareVersion.*/g).respond(200, true);
+    GSSIframeService.syncCheck()
+      .then(function (res) {
+        expect(res).toBeTruthy();
+      });
+    $httpBackend.flush();
+  });
 
-  it('getGssUrl, should return AWS CHP URL', function () {
-    spyOn(featureToggleService, 'gssWebexCHPEnabledGetStatus').and.returnValue($q.resolve(function () { return false; }));
-    expect(GSSIframeService.getGssUrl()).toEqual('https://service-dev-collaborationhelp.cisco.com/status');
+  it('sync up the data with AWS', function () {
+    $httpBackend.expectPOST(/.*\/syncUpFromAWS.*/g).respond(200, true);
+    GSSIframeService.syncUp()
+      .then(function (res) {
+        expect(res).toBeTruthy();
+      });
+    $httpBackend.flush();
   });
 });
