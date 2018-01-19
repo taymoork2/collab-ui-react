@@ -929,6 +929,7 @@
             views: {
               'usersAdd@users.add': {
                 template: require('modules/core/users/userAdd/addUsersResultsModal.tpl.html'),
+                // TODO (mipark2): rm this if determined no longer needed
                 resolve: {
                   modalInfo: function ($state) {
                     $state.params.modalClass = 'add-users';
