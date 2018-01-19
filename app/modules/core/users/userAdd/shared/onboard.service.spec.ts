@@ -89,8 +89,8 @@ describe('OnboardService:', () => {
   });
 
   describe('onboardUsersInChunks():', () => {
-    it('should create sub-lists of users and call "Userservice.onboardUsersLegacy()" for each sub-list as needed', function () {
-      spyOn(this.Userservice, 'onboardUsersLegacy').and.returnValue(this.$q.resolve({}));
+    it('should create sub-lists of users and call "Userservice.onboardUsers()" for each sub-list as needed', function () {
+      spyOn(this.Userservice, 'onboardUsers').and.returnValue(this.$q.resolve({}));
       spyOn(this.OnboardService, 'parseOnboardedUsers');
       const fakeUsersList = ['fake-user-1'];
       const fakeEntitlementsList = 'fake-entitlements-list';
@@ -99,33 +99,33 @@ describe('OnboardService:', () => {
       this.OnboardService.onboardUsersInChunks(fakeUsersList, fakeEntitlementsList, fakeLicensesList, batchSize)
         .then((results) => {
           expect(results.length).toBe(1);
-          expect(this.Userservice.onboardUsersLegacy.calls.count()).toBe(1);
+          expect(this.Userservice.onboardUsers.calls.count()).toBe(1);
         })
         .then(() => {
           // user list bigger than batch size (user list length: 2, batch size: 1)
           fakeUsersList.push('fake-user-2');
-          this.Userservice.onboardUsersLegacy.calls.reset();
+          this.Userservice.onboardUsers.calls.reset();
           return this.OnboardService.onboardUsersInChunks(fakeUsersList, fakeEntitlementsList, fakeLicensesList, batchSize);
         })
         .then((results) => {
           expect(results.length).toBe(2);
-          expect(this.Userservice.onboardUsersLegacy.calls.count()).toBe(2);
+          expect(this.Userservice.onboardUsers.calls.count()).toBe(2);
         })
         .then(() => {
           // user list and batch size equal (user list length: 2, batch size: 2)
           batchSize = 2;
-          this.Userservice.onboardUsersLegacy.calls.reset();
+          this.Userservice.onboardUsers.calls.reset();
           return this.OnboardService.onboardUsersInChunks(fakeUsersList, fakeEntitlementsList, fakeLicensesList, batchSize);
         })
         .then((results) => {
           expect(results.length).toBe(1);
-          expect(this.Userservice.onboardUsersLegacy.calls.count()).toBe(1);
+          expect(this.Userservice.onboardUsers.calls.count()).toBe(1);
         });
       this.$scope.$apply();
     });
 
     it('should return a list of promises whose resolved values are objects with "onboardedUsers" properties', function () {
-      spyOn(this.Userservice, 'onboardUsersLegacy').and.returnValue(this.$q.resolve({}));
+      spyOn(this.Userservice, 'onboardUsers').and.returnValue(this.$q.resolve({}));
       spyOn(this.OnboardService, 'parseOnboardedUsers').and.returnValue('fake-parseOnboardedUsers-result');
       const fakeUsersList = ['fake-user-1'];
       const fakeEntitlementsList = 'fake-entitlements-list';

@@ -169,10 +169,14 @@ export default class OnboardService {
   public onboardUsersInChunks(usersList: IUserNameAndEmail[], entitleList: IUserEntitlementRequestItem[], licenseList: ILicenseRequestItem[], chunkSize: number = this.Config.batchSize) {
     // notes:
     // - split out users list into smaller list chunks
-    // - call 'Userservice.onboardUsersLegacy()' for each chunk
+    // - call 'Userservice.onboardUsers()' for each chunk
     const usersListChunks = _.chunk(usersList, chunkSize);
     const promises = _.map(usersListChunks, (usersListChunk) => {
-      return this.Userservice.onboardUsersLegacy(usersListChunk, entitleList, licenseList)
+      return this.Userservice.onboardUsers({
+        users: usersListChunk,
+        licenses: licenseList,
+        userEntitlements: entitleList,
+      })
         .then((response) => {
           // add 'onboardedUsers' property and resolve
           const userResponse: IOnboardedUserResult[] = _.get(response, 'data.userResponse', []);
