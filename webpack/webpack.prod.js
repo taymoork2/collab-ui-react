@@ -38,7 +38,6 @@ function webpackConfig(env) {
     plugins: plugins.commonsChunkPlugins.concat([
       plugins.getHtmlWebpackPlugin({
         ngStrictDi: '',
-        loadAdobeScripts: true,
       }),
       new ExtractTextPlugin({
         filename: 'styles/[name].[chunkhash].css',

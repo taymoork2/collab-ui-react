@@ -98,7 +98,6 @@
     require('modules/core/stateRedirect/previousState.service'),
     require('modules/core/trackingId/trackingId.module'),
     require('modules/core/window').default,
-    require('modules/online/analytics').default,
     require('modules/online/upgrade').default,
     require('@collabui/collab-ui-ng').default,
     'ct.ui.router.extras.sticky',
