@@ -162,6 +162,12 @@ export default class OnboardService {
     scopeData.invalidDirSyncUsersCount = 0;
   }
 
+  public removeEmailFromTokenfield(email: string, userList: string) {
+    return userList.split(', ').filter(function (token) {
+      return token.indexOf(email) === -1;
+    }).join(', ');
+  }
+
   public parseUsersList(userList: string): IUserNameAndEmail[] {
     return addressParser.parse(userList);
   }

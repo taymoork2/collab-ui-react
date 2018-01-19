@@ -1375,12 +1375,6 @@ require('./_user-add.scss');
     // TODO (mipark2): rm this if determined no longer needed (see: '$scope.manualEntryNext()')
     $scope.invalidcount = OnboardStore['users.add.manual'].invalidcount;
 
-    function removeEmailFromTokenfield(email) {
-      $scope.model.userList = $scope.model.userList.split(', ').filter(function (token) {
-        return token.indexOf(email) === -1;
-      }).join(', ');
-    }
-
     var resetUsersfield = function () {
       return OnboardService.resetUsersfield($scope);
     };
@@ -1507,7 +1501,7 @@ require('./_user-add.scss');
           $scope.results.warnings = [];
           _.forEach($scope.results.resultList, function (userResult) {
             if (userResult.alertType === 'success' && userResult.email) {
-              removeEmailFromTokenfield(userResult.email);
+              $scope.model.userList = OnboardService.removeEmailFromTokenfield(userResult.email, $scope.model.userList);
             }
             if (userResult.warningMsg) {
               $scope.results.warnings.push(userResult.warningMsg);
