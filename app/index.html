@@ -12,9 +12,6 @@
     <% for (var chunk in htmlWebpackPlugin.options.headChunks) { %>
     <script src="<%= htmlWebpackPlugin.files.chunks[htmlWebpackPlugin.options.headChunks[chunk]].entry %>" type="text/javascript"></script>
     <% } %>
-    <% if (htmlWebpackPlugin.options.loadAdobeScripts) { %>
-    <script src="//assets.adobedtm.com/2bcd47c09d46d6e1ea2fd7753b40afb656eb0683/satelliteLib-b40066032cf0a1b4f92efb2131e8178ab11ab006.js"></script>
-    <% } %>
     <%= htmlWebpackPlugin.options.dllBundlesFrag %>
     <% for (var chunkKey in htmlWebpackPlugin.options.chunks) {
          var css = htmlWebpackPlugin.files.chunks[htmlWebpackPlugin.options.chunks[chunkKey]].css;
@@ -36,9 +33,6 @@
       You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.
     </div>
     <![endif]-->
-    <% if (htmlWebpackPlugin.options.loadAdobeScripts) { %>
-    <script>if(typeof _satellite !== 'undefined'){_satellite.pageBottom();}</script>
-    <% } %>
     <% for (var chunk in htmlWebpackPlugin.options.bodyChunks) { %>
     <script src="<%= htmlWebpackPlugin.files.chunks[htmlWebpackPlugin.options.bodyChunks[chunk]].entry %>" type="text/javascript"></script>
     <% } %>

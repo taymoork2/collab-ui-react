@@ -13,14 +13,14 @@
 </div>
 
 <div class="modal-footer">
-  <span ng-if="modal.copied" translate="helpdesk.extended-data-dialog.copiedToClipboard"></span>&nbsp;&nbsp;
+  <span ng-if="modal.copied" translate="common.copiedToClipboard"></span>&nbsp;&nbsp;
   <button ng-disabled="modal.loading"
           class="btn btn--primary"
           ngclipboard data-clipboard-target="#helpdesk-extended-data-modal-content"
           ngclipboard-success="modal.clipboardSuccess(e)"
           ngclipboard-error="modal.clipboardError(e)"
           focus-on>
-    <span translate="helpdesk.extended-data-dialog.copy">
+    <span translate="common.copy">
     </span>
   </button>
 </div>
