@@ -186,9 +186,9 @@ var auth = {
     org: '5abcd266-e194-475e-bc48-010af5da6dde',
   },
   'expertvirtualassistant-admin': {
-    user: 'sparkexpertbot+admin@gmail.com',
-    pass: 'Cisco@123',
-    org: 'a97e8ec7-c885-4990-8b81-ccec270a169f',
+    user: 'sparkcareatlaseva+admin@gmail.com',
+    pass: 'C1sco@123',
+    org: '51a8b0f5-ba13-46c2-8ac1-c4b5b8b3f7ef',
   },
   'wbx-multipleCenterLicenseTestAdmin': {
     user: 't31r1-regression-adm@mailinator.com',
