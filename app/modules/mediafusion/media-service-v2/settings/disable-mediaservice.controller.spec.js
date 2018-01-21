@@ -4,8 +4,7 @@ describe('Controller: DisableMediaServiceController', function () {
   beforeEach(angular.mock.module('Mediafusion'));
   beforeEach(angular.mock.module('Hercules'));
 
-  var $q, httpMock, controller, DeactivateMediaService, HybridServicesClusterService, Notification;
-
+  var $q, $httpBackend, controller, DeactivateMediaService, HybridServicesClusterService, Notification;
   var modalInstance = {
     dismiss: jasmine.createSpy('dismiss'),
     close: jasmine.createSpy('close'),
@@ -21,10 +20,9 @@ describe('Controller: DisableMediaServiceController', function () {
     Notification = _Notification_;
     HybridServicesClusterService = _HybridServicesClusterService_;
     DeactivateMediaService = _DeactivateMediaService_;
-    httpMock = _$httpBackend_;
+    $httpBackend = _$httpBackend_;
     spyOn($state, 'go');
     spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve({}));
-    //httpMock.when('GET', /^\w+.*/).respond({});
     controller = $controller('DisableMediaServiceController', {
       $state: $state,
       $q: $q,
@@ -35,7 +33,7 @@ describe('Controller: DisableMediaServiceController', function () {
   }));
 
   afterEach(function () {
-    $q = httpMock = DeactivateMediaService = HybridServicesClusterService = Notification = undefined;
+    $q = $httpBackend = controller = DeactivateMediaService = HybridServicesClusterService = Notification = undefined;
   });
 
   it('controller should be defined', function () {
@@ -61,7 +59,7 @@ describe('Controller: DisableMediaServiceController', function () {
     spyOn(controller, 'step');
     spyOn(DeactivateMediaService, 'deactivateHybridMediaService');
     controller.deactivate();
-    httpMock.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingExpectation();
     expect(controller.step).toBe('2');
     expect(DeactivateMediaService.deactivateHybridMediaService).toHaveBeenCalled();
   });

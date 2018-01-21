@@ -42,7 +42,7 @@
       ServiceDescriptorService.enableService(serviceId).then('', function () {
         Notification.error('mediaFusion.mediaServiceActivationFailure');
       });
-      setisMediaServiceEnabled(true);
+      setIsMediaServiceEnabled(true);
       enableOrpheusForMediaFusion();
       setOrgSettingsForDevOps();
     }
@@ -112,7 +112,7 @@
       return isMediaService.promise;
     };
 
-    var setisMediaServiceEnabled = function (value) {
+    var setIsMediaServiceEnabled = function (value) {
       vm.isMediaServiceEnabled = value;
     };
 
@@ -206,7 +206,7 @@
     };
 
     return {
-      setisMediaServiceEnabled: setisMediaServiceEnabled,
+      setIsMediaServiceEnabled: setIsMediaServiceEnabled,
       getMediaServiceState: getMediaServiceState,
       getUserIdentityOrgToMediaAgentOrgMapping: getUserIdentityOrgToMediaAgentOrgMapping,
       setUserIdentityOrgToMediaAgentOrgMapping: setUserIdentityOrgToMediaAgentOrgMapping,

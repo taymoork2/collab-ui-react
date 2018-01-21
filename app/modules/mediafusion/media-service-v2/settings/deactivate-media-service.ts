@@ -1,15 +1,15 @@
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { Notification } from 'modules/core/notifications';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
-import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 export class DeactivateMediaService {
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
     private $state: ng.ui.IStateService,
-    private Notification: Notification,
-    private MediaServiceActivationV2,
     private HybridServicesClusterService: HybridServicesClusterService,
+    private MediaServiceActivationV2,
+    private Notification: Notification,
     private ServiceDescriptorService: ServiceDescriptorService,
   ) {}
   public clusterNames: string[];
@@ -26,7 +26,6 @@ export class DeactivateMediaService {
       .catch(() => []);
   }
 
-
   public deactivateHybridMediaService() {
     this.getClusterList()
       .then((clusters) => {
@@ -35,17 +34,14 @@ export class DeactivateMediaService {
         this.clusterNames.sort();
       })
       .then(() => {
-        const promises: ng.IPromise<any>[] = [];
-        _.forEach(this.clusterIds, cluster => {
-          promises.push(this.HybridServicesClusterService.deregisterCluster(cluster));
-        });
+        const promises = _.map(this.clusterIds, (clusterId) => this.HybridServicesClusterService.deregisterCluster(clusterId));
         this.$q.all(promises)
         .then(() => {
           this.ServiceDescriptorService.disableService(this.serviceId);
-          this.MediaServiceActivationV2.setisMediaServiceEnabled(false);
+          this.MediaServiceActivationV2.setIsMediaServiceEnabled(false);
           this.MediaServiceActivationV2.disableOrpheusForMediaFusion();
           this.MediaServiceActivationV2.deactivateHybridMedia();
-          this.MediaServiceActivationV2.disableMFOrgSettingsForDevOps();
+          return this.MediaServiceActivationV2.disableMFOrgSettingsForDevOps();
         })
         .catch((error) => {
           this.Notification.errorWithTrackingId(error, 'mediaFusion.deactivate.error');

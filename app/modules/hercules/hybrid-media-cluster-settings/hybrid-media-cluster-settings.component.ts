@@ -51,7 +51,7 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
     const { clusterId } = changes;
     if (clusterId && clusterId.currentValue) {
       this.clusterId = clusterId.currentValue;
-      this.getClusterList()
+      this.updateClusterList()
       .then(() => this.loadCluster(clusterId.currentValue))
       .then(() => this.getProperties(clusterId.currentValue));
     }
@@ -70,7 +70,7 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
       });
   }
 
-  private getClusterList() {
+  private updateClusterList() {
     return this.HybridServicesClusterService.getAll()
       .then((clusters) => {
         this.clusterList = _.filter(clusters, {

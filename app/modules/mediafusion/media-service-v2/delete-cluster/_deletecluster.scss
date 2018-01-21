@@ -1,3 +1,5 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+
 .deleteClusterTableRow {
   border-top: 0;
   display: flex;
@@ -57,8 +59,8 @@
   width: 100%;
 }
 .warning-icon {
-  color: #FFB400;
-  margin-right: .93px;
+  color: $color-attention-base;
+  margin-right: 0.06rem;
 }
 .warning-container {
   margin-left: 1.87rem;

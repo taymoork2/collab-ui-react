@@ -6,91 +6,101 @@
 </div>
 <div class="modal-body">
   <div ng-hide="deleteClust.loading">
-    <div ng-show="deleteClust.noOfHost > 0" >
-    <div ng-hide="deleteClust.failedToDelete">
-      <p translate="mediaFusion.clusters.deleteClusterBodyDesc"></p>
-      <p class="makeASelection"> <strong translate="mediaFusion.clusters.makeASelection" /></p>
-      <div class="form-group radioGroup">
-        <div class="cs-radio-group radioGroup">
-          <div class="cs-input-group cs-input-radio">
-            <div class="radioButton1">
-              <input type="radio" id="individualRadio1" ng-model="deleteClust.radioModel" ng-value='1'>
-              <label for="individualRadio1">
-                <span translate="mediaFusion.clusters.moveallnodes"></span>
-              </label>
-            </div>
-            <div class="radioButton1">
-              <input type="radio" id="individualRadio2" ng-model="deleteClust.radioModel" ng-value='2'>
-              <label for="individualRadio2">
-                <span translate="mediaFusion.clusters.deregisterallnodes"></span>
-              </label>
+    <div ng-show="deleteClust.noOfHost > 0">
+      <div ng-hide="deleteClust.failedToDelete">
+        <p translate="mediaFusion.clusters.deleteClusterBodyDesc"></p>
+        <p class="makeASelection">
+          <strong translate="mediaFusion.clusters.makeASelection" />
+        </p>
+        <div class="form-group radioGroup">
+          <div class="cs-radio-group radioGroup">
+            <div class="cs-input-group cs-input-radio">
+              <div class="radioButton1">
+                <input type="radio" id="individualRadio1" ng-model="deleteClust.radioModel" ng-value='1'>
+                <label for="individualRadio1">
+                  <span translate="mediaFusion.clusters.moveallnodes"></span>
+                </label>
+              </div>
+              <div class="radioButton1">
+                <input type="radio" id="individualRadio2" ng-model="deleteClust.radioModel" ng-value='2'>
+                <label for="individualRadio2">
+                  <span translate="mediaFusion.clusters.deregisterallnodes"></span>
+                </label>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      <div ng-show="deleteClust.failedToDelete">
+        {{deleteClust.unableToMoveNodes}}
+      </div>
+      <div ng-show="!deleteClust.ngDisable">
+        <p class="selectTheDest" translate="mediaFusion.clusters.selectTheDest"></p>
+        <table>
+          <tr class="deleteClusterTableHeaderRow">
+            <th translate="mediaFusion.clusters.nodes"></th>
+            <th translate="mediaFusion.clusters.moveTo"></th>
+          </tr>
+          <tr class="deleteClusterTableRow" ng-repeat="host in deleteClust.hosts">
+            <td ng-disabled="deleteClust.radioModel === 2">{{ host.hostname }} </td>
+            <td>
+              <cs-select ng-hide="deleteClust.radioModel === 2" ng-model="deleteClust.selectModel[host.hostname]" options="deleteClust.options"
+                placeholder="deleteClust.selectPlaceholder" combo="true">
+              </cs-select>
+              <cs-select ng-hide="deleteClust.radioModel === 1" is-disabled="deleteClust.radioModel === 2" ng-model="deleteClust.selectModel[host.hostname]"
+                options="deleteClust.options" placeholder="deleteClust.selectPlaceholder">
+              </cs-select>
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
-    <div ng-show="deleteClust.failedToDelete">
-      {{deleteClust.unableToMoveNodes}}
-    </div>
-    <div ng-show="!deleteClust.ngDisable ">
-      <p class="selectTheDest" translate="mediaFusion.clusters.selectTheDest"></p>
-      <table>
-        <tr class="deleteClusterTableHeaderRow">
-          <th translate="mediaFusion.clusters.nodes"></th>
-          <th translate="mediaFusion.clusters.moveTo"></th>
-        </tr>
-        <tr class="deleteClusterTableRow" ng-repeat="host in deleteClust.hosts">
-          <td ng-disabled="deleteClust.radioModel === 2">{{ host.hostname }} </td>
-          <td>
-            <cs-select ng-hide="deleteClust.radioModel === 2" ng-model="deleteClust.selectModel[host.hostname]" options="deleteClust.options" placeholder="deleteClust.selectPlaceholder" combo="true">
-            </cs-select>
-            <cs-select ng-hide="deleteClust.radioModel === 1" is-disabled="deleteClust.radioModel === 2" ng-model="deleteClust.selectModel[host.hostname]" options="deleteClust.options" placeholder="deleteClust.selectPlaceholder" >
-            </cs-select>
-          </td>
-        </tr>
-      </table>
-    </div>
-  </div>
     <div ng-show="deleteClust.radioModel === 2 && !deleteClust.ngDisable">
       <div class="form-group">
-        <div class="cs-checkbox-group" ng-show=" deleteClust.radioModel === 2">
-          <span class="warning-icon"><i class="icon icon-warning"></i></span>
+        <div class="cs-checkbox-group" ng-show="deleteClust.radioModel === 2">
+          <span class="warning-icon">
+            <i class="icon icon-warning"></i>
+          </span>
           <div class="warning-container">
-          <span translate="mediaFusion.clusters.deregisterWarning"></span>
-          <div class="cs-input-group cs-input-checkbox">
-            <input type="checkbox" id="individualcheckbox" ng-model="deleteClust.checkboxModel">
-            <label for="individualcheckbox">
-              <span translate="common.iUnderstand"></span>
-            </label>
-          </div>
+            <span translate="mediaFusion.clusters.deregisterWarning"></span>
+            <div class="cs-input-group cs-input-checkbox">
+              <input type="checkbox" id="individualcheckbox" ng-model="deleteClust.checkboxModel">
+              <label for="individualcheckbox">
+                <span translate="common.iUnderstand"></span>
+              </label>
+            </div>
           </div>
         </div>
         <div class="cs-checkbox-group" ng-show="deleteClust.clusters.length === 1">
-          <span class="warning-icon"><i class="icon icon-warning"></i></span>
+          <span class="warning-icon">
+            <i class="icon icon-warning"></i>
+          </span>
           <div class="warning-container">
+            <span translate="mediaFusion.clusters.deactivateWarning"></span>
+            <div class="cs-input-group cs-input-checkbox">
+              <input type="checkbox" id="deactivateCheckbox" ng-model="deleteClust.lastClusterCheckboxModel">
+              <label for="deactivateCheckbox">
+                <span translate="common.iUnderstand"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group" ng-show="deleteClust.clusters.length === 1 && deleteClust.noOfHost < 1">
+      <div class="cs-checkbox-group" ng-show="deleteClust.clusters.length === 1">
+        <span class="warning-icon">
+          <i class="icon icon-warning"></i>
+        </span>
+        <div class="warning-container">
           <span translate="mediaFusion.clusters.deactivateWarning"></span>
           <div class="cs-input-group cs-input-checkbox">
-            <input type="checkbox" id="deactivateCheckbox" ng-model="deleteClust.lastClusterCheckboxModel">
-            <label for="deactivateCheckbox">
+            <input type="checkbox" id="alertCheckbox" ng-model="deleteClust.alertCheckboxModel">
+            <label for="alertCheckbox">
               <span translate="common.iUnderstand"></span>
             </label>
           </div>
         </div>
-        </div>
-      </div>
-    </div>
-    <div class="form-group" ng-show="deleteClust.clusters.length === 1 && deleteClust.noOfHost < 1" >
-      <div class="cs-checkbox-group" ng-show="deleteClust.clusters.length === 1">
-        <span class="warning-icon"><i class="icon icon-warning"></i></span>
-        <div class="warning-container">
-        <span translate="mediaFusion.clusters.deactivateWarning"></span>
-        <div class="cs-input-group cs-input-checkbox">
-          <input type="checkbox" id="alertCheckbox" ng-model="deleteClust.alertCheckboxModel">
-          <label for="alertCheckbox">
-            <span translate="common.iUnderstand"></span>
-          </label>
-        </div>
-      </div>
       </div>
     </div>
   </div>
@@ -102,33 +112,34 @@
 </div>
 <div class="modal-footer">
   <div ng-show="deleteClust.radioModel === 1 && deleteClust.noOfHost > 0">
-    <button class="btn btn--primary pull-right" id="convertActionButton" ng-click="deleteClust.continue()" ng-disabled="!deleteClust.canContinue()" ng-hide="deleteClust.ngDisable">
+    <button class="btn btn--primary pull-right" id="convertActionButton" ng-click="deleteClust.continue()" ng-disabled="!deleteClust.canContinue()"
+      ng-hide="deleteClust.ngDisable">
       <span ng-hide="saving" translate="mediaFusion.clusters.continue">
-    </span>
+      </span>
       <span ng-show="saving">
-      <i class="icon icon-spinner">
-      </i>
-    </span>
+        <i class="icon icon-spinner">
+        </i>
+      </span>
     </button>
   </div>
-  <div ng-show=" deleteClust.radioModel === 2 ">
+  <div ng-show="deleteClust.radioModel === 2">
     <button class="btn btn--negative pull-right" id="convertActionButton" ng-click="deleteClust.deleteCluster()" ng-disabled="!deleteClust.checkboxModel || !deleteClust.lastClusterCheckboxModel">
       <span ng-hide="saving" translate="mediaFusion.clusters.deletecluster">
-    </span>
+      </span>
       <span ng-show="saving">
-      <i class="icon icon-spinner">
-      </i>
-    </span>
+        <i class="icon icon-spinner">
+        </i>
+      </span>
     </button>
   </div>
-  <div ng-show="deleteClust.clusters.length === 1 && deleteClust.noOfHost < 1" >
+  <div ng-show="deleteClust.clusters.length === 1 && deleteClust.noOfHost < 1">
     <button class="btn btn--negative pull-right" id="convertActionButton" ng-click="deleteClust.deleteCluster()" ng-disabled="!deleteClust.alertCheckboxModel">
       <span ng-hide="saving" translate="mediaFusion.clusters.deletecluster">
-    </span>
+      </span>
       <span ng-show="saving">
-      <i class="icon icon-spinner">
-      </i>
-    </span>
+        <i class="icon icon-spinner">
+        </i>
+      </span>
     </button>
   </div>
   <button class="btn pull-right" id="convertCancelButton" ng-click="$dismiss()" style="margin-right: 10px">

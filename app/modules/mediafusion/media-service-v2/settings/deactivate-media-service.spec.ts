@@ -30,11 +30,9 @@ describe('DeactivateMediaService', () => {
           hostname: 'hybridmedia.sample.org',
         }],
       }];
-      spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve(
-        clusters,
-      ));
+      spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve(clusters));
       spyOn(ServiceDescriptorService, 'disableService').and.returnValue($q.resolve({}));
-      spyOn(MediaServiceActivationV2, 'setisMediaServiceEnabled').and.returnValue($q.resolve({}));
+      spyOn(MediaServiceActivationV2, 'setIsMediaServiceEnabled').and.returnValue($q.resolve({}));
       spyOn(MediaServiceActivationV2, 'disableOrpheusForMediaFusion').and.returnValue($q.resolve({}));
       spyOn(MediaServiceActivationV2, 'deactivateHybridMedia').and.returnValue($q.resolve({}));
       spyOn(MediaServiceActivationV2, 'disableMFOrgSettingsForDevOps').and.returnValue($q.resolve({}));
