@@ -20,6 +20,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   var ceMenuWithAnnouncementsPlay;
   var ceWelcomeWithAnnouncementsKeys;
   var ceWelcomeMenuWithOldQueue;
+  var ceMenuWithAnnouncementsPlayWithoutValidDescription;
 
   var ceWelcome2 = {
     callExperienceName: 'AA Welcome',
@@ -144,11 +145,12 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     ceWelcomeWithAnnouncementsKeys = wmenuWithAnnouncements.ceWelcomeWithAnnouncementsKeys;
     ceMenuWithDynaSay = wmenuWithAnnouncements.ceDynamicSay;
     ceMenuWithAnnouncementsPlay = wmenuWithAnnouncements.ceWelcomeWithAnnouncementsPlay;
+    ceMenuWithAnnouncementsPlayWithoutValidDescription = wmenuWithAnnouncements.ceWelcomeWithAnnouncementsPlayWithoutValidDescription;
     spyOn(AARestModelService, 'getRestBlocks').and.returnValue(restBlocks);
   }));
 
   afterEach(function () {
-    AutoAttendantCeMenuModelService = AARestModelService = wmenu = ceWelcome = ceWelcomeNoDescription = ceWelcomeNoDescriptionTemp = welcomeMenu = ceMenuFull = wmenuWithAnnouncements = ceWelcomeMenuWithOldQueue = ceWelcomeWithQueue = ceWelcomeWithAnnouncements = ceWelcomeWithAnnouncementsKeys = ceMenuWithDynaSay = ceMenuWithAnnouncementsPlay = undefined;
+    AutoAttendantCeMenuModelService = AARestModelService = wmenu = ceWelcome = ceWelcomeNoDescription = ceWelcomeNoDescriptionTemp = welcomeMenu = ceMenuFull = wmenuWithAnnouncements = ceWelcomeMenuWithOldQueue = ceWelcomeWithQueue = ceWelcomeWithAnnouncements = ceWelcomeWithAnnouncementsKeys = ceMenuWithDynaSay = ceMenuWithAnnouncementsPlay = ceMenuWithAnnouncementsPlayWithoutValidDescription = undefined;
   });
 
   describe('createAnnouncements for menuEntry with announcements with dynamic', function () {
@@ -166,6 +168,19 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceMenuWithAnnouncementsPlay, 'openHours');
       var success = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'openHours', _welcomeMenu);
       expect(success).toBe(true);
+    });
+  });
+
+  /*This case will test the scenario that prompts description should be populated
+   * when CE definition is saved while update in schedule.
+   */
+  describe('createAnnouncements for menuEntry with announcements with play and Description', function () {
+    it('should createAnnouncements for menuEntry with announcements with play and description', function () {
+      var _ceRecord = _.cloneDeep(ceInfos[0]);
+      var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceMenuWithAnnouncementsPlayWithoutValidDescription, 'openHours');
+      _.set(welcomeMenu, 'entries[0].headers[0].actions[0].description', 'uploadFile');
+      expect(AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'openHours', _welcomeMenu)).toBe(true);
+      expect(_.get(_ceRecord.actionSets[0], 'actions[0].runActionsOnInput.prompts.description')).toBe('uploadFile');
     });
   });
 
@@ -198,7 +213,6 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       expect(_.isEqual(_welcomeMenu['entries'][0].headers[0].actions[0].name, 'play')).toBe(true);
     });
   });
-
 
   describe('getWelcomeMenu', function () {
     it('should return welcomeMenu from parsing ceWelcome', function () {
@@ -242,6 +256,18 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     it('should return welcomeMenu from parsing ceWelcome3', function () {
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcome3, 'holidays');
       expect(_.get(_welcomeMenu['entries'][0], 'actions[0].description')).toBe('Welcome prompt during closedHours and holidays');
+    });
+  });
+
+  /* This test case tests the scenario where AA is being updated that has holidays configured to behave as ClosedHours */
+  describe('getWelcomeMenu with Closed Hours and holidays in same lane', function () {
+    it('should test the updated JSON in case of closed hours and holidays in same lane', function () {
+      var _ceRecord = _.cloneDeep(ceWelcome3);
+      _ceRecord.callExperienceName = 'AA Combined';
+      _.set(_ceRecord.actionSets[1], 'actions[0].play.description', 'This is new welcome prompt for closedHours and holidays schedule');
+      var _combinedMenu = AutoAttendantCeMenuModelService.getCombinedMenu(_ceRecord, 'holidays');
+      AutoAttendantCeMenuModelService.updateCombinedMenu(_ceRecord, 'holidays', _combinedMenu);
+      expect(_.get(_combinedMenu['entries'][0], 'actions[0].description')).toBe('This is new welcome prompt for closedHours and holidays schedule');
     });
   });
 

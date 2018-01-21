@@ -1,5 +1,5 @@
 import { ILicenseRequestItem, IUserEntitlementRequestItem, IAutoAssignTemplateRequestPayload } from 'modules/core/users/shared';
-import { AssignableServicesItemCategory, IAssignableLicenseCheckboxState, ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
+import { AssignableServicesItemCategory, IAssignableLicenseCheckboxState, ILicenseUsage, ILicenseUsageMap, ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
 import { LicenseChangeOperation } from 'modules/core/users/shared';
 
 export class AutoAssignTemplateService {
@@ -42,12 +42,12 @@ export class AutoAssignTemplateService {
     return this.$http.get<{autoLicenseAssignment: boolean}>(this.autoAssignSettingsUrl).then(response => response.data.autoLicenseAssignment);
   }
 
-  public saveTemplate(payload: IAutoAssignTemplateRequestPayload): ng.IPromise<any> {
+  public createTemplate(payload: IAutoAssignTemplateRequestPayload): ng.IPromise<any> {
     return this.$http.post(this.autoAssignTemplateUrl, payload);
   }
 
-  public updateTemplate(payload: IAutoAssignTemplateRequestPayload): ng.IPromise<any> {
-    return this.$http.patch(this.autoAssignTemplateUrl, payload);
+  public updateTemplate(templateId: string, payload: IAutoAssignTemplateRequestPayload): ng.IPromise<any> {
+    return this.$http.patch(`${this.autoAssignTemplateUrl}/${templateId}`, payload);
   }
 
   private setTemplateEnabled(enabled: boolean): ng.IPromise<any> {
@@ -74,19 +74,37 @@ export class AutoAssignTemplateService {
     return this.mkPayload(stateData);
   }
 
-  public convertDefaultTemplateToStateData(response): any {
+  private getAllLicenses(subscriptions: ISubscription[]): ILicenseUsageMap {
+    const licensesList: ILicenseUsage[] = _.flatMap(subscriptions, subscription => subscription.licenses);
+    return _.reduce(licensesList, (result, license) => {
+      result[license.licenseId] = license;
+      return result;
+    }, {});
+  }
+
+  private mkLicensesStateData(assignedLicenses: { id: string }[], allLicenses: ILicenseUsageMap) {
+    return _.reduce(assignedLicenses, (result, assignedLicense) => {
+      const id = assignedLicense.id;
+      const originalLicense = _.get(allLicenses, id);
+      result[id] = {
+        isSelected: true,
+        license: originalLicense,
+      };
+      return result;
+    }, {});
+  }
+
+  public toStateData(template, subscriptions): any {
     const stateData: any = {};
-    const licenses: any = {};
-    _.forEach(response[0].licenses, function (license) {
-      const id = license.id;
-      _.set(licenses, id, { isSelected: true });
-    });
-    _.set(stateData, 'LICENSE', licenses);
-    _.set(stateData, `USER_ENTITLEMENTS_PAYLOAD`, response[0].userEntitlements);
+    const assignedLicenses = template.licenses;
+    const allLicenses = this.getAllLicenses(subscriptions);
+    stateData.LICENSE = this.mkLicensesStateData(assignedLicenses, allLicenses);
+    stateData.USER_ENTITLEMENTS_PAYLOAD = template.userEntitlements;
+    stateData.subscriptions = subscriptions;
     return stateData;
   }
 
-  public getSortedSubscriptions(): ISubscription[] {
+  public getSortedSubscriptions(): ng.IPromise<ISubscription[]> {
     return this.Orgservice.getLicensesUsage()
       .then((subscriptions) => _.sortBy(subscriptions, 'subscriptionId'));
   }

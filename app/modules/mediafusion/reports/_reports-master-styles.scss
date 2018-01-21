@@ -7,7 +7,6 @@
 @import 'adoption-report/meeting-location/_meeting-location-styles';
 @import 'media-report-card/_media_report_card';
 @import 'media-report-flip-card/_media-report-flip-styles.scss';
-
 .media-reports {
   @extend %content-subheader;
   @extend %page-content-padding;
@@ -43,7 +42,7 @@
   .cs-card-layout {
     margin-bottom: rem-calc(15);
   }
-  .cs-card > article graphheader {
+  .cs-card>article graphheader {
     padding-right: 1rem;
     padding-left: 0.1rem;
     padding-top: 0.1rem;
@@ -170,11 +169,13 @@
     background-color: #C5E9F7;
   }
 }
+
 .availabilityCursor {
   .amcharts-category-axis .amcharts-axis-label {
     cursor: pointer;
   }
 }
+
 .partically-unavailable {
   position: absolute;
   bottom: 70px;
@@ -182,17 +183,27 @@
   right: 0;
   color: #F5A623;
 }
+
 .media-checkbox:before {
   margin-bottom: 40px !important;
 }
+
 @keyframes scaleUpMediaCards {
   0% {
     transform: scale(0, 0);
     opacity: 0;
   }
-
   100% {
     transform: scale(1, 1);
+    opacity: 1;
+  }
+}
+
+@keyframes graphAxisFade {
+  0% {
+    opacity: 0;
+  }
+  100% {
     opacity: 1;
   }
 }

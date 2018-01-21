@@ -30,6 +30,7 @@ module.exports = {
   atlasHybridEnable: 'huron-i387-enterprise-private-trunking',
   atlasExpertVirtualAssistantEnable: 'atlas-expert-virtual-assistant-enable',
   atlasF2993NewUserAndDeviceRoles: 'atlas-f2993-new-user-and-device-roles',
+  atlasF6980MultiDirSync: 'atlas-f6980-multi-dir-sync',
   atlasF3745AutoAssignLicenses: 'atlas-f3745-auto-assign-licenses',
   atlasFileSharingControlSettings: 'atlas-file-sharing-control-settings',
   atlasHelpDeskExt: 'atlas-helpdesk-extended-information',
@@ -106,6 +107,7 @@ module.exports = {
   flagMsg: 'flag-msg',
   gemServicesTab: 'gem-services-tab',
   geoHintEnabled: 'geo-hint-enabled',
+  gssWebexCHPEnabled: 'gss-webex-chp-enabled',
   hi1033: 'h-i1033',
   hI1484: 'h-i1484', // Multi-Location Support
   hI802: 'h-i802',

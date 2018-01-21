@@ -87,17 +87,17 @@ describe('Service: AutoAssignTemplateService:', () => {
     });
   });
 
-  describe('saveTemplate():', () => {
+  describe('createTemplate():', () => {
     it('should call POST on the internal endpoint url with the given payload', function () {
       this.$httpBackend.expectPOST(this.endpointUrl, { foo: 'bar' });
-      this.AutoAssignTemplateService.saveTemplate({ foo: 'bar' });
+      this.AutoAssignTemplateService.createTemplate({ foo: 'bar' });
     });
   });
 
   describe('updateTemplate():', () => {
     it('should call PATCH on the internal endpoint url with the given payload', function () {
-      this.$httpBackend.expectPATCH(this.endpointUrl, { foo: 'bar' });
-      this.AutoAssignTemplateService.updateTemplate({ foo: 'bar' });
+      this.$httpBackend.expectPATCH(`${this.endpointUrl}/fake-template-id-1`, { foo: 'bar' });
+      this.AutoAssignTemplateService.updateTemplate('fake-template-id-1', { foo: 'bar' });
     });
   });
 
@@ -122,12 +122,84 @@ describe('Service: AutoAssignTemplateService:', () => {
     });
   });
 
-  describe('convertDefaultTemplateToStateData():', () => {
-    it('should convert state data given the default template payload', function () {
-      spyOn(this.AutoAssignTemplateService, 'convertDefaultTemplateToStateData').and.returnValue(this.stateData);
-      expect(_.get(this.AutoAssignTemplateService.convertDefaultTemplateToStateData(), 'LICENSE')).toEqual({ subscriptionId: 'fake-subscriptionId-1' });
-      expect(_.get(this.AutoAssignTemplateService.convertDefaultTemplateToStateData(), 'USER_ENTITLEMENTS_PAYLOAD')).toBe(undefined);
-      expect(_.get(this.AutoAssignTemplateService.convertDefaultTemplateToStateData(), 'subscriptions')).toBe(undefined);
+  describe('getAllLicenses():', () => {
+    it('should compose a map of licenses keyed by their license ids', function () {
+      const fakeSubscriptions = [{
+        subscriptionId: 'fake-subscription-id-1',
+        licenses: [
+          { licenseId: 'fake-license-id-1' },
+        ],
+      }, {
+        subscriptionId: 'fake-subscription-id-2',
+        licenses: [
+          { licenseId: 'fake-license-id-2a' },
+          { licenseId: 'fake-license-id-2b' },
+        ],
+      }, {
+        subscriptionId: 'fake-subscription-id-3',
+        licenses: [
+          { licenseId: 'fake-license-id-3a' },
+          { licenseId: 'fake-license-id-3b' },
+          { licenseId: 'fake-license-id-3c' },
+        ],
+      }];
+
+      expect(this.AutoAssignTemplateService.getAllLicenses(fakeSubscriptions)).toEqual({
+        'fake-license-id-1': { licenseId: 'fake-license-id-1' },
+        'fake-license-id-2a': { licenseId: 'fake-license-id-2a' },
+        'fake-license-id-2b': { licenseId: 'fake-license-id-2b' },
+        'fake-license-id-3a': { licenseId: 'fake-license-id-3a' },
+        'fake-license-id-3b': { licenseId: 'fake-license-id-3b' },
+        'fake-license-id-3c': { licenseId: 'fake-license-id-3c' },
+      });
+    });
+  });
+
+  describe('mkLicensesStateData():', () => {
+    it('should compose state data representing currently selected licenses', function () {
+      const fakeAllLicenses = {
+        'fake-license-id-1': { foo: 1 },
+        'fake-license-id-2': { foo: 2 },
+        'fake-license-id-3': { foo: 3 },
+      };
+      expect(this.AutoAssignTemplateService.mkLicensesStateData([{ id: 'fake-license-id-1' }], fakeAllLicenses)).toEqual({
+        'fake-license-id-1': {
+          isSelected: true,
+          license: { foo: 1 },
+        },
+      });
+
+      expect(this.AutoAssignTemplateService.mkLicensesStateData([
+        { id: 'fake-license-id-1' },
+        { id: 'fake-license-id-3' }],
+        fakeAllLicenses)).toEqual({
+          'fake-license-id-1': {
+            isSelected: true,
+            license: { foo: 1 },
+          },
+          'fake-license-id-3': {
+            isSelected: true,
+            license: { foo: 3 },
+          },
+        });
+    });
+  });
+
+  describe('toStateData():', () => {
+    it('should compose state data object with "LICENSE", "USER_ENTITLEMENTS_PAYLOAD", and "subscriptions" properties', function () {
+      spyOn(this.AutoAssignTemplateService, 'getAllLicenses').and.returnValue('fake-allLicenses-result');
+      spyOn(this.AutoAssignTemplateService, 'mkLicensesStateData').and.returnValue('fake-mkLicensesStateData-result');
+      const result = this.AutoAssignTemplateService.toStateData({
+        licenses: 'fake-template-licenses-arg',
+        userEntitlements: 'fake-template-userEntitlements-arg',
+      }, 'fake-subscriptions-arg');
+
+      expect(this.AutoAssignTemplateService.mkLicensesStateData).toHaveBeenCalledWith('fake-template-licenses-arg', 'fake-allLicenses-result');
+      expect(result).toEqual({
+        LICENSE: 'fake-mkLicensesStateData-result',
+        USER_ENTITLEMENTS_PAYLOAD: 'fake-template-userEntitlements-arg',
+        subscriptions: 'fake-subscriptions-arg',
+      });
     });
   });
 

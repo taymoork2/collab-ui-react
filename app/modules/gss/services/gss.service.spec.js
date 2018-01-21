@@ -85,22 +85,4 @@ describe('Service: GSSService', function () {
 
     $httpBackend.flush();
   });
-
-  it('compare version', function () {
-    $httpBackend.expectGET(/.*\/compareVersion.*/g).respond(200, true);
-    GSSService.syncCheck()
-      .then(function (res) {
-        expect(res).toBeTruthy();
-      });
-    $httpBackend.flush();
-  });
-
-  it('sync up the data with AWS', function () {
-    $httpBackend.expectPOST(/.*\/syncUpFromAWS.*/g).respond(200, true);
-    GSSService.syncUp()
-      .then(function (res) {
-        expect(res).toBeTruthy();
-      });
-    $httpBackend.flush();
-  });
 });

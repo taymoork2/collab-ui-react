@@ -207,7 +207,7 @@ require('./_overview.scss');
         }
         if (Authinfo.isCare() || Authinfo.isCareVoice()) {
           var hasMessage = Authinfo.isMessageEntitled();
-          var hasCall = Authinfo.isSquaredUC();
+          var hasCall = Authinfo.hasCallLicense();
           if (!hasMessage && !hasCall) {
             vm.notifications.push(OverviewNotificationFactory
               .createCareLicenseNotification('homePage.careLicenseMsgAndCallMissingText', 'homePage.careLicenseLinkText'));

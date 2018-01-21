@@ -1,6 +1,6 @@
 <div class="cs-card-container">
   <cs-card-layout>
-    <cs-card ng-repeat="huronFeature in huronFeaturesCtrl.listOfFeatures" class="small header-background hoverable" ng-class="huronFeaturesCtrl.cardColor[huronFeature.filterValue]">
+    <cs-card ng-repeat="huronFeature in huronFeaturesCtrl.listOfFeatures" class="cs-card--small header-background hoverable" ng-class="huronFeaturesCtrl.cardColor[huronFeature.filterValue]">
       <article ng-click="huronFeaturesCtrl.editHuronFeature((huronFeature), $event)" hover-delay>
         <header>
           <div class="header-with-right-icon">

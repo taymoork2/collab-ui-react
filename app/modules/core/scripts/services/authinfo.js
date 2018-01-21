@@ -70,6 +70,13 @@
       return false;
     }
 
+    function isLicensed(license) {
+      var licenseData = _.find(authData.licenses, function (searchLicense) {
+        return searchLicense.licenseType === license;
+      });
+      return !_.isUndefined(licenseData);
+    }
+
     return {
       initialize: function (data) {
         authData.isInDelegatedAdministrationOrg = data.isInDelegatedAdministrationOrg;
@@ -502,6 +509,9 @@
       },
       isServiceAllowed: function (service) {
         return !(service === 'squaredTeamMember' && !this.isSquaredTeamMember());
+      },
+      hasCallLicense: function () {
+        return isLicensed(Config.licenseTypes.COMMUNICATION);
       },
       isSquaredUC: function () {
         return isEntitled(Config.entitlements.huron);

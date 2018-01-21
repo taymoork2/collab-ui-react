@@ -151,30 +151,32 @@
     angular-formly "~7.3.0"
     api-check "~7.5.0"
 
-"@collabui/collab-ui-icons@^1.0.0":
+"@collabui/collab-ui-icons@1.0.3":
   version "1.0.3"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui-icons/-/@collabui/collab-ui-icons-1.0.3.tgz#132d95251307709d430659a18220cc02a3d2c00c"
 
-"@collabui/collab-ui-ng@*", "@collabui/collab-ui-ng@~7.8.2":
-  version "7.8.2"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui-ng/-/@collabui/collab-ui-ng-7.8.2.tgz#9a4f77d68a3b23264d2f3d2f73e2984097a83bf1"
+"@collabui/collab-ui-ng@*", "@collabui/collab-ui-ng@~7.9.1":
+  version "7.9.1"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui-ng/-/@collabui/collab-ui-ng-7.9.1.tgz#2ebc37a19fccb8b41be407a47da84292e1075996"
   dependencies:
+    "@collabui/collab-ui" "~5.3.3"
     angular "^1.5.0"
     angular-animate "^1.5.0"
     angular-messages "^1.5.0"
     angular-ui-grid "~3.0.7"
-    angular-ui-router "^0.3.1"
+    angular-ui-router "^0.4.3"
     google-libphonenumber "^2.0.15"
     imagesloaded "3.1.8"
     jquery "2.1.1"
     masonry-layout "^4.1.1"
     moment "^2.10.6"
 
-"@collabui/collab-ui@~5.0.1":
-  version "5.0.4"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui/-/@collabui/collab-ui-5.0.4.tgz#81f2c383fa308f2bf7fb3ae22cf01f8d68cd696b"
+"@collabui/collab-ui@~5.3.3", "@collabui/collab-ui@~5.3.4":
+  version "5.3.4"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui/-/@collabui/collab-ui-5.3.4.tgz#e6894e8b7bd5c85b6fcd9d21f2f327c47daa0a57"
   dependencies:
-    "@collabui/collab-ui-icons" "^1.0.0"
+    "@collabui/collab-ui-icons" "1.0.3"
+    ng2-material-dropdown "^0.8.0"
 
 "@types/amcharts@^0.0.39":
   version "0.0.39"
@@ -512,6 +514,12 @@ angular-ui-grid@~3.0.7:
 angular-ui-router@^0.3.1:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/angular-ui-router/-/angular-ui-router-0.3.2.tgz#c27e0496309c99218d5655985b164a096ab520a9"
+  dependencies:
+    angular "^1.0.8"
+
+angular-ui-router@^0.4.3:
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/angular-ui-router/-/angular-ui-router-0.4.3.tgz#6c29546fe50b8d2f74614dcb8660d6fc40d6e167"
   dependencies:
     angular "^1.0.8"
 
@@ -6323,6 +6331,10 @@ ng-file-upload@~12.2.0:
 ng-tags-input@^3.1.1:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/ng-tags-input/-/ng-tags-input-3.2.0.tgz#91282de575130c8ab794797febf0972b0f3bba3e"
+
+ng2-material-dropdown@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/ng2-material-dropdown/-/ng2-material-dropdown-0.8.0.tgz#9ad5757fbab2922a51216e3bf38e12d3a7964c60"
 
 ngclipboard@~1.1.1:
   version "1.1.2"

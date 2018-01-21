@@ -455,7 +455,9 @@
       }
       for (var i = 0; i < actions.length; i++) {
         newActionArray[i] = {};
-        menuEntry.description = actions[i].description;
+        if (!_.isEmpty(actions[i].description)) {
+          menuEntry.description = actions[i].description;
+        }
         if (actions[i].deleteUrl && _.startsWith(actions[i].getValue(), 'http')) {
           newActionArray[i].url = (actions[i].getValue() ? encodeUtf8(actions[i].getValue()) : '');
           newActionArray[i].deleteUrl = actions[i].deleteUrl;
@@ -1561,8 +1563,10 @@
       if (_.isUndefined(ceRecord.actionSets)) {
         ceRecord.actionSets = [];
       }
-
       var actionSet = getAndCreateActionSet(ceRecord, actionSetName);
+      if (actionSetName === HOLIDAYS_ACTION_SET_NAME && ceRecord.scheduleEventTypeMap[HOLIDAYS_SCHEDULE_EVENT] === CLOSED_HOURS_ACTION_SET_NAME) {
+        return true;
+      }
       actionSet.actions = createWelcomeMenu(aaMenu);
 
       return true;

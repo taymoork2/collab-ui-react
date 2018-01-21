@@ -317,7 +317,7 @@ describe('Component: PstnWizardComponent', () => {
       ctrl = initController();
       ctrl.$onInit();
       this.$scope.$apply();
-      expect(ctrl.showContractIncomplete).toBe(true);
+      expect(ctrl.showContractUnSigned()).toBe(true);
     });
 
     it('should NOT show the contract incomplete message', function () {
@@ -325,7 +325,7 @@ describe('Component: PstnWizardComponent', () => {
       ctrl = initController();
       ctrl.$onInit();
       this.$scope.$apply();
-      expect(ctrl.showContractIncomplete).toBe(false);
+      expect(ctrl.showContractUnSigned()).toBe(false);
     });
   });
 });

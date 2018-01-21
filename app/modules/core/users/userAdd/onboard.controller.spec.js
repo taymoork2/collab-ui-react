@@ -103,6 +103,7 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(this.ServiceSetup, 'listSites').and.returnValue(this.$q.resolve(this.mock.sites));
 
     spyOn(this.Userservice, 'onboardUsers');
+    spyOn(this.Userservice, 'onboardUsersLegacy');
     spyOn(this.Userservice, 'bulkOnboardUsers');
     spyOn(this.Userservice, 'migrateUsers').and.returnValue(this.mock.getMigrateUsers);
     spyOn(this.Userservice, 'updateUsers');
@@ -189,7 +190,7 @@ describe('OnboardCtrl: Ctrl', function () {
         expect(this.$scope.model.numMaxUsers).toEqual(2);
       });
       it('should report existing users', function () {
-        this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(200, '', 2)));
+        this.Userservice.onboardUsersLegacy.and.returnValue(this.$q.resolve(onboardUsersResponse(200, '', 2)));
         var promise = this.$scope.dirsyncProcessingNext();
         this.$scope.$apply();
         expect(promise).toBeResolved();
@@ -200,7 +201,7 @@ describe('OnboardCtrl: Ctrl', function () {
         expect(this.$scope.model.userErrorArray.length).toEqual(0);
       });
       it('should report error users', function () {
-        this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(403, '', 2)));
+        this.Userservice.onboardUsersLegacy.and.returnValue(this.$q.resolve(onboardUsersResponse(403, '', 2)));
         var promise = this.$scope.dirsyncProcessingNext();
         this.$scope.$apply();
         expect(promise).toBeResolved();
@@ -211,7 +212,7 @@ describe('OnboardCtrl: Ctrl', function () {
         expect(this.$scope.model.userErrorArray.length).toEqual(2);
       });
       it('should report error users when API fails', function () {
-        this.Userservice.onboardUsers.and.returnValue(this.$q.reject(onboardUsersResponse(500, '', 2)));
+        this.Userservice.onboardUsersLegacy.and.returnValue(this.$q.reject(onboardUsersResponse(500, '', 2)));
         var promise = this.$scope.dirsyncProcessingNext();
         this.$scope.$apply();
         expect(promise).toBeResolved();
@@ -222,7 +223,7 @@ describe('OnboardCtrl: Ctrl', function () {
         expect(this.$scope.model.userErrorArray.length).toEqual(2);
       });
       it('should stop processing when cancelled', function () {
-        this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(-1, '', 2)));
+        this.Userservice.onboardUsersLegacy.and.returnValue(this.$q.resolve(onboardUsersResponse(-1, '', 2)));
         var promise = this.$scope.dirsyncProcessingNext();
         this.$scope.$apply();
         expect(promise).toBeResolved();
@@ -818,15 +819,15 @@ describe('OnboardCtrl: Ctrl', function () {
 
     beforeEach(function () {
       this.$scope.$dismiss = _.noop;
-      this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(200, '', 2)));
+      this.Userservice.onboardUsersLegacy.and.returnValue(this.$q.resolve(onboardUsersResponse(200, '', 2)));
     });
 
     describe('with a current user', function () {
       beforeEach(updateUserLicense);
 
       it('should call Userservice.onboardUsers() with the current user', function () {
-        expect(this.Userservice.onboardUsers).toHaveBeenCalled();
-        var onboardedUser = this.Userservice.onboardUsers.calls.mostRecent().args[0][0];
+        expect(this.Userservice.onboardUsersLegacy).toHaveBeenCalled();
+        var onboardedUser = this.Userservice.onboardUsersLegacy.calls.mostRecent().args[0][0];
         expect(onboardedUser.address).toEqual(this.$stateParams.currentUser.userName);
       });
     });
@@ -836,8 +837,8 @@ describe('OnboardCtrl: Ctrl', function () {
       beforeEach(updateUserLicense);
 
       it('should call Userservice.onboardUsers() with the custom user list', function () {
-        expect(this.Userservice.onboardUsers).toHaveBeenCalled();
-        var onboardedUser = this.Userservice.onboardUsers.calls.mostRecent().args[0][0];
+        expect(this.Userservice.onboardUsersLegacy).toHaveBeenCalled();
+        var onboardedUser = this.Userservice.onboardUsersLegacy.calls.mostRecent().args[0][0];
         expect(onboardedUser.address).toEqual(this.usrlist[0].address);
       });
     });
@@ -857,8 +858,8 @@ describe('OnboardCtrl: Ctrl', function () {
           },
         });
         updateUserLicense.apply(this);
-        expect(this.Userservice.onboardUsers).toHaveBeenCalled();
-        var onboardedUser = this.Userservice.onboardUsers.calls.mostRecent().args[0][0];
+        expect(this.Userservice.onboardUsersLegacy).toHaveBeenCalled();
+        var onboardedUser = this.Userservice.onboardUsersLegacy.calls.mostRecent().args[0][0];
         expect(onboardedUser.internalExtension).toBe('123');
         expect(onboardedUser.directLine).toBe('+456');
       });
@@ -875,8 +876,8 @@ describe('OnboardCtrl: Ctrl', function () {
           },
         });
         updateUserLicense.apply(this);
-        expect(this.Userservice.onboardUsers).toHaveBeenCalled();
-        var onboardedUser = this.Userservice.onboardUsers.calls.mostRecent().args[0][0];
+        expect(this.Userservice.onboardUsersLegacy).toHaveBeenCalled();
+        var onboardedUser = this.Userservice.onboardUsersLegacy.calls.mostRecent().args[0][0];
         expect(onboardedUser.internalExtension).toBe('123');
         expect(onboardedUser.directLine).toBeUndefined();
       });

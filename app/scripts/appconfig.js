@@ -42,6 +42,19 @@
     };
   }
 
+  function toResolveParam(paramName, defaultVal) {
+    return /* @ngInject */ function ($stateParams) {
+      return _.get($stateParams, paramName, defaultVal);
+    };
+  }
+
+  function stateParamsToResolveParams(stateParams) {
+    return _.reduce(stateParams, function (result, defaultVal, paramName) {
+      result[paramName] = toResolveParam(paramName, defaultVal);
+      return result;
+    }, {});
+  }
+
   angular
     .module('wx2AdminWebClientApp')
     .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider', 'languagesProvider',
@@ -793,9 +806,6 @@
           })
           .state('my-company.subscriptions', {
             url: '/my-company/subscriptions',
-            onEnter: /* @ngInject */ function (OnlineAnalyticsService) {
-              OnlineAnalyticsService.track(OnlineAnalyticsService.MY_COMPANY_SUBSCRIPTIONS);
-            },
             resolve: {
               account: /* @ngInject */ function (AccountService) {
                 return AccountService.updateAuthinfoAccount();
@@ -811,9 +821,6 @@
           })
           .state('my-company.info', {
             url: '/my-company',
-            onEnter: /* @ngInject */ function (OnlineAnalyticsService) {
-              OnlineAnalyticsService.track(OnlineAnalyticsService.MY_COMPANY_INFO);
-            },
             views: {
               tabContent: {
                 controllerAs: 'mcpInfo',
@@ -824,9 +831,6 @@
           })
           .state('my-company.orders', {
             url: '/my-company/orders',
-            onEnter: /* @ngInject */ function (OnlineAnalyticsService) {
-              OnlineAnalyticsService.track(OnlineAnalyticsService.MY_COMPANY_ORDER_HISTORY);
-            },
             views: {
               tabContent: {
                 template: '<my-company-orders></my-company-orders>',
@@ -835,9 +839,6 @@
           })
           .state('my-company.billing', {
             url: '/my-company/billing',
-            onEnter: /* @ngInject */ function (OnlineAnalyticsService) {
-              OnlineAnalyticsService.track(OnlineAnalyticsService.MY_COMPANY_BILLING);
-            },
             views: {
               tabContent: {
                 template: '<my-company-billing></my-company-billing>',
@@ -941,6 +942,7 @@
             views: {
               'usersAdd@users.add': {
                 template: require('modules/core/users/userAdd/addUsersResultsModal.tpl.html'),
+                // TODO (mipark2): rm this if determined no longer needed
                 resolve: {
                   modalInfo: function ($state) {
                     $state.params.modalClass = 'add-users';
@@ -1031,16 +1033,27 @@
             },
           })
           .state('users.manage.edit-auto-assign-template-modal', {
-            template: '<edit-auto-assign-template-modal dismiss="$dismiss()"></edit-auto-assign-template-modal>',
+            template: '<edit-auto-assign-template-modal dismiss="$dismiss()" prev-state="$resolve.prevState" is-edit-template-mode="$resolve.isEditTemplateMode" state-data="$resolve.stateData"></edit-auto-assign-template-modal>',
+            resolve: stateParamsToResolveParams({
+              prevState: 'users.manage.picker',
+              isEditTemplateMode: false,
+              stateData: null,
+            }),
             params: {
               prevState: 'users.manage.picker',
+              isEditTemplateMode: false,
               stateData: null,
             },
           })
           .state('users.manage.edit-summary-auto-assign-template-modal', {
-            template: '<edit-summary-auto-assign-template-modal dismiss="$dismiss()"></edit-summary-auto-assign-template-modal>',
+            template: '<edit-summary-auto-assign-template-modal dismiss="$dismiss()" state-data="$resolve.stateData" is-edit-template-mode="$resolve.isEditTemplateMode"></edit-summary-auto-assign-template-modal>',
+            resolve: stateParamsToResolveParams({
+              stateData: null,
+              isEditTemplateMode: false,
+            }),
             params: {
               stateData: null,
+              isEditTemplateMode: false,
             },
           })
           .state('users.manage.onboard-summary-for-auto-assign-modal', {

@@ -4,7 +4,7 @@ import { PstnWizardService } from './pstnWizard.service';
 import { DirectInwardDialing } from './directInwardDialing';
 import { TokenMethods } from '../pstnSwivelNumbers';
 import {
-  TOKEN_FIELD_ID, TOLLFREE_ORDERING_CAPABILITY,
+  TOKEN_FIELD_ID,
 } from '../pstn.const';
 import { PstnService } from '../pstn.service';
 import { PstnModel, IOrder } from '../pstn.model';
@@ -58,7 +58,6 @@ export class PstnWizardCtrl implements ng.IComponentController {
     pstn: new NumberModel(),
     tollFree: new NumberModel(),
   };
-  public showContractIncomplete = false;
   public tokenfieldId: string = TOKEN_FIELD_ID;
   public showPortNumbers: boolean = false;
   public showTollFreeNumbers: boolean = false;
@@ -93,12 +92,6 @@ export class PstnWizardCtrl implements ng.IComponentController {
               private PhoneNumberService: PhoneNumberService,
               private FeatureToggleService,
               ) {
-    this.contact = this.PstnWizardService.getContact();
-    this.address = _.cloneDeep(this.PstnModel.getServiceAddress());
-    this.countryCode = this.PstnModel.getCountryCode();
-    this.carrierName = this.PstnModel.getProvider().displayName;
-    this.isTrial = this.PstnModel.getIsTrial();
-    this.showPortNumbers = !this.isTrial;
     this.PORTING_NUMBERS = this.$translate.instant('pstnSetup.portNumbersLabel');
     this.tokenmethods = new TokenMethods(this.createToken.bind(this), this.createdToken.bind(this), this.editToken.bind(this), this.removeToken.bind(this));
     this.titles = this.PstnWizardService.STEP_TITLE;
@@ -109,26 +102,45 @@ export class PstnWizardCtrl implements ng.IComponentController {
   }
 
   public $onInit(): void {
-    this.PstnWizardService.init().then(() => this.enableCarriers = true);
+    this.PstnWizardService.init().then(() => {
+      this.enableCarriers = true;
+      //Set the following values after PstnWizardService initializes
+      this.contact = this.PstnWizardService.getContact();
+      this.address = _.cloneDeep(this.PstnModel.getServiceAddress());
+      this.countryCode = this.PstnModel.getCountryCode();
+      this.carrierName = this.PstnModel.getProvider().displayName;
+      this.isTrial = this.PstnModel.getIsTrial();
+      this.showPortNumbers = !this.isTrial;
+    });
     this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking).then((enabled) => {
       this.ftI387PrivateTrunking = enabled;
     });
     this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1635).then((enabled) => {
       this.ftHI1635 = enabled;
-    }).finally(() => {
-      if (this.ftHI1635) {
-        if (this.PstnModel.getContractStatus() === ContractStatus.UnSigned) {
-          this.showContractIncomplete = true;
-        }
-      }
     });
     this.FeatureToggleService.getCallFeatureForCustomer(this.PstnModel.getCustomerId(), this.FeatureToggleService.features.hI1484).then((enabled) => {
       this.ftLocation = enabled;
     });
+    if (this.PstnModel.getContractStatus() === ContractStatus.UnKnown) {
+      this.PstnService.getCustomerV2(this.PstnModel.getCustomerId(), { deep: true }).then(customer => {
+        this.PstnModel.setContractStatus(customer.contractStatus);
+      });
+    }
   }
 
-  public customerExists(): boolean {
+  public showOrderForm(): boolean {
+    if (!this.ftHI1635) {
+      return true;
+    }
+    //If false, means contract has not been sent
     return this.PstnModel.isCustomerExists();
+  }
+
+  public showContractUnSigned(): boolean {
+    if (!this.ftHI1635) {
+      return false;
+    }
+    return this.PstnModel.getContractStatus() === ContractStatus.UnSigned;
   }
 
   public sendContract(): void {
@@ -277,12 +289,8 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   public onProviderChange(): void {
     const pstnProvider: PstnCarrier = this.PstnModel.getProvider();
-    if (!this.isTrial) {
-      if (pstnProvider.getCapability(TOLLFREE_ORDERING_CAPABILITY)) {
-        this.showTollFreeNumbers = true;
-      }
-    }
     this.carrierName = pstnProvider.vendor;
+    this.getCapabilities();
     this.goToNumbers();
   }
 
