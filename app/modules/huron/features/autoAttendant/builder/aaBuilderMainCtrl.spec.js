@@ -413,7 +413,8 @@ describe('Controller: AABuilderMainCtrl', function () {
 
         this.$scope.$apply();
 
-        expect(_.get(this.aaModel.aaRecord, 'assignedResources[0].uuid', 'undefined')).toBe('21799279-2529-4358-ab2f-1e46bfc3684b');
+        expect(_.get(this.aaModel.aaRecord, 'assignedResources[0].uuid')).toBe('21799279-2529-4358-ab2f-1e46bfc3684b');
+        expect(resource.getUUID()).toBe('00097a86-45ef-44a7-aa78-6d32a0ca1d3b');
       });
   });
 
