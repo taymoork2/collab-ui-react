@@ -1008,43 +1008,44 @@
               prevState: null,
             },
           })
-          .state('users.manage.advanced', {
+          .state('users.manage.dir-sync', {
             abstract: true,
-            controller: 'UserManageAdvancedController',
-            controllerAs: 'umac',
-            template: require('modules/core/users/userManage/userManageAdvanced.tpl.html'),
+            controller: 'UserManageDirSyncController',
+            controllerAs: 'umds',
+            template: require('modules/core/users/userManage/dir-sync/user-manage-dir-sync.html'),
           })
-          .state('users.manage.advanced.add', {
+          // TODO refactor used logic from 'AddUserCtrl' -> 'UserManageDirSyncController' and rm AddUserCtrl
+          .state('users.manage.dir-sync.add', {
             abstract: true,
             controller: 'AddUserCtrl',
             controllerAs: 'auc',
             template: '<div ui-view class="flex-container flex-item-resize"></div>',
           })
-          .state('users.manage.advanced.add.ob', {
+          .state('users.manage.dir-sync.add.ob', {
             abstract: true,
             controller: 'OnboardCtrl',
             controllerAs: 'obc',
             template: '<div ui-view class="flex-container flex-item-resize"></div>',
           })
-          .state('users.manage.advanced.add.ob.installConnector', {
-            template: require('modules/core/users/userManage/userManageInstallConnector.tpl.html'),
+          .state('users.manage.dir-sync.add.ob.installConnector', {
+            template: require('modules/core/users/userManage/dir-sync/user-manage-dir-sync-install-connector.html'),
           })
-          .state('users.manage.advanced.add.ob.syncStatus', {
-            template: require('modules/core/users/userManage/userManageAdvancedSyncStatus.tpl.html'),
+          .state('users.manage.dir-sync.add.ob.syncStatus', {
+            template: require('modules/core/users/userManage/dir-sync/user-manage-dir-sync-status.html'),
           })
-          .state('users.manage.advanced.add.ob.dirsyncServices', {
-            template: require('modules/core/users/userManage/userManageAssignServices.tpl.html'),
+          .state('users.manage.dir-sync.add.ob.dirsyncServices', {
+            template: require('modules/core/users/userManage/dir-sync/user-manage-dir-sync-assign-services.html'),
             controller: /* @ngInject */ function ($scope) {
               $scope.dirsyncInitForServices();
             },
           })
-          .state('users.manage.advanced.add.ob.dirsyncResult', {
-            template: require('modules/core/users/userManage/userManageAdvancedResults.tpl.html'),
+          .state('users.manage.dir-sync.add.ob.dirsyncResult', {
+            template: require('modules/core/users/userManage/dir-sync/user-manage-dir-sync-results.html'),
             controller: /* @ngInject */ function ($scope) {
-              $scope.umac.isBusy = true;
+              $scope.umds.isBusy = true;
               $scope.csv.model = $scope.model;
               $scope.bulkSave().then(function () {
-                $scope.umac.isBusy = false;
+                $scope.umds.isBusy = false;
               });
             },
           })

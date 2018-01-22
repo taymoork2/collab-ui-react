@@ -59,7 +59,7 @@ require('./_user-manage.scss');
             break;
 
           case vm.ManageType.ADVANCED_DS:
-            $state.go('users.manage.advanced.add.ob.syncStatus');
+            $state.go('users.manage.dir-sync.add.ob.syncStatus');
             break;
         }
       }

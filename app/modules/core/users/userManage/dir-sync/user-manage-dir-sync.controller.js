@@ -1,13 +1,8 @@
-require('./_user-manage.scss');
-
 (function () {
   'use strict';
 
-  angular.module('Core')
-    .controller('UserManageAdvancedController', UserManageAdvancedController);
-
   /* @ngInject */
-  function UserManageAdvancedController($modal, $previousState, $rootScope, $scope, $state, $timeout, $translate, Analytics, Authinfo, DirSyncService, Notification) {
+  module.exports = function UserManageDirSyncController($modal, $previousState, $rootScope, $scope, $state, $timeout, $translate, Analytics, Authinfo, DirSyncService, Notification) {
     var vm = this;
 
     vm.isUserAdmin = isUserAdmin;
@@ -155,5 +150,5 @@ require('./_user-manage.scss');
         $scope.$dismiss();
       });
     }
-  }
+  };
 })();

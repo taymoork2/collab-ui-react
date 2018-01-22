@@ -183,12 +183,12 @@ describe('UserManageOrgController', () => {
     expect(this.Analytics.trackAddUsers).toHaveBeenCalledWith(this.Analytics.sections.ADD_USERS.eventNames.CSV_UPLOAD, this.Analytics.sections.ADD_USERS.uploadMethods.CSV);
   });
 
-  it('should go to users.manage.advanced.add.ob.installConnector', function () {
+  it('should go to users.manage.dir-sync.add.ob.installConnector', function () {
     initControllerAndDefaults.apply(this);
     this.controller.manageType = 'advancedNoDS';
 
     this.controller.onNext();
-    expect(this.$state.go).toHaveBeenCalledWith('users.manage.advanced.add.ob.installConnector');
+    expect(this.$state.go).toHaveBeenCalledWith('users.manage.dir-sync.add.ob.installConnector');
     expect(this.Analytics.trackAddUsers).toHaveBeenCalledWith(this.Analytics.sections.ADD_USERS.eventNames.INSTALL_CONNECTOR, this.Analytics.sections.ADD_USERS.uploadMethods.SYNC);
   });
 
@@ -240,7 +240,7 @@ describe('UserManageOrgController', () => {
     this.controller.handleDirSyncService();
     this.$scope.$apply();
 
-    expect(this.$state.go).toHaveBeenCalledWith('users.manage.advanced.add.ob.installConnector');
+    expect(this.$state.go).toHaveBeenCalledWith('users.manage.dir-sync.add.ob.installConnector');
   });
 
   describe('initFeatureToggles():', function () {

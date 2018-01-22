@@ -7,8 +7,8 @@ enum State {
   USERS_AUTO_ASSIGN_TEMPLATE = 'users.manage.edit-auto-assign-template-modal',
   USERS_CONVERT = 'users.convert',
   USERS_CSV = 'users.csv',
-  USERS_DIR_SYNC_INSTALL = 'users.manage.advanced.add.ob.installConnector',
-  USERS_DIR_SYNC_STATUS = 'users.manage.advanced.add.ob.syncStatus',
+  USERS_DIR_SYNC_INSTALL = 'users.manage.dir-sync.add.ob.installConnector',
+  USERS_DIR_SYNC_STATUS = 'users.manage.dir-sync.add.ob.syncStatus',
   USERS_EMAIL_SUPPRESS = 'users.manage.emailSuppress',
   USERS_MANAGE_PICKER = 'users.manage.picker',
 }

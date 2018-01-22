@@ -12,6 +12,7 @@ import userAddModuleName from 'modules/core/users/userAdd';
 import * as userCsvServiceModuleName from 'modules/core/users/userCsv/userCsv.service';
 import onboardSummaryForAutoAssignModalModuleName from './onboard-summary-for-auto-assign-modal';
 import manageUsersSharedModuleName from './shared';
+import dirSyncModuleName from './dir-sync';
 
 export default angular
   .module('core.users.userManage', [
@@ -29,6 +30,7 @@ export default angular
     userCsvServiceModuleName,
     onboardSummaryForAutoAssignModalModuleName,
     manageUsersSharedModuleName,
+    dirSyncModuleName,
   ])
   .controller('UserManageOrgController', require('./userManageOrg.controller'))
   .name;
