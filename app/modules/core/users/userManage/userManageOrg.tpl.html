@@ -98,7 +98,12 @@
   </div>
 
   <div class="row" ng-if="umoc.multiDirSyncToggle && !umoc.isUserAdminUser">
-    <multi-dirsync-section initialize-function="umoc.goToInitialize()"></multi-dirsync-section>
+    <div class="columns medium-4 manage-modal-header">
+      <h4 translate="userManage.org.activeDirectory"></h4>
+    </div>
+    <div class="columns medium-8 manage-modal-label sync-status">
+      <multi-dirsync-section></multi-dirsync-section>
+    </div>
   </div>
 
   <hr>

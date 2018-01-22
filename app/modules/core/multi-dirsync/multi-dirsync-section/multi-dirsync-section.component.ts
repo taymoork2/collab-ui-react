@@ -1,5 +1,5 @@
 import { Analytics } from 'modules/core/analytics';
-import { MultiDirSyncService } from '../multiDirsync.service';
+import { MultiDirSyncService } from '../multi-dirsync.service';
 import { IDirectorySync } from '../index';
 
 interface IStateWithModal extends ng.ui.IStateService {
@@ -24,17 +24,16 @@ export class MultiDirSyncSectionController {
 
   public refresh() {
     this.dirsyncUpdating = true;
-    this.MultiDirSyncService.getEnabledDomains().then((enabledDomains: IDirectorySync[]) => {
-      this.dirsyncUpdating = false;
+    this.MultiDirSyncService.getEnabledDomains().then((enabledDomains) => {
       this.dirSyncArray = enabledDomains;
-
       if (this.dirSyncArray.length > 0) {
         this.dirsyncEnabled = true;
       }
     }).catch((error) => {
-      this.dirsyncUpdating = false;
       this.dirsyncEnabled = false;
       this.MultiDirSyncService.domainsErrorNotification(error);
+    }).finally(() => {
+      this.dirsyncUpdating = false;
     });
   }
 

@@ -1,4 +1,4 @@
-import { MultiDirSyncService } from '../multiDirsync.service';
+import { MultiDirSyncService } from '../multi-dirsync.service';
 import { IDirectoryConnector, IDirectorySync, IDomain } from '../index';
 
 export class MultiDirSyncSettingController {
@@ -35,18 +35,17 @@ export class MultiDirSyncSettingController {
 
   private refresh(): void {
     this.updatingStatus = true;
-    this.MultiDirSyncService.getEnabledDomains().then((enabledDomains: IDirectorySync[]) => {
-      this.updatingStatus = false;
+    this.MultiDirSyncService.getEnabledDomains().then((enabledDomains) => {
       this.dirSyncArray = enabledDomains;
-
       if (this.dirSyncArray.length > 0) {
         this.dirSyncEnabled = true;
       }
     })
     .catch((error) => {
-      this.updatingStatus = false;
       this.dirSyncEnabled = false;
       this.MultiDirSyncService.domainsErrorNotification(error);
+    }).finally(() => {
+      this.updatingStatus = false;
     });
   }
 }

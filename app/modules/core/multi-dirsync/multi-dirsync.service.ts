@@ -4,16 +4,10 @@ import { IToolkitModalService, IToolkitModalSettings } from 'modules/core/modal'
 
 export class MultiDirSyncService {
   private readonly ENABLED = 'ENABLED';
-  private baseOptions: IToolkitModalSettings = {
-    type: 'dialog',
-    close: this.$translate.instant('common.turnOff'),
-    dismiss: this.$translate.instant('common.cancel'),
-  };
 
   /* @ngInject */
   public constructor(
     private $http: ng.IHttpService,
-    private $q: ng.IQService,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private ModalService: IToolkitModalService,
@@ -21,7 +15,7 @@ export class MultiDirSyncService {
     private UrlConfig,
   ) {}
 
-  public getDomains(domain?: string) {
+  public getDomains(domain?: string): ng.IHttpPromise<any> {
     let URL: string = `${this.baseUrl}configurations/domains`;
     if (domain) {
       URL += `/${domain}`;
@@ -30,8 +24,8 @@ export class MultiDirSyncService {
     return this.$http.get(URL);
   }
 
-  public getEnabledDomains() {
-    return this.getDomains().then((response: any) => {
+  public getEnabledDomains(): ng.IPromise<IDirectorySync[]> {
+    return this.getDomains().then((response) => {
       let responseArray: IDirectorySync[] = _.get(response, 'data.directorySyncResponseBeans', []);
       responseArray = _.filter(responseArray, (site: IDirectorySync) => {
         return site.serviceMode === this.ENABLED;
@@ -60,17 +54,11 @@ export class MultiDirSyncService {
     options.message = this.$translate.instant('globalSettings.multiDirsync.deactivateConnectorMessage');
     options.close = this.$translate.instant('common.deactivate');
 
-    return this.$q((resolve, reject) => {
-      this.ModalService.open(options).result.then(() => {
-        this.deleteConnector(connectorName).catch((error) => {
-          this.Notification.errorWithTrackingId(error, 'globalSettings.multiDirsync.connectorError', {
-            connectorName: connectorName,
-          });
-        }).finally(() => {
-          resolve('refresh');
+    return this.ModalService.open(options).result.then(() => {
+      return this.deleteConnector(connectorName).catch((error) => {
+        this.Notification.errorWithTrackingId(error, 'globalSettings.multiDirsync.connectorError', {
+          connectorName: connectorName,
         });
-      }).catch(() => {
-        reject('closed');
       });
     });
   }
@@ -80,15 +68,9 @@ export class MultiDirSyncService {
     options.title = this.$translate.instant('globalSettings.multiDirsync.turnOffAllTitle');
     options.message = this.$translate.instant('globalSettings.multiDirsync.turnOffAllMessage');
 
-    return this.$q((resolve, reject) => {
-      this.ModalService.open(options).result.then(() => {
-        this.deactivateDomain().catch((error) => {
-          this.Notification.errorWithTrackingId(error, 'globalSettings.multiDirsync.deleteAllError');
-        }).finally(() => {
-          resolve('refresh');
-        });
-      }).catch(() => {
-        reject('closed');
+    return this.ModalService.open(options).result.then(() => {
+      return this.deactivateDomain().catch((error) => {
+        this.Notification.errorWithTrackingId(error, 'globalSettings.multiDirsync.deleteAllError');
       });
     });
   }
@@ -98,17 +80,11 @@ export class MultiDirSyncService {
     options.title = this.$translate.instant('globalSettings.multiDirsync.turnOff', { domainName: domainName });
     options.message = this.$translate.instant('globalSettings.multiDirsync.turnOffDomainMessage');
 
-    return this.$q((resolve, reject) => {
-      this.ModalService.open(options).result.then(() => {
-        this.deactivateDomain(domainName).catch((error) => {
-          this.Notification.errorWithTrackingId(error, 'globalSettings.multiDirsync.deleteError', {
-            domainName: domainName,
-          });
-        }).finally(() => {
-          resolve('refresh');
+    return this.ModalService.open(options).result.then(() => {
+      return this.deactivateDomain(domainName).catch((error) => {
+        this.Notification.errorWithTrackingId(error, 'globalSettings.multiDirsync.deleteError', {
+          domainName: domainName,
         });
-      }).catch(() => {
-        reject('closed');
       });
     });
   }
@@ -122,6 +98,14 @@ export class MultiDirSyncService {
 
   private get baseUrl() {
     return `${this.UrlConfig.getAdminServiceUrl()}organization/${this.Authinfo.getOrgId()}/dirsync/`;
+  }
+
+  private get baseOptions(): IToolkitModalSettings {
+    return {
+      type: 'dialog',
+      close: this.$translate.instant('common.turnOff'),
+      dismiss: this.$translate.instant('common.cancel'),
+    };
   }
 
   private deactivateDomain(domain?: string) {

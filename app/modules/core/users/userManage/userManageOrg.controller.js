@@ -6,7 +6,7 @@
 
   /* @ngInject */
   function UserManageOrgController($q, $state, $window, Analytics, Authinfo, AutoAssignTemplateModel, AutoAssignTemplateService, DirSyncService, FeatureToggleService, Notification, OnboardService, Orgservice, UserCsvService) {
-    var DEFAULT_AUTO_ASSIGN_TEMPLATE = 'Default';
+    var DEFAULT_AUTO_ASSIGN_TEMPLATE = AutoAssignTemplateService.DEFAULT;
     var vm = this;
 
     vm.ManageType = require('./userManage.keys').ManageType;
