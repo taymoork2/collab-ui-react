@@ -591,87 +591,7 @@ describe('ClusterService', () => {
     });
   });
 
-  describe('.upgradeSoftware', () => {
-    it('should upgrade software using the correct backend', () => {
-      $httpBackend
-        .when('POST', 'http://elg.no/organizations/orgId/clusters/cluster_0/provisioning/actions/update/invoke?connectorType=c_mgmt&forced=true')
-        .respond({
-          foo: 'bar',
-        });
-
-      const callback = jasmine.createSpy('callback');
-      ClusterService.upgradeSoftware('cluster_0', 'c_mgmt').then(callback);
-      $httpBackend.flush();
-
-      expect(callback).toHaveBeenCalledTimes(1);
-      expect(callback.calls.mostRecent().args[0].foo).toBe('bar');
-    });
-
-    it('should call poller.forceAction on success', () => {
-      $httpBackend
-        .when('POST', 'http://elg.no/organizations/orgId/clusters/cluster_0/provisioning/actions/update/invoke?connectorType=c_mgmt&forced=true')
-        .respond({
-          foo: 'bar',
-        });
-
-      ClusterService.upgradeSoftware('cluster_0', 'c_mgmt');
-      $httpBackend.flush();
-
-      expect(forceAction).toHaveBeenCalledTimes(1);
-    });
-
-    it('should fail on 500 errors', () => {
-      $httpBackend
-        .when('POST', 'http://elg.no/organizations/orgId/clusters/cluster_0/provisioning/actions/update/invoke?connectorType=c_mgmt&forced=true')
-        .respond(500);
-
-      const callback = jasmine.createSpy('callback');
-      ClusterService.upgradeSoftware('cluster_0', 'c_mgmt').then(_.noop, callback);
-      $httpBackend.flush();
-
-      expect(callback).toHaveBeenCalledTimes(1);
-      expect(callback.calls.mostRecent().args[0].foo).not.toBe(null);
-    });
-  });
-
-  describe('.deleteHost', () => {
-    it('should be using the correct backend', () => {
-      $httpBackend
-        .when('DELETE', 'http://elg.no/organizations/orgId/hosts/serial')
-        .respond(200);
-
-      const callback = jasmine.createSpy('callback');
-      ClusterService.deleteHost('serial').then(callback);
-      $httpBackend.flush();
-
-      expect(callback).toHaveBeenCalledTimes(1);
-    });
-
-    it('should call poller.forceAction on success', () => {
-      $httpBackend
-        .when('DELETE', 'http://elg.no/organizations/orgId/hosts/serial')
-        .respond(200);
-
-      ClusterService.deleteHost('serial');
-      $httpBackend.flush();
-
-      expect(forceAction).toHaveBeenCalledTimes(1);
-    });
-
-    it('should fail on 500 errors', () => {
-      $httpBackend
-        .when('DELETE', 'http://elg.no/organizations/orgId/hosts/serial')
-        .respond(500);
-
-      const callback = jasmine.createSpy('callback');
-      ClusterService.deleteHost('serial').then(_.noop, callback);
-      $httpBackend.flush();
-
-      expect(callback).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe('.mergeRunningState', () => {
+  describe('._mergeRunningState', () => {
     let nonEmpty_mf_clusterList: IConnector[], nonEmpty_hds_connectorList: IConnector[], nonEmpty_exp_connectorList: IConnector[], empty_connector_list: IConnector[];
 
     beforeEach(() => {
@@ -704,32 +624,32 @@ describe('ClusterService', () => {
     });
 
     it('should keep the state for non-empty media clusters', () => {
-      const mergedState = ClusterService.mergeRunningState(nonEmpty_mf_clusterList, 'mf_mgmt');
+      const mergedState = ClusterService._mergeRunningState(nonEmpty_mf_clusterList, 'mf_mgmt');
       expect(mergedState.state).toBe('not_installed');
     });
 
     it('should keep the state for non-empty hds clusters', () => {
-      const mergedState = ClusterService.mergeRunningState(nonEmpty_hds_connectorList, 'hds_app');
+      const mergedState = ClusterService._mergeRunningState(nonEmpty_hds_connectorList, 'hds_app');
       expect(mergedState.state).toBe('disabled');
     });
 
     it('should keep the state for non-empty expressway clusters', () => {
-      const mergedState = ClusterService.mergeRunningState(nonEmpty_exp_connectorList, 'c_mgmt');
+      const mergedState = ClusterService._mergeRunningState(nonEmpty_exp_connectorList, 'c_mgmt');
       expect(mergedState.state).toBe('registered');
     });
 
     it('should flip to no_nodes_registered for empty media clusters', () => {
-      const mergedState = ClusterService.mergeRunningState(empty_connector_list, 'mf_mgmt');
+      const mergedState = ClusterService._mergeRunningState(empty_connector_list, 'mf_mgmt');
       expect(mergedState.state).toBe('no_nodes_registered');
     });
 
     it('should flip to no_nodes_registered for empty hds clusters', () => {
-      const mergedState = ClusterService.mergeRunningState(empty_connector_list, 'hds_app');
+      const mergedState = ClusterService._mergeRunningState(empty_connector_list, 'hds_app');
       expect(mergedState.state).toBe('no_nodes_registered');
     });
 
     it('should flip to not_registered for empty expressway clusters', () => {
-      const mergedState = ClusterService.mergeRunningState(empty_connector_list, 'c_mgmt');
+      const mergedState = ClusterService._mergeRunningState(empty_connector_list, 'c_mgmt');
       expect(mergedState.state).toBe('not_registered');
     });
   });

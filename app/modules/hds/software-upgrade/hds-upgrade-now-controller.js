@@ -2,12 +2,11 @@
   'use strict';
 
   /* @ngInject */
-  function HDSUpgradeNowController(ClusterService, Notification, $modalInstance, clusterId, $translate) {
+  function HDSUpgradeNowController(HybridServicesClusterService, Notification, $modalInstance, clusterId, $translate) {
     var vm = this;
-    //clusterId, connector, MediaClusterServiceV2, $translate, $modalInstance, Notification
 
     vm.upgrade = function () {
-      ClusterService
+      HybridServicesClusterService
         .upgradeSoftware(clusterId, 'hds_app')
         .then(function () {
           $modalInstance.dismiss();

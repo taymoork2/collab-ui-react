@@ -8,7 +8,7 @@
     .controller('SoftwareUpgradeController', SoftwareUpgradeController);
 
   /* @ngInject */
-  function SoftwareUpgradeController($translate, $modalInstance, servicesId, connectorType, availableVersion, cluster, ClusterService, HybridServicesExtrasService, Notification) {
+  function SoftwareUpgradeController($translate, $modalInstance, servicesId, connectorType, availableVersion, cluster, HybridServicesClusterService, HybridServicesExtrasService, Notification) {
     var vm = this;
     vm.upgrading = false;
     vm.availableVersion = availableVersion;
@@ -31,7 +31,7 @@
 
     vm.upgrade = function () {
       vm.upgrading = true;
-      ClusterService
+      HybridServicesClusterService
         .upgradeSoftware(cluster.id, connectorType)
         .then(function () {
           $modalInstance.close();
