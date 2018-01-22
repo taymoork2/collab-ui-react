@@ -8,6 +8,11 @@ export class LinkedSitesWebExService {
   private readonly domainsPath: string = '/wbxadmin/api/v1/sites/thissite/useremaildomains?limit=20';
   private readonly useSimulator: boolean = false; // NB do not check in as true
 
+  // TODO Remove this whitelist when no longer needed
+  private readonly dmzSites: string[] = [
+    'sqsitedemo.webex.com',
+  ];
+
   /* @ngInject */
   constructor(private $log: ng.ILogService,
               private $http: ng.IHttpService,
@@ -76,7 +81,7 @@ export class LinkedSitesWebExService {
       }).then((response) => {
         this.$log.debug('getCiAccountSync', response);
         return response.data;
-      }, (error) => {
+      }).catch((error) => {
         this.$log.debug('getCiAccountSync', error);
         throw error;
       });
@@ -118,7 +123,7 @@ export class LinkedSitesWebExService {
         } else {
           return response.data;
         }
-      }, (error) => {
+      }).catch((error) => {
         this.$log.debug('getDomains', error);
         throw error;
       });
@@ -127,9 +132,13 @@ export class LinkedSitesWebExService {
 
   // TODO Should only be used for webex sites in dmz
   private patchSiteForDevEnv(siteApiHost: string): string {
-    //return siteApiHost;
-    const pos: number = siteApiHost.indexOf('.');
-    return [siteApiHost.slice(0, pos), '.dmz', siteApiHost.slice(pos)].join('');
+    if (_.includes(this.dmzSites, siteApiHost)) {
+      this.$log.debug('siteApiHost', siteApiHost);
+      const pos: number = siteApiHost.indexOf('.');
+      return [siteApiHost.slice(0, pos), '.dmz', siteApiHost.slice(pos)].join('');
+    } else {
+      return siteApiHost;
+    }
   }
 
   private getSiteApiUrl(siteUrl: string) {
