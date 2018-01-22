@@ -393,7 +393,7 @@ describe('Controller: AABuilderMainCtrl', function () {
         });
 
         this.$httpBackend.when('GET', this.HuronConfig.getCmiV2Url() + '/customers/cuid/features/autoattendants/uuid/numbers').respond(function () {
-          return [200, { numbers: [{ number: '1111111', uuid: 'newUUID' }] }];
+          return [200, { numbers: [{ number: '1111111', uuid: '21799279-2529-4358-ab2f-1e46bfc3684b' }] }];
         });
 
         var resource = this.AutoAttendantCeInfoModelService.newResource();
@@ -406,14 +406,14 @@ describe('Controller: AABuilderMainCtrl', function () {
 
         this.aaModel.aaRecordUUID = 'uuid';
 
-        this.controller.ui.ceInfo.addResource({ id: '00097a86-45ef-44a7-aa78-6d32a0ca1d3b', uuid: '4066bc8a-c1ae-4e89-a109-5ec891be0683' });
+        this.controller.ui.ceInfo.addResource({ id: '00097a86-45ef-44a7-aa78-6d32a0ca1d3b', uuid: '21799279-2529-4358-ab2f-1e46bfc3684b' });
         this.controller.close();
 
         this.$httpBackend.flush();
 
         this.$scope.$apply();
 
-        expect(this.aaModel.aaRecord.assignedResources[0].uuid).toEqual('newUUID');
+        expect(_.get(this.aaModel.aaRecord, 'assignedResources[0].uuid', 'undefined')).toBe('21799279-2529-4358-ab2f-1e46bfc3684b');
       });
   });
 
