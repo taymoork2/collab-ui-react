@@ -69,6 +69,15 @@
                 $state.isExpertVirtualAssistantEnabled = isEnabled;
               });
           },
+          isHybridAndEPTConfigured: /* @ngInject */ function (AutoAttendantHybridCareService, $state) {
+            return AutoAttendantHybridCareService.isHybridAndEPTConfigured()
+              .then(function (isEnabled) {
+                $state.isHybridAndEPTConfigured = isEnabled;
+              });
+          },
+          isSparkCallConfigured: /* @ngInject */ function (AutoAttendantHybridCareService, $state) {
+            $state.isSparkCallConfigured = AutoAttendantHybridCareService.isSparkCallConfigured();
+          },
         },
       })
       .state('care.setupAssistant', {
