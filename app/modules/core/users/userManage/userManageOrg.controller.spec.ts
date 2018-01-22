@@ -10,11 +10,13 @@ describe('UserManageOrgController', () => {
       '$scope',
       '$state',
       '$window',
+      'Authinfo',
       'Analytics',
       'AutoAssignTemplateModel',
       'AutoAssignTemplateService',
       'DirSyncService',
       'FeatureToggleService',
+      'Notification',
       'OnboardService',
       'Orgservice',
       'UserCsvService',
@@ -57,6 +59,7 @@ describe('UserManageOrgController', () => {
     spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(false);
     spyOn(this.FeatureToggleService, 'atlasEmailSuppressGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'atlasF6980MultiDirSyncManageUsersGetStatus').and.returnValue(this.$q.resolve(false));
 
     initController.apply(this);
   }
@@ -74,6 +77,7 @@ describe('UserManageOrgController', () => {
     } = spies;
     spyOn(this.FeatureToggleService, 'atlasEmailSuppressGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'atlasF6980MultiDirSyncManageUsersGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.AutoAssignTemplateService, 'isEnabledForOrg').and.returnValue(isEnabledForOrg);
     spyOn(this.AutoAssignTemplateService, 'getTemplates').and.returnValue(getTemplates);
 
@@ -107,6 +111,7 @@ describe('UserManageOrgController', () => {
     });
     spyOn(this.FeatureToggleService, 'atlasEmailSuppressGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'atlasF6980MultiDirSyncManageUsersGetStatus').and.returnValue(this.$q.resolve(false));
 
     initController.apply(this);
   }
