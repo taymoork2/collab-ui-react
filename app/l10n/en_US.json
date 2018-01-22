@@ -226,6 +226,8 @@
         "deleteAutoAssign": "Delete Auto-Assign Template"
       },
       "modifyAutoAssign": {
+        "title": "Modify Auto-Assign Template",
+        "modifySuccess": "Your license template has been modified successfully. Licenses will be assigned to new users automatically.",
         "modifyError": "Template failed to load."
       },
       "activateAutoAssign": {
@@ -7534,6 +7536,13 @@
     "syncStatusTooltip": "Jabber Messenger users added to Org Admin are synced to Common Identity",
     "dirsyncStatusHeading": "Common Identity Directory Synchronization",
     "dirsyncStatusTooltip": "To access Cisco Spark platform capabilities, WebEx Messenger users need to be synchronized with the Common Identity service."
+  },
+  "careAddNumberTpl": {
+    "emergencyAcknowledge": "I understand that dialing emergency numbers may not work on an enterprise class IP telephony network.",
+    "addNumbers": "Add Numbers",
+    "pstnNumbers": "PSTN Numbers",
+    "internalDialing": "Internal Dialing",
+    "duplicateNumber": "{{number}} is a duplicate number."
   },
   "careChatTpl": {
     "editAction": "Edit",

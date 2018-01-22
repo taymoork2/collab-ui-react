@@ -14,6 +14,7 @@ class CareNumbersCtrl implements ng.IComponentController {
     private $q: ng.IQService,
     private PrivateTrunkService: PrivateTrunkService,
     private ServiceDescriptorService: ServiceDescriptorService,
+    private $modal,
   ) {}
 
   public $onInit() {
@@ -29,6 +30,14 @@ class CareNumbersCtrl implements ng.IComponentController {
       this.eptStatus = response.ept.state !== 'unknown';
     }).finally(() => this.loading = false);
   }
+
+  public openNewCareFeatureModal() {
+    this.$modal.open({
+      template: '<care-add-numbers-modal dismiss="$dismiss()" class="care-modal"></care-add-numbers-modal>',
+      type: 'full',
+    });
+  }
+
 }
 
 export class CareNumbersComponent implements ng.IComponentOptions {

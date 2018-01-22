@@ -176,11 +176,17 @@
       integration: 'https://ccaportalbts.webex.com/pcs/api/v2/',
       prod: 'https://ccaportal.webex.com/pcs/api/v2/',
     },
-    GssUrl: {
+    GssUrlWebexCHP: {
       dev: 'https://statusbts.webex.com/status',
       cfe: 'https://statusbts.webex.com/status',
       integration: 'https://statusbts.webex.com/status',
       prod: 'https://healthstatus.webex.com/status',
+    },
+    GssUrlAWSCHP: {
+      dev: 'https://service-dev-collaborationhelp.cisco.com/status',
+      cfe: 'https://service-dev-collaborationhelp.cisco.com/status',
+      integration: 'https://service-stage-collaborationhelp.cisco.com/status',
+      prod: 'https://service-collaborationhelp.cisco.com/status',
     },
     UccUrl: {
       dev: 'https://ucc-intb.ciscospark.com/ucm-service/api/v1',

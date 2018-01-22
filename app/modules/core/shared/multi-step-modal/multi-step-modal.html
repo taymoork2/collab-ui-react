@@ -3,7 +3,7 @@
   <h3 class="modal-title" translate="{{::$ctrl.l10nTitle}}"></h3>
 </div>
 
-<div class="modal-body" ng-transclude>
+<div class="modal-body" scroll-indicator="{{::$ctrl.showScrollIndicator}}" ng-transclude>
 </div>
 
 <div class="modal-footer" ng-if="::$ctrl.showFooter()">

@@ -171,9 +171,9 @@
     masonry-layout "^4.1.1"
     moment "^2.10.6"
 
-"@collabui/collab-ui@~5.3.3":
-  version "5.3.3"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui/-/@collabui/collab-ui-5.3.3.tgz#29e70e312536b484c64f7fefc39bb0ac81dea9fe"
+"@collabui/collab-ui@~5.3.3", "@collabui/collab-ui@~5.3.4":
+  version "5.3.4"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui/-/@collabui/collab-ui-5.3.4.tgz#e6894e8b7bd5c85b6fcd9d21f2f327c47daa0a57"
   dependencies:
     "@collabui/collab-ui-icons" "1.0.3"
     ng2-material-dropdown "^0.8.0"

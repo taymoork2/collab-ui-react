@@ -162,6 +162,12 @@ export default class OnboardService {
     scopeData.invalidDirSyncUsersCount = 0;
   }
 
+  public removeEmailFromTokenfield(email: string, userList: string) {
+    return userList.split(', ').filter(function (token) {
+      return token.indexOf(email) === -1;
+    }).join(', ');
+  }
+
   public parseUsersList(userList: string): IUserNameAndEmail[] {
     return addressParser.parse(userList);
   }
@@ -169,10 +175,14 @@ export default class OnboardService {
   public onboardUsersInChunks(usersList: IUserNameAndEmail[], entitleList: IUserEntitlementRequestItem[], licenseList: ILicenseRequestItem[], chunkSize: number = this.Config.batchSize) {
     // notes:
     // - split out users list into smaller list chunks
-    // - call 'Userservice.onboardUsersLegacy()' for each chunk
+    // - call 'Userservice.onboardUsers()' for each chunk
     const usersListChunks = _.chunk(usersList, chunkSize);
     const promises = _.map(usersListChunks, (usersListChunk) => {
-      return this.Userservice.onboardUsersLegacy(usersListChunk, entitleList, licenseList)
+      return this.Userservice.onboardUsers({
+        users: usersListChunk,
+        licenses: licenseList,
+        userEntitlements: entitleList,
+      })
         .then((response) => {
           // add 'onboardedUsers' property and resolve
           const userResponse: IOnboardedUserResult[] = _.get(response, 'data.userResponse', []);
