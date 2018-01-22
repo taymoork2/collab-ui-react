@@ -91,5 +91,6 @@ export class AutoAssignTemplateManageOptionsComponent implements ng.IComponentOp
     isTemplateActive: '<',
     onDelete: '&',
     onActivateToggle: '&',
+    onModify: '&',
   };
 }

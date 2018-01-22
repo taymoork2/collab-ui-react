@@ -6,7 +6,7 @@
 
   <div class="ct-sa-content overview-card-layout">
     <cs-card-layout block-view="true" class="ct-card-center">
-      <cs-card ng-repeat="card in careSetupAssistant.overviewCards" class="medium">
+      <cs-card ng-repeat="card in careSetupAssistant.overviewCards" class="cs-card--medium">
         <article ng-class="{'ct-card-border-enabled': careSetupAssistant.getCardConfig(card.name).enabled,
           'ct-card-border-disabled': !careSetupAssistant.getCardConfig(card.name).enabled,
           'ct-card-disabled': !careSetupAssistant.isOverviewCardConfigurable(card.name) }"

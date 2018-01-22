@@ -111,7 +111,7 @@
 
   <div ng-if="!$ctrl.loading">
     <cs-card-layout class="kpi-banner">
-      <cs-card class="small"  ng-repeat="item in $ctrl.KPIData">
+      <cs-card class="cs-card--small"  ng-repeat="item in $ctrl.KPIData">
         <article>
           <header>
             <h4> {{::'gemini.reports.kpi.'+ item.name | translate}}</h4></header>

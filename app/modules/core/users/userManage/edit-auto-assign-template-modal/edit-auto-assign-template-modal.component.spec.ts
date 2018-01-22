@@ -11,6 +11,7 @@ describe('Component: editAutoAssignTemplateModal:', () => {
       'Analytics',
       'AutoAssignTemplateService',
     );
+    this.stateData = {};
     this.$scope.dismiss = _.noop;
   });
 
@@ -21,6 +22,7 @@ describe('Component: editAutoAssignTemplateModal:', () => {
 
   describe('primary behaviors (view):', () => {
     beforeEach(function () {
+      spyOn(this.AutoAssignTemplateService, 'getSortedSubscriptions').and.returnValue(this.$q.resolve([]));
       this.compileTemplate('<edit-auto-assign-template-modal dismiss="_.noop()"></edit-auto-assign-template-modal>');
     });
 
@@ -47,17 +49,28 @@ describe('Component: editAutoAssignTemplateModal:', () => {
   describe('primary behaviors (controller):', () => {
     beforeEach(function () {
       spyOn(this.$state, 'go');
-      _.set(this.$state, 'params.prevState', 'fake-previous-state');
+      _.set(this.stateData, 'subscriptions', []);
       spyOn(this.Analytics, 'trackAddUsers');
       spyOn(this.AutoAssignTemplateService, 'getSortedSubscriptions').and.returnValue(this.$q.resolve([]));
       this.compileComponent('editAutoAssignTemplateModal', {
+        prevState: 'fake-previous-state',
+        isEditTemplateMode: true,
+        stateData: this.stateData,
         dismiss: 'dismiss',
       });
     });
 
     it('should navigate to previous state when back button is clicked', function () {
       this.view.find('button.btn.back').click();
-      expect(this.$state.go).toHaveBeenCalledWith('fake-previous-state');
+      expect(this.$state.go).toHaveBeenCalledWith('users.manage.picker');
+    });
+
+    it('should navigate to the next state when next button is clicked', function () {
+      this.view.find('button.btn.next').click();
+      expect(this.$state.go).toHaveBeenCalledWith('users.manage.edit-summary-auto-assign-template-modal', {
+        stateData: this.stateData,
+        isEditTemplateMode: true,
+      });
     });
 
     it('should track the event when the modal is dismissed', function () {

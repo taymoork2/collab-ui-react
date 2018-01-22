@@ -45,6 +45,7 @@ module.exports = {
   atlasITProPackPurchased: 'atlas-it-pro-pack-purchased',
   atlasJabberInterop: 'atlas-jabber-interop',
   atlasJira2126UseAltEndpoint: 'atlas-jira-2126-use-alt-endpoint',
+  atlasMediaServiceMultipleInsights: 'atlas-media-service-multiple-insights',
   atlasMediaServicePhaseTwo: 'atlas-media-service-phase-two',
   atlasMediaServiceTrustedSIP: 'atlas-media-service-trusted-sip',
   atlasMyCompanyBillingTab: 'atlas-my-company-billing-tab',
@@ -107,6 +108,7 @@ module.exports = {
   flagMsg: 'flag-msg',
   gemServicesTab: 'gem-services-tab',
   geoHintEnabled: 'geo-hint-enabled',
+  gssWebexCHPEnabled: 'gss-webex-chp-enabled',
   hi1033: 'h-i1033',
   hI1484: 'h-i1484', // Multi-Location Support
   hI802: 'h-i802',

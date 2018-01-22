@@ -1,13 +1,13 @@
 <div class="subscriptions-container">
   <cr-trial-notice-banner ng-if="mcpSub.hasEnterpriseTrial || mcpSub.trialUrlFailed"></cr-trial-notice-banner>
   <cs-card-layout block-view="true">
-    <cs-card class="full detail-view" ng-repeat="subscription in mcpSub.subscriptionDetails" ng-if="mcpSub.subscriptionDetails.length > 1" ng-class="{ 'subscription-expanded': subscription.viewAll }">
+    <cs-card class="cs-card--full detail-view" ng-repeat="subscription in mcpSub.subscriptionDetails" ng-if="mcpSub.subscriptionDetails.length > 1" ng-class="{ 'subscription-expanded': subscription.viewAll }">
       <article><section>
         <subscription-details subscription="subscription"></subscription-details>
       </section></article>
     </cs-card>
 
-    <cs-card class="full subscriptions" ng-if="mcpSub.hybridServices.length > 0 || mcpSub.visibleSubscriptions">
+    <cs-card class="cs-card--full subscriptions" ng-if="mcpSub.hybridServices.length > 0 || mcpSub.visibleSubscriptions">
       <article>
         <header>
           <div class="column medium-2 card-title">
@@ -68,7 +68,7 @@
       </article>
     </cs-card>
 
-    <cs-card class="full pro-pack-card" ng-if="mcpSub.isProPackPurchased && mcpSub.proPackData">
+    <cs-card class="cs-card--full pro-pack-card" ng-if="mcpSub.isProPackPurchased && mcpSub.proPackData">
       <article>
         <header>
           <h3 class="column medium-2 card-title" translate="subscriptions.premiumManagement"></h3>

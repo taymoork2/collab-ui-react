@@ -3,6 +3,8 @@ import { IAutoAssignTemplateRequestPayload } from 'modules/core/users/shared';
 class EditSummaryAutoAssignTemplateModalController implements ng.IComponentController {
   private dismiss: Function;
   private stateData: any;  // TODO: better type
+  private isEditTemplateMode: boolean;
+  private templateId: string;
   public saveLoading = false;
 
   /* @ngInject */
@@ -14,7 +16,40 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
   ) {}
 
   public $onInit(): void {
-    this.stateData = _.get(this.$state, 'params.stateData');
+    this.templateId = '';
+
+    this.AutoAssignTemplateService.getDefaultTemplate()
+      .then((defaultTemplate) => {
+        this.templateId = defaultTemplate.templateId;
+      });
+  }
+
+  private updateTemplate(payload: IAutoAssignTemplateRequestPayload): void {
+    this.AutoAssignTemplateService.updateTemplate(this.templateId, payload)
+      .then(() => {
+        this.Notification.success('userManage.org.modifyAutoAssign.modifySuccess');
+        this.$state.go('users.list');
+      })
+      .catch((response) => {
+        this.Notification.errorResponse(response, 'userManage.autoAssignTemplate.editSummary.saveError');
+      })
+      .finally(() => {
+        this.saveLoading = false;
+      });
+  }
+
+  private createTemplate(payload: IAutoAssignTemplateRequestPayload): void {
+    this.AutoAssignTemplateService.createTemplate(payload)
+        .then(() => {
+          this.Notification.success('userManage.autoAssignTemplate.editSummary.saveSuccess');
+          this.$state.go('users.list');
+        })
+        .catch((response) => {
+          this.Notification.errorResponse(response, 'userManage.autoAssignTemplate.editSummary.saveError');
+        })
+        .finally(() => {
+          this.saveLoading = false;
+        });
   }
 
   public dismissModal(): void {
@@ -31,17 +66,7 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
   public save(): void {
     this.saveLoading = true;
     const payload: IAutoAssignTemplateRequestPayload = this.AutoAssignTemplateService.stateDataToPayload(this.stateData);
-    this.AutoAssignTemplateService.saveTemplate(payload)
-      .then(() => {
-        this.Notification.success('userManage.autoAssignTemplate.editSummary.saveSuccess');
-        this.$state.go('users.list');
-      })
-      .catch((response) => {
-        this.Notification.errorResponse(response, 'userManage.autoAssignTemplate.editSummary.saveError');
-      })
-      .finally(() => {
-        this.saveLoading = false;
-      });
+    return this.isEditTemplateMode ? this.updateTemplate(payload) : this.createTemplate(payload);
   }
 }
 
@@ -50,5 +75,7 @@ export class EditSummaryAutoAssignTemplateModalComponent implements ng.IComponen
   public template = require('./edit-summary-auto-assign-template-modal.html');
   public bindings = {
     dismiss: '&?',
+    isEditTemplateMode: '<',
+    stateData: '<',
   };
 }
