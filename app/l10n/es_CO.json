@@ -8824,7 +8824,7 @@
       "title": "Token e instrucciones",
       "close": "Cerrar",
       "instructions": "Debe copiar y pegar este token de comprobación de DNS en la sección de registro de TXT para demostrar que posee el dominio:",
-      "howto": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Obtenga más información</a> sobre cómo introducir el token de comprobación de DNS.",
+      "howto": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Obtenga más información</a> sobre cómo introducir el token de comprobación de DNS.",
       "beforeVerify": "Antes de comprobar"
     }
   },

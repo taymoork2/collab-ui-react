@@ -8824,7 +8824,7 @@
       "title": "Código e instruções",
       "close": "Fechar",
       "instructions": "você deve copiar e colar este token de verificação DNS para a seção de registro TXT para provar que você possui o domínio:",
-      "howto": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Saiba mais</a> sobre como inserir o código de verificação DNS.",
+      "howto": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Saiba mais</a> sobre como inserir o código de verificação DNS.",
       "beforeVerify": "Antes de verificar"
     }
   },
