@@ -10,9 +10,15 @@
   version "5.0.0"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@atlas/eslint-plugin-atlas-ui/-/@atlas/eslint-plugin-atlas-ui-5.0.0.tgz#04e83dc425f3919bdfa5b943b67a554959a455c7"
 
-"@ciscospark/common@1.1.6":
-  version "1.1.6"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@ciscospark/common/-/common-1.1.6.tgz#c388eba1a32898f505faa48b05b4ca88b311b9fc"
+"@ciscospark/common-timers@1.23.4":
+  version "1.23.4"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@ciscospark/common-timers/-/common-timers-1.23.4.tgz#c47cc6e6bfff3358438a420e09b4aa5d5b139f1f"
+  dependencies:
+    envify "^3.4.1"
+
+"@ciscospark/common@1.23.4":
+  version "1.23.4"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@ciscospark/common/-/common-1.23.4.tgz#e291603da86992f990b0d26d0e252137dd939add"
   dependencies:
     babel-runtime "^6.23.0"
     backoff "^2.5.0"
@@ -21,11 +27,11 @@
     lodash "^4.17.4"
     urlsafe-base64 "^1.0.0"
 
-"@ciscospark/http-core@1.1.6":
-  version "1.1.6"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@ciscospark/http-core/-/http-core-1.1.6.tgz#43c2d96d5979ddb866aea18b33cf8a6ee2a59b1a"
+"@ciscospark/http-core@1.23.4":
+  version "1.23.4"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@ciscospark/http-core/-/http-core-1.23.4.tgz#4f339e2c7c6d557ce9c2b28f769ea32f362fb506"
   dependencies:
-    "@ciscospark/common" "1.1.6"
+    "@ciscospark/common" "1.23.4"
     babel-runtime "^6.23.0"
     envify "^3.4.1"
     file-type "^3.9.0"
@@ -37,15 +43,16 @@
     request "^2.81.0"
     xtend "^4.0.1"
 
-"@ciscospark/internal-plugin-encryption@1.1.6":
-  version "1.1.6"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@ciscospark/internal-plugin-encryption/-/internal-plugin-encryption-1.1.6.tgz#034712fc410b919fa168b99b18a689cfca1420a6"
+"@ciscospark/internal-plugin-encryption@1.23.4":
+  version "1.23.4"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@ciscospark/internal-plugin-encryption/-/internal-plugin-encryption-1.23.4.tgz#94892f983a81e97d2a0ba7f5808f1d32d4b935c7"
   dependencies:
-    "@ciscospark/common" "1.1.6"
-    "@ciscospark/http-core" "1.1.6"
-    "@ciscospark/internal-plugin-mercury" "1.1.6"
-    "@ciscospark/internal-plugin-wdm" "1.1.6"
-    "@ciscospark/spark-core" "1.1.6"
+    "@ciscospark/common" "1.23.4"
+    "@ciscospark/common-timers" "1.23.4"
+    "@ciscospark/http-core" "1.23.4"
+    "@ciscospark/internal-plugin-mercury" "1.23.4"
+    "@ciscospark/internal-plugin-wdm" "1.23.4"
+    "@ciscospark/spark-core" "1.23.4"
     babel-runtime "^6.23.0"
     envify "^3.4.1"
     lodash "^4.17.4"
@@ -53,24 +60,26 @@
     node-kms "^0.3.2"
     node-scr "^0.2.2"
 
-"@ciscospark/internal-plugin-feature@1.1.6":
-  version "1.1.6"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@ciscospark/internal-plugin-feature/-/internal-plugin-feature-1.1.6.tgz#c354550a82a870584896949ef223c182cb972324"
+"@ciscospark/internal-plugin-feature@1.23.4":
+  version "1.23.4"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@ciscospark/internal-plugin-feature/-/internal-plugin-feature-1.23.4.tgz#f91748a55a9703ee15d48c8cbf7965600982a941"
   dependencies:
-    "@ciscospark/internal-plugin-wdm" "1.1.6"
-    "@ciscospark/spark-core" "1.1.6"
+    "@ciscospark/internal-plugin-wdm" "1.23.4"
+    "@ciscospark/spark-core" "1.23.4"
     babel-runtime "^6.23.0"
     envify "^3.4.1"
     lodash "^4.17.4"
 
-"@ciscospark/internal-plugin-mercury@1.1.6":
-  version "1.1.6"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@ciscospark/internal-plugin-mercury/-/internal-plugin-mercury-1.1.6.tgz#2470b6e115a5001de8b85450b54878e796bddbbb"
+"@ciscospark/internal-plugin-mercury@1.23.4":
+  version "1.23.4"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@ciscospark/internal-plugin-mercury/-/internal-plugin-mercury-1.23.4.tgz#0e788538aad8d397a68de7959d87361ea547718c"
   dependencies:
-    "@ciscospark/common" "1.1.6"
-    "@ciscospark/internal-plugin-feature" "1.1.6"
-    "@ciscospark/internal-plugin-wdm" "1.1.6"
-    "@ciscospark/spark-core" "1.1.6"
+    "@ciscospark/common" "1.23.4"
+    "@ciscospark/common-timers" "1.23.4"
+    "@ciscospark/internal-plugin-feature" "1.23.4"
+    "@ciscospark/internal-plugin-metrics" "1.23.4"
+    "@ciscospark/internal-plugin-wdm" "1.23.4"
+    "@ciscospark/spark-core" "1.23.4"
     babel-runtime "^6.23.0"
     backoff "^2.5.0"
     envify "^3.4.1"
@@ -79,56 +88,59 @@
     uuid "^3.0.1"
     ws "^1.1.4"
 
-"@ciscospark/internal-plugin-metrics@1.1.6":
-  version "1.1.6"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@ciscospark/internal-plugin-metrics/-/internal-plugin-metrics-1.1.6.tgz#3f8f952778504c7af020e6035e8928294c557241"
+"@ciscospark/internal-plugin-metrics@1.23.4":
+  version "1.23.4"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@ciscospark/internal-plugin-metrics/-/internal-plugin-metrics-1.23.4.tgz#a0a8fcfa70b5bcafeff59b8a439c558b8f1bf1ce"
   dependencies:
-    "@ciscospark/common" "1.1.6"
-    "@ciscospark/internal-plugin-wdm" "1.1.6"
-    "@ciscospark/spark-core" "1.1.6"
+    "@ciscospark/common" "1.23.4"
+    "@ciscospark/common-timers" "1.23.4"
+    "@ciscospark/internal-plugin-wdm" "1.23.4"
+    "@ciscospark/spark-core" "1.23.4"
     babel-runtime "^6.23.0"
     envify "^3.4.1"
 
-"@ciscospark/internal-plugin-search@1.1.6":
-  version "1.1.6"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@ciscospark/internal-plugin-search/-/internal-plugin-search-1.1.6.tgz#56915b30cd78f38850e706f019690edbdee214bd"
+"@ciscospark/internal-plugin-search@1.23.4":
+  version "1.23.4"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@ciscospark/internal-plugin-search/-/internal-plugin-search-1.23.4.tgz#e8d1ccac668ab8d2b5acdece499a87ad19e1e805"
   dependencies:
-    "@ciscospark/common" "1.1.6"
-    "@ciscospark/internal-plugin-encryption" "1.1.6"
-    "@ciscospark/spark-core" "1.1.6"
+    "@ciscospark/common" "1.23.4"
+    "@ciscospark/internal-plugin-encryption" "1.23.4"
+    "@ciscospark/spark-core" "1.23.4"
     babel-runtime "^6.23.0"
     envify "^3.4.1"
     lodash "^4.17.4"
 
-"@ciscospark/internal-plugin-wdm@1.1.6":
-  version "1.1.6"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@ciscospark/internal-plugin-wdm/-/internal-plugin-wdm-1.1.6.tgz#9802bd7dc393907211bc0b2ae5d394907e7fd4b4"
+"@ciscospark/internal-plugin-wdm@1.23.4":
+  version "1.23.4"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@ciscospark/internal-plugin-wdm/-/internal-plugin-wdm-1.23.4.tgz#a9c355b4a8f0a4642f060fc95672f1c16a117f49"
   dependencies:
-    "@ciscospark/common" "1.1.6"
-    "@ciscospark/http-core" "1.1.6"
-    "@ciscospark/spark-core" "1.1.6"
+    "@ciscospark/common" "1.23.4"
+    "@ciscospark/common-timers" "1.23.4"
+    "@ciscospark/http-core" "1.23.4"
+    "@ciscospark/spark-core" "1.23.4"
     ampersand-collection "^2.0.0"
     ampersand-state "^5.0.2"
     babel-runtime "^6.23.0"
     envify "^3.4.1"
     lodash "^4.17.4"
 
-"@ciscospark/plugin-logger@1.1.6":
-  version "1.1.6"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@ciscospark/plugin-logger/-/plugin-logger-1.1.6.tgz#f8873fbfa1fa708fae1b09ebee58c665f59aa077"
+"@ciscospark/plugin-logger@1.23.4":
+  version "1.23.4"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@ciscospark/plugin-logger/-/plugin-logger-1.23.4.tgz#6888d1d5d45c34fc40cb8797b3e5f61e87468b8e"
   dependencies:
-    "@ciscospark/common" "1.1.6"
-    "@ciscospark/spark-core" "1.1.6"
+    "@ciscospark/common" "1.23.4"
+    "@ciscospark/spark-core" "1.23.4"
     babel-runtime "^6.23.0"
     envify "^3.4.1"
     lodash "^4.17.4"
 
-"@ciscospark/spark-core@1.1.6":
-  version "1.1.6"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@ciscospark/spark-core/-/spark-core-1.1.6.tgz#7c9629a901b87a28582bc5679b2847d493ea36d0"
+"@ciscospark/spark-core@1.23.4":
+  version "1.23.4"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@ciscospark/spark-core/-/spark-core-1.23.4.tgz#0f885b73f2db84479283f349e3ca658e5e2aacc4"
   dependencies:
-    "@ciscospark/common" "1.1.6"
-    "@ciscospark/http-core" "1.1.6"
+    "@ciscospark/common" "1.23.4"
+    "@ciscospark/common-timers" "1.23.4"
+    "@ciscospark/http-core" "1.23.4"
     ampersand-collection "^2.0.0"
     ampersand-events "^2.0.2"
     ampersand-state "^5.0.2"
