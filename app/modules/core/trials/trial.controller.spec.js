@@ -9,6 +9,9 @@ describe('Controller: TrialCtrl:', function () {
   var purchasedCustomerData = getJSONFixture('core/json/customers/customerWithLicensesNoTrial.json');
   var purchasedWithTrialCustomerData = getJSONFixture('core/json/customers/customerWithLicensesAndTrial.json');
   var enabledFeatureToggles = [];
+
+  var orgAlreadyRegistered = 'ORGANIZATION_REGISTERED_USING_API';
+
   afterEach(function () {
     controller = helpers = $controller = $scope = $state = $q = $translate = $window = $httpBackend = Analytics = Authinfo = Config = Notification = TrialService = TrialContextService = HuronCustomer = FeatureToggleService = Orgservice = undefined;
   });
@@ -857,6 +860,62 @@ describe('Controller: TrialCtrl:', function () {
           expect(TrialContextService.removeService).not.toHaveBeenCalled();
           expect(Notification.errorResponse).toHaveBeenCalledWith('rejected', 'trialModal.editTrialContextServiceEnableError');
         });
+
+        it('doesn\'t notify on ORGANIZATION_REGISTERED_USING_API if care trial is enabled', function () {
+          addContextSpy.and.returnValue(
+            $q.reject({
+              data: {
+                error: {
+                  statusText: orgAlreadyRegistered,
+                },
+              },
+            })
+          );
+
+          controller.contextTrial.enabled = true;
+          controller.careTrial.enabled = true;
+          controller.advanceCareTrial.enabled = true;
+          controller.editTrial();
+
+          // Check if button is greyed out, depending on form element being touched (in this case, false)
+          // Should evaluate to true
+          var greyedOut = controller.hasRegisteredContextService({ $pristine: true });
+
+          $scope.$apply();
+
+          expect(greyedOut).toBe(true);
+          expect(TrialContextService.addService).toHaveBeenCalled();
+          expect(TrialContextService.removeService).not.toHaveBeenCalled();
+          expect(Notification.errorResponse).not.toHaveBeenCalled();
+        });
+
+        it('doesn\'t notify on ORGANIZATION_REGISTERED_USING_API if care trial is disabled', function () {
+          addContextSpy.and.returnValue(
+            $q.reject({
+              data: {
+                error: {
+                  statusText: orgAlreadyRegistered,
+                },
+              },
+            })
+          );
+
+          controller.contextTrial.enabled = true;
+          controller.careTrial.enabled = false;
+          controller.advanceCareTrial.enabled = false;
+          controller.editTrial();
+
+          // Check if button is greyed out, depending on form element being touched (in this case, false)
+          // Should evaluate to true
+          var greyedOut = controller.hasRegisteredContextService({ $pristine: true });
+
+          $scope.$apply();
+
+          expect(greyedOut).toBe(true);
+          expect(TrialContextService.addService).toHaveBeenCalled();
+          expect(TrialContextService.removeService).not.toHaveBeenCalled();
+          expect(Notification.errorResponse).not.toHaveBeenCalled();
+        });
       });
     });
   });
@@ -1579,6 +1638,62 @@ describe('Controller: TrialCtrl:', function () {
           $scope.$apply();
           expect(TrialContextService.addService).toHaveBeenCalled();
           expect(Notification.errorResponse).toHaveBeenCalledWith('rejected', 'trialModal.startTrialContextServiceError');
+        });
+
+        it('doesn\'t notify on ORGANIZATION_REGISTERED_USING_API if care trial is enabled', function () {
+          addContextSpy.and.returnValue(
+            $q.reject({
+              data: {
+                error: {
+                  statusText: orgAlreadyRegistered,
+                },
+              },
+            })
+          );
+
+          controller.contextTrial.enabled = true;
+          controller.callTrial.enabled = false;
+          controller.careTrial.enabled = true;
+          controller.advanceCareTrial.enabled = true;
+          controller.startTrial();
+
+          // Check if button is greyed out, depending on form element being touched (in this case, true)
+          // Should evaluate to false
+          var greyedOut = controller.hasRegisteredContextService({ $pristine: false });
+
+          $scope.$apply();
+
+          expect(greyedOut).toBe(false);
+          expect(TrialContextService.addService).toHaveBeenCalled();
+          expect(Notification.errorResponse).not.toHaveBeenCalled();
+        });
+
+        it('doesn\'t notify on ORGANIZATION_REGISTERED_USING_API if care trial is disabled', function () {
+          addContextSpy.and.returnValue(
+            $q.reject({
+              data: {
+                error: {
+                  statusText: orgAlreadyRegistered,
+                },
+              },
+            })
+          );
+
+          controller.contextTrial.enabled = true;
+          controller.callTrial.enabled = false;
+          controller.careTrial.enabled = false;
+          controller.advanceCareTrial.enabled = false;
+          controller.startTrial();
+
+          // Check if button is greyed out, depending on form element being touched (in this case, true)
+          // Should evaluate to false
+          var greyedOut = controller.hasRegisteredContextService({ $pristine: false });
+
+          $scope.$apply();
+
+          expect(greyedOut).toBe(false);
+          expect(TrialContextService.addService).toHaveBeenCalled();
+          expect(Notification.errorResponse).not.toHaveBeenCalled();
         });
 
         it('should not be able to proceed if no other trial services are checked', function () {
