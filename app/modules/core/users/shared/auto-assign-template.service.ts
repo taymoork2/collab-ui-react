@@ -104,6 +104,14 @@ export class AutoAssignTemplateService {
     return stateData;
   }
 
+  public getDefaultStateData() {
+    return this.$q.all({
+      defaultAutoAssignTemplate: this.getDefaultTemplate(),
+      subscriptions: this.getSortedSubscriptions(),
+    })
+    .then(results => this.toStateData(results.defaultAutoAssignTemplate, results.subscriptions));
+  }
+
   public getSortedSubscriptions(): ng.IPromise<ISubscription[]> {
     return this.Orgservice.getLicensesUsage()
       .then((subscriptions) => _.sortBy(subscriptions, 'subscriptionId'));
