@@ -369,6 +369,10 @@
         "warningTitle": "Auto Assign CSV Rules",
         "warningMessage": "Leave the license fields blank if you want to apply the auto assign template to a new user. Or specify licenses by typing True or False and the auto assign template isn't applied. Existing users are not impacted by the auto assign template."
       }
+    },
+    "autoAssignLicenseSummaryForDirSync": {
+      "header": "License Summary",
+      "description": "You've enabled Auto-Assign. All synchronized users will be assigned the following licenses automatically."
     }
   },
   "userTaskManagerModal": {
