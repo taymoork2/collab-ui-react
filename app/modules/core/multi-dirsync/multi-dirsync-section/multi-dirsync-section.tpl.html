@@ -21,7 +21,7 @@
   <cs-statusindicator ng-model="disabled"></cs-statusindicator>
   <span translate="common.disabled"></span>
   <br>
-  <a href class="p" ng-click="$ctrl.goToInitialize()" translate="userManage.org.turnOnDirSync"></a>
+  <a href class="p" ng-click="$ctrl.onEnableClick()" translate="userManage.org.turnOnDirSync"></a>
 </div>
 <div id="dirsyncEnabled" ng-if="!$ctrl.dirsyncUpdating && $ctrl.dirsyncEnabled" ng-repeat="dirsync in $ctrl.dirSyncArray track by $index">
   <cs-statusindicator ng-model="dirsync.siteStatus"></cs-statusindicator>

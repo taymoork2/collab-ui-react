@@ -102,7 +102,9 @@
       <h4 translate="userManage.org.activeDirectory"></h4>
     </div>
     <div class="columns medium-8 manage-modal-label sync-status">
-      <multi-dirsync-section></multi-dirsync-section>
+      <multi-dirsync-section
+        on-enable-click="umoc.onNext(umoc.ManageType.ADVANCED_NO_DS)">
+      </multi-dirsync-section>
     </div>
   </div>
 

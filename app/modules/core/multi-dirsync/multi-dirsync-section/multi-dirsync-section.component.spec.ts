@@ -15,7 +15,6 @@ describe('MultiDirsyncSection Component:', function () {
       '$q',
       '$scope',
       '$state',
-      'Analytics',
       'ModalService',
       'MultiDirSyncService',
       'Notification',
@@ -38,7 +37,6 @@ describe('MultiDirsyncSection Component:', function () {
     spyOn(this.MultiDirSyncService, 'deactivateDomain').and.returnValue(this.$q.resolve(true));
 
     spyOn(this.Notification, 'errorWithTrackingId');
-    spyOn(this.Analytics, 'trackAddUsers');
     spyOn(this.$state, 'go');
 
     this.$state.modal = {
@@ -48,8 +46,10 @@ describe('MultiDirsyncSection Component:', function () {
   });
 
   function initComponent() {
-    this.compileComponent('multiDirsyncSection', {});
-    this.$scope.$apply();
+    this.$scope.onEnableClickSpy = jasmine.createSpy('onEnableClick');
+    this.compileComponent('multiDirsyncSection', {
+      onEnableClick: 'onEnableClickSpy()',
+    });
   }
 
   describe('Positive Tests -', function () {
@@ -116,8 +116,7 @@ describe('MultiDirsyncSection Component:', function () {
       initComponent.call(this);
 
       this.view.find(DISABLED_LINK).click();
-      expect(this.Analytics.trackAddUsers).toHaveBeenCalledTimes(1);
-      expect(this.$state.go).toHaveBeenCalledWith('users.manage.advanced.add.ob.installConnector');
+      expect(this.$scope.onEnableClickSpy).toHaveBeenCalled();
     });
 
     it('should notify on failed delete', function () {
