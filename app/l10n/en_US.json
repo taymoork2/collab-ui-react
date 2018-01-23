@@ -2799,7 +2799,7 @@
         "heading": "Documentation and Software",
         "headingDoc": "Documentation",
         "headingSoftware": "Software",
-        "help": "Visit <a href=\"{{helpLink}}\" target=\"_blank\">Help Central</a> for further information about {{localizedServiceName}}.",
+        "help": "See the <a href=\"{{helpLink}}\" target=\"_blank\">deployment documentation</a> for further information about {{localizedServiceName}}.",
         "downloadExpressway": "Download Cisco Expressway software from <a href=\"{{downloadLink}}\" target=\"_blank\">software.cisco.com</a>.",
         "downloadECP": "<a href=\"{{downloadLink}}\" target=\"_blank\">Download {{serviceName}} software</a>.",
         "downloadDemoHybridMedia": "<a href=\"{{downloadLink}}\" target=\"_blank\">Download Full Software Image</a><br> (Full capacity and used for production deployments of Hybrid Media)<br> <a href=\"{{downloadDemoLink}}\" target=\"_blank\">Download Demo Software Image</a> <br>(Limited capacity, lifespan of 90 days, and only used for demos of Hybrid Media)"
