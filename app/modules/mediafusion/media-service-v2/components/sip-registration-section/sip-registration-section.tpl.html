@@ -1,0 +1,9 @@
+<setting-section setting="$ctrl.sipRegistration" class="needs-border-top">
+    <div class="sub-section">
+        <h5 class="sub-section__label" translate="mediaFusion.sipconfiguration.title"></h5>
+        <p class="sub-section__description" translate="mediaFusion.sipconfiguration.description"></p>
+        <input cs-input type="text" id="sipurlconfiguration" placeholder="{{:: 'mediaFusion.sipconfiguration.placeholder' | translate}}"
+                ng-model="$ctrl.sipurlconfiguration" cs-input-group-size="medium-4" cs-input-help-text="{{:: 'mediaFusion.sipconfiguration.example' | translate}}">
+        <button type="button" class="btn media-service-btn-padding" ng-click="$ctrl.saveSipTrunk()" translate="common.save"></button>
+    </div>
+</setting-section>

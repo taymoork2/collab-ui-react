@@ -14,7 +14,8 @@
     </setting-section>
 
     <div ng-if="$ctrl.hasMfPhaseTwoToggle">
-      <setting-section setting="$ctrl.sipRegistration" class="needs-border-top">
+        <sip-registration-section cluster="$ctrl.cluster"></sip-registration-section>
+      <!-- <setting-section setting="$ctrl.sipRegistration" class="needs-border-top">
         <div class="sub-section">
           <h5 class="sub-section__label" translate="mediaFusion.sipconfiguration.title"></h5>
           <p class="sub-section__description" translate="mediaFusion.sipconfiguration.description"></p>
@@ -22,11 +23,12 @@
                  ng-model="$ctrl.sipurlconfiguration" cs-input-group-size="medium-4" cs-input-help-text="{{:: 'mediaFusion.sipconfiguration.example' | translate}}">
           <button type="button" class="btn media-service-btn-padding" ng-click="$ctrl.saveSipTrunk()" translate="common.save"></button>
         </div>
-      </setting-section>
+      </setting-section> -->
     </div>
 
     <div ng-if="$ctrl.hasMfTrustedSipToggle">
-      <setting-section setting="$ctrl.trustedSip" class="needs-border-top">
+      <trusted-sip-section cluster="$ctrl.cluster"></trusted-sip-section>
+      <!-- <setting-section setting="$ctrl.trustedSip" class="needs-border-top">
         <div class="sub-section">
           <h5 class="sub-section__label" translate="mediaFusion.trustedSip.title"></h5>
           <p class="sub-section__description" translate="mediaFusion.trustedSip.description"></p>
@@ -39,7 +41,7 @@
                       allowed-tags-pattern="((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)|((?!:\/\/)([a-zA-Z0-9]+\.)?[a-zA-Z0-9][a-zA-Z0-9-]+\.[a-zA-Z]{2,6}))">
           </tags-input>
         </div>
-      </setting-section>
+      </setting-section> -->
     </div>
 
     <release-channel-section cluster="$ctrl.cluster"></release-channel-section>
