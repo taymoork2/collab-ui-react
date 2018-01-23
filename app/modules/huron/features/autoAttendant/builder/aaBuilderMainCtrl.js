@@ -117,7 +117,8 @@
     // Save the phone number resources originally in the CE (used on exit with no save, and on save error)
     function unAssignAssigned() {
       // check to see if the local assigned list of resources is different than in CE info
-      if (!_.isUndefined(vm.aaModel.aaRecord) && areAssignedResourcesDifferent(vm.aaModel.aaRecord.assignedResources, vm.ui.ceInfo.getResources(), 'id')) {
+      if (!_.isUndefined(vm.aaModel.aaRecord) && (areAssignedResourcesDifferent(vm.aaModel.aaRecord.assignedResources, vm.ui.ceInfo.getResources(), 'id')
+              || areAssignedResourcesDifferent(vm.aaModel.aaRecord.assignedResources, vm.ui.ceInfo.getResources(), 'uuid'))) {
         var ceInfo = AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord);
         return AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, ceInfo.getResources()).then(
           function () {

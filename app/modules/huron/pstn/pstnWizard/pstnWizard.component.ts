@@ -92,12 +92,6 @@ export class PstnWizardCtrl implements ng.IComponentController {
               private PhoneNumberService: PhoneNumberService,
               private FeatureToggleService,
               ) {
-    this.contact = this.PstnWizardService.getContact();
-    this.address = _.cloneDeep(this.PstnModel.getServiceAddress());
-    this.countryCode = this.PstnModel.getCountryCode();
-    this.carrierName = this.PstnModel.getProvider().displayName;
-    this.isTrial = this.PstnModel.getIsTrial();
-    this.showPortNumbers = !this.isTrial;
     this.PORTING_NUMBERS = this.$translate.instant('pstnSetup.portNumbersLabel');
     this.tokenmethods = new TokenMethods(this.createToken.bind(this), this.createdToken.bind(this), this.editToken.bind(this), this.removeToken.bind(this));
     this.titles = this.PstnWizardService.STEP_TITLE;
@@ -108,7 +102,16 @@ export class PstnWizardCtrl implements ng.IComponentController {
   }
 
   public $onInit(): void {
-    this.PstnWizardService.init().then(() => this.enableCarriers = true);
+    this.PstnWizardService.init().then(() => {
+      this.enableCarriers = true;
+      //Set the following values after PstnWizardService initializes
+      this.contact = this.PstnWizardService.getContact();
+      this.address = _.cloneDeep(this.PstnModel.getServiceAddress());
+      this.countryCode = this.PstnModel.getCountryCode();
+      this.carrierName = this.PstnModel.getProvider().displayName;
+      this.isTrial = this.PstnModel.getIsTrial();
+      this.showPortNumbers = !this.isTrial;
+    });
     this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking).then((enabled) => {
       this.ftI387PrivateTrunking = enabled;
     });
@@ -118,6 +121,11 @@ export class PstnWizardCtrl implements ng.IComponentController {
     this.FeatureToggleService.getCallFeatureForCustomer(this.PstnModel.getCustomerId(), this.FeatureToggleService.features.hI1484).then((enabled) => {
       this.ftLocation = enabled;
     });
+    if (this.PstnModel.getContractStatus() === ContractStatus.UnKnown) {
+      this.PstnService.getCustomerV2(this.PstnModel.getCustomerId(), { deep: true }).then(customer => {
+        this.PstnModel.setContractStatus(customer.contractStatus);
+      });
+    }
   }
 
   public showOrderForm(): boolean {

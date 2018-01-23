@@ -4,10 +4,10 @@ class AutoAssignTemplateManageOptionsController implements ng.IComponentControll
   private autoAssignTemplates: any;  // TODO: better type
   private onDelete: Function;
   private onActivateToggle: Function;
-  private stateData: any;
 
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
     private $state: ng.ui.IStateService,
     private $translate,
     private AutoAssignTemplateService,
@@ -15,27 +15,21 @@ class AutoAssignTemplateManageOptionsController implements ng.IComponentControll
     private Notification,
   ) {}
 
-  public $onInit(): void {
-    this.stateData = {};
-
-    this.AutoAssignTemplateService.getSortedSubscriptions().then((sortedSubscriptions) => {
-      _.set(this.stateData, 'subscriptions', sortedSubscriptions);
-    });
-  }
-
   public modifyAutoAssignTemplate() {
-    this.AutoAssignTemplateService.getDefaultTemplate()
-      .then((defaultTemplate) => {
-        const convertedStateData = this.AutoAssignTemplateService.templateToStateData(defaultTemplate);
-        _.merge(this.stateData, convertedStateData);
-        this.$state.go('users.manage.edit-auto-assign-template-modal', {
-          prevState: 'users.manage.picker',
-          stateData: this.stateData,
-        });
-      })
-      .catch((response) => {
-        this.Notification.errorResponse(response, 'userManage.org.modifyAutoAssign.modifyError');
+    this.$q.all({
+      defaultAutoAssignTemplate: this.AutoAssignTemplateService.getDefaultTemplate(),
+      subscriptions: this.AutoAssignTemplateService.getSortedSubscriptions(),
+    })
+    .then((results) => {
+      const stateData = this.AutoAssignTemplateService.toStateData(results.defaultAutoAssignTemplate, results.subscriptions);
+      this.$state.go('users.manage.edit-auto-assign-template-modal', {
+        prevState: 'users.manage.picker',
+        stateData: stateData,
       });
+    })
+    .catch((response) => {
+      this.Notification.errorResponse(response, 'userManage.org.modifyAutoAssign.modifyError');
+    });
   }
 
   public activateAutoAssignTemplate() {
@@ -97,5 +91,6 @@ export class AutoAssignTemplateManageOptionsComponent implements ng.IComponentOp
     isTemplateActive: '<',
     onDelete: '&',
     onActivateToggle: '&',
+    onModify: '&',
   };
 }

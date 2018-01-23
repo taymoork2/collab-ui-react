@@ -7,6 +7,7 @@ export class CiscoCollaborationCloudCertificateStoreCtrl implements ng.IComponen
   public file: File;
   public onChangeFn: Function;
   public onChangeOptionFn: Function;
+  public serviceId: 'ept' | 'squared-fusion-ec';
   public formattedCertList: IformattedCertificate[];
   public certLabels: string[];
   public isImporting: boolean = false;
@@ -39,8 +40,6 @@ export class CiscoCollaborationCloudCertificateStoreCtrl implements ng.IComponen
       this.$translate.instant('hercules.settings.call.certificatesExpires'),
     ];
 
-    this.certTitle = (!this.isFirstTimeSetup) ?  this.$translate.instant('servicesOverview.cards.privateTrunk.certificateTitleSettings') : this.$translate.instant('servicesOverview.cards.privateTrunk.certificateTitle');
-    this.certDesc = (!this.isFirstTimeSetup) ?  this.$translate.instant('servicesOverview.cards.privateTrunk.certificateDescSettings') : this.$translate.instant('servicesOverview.cards.privateTrunk.certificateDescriptionNew');
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
@@ -109,5 +108,6 @@ export class CiscoCollaborationCloudCertificateStoreComponent implements ng.ICom
     isImporting: '<',
     onChangeFn: '&',
     onChangeOptionFn: '&',
+    serviceId: '<',
   };
 }

@@ -186,9 +186,9 @@ var auth = {
     org: '5abcd266-e194-475e-bc48-010af5da6dde',
   },
   'expertvirtualassistant-admin': {
-    user: 'sparkexpertbot+admin@gmail.com',
-    pass: 'Cisco@123',
-    org: 'a97e8ec7-c885-4990-8b81-ccec270a169f',
+    user: 'sparkcareatlaseva+admin@gmail.com',
+    pass: 'C1sco@123',
+    org: '51a8b0f5-ba13-46c2-8ac1-c4b5b8b3f7ef',
   },
   'wbx-multipleCenterLicenseTestAdmin': {
     user: 't31r1-regression-adm@mailinator.com',
@@ -244,6 +244,11 @@ var auth = {
     user: 't31r1-regression-adm@mailinator.com',
     pass: 'Cisco!23',
     org: 'b322c279-22d8-488f-a670-cdcb6380033e',
+  },
+  'hybrid-org': {
+    user: 'shivani.hybrid0712+a@gmail.com',
+    pass: 'Cisco123!',
+    org: '5abae65f-3157-4d09-ad29-7187b5cfbba2',
   },
 };
 

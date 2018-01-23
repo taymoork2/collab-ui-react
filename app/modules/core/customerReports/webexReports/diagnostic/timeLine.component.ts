@@ -33,12 +33,12 @@ class TimeLine implements ng.IComponentController {
     this.addFnToD3();
     this.initParameters();
 
-    this.axis();
+    this.xAxis();
     this.gridVerticalLine();
     this.gridHorizontalLine();
     this.drawLines();
-    this.showUser();
-    this.legend();
+    this.yAxis();
+    this.setLegend();
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
@@ -62,43 +62,6 @@ class TimeLine implements ng.IComponentController {
     }, 500)();
   }
 
-  private preLineSegData(arr, type) { //TODO, will discuss with backend to optimize the response data
-    let arrLine = [];
-    _.forEach(arr, (item, key) => {
-      const data: any = _.find(this.data.data, { nodeId: key });
-      let startx = _.get(data, 'x1', 0) - 5;
-
-      _.map(item, (item_: any) => {
-        const endZone = this.time2line(this.timestampToDate(item_.endTime));
-        const endPoint = this.time2line(this.timestampToDate(item_.timestamp));
-        const startZone = this.time2line(this.timestampToDate(item_.startTime));
-
-        if ( _.get(data, 'leaveTime') < item_.endTime  || endPoint < _.get(data, 'x1', 0) + 14 ) { // out of the line
-          return true;
-        }
-        const lineSeg = _.assignIn({}, item_, { x1: startx, y1: _.get(data, 'y1', 0), x2: endPoint, y2: _.get(data, 'y2', 0), msgArr: this.setMsg(_.assign({}, item_, data), type), class: _.lowerFirst(`${item_.quality}Line`) });
-        if (startx < startZone || startx > endZone) {
-          lineSeg.x1 = startZone + 19;
-        }
-        arrLine = _.concat(arrLine, lineSeg);
-        startx = endPoint;
-      });
-    });
-    return arrLine;
-  }
-
-  private lineSegment(arr, type) {
-    const data = this.preLineSegData(arr, type);
-    const node = this.dataToline({ data: data, append: 'svg:line', class: type });
-    node.attr('class', item => item.class).attr('id', item => `my${type}${item.nodeId}`)
-      .on('mouseover', (item) => {
-        this.makeTips({ arr: item.msgArr }, item.y1 - 8, item.x1);
-      })
-      .on('mouseout', () => this.hideTips());
-
-    this.coverLine(data);
-  }
-
   private initParameters(): void {
     this.option.width = this.getCanvasWidth();
     this.data.endTime = this.sourceData.endTime;
@@ -114,19 +77,29 @@ class TimeLine implements ng.IComponentController {
     };
     this.option.gridWidth = (this.coordinate.endX - this.coordinate.x) / this.data.gridVerticalLineNum;
 
-    this.setDomain();
-    this.svg = d3.select('.timelineSvg')
-      .append('svg:svg')
-      .attr('width', this.option.width)
-      .attr('height', this.option.height);
-    this.tip = d3.select('.timelineSvg').append('div')
-      .attr('class', 'timelineTooltip')
-      .style('opacity', 0);
-
+    this.svg = d3.select('.timelineSvg').append('svg:svg').attr('width', this.option.width).attr('height', this.option.height);
+    this.tip = d3.select('.timelineSvg').append('div').attr('class', 'timelineTooltip').style('opacity', 0);
     this.legendInfo = {
       line: ['Good', 'Fair', 'Poor', 'N/A'],
       circle: ['Good', 'Fair', 'Poor', 'N/A'],
     };
+
+    this.setDomain();
+    this.drawStartEndLine();
+  }
+
+  private drawStartEndLine() {
+    const start = this.time2line(this.timestampToDate(this.sourceData.startTime));
+    const end = this.time2line(this.timestampToDate(this.sourceData.endTime));
+    const data = [
+      { x1: end, y1: this.coordinate.y, x2: end, y2: this.coordinate.endY },
+      { x1: start, y1: this.coordinate.y, x2: start, y2: this.coordinate.endY },
+    ];
+    this.dataToline({ data: data, append: 'svg:line', class: 'startEnd' });
+    const g = d3.select('.timelineSvg').insert('div', 'svg').attr('class', 'seFlag')
+    .attr('style', `width: ${end - start + 4}px; margin-left: ${start - 2}px; top: -${this.option.gridHeight / 2}px`);
+    g.append('span').attr('class', 'badge').text(this.stampToDate(this.sourceData.startTime, 'hh:mm A'));
+    g.append('span').attr('class', 'badge').text(this.stampToDate(this.sourceData.endTime, 'hh:mm A'));
   }
 
   private getGridHorizontalLineHum(): number {
@@ -142,10 +115,6 @@ class TimeLine implements ng.IComponentController {
     return (this.data.gridHorizontalLineNum * this.option.gridHeight) + this.option.paddingButtom + this.option.paddingTop;
   }
 
-  private setDomain(): void {
-    this.data.domain = [this.timestampToDate(this.sourceData.startTime), this.timestampToDate(this.sourceData.endTime)];
-  }
-
   private gridHorizontalLine(): void {
     const data: Object[] = [];
     let y = this.coordinate.y;
@@ -158,26 +127,42 @@ class TimeLine implements ng.IComponentController {
 
   private gridVerticalLine(): void {
     const data: Object[] = [];
-    let x = this.coordinate.x - this.option.gridWidth;
-    while ( x < this.coordinate.endX) {
-      x += this.option.gridWidth;
+    let x = this.coordinate.x;
+    while ( x <= this.coordinate.endX) {
       data.push({ x1: x, y1: this.coordinate.y, x2: x, y2: this.coordinate.endY });
+      x += this.option.gridWidth;
     }
     this.dataToline({ data: data, append: 'svg:line', class: 'gridVerticalLine' });
   }
 
-  private axis(): void {
-    const timeRange = d3.time.scale()
-      .domain(this.data.domain)
-      .range([this.coordinate.x, this.coordinate.endX]);
-    this.time2line = timeRange;
+  private setDomain(): void {
+    const tickSize = this.getTickSize();
+    const tickNum = this.getTickNum(tickSize);
+    const startTime = _.floor(this.sourceData.startTime / tickSize) * tickSize;
+    const endTime = startTime + tickSize * tickNum;
+
+    this.data.domain = [this.timestampToDate(startTime), this.timestampToDate(endTime)];
+    this.time2line = d3.time.scale()
+    .domain(this.data.domain)
+    .range([this.coordinate.x, this.coordinate.endX]);
+
+    this.data.domain_ = [];
+    let i = 0;
+    while (i < tickNum + 1) {
+      const dm = startTime + tickSize * i;
+      this.data.domain_.push(this.timestampToDate(dm));
+      i++;
+    }
+  }
+
+  private xAxis(): void {
     this.preData();
 
     const xAxis = d3.svg.axis()
-      .scale(timeRange)
+      .scale(this.time2line)
       .orient('bottom')
-      .ticks(7)
       .tickSize(3, 0)
+      .tickValues(this.data.domain_)
       .tickFormat(d3.time.format(this.data.xAxisFormat));
 
     this.svg.append('g')
@@ -192,14 +177,9 @@ class TimeLine implements ng.IComponentController {
     _.map(this.sourceData.lines, (item: any, key) => {
       y += this.option.gridHeight;
       const arr = _.map(item, (item_: any) => {
-        return _.assignIn({}, item_, {
-          y: y,
-          y1: y,
-          y2: y,
-          filterId: key,
-          x2: this.time2line(this.timestampToDate(item_.leaveTime)),
-          x1: this.time2line(this.timestampToDate(item_.joinTime)) + 6,
-        });
+        const x2 = this.time2line(this.timestampToDate(item_.leaveTime));
+        const x1 = this.time2line(this.timestampToDate(item_.joinTime)) + 13;
+        return _.assignIn({}, item_, { y1: y, y2: y, x2: x2 > x1 ? x2 : x1, x1: x1, filterId: key });
       });
       data = _.concat(data, arr);
     });
@@ -221,16 +201,14 @@ class TimeLine implements ng.IComponentController {
       .enter()
       .append('circle')
       .attr('r', 9)
-      .attr('transform', item => `translate(${item.x1 + 3}, ${item.y1})`)
+      .attr('transform', item => `translate(${item.x1}, ${item.y1})`)
       .attr('id', item => `myDot${item.guestId}-${item.userId}-${item.joinTime}`)
       .on('mouseover', item => {
-        let jmtVal = '';
         const circleId = `#myDot${item.guestId}-${item.userId}-${item.joinTime}`;
         const jmtQuality = this.$element.find(circleId).attr('jmtQuality');
         const joinMeetingTime = this.$element.find(circleId).attr('joinMeetingTime');
-        if (_.isUndefined(joinMeetingTime)) {
-          jmtVal = 'Unavaliable';
-        } else {
+        let jmtVal = 'Unavaliable';
+        if (!_.isUndefined(joinMeetingTime)) {
           jmtVal = _.parseInt(joinMeetingTime) === 1 ? `:${joinMeetingTime} Second` : `:${joinMeetingTime} Seconds`;
         }
 
@@ -239,12 +217,12 @@ class TimeLine implements ng.IComponentController {
           { key: jmtVal },
         ];
 
-        this.makeTips({ arr: msgArr }, item.y1 - 16, item.x1);
+        this.makeTips({ arr: msgArr }, item.y1 - 16, item.x1 - 2);
       })
       .on('mouseout', () => this.hideTips());
   }
 
-  private makeTips(msg, top: number|undefined = undefined, left: number|undefined = undefined) {
+  private makeTips(msg, top: number, left: number) {
     let template: string = '';
     _.forEach(msg.arr, item => {
       template += `<p class="${item.class ? item.class : ''}"><span>${item.key}</span> ${item.value ? item.value : ''}</p>`;
@@ -254,16 +232,13 @@ class TimeLine implements ng.IComponentController {
 
     const leftOffset = this.tip.style('width').replace('px', '');
     const topOffset = this.tip.style('height').replace('px', '');
-    const top_ = top || d3.event.clientY;
-    const left_ = left || d3.event.clientX;
     this.tip.transition()
       .duration(500)
       .style('opacity', 1)
-      .style('top', () => (top_ - topOffset) + 'px' )
-      .style('left', () => (left_ - leftOffset / 2) + 'px' );
+      .style('top', () => (top - topOffset) + 'px' ).style('left', () => (left - leftOffset / 2) + 'px' );
   }
 
-  private showUser(): void {
+  private yAxis(): void {
     const data = _.uniqBy(this.data.data, 'filterId');
     const g = d3.select('.timelineSvg').insert('div', 'svg').attr('class', 'yaxis');
     g.selectAll('.yaxis')
@@ -279,12 +254,9 @@ class TimeLine implements ng.IComponentController {
           { key: 'Duration: ', value: _.round(item.duration / 60) + ' Min' },
         ];
 
-        this.makeTips({ arr: msgArr }, item.y - 15, this.option.paddingLeft - 40 );
+        this.makeTips({ arr: msgArr }, item.y1 - 15, this.option.paddingLeft - 40 );
       })
-      .on('mouseout', () => this.hideTips())
-      .text(item => `${item.userName}`)
-      .append('i')
-      .attr('class', item => `icon ${item.deviceIcon}`);
+      .on('mouseout', () => this.hideTips()).text(item => `${item.userName}`).append('i').attr('class', item => `icon ${item.deviceIcon}`);
   }
 
   private drawCircle(node, class_, pos) {
@@ -313,7 +285,50 @@ class TimeLine implements ng.IComponentController {
     .attr('transform', `translate(${pos.x} , ${pos.y})`);
   }
 
-  private legend(): void {
+  private preLineSegData(arr, type) { //TODO, will discuss with backend to optimize the response data
+    let arrLine = [];
+    _.forEach(arr, (item, key) => {
+      const data: any = _.find(this.data.data, { nodeId: key });
+      let startx = _.get(data, 'x1', 0) - 4;
+      const leaveTime = _.get(data, 'leaveTime', 0);
+
+      _.map(item, (item_: any) => {
+        const endZone = this.time2line(this.timestampToDate(item_.endTime));
+        const endPoint = this.time2line(this.timestampToDate(item_.timestamp));
+        const startZone = this.time2line(this.timestampToDate(item_.startTime));
+        item_.endTime = (item_.endTime > leaveTime) ? leaveTime : item_.endTime;
+
+        if ( leaveTime < item_.endTime  || endPoint < _.get(data, 'x1', 0) + 14 ) { // out of the line
+          item_.endTime = leaveTime;
+          return true;
+        }
+
+        if (endPoint > _.get(data, 'x2', 0) || startx > _.get(data, 'x2', 0)) {
+          return true;
+        }
+
+        const lineSeg = _.assignIn({}, item_, { x1: startx, y1: _.get(data, 'y1', 0), x2: endPoint, y2: _.get(data, 'y2', 0), msgArr: this.setMsg(_.assign({}, item_, data), type), class: _.lowerFirst(`${item_.quality}Line`) });
+        lineSeg.x = (startx < startZone || startx > endZone) ? startZone + 19 : lineSeg.x;
+        arrLine = _.concat(arrLine, lineSeg);
+        startx = endPoint;
+      });
+    });
+    return arrLine;
+  }
+
+  private lineSegment(arr, type) {
+    const data = this.preLineSegData(arr, type);
+    const node = this.dataToline({ data: data, append: 'svg:line', class: type });
+    node.attr('class', item => item.class).attr('id', item => `my${type}${item.nodeId}`)
+      .on('mouseover', (item) => {
+        this.makeTips({ arr: item.msgArr }, item.y1 - 8, item.x1);
+      })
+      .on('mouseout', () => this.hideTips());
+
+    this.coverLine(data);
+  }
+
+  private setLegend(): void {
     const g = d3.select('.timelineSvg').append('div').attr('class', 'legend').attr('style', `width:${this.option.width}px`);
     this.legendTitle(g);
     g.append('div').attr('class', 'legendCircle');
@@ -382,7 +397,7 @@ class TimeLine implements ng.IComponentController {
         .attr('jmtQuality', this.legendInfo.circle[_.parseInt(item.jmtQuality) - 1]);
       } else if (classKey === 1) {
         d3.select(dotId).remove();
-        newS = this.drawTriangle(node, { x: nodex + 3, y: nodey - 9 });
+        newS = this.drawTriangle(node, { x: nodex, y: nodey - 9 });
       } else if (classKey === 2) {
         d3.select(dotId).remove();
         newS = this.drawSquare(node, { x: nodex - 6, y: nodey - 9 });
@@ -442,10 +457,14 @@ class TimeLine implements ng.IComponentController {
     return data_;
   }
 
-  private timestampToDate(timestamp): Date {
+  private stampToDate(timestamp, formatStr: string = 'YYYY-MM-DD HH:mm:ss'): string {
     const offset = this.sourceData.offset ? this.sourceData.offset : '+00:00';
     const utcTime = moment(timestamp).utc().format('YYYY-MM-DD HH:mm:ss');
-    const dateStr = moment.utc(utcTime).utcOffset(offset).format('YYYY-MM-DD HH:mm:ss');
+    const dateStr = moment.utc(utcTime).utcOffset(offset).format(formatStr);
+    return dateStr;
+  }
+  private timestampToDate(timestamp): Date {
+    const dateStr = this.stampToDate(timestamp);
     return moment(dateStr).toDate();
   }
 
@@ -473,22 +492,37 @@ class TimeLine implements ng.IComponentController {
   }
 
   private setMsg(item, type) {
-    let msgArr: Object[] = [];
-    if (type === 'cmr') {
-      msgArr = [
-        { key: `${item.type} Quality: `, value: item.quality },
-        { key: `Loss Rate: `, value: _.round(item.lossRate * 100, 2) + ` %` },
-        { key: 'Jitter: ', value: _.parseInt(item.jitter) === 1 ? `${item.jitter} Millisecond` : `${item.jitter} Milliseconds` },
-      ];
-    } else if (type === 'pstn') {
-      msgArr = [
+    const typeObj = {
+      pstn: [
         { key: `${item.type} Quality: `, value: item.quality },
         { key: `MOS Score: `, value: item.audioMos },
         { key: `Call Type: `, value: item.callType },
-      ];
-    }
+      ],
+      cmr: [
+        { key: `${item.type} Quality: `, value: item.quality },
+        { key: `Loss Rate: `, value: _.round(item.lossRate * 100, 2) + ` %` },
+        { key: 'Jitter: ', value: _.parseInt(item.jitter) === 1 ? `${item.jitter} Millisecond` : `${item.jitter} Milliseconds` },
+      ],
+    };
 
-    return msgArr;
+    return typeObj[type];
+  }
+
+  private getTickSize(): number {
+    let i = 0;
+    let startTime = 0;
+    let tickSize = 60 * 1000;
+    while (startTime + tickSize * 6 < this.sourceData.endTime) {
+      tickSize = i ? i * 5 * 60 * 1000 : tickSize;
+      startTime = _.floor(this.sourceData.startTime / tickSize) * tickSize;
+      i += 1;
+    }
+    return tickSize;
+  }
+
+  private getTickNum(tickSize): number {
+    const startTime = _.floor(this.sourceData.startTime / tickSize) * tickSize;
+    return startTime + tickSize * 4 > this.sourceData.endTime ? 4 : 6;
   }
 
   private addFnToD3() {

@@ -226,6 +226,8 @@
         "deleteAutoAssign": "Delete Auto-Assign Template"
       },
       "modifyAutoAssign": {
+        "title": "Modify Auto-Assign Template",
+        "modifySuccess": "Your license template has been modified successfully. Licenses will be assigned to new users automatically.",
         "modifyError": "Template failed to load."
       },
       "activateAutoAssign": {
@@ -802,7 +804,7 @@
     "start": "Start",
     "hostID": "Host ID",
     "details": "Details",
-    "created": "Created",
+    "created": "Meeting Created",
     "duration": "Duration",
     "hostName": "Host Name",
     "site": "Site Name(ID)",
@@ -1536,6 +1538,8 @@
     "completed": "Completed",
     "confirm": "Confirm",
     "continue": "Continue",
+    "copy": "Copy",
+    "copiedToClipboard": "Data copied to clipboard",
     "copyToClipboard": "Copy to Clipboard",
     "create": "Create",
     "dateRange": "Date Range",
@@ -1662,6 +1666,7 @@
     "trySearchAgain": "Try another search.",
     "turnOff": "Turn Off",
     "type": "Type",
+    "unableToCopy": "Unable to copy data to clipboard",
     "unassigned": "Unassigned",
     "unknown": "Unknown",
     "update": "Update",
@@ -5368,6 +5373,7 @@
       "sx10": "SX10",
       "dx80": "DX80",
       "mx300": "MX300 (Limit {{max}})",
+      "roomKit": "Room Kit (Limit {{max}})",
       "phone8865": "8865",
       "phone8845": "8845",
       "phone7832": "7832",
@@ -5375,7 +5381,7 @@
       "phone7841": "7841",
       "quantity": "Quantity",
       "invalidQuantity": "Quantity must be between {{min}} and {{max}}",
-      "invalidQuantityMx300": "Quantity must be {{qty}}",
+      "invalidQuantitySingle": "Quantity must be {{qty}}",
       "invalidTotalQuantity": "Entire order must have between {{min}} and {{max}} devices",
       "invalidRoomSystemsQuantity": "Limited to {{max}} Cisco Spark Room Devices",
       "invalidPhonesQuantity": "Limited to {{max}} Personal & Shared Desk Phones",
@@ -6228,6 +6234,7 @@
       "hybridHeading": "Cloud and On-Premises",
       "othersHeading": "Others",
       "callsBallon": "Calls:",
+      "cloudconnectivityissues": "Cloud Connectivity Issues",
       "clientType": {
         "android": "Android",
         "blackberry": "BlackBerry",
@@ -7533,6 +7540,13 @@
     "dirsyncStatusHeading": "Common Identity Directory Synchronization",
     "dirsyncStatusTooltip": "To access Cisco Spark platform capabilities, WebEx Messenger users need to be synchronized with the Common Identity service."
   },
+  "careAddNumberTpl": {
+    "emergencyAcknowledge": "I understand that dialing emergency numbers may not work on an enterprise class IP telephony network.",
+    "addNumbers": "Add Numbers",
+    "pstnNumbers": "PSTN Numbers",
+    "internalDialing": "Internal Dialing",
+    "duplicateNumber": "{{number}} is a duplicate number."
+  },
   "careChatTpl": {
     "editAction": "Edit",
     "deleteFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?",
@@ -8445,6 +8459,7 @@
       "domainsError": "There was a problem retrieving the Directory Synchronization data.",
       "operational": "Operational",
       "outage": "Outage",
+      "seeAllDomains": "See All Registered Domains",
       "toggleMenu": "toggle domain action menu",
       "turnOff": "Turn Off {{domainName}}",
       "turnOffAllMessage": "This step turns off all synchronization from Directory Connector. Once the synchronization is disabled, you can only manage users manually and they won't appear in Active Directory.  Are you sure you want to turn off all sychronization?",
@@ -8748,11 +8763,6 @@
       "nohistory": "No Search History",
       "singlematch": "match",
       "matches": "matches"
-    },
-    "extended-data-dialog": {
-      "copy": "Copy",
-      "copiedToClipboard": "Data copied to clipboard",
-      "unableToCopy": "Unable to copy data to clipboard"
     },
     "verification": "Verification",
     "resend": "Resend Invite",
@@ -9328,8 +9338,6 @@
         "hybridDestination": "Use one or more Expressway-E configured for Hybrid Call Connect ",
         "addSipDestination": "Add SIP destination",
         "certificateTitle": "Certificates",
-        "certificateDescription": "Choose whether you want to use the certificates provided by the Cisco Collaboration default trust list or upload your own.",
-        "certificateDescriptionNew": "Choose whether you want to use the certificates provided by the Cisco Collaboration Cloud default trust list or upload your own.",
         "certDescNew": "Use certificates provided from the <a href=\"{{href}}\" target=\"_blank\">Cisco Collaboration Cloud default trust list</a>",
         "upload": "or upload your own. If you use your own, make sure the hostnames are on a verified domain",
         "click": ". For help, <a href=\"{{href}}\" target=\"_blank\">click here</a>.",

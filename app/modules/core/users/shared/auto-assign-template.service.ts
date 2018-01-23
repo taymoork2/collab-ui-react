@@ -42,12 +42,12 @@ export class AutoAssignTemplateService {
     return this.$http.get<{autoLicenseAssignment: boolean}>(this.autoAssignSettingsUrl).then(response => response.data.autoLicenseAssignment);
   }
 
-  public saveTemplate(payload: IAutoAssignTemplateRequestPayload): ng.IPromise<any> {
+  public createTemplate(payload: IAutoAssignTemplateRequestPayload): ng.IPromise<any> {
     return this.$http.post(this.autoAssignTemplateUrl, payload);
   }
 
-  public updateTemplate(payload: IAutoAssignTemplateRequestPayload): ng.IPromise<any> {
-    return this.$http.patch(this.autoAssignTemplateUrl, payload);
+  public updateTemplate(templateId: string, payload: IAutoAssignTemplateRequestPayload): ng.IPromise<any> {
+    return this.$http.patch(`${this.autoAssignTemplateUrl}/${templateId}`, payload);
   }
 
   private setTemplateEnabled(enabled: boolean): ng.IPromise<any> {

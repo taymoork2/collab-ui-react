@@ -31,6 +31,11 @@
   @extend %grid-header;
   @extend %page-background-white;
 
+  .ui-grid-viewport {
+    height: 70vh !important;
+    background-color: $white !important;
+  }
+
   .ui-grid-row {
     &:hover {
       background-color: transparent;
@@ -56,6 +61,11 @@
     .loading-sites-spinner {
       font-size: 2rem;
     }
+  }
+
+  .waiting {
+    font-size: 0.5rem;
+    opacity: 0.3;
   }
 
 }
