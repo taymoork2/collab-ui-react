@@ -102,6 +102,7 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(this.TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue(this.$q.resolve(this.mock.sites));
     spyOn(this.ServiceSetup, 'listSites').and.returnValue(this.$q.resolve(this.mock.sites));
 
+    spyOn(this.Userservice, 'onboardUsers');
     spyOn(this.Userservice, 'onboardUsersLegacy');
     spyOn(this.Userservice, 'bulkOnboardUsers');
     spyOn(this.Userservice, 'migrateUsers').and.returnValue(this.mock.getMigrateUsers);
@@ -238,7 +239,7 @@ describe('OnboardCtrl: Ctrl', function () {
     });
   });
 
-  describe('onboardUsersLegacy()', function () {
+  describe('onboardUsers()', function () {
     beforeEach(initController);
 
     beforeEach(function () {
@@ -250,8 +251,8 @@ describe('OnboardCtrl: Ctrl', function () {
     });
 
     describe('with a usrlist array that has 12 new users', function () {
-      it('should call Userservice.onboardUsersLegacy() and produce correct new users count', function () {
-        this.Userservice.onboardUsersLegacy.and.returnValue(this.$q.resolve(onboardUsersResponse(201, '', 6)));
+      it('should call Userservice.onboardUsers() and produce correct new users count', function () {
+        this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(201, '', 6)));
         this.$scope.onboardUsers(true);
         this.$scope.$apply();
         expect(this.$scope.numAddedUsers).toEqual(12);
@@ -259,8 +260,8 @@ describe('OnboardCtrl: Ctrl', function () {
     });
 
     describe('with a usrlist array that has 12 existing users', function () {
-      it('should call Userservice.onboardUsersLegacy() and produce correct new users count', function () {
-        this.Userservice.onboardUsersLegacy.and.returnValue(this.$q.resolve(onboardUsersResponse(200, '', 6)));
+      it('should call Userservice.onboardUsers() and produce correct new users count', function () {
+        this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(200, '', 6)));
         this.$scope.onboardUsers(true);
         this.$scope.$apply();
         expect(this.$scope.numUpdatedUsers).toEqual(12);
@@ -824,7 +825,7 @@ describe('OnboardCtrl: Ctrl', function () {
     describe('with a current user', function () {
       beforeEach(updateUserLicense);
 
-      it('should call Userservice.onboardUsersLegacy() with the current user', function () {
+      it('should call Userservice.onboardUsers() with the current user', function () {
         expect(this.Userservice.onboardUsersLegacy).toHaveBeenCalled();
         var onboardedUser = this.Userservice.onboardUsersLegacy.calls.mostRecent().args[0][0];
         expect(onboardedUser.address).toEqual(this.$stateParams.currentUser.userName);
@@ -835,7 +836,7 @@ describe('OnboardCtrl: Ctrl', function () {
       beforeEach(initCustomUsrList);
       beforeEach(updateUserLicense);
 
-      it('should call Userservice.onboardUsersLegacy() with the custom user list', function () {
+      it('should call Userservice.onboardUsers() with the custom user list', function () {
         expect(this.Userservice.onboardUsersLegacy).toHaveBeenCalled();
         var onboardedUser = this.Userservice.onboardUsersLegacy.calls.mostRecent().args[0][0];
         expect(onboardedUser.address).toEqual(this.usrlist[0].address);

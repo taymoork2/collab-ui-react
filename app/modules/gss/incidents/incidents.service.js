@@ -6,9 +6,7 @@
     .factory('IncidentsService', IncidentsService);
 
   /* @ngInject */
-  function IncidentsService($http, UrlConfig) {
-    var baseUrl = UrlConfig.getGssUrl();
-
+  function IncidentsService($http, GSSIframeService) {
     var service = {
       getIncidents: getIncidents,
       createIncident: createIncident,
@@ -29,52 +27,52 @@
     }
 
     function getIncidents(serviceId) {
-      var url = baseUrl + '/services/' + serviceId + '/incidents';
+      var url = GSSIframeService.getGssUrl() + '/services/' + serviceId + '/incidents';
       return $http.get(url).then(extractData);
     }
 
     function createIncident(serviceId, incident) {
-      var url = baseUrl + '/services/' + serviceId + '/incidents';
+      var url = GSSIframeService.getGssUrl() + '/services/' + serviceId + '/incidents';
       return $http.post(url, incident).then(extractData);
     }
 
     function deleteIncident(incidentId) {
-      var url = baseUrl + '/incidents/' + incidentId;
+      var url = GSSIframeService.getGssUrl() + '/incidents/' + incidentId;
       return $http.delete(url).then(extractData);
     }
 
     function getIncident(incidentId) {
-      var url = baseUrl + '/incidents/' + incidentId;
+      var url = GSSIframeService.getGssUrl() + '/incidents/' + incidentId;
       return $http.get(url).then(extractData);
     }
 
     function updateIncidentNameAndImpact(incidentId, incidentName, impact) {
-      var url = baseUrl + '/incidents/' + incidentId;
+      var url = GSSIframeService.getGssUrl() + '/incidents/' + incidentId;
       return $http.put(url, { incidentName: incidentName, impact: impact }).then(extractData);
     }
 
     function getComponents(serviceId) {
-      var url = baseUrl + '/services/' + serviceId + '/components';
+      var url = GSSIframeService.getGssUrl() + '/services/' + serviceId + '/components';
       return $http.get(url).then(extractData);
     }
 
     function updateIncident(incidentId, incidentData) {
-      var url = baseUrl + '/incidents/' + incidentId + '/messages';
+      var url = GSSIframeService.getGssUrl() + '/incidents/' + incidentId + '/messages';
       return $http.post(url, incidentData).then(extractData);
     }
 
     function getAffectedComponents(messageId) {
-      var url = baseUrl + '/incidents/messages/' + messageId;
+      var url = GSSIframeService.getGssUrl() + '/incidents/messages/' + messageId;
       return $http.get(url).then(extractData);
     }
 
     function updateIncidentMessage(messageId, message) {
-      var url = baseUrl + '/incidents/messages/' + messageId;
+      var url = GSSIframeService.getGssUrl() + '/incidents/messages/' + messageId;
       return $http.put(url, message).then(extractData);
     }
 
     function deleteIncidentMessage(messageId) {
-      var url = baseUrl + '/incidents/messages/' + messageId;
+      var url = GSSIframeService.getGssUrl() + '/incidents/messages/' + messageId;
       return $http.delete(url).then(extractData);
     }
   }

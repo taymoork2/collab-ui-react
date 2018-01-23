@@ -22,7 +22,7 @@
                           id="{{evaData.id}}"
                           name="{{evaData.Name}}"
                           cs-input-label="{{evaData.label}}"
-                          ng-change="careSetupAssistant.onEVAOptionChange()"
+                          ng-change="careSetupAssistant.onEscalationOptionChange(evaData.value)"
                           ng-disabled="evaData.isDisabled"
                           ng-click="careSetupAssistant.setRequiredValue()"
                           >

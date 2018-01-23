@@ -185,9 +185,12 @@
       });
     }
 
-    function getParticipantDistributionData(time, cluster) {
-      vm.callDistributionUrl = '/clusters_call_volume_with_insights';
-
+    function getParticipantDistributionData(time, cluster, multipleinsight) {
+      if (multipleinsight) {
+        vm.callDistributionUrl = '/clusters_call_volume_with_multiple_insights';//url for multiple insight
+      } else {
+        vm.callDistributionUrl = '/clusters_call_volume_with_insights';
+      }
       var returnData = {
         graphData: [],
         graphs: [],

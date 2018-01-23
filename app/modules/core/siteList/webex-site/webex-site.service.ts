@@ -30,10 +30,18 @@ export class WebExSiteService {
     private SetupWizardService: SetupWizardService,
   ) { }
 
+  public getExistingSites(confServicesInActingSubscription): IWebExSite[] {
+    return _.map(confServicesInActingSubscription, (license: IConferenceLicense) => {
+      return {
+        siteUrl: _.replace(_.get<string>(license, 'siteUrl'), this.Config.siteDomainUrl.webexUrl, ''),
+        quantity: license.volume,
+        centerType: license.offerName,
+        isCIUnifiedSite: license.isCIUnifiedSite,
+      };
+    });
+  }
   public transformExistingSites(confServicesInActingSubscription): IWebExSite[] {
-    return _.chain(confServicesInActingSubscription).map((site) => {
-      return { siteUrl: site.siteUrl, isCIUnifiedSite: site.isCIUnifiedSite };
-    })
+    return _.chain(this.getExistingSites(confServicesInActingSubscription))
     .uniqBy('siteUrl').map(site => {
       return {
         siteUrl: _.replace(site.siteUrl.toString(), this.Config.siteDomainUrl.webexUrl, ''),

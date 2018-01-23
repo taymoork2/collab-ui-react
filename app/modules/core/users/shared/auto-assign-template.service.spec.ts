@@ -87,17 +87,17 @@ describe('Service: AutoAssignTemplateService:', () => {
     });
   });
 
-  describe('saveTemplate():', () => {
+  describe('createTemplate():', () => {
     it('should call POST on the internal endpoint url with the given payload', function () {
       this.$httpBackend.expectPOST(this.endpointUrl, { foo: 'bar' });
-      this.AutoAssignTemplateService.saveTemplate({ foo: 'bar' });
+      this.AutoAssignTemplateService.createTemplate({ foo: 'bar' });
     });
   });
 
   describe('updateTemplate():', () => {
     it('should call PATCH on the internal endpoint url with the given payload', function () {
-      this.$httpBackend.expectPATCH(this.endpointUrl, { foo: 'bar' });
-      this.AutoAssignTemplateService.updateTemplate({ foo: 'bar' });
+      this.$httpBackend.expectPATCH(`${this.endpointUrl}/fake-template-id-1`, { foo: 'bar' });
+      this.AutoAssignTemplateService.updateTemplate('fake-template-id-1', { foo: 'bar' });
     });
   });
 

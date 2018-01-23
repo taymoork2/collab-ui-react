@@ -1,0 +1,29 @@
+<h5>
+  {{::'userManage.org.directorySynchronization' | translate}}
+  <div cs-dropdown class="actions-menu" ng-if="!$ctrl.dirsyncUpdating && $ctrl.dirsyncEnabled">
+    <button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle icon icon-three-dots" aria-label="globalSettings.multiDirsync.toggleMenu"></button>
+    <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
+      <li class="dropdown-item" ng-repeat="dirsync in $ctrl.dirSyncArray track by $index" ng-click="$ctrl.deleteDomain(dirsync)">
+        <a translate="globalSettings.multiDirsync.turnOff" translate-values="{ domainName: dirsync.domains[0].domainName }"></a>
+      </li>
+      <li class="dropdown-item" ng-click="$ctrl.goToSettings()">
+        <a translate="globalSettings.multiDirsync.seeAllDomains"></a>
+      </li>
+    </ul>
+  </div>
+</h5>
+
+<div id="dirsyncUpdating" ng-if="$ctrl.dirsyncUpdating">
+  <span translate="globalSettings.multiDirsync.loading"></span>
+  <i class="space icon icon-spinner"></i>
+</div>
+<div id="dirsyncDisabled" ng-if="!$ctrl.dirsyncUpdating && !$ctrl.dirsyncEnabled">
+  <cs-statusindicator ng-model="disabled"></cs-statusindicator>
+  <span translate="common.disabled"></span>
+  <br>
+  <a href class="p" ng-click="$ctrl.goToInitialize()" translate="userManage.org.turnOnDirSync"></a>
+</div>
+<div id="dirsyncEnabled" ng-if="!$ctrl.dirsyncUpdating && $ctrl.dirsyncEnabled" ng-repeat="dirsync in $ctrl.dirSyncArray track by $index">
+  <cs-statusindicator ng-model="dirsync.siteStatus"></cs-statusindicator>
+  <span>{{::dirsync.domains[0].domainName}}</span>
+</div>

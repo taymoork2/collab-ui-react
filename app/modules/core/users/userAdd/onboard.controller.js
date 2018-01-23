@@ -684,7 +684,7 @@ require('./_user-add.scss');
     }
 
 
-    function createPropertiesForAnalyltics() {
+    function createPropertiesForAnalytics() {
       return {
         numberOfErrors: $scope.results.errors.length,
         usersAdded: $scope.numAddedUsers,
@@ -1375,12 +1375,6 @@ require('./_user-add.scss');
     // TODO (mipark2): rm this if determined no longer needed (see: '$scope.manualEntryNext()')
     $scope.invalidcount = OnboardStore['users.add.manual'].invalidcount;
 
-    function removeEmailFromTokenfield(email) {
-      $scope.model.userList = $scope.model.userList.split(', ').filter(function (token) {
-        return token.indexOf(email) === -1;
-      }).join(', ');
-    }
-
     var resetUsersfield = function () {
       return OnboardService.resetUsersfield($scope);
     };
@@ -1401,7 +1395,7 @@ require('./_user-add.scss');
 
     $scope.goToUsersPage = function () {
       $previousState.forget('modalMemo');
-      Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.FINISH, null, createPropertiesForAnalyltics());
+      Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.FINISH, null, createPropertiesForAnalytics());
       $state.go('users.list');
     };
 
@@ -1409,7 +1403,7 @@ require('./_user-add.scss');
       if (isFTW) {
         $scope.wizard.goToStep('manualEntry');
       } else {
-        Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.GO_BACK_FIX, null, createPropertiesForAnalyltics());
+        Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.GO_BACK_FIX, null, createPropertiesForAnalytics());
         $state.go('users.add.manual');
       }
     };
@@ -1507,7 +1501,7 @@ require('./_user-add.scss');
           $scope.results.warnings = [];
           _.forEach($scope.results.resultList, function (userResult) {
             if (userResult.alertType === 'success' && userResult.email) {
-              removeEmailFromTokenfield(userResult.email);
+              $scope.model.userList = OnboardService.removeEmailFromTokenfield(userResult.email, $scope.model.userList);
             }
             if (userResult.warningMsg) {
               $scope.results.warnings.push(userResult.warningMsg);
@@ -1521,7 +1515,7 @@ require('./_user-add.scss');
             var msg = 'Invited ' + $scope.numAddedUsers + ' users';
             LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), $scope.numAddedUsers, null);
           }
-          Analytics.trackAddUsers(Analytics.eventNames.SAVE, null, createPropertiesForAnalyltics());
+          Analytics.trackAddUsers(Analytics.eventNames.SAVE, null, createPropertiesForAnalytics());
           $state.go('users.add.results');
         })
         .finally(function () {

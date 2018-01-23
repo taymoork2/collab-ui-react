@@ -5,7 +5,7 @@
   module.exports = UserManageOrgController;
 
   /* @ngInject */
-  function UserManageOrgController($q, $state, Analytics, AutoAssignTemplateModel, AutoAssignTemplateService, DirSyncService, FeatureToggleService, Notification, OnboardService, Orgservice, UserCsvService) {
+  function UserManageOrgController($q, $state, $window, Analytics, Authinfo, AutoAssignTemplateModel, AutoAssignTemplateService, DirSyncService, FeatureToggleService, Notification, OnboardService, Orgservice, UserCsvService) {
     var DEFAULT_AUTO_ASSIGN_TEMPLATE = AutoAssignTemplateService.DEFAULT;
     var vm = this;
 
@@ -36,6 +36,7 @@
 
     vm.initFeatureToggles = initFeatureToggles;
     vm.initConvertableUsers = initConvertableUsers;
+    vm.isUserAdminUser = Authinfo.isUserAdminUser();
 
     var isAtlasEmailSuppressToggle = false;
     var isOrgEnabledForAutoAssignTemplates = false;
@@ -56,9 +57,11 @@
       return $q.all({
         atlasEmailSuppress: FeatureToggleService.atlasEmailSuppressGetStatus(),
         atlasF3745AutoAssignLicenses: FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus(),
+        multiDirSyncToggle: FeatureToggleService.atlasF6980MultiDirSyncManageUsersGetStatus(),
       }).then(function (toggles) {
         isAtlasEmailSuppressToggle = toggles.atlasEmailSuppress;
         vm.isAtlasF3745AutoAssignToggle = toggles.atlasF3745AutoAssignLicenses;
+        vm.multiDirSyncToggle = toggles.multiDirSyncToggle;
       });
     }
 
@@ -124,7 +127,6 @@
 
     function handleDirSyncService() {
       if (vm.isDirSyncEnabled) {
-        // - because we're in a modal, chain the transition to 'settings' after dismissing the modal
         $state.modal.closed.then(function () {
           $state.go('settings', {
             showSettings: 'dirsync',

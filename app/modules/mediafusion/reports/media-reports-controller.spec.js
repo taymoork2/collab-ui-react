@@ -104,6 +104,7 @@ describe('Controller:MediaReportsController', function () {
       $interval: $interval,
       Log: Log,
       Config: Config,
+      hasMFMultipleInsightFeatureToggle: false,
     });
   }));
   it('controller should be defined', function () {
@@ -148,7 +149,7 @@ describe('Controller:MediaReportsController', function () {
       expect(MediaReportsService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[1], controller.clusterSelected);
       expect(MediaReportsService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[1], controller.clusterSelected);
       expect(MediaReportsService.getUtilizationData).toHaveBeenCalledWith(timeOptions[1], controller.clusterSelected);
-      expect(MediaReportsService.getParticipantDistributionData).toHaveBeenCalledWith(timeOptions[1], controller.clusterSelected);
+      expect(MediaReportsService.getParticipantDistributionData).toHaveBeenCalledWith(timeOptions[1], controller.clusterSelected, false);
       expect(MediaReportsService.getOverflowIndicator).toHaveBeenCalledWith(timeOptions[1], controller.clusterSelected);
     });
   });

@@ -232,6 +232,7 @@
     'Sunlight.pagination',
     require('modules/sunlight/services').default,
     require('modules/sunlight/numbers').default,
+    require('modules/sunlight/numbers/addNumbers').default,
   ]);
 
   angular.module('Context', ['Core']);

@@ -207,6 +207,12 @@
         model: 'CISCO_MX300',
         type: 'ROOM_SYSTEMS',
       },
+      CISCO_ROOM_KIT: {
+        min: 1,
+        max: 1,
+        model: 'CISCO_ROOM_KIT',
+        type: 'ROOM_SYSTEMS',
+      },
       CISCO_8865: {
         min: 1,
         max: 4,
@@ -250,6 +256,7 @@
       CISCO_SX10: 'ROLLOUT1',
       CISCO_DX80: 'ROLLOUT3',
       CISCO_MX300: 'US',
+      CISCO_ROOM_KIT: 'ROLLOUT1',
       CISCO_8865: 'ROLLOUT2',
       CISCO_8845: 'ROLLOUT2',
       CISCO_8841: 'ROLLOUT2',
