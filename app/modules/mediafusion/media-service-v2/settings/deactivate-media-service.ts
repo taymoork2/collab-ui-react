@@ -1,4 +1,5 @@
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
+import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
 import { Notification } from 'modules/core/notifications';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
@@ -14,7 +15,7 @@ export class DeactivateMediaService {
   ) {}
   public clusterNames: string[];
   public clusterIds: string[];
-  public serviceId: any = 'squared-fusion-media';
+  public serviceId: HybridServiceId = 'squared-fusion-media';
 
   private getClusterList() {
     return this.HybridServicesClusterService.getAll()

@@ -35,10 +35,6 @@ describe('Controller: DisableMediaServiceController', function () {
   afterEach(function () {
     $q = $httpBackend = controller = DeactivateMediaService = HybridServicesClusterService = Notification = undefined;
   });
-
-  it('controller should be defined', function () {
-    expect(controller).toBeDefined();
-  });
   it('should call the dismiss for cancel', function () {
     controller.cancel();
     expect(modalInstance.dismiss).toHaveBeenCalled();

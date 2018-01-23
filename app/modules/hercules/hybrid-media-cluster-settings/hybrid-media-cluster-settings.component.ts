@@ -61,7 +61,6 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
         this.cluster = cluster;
 
         if (cluster.connectors && cluster.connectors.length === 0 && this.clusterList.length > 1) {
-          /* We have cluster data, but there are no nodes. Let's use the default deregistration dialog.  */
           this.deregisterModalOptions = undefined;
         }
         return cluster;

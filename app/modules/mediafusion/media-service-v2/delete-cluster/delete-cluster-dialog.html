@@ -4,7 +4,7 @@
     <h5 class="modal-title" translate="mediaFusion.clusters.deleteclusterHeadding"></h5>
   </div>
 </div>
-<div class="modal-body">
+<div class="modal-body mf-delete-cluster-modal">
   <div ng-hide="deleteClust.loading">
     <div ng-show="deleteClust.noOfHost > 0">
       <div ng-hide="deleteClust.failedToDelete">
@@ -16,14 +16,14 @@
           <div class="cs-radio-group radioGroup">
             <div class="cs-input-group cs-input-radio">
               <div class="radioButton1">
-                <input type="radio" id="individualRadio1" ng-model="deleteClust.radioModel" ng-value='1'>
-                <label for="individualRadio1">
+                <input type="radio" id="mfMoveNodeCheck" ng-model="deleteClust.radioModel" ng-value="1">
+                <label for="mfMoveNodeCheck">
                   <span translate="mediaFusion.clusters.moveallnodes"></span>
                 </label>
               </div>
               <div class="radioButton1">
-                <input type="radio" id="individualRadio2" ng-model="deleteClust.radioModel" ng-value='2'>
-                <label for="individualRadio2">
+                <input type="radio" id="mfDeregisterNodeCheck" ng-model="deleteClust.radioModel" ng-value="2">
+                <label for="mfDeregisterNodeCheck">
                   <span translate="mediaFusion.clusters.deregisterallnodes"></span>
                 </label>
               </div>
@@ -106,7 +106,7 @@
   </div>
   <div ng-show="deleteClust.loading">
     <div class="spinner-position remove-cluster-spinner">
-      <i class='icon icon-spinner icon-3x media-modal-position'></i>
+      <i class="icon icon-spinner icon-3x media-modal-position"></i>
     </div>
   </div>
 </div>
