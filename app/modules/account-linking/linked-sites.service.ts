@@ -1,4 +1,4 @@
-import { IACSiteInfo, IACLinkingStatus, IACWebexSiteinfoResponse } from './account-linking.interface';
+import { IACSiteInfo, IACLinkingStatus, IACWebexSiteinfoResponse, LinkingMode } from './account-linking.interface';
 import { Notification } from 'modules/core/notifications';
 
 export class LinkedSitesService {
@@ -50,7 +50,21 @@ export class LinkedSitesService {
       return si;
     }).catch((error) => {
       this.$log.debug('error', error);
-      this.Notification.error('accountLinking.errors.getCiSiteLinkingError', { message: error.data.errorMsg });
+      // 404 is interpreted as a v1 site
+      if (error.status === 404) {
+        this.$log.warn(siteUrl + ' does not support v2 API');
+        const si: IACWebexSiteinfoResponse = {
+          accountLinkingMode: LinkingMode.UNSET,
+          enable: false,
+          linkAllUsers: false,
+          supportAgreementLinkingMode: false,
+          trustedDomains: [],
+        };
+        return si;
+      } else {
+        this.$log.debug('getSiteInfo error', error);
+        this.Notification.error('accountLinking.errors.getCiSiteLinkingError', { message: error.data.errorMsg });
+      }
     });
   }
 
@@ -59,8 +73,13 @@ export class LinkedSitesService {
       this.$log.debug('getCiAccountSync', status);
       return status;
     }).catch((error) => {
-      this.$log.debug('error', error);
-      this.Notification.error('accountLinking.errors.getCiAccountSyncError', { message: error.data.errorMsg });
+      if (error.status === 404) {
+        this.$log.warn(siteUrl + ' does not support v2 API');
+        return null;
+      } else {
+        this.$log.debug('getCiAccountSync error', error);
+        this.Notification.error('accountLinking.errors.getCiAccountSyncError', { message: error.data.errorMsg });
+      }
     });
   }
 
@@ -69,8 +88,13 @@ export class LinkedSitesService {
       this.$log.debug('LinkedSitesService.getDomains', domains);
       return domains;
     }).catch((error) => {
-      this.$log.debug('error', error);
-      this.Notification.error('accountLinking.errors.getDomainsError', { message: error.data.errorMsg });
+      if (error.status === 404) {
+        this.$log.warn(siteUrl + ' does not support v2 API');
+        return null;
+      } else {
+        this.$log.debug('getDomains error', error);
+        this.Notification.error('accountLinking.errors.getDomainsError', { message: error.data.errorMsg });
+      }
     });
   }
 }

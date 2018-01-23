@@ -6,7 +6,8 @@
     translate="servicesOverview.cards.privateTrunk.certDescNew"
     translate-values="{href: 'https://collaborationhelp.cisco.com/article/en-us/DOC-4302'}"></span>
   <span class="span-font-size" ng-class="{'font-settings': !$ctrl.isFirstTimeSetup}" translate="servicesOverview.cards.privateTrunk.upload"></span>
-  <span class="span-font-size" ng-class="{'font-settings': !$ctrl.isFirstTimeSetup}" translate="servicesOverview.cards.privateTrunk.click" translate-values="{href: 'https://www.cisco.com/go/spark-calling-branch-office'}"></span>
+  <span ng-if="$ctrl.serviceId === 'ept'" class="span-font-size" ng-class="{'font-settings': !$ctrl.isFirstTimeSetup}" translate="servicesOverview.cards.privateTrunk.click" translate-values="{href: 'https://www.cisco.com/go/spark-calling-branch-office'}"></span>
+  <span ng-if="$ctrl.serviceId === 'squared-fusion-ec'" class="span-font-size" ng-class="{'font-settings': !$ctrl.isFirstTimeSetup}" translate="servicesOverview.cards.privateTrunk.click" translate-values="{href: 'https://www.cisco.com/go/hybrid-services-call' }"></span>
   <div>
     <div class="margin-input">
       <input

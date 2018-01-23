@@ -10,6 +10,7 @@ class WebexDeleteSiteModalController implements ng.IComponentController {
 
   // parameters for child controls
   public sitesArray: IWebExSite[] = [];
+  public existingWebexSites: IWebExSite[];
   public conferenceLicensesInSubscription: IConferenceLicense[];
   public siteUrl: string;
 
@@ -70,6 +71,7 @@ class WebexDeleteSiteModalController implements ng.IComponentController {
     this.conferenceLicensesInSubscription = this.SetupWizardService.getConferenceLicensesBySubscriptionId(subscriptionId);
     const licensesWithoutDeletedSite = _.reject(this.conferenceLicensesInSubscription, { siteUrl: this.siteUrl });
     this.sitesArray = this.WebExSiteService.transformExistingSites(licensesWithoutDeletedSite);
+    this.existingWebexSites = this.WebExSiteService.getExistingSites(this.conferenceLicensesInSubscription);
   }
 
   // callbacks from components

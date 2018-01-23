@@ -15,6 +15,7 @@ class WebexAddSiteModalController implements ng.IComponentController {
 
   // parameters for child controls
   public sitesArray: IWebExSite[] = [];
+  public existingWebexSites: IWebExSite[];
   public conferenceLicensesInSubscription: IConferenceLicense[];
   public audioPackage: string | null;
   public audioPartnerName?: string;
@@ -186,6 +187,7 @@ class WebexAddSiteModalController implements ng.IComponentController {
       this.currentSubscriptionId = subscriptionId;
       this.conferenceLicensesInSubscription = this.SetupWizardService.getConferenceLicensesBySubscriptionId(subscriptionId);
       this.setAudioPackageInfo(subscriptionId);
+      this.existingWebexSites = this.WebExSiteService.getExistingSites(this.conferenceLicensesInSubscription);
       this.sitesArray = this.WebExSiteService.transformExistingSites(this.conferenceLicensesInSubscription);
     }
   }

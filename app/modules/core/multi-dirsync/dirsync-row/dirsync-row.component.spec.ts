@@ -5,8 +5,6 @@ describe('DirsyncRowController Component', function () {
   const DISABLED = 'disabled';
   const PRIMARY = 'primary';
   const SUCCESS = 'success';
-  const WARNING = 'warning';
-  const DANGER = 'danger';
 
   // html locators
   const CONNECTOR_NAMES = '.columns.medium-8 span';
@@ -26,21 +24,20 @@ describe('DirsyncRowController Component', function () {
     this.$scope.dirsync = _.cloneDeep(this.fixture.dirsyncRow);
     this.$scope.deleteDomainFn = jasmine.createSpy('deleteDomainFn');
     this.$scope.deactivateConnectorFn = jasmine.createSpy('deactivateConnectorFn');
-
-    this.initComponent = () => {
-      this.compileComponent('dirsyncRow', {
-        dirsync: 'dirsync',
-        deleteDomainFn: 'deleteDomainFn(domain)',
-        deactivateConnectorFn: 'deactivateConnectorFn(connector)',
-      });
-      this.$scope.$apply();
-    };
   });
+
+  function initComponent() {
+    this.compileComponent('dirsyncRow', {
+      dirsync: 'dirsync',
+      deleteDomainFn: 'deleteDomainFn(domain)',
+      deactivateConnectorFn: 'deactivateConnectorFn(connector)',
+    });
+    this.$scope.$apply();
+  }
 
   describe('dirsyncRow should initialize with expected settings', function () {
     it('when all connectors are in service', function () {
-      this.initComponent();
-      expect(this.controller.domainStatus).toEqual(SUCCESS);
+      initComponent.call(this);
       expect(this.controller.connectors).toEqual(this.dirsyncConnectors);
       expect(this.controller.domainName).toEqual(this.$scope.dirsync.domains[0].domainName);
     });
@@ -50,8 +47,7 @@ describe('DirsyncRowController Component', function () {
       this.dirsyncConnectors[0].isInService = false;
       this.dirsyncConnectors[0].status = DISABLED;
 
-      this.initComponent();
-      expect(this.controller.domainStatus).toEqual(WARNING);
+      initComponent.call(this);
       expect(this.controller.connectors).toEqual(this.dirsyncConnectors);
     });
 
@@ -63,15 +59,14 @@ describe('DirsyncRowController Component', function () {
       this.dirsyncConnectors[1].isInService = false;
       this.dirsyncConnectors[1].status = DISABLED;
 
-      this.initComponent();
-      expect(this.controller.domainStatus).toEqual(DANGER);
+      initComponent.call(this);
       expect(this.controller.connectors).toEqual(this.dirsyncConnectors);
     });
   });
 
   describe('Component HTML', function () {
     beforeEach(function () {
-      this.initComponent();
+      initComponent.call(this);
     });
 
     it('should display all connectors and have three items in the dropdown menu', function () {

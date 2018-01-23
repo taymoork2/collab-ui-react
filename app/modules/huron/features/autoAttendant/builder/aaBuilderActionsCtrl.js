@@ -15,7 +15,7 @@
     .controller('AABuilderActionsCtrl', AABuilderActionsCtrl);
 
   /* @ngInject */
-  function AABuilderActionsCtrl($rootScope, $scope, $translate, $controller, $modal, AAUiModelService, AACommonService, AutoAttendantCeMenuModelService, CustomVariableService) {
+  function AABuilderActionsCtrl($rootScope, $scope, $translate, $controller, $modal, AAUiModelService, AACommonService, AutoAttendantCeMenuModelService, AutoAttendantHybridCareService, CustomVariableService) {
     var vm = this;
     var appendSpecialCharHelp = '<br><br>' + $translate.instant('autoAttendant.sayMessageSpecialChar');
     var appendRouteToPhoneNumberHelp = '<br><br>' + $translate.instant('autoAttendant.routeToPhoneNumberHelp');
@@ -37,16 +37,6 @@
       help: $translate.instant('autoAttendant.phoneMenuHelp') + appendSpecialCharHelp + appendRouteToPhoneNumberHelp,
       metric: 'Phone-Menu-Title',
       showHelpLink: true,
-      actions: ['runActionsOnInput'],
-    }, {
-      title: $translate.instant('autoAttendant.phoneMenuDialExt'),
-      controller: 'AADialByExtCtrl as aaDialByExtCtrl',
-      url: aaDialByExtTemplatePath,
-      hint: $translate.instant('autoAttendant.actionDialByExtensionHint'),
-      help: $translate.instant('autoAttendant.actionDialByExtensionHelp'),
-      metric: 'Dial-By-Extension-Title',
-      showHelpLink: false,
-      type: [2, 5], // 2 goes for dialByExtension whereas 5 for dialByEsn
       actions: ['runActionsOnInput'],
     }, {
       title: $translate.instant('autoAttendant.actionRouteCall'),
@@ -235,6 +225,23 @@
           metric: 'Rest-Api-Title',
           showHelpLink: false,
           actions: ['doREST'],
+        });
+      }
+      /* spark call options will be shown in case
+       * 1. hybrid toggle is disabled
+       * 2. hybrid toggle is enabled and customer have spark call configuration */
+      if ((!AACommonService.isHybridEnabledOnOrg()) ||
+        (AACommonService.isHybridEnabledOnOrg() && AutoAttendantHybridCareService.isSparkCallConfigured())) {
+        vm.options.push({
+          title: $translate.instant('autoAttendant.phoneMenuDialExt'),
+          controller: 'AADialByExtCtrl as aaDialByExtCtrl',
+          url: aaDialByExtTemplatePath,
+          hint: $translate.instant('autoAttendant.actionDialByExtensionHint'),
+          help: $translate.instant('autoAttendant.actionDialByExtensionHelp'),
+          metric: 'Dial-By-Extension-Title',
+          showHelpLink: false,
+          type: [2, 5], // 2 goes for dialByExtension whereas 5 for dialByEsn
+          actions: ['runActionsOnInput'],
         });
       }
     }
