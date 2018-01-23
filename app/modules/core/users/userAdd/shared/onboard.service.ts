@@ -1,6 +1,7 @@
+import { Analytics } from 'modules/core/analytics';
 import Feature from './feature.model';
 import * as addressParser from 'emailjs-addressparser';
-import { ILicenseRequestItem, IOnboardedUserResult, IParsedOnboardedUserResult, IUserEntitlementRequestItem, IUserNameAndEmail } from 'modules/core/users/shared/onboard.interfaces';
+import { ILicenseRequestItem, IOnboardedUserResult, IOnboardedUsersAggregateResult, IOnboardedUsersAnalyticsProperties, IParsedOnboardedUserResult, IUserEntitlementRequestItem, IUserNameAndEmail } from 'modules/core/users/shared/onboard.interfaces';
 import { Config } from 'modules/core/config/config';
 
 // TODO: mv this to more appropriate location once more is known about message codes from onboard API
@@ -17,7 +18,9 @@ export default class OnboardService {
     public $rootScope: ng.IRootScopeService,
     public $timeout: ng.ITimeoutService,
     public $translate: ng.translate.ITranslateService,
+    private Analytics: Analytics,
     private Config: Config,
+    private LogMetricsService,
     public UserCsvService,
     public Userservice,
   ) {
@@ -172,10 +175,22 @@ export default class OnboardService {
     return addressParser.parse(userList);
   }
 
-  public onboardUsersInChunks(usersList: IUserNameAndEmail[], entitleList: IUserEntitlementRequestItem[], licenseList: ILicenseRequestItem[], chunkSize: number = this.Config.batchSize) {
+  public onboardUsersInChunks(
+    usersList: IUserNameAndEmail[],
+    entitleList: IUserEntitlementRequestItem[],
+    licenseList: ILicenseRequestItem[],
+    options: {
+      chunkSize?: number,
+      servicesSelected?: {},
+    } = {},
+  ): ng.IPromise<IOnboardedUsersAggregateResult> {
     // notes:
     // - split out users list into smaller list chunks
     // - call 'Userservice.onboardUsers()' for each chunk
+    const {
+      chunkSize = this.Config.batchSize,
+      servicesSelected = {},
+    } = options;
     const usersListChunks = _.chunk(usersList, chunkSize);
     const promises = _.map(usersListChunks, (usersListChunk) => {
       return this.Userservice.onboardUsers({
@@ -183,16 +198,29 @@ export default class OnboardService {
         licenses: licenseList,
         userEntitlements: entitleList,
       })
-        .then((response) => {
-          // add 'onboardedUsers' property and resolve
-          const userResponse: IOnboardedUserResult[] = _.get(response, 'data.userResponse', []);
-          const onboardedUsers = this.parseOnboardedUsers(userResponse, response);
-          response.onboardedUsers = onboardedUsers;
-          return response;
-        });
+      .then((response) => {
+        // add 'onboardedUsers' property and resolve
+        const userResponse: IOnboardedUserResult[] = _.get(response, 'data.userResponse', []);
+        const onboardedUsers = this.parseOnboardedUsers(userResponse, response);
+        response.onboardedUsers = onboardedUsers;
+        return response;
+      });
     });
 
-    return this.$q.all(promises);
+    // aggregate all responses into a single result
+    return this.$q.all(promises).then((responses): IOnboardedUsersAggregateResult => {
+      const aggregateResult: IOnboardedUsersAggregateResult = this.aggregateResponses(responses);
+
+      // track onbord event, then resolve
+      this.trackOnboardSaveEvent({
+        numAddedUsers: aggregateResult.numAddedUsers,
+        numUpdatedUsers: aggregateResult.numUpdatedUsers,
+        numErrors: _.size(aggregateResult.results.errors),
+        servicesSelected: servicesSelected,
+      });
+
+      return aggregateResult;
+    });
   }
 
   private parseOnboardedUsers(onboardedUsers: IOnboardedUserResult[], response: ng.IHttpResponse<any>): {
@@ -344,5 +372,62 @@ export default class OnboardService {
     }, result);
 
     return result;
+  }
+
+  private aggregateResponses(responses): IOnboardedUsersAggregateResult {
+    const numUpdatedUsers = _.sumBy(responses as any, 'onboardedUsers.numUpdatedUsers');
+    const numAddedUsers = _.sumBy(responses as any, 'onboardedUsers.numAddedUsers');
+    const resultList: IParsedOnboardedUserResult[] = _.flatMap<IParsedOnboardedUserResult>(responses, 'onboardedUsers.resultList');
+    const errors: string[] = _.compact(_.map(resultList, 'errorMsg'));
+    const warnings: string[] = _.compact(_.map(resultList, 'warningMsg'));
+    return {
+      numUpdatedUsers: numUpdatedUsers,
+      numAddedUsers: numAddedUsers,
+      results: {
+        resultList: resultList,
+        errors: errors,
+        warnings: warnings,
+      },
+    };
+  }
+
+  public trackOnboardSaveEvent(options: {
+    numAddedUsers: number,
+    numUpdatedUsers: number,
+    numErrors: number,
+    servicesSelected: {},
+  }): void {
+    const { numAddedUsers, numUpdatedUsers, numErrors, servicesSelected } = options;
+    if (numAddedUsers > 0) {
+      const msg = `Invited ${options.numAddedUsers} users`;
+      // TODO: replace with 'MetricsService'
+      this.LogMetricsService.logMetrics(msg,
+        this.LogMetricsService.getEventType('inviteUsers'),
+        this.LogMetricsService.getEventAction('buttonClick'),
+        200,
+        moment(),
+        numAddedUsers,
+        null);
+    }
+    const analyticsProps = this.createPropertiesForAnalytics(numAddedUsers, numUpdatedUsers, numErrors, servicesSelected);
+    this.Analytics.trackAddUsers(this.Analytics.eventNames.SAVE, null, analyticsProps);
+  }
+
+  public createPropertiesForAnalytics(numAddedUsers = 0, numUpdatedUsers = 0, numErrors = 0, servicesSelected = {}): IOnboardedUsersAnalyticsProperties {
+    return {
+      numberOfErrors: numErrors,
+      usersAdded: numAddedUsers,
+      usersUpdated: numUpdatedUsers,
+      servicesSelected: this.getSelectedKeys(servicesSelected),
+    };
+  }
+
+  private getSelectedKeys(obj: {}): string[] {
+    return _.reduce(obj, function (result, v, k) {
+      if (v === true) {
+        result.push(k);
+      }
+      return result;
+    }, [] as string[]);
   }
 }
