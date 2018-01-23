@@ -1,7 +1,7 @@
 import { ManageType } from '../userManage.keys';
 import { OnboardCtrlBoundUIStates } from 'modules/core/users/userAdd/shared/onboard.store';
 import * as FeatureConfig from 'modules/core/featureToggle/features.config';
-import { AutoAssignTemplateModel } from 'modules/core/users/shared/auto-assign-template.model';
+import { AutoAssignTemplateModel } from 'modules/core/users/shared/auto-assign-template';
 
 enum State {
   USERS_ADD_MANUAL = 'users.add.manual',

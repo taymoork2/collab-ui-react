@@ -1,4 +1,5 @@
 import { IAutoAssignTemplateRequestPayload } from 'modules/core/users/shared';
+import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template';
 
 class EditSummaryAutoAssignTemplateModalController implements ng.IComponentController {
   private dismiss: Function;
@@ -12,7 +13,7 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
     private $state: ng.ui.IStateService,
     private Notification,
     private Analytics,
-    private AutoAssignTemplateService,
+    private AutoAssignTemplateService: AutoAssignTemplateService,
   ) {}
 
   public $onInit(): void {

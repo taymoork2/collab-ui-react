@@ -1,6 +1,6 @@
 import { CsvDownloadTypes, CsvDownloadService } from 'modules/core/csvDownload';
 import { IToolkitModalService } from 'modules/core/modal';
-import { AutoAssignTemplateModel } from 'modules/core/users/shared/auto-assign-template.model';
+import { AutoAssignTemplateModel } from 'modules/core/users/shared/auto-assign-template';
 
 /* UI for allowing user to export the Csv and Template. Does not do downloading on its own! See csvDownload.component */
 export class UserCsvExportComponent {

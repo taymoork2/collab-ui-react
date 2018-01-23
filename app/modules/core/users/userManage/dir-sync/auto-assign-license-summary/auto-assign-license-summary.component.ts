@@ -1,4 +1,4 @@
-import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template.service';
+import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template';
 
 export class AutoAssignLicenseSummaryController implements ng.IComponentController {
   public stateData;
