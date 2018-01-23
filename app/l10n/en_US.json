@@ -2608,22 +2608,8 @@
       "editSettingsLink": "Edit cluster settings",
       "editTrunkSettingsLink": "Edit resource settings",
       "softwareUpgrade": "Software Upgrade",
-      "currentVersion": "Current Version",
-      "newVersion": "New Version",
-      "explanation": "You are about to upgrade {{connectorType}} to version {{newVersion}} on all nodes in your Expressway cluster",
-      "releaseNotesLinkText": "See release notes for {{connectorType}} {{newVersion}}",
-      "releaseNotes": "Release Notes",
-      "pending": "Pending",
-      "upgrade": "Upgrade",
       "upgradeNow": "Upgrade Now",
-      "upgradesAutomatically": "Upgrades automatically",
-      "upgradeProcessInitiating": "Initiating the upgrade to version {{version}}…",
-      "upgradingHost": "Upgrading {{host}} to {{version}}",
-      "upgradeDone": "Upgrade completed!",
-      "upToDate": "{{connectorType}} is up to date on this cluster.",
-      "upgradePossible": "A new version is available for {{connectorType}}: {{availableVersion}}.",
-      "urgentUpgrade": "An urgent upgrade is available for {{connectorType}}: {{availableVersion}}.",
-      "upgradeWarning": "This cluster has one or more nodes where {{ManagementConnector}} is not sending updates to {{CiscoCollaborationCloud}}. It is recommended to bring {{ManagementConnector}} online before initiating an upgrade."
+      "upgradesAutomatically": "Upgrades automatically"
     },
     "connectorUpgrade": {
       "title": "Connector Upgrade",
@@ -6318,18 +6304,6 @@
       "beta": "BETA",
       "latest": "LATEST",
       "errorMsg": "Before you can delete this cluster, you must either move all nodes to another cluster or deregister all nodes."
-    },
-    "upgradeClusters": {
-      "title": "Software Upgrade",
-      "upgradeNow": "Upgrade Now",
-      "installing": "Software is installing.",
-      "upgradeWarning": "This cluster has one or more offline nodes. It is recommended to bring all nodes online before initiating an upgrade.",
-      "pending": "Pending",
-      "upgradingHost": "Upgrading {{host}} to {{version}}",
-      "upgradeProcessInitiating": "Initiating the upgrade to version {{version}}…",
-      "upgradeDone": "Upgrade completed!",
-      "success": "The cluster will begin upgrading shortly.",
-      "error": "Error in upgrading cluster. Please try again later."
     },
     "reassign": {
       "reassignHost": "Reassign Host",
