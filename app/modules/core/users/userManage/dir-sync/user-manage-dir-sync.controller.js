@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  module.exports = function UserManageDirSyncController($modal, $previousState, $rootScope, $scope, $state, $timeout, $translate, Analytics, Authinfo, DirSyncService, Notification) {
+  module.exports = function UserManageDirSyncController($modal, $previousState, $rootScope, $scope, $state, $timeout, $translate, Analytics, Authinfo, AutoAssignTemplateModel, DirSyncService, Notification) {
     var vm = this;
 
     vm.isUserAdmin = isUserAdmin;
@@ -35,6 +35,7 @@
         rootState = 'users.manage.picker';
       }
 
+      // TODO cleanup these rootscope listeners
       $rootScope.$on('add-user-dirsync-started', function () {
         vm.isBusy = true;
         vm.dirSyncStatusMessage = $translate.instant('userManage.ad.dirSyncProcessing');
@@ -62,24 +63,30 @@
       };
     }
 
-    var transitions = {
-      installConnector: {
-        next: '^.syncStatus',
+    var transitions = AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated ? {
+      autoAssignLicenseSummary: {
         prev: rootState,
+        next: '^.installConnector',
+      },
+
+      installConnector: {
+        prev: '^.autoAssignLicenseSummary',
+        last: '^.syncStatus',
+      },
+    } : {
+      installConnector: {
+        prev: rootState,
+        next: '^.syncStatus',
       },
 
       syncStatus: {
-        next: '^.dirsyncServices',
         prev: '^.installConnector',
+        next: '^.dirsyncServices',
       },
 
       dirsyncServices: {
-        next: '^.dirsyncResult',
         prev: '^.syncStatus',
-      },
-
-      dirsyncResult: {
-        next: 'users.list',
+        last: '^.dirsyncResult',
       },
     };
 
@@ -112,35 +119,33 @@
 
     function onBack() {
       var curState = getCurrentState();
-      var nextState = transitions[curState].prev;
+      var prevState = transitions[curState].prev;
       Analytics.trackAddUsers(Analytics.eventNames.BACK);
       if (curState === 'syncStatus') {
-        $state.go('users.manage.activedir');
+        $state.go('users.manage.picker');
       } else {
-        $state.go(nextState);
+        $state.go(prevState);
       }
     }
 
     function onNext() {
       var curState = getCurrentState();
-      var nextState = transitions[curState].next;
-      vm.showCloseButton = (nextState.indexOf('dirsyncResult') >= 0);
 
-      if (curState === 'installConnector') {
-        // make sure directory syncing is enabled. If not, then we can't continue and need
-        // to display an error
-        if (DirSyncService.isDirSyncEnabled()) {
-          Analytics.trackAddUsers(Analytics.eventNames.NEXT);
-          $state.go(nextState);
-        } else {
-          Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.SYNC_ERROR, null, { error: 'Directory Connector not installed' });
-          Notification.warning('userManage.advanced.noDirSync');
-        }
-      } else {
-        // move on
-        Analytics.trackAddUsers(Analytics.eventNames.NEXT);
-        $state.go(nextState);
+      if (curState === 'installConnector' && !DirSyncService.isDirSyncEnabled()) {
+        Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.SYNC_ERROR, null, { error: 'Directory Connector not installed' });
+        Notification.warning('userManage.advanced.noDirSync');
+        return;
       }
+
+      var nextState = transitions[curState].next;
+      var lastState = transitions[curState].last;
+      vm.showCloseButton = !!lastState;
+      if (vm.showCloseButton) {
+        nextState = lastState;
+      }
+
+      Analytics.trackAddUsers(Analytics.eventNames.NEXT);
+      $state.go(nextState);
     }
 
     function onClose() {

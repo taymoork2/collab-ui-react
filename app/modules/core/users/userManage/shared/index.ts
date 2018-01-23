@@ -2,6 +2,7 @@ import licenseSummaryModuleName from './license-summary';
 import { UserManageService } from './user-manage.service';
 import * as analyticsModuleName from 'modules/core/analytics';
 import featureToggleModuleName from 'modules/core/featureToggle';
+import usersSharedModuleName from 'modules/core/users/shared'; // TODO refactor into users/shared/auto-assign-template
 
 export default angular
   .module('core.users.userManage.shared', [
@@ -10,6 +11,7 @@ export default angular
     analyticsModuleName,
     featureToggleModuleName,
     licenseSummaryModuleName,
+    usersSharedModuleName,
   ])
   .service('UserManageService', UserManageService)
   .name;

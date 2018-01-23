@@ -1027,6 +1027,9 @@
             controllerAs: 'obc',
             template: '<div ui-view class="flex-container flex-item-resize"></div>',
           })
+          .state('users.manage.dir-sync.add.ob.autoAssignLicenseSummary', {
+            template: '<user-manage-dir-sync-auto-assign-license-summary></user-manage-dir-sync-auto-assign-license-summary>',
+          })
           .state('users.manage.dir-sync.add.ob.installConnector', {
             template: require('modules/core/users/userManage/dir-sync/user-manage-dir-sync-install-connector.html'),
           })

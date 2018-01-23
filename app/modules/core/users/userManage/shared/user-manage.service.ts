@@ -1,6 +1,7 @@
 import { ManageType } from '../userManage.keys';
 import { OnboardCtrlBoundUIStates } from 'modules/core/users/userAdd/shared/onboard.store';
 import * as FeatureConfig from 'modules/core/featureToggle/features.config';
+import { AutoAssignTemplateModel } from 'modules/core/users/shared/auto-assign-template.model';
 
 enum State {
   USERS_ADD_MANUAL = 'users.add.manual',
@@ -8,6 +9,7 @@ enum State {
   USERS_CONVERT = 'users.convert',
   USERS_CSV = 'users.csv',
   USERS_DIR_SYNC_INSTALL = 'users.manage.dir-sync.add.ob.installConnector',
+  USERS_DIR_SYNC_LICENSE_SUMMARY = 'users.manage.dir-sync.add.ob.autoAssignLicenseSummary',
   USERS_DIR_SYNC_STATUS = 'users.manage.dir-sync.add.ob.syncStatus',
   USERS_EMAIL_SUPPRESS = 'users.manage.emailSuppress',
   USERS_MANAGE_PICKER = 'users.manage.picker',
@@ -19,6 +21,7 @@ export class UserManageService {
     private $q: ng.IQService,
     private $state: ng.ui.IStateService,
     private Analytics,
+    private AutoAssignTemplateModel: AutoAssignTemplateModel,
     private FeatureToggleService,
   ) {}
 
@@ -60,8 +63,12 @@ export class UserManageService {
         break;
 
       case ManageType.ADVANCED_NO_DS:
-        this.Analytics.trackAddUsers(this.Analytics.sections.ADD_USERS.eventNames.INSTALL_CONNECTOR, this.Analytics.sections.ADD_USERS.uploadMethods.SYNC);
-        this.$state.go(State.USERS_DIR_SYNC_INSTALL);
+        if (this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated) {
+          this.$state.go(State.USERS_DIR_SYNC_LICENSE_SUMMARY);
+        } else {
+          this.Analytics.trackAddUsers(this.Analytics.sections.ADD_USERS.eventNames.INSTALL_CONNECTOR, this.Analytics.sections.ADD_USERS.uploadMethods.SYNC);
+          this.$state.go(State.USERS_DIR_SYNC_INSTALL);
+        }
         break;
 
       case ManageType.CONVERT:
