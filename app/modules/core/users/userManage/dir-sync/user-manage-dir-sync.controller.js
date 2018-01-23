@@ -4,6 +4,7 @@
   /* @ngInject */
   module.exports = function UserManageDirSyncController($modal, $previousState, $rootScope, $scope, $state, $timeout, $translate, Analytics, Authinfo, AutoAssignTemplateModel, DirSyncService, Notification) {
     var vm = this;
+    var eventListeners = [];
 
     vm.isUserAdmin = isUserAdmin;
     vm.onInit = onInit;
@@ -25,6 +26,12 @@
       Analytics.trackAddUsers(Analytics.eventNames.CANCEL_MODAL);
     });
 
+    $scope.$on('$destroy', function () {
+      while (!_.isEmpty(eventListeners)) {
+        _.attempt(eventListeners.pop());
+      }
+    });
+
     //////////////////
     var rootState;
 
@@ -35,25 +42,24 @@
         rootState = 'users.manage.picker';
       }
 
-      // TODO cleanup these rootscope listeners
-      $rootScope.$on('add-user-dirsync-started', function () {
+      eventListeners.push($rootScope.$on('add-user-dirsync-started', function () {
         vm.isBusy = true;
         vm.dirSyncStatusMessage = $translate.instant('userManage.ad.dirSyncProcessing');
-      });
+      }));
 
-      $rootScope.$on('add-user-dirsync-completed', function () {
+      eventListeners.push($rootScope.$on('add-user-dirsync-completed', function () {
         vm.isBusy = false;
         vm.dirSyncStatusMessage = $translate.instant('userManage.ad.dirSyncSuccess');
-      });
+      }));
 
       // The dir-sync call will always be an error for User Admins, but they should be able to try to update dir-sync users regardless
-      $rootScope.$on('add-user-dirsync-error', function () {
+      eventListeners.push($rootScope.$on('add-user-dirsync-error', function () {
         if (!vm.isUserAdmin) {
           vm.isNextDisabled = true;
           vm.dirSyncStatusMessage = $translate.instant('userManage.ad.dirSyncError');
           Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.SYNC_ERROR, null, { error: 'Directory Sync Error' });
         }
-      });
+      }));
 
       // adapt so we an use the userCsvResults page since we want the DirSync results to look the same
       $scope.csv = {
