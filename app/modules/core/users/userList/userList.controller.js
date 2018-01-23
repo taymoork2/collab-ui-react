@@ -116,6 +116,16 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
         bind();
         getUserList();
       });
+
+      if ($state.params.preSelectedUserId) {
+        UserOverviewService.getUser($state.params.preSelectedUserId)
+          .then(function (response) {
+            if (response && response.user) {
+              $scope.currentUser = response.user;
+              showUserDetails(response.user);
+            }
+          });
+      }
     }
 
     function onDestroy() {
