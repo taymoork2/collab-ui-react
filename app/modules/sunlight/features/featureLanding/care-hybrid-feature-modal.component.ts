@@ -35,7 +35,7 @@ class CareHybridFeatureModalCtrl implements ng.IComponentController {
     serviceCards.push({ //AutoAttendant
       id: 'AA',
       label: 'autoAttendant.title',
-      description: 'autoAttendant.modalDescription',
+      description: 'autoAttendant.careModalDescription',
       code: 'autoAttendant.code',
       color: 'feature-aa-color',
       warning: 'autoAttendant.warning',
