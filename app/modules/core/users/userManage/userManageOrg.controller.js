@@ -44,6 +44,7 @@
 
     //////////////////
     function onInit() {
+      initAutoAssignModel();
       initConvertableUsers();
       initFeatureToggles()
         .then(function () {
@@ -60,6 +61,11 @@
         vm.isAtlasF3745AutoAssignToggle = toggles.atlasF3745AutoAssignLicenses;
         vm.multiDirSyncToggle = toggles.multiDirSyncToggle;
       });
+    }
+
+    function initAutoAssignModel() {
+      // TODO needed when delete auto assign template too
+      AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = false;
     }
 
     function initConvertableUsers() {
