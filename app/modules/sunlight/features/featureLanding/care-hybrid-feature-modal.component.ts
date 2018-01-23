@@ -40,6 +40,7 @@ class CareHybridFeatureModalCtrl implements ng.IComponentController {
       color: 'feature-aa-color',
       warning: 'autoAttendant.warning',
       disabled: isAACardDisabled,
+      showWarning: isAACardDisabled,
     });
 
     if (this.Authinfo.isCare()) {

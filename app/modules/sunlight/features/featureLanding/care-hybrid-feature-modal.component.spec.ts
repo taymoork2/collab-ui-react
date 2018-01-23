@@ -18,21 +18,21 @@ describe('Component:care hybrid feature modal', () => {
     expect(this.controller.features.length).toEqual(2);
   });
 
-  it('AA Card should be disabled when neither Spark call nor Hybrid/EPT configured', function () {
+  it('should check AutoAttendant card to be in disabled state when neither Spark call nor Hybrid/EPT configured', function () {
     this.$state.isSparkCallConfigured = false;
     this.$state.isHybridAndEPTConfigured = false;
     this.compileComponent('care-hybrid-feature-modal', { dismiss: 'dismiss()' });
     expect(this.controller.features[1].disabled).toBe(true);
   });
 
-  it('AA Card should not be disabled when Spark call is configured but Hybrid/EPT not', function () {
+  it('should check AutoAttendant card to be in enabled state when Spark call is configured but Hybrid/EPT not', function () {
     this.$state.isSparkCallConfigured = true;
     this.$state.isHybridAndEPTConfigured = false;
     this.compileComponent('care-hybrid-feature-modal', { dismiss: 'dismiss()' });
     expect(this.controller.features[1].disabled).toBe(false);
   });
 
-  it('AA Card should not be disabled when Spark call is not configured but Hybrid/EPT is configured', function () {
+  it('should check AutoAttendant card to be in enabled state when Spark call is not configured but Hybrid/EPT is configured', function () {
     this.$state.isSparkCallConfigured = false;
     this.$state.isHybridAndEPTConfigured = true;
     this.compileComponent('care-hybrid-feature-modal', { dismiss: 'dismiss()' });
