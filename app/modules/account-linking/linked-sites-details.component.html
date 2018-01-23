@@ -49,7 +49,7 @@
         <span class="section-name" translate="accountLinking.name"></span>
         <span>
         <a class="as-button"
-           ng-show="$ctrl.selectedSiteInfo.isSiteAdmin"
+           ng-show="$ctrl.selectedSiteInfo.isSiteAdmin && $ctrl.selectedSiteInfo.supportAgreementLinkingMode"
            ng-click="$ctrl.modifyLinkingMethod()"
            translate="accountLinking.siteDetails.modify"></a>
       </span>

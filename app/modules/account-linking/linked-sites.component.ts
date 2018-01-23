@@ -89,20 +89,19 @@ class LinkedSitesComponentCtrl implements ng.IComponentController {
 
   }
 
-  // TODO: Find other situations where the wizard should be shown and what site to use
   private showWizardIfRequired(originator: LinkingOriginator) {
-
-    // TODO: Cannot just select the first on if multiple sites !!!
-    //       One proposal is NOT showing the wizard if more that one site waiting, but
-    //       instead bring the user directly to the sites list page.
-    this.$log.warn('For now, just select any of them... ', this.sitesInfo);
+    this.$log.warn('For now, just select first from the following list:', this.sitesInfo);
     const selectedSiteInfo = this.sitesInfo[0];
-    this.$log.warn('ans siteInfo fi use for wizard = ', selectedSiteInfo);
-
-    if (originator === LinkingOriginator.Banner) {
-      this.showWizard(selectedSiteInfo);
-    } else if (originator !== LinkingOriginator.Menu) {
-      this.$log.warn('Page was initiated from unknown originator.');
+    if (originator === LinkingOriginator.Banner && selectedSiteInfo.isSiteAdmin === true) {
+      if (this.sitesInfo.length === 1) {
+        this.showWizard(selectedSiteInfo);
+      } else {
+        this.$state.go('site-list.linked', {
+          selectedSiteInfo: this.sitesInfo,
+          showWizardFn: this.showWizardFn,
+          launchWebexFn: this.launchWebexFn,
+        });
+      }
     }
   }
 

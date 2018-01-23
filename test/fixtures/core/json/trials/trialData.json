@@ -84,7 +84,12 @@
             "model": "CISCO_MX300",
             "enabled": true,
             "quantity": 0
-          }]
+          }, {
+            "model": "CISCO_ROOM_KIT",
+            "enabled": true,
+            "quantity": 0
+          }
+          ]
         }
       },
       "deviceTrial": {
@@ -191,6 +196,10 @@
             "quantity": 0
           }, {
             "model": "CISCO_MX300",
+            "enabled": true,
+            "quantity": 0
+          }, {
+            "model": "CISCO_ROOM_KIT",
             "enabled": true,
             "quantity": 0
           }]

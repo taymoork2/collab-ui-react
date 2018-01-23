@@ -1,6 +1,5 @@
 import { IExtendedClusterFusion, ICluster, IClusterPropertySet } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
-import { ClusterService } from 'modules/hercules/services/cluster-service';
 import { Notification } from 'modules/core/notifications';
 import { IDeregisterModalOptions } from 'modules/hercules/rename-and-deregister-cluster-section/hs-rename-and-deregister-cluster.component';
 
@@ -41,7 +40,6 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private ClusterService: ClusterService,
     private HybridServicesClusterService: HybridServicesClusterService,
     private Notification: Notification,
   ) { }
@@ -80,7 +78,7 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
   }
 
   private getProperties(clusterId) {
-    this.ClusterService.getProperties(clusterId)
+    this.HybridServicesClusterService.getProperties(clusterId)
       .then((properties: IClusterPropertySet) => {
         if (!_.isUndefined(properties['mf.ucSipTrunk'])) {
           this.sipurlconfiguration = properties['mf.ucSipTrunk'];
@@ -109,7 +107,7 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
     const payload: IClusterPropertySet = {
       'mf.ucSipTrunk': this.sipurlconfiguration,
     };
-    this.ClusterService.setProperties(this.clusterId, payload)
+    this.HybridServicesClusterService.setProperties(this.clusterId, payload)
       .then(() => {
         this.Notification.success('mediaFusion.sipconfiguration.success');
       })
@@ -122,7 +120,7 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
     const payload: IClusterPropertySet = {
       'mf.trustedSipSources': _.map(this.trustedsipconfiguration, 'text').join(', '),
     };
-    this.ClusterService.setProperties(this.clusterId, payload)
+    this.HybridServicesClusterService.setProperties(this.clusterId, payload)
       .then(() => {
         this.Notification.success('mediaFusion.trustedSip.success');
       })

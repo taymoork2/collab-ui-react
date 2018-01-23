@@ -20,6 +20,21 @@ describe('Component: WebexSiteLicensesComponent', function () {
         timezone: '1',
       }],
       conferenceLicenses: licenses.confLicenses,
+      existingWebexSites: [{
+        siteUrl: 'abc.dmz',
+        centerType: 'MC',
+        quantity: 100,
+      },
+      {
+        siteUrl: 'abc.dmz',
+        centerType: 'EE',
+        quantity: 100,
+      },
+      {
+        siteUrl: 'site3.dmz',
+        centerType: 'EE',
+        quantity: 100,
+      }],
     };
 
     initSpies.apply(this);
@@ -27,6 +42,7 @@ describe('Component: WebexSiteLicensesComponent', function () {
     this.compileComponent('webexSiteLicenses', {
       conferenceLicensesInSubscription: this.$scope.fixtures.conferenceLicenses,
       sitesArray: this.$scope.fixtures.sitesArray,
+      existingWebexSites: this.$scope.fixtures.existingWebexSites,
       onDistributionChange: 'onDistributionChangeFn(sites, isValid)',
     });
   });
@@ -90,8 +106,8 @@ describe('Component: WebexSiteLicensesComponent', function () {
 
   describe('Validation of license distribution', () => {
     it('should NOT validate if there is a site without licenses', function () {
-      expect(this.controller.distributedLicensesArray[2][0].quantity).toBe(0);
-      expect(this.controller.distributedLicensesArray[2][1].quantity).toBe(0);
+      expect(this.controller.distributedLicensesArray[1][0].quantity).toBe(0);
+      expect(this.controller.distributedLicensesArray[1][1].quantity).toBe(0);
       this.controller.validateData();
       expect(this.$scope.onDistributionChangeFn).toHaveBeenCalledWith([], false );
     });
@@ -103,7 +119,7 @@ describe('Component: WebexSiteLicensesComponent', function () {
     });
 
     it('should validate if all licenses are asigned and there are no sites without licenses', function () {
-      this.controller.distributedLicensesArray[2][0].quantity = 2;
+      this.controller.distributedLicensesArray[1][0].quantity = 2;
       this.controller.distributedLicensesArray[0][0].quantity = this.controller.distributedLicensesArray[0][0].quantity - 2;
       this.controller.validateData();
       expect(this.$scope.onDistributionChangeFn).toHaveBeenCalledWith(jasmine.any(Object), true);

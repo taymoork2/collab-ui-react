@@ -11,6 +11,7 @@
       'Nodes Added': $translate.instant('mediaFusion.metrics.nodesAdded'),
       'Nodes Unavailable': $translate.instant('mediaFusion.metrics.nodesUnavailable'),
       'Redirected by this Cluster': $translate.instant('mediaFusion.metrics.redirectedcalls'),
+      '1001': $translate.instant('mediaFusion.metrics.cloudconnectivityissues'),
     };
     vm.insightImage = 'images/mf_insight_16.png';
     vm.bulletField = 'bulletField';
@@ -31,7 +32,9 @@
                 insight1 = insight1.filter(Boolean);
                 insight1[0] = insight1[0].replace(/\s+$/, '');
                 insight1[0] = translateInsightType(insight1[0]);
-                insight1 = insight1[0] + ' ' + insight1[1] + '<br>';
+                if (insight1[1]) {
+                  insight1 = insight1[0] + ' ' + insight1[1] + '<br>';
+                }
                 finalinsight += insight1;
                 value[key] = finalinsight;
               });
