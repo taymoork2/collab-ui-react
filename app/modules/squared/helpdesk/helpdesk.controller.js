@@ -6,7 +6,7 @@ require('./helpdesk.scss');
   var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
   /* @ngInject */
-  function HelpdeskController($modal, $q, $scope, $state, $translate, $window, Authinfo, Config, HelpdeskHuronService, HelpdeskSearchHistoryService, HelpdeskService, HelpdeskSplunkReporterService, LicenseService) {
+  function HelpdeskController($element, $modal, $q, $scope, $state, $translate, $window, AccessibilityService, Authinfo, Config, HelpdeskHuronService, HelpdeskSearchHistoryService, HelpdeskService, HelpdeskSplunkReporterService, LicenseService) {
     $scope.$on('$viewContentLoaded', function () {
       setSearchFieldFocus();
       $window.document.title = $translate.instant('helpdesk.browserTabHeaderTitle');
@@ -23,6 +23,7 @@ require('./helpdesk.scss');
     vm.searchingForDevices = false;
     vm.lookingUpOrgFilter = false;
     vm.searchString = '';
+    vm.arrowNavigation = arrowNavigation;
     vm.keyPressHandler = keyPressHandler;
     vm.showMoreResults = showMoreResults;
     vm.showDeviceResultPane = showDeviceResultPane;
@@ -436,67 +437,57 @@ require('./helpdesk.scss');
       return sorted;
     }
 
-    function keyPressHandler(event) {
-      var S = 83;
-      var activeElement = angular.element($window.document.activeElement);
-      var inputFieldHasFocus = activeElement[0]['id'] === 'searchInput';
-      if (inputFieldHasFocus && !(event.keyCode === KeyCodes.ESCAPE || event.keyCode === KeyCodes.ENTER)) {
-        return; // if not escape and enter, nothing to do
-      }
-      var activeTabIndex = activeElement[0]['tabIndex'];
-      var newTabIndex = -1;
-
-      switch (event.keyCode) {
-        case KeyCodes.LEFT:
-          newTabIndex = activeTabIndex - 1;
-          break;
-
+    function arrowNavigation($event, index, locator) {
+      switch ($event.keyCode) {
+        // UP/DOWN arrows allow for navigating list, skipping the search icon when it is present
+        // Tabbing will follow tab order and include the search icon when it is present
         case KeyCodes.UP:
-          newTabIndex = activeTabIndex - 10;
+          if (index > 0) {
+            var previousIndex = index - 1;
+            AccessibilityService.setFocus($element, '.' + locator + '-card-' + previousIndex + ' article');
+          }
           break;
-
-        case KeyCodes.RIGHT:
-          newTabIndex = activeTabIndex + 1;
-          break;
-
         case KeyCodes.DOWN:
-          newTabIndex = activeTabIndex + 10;
-          break;
-
-        case KeyCodes.ESCAPE:
-          if (inputFieldHasFocus) {
-            initSearchWithoutOrgFilter();
-          } else {
-            angular.element('#searchInput').focus().select();
-            newTabIndex = -1;
-          }
-          break;
-
-        case KeyCodes.ENTER:
-          if (!inputFieldHasFocus) {
-            activeElement.click();
-          }
-          break;
-
-        case S:
-          var orgLink = JSON.parse(activeElement.find('a')[0]['name']);
-          // TODO: Avoid throwing console error when element not found !
-          if (orgLink) {
-            initSearchWithOrgFilter(orgLink);
-          }
+          var nextIndex = index + 1;
+          AccessibilityService.setFocus($element, '.' + locator + '-card-' + nextIndex + ' article');
           break;
       }
+    }
 
-      if (newTabIndex != -1) {
-        $('[tabindex=' + newTabIndex + ']').focus();
+    function keyPressHandler(event) {
+      if (!AccessibilityService.modalVisible()) {
+        var S = 83;
+        var activeElement = $element.find(event.target);
+        var inputFieldHasFocus = activeElement[0]['id'] === 'searchInput';
+        if (inputFieldHasFocus && !(event.keyCode === KeyCodes.ESCAPE || event.keyCode === KeyCodes.ENTER)) {
+          return; // if not escape and enter, nothing to do
+        }
+
+        switch (event.keyCode) {
+          case KeyCodes.ESCAPE:
+            if (inputFieldHasFocus) {
+              initSearchWithoutOrgFilter();
+            } else {
+              $element.find('#searchInput').focus().select();
+            }
+            break;
+
+          case S:
+            var orgLink = JSON.parse(activeElement.find('a')[0]['name']);
+            // TODO: Avoid throwing console error when element not found !
+            if (orgLink) {
+              initSearchWithOrgFilter(orgLink);
+            }
+            break;
+        }
       }
     }
 
     function setSearchFieldFocus() {
       if (HelpdeskService.checkIfMobile()) {
-        angular.element('#searchInput').blur();
+        $element.find('#searchInput').blur();
       } else {
-        angular.element('#searchInput').focus();
+        $element.find('#searchInput').focus();
       }
     }
 

@@ -1,12 +1,14 @@
 (function () {
   'use strict';
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   angular
     .module('Squared')
     .controller('HelpdeskOrgController', HelpdeskOrgController);
 
   /* @ngInject */
-  function HelpdeskOrgController($anchorScroll, $location, $modal, $q, $scope, $state, $stateParams, $translate, $window, Authinfo, Config, HelpdeskService, HelpdeskCardsOrgService, FeatureToggleService, LicenseService, Notification, Orgservice, UrlConfig) {
+  function HelpdeskOrgController($anchorScroll, $location, $modal, $q, $scope, $state, $stateParams, $translate, $window, AccessibilityService, Authinfo, Config, HelpdeskService, HelpdeskCardsOrgService, FeatureToggleService, LicenseService, Notification, Orgservice, UrlConfig) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -104,7 +106,7 @@
     }
 
     function setReadOnlyLaunchButtonVisibility(orgData) {
-      if (orgData.id == Authinfo.getOrgId()) {
+      if (orgData.id === Authinfo.getOrgId()) {
         vm.allowLaunchAtlas = false;
       } else if (!orgData.orgSettings) {
         vm.allowLaunchAtlas = true;
@@ -156,7 +158,6 @@
       findServiceOrders(vm.orgId);
       findAdminUsers(org);
       vm.supportedBy = isTrials(org.orgSettings) ? $translate.instant('helpdesk.trials') : $translate.instant('helpdesk.ts');
-      angular.element('.helpdesk-details').focus();
       setReadOnlyLaunchButtonVisibility(org);
     }
 
@@ -252,14 +253,10 @@
       vm.adminUserLimit = vm.initialAdminUserLimit;
     }
 
-    function modalVisible() {
-      return $('#HelpdeskExtendedInfoDialog').is(':visible');
-    }
-
     function keyPressHandler(event) {
-      if (!modalVisible()) {
+      if (!AccessibilityService.modalVisible()) {
         switch (event.keyCode) {
-          case 27: // Esc
+          case KeyCodes.ESCAPE:
             $window.history.back();
             break;
           case 83: // S

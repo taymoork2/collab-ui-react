@@ -4,7 +4,7 @@
   var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
   /* @ngInject */
-  function HelpdeskCloudberryDeviceController($stateParams, $window, Authinfo, HelpdeskLogService, HelpdeskService, Notification, WindowLocation) {
+  function HelpdeskCloudberryDeviceController($stateParams, $window, AccessibilityService, Authinfo, HelpdeskLogService, HelpdeskService, Notification, WindowLocation) {
     $('body').css('background', 'white');
     var vm = this;
     vm.deviceId = $stateParams.id;
@@ -40,8 +40,6 @@
           vm.lastPushedLog = log;
         }, _.noop);
       }
-
-      angular.element('.helpdesk-details').focus();
     }
 
     function isAuthorizedForLog() {
@@ -55,7 +53,7 @@
     }
 
     function keyPressHandler(event) {
-      if (event.keyCode === KeyCodes.ESCAPE) {
+      if (!AccessibilityService.modalVisible() && event.keyCode === KeyCodes.ESCAPE) {
         $window.history.back();
       }
     }

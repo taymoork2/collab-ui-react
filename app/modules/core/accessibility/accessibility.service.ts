@@ -23,6 +23,10 @@ export class AccessibilityService {
     private $timeout: ng.ITimeoutService,
   ) {}
 
+  public modalVisible(): boolean {
+    return $('.modal-content').is(':visible');
+  }
+
   public setFocus(elem: ng.IRootElementService, identifier: string, time?: number): void {
     this.$timeout(() => {
       elem.find(identifier).focus();
