@@ -30,9 +30,17 @@ hybrid-services-nodes-page-actions {
     left: auto;
     right: 0;
 
+    a {
+      display: flex;
+      align-items: center;
+
+      span {
+        margin-right: auto;
+      }
+    }
+
     .icon {
-      vertical-align: -2px;
-      margin-left: 3px;
+      margin-left: 5px;
       color: $gray-base;
     }
   }
