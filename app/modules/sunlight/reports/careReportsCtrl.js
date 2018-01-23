@@ -104,14 +104,14 @@
     vm.mediaTypeSelected = vm.mediaTypeOptions[1];
     vm.callbackFeature = false;
 
-    function setDrillDownProps(webcallDataPresent) {
+    function setDrillDownProps(webcallDataPresent, data) {
       vm.taskIncomingDrilldownProps = DrillDownReportProps.taskIncomingDrilldownProps(timeSelected,
-        vm.shouldVideoDrillDownDisplayed(webcallDataPresent.isTotalHandledPresent));
-      vm.taskOfferedDrilldownProps = DrillDownReportProps.taskOfferedDrilldownProps(timeSelected);
+        vm.shouldVideoDrillDownDisplayed(webcallDataPresent.isTotalHandledPresent), data);
+      vm.taskOfferedDrilldownProps = DrillDownReportProps.taskOfferedDrilldownProps(timeSelected, data);
       vm.avgCsatDrilldownProps = DrillDownReportProps.avgCsatDrilldownProps(timeSelected,
-        vm.shouldVideoDrillDownDisplayed(webcallDataPresent.isAvgCSATPresent));
+        vm.shouldVideoDrillDownDisplayed(webcallDataPresent.isAvgCSATPresent), data);
       vm.taskTimeDrilldownProps = DrillDownReportProps.taskTimeDrilldownProps(timeSelected,
-        vm.shouldVideoDrillDownDisplayed(webcallDataPresent.isAvgHandleTimePresent));
+        vm.shouldVideoDrillDownDisplayed(webcallDataPresent.isAvgHandleTimePresent), data);
     }
 
     function filtersUpdate() {
@@ -173,7 +173,7 @@
       } else {
         vm.tableDataPromise = getTableData(mediaTypeSelected, timeSelected);
         return vm.tableDataPromise.then(function (dataObj) {
-          setDrillDownProps(dataObj.isWebcallDataPresent);
+          setDrillDownProps(dataObj.isWebcallDataPresent, dataObj.data);
           onSuccess(dataObj.data);
         }, onError);
       }

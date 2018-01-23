@@ -48,7 +48,7 @@
       };
     }
 
-    function taskIncomingDrilldownProps(timeSelected, shouldDisplayWebcall) {
+    function taskIncomingDrilldownProps(timeSelected, shouldDisplayWebcall, data) {
       var props = {
         description: function () {
           return $translate.instant('taskIncoming.drilldownDescription', {
@@ -118,11 +118,14 @@
           sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
         });
       }
+      if (!data || data.length === 0) {
+        props.state = ReportConstants.EMPTY;
+      }
 
       return _.merge(getDefaultProps(), props);
     }
 
-    function taskOfferedDrilldownProps(timeSelected) {
+    function taskOfferedDrilldownProps(timeSelected, data) {
       var props = {
         description: function () {
           return $translate.instant('taskOffered.drilldownDescription', {
@@ -197,10 +200,13 @@
           });
         },
       };
+      if (!data || data.length === 0) {
+        props.state = ReportConstants.EMPTY;
+      }
       return _.merge(getDefaultProps(), props);
     }
 
-    function avgCsatDrilldownProps(timeSelected, shouldDisplayWebcall) {
+    function avgCsatDrilldownProps(timeSelected, shouldDisplayWebcall, data) {
       var props = {
         description: function () {
           return $translate.instant('averageCsat.drilldownDescription', {
@@ -272,10 +278,13 @@
           sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
         });
       }
+      if (!data || data.length === 0) {
+        props.state = ReportConstants.EMPTY;
+      }
       return _.merge(getDefaultProps(), props);
     }
 
-    function taskTimeDrilldownProps(timeSelected, shouldDisplayWebcall) {
+    function taskTimeDrilldownProps(timeSelected, shouldDisplayWebcall, data) {
       var props = {
         description: function () {
           return $translate.instant('taskTime.drilldownDescription', {
@@ -346,6 +355,9 @@
           type: 'number',
           sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
         });
+      }
+      if (!data || data.length === 0) {
+        props.state = ReportConstants.EMPTY;
       }
       return _.merge(getDefaultProps(), props);
     }
