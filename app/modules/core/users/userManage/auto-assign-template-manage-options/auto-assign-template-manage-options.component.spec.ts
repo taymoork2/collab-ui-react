@@ -47,7 +47,7 @@ describe('Component: autoAssignTemplateManageOptions:', () => {
     it('should render a toggle button, a drop-down menu, and three menu items', function () {
       expect(this.view.find('button[cs-dropdown-toggle]')).toExist();
       expect(this.view.find('ul[cs-dropdown-menu]')).toExist();
-      expect(this.view.find('li.menu-item').length).toBe(3);
+      expect(this.view.find('li').length).toBe(3);
       expect(this.view.find(Options.MODIFY)).toExist();
       expect(this.view.find(Options.ACTIVATE)).toExist();
       expect(this.view.find(Options.DEACTIVATE)).not.toExist();

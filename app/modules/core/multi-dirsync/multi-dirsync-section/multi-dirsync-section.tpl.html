@@ -3,10 +3,10 @@
   <div cs-dropdown class="actions-menu" ng-if="!$ctrl.dirsyncUpdating && $ctrl.dirsyncEnabled">
     <button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle icon icon-three-dots" aria-label="globalSettings.multiDirsync.toggleMenu"></button>
     <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
-      <li class="dropdown-item" ng-repeat="dirsync in $ctrl.dirSyncArray track by $index" ng-click="$ctrl.deleteDomain(dirsync)">
+      <li ng-repeat="dirsync in $ctrl.dirSyncArray track by $index" ng-click="$ctrl.deleteDomain(dirsync)">
         <a translate="globalSettings.multiDirsync.turnOff" translate-values="{ domainName: dirsync.domains[0].domainName }"></a>
       </li>
-      <li class="dropdown-item" ng-click="$ctrl.goToSettings()">
+      <li ng-click="$ctrl.goToSettings()">
         <a translate="globalSettings.multiDirsync.seeAllDomains"></a>
       </li>
     </ul>

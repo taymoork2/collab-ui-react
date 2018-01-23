@@ -13,7 +13,7 @@
     <div class="columns medium-7">
       <div class="cs-radio-group">
         <ul>
-          <li>
+          <li class="user-manage__manage-type-list-item">
             <input cs-input type="radio"
               ng-model="umoc.manageType"
               id="org-manual"
@@ -22,7 +22,7 @@
               cs-input-label="{{::'userManage.org.manualLabel'|translate}}"
               cs-input-help-text="{{::'userManage.org.manualDetails'|translate: {maxUsersInManual: umoc.maxUsersInManual} }}">
           </li>
-          <li>
+          <li class="user-manage__manage-type-list-item">
             <input cs-input type="radio"
               ng-model="umoc.manageType"
               id="org-bulk"
@@ -37,7 +37,7 @@
               </cr-user-csv-export>
             </p>
           </li>
-          <li>
+          <li class="user-manage__manage-type-list-item">
             <input cs-input type="radio"
               ng-model="umoc.manageType"
               id="org-advanced"
@@ -46,7 +46,7 @@
               cs-input-label="{{::'userManage.org.advancedLabel'|translate}}"
               cs-input-help-text="{{::'userManage.org.advancedDetails'|translate}}">
           </li>
-          <li>
+          <li class="user-manage__manage-type-list-item">
             <input cs-input type="radio"
               ng-if="umoc.convertableUsers"
               ng-model="umoc.manageType"

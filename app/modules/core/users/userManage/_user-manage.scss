@@ -208,10 +208,8 @@
     flex: 0 0 auto;
   }
 
-  li {
-    &:not(.dropdown-item) {
-      @include vr-spacing(pb, 1);
-    }
+  &__manage-type-list-item {
+    @include vr-spacing(pb, 1);
 
     list-style-type: none;
 

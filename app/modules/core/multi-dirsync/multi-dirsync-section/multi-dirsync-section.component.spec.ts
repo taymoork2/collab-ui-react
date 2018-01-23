@@ -7,7 +7,7 @@ describe('MultiDirsyncSection Component:', function () {
   const DOMAIN_NAME = '#dirsyncEnabled span';
   const DOMAIN_STATUS = '#dirsyncEnabled cs-statusindicator';
   const DROPDOWN_BUTTON = '.dropdown-toggle';
-  const DROPDOWN_MENU = '.dropdown-item a';
+  const DROPDOWN_MENU = 'li a';
 
   beforeEach(function () {
     this.initModules(testModule);
