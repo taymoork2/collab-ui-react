@@ -1,6 +1,5 @@
 import { ManageType } from '../userManage.keys';
 import { OnboardCtrlBoundUIStates } from 'modules/core/users/userAdd/shared/onboard.store';
-import * as FeatureConfig from 'modules/core/featureToggle/features.config';
 import { AutoAssignTemplateModel } from 'modules/core/users/shared/auto-assign-template';
 
 enum State {
@@ -40,7 +39,8 @@ export class UserManageService {
 
   private get featureTogglePromises(): ng.IPromise<{atlasEmailSuppress: boolean}> {
     return this.$q.all({
-      atlasEmailSuppress: this.FeatureToggleService.supports(FeatureConfig.atlasEmailSuppress),
+      // TODO remove GA feature toggle?
+      atlasEmailSuppress: this.FeatureToggleService.atlasEmailSuppressGetStatus(),
     });
   }
 

@@ -4,6 +4,10 @@ import * as analyticsModuleName from 'modules/core/analytics';
 import featureToggleModuleName from 'modules/core/featureToggle';
 import usersSharedAutoAssignTemplateModuleName from 'modules/core/users/shared/auto-assign-template';
 
+export {
+  UserManageService,
+};
+
 export default angular
   .module('core.users.userManage.shared', [
     require('angular-ui-router'),
