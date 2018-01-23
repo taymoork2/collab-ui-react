@@ -39,7 +39,6 @@ describe('CareLocalSettingsCtrl', function () {
     spyOn(this.Authinfo, 'isCareVoice').and.returnValue(isCareVoice);
     spyOn(this, '$interval').and.callThrough();
     spyOn(this.SunlightUtilitiesService, 'removeCareSetupKey').and.callFake(function () { });
-    spyOn(this.FeatureToggleService, 'atlasCareCvcToCdcMigrationGetStatus').and.returnValue(this.$q.resolve(false));
     this.sunlightChatConfigUrl = this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/chat';
     this.aaCSOnboardingUrl = this.HuronConfig.getCesUrl() + '/customers/' + this.Authinfo.getOrgId() + '/config/csOnboardingStatus';
   }
@@ -1162,45 +1161,6 @@ describe('CareLocalSettingsCtrl', function () {
       this.$scope.$apply();
       this.$interval.flush(10001);
       expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
-    });
-  });
-
-  describe('Care Settings - When with cvcToCdcMigration feature flag  ', function () {
-    beforeEach(function () {
-      this.initModules(
-        'Sunlight'
-      );
-    });
-    beforeEach(initDependencies);
-    beforeEach(function () {
-      initSpies.call(this, this.orgId, false, true);
-      initAAFeatureToggleSpies.call(this, false, true);
-      spyOn(this.Authinfo, 'isCareAndCDC').and.returnValue(true);
-      spyOn(this.SunlightConfigService, 'aaOnboard').and.returnValue(this.$q.resolve({ status: 204 }));
-    });
-
-    it('should on board aa when k1 enable and feature flag are true', function () {
-      initController.call(this);
-      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
-      this.controller.csOnboardingStatus = this.constants.status.SUCCESS;
-      this.controller.careSetupDoneByOrgAdmin = false;
-      this.controller.featureToggles.cvcAsCdcFeatureToggle = true;
-
-      this.controller.onboardToCare();
-      this.$scope.$apply();
-      expect(this.controller.aaOnboardingStatus).toBe(this.constants.status.SUCCESS);
-    });
-
-    it('should not on board aa when k1 enable and feature flag are false', function () {
-      initController.call(this);
-      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
-      this.controller.csOnboardingStatus = this.constants.status.SUCCESS;
-      this.controller.careSetupDoneByOrgAdmin = false;
-      this.controller.featureToggles.cvcAsCdcFeatureToggle = false;
-
-      this.controller.onboardToCare();
-      this.$scope.$apply();
-      expect(this.controller.aaOnboardingStatus).toBe(this.constants.status.UNKNOWN);
     });
   });
 });
