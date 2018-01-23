@@ -48,7 +48,7 @@
       };
     }
 
-    function taskIncomingDrilldownProps(timeSelected, shouldDisplayWebcall, data) {
+    function taskIncomingDrilldownProps(timeSelected, shouldDisplayWebcall, setStateToEmpty) {
       var props = {
         description: function () {
           return $translate.instant('taskIncoming.drilldownDescription', {
@@ -118,14 +118,14 @@
           sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
         });
       }
-      if (!data || data.length === 0) {
+      if (setStateToEmpty) {
         props.state = ReportConstants.EMPTY;
       }
 
       return _.merge(getDefaultProps(), props);
     }
 
-    function taskOfferedDrilldownProps(timeSelected, data) {
+    function taskOfferedDrilldownProps(timeSelected, setStateToEmpty) {
       var props = {
         description: function () {
           return $translate.instant('taskOffered.drilldownDescription', {
@@ -200,13 +200,13 @@
           });
         },
       };
-      if (!data || data.length === 0) {
+      if (setStateToEmpty) {
         props.state = ReportConstants.EMPTY;
       }
       return _.merge(getDefaultProps(), props);
     }
 
-    function avgCsatDrilldownProps(timeSelected, shouldDisplayWebcall, data) {
+    function avgCsatDrilldownProps(timeSelected, shouldDisplayWebcall, setStateToEmpty) {
       var props = {
         description: function () {
           return $translate.instant('averageCsat.drilldownDescription', {
@@ -278,13 +278,13 @@
           sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
         });
       }
-      if (!data || data.length === 0) {
+      if (setStateToEmpty) {
         props.state = ReportConstants.EMPTY;
       }
       return _.merge(getDefaultProps(), props);
     }
 
-    function taskTimeDrilldownProps(timeSelected, shouldDisplayWebcall, data) {
+    function taskTimeDrilldownProps(timeSelected, shouldDisplayWebcall, setStateToEmpty) {
       var props = {
         description: function () {
           return $translate.instant('taskTime.drilldownDescription', {
@@ -356,7 +356,7 @@
           sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
         });
       }
-      if (!data || data.length === 0) {
+      if (setStateToEmpty) {
         props.state = ReportConstants.EMPTY;
       }
       return _.merge(getDefaultProps(), props);

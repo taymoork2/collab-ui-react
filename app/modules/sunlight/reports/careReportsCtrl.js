@@ -104,14 +104,14 @@
     vm.mediaTypeSelected = vm.mediaTypeOptions[1];
     vm.callbackFeature = false;
 
-    function setDrillDownProps(webcallDataPresent, data) {
+    function setDrillDownProps(webcallDataPresent, isDataEmpty) {
       vm.taskIncomingDrilldownProps = DrillDownReportProps.taskIncomingDrilldownProps(timeSelected,
-        vm.shouldVideoDrillDownDisplayed(webcallDataPresent.isTotalHandledPresent), data);
-      vm.taskOfferedDrilldownProps = DrillDownReportProps.taskOfferedDrilldownProps(timeSelected, data);
+        vm.shouldVideoDrillDownDisplayed(webcallDataPresent.isTotalHandledPresent), isDataEmpty);
+      vm.taskOfferedDrilldownProps = DrillDownReportProps.taskOfferedDrilldownProps(timeSelected, isDataEmpty);
       vm.avgCsatDrilldownProps = DrillDownReportProps.avgCsatDrilldownProps(timeSelected,
-        vm.shouldVideoDrillDownDisplayed(webcallDataPresent.isAvgCSATPresent), data);
+        vm.shouldVideoDrillDownDisplayed(webcallDataPresent.isAvgCSATPresent), isDataEmpty);
       vm.taskTimeDrilldownProps = DrillDownReportProps.taskTimeDrilldownProps(timeSelected,
-        vm.shouldVideoDrillDownDisplayed(webcallDataPresent.isAvgHandleTimePresent), data);
+        vm.shouldVideoDrillDownDisplayed(webcallDataPresent.isAvgHandleTimePresent), isDataEmpty);
     }
 
     function filtersUpdate() {
@@ -162,6 +162,12 @@
       return tableDataFor.mediaTypeSelected === mediaTypeSelected && tableDataFor.timeSelected === timeSelected;
     }
 
+    function isDataEmpty(data) {
+      if (!data || data.length === 0) {
+        return true;
+      }
+    }
+
     vm.showTable = function (onSuccess, onError, mediaTypeSelected, timeSelected) {
       if (vm.tableDataStatus === SET) {
         onSuccess(vm.tableData);
@@ -173,7 +179,7 @@
       } else {
         vm.tableDataPromise = getTableData(mediaTypeSelected, timeSelected);
         return vm.tableDataPromise.then(function (dataObj) {
-          setDrillDownProps(dataObj.isWebcallDataPresent, dataObj.data);
+          setDrillDownProps(dataObj.isWebcallDataPresent, isDataEmpty(dataObj.data));
           onSuccess(dataObj.data);
         }, onError);
       }

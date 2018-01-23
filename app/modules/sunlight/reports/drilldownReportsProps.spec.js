@@ -22,36 +22,75 @@ describe('DrillDownReportsProps', function () {
     expect(props.table.gridOptions.columnDefs[1].width).toBe('40%');
   }
 
-  it('should get props for Incoming task drill-down', function () {
-    var props = drillDownReportsProps.taskIncomingDrilldownProps({}, true, 'chat');
-    assertTableWithWebcall(props);
-    expect(props.table.gridOptions.columnDefs[1].field).toBe('tasksHandled');
-    expect(props.table.gridOptions.columnDefs[2].field).toBe('webcallTasksHandled');
+  describe('should get props for Incoming task drill-down', function () {
+    it('based on shouldDisplayWebcall value', function () {
+      var props = drillDownReportsProps.taskIncomingDrilldownProps({}, true, 'chat');
+      assertTableWithWebcall(props);
+      expect(props.table.gridOptions.columnDefs[1].field).toBe('tasksHandled');
+      expect(props.table.gridOptions.columnDefs[2].field).toBe('webcallTasksHandled');
 
-    props = drillDownReportsProps.taskIncomingDrilldownProps({}, false, 'chat');
-    assertTableWithOutWebcall(props);
-    expect(props.table.gridOptions.columnDefs[1].field).toBe('tasksHandled');
+      props = drillDownReportsProps.taskIncomingDrilldownProps({}, false, 'chat');
+      assertTableWithOutWebcall(props);
+      expect(props.table.gridOptions.columnDefs[1].field).toBe('tasksHandled');
+    });
+
+    it('based on setStateToEmpty value', function () {
+      var props = drillDownReportsProps.taskIncomingDrilldownProps({}, false, true, 'chat');
+      expect(props.state).toBe('empty');
+
+      props = drillDownReportsProps.taskIncomingDrilldownProps({}, false, false, 'chat');
+      expect(props.state).toBe('set');
+    });
+
   });
 
-  it('should get props for avergae CSAT drill-down', function () {
-    var props = drillDownReportsProps.avgCsatDrilldownProps({}, true, 'chat');
-    assertTableWithWebcall(props);
-    expect(props.table.gridOptions.columnDefs[1].field).toBe('avgCsatScore');
-    expect(props.table.gridOptions.columnDefs[2].field).toBe('avgWebcallCsatScore');
+  describe('should get props for avergae CSAT drill-down', function () {
+    it('based on shouldDisplayWebcall value', function () {
+      var props = drillDownReportsProps.avgCsatDrilldownProps({}, true, 'chat');
+      assertTableWithWebcall(props);
+      expect(props.table.gridOptions.columnDefs[1].field).toBe('avgCsatScore');
+      expect(props.table.gridOptions.columnDefs[2].field).toBe('avgWebcallCsatScore');
 
-    props = drillDownReportsProps.avgCsatDrilldownProps({}, false, 'chat');
-    assertTableWithOutWebcall(props);
-    expect(props.table.gridOptions.columnDefs[1].field).toBe('avgCsatScore');
+      props = drillDownReportsProps.avgCsatDrilldownProps({}, false, 'chat');
+      assertTableWithOutWebcall(props);
+      expect(props.table.gridOptions.columnDefs[1].field).toBe('avgCsatScore');
+    });
+
+    it('based on setStateToEmpty value', function () {
+      var props = drillDownReportsProps.avgCsatDrilldownProps({}, false, true, 'chat');
+      expect(props.state).toBe('empty');
+
+      props = drillDownReportsProps.avgCsatDrilldownProps({}, false, false, 'chat');
+      expect(props.state).toBe('set');
+    });
   });
 
-  it('should get props for avg handle time drill-down', function () {
-    var props = drillDownReportsProps.taskTimeDrilldownProps({}, true, 'chat');
-    assertTableWithWebcall(props);
-    expect(props.table.gridOptions.columnDefs[1].field).toBe('avgHandleTime');
-    expect(props.table.gridOptions.columnDefs[2].field).toBe('avgWebcallHandleTime');
+  describe('should get props for avg handle time drill-down', function () {
+    it('based on shouldDisplayWebcall value', function () {
+      var props = drillDownReportsProps.taskTimeDrilldownProps({}, true, 'chat');
+      assertTableWithWebcall(props);
+      expect(props.table.gridOptions.columnDefs[1].field).toBe('avgHandleTime');
+      expect(props.table.gridOptions.columnDefs[2].field).toBe('avgWebcallHandleTime');
 
-    props = drillDownReportsProps.taskTimeDrilldownProps({}, false, 'chat');
-    assertTableWithOutWebcall(props);
-    expect(props.table.gridOptions.columnDefs[1].field).toBe('avgHandleTime');
+      props = drillDownReportsProps.taskTimeDrilldownProps({}, false, 'chat');
+      assertTableWithOutWebcall(props);
+      expect(props.table.gridOptions.columnDefs[1].field).toBe('avgHandleTime');
+    });
+
+    it('based on setStateToEmpty value', function () {
+      var props = drillDownReportsProps.taskTimeDrilldownProps({}, false, true, 'chat');
+      expect(props.state).toBe('empty');
+
+      props = drillDownReportsProps.taskTimeDrilldownProps({}, false, false, 'chat');
+      expect(props.state).toBe('set');
+    });
+  });
+
+  it('should get props for Offered task drill-down based on setStateToEmpty value', function () {
+    var props = drillDownReportsProps.taskOfferedDrilldownProps({}, true, 'chat');
+    expect(props.state).toBe('empty');
+
+    props = drillDownReportsProps.taskOfferedDrilldownProps({}, false, 'chat');
+    expect(props.state).toBe('set');
   });
 });
