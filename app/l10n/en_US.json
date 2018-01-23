@@ -1363,10 +1363,12 @@
     "manualCodes": {
       "100": "Not Used",
       "200": "Transfer; Modify of non-CI WebEx site",
-      "210": "Create non-CI Site (new)",
+      "210": "Create non-CI Site",
+      "220": "Site does not support auto provisioning",
       "300": "TSP to WEBEX Audio/VoIPOnly; TSP partner to direct customer transfer",
       "400": "WEBEX/VoIPOnly to TSP Audio; Direct customer to partner transfer",
       "450": "Modify of MP audio",
+      "460": "Modify of unrecognized audio type",
       "500": "Manual Branding needed",
       "600": "CCASP Audio Setup, Modify, Cancel, Suspend/Resume, or Audio Change",
       "650": "CCA-Enterprise setup, Cancel",
@@ -1378,6 +1380,10 @@
       "910": "CMR changes for non-CI sites",
       "920": "TSP partner to partner transfer",
       "930": "Session swap for non-CI site",
+      "940": "CMR requires MC",
+      "950": "Down sell",
+      "960": "CMR - data center does not support CMR",
+      "970": "Duplicate primary language and additional language in site",
       "1000": "Messenger"
     }
   },
