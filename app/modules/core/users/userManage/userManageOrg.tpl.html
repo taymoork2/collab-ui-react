@@ -142,6 +142,11 @@
     <div class="columns medium-4 modify-users-section" ng-click="umoc.onNext(umoc.ManageType.MANUAL)">
       <h4 class="modify-users-section--label" translate="userManage.org.manualLabelNew"></h4>
       <h6 class="modify-users-section--details" translate="userManage.org.manualDetailsNew" translate-values="{maxUsersInManual: umoc.maxUsersInManual}"></h6>
+      <a href
+        ng-if="umoc.isDirSyncEnabled"
+        ng-click="umoc.onNext(umoc.ManageType.ADVANCED_DS)"
+        class="h6 modify-users-section--details-link"
+        translate="userManage.org.dirSyncModifyAll"></a>
     </div>
     <div class="columns medium-4 modify-users-section modify-users-section--middle-box"
       ng-click="umoc.onNext(umoc.ManageType.BULK)">

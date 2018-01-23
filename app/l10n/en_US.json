@@ -201,6 +201,7 @@
       "manualLabelNew": "Manually Add or Modify Users",
       "manualDetails": "All you need are email addresses to add and/or edit up to {{maxUsersInManual}} users.",
       "manualDetailsNew": "Add or Modify up to {{maxUsersInManual}} users.",
+      "dirSyncModifyAll": "Modify All Synchronized Users",
       "bulkLabel": "Export and import users with a CSV file",
       "bulkLabelNew": "Bulk Add or Modify Users",
       "bulkDetails": "Best method for adding and editing up to {{maxUsersInCSV}} users at the same time.",

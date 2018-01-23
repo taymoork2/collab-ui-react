@@ -5,6 +5,7 @@
   module.exports = function UserManageDirSyncController($modal, $previousState, $rootScope, $scope, $state, $timeout, $translate, Analytics, Authinfo, AutoAssignTemplateModel, DirSyncService, Notification) {
     var vm = this;
     var eventListeners = [];
+    var transitions;
 
     vm.isUserAdmin = isUserAdmin;
     vm.onInit = onInit;
@@ -33,14 +34,13 @@
     });
 
     //////////////////
-    var rootState;
-
     function onInit() {
       // save state we came from here so we can go back when exiting this flow
-      rootState = $previousState.get().state.name;
+      var rootState = $previousState.get().state.name;
       if (rootState === 'users.manage.emailSuppress') {
         rootState = 'users.manage.picker';
       }
+      transitions = getTransitions(rootState);
 
       eventListeners.push($rootScope.$on('add-user-dirsync-started', function () {
         vm.isBusy = true;
@@ -69,32 +69,52 @@
       };
     }
 
-    var transitions = AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated ? {
-      autoAssignLicenseSummary: {
-        prev: rootState,
-        next: '^.installConnector',
-      },
+    function getTransitions(rootState) {
+      if (!AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated) {
+        return {
+          installConnector: {
+            prev: rootState,
+            next: '^.syncStatus',
+          },
 
-      installConnector: {
-        prev: '^.autoAssignLicenseSummary',
-        last: '^.syncStatus',
-      },
-    } : {
-      installConnector: {
-        prev: rootState,
-        next: '^.syncStatus',
-      },
+          syncStatus: {
+            prev: 'users.manage.picker',
+            next: '^.dirsyncServices',
+          },
 
-      syncStatus: {
-        prev: '^.installConnector',
-        next: '^.dirsyncServices',
-      },
+          dirsyncServices: {
+            prev: '^.syncStatus',
+            last: '^.dirsyncResult',
+          },
+        };
+      }
 
-      dirsyncServices: {
-        prev: '^.syncStatus',
-        last: '^.dirsyncResult',
-      },
-    };
+      if (DirSyncService.isDirSyncEnabled()) {
+        return {
+          syncStatus: {
+            prev: 'users.manage.picker',
+            next: '^.dirsyncServices',
+          },
+
+          dirsyncServices: {
+            prev: '^.syncStatus',
+            last: '^.dirsyncResult',
+          },
+        };
+      }
+
+      return {
+        autoAssignLicenseSummary: {
+          prev: rootState,
+          next: '^.installConnector',
+        },
+
+        installConnector: {
+          prev: '^.autoAssignLicenseSummary',
+          last: '^.syncStatus',
+        },
+      };
+    }
 
     function isUserAdmin() {
       return Authinfo.isUserAdminUser();
@@ -127,11 +147,7 @@
       var curState = getCurrentState();
       var prevState = transitions[curState].prev;
       Analytics.trackAddUsers(Analytics.eventNames.BACK);
-      if (curState === 'syncStatus') {
-        $state.go('users.manage.picker');
-      } else {
-        $state.go(prevState);
-      }
+      $state.go(prevState);
     }
 
     function onNext() {

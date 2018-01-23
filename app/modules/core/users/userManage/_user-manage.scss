@@ -1,4 +1,5 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/typography';
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 .modal-content .center-spinner {
@@ -62,6 +63,10 @@
       @include vr-spacing(mh, 2.5);
 
       color: $gray-base;
+    }
+
+    &--details-link:not(:hover):not(:focus) {
+      color: $anchor-font-color;
     }
 
     &--disabled {
