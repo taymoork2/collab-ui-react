@@ -525,50 +525,6 @@ describe('ClusterService', () => {
     });
   });
 
-  describe('.getClustersByConnectorType', () => {
-    it('should return cached clusters as an array', () => {
-      const response = org([
-        cluster([
-          connector('c_mgmt'),
-          connector('c_ucmc'),
-        ]),
-        cluster([
-          connector('c_mgmt'),
-        ]),
-      ]);
-      $httpBackend
-        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
-        .respond(response);
-
-      ClusterService.fetch();
-      $httpBackend.flush();
-
-      const mgmtClusters = ClusterService.getClustersByConnectorType('c_mgmt');
-      expect(mgmtClusters.length).toBe(2);
-      const ucmcClusters = ClusterService.getClustersByConnectorType('c_ucmc');
-      expect(ucmcClusters.length).toBe(1);
-    });
-
-    it('should sort clusters by name', () => {
-      const response = org([
-        cluster([connector('c_mgmt')], { name: 'Z' }),
-        cluster([connector('c_mgmt')], { name: '👀' }),
-        cluster([connector('c_mgmt')], { name: 'A' }),
-      ]);
-
-      $httpBackend
-        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
-        .respond(response);
-
-      ClusterService.fetch();
-      $httpBackend.flush();
-
-      const mgmtClusters = ClusterService.getClustersByConnectorType('c_mgmt');
-      expect(mgmtClusters[0].name).toBe('A');
-      expect(mgmtClusters[2].name).toBe('👀');
-    });
-  });
-
   describe('.getCluster', () => {
     it('should return a cluster formatted for a certain type', () => {
       const response = org([

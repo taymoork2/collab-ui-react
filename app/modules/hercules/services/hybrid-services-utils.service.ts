@@ -56,7 +56,7 @@ export class HybridServicesUtilsService {
     }
   }
 
-  public serviceId2ConnectorType(serviceId: HybridServiceId): ConnectorType | undefined {
+  public serviceId2ConnectorType(serviceId: HybridServiceId): ConnectorType {
     switch (serviceId) {
       case 'squared-fusion-cal':
         return 'c_cal';
@@ -72,9 +72,9 @@ export class HybridServicesUtilsService {
       case 'spark-hybrid-datasecurity':
         return 'hds_app';
       case 'contact-center-context':
-        // Will it become ['cs_mgmt', 'cs_context']?
         return 'cs_mgmt';
     }
+    throw new Error(`Unknown Service ID: ${serviceId}`);
   }
 
   public serviceId2Icon(serviceId: HybridServiceId): string {

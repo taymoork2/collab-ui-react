@@ -192,16 +192,6 @@ export class ClusterService {
     return this.clusterCache[type][id];
   }
 
-  public getClustersByConnectorType(type: ConnectorType): IExtendedCluster[] {
-    const clusters: IExtendedCluster[] = _.chain(this.clusterCache[type])
-      .values<IExtendedCluster>() // turn them to an array
-      .sortBy((cluster) => {
-        return cluster.name.toLocaleUpperCase();
-      })
-      .value();
-    return clusters;
-  }
-
   // Private methods
   private extractDataFromResponse<T>(response: ng.IHttpResponse<T>) {
     return response.data;

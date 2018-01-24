@@ -4,12 +4,18 @@ describe('Service: ServiceStateChecker', function () {
   beforeEach(angular.mock.module(mockDependencies));
   beforeEach(angular.mock.module('Hercules'));
 
-  var $q, $rootScope, $httpBackend, ClusterService, NotificationService, ServiceStateChecker, USSService, ServiceDescriptorService, DomainManagementService, FeatureToggleService, FmsOrgSettings, HybridServicesExtrasService, Orgservice;
+  var $q, $rootScope, $httpBackend, HybridServicesClusterService, NotificationService, ServiceStateChecker, USSService, ServiceDescriptorService, DomainManagementService, FeatureToggleService, FmsOrgSettings, HybridServicesExtrasService, Orgservice;
 
   var okClusterMockData = {
     id: 0,
     name: 'Tom is Awesome!',
     releaseChannel: 'stable',
+    targetType: 'c_mgmt',
+    provisioning: [{
+      connectorType: 'c_mgmt',
+    }, {
+      connectorType: 'c_cal',
+    }],
     connectors: [{
       connectorType: 'c_mgmt',
       state: 'running',
@@ -33,7 +39,7 @@ describe('Service: ServiceStateChecker', function () {
     });
   }
 
-  beforeEach(inject(function (_$q_, _$httpBackend_, _$rootScope_, _NotificationService_, _ClusterService_, _FeatureToggleService_, _ServiceStateChecker_, _DomainManagementService_, _Orgservice_, _ServiceDescriptorService_, _USSService_, _FmsOrgSettings_, _HybridServicesExtrasService_) {
+  beforeEach(inject(function (_$q_, _$httpBackend_, _$rootScope_, _NotificationService_, _HybridServicesClusterService_, _FeatureToggleService_, _ServiceStateChecker_, _DomainManagementService_, _Orgservice_, _ServiceDescriptorService_, _USSService_, _FmsOrgSettings_, _HybridServicesExtrasService_) {
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     $rootScope = _$rootScope_;
@@ -45,12 +51,11 @@ describe('Service: ServiceStateChecker', function () {
     Orgservice = _Orgservice_;
     ServiceDescriptorService = _ServiceDescriptorService_;
     USSService = _USSService_;
-    ClusterService = _ClusterService_;
+    HybridServicesClusterService = _HybridServicesClusterService_;
     FmsOrgSettings = _FmsOrgSettings_;
 
     $httpBackend.when('GET', 'l10n/en_US.json').respond({});
-    ClusterService.getClustersByConnectorType = jasmine.createSpy('getClustersByConnectorType').and.returnValue([]);
-    ClusterService.subscribe = jasmine.createSpy('subscribe');
+    HybridServicesClusterService.getAll = jasmine.createSpy('getAll').and.returnValue($q.resolve([]));
     DomainManagementService.getVerifiedDomains = jasmine.createSpy('getVerifiedDomains').and.returnValue($q.resolve([{
       domain: 'somedomain',
     }]));
@@ -66,19 +71,22 @@ describe('Service: ServiceStateChecker', function () {
   }));
 
   it('should raise the "fuseNotPerformed" message if there are no connectors', function () {
-    ClusterService.getClustersByConnectorType.and.returnValue([]);
+    HybridServicesClusterService.getAll.and.returnValue($q.resolve([]));
     ServiceStateChecker.checkState('squared-fusion-cal');
+    $rootScope.$digest();
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('fuseNotPerformed');
   });
 
   it('should clear the "fuseNotPerformed" message when fusing a cluster ', function () {
-    ClusterService.getClustersByConnectorType.and.returnValue([]);
+    HybridServicesClusterService.getAll.and.returnValue($q.resolve([]));
     ServiceStateChecker.checkState('squared-fusion-cal');
+    $rootScope.$digest();
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('fuseNotPerformed');
-    ClusterService.getClustersByConnectorType.and.returnValue([okClusterMockData]);
+    HybridServicesClusterService.getAll.and.returnValue($q.resolve([okClusterMockData]));
     ServiceStateChecker.checkState('squared-fusion-cal');
+    $rootScope.$digest();
     expect(NotificationService.getNotificationLength()).toEqual(0);
   });
 
@@ -91,8 +99,9 @@ describe('Service: ServiceStateChecker', function () {
       },
     });
 
-    ClusterService.getClustersByConnectorType.and.returnValue([okClusterMockData]);
+    HybridServicesClusterService.getAll.and.returnValue($q.resolve([okClusterMockData]));
     ServiceStateChecker.checkState('squared-fusion-cal');
+    $rootScope.$digest();
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('squared-fusion-cal:noUsersActivated');
     USSService.getStatusesSummary.and.returnValue({
@@ -101,6 +110,7 @@ describe('Service: ServiceStateChecker', function () {
       },
     });
     ServiceStateChecker.checkState('squared-fusion-cal');
+    $rootScope.$digest();
     expect(NotificationService.getNotificationLength()).toEqual(0);
   });
 
@@ -112,8 +122,9 @@ describe('Service: ServiceStateChecker', function () {
         notActivated: 0,
       },
     });
-    ClusterService.getClustersByConnectorType.and.returnValue([okClusterMockData]);
+    HybridServicesClusterService.getAll.and.returnValue($q.resolve([okClusterMockData]));
     ServiceStateChecker.checkState('squared-fusion-cal');
+    $rootScope.$digest();
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('squared-fusion-cal:userErrors');
     USSService.getStatusesSummary.and.returnValue({
@@ -122,6 +133,7 @@ describe('Service: ServiceStateChecker', function () {
       },
     });
     ServiceStateChecker.checkState('squared-fusion-cal');
+    $rootScope.$digest();
     expect(NotificationService.getNotificationLength()).toEqual(0);
   });
 
@@ -136,7 +148,7 @@ describe('Service: ServiceStateChecker', function () {
 
     USSService.getOrgId.and.returnValue('orgId');
     USSService.getOrg.and.returnValue($q.resolve({}));
-    ClusterService.getClustersByConnectorType.and.returnValue([okClusterMockData]);
+    HybridServicesClusterService.getAll.and.returnValue($q.resolve([okClusterMockData]));
     ServiceDescriptorService.isServiceEnabled.and.returnValue($q.resolve(true));
     ServiceDescriptorService.getServices.and.returnValue($q.resolve(
       [{
@@ -168,7 +180,7 @@ describe('Service: ServiceStateChecker', function () {
     USSService.getOrgId.and.returnValue('orgId');
     USSService.getOrg.and.returnValue($q.resolve({ sipDomain: 'example.com' }));
     ServiceDescriptorService.isServiceEnabled.and.returnValue($q.resolve(true));
-    ClusterService.getClustersByConnectorType.and.returnValue([okClusterMockData]);
+    HybridServicesClusterService.getAll.and.returnValue($q.resolve([okClusterMockData]));
     ServiceDescriptorService.getServices.and.returnValue($q.resolve([{
       id: 'squared-fusion-ec',
       enabled: true,
@@ -229,7 +241,7 @@ describe('Service: ServiceStateChecker', function () {
       }]
     ));
 
-    ClusterService.getClustersByConnectorType.and.returnValue([okClusterMockData]);
+    HybridServicesClusterService.getAll.and.returnValue($q.resolve([okClusterMockData]));
     FeatureToggleService.supports.and.returnValue($q.resolve(true));
     Orgservice.getOrg = function (cb) {
       cb({}, 200);
@@ -265,7 +277,7 @@ describe('Service: ServiceStateChecker', function () {
     ));
 
 
-    ClusterService.getClustersByConnectorType.and.returnValue([okClusterMockData]);
+    HybridServicesClusterService.getAll.and.returnValue($q.resolve([okClusterMockData]));
     FeatureToggleService.supports.and.returnValue($q.resolve(true));
     Orgservice.getOrg = function (cb) {
       cb({}, 200);
@@ -294,7 +306,7 @@ describe('Service: ServiceStateChecker', function () {
 
   it('should add a notification when the cluster release channel does not match the default one', function () {
     FmsOrgSettings.get.and.returnValue($q.resolve({ expresswayClusterReleaseChannel: 'beta' }));
-    ClusterService.getClustersByConnectorType.and.returnValue([okClusterMockData]);
+    HybridServicesClusterService.getAll.and.returnValue($q.resolve([okClusterMockData]));
     FeatureToggleService.supports.and.returnValue($q.resolve(true));
 
     ServiceStateChecker.checkState('squared-fusion-cal');
@@ -310,7 +322,7 @@ describe('Service: ServiceStateChecker', function () {
   });
 
   it('should add and clear service alarms', function () {
-    ClusterService.getClustersByConnectorType.and.returnValue([okClusterMockData]);
+    HybridServicesClusterService.getAll.and.returnValue($q.resolve([okClusterMockData]));
     FeatureToggleService.supports.and.returnValue($q.resolve(false));
 
     HybridServicesExtrasService.getAlarms.and.returnValue($q.resolve([
