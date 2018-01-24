@@ -421,7 +421,7 @@
       var action;
       action = new Action('dynamic', '');
       action.dynamicList = inObject;
-      if (!_.isUndefined(inObject[0].say.voice)) {
+      if (!_.isUndefined(inObject[0].say) && !_.isUndefined(inObject[0].say.voice)) {
         action.setVoice(inObject[0].say.voice);
       }
       menuEntry.addAction(action);
