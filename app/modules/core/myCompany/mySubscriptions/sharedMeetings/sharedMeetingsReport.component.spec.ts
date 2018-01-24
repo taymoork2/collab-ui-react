@@ -189,7 +189,9 @@ describe('Component: sharedMeetingReport', function () {
 
   describe('When the graph API returns an error', function () {
     it('should start with expected defaults', function () {
-      spyOn(this.SharedMeetingsReportService, 'getMaxConcurrentMeetingsData').and.returnValue(this.$q.reject(this.error));
+      spyOn(this.SharedMeetingsReportService, 'getMaxConcurrentMeetingsData').and.callFake(() => {
+        return this.$q.reject(this.error);
+      });
       spyOn(this.SharedMeetingsReportService, 'getDetailedReportData');
       this.initController();
 
@@ -220,7 +222,9 @@ describe('Component: sharedMeetingReport', function () {
 
   describe('When detailed API returns an error', function () {
     it('should start with expected defaults', function () {
-      spyOn(this.SharedMeetingsReportService, 'getDetailedReportData').and.returnValue(this.$q.reject(this.error));
+      spyOn(this.SharedMeetingsReportService, 'getDetailedReportData').and.callFake(() => {
+        return this.$q.reject(this.error);
+      });
       spyOn(this.SharedMeetingsReportService, 'getMaxConcurrentMeetingsData').and.callFake((): any => {
         const APIResponse: any = _.cloneDeep(this.data.APIResponse);
         APIResponse.MaxConcurrentMeetings = this.createMaxMeetings(this.controller.timeSelected.value);

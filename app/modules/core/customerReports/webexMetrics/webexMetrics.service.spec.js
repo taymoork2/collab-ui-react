@@ -112,8 +112,9 @@ describe('WebexMetricsService', function () {
 
   it('check checkWebexAccessiblity', function () {
     spyOn(this.Authinfo, 'isCustomerLaunchedFromPartner').and.returnValue(false);
-    this.WebexMetricsService.checkWebexAccessiblity().then(function (results) {
-      expect(this.WebexMetricsService.isAnySupported(results)).toBeTruthy();
+    var mx = this.WebexMetricsService;
+    mx.checkWebexAccessiblity().then(function (results) {
+      expect(mx.isAnySupported(results)).toBeTruthy();
     });
     this.$httpBackend.flush();
   });

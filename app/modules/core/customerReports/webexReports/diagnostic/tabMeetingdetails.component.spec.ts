@@ -25,6 +25,18 @@ describe('Component: dgcTabMeetingdetail', () => {
               { rxPackets: 134263, txPackets: 123736, audioMos: 3, packetLost: 0, packetBad: 0, timestamp: 1513215075000 },
               { rxPackets: 135110, txPackets: 123089, audioMos: 1, packetLost: 0, packetBad: 0, timestamp: 1513215135000 },
             ],
+            audioQos: {
+              VCS: [
+                { packetLoss: 0, lossRate: 0.06, jitter: 2, timestamp: 1515389351508 },
+                { packetLoss: 0, lossRate: 0.01, jitter: 21, timestamp: 1515389265000 },
+              ],
+            },
+            videoQos: {
+              VCS: [
+                { packetLoss: 0, lossRate: 0.06, jitter: 3, timestamp: 1515389265000 },
+                { packetLoss: 0, lossRate: 0.01, jitter: 22, timestamp: 1515389351508 },
+              ],
+            },
           },
         ],
       },
@@ -109,12 +121,6 @@ describe('Component: dgcTabMeetingdetail', () => {
     this.controller.onChangeQOS('voip');
     this.$timeout.flush();
     expect(this.controller.loading).toBe(false);
-  });
-
-  it('', function () {
-    this.SearchService.getQOS.and.returnValue(this.$q.resolve(this.videoQos));
-    this.SearchService.getUniqueParticipants.and.returnValue(this.$q.resolve(this.uniqueParticipants));
-    initComponent.call(this);
   });
 
   it('Should call Notification.errorResponse when response status is 404', function () {
