@@ -1,8 +1,8 @@
 <multi-step-modal
-  l10n-title="usersPage.addUsers"
+  l10n-title="{{:: $ctrl.convertUsersFlow ? 'usersPage.convertUsers' : 'usersPage.addUsers' }}"
   dismiss="$ctrl.dismissModal()"
   custom-finish="$ctrl.goToUsersPage()"
-  custom-finish-l10n-label="{{:: $ctrl.hasErrors() ? 'usersPage.skipErrorsAndFinish' : 'common.finish' }}">
+  custom-finish-l10n-label="{{:: $ctrl.customFinishL10nLabel }}">
   <cr-add-users-results
     num-added-users="$ctrl.numAddedUsers"
     num-updated-users="$ctrl.numUpdatedUsers"
