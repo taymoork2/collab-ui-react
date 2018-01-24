@@ -17,8 +17,10 @@
         <div ng-if="trial.isExistingOrg()" class="cs-input-group">
           <label class="sub-section__label" translate="partnerHomePage.customerName"></label>
           <input cs-input type="text" disabled="disabled" ng-model="trial.currentTrial.customerName">
-          <label class="sub-section__label" translate="partnerHomePage.customerEmail"></label>
-          <input cs-input type="text" disabled="disabled" ng-model="trial.currentTrial.customerEmail">
+          <div ng-if="!trial.isEditTrial()">
+            <label class="sub-section__label" translate="partnerHomePage.customerEmail"></label>
+            <input cs-input type="text" disabled="disabled" ng-model="trial.currentTrial.customerEmail">
+          </div>
         </div>
         <!-- new customer -->
         <div ng-if="!trial.isExistingOrg()" class="cs-input-group">
