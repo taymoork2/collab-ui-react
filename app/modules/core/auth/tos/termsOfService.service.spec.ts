@@ -1,7 +1,7 @@
 import tosModule from './index';
 
 describe('TOSService', () => {
-  var mockTosModal = {
+  const mockTosModal = {
     dismiss: jasmine.createSpy('dismiss').and.returnValue(true),
   };
 

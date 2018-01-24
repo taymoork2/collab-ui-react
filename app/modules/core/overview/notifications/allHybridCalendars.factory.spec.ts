@@ -123,7 +123,7 @@ describe('OverviewAllHybridCalendarsNotification', () => {
       CloudConnectorService.getService.and.returnValues($q.resolve({ setup: true }), $q.resolve({ setup: true }));
       OverviewAllHybridCalendarsNotification.createNotification($state, CloudConnectorService, HybridServicesClusterService, HybridServicesFlagService, HybridServicesUtilsService).catch(err => {
         expect(err.message).toBe('Could not reach one or more services');
-      })
+      });
       $scope.$apply();
     });
 
@@ -132,7 +132,7 @@ describe('OverviewAllHybridCalendarsNotification', () => {
       CloudConnectorService.getService.and.returnValues($q.reject('ERROR!'), $q.resolve({ setup: true }));
       OverviewAllHybridCalendarsNotification.createNotification($state, CloudConnectorService, HybridServicesClusterService, HybridServicesFlagService, HybridServicesUtilsService).catch(err => {
         expect(err.message).toBe('Could not reach one or more services');
-      })
+      });
       $scope.$apply();
     });
   });

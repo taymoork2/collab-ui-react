@@ -244,7 +244,7 @@ describe('CsvDownloadService', () => {
       this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportINVALID);
       this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true).catch( function (response) {
         expect(response.message).toBe('Unknown status');
-      })
+      });
       this.$httpBackend.flush();
     });
 
@@ -252,7 +252,7 @@ describe('CsvDownloadService', () => {
       this.$httpBackend.expectGET('http://example.com/getUserReport').respond(503);
       this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true).catch( function (response) {
         expect(response.status).toBe(503);
-      })
+      });
       this.$httpBackend.flush();
     });
 

@@ -282,7 +282,6 @@ describe('DeviceBrandingSettingCtrl', () => {
               //perform
               this.controller.applyBranding();
               this.$httpBackend.flush();
-  
             });
 
             it('should set changed to false when done', function () {
@@ -330,7 +329,7 @@ describe('DeviceBrandingSettingCtrl', () => {
 
           describe('with one failing image upload', () => {
             beforeEach(function () {
-              let uploadUrls: string[] = [];
+              const uploadUrls: string[] = [];
               [1, 2, 3].forEach((i) => {
                 //should fetch 3x url
                 const uploadUrl = '8AAFF7C25CCE77B2015CCE77E505001' + i + 'up';

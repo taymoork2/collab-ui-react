@@ -84,7 +84,7 @@ describe('RateLimitInterceptor', () => {
         delay_in_millis: 200,
         orig_http_status: 429,
       });
-    })
+    });
     this.$httpBackend.flush();
 
     this.$httpBackend.expectGET(this.URL).respond(429);
