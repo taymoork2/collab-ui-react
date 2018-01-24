@@ -41,7 +41,6 @@ describe('DrillDownReportsProps', function () {
       props = drillDownReportsProps.taskIncomingDrilldownProps({}, false, false, 'chat');
       expect(props.state).toBe('set');
     });
-
   });
 
   describe('should get props for avergae CSAT drill-down', function () {
