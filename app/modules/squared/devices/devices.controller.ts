@@ -7,6 +7,7 @@ import { FilteredDeviceViewDataSource } from './filtered-deviceview-datasource';
 import { DeviceMatcher } from './device-matcher';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 import { CsdmPlaceService } from 'modules/squared/devices/services/CsdmPlaceService';
+import { CloudConnectorService } from '../../hercules/services/calendar-cloud-connector.service';
 
 export class DevicesLegacyController implements ng.IComponentController {
   public exporting: boolean;
@@ -52,6 +53,7 @@ export class DevicesLegacyController implements ng.IComponentController {
     private Userservice,
     private WizardFactory,
     private CsdmPlaceService: CsdmPlaceService,
+    private CloudConnectorService: CloudConnectorService,
     $scope: ng.IScope,
     $timeout: ng.ITimeoutService,
     AccountOrgService,
@@ -210,10 +212,20 @@ export class DevicesLegacyController implements ng.IComponentController {
         return service.id === 'squared-fusion-uc';
       }).some().value();
     });
+    const office365Promise = this.FeatureToggleService.atlasOffice365SupportGetStatus().then(feature => {
+      if (feature) {
+        return this.CloudConnectorService.getService('squared-fusion-o365').then(service => {
+          this.hybridCalendarEnabledOnOrg = this.hybridCalendarEnabledOnOrg || service.provisioned;
+        });
+      }
+    });
+    const googleCalendarPromise = this.CloudConnectorService.getService('squared-fusion-gcal').then(service => {
+      this.hybridCalendarEnabledOnOrg = this.hybridCalendarEnabledOnOrg || service.provisioned;
+    });
     const multipleDevicesPerPlacePromise = this.FeatureToggleService.csdmMultipleDevicesPerPlaceGetStatus().then(feature => {
       this.csdmMultipleDevicesPerPlaceFeature = feature;
     });
-    this.$q.all([ataPromise, hybridPromise, personalPromise, placeCalendarPromise, anyCalendarEnabledPromise, getLoggedOnUserPromise, multipleDevicesPerPlacePromise]).finally(() => {
+    this.$q.all([ataPromise, hybridPromise, personalPromise, placeCalendarPromise, anyCalendarEnabledPromise, getLoggedOnUserPromise, office365Promise, googleCalendarPromise, multipleDevicesPerPlacePromise]).finally(() => {
       this.addDeviceIsDisabled = false;
     });
 
