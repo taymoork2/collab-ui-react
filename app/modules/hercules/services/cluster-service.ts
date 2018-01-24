@@ -33,7 +33,6 @@ export class ClusterService {
     cs_context: {},
   };
   private hub = this.CsdmHubFactory.create();
-  public subscribe= this.hub.on;
 
   /* @ngInject */
   constructor(
