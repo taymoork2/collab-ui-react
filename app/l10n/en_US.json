@@ -8414,7 +8414,7 @@
       "status": "Status",
       "enabled": "Enabled",
       "disabled": "Disabled",
-      "turnOffDirSync": "Turn off Directory Synchronization",
+      "turnOffDirSync": "Turn off All Directory Synchronizations",
       "turnOnDirSync": "How to Turn On Directory Synchronization",
       "connectorsTitle": "Directory Connectors",
       "deregister": "Deregister",
