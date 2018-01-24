@@ -10,6 +10,7 @@ export enum UserEntitlementName {
   MESSENGER_INTEROP = 'messengerInterop',
   SPARK = 'spark',
   SPARK_ADMIN = 'sparkAdmin',
+  SPARK_HYBRID_IMP_INTEROP = 'sparkHybridImpInterop',
   SPARK_TEST_ACCOUNT = 'sparkTestAccount',
   SQUARED_CALL_INITIATION = 'squaredCallInitiation',
   SQUARED_FUSION_CAL = 'squaredFusionCal',
