@@ -70,8 +70,21 @@ export interface IParsedOnboardedUserResult {
   errorMsg?: string;
 }
 
-export interface IOnboardedUsersAggregateResult {
+export interface IOnboardedUsersResultsErrorsAndWarnings {
   resultList: IParsedOnboardedUserResult[];
+  errors: string[];
+  warnings: string[];
+}
+
+export interface IOnboardedUsersAggregateResult {
+  results: IOnboardedUsersResultsErrorsAndWarnings;
   numUpdatedUsers: number;
   numAddedUsers: number;
+}
+
+export interface IOnboardedUsersAnalyticsProperties {
+  numberOfErrors: number;
+  usersAdded: number;
+  usersUpdated: number;
+  servicesSelected: string[];
 }

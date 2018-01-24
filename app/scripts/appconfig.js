@@ -856,6 +856,7 @@
             controller: 'UserListCtrl',
             params: {
               showAddUsers: {},
+              preSelectedUserId: '',
             },
           })
           .state('users.delete', {
@@ -2352,6 +2353,9 @@
             controller: 'PlacesCtrl',
             controllerAs: 'sc',
             parent: 'main',
+            params: {
+              preSelectedPlaceId: '',
+            },
             data: {
               bodyClass: 'places-page',
             },
