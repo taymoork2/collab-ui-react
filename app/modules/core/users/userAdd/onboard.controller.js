@@ -12,8 +12,8 @@ require('./_user-add.scss');
     var vm = this;
 
     // reset corresponding scope properties in OnboardStore each time this controller initializes
-    OnboardStore.resetForState('users.add.manual');
-    OnboardStore.resetForState('users.convert');
+    var resetOnboardStoreStates = _.get($state, 'params.resetOnboardStoreStates');
+    OnboardStore.resetStatesAsNeeded(resetOnboardStoreStates);
 
     $scope.model = OnboardStore['users.add.manual'].model;
 

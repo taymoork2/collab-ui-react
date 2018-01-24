@@ -26,6 +26,7 @@ export interface IOnboardScopeForUsersConvert {
 }
 
 export enum OnboardCtrlBoundUIStates {
+  ALL = 'all',
   USERS_ADD_MANUAL = 'users.add.manual',
   USERS_CONVERT = 'users.convert',
 }
@@ -38,8 +39,31 @@ export default class OnboardStore {
   /* @ngInject */
   constructor(
   ) {
+    this.resetAllStates();
+  }
+
+  public resetStatesAsNeeded(stateNameOrStateNames: OnboardCtrlBoundUIStates | OnboardCtrlBoundUIStates[]): void {
+    // shorthand aliases
+    const stateName = stateNameOrStateNames as OnboardCtrlBoundUIStates;
+    const stateNames = stateNameOrStateNames as OnboardCtrlBoundUIStates[];
+    if (_.isString(stateName)) {
+      if (stateName === OnboardCtrlBoundUIStates.ALL) {
+        return this.resetAllStates();
+      }
+      return this.resetForState(stateName);
+    }
+    this.resetSomeStates(stateNames);
+  }
+
+  public resetAllStates(): void {
     this.resetForState(OnboardCtrlBoundUIStates.USERS_ADD_MANUAL);
     this.resetForState(OnboardCtrlBoundUIStates.USERS_CONVERT);
+  }
+
+  public resetSomeStates(stateNames: OnboardCtrlBoundUIStates[]): void {
+    _.forEach(stateNames, (stateName) => {
+      this.resetForState(stateName);
+    });
   }
 
   public resetForState(uiStateName: OnboardCtrlBoundUIStates): void {

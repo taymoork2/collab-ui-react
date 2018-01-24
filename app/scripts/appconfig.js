@@ -919,9 +919,11 @@
               },
             },
             resolve: stateParamsToResolveParams({
+              resetOnboardStoreStates: null,
               stateData: null,
             }),
             params: {
+              resetOnboardStoreStates: null,
               stateData: null,
             },
           })
