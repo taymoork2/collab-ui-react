@@ -4,7 +4,7 @@
     <cs-page-sub-header-left>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
-      <button class="btn btn--people" translate="hcs.taas.suiteView.createSuite" ng-click="$ctrl.createSuite()">
+      <button class="btn btn--people" translate="hcs.taas.suiteView.createSuite" ng-click="$ctrl.createSuite()" ng-disabled="true"> <!-- disabled for demos, this isn't fully functioning yet, but want to show it as feature -->
       </button>
       <button class="btn btn--people" translate="hcs.taas.suiteView.resources" ng-click="$ctrl.resources()">
       </button>
@@ -53,7 +53,7 @@
                     <li ng-repeat="test in suite.tests">{{test.name}}</li>
                   </ul>
                   <!--<p ng-repeat="schedule in $ctrl.schedules">Last run: {{schedule.name}}</p>-->
-                  <p><a href="http://10.89.81.76/testreports/?test_category=Basic%20Sanity&test_venue=TaaS%20Joe%20%20Widget%20Shop" target="_blank">Go to results</a></p>
+                  <p><a ng-click="$ctrl.viewResults()" translate="hcs.taas.suiteView.goToResults"></a></p>
               </section>
               <footer class="text-right">
               </footer>

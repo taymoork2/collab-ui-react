@@ -3102,6 +3102,18 @@
               filter: null,
             },
           })
+          .state('taasResults', {
+            parent: 'main',
+            url: '/taasResults',
+            template: '<taas-results-view></taas-results-view>',
+          })
+          .state('taasResultsView.list', {
+            url: '/taasResultsView',
+            template: '<taas-results-view></taas-results-view>',
+            params: {
+              filter: null,
+            },
+          })
           .state('taasServiceManager', {
             abstract: true,
             parent: 'modalSmall',

@@ -108,6 +108,10 @@ export class SuiteViewCtrl implements ng.IComponentController {
     this.$state.go('taasSchedule');
   }
 
+  public viewResults(): void {
+    this.$state.go('taasResults');
+  }
+
   public scheduler(suite: HtmSuite, customerId): void {
     this.$state.go('taasServiceManager.scheduler', { suite: suite, customerId: customerId });
   }

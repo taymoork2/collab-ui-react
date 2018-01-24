@@ -327,6 +327,89 @@ export class HtmTestDefinition {
   }
 }
 
+export interface IRHtmResults {
+  id?: string;
+  name: string;
+  initiator: string;
+  runId: string;
+  pass: number;
+  fail: number;
+  skip: number;
+  error: number;
+  total: number;
+  link: string;
+  suiteName: string;
+  taskName: string;
+  notificationStatus: string;
+  details: string;
+  startTime: number;
+  endTime: number;
+  runLength: number;
+}
+
+export class HtmResults {
+  public id?: string;
+  public name: string;
+  public initiator: string;
+  public runId: string;
+  public pass: number;
+  public fail: number;
+  public skip: number;
+  public error: number;
+  public total: number;
+  public link: string;
+  public suiteName: string;
+  public taskName: string;
+  public notificationStatus: string;
+  public details: string;
+  public startTime: Date;
+  public endTime: Date;
+  public runLength: number;
+
+  constructor(htmResults: IRHtmResults = {
+    name: '',
+    initiator: '',
+    runId: '',
+    pass: 0,
+    fail: 0,
+    skip: 0,
+    error: 0,
+    total: 0,
+    link: '',
+    suiteName: '',
+    taskName: '',
+    notificationStatus: '',
+    details: '',
+    startTime: 0,
+    endTime: 0,
+    runLength: 0,
+  }) {
+    this.id = htmResults.id;
+    this.name = htmResults.name;
+    this.initiator = htmResults.initiator;
+    this.runId = htmResults.runId;
+    this.pass = htmResults.pass;
+    this.fail = htmResults.fail;
+    this.skip = htmResults.skip;
+    this.error = htmResults.error;
+    this.total = htmResults.total;
+    this.link = htmResults.link;
+    this.suiteName = htmResults.suiteName;
+    this.taskName = htmResults.taskName;
+    this.notificationStatus = htmResults.notificationStatus;
+    this.details = htmResults.details;
+    this.runLength = htmResults.runLength;
+    if (htmResults.startTime !== 0) {
+      this.startTime = new Date(0);
+      this.startTime.setUTCSeconds(htmResults.startTime);
+    }
+    if (htmResults.endTime !== 0) {
+      this.endTime = new Date(0);
+      this.endTime.setUTCSeconds(htmResults.endTime);
+    }
+  }
+}
+
 export const SETUP_NOT_COMPLETE = {
   serviceId: '',
   setup: false,

@@ -5,7 +5,7 @@
       </cs-page-sub-header-left>
       <cs-page-sub-header-right>
         <!-- Add Nav tabs here -->
-        <button class="btn btn--people" ng-click="$ctrl.createResource()" translate="hcs.taas.resourcesView.createResource"></button>
+        <button class="btn btn--people" ng-click="$ctrl.createResource()" translate="hcs.taas.resourcesView.createResource" ng-disabled="true"></button> <!-- disabled for demos, this isn't fully functioning yet, but want to show it as feature -->
       </cs-page-sub-header-right>
     </cs-page-sub-header>
     <div ng-if="$ctrl.pageState != $ctrl.STATE_NEW" class="suite-content content-container">

@@ -10377,8 +10377,9 @@
         "results": "Get last test run results",
         "schedule": "Scheduling",
         "successTitle": "Your test is running!",
-        "successRun": "You should go catch it...",
-        "errorRun": "Something went wrong with scheduling"
+        "successRun": "To see results, click the link in the card",
+        "errorRun": "Something went wrong with scheduling",
+        "goToResults": "View Results"
       },
       "taskView": {
         "title": "Tests",
@@ -10414,6 +10415,15 @@
         "instructions": "Use this form to create a resource to be used for testing. Can be an IP phone, Camelot, MMR, etc.",
         "resourceName": "Resource name",
         "resourceDetails": "Resource Details"
+      },
+      "resultView": {
+        "suiteName": "Suite name",
+        "taskName": "Task name",
+        "startTime": "Task start time",
+        "pass": "Passed",
+        "fail": "Failed",
+        "skip": "Skipped",
+        "error": "Errors"
       }
     }
   }
