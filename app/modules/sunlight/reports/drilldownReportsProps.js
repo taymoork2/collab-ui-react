@@ -48,6 +48,12 @@
       };
     }
 
+    function setStateInProps(props, setStateToEmpty) {
+      if (setStateToEmpty) {
+        props.state = ReportConstants.EMPTY;
+      }
+    }
+
     function taskIncomingDrilldownProps(timeSelected, shouldDisplayWebcall, setStateToEmpty) {
       var props = {
         description: function () {
@@ -118,9 +124,7 @@
           sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
         });
       }
-      if (setStateToEmpty) {
-        props.state = ReportConstants.EMPTY;
-      }
+      setStateInProps(props, setStateToEmpty);
 
       return _.merge(getDefaultProps(), props);
     }
@@ -200,9 +204,9 @@
           });
         },
       };
-      if (setStateToEmpty) {
-        props.state = ReportConstants.EMPTY;
-      }
+
+      setStateInProps(props, setStateToEmpty);
+
       return _.merge(getDefaultProps(), props);
     }
 
@@ -278,9 +282,8 @@
           sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
         });
       }
-      if (setStateToEmpty) {
-        props.state = ReportConstants.EMPTY;
-      }
+      setStateInProps(props, setStateToEmpty);
+
       return _.merge(getDefaultProps(), props);
     }
 
@@ -356,9 +359,8 @@
           sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
         });
       }
-      if (setStateToEmpty) {
-        props.state = ReportConstants.EMPTY;
-      }
+      setStateInProps(props, setStateToEmpty);
+
       return _.merge(getDefaultProps(), props);
     }
 
