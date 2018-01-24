@@ -6,7 +6,7 @@
     .controller('AARouteCallMenuCtrl', AARouteCallMenuCtrl);
 
   /* @ngInject */
-  function AARouteCallMenuCtrl($scope, $translate, AAUiModelService, AACommonService, QueueHelperService, $q) {
+  function AARouteCallMenuCtrl($scope, $translate, AutoAttendantHybridCareService, AAUiModelService, AACommonService, QueueHelperService, $q) {
     var vm = this;
     vm.queues = [];
     vm.actionPlaceholder = $translate.instant('autoAttendant.actionPlaceholder');
@@ -14,16 +14,12 @@
     vm.options = [{
       label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
       value: 'routeToUser',
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
-      value: 'routeToVoiceMail',
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
-      value: 'routeToHuntGroup',
-    }, {
+    },
+    {
       label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
       value: 'goto',
-    }, {
+    },
+    {
       label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
       value: 'route',
     }];
@@ -95,6 +91,19 @@
         vm.options.push({
           label: $translate.instant('autoAttendant.phoneMenuRouteToSipEndpoint'),
           value: 'routeToSipEndpoint',
+        });
+      }
+      /* spark call options will be shown in case
+       * 1. hybrid toggle is disabled
+       * 2. hybrid toggle is enabled and customer have spark call configuration */
+      if ((!AACommonService.isHybridEnabledOnOrg()) ||
+        (AACommonService.isHybridEnabledOnOrg() && AutoAttendantHybridCareService.isSparkCallConfigured())) {
+        vm.options.push({
+          label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
+          value: 'routeToVoiceMail',
+        }, {
+          label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
+          value: 'routeToHuntGroup',
         });
       }
     }

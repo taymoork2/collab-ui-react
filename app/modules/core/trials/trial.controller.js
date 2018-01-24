@@ -167,6 +167,8 @@
     });
     vm.setDefaultCountry = setDefaultCountry;
 
+    vm.hasRegisteredContextService = hasRegisteredContextService;
+
     //watch room systems trial 'enabled' for quantity
     $scope.$watch(function () {
       return vm.roomSystemTrial.enabled;
@@ -683,6 +685,10 @@
         hasEnabledAdvanceCareTrial(vm.advanceCareTrial, vmPreset);
     }
 
+    function hasRegisteredContextService(contextFormSection) {
+      return vm.contextTrial.enabled && contextFormSection.$pristine;
+    }
+
     function hasService(service) {
       return service.enabled || service.paid > 0;
     }
@@ -968,11 +974,18 @@
       //edit
       var hasValueChanged = !isExistingOrg() ? vm.contextTrial.enabled : (vm.preset.context !== vm.contextTrial.enabled);
       var errorAddResponse = isNewTrial() ? 'trialModal.startTrialContextServiceError' : 'trialModal.editTrialContextServiceEnableError';
+      var orgAlreadyRegistered = 'ORGANIZATION_REGISTERED_USING_API';
+
       if (!hasValueChanged) {
         return;
       }
       if (vm.contextTrial.enabled) {
         return TrialContextService.addService(customerOrgId).catch(function (response) {
+          // ignore only the "org already registered" error
+          if (_.get(response, 'data.error.statusText') === orgAlreadyRegistered) {
+            return;
+          }
+
           Notification.errorResponse(response, errorAddResponse);
           return $q.reject(response);
         });

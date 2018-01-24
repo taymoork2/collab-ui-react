@@ -5,7 +5,7 @@ describe('UserManageModalPickerController', function () {
 
   function init() {
     this.initModules('Core', 'Huron', 'Sunlight');
-    this.injectDependencies('$scope', '$rootScope', '$controller', '$q', '$state', 'DirSyncService');
+    this.injectDependencies('$scope', '$rootScope', '$controller', '$q', '$state', 'DirSyncService', 'FeatureToggleService');
     initDependencySpies.apply(this);
   }
 
@@ -13,6 +13,7 @@ describe('UserManageModalPickerController', function () {
     spyOn(this.$state, 'go');
     spyOn(this.DirSyncService, 'requiresRefresh').and.returnValue(false);
     spyOn(this.DirSyncService, 'refreshStatus').and.returnValue(this.$q.resolve());
+    spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(false));
   }
 
   function initController() {

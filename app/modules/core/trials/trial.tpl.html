@@ -307,7 +307,9 @@
         <h4 translate="partnerHomePage.nonTrialServices"></h4>
       </div>
       <div class="section__content">
+         <!-- we don't support de-registering Context Service, so grey out checkbox if it is enabled -->
          <input type="checkbox" cs-input
+            ng-disabled="trial.hasRegisteredContextService(trialForm.contextTrial)"
             ng-model="trial.contextTrial.enabled"
             id="contextTrial" name="contextTrial"
             cs-input-label="{{::'trials.context' | translate}}">

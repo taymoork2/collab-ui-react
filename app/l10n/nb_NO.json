@@ -8824,7 +8824,7 @@
       "title": "Token og instruksjoner",
       "close": "Lukk",
       "instructions": "du må kopiere og lime inn dette DNS-verifikasjonstoken på TXT-registreringsseksjonen for å bevise at du eier domenet:",
-      "howto": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Finn ut mer</a> om hvordan du kan oppgi et DNS verifikasjonstoken.",
+      "howto": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Finn ut mer</a> om hvordan du kan oppgi et DNS verifikasjonstoken.",
       "beforeVerify": "Før du verifiserer"
     }
   },

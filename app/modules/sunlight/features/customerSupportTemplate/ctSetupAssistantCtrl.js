@@ -341,16 +341,22 @@
       welcomeMessage: $translate.instant('careChatTpl.virtualAssistantWelcomeMessage'),
     };
 
+    var defaultExpertVirtualAssistantConfig = {
+      id: '',
+      name: '',
+    };
+
     vm.selectedVA = {
       id: '',
       name: '',
     };
 
+    vm.selectedEVA = _.cloneDeep(defaultExpertVirtualAssistantConfig);
+
     vm.vaSelectionCommit = function () {
       vm.template.configuration.virtualAssistant.config.id = vm.selectedVA.id;
       vm.template.configuration.virtualAssistant.config.name = vm.selectedVA.name;
     };
-
 
     /* Templates */
     var defaultChatTemplate = {
@@ -376,6 +382,7 @@
           },
         },
         routingLabel: SunlightConstantsService.routingLabels.AGENT,
+        expertVirtualAssistant: _.cloneDeep(defaultExpertVirtualAssistantConfig),
         virtualAssistant: _.cloneDeep(defaultVirtualAssistantConfig),
         pages: {
           customerInformation: {
@@ -705,6 +712,7 @@
           },
         },
         routingLabel: SunlightConstantsService.routingLabels.AGENT,
+        expertVirtualAssistant: _.cloneDeep(defaultExpertVirtualAssistantConfig),
         virtualAssistant: _.cloneDeep(defaultVirtualAssistantConfig),
         pages: {
           customerInformationChat: {
@@ -1379,8 +1387,8 @@
     function isExpertEscalationSelected() {
       // if eva is configured AND escalation to expert selected
       return !(vm.selectedMediaType === 'chatPlusCallback' && vm.cardMode === 'callback') &&
-        vm.evaConfig.isEvaFlagEnabled && vm.evaConfig.isEvaConfigured && vm.template.configuration.routingLabel &&
-        _.includes(SunlightConstantsService.evaOptions, vm.template.configuration.routingLabel);
+          vm.evaConfig.isEvaFlagEnabled && vm.evaConfig.isEvaConfigured && vm.template.configuration.routingLabel &&
+          _.includes(SunlightConstantsService.evaOptions, vm.template.configuration.routingLabel);
     }
 
     function checkIfTypeCategory(attributes) {
@@ -1389,6 +1397,15 @@
       });
       return isCategoryType;
     }
+
+    vm.onEscalationOptionChange = function (escalationType) {
+      var isExpertIncluded = _.includes(SunlightConstantsService.evaOptions, escalationType);
+      if (isExpertIncluded) {
+        vm.template.configuration.expertVirtualAssistant = vm.selectedEVA;
+      } else {
+        vm.template.configuration.expertVirtualAssistant = _.cloneDeep(defaultExpertVirtualAssistantConfig);
+      }
+    };
 
     function setRequiredValueChat(radioButtonValue) {
       var defaultChatAttributes = defaultChatTemplate.configuration.pages.customerInformation.fields.field3.attributes;
@@ -1923,6 +1940,8 @@
           });
           var evaForOrg = data.items[0]; // first eva assuming only one as atlas doesnt allow
           if (isEvaObjectValid(evaForOrg)) {
+            vm.selectedEVA.id = evaForOrg.id;
+            vm.selectedEVA.name = evaForOrg.name;
             var listSpaces = EvaService.getExpertAssistantSpaces(evaForOrg.id, evaForOrg.orgId);
             getEvaSpaceDetailsText(listSpaces, evaForOrg);
           } else {

@@ -132,13 +132,22 @@ export class PstnWizardCtrl implements ng.IComponentController {
     if (!this.ftHI1635) {
       return true;
     }
-    //If false, means contract has not been sent
+    //If a Standard number is in the order cart allow the OrderForm flow to be true
+    //Nomally the showContractUnSigned() will be false.
+    if (this.orderCart && this.orderCart.length > 0) {
+      return true;
+    }
+    //If the customer doesn't exist (false), that means contract has not been sent
     return this.PstnModel.isCustomerExists();
   }
 
   public showContractUnSigned(): boolean {
     if (!this.ftHI1635) {
       return false;
+    }
+    //Anything but the signed state and at least 1 order in the cart should show the unsigned message.
+    if (this.orderCart && this.orderCart.length > 0 && this.PstnModel.getContractStatus() !== ContractStatus.Signed) {
+      return true;
     }
     return this.PstnModel.getContractStatus() === ContractStatus.UnSigned;
   }

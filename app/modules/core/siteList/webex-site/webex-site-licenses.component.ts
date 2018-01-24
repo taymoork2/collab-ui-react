@@ -1,4 +1,4 @@
-import { IWebExSite, IConferenceLicense, IPendingLicense, IWebexSiteDetail } from 'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
+import { IWebExSite, IPendingLicense } from 'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
 import { WebExSite } from 'modules/core/setupWizard/meeting-settings/meeting-settings.model';
 import { Config } from 'modules/core/config/config';
 class WebexSiteLicensesCtrl implements ng.IComponentController {
@@ -13,8 +13,8 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
   public conferenceLicensesInSubscription;
   public licenseDistributionForm: ng.IFormController;
   public sitesArray: IWebExSite[];
+  public existingWebexSites: WebExSite[];
   public distributedLicensesArray: IWebExSite[][];
-  public distributedLicensesPayload;
   public centerDetails: { centerType: string; volume: number; }[];
   public isHideDescription: boolean;
   public onDistributionChange: Function;
@@ -48,15 +48,8 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
 
   public $onInit(): void {
     if (this.sitesArray && this.conferenceLicensesInSubscription) {
-      let existingWebexSites;
-      //distributedLicensesPayload has previously saved data
-      if (!_.isEmpty(this.distributedLicensesPayload)) {
-        existingWebexSites = this.getWebexSitesFromLicenseDistribution(this.distributedLicensesPayload);
-      } else {
-        existingWebexSites = this.getExistingWebexSites(this.conferenceLicensesInSubscription);
-      }
       this.centerDetails = this.getWebExMeetingsLicenseTypeDetails(this.conferenceLicensesInSubscription);
-      this.constructDistributedSitesArray(existingWebexSites);
+      this.constructDistributedSitesArray();
     }
   }
 
@@ -66,30 +59,30 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
     }
   }
 
-  public constructDistributedSitesArray(existingWebexSites): void {
+  public constructDistributedSitesArray(): void {
     //if it doesn't exist build
     if (_.isEmpty(this.distributedLicensesArray)) {
       this.distributedLicensesArray = _.map(this.sitesArray, (site: IWebExSite) => {
         return _.map(this.centerDetails, (center) => {
           return new WebExSite({
             centerType: center.centerType,
-            quantity: site.quantity || 0,
+            quantity: 0,
             siteUrl: site.siteUrl,
             timezone: site.timezone,
             setupType: site.setupType,
           });
         });
       });
-      this.mergeExistingWebexSites(existingWebexSites);
+      this.addExistingLicenseCounts();
     }
   }
 
-  private mergeExistingWebexSites(existingWebexSites): void {
+  private addExistingLicenseCounts(): void {
     _.forEach(this.distributedLicensesArray, (sitesArray) => {
-      _.forEach(existingWebexSites, (siteObj) => {
-        const site = _.find(sitesArray, { siteUrl: siteObj.siteUrl, centerType: siteObj.centerType });
-        if (_.has(site, 'quantity')) {
-          site.quantity = siteObj.quantity;
+      _.forEach(sitesArray, (site) => {
+        const matchingExistingSiteAndCenterType = _.find(this.existingWebexSites, { siteUrl: site.siteUrl, centerType: site.centerType });
+        if (matchingExistingSiteAndCenterType) {
+          site.quantity = matchingExistingSiteAndCenterType.quantity;
         }
       });
     });
@@ -182,26 +175,6 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
     });
   }
 
-  private getExistingWebexSites(confServicesInActingSubscription): IWebExSite[] {
-    return _.map(confServicesInActingSubscription, (license: IConferenceLicense) => {
-      return {
-        siteUrl: _.replace(_.get<string>(license, 'siteUrl'), this.Config.siteDomainUrl.webexUrl, ''),
-        quantity: license.volume,
-        centerType: license.offerName,
-      };
-    });
-  }
-
-  private getWebexSitesFromLicenseDistribution(sitesInDistributionArray): IWebExSite[] {
-    return _.map(sitesInDistributionArray, (site: IWebexSiteDetail) => {
-      return {
-        siteUrl: _.replace(_.get<string>(site, 'siteUrl'), this.Config.siteDomainUrl.webexUrl, ''),
-        quantity: site.quantity,
-        centerType: site.centerType,
-      };
-    });
-  }
-
   private constructWebexLicensesPayload(distributedLicensesArray): WebExSite[] {
     const webexSiteDetailsList: WebExSite[] = [];
     const distributedLicenses = _.flatten(distributedLicensesArray);
@@ -252,8 +225,8 @@ export class WebexSiteLicensesComponent implements ng.IComponentOptions {
   public template = require('./webex-site-licenses.html');
   public bindings = {
     sitesArray: '<',
+    existingWebexSites: '<',
     conferenceLicensesInSubscription: '<',
-    distributedLicensesPayload: '<?',
     isHideDescription: '<?',
     onDistributionChange: '&',
     onSendTracking: '&?',

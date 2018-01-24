@@ -1,4 +1,4 @@
-import { IFMSOrganization, ICluster, IConnector, IExtendedCluster, IExtendedConnector, ConnectorType, IClusterAggregate, IConnectorAlarm, IClusterPropertySet, IExtendedConnectorAlarm, IExtendedClusterFusion, IClusterWithExtendedConnectors, ConnectorMaintenanceMode } from 'modules/hercules/hybrid-services.types';
+import { IFMSOrganization, ICluster, IConnector, IExtendedCluster, IExtendedConnector, ConnectorType, IClusterAggregate, IConnectorAlarm, IExtendedConnectorAlarm, IExtendedClusterFusion, IClusterWithExtendedConnectors, ConnectorMaintenanceMode } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterStatesService, IConnectorStateDetails } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 import { CsdmPollerFactory as CsdmPoller, CsdmHubFactory } from 'modules/squared/devices/services/CsdmPoller';
 import { CsdmCacheUpdater } from 'modules/squared/devices/services/CsdmCacheUpdater';
@@ -33,7 +33,6 @@ export class ClusterService {
     cs_context: {},
   };
   private hub = this.CsdmHubFactory.create();
-  private poller = this.CsdmPoller.create(this.fetch.bind(this), this.hub);
   public subscribe= this.hub.on;
 
   /* @ngInject */
@@ -47,7 +46,9 @@ export class ClusterService {
     private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private UrlConfig,
-  ) {}
+  ) {
+    this.CsdmPoller.create(this.fetch.bind(this), this.hub);
+  }
 
   private addExtendedPropertiesToClusters(clusters: IClusterWithExtendedConnectors[]): ng.IPromise<IExtendedClusterFusion[]> {
     return this.HybridServicesClusterService.addExtendedPropertiesToClusters(clusters)
@@ -161,7 +162,7 @@ export class ClusterService {
       });
   }
 
-  public mergeRunningState(connectors: IConnector[], type: ConnectorType): IStateSeverity {
+  public _mergeRunningState(connectors: IConnector[], type: ConnectorType): IStateSeverity {
     if (_.size(connectors) === 0 &&
       (type === 'hds_app' || type === 'mf_mgmt')) {
       return {
@@ -199,41 +200,6 @@ export class ClusterService {
       })
       .value();
     return clusters;
-  }
-
-  public upgradeSoftware(clusterId: string, connectorType: ConnectorType) {
-    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}/provisioning/actions/update/invoke?connectorType=${connectorType}&forced=true`;
-    return this.$http.post(url, '')
-      .then(this.extractDataFromResponse)
-      .then((data) => {
-        this.poller.forceAction();
-        return data;
-      });
-  }
-
-  public deleteHost(serial: string) {
-    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/hosts/${serial}`;
-    return this.$http.delete(url)
-      .then(this.extractDataFromResponse)
-      .then((data) => {
-        this.poller.forceAction();
-        return data;
-      });
-  }
-
-  public getProperties(clusterId: string): ng.IPromise<IClusterPropertySet> {
-    const url = `${this.UrlConfig.getHerculesUrl()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}/properties`;
-    return this.$http.get(url)
-      .then(this.extractDataFromResponse);
-  }
-
-  public setProperties(clusterId: string, payload: IClusterPropertySet): ng.IPromise<{}> {
-    const url = `${this.UrlConfig.getHerculesUrl()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}/properties`;
-    return this.$http.post(url, payload)
-      .then((res) => {
-        this.HybridServicesClusterService.clearCache();
-        return res;
-      });
   }
 
   // Private methods
@@ -356,7 +322,7 @@ export class ClusterService {
     const upgradeAvailable = provisioning && _.some(cluster.connectors, (connector) => {
       return provisioning.availableVersion && connector.runningVersion !== provisioning.availableVersion;
     });
-    const mergedState = this.mergeRunningState(connectors, type).state;
+    const mergedState = this._mergeRunningState(connectors, type).state;
     const hosts = _.chain(connectors)
       .map<string>('hostname')
       .uniq()

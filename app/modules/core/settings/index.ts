@@ -7,7 +7,7 @@ import emailModule from './email';
 import brandingModule from './branding';
 import domainsModule from './domain';
 import dirSyncModule from './dirsync';
-import multiDirSyncModule from './multi-dirsync-setting';
+import multiDirSyncModule from 'modules/core/multi-dirsync';
 import privacySectionModule from './privacySection';
 import retentionModule from './retention';
 import securityModule from './security';
