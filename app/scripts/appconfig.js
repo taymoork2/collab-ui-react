@@ -915,8 +915,14 @@
           .state('users.add.manual', {
             views: {
               'usersAdd@users.add': {
-                template: '<manual-add-users-modal dismiss="$dismiss()"></manual-add-users-modal>',
+                template: '<manual-add-users-modal state-data="$resolve.stateData" dismiss="$dismiss()"></manual-add-users-modal>',
               },
+            },
+            resolve: stateParamsToResolveParams({
+              stateData: null,
+            }),
+            params: {
+              stateData: null,
             },
           })
           .state('users.add.services', {
@@ -1065,7 +1071,11 @@
             },
           })
           .state('users.manage.onboard-summary-for-auto-assign-modal', {
-            template: '<onboard-summary-for-auto-assign-modal dismiss="$dismiss()"></onboard-summary-for-auto-assign-modal>',
+            template: '<onboard-summary-for-auto-assign-modal dismiss="$dismiss()" state-data="$resolve.stateData" user-list="$resolve.userList"></onboard-summary-for-auto-assign-modal>',
+            resolve: stateParamsToResolveParams({
+              stateData: null,
+              userList: null,
+            }),
             params: {
               stateData: null,
               userList: null,
