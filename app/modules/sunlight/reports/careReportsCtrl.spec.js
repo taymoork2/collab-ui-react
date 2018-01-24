@@ -469,7 +469,7 @@ describe('Controller: Care Reports Controller', function () {
 
     it('selectced mediaType is non chat', function () {
       setInitFlags(true, 'callback');
-      expect(controller.shouldVideoDrillDownDisplayed(false)).toBe(false);
+      expect(controller.shouldVideoDrillDownBeDisplayed(false)).toBe(false);
       controller.shouldDisplayBreakdown({});
       expect(controller.showChartWithoutBreakdown.taskIncoming).toBe(true);
       expect(controller.showChartWithoutBreakdown.avgCsat).toBe(true);
@@ -478,7 +478,7 @@ describe('Controller: Care Reports Controller', function () {
 
     it('selectced mediaType chat, chat-to-video is enabled and data is present', function () {
       setInitFlags(true, 'chat');
-      expect(controller.shouldVideoDrillDownDisplayed(true)).toBe(true);
+      expect(controller.shouldVideoDrillDownBeDisplayed(true)).toBe(true);
       controller.shouldDisplayBreakdown({
         isNumHandledTaskPresent: true, isAvgCSATPresent: true, isAvgHandleTimePresent: true,
       });
@@ -489,7 +489,7 @@ describe('Controller: Care Reports Controller', function () {
 
     it('selectced mediaType chat, chat-to-video is enabled and data is not present', function () {
       setInitFlags(true, 'chat');
-      expect(controller.shouldVideoDrillDownDisplayed(false)).toBe(true);
+      expect(controller.shouldVideoDrillDownBeDisplayed(false)).toBe(true);
       controller.shouldDisplayBreakdown({
         isNumHandledTaskPresent: false, isAvgCSATPresent: false, isAvgHandleTimePresent: false,
       });
@@ -500,7 +500,7 @@ describe('Controller: Care Reports Controller', function () {
 
     it('selectced mediaType chat, chat-to-video is disabled and data is not present', function () {
       setInitFlags(false, 'chat');
-      expect(controller.shouldVideoDrillDownDisplayed(false)).toBe(false);
+      expect(controller.shouldVideoDrillDownBeDisplayed(false)).toBe(false);
       controller.shouldDisplayBreakdown({
         isNumHandledTaskPresent: false, isAvgCSATPresent: false, isAvgHandleTimePresent: false,
       });
@@ -511,7 +511,7 @@ describe('Controller: Care Reports Controller', function () {
 
     it('selectced mediaType chat, chat-to-video is disabled and data is present', function () {
       setInitFlags(false, 'chat');
-      expect(controller.shouldVideoDrillDownDisplayed(true)).toBe(true);
+      expect(controller.shouldVideoDrillDownBeDisplayed(true)).toBe(true);
       controller.shouldDisplayBreakdown({
         isNumHandledTaskPresent: true, isAvgCSATPresent: true, isAvgHandleTimePresent: true,
       });
