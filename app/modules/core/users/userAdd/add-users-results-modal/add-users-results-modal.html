@@ -1,0 +1,11 @@
+<multi-step-modal
+  l10n-title="usersPage.addUsers"
+  dismiss="$ctrl.dismissModal()"
+  custom-finish="$ctrl.goToUsersPage()"
+  custom-finish-l10n-label="{{:: $ctrl.hasErrors() ? 'usersPage.skipErrorsAndFinish' : 'common.finish' }}">
+  <cr-add-users-results
+    num-added-users="$ctrl.numAddedUsers"
+    num-updated-users="$ctrl.numUpdatedUsers"
+    results="$ctrl.results"
+    ></cr-add-users-results>
+</multi-step-modal>
