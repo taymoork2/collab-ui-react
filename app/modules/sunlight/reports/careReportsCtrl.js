@@ -79,7 +79,7 @@
       vm.showChartWithoutBreakdown.taskTime = isVideoDisabledOrChatNotSelected || (vm.isVideoCallEnabled === false && webcallStats.isAvgHandleTimePresent === false);
     };
 
-    vm.shouldVideoDrillDownDisplayed = function (isDataPresent) {
+    vm.shouldVideoDrillDownBeDisplayed = function (isDataPresent) {
       var selectedMediaType = vm.mediaTypeSelected.name;
       return vm.isVideoFeatureEnabled && selectedMediaType === 'chat' && (vm.isVideoCallEnabled || isDataPresent);
     };
@@ -106,12 +106,12 @@
 
     function setDrillDownProps(webcallDataPresent, isDataEmpty) {
       vm.taskIncomingDrilldownProps = DrillDownReportProps.taskIncomingDrilldownProps(timeSelected,
-        vm.shouldVideoDrillDownDisplayed(webcallDataPresent.isTotalHandledPresent), isDataEmpty);
+        vm.shouldVideoDrillDownBeDisplayed(webcallDataPresent.isTotalHandledPresent), isDataEmpty);
       vm.taskOfferedDrilldownProps = DrillDownReportProps.taskOfferedDrilldownProps(timeSelected, isDataEmpty);
       vm.avgCsatDrilldownProps = DrillDownReportProps.avgCsatDrilldownProps(timeSelected,
-        vm.shouldVideoDrillDownDisplayed(webcallDataPresent.isAvgCSATPresent), isDataEmpty);
+        vm.shouldVideoDrillDownBeDisplayed(webcallDataPresent.isAvgCSATPresent), isDataEmpty);
       vm.taskTimeDrilldownProps = DrillDownReportProps.taskTimeDrilldownProps(timeSelected,
-        vm.shouldVideoDrillDownDisplayed(webcallDataPresent.isAvgHandleTimePresent), isDataEmpty);
+        vm.shouldVideoDrillDownBeDisplayed(webcallDataPresent.isAvgHandleTimePresent), isDataEmpty);
     }
 
     function filtersUpdate() {
