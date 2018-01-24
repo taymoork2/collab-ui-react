@@ -370,6 +370,7 @@ header > p > span.badge {
       @include vr-spacing(pr, 1.5);
       @include vr-spacing(pl, 1.5);
 
+      margin-bottom: auto;
       text-align: left;
     }
   }
