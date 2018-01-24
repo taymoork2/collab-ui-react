@@ -2,14 +2,24 @@
 
   <div class="header-image">
     <div class="device-img" ng-if="deviceOverview.currentDevice.accountType === 'MACHINE'">
-      <img src="/images/devices-hi/space_avatar.png" />
+      <img src="/images/devices-hi/space_avatar.png" ng-if="deviceOverview.jumpToAccount" ng-click="deviceOverview.goToAccount()" />
+      <img src="/images/devices-hi/space_avatar.png" ng-if="!deviceOverview.jumpToAccount" />
     </div>
     <div class="user-img" ng-if="deviceOverview.currentDevice.accountType === 'PERSON'">
-      <span ng-if="!deviceOverview.currentDevice.photos">
-        <i class="icon icon-user"></i>
-      </span>
-      <img ng-if="deviceOverview.currentDevice.photos"
-           ng-src="{{deviceOverview.currentDevice.photos[1].url}}" />
+      <div ng-if="deviceOverview.jumpToAccount" ng-click="deviceOverview.goToAccount()">
+        <span ng-if="!deviceOverview.currentDevice.photos">
+          <i class="icon icon-user"></i>
+        </span>
+        <img ng-if="deviceOverview.currentDevice.photos"
+             ng-src="{{deviceOverview.currentDevice.photos[1].url}}" />
+      </div>
+      <div ng-if="!deviceOverview.jumpToAccount">
+        <span ng-if="!deviceOverview.currentDevice.photos">
+          <i class="icon icon-user"></i>
+        </span>
+        <img ng-if="deviceOverview.currentDevice.photos"
+             ng-src="{{deviceOverview.currentDevice.photos[1].url}}" />
+      </div>
     </div>
   </div>
 
@@ -18,9 +28,17 @@
       <div class="header-title">
         <span
           id="header-title"
-          title="{{deviceOverview.currentDevice.displayName}}">
+          title="{{deviceOverview.currentDevice.displayName}}"
+          ng-if="deviceOverview.jumpToAccount"
+          ng-click="deviceOverview.goToAccount()">
           {{deviceOverview.currentDevice.displayName}}
-      </span>
+        </span>
+        <span
+          id="header-title"
+          title="{{deviceOverview.currentDevice.displayName}}"
+          ng-if="!deviceOverview.jumpToAccount">
+          {{deviceOverview.currentDevice.displayName}}
+        </span>
       </div>
     </div>
   </div>

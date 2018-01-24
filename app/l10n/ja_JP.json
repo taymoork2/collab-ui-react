@@ -8824,7 +8824,7 @@
       "title": "トークンと手順",
       "close": "閉じる",
       "instructions": "この DNS 確認トークンをコピーし、これを TXT レコードセクションに貼り付けて、このドメインを所有していることを証明します:",
-      "howto": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>DNS 検証トークンの入力方法</a>の詳細をご覧ください。",
+      "howto": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>DNS 検証トークンの入力方法</a>の詳細をご覧ください。",
       "beforeVerify": "確認する前に"
     }
   },
