@@ -8824,7 +8824,7 @@
       "title": "Token i instrukcje",
       "close": "Zamknij",
       "instructions": "Aby udowodnić, że ta domena należy do Ciebie, w sekcji rekordu TXT musisz wkleić token weryfikacji DNS:",
-      "howto": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Dowiedz się,</a> jak wprowadzić token weryfikacji DNS.",
+      "howto": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Dowiedz się,</a> jak wprowadzić token weryfikacji DNS.",
       "beforeVerify": "Zanim zweryfikujesz"
     }
   },

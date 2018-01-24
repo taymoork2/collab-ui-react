@@ -7,6 +7,7 @@ import { PlaceCallOverviewService, PlaceCallOverviewData } from 'modules/squared
 import { LocationsService, LocationListItem, MEMBER_TYPE_PLACE } from 'modules/call/locations';
 import { IPreferredLanguageFeature, PreferredLanguageFeature, IPreferredLanugageOption } from 'modules/huron/preferredLanguage';
 import { Notification } from 'modules/core/notifications';
+import { CloudConnectorService } from '../../../hercules/services/calendar-cloud-connector.service';
 
 interface IDevice {
 }
@@ -60,6 +61,7 @@ class PlaceOverview implements ng.IComponentController {
     public LocationsService: LocationsService,
     private PlaceCallOverviewService: PlaceCallOverviewService,
     private Notification: Notification,
+    private CloudConnectorService: CloudConnectorService,
   ) {
     this.csdmHuronUserDeviceService = this.CsdmHuronUserDeviceService.create(this.$stateParams.currentPlace.cisUuid);
     CsdmDataModelService.reloadItem(this.$stateParams.currentPlace).then((updatedPlace) => this.displayPlace(updatedPlace));
@@ -203,12 +205,22 @@ class PlaceOverview implements ng.IComponentController {
       this.csdmHybridCalendarFeature = feature;
     });
     this.ServiceDescriptorService.getServices().then(services => {
-      this.hybridCalendarEnabledOnOrg = _.chain(this.ServiceDescriptorService.filterEnabledServices(services)).filter(service => {
+      this.hybridCalendarEnabledOnOrg = this.hybridCalendarEnabledOnOrg || _.chain(this.ServiceDescriptorService.filterEnabledServices(services)).filter(service => {
         return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
       }).some().value();
       this.hybridCallEnabledOnOrg = _.chain(this.ServiceDescriptorService.filterEnabledServices(services)).filter(service => {
         return service.id === 'squared-fusion-uc';
       }).some().value();
+    });
+    this.FeatureToggleService.atlasOffice365SupportGetStatus().then(feature => {
+      if (feature) {
+        this.CloudConnectorService.getService('squared-fusion-o365').then(service => {
+          this.hybridCalendarEnabledOnOrg = this.hybridCalendarEnabledOnOrg || service.provisioned;
+        });
+      }
+    });
+    this.CloudConnectorService.getService('squared-fusion-gcal').then(service => {
+      this.hybridCalendarEnabledOnOrg = this.hybridCalendarEnabledOnOrg || service.provisioned;
     });
 
     this.fetchDetailsForLoggedInUser();

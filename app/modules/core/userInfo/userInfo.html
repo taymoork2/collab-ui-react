@@ -21,7 +21,7 @@
           ng-model="langSettings.selected"
           ng-change="langSettings.updateLanguage()"
           aria-labelledby="languageSelectorLabel"
-          onclick="event.stopPropagation();">
+          ng-click="$event.stopPropagation();">
         </select>
         <span id="languageSelectorLabel" class="sr-only" translate="common.selectLanguage" aria-hidden="true"></span>
       </a>

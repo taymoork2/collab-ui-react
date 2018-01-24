@@ -8824,7 +8824,7 @@
       "title": "Token dan Petunjuk",
       "close": "Tutup",
       "instructions": "Anda harus menyalin dan menempel token verifikasi DNS ini ke bagian data TXT untuk membuktikan bahwa Anda memiliki domain:",
-      "howto": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Pelajari lebih lanjut</a> tentang cara memasukkan token verifikasi DNS.",
+      "howto": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Pelajari lebih lanjut</a> tentang cara memasukkan token verifikasi DNS.",
       "beforeVerify": "Sebelum Anda memverifikasi"
     }
   },

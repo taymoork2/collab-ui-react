@@ -1363,10 +1363,12 @@
     "manualCodes": {
       "100": "Not Used",
       "200": "Transfer; Modify of non-CI WebEx site",
-      "210": "Create non-CI Site (new)",
+      "210": "Create non-CI Site",
+      "220": "Site does not support auto provisioning",
       "300": "TSP to WEBEX Audio/VoIPOnly; TSP partner to direct customer transfer",
       "400": "WEBEX/VoIPOnly to TSP Audio; Direct customer to partner transfer",
       "450": "Modify of MP audio",
+      "460": "Modify of unrecognized audio type",
       "500": "Manual Branding needed",
       "600": "CCASP Audio Setup, Modify, Cancel, Suspend/Resume, or Audio Change",
       "650": "CCA-Enterprise setup, Cancel",
@@ -1378,6 +1380,10 @@
       "910": "CMR changes for non-CI sites",
       "920": "TSP partner to partner transfer",
       "930": "Session swap for non-CI site",
+      "940": "CMR requires MC",
+      "950": "Down sell",
+      "960": "CMR - data center does not support CMR",
+      "970": "Duplicate primary language and additional language in site",
       "1000": "Messenger"
     }
   },
@@ -2608,22 +2614,8 @@
       "editSettingsLink": "Edit cluster settings",
       "editTrunkSettingsLink": "Edit resource settings",
       "softwareUpgrade": "Software Upgrade",
-      "currentVersion": "Current Version",
-      "newVersion": "New Version",
-      "explanation": "You are about to upgrade {{connectorType}} to version {{newVersion}} on all nodes in your Expressway cluster",
-      "releaseNotesLinkText": "See release notes for {{connectorType}} {{newVersion}}",
-      "releaseNotes": "Release Notes",
-      "pending": "Pending",
-      "upgrade": "Upgrade",
       "upgradeNow": "Upgrade Now",
-      "upgradesAutomatically": "Upgrades automatically",
-      "upgradeProcessInitiating": "Initiating the upgrade to version {{version}}…",
-      "upgradingHost": "Upgrading {{host}} to {{version}}",
-      "upgradeDone": "Upgrade completed!",
-      "upToDate": "{{connectorType}} is up to date on this cluster.",
-      "upgradePossible": "A new version is available for {{connectorType}}: {{availableVersion}}.",
-      "urgentUpgrade": "An urgent upgrade is available for {{connectorType}}: {{availableVersion}}.",
-      "upgradeWarning": "This cluster has one or more nodes where {{ManagementConnector}} is not sending updates to {{CiscoCollaborationCloud}}. It is recommended to bring {{ManagementConnector}} online before initiating an upgrade."
+      "upgradesAutomatically": "Upgrades automatically"
     },
     "connectorUpgrade": {
       "title": "Connector Upgrade",
@@ -2807,7 +2799,7 @@
         "heading": "Documentation and Software",
         "headingDoc": "Documentation",
         "headingSoftware": "Software",
-        "help": "Visit <a href=\"{{helpLink}}\" target=\"_blank\">Help Central</a> for further information about {{localizedServiceName}}.",
+        "help": "See the <a href=\"{{helpLink}}\" target=\"_blank\">deployment documentation</a> for further information about {{localizedServiceName}}.",
         "downloadExpressway": "Download Cisco Expressway software from <a href=\"{{downloadLink}}\" target=\"_blank\">software.cisco.com</a>.",
         "downloadECP": "<a href=\"{{downloadLink}}\" target=\"_blank\">Download {{serviceName}} software</a>.",
         "downloadDemoHybridMedia": "<a href=\"{{downloadLink}}\" target=\"_blank\">Download Full Software Image</a><br> (Full capacity and used for production deployments of Hybrid Media)<br> <a href=\"{{downloadDemoLink}}\" target=\"_blank\">Download Demo Software Image</a> <br>(Limited capacity, lifespan of 90 days, and only used for demos of Hybrid Media)"
@@ -4225,6 +4217,8 @@
   "autoAttendant": {
     "code": "AA",
     "title": "Auto Attendant",
+    "warning": "Requires call service.",
+    "careModalDescription": "Play custom prompts and provide callers with menu options to route calls through your system.",
     "modalDescription": "Auto attendants play customized prompts and provide callers with menu options for routing their calls through your system.",
     "namePlaceholder": "Name the Auto Attendant",
     "repeatMenu": "Repeat",
@@ -5371,6 +5365,7 @@
       "sx10": "SX10",
       "dx80": "DX80",
       "mx300": "MX300 (Limit {{max}})",
+      "roomKit": "Room Kit (Limit {{max}})",
       "phone8865": "8865",
       "phone8845": "8845",
       "phone7832": "7832",
@@ -5378,7 +5373,7 @@
       "phone7841": "7841",
       "quantity": "Quantity",
       "invalidQuantity": "Quantity must be between {{min}} and {{max}}",
-      "invalidQuantityMx300": "Quantity must be {{qty}}",
+      "invalidQuantitySingle": "Quantity must be {{qty}}",
       "invalidTotalQuantity": "Entire order must have between {{min}} and {{max}} devices",
       "invalidRoomSystemsQuantity": "Limited to {{max}} Cisco Spark Room Devices",
       "invalidPhonesQuantity": "Limited to {{max}} Personal & Shared Desk Phones",
@@ -6315,18 +6310,6 @@
       "beta": "BETA",
       "latest": "LATEST",
       "errorMsg": "Before you can delete this cluster, you must either move all nodes to another cluster or deregister all nodes."
-    },
-    "upgradeClusters": {
-      "title": "Software Upgrade",
-      "upgradeNow": "Upgrade Now",
-      "installing": "Software is installing.",
-      "upgradeWarning": "This cluster has one or more offline nodes. It is recommended to bring all nodes online before initiating an upgrade.",
-      "pending": "Pending",
-      "upgradingHost": "Upgrading {{host}} to {{version}}",
-      "upgradeProcessInitiating": "Initiating the upgrade to version {{version}}…",
-      "upgradeDone": "Upgrade completed!",
-      "success": "The cluster will begin upgrading shortly.",
-      "error": "Error in upgrading cluster. Please try again later."
     },
     "reassign": {
       "reassignHost": "Reassign Host",
@@ -8458,6 +8441,7 @@
       "domainsError": "There was a problem retrieving the Directory Synchronization data.",
       "operational": "Operational",
       "outage": "Outage",
+      "seeAllDomains": "See All Registered Domains",
       "toggleMenu": "toggle domain action menu",
       "turnOff": "Turn Off {{domainName}}",
       "turnOffAllMessage": "This step turns off all synchronization from Directory Connector. Once the synchronization is disabled, you can only manage users manually and they won't appear in Active Directory.  Are you sure you want to turn off all sychronization?",
@@ -9003,7 +8987,7 @@
       "title": "Token and Instructions",
       "close": "Close",
       "instructions": "you must copy and paste this DNS verification token to the TXT record section to prove that you own the domain:",
-      "howto": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Learn more</a> about how to enter the DNS verification token.",
+      "howto": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Learn more</a> about how to enter the DNS verification token.",
       "beforeVerify": "Before you verify"
     }
   },

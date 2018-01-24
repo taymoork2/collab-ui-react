@@ -1,3 +1,5 @@
+// TODO: convert this file to TypeScript
+
 (function () {
   'use strict';
 

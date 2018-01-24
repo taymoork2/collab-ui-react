@@ -8824,7 +8824,7 @@
       "title": "Symbol og instruktioner",
       "close": "Luk",
       "instructions": "du må kopiere og indsætte denne DNS-token til bekræftelse i optagelsesafsnittet TXT for at bevise, at du ejer domænet:",
-      "howto": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Læs mere</a> om, hvordan du indtaster DNS token til bekræftelse.",
+      "howto": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Læs mere</a> om, hvordan du indtaster DNS token til bekræftelse.",
       "beforeVerify": "Inden du verificerer"
     }
   },

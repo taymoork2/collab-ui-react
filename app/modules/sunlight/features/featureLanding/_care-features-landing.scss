@@ -336,6 +336,10 @@ header > p > span.badge {
       color: $color-people-base;
     }
 
+    .aa-learn-more {
+      @include vr-spacing(pl, 0.35);
+    }
+
     .feature-aa-color {
       color: $toolkit-primary;
     }

@@ -8824,7 +8824,7 @@
       "title": "記號和指示",
       "close": "關閉",
       "instructions": "必須複製此 DNS 驗證記號並貼到 TXT 記錄區段，以證明您擁有此網域：",
-      "howto": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>進一步瞭解</a>如何輸入 DNS 驗證記號。",
+      "howto": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>進一步瞭解</a>如何輸入 DNS 驗證記號。",
       "beforeVerify": "驗證之前"
     }
   },
