@@ -3,9 +3,9 @@ import OnboardService from 'modules/core/users/userAdd/shared/onboard.service';
 
 export class CrAddUsersResultsController implements ng.IComponentController {
 
-  private numAddedUsers: number;
-  private numUpdatedUsers: number;
-  private results: IOnboardedUsersResultsErrorsAndWarnings;
+  public numAddedUsers: number;
+  public numUpdatedUsers: number;
+  public results: IOnboardedUsersResultsErrorsAndWarnings;
 
   /* @ngInject */
   constructor(

@@ -3,12 +3,12 @@ import OnboardService from 'modules/core/users/userAdd/shared/onboard.service';
 import OnboardStore from 'modules/core/users/userAdd/shared/onboard.store';
 
 export class AddUsersResultsModalController implements ng.IComponentController {
-  private convertPending: boolean;
-  private convertUsersFlow: boolean;
-  private dismiss: Function;
-  private numAddedUsers: number;
-  private numUpdatedUsers: number;
-  private results: IOnboardedUsersResultsErrorsAndWarnings;
+  public convertPending: boolean;
+  public convertUsersFlow: boolean;
+  public dismiss: Function;
+  public numAddedUsers: number;
+  public numUpdatedUsers: number;
+  public results: IOnboardedUsersResultsErrorsAndWarnings;
 
   /* @ngInject */
   constructor(
@@ -18,10 +18,6 @@ export class AddUsersResultsModalController implements ng.IComponentController {
     private OnboardService: OnboardService,
     private OnboardStore: OnboardStore,
   ) {}
-
-  public $onInit(): void {
-    this.dismiss = _.isFunction(this.dismiss) ? this.dismiss : _.noop;
-  }
 
   public dismissModal(): void {
     if (!this.convertUsersFlow) {

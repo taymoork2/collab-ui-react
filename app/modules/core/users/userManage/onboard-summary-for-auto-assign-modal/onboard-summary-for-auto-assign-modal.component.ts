@@ -2,9 +2,9 @@ import { IOnboardedUsersAggregateResult, IUserNameAndEmail } from 'modules/core/
 import OnboardService from 'modules/core/users/userAdd/shared/onboard.service';
 
 export class OnboardSummaryForAutoAssignModalController implements ng.IComponentController {
-  private dismiss: Function;
-  private stateData: any;  // TODO: better type
-  private userList: IUserNameAndEmail[];
+  public dismiss: Function;
+  public stateData: any;  // TODO: better type
+  public userList: IUserNameAndEmail[];
   public saveLoading = false;
 
   /* @ngInject */
@@ -15,10 +15,6 @@ export class OnboardSummaryForAutoAssignModalController implements ng.IComponent
     private Notification,
     private OnboardService: OnboardService,
   ) {}
-
-  public $onInit(): void {
-    this.dismiss = _.isFunction(this.dismiss) ? this.dismiss : _.noop;
-  }
 
   public dismissModal(): void {
     this.Analytics.trackAddUsers(this.Analytics.eventNames.CANCEL_MODAL);
@@ -55,7 +51,7 @@ export class OnboardSummaryForAutoAssignModalComponent implements ng.IComponentO
   public controller = OnboardSummaryForAutoAssignModalController;
   public template = require('./onboard-summary-for-auto-assign-modal.html');
   public bindings = {
-    dismiss: '&?',
+    dismiss: '&',
     stateData: '<',
     userList: '<',
   };
