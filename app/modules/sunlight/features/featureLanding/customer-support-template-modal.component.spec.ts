@@ -39,4 +39,40 @@ describe('Component: customer support template modal', () => {
     });
   });
 
+  it('should check if Callback/Chat+Callback Card is enabled when Spark call is configured but Hybrid/EPT is not', function () {
+    this.$state.isHybridToggleEnabled = false;
+    this.$state.isSparkCallConfigured = true;
+    this.$state.isHybridAndEPTConfigured = true;
+    this.controller.$onInit();
+    expect(this.controller.features[1].disabled).toBe(false);
+  });
+
+  it('should check if Callback/Chat+Callback Card is enabled when both Spark call and Hybrid/EPT is configured', function () {
+    this.$state.isHybridToggleEnabled = true;
+    this.$state.isSparkCallConfigured = true;
+    this.$state.isHybridAndEPTConfigured = false;
+    this.controller.$onInit();
+    expect(this.controller.features[1].disabled).toBe(false);
+  });
+
+  it('should return true if Spark call is configured and Hybrid/EPT is not', function () {
+    this.$state.isSparkCallConfigured = true;
+    this.$state.isHybridAndEPTConfigured = false;
+    this.controller.isHybridOrSparkCallEnabled();
+    expect(this.controller.isHybridOrSparkCallEnabled()).toBe(true);
+  });
+
+  it('should return true if both Spark call and Hybrid/EPT is configured', function () {
+    this.$state.isSparkCallConfigured = true;
+    this.$state.isHybridAndEPTConfigured = true;
+    this.controller.isHybridOrSparkCallEnabled();
+    expect(this.controller.isHybridOrSparkCallEnabled()).toBe(true);
+  });
+
+  it('should return false if both Spark call and Hybrid/EPT is not configured', function () {
+    this.$state.isSparkCallConfigured = false;
+    this.$state.isHybridAndEPTConfigured = false;
+    this.controller.isHybridOrSparkCallEnabled();
+    expect(this.controller.isHybridOrSparkCallEnabled()).toBe(false);
+  });
 });

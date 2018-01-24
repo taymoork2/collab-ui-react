@@ -373,6 +373,14 @@ header > p > span.badge {
       margin-bottom: auto;
       text-align: left;
     }
+
+    .feature-warning-container {
+     font-size: rem-calc(14);
+    }
+
+    .feature-icon-color {
+      color: $color-blue-base;
+    }
   }
 }
 

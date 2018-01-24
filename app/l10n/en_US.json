@@ -7296,7 +7296,9 @@
       "webTemplate": "Web Template",
       "callbackType": "Callback Template",
       "chatPlusCallbackType": "Chat+Callback Template",
-      "virtualAssistant": "Virtual Assistant"
+      "virtualAssistant": "Virtual Assistant",
+      "noCallWarningMessage" : "Requires call service.",
+      "learnMoreLink": "Learn More"
     },
     "settings": {
       "setUpCare": "Care",
