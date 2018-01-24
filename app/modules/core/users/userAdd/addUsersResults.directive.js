@@ -4,7 +4,7 @@ require('./_user-add.scss');
   'use strict';
 
   angular.module('Core')
-    .directive('crAddUsersResults', crAddUsersResults);
+    .directive('crAddUsersResultsXxx', crAddUsersResults);
 
   function crAddUsersResults() {
     return {
