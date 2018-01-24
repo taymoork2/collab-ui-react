@@ -43,16 +43,13 @@ export default class OnboardStore {
   }
 
   public resetStatesAsNeeded(stateNameOrStateNames: OnboardCtrlBoundUIStates | OnboardCtrlBoundUIStates[]): void {
-    // shorthand aliases
-    const stateName = stateNameOrStateNames as OnboardCtrlBoundUIStates;
-    const stateNames = stateNameOrStateNames as OnboardCtrlBoundUIStates[];
-    if (_.isString(stateName)) {
-      if (stateName === OnboardCtrlBoundUIStates.ALL) {
+    if (_.isString(stateNameOrStateNames)) {
+      if (stateNameOrStateNames === OnboardCtrlBoundUIStates.ALL) {
         return this.resetAllStates();
       }
-      return this.resetForState(stateName);
+      return this.resetForState(stateNameOrStateNames);
     }
-    this.resetSomeStates(stateNames);
+    return this.resetSomeStates(stateNameOrStateNames);
   }
 
   public resetAllStates(): void {
