@@ -9,7 +9,7 @@
     var DEFAULT_AUTO_ASSIGN_TEMPLATE = AutoAssignTemplateService.DEFAULT;
     var vm = this;
 
-    vm.ManageType = require('./userManage.keys').ManageType;
+    vm.ManageType = require('./shared/user-manage.keys').ManageType;
 
     vm.onInit = onInit;
     vm.manageType = 'manual';

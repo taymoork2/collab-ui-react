@@ -76,12 +76,10 @@
             prev: rootState,
             next: '^.syncStatus',
           },
-
           syncStatus: {
             prev: 'users.manage.picker',
             next: '^.dirsyncServices',
           },
-
           dirsyncServices: {
             prev: '^.syncStatus',
             last: '^.dirsyncResult',
@@ -95,7 +93,6 @@
             prev: 'users.manage.picker',
             next: '^.dirsyncServices',
           },
-
           dirsyncServices: {
             prev: '^.syncStatus',
             last: '^.dirsyncResult',
@@ -108,7 +105,6 @@
           prev: rootState,
           next: '^.installConnector',
         },
-
         installConnector: {
           prev: '^.autoAssignLicenseSummary',
           last: '^.syncStatus',

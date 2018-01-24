@@ -1,6 +1,6 @@
 import { UserManageEmailSuppressComponent } from './emailSuppress.component';
 import { UserManageEmailSuppressController } from './emailSuppress.controller';
-import userManageSharedModuleName from '../shared';
+import userManageSharedModuleName from 'modules/core/users/userManage/shared';
 import './emailSuppress.scss';
 
 export default angular.module('core.users.userManage.emailSuppress', [

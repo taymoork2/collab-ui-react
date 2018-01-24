@@ -1,4 +1,4 @@
-import { ManageType } from '../userManage.keys';
+import { ManageType } from './user-manage.keys';
 import { OnboardCtrlBoundUIStates } from 'modules/core/users/userAdd/shared/onboard.store';
 import { AutoAssignTemplateModel } from 'modules/core/users/shared/auto-assign-template';
 

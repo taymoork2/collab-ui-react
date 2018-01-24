@@ -1,9 +1,7 @@
-import moduleName, {
-  UserManageService,
-} from './index';
+import moduleName, { UserManageService } from './index';
 import { AutoAssignTemplateModel } from 'modules/core/users/shared/auto-assign-template';
 
-import { ManageType } from '../userManage.keys';
+import { ManageType } from './user-manage.keys';
 
 type Test = atlas.test.IServiceTest<{
   $state: ng.ui.IStateService,

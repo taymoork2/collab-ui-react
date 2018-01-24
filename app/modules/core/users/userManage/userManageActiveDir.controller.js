@@ -20,7 +20,7 @@ require('./_user-manage.scss');
     vm.onInit();
 
     var isAtlasEmailSuppressToggle = false;
-    vm.ManageType = require('./userManage.keys').ManageType;
+    vm.ManageType = require('./shared/user-manage.keys').ManageType;
 
     //////////////////
     function onInit() {

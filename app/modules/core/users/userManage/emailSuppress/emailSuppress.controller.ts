@@ -1,5 +1,5 @@
-import { ManageType } from '../userManage.keys';
-import { UserManageService } from '../shared/user-manage.service';
+import { ManageType } from 'modules/core/users/userManage/shared/user-manage.keys';
+import { UserManageService } from 'modules/core/users/userManage/shared/user-manage.service';
 
 interface IAdminOrgResponse {
   isOnBoardingEmailSuppressed: boolean;
