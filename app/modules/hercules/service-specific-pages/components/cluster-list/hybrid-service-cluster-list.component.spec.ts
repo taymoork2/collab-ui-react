@@ -36,7 +36,7 @@ describe('HybridServiceClusterList controller', () => {
       spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve([]));
     });
 
-    it('should call ClusterService on init when building the Media Service cluster list', () => {
+    it('should call HybridServicesClusterService on init when building the Media Service cluster list', () => {
       ctrl = initController('squared-fusion-media', '1234');
       ctrl.$onInit();
       expect(HybridServicesClusterService.getAll.calls.count()).toBe(1);
@@ -44,7 +44,7 @@ describe('HybridServiceClusterList controller', () => {
       expect(EnterprisePrivateTrunkService.subscribe.calls.count()).toBe(0);
     });
 
-    it('should call ClusterService on init when building the Calendar Service cluster list', () => {
+    it('should call HybridServicesClusterService on init when building the Calendar Service cluster list', () => {
       ctrl = initController('squared-fusion-cal', '1234');
       ctrl.$onInit();
       expect(HybridServicesClusterService.getAll.calls.count()).toBe(1);
@@ -52,7 +52,7 @@ describe('HybridServiceClusterList controller', () => {
       expect(EnterprisePrivateTrunkService.subscribe.calls.count()).toBe(0);
     });
 
-    it('should call ClusterService on init when building the Call Service cluster list', () => {
+    it('should call HybridServicesClusterService on init when building the Call Service cluster list', () => {
       ctrl = initController('squared-fusion-uc', '1234');
       ctrl.$onInit();
       expect(HybridServicesClusterService.getAll.calls.count()).toBe(1);
@@ -60,7 +60,7 @@ describe('HybridServiceClusterList controller', () => {
       expect(EnterprisePrivateTrunkService.subscribe.calls.count()).toBe(0);
     });
 
-    it('should call ClusterService on init when building the IM&P Service cluster list', () => {
+    it('should call HybridServicesClusterService on init when building the IM&P Service cluster list', () => {
       ctrl = initController('spark-hybrid-impinterop', '1234');
       ctrl.$onInit();
       expect(HybridServicesClusterService.getAll.calls.count()).toBe(1);
@@ -68,7 +68,7 @@ describe('HybridServiceClusterList controller', () => {
       expect(EnterprisePrivateTrunkService.subscribe.calls.count()).toBe(0);
     });
 
-    it('should call ClusterService on init when building the Hybrid Data Security cluster list', () => {
+    it('should call HybridServicesClusterService on init when building the Hybrid Data Security cluster list', () => {
       ctrl = initController('spark-hybrid-datasecurity', '1234');
       ctrl.$onInit();
       expect(HybridServicesClusterService.getAll.calls.count()).toBe(1);
@@ -76,7 +76,7 @@ describe('HybridServiceClusterList controller', () => {
       expect(EnterprisePrivateTrunkService.subscribe.calls.count()).toBe(0);
     });
 
-    it('should call ClusterService on init when building the Context Service cluster list', () => {
+    it('should call HybridServicesClusterService on init when building the Context Service cluster list', () => {
       ctrl = initController('contact-center-context', '1234');
       ctrl.$onInit();
       expect(HybridServicesClusterService.getAll.calls.count()).toBe(1);

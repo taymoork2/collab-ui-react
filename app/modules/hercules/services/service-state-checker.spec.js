@@ -8,7 +8,7 @@ describe('Service: ServiceStateChecker', function () {
 
   var okClusterMockData = {
     id: 0,
-    name: 'Tom is Awesome!',
+    name: 'Kjetil is Awesome!',
     releaseChannel: 'stable',
     targetType: 'c_mgmt',
     provisioning: [{
