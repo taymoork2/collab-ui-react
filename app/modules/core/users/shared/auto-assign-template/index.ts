@@ -11,6 +11,8 @@ export {
   AutoAssignTemplateService,
 };
 
+export * from './auto-assign-template.interfaces';
+
 export default angular.module('core.users.shared.auto-assign-template', [
   authinfoModuleName,
   messengerInteropModuleName,

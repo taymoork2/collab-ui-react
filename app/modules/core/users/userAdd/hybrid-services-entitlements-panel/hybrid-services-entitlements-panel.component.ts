@@ -8,7 +8,7 @@ interface IExtendedServiceDescription extends IServiceDescription {
   entitled?: boolean;
 }
 
-interface IHybridServices {
+export interface IHybridServices {
   calendarEntitled: boolean;
   selectedCalendarType: HybridServiceId | null;
   hybridMessage: IExtendedServiceDescription | null;
