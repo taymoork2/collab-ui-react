@@ -4176,10 +4176,8 @@
           })
           // hybrid context
           .state('context', {
-            template: require('modules/context/container/hybrid-context-container.html'),
-            controller: 'HybridContextContainerController',
-            controllerAs: 'hybridContextContainerController',
             parent: 'main',
+            template: '<context-container back-state="$resolve.backState"></context-container>',
             params: {
               backState: null,
             },
