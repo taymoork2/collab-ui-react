@@ -1,6 +1,6 @@
 import { IToolkitModalService } from 'modules/core/modal';
 import { Config } from 'modules/core/config/config';
-import MessengerInteropService from 'modules/core/users/userAdd/shared/messenger-interop.service';
+import MessengerInteropService from 'modules/core/users/userAdd/shared/messenger-interop/messenger-interop.service';
 
 class CrServicesPanelsController implements ng.IComponentController {
   public isCareEnabled = false;
