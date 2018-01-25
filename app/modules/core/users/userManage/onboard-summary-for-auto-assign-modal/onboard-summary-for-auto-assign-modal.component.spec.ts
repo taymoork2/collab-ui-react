@@ -1,15 +1,18 @@
 import moduleName from './index';
+import { Analytics } from 'modules/core/analytics';
+import { Notification } from 'modules/core/notifications';
+import OnboardService from 'modules/core/users/userAdd/shared/onboard.service';
 import { OnboardSummaryForAutoAssignModalController } from './onboard-summary-for-auto-assign-modal.component';
 import { MultiStepModalComponent } from 'modules/core/shared/multi-step-modal/multi-step-modal.component';
 import { LicenseSummaryComponent } from 'modules/core/users/userManage/shared/license-summary/license-summary.component';
 
 type Test = atlas.test.IComponentTest<OnboardSummaryForAutoAssignModalController, {
-  $q;
-  $scope;
-  $state;
-  Analytics;
-  Notification;
-  OnboardService;
+  $q: ng.IQService;
+  $scope: ng.IScope;
+  $state: ng.ui.IStateService;
+  Analytics: Analytics;
+  Notification: Notification;
+  OnboardService: OnboardService;
 }, {
   components: {
     multiStepModal: atlas.test.IComponentSpy<MultiStepModalComponent>;
