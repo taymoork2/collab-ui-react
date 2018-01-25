@@ -33,7 +33,7 @@
     }
 
     .care-icon {
-      @include vr-spacing(pt, 0.5);
+      @include vr-spacing(pt, 0.8);
       display: inline-flex;
 
       .people {
@@ -318,6 +318,10 @@ header > p > span.badge {
         &:first-child {
           flex-basis: 100%;
         }
+      }
+
+      .virtual-assistant-icon {
+        font-size: rem-calc(32);
       }
     }
 
