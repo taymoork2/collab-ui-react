@@ -72,9 +72,9 @@ describe('Component: onboardSummaryForAutoAssignModal:', () => {
     });
 
     it('should pass along its "stateData" to its "license-summary"', function (this: Test) {
-      this.$scope.fakeAutoAssignTemplateData = 'fake-stateData';
+      this.$scope.fakeAutoAssignTemplateData = 'fake-autoAssignTemplateData';
       initComponent.call(this);
-      expect(this.components.licenseSummary.bindings[0].stateData).toBe('fake-stateData');
+      expect(this.components.licenseSummary.bindings[0].stateData).toBe('fake-autoAssignTemplateData');
     });
   });
 
@@ -90,12 +90,12 @@ describe('Component: onboardSummaryForAutoAssignModal:', () => {
 
     describe('back():', () => {
       it('should go back to "users.add.manual" state passing along its "stateData"', function (this: Test) {
-        this.$scope.fakeAutoAssignTemplateData = 'fake-stateData';
+        this.$scope.fakeAutoAssignTemplateData = 'fake-autoAssignTemplateData';
         spyOn(this.$state, 'go');
         initComponent.call(this);
         this.controller.back();
         expect(this.$state.go).toHaveBeenCalledWith('users.add.manual', {
-          stateData: 'fake-stateData',
+          stateData: 'fake-autoAssignTemplateData',
         });
       });
     });
