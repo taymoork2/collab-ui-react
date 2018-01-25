@@ -20,12 +20,12 @@
     <assignable-services
       subscriptions="$ctrl.sortedSubscriptions"
       on-update="$ctrl.recvUpdate($event)"
-      state-data="$ctrl.stateData"
+      auto-assign-template-data="$ctrl.stateData"
       >
     </assignable-services>
     <hybrid-services-entitlements-panel
       entitlements-callback="$ctrl.recvHybridServicesEntitlementsPayload(entitlements)"
-      state-data="$ctrl.stateData"
+      auto-assign-template-data="$ctrl.stateData"
       >
     </hybrid-services-entitlements-panel>
   </div>

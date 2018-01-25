@@ -42,7 +42,7 @@ describe('Component: editAutoAssignTemplateModal:', () => {
     it('should render render an "assignable-services" element', function () {
       expect(this.view.find('assignable-services[subscriptions]').length).toBe(1);
       expect(this.view.find('assignable-services[on-update]').length).toBe(1);
-      expect(this.view.find('assignable-services[state-data]').length).toBe(1);
+      expect(this.view.find('assignable-services[auto-assign-template-data]').length).toBe(1);
     });
   });
 

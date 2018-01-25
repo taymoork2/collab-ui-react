@@ -29,7 +29,7 @@ describe('Component: assignableLicenseCheckbox:', () => {
         license="fakeLicense"
         l10n-label="fake-label"
         on-update="onUpdate()"
-        state-data="stateData">
+        auto-assign-template-data="stateData">
         ${transcludeContent}
       </assignable-license-checkbox>`);
     this.controller = this.view.controller('assignableLicenseCheckbox');
