@@ -9,6 +9,7 @@ describe('Service: AutoAssignTemplateService:', () => {
       '$scope',
       'Authinfo',
       'AutoAssignTemplateService',
+      'MessengerInteropService',
       'Orgservice',
       'UrlConfig',
     );
@@ -17,10 +18,13 @@ describe('Service: AutoAssignTemplateService:', () => {
     this.fixtures = {};
     this.fixtures.fakeLicenseUsage = [{
       subscriptionId: 'fake-subscriptionId-2',
+      licenses: [{ offerName: 'foo' }],
     }, {
       subscriptionId: 'fake-subscriptionId-3',
+      licenses: [{ offerName: 'foo' }],
     }, {
       subscriptionId: 'fake-subscriptionId-1',
+      licenses: [{ offerName: 'foo' }],
     }];
     this.stateData = {};
     _.set(this.stateData, 'subscriptions', undefined);
@@ -204,7 +208,24 @@ describe('Service: AutoAssignTemplateService:', () => {
   });
 
   describe('getSortedSubscriptions():', () => {
-    it('should initialize "sortedSubscription" property', function (done) {
+    it('should resolve with a collection of subscriptions sorted by subscription id', function (done) {
+      this.AutoAssignTemplateService.getSortedSubscriptions().then(sortedSubscriptions => {
+        expect(sortedSubscriptions.length).toBe(3);
+        expect(_.get(sortedSubscriptions[0], 'subscriptionId')).toBe('fake-subscriptionId-1');
+        expect(_.get(sortedSubscriptions[1], 'subscriptionId')).toBe('fake-subscriptionId-2');
+        expect(_.get(sortedSubscriptions[2], 'subscriptionId')).toBe('fake-subscriptionId-3');
+        _.defer(done);
+      });
+      this.$scope.$apply();
+    });
+
+    it('should not containing subscriptions with only licenses of "MSGR" offer name', function (done) {
+      expect(this.fixtures.fakeLicenseUsage.length).toBe(3);
+      this.fixtures.fakeLicenseUsage.push({
+        subscriptionId: 'fake-subscriptionId-4',
+        licenses: [{ offerName: 'MSGR' }],
+      });
+      expect(this.fixtures.fakeLicenseUsage.length).toBe(4);
       this.AutoAssignTemplateService.getSortedSubscriptions().then(sortedSubscriptions => {
         expect(sortedSubscriptions.length).toBe(3);
         expect(_.get(sortedSubscriptions[0], 'subscriptionId')).toBe('fake-subscriptionId-1');

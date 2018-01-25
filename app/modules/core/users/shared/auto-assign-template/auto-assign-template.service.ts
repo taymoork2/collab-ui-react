@@ -1,5 +1,6 @@
 import { ILicenseRequestItem, IUserEntitlementRequestItem, IAutoAssignTemplateRequestPayload, LicenseChangeOperation } from 'modules/core/users/shared/onboard.interfaces';
 import { AssignableServicesItemCategory, IAssignableLicenseCheckboxState, ILicenseUsage, ILicenseUsageMap, ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
+import MessengerInteropService from 'modules/core/users/userAdd/shared/messenger-interop/messenger-interop.service';
 
 export class AutoAssignTemplateService {
 
@@ -10,6 +11,7 @@ export class AutoAssignTemplateService {
     private $http: ng.IHttpService,
     private $q: ng.IQService,
     private Authinfo,
+    private MessengerInteropService: MessengerInteropService,
     private Orgservice,
     private UrlConfig,
   ) {}
@@ -113,7 +115,13 @@ export class AutoAssignTemplateService {
 
   public getSortedSubscriptions(): ng.IPromise<ISubscription[]> {
     return this.Orgservice.getLicensesUsage()
-      .then((subscriptions) => _.sortBy(subscriptions, 'subscriptionId'));
+      .then((subscriptions: ISubscription[]) => {
+        subscriptions = _.sortBy(subscriptions, 'subscriptionId');
+        subscriptions = _.reject(subscriptions, (subscription) => {
+          return this.MessengerInteropService.subscriptionIsMessengerOnly(subscription);
+        });
+        return subscriptions;
+      });
   }
 
   private mkPayload(stateData): IAutoAssignTemplateRequestPayload {

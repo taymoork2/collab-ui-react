@@ -1,4 +1,5 @@
 import { Config } from 'modules/core/config/config';
+import { ISubscription, ILicenseUsage } from 'modules/core/users/userAdd/assignable-services/shared/license-usage-util.interfaces';
 
 export default class MessengerInteropService {
   /* @ngInject */
@@ -28,5 +29,14 @@ export default class MessengerInteropService {
       },
     });
     return !!hasMessenger;
+  }
+
+  public subscriptionIsMessengerOnly(subscription: ISubscription): boolean {
+    if (_.isEmpty(subscription.licenses)) {
+      return false;
+    }
+    const msgrLicenses: ILicenseUsage[] = _.filter(subscription.licenses, { offerName: this.Config.offerCodes.MSGR });
+    const nonMsgrLicenses: ILicenseUsage[] = _.reject(subscription.licenses, { offerName: this.Config.offerCodes.MSGR });
+    return _.isEmpty(nonMsgrLicenses) && !_.isEmpty(msgrLicenses);
   }
 }
