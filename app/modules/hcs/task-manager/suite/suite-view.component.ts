@@ -93,7 +93,7 @@ export class SuiteViewCtrl implements ng.IComponentController {
       schedule.name = suite.name;
     }
     this.HcsTestManagerService.createSchedule(schedule);
-    this.Notification.success('hcs.taas.suite.successRun', undefined, 'hcs.taas.suite.successTitle');
+    this.Notification.success('hcs.taas.suiteView.successRun', undefined, 'hcs.taas.suiteView.successTitle');
   }
 
   public resources(): void {
