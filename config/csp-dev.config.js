@@ -23,8 +23,6 @@ let cspDevConfig = mkCspConfig({
   ],
   objectSrc: [],
   connectSrc: [
-    'http://10.201.82.158:8082', //Test as a service DEMO -- Matt's server
-    'https://taasapi.cisco.com:8082', //Test as a Service temp server
     'http://127.0.0.1:8080', // Local Atlas Backend
     'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
     'http://localhost:8080', // Local Atlas Backend
