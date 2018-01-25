@@ -54,6 +54,7 @@ describe('SetupWizardCtrl', function () {
       return this.$q.resolve(_.includes(this.enabledFeatureToggles, feature));
     }.bind(this));
     spyOn(this.Orgservice, 'getAdminOrgUsage').and.returnValue(this.$q.resolve(this.usageFixture));
+    spyOn(this.Analytics, 'trackServiceSetupSteps');
 
     this._expectStepIndex = _expectStepIndex;
     this._expectSubStepIndex = _expectSubStepIndex;
@@ -111,7 +112,6 @@ describe('SetupWizardCtrl', function () {
 
   describe('Before initializing toggles', function () {
     beforeEach(function () {
-      spyOn(this.Analytics, 'trackServiceSetupSteps').and.callThrough();
       this.initController();
     });
 
@@ -521,11 +521,11 @@ describe('SetupWizardCtrl', function () {
         displayName: 'Bob Belcher',
         countryCode: 'US',
       });
-      this.initController();
     });
 
     it('should create customer', function () {
-      this.$httpBackend.expectPOST('/customers').respond(200);
+      this.$httpBackend.expectPOST(/customers/).respond(200);
+      this.initController();
     });
   });
 

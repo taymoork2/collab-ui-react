@@ -6,7 +6,6 @@ describe('SettingsCtrl', function () {
     this.initModules(testModule);
     this.injectDependencies('$rootScope', '$scope', '$stateParams', '$controller', '$q', '$timeout', 'Authinfo', 'FeatureToggleService', 'ProPackService', 'Orgservice');
 
-    spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.reject());
     spyOn(this.Authinfo, 'isPartner').and.returnValue(false);
     spyOn(this.Authinfo, 'isCustomerAdmin').and.returnValue(false);
     spyOn(this.Authinfo, 'isDirectCustomer').and.returnValue(false);
@@ -88,7 +87,7 @@ describe('SettingsCtrl', function () {
 
     describe('with allowCustomerLogos set to true', function () {
       beforeEach(function () {
-        this.Orgservice.getOrg.and.returnValue(this.$q.resolve({
+        spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.resolve({
           data: {
             orgSettings: {
               allowCustomerLogos: true,
@@ -114,7 +113,7 @@ describe('SettingsCtrl', function () {
 
     describe('with allowCustomerLogos set to false', function () {
       beforeEach(function () {
-        this.Orgservice.getOrg.and.returnValue(this.$q.resolve({
+        spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.resolve({
           data: {
             orgSettings: {
               allowCustomerLogos: false,

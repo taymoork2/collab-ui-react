@@ -136,8 +136,12 @@ describe('MultiDirsyncSetting Component:', function () {
 
     describe('should call error notification when MultiDirSyncService returns in error when', function () {
       beforeEach(function () {
-        this.MultiDirSyncService.deleteConnector.and.returnValue(this.$q.reject(ERROR_FIVE_HUNDRED));
-        this.MultiDirSyncService.deactivateDomain.and.returnValue(this.$q.reject(ERROR_FIVE_HUNDRED));
+        this.MultiDirSyncService.deleteConnector.and.callFake(() => {
+          return this.$q.reject(ERROR_FIVE_HUNDRED);
+        });
+        this.MultiDirSyncService.deactivateDomain.and.callFake(() => {
+          return this.$q.reject(ERROR_FIVE_HUNDRED);
+        });
         initComponent.call(this);
       });
 

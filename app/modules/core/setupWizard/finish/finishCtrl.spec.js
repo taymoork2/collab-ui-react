@@ -50,9 +50,10 @@ describe('Controller: Finish - Activate and Start Billing', function () {
     });
 
     it('should reject and should not call TrialWebexService.setProvisioningWebexSendCustomerEmailFlag', function () {
-      var promise = this.$scope.setSendCustomerEmailFlag();
+      this.$scope.setSendCustomerEmailFlag().catch(function (err) {
+        expect(err).toBe('A boolean must be passed.');
+      });
       this.$scope.$apply();
-      expect(promise).toBeRejectedWith('A boolean must be passed.');
     });
 
     it('should call TrialWebexService.setProvisioningWebexSendCustomerEmailFlag', function () {

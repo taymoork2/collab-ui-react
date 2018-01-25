@@ -135,6 +135,8 @@ export class SettingsCtrl {
           defered.resolve(true);
         }
         defered.resolve(false);
+      }).catch(() => {
+        defered.resolve(false);
       });
     } else {
       defered.resolve(false);
