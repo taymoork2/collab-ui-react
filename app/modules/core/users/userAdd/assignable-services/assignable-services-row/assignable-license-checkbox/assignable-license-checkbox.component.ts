@@ -13,11 +13,11 @@ class AssignableLicenseCheckboxController implements ng.IComponentController {
     }
     const licenseId: string = this.license.licenseId;
     this.itemId = licenseId;
-    this.stateDataEntry = _.assignIn({
+    this.entryData = _.assignIn({
       isSelected: false,
       isDisabled: false,
       license: this.license,
-    }, this.stateDataEntry);
+    }, this.entryData);
   }
 
   public getTotalLicenseUsage(): number {
@@ -48,20 +48,20 @@ class AssignableLicenseCheckboxController implements ng.IComponentController {
     this.onUpdate(licenseUpdateEvent);
   }
 
-  public get stateDataEntry(): IAssignableLicenseCheckboxState {
+  public get entryData(): IAssignableLicenseCheckboxState {
     return _.get(this.stateData, `${AssignableLicenseCheckboxController.itemCategory}["${this.itemId}"]`);
   }
 
-  public set stateDataEntry(stateDataEntry: IAssignableLicenseCheckboxState) {
-    _.set(this.stateData, `${AssignableLicenseCheckboxController.itemCategory}["${this.itemId}"]`, stateDataEntry);
+  public set entryData(entryData: IAssignableLicenseCheckboxState) {
+    _.set(this.stateData, `${AssignableLicenseCheckboxController.itemCategory}["${this.itemId}"]`, entryData);
   }
 
   public get isSelected(): boolean {
-    return this.stateDataEntry.isSelected;
+    return this.entryData.isSelected;
   }
 
   public get isDisabled(): boolean {
-    return this.stateDataEntry.isDisabled || !this.isLicenseStatusOk() || !this.hasVolume();
+    return this.entryData.isDisabled || !this.isLicenseStatusOk() || !this.hasVolume();
   }
 
   private isLicenseStatusOk(): boolean {
