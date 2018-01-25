@@ -2,6 +2,7 @@ import moduleName from './index';
 import { ManualAddUsersModalController } from './manual-add-users-modal.component';
 import { MultiStepModalComponent } from 'modules/core/shared/multi-step-modal/multi-step-modal.component';
 import { CrOnboardUsersComponent } from './cr-onboard-users/cr-onboard-users.component';
+import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 
 type Test = atlas.test.IComponentTest<ManualAddUsersModalController, {
   $state;
@@ -57,17 +58,22 @@ describe('Component: manualAddUsersModal:', () => {
     });
 
     it('should have autoAssignTemplateData if a default auto-assign template exists, the org is enabled for it, and subscriptions exist', function (this: Test) {
-      expect(this.controller.autoAssignTemplateData).toBe(undefined);
+      expect(this.controller.autoAssignTemplateData).not.toBeDefined();
       expect(this.controller.useDefaultAutoAssignTemplate).toBe(false);
+
+      // notes:
+      // - use a mock, but make sure it is non-empty to test 'useDefaultAutoAssignTemplate' getter logic
+      const fakeToAutoAssignTemplateDataResult = {} as IAutoAssignTemplateData;
+      fakeToAutoAssignTemplateDataResult.subscriptions = [];
 
       this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = true;
       this.AutoAssignTemplateService.getDefaultTemplate.and.returnValue(this.$q.resolve('fake-getDefaultTemplate-result'));
       this.AutoAssignTemplateService.getSortedSubscriptions.and.returnValue(this.$q.resolve('fake-getSortedSubscriptions-result'));
-      spyOn(this.AutoAssignTemplateService, 'toAutoAssignTemplateData').and.returnValue('fake-toAutoAssignTemplateData-result');
+      spyOn(this.AutoAssignTemplateService, 'toAutoAssignTemplateData').and.returnValue(fakeToAutoAssignTemplateDataResult);
       initComponent.call(this);
 
       expect(this.AutoAssignTemplateService.toAutoAssignTemplateData).toHaveBeenCalledWith('fake-getDefaultTemplate-result', 'fake-getSortedSubscriptions-result');
-      expect(this.controller.autoAssignTemplateData).toBe('fake-toAutoAssignTemplateData-result');
+      expect(this.controller.autoAssignTemplateData).toEqual(fakeToAutoAssignTemplateDataResult);
       expect(this.controller.useDefaultAutoAssignTemplate).toBe(true);
     });
   });

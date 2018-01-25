@@ -1,9 +1,10 @@
 import { IOnboardedUsersAggregateResult, IUserNameAndEmail } from 'modules/core/users/shared/onboard.interfaces';
 import OnboardService from 'modules/core/users/userAdd/shared/onboard.service';
+import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 
 export class OnboardSummaryForAutoAssignModalController implements ng.IComponentController {
   public dismiss: Function;
-  public autoAssignTemplateData: any;  // TODO: better type
+  public autoAssignTemplateData: IAutoAssignTemplateData;
   public userList: IUserNameAndEmail[];
   public saveLoading = false;
 

@@ -1,10 +1,11 @@
 import { AssignableServicesItemCategory, IAssignableLicenseCheckboxState, ILicenseUsage, LicenseStatus } from 'modules/core/users/userAdd/assignable-services/shared';
+import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 
 class AssignableLicenseCheckboxController implements ng.IComponentController {
   private static readonly itemCategory = AssignableServicesItemCategory.LICENSE;
   private itemId: string;
   private license: ILicenseUsage;
-  private autoAssignTemplateData: any;  // TODO: better type
+  private autoAssignTemplateData: IAutoAssignTemplateData;
   private onUpdate: Function;
 
   public $onInit(): void {

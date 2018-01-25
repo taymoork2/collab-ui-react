@@ -1,6 +1,7 @@
 import { ILicenseRequestItem, IUserEntitlementRequestItem, IAutoAssignTemplateRequestPayload, LicenseChangeOperation } from 'modules/core/users/shared/onboard.interfaces';
 import { AssignableServicesItemCategory, IAssignableLicenseCheckboxState, ILicenseUsage, ILicenseUsageMap, ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
 import MessengerInteropService from 'modules/core/users/userAdd/shared/messenger-interop/messenger-interop.service';
+import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 
 export class AutoAssignTemplateService {
 
@@ -71,7 +72,7 @@ export class AutoAssignTemplateService {
     return this.$http.delete(`${this.autoAssignTemplateUrl}/${templateId}`);
   }
 
-  public autoAssignTemplateDataToPayload(autoAssignTemplateData): any {
+  public autoAssignTemplateDataToPayload(autoAssignTemplateData: IAutoAssignTemplateData): any {
     return this.mkPayload(autoAssignTemplateData);
   }
 
@@ -95,8 +96,8 @@ export class AutoAssignTemplateService {
     }, {});
   }
 
-  public toAutoAssignTemplateData(template, subscriptions): any {
-    const autoAssignTemplateData: any = {};
+  public toAutoAssignTemplateData(template, subscriptions): IAutoAssignTemplateData {
+    const autoAssignTemplateData = {} as IAutoAssignTemplateData;
     const assignedLicenses = template.licenses;
     const allLicenses = this.getAllLicenses(subscriptions);
     autoAssignTemplateData.LICENSE = this.mkLicenseEntries(assignedLicenses, allLicenses);
@@ -124,7 +125,7 @@ export class AutoAssignTemplateService {
       });
   }
 
-  private mkPayload(autoAssignTemplateData): IAutoAssignTemplateRequestPayload {
+  private mkPayload(autoAssignTemplateData: IAutoAssignTemplateData): IAutoAssignTemplateRequestPayload {
     const licensesPayload = this.mkLicensesPayload(autoAssignTemplateData);
     const userEntitlementsPayload = this.mkUserEntitlementsPayload(autoAssignTemplateData);
     const result = {
@@ -135,7 +136,7 @@ export class AutoAssignTemplateService {
     return result;
   }
 
-  private mkLicensesPayload(autoAssignTemplateData): ILicenseRequestItem[] {
+  private mkLicensesPayload(autoAssignTemplateData: IAutoAssignTemplateData): ILicenseRequestItem[] {
     const licenseItems = autoAssignTemplateData[AssignableServicesItemCategory.LICENSE];
     const selectedItems: IAssignableLicenseCheckboxState[] = _.filter(licenseItems, { isSelected: true });
     const result = _.map(selectedItems, (selectedItem) => {
@@ -148,7 +149,7 @@ export class AutoAssignTemplateService {
     return result;
   }
 
-  private mkUserEntitlementsPayload(autoAssignTemplateData): IUserEntitlementRequestItem[] {
+  private mkUserEntitlementsPayload(autoAssignTemplateData: IAutoAssignTemplateData): IUserEntitlementRequestItem[] {
     if (_.isEmpty(_.get(autoAssignTemplateData, AssignableServicesItemCategory.LICENSE))) {
       return [];
     }

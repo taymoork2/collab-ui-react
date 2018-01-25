@@ -2,6 +2,7 @@ import { AutoAssignTemplateModel, AutoAssignTemplateService } from 'modules/core
 import { IOnboardScopeForUsersAdd, OnboardCtrlBoundUIStates } from 'modules/core/users/userAdd/shared/onboard.store';
 import OnboardService from 'modules/core/users/userAdd/shared/onboard.service';
 import OnboardStore from 'modules/core/users/userAdd/shared/onboard.store';
+import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 
 export class ManualAddUsersModalController implements ng.IComponentController {
   public isDirSyncEnabled: boolean;
@@ -9,7 +10,7 @@ export class ManualAddUsersModalController implements ng.IComponentController {
   public model: any;
   private dismiss?: Function;
   private scopeData: IOnboardScopeForUsersAdd;
-  public autoAssignTemplateData: any;  // TODO: better type
+  public autoAssignTemplateData: IAutoAssignTemplateData;
 
   /* @ngInject */
   constructor(

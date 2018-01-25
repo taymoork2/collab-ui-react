@@ -1,9 +1,9 @@
-import { IAutoAssignTemplateRequestPayload } from 'modules/core/users/shared';
-import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template';
+import { IAutoAssignTemplateRequestPayload } from 'modules/core/users/shared/onboard.interfaces';
+import { AutoAssignTemplateService, IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 
 class EditSummaryAutoAssignTemplateModalController implements ng.IComponentController {
   private dismiss: Function;
-  private autoAssignTemplateData: any;  // TODO: better type
+  private autoAssignTemplateData: IAutoAssignTemplateData;
   private isEditTemplateMode: boolean;
   private templateId: string;
   public saveLoading = false;

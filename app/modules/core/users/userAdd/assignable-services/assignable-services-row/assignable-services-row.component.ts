@@ -1,5 +1,6 @@
 import { AssignableServicesItemCategory, ILicenseUsage, ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
 import { OfferName } from 'modules/core/shared';
+import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 
 class AssignableServicesRowController implements ng.IComponentController {
 
@@ -7,7 +8,7 @@ class AssignableServicesRowController implements ng.IComponentController {
   public showContent: boolean;
   private static readonly itemCategory = AssignableServicesItemCategory.SUBSCRIPTION;
   private subscription: ISubscription;
-  private autoAssignTemplateData: any;  // TODO: better type
+  private autoAssignTemplateData: IAutoAssignTemplateData;
   private onUpdate: Function;
   private licenses: ILicenseUsage[];
   private messageLicenses: ILicenseUsage[];

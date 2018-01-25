@@ -3,6 +3,7 @@ import { FeatureToggleService } from 'modules/core/featureToggle';
 import { IServiceDescription, ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 import { IEntitlementNameAndState } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
 import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
+import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 
 interface IExtendedServiceDescription extends IServiceDescription {
   entitled?: boolean;
@@ -31,7 +32,7 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
   private showCalendarChoice: boolean;
   private services: IHybridServices;
   private entitlementsCallback: Function;
-  private autoAssignTemplateData: any;  // TODO: better type
+  private autoAssignTemplateData: IAutoAssignTemplateData;
 
   /* @ngInject */
   constructor (
@@ -91,7 +92,7 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
 
   public $onInit(): void {
     if (!this.autoAssignTemplateData) {
-      this.autoAssignTemplateData = {};
+      this.autoAssignTemplateData = {} as IAutoAssignTemplateData;
     }
     this.initHybridServices(this.autoAssignTemplateData);
   }

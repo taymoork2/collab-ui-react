@@ -1,11 +1,11 @@
 import { ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
-import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template';
+import { AutoAssignTemplateService, IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 
 class EditAutoAssignTemplateModalController implements ng.IComponentController {
 
   private prevState: string;
   private dismiss: Function;
-  private autoAssignTemplateData: any;  // TODO: better type
+  private autoAssignTemplateData: IAutoAssignTemplateData;
   private isEditTemplateMode = false;
   public sortedSubscriptions: ISubscription[];
 
@@ -27,7 +27,7 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
     }
 
     // otherwise use default initialization
-    this.autoAssignTemplateData = {};
+    this.autoAssignTemplateData = {} as IAutoAssignTemplateData;
     this.AutoAssignTemplateService.getSortedSubscriptions()
       .then(sortedSubscriptions => {
         this.sortedSubscriptions = sortedSubscriptions;

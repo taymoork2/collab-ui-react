@@ -1,11 +1,12 @@
 import { ILicenseUsage } from 'modules/core/users/userAdd/assignable-services/shared';
-import { IUserEntitlementRequestItem, UserEntitlementName } from 'modules/core/users/shared';
+import { IUserEntitlementRequestItem, UserEntitlementName } from 'modules/core/users/shared/onboard.interfaces';
+import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 import { OfferName } from 'modules/core/shared';
 
 class LicenseSummaryController implements ng.IComponentController {
   private advancedMeetingLicenses: ILicenseUsage[];
   private advancedMeetingSiteUrls: string[];
-  private autoAssignTemplateData: any; //TODO add a better type
+  private autoAssignTemplateData: IAutoAssignTemplateData;
   public readonly ENTITLEMENT_NAME = UserEntitlementName;
   public OFFER_NAME = OfferName;
 
