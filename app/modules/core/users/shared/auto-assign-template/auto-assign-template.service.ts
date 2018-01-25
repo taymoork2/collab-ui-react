@@ -71,7 +71,7 @@ export class AutoAssignTemplateService {
     return this.$http.delete(`${this.autoAssignTemplateUrl}/${templateId}`);
   }
 
-  public stateDataToPayload(stateData): any {
+  public autoAssignTemplateDataToPayload(stateData): any {
     return this.mkPayload(stateData);
   }
 

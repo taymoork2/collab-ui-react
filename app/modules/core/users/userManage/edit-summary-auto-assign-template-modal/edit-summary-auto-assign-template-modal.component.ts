@@ -66,7 +66,7 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
 
   public save(): void {
     this.saveLoading = true;
-    const payload: IAutoAssignTemplateRequestPayload = this.AutoAssignTemplateService.stateDataToPayload(this.stateData);
+    const payload: IAutoAssignTemplateRequestPayload = this.AutoAssignTemplateService.autoAssignTemplateDataToPayload(this.stateData);
     return this.isEditTemplateMode ? this.updateTemplate(payload) : this.createTemplate(payload);
   }
 }
