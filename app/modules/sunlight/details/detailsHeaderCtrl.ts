@@ -9,7 +9,6 @@ class Tab {
 }
 
 class DetailsHeaderCtrl implements ng.IComponentController {
-  public back: boolean = false;
   public tabs: Tab[] = [];
 
   /* @ngInject */

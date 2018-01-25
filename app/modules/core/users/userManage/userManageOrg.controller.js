@@ -5,7 +5,9 @@
   module.exports = UserManageOrgController;
 
   /* @ngInject */
-  function UserManageOrgController($q, $state, $window, Analytics, Authinfo, AutoAssignTemplateModel, AutoAssignTemplateService, DirSyncService, FeatureToggleService, Notification, OnboardService, Orgservice, UserCsvService) {
+  function UserManageOrgController($q, $state, Analytics, Authinfo, AutoAssignTemplateModel, AutoAssignTemplateService, DirSyncService, FeatureToggleService, Notification, OnboardService, Orgservice, UserCsvService) {
+    // TODO: use 'OnboardCtrlBoundUIStates.ALL' when converting to TS
+    var ALL_ONBOARD_STORE_STATES = 'all';
     var DEFAULT_AUTO_ASSIGN_TEMPLATE = AutoAssignTemplateService.DEFAULT;
     var vm = this;
 
@@ -162,7 +164,9 @@
         switch (vm.manageType) {
           case vm.ManageType.MANUAL:
             Analytics.trackAddUsers(Analytics.eventNames.NEXT, Analytics.sections.ADD_USERS.uploadMethods.MANUAL);
-            $state.go('users.add.manual');
+            $state.go('users.add.manual', {
+              resetOnboardStoreStates: ALL_ONBOARD_STORE_STATES,
+            });
             break;
 
           case vm.ManageType.BULK:

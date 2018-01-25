@@ -1,12 +1,8 @@
 <div>
   <div class="ct-title">
-		<span class="h3">
-			{{$ctrl.getText('configurationSteps.title')}}
-		</span>
+    <span class="h3">{{$ctrl.getText('configurationSteps.title')}}</span>
   </div>
-  <h6 class="ct-title-desc">
-    {{$ctrl.getText('configurationSteps.desc')}}
-  </h6>
+  <h6 class="ct-title-desc">{{$ctrl.getText('configurationSteps.desc')}}</h6>
   <div class="cs-card-container ct-sa-content">
     <cs-card-layout block-view="true" class="va-card-center">
       <cs-card class="va-box eva-configuration-steps-box va-card">
@@ -16,22 +12,54 @@
         <div class="instruction-row">
           <img class="icon-circle" src="/images/icon-circle-one.svg"/>
           <h5>{{$ctrl.getText('configurationSteps.boxStepOne')}}
-          <i class="icon icon-information" tooltip="{{$ctrl.getText('configurationSteps.boxStepOneTooltip')}}" tooltip-placement="top" tooltip-class="smaller-font"></i></h5>
+            <i class="icon icon-information"
+              tooltip="{{$ctrl.getText('configurationSteps.boxStepOneTooltip')}}"
+              aria-label="{{$ctrl.getText('configurationSteps.boxStepOneTooltip')}}"
+              tooltip-placement="top"
+              tooltip-class="smaller-font"
+              tooltip-trigger="mouseover focus"
+              tabindex="0">
+            </i>
+          </h5>
         </div>
         <div class="instruction-row">
           <img class="icon-circle" src="/images/icon-circle-two.svg"/>
           <h5>{{$ctrl.getText('configurationSteps.boxStepTwo')}}
-          <i class="icon icon-information" tooltip="{{$ctrl.getText('configurationSteps.boxStepTwoTooltip')}}" tooltip-placement="top" tooltip-class="smaller-font"></i></h5>
+            <i class="icon icon-information"
+              tooltip="{{$ctrl.getText('configurationSteps.boxStepTwoTooltip')}}"
+              aria-label="{{$ctrl.getText('configurationSteps.boxStepTwoTooltip')}}"
+              tooltip-placement="top"
+              tooltip-class="smaller-font"
+              tooltip-trigger="mouseover focus"
+              tabindex="0">
+            </i>
+          </h5>
         </div>
         <div class="instruction-row">
           <img class="icon-circle" src="/images/icon-circle-three.svg"/>
           <h5>{{$ctrl.getText('configurationSteps.boxStepThree')}}
-          <i class="icon icon-information" tooltip="{{$ctrl.getText('configurationSteps.boxStepThreeTooltip')}}" tooltip-placement="top" tooltip-class="smaller-font"></i></h5>
+            <i class="icon icon-information"
+              tooltip="{{$ctrl.getText('configurationSteps.boxStepThreeTooltip')}}"
+              aria-label="{{$ctrl.getText('configurationSteps.boxStepThreeTooltip')}}"
+              tooltip-placement="top"
+              tooltip-class="smaller-font"
+              tooltip-trigger="mouseover focus"
+              tabindex="0">
+            </i>
+          </h5>
         </div>
         <div class="instruction-row">
           <img class="icon-circle" src="/images/icon-circle-four.svg"/>
           <h5>{{$ctrl.getText('configurationSteps.boxStepFour')}}
-          <i class="icon icon-information" tooltip="{{$ctrl.getText('configurationSteps.boxStepFourTooltip')}}" tooltip-placement="top" tooltip-class="smaller-font"></i></h5>
+            <i class="icon icon-information"
+              tooltip="{{$ctrl.getText('configurationSteps.boxStepFourTooltip')}}"
+              aria-label="{{$ctrl.getText('configurationSteps.boxStepFourTooltip')}}"
+              tooltip-placement="top"
+              tooltip-class="smaller-font"
+              tooltip-trigger="mouseover focus"
+              tabindex="0">
+            </i>
+          </h5>
         </div>
         <div class="learn-more-row">
           <a href="https://www.cisco.com/go/create-eva" target="_blank">

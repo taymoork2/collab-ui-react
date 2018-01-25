@@ -53,8 +53,8 @@
             tooltip-placement="bottom-right"
             tooltip-trigger="mouseenter focus"
             aria-label="{{careFeaturesCtrl.tooltip}}"
-            tabindex="0">
-             <button class="btn btn--people new-feature-button"
+            tabindex="{{careFeaturesCtrl.hasMessage ? -1 : 0}}">
+            <button class="btn btn--people new-feature-button"
               ng-disabled="!careFeaturesCtrl.hasMessage"
               ng-click="careFeaturesCtrl.openNewCareFeatureModal()">
               <span translate="sunlightDetails.newFeatures.newFeatureButtonText"></span>

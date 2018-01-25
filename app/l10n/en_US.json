@@ -1363,10 +1363,12 @@
     "manualCodes": {
       "100": "Not Used",
       "200": "Transfer; Modify of non-CI WebEx site",
-      "210": "Create non-CI Site (new)",
+      "210": "Create non-CI Site",
+      "220": "Site does not support auto provisioning",
       "300": "TSP to WEBEX Audio/VoIPOnly; TSP partner to direct customer transfer",
       "400": "WEBEX/VoIPOnly to TSP Audio; Direct customer to partner transfer",
       "450": "Modify of MP audio",
+      "460": "Modify of unrecognized audio type",
       "500": "Manual Branding needed",
       "600": "CCASP Audio Setup, Modify, Cancel, Suspend/Resume, or Audio Change",
       "650": "CCA-Enterprise setup, Cancel",
@@ -1378,6 +1380,10 @@
       "910": "CMR changes for non-CI sites",
       "920": "TSP partner to partner transfer",
       "930": "Session swap for non-CI site",
+      "940": "CMR requires MC",
+      "950": "Down sell",
+      "960": "CMR - data center does not support CMR",
+      "970": "Duplicate primary language and additional language in site",
       "1000": "Messenger"
     }
   },
@@ -2793,7 +2799,7 @@
         "heading": "Documentation and Software",
         "headingDoc": "Documentation",
         "headingSoftware": "Software",
-        "help": "Visit <a href=\"{{helpLink}}\" target=\"_blank\">Help Central</a> for further information about {{localizedServiceName}}.",
+        "help": "See the <a href=\"{{helpLink}}\" target=\"_blank\">deployment documentation</a> for further information about {{localizedServiceName}}.",
         "downloadExpressway": "Download Cisco Expressway software from <a href=\"{{downloadLink}}\" target=\"_blank\">software.cisco.com</a>.",
         "downloadECP": "<a href=\"{{downloadLink}}\" target=\"_blank\">Download {{serviceName}} software</a>.",
         "downloadDemoHybridMedia": "<a href=\"{{downloadLink}}\" target=\"_blank\">Download Full Software Image</a><br> (Full capacity and used for production deployments of Hybrid Media)<br> <a href=\"{{downloadDemoLink}}\" target=\"_blank\">Download Demo Software Image</a> <br>(Limited capacity, lifespan of 90 days, and only used for demos of Hybrid Media)"
@@ -7290,7 +7296,9 @@
       "webTemplate": "Web Template",
       "callbackType": "Callback Template",
       "chatPlusCallbackType": "Chat+Callback Template",
-      "virtualAssistant": "Virtual Assistant"
+      "virtualAssistant": "Virtual Assistant",
+      "noCallWarningMessage" : "Requires call service.",
+      "learnMoreLink": "Learn More"
     },
     "settings": {
       "setUpCare": "Care",
@@ -7883,10 +7891,7 @@
         "boxTitle": "Create a Dialogflow agent before you create your {{ featureName }}.",
         "boxDesc": "Build an automated agent in Dialogflow with a natural language dialogue. Your integrated {{ featureName }} uses the built-in dialogue to interact with your customers and escalate a conversation to live agents as needed.",
         "boxRadioOne": "No, I don’t have a preconfigured Dialogflow agent",
-        "boxRadioOneDesc1": "Go to ",
-        "boxRadioDialogflow": "Dialogflow",
-        "boxRadioOneDesc2": " to create an agent. To get started, see the ",
-        "boxRadioDialogflowDoc": "Dialogflow documentation",
+        "boxRadioOneDesc": "Go to <a href=\"https://dialogflow.com\" target=\"_blank\">Dialogflow</a> to create an agent. To get started, see the <a href=\"https://dialogflow.com/docs/getting-started/basics\" target=\"_blank\">Dialogflow documentation</a>",
         "boxRadioTwo": "Yes, I have a preconfigured Dialogflow agent and am ready to proceed",
         "boxRadioTwoDesc": "Click the arrow to continue to integrate your Dialogflow agent with a {{ featureName }}"
       },
@@ -8406,7 +8411,7 @@
       "status": "Status",
       "enabled": "Enabled",
       "disabled": "Disabled",
-      "turnOffDirSync": "Turn off Directory Synchronization",
+      "turnOffDirSync": "Turn off All Directory Synchronizations",
       "turnOnDirSync": "How to Turn On Directory Synchronization",
       "connectorsTitle": "Directory Connectors",
       "deregister": "Deregister",
@@ -8979,7 +8984,7 @@
       "title": "Token and Instructions",
       "close": "Close",
       "instructions": "you must copy and paste this DNS verification token to the TXT record section to prove that you own the domain:",
-      "howto": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Learn more</a> about how to enter the DNS verification token.",
+      "howto": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Learn more</a> about how to enter the DNS verification token.",
       "beforeVerify": "Before you verify"
     }
   },

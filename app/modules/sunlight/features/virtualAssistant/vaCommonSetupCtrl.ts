@@ -61,17 +61,18 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
 
   /* @ngInject*/
   constructor(
+    public $element: ng.IRootElementService,
+    public $modal: IToolkitModalService,
     public $scope: ng.IScope,
     public $state: ng.ui.IStateService,
-    public $modal: IToolkitModalService,
-    public $translate: ng.translate.ITranslateService,
     public $timeout: ng.ITimeoutService,
-    public Authinfo,
+    public $translate: ng.translate.ITranslateService,
+    public $window: ng.IWindowService,
     public Analytics,
+    public Authinfo,
+    public CTService,
     public Notification,
     public UrlConfig,
-    public CTService,
-    public $window,
   ) {
     const controller = this;
     (<IScopeWithController>this.$scope).controller = controller; // used by ctCancelModal to not be tied to 1 controller.
@@ -162,6 +163,21 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
     switch (keyCode) {
       case KeyCodes.ESCAPE:
         this.cancelModal();
+        break;
+      default:
+        break;
+    }
+  }
+
+  /**
+   * evaluate the passed event to trip a condition.
+   * @param $event
+   */
+  public keydown($event: KeyboardEvent): void {
+    switch ($event.which) {
+      case KeyCodes.ENTER:
+      case KeyCodes.SPACE:
+        this.nextPage();
         break;
       default:
         break;
@@ -469,6 +485,19 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
     this.Notification.success('careChatTpl.createSuccessText', {
       featureName: this.template.configuration.pages.vaName.nameValue,
     });
+  }
+
+  /**
+   * open file browser on Enter/Space Keypress
+   * @param $event
+   */
+  public openFileBrowser($event: KeyboardEvent) {
+    switch ($event.which) {
+      case KeyCodes.ENTER:
+      case KeyCodes.SPACE:
+        this.$element.find('.file-browser-ctrl').click();
+        break;
+    }
   }
 
   /**

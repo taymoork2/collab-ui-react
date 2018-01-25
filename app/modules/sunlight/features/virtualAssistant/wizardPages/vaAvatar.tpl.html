@@ -30,8 +30,11 @@
           <p class="va-upload-desc">{{$ctrl.getText('avatar.uploadDesc')}}</p>
         </span>
 
-        <div ngf-select="$ctrl.uploadAvatar($file)" ngf-accept="'image/png'" ngf-multiple="false">
-          <p class="ct-title-desc va-input-messages">{{$ctrl.getText('avatar.dragDropDesc')}}<label class="va-input-label">{{$ctrl.getText('avatar.fileBrowser')}}</label></p>
+        <div class="file-browser-ctrl" ngf-select="$ctrl.uploadAvatar($file)" ngf-accept="'image/png'" ngf-multiple="false">
+          <p class="ct-title-desc va-input-messages">
+            {{$ctrl.getText('avatar.dragDropDesc')}}
+            <label class="va-input-label" ng-keypress="$ctrl.openFileBrowser($event)" tabindex="0" focus-on>{{$ctrl.getText('avatar.fileBrowser')}}</label>
+          </p>
         </div>
     </div>
 

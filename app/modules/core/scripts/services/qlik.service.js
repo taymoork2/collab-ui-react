@@ -28,6 +28,7 @@
       getQBSInfo: getQBSInfo,
       getQlikMashupUrl: getQlikMashupUrl,
       getProdToBTSQBSInfo: getProdToBTSQBSInfo,
+      callReportQBSBTS: callReportQBSBTS,
     };
 
     return service;
@@ -68,7 +69,7 @@
 
       if (Config.getEnv() === 'prod' && (env !== 'integration') && (isError || siteId === '')) {
         $log.log('turns to call QBS BTS');
-        return callReportQBSBTS(reportType, viewType, data);
+        return service.callReportQBSBTS(reportType, viewType, data);
       }
 
       if (isError) {

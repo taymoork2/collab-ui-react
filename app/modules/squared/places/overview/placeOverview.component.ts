@@ -212,10 +212,14 @@ class PlaceOverview implements ng.IComponentController {
         return service.id === 'squared-fusion-uc';
       }).some().value();
     });
-    this.CloudConnectorService.getService('squared-fusion-gcal').then(service => {
-      this.hybridCalendarEnabledOnOrg = this.hybridCalendarEnabledOnOrg || service.provisioned;
+    this.FeatureToggleService.atlasOffice365SupportGetStatus().then(feature => {
+      if (feature) {
+        this.CloudConnectorService.getService('squared-fusion-o365').then(service => {
+          this.hybridCalendarEnabledOnOrg = this.hybridCalendarEnabledOnOrg || service.provisioned;
+        });
+      }
     });
-    this.CloudConnectorService.getService('squared-fusion-o365').then(service => {
+    this.CloudConnectorService.getService('squared-fusion-gcal').then(service => {
       this.hybridCalendarEnabledOnOrg = this.hybridCalendarEnabledOnOrg || service.provisioned;
     });
 

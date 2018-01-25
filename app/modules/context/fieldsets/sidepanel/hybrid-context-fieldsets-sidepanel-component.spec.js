@@ -226,7 +226,7 @@ describe('Component: Fieldset SidePanel', function () {
 
         expect(ModalService.open).toHaveBeenCalled();
         expect(ContextFieldsetsService.deleteFieldset).not.toHaveBeenCalled();
-        expect(Notification.error).not.toHaveBeenCalled();
+        expect(Notification.error).toHaveBeenCalled();
         expect(Analytics.trackEvent).not.toHaveBeenCalled();
         expect($state.go).not.toHaveBeenCalled();
       });

@@ -79,6 +79,7 @@ class InlineEditText implements ng.IComponentController {
       newValue: newValue,
     }))
       .then(() => this.saveSuccess(newValue))
+      .catch(_.noop)
       .finally(() => this.saveInProgress = false);
   }
 }

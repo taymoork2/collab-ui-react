@@ -8824,7 +8824,7 @@
       "title": "Nyckel och instruktioner",
       "close": "Stäng",
       "instructions": "måste du kopiera och klistra in denna DNS-verifieringsnyckel i TXT-registreringsavsnittet för att bevisa att du äger domänen:",
-      "howto": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Läs mer</a> om hur man anger DNS-verifieringsnyckeln.",
+      "howto": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Läs mer</a> om hur man anger DNS-verifieringsnyckeln.",
       "beforeVerify": "Innan du verifierar"
     }
   },

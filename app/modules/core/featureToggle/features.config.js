@@ -92,6 +92,7 @@ module.exports = {
   csdmAtaCpc: 'csdm-ata-cpc',
   csdmAtaReboot: 'csdm-ata-reboot',
   csdmDeviceBranding: 'csdm-device-branding',
+  csdmDeviceAccountJump: 'csdm-device-account-jump',
   csdmDevicePlaceLink: 'csdm-device-place-link',
   csdmDevRed: 'csdm-device-red',
   csdmHybridCall: 'csdm-hybrid-call',

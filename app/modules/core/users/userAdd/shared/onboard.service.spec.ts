@@ -8,6 +8,8 @@ describe('OnboardService:', () => {
     this.injectDependencies(
       '$q',
       '$scope',
+      'Analytics',
+      'LogMetricsService',
       'OnboardService',
       'UserCsvService',
       'Userservice',
@@ -90,50 +92,71 @@ describe('OnboardService:', () => {
 
   describe('onboardUsersInChunks():', () => {
     it('should create sub-lists of users and call "Userservice.onboardUsers()" for each sub-list as needed', function () {
-      spyOn(this.Userservice, 'onboardUsers').and.returnValue(this.$q.resolve({}));
+      spyOn(this.Userservice, 'onboardUsers').and.returnValue(this.$q.resolve('fake-Userservice.onboardUsers-result'));
       spyOn(this.OnboardService, 'parseOnboardedUsers');
+      spyOn(this.OnboardService, 'aggregateResponses').and.returnValue('fake-aggregateResponses-result');
+      spyOn(this.OnboardService, 'trackOnboardSaveEvent');
       const fakeUsersList = ['fake-user-1'];
       const fakeEntitlementsList = 'fake-entitlements-list';
       const fakeLicensesList = 'fake-licenses-list';
-      let batchSize = 1;
-      this.OnboardService.onboardUsersInChunks(fakeUsersList, fakeEntitlementsList, fakeLicensesList, batchSize)
-        .then((results) => {
-          expect(results.length).toBe(1);
+      const fakeOptions = {
+        batchSize: 1,
+      };
+      this.OnboardService.onboardUsersInChunks(fakeUsersList, fakeEntitlementsList, fakeLicensesList, fakeOptions)
+        .then((result) => {
+          expect(result).toBe('fake-aggregateResponses-result');
           expect(this.Userservice.onboardUsers.calls.count()).toBe(1);
+          expect(this.OnboardService.parseOnboardedUsers.calls.count()).toBe(1);
+          expect(this.OnboardService.aggregateResponses.toHaveBeenCalledWith(['fake-Userservice.onboardUsers-result']));
+          expect(this.OnboardService.trackOnboardSaveEvent.calls.count()).toBe(1);
         })
         .then(() => {
           // user list bigger than batch size (user list length: 2, batch size: 1)
           fakeUsersList.push('fake-user-2');
           this.Userservice.onboardUsers.calls.reset();
-          return this.OnboardService.onboardUsersInChunks(fakeUsersList, fakeEntitlementsList, fakeLicensesList, batchSize);
+          this.OnboardService.parseOnboardedUsers.calls.reset();
+          this.OnboardService.trackOnboardSaveEvent.calls.reset();
+          return this.OnboardService.onboardUsersInChunks(fakeUsersList, fakeEntitlementsList, fakeLicensesList, fakeOptions);
         })
-        .then((results) => {
-          expect(results.length).toBe(2);
+        .then((result) => {
+          // resolved value is always the return value of 'aggregateResponses()' (spied for this test)
+          expect(result).toBe('fake-aggregateResponses-result');
+
+          // two requests were sent
           expect(this.Userservice.onboardUsers.calls.count()).toBe(2);
+          expect(this.OnboardService.parseOnboardedUsers.calls.count()).toBe(2);
+
+          // so we have two http responses to aggregate
+          expect(this.OnboardService.aggregateResponses.toHaveBeenCalledWith([
+            'fake-Userservice.onboardUsers-result',
+            'fake-Userservice.onboardUsers-result',
+          ]));
+
+          // but we still only track a single event
+          expect(this.OnboardService.trackOnboardSaveEvent.calls.count()).toBe(1);
         })
         .then(() => {
           // user list and batch size equal (user list length: 2, batch size: 2)
-          batchSize = 2;
+          fakeOptions.batchSize = 2;
           this.Userservice.onboardUsers.calls.reset();
-          return this.OnboardService.onboardUsersInChunks(fakeUsersList, fakeEntitlementsList, fakeLicensesList, batchSize);
+          this.OnboardService.parseOnboardedUsers.calls.reset();
+          this.OnboardService.trackOnboardSaveEvent.calls.reset();
+          return this.OnboardService.onboardUsersInChunks(fakeUsersList, fakeEntitlementsList, fakeLicensesList, fakeOptions);
         })
-        .then((results) => {
-          expect(results.length).toBe(1);
-          expect(this.Userservice.onboardUsers.calls.count()).toBe(1);
-        });
-      this.$scope.$apply();
-    });
+        .then((result) => {
+          expect(result).toBe('fake-aggregateResponses-result');
 
-    it('should return a list of promises whose resolved values are objects with "onboardedUsers" properties', function () {
-      spyOn(this.Userservice, 'onboardUsers').and.returnValue(this.$q.resolve({}));
-      spyOn(this.OnboardService, 'parseOnboardedUsers').and.returnValue('fake-parseOnboardedUsers-result');
-      const fakeUsersList = ['fake-user-1'];
-      const fakeEntitlementsList = 'fake-entitlements-list';
-      const fakeLicensesList = 'fake-licenses-list';
-      const batchSize = 1;
-      this.OnboardService.onboardUsersInChunks(fakeUsersList, fakeEntitlementsList, fakeLicensesList, batchSize)
-        .then((results) => {
-          expect(results[0].onboardedUsers).toBe('fake-parseOnboardedUsers-result');
+          // only 1 request is sent
+          expect(this.Userservice.onboardUsers.calls.count()).toBe(1);
+          expect(this.OnboardService.parseOnboardedUsers.calls.count()).toBe(1);
+
+          // only 1 http response to aggregate
+          expect(this.OnboardService.aggregateResponses.toHaveBeenCalledWith([
+            'fake-Userservice.onboardUsers-result',
+          ]));
+
+          // and still only track the event once
+          expect(this.OnboardService.trackOnboardSaveEvent.calls.count()).toBe(1);
         });
       this.$scope.$apply();
     });
@@ -219,6 +242,152 @@ describe('OnboardService:', () => {
       expect(result.resultList[1].warningMsg).not.toBeDefined();
       expect(result.resultList[1].errorMsg).toBe('fake-addErrorWithTrackingID-result');
       expect(this.UserCsvService.addErrorWithTrackingID.calls.count()).toBe(2);
+    });
+  });
+
+  describe('aggregateResponses():', () => {
+    it('should combine properties from one or more http responses and return an aggregate result', function () {
+      const fakeOnboardUsersHttpResponses: any = [];
+      fakeOnboardUsersHttpResponses.push({
+        onboardedUsers: {
+          numUpdatedUsers: 0,
+          numAddedUsers: 1,
+          resultList: ['fake-newly-added-user-1'],
+        },
+      });
+
+      let result = this.OnboardService.aggregateResponses(fakeOnboardUsersHttpResponses);
+      expect(result.numUpdatedUsers).toBe(0);
+      expect(result.numAddedUsers).toBe(1);
+      expect(result.results.resultList).toEqual(['fake-newly-added-user-1']);
+      expect(result.results.errors).toEqual([]);
+      expect(result.results.warnings).toEqual([]);
+
+      fakeOnboardUsersHttpResponses.push({
+        onboardedUsers: {
+          numUpdatedUsers: 1,
+          numAddedUsers: 2,
+          resultList: ['fake-newly-added-user-2', 'fake-newly-added-user-3', 'fake-updated-user-4'],
+        },
+      });
+      result = this.OnboardService.aggregateResponses(fakeOnboardUsersHttpResponses);
+      expect(result.numUpdatedUsers).toBe(1);
+      expect(result.numAddedUsers).toBe(3);
+      expect(result.results.resultList).toEqual([
+        'fake-newly-added-user-1',
+        'fake-newly-added-user-2',
+        'fake-newly-added-user-3',
+        'fake-updated-user-4',
+      ]);
+      expect(result.results.errors).toEqual([]);
+      expect(result.results.warnings).toEqual([]);
+    });
+
+    it('should aggregate warning and error messages if present in respective responses', function () {
+      const fakeOnboardUsersHttpResponses: any = [];
+      fakeOnboardUsersHttpResponses.push({
+        onboardedUsers: {
+          resultList: [
+            { warningMsg: 'fake-warningMsg-1' },
+            { warningMsg: 'fake-warningMsg-2' },
+            { errorMsg: 'fake-errorMsg-1' },
+          ],
+        },
+      });
+
+      let result = this.OnboardService.aggregateResponses(fakeOnboardUsersHttpResponses);
+      expect(result.results.resultList).toEqual([
+        { warningMsg: 'fake-warningMsg-1' },
+        { warningMsg: 'fake-warningMsg-2' },
+        { errorMsg: 'fake-errorMsg-1' },
+      ]);
+      expect(result.results.errors).toEqual(['fake-errorMsg-1']);
+      expect(result.results.warnings).toEqual(['fake-warningMsg-1', 'fake-warningMsg-2']);
+
+      fakeOnboardUsersHttpResponses.push({
+        onboardedUsers: {
+          resultList: [
+            { warningMsg: 'fake-warningMsg-3' },
+            { errorMsg: 'fake-errorMsg-2' },
+            { errorMsg: 'fake-errorMsg-3' },
+          ],
+        },
+      });
+      result = this.OnboardService.aggregateResponses(fakeOnboardUsersHttpResponses);
+      expect(result.results.resultList).toEqual([
+        { warningMsg: 'fake-warningMsg-1' },
+        { warningMsg: 'fake-warningMsg-2' },
+        { errorMsg: 'fake-errorMsg-1' },
+        { warningMsg: 'fake-warningMsg-3' },
+        { errorMsg: 'fake-errorMsg-2' },
+        { errorMsg: 'fake-errorMsg-3' },
+      ]);
+      expect(result.results.errors).toEqual([
+        'fake-errorMsg-1',
+        'fake-errorMsg-2',
+        'fake-errorMsg-3',
+      ]);
+      expect(result.results.warnings).toEqual([
+        'fake-warningMsg-1',
+        'fake-warningMsg-2',
+        'fake-warningMsg-3',
+      ]);
+    });
+  });
+
+  describe('trackOnboardSaveEvent():', () => {
+    it('should make tracking calls as-needed', function () {
+      spyOn(this.LogMetricsService, 'logMetrics');
+      spyOn(this.Analytics, 'trackAddUsers');
+      spyOn(this.OnboardService, 'createPropertiesForAnalytics').and.returnValue('fake-createPropertiesForAnalytics-result');
+      const fakeOptions = {
+        numAddedUsers: 0,
+        numUpdatedUsers: 0,
+        numErrors: 0,
+        servicesSelected: {},
+      };
+      this.OnboardService.trackOnboardSaveEvent(fakeOptions);
+      expect(this.LogMetricsService.logMetrics).not.toHaveBeenCalled();
+      expect(this.Analytics.trackAddUsers).toHaveBeenCalledWith(this.Analytics.eventNames.SAVE, null, 'fake-createPropertiesForAnalytics-result');
+
+      // at least one user added, log to metrics
+      fakeOptions.numAddedUsers = 1;
+      this.OnboardService.trackOnboardSaveEvent(fakeOptions);
+      expect(this.LogMetricsService.logMetrics).toHaveBeenCalled();
+    });
+  });
+
+  describe('createPropertiesForAnalytics():', () => {
+    it('should return a result composed of the given args', function () {
+      const numAddedUsers = 1;
+      const numUpdatedUsers = 2;
+      const numErrors = 3;
+      const servicesSelected = { foo: 0 };
+      spyOn(this.OnboardService, 'getSelectedKeys').and.callThrough();
+
+      const result = this.OnboardService.createPropertiesForAnalytics(numAddedUsers, numUpdatedUsers, numErrors, servicesSelected);
+      expect(result).toEqual({
+        numberOfErrors: 3,
+        usersAdded: 1,
+        usersUpdated: 2,
+        servicesSelected: [],
+      });
+      expect(this.OnboardService.getSelectedKeys).toHaveBeenCalledWith({ foo: 0 });
+    });
+  });
+
+  describe('getSelectedKeys():', () => {
+    it('should return the keys whose values are explicitly true', function () {
+      expect(this.OnboardService.getSelectedKeys(null)).toEqual([]);
+      expect(this.OnboardService.getSelectedKeys(undefined)).toEqual([]);
+      expect(this.OnboardService.getSelectedKeys()).toEqual([]);
+      expect(this.OnboardService.getSelectedKeys({})).toEqual([]);
+      expect(this.OnboardService.getSelectedKeys({
+        foo1: true,
+        foo2: 'true',
+        foo3: 1,
+        foo4: false,
+      })).toEqual(['foo1']);
     });
   });
 });

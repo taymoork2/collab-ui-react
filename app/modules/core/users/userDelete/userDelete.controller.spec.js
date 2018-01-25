@@ -2,7 +2,7 @@
 
 describe('Controller: UserDeleteCtrl', function () {
   var $rootScope, $scope, $q, $controller, $timeout, $translate, controller;
-  var Authinfo, Notification, SunlightConfigService, Userservice, SyncService;
+  var Notification, SunlightConfigService, Userservice, SyncService, Config;
   var stateParams = {
     deleteUserOrgId: '123',
     deleteUserUuId: '456',
@@ -18,7 +18,7 @@ describe('Controller: UserDeleteCtrl', function () {
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies(_$rootScope_, _$q_, _$controller_, _$timeout_, _$translate_, _Authinfo_, _Notification_, _SunlightConfigService_, _Userservice_, _SyncService_) {
+  function dependencies(_$rootScope_, _$q_, _$controller_, _$timeout_, _$translate_, _Notification_, _SunlightConfigService_, _Userservice_, _SyncService_, _Config_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -29,11 +29,16 @@ describe('Controller: UserDeleteCtrl', function () {
     SyncService = _SyncService_;
     Notification = _Notification_;
     SunlightConfigService = _SunlightConfigService_;
-    Authinfo = _Authinfo_;
+    Config = _Config_;
   }
 
   function initSpies() {
-    spyOn(Userservice, 'getUser');
+    var userEntitlements = {
+      data: {
+        entitlements: [Config.entitlements.care],
+      },
+    };
+    spyOn(Userservice, 'getUser').and.returnValue($q.resolve(userEntitlements));
     spyOn(Userservice, 'deactivateUser').and.returnValue($q.resolve());
     $scope.$close = jasmine.createSpy('$close');
     spyOn(Notification, 'success');
@@ -45,7 +50,6 @@ describe('Controller: UserDeleteCtrl', function () {
     spyOn(SunlightConfigService, 'deleteUser').and.returnValue(
       $q.resolve(deferred.promise)
     );
-    spyOn(Authinfo, 'isCare').and.returnValue(true);
   }
 
   function initController() {
@@ -56,15 +60,6 @@ describe('Controller: UserDeleteCtrl', function () {
     $scope.$apply();
   }
 
-  function setupUser() {
-    var entitlements = Array.prototype.slice.apply(arguments);
-    Userservice.getUser.and.callFake(function (uuid, callback) {
-      callback({
-        entitlements: entitlements,
-      });
-    });
-  }
-
   function deactivateUser() {
     controller.deactivateUser();
     $scope.$apply();
@@ -73,6 +68,10 @@ describe('Controller: UserDeleteCtrl', function () {
 
   function setupDeleteError() {
     Userservice.deactivateUser.and.returnValue($q.reject());
+  }
+
+  function setupGetUserError() {
+    Userservice.getUser.and.returnValue($q.reject());
   }
 
   describe('deleteCheck', function () {
@@ -87,11 +86,12 @@ describe('Controller: UserDeleteCtrl', function () {
   });
 
   describe('User', function () {
-    beforeEach(setupUser);
-
     describe('successful delete', function () {
       beforeEach(deactivateUser);
 
+      it('should call Userservice.getUser', function () {
+        expect(Userservice.getUser).toHaveBeenCalled();
+      });
       it('should call Userservice.deactivateUser', function () {
         expect(Userservice.deactivateUser).toHaveBeenCalledWith({
           email: stateParams.deleteUsername,
@@ -102,9 +102,6 @@ describe('Controller: UserDeleteCtrl', function () {
           email: stateParams.deleteUsername,
         });
         expect(Notification.errorResponse).not.toHaveBeenCalled();
-      });
-      it('should have called Authinfo.isCare', function () {
-        expect(Authinfo.isCare).toHaveBeenCalled();
       });
       it('should call SunlightConfigService.deleteUser', function () {
         expect(SunlightConfigService.deleteUser).toHaveBeenCalledWith('456');
@@ -121,6 +118,9 @@ describe('Controller: UserDeleteCtrl', function () {
       beforeEach(setupDeleteError);
       beforeEach(deactivateUser);
 
+      it('should call Userservice.getUser', function () {
+        expect(Userservice.getUser).toHaveBeenCalled();
+      });
       it('should call Userservice.deactivateUser', function () {
         expect(Userservice.deactivateUser).toHaveBeenCalledWith({
           email: stateParams.deleteUsername,
@@ -130,9 +130,6 @@ describe('Controller: UserDeleteCtrl', function () {
         expect(Notification.success).not.toHaveBeenCalled();
         expect(Notification.errorResponse).toHaveBeenCalled();
       });
-      it('should not have call Authinfo.isCare', function () {
-        expect(Authinfo.isCare).not.toHaveBeenCalled();
-      });
       it('should not call SunlightConfigService.deleteUser', function () {
         expect(SunlightConfigService.deleteUser).not.toHaveBeenCalled();
       });
@@ -141,6 +138,17 @@ describe('Controller: UserDeleteCtrl', function () {
       });
       it('should not have closed the modal', function () {
         expect($scope.$close).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('User delete', function () {
+      beforeEach(setupGetUserError);
+
+      it('should check messenger sync status although getUser is a error', function () {
+        expect(SyncService.isMessengerSyncEnabled).toHaveBeenCalled();
+      });
+      it('should have set msgrloaded although getUser is a error', function () {
+        expect(controller.msgrloaded).toEqual(true);
       });
     });
   });
