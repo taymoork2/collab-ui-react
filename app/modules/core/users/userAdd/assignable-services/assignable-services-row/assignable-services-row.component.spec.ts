@@ -10,7 +10,7 @@ describe('Component: assignableServicesRow:', () => {
     this.$scope.fakeSubscription = {
       subscriptionId: 'fake-subscriptionId-1',
     };
-    this.$scope.fakeStateData = {
+    this.$scope.fakeAutoAssignTemplateData = {
       SUBSCRIPTION: {
         'fake-subscriptionId-1': {
           showContent: false,
@@ -48,7 +48,7 @@ describe('Component: assignableServicesRow:', () => {
       it('should render a collapsed row if previous state has "showContent" set to false', function () {
         this.compileComponent('assignableServicesRow', {
           subscription: 'fakeSubscription',
-          stateData: 'fakeStateData',
+          stateData: 'fakeAutoAssignTemplateData',
         });
         expect(this.view.find('.subscription__header .icon.toggle')).toHaveClass('icon-chevron-down');
         expect(this.view.find('.subscription__content')).toHaveClass('ng-hide');
@@ -89,7 +89,7 @@ describe('Component: assignableServicesRow:', () => {
 
       this.compileComponent('assignableServicesRow', {
         subscription: 'fakeSubscription',
-        stateData: 'fakeStateData',
+        stateData: 'fakeAutoAssignTemplateData',
       });
       expect(this.controller.showContent).toBe(false);
     });

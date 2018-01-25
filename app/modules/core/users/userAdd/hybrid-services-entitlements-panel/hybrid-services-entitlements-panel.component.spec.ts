@@ -224,7 +224,7 @@ describe('Component Controller: hybridServicesPanelCtrl', function () {
 
   it('should initialize "services" property from "stateData" if provided', function () {
     initMockServices.call(this, ['squared-fusion-uc'], []);
-    this.$scope.fakeStateData = {
+    this.$scope.fakeAutoAssignTemplateData = {
       hybridServices: {
         callServiceAware: {
           enabled: true,
@@ -237,7 +237,7 @@ describe('Component Controller: hybridServicesPanelCtrl', function () {
       },
     };
     this.compileComponent('hybridServicesEntitlementsPanel', {
-      stateData: 'fakeStateData',
+      stateData: 'fakeAutoAssignTemplateData',
     });
     expect(this.ServiceDescriptorService.getServices).not.toHaveBeenCalled();
     expect(this.CloudConnectorService.getService).not.toHaveBeenCalled();

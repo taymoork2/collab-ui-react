@@ -39,13 +39,13 @@ describe('Component: onboardSummaryForAutoAssignModal:', () => {
       'Notification',
       'OnboardService',
     );
-    this.$scope.fakeStateData = {};
+    this.$scope.fakeAutoAssignTemplateData = {};
     this.$scope.fakeUserList = [];
   });
 
   function initComponent(this: Test) {
     this.compileComponent('onboardSummaryForAutoAssignModal', {
-      stateData: 'fakeStateData',
+      stateData: 'fakeAutoAssignTemplateData',
       userList: 'fakeUserList',
     });
   }
@@ -72,7 +72,7 @@ describe('Component: onboardSummaryForAutoAssignModal:', () => {
     });
 
     it('should pass along its "stateData" to its "license-summary"', function (this: Test) {
-      this.$scope.fakeStateData = 'fake-stateData';
+      this.$scope.fakeAutoAssignTemplateData = 'fake-stateData';
       initComponent.call(this);
       expect(this.components.licenseSummary.bindings[0].stateData).toBe('fake-stateData');
     });
@@ -90,7 +90,7 @@ describe('Component: onboardSummaryForAutoAssignModal:', () => {
 
     describe('back():', () => {
       it('should go back to "users.add.manual" state passing along its "stateData"', function (this: Test) {
-        this.$scope.fakeStateData = 'fake-stateData';
+        this.$scope.fakeAutoAssignTemplateData = 'fake-stateData';
         spyOn(this.$state, 'go');
         initComponent.call(this);
         this.controller.back();
