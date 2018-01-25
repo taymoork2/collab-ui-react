@@ -70,6 +70,52 @@
 		}]
 	},
 	
+	"ceWelcomeWithoutDynamicSay": {
+		"callExperienceName": "AA Welcome",
+		"assignedResources": [{
+			"trigger": "incomingCall",
+			"type": "directoryNumber",
+			"id": "e7d68d8c-9e92-4330-a881-5fc9ace1f7d3"
+		}],
+		"defaultActionSet": "openHours",
+		"scheduleEventTypeMap": {
+			"open": "openHours"
+		},
+		"actionSets": [{
+			"name": "openHours",
+			"actions": [{
+
+				"runActionsOnInput": {
+					"description": "phone menu with announcements having dynamic",
+					"language": "",
+					"voice": "",
+					"prompts": {
+						"description": "",
+						"playList": [],
+						"sayList": [],
+						"announcements": [{
+							"dynamic": {
+								"dynamicOperations": [ { } ]
+							}
+						}]
+					},
+					"attempts": 2,
+					"inputs": [{
+						"description": "",
+						"input": "0",
+						"actions": [{
+							"repeatActionsOnInput": {
+								"level": 0
+							}
+						}]
+					}],
+					"incompleteInputActions": [],
+					"rawInputActions": []
+				}
+			}]
+		}]
+	},
+	
 	"ceDynamicSay": {
 		"callExperienceName": "AA Welcome",
 		"assignedResources": [{

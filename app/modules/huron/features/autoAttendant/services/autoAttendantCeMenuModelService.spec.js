@@ -15,6 +15,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   var ceMenuFull;
   var wmenuWithAnnouncements;
   var ceWelcomeWithAnnouncements;
+  var ceWelcomeWithoutDynaSay;
   var ceWelcomeWithQueue;
   var ceMenuWithDynaSay;
   var ceMenuWithAnnouncementsPlay;
@@ -142,6 +143,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     ceWelcomeMenuWithOldQueue = getJSONFixture('huron/json/autoAttendant/ceWelcomeMenuWithOldQueueDef.json');
     ceWelcomeWithQueue = ceWelcomeMenuWithOldQueue.ceWelcomeMenuWithOldQueueDef;
     ceWelcomeWithAnnouncements = wmenuWithAnnouncements.ceWelcome;
+    ceWelcomeWithoutDynaSay = wmenuWithAnnouncements.ceWelcomeWithoutDynamicSay;
     ceWelcomeWithAnnouncementsKeys = wmenuWithAnnouncements.ceWelcomeWithAnnouncementsKeys;
     ceMenuWithDynaSay = wmenuWithAnnouncements.ceDynamicSay;
     ceMenuWithAnnouncementsPlay = wmenuWithAnnouncements.ceWelcomeWithAnnouncementsPlay;
@@ -150,7 +152,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   }));
 
   afterEach(function () {
-    AutoAttendantCeMenuModelService = AARestModelService = wmenu = ceWelcome = ceWelcomeNoDescription = ceWelcomeNoDescriptionTemp = welcomeMenu = ceMenuFull = wmenuWithAnnouncements = ceWelcomeMenuWithOldQueue = ceWelcomeWithQueue = ceWelcomeWithAnnouncements = ceWelcomeWithAnnouncementsKeys = ceMenuWithDynaSay = ceMenuWithAnnouncementsPlay = ceMenuWithAnnouncementsPlayWithoutValidDescription = undefined;
+    AutoAttendantCeMenuModelService = AARestModelService = wmenu = ceWelcome = ceWelcomeNoDescription = ceWelcomeNoDescriptionTemp = welcomeMenu = ceMenuFull = wmenuWithAnnouncements = ceWelcomeMenuWithOldQueue = ceWelcomeWithQueue = ceWelcomeWithAnnouncements = ceWelcomeWithAnnouncementsKeys = ceMenuWithDynaSay = ceMenuWithAnnouncementsPlay = ceMenuWithAnnouncementsPlayWithoutValidDescription = ceWelcomeWithoutDynaSay = undefined;
   });
 
   describe('createAnnouncements for menuEntry with announcements with dynamic', function () {
@@ -192,6 +194,15 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       expect(_.isEqual(_welcomeMenu['type'], ceWelcomeWithAnnouncementsKeys['type'])).toBe(true);
       expect(_.isEqual(_welcomeMenu['id'], ceWelcomeWithAnnouncementsKeys['id'])).toBe(true);
       expect(_.isEqual(_welcomeMenu['entries'][0].headers[0].actions[0].name, 'dynamic')).toBe(true);
+    });
+  });
+
+  describe('getWelcomeMenu for dynamic announcements', function () {
+    it('should handle welcomeMenu well while parsing ceWelcomeWithoutDynamicSay', function () {
+      var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcomeWithoutDynaSay, 'openHours');
+      expect(_.isEqual(_welcomeMenu['entries'][0].headers[0].actions[0].name, 'dynamic')).toBe(true);
+      expect(_.get(_welcomeMenu['entries'][0].headers[0], 'actions[0].dynamicList', '').length).toBe(1);
+      expect(_welcomeMenu['entries'][0].headers[0].actions[0].dynamicList.say).not.toBeDefined();
     });
   });
 
