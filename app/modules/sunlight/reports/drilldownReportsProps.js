@@ -48,7 +48,13 @@
       };
     }
 
-    function taskIncomingDrilldownProps(timeSelected, shouldDisplayWebcall) {
+    function setStateInProps(props, setStateToEmpty) {
+      if (setStateToEmpty) {
+        props.state = ReportConstants.EMPTY;
+      }
+    }
+
+    function taskIncomingDrilldownProps(timeSelected, shouldDisplayWebcall, setStateToEmpty) {
       var props = {
         description: function () {
           return $translate.instant('taskIncoming.drilldownDescription', {
@@ -118,11 +124,12 @@
           sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
         });
       }
+      setStateInProps(props, setStateToEmpty);
 
       return _.merge(getDefaultProps(), props);
     }
 
-    function taskOfferedDrilldownProps(timeSelected) {
+    function taskOfferedDrilldownProps(timeSelected, setStateToEmpty) {
       var props = {
         description: function () {
           return $translate.instant('taskOffered.drilldownDescription', {
@@ -197,10 +204,13 @@
           });
         },
       };
+
+      setStateInProps(props, setStateToEmpty);
+
       return _.merge(getDefaultProps(), props);
     }
 
-    function avgCsatDrilldownProps(timeSelected, shouldDisplayWebcall) {
+    function avgCsatDrilldownProps(timeSelected, shouldDisplayWebcall, setStateToEmpty) {
       var props = {
         description: function () {
           return $translate.instant('averageCsat.drilldownDescription', {
@@ -272,10 +282,12 @@
           sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
         });
       }
+      setStateInProps(props, setStateToEmpty);
+
       return _.merge(getDefaultProps(), props);
     }
 
-    function taskTimeDrilldownProps(timeSelected, shouldDisplayWebcall) {
+    function taskTimeDrilldownProps(timeSelected, shouldDisplayWebcall, setStateToEmpty) {
       var props = {
         description: function () {
           return $translate.instant('taskTime.drilldownDescription', {
@@ -347,6 +359,8 @@
           sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
         });
       }
+      setStateInProps(props, setStateToEmpty);
+
       return _.merge(getDefaultProps(), props);
     }
 

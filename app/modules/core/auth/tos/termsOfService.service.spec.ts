@@ -1,6 +1,9 @@
 import tosModule from './index';
 
 describe('TOSService', () => {
+  const mockTosModal = {
+    dismiss: jasmine.createSpy('dismiss').and.returnValue(true),
+  };
 
   beforeEach(function () {
     this.initModules(tosModule);
@@ -21,11 +24,7 @@ describe('TOSService', () => {
 
     this.MeServiceSpy = spyOn(this.MeService, 'getMe').and.callFake(() => this.$q.resolve(this.meData));
 
-    this.mockTosModal = {
-      dismiss: jasmine.createSpy('dismiss').and.returnValue(true),
-    };
-
-    spyOn(this.$modal, 'open').and.returnValue(this.mockTosModal);
+    spyOn(this.$modal, 'open').and.returnValue(mockTosModal);
     spyOn(this.TOSService, 'dismissModal').and.callThrough();
 
     installPromiseMatchers();
@@ -84,30 +83,27 @@ describe('TOSService', () => {
       spyOn(this.UserPreferencesService, 'setUserPreferences').and.returnValue(this.$q.resolve());
 
       const ap = this.TOSService.hasAcceptedTOS();
-      this.$rootScope.$digest();
       expect(ap).toBeResolvedWith(false);
 
       this.TOSService.openTOSModal();
-      const promise = this.TOSService.acceptTOS()
-        .finally(() => {
-          expect(this.mockTosModal.dismiss).toHaveBeenCalled();
-        });
-      expect(promise).toBeResolved();
+      this.TOSService.acceptTOS().then( function() {
+        expect(mockTosModal.dismiss).toHaveBeenCalled();
+      });
+      this.$rootScope.$digest();
     });
 
     it('should reject acceptTOS promise if user update failed', function () {
-      spyOn(this.UserPreferencesService, 'setUserPreferences').and.returnValue(this.$q.reject());
-
       const ap = this.TOSService.hasAcceptedTOS();
-      this.$rootScope.$digest();
       expect(ap).toBeResolvedWith(false);
 
+      spyOn(this.UserPreferencesService, 'setUserPreferences').and.returnValue(this.$q.reject());
+
       this.TOSService.openTOSModal();
-      const promise = this.TOSService.acceptTOS()
-        .finally(() => {
-          expect(this.mockTosModal.dismiss).not.toHaveBeenCalled();
-        });
-      expect(promise).toBeRejected();
+      mockTosModal.dismiss.calls.reset(); // openTOSModal calls dismiss, so reset spy
+      this.TOSService.acceptTOS().catch( function() {
+        expect(mockTosModal.dismiss).not.toHaveBeenCalled();
+      });
+      this.$rootScope.$digest();
     });
 
   });

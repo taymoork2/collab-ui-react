@@ -64,17 +64,20 @@ describe('orgService', function () {
   it('should fail to get an organization for a given orgId', function () {
     var callback = jasmine.createSpy('callback');
     this.$httpBackend.when('GET', this.UrlConfig.getScomUrl() + '/' + this.Authinfo.getOrgId()).respond(500, {});
-    this.Orgservice.getOrg(callback, this.Authinfo.getOrgId());
+    this.Orgservice.getOrg(callback, this.Authinfo.getOrgId()).catch(function (response) {
+      expect(response.status).toBe(500);
+      expect(callback.calls.count()).toBe(1);
+      expect(callback.calls.argsFor(0)[0].success).toBe(false);
+    });
     this.$httpBackend.flush();
-    expect(callback.calls.count()).toBe(1);
-    expect(callback.calls.argsFor(0)[0].success).toBe(false);
   });
 
   it('should fail to get an organization for a given orgId and reject the returned promise', function () {
     this.$httpBackend.expect('GET', this.UrlConfig.getScomUrl() + '/' + this.Authinfo.getOrgId()).respond(500, {});
-    var promise = this.Orgservice.getOrg(_.noop, this.Authinfo.getOrgId());
+    this.Orgservice.getOrg(_.noop, this.Authinfo.getOrgId()).catch(function (response) {
+      expect(response.status).toBe(500);
+    });
     this.$httpBackend.flush();
-    expect(promise).toBeRejected();
   });
 
   it('should get an organization for getOrgId provided by Authinfo', function () {
@@ -89,10 +92,12 @@ describe('orgService', function () {
   it('should fail to get an organization for getOrgId provided by Authinfo', function () {
     var callback = jasmine.createSpy('callback');
     this.$httpBackend.when('GET', this.UrlConfig.getScomUrl() + '/' + this.Authinfo.getOrgId()).respond(500, {});
-    this.Orgservice.getOrg(callback, this.Authinfo.getOrgId());
+    this.Orgservice.getOrg(callback, this.Authinfo.getOrgId()).catch(function (response) {
+      expect(response.status).toBe(500);
+      expect(callback.calls.count()).toBe(1);
+      expect(callback.calls.argsFor(0)[0].success).toBe(false);
+    });
     this.$httpBackend.flush();
-    expect(callback.calls.count()).toBe(1);
-    expect(callback.calls.argsFor(0)[0].success).toBe(false);
   });
 
   it('should successfully get an admin organization for a given orgId', function () {
@@ -118,10 +123,12 @@ describe('orgService', function () {
   it('should fail to get an admin organization for a given orgId', function () {
     var callback = jasmine.createSpy('callback');
     this.$httpBackend.when('GET', this.UrlConfig.getAdminServiceUrl() + 'organizations/' + this.Authinfo.getOrgId() + '?disableCache=false').respond(500, {});
-    this.Orgservice.getAdminOrg(callback, this.Authinfo.getOrgId());
+    this.Orgservice.getAdminOrg(callback, this.Authinfo.getOrgId()).catch(function (response) {
+      expect(response.status).toBe(500);
+      expect(callback.calls.count()).toBe(1);
+      expect(callback.calls.argsFor(0)[0].success).toBe(false);
+    });
     this.$httpBackend.flush();
-    expect(callback.calls.count()).toBe(1);
-    expect(callback.calls.argsFor(0)[0].success).toBe(false);
   });
 
   it('should successfully get an admin organization for getOrgId provided by Authinfo', function () {
@@ -136,10 +143,12 @@ describe('orgService', function () {
   it('should fail to get an admin organization for getOrgId provided by Authinfo', function () {
     var callback = jasmine.createSpy('callback');
     this.$httpBackend.when('GET', this.UrlConfig.getAdminServiceUrl() + 'organizations/' + this.Authinfo.getOrgId() + '?disableCache=false').respond(500, {});
-    this.Orgservice.getAdminOrg(callback, this.Authinfo.getOrgId());
+    this.Orgservice.getAdminOrg(callback, this.Authinfo.getOrgId()).catch(function (response) {
+      expect(response.status).toBe(500);
+      expect(callback.calls.count()).toBe(1);
+      expect(callback.calls.argsFor(0)[0].success).toBe(false);
+    });
     this.$httpBackend.flush();
-    expect(callback.calls.count()).toBe(1);
-    expect(callback.calls.argsFor(0)[0].success).toBe(false);
   });
 
   it('should successfully get an admin organization for a given orgId as when called as a promise', function () {
@@ -153,11 +162,10 @@ describe('orgService', function () {
 
   it('should fail to get an admin organization for getOrgId provided by Authinfo when called as a promise', function () {
     this.$httpBackend.when('GET', this.UrlConfig.getAdminServiceUrl() + 'organizations/' + this.Authinfo.getOrgId() + '?disableCache=false').respond(500, {});
-    var promise = this.Orgservice.getAdminOrgAsPromise(this.Authinfo.getOrgId());
-    this.$httpBackend.flush();
-    promise.then(function (data) {
-      expect(data.success).toBe(false);
+    this.Orgservice.getAdminOrgAsPromise(this.Authinfo.getOrgId()).catch(function (response) {
+      expect(response.data.success).toBe(false);
     });
+    this.$httpBackend.flush();
   });
 
   it('should successfully get unlicensed users for random orgId', function () {
@@ -413,9 +421,10 @@ describe('orgService', function () {
     };
     this.$httpBackend.when('GET', this.UrlConfig.getScomUrl() + '/' + this.Authinfo.getOrgId() + '?disableCache=true').respond(200, {});
     this.$httpBackend.when('PATCH', this.UrlConfig.getAdminServiceUrl() + 'organizations/' + this.Authinfo.getOrgId() + '/settings', payload).respond(500, {});
-    var promise = this.Orgservice.setOrgSettings(this.Authinfo.getOrgId(), payload);
+    this.Orgservice.setOrgSettings(this.Authinfo.getOrgId(), payload).catch(function (response) {
+      expect(response.status).toBe(500);
+    });
     this.$httpBackend.flush();
-    expect(promise).toBeRejected();
   });
 
   it('should overwrite current settings with new settings', function () {
@@ -522,18 +531,18 @@ describe('orgService', function () {
       this.patchRequest.respond({
         status: 'DUPLICATE',
       });
-      var promise = this.Orgservice.updateDisplayName('123', 'new display name');
+      this.Orgservice.updateDisplayName('123', 'new display name').catch(function (err) {
+        expect(err).toBe('helpdesk.org.duplicateName');
+      });
       this.$httpBackend.flush();
-
-      expect(promise).toBeRejectedWith('helpdesk.org.duplicateName');
     });
 
     it('should reject on error', function () {
       this.patchRequest.respond(500);
-      var promise = this.Orgservice.updateDisplayName('123', 'new display name');
+      this.Orgservice.updateDisplayName('123', 'new display name').catch(function (response) {
+        expect(response.status).toBe(500);
+      });
       this.$httpBackend.flush();
-
-      expect(promise).toBeRejected();
     });
   });
 
@@ -565,10 +574,10 @@ describe('orgService', function () {
 
     it('should reject on error', function () {
       this.patchRequest.respond(500);
-      var promise = this.Orgservice.validateDisplayName('123', 'new display name');
+      this.Orgservice.validateDisplayName('123', 'new display name').catch(function (response) {
+        expect(response.status).toBe(500);
+      });
       this.$httpBackend.flush();
-
-      expect(promise).toBeRejected();
     });
   });
 
@@ -609,45 +618,58 @@ describe('orgService', function () {
   });
 
   describe('getInternallyManagedSubscriptions', function () {
+    var subscriptions;
     beforeEach(function () {
-      this.subscriptions = [
+      subscriptions = [
         {
+          subscriptionId: 'unknown',
+          internalSubscriptionId: 'unknown',
           licenses: [],
         },
         {
+          subscriptionId: 'unknown',
+          internalSubscriptionId: 'unknown',
           licenses: [
             { licenseId: 'fake-license-id-1' },
           ],
         },
         {
+          subscriptionId: 'unknown',
+          internalSubscriptionId: 'unknown',
           licenses: [
             { licenseId: 'fake-license-id-1' },
             { licenseId: 'fake-license-id-2' },
           ],
         },
       ];
-      spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.subscriptions));
+      this.$httpBackend.expectGET(this.UrlConfig.getAdminServiceUrl() + 'customers/' + this.currentOrgId + '/usage').respond(200, subscriptions);
+      this.Orgservice.clearOrgUsageCache(this.currentOrgId);
+    });
+
+    afterEach(function () {
+      this.$httpBackend.verifyNoOutstandingExpectation();
+      this.$httpBackend.verifyNoOutstandingRequest();
     });
 
     it('should return all subscriptions where Authinfo.isExternallyManagedLicense is false', function () {
       spyOn(this.Authinfo, 'isExternallyManagedLicense').and.returnValue(false);
       this.Orgservice.getInternallyManagedSubscriptions().then(function (response) {
-        expect(response).toEqual(this.subscriptions);
+        expect(response).toEqual(subscriptions);
       });
-      this.$scope.$apply();
+      this.$httpBackend.flush();
     });
 
     it('should filter out subscriptions with 1 and only 1 license and where Authinfo.isExternallyManagedLicense is true', function () {
       spyOn(this.Authinfo, 'isExternallyManagedLicense').and.returnValue(true);
       this.Orgservice.getInternallyManagedSubscriptions().then(function (response) {
-        expect(response).not.toEqual(this.subscriptions);
+        expect(response).not.toEqual(subscriptions);
 
         // subscriptions with 0 and 2+ licenses are retained
         expect(response.length).toBe(2);
-        expect(response[0]).toEqual(this.subscriptions[0]);
-        expect(response[1]).toEqual(this.subscriptions[2]);
+        expect(response[0]).toEqual(subscriptions[0]);
+        expect(response[1]).toEqual(subscriptions[2]);
       });
-      this.$scope.$apply();
+      this.$httpBackend.flush();
     });
   });
 });

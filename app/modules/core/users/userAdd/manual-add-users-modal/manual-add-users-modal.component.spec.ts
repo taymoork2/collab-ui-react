@@ -29,6 +29,7 @@ describe('Component: manualAddUsersModal:', () => {
     );
     this.injectDependencies(
       '$q',
+      '$scope',
       '$state',
       'Analytics',
       'AutoAssignTemplateModel',
@@ -68,6 +69,35 @@ describe('Component: manualAddUsersModal:', () => {
       expect(this.AutoAssignTemplateService.toStateData).toHaveBeenCalledWith('fake-getDefaultTemplate-result', 'fake-getSortedSubscriptions-result');
       expect(this.controller.stateData).toBe('fake-toStateData-result');
       expect(this.controller.useDefaultAutoAssignTemplate).toBe(true);
+    });
+  });
+
+  describe('initial state (with input bindings):', () => {
+    it('should skip fetching template data depending on whether it is passed in through input binding and default template is activated', function (this: Test) {
+      this.$scope.fakeStateData = { foo: 0 };
+      this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = true;
+      this.compileComponent('manualAddUsersModal', {
+        stateData: 'fakeStateData',
+      });
+      expect(this.AutoAssignTemplateService.getDefaultTemplate).not.toHaveBeenCalled();
+      expect(this.AutoAssignTemplateService.getSortedSubscriptions).not.toHaveBeenCalled();
+
+      // template is deactivated means we still fetch
+      this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = false;
+      this.compileComponent('manualAddUsersModal', {
+        stateData: 'fakeStateData',
+      });
+      expect(this.AutoAssignTemplateService.getDefaultTemplate).toHaveBeenCalled();
+      expect(this.AutoAssignTemplateService.getSortedSubscriptions).toHaveBeenCalled();
+
+      // template is activated, but data passed through input binding is empty means we still fetch
+      this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = true;
+      this.$scope.fakeStateData = undefined;
+      this.compileComponent('manualAddUsersModal', {
+        stateData: 'fakeStateData',
+      });
+      expect(this.AutoAssignTemplateService.getDefaultTemplate).toHaveBeenCalled();
+      expect(this.AutoAssignTemplateService.getSortedSubscriptions).toHaveBeenCalled();
     });
   });
 

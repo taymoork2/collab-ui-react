@@ -94,6 +94,8 @@ require('./_fieldsets-sidepanel.scss');
           Notification.error('context.dictionary.fieldsetPage.fieldsetDeleteFailure');
           Analytics.trackEvent(Analytics.sections.CONTEXT.eventNames.CONTEXT_DELETE_FIELDSET_FAILURE);
         });
+      }).catch(function () {
+        Notification.error('notifications.genericError');
       });
     };
   }

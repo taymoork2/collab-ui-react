@@ -54,6 +54,14 @@ describe('CareLocalSettingsCtrl', function () {
 
   function initController(_controllerLocals) {
     var controllerLocals = _.assignIn({}, {
+      $element: {
+        find: function (locator) {
+          expect(locator).toEqual(jasmine.any(String));
+          return {
+            focus: _.noop,
+          };
+        },
+      },
       $scope: this.$scope,
       $interval: this.$interval,
       Notification: this.Notification,

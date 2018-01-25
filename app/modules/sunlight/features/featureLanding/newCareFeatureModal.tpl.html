@@ -22,6 +22,11 @@
       <p class="feature-description-container" ng-class="{'feature-label-disabled': feature.disabled}">
         <span translate="{{feature.description}}" translate-value-onclick="$ctrl.purchaseLink()" translate-compile />
       </p>
+      <div class= "feature-warning-container" ng-if= "feature.showWarning">
+          <i class="icon {{feature.warningIcon}} feature-icon-color"></i> 
+          <span translate="{{feature.warning}}"></span>
+          <a translate="sunlightDetails.newFeatures.learnMoreLink" href= # ></a>
+      </div>
     </div>
     <div ng-if="$ctrl.features.length === 0">
       <h4 translate="sunlightDetails.newFeatures.noCareFeatures"></h4>

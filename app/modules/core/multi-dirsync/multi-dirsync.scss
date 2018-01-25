@@ -10,7 +10,11 @@ multi-dirsync-setting {
 .row .row.dirsync-row {
   @include vr-spacing(mb, 1);
 
+  .connector-disabled {
+    color: $gray-3;
+  }
+
   .primary {
-    color: $color-blue-base;
+    color: $blue-base;
   }
 }

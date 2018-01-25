@@ -915,8 +915,16 @@
           .state('users.add.manual', {
             views: {
               'usersAdd@users.add': {
-                template: '<manual-add-users-modal dismiss="$dismiss()"></manual-add-users-modal>',
+                template: '<manual-add-users-modal state-data="$resolve.stateData" dismiss="$dismiss()"></manual-add-users-modal>',
               },
+            },
+            resolve: stateParamsToResolveParams({
+              resetOnboardStoreStates: null,
+              stateData: null,
+            }),
+            params: {
+              resetOnboardStoreStates: null,
+              stateData: null,
             },
           })
           .state('users.add.services', {
@@ -942,15 +950,22 @@
           .state('users.add.results', {
             views: {
               'usersAdd@users.add': {
-                template: require('modules/core/users/userAdd/addUsersResultsModal.tpl.html'),
-                // TODO (mipark2): rm this if determined no longer needed
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'add-users';
-                    $state.params.modalId = 'modalContent';
-                  },
-                },
+                template: '<add-users-results-modal dismiss="$dismiss()" convert-pending="$resolve.convertPending" convert-users-flow="$resolve.convertUsersFlow" num-updated-users="$resolve.numUpdatedUsers" num-added-users="$resolve.numAddedUsers" results="$resolve.results"></add-users-results-modal>',
               },
+            },
+            resolve: stateParamsToResolveParams({
+              convertPending: false,
+              convertUsersFlow: false,
+              numUpdatedUsers: 0,
+              numAddedUsers: 0,
+              results: [],
+            }),
+            params: {
+              convertPending: false,
+              convertUsersFlow: false,
+              numUpdatedUsers: 0,
+              numAddedUsers: 0,
+              results: [],
             },
           })
 
@@ -1058,7 +1073,11 @@
             },
           })
           .state('users.manage.onboard-summary-for-auto-assign-modal', {
-            template: '<onboard-summary-for-auto-assign-modal dismiss="$dismiss()"></onboard-summary-for-auto-assign-modal>',
+            template: '<onboard-summary-for-auto-assign-modal dismiss="$dismiss()" state-data="$resolve.stateData" user-list="$resolve.userList"></onboard-summary-for-auto-assign-modal>',
+            resolve: stateParamsToResolveParams({
+              stateData: null,
+              userList: null,
+            }),
             params: {
               stateData: null,
               userList: null,

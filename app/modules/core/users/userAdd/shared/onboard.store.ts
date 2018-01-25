@@ -21,23 +21,58 @@ export interface IOnboardScopeForUsersAdd {
   };
 }
 
+export interface IOnboardScopeForUsersConvert {
+  convertCancelled: boolean;
+}
+
 export enum OnboardCtrlBoundUIStates {
+  ALL = 'all',
   USERS_ADD_MANUAL = 'users.add.manual',
+  USERS_CONVERT = 'users.convert',
 }
 
 export default class OnboardStore {
 
   public 'users.add.manual': IOnboardScopeForUsersAdd;
+  public 'users.convert': IOnboardScopeForUsersConvert;
 
   /* @ngInject */
   constructor(
   ) {
+    this.resetAllStates();
+  }
+
+  public resetStatesAsNeeded(stateNameOrStateNames: OnboardCtrlBoundUIStates | OnboardCtrlBoundUIStates[]): void {
+    if (_.isString(stateNameOrStateNames)) {
+      if (stateNameOrStateNames === OnboardCtrlBoundUIStates.ALL) {
+        return this.resetAllStates();
+      }
+      return this.resetForState(stateNameOrStateNames);
+    }
+    return this.resetSomeStates(stateNameOrStateNames);
+  }
+
+  public resetAllStates(): void {
     this.resetForState(OnboardCtrlBoundUIStates.USERS_ADD_MANUAL);
+    this.resetForState(OnboardCtrlBoundUIStates.USERS_CONVERT);
+  }
+
+  public resetSomeStates(stateNames: OnboardCtrlBoundUIStates[]): void {
+    _.forEach(stateNames, (stateName) => {
+      this.resetForState(stateName);
+    });
   }
 
   public resetForState(uiStateName: OnboardCtrlBoundUIStates): void {
-    if (uiStateName === OnboardCtrlBoundUIStates.USERS_ADD_MANUAL) {
-      this[uiStateName] = this.initUsersAdd();
+    switch (uiStateName) {
+      case OnboardCtrlBoundUIStates.USERS_ADD_MANUAL:
+        this[uiStateName] = this.initUsersAdd();
+        return;
+      case OnboardCtrlBoundUIStates.USERS_CONVERT:
+        this[uiStateName] = this.initUsersConvert();
+        return;
+      default:
+        return;
     }
   }
 
@@ -59,5 +94,11 @@ export default class OnboardStore {
     };
 
     return result;
+  }
+
+  private initUsersConvert(): IOnboardScopeForUsersConvert {
+    return {
+      convertCancelled: false,
+    };
   }
 }
