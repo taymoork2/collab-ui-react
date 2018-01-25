@@ -1,0 +1,64 @@
+<div class="users-upload-results">
+  <i ng-if="$ctrl.results.errors.length === 0" class="icon icon-check-mark-success"></i>
+  <div class="results-container">
+    <div class="result new-users" ng-class="{disabled: $ctrl.numAddedUsers === 0}">
+      <div class="total">{{$ctrl.numAddedUsers}}</div>
+      <h4 class="total-title" translate="usersPage.newUsers" translate-value-newusers="{{$ctrl.numAddedUsers}}" translate-interpolation="messageformat"></h4>
+    </div>
+    <div class="result updated-users" ng-class="{disabled: $ctrl.numUpdatedUsers === 0}">
+      <div class="total">{{$ctrl.numUpdatedUsers}}</div>
+      <h4 class="total-title" translate="usersPage.updatedUsers" translate-value-updatedusers="{{$ctrl.numUpdatedUsers}}" translate-interpolation="messageformat"></h4>
+    </div>
+    <div class="result error-users" ng-class="{disabled: $ctrl.results.errors.length === 0}">
+      <div class="total">{{$ctrl.results.errors.length}}</div>
+      <h4 class="total-title" translate="usersPage.errors" translate-value-errors="{{$ctrl.results.errors.length}}" translate-interpolation="messageformat"></h4>
+      <div class="action-link" ng-if="$ctrl.results.errors.length > 0">
+        <i class="icon icon-error"></i>
+        <a href ng-click="$ctrl.fixBulkErrors()" translate="firstTimeWizard.fixBulkErrors"></a>
+      </div>
+    </div>
+  </div>
+  <div class="results-total">{{$ctrl.results.resultList.length}} <span translate="firstTimeWizard.totalProcessed"></span></div>
+  <div class="error-table table-header" ng-if="$ctrl.results.errors.length > 0 || $ctrl.results.warnings.length > 0">
+    <table class="table table-bordered">
+      <colgroup>
+        <col class="medium-10">
+      </colgroup>
+      <thead>
+        <tr>
+          <th translate='usersPage.errorWarningMessages'></th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+  <div  class="error-table table-body warning-table" ng-if="$ctrl.results.warnings.length > 0">
+    <table id="warningTable" class="table table-bordered">
+      <colgroup>
+        <col class="medium-10">
+      </colgroup>
+      <tbody>
+        <tr ng-repeat="msg in $ctrl.results.warnings">
+          <td>
+            <i class="icon icon-warning"></i>
+            {{::msg}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div  class="error-table table-body" ng-if="$ctrl.results.errors.length > 0">
+    <table id="errorTable" class="table table-bordered">
+      <colgroup>
+        <col class="medium-10">
+      </colgroup>
+      <tbody>
+        <tr ng-repeat="msg in $ctrl.results.errors">
+          <td>
+            <i class="icon icon-error"></i>
+            {{::msg}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

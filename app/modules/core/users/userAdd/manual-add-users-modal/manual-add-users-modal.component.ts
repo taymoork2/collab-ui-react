@@ -11,7 +11,6 @@ export class ManualAddUsersModalController implements ng.IComponentController {
   private dismiss?: Function;
   private scopeData: IOnboardScopeForUsersAdd;
   public stateData: any;  // TODO: better type
-  public useDefaultAutoAssignTemplate = false;
 
   /* @ngInject */
   constructor(
@@ -34,16 +33,25 @@ export class ManualAddUsersModalController implements ng.IComponentController {
     this.model = this.scopeData.model;
     this.maxUsersInManual = this.OnboardService.maxUsersInManual;
 
+    // early-out if state data provided through input binding (ie. passed from another step)
+    if (this.useDefaultAutoAssignTemplate) {
+      return;
+    }
+
+    // otherwise initialize state data
     this.$q.all({
       defaultAutoAssignTemplate: this.AutoAssignTemplateService.getDefaultTemplate(),
       subscriptions: this.AutoAssignTemplateService.getSortedSubscriptions(),
     }).then((results) => {
-      if (!this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated || !results.defaultAutoAssignTemplate) {
+      if (!results.defaultAutoAssignTemplate) {
         return;
       }
       this.stateData = this.AutoAssignTemplateService.toStateData(results.defaultAutoAssignTemplate, results.subscriptions);
-      this.useDefaultAutoAssignTemplate = true;
     });
+  }
+
+  public get useDefaultAutoAssignTemplate(): boolean {
+    return !_.isEmpty(this.stateData) && this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated;
   }
 
   public dismissModal(): void {
@@ -132,5 +140,6 @@ export class ManualAddUsersModalComponent implements ng.IComponentOptions {
   public template = require('./manual-add-users-modal.html');
   public bindings = {
     dismiss: '&?',
+    stateData: '<',
   };
 }

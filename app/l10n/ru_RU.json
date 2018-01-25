@@ -8824,7 +8824,7 @@
       "title": "Маркер и инструкции",
       "close": "Закрыть",
       "instructions": "необходимо скопировать и вставить этот маркер проверки DNS в раздел текстовой записи, чтобы подтвердить свои права на домен:",
-      "howto": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Узнайте больше</a> о том, как ввести маркер проверки DNS.",
+      "howto": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Узнайте больше</a> о том, как ввести маркер проверки DNS.",
       "beforeVerify": "Перед проверкой"
     }
   },

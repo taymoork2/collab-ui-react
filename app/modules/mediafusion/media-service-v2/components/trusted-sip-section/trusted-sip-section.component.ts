@@ -1,5 +1,5 @@
 import { ICluster, IClusterPropertySet } from 'modules/hercules/hybrid-services.types';
-import { ClusterService } from 'modules/hercules/services/cluster-service';
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { Notification } from 'modules/core/notifications';
 
 interface ITag {
@@ -20,7 +20,7 @@ class TrustedSipSectionCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private ClusterService: ClusterService,
+    private HybridServicesClusterService: HybridServicesClusterService,
     private Notification: Notification,
   ) { }
 
@@ -34,7 +34,7 @@ class TrustedSipSectionCtrl implements ng.IComponentController {
   }
 
   private getProperties(clusterId) {
-    this.ClusterService.getProperties(clusterId)
+    this.HybridServicesClusterService.getProperties(clusterId)
       .then((properties: IClusterPropertySet) => {
         let rawTrustedSipConfigurationData;
         if (!_.isUndefined(properties['mf.trustedSipSources'])) {
@@ -60,7 +60,7 @@ class TrustedSipSectionCtrl implements ng.IComponentController {
     const payload: IClusterPropertySet = {
       'mf.trustedSipSources': _.map(this.trustedsipconfiguration, 'text').join(', '),
     };
-    this.ClusterService.setProperties(this.clusterId, payload)
+    this.HybridServicesClusterService.setProperties(this.clusterId, payload)
       .then(() => {
         this.Notification.success('mediaFusion.trustedSip.success');
       })

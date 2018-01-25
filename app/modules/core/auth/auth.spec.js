@@ -117,23 +117,27 @@ describe('Auth Service', function () {
         .expectPOST('url', 'data', assertCredentials)
         .respond(500);
 
-      var promise = Auth.getNewAccessToken({
+      Auth.getNewAccessToken({
         code: 'argToGetNewAccessToken',
         state: '123-abc-456',
-      });
+      })
+        .catch(function (response) {
+          expect(response.status).toBe(500);
+        });
       $httpBackend.flush();
-      expect(promise).toBeRejectedWith(mockResponse(500));
     });
 
     it('should not get new access token if not oauth state', function () {
       Auth.verifyOauthState.and.returnValue(false);
 
-      var promise = Auth.getNewAccessToken({
+      Auth.getNewAccessToken({
         code: 'argToGetNewAccessToken',
         state: '123-abc-456',
-      });
+      })
+        .catch(function (response) {
+          expect(response).toBe(undefined);
+        });
       $rootScope.$apply();
-      expect(promise).toBeRejectedWith(undefined);
     });
   });
 
@@ -166,25 +170,27 @@ describe('Auth Service', function () {
         .expectPOST('url', 'accessCodeUrl', assertCredentials)
         .respond(500);
 
-      var promise = Auth.refreshAccessToken();
+      Auth.refreshAccessToken().catch(function (response) {
+        expect(response.status).toBe(500);
+        expect(SessionStorage.get.calls.argsFor(0)[0]).toBe('refreshToken');
+        expect(OAuthConfig.getOauthAccessCodeUrl.calls.argsFor(0)[0]).toBe('fromStorage');
+        expect(TokenService.completeLogout).toHaveBeenCalled();
+      });
 
       $httpBackend.flush();
-      expect(promise).toBeRejectedWith(mockResponse(500));
-      expect(SessionStorage.get.calls.argsFor(0)[0]).toBe('refreshToken');
-      expect(OAuthConfig.getOauthAccessCodeUrl.calls.argsFor(0)[0]).toBe('fromStorage');
-      expect(TokenService.completeLogout).toHaveBeenCalled();
     });
 
     it('should reject refresh access token if no refresh token', function () {
       SessionStorage.get.and.returnValue(undefined);
 
-      var promise = Auth.refreshAccessToken();
+      Auth.refreshAccessToken().catch(function (response) {
+        expect(response).toBe('refreshtoken not found');
+        expect(SessionStorage.get.calls.argsFor(0)[0]).toBe('refreshToken');
+        expect(OAuthConfig.getOauthAccessCodeUrl.calls.argsFor(0)[0]).toBe(undefined);
+        expect(TokenService.completeLogout).toHaveBeenCalled();
+      });
 
       $rootScope.$apply();
-      expect(promise).toBeRejectedWith('refreshtoken not found');
-      expect(SessionStorage.get.calls.argsFor(0)[0]).toBe('refreshToken');
-      expect(OAuthConfig.getOauthAccessCodeUrl.calls.argsFor(0)[0]).toBe(undefined);
-      expect(TokenService.completeLogout).toHaveBeenCalled();
     });
   });
 
@@ -249,11 +255,12 @@ describe('Auth Service', function () {
         .expectPOST('access_token_url')
         .respond(500);
 
-      var promise = Auth.refreshAccessTokenAndResendRequest();
+      Auth.refreshAccessTokenAndResendRequest().catch(function (response) {
+        expect(response.status).toBe(500);
+        expect(TokenService.completeLogout).toHaveBeenCalledWith('logoutUrl');
+      });
 
       $httpBackend.flush();
-      expect(promise).toBeRejectedWith(mockResponse(500));
-      expect(TokenService.completeLogout).toHaveBeenCalledWith('logoutUrl');
     });
 
     function expectRefreshCountFromTwoRetriesOverSpan(expectedRefreshCount, durationOfSpan) {
@@ -322,10 +329,11 @@ describe('Auth Service', function () {
         .expectPOST('url', 'data', assertCredentials)
         .respond(500);
 
-      var promise = Auth.setAccessToken();
+      Auth.setAccessToken().catch(function (response) {
+        expect(response.status).toBe(500);
+      });
 
       $httpBackend.flush();
-      expect(promise).toBeRejectedWith(mockResponse(500));
     });
   });
 
@@ -390,11 +398,12 @@ describe('Auth Service', function () {
         .expectDELETE('refreshtoken=OauthDeleteRefreshTokenUrl')
         .respond(500);
 
-      var promise = Auth.logoutAndRedirectTo('customLogoutUrl');
+      Auth.logoutAndRedirectTo('customLogoutUrl').catch(function (response) {
+        expect(response.status).toBe(500);
+        expect(TokenService.completeLogout).toHaveBeenCalledWith('customLogoutUrl');
+      });
 
       $httpBackend.flush();
-      expect(promise).toBeRejectedWith(mockResponse(500));
-      expect(TokenService.completeLogout).toHaveBeenCalledWith('customLogoutUrl');
     });
 
     it('should logout and redirect to a provided url even if we didnt match any refresh tokens on client_session_id', function () {
@@ -427,11 +436,12 @@ describe('Auth Service', function () {
         .expectGET('OauthListTokenUrl')
         .respond(500);
 
-      var promise = Auth.logoutAndRedirectTo('customLogoutUrl');
+      Auth.logoutAndRedirectTo('customLogoutUrl').catch(function (response) {
+        expect(response.status).toBe(500);
+        expect(TokenService.completeLogout).toHaveBeenCalledWith('customLogoutUrl');
+      });
 
       $httpBackend.flush();
-      expect(promise).toBeRejectedWith(mockResponse(500));
-      expect(TokenService.completeLogout).toHaveBeenCalledWith('customLogoutUrl');
     });
   });
 
@@ -536,7 +546,9 @@ describe('Auth Service', function () {
         $httpBackend
           .expectGET('path/organizations/1337/services')
           .respond(500, {});
-        Auth.authorize();
+        Auth.authorize().catch(function (response) {
+          expect(response.status).toBe(500);
+        });
 
         $httpBackend.flush();
       });
@@ -822,8 +834,10 @@ describe('Auth Service', function () {
       $httpBackend
         .expectDELETE('http://www.example.com/idb/oauth2/v1/tokens?username=fakeuser%40example.com&orgid=eca72332-dc0a-4da6-a8a1-eaaad58d2dc9')
         .respond(403, {});
-      var promise = Auth.revokeUserAuthTokens('fakeuser@example.com', 'eca72332-dc0a-4da6-a8a1-eaaad58d2dc9');
-      expect(promise).toBeRejected();
+      Auth.revokeUserAuthTokens('fakeuser@example.com', 'eca72332-dc0a-4da6-a8a1-eaaad58d2dc9').catch(function (response) {
+        expect(response.status).toBe(403);
+      });
+      $httpBackend.flush();
     });
 
     it('revoke user token should be success', function () {
@@ -842,11 +856,5 @@ describe('Auth Service', function () {
 
   function assertCredentials(headers) {
     return headers['Authorization'] === 'Basic clientRegistrationCredentials';
-  }
-
-  function mockResponse(status) {
-    return jasmine.objectContaining({
-      status: status,
-    });
   }
 });

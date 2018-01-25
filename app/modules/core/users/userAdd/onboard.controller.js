@@ -12,7 +12,8 @@ require('./_user-add.scss');
     var vm = this;
 
     // reset corresponding scope properties in OnboardStore each time this controller initializes
-    OnboardStore.resetForState('users.add.manual');
+    var resetOnboardStoreStates = _.get($state, 'params.resetOnboardStoreStates');
+    OnboardStore.resetStatesAsNeeded(resetOnboardStoreStates);
 
     $scope.model = OnboardStore['users.add.manual'].model;
 
@@ -602,9 +603,9 @@ require('./_user-add.scss');
     $scope.setCareService = setCareService;
     var convertUsersCount = 0;
     var convertStartTime = 0;
-    var convertCancelled = false;
     var convertBacked = false;
     var convertPending = false;
+    var convertProps = OnboardStore['users.convert']; // shorthand alias
 
     $scope.messageFeatures.push(new ServiceFeature($translate.instant('onboardModal.msgFree'), 0, 'msgRadio', new FakeLicense('freeTeamRoom')));
     $scope.conferenceFeatures.push(new ServiceFeature($translate.instant('onboardModal.mtgFree'), 0, 'confRadio', new FakeLicense('freeConferencing')));
@@ -673,24 +674,15 @@ require('./_user-add.scss');
       }
     }
 
-    function getSelectedKeys(obj) {
-      var result = _.reduce(obj, function (result, v, k) {
-        if (v === true) {
-          result.push(k);
-        }
-        return result;
-      }, []);
-      return result;
-    }
-
-
     function createPropertiesForAnalytics() {
-      return {
-        numberOfErrors: $scope.results.errors.length,
-        usersAdded: $scope.numAddedUsers,
-        usersUpdated: $scope.numUpdatedUsers,
-        servicesSelected: getSelectedKeys(),
-      };
+      // FIXME (mipark2): understand original intent and fix this
+      var servicesSelected = {};
+      return OnboardService.createPropertiesForAnalytics(
+        $scope.numAddedUsers,
+        $scope.numUpdatedUsers,
+        _.size($scope.results.errors),
+        servicesSelected
+      );
     }
 
     if (userEnts) {
@@ -1467,56 +1459,45 @@ require('./_user-add.scss');
 
       entitleList = entitleList.concat(getHybridServicesEntitlements('add'));
 
-      // notes (as of 2018-01-13):
-      // - 'Userservice.onboardUsersLegacy()' can be called multiple times given a large enough user
-      //   list (called once for each 'Config.batchSize' length of users)
-      // - each response is aggregated back into scope variables:
-      //   - 'numUpdatedUsers'
-      //   - 'numAddedUsers'
-      //   - 'results.resultList'
-      //   - 'results.warnings'
-      //   - 'results.errors'
-      return OnboardService.onboardUsersInChunks(usersList, entitleList, licenseList, Config.batchSize)
+      return OnboardService.onboardUsersInChunks(usersList, entitleList, licenseList)
         .catch(function (rejectedResponse) {
           // notes:
-          // - potentially multiple 'Userservice.onboardUsersLegacy()' calls could have been made
+          // - potentially multiple 'Userservice.onboardUsers()' calls could have been made
           // - if any calls reject (or in the case of multiple calls, the first one rejects), we
           //   error notify and re-reject
           Notification.errorResponse(rejectedResponse);
           return $q.reject();
         })
-        .then(function (responses) {
+        .then(function (aggregateResults) {
           // TODO: rm this if determined no longer needed (onboarding user still in FTSW?)
           if (isFTW) {
             return $q.resolve();
           }
 
-          // aggregate results
-          $scope.numUpdatedUsers = _.sumBy(responses, 'onboardedUsers.numUpdatedUsers');
-          $scope.numAddedUsers = _.sumBy(responses, 'onboardedUsers.numAddedUsers');
-          $scope.results.resultList = _.flatMap(responses, 'onboardedUsers.resultList');
+          // put aggregate results back into scope variables
+          $scope.numUpdatedUsers = aggregateResults.numUpdatedUsers;
+          $scope.numAddedUsers = aggregateResults.numAddedUsers;
+          $scope.results.resultList = _.get(aggregateResults, 'results.resultList');
+          $scope.results.errors = _.get(aggregateResults, 'results.errors');
+          $scope.results.warnings = _.get(aggregateResults, 'results.warnings');
 
-          //concatenating the results in an array of strings for notify function
-          $scope.results.errors = [];
-          $scope.results.warnings = [];
+          // notes:
+          // - trim out entries for successfully onboarded users
+          // - if errors are present, the next step ('users.add.results') will show a link allowing
+          //   jump back to 'users.add.manual', which renders the remaining user entries
           _.forEach($scope.results.resultList, function (userResult) {
             if (userResult.alertType === 'success' && userResult.email) {
               $scope.model.userList = OnboardService.removeEmailFromTokenfield(userResult.email, $scope.model.userList);
             }
-            if (userResult.warningMsg) {
-              $scope.results.warnings.push(userResult.warningMsg);
-            }
-            if (userResult.errorMsg) {
-              $scope.results.errors.push(userResult.errorMsg);
-            }
           });
 
-          if ($scope.numAddedUsers > 0) {
-            var msg = 'Invited ' + $scope.numAddedUsers + ' users';
-            LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), $scope.numAddedUsers, null);
-          }
-          Analytics.trackAddUsers(Analytics.eventNames.SAVE, null, createPropertiesForAnalytics());
-          $state.go('users.add.results');
+          $state.go('users.add.results', {
+            convertPending: convertPending,
+            convertUsersFlow: $scope.convertUsersFlow,
+            numUpdatedUsers: $scope.numUpdatedUsers,
+            numAddedUsers: $scope.numAddedUsers,
+            results: $scope.results,
+          });
         })
         .finally(function () {
           $rootScope.$broadcast('USER_LIST_UPDATED');
@@ -1659,7 +1640,7 @@ require('./_user-add.scss');
           resetUsersfield();
         }
       } else {
-        if ($scope.convertSelectedList.length > 0 && convertCancelled === false && convertBacked === false) {
+        if ($scope.convertSelectedList.length > 0 && convertProps.convertCancelled === false && convertBacked === false) {
           convertUsersInBatch();
         } else {
           if (convertBacked === false) {
@@ -1824,7 +1805,7 @@ require('./_user-add.scss');
 
     $scope.cancelConvert = function () {
       if (convertPending === true) {
-        convertCancelled = true;
+        convertProps.convertCancelled = true;
       } else {
         $scope.$dismiss();
       }
@@ -1907,7 +1888,7 @@ require('./_user-add.scss');
     $scope.convertUsers = function () {
       $scope.btnConvertLoad = true;
       convertPending = true;
-      convertCancelled = false;
+      convertProps.convertCancelled = false;
       convertBacked = false;
       $scope.numAddedUsers = 0;
       $scope.numUpdatedUsers = 0;
@@ -1949,7 +1930,7 @@ require('./_user-add.scss');
           convertPending = false;
           Userservice.updateUsers(successMovedUsers, licenseList, entitleList, 'convertUser', entitleUserCallback);
         } else {
-          if ($scope.convertSelectedList.length > 0 && convertCancelled === false && convertBacked === false) {
+          if ($scope.convertSelectedList.length > 0 && convertProps.convertCancelled === false && convertBacked === false) {
             convertUsersInBatch();
           } else {
             convertPending = false;

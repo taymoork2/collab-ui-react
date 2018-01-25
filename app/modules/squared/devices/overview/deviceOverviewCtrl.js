@@ -38,6 +38,10 @@
 
       displayDevice($stateParams.currentDevice);
 
+      FeatureToggleService.csdmDeviceAccountJumpGetStatus().then(function (response) {
+        deviceOverview.jumpToAccount = response;
+      });
+
       fetchT38Visibility();
       fetchDetailsForLoggedInUser();
 
@@ -132,6 +136,18 @@
       resetSelectedChannel();
       return $q.all(promises);
     }
+
+    deviceOverview.goToAccount = function () {
+      if (deviceOverview.currentDevice.accountType === 'MACHINE') {
+        $state.go('places', {
+          preSelectedPlaceId: deviceOverview.currentDevice.cisUuid,
+        });
+      } else {
+        $state.go('users.list', {
+          preSelectedUserId: deviceOverview.currentDevice.cisUuid,
+        });
+      }
+    };
 
     deviceOverview.reactivateRoomDevice = function () {
       var wizardState = {

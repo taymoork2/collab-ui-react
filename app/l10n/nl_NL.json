@@ -8824,7 +8824,7 @@
       "title": "Token en instructies",
       "close": "Sluiten",
       "instructions": "moet u deze DNS-verificatietoken kopiëren en in het gedeelte TXT-record plakken om te bewijzen dat u eigenaar bent van het domein:",
-      "howto": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Meer informatie</a> over hoe u de DNS-verificatietoken invoert.",
+      "howto": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Meer informatie</a> over hoe u de DNS-verificatietoken invoert.",
       "beforeVerify": "Voordat u verifieert"
     }
   },

@@ -1,9 +1,22 @@
 import { IToolkitModalService } from 'modules/core/modal';
 import * as _ from 'lodash';
 import { VaCommonSetupCtrl } from './vaCommonSetupCtrl';
+import { AccessibilityService } from 'modules/core/accessibility';
+
+enum PageFocusKey {
+  CVA_CONFIG_OVERVIEW = 'cvaConfigOverview',
+}
+
+enum PageLocatorKey {
+  CVA_CONFIG_OVERVIEW = '[name="dialogflowRadio"]',
+}
 
 export interface IScopeWithController extends ng.IScope {
   controller?: any;
+}
+
+interface ICvaSetupPages {
+  [key: string]: boolean;
 }
 
 // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
@@ -75,6 +88,7 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
 
   /* @ngInject*/
   constructor(
+    public $element: ng.IRootElementService,
     public $scope: ng.IScope,
     public $state: ng.ui.IStateService,
     public $stateParams: ng.ui.IStateParamsService,
@@ -82,14 +96,15 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     public $translate: ng.translate.ITranslateService,
     public $timeout: ng.ITimeoutService,
     public $window: ng.IWindowService,
-    public CvaService,
+    public AccessibilityService: AccessibilityService,
+    public Analytics,
     public Authinfo,
     public CTService,
-    public Analytics,
+    public CvaService,
     public Notification,
     public UrlConfig,
   ) {
-    super($scope, $state, $modal, $translate, $timeout, Authinfo, Analytics, Notification, UrlConfig, CTService, $window);
+    super($element, $modal, $scope, $state, $timeout, $translate, $window, Analytics, Authinfo, CTService, Notification, UrlConfig);
     this.service = this.CvaService;
     // states == pages in order as found in storage template
     this.states = Object.keys(this.template.configuration.pages);
@@ -117,6 +132,22 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     }
   }
 
+  private pageFocus: ICvaSetupPages = {};
+  private setFocus(page: PageFocusKey, locator: PageLocatorKey) {
+    const element = this.$element.find(locator);
+    if (!this.pageFocus[page] && element.length > 0) {
+      this.AccessibilityService.setFocus(this.$element, locator);
+      this.unsetFocus();
+      this.pageFocus[page] = true;
+    }
+  }
+
+  private unsetFocus() {
+    _.forEach(this.pageFocus, (_value, key: PageFocusKey) => {
+      this.pageFocus[key] = false;
+    });
+  }
+
   /**
    * should next button be rendered.
    * @returns {boolean}
@@ -124,16 +155,22 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
   public nextButton(): any {
     switch (this.currentState) {
       case 'cvaConfigOverview':
+        this.setFocus(PageFocusKey.CVA_CONFIG_OVERVIEW, PageLocatorKey.CVA_CONFIG_OVERVIEW);
         return this.isDialogflowAgentConfigured(); // check radio button state
       case 'cvaDialogIntegration':
+        this.unsetFocus();
         return true;
       case 'cvaAccessToken':
+        this.unsetFocus();
         return this.isAccessTokenValid();
       case 'vaName':
+        this.unsetFocus();
         return this.isNamePageValid() && !this.isAvatarUploading();
       case 'vaAvatar':
+        this.unsetFocus();
         return !this.isAvatarUploading();
       case 'vaSummary':
+        this.unsetFocus();
         return 'hidden';
     }
   }

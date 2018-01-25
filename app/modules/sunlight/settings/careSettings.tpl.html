@@ -10,11 +10,13 @@
           <h5 class="sub-section__label" translate="sunlightDetails.settings.setUpCare"></h5>
           <p class="sub-section__description ng-scope" translate="sunlightDetails.settings.setUpDescription"></p>
           <br>
-          <button id="ccfsBtn" cs-btn class="btn--primary loading-button" loading="localCareSettings.state === localCareSettings.IN_PROGRESS"
+          <button cs-btn
+            id="ccfsBtn"
+            class="btn--primary loading-button"
+            loading="localCareSettings.state === localCareSettings.IN_PROGRESS"
             ng-click="localCareSettings.onboardToCare()"
-            ng-disabled="localCareSettings.state === localCareSettings.IN_PROGRESS ||
-            localCareSettings.state === localCareSettings.ONBOARDED">
-          <span translate="firstTimeWizard.careSettingsButton"></span>
+            ng-disabled="localCareSettings.state === localCareSettings.IN_PROGRESS || localCareSettings.state === localCareSettings.ONBOARDED">
+            <span translate="firstTimeWizard.careSettingsButton"></span>
           </button>
         </div>
       </div>
@@ -30,18 +32,15 @@
       <div class="section__content">
         <div class="sub-section">
           <div class="cs-radio-group">
-
-            <input
-                    ng-repeat ="type in localCareSettings.routingTypes"
-                    ng-disabled="localCareSettings.enableRoutingMechanism()"
-                    cs-input
-                    type="radio"
-                    ng-model="localCareSettings.queueConfig.selectedRouting"
-                    id="{{type.Header}}"
-                    value="{{type.Value}}"
-                    cs-input-label="{{type.Header}}"
-                    cs-input-help-text="{{type.Label}}"
-                    name= "selectedRouting">
+            <input cs-input type="radio"
+              ng-repeat="type in localCareSettings.routingTypes"
+              ng-disabled="localCareSettings.enableRoutingMechanism()"
+              ng-model="localCareSettings.queueConfig.selectedRouting"
+              id="{{type.Header}}"
+              value="{{type.Value}}"
+              cs-input-label="{{type.Header}}"
+              cs-input-help-text="{{type.Label}}"
+              name="selectedRouting">
           </div>
         </div>
         <div class="body-small care-warning-message" ng-if="orgConfigForm.selectedRouting.$dirty">
@@ -49,9 +48,9 @@
             <i class="icon icon-warning"></i>
           </div>
           <div>
-            <div>{{:: 'sunlightDetails.settings.routingChangeWarnMsgLine1' | translate }}</div>
-            <div>{{:: 'sunlightDetails.settings.routingChangeWarnMsgLine2' | translate }}</div>
-            <div>{{:: 'sunlightDetails.settings.routingChangeWarnMsgLine3' | translate }}</div>
+            <div translate="sunlightDetails.settings.routingChangeWarnMsgLine1"></div>
+            <div translate="sunlightDetails.settings.routingChangeWarnMsgLine2"></div>
+            <div translate="sunlightDetails.settings.routingChangeWarnMsgLine3"></div>
           </div>
         </div>
         </div>
@@ -59,9 +58,7 @@
     <div class="cs-form__section" ng-show="localCareSettings.featureToggles.chatToVideoFeatureToggle">
       <div class="section__info">
         <h4 class="section__title" translate="sunlightDetails.settings.chatCount.sectionInfoTitle"></h4>
-        <p class="sub-section__description ng-scope"
-          translate="sunlightDetails.settings.chatCount.sectionInfoDescription">
-        </p>
+        <p class="sub-section__description ng-scope" translate="sunlightDetails.settings.chatCount.sectionInfoDescription"></p>
       </div>
       <div class="section__content">
         <div class="sub-section">
@@ -71,7 +68,12 @@
           <br>
           <div class="row">
             <div class="large-3">
-              <cs-select class="selectedChatCount" name="selectedChatCount" ng-model="localCareSettings.orgChatConfig.selectedChatCount" options="localCareSettings.chatCountOptions">
+              <cs-select
+                class="selectedChatCount"
+                name="selectedChatCount"
+                ng-model="localCareSettings.orgChatConfig.selectedChatCount"
+                options="localCareSettings.chatCountOptions"
+                aria-text="{{::'sunlightDetails.settings.chatCount.sectionContentTitle' | translate}}">
               </cs-select>
             </div>
           </div>
@@ -81,20 +83,20 @@
     <div class="cs-form__section" ng-show="localCareSettings.featureToggles.chatToVideoFeatureToggle">
       <div class="section__info">
         <h4 class="section__title" translate="sunlightDetails.settings.video.sectionInfoTitle"></h4>
-        <p class="sub-section__description ng-scope"
-          translate="sunlightDetails.settings.video.sectionInfoDescription">
-        </p>
+        <p class="sub-section__description ng-scope" translate="sunlightDetails.settings.video.sectionInfoDescription"></p>
       </div>
       <div class="section__content">
         <div class="sub-section">
           <h5 class="sub-section__label" translate="sunlightDetails.settings.video.sectionContentTitle"></h5>
-          <p class="cs-input-help-text"
-            translate="sunlightDetails.settings.video.sectionContentDescription"></p>
+          <p class="cs-input-help-text" translate="sunlightDetails.settings.video.sectionContentDescription"></p>
           <br>
           <div class="row">
             <div class="large-3">
-              <cs-toggle-switch ng-model="localCareSettings.orgChatConfig.selectedVideoInChatToggle"
-                toggle-id="selectedVideoInChatToggle" size="small">
+              <cs-toggle-switch
+                ng-model="localCareSettings.orgChatConfig.selectedVideoInChatToggle"
+                toggle-id="selectedVideoInChatToggle"
+                size="small"
+                cs-aria-label="{{::'sunlightDetails.settings.video.sectionContentTitle' | translate}}">
               </cs-toggle-switch>
             </div>
           </div>
@@ -102,8 +104,17 @@
       </div>
     </div>
     <div class="save-care-section" ng-if="orgConfigForm.$dirty">
-      <button ng-click="localCareSettings.cancelEdit()" translate="common.cancel" ng-disabled="localCareSettings.isProcessing && localCareSettings.isQueueProcessing"></button>
-      <button class="btn btn--primary" cs-btn loading="localCareSettings.isProcessing && localCareSettings.isQueueProcessing" ng-click="localCareSettings.openModal()"><span translate="common.save"></span></button>
+      <button
+        ng-click="localCareSettings.cancelEdit()"
+        translate="common.cancel"
+        ng-disabled="localCareSettings.isProcessing && localCareSettings.isQueueProcessing">
+      </button>
+      <button cs-btn
+        class="btn btn--primary"
+        loading="localCareSettings.isProcessing && localCareSettings.isQueueProcessing"
+        ng-click="localCareSettings.openModal()">
+        <span translate="common.save"></span>
+      </button>
     </div>
     </form>
   </div>

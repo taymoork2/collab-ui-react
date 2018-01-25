@@ -1,3 +1,5 @@
+import { OnboardCtrlBoundUIStates } from 'modules/core/users/userAdd/shared/onboard.store';
+
 import { ManageType } from '../userManage.keys';
 
 interface IAdminOrgResponse {
@@ -55,7 +57,9 @@ export class UserManageEmailSuppressController implements ng.IComponentControlle
     switch (this.manageType) {
       case ManageType.MANUAL:
         this.Analytics.trackAddUsers(this.Analytics.eventNames.NEXT, this.Analytics.sections.ADD_USERS.uploadMethods.MANUAL);
-        this.$state.go('users.add.manual');
+        this.$state.go('users.add.manual', {
+          resetOnboardStoreStates: OnboardCtrlBoundUIStates.ALL,
+        });
         break;
 
       case ManageType.BULK:

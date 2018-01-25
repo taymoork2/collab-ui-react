@@ -8824,7 +8824,7 @@
       "title": "令牌和说明",
       "close": "关闭",
       "instructions": "必须将此 DNS 验证令牌复制粘贴到 TXT 记录部分，以证明您拥有该域：",
-      "howto": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>了解</a>如何输入 DNS 验证令牌的更多信息。",
+      "howto": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>了解</a>如何输入 DNS 验证令牌的更多信息。",
       "beforeVerify": "验证前的准备工作"
     }
   },
