@@ -15,14 +15,17 @@ require('./_user-roles.scss');
     $scope.isPartner = SessionStorage.get('partnerOrgId');
     $scope.helpDeskFeatureAllowed = Authinfo.isCisco() || _.includes(['fe5acf7a-6246-484f-8f43-3e8c910fc50d'], Authinfo.getOrgId());
     $scope.showHelpDeskRole = $scope.isPartner || $scope.helpDeskFeatureAllowed;
-    FeatureToggleService.supports(FeatureToggleService.features.atlasHelpDeskOrderSearch).then(function (result) {
-      $scope.showOrderAdminRole = result;
-    });
-    FeatureToggleService.supports(FeatureToggleService.features.atlasPartnerManagement).then(function (result) {
-      $scope.showPartnerManagementRole = result;
-    });
-    FeatureToggleService.supports(FeatureToggleService.features.atlasF2993NewUserAndDeviceRoles).then(function (result) {
-      $scope.showUserDeviceAdminRoles = result;
+
+    $q.all({
+      atlasHelpDeskOrderSearch: FeatureToggleService.supports(FeatureToggleService.features.atlasHelpDeskOrderSearch),
+      atlasPartnerManagement: FeatureToggleService.supports(FeatureToggleService.features.atlasPartnerManagement),
+      atlasF2993NewDeviceRole: FeatureToggleService.supports(FeatureToggleService.features.atlasF2993NewDeviceRole),
+      atlasF2993NewUserRole: FeatureToggleService.supports(FeatureToggleService.features.atlasF2993NewUserRole),
+    }).then(function (toggles) {
+      $scope.showOrderAdminRole = toggles.atlasHelpDeskOrderSearch;
+      $scope.showPartnerManagementRole = toggles.atlasPartnerManagement;
+      $scope.showDeviceRole = toggles.atlasF2993NewDeviceRole;
+      $scope.showUserRole = toggles.atlasF2993NewUserRole;
     });
 
     var ROLE_TRANSLATIONS = {
@@ -366,11 +369,13 @@ require('./_user-roles.scss');
             roleName: Config.roles.reports,
             roleState: Config.roleState.inactive,
           });
-          if ($scope.showUserDeviceAdminRoles) {
+          if ($scope.showUserRole) {
             roles.push({
               roleName: Config.roles.user_admin,
               roleState: Config.roleState.inactive,
             });
+          }
+          if ($scope.showDeviceRole) {
             roles.push({
               roleName: Config.roles.device_admin,
               roleState: Config.roleState.inactive,
@@ -402,11 +407,13 @@ require('./_user-roles.scss');
             roleName: Config.roles.reports,
             roleState: checkPartialRoles($scope.rolesObj.supportAdminValue),
           });
-          if ($scope.showUserDeviceAdminRoles) {
+          if ($scope.showUserRole) {
             roles.push({
               roleName: Config.roles.user_admin,
               roleState: checkPartialRoles($scope.rolesObj.userAdminValue),
             });
+          }
+          if ($scope.showDeviceRole) {
             roles.push({
               roleName: Config.roles.device_admin,
               roleState: checkPartialRoles($scope.rolesObj.deviceAdminValue),
@@ -438,11 +445,13 @@ require('./_user-roles.scss');
             roleName: Config.roles.reports,
             roleState: Config.roleState.inactive,
           });
-          if ($scope.showUserDeviceAdminRoles) {
+          if ($scope.showUserRole) {
             roles.push({
               roleName: Config.roles.user_admin,
               roleState: Config.roleState.inactive,
             });
+          }
+          if ($scope.showDeviceRole) {
             roles.push({
               roleName: Config.roles.device_admin,
               roleState: Config.roleState.inactive,
