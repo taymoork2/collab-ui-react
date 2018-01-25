@@ -159,21 +159,21 @@ describe('Service: AutoAssignTemplateService:', () => {
     });
   });
 
-  describe('mkLicensesStateData():', () => {
+  describe('mkLicenseEntries():', () => {
     it('should compose state data representing currently selected licenses', function () {
       const fakeAllLicenses = {
         'fake-license-id-1': { foo: 1 },
         'fake-license-id-2': { foo: 2 },
         'fake-license-id-3': { foo: 3 },
       };
-      expect(this.AutoAssignTemplateService.mkLicensesStateData([{ id: 'fake-license-id-1' }], fakeAllLicenses)).toEqual({
+      expect(this.AutoAssignTemplateService.mkLicenseEntries([{ id: 'fake-license-id-1' }], fakeAllLicenses)).toEqual({
         'fake-license-id-1': {
           isSelected: true,
           license: { foo: 1 },
         },
       });
 
-      expect(this.AutoAssignTemplateService.mkLicensesStateData([
+      expect(this.AutoAssignTemplateService.mkLicenseEntries([
         { id: 'fake-license-id-1' },
         { id: 'fake-license-id-3' }],
         fakeAllLicenses)).toEqual({
@@ -192,15 +192,15 @@ describe('Service: AutoAssignTemplateService:', () => {
   describe('toAutoAssignTemplateData():', () => {
     it('should compose state data object with "LICENSE", "USER_ENTITLEMENTS_PAYLOAD", and "subscriptions" properties', function () {
       spyOn(this.AutoAssignTemplateService, 'getAllLicenses').and.returnValue('fake-allLicenses-result');
-      spyOn(this.AutoAssignTemplateService, 'mkLicensesStateData').and.returnValue('fake-mkLicensesStateData-result');
+      spyOn(this.AutoAssignTemplateService, 'mkLicenseEntries').and.returnValue('fake-mkLicenseEntries-result');
       const result = this.AutoAssignTemplateService.toAutoAssignTemplateData({
         licenses: 'fake-template-licenses-arg',
         userEntitlements: 'fake-template-userEntitlements-arg',
       }, 'fake-subscriptions-arg');
 
-      expect(this.AutoAssignTemplateService.mkLicensesStateData).toHaveBeenCalledWith('fake-template-licenses-arg', 'fake-allLicenses-result');
+      expect(this.AutoAssignTemplateService.mkLicenseEntries).toHaveBeenCalledWith('fake-template-licenses-arg', 'fake-allLicenses-result');
       expect(result).toEqual({
-        LICENSE: 'fake-mkLicensesStateData-result',
+        LICENSE: 'fake-mkLicenseEntries-result',
         USER_ENTITLEMENTS_PAYLOAD: 'fake-template-userEntitlements-arg',
         subscriptions: 'fake-subscriptions-arg',
       });

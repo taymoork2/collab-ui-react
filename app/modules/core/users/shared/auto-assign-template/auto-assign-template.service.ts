@@ -83,7 +83,7 @@ export class AutoAssignTemplateService {
     }, {});
   }
 
-  private mkLicensesStateData(assignedLicenses: { id: string }[], allLicenses: ILicenseUsageMap) {
+  private mkLicenseEntries(assignedLicenses: { id: string }[], allLicenses: ILicenseUsageMap) {
     return _.reduce(assignedLicenses, (result, assignedLicense) => {
       const id = assignedLicense.id;
       const originalLicense = _.get(allLicenses, id);
@@ -99,7 +99,7 @@ export class AutoAssignTemplateService {
     const stateData: any = {};
     const assignedLicenses = template.licenses;
     const allLicenses = this.getAllLicenses(subscriptions);
-    stateData.LICENSE = this.mkLicensesStateData(assignedLicenses, allLicenses);
+    stateData.LICENSE = this.mkLicenseEntries(assignedLicenses, allLicenses);
     stateData.USER_ENTITLEMENTS_PAYLOAD = template.userEntitlements;
     stateData.subscriptions = subscriptions;
     return stateData;
