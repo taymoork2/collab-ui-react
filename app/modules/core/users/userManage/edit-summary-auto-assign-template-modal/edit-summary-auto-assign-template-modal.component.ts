@@ -3,7 +3,7 @@ import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign
 
 class EditSummaryAutoAssignTemplateModalController implements ng.IComponentController {
   private dismiss: Function;
-  private stateData: any;  // TODO: better type
+  private autoAssignTemplateData: any;  // TODO: better type
   private isEditTemplateMode: boolean;
   private templateId: string;
   public saveLoading = false;
@@ -60,13 +60,13 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
 
   public back(): void {
     this.$state.go('users.manage.edit-auto-assign-template-modal', {
-      stateData: this.stateData,
+      autoAssignTemplateData: this.autoAssignTemplateData,
     });
   }
 
   public save(): void {
     this.saveLoading = true;
-    const payload: IAutoAssignTemplateRequestPayload = this.AutoAssignTemplateService.autoAssignTemplateDataToPayload(this.stateData);
+    const payload: IAutoAssignTemplateRequestPayload = this.AutoAssignTemplateService.autoAssignTemplateDataToPayload(this.autoAssignTemplateData);
     return this.isEditTemplateMode ? this.updateTemplate(payload) : this.createTemplate(payload);
   }
 }
@@ -77,6 +77,6 @@ export class EditSummaryAutoAssignTemplateModalComponent implements ng.IComponen
   public bindings = {
     dismiss: '&?',
     isEditTemplateMode: '<',
-    stateData: '<',
+    autoAssignTemplateData: '<',
   };
 }

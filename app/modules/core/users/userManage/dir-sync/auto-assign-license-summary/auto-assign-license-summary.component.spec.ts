@@ -39,19 +39,19 @@ describe('Component: userManageDirSyncAutoAssignLicenseSummary:', () => {
       LICENSE_SUMMARY = 'license-summary.user-manage-dir-sync-auto-assign-license-summary__license-summary',
     }
 
-    it('should show loading before license-summary loads with stateData', function (this: Test) {
+    it('should show loading before license-summary loads with autoAssignTemplateData', function (this: Test) {
       expect(this.view.find(View.LOADING_SPINNER)).toExist();
       expect(this.view.find(View.LICENSE_SUMMARY)).not.toExist();
 
-      const stateData = {
+      const autoAssignTemplateData = {
         some: 'data',
       };
-      this.stateDataDeferred.resolve(stateData);
+      this.stateDataDeferred.resolve(autoAssignTemplateData);
       this.$scope.$apply();
 
       expect(this.view.find(View.LOADING_SPINNER)).not.toExist();
       expect(this.view.find(View.LICENSE_SUMMARY)).toExist();
-      expect(this.components.licenseSummary.bindings[0].stateData).toEqual(stateData);
+      expect(this.components.licenseSummary.bindings[0].autoAssignTemplateData).toEqual(autoAssignTemplateData);
     });
   });
 });

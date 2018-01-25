@@ -71,8 +71,8 @@ export class AutoAssignTemplateService {
     return this.$http.delete(`${this.autoAssignTemplateUrl}/${templateId}`);
   }
 
-  public autoAssignTemplateDataToPayload(stateData): any {
-    return this.mkPayload(stateData);
+  public autoAssignTemplateDataToPayload(autoAssignTemplateData): any {
+    return this.mkPayload(autoAssignTemplateData);
   }
 
   private getAllLicenses(subscriptions: ISubscription[]): ILicenseUsageMap {
@@ -96,13 +96,13 @@ export class AutoAssignTemplateService {
   }
 
   public toAutoAssignTemplateData(template, subscriptions): any {
-    const stateData: any = {};
+    const autoAssignTemplateData: any = {};
     const assignedLicenses = template.licenses;
     const allLicenses = this.getAllLicenses(subscriptions);
-    stateData.LICENSE = this.mkLicenseEntries(assignedLicenses, allLicenses);
-    stateData.USER_ENTITLEMENTS_PAYLOAD = template.userEntitlements;
-    stateData.subscriptions = subscriptions;
-    return stateData;
+    autoAssignTemplateData.LICENSE = this.mkLicenseEntries(assignedLicenses, allLicenses);
+    autoAssignTemplateData.USER_ENTITLEMENTS_PAYLOAD = template.userEntitlements;
+    autoAssignTemplateData.subscriptions = subscriptions;
+    return autoAssignTemplateData;
   }
 
   public getDefaultStateData() {
@@ -124,9 +124,9 @@ export class AutoAssignTemplateService {
       });
   }
 
-  private mkPayload(stateData): IAutoAssignTemplateRequestPayload {
-    const licensesPayload = this.mkLicensesPayload(stateData);
-    const userEntitlementsPayload = this.mkUserEntitlementsPayload(stateData);
+  private mkPayload(autoAssignTemplateData): IAutoAssignTemplateRequestPayload {
+    const licensesPayload = this.mkLicensesPayload(autoAssignTemplateData);
+    const userEntitlementsPayload = this.mkUserEntitlementsPayload(autoAssignTemplateData);
     const result = {
       name: this.DEFAULT,
       userEntitlements: userEntitlementsPayload,
@@ -135,8 +135,8 @@ export class AutoAssignTemplateService {
     return result;
   }
 
-  private mkLicensesPayload(stateData): ILicenseRequestItem[] {
-    const licenseItems = stateData[AssignableServicesItemCategory.LICENSE];
+  private mkLicensesPayload(autoAssignTemplateData): ILicenseRequestItem[] {
+    const licenseItems = autoAssignTemplateData[AssignableServicesItemCategory.LICENSE];
     const selectedItems: IAssignableLicenseCheckboxState[] = _.filter(licenseItems, { isSelected: true });
     const result = _.map(selectedItems, (selectedItem) => {
       return <ILicenseRequestItem>{
@@ -148,15 +148,15 @@ export class AutoAssignTemplateService {
     return result;
   }
 
-  private mkUserEntitlementsPayload(stateData): IUserEntitlementRequestItem[] {
-    if (_.isEmpty(_.get(stateData, AssignableServicesItemCategory.LICENSE))) {
+  private mkUserEntitlementsPayload(autoAssignTemplateData): IUserEntitlementRequestItem[] {
+    if (_.isEmpty(_.get(autoAssignTemplateData, AssignableServicesItemCategory.LICENSE))) {
       return [];
     }
 
     let result: IUserEntitlementRequestItem[] = [];
     // TODO: rm this logic once 'hybrid-services-entitlements-panel' propogates its UI state
     //   and build this payload from UI state instead
-    const hybridUserEntitlements: IUserEntitlementRequestItem[] = _.get(stateData, 'USER_ENTITLEMENTS_PAYLOAD', []);
+    const hybridUserEntitlements: IUserEntitlementRequestItem[] = _.get(autoAssignTemplateData, 'USER_ENTITLEMENTS_PAYLOAD', []);
     result = result.concat(hybridUserEntitlements);
 
     return result;

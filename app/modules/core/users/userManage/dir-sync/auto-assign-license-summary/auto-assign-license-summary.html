@@ -1,10 +1,10 @@
 <h4 translate="userManage.autoAssignLicenseSummaryForDirSync.header"></h4>
 <p translate="userManage.autoAssignLicenseSummaryForDirSync.description"></p>
 
-<i ng-if="!$ctrl.stateData"
+<i ng-if="!$ctrl.autoAssignTemplateData"
   class="icon icon-spinner user-manage-dir-sync-auto-assign-license-summary__icon-spinner--large"></i>
 
-<license-summary ng-if="$ctrl.stateData"
+<license-summary ng-if="$ctrl.autoAssignTemplateData"
   class="user-manage-dir-sync-auto-assign-license-summary__license-summary"
-  auto-assign-template-data="$ctrl.stateData">
+  auto-assign-template-data="$ctrl.autoAssignTemplateData">
 </license-summary>

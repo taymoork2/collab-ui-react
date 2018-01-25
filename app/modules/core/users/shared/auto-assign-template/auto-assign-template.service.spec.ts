@@ -26,10 +26,10 @@ describe('Service: AutoAssignTemplateService:', () => {
       subscriptionId: 'fake-subscriptionId-1',
       licenses: [{ offerName: 'foo' }],
     }];
-    this.stateData = {};
-    _.set(this.stateData, 'subscriptions', undefined);
-    _.set(this.stateData, 'LICENSE', { subscriptionId: 'fake-subscriptionId-1' });
-    _.set(this.stateData, 'USER_ENTITLEMENTS_PAYLOAD', undefined);
+    this.autoAssignTemplateData = {};
+    _.set(this.autoAssignTemplateData, 'subscriptions', undefined);
+    _.set(this.autoAssignTemplateData, 'LICENSE', { subscriptionId: 'fake-subscriptionId-1' });
+    _.set(this.autoAssignTemplateData, 'USER_ENTITLEMENTS_PAYLOAD', undefined);
   });
 
   beforeEach(function () {
@@ -253,8 +253,8 @@ describe('Service: AutoAssignTemplateService:', () => {
   });
 
   describe('mkLicensesPayload():', function () {
-    it('should filter only selected licenses from "stateData" property', function () {
-      const stateData = {
+    it('should filter only selected licenses from "autoAssignTemplateData" property', function () {
+      const autoAssignTemplateData = {
         LICENSE: {
           'fake-license-id-1': {
             isSelected: true,
@@ -276,7 +276,7 @@ describe('Service: AutoAssignTemplateService:', () => {
           },
         },
       };
-      expect(this.AutoAssignTemplateService.mkLicensesPayload(stateData)).toEqual([{
+      expect(this.AutoAssignTemplateService.mkLicensesPayload(autoAssignTemplateData)).toEqual([{
         id: 'fake-license-id-1',
         idOperation: 'ADD',
         properties: {},

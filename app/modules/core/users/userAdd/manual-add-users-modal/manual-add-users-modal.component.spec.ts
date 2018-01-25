@@ -56,8 +56,8 @@ describe('Component: manualAddUsersModal:', () => {
       expect(this.controller.dismissModal).toHaveBeenCalled();
     });
 
-    it('should have stateData if a default auto-assign template exists, the org is enabled for it, and subscriptions exist', function (this: Test) {
-      expect(this.controller.stateData).toBe(undefined);
+    it('should have autoAssignTemplateData if a default auto-assign template exists, the org is enabled for it, and subscriptions exist', function (this: Test) {
+      expect(this.controller.autoAssignTemplateData).toBe(undefined);
       expect(this.controller.useDefaultAutoAssignTemplate).toBe(false);
 
       this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = true;
@@ -67,7 +67,7 @@ describe('Component: manualAddUsersModal:', () => {
       initComponent.call(this);
 
       expect(this.AutoAssignTemplateService.toAutoAssignTemplateData).toHaveBeenCalledWith('fake-getDefaultTemplate-result', 'fake-getSortedSubscriptions-result');
-      expect(this.controller.stateData).toBe('fake-toAutoAssignTemplateData-result');
+      expect(this.controller.autoAssignTemplateData).toBe('fake-toAutoAssignTemplateData-result');
       expect(this.controller.useDefaultAutoAssignTemplate).toBe(true);
     });
   });
@@ -77,7 +77,7 @@ describe('Component: manualAddUsersModal:', () => {
       this.$scope.fakeAutoAssignTemplateData = { foo: 0 };
       this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = true;
       this.compileComponent('manualAddUsersModal', {
-        stateData: 'fakeAutoAssignTemplateData',
+        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
       expect(this.AutoAssignTemplateService.getDefaultTemplate).not.toHaveBeenCalled();
       expect(this.AutoAssignTemplateService.getSortedSubscriptions).not.toHaveBeenCalled();
@@ -85,7 +85,7 @@ describe('Component: manualAddUsersModal:', () => {
       // template is deactivated means we still fetch
       this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = false;
       this.compileComponent('manualAddUsersModal', {
-        stateData: 'fakeAutoAssignTemplateData',
+        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
       expect(this.AutoAssignTemplateService.getDefaultTemplate).toHaveBeenCalled();
       expect(this.AutoAssignTemplateService.getSortedSubscriptions).toHaveBeenCalled();
@@ -94,7 +94,7 @@ describe('Component: manualAddUsersModal:', () => {
       this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = true;
       this.$scope.fakeAutoAssignTemplateData = undefined;
       this.compileComponent('manualAddUsersModal', {
-        stateData: 'fakeAutoAssignTemplateData',
+        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
       expect(this.AutoAssignTemplateService.getDefaultTemplate).toHaveBeenCalled();
       expect(this.AutoAssignTemplateService.getSortedSubscriptions).toHaveBeenCalled();

@@ -211,18 +211,18 @@ describe('Component Controller: hybridServicesPanelCtrl', function () {
     expect(this.controller.services.hybridMessage.enabled).toBe(true);
   });
 
-  it('should initialize a "stateData" property and populate it with the initialized "services" property', function () {
+  it('should initialize a "autoAssignTemplateData" property and populate it with the initialized "services" property', function () {
     initMockServices.call(this, ['squared-fusion-uc'], []);
     this.compileComponent('hybridServicesEntitlementsPanel');
-    expect(_.isEmpty(this.controller.stateData.hybridServices)).toBe(false);
-    expect(this.controller.stateData.hybridServices.callServiceAware).toEqual({
+    expect(_.isEmpty(this.controller.autoAssignTemplateData.hybridServices)).toBe(false);
+    expect(this.controller.autoAssignTemplateData.hybridServices.callServiceAware).toEqual({
       enabled: true,
       entitled: false,
       id: 'squared-fusion-uc',
     });
   });
 
-  it('should initialize "services" property from "stateData" if provided', function () {
+  it('should initialize "services" property from "autoAssignTemplateData" if provided', function () {
     initMockServices.call(this, ['squared-fusion-uc'], []);
     this.$scope.fakeAutoAssignTemplateData = {
       hybridServices: {
@@ -237,11 +237,11 @@ describe('Component Controller: hybridServicesPanelCtrl', function () {
       },
     };
     this.compileComponent('hybridServicesEntitlementsPanel', {
-      stateData: 'fakeAutoAssignTemplateData',
+      autoAssignTemplateData: 'fakeAutoAssignTemplateData',
     });
     expect(this.ServiceDescriptorService.getServices).not.toHaveBeenCalled();
     expect(this.CloudConnectorService.getService).not.toHaveBeenCalled();
-    expect(this.controller.stateData.hybridServices.callServiceAware).toEqual({
+    expect(this.controller.autoAssignTemplateData.hybridServices.callServiceAware).toEqual({
       enabled: true,
       entitled: false,
       id: 'squared-fusion-uc',

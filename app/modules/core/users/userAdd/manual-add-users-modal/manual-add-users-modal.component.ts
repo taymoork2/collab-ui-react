@@ -9,7 +9,7 @@ export class ManualAddUsersModalController implements ng.IComponentController {
   public model: any;
   private dismiss?: Function;
   private scopeData: IOnboardScopeForUsersAdd;
-  public stateData: any;  // TODO: better type
+  public autoAssignTemplateData: any;  // TODO: better type
 
   /* @ngInject */
   constructor(
@@ -45,12 +45,12 @@ export class ManualAddUsersModalController implements ng.IComponentController {
       if (!results.defaultAutoAssignTemplate) {
         return;
       }
-      this.stateData = this.AutoAssignTemplateService.toAutoAssignTemplateData(results.defaultAutoAssignTemplate, results.subscriptions);
+      this.autoAssignTemplateData = this.AutoAssignTemplateService.toAutoAssignTemplateData(results.defaultAutoAssignTemplate, results.subscriptions);
     });
   }
 
   public get useDefaultAutoAssignTemplate(): boolean {
-    return !_.isEmpty(this.stateData) && this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated;
+    return !_.isEmpty(this.autoAssignTemplateData) && this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated;
   }
 
   public dismissModal(): void {
@@ -80,7 +80,7 @@ export class ManualAddUsersModalController implements ng.IComponentController {
       return;
     }
     this.$state.go('users.manage.onboard-summary-for-auto-assign-modal', {
-      stateData: this.stateData,
+      autoAssignTemplateData: this.autoAssignTemplateData,
       userList: this.getUsersList(),
     });
   }
@@ -139,6 +139,6 @@ export class ManualAddUsersModalComponent implements ng.IComponentOptions {
   public template = require('./manual-add-users-modal.html');
   public bindings = {
     dismiss: '&?',
-    stateData: '<',
+    autoAssignTemplateData: '<',
   };
 }

@@ -1,7 +1,7 @@
 import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template';
 
 export class AutoAssignLicenseSummaryController implements ng.IComponentController {
-  public stateData;
+  public autoAssignTemplateData;
 
   /* @ngInject */
   constructor(
@@ -9,8 +9,8 @@ export class AutoAssignLicenseSummaryController implements ng.IComponentControll
   ) {}
 
   public $onInit() {
-    this.AutoAssignTemplateService.getDefaultStateData().then((stateData) => {
-      this.stateData = stateData;
+    this.AutoAssignTemplateService.getDefaultStateData().then((autoAssignTemplateData) => {
+      this.autoAssignTemplateData = autoAssignTemplateData;
     });
   }
 }

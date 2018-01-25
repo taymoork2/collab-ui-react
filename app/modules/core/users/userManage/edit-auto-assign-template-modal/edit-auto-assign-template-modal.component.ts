@@ -5,7 +5,7 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
 
   private prevState: string;
   private dismiss: Function;
-  private stateData: any;  // TODO: better type
+  private autoAssignTemplateData: any;  // TODO: better type
   private isEditTemplateMode = false;
   public sortedSubscriptions: ISubscription[];
 
@@ -20,18 +20,18 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
     this.prevState = _.get<string>(this.$state, 'params.prevState', 'users.manage.picker');
 
     // restore state if provided
-    if (this.stateData) {
-      this.sortedSubscriptions = _.get(this.stateData, 'subscriptions');
+    if (this.autoAssignTemplateData) {
+      this.sortedSubscriptions = _.get(this.autoAssignTemplateData, 'subscriptions');
       this.isEditTemplateMode = true;
       return;
     }
 
     // otherwise use default initialization
-    this.stateData = {};
+    this.autoAssignTemplateData = {};
     this.AutoAssignTemplateService.getSortedSubscriptions()
       .then(sortedSubscriptions => {
         this.sortedSubscriptions = sortedSubscriptions;
-        this.stateData.subscriptions = sortedSubscriptions;
+        this.autoAssignTemplateData.subscriptions = sortedSubscriptions;
       });
   }
 
@@ -46,7 +46,7 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
 
   public next(): void {
     this.$state.go('users.manage.edit-summary-auto-assign-template-modal', {
-      stateData: this.stateData,
+      autoAssignTemplateData: this.autoAssignTemplateData,
       isEditTemplateMode: this.isEditTemplateMode,
     });
   }
@@ -61,12 +61,12 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
     // notes:
     // - item id can potentially contain period chars ('.')
     // - so we wrap interpolated value in double-quotes to prevent unintended deep property creation
-    _.set(this.stateData, `${itemCategory}["${itemId}"]`, item);
+    _.set(this.autoAssignTemplateData, `${itemCategory}["${itemId}"]`, item);
   }
 
   // TODO: remove this callback once 'hybrid-services-entitlements-panel' can leverage 'onUpdate()' callbacks
   public recvHybridServicesEntitlementsPayload(entitlements): void {
-    _.set(this.stateData, `USER_ENTITLEMENTS_PAYLOAD`, entitlements);
+    _.set(this.autoAssignTemplateData, `USER_ENTITLEMENTS_PAYLOAD`, entitlements);
   }
 }
 
@@ -76,7 +76,7 @@ export class EditAutoAssignTemplateModalComponent implements ng.IComponentOption
   public bindings = {
     prevState: '<',
     isEditTemplateMode: '<',
-    stateData: '<',
+    autoAssignTemplateData: '<',
     dismiss: '&?',
   };
 }

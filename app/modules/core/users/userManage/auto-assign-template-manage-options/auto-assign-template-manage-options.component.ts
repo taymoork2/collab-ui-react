@@ -23,10 +23,10 @@ class AutoAssignTemplateManageOptionsController implements ng.IComponentControll
       subscriptions: this.AutoAssignTemplateService.getSortedSubscriptions(),
     })
     .then((results) => {
-      const stateData = this.AutoAssignTemplateService.toAutoAssignTemplateData(results.defaultAutoAssignTemplate, results.subscriptions);
+      const autoAssignTemplateData = this.AutoAssignTemplateService.toAutoAssignTemplateData(results.defaultAutoAssignTemplate, results.subscriptions);
       this.$state.go('users.manage.edit-auto-assign-template-modal', {
         prevState: 'users.manage.picker',
-        stateData: stateData,
+        autoAssignTemplateData: autoAssignTemplateData,
       });
     })
     .catch((response) => {

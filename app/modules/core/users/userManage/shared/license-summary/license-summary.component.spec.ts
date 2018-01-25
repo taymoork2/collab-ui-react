@@ -13,7 +13,7 @@ describe('Component: licenseSummary:', () => {
     it('should render an empty table if there is not at least 1 license with the right "offerName"', function () {
       this.$scope.fakeAutoAssignTemplateData = {};
       this.compileComponent('licenseSummary', {
-        stateData: 'fakeAutoAssignTemplateData',
+        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
       expect(this.view.find('.license-summary').length).toBe(1);
     });
@@ -31,7 +31,7 @@ describe('Component: licenseSummary:', () => {
       };
 
       this.compileComponent('licenseSummary', {
-        stateData: 'fakeAutoAssignTemplateData',
+        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
 
       expect(this.view.find('.license-summary').length).toBe(1);
@@ -51,7 +51,7 @@ describe('Component: licenseSummary:', () => {
       };
 
       this.compileComponent('licenseSummary', {
-        stateData: 'fakeAutoAssignTemplateData',
+        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
 
       expect(this.view.find('.license-summary').length).toBe(1);
@@ -71,7 +71,7 @@ describe('Component: licenseSummary:', () => {
       };
 
       this.compileComponent('licenseSummary', {
-        stateData: 'fakeAutoAssignTemplateData',
+        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
 
       expect(this.view.find('.license-summary').length).toBe(1);
@@ -91,7 +91,7 @@ describe('Component: licenseSummary:', () => {
       };
 
       this.compileComponent('licenseSummary', {
-        stateData: 'fakeAutoAssignTemplateData',
+        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
 
       expect(this.view.find('.license-summary').length).toBe(1);
@@ -116,7 +116,7 @@ describe('Component: licenseSummary:', () => {
       spyOn(this.LicenseUsageUtilService, 'getTotalLicenseUsage');
       spyOn(this.LicenseUsageUtilService, 'getTotalLicenseVolume');
       this.compileComponent('licenseSummary', {
-        stateData: 'fakeAutoAssignTemplateData',
+        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
 
       this.controller.getTotalLicenseUsage('CF');
@@ -133,7 +133,7 @@ describe('Component: licenseSummary:', () => {
         },
       }];
       this.compileComponent('licenseSummary', {
-        stateData: 'fakeAutoAssignTemplateData',
+        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
       spyOn(this.controller, 'getHybridUserEntitlements').and.returnValue(this.$scope.fakeAutoAssignTemplateData.USER_ENTITLEMENTS_PAYLOAD);
 

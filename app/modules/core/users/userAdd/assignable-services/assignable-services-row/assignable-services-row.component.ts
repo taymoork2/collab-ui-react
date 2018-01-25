@@ -7,7 +7,7 @@ class AssignableServicesRowController implements ng.IComponentController {
   public showContent: boolean;
   private static readonly itemCategory = AssignableServicesItemCategory.SUBSCRIPTION;
   private subscription: ISubscription;
-  private stateData: any;  // TODO: better type
+  private autoAssignTemplateData: any;  // TODO: better type
   private onUpdate: Function;
   private licenses: ILicenseUsage[];
   private messageLicenses: ILicenseUsage[];
@@ -32,7 +32,7 @@ class AssignableServicesRowController implements ng.IComponentController {
     this.advancedMeetingSiteUrls = this.getAdvancedMeetingSiteUrls();
 
     const entryKey = `${AssignableServicesRowController.itemCategory}["${this.subscription.subscriptionId}"]`;
-    this.showContent = _.get(this.stateData, `${entryKey}.showContent`, true);
+    this.showContent = _.get(this.autoAssignTemplateData, `${entryKey}.showContent`, true);
   }
 
   private getMessageLicenses(): ILicenseUsage[] {
@@ -100,6 +100,6 @@ export class AssignableServicesRowComponent implements ng.IComponentOptions {
     isCareEnabled: '<',
     subscription: '<',
     onUpdate: '&',
-    stateData: '<',
+    autoAssignTemplateData: '<',
   };
 }

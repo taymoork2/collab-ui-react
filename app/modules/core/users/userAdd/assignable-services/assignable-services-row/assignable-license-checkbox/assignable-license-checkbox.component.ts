@@ -4,7 +4,7 @@ class AssignableLicenseCheckboxController implements ng.IComponentController {
   private static readonly itemCategory = AssignableServicesItemCategory.LICENSE;
   private itemId: string;
   private license: ILicenseUsage;
-  private stateData: any;  // TODO: better type
+  private autoAssignTemplateData: any;  // TODO: better type
   private onUpdate: Function;
 
   public $onInit(): void {
@@ -39,7 +39,7 @@ class AssignableLicenseCheckboxController implements ng.IComponentController {
 
           // notes:
           // - for convenience, we include the 'license' property in the callback as well
-          // - this allows for observers looking only at the top-level 'stateData' property to know
+          // - this allows for observers looking only at the top-level 'autoAssignTemplateData' property to know
           //   which licenses were selected
           license: this.license,
         },
@@ -49,11 +49,11 @@ class AssignableLicenseCheckboxController implements ng.IComponentController {
   }
 
   public get entryData(): IAssignableLicenseCheckboxState {
-    return _.get(this.stateData, `${AssignableLicenseCheckboxController.itemCategory}["${this.itemId}"]`);
+    return _.get(this.autoAssignTemplateData, `${AssignableLicenseCheckboxController.itemCategory}["${this.itemId}"]`);
   }
 
   public set entryData(entryData: IAssignableLicenseCheckboxState) {
-    _.set(this.stateData, `${AssignableLicenseCheckboxController.itemCategory}["${this.itemId}"]`, entryData);
+    _.set(this.autoAssignTemplateData, `${AssignableLicenseCheckboxController.itemCategory}["${this.itemId}"]`, entryData);
   }
 
   public get isSelected(): boolean {
@@ -82,6 +82,6 @@ export class AssignableLicenseCheckboxComponent implements ng.IComponentOptions 
     license: '<',
     l10nLabel: '@',
     onUpdate: '&',
-    stateData: '<',
+    autoAssignTemplateData: '<',
   };
 }

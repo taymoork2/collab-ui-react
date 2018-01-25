@@ -915,16 +915,16 @@
           .state('users.add.manual', {
             views: {
               'usersAdd@users.add': {
-                template: '<manual-add-users-modal auto-assign-template-data="$resolve.stateData" dismiss="$dismiss()"></manual-add-users-modal>',
+                template: '<manual-add-users-modal auto-assign-template-data="$resolve.autoAssignTemplateData" dismiss="$dismiss()"></manual-add-users-modal>',
               },
             },
             resolve: stateParamsToResolveParams({
               resetOnboardStoreStates: null,
-              stateData: null,
+              autoAssignTemplateData: null,
             }),
             params: {
               resetOnboardStoreStates: null,
-              stateData: null,
+              autoAssignTemplateData: null,
             },
           })
           .state('users.add.services', {
@@ -1053,37 +1053,37 @@
             },
           })
           .state('users.manage.edit-auto-assign-template-modal', {
-            template: '<edit-auto-assign-template-modal dismiss="$dismiss()" prev-state="$resolve.prevState" is-edit-template-mode="$resolve.isEditTemplateMode" auto-assign-template-data="$resolve.stateData"></edit-auto-assign-template-modal>',
+            template: '<edit-auto-assign-template-modal dismiss="$dismiss()" prev-state="$resolve.prevState" is-edit-template-mode="$resolve.isEditTemplateMode" auto-assign-template-data="$resolve.autoAssignTemplateData"></edit-auto-assign-template-modal>',
             resolve: stateParamsToResolveParams({
               prevState: 'users.manage.picker',
               isEditTemplateMode: false,
-              stateData: null,
+              autoAssignTemplateData: null,
             }),
             params: {
               prevState: 'users.manage.picker',
               isEditTemplateMode: false,
-              stateData: null,
+              autoAssignTemplateData: null,
             },
           })
           .state('users.manage.edit-summary-auto-assign-template-modal', {
-            template: '<edit-summary-auto-assign-template-modal dismiss="$dismiss()" auto-assign-template-data="$resolve.stateData" is-edit-template-mode="$resolve.isEditTemplateMode"></edit-summary-auto-assign-template-modal>',
+            template: '<edit-summary-auto-assign-template-modal dismiss="$dismiss()" auto-assign-template-data="$resolve.autoAssignTemplateData" is-edit-template-mode="$resolve.isEditTemplateMode"></edit-summary-auto-assign-template-modal>',
             resolve: stateParamsToResolveParams({
-              stateData: null,
+              autoAssignTemplateData: null,
               isEditTemplateMode: false,
             }),
             params: {
-              stateData: null,
+              autoAssignTemplateData: null,
               isEditTemplateMode: false,
             },
           })
           .state('users.manage.onboard-summary-for-auto-assign-modal', {
-            template: '<onboard-summary-for-auto-assign-modal dismiss="$dismiss()" auto-assign-template-data="$resolve.stateData" user-list="$resolve.userList"></onboard-summary-for-auto-assign-modal>',
+            template: '<onboard-summary-for-auto-assign-modal dismiss="$dismiss()" auto-assign-template-data="$resolve.autoAssignTemplateData" user-list="$resolve.userList"></onboard-summary-for-auto-assign-modal>',
             resolve: stateParamsToResolveParams({
-              stateData: null,
+              autoAssignTemplateData: null,
               userList: null,
             }),
             params: {
-              stateData: null,
+              autoAssignTemplateData: null,
               userList: null,
             },
           })
