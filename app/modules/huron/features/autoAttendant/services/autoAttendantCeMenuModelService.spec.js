@@ -208,7 +208,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     });
   });
 
-  describe('getWelcomeMenu for dynamic announcements for ', function () {
+  describe('getWelcomeMenu for dynamic announcements for ceWelcomeWithEmptyDynamicSay', function () {
     it('should handle welcomeMenu well while parsing ceWelcomeWithEmptyDynamicSay', function () {
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcomeWithEmpDynamicSay, 'openHours');
       expect(_.isEqual(_welcomeMenu['entries'][0].headers[0].actions[0].name, 'dynamic')).toBe(true);
