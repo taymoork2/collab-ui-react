@@ -16,13 +16,11 @@ import URIVerificationServiceModuleName from 'modules/hercules/services/uri-veri
 import hybridServiceUserSidepanelHelperServiceModuleName from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
 import serviceDescriptorServiceModuleName from 'modules/hercules/services/service-descriptor.service';
 import cloudConnectorServiceModuleName from 'modules/hercules/services/calendar-cloud-connector.service';
-import clusterServiceModuleName from 'modules/hercules/services/cluster-service';
 
 export default angular
   .module('huron.place-overview', [
     require('angular-ui-router'),
     cloudConnectorServiceModuleName,
-    clusterServiceModuleName,
     hybridServiceUserSidepanelHelperServiceModuleName,
     preferredLanguageModule,
     placeCallOverviewServiceModule,

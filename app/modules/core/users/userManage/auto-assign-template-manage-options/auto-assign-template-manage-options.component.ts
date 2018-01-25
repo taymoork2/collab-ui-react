@@ -1,3 +1,5 @@
+import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template';
+
 class AutoAssignTemplateManageOptionsController implements ng.IComponentController {
 
   private readonly DEFAULT_AUTO_ASSIGN_TEMPLATE = 'Default';
@@ -10,7 +12,7 @@ class AutoAssignTemplateManageOptionsController implements ng.IComponentControll
     private $q: ng.IQService,
     private $state: ng.ui.IStateService,
     private $translate,
-    private AutoAssignTemplateService,
+    private AutoAssignTemplateService: AutoAssignTemplateService,
     private ModalService,
     private Notification,
   ) {}
@@ -70,7 +72,7 @@ class AutoAssignTemplateManageOptionsController implements ng.IComponentControll
       dismiss: this.$translate.instant('common.cancel'),
       btnType: 'alert',
     }).result.then(() => {
-      const templateId = _.get(this.autoAssignTemplates, `${this.DEFAULT_AUTO_ASSIGN_TEMPLATE}.templateId`);
+      const templateId = _.get<string>(this.autoAssignTemplates, `${this.DEFAULT_AUTO_ASSIGN_TEMPLATE}.templateId`);
       return this.AutoAssignTemplateService.deleteTemplate(templateId)
         .then(() => {
           this.Notification.success('userManage.org.deleteAutoAssignModal.deleteSuccess');

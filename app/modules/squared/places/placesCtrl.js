@@ -60,7 +60,7 @@ require('../devices/_devices.scss');
             vm.csdmHybridCalendarFeature = feature;
           });
           var anyCalendarEnabledPromise = ServiceDescriptorService.getServices().then(function (services) {
-            vm.hybridCalendarEnabledOnOrg = _.chain(ServiceDescriptorService.filterEnabledServices(services)).filter(function (service) {
+            vm.hybridCalendarEnabledOnOrg = vm.hybridCalendarEnabledOnOrg || _.chain(ServiceDescriptorService.filterEnabledServices(services)).filter(function (service) {
               return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
             }).some().value();
             vm.hybridCallEnabledOnOrg = _.chain(ServiceDescriptorService.filterEnabledServices(services)).filter(function (service) {

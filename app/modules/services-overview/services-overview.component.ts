@@ -16,6 +16,8 @@ import { Notification } from 'modules/core/notifications';
 import { ProPackService }  from 'modules/core/proPack/proPack.service';
 import { TaskManagerService } from 'modules/hcs/task-manager';
 
+type AllService = ICCCService | IPrivateTrunkResourceWithStatus | IServiceStatusWithSetup;
+
 export class ServicesOverviewController implements ng.IComponentController {
   private cards: ServicesOverviewCard[] = [
     new ServicesOverviewMessageCard(this.Authinfo, this.MessengerInteropService),
@@ -31,7 +33,7 @@ export class ServicesOverviewController implements ng.IComponentController {
   public _servicesInactive: HybridServiceId[] = []; // made public for easier testing
   public clusters: IExtendedClusterFusion[] | null = null;
   public trunks: IPrivateTrunkResourceWithStatus[] | null = null;
-  public servicesStatuses: (ICCCService | IPrivateTrunkResourceWithStatus | IServiceStatusWithSetup)[] = [];
+  public servicesStatuses: AllService[] = [];
   public loadingHybridServicesCards = true;
 
   /* @ngInject */
@@ -39,6 +41,7 @@ export class ServicesOverviewController implements ng.IComponentController {
     private $modal: IToolkitModalService,
     private $q: ng.IQService,
     private $state: ng.ui.IStateService,
+    private Analytics,
     private Authinfo,
     private CloudConnectorService: CloudConnectorService,
     private Config: Config,
@@ -159,6 +162,28 @@ export class ServicesOverviewController implements ng.IComponentController {
                 this._servicesInactive.push(serviceId);
               }
             });
+            const payload = {
+              'All Clusters is clickable': _.sum([_.get(this.clusters, 'length', 0), _.get(this.trunks, 'length', 0)]) > 0,
+              'Call is setup': this.getProperty(servicesStatuses, 'squared-fusion-uc', 'setup'),
+              'Call status': this.getProperty(servicesStatuses, 'squared-fusion-uc', 'status'),
+              'Calendar is setup': this.getProperty(servicesStatuses, 'squared-fusion-cal', 'setup'),
+              'Calendar status': this.getProperty(servicesStatuses, 'squared-fusion-cal', 'status'),
+              'Office 365 is setup': this.getProperty(servicesStatuses, 'squared-fusion-o365', 'setup'),
+              'Office 365 status': this.getProperty(servicesStatuses, 'squared-fusion-o365', 'status'),
+              'Google Calendar is setup': this.getProperty(servicesStatuses, 'squared-fusion-gcal', 'setup'),
+              'Google Calendar status': this.getProperty(servicesStatuses, 'squared-fusion-gcal', 'status'),
+              'Media is setup': this.getProperty(servicesStatuses, 'squared-fusion-media', 'setup'),
+              'Media status': this.getProperty(servicesStatuses, 'squared-fusion-media', 'status'),
+              'Data Security is setup': this.getProperty(servicesStatuses, 'spark-hybrid-datasecurity', 'setup'),
+              'Data Security status': this.getProperty(servicesStatuses, 'spark-hybrid-datasecurity', 'status'),
+              'Context is setup': this.getProperty(servicesStatuses, 'contact-center-context', 'setup'),
+              'Context status': this.getProperty(servicesStatuses, 'contact-center-context', 'status'),
+              'Private Trunking is setup': this.getProperty(servicesStatuses, 'ept', 'setup'),
+              'Private Trunking status': this.getProperty(servicesStatuses, 'ept', 'status'),
+              'Message is setup': this.getProperty(servicesStatuses, 'spark-hybrid-impinterop', 'setup'),
+              'Message status': this.getProperty(servicesStatuses, 'spark-hybrid-impinterop', 'status'),
+            };
+            this.Analytics.trackEvent(this.Analytics.sections.HS_NAVIGATION.eventNames.VISIT_SERVICES_OVERVIEW, payload);
           })
           .finally(() => {
             this.loadingHybridServicesCards = false;
@@ -238,6 +263,13 @@ export class ServicesOverviewController implements ng.IComponentController {
     this.forwardEvent('updateWebexSiteList', siteList);
   }
 
+  private getProperty(servicesStatuses: AllService[], serviceId: HybridServiceId, property: 'setup' | 'status'): any {
+    if (property === 'setup') {
+      return _.get(_.find(servicesStatuses, { serviceId: serviceId }), property, false);
+    } else if (property === 'status') {
+      return _.get(_.find(servicesStatuses, { serviceId: serviceId }), property, 'notAvailable');
+    }
+  }
 }
 
 export class ServicesOverviewComponent implements ng.IComponentOptions {

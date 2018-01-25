@@ -10,7 +10,7 @@
 
   <div class="flex-item-no-resize ds-inline">
     <span>{{::'firstTimeWizard.results'|translate}}:</span>
-    <strong ng-if="!umac.isUserAdmin()">{{umac.dirSyncStatusMessage}}</strong>
+    <strong ng-if="!umds.isUserAdmin()">{{umds.dirSyncStatusMessage}}</strong>
     <span ng-if="numUsersInSync > 0">
       <span> - </span>
       <strong>{{numUsersInSync}}</strong>
@@ -18,14 +18,14 @@
     </span>
   </div>
 
-  <div ng-if="!umac.isUserAdmin()" class="dirsync-info sync-dirsync-refresh-button flex-item-no-resize ds-inline">
+  <div ng-if="!umds.isUserAdmin()" class="dirsync-info sync-dirsync-refresh-button flex-item-no-resize ds-inline">
     <span translate="userManage.ad.lastSynced"></span>
     <span>{{lastEndTime | date:'MMM d yyyy h:mm a'}}</span>
-    <a href ng-click="getStatus()" ng-if="!umac.isBusy"><i class="icon icon-refresh"></i></a>
+    <a href ng-click="getStatus()" ng-if="!umds.isBusy"><i class="icon icon-refresh"></i></a>
   </div>
 
   <div class="dirsync-info flex-item-resize">
-    <div class="ftwdirgridStyle flex-item-resize" ui-grid="gridOptions" grid-spinner="umac.isBusy">
+    <div class="ftwdirgridStyle flex-item-resize" ui-grid="gridOptions" grid-spinner="umds.isBusy">
     </div>
   </div>
 

@@ -1,6 +1,5 @@
-import { OnboardCtrlBoundUIStates } from 'modules/core/users/userAdd/shared/onboard.store';
-
-import { ManageType } from '../userManage.keys';
+import { ManageType } from 'modules/core/users/userManage/shared/user-manage.keys';
+import { UserManageService } from 'modules/core/users/userManage/shared/user-manage.service';
 
 interface IAdminOrgResponse {
   isOnBoardingEmailSuppressed: boolean;
@@ -12,7 +11,7 @@ export class UserManageEmailSuppressController implements ng.IComponentControlle
   public dataLoaded = false;
   public isEmailSuppressed = false;
   public isSparkCallEnabled = false;
-  private manageType: string;
+  private manageType: ManageType;
   private prevState: string;
   private dismiss: Function;
 
@@ -22,8 +21,9 @@ export class UserManageEmailSuppressController implements ng.IComponentControlle
     private $stateParams,
     private Analytics,
     private Orgservice,
+    private UserManageService: UserManageService,
   ) {
-    this.manageType = _.get<string>(this.$stateParams, 'manageType');
+    this.manageType = _.get<ManageType>(this.$stateParams, 'manageType');
     this.prevState = _.get<string>(this.$stateParams, 'prevState');
   }
 
@@ -54,33 +54,6 @@ export class UserManageEmailSuppressController implements ng.IComponentControlle
   }
 
   public onNext(): void {
-    switch (this.manageType) {
-      case ManageType.MANUAL:
-        this.Analytics.trackAddUsers(this.Analytics.eventNames.NEXT, this.Analytics.sections.ADD_USERS.uploadMethods.MANUAL);
-        this.$state.go('users.add.manual', {
-          resetOnboardStoreStates: OnboardCtrlBoundUIStates.ALL,
-        });
-        break;
-
-      case ManageType.BULK:
-        this.Analytics.trackAddUsers(this.Analytics.sections.ADD_USERS.eventNames.CSV_UPLOAD, this.Analytics.sections.ADD_USERS.uploadMethods.CSV);
-        this.$state.go('users.csv');
-        break;
-
-      case ManageType.ADVANCED_NO_DS:
-        this.Analytics.trackAddUsers(this.Analytics.sections.ADD_USERS.eventNames.INSTALL_CONNECTOR, this.Analytics.sections.ADD_USERS.uploadMethods.SYNC);
-        this.$state.go('users.manage.advanced.add.ob.installConnector');
-        break;
-
-      case ManageType.CONVERT:
-        this.$state.go('users.convert', {
-          manageUsers: true,
-        });
-        break;
-
-      case ManageType.ADVANCED_DS:
-        this.$state.go('users.manage.advanced.add.ob.syncStatus');
-        break;
-    }
+    this.UserManageService.gotoNextStateForManageTypeAfterEmailSuppress(this.manageType);
   }
 }

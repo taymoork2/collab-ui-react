@@ -1,6 +1,5 @@
-import { ILicenseRequestItem, IUserEntitlementRequestItem, IAutoAssignTemplateRequestPayload } from 'modules/core/users/shared';
+import { ILicenseRequestItem, IUserEntitlementRequestItem, IAutoAssignTemplateRequestPayload, LicenseChangeOperation } from 'modules/core/users/shared/onboard.interfaces';
 import { AssignableServicesItemCategory, IAssignableLicenseCheckboxState, ILicenseUsage, ILicenseUsageMap, ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
-import { LicenseChangeOperation } from 'modules/core/users/shared';
 
 export class AutoAssignTemplateService {
 
@@ -102,6 +101,14 @@ export class AutoAssignTemplateService {
     stateData.USER_ENTITLEMENTS_PAYLOAD = template.userEntitlements;
     stateData.subscriptions = subscriptions;
     return stateData;
+  }
+
+  public getDefaultStateData() {
+    return this.$q.all({
+      defaultAutoAssignTemplate: this.getDefaultTemplate(),
+      subscriptions: this.getSortedSubscriptions(),
+    })
+    .then(results => this.toStateData(results.defaultAutoAssignTemplate, results.subscriptions));
   }
 
   public getSortedSubscriptions(): ng.IPromise<ISubscription[]> {

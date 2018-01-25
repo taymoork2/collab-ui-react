@@ -1,6 +1,5 @@
-import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template.service';
+import { AutoAssignTemplateModel, AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template';
 import { IOnboardScopeForUsersAdd, OnboardCtrlBoundUIStates } from 'modules/core/users/userAdd/shared/onboard.store';
-import { AutoAssignTemplateModel } from 'modules/core/users/shared/auto-assign-template.model';
 import OnboardService from 'modules/core/users/userAdd/shared/onboard.service';
 import OnboardStore from 'modules/core/users/userAdd/shared/onboard.store';
 

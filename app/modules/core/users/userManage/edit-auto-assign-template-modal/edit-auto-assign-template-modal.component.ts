@@ -1,4 +1,5 @@
 import { ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
+import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template';
 
 class EditAutoAssignTemplateModalController implements ng.IComponentController {
 
@@ -12,7 +13,7 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
   constructor(
     private $state: ng.ui.IStateService,
     private Analytics,
-    private AutoAssignTemplateService,
+    private AutoAssignTemplateService: AutoAssignTemplateService,
   ) {}
 
   public $onInit(): void {
