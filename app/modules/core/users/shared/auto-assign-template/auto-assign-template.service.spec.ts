@@ -189,11 +189,11 @@ describe('Service: AutoAssignTemplateService:', () => {
     });
   });
 
-  describe('toStateData():', () => {
+  describe('toAutoAssignTemplateData():', () => {
     it('should compose state data object with "LICENSE", "USER_ENTITLEMENTS_PAYLOAD", and "subscriptions" properties', function () {
       spyOn(this.AutoAssignTemplateService, 'getAllLicenses').and.returnValue('fake-allLicenses-result');
       spyOn(this.AutoAssignTemplateService, 'mkLicensesStateData').and.returnValue('fake-mkLicensesStateData-result');
-      const result = this.AutoAssignTemplateService.toStateData({
+      const result = this.AutoAssignTemplateService.toAutoAssignTemplateData({
         licenses: 'fake-template-licenses-arg',
         userEntitlements: 'fake-template-userEntitlements-arg',
       }, 'fake-subscriptions-arg');

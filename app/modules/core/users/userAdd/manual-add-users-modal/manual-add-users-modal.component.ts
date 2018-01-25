@@ -45,7 +45,7 @@ export class ManualAddUsersModalController implements ng.IComponentController {
       if (!results.defaultAutoAssignTemplate) {
         return;
       }
-      this.stateData = this.AutoAssignTemplateService.toStateData(results.defaultAutoAssignTemplate, results.subscriptions);
+      this.stateData = this.AutoAssignTemplateService.toAutoAssignTemplateData(results.defaultAutoAssignTemplate, results.subscriptions);
     });
   }
 

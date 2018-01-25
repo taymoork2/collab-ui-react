@@ -95,7 +95,7 @@ export class AutoAssignTemplateService {
     }, {});
   }
 
-  public toStateData(template, subscriptions): any {
+  public toAutoAssignTemplateData(template, subscriptions): any {
     const stateData: any = {};
     const assignedLicenses = template.licenses;
     const allLicenses = this.getAllLicenses(subscriptions);
@@ -110,7 +110,7 @@ export class AutoAssignTemplateService {
       defaultAutoAssignTemplate: this.getDefaultTemplate(),
       subscriptions: this.getSortedSubscriptions(),
     })
-    .then(results => this.toStateData(results.defaultAutoAssignTemplate, results.subscriptions));
+    .then(results => this.toAutoAssignTemplateData(results.defaultAutoAssignTemplate, results.subscriptions));
   }
 
   public getSortedSubscriptions(): ng.IPromise<ISubscription[]> {

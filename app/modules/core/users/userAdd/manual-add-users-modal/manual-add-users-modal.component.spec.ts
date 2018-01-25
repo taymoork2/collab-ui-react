@@ -63,11 +63,11 @@ describe('Component: manualAddUsersModal:', () => {
       this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = true;
       this.AutoAssignTemplateService.getDefaultTemplate.and.returnValue(this.$q.resolve('fake-getDefaultTemplate-result'));
       this.AutoAssignTemplateService.getSortedSubscriptions.and.returnValue(this.$q.resolve('fake-getSortedSubscriptions-result'));
-      spyOn(this.AutoAssignTemplateService, 'toStateData').and.returnValue('fake-toStateData-result');
+      spyOn(this.AutoAssignTemplateService, 'toAutoAssignTemplateData').and.returnValue('fake-toAutoAssignTemplateData-result');
       initComponent.call(this);
 
-      expect(this.AutoAssignTemplateService.toStateData).toHaveBeenCalledWith('fake-getDefaultTemplate-result', 'fake-getSortedSubscriptions-result');
-      expect(this.controller.stateData).toBe('fake-toStateData-result');
+      expect(this.AutoAssignTemplateService.toAutoAssignTemplateData).toHaveBeenCalledWith('fake-getDefaultTemplate-result', 'fake-getSortedSubscriptions-result');
+      expect(this.controller.stateData).toBe('fake-toAutoAssignTemplateData-result');
       expect(this.controller.useDefaultAutoAssignTemplate).toBe(true);
     });
   });
