@@ -84,7 +84,7 @@ export class ServicesOverviewController implements ng.IComponentController {
         this.forwardEvent('sparkCallCdrReportingFeatureToggleEventhandler', response.hI802);
 
         // Used by hybrid cards
-        if (this.Authinfo.isFusionUC()) {
+        if (this.Authinfo.isFusionUC() || ((this.Authinfo.hasCallLicense() || this.Authinfo.hasCareLicense()) && response.hybridCare)) {
           this._servicesToDisplay.push('squared-fusion-uc');
         }
         if (this.Authinfo.isFusionCal()) {
@@ -105,7 +105,7 @@ export class ServicesOverviewController implements ng.IComponentController {
         if (this.Authinfo.isContactCenterContext()) {
           this._servicesToDisplay.push('contact-center-context');
         }
-        if (response.huronEnterprisePrivateTrunking && (this.Authinfo.isSquaredUC() || response.hybridCare)) {
+        if (response.huronEnterprisePrivateTrunking && (this.Authinfo.isSquaredUC() || ((this.Authinfo.hasCallLicense() || this.Authinfo.hasCareLicense()) && response.hybridCare))) {
           this._servicesToDisplay.push('ept');
         }
         if (response.atlasHybridImp && this.Authinfo.isFusionIMP()) {
