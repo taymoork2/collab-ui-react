@@ -1,4 +1,4 @@
-import { IAutoAssignTemplateRequestPayload } from 'modules/core/users/shared/onboard.interfaces';
+import { IAutoAssignTemplateRequestPayload } from 'modules/core/users/shared/onboard/onboard.interfaces';
 import { AutoAssignTemplateService, IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 
 class EditSummaryAutoAssignTemplateModalController implements ng.IComponentController {

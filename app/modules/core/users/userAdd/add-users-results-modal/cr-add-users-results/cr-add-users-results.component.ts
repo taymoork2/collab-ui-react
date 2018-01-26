@@ -1,4 +1,4 @@
-import { IOnboardedUsersResultsErrorsAndWarnings } from 'modules/core/users/shared/onboard.interfaces';
+import { IOnboardedUsersResultsErrorsAndWarnings } from 'modules/core/users/shared/onboard/onboard.interfaces';
 import OnboardService from 'modules/core/users/shared/onboard/onboard.service';
 
 export class CrAddUsersResultsController implements ng.IComponentController {

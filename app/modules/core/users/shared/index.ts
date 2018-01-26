@@ -1,5 +1,3 @@
-export * from './onboard.interfaces';
-
 import crUsersErrorResultsModuleName from './cr-users-error-results';
 import crUsersTileTotalsModuleName from './cr-users-tile-totals';
 import crCheckboxItemModuleName from './cr-checkbox-item';

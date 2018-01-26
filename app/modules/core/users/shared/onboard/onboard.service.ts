@@ -1,7 +1,7 @@
 import { Analytics } from 'modules/core/analytics';
 import Feature from './feature.model';
 import * as addressParser from 'emailjs-addressparser';
-import { ILicenseRequestItem, IOnboardedUserResult, IOnboardedUsersAggregateResult, IOnboardedUsersAnalyticsProperties, IParsedOnboardedUserResult, IUserEntitlementRequestItem, IUserNameAndEmail } from 'modules/core/users/shared/onboard.interfaces';
+import { ILicenseRequestItem, IOnboardedUserResult, IOnboardedUsersAggregateResult, IOnboardedUsersAnalyticsProperties, IParsedOnboardedUserResult, IUserEntitlementRequestItem, IUserNameAndEmail } from 'modules/core/users/shared/onboard/onboard.interfaces';
 import { Config } from 'modules/core/config/config';
 
 // TODO: mv this to more appropriate location once more is known about message codes from onboard API
