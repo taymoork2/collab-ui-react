@@ -19,6 +19,8 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   var ceWelcomeWithEmpDynamicSay;
   var ceWelcomeWithQueue;
   var ceMenuWithDynaSay;
+  var ceMenuWithoutDynaSay;
+  var ceMenuWithEmptyDynaSay;
   var ceMenuWithAnnouncementsPlay;
   var ceWelcomeWithAnnouncementsKeys;
   var ceWelcomeMenuWithOldQueue;
@@ -148,13 +150,15 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     ceWelcomeWithEmpDynamicSay = wmenuWithAnnouncements.ceWelcomeWithEmptyDynamicSay;
     ceWelcomeWithAnnouncementsKeys = wmenuWithAnnouncements.ceWelcomeWithAnnouncementsKeys;
     ceMenuWithDynaSay = wmenuWithAnnouncements.ceDynamicSay;
+    ceMenuWithoutDynaSay = wmenuWithAnnouncements.ceWithoutDynamicSay;
+    ceMenuWithEmptyDynaSay = wmenuWithAnnouncements.ceWithEmptyDynamicSay;
     ceMenuWithAnnouncementsPlay = wmenuWithAnnouncements.ceWelcomeWithAnnouncementsPlay;
     ceMenuWithAnnouncementsPlayWithoutValidDescription = wmenuWithAnnouncements.ceWelcomeWithAnnouncementsPlayWithoutValidDescription;
     spyOn(AARestModelService, 'getRestBlocks').and.returnValue(restBlocks);
   }));
 
   afterEach(function () {
-    AutoAttendantCeMenuModelService = AARestModelService = wmenu = ceWelcome = ceWelcomeNoDescription = ceWelcomeNoDescriptionTemp = welcomeMenu = ceMenuFull = wmenuWithAnnouncements = ceWelcomeMenuWithOldQueue = ceWelcomeWithQueue = ceWelcomeWithAnnouncements = ceWelcomeWithAnnouncementsKeys = ceMenuWithDynaSay = ceMenuWithAnnouncementsPlay = ceMenuWithAnnouncementsPlayWithoutValidDescription = ceWelcomeWithoutDynaSay = ceWelcomeWithEmpDynamicSay = undefined;
+    AutoAttendantCeMenuModelService = AARestModelService = wmenu = ceWelcome = ceWelcomeNoDescription = ceWelcomeNoDescriptionTemp = welcomeMenu = ceMenuFull = wmenuWithAnnouncements = ceWelcomeMenuWithOldQueue = ceWelcomeWithQueue = ceWelcomeWithAnnouncements = ceWelcomeWithAnnouncementsKeys = ceMenuWithDynaSay = ceMenuWithoutDynaSay = ceMenuWithEmptyDynaSay = ceMenuWithAnnouncementsPlay = ceMenuWithAnnouncementsPlayWithoutValidDescription = ceWelcomeWithoutDynaSay = ceWelcomeWithEmpDynamicSay = undefined;
   });
 
   describe('createAnnouncements for menuEntry with announcements with dynamic', function () {
@@ -187,7 +191,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       expect(_.get(_ceRecord.actionSets[0], 'actions[0].runActionsOnInput.prompts.description')).toBe('uploadFile');
     });
   });
-
+ 
   describe('getWelcomeMenu for announcements with dynamic', function () {
     it('should return welcomeMenu from parsing ceWelcome', function () {
       //AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcomeWithAnnouncements, 'openHours');
@@ -198,7 +202,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       expect(_.isEqual(_welcomeMenu['entries'][0].headers[0].actions[0].name, 'dynamic')).toBe(true);
     });
   });
-
+  
   describe('getWelcomeMenu for dynamic announcements', function () {
     it('should handle welcomeMenu well while parsing ceWelcomeWithoutDynamicSay', function () {
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcomeWithoutDynaSay, 'openHours');
@@ -208,6 +212,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     });
   });
 
+  
   describe('getWelcomeMenu for dynamic announcements for ceWelcomeWithEmptyDynamicSay', function () {
     it('should handle welcomeMenu well while parsing ceWelcomeWithEmptyDynamicSay', function () {
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcomeWithEmpDynamicSay, 'openHours');
@@ -224,6 +229,26 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       expect(_.isEqual(_welcomeMenu['type'], ceWelcomeWithAnnouncementsKeys['type'])).toBe(true);
       expect(_.isEqual(_welcomeMenu['id'], ceWelcomeWithAnnouncementsKeys['id'])).toBe(true);
       expect(_.isEqual(_welcomeMenu['entries'][0].actions[0].name, 'dynamic')).toBe(true);
+    });
+  });
+  describe('getWelcomeMenu for dynamic say when dynamic operations have no data', function () {
+    it('should return welcomeMenu from parsing ceDynamicSay', function () {
+      //AutoAttendantCeMenuModelService.getWelcomeMenu(ceMenuWithDynaSay, 'openHours');
+      var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceMenuWithoutDynaSay, 'openHours');
+      expect(_.isEqual(_welcomeMenu['type'], ceWelcomeWithAnnouncementsKeys['type'])).toBe(true);
+      expect(_.isEqual(_welcomeMenu['id'], ceWelcomeWithAnnouncementsKeys['id'])).toBe(true);
+      expect(_.isEqual(_welcomeMenu['entries'][0].actions[0].name, 'dynamic')).toBe(true);
+      expect(_.isEqual(_welcomeMenu['entries'][0].actions[0].voice, '')).toBe(true);
+    });
+  });
+  describe('getWelcomeMenu for dynamic say when dynamic operations is blank', function () {
+    it('should return welcomeMenu from parsing ceDynamicSay', function () {
+      //AutoAttendantCeMenuModelService.getWelcomeMenu(ceMenuWithDynaSay, 'openHours');
+      var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceMenuWithEmptyDynaSay, 'openHours');
+      expect(_.isEqual(_welcomeMenu['type'], ceWelcomeWithAnnouncementsKeys['type'])).toBe(true);
+      expect(_.isEqual(_welcomeMenu['id'], ceWelcomeWithAnnouncementsKeys['id'])).toBe(true);
+      expect(_.isEqual(_welcomeMenu['entries'][0].actions[0].name, 'dynamic')).toBe(true);
+      expect(_.isEqual(_welcomeMenu['entries'][0].actions[0].voice, '')).toBe(true);
     });
   });
 
