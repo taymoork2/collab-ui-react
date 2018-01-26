@@ -191,7 +191,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       expect(_.get(_ceRecord.actionSets[0], 'actions[0].runActionsOnInput.prompts.description')).toBe('uploadFile');
     });
   });
- 
+
   describe('getWelcomeMenu for announcements with dynamic', function () {
     it('should return welcomeMenu from parsing ceWelcome', function () {
       //AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcomeWithAnnouncements, 'openHours');
@@ -202,7 +202,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       expect(_.isEqual(_welcomeMenu['entries'][0].headers[0].actions[0].name, 'dynamic')).toBe(true);
     });
   });
-  
+
   describe('getWelcomeMenu for dynamic announcements', function () {
     it('should handle welcomeMenu well while parsing ceWelcomeWithoutDynamicSay', function () {
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcomeWithoutDynaSay, 'openHours');
@@ -212,7 +212,6 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     });
   });
 
-  
   describe('getWelcomeMenu for dynamic announcements for ceWelcomeWithEmptyDynamicSay', function () {
     it('should handle welcomeMenu well while parsing ceWelcomeWithEmptyDynamicSay', function () {
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcomeWithEmpDynamicSay, 'openHours');
