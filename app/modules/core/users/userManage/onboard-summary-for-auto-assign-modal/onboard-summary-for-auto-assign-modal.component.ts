@@ -1,5 +1,5 @@
 import { IOnboardedUsersAggregateResult, IUserNameAndEmail } from 'modules/core/users/shared/onboard.interfaces';
-import OnboardService from 'modules/core/users/userAdd/shared/onboard.service';
+import OnboardService from 'modules/core/users/shared/onboard/onboard.service';
 import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 
 export class OnboardSummaryForAutoAssignModalController implements ng.IComponentController {
