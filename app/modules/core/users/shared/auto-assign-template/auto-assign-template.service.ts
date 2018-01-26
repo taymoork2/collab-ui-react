@@ -1,6 +1,6 @@
 import { ILicenseRequestItem, IUserEntitlementRequestItem, IAutoAssignTemplateRequestPayload, LicenseChangeOperation } from 'modules/core/users/shared/onboard.interfaces';
 import { AssignableServicesItemCategory, IAssignableLicenseCheckboxState, ILicenseUsage, ILicenseUsageMap, ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
-import MessengerInteropService from 'modules/core/users/userAdd/shared/messenger-interop/messenger-interop.service';
+import { MessengerInteropService } from 'modules/core/users/userAdd/shared/messenger-interop/messenger-interop.service';
 import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 
 export class AutoAssignTemplateService {
