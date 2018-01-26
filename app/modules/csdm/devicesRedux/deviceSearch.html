@@ -26,17 +26,28 @@
            ng-if="dctrl.searchObject.hasAnyBulletOrEditedText()"></i>
       </div>
       <div class="dropdown-positioner">
-        <div class="suggestions-dropdown" ng-mouseleave="dctrl.suggestions.setFirstActive()"
+        <div class="suggestions-dropdown" ng-mouseleave="dctrl.suggestions.setActiveSuggestionByHover()"
              ng-show="dctrl.showSuggestions || dctrl.startSelecting" ng-mousedown="dctrl.startSelecting = true">
-          <ul>
-            <li
-              ng-repeat="suggestion in dctrl.suggestions.uiSuggestions track by $index"
-              ng-class="{active: dctrl.suggestions.isSuggestionActive($index)}"
-              ng-mouseenter="dctrl.suggestions.setActiveSuggestion($index)"
-              ng-mouseup="dctrl.selectSuggestion(suggestion);dctrl.startSelecting = false">
-              <div class="field"><i ng-bind-html="suggestion.readableField"></i></div>
-              <div class="text" ng-bind-html="suggestion.translatableText | highlightSearchAndTranslate:suggestion.translateParams:dctrl.searchObject"></div>
-              <div class="count" ng-if="suggestion.count > 0 || suggestion.count === 0">({{suggestion.count}})</div>
+          <ul class="group">
+            <li class="group"
+                ng-repeat="suggestionGroup in dctrl.suggestions.uiSuggestionGroups track by $index"
+                ng-hide="suggestionGroup.uiSuggestions.length===0">
+
+              <ul class="suggestions">
+                <li class="suggestion"
+                    ng-repeat="suggestion in suggestionGroup.uiSuggestions track by $index"
+                    ng-class="{active: suggestion.activeByKeyboard, hover: suggestion.activeByHover}"
+                    ng-mouseenter="dctrl.suggestions.setActiveSuggestionByHover(suggestion)"
+                    ng-mouseup="dctrl.selectSuggestion(suggestion);dctrl.startSelecting = false">
+                  <div class="field" ng-show="$first"
+                       ng-bind-html="suggestionGroup.readableField | highlight:dctrl.searchInput:true">
+                  </div>
+                  <div class="field" ng-hide="$first"></div>
+                  <div class="text"
+                       ng-bind-html="suggestion.translatedText | translateHighlight:suggestion.textTranslationKey:suggestion.textTranslationParams:dctrl.searchObject.getWorkingElement()"></div>
+                  <div class="count" ng-if="suggestion.count > 0 || suggestion.count === 0">({{suggestion.count}})</div>
+                </li>
+              </ul>
             </li>
           </ul>
         </div>
@@ -49,6 +60,3 @@
     </div>
   </form>
 </div>
-
-<!--Enable this to see the final query for debugging:-->
-<!--<label style="margin:0; font-size: xx-small">{{ dctrl.getTranslatedQuery() }}</label>-->
