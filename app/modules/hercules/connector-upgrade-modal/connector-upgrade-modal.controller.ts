@@ -22,6 +22,7 @@ export class ConnectorUpgradeController {
     private $translate: ng.translate.ITranslateService,
     private cluster: ICluster,
     private connectorType: ConnectorType,
+    private Analytics,
     private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesExtrasService: HybridServicesExtrasService,
     private Notification: Notification,
@@ -30,6 +31,9 @@ export class ConnectorUpgradeController {
   }
 
   public upgrade() {
+    this.Analytics.trackHybridServiceEvent(this.Analytics.sections.HS_NAVIGATION.eventNames.OPEN_CONNECTOR_UPGRADE_MODAL, {
+      'Connector Type': connectorType,
+    });
     this.upgrading = true;
     this.HybridServicesClusterService.upgradeSoftware(this.cluster.id, this.connectorType)
       .then(() => {
@@ -66,6 +70,7 @@ export class ConnectorUpgradeController {
 export default angular
   .module('hercules.upgrade-modal', [
     require('angular-translate'),
+    require('modules/core/analytics'),
     require('modules/core/notifications').default,
     require('modules/hercules/services/hybrid-services-cluster.service').default,
     require('modules/hercules/services/hybrid-services-extras.service').default,
