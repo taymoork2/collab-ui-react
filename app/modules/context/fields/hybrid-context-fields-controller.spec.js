@@ -1,9 +1,10 @@
 'use strict';
 
 var PropertyConstants = require('modules/context/services/context-property-service').PropertyConstants;
+var AdminAuthorizationStatus = require('modules/context/services/context-authorization-service').AdminAuthorizationStatus;
 
 describe('HybridContextFieldsCtrl', function () {
-  var $controller, $scope, $state, $q, Authinfo, controller, ContextFieldsService, Log, Notification, LogMetricsService, PropertyService;
+  var $controller, $scope, $state, $q, Authinfo, controller, ContextFieldsService, Log, Notification, LogMetricsService, PropertyService, ContextAdminAuthorizationService, $translate;
   var fakeGridApi = {
     infiniteScroll: {
       dataLoaded: jasmine.createSpy('dataLoaded'),
@@ -25,10 +26,10 @@ describe('HybridContextFieldsCtrl', function () {
   beforeEach(initSpies);
 
   afterAll(function () {
-    $controller = $scope = $state = $q = Authinfo = controller = ContextFieldsService = Log = Notification = PropertyService = fakeGridApi = LogMetricsService = undefined;
+    $controller = $scope = $state = $q = $translate = Authinfo = controller = ContextFieldsService = Log = Notification = PropertyService = fakeGridApi = LogMetricsService = ContextAdminAuthorizationService = undefined;
   });
 
-  function dependencies($rootScope, _$controller_, _$q_, _$state_, _Authinfo_, _ContextFieldsService_, _Log_, _Notification_, _LogMetricsService_, _PropertyService_) {
+  function dependencies($rootScope, _$controller_, _$q_, _$translate_, _$state_, _Authinfo_, _ContextFieldsService_, _Log_, _Notification_, _LogMetricsService_, _PropertyService_, _ContextAdminAuthorizationService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -40,6 +41,8 @@ describe('HybridContextFieldsCtrl', function () {
     LogMetricsService = _LogMetricsService_;
     Authinfo = _Authinfo_;
     PropertyService = _PropertyService_;
+    ContextAdminAuthorizationService = _ContextAdminAuthorizationService_;
+    $translate = _$translate_;
   }
 
   function initSpies() {
@@ -50,6 +53,7 @@ describe('HybridContextFieldsCtrl', function () {
     spyOn(LogMetricsService, 'logMetrics');
     spyOn(Authinfo, 'getOrgName').and.returnValue('orgName');
     spyOn(PropertyService, 'getProperty').and.returnValue($q.resolve(PropertyConstants.MAX_FIELDS_DEFAULT_VALUE));
+    spyOn(ContextAdminAuthorizationService, 'getAdminAuthorizationStatus').and.returnValue($q.resolve(AdminAuthorizationStatus.AUTHORIZED));
   }
 
   function initController() {
@@ -90,6 +94,7 @@ describe('HybridContextFieldsCtrl', function () {
         id: 'Agent_ID',
         lastUpdated: '01/23/2017',
       }]));
+      ContextAdminAuthorizationService.getAdminAuthorizationStatus.and.returnValue($q.resolve(AdminAuthorizationStatus.AUTHORIZED));
       controller = initController();
       $scope.$apply();
 
@@ -508,6 +513,7 @@ describe('HybridContextFieldsCtrl', function () {
           id: 'FieldNotContainSearchStr',
           dataType: 'double',
         }]));
+        ContextAdminAuthorizationService.getAdminAuthorizationStatus.and.returnValue($q.resolve(AdminAuthorizationStatus.AUTHORIZED));
         controller = initController();
         spyOn(Authinfo, 'getOrgId').and.returnValue(ORG_ID);
       });
@@ -518,14 +524,17 @@ describe('HybridContextFieldsCtrl', function () {
 
       it('should have the default max fields', function () {
         $scope.$apply();
+
         expect(controller.maxFieldsAllowed).toBe(DEFAULT_MAX_FIELDS);
         expect(controller.showNew).toBe(true);
+        expect(controller.newButtonTooltip).toBe('');
       });
 
       it('should overrides the max fields property and new is disabled', function () {
         var maxFields = 2;
         PropertyService.getProperty.and.returnValue($q.resolve(maxFields));
         $scope.$apply();
+
         expect(controller.maxFieldsAllowed).toBe(maxFields);
         expect(controller.showNew).toBe(false);
       });
@@ -533,8 +542,27 @@ describe('HybridContextFieldsCtrl', function () {
       it('should use default max fields allowed on reject', function () {
         PropertyService.getProperty.and.returnValue($q.reject());
         $scope.$apply();
+
         expect(controller.maxFieldsAllowed).toBe(PropertyConstants.MAX_FIELDS_DEFAULT_VALUE);
         expect(controller.showNew).toBe(true);
+      });
+
+      it('should set the tooltip if admin not authorized', function () {
+        ContextAdminAuthorizationService.getAdminAuthorizationStatus.and.returnValue($q.resolve(AdminAuthorizationStatus.UNAUTHORIZED));
+        controller = initController();
+        $scope.$apply();
+
+        expect(controller.adminAuthorizationStatus).toBe(AdminAuthorizationStatus.UNAUTHORIZED);
+        expect(controller.newButtonTooltip).toBe($translate.instant('context.dictionary.fieldPage.notAuthorized'));
+      });
+
+      it('should set the tooltip if admin authorization is unknown ', function () {
+        ContextAdminAuthorizationService.getAdminAuthorizationStatus.and.returnValue($q.resolve(AdminAuthorizationStatus.UNKNOWN));
+        controller = initController();
+        $scope.$apply();
+
+        expect(controller.adminAuthorizationStatus).toBe(AdminAuthorizationStatus.UNKNOWN);
+        expect(controller.newButtonTooltip).toBe($translate.instant('context.dictionary.unknownAdminAuthorizationStatus'));
       });
     });
   });

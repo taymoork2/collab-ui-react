@@ -5,13 +5,13 @@ var momentFilter = require('../filters/momentFilter').Moment;
   'use strict';
 
   var PropertyConstants = require('modules/context/services/context-property-service').PropertyConstants;
-
+  var AdminAuthorizationStatus = require('modules/context/services/context-authorization-service').AdminAuthorizationStatus;
   angular
     .module('Context')
     .controller('HybridContextFieldsCtrl', HybridContextFieldsCtrl);
 
   /* @ngInject */
-  function HybridContextFieldsCtrl($scope, $rootScope, $state, $translate, Log, LogMetricsService, $q, ContextFieldsService, Notification, PropertyService, Authinfo, FieldUtils) {
+  function HybridContextFieldsCtrl($scope, $rootScope, $state, $translate, Log, LogMetricsService, $q, ContextFieldsService, Notification, PropertyService, Authinfo, FieldUtils, ContextAdminAuthorizationService) {
     var dateTimeFormatString = 'LL';
     var vm = this;
     var eventListeners = [];
@@ -27,7 +27,7 @@ var momentFilter = require('../filters/momentFilter').Moment;
     };
     vm.showNew = false;
     vm.maxFieldsAllowed = PropertyConstants.MAX_FIELDS_DEFAULT_VALUE;
-    vm.maxLimitReachedTooltip = $translate.instant('context.dictionary.fieldPage.limitReached');
+    vm.newButtonTooltip = '';
 
     vm.filterBySearchStr = filterBySearchStr;
     vm.filterList = filterList;
@@ -49,11 +49,13 @@ var momentFilter = require('../filters/momentFilter').Moment;
         callback: function (newField) {
           var fieldCopy = _.cloneDeep(newField);
           vm.fieldsList.allFields.unshift(processField(fieldCopy));
-          checkFieldsLimit();
+          checkFieldsLimitAndSetTooltip();
           filterList(vm.searchStr);
         },
       });
     };
+
+    vm.adminAuthorizationStatus = AdminAuthorizationStatus.UNKNOWN;
 
     $scope.$on('$destroy', onDestroy);
 
@@ -142,6 +144,7 @@ var momentFilter = require('../filters/momentFilter').Moment;
           vm.gridOptions.data = processedFields;
           vm.fieldsList.allFields = processedFields;
           vm.noSearchResults = processedFields.length === 0;
+          return $q.resolve();
         })
         .catch(function (err) {
           Log.debug('CS fields search failed. Status: ' + err);
@@ -152,12 +155,13 @@ var momentFilter = require('../filters/momentFilter').Moment;
       var promises = {
         getAndProcessFieldsPromise: getAndProcessFieldsPromise,
         getMaxFieldsAllowed: getMaxFieldsAllowed(),
+        getAdminAuthorizationStatus: getAdminAuthorizationStatus(),
       };
 
       return $q.all(promises)
         .then(function () {
           vm.gridApi.infiniteScroll.dataLoaded();
-          checkFieldsLimit();
+          checkFieldsLimitAndSetTooltip();
         })
         .finally(function () {
           vm.gridRefresh = false;
@@ -165,12 +169,28 @@ var momentFilter = require('../filters/momentFilter').Moment;
         });
     }
 
-    function checkFieldsLimit() {
+    function checkFieldsLimitAndSetTooltip() {
       var customFields = vm.fieldsList.allFields.filter(function (field) {
         return _.get(field, 'publiclyAccessibleUI', '').toLowerCase() !== 'cisco';
       });
 
-      vm.showNew = customFields.length < vm.maxFieldsAllowed;
+      vm.showNew = customFields.length < vm.maxFieldsAllowed && (vm.adminAuthorizationStatus === AdminAuthorizationStatus.AUTHORIZED);
+
+      if (!vm.showNew) {
+        switch (vm.adminAuthorizationStatus) {
+          case AdminAuthorizationStatus.AUTHORIZED:
+            vm.newButtonTooltip = $translate.instant('context.dictionary.fieldPage.limitReached');
+            break;
+          case AdminAuthorizationStatus.UNAUTHORIZED:
+            vm.newButtonTooltip = $translate.instant('context.dictionary.fieldPage.notAuthorized');
+            break;
+          case AdminAuthorizationStatus.UNKNOWN:
+            vm.newButtonTooltip = $translate.instant('context.dictionary.unknownAdminAuthorizationStatus');
+            break;
+          default:
+            break;
+        }
+      }
     }
 
     function initializeGrid() {
@@ -180,6 +200,7 @@ var momentFilter = require('../filters/momentFilter').Moment;
         vm.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
           $state.go('context-fields-sidepanel', {
+            adminAuthorizationStatus: vm.adminAuthorizationStatus,
             field: row.entity,
             process: processField,
             callback: function (updatedField) {
@@ -305,6 +326,16 @@ var momentFilter = require('../filters/momentFilter').Moment;
         })
         .then(function () {
           return vm.maxFieldsAllowed;
+        });
+    }
+
+    function getAdminAuthorizationStatus() {
+      return ContextAdminAuthorizationService.getAdminAuthorizationStatus()
+        .then(function (status) {
+          vm.adminAuthorizationStatus = status;
+        })
+        .catch(function (err) {
+          Log.error('unable to get admin authorization status', err);
         });
     }
   }
