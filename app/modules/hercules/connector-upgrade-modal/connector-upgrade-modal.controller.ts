@@ -31,8 +31,9 @@ export class ConnectorUpgradeController {
   }
 
   public upgrade() {
-    this.Analytics.trackHybridServiceEvent(this.Analytics.sections.HS_NAVIGATION.eventNames.OPEN_CONNECTOR_UPGRADE_MODAL, {
-      'Connector Type': connectorType,
+    this.Analytics.trackHybridServiceEvent(this.Analytics.sections.HS_NAVIGATION.eventNames.START_CONNECTOR_UPGRADE, {
+      'Cluster Id': this.cluster.id,
+      'Connector Type': this.connectorType,
     });
     this.upgrading = true;
     this.HybridServicesClusterService.upgradeSoftware(this.cluster.id, this.connectorType)

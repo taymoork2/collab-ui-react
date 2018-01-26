@@ -164,6 +164,10 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
   }
 
   public openUpgradeModal(connectorType): void {
+    this.Analytics.trackHybridServiceEvent(this.Analytics.sections.HS_NAVIGATION.eventNames.OPEN_CONNECTOR_UPGRADE_MODAL, {
+      'Cluster Id': this.clusterCache.id,
+      'Connector Type': connectorType,
+    });
     this.$modal.open({
       template: require('modules/hercules/connector-upgrade-modal/connector-upgrade-modal.html'),
       type: 'small',
