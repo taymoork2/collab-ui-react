@@ -6,6 +6,7 @@ import { Notification } from 'modules/core/notifications';
 import { QueryParser } from '../services/search/queryParser';
 import { SearchTranslator } from '../services/search/searchTranslator';
 import { SearchElement } from '../services/search/searchElement';
+import { SearchRequestCompressor } from '../services/search/searchRequestCompressor';
 import { CloudConnectorService } from '../../hercules/services/calendar-cloud-connector.service';
 
 require('./_devices.scss');
@@ -49,13 +50,17 @@ export class DevicesCtrl implements ng.IComponentController {
               private Notification: Notification,
               private WizardFactory,
               private $state,
+              private $scope,
               private FeatureToggleService,
               private $q,
               private Userservice,
               private DeviceSearchTranslator: SearchTranslator,
               private ServiceDescriptorService,
               private Authinfo,
-              private CloudConnectorService: CloudConnectorService) {
+              private CloudConnectorService: CloudConnectorService,
+              private SearchRequestCompressor: SearchRequestCompressor,
+              $stateParams,
+              ) {
     this.initForAddButton();
     AccountOrgService.getAccount(Authinfo.getOrgId())
       .then((response) => {
@@ -69,6 +74,26 @@ export class DevicesCtrl implements ng.IComponentController {
       });
 
     this._searchObject = SearchObject.createWithQuery(new QueryParser(this.DeviceSearchTranslator), '');
+
+    this.$scope.$on('$stateChangeStart', (_event, toState, toParams) => {
+      if (toState.name === 'devices.search' || toState.name === 'devices') {
+        this.updateSearchObjectFromUrlParam(toParams.q);
+        this.searchInteraction.searchChange();
+      }
+    });
+
+    try {
+      this.updateSearchObjectFromUrlParam($stateParams.q);
+    } catch (e) {
+      this.Notification.warning(e.messageKey || 'spacesPage.searchlinkBad');
+    }
+  }
+
+  private updateSearchObjectFromUrlParam(urlParamValue: string) {
+    const query = urlParamValue;
+    const se = query ? this.SearchRequestCompressor.decompress(query) : undefined;
+    this._searchObject.setQuery(se ? se.toQuery() : '', se);
+    this._searchObject.setWorkingElementText('');
   }
 
   get searchResult(): SearchResult {
@@ -161,6 +186,14 @@ export class DevicesCtrl implements ng.IComponentController {
   }
 
   public searchResultChanged(result: SearchResult) {
+    if (this.searchObject.lastGoodQuery) {
+      const compressedQuery = this.SearchRequestCompressor.compress(this.searchObject.lastGoodQuery);
+      if (this.$state.current.name === 'devices.search' || compressedQuery) {
+        this.$state.transitionTo('devices.search', { q: compressedQuery },
+          { reload: false, inherit: true, notify: false });
+      }
+    }
+
     if (result && result.hits && result.hits.total > 0) {
       this.devicesHaveBeenSeen = true;
     }

@@ -2788,6 +2788,7 @@
           })
           .state('devices', {
             url: '/devices',
+            reloadOnSearch: false,
             template: '<devices-redux ng-if="$resolve.hasDevicesReduxFeatureToggle"></devices-redux><devices-page ng-if="!$resolve.hasDevicesReduxFeatureToggle"></devices-page>',
             parent: 'main',
             resolve: {
@@ -2796,8 +2797,12 @@
               },
             },
           })
+          .state('devices.search', {
+            url: '/search/:q',
+          })
           .state('devices-redux', {
             url: '/devices-redux',
+            reloadOnSearch: false,
             template: '<devices-redux></devices-redux>',
             parent: 'main',
           })

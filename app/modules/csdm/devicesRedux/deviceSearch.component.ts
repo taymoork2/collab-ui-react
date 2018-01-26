@@ -12,10 +12,6 @@ import { KeyCodes } from '../../core/accessibility/accessibility.service';
 export class DeviceSearch implements ng.IComponentController, ISearchHandler, IBulletContainer {
 
   private static partialSearchError: boolean;
-
-  private lastSearchInput = '';
-  public searchInput = '';
-  public searchField = '';
   private lastSearchObject: SearchObject;
   private _inputActive: boolean;
   private searchDelayTimer: ng.IPromise<any> | null;
@@ -81,10 +77,12 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     this.searchChange();
   }
 
-  public onInputChange() {
-    if (this.lastSearchInput !== this.searchInput) {
-      this.searchObject.setWorkingElementText(this.searchInput);
-      this.lastSearchInput = this.searchInput;
+  get searchInput(): string {
+    return this.searchObject.getWorkingElementText();
+  }
+
+  set searchInput(value: string) {
+    if (this.searchObject.setWorkingElementText(value)) {
       this.searchChange();
       if (this.searchObject.hasError) {
         this.showSuggestions = false;
@@ -98,20 +96,15 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
   public editBullet(bullet: SearchElement) {
     if (!this.searchObject.hasError) {
       this.searchObject.submitWorkingElement();
-      this.searchInput = '';
-      this.lastSearchInput = '';
     }
     this.searchObject.hasError = false;
-    this.lastSearchInput = bullet.toQuery();
-    this.searchInput = this.lastSearchInput;
+    this.searchObject.setWorkingElementText(bullet.toQuery());
     this.setFocusToInputField();
     bullet.setBeingEdited(true);
   }
 
   public clearSearchInput() {
     this.searchObject.setQuery('');
-    this.searchInput = '';
-    this.lastSearchInput = '';
     this.suggestions.updateBasedOnInput(this.searchObject);
     this.searchChange();
   }
@@ -165,15 +158,13 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     if (suggestion) {
       this.searchObject.setWorkingElementText(suggestion.searchString);
       if (suggestion.isFieldSuggestion) {
-        this.searchInput = this.lastSearchInput = suggestion.searchString;
+        this.searchObject.setWorkingElementText(suggestion.searchString);
         this.searchChange();
         this.suggestions.updateBasedOnInput(this.searchObject);
         return;
       }
     }
     this.searchObject.submitWorkingElement();
-    this.searchInput = '';
-    this.lastSearchInput = '';
     this.searchChange();
     this.suggestions.updateBasedOnInput(this.searchObject);
   }
@@ -322,7 +313,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
 
 export interface ISearchHandler {
   addToSearch(searchElement: SearchElement, toggle: boolean);
-
+  searchChange();
   setSortOrder(field?: string, order?: string);
 }
 
@@ -332,6 +323,12 @@ export class SearchInteraction implements ISearchHandler {
   public addToSearch(searchElement: SearchElement, toggle: boolean) {
     if (this.receiver) {
       this.receiver.addToSearch(searchElement, toggle);
+    }
+  }
+
+  public searchChange() {
+    if (this.receiver) {
+      this.receiver.searchChange();
     }
   }
 
