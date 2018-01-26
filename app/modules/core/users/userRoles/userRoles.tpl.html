@@ -181,7 +181,7 @@
               <div class="admin-roles-panel" ng-if="showHelpDeskRole">
                 <p><span class="edit-title" translate="rolesPanel.helpdesk"></span></p>
 
-                <div class="admin-options indent-checkbox">
+                <div class="admin-options">
                   <input cs-input type="checkbox"
                     id="helpdeskCkbx"
                     cs-input-label="{{::'ciRoles.atlas-portal.partner.helpdesk' | translate}}"
@@ -195,7 +195,7 @@
                     class="icon icon-information role-information"
                     tabindex="0"></i>
                 </div>
-                <div class="admin-options indent-nestedcheckbox" ng-if="showOrderAdminRole">
+                <div class="admin-options indent-checkbox" ng-if="showOrderAdminRole">
                   <input cs-input type="checkbox"
                     id="orderadminCkbx"
                     cs-input-label="{{::'ciRoles.atlas-portal.partner.orderadmin' | translate}}"
@@ -209,7 +209,7 @@
                     class="icon icon-information role-information"
                     tabindex="0"></i>
                 </div>
-                <div class="admin-options indent-checkbox" ng-if="showPartnerManagementRole">
+                <div class="admin-options" ng-if="showPartnerManagementRole">
                   <input cs-input type="checkbox"
                     id="partnermgmtCkbx"
                     cs-input-label="{{::'ciRoles.atlas-portal.cisco.partnermgmt' | translate}}"
@@ -228,7 +228,7 @@
               <div class="admin-roles-panel" ng-if="showComplianceRole && !isUserAdminUser">
                 <p><span class="edit-title" translate="rolesPanel.compliance"></span></p>
 
-                <div class="admin-options indent-checkbox">
+                <div class="admin-options">
                   <input cs-input type="checkbox"
                     id="complianceCkbx"
                     cs-input-label="{{::'ciRoles.compliance' | translate}}"
