@@ -1,4 +1,3 @@
-import { Analytics } from 'modules/core/analytics';
 import { MultiDirSyncService } from '../multi-dirsync.service';
 import { IDirectorySync } from '../index';
 
@@ -14,7 +13,6 @@ export class MultiDirSyncSectionController {
   /* @ngInject */
   public constructor(
     private $state: IStateWithModal,
-    private Analytics: Analytics,
     private MultiDirSyncService: MultiDirSyncService,
   ) {}
 
@@ -43,11 +41,6 @@ export class MultiDirSyncSectionController {
     });
   }
 
-  public goToInitialize() {
-    this.Analytics.trackAddUsers(this.Analytics.sections.ADD_USERS.eventNames.INSTALL_CONNECTOR, this.Analytics.sections.ADD_USERS.uploadMethods.SYNC);
-    this.$state.go('users.manage.advanced.add.ob.installConnector');
-  }
-
   public goToSettings() {
     this.$state.modal.closed.then(() => {
       this.$state.go('settings', {
@@ -61,4 +54,7 @@ export class MultiDirSyncSectionController {
 export class MultiDirSyncSectionComponent implements ng.IComponentOptions {
   public controller = MultiDirSyncSectionController;
   public template = require('./multi-dirsync-section.tpl.html');
+  public bindings = {
+    onEnableClick: '&',
+  };
 }

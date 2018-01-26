@@ -915,16 +915,16 @@
           .state('users.add.manual', {
             views: {
               'usersAdd@users.add': {
-                template: '<manual-add-users-modal state-data="$resolve.stateData" dismiss="$dismiss()"></manual-add-users-modal>',
+                template: '<manual-add-users-modal auto-assign-template-data="$resolve.autoAssignTemplateData" dismiss="$dismiss()"></manual-add-users-modal>',
               },
             },
             resolve: stateParamsToResolveParams({
               resetOnboardStoreStates: null,
-              stateData: null,
+              autoAssignTemplateData: null,
             }),
             params: {
               resetOnboardStoreStates: null,
-              stateData: null,
+              autoAssignTemplateData: null,
             },
           })
           .state('users.add.services', {
@@ -1008,78 +1008,82 @@
               prevState: null,
             },
           })
-          .state('users.manage.advanced', {
+          .state('users.manage.dir-sync', {
             abstract: true,
-            controller: 'UserManageAdvancedController',
-            controllerAs: 'umac',
-            template: require('modules/core/users/userManage/userManageAdvanced.tpl.html'),
+            controller: 'UserManageDirSyncController',
+            controllerAs: 'umds',
+            template: require('modules/core/users/userManage/dir-sync/user-manage-dir-sync.html'),
           })
-          .state('users.manage.advanced.add', {
+          // TODO refactor used logic from 'AddUserCtrl' -> 'UserManageDirSyncController' and rm AddUserCtrl
+          .state('users.manage.dir-sync.add', {
             abstract: true,
             controller: 'AddUserCtrl',
             controllerAs: 'auc',
             template: '<div ui-view class="flex-container flex-item-resize"></div>',
           })
-          .state('users.manage.advanced.add.ob', {
+          .state('users.manage.dir-sync.add.ob', {
             abstract: true,
             controller: 'OnboardCtrl',
             controllerAs: 'obc',
             template: '<div ui-view class="flex-container flex-item-resize"></div>',
           })
-          .state('users.manage.advanced.add.ob.installConnector', {
-            template: require('modules/core/users/userManage/userManageInstallConnector.tpl.html'),
+          .state('users.manage.dir-sync.add.ob.autoAssignLicenseSummary', {
+            template: '<user-manage-dir-sync-auto-assign-license-summary></user-manage-dir-sync-auto-assign-license-summary>',
           })
-          .state('users.manage.advanced.add.ob.syncStatus', {
-            template: require('modules/core/users/userManage/userManageAdvancedSyncStatus.tpl.html'),
+          .state('users.manage.dir-sync.add.ob.installConnector', {
+            template: require('modules/core/users/userManage/dir-sync/user-manage-dir-sync-install-connector.html'),
           })
-          .state('users.manage.advanced.add.ob.dirsyncServices', {
-            template: require('modules/core/users/userManage/userManageAssignServices.tpl.html'),
+          .state('users.manage.dir-sync.add.ob.syncStatus', {
+            template: require('modules/core/users/userManage/dir-sync/user-manage-dir-sync-status.html'),
+          })
+          .state('users.manage.dir-sync.add.ob.dirsyncServices', {
+            template: require('modules/core/users/userManage/dir-sync/user-manage-dir-sync-assign-services.html'),
             controller: /* @ngInject */ function ($scope) {
               $scope.dirsyncInitForServices();
             },
           })
-          .state('users.manage.advanced.add.ob.dirsyncResult', {
-            template: require('modules/core/users/userManage/userManageAdvancedResults.tpl.html'),
+          .state('users.manage.dir-sync.add.ob.dirsyncResult', {
+            template: require('modules/core/users/userManage/dir-sync/user-manage-dir-sync-results.html'),
             controller: /* @ngInject */ function ($scope) {
-              $scope.umac.isBusy = true;
+              $scope.umds.isBusy = true;
               $scope.csv.model = $scope.model;
               $scope.bulkSave().then(function () {
-                $scope.umac.isBusy = false;
+                $scope.umds.isBusy = false;
               });
             },
           })
           .state('users.manage.edit-auto-assign-template-modal', {
-            template: '<edit-auto-assign-template-modal dismiss="$dismiss()" prev-state="$resolve.prevState" is-edit-template-mode="$resolve.isEditTemplateMode" state-data="$resolve.stateData"></edit-auto-assign-template-modal>',
+            template: '<edit-auto-assign-template-modal dismiss="$dismiss()" prev-state="$resolve.prevState" is-edit-template-mode="$resolve.isEditTemplateMode" auto-assign-template-data="$resolve.autoAssignTemplateData"></edit-auto-assign-template-modal>',
             resolve: stateParamsToResolveParams({
               prevState: 'users.manage.picker',
               isEditTemplateMode: false,
-              stateData: null,
+              autoAssignTemplateData: null,
             }),
             params: {
               prevState: 'users.manage.picker',
               isEditTemplateMode: false,
-              stateData: null,
+              autoAssignTemplateData: null,
             },
           })
           .state('users.manage.edit-summary-auto-assign-template-modal', {
-            template: '<edit-summary-auto-assign-template-modal dismiss="$dismiss()" state-data="$resolve.stateData" is-edit-template-mode="$resolve.isEditTemplateMode"></edit-summary-auto-assign-template-modal>',
+            template: '<edit-summary-auto-assign-template-modal dismiss="$dismiss()" auto-assign-template-data="$resolve.autoAssignTemplateData" is-edit-template-mode="$resolve.isEditTemplateMode"></edit-summary-auto-assign-template-modal>',
             resolve: stateParamsToResolveParams({
-              stateData: null,
+              autoAssignTemplateData: null,
               isEditTemplateMode: false,
             }),
             params: {
-              stateData: null,
+              autoAssignTemplateData: null,
               isEditTemplateMode: false,
             },
           })
           .state('users.manage.onboard-summary-for-auto-assign-modal', {
-            template: '<onboard-summary-for-auto-assign-modal dismiss="$dismiss()" state-data="$resolve.stateData" user-list="$resolve.userList"></onboard-summary-for-auto-assign-modal>',
+            template: '<onboard-summary-for-auto-assign-modal dismiss="$dismiss()" auto-assign-template-data="$resolve.autoAssignTemplateData" user-list="$resolve.userList"></onboard-summary-for-auto-assign-modal>',
             resolve: stateParamsToResolveParams({
-              stateData: null,
+              autoAssignTemplateData: null,
               userList: null,
             }),
             params: {
-              stateData: null,
+              autoAssignTemplateData: null,
               userList: null,
             },
           })
@@ -3102,6 +3106,18 @@
               filter: null,
             },
           })
+          .state('taasResults', {
+            parent: 'main',
+            url: '/taasResults',
+            template: '<taas-results-view></taas-results-view>',
+          })
+          .state('taasResultsView.list', {
+            url: '/taasResultsView',
+            template: '<taas-results-view></taas-results-view>',
+            params: {
+              filter: null,
+            },
+          })
           .state('taasServiceManager', {
             abstract: true,
             parent: 'modalSmall',
@@ -4176,10 +4192,8 @@
           })
           // hybrid context
           .state('context', {
-            template: require('modules/context/container/hybrid-context-container.html'),
-            controller: 'HybridContextContainerController',
-            controllerAs: 'hybridContextContainerController',
             parent: 'main',
+            template: '<context-container back-state="$resolve.backState"></context-container>',
             params: {
               backState: null,
             },
@@ -4276,7 +4290,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<context-fields-sidepanel field="$resolve.field" process="$resolve.process" callback="$resolve.callback"></context-fields-sidepanel>',
+                template: '<context-fields-sidepanel admin-authorization-status="$resolve.adminAuthorizationStatus" field="$resolve.field" process="$resolve.process" callback="$resolve.callback"></context-fields-sidepanel>',
               },
               'header@context-fields-sidepanel': {
                 template: require('modules/context/fields/sidepanel/hybrid-context-fields-sidepanel-header.html'),
@@ -4284,11 +4298,15 @@
             },
             data: {},
             params: {
+              adminAuthorizationStatus: {},
               field: {},
               process: function () {},
               callback: function () {},
             },
             resolve: {
+              adminAuthorizationStatus: /* @ngInject */ function ($stateParams) {
+                return $stateParams.adminAuthorizationStatus;
+              },
               field: /* @ngInject */ function ($stateParams) {
                 return $stateParams.field;
               },
@@ -4363,7 +4381,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<context-fieldsets-sidepanel fieldset="$resolve.fieldset" process="$resolve.process" callback="$resolve.callback" ></context-fieldsets-sidepanel>',
+                template: '<context-fieldsets-sidepanel admin-authorization-status="$resolve.adminAuthorizationStatus" fieldset="$resolve.fieldset" process="$resolve.process" callback="$resolve.callback" ></context-fieldsets-sidepanel>',
               },
               'header@context-fieldsets-sidepanel': {
                 template: require('modules/context/fieldsets/sidepanel/hybrid-context-fieldsets-sidepanel-header.html'),
@@ -4371,11 +4389,15 @@
             },
             data: {},
             params: {
+              adminAuthorizationStatus: {},
               fieldset: {},
               process: function () {},
               callback: function () {},
             },
             resolve: {
+              adminAuthorizationStatus: /* @ngInject */ function ($stateParams) {
+                return $stateParams.adminAuthorizationStatus;
+              },
               fieldset: /* @ngInject */ function ($stateParams) {
                 return $stateParams.fieldset;
               },

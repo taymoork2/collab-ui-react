@@ -61,12 +61,6 @@ export interface ICluster {
   url: string;
 }
 
-// ClusterService
-export interface IExtendedCluster extends ICluster {
-  aggregates: IClusterAggregate;
-  extendedProperties: IClusterExtendedProperties;
-}
-
 // HybridServicesClusterService
 export interface IClusterWithExtendedConnectors extends ICluster {
   connectors: IExtendedConnector[];

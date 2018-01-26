@@ -3,10 +3,6 @@
 auto-assign-template-manage-options {
   display: block;
 
-	.menu-item {
-		padding-bottom: 0;
-	}
-
 	// TODO (f3745): explore display: flex layout and rm this if no longer needed
   @media only screen and (min-width: 641px) {
     .manage-modal-dots {

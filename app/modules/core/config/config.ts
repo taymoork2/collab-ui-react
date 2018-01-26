@@ -545,6 +545,7 @@ export class Config {
       'taasResource',
       'taasSchedule',
       'taasServiceManager',
+      'taasResults',
     ],
     Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'dgc'],
     Tech_Support: ['gss'],

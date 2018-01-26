@@ -13,7 +13,7 @@
     <div class="columns medium-7">
       <div class="cs-radio-group">
         <ul>
-          <li>
+          <li class="user-manage__manage-type-list-item">
             <input cs-input type="radio"
               ng-model="umoc.manageType"
               id="org-manual"
@@ -22,7 +22,7 @@
               cs-input-label="{{::'userManage.org.manualLabel'|translate}}"
               cs-input-help-text="{{::'userManage.org.manualDetails'|translate: {maxUsersInManual: umoc.maxUsersInManual} }}">
           </li>
-          <li>
+          <li class="user-manage__manage-type-list-item">
             <input cs-input type="radio"
               ng-model="umoc.manageType"
               id="org-bulk"
@@ -37,7 +37,7 @@
               </cr-user-csv-export>
             </p>
           </li>
-          <li>
+          <li class="user-manage__manage-type-list-item">
             <input cs-input type="radio"
               ng-model="umoc.manageType"
               id="org-advanced"
@@ -46,7 +46,7 @@
               cs-input-label="{{::'userManage.org.advancedLabel'|translate}}"
               cs-input-help-text="{{::'userManage.org.advancedDetails'|translate}}">
           </li>
-          <li>
+          <li class="user-manage__manage-type-list-item">
             <input cs-input type="radio"
               ng-if="umoc.convertableUsers"
               ng-model="umoc.manageType"
@@ -102,7 +102,9 @@
       <h4 translate="userManage.org.activeDirectory"></h4>
     </div>
     <div class="columns medium-8 manage-modal-label sync-status">
-      <multi-dirsync-section></multi-dirsync-section>
+      <multi-dirsync-section
+        on-enable-click="umoc.onNext(umoc.ManageType.ADVANCED_NO_DS)">
+      </multi-dirsync-section>
     </div>
   </div>
 
@@ -142,6 +144,11 @@
     <div class="columns medium-4 modify-users-section" ng-click="umoc.onNext(umoc.ManageType.MANUAL)">
       <h4 class="modify-users-section--label" translate="userManage.org.manualLabelNew"></h4>
       <h6 class="modify-users-section--details" translate="userManage.org.manualDetailsNew" translate-values="{maxUsersInManual: umoc.maxUsersInManual}"></h6>
+      <a href
+        ng-if="umoc.isDirSyncEnabled"
+        ng-click="umoc.onNext(umoc.ManageType.ADVANCED_DS)"
+        class="h6 modify-users-section--details-link"
+        translate="userManage.org.dirSyncModifyAll"></a>
     </div>
     <div class="columns medium-4 modify-users-section modify-users-section--middle-box"
       ng-click="umoc.onNext(umoc.ManageType.BULK)">

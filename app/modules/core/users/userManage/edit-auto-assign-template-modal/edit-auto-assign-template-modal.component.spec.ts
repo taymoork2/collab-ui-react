@@ -11,7 +11,7 @@ describe('Component: editAutoAssignTemplateModal:', () => {
       'Analytics',
       'AutoAssignTemplateService',
     );
-    this.stateData = {};
+    this.autoAssignTemplateData = {};
     this.$scope.dismiss = _.noop;
   });
 
@@ -42,20 +42,20 @@ describe('Component: editAutoAssignTemplateModal:', () => {
     it('should render render an "assignable-services" element', function () {
       expect(this.view.find('assignable-services[subscriptions]').length).toBe(1);
       expect(this.view.find('assignable-services[on-update]').length).toBe(1);
-      expect(this.view.find('assignable-services[state-data]').length).toBe(1);
+      expect(this.view.find('assignable-services[auto-assign-template-data]').length).toBe(1);
     });
   });
 
   describe('primary behaviors (controller):', () => {
     beforeEach(function () {
       spyOn(this.$state, 'go');
-      _.set(this.stateData, 'subscriptions', []);
+      _.set(this.autoAssignTemplateData, 'subscriptions', []);
       spyOn(this.Analytics, 'trackAddUsers');
       spyOn(this.AutoAssignTemplateService, 'getSortedSubscriptions').and.returnValue(this.$q.resolve([]));
       this.compileComponent('editAutoAssignTemplateModal', {
         prevState: 'fake-previous-state',
         isEditTemplateMode: true,
-        stateData: this.stateData,
+        autoAssignTemplateData: this.autoAssignTemplateData,
         dismiss: 'dismiss',
       });
     });
@@ -68,7 +68,7 @@ describe('Component: editAutoAssignTemplateModal:', () => {
     it('should navigate to the next state when next button is clicked', function () {
       this.view.find('button.btn.next').click();
       expect(this.$state.go).toHaveBeenCalledWith('users.manage.edit-summary-auto-assign-template-modal', {
-        stateData: this.stateData,
+        autoAssignTemplateData: this.autoAssignTemplateData,
         isEditTemplateMode: true,
       });
     });

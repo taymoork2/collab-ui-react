@@ -45,4 +45,34 @@ describe('MessengerInteropService', () => {
     }]);
     expect(this.MessengerInteropService.hasMessengerLicense()).toBe(true);
   });
+
+  it('subscriptionIsMessengerOnly():', function () {
+    const fakeSubscription = {
+      licenses: [] as any,
+    };
+    // empty licenses list
+    let result = this.MessengerInteropService.subscriptionIsMessengerOnly(fakeSubscription);
+    expect(result).toBe(false);
+
+    // at least 1 license with 'MSGR'
+    fakeSubscription.licenses.push({
+      offerName: 'MSGR',
+    });
+    result = this.MessengerInteropService.subscriptionIsMessengerOnly(fakeSubscription);
+    expect(result).toBe(true);
+
+    // multiple licenses of 'MSGR' isn't treated as invalid (though unlikely to occur in practice)
+    fakeSubscription.licenses.push({
+      offerName: 'MSGR',
+    });
+    result = this.MessengerInteropService.subscriptionIsMessengerOnly(fakeSubscription);
+    expect(result).toBe(true);
+
+    // at least 1 license that is 'MSGR', and at least 1 not
+    fakeSubscription.licenses.push({
+      offerName: 'foo',
+    });
+    result = this.MessengerInteropService.subscriptionIsMessengerOnly(fakeSubscription);
+    expect(result).toBe(false);
+  });
 });

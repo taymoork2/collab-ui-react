@@ -9,6 +9,7 @@ describe('Service: AutoAssignTemplateService:', () => {
       '$scope',
       'Authinfo',
       'AutoAssignTemplateService',
+      'MessengerInteropService',
       'Orgservice',
       'UrlConfig',
     );
@@ -17,15 +18,18 @@ describe('Service: AutoAssignTemplateService:', () => {
     this.fixtures = {};
     this.fixtures.fakeLicenseUsage = [{
       subscriptionId: 'fake-subscriptionId-2',
+      licenses: [{ offerName: 'foo' }],
     }, {
       subscriptionId: 'fake-subscriptionId-3',
+      licenses: [{ offerName: 'foo' }],
     }, {
       subscriptionId: 'fake-subscriptionId-1',
+      licenses: [{ offerName: 'foo' }],
     }];
-    this.stateData = {};
-    _.set(this.stateData, 'subscriptions', undefined);
-    _.set(this.stateData, 'LICENSE', { subscriptionId: 'fake-subscriptionId-1' });
-    _.set(this.stateData, 'USER_ENTITLEMENTS_PAYLOAD', undefined);
+    this.autoAssignTemplateData = {};
+    _.set(this.autoAssignTemplateData, 'subscriptions', undefined);
+    _.set(this.autoAssignTemplateData, 'LICENSE', { subscriptionId: 'fake-subscriptionId-1' });
+    _.set(this.autoAssignTemplateData, 'USER_ENTITLEMENTS_PAYLOAD', undefined);
   });
 
   beforeEach(function () {
@@ -155,21 +159,21 @@ describe('Service: AutoAssignTemplateService:', () => {
     });
   });
 
-  describe('mkLicensesStateData():', () => {
+  describe('mkLicenseEntries():', () => {
     it('should compose state data representing currently selected licenses', function () {
       const fakeAllLicenses = {
         'fake-license-id-1': { foo: 1 },
         'fake-license-id-2': { foo: 2 },
         'fake-license-id-3': { foo: 3 },
       };
-      expect(this.AutoAssignTemplateService.mkLicensesStateData([{ id: 'fake-license-id-1' }], fakeAllLicenses)).toEqual({
+      expect(this.AutoAssignTemplateService.mkLicenseEntries([{ id: 'fake-license-id-1' }], fakeAllLicenses)).toEqual({
         'fake-license-id-1': {
           isSelected: true,
           license: { foo: 1 },
         },
       });
 
-      expect(this.AutoAssignTemplateService.mkLicensesStateData([
+      expect(this.AutoAssignTemplateService.mkLicenseEntries([
         { id: 'fake-license-id-1' },
         { id: 'fake-license-id-3' }],
         fakeAllLicenses)).toEqual({
@@ -185,18 +189,18 @@ describe('Service: AutoAssignTemplateService:', () => {
     });
   });
 
-  describe('toStateData():', () => {
+  describe('toAutoAssignTemplateData():', () => {
     it('should compose state data object with "LICENSE", "USER_ENTITLEMENTS_PAYLOAD", and "subscriptions" properties', function () {
       spyOn(this.AutoAssignTemplateService, 'getAllLicenses').and.returnValue('fake-allLicenses-result');
-      spyOn(this.AutoAssignTemplateService, 'mkLicensesStateData').and.returnValue('fake-mkLicensesStateData-result');
-      const result = this.AutoAssignTemplateService.toStateData({
+      spyOn(this.AutoAssignTemplateService, 'mkLicenseEntries').and.returnValue('fake-mkLicenseEntries-result');
+      const result = this.AutoAssignTemplateService.toAutoAssignTemplateData({
         licenses: 'fake-template-licenses-arg',
         userEntitlements: 'fake-template-userEntitlements-arg',
       }, 'fake-subscriptions-arg');
 
-      expect(this.AutoAssignTemplateService.mkLicensesStateData).toHaveBeenCalledWith('fake-template-licenses-arg', 'fake-allLicenses-result');
+      expect(this.AutoAssignTemplateService.mkLicenseEntries).toHaveBeenCalledWith('fake-template-licenses-arg', 'fake-allLicenses-result');
       expect(result).toEqual({
-        LICENSE: 'fake-mkLicensesStateData-result',
+        LICENSE: 'fake-mkLicenseEntries-result',
         USER_ENTITLEMENTS_PAYLOAD: 'fake-template-userEntitlements-arg',
         subscriptions: 'fake-subscriptions-arg',
       });
@@ -204,7 +208,24 @@ describe('Service: AutoAssignTemplateService:', () => {
   });
 
   describe('getSortedSubscriptions():', () => {
-    it('should initialize "sortedSubscription" property', function (done) {
+    it('should resolve with a collection of subscriptions sorted by subscription id', function (done) {
+      this.AutoAssignTemplateService.getSortedSubscriptions().then(sortedSubscriptions => {
+        expect(sortedSubscriptions.length).toBe(3);
+        expect(_.get(sortedSubscriptions[0], 'subscriptionId')).toBe('fake-subscriptionId-1');
+        expect(_.get(sortedSubscriptions[1], 'subscriptionId')).toBe('fake-subscriptionId-2');
+        expect(_.get(sortedSubscriptions[2], 'subscriptionId')).toBe('fake-subscriptionId-3');
+        _.defer(done);
+      });
+      this.$scope.$apply();
+    });
+
+    it('should not containing subscriptions with only licenses of "MSGR" offer name', function (done) {
+      expect(this.fixtures.fakeLicenseUsage.length).toBe(3);
+      this.fixtures.fakeLicenseUsage.push({
+        subscriptionId: 'fake-subscriptionId-4',
+        licenses: [{ offerName: 'MSGR' }],
+      });
+      expect(this.fixtures.fakeLicenseUsage.length).toBe(4);
       this.AutoAssignTemplateService.getSortedSubscriptions().then(sortedSubscriptions => {
         expect(sortedSubscriptions.length).toBe(3);
         expect(_.get(sortedSubscriptions[0], 'subscriptionId')).toBe('fake-subscriptionId-1');
@@ -232,8 +253,8 @@ describe('Service: AutoAssignTemplateService:', () => {
   });
 
   describe('mkLicensesPayload():', function () {
-    it('should filter only selected licenses from "stateData" property', function () {
-      const stateData = {
+    it('should filter only selected licenses from "autoAssignTemplateData" property', function () {
+      const autoAssignTemplateData = {
         LICENSE: {
           'fake-license-id-1': {
             isSelected: true,
@@ -255,7 +276,7 @@ describe('Service: AutoAssignTemplateService:', () => {
           },
         },
       };
-      expect(this.AutoAssignTemplateService.mkLicensesPayload(stateData)).toEqual([{
+      expect(this.AutoAssignTemplateService.mkLicensesPayload(autoAssignTemplateData)).toEqual([{
         id: 'fake-license-id-1',
         idOperation: 'ADD',
         properties: {},

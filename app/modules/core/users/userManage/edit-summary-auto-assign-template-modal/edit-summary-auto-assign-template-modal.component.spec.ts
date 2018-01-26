@@ -30,7 +30,7 @@ describe('Component: editSummaryAutoAssignTemplateModal:', () => {
 
   describe('clicking save:', () => {
     beforeEach(function() {
-      this.stateData = {
+      this.autoAssignTemplateData = {
         items: {
           'fake-license-id-1': {},
           'fake-license-id-2': {},
@@ -44,7 +44,7 @@ describe('Component: editSummaryAutoAssignTemplateModal:', () => {
     it('should call saveTemplate if isEditTemplateMode is false', function () {
       this.compileComponent('editSummaryAutoAssignTemplateModal', {
         dismiss: 'dismiss',
-        stateData: this.stateData,
+        autoAssignTemplateData: this.autoAssignTemplateData,
         isEditTemplateMode: false,
       });
       this.view.find('button.btn.save').click();
@@ -54,7 +54,7 @@ describe('Component: editSummaryAutoAssignTemplateModal:', () => {
     it('should call updateTemplate if isEditTemplateMode is true', function () {
       this.compileComponent('editSummaryAutoAssignTemplateModal', {
         dismiss: 'dismiss',
-        stateData: this.stateData,
+        autoAssignTemplateData: this.autoAssignTemplateData,
         isEditTemplateMode: true,
       });
       this.view.find('button.btn.save').click();

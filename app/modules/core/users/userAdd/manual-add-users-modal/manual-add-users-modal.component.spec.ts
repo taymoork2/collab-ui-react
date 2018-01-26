@@ -2,6 +2,7 @@ import moduleName from './index';
 import { ManualAddUsersModalController } from './manual-add-users-modal.component';
 import { MultiStepModalComponent } from 'modules/core/shared/multi-step-modal/multi-step-modal.component';
 import { CrOnboardUsersComponent } from './cr-onboard-users/cr-onboard-users.component';
+import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 
 type Test = atlas.test.IComponentTest<ManualAddUsersModalController, {
   $state;
@@ -56,28 +57,33 @@ describe('Component: manualAddUsersModal:', () => {
       expect(this.controller.dismissModal).toHaveBeenCalled();
     });
 
-    it('should have stateData if a default auto-assign template exists, the org is enabled for it, and subscriptions exist', function (this: Test) {
-      expect(this.controller.stateData).toBe(undefined);
+    it('should have autoAssignTemplateData if a default auto-assign template exists, the org is enabled for it, and subscriptions exist', function (this: Test) {
+      expect(this.controller.autoAssignTemplateData).not.toBeDefined();
       expect(this.controller.useDefaultAutoAssignTemplate).toBe(false);
+
+      // notes:
+      // - use a mock, but make sure it is non-empty to test 'useDefaultAutoAssignTemplate' getter logic
+      const fakeToAutoAssignTemplateDataResult = {} as IAutoAssignTemplateData;
+      fakeToAutoAssignTemplateDataResult.subscriptions = [];
 
       this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = true;
       this.AutoAssignTemplateService.getDefaultTemplate.and.returnValue(this.$q.resolve('fake-getDefaultTemplate-result'));
       this.AutoAssignTemplateService.getSortedSubscriptions.and.returnValue(this.$q.resolve('fake-getSortedSubscriptions-result'));
-      spyOn(this.AutoAssignTemplateService, 'toStateData').and.returnValue('fake-toStateData-result');
+      spyOn(this.AutoAssignTemplateService, 'toAutoAssignTemplateData').and.returnValue(fakeToAutoAssignTemplateDataResult);
       initComponent.call(this);
 
-      expect(this.AutoAssignTemplateService.toStateData).toHaveBeenCalledWith('fake-getDefaultTemplate-result', 'fake-getSortedSubscriptions-result');
-      expect(this.controller.stateData).toBe('fake-toStateData-result');
+      expect(this.AutoAssignTemplateService.toAutoAssignTemplateData).toHaveBeenCalledWith('fake-getDefaultTemplate-result', 'fake-getSortedSubscriptions-result');
+      expect(this.controller.autoAssignTemplateData).toEqual(fakeToAutoAssignTemplateDataResult);
       expect(this.controller.useDefaultAutoAssignTemplate).toBe(true);
     });
   });
 
   describe('initial state (with input bindings):', () => {
     it('should skip fetching template data depending on whether it is passed in through input binding and default template is activated', function (this: Test) {
-      this.$scope.fakeStateData = { foo: 0 };
+      this.$scope.fakeAutoAssignTemplateData = { foo: 0 };
       this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = true;
       this.compileComponent('manualAddUsersModal', {
-        stateData: 'fakeStateData',
+        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
       expect(this.AutoAssignTemplateService.getDefaultTemplate).not.toHaveBeenCalled();
       expect(this.AutoAssignTemplateService.getSortedSubscriptions).not.toHaveBeenCalled();
@@ -85,16 +91,16 @@ describe('Component: manualAddUsersModal:', () => {
       // template is deactivated means we still fetch
       this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = false;
       this.compileComponent('manualAddUsersModal', {
-        stateData: 'fakeStateData',
+        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
       expect(this.AutoAssignTemplateService.getDefaultTemplate).toHaveBeenCalled();
       expect(this.AutoAssignTemplateService.getSortedSubscriptions).toHaveBeenCalled();
 
       // template is activated, but data passed through input binding is empty means we still fetch
       this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = true;
-      this.$scope.fakeStateData = undefined;
+      this.$scope.fakeAutoAssignTemplateData = undefined;
       this.compileComponent('manualAddUsersModal', {
-        stateData: 'fakeStateData',
+        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
       expect(this.AutoAssignTemplateService.getDefaultTemplate).toHaveBeenCalled();
       expect(this.AutoAssignTemplateService.getSortedSubscriptions).toHaveBeenCalled();

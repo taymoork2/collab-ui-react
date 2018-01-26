@@ -201,8 +201,9 @@
       "manualLabelNew": "Manually Add or Modify Users",
       "manualDetails": "All you need are email addresses to add and/or edit up to {{maxUsersInManual}} users.",
       "manualDetailsNew": "Add or Modify up to {{maxUsersInManual}} users.",
+      "dirSyncModifyAll": "Modify All Synchronized Users",
       "bulkLabel": "Export and import users with a CSV file",
-      "bulkLabelNew": "Bulk Add or Modify Users",
+      "bulkLabelNew": "CSV Add or Modify Users",
       "bulkDetails": "Best method for adding and editing up to {{maxUsersInCSV}} users at the same time.",
       "bulkDetailsNew": "Add or modify up to {{maxUsersInCSV}} users with a CSV file.",
       "advancedLabel": "Enable directory synchronization",
@@ -369,6 +370,10 @@
         "warningTitle": "Auto Assign CSV Rules",
         "warningMessage": "Leave the license fields blank if you want to apply the auto assign template to a new user. Or specify licenses by typing True or False and the auto assign template isn't applied. Existing users are not impacted by the auto assign template."
       }
+    },
+    "autoAssignLicenseSummaryForDirSync": {
+      "header": "License Summary",
+      "description": "You've enabled Auto-Assign. All synchronized users will be assigned the following licenses automatically."
     }
   },
   "userTaskManagerModal": {
@@ -3433,6 +3438,10 @@
       "actions": "Actions",
       "dateUpdated": "Date Updated",
       "update": "Edit",
+      "unknownAdminAuthorizationStatus": "Cannot retrieve registration status. Refresh your browser to try again.",
+      "resource": {
+        "notAuthorized": "You are not authorized to manage Hybrid Context resources for this organization."
+      },
       "fieldPage": {
         "associatedFieldsets": "Associated Fieldsets",
         "associatedFieldsetsError": "Unable to retrieve associated fieldsets.",
@@ -3485,7 +3494,8 @@
         "optionRequired": "This field is required.",
         "optionsLabelWithCount": "Options ({{count}})",
         "optionsLabel": "Options",
-        "optionsDetailLabel": "List of options in this single select field."
+        "optionsDetailLabel": "List of options in this single select field.",
+        "notAuthorized": "You are not authorized to manage Hybrid Context fields for this organization."
       },
       "fieldsetPage": {
         "fieldsetId": "Fieldset ID",
@@ -3516,7 +3526,8 @@
         "notInUseTooltip": "Fieldset not associated with any objects.",
         "limitReached": "Maximum fieldsets reached",
         "fieldMaxLimitReached": "Maximum fields in fieldset reached.",
-        "fieldsetLimitReadFailed": "Unable to retrieve fieldsets limit. Refresh your browser to try again"
+        "fieldsetLimitReadFailed": "Unable to retrieve fieldsets limit. Refresh your browser to try again",
+        "notAuthorized": "You are not authorized to manage Hybrid Context fieldsets for this organization."
       }
     }
   },
@@ -10377,8 +10388,9 @@
         "results": "Get last test run results",
         "schedule": "Scheduling",
         "successTitle": "Your test is running!",
-        "successRun": "You should go catch it...",
-        "errorRun": "Something went wrong with scheduling"
+        "successRun": "To see results, click the link in the card",
+        "errorRun": "Something went wrong with scheduling",
+        "goToResults": "View Results"
       },
       "taskView": {
         "title": "Tests",
@@ -10414,6 +10426,15 @@
         "instructions": "Use this form to create a resource to be used for testing. Can be an IP phone, Camelot, MMR, etc.",
         "resourceName": "Resource name",
         "resourceDetails": "Resource Details"
+      },
+      "resultView": {
+        "suiteName": "Suite name",
+        "taskName": "Task name",
+        "startTime": "Task start time",
+        "pass": "Passed",
+        "fail": "Failed",
+        "skip": "Skipped",
+        "error": "Errors"
       }
     }
   }

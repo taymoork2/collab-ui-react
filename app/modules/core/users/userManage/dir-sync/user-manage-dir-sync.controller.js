@@ -1,14 +1,11 @@
-require('./_user-manage.scss');
-
 (function () {
   'use strict';
 
-  angular.module('Core')
-    .controller('UserManageAdvancedController', UserManageAdvancedController);
-
   /* @ngInject */
-  function UserManageAdvancedController($modal, $previousState, $rootScope, $scope, $state, $timeout, $translate, Analytics, Authinfo, DirSyncService, Notification) {
+  module.exports = function UserManageDirSyncController($modal, $previousState, $rootScope, $scope, $state, $timeout, $translate, Analytics, Authinfo, AutoAssignTemplateModel, DirSyncService, Notification) {
     var vm = this;
+    var eventListeners = [];
+    var transitions;
 
     vm.isUserAdmin = isUserAdmin;
     vm.onInit = onInit;
@@ -30,34 +27,39 @@ require('./_user-manage.scss');
       Analytics.trackAddUsers(Analytics.eventNames.CANCEL_MODAL);
     });
 
-    //////////////////
-    var rootState;
+    $scope.$on('$destroy', function () {
+      while (!_.isEmpty(eventListeners)) {
+        _.attempt(eventListeners.pop());
+      }
+    });
 
+    //////////////////
     function onInit() {
       // save state we came from here so we can go back when exiting this flow
-      rootState = $previousState.get().state.name;
+      var rootState = $previousState.get().state.name;
       if (rootState === 'users.manage.emailSuppress') {
         rootState = 'users.manage.picker';
       }
+      transitions = getTransitions(rootState);
 
-      $rootScope.$on('add-user-dirsync-started', function () {
+      eventListeners.push($rootScope.$on('add-user-dirsync-started', function () {
         vm.isBusy = true;
         vm.dirSyncStatusMessage = $translate.instant('userManage.ad.dirSyncProcessing');
-      });
+      }));
 
-      $rootScope.$on('add-user-dirsync-completed', function () {
+      eventListeners.push($rootScope.$on('add-user-dirsync-completed', function () {
         vm.isBusy = false;
         vm.dirSyncStatusMessage = $translate.instant('userManage.ad.dirSyncSuccess');
-      });
+      }));
 
       // The dir-sync call will always be an error for User Admins, but they should be able to try to update dir-sync users regardless
-      $rootScope.$on('add-user-dirsync-error', function () {
+      eventListeners.push($rootScope.$on('add-user-dirsync-error', function () {
         if (!vm.isUserAdmin) {
           vm.isNextDisabled = true;
           vm.dirSyncStatusMessage = $translate.instant('userManage.ad.dirSyncError');
           Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.SYNC_ERROR, null, { error: 'Directory Sync Error' });
         }
-      });
+      }));
 
       // adapt so we an use the userCsvResults page since we want the DirSync results to look the same
       $scope.csv = {
@@ -67,26 +69,48 @@ require('./_user-manage.scss');
       };
     }
 
-    var transitions = {
-      installConnector: {
-        next: '^.syncStatus',
-        prev: rootState,
-      },
+    function getTransitions(rootState) {
+      if (!AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated) {
+        return {
+          installConnector: {
+            prev: rootState,
+            next: '^.syncStatus',
+          },
+          syncStatus: {
+            prev: 'users.manage.picker',
+            next: '^.dirsyncServices',
+          },
+          dirsyncServices: {
+            prev: '^.syncStatus',
+            last: '^.dirsyncResult',
+          },
+        };
+      }
 
-      syncStatus: {
-        next: '^.dirsyncServices',
-        prev: '^.installConnector',
-      },
+      if (DirSyncService.isDirSyncEnabled()) {
+        return {
+          syncStatus: {
+            prev: 'users.manage.picker',
+            next: '^.dirsyncServices',
+          },
+          dirsyncServices: {
+            prev: '^.syncStatus',
+            last: '^.dirsyncResult',
+          },
+        };
+      }
 
-      dirsyncServices: {
-        next: '^.dirsyncResult',
-        prev: '^.syncStatus',
-      },
-
-      dirsyncResult: {
-        next: 'users.list',
-      },
-    };
+      return {
+        autoAssignLicenseSummary: {
+          prev: rootState,
+          next: '^.installConnector',
+        },
+        installConnector: {
+          prev: '^.autoAssignLicenseSummary',
+          last: '^.syncStatus',
+        },
+      };
+    }
 
     function isUserAdmin() {
       return Authinfo.isUserAdminUser();
@@ -117,35 +141,29 @@ require('./_user-manage.scss');
 
     function onBack() {
       var curState = getCurrentState();
-      var nextState = transitions[curState].prev;
+      var prevState = transitions[curState].prev;
       Analytics.trackAddUsers(Analytics.eventNames.BACK);
-      if (curState === 'syncStatus') {
-        $state.go('users.manage.activedir');
-      } else {
-        $state.go(nextState);
-      }
+      $state.go(prevState);
     }
 
     function onNext() {
       var curState = getCurrentState();
-      var nextState = transitions[curState].next;
-      vm.showCloseButton = (nextState.indexOf('dirsyncResult') >= 0);
 
-      if (curState === 'installConnector') {
-        // make sure directory syncing is enabled. If not, then we can't continue and need
-        // to display an error
-        if (DirSyncService.isDirSyncEnabled()) {
-          Analytics.trackAddUsers(Analytics.eventNames.NEXT);
-          $state.go(nextState);
-        } else {
-          Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.SYNC_ERROR, null, { error: 'Directory Connector not installed' });
-          Notification.warning('userManage.advanced.noDirSync');
-        }
-      } else {
-        // move on
-        Analytics.trackAddUsers(Analytics.eventNames.NEXT);
-        $state.go(nextState);
+      if (curState === 'installConnector' && !DirSyncService.isDirSyncEnabled()) {
+        Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.SYNC_ERROR, null, { error: 'Directory Connector not installed' });
+        Notification.warning('userManage.advanced.noDirSync');
+        return;
       }
+
+      var nextState = transitions[curState].next;
+      var lastState = transitions[curState].last;
+      vm.showCloseButton = !!lastState;
+      if (vm.showCloseButton) {
+        nextState = lastState;
+      }
+
+      Analytics.trackAddUsers(Analytics.eventNames.NEXT);
+      $state.go(nextState);
     }
 
     function onClose() {
@@ -155,5 +173,5 @@ require('./_user-manage.scss');
         $scope.$dismiss();
       });
     }
-  }
+  };
 })();

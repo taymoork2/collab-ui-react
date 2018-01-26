@@ -187,7 +187,7 @@ export class DevicesCtrl implements ng.IComponentController {
       this.csdmHybridCalendarFeature = feature;
     });
     const anyCalendarEnabledPromise = this.ServiceDescriptorService.getServices().then((services) => {
-      this.hybridCalendarEnabledOnOrg = _.chain(this.ServiceDescriptorService.filterEnabledServices(services)).filter((service) => {
+      this.hybridCalendarEnabledOnOrg = this.hybridCalendarEnabledOnOrg || _.chain(this.ServiceDescriptorService.filterEnabledServices(services)).filter((service) => {
         return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
       }).some().value();
       this.hybridCallEnabledOnOrg = _.chain(this.ServiceDescriptorService.filterEnabledServices(services)).filter((service) => {

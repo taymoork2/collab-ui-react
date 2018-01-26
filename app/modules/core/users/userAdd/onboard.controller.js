@@ -2068,7 +2068,7 @@ require('./_user-add.scss');
       });
     };
 
-    // hack to allow adding services when exiting the users.manage.advanced.add.ob.syncStatus state
+    // hack to allow adding services when exiting the users.manage.dir-sync.add.ob.syncStatus state
     $scope.dirsyncInitForServices = function () {
       userArray = [];
       if ($scope.userList && $scope.userList.length > 0) {

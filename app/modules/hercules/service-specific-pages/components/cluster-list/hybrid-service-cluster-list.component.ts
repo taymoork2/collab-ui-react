@@ -1,11 +1,10 @@
-import ClusterServiceModuleName, { ClusterService } from 'modules/hercules/services/cluster-service';
-import { ConnectorType, HybridServiceId, IExtendedCluster, IExtendedClusterServiceStatus } from 'modules/hercules/hybrid-services.types';
+import { ConnectorType, HybridServiceId, IExtendedClusterServiceStatus, IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
 import EnterprisePrivateTrunkServiceModuleName, { EnterprisePrivateTrunkService, IPrivateTrunkResourceWithStatus } from 'modules/hercules/services/enterprise-private-trunk-service';
 import HybridServicesUtilsServiceModuleName, { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 import GridModule, { GridCellService } from 'modules/core/csgrid';
 import './_hybrid-service-cluster-list.scss';
 import HybridServicesClusterStatesServiceModuleName, { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
-import { HighLevelStatusForService } from 'modules/hercules/services/hybrid-services-cluster.service';
+import HybridServiceClusterServiceModuleName, { HighLevelStatusForService, HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 export class HybridServiceClusterListCtrl implements ng.IComponentController {
 
@@ -15,17 +14,18 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
   public state: string;
 
   private serviceId: HybridServiceId;
-  private connectorType: ConnectorType | undefined;
+  private connectorType: ConnectorType;
   private clusterId: string;
 
   /* @ngInject */
   constructor(
     private $scope: ng.IScope,
     private $state: ng.ui.IStateService,
+    private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
-    private ClusterService: ClusterService,
-    private GridCellService: GridCellService,
     private EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
+    private GridCellService: GridCellService,
+    private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private HybridServicesUtilsService: HybridServicesUtilsService,
   ) {
@@ -33,74 +33,12 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
     this.updateTrunks = this.updateTrunks.bind(this);
   }
 
-  /**
-   * Huge hack to please the typing system. We really expect clusters but private trunks are too different…
-   * @param trunks
-   */
-  private convertTrunkResourceToCluster(trunks: IPrivateTrunkResourceWithStatus[]): IExtendedCluster[] {
-    return _.map(trunks, (trunk) => {
-      return <IExtendedCluster>{
-        connectors: [],
-        id: trunk.uuid,
-        name: trunk.name,
-        provisioning: [],
-        releaseChannel: '',
-        targetType: 'ept',
-        upgradeSchedule: {
-          moratoria: [],
-          nextUpgradeWindow: {
-            endTime: '',
-            startTime: '',
-          },
-          scheduleDays: [],
-          scheduleTime: '03:00',
-          scheduleTimeZone: '',
-          urgentScheduleTime: '00:00',
-          url: '',
-        },
-        upgradeScheduleUrl: '',
-        url: '',
-        aggregates: {
-          alarms: [],
-          state: 'running',
-          upgradeState: 'upgraded',
-          provisioning: {
-            availablePackageIsUrgent: false,
-            availableVersion: '',
-            connectorType: 'c_ucmc',
-            packageUrl: '',
-            provisionedVersion: '',
-            url: '',
-          },
-          upgradeAvailable: false,
-          upgradeWarning: false,
-          hosts: [],
-        },
-        extendedProperties: {
-          alarms: 'none',
-          alarmsBadgeCss: '',
-          allowedRedirectTarget: undefined,
-          hasUpgradeAvailable: false,
-          isEmpty: false,
-          maintenanceMode: 'off',
-          registrationTimedOut: false,
-          servicesStatuses: [{
-            serviceId: 'ept',
-            state: {
-              cssClass: this.HybridServicesClusterStatesService.getServiceStatusCSSClassFromLabel(trunk.status.state as HighLevelStatusForService),
-              name: trunk.status.state,
-            },
-            total: 1,
-          }],
-          upgradeState: 'upgraded',
-        },
-      };
-    });
-  }
-
   public $onInit() {
-    this.connectorType = this.HybridServicesUtilsService.serviceId2ConnectorType(this.serviceId);
+    if (this.serviceId !== 'ept') {
+      this.connectorType = this.HybridServicesUtilsService.serviceId2ConnectorType(this.serviceId);
+    }
 
+    // Setup the grid
     this.clusterListGridOptions = {
       enableRowSelection: true,
       rowHeight: 75,
@@ -132,39 +70,50 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
       },
     };
 
-    if (this.serviceId !== 'ept' && this.connectorType !== undefined) {
-      this.clusterListGridOptions.data = this._keepOnlyRelevantServiceStatus(this.ClusterService.getClustersByConnectorType(this.connectorType));
-    } else {
+    // Fecth first data and setup polling
+    if (this.serviceId !== 'ept') {
+      this.updateClusters()
+        .finally(() => {
+          this.firstLoad = false;
+        });
+    } else if (this.serviceId === 'ept') {
       this.clusterListGridOptions.data = this._keepOnlyRelevantServiceStatus(this.convertTrunkResourceToCluster(this.EnterprisePrivateTrunkService.getAllResources()));
-    }
-
-    if (this.serviceId === 'ept') {
       this.updateTrunks();
       this.EnterprisePrivateTrunkService.subscribe('data', this.updateTrunks, {
-        scope: this.$scope,
-      });
-    } else {
-      this.updateClusters();
-      this.ClusterService.subscribe('data', this.updateClusters, {
         scope: this.$scope,
       });
     }
   }
 
   private updateTrunks() {
-    if (this.serviceId === 'ept') {
-      this.clusterListGridOptions.data = this._keepOnlyRelevantServiceStatus((this.convertTrunkResourceToCluster(this.EnterprisePrivateTrunkService.getAllResources())));
-    }
+    this.clusterListGridOptions.data = this._keepOnlyRelevantServiceStatus((this.convertTrunkResourceToCluster(this.EnterprisePrivateTrunkService.getAllResources())));
     this.firstLoad = false;
   }
 
-  protected updateClusters() {
-    if (this.connectorType === undefined) {
-      this.firstLoad = false;
-      return;
-    }
-    this.clusterListGridOptions.data = this._keepOnlyRelevantServiceStatus(this.ClusterService.getClustersByConnectorType(this.connectorType));
-    this.firstLoad = false;
+  private getClustersByConnectorType() {
+    return this.HybridServicesClusterService.getAll()
+      .then(response => {
+        const clusters = _.chain(response)
+          .filter(cluster => {
+            return _.some(cluster.provisioning, { connectorType: this.connectorType });
+          })
+          .map(cluster => {
+            return {
+              ...cluster,
+              connectors: _.filter(cluster.connectors, { connectorType: this.connectorType }),
+            };
+          })
+          .value();
+        return clusters.sort((a, b) =>  a.name.localeCompare(b.name));
+      });
+  }
+
+  private updateClusters() {
+    return this.getClustersByConnectorType().then(clusters => {
+      this.clusterListGridOptions.data = this._keepOnlyRelevantServiceStatus(clusters);
+      this.$timeout(this.updateClusters, 30 * 1000);
+      return clusters;
+    });
   }
 
   private goToSidepanel(clusterId: string) {
@@ -185,13 +134,62 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
 
   }
 
-  public _keepOnlyRelevantServiceStatus(clusters: IExtendedCluster[]): any[] {
+  public _keepOnlyRelevantServiceStatus(clusters: IExtendedClusterFusion[]): any[] {
     return _.map(clusters, (cluster: any) => {
-      // Augment cluster.extendedProperties just for this page!
+      // Augment cluster.extendedProperties by adding a new property, servicesStatuses, derived from servicesStatuseses, just for this page!
       cluster.extendedProperties.servicesStatus = _.find(cluster.extendedProperties.servicesStatuses, (serviceStatus: IExtendedClusterServiceStatus) => {
         return serviceStatus.serviceId === this.serviceId;
       });
       return cluster;
+    });
+  }
+
+  /**
+   * Huge hack to please the typing system. We really expect clusters but private trunks are too different…
+   * @param trunks
+   */
+  private convertTrunkResourceToCluster(trunks: IPrivateTrunkResourceWithStatus[]): IExtendedClusterFusion[] {
+    return _.map(trunks, trunk => {
+      return <IExtendedClusterFusion>{
+        connectors: [],
+        id: trunk.uuid,
+        name: trunk.name,
+        provisioning: [],
+        releaseChannel: '',
+        targetType: 'ept',
+        upgradeSchedule: {
+          moratoria: [],
+          nextUpgradeWindow: {
+            endTime: '',
+            startTime: '',
+          },
+          scheduleDays: [],
+          scheduleTime: '03:00',
+          scheduleTimeZone: '',
+          urgentScheduleTime: '00:00',
+          url: '',
+        },
+        upgradeScheduleUrl: '',
+        url: '',
+        extendedProperties: {
+          alarms: 'none',
+          alarmsBadgeCss: '',
+          allowedRedirectTarget: undefined,
+          hasUpgradeAvailable: false,
+          isEmpty: false,
+          maintenanceMode: 'off',
+          registrationTimedOut: false,
+          servicesStatuses: [{
+            serviceId: 'ept',
+            state: {
+              cssClass: this.HybridServicesClusterStatesService.getServiceStatusCSSClassFromLabel(trunk.status.state as HighLevelStatusForService),
+              name: trunk.status.state,
+            },
+            total: 1,
+          }],
+          upgradeState: 'upgraded',
+        },
+      };
     });
   }
 }
@@ -210,9 +208,9 @@ export default angular
   .module('hybrid-services-service-specific-cluster-list', [
     require('angular-ui-router'),
     require('angular-translate'),
-    ClusterServiceModuleName,
-    GridModule,
     EnterprisePrivateTrunkServiceModuleName,
+    GridModule,
+    HybridServiceClusterServiceModuleName,
     HybridServicesClusterStatesServiceModuleName,
     HybridServicesUtilsServiceModuleName,
   ])
