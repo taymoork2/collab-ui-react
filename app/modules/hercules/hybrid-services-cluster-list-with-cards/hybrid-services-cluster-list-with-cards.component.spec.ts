@@ -26,7 +26,7 @@ describe('Component: HybridServicesClusterListWithCardsComponent', function () {
     }));
     spyOn(EnterprisePrivateTrunkService, 'fetch');
     spyOn(ResourceGroupService, 'getAllowedChannels').and.returnValue($q.resolve(['stable']));
-    spyOn(Analytics, 'trackHSNavigation');
+    spyOn(Analytics, 'trackHybridServiceEvent');
     spyOn(Notification, 'errorWithTrackingId');
     spyOn(Authinfo, 'isEntitled').and.returnValue(true);
   }

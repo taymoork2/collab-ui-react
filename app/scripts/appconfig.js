@@ -856,6 +856,7 @@
             controller: 'UserListCtrl',
             params: {
               showAddUsers: {},
+              preSelectedUserId: '',
             },
           })
           .state('users.delete', {
@@ -914,8 +915,16 @@
           .state('users.add.manual', {
             views: {
               'usersAdd@users.add': {
-                template: '<manual-add-users-modal dismiss="$dismiss()"></manual-add-users-modal>',
+                template: '<manual-add-users-modal auto-assign-template-data="$resolve.autoAssignTemplateData" dismiss="$dismiss()"></manual-add-users-modal>',
               },
+            },
+            resolve: stateParamsToResolveParams({
+              resetOnboardStoreStates: null,
+              autoAssignTemplateData: null,
+            }),
+            params: {
+              resetOnboardStoreStates: null,
+              autoAssignTemplateData: null,
             },
           })
           .state('users.add.services', {
@@ -941,15 +950,22 @@
           .state('users.add.results', {
             views: {
               'usersAdd@users.add': {
-                template: require('modules/core/users/userAdd/addUsersResultsModal.tpl.html'),
-                // TODO (mipark2): rm this if determined no longer needed
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'add-users';
-                    $state.params.modalId = 'modalContent';
-                  },
-                },
+                template: '<add-users-results-modal dismiss="$dismiss()" convert-pending="$resolve.convertPending" convert-users-flow="$resolve.convertUsersFlow" num-updated-users="$resolve.numUpdatedUsers" num-added-users="$resolve.numAddedUsers" results="$resolve.results"></add-users-results-modal>',
               },
+            },
+            resolve: stateParamsToResolveParams({
+              convertPending: false,
+              convertUsersFlow: false,
+              numUpdatedUsers: 0,
+              numAddedUsers: 0,
+              results: [],
+            }),
+            params: {
+              convertPending: false,
+              convertUsersFlow: false,
+              numUpdatedUsers: 0,
+              numAddedUsers: 0,
+              results: [],
             },
           })
 
@@ -992,74 +1008,82 @@
               prevState: null,
             },
           })
-          .state('users.manage.advanced', {
+          .state('users.manage.dir-sync', {
             abstract: true,
-            controller: 'UserManageAdvancedController',
-            controllerAs: 'umac',
-            template: require('modules/core/users/userManage/userManageAdvanced.tpl.html'),
+            controller: 'UserManageDirSyncController',
+            controllerAs: 'umds',
+            template: require('modules/core/users/userManage/dir-sync/user-manage-dir-sync.html'),
           })
-          .state('users.manage.advanced.add', {
+          // TODO refactor used logic from 'AddUserCtrl' -> 'UserManageDirSyncController' and rm AddUserCtrl
+          .state('users.manage.dir-sync.add', {
             abstract: true,
             controller: 'AddUserCtrl',
             controllerAs: 'auc',
             template: '<div ui-view class="flex-container flex-item-resize"></div>',
           })
-          .state('users.manage.advanced.add.ob', {
+          .state('users.manage.dir-sync.add.ob', {
             abstract: true,
             controller: 'OnboardCtrl',
             controllerAs: 'obc',
             template: '<div ui-view class="flex-container flex-item-resize"></div>',
           })
-          .state('users.manage.advanced.add.ob.installConnector', {
-            template: require('modules/core/users/userManage/userManageInstallConnector.tpl.html'),
+          .state('users.manage.dir-sync.add.ob.autoAssignLicenseSummary', {
+            template: '<user-manage-dir-sync-auto-assign-license-summary></user-manage-dir-sync-auto-assign-license-summary>',
           })
-          .state('users.manage.advanced.add.ob.syncStatus', {
-            template: require('modules/core/users/userManage/userManageAdvancedSyncStatus.tpl.html'),
+          .state('users.manage.dir-sync.add.ob.installConnector', {
+            template: require('modules/core/users/userManage/dir-sync/user-manage-dir-sync-install-connector.html'),
           })
-          .state('users.manage.advanced.add.ob.dirsyncServices', {
-            template: require('modules/core/users/userManage/userManageAssignServices.tpl.html'),
+          .state('users.manage.dir-sync.add.ob.syncStatus', {
+            template: require('modules/core/users/userManage/dir-sync/user-manage-dir-sync-status.html'),
+          })
+          .state('users.manage.dir-sync.add.ob.dirsyncServices', {
+            template: require('modules/core/users/userManage/dir-sync/user-manage-dir-sync-assign-services.html'),
             controller: /* @ngInject */ function ($scope) {
               $scope.dirsyncInitForServices();
             },
           })
-          .state('users.manage.advanced.add.ob.dirsyncResult', {
-            template: require('modules/core/users/userManage/userManageAdvancedResults.tpl.html'),
+          .state('users.manage.dir-sync.add.ob.dirsyncResult', {
+            template: require('modules/core/users/userManage/dir-sync/user-manage-dir-sync-results.html'),
             controller: /* @ngInject */ function ($scope) {
-              $scope.umac.isBusy = true;
+              $scope.umds.isBusy = true;
               $scope.csv.model = $scope.model;
               $scope.bulkSave().then(function () {
-                $scope.umac.isBusy = false;
+                $scope.umds.isBusy = false;
               });
             },
           })
           .state('users.manage.edit-auto-assign-template-modal', {
-            template: '<edit-auto-assign-template-modal dismiss="$dismiss()" prev-state="$resolve.prevState" is-edit-template-mode="$resolve.isEditTemplateMode" state-data="$resolve.stateData"></edit-auto-assign-template-modal>',
+            template: '<edit-auto-assign-template-modal dismiss="$dismiss()" prev-state="$resolve.prevState" is-edit-template-mode="$resolve.isEditTemplateMode" auto-assign-template-data="$resolve.autoAssignTemplateData"></edit-auto-assign-template-modal>',
             resolve: stateParamsToResolveParams({
               prevState: 'users.manage.picker',
               isEditTemplateMode: false,
-              stateData: null,
+              autoAssignTemplateData: null,
             }),
             params: {
               prevState: 'users.manage.picker',
               isEditTemplateMode: false,
-              stateData: null,
+              autoAssignTemplateData: null,
             },
           })
           .state('users.manage.edit-summary-auto-assign-template-modal', {
-            template: '<edit-summary-auto-assign-template-modal dismiss="$dismiss()" state-data="$resolve.stateData" is-edit-template-mode="$resolve.isEditTemplateMode"></edit-summary-auto-assign-template-modal>',
+            template: '<edit-summary-auto-assign-template-modal dismiss="$dismiss()" auto-assign-template-data="$resolve.autoAssignTemplateData" is-edit-template-mode="$resolve.isEditTemplateMode"></edit-summary-auto-assign-template-modal>',
             resolve: stateParamsToResolveParams({
-              stateData: null,
+              autoAssignTemplateData: null,
               isEditTemplateMode: false,
             }),
             params: {
-              stateData: null,
+              autoAssignTemplateData: null,
               isEditTemplateMode: false,
             },
           })
           .state('users.manage.onboard-summary-for-auto-assign-modal', {
-            template: '<onboard-summary-for-auto-assign-modal dismiss="$dismiss()"></onboard-summary-for-auto-assign-modal>',
+            template: '<onboard-summary-for-auto-assign-modal dismiss="$dismiss()" auto-assign-template-data="$resolve.autoAssignTemplateData" user-list="$resolve.userList"></onboard-summary-for-auto-assign-modal>',
+            resolve: stateParamsToResolveParams({
+              autoAssignTemplateData: null,
+              userList: null,
+            }),
             params: {
-              stateData: null,
+              autoAssignTemplateData: null,
               userList: null,
             },
           })
@@ -2352,6 +2376,9 @@
             controller: 'PlacesCtrl',
             controllerAs: 'sc',
             parent: 'main',
+            params: {
+              preSelectedPlaceId: '',
+            },
             data: {
               bodyClass: 'places-page',
             },
@@ -2769,6 +2796,9 @@
               },
             },
           })
+          .state('devices.search', {
+            url: '/search/:q',
+          })
           .state('devices-redux', {
             url: '/devices-redux',
             template: '<devices-redux></devices-redux>',
@@ -3075,6 +3105,18 @@
           .state('taasScheduleView.list', {
             url: '/taasScheduleView',
             template: '<taas-schedule-view></taas-schedule-view>',
+            params: {
+              filter: null,
+            },
+          })
+          .state('taasResults', {
+            parent: 'main',
+            url: '/taasResults',
+            template: '<taas-results-view></taas-results-view>',
+          })
+          .state('taasResultsView.list', {
+            url: '/taasResultsView',
+            template: '<taas-results-view></taas-results-view>',
             params: {
               filter: null,
             },
@@ -4153,10 +4195,8 @@
           })
           // hybrid context
           .state('context', {
-            template: require('modules/context/container/hybrid-context-container.html'),
-            controller: 'HybridContextContainerController',
-            controllerAs: 'hybridContextContainerController',
             parent: 'main',
+            template: '<context-container back-state="$resolve.backState"></context-container>',
             params: {
               backState: null,
             },
@@ -4176,7 +4216,7 @@
               contextServiceView: {
                 template: '<hybrid-service-cluster-list service-id="\'contact-center-context\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
                 controller: /* @ngInject */ function (Analytics) {
-                  return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CONTEXT_LIST);
+                  return Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CONTEXT_LIST);
                 },
               },
             },
@@ -4208,7 +4248,7 @@
           })
           .state('context-cluster.nodes', {
             url: '/nodes',
-            template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
+            template: '<hybrid-services-nodes-page back-state="$resolve.backState" cluster-id="$resolve.id"></hybrid-services-nodes-page>',
           })
           .state('context-fields', {
             url: '/services/context/fields',
@@ -4253,7 +4293,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<context-fields-sidepanel field="$resolve.field" process="$resolve.process" callback="$resolve.callback"></context-fields-sidepanel>',
+                template: '<context-fields-sidepanel admin-authorization-status="$resolve.adminAuthorizationStatus" field="$resolve.field" process="$resolve.process" callback="$resolve.callback"></context-fields-sidepanel>',
               },
               'header@context-fields-sidepanel': {
                 template: require('modules/context/fields/sidepanel/hybrid-context-fields-sidepanel-header.html'),
@@ -4261,11 +4301,15 @@
             },
             data: {},
             params: {
+              adminAuthorizationStatus: {},
               field: {},
               process: function () {},
               callback: function () {},
             },
             resolve: {
+              adminAuthorizationStatus: /* @ngInject */ function ($stateParams) {
+                return $stateParams.adminAuthorizationStatus;
+              },
               field: /* @ngInject */ function ($stateParams) {
                 return $stateParams.field;
               },
@@ -4340,7 +4384,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<context-fieldsets-sidepanel fieldset="$resolve.fieldset" process="$resolve.process" callback="$resolve.callback" ></context-fieldsets-sidepanel>',
+                template: '<context-fieldsets-sidepanel admin-authorization-status="$resolve.adminAuthorizationStatus" fieldset="$resolve.fieldset" process="$resolve.process" callback="$resolve.callback" ></context-fieldsets-sidepanel>',
               },
               'header@context-fieldsets-sidepanel': {
                 template: require('modules/context/fieldsets/sidepanel/hybrid-context-fieldsets-sidepanel-header.html'),
@@ -4348,11 +4392,15 @@
             },
             data: {},
             params: {
+              adminAuthorizationStatus: {},
               fieldset: {},
               process: function () {},
               callback: function () {},
             },
             resolve: {
+              adminAuthorizationStatus: /* @ngInject */ function ($stateParams) {
+                return $stateParams.adminAuthorizationStatus;
+              },
               fieldset: /* @ngInject */ function ($stateParams) {
                 return $stateParams.fieldset;
               },
@@ -4502,7 +4550,7 @@
           })
           .state('expressway-cluster.nodes', {
             url: '/nodes',
-            template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
+            template: '<hybrid-services-nodes-page back-state="$resolve.backState" cluster-id="$resolve.id"></hybrid-services-nodes-page>',
           })
           .state('expressway-cluster.settings', {
             url: '/settings',
@@ -4562,7 +4610,7 @@
               fullPane: {
                 template: '<hybrid-service-cluster-list service-id="\'spark-hybrid-datasecurity\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
                 controller: /* @ngInject */ function (Analytics) {
-                  return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_HDS_LIST);
+                  return Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_HDS_LIST);
                 },
               },
             },
@@ -4663,7 +4711,7 @@
           })
           .state('hds-cluster.nodes', {
             url: '/nodes',
-            template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
+            template: '<hybrid-services-nodes-page back-state="$resolve.backState" cluster-id="$resolve.id"></hybrid-services-nodes-page>',
           })
           .state('hds-cluster.settings', {
             url: '/settings',
@@ -4688,7 +4736,7 @@
           })
           .state('mediafusion-cluster.nodes', {
             url: '/nodes',
-            template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
+            template: '<hybrid-services-nodes-page back-state="$resolve.backState" cluster-id="$resolve.id"></hybrid-services-nodes-page>',
           })
           .state('mediafusion-cluster.settings', {
             url: '/settings',
@@ -4724,7 +4772,7 @@
           })
           .state('cucm-cluster.nodes', {
             url: '/nodes',
-            template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
+            template: '<hybrid-services-nodes-page back-state="$resolve.backState" cluster-id="$resolve.id"></hybrid-services-nodes-page>',
           })
           .state('cucm-cluster.settings', {
             url: '/settings',
@@ -4944,7 +4992,7 @@
               calendarServiceView: {
                 template: require('modules/hercules/service-specific-pages/calendar-service-pages/calendar-service-resources.html'),
                 controller: /* @ngInject */ function (Analytics) {
-                  return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_EXC_LIST);
+                  return Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_EXC_LIST);
                 },
               },
             },
@@ -4966,7 +5014,7 @@
             url: '/services/office-365/settings',
             template: '<office-365-settings-page></office-365-settings-page>',
             controller: /* @ngInject */ function (Analytics) {
-              return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_O365_SETTINGS);
+              return Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_O365_SETTINGS);
             },
           })
           .state('google-calendar-service', {
@@ -4978,7 +5026,7 @@
             url: '/services/google-calendar/settings',
             template: '<google-calendar-settings-page></google-calendar-settings-page>',
             controller: /* @ngInject */ function (Analytics) {
-              return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_GOOG_SETTINGS);
+              return Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_GOOG_SETTINGS);
             },
           })
           .state('call-service', {
@@ -4998,7 +5046,7 @@
                 template: require('modules/hercules/service-specific-pages/call-service-pages/call-service-resources.html'),
               },
               controller: /* @ngInject */ function (Analytics) {
-                return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CALL_LIST);
+                return Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CALL_LIST);
               },
             },
           })
@@ -5248,7 +5296,7 @@
               fullPane: {
                 template: '<hybrid-service-cluster-list service-id="\'squared-fusion-media\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
                 controller: /* @ngInject */ function (Analytics) {
-                  return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_LIST);
+                  return Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_LIST);
                 },
               },
             },
@@ -5268,7 +5316,7 @@
               },
             },
             controller: /* @ngInject */ function (Analytics) {
-              return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_SETTINGS);
+              return Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_SETTINGS);
             },
           });
 

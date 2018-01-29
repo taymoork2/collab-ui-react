@@ -98,7 +98,7 @@
           .catch(function (response) {
             Notification.errorResponse(response, 'customerAdminPanel.customerAdministratorRemoveFailure');
           });
-      });
+      }).catch(_.noop);
     }
 
     function getFoundUsers(str, users, limit) {

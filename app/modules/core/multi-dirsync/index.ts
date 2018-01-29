@@ -3,7 +3,6 @@ import { MultiDirSyncSectionComponent } from './multi-dirsync-section/multi-dirs
 import { MultiDirSyncService } from './multi-dirsync.service';
 import { DirsyncRowComponent } from './dirsync-row/dirsync-row.component';
 
-import * as analyticsModuleName from 'modules/core/analytics';
 import modalModuleName from 'modules/core/modal';
 import notificationModuleName from 'modules/core/notifications';
 
@@ -14,7 +13,6 @@ export * from './multi-dirsync.interfaces';
 export default angular.module('core.settings.multi-dirsync', [
   require('angular-translate'),
   require('@collabui/collab-ui-ng').default,
-  analyticsModuleName,
   modalModuleName,
   notificationModuleName,
 ])

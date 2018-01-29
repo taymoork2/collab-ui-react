@@ -8824,7 +8824,7 @@
       "title": "Token und Anweisungen",
       "close": "Schließen",
       "instructions": "Sie müssen dieses DNS-Verifizierungstoken in den TXT-Aufzeichnungsabschnitt kopieren, um zu belegen, dass Sie Eigentümer der Domäne sind:",
-      "howto": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Mehr Informationen zur</a> Eingabe des DNS-Verifizierungstoken.",
+      "howto": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Mehr Informationen zur</a> Eingabe des DNS-Verifizierungstoken.",
       "beforeVerify": "Vor der Verifizierung"
     }
   },

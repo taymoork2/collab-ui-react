@@ -1,8 +1,9 @@
 'use strict';
 
 describe('Component: fields sidepanel', function () {
-  var Analytics, ContextFieldsService, ContextFieldsetsService, ModalService, Notification, ctrl, $componentCtrl, $state, $q, $rootScope, field;
+  var Analytics, ContextFieldsService, ContextFieldsetsService, ModalService, Notification, ctrl, $componentCtrl, $state, $q, $rootScope, field, adminAuthorizationStatus;
   var deleteFieldSpy, membershipReturnSpy, modalSpy;
+  var AdminAuthorizationStatus = require('modules/context/services/context-authorization-service').AdminAuthorizationStatus;
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Context'));
@@ -12,7 +13,7 @@ describe('Component: fields sidepanel', function () {
   // need to cleanup here to prevent more memory leaks
   afterAll(function () {
     Analytics = ContextFieldsService = ContextFieldsetsService = ModalService = Notification = ctrl = $componentCtrl = $state = $q
-      = $rootScope = field = membershipReturnSpy = deleteFieldSpy = modalSpy = undefined;
+      = $rootScope = field = membershipReturnSpy = deleteFieldSpy = modalSpy = adminAuthorizationStatus = undefined;
   });
 
   function dependencies(_$componentController_, _$rootScope_, _$state_, _$q_, _Analytics_, _ContextFieldsService_, _ContextFieldsetsService_, _ModalService_, _Notification_) {
@@ -41,6 +42,7 @@ describe('Component: fields sidepanel', function () {
 
   function initController() {
     field = {};
+    adminAuthorizationStatus = {};
     ctrl = $componentCtrl('contextFieldsSidepanel', {
       $state: $state,
       Analytics: Analytics,
@@ -49,6 +51,7 @@ describe('Component: fields sidepanel', function () {
       ModalService: ModalService,
       Notification: Notification,
     }, {
+      adminAuthorizationStatus: adminAuthorizationStatus,
       field: field,
     });
   }
@@ -103,40 +106,71 @@ describe('Component: fields sidepanel', function () {
     });
 
     describe('isEditable', function () {
-      it('should return false if publically accssible', function () {
+      it('should return false if publically accssible and admin authorized', function () {
         ctrl.publiclyAccessible = true;
         ctrl.inUse = false;
+        ctrl.adminAuthorizationStatus = AdminAuthorizationStatus.AUTHORIZED;
         expect(ctrl.isEditable()).toBe(false);
       });
-      it('should return true if in Use and not publically accessible', function () {
+
+      it('should return true if in Use and not publically accessible and admin authorized', function () {
         // NOTE: _some_ members of the field are editable
         ctrl.publiclyAccessible = false;
         ctrl.inUse = true;
+        ctrl.adminAuthorizationStatus = AdminAuthorizationStatus.AUTHORIZED;
         expect(ctrl.isEditable()).toBe(true);
       });
+
       it('should return true if not publically accssible and not in use', function () {
         ctrl.publiclyAccessible = false;
         ctrl.inUse = false;
+        ctrl.adminAuthorizationStatus = AdminAuthorizationStatus.AUTHORIZED;
         expect(ctrl.isEditable()).toBe(true);
       });
+
       it('should return true if not publically accssible and in use', function () {
         ctrl.publiclyAccessible = false;
         ctrl.inUse = true;
+        ctrl.adminAuthorizationStatus = AdminAuthorizationStatus.AUTHORIZED;
         expect(ctrl.isEditable()).toBe(true);
+      });
+
+      it('should return false if it is publicly accessible and admin not authorized', function () {
+        ctrl.publiclyAccessible = true;
+        ctrl.adminAuthorizationStatus = AdminAuthorizationStatus.UNAUTHORIZED;
+        expect(ctrl.isEditable()).toBe(false);
+      });
+
+      it('should return false if it is not publicly accessible and admin not authorized', function () {
+        ctrl.publiclyAccessible = false;
+        ctrl.adminAuthorizationStatus = AdminAuthorizationStatus.UNAUTHORIZED;
+        expect(ctrl.isEditable()).toBe(false);
       });
     });
 
     describe('isDeletable', function () {
       // iterate over combinations if publiclyAccessible and inUse
       [
-        { publiclyAccessible: true, inUse: false, deletable: false },
-        { publiclyAccessible: false, inUse: false, deletable: true },
-        { publiclyAccessible: true, inUse: true, deletable: false },
-        { publiclyAccessible: true, inUse: true, deletable: false },
+        {
+          publiclyAccessible: true, inUse: false, adminAuthorizationStatus: AdminAuthorizationStatus.UNAUTHORIZED, deletable: false,
+        },
+        {
+          publiclyAccessible: false, inUse: false, adminAuthorizationStatus: AdminAuthorizationStatus.AUTHORIZED, deletable: true,
+        },
+        {
+          publiclyAccessible: true, inUse: true, adminAuthorizationStatus: AdminAuthorizationStatus.UNAUTHORIZED, deletable: false,
+        },
+        {
+          publiclyAccessible: false, inUse: true, adminAuthorizationStatus: AdminAuthorizationStatus.AUTHORIZED, deletable: false,
+        },
+        {
+          publiclyAccessible: false, inUse: false, adminAuthorizationStatus: AdminAuthorizationStatus.UNAUTHORIZED, deletable: false,
+        },
       ].forEach(function (testParams) {
-        it('should return ' + testParams.deletable + ' if publiclyAccessible is ' + testParams.publiclyAccessible + ' and inUse is ' + testParams.inUse, function () {
+        it('should return ' + testParams.deletable + ' if publiclyAccessible is ' + testParams.publiclyAccessible + ',  and adminAuthorizationStatus is ' + testParams.adminAuthorizationStatus + 'and inUse is ' + testParams.inUse, function () {
           ctrl.publiclyAccessible = testParams.publiclyAccessible;
           ctrl.inUse = testParams.inUse;
+          ctrl.adminAuthorizationStatus = testParams.adminAuthorizationStatus;
           expect(ctrl.isDeletable()).toBe(testParams.deletable);
         });
       });
@@ -330,6 +364,8 @@ describe('Component: fields sidepanel', function () {
       dataType: 'string',
     };
 
+    var adminAuthorizationStatus = AdminAuthorizationStatus.AUTHORIZED;
+
     beforeEach(function () {
       this.injectDependencies(
         '$q',
@@ -339,6 +375,7 @@ describe('Component: fields sidepanel', function () {
       this.featureSupportSpy.and.returnValue(this.$q.resolve(false));
       membershipReturnSpy.and.returnValue(this.$q.resolve([]));
       this.compileComponentNoApply('contextFieldsSidepanel', {
+        adminAuthorizationStatus: adminAuthorizationStatus,
         field: field,
       });
 
@@ -365,6 +402,7 @@ describe('Component: fields sidepanel', function () {
 
     describe('edit and delete buttons', function () {
       it('should have edit button', function () {
+        this.getController().adminAuthorizationStatus = AdminAuthorizationStatus.AUTHORIZED;
         this.$scope.$apply();
         expect(this.getController().isEditable()).toBe(true);
         var sectionTitle = this.view.find('section-title');
@@ -378,6 +416,7 @@ describe('Component: fields sidepanel', function () {
       });
 
       it('should have delete button', function () {
+        this.getController().adminAuthorizationStatus = AdminAuthorizationStatus.AUTHORIZED;
         this.$scope.$apply();
         expect(this.getController().isDeletable()).toBe(true);
         var containerDiv = this.view.find('cs-sp-container');

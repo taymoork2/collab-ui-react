@@ -20,6 +20,7 @@ describe('UserManageOrgController', () => {
       'OnboardService',
       'Orgservice',
       'UserCsvService',
+      'UserManageService',
     );
 
     this.$state = {
@@ -32,6 +33,7 @@ describe('UserManageOrgController', () => {
 
     spyOn(this.Analytics, 'trackAddUsers');
     spyOn(this.$window, 'open');
+    spyOn(this.UserManageService, 'gotoNextStateForManageType');
   }
 
   function initController() {
@@ -57,11 +59,10 @@ describe('UserManageOrgController', () => {
       });
     });
     spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(false);
-    spyOn(this.FeatureToggleService, 'atlasEmailSuppressGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.FeatureToggleService, 'atlasF6980MultiDirSyncManageUsersGetStatus').and.returnValue(this.$q.resolve(false));
 
-    initController.apply(this);
+    initController.call(this);
   }
 
   function initControllerAndAutoAssignFeatureToggleOn(spies: {
@@ -75,19 +76,18 @@ describe('UserManageOrgController', () => {
         foo: 'bar',
       }]),
     } = spies;
-    spyOn(this.FeatureToggleService, 'atlasEmailSuppressGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlasF6980MultiDirSyncManageUsersGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.AutoAssignTemplateService, 'isEnabledForOrg').and.returnValue(isEnabledForOrg);
     spyOn(this.AutoAssignTemplateService, 'getTemplates').and.returnValue(getTemplates);
 
-    initController.apply(this);
+    initController.call(this);
   }
 
   function initControllerAndDirSyncEnabled() {
     spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(true);
 
-    initController.apply(this);
+    initController.call(this);
   }
 
   function initControllerAndUnlicensedUsers() {
@@ -97,29 +97,13 @@ describe('UserManageOrgController', () => {
         totalResults: 1,
       });
     });
-    spyOn(this.FeatureToggleService, 'atlasEmailSuppressGetStatus').and.returnValue(this.$q.resolve(false));
-
-    initController.apply(this);
-  }
-
-  function initControllerAndUnlicensedUsersAndFeatureToggleOn() {
-    spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(function (callback) {
-      callback({
-        success: true,
-        totalResults: 1,
-      });
-    });
-    spyOn(this.FeatureToggleService, 'atlasEmailSuppressGetStatus').and.returnValue(this.$q.resolve(true));
-    spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(false));
-    spyOn(this.FeatureToggleService, 'atlasF6980MultiDirSyncManageUsersGetStatus').and.returnValue(this.$q.resolve(false));
-
-    initController.apply(this);
+    initController.call(this);
   }
 
   beforeEach(init);
 
   it('should init with expected responses when getUnlicensedUsers fails', function () {
-    initControllerAndDefaults.apply(this);
+    initControllerAndDefaults.call(this);
 
     expect(this.controller.manageType).toEqual('manual');
     expect(this.controller.maxUsersInCSV).toEqual(this.UserCsvService.maxUsersInCSV);
@@ -136,7 +120,7 @@ describe('UserManageOrgController', () => {
       });
     });
 
-    initController.apply(this);
+    initController.call(this);
 
     expect(this.controller.manageType).toEqual('manual');
     expect(this.controller.maxUsersInCSV).toEqual(this.UserCsvService.maxUsersInCSV);
@@ -146,7 +130,7 @@ describe('UserManageOrgController', () => {
   });
 
   it('should init with expected responses when getUnlicensedUsers returns 1 or more unlicensed users', function () {
-    initControllerAndUnlicensedUsers.apply(this);
+    initControllerAndUnlicensedUsers.call(this);
 
     expect(this.controller.manageType).toEqual('manual');
     expect(this.controller.maxUsersInCSV).toEqual(this.UserCsvService.maxUsersInCSV);
@@ -156,70 +140,12 @@ describe('UserManageOrgController', () => {
   });
 
   it('should cancel modal', function () {
-    initControllerAndDefaults.apply(this);
+    initControllerAndDefaults.call(this);
 
     expect(this.$state.modal.dismiss).toHaveBeenCalledTimes(0);
     this.controller.cancelModal();
     expect(this.$state.modal.dismiss).toHaveBeenCalledTimes(1);
     expect(this.Analytics.trackAddUsers).toHaveBeenCalledWith(this.Analytics.eventNames.CANCEL_MODAL);
-  });
-
-  it('should go to users.add', function () {
-    initControllerAndDefaults.apply(this);
-
-    this.controller.onNext();
-    expect(this.$state.go).toHaveBeenCalledWith('users.add.manual');
-    expect(this.Analytics.trackAddUsers).toHaveBeenCalledWith(this.Analytics.eventNames.NEXT, this.Analytics.sections.ADD_USERS.uploadMethods.MANUAL);
-  });
-
-  it('should go to users.csv', function () {
-    initControllerAndDefaults.apply(this);
-    this.controller.manageType = 'bulk';
-
-    this.controller.onNext();
-    expect(this.$state.go).toHaveBeenCalledWith('users.csv');
-    expect(this.Analytics.trackAddUsers).toHaveBeenCalledWith(this.Analytics.sections.ADD_USERS.eventNames.CSV_UPLOAD, this.Analytics.sections.ADD_USERS.uploadMethods.CSV);
-  });
-
-  it('should go to users.manage.advanced.add.ob.installConnector', function () {
-    initControllerAndDefaults.apply(this);
-    this.controller.manageType = 'advancedNoDS';
-
-    this.controller.onNext();
-    expect(this.$state.go).toHaveBeenCalledWith('users.manage.advanced.add.ob.installConnector');
-    expect(this.Analytics.trackAddUsers).toHaveBeenCalledWith(this.Analytics.sections.ADD_USERS.eventNames.INSTALL_CONNECTOR, this.Analytics.sections.ADD_USERS.uploadMethods.SYNC);
-  });
-
-  it('should go to users.convert', function () {
-    initControllerAndUnlicensedUsers.apply(this);
-    this.controller.manageType = 'convert';
-
-    this.controller.onNext();
-    expect(this.$state.go).toHaveBeenCalledWith('users.convert', {
-      manageUsers: true,
-    });
-    expect(this.Analytics.trackAddUsers).not.toHaveBeenCalled();
-  });
-
-  it('should go to users.manage.emailSuppress when emailSuppress toggle is on', function () {
-    initControllerAndUnlicensedUsersAndFeatureToggleOn.apply(this);
-    this.controller.manageType = 'manual';
-
-    this.controller.onNext();
-    expect(this.$state.go).toHaveBeenCalledWith('users.manage.emailSuppress', {
-      manageType: 'manual',
-      prevState: 'users.manage.org',
-    });
-  });
-
-  it('should go to auto assign template when isAtlasF3745AutoAssignToggle is on', function () {
-    initControllerAndAutoAssignFeatureToggleOn.apply(this);
-    this.controller.manageType = 'autoAssignTemplate';
-
-    this.controller.onNext();
-    expect(this.$state.go).toHaveBeenCalledWith('users.manage.edit-auto-assign-template-modal', {
-      prevState: 'users.manage.picker',
-    });
   });
 
   it('should go to settings page if isDirSyncEnabled is true', function () {
@@ -238,16 +164,22 @@ describe('UserManageOrgController', () => {
     this.controller.handleDirSyncService();
     this.$scope.$apply();
 
-    expect(this.$state.go).toHaveBeenCalledWith('users.manage.advanced.add.ob.installConnector');
+    expect(this.UserManageService.gotoNextStateForManageType).toHaveBeenCalledWith('advancedNoDS');
+  });
+
+  describe('onNext():', () => {
+    it('should call UserManageService.gotoNextStateForManageType()', function () {
+      initControllerAndDefaults.call(this);
+      this.controller.onNext('my-manage-type');
+      expect(this.UserManageService.gotoNextStateForManageType).toHaveBeenCalledWith('my-manage-type');
+    });
   });
 
   describe('initFeatureToggles():', function () {
     it('should fetch feature toggles"', function () {
-      spyOn(this.FeatureToggleService, 'atlasEmailSuppressGetStatus');
       spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus');
       initController.call(this);
       this.controller.initFeatureToggles();
-      expect(this.FeatureToggleService.atlasEmailSuppressGetStatus).toHaveBeenCalled();
       expect(this.FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus).toHaveBeenCalled();
     });
   });

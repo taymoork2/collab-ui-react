@@ -38,6 +38,9 @@
           })
             .then(function (response) {
               return response.data;
+            })
+            .catch(function (response) {
+              return response;
             });
         });
     }
@@ -56,6 +59,8 @@
           return _.map(response.data, function (fieldset) {
             return fieldset.id;
           });
+        }).catch(function (response) {
+          return response;
         });
     }
 

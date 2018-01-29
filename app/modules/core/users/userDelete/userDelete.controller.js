@@ -7,12 +7,13 @@ require('./_user-delete.scss');
     .controller('UserDeleteCtrl', UserDeleteCtrl);
 
   /* @ngInject */
-  function UserDeleteCtrl($scope, $rootScope, $stateParams, $timeout, $translate, Authinfo, Notification, SunlightConfigService, Userservice, Config, SyncService) {
+  function UserDeleteCtrl($scope, $rootScope, $stateParams, $timeout, $translate, Notification, SunlightConfigService, Userservice, Config, SyncService) {
     var vm = this;
 
     vm.deleteUserOrgId = $stateParams.deleteUserOrgId;
     vm.deleteUserUuId = $stateParams.deleteUserUuId;
     vm.deleteUsername = $stateParams.deleteUsername;
+    vm.deleteUserEntitlements = [];
     vm.isMsgrUser = false;
     vm.msgrloaded = false;
 
@@ -25,24 +26,33 @@ require('./_user-delete.scss');
 
     init();
 
-    function init() {
+    function checkMessengerSyncStatus() {
       vm.isMsgrUser = false;
       vm.msgrloaded = false;
       SyncService.isMessengerSyncEnabled()
         .then(function (isEnabled) {
           if (isEnabled) {
-            Userservice.getUser(vm.deleteUserUuId, function (user) {
-              if (_.includes(user.entitlements, Config.entitlements.messenger)) {
-                vm.isMsgrUser = true;
-              }
-              vm.msgrloaded = true;
-            });
+            if (_.includes(vm.deleteUserEntitlements, Config.entitlements.messenger)) {
+              vm.isMsgrUser = true;
+            }
+            vm.msgrloaded = true;
           } else {
             vm.msgrloaded = true;
           }
         }, function error() {
           vm.isMsgrUser = false;
         });
+    }
+
+    function init() {
+      Userservice.getUser(vm.deleteUserUuId, _.noop).then(function (response) {
+        var data = response.data;
+        data = _.isObject(data) ? data : {};
+        vm.deleteUserEntitlements = data.entitlements;
+        checkMessengerSyncStatus();
+      }, function error() {
+        checkMessengerSyncStatus();
+      });
     }
 
     function deleteCheck() {
@@ -77,7 +87,7 @@ require('./_user-delete.scss');
 
       var userId = vm.deleteUserUuId;
 
-      if (Authinfo.isCare()) {
+      if (_.includes(vm.deleteUserEntitlements, Config.entitlements.care)) {
         SunlightConfigService.deleteUser(userId)
           .then(deleteFromCareSuccess)
           .catch(deleteFromCareFailure);

@@ -19,16 +19,17 @@ export class TaasScheduleViewCtrl implements ng.IComponentController {
   public pageState: State = State.Loading;
   public backState = 'taasSuites';
   public schedule: HtmSchedule[] = [];
+
   private scheduleListData;
 
   /* @ngInject */
   constructor(
     public HcsTestManagerService: TaskManagerService,
     public $modal: IToolkitModalService,
-    private $state: ng.ui.IStateService,
     public $translate: ng.translate.ITranslateService,
     public $q: ng.IQService,
 
+    private $state: ng.ui.IStateService,
     private Notification: Notification,
     ) {}
 

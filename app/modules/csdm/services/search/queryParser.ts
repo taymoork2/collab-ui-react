@@ -45,6 +45,8 @@ class SearchElementBuilder {
 
 export class QueryParser {
 
+  public static readonly Field_CisUUID = 'cisuuid';
+  public static readonly Field_AccountType = 'accounttype';
   public static readonly Field_ErrorCodes = 'errorcodes';
   public static readonly Field_UpgradeChannel = 'upgradechannel';
   public static readonly Field_Product = 'product';
@@ -52,20 +54,26 @@ export class QueryParser {
   public static readonly Field_ConnectionStatus = 'connectionstatus';
   public static readonly Field_Tag = 'tag';
   public static readonly Field_Displayname = 'displayname';
+  public static readonly Field_Serial = 'serial';
+  public static readonly Field_Mac = 'mac';
+  public static readonly Field_IP = 'ip';
+  public static readonly Field_Description = 'description';
+  public static readonly Field_Software = 'software';
+  public static readonly Field_SipUrl = 'sipurl';
 
-  private static validFieldNames = [QueryParser.Field_Displayname,
-    'cisuuid',
-    'accounttype',
+  public static readonly validFieldNames = [QueryParser.Field_Displayname,
+    QueryParser.Field_CisUUID,
+    QueryParser.Field_AccountType,
     QueryParser.Field_ActiveInterface,
-    'serial',
-    'mac',
-    'ip',
-    'description',
-    'software',
+    QueryParser.Field_Serial,
+    QueryParser.Field_Mac,
+    QueryParser.Field_IP,
+    QueryParser.Field_Description,
+    QueryParser.Field_Software,
     QueryParser.Field_UpgradeChannel,
     QueryParser.Field_Product,
     QueryParser.Field_ConnectionStatus,
-    'sipurl',
+    QueryParser.Field_SipUrl,
     QueryParser.Field_ErrorCodes,
     QueryParser.Field_Tag];
 

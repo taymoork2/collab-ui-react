@@ -11,15 +11,15 @@ describe('Component: licenseSummary:', () => {
 
   describe('primary behaviors (view):', () => {
     it('should render an empty table if there is not at least 1 license with the right "offerName"', function () {
-      this.$scope.fakeStateData = {};
+      this.$scope.fakeAutoAssignTemplateData = {};
       this.compileComponent('licenseSummary', {
-        stateData: 'fakeStateData',
+        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
       expect(this.view.find('.license-summary').length).toBe(1);
     });
 
     it('should render a license-summary-item in the message row if a license has a MS offer name', function () {
-      this.$scope.fakeStateData = {
+      this.$scope.fakeAutoAssignTemplateData = {
         LICENSE: {
           MS_4f4253ad: {
             isSelected: true,
@@ -31,7 +31,7 @@ describe('Component: licenseSummary:', () => {
       };
 
       this.compileComponent('licenseSummary', {
-        stateData: 'fakeStateData',
+        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
 
       expect(this.view.find('.license-summary').length).toBe(1);
@@ -39,7 +39,7 @@ describe('Component: licenseSummary:', () => {
     });
 
     it('should render a license-summary-item in the meeting row if a license has a CF offer name', function () {
-      this.$scope.fakeStateData = {
+      this.$scope.fakeAutoAssignTemplateData = {
         LICENSE: {
           CF_4f4253ad: {
             isSelected: true,
@@ -51,7 +51,7 @@ describe('Component: licenseSummary:', () => {
       };
 
       this.compileComponent('licenseSummary', {
-        stateData: 'fakeStateData',
+        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
 
       expect(this.view.find('.license-summary').length).toBe(1);
@@ -59,7 +59,7 @@ describe('Component: licenseSummary:', () => {
     });
 
     it('should render a license-summary-item in the meeting row if a license has a CO offer name', function () {
-      this.$scope.fakeStateData = {
+      this.$scope.fakeAutoAssignTemplateData = {
         LICENSE: {
           CF_4f4253ad: {
             isSelected: true,
@@ -71,7 +71,7 @@ describe('Component: licenseSummary:', () => {
       };
 
       this.compileComponent('licenseSummary', {
-        stateData: 'fakeStateData',
+        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
 
       expect(this.view.find('.license-summary').length).toBe(1);
@@ -79,7 +79,7 @@ describe('Component: licenseSummary:', () => {
     });
 
     it('should render a license-summary-item in the meeting row if a license has a CDC offer name', function () {
-      this.$scope.fakeStateData = {
+      this.$scope.fakeAutoAssignTemplateData = {
         LICENSE: {
           CF_4f4253ad: {
             isSelected: true,
@@ -91,7 +91,7 @@ describe('Component: licenseSummary:', () => {
       };
 
       this.compileComponent('licenseSummary', {
-        stateData: 'fakeStateData',
+        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
 
       expect(this.view.find('.license-summary').length).toBe(1);
@@ -101,7 +101,7 @@ describe('Component: licenseSummary:', () => {
 
   describe('primary behaviors (controller):', () => {
     it('should pass through its calls to respective LicenseUsageUtilService methods', function () {
-      this.$scope.fakeStateData = {
+      this.$scope.fakeAutoAssignTemplateData = {
         LICENSE: {
           CF_4f4253ad: {
             isSelected: true,
@@ -116,7 +116,7 @@ describe('Component: licenseSummary:', () => {
       spyOn(this.LicenseUsageUtilService, 'getTotalLicenseUsage');
       spyOn(this.LicenseUsageUtilService, 'getTotalLicenseVolume');
       this.compileComponent('licenseSummary', {
-        stateData: 'fakeStateData',
+        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
 
       this.controller.getTotalLicenseUsage('CF');
@@ -127,17 +127,17 @@ describe('Component: licenseSummary:', () => {
     });
 
     it('should find the appropriate hybrid service user entitlements', function () {
-      this.$scope.fakeStateData = [{
+      this.$scope.fakeAutoAssignTemplateData = [{
         USER_ENTITLEMENTS_PAYLOAD: {
           entitlementName: 'squaredFusionCal',
         },
       }];
       this.compileComponent('licenseSummary', {
-        stateData: 'fakeStateData',
+        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
-      spyOn(this.controller, 'getHybridUserEntitlements').and.returnValue(this.$scope.fakeStateData.USER_ENTITLEMENTS_PAYLOAD);
+      spyOn(this.controller, 'getHybridUserEntitlements').and.returnValue(this.$scope.fakeAutoAssignTemplateData.USER_ENTITLEMENTS_PAYLOAD);
 
-      expect(this.controller.findHybridUserEntitlement('squaredFusionCal')).toEqual(this.$scope.fakeStateData.USER_ENTITLEMENTS_PAYLOAD);
+      expect(this.controller.findHybridUserEntitlement('squaredFusionCal')).toEqual(this.$scope.fakeAutoAssignTemplateData.USER_ENTITLEMENTS_PAYLOAD);
     });
   });
 });

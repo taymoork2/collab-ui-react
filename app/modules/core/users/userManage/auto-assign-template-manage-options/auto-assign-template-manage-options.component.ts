@@ -1,3 +1,5 @@
+import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template';
+
 class AutoAssignTemplateManageOptionsController implements ng.IComponentController {
 
   private readonly DEFAULT_AUTO_ASSIGN_TEMPLATE = 'Default';
@@ -10,7 +12,7 @@ class AutoAssignTemplateManageOptionsController implements ng.IComponentControll
     private $q: ng.IQService,
     private $state: ng.ui.IStateService,
     private $translate,
-    private AutoAssignTemplateService,
+    private AutoAssignTemplateService: AutoAssignTemplateService,
     private ModalService,
     private Notification,
   ) {}
@@ -21,10 +23,10 @@ class AutoAssignTemplateManageOptionsController implements ng.IComponentControll
       subscriptions: this.AutoAssignTemplateService.getSortedSubscriptions(),
     })
     .then((results) => {
-      const stateData = this.AutoAssignTemplateService.toStateData(results.defaultAutoAssignTemplate, results.subscriptions);
+      const autoAssignTemplateData = this.AutoAssignTemplateService.toAutoAssignTemplateData(results.defaultAutoAssignTemplate, results.subscriptions);
       this.$state.go('users.manage.edit-auto-assign-template-modal', {
         prevState: 'users.manage.picker',
-        stateData: stateData,
+        autoAssignTemplateData: autoAssignTemplateData,
       });
     })
     .catch((response) => {
@@ -70,7 +72,7 @@ class AutoAssignTemplateManageOptionsController implements ng.IComponentControll
       dismiss: this.$translate.instant('common.cancel'),
       btnType: 'alert',
     }).result.then(() => {
-      const templateId = _.get(this.autoAssignTemplates, `${this.DEFAULT_AUTO_ASSIGN_TEMPLATE}.templateId`);
+      const templateId = _.get<string>(this.autoAssignTemplates, `${this.DEFAULT_AUTO_ASSIGN_TEMPLATE}.templateId`);
       return this.AutoAssignTemplateService.deleteTemplate(templateId)
         .then(() => {
           this.Notification.success('userManage.org.deleteAutoAssignModal.deleteSuccess');

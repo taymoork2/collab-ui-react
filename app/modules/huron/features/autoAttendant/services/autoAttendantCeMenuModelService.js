@@ -421,7 +421,7 @@
       var action;
       action = new Action('dynamic', '');
       action.dynamicList = inObject;
-      if (!_.isUndefined(inObject[0].say.voice)) {
+      if (_.has(inObject[0], ['say', 'voice'])) {
         action.setVoice(inObject[0].say.voice);
       }
       menuEntry.addAction(action);
@@ -520,7 +520,9 @@
         action = new Action('dynamic', '');
         var dynamicList = inAction.dynamic.dynamicOperations;
         action.dynamicList = dynamicList;
-        action.voice = dynamicList[0].say.voice;
+        if (_.has(dynamicList, [0, 'say', 'voice'])) {
+          action.voice = dynamicList[0].say.voice;
+        }
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.play)) {
         action = new Action('play', decodeUtf8(inAction.play.url));

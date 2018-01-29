@@ -5,49 +5,52 @@ describe('DeviceBrandingSettingCtrl', () => {
     this.superhash = 2;
     this.initModules(deviceBrandingModule);
     this.injectDependencies('$scope', '$controller', '$q', '$httpBackend', 'Notification', 'Authinfo', 'LogMetricsService', 'UrlConfig', '$rootScope', 'Upload');
-    spyOn(this.Notification, 'success').and.callFake(_.noop);
-    spyOn(this.Notification, 'errorResponse').and.callFake(_.noop);
+    spyOn(this.Notification, 'success');
+    spyOn(this.Notification, 'errorResponse');
   });
 
   afterEach(function () {
+    this.$httpBackend.verifyNoOutstandingExpectation();
     this.$httpBackend.verifyNoOutstandingRequest();
   });
 
   function initComponent(bindings) {
     this.compileComponent('deviceBrandingSetting', _.assignIn({}, bindings));
     this.$httpBackend.flush();
-    this.$rootScope.$digest();
-    this.$scope.$apply();
   }
 
   const imageFile = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUp/hOeZ81YAAAACklEQVQIW2NgAAAAAgABYkBPaAAAAABJRU5ErkJggg==';
 
   describe('with existing branding', function () {
-    let lighLogoUrl, darkLogoUrl, halfwakeLogoUrl, notifyUrl;
+    let lightLogoUrl, darkLogoUrl, halfwakeLogoUrl, notifyUrl;
     beforeEach(function () {
-      lighLogoUrl = this.UrlConfig.getAdminServiceUrl() + 'organizations/' + this.Authinfo.getOrgId() + '/config/files/8AAFF7C25CCE77B2015CCE77E5050001';
+      lightLogoUrl = this.UrlConfig.getAdminServiceUrl() + 'organizations/' + this.Authinfo.getOrgId() + '/config/files/8AAFF7C25CCE77B2015CCE77E5050001';
       darkLogoUrl = this.UrlConfig.getAdminServiceUrl() + 'organizations/' + this.Authinfo.getOrgId() + '/config/files/8AAFF7C25CCE77B2015CCE77E5050003';
       halfwakeLogoUrl = this.UrlConfig.getAdminServiceUrl() + 'organizations/' + this.Authinfo.getOrgId() + '/config/files/8AAFF7C25CCE77B2015CCE77E5050009';
       notifyUrl = this.UrlConfig.getCsdmServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/devices/update';
       this.$httpBackend.whenGET(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/branding').respond(200, {
         value: {
-          logoLight: { url: lighLogoUrl },
+          logoLight: { url: lightLogoUrl },
           logoDark: { url: darkLogoUrl },
           halfwakeBackground: { url: halfwakeLogoUrl },
         },
       });
-      this.$httpBackend.expectGET(lighLogoUrl + '/tempUrl').respond(200, { tempURL: 'lightlogotemp' });
+      this.$httpBackend.whenGET(lightLogoUrl + '/tempUrl').respond(200, { tempURL: 'light URL' });
+      this.$httpBackend.whenGET(darkLogoUrl + '/tempUrl').respond(200, { tempURL: 'dark URL' });
+      this.$httpBackend.whenGET(halfwakeLogoUrl + '/tempUrl').respond(200, { tempURL: 'halfwake URL' });
     });
     describe('on init', function () {
       beforeEach(function () {
         initComponent.apply(this);
       });
       it('should fetch settings and set imgFileUrls', function () {
-        expect(this.controller.logolight.origUrl).toBe(lighLogoUrl);
+        expect(this.controller.logolight.origUrl).toBe(lightLogoUrl);
         expect(this.controller.logodark.origUrl).toBe(darkLogoUrl);
         expect(this.controller.halfwakeBackground.origUrl).toBe(halfwakeLogoUrl);
 
-        expect(this.controller.logolight.tempDownloadUrl).toBe('lightlogotemp');
+        expect(this.controller.logolight.tempDownloadUrl).toBe('light URL');
+        expect(this.controller.logodark.tempDownloadUrl).toBe('dark URL');
+        expect(this.controller.halfwakeBackground.tempDownloadUrl).toBe('halfwake URL');
       });
 
       it('should set use partner to false', function () {
@@ -102,7 +105,7 @@ describe('DeviceBrandingSettingCtrl', () => {
 
               //should delete old files
               this.$httpBackend.expectDELETE(halfwakeLogoUrl).respond(204);
-              this.$httpBackend.expectDELETE(lighLogoUrl).respond(204);
+              this.$httpBackend.expectDELETE(lightLogoUrl).respond(204);
               this.$httpBackend.expectDELETE(darkLogoUrl).respond(204);
 
               //should notify all devices
@@ -110,9 +113,7 @@ describe('DeviceBrandingSettingCtrl', () => {
 
               //perform
               this.controller.applyBranding();
-              this.$rootScope.$digest();
               this.$httpBackend.flush();
-              this.$rootScope.$digest();
             });
 
             it('should delete old files and not show error', function () {
@@ -154,7 +155,7 @@ describe('DeviceBrandingSettingCtrl', () => {
               // should save branding
               this.$httpBackend.expectPUT(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/branding').respond(204, {
                 value: {
-                  logoLight: { url: lighLogoUrl },
+                  logoLight: { url: lightLogoUrl },
                   logoDark: { url: 'darklogo2' },
                   halfwakeBackground: { url: halfwakeLogoUrl },
                 },
@@ -168,9 +169,7 @@ describe('DeviceBrandingSettingCtrl', () => {
 
               //perform
               this.controller.applyBranding();
-              this.$rootScope.$digest();
               this.$httpBackend.flush();
-              this.$rootScope.$digest();
             });
 
             it('should delete one old files and not show error', function () {
@@ -199,7 +198,7 @@ describe('DeviceBrandingSettingCtrl', () => {
               this.$httpBackend.expectPUT(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/branding',
                 {
                   value: {
-                    logoLight: { url: lighLogoUrl },
+                    logoLight: { url: lightLogoUrl },
                     // logoDark: undefined,
                     halfwakeBackground: { url: halfwakeLogoUrl },
                   },
@@ -207,7 +206,7 @@ describe('DeviceBrandingSettingCtrl', () => {
                 })
                 .respond(204, {
                   value: {
-                    logoLight: { url: lighLogoUrl },
+                    logoLight: { url: lightLogoUrl },
                     halfwakeBackground: { url: halfwakeLogoUrl },
                   },
                 });
@@ -220,10 +219,7 @@ describe('DeviceBrandingSettingCtrl', () => {
 
               //perform
               this.controller.applyBranding();
-              this.$rootScope.$digest();
-              this.$rootScope.$digest();
               this.$httpBackend.flush();
-              this.$rootScope.$digest();
             });
 
             it('should save to lyra with no errors', function () {
@@ -299,9 +295,7 @@ describe('DeviceBrandingSettingCtrl', () => {
 
               //perform
               this.controller.applyBranding();
-              this.$rootScope.$digest();
               this.$httpBackend.flush();
-              this.$rootScope.$digest();
             });
 
             it('should set changed to false when done', function () {
@@ -338,10 +332,7 @@ describe('DeviceBrandingSettingCtrl', () => {
 
               //perform
               this.controller.applyBranding();
-              this.$rootScope.$digest();
               this.$httpBackend.flush();
-              this.$rootScope.$digest();
-
             });
 
             it('should display error notification', function () {
@@ -351,9 +342,8 @@ describe('DeviceBrandingSettingCtrl', () => {
           });
 
           describe('with one failing image upload', () => {
-
             beforeEach(function () {
-              let uploadUrls: string[] = [];
+              const uploadUrls: string[] = [];
               [1, 2, 3].forEach((i) => {
                 //should fetch 3x url
                 const uploadUrl = '8AAFF7C25CCE77B2015CCE77E505001' + i + 'up';
@@ -366,17 +356,14 @@ describe('DeviceBrandingSettingCtrl', () => {
                 uploadUrls.push(uploadUrl);
               });
 
-              uploadUrls = uploadUrls;
-              //should upload 3x images
-              this.$httpBackend.expectPUT(uploadUrls[0]).respond(204);
-              this.$httpBackend.expectPUT(uploadUrls[1]).respond(204);
-              this.$httpBackend.expectPUT(uploadUrls[2]).respond(401);
+              //should upload 3x images, first two succeed, last fails
+              spyOn(this.Upload, 'http').and.callFake((arg) => {
+                return (arg.url === uploadUrls[2]) ? this.$q.reject(401) : this.$q.resolve(204);
+              });
 
               //perform
               this.controller.applyBranding();
-              this.$rootScope.$digest();
               this.$httpBackend.flush();
-              this.$rootScope.$digest();
             });
 
             it('should display error notification', function () {
@@ -437,9 +424,7 @@ describe('DeviceBrandingSettingCtrl', () => {
 
               //perform
               this.controller.applyBranding();
-              this.$rootScope.$digest();
               this.$httpBackend.flush();
-              this.$rootScope.$digest();
             });
 
             it('should set changed to false when done', function () {

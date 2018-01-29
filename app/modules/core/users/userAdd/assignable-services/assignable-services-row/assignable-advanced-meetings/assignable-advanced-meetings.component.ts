@@ -183,6 +183,6 @@ export class AssignableAdvancedMeetingsComponent implements ng.IComponentOptions
     licenses: '<',
     siteUrls: '<',
     onUpdate: '&',
-    stateData: '<',
+    autoAssignTemplateData: '<',
   };
 }

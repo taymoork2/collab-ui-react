@@ -62,7 +62,7 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
       result: modalDefer.promise,
     });
     spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve({}));
-    spyOn(Notification, 'error');
+    spyOn(Notification, 'errorResponse');
     spyOn(Notification, 'success');
 
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
@@ -253,17 +253,15 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
   });
 
   describe('addCustomerAdmin call failed', function () {
-    beforeEach(function () {
-      CustomerAdministratorService.addCustomerAdmin = jasmine.createSpy('CustomerAdministratorService').and.returnValue($q.reject());
+    it('must throw Notification.errorResponse', function () {
       initController();
-    });
-
-    it('must throw Notification.error', function () {
+      spyOn(CustomerAdministratorService, 'addCustomerAdmin').and.returnValue($q.reject());
       controller.users = testUsers;
       controller.assignedAdmins = [];
-      controller.addCustomerAdmin('Frank Sinatra').catch(function () {
-        expect(Notification.error()).toHaveBeenCalled();
+      controller.addCustomerAdmin('Frank Sinatra').then(function () {
+        expect(Notification.errorResponse).toHaveBeenCalled();
       });
+      $scope.$apply();
     });
   });
 

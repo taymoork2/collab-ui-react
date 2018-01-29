@@ -1,8 +1,8 @@
-import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template.service';
+import { AutoAssignTemplateModel, AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template';
 import { IOnboardScopeForUsersAdd, OnboardCtrlBoundUIStates } from 'modules/core/users/userAdd/shared/onboard.store';
-import { AutoAssignTemplateModel } from 'modules/core/users/shared/auto-assign-template.model';
 import OnboardService from 'modules/core/users/userAdd/shared/onboard.service';
 import OnboardStore from 'modules/core/users/userAdd/shared/onboard.store';
+import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 
 export class ManualAddUsersModalController implements ng.IComponentController {
   public isDirSyncEnabled: boolean;
@@ -10,8 +10,7 @@ export class ManualAddUsersModalController implements ng.IComponentController {
   public model: any;
   private dismiss?: Function;
   private scopeData: IOnboardScopeForUsersAdd;
-  public stateData: any;  // TODO: better type
-  public useDefaultAutoAssignTemplate = false;
+  public autoAssignTemplateData: IAutoAssignTemplateData;
 
   /* @ngInject */
   constructor(
@@ -34,16 +33,25 @@ export class ManualAddUsersModalController implements ng.IComponentController {
     this.model = this.scopeData.model;
     this.maxUsersInManual = this.OnboardService.maxUsersInManual;
 
+    // early-out if state data provided through input binding (ie. passed from another step)
+    if (this.useDefaultAutoAssignTemplate) {
+      return;
+    }
+
+    // otherwise initialize state data
     this.$q.all({
       defaultAutoAssignTemplate: this.AutoAssignTemplateService.getDefaultTemplate(),
       subscriptions: this.AutoAssignTemplateService.getSortedSubscriptions(),
     }).then((results) => {
-      if (!this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated || !results.defaultAutoAssignTemplate) {
+      if (!results.defaultAutoAssignTemplate) {
         return;
       }
-      this.stateData = this.AutoAssignTemplateService.toStateData(results.defaultAutoAssignTemplate, results.subscriptions);
-      this.useDefaultAutoAssignTemplate = true;
+      this.autoAssignTemplateData = this.AutoAssignTemplateService.toAutoAssignTemplateData(results.defaultAutoAssignTemplate, results.subscriptions);
     });
+  }
+
+  public get useDefaultAutoAssignTemplate(): boolean {
+    return !_.isEmpty(this.autoAssignTemplateData) && this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated;
   }
 
   public dismissModal(): void {
@@ -73,7 +81,7 @@ export class ManualAddUsersModalController implements ng.IComponentController {
       return;
     }
     this.$state.go('users.manage.onboard-summary-for-auto-assign-modal', {
-      stateData: this.stateData,
+      autoAssignTemplateData: this.autoAssignTemplateData,
       userList: this.getUsersList(),
     });
   }
@@ -132,5 +140,6 @@ export class ManualAddUsersModalComponent implements ng.IComponentOptions {
   public template = require('./manual-add-users-modal.html');
   public bindings = {
     dismiss: '&?',
+    autoAssignTemplateData: '<',
   };
 }

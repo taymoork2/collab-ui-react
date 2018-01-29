@@ -8824,7 +8824,7 @@
       "title": "Jeton et Instructions",
       "close": "Fermer",
       "instructions": "vous devez copier et coller ce jeton de vérification DNS dans la section d'enregistrement TXT pour prouver que vous possédez le domaine :",
-      "howto": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>En savoir plus</a> sur la façon de saisir le jeton de vérification DNS.",
+      "howto": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>En savoir plus</a> sur la façon de saisir le jeton de vérification DNS.",
       "beforeVerify": "Avant d'effectuer la vérification"
     }
   },

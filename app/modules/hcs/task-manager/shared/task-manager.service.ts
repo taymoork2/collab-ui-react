@@ -2,7 +2,7 @@ import {
   IRHtmBuildingBlocks, HtmBuildingBlocks,
   IRHtmCustomer, HtmCustomer,
   IRHtmResource, HtmResource,
-  IRHtmTestResults,
+  IRHtmResults, HtmResults,
   IRHtmSchedule, HtmSchedule,
   IRHtmTest, HtmTest,
   IRHtmSuite, HtmSuite,
@@ -10,8 +10,7 @@ import {
   SETUP_NOT_COMPLETE, SETUP_COMPLETE,
 } from './task-manager.const';
 
-//export const TAAS_ADDRESS: string = 'http://10.201.82.158:8082'; //Matt's Server
-export const TAAS_ADDRESS: string = 'https://taasapi.cisco.com:8082';
+export const TAAS_ADDRESS: string = 'https://uctaas.cisco.com:8082';
 //CRUD Resources
 export const PATH_RESOURCE: string = '/api/v1/customers/:customerId/resources/:resourceId';
 //Read Test Building Blocks
@@ -30,6 +29,8 @@ export const PATH_TESTDEFS: string = '/api/v1/customers/:customerId/testdefiniti
 export const PATH_CUSTOMERS: string = '/api/v1/customers/:customerId';
 // R Test Definitions
 export const PATH_TESTDEFINITIONS: string = '/api/v1/customers/:customerId/testdefinitions/:testdefinitionsId';
+//Read Results
+export const PATH_SUITERESULTS: string = '/api/v1/customers/:customerId/testresults';
 
 interface IResource<T> extends ng.resource.IResourceClass<T & ng.resource.IResource<T>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
@@ -142,10 +143,18 @@ export class TaskManagerService {
   }
 
 //Results;
-  public getResults(): ng.IPromise<IRHtmTestResults[]> {
-    return this.$q.resolve(
-      [] as IRHtmTestResults[],
-    );
+  public getResults(): ng.IPromise<HtmResults[]> {
+    const resource = <IResource<IRHtmResults>>this.$resource(`${TAAS_ADDRESS}${PATH_SUITERESULTS}`);
+    return resource.query({
+      customerId: this.customerId,
+    }).$promise.then((rresults: IRHtmResults[]) => {
+      const results: HtmResults[] = [];
+      for (const i of rresults) {
+        results.push(new HtmResults(i));
+      }
+      //TODO: REMOVE - Get all tests until API returns tests
+      return results;
+    });
   }
 
 //Schedules

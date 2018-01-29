@@ -65,6 +65,9 @@ describe('Component: Fieldset SidePanel', function () {
     lastUpdated: '2017-02-10T19:37:36.998Z',
   };
 
+  var AdminAuthorizationStatus = require('modules/context/services/context-authorization-service').AdminAuthorizationStatus;
+  var adminAuthorizationStatus = AdminAuthorizationStatus.AUTHORIZED;
+
   describe('controller tests', function () {
     var $componentCtrl, $q, $rootScope, $state, Analytics, ContextFieldsetsService, ctrl, ModalService, Notification;
     // spies
@@ -102,6 +105,7 @@ describe('Component: Fieldset SidePanel', function () {
         ModalService: ModalService,
         Notification: Notification,
       }, {
+        adminAuthorizationStatus: adminAuthorizationStatus,
         fieldset: fieldset,
       });
       ctrl.$onInit();
@@ -182,31 +186,49 @@ describe('Component: Fieldset SidePanel', function () {
     });
 
     describe('isEditable', function () {
-      it('should return false if publicly accessible', function () {
+      it('should return false if publicly accessible and admin authorized', function () {
         ctrl.publiclyAccessible = true;
+        ctrl.adminAuthorizationStatus = AdminAuthorizationStatus.AUTHORIZED;
         expect(ctrl.isEditable()).toBe(false);
       });
-      it('should return true if it is not publicly accessible', function () {
+
+      it('should return true if it is not publicly accessible and admin authorized', function () {
         ctrl.publiclyAccessible = false;
+        ctrl.adminAuthorizationStatus = AdminAuthorizationStatus.AUTHORIZED;
         expect(ctrl.isEditable()).toBe(true);
+      });
+
+      it('should return false if it is publicly accessible and admin not authorized', function () {
+        ctrl.publiclyAccessible = true;
+        ctrl.adminAuthorizationStatus = AdminAuthorizationStatus.UNAUTHORIZED;
+        expect(ctrl.isEditable()).toBe(false);
+      });
+
+      it('should return false if it is not publicly accessible and admin not authorized', function () {
+        ctrl.publiclyAccessible = false;
+        ctrl.adminAuthorizationStatus = AdminAuthorizationStatus.UNAUTHORIZED;
+        expect(ctrl.isEditable()).toBe(false);
       });
     });
     describe('isDeletable', function () {
       it('should return false if publicly accessible', function () {
         ctrl.publiclyAccessible = true;
         ctrl.inUse = false;
+        ctrl.adminAuthorizationStatus = AdminAuthorizationStatus.AUTHORIZED;
         expect(ctrl.isDeletable()).toBe(false);
       });
 
       it('should return false if in Use', function () {
         ctrl.publiclyAccessible = false;
         ctrl.inUse = true;
+        ctrl.adminAuthorizationStatus = AdminAuthorizationStatus.AUTHORIZED;
         expect(ctrl.isDeletable()).toBe(false);
       });
 
       it('should return true if not publicly accessible and not in use', function () {
         ctrl.publiclyAccessible = false;
         ctrl.inUse = false;
+        ctrl.adminAuthorizationStatus = AdminAuthorizationStatus.AUTHORIZED;
         expect(ctrl.isDeletable()).toBe(true);
       });
     });
@@ -226,7 +248,7 @@ describe('Component: Fieldset SidePanel', function () {
 
         expect(ModalService.open).toHaveBeenCalled();
         expect(ContextFieldsetsService.deleteFieldset).not.toHaveBeenCalled();
-        expect(Notification.error).not.toHaveBeenCalled();
+        expect(Notification.error).toHaveBeenCalled();
         expect(Analytics.trackEvent).not.toHaveBeenCalled();
         expect($state.go).not.toHaveBeenCalled();
       });
@@ -277,7 +299,23 @@ describe('Component: Fieldset SidePanel', function () {
       this.featureSupportSpy = spyOn(this.FeatureToggleService, 'supports');
       this.featureSupportSpy.and.returnValue(this.$q.resolve(false));
 
-      this.compileComponentNoApply('contextFieldsetsSidepanel', { fieldset: customFieldset });
+      this.compileComponentNoApply('contextFieldsetsSidepanel', {
+        fieldset: customFieldset,
+        adminAuthorizationStatus: AdminAuthorizationStatus.AUTHORIZED,
+      });
+
+      this.getController = function () {
+        var controller = this.controller;
+        if (controller === undefined) {
+          var viewNode = this.view[0];
+          expect(viewNode).toHaveLength(1);
+          var componentName = viewNode.localName;
+          componentName = _.camelCase(componentName);
+          controller = this.view.controller(componentName);
+          this.controller = controller;
+        }
+        return controller;
+      };
     });
 
     afterEach(function () {
@@ -288,6 +326,7 @@ describe('Component: Fieldset SidePanel', function () {
     });
 
     it('should have edit button', function () {
+      this.getController().adminAuthorizationStatus = AdminAuthorizationStatus.AUTHORIZED;
       this.$scope.$apply();
       var sectionTitle = this.view.find('section-title');
       // there are 2 of these, but only 1 visible at a time
@@ -300,6 +339,7 @@ describe('Component: Fieldset SidePanel', function () {
     });
 
     it('should have delete button', function () {
+      this.getController().adminAuthorizationStatus = AdminAuthorizationStatus.AUTHORIZED;
       this.$scope.$apply();
       var containerDiv = this.view.find('cs-sp-container');
       var section = containerDiv.find('cs-sp-section');

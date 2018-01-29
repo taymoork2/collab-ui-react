@@ -5,7 +5,7 @@
       </cs-searchfilter>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
-      <span ng-if="!contextFieldsets.showNew" tooltip-class="context-tooltip" tooltip="{{contextFieldsets.maxLimitReachedTooltip}}" tooltip-placement="left">
+      <span ng-if="!contextFieldsets.showNew" tooltip-class="context-tooltip" tooltip="{{contextFieldsets.newButtonTooltip}}" tooltip-placement="left">
         <button class="btn btn--people"
                 ng-disabled="contextFieldsets.fetchFailed || !contextFieldsets.showNew"
                 translate="common.new"></button>

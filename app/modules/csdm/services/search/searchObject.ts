@@ -98,14 +98,22 @@ export class SearchObject {
     }
   }
 
-  public setWorkingElementText(translatedQuery: string) {
-    this.workingElementText = translatedQuery;
+  public getWorkingElementText(): string {
+    return this.workingElementText;
+  }
+
+  public setWorkingElementText(workingElementText: string): boolean {
+
+    if (this.workingElementText === workingElementText) {
+      return false;
+    }
+    this.workingElementText = workingElementText;
     const alreadyEdited = SearchObject.findFirstElementMatching(this.parsedQuery, se => se.isBeingEdited());
-    if (_.isEmpty(translatedQuery) && alreadyEdited) {
+    if (_.isEmpty(workingElementText) && alreadyEdited) {
       this.removeSearchElement(alreadyEdited);
     } else {
       try {
-        const parsedNewQuery = this.queryParser.parseQueryString(translatedQuery);
+        const parsedNewQuery = this.queryParser.parseQueryString(workingElementText);
         this.hasError = false;
         parsedNewQuery.setBeingEdited(true);
 
@@ -115,7 +123,7 @@ export class SearchObject {
           } else {
             alreadyEdited.replaceWith(parsedNewQuery);
           }
-        } else {
+        } else if (workingElementText) {
           this.addParsedSearchElement(parsedNewQuery, false);
         }
         this.setQuery(this.parsedQuery.toQuery(), this.parsedQuery);
@@ -124,6 +132,7 @@ export class SearchObject {
         this.hasError = true;
       }
     }
+    return true;
   }
 
   public getWorkingElement(): SearchElement | null {
