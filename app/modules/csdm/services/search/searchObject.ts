@@ -39,12 +39,6 @@ export class SearchObject {
     return so;
   }
 
-  public static createWithSearchElement(queryParser: QueryParser, se?: SearchElement): SearchObject {
-    const so = new SearchObject(queryParser);
-    so.setQuery(se ? se.toQuery() : '', se);
-    return so;
-  }
-
   public nextPage() {
     this.from += 20;
   }

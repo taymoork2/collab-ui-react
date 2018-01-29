@@ -6,7 +6,7 @@ import { Notification } from 'modules/core/notifications';
 import { QueryParser } from '../services/search/queryParser';
 import { SearchTranslator } from '../services/search/searchTranslator';
 import { SearchElement } from '../services/search/searchElement';
-import { SearchRequestCompressor } from '../services/search/searchRequestCompressor';
+import { SearchLinkExpiredkError, SearchRequestCompressor } from '../services/search/searchRequestCompressor';
 import { CloudConnectorService } from '../../hercules/services/calendar-cloud-connector.service';
 
 require('./_devices.scss');
@@ -85,7 +85,11 @@ export class DevicesCtrl implements ng.IComponentController {
     try {
       this.updateSearchObjectFromUrlParam($stateParams.q);
     } catch (e) {
-      this.Notification.warning(e.messageKey || 'spacesPage.searchlinkBad');
+      if (e instanceof SearchLinkExpiredkError) {
+        this.Notification.warning(e.messageKey);
+      } else {
+        this.Notification.warning('spacesPage.searchLinkBad');
+      }
     }
   }
 

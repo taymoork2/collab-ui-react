@@ -9,6 +9,7 @@ export class SearchRequestCompressor {
     this.MAX_COUNT_VALUE = this.keyset.charAt(this.keyset.length - 1);
     this.encodingChunkSize = 4;
 
+
     this.fieldCompressionMap[QueryParser.Field_ActiveInterface] = 'a';
     this.fieldCompressionMap[QueryParser.Field_Tag] = 'b';
     this.fieldCompressionMap[QueryParser.Field_ConnectionStatus] = 'c';
@@ -24,6 +25,7 @@ export class SearchRequestCompressor {
     this.fieldCompressionMap[QueryParser.Field_Mac] = 'm';
     this.fieldCompressionMap[QueryParser.Field_UpgradeChannel] = 'n';
     this.fieldCompressionMap[QueryParser.Field_Product] = 'o';
+    this.fieldCompressionMap[SearchRequestCompressor.CUSTOM_FIELD] = 'z';
 
     this.fieldValueCompressionMap[QueryParser.Field_ConnectionStatus] = {};
     this.fieldValueCompressionMap[QueryParser.Field_ConnectionStatus]['CONNECTED_WITH_ISSUES'] = 'a';
@@ -37,6 +39,11 @@ export class SearchRequestCompressor {
   private readonly MAX_COUNT_VALUE: string;
   private readonly keyset: string;
   private myVersion = 0;
+  private static readonly CUSTOM_FIELD = 'custom';
+  private static readonly HEADER_FLAG_ISFIELDQUERY = 0;
+  private static readonly HEADER_FLAG_FIELDQUERY_EXACT = 1;
+  private static readonly HEADER_FLAG_FIELDQUERY_HASFIELD = 2;
+  private static readonly HEADER_FLAG_COLLECTION_ISAND = 1;
 
   private readonly fieldCompressionMap: { [key: string]: string } = {};
   private readonly fieldValueCompressionMap: { [key: string]: { [key: string]: string } } = {};
@@ -50,7 +57,7 @@ export class SearchRequestCompressor {
 
   public decompress(payload: string): SearchElement {
     if (this.keyset.indexOf(payload.charAt(0)) !== this.myVersion) {
-      throw new SearchLinExpiredkError();
+      throw new SearchLinkExpiredkError();
     }
     return this.decompressElement(payload.substr(1));
   }
@@ -66,38 +73,46 @@ export class SearchRequestCompressor {
   }
 
   private decompressElement(payload: string): SearchElement {
-    const headerFlags = Number(payload.charCodeAt(0) - 48).toString(2); //To align with start of '0' in ASCII
-    if (this.isFlagSet(headerFlags, 0)) {
-      return this.deCompressFieldQuery(this.isFlagSet(headerFlags, 1), this.isFlagSet(headerFlags, 2), payload.substr(1));
+    if (this.isFlagSet(payload, SearchRequestCompressor.HEADER_FLAG_ISFIELDQUERY)) {
+      return this.deCompressFieldQuery(this.isFlagSet(payload, SearchRequestCompressor.HEADER_FLAG_FIELDQUERY_EXACT),
+        this.isFlagSet(payload, SearchRequestCompressor.HEADER_FLAG_FIELDQUERY_HASFIELD), payload.substr(1));
     }
     const subCountHeader = this.getLengthHeader(payload.substr(1));
     const subCount = this.getLengthFromBytes(subCountHeader);
 
-    return this.deCompressCollectionOperator(this.isFlagSet(headerFlags, 1), subCount, payload.substr(1 + subCountHeader.length));
+    return this.deCompressCollectionOperator(this.isFlagSet(payload, SearchRequestCompressor.HEADER_FLAG_COLLECTION_ISAND), subCount, payload.substr(1 + subCountHeader.length));
   }
 
-  private isFlagSet(headerFlags: string, pos: number): boolean {
+  private isFlagSet(header: string, pos: number): boolean {
+    const headerFlags = this.getLengthFromBytes(header.charAt(0)).toString(2);
+    //const headerFlags = Number(header.charCodeAt(0) - 48).toString(2); //To align with start of '0' in ASCII
     return headerFlags.length > pos && (headerFlags[headerFlags.length - 1 - pos] === '1');
   }
 
-  private compressFieldQuery(fq: FieldQuery): string {
-    const header = ((1 + (fq.type === FieldQuery.QueryTypeExact ? 2 : 0) + (fq.field ? 4 : 0)) + '') || '0';
-    return header + (fq.field ? (this.compressField(fq.field) + ':') : '') + this.compressQueryval(fq);
+  private getFlagVal(flagPos: number): number {
+    return Math.pow(2, flagPos);
   }
 
-  private compressQueryval(fq: FieldQuery): string {
+  private compressFieldQuery(fq: FieldQuery): string {
+    const headerVal = this.getFlagVal(SearchRequestCompressor.HEADER_FLAG_ISFIELDQUERY)
+      + (fq.type === FieldQuery.QueryTypeExact ? (this.getFlagVal(SearchRequestCompressor.HEADER_FLAG_FIELDQUERY_EXACT)) : 0)
+      + (fq.field ? this.getFlagVal(SearchRequestCompressor.HEADER_FLAG_FIELDQUERY_HASFIELD) : 0);
+    const header = this.getLengthBytes(headerVal);
+
+    return header + (fq.field ? (this.compressField(fq.field)) : '') + this.compressQueryVal(fq);
+  }
+
+  private compressQueryVal(fq: FieldQuery): string {
     const queryVal = (fq.field && fq.query && fq.type === FieldQuery.QueryTypeExact && this.fieldValueCompressionMap[fq.field.toLowerCase()]
       && this.fieldValueCompressionMap[fq.field.toLowerCase()][fq.query.toUpperCase()])
       || fq.query;
 
-    return this.Utils.Base64.encode((queryVal || '')).replace(/\=+$/, '');
+    return this.encodeUTF8(queryVal);
   }
 
-  private deCompressQueryval(compressedQueryVal: string, uncompressedField: string | undefined, isExact: boolean): string {
-    const lenMod = (compressedQueryVal.length % this.encodingChunkSize);
-    const reintroducedBase64EndPad = _.repeat('=', (lenMod > 0 ? this.encodingChunkSize : 0) - lenMod);
-    const base64Query = compressedQueryVal + reintroducedBase64EndPad;
-    const decodedQueryVal = this.Utils.Base64.decode(base64Query);
+  private deCompressQueryVal(compressedQueryVal: string, uncompressedField: string | undefined, isExact: boolean): string {
+
+    const decodedQueryVal = this.decodeUTF8(compressedQueryVal);
 
     return (uncompressedField && isExact && this.fieldValueCompressionMap[uncompressedField.toLowerCase()]
       && _.findKey(this.fieldValueCompressionMap[uncompressedField.toLowerCase()], cFieldVal => cFieldVal === decodedQueryVal))
@@ -105,34 +120,53 @@ export class SearchRequestCompressor {
   }
 
   private compressField(field: string): string {
-    return this.fieldCompressionMap[field.toLowerCase()] || field;
+    return this.fieldCompressionMap[field.toLowerCase()]
+      || (this.fieldCompressionMap[SearchRequestCompressor.CUSTOM_FIELD] + this.wrapInLengthHeader(this.encodeUTF8(field)));
   }
 
   private deCompressField(compressedField: string): string {
-    return _.findKey(this.fieldCompressionMap, cField => cField === compressedField) || compressedField;
+    return _.findKey(this.fieldCompressionMap, cField => cField === compressedField) || this.decodeUTF8(compressedField);
   }
 
   private deCompressFieldQuery(isExact: boolean, hasField: boolean, payload: string): SearchElement {
-    const field = hasField ? this.deCompressField(payload.split(':')[0]) : undefined;
-    const compressedQueryVal = hasField ? payload.split(':')[1] : payload || '';
-    const queryVal = this.deCompressQueryval(compressedQueryVal, field, isExact);
+    let compressedFieldByteCount = 0;
+    let field: string | undefined;
+
+    if (hasField) {
+      const compressedFieldChar = payload.charAt(0);
+      compressedFieldByteCount = 1;
+
+      if (compressedFieldChar === SearchRequestCompressor.CUSTOM_FIELD) {
+        const fieldLengthHeader = this.getLengthHeader(payload.substr(1));
+        compressedFieldByteCount += fieldLengthHeader.length;
+        const fieldLength = this.getLengthFromBytes(fieldLengthHeader);
+        field = this.decodeUTF8(payload.substr(2, fieldLength));
+        compressedFieldByteCount += field.length;
+      } else {
+        field = this.deCompressField(compressedFieldChar);
+      }
+    }
+
+    const compressedQueryVal = payload.substr(compressedFieldByteCount);
+    const queryVal = this.deCompressQueryVal(compressedQueryVal, field, isExact);
     return new FieldQuery(queryVal,
       field,
       isExact ? FieldQuery.QueryTypeExact : undefined);
   }
 
   private compressCollectionOperator(coll: CollectionOperator): string {
-    const header = (((coll instanceof OperatorAnd) ? 2 : 0) + '') || '0';
+    const headerVal = (coll instanceof OperatorAnd) ? this.getFlagVal(SearchRequestCompressor.HEADER_FLAG_COLLECTION_ISAND) : 0;
+    const header = this.getLengthBytes(headerVal);
     const subCount = this.getLengthBytes(coll.getExpressions().length);
 
-    return header + subCount + _.map(coll.getExpressions(), e => this.addLength(this.compressElement(e))).join('');
+    return header + subCount + _.map(coll.getExpressions(), e => this.wrapInLengthHeader(this.compressElement(e))).join('');
   }
 
-  private addLength(payload: string): string {
+  private wrapInLengthHeader(payload: string): string {
     return this.getLengthBytes(payload.length) + payload;
   }
 
-  public getLengthFromBytes(lengthBytes: string) {
+  public getLengthFromBytes(lengthBytes: string): number {
     if (lengthBytes && lengthBytes.length === 0) {
       return 0;
     }
@@ -170,8 +204,19 @@ export class SearchRequestCompressor {
 
     return isAnd ? new OperatorAnd(subElementCollection) : new OperatorOr(subElementCollection);
   }
+
+  private encodeUTF8(queryVal: string): string {
+    return this.Utils.Base64.encode((queryVal || '')).replace(/\=+$/, '');
+  }
+
+  private decodeUTF8(compressedQueryVal: string): string {
+    const lenMod = (compressedQueryVal.length % this.encodingChunkSize);
+    const reintroducedBase64EndPad = _.repeat('=', (lenMod > 0 ? this.encodingChunkSize : 0) - lenMod);
+    const base64Query = compressedQueryVal + reintroducedBase64EndPad;
+    return this.Utils.Base64.decode(base64Query);
+  }
 }
 
-class SearchLinExpiredkError extends Error {
-  public messageKey = 'spacesPage.searchlinkExpired';
+export class SearchLinkExpiredkError extends Error {
+  public messageKey = 'spacesPage.searchLinkExpired';
 }

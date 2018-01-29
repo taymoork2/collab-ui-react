@@ -17,38 +17,39 @@ describe('searchRequestCompressor', () => {
 
     it('the base64 encoder should not change utf8-encoding', function () {
       const compressor = this.SearchRequestCompressor;
-      expect(compressor.compress(new FieldQuery('conne🚘atåÜs'))).toBe('A1Y29ubmXtoL3tuphhdMOlw5xz'); //This must be "set in stone" (except header)
-      expect(compressor.decompress('A1Y29ubmXtoL3tuphhdMOlw5xz').toQuery()).toBe('conne🚘atåÜs');
+      expect(compressor.compress(new FieldQuery('conne🚘atåÜs'))).toBe('ABY29ubmXtoL3tuphhdMOlw5xz'); //This must be "set in stone" (except header)
+      expect(compressor.decompress('ABY29ubmXtoL3tuphhdMOlw5xz').toQuery()).toBe('conne🚘atåÜs');
     });
 
     it('the compressed field representations should not change.', function () {
       const compressor = this.SearchRequestCompressor;
-      expect(compressor.compress(new FieldQuery('', QueryParser.Field_ActiveInterface))).toBe('A5a:');
-      expect(compressor.compress(new FieldQuery('', QueryParser.Field_Tag))).toBe('A5b:');
-      expect(compressor.compress(new FieldQuery('', QueryParser.Field_ConnectionStatus))).toBe('A5c:');
-      expect(compressor.compress(new FieldQuery('', QueryParser.Field_Description))).toBe('A5d:');
-      expect(compressor.compress(new FieldQuery('', QueryParser.Field_ErrorCodes))).toBe('A5e:');
-      expect(compressor.compress(new FieldQuery('', QueryParser.Field_Displayname))).toBe('A5f:');
-      expect(compressor.compress(new FieldQuery('', QueryParser.Field_AccountType))).toBe('A5g:');
-      expect(compressor.compress(new FieldQuery('', QueryParser.Field_SipUrl))).toBe('A5h:');
-      expect(compressor.compress(new FieldQuery('', QueryParser.Field_IP))).toBe('A5i:');
-      expect(compressor.compress(new FieldQuery('', QueryParser.Field_CisUUID))).toBe('A5j:');
-      expect(compressor.compress(new FieldQuery('', QueryParser.Field_Serial))).toBe('A5k:');
-      expect(compressor.compress(new FieldQuery('', QueryParser.Field_Software))).toBe('A5l:');
-      expect(compressor.compress(new FieldQuery('', QueryParser.Field_Mac))).toBe('A5m:');
-      expect(compressor.compress(new FieldQuery('', QueryParser.Field_UpgradeChannel))).toBe('A5n:');
-      expect(compressor.compress(new FieldQuery('', QueryParser.Field_Product))).toBe('A5o:');
+      expect(compressor.compress(new FieldQuery('', QueryParser.Field_ActiveInterface))).toBe('AFa');
+      expect(compressor.compress(new FieldQuery('', QueryParser.Field_Tag))).toBe('AFb');
+      expect(compressor.compress(new FieldQuery('', QueryParser.Field_ConnectionStatus))).toBe('AFc');
+      expect(compressor.compress(new FieldQuery('', QueryParser.Field_Description))).toBe('AFd');
+      expect(compressor.compress(new FieldQuery('', QueryParser.Field_ErrorCodes))).toBe('AFe');
+      expect(compressor.compress(new FieldQuery('', QueryParser.Field_Displayname))).toBe('AFf');
+      expect(compressor.compress(new FieldQuery('', QueryParser.Field_AccountType))).toBe('AFg');
+      expect(compressor.compress(new FieldQuery('', QueryParser.Field_SipUrl))).toBe('AFh');
+      expect(compressor.compress(new FieldQuery('', QueryParser.Field_IP))).toBe('AFi');
+      expect(compressor.compress(new FieldQuery('', QueryParser.Field_CisUUID))).toBe('AFj');
+      expect(compressor.compress(new FieldQuery('', QueryParser.Field_Serial))).toBe('AFk');
+      expect(compressor.compress(new FieldQuery('', QueryParser.Field_Software))).toBe('AFl');
+      expect(compressor.compress(new FieldQuery('', QueryParser.Field_Mac))).toBe('AFm');
+      expect(compressor.compress(new FieldQuery('', QueryParser.Field_UpgradeChannel))).toBe('AFn');
+      expect(compressor.compress(new FieldQuery('', QueryParser.Field_Product))).toBe('AFo');
+      expect(compressor.compress(new FieldQuery('', 'nico'))).toBe('AFzGbmljbw');
     });
 
     it('the compressed field value for connection status should not change.', function () {
       const compressor = this.SearchRequestCompressor;
-      expect(compressor.compress(new FieldQuery('CONNECTED_WITH_ISSUES', QueryParser.Field_ConnectionStatus, FieldQuery.QueryTypeExact))).toBe('A7c:YQ');
-      expect(compressor.compress(new FieldQuery('CONNEcted_with_ISSUES', QueryParser.Field_ConnectionStatus, FieldQuery.QueryTypeExact))).toBe('A7c:YQ');
-      expect(compressor.compress(new FieldQuery('DISCONNECTED', QueryParser.Field_ConnectionStatus, FieldQuery.QueryTypeExact))).toBe('A7c:Yg');
-      expect(compressor.compress(new FieldQuery('OFFLINE_EXPIRED', QueryParser.Field_ConnectionStatus, FieldQuery.QueryTypeExact))).toBe('A7c:Yw');
-      expect(compressor.compress(new FieldQuery('CONNECTED', QueryParser.Field_ConnectionStatus, FieldQuery.QueryTypeExact))).toBe('A7c:ZA');
-      expect(compressor.compress(new FieldQuery('UNKNOWN', QueryParser.Field_ConnectionStatus, FieldQuery.QueryTypeExact))).toBe('A7c:ZQ');
-      expect(compressor.compress(new FieldQuery('NewUnknown value', QueryParser.Field_ConnectionStatus, FieldQuery.QueryTypeExact))).toBe('A7c:TmV3VW5rbm93biB2YWx1ZQ');
+      expect(compressor.compress(new FieldQuery('CONNECTED_WITH_ISSUES', QueryParser.Field_ConnectionStatus, FieldQuery.QueryTypeExact))).toBe('AHcYQ');
+      expect(compressor.compress(new FieldQuery('CONNEcted_with_ISSUES', QueryParser.Field_ConnectionStatus, FieldQuery.QueryTypeExact))).toBe('AHcYQ');
+      expect(compressor.compress(new FieldQuery('DISCONNECTED', QueryParser.Field_ConnectionStatus, FieldQuery.QueryTypeExact))).toBe('AHcYg');
+      expect(compressor.compress(new FieldQuery('OFFLINE_EXPIRED', QueryParser.Field_ConnectionStatus, FieldQuery.QueryTypeExact))).toBe('AHcYw');
+      expect(compressor.compress(new FieldQuery('CONNECTED', QueryParser.Field_ConnectionStatus, FieldQuery.QueryTypeExact))).toBe('AHcZA');
+      expect(compressor.compress(new FieldQuery('UNKNOWN', QueryParser.Field_ConnectionStatus, FieldQuery.QueryTypeExact))).toBe('AHcZQ');
+      expect(compressor.compress(new FieldQuery('NewUnknown value', QueryParser.Field_ConnectionStatus, FieldQuery.QueryTypeExact))).toBe('AHcTmV3VW5rbm93biB2YWx1ZQ');
     });
 
     it('should compress and decompress connection status values', function () {
@@ -120,9 +121,9 @@ describe('searchRequestCompressor', () => {
 
     it('should compress any defined field.', function () {
       const compressor = this.SearchRequestCompressor;
-      expect(compressor.compress(new FieldQuery('', 'connectionstatus')).length).toBe(4);
-      expect(compressor.compress(new FieldQuery('', 'connectionStatus')).length).toBe(4);
-      _.each(QueryParser.validFieldNames, fn => expect(compressor.compress(new FieldQuery('', fn)).length).toBe(4));
+      expect(compressor.compress(new FieldQuery('', 'connectionstatus')).length).toBe(3);
+      expect(compressor.compress(new FieldQuery('', 'connectionStatus')).length).toBe(3);
+      _.each(QueryParser.validFieldNames, fn => expect(compressor.compress(new FieldQuery('', fn)).length).toBe(3));
     });
 
     it('an empty query should compress to an empty string', function () {
