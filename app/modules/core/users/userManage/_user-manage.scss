@@ -10,6 +10,10 @@
   @include vr-spacing(mt, 0.75);
 }
 
+.user-manage__text--disabled {
+  color: $gray-light-1;
+}
+
 .user-manage__manage-type-list-item-indent {
   @include vr-spacing(pt, 0.5);
   @include vr-spacing(pl, 2);
@@ -18,12 +22,6 @@
 .user-manage {
   display: flex;
   flex: 1 1 auto;
-
-  .modify-users-section {
-    &--disabled {
-      color: $gray-light-1;
-    }
-  }
 
   .row {
     flex: 1 1 auto;
