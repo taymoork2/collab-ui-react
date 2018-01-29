@@ -7399,6 +7399,18 @@
     "reloadMessage": "Please try reloading the page",
     "feature": "Feature"
   },
+  "careVoiceFeatures": {
+    "title": "Enable Spark Care Voice Features",
+    "heading": "Choose a call service to enable Spark Care voice features:",
+    "enableSparkCall": "Enable Spark Call",
+    "scDescription": "Allow Spark Care agents to use Spark Call for voice features.",
+    "enableSC": "Contact your partner to enable Spark Call.",
+    "contactPartner": "<a href = #>Contact Partner</a>",
+    "useHybridCall": "Use Hybrid Call",
+    "hcDescription": "Allow Spark Care agents to use on-premises infrastructure for voice features.",
+    "enableHybrid": "Set up Hybrid Call and Enterprise Private Trunking to enable your organization to use Cisco Unified Communications Manager.",
+    "setUpHybrid": "<a href ng-click=\"{{onsetuphybrid}}\">Set up Hybrid Call</a><br><a href ng-click=\"{{onsetuptrunk}}\">Set up Enterprise Private Trunking</a>"
+  },
   "placesPage": {
     "nameHeader": "Name",
     "typeHeader": "Type",
