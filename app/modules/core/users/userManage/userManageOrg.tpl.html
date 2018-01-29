@@ -90,11 +90,12 @@
         <h6 ng-if="umoc.isDirSyncEnabled" translate="common.enabled"></h6>
         <h6 ng-if="!umoc.isDirSyncEnabled" translate="common.disabled"></h6>
       </span>
-      <a href
-        class="h6 user-manage__heading--link"
-        ng-click="umoc.handleDirSyncService()"
-        translate="{{ umoc.dirSyncText }}">
-      </a>
+      <p>
+        <a href
+          ng-click="umoc.handleDirSyncService()"
+          translate="{{ umoc.dirSyncText }}">
+        </a>
+      </p>
     </div>
   </div>
 
@@ -126,12 +127,13 @@
         <h6 ng-if="umoc.isDefaultAutoAssignTemplateActivated()" translate="common.keys.activated"></h6>
         <h6 ng-if="!umoc.isDefaultAutoAssignTemplateActivated()" translate="common.keys.deactivated"></h6>
       </span>
-      <a href
-        ng-if="!umoc.hasDefaultAutoAssignTemplate()"
-        ng-click="umoc.onNext(umoc.ManageType.AUTO_ASSIGN_TEMPLATE)"
-        class="h6 user-manage__text--margin user-manage__heading--link"
-        translate="userManage.org.setUpAutoAssignTemplate">
-      </a>
+      <p class="user-manage__text--margin">
+        <a href
+          ng-if="!umoc.hasDefaultAutoAssignTemplate()"
+          ng-click="umoc.onNext(umoc.ManageType.AUTO_ASSIGN_TEMPLATE)"
+          translate="userManage.org.setUpAutoAssignTemplate">
+        </a>
+      </p>
     </div>
     <auto-assign-template-manage-options
       ng-if="umoc.hasDefaultAutoAssignTemplate()"
@@ -153,11 +155,13 @@
           <h6 translate="userManage.org.manualDetailsNew" translate-values="{maxUsersInManual: umoc.maxUsersInManual}"></h6>
         </cr-action-card-section>
         <cr-action-card-footer>
-          <a href
-            ng-if="umoc.isDirSyncEnabled"
-            ng-click="umoc.onNext(umoc.ManageType.ADVANCED_DS)"
-            class="h6 user-manage__heading--link"
-            translate="userManage.org.dirSyncModifyAll"></a>
+          <p>
+            <a href
+              ng-if="umoc.isDirSyncEnabled"
+              ng-click="umoc.onNext(umoc.ManageType.ADVANCED_DS)"
+              translate="userManage.org.dirSyncModifyAll">
+            </a>
+          </p>
         </cr-action-card-footer>
       </cr-action-card>
       <cr-action-card ng-click="umoc.onNext(umoc.ManageType.BULK)">
