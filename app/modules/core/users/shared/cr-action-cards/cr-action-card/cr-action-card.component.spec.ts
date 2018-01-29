@@ -10,9 +10,9 @@ describe('Component: crActionCard:', () => {
 
   describe('primary behaviors (view):', () => {
     enum View {
-      MY_HEADER = 'article.cr-action-card > header.cr-action-card__header > cr-action-card-header > my-header',
-      MY_SECTION = 'article.cr-action-card > section.cr-action-card__section > cr-action-card-section > my-section',
-      MY_FOOTER = 'article.cr-action-card > footer.cr-action-card__footer > cr-action-card-footer > my-footer',
+      MY_HEADER = 'header.cr-action-card__header > cr-action-card-header > my-header',
+      MY_SECTION = 'section.cr-action-card__section > cr-action-card-section > my-section',
+      MY_FOOTER = 'footer.cr-action-card__footer > cr-action-card-footer > my-footer',
     }
 
     it('should transclude header, section, and footer', function (this: Test) {

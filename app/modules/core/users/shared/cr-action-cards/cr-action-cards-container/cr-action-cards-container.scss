@@ -1,6 +1,6 @@
 @import '~@collabui/collab-ui/scss/settings/media';
 @import 'styles/partials/mixins';
-@import '../cr-action-cards.variables';
+@import 'modules/core/users/shared/cr-action-cards/cr-action-cards.variables';
 
 cr-action-cards-container {
   @include keep-flex-container(row);
