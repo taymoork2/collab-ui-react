@@ -8,6 +8,8 @@ export default angular
   .module('Csdm.services', [
     coreUrlConfigModule,
     require('modules/core/scripts/services/authinfo'),
+    require('angular-translate'),
+    require('angular-sanitize'),
     require('modules/core/scripts/services/missing-translation-handler.factory').default,
   ])
   .service('CsdmSearchService', CsdmSearchService)

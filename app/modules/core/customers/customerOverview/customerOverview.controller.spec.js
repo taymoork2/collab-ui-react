@@ -23,26 +23,6 @@ describe('Controller: CustomerOverviewCtrl', function () {
         offerName: 'ST',
         licenseType: 'STORAGE',
       }],
-      offer: [{
-        icon: 'icon-circle-contact-centre',
-        isSparkCare: true,
-        name: 'Care',
-        order: 5,
-        qty: 55,
-        sub: [{
-          icon: 'icon-circle-contact-centre',
-          name: 'Chat, Callback and Inbound Call',
-          offerTypes: 'CARE',
-          order: 1,
-          qty: 50,
-        }, {
-          icon: 'icon-circle-contact-centre',
-          name: 'Chat, Callback and Inbound Call',
-          offerTypes: 'CARE',
-          order: 1,
-          qty: 50,
-        }],
-      }],
     };
     identityCustomer = {
       services: ['webex-squared', 'ciscouc'],
@@ -99,7 +79,6 @@ describe('Controller: CustomerOverviewCtrl', function () {
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasJira2126UseAltEndpointGetStatus').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'hI1635GetStatus').and.returnValue($q.resolve(false));
-    spyOn(FeatureToggleService, 'atlasCareCvcToCdcMigrationGetStatus').and.returnValue($q.resolve(false));
     spyOn(PartnerService, 'updateOrgForCustomerView').and.returnValue($q.resolve());
 
     initController();
@@ -251,115 +230,6 @@ describe('Controller: CustomerOverviewCtrl', function () {
   describe('atlasCareTrialsGetStatus should be called', function () {
     it('should have called FeatureToggleService.atlasCareTrialsGetStatus', function () {
       expect(FeatureToggleService.atlasCareInboundTrialsGetStatus).toHaveBeenCalled();
-    });
-  });
-
-  describe('Customer overview page', function () {
-    it('total care offers quantity should not be greater then 50 when cvcAsCdcFeatureToggle is enabled', function () {
-      controller.cvcAsCdcFeatureToggle = true;
-      var trailService = {
-        icon: 'icon-circle-contact-centre',
-        isSparkCare: true,
-        name: 'Care',
-        order: 5,
-        qty: 100,
-        sub: [{
-          icon: 'icon-circle-contact-centre',
-          name: 'Chat, Callback and Inbound Call',
-          offerTypes: 'CARE',
-          order: 1,
-          qty: 50,
-        }, {
-          icon: 'icon-circle-contact-centre',
-          name: 'Chat, Callback',
-          offerTypes: 'CAREVOICE',
-          order: 1,
-          qty: 50,
-        }],
-      };
-      var result = controller.getCareDetailsQuantity(trailService);
-      expect(result).toEqual(50);
-    });
-
-    it('total care offers quantity should be as it is given in trail service when cvcAsCdcFeatureToggle is disabled ', function () {
-      var trailService = {
-        icon: 'icon-circle-contact-centre',
-        isSparkCare: true,
-        name: 'Care',
-        order: 5,
-        qty: 65,
-        sub: [{
-          icon: 'icon-circle-contact-centre',
-          name: 'Chat, Callback and Inbound Call',
-          offerTypes: 'CARE',
-          order: 1,
-          qty: 30,
-        }, {
-          icon: 'icon-circle-contact-centre',
-          name: 'Chat, Callback',
-          offerTypes: 'CAREVOICE',
-          order: 1,
-          qty: 35,
-        }],
-      };
-      var result = controller.getCareDetailsQuantity(trailService);
-      expect(result).toEqual(65);
-    });
-
-    it('CARE offers quantity should be minimum of 50 and sum of CARE offers quantity + CAREVOICE offers quantity when cvcAsCdcFeatureToggle is enabled ', function () {
-      controller.cvcAsCdcFeatureToggle = true;
-      var subTrailService = [{
-        icon: 'icon-circle-contact-centre',
-        name: 'Chat, Callback and Inbound Call',
-        offerTypes: 'CARE',
-        order: 1,
-        qty: 30,
-      }, {
-        icon: 'icon-circle-contact-centre',
-        name: 'Chat, Callback',
-        offerTypes: 'CAREVOICE',
-        order: 1,
-        qty: 30,
-      }];
-      var result = controller.getCareDetailsSub(subTrailService);
-      expect(result[0].qty).toEqual(50);
-
-      var newTrailService = [{
-        icon: 'icon-circle-contact-centre',
-        name: 'Chat, Callback and Inbound Call',
-        offerTypes: 'CARE',
-        order: 1,
-        qty: 20,
-      }, {
-        icon: 'icon-circle-contact-centre',
-        name: 'Chat, Callback',
-        offerTypes: 'CAREVOICE',
-        order: 1,
-        qty: 10,
-      }];
-
-      var newResult = controller.getCareDetailsSub(newTrailService);
-      expect(newResult[0].qty).toEqual(30);
-    });
-
-    it('CAREVOICE offers data should not in subTrialPayload when cvcAsCdcFeatureToggle is enabled ', function () {
-      controller.cvcAsCdcFeatureToggle = true;
-      var subTrailService = [{
-        icon: 'icon-circle-contact-centre',
-        name: 'Chat, Callback and Inbound Call',
-        offerTypes: 'CARE',
-        order: 1,
-        qty: 30,
-      }, {
-        icon: 'icon-circle-contact-centre',
-        name: 'Chat, Callback',
-        offerTypes: 'CAREVOICE',
-        order: 1,
-        qty: 30,
-      }];
-      var result = controller.getCareDetailsSub(subTrailService);
-      expect(result.length).toEqual(1);
-      expect(result[0].offerTypes).toEqual('CARE');
     });
   });
 });

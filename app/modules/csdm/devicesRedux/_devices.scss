@@ -6,7 +6,6 @@
 @import '~@collabui/collab-ui/scss/tools/mixins/easing';
 @import '../../../styles/variables';
 
-
 .devices-redux {
 
   .ui-grid-cell:first-child,
@@ -222,7 +221,6 @@
       width: 16px;
       border: 3px solid white;
     }
-
 
     .device-status-red {
       background-color: $brand-danger;
@@ -492,7 +490,7 @@
           color: $gray-base;
           left: auto;
           right: 11px;
-          top:7px;
+          top: 7px;
           position: absolute;
         }
       }
@@ -522,7 +520,7 @@
         height: 0;
         .suggestions-dropdown {
           user-select: none;
-          position:absolute;
+          position: absolute;
           width: 430px;
           background-color: white;
           z-index: 1;
@@ -533,21 +531,33 @@
           overflow-y: auto;
 
           .active {
-            background-color: $gray-light-2;
+            background-color: $gray-light-3;
           }
-          ul {
+          .hover {
+            background-color: $gray-light-4;
+          }
+          > ul {
             margin-left: 0;
           }
-          li {
+          .group :last-child {
+            border-bottom: none;
+          }
+          .group > li {
             display: flex;
             justify-content: space-between;
             list-style: none;
+            border-bottom: 1px solid $gray-light-2;
             .field {
               min-width: 90px;
-              i {
-                margin-left: 4px;
-                margin-right: 4px;
-              }
+              margin-left: 1rem;
+              margin-right: 4px;
+            }
+            .suggestions {
+              margin-left: 0;
+              flex-grow: 2;
+            }
+            .suggestion {
+              display: flex;
             }
             .text {
               flex-grow: 2;
@@ -579,7 +589,7 @@
       color: $gray-dark-2;
       .field-descriptor {
         color: $gray-dark-1;
-        white-space:pre;
+        white-space: pre;
       }
       .collection-operator {
         color: $gray-dark-1;
@@ -624,7 +634,7 @@
 }
 
 $search-header-height: 185px;
-@media (max-width:991px) {
+@media (max-width: 991px) {
   .devices-redux .result-pane {
     .gridStyle {
       height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height}));
@@ -635,7 +645,7 @@ $search-header-height: 185px;
   }
 }
 
-@media (min-width:992px) {
+@media (min-width: 992px) {
   .devices-redux .result-pane {
     .gridStyle {
       height: calc(100vh - (#{$page-header-height} + #{$search-header-height}));
