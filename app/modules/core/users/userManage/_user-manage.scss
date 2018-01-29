@@ -10,10 +10,6 @@
   display: flex;
   flex: 1 1 auto;
 
-  h4 {
-    @include vr-spacing(mb, 0.5);
-  }
-
   .manage-modal-header {
     @include vr-spacing(mt, 2.1875);
     @include vr-spacing(pl, 0);
