@@ -400,11 +400,12 @@
       border-radius: 100%;
       border-color: transparent;
       padding: 0.4rem;
+    }
 
-      &:hover {
-        border-color: $gray-lighter;
-        color: $gray-darker;
-      }
+    .search-link:focus .icon-org-search,
+    .icon-org-search:hover {
+      border-color: $gray-lighter;
+      color: $gray-darker;
     }
 
     .cs-card:first-child {

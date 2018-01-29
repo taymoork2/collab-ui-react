@@ -8,7 +8,7 @@
   var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
   /* @ngInject */
-  function HelpdeskUserController($modal, $q, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, HybridServicesI18NService, HybridServicesClusterService, ResourceGroupService, UCCService) {
+  function HelpdeskUserController($modal, $q, $stateParams, $translate, $window, AccessibilityService, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, HybridServicesI18NService, HybridServicesClusterService, ResourceGroupService, UCCService) {
     var vm = this;
     var SUPPRESSED_STATE = {
       LOADING: 'loading',
@@ -467,7 +467,6 @@
       }
 
       vm.cardsAvailable = true;
-      angular.element('.helpdesk-details').focus();
     }
 
     function filterLog(metadataList, condnFn) {
@@ -500,15 +499,9 @@
       }
     }
 
-    function modalVisible() {
-      return $('#HelpdeskExtendedInfoDialog').is(':visible');
-    }
-
     function keyPressHandler(event) {
-      if (!modalVisible()) {
-        if (event.keyCode === KeyCodes.ESCAPE) {
-          $window.history.back();
-        }
+      if (!AccessibilityService.isVisible(AccessibilityService.MODAL) && event.keyCode === KeyCodes.ESCAPE) {
+        $window.history.back();
       }
     }
 

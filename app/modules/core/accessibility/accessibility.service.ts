@@ -18,10 +18,20 @@ export enum KeyCodes {
 }
 
 export class AccessibilityService {
+  public readonly MODAL = '.modal-content';
+
   /* @ngInject */
   constructor(
     private $timeout: ng.ITimeoutService,
   ) {}
+
+  public isVisible(locator: string, elem?: ng.IRootElementService): boolean {
+    if (_.isUndefined(elem)) {
+      return $(locator).is(':visible');
+    } else {
+      return elem!.find(locator).is(':visible');
+    }
+  }
 
   public setFocus(elem: ng.IRootElementService, identifier: string, time?: number): void {
     this.$timeout(() => {
