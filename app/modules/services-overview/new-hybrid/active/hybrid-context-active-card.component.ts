@@ -4,9 +4,16 @@ class HybridContextActiveCardController implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private Authinfo: Authinfo,
+    private FeatureToggleService,
   ) {}
 
   protected isPartnerAdmin = this.Authinfo.isCustomerLaunchedFromPartner();
+  protected hasContextServiceOnboardingFeature: boolean = false;
+
+  public $onInit() {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasContextServiceOnboarding)
+      .then(supports => this.hasContextServiceOnboardingFeature = supports);
+  }
 }
 
 export class HybridContextActiveCardComponent implements ng.IComponentOptions {
@@ -22,11 +29,12 @@ export class HybridContextActiveCardComponent implements ng.IComponentOptions {
           <div class="active-card_title" translate="servicesOverview.cards.shared.resources"></div>
           <div class="active-card_action"><a ui-sref="context-resources" translate="servicesOverview.cards.shared.viewAll"></a></div>
         </div>
-        <div class="active-card_section" ng-if="!$ctrl.isPartnerAdmin">
+        <div class="active-card_section">
           <div class="active-card_title" translate="servicesOverview.cards.shared.service"></div>
           <div class="active-card_action">
-            <a ui-sref="context-fields" translate="servicesOverview.cards.hybridContext.buttons.fields"></a><br>
-            <a ui-sref="context-fieldsets" translate="servicesOverview.cards.hybridContext.buttons.fieldsets"></a>
+            <a ui-sref="context-fields" ng-if="!$ctrl.isPartnerAdmin" translate="servicesOverview.cards.hybridContext.buttons.fields"></a><br>
+            <a ui-sref="context-fieldsets" ng-if="!$ctrl.isPartnerAdmin" translate="servicesOverview.cards.hybridContext.buttons.fieldsets"></a><br>
+            <a ui-sref="context-settings" ng-if="$ctrl.hasContextServiceOnboardingFeature" translate="servicesOverview.cards.hybridContext.buttons.settings"></a>
           </div>
         </div>
       </div>

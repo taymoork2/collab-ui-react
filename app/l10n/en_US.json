@@ -3678,6 +3678,14 @@
         "fieldMaxLimitReached": "Maximum fields in fieldset reached.",
         "fieldsetLimitReadFailed": "Unable to retrieve fieldsets limit. Refresh your browser to try again",
         "notAuthorized": "You are not authorized to manage Hybrid Context fieldsets for this organization."
+      },
+      "settingPage": {
+        "adminAuthorization": "Administrator Authorization",
+        "adminAuthorizationDescription": "Synchronize administrative permissions for your organization.",
+        "unauthorizedTooltip": "To synchronize permissions, contact an authorized administrator.",
+        "synchronize": "Synchronize",
+        "synchronizationSuccessful": "Administration permissions synchronized successfully.",
+        "synchronizationFailure": "Cannot synchronize administrative permissions. Try again."
       }
     }
   },
@@ -9421,7 +9429,8 @@
         "buttons": {
           "resources": "Resources",
           "fields": "Fields",
-          "fieldsets": "Fieldsets"
+          "fieldsets": "Fieldsets",
+          "settings": "Settings"
         }
       },
       "privateTrunk": {
