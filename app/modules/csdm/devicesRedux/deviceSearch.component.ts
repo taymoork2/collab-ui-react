@@ -70,12 +70,12 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
 
   public setSortOrder(field: string, order: string) {
     this.searchObject.setSortOrder(field, order);
-    this.searchChange();
+    this.searchChange(true);
   }
 
   public addToSearch(searchElement: SearchElement, toggle: boolean) {
     this.searchObject.addParsedSearchElement(searchElement, toggle);
-    this.searchChange();
+    this.searchChange(true);
   }
 
   get searchInput(): string {
@@ -84,7 +84,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
 
   set searchInput(value: string) {
     if (this.searchObject.setWorkingElementText(value)) {
-      this.searchChange();
+      this.searchChange(false);
       if (this.searchObject.hasError) {
         this.showSuggestions = false;
       } else {
@@ -107,7 +107,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
   public clearSearchInput() {
     this.searchObject.setQuery('');
     this.suggestions.updateBasedOnInput(this.searchObject);
-    this.searchChange();
+    this.searchChange(true);
   }
 
   public getSearchPlaceholder() {
@@ -132,10 +132,10 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
 
   public removeBullet(bullet: SearchElement) {
     this.searchObject.removeSearchElement(bullet);
-    this.searchChange();
+    this.searchChange(true);
   }
 
-  public searchChange() {
+  public searchChange(nodelay: boolean) {
     if (this.lastSearchObject && this.lastSearchObject.equals(this.searchObject)) {
       return;
     } else if (this.searchObject.hasError && !this.lastSearchObject) {
@@ -152,7 +152,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
       this.performSearch(searchClone); //TODO avoid at now
       this.lastSearchObject = searchClone;
       this.suggestions.onSearchChanged(this.searchObject);
-    }, DeviceSearch.SEARCH_DELAY_MS);
+    }, nodelay ? 0 : DeviceSearch.SEARCH_DELAY_MS);
   }
 
   public selectSuggestion(suggestion: ISuggestion | null) {
@@ -160,13 +160,13 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
       this.searchObject.setWorkingElementText(suggestion.searchString);
       if (suggestion.isFieldSuggestion) {
         this.searchObject.setWorkingElementText(suggestion.searchString);
-        this.searchChange();
+        this.searchChange(true);
         this.suggestions.updateBasedOnInput(this.searchObject);
         return;
       }
     }
     this.searchObject.submitWorkingElement();
-    this.searchChange();
+    this.searchChange(true);
     this.suggestions.updateBasedOnInput(this.searchObject);
   }
 
@@ -315,7 +315,9 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
 
 export interface ISearchHandler {
   addToSearch(searchElement: SearchElement, toggle: boolean);
-  searchChange();
+
+  searchChange(nodelay: boolean);
+
   setSortOrder(field?: string, order?: string);
 }
 
@@ -328,9 +330,9 @@ export class SearchInteraction implements ISearchHandler {
     }
   }
 
-  public searchChange() {
+  public searchChange(nodelay: boolean) {
     if (this.receiver) {
-      this.receiver.searchChange();
+      this.receiver.searchChange(nodelay);
     }
   }
 

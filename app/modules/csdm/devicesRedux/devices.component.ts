@@ -78,7 +78,7 @@ export class DevicesCtrl implements ng.IComponentController {
     this.$scope.$on('$stateChangeStart', (_event, toState, toParams) => {
       if (toState.name === 'devices.search' || toState.name === 'devices') {
         this.updateSearchObjectFromUrlParam(toParams.q);
-        this.searchInteraction.searchChange();
+        this.searchInteraction.searchChange(true);
       }
     });
 
