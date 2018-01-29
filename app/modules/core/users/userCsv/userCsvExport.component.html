@@ -2,11 +2,11 @@
   <div ng-if="$ctrl.displayAsLink">
     <!-- when displayed as a link, can only export the Csv file -->
     <div ng-if="!$ctrl.isDownloading">
-      <a href="" ng-click="$ctrl.exportCsv()">{{$ctrl.asLink}}</a>
+      <p><a href="" ng-click="$ctrl.exportCsv()">{{$ctrl.asLink}}</a></p>
     </div>
     <div class="cancel" ng-if="$ctrl.isDownloading">
       <span class="icon icon-spinner"></span>
-      <a href="" translate="userManage.bulk.cancelExport" ng-click="$ctrl.cancelDownload()"></a>
+      <p><a href="" translate="userManage.bulk.cancelExport" ng-click="$ctrl.cancelDownload()"></a></p>
     </div>
   </div>
   <div ng-if="!$ctrl.displayAsLink">

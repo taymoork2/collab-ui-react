@@ -14,6 +14,11 @@
   color: $anchor-font-color;
 }
 
+.user-manage__manage-type-list-item-indent {
+  @include vr-spacing(pt, 0.5);
+  @include vr-spacing(pl, 2);
+}
+
 .user-manage {
   display: flex;
   flex: 1 1 auto;
@@ -21,23 +26,6 @@
   .modify-users-section {
     &--disabled {
       color: $gray-light-1;
-    }
-  }
-
-  .csv-export-link {
-    @include vr-spacing(pv, 0.5);
-
-    &--not-auto-assign {
-      @include vr-spacing(pl, 2);
-    }
-
-    .cancel {
-      display: inline-flex;
-
-      .icon-spinner {
-        @include vr-spacing(ml, 0.25);
-        @include vr-spacing(mr, 0.5);
-      }
     }
   }
 

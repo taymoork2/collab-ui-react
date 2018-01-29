@@ -30,12 +30,11 @@
               ng-value="umoc.ManageType.BULK"
               cs-input-label="{{::'userManage.org.bulkLabel'|translate}}"
               cs-input-help-text="{{::'userManage.org.bulkDetails'|translate: {maxUsersInCSV: umoc.maxUsersInCSV} }}">
-            <p class="csv-export-link csv-export-link--not-auto-assign">
-              <cr-user-csv-export
-                as-link="{{::'userManage.bulk.exportUserList'|translate}}"
-                use-csv-download-directive="true">
-              </cr-user-csv-export>
-            </p>
+            <cr-user-csv-export
+              class="user-manage__manage-type-list-item-indent"
+              as-link="{{::'userManage.bulk.exportUserList'|translate}}"
+              use-csv-download-directive="true">
+            </cr-user-csv-export>
           </li>
           <li class="user-manage__manage-type-list-item">
             <input cs-input type="radio"
@@ -169,11 +168,11 @@
           <h6 translate="userManage.org.bulkDetailsNew" translate-values="{maxUsersInCSV: umoc.maxUsersInCSV}"></h6>
         </cr-action-card-section>
         <cr-action-card-footer>
-          <p class="csv-export-link">
-            <cr-user-csv-export as-link="{{::'userManage.bulk.exportUserList'|translate}}" ng-click="$event.stopPropagation()"
-              use-csv-download-directive="true">
-            </cr-user-csv-export>
-          </p>
+          <cr-user-csv-export
+            as-link="{{::'userManage.bulk.exportUserList'|translate}}"
+            ng-click="$event.stopPropagation()"
+            use-csv-download-directive="true">
+          </cr-user-csv-export>
         </cr-action-card-footer>
       </cr-action-card>
       <cr-action-card ng-if="umoc.convertableUsers" ng-click="umoc.onNext(umoc.ManageType.CONVERT)">

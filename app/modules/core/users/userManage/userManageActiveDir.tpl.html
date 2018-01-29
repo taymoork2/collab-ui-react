@@ -51,12 +51,11 @@
               ng-value="umadc.ManageType.BULK"
               cs-input-label="{{::'userManage.ad.bulkLabel'|translate}}"
               cs-input-help-text="{{'userManage.ad.bulkDetails'|translate: {maxUsersInCSV: umadc.maxUsersInCSV} }}">
-            <p class="csv-export-link">
-              <cr-user-csv-export
-                as-link="{{::'userManage.bulk.exportUserList'|translate}}"
-                use-csv-download-directive="true">
-              </cr-user-csv-export>
-            </p>
+            <cr-user-csv-export
+              class="user-manage__manage-type-list-item-indent"
+              as-link="{{::'userManage.bulk.exportUserList'|translate}}"
+              use-csv-download-directive="true">
+            </cr-user-csv-export>
           </li>
           <li class="user-manage__manage-type-list-item">
             <input cs-input type="radio"
