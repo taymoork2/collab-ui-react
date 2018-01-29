@@ -123,13 +123,16 @@
           VISIT_HDS_LIST: 'Visit Hybrid Data Security Service Cluster List',
           VISIT_HDS_SETTINGS: 'Visit Hybrid Data Security Service Settings',
           VISIT_CAL_EXC_LIST: 'Visit Hybrid Calendar (Exchange) Service Cluster List',
-          VISIT_CAL_EXC_SETTINGS: 'Visit Hybrid Calendar (Exchange) Service Settings', // TODO
+          VISIT_CAL_EXC_SETTINGS: 'Visit Hybrid Calendar (Exchange) Service Settings',
           VISIT_CAL_O365_SETTINGS: 'Visit Hybrid Calendar (Office 365) Service Settings',
           VISIT_CAL_GOOG_SETTINGS: 'Visit Hybrid Calendar (Google) Service Settings',
           VISIT_CALL_LIST: 'Visit Hybrid Call Service Cluster List',
           VISIT_CALL_SETTINGS: 'Visit Hybrid Call Service Settings',
           VISIT_MEDIA_LIST: 'Visit Hybrid Media Service Cluster List',
           VISIT_MEDIA_SETTINGS: 'Visit Hybrid Media Service Settings',
+          VISIT_NODE_LIST_SETTINGS: 'Visit Hybrid Nodes List',
+          OPEN_CONNECTOR_UPGRADE_MODAL: 'Open Connector Upgrade Modal',
+          START_CONNECTOR_UPGRADE: 'Start Connector Upgrade',
         },
         persistentProperties: null,
       },
@@ -263,7 +266,7 @@
       trackUserOnboarding: trackUserOnboarding,
       trackAddUsers: trackAddUsers,
       trackCsv: trackCsv,
-      trackHSNavigation: trackHSNavigation,
+      trackHybridServiceEvent: trackHybridServiceEvent,
       trackReportsEvent: trackReportsEvent,
     };
 
@@ -495,7 +498,6 @@
       return trackEvent(eventName, properties);
     }
 
-
     /**
     * Add User Events
     */
@@ -528,11 +530,12 @@
     }
 
     /**
-     * Hybrid Services navigation
+     * Hybrid Services
      */
-    function trackHSNavigation(eventName, payload) {
+    // function trackHybridServiceEvent(eventName, payload) {
+    function trackHybridServiceEvent(eventName, payload) {
       if (!eventName) {
-        return _logError('trackHSNavigation', NO_EVENT_NAME);
+        return _logError('trackHybridServiceEvent', NO_EVENT_NAME);
       }
 
       var properties = _.extend({
@@ -561,7 +564,6 @@
     /**
     * General Error Tracking
     */
-
     function trackError(errorObj, cause) {
       var message = _.get(errorObj, 'message');
       var stack = _.get(errorObj, 'stack');
