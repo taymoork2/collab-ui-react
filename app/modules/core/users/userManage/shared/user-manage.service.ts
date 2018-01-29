@@ -1,5 +1,5 @@
 import { ManageType } from './user-manage.keys';
-import { OnboardCtrlBoundUIStates } from 'modules/core/users/userAdd/shared/onboard.store';
+import { OnboardCtrlBoundUIStates } from 'modules/core/users/shared/onboard/onboard.store';
 import { AutoAssignTemplateModel } from 'modules/core/users/shared/auto-assign-template';
 
 enum State {

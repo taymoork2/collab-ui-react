@@ -1,7 +1,7 @@
 import { AutoAssignTemplateModel, AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template';
-import { IOnboardScopeForUsersAdd, OnboardCtrlBoundUIStates } from 'modules/core/users/userAdd/shared/onboard.store';
-import OnboardService from 'modules/core/users/userAdd/shared/onboard.service';
-import OnboardStore from 'modules/core/users/userAdd/shared/onboard.store';
+import { IOnboardScopeForUsersAdd, OnboardCtrlBoundUIStates } from 'modules/core/users/shared/onboard/onboard.store';
+import OnboardService from 'modules/core/users/shared/onboard/onboard.service';
+import OnboardStore from 'modules/core/users/shared/onboard/onboard.store';
 import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 
 export class ManualAddUsersModalController implements ng.IComponentController {
