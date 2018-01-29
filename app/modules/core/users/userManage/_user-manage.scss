@@ -30,6 +30,20 @@
   }
 }
 
+.user-manage__auto-assign-title-row {
+  display: flex;
+  align-items: center;
+}
+
+.user-manage__auto-assign-title {
+  @media #{$small-only} {
+    @include vr-spacing(mr, 1);
+  }
+  @media #{$medium-up} {
+    @include vr-spacing(mr, 3);
+  }
+}
+
 .user-manage {
   display: flex;
   flex: 1 1 auto;
