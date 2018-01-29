@@ -133,12 +133,6 @@
     }
   }
 
-  .divider {
-    @include vr-spacing(mb, 0.75);
-
-    flex: 0 0 auto;
-  }
-
   &__manage-type-list-item {
     @include vr-spacing(pb, 1);
 
