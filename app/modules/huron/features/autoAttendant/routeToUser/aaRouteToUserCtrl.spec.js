@@ -2,7 +2,7 @@
 
 describe('Controller: AARouteToUserCtrl', function () {
   var $controller;
-  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, $httpBackend, HuronConfig, aaCommonService;
+  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, $httpBackend, HuronConfig, aaCommonService, AutoAttendantHybridCareService, $q;
 
   var $rootScope, $scope, UrlConfig;
 
@@ -247,7 +247,7 @@ describe('Controller: AARouteToUserCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$controller_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _$httpBackend_, _Authinfo_, _HuronConfig_, _UrlConfig_, _AACommonService_/* , _AAUserService_ */) {
+  beforeEach(inject(function (_$controller_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _$httpBackend_, _Authinfo_, _HuronConfig_, _UrlConfig_, _AutoAttendantHybridCareService_, _$q_, _AACommonService_/* , _AAUserService_ */) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
 
@@ -257,6 +257,8 @@ describe('Controller: AARouteToUserCtrl', function () {
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     aaCommonService = _AACommonService_;
+    AutoAttendantHybridCareService = _AutoAttendantHybridCareService_;
+    $q = _$q_;
 
     $httpBackend = _$httpBackend_;
     authinfo = _Authinfo_;
@@ -279,6 +281,7 @@ describe('Controller: AARouteToUserCtrl', function () {
     aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
 
     spyOn(aaCommonService, 'isHybridEnabledOnOrg').and.returnValue(true);
+    spyOn(AutoAttendantHybridCareService, 'isHybridAndEPTConfigured').and.returnValue($q.resolve(true));
 
     var listUsersUrl = UrlConfig.getScimUrl(authinfo.getOrgId()) +
       '?' + '&' + listUsersProps.attributes +
@@ -372,6 +375,7 @@ describe('Controller: AARouteToUserCtrl', function () {
     aaModel.ceInfos = null;
 
     aaUiModel[schedule] = null;
+    $q = null;
   });
 
   describe('AARouteToUser', function () {
@@ -487,11 +491,11 @@ describe('Controller: AARouteToUserCtrl', function () {
 
       $scope.$apply();
 
-      expect(controller.users[1].description).toEqual(nameNumber);
+      expect(controller.users[3].description).toEqual(nameNumber);
     });
 
     it('should show user with extension response as 404 for call free users', function () {
-      var result = 'Super Admin (spark)';
+      var result = 'Super Admin (Spark)';
       cmiCompleteUserGet.respond(404);
 
       var controller = $controller('AARouteToUserCtrl', {
@@ -505,12 +509,12 @@ describe('Controller: AARouteToUserCtrl', function () {
       $httpBackend.flush();
 
       $scope.$apply();
-      expect(controller.users.length).toEqual(4);
-      expect(controller.users[0].description).toEqual(result);
+      expect(controller.users.length).toEqual(10);
+      expect(controller.users[3].description).toEqual(result);
     });
 
     it('should show user email id when dispalyName, firstname and lasname are empty', function () {
-      var result = 'user@gmail.com (spark)';
+      var result = 'user@gmail.com (Spark)';
       cmiCompleteUserGet.respond(404);
 
       var controller = $controller('AARouteToUserCtrl', {
@@ -524,12 +528,12 @@ describe('Controller: AARouteToUserCtrl', function () {
       $httpBackend.flush();
 
       $scope.$apply();
-      expect(controller.users.length).toEqual(4);
-      expect(controller.users[2].description).toEqual(result);
+      expect(controller.users.length).toEqual(10);
+      expect(controller.users[8].description).toEqual(result);
     });
 
     it('should show user lastname when dispalyName and firstName is empty', function () {
-      var result = 'Super Admin (spark)';
+      var result = 'Super Admin (Spark)';
       cmiCompleteUserGet.respond(404);
 
       var controller = $controller('AARouteToUserCtrl', {
@@ -543,28 +547,62 @@ describe('Controller: AARouteToUserCtrl', function () {
       $httpBackend.flush();
 
       $scope.$apply();
-      expect(controller.users.length).toEqual(4);
-      expect(controller.users[0].description).toEqual(result);
+      expect(controller.users.length).toEqual(10);
+      expect(controller.users[3].description).toEqual(result);
     });
 
-
-    it('when user has selected route to voicemail and extension response is 404, it should omit that user', function () {
-      $scope.voicemail = true;
+    it('should show hybrid user with extension when phoneNumbers exist in response', function () {
+      var result = 'AlanHybrid Geller (9999)';
       cmiCompleteUserGet.respond(404);
+
       var controller = $controller('AARouteToUserCtrl', {
         $scope: $scope,
       });
 
-      // user with both display name and extension should have both
-
       controller.sort.fullLoad = 8;
-      controller.sort.minOffered = 1;
+
       controller.getUsers();
+
       $httpBackend.flush();
 
       $scope.$apply();
+      expect(controller.users[1].description).toEqual(result);
+    });
 
-      expect(controller.users.length).toEqual(0);
+    it('should show hybrid user email when displayName is same as email in response and extension does not exist', function () {
+      var result = 'user@gmail.com';
+      cmiCompleteUserGet.respond(404);
+
+      var controller = $controller('AARouteToUserCtrl', {
+        $scope: $scope,
+      });
+
+      controller.sort.fullLoad = 8;
+
+      controller.getUsers();
+
+      $httpBackend.flush();
+
+      $scope.$apply();
+      expect(controller.users[7].description).toEqual(result);
+    });
+
+    it('should show hybrid user firstName lastName along with email, when user displayName does not exist and type and work are undefined in response', function () {
+      var result = 'Sam Will (user@gmail.com)';
+      cmiCompleteUserGet.respond(404);
+
+      var controller = $controller('AARouteToUserCtrl', {
+        $scope: $scope,
+      });
+
+      controller.sort.fullLoad = 8;
+
+      controller.getUsers();
+
+      $httpBackend.flush();
+
+      $scope.$apply();
+      expect(controller.users[2].description).toEqual(result);
     });
 
     describe('activate', function () {
@@ -621,7 +659,7 @@ describe('Controller: AARouteToUserCtrl', function () {
         menuEntry.addAction(actionEntry);
         aaUiModel[schedule].entries[0].addEntry(menuEntry);
 
-        cmiCompleteUserGet.respond(404);
+        cmiCompleteUserGet.respond(500);
 
         var controller = $controller('AARouteToUserCtrl', {
           $scope: $scope,
