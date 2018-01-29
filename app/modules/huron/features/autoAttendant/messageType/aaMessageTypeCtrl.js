@@ -240,7 +240,9 @@
 
     function createDynamicValues(action) {
       _.forEach(action.dynamicList, function (opt) {
-        var model = {}; var sayValue = ''; if (!_.isUndefined(opt.say) && !_.isEmpty(opt.say.value)) {
+        var model = {};
+        var sayValue = '';
+        if (!_.isUndefined(opt.say) && !_.isEmpty(opt.say.value)) {
           sayValue = opt.say.value;
         }
         if (!opt.isDynamic && _.isEmpty(opt.htmlModel)) {
