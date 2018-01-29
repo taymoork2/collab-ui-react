@@ -49,10 +49,10 @@ As noted in the [aria-label](#aria-label-and-screen-readers) section, tooltips a
 Examples:
 ```html
 <i class="icon info-icon"
-  tooltip="{{::'tooltip.demo | translate}}"
+  tooltip="{{::'tooltip.demo' | translate}}"
   tooltip-trigger="focus mouseenter"
   tabindex="0"
-  aria-label="{{::'tooltip.demo | translate}}"></i>
+  aria-label="{{::'tooltip.demo' | translate}}"></i>
 ```
 or
 ```html

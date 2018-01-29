@@ -8,7 +8,9 @@ export class DirsyncRowController {
   public connectors: any[] = [];
 
   /* @ngInject */
-  public constructor() {}
+  public constructor(
+    private $translate: ng.translate.ITranslateService,
+  ) {}
 
   public $onInit() {
     this.connectors = _.map(this.dirsync.connectors, (connector: IDirectoryConnector) => {
@@ -22,6 +24,10 @@ export class DirsyncRowController {
 
   public get domainName(): string {
     return _.get(this.dirsync, 'domains[0].domainName'); // should only be one domain per dirsync site
+  }
+
+  public getTooltip(connector: IDirectoryConnector): string {
+    return connector.isInService ?  this.$translate.instant('globalSettings.multiDirsync.pcOnline') :  this.$translate.instant('globalSettings.multiDirsync.pcOffline');
   }
 
   public deactivateConnector(connector: IDirectoryConnector): void {
