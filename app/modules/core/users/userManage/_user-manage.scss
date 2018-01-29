@@ -1,4 +1,5 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/media';
 @import '~@collabui/collab-ui/scss/settings/typography';
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
@@ -19,6 +20,16 @@
   @include vr-spacing(pl, 2);
 }
 
+.user-manage__modify-users-title {
+  @include vr-spacing(mb, 1.5);
+}
+
+.user-manage__row > .columns {
+  @media #{$small-only} {
+    @include vr-spacing(mb, 1);
+  }
+}
+
 .user-manage {
   display: flex;
   flex: 1 1 auto;
@@ -29,12 +40,6 @@
 
   .row.no-flex {
     flex: 0 0 auto;
-  }
-
-  form {
-    .columns {
-      @include vr-spacing(mb, 1);
-    }
   }
 
   .sync-status {
