@@ -2796,6 +2796,9 @@
               },
             },
           })
+          .state('devices.search', {
+            url: '/search/:q',
+          })
           .state('devices-redux', {
             url: '/devices-redux',
             template: '<devices-redux></devices-redux>',

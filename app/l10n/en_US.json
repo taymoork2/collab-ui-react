@@ -2225,6 +2225,8 @@
     "saving": "Saving...",
     "errorAddr": "The address you entered is invalid, please try again.",
     "failedToDelete": "Failed to delete device. Reason:",
+    "searchLinkExpired": "The search link has expired.",
+    "searchLinkBad": "The search link is invalid.",
     "deviceAccess": "Device Access",
     "remoteAccessKey": {
       "ciscoSupport": "Cisco Support",
