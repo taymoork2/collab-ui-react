@@ -6,32 +6,19 @@
   margin: auto;
 }
 
+.user-manage__text--margin {
+  @include vr-spacing(mt, 0.75);
+}
+
+.user-manage__heading--link:not(:hover):not(:focus) {
+  color: $anchor-font-color;
+}
+
 .user-manage {
   display: flex;
   flex: 1 1 auto;
 
-  .manage-modal-header {
-    @include vr-spacing(mt, 2.1875);
-    @include vr-spacing(pl, 0);
-  }
-
-  .manage-modal-label {
-    @include vr-spacing(mt, 2.6875);
-  }
-
-  .manage-modal-detail {
-    @include vr-spacing(mt, 0.75);
-
-    &--link {
-      color: $color-blue-base;
-    }
-  }
-
   .modify-users-section {
-    &--details-link:not(:hover):not(:focus) {
-      color: $anchor-font-color;
-    }
-
     &--disabled {
       color: $gray-light-1;
     }
