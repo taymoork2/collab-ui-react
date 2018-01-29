@@ -29,6 +29,8 @@ export interface ISuggestionDropdown {
   updateSuggestionsBasedOnSearchResult(searchResult: SearchResult | undefined,
                                        searchObject: SearchObject): void;
 
+  setInitialSearchResult(searchResult: SearchResult | undefined);
+
   onSearchChanged(searchObject: SearchObject): void;
 }
 
@@ -192,6 +194,10 @@ export class SuggestionDropdown implements ISuggestionDropdown {
       activeSelection.setActiveByKeyboard(true);
       firstGroup.setActiveByKeyboard(true);
     }
+  }
+
+  public setInitialSearchResult(searchResult: SearchResult | undefined) {
+    this.initialSearchResult = searchResult || this.initialSearchResult;
   }
 
   public updateSuggestionsBasedOnSearchResult(searchResult: SearchResult,
