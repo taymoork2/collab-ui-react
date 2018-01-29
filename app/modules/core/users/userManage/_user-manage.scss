@@ -2,13 +2,8 @@
 @import '~@collabui/collab-ui/scss/settings/typography';
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
-.modal-content .center-spinner {
-  height: 100%;
-
-  .icon {
-    top: 50%;
-    left: 50%;
-  }
+.user-manage-picker__center-spinner {
+  margin: auto;
 }
 
 .modal-usermanage-dialog {

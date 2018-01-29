@@ -972,8 +972,7 @@
           ///////////////////////////
           .state('users.manage.picker', {
             controller: 'UserManageModalPickerController',
-            template: '<div class="center-spinner">' +
-              '<i class="icon icon-spinner icon-2x"></i></div>',
+            template: '<div class="user-manage-picker__center-spinner"><i class="icon icon-spinner icon-5x"></i></div>',
           })
           .state('users.manage', {
             abstract: true,
