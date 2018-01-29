@@ -455,7 +455,7 @@ require('./helpdesk.scss');
     }
 
     function keyPressHandler(event) {
-      if (!AccessibilityService.modalVisible()) {
+      if (!AccessibilityService.isVisible(AccessibilityService.MODAL)) {
         var S = 83;
         var activeElement = $element.find(event.target);
         var inputFieldHasFocus = activeElement[0]['id'] === 'searchInput';

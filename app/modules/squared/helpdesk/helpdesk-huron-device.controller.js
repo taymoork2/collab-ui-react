@@ -51,7 +51,7 @@
     }
 
     function keyPressHandler(event) {
-      if (!AccessibilityService.modalVisible() && event.keyCode === KeyCodes.ESCAPE) {
+      if (!AccessibilityService.isVisible(AccessibilityService.MODAL) && event.keyCode === KeyCodes.ESCAPE) {
         $window.history.back();
       }
     }

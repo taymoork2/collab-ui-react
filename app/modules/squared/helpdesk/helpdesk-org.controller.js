@@ -254,7 +254,7 @@
     }
 
     function keyPressHandler(event) {
-      if (!AccessibilityService.modalVisible()) {
+      if (!AccessibilityService.isVisible(AccessibilityService.MODAL)) {
         switch (event.keyCode) {
           case KeyCodes.ESCAPE:
             $window.history.back();
