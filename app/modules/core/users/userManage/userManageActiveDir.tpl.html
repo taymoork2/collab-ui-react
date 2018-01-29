@@ -4,75 +4,73 @@
 </div>
 
 <div class="modal-body user-manage">
-  <div class="sync-container">
-    <div class="row collapse sync-status sync-top">
-      <div class="columns medium-5">
-        <h4 translate="userManage.ad.adLabel"></h4>
-      </div>
-      <div class="ds-sync columns medium-7">
-        <i class="working icon icon-circle"></i>
-        <div class="details">
-          <h6 translate="userManage.ad.adStatus"></h6>
-          <p translate="userManage.ad.adStatusDetails"></p>
-          <a href class="p"
-            ng-if="!umadc.isUserAdmin()"
-            ng-click="umadc.onTurnOffDS()"
-            translate="userManage.ad.turnOffDS"
-            tooltip="{{::'userManage.ad.turnOffDSToolTip'|translate}}"
-            tooltip-placement="bottom"
-            tooltip-trigger="mouseover focus"
-            aria-label="{{:: 'userManage.ad.turnOffDS' | translate}} {{::'userManage.ad.turnOffDSToolTip' | translate}}"
-            tabindex="0"></a>
-        </div>
+  <div class="row collapse sync-status">
+    <div class="columns medium-5">
+      <h4 translate="userManage.ad.adLabel"></h4>
+    </div>
+    <div class="ds-sync columns medium-7">
+      <i class="working icon icon-circle"></i>
+      <div class="details">
+        <h6 translate="userManage.ad.adStatus"></h6>
+        <p translate="userManage.ad.adStatusDetails"></p>
+        <a href class="p"
+          ng-if="!umadc.isUserAdmin()"
+          ng-click="umadc.onTurnOffDS()"
+          translate="userManage.ad.turnOffDS"
+          tooltip="{{::'userManage.ad.turnOffDSToolTip'|translate}}"
+          tooltip-placement="bottom"
+          tooltip-trigger="mouseover focus"
+          aria-label="{{:: 'userManage.ad.turnOffDS' | translate}} {{::'userManage.ad.turnOffDSToolTip' | translate}}"
+          tabindex="0"></a>
       </div>
     </div>
-    <hr>
-    <form name="userModifyUsersForm" class="row collapse">
-      <div class="columns medium-5">
-        <h4 translate="userManage.ad.typeLabel"></h4>
-        <p translate="userManage.ad.typeInstructions"></p>
-      </div>
-      <div class="columns medium-7">
-        <div class="cs-radio-group">
-          <ul>
-            <li class="user-manage__manage-type-list-item">
-              <input cs-input type="radio"
-                ng-model="umadc.manageType"
-                id="ad-manual"
-                name="manageUsers"
-                ng-value="umadc.ManageType.MANUAL"
-                cs-input-label="{{::'userManage.ad.manualLabel'|translate}}"
-                cs-input-help-text="{{'userManage.ad.manualDetails'|translate: {maxUsersInManual: umadc.maxUsersInManual} }}">
-            </li>
-            <li class="user-manage__manage-type-list-item">
-              <input cs-input type="radio"
-                ng-model="umadc.manageType"
-                id="ad-bulk"
-                name="manageUsers"
-                ng-value="umadc.ManageType.BULK"
-                cs-input-label="{{::'userManage.ad.bulkLabel'|translate}}"
-                cs-input-help-text="{{'userManage.ad.bulkDetails'|translate: {maxUsersInCSV: umadc.maxUsersInCSV} }}">
-              <p class="csv-export-link">
-                <cr-user-csv-export
-                  as-link="{{::'userManage.bulk.exportUserList'|translate}}"
-                  use-csv-download-directive="true">
-                </cr-user-csv-export>
-              </p>
-            </li>
-            <li class="user-manage__manage-type-list-item">
-              <input cs-input type="radio"
-                ng-model="umadc.manageType"
-                id="ad-advanced"
-                name="manageUsers"
-                ng-value="umadc.ManageType.ADVANCED_DS"
-                cs-input-label="{{::'userManage.ad.advancedLabel'|translate}}"
-                cs-input-help-text="{{::'userManage.ad.advancedDetails'|translate}}">
-            </li>
-          </ul>
-        </div>
-      </div>
-    </form>
   </div>
+  <hr>
+  <form name="userModifyUsersForm" class="row collapse">
+    <div class="columns medium-5">
+      <h4 translate="userManage.ad.typeLabel"></h4>
+      <p translate="userManage.ad.typeInstructions"></p>
+    </div>
+    <div class="columns medium-7">
+      <div class="cs-radio-group">
+        <ul>
+          <li class="user-manage__manage-type-list-item">
+            <input cs-input type="radio"
+              ng-model="umadc.manageType"
+              id="ad-manual"
+              name="manageUsers"
+              ng-value="umadc.ManageType.MANUAL"
+              cs-input-label="{{::'userManage.ad.manualLabel'|translate}}"
+              cs-input-help-text="{{'userManage.ad.manualDetails'|translate: {maxUsersInManual: umadc.maxUsersInManual} }}">
+          </li>
+          <li class="user-manage__manage-type-list-item">
+            <input cs-input type="radio"
+              ng-model="umadc.manageType"
+              id="ad-bulk"
+              name="manageUsers"
+              ng-value="umadc.ManageType.BULK"
+              cs-input-label="{{::'userManage.ad.bulkLabel'|translate}}"
+              cs-input-help-text="{{'userManage.ad.bulkDetails'|translate: {maxUsersInCSV: umadc.maxUsersInCSV} }}">
+            <p class="csv-export-link">
+              <cr-user-csv-export
+                as-link="{{::'userManage.bulk.exportUserList'|translate}}"
+                use-csv-download-directive="true">
+              </cr-user-csv-export>
+            </p>
+          </li>
+          <li class="user-manage__manage-type-list-item">
+            <input cs-input type="radio"
+              ng-model="umadc.manageType"
+              id="ad-advanced"
+              name="manageUsers"
+              ng-value="umadc.ManageType.ADVANCED_DS"
+              cs-input-label="{{::'userManage.ad.advancedLabel'|translate}}"
+              cs-input-help-text="{{::'userManage.ad.advancedDetails'|translate}}">
+          </li>
+        </ul>
+      </div>
+    </div>
+  </form>
 </div>
 
 <div class="modal-footer">

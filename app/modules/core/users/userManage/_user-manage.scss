@@ -24,16 +24,6 @@
     }
   }
 
-  .sync-container {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
-
-    .sync-top {
-      max-height: 20rem;
-    }
-  }
-
   .csv-export-link {
     @include vr-spacing(pv, 0.5);
 
