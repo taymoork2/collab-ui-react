@@ -893,7 +893,6 @@
       _.set(initResults, 'sparkBoardTrial.enabled', results.atlasDarling);
       _.set(initResults, 'webexTrial.enabled', true);
       _.set(initResults, 'meetingTrial.enabled', true);
-      _.set(initResults, 'callTrial.enabled', hasCallEntitlement);
       _.set(initResults, 'messageTrial.enabled', true);
       _.set(initResults, 'roomSystemTrial.details.quantity', stateDefaults.roomSystemsDefault);
       _.set(initResults, 'sparkBoardTrial.details.quantity', stateDefaults.sparkBoardDefault);
