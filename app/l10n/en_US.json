@@ -7625,6 +7625,7 @@
     "evaSpaceDetailsTextOneSpace": ", your Expert Virtual Assistant, is in 1 Expert Space in Cisco Spark:",
     "evaDefaultName": "EVA",
     "customerInfoToggleTooltipMessage": "This screen is required for this template and cannot be disabled.",
+    "agentUnavailableToggleTooltipMessage": "You are escalating to experts only, so Agent Unavailability configuration is not required. To enable escalation to agents, edit your Chat Escalation Behavior setting.",
     "virtualAssistantToggleTooltipMessage": "Configure a Customer Virtual Assistant from the Features page before you enable this. You can also configure your assistant and enable this feature at a later time.",
     "getVirtualAssistantListError": "Error in getting list of configured virtual assistant.",
     "virtualAssistantSelector": "Customer Virtual Assistant",

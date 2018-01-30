@@ -70,6 +70,7 @@
     vm.evaLearnMoreLink = 'https://www.cisco.com/go/create-template';
     vm.evaSpaceTooltipData = '';
     vm.isExpertEscalationSelected = isExpertEscalationSelected;
+    vm.isExpertOnlyEscalationSelected = isExpertOnlyEscalationSelected;
     vm.setRequiredValue = setRequiredValue;
     vm.checkIfTypeCategory = checkIfTypeCategory;
     vm.isPopoverActive = false;
@@ -1391,6 +1392,12 @@
           _.includes(SunlightConstantsService.evaOptions, vm.template.configuration.routingLabel);
     }
 
+    function isExpertOnlyEscalationSelected() {
+      // if eva is configured AND escalation to agent is not selected
+      return vm.evaConfig.isEvaFlagEnabled && vm.evaConfig.isEvaConfigured && vm.template.configuration.routingLabel &&
+        vm.template.configuration.routingLabel === SunlightConstantsService.routingLabels.EXPERT;
+    }
+
     function checkIfTypeCategory(attributes) {
       var isCategoryType = _.find(attributes, function (attribute) {
         return (attribute.name === 'type' && attribute.value.id === 'category');
@@ -1433,6 +1440,13 @@
         case vm.mediaTypes.chat: setRequiredValueChat(radioButtonValue); break;
         case vm.mediaTypes.chatPlusCallback: setRequiredValueChatPlusCallback(radioButtonValue); break;
       }
+      var agentEnabled = true;
+      if (isExpertOnlyEscalationSelected()) {
+        agentEnabled = false;
+      }
+      var agentPageDisabled = vm.template.configuration.pages['agentUnavailable'];
+      agentPageDisabled.enabled = agentEnabled;
+      vm.template.configuration.pages['agentUnavailable'] = agentPageDisabled;
     }
 
     vm.isInputValid = function (input) {
@@ -1904,9 +1918,9 @@
 
     function shouldShowOverviewPageTooltip(cardName) {
       switch (vm.selectedMediaType) {
-        case 'chat': return ((cardName === 'virtualAssistant') && !vm.hasConfiguredVirtualAssistantServices);
+        case 'chat': return ((cardName === 'agentUnavailable' && isExpertOnlyEscalationSelected()) || ((cardName === 'virtualAssistant') && !vm.hasConfiguredVirtualAssistantServices));
         case 'callback': return (cardName === 'customerInformation');
-        case 'chatPlusCallback': return ((cardName === 'customerInformationCallback') || ((cardName === 'virtualAssistant') && !vm.hasConfiguredVirtualAssistantServices));
+        case 'chatPlusCallback': return ((cardName === 'agentUnavailable' && isExpertOnlyEscalationSelected()) || (cardName === 'customerInformationCallback') || ((cardName === 'virtualAssistant') && !vm.hasConfiguredVirtualAssistantServices));
         default: return false;
       }
     }
@@ -1914,6 +1928,7 @@
     // used in conjunction with shouldShowOverviewPageTooltip
     function overviewPageTooltipText(cardName) {
       switch (cardName) {
+        case 'agentUnavailable': return $translate.instant('careChatTpl.agentUnavailableToggleTooltipMessage');
         case 'customerInformation':
         case 'customerInformationCallback': return $translate.instant('careChatTpl.customerInfoToggleTooltipMessage');
         case 'virtualAssistant': return $translate.instant('careChatTpl.virtualAssistantToggleTooltipMessage');
