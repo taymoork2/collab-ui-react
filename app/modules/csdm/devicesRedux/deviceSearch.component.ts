@@ -44,6 +44,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
               private Notification,
               private $timeout: ng.ITimeoutService,
               private DeviceSearchTranslator: SearchTranslator,
+              private Analytics,
               private CsdmUpgradeChannelService) {
     const upgradeChannelsAvailable = this.CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(channels => {
       return channels.length > 1;
@@ -165,7 +166,11 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     }, nodelay ? 0 : DeviceSearch.SEARCH_DELAY_MS);
   }
 
-  public selectSuggestion(suggestion: ISuggestion | null) {
+  public selectSuggestion(suggestion: ISuggestion | null, byMouse: boolean) {
+    this.trackSuggestionAction(byMouse
+      ? this.Analytics.sections.DEVICE_SEARCH.eventNames.SUGGESTION_PICKED_BY_MOUSE
+      : this.Analytics.sections.DEVICE_SEARCH.eventNames.SUGGESTION_PICKED_BY_KEYBOARD,
+      suggestion);
     if (suggestion) {
       this.searchObject.setWorkingElementText(suggestion.searchString);
       if (suggestion.isFieldSuggestion) {
@@ -215,7 +220,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
           break;
         case KeyCodes.ENTER:
           if (!this.searchObject.hasError) {
-            this.selectSuggestion(this.suggestions.getActiveSuggestionByKeyboard());
+            this.selectSuggestion(this.suggestions.getActiveSuggestionByKeyboard(), false);
           }
       }
     }
@@ -273,6 +278,34 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
         this.isSearching = false;
         DeviceSearch.ShowSearchError(this.Notification, e.data && e.data.trackingId);
       }
+    });
+    this.trackSearchAction(caller === Caller.aggregator
+      ? this.Analytics.sections.DEVICE_SEARCH.eventNames.INITIAL_SEARCH
+      : this.Analytics.sections.DEVICE_SEARCH.eventNames.PERFORM_SEARCH,
+      search);
+  }
+
+  private trackSuggestionAction(trackingEventName: string, suggestion: ISuggestion | null) {
+    if (!suggestion) {
+      return;
+    }
+    this.Analytics.trackEvent(trackingEventName, {
+      suggestion_field: suggestion.field || 'ANY_FIELD',
+      suggestion_length: (suggestion.searchString || '').length,
+      suggestion_rank: suggestion.rank,
+      suggestion_count: suggestion.count,
+      suggestion_field_only: suggestion.isFieldSuggestion,
+    });
+  }
+
+  private trackSearchAction(trackingEventName: string, search: SearchObject) {
+    if (!search) {
+      return;
+    }
+    const query = search.getTranslatedQueryString(null) || '';
+    this.Analytics.trackEvent(trackingEventName, {
+      query_length: query.length,
+      query_error: search.hasError,
     });
   }
 
