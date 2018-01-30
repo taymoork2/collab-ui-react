@@ -116,6 +116,12 @@
 
   .card-header {
     height: rem-calc(110);
+
+    .icon-color {
+      color: $gray-light;
+      line-height: 2;
+      padding-right: .5rem;
+    }
   }
 
   .card-footer {

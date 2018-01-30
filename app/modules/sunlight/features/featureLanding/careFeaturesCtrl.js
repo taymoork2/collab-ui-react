@@ -12,12 +12,13 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     });
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, $rootScope, AutoAttendantCeInfoModelService, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, CvaService, EvaService, FeatureToggleService) {
+  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, $rootScope, AutoAttendantCeInfoModelService, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, CvaService, EvaService, FeatureToggleService, HuronFeaturesListService) {
+
     var vm = this;
     vm.isVirtualAssistantEnabled = $state.isVirtualAssistantEnabled;
     vm.isExpertVirtualAssistantEnabled = $state.isExpertVirtualAssistantEnabled;
     vm.init = init;
-    vm.getCeList = getCeList;
+
     var pageStates = {
       newFeature: 'NewFeature',
       showFeatures: 'ShowFeatures',
@@ -29,6 +30,8 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     var listOfEvaFeatures = [];
     var listOfNonVaFeatures = [];
     var featureToBeDeleted = {};
+    var listOfAAFeatures = [];
+
     vm.searchData = searchData;
     vm.deleteCareFeature = deleteCareFeature;
     vm.deleteCareFeatureKeypress = deleteCareFeatureKeypress;
@@ -48,6 +51,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     vm.placeholder = {
       name: 'Search',
     };
+    vm.aaModel = {};
     vm.filterText = '';
     vm.template = null;
     vm.openNewCareFeatureModal = openNewCareFeatureModal;
@@ -118,21 +122,34 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     }
 
     /**
-     * Function to get Ce info so that getAAModel() can gets its value to proceed
-     * further in aaBuilder under care features.
+     * Function to push the AutoAttendant feature into the features list if 
+     * Hybrid is enabled. 
      */
-    function getCeList() {
-      FeatureToggleService.supports(FeatureToggleService.features.atlasHybridEnable).then(function (results) {
+    function setupHybridFeatures() {
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridEnable).then(function (results) {
         if (results) {
-          AutoAttendantCeInfoModelService.getCeInfosList();
+          vm.features.push({
+            name: 'AA',
+            getFeature: function () {
+              return AutoAttendantCeInfoModelService.getCeInfosList();
+            },
+            formatter: HuronFeaturesListService.autoAttendants,
+            isEmpty: false,
+            i18n: 'huronFeatureDetails.aaName',
+            color: 'primary',
+            badge: 'primary',
+            data: [],
+          });
+
+          vm.filters.push({
+            name: $translate.instant('autoAttendant.title'),
+            filterValue: CareFeatureList.filterConstants.autoAttendant,
+          });
         }
       });
     }
-    init();
 
-    function init() {
-      vm.getCeList();
-      vm.pageState = pageStates.loading;
+    function settingFeatures() {
       var featuresPromises = getListOfFeatures();
 
       handleFeaturePromises(featuresPromises);
@@ -149,9 +166,12 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
             case 'expertVirtualAssistant':
               listOfEvaFeatures = listOfEvaFeatures.concat(vm.features[i].data);
               break;
+            case 'AA':
+              listOfAAFeatures = listOfAAFeatures.concat(vm.features[i].data);
+              break;
             default:
               listOfNonVaFeatures = listOfNonVaFeatures.concat(vm.features[i].data);
-              break;
+             break;
           }
         }
         generateTemplateCountAndSpaceUsage();
@@ -167,6 +187,18 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
       } else if (!vm.hasMessage) {
         vm.tooltip = $translate.instant('sunlightDetails.licensesMissing.messageOnly');
       }
+    }
+
+    init();
+
+    function init() {
+      vm.pageState = pageStates.loading;
+      setupHybridFeatures().then(function () {
+        settingFeatures();
+      })
+        .catch(function () {
+          settingFeatures();
+        });
     }
 
     /**
@@ -264,6 +296,11 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
         feature.data = list;
         feature.isEmpty = false;
 
+        // Adding AutoAttedant as a new feature.
+        if (feature.name === 'AA') {
+          vm.aaModel = data;
+        }
+
         if (feature.name === 'expertVirtualAssistant') {
           _.forEach(feature.data, function (eva, index) {
             return EvaService.getExpertAssistantSpaces(eva.id)
@@ -337,32 +374,40 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     }
 
     vm.editCareFeature = function (feature, $event) {
-      $event.stopImmediatePropagation();
-      if (feature.featureType === EvaService.evaServiceCard.id) {
-        EvaService.getExpertAssistant(feature.templateId).then(function (template) {
-          EvaService.evaServiceCard.goToService($state, {
+      if (feature.filterValue === 'AA') {
+        $rootScope.isCare = true;
+        vm.aaModel.aaName = feature.cardName;
+        $state.go('huronfeatures.aabuilder', {
+          aaName: vm.aaModel.aaName,
+        });
+      } else {
+        $event.stopImmediatePropagation();
+        if (feature.featureType === EvaService.evaServiceCard.id) {
+          EvaService.getExpertAssistant(feature.templateId).then(function (template) {
+            EvaService.evaServiceCard.goToService($state, {
+              isEditFeature: true,
+              template: template,
+            });
+          });
+          return;
+        }
+        if (feature.featureType === CvaService.cvaServiceCard.id) {
+          CvaService.getConfig(feature.templateId).then(function (template) {
+            CvaService.cvaServiceCard.goToService($state, {
+              isEditFeature: true,
+              template: template,
+            });
+          });
+          return;
+        }
+        CareFeatureList.getTemplate(feature.templateId).then(function (template) {
+          $state.go('care.setupAssistant', {
             isEditFeature: true,
             template: template,
+            type: template.configuration.mediaType,
           });
         });
-        return;
       }
-      if (feature.featureType === CvaService.cvaServiceCard.id) {
-        CvaService.getConfig(feature.templateId).then(function (template) {
-          CvaService.cvaServiceCard.goToService($state, {
-            isEditFeature: true,
-            template: template,
-          });
-        });
-        return;
-      }
-      CareFeatureList.getTemplate(feature.templateId).then(function (template) {
-        $state.go('care.setupAssistant', {
-          isEditFeature: true,
-          template: template,
-          type: template.configuration.mediaType,
-        });
-      });
     };
 
     function userHasAccess(feature) {
@@ -380,11 +425,23 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
       $event.preventDefault();
       $event.stopImmediatePropagation();
       featureToBeDeleted = feature;
-      $state.go('care.Features.DeleteFeature', {
-        deleteFeatureName: feature.name,
-        deleteFeatureId: feature.templateId,
-        deleteFeatureType: feature.featureType,
-      });
+      if (feature.hasDepends) {
+        Notification.error('huronFeatureDetails.aaDeleteBlocked', {
+          aaNames: feature.dependsNames.join(', '),
+        });
+        return;
+      }
+
+      /* Checking if feature has cardName then the feature is
+       * AutoAttedant otherwise its a Customer Support template.
+       */
+      if (_.has(feature, 'cardName')) {
+        $state.go('huronfeatures.deleteFeature', {
+          deleteFeatureName: feature.cardName,
+          deleteFeatureId: feature.id,
+          deleteFeatureType: feature.filterValue,
+        });
+      }
     }
 
     function deleteCareFeatureKeypress(feature, $event) {
@@ -414,6 +471,18 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
           break;
       }
     }
+
+    /** Getting the details of the all the dependant AA's */
+    vm.detailsHuronFeature = function (feature, $event) {
+      $event.preventDefault();
+      $event.stopImmediatePropagation();
+      $state.go('huronfeatures.aaListDepends', {
+        detailsFeatureName: feature.cardName,
+        detailsFeatureId: feature.id,
+        detailsFeatureType: feature.filterValue,
+        detailsDependsList: feature.dependsNames,
+      });
+    };
 
     function spacesInUseText(feature) {
       var numOfSpaces = _.get(feature, 'spaces.length', 0);
@@ -449,6 +518,34 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
       featureToBeDeleted = {};
       if (listOfAllFeatures.length === 0) {
         vm.pageState = pageStates.newFeature;
+      }
+    });
+
+    /** list is updated by deleting an Auto Attendant from care feature landing page */
+    $scope.$on('HURON_FEATURE_DELETED', function () {
+      listOfAllFeatures.splice(listOfAllFeatures.indexOf(featureToBeDeleted), 1);
+
+      if (featureToBeDeleted.filterValue === 'AA' && featureToBeDeleted.hasReferences) {
+        _.forEach(featureToBeDeleted.referenceNames, function (ref) {
+          var cardToRefresh = _.find(listOfAllFeatures, function (feature) {
+            return feature.cardName === ref;
+          });
+          if (!_.isUndefined(cardToRefresh)) {
+            cardToRefresh.dependsNames.splice(cardToRefresh.dependsNames.indexOf(featureToBeDeleted.cardName), 1);
+            if (cardToRefresh.dependsNames.length === 0) {
+              cardToRefresh.hasDepends = false;
+            }
+          }
+        });
+      }
+
+      vm.filteredListOfFeatures = listOfAllFeatures;
+      featureToBeDeleted = {};
+      if (listOfAllFeatures.length === 0) {
+        vm.pageState = pageStates.newFeature;
+      }
+      if (vm.filterText) {
+        searchData(vm.filterText);
       }
     });
 

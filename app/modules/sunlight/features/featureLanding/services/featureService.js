@@ -10,6 +10,7 @@
     var filterConstants = {
       customerSupport: 'customerSupport',
       virtualAssistant: 'virtualAssistant',
+      autoAttendant: 'AA',
       all: 'all',
     };
     var service = {
@@ -70,9 +71,13 @@
     function filterCards(list, filterValue, filterText) {
       var filterStringProperties = [
         'name',
+        'cardName',
       ];
 
       var filteredList = _.filter(list, function (feature) {
+        if (feature.mediaType && filterValue === filterConstants.autoAttendant) {
+          return false;
+        }
         if (filterValue === filterConstants.customerSupport && feature.mediaType === filterConstants.virtualAssistant) {
           //if the filter selected is support virtual assistant templates should not be displayed
           return false;
@@ -82,7 +87,7 @@
           return false;
         }
         if (filterValue !== filterConstants.customerSupport && filterValue !== filterConstants.virtualAssistant
-          && filterValue !== filterConstants.all) {
+          && filterValue !== filterConstants.autoAttendant && filterValue !== filterConstants.all) {
           //if the filter value is not any of the valid values templates should not be displayed
           return false;
         }
@@ -90,9 +95,12 @@
           return true;
         }
         var matchedStringProperty = _.some(filterStringProperties, function (stringProperty) {
-          return _.includes(_.get(feature, stringProperty).toLowerCase(), filterText.toLowerCase());
+          return _.includes(_.get(feature, stringProperty, '').toLowerCase(), filterText.toLowerCase());
         });
-        return matchedStringProperty;
+        var matchedNumbers = _.some(feature.numbers, function (number) {
+          return _.includes(number, filterText);
+        });
+        return matchedStringProperty || matchedNumbers;
       });
       return filteredList;
     }
