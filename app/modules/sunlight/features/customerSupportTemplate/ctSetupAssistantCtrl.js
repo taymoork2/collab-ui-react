@@ -1440,12 +1440,8 @@
         case vm.mediaTypes.chat: setRequiredValueChat(radioButtonValue); break;
         case vm.mediaTypes.chatPlusCallback: setRequiredValueChatPlusCallback(radioButtonValue); break;
       }
-      var agentEnabled = true;
-      if (isExpertOnlyEscalationSelected()) {
-        agentEnabled = false;
-      }
       var agentPageDisabled = vm.template.configuration.pages['agentUnavailable'];
-      agentPageDisabled.enabled = agentEnabled;
+      agentPageDisabled.enabled = !isExpertOnlyEscalationSelected();
       vm.template.configuration.pages['agentUnavailable'] = agentPageDisabled;
     }
 
