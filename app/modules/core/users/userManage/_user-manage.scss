@@ -24,38 +24,46 @@
   @include vr-spacing(mb, 1.5);
 }
 
+// TODO extract this into generic class for toolkit layout container
 .user-manage__row > .columns {
-  @media #{$small-only} {
-    @include vr-spacing(mb, 1);
+  &:not(:last-child) {
+    @media #{$small-only} {
+      @include vr-spacing(mb, 2.25);
+    }
   }
+
+  &:last-child {
+    @media #{$medium-up} {
+      margin-top: 4px;
+    }
+  }
+}
+
+.user-manage__modal-body > .user-manage__row:first-child {
+  @include vr-spacing(pt, .75);
+}
+
+.user-manage__hr {
+  @include vr-spacing(mv, 2.25);
 }
 
 .user-manage__auto-assign-title-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 }
 
-.user-manage__auto-assign-title {
+.user-manage__auto-assign-title-action {
+  @include vr-spacing(mt, -.5);
+
   @media #{$small-only} {
-    @include vr-spacing(mr, 1);
+    @include vr-spacing(ml, 1);
   }
   @media #{$medium-up} {
-    @include vr-spacing(mr, 3);
+    @include vr-spacing(ml, 3);
   }
 }
 
 .user-manage {
-  display: flex;
-  flex: 1 1 auto;
-
-  .row {
-    flex: 1 1 auto;
-  }
-
-  .row.no-flex {
-    flex: 0 0 auto;
-  }
-
   .sync-status {
     .ds-inline {
       display: inline;

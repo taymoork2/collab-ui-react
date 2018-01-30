@@ -75,7 +75,7 @@
 </div>
 
 <!-- Does have AtlasF3745AutoAssignToggle -->
-<div ng-if="umoc.isAtlasF3745AutoAssignToggle" class="modal-body user-manage">
+<div ng-if="umoc.isAtlasF3745AutoAssignToggle" class="modal-body user-manage user-manage__modal-body">
   <div class="row collapse user-manage__row" ng-if="!umoc.multiDirSyncToggle">
     <div class="columns medium-5">
       <h4 translate="userManage.org.activeDirectory"></h4>
@@ -110,15 +110,16 @@
     </div>
   </div>
 
-  <hr>
+  <hr class="user-manage__hr">
   <div class="row collapse user-manage__row">
     <div class="columns medium-5">
       <h4 translate="userManage.org.licenses"></h4>
     </div>
     <div class="columns medium-7 sync-status">
       <div class="user-manage__auto-assign-title-row">
-        <h5 class="user-manage__auto-assign-title" translate="userManage.org.autoAssignLicenses"></h5>
+        <h5 translate="userManage.org.autoAssignLicenses"></h5>
         <auto-assign-template-manage-options
+          class="user-manage__auto-assign-title-action"
           ng-if="umoc.hasDefaultAutoAssignTemplate()"
           auto-assign-templates="umoc.autoAssignTemplates"
           on-delete="umoc.recvDelete()"
@@ -145,7 +146,7 @@
       </p>
     </div>
   </div>
-  <hr>
+  <hr class="user-manage__hr">
   <div class="row collapse user-manage__row">
     <div class="columns medium-12 user-manage__modify-users-title">
       <h4 translate="userManage.org.modifyUsers"></h4>
