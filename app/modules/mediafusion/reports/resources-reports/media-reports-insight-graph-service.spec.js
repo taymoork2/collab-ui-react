@@ -5,13 +5,18 @@ describe('Service: Media Reports Insight Graph Service', function () {
 
   vm.participantActivityData = getJSONFixture('mediafusion/json/metrics-graph-report/numberOfParticipant.json');
   vm.insightData = vm.participantActivityData;
+  vm.participantDistributionGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/ParticipantDistributionGraphData.json');
+  vm.multipleInsightData = vm.participantDistributionGraphData;
   vm.nodesUnavailable = 'mediaFusion.metrics.nodesUnavailable';
-  vm.nodesUnavailable = vm.nodesUnavailable + ' ' + 1;
   vm.redirectCluster = 'mediaFusion.metrics.callsRedirectedCluster';
-  vm.redirectCluster = vm.redirectCluster + ' ' + 5;
+  vm.cloudConnectivityIssues = 'mediaFusion.metrics.cloudconnectivityissues';
   vm.bullett = 'images/mf_insight_16.png';
   vm.insightCloud = 'insight_cloudParticipants';
-
+  vm.insight1 = vm.redirectCluster + ' ' + 2;
+  vm.insight2 = vm.redirectCluster + ' ' + 6;
+  vm.insight3 = vm.redirectCluster + ' ' + 5;
+  vm.nodesUnavailable = vm.nodesUnavailable + ' ' + 1;
+  
 
   vm.checkForDefined = function (ParticipantsData) {
     expect(ParticipantsData).toBeDefined();
@@ -28,10 +33,19 @@ describe('Service: Media Reports Insight Graph Service', function () {
 
       vm.checkForDefined(ParticipantsData);
       expect(ParticipantsData.graphData[1].insight_cloudParticipants).toEqual(vm.nodesUnavailable);
-      expect(ParticipantsData.graphData[5].insight_cloudParticipants).toEqual(vm.redirectCluster);
-      expect(ParticipantsData.graphData[4].insight_cloudParticipants).toEqual(vm.redirectCluster + '<br>' + vm.nodesUnavailable + '<br>');
+      expect(ParticipantsData.graphData[5].insight_cloudParticipants).toEqual(vm.insight3);
+      expect(ParticipantsData.graphData[4].insight_cloudParticipants).toEqual(vm.insight3 + '<br>' + vm.nodesUnavailable + '<br>');
       expect(ParticipantsData.graphData[1].bullet_cloudParticipants).toEqual(vm.bullett);
       expect(ParticipantsData.graphs[0].descriptionField).toEqual(vm.insightCloud);
+    });
+
+    it('MediaReports InsightGraphService should return the expected responses for ParticipantDistributiondata With Multiple Insights', function () {
+      var MultipleInsightData = vm.InsightGraphService.getAdjustedInsightData(vm.multipleInsightData);
+
+      vm.checkForDefined(MultipleInsightData);
+      expect(MultipleInsightData.graphData[1]['insight_3968ec71-8075-4ef9-b9e9-18f2eb8c1fef']).toEqual(vm.insight3 + '<br>' + vm.cloudConnectivityIssues);
+      expect(MultipleInsightData.graphData[1]['insight_fc0a6cc1-98e6-42d8-b366-d6e82e426c17']).toEqual(vm.insight1 + '<br>' + vm.cloudConnectivityIssues);
+      expect(MultipleInsightData.graphData[1]['insight_548d05ce-99ac-4d78-a926-3f18afd88064']).toEqual(vm.insight2 + '<br>' + vm.cloudConnectivityIssues);
     });
   });
 });

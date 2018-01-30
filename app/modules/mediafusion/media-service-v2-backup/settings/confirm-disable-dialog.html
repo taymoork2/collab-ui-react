@@ -1,0 +1,50 @@
+<div class="modal-header">
+  <span class="modal-title"
+        translate="hercules.settings.deactivateServiceHeading"
+        translate-values="{ServiceName: 'Hybrid Media Service'}"></span>
+</div>
+
+<div class="modal-body media-modal-text">
+  <div class="spinner-position media-modal-spinner" ng-show="disableServiceDialog.isLoading === false">
+    <i class='icon icon-spinner icon-2x media-modal-position'></i>
+  </div>
+  <span class="media-model-align" ng-if="disableServiceDialog.step === '1'">
+    <p>
+      <span ng-show="disableServiceDialog.isLoading === true" translate="mediaFusion.deactivate.deregister_cluster_list"></span>
+      <div class="media-cluster-list" ng-repeat="ecp in disableServiceDialog.clusterNames">
+        {{ecp}}</br>
+      </div>
+    </p>
+    <br>
+    <p>
+      <div class="form-group">
+        <div class="cs-checkbox-group">
+          <div class="cs-input-group cs-input-checkbox" ng-show="disableServiceDialog.isLoading === true">
+            <input type="checkbox" id="individualcheckbox" ng-model="disableServiceDialog.checkboxModel">
+            <label for="individualcheckbox" class="media-checkbox">
+              <span translate="mediaFusion.deactivate.confirmation_check"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </p>
+  </span>
+
+  <span class="media-model-align" ng-if="disableServiceDialog.step === '2'">
+    <p>
+      <span translate="mediaFusion.deactivate.success"></span><br>
+    </p>
+    <br>
+    <p>
+      <span translate="mediaFusion.deactivate.future"></span>
+    </p>
+  </span>
+</div>
+
+<div class="modal-footer">
+  <button ng-click="disableServiceDialog.cancel()" ng-show="disableServiceDialog.step === '1'" class="btn ">{{'common.cancel' | translate}}</button>
+  <button ng-click="disableServiceDialog.deactivate()" ng-show="disableServiceDialog.step === '1'" ng-disabled ="!disableServiceDialog.checkboxModel" class="btn btn--alert pull-right">{{'mediaFusion.deactivate.button_deactivate' | translate}}</button>
+
+  <button ng-click="disableServiceDialog.done()" ng-show="disableServiceDialog.step === '2'" class="btn btn--primary pull-right">{{'common.done' | translate}}</button>
+</div>
+

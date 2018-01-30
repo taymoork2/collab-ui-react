@@ -1,0 +1,50 @@
+<div class="modal-header">
+        <button type="button" class="close" ng-click="redirectResource.closeSetupModal()" aria-label="{{::'common.close' | translate}}"></button>
+        <h5 class="modal-title">
+            <span translate="mediaFusion.easyConfig.titleV2">
+            </span>
+          </h5>
+      </div>
+      <div class="modal-body">
+        <setting-section setting="cluster">
+          <div class="sub-section">
+            <h5 class="sub-section__label" translate="mediaFusion.easyConfig.clusterInfo"></h5>
+            <p class="sub-section__description" translate="mediaFusion.easyConfig.createMessage"></p>
+            <form name="myRadioForm">
+              <div class="cs-radio-group radioGroup">
+                  <div class="cs-input-group cs-input-radio">
+                    <input cs-input type="radio" ng-model="redirectResource.radio" id="yes" name="redirectResource" ng-value='1' cs-input-label="{{'mediaFusion.easyConfig.createCluster' | translate}}">
+                    <div ng-show="redirectResource.radio === 1" class="columns medium-11 inputHostNameForm">
+                      <input class="cs-input" ng-model="redirectResource.clusterName" placeholder="{{'mediaFusion.easyConfig.enterCluster' | translate}} " type="text">
+                      <p class= "cs-input__help-text" translate="mediaFusion.easyConfig.clusterHelpText"></p>
+                    </div>
+                    <input cs-input type="radio" ng-model="redirectResource.radio" id="no" name="redirectResource" ng-value='0' cs-input-label="{{'mediaFusion.easyConfig.existingCluster' | translate}}" >
+                    <div class="row" ng-show="redirectResource.radio === 0">
+                        <div class="columns medium-11">
+                          <cs-select ng-model="select.selected" options="select.options" labelfield="label"
+                          placeholder="select.selectPlaceholder" required="select.required" filter="true">
+                          </cs-select>
+                        </div>
+                    </div>
+                  </div>
+              </div>
+            </form>
+          </div>
+          <div class="sub-section">
+              <h5 class="sub-section__label" translate="mediaFusion.easyConfig.mediaNode"></h5>
+              <p class="sub-section__description" translate="mediaFusion.easyConfig.mediaNodeMessage"></p>
+              <div class="columns medium-8 inputHostNameForm">
+                <input class="cs-input" ng-model="redirectResource.hostName" placeholder="{{'mediaFusion.easyConfig.enterNode' | translate}} " type="text">
+              </div>
+          </div>
+        </setting-section>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" ng-click="redirectResource.closeSetupModal()">
+          <span translate="mediaFusion.add-resource-dialog.cancel"></span>
+        </button>
+        <button class="btn activate-button btn--primary" ng-click="redirectResource.next()" ng-disabled="!redirectResource.hostName">
+          <span translate="mediaFusion.add-resource-dialog.next"></span>
+        </button>
+      </div>
+      
