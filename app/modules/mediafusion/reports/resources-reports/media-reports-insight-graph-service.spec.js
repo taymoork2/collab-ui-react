@@ -3,19 +3,19 @@
 describe('Service: Media Reports Insight Graph Service', function () {
   var vm = this;
 
-   vm.participantActivityData = getJSONFixture('mediafusion/json/metrics-graph-report/numberOfParticipant.json');
-   vm.insightData = vm.participantActivityData;
-   vm.participantDistributionGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/ParticipantDistributionGraphData.json');
-   vm.multipleInsightData = vm.participantDistributionGraphData;
-   vm.nodesUnavailable = 'mediaFusion.metrics.nodesUnavailable';
-   vm.redirectCluster = 'mediaFusion.metrics.callsRedirectedCluster';
-   vm.cloudConnectivityIssues = 'mediaFusion.metrics.cloudconnectivityissues';
-   vm.bullett = 'images/mf_insight_16.png';
-   vm.insightCloud = 'insight_cloudParticipants';
-   vm.insight1 = vm.redirectCluster + ' ' + 2;
-   vm.insight2 = vm.redirectCluster + ' ' + 6;
-   vm.insight3 = vm.redirectCluster + ' ' + 5;
-   vm.nodesUnavailable = vm.nodesUnavailable + ' ' + 1;
+  vm.participantActivityData = getJSONFixture('mediafusion/json/metrics-graph-report/numberOfParticipant.json');
+  vm.insightData = vm.participantActivityData;
+  vm.participantDistributionGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/ParticipantDistributionGraphData.json');
+  vm.multipleInsightData = vm.participantDistributionGraphData;
+  vm.nodesUnavailable = 'mediaFusion.metrics.nodesUnavailable';
+  vm.redirectCluster = 'mediaFusion.metrics.callsRedirectedCluster';
+  vm.cloudConnectivityIssues = 'mediaFusion.metrics.cloudconnectivityissues';
+  vm.bullett = 'images/mf_insight_16.png';
+  vm.insightCloud = 'insight_cloudParticipants';
+  vm.insight1 = vm.redirectCluster + ' ' + 2;
+  vm.insight2 = vm.redirectCluster + ' ' + 6;
+  vm.insight3 = vm.redirectCluster + ' ' + 5;
+  vm.nodesUnavailable = vm.nodesUnavailable + ' ' + 1;
 
 
   vm.checkForDefined = function (ParticipantsData) {
