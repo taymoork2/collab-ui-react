@@ -79,22 +79,23 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
 
   /* @ngInject*/
   constructor(
+    public $element: ng.IRootElementService,
+    public $modal: IToolkitModalService,
     public $scope: ng.IScope,
     public $state: ng.ui.IStateService,
     public $stateParams: ng.ui.IStateParamsService,
-    public $modal: IToolkitModalService,
-    public $translate: ng.translate.ITranslateService,
     public $timeout: ng.ITimeoutService,
-    private EvaService,
-    private SparkService,
-    public Authinfo,
+    public $translate: ng.translate.ITranslateService,
+    public $window: ng.IWindowService,
     public Analytics,
-    public Notification,
-    public UrlConfig,
+    public Authinfo,
     public CTService,
-    public $window,
+    private EvaService,
+    public Notification,
+    private SparkService,
+    public UrlConfig,
   ) {
-    super($scope, $state, $modal, $translate, $timeout, Authinfo, Analytics, Notification, UrlConfig, CTService, $window);
+    super($element, $modal, $scope, $state, $timeout, $translate, $window, Analytics, Authinfo, CTService, Notification, UrlConfig);
     this.service = this.EvaService;
     // states == pages in order as found in storage template
     this.states = Object.keys(this.template.configuration.pages);

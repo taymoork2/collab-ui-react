@@ -1,13 +1,10 @@
 (function () {
   'use strict';
 
-  angular
-    .module('GSS')
+  angular.module('GSS')
     .factory('GSSService', GSSService);
 
-  function GSSService($http, UrlConfig) {
-    var url = UrlConfig.getGssUrl();
-    var servicesUrl = url + '/services';
+  function GSSService($http, GSSIframeService) {
     var serviceId;
 
     var service = {
@@ -17,8 +14,6 @@
       addService: addService,
       deleteService: deleteService,
       modifyService: modifyService,
-      syncCheck: syncCheck,
-      syncUp: syncUp,
     };
 
     return service;
@@ -28,7 +23,7 @@
     }
 
     function getServices() {
-      return $http.get(servicesUrl)
+      return $http.get(GSSIframeService.getGssUrl() + '/services')
         .then(extractData);
     }
 
@@ -41,39 +36,26 @@
     }
 
     function addService(serviceName, description) {
-      return $http.post(servicesUrl, {
+      return $http.post(GSSIframeService.getGssUrl() + '/services', {
         serviceName: serviceName,
         description: description,
       }).then(extractData);
     }
 
     function deleteService(serviceId) {
-      var deleteUrl = servicesUrl + '/' + serviceId;
+      var deleteUrl = GSSIframeService.getGssUrl() + '/services' + '/' + serviceId;
 
       return $http.delete(deleteUrl)
         .then(extractData);
     }
 
     function modifyService(serviceId, serviceName, description) {
-      var modifyUrl = servicesUrl + '/' + serviceId;
+      var modifyUrl = GSSIframeService.getGssUrl() + '/services' + '/' + serviceId;
 
       return $http.put(modifyUrl, {
         serviceName: serviceName,
         description: description,
       }).then(extractData);
-    }
-
-    function syncCheck() {
-      var compareVersionUrl = url + '/compareVersion';
-
-      return $http.get(compareVersionUrl)
-        .then(extractData);
-    }
-
-    function syncUp() {
-      var syncUpUrl = url + '/syncUpFromAWS';
-      return $http.post(syncUpUrl)
-        .then(extractData);
     }
   }
 }());

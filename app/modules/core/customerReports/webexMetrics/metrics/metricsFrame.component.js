@@ -9,11 +9,13 @@
     });
 
   /* @ngInject */
-  function metricsFrameController($log, $rootScope, $scope, $timeout, $window, LoadingTimeout) {
+  function metricsFrameController($log, $rootScope, $sce, $scope, $timeout, $window, LoadingTimeout) {
     var vm = this;
     var eventListeners = [];
     vm.isIframeLoaded = false;
+    vm.qlikReportUrl = $sce.trustAsResourceUrl('about: blank');
     vm.messageHandle = messageHandle;
+    vm.setQlikUrls = setQlikUrls;
 
     $window.addEventListener('message', messageHandle, true);
 
@@ -25,11 +27,25 @@
         function loadIframe() {
           if (vm.iframeForm) {
             startLoadReport();
-            vm.iframeForm.$$element[0].submit();
+            vm.qlikReportUrl = setQlikUrls(iframeUrl, data);
           }
         },
         0
       );
+    }
+
+    function setQlikUrls(iframeUrl, data) {
+      var qlikUrls = data.trustIframeUrl;
+      var params = [];
+      if (_.isObject(data) && !_.isEmpty(data)) {
+        _.forEach(data, function (value, key) {
+          if (key !== 'trustIframeUrl') {
+            params.push(key + '=' + value);
+          }
+        });
+        qlikUrls += ('?' + params.join('&'));
+      }
+      return $sce.trustAsResourceUrl(qlikUrls);
     }
 
     function messageHandle(event) {

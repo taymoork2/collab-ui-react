@@ -10,6 +10,13 @@
       opacity: 0.5;
     }
   }
+
+  .webex-site-name {
+    width: 23rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   .read-only-site {
     background-color: $color-yellow-light;
     border-top: 4px solid $color-yellow-dark;
@@ -24,6 +31,11 @@
   @extend %grid-header;
   @extend %page-background-white;
 
+  .ui-grid-viewport {
+    height: 70vh !important;
+    background-color: $white !important;
+  }
+
   .ui-grid-row {
     &:hover {
       background-color: transparent;
@@ -34,6 +46,13 @@
     vertical-align: middle;
   }
 
+  li {
+    a.disabled {
+      color: $gray-light-2;
+      cursor: default;
+    }
+  }
+
   .loading-sites {
     position: absolute;
     top: 20%;
@@ -42,5 +61,52 @@
     .loading-sites-spinner {
       font-size: 2rem;
     }
+  }
+
+  .waiting {
+    font-size: 0.5rem;
+    opacity: 0.3;
+  }
+
+}
+.account-linking-wizard-custom {
+  height: 0px !important;
+}
+
+.account-linking-wizard {
+  h5 {
+    font-weight: bold;
+    padding-bottom: 1rem;
+    padding-top: 0.3rem;
+  }
+  label {
+    font-weight: bold;
+  }
+  .input-info {
+    padding-left: 2rem;
+    p {
+      padding-bottom: 0.1rem;
+    }
+  }
+  p {
+    padding-bottom: 0.5rem;
+  }
+  .center {
+    text-align: center;
+  }
+  .icon {
+    font-size: 6rem;
+  }
+  .icon-info-text {
+    font-size: 2rem;
+  }
+
+  .domain-right {
+    padding-left: 1rem;
+  }
+
+  .domain {
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

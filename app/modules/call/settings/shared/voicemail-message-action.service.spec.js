@@ -28,26 +28,21 @@ describe('Service: VoicemailMessageAction', function () {
     }];
 
     it('should get messageAction', function () {
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voicemail/customers/1/usertemplates/1/messageactions').respond(messageActions);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voicemail/customers/1/usertemplates/1/messageactions').respond(200, messageActions);
 
-      var response = VoicemailMessageAction.get('1');
+      VoicemailMessageAction.get('1').then(function (resp) {
+        expect(resp.toJSON()).toEqual(messageActions[0]);
+      });
       $httpBackend.flush();
-
-      expect(response.$$state.status).toEqual(1);
-      expect(response.$$state.value.objectId).toEqual(messageActions[0].objectId);
-      expect(response.$$state.value.voicemailAction).toEqual(messageActions[0].voicemailAction);
     });
 
     it('should get messageAction', function () {
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voicemail/customers/1/usertemplates/1/messageactions').respond([]);
 
-      var response = VoicemailMessageAction.get('1');
+      VoicemailMessageAction.get('1').catch(function (err) {
+        expect(err).toBe('Failed to get voicemail to email settings.');
+      });
       $httpBackend.flush();
-
-      expect(response.$$state.status).toEqual(2);
-      expect(response.$$state.value).toBeDefined();
-      expect(response.$$state.value.objectId).not.toBeDefined();
-      expect(response.$$state.value.voicemailAction).not.toBeDefined();
     });
   });
 

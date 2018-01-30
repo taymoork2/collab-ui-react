@@ -180,6 +180,11 @@ describe('Care Setup Assistant Ctrl', function () {
     },
   };
 
+  var defaultExpertVirtualAssistant = {
+    id: '',
+    name: '',
+  };
+
   var selectedDaysByDefault = businessHours.selectedDaysByDefault;
   var defaultTimeZone = businessHours.defaultTimeZone;
   var defaultDayPreview = businessHours.defaultDayPreview;
@@ -416,12 +421,96 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.nextButton()).toEqual(false);
     });
 
-    it('agent should be selected by default when creating a new template', function () {
+    it('agent should be selected by default and default EVA Configuration should be set when creating a new template', function () {
       inject(intializeCtrl('chat'));
       resolveTogglePromise();
       controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
       controller.template.name = templateName;
       expect(controller.template.configuration.routingLabel).toEqual('agent');
+      expect(controller.isExpertEscalationSelected()).toEqual(false);
+      expect(controller.template.configuration.expertVirtualAssistant).toEqual(defaultExpertVirtualAssistant);
+    });
+
+    it('should have set the EVA configuration if expert/agentPlusExpert is selected', function () {
+      var configMock = Object.assign({}, existingTemplateData, {
+        configuration: Object.assign({}, existingTemplateData.configuration, {
+          routingLabel: 'expert',
+        }),
+      });
+      inject(intializeCtrl('chat', configMock));
+      resolveTogglePromise();
+      controller.selectedEVA = {
+        id: '1234',
+        name: 'Cumulus Expert',
+      };
+      controller.evaConfig.isEvaConfigured = true;
+      controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
+      controller.template.configuration.routingLabel = 'expert';
+      controller.onEscalationOptionChange('expert');
+      expect(controller.template.configuration.routingLabel).toEqual('expert');
+      expect(controller.isExpertEscalationSelected()).toEqual(true);
+      expect(controller.template.configuration.expertVirtualAssistant).toEqual(controller.selectedEVA);
+    });
+
+    it('should update and set the EVA configuration if we switch from agent to expert/agentplusexpert', function () {
+      var configMock = Object.assign({}, existingTemplateData, {
+        configuration: Object.assign({}, existingTemplateData.configuration, {
+          routingLabel: 'agent',
+          expertVirtualAssistant: {
+            id: '',
+            name: '',
+          },
+        }),
+      });
+      inject(intializeCtrl('chat', configMock, true));
+      resolveTogglePromise();
+      controller.selectedEVA = {
+        id: '1234',
+        name: 'Cumulus Expert',
+      };
+
+      controller.evaConfig.isEvaConfigured = true;
+      controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
+      expect(controller.template.configuration.routingLabel).toEqual('agent');
+      expect(controller.isExpertEscalationSelected()).toEqual(false);
+      expect(controller.template.configuration.expertVirtualAssistant).toEqual(defaultExpertVirtualAssistant);
+
+      controller.template.configuration.routingLabel = 'expert';
+      controller.onEscalationOptionChange('expert');
+      expect(controller.template.configuration.routingLabel).toEqual('expert');
+      expect(controller.isExpertEscalationSelected()).toEqual(true);
+      expect(controller.template.configuration.expertVirtualAssistant).toEqual(controller.selectedEVA);
+    });
+
+    it('should update and set the default EVA configuration if we switch from ' +
+        'expert/agentplusexpert to agent', function () {
+      var configMock = Object.assign({}, existingTemplateData, {
+        configuration: Object.assign({}, existingTemplateData.configuration, {
+          routingLabel: 'expert',
+          expertVirtualAssistant: {
+            id: '1234',
+            name: 'Cumulus Expert',
+          },
+        }),
+      });
+      inject(intializeCtrl('chat', configMock, true));
+      resolveTogglePromise();
+      controller.selectedEVA = {
+        id: '1234',
+        name: 'Cumulus Expert',
+      };
+
+      controller.evaConfig.isEvaConfigured = true;
+      controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
+      expect(controller.template.configuration.routingLabel).toEqual('expert');
+      expect(controller.isExpertEscalationSelected()).toEqual(true);
+      expect(controller.template.configuration.expertVirtualAssistant).toEqual(controller.selectedEVA);
+
+      controller.template.configuration.routingLabel = 'agent';
+      controller.onEscalationOptionChange('agent');
+      expect(controller.template.configuration.routingLabel).toEqual('agent');
+      expect(controller.isExpertEscalationSelected()).toEqual(false);
+      expect(controller.template.configuration.expertVirtualAssistant).toEqual(defaultExpertVirtualAssistant);
     });
 
     it('state should have chatEscalationBehavior when EVA is enabled for org', function () {

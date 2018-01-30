@@ -177,7 +177,6 @@
     require('modules/hercules/service-specific-pages/components/cluster-list/hybrid-service-cluster-list.component').default,
     require('modules/hercules/service-specific-pages/components/user-status-report').default,
     require('modules/hercules/services/calendar-cloud-connector.service').default,
-    require('modules/hercules/services/cluster-service').default,
     require('modules/hercules/services/enterprise-private-trunk-service').default,
     require('modules/hercules/services/excel-service').default,
     require('modules/hercules/services/fms-org-settings.service').default,
@@ -232,6 +231,7 @@
     'Sunlight.pagination',
     require('modules/sunlight/services').default,
     require('modules/sunlight/numbers').default,
+    require('modules/sunlight/numbers/addNumbers').default,
   ]);
 
   angular.module('Context', ['Core']);
@@ -242,19 +242,17 @@
 
   angular.module('HCS', [
     'Core',
-    require('modules/hcs/test-manager').default,
-    require('modules/hcs/test-manager/overview').default,
-    require('modules/hcs/test-manager/suiteView').default,
-    require('modules/hcs/test-manager/testView').default,
-    require('modules/hcs/test-manager/scheduler').default,
-    require('modules/hcs/test-manager/resources').default,
-    require('modules/hcs/test-manager/scheduleView').default,
-    require('modules/hcs/test-manager/resourceCreate').default,
-    require('modules/hcs/test-manager/suite-create').default,
+    require('modules/hcs/task-manager').default,
+    require('modules/hcs/task-manager/resource').default,
+    require('modules/hcs/task-manager/schedule').default,
+    require('modules/hcs/task-manager/suite').default,
+    require('modules/hcs/task-manager/task').default,
+    require('modules/hcs/task-manager/results').default,
   ]);
 
   angular.module('ServicesOverview', [
     require('modules/services-overview').default,
+    require('modules/services-overview/new-hybrid/active').default,
     require('modules/services-overview/new-hybrid/prerequisites-modals/basic-expressway-prerequisites').default,
     require('modules/services-overview/new-hybrid/prerequisites-modals/call-service-aware-prerequisites').default,
     require('modules/services-overview/new-hybrid/prerequisites-modals/call-service-connect-prerequisites').default,

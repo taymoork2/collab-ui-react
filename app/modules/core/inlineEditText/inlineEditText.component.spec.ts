@@ -141,8 +141,10 @@ describe('Component: InlineEditText', () => {
     });
 
     it('should remain in edit mode if save fails', function () {
-      this.$scope.saveValue.and.returnValue(this.$q.reject());
-
+      // when using rejects and views, use callFake instead of returnValue to avoid PURs...
+      this.$scope.saveValue.and.callFake(() => {
+        return this.$q.reject();
+      });
       this.view.find(this.INPUT).val(this.newValue).change().submit();
       this.view.find(this.SUBMIT_BUTTON).click();
 

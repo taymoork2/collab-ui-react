@@ -1,0 +1,6 @@
+<div class="ui-grid-cell-contents" ng-if="row.entity.linkingMode">
+  {{row.entity.linkingModeDisplay }}
+</div>
+<div class="ui-grid-cell-contents" ng-if="row.entity.linkingMode === undefined">
+  <div cs-loader class="waiting"/>
+</div>

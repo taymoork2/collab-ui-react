@@ -24,19 +24,21 @@ describe('HealthService', function () {
         serviceState: 'online',
       });
 
-      const promise = this.HealthService.getHealthStatus();
+      this.HealthService.getHealthStatus().then(response => {
+        expect(response).toBe('online');
+      });
 
       this.$httpBackend.flush();
-      expect(promise).toBeResolvedWith('online');
     });
 
     it('should return an error if service is unavailable', function () {
       this.$httpBackend.expectGET(this.pingRegex).respond(404);
 
-      const promise = this.HealthService.getHealthStatus();
+      this.HealthService.getHealthStatus().catch(response => {
+        expect(response.status).toBe(404);
+      });
 
       this.$httpBackend.flush();
-      expect(promise).toBeRejected();
     });
   });
 });

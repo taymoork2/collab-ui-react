@@ -183,19 +183,17 @@ describe('Controller: SupportCtrl', function () {
   });
 
   it('should open modal when openExtendedMetadata is invoked', function () {
-    var metadata = 'themetadata';
+    var metadata = 'theMetadata';
+
     $scope.openExtendedMetadata(metadata);
     $scope.$apply();
 
-    expect($modal.open).toHaveBeenCalledWith({
-      template: require('modules/squared/support/logs-extended-metadata.html'),
-      controller: 'LogsExtendedMetadataController as modal',
-      modalId: 'logs-extended-metadata-dialog',
-      resolve: {
-        title: jasmine.any(Function),
-        data: jasmine.any(Function),
-      },
-    });
+    expect($modal.open).toHaveBeenCalledWith(jasmine.objectContaining({
+      template: '<logs-extended-metadata metadata="metadata" dismiss="$dismiss()"></logs-extended-metadata>',
+      scope: jasmine.objectContaining({
+        metadata: metadata,
+      }),
+    }));
   });
 });
 

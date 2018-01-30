@@ -52,38 +52,40 @@
           <div class="sub-section device-listing">
             <h5 class="sub-section__label" translate="trialModal.call.meetingRoomCamera" translate-values='{ max: callTrial.deviceLimit.roomSystems.max}'></h5>
             <!-- sx10 -->
-            <div class="cs-checkbox-group medium-12 ">
-              <input
-                cs-input
-                type="checkbox"
-                ng-model="callTrial.sx10.enabled"
-                id="trial--devices--cameraSX10"
-                name="trialDevicesCameraSX10"
-                ng-change="callTrial.setQuantityInputDefault(callTrial.sx10)"
-                ng-disabled="!callTrial.canAddRoomSystemDevice"
-                cs-input-label="{{::'trialModal.call.sx10' | translate}}"
-                cs-input-group-size="medium-6 medium-offset-1">
-              <input
-                cs-input
-                type="number"
-                ng-model="callTrial.sx10.quantity"
-                id="trial--devices--cameraSX10Quantity"
-                name="trialDevicesCameraSX10Quantity"
-                min="0"
-                cs-input-label="{{:: 'trialModal.call.quantity' | translate}}"
-                cs-input-group-size="pull-left medium-5 label-left label-medium-6"
-                cs-input-size="medium-5 medium-offset-1"
-                trial-device-quantity-validator="{type: 'roomSystems', name: 'sx10'}"
-                error-messages="callTrial.validationMessages.sx10"
-                ng-model-options="{ allowInvalid: true}"
-                ng-required="callTrial.sx10.enabled"
-                ng-disabled="callTrial.areTemplateOptionsDisabled(callTrial.sx10)">
-            </div>
-            <div ng-messages="trialForm.trialDevicesCameraSX10Quantity.$error" class="cs-input__messages error medium-11 medium-offset-1">
-              <div ng-message="trialDeviceQuantityValidator" class="message">
-              {{callTrial.validationMessages.sx10.trialDeviceQuantityValidator}}
+            <div ng-show="callTrial.showRoomTrialDevice('sx10')">
+              <div class="cs-checkbox-group medium-12 ">
+                <input
+                  cs-input
+                  type="checkbox"
+                  ng-model="callTrial.sx10.enabled"
+                  id="trial--devices--cameraSX10"
+                  name="trialDevicesCameraSX10"
+                  ng-change="callTrial.setQuantityInputDefault(callTrial.sx10)"
+                  ng-disabled="!callTrial.canAddRoomSystemDevice"
+                  cs-input-label="{{::'trialModal.call.sx10' | translate}}"
+                  cs-input-group-size="medium-6 medium-offset-1">
+                <input
+                  cs-input
+                  type="number"
+                  ng-model="callTrial.sx10.quantity"
+                  id="trial--devices--cameraSX10Quantity"
+                  name="trialDevicesCameraSX10Quantity"
+                  min="0"
+                  cs-input-label="{{:: 'trialModal.call.quantity' | translate}}"
+                  cs-input-group-size="pull-left medium-5 label-left label-medium-6"
+                  cs-input-size="medium-5 medium-offset-1"
+                  trial-device-quantity-validator="{type: 'roomSystems', name: 'sx10'}"
+                  error-messages="callTrial.validationMessages.sx10"
+                  ng-model-options="{ allowInvalid: true}"
+                  ng-required="callTrial.sx10.enabled"
+                  ng-disabled="callTrial.areTemplateOptionsDisabled(callTrial.sx10)">
               </div>
-            </div>
+              <div ng-messages="trialForm.trialDevicesCameraSX10Quantity.$error" class="cs-input__messages error medium-11 medium-offset-1">
+                <div ng-message="trialDeviceQuantityValidator" class="message">
+                {{callTrial.validationMessages.sx10.trialDeviceQuantityValidator}}
+                </div>
+              </div>
+          </div>
             <!-- dx80 -->
             <div class="cs-checkbox-group medium-12">
               <input
@@ -118,36 +120,73 @@
               </div>
             </div>
             <!-- mx300 -->
-            <div class="cs-checkbox-group medium-12">
-              <input
-                cs-input
-                type="checkbox"
-                ng-model="callTrial.mx300.enabled"
-                id="trial--devices--cameraMX300"
-                name="trialDevicesCameraMX300"
-                ng-change="callTrial.setQuantityInputDefault(callTrial.mx300)"
-                ng-disabled="!callTrial.canAddRoomSystemDevice"
-                cs-input-label="{{::'trialModal.call.mx300' | translate: callTrial.translationData.MX300 }}"
-                cs-input-group-size="medium-6 medium-offset-1">
-              <input
-                cs-input
-                type="number"
-                ng-model="callTrial.mx300.quantity"
-                id="trial--devices--cameraMX300Quantity"
-                name="trialDevicesCameraMX300Quantity"
-                min="0"
-                cs-input-label="{{:: 'trialModal.call.quantity' | translate}}"
-                cs-input-group-size="pull-left medium-5 label-left label-medium-6"
-                cs-input-size="medium-5 medium-offset-1"
-                trial-device-quantity-validator="{type: 'roomSystems', name: 'mx300'}"
-                error-messages="callTrial.validationMessages.mx300"
-                ng-model-options="{ allowInvalid: true}"
-                ng-required="callTrial.mx300.enabled"
-                ng-disabled="callTrial.areTemplateOptionsDisabled(callTrial.mx300)">
+            <div ng-show="callTrial.showRoomTrialDevice('mx300')">
+              <div class="cs-checkbox-group medium-12">
+                <input
+                  cs-input
+                  type="checkbox"
+                  ng-model="callTrial.mx300.enabled"
+                  id="trial--devices--cameraMX300"
+                  name="trialDevicesCameraMX300"
+                  ng-change="callTrial.setQuantityInputDefault(callTrial.mx300)"
+                  ng-disabled="!callTrial.canAddRoomSystemDevice"
+                  cs-input-label="{{::'trialModal.call.mx300' | translate: callTrial.translationData.MX300 }}"
+                  cs-input-group-size="medium-6 medium-offset-1">
+                <input
+                  cs-input
+                  type="number"
+                  ng-model="callTrial.mx300.quantity"
+                  id="trial--devices--cameraMX300Quantity"
+                  name="trialDevicesCameraMX300Quantity"
+                  min="0"
+                  cs-input-label="{{:: 'trialModal.call.quantity' | translate}}"
+                  cs-input-group-size="pull-left medium-5 label-left label-medium-6"
+                  cs-input-size="medium-5 medium-offset-1"
+                  trial-device-quantity-validator="{type: 'roomSystems', name: 'mx300'}"
+                  error-messages="callTrial.validationMessages.mx300"
+                  ng-model-options="{ allowInvalid: true}"
+                  ng-required="callTrial.mx300.enabled"
+                  ng-disabled="callTrial.areTemplateOptionsDisabled(callTrial.mx300)">
+              </div>
+              <div ng-messages="trialForm.trialDevicesCameraMX300Quantity.$error" class="cs-input__messages error medium-11 medium-offset-1">
+                <div ng-message="trialDeviceQuantityValidator" class="message">
+                {{callTrial.validationMessages.mx300.trialDeviceQuantityValidator}}
+                </div>
+              </div>
             </div>
-            <div ng-messages="trialForm.trialDevicesCameraMX300Quantity.$error" class="cs-input__messages error medium-11 medium-offset-1">
-              <div ng-message="trialDeviceQuantityValidator" class="message">
-              {{callTrial.validationMessages.mx300.trialDeviceQuantityValidator}}
+            <!-- roomKit -->
+            <div ng-show="callTrial.showRoomTrialDevice('roomKit')">
+              <div class="cs-checkbox-group medium-12">
+                <input
+                  cs-input
+                  type="checkbox"
+                  ng-model="callTrial.roomKit.enabled"
+                  id="trial--devices--roomKit"
+                  name="trialDevicesRoomKit"
+                  ng-change="callTrial.setQuantityInputDefault(callTrial.roomKit)"
+                  ng-disabled="!callTrial.canAddRoomSystemDevice"
+                  cs-input-label="{{::'trialModal.call.roomKit' | translate: callTrial.translationData.roomKit }}"
+                  cs-input-group-size="medium-6 medium-offset-1">
+                <input
+                  cs-input
+                  type="number"
+                  ng-model="callTrial.roomKit.quantity"
+                  id="trial--devices--roomKitQuantity"
+                  name="trialDevicesRoomKitQuantity"
+                  min="0"
+                  cs-input-label="{{:: 'trialModal.call.quantity' | translate}}"
+                  cs-input-group-size="pull-left medium-5 label-left label-medium-6"
+                  cs-input-size="medium-5 medium-offset-1"
+                  trial-device-quantity-validator="{type: 'roomSystems', name: 'roomKit'}"
+                  error-messages="callTrial.validationMessages.roomKit"
+                  ng-model-options="{ allowInvalid: true}"
+                  ng-required="callTrial.roomKit.enabled"
+                  ng-disabled="callTrial.areTemplateOptionsDisabled(callTrial.roomKit)">
+              </div>
+              <div ng-messages="trialForm.trialDevicesRoomKitQuantity.$error" class="cs-input__messages error medium-11 medium-offset-1">
+                <div ng-message="trialDeviceQuantityValidator" class="message">
+                {{callTrial.validationMessages.roomKit.trialDeviceQuantityValidator}}
+                </div>
               </div>
             </div>
           </div>
@@ -453,7 +492,7 @@
     translate="common.back">
   </button>
   <button id="trial--devices--startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
-      ng-click="trialForm.$setPristine(true); callTrial.skip(!callTrial.areAdditionalDevicesAllowed()); trial.nextStep()" ng-disabled="callTrial.areAdditionalDevicesAllowed() && (trialForm.$invalid || !callTrial.getTotalQuantity()>0)">
+      ng-click="trialForm.$setPristine(true); callTrial.skip(!callTrial.areAdditionalDevicesAllowed()); trial.nextStep()" ng-disabled="callTrial.areAdditionalDevicesAllowed() && (trialForm.$invalid || callTrial.getTotalQuantityBeingAdded() === 0)">
       <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
       <span ng-if="trial.hasNextStep()" translate="common.next"></span>
     </span>

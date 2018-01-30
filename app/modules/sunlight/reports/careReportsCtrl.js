@@ -79,7 +79,7 @@
       vm.showChartWithoutBreakdown.taskTime = isVideoDisabledOrChatNotSelected || (vm.isVideoCallEnabled === false && webcallStats.isAvgHandleTimePresent === false);
     };
 
-    vm.shouldVideoDrillDownDisplayed = function (isDataPresent) {
+    vm.shouldVideoDrillDownBeDisplayed = function (isDataPresent) {
       var selectedMediaType = vm.mediaTypeSelected.name;
       return vm.isVideoFeatureEnabled && selectedMediaType === 'chat' && (vm.isVideoCallEnabled || isDataPresent);
     };
@@ -104,14 +104,14 @@
     vm.mediaTypeSelected = vm.mediaTypeOptions[1];
     vm.callbackFeature = false;
 
-    function setDrillDownProps(webcallDataPresent) {
+    function setDrillDownProps(webcallDataPresent, isDataEmpty) {
       vm.taskIncomingDrilldownProps = DrillDownReportProps.taskIncomingDrilldownProps(timeSelected,
-        vm.shouldVideoDrillDownDisplayed(webcallDataPresent.isTotalHandledPresent));
-      vm.taskOfferedDrilldownProps = DrillDownReportProps.taskOfferedDrilldownProps(timeSelected);
+        vm.shouldVideoDrillDownBeDisplayed(webcallDataPresent.isTotalHandledPresent), isDataEmpty);
+      vm.taskOfferedDrilldownProps = DrillDownReportProps.taskOfferedDrilldownProps(timeSelected, isDataEmpty);
       vm.avgCsatDrilldownProps = DrillDownReportProps.avgCsatDrilldownProps(timeSelected,
-        vm.shouldVideoDrillDownDisplayed(webcallDataPresent.isAvgCSATPresent));
+        vm.shouldVideoDrillDownBeDisplayed(webcallDataPresent.isAvgCSATPresent), isDataEmpty);
       vm.taskTimeDrilldownProps = DrillDownReportProps.taskTimeDrilldownProps(timeSelected,
-        vm.shouldVideoDrillDownDisplayed(webcallDataPresent.isAvgHandleTimePresent));
+        vm.shouldVideoDrillDownBeDisplayed(webcallDataPresent.isAvgHandleTimePresent), isDataEmpty);
     }
 
     function filtersUpdate() {
@@ -162,6 +162,12 @@
       return tableDataFor.mediaTypeSelected === mediaTypeSelected && tableDataFor.timeSelected === timeSelected;
     }
 
+    function isDataEmpty(data) {
+      if (!data || data.length === 0) {
+        return true;
+      }
+    }
+
     vm.showTable = function (onSuccess, onError, mediaTypeSelected, timeSelected) {
       if (vm.tableDataStatus === SET) {
         onSuccess(vm.tableData);
@@ -173,7 +179,7 @@
       } else {
         vm.tableDataPromise = getTableData(mediaTypeSelected, timeSelected);
         return vm.tableDataPromise.then(function (dataObj) {
-          setDrillDownProps(dataObj.isWebcallDataPresent);
+          setDrillDownProps(dataObj.isWebcallDataPresent, isDataEmpty(dataObj.data));
           onSuccess(dataObj.data);
         }, onError);
       }

@@ -38,7 +38,7 @@
         <div class="columns medium-7">
           <div class="cs-radio-group">
             <ul>
-              <li>
+              <li class="user-manage__manage-type-list-item">
                 <input cs-input type="radio"
                   ng-model="umadc.manageType"
                   id="ad-manual"
@@ -47,7 +47,7 @@
                   cs-input-label="{{::'userManage.ad.manualLabel'|translate}}"
                   cs-input-help-text="{{'userManage.ad.manualDetails'|translate: {maxUsersInManual: umadc.maxUsersInManual} }}">
               </li>
-              <li>
+              <li class="user-manage__manage-type-list-item">
                 <input cs-input type="radio"
                   ng-model="umadc.manageType"
                   id="ad-bulk"
@@ -62,7 +62,7 @@
                   </cr-user-csv-export>
                 </p>
               </li>
-              <li>
+              <li class="user-manage__manage-type-list-item">
                 <input cs-input type="radio"
                   ng-model="umadc.manageType"
                   id="ad-advanced"

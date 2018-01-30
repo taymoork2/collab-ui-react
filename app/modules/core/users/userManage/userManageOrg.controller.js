@@ -5,12 +5,11 @@
   module.exports = UserManageOrgController;
 
   /* @ngInject */
-  function UserManageOrgController($q, $state, $window, Analytics, AutoAssignTemplateService, DirSyncService, FeatureToggleService, Notification, OnboardService, Orgservice, UserCsvService) {
-    var DEFAULT_AUTO_ASSIGN_TEMPLATE = 'Default';
-    var ENABLE_DIR_SYNC_URL = 'https://www.cisco.com/go/hybrid-services-directory';
+  function UserManageOrgController($q, $state, Analytics, Authinfo, AutoAssignTemplateModel, AutoAssignTemplateService, DirSyncService, FeatureToggleService, Notification, OnboardService, Orgservice, UserCsvService, UserManageService) {
+    var DEFAULT_AUTO_ASSIGN_TEMPLATE = AutoAssignTemplateService.DEFAULT;
     var vm = this;
 
-    vm.ManageType = require('./userManage.keys').ManageType;
+    vm.ManageType = require('./shared/user-manage.keys').ManageType;
 
     vm.onInit = onInit;
     vm.manageType = 'manual';
@@ -18,45 +17,55 @@
     vm.maxUsersInManual = OnboardService.maxUsersInManual;
     vm.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
     vm.hasDefaultAutoAssignTemplate = hasDefaultAutoAssignTemplate;
-    vm.getDefaultSettingsForAutoAssignTemplate = getDefaultSettingsForAutoAssignTemplate;
+    vm.initDefaultAutoAssignTemplate = initDefaultAutoAssignTemplate;
     vm.toggleActivateForDefaultAutoAssignTemplate = toggleActivateForDefaultAutoAssignTemplate;
     vm.isDefaultAutoAssignTemplateActivated = isDefaultAutoAssignTemplateActivated;
     vm.recvDelete = recvDelete;
     vm.cancelModal = cancelModal;
     vm.handleDirSyncService = handleDirSyncService;
     vm.onNext = onNext;
-    vm.isDefaultAutoAssignActivated = false;
     vm.convertableUsers = false;
     vm.isAtlasF3745AutoAssignToggle = false;
     vm.autoAssignTemplates = {};
-    vm.dirSyncText = vm.isDirSyncEnabled ? 'globalSettings.dirsync.turnOffDirSync' : 'globalSettings.dirsync.turnOnDirSync';
+
+    Object.defineProperty(vm, 'dirSyncText', {
+      get: function () {
+        return vm.isDirSyncEnabled ? 'userManage.ad.turnOffDS' : 'userManage.org.turnOnDirSync';
+      },
+    });
 
     vm.initFeatureToggles = initFeatureToggles;
     vm.initConvertableUsers = initConvertableUsers;
-    vm.initDefaultAutoAssignTemplate = initDefaultAutoAssignTemplate;
+    vm.isUserAdminUser = Authinfo.isUserAdminUser();
 
-    var isAtlasEmailSuppressToggle = false;
+    var isOrgEnabledForAutoAssignTemplates = false;
 
     vm.onInit();
 
     //////////////////
     function onInit() {
+      initAutoAssignModel();
       initConvertableUsers();
       initFeatureToggles()
         .then(function () {
           initDefaultAutoAssignTemplate();
-          getDefaultSettingsForAutoAssignTemplate();
+          initOrgSettingForAutoAssignTemplates();
         });
     }
 
     function initFeatureToggles() {
       return $q.all({
-        atlasEmailSuppress: FeatureToggleService.atlasEmailSuppressGetStatus(),
         atlasF3745AutoAssignLicenses: FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus(),
+        multiDirSyncToggle: FeatureToggleService.atlasF6980MultiDirSyncManageUsersGetStatus(),
       }).then(function (toggles) {
-        isAtlasEmailSuppressToggle = toggles.atlasEmailSuppress;
         vm.isAtlasF3745AutoAssignToggle = toggles.atlasF3745AutoAssignLicenses;
+        vm.multiDirSyncToggle = toggles.multiDirSyncToggle;
       });
+    }
+
+    function initAutoAssignModel() {
+      // TODO needed when delete auto assign template too
+      AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = false;
     }
 
     function initConvertableUsers() {
@@ -71,40 +80,33 @@
       if (!vm.isAtlasF3745AutoAssignToggle) {
         return;
       }
-      AutoAssignTemplateService.getTemplates()
-        .then(function (templates) {
-          var foundTemplate = _.find(templates, { name: DEFAULT_AUTO_ASSIGN_TEMPLATE });
-          _.set(vm.autoAssignTemplates, DEFAULT_AUTO_ASSIGN_TEMPLATE, foundTemplate);
+      AutoAssignTemplateService.getDefaultTemplate()
+        .then(function (defaultTemplate) {
+          _.set(vm.autoAssignTemplates, DEFAULT_AUTO_ASSIGN_TEMPLATE, defaultTemplate);
         })
         .catch(function (response) {
-          // 404's when fetching auto-assign templates will be fairly common
-          if (response.status === 404) {
-            _.set(vm.autoAssignTemplates, DEFAULT_AUTO_ASSIGN_TEMPLATE, undefined);
-            return;
-          }
           Notification.errorResponse(response);
         });
     }
 
-    function getAutoAssignTemplate() {
-      return _.get(vm.autoAssignTemplates, DEFAULT_AUTO_ASSIGN_TEMPLATE);
+    function initOrgSettingForAutoAssignTemplates() {
+      if (!vm.isAtlasF3745AutoAssignToggle) {
+        return;
+      }
+      isOrgEnabledForAutoAssignTemplates = false;
+      AutoAssignTemplateService.isEnabledForOrg()
+        .catch(_.noop)
+        .then(function (isEnabled) {
+          isOrgEnabledForAutoAssignTemplates = isEnabled;
+        });
     }
 
     function hasDefaultAutoAssignTemplate() {
-      return !!getAutoAssignTemplate();
-    }
-
-    /* Used to check if autoLicenseAssignment property exists and is set to true
-    currently isn't set to TRUE 12/21/17
-    */
-    function getDefaultSettingsForAutoAssignTemplate() {
-      AutoAssignTemplateService.isEnabled().then(function (isEnabled) {
-        vm.isDefaultAutoAssignActivated = isEnabled;
-      });
+      return !!_.get(vm.autoAssignTemplates, DEFAULT_AUTO_ASSIGN_TEMPLATE);
     }
 
     function toggleActivateForDefaultAutoAssignTemplate(isActivated) {
-      vm.isDefaultAutoAssignActivated = isActivated;
+      isOrgEnabledForAutoAssignTemplates = isActivated;
     }
 
     /* There are two levels of enablement for a template (i.e. what is known as "activation")
@@ -113,7 +115,8 @@
     Once 2 is implemented, logic will most likely change 12/21/17
     */
     function isDefaultAutoAssignTemplateActivated() {
-      return hasDefaultAutoAssignTemplate() && vm.isDefaultAutoAssignActivated;
+      AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = hasDefaultAutoAssignTemplate() && isOrgEnabledForAutoAssignTemplates;
+      return AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated;
     }
 
     function recvDelete() {
@@ -127,7 +130,6 @@
 
     function handleDirSyncService() {
       if (vm.isDirSyncEnabled) {
-        // - because we're in a modal, chain the transition to 'settings' after dismissing the modal
         $state.modal.closed.then(function () {
           $state.go('settings', {
             showSettings: 'dirsync',
@@ -135,14 +137,8 @@
         });
         $state.modal.dismiss();
       } else {
-        $window.open(ENABLE_DIR_SYNC_URL, '_blank');
+        onNext(vm.ManageType.ADVANCED_NO_DS);
       }
-    }
-
-    function goToAutoAssignTemplate() {
-      $state.go('users.manage.edit-auto-assign-template-modal', {
-        prevState: 'users.manage.picker',
-      });
     }
 
     function onNext(_manageType) {
@@ -150,43 +146,7 @@
         vm.manageType = _manageType;
       }
 
-      if (isAtlasEmailSuppressToggle) {
-        if (vm.manageType === vm.ManageType.AUTO_ASSIGN_TEMPLATE) {
-          goToAutoAssignTemplate();
-        } else {
-          $state.go('users.manage.emailSuppress', {
-            manageType: vm.manageType,
-            prevState: 'users.manage.org',
-          });
-        }
-      } else {
-        switch (vm.manageType) {
-          case vm.ManageType.MANUAL:
-            Analytics.trackAddUsers(Analytics.eventNames.NEXT, Analytics.sections.ADD_USERS.uploadMethods.MANUAL);
-            $state.go('users.add.manual');
-            break;
-
-          case vm.ManageType.BULK:
-            Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.CSV_UPLOAD, Analytics.sections.ADD_USERS.uploadMethods.CSV);
-            $state.go('users.csv');
-            break;
-
-          case vm.ManageType.ADVANCED_NO_DS:
-            Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.INSTALL_CONNECTOR, Analytics.sections.ADD_USERS.uploadMethods.SYNC);
-            $state.go('users.manage.advanced.add.ob.installConnector');
-            break;
-
-          case vm.ManageType.CONVERT:
-            $state.go('users.convert', {
-              manageUsers: true,
-            });
-            break;
-
-          case vm.ManageType.AUTO_ASSIGN_TEMPLATE:
-            goToAutoAssignTemplate();
-            break;
-        }
-      }
+      UserManageService.gotoNextStateForManageType(vm.manageType);
     }
   }
 })();

@@ -2,11 +2,13 @@ import moduleName from './index';
 import { ManualAddUsersModalController } from './manual-add-users-modal.component';
 import { MultiStepModalComponent } from 'modules/core/shared/multi-step-modal/multi-step-modal.component';
 import { CrOnboardUsersComponent } from './cr-onboard-users/cr-onboard-users.component';
+import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 
 type Test = atlas.test.IComponentTest<ManualAddUsersModalController, {
-  $previousState;
   $state;
   Analytics;
+  AutoAssignTemplateModel;
+  AutoAssignTemplateService;
   OnboardService;
 }, {
   components: {
@@ -27,11 +29,18 @@ describe('Component: manualAddUsersModal:', () => {
       this.components.crOnboardUsers,
     );
     this.injectDependencies(
-      '$previousState',
+      '$q',
+      '$scope',
       '$state',
       'Analytics',
+      'AutoAssignTemplateModel',
+      'AutoAssignTemplateService',
       'OnboardService',
     );
+
+    spyOn(this.AutoAssignTemplateService, 'getDefaultTemplate').and.returnValue(this.$q.resolve());
+    spyOn(this.AutoAssignTemplateService, 'isEnabledForOrg').and.returnValue(this.$q.resolve());
+    spyOn(this.AutoAssignTemplateService, 'getSortedSubscriptions').and.returnValue(this.$q.resolve());
   });
 
   function initComponent(this: Test) {
@@ -47,16 +56,60 @@ describe('Component: manualAddUsersModal:', () => {
       this.components.multiStepModal.bindings[0].dismiss();
       expect(this.controller.dismissModal).toHaveBeenCalled();
     });
+
+    it('should have autoAssignTemplateData if a default auto-assign template exists, the org is enabled for it, and subscriptions exist', function (this: Test) {
+      expect(this.controller.autoAssignTemplateData).not.toBeDefined();
+      expect(this.controller.useDefaultAutoAssignTemplate).toBe(false);
+
+      // notes:
+      // - use a mock, but make sure it is non-empty to test 'useDefaultAutoAssignTemplate' getter logic
+      const fakeToAutoAssignTemplateDataResult = {} as IAutoAssignTemplateData;
+      fakeToAutoAssignTemplateDataResult.subscriptions = [];
+
+      this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = true;
+      this.AutoAssignTemplateService.getDefaultTemplate.and.returnValue(this.$q.resolve('fake-getDefaultTemplate-result'));
+      this.AutoAssignTemplateService.getSortedSubscriptions.and.returnValue(this.$q.resolve('fake-getSortedSubscriptions-result'));
+      spyOn(this.AutoAssignTemplateService, 'toAutoAssignTemplateData').and.returnValue(fakeToAutoAssignTemplateDataResult);
+      initComponent.call(this);
+
+      expect(this.AutoAssignTemplateService.toAutoAssignTemplateData).toHaveBeenCalledWith('fake-getDefaultTemplate-result', 'fake-getSortedSubscriptions-result');
+      expect(this.controller.autoAssignTemplateData).toEqual(fakeToAutoAssignTemplateDataResult);
+      expect(this.controller.useDefaultAutoAssignTemplate).toBe(true);
+    });
+  });
+
+  describe('initial state (with input bindings):', () => {
+    it('should skip fetching template data depending on whether it is passed in through input binding and default template is activated', function (this: Test) {
+      this.$scope.fakeAutoAssignTemplateData = { foo: 0 };
+      this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = true;
+      this.compileComponent('manualAddUsersModal', {
+        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
+      });
+      expect(this.AutoAssignTemplateService.getDefaultTemplate).not.toHaveBeenCalled();
+      expect(this.AutoAssignTemplateService.getSortedSubscriptions).not.toHaveBeenCalled();
+
+      // template is deactivated means we still fetch
+      this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = false;
+      this.compileComponent('manualAddUsersModal', {
+        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
+      });
+      expect(this.AutoAssignTemplateService.getDefaultTemplate).toHaveBeenCalled();
+      expect(this.AutoAssignTemplateService.getSortedSubscriptions).toHaveBeenCalled();
+
+      // template is activated, but data passed through input binding is empty means we still fetch
+      this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = true;
+      this.$scope.fakeAutoAssignTemplateData = undefined;
+      this.compileComponent('manualAddUsersModal', {
+        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
+      });
+      expect(this.AutoAssignTemplateService.getDefaultTemplate).toHaveBeenCalled();
+      expect(this.AutoAssignTemplateService.getSortedSubscriptions).toHaveBeenCalled();
+    });
   });
 
   describe('primary behaviors (controller):', () => {
     describe('back():', () => {
       beforeEach(function (this: Test) {
-        spyOn(this.$previousState, 'get').and.returnValue({
-          state: {
-            name: 'fake-previous-state',
-          },
-        });
         spyOn(this.Analytics, 'trackAddUsers');
         spyOn(this.$state, 'go');
       });
@@ -64,17 +117,12 @@ describe('Component: manualAddUsersModal:', () => {
 
       it('should transition to the previous state by default', function (this: Test) {
         this.controller.back();
-        expect(this.$state.go).toHaveBeenCalledWith('fake-previous-state');
+        expect(this.$state.go).toHaveBeenCalledWith('users.manage.picker');
       });
 
-      it('should transition back to "users.manage.picker" if previous state was "users.manage.emailSuppress"', function (this: Test) {
-        this.$previousState.get.and.returnValue({
-          state: {
-            name: 'users.manage.emailSuppress',
-          },
-        });
-        this.controller.back();
-        expect(this.$state.go).toHaveBeenCalledWith('users.manage.picker');
+      it('should transition specified state if one was provided', function (this: Test) {
+        this.controller.back('fake-state');
+        expect(this.$state.go).toHaveBeenCalledWith('fake-state');
       });
 
       it('should track the "Back" action', function (this: Test) {

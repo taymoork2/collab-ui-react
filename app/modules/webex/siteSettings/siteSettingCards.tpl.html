@@ -1,20 +1,20 @@
 <div class="cs-card-container">
 <cs-card-layout>
   <cs-card ng-repeat="siteSettingCardObj in siteSettingsObj.siteSettingCardObjs"
-  		   class="medium"
-           id={{siteSettingCardObj.id}}-card
-           name={{siteSettingCardObj.id}}-card
-           ng-if="0 <siteSettingCardObj.pageObjs.length">
-           
+    class="cs-card--medium"
+    id={{siteSettingCardObj.id}}-card
+    name={{siteSettingCardObj.id}}-card
+    ng-if="0 <siteSettingCardObj.pageObjs.length">
+
     <article>
       <header>
         <h3 xml:lang="{{siteSettingCardObj.lang}}">
           {{siteSettingCardObj.label}}
         </h3>
-        
+
         {{siteSettingCardObj.comment}}
       </header>
-      
+
       <section>
         <ul class="no-bullet" title="{{siteSettingCardObj.label}}">
           <li ng-repeat="pageObj in siteSettingCardObj.pageObjs">
@@ -26,11 +26,11 @@
               {{pageObj.label}}
             </a>
             </li>
-          
+
             <h4 ng-repeat-start="subSectionObj in siteSettingCardObj.subSectionObjs" ng-if="subSectionObj.pageObjs.length>0" xml:lang="{{subSectionObj.lang}}">
               {{subSectionObj.label}}
             </h4>
-            
+
             <li ng-repeat="pageObj in subSectionObj.pageObjs">
               <a id={{pageObj.id}}
                  name={{pageObj.id}}

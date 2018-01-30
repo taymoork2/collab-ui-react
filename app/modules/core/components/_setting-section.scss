@@ -6,7 +6,10 @@ setting-section {
   display: block;
 }
 
-setting-section + setting-section {
+setting-section + setting-section,
+.setting-section + setting-section,
+setting-section + .setting-section,
+.setting-section + .setting-section {
   border-top: 1px solid $gray-light-2;
 }
 

@@ -1,7 +1,7 @@
-<div class="helpdesk-details" ng-keyup="helpdeskDeviceCtrl.keyPressHandler($event)" tabindex="1">
+<div class="helpdesk-details" ng-keyup="helpdeskDeviceCtrl.keyPressHandler($event)">
   <div class="row head full">
     <div class="columns large-12">
-      <a ui-sref="helpdesk.search">
+      <a ui-sref="helpdesk.search" focus-on>
         <i class="icon icon-back icon-lg"></i>
         <span translate="helpdesk.backToSearchResults"></span>
       </a>
@@ -101,7 +101,7 @@
         </div>
         <div class="small-8 medium-9 large-10 columns details-value-device">
           <span>
-            <a ng-if="helpdeskDeviceCtrl.lastPushedLog" ng-click="helpdeskDeviceCtrl.downloadLog(helpdeskDeviceCtrl.lastPushedLog.filename)">{{helpdeskDeviceCtrl.lastPushedLog.timestamp | date:'yyyy-MM-dd HH:mm':'UTC'}} UTC</a>
+            <a href ng-if="helpdeskDeviceCtrl.lastPushedLog" ng-click="helpdeskDeviceCtrl.downloadLog(helpdeskDeviceCtrl.lastPushedLog.filename)">{{helpdeskDeviceCtrl.lastPushedLog.timestamp | date:'yyyy-MM-dd HH:mm':'UTC'}} UTC</a>
           </span>
           <span ng-if="!helpdeskDeviceCtrl.lastPushedLog" translate="helpdesk.noLog"></span>
         </div>

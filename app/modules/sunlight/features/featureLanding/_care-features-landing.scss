@@ -336,6 +336,10 @@ header > p > span.badge {
       color: $color-people-base;
     }
 
+    .aa-learn-more {
+      @include vr-spacing(pl, 0.35);
+    }
+
     .feature-aa-color {
       color: $toolkit-primary;
     }
@@ -366,7 +370,16 @@ header > p > span.badge {
       @include vr-spacing(pr, 1.5);
       @include vr-spacing(pl, 1.5);
 
+      margin-bottom: auto;
       text-align: left;
+    }
+
+    .feature-warning-container {
+     font-size: rem-calc(14);
+    }
+
+    .feature-icon-color {
+      color: $color-blue-base;
     }
   }
 }

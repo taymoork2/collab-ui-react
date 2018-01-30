@@ -1,41 +1,37 @@
+import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template';
+
 class AutoAssignTemplateManageOptionsController implements ng.IComponentController {
 
   private readonly DEFAULT_AUTO_ASSIGN_TEMPLATE = 'Default';
   private autoAssignTemplates: any;  // TODO: better type
   private onDelete: Function;
   private onActivateToggle: Function;
-  private stateData: any;
 
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
     private $state: ng.ui.IStateService,
     private $translate,
-    private AutoAssignTemplateService,
+    private AutoAssignTemplateService: AutoAssignTemplateService,
     private ModalService,
     private Notification,
   ) {}
 
-  public $onInit(): void {
-    this.stateData = {};
-
-    this.AutoAssignTemplateService.getSortedSubscriptions().then((sortedSubscriptions) => {
-      _.set(this.stateData, 'subscriptions', sortedSubscriptions);
-    });
-  }
-
   public modifyAutoAssignTemplate() {
-    this.AutoAssignTemplateService.getTemplates()
-      .then((response) => {
-        const convertedStateData = this.AutoAssignTemplateService.convertDefaultTemplateToStateData(response);
-        _.merge(this.stateData, convertedStateData);
-        this.$state.go('users.manage.edit-auto-assign-template-modal', {
-          prevState: 'users.manage.picker',
-          stateData: this.stateData,
-        });
-      })
-      .catch((response) => {
-        this.Notification.errorResponse(response, 'userManage.org.modifyAutoAssign.modifyError');
+    this.$q.all({
+      defaultAutoAssignTemplate: this.AutoAssignTemplateService.getDefaultTemplate(),
+      subscriptions: this.AutoAssignTemplateService.getSortedSubscriptions(),
+    })
+    .then((results) => {
+      const autoAssignTemplateData = this.AutoAssignTemplateService.toAutoAssignTemplateData(results.defaultAutoAssignTemplate, results.subscriptions);
+      this.$state.go('users.manage.edit-auto-assign-template-modal', {
+        prevState: 'users.manage.picker',
+        autoAssignTemplateData: autoAssignTemplateData,
       });
+    })
+    .catch((response) => {
+      this.Notification.errorResponse(response, 'userManage.org.modifyAutoAssign.modifyError');
+    });
   }
 
   public activateAutoAssignTemplate() {
@@ -76,7 +72,7 @@ class AutoAssignTemplateManageOptionsController implements ng.IComponentControll
       dismiss: this.$translate.instant('common.cancel'),
       btnType: 'alert',
     }).result.then(() => {
-      const templateId = _.get(this.autoAssignTemplates, `${this.DEFAULT_AUTO_ASSIGN_TEMPLATE}.templateId`);
+      const templateId = _.get<string>(this.autoAssignTemplates, `${this.DEFAULT_AUTO_ASSIGN_TEMPLATE}.templateId`);
       return this.AutoAssignTemplateService.deleteTemplate(templateId)
         .then(() => {
           this.Notification.success('userManage.org.deleteAutoAssignModal.deleteSuccess');
@@ -97,5 +93,6 @@ export class AutoAssignTemplateManageOptionsComponent implements ng.IComponentOp
     isTemplateActive: '<',
     onDelete: '&',
     onActivateToggle: '&',
+    onModify: '&',
   };
 }

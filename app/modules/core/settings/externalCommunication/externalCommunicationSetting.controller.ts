@@ -31,7 +31,8 @@ export class ExternalCommunicationSettingController {
       .then((response) => {
         this.blockExternalCommunicationSettingLoaded(response.blockExternalCommunication);
         this.isProPackPurchased = response.proPackPurchased;
-      });
+      })
+      .catch(_.noop);
   }
 
   private blockExternalCommunicationSettingLoaded(blockExternalCommunication: boolean) {

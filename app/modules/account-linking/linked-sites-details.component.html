@@ -8,7 +8,9 @@
     <div class="header-info">
       <div class="header-info-wrap">
         <div class="header-title">
-          {{$ctrl.selectedSite.linkedSiteUrl}}
+          <div class="webex-site-name">
+            {{$ctrl.selectedSiteInfo.linkedSiteUrl}}
+          </div>
         </div>
         <div class="header-subinfo">
           <span translate="accountLinking.siteDetails.legacyWebexLicense"></span>
@@ -17,8 +19,8 @@
     </div>
   </cs-sp-header>
 
-  <div ng-hide="$ctrl.selectedSite.isSiteAdmin" class="read-only-site">
-    <span translate="accountLinking.siteDetails.readOnly"></span>
+  <div ng-hide="$ctrl.selectedSiteInfo.isSiteAdmin" class="read-only-site">
+    <span translate="accountLinking.siteDetails.dontHaveAdminRights"></span>
   </div>
 
   <cs-sp-container>
@@ -32,7 +34,7 @@
         <ul>
           <li class="feature">
             <span class="feature-name" translate="accountLinking.siteDetails.siteName"></span>
-            <span class="feature-details">{{$ctrl.selectedSite.linkedSiteUrl}}</span>
+            <span class="feature-details">{{$ctrl.selectedSiteInfo.linkedSiteUrl}}</span>
           </li>
           <li class="feature">
             <span class="feature-name" translate="accountLinking.siteDetails.licenseType"></span>
@@ -46,7 +48,10 @@
       <div class="section-title-row">
         <span class="section-name" translate="accountLinking.name"></span>
         <span>
-        <a class="as-button" ng-show="$ctrl.selectedSite.isSiteAdmin" ng-click="!$ctrl.selectedSite.isSiteAdmin || $ctrl.modifyLinkingMethod()" translate="accountLinking.siteDetails.modify"></a>
+        <a class="as-button"
+           ng-show="$ctrl.selectedSiteInfo.isSiteAdmin && $ctrl.selectedSiteInfo.supportAgreementLinkingMode"
+           ng-click="$ctrl.modifyLinkingMethod()"
+           translate="accountLinking.siteDetails.modify"></a>
       </span>
       </div>
 
@@ -54,11 +59,13 @@
         <ul>
           <li class="feature">
             <span class="feature-name" translate="accountLinking.siteDetails.linkingMode"></span>
-            <span class="feature-details">?</span>
+            <span class="feature-details">
+              {{$ctrl.selectedSiteInfo.linkingModeDisplay}}
+            </span>
           </li>
           <li class="feature">
-            <span class="feature-name" translate="accountLinking.siteDetails.linkedUsers"></span>
-            <span class="feature-details">?</span>
+            <span class="feature-name" translate="accountLinking.siteDetails.linkedAccounts"></span>
+            <span class="feature-details">{{$ctrl.selectedSiteInfo.linkingStatus.accountsLinked}}/{{$ctrl.selectedSiteInfo.linkingStatus.totalWebExAccounts}}</span>
           </li>
         </ul>
       </div>
@@ -73,15 +80,12 @@
       </div>
     </cs-sp-section>
 
-    <cs-sp-section ng-show="$ctrl.selectedSite.isSiteAdmin">
+    <cs-sp-section ng-show="$ctrl.selectedSiteInfo.isSiteAdmin">
       <div class="section-title-row">
-        <a class="btn btn--people" ng-click="$ctrl.launchSiteAdmin()" role="button" translate="accountLinking.siteDetails.launchWebexSiteAdmin"></a>
+        <a class="btn btn--people" ng-click="$ctrl.launchSiteAdmin($ctrl.selectedSiteInfo)" role="button" translate="accountLinking.siteDetails.launchWebexSiteAdmin"></a>
       </div>
     </cs-sp-section>
 
   </cs-sp-container>
 
 </div>
-
-<!-- TODO: Replace by creating form programatically ? -->
-<linked-sites-goto-webex ready-to-launch="$ctrl.readyToLaunch(buttonId)" webex-page="$ctrl.webexPage"></linked-sites-goto-webex>

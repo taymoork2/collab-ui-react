@@ -1,0 +1,45 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="$ctrl.dismiss()" aria-label="{{::'common.close' | translate}}"></button>
+    <h3 class="modal-title" translate="careAddNumberTpl.addNumbers"></h3>
+  </div>
+  <div class="modal-body">
+    <div class="loading-container" ng-if="$ctrl.loading">
+      <i class="icon icon-spinner"></i>
+    </div>
+    <form novalidate name="$ctrl.form" ng-if="!$ctrl.loading" class="huron-settings-main-container">
+      <h3 translate="careAddNumberTpl.pstnNumbers"></h3>
+      <cs-token-field tokens="$ctrl.number" tokenfieldid="$ctrl.tokenfieldid" 
+      tokenplaceholder="$ctrl.tokenplaceholder" tokenoptions="$ctrl.tokenoptions" tokenmethods="$ctrl.tokenmethods"></cs-token-field>
+      <div class="cs-input-group cs-input-checkbox">
+        <input id="emergencyAcknowledge" name="emergencyAcknowledge"
+          ng-model="$ctrl.acknowledge"
+          type="checkbox"
+          value="true" required>
+        <label class="cs-checkbox" for="emergencyAcknowledge"><span translate="careAddNumberTpl.emergencyAcknowledge"></span></label>
+      </div>
+      <br>
+      <h3 translate="careAddNumberTpl.internalDialing"></h3>
+      <uc-extension-length
+          extension-length="$ctrl.huronSettingsData.site.extensionLength"
+          settings-data="$ctrl.huronSettingsData"
+          extension-decrease-allowed="$ctrl.settingsOptions.extensionDecreaseAllowed"
+          extension-length-saved-fn="$ctrl.onExtensionLengthSaved()"
+          decrease-extension-length-fn="$ctrl.onDecreaseExtensionLength(extensionLength)"
+          on-change-fn="$ctrl.onExtensionLengthChanged(extensionLength)">
+      </uc-extension-length>
+      <br>
+      <uc-extension-range
+          steering-digit="$ctrl.huronSettingsData.site.steeringDigit"
+          extension-length="$ctrl.huronSettingsData.site.extensionLength"
+          number-ranges="$ctrl.huronSettingsData.internalNumberRanges"
+          on-change-fn="$ctrl.onExtensionRangeChanged(extensionRanges)">
+      </uc-extension-range>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" ng-click="$ctrl.dismiss()" translate="common.cancel"></button>
+    <button class="btn btn--primary" cs-btn loading="$ctrl.processing" ng-disabled="!$ctrl.form.$dirty || $ctrl.form.$invalid" ng-click="$ctrl.saveHuronSettings()">
+        <span translate="common.save"></span>
+    </button>
+  </div>
+  

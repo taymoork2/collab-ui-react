@@ -1,5 +1,6 @@
 import { AssignableServicesItemCategory, ILicenseUsage, ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
 import { OfferName } from 'modules/core/shared';
+import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 
 class AssignableServicesRowController implements ng.IComponentController {
 
@@ -7,7 +8,7 @@ class AssignableServicesRowController implements ng.IComponentController {
   public showContent: boolean;
   private static readonly itemCategory = AssignableServicesItemCategory.SUBSCRIPTION;
   private subscription: ISubscription;
-  private stateData: any;  // TODO: better type
+  private autoAssignTemplateData: IAutoAssignTemplateData;
   private onUpdate: Function;
   private licenses: ILicenseUsage[];
   private messageLicenses: ILicenseUsage[];
@@ -31,8 +32,8 @@ class AssignableServicesRowController implements ng.IComponentController {
     this.advancedMeetingLicenses = this.getAdvancedMeetingLicenses();
     this.advancedMeetingSiteUrls = this.getAdvancedMeetingSiteUrls();
 
-    const stateDataKey = `${AssignableServicesRowController.itemCategory}["${this.subscription.subscriptionId}"]`;
-    this.showContent = _.get(this.stateData, `${stateDataKey}.showContent`, true);
+    const entryKey = `${AssignableServicesRowController.itemCategory}["${this.subscription.subscriptionId}"]`;
+    this.showContent = _.get(this.autoAssignTemplateData, `${entryKey}.showContent`, true);
   }
 
   private getMessageLicenses(): ILicenseUsage[] {
@@ -100,6 +101,6 @@ export class AssignableServicesRowComponent implements ng.IComponentOptions {
     isCareEnabled: '<',
     subscription: '<',
     onUpdate: '&',
-    stateData: '<',
+    autoAssignTemplateData: '<',
   };
 }

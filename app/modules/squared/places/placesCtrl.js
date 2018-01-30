@@ -8,7 +8,7 @@ require('../devices/_devices.scss');
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($q, $scope, $state, $translate, CsdmFilteredViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptorService, GridCellService) {
+      function ($q, $scope, $state, $translate, CsdmFilteredViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptorService, GridCellService, CloudConnectorService) {
         var vm = this;
 
         vm.data = [];
@@ -41,6 +41,12 @@ require('../devices/_devices.scss');
           });
 
           vm.gridOptions.data = vm.filteredView.getResult();
+
+          if ($state.params.preSelectedPlaceId) {
+            CsdmDataModelService.reloadPlace($state.params.preSelectedPlaceId).then(function (place) {
+              vm.showPlaceDetails(place);
+            });
+          }
         }
 
         function fetchAsyncSettings() {
@@ -54,14 +60,24 @@ require('../devices/_devices.scss');
             vm.csdmHybridCalendarFeature = feature;
           });
           var anyCalendarEnabledPromise = ServiceDescriptorService.getServices().then(function (services) {
-            vm.hybridCalendarEnabledOnOrg = _.chain(ServiceDescriptorService.filterEnabledServices(services)).filter(function (service) {
+            vm.hybridCalendarEnabledOnOrg = vm.hybridCalendarEnabledOnOrg || _.chain(ServiceDescriptorService.filterEnabledServices(services)).filter(function (service) {
               return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
             }).some().value();
             vm.hybridCallEnabledOnOrg = _.chain(ServiceDescriptorService.filterEnabledServices(services)).filter(function (service) {
               return service.id === 'squared-fusion-uc';
             }).some().value();
           });
-          $q.all([ataPromise, hybridPromise, placeCalendarPromise, anyCalendarEnabledPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
+          var office365Promise = FeatureToggleService.atlasOffice365SupportGetStatus().then(function (feature) {
+            if (feature) {
+              return CloudConnectorService.getService('squared-fusion-o365').then(function (service) {
+                vm.hybridCalendarEnabledOnOrg = vm.hybridCalendarEnabledOnOrg || service.provisioned;
+              });
+            }
+          });
+          var googleCalendarPromise = CloudConnectorService.getService('squared-fusion-gcal').then(function (service) {
+            vm.hybridCalendarEnabledOnOrg = vm.hybridCalendarEnabledOnOrg || service.provisioned;
+          });
+          $q.all([ataPromise, hybridPromise, placeCalendarPromise, anyCalendarEnabledPromise, office365Promise, googleCalendarPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
             vm.addPlaceIsDisabled = false;
           });
         }

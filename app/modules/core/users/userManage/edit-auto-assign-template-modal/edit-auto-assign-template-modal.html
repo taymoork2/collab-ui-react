@@ -1,8 +1,9 @@
 <multi-step-modal
-  l10n-title="userManage.autoAssignTemplate.edit.title"
+  l10n-title="{{:: $ctrl.isEditTemplateMode ? 'userManage.org.modifyAutoAssign.title' : 'userManage.autoAssignTemplate.edit.title' }}"
   dismiss="$ctrl.dismissModal()"
   back="$ctrl.back()"
-  next="$ctrl.next()">
+  next="$ctrl.next()"
+  show-body-scroll-indicator="true">
   <h4 translate="userManage.autoAssignTemplate.edit.header"></h4>
   <p translate="userManage.autoAssignTemplate.edit.description"></p>
   <p>
@@ -19,13 +20,13 @@
     <assignable-services
       subscriptions="$ctrl.sortedSubscriptions"
       on-update="$ctrl.recvUpdate($event)"
-      state-data="$ctrl.stateData"
+      auto-assign-template-data="$ctrl.autoAssignTemplateData"
       >
     </assignable-services>
     <hybrid-services-entitlements-panel
       entitlements-callback="$ctrl.recvHybridServicesEntitlementsPayload(entitlements)"
-      has-assignable-licenses="$ctrl.hasAssignableLicenses"
-      state-data="$ctrl.stateData"
+      auto-assign-template-data="$ctrl.autoAssignTemplateData"
+      user-entitlements-state-data="$ctrl.autoAssignTemplateData.USER_ENTITLEMENTS_PAYLOAD"
       >
     </hybrid-services-entitlements-panel>
   </div>

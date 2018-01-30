@@ -1,0 +1,20 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
+multi-dirsync-setting {
+  &.setting-section .cs-form__section {
+    border-top: 1px solid $gray-light-2;
+  }
+}
+
+.row .row.dirsync-row {
+  @include vr-spacing(mb, 1);
+
+  .connector-disabled {
+    color: $gray-3;
+  }
+
+  .primary {
+    color: $blue-base;
+  }
+}

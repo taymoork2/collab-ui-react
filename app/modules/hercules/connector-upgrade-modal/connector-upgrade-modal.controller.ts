@@ -1,8 +1,8 @@
 import * as URL from 'url';
-import { ClusterService } from 'modules/hercules/services/cluster-service';
 import { ConnectorType, ICluster } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesExtrasService } from 'modules/hercules/services/hybrid-services-extras.service';
 import { Notification } from 'modules/core/notifications';
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 interface IUpgrade {
   connectorType: ConnectorType;
@@ -22,7 +22,8 @@ export class ConnectorUpgradeController {
     private $translate: ng.translate.ITranslateService,
     private cluster: ICluster,
     private connectorType: ConnectorType,
-    private ClusterService: ClusterService,
+    private Analytics,
+    private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesExtrasService: HybridServicesExtrasService,
     private Notification: Notification,
   ) {
@@ -30,8 +31,12 @@ export class ConnectorUpgradeController {
   }
 
   public upgrade() {
+    this.Analytics.trackHybridServiceEvent(this.Analytics.sections.HS_NAVIGATION.eventNames.START_CONNECTOR_UPGRADE, {
+      'Cluster Id': this.cluster.id,
+      'Connector Type': this.connectorType,
+    });
     this.upgrading = true;
-    this.ClusterService.upgradeSoftware(this.cluster.id, this.connectorType)
+    this.HybridServicesClusterService.upgradeSoftware(this.cluster.id, this.connectorType)
       .then(() => {
         this.$modalInstance.close();
       })
@@ -66,7 +71,9 @@ export class ConnectorUpgradeController {
 export default angular
   .module('hercules.upgrade-modal', [
     require('angular-translate'),
+    require('modules/core/analytics'),
     require('modules/core/notifications').default,
+    require('modules/hercules/services/hybrid-services-cluster.service').default,
     require('modules/hercules/services/hybrid-services-extras.service').default,
     require('modules/hercules/services/uss.service').default,
   ])

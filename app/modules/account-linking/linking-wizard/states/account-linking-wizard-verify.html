@@ -1,0 +1,47 @@
+<div class="modal-body">
+
+  <div class="row">
+    <div class="columns medium-4">
+      <h4>Verify Domains</h4>
+      <p>
+        Verify your domain and ensure the security and integrity of your organization.
+        Users belonging to verified domains will not be sent an email to verify their email address.
+      </p>
+      <p>Exceptions</p>
+    </div>
+    <div class="columns medium-5 medium-offset-1">
+      <div class="align-top">
+
+          <input cs-input type="radio" ng-model="$ctrl.selection" id="signAgreement" name="signAgreement" value="signAgreement"
+                 cs-input-label="Sign Agreement">
+
+        <p class="input-info">
+          Sign a legal agreement that allows your organization to verify your domains with a pending status.
+        You have 3 months to add the TXT record to your DNS and prove that you have ownership of the domain.</p>
+
+        <input cs-input type="radio" ng-model="$ctrl.selection" id="verifyNow" name="verifyNow" value="verifyNow"
+               cs-input-label="Verify Now"/>
+
+        <p  class="input-info">
+          We provide a token to add to your domain host's DNS TXT record. We confirm that you own the domain by checking for this token on te DNS server.
+          Once The verification is completed, go to WebEx Site Administration and invite users to Cisco Spark.
+        </p>
+      </div>
+    </div>
+    <div class="columns medium-2"></div>
+  </div>
+
+</div>
+
+<div class="modal-footer">
+  <button class="btn"
+          ng-click="$ctrl.backFunc()"
+          translate="common.back">
+  </button>
+  <button ng-disabled="!$ctrl.showNext()"
+          id="accountLinkingVerifyNextButton"
+          class="btn btn--primary"
+          ng-click="$ctrl.next()"
+          translate="common.next">
+  </button>
+</div>

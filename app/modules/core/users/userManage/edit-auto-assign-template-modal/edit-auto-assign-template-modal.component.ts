@@ -1,39 +1,38 @@
 import { ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
+import { AutoAssignTemplateService, IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 
 class EditAutoAssignTemplateModalController implements ng.IComponentController {
 
   private prevState: string;
   private dismiss: Function;
-  private stateData: any;  // TODO: better type
+  private autoAssignTemplateData: IAutoAssignTemplateData;
+  private isEditTemplateMode = false;
   public sortedSubscriptions: ISubscription[];
 
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
     private Analytics,
-    private AutoAssignTemplateService,
+    private AutoAssignTemplateService: AutoAssignTemplateService,
   ) {}
 
   public $onInit(): void {
     this.prevState = _.get<string>(this.$state, 'params.prevState', 'users.manage.picker');
 
     // restore state if provided
-    const stateData = _.get(this.$state, 'params.stateData');
-    if (stateData) {
-      this.stateData = stateData;
-      this.sortedSubscriptions = _.get(stateData, 'subscriptions');
+    if (this.autoAssignTemplateData) {
+      this.sortedSubscriptions = _.get(this.autoAssignTemplateData, 'subscriptions');
+      this.isEditTemplateMode = true;
       return;
     }
 
     // otherwise use default initialization
-    this.stateData = {};
-    _.set(this.stateData, 'subscriptions', this.AutoAssignTemplateService.getSortedSubscriptions());
-  }
-
-  public get hasAssignableLicenses(): boolean {
-    return _.some(this.sortedSubscriptions, (subscription) => {
-      return !_.isEmpty(subscription.licenses);
-    });
+    this.autoAssignTemplateData = {} as IAutoAssignTemplateData;
+    this.AutoAssignTemplateService.getSortedSubscriptions()
+      .then(sortedSubscriptions => {
+        this.sortedSubscriptions = sortedSubscriptions;
+        this.autoAssignTemplateData.subscriptions = sortedSubscriptions;
+      });
   }
 
   public dismissModal(): void {
@@ -47,7 +46,8 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
 
   public next(): void {
     this.$state.go('users.manage.edit-summary-auto-assign-template-modal', {
-      stateData: this.stateData,
+      autoAssignTemplateData: this.autoAssignTemplateData,
+      isEditTemplateMode: this.isEditTemplateMode,
     });
   }
 
@@ -61,12 +61,12 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
     // notes:
     // - item id can potentially contain period chars ('.')
     // - so we wrap interpolated value in double-quotes to prevent unintended deep property creation
-    _.set(this.stateData, `${itemCategory}["${itemId}"]`, item);
+    _.set(this.autoAssignTemplateData, `${itemCategory}["${itemId}"]`, item);
   }
 
   // TODO: remove this callback once 'hybrid-services-entitlements-panel' can leverage 'onUpdate()' callbacks
   public recvHybridServicesEntitlementsPayload(entitlements): void {
-    _.set(this.stateData, `USER_ENTITLEMENTS_PAYLOAD`, entitlements);
+    _.set(this.autoAssignTemplateData, `USER_ENTITLEMENTS_PAYLOAD`, entitlements);
   }
 }
 
@@ -74,6 +74,9 @@ export class EditAutoAssignTemplateModalComponent implements ng.IComponentOption
   public controller = EditAutoAssignTemplateModalController;
   public template = require('./edit-auto-assign-template-modal.html');
   public bindings = {
+    prevState: '<',
+    isEditTemplateMode: '<',
+    autoAssignTemplateData: '<',
     dismiss: '&?',
   };
 }

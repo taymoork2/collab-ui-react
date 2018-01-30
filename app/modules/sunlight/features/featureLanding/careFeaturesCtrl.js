@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
 (function () {
   'use strict';
@@ -11,11 +12,12 @@ var _ = require('lodash');
     });
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, $rootScope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, CvaService, EvaService) {
+  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, $rootScope, AutoAttendantCeInfoModelService, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, CvaService, EvaService, FeatureToggleService) {
     var vm = this;
     vm.isVirtualAssistantEnabled = $state.isVirtualAssistantEnabled;
     vm.isExpertVirtualAssistantEnabled = $state.isExpertVirtualAssistantEnabled;
     vm.init = init;
+    vm.getCeList = getCeList;
     var pageStates = {
       newFeature: 'NewFeature',
       showFeatures: 'ShowFeatures',
@@ -29,7 +31,9 @@ var _ = require('lodash');
     var featureToBeDeleted = {};
     vm.searchData = searchData;
     vm.deleteCareFeature = deleteCareFeature;
+    vm.deleteCareFeatureKeypress = deleteCareFeatureKeypress;
     vm.openEmbedCodeModal = openEmbedCodeModal;
+    vm.openEmbedCodeModalKeypress = openEmbedCodeModalKeypress;
     vm.filteredListOfFeatures = [];
     vm.pageState = pageStates.loading;
     vm.cardColor = {};
@@ -113,9 +117,21 @@ var _ = require('lodash');
       vm.features.push(EvaService.featureList);
     }
 
+    /**
+     * Function to get Ce info so that getAAModel() can gets its value to proceed
+     * further in aaBuilder under care features.
+     */
+    function getCeList() {
+      FeatureToggleService.supports(FeatureToggleService.features.atlasHybridEnable).then(function (results) {
+        if (results) {
+          AutoAttendantCeInfoModelService.getCeInfosList();
+        }
+      });
+    }
     init();
 
     function init() {
+      vm.getCeList();
       vm.pageState = pageStates.loading;
       var featuresPromises = getListOfFeatures();
 
@@ -157,11 +173,15 @@ var _ = require('lodash');
      * Generate the template count for both CVA and EVA and Space count for EVA only
      */
     function generateTemplateCountAndSpaceUsage() {
-      var listOfVaFeatures = listOfCvaFeatures.concat(listOfEvaFeatures);
       _.forEach(listOfNonVaFeatures, function (item) {
         _.forEach(item.features, function (featureItem) {
-          if (!_.isEmpty(featureItem.id)) {
-            var va = _.find(listOfVaFeatures, function (vaFeature) {
+          // for eva, we don't know the id, so will add the count to all eva's
+          if (featureItem.featureType === 'eva') {
+            _.forEach(listOfEvaFeatures, function (evaItem) {
+              evaItem.templates.push(item.name);
+            });
+          } else if (!_.isEmpty(featureItem.id)) {
+            var va = _.find(listOfCvaFeatures, function (vaFeature) {
               return vaFeature.id === featureItem.id;
             });
 
@@ -175,13 +195,13 @@ var _ = require('lodash');
       // Generate the template html popover for CVA
       _.forEach(listOfCvaFeatures, function (item) {
         var popoverMainHeader = $translate.instant('careChatTpl.featureCard.cvaPopoverMainHeader');
-        item.htmlPopover = generateTemplateCountHtmlPopover(popoverMainHeader, item);
+        item.templatesHtmlPopover = generateTemplateCountHtmlPopover(popoverMainHeader, item);
       });
 
       // Generate the template html popover for EVA
       _.forEach(listOfEvaFeatures, function (item) {
         var popoverMainHeader = $translate.instant('careChatTpl.featureCard.evaPopoverMainHeader');
-        item.htmlPopover = generateTemplateCountHtmlPopover(popoverMainHeader, item) + '<br>' + item.htmlPopover;
+        item.templatesHtmlPopover = generateTemplateCountHtmlPopover(popoverMainHeader, item);
       });
     }
 
@@ -249,11 +269,11 @@ var _ = require('lodash');
             return EvaService.getExpertAssistantSpaces(eva.id)
               .then(function (result) {
                 feature.data[index].spaces = result.items;
-                feature.data[index].htmlPopover = vm.generateHtmlPopover(feature.data[index]);
+                feature.data[index].spacesHtmlPopover = vm.generateHtmlPopover(feature.data[index]);
               })
               .catch(function () {
                 feature.data[index].spaces = [];
-                feature.data[index].htmlPopover = vm.generateHtmlPopover(feature.data[index]);
+                feature.data[index].spacesHtmlPopover = vm.generateHtmlPopover(feature.data[index]);
               });
           });
         }
@@ -367,10 +387,32 @@ var _ = require('lodash');
       });
     }
 
+    function deleteCareFeatureKeypress(feature, $event) {
+      switch ($event.which) {
+        case KeyCodes.ENTER:
+        case KeyCodes.SPACE:
+          $event.preventDefault();
+          $event.stopImmediatePropagation();
+          deleteCareFeature(feature, $event);
+          break;
+      }
+    }
+
     function openEmbedCodeModal(feature, $event) {
       $event.preventDefault();
       $event.stopImmediatePropagation();
       CTService.openEmbedCodeModal(feature.templateId, feature.name);
+    }
+
+    function openEmbedCodeModalKeypress(feature, $event) {
+      switch ($event.which) {
+        case KeyCodes.ENTER:
+        case KeyCodes.SPACE:
+          $event.preventDefault();
+          $event.stopImmediatePropagation();
+          openEmbedCodeModal(feature, $event);
+          break;
+      }
     }
 
     function spacesInUseText(feature) {

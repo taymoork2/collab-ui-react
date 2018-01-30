@@ -21,6 +21,6 @@ export class AssignableServicesComponent implements ng.IComponentOptions {
   public bindings = {
     subscriptions: '<',
     onUpdate: '&',
-    stateData: '<',
+    autoAssignTemplateData: '<',
   };
 }

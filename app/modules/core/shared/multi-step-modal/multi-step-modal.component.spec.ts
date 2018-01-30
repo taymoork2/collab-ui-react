@@ -102,5 +102,11 @@ describe('Component: multiStepModal:', () => {
       expect(this.view.find('.modal-body > span.foo').length).toBe(1);
       expect(this.view.find('.modal-body > span.foo').get(0)).toHaveText('fake-content');
     });
+
+    it('should render a custom finish button with custom l10n label as-needed', function () {
+      this.compileTemplate('<multi-step-modal custom-finish="_.noop()" custom-finish-l10n-label="fake.label"></multi-step-modal>');
+      expect(this.view.find('button.btn.custom-finish').length).toBe(1);
+      expect(this.view.find('button.btn.custom-finish [translate="fake.label"]').length).toBe(1);
+    });
   });
 });

@@ -116,6 +116,16 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
         bind();
         getUserList();
       });
+
+      if ($state.params.preSelectedUserId) {
+        UserOverviewService.getUser($state.params.preSelectedUserId)
+          .then(function (response) {
+            if (response && response.user) {
+              $scope.currentUser = response.user;
+              showUserDetails(response.user);
+            }
+          });
+      }
     }
 
     function onDestroy() {
@@ -487,8 +497,12 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     }
 
     function canShowResendInvite(user) {
-      var isHuronUser = Userservice.isHuronUser(user.entitlements);
-      return (user.userStatus === 'pending' || user.userStatus === 'error' || isHuronUser) && !$scope.isCSB;
+      if ($scope.isCSB || $scope.dirsyncEnabled) {
+        return false;
+      } else {
+        var isHuronUser = Userservice.isHuronUser(user.entitlements);
+        return (user.userStatus === 'pending' || user.userStatus === 'error' || isHuronUser);
+      }
     }
 
     function keypressResendInvitation($event, userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {

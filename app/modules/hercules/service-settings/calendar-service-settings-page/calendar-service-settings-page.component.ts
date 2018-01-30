@@ -4,7 +4,7 @@ class CalendarServiceSettingsPageComponentCtrl implements ng.IComponentControlle
   constructor(
     private Analytics,
   ) {
-    this.Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_EXC_SETTINGS);
+    this.Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_EXC_SETTINGS);
   }
 
 }

@@ -30,7 +30,6 @@ function webpackConfig(env) {
     plugins: plugins.commonsChunkPlugins.concat([
       plugins.getHtmlWebpackPlugin({
         ngStrictDi: 'ng-strict-di',
-        loadAdobeScripts: false,
       }),
       new webpack.HotModuleReplacementPlugin(),
     ]),
@@ -66,7 +65,6 @@ function webpackConfig(env) {
 
     config.plugins[0] = plugins.getHtmlWebpackPlugin({
       ngStrictDi: 'ng-strict-di',
-      loadAdobeScripts: false,
       dllBundlesFrag: htmlFrag,
     });
 

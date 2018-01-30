@@ -4,7 +4,7 @@
   var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
   /* @ngInject */
-  function HelpdeskHuronDeviceController($stateParams, $window, HelpdeskHuronService, HelpdeskService, Notification) {
+  function HelpdeskHuronDeviceController($stateParams, $window, AccessibilityService, HelpdeskHuronService, HelpdeskService, Notification) {
     $('body').css('background', 'white');
     var vm = this;
     vm.deviceId = $stateParams.id;
@@ -48,12 +48,10 @@
       HelpdeskHuronService.getDeviceNumbers(vm.deviceId, vm.orgId, vm.device.ownerUser ? vm.device.ownerUser.uuid : null).then(function (deviceNumbers) {
         vm.deviceNumbers = deviceNumbers;
       }, vm._helpers.notifyError);
-
-      angular.element('.helpdesk-details').focus();
     }
 
     function keyPressHandler(event) {
-      if (event.keyCode === KeyCodes.ESCAPE) {
+      if (!AccessibilityService.isVisible(AccessibilityService.MODAL) && event.keyCode === KeyCodes.ESCAPE) {
         $window.history.back();
       }
     }

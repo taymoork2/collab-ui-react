@@ -1,21 +1,21 @@
+import { IOnboardedUsersAggregateResult, IUserNameAndEmail } from 'modules/core/users/shared/onboard/onboard.interfaces';
+import OnboardService from 'modules/core/users/shared/onboard/onboard.service';
+import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
+
 export class OnboardSummaryForAutoAssignModalController implements ng.IComponentController {
-  private dismiss: Function;
-  private stateData: any;  // TODO: better type
-  private userList: any; // TODO: better type
+  public dismiss: Function;
+  public autoAssignTemplateData: IAutoAssignTemplateData;
+  public userList: IUserNameAndEmail[];
   public saveLoading = false;
 
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
     private $state: ng.ui.IStateService,
     private Analytics,
     private Notification,
-    private Userservice,
+    private OnboardService: OnboardService,
   ) {}
-
-  public $onInit(): void {
-    this.stateData = _.get(this.$state, 'params.stateData');
-    this.userList = _.get(this.$state, 'params.userList');
-  }
 
   public dismissModal(): void {
     this.Analytics.trackAddUsers(this.Analytics.eventNames.CANCEL_MODAL);
@@ -24,7 +24,7 @@ export class OnboardSummaryForAutoAssignModalController implements ng.IComponent
 
   public back(): void {
     this.$state.go('users.add.manual', {
-      stateData: this.stateData,
+      autoAssignTemplateData: this.autoAssignTemplateData,
     });
   }
 
@@ -32,16 +32,18 @@ export class OnboardSummaryForAutoAssignModalController implements ng.IComponent
     this.saveLoading = true;
     const licenses = [];
     const userEntitlements = [];
-    this.Userservice.onboardUsersV2(this.userList, licenses, userEntitlements)
-      .then(() => {
-        this.Notification.success('userManage.autoAssignTemplate.editSummary.saveSuccess');
-        this.$state.go('users.list');
+
+    this.OnboardService.onboardUsersInChunks(this.userList, userEntitlements, licenses)
+      .catch((rejectedResponse) => {
+        // notes:
+        // - potentially multiple 'Userservice.onboardUsersLegacy()' calls could have been made
+        // - if any calls reject (or in the case of multiple calls, the first one rejects), we
+        //   error notify and re-reject
+        this.Notification.errorResponse(rejectedResponse);
+        return this.$q.reject();
       })
-      .catch((response) => {
-        this.Notification.errorResponse(response, 'userManage.autoAssignTemplate.editSummary.saveError');
-      })
-      .finally(() => {
-        this.saveLoading = false;
+      .then((aggregateResult: IOnboardedUsersAggregateResult) => {
+        this.$state.go('users.add.results', aggregateResult);
       });
   }
 }
@@ -50,6 +52,8 @@ export class OnboardSummaryForAutoAssignModalComponent implements ng.IComponentO
   public controller = OnboardSummaryForAutoAssignModalController;
   public template = require('./onboard-summary-for-auto-assign-modal.html');
   public bindings = {
-    dismiss: '&?',
+    dismiss: '&',
+    autoAssignTemplateData: '<',
+    userList: '<',
   };
 }

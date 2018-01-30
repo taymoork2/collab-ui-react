@@ -1,0 +1,37 @@
+<div class="modal-body">
+
+  <div class="row">
+    <div class="columns medium-4">
+      <h4>Cisco Spark Agreement</h4>
+    </div>
+    <div class="columns medium-5 medium-offset-1">
+      <div class="align-top">
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam a lectus id lectus malesuada eleifend id ac ante. Curabitur vel nibh a urna finibus fringilla. Donec et justo in velit molestie pharetra eget in risus. Aenean sit amet urna a felis volutpat
+          mattis. Cras tincidunt libero vitae risus euismod convallis. Fusce vehicula magna elit, fermentum gravida nisi malesuada non. Duis eget quam eget nisl lacinia convallis eu vel arcu. Curabitur diam felis, maximus sit amet auctor in, consequat
+          porttitor justo. Mauris pellentesque nunc eu blandit consequat. Maecenas tortor nulla, pharetra a mi et, eleifend egestas velit. Aenean ex quam, euismod ut feugiat a, efficitur eu dolor. Praesent vehicula nulla turpis. Mauris tempus nisl lorem,
+          rutrum dictum enim tincidunt id. Integer eget efficitur risus. Mauris eleifend eget ex vestibulum gravida. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse faucibus eros et turpis hendrerit porttitor. Nulla ut nisl non lectus
+          condimentum tincidunt. Pellentesque et lorem eu turpis malesuada accumsan. Quisque volutpat tortor sed velit mattis fermentum. Integer elementum, massa ut tempus faucibus, felis erat elementum ex, vitae porttitor augue eros ac sapien. Duis placerat
+          velit id cursus ullamcorper.
+        </p>
+        <div class="agreement-accept">
+          <input cs-input type="checkbox" ng-model="$ctrl.agreementAccepted" id="agreementAccepted" name="agreementAccepted" cs-input-label="{{:: 'accountLinking.wizard.agreementAcceptLabel' | translate}}" />
+        </div>
+      </div>
+    </div>
+    <div class="columns medium-2"></div>
+  </div>
+
+</div>
+
+<div class="modal-footer">
+  <button class="btn"
+          ng-click="$ctrl.backFunc()"
+          translate="common.back">
+  </button>
+  <button ng-disabled="!$ctrl.agreementAccepted"
+          class="btn btn--primary"
+          ng-click="$ctrl.next()"
+          translate="common.next">
+  </button>
+</div>

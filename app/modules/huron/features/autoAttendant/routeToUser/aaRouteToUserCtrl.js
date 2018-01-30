@@ -104,10 +104,16 @@
     // format name with extension
     function formatName(user, extension) {
       var name;
-      if (!_.isUndefined(user.displayName)) {
+      if (!_.isEmpty(_.get(user, 'displayName'))) {
         name = user.displayName;
+      } else if (_.isEmpty(_.get(user.name, 'givenName')) && _.isEmpty(_.get(user.name, 'familyName'))) {
+        name = _.get(user, 'userName');
       } else {
-        name = user.userName;
+        if (_.isEmpty(_.get(user.name, 'givenName'))) {
+          name = _.get(user.name, 'familyName');
+        } else {
+          name = _.get(user.name, 'givenName') + ' ' + _.get(user.name, 'familyName');
+        }
       }
 
       if (!_.isUndefined(extension) && extension.length > 0) {
