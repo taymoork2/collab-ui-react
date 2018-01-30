@@ -29,11 +29,6 @@ describe('Care Feature Ctrl should', function () {
 
   var myPersonId = 'my_person_id';
   var ownerDetails = { id: 'some_owner', displayName: 'Some Owner' };
-  var emptyCeInfosList = function () {
-    return {
-      items: [],
-    };
-  };
 
   var listCVAsSuccess = function () {
     return {
@@ -175,7 +170,7 @@ describe('Care Feature Ctrl should', function () {
     hasReferences: false,
     id: '818cbed6-43c3-40bb-932f-4e2802adf6a8',
     numbers: [],
-    referenceNames: []
+    referenceNames: [],
   }];
 
   beforeEach(angular.mock.module('Sunlight'));
@@ -587,16 +582,16 @@ describe('Care Feature Ctrl should', function () {
     });
 
     it('should get list of AAs and if there is any data, should change the pageState to showFeatures', function () {
-      expect(controller.pageState).toEqual('Loading');
+      expect(controller.pageState).toBe('Loading');
       getAllTemplatesDeferred();
       evaSpacesDeferred.resolve(listEvaSpacesSuccess());
       getAADeferred.resolve(ceInfosList());
       $scope.$apply();
-      expect(controller.pageState).toEqual('ShowFeatures');
+      expect(controller.pageState).toBe('ShowFeatures');
     });
 
     it('should get list of AAs and if data received is empty, should change the pageSate to newFeature', function () {
-      expect(controller.pageState).toEqual('Loading');
+      expect(controller.pageState).toBe('Loading');
       getAADeferred.resolve(getAAListSuccessResp(emptyListOfAAs));
       deferred.resolve(getTemplatesSuccess('chat', emptyListOfCTs));
       callbackDeferred.resolve(getTemplatesSuccess('callback', emptyListOfCTs));
@@ -604,7 +599,7 @@ describe('Care Feature Ctrl should', function () {
       cvaDeferred.resolve(getTemplatesSuccess('virtualAssistant', emptyListOfCTs));
       evaDeferred.resolve(getTemplatesSuccess('virtualAssistant', emptyListOfCTs));
       $scope.$apply();
-      expect(controller.pageState).toEqual('NewFeature');
+      expect(controller.pageState).toBe('NewFeature');
     });
 
     it('should be able call delete an AA function and call the $state service', function () {
@@ -634,6 +629,7 @@ describe('Care Feature Ctrl should', function () {
     it('should receive the HURON_FEATURE_DELETED event when an AA gets deleted with dependencies', function () {
       spyOn(Notification, 'error');
       $scope.$apply();
+      var featureTobBeDeleted = AAs[0];
       controller.filteredListOfFeatures = AAs;
       controller.deleteCareFeature(controller.filteredListOfFeatures[0], $event);
       $rootScope.$broadcast('HURON_FEATURE_DELETED', {
@@ -641,6 +637,7 @@ describe('Care Feature Ctrl should', function () {
         deleteFeatureId: AAs[0].id,
         deleteFeatureType: 'AA',
       });
+      expect(controller.filteredListOfFeatures).not.toEqual(jasmine.arrayContaining([featureTobBeDeleted]));
     });
 
     it('should filter a list of AAs', function () {
@@ -652,7 +649,7 @@ describe('Care Feature Ctrl should', function () {
       getAADeferred.resolve(getAAListSuccessResp(listOfAAs));
       $scope.$apply();
       controller.setFilter('AA');
-      expect(controller.filteredListOfFeatures.length).toEqual(3);
+      expect(controller.filteredListOfFeatures.length).toBe(3);
       expect(controller.filteredListOfFeatures[0].cardName).toEqual(AAs[0].cardName);
     });
 
@@ -662,8 +659,18 @@ describe('Care Feature Ctrl should', function () {
       $scope.$apply();
       controller.searchData('Third');
       controller.setFilter('all');
-      expect(controller.filteredListOfFeatures.length).toEqual(1);
-      expect(controller.filteredListOfFeatures[0].cardName).toEqual('Third AA');
+      expect(controller.filteredListOfFeatures.length).toBe(1);
+      expect(controller.filteredListOfFeatures[0].cardName).toBe('Third AA');
+    });
+
+    it('should be able to find the details of the dependant AA', function () {
+      controller.detailsHuronFeature(AAs[3], $event);
+      expect($state.go).toHaveBeenCalledWith('huronfeatures.aaListDepends', {
+        detailsFeatureName: AAs[3].cardName,
+        detailsFeatureId: AAs[3].id,
+        detailsFeatureType: 'AA',
+        detailsDependsList: AAs[3].dependsNames,
+      });
     });
   });
 });
