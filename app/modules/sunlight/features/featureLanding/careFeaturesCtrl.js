@@ -192,10 +192,9 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
     function init() {
       vm.pageState = pageStates.loading;
-      setupHybridFeatures().then(function () {
-        settingFeatures();
-      })
-        .catch(function () {
+      setupHybridFeatures()
+        .then(_.noop)
+        .finally(function () {
           settingFeatures();
         });
     }
