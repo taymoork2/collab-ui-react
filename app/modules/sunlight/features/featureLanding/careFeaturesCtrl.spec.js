@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Care Feature Ctrl should', function () {
-  var controller, $filter, $q, $rootScope, $state, $scope, Authinfo, CareFeatureList, CvaService, EvaService,
+  var controller, $controller, $filter, $q, $rootScope, $state, $scope, Authinfo, CareFeatureList, CvaService, EvaService, getAADeferred,
     Log, Notification, deferred, callbackDeferred, chatPlusCallbackDeferred, cvaDeferred, evaDeferred, evaSpacesDeferred, $translate, SparkService, getPersonDeferred, FeatureToggleService, AutoAttendantCeInfoModelService;
 
   var spiedAuthinfo = {
@@ -64,13 +64,13 @@ describe('Care Feature Ctrl should', function () {
           cardName: 'Main AA',
           numbers: ['1111'],
           id: 'c16a6027-caef-4429-b3af-9d61ddc71111',
-          featureName: 'huronHuntGroup.hg',
+          featureName: 'huronFeatureDetails.aa',
           filterValue: 'AA',
         }, {
           cardName: 'Second AA',
           numbers: ['2222'],
           id: 'c16a6027-caef-4429-b3af-9d61ddc72222',
-          featureName: 'huronHuntGroup.hg',
+          featureName: 'huronFeatureDetails.aa',
           filterValue: 'AA',
           hasReferences: true,
           referenceNames: ['Main AA'],
@@ -78,7 +78,7 @@ describe('Care Feature Ctrl should', function () {
           cardName: 'Third  AA',
           numbers: ['3333'],
           id: 'c16a6027-caef-4429-b3af-9d61ddc73333',
-          featureName: 'huronHuntGroup.hg',
+          featureName: 'huronFeatureDetails.aa',
           filterValue: 'AA',
         },
       ],
@@ -184,9 +184,10 @@ describe('Care Feature Ctrl should', function () {
     $provide.value('Authinfo', spiedAuthinfo);
   }));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$filter_, _$state_, _$q_, _Authinfo_, _CareFeatureList_, _Notification_, _Log_, _$translate_, _CvaService_, _EvaService_, _SparkService_, _AutoAttendantCeInfoModelService_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$filter_, _$state_, _$q_, _Authinfo_, _CareFeatureList_, _Notification_, _Log_, _$translate_, _CvaService_, _EvaService_, _SparkService_, _AutoAttendantCeInfoModelService_, _FeatureToggleService_) {
     $rootScope = _$rootScope_;
     $filter = _$filter_;
+    $controller = _$controller_;
     $q = _$q_;
     $state = _$state_;
     $scope = _$rootScope_.$new();
@@ -227,21 +228,6 @@ describe('Care Feature Ctrl should', function () {
     $state.isVirtualAssistantEnabled = true;
     // Turned on expert virtual assistant enabled flag
     $state.isExpertVirtualAssistantEnabled = true;
-
-    controller = $controller('CareFeaturesCtrl', {
-      $scope: $scope,
-      $state: $state,
-      $filter: $filter,
-      Authinfo: Authinfo,
-      CareFeatureList: CareFeatureList,
-      Log: Log,
-      Notification: Notification,
-      $translate: $translate,
-      CvaService: CvaService,
-      EvaService: EvaService,
-      SparkService: SparkService,
-      AutoAttendantCeInfoModelService: AutoAttendantCeInfoModelService,
-    });
   }));
 
   var getAllTemplatesDeferred = function () {
@@ -256,6 +242,20 @@ describe('Care Feature Ctrl should', function () {
   describe('Feature Toogle for Hybrid is disabled', function () {
     beforeEach(function () {
       spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
+      controller = $controller('CareFeaturesCtrl', {
+        $scope: $scope,
+        $state: $state,
+        $filter: $filter,
+        Authinfo: Authinfo,
+        CareFeatureList: CareFeatureList,
+        Log: Log,
+        Notification: Notification,
+        $translate: $translate,
+        CvaService: CvaService,
+        EvaService: EvaService,
+        SparkService: SparkService,
+        AutoAttendantCeInfoModelService: AutoAttendantCeInfoModelService,
+      });
       $scope.$apply();
     });
 
@@ -563,6 +563,20 @@ describe('Care Feature Ctrl should', function () {
   describe('Features Controller for AutoAttendant ', function () {
     beforeEach(function () {
       spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
+      controller = $controller('CareFeaturesCtrl', {
+        $scope: $scope,
+        $state: $state,
+        $filter: $filter,
+        Authinfo: Authinfo,
+        CareFeatureList: CareFeatureList,
+        Log: Log,
+        Notification: Notification,
+        $translate: $translate,
+        CvaService: CvaService,
+        EvaService: EvaService,
+        SparkService: SparkService,
+        AutoAttendantCeInfoModelService: AutoAttendantCeInfoModelService,
+      });
       $scope.$apply();
     });
     it('should push the AutoAttendant feature in Feature tab if Hybrid Toggle is enabled', function () {

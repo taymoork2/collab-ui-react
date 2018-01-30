@@ -13,7 +13,6 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
   /* @ngInject */
   function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, $rootScope, AutoAttendantCeInfoModelService, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, CvaService, EvaService, FeatureToggleService, HuronFeaturesListService) {
-
     var vm = this;
     vm.isVirtualAssistantEnabled = $state.isVirtualAssistantEnabled;
     vm.isExpertVirtualAssistantEnabled = $state.isExpertVirtualAssistantEnabled;
@@ -122,8 +121,8 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     }
 
     /**
-     * Function to push the AutoAttendant feature into the features list if 
-     * Hybrid is enabled. 
+     * Function to push the AutoAttendant feature into the features list if
+     * Hybrid is enabled.
      */
     function setupHybridFeatures() {
       return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridEnable).then(function (results) {
@@ -171,7 +170,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
               break;
             default:
               listOfNonVaFeatures = listOfNonVaFeatures.concat(vm.features[i].data);
-             break;
+              break;
           }
         }
         generateTemplateCountAndSpaceUsage();
@@ -440,6 +439,12 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
           deleteFeatureName: feature.cardName,
           deleteFeatureId: feature.id,
           deleteFeatureType: feature.filterValue,
+        });
+      } else {
+        $state.go('care.Features.DeleteFeature', {
+          deleteFeatureName: feature.name,
+          deleteFeatureId: feature.templateId,
+          deleteFeatureType: feature.featureType,
         });
       }
     }
