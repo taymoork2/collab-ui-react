@@ -8,7 +8,7 @@
     <h5 ng-if="!isDirSyncEnabled" translate="userManage.ad.adStatusDisabled"></h5>
   </div>
 
-  <div class="flex-item-no-resize ds-inline">
+  <div>
     <span>{{::'firstTimeWizard.results'|translate}}:</span>
     <strong ng-if="!umds.isUserAdmin()">{{umds.dirSyncStatusMessage}}</strong>
     <span ng-if="numUsersInSync > 0">
@@ -18,7 +18,7 @@
     </span>
   </div>
 
-  <div ng-if="!umds.isUserAdmin()" class="dirsync-info sync-dirsync-refresh-button flex-item-no-resize ds-inline">
+  <div ng-if="!umds.isUserAdmin()" class="user-manage-dir-sync__text--margin">
     <span translate="userManage.ad.lastSynced"></span>
     <span>{{lastEndTime | date:'MMM d yyyy h:mm a'}}</span>
     <a href ng-click="getStatus()" ng-if="!umds.isBusy"><i class="icon icon-refresh"></i></a>
