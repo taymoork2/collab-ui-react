@@ -28,8 +28,12 @@
           </div>
         </div>
       </form>
-      <button class="btn btn--primary btn--large message-box__btn" role="button" ng-click="login()" ng-disabled="loginForm.email.$invalid">
-      <span translate="loginPage.login"></span>
+      <button
+        class="btn btn--primary btn--large message-box__btn"
+        role="button"
+        ng-click="login()"
+        ng-disabled="loginForm.email.$invalid"
+        translate="loginPage.login">
       </button>
       <div class="message-box__footer" translate="loginPage.license"></div>
       <div ng-show="loading" class="login-spinner">

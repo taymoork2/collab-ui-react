@@ -1,7 +1,7 @@
 <h5>
   {{::'userManage.org.directorySynchronization' | translate}}
   <div cs-dropdown class="actions-menu" ng-if="!$ctrl.dirsyncUpdating && $ctrl.dirsyncEnabled">
-    <button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle icon icon-three-dots" aria-label="globalSettings.multiDirsync.toggleMenu"></button>
+    <button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle icon icon-three-dots" aria-label="{{::'common.toggleMenu' | translate}}"></button>
     <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
       <li ng-repeat="dirsync in $ctrl.dirSyncArray track by $index" ng-click="$ctrl.deleteDomain(dirsync)">
         <a translate="globalSettings.multiDirsync.turnOff" translate-values="{ domainName: dirsync.domains[0].domainName }"></a>
