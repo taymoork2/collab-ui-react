@@ -70,7 +70,7 @@ export class CloudConnectorService {
   }
 
   public getOffice365AdminConsentUrl(): ng.IPromise<string> {
-    const returnUrl = `${this.OAuthConfig.getAdminPortalUrl()}#/services`;
+    const returnUrl = `${this.OAuthConfig.getAdminPortalUrl()}/services`;
     return this.$http.get<IRequestAdminConsentResponse>(`${this.UrlConfig.getCccUrl()}/orgs/${this.Authinfo.getOrgId()}/services/squared-fusion-cal/provisioning/requestAdminConsent`, {
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
