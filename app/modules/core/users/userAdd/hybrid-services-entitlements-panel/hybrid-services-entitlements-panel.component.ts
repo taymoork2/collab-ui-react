@@ -13,6 +13,7 @@ interface IExtendedServiceDescription extends IServiceDescription {
 class HybridServicesEntitlementsPanelController implements ng.IComponentController {
 
   private static readonly HYBRID_SERVICES = 'hybridServices';
+  private allowRemove: boolean;
   private isEnabled = false;
   private entitlements: IUserEntitlementRequestItem[] = [];
   private showCalendarChoice: boolean;
@@ -85,6 +86,7 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
     if (!this.userEntitlementsStateData) {
       this.userEntitlementsStateData = [] as IUserEntitlementRequestItem[];
     }
+    this.allowRemove = !!this.allowRemove;
     this.initHybridServices(this.autoAssignTemplateData, this.userEntitlementsStateData);
   }
 
@@ -167,7 +169,7 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
 
   public setEntitlements(): void {
     // US8209 says to only add entitlements, not remove them. Allowing INACTIVE would remove entitlement when users are patched.
-    this.entitlements = this.HybridServicesEntitlementsPanelService.getEntitlements(this.services);
+    this.entitlements = this.HybridServicesEntitlementsPanelService.getEntitlements(this.services, { allowRemove: this.allowRemove });
     if (!_.isUndefined(this.entitlementsCallback)) {
       this.entitlementsCallback({
         entitlements: this.entitlements,
@@ -184,5 +186,6 @@ export class HybridServicesEntitlementsPanelComponent implements ng.IComponentOp
     onUpdate: '&?',
     autoAssignTemplateData: '<?',
     userEntitlementsStateData: '<',
+    allowRemove: '<',
   };
 }

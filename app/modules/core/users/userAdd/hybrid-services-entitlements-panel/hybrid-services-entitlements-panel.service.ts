@@ -1,6 +1,6 @@
 import { IServiceDescription } from 'modules/hercules/services/service-descriptor.service';
 import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
-import { IUserEntitlementRequestItem } from 'modules/core/users/shared/onboard/onboard.interfaces';
+import { IUserEntitlementRequestItem, UserEntitlementName, UserEntitlementState } from 'modules/core/users/shared/onboard/onboard.interfaces';
 
 interface IExtendedServiceDescription extends IServiceDescription {
   entitled?: boolean;
@@ -28,22 +28,34 @@ export class HybridServicesEntitlementsPanelService {
     private OnboardService,
   ) {}
 
-  public getEntitlements(hybridServices: IHybridServices): IUserEntitlementRequestItem[] {
+  public getEntitlements(hybridServices: IHybridServices, options?: { allowRemove: boolean }): IUserEntitlementRequestItem[] {
     let entitlements: IUserEntitlementRequestItem[] = [];
+    const allowRemove = _.get(options, 'allowRemove', false);
+    let entitlementName, entitlementState;
+
     if (hybridServices.calendarEntitled) {
       hybridServices.setSelectedCalendarEntitlement();
-      if (_.get(hybridServices, 'calendarExchangeOrOffice365.entitled')) {
-        entitlements.push(<IUserEntitlementRequestItem>{ entitlementState: 'ACTIVE', entitlementName: 'squaredFusionCal' });
-      } else if (_.get(hybridServices, 'calendarGoogle.entitled')) {
-        entitlements.push(<IUserEntitlementRequestItem>{ entitlementState: 'ACTIVE', entitlementName: 'squaredFusionGCal' });
+      if (_.has(hybridServices, 'calendarExchangeOrOffice365.entitled')) {
+        entitlementName = UserEntitlementName.SQUARED_FUSION_CAL;
+        entitlementState = _.get(hybridServices, 'calendarExchangeOrOffice365.entitled');
+        entitlements.push(this.OnboardService.toEntitlementItem(entitlementName, entitlementState));
+      }
+      if (_.has(hybridServices, 'calendarGoogle.entitled')) {
+        entitlementName = UserEntitlementName.SQUARED_FUSION_GCAL;
+        entitlementState = _.get(hybridServices, 'calendarGoogle.entitled');
+        entitlements.push(this.OnboardService.toEntitlementItem(entitlementName, entitlementState));
       }
     } else {
       hybridServices.selectedCalendarType = null;
     }
-    if (!this.hasHuronCallEntitlement() && _.get(hybridServices, 'callServiceAware.entitled')) {
-      entitlements.push(<IUserEntitlementRequestItem>{ entitlementState: 'ACTIVE', entitlementName: 'squaredFusionUC' });
-      if (hybridServices.callServiceConnect && hybridServices.callServiceConnect.entitled) {
-        entitlements.push(<IUserEntitlementRequestItem>{ entitlementState: 'ACTIVE', entitlementName: 'squaredFusionEC' });
+    if (!this.hasHuronCallEntitlement() && _.has(hybridServices, 'callServiceAware.entitled')) {
+      entitlementName = UserEntitlementName.SQUARED_FUSION_UC;
+      entitlementState = _.get(hybridServices, 'callServiceAware.entitled');
+      entitlements.push(this.OnboardService.toEntitlementItem(entitlementName, entitlementState));
+      if (_.has(hybridServices, 'callServiceConnect.entitled')) {
+        entitlementName = UserEntitlementName.SQUARED_FUSION_EC;
+        entitlementState = _.get(hybridServices, 'callServiceConnect.entitled');
+        entitlements.push(this.OnboardService.toEntitlementItem(entitlementName, entitlementState));
       }
     } else {
       if (hybridServices.callServiceAware) {
@@ -53,14 +65,21 @@ export class HybridServicesEntitlementsPanelService {
         hybridServices.callServiceConnect.entitled = false;
       }
     }
-    if (_.get(hybridServices, 'hybridMessage.entitled')) {
-      entitlements.push(<IUserEntitlementRequestItem>{ entitlementState: 'ACTIVE', entitlementName: 'sparkHybridImpInterop' });
+    if (_.has(hybridServices, 'hybridMessage.entitled')) {
+      entitlementName = UserEntitlementName.SPARK_HYBRID_IMP_INTEROP,
+      entitlementState = _.get(hybridServices, 'hybridMessage.entitled'),
+      entitlements.push(this.OnboardService.toEntitlementItem(entitlementName, entitlementState));
+    }
+
+    // disallow removing entitlements as-needed
+    if (!allowRemove) {
+      entitlements = _.reject(entitlements, { entitlementState: UserEntitlementState.INACTIVE });
     }
 
     return entitlements;
   }
 
-  public hasHuronCallEntitlement(): boolean {
+  private hasHuronCallEntitlement(): boolean {
     return this.OnboardService.huronCallEntitlement;
   }
 }
