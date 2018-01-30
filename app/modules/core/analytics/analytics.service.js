@@ -241,6 +241,15 @@
           VIEW_INVOICE: 'Online: View Invoice',
         },
       },
+      DEVICE_SEARCH: {
+        name: 'Devices search',
+        eventNames: {
+          INITIAL_SEARCH: 'CSDM Initial dev search',
+          SUGGESTION_PICKED_BY_KEYBOARD: 'CSDM Suggestion keyboard',
+          SUGGESTION_PICKED_BY_MOUSE: 'CSDM Suggestion mouse',
+          PERFORM_SEARCH: 'CSDM dev search',
+        },
+      },
     };
 
     var service = {

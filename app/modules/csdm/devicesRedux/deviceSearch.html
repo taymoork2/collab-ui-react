@@ -37,7 +37,7 @@
                     ng-repeat="suggestion in suggestionGroup.uiSuggestions track by $index"
                     ng-class="{active: suggestion.activeByKeyboard, hover: suggestion.activeByHover}"
                     ng-mouseenter="dctrl.suggestions.setActiveSuggestionByHover(suggestion)"
-                    ng-mouseup="dctrl.selectSuggestion(suggestion);dctrl.startSelecting = false">
+                    ng-mouseup="dctrl.selectSuggestion(suggestion, true);dctrl.startSelecting = false">
                   <div class="field" ng-show="$first"
                        ng-bind-html="suggestionGroup.readableField | highlight:dctrl.searchInput:true">
                   </div>
