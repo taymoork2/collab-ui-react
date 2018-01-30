@@ -54,7 +54,14 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
   }
 
   public $onInit(): void {
-    this.performSearch(this.searchObject);
+    let initialSearch = true;
+    if (this.searchObject && this.searchObject.hasAnyBulletOrEditedText()) {
+      const searchObject = this.searchObject.clone();
+      searchObject.setQuery('');
+      this.performSearch(searchObject, Caller.aggregator);
+      initialSearch = false;
+    }
+    this.performSearch(this.searchObject, initialSearch ? Caller.aggregator : Caller.searchOrLoadMore);
     this.$timeout(() => {
       //DOM has finished rendering
       this.setFocusToInputField();
@@ -62,9 +69,12 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     this.searchInteraction.receiver = this;
   }
 
-  private updateSearchResult(result?: SearchResult) {
+  private updateSearchResult(result?: SearchResult, caller?: Caller) {
     this.searchResultChanged({ result: result });
 
+    if (caller === Caller.aggregator) {
+      this.suggestions.setInitialSearchResult(result);
+    }
     this.suggestions.updateSuggestionsBasedOnSearchResult(result, this.searchObject);
   }
 
@@ -149,7 +159,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     }
 
     this.searchDelayTimer = this.$timeout(() => {
-      this.performSearch(searchClone); //TODO avoid at now
+      this.performSearch(searchClone, Caller.searchOrLoadMore);
       this.lastSearchObject = searchClone;
       this.suggestions.onSearchChanged(this.searchObject);
     }, nodelay ? 0 : DeviceSearch.SEARCH_DELAY_MS);
@@ -248,11 +258,11 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     }
   }
 
-  private performSearch(search: SearchObject) {
+  private performSearch(search: SearchObject, caller: Caller) {
     this.isSearching = true;
-    this.CsdmSearchService.search(search, Caller.searchOrLoadMore).then((response) => {
+    this.CsdmSearchService.search(search, caller).then((response) => {
       if (response && response.data) {
-        this.updateSearchResult(response.data);
+        this.updateSearchResult(response.data, caller);
         DeviceSearch.ShowPartialSearchErrors(response, this.Notification);
       } else {
         this.updateSearchResult();

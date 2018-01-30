@@ -488,6 +488,11 @@ describe('UserListCtrl: Ctrl', function () {
       expect(this.controller.canShowResendInvite(this.user)).toBeTruthy();
     });
 
+    it('should return false if org is dirsynch', function () {
+      this.$scope.dirsyncEnabled = true;
+      expect(this.controller.canShowResendInvite(this.user)).toBeFalsy();
+    });
+
     it('should return false if userStatus is neither pending nor error', function () {
       expect(this.controller.canShowResendInvite(this.user)).toBeFalsy();
       this.user.userStatus = 'batman';

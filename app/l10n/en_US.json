@@ -2743,7 +2743,7 @@
       "authorization": {
         "title": "Authorize Cisco Collaboration Cloud on your G Suite account",
         "line1": "To enable Hybrid Calendar Service for you users, you must authorize Cisco Collaboration Cloud on your G Suite account.",
-        "item1": "In a new tab, open your <a href=\"https://admin.google.com/AdminHome\" target=\"_blank\">G Suite account dashboard</a> and then go to Security.",
+        "item1": "In a new tab, open your <a href=\"https://admin.google.com/AdminHome\" target=\"_blank\">G Suite account dashboard</a> and then go to <strong>Security</strong>.",
         "item2": "Click <strong>Show more</strong> and then <strong>Advanced settings</strong>.",
         "item3": "Click <strong>Manage API Client Access</strong>.",
         "item4": "Copy the client name and scope to your clipboard.",

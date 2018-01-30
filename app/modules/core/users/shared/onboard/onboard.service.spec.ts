@@ -1,4 +1,4 @@
-import { IOnboardedUserResult } from 'modules/core/users/shared/onboard.interfaces';
+import { IOnboardedUserResult } from 'modules/core/users/shared/onboard/onboard.interfaces';
 
 import moduleName from './index';
 

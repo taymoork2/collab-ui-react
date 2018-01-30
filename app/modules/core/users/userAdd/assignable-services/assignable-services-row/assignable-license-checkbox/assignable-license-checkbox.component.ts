@@ -14,6 +14,9 @@ class AssignableLicenseCheckboxController implements ng.IComponentController {
     }
     const licenseId: string = this.license.licenseId;
     this.itemId = licenseId;
+    // notes:
+    // - 'entryData' might already be populated (ie. 'autoAssignTemplateData' was composed somewhere else)
+    // - initialize with default properties, but override if an entry already existed
     this.entryData = _.assignIn({
       isSelected: false,
       isDisabled: false,

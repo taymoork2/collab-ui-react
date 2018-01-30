@@ -1,4 +1,4 @@
-import { IOnboardScopeForUsersAdd, OnboardCtrlBoundUIStates } from 'modules/core/users/userAdd/shared/onboard.store';
+import { IOnboardScopeForUsersAdd, OnboardCtrlBoundUIStates } from 'modules/core/users/shared/onboard/onboard.store';
 import { KeyCodes } from 'modules/core/accessibility';
 
 // notes:

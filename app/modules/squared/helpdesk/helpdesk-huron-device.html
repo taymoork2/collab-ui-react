@@ -1,7 +1,7 @@
-<div class="helpdesk-details" ng-keyup="helpdeskDeviceCtrl.keyPressHandler($event)" tabindex="1">
+<div class="helpdesk-details" ng-keyup="helpdeskDeviceCtrl.keyPressHandler($event)">
   <div class="row head full">
     <div class="columns large-12">
-      <a ui-sref="helpdesk.search">
+      <a ui-sref="helpdesk.search" focus-on>
         <i class="icon icon-back icon-lg"></i>
         <span translate="helpdesk.backToSearchResults"></span>
       </a>
@@ -22,7 +22,7 @@
             ng-if="helpdeskDeviceCtrl.device.image"
             ng-src="{{helpdeskDeviceCtrl.device.image}}"
             style="width: 50px; margin-right: 0.5rem;"/> {{helpdeskDeviceCtrl.device.product}}
-          </span> 
+          </span>
         </div>
       </div>
 
@@ -34,7 +34,7 @@
           <span><i class="icon icon-circle circle-status-icon" ng-class="helpdeskDeviceCtrl.device.deviceStatus.cssColorClass"></i> {{helpdeskDeviceCtrl.device.deviceStatus.statusKey | translate}}</span>
         </div>
       </div>
-      
+
       <div class="row" ng-if="helpdeskDeviceCtrl.device.description">
         <div class="small-4 medium-3 large-2 columns details-heading">
           <span>{{'common.description' | translate}}:</span>
@@ -42,8 +42,8 @@
         <div class="small-8 medium-9 large-10 columns details-value-device">
           <span>{{helpdeskDeviceCtrl.device.description}}</span>
         </div>
-      </div>    
-      
+      </div>
+
       <div class="row">
         <div class="small-4 medium-3 large-2 columns details-heading">
           <span>{{'common.id' | translate}}:</span>
@@ -52,7 +52,7 @@
           <span>{{helpdeskDeviceCtrl.device.uuid}}</span>
         </div>
       </div>
-          
+
       <div class="row" ng-if="helpdeskDeviceCtrl.ownerUser">
         <div class="small-4 medium-3 large-2 columns details-heading">
           <span>{{'common.user' | translate}}:</span>
@@ -78,14 +78,14 @@
           </span>
         </div>
       </div>
-      
+
       <div class="row" ng-if="helpdeskDeviceCtrl.deviceNumbers">
         <div class="small-4 medium-3 large-2 columns details-heading">
           <span>{{'helpdesk.numbers' | translate}}:</span>
         </div>
         <div class="small-8 medium-9 large-10 columns details-value-device">
           <div ng-repeat="number in helpdeskDeviceCtrl.deviceNumbers | orderBy:'sortOrder'">
-            <span>{{number.directoryNumber.pattern}}</span><span ng-if="number.e164Mask"> {{'common.or' | translate}} {{number.e164Mask}}</span> 
+            <span>{{number.directoryNumber.pattern}}</span><span ng-if="number.e164Mask"> {{'common.or' | translate}} {{number.e164Mask}}</span>
             <span ng-if="number.dnUsage">- {{'helpdesk.' + number.dnUsage | translate}}</span>
             <span ng-if="number.users.length > 1"> ({{number.users.length}} {{'helpdesk.users' | translate | lowercase}})</span>
           </div>
@@ -93,7 +93,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="row full" ng-if="helpdeskDeviceCtrl.notFound">
     <div class="columns medium-12">
       <h3 class="display-name ellipsis" ng-if="helpdeskDeviceCtrl.device">{{helpdeskDeviceCtrl.device.displayName}}</h3>
