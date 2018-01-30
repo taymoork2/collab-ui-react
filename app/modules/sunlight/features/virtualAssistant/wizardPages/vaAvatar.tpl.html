@@ -55,7 +55,8 @@
       <span ng-switch-when="FileTypeError"> {{$ctrl.getText('avatar.errorUnsupportedFile')}}</span>
       <span ng-switch-when="FileSizeError"> {{$ctrl.getText('avatar.errorOverMaxFileSizeLimit')}}</span>
       <span ng-switch-when="FileUploadError"> {{$ctrl.getText('avatar.errorUploadFile')}}</span>
-      <span ng-switch-when="InvalidFile"> {{$ctrl.getText('invalidInput.invalidIcon')}}</span>
+      <span ng-switch-when="InvalidFile"> {{$ctrl.getText('avatar.errorInvalidIcon')}}</span>
+      <span ng-switch-when="InvalidIconDimensions"> {{$ctrl.getText('avatar.errorInvalidIconDimensions')}}</span>
     </div>
   </div>
 </div>

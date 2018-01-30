@@ -8030,6 +8030,10 @@
         "duplicateName": "The {{ featureName }} must have a unique name.\nClick the back arrow to return to the Name page and enter a valid name.",
         "invalidName": "The {{ featureName }} name is invalid.\nClick the back arrow to return to the Name page and enter a valid name.",
         "invalidIcon": "The {{ featureName }} avatar is invalid.\nClick the back arrow to return to the Avatar page and upload a valid avatar.",
+        "invalidIconFileType": "The supported file type of the {{ featureName }} avatar is PNG.\nClick the back arrow to return to the Avatar page and upload a valid avatar.",
+        "invalidIconTooLarge": "The image file size of the {{ featureName }} avatar must be less than 1 MB. \nClick the back arrow to return to the Avatar page and upload a valid avatar.",
+        "invalidIconCorrupted": "The {{ featureName }} avatar is invalid.\nClick the back arrow to return to the Avatar page and upload a valid avatar.",
+        "invalidIconDimensions" : "The dimensions of the {{ featureName }} avatar must be exactly 512 x 512 pixels.\nClick the back arrow to return to the Avatar page and upload a valid avatar.",
         "invalidEmail": "The email you entered is invalid.\nClick the back arrow to return to the Email page and enter a valid email."
       },
       "createTitle": "Create {{ featureName }}",
@@ -8086,11 +8090,13 @@
         "preview": "Avatar Preview",
         "fileBrowser": "file browser",
         "uploadingImage": "Uploading image...",
-        "uploadDesc": "Upload a PNG of maximum 1MB. For best results make sure that your image has a transparent background with no padding.",
+        "uploadDesc": "Upload a PNG of 512 x 512 pixels and maximum 1 MB. For best results make sure that your image has a transparent background with no padding.",
         "dragDropDesc": "Drag and drop a file or use the ",
         "errorUnsupportedFile": "Cannot upload unsupported file. Supported file type is PNG.",
         "errorOverMaxFileSizeLimit": "The image file size must be less than 1 MB.",
-        "errorUploadFile": "Cannot upload image. Try again."
+        "errorUploadFile": "Cannot upload image. Try again.",
+        "errorInvalidIcon": "The {{ featureName }} avatar is invalid.",
+        "errorInvalidIconDimensions" : "The dimensions of the {{ featureName }} avatar must be exactly 512 x 512 pixels."
       },
       "summary": {
         "cvaDesc": "You have configured {{ name }}. To use the assisted service feature in your organization's chat application, add your assistant to a Customer Support Template.",

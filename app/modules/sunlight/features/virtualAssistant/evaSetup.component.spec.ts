@@ -427,13 +427,20 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
   });
 
   describe('Summary Page', function () {
-    let deferred, listEvasDeferred;
+    let deferred, updateDeferred, updateIconDeferred, listEvasDeferred;
     beforeEach(function () {
       deferred = this.$q.defer();
+      updateDeferred = this.$q.defer();
+      updateIconDeferred = this.$q.defer();
       listEvasDeferred = this.$q.defer();
       spyOn(this.EvaService, 'addExpertAssistant').and.returnValue(deferred.promise);
-      spyOn(this.EvaService, 'updateExpertAssistant').and.returnValue(deferred.promise);
+      spyOn(this.EvaService, 'updateExpertAssistant').and.returnValue(updateDeferred.promise);
+      spyOn(this.EvaService, 'updateExpertAssistantIcon').and.returnValue(updateIconDeferred.promise);
       spyOn(this.EvaService, 'listExpertAssistants').and.returnValue(listEvasDeferred.promise);
+    });
+
+    afterEach(function () {
+      deferred = updateDeferred = updateIconDeferred = listEvasDeferred = undefined;
     });
 
     it("should fail to submit Expert Virtual Assistant when the 'saveTemplateErrorOccurred' is set", function () {
@@ -503,7 +510,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       const testName = 'My Test EVA';
       controller.template.configuration.pages.vaName.nameValue = testName;
       spyOn(this.$state, 'go');
-      deferred.resolve({
+      updateDeferred.resolve({
         success: true,
         status: 200,
       });
@@ -530,7 +537,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
           errorCode: '100106',
         }],
       };
-      deferred.reject(failedData);
+      updateDeferred.reject(failedData);
       controller.submitFeature();
       this.$scope.$apply();
 
@@ -538,7 +545,36 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String));
     });
 
-    it('should show correct notification if user does not have access for edit Edit', function () {
+    it('should show invalidIconDimensions if update icon fails on Edit', function () {
+      const myTranslation = 'invalid icon dimensions';
+      spyOn(this.$translate, 'instant').and.returnValue(myTranslation);
+      //by default, this flag is false
+      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
+      controller.template.configuration.pages.vaAvatar.oldFileValue = 'oldFile';
+      controller.isEditFeature = true;
+      updateDeferred.resolve({
+        success: true,
+        status: 200,
+      });
+      const failedData = {
+        success: false,
+        status: 403,
+        Errors: [{
+          errorCode: '100106',
+        }],
+      };
+      const response = (<any>Object).assign({ data: { type: 'invalidInput.invalidIconDimensions' } }, failedData);
+      updateIconDeferred.reject(response);
+      controller.submitFeature();
+      this.$scope.$apply();
+
+      expect(controller.saveTemplateErrorOccurred).toBeTruthy();
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(response, jasmine.any(String));
+      expect(controller.template.configuration.pages.vaAvatar.avatarError).toBe(controller.avatarErrorType.INVALID_ICON_DIMENSIONS);
+      expect(controller.summaryErrorMessage).toBe(myTranslation);
+    });
+
+    it('should show correct notification if user does not have access for edit', function () {
       //by default, this flag is false
       expect(controller.saveTemplateErrorOccurred).toBeFalsy();
       controller.isEditFeature = true;

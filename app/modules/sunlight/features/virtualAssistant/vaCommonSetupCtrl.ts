@@ -48,6 +48,7 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
     FILE_SIZE_ERROR: 'FileSizeError',
     FILE_UPLOAD_ERROR: 'FileUploadError',
     INVALID_FILE: 'InvalidFile',
+    INVALID_ICON_DIMENSIONS: 'InvalidIconDimensions',
   };
 
   // Avatar file load progress states
@@ -335,12 +336,12 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
                   this.changeAvatarUploadState();
                 }
               })
-              .catch(() => {
-                this.handleAvatarFileUploadError();
+              .catch((response) => {
+                this.handleAvatarFileUploadError(response);
               });
           })
-          .catch(() => {
-            this.handleAvatarFileUploadError();
+          .catch((response) => {
+            this.handleAvatarFileUploadError(response);
           })
           .finally(() => {
             this.changeAvatarUploadState();
@@ -349,9 +350,32 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
     }
   }
 
-  private handleAvatarFileUploadError() {
+  private getAvatarError(errorType: string): string {
+    if (errorType) {
+      switch (errorType) {
+        case 'invalidInput.invalidIconFileType':
+          return this.avatarErrorType.FILE_TYPE_ERROR;
+        case 'invalidInput.invalidIconTooLarge':
+          return this.avatarErrorType.FILE_SIZE_ERROR;
+        case 'invalidInput.invalidIconCorrupted':
+        case 'invalidInput.invalidIcon':
+          return this.avatarErrorType.INVALID_FILE;
+        case 'invalidInput.invalidIconDimensions':
+          return this.avatarErrorType.INVALID_ICON_DIMENSIONS;
+      }
+    }
+    return '';
+  }
+
+  private handleAvatarFileUploadError(response?: ng.IHttpResponse<any>): void {
     if (!this.template.configuration.pages.vaAvatar.uploadCanceled) {
-      this.template.configuration.pages.vaAvatar.avatarError = this.avatarErrorType.FILE_UPLOAD_ERROR;
+      const errorType = response && response.data ? response.data.type : null;
+      const avatarError = this.getAvatarError(errorType);
+      if (!_.isEmpty(avatarError)) {
+        this.template.configuration.pages.vaAvatar.avatarError = avatarError;
+      } else {
+        this.template.configuration.pages.vaAvatar.avatarError = this.avatarErrorType.FILE_UPLOAD_ERROR;
+      }
     }
   }
 
@@ -437,12 +461,13 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
           //save current name so we can check against it when user goes back to name page to change the name
           this.template.configuration.pages.vaName.nameWithError = this.template.configuration.pages.vaName.nameValue;
           break;
-        case 'invalidInput.invalidIcon':
-          this.template.configuration.pages.vaAvatar.avatarError = this.avatarErrorType.INVALID_FILE;
-          break;
         case 'invalidInput.invalidAccessToken':
           this.template.configuration.pages.cvaAccessToken.invalidToken = true;
           this.template.configuration.pages.cvaAccessToken.needsValidation = false;
+      }
+      const avatarError = this.getAvatarError(errorType);
+      if (!_.isEmpty(avatarError)) {
+        this.template.configuration.pages.vaAvatar.avatarError = avatarError;
       }
     }
   }

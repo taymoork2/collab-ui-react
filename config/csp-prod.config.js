@@ -62,6 +62,7 @@ module.exports = {
     'https://*.clouddrive.com',
     'https://*.localytics.com',
     'https://*.rackcdn.com',
+    'http://*.rackcdn.com', // Expert Virtual Assistant avatar icon
     'https://bam.nr-data.net', // New Relic Browser
   ],
   // valid sources for sources for JavaScript
