@@ -2,7 +2,7 @@ import {
   PSTN, NUMTYPE_DID, NXX, NPA, GROUP_BY, NUMTYPE_TOLLFREE, TATA, BLOCK_ORDER, NUMBER_ORDER,
   PORT_ORDER, AUDIT, UPDATE, DELETE, ADD, PROVISIONED, CANCELLED, PENDING, QUEUED, TYPE_PORT,
   ORDER, ADMINTYPE_PARTNER, ADMINTYPE_CUSTOMER, PSTN_CARRIER_ID, E911_SIGNEE, SWIVEL,
-  ContractStatus,
+  ContractStatus, NUMTYPE_IMPORTED,
 } from './pstn.const';
 import {
   PstnModel,
@@ -457,14 +457,26 @@ export class PstnService {
   public orderNumbersV2Swivel(customerId: string, numbers: string[]): ng.IPromise<any[]> {
     const promises: ng.IPromise<any>[] = [];
     let tfnNumbers: string[] = [];
+    let importedNumbers: string[] = [];
 
     tfnNumbers = _.remove(numbers, number => {
       return this.PhoneNumberService.getPhoneNumberType(number) === PhoneNumberType.TOLL_FREE;
     });
 
+    importedNumbers = _.remove(numbers, number => {
+      const e164FormattedNumber = this.PhoneNumberService.getE164Format(number);
+      return !this.PhoneNumberService.internationalNumberValidator(e164FormattedNumber);
+    });
+
     const tfnPayload = {
       numbers: tfnNumbers,
       numberType: NUMTYPE_TOLLFREE,
+      createdBy: this.setCreatedBy(),
+    };
+
+    const importedPayload = {
+      numbers: importedNumbers,
+      numberType: NUMTYPE_IMPORTED,
       createdBy: this.setCreatedBy(),
     };
 
@@ -486,6 +498,13 @@ export class PstnService {
           customerId: customerId,
       }, tfnPayload).$promise;
       promises.push(tollFreePromise);
+    }
+
+    if (importedNumbers.length > 0) {
+      const importedPromise = this.TerminusService.customerNumbersOrderV2().save({
+        customerId: customerId,
+      }, importedPayload).$promise;
+      promises.push(importedPromise);
     }
     return this.$q.all(promises);
   }
