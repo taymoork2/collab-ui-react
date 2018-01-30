@@ -21,7 +21,7 @@
   <div ng-if="!umds.isUserAdmin()" class="user-manage-dir-sync__text--margin">
     <span translate="userManage.ad.lastSynced"></span>
     <span>{{lastEndTime | date:'MMM d yyyy h:mm a'}}</span>
-    <a href ng-click="getStatus()" ng-if="!umds.isBusy"><i class="icon icon-refresh"></i></a>
+    <a href ng-click="getStatus()" ng-if="!umds.isBusy"><i class="icon icon-refresh user-manage-dir-sync__icon-refresh"></i></a>
   </div>
 
   <div class="dirsync-info flex-item-resize">

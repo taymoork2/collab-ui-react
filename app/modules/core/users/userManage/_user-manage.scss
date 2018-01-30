@@ -65,14 +65,6 @@
 
 .user-manage {
   .sync-status {
-    .icon-refresh {
-      @include vr-spacing(m, 0.5);
-
-      font-weight: bolder;
-      position: relative;
-      top: 0.1rem;
-    }
-
     .ds-sync {
       display: flex;
       flex-direction: row;

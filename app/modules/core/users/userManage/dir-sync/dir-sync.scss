@@ -1,3 +1,12 @@
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
 .user-manage-dir-sync__text--margin {
   margin-top: 1rem;
+}
+
+.user-manage-dir-sync__icon-refresh {
+  @include vr-spacing(m, 0.5);
+
+  font-weight: bolder;
+  top: 0.1rem;
 }
