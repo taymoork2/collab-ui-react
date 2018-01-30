@@ -84,7 +84,7 @@ export class CloudConnectorService {
   public confirmO365Provisioning(email: string): ng.IPromise<''> {
     return this.$http.get<any>(`${this.UrlConfig.getCccUrl()}/orgs/${this.Authinfo.getOrgId()}/services/squared-fusion-cal/provisioning/confirmO365Provisioning`, {
       params: {
-        testEmail: encodeURIComponent(email),
+        testEmail: email,
       },
     }).then(r => r.data);
   }
