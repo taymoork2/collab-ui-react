@@ -18,3 +18,8 @@
     overflow-x: hidden;
   }
 }
+
+// TODO decouple this override from the .user-csv implementation
+.user-csv.modal-body > .flex-container.user-manage-dir-sync__flex-container {
+  flex-shrink: 0;
+}

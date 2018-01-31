@@ -73,8 +73,4 @@
       @include vr-spacing(mb, 0);
     }
   }
-
-  &.user-csv.modal-body.user-manage-advanced-results > .flex-container {
-    flex-shrink: 0;
-  }
 }
