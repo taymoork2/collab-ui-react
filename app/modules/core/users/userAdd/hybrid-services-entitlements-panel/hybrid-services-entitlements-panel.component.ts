@@ -1,35 +1,21 @@
 import { CloudConnectorService, ICCCService } from 'modules/hercules/services/calendar-cloud-connector.service';
 import { FeatureToggleService } from 'modules/core/featureToggle';
 import { IServiceDescription, ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
-import { IEntitlementNameAndState } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
 import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
 import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 import { UserEntitlementName, IUserEntitlementRequestItem } from 'modules/core/users/shared/onboard/onboard.interfaces';
+import { HybridServicesEntitlementsPanelService, IHybridServices } from './hybrid-services-entitlements-panel.service';
 
 interface IExtendedServiceDescription extends IServiceDescription {
   entitled?: boolean;
 }
 
-export interface IHybridServices {
-  calendarEntitled: boolean;
-  selectedCalendarType: HybridServiceId | null;
-  hybridMessage: IExtendedServiceDescription | null;
-  calendarExchangeOrOffice365: IExtendedServiceDescription | null;
-  calendarGoogle: IExtendedServiceDescription | null;
-  callServiceAware: IExtendedServiceDescription | null;
-  callServiceConnect: IExtendedServiceDescription | null;
-  notSetupText: string;
-  hasHybridMessageService: Function;
-  hasCalendarService: Function;
-  hasCallService: Function;
-  setSelectedCalendarEntitlement: Function;
-}
-
 class HybridServicesEntitlementsPanelController implements ng.IComponentController {
 
   private static readonly HYBRID_SERVICES = 'hybridServices';
+  private allowRemove: boolean;
   private isEnabled = false;
-  private entitlements: IEntitlementNameAndState[] = [];
+  private entitlements: IUserEntitlementRequestItem[] = [];
   private showCalendarChoice: boolean;
   private services: IHybridServices;
   private entitlementsCallback: Function;
@@ -43,7 +29,7 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
     private Authinfo,
     private CloudConnectorService: CloudConnectorService,
     private FeatureToggleService: FeatureToggleService,
-    private OnboardService,
+    private HybridServicesEntitlementsPanelService: HybridServicesEntitlementsPanelService,
     private ServiceDescriptorService: ServiceDescriptorService,
 
   ) {
@@ -100,6 +86,7 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
     if (!this.userEntitlementsStateData) {
       this.userEntitlementsStateData = [] as IUserEntitlementRequestItem[];
     }
+    this.allowRemove = !!this.allowRemove;
     this.initHybridServices(this.autoAssignTemplateData, this.userEntitlementsStateData);
   }
 
@@ -182,33 +169,7 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
 
   public setEntitlements(): void {
     // US8209 says to only add entitlements, not remove them. Allowing INACTIVE would remove entitlement when users are patched.
-    this.entitlements = [];
-    if (this.services.calendarEntitled) {
-      this.services.setSelectedCalendarEntitlement();
-      if (_.get(this.services, 'calendarExchangeOrOffice365.entitled')) {
-        this.entitlements.push({ entitlementState: 'ACTIVE', entitlementName: 'squaredFusionCal' });
-      } else if (_.get(this.services, 'calendarGoogle.entitled')) {
-        this.entitlements.push({ entitlementState: 'ACTIVE', entitlementName: 'squaredFusionGCal' });
-      }
-    } else {
-      this.services.selectedCalendarType = null;
-    }
-    if (!this.hasHuronCallEntitlement() && _.get(this.services, 'callServiceAware.entitled')) {
-      this.entitlements.push({ entitlementState: 'ACTIVE', entitlementName: 'squaredFusionUC' });
-      if (this.services.callServiceConnect && this.services.callServiceConnect.entitled) {
-        this.entitlements.push({ entitlementState: 'ACTIVE', entitlementName: 'squaredFusionEC' });
-      }
-    } else {
-      if (this.services.callServiceAware) {
-        this.services.callServiceAware.entitled = false;
-      }
-      if (this.services.callServiceConnect) {
-        this.services.callServiceConnect.entitled = false;
-      }
-    }
-    if (_.get(this.services, 'hybridMessage.entitled')) {
-      this.entitlements.push({ entitlementState: 'ACTIVE', entitlementName: 'sparkHybridImpInterop' });
-    }
+    this.entitlements = this.HybridServicesEntitlementsPanelService.getEntitlements(this.services, { allowRemove: this.allowRemove });
     if (!_.isUndefined(this.entitlementsCallback)) {
       this.entitlementsCallback({
         entitlements: this.entitlements,
@@ -216,10 +177,9 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
     }
   }
 
-  public hasHuronCallEntitlement(): boolean {
-    return this.OnboardService.huronCallEntitlement;
+  public hasHuronCallEntitlement() {
+    return this.HybridServicesEntitlementsPanelService.hasHuronCallEntitlement();
   }
-
 }
 
 export class HybridServicesEntitlementsPanelComponent implements ng.IComponentOptions {
@@ -230,5 +190,6 @@ export class HybridServicesEntitlementsPanelComponent implements ng.IComponentOp
     onUpdate: '&?',
     autoAssignTemplateData: '<?',
     userEntitlementsStateData: '<',
+    allowRemove: '<',
   };
 }

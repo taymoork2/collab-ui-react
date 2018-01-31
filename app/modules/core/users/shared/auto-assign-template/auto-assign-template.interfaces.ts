@@ -1,6 +1,6 @@
 import { ILicenseUsage, ISubscription } from 'modules/core/users/userAdd/assignable-services/shared/license-usage-util.interfaces';
 import { IUserEntitlementRequestItem } from 'modules/core/users/shared/onboard/onboard.interfaces';
-import { IHybridServices } from 'modules/core/users/userAdd/hybrid-services-entitlements-panel/hybrid-services-entitlements-panel.component';
+import { IHybridServices } from 'modules/core/users/userAdd/hybrid-services-entitlements-panel/hybrid-services-entitlements-panel.service';
 
 export interface IAutoAssignTemplateData {
   LICENSE: {

@@ -1,4 +1,4 @@
-import { IOnboardedUserResult } from 'modules/core/users/shared/onboard/onboard.interfaces';
+import { IOnboardedUserResult, UserEntitlementState } from 'modules/core/users/shared/onboard/onboard.interfaces';
 
 import moduleName from './index';
 
@@ -388,6 +388,34 @@ describe('OnboardService:', () => {
         foo3: 1,
         foo4: false,
       })).toEqual(['foo1']);
+    });
+  });
+
+  describe('toEntitlementItem():', () => {
+    it('should return an object usable for a request payload for making changes to a user entitlement', function () {
+      spyOn(this.OnboardService, 'toEntitlementState').and.returnValue('fake-toEntitlementState-result');
+      expect(this.OnboardService.toEntitlementItem('foo', true)).toEqual({
+        entitlementName: 'foo',
+        entitlementState: 'fake-toEntitlementState-result',
+      });
+      expect(this.OnboardService.toEntitlementItem('bar', false)).toEqual({
+        entitlementName: 'bar',
+        entitlementState: 'fake-toEntitlementState-result',
+      });
+      expect(this.OnboardService.toEntitlementItem('baz')).toEqual({
+        entitlementName: 'baz',
+        entitlementState: 'fake-toEntitlementState-result',
+      });
+    });
+  });
+
+  describe('toEntitlementState():', () => {
+    it('should return either "ACTIVE" or "INACTIVE" depending on the truthiness of the param', function () {
+      expect(this.OnboardService.toEntitlementState(true)).toBe(UserEntitlementState.ACTIVE);
+      expect(this.OnboardService.toEntitlementState(false)).toBe(UserEntitlementState.INACTIVE);
+      expect(this.OnboardService.toEntitlementState(null)).toBe(UserEntitlementState.INACTIVE);
+      expect(this.OnboardService.toEntitlementState(undefined)).toBe(UserEntitlementState.INACTIVE);
+      expect(this.OnboardService.toEntitlementState()).toBe(UserEntitlementState.INACTIVE);
     });
   });
 });
