@@ -7,6 +7,7 @@ import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-s
 export interface ISimplifiedConnector {
   alarms: IConnectorAlarm[];
   connectorType: ConnectorType;
+  clusterId: string;
   hasUpgradeAvailable: boolean;
   upgradesAutomatically: boolean;
   id: string;
@@ -176,6 +177,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
               const simplifiedConnector: ISimplifiedConnector = {
                 alarms: connector.alarms,
                 connectorType: connector.connectorType,
+                clusterId: connector.clusterId,
                 hasUpgradeAvailable: this.hasUpgradeAvailable(connector),
                 upgradesAutomatically: this.upgradesAutomatically(connector),
                 id: connector.id,

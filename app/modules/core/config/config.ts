@@ -394,6 +394,7 @@ export class Config {
       'services-overview',
       'resource-group-settings',
       'cluster-list',
+      'hybrid-services-event-history-page',
       'expressway-cluster',
       'hybrid-services-connector-sidepanel',
       'cucm-cluster', // Remove when squared-fusion-khaos entitlement is returned by Atlas backend
