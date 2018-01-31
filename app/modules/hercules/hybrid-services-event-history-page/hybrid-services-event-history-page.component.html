@@ -1,0 +1,40 @@
+<div class="hercules hercules-fix-paragraphs">
+  <cs-page-header title-name="{{:: 'hercules.eventHistory.pageTitle' | translate}}"
+                  back="true"
+                  js-back="true"></cs-page-header>
+  <cs-page-sub-header>
+    <cs-page-sub-header-left class="medium-9">
+
+      <span translate="hercules.eventHistory.serviceFilter"></span>
+      <form>
+        <div class="filter-dropdown">
+          <cs-select ng-model="$ctrl.selectedServiceFilter"
+                     options="$ctrl.servicesOptions"
+                     on-change-fn="$ctrl.serviceFilterChanged()">
+          </cs-select>
+        </div>
+      </form>
+      <span translate="hercules.eventHistory.resourceFilter"></span>
+      <form>
+        <div class="filter-dropdown">
+          <cs-select ng-model="$ctrl.selectedResourceFilter"
+                     options="$ctrl.resourcesOptions"
+                     on-change-fn="$ctrl.resourceFilterChanged()">
+          </cs-select>
+        </div>
+      </form>
+
+    </cs-page-sub-header-left>
+    <cs-page-sub-header-right class="medium-3">
+        <span translate="hercules.eventHistory.dataSince"></span>
+        <span class="timestamp" ng-if="$ctrl.earliestTimestampSearched">{{$ctrl.formatTime($ctrl.earliestTimestampSearched)}}</span>
+        <span cs-loader class="timestamp" ng-if="!$ctrl.earliestTimestampSearched"></span>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+  <hybrid-services-cluster-status-history-table service-id="$ctrl.serviceId"
+                                                connector-id="$ctrl.connectorId"
+                                                resource-filter="$ctrl.resourceFilter"
+                                                cluster-id="$ctrl.clusterId"
+                                                earliest-timestamp-searched-updated="$ctrl.earliestTimestampSearchedUpdated(options)">
+  </hybrid-services-cluster-status-history-table>
+</div>

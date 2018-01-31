@@ -1,9 +1,5 @@
 <setting-section setting="$ctrl.clusterSection" class="needs-border-top">
 
-  <expressway-cluster-history-section cluster-id="$ctrl.clusterId"
-                                      cluster-name="$ctrl.cluster.name"
-                                      ng-if="$ctrl.atlasHybridAuditLogEnabled && $ctrl.cluster.targetType === 'c_mgmt'"></expressway-cluster-history-section>
-
   <div class="sub-section" ng-if="$ctrl.showRenameSection" id="renameSection">
     <h5 class="sub-section__label" translate="common.rename"></h5>
     <p ng-if="$ctrl.cluster.targetType !== 'ept'"

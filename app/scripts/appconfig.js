@@ -5205,6 +5205,51 @@
             controller: 'ResourceGroupSettingsController',
             controllerAs: 'rgsCtrl',
             parent: 'main',
+          })
+          .state('hybrid-services-event-history-page', {
+            parent: 'main',
+            url: '/services/clusters/history?cluster=clusterId&serviceId&connectorId',
+            template: '<hybrid-services-event-history-page cluster-id="$resolve.clusterId" connector-id="$resolve.connectorId" service-id="$resolve.serviceId" resource-filter="$resolve.resourceFilter"></hybrid-services-event-history-page>',
+            params: {
+              clusterId: null,
+              connectorId: null,
+              serviceId: null,
+              resourceFilter: null,
+            },
+            resolve: {
+              clusterId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
+              connectorId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.connectorId;
+              },
+              serviceId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.serviceId;
+              },
+              resourceFilter: /* @ngInject */ function ($stateParams) {
+                return $stateParams.resourceFilter;
+              },
+            },
+          })
+          .state('hybrid-services-event-history-page.sidepanel', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<hybrid-services-cluster-status-history-sidepanel event-item="$resolve.eventItem"></hybrid-services-event-history-cluster-alarm-history-sidepanel>',
+              },
+              'header@hybrid-services-event-history-page.sidepanel': {
+                template: require('modules/hercules/hybrid-services-event-history-page/cluster-status-history/cluster-status-history-sidepanel-header.html'),
+              },
+            },
+            params: {
+              eventItem: null,
+            },
+            resolve: {
+              eventItem: /* @ngInject */ function ($stateParams) {
+                return $stateParams.eventItem;
+              },
+              displayName: translateDisplayName('sidePanelBreadcrumb.overview'),
+            },
           });
 
         $stateProvider

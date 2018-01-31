@@ -1531,6 +1531,7 @@
     "active": "Active",
     "add": "Add",
     "agree": "Agree",
+    "alarm": "Alarm",
     "alert": "Alert",
     "all": "All",
     "and": "and",
@@ -1538,6 +1539,7 @@
     "assign": "Assign",
     "assigned": "Assigned",
     "authorize": "Authorize",
+    "automatic": "Automatic",
     "back": "Back",
     "begin": "Begin",
     "cancel": "Cancel",
@@ -2477,7 +2479,7 @@
       "contact-center-context": "Context Service",
       "squared-fusion-ec": "Call Service Connect",
       "squared-fusion-ec.full": "Call Service Connect",
-      "squared-fusion-mgmt": "Expressway Management Service",
+      "squared-fusion-mgmt": "Management Service",
       "spark-hybrid-impinterop": "Message Service"
     },
     "hybridServiceNames": {
@@ -2502,7 +2504,7 @@
       "contact-center-context": "Context Connector",
       "squared-fusion-ec": "Call Connector",
       "squared-fusion-mgmt": "Management Connector",
-      "spark-hybrid-impinterop": "Hybrid Message Connector"
+      "spark-hybrid-impinterop": "Message Connector"
     },
     "connectorNameFromConnectorType": {
       "c_cal": "Calendar Connector",
@@ -2514,7 +2516,7 @@
       "cs_context": "Context Connector",
       "ucm_mgmt": "Management Connector",
       "c_serab": "Serviceability Connector",
-      "c_imp": "Hybrid Message Connector"
+      "c_imp": "Message Connector"
     },
     "shortConnectorNameFromConnectorType": {
       "c_cal": "Calendar",
@@ -3408,6 +3410,132 @@
     "office365FailureModal": {
       "subtitle": "An error occured during the authorization",
       "errorCode": "Error Code: {{code}}."
+    },
+    "eventHistory": {
+      "pageTitle": "Alarm, Status, and Upgrade History",
+      "featureDescription": "View all raised and resolved alarms, connector status changes, and cluster configuration changes over the last 7 days.",
+      "viewHistory": "View History",
+      "noEventsFound": "No Events Found",
+      "cannotReadEventData": "Could not read event history data",
+      "cannotReadResourceNames": "Could not read resource names. Defaulting to not filtering on any specific resource.",
+      "scheduledTask": "Scheduled Task",
+      "automatic": "Automatic",
+      "allServices": "All Services",
+      "allResources": "All Resources",
+      "serviceFilter": "Service Filter:",
+      "resourceFilter": "Resource Filter:",
+      "dataSince": "Events since",
+      "connectorProvisioned": "Cluster has been provisioned with {{connectorName}} version {{newVersion}}",
+      "connectorDeprovisioned": "{{connectorName}} has been removed from cluster",
+      "connectorProvisioningChanged": "{{connectorName}} upgrade to {{newVersion}} initiated",
+      "serviceEnabled": "{{serviceName}} has been enabled",
+      "serviceDisabled": "{{serviceName}} has been disabled",
+      "newUpgradeSchedule": "New Upgrade Schedule: {{newSchedule}}",
+      "clusterRenamed": "Cluster Name Updated",
+      "resourceGroupChanged": "Resource Group Changed",
+      "releaseChannelChanged": "Release Channel Changed",
+      "connectorEventTitles": {
+        "downloading": "{{connectorType}} downloading",
+        "installing": "{{connectorType}} installing",
+        "not_installed": "{{connectorType}} not installed",
+        "disabled": "{{connectorType}} disabled",
+        "not_initialized": "{{connectorType}} not initialized",
+        "not_operational": "{{connectorType}} not operational",
+        "not_configured": "{{connectorType}} not configured",
+        "running": "{{connectorType}} version {{version}} running and operational"
+      },
+      "table": {
+        "event": "Event",
+        "severity": "Severity",
+        "type": "Type",
+        "service": "Service",
+        "resource": "Resource",
+        "performedBy": "Performed By",
+        "time": "Time",
+        "critical": "Critical",
+        "error": "Error",
+        "warning": "Warning",
+        "info": "Info",
+        "resolved": "Resolved",
+        "ignored": "Ignored",
+        "none": "None"
+      },
+      "eventClasses": {
+        "cluster": "Cluster",
+        "connector": "Connector",
+        "alarm": "Alarm",
+        "service": "Service"
+      },
+      "sidepanel": {
+        "header": "Event Details",
+        "description": "Description",
+        "connectorEvents": {
+          "provideInfoBelow": "Provide the information below when opening a support case.",
+          "not_installed": "The Expressway reports that {{localizedConnectorName}} is not installed. This state is expected for a short while for new deployments, and it could also happen during upgrades.",
+          "not_installed-help": "Something is likely to be misconfigured if this state lasts for more than a couple of minutes, and admin action is required to fix it. The Expressway's Management Connector might have raised an alarm that could assist you with troubleshooting.",
+          "disabled": "{{localizedConnectorName}} is on version {{softwareVersion}}, but the connector has been disabled on the Expressway. Connectors should not be kept in a disabled state: Either log in to the Expressway web interface to start it, or uninstall it using the cluster configuration page in Cisco Spark Control Hub.",
+          "downloading": "Version {{softwareVersion}} of  {{localizedConnectorName}} is being downloaded from Cisco Collaboration Cloud. It will be installed when it has finished downloading.",
+          "installing": "{{localizedConnectorName}} version {{softwareVersion}} has finished downloading from Cisco Collaboration Cloud, and is now installing on the Expressway. Installation normally take less than a minute.",
+          "not_configured": "{{localizedConnectorName}} version {{softwareVersion}} has been installed, but the connector has not been configured. Log in to the Expressway to configure it, and then start the connector.",
+          "initializing": "{{localizedConnectorName}} version {{softwareVersion}} has been installed, but the new software is still starting up, and is not yet initialized. Initializing the connector software might take several hours for connectors that are running at full capacity and host a lot of users.",
+          "not_operational": "{{localizedConnectorName}} version {{softwareVersion}} is running, but is reporting that the software is not operational. This is not expected, and admin intervention is required to correct it.",
+          "running": "The {{localizedConnectorName}} software is running version {{softwareVersion}} and is operational. This is the expected state after a successful upgrade or new installation."
+        },
+        "alarmEvents": {
+          "alarmRaisedEmailsSentTitle": "Emails sent about new alarm",
+          "alarmResolvedEmailsSentTitle": "Emails sent about resolved alarm",
+          "alarmRaised": "An alarm has been raised on the Expressway node {{hostname}}.",
+          "alarmRaised-description": "The Expressway provided the following alarm description: <strong>{{description}}</strong>",
+          "alarmResolved": "The alarm titled <strong>{{title}}</strong> has now been resolved on node {{hostname}}.",
+          "alarmDebounced": "An alarm titled <strong>{{title}}</strong> was raised on the Expressway, and then marked as resolved within a few minutes.",
+          "alarmDebounced-help": "This alarm was resolved so quickly that Cisco Collaboration Cloud did not send an email notification about it. Alarms that auto-resolve are normally not a cause for concern, and do not require admin intervention unless they keep being raised for a substantial amount of time.",
+          "alarmRaisedNotificationSent": "Cisco Collaboration Cloud has emailed {{recipientCount}} recipients about the new alarm titled <strong>{{title}}</strong> on node {{hostname}}.",
+          "alarmResolvedNotificationSent": "Cisco Collaboration Cloud has emailed {{recipientCount}} recipients because the alarm titled <strong>{{title}}</strong> on node {{hostname}} was marked as resolved."
+        },
+        "clusterEvents": {
+          "firstUpgradeSchedule": "All connectors in the Expressway cluster have been configured with the following upgrade schedule: {{upgradeSchedule}}",
+          "changedUpgradeSchedule": "{{username}} has changed the upgrade schedule for all connectors in the Expressway cluster. The new schedule is: {{newSchedule}}. Its previous upgrade schedule was: {{oldSchedule}}.",
+          "automatedProvisioningChange": "The {{connectorName}} target version has changed to {{newValue}}. This happened as part of a scheduled upgrade.",
+          "automatedProvisioning": "The Expressway cluster has been provisioned with {{connectorName}}. This happened automatically.",
+          "automatedDeprovisioning": "The Expressway cluster will no longer run {{connectorName}}.",
+          "manualProvisioningChange": "The {{connectorName}} target version has changed to {{newValue}}. The upgrade was manually triggered by {{username}}.",
+          "manualProvisioning": "{{username}} provisioned the Expressway cluster with {{connectorName}}. This either happened because the user created a new cluster, or because he or she added {{connectorName}} to an existing cluster.",
+          "manualDeprovisioning": "{{username}} changed the Expressway configuration so that {{connectorName}} will be removed from all cluster nodes.",
+          "upgradeHelpText": " Each node in the cluster will sequentially start to upgrade to the new version. The upgrade has succeeded when all nodes are on the new software version, and have reported to Cisco Collaboration Cloud that they are operational.",
+          "provisioningAddedHelpText": "An administrator must log in to the Expressway master peer and configure the {{connectorName}} software once it has been installed on all cluster nodes.",
+          "provisioningRemovedHelpText": "The software will be uninstalled, and all local configuration deleted.",
+          "automatedDeprovisioningHelpText": "This configuration change happened because of a change to the Cisco Spark organization's configuration, for example because an entitlement was removed or a service was deactivated.",
+          "renamed": "{{username}} renamed the cluster. Its new name is {{newName}}, and the old name was {{oldName}}.",
+          "nameAssigned": "{{username}} configured the cluster name to be {{name}}.",
+          "resourceGroupIntro": "{{username}} changed the cluster's Resource Group.",
+          "previouslyNotInResourceGroup": "The new Resource Group name is: <strong>{{newGroup}}</strong>. The cluster was previously not part of a Resource Group.",
+          "changedResourceGroup": "The new Resource Group name is: <strong>{{newGroup}}</strong>. The cluster was previously part of {{oldGroup}}.",
+          "removedResourceGroup": "The cluster is no longer part of a Resource Group. The cluster was previously part of {{oldGroup}}.",
+          "changedReleaseChannel": "{{username}} changed the cluster's Release Channel.",
+          "oldAndNewReleaseChannel": "The new Release Channel is: <strong>{{newReleaseChannel}}</strong>. The old Release Channel was: {{oldReleaseChannel}}.",
+          "changedReleaseChannelHelp": "An Expressway cluster's Release Channel can change either if the cluster is moved in or out of a Resource Group, or if its existing Resource Group changes its associated Release Channel."
+        },
+        "serviceActivationEvents": {
+          "serviceEnabled": "{{username}} has activated {{serviceName}} in the Cisco Spark organization. This usually happens when an admin user registers an Expressway cluster that runs {{connectorName}}, or adds the first {{connectorName}} to an existing Expressway cluster.",
+          "callServiceConnectEnabled": "{{username}} has activated {{serviceName}} in the Cisco Spark organization. All Expressway clusters running {{connectorName}} will automatically also be used for {{serviceName}}.",
+          "serviceDisabled": "{{username}} has disabled {{serviceName}} in the Cisco Spark organization.",
+          "serviceDisabledHelpText": "{{serviceName}} entitlements are automatically removed from users, and {{connectorName}} is automatically uninstalled from all Expressway clusters.",
+          "serviceDisabledHelpTextCallServiceConnect": "{{serviceName}} entitlements are automatically removed from users, and remote device configurations deleted."
+        },
+        "technicalDetails": {
+          "heading": "Technical Details",
+          "tooltip": "Customer data is always stored in an anonymized fashion in the Cisco Collaboration Cloud. Provide the information in this section to Cisco Technical Support if you need Cisco to investigate this event.",
+          "resourceName": "Resource Name:",
+          "clusterId": "Cluster ID:",
+          "connectorId": "Connector ID:",
+          "connectorType": "Connector Type:",
+          "alarmId": "Alarm ID:",
+          "softwareVersion": "Software Version:",
+          "timestamp": "Timestamp:",
+          "userId": "User ID:",
+          "trackingId": "Tracking ID:"
+        }
+      }
     }
   },
   "context": {
