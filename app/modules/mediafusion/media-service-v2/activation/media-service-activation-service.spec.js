@@ -88,13 +88,13 @@ describe('MediaServiceActivationV2', function () {
     expect(HybridServicesClusterService.serviceIsSetUp).toHaveBeenCalled();
   });
   it('MediaServiceActivationV2 isServiceEnabled should not be called for getMediaServiceState when isMediaServiceEnabled is set to true', function () {
-    Service.setisMediaServiceEnabled(true);
+    Service.setIsMediaServiceEnabled(true);
     spyOn(HybridServicesClusterService, 'serviceIsSetUp').and.callThrough();
     Service.getMediaServiceState();
     expect(HybridServicesClusterService.serviceIsSetUp).not.toHaveBeenCalled();
   });
   it('MediaServiceActivationV2 isServiceEnabled should not be called for getMediaServiceState when isMediaServiceEnabled is set to false', function () {
-    Service.setisMediaServiceEnabled(false);
+    Service.setIsMediaServiceEnabled(false);
     spyOn(HybridServicesClusterService, 'serviceIsSetUp').and.callThrough();
     Service.getMediaServiceState();
     expect(HybridServicesClusterService.serviceIsSetUp).not.toHaveBeenCalled();

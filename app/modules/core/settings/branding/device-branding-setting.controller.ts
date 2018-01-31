@@ -108,6 +108,9 @@ export class DeviceBrandingController implements ng.IComponentController {
       })
       .then((results) => {
         this.setFilesFromBrandingSetting(_.get(results, 'settings.data'), true);
+        return this.CsdmConfigurationService.notifyOrgSetting();
+      })
+      .then(_results => {
         this.Notification.success('partnerProfile.processing');
       })
       .catch((error) => {

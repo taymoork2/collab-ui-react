@@ -1593,6 +1593,7 @@
     "invalidUrl": "This is not a valid URL.",
     "invalidZipCode": "Incorrect Zip Code",
     "ipAddress": "IP Address",
+    "iUnderstand": "I Understand",
     "keys": {
       "activated": "Activated",
       "deactivated": "Deactivated"
@@ -2384,8 +2385,7 @@
       "intro": "You are about to remove {{serviceName}} from the Expressway cluster {{clusterName}}.",
       "settingsWillBeWiped": "This action will remove {{connectorName}} and delete all of the connector's local settings.",
       "notDeregistered": "{{clusterName}} will still be registered to Cisco Collaboration Cloud, and the Expressway cluster can still be used for hosting Hybrid Services.",
-      "lastClusterWarning": "This is the last cluster that's running {{connectorName}} for this organization. If you deactivate {{connectorName}}, the service will be unavailable for your users until you add more resources. To completely deactivate the service for this organization and its users, go to the {{serviceName}} settings page.",
-      "iUnderstand": "I understand"
+      "lastClusterWarning": "This is the last cluster that's running {{connectorName}} for this organization. If you deactivate {{connectorName}}, the service will be unavailable for your users until you add more resources. To completely deactivate the service for this organization and its users, go to the {{serviceName}} settings page."
     },
     "clusters": {
       "listing": {
@@ -5620,7 +5620,6 @@
     "deleteOrgConfirmMsg": "Are you sure you want to permanently delete customer '{{orgName}}'?",
     "deleteOrgHmsError": "For the customer '{{orgName}}' Hybrid Media Service is currently Active, please deactivate Hybrid Media Service before deleting the customer.",
     "deleteOrg": "Delete Customer",
-    "iUnderstand": "I Understand",
     "deleteOrgSuccess": "{{orgName}} successfully deleted",
     "deleteOrgError": "{{orgName}} was not deleted.",
     "pstnOrders": "PSTN Orders & Imports",
@@ -6311,7 +6310,6 @@
       "moveTo": "Move to:",
       "cancel": "Cancel",
       "continue": "Continue",
-      "deregisterAllconfirmation": "I understand that all the nodes in this cluster will be deregistered automatically, and that the cluster will be deleted permanently. I also understand that I cannot undo this action.",
       "unabletomovenodes": "Failed to move/defuse {{nodes}} press cancel and try again",
       "clusterdeleteSuccess": "Successfully deleted {{clustername}}",
       "clusterCreationFailed": "Failed to create new cluster: {{enteredCluster}}",
@@ -6321,7 +6319,9 @@
       "stable": "STABLE",
       "beta": "BETA",
       "latest": "LATEST",
-      "errorMsg": "Before you can delete this cluster, you must either move all nodes to another cluster or deregister all nodes."
+      "errorMsg": "Before you can delete this cluster, you must either move all nodes to another cluster or deregister all nodes.",
+      "deregisterWarning": "All the nodes in this cluster will be deregistered automatically and the cluster will be moved permanently. This action can not be undone.",
+      "deactivateWarning": "This is the last Hybrid Media cluster for this organization. If you remove it, the service will be deactivated."
     },
     "reassign": {
       "reassignHost": "Reassign Host",
@@ -6344,7 +6344,7 @@
       "confirmation_check": "By deactivating Hybrid Media Service, I understand that the above clusters will be deregistered and all further meetings will be hosted  in the cloud and that this action cannot be undone.",
       "button_deactivate": "Deactivate",
       "success": "Your Hybrid Media Services was deactivated successfully.",
-      "error": "Error in deregistering clusters. Please try again after sometime.",
+      "error": "Could not deactivate Hybrid Media Service.",
       "step": "Step ",
       "of": " of 2"
     },
@@ -7400,6 +7400,18 @@
     "reloadMessage": "Please try reloading the page",
     "feature": "Feature"
   },
+  "careVoiceFeatures": {
+    "title": "Enable Spark Care Voice Features",
+    "heading": "Choose a call service to enable Spark Care voice features:",
+    "enableSparkCall": "Enable Spark Call",
+    "scDescription": "Allow Spark Care agents to use Spark Call for voice features.",
+    "enableSC": "Contact your partner to enable Spark Call.",
+    "contactPartner": "<a href = #>Contact Partner</a>",
+    "useHybridCall": "Use Hybrid Call",
+    "hcDescription": "Allow Spark Care agents to use on-premises infrastructure for voice features.",
+    "enableHybrid": "Set up Hybrid Call and Enterprise Private Trunking to enable your organization to use Cisco Unified Communications Manager.",
+    "setUpHybrid": "<a href ng-click=\"{{onsetuphybrid}}\">Set up Hybrid Call</a><br><a href ng-click=\"{{onsetuptrunk}}\">Set up Enterprise Private Trunking</a>"
+  },
   "placesPage": {
     "nameHeader": "Name",
     "typeHeader": "Type",
@@ -7626,6 +7638,7 @@
     "evaSpaceDetailsTextOneSpace": ", your Expert Virtual Assistant, is in 1 Expert Space in Cisco Spark:",
     "evaDefaultName": "EVA",
     "customerInfoToggleTooltipMessage": "This screen is required for this template and cannot be disabled.",
+    "agentUnavailableToggleTooltipMessage": "You are escalating to experts only, so Agent Unavailability configuration is not required. To enable escalation to agents, edit your Chat Escalation Behavior setting.",
     "virtualAssistantToggleTooltipMessage": "Configure a Customer Virtual Assistant from the Features page before you enable this. You can also configure your assistant and enable this feature at a later time.",
     "getVirtualAssistantListError": "Error in getting list of configured virtual assistant.",
     "virtualAssistantSelector": "Customer Virtual Assistant",

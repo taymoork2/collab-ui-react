@@ -95,7 +95,6 @@ module.exports = {
   csdmDeviceBranding: 'csdm-device-branding',
   csdmDeviceAccountJump: 'csdm-device-account-jump',
   csdmDevicePlaceLink: 'csdm-device-place-link',
-  csdmDevRed: 'csdm-device-red',
   csdmHybridCall: 'csdm-hybrid-call',
   csdmMultipleDevicesPerPlace: 'csdm-multiple-devices-per-place',
   csdmPlaceCalendar: 'csdm-hybrid-calendar',

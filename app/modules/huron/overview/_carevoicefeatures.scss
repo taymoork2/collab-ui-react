@@ -1,0 +1,82 @@
+@import 'app/modules/huron/features/featureLanding/_feature-landing';
+
+.heading-container {
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+  color: $gray-darkest;
+}
+
+.voice-feature-color {
+  color: $gray-dark-2;
+}
+
+.voice-feature-modal {
+  // The modal body.
+  display: flex;
+  flex-flow: row wrap;
+
+  @include vr-spacing(pt, 0);
+  @include vr-spacing(pr, 4.5);
+  @include vr-spacing(pb, 3);
+  @include vr-spacing(pl, 4.5);
+
+div.voice-card-container {
+    // The button options in the body.
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: rem-calc(335);
+    height: rem-calc(350);
+    color: $gray-darkest;
+    background-color: $gray-lightest;
+    border-style: hidden;
+    border-radius: 0.25rem;
+    cursor: default;
+    text-align: center;
+    font-family: $brand-font-cisco-TT-Light;
+    box-shadow: none;
+
+    @include vr-spacing(mr, 0.125);
+    @include vr-spacing(ml, 1.5);
+    @include vr-spacing(mb, 1);
+    @include vr-spacing(p, 0);
+
+    &:not([disabled]):hover {
+      cursor: pointer;
+      background-color: $gray-light;
+    }
+
+    &:first-child:nth-last-child(4),
+    &:first-child:nth-last-child(4) ~ div {
+      flex: 1 1 48%;
+    }
+
+    .voice-label-container {
+      @include vr-spacing(pt, 2);
+      @include vr-spacing(pr, 1);
+      @include vr-spacing(pl, 1);
+      @include vr-spacing(pb, 1);
+
+      height: rem-calc(64);
+    }
+
+    .voice-label-disabled {
+      color: $gray-light-2;
+    }
+
+    .voice-description-container {
+      @include vr-spacing(pt, 1);
+      @include vr-spacing(ph, 1.5);
+      @include vr-spacing(pb, 0.5);
+      @include vr-spacing(pr, 1.5);
+      @include vr-spacing(pl, 1.5);
+
+      text-align: left;
+    }
+
+    .voice-detail-container {
+     margin: auto;
+     font-size: rem-calc(14);
+    }
+  }
+}

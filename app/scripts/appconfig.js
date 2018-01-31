@@ -2790,21 +2790,11 @@
           })
           .state('devices', {
             url: '/devices',
-            template: '<devices-redux ng-if="$resolve.hasDevicesReduxFeatureToggle"></devices-redux><devices-page ng-if="!$resolve.hasDevicesReduxFeatureToggle"></devices-page>',
+            template: '<devices-redux></devices-redux>',
             parent: 'main',
-            resolve: {
-              hasDevicesReduxFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.csdmDevRed);
-              },
-            },
           })
           .state('devices.search', {
             url: '/search/:q',
-          })
-          .state('devices-redux', {
-            url: '/devices-redux',
-            template: '<devices-redux></devices-redux>',
-            parent: 'main',
           })
           .state('device-overview', {
             parent: 'sidepanel',
