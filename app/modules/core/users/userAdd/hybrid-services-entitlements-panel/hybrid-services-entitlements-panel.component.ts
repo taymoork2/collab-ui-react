@@ -176,6 +176,10 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
       });
     }
   }
+
+  public hasHuronCallEntitlement() {
+    return this.HybridServicesEntitlementsPanelService.hasHuronCallEntitlement();
+  }
 }
 
 export class HybridServicesEntitlementsPanelComponent implements ng.IComponentOptions {

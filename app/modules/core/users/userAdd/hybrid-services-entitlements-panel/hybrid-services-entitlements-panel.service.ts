@@ -79,7 +79,7 @@ export class HybridServicesEntitlementsPanelService {
     return entitlements;
   }
 
-  private hasHuronCallEntitlement(): boolean {
+  public hasHuronCallEntitlement(): boolean {
     return this.OnboardService.huronCallEntitlement;
   }
 }
