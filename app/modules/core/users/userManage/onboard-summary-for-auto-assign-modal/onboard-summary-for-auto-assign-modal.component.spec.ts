@@ -1,7 +1,7 @@
 import moduleName from './index';
 import { Analytics } from 'modules/core/analytics';
 import { Notification } from 'modules/core/notifications';
-import OnboardService from 'modules/core/users/userAdd/shared/onboard.service';
+import OnboardService from 'modules/core/users/shared/onboard/onboard.service';
 import { OnboardSummaryForAutoAssignModalController } from './onboard-summary-for-auto-assign-modal.component';
 import { MultiStepModalComponent } from 'modules/core/shared/multi-step-modal/multi-step-modal.component';
 import { LicenseSummaryComponent } from 'modules/core/users/userManage/shared/license-summary/license-summary.component';

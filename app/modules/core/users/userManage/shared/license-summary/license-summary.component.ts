@@ -1,5 +1,5 @@
 import { ILicenseUsage } from 'modules/core/users/userAdd/assignable-services/shared';
-import { IUserEntitlementRequestItem, UserEntitlementName } from 'modules/core/users/shared/onboard.interfaces';
+import { IUserEntitlementRequestItem, UserEntitlementName } from 'modules/core/users/shared/onboard/onboard.interfaces';
 import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 import { OfferName } from 'modules/core/shared';
 

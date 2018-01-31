@@ -1,5 +1,5 @@
 import { ICardButton, ServicesOverviewCard } from '../shared/services-overview-card';
-import MessengerInteropService from 'modules/core/users/userAdd/shared/messenger-interop/messenger-interop.service';
+import { MessengerInteropService } from 'modules/core/users/userAdd/shared/messenger-interop/messenger-interop.service';
 
 export class ServicesOverviewMessageCard extends ServicesOverviewCard {
   public getShowMoreButton(): ICardButton | undefined {

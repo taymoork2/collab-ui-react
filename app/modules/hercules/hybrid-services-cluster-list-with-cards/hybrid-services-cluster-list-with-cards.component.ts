@@ -61,7 +61,7 @@ class HybridServicesClusterListWithCardsCtrl implements ng.IComponentController 
   }
 
   public $onInit() {
-    this.Analytics.trackHSNavigation(this.Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CLUSTER_LIST);
+    this.Analytics.trackHybridServiceEvent(this.Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CLUSTER_LIST);
     this.loadResources();
   }
 

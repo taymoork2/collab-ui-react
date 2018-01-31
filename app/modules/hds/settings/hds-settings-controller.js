@@ -37,7 +37,7 @@
     var trialAdrServer = '';
     var trialSecurityService = '';
 
-    Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_HDS_SETTINGS);
+    Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_HDS_SETTINGS);
 
     // TODO: below is the jason to recover initial state, remove it when at the very late stage of HDS dev
     var jsonTrialMode = {
