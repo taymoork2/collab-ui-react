@@ -3190,7 +3190,7 @@
       "releaseChannelHeader": "Release Channel",
       "releaseChannelClusterDescription": "Select the release channel for all Hybrid Services running in this cluster.",
       "releaseChannelResourceGroupDescription": "Select the release channel for all Hybrid Services running in this group.",
-      "expresswayTip": "To change the release channel for this cluster, change the default release channel or assign it to a resource group with the preferred release channel.",
+      "newExpresswayTip": "You cannot change the release channel for individual Expressway clusters. To change the release channel for this cluster, change the default release channel or assign the cluster to a resource group with the preferred release channel. See the <a href=\"https://collaborationhelp.cisco.com/article/kkibf0\" target=\"_blank\">documentation</a> for guidance.",
       "releaseChannelTip": "To change the release channel for this cluster, assign it to a resource group with the preferred release channel.",
       "releaseChannelSaved": "Release channel saved successfully",
       "orgHasNoAccessToChannel": "The resource group is configured with the “{{currentReleaseChannel}}” release channel, which is no longer available to your organization. Set the release channel to “{{stableReleaseChannel}}” to restore service.",

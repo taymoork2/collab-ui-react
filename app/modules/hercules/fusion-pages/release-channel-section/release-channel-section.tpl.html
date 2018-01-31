@@ -3,7 +3,7 @@
   <p ng-if="$ctrl.type === 'resource-group'" class="sub-section__description" translate="hercules.releaseChannelSection.releaseChannelResourceGroupDescription"></p>
   <p ng-if="!$ctrl.isDisabled() && $ctrl.type === 'cluster'" class="sub-section__description" translate="hercules.releaseChannelSection.releaseChannelClusterDescription"></p>
   <p ng-if="$ctrl.clusterSettingsButHasResourceGroup()" class="sub-section__description" translate="hercules.releaseChannelSection.releaseChannelTip"></p>
-  <p ng-if="$ctrl.isUnassignedExpresswayClusterSettings()" class="sub-section__description" translate="hercules.releaseChannelSection.expresswayTip"></p>
+  <p ng-if="$ctrl.isUnassignedExpresswayClusterSettings()" class="sub-section__description" translate="hercules.releaseChannelSection.newExpresswayTip"></p>
   <div class="medium-8" ng-if="!$ctrl.showResetSection">
     <cs-select
       ng-model="$ctrl.releaseChannelSelected"
