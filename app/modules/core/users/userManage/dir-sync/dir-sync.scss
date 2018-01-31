@@ -1,3 +1,4 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 .user-manage-dir-sync__text--margin {
@@ -9,4 +10,11 @@
 
   font-weight: bolder;
   top: 0.1rem;
+}
+
+.user-manage-dir-sync__grid {
+  border: 1px solid $gray-light-2;
+  > :nth-child(2) {
+    overflow-x: hidden;
+  }
 }

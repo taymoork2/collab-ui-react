@@ -1,3 +1,4 @@
+// TODO refactor valid scss into other files and remove
 @import '~@collabui/collab-ui/scss/settings/colors';
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
@@ -360,28 +361,6 @@ input#dirDomainText {
   width: 25%;
   left: 2px;
   position: relative;
-}
-
-.dirsync-info {
-  margin-top: 16px;
-  width: 550px;
-  display: flex;
-  flex-direction: column;
-
-  .ftwdirgridStyle {
-    margin-top: 10px;
-    height: 200px;
-    border: 1px solid lightgray;
-
-    > :nth-child(2) {
-      overflow-x: hidden;
-    }
-  }
-
-  .sync-dirsync-refresh-button {
-    font-size: 12px;
-    //font-size: $body-small-font-size;
-  }
 }
 
 .onboard-label {
