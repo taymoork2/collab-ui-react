@@ -906,7 +906,7 @@ describe('Controller: TrialCtrl:', function () {
       expect(controller.webexTrial.enabled).toBeTruthy();
       expect(controller.roomSystemTrial.enabled).toBeTruthy();
       expect(controller.sparkBoardTrial.enabled).toBeTruthy();
-      expect(controller.callTrial.enabled).toBeTruthy();
+      expect(controller.callTrial.enabled).toBeFalsy();
       expect(controller.pstnTrial.enabled).toBeTruthy();
       expect(controller.contextTrial.enabled).toBeFalsy();
     });
@@ -1035,8 +1035,8 @@ describe('Controller: TrialCtrl:', function () {
           controller.pstnTrial.enabled = false;
         });
 
-        it('should have Squared UC offer', function () {
-          expect(controller.callTrial.enabled).toBeTruthy();
+        it('should not have Squared UC offer by default', function () {
+          expect(controller.callTrial.enabled).toBeFalsy();
           expect(controller.pstnTrial.enabled).toBeFalsy();
         });
 
@@ -1059,8 +1059,8 @@ describe('Controller: TrialCtrl:', function () {
       });
 
       describe('With Squared UC and PSTN', function () {
-        it('should have Squared UC offer', function () {
-          expect(controller.callTrial.enabled).toBeTruthy();
+        it('should not have Squared UC offer by default', function () {
+          expect(controller.callTrial.enabled).toBeFalsy();
           expect(controller.pstnTrial.enabled).toBeTruthy();
         });
 
