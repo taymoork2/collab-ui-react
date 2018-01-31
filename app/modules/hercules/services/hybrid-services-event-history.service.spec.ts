@@ -990,41 +990,6 @@ describe('HybridServicesEventHistoryService', () => {
         $httpBackend.flush();
       });
 
-      it('should persist metadata for service events', (done) => {
-
-        $httpBackend
-          .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/null/events/?clusterId=&fromTime=time`)
-          .respond( [{
-            items: [],
-          }]);
-
-        $httpBackend
-          .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/null/events/?type=ServiceEnabled&type=ServiceDisabled&fromTime=time`)
-          .respond( {
-            items: [{
-              context: {
-                principalType: 'MACHINE',
-                principalId: '12345',
-                trackingId: '666-a-fun-number',
-              },
-              payload: {
-                type: 'ServiceEnabled',
-              },
-              timestamp: '2018-something',
-            }],
-          });
-
-        HybridServicesEventHistoryService.getAllEvents('', '', 'time')
-          .then((data) => {
-            expect(data.items[0].userId).toBe('12345');
-            expect(data.items[0].principalType).toBe('MACHINE');
-            expect(data.items[0].timestamp).toBe('2018-something');
-            expect(data.items[0].trackingId).toBe('666-a-fun-number');
-            done();
-          });
-        $httpBackend.flush();
-      });
-
     });
 
     describe ('resolving usernames', () => {
