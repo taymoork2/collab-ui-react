@@ -47,62 +47,12 @@
   }
 
   .modify-users-section {
-    @include vr-spacing(mt, 1.5);
-
-    height: 13rem;
-    text-align: center;
-    background-color: $gray-light-4;
-
-    &--label {
-      @include vr-spacing(mv, 2);
-      @include vr-spacing(mh, 1);
-    }
-
-    &--details {
-      @include vr-spacing(mv, 0);
-      @include vr-spacing(mh, 2.5);
-
-      color: $gray-base;
-    }
-
     &--details-link:not(:hover):not(:focus) {
       color: $anchor-font-color;
     }
 
     &--disabled {
       color: $gray-light-1;
-    }
-  }
-
-  @media only screen and (min-width: 1441px) {
-    .modify-users-section {
-      width: 17.75rem;
-
-      &--middle-box {
-        @include vr-spacing(ml, 1.5);
-        @include vr-spacing(mr, 1.5);
-      }
-    }
-  }
-
-  @media only screen and (min-width: 641px) {
-    .modify-users-section {
-      width: 18rem;
-
-      &--middle-box {
-        @include vr-spacing(ml, 1);
-        @include vr-spacing(mr, 1);
-      }
-    }
-  }
-
-  @media only screen and (max-width: 641px) {
-    .modify-users-section {
-      width: 17.75rem;
-
-      &--right-box {
-        float: left;
-      }
     }
   }
 

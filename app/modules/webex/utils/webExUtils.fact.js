@@ -17,9 +17,9 @@
       var logMsg = '';
 
       var siteAdminProtocol = 'https://';
-      var siteAdminLink = '/wbxadmin/default.do?siteurl=';
+      var siteAdminLink = '/admin';
 
-      var siteAdminUrl = siteAdminProtocol + siteUrl + siteAdminLink + obj.getSiteName(siteUrl);
+      var siteAdminUrl = siteAdminProtocol + siteUrl + siteAdminLink;
 
       logMsg = funcName + '\n' +
         'siteUrl=' + siteUrl + '\n' +

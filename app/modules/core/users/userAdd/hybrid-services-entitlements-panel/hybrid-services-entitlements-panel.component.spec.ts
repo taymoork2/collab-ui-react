@@ -247,6 +247,23 @@ describe('Component Controller: hybridServicesPanelCtrl', function () {
       id: 'squared-fusion-uc',
     });
   });
+
+  it('should initialize "services" properties from "userEntitlementsStateData" if provided', function () {
+    initMockServices.call(this, ['squared-fusion-uc'], ['squared-fusion-cal']);
+    this.$scope.fakeUserEntitlementsStateData = [{
+      entitlementName: 'squaredFusionUC',
+      entitlementState: 'ACTIVE',
+    }, {
+      entitlementName: 'squaredFusionCal',
+      entitlementState: 'ACTIVE',
+    }];
+    this.compileComponent('hybridServicesEntitlementsPanel', {
+      userEntitlementsStateData: 'fakeUserEntitlementsStateData',
+    });
+    this.$scope.$apply();
+    expect(this.controller.services.calendarEntitled).toBe(true);
+    expect(this.controller.services.callServiceAware.entitled).toBe(true);
+  });
 });
 
 describe('Cloud-only calendar deployments', () => {

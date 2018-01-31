@@ -3,7 +3,7 @@ import { DeviceSearchBulletComponent } from './deviceSearchBullet.component';
 import { DeviceSearchComponent } from './deviceSearch.component';
 import { DeviceListComponent } from './deviceList.component';
 import { ChartComponent } from './chart.component';
-import { highlightFilter, highlightSearchAndTranslateFilter } from './highlightFilter';
+import { highlightAndTranslate, highlightFilter } from './highlightFilter';
 
 export default angular
   .module('Csdm.devices', [
@@ -12,6 +12,7 @@ export default angular
     require('angular-translate'),
     require('angular-sanitize'),
     require('modules/core/scripts/services/missing-translation-handler.factory').default,
+    require('modules/core/analytics'),
   ])
   .component('deviceSearchBullet', new DeviceSearchBulletComponent())
   .component('deviceSearch', new DeviceSearchComponent())
@@ -20,5 +21,5 @@ export default angular
   .controller('DevicesReduxCtrl', DevicesCtrl)
   .component('devicesRedux', new DevicesComponent())
   .filter('highlight', highlightFilter)
-  .filter('highlightSearchAndTranslate', highlightSearchAndTranslateFilter)
+  .filter('translateHighlight', highlightAndTranslate)
   .name;

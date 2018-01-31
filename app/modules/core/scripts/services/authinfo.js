@@ -513,6 +513,9 @@
       hasCallLicense: function () {
         return isLicensed(Config.licenseTypes.COMMUNICATION);
       },
+      hasCareLicense: function () {
+        return isLicensed(Config.licenseTypes.CARE);
+      },
       isSquaredUC: function () {
         return isEntitled(Config.entitlements.huron);
       },
