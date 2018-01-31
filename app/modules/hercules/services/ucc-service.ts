@@ -1,5 +1,10 @@
 export interface IUserDiscoveryInfo {
   directoryURI: string;
+  primaryDn: string;
+  telephoneNumber: string;
+  UCMInfo: {
+    ClusterFQDN: string;
+  };
 }
 
 interface IResult {

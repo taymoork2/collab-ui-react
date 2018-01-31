@@ -7087,6 +7087,9 @@
     "status": "Status",
     "cluster": "Cluster",
     "sipUri": "Directory URI",
+    "primaryDN": "Primary DN",
+    "telephoneNumber": "Phone Number",
+    "ucmCluster": "UCM FQDN(s)",
     "details": "Details"
   },
   "validation": {
