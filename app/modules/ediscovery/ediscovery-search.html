@@ -1,9 +1,9 @@
 <div class="ediscovery-search">
-  <div ng-class="(ediscoverySearchCtrl.roomInfo && ediscoverySearchCtrl.ediscoveryToggle) ? 'advanced-search' : 'basic-search'">
+  <div ng-class="(ediscoverySearchCtrl.roomInfo) ? 'advanced-search' : 'basic-search'">
     <div class="ediscovery-search-bar">
 
       <!-- Updated Search -->
-      <div ng-if="!ediscoverySearchCtrl.roomInfo && !ediscoverySearchCtrl.searchingForRoom && ediscoverySearchCtrl.ediscoveryToggle">
+      <div ng-if="!ediscoverySearchCtrl.roomInfo && !ediscoverySearchCtrl.searchingForRoom">
         <div class="main-heading">
           <h1 translate="ediscovery.heading"></h1>
         </div>
@@ -108,23 +108,6 @@
         </div>
       </div>
 
-      <!-- Original Search -->
-      <div ng-if="!ediscoverySearchCtrl.ediscoveryToggle">
-        <div class="main-heading">
-          <h1 translate="ediscovery.heading"></h1>
-          <span translate="ediscovery.originalConsole.subheading"></span>
-        </div>
-        <div class="typeahead-large">
-          <input maxlength="50" spellcheck="false" class="fit" type="search" tabindex="1" autocomplete="off" ng-model="ediscoverySearchCtrl.searchCriteria.roomId" autofocus="true" ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)"/>
-          <button type="submit" class="btn btn--circle btn--primary icon icon-search" ng-click="ediscoverySearchCtrl.searchForRoom(ediscoverySearchCtrl.searchCriteria.roomId);" ng-disabled="ediscoverySearchCtrl.searchButtonDisabled()"></button>
-          <div class="input-description"></div>
-        </div>
-
-        <p class="search-tip" translate="ediscovery.searchTip"></p>
-        <div class="search-error" ng-if="ediscoverySearchCtrl.warning">
-          <span>{{ediscoverySearchCtrl.error}}</span>
-        </div>
-      </div>
 
       <div ng-show="ediscoverySearchCtrl.searchingForRoom">
         <div class="main-heading">
@@ -138,7 +121,6 @@
     </div>
   </div>
 
-  <ediscovery-search-result class="search-result-area" ng-if="ediscoverySearchCtrl.roomInfo && !ediscoverySearchCtrl.ediscoveryToggle"></ediscovery-search-result>
-  <ediscovery-search-result-adv class="search-result-area" ng-if="ediscoverySearchCtrl.roomInfo && ediscoverySearchCtrl.ediscoveryToggle"></ediscovery-search-result-adv>
+ <ediscovery-search-result class="search-result-area" ng-if="ediscoverySearchCtrl.roomInfo"></ediscovery-search-result>
 
 </div>

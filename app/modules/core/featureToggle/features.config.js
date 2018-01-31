@@ -24,7 +24,6 @@ module.exports = {
   atlasDataRetentionSettings: 'atlas-data-retention-settings',
   atlasDeviceExport: 'atlas-device-export',
   atlasDevicesAdvancedSettings: 'atlas-devices-advanced-settings',
-  atlasEdiscovery: 'atlas-ediscovery',
   atlasEmailStatus: 'atlas-email-status',
   atlasEmailSuppress: 'atlas-email-suppress',
   atlasHybridEnable: 'huron-i387-enterprise-private-trunking',

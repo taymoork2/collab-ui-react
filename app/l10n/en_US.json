@@ -3952,22 +3952,6 @@
       "reportsBanner": "Your report is being generated and may take up to a few hours or more. You can view the status in the list below or <a href ui-sref=\"{{sref}}\">generate another report</a>.",
       "generating": "Generating..."
     },
-    "originalConsole": {
-      "subheading": "Find all relevant data for a space.",
-      "reportNameNotEmpty": "Report Name can not be empty",
-      "reportNamePlaceholder": "Enter report name",
-      "startDate": "Start Date",
-      "endDate": "End Date",
-      "reportDateRange": "Date Range",
-      "noRangeSpecified": "No date range specified",
-      "takeMeToReports": "Take Me to Reports",
-      "dateTo": "to",
-      "endDateUntil": "until",
-      "endDateOnward": "onward",
-      "startDatePlaceholder": "Choose a Start Date",
-      "endDatePlaceholder": "Choose an End Date",
-      "generatedAt": "Generated At"
-    },
     "tabs": {
       "search": "Search",
       "reports": "Reports"

@@ -29,7 +29,6 @@ require('./_support.scss');
     $scope.gotoProvisioningConsole = gotoProvisioningConsole;
     $scope.hasAtlasHybridCallUserTestTool = hasAtlasHybridCallUserTestTool;
     $scope.showOrderProvisioningConsole = false;
-    $scope.hasAtlasEdiscoveryToggle = false;
 
     var vm = this;
     vm.masonryRefreshed = false;
@@ -62,9 +61,6 @@ require('./_support.scss');
     function initializeShowLinks() {
       FeatureToggleService.atlasOrderProvisioningConsoleGetStatus().then(function (result) {
         $scope.showOrderProvisioningConsole = Authinfo.isOrderAdminUser() && (!Config.isProd() || result);
-      });
-      FeatureToggleService.atlasEdiscoveryGetStatus().then(function (result) {
-        $scope.hasAtlasEdiscoveryToggle = result;
       });
       Userservice.getUser('me', function (user, status) {
         if (user.success) {
@@ -130,7 +126,7 @@ require('./_support.scss');
     };
 
     $scope.showEdiscoveryLink = function () {
-      return Authinfo.isComplianceUser() && $scope.hasAtlasEdiscoveryToggle;
+      return Authinfo.isComplianceUser();
     };
 
     $scope.tabs = [{
