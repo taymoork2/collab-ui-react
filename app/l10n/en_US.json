@@ -8596,6 +8596,8 @@
       "domainsError": "There was a problem retrieving the Directory Synchronization data.",
       "operational": "Operational",
       "outage": "Outage",
+      "pcOnline": "PC server online",
+      "pcOffline": "PC server offline",
       "seeAllDomains": "See All Registered Domains",
       "turnOff": "Turn Off {{domainName}}",
       "turnOffAllMessage": "This step turns off all synchronization from Directory Connector. Once the synchronization is disabled, you can only manage users manually and they won't appear in Active Directory.  Are you sure you want to turn off all sychronization?",
