@@ -1,32 +1,29 @@
-<div class="flex-container flex-item-resize sync-status" ng-init="getStatus()">
+<h3 translate="firstTimeWizard.syncStatus"></h3>
 
-  <h3 class="flex-item-no-resize" translate="firstTimeWizard.syncStatus"></h3>
+<div ng-init="getStatus()">
+  <cs-statusindicator ng-model="umds.dirSyncStatus">
+  </cs-statusindicator>
+  <span class="h5" ng-if="umds.isDirSyncEnabled" translate="userManage.ad.adStatus"></span>
+  <span class="h5" ng-if="!umds.isDirSyncEnabled" translate="userManage.ad.adStatusDisabled"></span>
+</div>
 
-  <div class="flex-item-no-resize ds-sync">
-    <i class="working icon icon-circle" ng-class="{'failing': !isDirSyncEnabled}"></i>
-    <h5 ng-if="isDirSyncEnabled" translate="userManage.ad.adStatus"></h5>
-    <h5 ng-if="!isDirSyncEnabled" translate="userManage.ad.adStatusDisabled"></h5>
+<div class="user-manage-dir-sync__text--margin">
+  <span>{{::'firstTimeWizard.results'|translate}}:</span>
+  <strong ng-if="!umds.isUserAdmin()">{{umds.dirSyncStatusMessage}}</strong>
+  <span ng-if="numUsersInSync > 0">
+    <span> - </span>
+    <strong>{{numUsersInSync}}</strong>
+    <span>{{dirsyncUserCountText}}</span>
+  </span>
+</div>
+
+<div ng-if="!umds.isUserAdmin()" class="user-manage-dir-sync__text--margin">
+  <span translate="userManage.ad.lastSynced"></span>
+  <span>{{lastEndTime | date:'MMM d yyyy h:mm a'}}</span>
+  <a href ng-click="getStatus()" ng-if="!umds.isBusy"><i class="icon icon-refresh user-manage-dir-sync__icon-refresh"></i></a>
+</div>
+
+<div class="dirsync-info flex-item-resize">
+  <div class="ftwdirgridStyle flex-item-resize" ui-grid="gridOptions" grid-spinner="umds.isBusy">
   </div>
-
-  <div>
-    <span>{{::'firstTimeWizard.results'|translate}}:</span>
-    <strong ng-if="!umds.isUserAdmin()">{{umds.dirSyncStatusMessage}}</strong>
-    <span ng-if="numUsersInSync > 0">
-      <span> - </span>
-      <strong>{{numUsersInSync}}</strong>
-      <span>{{dirsyncUserCountText}}</span>
-    </span>
-  </div>
-
-  <div ng-if="!umds.isUserAdmin()" class="user-manage-dir-sync__text--margin">
-    <span translate="userManage.ad.lastSynced"></span>
-    <span>{{lastEndTime | date:'MMM d yyyy h:mm a'}}</span>
-    <a href ng-click="getStatus()" ng-if="!umds.isBusy"><i class="icon icon-refresh user-manage-dir-sync__icon-refresh"></i></a>
-  </div>
-
-  <div class="dirsync-info flex-item-resize">
-    <div class="ftwdirgridStyle flex-item-resize" ui-grid="gridOptions" grid-spinner="umds.isBusy">
-    </div>
-  </div>
-
 </div>

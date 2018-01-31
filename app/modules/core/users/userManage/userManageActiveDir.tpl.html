@@ -4,25 +4,28 @@
 </div>
 
 <div class="modal-body user-manage">
-  <div class="row collapse user-manage__row sync-status">
+  <div class="row collapse user-manage__row">
     <div class="columns medium-5">
       <h4 translate="userManage.ad.adLabel"></h4>
     </div>
-    <div class="ds-sync columns medium-7">
-      <i class="working icon icon-circle"></i>
-      <div class="details">
-        <h6 translate="userManage.ad.adStatus"></h6>
-        <p translate="userManage.ad.adStatusDetails"></p>
-        <a href class="p"
-          ng-if="!umadc.isUserAdmin()"
-          ng-click="umadc.onTurnOffDS()"
-          translate="userManage.ad.turnOffDS"
-          tooltip="{{::'userManage.ad.turnOffDSToolTip'|translate}}"
-          tooltip-placement="bottom"
-          tooltip-trigger="mouseover focus"
-          aria-label="{{:: 'userManage.ad.turnOffDS' | translate}} {{::'userManage.ad.turnOffDSToolTip' | translate}}"
-          tabindex="0"></a>
-      </div>
+    <div class="columns medium-7">
+      <cs-statusindicator ng-model="umadc.dirSyncStatus">
+      </cs-statusindicator>
+      <span class="h6" translate="userManage.ad.adStatus"></span>
+      <p class="user-manage-dir-sync__text--margin"
+        translate="userManage.ad.adStatusDetails">
+      </p>
+      <p class="user-manage-dir-sync__text--margin">
+        <a href
+        ng-if="!umadc.isUserAdmin()"
+        ng-click="umadc.onTurnOffDS()"
+        translate="userManage.ad.turnOffDS"
+        tooltip="{{::'userManage.ad.turnOffDSToolTip'|translate}}"
+        tooltip-placement="bottom"
+        tooltip-trigger="mouseover focus"
+        aria-label="{{:: 'userManage.ad.turnOffDS' | translate}} {{::'userManage.ad.turnOffDSToolTip' | translate}}"
+        tabindex="0"></a>
+      </p>
     </div>
   </div>
   <hr class="user-manage__hr">

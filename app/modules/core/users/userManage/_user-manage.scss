@@ -64,49 +64,6 @@
 }
 
 .user-manage {
-  .sync-status {
-    .ds-sync {
-      display: flex;
-      flex-direction: row;
-      padding-bottom: 1rem;
-
-      h5 {
-        @include vr-spacing(ml, 0.5);
-      }
-
-      div.details {
-        @include vr-spacing(ml, 0.5);
-
-        h5 {
-          @include vr-spacing(ml, 0);
-        }
-
-        p {
-          @include vr-spacing(mv, 1);
-        }
-      }
-
-      .icon-circle-manage {
-        @include vr-spacing(mr, 0.5);
-      }
-
-      .disabled {
-        @include vr-spacing(mt, 0.25);
-        color: $gray-base;
-      }
-
-      .working {
-        color: $brand-success;
-        top: 0.25rem;
-        font-size: small;
-      }
-
-      .failing {
-        color: $brand-danger;
-      }
-    }
-  }
-
   &__manage-type-list-item {
     @include vr-spacing(pb, 1);
 

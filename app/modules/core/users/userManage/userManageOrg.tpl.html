@@ -80,17 +80,15 @@
     <div class="columns medium-5">
       <h4 translate="userManage.org.activeDirectory"></h4>
     </div>
-    <div class="columns medium-7 sync-status">
+    <div class="columns medium-7">
       <h5 translate="userManage.org.directorySynchronization"></h5>
-      <span class="user-manage__text--margin ds-sync">
-        <!-- TODO replace with cs-statusindicator -->
-        <i class="icon icon-circle icon-circle-manage"
-          ng-class="{'working': umoc.isDirSyncEnabled, 'disabled': !umoc.isDirSyncEnabled}">
-        </i>
-        <h6 ng-if="umoc.isDirSyncEnabled" translate="common.enabled"></h6>
-        <h6 ng-if="!umoc.isDirSyncEnabled" translate="common.disabled"></h6>
-      </span>
-      <p>
+      <div class="user-manage__text--margin">
+        <cs-statusindicator ng-model="umoc.dirSyncStatus">
+        </cs-statusindicator>
+        <span class="h6" ng-if="umoc.isDirSyncEnabled" translate="common.enabled"></span>
+        <span class="h6" ng-if="!umoc.isDirSyncEnabled" translate="common.disabled"></span>
+      </div>
+      <p class="user-manage__text--margin">
         <a href
           ng-click="umoc.handleDirSyncService()"
           translate="{{ umoc.dirSyncText }}">
@@ -103,7 +101,7 @@
     <div class="columns medium-5">
       <h4 translate="userManage.org.activeDirectory"></h4>
     </div>
-    <div class="columns medium-7 sync-status">
+    <div class="columns medium-7">
       <multi-dirsync-section
         on-enable-click="umoc.onNext(umoc.ManageType.ADVANCED_NO_DS)">
       </multi-dirsync-section>
@@ -115,7 +113,7 @@
     <div class="columns medium-5">
       <h4 translate="userManage.org.licenses"></h4>
     </div>
-    <div class="columns medium-7 sync-status">
+    <div class="columns medium-7">
       <div class="user-manage__auto-assign-title-row">
         <h5 translate="userManage.org.autoAssignLicenses"></h5>
         <auto-assign-template-manage-options
@@ -127,16 +125,13 @@
           is-template-active="umoc.isDefaultAutoAssignTemplateActivated()">
         </auto-assign-template-manage-options>
       </div>
-      <span ng-if="umoc.hasDefaultAutoAssignTemplate()"
-        class="user-manage__text--margin ds-sync">
-        <!-- TODO replace with cs-statusindicator -->
-        <i class="icon icon-circle icon-circle-manage"
-          ng-class="{'working': umoc.isDefaultAutoAssignTemplateActivated(),
-          'disabled': !umoc.isDefaultAutoAssignTemplateActivated()}">
-        </i>
-        <h6 ng-if="umoc.isDefaultAutoAssignTemplateActivated()" translate="common.keys.activated"></h6>
-        <h6 ng-if="!umoc.isDefaultAutoAssignTemplateActivated()" translate="common.keys.deactivated"></h6>
-      </span>
+      <div ng-if="umoc.hasDefaultAutoAssignTemplate()"
+        class="user-manage__text--margin">
+        <cs-statusindicator ng-model="umoc.defaultAutoAssignTemplateActivatedStatus">
+        </cs-statusindicator>
+        <span class="h6" ng-if="umoc.isDefaultAutoAssignTemplateActivated()" translate="common.keys.activated"></span>
+        <span class="h6" ng-if="!umoc.isDefaultAutoAssignTemplateActivated()" translate="common.keys.deactivated"></span>
+      </div>
       <p ng-if="!umoc.hasDefaultAutoAssignTemplate()"
         class="user-manage__text--margin">
         <a href
