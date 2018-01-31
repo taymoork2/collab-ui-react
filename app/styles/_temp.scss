@@ -489,77 +489,14 @@ input[type='file']::-webkit-file-upload-button {
   }
 }
 
-/************ Initial Setup ************/
-
-.initial-setup {
-  width: 1270px;
-  height: 500px;
-  position: relative;
-  top: 50px;
-  padding: 10px;
-}
-
-.initial-setup-panel {
-  width: 1250px;
-  height: inherit;
-  position: relative;
-}
-
-.initial-setup-sidebar {
-  border: solid 1px #c0c0c0;
-  position: relative;
-  width: 295px;
-  height: inherit;
-  padding: 10px;
-}
-
-.initial-setup-body {
-  position: relative;
-  top: -500px;
-  left: 300px;
-  width: 950px;
-  height: inherit;
-  padding: 10px;
-}
-
 .tabHighlight {
   background-color: #1b95bb;
-  color: white;
-
-  a.ftwNavLink {
-    color: white;
-  }
-}
-
-.ftwNavLink {
-  font-size: 25px;
-}
-
-a.ftwNavLink {
-  color: black;
-}
-
-a:hover.ftwNavLink {
-  color: #1883a4;
-}
-
-a:active.ftwNavLink {
   color: white;
 }
 
 .syncradio {
   margin-right: 10px !important;
   margin-left: 40px !important;
-}
-
-.initialSetupNav {
-  position: relative;
-  min-width: 263px;
-  padding: 5px;
-  margin: 5px;
-  height: 38px;
-  float: left;
-  text-align: left;
 }
 
 #userslist .icon-check {
