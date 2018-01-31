@@ -159,6 +159,10 @@ describe('QueryParser', () => {
     expect(new QueryParser(new SearchTranslator(translate, null)).getUniversalFieldName('proXduct')).toBeUndefined();
   });
 
+  it('all valid fields must be lowercase.', () => {
+    _.each(QueryParser.validFieldNames, f => expect(f).toBe(f.toLowerCase()));
+  });
+
   function expectQueryToThrow(query: string) {
     try {
       new QueryParser(new SearchTranslator(translate, null)).parseQueryString(query);

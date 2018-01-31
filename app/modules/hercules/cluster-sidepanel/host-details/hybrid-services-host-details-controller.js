@@ -115,6 +115,7 @@
     function goToNodesPage() {
       $state.go('mediafusion-cluster.nodes', {
         id: cluster.id,
+        backState: 'media-service-v2.list',
       });
     }
   }

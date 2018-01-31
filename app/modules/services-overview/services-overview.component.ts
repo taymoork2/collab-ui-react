@@ -11,7 +11,7 @@ import { FeatureToggleService } from 'modules/core/featureToggle';
 import { HybridServicesClusterService, IServiceStatusWithSetup } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { HybridServiceId, IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
 import { IToolkitModalService } from 'modules/core/modal';
-import MessengerInteropService from 'modules/core/users/userAdd/shared/messenger-interop/messenger-interop.service';
+import { MessengerInteropService } from 'modules/core/users/userAdd/shared/messenger-interop/messenger-interop.service';
 import { Notification } from 'modules/core/notifications';
 import { ProPackService }  from 'modules/core/proPack/proPack.service';
 import { TaskManagerService } from 'modules/hcs/task-manager';
@@ -84,7 +84,7 @@ export class ServicesOverviewController implements ng.IComponentController {
         this.forwardEvent('sparkCallCdrReportingFeatureToggleEventhandler', response.hI802);
 
         // Used by hybrid cards
-        if (this.Authinfo.isFusionUC()) {
+        if (this.Authinfo.isFusionUC() || ((this.Authinfo.hasCallLicense() || this.Authinfo.hasCareLicense()) && response.hybridCare)) {
           this._servicesToDisplay.push('squared-fusion-uc');
         }
         if (this.Authinfo.isFusionCal()) {
@@ -105,7 +105,7 @@ export class ServicesOverviewController implements ng.IComponentController {
         if (this.Authinfo.isContactCenterContext()) {
           this._servicesToDisplay.push('contact-center-context');
         }
-        if (response.huronEnterprisePrivateTrunking && (this.Authinfo.isSquaredUC() || response.hybridCare)) {
+        if (response.huronEnterprisePrivateTrunking && (this.Authinfo.isSquaredUC() || ((this.Authinfo.hasCallLicense() || this.Authinfo.hasCareLicense()) && response.hybridCare))) {
           this._servicesToDisplay.push('ept');
         }
         if (response.atlasHybridImp && this.Authinfo.isFusionIMP()) {

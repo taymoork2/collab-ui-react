@@ -1,7 +1,7 @@
 import { Config } from 'modules/core/config/config';
 import { ISubscription, ILicenseUsage } from 'modules/core/users/userAdd/assignable-services/shared/license-usage-util.interfaces';
 
-export default class MessengerInteropService {
+export class MessengerInteropService {
   /* @ngInject */
   constructor(
     private Authinfo,

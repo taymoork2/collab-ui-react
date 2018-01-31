@@ -140,37 +140,55 @@
   </div>
   <hr>
   <div class="row">
-    <h4 class="columns manage-modal-header" translate="userManage.org.modifyUsers"></h4>
-    <div class="columns medium-4 modify-users-section" ng-click="umoc.onNext(umoc.ManageType.MANUAL)">
-      <h4 class="modify-users-section--label" translate="userManage.org.manualLabelNew"></h4>
-      <h6 class="modify-users-section--details" translate="userManage.org.manualDetailsNew" translate-values="{maxUsersInManual: umoc.maxUsersInManual}"></h6>
-      <a href
-        ng-if="umoc.isDirSyncEnabled"
-        ng-click="umoc.onNext(umoc.ManageType.ADVANCED_DS)"
-        class="h6 modify-users-section--details-link"
-        translate="userManage.org.dirSyncModifyAll"></a>
-    </div>
-    <div class="columns medium-4 modify-users-section modify-users-section--middle-box"
-      ng-click="umoc.onNext(umoc.ManageType.BULK)">
-      <h4 class="modify-users-section--label" translate="userManage.org.bulkLabelNew"></h4>
-      <h6 class="modify-users-section--details" translate="userManage.org.bulkDetailsNew" translate-values="{maxUsersInCSV: umoc.maxUsersInCSV}"></h6>
-      <p class="csv-export-link">
-        <cr-user-csv-export as-link="{{::'userManage.bulk.exportUserList'|translate}}" ng-click="$event.stopPropagation()"
-          use-csv-download-directive="true">
-        </cr-user-csv-export>
-      </p>
-    </div>
-    <div ng-if="umoc.convertableUsers" class="columns medium-4 modify-users-section modify-users-section--right-box"
-      ng-click="umoc.onNext(umoc.ManageType.CONVERT)">
-      <h4 class="modify-users-section--label" translate="userManage.org.convertLabel" ></h4>
-      <h6 class="modify-users-section--details" translate="userManage.org.convertDetails"></h6>
-    </div>
-    <div class="modify-users-section--right-box">
-      <div ng-if="!umoc.convertableUsers" class="columns medium-4 modify-users-section">
-        <h4 class="modify-users-section--label modify-users-section--disabled" translate="userManage.org.convertLabel" ></h4>
-        <h6 class="modify-users-section--disabled" translate="userManage.org.convertUnavailable"></h6>
-      </div>
-    </div>
+    <h4 class="manage-modal-header" translate="userManage.org.modifyUsers"></h4>
+    <cr-action-cards-container>
+      <cr-action-card ng-click="umoc.onNext(umoc.ManageType.MANUAL)">
+        <cr-action-card-header>
+          <h4 translate="userManage.org.manualLabelNew"></h4>
+        </cr-action-card-header>
+        <cr-action-card-section>
+          <h6 translate="userManage.org.manualDetailsNew" translate-values="{maxUsersInManual: umoc.maxUsersInManual}"></h6>
+        </cr-action-card-section>
+        <cr-action-card-footer>
+          <a href
+            ng-if="umoc.isDirSyncEnabled"
+            ng-click="umoc.onNext(umoc.ManageType.ADVANCED_DS)"
+            class="h6 modify-users-section--details-link"
+            translate="userManage.org.dirSyncModifyAll"></a>
+        </cr-action-card-footer>
+      </cr-action-card>
+      <cr-action-card ng-click="umoc.onNext(umoc.ManageType.BULK)">
+        <cr-action-card-header>
+          <h4 translate="userManage.org.bulkLabelNew"></h4>
+        </cr-action-card-header>
+        <cr-action-card-section>
+          <h6 translate="userManage.org.bulkDetailsNew" translate-values="{maxUsersInCSV: umoc.maxUsersInCSV}"></h6>
+        </cr-action-card-section>
+        <cr-action-card-footer>
+          <p class="csv-export-link">
+            <cr-user-csv-export as-link="{{::'userManage.bulk.exportUserList'|translate}}" ng-click="$event.stopPropagation()"
+              use-csv-download-directive="true">
+            </cr-user-csv-export>
+          </p>
+        </cr-action-card-footer>
+      </cr-action-card>
+      <cr-action-card ng-if="umoc.convertableUsers" ng-click="umoc.onNext(umoc.ManageType.CONVERT)">
+        <cr-action-card-header>
+          <h4 translate="userManage.org.convertLabel" ></h4>
+        </cr-action-card-header>
+        <cr-action-card-section>
+          <h6 translate="userManage.org.convertDetails"></h6>
+        </cr-action-card-section>
+      </cr-action-card>
+      <cr-action-card ng-if="!umoc.convertableUsers">
+        <cr-action-card-header>
+          <h4 class="modify-users-section--disabled" translate="userManage.org.convertLabel" ></h4>
+        </cr-action-card-header>
+        <cr-action-card-section>
+          <h6 class="modify-users-section--disabled" translate="userManage.org.convertUnavailable"></h6>
+        </cr-action-card-section>
+      </cr-action-card>
+    </cr-action-cards-container>
   </div>
 </div>
 

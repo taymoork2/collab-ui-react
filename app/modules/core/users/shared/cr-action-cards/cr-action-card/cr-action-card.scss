@@ -1,0 +1,61 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/media';
+@import 'styles/partials/mixins';
+@import 'modules/core/users/shared/cr-action-cards/cr-action-cards.variables';
+
+cr-action-card {
+  @include keep-flex-container(column, 1, 1, auto);
+  background-color: $gray-light-4;
+  text-align: center;
+
+  @media #{$small-up} {
+    margin: $cr-action-cards-container-margin--small;
+  }
+  @media #{$large-up} {
+    margin: $cr-action-cards-container-margin--large;
+  }
+
+  cr-action-cards-container & {
+    min-height: $cr-action-cards-container__cr-action-card-min-height;
+
+    @media #{$small-only} {
+      max-width: $cr-action-cards-container__cr-action-card-max-width--small;
+    }
+    @media #{$medium-only} {
+      max-width: calc(100% / #{$cr-action-cards-container-num-of-action-cards} - #{$cr-action-cards-container-gutter--small});
+    }
+    @media #{$large-up} {
+      max-width: calc(100% / #{$cr-action-cards-container-num-of-action-cards} - #{$cr-action-cards-container-gutter--large});
+    }
+  }
+}
+
+.cr-action-card {
+  &__header {
+    padding: 2rem 2.625rem 1.5rem;
+
+    @media #{$medium-only} {
+      padding-left: $cr-action-card-padding--medium;
+      padding-right: $cr-action-card-padding--medium;
+    }
+  }
+
+  &__section {
+    flex: 1 0 0px;
+    padding: 0 2rem;
+
+    @media #{$medium-only} {
+      padding-left: $cr-action-card-padding--medium;
+      padding-right: $cr-action-card-padding--medium;
+    }
+  }
+
+  &__footer {
+    padding: .5rem 2rem 1rem;
+
+    @media #{$medium-only} {
+      padding-left: $cr-action-card-padding--medium;
+      padding-right: $cr-action-card-padding--medium;
+    }
+  }
+}

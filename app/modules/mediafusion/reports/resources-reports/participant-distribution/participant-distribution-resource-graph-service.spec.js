@@ -46,13 +46,13 @@ describe('Service: Participant Distribution Resource GraphService', function () 
 
   it('setParticipantDistributionGraph should return an amchart object successfully', function () {
     var setParticipantDistributionGraphResponse = ParticipantDistributionResourceGraphService.setParticipantDistributionGraph(participantDistributionGraphData, participantDistributionChart, allClusters, allClusters, daterange, IdMap);
-    expect(setParticipantDistributionGraphResponse.graphs.length).toBe(9);
-    expect(setParticipantDistributionGraphResponse.dataProvider).toEqual(participantDistributionGraphData.participantdistributionresponse);
+    expect(setParticipantDistributionGraphResponse.graphs.length).toBe(11);
+    expect(setParticipantDistributionGraphResponse.dataProvider[2]).toEqual(participantDistributionGraphData.participantdistributionresponse[2]);
   });
 
   it('setParticipantDistributionGraph should return an amchart object successfully when particular cluster is selected', function () {
     var setParticipantDistributionGraphResponse = ParticipantDistributionResourceGraphService.setParticipantDistributionGraph(participantDistributionGraphData, participantDistributionChart, allClusters, clusterId, daterange, IdMap);
-    expect(setParticipantDistributionGraphResponse.graphs.length).toBe(9);
-    expect(setParticipantDistributionGraphResponse.dataProvider).toEqual(participantDistributionGraphData.participantdistributionresponse);
+    expect(setParticipantDistributionGraphResponse.graphs.length).toBe(11);
+    expect(setParticipantDistributionGraphResponse.dataProvider[2]).toEqual(participantDistributionGraphData.participantdistributionresponse[2]);
   });
 });

@@ -22,11 +22,12 @@ describe('DeviceBrandingSettingCtrl', () => {
   const imageFile = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUp/hOeZ81YAAAACklEQVQIW2NgAAAAAgABYkBPaAAAAABJRU5ErkJggg==';
 
   describe('with existing branding', function () {
-    let lightLogoUrl, darkLogoUrl, halfwakeLogoUrl;
+    let lightLogoUrl, darkLogoUrl, halfwakeLogoUrl, notifyUrl;
     beforeEach(function () {
       lightLogoUrl = this.UrlConfig.getAdminServiceUrl() + 'organizations/' + this.Authinfo.getOrgId() + '/config/files/8AAFF7C25CCE77B2015CCE77E5050001';
       darkLogoUrl = this.UrlConfig.getAdminServiceUrl() + 'organizations/' + this.Authinfo.getOrgId() + '/config/files/8AAFF7C25CCE77B2015CCE77E5050003';
       halfwakeLogoUrl = this.UrlConfig.getAdminServiceUrl() + 'organizations/' + this.Authinfo.getOrgId() + '/config/files/8AAFF7C25CCE77B2015CCE77E5050009';
+      notifyUrl = this.UrlConfig.getCsdmServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/devices/update';
       this.$httpBackend.whenGET(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/branding').respond(200, {
         value: {
           logoLight: { url: lightLogoUrl },
@@ -107,6 +108,9 @@ describe('DeviceBrandingSettingCtrl', () => {
               this.$httpBackend.expectDELETE(lightLogoUrl).respond(204);
               this.$httpBackend.expectDELETE(darkLogoUrl).respond(204);
 
+              //should notify all devices
+              this.$httpBackend.expectPOST(notifyUrl).respond(200);
+
               //perform
               this.controller.applyBranding();
               this.$httpBackend.flush();
@@ -160,6 +164,9 @@ describe('DeviceBrandingSettingCtrl', () => {
               //should delete old files
               this.$httpBackend.expectDELETE(darkLogoUrl).respond(204);
 
+              //should notify all devices
+              this.$httpBackend.expectPOST(notifyUrl).respond(200);
+
               //perform
               this.controller.applyBranding();
               this.$httpBackend.flush();
@@ -206,6 +213,9 @@ describe('DeviceBrandingSettingCtrl', () => {
 
               //should delete old files
               this.$httpBackend.expectDELETE(darkLogoUrl).respond(204);
+
+              //should notify all devices
+              this.$httpBackend.expectPOST(notifyUrl).respond(200);
 
               //perform
               this.controller.applyBranding();
@@ -278,6 +288,10 @@ describe('DeviceBrandingSettingCtrl', () => {
                   halfwakeBackground: { url: 'halfwakelogo2' },
                 },
               });
+
+              const notifyUrl = this.UrlConfig.getCsdmServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/devices/update';
+              //should notify all devices
+              this.$httpBackend.expectPOST(notifyUrl).respond(200);
 
               //perform
               this.controller.applyBranding();
@@ -403,6 +417,10 @@ describe('DeviceBrandingSettingCtrl', () => {
                     logoLight: { url: 'lightlogo2' },
                   },
                 });
+
+              const notifyUrl = this.UrlConfig.getCsdmServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/devices/update';
+              //should notify all devices
+              this.$httpBackend.expectPOST(notifyUrl).respond(200);
 
               //perform
               this.controller.applyBranding();

@@ -39,6 +39,14 @@ class DocumentationSectionCtrl implements IDocumentationSectionCtrl, ng.ICompone
       this.downloadLink = 'https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP';
     }
 
+    if (this.serviceId === 'squared-fusion-cal') {
+      this.helpLink = 'https://www.cisco.com/go/hybrid-services-calendar';
+    }
+
+    if (this.serviceId === 'squared-fusion-uc') {
+      this.helpLink = 'https://www.cisco.com/go/hybrid-services-call';
+    }
+
     if (this.serviceId === 'ept') {
       this.helpLink = 'https://www.cisco.com/go/spark-calling-branch-office';
     }
