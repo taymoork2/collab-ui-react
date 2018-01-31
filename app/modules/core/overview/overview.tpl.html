@@ -41,7 +41,7 @@
                   <a href ng-if="notification.linkText.length > 0" ng-click="notification.link()" translate="{{notification.linkText}}"></a>
                 </div>
               </span>
-              <button type="button" class="close" ng-if="notification.canDismiss" ng-click="overview.dismissNotification(notification)" aria-label="{{'common.close' | translate}}"></button>
+              <button type="button" class="close" ng-if="notification.canDismiss" ng-click="overview.dismissNotification(notification)" aria-label="{{::'common.close' | translate}}"></button>
             </div>
           </section>
           <footer>

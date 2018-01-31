@@ -114,9 +114,11 @@
                     </span>
                     <button class="btn btn--circle btn--small btn--primary icon icon-check pull-right"
                       ng-click="$ctrl.saveOption()"
-                      ng-disabled="!$ctrl.saveOptionButtonEnabled()"></button>
+                      ng-disabled="!$ctrl.saveOptionButtonEnabled()"
+                      aria-label="{{::'common.save' | translate}}"></button>
                     <button class="btn btn--circle btn--small btn--white icon icon-close pull-right"
-                      ng-click="$ctrl.cancelEditOption()"></button>
+                      ng-click="$ctrl.cancelEditOption()"
+                      aria-label="{{::'common.close' | translate}}"></button>
                   </div>
                 </div>
               </div>
@@ -141,9 +143,11 @@
                 </span>
                 <button class="btn btn--circle btn--small btn--primary icon icon-check pull-right"
                   ng-click="$ctrl.saveOption()"
-                  ng-disabled="!$ctrl.saveOptionButtonEnabled()"></button>
+                  ng-disabled="!$ctrl.saveOptionButtonEnabled()"
+                  aria-label="{{::'common.save' | translate}}"></button>
                 <button class="btn btn--circle btn--small btn--white icon icon-close pull-right"
-                  ng-click="$ctrl.cancelAddOption()"></button>
+                  ng-click="$ctrl.cancelAddOption()"
+                  aria-label="{{::'common.close' | translate}}"></button>
               </div>
             </div>
 
