@@ -53,6 +53,10 @@ export class HybridServicesEntitlementsPanelService {
       entitlementState = _.get(hybridServices, 'callServiceAware.entitled');
       entitlements.push(this.OnboardService.toEntitlementItem(entitlementName, entitlementState));
       if (_.has(hybridServices, 'callServiceConnect.entitled')) {
+        // if call service aware is unselected, call service connect must follow
+        if (!_.get(hybridServices, 'callServiceAware.entitled')) {
+          _.set(hybridServices, 'callServiceConnect.entitled', false);
+        }
         entitlementName = UserEntitlementName.SQUARED_FUSION_EC;
         entitlementState = _.get(hybridServices, 'callServiceConnect.entitled');
         entitlements.push(this.OnboardService.toEntitlementItem(entitlementName, entitlementState));
