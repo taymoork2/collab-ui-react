@@ -28,9 +28,9 @@ export class HybridServicesEntitlementsPanelService {
     private OnboardService,
   ) {}
 
-  public getEntitlements(hybridServices: IHybridServices, options?: { allowRemove: boolean }): IUserEntitlementRequestItem[] {
+  public getEntitlements(hybridServices: IHybridServices, options: { allowRemove?: boolean } = {}): IUserEntitlementRequestItem[] {
     let entitlements: IUserEntitlementRequestItem[] = [];
-    const allowRemove = _.get(options, 'allowRemove', false);
+    const { allowRemove = false } = options;
     let entitlementName, entitlementState;
 
     if (hybridServices.calendarEntitled) {
