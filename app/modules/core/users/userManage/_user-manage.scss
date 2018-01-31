@@ -1,69 +1,68 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
 @import '~@collabui/collab-ui/scss/settings/media';
-@import '~@collabui/collab-ui/scss/settings/typography';
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 .user-manage-picker__center-spinner {
   margin: auto;
 }
 
-.user-manage__text--margin {
-  @include vr-spacing(mt, 0.75);
-}
-
-.user-manage__text--disabled {
-  color: $gray-light-1;
-}
-
-.user-manage__manage-type-list-item-indent {
-  @include vr-spacing(pt, 0.5);
-  @include vr-spacing(pl, 2);
-}
-
-.user-manage__modify-users-title {
-  @include vr-spacing(mb, 1.5);
-}
-
-// TODO extract this into generic class for toolkit layout container
-.user-manage__row > .columns {
-  &:not(:last-child) {
-    @media #{$small-only} {
-      @include vr-spacing(mb, 2.25);
-    }
-  }
-
-  &:last-child {
-    @media #{$medium-up} {
-      margin-top: 4px;
-    }
-  }
-}
-
-.user-manage__modal-body > .user-manage__row:first-child {
-  @include vr-spacing(pt, .75);
-}
-
-.user-manage__hr {
-  @include vr-spacing(mv, 2.25);
-}
-
-.user-manage__auto-assign-title-row {
-  display: flex;
-  align-items: flex-start;
-}
-
-.user-manage__auto-assign-title-action {
-  @include vr-spacing(mt, -.5);
-
-  @media #{$small-only} {
-    @include vr-spacing(ml, 1);
-  }
-  @media #{$medium-up} {
-    @include vr-spacing(ml, 3);
-  }
-}
-
 .user-manage {
+  &__text--margin {
+    @include vr-spacing(mt, 0.75);
+  }
+
+  &__text--disabled {
+    color: $gray-light-1;
+  }
+
+  &__manage-type-list-item-indent {
+    @include vr-spacing(pt, 0.5);
+    @include vr-spacing(pl, 2);
+  }
+
+  &__modify-users-title {
+    @include vr-spacing(mb, 1.5);
+  }
+
+  // TODO extract this into generic class for toolkit layout container
+  &__row > .columns {
+    &:not(:last-child) {
+      @media #{$small-only} {
+        @include vr-spacing(mb, 2.25);
+      }
+    }
+
+    &:last-child {
+      @media #{$medium-up} {
+        margin-top: 4px;
+      }
+    }
+  }
+
+  &__modal-body > &__row:first-child {
+    @include vr-spacing(pt, .75);
+  }
+
+  &__hr {
+    @include vr-spacing(mv, 2.25);
+  }
+
+  &__auto-assign-title-row {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  &__auto-assign-title-action {
+    @include vr-spacing(mt, -.5);
+
+    @media #{$small-only} {
+      @include vr-spacing(ml, 1);
+    }
+    @media #{$medium-up} {
+      @include vr-spacing(ml, 3);
+    }
+  }
+
   &__manage-type-list-item {
     @include vr-spacing(pb, 1);
 
