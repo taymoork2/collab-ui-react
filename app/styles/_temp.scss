@@ -459,30 +459,6 @@ input[type='file']::-webkit-file-upload-button {
   margin-left: 60px;
 }
 
-#domainDesc {
-  margin-left: 60px;
-  margin-top: 10px;
-  color: gray;
-}
-
-.dirsync-refresh-button {
-  float: right;
-  margin-right: 75px;
-}
-
-.subheading {
-  margin-right: 10px;
-}
-
-.installStep,
-#userResults {
-  margin-bottom: 10px;
-}
-
-.boldText {
-  font-weight: bold;
-}
-
 .ssoDesc::after,
 #importFileDiv::after,
 #ssoFooter::after {
@@ -546,30 +522,6 @@ input[type='file']::-webkit-file-upload-button {
   padding: 10px;
 }
 
-.initialSetupTabs {
-  border: solid 1px #c0c0c0;
-  position: relative;
-  height: 50px;
-  margin: -10px;
-}
-
-.initialSetupTab {
-  position: relative;
-  min-width: 100px;
-  padding: 5px;
-  margin: 5px;
-  height: 38px;
-  float: left;
-  text-align: center;
-}
-
-.initialSetupContent {
-  position: relative;
-  padding: 10px;
-  height: 340px;
-  margin: -10px;
-}
-
 .initialSetupNavBtns {
   position: absolute;
   padding: 33px;
@@ -579,38 +531,13 @@ input[type='file']::-webkit-file-upload-button {
   width: 908px;
 }
 
-.initialSetupAddUserNavBtns {
-  position: absolute;
-  padding: 33px;
-  padding-left: 170px;
-  height: 100px;
-  bottom: -100px;
-  width: 908px;
-}
-
 .tabHighlight {
   background-color: #1b95bb;
   color: white;
 
-  a.ftwTabLink {
-    color: white;
-  }
-
   a.ftwNavLink {
     color: white;
   }
-}
-
-a.ftwTabLink {
-  color: black;
-}
-
-a:hover.ftwTabLink {
-  color: #1883a4;
-}
-
-a:active.ftwTabLink {
-  color: white;
 }
 
 .ftwNavLink {
@@ -632,26 +559,6 @@ a:active.ftwNavLink {
 .syncradio {
   margin-right: 10px !important;
   margin-left: 40px !important;
-}
-
-.choosesyncOpts::after,
-.initialSetupContent::before {
-  content: '\000A\000A';
-  white-space: pre-wrap;
-}
-
-.syncStatusText {
-  margin-left: 170px;
-  width: 550px;
-  height: 30px;
-}
-
-#syncNumUsers {
-  margin-left: 230px;
-}
-
-.ftwCenterContent {
-  margin-left: 170px;
 }
 
 .initialSetupNav {
