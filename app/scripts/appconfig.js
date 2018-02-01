@@ -1096,13 +1096,12 @@
             views: {
               'modal@': {
                 controller: 'OnboardCtrl',
-                template: '<div ui-view="usersConvert"></div>',
+                template: '<div ui-view="usersConvert" class="convert-users"></div>',
               },
               'usersConvert@users.convert': {
                 template: '<cr-convert-users-modal/>',
                 resolve: {
                   modalInfo: function ($state) {
-                    $state.params.modalClass = 'convert-users';
                     $state.params.modalId = 'convertDialog';
                   },
                 },
