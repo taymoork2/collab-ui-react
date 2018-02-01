@@ -18,6 +18,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
   private searchDelayTimer: ng.IPromise<any> | null;
   private static readonly SEARCH_DELAY_MS = 200;
   private interactedWithSearch = false;
+  private queryCounter: number = 0;
 
   get inputActive(): boolean {
     return this._inputActive;
@@ -168,8 +169,8 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
 
   public selectSuggestion(suggestion: ISuggestion | null, byMouse: boolean) {
     this.trackSuggestionAction(byMouse
-      ? this.Analytics.sections.DEVICE_SEARCH.eventNames.SUGGESTION_PICKED_BY_MOUSE
-      : this.Analytics.sections.DEVICE_SEARCH.eventNames.SUGGESTION_PICKED_BY_KEYBOARD,
+      ? 'MOUSE'
+      : 'KEYBOARD',
       suggestion);
     if (suggestion) {
       this.searchObject.setWorkingElementText(suggestion.searchString);
@@ -280,17 +281,18 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
       }
     });
     this.trackSearchAction(caller === Caller.aggregator
-      ? this.Analytics.sections.DEVICE_SEARCH.eventNames.INITIAL_SEARCH
-      : this.Analytics.sections.DEVICE_SEARCH.eventNames.PERFORM_SEARCH,
+      ? 'INITIAL_SEARCH'
+      : 'SEARCH',
       search);
   }
 
-  private trackSuggestionAction(trackingEventName: string, suggestion: ISuggestion | null) {
+  private trackSuggestionAction(clickSource: string, suggestion: ISuggestion | null) {
     if (!suggestion) {
       return;
     }
-    this.Analytics.trackEvent(trackingEventName, {
-      suggestion_field: suggestion.field || 'ANY_FIELD',
+    this.Analytics.trackEvent(this.Analytics.sections.DEVICE_SEARCH.eventNames.SELECT_SUGGESTION, {
+      suggestion_click: clickSource,
+      suggestion_field: _.toLower(suggestion.field || 'ANY_FIELD'),
       suggestion_length: (suggestion.searchString || '').length,
       suggestion_rank: suggestion.rank,
       suggestion_count: suggestion.count,
@@ -298,14 +300,16 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     });
   }
 
-  private trackSearchAction(trackingEventName: string, search: SearchObject) {
+  private trackSearchAction(querySource: string, search: SearchObject) {
     if (!search) {
       return;
     }
     const query = search.getTranslatedQueryString(null) || '';
-    this.Analytics.trackEvent(trackingEventName, {
+    this.Analytics.trackEvent(this.Analytics.sections.DEVICE_SEARCH.eventNames.PERFORM_SEARCH, {
       query_length: query.length,
       query_error: search.hasError,
+      query_source: querySource,
+      query_count: this.queryCounter++,
     });
   }
 

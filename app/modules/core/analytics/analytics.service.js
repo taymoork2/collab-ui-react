@@ -244,10 +244,9 @@
       DEVICE_SEARCH: {
         name: 'Devices search',
         eventNames: {
-          INITIAL_SEARCH: 'CSDM Initial dev search',
-          SUGGESTION_PICKED_BY_KEYBOARD: 'CSDM Suggestion keyboard',
-          SUGGESTION_PICKED_BY_MOUSE: 'CSDM Suggestion mouse',
           PERFORM_SEARCH: 'CSDM dev search',
+          SELECT_SUGGESTION: 'CSDM Suggestion',
+          EXPAND_DEVICE: 'CSDM expand device',
         },
       },
     };
