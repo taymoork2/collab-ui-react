@@ -1130,6 +1130,7 @@
           .state('users.convert.results', {
             views: {
               'usersConvert@users.convert': {
+                // TODO auto-assign should refactor for <add-users-results-modal>
                 template: require('modules/core/users/userAdd/addUsersResultsModal.tpl.html'),
               },
             },

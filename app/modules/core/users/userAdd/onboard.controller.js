@@ -1852,10 +1852,12 @@ require('./_user-add.scss');
       convertUsersCount = $scope.convertSelectedList.length;
       $scope.convertUsersFlow = true;
       convertPending = false;
+      // TODO if auto-assign, should go to summary screen
       $state.go('users.convert.services', {});
     };
 
     $scope.convertUsersNext = function () {
+      // TODO if auto-assign, should just call convertUsers
       if (shouldAddCallService()) {
         $scope.processing = true;
         // Copying selected users to user list
@@ -1918,6 +1920,7 @@ require('./_user-add.scss');
           }
         }
 
+        // TODO if auto-assign, should not update users
         if (successMovedUsers.length > 0) {
           var entitleList = [];
           var licenseList = [];
