@@ -1,5 +1,8 @@
 import { ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
 import { AutoAssignTemplateService, IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
+import { IHybridServices } from 'modules/core/users/userAdd/hybrid-services-entitlements-panel/hybrid-services-entitlements-panel.service';
+import { ICrCheckboxItemState } from 'modules/core/users/shared/cr-checkbox-item/cr-checkbox-item.component';
+import { IUserEntitlementRequestItem, UserEntitlementState } from 'modules/core/users/shared/onboard/onboard.interfaces';
 
 class EditAutoAssignTemplateModalController implements ng.IComponentController {
 
@@ -64,10 +67,27 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
     _.set(this.autoAssignTemplateData, `viewData.${itemCategory}["${itemId}"]`, item);
   }
 
-  // TODO: remove this callback once 'hybrid-services-entitlements-panel' can leverage 'onUpdate()' callbacks
-  public recvHybridServicesEntitlementsPayload(entitlements): void {
-    // TODO: reimplement this logic
-    // _.set(this.autoAssignTemplateData, `USER_ENTITLEMENTS_PAYLOAD`, entitlements);
+  public recvHybridServicesEntitlementsUpdate(entitlements: IUserEntitlementRequestItem[]): void {
+    _.forEach(entitlements, (entitlement) => {
+      const { entitlementName, entitlementState } = entitlement;
+      const isSelected = entitlementState === UserEntitlementState.ACTIVE;
+      _.set(this.autoAssignTemplateData, `viewData.USER_ENTITLEMENT.${entitlementName}`, {
+        isSelected: isSelected,
+        isDisabled: false,
+      });
+    });
+  }
+
+  public getUserEntitlements(): { [key: string]: ICrCheckboxItemState } {
+    return _.get(this.autoAssignTemplateData, `viewData.USER_ENTITLEMENT`);
+  }
+
+  public getHybridServices(): IHybridServices {
+    return _.get(this.autoAssignTemplateData, `otherData.hybridServices`);
+  }
+
+  public setHybridServices(hybridServices: IHybridServices): void {
+    _.set(this.autoAssignTemplateData, `otherData.hybridServices`, hybridServices);
   }
 }
 

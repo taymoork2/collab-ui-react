@@ -2,9 +2,9 @@ import { CloudConnectorService, ICCCService } from 'modules/hercules/services/ca
 import { FeatureToggleService } from 'modules/core/featureToggle';
 import { IServiceDescription, ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
-import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 import { UserEntitlementName, IUserEntitlementRequestItem } from 'modules/core/users/shared/onboard/onboard.interfaces';
 import { HybridServicesEntitlementsPanelService, IHybridServices } from './hybrid-services-entitlements-panel.service';
+import { IUserEntitlementsViewState } from 'modules/core/users/shared/auto-assign-template/auto-assign-template.interfaces';
 
 interface IExtendedServiceDescription extends IServiceDescription {
   entitled?: boolean;
@@ -12,15 +12,15 @@ interface IExtendedServiceDescription extends IServiceDescription {
 
 class HybridServicesEntitlementsPanelController implements ng.IComponentController {
 
-  private static readonly HYBRID_SERVICES = 'hybridServices';
   private allowRemove: boolean;
   private isEnabled = false;
   private entitlements: IUserEntitlementRequestItem[] = [];
+  private saveInstance: Function;
   private showCalendarChoice: boolean;
   private services: IHybridServices;
   private entitlementsCallback: Function;
-  private autoAssignTemplateData: IAutoAssignTemplateData;
-  private userEntitlementsStateData: IUserEntitlementRequestItem[];
+  private restoreInstance: IHybridServices;
+  private restoreUserEntitlements: IUserEntitlementsViewState;
 
   /* @ngInject */
   constructor (
@@ -79,34 +79,27 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
   }
 
   public $onInit(): void {
-    if (!this.autoAssignTemplateData) {
-      this.autoAssignTemplateData = {} as IAutoAssignTemplateData;
-    }
-
-    if (!this.userEntitlementsStateData) {
-      this.userEntitlementsStateData = [] as IUserEntitlementRequestItem[];
-    }
     this.allowRemove = !!this.allowRemove;
-    this.initHybridServices(this.autoAssignTemplateData, this.userEntitlementsStateData);
+    this.initHybridServices();
   }
 
-  private initHybridServices(autoAssignTemplateData, userEntitlementsStateData) {
+  private initHybridServices() {
+    const restoreUserEntitlements = this.restoreUserEntitlements || {} as IUserEntitlementsViewState;
     const preselected = {
-      squaredFusionCal: !!_.find(userEntitlementsStateData, { entitlementName: UserEntitlementName.SQUARED_FUSION_CAL }),
-      squaredFusionUc: !!_.find(userEntitlementsStateData, { entitlementName: UserEntitlementName.SQUARED_FUSION_UC }),
-      squaredFusionEc: !!_.find(userEntitlementsStateData, { entitlementName: UserEntitlementName.SQUARED_FUSION_EC }),
-      squaredFusionGcal: !!_.find(userEntitlementsStateData, { entitlementName: UserEntitlementName.SQUARED_FUSION_GCAL }),
-      sparkHybridImpInterop: !!_.find(userEntitlementsStateData, { entitlementName: UserEntitlementName.SPARK_HYBRID_IMP_INTEROP }),
+      squaredFusionCal: _.get(restoreUserEntitlements, `${UserEntitlementName.SQUARED_FUSION_CAL}.isSelected`, false),
+      squaredFusionUc: _.get(restoreUserEntitlements, `${UserEntitlementName.SQUARED_FUSION_UC}.isSelected`, false),
+      squaredFusionEc: _.get(restoreUserEntitlements, `${UserEntitlementName.SQUARED_FUSION_EC}.isSelected`, false),
+      squaredFusionGcal: _.get(restoreUserEntitlements, `${UserEntitlementName.SQUARED_FUSION_GCAL}.isSelected`, false),
+      sparkHybridImpInterop: _.get(restoreUserEntitlements, `${UserEntitlementName.SPARK_HYBRID_IMP_INTEROP}.isSelected`, false),
     };
-    // restore from 'autoAssignTemplateData' if present
-    const previousServices: IHybridServices = _.get(autoAssignTemplateData, `otherData.${HybridServicesEntitlementsPanelController.HYBRID_SERVICES}`);
-    if (previousServices) {
-      this.services = previousServices;
+    // restore from previous instance if present
+    if (this.restoreInstance) {
+      this.services = this.restoreInstance;
       this.initIsEnabled();
       return;
     }
 
-    // otherwise initialize as per usual, and store in 'autoAssignTemplateData'
+    // otherwise initialize as per usual
     this.$q.all({
       servicesFromFms: this.ServiceDescriptorService.getServices(),
       gcalService: this.CloudConnectorService.getService('squared-fusion-gcal'),
@@ -125,7 +118,6 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
         this.services.calendarEntitled = true;
         this.services.setSelectedCalendarEntitlement();
       }
-      _.set(autoAssignTemplateData, HybridServicesEntitlementsPanelController.HYBRID_SERVICES, this.services);
       this.initIsEnabled();
     });
   }
@@ -136,6 +128,7 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
       return;
     }
     this.isEnabled = this.services.hasCalendarService() || this.services.hasCallService() || this.services.hasHybridMessageService();
+    this.saveInstance({ hybridServices: this.services });
   }
 
   private getServiceIfEnabledInFMS(services: IServiceDescription[], id: HybridServiceId, options?: { isPreselected: boolean }): IExtendedServiceDescription | null {
@@ -186,10 +179,10 @@ export class HybridServicesEntitlementsPanelComponent implements ng.IComponentOp
   public controller = HybridServicesEntitlementsPanelController;
   public template = require('./hybrid-services-entitlements-panel.html');
   public bindings = {
-    entitlementsCallback: '&',
-    onUpdate: '&?',
-    autoAssignTemplateData: '<?',
-    userEntitlementsStateData: '<',
     allowRemove: '<',
+    entitlementsCallback: '&',
+    restoreInstance: '<',
+    restoreUserEntitlements: '<',
+    saveInstance: '&',
   };
 }
