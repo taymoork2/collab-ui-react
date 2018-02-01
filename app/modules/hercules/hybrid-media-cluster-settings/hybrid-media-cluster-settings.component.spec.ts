@@ -23,6 +23,7 @@ describe('HybridMediaClusterSettingsCtrl', () => {
 
   function initSpies() {
     spyOn(HybridServicesClusterService, 'get').and.returnValue($q.resolve({}));
+    spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve({}));
   }
 
   function initController(clusterId?: string) {

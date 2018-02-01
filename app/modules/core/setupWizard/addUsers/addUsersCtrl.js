@@ -298,7 +298,7 @@
           Log.debug('Retrieved DirSync status successfully. Status: ' + status);
           if (data) {
             $scope.dirsyncStatus = data.result;
-            $scope.lastEndTime = data.lastEndTime;
+            $scope.lastEndTime = data.lastEndTime; // TODO refactor - used in user-manage-dir-sync-status.html
           }
           Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.SYNC_REFRESH, null, { result: 'success', clicks: getStatusCount });
         } else {

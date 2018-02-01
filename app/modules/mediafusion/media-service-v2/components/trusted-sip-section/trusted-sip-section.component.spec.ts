@@ -1,9 +1,10 @@
+import moduleName from './index';
 
 describe('TrustedSipSectionCtrl', () => {
 
   let $componentController, $scope, $q, HybridServicesClusterService;
 
-  beforeEach(angular.mock.module('Mediafusion'));
+  beforeEach(angular.mock.module(moduleName));
 
   interface ICluster {
     id: string;
@@ -47,7 +48,7 @@ describe('TrustedSipSectionCtrl', () => {
   it('should get cluster data from FMS when initializing', () => {
     HybridServicesClusterService.getProperties.and.returnValue($q.resolve({}));
     const cluster = {
-      id: '78j3g3',
+      id: 'fake-id',
     };
     initController(cluster);
     expect(HybridServicesClusterService.getProperties).toHaveBeenCalledWith(cluster.id);
@@ -56,7 +57,7 @@ describe('TrustedSipSectionCtrl', () => {
 
   it('should read and parse trusted SIP sources', () => {
     const cluster = {
-      id: 'ty6y3g-egue63-ty632',
+      id: 'fake-id',
     };
     const source1 = 'Doc';
     const source2 = 'Grumpy';
@@ -85,7 +86,7 @@ describe('TrustedSipSectionCtrl', () => {
     HybridServicesClusterService.getProperties.and.returnValue($q.resolve({}));
 
     const cluster = {
-      id: '56t723',
+      id: 'fake-id',
     };
     const source1 = 'registrar.example.org';
     const source2 = 'proxy.example.org';

@@ -28,6 +28,10 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
 
   public connectorId: string;
   public directoryUri: string;
+  public primaryDn: string;
+  public telephoneNumber: string;
+  public ucmCluster: string;
+
   public domainVerificationError = false;
 
   private entitlementUpdatedCallback: Function;
@@ -115,7 +119,10 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
     this.UCCService.getUserDiscovery(userId)
       .then((userDiscovery: IUserDiscoveryInfo) => {
         this.directoryUri = userDiscovery.directoryURI;
-        if (this.directoryUri) {
+        this.primaryDn = userDiscovery.primaryDn;
+        this.telephoneNumber = userDiscovery.telephoneNumber;
+        this.ucmCluster = userDiscovery.UCMInfo && userDiscovery.UCMInfo.ClusterFQDN;
+        if (this.directoryUri || this.primaryDn || this.telephoneNumber) {
           this.DomainManagementService.getVerifiedDomains()
             .then((domainList) => {
               if (!this.UriVerificationService.isDomainVerified(domainList, this.directoryUri)) {

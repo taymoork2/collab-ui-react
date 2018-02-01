@@ -1,8 +1,11 @@
 export class CsdmConfigurationService {
   private configUrl: string;
+  private notifyUrl: string;
+
   /* @ngInject  */
   constructor(private $http, private Authinfo, UrlConfig) {
     this.configUrl = UrlConfig.getLyraServiceUrl() + '/configuration/rules';
+    this.notifyUrl = UrlConfig.getCsdmServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/update';
   }
 
   public getRuleForPlace(cisUuid, key) {
@@ -28,6 +31,16 @@ export class CsdmConfigurationService {
     return this.$http.put(this.configUrl + '/organization/' + this.Authinfo.getOrgId() + '/' + key, {
       value: value,
       enforced: false,
+    });
+  }
+
+  public notifyOrgSetting() {
+    return this.$http.post(this.notifyUrl, {
+      searchRequest: { query: null, size: 31337, from: 0 },
+      updateCommand: {
+        type: 'notify',
+        notification: 'configurationChanged',
+      },
     });
   }
 

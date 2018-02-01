@@ -1,7 +1,7 @@
 import moduleName from './index';
 import { Analytics } from 'modules/core/analytics';
 import { Notification } from 'modules/core/notifications';
-import OnboardService from 'modules/core/users/userAdd/shared/onboard.service';
+import OnboardService from 'modules/core/users/shared/onboard/onboard.service';
 import { OnboardSummaryForAutoAssignModalController } from './onboard-summary-for-auto-assign-modal.component';
 import { MultiStepModalComponent } from 'modules/core/shared/multi-step-modal/multi-step-modal.component';
 import { LicenseSummaryComponent } from 'modules/core/users/userManage/shared/license-summary/license-summary.component';
@@ -39,13 +39,13 @@ describe('Component: onboardSummaryForAutoAssignModal:', () => {
       'Notification',
       'OnboardService',
     );
-    this.$scope.fakeStateData = {};
+    this.$scope.fakeAutoAssignTemplateData = {};
     this.$scope.fakeUserList = [];
   });
 
   function initComponent(this: Test) {
     this.compileComponent('onboardSummaryForAutoAssignModal', {
-      stateData: 'fakeStateData',
+      autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       userList: 'fakeUserList',
     });
   }
@@ -71,10 +71,10 @@ describe('Component: onboardSummaryForAutoAssignModal:', () => {
       expect(this.controller.save).toHaveBeenCalled();
     });
 
-    it('should pass along its "stateData" to its "license-summary"', function (this: Test) {
-      this.$scope.fakeStateData = 'fake-stateData';
+    it('should pass along its "autoAssignTemplateData" to its "license-summary"', function (this: Test) {
+      this.$scope.fakeAutoAssignTemplateData = 'fake-autoAssignTemplateData';
       initComponent.call(this);
-      expect(this.components.licenseSummary.bindings[0].stateData).toBe('fake-stateData');
+      expect(this.components.licenseSummary.bindings[0].autoAssignTemplateData).toBe('fake-autoAssignTemplateData');
     });
   });
 
@@ -89,13 +89,13 @@ describe('Component: onboardSummaryForAutoAssignModal:', () => {
     });
 
     describe('back():', () => {
-      it('should go back to "users.add.manual" state passing along its "stateData"', function (this: Test) {
-        this.$scope.fakeStateData = 'fake-stateData';
+      it('should go back to "users.add.manual" state passing along its "autoAssignTemplateData"', function (this: Test) {
+        this.$scope.fakeAutoAssignTemplateData = 'fake-autoAssignTemplateData';
         spyOn(this.$state, 'go');
         initComponent.call(this);
         this.controller.back();
         expect(this.$state.go).toHaveBeenCalledWith('users.add.manual', {
-          stateData: 'fake-stateData',
+          autoAssignTemplateData: 'fake-autoAssignTemplateData',
         });
       });
     });

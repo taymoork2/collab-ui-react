@@ -36,7 +36,7 @@ describe('Component: assignableAdvancedMeetings:', () => {
       expect(this.view.find('assignable-license-checkbox[l10n-label="subscriptions.licenseTypes.EC"]').length).toBe(1);
       expect(this.view.find('assignable-license-checkbox advanced-meeting-license-description').length).toBe(1);
       expect(this.view.find('assignable-license-checkbox usage-line').length).toBe(1);
-      expect(this.view.find('assignable-license-checkbox[state-data]').length).toBe(1);
+      expect(this.view.find('assignable-license-checkbox[auto-assign-template-data]').length).toBe(1);
       expect(this.view.find('assignable-license-checkbox[on-update]').length).toBe(1);
 
       this.$scope.licenses = [{

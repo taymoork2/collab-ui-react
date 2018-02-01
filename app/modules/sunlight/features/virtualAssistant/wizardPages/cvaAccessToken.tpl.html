@@ -17,7 +17,7 @@
               ng-change="$ctrl.onDialogflowTokenChange()"
               ng-model="$ctrl.template.configuration.pages.cvaAccessToken.accessTokenValue"
               ng-disabled="$ctrl.template.configuration.pages.cvaAccessToken.validatingToken"
-              placeholder="$ctrl.getText('accessToken.inputLabel')">
+              placeholder="{{$ctrl.getText('accessToken.inputLabel')}}">
             <i class="icon icon-check token-check-mark" ng-hide="!($ctrl.template.configuration.pages.cvaAccessToken.invalidToken == false)"></i>
             <button cs-btn class="btn btn--primary validate-button"
               ng-disabled="$ctrl.isValidateButtonDisabled()"

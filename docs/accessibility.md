@@ -49,10 +49,10 @@ As noted in the [aria-label](#aria-label-and-screen-readers) section, tooltips a
 Examples:
 ```html
 <i class="icon info-icon"
-  tooltip="{{::'tooltip.demo | translate}}"
+  tooltip="{{::'tooltip.demo' | translate}}"
   tooltip-trigger="focus mouseenter"
   tabindex="0"
-  aria-label="{{::'tooltip.demo | translate}}"></i>
+  aria-label="{{::'tooltip.demo' | translate}}"></i>
 ```
 or
 ```html
@@ -191,7 +191,7 @@ Example:
 
 Warning: Be very careful about using `focus-on` to draw focus to an element.  Some components are used in multiple places and an element in those components may need to be automatically focused on when it's a single page in a model but not when it's a single part of an overall settings page.  In these cases, `focus-on` can cause focus to jump to the wrong place on some pages.
 
-### focusing from the controller
+### Accessibility Service
 
 There is now a service, the AccessibilityService, that has been created for generic accessibility related functions.  This includes the `setFocus` function, which takes in three variables: `elem: ng.IRootElementService, identifier: string, time?: number`.
 
@@ -205,6 +205,17 @@ this.AccessibilityService.setFocus(this.$element, '#elementId', 1000); // timeou
 ```
 
 Focusing on an element from the controller is useful when a page is loading and the first focusable element is part of a component used in multiple places or when a page has already loaded but focus needs to automatically shift based on an interaction with page.  Some examples of this would be when clicking 'edit' on a dropdown list, deleting a selected element from a list, or after selecting a save/cancel option (causing the save/cancel buttons to disappear).
+
+Additionally there is the `isVisible` function which checks the visibility of an element based on a locator.  The function accepts the following arguments: `locator: string, elem?: ng.IRootElementService`.
+
+Example:
+```typescript
+this.AccessibilityService.isVisible('.locator-class', this.$element);
+// or
+this.AccessibilityService.isVisible('.other-locator');
+```
+
+There is currently one readonly variable - `public readobly MODAL = '.modal-content';` - which should not be sent with a `this.$element` to allow checking the visibility a modal to prevent erroneous ESC key interactions.  See `helpdesk-org.controller.js` for an example of this usage.
 
 ## Toolkit Keyboard Navigation Integration
 

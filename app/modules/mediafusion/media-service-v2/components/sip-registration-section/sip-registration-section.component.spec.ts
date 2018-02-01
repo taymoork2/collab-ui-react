@@ -1,7 +1,9 @@
+import moduleName from './index';
+
 describe('SipRegistrationSectionCtrl', () => {
   let $componentController, $scope, $q, HybridServicesClusterService;
 
-  beforeEach(angular.mock.module('Mediafusion'));
+  beforeEach(angular.mock.module(moduleName));
 
   interface ICluster {
     id: string;
@@ -11,10 +13,10 @@ describe('SipRegistrationSectionCtrl', () => {
   beforeEach(initSpies);
   afterEach(cleanup);
 
-  function dependencies (_$componentController_, $rootScope, _$q_, _HybridServicesClusterService_) {
+  function dependencies (_$componentController_, _$q_, $rootScope, _HybridServicesClusterService_) {
     $componentController = _$componentController_;
-    $scope = $rootScope.$new();
     $q = _$q_;
+    $scope = $rootScope.$new();
     HybridServicesClusterService = _HybridServicesClusterService_;
   }
 
@@ -45,7 +47,7 @@ describe('SipRegistrationSectionCtrl', () => {
   it('should get cluster data from FMS when initializing', () => {
     HybridServicesClusterService.getProperties.and.returnValue($q.resolve({}));
     const cluster = {
-      id: '78j3g3',
+      id: 'fake-id',
     };
     initController(cluster);
     expect(HybridServicesClusterService.getProperties).toHaveBeenCalledWith(cluster.id);
@@ -55,7 +57,7 @@ describe('SipRegistrationSectionCtrl', () => {
   it('should save a SIP trunk with the correct data', () => {
     HybridServicesClusterService.getProperties.and.returnValue($q.resolve({}));
     const cluster = {
-      id: 'ui96yew',
+      id: 'fake-id',
     };
     const sipUrl = 'sip://10.30.60.100';
     const ctrl = initController(cluster);

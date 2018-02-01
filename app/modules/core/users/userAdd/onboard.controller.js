@@ -1346,7 +1346,7 @@ require('./_user-add.scss');
     //***
     //*********************************************************************
 
-    var Feature = require('modules/core/users/userAdd/shared/feature.model').default;
+    var Feature = require('modules/core/users/shared/onboard/feature.model').default;
 
     function LicenseFeature(name, bAdd) {
       return {
@@ -2068,7 +2068,7 @@ require('./_user-add.scss');
       });
     };
 
-    // hack to allow adding services when exiting the users.manage.advanced.add.ob.syncStatus state
+    // hack to allow adding services when exiting the users.manage.dir-sync.add.ob.syncStatus state
     $scope.dirsyncInitForServices = function () {
       userArray = [];
       if ($scope.userList && $scope.userList.length > 0) {

@@ -99,6 +99,45 @@
           </div>
         </div>
 
+        <div class="row collapse" ng-if="$ctrl.primaryDn || ($ctrl.userStatusAware.state === 'error' || $ctrl.userStatusAware.state === 'activated')">
+          <div class="columns small-3">
+            <span class="hybrid-services-label">{{::'cloudExtensions.primaryDN' | translate}}:</span>
+          </div>
+          <div class="columns small-9">
+            <span ng-if="$ctrl.primaryDn"
+                  class="hybrid-services-label">{{$ctrl.primaryDn}}</span>
+            <span ng-if="!$ctrl.primaryDn"
+                  class="hybrid-services-label status-error"
+                  translate="common.notFound"></span>
+          </div>
+        </div>
+
+        <div class="row collapse" ng-if="$ctrl.telephoneNumber || ($ctrl.userStatusAware.state === 'error' || $ctrl.userStatusAware.state === 'activated')">
+          <div class="columns small-3">
+            <span class="hybrid-services-label">{{::'cloudExtensions.telephoneNumber' | translate}}:</span>
+          </div>
+          <div class="columns small-9">
+            <span ng-if="$ctrl.telephoneNumber"
+                  class="hybrid-services-label">{{$ctrl.telephoneNumber}}</span>
+            <span ng-if="!$ctrl.telephoneNumber"
+                  class="hybrid-services-label status-error"
+                  translate="common.notFound"></span>
+          </div>
+        </div>
+
+        <div class="row collapse" ng-if="$ctrl.ucmCluster || ($ctrl.userStatusAware.state === 'error' || $ctrl.userStatusAware.state === 'activated')">
+          <div class="columns small-3">
+            <span class="hybrid-services-label">{{::'cloudExtensions.ucmCluster' | translate}}:</span>
+          </div>
+          <div class="columns small-9">
+            <span ng-if="$ctrl.ucmCluster"
+                  class="hybrid-services-label">{{$ctrl.ucmCluster}}</span>
+            <span ng-if="!$ctrl.ucmCluster"
+                  class="hybrid-services-label status-error"
+                  translate="common.notFound"></span>
+          </div>
+        </div>
+
         <hs-is-invite-pending-warning ng-if="$ctrl.isInvitePending"
                                       is-entitled="$ctrl.entitledToggle"
                                       was-entitled="$ctrl.userIsCurrentlyEntitled"

@@ -26,7 +26,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="column-subsription-header free" translate="onboardModal.freeCollab"></div>
+    <div class="column-subscription-header free" translate="onboardModal.freeCollab"></div>
   </div>
   <div class="row full flex-row">
     <div class="small-4 columns column-free">
@@ -47,7 +47,7 @@
       subscription="subscription"
       is-care-enabled="$ctrl.isCareEnabled"
       on-update="$ctrl.onUpdate({ $event: $event })"
-      state-data="$ctrl.stateData">
+      auto-assign-template-data="$ctrl.autoAssignTemplateData">
     </assignable-services-row>
   </div>
 </div>

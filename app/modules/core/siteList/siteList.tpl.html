@@ -11,7 +11,7 @@
   <!-- Start Webex linked form -->
   <form action="{{siteList.trustSrc(siteList.siteAdminUrl)}}" class="webex-hidden-form" method="post" target="_blank">
     <input type="hidden" name="authorization" value="{{siteList.accessToken}}">
-    <button type="submit" id="webExLinkedSiteFormBtn"></button>
+    <button type="submit" id="webExLinkedSiteFormBtn" aria-label="{{::'common.submit' | translate}}"></button>
   </form>
   <!-- End Webex linked form -->
 </div>

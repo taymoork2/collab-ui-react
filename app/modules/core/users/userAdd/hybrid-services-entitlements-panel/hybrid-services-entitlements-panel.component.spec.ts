@@ -211,20 +211,20 @@ describe('Component Controller: hybridServicesPanelCtrl', function () {
     expect(this.controller.services.hybridMessage.enabled).toBe(true);
   });
 
-  it('should initialize a "stateData" property and populate it with the initialized "services" property', function () {
+  it('should initialize a "autoAssignTemplateData" property and populate it with the initialized "services" property', function () {
     initMockServices.call(this, ['squared-fusion-uc'], []);
     this.compileComponent('hybridServicesEntitlementsPanel');
-    expect(_.isEmpty(this.controller.stateData.hybridServices)).toBe(false);
-    expect(this.controller.stateData.hybridServices.callServiceAware).toEqual({
+    expect(_.isEmpty(this.controller.autoAssignTemplateData.hybridServices)).toBe(false);
+    expect(this.controller.autoAssignTemplateData.hybridServices.callServiceAware).toEqual({
       enabled: true,
       entitled: false,
       id: 'squared-fusion-uc',
     });
   });
 
-  it('should initialize "services" property from "stateData" if provided', function () {
+  it('should initialize "services" property from "autoAssignTemplateData" if provided', function () {
     initMockServices.call(this, ['squared-fusion-uc'], []);
-    this.$scope.fakeStateData = {
+    this.$scope.fakeAutoAssignTemplateData = {
       hybridServices: {
         callServiceAware: {
           enabled: true,
@@ -237,15 +237,32 @@ describe('Component Controller: hybridServicesPanelCtrl', function () {
       },
     };
     this.compileComponent('hybridServicesEntitlementsPanel', {
-      stateData: 'fakeStateData',
+      autoAssignTemplateData: 'fakeAutoAssignTemplateData',
     });
     expect(this.ServiceDescriptorService.getServices).not.toHaveBeenCalled();
     expect(this.CloudConnectorService.getService).not.toHaveBeenCalled();
-    expect(this.controller.stateData.hybridServices.callServiceAware).toEqual({
+    expect(this.controller.autoAssignTemplateData.hybridServices.callServiceAware).toEqual({
       enabled: true,
       entitled: false,
       id: 'squared-fusion-uc',
     });
+  });
+
+  it('should initialize "services" properties from "userEntitlementsStateData" if provided', function () {
+    initMockServices.call(this, ['squared-fusion-uc'], ['squared-fusion-cal']);
+    this.$scope.fakeUserEntitlementsStateData = [{
+      entitlementName: 'squaredFusionUC',
+      entitlementState: 'ACTIVE',
+    }, {
+      entitlementName: 'squaredFusionCal',
+      entitlementState: 'ACTIVE',
+    }];
+    this.compileComponent('hybridServicesEntitlementsPanel', {
+      userEntitlementsStateData: 'fakeUserEntitlementsStateData',
+    });
+    this.$scope.$apply();
+    expect(this.controller.services.calendarEntitled).toBe(true);
+    expect(this.controller.services.callServiceAware.entitled).toBe(true);
   });
 });
 

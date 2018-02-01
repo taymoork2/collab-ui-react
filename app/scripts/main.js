@@ -163,6 +163,8 @@
     require('modules/hercules/google-calendar-settings/google-calendar-config-section/google-calendar-second-time-setup').default,
     require('modules/hercules/hybrid-media-cluster-settings').default,
     require('modules/hercules/hybrid-services-cluster-list-with-cards').default,
+    require('modules/hercules/hybrid-services-event-history-page').default,
+    require('modules/hercules/hybrid-services-event-history-page/cluster-status-history').default,
     require('modules/hercules/hybrid-services-nodes-page').default,
     require('modules/hercules/office-365-settings/office-365-re-authorization-section').default,
     require('modules/hercules/office-365-settings/office-365-settings-page').default,
@@ -177,13 +179,13 @@
     require('modules/hercules/service-specific-pages/components/cluster-list/hybrid-service-cluster-list.component').default,
     require('modules/hercules/service-specific-pages/components/user-status-report').default,
     require('modules/hercules/services/calendar-cloud-connector.service').default,
-    require('modules/hercules/services/cluster-service').default,
     require('modules/hercules/services/enterprise-private-trunk-service').default,
     require('modules/hercules/services/excel-service').default,
     require('modules/hercules/services/fms-org-settings.service').default,
     require('modules/hercules/services/hs-flag-service').default,
     require('modules/hercules/services/hybrid-services-cluster-states.service').default,
     require('modules/hercules/services/hybrid-services-cluster.service').default,
+    require('modules/hercules/services/hybrid-services-event-history.service').default,
     require('modules/hercules/services/hybrid-services-extras.service').default,
     require('modules/hercules/services/hybrid-services-i18n.service').default,
     require('modules/hercules/services/hybrid-services-user-sidepanel-helper.service').default,
@@ -211,7 +213,13 @@
     require('modules/hds/services/hds.service'),
   ]);
 
-  angular.module('Mediafusion', ['Core', 'Hercules', 'Squared']);
+  angular.module('Mediafusion', [
+    'Core',
+    'Hercules',
+    'Squared',
+    require('modules/mediafusion/media-service-v2/components/sip-registration-section').default,
+    require('modules/mediafusion/media-service-v2/components/trusted-sip-section').default,
+  ]);
 
   angular.module('WebExApp', [
     'Core',
@@ -248,6 +256,7 @@
     require('modules/hcs/task-manager/schedule').default,
     require('modules/hcs/task-manager/suite').default,
     require('modules/hcs/task-manager/task').default,
+    require('modules/hcs/task-manager/results').default,
   ]);
 
   angular.module('ServicesOverview', [

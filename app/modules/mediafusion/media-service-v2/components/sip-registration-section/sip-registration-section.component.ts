@@ -8,7 +8,7 @@ class SipRegistrationSectionCtrl implements ng.IComponentController {
   public hasMfTrustedSipToggle: boolean;
   public clusterId: string;
   public cluster: ICluster;
-  public sipurlconfiguration: string | undefined;
+  public sipConfigUrl: string | undefined;
 
   public sipRegistration = {
     title: 'mediaFusion.sipconfiguration.title',
@@ -29,18 +29,17 @@ class SipRegistrationSectionCtrl implements ng.IComponentController {
     }
   }
 
-  private getProperties(clusterId) {
+  private getProperties(clusterId): void {
     this.HybridServicesClusterService.getProperties(clusterId)
       .then((properties: IClusterPropertySet) => {
-        if (!_.isUndefined(properties['mf.ucSipTrunk'])) {
-          this.sipurlconfiguration = properties['mf.ucSipTrunk'];
-        }
+        const sipTrunkUrl = properties['mf.ucSipTrunk'];
+        this.sipConfigUrl = sipTrunkUrl ? sipTrunkUrl : this.sipConfigUrl;
       });
   }
 
-  public saveSipTrunk() {
+  public saveSipTrunk(): void {
     const payload: IClusterPropertySet = {
-      'mf.ucSipTrunk': this.sipurlconfiguration,
+      'mf.ucSipTrunk': this.sipConfigUrl,
     };
     this.HybridServicesClusterService.setProperties(this.clusterId, payload)
       .then(() => {
@@ -55,13 +54,9 @@ class SipRegistrationSectionCtrl implements ng.IComponentController {
 
 export class SipRegistrationSectionComponent implements ng.IComponentOptions {
   public controller = SipRegistrationSectionCtrl;
-  public template = require('modules/mediafusion/media-service-v2/components/sip-registration-section/sip-registration-section.tpl.html');
+  public template = require('./sip-registration-section.tpl.html');
   public bindings = {
     cluster: '<',
   };
 }
 
-export default angular
-  .module('Mediafusion')
-  .component('sipRegistrationSection', new SipRegistrationSectionComponent())
-  .name;

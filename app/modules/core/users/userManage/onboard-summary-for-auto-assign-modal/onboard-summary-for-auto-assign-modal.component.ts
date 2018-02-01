@@ -1,9 +1,10 @@
-import { IOnboardedUsersAggregateResult, IUserNameAndEmail } from 'modules/core/users/shared/onboard.interfaces';
-import OnboardService from 'modules/core/users/userAdd/shared/onboard.service';
+import { IOnboardedUsersAggregateResult, IUserNameAndEmail } from 'modules/core/users/shared/onboard/onboard.interfaces';
+import OnboardService from 'modules/core/users/shared/onboard/onboard.service';
+import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 
 export class OnboardSummaryForAutoAssignModalController implements ng.IComponentController {
   public dismiss: Function;
-  public stateData: any;  // TODO: better type
+  public autoAssignTemplateData: IAutoAssignTemplateData;
   public userList: IUserNameAndEmail[];
   public saveLoading = false;
 
@@ -23,7 +24,7 @@ export class OnboardSummaryForAutoAssignModalController implements ng.IComponent
 
   public back(): void {
     this.$state.go('users.add.manual', {
-      stateData: this.stateData,
+      autoAssignTemplateData: this.autoAssignTemplateData,
     });
   }
 
@@ -52,7 +53,7 @@ export class OnboardSummaryForAutoAssignModalComponent implements ng.IComponentO
   public template = require('./onboard-summary-for-auto-assign-modal.html');
   public bindings = {
     dismiss: '&',
-    stateData: '<',
+    autoAssignTemplateData: '<',
     userList: '<',
   };
 }

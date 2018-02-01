@@ -1,7 +1,12 @@
+import { Authinfo } from 'modules/core/scripts/services/authinfo';
+
 class HybridContextActiveCardController implements ng.IComponentController {
   /* @ngInject */
   constructor(
+    private Authinfo: Authinfo,
   ) {}
+
+  protected isPartnerAdmin = this.Authinfo.isCustomerLaunchedFromPartner();
 }
 
 export class HybridContextActiveCardComponent implements ng.IComponentOptions {
@@ -13,7 +18,7 @@ export class HybridContextActiveCardComponent implements ng.IComponentOptions {
         <i class="icon icon-question-circle" tooltip="{{::'servicesOverview.cards.hybridContext.description' | translate}}" tooltip-placement="bottom-right" tabindex="0" tooltip-trigger="focus mouseenter"></i>
       </div>
       <div class="active-card_content">
-        <div class="active-card_section">
+        <div class="active-card_section" ng-if="!$ctrl.isPartnerAdmin">
           <div class="active-card_title" translate="servicesOverview.cards.shared.service"></div>
           <div class="active-card_action">
             <a ui-sref="context-fields" translate="servicesOverview.cards.hybridContext.buttons.fields"></a><br>

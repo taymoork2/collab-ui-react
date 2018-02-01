@@ -561,6 +561,32 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.isExpertEscalationSelected()).toEqual(false);
     });
 
+    it('isExpertOnlyEscalationSelected should give correct value if chat escalation type is expert only', function () {
+      var configMock = Object.assign({}, existingTemplateData, {
+        configuration: Object.assign({}, existingTemplateData.configuration, {
+          routingLabel: 'expert',
+        }),
+      });
+      inject(intializeCtrl('chat', configMock, true));
+      resolveTogglePromise();
+      controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
+      controller.template.name = templateName;
+      expect(controller.isExpertOnlyEscalationSelected()).toEqual(true);
+    });
+
+    it('isExpertOnlyEscalationSelected should give correct value if chat escalation type includes agent', function () {
+      var configMock = Object.assign({}, existingTemplateData, {
+        configuration: Object.assign({}, existingTemplateData.configuration, {
+          routingLabel: 'agent',
+        }),
+      });
+      inject(intializeCtrl('chat', configMock, true));
+      resolveTogglePromise();
+      controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
+      controller.template.name = templateName;
+      expect(controller.isExpertOnlyEscalationSelected()).toEqual(false);
+    });
+
     it('correct details for expert space should be set when expert is persent for the org and agent is selected', function () {
       var configMock = Object.assign({}, existingTemplateData, {
         configuration: Object.assign({}, existingTemplateData.configuration, {

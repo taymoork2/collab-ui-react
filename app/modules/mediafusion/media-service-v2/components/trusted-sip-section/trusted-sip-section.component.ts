@@ -56,7 +56,7 @@ class TrustedSipSectionCtrl implements ng.IComponentController {
       });
   }
 
-  public saveTrustedSip() {
+  public saveTrustedSip(): void {
     const payload: IClusterPropertySet = {
       'mf.trustedSipSources': _.map(this.trustedsipconfiguration, 'text').join(', '),
     };
@@ -73,13 +73,9 @@ class TrustedSipSectionCtrl implements ng.IComponentController {
 
 export class TrustedSipSectionComponent implements ng.IComponentOptions {
   public controller = TrustedSipSectionCtrl;
-  public template = require('modules/mediafusion/media-service-v2/components/trusted-sip-section/trusted-sip-section.tpl.html');
+  public template = require('./trusted-sip-section.tpl.html');
   public bindings = {
     cluster: '<',
   };
 }
 
-export default angular
-  .module('Mediafusion')
-  .component('trustedSipSection', new TrustedSipSectionComponent())
-  .name;

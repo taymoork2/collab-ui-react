@@ -3,7 +3,7 @@ import './add-users-results-modal.scss';
 import * as analyticsModuleName from 'modules/core/analytics';
 import coreSharedModuleName from 'modules/core/shared';
 import crAddUsersResultsModuleName from './cr-add-users-results';
-import userAddSharedModuleName from 'modules/core/users/userAdd/shared';
+import onboardModuleName from 'modules/core/users/shared/onboard';
 import { AddUsersResultsModalComponent } from './add-users-results-modal.component';
 
 export default angular.module('core.users.userAdd.add-users-results-modal', [
@@ -13,7 +13,7 @@ export default angular.module('core.users.userAdd.add-users-results-modal', [
   analyticsModuleName,
   coreSharedModuleName,
   crAddUsersResultsModuleName,
-  userAddSharedModuleName,
+  onboardModuleName,
 ])
   .component('addUsersResultsModal', new AddUsersResultsModalComponent())
   .name;

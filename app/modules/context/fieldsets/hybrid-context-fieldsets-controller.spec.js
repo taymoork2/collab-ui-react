@@ -2,10 +2,10 @@
 
 describe('HybridContextFieldsetsCtrl', function () {
   var PropertyConstants = require('modules/context/services/context-property-service').PropertyConstants;
-
+  var AdminAuthorizationStatus = require('modules/context/services/context-authorization-service').AdminAuthorizationStatus;
   var MOCK_ORG_ID = 'mocked-org-id';
 
-  var $controller, $scope, $state, $q, Authinfo, controller, ContextFieldsetsService, Log, Notification, PropertyService;
+  var $controller, $scope, $state, $q, Authinfo, controller, ContextFieldsetsService, Log, Notification, PropertyService, ContextAdminAuthorizationService, $translate;
   var fakeGridApi = {
     infiniteScroll: {
       dataLoaded: jasmine.createSpy('dataLoaded'),
@@ -27,10 +27,10 @@ describe('HybridContextFieldsetsCtrl', function () {
   beforeEach(initSpies);
 
   afterAll(function () {
-    $controller = $scope = $state = $q = Authinfo = controller = ContextFieldsetsService = Log = Notification = PropertyService = fakeGridApi = undefined;
+    $controller = $scope = $state = $q = $translate = Authinfo = controller = ContextFieldsetsService = Log = Notification = PropertyService = fakeGridApi = ContextAdminAuthorizationService = undefined;
   });
 
-  function dependencies($rootScope, _$controller_, _$q_, _$state_, _Authinfo_, _ContextFieldsetsService_, _Log_, _Notification_, _PropertyService_) {
+  function dependencies($rootScope, _$controller_, _$q_, _$translate_, _$state_, _Authinfo_, _ContextFieldsetsService_, _Log_, _Notification_, _PropertyService_, _ContextAdminAuthorizationService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -41,6 +41,8 @@ describe('HybridContextFieldsetsCtrl', function () {
     Notification = _Notification_;
     Authinfo = _Authinfo_;
     PropertyService = _PropertyService_;
+    ContextAdminAuthorizationService = _ContextAdminAuthorizationService_;
+    $translate = _$translate_;
   }
 
   function initSpies() {
@@ -51,6 +53,7 @@ describe('HybridContextFieldsetsCtrl', function () {
     spyOn(Authinfo, 'getOrgName').and.returnValue('orgName');
     spyOn(PropertyService, 'getProperty').and.returnValue($q.resolve(PropertyConstants.MAX_FIELDSETS_DEFAULT_VALUE));
     spyOn(Authinfo, 'getOrgId').and.returnValue(MOCK_ORG_ID);
+    spyOn(ContextAdminAuthorizationService, 'getAdminAuthorizationStatus').and.returnValue($q.resolve(AdminAuthorizationStatus.AUTHORIZED));
   }
 
   function initController() {
@@ -127,6 +130,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         id: 'aa2_custom_fieldset',
         lastUpdated: '2017-02-10T19:37:36.998Z',
       }]));
+      ContextAdminAuthorizationService.getAdminAuthorizationStatus.and.returnValue($q.resolve(AdminAuthorizationStatus.AUTHORIZED));
       controller = initController();
       $scope.$apply();
 
@@ -770,7 +774,7 @@ describe('HybridContextFieldsetsCtrl', function () {
       expect(controller.placeholder.count).toBe(2);
     });
 
-    describe('max fieldsets allowed', function () {
+    describe('max fieldsets allowed and admin authorized', function () {
       var MAX_FIELDSETS_PROPERTY = PropertyConstants.MAX_FIELDSETS_PROP_NAME;
 
       beforeEach(function () {
@@ -822,6 +826,7 @@ describe('HybridContextFieldsetsCtrl', function () {
           refUrl: '/dictionary/fieldset/v1/id/ccc_custom_fieldset',
           id: 'ccc_custom_fieldset',
         }]));
+        ContextAdminAuthorizationService.getAdminAuthorizationStatus.and.returnValue($q.resolve(AdminAuthorizationStatus.AUTHORIZED));
       });
 
       afterEach(function () {
@@ -831,15 +836,20 @@ describe('HybridContextFieldsetsCtrl', function () {
       it('should have the default max fields', function () {
         controller = initController();
         $scope.$apply();
+
         expect(controller.maxFieldsetsAllowed).toBe(PropertyConstants.MAX_FIELDSETS_DEFAULT_VALUE);
+        expect(controller.adminAuthorizationStatus).toBe(AdminAuthorizationStatus.AUTHORIZED);
         expect(controller.showNew).toBe(true);
+        expect(controller.newButtonTooltip).toBe('');
       });
 
       it('should overrides the max fields property and new is disabled', function () {
         PropertyService.getProperty.and.returnValue($q.resolve(2));
         controller = initController();
         $scope.$apply();
+
         expect(controller.maxFieldsetsAllowed).toBe(2);
+        expect(controller.adminAuthorizationStatus).toBe(AdminAuthorizationStatus.AUTHORIZED);
         expect(controller.showNew).toBe(false);
       });
 
@@ -847,8 +857,28 @@ describe('HybridContextFieldsetsCtrl', function () {
         PropertyService.getProperty.and.returnValue($q.reject());
         controller = initController();
         $scope.$apply();
+
         expect(controller.maxFieldsetsAllowed).toBe(PropertyConstants.MAX_FIELDSETS_DEFAULT_VALUE);
+        expect(controller.adminAuthorizationStatus).toBe(AdminAuthorizationStatus.AUTHORIZED);
         expect(controller.showNew).toBe(true);
+      });
+
+      it('should set the tooltip if admin not authorized', function () {
+        ContextAdminAuthorizationService.getAdminAuthorizationStatus.and.returnValue($q.resolve(AdminAuthorizationStatus.UNAUTHORIZED));
+        controller = initController();
+        $scope.$apply();
+
+        expect(controller.adminAuthorizationStatus).toBe(AdminAuthorizationStatus.UNAUTHORIZED);
+        expect(controller.newButtonTooltip).toBe($translate.instant('context.dictionary.fieldsetPage.notAuthorized'));
+      });
+
+      it('should set the tooltip if admin authorization is unknown ', function () {
+        ContextAdminAuthorizationService.getAdminAuthorizationStatus.and.returnValue($q.resolve(AdminAuthorizationStatus.UNKNOWN));
+        controller = initController();
+        $scope.$apply();
+
+        expect(controller.adminAuthorizationStatus).toBe(AdminAuthorizationStatus.UNKNOWN);
+        expect(controller.newButtonTooltip).toBe($translate.instant('context.dictionary.unknownAdminAuthorizationStatus'));
       });
     });
   });

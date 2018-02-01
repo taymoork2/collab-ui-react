@@ -1,6 +1,6 @@
-import { IOnboardedUsersResultsErrorsAndWarnings } from 'modules/core/users/shared/onboard.interfaces';
-import OnboardService from 'modules/core/users/userAdd/shared/onboard.service';
-import OnboardStore from 'modules/core/users/userAdd/shared/onboard.store';
+import { IOnboardedUsersResultsErrorsAndWarnings } from 'modules/core/users/shared/onboard/onboard.interfaces';
+import OnboardService from 'modules/core/users/shared/onboard/onboard.service';
+import OnboardStore from 'modules/core/users/shared/onboard/onboard.store';
 
 export class AddUsersResultsModalController implements ng.IComponentController {
   public convertPending: boolean;

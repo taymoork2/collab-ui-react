@@ -1,4 +1,4 @@
-import { ICluster } from 'modules/hercules/hybrid-services.types';
+import { IExtendedClusterFusion, ICluster } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { IDeregisterModalOptions } from 'modules/hercules/rename-and-deregister-cluster-section/hs-rename-and-deregister-cluster.component';
 
@@ -8,6 +8,7 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
   public hasMfTrustedSipToggle: boolean;
   public clusterId: string;
   public cluster: ICluster;
+  public clusterList: IExtendedClusterFusion[] = [];
 
   public deregisterModalOptions: IDeregisterModalOptions | undefined = {
     resolve: {
@@ -32,7 +33,8 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
     const { clusterId } = changes;
     if (clusterId && clusterId.currentValue) {
       this.clusterId = clusterId.currentValue;
-      this.loadCluster(clusterId.currentValue);
+      this.updateClusterList()
+      .then(() => this.loadCluster(clusterId.currentValue));
     }
   }
 
@@ -41,12 +43,22 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
       .then((cluster) => {
         this.cluster = cluster;
 
-        if (cluster.connectors && cluster.connectors.length === 0) {
+        if (cluster.connectors && cluster.connectors.length === 0 && this.clusterList.length > 1) {
           this.deregisterModalOptions = undefined;
         }
         return cluster;
       });
   }
+
+  private updateClusterList() {
+    return this.HybridServicesClusterService.getAll()
+      .then((clusters) => {
+        this.clusterList = _.filter(clusters, {
+          targetType: 'mf_mgmt',
+        });
+      });
+  }
+
 }
 
 export class HybridMediaClusterSettingsComponent implements ng.IComponentOptions {

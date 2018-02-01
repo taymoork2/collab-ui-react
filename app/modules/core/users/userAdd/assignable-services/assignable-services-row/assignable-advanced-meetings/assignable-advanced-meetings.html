@@ -5,7 +5,7 @@
       license="license"
       l10n-label="{{:: 'subscriptions.licenseTypes.' + license.offerName }}"
       on-update="$ctrl.recvUpdate($event)"
-      state-data="$ctrl.stateData"
+      auto-assign-template-data="$ctrl.autoAssignTemplateData"
       ng-class="license.offerName === $ctrl.OFFER_NAME.CMR ? 'cs-input--nested-1' : ''"
       >
       <div ng-if="license.offerName !== $ctrl.OFFER_NAME.CMR">

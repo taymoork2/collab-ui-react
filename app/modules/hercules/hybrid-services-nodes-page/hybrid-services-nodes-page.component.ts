@@ -7,6 +7,7 @@ import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-s
 export interface ISimplifiedConnector {
   alarms: IConnectorAlarm[];
   connectorType: ConnectorType;
+  clusterId: string;
   hasUpgradeAvailable: boolean;
   upgradesAutomatically: boolean;
   id: string;
@@ -45,6 +46,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
   public loading = true; // first load
   public refreshing = false; // subsequent load of data
   public openedConnector: any;
+  public backState: string;
 
   /* @ngInject */
   constructor(
@@ -53,6 +55,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private $state: ng.ui.IStateService,
+    private Analytics,
     private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesUtilsService: HybridServicesUtilsService,
     private Notification: Notification,
@@ -65,11 +68,28 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
     const { clusterId } = changes;
     if (clusterId && clusterId.currentValue) {
-      this.loadCluster(clusterId.currentValue);
+      this.loadCluster(clusterId.currentValue).then(data => {
+        if (clusterId.isFirstChange()) {
+          this.Analytics.trackHybridServiceEvent(this.Analytics.sections.HS_NAVIGATION.eventNames.VISIT_NODE_LIST_SETTINGS, {
+            'Cluster Type': data ? data.targetType : undefined,
+            Referrer: this.getReferrer(this.backState),
+          });
+        }
+      });
       this.HybridServicesClusterService.get(clusterId.currentValue)
         .then((info) => {
           this.nextUpgradeStartTime = moment(info.upgradeSchedule.nextUpgradeWindow.startTime).format('LLL');
         });
+    }
+  }
+
+  private getReferrer(backState: string | null): string {
+    if (backState === 'cluster-list') {
+      return 'Cluster Card';
+    } else if (_.includes(['calendar-service.list', 'call-service.list', 'media-service-v2.list', 'hds.list', 'context-resources'], backState)) {
+      return 'Cluster Sidepanel';
+    } else {
+      return 'Direct Link';
     }
   }
 
@@ -145,6 +165,10 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
   }
 
   public openUpgradeModal(connectorType): void {
+    this.Analytics.trackHybridServiceEvent(this.Analytics.sections.HS_NAVIGATION.eventNames.OPEN_CONNECTOR_UPGRADE_MODAL, {
+      'Cluster Id': this.clusterCache.id,
+      'Connector Type': connectorType,
+    });
     this.$modal.open({
       template: require('modules/hercules/connector-upgrade-modal/connector-upgrade-modal.html'),
       type: 'small',
@@ -176,6 +200,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
               const simplifiedConnector: ISimplifiedConnector = {
                 alarms: connector.alarms,
                 connectorType: connector.connectorType,
+                clusterId: connector.clusterId,
                 hasUpgradeAvailable: this.hasUpgradeAvailable(connector),
                 upgradesAutomatically: this.upgradesAutomatically(connector),
                 id: connector.id,
@@ -232,5 +257,6 @@ export class HybridServicesNodesPageComponent implements ng.IComponentOptions {
   public template = require('modules/hercules/hybrid-services-nodes-page/hybrid-services-nodes-page.html');
   public bindings = {
     clusterId: '<',
+    backState: '<',
   };
 }
