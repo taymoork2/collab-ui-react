@@ -11,6 +11,7 @@ describe('Component Controller: hybridServicesPanelCtrl', function () {
       'Authinfo',
       'CloudConnectorService',
       'FeatureToggleService',
+      'HybridServicesEntitlementsPanelService',
       'ServiceDescriptorService',
       'OnboardService',
     );
@@ -211,58 +212,100 @@ describe('Component Controller: hybridServicesPanelCtrl', function () {
     expect(this.controller.services.hybridMessage.enabled).toBe(true);
   });
 
-  it('should initialize a "autoAssignTemplateData" property and populate it with the initialized "services" property', function () {
+  it('should initialize "services" property from "restoreInstance" input binding if provided', function () {
     initMockServices.call(this, ['squared-fusion-uc'], []);
-    this.compileComponent('hybridServicesEntitlementsPanel');
-    expect(_.isEmpty(this.controller.autoAssignTemplateData.hybridServices)).toBe(false);
-    expect(this.controller.autoAssignTemplateData.hybridServices.callServiceAware).toEqual({
-      enabled: true,
-      entitled: false,
-      id: 'squared-fusion-uc',
-    });
-  });
-
-  it('should initialize "services" property from "autoAssignTemplateData" if provided', function () {
-    initMockServices.call(this, ['squared-fusion-uc'], []);
-    this.$scope.fakeAutoAssignTemplateData = {
-      hybridServices: {
-        callServiceAware: {
-          enabled: true,
-          entitled: false,
-          id: 'squared-fusion-uc',
-        },
-        hasCalendarService: jasmine.createSpy('hasCalendarService'),
-        hasCallService: jasmine.createSpy('hasCallService'),
-        hasHybridMessageService: jasmine.createSpy('hasHybridMessageService'),
-      },
+    this.$scope.fakeRestoreInstance = {
+      hasCalendarService: jasmine.createSpy('hasCalendarService'),
+      hasCallService: jasmine.createSpy('hasCallService'),
+      hasHybridMessageService: jasmine.createSpy('hasHybridMessageService'),
     };
     this.compileComponent('hybridServicesEntitlementsPanel', {
-      autoAssignTemplateData: 'fakeAutoAssignTemplateData',
+      restoreInstance: 'fakeRestoreInstance',
     });
     expect(this.ServiceDescriptorService.getServices).not.toHaveBeenCalled();
     expect(this.CloudConnectorService.getService).not.toHaveBeenCalled();
-    expect(this.controller.autoAssignTemplateData.hybridServices.callServiceAware).toEqual({
-      enabled: true,
-      entitled: false,
-      id: 'squared-fusion-uc',
-    });
+    expect(this.controller.services).toEqual(this.$scope.fakeRestoreInstance);
   });
 
   it('should initialize "services" properties from "userEntitlementsStateData" if provided', function () {
-    initMockServices.call(this, ['squared-fusion-uc'], ['squared-fusion-cal']);
-    this.$scope.fakeUserEntitlementsStateData = [{
-      entitlementName: 'squaredFusionUC',
-      entitlementState: 'ACTIVE',
-    }, {
-      entitlementName: 'squaredFusionCal',
-      entitlementState: 'ACTIVE',
-    }];
+    // call service aware and exchange calendar enabled
+    initMockServices.call(this, ['squared-fusion-uc', 'squared-fusion-cal'], []);
+
+    // restore as selected
+    this.$scope.fakeRestoreUserEntitlements = {
+      squaredFusionUC: { isSelected: true },
+      squaredFusionCal: { isSelected: true },
+    };
     this.compileComponent('hybridServicesEntitlementsPanel', {
-      userEntitlementsStateData: 'fakeUserEntitlementsStateData',
+      restoreUserEntitlements: 'fakeRestoreUserEntitlements',
     });
     this.$scope.$apply();
-    expect(this.controller.services.calendarEntitled).toBe(true);
     expect(this.controller.services.callServiceAware.entitled).toBe(true);
+    expect(this.controller.services.calendarEntitled).toBe(true);
+    expect(this.controller.services.calendarExchangeOrOffice365.entitled).toBe(true);
+
+    // call service aware unselected, exchange calendar selected
+    this.$scope.fakeRestoreUserEntitlements = {
+      squaredFusionUC: { isSelected: false },
+      squaredFusionCal: { isSelected: true },
+    };
+    this.compileComponent('hybridServicesEntitlementsPanel', {
+      restoreUserEntitlements: 'fakeRestoreUserEntitlements',
+    });
+    this.$scope.$apply();
+    expect(this.controller.services.callServiceAware.entitled).toBe(false);
+    expect(this.controller.services.calendarEntitled).toBe(true);
+    expect(this.controller.services.calendarExchangeOrOffice365.entitled).toBe(true);
+
+    // both unselected
+    this.$scope.fakeRestoreUserEntitlements = {
+      squaredFusionUC: { isSelected: false },
+      squaredFusionCal: { isSelected: false },
+    };
+    this.compileComponent('hybridServicesEntitlementsPanel', {
+      restoreUserEntitlements: 'fakeRestoreUserEntitlements',
+    });
+    this.$scope.$apply();
+    expect(this.controller.services.callServiceAware.entitled).toBe(false);
+    expect(this.controller.services.calendarEntitled).toBe(false);
+    expect(this.controller.services.calendarExchangeOrOffice365.entitled).toBe(false);
+  });
+
+  describe('initIsEnabled():', () => {
+    it('should call "saveInstance()" output binding passing its initialized "services" property', function () {
+      this.compileComponent('hybridServicesEntitlementsPanel');
+      spyOn(this.controller, 'saveInstance');
+      const fakeServices = {
+        hasCalendarService: jasmine.createSpy('hasCalendarService'),
+        hasCallService: jasmine.createSpy('hasCallService'),
+        hasHybridMessageService: jasmine.createSpy('hasHybridMessageService'),
+      };
+      this.controller.services = fakeServices;
+      this.controller.initIsEnabled();
+      expect(this.controller.saveInstance).toHaveBeenCalledWith({ hybridServices: fakeServices });
+    });
+  });
+
+  describe('setEntitlements():', () => {
+    it('should call "saveInstance()" output binding passing its initialized "services" property', function () {
+      spyOn(this.HybridServicesEntitlementsPanelService, 'getEntitlements');
+
+      this.$scope.allowRemove = true;
+      this.compileComponent('hybridServicesEntitlementsPanel', {
+        allowRemove: 'allowRemove',
+      });
+      this.controller.services = 'fake-services';
+      this.controller.setEntitlements();
+      expect(this.HybridServicesEntitlementsPanelService.getEntitlements).toHaveBeenCalledWith('fake-services', { allowRemove: true });
+
+      this.$scope.allowRemove = false;
+      this.compileComponent('hybridServicesEntitlementsPanel', {
+        allowRemove: 'allowRemove',
+      });
+      this.controller.services = 'fake-services';
+      this.controller.setEntitlements();
+      expect(this.HybridServicesEntitlementsPanelService.getEntitlements).toHaveBeenCalledWith('fake-services', { allowRemove: false });
+    });
   });
 });
 

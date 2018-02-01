@@ -25,9 +25,6 @@ describe('Component: autoAssignTemplateManageOptions:', () => {
       },
     };
     this.$scope.onDelete = _.noop;
-    this.autoAssignTemplateData = {};
-    _.set(this.autoAssignTemplateData, 'LICENSE', {});
-    _.set(this.autoAssignTemplateData, 'USER_ENTITLEMENTS_PAYLOAD', undefined);
   });
 
   beforeEach(function () {

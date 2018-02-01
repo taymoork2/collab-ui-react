@@ -61,7 +61,7 @@ describe('Component: assignableLicenseCheckbox:', () => {
     it('should initialize an entry in "autoAssignTemplateData", if one does not exist yet', function () {
       expect(this.$scope.autoAssignTemplateData).toEqual({});
       initComponent.call(this);
-      expect(this.$scope.autoAssignTemplateData).toEqual({
+      expect(this.$scope.autoAssignTemplateData.viewData).toEqual({
         LICENSE: {
           'fake-licenseId': {
             isSelected: false,
@@ -80,7 +80,7 @@ describe('Component: assignableLicenseCheckbox:', () => {
     it('should get "isSelected" according to value in "autoAssignTemplateData"', function () {
       initComponent.call(this);
       expect(this.controller.isSelected).toBe(false);
-      this.$scope.autoAssignTemplateData.LICENSE['fake-licenseId'].isSelected = true;
+      this.$scope.autoAssignTemplateData.viewData.LICENSE['fake-licenseId'].isSelected = true;
       expect(this.controller.isSelected).toBe(true);
     });
 
@@ -91,11 +91,11 @@ describe('Component: assignableLicenseCheckbox:', () => {
       expect(this.controller.isDisabled).toBe(false);
 
       // 'isDisabled' in 'autoAssignTemplateData' entry is true
-      this.$scope.autoAssignTemplateData.LICENSE['fake-licenseId'].isDisabled = true;
+      this.$scope.autoAssignTemplateData.viewData.LICENSE['fake-licenseId'].isDisabled = true;
       expect(this.controller.isDisabled).toBe(true);
 
       // reset 'isDisabled', 'isLicenseStatusOk()' is false
-      this.$scope.autoAssignTemplateData.LICENSE['fake-licenseId'].isDisabled = false;
+      this.$scope.autoAssignTemplateData.viewData.LICENSE['fake-licenseId'].isDisabled = false;
       this.controller.isLicenseStatusOk.and.returnValue(false);
       expect(this.controller.isDisabled).toBe(true);
 
