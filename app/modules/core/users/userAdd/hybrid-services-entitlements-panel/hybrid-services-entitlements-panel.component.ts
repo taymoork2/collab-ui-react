@@ -99,7 +99,7 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
       sparkHybridImpInterop: !!_.find(userEntitlementsStateData, { entitlementName: UserEntitlementName.SPARK_HYBRID_IMP_INTEROP }),
     };
     // restore from 'autoAssignTemplateData' if present
-    const previousServices: IHybridServices = _.get(autoAssignTemplateData, HybridServicesEntitlementsPanelController.HYBRID_SERVICES);
+    const previousServices: IHybridServices = _.get(autoAssignTemplateData, `otherData.${HybridServicesEntitlementsPanelController.HYBRID_SERVICES}`);
     if (previousServices) {
       this.services = previousServices;
       this.initIsEnabled();

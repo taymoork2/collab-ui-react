@@ -27,11 +27,11 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
     }
 
     // otherwise use default initialization
-    this.autoAssignTemplateData = {} as IAutoAssignTemplateData;
+    this.autoAssignTemplateData = this.AutoAssignTemplateService.initAutoAssignTemplateData();
     this.AutoAssignTemplateService.getSortedSubscriptions()
       .then(sortedSubscriptions => {
         this.sortedSubscriptions = sortedSubscriptions;
-        this.autoAssignTemplateData.subscriptions = sortedSubscriptions;
+        this.autoAssignTemplateData.apiData.subscriptions = sortedSubscriptions;
       });
   }
 
@@ -61,12 +61,13 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
     // notes:
     // - item id can potentially contain period chars ('.')
     // - so we wrap interpolated value in double-quotes to prevent unintended deep property creation
-    _.set(this.autoAssignTemplateData, `${itemCategory}["${itemId}"]`, item);
+    _.set(this.autoAssignTemplateData, `viewData.${itemCategory}["${itemId}"]`, item);
   }
 
   // TODO: remove this callback once 'hybrid-services-entitlements-panel' can leverage 'onUpdate()' callbacks
   public recvHybridServicesEntitlementsPayload(entitlements): void {
-    _.set(this.autoAssignTemplateData, `USER_ENTITLEMENTS_PAYLOAD`, entitlements);
+    // TODO: reimplement this logic
+    // _.set(this.autoAssignTemplateData, `USER_ENTITLEMENTS_PAYLOAD`, entitlements);
   }
 }
 

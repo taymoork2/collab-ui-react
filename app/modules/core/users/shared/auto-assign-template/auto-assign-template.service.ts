@@ -1,7 +1,8 @@
-import { ILicenseRequestItem, IUserEntitlementRequestItem, IAutoAssignTemplateRequestPayload, LicenseChangeOperation } from 'modules/core/users/shared/onboard/onboard.interfaces';
+import { ILicenseRequestItem, ILicenseResponseItem, IUserEntitlementRequestItem, IAutoAssignTemplateRequestPayload, LicenseChangeOperation, UserEntitlementName, UserEntitlementState } from 'modules/core/users/shared/onboard/onboard.interfaces';
 import { AssignableServicesItemCategory, IAssignableLicenseCheckboxState, ILicenseUsage, ILicenseUsageMap, ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
 import { MessengerInteropService } from 'modules/core/users/userAdd/shared/messenger-interop/messenger-interop.service';
-import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
+import { IAutoAssignTemplateData, IAutoAssignTemplateResponse } from 'modules/core/users/shared/auto-assign-template';
+import { ICrCheckboxItemState } from 'modules/core/users/shared/cr-checkbox-item/cr-checkbox-item.component';
 
 export class AutoAssignTemplateService {
 
@@ -96,13 +97,26 @@ export class AutoAssignTemplateService {
     }, {});
   }
 
-  public toAutoAssignTemplateData(template, subscriptions): IAutoAssignTemplateData {
-    const autoAssignTemplateData = {} as IAutoAssignTemplateData;
+  private mkUserEntitlementEntries(userEntitlementItems: IUserEntitlementRequestItem[]) {
+    return _.reduce(userEntitlementItems, (result, userEntitlementItem) => {
+      const { entitlementName, entitlementState } = userEntitlementItem;
+      result[entitlementName] = <ICrCheckboxItemState>{
+        isSelected: entitlementState === 'ACTIVE' ? true : false,
+        isDisabled: false,
+      };
+      return result;
+    }, {});
+  }
+
+  public toAutoAssignTemplateData(template: IAutoAssignTemplateResponse, subscriptions: ISubscription[]): IAutoAssignTemplateData {
+    const autoAssignTemplateData = this.initAutoAssignTemplateData();
+
     const assignedLicenses = template.licenses;
     const allLicenses = this.getAllLicenses(subscriptions);
-    autoAssignTemplateData.LICENSE = this.mkLicenseEntries(assignedLicenses, allLicenses);
-    autoAssignTemplateData.USER_ENTITLEMENTS_PAYLOAD = template.userEntitlements;
-    autoAssignTemplateData.subscriptions = subscriptions;
+    autoAssignTemplateData.viewData.LICENSE = this.mkLicenseEntries(assignedLicenses, allLicenses);
+    autoAssignTemplateData.viewData.USER_ENTITLEMENT = this.mkUserEntitlementEntries(template.userEntitlements);
+    autoAssignTemplateData.apiData.subscriptions = subscriptions;
+    autoAssignTemplateData.apiData.template = template;
     return autoAssignTemplateData;
   }
 
@@ -160,6 +174,11 @@ export class AutoAssignTemplateService {
     const hybridUserEntitlements: IUserEntitlementRequestItem[] = _.get(autoAssignTemplateData, 'USER_ENTITLEMENTS_PAYLOAD', []);
     result = result.concat(hybridUserEntitlements);
 
+  public initAutoAssignTemplateData(): IAutoAssignTemplateData {
+    const result = {} as IAutoAssignTemplateData;
+    result.viewData = {} as any;
+    result.apiData = {} as any;
+    result.otherData = {} as any;
     return result;
   }
 }
