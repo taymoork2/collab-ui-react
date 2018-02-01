@@ -15,6 +15,9 @@ describe('Component: editSummaryAutoAssignTemplateModal:', () => {
       'Notification',
     );
     this.$scope.dismiss = _.noop;
+    spyOn(this.AutoAssignTemplateService, 'getDefaultTemplate').and.returnValue(this.$q.resolve({
+      templateId: 'fake-template-id',
+    }));
   });
 
   describe('primary behaviors (view):', () => {
@@ -34,9 +37,6 @@ describe('Component: editSummaryAutoAssignTemplateModal:', () => {
       spyOn(this.AutoAssignTemplateService, 'autoAssignTemplateDataToPayload').and.returnValue('fake-autoAssignTemplateDataToPayload-result');
       spyOn(this.AutoAssignTemplateService, 'createTemplate').and.returnValue(this.$q.resolve({}));
       spyOn(this.AutoAssignTemplateService, 'updateTemplate').and.returnValue(this.$q.resolve({}));
-      spyOn(this.AutoAssignTemplateService, 'getDefaultTemplate').and.returnValue(this.$q.resolve({
-        templateId: 'fake-template-id',
-      }));
     });
 
     it('should call saveTemplate if isEditTemplateMode is false', function () {

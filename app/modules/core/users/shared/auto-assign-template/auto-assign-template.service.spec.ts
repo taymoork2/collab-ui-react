@@ -55,8 +55,9 @@ describe('Service: AutoAssignTemplateService:', () => {
 
   describe('getTemplates():', () => {
     it('should call GET on the internal endpoint url', function () {
-      this.$httpBackend.expectGET(this.endpointUrl);
+      this.$httpBackend.expectGET(this.endpointUrl).respond(200);
       this.AutoAssignTemplateService.getTemplates();
+      this.$httpBackend.flush();
     });
   });
 
@@ -97,36 +98,41 @@ describe('Service: AutoAssignTemplateService:', () => {
 
   describe('createTemplate():', () => {
     it('should call POST on the internal endpoint url with the given payload', function () {
-      this.$httpBackend.expectPOST(this.endpointUrl, { foo: 'bar' });
+      this.$httpBackend.expectPOST(this.endpointUrl, { foo: 'bar' }).respond(200);
       this.AutoAssignTemplateService.createTemplate({ foo: 'bar' });
+      this.$httpBackend.flush();
     });
   });
 
   describe('updateTemplate():', () => {
     it('should call PATCH on the internal endpoint url with the given payload', function () {
-      this.$httpBackend.expectPATCH(`${this.endpointUrl}/fake-template-id-1`, { foo: 'bar' });
+      this.$httpBackend.expectPATCH(`${this.endpointUrl}/fake-template-id-1`, { foo: 'bar' }).respond(200);
       this.AutoAssignTemplateService.updateTemplate('fake-template-id-1', { foo: 'bar' });
+      this.$httpBackend.flush();
     });
   });
 
   describe('activateTemplate():', () => {
     it('should call POST on the internal settings url with an empty payload and enabled=true', function () {
-      this.$httpBackend.expectPOST(`${this.settingsUrl}?enabled=true`);
+      this.$httpBackend.expectPOST(`${this.settingsUrl}?enabled=true`).respond(200);
       this.AutoAssignTemplateService.activateTemplate();
+      this.$httpBackend.flush();
     });
   });
 
   describe('deactivateTemplate():', () => {
     it('should call POST on the internal settings url with an empty payload and enabled=false', function () {
-      this.$httpBackend.expectPOST(`${this.settingsUrl}?enabled=false`);
+      this.$httpBackend.expectPOST(`${this.settingsUrl}?enabled=false`).respond(200);
       this.AutoAssignTemplateService.deactivateTemplate();
+      this.$httpBackend.flush();
     });
   });
 
   describe('deleteTemplate():', () => {
     it('should call DELETE on the internal endpoint url with the given payload', function () {
-      this.$httpBackend.expectDELETE(`${this.endpointUrl}/fake-template-id-1`);
+      this.$httpBackend.expectDELETE(`${this.endpointUrl}/fake-template-id-1`).respond(200);
       this.AutoAssignTemplateService.deleteTemplate('fake-template-id-1');
+      this.$httpBackend.flush();
     });
   });
 

@@ -92,26 +92,37 @@ describe('OnboardService:', () => {
 
   describe('onboardUsersInChunks():', () => {
     it('should create sub-lists of users and call "Userservice.onboardUsers()" for each sub-list as needed', function () {
-      spyOn(this.Userservice, 'onboardUsers').and.returnValue(this.$q.resolve('fake-Userservice.onboardUsers-result'));
-      spyOn(this.OnboardService, 'parseOnboardedUsers');
-      spyOn(this.OnboardService, 'aggregateResponses').and.returnValue('fake-aggregateResponses-result');
-      spyOn(this.OnboardService, 'trackOnboardSaveEvent');
       const fakeUsersList = ['fake-user-1'];
       const fakeEntitlementsList = 'fake-entitlements-list';
       const fakeLicensesList = 'fake-licenses-list';
       const fakeOptions = {
-        batchSize: 1,
+        chunkSize: 1,
       };
+      const fakeOnboardResponse = {
+        status: 200,
+        data: { userResponse: 'fake-Userservice.onboardUsers-result' },
+      };
+      const fakeAggResponse = {
+        numAddedUsers: 1,
+        numUpdatedUsers: 1,
+        results: { errors: 0 },
+      };
+
+      spyOn(this.Userservice, 'onboardUsers').and.returnValue(this.$q.resolve(fakeOnboardResponse));
+      spyOn(this.OnboardService, 'parseOnboardedUsers');
+      spyOn(this.OnboardService, 'aggregateResponses').and.returnValue(fakeAggResponse);
+      spyOn(this.OnboardService, 'trackOnboardSaveEvent');
+
       this.OnboardService.onboardUsersInChunks(fakeUsersList, fakeEntitlementsList, fakeLicensesList, fakeOptions)
         .then((result) => {
-          expect(result).toBe('fake-aggregateResponses-result');
+          expect(result).toEqual(fakeAggResponse);
           expect(this.Userservice.onboardUsers.calls.count()).toBe(1);
           expect(this.OnboardService.parseOnboardedUsers.calls.count()).toBe(1);
-          expect(this.OnboardService.aggregateResponses.toHaveBeenCalledWith(['fake-Userservice.onboardUsers-result']));
+          expect(this.OnboardService.aggregateResponses).toHaveBeenCalledWith([fakeOnboardResponse]);
           expect(this.OnboardService.trackOnboardSaveEvent.calls.count()).toBe(1);
         })
         .then(() => {
-          // user list bigger than batch size (user list length: 2, batch size: 1)
+          // user list bigger than chunk size (user list length: 2, chunk size: 1)
           fakeUsersList.push('fake-user-2');
           this.Userservice.onboardUsers.calls.reset();
           this.OnboardService.parseOnboardedUsers.calls.reset();
@@ -120,40 +131,38 @@ describe('OnboardService:', () => {
         })
         .then((result) => {
           // resolved value is always the return value of 'aggregateResponses()' (spied for this test)
-          expect(result).toBe('fake-aggregateResponses-result');
+          expect(result).toEqual(fakeAggResponse);
 
           // two requests were sent
           expect(this.Userservice.onboardUsers.calls.count()).toBe(2);
           expect(this.OnboardService.parseOnboardedUsers.calls.count()).toBe(2);
 
           // so we have two http responses to aggregate
-          expect(this.OnboardService.aggregateResponses.toHaveBeenCalledWith([
-            'fake-Userservice.onboardUsers-result',
-            'fake-Userservice.onboardUsers-result',
-          ]));
+          expect(this.OnboardService.aggregateResponses).toHaveBeenCalledWith([
+            fakeOnboardResponse,
+            fakeOnboardResponse,
+          ]);
 
           // but we still only track a single event
           expect(this.OnboardService.trackOnboardSaveEvent.calls.count()).toBe(1);
         })
         .then(() => {
           // user list and batch size equal (user list length: 2, batch size: 2)
-          fakeOptions.batchSize = 2;
+          fakeOptions.chunkSize = 2;
           this.Userservice.onboardUsers.calls.reset();
           this.OnboardService.parseOnboardedUsers.calls.reset();
           this.OnboardService.trackOnboardSaveEvent.calls.reset();
           return this.OnboardService.onboardUsersInChunks(fakeUsersList, fakeEntitlementsList, fakeLicensesList, fakeOptions);
         })
         .then((result) => {
-          expect(result).toBe('fake-aggregateResponses-result');
+          expect(result).toEqual(fakeAggResponse);
 
           // only 1 request is sent
           expect(this.Userservice.onboardUsers.calls.count()).toBe(1);
           expect(this.OnboardService.parseOnboardedUsers.calls.count()).toBe(1);
 
           // only 1 http response to aggregate
-          expect(this.OnboardService.aggregateResponses.toHaveBeenCalledWith([
-            'fake-Userservice.onboardUsers-result',
-          ]));
+          expect(this.OnboardService.aggregateResponses).toHaveBeenCalledWith([fakeOnboardResponse]);
 
           // and still only track the event once
           expect(this.OnboardService.trackOnboardSaveEvent.calls.count()).toBe(1);

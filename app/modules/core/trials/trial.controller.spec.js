@@ -796,12 +796,11 @@ describe('Controller: TrialCtrl:', function () {
         it('should display notification if call to disable context service fails', function () {
           removeContextSpy.and.returnValue($q.reject('rejected'));
           controller.contextTrial.enabled = false;
-          controller.editTrial().catch(function () {
-            expect(TrialContextService.addService).not.toHaveBeenCalled();
-            expect(TrialContextService.removeService).toHaveBeenCalled();
-            expect(Notification.errorResponse).toHaveBeenCalledWith('rejected', 'trialModal.editTrialContextServiceDisableError');
-          });
+          controller.editTrial().catch(_.noop);
           $scope.$apply();
+          expect(TrialContextService.addService).not.toHaveBeenCalled();
+          expect(TrialContextService.removeService).toHaveBeenCalled();
+          expect(Notification.errorResponse).toHaveBeenCalledWith('rejected', 'trialModal.editTrialContextServiceDisableError');
         });
       });
 
@@ -821,12 +820,11 @@ describe('Controller: TrialCtrl:', function () {
         it('should display notification if call to enable context service fails', function () {
           addContextSpy.and.returnValue($q.reject('rejected'));
           controller.contextTrial.enabled = true;
-          controller.editTrial().catch(function () {
-            expect(TrialContextService.addService).toHaveBeenCalled();
-            expect(TrialContextService.removeService).not.toHaveBeenCalled();
-            expect(Notification.errorResponse).toHaveBeenCalledWith('rejected', 'trialModal.editTrialContextServiceEnableError');
-          });
+          controller.editTrial().catch(_.noop);
           $scope.$apply();
+          expect(TrialContextService.addService).toHaveBeenCalled();
+          expect(TrialContextService.removeService).not.toHaveBeenCalled();
+          expect(Notification.errorResponse).toHaveBeenCalledWith('rejected', 'trialModal.editTrialContextServiceEnableError');
         });
 
         it('doesn\'t notify on ORGANIZATION_REGISTERED_USING_API if care trial is enabled', function () {
@@ -1056,11 +1054,10 @@ describe('Controller: TrialCtrl:', function () {
 
         it('error should notify error', function () {
           spyOn(HuronCustomer, 'create').and.returnValue($q.reject());
-          controller.startTrial().catch(function () {
-            expect(Notification.errorResponse).toHaveBeenCalled();
-            expect(Notification.errorResponse.calls.count()).toEqual(1);
-          });
+          controller.startTrial().catch(_.noop);
           $scope.$apply();
+          expect(Notification.errorResponse).toHaveBeenCalled();
+          expect(Notification.errorResponse.calls.count()).toEqual(1);
         });
       });
 
@@ -1084,11 +1081,10 @@ describe('Controller: TrialCtrl:', function () {
 
         it('error should notify error', function () {
           spyOn(HuronCustomer, 'create').and.returnValue($q.reject());
-          controller.startTrial().catch(function () {
-            expect(Notification.errorResponse).toHaveBeenCalled();
-            expect(Notification.errorResponse.calls.count()).toEqual(1);
-          });
+          controller.startTrial().catch(_.noop);
           $scope.$apply();
+          expect(Notification.errorResponse).toHaveBeenCalled();
+          expect(Notification.errorResponse.calls.count()).toEqual(1);
         });
       });
 
@@ -1151,11 +1147,10 @@ describe('Controller: TrialCtrl:', function () {
           controller.callTrial.enabled = false;
           controller.roomSystemTrial.enabled = false;
           controller.sparkBoardTrial.enabled = false;
-          controller.startTrial().catch(function () {
-            expect(TrialContextService.addService).toHaveBeenCalled();
-            expect(Notification.errorResponse).toHaveBeenCalledWith('rejected', 'trialModal.startTrialContextServiceError');
-          });
+          controller.startTrial().catch(_.noop);
           $scope.$apply();
+          expect(TrialContextService.addService).toHaveBeenCalled();
+          expect(Notification.errorResponse).toHaveBeenCalledWith('rejected', 'trialModal.startTrialContextServiceError');
         });
 
         it('should not be able to proceed if no other trial services are checked', function () {
@@ -1502,11 +1497,10 @@ describe('Controller: TrialCtrl:', function () {
 
         it('error should notify error', function () {
           spyOn(HuronCustomer, 'create').and.returnValue($q.reject());
-          controller.startTrial().catch(function () {
-            expect(Notification.errorResponse).toHaveBeenCalled();
-            expect(Notification.errorResponse.calls.count()).toEqual(1);
-          });
+          controller.startTrial().catch(_.noop);
           $scope.$apply();
+          expect(Notification.errorResponse).toHaveBeenCalled();
+          expect(Notification.errorResponse.calls.count()).toEqual(1);
         });
       });
 
@@ -1535,11 +1529,10 @@ describe('Controller: TrialCtrl:', function () {
         });
         it('error should notify error', function () {
           spyOn(HuronCustomer, 'create').and.returnValue($q.reject());
-          controller.startTrial().catch(function () {
-            expect(Notification.errorResponse).toHaveBeenCalled();
-            expect(Notification.errorResponse.calls.count()).toEqual(1);
-          });
+          controller.startTrial().catch(_.noop);
           $scope.$apply();
+          expect(Notification.errorResponse).toHaveBeenCalled();
+          expect(Notification.errorResponse.calls.count()).toEqual(1);
         });
       });
 
@@ -1596,11 +1589,10 @@ describe('Controller: TrialCtrl:', function () {
           addContextSpy.and.returnValue($q.reject('rejected'));
           controller.contextTrial.enabled = true;
           controller.callTrial.enabled = false;
-          controller.startTrial().catch(function () {
-            expect(TrialContextService.addService).toHaveBeenCalled();
-            expect(Notification.errorResponse).toHaveBeenCalledWith('rejected', 'trialModal.startTrialContextServiceError');
-          });
+          controller.startTrial().catch(_.noop);
           $scope.$apply();
+          expect(TrialContextService.addService).toHaveBeenCalled();
+          expect(Notification.errorResponse).toHaveBeenCalledWith('rejected', 'trialModal.startTrialContextServiceError');
         });
 
         it('doesn\'t notify on ORGANIZATION_REGISTERED_USING_API if care trial is enabled', function () {
