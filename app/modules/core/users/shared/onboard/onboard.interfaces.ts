@@ -40,9 +40,12 @@ export interface IUserEntitlementRequestItem {
   entitlementState: UserEntitlementState;
 }
 
-export interface ILicenseRequestItem {
+export interface ILicenseResponseItem {
   id: string;
   idOperation: LicenseChangeOperation;
+}
+
+export interface ILicenseRequestItem extends ILicenseResponseItem {
   properties: Object;
 }
 
