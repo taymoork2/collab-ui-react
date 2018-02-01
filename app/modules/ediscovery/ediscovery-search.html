@@ -93,9 +93,12 @@
             </div>
           </div>
           <div class="row mid-gap query-row">
-            <button type="submit" class="btn btn--primary search-button"
-            translate="common.search" ng-click="ediscoverySearchCtrl.searchByLimit()"
-            ng-disabled="ediscoverySearchCtrl.searchButtonDisabled(qForm.qInput.$invalid && qForm.qInput.$touched)"></button>
+            <button type="submit"
+              class="btn btn--primary search-button"
+              translate="common.search"
+              ng-click="ediscoverySearchCtrl.searchByLimit()"
+              ng-disabled="ediscoverySearchCtrl.searchButtonDisabled(qForm.qInput.$invalid && qForm.qInput.$touched)">
+            </button>
             <div ng-if="ediscoverySearchCtrl.error" class="search-error">
               <i class="icon icon-error search-error"></i>
               <span class="search-error">{{ediscoverySearchCtrl.error}}</span>
@@ -107,7 +110,6 @@
           </div>
         </div>
       </div>
-
 
       <div ng-show="ediscoverySearchCtrl.searchingForRoom">
         <div class="main-heading">
