@@ -78,6 +78,9 @@
         if (feature.mediaType && filterValue === filterConstants.autoAttendant) {
           return false;
         }
+        if (!feature.mediaType && filterValue === filterConstants.customerSupport) {
+          return false;
+        }
         if (filterValue === filterConstants.customerSupport && feature.mediaType === filterConstants.virtualAssistant) {
           //if the filter selected is support virtual assistant templates should not be displayed
           return false;
