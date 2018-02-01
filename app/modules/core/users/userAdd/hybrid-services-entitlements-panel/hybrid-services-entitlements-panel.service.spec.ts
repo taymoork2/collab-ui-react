@@ -50,12 +50,20 @@ describe('HybridServicesEntitlementsPanelService:', () => {
       expect(this.fakeHybridServices.selectedCalendarType).toBe(null);
     });
 
+    it('should always add "remove" entitlement operations for both calendar options if calendar section is disabled', function () {
+      _.set(this.fakeHybridServices, 'calendarEntitled', false);
+      const result = this.HybridServicesEntitlementsPanelService.getEntitlements(this.fakeHybridServices);
+      expect(result.length).toBe(2);
+      expect(this.OnboardService.toEntitlementItem.calls.argsFor(0)).toEqual([UserEntitlementName.SQUARED_FUSION_CAL, false]);
+      expect(this.OnboardService.toEntitlementItem.calls.argsFor(1)).toEqual([UserEntitlementName.SQUARED_FUSION_GCAL, false]);
+    });
+
     it('should add an entitlement if huron call is not entitled and call service aware is entitled', function () {
       spyOn(this.HybridServicesEntitlementsPanelService, 'hasHuronCallEntitlement').and.returnValue(false);
       _.set(this.fakeHybridServices, 'callServiceAware.entitled', true);
       const result = this.HybridServicesEntitlementsPanelService.getEntitlements(this.fakeHybridServices);
-      expect(result.length).toBe(1);
-      expect(this.OnboardService.toEntitlementItem).toHaveBeenCalledWith(UserEntitlementName.SQUARED_FUSION_UC, true);
+      expect(result.length).toBe(3);
+      expect(this.OnboardService.toEntitlementItem.calls.argsFor(2)).toEqual([UserEntitlementName.SQUARED_FUSION_UC, true]);
     });
 
     it('should add 2 entitlements if huron call is not entitled and both call service aware and call service connect are entitled', function () {
@@ -63,16 +71,16 @@ describe('HybridServicesEntitlementsPanelService:', () => {
       _.set(this.fakeHybridServices, 'callServiceAware.entitled', true);
       _.set(this.fakeHybridServices, 'callServiceConnect.entitled', true);
       const result = this.HybridServicesEntitlementsPanelService.getEntitlements(this.fakeHybridServices);
-      expect(result.length).toBe(2);
-      expect(this.OnboardService.toEntitlementItem.calls.argsFor(0)).toEqual([UserEntitlementName.SQUARED_FUSION_UC, true]);
-      expect(this.OnboardService.toEntitlementItem.calls.argsFor(1)).toEqual([UserEntitlementName.SQUARED_FUSION_EC, true]);
+      expect(result.length).toBe(4);
+      expect(this.OnboardService.toEntitlementItem.calls.argsFor(2)).toEqual([UserEntitlementName.SQUARED_FUSION_UC, true]);
+      expect(this.OnboardService.toEntitlementItem.calls.argsFor(3)).toEqual([UserEntitlementName.SQUARED_FUSION_EC, true]);
     });
 
     it('should add an entitlement hybrid message is present and entitled', function () {
       _.set(this.fakeHybridServices, 'hybridMessage.entitled', true);
       const result = this.HybridServicesEntitlementsPanelService.getEntitlements(this.fakeHybridServices);
-      expect(result.length).toBe(1);
-      expect(this.OnboardService.toEntitlementItem).toHaveBeenCalledWith(UserEntitlementName.SPARK_HYBRID_IMP_INTEROP, true);
+      expect(result.length).toBe(3);
+      expect(this.OnboardService.toEntitlementItem.calls.argsFor(2)).toEqual([UserEntitlementName.SPARK_HYBRID_IMP_INTEROP, true]);
     });
 
     it('should by default, disallow entitlements that are set to "INACTIVE"', function () {
