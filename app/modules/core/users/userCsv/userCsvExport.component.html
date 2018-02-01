@@ -1,13 +1,13 @@
 <div class="user-csv-export">
   <div ng-if="$ctrl.displayAsLink">
     <!-- when displayed as a link, can only export the Csv file -->
-    <div ng-if="!$ctrl.isDownloading">
-      <p><a href="" ng-click="$ctrl.exportCsv()">{{$ctrl.asLink}}</a></p>
-    </div>
-    <div class="cancel" ng-if="$ctrl.isDownloading">
+    <p ng-if="!$ctrl.isDownloading">
+      <a href="" ng-click="$ctrl.exportCsv()">{{$ctrl.asLink}}</a>
+    </p>
+    <p class="cancel" ng-if="$ctrl.isDownloading">
       <span class="icon icon-spinner"></span>
-      <p><a href="" translate="userManage.bulk.cancelExport" ng-click="$ctrl.cancelDownload()"></a></p>
-    </div>
+      <a href="" translate="userManage.bulk.cancelExport" ng-click="$ctrl.cancelDownload()"></a>
+    </p>
   </div>
   <div ng-if="!$ctrl.displayAsLink">
     <!-- when displayed as component, use can choose to export Csv or Template -->
