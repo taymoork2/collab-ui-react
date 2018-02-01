@@ -113,7 +113,7 @@ export class AutoAssignTemplateService {
     return _.reduce(userEntitlementItems, (result, userEntitlementItem) => {
       const { entitlementName, entitlementState } = userEntitlementItem;
       result[entitlementName] = <ICrCheckboxItemState>{
-        isSelected: entitlementState === 'ACTIVE' ? true : false,
+        isSelected: entitlementState === 'ACTIVE',
         isDisabled: false,
       };
       return result;
