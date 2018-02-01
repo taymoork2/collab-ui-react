@@ -1377,20 +1377,6 @@ require('./_user-add.scss');
       initResults();
     };
 
-    $scope.skipErrorsOrFinish = function () {
-      if (_.get($scope, 'results.errors.length')) {
-        return 'usersPage.skipErrorsAndFinish';
-      } else {
-        return 'common.finish';
-      }
-    };
-
-    $scope.goToUsersPage = function () {
-      $previousState.forget('modalMemo');
-      Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.FINISH, null, createPropertiesForAnalytics());
-      $state.go('users.list');
-    };
-
     $scope.fixBulkErrors = function () {
       if (isFTW) {
         $scope.wizard.goToStep('manualEntry');
