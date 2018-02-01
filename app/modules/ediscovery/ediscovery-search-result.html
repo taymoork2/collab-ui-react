@@ -1,94 +1,94 @@
 <div class="row search-result" ng-if="ediscoverySearchCtrl.roomInfo">
-	<div class="create-form">
-		<cs-card class="cs-card--medium">
-			<article class="input-section">
-				<div class="back-button">
-		      <a ng-click="ediscoverySearchCtrl.resetSearchPageToInitialState()">
-		        <i class="icon icon-back icon-lg"></i>
-		        <span translate="ediscovery.searchResults.backToSearch"></span>
-		      </a>
-		    </div>
-				<header><h4 class="result-info" translate="ediscovery.searchResults.searchInfo"></h4></header>
-				<section>
-					<p class="result-title">{{ediscoverySearchCtrl.searchResultsHeader}}</p>
-					<div ng-repeat="keyword in ediscoverySearchCtrl.searchResults.keywords">
-						<p class="result-info">{{keyword}}</p>
-					</div>
-					<div class="date-range-tooltip">
-						<span class="result-title" translate="ediscovery.searchResults.dateRange"></span>
-						<i ng-if="ediscoverySearchCtrl.showHover()" tooltip="{{'ediscovery.searchParameters.dateRangeTooltip' | translate}}" tooltip-placement="right" class="icon icon-info"></i>
-					</div>
-					<p class="result-info">{{ediscoverySearchCtrl.searchCriteria.startDate}} - {{ediscoverySearchCtrl.searchCriteria.endDate}}</p>
-					<p class="result-title" translate="ediscovery.searchResults.messages"></p>
-					<div ng-repeat="query in ediscoverySearchCtrl.searchResults.queries">
-						<p class="result-info">{{query}}</p>
-					</div>
-				</section>
-			</article>
-		</cs-card>
-		<cs-card ng-if="ediscoverySearchCtrl.isReport" class="cs-card--large">
-			<article>
-				<header><h4 translate="ediscovery.searchResults.reportSummary"></h4></header>
-				<section class="row">
-					<div class="col-md-2">
-						<p class="report-title" translate="ediscovery.searchResults.spaces"></p>
-						<p class="report-info">{{ediscoverySearchCtrl.searchResults.numRooms}}</p>
-					</div>
-					<div class="col-md-3">
-						<p class="report-title" translate="ediscovery.searchResults.messages"></p>
-						<p class="report-info">{{ediscoverySearchCtrl.searchResults.numMessages}}</p>
-					</div>
-					<div class="col-md-2">
-						<p class="report-title" translate="ediscovery.searchResults.files"></p>
-						<p class="report-info">{{ediscoverySearchCtrl.searchResults.numFiles}}</p>
-					</div>
-					<div class="col-md-5">
-						<p class="report-title" translate="ediscovery.searchResults.estReport"></p>
-						<p class="report-info">{{ediscoverySearchCtrl.searchResults.totalSize}}</p>
-					</div>
-				</section>
-			</article>
-		</cs-card>
-		<!-- Max Rooms (2500) error card -->
-		<cs-card ng-if="ediscoverySearchCtrl.isReportMaxRooms" class="cs-card--large">
-			<article>
-				<header><h4 translate="ediscovery.searchResults.maxRoomsReached"></h4></header>
-				<section>
-					<div class="report-error">
-						<i class="icon icon-warning report-warning"></i>
-						<span translate="ediscovery.searchResults.maxRoomsReachedSummary"></span>
-						<br>
-					</div>
-				</section>
-				<footer>
-					<button type="button" class="btn btn--primary" ng-click="ediscoverySearchCtrl.resetSearchPageToInitialState()" translate="ediscovery.searchResults.reportErrorButton"></button>
-				</footer>
-			</article>
-		</cs-card>
-		<!-- Report Size (5GB) max card -->
-		<cs-card ng-if="ediscoverySearchCtrl.isReportTooBig" class="cs-card--large">
-			<article>
-				<header><h4 translate="ediscovery.searchResults.reportSizeTooBig"></h4></header>
-				<section>
-					<div class="report-error">
-						<i class="icon icon-warning report-warning"></i>
-						<span translate="ediscovery.searchResults.reportSizeErrorSummary"></span>
-						<br>
-					</div>
-				</section>
-				<footer>
-					<button type="button" class="btn btn--primary" ng-click="ediscoverySearchCtrl.resetSearchPageToInitialState()" translate="ediscovery.searchResults.reportErrorButton"></button>
-				</footer>
-			</article>
-		</cs-card>
-		<!-- Normal Report Generation Card -->
-		<cs-card ng-if="!ediscoverySearchCtrl.isReportMaxRooms && !ediscoverySearchCtrl.isReportTooBig" class="cs-card--large">
-			<article>
-				<section class="report-section">
-					<!-- Generate Report Section -->
-		      <search-results-report ng-if="ediscoverySearchCtrl.isReport"></search-results-report>
-				</section>
-			</article>
-		</cs-card>
-	</div>
+  <div class="create-form">
+    <cs-card class="cs-card--medium">
+      <article class="input-section">
+        <div class="back-button">
+          <a href ng-click="ediscoverySearchCtrl.resetSearchPageToInitialState()">
+            <i class="icon icon-back icon-lg"></i>
+            <span translate="ediscovery.searchResults.backToSearch"></span>
+          </a>
+        </div>
+        <header><h4 class="result-info" translate="ediscovery.searchResults.searchInfo"></h4></header>
+        <section>
+          <p class="result-title">{{ediscoverySearchCtrl.searchResultsHeader}}</p>
+          <div ng-repeat="keyword in ediscoverySearchCtrl.searchResults.keywords">
+            <p class="result-info">{{keyword}}</p>
+          </div>
+          <div class="date-range-tooltip">
+            <span class="result-title" translate="ediscovery.searchResults.dateRange"></span>
+            <i ng-if="ediscoverySearchCtrl.showHover()" tooltip="{{'ediscovery.searchParameters.dateRangeTooltip' | translate}}" tooltip-placement="right" class="icon icon-info"></i>
+          </div>
+          <p class="result-info">{{ediscoverySearchCtrl.searchCriteria.startDate}} - {{ediscoverySearchCtrl.searchCriteria.endDate}}</p>
+          <p class="result-title" translate="ediscovery.searchResults.messages"></p>
+          <div ng-repeat="query in ediscoverySearchCtrl.searchResults.queries">
+            <p class="result-info">{{query}}</p>
+          </div>
+        </section>
+      </article>
+    </cs-card>
+    <cs-card ng-if="ediscoverySearchCtrl.isReport" class="cs-card--large">
+      <article>
+        <header><h4 translate="ediscovery.searchResults.reportSummary"></h4></header>
+        <section class="row">
+          <div class="col-md-2">
+            <p class="report-title" translate="ediscovery.searchResults.spaces"></p>
+            <p class="report-info">{{ediscoverySearchCtrl.searchResults.numRooms}}</p>
+          </div>
+          <div class="col-md-3">
+            <p class="report-title" translate="ediscovery.searchResults.messages"></p>
+            <p class="report-info">{{ediscoverySearchCtrl.searchResults.numMessages}}</p>
+          </div>
+          <div class="col-md-2">
+            <p class="report-title" translate="ediscovery.searchResults.files"></p>
+            <p class="report-info">{{ediscoverySearchCtrl.searchResults.numFiles}}</p>
+          </div>
+          <div class="col-md-5">
+            <p class="report-title" translate="ediscovery.searchResults.estReport"></p>
+            <p class="report-info">{{ediscoverySearchCtrl.searchResults.totalSize}}</p>
+          </div>
+        </section>
+      </article>
+    </cs-card>
+    <!-- Max Rooms (2500) error card -->
+    <cs-card ng-if="ediscoverySearchCtrl.isReportMaxRooms" class="cs-card--large">
+      <article>
+        <header><h4 translate="ediscovery.searchResults.maxRoomsReached"></h4></header>
+        <section>
+          <div class="report-error">
+            <i class="icon icon-warning report-warning"></i>
+            <span translate="ediscovery.searchResults.maxRoomsReachedSummary"></span>
+            <br>
+          </div>
+        </section>
+        <footer>
+          <button type="button" class="btn btn--primary" ng-click="ediscoverySearchCtrl.resetSearchPageToInitialState()" translate="ediscovery.searchResults.reportErrorButton"></button>
+        </footer>
+      </article>
+    </cs-card>
+    <!-- Report Size (5GB) max card -->
+    <cs-card ng-if="ediscoverySearchCtrl.isReportTooBig" class="cs-card--large">
+      <article>
+        <header><h4 translate="ediscovery.searchResults.reportSizeTooBig"></h4></header>
+        <section>
+          <div class="report-error">
+            <i class="icon icon-warning report-warning"></i>
+            <span translate="ediscovery.searchResults.reportSizeErrorSummary"></span>
+            <br>
+          </div>
+        </section>
+        <footer>
+          <button type="button" class="btn btn--primary" ng-click="ediscoverySearchCtrl.resetSearchPageToInitialState()" translate="ediscovery.searchResults.reportErrorButton"></button>
+        </footer>
+      </article>
+    </cs-card>
+    <!-- Normal Report Generation Card -->
+    <cs-card ng-if="!ediscoverySearchCtrl.isReportMaxRooms && !ediscoverySearchCtrl.isReportTooBig" class="cs-card--large">
+      <article>
+        <section class="report-section">
+          <!-- Generate Report Section -->
+          <search-results-report ng-if="ediscoverySearchCtrl.isReport"></search-results-report>
+        </section>
+      </article>
+    </cs-card>
+  </div>
 </div>

@@ -1,6 +1,11 @@
 <div class="grid-contents" ng-click="grid.appScope.clearRows()">
   <span cs-dropdown class="line-list-actions-menu" ng-if="grid.appScope.canShowActionsMenu(row.entity)">
-    <button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">
+    <button cs-dropdown-toggle
+      id="actionsButton"
+      class="btn--none dropdown-toggle"
+      ng-click="$event.stopPropagation()"
+      ng-class="dropdown-toggle"
+      aria-label="{{::'common.toggleMenu' | translate}}">
       <i class="icon icon-three-dots"></i>
     </button>
     <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">

@@ -16,7 +16,10 @@
           ng-show="cbgsCtrl.isDownload"
           filename="{{'gemini.cbgs.export.csvFilename' | translate}}"
           quote-strings="true">
-          <button class="btn--none"><i class="icon icon-download icon-lg"></i></button>
+          <!-- removing button from tabindex to prevent having the csv download in the index twice -->
+          <button class="btn--none" tabindex="-1">
+            <i class="icon icon-download icon-lg"></i>
+          </button>
         </a>
       </div>
       <div ng-if="cbgsCtrl.exportLoading"

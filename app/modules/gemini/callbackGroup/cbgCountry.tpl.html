@@ -32,7 +32,7 @@
       </div>
       <div ng-if="$ctrl.isCsvValid" class="pull-left">
         <span title="{{$ctrl.model.fullFileName}}">{{$ctrl.model.fileName}}</span>
-        <button type="button" ng-click="$ctrl.onResetFile()" class="btn--none">
+        <button type="button" ng-click="$ctrl.onResetFile()" class="btn--none" aria-label="{{::'common.close' | translate}}">
           <small class="icon icon-exit"></small>
         </button>
       </div>
