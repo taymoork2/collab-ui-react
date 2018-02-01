@@ -1,5 +1,10 @@
 import { StringUtilService } from 'modules/core/shared';
 
+export interface ICrCheckboxItemState {
+  isSelected: boolean;
+  isDisabled: boolean;
+}
+
 class CrCheckboxItemController implements ng.IComponentController {
   public formItemId: string | undefined;
   public itemId: string;
