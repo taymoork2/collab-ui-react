@@ -567,6 +567,8 @@ describe('Service: HybridServicesClusterService', function () {
 
     function createExpresswayCluster(connectorType: ConnectorType): IExtendedClusterFusion {
       return {
+        allowedRegistrationHostsUrl: '',
+        createdAt: '',
         connectors: [],
         id: String(_.random(10)),
         name: String(connectorType + _.random(10)),
@@ -575,6 +577,7 @@ describe('Service: HybridServicesClusterService', function () {
           alarmsBadgeCss: 'success',
           allowedRedirectTarget: undefined,
           hasUpgradeAvailable: false,
+          isUpgradeUrgent: false,
           isEmpty: true,
           maintenanceMode: 'on',
           registrationTimedOut: false,
@@ -621,6 +624,7 @@ describe('Service: HybridServicesClusterService', function () {
           alarms: '',
           alarmsBadgeCss: '',
           hasUpgradeAvailable: false,
+          isUpgradeUrgent: false,
           maintenanceMode: 'off',
           state: {
             name: 'running',

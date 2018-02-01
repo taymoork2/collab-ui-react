@@ -9,6 +9,7 @@ export interface ISimplifiedConnector {
   connectorType: ConnectorType;
   clusterId: string;
   hasUpgradeAvailable: boolean;
+  isUpgradeUrgent: boolean;
   upgradesAutomatically: boolean;
   id: string;
   maintenanceMode: ConnectorMaintenanceMode;
@@ -201,13 +202,14 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
                 alarms: connector.alarms,
                 connectorType: connector.connectorType,
                 clusterId: connector.clusterId,
+                extendedProperties: connector.extendedProperties,
                 hasUpgradeAvailable: this.hasUpgradeAvailable(connector),
-                upgradesAutomatically: this.upgradesAutomatically(connector),
+                isUpgradeUrgent: this.isUpgradeUrgent(connector),
                 id: connector.id,
                 maintenanceMode: connector.extendedProperties.maintenanceMode,
                 originalState: connector.state,
                 service: this.$translate.instant(`hercules.shortConnectorNameFromConnectorType.${connector.connectorType}`),
-                extendedProperties: connector.extendedProperties,
+                upgradesAutomatically: this.upgradesAutomatically(connector),
                 upgradeState: connector.upgradeState,
                 version: connector.runningVersion,
               };
@@ -244,6 +246,12 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
   private hasUpgradeAvailable(connector: IExtendedConnector): boolean {
     return !this.upgradesAutomatically(connector)
       ? connector.extendedProperties.hasUpgradeAvailable
+      : false;
+  }
+
+  private isUpgradeUrgent(connector: IExtendedConnector): boolean {
+    return !this.upgradesAutomatically(connector)
+      ? connector.extendedProperties.isUpgradeUrgent
       : false;
   }
 
