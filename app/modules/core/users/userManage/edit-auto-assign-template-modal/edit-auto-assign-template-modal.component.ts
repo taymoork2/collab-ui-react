@@ -1,7 +1,7 @@
 import { ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
-import { AutoAssignTemplateService, IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
+import { IAutoAssignTemplateData, IUserEntitlementsViewState } from 'modules/core/users/shared/auto-assign-template/auto-assign-template.interfaces';
+import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template/auto-assign-template.service';
 import { IHybridServices } from 'modules/core/users/userAdd/hybrid-services-entitlements-panel/hybrid-services-entitlements-panel.service';
-import { ICrCheckboxItemState } from 'modules/core/users/shared/cr-checkbox-item/cr-checkbox-item.component';
 import { IUserEntitlementRequestItem, UserEntitlementState } from 'modules/core/users/shared/onboard/onboard.interfaces';
 
 class EditAutoAssignTemplateModalController implements ng.IComponentController {
@@ -78,7 +78,7 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
     });
   }
 
-  public getUserEntitlements(): { [key: string]: ICrCheckboxItemState } {
+  public getUserEntitlements(): IUserEntitlementsViewState {
     return _.get(this.autoAssignTemplateData, `viewData.USER_ENTITLEMENT`);
   }
 

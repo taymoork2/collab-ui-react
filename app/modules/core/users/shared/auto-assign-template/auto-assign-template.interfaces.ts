@@ -9,22 +9,22 @@ export interface IUserEntitlementsViewState {
 
 export interface IAutoAssignTemplateData {
   viewData: {
-    LICENSE: {
+    LICENSE?: {
       [key: string]: IAssignableLicenseCheckboxState;
     };
-    SUBSCRIPTION: {
+    SUBSCRIPTION?: {
       [key: string]: {
         showContent: boolean;
       };
     };
-    USER_ENTITLEMENT: IUserEntitlementsViewState;
+    USER_ENTITLEMENT?: IUserEntitlementsViewState;
   };
   otherData: {
-    hybridServices: IHybridServices;
+    hybridServices?: IHybridServices;
   };
   apiData: {
-    subscriptions: ISubscription[];
-    template: IAutoAssignTemplateResponse;
+    subscriptions?: ISubscription[];
+    template?: IAutoAssignTemplateResponse;
   };
 }
 

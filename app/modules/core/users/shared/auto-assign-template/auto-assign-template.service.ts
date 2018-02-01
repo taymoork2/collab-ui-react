@@ -1,7 +1,7 @@
 import { ILicenseRequestItem, ILicenseResponseItem, IUserEntitlementRequestItem, IAutoAssignTemplateRequestPayload, LicenseChangeOperation, UserEntitlementName, UserEntitlementState } from 'modules/core/users/shared/onboard/onboard.interfaces';
 import { AssignableServicesItemCategory, IAssignableLicenseCheckboxState, ILicenseUsage, ILicenseUsageMap, ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
 import { MessengerInteropService } from 'modules/core/users/userAdd/shared/messenger-interop/messenger-interop.service';
-import { IAutoAssignTemplateData, IAutoAssignTemplateResponse } from 'modules/core/users/shared/auto-assign-template';
+import { IAutoAssignTemplateData, IAutoAssignTemplateResponse, IUserEntitlementsViewState } from 'modules/core/users/shared/auto-assign-template/auto-assign-template.interfaces';
 import { ICrCheckboxItemState } from 'modules/core/users/shared/cr-checkbox-item/cr-checkbox-item.component';
 
 export class AutoAssignTemplateService {
@@ -97,7 +97,7 @@ export class AutoAssignTemplateService {
     }, {});
   }
 
-  private mkUserEntitlementEntries(userEntitlementItems: IUserEntitlementRequestItem[]) {
+  private mkUserEntitlementEntries(userEntitlementItems: IUserEntitlementRequestItem[]): IUserEntitlementsViewState {
     return _.reduce(userEntitlementItems, (result, userEntitlementItem) => {
       const { entitlementName, entitlementState } = userEntitlementItem;
       result[entitlementName] = <ICrCheckboxItemState>{
@@ -168,7 +168,7 @@ export class AutoAssignTemplateService {
 
   private mkUserEntitlementsPayload(autoAssignTemplateData: IAutoAssignTemplateData): IUserEntitlementRequestItem[] {
     const userEntitlementItems = autoAssignTemplateData.viewData[AssignableServicesItemCategory.USER_ENTITLEMENT];
-    const result = _.reduce(userEntitlementItems, (result, userEntitlementItem, userEntitlementName) => {
+    const result = _.reduce(<IUserEntitlementsViewState>userEntitlementItems, (result, userEntitlementItem, userEntitlementName) => {
       // allow any "add" operations, only allow "remove" operations if user entitlement already existed in the template
       if (userEntitlementItem.isSelected || this.isUserEntitlementNameInTemplate(userEntitlementName, autoAssignTemplateData)) {
         result.push(<IUserEntitlementRequestItem>{
@@ -192,10 +192,10 @@ export class AutoAssignTemplateService {
   }
 
   public initAutoAssignTemplateData(): IAutoAssignTemplateData {
-    const result = {} as IAutoAssignTemplateData;
-    result.viewData = {} as any;
-    result.apiData = {} as any;
-    result.otherData = {} as any;
-    return result;
+    return {
+      viewData: {},
+      apiData: {},
+      otherData: {},
+    };
   }
 }

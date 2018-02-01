@@ -1,6 +1,7 @@
 import { ILicenseUsage } from 'modules/core/users/userAdd/assignable-services/shared';
 import { UserEntitlementName } from 'modules/core/users/shared/onboard/onboard.interfaces';
-import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
+import { IAssignableLicenseCheckboxState } from 'modules/core/users/userAdd/assignable-services/shared/license-usage-util.interfaces';
+import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template/auto-assign-template.interfaces';
 import { OfferName } from 'modules/core/shared';
 import { ICrCheckboxItemState } from 'modules/core/users/shared/cr-checkbox-item/cr-checkbox-item.component';
 
@@ -20,8 +21,11 @@ class LicenseSummaryController implements ng.IComponentController {
     this.advancedMeetingLicenses = this.getAdvancedMeetingLicenses();
     this.advancedMeetingSiteUrls = this.getAdvancedMeetingSiteUrls();
   }
+
   private getSelectedLicenses(): ILicenseUsage[] {
-    const isSelectedLicense = _.filter(this.autoAssignTemplateData.viewData.LICENSE, { isSelected: true });
+    const isSelectedLicense = _.filter(
+      this.autoAssignTemplateData.viewData.LICENSE as { [key: string]: IAssignableLicenseCheckboxState; },
+      { isSelected: true });
     return _.map(isSelectedLicense, 'license');
   }
 
