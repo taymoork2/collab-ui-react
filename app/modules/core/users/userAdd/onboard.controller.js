@@ -1645,7 +1645,13 @@ require('./_user-add.scss');
         } else {
           if (convertBacked === false) {
             $scope.btnConvertLoad = false;
-            $state.go('users.convert.results');
+            $state.go('users.convert.results', {
+              convertPending: convertPending,
+              convertUsersFlow: $scope.convertUsersFlow,
+              numUpdatedUsers: $scope.numUpdatedUsers,
+              numAddedUsers: $scope.numAddedUsers,
+              results: $scope.results,
+            });
           } else {
             $state.go('users.convert', {});
           }
@@ -1939,7 +1945,13 @@ require('./_user-add.scss');
             convertPending = false;
             if (convertBacked === false) {
               $scope.btnConvertLoad = false;
-              $state.go('users.convert.results');
+              $state.go('users.convert.results', {
+                convertPending: convertPending,
+                convertUsersFlow: $scope.convertUsersFlow,
+                numUpdatedUsers: $scope.numUpdatedUsers,
+                numAddedUsers: $scope.numAddedUsers,
+                results: $scope.results,
+              });
             } else {
               $state.go('users.convert', {});
             }

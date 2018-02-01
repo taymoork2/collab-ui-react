@@ -1128,10 +1128,23 @@
           })
           .state('users.convert.results', {
             views: {
-              'usersConvert@users.convert': {
-                // TODO auto-assign should refactor for <add-users-results-modal>
-                template: require('modules/core/users/userAdd/addUsersResultsModal.tpl.html'),
+              'usersAdd@users.add': {
+                template: '<add-users-results-modal dismiss="$dismiss()" convert-pending="$resolve.convertPending" convert-users-flow="$resolve.convertUsersFlow" num-updated-users="$resolve.numUpdatedUsers" num-added-users="$resolve.numAddedUsers" results="$resolve.results"></add-users-results-modal>',
               },
+            },
+            resolve: stateParamsToResolveParams({
+              convertPending: false,
+              convertUsersFlow: false,
+              numUpdatedUsers: 0,
+              numAddedUsers: 0,
+              results: [],
+            }),
+            params: {
+              convertPending: false,
+              convertUsersFlow: false,
+              numUpdatedUsers: 0,
+              numAddedUsers: 0,
+              results: [],
             },
           })
           .state('users.csv', {
