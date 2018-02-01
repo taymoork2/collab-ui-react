@@ -3,32 +3,29 @@
   <button
     type="button"
     class="close"
-    ng-click="$dismiss()">
+    ng-click="$dismiss()"
+    aria-label="{{::'common.close' | translate}}">
   </button>
   <h3 class="modal-title">{{ rdc.getDeleteText() }}</h3>
 </div>
 
 <!-- body -->
-<div
-  class="modal-body">
+<div class="modal-body">
   <p>
     <span>{{ rdc.getDeleteConfText() }}</span>
   </p>
 </div>
 
 <!-- footer -->
-<div
-  class="modal-footer">
+<div class="modal-footer">
   <button
     class="btn"
-    ng-click="$dismiss()">
-    <span
-      translate="common.cancel">
-    </span>
+    ng-click="$dismiss()"
+    translate="common.cancel">
   </button>
   <button
     class="btn btn--negative"
-    sq-click-promise="rdc.deleteDevice(sc.currentDevice)" >
+    sq-click-promise="rdc.deleteDevice(sc.currentDevice)">
     <span translate="common.delete"></span>
   </button>
 </div>
