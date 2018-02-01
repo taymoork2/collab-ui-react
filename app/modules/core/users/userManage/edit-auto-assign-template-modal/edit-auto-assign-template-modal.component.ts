@@ -6,7 +6,7 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
   private prevState: string;
   private dismiss: Function;
   private autoAssignTemplateData: IAutoAssignTemplateData;
-  private isEditTemplateMode = false;
+  public isEditTemplateMode: boolean;
   public sortedSubscriptions: ISubscription[];
 
   /* @ngInject */
@@ -18,11 +18,11 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
 
   public $onInit(): void {
     this.prevState = _.get<string>(this.$state, 'params.prevState', 'users.manage.picker');
+    this.isEditTemplateMode = !!this.isEditTemplateMode;
 
     // restore state if provided
     if (this.autoAssignTemplateData) {
-      this.sortedSubscriptions = _.get(this.autoAssignTemplateData, 'subscriptions');
-      this.isEditTemplateMode = true;
+      this.sortedSubscriptions = _.get(this.autoAssignTemplateData, 'apiData.subscriptions');
       return;
     }
 
