@@ -45,6 +45,18 @@ export class AutoAssignTemplateService {
     return this.$http.get<{autoLicenseAssignment: boolean}>(this.autoAssignSettingsUrl).then(response => response.data.autoLicenseAssignment);
   }
 
+  public isDefaultAutoAssignTemplateActivated(): ng.IPromise<boolean> {
+    return this.$q.all({
+      defaultTemplate: this.getDefaultTemplate(),
+      isEnabledForOrg: this.isEnabledForOrg(),
+    }).then(responses => {
+      if (!responses.defaultTemplate) {
+        return false;
+      }
+      return responses.isEnabledForOrg;
+    }).catch(() => false);
+  }
+
   public createTemplate(payload: IAutoAssignTemplateRequestPayload): ng.IPromise<any> {
     return this.$http.post(this.autoAssignTemplateUrl, payload);
   }

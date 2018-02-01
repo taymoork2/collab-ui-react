@@ -74,6 +74,7 @@ export class UserManageService {
       case ManageType.CONVERT:
         this.$state.go(State.USERS_CONVERT, {
           manageUsers: true,
+          isDefaultAutoAssignTemplateActivated: this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated,
         });
         break;
 
