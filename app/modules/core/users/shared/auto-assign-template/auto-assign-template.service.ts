@@ -151,28 +151,45 @@ export class AutoAssignTemplateService {
   }
 
   private mkLicensesPayload(autoAssignTemplateData: IAutoAssignTemplateData): ILicenseRequestItem[] {
-    const licenseItems = autoAssignTemplateData[AssignableServicesItemCategory.LICENSE];
-    const selectedItems: IAssignableLicenseCheckboxState[] = _.filter(licenseItems, { isSelected: true });
-    const result = _.map(selectedItems, (selectedItem) => {
-      return <ILicenseRequestItem>{
-        id: selectedItem.license.licenseId,
-        idOperation: LicenseChangeOperation.ADD,
-        properties: {},
-      };
-    });
+    const licenseItems: IAssignableLicenseCheckboxState[] = _.values(autoAssignTemplateData.viewData[AssignableServicesItemCategory.LICENSE]);
+    const result = _.compact(_.map(licenseItems, (licenseItem) => {
+      // allow any "add" operations, only allow "remove" operations if license already existed in the template
+      if (licenseItem.isSelected || this.isLicenseIdInTemplate(licenseItem.license.licenseId, autoAssignTemplateData)) {
+        return <ILicenseRequestItem>{
+          id: licenseItem.license.licenseId,
+          idOperation: licenseItem.isSelected ? LicenseChangeOperation.ADD : LicenseChangeOperation.REMOVE,
+          properties: {},
+        };
+      }
+    })) as ILicenseRequestItem[];
+
     return result;
   }
 
   private mkUserEntitlementsPayload(autoAssignTemplateData: IAutoAssignTemplateData): IUserEntitlementRequestItem[] {
-    if (_.isEmpty(_.get(autoAssignTemplateData, AssignableServicesItemCategory.LICENSE))) {
-      return [];
-    }
+    const userEntitlementItems = autoAssignTemplateData.viewData[AssignableServicesItemCategory.USER_ENTITLEMENT];
+    const result = _.reduce(userEntitlementItems, (result, userEntitlementItem, userEntitlementName) => {
+      // allow any "add" operations, only allow "remove" operations if user entitlement already existed in the template
+      if (userEntitlementItem.isSelected || this.isUserEntitlementNameInTemplate(userEntitlementName, autoAssignTemplateData)) {
+        result.push(<IUserEntitlementRequestItem>{
+          entitlementName: userEntitlementName,
+          entitlementState: userEntitlementItem.isSelected ? UserEntitlementState.ACTIVE : UserEntitlementState.INACTIVE,
+        });
+      }
+      return result;
+    }, [] as IUserEntitlementRequestItem[]);
+    return result;
+  }
 
-    let result: IUserEntitlementRequestItem[] = [];
-    // TODO: rm this logic once 'hybrid-services-entitlements-panel' propogates its UI state
-    //   and build this payload from UI state instead
-    const hybridUserEntitlements: IUserEntitlementRequestItem[] = _.get(autoAssignTemplateData, 'USER_ENTITLEMENTS_PAYLOAD', []);
-    result = result.concat(hybridUserEntitlements);
+  private isLicenseIdInTemplate(licenseId: string, autoAssignTemplateData: IAutoAssignTemplateData): boolean {
+    const templateLicenseItems: ILicenseResponseItem[] = _.get(autoAssignTemplateData, 'apiData.template.licenses');
+    return !!_.find(templateLicenseItems, { id: licenseId });
+  }
+
+  private isUserEntitlementNameInTemplate(userEntitlementName: UserEntitlementName, autoAssignTemplateData: IAutoAssignTemplateData): boolean {
+    const templateUserEntitlementItems: IUserEntitlementRequestItem[] = _.get(autoAssignTemplateData, 'apiData.template.userEntitlements');
+    return !!_.find(templateUserEntitlementItems, { entitlementName: userEntitlementName });
+  }
 
   public initAutoAssignTemplateData(): IAutoAssignTemplateData {
     const result = {} as IAutoAssignTemplateData;
