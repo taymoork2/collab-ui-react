@@ -2652,7 +2652,9 @@
       "text": "You are about to update {{name}} connectors to {{version}}.",
       "releaseNotes": "Release Notes",
       "releaseNotesLink": "Open in a new tab",
-      "upgradeNow": "Upgrade Now"
+      "upgradeNow": "Upgrade Now",
+      "warning1": "Some nodes in this clusters are either offline or in maintenance mode. These nodes will not be upgraded until they are back online.",
+      "warning2": "We recommend that you bring all nodes online before initiating an upgrade."
     },
     "expresswayClusterSettings": {
       "upgradeScheduleHeader": "Upgrade",
@@ -3279,9 +3281,16 @@
         "title": "Disable maintenance mode",
         "message": "Are you sure you want to disable maintenance mode for this node?"
       },
-      "alertBannerNumber": "{count, plural, =1{Upgrade for connectors available!} other{Upgrades for connectors available!}}",
-      "alertBannerTime": "{count, plural, =1{It} other{They}} will be applied on {date}.",
-      "alertBannerLink": "<a href ng-click=\"{{onclick}}\">Upgrade {{service}} connectors now</a>.",
+      "alertDisableMaintenanceMode": "To install, disable maintenance mode on the nodes.",
+      "alertDisableMaintenanceModeFor": "To install {{connector}}, disable maintenance mode on the nodes.",
+      "alertenableTheNodes": "To install, bring the nodes back online first.",
+      "alertenableTheNodesFor": "To install {{connector}}, bring the nodes back online first.",
+      "alertInstallNow": "Install now…",
+      "alertUpgradeAvailableFor": "Upgrade available for {{connector}}.",
+      "alertUpgradeConnectorNow": "Upgrade {{connector}} now.",
+      "alertUpgradesAvailable": "Upgrades available.",
+      "alertUrgent": "(urgent)",
+      "alertUrgentUpgradeAvailableFor": "Urgent upgrade available for {{connector}}.",
       "instructions": "Instructions"
     },
     "hybridServicesConnectorSidepanel": {

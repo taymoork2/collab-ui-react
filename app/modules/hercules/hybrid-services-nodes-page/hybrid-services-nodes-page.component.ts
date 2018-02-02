@@ -1,21 +1,22 @@
 import { Notification } from 'modules/core/notifications';
-import { IToolkitModalService } from 'modules/core/modal';
 import { IConnectorAlarm, ICluster, ConnectorMaintenanceMode, ConnectorType, IHost, ClusterTargetType, ConnectorState, IExtendedClusterFusion, IConnectorExtendedProperties, IExtendedConnector } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
+/* tslint:disable:object-literal-key-quotes quotemark */
+
 export interface ISimplifiedConnector {
   alarms: IConnectorAlarm[];
-  connectorType: ConnectorType;
   clusterId: string;
+  connectorType: ConnectorType;
+  extendedProperties: IConnectorExtendedProperties;
   hasUpgradeAvailable: boolean;
-  isUpgradeUrgent: boolean;
-  upgradesAutomatically: boolean;
   id: string;
+  isUpgradeUrgent: boolean;
   maintenanceMode: ConnectorMaintenanceMode;
   originalState: ConnectorState;
   service: string;
-  extendedProperties: IConnectorExtendedProperties;
+  upgradesAutomatically: boolean;
   upgradeState: string;
   version: string;
 }
@@ -39,9 +40,7 @@ interface IData {
 class HybridServicesNodesPageCtrl implements ng.IComponentController {
   private REFRESH_INTERVAL = 30 * 1000;
   private refreshTimeout: ng.IPromise<void> | null = null;
-  private clusterCache: IExtendedClusterFusion;
-  public connectorTypesWithUpgrade: ConnectorType[] = [];
-  public nextUpgradeStartTime = '';
+  public clusterCache: IExtendedClusterFusion;
   public data: IData;
   public gridOptions = {};
   public loading = true; // first load
@@ -52,7 +51,6 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
-    private $modal: IToolkitModalService,
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private $state: ng.ui.IStateService,
@@ -77,10 +75,6 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
           });
         }
       });
-      this.HybridServicesClusterService.get(clusterId.currentValue)
-        .then((info) => {
-          this.nextUpgradeStartTime = moment(info.upgradeSchedule.nextUpgradeWindow.startTime).format('LLL');
-        });
     }
   }
 
@@ -165,27 +159,6 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     return this.$q.all(promises);
   }
 
-  public openUpgradeModal(connectorType): void {
-    this.Analytics.trackHybridServiceEvent(this.Analytics.sections.HS_NAVIGATION.eventNames.OPEN_CONNECTOR_UPGRADE_MODAL, {
-      'Cluster Id': this.clusterCache.id,
-      'Connector Type': connectorType,
-    });
-    this.$modal.open({
-      template: require('modules/hercules/connector-upgrade-modal/connector-upgrade-modal.html'),
-      type: 'small',
-      controller: 'ConnectorUpgradeController',
-      controllerAs: 'ConnectorUpgradeCtrl',
-      resolve: {
-        connectorType: () => connectorType,
-        cluster: () => this.clusterCache,
-      },
-    })
-    .result
-    .then(() => {
-      this.loadCluster(this.data.id);
-    });
-  }
-
   private processData(cluster: IExtendedClusterFusion, nodes: IHost[]): IData {
     const result: IData = {
       id: cluster.id,
@@ -200,12 +173,12 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
             .map(connector => {
               const simplifiedConnector: ISimplifiedConnector = {
                 alarms: connector.alarms,
-                connectorType: connector.connectorType,
                 clusterId: connector.clusterId,
+                connectorType: connector.connectorType,
                 extendedProperties: connector.extendedProperties,
                 hasUpgradeAvailable: this.hasUpgradeAvailable(connector),
-                isUpgradeUrgent: this.isUpgradeUrgent(connector),
                 id: connector.id,
+                isUpgradeUrgent: this.isUpgradeUrgent(connector),
                 maintenanceMode: connector.extendedProperties.maintenanceMode,
                 originalState: connector.state,
                 service: this.$translate.instant(`hercules.shortConnectorNameFromConnectorType.${connector.connectorType}`),
@@ -229,13 +202,6 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
         .value(),
     };
 
-    this.connectorTypesWithUpgrade = _.chain(result.nodes)
-      .map((node) => node.connectors)
-      .flatten<ISimplifiedConnector>()
-      .filter((connector) => connector.hasUpgradeAvailable && connector.originalState !== 'offline')
-      .map((connector) => connector.connectorType)
-      .uniq()
-      .value();
     return result;
   }
 
