@@ -7,7 +7,7 @@ class CareVoiceFeaturesModalCtrl implements ng.IComponentController {
 
   /* @ngInject*/
   constructor(
-    public $modal,
+    public $modalStack,
     public $state,
     ) {
   }
@@ -43,10 +43,16 @@ class CareVoiceFeaturesModalCtrl implements ng.IComponentController {
     this.features = serviceCards;
   }
 
+  /**
+   * This method takes the user to services-overview page and dismisses all the opened modals.
+   */
   public hybridLink(): void {
-  }
-
-  public trunkLink(): void {
+    let top = this.$modalStack.getTop();
+    while (top) {
+      this.$modalStack.dismiss(top.key);
+      top = this.$modalStack.getTop();
+    }
+    this.$state.go('services-overview');
   }
 }
 
