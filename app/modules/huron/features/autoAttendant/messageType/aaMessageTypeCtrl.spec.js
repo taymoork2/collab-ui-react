@@ -81,13 +81,8 @@ describe('Controller: AAMessageTypeCtrl', function () {
                   }, {
                     nodeName: 'SPAN',
                     parentElement: {
-                      attributes: [{
-                        value: 'Test Attribute',
-                      }, {
-                        value: 'NUMBER',
-                      }, {
-                        value: 'dummyId',
-                      }],
+                      attributes: [
+                      ]
                     },
                   }],
                   className: 'dynamic-prompt aa-message-height',
@@ -96,6 +91,12 @@ describe('Controller: AAMessageTypeCtrl', function () {
               },
             },
           };
+          var rangeChildNode = range.endContainer.ownerDocument.activeElement.childNodes[1];
+          var attributes = rangeChildNode.parentElement.attributes;
+          _.set(attributes, 'element-text.value', 'Test Attribute');
+          _.set(attributes, 'read-as.value', 'NUMBER');
+          _.set(attributes, 'element-id.value', 'dummyId');
+
           return range;
         };
         spyOn(angular, 'element').and.returnValue(dynamicElement);
