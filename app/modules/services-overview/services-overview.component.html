@@ -2,7 +2,7 @@
 
 <div class="content-container services-list">
   <h5><span translate="servicesOverview.cloudServices"></span></h5>
-  <cs-card-layout block-view="true">
+  <cs-card-layout block-view="true" ng-if="!$ctrl.isPartnerAdmin()">
     <cs-card class="cs-card--small" ng-class="card.cardClass" ng-repeat="card in $ctrl.getCloudCards()" ng-if="card.display">
       <!--
         currently ng-include templates loaded through ngtemplate-loader
@@ -11,12 +11,21 @@
       <article ng-include="card.template"></article>
     </cs-card>
   </cs-card-layout>
+  <cs-card-layout block-view="true">
+    <cs-card class="cs-card--small" ng-class="card.cardClass" ng-repeat="card in $ctrl.getHcsCards()" ng-if="card.display">
+      <!--
+        currently ng-include templates loaded through ngtemplate-loader
+        TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+      -->
+      <article ng-include="card.template"></article>
+    </cs-card>
+  </cs-card-layout>
 
-  <div ng-if="$ctrl.loadingHybridServicesCards">
+  <div ng-if="$ctrl.loadingHybridServicesCards && !$ctrl.isPartnerAdmin()">
     <h5><span translate="servicesOverview.hybridServices"></span></h5>
     <span class="icon icon-spinner icon-2x"></span>
   </div>
-  <div ng-if="!$ctrl.loadingHybridServicesCards">
+  <div ng-if="!$ctrl.loadingHybridServicesCards && !$ctrl.isPartnerAdmin()">
     <h5 ng-if="$ctrl.isAnyHybridServiceActive()"><span translate="servicesOverview.hybridServices"></span></h5>
     <cs-card-layout block-view="true" ng-if="$ctrl.isAnyHybridServiceActive()">
       <on-premises-card ng-if="$ctrl.showOnPremisesCard()" class="cs-card cs-card--small active-card" clusters="$ctrl.clusters" trunks="$ctrl.trunks"></on-premises-card>

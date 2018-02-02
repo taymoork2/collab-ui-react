@@ -3091,6 +3091,16 @@
               filter: null,
             },
           })
+          .state('partner-services-overview', {
+            url: '/services-overview',
+            template: '<services-overview url-params="$resolve.urlParams"></services-overview>',
+            parent: 'partner',
+            resolve: {
+              urlParams: /* @ngInject */ function ($stateParams) {
+                return $stateParams;
+              },
+            },
+          })
           .state('taasSuites', {
             parent: 'main',
             url: '/taasSuite',

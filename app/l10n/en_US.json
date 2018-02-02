@@ -10501,6 +10501,10 @@
     }
   },
   "hcs": {
+    "cardTitle": "Hosted Collaboration Service",
+    "description": "Extend Management services to Hosted Cloud Solution.",
+    "license": "License Management",
+    "upgrade": "Upgrade Management",
     "taas": {
       "testState": {
         "good": "Passed",
@@ -10568,5 +10572,6 @@
         "error": "Errors"
       }
     }
+
   }
 }

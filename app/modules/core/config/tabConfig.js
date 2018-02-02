@@ -52,6 +52,13 @@
     state: 'services-overview',
     link: 'services',
   }, {
+    tab: 'partnerServicesTab',
+    icon: 'icon-cloud',
+    title: 'tabs.servicesTab',
+    state: 'partner-services-overview',
+    feature: 'atlas-hosted-cloud-service',
+    link: '/partner/services-overview',
+  }, {
     tab: 'deviceTab',
     icon: 'icon-devices',
     title: 'tabs.deviceTab',
@@ -168,6 +175,13 @@
     state: 'services-overview',
     link: 'services',
     iconClass: 'icon-outline',
+  }, {
+    tab: 'partnerServicesTab',
+    icon: 'icon-cloud',
+    title: 'tabs.servicesTab',
+    state: 'partner-services-overview',
+    feature: 'atlas-hosted-cloud-service',
+    link: '/partner/services-overview',
   }, {
     tab: 'deviceTab',
     icon: 'icon-endpoint-active',
