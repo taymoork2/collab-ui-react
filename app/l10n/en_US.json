@@ -4344,7 +4344,7 @@
   "autoAttendant": {
     "code": "AA",
     "title": "Auto Attendant",
-    "warning": "Requires call service.",
+    "noCallWarningMessage" : "Requires call service. <a href ng-click=\"{{onclick}}\">Learn More</a>",
     "careModalDescription": "Play custom prompts and provide callers with menu options to route calls through your system.",
     "modalDescription": "Auto attendants play customized prompts and provide callers with menu options for routing their calls through your system.",
     "namePlaceholder": "Name the Auto Attendant",
@@ -7426,8 +7426,7 @@
       "callbackType": "Callback Template",
       "chatPlusCallbackType": "Chat+Callback Template",
       "virtualAssistant": "Virtual Assistant",
-      "noCallWarningMessage" : "Requires call service.",
-      "learnMoreLink": "Learn More"
+      "noCallWarningMessage" : "Requires call service. <a href ng-click=\"{{onclick}}\">Learn More</a>"
     },
     "settings": {
       "setUpCare": "Care",
