@@ -1,6 +1,7 @@
 import './hybrid-services-entitlements-panel.scss';
 
 import { HybridServicesEntitlementsPanelComponent } from './hybrid-services-entitlements-panel.component';
+import { HybridServicesEntitlementsPanelService } from './hybrid-services-entitlements-panel.service';
 import calendarCloudConnectorServiceModuleName from 'modules/hercules/services/calendar-cloud-connector.service';
 import featureToggleModuleName from 'modules/core/featureToggle';
 import onboardModuleName from 'modules/core/users/shared/onboard';
@@ -13,4 +14,5 @@ export default angular.module('core.users.userAdd.hybrid-services-entitlements-p
   serviceDescriptorModuleName,
 ])
   .component('hybridServicesEntitlementsPanel', new HybridServicesEntitlementsPanelComponent())
+  .service('HybridServicesEntitlementsPanelService', HybridServicesEntitlementsPanelService)
   .name;

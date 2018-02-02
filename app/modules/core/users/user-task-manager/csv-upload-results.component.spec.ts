@@ -47,6 +47,7 @@ describe('Component: csvUploadResults', () => {
     });
     spyOn(this.UserTaskManagerService, 'cancelTask').and.returnValue(this.$q.resolve());
     spyOn(this.UserTaskManagerService, 'getUserDisplayAndEmail').and.returnValue(this.$q.resolve('User Me (user.me@gmail.com)'));
+    spyOn(this.UserTaskManagerService, 'getTaskErrors').and.returnValue(this.$q.resolve());
 
     this.aTask = _.cloneDeep(require('./test-tasks.json').csvUploadResultsTasks);
     this.$scope.activeTask = this.aTask;

@@ -11,9 +11,11 @@ describe('Component: assignableServicesRow:', () => {
       subscriptionId: 'fake-subscriptionId-1',
     };
     this.$scope.fakeAutoAssignTemplateData = {
-      SUBSCRIPTION: {
-        'fake-subscriptionId-1': {
-          showContent: false,
+      viewData: {
+        SUBSCRIPTION: {
+          'fake-subscriptionId-1': {
+            showContent: false,
+          },
         },
       },
     };

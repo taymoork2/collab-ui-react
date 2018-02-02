@@ -972,8 +972,7 @@
           ///////////////////////////
           .state('users.manage.picker', {
             controller: 'UserManageModalPickerController',
-            template: '<div class="center-spinner">' +
-              '<i class="icon icon-spinner icon-2x"></i></div>',
+            template: '<div class="user-manage-picker__center-spinner"><i class="icon icon-spinner icon-5x"></i></div>',
           })
           .state('users.manage', {
             abstract: true,
@@ -1053,7 +1052,7 @@
             },
           })
           .state('users.manage.edit-auto-assign-template-modal', {
-            template: '<edit-auto-assign-template-modal dismiss="$dismiss()" prev-state="$resolve.prevState" is-edit-template-mode="$resolve.isEditTemplateMode" auto-assign-template-data="$resolve.autoAssignTemplateData" user-entitlements-state-data="$resolve.autoAssignTemplateData.USER_ENTITLEMENTS_PAYLOAD"></edit-auto-assign-template-modal>',
+            template: '<edit-auto-assign-template-modal dismiss="$dismiss()" prev-state="$resolve.prevState" is-edit-template-mode="$resolve.isEditTemplateMode" auto-assign-template-data="$resolve.autoAssignTemplateData"></edit-auto-assign-template-modal>',
             resolve: stateParamsToResolveParams({
               prevState: 'users.manage.picker',
               isEditTemplateMode: false,
@@ -5205,6 +5204,51 @@
             controller: 'ResourceGroupSettingsController',
             controllerAs: 'rgsCtrl',
             parent: 'main',
+          })
+          .state('hybrid-services-event-history-page', {
+            parent: 'main',
+            url: '/services/clusters/history?cluster=clusterId&serviceId&connectorId',
+            template: '<hybrid-services-event-history-page cluster-id="$resolve.clusterId" connector-id="$resolve.connectorId" service-id="$resolve.serviceId" resource-filter="$resolve.resourceFilter"></hybrid-services-event-history-page>',
+            params: {
+              clusterId: null,
+              connectorId: null,
+              serviceId: null,
+              resourceFilter: null,
+            },
+            resolve: {
+              clusterId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
+              connectorId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.connectorId;
+              },
+              serviceId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.serviceId;
+              },
+              resourceFilter: /* @ngInject */ function ($stateParams) {
+                return $stateParams.resourceFilter;
+              },
+            },
+          })
+          .state('hybrid-services-event-history-page.sidepanel', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<hybrid-services-cluster-status-history-sidepanel event-item="$resolve.eventItem"></hybrid-services-event-history-cluster-alarm-history-sidepanel>',
+              },
+              'header@hybrid-services-event-history-page.sidepanel': {
+                template: require('modules/hercules/hybrid-services-event-history-page/cluster-status-history/cluster-status-history-sidepanel-header.html'),
+              },
+            },
+            params: {
+              eventItem: null,
+            },
+            resolve: {
+              eventItem: /* @ngInject */ function ($stateParams) {
+                return $stateParams.eventItem;
+              },
+              displayName: translateDisplayName('sidePanelBreadcrumb.overview'),
+            },
           });
 
         $stateProvider

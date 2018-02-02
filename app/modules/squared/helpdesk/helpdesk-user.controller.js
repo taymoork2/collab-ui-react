@@ -397,12 +397,16 @@
                 break;
               case 'squared-fusion-uc':
                 vm.hybridServicesCard.uc.status = status;
-                vm.hybridServicesCard.uc.showDirectoryUri = false;
+                vm.hybridServicesCard.uc.showUserNumbers = false;
                 if (vm.hybridServicesCard.uc.status.state === 'error' || vm.hybridServicesCard.uc.status.state === 'activated') {
-                  vm.hybridServicesCard.uc.showDirectoryUri = true;
-                  UCCService.getUserDiscovery(vm.userId, vm.orgId).then(function (userDiscovery) {
-                    vm.hybridServicesCard.uc.directoryUri = userDiscovery.directoryURI;
-                  });
+                  vm.hybridServicesCard.uc.showUserNumbers = true;
+                  UCCService.getUserDiscovery(vm.userId, vm.orgId)
+                    .then(function (userDiscovery) {
+                      vm.hybridServicesCard.uc.directoryUri = userDiscovery.directoryURI;
+                      vm.hybridServicesCard.uc.primaryDn = userDiscovery.primaryDn;
+                      vm.hybridServicesCard.uc.telephoneNumber = userDiscovery.telephoneNumber;
+                      vm.hybridServicesCard.uc.ucmCluster = userDiscovery.UCMInfo && userDiscovery.UCMInfo.ClusterFQDN;
+                    });
                 }
                 break;
               case 'squared-fusion-ec':

@@ -166,12 +166,13 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
     describe('sendRequest():', function () {
       it('should set requestResult to TOTAL_FAILURE when the request to notify partners fails', function () {
         spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.reject('error'));
-
-        controller.sendRequest().then(function () {
-          expect(Notification.errorResponse).toHaveBeenCalled();
-          expect(Notification.errorResponse.calls.count()).toEqual(1);
-          expect(controller.requestResult).toBe(controller.requestResultEnum.TOTAL_FAILURE);
-        });
+        controller.sendRequest().then(fail)
+          .catch(function (response) {
+            expect(response).toBe('error');
+            expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+            expect(Notification.errorWithTrackingId.calls.count()).toEqual(1);
+            expect(controller.requestResult).toBe(controller.requestResultEnum.TOTAL_FAILURE);
+          });
       });
 
       it('should set requestResult to TOTAL_FAILURE when the request to notify partners has no notifications', function () {

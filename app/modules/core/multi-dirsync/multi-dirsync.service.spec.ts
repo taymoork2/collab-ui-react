@@ -40,7 +40,7 @@ describe('MultiDirSyncService - ', function () {
     ] });
 
     this.MultiDirSyncService.getEnabledDomains().then((results) => {
-      expect(results.data.directorySyncResponseBeans).toEqual([this.fixture.dirsyncRow]);
+      expect(results).toEqual([this.fixture.dirsyncRow]);
     });
     this.$httpBackend.flush();
   });

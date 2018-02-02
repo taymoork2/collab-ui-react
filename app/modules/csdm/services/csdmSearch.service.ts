@@ -26,7 +26,10 @@ export class CsdmSearchService {
         url,
         this.constructSearchRequest(search),
         { timeout: this.pendingPromise[caller].promise })
-      .then(data => this.DeviceSearchConverter.convertSearchResult(data));
+      .then(data => this.DeviceSearchConverter.convertSearchResult(data))
+      .catch(response => {
+        return this.$q.reject(response);
+      });
   }
 
   public constructSearchRequest(so: SearchObject): any {

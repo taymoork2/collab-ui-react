@@ -1,6 +1,11 @@
-<strong> <span translate="hercules.overview.setupCloudSipUriHeader"></span></strong>
+<strong><span translate="hercules.overview.setupCloudSipUriHeader"></span></strong>
 
-<p><span translate="homePage.setupCloudSipUriMessage"></span>
-  <a ng-click="notificationController.showEnterpriseSettings()"
-     translate="homePage.goSetupCloudSipUri"></a></p>
-<button type="button" class="close" ng-click="notificationController.setSipUriNotificationAcknowledged()"></button>
+<p>
+  <span translate="homePage.setupCloudSipUriMessage"></span>
+  <a href ng-click="notificationController.showEnterpriseSettings()" translate="homePage.goSetupCloudSipUri"></a>
+</p>
+<button type="button"
+  class="close"
+  ng-click="notificationController.setSipUriNotificationAcknowledged()"
+  aria-label="{{::'common.close' | translate}}">
+</button>

@@ -41,15 +41,16 @@
     <button
       type="button"
       ng-click="$ctrl.disableEdit()"
-      class="btn--circle btn--white btn--small">
+      class="btn--circle btn--white btn--small"
+      aria-label="{{::'common.remove' | translate}}">
       <i class="icon icon-remove"></i>
     </button>
-    <button
-      cs-btn
+    <button cs-btn
       loading="$ctrl.saveInProgress"
       type="submit"
       ng-disabled="!$ctrl.form.$valid"
-      class="btn--circle btn--white btn--small btn--primary">
+      class="btn--circle btn--white btn--small btn--primary"
+      aria-label="{{::'common.save' | translate}}">
       <i class="icon icon-check"></i>
     </button>
   </form>

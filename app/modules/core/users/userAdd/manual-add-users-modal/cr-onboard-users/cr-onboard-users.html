@@ -4,28 +4,74 @@
   </div>
   <div ng-if="$ctrl.model.userInputOption === 0">
     <div ng-class="{'has-error': $ctrl.hasErrors()}">
-      <cs-token-field tokens="$ctrl.model.userList" tokenfieldid="$ctrl.tokenfieldid" tokenoptions="$ctrl.tokenoptions" tokenmethods="$ctrl.tokenmethods" tokenplaceholder="$ctrl.tokenplaceholder" ng-init="$ctrl.validateTokens()"></cs-token-field>
+      <cs-token-field
+        tokens="$ctrl.model.userList"
+        tokenfieldid="$ctrl.tokenfieldid"
+        tokenoptions="$ctrl.tokenoptions"
+        tokenmethods="$ctrl.tokenmethods"
+        tokenplaceholder="$ctrl.tokenplaceholder"
+        ng-init="$ctrl.validateTokens()">
+      </cs-token-field>
     </div>
     <div class="flex-container">
       <label class="adduser-input-desc" for="usersfield-tokenfield" translate="usersPage.userInputDescription"/>
-      <button type="button" class="btn btn--circle btn--link clear-button" ng-click="$ctrl.clearPanel()" tooltip="{{::'onboardModal.clearAll'|translate}}" tooltip-placement="left">
+      <button type="button"
+        class="btn btn--circle btn--link clear-button"
+        ng-click="$ctrl.clearPanel()"
+        tooltip="{{::'onboardModal.clearAll' | translate}}"
+        tooltip-trigger="focus mouseenter"
+        tooltip-placement="left"
+        aria-label="{{::'onboardModal.clearAll' | translate}}">
         <span class="icon icon-trash"></span>
       </button>
     </div>
   </div>
   <div  ng-if="$ctrl.model.userInputOption === 1">
     <div class="form-group user-name-email-input" >
-      <input required type="text" class="form-control flex1 input-lg" ng-model="$ctrl.model.firstName" id="firstName" placeholder="{{::$ctrl.strFirstName}}" ng-keypress="$ctrl.onEnterKey($event)">
-      <input required type="text" class="form-control flex2 input-lg" ng-model="$ctrl.model.lastName" id="lastName" placeholder="{{::$ctrl.strLastName}}" ng-keypress="$ctrl.onEnterKey($event)">
-      <input required type="text" class="form-control flex2 input-lg" ng-model="$ctrl.model.emailAddress" id="emailAddress" placeholder="{{::$ctrl.strEmailAddress}}" ng-change="$ctrl.validateEmailField()" ng-keypress="$ctrl.onEnterKey($event)">
-      <i class="icon icon-plus plus-icon" ng-class="{'plus-icon-inactive': $ctrl.model.userForm.$invalid || !$ctrl.model.userInfoValid, 'plus-icon-active': $ctrl.model.userForm.$valid && $ctrl.model.userInfoValid}" ng-click="$ctrl.addToUsersfield()"></i>
+      <input required type="text"
+        class="form-control flex1 input-lg"
+        ng-model="$ctrl.model.firstName"
+        id="firstName"
+        placeholder="{{::$ctrl.strFirstName}}"
+        ng-keypress="$ctrl.onEnterKey($event)">
+      <input required type="text"
+        class="form-control flex2 input-lg"
+        ng-model="$ctrl.model.lastName"
+        id="lastName"
+        placeholder="{{::$ctrl.strLastName}}"
+        ng-keypress="$ctrl.onEnterKey($event)">
+      <input required type="text"
+        class="form-control flex2 input-lg"
+        ng-model="$ctrl.model.emailAddress"
+        id="emailAddress"
+        placeholder="{{::$ctrl.strEmailAddress}}"
+        ng-change="$ctrl.validateEmailField()"
+        ng-keypress="$ctrl.onEnterKey($event)">
+      <i
+        class="icon icon-plus plus-icon"
+        ng-class="{'plus-icon-inactive': $ctrl.model.userForm.$invalid || !$ctrl.model.userInfoValid, 'plus-icon-active': $ctrl.model.userForm.$valid && $ctrl.model.userInfoValid}"
+        ng-click="$ctrl.addToUsersfield()">
+      </i>
     </div>
     <div class="onboard-tokens" ng-class="{'has-error': $ctrl.hasErrors()}">
-      <cs-token-field tokens="$ctrl.model.userList" tokenfieldid="$ctrl.tokenfieldid" tokenoptions="$ctrl.tokenoptions" tokenmethods="$ctrl.tokenmethods" static="true" ng-init="$ctrl.validateTokens()"></cs-token-field>
+      <cs-token-field
+        tokens="$ctrl.model.userList"
+        tokenfieldid="$ctrl.tokenfieldid"
+        tokenoptions="$ctrl.tokenoptions"
+        tokenmethods="$ctrl.tokenmethods"
+        static="true"
+        ng-init="$ctrl.validateTokens()">
+      </cs-token-field>
     </div>
     <div class="flex-container">
       <div class="adduser-input-desc"></div>
-      <button type="button" class="btn btn--circle btn--link clear-button" ng-click="$ctrl.clearPanel()" tooltip="{{::'onboardModal.clearAll'|translate}}" tooltip-placement="left">
+      <button type="button"
+        class="btn btn--circle btn--link clear-button"
+        ng-click="$ctrl.clearPanel()"
+        tooltip="{{::'onboardModal.clearAll' | translate}}"
+        tooltip-trigger="focus mouseenter"
+        tooltip-placement="left"
+        aria-label="{{::'onboardModal.clearAll' | translate}}">
         <span class="icon icon-trash"></span>
       </button>
     </div>

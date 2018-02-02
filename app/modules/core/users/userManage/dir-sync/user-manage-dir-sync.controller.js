@@ -6,6 +6,8 @@
     var vm = this;
     var eventListeners = [];
     var transitions;
+    var SUCCESS = 'success';
+    var DANGER = 'danger';
 
     vm.isUserAdmin = isUserAdmin;
     vm.onInit = onInit;
@@ -31,6 +33,22 @@
       while (!_.isEmpty(eventListeners)) {
         _.attempt(eventListeners.pop());
       }
+    });
+
+    // TODO refactor
+    // Remove dependecy on AddUsersCtrl.getStatus() which uses DirSyncServiceOld.getDirSyncStatus()
+    // Need to refresh the DirSyncService for our isDirSyncEnabled() check
+    Object.defineProperties(vm, {
+      isDirSyncEnabled: {
+        get: function () {
+          return DirSyncService.isDirSyncEnabled();
+        },
+      },
+      dirSyncStatus: {
+        get: function () {
+          return DirSyncService.isDirSyncEnabled() ? SUCCESS : DANGER;
+        },
+      },
     });
 
     //////////////////

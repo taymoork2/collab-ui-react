@@ -19,7 +19,9 @@
           loading="customerAdmin.loading"
           class="btn btn--primary inline search-add-button"
           ng-click="customerAdmin.addCustomerAdmin(customerAdmin.selected)"
-          ng-disabled="!customerAdmin.canAddUser()">Add</button>
+          ng-disabled="!customerAdmin.canAddUser()">
+          <span translate="common.add"></span>
+        </button>
       </div>
       <span ng-if="customerAdmin.resultsError">{{customerAdmin.resultsErrorMessage}}</span>
      </div>

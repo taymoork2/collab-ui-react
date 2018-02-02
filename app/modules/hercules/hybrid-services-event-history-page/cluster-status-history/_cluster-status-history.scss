@@ -1,0 +1,25 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+
+hybrid-services-cluster-status-history-table {
+  display: block;
+
+  .item-row {
+    &:hover {
+      background-color: $color-primary-lighter;
+    }
+
+    &.active {
+      background-color: $color-primary-base;
+
+      td {
+        color: #fff;
+      }
+    }
+  }
+
+  .no-events-found {
+    margin-left: 2em;
+    margin-top: 2em;
+  }
+
+}

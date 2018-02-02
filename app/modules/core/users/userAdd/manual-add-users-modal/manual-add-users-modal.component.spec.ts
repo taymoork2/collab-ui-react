@@ -2,7 +2,6 @@ import moduleName from './index';
 import { ManualAddUsersModalController } from './manual-add-users-modal.component';
 import { MultiStepModalComponent } from 'modules/core/shared/multi-step-modal/multi-step-modal.component';
 import { CrOnboardUsersComponent } from './cr-onboard-users/cr-onboard-users.component';
-import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 
 type Test = atlas.test.IComponentTest<ManualAddUsersModalController, {
   $state;
@@ -63,8 +62,8 @@ describe('Component: manualAddUsersModal:', () => {
 
       // notes:
       // - use a mock, but make sure it is non-empty to test 'useDefaultAutoAssignTemplate' getter logic
-      const fakeToAutoAssignTemplateDataResult = {} as IAutoAssignTemplateData;
-      fakeToAutoAssignTemplateDataResult.subscriptions = [];
+      const fakeToAutoAssignTemplateDataResult = this.AutoAssignTemplateService.initAutoAssignTemplateData();
+      fakeToAutoAssignTemplateDataResult.apiData.subscriptions = [];
 
       this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = true;
       this.AutoAssignTemplateService.getDefaultTemplate.and.returnValue(this.$q.resolve('fake-getDefaultTemplate-result'));

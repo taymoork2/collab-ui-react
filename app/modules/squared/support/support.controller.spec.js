@@ -37,7 +37,6 @@ describe('Controller: SupportCtrl', function () {
     spyOn(Authinfo, 'isOrderAdminUser').and.returnValue(true);
     spyOn(Config, 'isProd').and.returnValue(false);
     spyOn(FeatureToggleService, 'atlasOrderProvisioningConsoleGetStatus').and.returnValue($q.resolve(true));
-    spyOn(FeatureToggleService, 'atlasEdiscoveryGetStatus').and.returnValue($q.resolve(false));
     $scope = $rootScope.$new();
     controller = $controller('SupportCtrl', {
       $modal: $modal,
@@ -79,7 +78,6 @@ describe('Controller: SupportCtrl', function () {
     });
 
     it('should show if user has both compliance role and ediscovery feature toggle', function () {
-      FeatureToggleService.atlasEdiscoveryGetStatus.and.returnValue($q.resolve(true));
       Authinfo.isComplianceUser.and.returnValue(true);
       $scope.initializeShowLinks();
       $scope.$apply();

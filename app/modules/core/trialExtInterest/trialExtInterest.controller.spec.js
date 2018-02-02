@@ -22,7 +22,9 @@ describe('Controller: TrialExtInterestCtrl', function () {
     TrialExtInterestService = _TrialExtInterestService_;
     $q = _$q_;
 
-    spyOn(TrialExtInterestService, 'notifyPartnerAdmin').and.returnValue($q.reject());
+    spyOn(TrialExtInterestService, 'notifyPartnerAdmin').and.callFake(function () {
+      return $q.reject();
+    });
     spyOn($location, 'search').and.returnValue({
       eqp: null,
     });

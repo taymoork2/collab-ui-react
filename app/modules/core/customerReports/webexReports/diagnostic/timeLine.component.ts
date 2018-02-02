@@ -33,9 +33,9 @@ class TimeLine implements ng.IComponentController {
     this.addFnToD3();
     this.initParameters();
 
+    this.setDomain();
+    this.drawStartEndLine();
     this.xAxis();
-    this.gridVerticalLine();
-    this.gridHorizontalLine();
     this.drawLines();
     this.yAxis();
     this.setLegend();
@@ -83,9 +83,6 @@ class TimeLine implements ng.IComponentController {
       line: ['Good', 'Fair', 'Poor', 'N/A'],
       circle: ['Good', 'Fair', 'Poor', 'N/A'],
     };
-
-    this.setDomain();
-    this.drawStartEndLine();
   }
 
   private drawStartEndLine() {
@@ -115,6 +112,11 @@ class TimeLine implements ng.IComponentController {
     return (this.data.gridHorizontalLineNum * this.option.gridHeight) + this.option.paddingButtom + this.option.paddingTop;
   }
 
+  private drawGrid(tickSize, ticks) {
+    this.gridHorizontalLine();
+    this.gridVerticalLine(tickSize, ticks);
+  }
+
   private gridHorizontalLine(): void {
     const data: Object[] = [];
     let y = this.coordinate.y;
@@ -125,44 +127,39 @@ class TimeLine implements ng.IComponentController {
     this.dataToline({ data: data, append: 'svg:line', class: 'gridHorizontalLine' });
   }
 
-  private gridVerticalLine(): void {
+  private gridVerticalLine(tickSize, ticks): void {
+    let i = 0;
     const data: Object[] = [];
-    let x = this.coordinate.x;
-    while ( x <= this.coordinate.endX) {
-      data.push({ x1: x, y1: this.coordinate.y, x2: x, y2: this.coordinate.endY });
-      x += this.option.gridWidth;
+    while (i <= 12) {
+      const tickPoint = ticks[0] + tickSize * i * 0.5;
+      if (tickPoint <= ticks[_.size(ticks) - 1]) {
+        const x = this.time2line(this.timestampToDate(tickPoint));
+        data.push({ x1: x, y1: this.coordinate.y, x2: x, y2: this.coordinate.endY });
+      }
+      i++;
     }
     this.dataToline({ data: data, append: 'svg:line', class: 'gridVerticalLine' });
   }
 
   private setDomain(): void {
     const tickSize = this.getTickSize();
-    const tickNum = this.getTickNum(tickSize);
-    const startTime = _.floor(this.sourceData.startTime / tickSize) * tickSize;
-    const endTime = startTime + tickSize * tickNum;
-
-    this.data.domain = [this.timestampToDate(startTime), this.timestampToDate(endTime)];
+    const ticks = this.getTicks(tickSize);
+    this.data.domain = [ticks[0], ticks[_.size(ticks) - 1]];
     this.time2line = d3.time.scale()
     .domain(this.data.domain)
     .range([this.coordinate.x, this.coordinate.endX]);
 
-    this.data.domain_ = [];
-    let i = 0;
-    while (i < tickNum + 1) {
-      const dm = startTime + tickSize * i;
-      this.data.domain_.push(this.timestampToDate(dm));
-      i++;
-    }
+    this.data.tickValues = _.map(ticks, item => this.timestampToDate(item));
+    this.drawGrid(tickSize, this.data.domain);
   }
 
   private xAxis(): void {
     this.preData();
-
     const xAxis = d3.svg.axis()
       .scale(this.time2line)
       .orient('bottom')
       .tickSize(3, 0)
-      .tickValues(this.data.domain_)
+      .tickValues(this.data.tickValues)
       .tickFormat(d3.time.format(this.data.xAxisFormat));
 
     this.svg.append('g')
@@ -509,20 +506,39 @@ class TimeLine implements ng.IComponentController {
   }
 
   private getTickSize(): number {
-    let i = 0;
+    let i = 1;
     let startTime = 0;
     let tickSize = 60 * 1000;
     while (startTime + tickSize * 6 < this.sourceData.endTime) {
-      tickSize = i ? i * 5 * 60 * 1000 : tickSize;
+      tickSize = i <= 5 ? i * 60 * 1000 : (i - 5) * 5 * 60 * 1000;
       startTime = _.floor(this.sourceData.startTime / tickSize) * tickSize;
       i += 1;
     }
     return tickSize;
   }
 
-  private getTickNum(tickSize): number {
-    const startTime = _.floor(this.sourceData.startTime / tickSize) * tickSize;
-    return startTime + tickSize * 4 > this.sourceData.endTime ? 4 : 6;
+  private getTicks(tickSize) {
+    let i = 1;
+    const sourceStartTime = _.floor(this.sourceData.startTime / tickSize) * tickSize;
+    let startTime = sourceStartTime;
+    let endTime = startTime + tickSize * 6;
+    while (i <= 12) {
+      startTime = startTime + 0.5 * tickSize < this.sourceData.startTime ? startTime + 0.5 * tickSize : startTime;
+      endTime = endTime - 0.5 * tickSize > this.sourceData.endTime ? endTime - 0.5 * tickSize : endTime;
+      i++;
+    }
+
+    i = 0;
+    const tickValues = [startTime];
+    while (i < 6) {
+      const tickPoint = sourceStartTime + tickSize * i;
+      if (tickPoint > startTime && tickPoint < endTime) {
+        tickValues.push(tickPoint);
+      }
+      i++;
+    }
+    tickValues.push(endTime);
+    return tickValues;
   }
 
   private addFnToD3() {

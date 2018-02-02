@@ -21,7 +21,7 @@ class Chart implements ng.IComponentController {
   public searchObject?: SearchObject;
 
   /* @ngInject */
-  constructor(private $translate) {
+  constructor(private $translate, private Analytics) {
   }
 
   public $onInit() {
@@ -92,7 +92,9 @@ class Chart implements ng.IComponentController {
         event: 'clickSlice',
         method: (e) => {
           if (incommingData) {
-            this.pieChartClicked({ searchElement: new FieldQuery(e.dataItem.dataContext.key, incommingData.bucketName, FieldQuery.QueryTypeExact) });
+            const fieldQuery = new FieldQuery(e.dataItem.dataContext.key, incommingData.bucketName, FieldQuery.QueryTypeExact);
+            this.pieChartClicked({ searchElement: fieldQuery });
+            this.trackSearchClick('SLICE', fieldQuery);
           }
         },
       }],
@@ -109,11 +111,13 @@ class Chart implements ng.IComponentController {
   };
 
   public legendClick(legend: IBuckedDataChart) {
-    this.pieChartClicked({ searchElement: new FieldQuery(legend.key, legend.bucketName, FieldQuery.QueryTypeExact) });
+    const fieldQuery = new FieldQuery(legend.key, legend.bucketName, FieldQuery.QueryTypeExact);
+    this.pieChartClicked({ searchElement: fieldQuery });
+    this.trackSearchClick('LEGEND', fieldQuery);
   }
 
   private updateLegend(data: BuckedDataChartHolder) {
-    this.legend =  _
+    this.legend = _
       .chain(data.buckets)
       .filter('visibleLegend')
       .map((bucket: IBuckedDataChart) => {
@@ -137,7 +141,7 @@ class Chart implements ng.IComponentController {
   }
 
   private fillBlankValues(data: BucketHolder): BuckedDataChartHolder {
-    switch (data.bucketName)  {
+    switch (data.bucketName) {
       case 'connectionStatus':
         return this.fillConnectionStatusBlanks(data);
       default:
@@ -153,7 +157,7 @@ class Chart implements ng.IComponentController {
       disconnected: { key: 'disconnected', docCount: 0 },
       connected: { key: 'connected', docCount: 0 },
     }, dataKeyed);
-    data.buckets =  _.values(merged);
+    data.buckets = _.values(merged);
     return data;
   }
 
@@ -192,6 +196,17 @@ class Chart implements ng.IComponentController {
       const i = _.findIndex(this.currentAggregations, a => a.bucketName === selected.bucketName);
       this.showAggregate(this.currentAggregations[(i + 1) % this.currentAggregations.length].bucketName);
     }
+  }
+
+  private trackSearchClick(clickSource: string, fieldQuery: FieldQuery) {
+    if (!fieldQuery) {
+      return;
+    }
+    this.Analytics.trackEvent(this.Analytics.sections.DEVICE_SEARCH.eventNames.SELECT_SUGGESTION, {
+      suggestion_click: clickSource,
+      suggestion_field: _.toLower(fieldQuery.field || 'ANY_FIELD'),
+      suggestion_length: (fieldQuery.query || '').length,
+    });
   }
 }
 

@@ -7,6 +7,7 @@
   /* @ngInject */
   function UserManageOrgController($q, $state, Analytics, Authinfo, AutoAssignTemplateModel, AutoAssignTemplateService, DirSyncService, FeatureToggleService, Notification, OnboardService, Orgservice, UserCsvService, UserManageService) {
     var DEFAULT_AUTO_ASSIGN_TEMPLATE = AutoAssignTemplateService.DEFAULT;
+    var SUCCESS = 'success';
     var vm = this;
 
     vm.ManageType = require('./shared/user-manage.keys').ManageType;
@@ -28,9 +29,21 @@
     vm.isAtlasF3745AutoAssignToggle = false;
     vm.autoAssignTemplates = {};
 
-    Object.defineProperty(vm, 'dirSyncText', {
-      get: function () {
-        return vm.isDirSyncEnabled ? 'userManage.ad.turnOffDS' : 'userManage.org.turnOnDirSync';
+    Object.defineProperties(vm, {
+      dirSyncText: {
+        get: function () {
+          return vm.isDirSyncEnabled ? 'userManage.ad.turnOffDS' : 'userManage.org.turnOnDirSync';
+        },
+      },
+      dirSyncStatus: {
+        get: function () {
+          return vm.isDirSyncEnabled ? SUCCESS : undefined;
+        },
+      },
+      defaultAutoAssignTemplateActivatedStatus: {
+        get: function () {
+          return isDefaultAutoAssignTemplateActivated() ? SUCCESS : undefined;
+        },
       },
     });
 

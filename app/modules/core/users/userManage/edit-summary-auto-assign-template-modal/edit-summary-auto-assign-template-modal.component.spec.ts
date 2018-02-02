@@ -15,6 +15,9 @@ describe('Component: editSummaryAutoAssignTemplateModal:', () => {
       'Notification',
     );
     this.$scope.dismiss = _.noop;
+    spyOn(this.AutoAssignTemplateService, 'getDefaultTemplate').and.returnValue(this.$q.resolve({
+      templateId: 'fake-template-id',
+    }));
   });
 
   describe('primary behaviors (view):', () => {
@@ -30,13 +33,8 @@ describe('Component: editSummaryAutoAssignTemplateModal:', () => {
 
   describe('clicking save:', () => {
     beforeEach(function() {
-      this.autoAssignTemplateData = {
-        items: {
-          'fake-license-id-1': {},
-          'fake-license-id-2': {},
-          'fake-license-id-3': {},
-        },
-      };
+      this.autoAssignTemplateData = {};
+      spyOn(this.AutoAssignTemplateService, 'autoAssignTemplateDataToPayload').and.returnValue('fake-autoAssignTemplateDataToPayload-result');
       spyOn(this.AutoAssignTemplateService, 'createTemplate').and.returnValue(this.$q.resolve({}));
       spyOn(this.AutoAssignTemplateService, 'updateTemplate').and.returnValue(this.$q.resolve({}));
     });
@@ -48,7 +46,7 @@ describe('Component: editSummaryAutoAssignTemplateModal:', () => {
         isEditTemplateMode: false,
       });
       this.view.find('button.btn.save').click();
-      expect(this.AutoAssignTemplateService.createTemplate).toHaveBeenCalled();
+      expect(this.AutoAssignTemplateService.createTemplate).toHaveBeenCalledWith('fake-autoAssignTemplateDataToPayload-result');
     });
 
     it('should call updateTemplate if isEditTemplateMode is true', function () {
@@ -58,7 +56,7 @@ describe('Component: editSummaryAutoAssignTemplateModal:', () => {
         isEditTemplateMode: true,
       });
       this.view.find('button.btn.save').click();
-      expect(this.AutoAssignTemplateService.updateTemplate).toHaveBeenCalled();
+      expect(this.AutoAssignTemplateService.updateTemplate).toHaveBeenCalledWith('fake-template-id', 'fake-autoAssignTemplateDataToPayload-result');
     });
   });
 });

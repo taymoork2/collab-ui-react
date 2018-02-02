@@ -52,7 +52,7 @@ describe('userCsv.controller', function () {
     });
 
     spyOn(this.Userservice, 'onboardUsers').and.callThrough();
-    spyOn(this.Userservice, 'bulkOnboardUsers').and.callThrough();
+    spyOn(this.Userservice, 'bulkOnboardUsers').and.returnValue(this.$q.resolve());
     spyOn(this.Userservice, 'getUser').and.returnValue(this.getUserMe);
     spyOn(this.Userservice, 'migrateUsers').and.returnValue(this.getMigrateUsers);
     spyOn(this.Userservice, 'updateUsers').and.callThrough();
@@ -253,9 +253,8 @@ describe('userCsv.controller', function () {
           expect(this.controller.model.uploadProgress).toEqual(0);
         });
         it('should not go to the next step', function () {
-          var promise = this.controller.csvUploadNext();
+          this.controller.csvUploadNext().catch(_.noop);
           this.$scope.$apply();
-          expect(promise).toBeRejected();
           expect(this.Notification.error).toHaveBeenCalledWith('firstTimeWizard.uploadCsvEmpty');
         });
       });
@@ -277,9 +276,8 @@ describe('userCsv.controller', function () {
           this.controller.resetFile();
           this.$scope.$apply();
           this.$timeout.flush();
-          var promise = this.controller.csvUploadNext();
+          this.controller.csvUploadNext().catch(_.noop);
           this.$scope.$apply();
-          expect(promise).toBeRejected();
           expect(this.Notification.error).toHaveBeenCalledWith('firstTimeWizard.uploadCsvEmpty');
         });
       });
@@ -340,9 +338,8 @@ describe('userCsv.controller', function () {
           expect(this.controller.model.uploadProgress).toEqual(100);
         });
         it('should not go to the next step', function () {
-          var promise = this.controller.csvUploadNext();
+          this.controller.csvUploadNext().catch(_.noop);
           this.$scope.$apply();
-          expect(promise).toBeRejected();
           expect(this.Notification.error).toHaveBeenCalledWith('firstTimeWizard.uploadCsvEmpty');
         });
       });
@@ -902,7 +899,10 @@ describe('userCsv.controller', function () {
     });
 
     it('should ignore resource group changes if unable to read groups from FMS', function () {
-      this.ResourceGroupService.getAll.and.returnValue(this.$q.reject());
+      var ngq = this.$q;
+      this.ResourceGroupService.getAll.and.callFake(function () {
+        return ngq.reject();
+      });
       var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', 'Resource Group B', 'true', 'true']);
       expect(updatedUserProps.length).toEqual(0);
       expect(this.USSService.updateBulkUserProps.calls.count()).toEqual(0);
@@ -910,7 +910,10 @@ describe('userCsv.controller', function () {
     });
 
     it('should ignore resource group changes if unable to read current props from USS', function () {
-      this.USSService.getAllUserProps.and.returnValue(this.$q.reject());
+      var ngq = this.$q;
+      this.USSService.getAllUserProps.and.callFake(function () {
+        return ngq.reject();
+      });
       var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', 'Resource Group B', 'true', 'true']);
       expect(updatedUserProps.length).toEqual(0);
       expect(this.USSService.updateBulkUserProps.calls.count()).toEqual(0);
