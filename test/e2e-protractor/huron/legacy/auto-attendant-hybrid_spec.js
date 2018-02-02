@@ -18,6 +18,8 @@ describe('Huron Auto Attendant', function () {
   var testCardClick;
   var testCardClose;
   var flow;
+  
+  var ceInfos = require('./aaE2ETest.json');
 
   describe('Hybrid Enabled tenant', function () {
     beforeAll(function () {
@@ -104,6 +106,12 @@ describe('Huron Auto Attendant', function () {
       // saving the tenant and closing it
       utils.expectIsEnabled(autoattendant.saveButton);
       utils.click(autoattendant.saveButton);
+      utils.wait(autoattendant.saveButton, 120000);
+      flow = browser.controlFlow();
+      flow.execute(function () {
+        return aaGetCeUtils.validateCesDefinitionForHybridOrg(ceInfos.Test7.actionSets);
+     });
+      //utils.wait(autoattendant.saveButton, 120000);
 
     }, 120000);
 
