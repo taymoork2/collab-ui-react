@@ -30,7 +30,7 @@ export class ApiCacheManagementService {
   }
 
   public warmUpAsynchronousCaches(): ng.IPromise<void> {
-    if (!this.Authinfo.isAdmin()) {
+    if (!(this.Authinfo.isAdmin() || this.Authinfo.isReadOnlyAdmin())) {
       return this.$q.resolve();
     }
     const cachePromises: ng.IPromise<any>[] = [];
