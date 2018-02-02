@@ -3,7 +3,7 @@ import { USSService } from 'modules/hercules/services/uss.service';
 
 export class ApiCacheManagementService {
   private intervalPromise?: ng.IPromise<void>;
-  private readonly INTERVAL_DELAY = 100000;
+  private readonly INTERVAL_DELAY = 300000;
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
