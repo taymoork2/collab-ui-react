@@ -140,7 +140,7 @@ describe('Component: licenseSummary:', () => {
       expect(this.LicenseUsageUtilService.getTotalLicenseVolume).toHaveBeenCalled();
     });
 
-    describe('getHybridUserEntitlements', () => {
+    describe('getUserEntitlements', () => {
       it('should find the appropriate hybrid service user entitlements', function () {
         this.$scope.fakeAutoAssignTemplateData = {
           viewData: {
@@ -154,7 +154,7 @@ describe('Component: licenseSummary:', () => {
         this.compileComponent('licenseSummary', {
           autoAssignTemplateData: 'fakeAutoAssignTemplateData',
         });
-        expect(this.controller.getHybridUserEntitlements()).toEqual({
+        expect(this.controller.getUserEntitlements()).toEqual({
           squaredFusionCal: {
             isSelected: true,
           },
@@ -162,7 +162,7 @@ describe('Component: licenseSummary:', () => {
       });
     });
 
-    describe('hasHybridUserEntitlement', () => {
+    describe('hasUserEntitlement', () => {
       it('should find the appropriate hybrid service user entitlements', function () {
         this.$scope.fakeAutoAssignTemplateData = {
           viewData: {
@@ -176,12 +176,12 @@ describe('Component: licenseSummary:', () => {
         this.compileComponent('licenseSummary', {
           autoAssignTemplateData: 'fakeAutoAssignTemplateData',
         });
-        spyOn(this.controller, 'getHybridUserEntitlements').and.returnValue({
+        spyOn(this.controller, 'getUserEntitlements').and.returnValue({
           squaredFusionCal: {
             isSelected: true,
           },
         });
-        expect(this.controller.hasHybridUserEntitlement('squaredFusionCal')).toBe(true);
+        expect(this.controller.hasUserEntitlement('squaredFusionCal')).toBe(true);
       });
     });
   });
