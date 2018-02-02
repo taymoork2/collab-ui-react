@@ -84,9 +84,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     it('should go to next tab if sso is on and user clicks on next without clicking modify', function () {
       this.$scope.ssoEnabled = true;
       this.$scope.options.modifySSO = false;
-      this.$scope.initNext().catch(function (response) {
-        expect(response).toBe(undefined);
-      });
+      this.$scope.initNext().catch(_.noop);
       this.$scope.$apply();
       expect(this.$scope.wizard.nextTab).toHaveBeenCalled();
     });
@@ -95,9 +93,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       this.$scope.ssoEnabled = true;
       this.$scope.options.modifySSO = true;
       this.$scope.options.deleteSSOBySwitchingRadio = true;
-      this.$scope.initNext().catch(function (response) {
-        expect(response).toBe(undefined);
-      });
+      this.$scope.initNext().catch(_.noop);
       this.$scope.$apply();
       expect(this.$scope.wizard.nextTab).toHaveBeenCalled();
       //modify flag should be reset
@@ -128,9 +124,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     it('should go to next tab if sso is off and user selects simple option', function () {
       this.$scope.ssoEnabled = false;
       this.$scope.options.configureSSO = 1;
-      this.$scope.initNext().catch(function (response) {
-        expect(response).toBe(undefined);
-      });
+      this.$scope.initNext().catch(_.noop);
       this.$scope.$apply();
       expect(this.$scope.wizard.nextTab).toHaveBeenCalled();
     });

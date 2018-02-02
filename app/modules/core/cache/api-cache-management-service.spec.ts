@@ -71,14 +71,16 @@ describe('ApiCacheManagementService', () => {
     spyOn(this.Authinfo, 'isAdmin').and.returnValue(true);
     this.expectCacheRequests();
 
-    this.ApiCacheManagementService.warmUpOnInterval().catch(error => expect(error).toBe('canceled'));
+    this.ApiCacheManagementService.warmUpOnInterval().then(fail)
+      .catch(error => expect(error).toBe('canceled'));
     this.$httpBackend.flush(this.numberOfExpectedRequests);
 
     this.expectCacheRequestsAfterInterval();
     this.expectCacheRequestsAfterInterval();
 
     // retriggering interval should cancel previous interval gracefully
-    this.ApiCacheManagementService.warmUpOnInterval().catch(error => fail(error));
+    this.ApiCacheManagementService.warmUpOnInterval().then(fail)
+      .catch(error => fail(error));
     this.$httpBackend.flush(this.numberOfExpectedRequests);
 
     this.expectCacheRequestsAfterInterval();

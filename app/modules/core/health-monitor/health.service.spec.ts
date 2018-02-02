@@ -34,7 +34,8 @@ describe('HealthService', function () {
     it('should return an error if service is unavailable', function () {
       this.$httpBackend.expectGET(this.pingRegex).respond(404);
 
-      this.HealthService.getHealthStatus().catch(response => {
+      this.HealthService.getHealthStatus().then(fail)
+      .catch(response => {
         expect(response.status).toBe(404);
       });
 

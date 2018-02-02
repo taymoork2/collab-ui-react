@@ -83,7 +83,8 @@ describe('Service: BulkEnableVmService', () => {
     .respond(500);
 
     spyOn(this.BulkEnableVmService, 'enableUserVmRetry').and.callThrough();
-    this.BulkEnableVmService.enableUserVmRetry('12345', voiceMailPayload).catch(function (error) {
+    this.BulkEnableVmService.enableUserVmRetry('12345', voiceMailPayload).then(fail)
+    .catch(function (error) {
       expect(error.status).toBe(500);
     });
     expect(this.BulkEnableVmService.enableUserVmRetry).toHaveBeenCalledTimes(1);
@@ -95,7 +96,8 @@ describe('Service: BulkEnableVmService', () => {
     .respond(503);
 
     spyOn(this.BulkEnableVmService, 'getUserServicesRetry').and.callThrough();
-    this.BulkEnableVmService.getUserServicesRetry('12345').catch(function (error) {
+    this.BulkEnableVmService.getUserServicesRetry('12345').then(fail)
+    .catch(function (error) {
       expect(error.status).toBe(503);
     });
     this.$httpBackend.flush();
@@ -108,7 +110,8 @@ describe('Service: BulkEnableVmService', () => {
     .respond(502);
 
     spyOn(this.BulkEnableVmService, 'getUserServicesRetry').and.callThrough();
-    this.BulkEnableVmService.getUserServicesRetry('12345').catch(function (error) {
+    this.BulkEnableVmService.getUserServicesRetry('12345').then(fail)
+    .catch(function (error) {
       expect(error.status).toBe(502);
     });
     this.$httpBackend.flush();
@@ -121,7 +124,8 @@ describe('Service: BulkEnableVmService', () => {
     .respond(504);
 
     spyOn(this.BulkEnableVmService, 'getUserServicesRetry').and.callThrough();
-    this.BulkEnableVmService.getUserServicesRetry('12345').catch(function (error) {
+    this.BulkEnableVmService.getUserServicesRetry('12345').then(fail)
+    .catch(function (error) {
       expect(error.status).toBe(504);
     });
     this.$httpBackend.flush();
@@ -133,7 +137,8 @@ describe('Service: BulkEnableVmService', () => {
     this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/users/12345').respond(429);
     spyOn(this.BulkEnableVmService, 'getUserSitetoSiteNumberRetry').and.callThrough();
 
-    this.BulkEnableVmService.getUserSitetoSiteNumberRetry('12345', 5).catch(function (error) {
+    this.BulkEnableVmService.getUserSitetoSiteNumberRetry('12345', 5).then(fail)
+    .catch(function (error) {
       expect(error.status).toBe(429);
     });
     this.$httpBackend.flush();

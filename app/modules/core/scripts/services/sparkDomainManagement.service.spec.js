@@ -25,13 +25,15 @@ describe('SparkDomainManagementService: Service', function () {
   });
 
   it('should verify that a domain is passed for checkAvailability and addSipDomain calls', function () {
-    SparkDomainManagementService.checkDomainAvailability().catch(function (response) {
-      expect(response).toBe('A SIP Domain input value must be entered');
-    });
+    SparkDomainManagementService.checkDomainAvailability().then(fail)
+      .catch(function (response) {
+        expect(response).toBe('A SIP Domain input value must be entered');
+      });
 
-    SparkDomainManagementService.addSipDomain().catch(function (response) {
-      expect(response).toBe('A SIP Domain input value must be entered');
-    });
+    SparkDomainManagementService.addSipDomain().then(fail)
+      .catch(function (response) {
+        expect(response).toBe('A SIP Domain input value must be entered');
+      });
   });
 
   it('should present that the domain is not available', function () {
