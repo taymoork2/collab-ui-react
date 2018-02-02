@@ -3,12 +3,12 @@
   dismiss="$ctrl.dismissModal()"
   back="$ctrl.back()"
   save="$ctrl.save()"
-  save-loading="$ctrl.saveLoading">
-  <h4 translate="userManage.autoAssignTemplate.editSummary.header"></h4>
-  <p translate="userManage.autoAssignTemplate.editSummary.description"></p>
-
-  <license-summary
-    auto-assign-template-data="$ctrl.autoAssignTemplateData">
-  </license-summary>
-
+  save-loading="$ctrl.saveLoading"
+>
+  <license-summary-modal-body
+    title-key="userManage.autoAssignTemplate.editSummary.header"
+    description-key="userManage.autoAssignTemplate.editSummary.description"
+    auto-assign-template-data="$ctrl.autoAssignTemplateData"
+  >
+  </license-summary-modal-body>
 </multi-step-modal>

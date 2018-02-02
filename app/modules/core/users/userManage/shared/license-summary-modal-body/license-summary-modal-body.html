@@ -1,0 +1,16 @@
+<h4 class="license-summary-modal-body__title"
+  translate="{{:: $ctrl.titleKey }}"
+></h4>
+<p class="license-summary-modal-body__description"
+  translate="{{:: $ctrl.descriptionKey }}"
+></p>
+
+<div class="text-center"
+  ng-if="!$ctrl.autoAssignTemplateData"
+>
+  <i class="icon icon-spinner icon-5x"></i>
+</div>
+
+<license-summary ng-if="$ctrl.autoAssignTemplateData"
+  auto-assign-template-data="$ctrl.autoAssignTemplateData"
+></license-summary>

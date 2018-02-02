@@ -4,7 +4,7 @@ import { Notification } from 'modules/core/notifications';
 import OnboardService from 'modules/core/users/shared/onboard/onboard.service';
 import { OnboardSummaryForAutoAssignModalController } from './onboard-summary-for-auto-assign-modal.component';
 import { MultiStepModalComponent } from 'modules/core/shared/multi-step-modal/multi-step-modal.component';
-import { LicenseSummaryComponent } from 'modules/core/users/userManage/shared/license-summary/license-summary.component';
+import { LicenseSummaryModalBodyComponent } from 'modules/core/users/userManage/shared/license-summary-modal-body/license-summary-modal-body.component';
 
 type Test = atlas.test.IComponentTest<OnboardSummaryForAutoAssignModalController, {
   $q: ng.IQService;
@@ -16,7 +16,7 @@ type Test = atlas.test.IComponentTest<OnboardSummaryForAutoAssignModalController
 }, {
   components: {
     multiStepModal: atlas.test.IComponentSpy<MultiStepModalComponent>;
-    licenseSummary: atlas.test.IComponentSpy<LicenseSummaryComponent>;
+    licenseSummaryModalBody: atlas.test.IComponentSpy<LicenseSummaryModalBodyComponent>;
   },
 }>;
 
@@ -24,12 +24,12 @@ describe('Component: onboardSummaryForAutoAssignModal:', () => {
   beforeEach(function (this: Test) {
     this.components = {
       multiStepModal: this.spyOnComponent('multiStepModal'),
-      licenseSummary: this.spyOnComponent('licenseSummary'),
+      licenseSummaryModalBody: this.spyOnComponent('licenseSummaryModalBody'),
     };
     this.initModules(
       moduleName,
       this.components.multiStepModal,
-      this.components.licenseSummary,
+      this.components.licenseSummaryModalBody,
     );
     this.injectDependencies(
       '$q',
@@ -71,10 +71,10 @@ describe('Component: onboardSummaryForAutoAssignModal:', () => {
       expect(this.controller.save).toHaveBeenCalled();
     });
 
-    it('should pass along its "autoAssignTemplateData" to its "license-summary"', function (this: Test) {
+    it('should pass along its "autoAssignTemplateData" to its "license-summary-modal-body"', function (this: Test) {
       this.$scope.fakeAutoAssignTemplateData = 'fake-autoAssignTemplateData';
       initComponent.call(this);
-      expect(this.components.licenseSummary.bindings[0].autoAssignTemplateData).toBe('fake-autoAssignTemplateData');
+      expect(this.components.licenseSummaryModalBody.bindings[0].autoAssignTemplateData).toBe('fake-autoAssignTemplateData');
     });
   });
 

@@ -3,6 +3,7 @@ import { UserManageService } from './user-manage.service';
 import * as analyticsModuleName from 'modules/core/analytics';
 import featureToggleModuleName from 'modules/core/featureToggle';
 import usersSharedAutoAssignTemplateModuleName from 'modules/core/users/shared/auto-assign-template';
+import licenseSummaryModalBodyModuleName from './license-summary-modal-body';
 
 export {
   UserManageService,
@@ -16,6 +17,7 @@ export default angular
     featureToggleModuleName,
     licenseSummaryModuleName,
     usersSharedAutoAssignTemplateModuleName,
+    licenseSummaryModalBodyModuleName,
   ])
   .service('UserManageService', UserManageService)
   .name;
