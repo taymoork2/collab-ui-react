@@ -81,11 +81,7 @@
           vm.userSelected.description = userName;
         });
       }
-      if (AACommonService.isHybridEnabledOnOrg()) {
-        AutoAttendantHybridCareService.isHybridAndEPTConfigured().then(function (result) {
-          orgHasHybridEnabled = result;
-        });
-      }
+      orgHasHybridEnabled = AutoAttendantHybridCareService.getHybridandEPTConfiguration();
     }
 
     function saveUiModel() {

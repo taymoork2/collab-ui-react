@@ -2,7 +2,7 @@
 
 describe('Controller: AARouteToUserCtrl', function () {
   var $controller;
-  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, $httpBackend, HuronConfig, aaCommonService, AutoAttendantHybridCareService, $q;
+  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, $httpBackend, HuronConfig, aaCommonService, AutoAttendantHybridCareService;
 
   var $rootScope, $scope, UrlConfig;
 
@@ -247,7 +247,7 @@ describe('Controller: AARouteToUserCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$controller_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _$httpBackend_, _Authinfo_, _HuronConfig_, _UrlConfig_, _AutoAttendantHybridCareService_, _$q_, _AACommonService_/* , _AAUserService_ */) {
+  beforeEach(inject(function (_$controller_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _$httpBackend_, _Authinfo_, _HuronConfig_, _UrlConfig_, _AutoAttendantHybridCareService_, _AACommonService_/* , _AAUserService_ */) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
 
@@ -258,7 +258,6 @@ describe('Controller: AARouteToUserCtrl', function () {
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     aaCommonService = _AACommonService_;
     AutoAttendantHybridCareService = _AutoAttendantHybridCareService_;
-    $q = _$q_;
 
     $httpBackend = _$httpBackend_;
     authinfo = _Authinfo_;
@@ -279,9 +278,6 @@ describe('Controller: AARouteToUserCtrl', function () {
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
     aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
-
-    spyOn(aaCommonService, 'isHybridEnabledOnOrg').and.returnValue(true);
-    spyOn(AutoAttendantHybridCareService, 'isHybridAndEPTConfigured').and.returnValue($q.resolve(true));
 
     var listUsersUrl = UrlConfig.getScimUrl(authinfo.getOrgId()) +
       '?' + '&' + listUsersProps.attributes +
@@ -375,7 +371,6 @@ describe('Controller: AARouteToUserCtrl', function () {
     aaModel.ceInfos = null;
 
     aaUiModel[schedule] = null;
-    $q = null;
   });
 
   describe('AARouteToUser', function () {
@@ -494,115 +489,124 @@ describe('Controller: AARouteToUserCtrl', function () {
       expect(controller.users[3].description).toEqual(nameNumber);
     });
 
-    it('should show user with extension response as 404 for call free users', function () {
-      var result = 'Super Admin (Spark)';
-      cmiCompleteUserGet.respond(404);
-
-      var controller = $controller('AARouteToUserCtrl', {
-        $scope: $scope,
+    describe('for hybrid user', function () {
+      beforeEach(function () {
+        var attributesForHybridOrg = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings,phoneNumbers';
+        var listUsersUrl = UrlConfig.getScimUrl(authinfo.getOrgId()) +
+        '?' + '&' + attributesForHybridOrg +
+        '&' + listUsersProps.filter +
+        '&count=' + listUsersProps.count +
+        '&sortBy=' + listUsersProps.sortBy +
+        '&sortOrder=' + listUsersProps.sortOrder;
+        $httpBackend.whenGET(listUsersUrl).respond(200, userListCISResponse);
+        spyOn(AutoAttendantHybridCareService, 'getHybridandEPTConfiguration').and.returnValue(true);
+        cmiCompleteUserGet.respond(404);
       });
 
-      controller.sort.fullLoad = 8;
+      it('should show user with extension response as 404 for call free users', function () {
+        var result = 'Super Admin (Spark)';
 
-      controller.getUsers();
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope,
+        });
 
-      $httpBackend.flush();
+        controller.sort.fullLoad = 8;
 
-      $scope.$apply();
-      expect(controller.users.length).toEqual(10);
-      expect(controller.users[3].description).toEqual(result);
-    });
+        controller.getUsers();
 
-    it('should show user email id when dispalyName, firstname and lasname are empty', function () {
-      var result = 'user@gmail.com (Spark)';
-      cmiCompleteUserGet.respond(404);
+        $httpBackend.flush();
 
-      var controller = $controller('AARouteToUserCtrl', {
-        $scope: $scope,
+        $scope.$apply();
+        expect(controller.users.length).toEqual(10);
+        expect(controller.users[3].description).toEqual(result);
       });
 
-      controller.sort.fullLoad = 8;
+      it('should show user email id when dispalyName, firstname and lasname are empty', function () {
+        var result = 'user@gmail.com (Spark)';
 
-      controller.getUsers();
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope,
+        });
 
-      $httpBackend.flush();
+        controller.sort.fullLoad = 8;
 
-      $scope.$apply();
-      expect(controller.users.length).toEqual(10);
-      expect(controller.users[8].description).toEqual(result);
-    });
+        controller.getUsers();
 
-    it('should show user lastname when dispalyName and firstName is empty', function () {
-      var result = 'Super Admin (Spark)';
-      cmiCompleteUserGet.respond(404);
+        $httpBackend.flush();
 
-      var controller = $controller('AARouteToUserCtrl', {
-        $scope: $scope,
+        $scope.$apply();
+        expect(controller.users.length).toEqual(10);
+        expect(controller.users[8].description).toEqual(result);
       });
 
-      controller.sort.fullLoad = 8;
+      it('should show user lastname when dispalyName and firstName is empty', function () {
+        var result = 'Super Admin (Spark)';
 
-      controller.getUsers();
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope,
+        });
 
-      $httpBackend.flush();
+        controller.sort.fullLoad = 8;
 
-      $scope.$apply();
-      expect(controller.users.length).toEqual(10);
-      expect(controller.users[3].description).toEqual(result);
-    });
+        controller.getUsers();
 
-    it('should show hybrid user with extension when phoneNumbers exist in response', function () {
-      var result = 'AlanHybrid Geller (9999)';
-      cmiCompleteUserGet.respond(404);
+        $httpBackend.flush();
 
-      var controller = $controller('AARouteToUserCtrl', {
-        $scope: $scope,
+        $scope.$apply();
+        expect(controller.users.length).toEqual(10);
+        expect(controller.users[3].description).toEqual(result);
       });
 
-      controller.sort.fullLoad = 8;
+      it('should show hybrid user with extension when phoneNumbers exist in response', function () {
+        var result = 'AlanHybrid Geller (9999)';
 
-      controller.getUsers();
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope,
+        });
 
-      $httpBackend.flush();
+        controller.sort.fullLoad = 8;
 
-      $scope.$apply();
-      expect(controller.users[1].description).toEqual(result);
-    });
+        controller.getUsers();
 
-    it('should show hybrid user email when displayName is same as email in response and extension does not exist', function () {
-      var result = 'user@gmail.com';
-      cmiCompleteUserGet.respond(404);
+        $httpBackend.flush();
 
-      var controller = $controller('AARouteToUserCtrl', {
-        $scope: $scope,
+        $scope.$apply();
+        expect(controller.users[1].description).toEqual(result);
       });
 
-      controller.sort.fullLoad = 8;
+      it('should show hybrid user email when displayName is same as email in response and extension does not exist', function () {
+        var result = 'user@gmail.com';
 
-      controller.getUsers();
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope,
+        });
 
-      $httpBackend.flush();
+        controller.sort.fullLoad = 8;
 
-      $scope.$apply();
-      expect(controller.users[7].description).toEqual(result);
-    });
+        controller.getUsers();
 
-    it('should show hybrid user firstName lastName along with email, when user displayName does not exist and type and work are undefined in response', function () {
-      var result = 'Sam Will (user@gmail.com)';
-      cmiCompleteUserGet.respond(404);
+        $httpBackend.flush();
 
-      var controller = $controller('AARouteToUserCtrl', {
-        $scope: $scope,
+        $scope.$apply();
+        expect(controller.users[7].description).toEqual(result);
       });
 
-      controller.sort.fullLoad = 8;
+      it('should show hybrid user firstName lastName along with email, when user displayName does not exist and type and work are undefined in response', function () {
+        var result = 'Sam Will (user@gmail.com)';
 
-      controller.getUsers();
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope,
+        });
 
-      $httpBackend.flush();
+        controller.sort.fullLoad = 8;
 
-      $scope.$apply();
-      expect(controller.users[2].description).toEqual(result);
+        controller.getUsers();
+
+        $httpBackend.flush();
+
+        $scope.$apply();
+        expect(controller.users[2].description).toEqual(result);
+      });
     });
 
     describe('activate', function () {

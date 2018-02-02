@@ -11,7 +11,7 @@
   function AABuilderMainCtrl($element, $modalStack, $q, $rootScope, $scope, $state, $stateParams, $translate, AACalendarService, AACommonService,
     AADependencyService, AAMediaUploadService, AAMetricNameService, AAModelService, AANotificationService, AANumberAssignmentService, AARestModelService,
     AATrackChangeService, AAUiModelService, AAUiScheduleService, AAValidationService, AccessibilityService, AutoAttendantCeInfoModelService,
-    AutoAttendantCeMenuModelService, AutoAttendantCeService, AutoAttendantLocationService, Analytics, Authinfo, DoRestService, FeatureToggleService, ServiceSetup) {
+    AutoAttendantCeMenuModelService, AutoAttendantHybridCareService, AutoAttendantCeService, AutoAttendantLocationService, Analytics, Authinfo, DoRestService, FeatureToggleService, ServiceSetup) {
     var vm = this;
     vm.isWarn = false;
     vm.overlayTitle = $translate.instant('autoAttendant.builderTitle');
@@ -982,6 +982,11 @@
           AccessibilityService.setFocus($element, '.aa-name-edit', 2000);
         }
       });
+      if (AACommonService.isHybridEnabledOnOrg()) {
+        AutoAttendantHybridCareService.isHybridAndEPTConfigured().then(function (result) {
+          AutoAttendantHybridCareService.setHybridandEPTConfiguration(result);
+        });
+      }
     }
 
     function evalKeyPress($event) {
