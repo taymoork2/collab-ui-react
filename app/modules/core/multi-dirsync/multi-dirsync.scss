@@ -7,6 +7,12 @@ multi-dirsync-setting {
   }
 }
 
+multi-dirsync-section {
+  .dirsync-action-button {
+    top: rem-calc(-10);
+  }
+}
+
 .row .row.dirsync-row {
   @include vr-spacing(mb, 1);
 

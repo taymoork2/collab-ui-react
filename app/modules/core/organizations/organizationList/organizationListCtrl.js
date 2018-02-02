@@ -73,7 +73,7 @@ require('./_organization-list.scss');
       };
 
       var actionsTemplate = '<span cs-dropdown class="actions-menu">' +
-        '<button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
+        '<button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle" aria-label="' + $translate.instant('common.toggleMenu') + '">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
         '</span>';

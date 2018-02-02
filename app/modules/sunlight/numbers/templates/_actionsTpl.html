@@ -1,0 +1,12 @@
+<div class="grid-contents" ng-click="grid.appScope.clearRows()">
+  <span cs-dropdown class="line-list-actions-menu" ng-if="grid.appScope.canShowActionsMenu(row.entity)">
+    <button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">
+      <i class="icon icon-three-dots"></i>
+    </button>
+    <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
+      <li class="actions" ng-if="grid.appScope.canShowExternalNumberDelete(row.entity)" ng-click="grid.appScope.deleteExternalNumber($event, row.entity.externalNumber)">
+        <a><span translate="linesPage.deletePhoneNumber"></span></a>
+      </li>
+    </ul>
+  </span>
+</div>

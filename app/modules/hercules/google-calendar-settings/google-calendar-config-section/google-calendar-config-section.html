@@ -31,15 +31,14 @@
           ng-model="$ctrl.aclAdminAccount"
           cs-input-messages="$ctrl.errorMessages.aclAdminAccount">
       </div>
-      <button
-        cs-ctn
-        type="button"
+      <button cs-btn type="button"
         class="btn"
         ng-click="$ctrl.updateAclAdminAccount()"
         ng-show="$ctrl.aclAdminAccountForm.aclAdminAccount.$dirty"
         ng-disabled="$ctrl.aclAdminAccountForm.aclAdminAccount.$invalid"
-        loading="$ctrl.saving"
-        translate="common.save"></button>
+        loading="$ctrl.saving">
+        <span translate="common.save"></span>
+      </button>
     </div>
     <!-- /component? -->
   </div>

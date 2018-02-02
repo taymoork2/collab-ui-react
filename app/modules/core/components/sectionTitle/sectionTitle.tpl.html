@@ -2,7 +2,7 @@
   <span class="section-name" translate="{{$ctrl.titleKey}}" translate-values="{{$ctrl.titleKeyValues}}"></span>
   <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="$ctrl.shouldShowActions()">
     <span ng-if="!$ctrl.asButton">
-      <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle" aria-label="{{::'common.open' | translate}}">
+      <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle" aria-label="{{::'common.toggleMenu' | translate}}">
         <i class="icon icon-three-dots"></i>
       </button>
       <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
@@ -12,8 +12,16 @@
       </ul>
     </span>
     <span ng-if="$ctrl.asButton">
-      <a href ng-if="!$ctrl.shouldShowArrow()" class="as-button" ng-click="$ctrl.actionList[0].actionFunction()" translate="{{$ctrl.actionList[0].actionKey}}"></a>
-      <a href ng-if="$ctrl.shouldShowArrow()" class="as-arrow" ng-click="$ctrl.onActionClick()" aria-label="{{::'common.next' | translate}}">
+      <a href
+        ng-if="!$ctrl.shouldShowArrow()"
+        class="as-button"
+        ng-click="$ctrl.actionList[0].actionFunction()"
+        translate="{{$ctrl.actionList[0].actionKey}}"></a>
+      <a href
+        ng-if="$ctrl.shouldShowArrow()"
+        class="as-arrow"
+        ng-click="$ctrl.onActionClick()"
+        aria-label="{{::'common.next' | translate}}">
         <i class="icon icon-arrow-next"></i>
       </a>
     </span>

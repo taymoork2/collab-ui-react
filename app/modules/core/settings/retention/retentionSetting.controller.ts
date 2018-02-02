@@ -73,6 +73,7 @@ export class RetentionSettingController {
         const sparkDataRetentionDays = response.retention.sparkDataRetentionDays || this.RETENTION_DEFAULT;
         this.populateRetention(sparkDataRetentionDays);
       })
+      .catch(_.noop)
       .finally(() => {
         this.dataLoaded = true;
       });

@@ -110,13 +110,13 @@
             <span ng-if="$ctrl.secondaryReport" translate="{{::$ctrl.options.id}}.hide"></span>
           </a>
           <div class="pull-right" ng-if="$ctrl.secondaryReport && ($ctrl.totalPages > 1) && $ctrl.secondaryIsSet()">
-            <button type="button" class="carousel-control" ng-click="$ctrl.pageBackward()" ng-show="$ctrl.totalPages > 3" ng-disabled="$ctrl.currentPage <= 1">
+            <button type="button" class="carousel-control" ng-click="$ctrl.pageBackward()" ng-show="$ctrl.totalPages > 3" ng-disabled="$ctrl.currentPage <= 1" aria-label="{{::'common.back' | translate}}">
               <i class='icon icon-chevron-left'></i>
             </button>
             <button type="button" class="btn" ng-click="$ctrl.changePage($ctrl.pagingButtons[0])" ng-class="{'btn--primary': $ctrl.isCurrentPage(0), 'btn--link carousel-btn': !$ctrl.isCurrentPage(0)}"><span>{{$ctrl.pagingButtons[0]}}</span></button>
             <button type="button" class="btn" ng-click="$ctrl.changePage($ctrl.pagingButtons[1])" ng-class="{'btn--primary': $ctrl.isCurrentPage(1), 'btn--link carousel-btn': !$ctrl.isCurrentPage(1)}"><span>{{$ctrl.pagingButtons[1]}}</span></button>
             <button type="button" class="btn" ng-click="$ctrl.changePage($ctrl.pagingButtons[2])" ng-class="{'btn--primary': $ctrl.isCurrentPage(2), 'btn--link carousel-btn': !$ctrl.isCurrentPage(2)}" ng-show="$ctrl.totalPages > 2"><span>{{$ctrl.pagingButtons[2]}}</span></button>
-            <button type="button" class="carousel-control" ng-click="$ctrl.pageForward()" ng-show="$ctrl.totalPages > 3" ng-disabled="$ctrl.currentPage >= $ctrl.totalPages">
+            <button type="button" class="carousel-control" ng-click="$ctrl.pageForward()" ng-show="$ctrl.totalPages > 3" ng-disabled="$ctrl.currentPage >= $ctrl.totalPages" aria-label="{{::'common.next' | translate}}">
               <i class='icon icon-chevron-right'></i>
             </button>
           </div>

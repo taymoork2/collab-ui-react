@@ -361,8 +361,9 @@ export class CsdmDataModelService implements ICsdmDataModelService {
       return service.fetchItem(item.url).then((reloadedPlace) => {
         let deviceDeleted = false;
         _.each(_.difference(_.values(item.devices), _.values(reloadedPlace.devices)), (deletedDevice: any) => {
-
-          if (!reloadedPlace.devices[deletedDevice.url] || _.some(_.difference(item.devices[deletedDevice.url], deletedDevice))) {
+          const deviceInReloadedPlace: any = _.find(reloadedPlace.devices, { url: deletedDevice.url });
+          const deviceInPlace: any = _.find(reloadedPlace.devices, { url: deletedDevice.url });
+          if (!deviceInReloadedPlace || _.some(_.difference(deviceInPlace, deletedDevice))) {
             _.unset(this.theDeviceMap, [deletedDevice.url]);
             deviceDeleted = true;
           }

@@ -35,6 +35,7 @@ class DeviceList implements ng.IComponentController {
               private GridCellService: GridCellService,
               private DeviceSearchConverter: DeviceSearchConverter,
               private FeatureToggleService,
+              private Analytics,
               Authinfo) {
 
     this.FeatureToggleService.csdmDevicePlaceLinkGetStatus().then((result: boolean) => {
@@ -142,12 +143,14 @@ class DeviceList implements ng.IComponentController {
         huronDeviceService: this.huronDeviceService,
         deviceDeleted: this.deviceDeleted(this.searchHits),
       });
+      this.trackExpandDevice(device);
     } else {
       this.$state.go('device-overview', {
         currentDevice: device,
         huronDeviceService: this.huronDeviceService,
         deviceDeleted: this.deviceDeleted(this.searchHits),
       });
+      this.trackExpandDevice(device);
     }
   }
 
@@ -159,6 +162,13 @@ class DeviceList implements ng.IComponentController {
         });
       }
     };
+  }
+
+  private trackExpandDevice(device: IDevice) {
+    this.Analytics.trackEvent(this.Analytics.sections.DEVICE_SEARCH.eventNames.EXPAND_DEVICE, {
+      device_type: device && device.accountType,
+      device_status: device && device.cssColorClass,
+    });
   }
 
   private loadMore(fromScrollEvent = false) {

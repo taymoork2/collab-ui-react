@@ -1,0 +1,49 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
+
+.care-line-list {
+  @extend %grid-subheader;
+
+  .ui-grid {
+    .internalNumberColumn,
+    .externalNumberColumn,
+    .actionsColumn {
+      text-align: center;
+    }
+
+    .assignedToColumn {
+      text-align: left;
+    }
+
+    .ui-grid-row {
+      background-color: $white;
+      &:hover {
+        background-color: transparent;
+      }
+    }
+  }
+
+  &.ui-grid-cell:first-child,
+  .ui-grid-header-cell {
+    text-align: center;
+  }
+
+  .ui-grid-header-cell.assignedToHeader {
+    text-align: left;
+  }
+}
+
+.care-line-list .page-sub-header .export-lines i {
+  color: $gray-dark-1;
+  font-size: $h3-font-size;
+  margin-left: 1rem;
+  cursor: pointer;
+  padding-left: 0;
+}
+
+.care-line-list .page-sub-header .export-lines {
+  display: inline-block;
+  height: 22px;
+}

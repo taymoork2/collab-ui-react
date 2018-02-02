@@ -35,7 +35,6 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       callback(orgServiceJSONFixture.getOrg, getOrgStatus);
     });
     spyOn(this.Orgservice, 'getAdminOrgAsPromise').and.returnValue(this.$q.resolve({ data: { success: true, isOnBoardingEmailSuppressed: true, licenses: [{ licenseId: 'CO_1234' }] } }));
-    spyOn(this.Orgservice, 'setOrgEmailSuppress').and.returnValue(this.$q.reject());
     spyOn(this.SSOService, 'getMetaInfo').and.callThrough();
     spyOn(this.$modal, 'open').and.returnValue({ result: this.$q.resolve() });
 
@@ -85,9 +84,10 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     it('should go to next tab if sso is on and user clicks on next without clicking modify', function () {
       this.$scope.ssoEnabled = true;
       this.$scope.options.modifySSO = false;
-      var promise = this.$scope.initNext();
+      this.$scope.initNext().catch(function (response) {
+        expect(response).toBe(undefined);
+      });
       this.$scope.$apply();
-      expect(promise).toBeRejected();
       expect(this.$scope.wizard.nextTab).toHaveBeenCalled();
     });
 
@@ -95,9 +95,10 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       this.$scope.ssoEnabled = true;
       this.$scope.options.modifySSO = true;
       this.$scope.options.deleteSSOBySwitchingRadio = true;
-      var promise = this.$scope.initNext();
+      this.$scope.initNext().catch(function (response) {
+        expect(response).toBe(undefined);
+      });
       this.$scope.$apply();
-      expect(promise).toBeRejected();
       expect(this.$scope.wizard.nextTab).toHaveBeenCalled();
       //modify flag should be reset
       expect(this.$scope.options.modifySSO).toEqual(false);
@@ -114,6 +115,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     });
 
     it('should get email suppress status if sso is on and user selects simple option', function () {
+      spyOn(this.Orgservice, 'setOrgEmailSuppress').and.returnValue(this.$q.reject('error'));
       this.$rootScope.ssoEnabled = true;
       this.$scope.options.configureSSO = 1;
       this.controller.changeSSO(1);
@@ -126,9 +128,10 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     it('should go to next tab if sso is off and user selects simple option', function () {
       this.$scope.ssoEnabled = false;
       this.$scope.options.configureSSO = 1;
-      var promise = this.$scope.initNext();
+      this.$scope.initNext().catch(function (response) {
+        expect(response).toBe(undefined);
+      });
       this.$scope.$apply();
-      expect(promise).toBeRejected();
       expect(this.$scope.wizard.nextTab).toHaveBeenCalled();
     });
 

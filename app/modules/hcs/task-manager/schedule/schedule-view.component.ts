@@ -148,7 +148,7 @@ export class TaasScheduleViewCtrl implements ng.IComponentController {
       schedule.name = scheduled.name + '_COPY';
     }
     this.HcsTestManagerService.createSchedule(schedule),
-    this.Notification.success('hcs.taas.suite.successRun', undefined, 'hcs.taas.suite.successTitle');
+    this.Notification.success('hcs.taas.suiteView.successRun', undefined, 'hcs.taas.suiteView.successTitle');
   }
 
   public convertMonth(month: string): string {

@@ -1,4 +1,4 @@
-import { IAutoAssignTemplateRequestPayload } from 'modules/core/users/shared/onboard.interfaces';
+import { IAutoAssignTemplateRequestPayload } from 'modules/core/users/shared/onboard/onboard.interfaces';
 import { AutoAssignTemplateService, IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 
 class EditSummaryAutoAssignTemplateModalController implements ng.IComponentController {
@@ -61,6 +61,7 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
   public back(): void {
     this.$state.go('users.manage.edit-auto-assign-template-modal', {
       autoAssignTemplateData: this.autoAssignTemplateData,
+      isEditTemplateMode: this.isEditTemplateMode,
     });
   }
 

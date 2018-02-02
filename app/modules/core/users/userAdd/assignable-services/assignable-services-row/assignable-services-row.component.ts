@@ -33,7 +33,7 @@ class AssignableServicesRowController implements ng.IComponentController {
     this.advancedMeetingSiteUrls = this.getAdvancedMeetingSiteUrls();
 
     const entryKey = `${AssignableServicesRowController.itemCategory}["${this.subscription.subscriptionId}"]`;
-    this.showContent = _.get(this.autoAssignTemplateData, `${entryKey}.showContent`, true);
+    this.showContent = _.get(this.autoAssignTemplateData, `viewData.${entryKey}.showContent`, true);
   }
 
   private getMessageLicenses(): ILicenseUsage[] {

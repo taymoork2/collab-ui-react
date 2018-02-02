@@ -9,7 +9,7 @@
         <div class="feature-icon-container">
           <label class="feature-icon-circle {{feature.color}}" ng-if="feature.icons.length !== 0"
                  ng-class="{'feature-icon-disabled': feature.disabled}" ng-repeat="ftIcon in feature.icons">
-              <i class="icon {{ftIcon}}" ng-if="ftIcon"></i>
+              <i class="icon {{ftIcon}} {{feature.style}}" ng-if="ftIcon"></i>
           </label>
           <label class="feature-icon-circle {{feature.color}}" ng-if="feature.id === 'AA'">
             {{feature.code | translate}}
@@ -23,7 +23,7 @@
         <span translate="{{feature.description}}" translate-value-onclick="$ctrl.purchaseLink()" translate-compile />
       </p>
       <div class= "feature-warning-container" ng-if= "feature.showWarning">
-          <i class="icon {{feature.warningIcon}} feature-icon-color"></i> 
+          <i class="icon {{feature.warningIcon}} feature-icon-color"></i>
           <span translate="{{feature.warning}}"></span>
           <a translate="sunlightDetails.newFeatures.learnMoreLink" href= # ></a>
       </div>

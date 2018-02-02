@@ -18,7 +18,7 @@ describe('Component: cbgNotes', function () {
     $q = $state = $scope = $componentCtrl = ctrl = cbgService = Notification = PreviousState = undefined;
   });
 
-  function dependencies(_$q_, _$state_, _$rootScope_, _$componentController_, _Notification_, _cbgService_, _PreviousState_) {
+  function dependencies(_$httpBackend_, _$q_, _$state_, _$rootScope_, _$componentController_, _Notification_, _cbgService_, _PreviousState_, _UrlConfig_) {
     $q = _$q_;
     $state = _$state_;
     cbgService = _cbgService_;
@@ -26,6 +26,10 @@ describe('Component: cbgNotes', function () {
     Notification = _Notification_;
     PreviousState = _PreviousState_;
     $componentCtrl = _$componentController_;
+
+    // gem.service.js is bootstraping with call to initCountries (during injection) so I can't setup a spy to catch it
+    // because the spy isn't created until after the call to initCountries.
+    _$httpBackend_.whenGET(_UrlConfig_.getGeminiUrl() + 'countries').respond(200);
   }
 
   function initSpies() {

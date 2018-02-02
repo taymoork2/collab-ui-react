@@ -7,7 +7,7 @@ describe('DirsyncRowController Component', function () {
   const SUCCESS = 'success';
 
   // html locators
-  const CONNECTOR_NAMES = '.columns.medium-8 span';
+  const CONNECTOR_NAMES = '.columns.medium-8 a';
   const CONNECTOR_STATUS = '.columns.medium-8 cs-statusindicator';
   const DOMAIN_NAME = '.columns.medium-8 p';
   const MENU_BUTTON = '#actionsButton';

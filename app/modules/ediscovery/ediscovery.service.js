@@ -59,28 +59,6 @@ var Spark = require('@ciscospark/spark-core').default;
         });
     }
 
-    function getAvalonServiceUrl() {
-      var orgId = Authinfo.getOrgId();
-      var cachedAvalonRoomsUrl = avalonRoomsUrlCache.get(orgId);
-      if (cachedAvalonRoomsUrl) {
-        var deferred = $q.defer();
-        deferred.resolve(cachedAvalonRoomsUrl);
-        return deferred.promise;
-      }
-      return $http
-        .get(urlBase + 'compliance/organizations/' + orgId + '/servicelocations')
-        .then(function (res) {
-          if (res.data && res.data.avalonRoomsUrl) {
-            avalonRoomsUrlCache.put(orgId, res.data);
-          }
-          return res.data;
-        });
-    }
-
-    function getAvalonRoomInfo(url) {
-      return $http.get(url).then(extractData);
-    }
-
     function getReportKey(url, spark) {
       return spark.internal.encryption.kms.fetchKey({ uri: url })
         .then(function (result) {
@@ -253,8 +231,6 @@ var Spark = require('@ciscospark/spark-core').default;
 
     return {
       getArgonautServiceUrl: getArgonautServiceUrl,
-      getAvalonServiceUrl: getAvalonServiceUrl,
-      getAvalonRoomInfo: getAvalonRoomInfo,
       getReport: getReport,
       getReports: getReports,
       getReportKey: getReportKey,

@@ -33,7 +33,7 @@
     }
 
     .care-icon {
-      @include vr-spacing(pt, 0.5);
+      @include vr-spacing(pt, 0.8);
       display: inline-flex;
 
       .people {
@@ -116,6 +116,12 @@
 
   .card-header {
     height: rem-calc(110);
+
+    .icon-color {
+      color: $gray-light;
+      line-height: 2;
+      padding-right: .5rem;
+    }
   }
 
   .card-footer {
@@ -312,6 +318,10 @@ header > p > span.badge {
         &:first-child {
           flex-basis: 100%;
         }
+      }
+
+      .virtual-assistant-icon {
+        font-size: rem-calc(32);
       }
     }
 

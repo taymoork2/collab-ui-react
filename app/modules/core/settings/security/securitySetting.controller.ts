@@ -33,8 +33,7 @@ export class SecuritySettingController {
       .then((response) => {
         this.appSecuritySettingLoaded(response.security);
         this.isProPackPurchased = response.proPackPurchased;
-
-      });
+      }).catch(_.noop);
   }
 
   private appSecuritySettingLoaded(response: ng.IHttpResponse<IGetAppSecurityResponse>) {

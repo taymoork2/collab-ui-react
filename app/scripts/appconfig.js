@@ -972,8 +972,7 @@
           ///////////////////////////
           .state('users.manage.picker', {
             controller: 'UserManageModalPickerController',
-            template: '<div class="center-spinner">' +
-              '<i class="icon icon-spinner icon-2x"></i></div>',
+            template: '<div class="user-manage-picker__center-spinner"><i class="icon icon-spinner icon-5x"></i></div>',
           })
           .state('users.manage', {
             abstract: true,
@@ -1058,11 +1057,13 @@
               prevState: 'users.manage.picker',
               isEditTemplateMode: false,
               autoAssignTemplateData: null,
+              userEntitlementsStateData: null,
             }),
             params: {
               prevState: 'users.manage.picker',
               isEditTemplateMode: false,
               autoAssignTemplateData: null,
+              userEntitlementsStateData: null,
             },
           })
           .state('users.manage.edit-summary-auto-assign-template-modal', {
@@ -2788,18 +2789,11 @@
           })
           .state('devices', {
             url: '/devices',
-            template: '<devices-redux ng-if="$resolve.hasDevicesReduxFeatureToggle"></devices-redux><devices-page ng-if="!$resolve.hasDevicesReduxFeatureToggle"></devices-page>',
-            parent: 'main',
-            resolve: {
-              hasDevicesReduxFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.csdmDevRed);
-              },
-            },
-          })
-          .state('devices-redux', {
-            url: '/devices-redux',
             template: '<devices-redux></devices-redux>',
             parent: 'main',
+          })
+          .state('devices.search', {
+            url: '/search/:q',
           })
           .state('device-overview', {
             parent: 'sidepanel',
@@ -4213,7 +4207,7 @@
               contextServiceView: {
                 template: '<hybrid-service-cluster-list service-id="\'contact-center-context\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
                 controller: /* @ngInject */ function (Analytics) {
-                  return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CONTEXT_LIST);
+                  return Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CONTEXT_LIST);
                 },
               },
             },
@@ -4245,7 +4239,7 @@
           })
           .state('context-cluster.nodes', {
             url: '/nodes',
-            template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
+            template: '<hybrid-services-nodes-page back-state="$resolve.backState" cluster-id="$resolve.id"></hybrid-services-nodes-page>',
           })
           .state('context-fields', {
             url: '/services/context/fields',
@@ -4547,7 +4541,7 @@
           })
           .state('expressway-cluster.nodes', {
             url: '/nodes',
-            template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
+            template: '<hybrid-services-nodes-page back-state="$resolve.backState" cluster-id="$resolve.id"></hybrid-services-nodes-page>',
           })
           .state('expressway-cluster.settings', {
             url: '/settings',
@@ -4607,7 +4601,7 @@
               fullPane: {
                 template: '<hybrid-service-cluster-list service-id="\'spark-hybrid-datasecurity\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
                 controller: /* @ngInject */ function (Analytics) {
-                  return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_HDS_LIST);
+                  return Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_HDS_LIST);
                 },
               },
             },
@@ -4708,7 +4702,7 @@
           })
           .state('hds-cluster.nodes', {
             url: '/nodes',
-            template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
+            template: '<hybrid-services-nodes-page back-state="$resolve.backState" cluster-id="$resolve.id"></hybrid-services-nodes-page>',
           })
           .state('hds-cluster.settings', {
             url: '/settings',
@@ -4733,7 +4727,7 @@
           })
           .state('mediafusion-cluster.nodes', {
             url: '/nodes',
-            template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
+            template: '<hybrid-services-nodes-page back-state="$resolve.backState" cluster-id="$resolve.id"></hybrid-services-nodes-page>',
           })
           .state('mediafusion-cluster.settings', {
             url: '/settings',
@@ -4769,7 +4763,7 @@
           })
           .state('cucm-cluster.nodes', {
             url: '/nodes',
-            template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
+            template: '<hybrid-services-nodes-page back-state="$resolve.backState" cluster-id="$resolve.id"></hybrid-services-nodes-page>',
           })
           .state('cucm-cluster.settings', {
             url: '/settings',
@@ -4989,7 +4983,7 @@
               calendarServiceView: {
                 template: require('modules/hercules/service-specific-pages/calendar-service-pages/calendar-service-resources.html'),
                 controller: /* @ngInject */ function (Analytics) {
-                  return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_EXC_LIST);
+                  return Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_EXC_LIST);
                 },
               },
             },
@@ -5011,7 +5005,7 @@
             url: '/services/office-365/settings',
             template: '<office-365-settings-page></office-365-settings-page>',
             controller: /* @ngInject */ function (Analytics) {
-              return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_O365_SETTINGS);
+              return Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_O365_SETTINGS);
             },
           })
           .state('google-calendar-service', {
@@ -5023,7 +5017,7 @@
             url: '/services/google-calendar/settings',
             template: '<google-calendar-settings-page></google-calendar-settings-page>',
             controller: /* @ngInject */ function (Analytics) {
-              return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_GOOG_SETTINGS);
+              return Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_GOOG_SETTINGS);
             },
           })
           .state('call-service', {
@@ -5043,7 +5037,7 @@
                 template: require('modules/hercules/service-specific-pages/call-service-pages/call-service-resources.html'),
               },
               controller: /* @ngInject */ function (Analytics) {
-                return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CALL_LIST);
+                return Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CALL_LIST);
               },
             },
           })
@@ -5210,6 +5204,51 @@
             controller: 'ResourceGroupSettingsController',
             controllerAs: 'rgsCtrl',
             parent: 'main',
+          })
+          .state('hybrid-services-event-history-page', {
+            parent: 'main',
+            url: '/services/clusters/history?cluster=clusterId&serviceId&connectorId',
+            template: '<hybrid-services-event-history-page cluster-id="$resolve.clusterId" connector-id="$resolve.connectorId" service-id="$resolve.serviceId" resource-filter="$resolve.resourceFilter"></hybrid-services-event-history-page>',
+            params: {
+              clusterId: null,
+              connectorId: null,
+              serviceId: null,
+              resourceFilter: null,
+            },
+            resolve: {
+              clusterId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
+              connectorId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.connectorId;
+              },
+              serviceId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.serviceId;
+              },
+              resourceFilter: /* @ngInject */ function ($stateParams) {
+                return $stateParams.resourceFilter;
+              },
+            },
+          })
+          .state('hybrid-services-event-history-page.sidepanel', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<hybrid-services-cluster-status-history-sidepanel event-item="$resolve.eventItem"></hybrid-services-event-history-cluster-alarm-history-sidepanel>',
+              },
+              'header@hybrid-services-event-history-page.sidepanel': {
+                template: require('modules/hercules/hybrid-services-event-history-page/cluster-status-history/cluster-status-history-sidepanel-header.html'),
+              },
+            },
+            params: {
+              eventItem: null,
+            },
+            resolve: {
+              eventItem: /* @ngInject */ function ($stateParams) {
+                return $stateParams.eventItem;
+              },
+              displayName: translateDisplayName('sidePanelBreadcrumb.overview'),
+            },
           });
 
         $stateProvider
@@ -5293,7 +5332,7 @@
               fullPane: {
                 template: '<hybrid-service-cluster-list service-id="\'squared-fusion-media\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
                 controller: /* @ngInject */ function (Analytics) {
-                  return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_LIST);
+                  return Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_LIST);
                 },
               },
             },
@@ -5313,7 +5352,7 @@
               },
             },
             controller: /* @ngInject */ function (Analytics) {
-              return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_SETTINGS);
+              return Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_SETTINGS);
             },
           });
 
