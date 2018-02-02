@@ -1,12 +1,23 @@
 <div collapse="aaRouteToQueue.hideQueues">
-<cs-select aa-key="$index" ng-model="aaRouteToQueue.queueSelected" options="aaRouteToQueue.queues" id="route-queue-detail" labelfield="description" valuefield="id" placeholder="aaRouteToQueue.selectPlaceholder" filter="true" on-change-fn="aaRouteToQueue.saveUiModel()" icon="icon-chevron-down" input-placeholder="aaRouteToQueue.inputPlaceHolder">
-</cs-select>
+  <cs-select
+    aa-key="$index"
+    ng-model="aaRouteToQueue.queueSelected"
+    options="aaRouteToQueue.queues"
+    id="route-queue-detail"
+    labelfield="description"
+    valuefield="id"
+    placeholder="aaRouteToQueue.selectPlaceholder"
+    filter="true"
+    on-change-fn="aaRouteToQueue.saveUiModel()"
+    icon="icon-chevron-down"
+    input-placeholder="aaRouteToQueue.inputPlaceHolder">
+  </cs-select>
 </div>
 <div>
   <br>
-  <a translate="autoAttendant.queueSettings" id="queueSetting" ng-click="aaRouteToQueue.openQueueTreatmentModal()"></a>
+  <a href translate="autoAttendant.queueSettings" id="queueSetting" ng-click="aaRouteToQueue.openQueueTreatmentModal()"></a>
   <div ng-if="aaRouteToQueue.getWarning()">
-    <div class="columns small-12 aa-div-click" ng-click="aaRouteToQueue.togglefullWarningMsg()" ng-blur="aaRouteToQueue.closeFullWarningMsg()"> 
+    <div class="columns small-12 aa-div-click" ng-click="aaRouteToQueue.togglefullWarningMsg()" ng-blur="aaRouteToQueue.closeFullWarningMsg()">
       <span class="ellipsis icon icon-warning warning aa-icon-font-size"></span>
       <span class="aa-text-overflow" data-ng-bind="aaRouteToQueue.deletedSessionVariablesListAlongWithWarning"></span>
       <div ng-if = "aaRouteToQueue.fullWarningMsgValue" class="aa-full-warning" data-ng-bind = "aaRouteToQueue.deletedSessionVariablesListAlongWithWarning"></div>

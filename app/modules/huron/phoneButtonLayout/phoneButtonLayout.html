@@ -124,8 +124,8 @@
               <!-- this section holds the icons to the right of the phone buttons -->
               <div ng-if="!$ctrl.editing && !$ctrl.isReordering()">
                 <i ng-if="phoneButton.callPickupEnabled" tooltip="{{$ctrl.getTooltipText(phoneButton)}}" tooltip-placement="left" tooltip-trigger="mouseenter focus" class="icon icon-info phonebuttonlayout-spacing-edit"></i>
-                <a ng-if="phoneButton.isEditable" class="icon icon-edit phonebuttonlayout-spacing-edit" ng-click="$ctrl.setEdit(phoneButton)"></a>
-                <a ng-if="phoneButton.isDeletable" class="icon icon-trash" ng-click="$ctrl.delete(phoneButton)"></a>
+                <a href ng-if="phoneButton.isEditable" class="icon icon-edit phonebuttonlayout-spacing-edit" ng-click="$ctrl.setEdit(phoneButton)"></a>
+                <a href ng-if="phoneButton.isDeletable" class="icon icon-trash" ng-click="$ctrl.delete(phoneButton)"></a>
               </div>
               <div ng-if="$ctrl.isReordering()">
                 <a class="icon icon-tables" ng-class="{'selected': $ctrl.isSelectedPhoneButton(phoneButton)}"></a>
