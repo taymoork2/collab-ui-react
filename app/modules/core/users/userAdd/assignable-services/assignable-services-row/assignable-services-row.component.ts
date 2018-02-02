@@ -1,6 +1,7 @@
 import { AssignableServicesItemCategory, ILicenseUsage, ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
 import { OfferName } from 'modules/core/shared';
 import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
+import { MessengerInteropService } from 'modules/core/users/userAdd/shared/messenger-interop/messenger-interop.service';
 
 class AssignableServicesRowController implements ng.IComponentController {
 
@@ -20,7 +21,9 @@ class AssignableServicesRowController implements ng.IComponentController {
 
   /* @ngInject */
   constructor (
+    private $state,
     private LicenseUsageUtilService,
+    private MessengerInteropService: MessengerInteropService,
   ) {}
 
   public $onInit(): void {
@@ -78,6 +81,18 @@ class AssignableServicesRowController implements ng.IComponentController {
 
   public getTotalLicenseVolume(offerName: string): number {
     return this.LicenseUsageUtilService.getTotalLicenseVolume(offerName, this.licenses);
+  }
+
+  // TODO:
+  // - this implements a sub-optimal UX design decision to render jabber interop checkboxes within
+  //   the subscription rows (which are for presenting licenses, not entitlements)
+  // - rm this when no longer needed
+  public showJabberInteropCheckbox(): boolean {
+    // early out if not the correct UI state
+    if (_.get(this.$state, 'current.name') !== 'users.manage.edit-auto-assign-template-modal') {
+      return false;
+    }
+    return this.MessengerInteropService.hasMessengerLicense();
   }
 
   public recvUpdate($event): void {
