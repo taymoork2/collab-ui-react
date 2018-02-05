@@ -1130,6 +1130,13 @@
               },
             },
           })
+          .state('users.convert.auto-assign-license-summary', {
+            views: {
+              'usersConvert@users.convert': {
+                template: '<user-convert-auto-assign-license-summary dismiss="$dismiss()"></user-convert-auto-assign-license-summary>',
+              },
+            },
+          })
           .state('users.convert.services', {
             views: {
               'usersConvert@users.convert': {
