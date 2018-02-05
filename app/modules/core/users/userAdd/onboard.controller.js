@@ -1346,7 +1346,7 @@ require('./_user-add.scss');
     //***
     //*********************************************************************
 
-    var Feature = require('modules/core/users/userAdd/shared/feature.model').default;
+    var Feature = require('modules/core/users/shared/onboard/feature.model').default;
 
     function LicenseFeature(name, bAdd) {
       return {
@@ -1375,20 +1375,6 @@ require('./_user-add.scss');
     $scope.clearPanel = function () {
       resetUsersfield();
       initResults();
-    };
-
-    $scope.skipErrorsOrFinish = function () {
-      if (_.get($scope, 'results.errors.length')) {
-        return 'usersPage.skipErrorsAndFinish';
-      } else {
-        return 'common.finish';
-      }
-    };
-
-    $scope.goToUsersPage = function () {
-      $previousState.forget('modalMemo');
-      Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.FINISH, null, createPropertiesForAnalytics());
-      $state.go('users.list');
     };
 
     $scope.fixBulkErrors = function () {
@@ -1645,7 +1631,13 @@ require('./_user-add.scss');
         } else {
           if (convertBacked === false) {
             $scope.btnConvertLoad = false;
-            $state.go('users.convert.results');
+            $state.go('users.convert.results', {
+              convertPending: convertPending,
+              convertUsersFlow: $scope.convertUsersFlow,
+              numUpdatedUsers: $scope.numUpdatedUsers,
+              numAddedUsers: $scope.numAddedUsers,
+              results: $scope.results,
+            });
           } else {
             $state.go('users.convert', {});
           }
@@ -1852,10 +1844,12 @@ require('./_user-add.scss');
       convertUsersCount = $scope.convertSelectedList.length;
       $scope.convertUsersFlow = true;
       convertPending = false;
+      // TODO if auto-assign, should go to summary screen
       $state.go('users.convert.services', {});
     };
 
     $scope.convertUsersNext = function () {
+      // TODO if auto-assign, should just call convertUsers
       if (shouldAddCallService()) {
         $scope.processing = true;
         // Copying selected users to user list
@@ -1918,6 +1912,7 @@ require('./_user-add.scss');
           }
         }
 
+        // TODO if auto-assign, should not update users
         if (successMovedUsers.length > 0) {
           var entitleList = [];
           var licenseList = [];
@@ -1936,7 +1931,13 @@ require('./_user-add.scss');
             convertPending = false;
             if (convertBacked === false) {
               $scope.btnConvertLoad = false;
-              $state.go('users.convert.results');
+              $state.go('users.convert.results', {
+                convertPending: convertPending,
+                convertUsersFlow: $scope.convertUsersFlow,
+                numUpdatedUsers: $scope.numUpdatedUsers,
+                numAddedUsers: $scope.numAddedUsers,
+                results: $scope.results,
+              });
             } else {
               $state.go('users.convert', {});
             }

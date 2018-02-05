@@ -3,7 +3,8 @@
   <button
     type="button"
     class="close"
-    ng-click="$dismiss()">
+    ng-click="$dismiss()"
+    aria-label="{{::'common.close' | translate}}">
   </button>
   <h3 class="modal-title">{{ car.getHeaderText() }}</h3>
 </div>
@@ -13,20 +14,18 @@
   class="modal-body">
   <p>
     <span>{{ car.getBodyTextExplanation() }}</span>
-  </p><p>
-  <span>{{ car.getBodyTextConfirmation() }}</span>
-</p>
+  </p>
+  <p>
+    <span>{{ car.getBodyTextConfirmation() }}</span>
+  </p>
 </div>
 
 <!-- footer -->
-<div
-  class="modal-footer">
+<div class="modal-footer">
   <button
     class="btn"
-    ng-click="$dismiss()">
-    <span
-      translate="common.no">
-    </span>
+    ng-click="$dismiss()"
+    translate="common.no">
   </button>
   <button
     class="btn btn--primary"

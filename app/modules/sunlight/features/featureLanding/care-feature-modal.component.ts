@@ -36,6 +36,7 @@ class CareFeatureModalCtrl implements ng.IComponentController {
         label: 'sunlightDetails.newFeatures.virtualAssistant',
         description: 'careChatTpl.virtualAssistant.featureText.selectDesc',
         icons: ['icon-bot-four'],
+        style: 'virtual-assistant-icon',
         color: 'feature-va-color',
         disabled: false,
       });

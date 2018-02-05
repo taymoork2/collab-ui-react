@@ -28,10 +28,8 @@
     vm.lastEnabledDate = moment().format('YYYY-MM-DD');
 
     /* Report Generation Functions */
-    vm.searchForRoom = searchForRoom;
     vm.createReport = createReport;
     vm.generateReport = generateReport;
-    vm.runReport = runReport;
     vm.reportProgress = reportProgress;
     vm.downloadReport = downloadReport;
     vm.cancelReport = cancelReport;
@@ -44,7 +42,6 @@
     vm.searchInProgress = false;
     vm.currentReportId = null;
     vm.ongoingSearch = false;
-    vm.ediscoveryToggle = false;
     vm.proPackPurchased = false;
     vm.proPackEnabled = false;
 
@@ -97,11 +94,9 @@
       $q.all([
         ProPackService.hasProPackEnabled(),
         ProPackService.hasProPackPurchased(),
-        FeatureToggleService.atlasEdiscoveryGetStatus(),
       ]).then(function (toggles) {
         vm.proPackEnabled = toggles[0];
         vm.proPackPurchased = toggles[1];
-        vm.ediscoveryToggle = toggles[2];
         if (!vm.proPackPurchased) {
           vm.firstEnabledDate = moment().subtract(90, 'days').format('YYYY-MM-DD');
         }
@@ -332,85 +327,26 @@
         endDate: getEndDate(),
         keyword: vm.encryptedQuery,
         emailAddresses: vm.encryptedEmails,
-        roomIds: vm.ediscoveryToggle ? vm.unencryptedRoomIds : vm.searchCriteria.roomId,
+        roomIds: vm.unencryptedRoomIds,
       };
       EdiscoveryService.createReport(vm.createReportParams)
         .then(function (res) {
           vm.currentReportId = res.id;
-          if (vm.ediscoveryToggle) {
-            var reportParams = {
-              emailAddresses: vm.encryptedEmails,
-              query: vm.encryptedQuery,
-              roomIds: vm.unencryptedRoomIds,
-              encryptionKeyUrl: vm.encryptionKeyUrl,
-              responseUri: res.url,
-              startDate: formatDate('api', getStartDate()),
-              endDate: formatDate('api', getEndDate(), true),
-            };
-            generateReport(reportParams);
-          } else {
-            runReport(res.runUrl, res.url);
-          }
+          var reportParams = {
+            emailAddresses: vm.encryptedEmails,
+            query: vm.encryptedQuery,
+            roomIds: vm.unencryptedRoomIds,
+            encryptionKeyUrl: vm.encryptionKeyUrl,
+            responseUri: res.url,
+            startDate: formatDate('api', getStartDate()),
+            endDate: formatDate('api', getEndDate(), true),
+          };
+          generateReport(reportParams);
         })
         .catch(function (err) {
           Notification.errorWithTrackingId(err, 'ediscovery.searchResults.createReportFailed');
           vm.report = null;
           vm.createReportInProgress = false;
-        });
-    }
-
-    function searchForRoom(roomId) {
-      searchSetup();
-      vm.searchCriteria.roomId = roomId;
-      EdiscoveryService.getAvalonServiceUrl(roomId)
-        .then(function (result) {
-          return EdiscoveryService.getAvalonRoomInfo(result.avalonRoomsUrl + '/' + roomId);
-        })
-        .then(function (result) {
-          vm.roomInfo = result;
-          vm.searchCriteria.startDate = formatDate('display', getStartDate()) || formatDate('display', result.published);
-          vm.searchCriteria.endDate = result.lastRelevantActivityDate ? formatDate('display', result.lastRelevantActivityDate) : formatDate('display', getEndDate());
-          vm.searchCriteria.displayName = result.displayName;
-          _.forEach(result.participants.items, function (response) {
-            vm.searchResults.keywords.push(response.emailAddress);
-          });
-        })
-        .catch(function (err) {
-          var status = err && err.status ? err.status : 500;
-          switch (status) {
-            case 400:
-              vm.error = $translate.instant('ediscovery.search.invalidRoomId', {
-                roomId: roomId,
-              });
-              break;
-            case 404:
-              vm.error = $translate.instant('ediscovery.search.roomNotFound', {
-                roomId: roomId,
-              });
-              break;
-            default:
-              vm.error = $translate.instant('ediscovery.search.roomNotFound', {
-                roomId: roomId,
-              });
-              Notification.error('ediscovery.search.roomLookupError');
-              break;
-          }
-        })
-        .finally(function () {
-          vm.searchingForRoom = false;
-        });
-    }
-
-    function runReport(runUrl, url) {
-      EdiscoveryService.runReport(runUrl, vm.searchCriteria.roomId, url, getStartDate(), getEndDate())
-        .catch(function () {
-          Notification.error('ediscovery.search.runFailed');
-          EdiscoveryService.patchReport(vm.currentReportId, {
-            state: 'FAILED',
-            failureReason: 'UNEXPECTED_FAILURE',
-          });
-        }).finally(function () {
-          enableAvalonPolling();
         });
     }
 
@@ -528,8 +464,7 @@
 
     function searchButtonDisabled(_error) {
       var error = !_.isUndefined(_error) ? _error : false;
-      var disable = !vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchingForRoom === true;
-      return vm.ediscoveryToggle ? (error || vm.dateValidationError || !vm.searchModel) : disable;
+      return (error || vm.dateValidationError || !vm.searchModel);
     }
 
     function retrySearch() {
@@ -550,13 +485,18 @@
 
     /* Helper Functions */
     function splitWords(_words) {
-      var words = _words ? (_words).split(',').map(
-        function (m) {
-          return m.trim();
-        }).filter(function (f) {
-        return f !== '';
-      }) : null;
-      return words;
+      if (!_words) {
+        return null;
+      }
+      return (_words)
+        .split(',')
+        .map(
+          function (m) {
+            return m.trim();
+          })
+        .filter(function (f) {
+          return f !== '';
+        });
     }
 
     function bytesToSize(bytes) {

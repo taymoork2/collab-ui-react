@@ -163,9 +163,9 @@
     angular-formly "~7.3.0"
     api-check "~7.5.0"
 
-"@collabui/collab-ui-icons@1.0.3":
-  version "1.0.3"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui-icons/-/@collabui/collab-ui-icons-1.0.3.tgz#132d95251307709d430659a18220cc02a3d2c00c"
+"@collabui/collab-ui-icons@~1.0.4":
+  version "1.0.4"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui-icons/-/@collabui/collab-ui-icons-1.0.4.tgz#2ae8f820ce00b717e61f66ecfde6ffd27318fb5c"
 
 "@collabui/collab-ui-ng@*":
   version "7.9.1"
@@ -199,12 +199,11 @@
     masonry-layout "^4.1.1"
     moment "^2.10.6"
 
-"@collabui/collab-ui@~5.3.3", "@collabui/collab-ui@~5.3.4":
-  version "5.3.4"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui/-/@collabui/collab-ui-5.3.4.tgz#e6894e8b7bd5c85b6fcd9d21f2f327c47daa0a57"
+"@collabui/collab-ui@~5.3.3", "@collabui/collab-ui@~5.3.5":
+  version "5.3.5"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui/-/@collabui/collab-ui-5.3.5.tgz#930e75e879fdb436a8c3d21953942b044471db47"
   dependencies:
-    "@collabui/collab-ui-icons" "1.0.3"
-    ng2-material-dropdown "^0.8.0"
+    "@collabui/collab-ui-icons" "~1.0.4"
 
 "@types/amcharts@^0.0.39":
   version "0.0.39"
@@ -6359,10 +6358,6 @@ ng-file-upload@~12.2.0:
 ng-tags-input@^3.1.1:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/ng-tags-input/-/ng-tags-input-3.2.0.tgz#91282de575130c8ab794797febf0972b0f3bba3e"
-
-ng2-material-dropdown@^0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/ng2-material-dropdown/-/ng2-material-dropdown-0.8.0.tgz#9ad5757fbab2922a51216e3bf38e12d3a7964c60"
 
 ngclipboard@~1.1.1:
   version "1.1.2"

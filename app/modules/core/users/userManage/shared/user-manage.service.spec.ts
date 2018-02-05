@@ -82,10 +82,20 @@ describe('Service: UserManageService', () => {
     });
 
     it('should go to users.convert', function (this: Test) {
+      this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = false;
       this.UserManageService.gotoNextStateForManageTypeAfterEmailSuppress(ManageType.CONVERT);
       expect(this.$state.go).toHaveBeenCalledWith('users.convert', {
         manageUsers: true,
+        isDefaultAutoAssignTemplateActivated: false,
       });
+
+      this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = true;
+      this.UserManageService.gotoNextStateForManageTypeAfterEmailSuppress(ManageType.CONVERT);
+      expect(this.$state.go).toHaveBeenCalledWith('users.convert', {
+        manageUsers: true,
+        isDefaultAutoAssignTemplateActivated: true,
+      });
+
       expect(this.Analytics.trackAddUsers).not.toHaveBeenCalled();
     });
 

@@ -1,5 +1,5 @@
 <cr-collapsible-row
-  header-class="column-subsription-header paid subscription__header"
+  header-class="column-subscription-header paid subscription__header"
   content-class="row-licenses subscription__content"
   row-id="$ctrl.subscription.subscriptionId"
   row-title="$ctrl.subscription.subscriptionId"
@@ -19,12 +19,13 @@
       </assignable-license-checkbox>
 
       <!-- messenger -->
-      <assignable-license-checkbox
-        license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.MSGR)"
+      <assignable-user-entitlement-checkbox ng-if="$ctrl.showJabberInteropCheckbox()"
+        item-id="'messengerInterop'"
         l10n-label="onboardModal.ciscoSparkJabberInterop"
         on-update="$ctrl.onUpdate({ $event: $event })"
-        auto-assign-template-data="$ctrl.autoAssignTemplateData">
-      </assignable-license-checkbox>
+        auto-assign-template-data="$ctrl.autoAssignTemplateData"
+        >
+      </assignable-user-entitlement-checkbox>
     </div>
   </div>
 

@@ -3,7 +3,8 @@
   <button
     type="button"
     class="close"
-    ng-click="$dismiss()">
+    ng-click="$dismiss()"
+    aria-label="{{::'common.close' | translate}}">
   </button>
   <h3
     class="modal-title"
@@ -12,8 +13,7 @@
 </div>
 
 <!-- body -->
-<div
-  class="modal-body">
+<div class="modal-body">
   <p>
     <span
       translate="placesPage.deletePlaceConfText"
@@ -23,20 +23,15 @@
 </div>
 
 <!-- footer -->
-<div
-  class="modal-footer">
+<div class="modal-footer">
   <button
     class="btn"
-    ng-click="$dismiss()">
-    <span
-      translate="common.cancel">
-    </span>
+    ng-click="$dismiss()"
+    translate="common.cancel">
   </button>
   <button
     class="btn btn--negative"
     sq-click-promise="rdc.deletePlace(rdc.place)">
-    <span
-      translate="placesPage.deletePlace">
-    </span>
+    <span translate="placesPage.deletePlace"></span>
   </button>
 </div>

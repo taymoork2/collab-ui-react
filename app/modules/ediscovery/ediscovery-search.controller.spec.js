@@ -10,7 +10,6 @@ describe('Controller: EdiscoverySearchController', function () {
     spyOn(this.Analytics, 'trackEvent').and.returnValue(this.$q.resolve());
     spyOn(this.Analytics, 'trackEdiscoverySteps').and.returnValue(this.$q.resolve());
     spyOn(this.Authinfo, 'isEnterpriseCustomer').and.returnValue(false);
-    spyOn(this.FeatureToggleService, 'atlasEdiscoveryGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(false));
   }
@@ -102,7 +101,6 @@ describe('Controller: EdiscoverySearchController', function () {
 
   describe('Create report', function () {
     beforeEach(function () {
-      this.FeatureToggleService.atlasEdiscoveryGetStatus.and.returnValue(this.$q.resolve(true));
       var deferredRunReportResult = this.$q.defer();
 
       promise = this.$q.resolve({
@@ -188,7 +186,6 @@ describe('Controller: EdiscoverySearchController', function () {
     });
 
     it('received from avalon backend', function () {
-      this.FeatureToggleService.atlasEdiscoveryGetStatus.and.returnValue(this.$q.resolve(true));
       initController.apply(this);
       this.ediscoverySearchController.searchCriteria.roomId = 'whatever';
       this.ediscoverySearchController.searchCriteria.endDate = moment().format();
@@ -207,7 +204,6 @@ describe('Controller: EdiscoverySearchController', function () {
     var generatedResult;
     beforeEach(function () {
       initController.apply(this);
-      this.FeatureToggleService.atlasEdiscoveryGetStatus.and.returnValue(this.$q.resolve(true));
       generatedResult = {
         displayName: 'test1',
         url: 'whatever',

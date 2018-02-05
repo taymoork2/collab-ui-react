@@ -120,7 +120,9 @@ describe('MultiDirsyncSection Component:', function () {
     });
 
     it('should notify on failed delete', function () {
-      this.MultiDirSyncService.deactivateDomain.and.returnValue(this.$q.reject(ERROR_FIVE_HUNDRED));
+      this.MultiDirSyncService.deactivateDomain.and.callFake(() => {
+        return this.$q.reject(ERROR_FIVE_HUNDRED);
+      });
       initComponent.call(this);
 
       this.view.find(DROPDOWN_BUTTON).click();

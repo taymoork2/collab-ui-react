@@ -26,8 +26,8 @@ describe('Service: SetupWizard Service', function () {
     this.noWebexTrial = _.clone(getJSONFixture('core/json/authInfo/complexCustomerCases/customerWithCCASP.json'));
     spyOn(this.Authinfo, 'getSubscriptions').and.returnValue(this.authinfoPendingSubscriptions);
     spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(this.conferenceServices);
-    spyOn(this.SetupWizardService, 'validateTransferCode').and.callThrough();
-    spyOn(this.SetupWizardService, 'validateTransferCodeBySubscriptionId').and.callThrough();
+    spyOn(this.SetupWizardService, 'validateTransferCode');
+    spyOn(this.SetupWizardService, 'validateTransferCodeBySubscriptionId');
   });
 
   afterEach(function () {
@@ -176,8 +176,8 @@ describe('Service: SetupWizard Service', function () {
       this.$httpBackend.when('GET', url).respond(200, { ccaspPartnerList: partners });
       this.SetupWizardService.getCCASPPartners().then((result) => {
         expect(result.length).toEqual(3);
-        expect(result)[0].toEqual('anotherpartner');
-        expect(result)[2].toEqual('yetanother');
+        expect(result[0]).toEqual('anotherpartner');
+        expect(result[2]).toEqual('yetanother');
       });
       this.$httpBackend.flush();
     });
@@ -295,6 +295,7 @@ describe('Service: SetupWizard Service', function () {
         orderUuid: undefined,
       };
       const url = `${this.UrlConfig.getAdminServiceUrl()}subscriptions/site/verifytransfercode`;
+      this.SetupWizardService.validateTransferCodeBySubscriptionId.and.callThrough();
       this.SetupWizardService.validateTransferCodeBySubscriptionId({
         siteUrl: 'www.somesite',
         transferCode: '123',

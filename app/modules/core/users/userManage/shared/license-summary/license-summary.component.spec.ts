@@ -11,7 +11,11 @@ describe('Component: licenseSummary:', () => {
 
   describe('primary behaviors (view):', () => {
     it('should render an empty table if there is not at least 1 license with the right "offerName"', function () {
-      this.$scope.fakeAutoAssignTemplateData = {};
+      this.$scope.fakeAutoAssignTemplateData = {
+        viewData: {
+          LICENSE: {},
+        },
+      };
       this.compileComponent('licenseSummary', {
         autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
@@ -20,11 +24,13 @@ describe('Component: licenseSummary:', () => {
 
     it('should render a license-summary-item in the message row if a license has a MS offer name', function () {
       this.$scope.fakeAutoAssignTemplateData = {
-        LICENSE: {
-          MS_4f4253ad: {
-            isSelected: true,
-            license: {
-              offerName: 'MS',
+        viewData: {
+          LICENSE: {
+            MS_4f4253ad: {
+              isSelected: true,
+              license: {
+                offerName: 'MS',
+              },
             },
           },
         },
@@ -40,11 +46,13 @@ describe('Component: licenseSummary:', () => {
 
     it('should render a license-summary-item in the meeting row if a license has a CF offer name', function () {
       this.$scope.fakeAutoAssignTemplateData = {
-        LICENSE: {
-          CF_4f4253ad: {
-            isSelected: true,
-            license: {
-              offerName: 'CF',
+        viewData: {
+          LICENSE: {
+            CF_4f4253ad: {
+              isSelected: true,
+              license: {
+                offerName: 'CF',
+              },
             },
           },
         },
@@ -60,11 +68,13 @@ describe('Component: licenseSummary:', () => {
 
     it('should render a license-summary-item in the meeting row if a license has a CO offer name', function () {
       this.$scope.fakeAutoAssignTemplateData = {
-        LICENSE: {
-          CF_4f4253ad: {
-            isSelected: true,
-            license: {
-              offerName: 'CO',
+        viewData: {
+          LICENSE: {
+            CF_4f4253ad: {
+              isSelected: true,
+              license: {
+                offerName: 'CO',
+              },
             },
           },
         },
@@ -80,11 +90,13 @@ describe('Component: licenseSummary:', () => {
 
     it('should render a license-summary-item in the meeting row if a license has a CDC offer name', function () {
       this.$scope.fakeAutoAssignTemplateData = {
-        LICENSE: {
-          CF_4f4253ad: {
-            isSelected: true,
-            license: {
-              offerName: 'CDC',
+        viewData: {
+          LICENSE: {
+            CF_4f4253ad: {
+              isSelected: true,
+              license: {
+                offerName: 'CDC',
+              },
             },
           },
         },
@@ -102,13 +114,15 @@ describe('Component: licenseSummary:', () => {
   describe('primary behaviors (controller):', () => {
     it('should pass through its calls to respective LicenseUsageUtilService methods', function () {
       this.$scope.fakeAutoAssignTemplateData = {
-        LICENSE: {
-          CF_4f4253ad: {
-            isSelected: true,
-            license: {
-              offerName: 'CF',
-              usage: 3,
-              volume: 500,
+        viewData: {
+          LICENSE: {
+            CF_4f4253ad: {
+              isSelected: true,
+              license: {
+                offerName: 'CF',
+                usage: 3,
+                volume: 500,
+              },
             },
           },
         },
@@ -126,18 +140,49 @@ describe('Component: licenseSummary:', () => {
       expect(this.LicenseUsageUtilService.getTotalLicenseVolume).toHaveBeenCalled();
     });
 
-    it('should find the appropriate hybrid service user entitlements', function () {
-      this.$scope.fakeAutoAssignTemplateData = [{
-        USER_ENTITLEMENTS_PAYLOAD: {
-          entitlementName: 'squaredFusionCal',
-        },
-      }];
-      this.compileComponent('licenseSummary', {
-        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
+    describe('getUserEntitlements', () => {
+      it('should find the appropriate hybrid service user entitlements', function () {
+        this.$scope.fakeAutoAssignTemplateData = {
+          viewData: {
+            USER_ENTITLEMENT: {
+              squaredFusionCal: {
+                isSelected: true,
+              },
+            },
+          },
+        };
+        this.compileComponent('licenseSummary', {
+          autoAssignTemplateData: 'fakeAutoAssignTemplateData',
+        });
+        expect(this.controller.getUserEntitlements()).toEqual({
+          squaredFusionCal: {
+            isSelected: true,
+          },
+        });
       });
-      spyOn(this.controller, 'getHybridUserEntitlements').and.returnValue(this.$scope.fakeAutoAssignTemplateData.USER_ENTITLEMENTS_PAYLOAD);
+    });
 
-      expect(this.controller.findHybridUserEntitlement('squaredFusionCal')).toEqual(this.$scope.fakeAutoAssignTemplateData.USER_ENTITLEMENTS_PAYLOAD);
+    describe('hasUserEntitlement', () => {
+      it('should find the appropriate hybrid service user entitlements', function () {
+        this.$scope.fakeAutoAssignTemplateData = {
+          viewData: {
+            USER_ENTITLEMENT: {
+              squaredFusionCal: {
+                isSelected: true,
+              },
+            },
+          },
+        };
+        this.compileComponent('licenseSummary', {
+          autoAssignTemplateData: 'fakeAutoAssignTemplateData',
+        });
+        spyOn(this.controller, 'getUserEntitlements').and.returnValue({
+          squaredFusionCal: {
+            isSelected: true,
+          },
+        });
+        expect(this.controller.hasUserEntitlement('squaredFusionCal')).toBe(true);
+      });
     });
   });
 });

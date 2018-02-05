@@ -11,6 +11,17 @@ export class LinkedSitesWebExService {
   // TODO Remove this whitelist when no longer needed
   private readonly dmzSites: string[] = [
     'sqsitedemo.webex.com',
+    'sqe2e06.webex.com',
+    'sqe2e07.webex.com',
+    'sqe2e08.webex.com',
+    'sqe2e09.webex.com',
+    'sqe2e10.webex.com',
+    'sqe2e11.webex.com',
+    'sqe2e12.webex.com',
+    'sqe2e13.webex.com',
+    'sqe2e14.webex.com',
+    'sqe2e15.webex.com',
+    'sqe2e16.webex.com',
   ];
 
   /* @ngInject */

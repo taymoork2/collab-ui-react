@@ -10,6 +10,7 @@ require('./_user-manage.scss');
   function UserManageActiveDirController(Authinfo, FeatureToggleService, OnboardService, $state, $timeout, UserCsvService) {
     var vm = this;
 
+    vm.dirSyncStatus = 'success';
     vm.isUserAdmin = isUserAdmin;
     vm.onInit = onInit;
     vm.onNext = onNext;

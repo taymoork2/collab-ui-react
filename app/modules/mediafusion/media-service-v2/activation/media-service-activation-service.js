@@ -42,7 +42,7 @@
       ServiceDescriptorService.enableService(serviceId).then('', function () {
         Notification.error('mediaFusion.mediaServiceActivationFailure');
       });
-      setisMediaServiceEnabled(true);
+      setIsMediaServiceEnabled(true);
       enableOrpheusForMediaFusion();
       setOrgSettingsForDevOps();
     }
@@ -112,7 +112,7 @@
       return isMediaService.promise;
     };
 
-    var setisMediaServiceEnabled = function (value) {
+    var setIsMediaServiceEnabled = function (value) {
       vm.isMediaServiceEnabled = value;
     };
 
@@ -188,7 +188,7 @@
         updatedTime: moment().utc(),
       };
       var url = UrlConfig.getAthenaServiceUrl() + '/devops/organizations/' + Authinfo.getOrgId() + '/hms_org_activation';
-      $http.post(url, payload);
+      return $http.post(url, payload);
     };
 
     var logUserIdentityOrgToMediaAgentOrgMapping = function (response) {
@@ -206,7 +206,7 @@
     };
 
     return {
-      setisMediaServiceEnabled: setisMediaServiceEnabled,
+      setIsMediaServiceEnabled: setIsMediaServiceEnabled,
       getMediaServiceState: getMediaServiceState,
       getUserIdentityOrgToMediaAgentOrgMapping: getUserIdentityOrgToMediaAgentOrgMapping,
       setUserIdentityOrgToMediaAgentOrgMapping: setUserIdentityOrgToMediaAgentOrgMapping,

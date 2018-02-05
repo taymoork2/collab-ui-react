@@ -11,6 +11,7 @@ class CareAddNumbersModalCtrl implements ng.IComponentController {
   public dismiss: Function;
   public extensionLength: number;              // Dismiss callback for modal dialog
   public internalNumberRanges: any[] = [ { beginNumber: '500', endNumber: '599' } ];
+  public acknowledge: boolean = false;
 
   /** token properties */
   public numbers: any[] = [];
@@ -177,6 +178,9 @@ class CareAddNumbersModalCtrl implements ng.IComponentController {
     if (angular.element(e.relatedTarget).hasClass('invalid')) {
       this.invalidCount--;
     }
+    if (this.numbers.length === 0) {
+      this.resetForm();
+    }
   }
 
   private setPlaceholderText(text): void {
@@ -277,7 +281,7 @@ class CareAddNumbersModalCtrl implements ng.IComponentController {
   }
 
   public checkForChanges(): void {
-    if (this.HuronSettingsService.matchesOriginalConfig(this.huronSettingsData)) {
+    if (this.HuronSettingsService.matchesOriginalConfig(this.huronSettingsData) && this.numbers.length === 0) {
       this.resetForm();
     }
   }

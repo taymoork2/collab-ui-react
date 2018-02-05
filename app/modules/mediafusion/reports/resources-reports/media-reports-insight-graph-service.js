@@ -18,13 +18,13 @@
 
     function getAdjustedInsightData(response) {
       _.each(response.graphData, function (value) {
-        var finalinsight = '';
         _.map(value, function (res, key) {
           if (_.includes(key, 'bullet')) {
             res = vm.insightImage;
             value[key] = res;
           }
           if (_.includes(key, 'insight')) {
+            var finalinsight = '';
             if (_.includes(res, ',')) {
               res = res.split(',');
               _.each(res, function (insight1) {

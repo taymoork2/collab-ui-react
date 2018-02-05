@@ -35,23 +35,34 @@ class LinkedSitesGotoWebexComponentCtrl implements ng.IComponentController {
   }
 
   private updateLinkToWebex = (siteUrl, toSiteListPage) => {
+    const siteAdminUrl = this.assembleLinkToWebExSiteAdmin(siteUrl, toSiteListPage);
+    this.accessToken = this.TokenService.getAccessToken();
+    this.trustSrc = this.$sce.trustAsResourceUrl(siteAdminUrl);
+  }
+
+  private assembleLinkToWebExSiteAdmin = (siteUrl, toSiteListPage) => {
     this.$log.debug('updateLinkToSiteAdminPage', siteUrl);
     this.$log.debug('siteUrl', siteUrl);
     this.$log.debug('toSiteListPage', toSiteListPage);
 
-
     const adminUrl: any = [];
-    adminUrl.push(this.WebExUtilsFact.getSiteAdminUrl(siteUrl));
+    adminUrl.push(this.getSiteAdminUrl(siteUrl));
+    adminUrl.push('siteurl=');
+    adminUrl.push(this.WebExUtilsFact.getSiteName(siteUrl));
     if (toSiteListPage) {
       adminUrl.push('&mainPage=');
-      adminUrl.push(encodeURIComponent('accountlinking.do?siteUrl='));
+      adminUrl.push(encodeURIComponent('accountlinking.do'));
     }
 
     const siteAdminUrl = adminUrl.join('');
-    this.$log.debug('siteAdminUrl constrution=', siteAdminUrl);
+    this.$log.debug('SiteAdmin launch url:', siteAdminUrl);
+    return siteAdminUrl;
+  }
 
-    this.accessToken = this.TokenService.getAccessToken();
-    this.trustSrc = this.$sce.trustAsResourceUrl(siteAdminUrl);
+  private getSiteAdminUrl(siteUrl) {
+    const siteAdminProtocol = 'https://';
+    const siteAdminLink = '/wbxadmin/default.do?';
+    return siteAdminProtocol + siteUrl + siteAdminLink;
   }
 
   private launchWebex(buttonId) {

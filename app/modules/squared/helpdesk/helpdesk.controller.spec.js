@@ -9,6 +9,7 @@ describe('Controller: HelpdeskController', function () {
       '$scope',
       '$state',
       '$translate',
+      'AccessibilityService',
       'Authinfo',
       'Config',
       'HelpdeskService',
@@ -27,13 +28,28 @@ describe('Controller: HelpdeskController', function () {
     this.orgSearchResult = _.cloneDeep(this.jsonData.orgSearchResult);
 
     spyOn(this.FeatureToggleService, 'atlasHelpDeskOrderSearchGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.AccessibilityService, 'setFocus');
     spyOn(this.Authinfo, 'isInDelegatedAdministrationOrg').and.returnValue(true);
     spyOn(this.HelpdeskService, 'searchUsers');
     spyOn(this.HelpdeskService, 'searchOrgs');
 
+    this.$element = {
+      find: function () {
+        return {
+          blur: _.noop,
+          focus: function () {
+            return {
+              select: _.noop,
+            };
+          },
+        };
+      },
+    };
+
     this.initController = function () {
       this.controller = this.$controller('HelpdeskController', {
         HelpdeskService: this.HelpdeskService,
+        $element: this.$element,
         $translate: this.$translate,
         $scope: this.$scope,
         HelpdeskSearchHistoryService: this.HelpdeskSearchHistoryService,

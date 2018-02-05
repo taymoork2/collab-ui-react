@@ -143,6 +143,73 @@ describe('Controller: AAMessageTypeCtrl', function () {
         expect(c.dynamicValues[0].model).toEqual('dummy message');
       });
 
+      it('should be able to create new AA entry with null dynamic say', function () {
+        var c;
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+        action.dynamicList = [{
+          say: {
+            value: null,
+            voice: null,
+          },
+          isDynamic: true,
+          htmlModel: '',
+        }];
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(action);
+
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+
+        // setup the options menu
+        c = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+
+        expect(c).toBeDefined();
+        expect(c.dynamicValues[0].model).toEqual('');
+      });
+
+      it('should be able to create new AA entry with undefined dynamic say', function () {
+        var c;
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+        action.dynamicList = [{
+        }];
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(action);
+
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+
+        // setup the options menu
+        c = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+
+        expect(c).toBeDefined();
+        expect(c.dynamicValues[0].model).toEqual('');
+      });
+
+      it('should be able to create new AA entry with blank dynamic say', function () {
+        var c;
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+        action.dynamicList = [
+        ];
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(action);
+
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+
+        // setup the options menu
+        c = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+
+        expect(c).toBeDefined();
+        var blankArray = [];
+        expect(c.dynamicValues).toEqual(blankArray);
+      });
+
       it('should be able to create new AA entry with dynamicValues set to value', function () {
         var c;
         var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');

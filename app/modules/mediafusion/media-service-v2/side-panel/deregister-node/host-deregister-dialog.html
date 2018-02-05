@@ -20,20 +20,20 @@
 </div>
 
 <div class="modal-footer" ng-hide="hostDeregister.error">
-  <button class="btn" ng-click="$dismiss()">
-    <span translate="common.cancel"></span>
-  </button>
-  <button ng-disabled="hostDeregister.saving" id="convertActionButton" class="btn btn--alert"
-          ng-click="hostDeregister.deregister()">
-    <span ng-hide="hostDeregister.saving" translate="mediaFusion.deregister.header"></span>
-      <span ng-show="hostDeregister.saving">
-        <i class="icon icon-spinner"/>
-      </span>
+  <button class="btn" ng-click="$dismiss()" translate="common.cancel"></button>
+  <button
+    ng-disabled="hostDeregister.saving"
+    id="convertActionButton"
+    class="btn btn--alert"
+    ng-click="hostDeregister.deregister()"
+    aria-label="{{::'mediaFusion.deregister.header' | translate}}">
+    <span ng-if="!hostDeregister.saving" translate="mediaFusion.deregister.header"></span>
+    <span ng-if="hostDeregister.saving">
+      <i class="icon icon-spinner"/>
+    </span>
   </button>
 </div>
 <div class="modal-footer" ng-show="hostDeregister.error">
-  <button class="btn pull-right" ng-click="$dismiss()">
-    <span translate="common.ok"></span>
-  </button>
+  <button class="btn pull-right" ng-click="$dismiss()" translate="common.ok"></button>
 </div>
 

@@ -4,8 +4,14 @@
       <article ng-click="careFeaturesCtrl.editCareFeature((careFeature), $event)" hover-delay>
         <header class="card-header">
           <div class="header-with-right-icon">
-            <p class="h4 ellipsis" title="{{careFeature.name}}"> {{careFeature.name}} </p>
+            <!-- For AutoAttedant the Feature name is careFeature.cardName otherwise careFeature.name -->
+            <p class="h4 ellipsis" ng-if="careFeature.name" title="{{careFeature.name}}"> {{careFeature.name}} </p>
+            <p class="h4 ellipsis" ng-if="!careFeature.name" title="{{careFeature.cardName}}"> {{careFeature.cardName}} </p>
             <div class="right">
+              <a href
+                class="icon icon-link icon-color"
+                ng-if="(careFeature.filterValue === 'AA' && careFeature.hasDepends)"
+                ng-click="careFeaturesCtrl.detailsHuronFeature((careFeature), $event)"></a>
               <button type="button"
                 ng-click="careFeaturesCtrl.deleteCareFeature(careFeature, $event)"
                 ng-keydown="careFeaturesCtrl.deleteCareFeatureKeypress(careFeature, $event)"
@@ -16,7 +22,9 @@
           </div>
           <div class="care-sub-header">
             <div class="care-badge">
-              <span class="badge badge--outline" translate="careChatTpl.filterType.{{careFeature.mediaType}}"></span>
+              <!--if careFeature.name is undefined then show cardName othewise mediaType  -->
+              <span class="badge badge--outline primary" ng-if="!careFeature.name" translate="huronFeatureDetails.aa"></span>
+              <span  class="badge badge--outline" ng-if="careFeature.name" translate="careChatTpl.filterType.{{careFeature.mediaType}}"></span>
             </div>
             <div class="care-icon">
               <span ng-repeat="icon in careFeature.icons">
@@ -61,8 +69,9 @@
               </button>
             </div>
           </div>
+          <!-- if mediaType is undefined then do not show the download icon button -->
           <div class="right icon icon-download"
-            ng-if="careFeature.mediaType !== 'virtualAssistant'"
+            ng-if="careFeature.mediaType && careFeature.mediaType !== 'virtualAssistant'"
             ng-click="careFeaturesCtrl.openEmbedCodeModal(careFeature, $event)"
             ng-keydown="careFeaturesCtrl.openEmbedCodeModalKeypress(careFeature, $event)"
             aria-label="{{::'common.download' | translate}}"></div>

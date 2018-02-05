@@ -38,7 +38,7 @@ class CareHybridFeatureModalCtrl implements ng.IComponentController {
       description: 'autoAttendant.careModalDescription',
       code: 'autoAttendant.code',
       color: 'feature-aa-color',
-      warning: 'autoAttendant.warning',
+      warning: 'autoAttendant.noCallWarningMessage',
       disabled: isAACardDisabled,
       showWarning: isAACardDisabled,
     });
@@ -62,6 +62,13 @@ class CareHybridFeatureModalCtrl implements ng.IComponentController {
       });
     }
     this.dismiss();
+  }
+
+  public learnMoreLink(): void {
+    const templateStr = '<care-voice-features-modal dismiss="$dismiss()" class="care-modal"></care-voice-features-modal>';
+    this.$modal.open({
+      template: templateStr,
+    });
   }
 }
 

@@ -339,7 +339,7 @@
       "retrying": "Retrying...",
       "retryingIn": "retrying in:",
       "retryingUsers": "{users, plural, =1{# User} other{# Users}}",
-      "exportUserList": "Export user list."
+      "exportUserList": "Export user list"
     },
     "advanced": {
       "title": "Advanced",
@@ -1531,6 +1531,7 @@
     "active": "Active",
     "add": "Add",
     "agree": "Agree",
+    "alarm": "Alarm",
     "alert": "Alert",
     "all": "All",
     "and": "and",
@@ -1538,6 +1539,7 @@
     "assign": "Assign",
     "assigned": "Assigned",
     "authorize": "Authorize",
+    "automatic": "Automatic",
     "back": "Back",
     "begin": "Begin",
     "cancel": "Cancel",
@@ -1593,6 +1595,7 @@
     "invalidUrl": "This is not a valid URL.",
     "invalidZipCode": "Incorrect Zip Code",
     "ipAddress": "IP Address",
+    "iUnderstand": "I Understand",
     "keys": {
       "activated": "Activated",
       "deactivated": "Deactivated"
@@ -1601,6 +1604,7 @@
     "lastName": "Last Name",
     "learnMore": "Learn More",
     "leave": "Leave",
+    "loading": "Loading",
     "memberCount": "{{count}} Members",
     "members": "Members",
     "message": "Message",
@@ -1671,6 +1675,7 @@
     "test": "Test",
     "to": "to",
     "toggleData": "Toggle Data",
+    "toggleMenu": "Toggle Menu",
     "total": "Total",
     "trackingId": "Tracking Id: {{trackingId}}.",
     "tryAgain": "Try Again",
@@ -1891,8 +1896,8 @@
     "steeringDigitDescription": "Specify the number users must dial before placing an external call.",
     "emergencyAddressDescription": "This is the default address that will be used for emergency services. This can be overridden by each User or Place's device(s).",
     "extension": "Extension",
-    "extensionLength": "Extension Length",
-    "extensionLengthDescription": "Specify the total number of digits users must dial before placing an internal call.",
+    "extensionLength": "Length",
+    "extensionLengthDescription": "Choose the number of digits dialed for an internal call.",
     "extensionLengthHelpText": "After being set, this value can only be changed if no extensions are assigned.",
     "extensionLengthServicesHelpText": "Enabled only when no extensions have been assigned.",
     "extensionLengthServicesHelpTextForLocation": "Enabled only when no extensions have been assigned and only one location is configured.",
@@ -1918,8 +1923,8 @@
     "steeringDigitChangeWarning": "Changing the outbound dial digit will cause extensions that begin with the same number to experience dialing delays. Ensure that extensions do not begin with the same number as the outbound dial digit.",
     "extensionRangeChangeWarning": "Changing the outbound dial digit will cause extensions that begin with the same number to experience dialing delays. Ensure that extensions do not begin with the same number as the outbound dial digit.",
     "siteCodeDescription": "Specify a unique number to identify a specific site.",
-    "internalExtensionRange": "Internal Extension Range",
-    "internalNumberRangeDescription": "Specify range of internal numbers. Length must be {{length}} digits.",
+    "internalExtensionRange": "Range",
+    "internalNumberRangeDescription": "Specify range of numbers with a maximum of {{length}} digits.",
     "extensionError": "Extension not valid: ",
     "companyVoicemail": "Company Voicemail",
     "companyVoicemailDesc": "Turn on voicemail for the company.  External dial in numbers are set on locations.",
@@ -1929,7 +1934,7 @@
     "vmDeliveryMethodsHelpText": "Customize the voicemail delivery options for your organization. Aside from phone delivery, you can let users retrieve voicemails attachments in Cisco Spark, email or both. Downloaded voicemail attachments are not secure.",
     "companyVoicemailDescription": "Select a phone number to reserve for dialing voicemail from outside the company.",
     "to": "to",
-    "addMoreExtensionRanges": "Add more extension ranges",
+    "addMoreExtensionRanges": "Add ranges",
     "emptyNumber": "Number cannot be empty",
     "notANumber": " is not a valid number",
     "saveSuccess": "Call settings saved successfully",
@@ -2225,6 +2230,8 @@
     "saving": "Saving...",
     "errorAddr": "The address you entered is invalid, please try again.",
     "failedToDelete": "Failed to delete device. Reason:",
+    "searchLinkExpired": "The search link has expired.",
+    "searchLinkBad": "The search link is invalid.",
     "deviceAccess": "Device Access",
     "remoteAccessKey": {
       "ciscoSupport": "Cisco Support",
@@ -2382,8 +2389,7 @@
       "intro": "You are about to remove {{serviceName}} from the Expressway cluster {{clusterName}}.",
       "settingsWillBeWiped": "This action will remove {{connectorName}} and delete all of the connector's local settings.",
       "notDeregistered": "{{clusterName}} will still be registered to Cisco Collaboration Cloud, and the Expressway cluster can still be used for hosting Hybrid Services.",
-      "lastClusterWarning": "This is the last cluster that's running {{connectorName}} for this organization. If you deactivate {{connectorName}}, the service will be unavailable for your users until you add more resources. To completely deactivate the service for this organization and its users, go to the {{serviceName}} settings page.",
-      "iUnderstand": "I understand"
+      "lastClusterWarning": "This is the last cluster that's running {{connectorName}} for this organization. If you deactivate {{connectorName}}, the service will be unavailable for your users until you add more resources. To completely deactivate the service for this organization and its users, go to the {{serviceName}} settings page."
     },
     "clusters": {
       "listing": {
@@ -2475,7 +2481,7 @@
       "contact-center-context": "Context Service",
       "squared-fusion-ec": "Call Service Connect",
       "squared-fusion-ec.full": "Call Service Connect",
-      "squared-fusion-mgmt": "Expressway Management Service",
+      "squared-fusion-mgmt": "Management Service",
       "spark-hybrid-impinterop": "Message Service"
     },
     "hybridServiceNames": {
@@ -2500,7 +2506,7 @@
       "contact-center-context": "Context Connector",
       "squared-fusion-ec": "Call Connector",
       "squared-fusion-mgmt": "Management Connector",
-      "spark-hybrid-impinterop": "Hybrid Message Connector"
+      "spark-hybrid-impinterop": "Message Connector"
     },
     "connectorNameFromConnectorType": {
       "c_cal": "Calendar Connector",
@@ -2512,7 +2518,7 @@
       "cs_context": "Context Connector",
       "ucm_mgmt": "Management Connector",
       "c_serab": "Serviceability Connector",
-      "c_imp": "Hybrid Message Connector"
+      "c_imp": "Message Connector"
     },
     "shortConnectorNameFromConnectorType": {
       "c_cal": "Calendar",
@@ -2741,7 +2747,7 @@
       "authorization": {
         "title": "Authorize Cisco Collaboration Cloud on your G Suite account",
         "line1": "To enable Hybrid Calendar Service for you users, you must authorize Cisco Collaboration Cloud on your G Suite account.",
-        "item1": "In a new tab, open your <a href=\"https://admin.google.com/AdminHome\" target=\"_blank\">G Suite account dashboard</a> and then go to Security.",
+        "item1": "In a new tab, open your <a href=\"https://admin.google.com/AdminHome\" target=\"_blank\">G Suite account dashboard</a> and then go to <strong>Security</strong>.",
         "item2": "Click <strong>Show more</strong> and then <strong>Advanced settings</strong>.",
         "item3": "Click <strong>Manage API Client Access</strong>.",
         "item4": "Copy the client name and scope to your clipboard.",
@@ -3188,7 +3194,7 @@
       "releaseChannelHeader": "Release Channel",
       "releaseChannelClusterDescription": "Select the release channel for all Hybrid Services running in this cluster.",
       "releaseChannelResourceGroupDescription": "Select the release channel for all Hybrid Services running in this group.",
-      "expresswayTip": "To change the release channel for this cluster, change the default release channel or assign it to a resource group with the preferred release channel.",
+      "newExpresswayTip": "You cannot change the release channel for individual Expressway clusters. To change the release channel for this cluster, change the default release channel or assign the cluster to a resource group with the preferred release channel. See the <a href=\"https://collaborationhelp.cisco.com/article/kkibf0\" target=\"_blank\">documentation</a> for guidance.",
       "releaseChannelTip": "To change the release channel for this cluster, assign it to a resource group with the preferred release channel.",
       "releaseChannelSaved": "Release channel saved successfully",
       "orgHasNoAccessToChannel": "The resource group is configured with the “{{currentReleaseChannel}}” release channel, which is no longer available to your organization. Set the release channel to “{{stableReleaseChannel}}” to restore service.",
@@ -3406,6 +3412,132 @@
     "office365FailureModal": {
       "subtitle": "An error occured during the authorization",
       "errorCode": "Error Code: {{code}}."
+    },
+    "eventHistory": {
+      "pageTitle": "Alarm, Status, and Upgrade History",
+      "featureDescription": "View all raised and resolved alarms, connector status changes, and cluster configuration changes over the last 7 days.",
+      "viewHistory": "View History",
+      "noEventsFound": "No Events Found",
+      "cannotReadEventData": "Could not read event history data",
+      "cannotReadResourceNames": "Could not read resource names. Defaulting to not filtering on any specific resource.",
+      "scheduledTask": "Scheduled Task",
+      "automatic": "Automatic",
+      "allServices": "All Services",
+      "allResources": "All Resources",
+      "serviceFilter": "Service Filter:",
+      "resourceFilter": "Resource Filter:",
+      "dataSince": "Events since",
+      "connectorProvisioned": "Cluster has been provisioned with {{connectorName}} version {{newVersion}}",
+      "connectorDeprovisioned": "{{connectorName}} has been removed from cluster",
+      "connectorProvisioningChanged": "{{connectorName}} upgrade to {{newVersion}} initiated",
+      "serviceEnabled": "{{serviceName}} has been enabled",
+      "serviceDisabled": "{{serviceName}} has been disabled",
+      "newUpgradeSchedule": "New Upgrade Schedule: {{newSchedule}}",
+      "clusterRenamed": "Cluster Name Updated",
+      "resourceGroupChanged": "Resource Group Changed",
+      "releaseChannelChanged": "Release Channel Changed",
+      "connectorEventTitles": {
+        "downloading": "{{connectorType}} downloading",
+        "installing": "{{connectorType}} installing",
+        "not_installed": "{{connectorType}} not installed",
+        "disabled": "{{connectorType}} disabled",
+        "not_initialized": "{{connectorType}} not initialized",
+        "not_operational": "{{connectorType}} not operational",
+        "not_configured": "{{connectorType}} not configured",
+        "running": "{{connectorType}} version {{version}} running and operational"
+      },
+      "table": {
+        "event": "Event",
+        "severity": "Severity",
+        "type": "Type",
+        "service": "Service",
+        "resource": "Resource",
+        "performedBy": "Performed By",
+        "time": "Time",
+        "critical": "Critical",
+        "error": "Error",
+        "warning": "Warning",
+        "info": "Info",
+        "resolved": "Resolved",
+        "ignored": "Ignored",
+        "none": "None"
+      },
+      "eventClasses": {
+        "cluster": "Cluster",
+        "connector": "Connector",
+        "alarm": "Alarm",
+        "service": "Service"
+      },
+      "sidepanel": {
+        "header": "Event Details",
+        "description": "Description",
+        "connectorEvents": {
+          "provideInfoBelow": "Provide the information below when opening a support case.",
+          "not_installed": "The Expressway reports that {{localizedConnectorName}} is not installed. This state is expected for a short while for new deployments, and it could also happen during upgrades.",
+          "not_installed-help": "Something is likely to be misconfigured if this state lasts for more than a couple of minutes, and admin action is required to fix it. The Expressway's Management Connector might have raised an alarm that could assist you with troubleshooting.",
+          "disabled": "{{localizedConnectorName}} is on version {{softwareVersion}}, but the connector has been disabled on the Expressway. Connectors should not be kept in a disabled state: Either log in to the Expressway web interface to start it, or uninstall it using the cluster configuration page in Cisco Spark Control Hub.",
+          "downloading": "Version {{softwareVersion}} of  {{localizedConnectorName}} is being downloaded from Cisco Collaboration Cloud. It will be installed when it has finished downloading.",
+          "installing": "{{localizedConnectorName}} version {{softwareVersion}} has finished downloading from Cisco Collaboration Cloud, and is now installing on the Expressway. Installation normally take less than a minute.",
+          "not_configured": "{{localizedConnectorName}} version {{softwareVersion}} has been installed, but the connector has not been configured. Log in to the Expressway to configure it, and then start the connector.",
+          "initializing": "{{localizedConnectorName}} version {{softwareVersion}} has been installed, but the new software is still starting up, and is not yet initialized. Initializing the connector software might take several hours for connectors that are running at full capacity and host a lot of users.",
+          "not_operational": "{{localizedConnectorName}} version {{softwareVersion}} is running, but is reporting that the software is not operational. This is not expected, and admin intervention is required to correct it.",
+          "running": "The {{localizedConnectorName}} software is running version {{softwareVersion}} and is operational. This is the expected state after a successful upgrade or new installation."
+        },
+        "alarmEvents": {
+          "alarmRaisedEmailsSentTitle": "Emails sent about new alarm",
+          "alarmResolvedEmailsSentTitle": "Emails sent about resolved alarm",
+          "alarmRaised": "An alarm has been raised on the Expressway node {{hostname}}.",
+          "alarmRaised-description": "The Expressway provided the following alarm description: <strong>{{description}}</strong>",
+          "alarmResolved": "The alarm titled <strong>{{title}}</strong> has now been resolved on node {{hostname}}.",
+          "alarmDebounced": "An alarm titled <strong>{{title}}</strong> was raised on the Expressway, and then marked as resolved within a few minutes.",
+          "alarmDebounced-help": "This alarm was resolved so quickly that Cisco Collaboration Cloud did not send an email notification about it. Alarms that auto-resolve are normally not a cause for concern, and do not require admin intervention unless they keep being raised for a substantial amount of time.",
+          "alarmRaisedNotificationSent": "Cisco Collaboration Cloud has emailed {{recipientCount}} recipients about the new alarm titled <strong>{{title}}</strong> on node {{hostname}}.",
+          "alarmResolvedNotificationSent": "Cisco Collaboration Cloud has emailed {{recipientCount}} recipients because the alarm titled <strong>{{title}}</strong> on node {{hostname}} was marked as resolved."
+        },
+        "clusterEvents": {
+          "firstUpgradeSchedule": "All connectors in the Expressway cluster have been configured with the following upgrade schedule: {{upgradeSchedule}}",
+          "changedUpgradeSchedule": "{{username}} has changed the upgrade schedule for all connectors in the Expressway cluster. The new schedule is: {{newSchedule}}. Its previous upgrade schedule was: {{oldSchedule}}.",
+          "automatedProvisioningChange": "The {{connectorName}} target version has changed to {{newValue}}. This happened as part of a scheduled upgrade.",
+          "automatedProvisioning": "The Expressway cluster has been provisioned with {{connectorName}}. This happened automatically.",
+          "automatedDeprovisioning": "The Expressway cluster will no longer run {{connectorName}}.",
+          "manualProvisioningChange": "The {{connectorName}} target version has changed to {{newValue}}. The upgrade was manually triggered by {{username}}.",
+          "manualProvisioning": "{{username}} provisioned the Expressway cluster with {{connectorName}}. This either happened because the user created a new cluster, or because he or she added {{connectorName}} to an existing cluster.",
+          "manualDeprovisioning": "{{username}} changed the Expressway configuration so that {{connectorName}} will be removed from all cluster nodes.",
+          "upgradeHelpText": " Each node in the cluster will sequentially start to upgrade to the new version. The upgrade has succeeded when all nodes are on the new software version, and have reported to Cisco Collaboration Cloud that they are operational.",
+          "provisioningAddedHelpText": "An administrator must log in to the Expressway master peer and configure the {{connectorName}} software once it has been installed on all cluster nodes.",
+          "provisioningRemovedHelpText": "The software will be uninstalled, and all local configuration deleted.",
+          "automatedDeprovisioningHelpText": "This configuration change happened because of a change to the Cisco Spark organization's configuration, for example because an entitlement was removed or a service was deactivated.",
+          "renamed": "{{username}} renamed the cluster. Its new name is {{newName}}, and the old name was {{oldName}}.",
+          "nameAssigned": "{{username}} configured the cluster name to be {{name}}.",
+          "resourceGroupIntro": "{{username}} changed the cluster's Resource Group.",
+          "previouslyNotInResourceGroup": "The new Resource Group name is: <strong>{{newGroup}}</strong>. The cluster was previously not part of a Resource Group.",
+          "changedResourceGroup": "The new Resource Group name is: <strong>{{newGroup}}</strong>. The cluster was previously part of {{oldGroup}}.",
+          "removedResourceGroup": "The cluster is no longer part of a Resource Group. The cluster was previously part of {{oldGroup}}.",
+          "changedReleaseChannel": "{{username}} changed the cluster's Release Channel.",
+          "oldAndNewReleaseChannel": "The new Release Channel is: <strong>{{newReleaseChannel}}</strong>. The old Release Channel was: {{oldReleaseChannel}}.",
+          "changedReleaseChannelHelp": "An Expressway cluster's Release Channel can change either if the cluster is moved in or out of a Resource Group, or if its existing Resource Group changes its associated Release Channel."
+        },
+        "serviceActivationEvents": {
+          "serviceEnabled": "{{username}} has activated {{serviceName}} in the Cisco Spark organization. This usually happens when an admin user registers an Expressway cluster that runs {{connectorName}}, or adds the first {{connectorName}} to an existing Expressway cluster.",
+          "callServiceConnectEnabled": "{{username}} has activated {{serviceName}} in the Cisco Spark organization. All Expressway clusters running {{connectorName}} will automatically also be used for {{serviceName}}.",
+          "serviceDisabled": "{{username}} has disabled {{serviceName}} in the Cisco Spark organization.",
+          "serviceDisabledHelpText": "{{serviceName}} entitlements are automatically removed from users, and {{connectorName}} is automatically uninstalled from all Expressway clusters.",
+          "serviceDisabledHelpTextCallServiceConnect": "{{serviceName}} entitlements are automatically removed from users, and remote device configurations deleted."
+        },
+        "technicalDetails": {
+          "heading": "Technical Details",
+          "tooltip": "Customer data is always stored in an anonymized fashion in the Cisco Collaboration Cloud. Provide the information in this section to Cisco Technical Support if you need Cisco to investigate this event.",
+          "resourceName": "Resource Name:",
+          "clusterId": "Cluster ID:",
+          "connectorId": "Connector ID:",
+          "connectorType": "Connector Type:",
+          "alarmId": "Alarm ID:",
+          "softwareVersion": "Software Version:",
+          "timestamp": "Timestamp:",
+          "userId": "User ID:",
+          "trackingId": "Tracking ID:"
+        }
+      }
     }
   },
   "context": {
@@ -3820,22 +3952,6 @@
       "reportsBanner": "Your report is being generated and may take up to a few hours or more. You can view the status in the list below or <a href ui-sref=\"{{sref}}\">generate another report</a>.",
       "generating": "Generating..."
     },
-    "originalConsole": {
-      "subheading": "Find all relevant data for a space.",
-      "reportNameNotEmpty": "Report Name can not be empty",
-      "reportNamePlaceholder": "Enter report name",
-      "startDate": "Start Date",
-      "endDate": "End Date",
-      "reportDateRange": "Date Range",
-      "noRangeSpecified": "No date range specified",
-      "takeMeToReports": "Take Me to Reports",
-      "dateTo": "to",
-      "endDateUntil": "until",
-      "endDateOnward": "onward",
-      "startDatePlaceholder": "Choose a Start Date",
-      "endDatePlaceholder": "Choose an End Date",
-      "generatedAt": "Generated At"
-    },
     "tabs": {
       "search": "Search",
       "reports": "Reports"
@@ -4228,7 +4344,7 @@
   "autoAttendant": {
     "code": "AA",
     "title": "Auto Attendant",
-    "warning": "Requires call service.",
+    "noCallWarningMessage" : "Requires call service. <a href ng-click=\"{{onclick}}\">Learn More</a>",
     "careModalDescription": "Play custom prompts and provide callers with menu options to route calls through your system.",
     "modalDescription": "Auto attendants play customized prompts and provide callers with menu options for routing their calls through your system.",
     "namePlaceholder": "Name the Auto Attendant",
@@ -5316,7 +5432,6 @@
     "invalidTrialRoomSystemQuantity": "Number of Licenses should be between 1 and 20.",
     "invalidTrialSparkBoardQuantity": "Number of Licenses should be between 1 and 20.",
     "invalidTrialCareQuantity": "K1 and K2 licenses should be between 1 and 50 each and not exceed the Licenses Quantity in total.",
-    "invalidProvisionedTrialCareQuantity": "Care licenses should be between 1 and 50 each and not exceed the Licenses Quantity in total.",
     "careLicenseCountExceedsTotalCount": "Number of Licenses should be between 1 and 999 and no less than total Care license quantity.",
     "individualUserServices": "Individual User Services",
     "roomSystems": "Room Devices",
@@ -5619,7 +5734,6 @@
     "deleteOrgConfirmMsg": "Are you sure you want to permanently delete customer '{{orgName}}'?",
     "deleteOrgHmsError": "For the customer '{{orgName}}' Hybrid Media Service is currently Active, please deactivate Hybrid Media Service before deleting the customer.",
     "deleteOrg": "Delete Customer",
-    "iUnderstand": "I Understand",
     "deleteOrgSuccess": "{{orgName}} successfully deleted",
     "deleteOrgError": "{{orgName}} was not deleted.",
     "pstnOrders": "PSTN Orders & Imports",
@@ -5777,7 +5891,7 @@
     "notifyCustLater": "Notify Customer Later",
     "emailSuccessText": "Email successfully sent to customer.",
     "emailFailText": "Error sending email",
-    "inputPlacehoder": "Enter phone numbers separated by commas",
+    "inputPlacehoder": "Enter phone numbers separated by commas.",
     "didFormatHelpText": "For example: {{examples}}",
     "didAlreadyExist": "Phone number already exists."
   },
@@ -6310,7 +6424,6 @@
       "moveTo": "Move to:",
       "cancel": "Cancel",
       "continue": "Continue",
-      "deregisterAllconfirmation": "I understand that all the nodes in this cluster will be deregistered automatically, and that the cluster will be deleted permanently. I also understand that I cannot undo this action.",
       "unabletomovenodes": "Failed to move/defuse {{nodes}} press cancel and try again",
       "clusterdeleteSuccess": "Successfully deleted {{clustername}}",
       "clusterCreationFailed": "Failed to create new cluster: {{enteredCluster}}",
@@ -6320,7 +6433,9 @@
       "stable": "STABLE",
       "beta": "BETA",
       "latest": "LATEST",
-      "errorMsg": "Before you can delete this cluster, you must either move all nodes to another cluster or deregister all nodes."
+      "errorMsg": "Before you can delete this cluster, you must either move all nodes to another cluster or deregister all nodes.",
+      "deregisterWarning": "All the nodes in this cluster will be deregistered automatically and the cluster will be moved permanently. This action can not be undone.",
+      "deactivateWarning": "This is the last Hybrid Media cluster for this organization. If you remove it, the service will be deactivated."
     },
     "reassign": {
       "reassignHost": "Reassign Host",
@@ -6343,7 +6458,7 @@
       "confirmation_check": "By deactivating Hybrid Media Service, I understand that the above clusters will be deregistered and all further meetings will be hosted  in the cloud and that this action cannot be undone.",
       "button_deactivate": "Deactivate",
       "success": "Your Hybrid Media Services was deactivated successfully.",
-      "error": "Error in deregistering clusters. Please try again after sometime.",
+      "error": "Could not deactivate Hybrid Media Service.",
       "step": "Step ",
       "of": " of 2"
     },
@@ -7086,6 +7201,9 @@
     "status": "Status",
     "cluster": "Cluster",
     "sipUri": "Directory URI",
+    "primaryDN": "Primary DN",
+    "telephoneNumber": "Phone Number",
+    "ucmCluster": "UCM FQDN(s)",
     "details": "Details"
   },
   "validation": {
@@ -7308,8 +7426,7 @@
       "callbackType": "Callback Template",
       "chatPlusCallbackType": "Chat+Callback Template",
       "virtualAssistant": "Virtual Assistant",
-      "noCallWarningMessage" : "Requires call service.",
-      "learnMoreLink": "Learn More"
+      "noCallWarningMessage" : "Requires call service. <a href ng-click=\"{{onclick}}\">Learn More</a>"
     },
     "settings": {
       "setUpCare": "Care",
@@ -7399,6 +7516,18 @@
     "reloadMessage": "Please try reloading the page",
     "feature": "Feature"
   },
+  "careVoiceFeatures": {
+    "title": "Enable Spark Care Voice Features",
+    "heading": "Choose a call service to enable Spark Care voice features:",
+    "enableSparkCall": "Enable Spark Call",
+    "scDescription": "Allow Spark Care agents to use Spark Call for voice features.",
+    "enableSC": "Contact your partner to enable Spark Call.",
+    "contactPartner": "<a href = #>Contact Partner</a>",
+    "useHybridCall": "Use Hybrid Call",
+    "hcDescription": "Allow Spark Care agents to use on-premises infrastructure for voice features.",
+    "enableHybrid": "Set up Hybrid Call and Enterprise Private Trunking to enable your organization to use Cisco Unified Communications Manager.",
+    "setUpHybrid": "<a href ng-click=\"{{onsetuphybrid}}\">Set up Hybrid Call</a><br><a href ng-click=\"{{onsetuptrunk}}\">Set up Enterprise Private Trunking</a>"
+  },
   "placesPage": {
     "nameHeader": "Name",
     "typeHeader": "Type",
@@ -7458,7 +7587,7 @@
     "actionHeader": "Actions",
     "lineListError": "Error retrieving the user line association list. Please try reloading the page.",
     "getCountError": "Failed to fetch record counts.",
-    "phoneNumbers": "Phone Numbers",
+    "phoneNumbers": "Phone Number",
     "assignedTo": "Assigned to",
     "inProgress": "In Progress",
     "quantity": "Quantity: {{count}}",
@@ -7625,6 +7754,7 @@
     "evaSpaceDetailsTextOneSpace": ", your Expert Virtual Assistant, is in 1 Expert Space in Cisco Spark:",
     "evaDefaultName": "EVA",
     "customerInfoToggleTooltipMessage": "This screen is required for this template and cannot be disabled.",
+    "agentUnavailableToggleTooltipMessage": "You are escalating to experts only, so Agent Unavailability configuration is not required. To enable escalation to agents, edit your Chat Escalation Behavior setting.",
     "virtualAssistantToggleTooltipMessage": "Configure a Customer Virtual Assistant from the Features page before you enable this. You can also configure your assistant and enable this feature at a later time.",
     "getVirtualAssistantListError": "Error in getting list of configured virtual assistant.",
     "virtualAssistantSelector": "Customer Virtual Assistant",
@@ -8449,8 +8579,9 @@
       "domainsError": "There was a problem retrieving the Directory Synchronization data.",
       "operational": "Operational",
       "outage": "Outage",
+      "pcOnline": "PC server online",
+      "pcOffline": "PC server offline",
       "seeAllDomains": "See All Registered Domains",
-      "toggleMenu": "toggle domain action menu",
       "turnOff": "Turn Off {{domainName}}",
       "turnOffAllMessage": "This step turns off all synchronization from Directory Connector. Once the synchronization is disabled, you can only manage users manually and they won't appear in Active Directory.  Are you sure you want to turn off all sychronization?",
       "turnOffAllTitle": "Turn Off All Synchronization",
@@ -10370,6 +10501,10 @@
     }
   },
   "hcs": {
+    "cardTitle": "Hosted Collaboration Service",
+    "description": "Extend Management services to Hosted Cloud Solution.",
+    "license": "License Management",
+    "upgrade": "Upgrade Management",
     "taas": {
       "testState": {
         "good": "Passed",
@@ -10437,5 +10572,6 @@
         "error": "Errors"
       }
     }
+
   }
 }

@@ -1,33 +1,19 @@
-@import '~@collabui/collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
 @import '~@collabui/collab-ui/scss/settings/colors';
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+@import 'styles/partials/mixins';
 
 cr-convert-users-modal {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-
-  .manage-users-dialog {
-    // 100% - header - footer
-    height: calc(100% - 160px);
-
-    .ui-grid-cell,
-    .ui-grid-header-cell {
-      min-width: vr-adjust(400);
-    }
-  }
+  @include keep-flex-container(column);
 }
 
 .convert-users {
   .unlicensed-user-list {
     border: solid $gray-light-2 1px;
-    flex: 1 1 0;
-    display: flex;
-    flex-direction: column;
+    @include keep-flex-container(column);
   }
 
   .gridStyle {
-    flex: 1 1 0;
+    flex: 1 1 0px;
     min-height: 0;
     background-color: $brand-white;
   }

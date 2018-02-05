@@ -1,12 +1,15 @@
 import { ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
-import { AutoAssignTemplateService, IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
+import { IAutoAssignTemplateData, IUserEntitlementsViewState } from 'modules/core/users/shared/auto-assign-template/auto-assign-template.interfaces';
+import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template/auto-assign-template.service';
+import { IHybridServices } from 'modules/core/users/userAdd/hybrid-services-entitlements-panel/hybrid-services-entitlements-panel.service';
+import { IUserEntitlementRequestItem, UserEntitlementState } from 'modules/core/users/shared/onboard/onboard.interfaces';
 
 class EditAutoAssignTemplateModalController implements ng.IComponentController {
 
   private prevState: string;
   private dismiss: Function;
   private autoAssignTemplateData: IAutoAssignTemplateData;
-  private isEditTemplateMode = false;
+  public isEditTemplateMode: boolean;
   public sortedSubscriptions: ISubscription[];
 
   /* @ngInject */
@@ -18,20 +21,20 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
 
   public $onInit(): void {
     this.prevState = _.get<string>(this.$state, 'params.prevState', 'users.manage.picker');
+    this.isEditTemplateMode = !!this.isEditTemplateMode;
 
     // restore state if provided
     if (this.autoAssignTemplateData) {
-      this.sortedSubscriptions = _.get(this.autoAssignTemplateData, 'subscriptions');
-      this.isEditTemplateMode = true;
+      this.sortedSubscriptions = _.get(this.autoAssignTemplateData, 'apiData.subscriptions');
       return;
     }
 
     // otherwise use default initialization
-    this.autoAssignTemplateData = {} as IAutoAssignTemplateData;
+    this.autoAssignTemplateData = this.AutoAssignTemplateService.initAutoAssignTemplateData();
     this.AutoAssignTemplateService.getSortedSubscriptions()
       .then(sortedSubscriptions => {
         this.sortedSubscriptions = sortedSubscriptions;
-        this.autoAssignTemplateData.subscriptions = sortedSubscriptions;
+        this.autoAssignTemplateData.apiData.subscriptions = sortedSubscriptions;
       });
   }
 
@@ -61,12 +64,30 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
     // notes:
     // - item id can potentially contain period chars ('.')
     // - so we wrap interpolated value in double-quotes to prevent unintended deep property creation
-    _.set(this.autoAssignTemplateData, `${itemCategory}["${itemId}"]`, item);
+    _.set(this.autoAssignTemplateData, `viewData.${itemCategory}["${itemId}"]`, item);
   }
 
-  // TODO: remove this callback once 'hybrid-services-entitlements-panel' can leverage 'onUpdate()' callbacks
-  public recvHybridServicesEntitlementsPayload(entitlements): void {
-    _.set(this.autoAssignTemplateData, `USER_ENTITLEMENTS_PAYLOAD`, entitlements);
+  public recvHybridServicesEntitlementsUpdate(entitlements: IUserEntitlementRequestItem[]): void {
+    _.forEach(entitlements, (entitlement) => {
+      const { entitlementName, entitlementState } = entitlement;
+      const isSelected = entitlementState === UserEntitlementState.ACTIVE;
+      _.set(this.autoAssignTemplateData, `viewData.USER_ENTITLEMENT.${entitlementName}`, {
+        isSelected: isSelected,
+        isDisabled: false,
+      });
+    });
+  }
+
+  public getUserEntitlements(): IUserEntitlementsViewState {
+    return _.get(this.autoAssignTemplateData, `viewData.USER_ENTITLEMENT`);
+  }
+
+  public getHybridServices(): IHybridServices {
+    return _.get(this.autoAssignTemplateData, `otherData.hybridServices`);
+  }
+
+  public setHybridServices(hybridServices: IHybridServices): void {
+    _.set(this.autoAssignTemplateData, `otherData.hybridServices`, hybridServices);
   }
 }
 

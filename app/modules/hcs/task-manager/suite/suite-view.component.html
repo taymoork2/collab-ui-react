@@ -4,11 +4,18 @@
     <cs-page-sub-header-left>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
-      <button class="btn btn--people" translate="hcs.taas.suiteView.createSuite" ng-click="$ctrl.createSuite()" ng-disabled="true"> <!-- disabled for demos, this isn't fully functioning yet, but want to show it as feature -->
+      <button class="btn btn--people"
+        translate="hcs.taas.suiteView.createSuite"
+        ng-click="$ctrl.createSuite()"
+        ng-disabled="true"> <!-- disabled for demos, this isn't fully functioning yet, but want to show it as feature -->
       </button>
-      <button class="btn btn--people" translate="hcs.taas.suiteView.resources" ng-click="$ctrl.resources()">
+      <button class="btn btn--people"
+        translate="hcs.taas.suiteView.resources"
+        ng-click="$ctrl.resources()">
       </button>
-      <button class="btn btn--people" translate="hcs.taas.suiteView.schedule" ng-click="$ctrl.viewSchedule()">
+      <button class="btn btn--people"
+        translate="hcs.taas.suiteView.schedule"
+        ng-click="$ctrl.viewSchedule()">
       </button>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
@@ -18,7 +25,11 @@
       <div class="features-reload">
         <p class="h4" translate="huronFeatureDetails.sorryMessage"></p>
         <div class="h2" translate="huronFeatureDetails.reloadMessage"></div>
-        <button type="button" class="btn btn--link" ng-click="$ctrl.reload()">{{'suite.reload' | translate}}</button>
+        <button type="button"
+          class="btn btn--link"
+          ng-click="$ctrl.reload()"
+          translate="suite.reload">
+        </button>
       </div>
     </div>
     <!--Show Spinner Icon until controller receives data from back-end-->
@@ -34,16 +45,16 @@
                 <div class="header-with-right-icon">
                   <p class="h4 ellipsis" title="{{suite.name}}">{{suite.name}}</p>
                   <span cs-dropdown class="actions-menu dropdown pull-right">
-                   <button cs-dropdown-toggle class="btn-none card-action-btn" >
-                    <i class="icon icon-three-dots"></i>
-                   </button>
-                   <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-                    <li ng-click="$ctrl.runSuiteAction(suite)"><a translate="hcs.taas.suiteView.runSuite"></a></li>
-                    <li ng-click="$ctrl.editSuite(suite)"><a translate="hcs.taas.suiteView.editSuite"></a></li>
-                    <li ng-click="$ctrl.copySuite(suite)" ng-disabled="true"><a translate="hcs.taas.suiteView.copySuite"></a></li>
-                    <li ng-click="$ctrl.scheduler(suite, $ctrl.customerId)"><a translate="hcs.taas.suiteView.scheduleSuite"></a></li>
-                    <li ng-click="$ctrl.deleteSuite(suite)"><a translate="hcs.taas.suiteView.deleteSuite"></a></li>
-                  </ul>
+                    <button cs-dropdown-toggle class="btn-none card-action-btn" aria-label="{{::'common.toggleMenu' | translate}}">
+                      <i class="icon icon-three-dots"></i>
+                    </button>
+                    <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
+                      <li ng-click="$ctrl.runSuiteAction(suite)"><a translate="hcs.taas.suiteView.runSuite"></a></li>
+                      <li ng-click="$ctrl.editSuite(suite)"><a translate="hcs.taas.suiteView.editSuite"></a></li>
+                      <li ng-click="$ctrl.copySuite(suite)" ng-disabled="true"><a translate="hcs.taas.suiteView.copySuite"></a></li>
+                      <li ng-click="$ctrl.scheduler(suite, $ctrl.customerId)"><a translate="hcs.taas.suiteView.scheduleSuite"></a></li>
+                      <li ng-click="$ctrl.deleteSuite(suite)"><a translate="hcs.taas.suiteView.deleteSuite"></a></li>
+                    </ul>
                   </span>
                 </div>
               </header>
