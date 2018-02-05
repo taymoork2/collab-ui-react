@@ -71,6 +71,7 @@ module.exports = {
   atlasTrialsShipDevices: 'atlasTrialsShipDevices',
   atlasVirtualAssistantEnable: 'atlas-virtual-assistant-enable',
   atlasWebexAddSite: 'atlas-webex-add-site',
+  atlasWebexSiteManagementSetting: 'atlas-webex-site-management-setting',
   atMentions: 'at-mentions',
   audioPairing: 'audio-pairing',
   avrilI1558: 'avril-i1558',
