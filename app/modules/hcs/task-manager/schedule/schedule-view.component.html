@@ -7,7 +7,7 @@
         <button class="btn btn--people" ng-click="$ctrl.createSchedule()" ng-disabled="true" translate="hcs.taas.scheduleView.scheduleCreate"></button> <!-- disabled for demos, this isn't fully functioning yet, but want to show it as feature -->
       </cs-page-sub-header-right>
     </cs-page-sub-header>
-    <div ng-if="$ctrl.pageState != $ctrl.STATE_NEW" class="schedule-content content-container">
+    <div ng-if="$ctrl.pageState !== $ctrl.STATE_NEW" class="schedule-content content-container">
       <!-- Show Reload page when all location requests fail-->
       <div ng-if="$ctrl.pageState === $ctrl.STATE_RELOAD">
         <div class="features-reload">

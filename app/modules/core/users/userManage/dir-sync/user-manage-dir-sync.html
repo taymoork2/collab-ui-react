@@ -4,10 +4,10 @@
 </div>
 
 <div class="modal-body user-csv user-csv-results">
-  <div ng-if="umds.getCurrentState() == 'dirsyncServices'">
+  <div ng-if="umds.getCurrentState() === 'dirsyncServices'">
     <h3 translate="userManage.ad.typeLabel"></h3>
   </div>
-  <div ng-if="umds.getCurrentState() == 'dirsyncResult'">
+  <div ng-if="umds.getCurrentState() === 'dirsyncResult'">
     <h5 translate="userManage.advanced.updating"></h5>
   </div>
   <div ui-view class="flex-container flex-item-resize user-manage-dir-sync__flex-container"></div>

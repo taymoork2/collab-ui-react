@@ -7,7 +7,7 @@
       <div class="metrics-info">
         <div class="no-data" ng-if="$ctrl.value === $ctrl.parentcntrl.noData" ng-class="{'no-display': $ctrl.chartOptions.isShow==true}">{{$ctrl.value}}</div>
         <div ng-if="$ctrl.value !== $ctrl.parentcntrl.noData" ng-class="{'no-display': $ctrl.chartOptions.isShow==true}">
-          <div class="call-counts" ng-class="{'negetive-indicate' : $ctrl.parentcntrl.cardIndicatorDiff > 0 && $ctrl.headername == $ctrl.parentcntrl.second_card_heading, 'positive-indicate' : $ctrl.parentcntrl.cardIndicatorDiff < 0 && $ctrl.headername == $ctrl.parentcntrl.second_card_heading}">
+          <div class="call-counts" ng-class="{'negetive-indicate' : $ctrl.parentcntrl.cardIndicatorDiff > 0 && $ctrl.headername === $ctrl.parentcntrl.second_card_heading, 'positive-indicate' : $ctrl.parentcntrl.cardIndicatorDiff < 0 && $ctrl.headername === $ctrl.parentcntrl.second_card_heading}">
             <span ng-if="$ctrl.headername !== $ctrl.parentcntrl.second_card_heading" tooltip="{{$ctrl.tooltipValue}}" class="cardTooltipClass">
               {{$ctrl.value}}
             </span>
@@ -15,7 +15,7 @@
               <i class='icon icon-arrow-up indicator-icon' ng-class="{'no-display' : $ctrl.parentcntrl.cardIndicatorDiff < 0 || $ctrl.parentcntrl.cardIndicatorDiff === 0}"></i>
               <i class='icon icon-arrow-down indicator-icon' ng-class="{'no-display' : $ctrl.parentcntrl.cardIndicatorDiff > 0 || $ctrl.parentcntrl.cardIndicatorDiff === 0}"></i>
             </span>
-            <i class='icon media-scroll-icon icon-presentation' ng-class="{'no-display': $ctrl.headername != $ctrl.parentcntrl.availabilityCardHeading || !$ctrl.value}" scroll-on-click></i>
+            <i class='icon media-scroll-icon icon-presentation' ng-class="{'no-display': $ctrl.headername !== $ctrl.parentcntrl.availabilityCardHeading || !$ctrl.value}" scroll-on-click></i>
           </div>
           <span class="overflow-updown-text" ng-class="{'no-display': $ctrl.parentcntrl.cardIndicatorDiff === 0 || $ctrl.headername !== $ctrl.parentcntrl.second_card_heading}">
             {{$ctrl.parentcntrl.cardIndicator}} <span><span translate='mediaFusion.metrics.inThe'></span></span>
