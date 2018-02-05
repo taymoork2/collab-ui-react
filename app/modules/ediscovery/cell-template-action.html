@@ -29,9 +29,9 @@
         tooltip-append-to-body="true"
         class="icon icon-report action-icons disabled">
   </span>
-  
+
   <span ng-if="row.entity.canBeCancelled && !grid.appScope.reportsBeingCancelled[row.entity.id]"
-        translate="ediscovery.reportsList.cancel"
+        translate="ediscovery.reportsList.cancelReport"
         ng-click="grid.appScope.openCancelReportModal(row.entity.id)"></span>
   </span>
   <span ng-if="row.entity.encryptionKeyUrl"
