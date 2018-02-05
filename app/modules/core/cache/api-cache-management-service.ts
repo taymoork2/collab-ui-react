@@ -36,7 +36,7 @@ export class ApiCacheManagementService {
     const cachePromises: ng.IPromise<any>[] = [];
 
     // Add urls for other asynchronous caches that should be warmed up here
-    cachePromises.push(this.$http.post(this.UrlConfig.getCsdmServiceUrl() + `/organization/${this.Authinfo.getOrgId()}/preloadCaches`, null));
+    cachePromises.push(this.$http.post(`${this.UrlConfig.getCsdmServiceUrl()}/organization/${this.Authinfo.getOrgId()}/preloadCaches`, null));
 
     return this.$q.all(cachePromises).then(() => {
       return this.$q.resolve();
