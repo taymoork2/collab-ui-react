@@ -1,18 +1,7 @@
 <div class="fusion-cluster-settings">
   <div class="cs-form">
     <email-notifications-section service-id="'squared-fusion-media'"></email-notifications-section>
-    <div>
-      <setting-section setting="mediaServiceSettings.videoQuality" class="needs-border-top">
-        <div class="sub-section">
-          <h5 class="sub-section__label" translate="mediaFusion.videoQuality.title"></h5>
-          <p class="sub-section__description" translate="mediaFusion.videoQuality.description"></p>
-          <cs-toggle-switch ng-model="mediaServiceSettings.enableVideoQuality" ng-click="mediaServiceSettings.setEnableVideoQuality()"
-            toggle-id="toggleEnableVideoQuality" name="toggleEnableVideoQuality" size="small">
-
-          </cs-toggle-switch>
-        </div>
-      </setting-section>
-    </div>
+    <video-quality-section></video-quality-section>
     <deactivate-section service-id="'squared-fusion-media'" deactivate-modal-options="mediaServiceSettings.deactivateModalOptions"></deactivate-section>
     <documentation-section service-id="'squared-fusion-media'"></documentation-section>
   </div>

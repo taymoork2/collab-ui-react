@@ -213,7 +213,12 @@
     require('modules/hds/services/hds.service'),
   ]);
 
-  angular.module('Mediafusion', ['Core', 'Hercules', 'Squared']);
+  angular.module('Mediafusion', [
+    'Core',
+    'Hercules',
+    'Squared',
+    require('modules/mediafusion/media-service-v2/components/video-quality-section').default,
+  ]);
 
   angular.module('WebExApp', [
     'Core',
