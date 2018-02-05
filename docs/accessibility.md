@@ -6,11 +6,11 @@ Note: If you do not currently have a screen reader on your browser, there are ex
 
 It's important that everything in the tabindex be announced by screen readers.  When testing the keyboard accessibility aspects of any page, please ensure that your browser has a screen reader active to verify all expected information is announced.  The majority of focusable items will likely already have text in the page that is subsequently announced by the screen reader, however page items represented by icons, such as (x) close buttons or tooltips, do not have text on the page and thus do not announce anything (except possibly input-type or 'link') when tabbed to.  Aria-labels are to be used in these cases to assign text for the screen-reader to read without cluttering up the html with `<span>` elements that are hidden by css.
 
-- Button example
+- Icon only buttons require an aria-label while buttons with text do not
 ```html
 <button type="button" class="close" ng-click="$dismiss()" aria-label="{{::'common.close' | translate}}"></button>
 ```
-- Tooltip example (tooltips are not automatically added to the tabindex and require `tabindex="0"` to be included)
+- Tooltips are not automatically added to the tabindex and, unless they're on a button or an anchor element, will require `tabindex="0"` to be included
 ```html
 <i class="icon info-icon"
   tooltip="{{::'tooltip.demo | translate}}"

@@ -1096,13 +1096,12 @@
             views: {
               'modal@': {
                 controller: 'OnboardCtrl',
-                template: '<div ui-view="usersConvert"></div>',
+                template: '<div ui-view="usersConvert" class="convert-users"></div>',
               },
               'usersConvert@users.convert': {
                 template: '<cr-convert-users-modal/>',
                 resolve: {
                   modalInfo: function ($state) {
-                    $state.params.modalClass = 'convert-users';
                     $state.params.modalId = 'convertDialog';
                   },
                 },
@@ -1111,6 +1110,24 @@
             params: {
               manageUsers: false,
               readOnly: false,
+              isDefaultAutoAssignTemplateActivated: undefined,
+            },
+            resolve: {
+              isDefaultAutoAssignTemplateActivated: /* @ngInject */ function ($stateParams, AutoAssignTemplateModel, AutoAssignTemplateService, FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF3745AutoAssignLicenses).then(function (isEnabled) {
+                  if (!isEnabled) {
+                    return;
+                  }
+
+                  if (typeof $stateParams.isDefaultAutoAssignTemplateActivated !== 'undefined') {
+                    AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = $stateParams.isDefaultAutoAssignTemplateActivated;
+                    return;
+                  }
+                  return AutoAssignTemplateService.isDefaultAutoAssignTemplateActivated().then(function (isDefaultAutoAssignTemplateActivated) {
+                    AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = isDefaultAutoAssignTemplateActivated;
+                  });
+                });
+              },
             },
           })
           .state('users.convert.services', {
@@ -1129,9 +1146,23 @@
           })
           .state('users.convert.results', {
             views: {
-              'usersConvert@users.convert': {
-                template: require('modules/core/users/userAdd/addUsersResultsModal.tpl.html'),
+              'usersAdd@users.add': {
+                template: '<add-users-results-modal dismiss="$dismiss()" convert-pending="$resolve.convertPending" convert-users-flow="$resolve.convertUsersFlow" num-updated-users="$resolve.numUpdatedUsers" num-added-users="$resolve.numAddedUsers" results="$resolve.results"></add-users-results-modal>',
               },
+            },
+            resolve: stateParamsToResolveParams({
+              convertPending: false,
+              convertUsersFlow: false,
+              numUpdatedUsers: 0,
+              numAddedUsers: 0,
+              results: [],
+            }),
+            params: {
+              convertPending: false,
+              convertUsersFlow: false,
+              numUpdatedUsers: 0,
+              numAddedUsers: 0,
+              results: [],
             },
           })
           .state('users.csv', {
@@ -3058,6 +3089,16 @@
             controllerAs: 'customerList',
             params: {
               filter: null,
+            },
+          })
+          .state('partner-services-overview', {
+            url: '/services-overview',
+            template: '<services-overview url-params="$resolve.urlParams"></services-overview>',
+            parent: 'partner',
+            resolve: {
+              urlParams: /* @ngInject */ function ($stateParams) {
+                return $stateParams;
+              },
             },
           })
           .state('taasSuites', {
