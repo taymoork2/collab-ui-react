@@ -82,7 +82,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
                     nodeName: 'SPAN',
                     parentElement: {
                       attributes: [
-                      ]
+                      ],
                     },
                   }],
                   className: 'dynamic-prompt aa-message-height',
