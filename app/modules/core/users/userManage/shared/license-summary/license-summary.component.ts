@@ -37,7 +37,7 @@ class LicenseSummaryController implements ng.IComponentController {
     return this.LicenseUsageUtilService.getAdvancedMeetingSiteUrls(this.getSelectedLicenses());
   }
 
-  private getHybridUserEntitlements(): { [key: string]: ICrCheckboxItemState } {
+  private getUserEntitlements(): { [key: string]: ICrCheckboxItemState } {
     return _.get(this.autoAssignTemplateData, 'viewData.USER_ENTITLEMENT', {});
   }
 
@@ -53,9 +53,9 @@ class LicenseSummaryController implements ng.IComponentController {
     return this.LicenseUsageUtilService.getTotalLicenseVolume(offerName, this.getSelectedLicenses());
   }
 
-  public hasHybridUserEntitlement(entitlementName: string): boolean {
-    const hybridUserEntitlements = this.getHybridUserEntitlements();
-    return _.get(hybridUserEntitlements, `${entitlementName}.isSelected`, false);
+  public hasUserEntitlement(entitlementName: string): boolean {
+    const userEntitlements = this.getUserEntitlements();
+    return _.get(userEntitlements, `${entitlementName}.isSelected`, false);
   }
 }
 

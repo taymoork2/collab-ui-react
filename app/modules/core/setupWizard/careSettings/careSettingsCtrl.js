@@ -42,7 +42,7 @@ var HttpStatus = require('http-status-codes');
           if (result.status === HttpStatus.ACCEPTED) {
             vm.csOnboardingStatus = vm.status.SUCCESS;
           }
-        });
+        }).catch(_.noop);
       }
       if (Authinfo.isCareVoice() && vm.aaOnboardingStatus !== vm.status.SUCCESS) {
         promises.onBoardAA = SunlightConfigService.aaOnboard();
@@ -50,7 +50,7 @@ var HttpStatus = require('http-status-codes');
           if (result.status === HttpStatus.NO_CONTENT) {
             vm.aaOnboardingStatus = vm.status.SUCCESS;
           }
-        });
+        }).catch(_.noop);
       }
       if (vm.careSetupDoneByAdmin) {
         if (vm.appOnboardingStatus !== vm.status.SUCCESS) {
@@ -59,7 +59,7 @@ var HttpStatus = require('http-status-codes');
             if (result.status === HttpStatus.NO_CONTENT) {
               vm.appOnboardingStatus = vm.status.SUCCESS;
             }
-          });
+          }).catch(_.noop);
         }
         if (vm.jwtAppOnboardingStatus !== vm.status.SUCCESS) {
           promises.onBoardJwtApp = SunlightConfigService.onboardJwtApp();
@@ -67,7 +67,7 @@ var HttpStatus = require('http-status-codes');
             if (result.status === HttpStatus.NO_CONTENT) {
               vm.jwtAppOnboardingStatus = vm.status.SUCCESS;
             }
-          });
+          }).catch(_.noop);
         }
       }
       $q.all(promises).then(function (results) {

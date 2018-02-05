@@ -58,12 +58,14 @@ describe('CsdmSearchService', () => {
       let queryOneExecuted = false;
       let queryOneFinally = false;
       let queryTwoExecuted = false;
-      this.CsdmSearchService.search(searchObj).then(() => {
+      this.CsdmSearchService.search(searchObj, Caller.searchOrLoadMore).then(() => {
         queryOneExecuted = true;
-      }).finally(() => {
+      })
+      .catch(_.noop)
+      .finally(() => {
         queryOneFinally = true;
       });
-      this.CsdmSearchService.search(searchObj).then(() => {
+      this.CsdmSearchService.search(searchObj, Caller.searchOrLoadMore).then(() => {
         queryTwoExecuted = true;
       });
       this.$httpBackend.flush();

@@ -4,7 +4,7 @@
     </cs-header-left>
     <cs-header-right>
       <div cs-dropdown class="user-info dropdown">
-        <button cs-dropdown-toggle class="btn--user btn--sparkstatus dropdown-toggle" tabindex="0">
+        <button cs-dropdown-toggle class="btn--user btn--sparkstatus dropdown-toggle" aria-label="{{::'common.toggleMenu' | translate}}">
           <span class="icon icon-circle" ng-class="{unknown:  'helpdesk-grey', error: 'helpdesk-error', major_outage: 'helpdesk-error', warning: 'helpdesk-warning', partial_outage: 'helpdesk-yellow', operational: 'helpdesk-ok', degraded_performance:'helpdesk-yellow'}[helpdeskHeaderCtrl.overallSparkStatus]">
           </span>
         </button>
@@ -24,7 +24,7 @@
         </div>
       </div>
       <div cs-dropdown class="user-info dropdown">
-        <button cs-dropdown-toggle class="btn--user btn--history dropdown-toggle" ng-click="helpdeskHeaderCtrl.populateHistory()" tabindex="0">
+        <button cs-dropdown-toggle class="btn--user btn--history dropdown-toggle" ng-click="helpdeskHeaderCtrl.populateHistory()" aria-label="{{::'common.toggleMenu' | translate}}">
           <i class="icon icon-clock"></i>
         </button>
         <ul cs-dropdown-menu class="helpdesk-history-dropdown-menu" role="menu">

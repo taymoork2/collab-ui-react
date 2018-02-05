@@ -188,8 +188,8 @@ describe('Controller: SipDomainSettingController', function () {
     });
 
     it('addSipDomain should error gracefully', function () {
-      this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.reject());
       this.initController();
+      this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.reject());
 
       this.controller._inputValue = this.controller._validatedValue = 'alalalalalong!';
       this.controller.isConfirmed = true;
@@ -328,9 +328,12 @@ describe('Controller: SipDomainSettingController', function () {
     });
 
     describe('verifyAvailabilityAndValidity should set controller.verified based on the inputValue', function () {
+      beforeEach(function () {
+        this.initController();
+      });
+
       it('available response', function () {
         spyOn(this.SparkDomainManagementService, 'checkDomainAvailability').and.returnValue(this.$q.resolve(this.availableResponse));
-        this.initController();
         this.controller.form = getForm();
         this.controller.verifyAvailabilityAndValidity();
         this.$scope.$apply();
@@ -344,7 +347,6 @@ describe('Controller: SipDomainSettingController', function () {
 
       it('unavailable', function () {
         spyOn(this.SparkDomainManagementService, 'checkDomainAvailability').and.returnValue(this.$q.resolve(this.unavailableResponse));
-        this.initController();
         this.controller.form = getForm();
         this.controller.verifyAvailabilityAndValidity();
         this.$scope.$apply();
@@ -357,7 +359,6 @@ describe('Controller: SipDomainSettingController', function () {
 
       it('inputValue equals invalidInput', function () {
         spyOn(this.SparkDomainManagementService, 'checkDomainAvailability').and.returnValue(this.$q.reject(this.ERROR_FOUR_HUNDRED));
-        this.initController();
         this.controller.form = getForm();
         this.controller.verifyAvailabilityAndValidity();
         this.$scope.$apply();
@@ -370,7 +371,6 @@ describe('Controller: SipDomainSettingController', function () {
 
       it('error response', function () {
         spyOn(this.SparkDomainManagementService, 'checkDomainAvailability').and.returnValue(this.$q.reject(this.ERROR_FIVE_HUNDRED));
-        this.initController();
         this.controller.form = getForm();
         this.controller.verifyAvailabilityAndValidity();
         this.$scope.$apply();
@@ -383,7 +383,6 @@ describe('Controller: SipDomainSettingController', function () {
 
       it('unauthorized response', function () {
         spyOn(this.SparkDomainManagementService, 'checkDomainAvailability').and.returnValue(this.$q.reject(this.ERROR_FOUR_ZERO_ONE));
-        this.initController();
         this.controller.form = getForm();
         this.controller.verifyAvailabilityAndValidity();
         this.$scope.$apply();
@@ -396,8 +395,11 @@ describe('Controller: SipDomainSettingController', function () {
     });
 
     describe('first time wizard broadcast', function () {
-      it('should not save if inputValue is not updated', function () {
+      beforeEach(function () {
         this.initController();
+      });
+
+      it('should not save if inputValue is not updated', function () {
         this.controller.form = getForm();
         this.$rootScope.$broadcast(broadcasts.WIZARD_BROADCAST);
         this.$scope.$apply();
@@ -411,7 +413,6 @@ describe('Controller: SipDomainSettingController', function () {
 
       it('should save after inputValue is updated', function () {
         this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.resolve(this.unavailableResponse));
-        this.initController();
         this.controller.form = getForm();
         this.controller.inputValue = this.testInput;
         this.controller.isSSAReserved = false;
@@ -433,7 +434,6 @@ describe('Controller: SipDomainSettingController', function () {
 
       it('should signal an error if save returns with isDomainReserved as false', function () {
         this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.resolve(this.availableResponse));
-        this.initController();
         this.controller.form = getForm();
         this.controller.inputValue = this.testInput;
         this.controller.isSSAReserved = false;
@@ -449,8 +449,9 @@ describe('Controller: SipDomainSettingController', function () {
       });
 
       it('should signal a save error for a 502 error', function () {
-        this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.reject(this.ERROR_FIVE_ZERO_TWO));
-        this.initController();
+        this.SparkDomainManagementService.addSipDomain.and.callFake(() => {
+          return this.$q.reject(this.ERROR_FIVE_ZERO_TWO);
+        });
         this.controller.form = getForm();
         this.controller.inputValue = this.testInput;
         this.controller.isSSAReserved = false;
@@ -469,8 +470,9 @@ describe('Controller: SipDomainSettingController', function () {
       });
 
       it('should signal an unauthorized error for a 401 error', function () {
-        this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.reject(this.ERROR_FOUR_ZERO_ONE));
-        this.initController();
+        this.SparkDomainManagementService.addSipDomain.and.callFake(() => {
+          return this.$q.reject(this.ERROR_FOUR_ZERO_ONE);
+        });
         this.controller.form = getForm();
         this.controller.inputValue = this.testInput;
         this.controller.isSSAReserved = false;
@@ -481,8 +483,9 @@ describe('Controller: SipDomainSettingController', function () {
       });
 
       it('should signal a server error for a 500 error', function () {
-        this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.reject(this.ERROR_FIVE_HUNDRED));
-        this.initController();
+        this.SparkDomainManagementService.addSipDomain.and.callFake(() => {
+          return this.$q.reject(this.ERROR_FIVE_HUNDRED);
+        });
         this.controller.form = getForm();
         this.controller.inputValue = this.testInput;
         this.controller.isSSAReserved = false;
@@ -525,6 +528,7 @@ describe('Controller: SipDomainSettingController', function () {
 
     describe('Account Settings Save and Cancel Options', function () {
       beforeEach(function () {
+        this.initController();
         this.saveModal = _.cloneDeep(this.modal);
         this.saveModal.template = require('modules/core/settings/sipDomain/updateSipDomainWarning.tpl.html');
       });
@@ -534,7 +538,6 @@ describe('Controller: SipDomainSettingController', function () {
           result: this.$q.resolve(true),
         });
         this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.resolve(this.unavailableResponse));
-        this.initController();
 
         this.controller.form = getForm();
         this.controller.inputValue = this.testInput;
@@ -557,7 +560,6 @@ describe('Controller: SipDomainSettingController', function () {
           result: this.$q.reject(false),
         });
         this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.resolve(this.unavailableResponse));
-        this.initController();
 
         this.controller.form = getForm();
         this.controller.inputValue = this.testInput;
@@ -579,7 +581,6 @@ describe('Controller: SipDomainSettingController', function () {
       });
 
       it('should toggle the form off on the cancel broadcast', function () {
-        this.initController();
         this.controller.form = getForm();
         this.controller.inputValue = this.testInput;
         this.controller.sipForm = true;

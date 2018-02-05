@@ -32,7 +32,8 @@ describe('Controller: AABuilderMainCtrl', function () {
       'DoRestService',
       'FeatureToggleService',
       'HuronConfig',
-      'ServiceSetup'
+      'ServiceSetup',
+      'AutoAttendantHybridCareService'
     );
 
     // JSON Files
@@ -149,6 +150,8 @@ describe('Controller: AABuilderMainCtrl', function () {
     spyOn(this.$rootScope, '$broadcast').and.callThrough();
     spyOn(this.$modalStack, 'getTop').and.returnValue({});
     spyOn(this.$modalStack, 'dismiss');
+    spyOn(this.AACommonService, 'isHybridEnabledOnOrg').and.returnValue(true);
+    spyOn(this.AutoAttendantHybridCareService, 'isHybridAndEPTConfigured').and.returnValue(this.$q.resolve(true));
 
     // mock element
     this.elem = {

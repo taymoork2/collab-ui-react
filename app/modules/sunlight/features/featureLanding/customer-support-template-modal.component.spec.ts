@@ -75,4 +75,12 @@ describe('Component: customer support template modal', () => {
     this.controller.isHybridOrSparkCallEnabled();
     expect(this.controller.isHybridOrSparkCallEnabled()).toBe(false);
   });
+
+  it('learnMoreLink function call for opening the care voice features Modal.', function () {
+    this.controller.learnMoreLink();
+    expect(this.$scope.dismiss).not.toHaveBeenCalled();
+    expect(this.$modal.open).toHaveBeenCalledWith({
+      template: '<care-voice-features-modal dismiss="$dismiss()" class="care-modal"></care-voice-features-modal>',
+    });
+  });
 });

@@ -25,7 +25,7 @@
       </p>
       <div ng-if="feature.showWarning">
         <i class="icon icon-information {{feature.color}}"></i>
-        <span translate="{{feature.warning}}"></span><a class="aa-learn-more" translate="careChatTpl.learnMoreLink"></a>
+        <span translate="{{feature.warning}}" translate-value-onclick="$ctrl.learnMoreLink()" translate-compile />
       </div>
   </div>
     <div ng-if="$ctrl.features.length === 0">

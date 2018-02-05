@@ -301,6 +301,14 @@ sq-places-page-overview,
     padding: 2px 8px 0;
     background-color: #eee;
     color: #6a6b6c;
+    max-width: 100%;
+    > span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    :hover {
+      white-space: normal;
+    }
   }
 
   .add-tag {

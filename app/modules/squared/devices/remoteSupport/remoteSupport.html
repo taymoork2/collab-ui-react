@@ -2,7 +2,8 @@
   <button
     type="button"
     class="close"
-    ng-click="$dismiss()">
+    ng-click="$dismiss()"
+    aria-label="{{::'common.close' | translate}}">
   </button>
   <h3
     class="modal-title"
@@ -11,7 +12,6 @@
 </div>
 
 <div class="modal-body remote-support-modal-body">
-
   <h4 translate="spacesPage.remoteAccessKey.rsuKey"></h4>
   <p translate="spacesPage.remoteAccessKey.rsuKeyDesc"></p>
 
@@ -25,7 +25,6 @@
       <div ng-show="!rs.currentDevice.isOnline"><i class="icon icon-reset"></i> <span>Reset Key</span></div>
     </div>
   </div>
-
   </div>
 
 </div>
