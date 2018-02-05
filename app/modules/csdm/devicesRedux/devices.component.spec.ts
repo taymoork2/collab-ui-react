@@ -1,44 +1,33 @@
-'use strict';
+import devicesReduxModule from './index';
+import searchModule from '../services/index';
 
-describe('Controller: devicesLegacyController', function () {
-  var $scope, $state, $controller, controller, $httpBackend, $timeout, $q;
-  var UrlConfig, AccountOrgService, Authinfo, FeatureToggleService, Userservice, ServiceDescriptorService;
+describe('Controller: DevicesReduxCtrl', () => {
+  let controller;
 
-  beforeEach(angular.mock.module('Squared'));
-  beforeEach(angular.mock.module('Huron'));
-  beforeEach(angular.mock.module('Core'));
-  beforeEach(angular.mock.module('Sunlight'));
-
-  beforeEach(inject(dependencies));
+  beforeEach(function () {
+    this.initModules(searchModule, devicesReduxModule/*, userServiceModuleName, serviceDescriptorModuleName*/);
+    this.injectDependencies('$rootScope', '$state', '$timeout', '$controller', '$httpBackend', '$q', 'UrlConfig',
+        'AccountOrgService', 'Authinfo', 'FeatureToggleService', 'Userservice', 'ServiceDescriptorService');
+  });
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies($rootScope, _$state_, _$timeout_, _$controller_, _$httpBackend_, _$q_, _UrlConfig_, _AccountOrgService_, _Authinfo_, _FeatureToggleService_, _Userservice_, _ServiceDescriptorService_) {
-    $scope = $rootScope.$new();
-    $state = _$state_;
-    $controller = _$controller_;
-    $httpBackend = _$httpBackend_;
-    $timeout = _$timeout_;
-    $q = _$q_;
-    UrlConfig = _UrlConfig_;
-    AccountOrgService = _AccountOrgService_;
-    Authinfo = _Authinfo_;
-    FeatureToggleService = _FeatureToggleService_;
-    Userservice = _Userservice_;
-    ServiceDescriptorService = _ServiceDescriptorService_;
+  afterEach(function () {
+    controller = null;
+  });
+
+  function initController() {
+    controller = this.$controller('DevicesReduxCtrl', {
+      $scope: this.$scope,
+      $state: this.$state,
+    });
+    this.$scope.$apply();
   }
 
   function initSpies() {
-    // TODO - eww this is wrong - Just make this init right now
-    $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/null/devices/?type=huron').respond([]);
-    $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/nonExistingDevices').respond(200);
-    $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/devices?checkDisplayName=false&checkOnline=false').respond(200);
-    $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/devices').respond(200);
-    $httpBackend.expectGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/devices?checkDisplayName=false&checkOnline=false');
-    $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/codes').respond(200);
-    $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
+    this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
 
-    spyOn(Userservice, 'getUser').and.callFake(function (userId, callback) {
+    spyOn(this.Userservice, 'getUser').and.callFake(function (_userId, callback) {
       callback({
         data: {
           meta: {},
@@ -46,63 +35,44 @@ describe('Controller: devicesLegacyController', function () {
       });
     });
 
-    spyOn(AccountOrgService, 'getAccount').and.returnValue({
+    spyOn(this.AccountOrgService, 'getAccount').and.returnValue({
       then: _.noop,
     });
 
-    spyOn(ServiceDescriptorService, 'getServices').and.returnValue($q.resolve([]));
+    spyOn(this.ServiceDescriptorService, 'getServices').and.returnValue(this.$q.resolve([]));
 
-    spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(true));
-    spyOn(FeatureToggleService, 'atlasDeviceExportGetStatus').and.returnValue($q.resolve(true));
-    spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(true));
-    spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve(true));
-    spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(true));
-    spyOn(FeatureToggleService, 'csdmMultipleDevicesPerPlaceGetStatus').and.returnValue($q.resolve(true));
+    spyOn(this.FeatureToggleService, 'csdmATAGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'atlasDeviceExportGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'csdmMultipleDevicesPerPlaceGetStatus').and.returnValue(this.$q.resolve(true));
   }
 
-  function initController() {
-    controller = $controller('devicesLegacyController', {
-      $scope: $scope,
-      $state: $state,
+  describe('controller', function() {
+    it('should init controller', function() {
+      expect(controller).toBeDefined();
+      this.$httpBackend.flush();
+      this.$httpBackend.verifyNoOutstandingRequest();
+      this.$httpBackend.verifyNoOutstandingExpectation();
     });
-    $scope.$apply();
-  }
-
-  it('should init controller', function () {
-    expect(controller).toBeDefined();
-    $httpBackend.flush();
-    $httpBackend.verifyNoOutstandingRequest();
-    $httpBackend.verifyNoOutstandingExpectation();
   });
 
-  it('polls for devices every 30 second', function () {
-    $httpBackend.flush();
-    $httpBackend.verifyNoOutstandingRequest();
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.expectGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/devices');
-    $timeout.flush(30500);
-    //$timeout.verifyNoPendingTasks();
-    //$scope.$digest();
-    $httpBackend.flush();
-    $httpBackend.verifyNoOutstandingRequest();
-    $httpBackend.verifyNoOutstandingExpectation();
-  });
-
-  describe('startAddDeviceFlow function', function () {
-    var userCisUuid;
-    var email;
-    var orgId;
-    var adminFirstName;
-    var adminLastName;
-    var adminDisplayName;
-    var adminUserName;
-    var adminCisUuid;
-    var adminOrgId;
-    var isEntitledToHuron;
-    var isEntitledToRoomSystem;
-    var showATA;
-    var showPersonal;
-    var csdmMultipleDevicesPerPlaceFeature;
+  describe('startAddDeviceFlow function', () => {
+    let userCisUuid;
+    let email;
+    let orgId;
+    let adminFirstName;
+    let adminLastName;
+    let adminDisplayName;
+    let adminUserName;
+    let adminCisUuid;
+    let adminOrgId;
+    let isEntitledToHuron;
+    let isEntitledToRoomSystem;
+    let showATA;
+    let showPersonal;
+    let csdmMultipleDevicesPerPlaceFeature;
     beforeEach(function () {
       isEntitledToHuron = true;
       isEntitledToRoomSystem = true;
@@ -119,11 +89,11 @@ describe('Controller: devicesLegacyController', function () {
       adminCisUuid = 'adminCisUuid';
       adminOrgId = 'adminOrgId';
       spyOn(controller, 'isOrgEntitledToHuron').and.returnValue(isEntitledToHuron);
-      spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(isEntitledToRoomSystem);
-      spyOn(Authinfo, 'getUserId').and.returnValue(userCisUuid);
-      spyOn(Authinfo, 'getPrimaryEmail').and.returnValue(email);
-      spyOn(Authinfo, 'getOrgId').and.returnValue(orgId);
-      spyOn($state, 'go');
+      spyOn(this.Authinfo, 'isDeviceMgmt').and.returnValue(isEntitledToRoomSystem);
+      spyOn(this.Authinfo, 'getUserId').and.returnValue(userCisUuid);
+      spyOn(this.Authinfo, 'getPrimaryEmail').and.returnValue(email);
+      spyOn(this.Authinfo, 'getOrgId').and.returnValue(orgId);
+      spyOn(this.$state, 'go');
       controller.adminUserDetails = {
         firstName: adminFirstName,
         lastName: adminLastName,
@@ -136,12 +106,12 @@ describe('Controller: devicesLegacyController', function () {
       controller.showPersonal = showPersonal;
       controller.csdmMultipleDevicesPerPlaceFeature = csdmMultipleDevicesPerPlaceFeature;
       controller.startAddDeviceFlow();
-      $scope.$apply();
+      this.$scope.$apply();
     });
 
     it('should set the wizardState with correct fields for the wizard if places toggle is on', function () {
-      expect($state.go).toHaveBeenCalled();
-      var wizardState = $state.go.calls.mostRecent().args[1].wizard.state().data;
+      expect(this.$state.go).toHaveBeenCalled();
+      const wizardState = this.$state.go.calls.mostRecent().args[1].wizard.state().data;
       expect(wizardState.title).toBe('addDeviceWizard.newDevice');
       expect(wizardState.function).toBe('addDevice');
       expect(wizardState.showATA).toBe(showATA);
@@ -164,34 +134,34 @@ describe('Controller: devicesLegacyController', function () {
     });
   });
 
-  describe('Feature toggle loading', function () {
+  describe('Feature toggle loading', () => {
     it('should resolve toggle loading', function () {
-      controller = $controller('devicesLegacyController', {
-        $scope: $scope,
-        $state: $state,
-        FeatureToggleService: FeatureToggleService,
+      controller = this.$controller('DevicesReduxCtrl', {
+        $scope: this.$scope,
+        $state: this.$state,
+        FeatureToggleService: this.FeatureToggleService,
       });
       expect(controller.addDeviceIsDisabled).toBeTruthy();
-      $scope.$digest();
+      this.$scope.$digest();
       expect(controller.addDeviceIsDisabled).toBeFalsy();
     });
 
     it('should resolve toggle loading if a promise fails', function () {
-      var deferred = $q.defer();
-      FeatureToggleService.csdmHybridCallGetStatus.and.returnValue(deferred.promise);
-      controller = $controller('devicesLegacyController', {
-        $scope: $scope,
-        $state: $state,
+      const deferred = this.$q.defer();
+      this.FeatureToggleService.csdmHybridCallGetStatus.and.returnValue(deferred.promise);
+      controller = this.$controller('DevicesReduxCtrl', {
+        $scope: this.$scope,
+        $state: this.$state,
       });
       expect(controller.addDeviceIsDisabled).toBeTruthy();
       deferred.reject();
-      $scope.$digest();
+      this.$scope.$digest();
       expect(controller.addDeviceIsDisabled).toBeFalsy();
     });
   });
 
-  describe('export device data', function () {
-    var $modal, DeviceExportService, fakeModal, Notification;
+  describe('export device data', () => {
+    let $modal, DeviceExportService, fakeModal, Notification;
     beforeEach(inject(function (_$modal_, _DeviceExportService_, _Notification_) {
       $modal = _$modal_;
       DeviceExportService = _DeviceExportService_;
