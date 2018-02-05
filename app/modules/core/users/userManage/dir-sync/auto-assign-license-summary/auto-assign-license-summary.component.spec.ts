@@ -24,9 +24,9 @@ describe('Component: userManageDirSyncAutoAssignLicenseSummary:', () => {
 
   describe('primary behaviors (view):', () => {
     it('should bind header and description keys to license-summary-modal-body', function (this: Test) {
-      expect(this.components.licenseSummaryModalBody.bindings[0].titleKey).toEqual('userManage.autoAssignLicenseSummaryForDirSync.header');
-      expect(this.components.licenseSummaryModalBody.bindings[0].descriptionKey).toEqual('userManage.autoAssignLicenseSummaryForDirSync.description');
-      expect(this.components.licenseSummaryModalBody.bindings[0].autoAssignTemplateData).toBeUndefined();
+      expect(this.components.licenseSummaryModalBody.bindings[0].titleKey).toBe('userManage.autoAssignLicenseSummaryForDirSync.header');
+      expect(this.components.licenseSummaryModalBody.bindings[0].descriptionKey).toBe('userManage.autoAssignLicenseSummaryForDirSync.description');
+      expect(this.components.licenseSummaryModalBody.bindings[0].autoAssignTemplateData).not.toBeDefined();
     });
   });
 });

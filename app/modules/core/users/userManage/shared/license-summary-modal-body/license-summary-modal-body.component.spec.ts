@@ -39,10 +39,7 @@ describe('Component: licenseSummaryModalBody:', () => {
 
     describe('with initial autoAssignTemplateData', () => {
       it('should immediately show license-summary without needing to load data', function (this: Test) {
-        const autoAssignTemplateData = {
-          some: 'data',
-        };
-        this.$scope.myAutoAssignTemplateData = autoAssignTemplateData;
+        this.$scope.myAutoAssignTemplateData = 'fake-auto-assign-template-data';
         this.compileComponent('licenseSummaryModalBody', {
           titleKey: 'my-title-key',
           descriptionKey: 'my-description-key',
@@ -56,15 +53,12 @@ describe('Component: licenseSummaryModalBody:', () => {
         expect(this.view.find(View.LICENSE_SUMMARY)).toExist();
 
         expect(this.AutoAssignTemplateService.getDefaultStateData).not.toHaveBeenCalled();
-        expect(this.components.licenseSummary.bindings[0].autoAssignTemplateData).toEqual(autoAssignTemplateData);
+        expect(this.components.licenseSummary.bindings[0].autoAssignTemplateData).toBe('fake-auto-assign-template-data');
       });
     });
 
     describe('without initial autoAssignTemplateData', () => {
       it('should show loading before license-summary loads with autoAssignTemplateData', function (this: Test) {
-        const autoAssignTemplateData = {
-          some: 'data',
-        };
         this.compileComponent('licenseSummaryModalBody', {
           titleKey: 'my-title-key',
           descriptionKey: 'my-description-key',
@@ -78,12 +72,12 @@ describe('Component: licenseSummaryModalBody:', () => {
         expect(this.view.find(View.LICENSE_SUMMARY)).not.toExist();
 
         expect(this.AutoAssignTemplateService.getDefaultStateData).toHaveBeenCalled();
-        this.getDefaultStateDataDeferred.resolve(autoAssignTemplateData);
+        this.getDefaultStateDataDeferred.resolve('fake-auto-assign-template-data');
         this.$scope.$apply();
 
         expect(this.view.find(View.LOADING_SPINNER)).not.toExist();
         expect(this.view.find(View.LICENSE_SUMMARY)).toExist();
-        expect(this.components.licenseSummary.bindings[0].autoAssignTemplateData).toEqual(autoAssignTemplateData);
+        expect(this.components.licenseSummary.bindings[0].autoAssignTemplateData).toBe('fake-auto-assign-template-data');
       });
     });
   });

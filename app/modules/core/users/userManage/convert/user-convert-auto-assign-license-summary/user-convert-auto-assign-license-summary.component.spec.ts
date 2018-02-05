@@ -37,10 +37,10 @@ describe('Component: userManageDirSyncAutoAssignLicenseSummary:', () => {
 
   describe('primary behaviors (view):', () => {
     it('should bind title, header, and description keys to multi-step-modal and license-summary-modal-body', function (this: Test) {
-      expect(this.components.multiStepModal.bindings[0].l10nTitle).toEqual('homePage.convertUsers');
-      expect(this.components.licenseSummaryModalBody.bindings[0].titleKey).toEqual('userManage.autoAssignLicenseSummaryForConvert.header');
-      expect(this.components.licenseSummaryModalBody.bindings[0].descriptionKey).toEqual('userManage.autoAssignLicenseSummaryForConvert.description');
-      expect(this.components.licenseSummaryModalBody.bindings[0].autoAssignTemplateData).toBeUndefined();
+      expect(this.components.multiStepModal.bindings[0].l10nTitle).toBe('homePage.convertUsers');
+      expect(this.components.licenseSummaryModalBody.bindings[0].titleKey).toBe('userManage.autoAssignLicenseSummaryForConvert.header');
+      expect(this.components.licenseSummaryModalBody.bindings[0].descriptionKey).toBe('userManage.autoAssignLicenseSummaryForConvert.description');
+      expect(this.components.licenseSummaryModalBody.bindings[0].autoAssignTemplateData).not.toBeDefined();
     });
 
     it('should navigate back to users.convert', function (this: Test) {
