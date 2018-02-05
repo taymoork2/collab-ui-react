@@ -28,7 +28,7 @@
   &__row > .columns {
     &:not(:last-child) {
       @media #{$small-only} {
-        @include vr-spacing(mb, 2.25);
+        @include vr-spacing(mb, 1.5);
       }
     }
 
@@ -39,12 +39,8 @@
     }
   }
 
-  &__modal-body > &__row:first-child {
-    @include vr-spacing(pt, .75);
-  }
-
   &__hr {
-    @include vr-spacing(mv, 2.25);
+    @include vr-spacing(mv, 1.5);
   }
 
   &__auto-assign-title-row {
