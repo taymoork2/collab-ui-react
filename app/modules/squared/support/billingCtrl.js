@@ -5,7 +5,7 @@
     .controller('BillingCtrl', BillingCtrl);
 
   /* @ngInject */
-  function BillingCtrl($scope, $filter, Notification, Log, PageParam, $stateParams, BillingService) {
+  function BillingCtrl($scope, $filter, $translate, Notification, Log, PageParam, $stateParams, BillingService) {
     var enc;
     $scope.orderDetails = [];
 
@@ -62,7 +62,8 @@
     };
 
     var actionsTemplate = '<span cs-dropdown class="actions-menu">' +
-      '<button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
+      '<button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle" aria-label="' +
+      $translate.instant('common.close') + '">' +
       '<i class="icon icon-three-dots"></i>' +
       '</button>' +
       '<ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">' +

@@ -11,6 +11,7 @@ class CustomerSupportTemplateModalCtrl implements ng.IComponentController {
 
   /* @ngInject*/
   constructor(
+    public $modal,
     public $state,
     public Authinfo) {
   }
@@ -99,6 +100,13 @@ class CustomerSupportTemplateModalCtrl implements ng.IComponentController {
     } else {
       return false;
     }
+  }
+
+  public learnMoreLink(): void {
+    const templateStr = '<care-voice-features-modal dismiss="$dismiss()" class="care-modal"></care-voice-features-modal>';
+    this.$modal.open({
+      template: templateStr,
+    });
   }
 }
 

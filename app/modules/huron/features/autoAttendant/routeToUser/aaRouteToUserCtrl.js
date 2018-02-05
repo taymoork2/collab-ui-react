@@ -6,7 +6,7 @@
     .controller('AARouteToUserCtrl', AARouteToUserCtrl);
 
   /* @ngInject */
-  function AARouteToUserCtrl($q, $scope, $translate, AAUiModelService, AAUserService, AACommonService, Authinfo, AutoAttendantCeMenuModelService, LineResource, UserListService, Userservice, UserServiceVoice) {
+  function AARouteToUserCtrl($q, $scope, $translate, AutoAttendantHybridCareService, AAUiModelService, AAUserService, AACommonService, Authinfo, AutoAttendantCeMenuModelService, LineResource, UserListService, Userservice, UserServiceVoice) {
     var vm = this;
     var conditional = 'conditional';
 
@@ -52,11 +52,10 @@
     var orgHasHybridEnabled = false;
     var CONSTANTS = {};
 
-    //constants: squareFusionEc and squareFusionUc will used when we replace hybrid toggle with the hybrid api call
-    CONSTANTS.squareFusionEc = 'squared-fusion-ec';
-    CONSTANTS.squareFusionUc = 'squared-fusion-uc';
-    CONSTANTS.ciscouc = 'ciscouc';
     CONSTANTS.spark = 'spark';
+    CONSTANTS.work = 'work';
+    CONSTANTS.squaredFusionEc = 'squared-fusion-ec';
+    CONSTANTS.squaredFusionUc = 'squared-fusion-uc';
 
     /////////////////////
 
@@ -82,6 +81,7 @@
           vm.userSelected.description = userName;
         });
       }
+      orgHasHybridEnabled = AutoAttendantHybridCareService.getHybridandEPTConfiguration();
     }
 
     function saveUiModel() {
@@ -101,8 +101,7 @@
       action.setValue(vm.userSelected.id);
     }
 
-    // format name with extension
-    function formatName(user, extension) {
+    function getNameAsPerPriority(user) {
       var name;
       if (!_.isEmpty(_.get(user, 'displayName'))) {
         name = user.displayName;
@@ -115,7 +114,12 @@
           name = _.get(user.name, 'givenName') + ' ' + _.get(user.name, 'familyName');
         }
       }
+      return name;
+    }
 
+    // format name with extension
+    function formatName(user, extension) {
+      var name = getNameAsPerPriority(user);
       if (!_.isUndefined(extension) && extension.length > 0) {
         return name + ' (' + extension + ')';
       } else {
@@ -145,16 +149,20 @@
 
         return getUserExtension(userQuery).then(
           function (extension) {
+            // retrieves spark call user
             if (extension != null) {
               return formatName(userObj, extension);
             } else {
               return formatName(userObj, '');
             }
-          },
-          function () {
+          }).catch(function (error) {
+          if (error.status === 404) {
+            // When the org has hybrid enabled, check for retrieving call free or hybrid users
+            return addOrRetrieveUsers(user, false);
+          } else {
             return formatName(userObj, '');
           }
-        );
+        });
       });
     }
 
@@ -234,6 +242,7 @@
           var userInfoPromises = [];
           _.forEach(data.Resources, function (aUser) {
             userQuery.userId = aUser.id;
+
             userInfoPromises.push(getUserExtension(userQuery).then(function (extension) {
               // only add to the user list if they have a primary extension
               if (extension) {
@@ -250,18 +259,8 @@
                 }
               }
             }).catch(function (error) {
-              // if it's not found, there is no extension, don't add to list.
               if (error.status === 404) {
-                if (!$scope.voicemail && orgHasHybridEnabled) {
-                  // when user has selected route to user and org has hybrid enabled
-                  if (!_.isEmpty(aUser.entitlements) && (_.indexOf(aUser.entitlements, CONSTANTS.spark) > -1)) {
-                    var sparkCallUser = (_.indexOf(aUser.entitlements, CONSTANTS.ciscouc) > -1);
-                    if (!sparkCallUser && checkIfUsersLengthLessThanFullLoad()) {
-                      // appends (spark) in place of extension in case of callFreeUsers
-                      updateUserData(aUser, CONSTANTS.spark);
-                    }
-                  }
-                }
+                addOrRetrieveUsers(aUser, true);
               } else {
                 // if CMI user call otherwise failed, not immediately clear if user has extension or not, show just the user in the UI
                 updateUserData(aUser, '');
@@ -285,9 +284,60 @@
         } else {
           defer.reject();
         }
-      }, searchStr, false);
-
+      }, searchStr, false, null, null, orgHasHybridEnabled);
       return defer.promise;
+    }
+
+    function getHybridUserPhoneNumber(phoneNumbers) {
+      var result;
+      if (!_.isEmpty(phoneNumbers) && phoneNumbers.length > 0) {
+        result = _.find(phoneNumbers, function (number) {
+          if (!_.isEmpty(_.get(number, 'type')) && _.isEqual(_.get(number, 'type'), CONSTANTS.work)) {
+            return _.get(number, 'value', '');
+          }
+        });
+      }
+      return result;
+    }
+
+    function addOrRetrieveUsers(user, pushUser) {
+      // This function can be used for getting all users or retrieve the already selected user on load
+      // pushUser parameter is set to true when getting all users and set to false when retrieving already selected user
+      if (orgHasHybridEnabled) {
+        if (!_.isEmpty(user.entitlements) && (_.indexOf(user.entitlements, CONSTANTS.spark) > -1)) {
+          var isUserHybrid = (_.indexOf(user.entitlements, CONSTANTS.squaredFusionEc) > -1) && (_.indexOf(user.entitlements, CONSTANTS.squaredFusionUc) > -1);
+
+          if (isUserHybrid) {
+            var phoneNumber = getHybridUserPhoneNumber(_.get(user, 'phoneNumbers'));
+            if (!_.isUndefined(phoneNumber)) {
+              return (pushUser) ? updateUserData(user, phoneNumber.value) : formatName(user, phoneNumber.value);
+            } else {
+              // when hybrid user do not have an extension
+              return (pushUser) ? updateHybridUserDataWithoutExtension(user) : getHybridUserDescription(user);
+            }
+          } else {
+            // when user is call free
+            return (pushUser) ? updateUserData(user, _.capitalize(CONSTANTS.spark)) : formatName(user, _.capitalize(CONSTANTS.spark));
+          }
+        }
+      }
+    }
+
+    function getHybridUserDescription(user) {
+      var name = getNameAsPerPriority(user);
+      if (name !== user.userName) {
+        name = name + ' (' + user.userName + ')';
+      }
+      return name;
+    }
+
+    function updateHybridUserDataWithoutExtension(user) {
+      var name = getHybridUserDescription(user);
+
+      vm.users.push({
+        description: name,
+        id: user.id,
+      });
     }
 
     function checkIfUsersLengthLessThanFullLoad() {
@@ -356,12 +406,6 @@
             vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
             var action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToUserOrVM, '');
             vm.menuKeyEntry.addAction(action);
-          }
-        }
-        if (!$scope.voicemail) {
-          //TODO: Replace hybrid toggle with actual API call andd add check for whether enterprise trunking is enabled
-          if (AACommonService.isHybridEnabledOnOrg()) {
-            orgHasHybridEnabled = true;
           }
         }
       }
