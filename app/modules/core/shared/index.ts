@@ -1,3 +1,4 @@
+import crIconInfoModuleName from './cr-icon-info';
 import crProgressbarModuleName from './cr-progressbar';
 import multiStepModalModuleName from './multi-step-modal';
 import runningTaskStatusModuleName from './running-task-status';
@@ -10,6 +11,7 @@ export { OfferName } from './offer-name.keys';
 
 export default angular
   .module('core.shared', [
+    crIconInfoModuleName,
     crProgressbarModuleName,
     multiStepModalModuleName,
     runningTaskStatusModuleName,
