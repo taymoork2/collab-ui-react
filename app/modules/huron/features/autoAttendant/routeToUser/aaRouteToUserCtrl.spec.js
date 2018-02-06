@@ -594,6 +594,8 @@ describe('Controller: AARouteToUserCtrl', function () {
 
         $scope.$apply();
         expect(controller.users[5].description).toBe(result);
+        expect(controller.users[5].type).toBe('hybridUser');
+        expect(controller.users[5].sipUri).toBeUndefined();
       });
 
       it('should show hybrid user firstName lastName along with email, when user displayName does not exist and type and work are undefined in response', function () {
@@ -611,6 +613,8 @@ describe('Controller: AARouteToUserCtrl', function () {
 
         $scope.$apply();
         expect(controller.users[1].description).toBe(result);
+        expect(controller.users[1].type).toBe('hybridUser');
+        expect(controller.users[1].sipUri).toBeUndefined();
       });
     });
 

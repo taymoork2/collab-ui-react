@@ -363,7 +363,7 @@
         "avatarSyncEnabled": false,
         "sipAddresses": [
           {
-            "type": "cloud-calling",
+            "type": "cloud",
             "value": "user@webex.cisco.com"
           }
         ]
