@@ -1,12 +1,17 @@
-<div>
-  <input
-    cs-input
-    type="checkbox"
-    id="{{$ctrl.formItemId}}"
-    name="{{$ctrl.formItemId}}"
-    cs-input-label="{{:: $ctrl.l10nLabel | translate}}"
-    ng-model="$ctrl.isSelected"
-    ng-disabled="$ctrl.isDisabled"
-    ng-change="$ctrl.recvChange()">
+<div ng-class="{
+  'cr-checkbox-item--selected': $ctrl.isSelected,
+  'cr-checkbox-item--disabled': $ctrl.isDisabled
+  }">
+  <div>
+    <input
+      cs-input
+      type="checkbox"
+      id="{{$ctrl.formItemId}}"
+      name="{{$ctrl.formItemId}}"
+      cs-input-label="{{:: $ctrl.l10nLabel | translate}}"
+      ng-model="$ctrl.isSelected"
+      ng-disabled="$ctrl.isDisabled"
+      ng-change="$ctrl.recvChange()">
+  </div>
+  <div class="cr-checkbox-item__description" ng-transclude></div>
 </div>
-<div class="assignable_item_checkbox__description" ng-transclude></div>
