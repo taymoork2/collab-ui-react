@@ -15,12 +15,14 @@
   <cs-sp-section class="hybrid-services-user-sidepanel">
     <div class="section-title-row">
       <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-ec"></span>
-      <cs-toggle-switch ng-if="!$ctrl.loadingPage"
-                        toggle-id="callServiceConnectEntitledToggle"
-                        ng-model="$ctrl.entitledToggle"
-                        cs-change="$ctrl.changeEntitlement(toggleValue)"
-                        size="small"
-                        is-disabled="!$ctrl.loadingPage && !$ctrl.userHasEntitlement('squared-fusion-uc') || $ctrl.couldNotReadUser">
+      <cs-toggle-switch
+        ng-if="!$ctrl.loadingPage"
+        toggle-id="callServiceConnectEntitledToggle"
+        ng-model="$ctrl.entitledToggle"
+        cs-change="$ctrl.changeEntitlement(toggleValue)"
+        size="small"
+        is-disabled="!$ctrl.loadingPage && !$ctrl.userHasEntitlement('squared-fusion-uc') || $ctrl.couldNotReadUser"
+        cs-aria-label="{{::'hercules.cloudExtensions.serviceNames.squared-fusion-ec' | translate}}">
       </cs-toggle-switch>
       <span cs-loader
             class="hybrid-services-label loader-example--small"
