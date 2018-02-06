@@ -1,32 +1,32 @@
 import moduleName from './index';
 import { AutoAssignLicenseSummaryController } from './auto-assign-license-summary.component';
 
-import { LicenseSummaryModalBodyComponent } from 'modules/core/users/userManage/shared/license-summary-modal-body/license-summary-modal-body.component';
+import { AutoAssignTemplateSummaryContainerComponent } from 'modules/core/users/userManage/shared/auto-assign-template-summary-container/auto-assign-template-summary-container.component';
 
 type Test = atlas.test.IComponentTest<AutoAssignLicenseSummaryController, {
 }, {
   components: {
-    licenseSummaryModalBody: atlas.test.IComponentSpy<LicenseSummaryModalBodyComponent>,
+    autoAssignTemplateSummaryContainer: atlas.test.IComponentSpy<AutoAssignTemplateSummaryContainerComponent>,
   },
 }>;
 
 describe('Component: userManageDirSyncAutoAssignLicenseSummary:', () => {
   beforeEach(function (this: Test) {
     this.components = {
-      licenseSummaryModalBody: this.spyOnComponent('licenseSummaryModalBody'),
+      autoAssignTemplateSummaryContainer: this.spyOnComponent('autoAssignTemplateSummaryContainer'),
     };
     this.initModules(
       moduleName,
-      this.components.licenseSummaryModalBody,
+      this.components.autoAssignTemplateSummaryContainer,
     );
     this.compileComponent('userManageDirSyncAutoAssignLicenseSummary', {});
   });
 
   describe('primary behaviors (view):', () => {
-    it('should bind header and description keys to license-summary-modal-body', function (this: Test) {
-      expect(this.components.licenseSummaryModalBody.bindings[0].titleKey).toBe('userManage.autoAssignLicenseSummaryForDirSync.header');
-      expect(this.components.licenseSummaryModalBody.bindings[0].descriptionKey).toBe('userManage.autoAssignLicenseSummaryForDirSync.description');
-      expect(this.components.licenseSummaryModalBody.bindings[0].autoAssignTemplateData).not.toBeDefined();
+    it('should bind header and description keys to auto-assign-template-summary-container', function (this: Test) {
+      expect(this.components.autoAssignTemplateSummaryContainer.bindings[0].titleKey).toBe('userManage.autoAssignLicenseSummaryForDirSync.header');
+      expect(this.components.autoAssignTemplateSummaryContainer.bindings[0].descriptionKey).toBe('userManage.autoAssignLicenseSummaryForDirSync.description');
+      expect(this.components.autoAssignTemplateSummaryContainer.bindings[0].autoAssignTemplateData).not.toBeDefined();
     });
   });
 });

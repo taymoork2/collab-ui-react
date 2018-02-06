@@ -16,13 +16,13 @@ describe('Component: licenseSummary:', () => {
           LICENSE: {},
         },
       };
-      this.compileComponent('licenseSummary', {
+      this.compileComponent('autoAssignTemplateSummary', {
         autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
-      expect(this.view.find('.license-summary').length).toBe(1);
+      expect(this.view.find('.auto-assign-template-summary').length).toBe(1);
     });
 
-    it('should render a license-summary-item in the message row if a license has a MS offer name', function () {
+    it('should render a auto-assign-template-summary-item in the message row if a license has a MS offer name', function () {
       this.$scope.fakeAutoAssignTemplateData = {
         viewData: {
           LICENSE: {
@@ -36,15 +36,15 @@ describe('Component: licenseSummary:', () => {
         },
       };
 
-      this.compileComponent('licenseSummary', {
+      this.compileComponent('autoAssignTemplateSummary', {
         autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
 
-      expect(this.view.find('.license-summary').length).toBe(1);
-      expect(this.view.find('license-summary-item[l10n-title="onboardModal.paidCiscoSparkMessaging"]').length).toBe(1);
+      expect(this.view.find('.auto-assign-template-summary').length).toBe(1);
+      expect(this.view.find('auto-assign-template-summary-item[l10n-title="onboardModal.paidCiscoSparkMessaging"]').length).toBe(1);
     });
 
-    it('should render a license-summary-item in the meeting row if a license has a CF offer name', function () {
+    it('should render a auto-assign-template-summary-item in the meeting row if a license has a CF offer name', function () {
       this.$scope.fakeAutoAssignTemplateData = {
         viewData: {
           LICENSE: {
@@ -58,15 +58,15 @@ describe('Component: licenseSummary:', () => {
         },
       };
 
-      this.compileComponent('licenseSummary', {
+      this.compileComponent('autoAssignTemplateSummary', {
         autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
 
-      expect(this.view.find('.license-summary').length).toBe(1);
-      expect(this.view.find('license-summary-item[l10n-title="firstTimeWizard.meetingsInSpark"]').length).toBe(1);
+      expect(this.view.find('.auto-assign-template-summary').length).toBe(1);
+      expect(this.view.find('auto-assign-template-summary-item[l10n-title="firstTimeWizard.meetingsInSpark"]').length).toBe(1);
     });
 
-    it('should render a license-summary-item in the meeting row if a license has a CO offer name', function () {
+    it('should render a auto-assign-template-summary-item in the meeting row if a license has a CO offer name', function () {
       this.$scope.fakeAutoAssignTemplateData = {
         viewData: {
           LICENSE: {
@@ -80,15 +80,15 @@ describe('Component: licenseSummary:', () => {
         },
       };
 
-      this.compileComponent('licenseSummary', {
+      this.compileComponent('autoAssignTemplateSummary', {
         autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
 
-      expect(this.view.find('.license-summary').length).toBe(1);
-      expect(this.view.find('license-summary-item[l10n-title="onboardModal.paidSparkCall"]').length).toBe(1);
+      expect(this.view.find('.auto-assign-template-summary').length).toBe(1);
+      expect(this.view.find('auto-assign-template-summary-item[l10n-title="onboardModal.paidSparkCall"]').length).toBe(1);
     });
 
-    it('should render a license-summary-item in the meeting row if a license has a CDC offer name', function () {
+    it('should render a auto-assign-template-summary-item in the meeting row if a license has a CDC offer name', function () {
       this.$scope.fakeAutoAssignTemplateData = {
         viewData: {
           LICENSE: {
@@ -102,12 +102,12 @@ describe('Component: licenseSummary:', () => {
         },
       };
 
-      this.compileComponent('licenseSummary', {
+      this.compileComponent('autoAssignTemplateSummary', {
         autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
 
-      expect(this.view.find('.license-summary').length).toBe(1);
-      expect(this.view.find('license-summary-item[l10n-title="onboardModal.paidCDC"]').length).toBe(1);
+      expect(this.view.find('.auto-assign-template-summary').length).toBe(1);
+      expect(this.view.find('auto-assign-template-summary-item[l10n-title="onboardModal.paidCDC"]').length).toBe(1);
     });
   });
 
@@ -129,7 +129,7 @@ describe('Component: licenseSummary:', () => {
       };
       spyOn(this.LicenseUsageUtilService, 'getTotalLicenseUsage');
       spyOn(this.LicenseUsageUtilService, 'getTotalLicenseVolume');
-      this.compileComponent('licenseSummary', {
+      this.compileComponent('autoAssignTemplateSummary', {
         autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
 
@@ -151,7 +151,7 @@ describe('Component: licenseSummary:', () => {
             },
           },
         };
-        this.compileComponent('licenseSummary', {
+        this.compileComponent('autoAssignTemplateSummary', {
           autoAssignTemplateData: 'fakeAutoAssignTemplateData',
         });
         expect(this.controller.getUserEntitlements()).toEqual({
@@ -173,7 +173,7 @@ describe('Component: licenseSummary:', () => {
             },
           },
         };
-        this.compileComponent('licenseSummary', {
+        this.compileComponent('autoAssignTemplateSummary', {
           autoAssignTemplateData: 'fakeAutoAssignTemplateData',
         });
         spyOn(this.controller, 'getUserEntitlements').and.returnValue({

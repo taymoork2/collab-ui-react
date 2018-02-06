@@ -1,22 +1,22 @@
 import moduleName from './index';
-import { LicenseSummaryModalBodyController } from './license-summary-modal-body.component';
+import { AutoAssignTemplateSummaryContainerController } from './auto-assign-template-summary-container.component';
 
 import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template';
-import { LicenseSummaryComponent } from 'modules/core/users/userManage/shared/license-summary/license-summary.component';
+import { AutoAssignTemplateSummaryComponent } from 'modules/core/users/userManage/shared/auto-assign-template-summary/auto-assign-template-summary.component';
 
-type Test = atlas.test.IComponentTest<LicenseSummaryModalBodyController, {
+type Test = atlas.test.IComponentTest<AutoAssignTemplateSummaryContainerController, {
   AutoAssignTemplateService: AutoAssignTemplateService,
 }, {
   components: {
-    licenseSummary: atlas.test.IComponentSpy<LicenseSummaryComponent>,
+    licenseSummary: atlas.test.IComponentSpy<AutoAssignTemplateSummaryComponent>,
   },
   getDefaultStateDataDeferred: ng.IDeferred<any>,
 }>;
 
-describe('Component: licenseSummaryModalBody:', () => {
+describe('Component: autoAssignTemplateSummaryContainer:', () => {
   beforeEach(function (this: Test) {
     this.components = {
-      licenseSummary: this.spyOnComponent('licenseSummary'),
+      licenseSummary: this.spyOnComponent('autoAssignTemplateSummary'),
     };
     this.initModules(
       moduleName,
@@ -32,15 +32,15 @@ describe('Component: licenseSummaryModalBody:', () => {
   describe('primary behaviors (view):', () => {
     enum View {
       LOADING_SPINNER = '.text-center .icon.icon-5x.icon-spinner',
-      LICENSE_SUMMARY = 'license-summary',
-      TITLE = 'h4.license-summary-modal-body__title',
-      DESCRIPTION = 'p.license-summary-modal-body__description',
+      LICENSE_SUMMARY = 'auto-assign-template-summary',
+      TITLE = 'h4.auto-assign-template-summary-container__title',
+      DESCRIPTION = 'p.auto-assign-template-summary-container__description',
     }
 
     describe('with initial autoAssignTemplateData', () => {
       it('should immediately show license-summary without needing to load data', function (this: Test) {
         this.$scope.myAutoAssignTemplateData = 'fake-auto-assign-template-data';
-        this.compileComponent('licenseSummaryModalBody', {
+        this.compileComponent('autoAssignTemplateSummaryContainer', {
           titleKey: 'my-title-key',
           descriptionKey: 'my-description-key',
           autoAssignTemplateData: 'myAutoAssignTemplateData',
@@ -59,7 +59,7 @@ describe('Component: licenseSummaryModalBody:', () => {
 
     describe('without initial autoAssignTemplateData', () => {
       it('should show loading before license-summary loads with autoAssignTemplateData', function (this: Test) {
-        this.compileComponent('licenseSummaryModalBody', {
+        this.compileComponent('autoAssignTemplateSummaryContainer', {
           titleKey: 'my-title-key',
           descriptionKey: 'my-description-key',
           autoAssignTemplateData: 'myAutoAssignTemplateData',

@@ -3,7 +3,7 @@ import { Analytics } from 'modules/core/analytics';
 import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template/auto-assign-template.service';
 import { EditSummaryAutoAssignTemplateModalComponent } from './edit-summary-auto-assign-template-modal.component';
 import { MultiStepModalComponent } from 'modules/core/shared/multi-step-modal/multi-step-modal.component';
-import { LicenseSummaryModalBodyComponent } from 'modules/core/users/userManage/shared/license-summary-modal-body/license-summary-modal-body.component';
+import { AutoAssignTemplateSummaryContainerComponent } from 'modules/core/users/userManage/shared/auto-assign-template-summary-container/auto-assign-template-summary-container.component';
 
 type Test = atlas.test.IComponentTest<EditSummaryAutoAssignTemplateModalComponent, {
   $q: ng.IQService;
@@ -13,7 +13,7 @@ type Test = atlas.test.IComponentTest<EditSummaryAutoAssignTemplateModalComponen
 }, {
   components: {
     multiStepModal: atlas.test.IComponentSpy<MultiStepModalComponent>;
-    licenseSummaryModalBody: atlas.test.IComponentSpy<LicenseSummaryModalBodyComponent>;
+    autoAssignTemplateSummaryContainer: atlas.test.IComponentSpy<AutoAssignTemplateSummaryContainerComponent>;
   },
 }>;
 
@@ -21,12 +21,12 @@ describe('Component: editSummaryAutoAssignTemplateModal:', () => {
   beforeEach(function (this: Test) {
     this.components = {
       multiStepModal: this.spyOnComponent('multiStepModal'),
-      licenseSummaryModalBody: this.spyOnComponent('licenseSummaryModalBody'),
+      autoAssignTemplateSummaryContainer: this.spyOnComponent('autoAssignTemplateSummaryContainer'),
     };
     this.initModules(
       moduleName,
       this.components.multiStepModal,
-      this.components.licenseSummaryModalBody,
+      this.components.autoAssignTemplateSummaryContainer,
     );
     this.injectDependencies(
       '$scope',
@@ -55,8 +55,8 @@ describe('Component: editSummaryAutoAssignTemplateModal:', () => {
       expect(this.$scope.dismissSpy).toHaveBeenCalled();
     });
 
-    it('should pass along its "autoAssignTemplateData" to its "license-summary-modal-body"', function (this: Test) {
-      expect(this.components.licenseSummaryModalBody.bindings[0].autoAssignTemplateData).toBe('fake-autoAssignTemplateData');
+    it('should pass along its "autoAssignTemplateData" to its "auto-assign-template-summary-container"', function (this: Test) {
+      expect(this.components.autoAssignTemplateSummaryContainer.bindings[0].autoAssignTemplateData).toBe('fake-autoAssignTemplateData');
     });
   });
 

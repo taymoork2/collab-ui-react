@@ -1,14 +1,14 @@
-import './license-summary-modal-body.scss';
+import './auto-assign-template-summary-container.scss';
 
-import { LicenseSummaryModalBodyComponent } from './license-summary-modal-body.component';
+import { AutoAssignTemplateSummaryContainerComponent } from './auto-assign-template-summary-container.component';
 
-import licenseSummaryModuleName from 'modules/core/users/userManage/shared/license-summary';
+import autoAssignTemplateSummaryModuleName from 'modules/core/users/userManage/shared/auto-assign-template-summary';
 import usersSharedAutoAssignTemplateModuleName from 'modules/core/users/shared/auto-assign-template';
 
-export default angular.module('core.users.userManage.shared.license-summary-modal-body', [
+export default angular.module('core.users.userManage.shared.auto-assign-template-summary-container', [
   require('angular-translate'),
-  licenseSummaryModuleName,
+  autoAssignTemplateSummaryModuleName,
   usersSharedAutoAssignTemplateModuleName,
 ])
-  .component('licenseSummaryModalBody', new LicenseSummaryModalBodyComponent())
+  .component('autoAssignTemplateSummaryContainer', new AutoAssignTemplateSummaryContainerComponent())
   .name;

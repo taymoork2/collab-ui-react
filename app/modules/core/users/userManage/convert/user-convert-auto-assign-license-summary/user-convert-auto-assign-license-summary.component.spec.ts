@@ -1,14 +1,14 @@
 import moduleName from './index';
 import { UserConvertAutoAssignLicenseSummaryController } from './user-convert-auto-assign-license-summary.component';
 
-import { LicenseSummaryModalBodyComponent } from 'modules/core/users/userManage/shared/license-summary-modal-body/license-summary-modal-body.component';
+import { AutoAssignTemplateSummaryContainerComponent } from 'modules/core/users/userManage/shared/auto-assign-template-summary-container/auto-assign-template-summary-container.component';
 import { MultiStepModalComponent } from 'modules/core/shared/multi-step-modal/multi-step-modal.component';
 
 type Test = atlas.test.IComponentTest<UserConvertAutoAssignLicenseSummaryController, {
   $state: ng.ui.IStateService,
 }, {
   components: {
-    licenseSummaryModalBody: atlas.test.IComponentSpy<LicenseSummaryModalBodyComponent>,
+    autoAssignTemplateSummaryContainer: atlas.test.IComponentSpy<AutoAssignTemplateSummaryContainerComponent>,
     multiStepModal: atlas.test.IComponentSpy<MultiStepModalComponent>,
   },
 }>;
@@ -16,12 +16,12 @@ type Test = atlas.test.IComponentTest<UserConvertAutoAssignLicenseSummaryControl
 describe('Component: userManageDirSyncAutoAssignLicenseSummary:', () => {
   beforeEach(function (this: Test) {
     this.components = {
-      licenseSummaryModalBody: this.spyOnComponent('licenseSummaryModalBody'),
+      autoAssignTemplateSummaryContainer: this.spyOnComponent('autoAssignTemplateSummaryContainer'),
       multiStepModal: this.spyOnComponent('multiStepModal'),
     };
     this.initModules(
       moduleName,
-      this.components.licenseSummaryModalBody,
+      this.components.autoAssignTemplateSummaryContainer,
       this.components.multiStepModal,
     );
     this.injectDependencies(
@@ -36,11 +36,11 @@ describe('Component: userManageDirSyncAutoAssignLicenseSummary:', () => {
   });
 
   describe('primary behaviors (view):', () => {
-    it('should bind title, header, and description keys to multi-step-modal and license-summary-modal-body', function (this: Test) {
+    it('should bind title, header, and description keys to multi-step-modal and auto-assign-template-summary-container', function (this: Test) {
       expect(this.components.multiStepModal.bindings[0].l10nTitle).toBe('homePage.convertUsers');
-      expect(this.components.licenseSummaryModalBody.bindings[0].titleKey).toBe('userManage.autoAssignLicenseSummaryForConvert.header');
-      expect(this.components.licenseSummaryModalBody.bindings[0].descriptionKey).toBe('userManage.autoAssignLicenseSummaryForConvert.description');
-      expect(this.components.licenseSummaryModalBody.bindings[0].autoAssignTemplateData).not.toBeDefined();
+      expect(this.components.autoAssignTemplateSummaryContainer.bindings[0].titleKey).toBe('userManage.autoAssignLicenseSummaryForConvert.header');
+      expect(this.components.autoAssignTemplateSummaryContainer.bindings[0].descriptionKey).toBe('userManage.autoAssignLicenseSummaryForConvert.description');
+      expect(this.components.autoAssignTemplateSummaryContainer.bindings[0].autoAssignTemplateData).not.toBeDefined();
     });
 
     it('should navigate back to users.convert', function (this: Test) {

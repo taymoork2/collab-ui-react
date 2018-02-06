@@ -1,14 +1,14 @@
-import './license-summary.scss';
+import './auto-assign-template-summary.scss';
 
-import { LicenseSummaryComponent } from './license-summary.component';
-import licenseSummaryItemModuleName from './license-summary-item';
+import { AutoAssignTemplateSummaryComponent } from './auto-assign-template-summary.component';
+import autoAssignTemplateSummaryItemModuleName from './auto-assign-template-summary-item';
 import sharedModuleName from 'modules/core/users/userAdd/assignable-services/shared';
 
-export default angular.module('core.users.userManage.shared.license-summary', [
+export default angular.module('core.users.userManage.shared.auto-assign-template-summary', [
   require('angular-translate'),
   require('@collabui/collab-ui-ng').default,
-  licenseSummaryItemModuleName,
+  autoAssignTemplateSummaryItemModuleName,
   sharedModuleName,
 ])
-  .component('licenseSummary', new LicenseSummaryComponent())
+  .component('autoAssignTemplateSummary', new AutoAssignTemplateSummaryComponent())
   .name;

@@ -1,6 +1,6 @@
 import { AutoAssignTemplateService, IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 
-export class LicenseSummaryModalBodyController implements ng.IComponentController {
+export class AutoAssignTemplateSummaryContainerController implements ng.IComponentController {
   public autoAssignTemplateData?: IAutoAssignTemplateData;
 
   /* @ngInject */
@@ -18,9 +18,9 @@ export class LicenseSummaryModalBodyController implements ng.IComponentControlle
   }
 }
 
-export class LicenseSummaryModalBodyComponent implements ng.IComponentOptions {
-  public controller = LicenseSummaryModalBodyController;
-  public template = require('./license-summary-modal-body.html');
+export class AutoAssignTemplateSummaryContainerComponent implements ng.IComponentOptions {
+  public controller = AutoAssignTemplateSummaryContainerController;
+  public template = require('./auto-assign-template-summary-container.html');
   public bindings = {
     titleKey: '@',
     descriptionKey: '@',
