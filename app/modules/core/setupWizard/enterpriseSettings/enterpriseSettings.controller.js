@@ -278,7 +278,7 @@
             // Set the email suppress state to FALSE when the SSO is disabled
             Orgservice.setOrgEmailSuppress(false).then(function () {
               deleteSSO();
-            });
+            }).catch(_.noop);
           }).catch(function () {
             $scope.options.modifySSO = false; //reset modify flag if user clicks cancel
             $scope.options.configureSSO = 0;

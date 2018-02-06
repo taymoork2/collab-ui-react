@@ -10,9 +10,7 @@
   <span ng-if="$ctrl.serviceId === 'squared-fusion-ec'" class="span-font-size" ng-class="{'font-settings': !$ctrl.isFirstTimeSetup}" translate="servicesOverview.cards.privateTrunk.click" translate-values="{href: 'https://www.cisco.com/go/hybrid-services-call' }"></span>
   <div>
     <div class="margin-input">
-      <input
-        cs-input
-        type="checkbox"
+      <input cs-input type="checkbox"
         ng-model="$ctrl.certificateCustom"
         id="certificateChk"
         name="certificateChk"
@@ -41,11 +39,10 @@
                 <span class="icon icon-upload"></span>
                 <span class="body-small span-text" translate="hercules.settings.call.certificatesUpload"></span>
               </label>
-              <input
+              <input cr-file-read
                 id="upload"
                 type="file"
                 name="upload"
-                cr-file-read
                 file="$ctrl.file"
                 file-name="$ctrl.fileName"
                 file-max-size="10"
@@ -81,14 +78,19 @@
     <h5 ng-if="$ctrl.isCustomEnabled()" translate="servicesOverview.cards.privateTrunk.certificateDefaultInactive"></h5>
     <div ng-if="$ctrl.isCustomEnabled()">
       <span translate="servicesOverview.cards.privateTrunk.inactiveHelp"> </span>
-      <a class= "body-small" href="" translate="servicesOverview.cards.privateTrunk.restore" ng-click="$ctrl.deleteAllCerts()">'.'</a>
+      <a href class="body-small" translate="servicesOverview.cards.privateTrunk.restore" ng-click="$ctrl.deleteAllCerts()">'.'</a>
     </div>
     <div class="columns large-12 medium-12 small-12">
       <div class="box multibox-margin">
           <div ng-class="{'box-disabled': $ctrl.isCustomEnabled()}">
             <i class="icon icon-certified icon-lg cert-icon" ng-class="{'cert-color': !$ctrl.isCustomEnabled()}" ></i>
             <span class="span-filename" translate="servicesOverview.cards.privateTrunk.certificateDefaultListNew"></span>
-            <a class="close-icon-align body-small float-right-view" href="https://collaborationhelp.cisco.com/article/en-us/DOC-4302" target="_blank" translate="servicesOverview.cards.privateTrunk.view"></a>
+            <a
+              class="close-icon-align body-small float-right-view"
+              href="https://collaborationhelp.cisco.com/article/en-us/DOC-4302"
+              target="_blank"
+              translate="servicesOverview.cards.privateTrunk.view">
+            </a>
           </div>
       </div>
     </div>

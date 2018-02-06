@@ -46,7 +46,10 @@ export class HybridServicesEntitlementsPanelService {
         entitlements.push(this.OnboardService.toEntitlementItem(entitlementName, entitlementState));
       }
     } else {
+      // disable calendar options
       hybridServices.selectedCalendarType = null;
+      entitlements.push(this.OnboardService.toEntitlementItem(UserEntitlementName.SQUARED_FUSION_CAL, false));
+      entitlements.push(this.OnboardService.toEntitlementItem(UserEntitlementName.SQUARED_FUSION_GCAL, false));
     }
     if (!this.hasHuronCallEntitlement() && _.has(hybridServices, 'callServiceAware.entitled')) {
       entitlementName = UserEntitlementName.SQUARED_FUSION_UC;

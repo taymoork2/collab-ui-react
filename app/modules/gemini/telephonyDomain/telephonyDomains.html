@@ -12,8 +12,16 @@
         tooltip-trigger="mouseenter focus"
         aria-label="{{::'gemini.export.exportToCSV' | translate}}"
         tabindex="0">
-        <a href class="export-users" ng-csv="$ctrl.exportCSV()" filename="{{::'gemini.tds.export.csvFilename' | translate}}" quote-strings="true">
-          <button class="btn--none"><i class="icon icon-download icon-lg"></i></button>
+        <a href
+          class="export-users"
+          ng-csv="$ctrl.exportCSV()"
+          filename="{{::'gemini.tds.export.csvFilename' | translate}}"
+          quote-strings="true"
+          aria-label="{{::'common.download' | translate}}">
+          <!-- button removed from tabindex to prevent redundancy with <a> element wrapper -->
+          <button class="btn--none" tabindex="-1">
+            <i class="icon icon-download icon-lg"></i>
+          </button>
         </a>
       </div>
       <div ng-if="$ctrl.exportLoading"

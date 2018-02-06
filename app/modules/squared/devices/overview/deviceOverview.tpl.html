@@ -84,10 +84,8 @@
             ng-click="deviceOverview.resetDevice()"
             class="btn btn-action"
             ng-if="deviceOverview.currentDevice.canReset"
-            ng-disabled="!deviceOverview.currentDevice.isOnline">
-            <span
-              translate="spacesPage.reboot">
-            </span>
+            ng-disabled="!deviceOverview.currentDevice.isOnline"
+            translate="spacesPage.reboot">
           </button>
 
           <button
@@ -101,10 +99,8 @@
           <button
             ng-click="deviceOverview.deleteDevice()"
             class="btn btn-action"
-            ng-if="deviceOverview.currentDevice.canDelete">
-            <span
-              translate="common.delete">
-            </span>
+            ng-if="deviceOverview.currentDevice.canDelete"
+            translate="common.delete">
           </button>
         </div>
       </cs-sp-section>
@@ -113,7 +109,9 @@
         <div class="section-title-row">
           <span class="section-name" translate="spacesPage.informationHeader"></span>
           <span ng-if="deviceOverview.currentDevice.isATA" cs-dropdown class="actions-menu dropdown pull-right">
-            <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
+            <button cs-dropdown-toggle
+              class="actions-button btn--none dropdown-toggle"
+              aria-label="{{::'common.toggleMenu' | translate}}">
               <i class="icon icon-three-dots"></i>
             </button>
             <ul cs-dropdown-menu class="dropdown-menu dropdown-primary">
@@ -256,13 +254,13 @@
         <div class="form-group" ng-show="deviceOverview.currentDevice.hasAdvancedSettings" cr-feature-toggle feature-show="atlas-devices-advanced-settings">
           <label class="col-sm-4 control-label" translate="spacesPage.advancedSettings.advancedSettings"></label>
           <div class="col-sm-8">
-            <a sq-click-promise="deviceOverview.showAdvancedSettingsDialog()" translate="spacesPage.advancedSettings.launchAdvancedSettings"></a>
+            <a href sq-click-promise="deviceOverview.showAdvancedSettingsDialog()" translate="spacesPage.advancedSettings.launchAdvancedSettings"></a>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-4 control-label" translate="spacesPage.remoteAccessKey.ciscoSupport"></label>
           <div class="col-sm-8">
-            <a sq-click-promise="deviceOverview.showRemoteSupportDialog()" translate="spacesPage.remoteAccessKey.remoteAccessKey"></a>
+            <a href sq-click-promise="deviceOverview.showRemoteSupportDialog()" translate="spacesPage.remoteAccessKey.remoteAccessKey"></a>
             <p class="form-control-static warningFaxes">This key enables Cisco Support to resolve system issues remotely.</p>
           </div>
         </div>

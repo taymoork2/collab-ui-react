@@ -12,7 +12,9 @@
           <span translate="hercules.fusion.list.users"></span>:&nbsp;{{::$ctrl.group.numberOfUsers}}
         </div>
       </div>
-      <a ui-sref="resource-group-settings({id: $ctrl.group.id})" class="resource-group-settings-link"><i class="icon icon-settings"></i></a>
+      <a ui-sref="resource-group-settings({id: $ctrl.group.id})" class="resource-group-settings-link" aria-label="{{$ctrl.getResourceGroupSettingsAriaLabel()}}">
+        <i class="icon icon-settings"></i>
+      </a>
     </header>
     <section ng-show="$ctrl.showDetails">
       <div ng-if="$ctrl.hasZeroClusters() && !$ctrl.hasUsers()" class="resource-group-banner">

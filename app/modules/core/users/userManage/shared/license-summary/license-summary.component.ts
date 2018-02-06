@@ -1,7 +1,9 @@
 import { ILicenseUsage } from 'modules/core/users/userAdd/assignable-services/shared';
-import { IUserEntitlementRequestItem, UserEntitlementName } from 'modules/core/users/shared/onboard/onboard.interfaces';
-import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
+import { UserEntitlementName } from 'modules/core/users/shared/onboard/onboard.interfaces';
+import { IAssignableLicenseCheckboxState } from 'modules/core/users/userAdd/assignable-services/shared/license-usage-util.interfaces';
+import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template/auto-assign-template.interfaces';
 import { OfferName } from 'modules/core/shared';
+import { ICrCheckboxItemState } from 'modules/core/users/shared/cr-checkbox-item/cr-checkbox-item.component';
 
 class LicenseSummaryController implements ng.IComponentController {
   private advancedMeetingLicenses: ILicenseUsage[];
@@ -19,8 +21,11 @@ class LicenseSummaryController implements ng.IComponentController {
     this.advancedMeetingLicenses = this.getAdvancedMeetingLicenses();
     this.advancedMeetingSiteUrls = this.getAdvancedMeetingSiteUrls();
   }
+
   private getSelectedLicenses(): ILicenseUsage[] {
-    const isSelectedLicense = _.filter(this.autoAssignTemplateData.LICENSE, { isSelected: true });
+    const isSelectedLicense = _.filter(
+      this.autoAssignTemplateData.viewData.LICENSE as { [key: string]: IAssignableLicenseCheckboxState; },
+      { isSelected: true });
     return _.map(isSelectedLicense, 'license');
   }
 
@@ -32,9 +37,8 @@ class LicenseSummaryController implements ng.IComponentController {
     return this.LicenseUsageUtilService.getAdvancedMeetingSiteUrls(this.getSelectedLicenses());
   }
 
-  // TODO: 'USER_ENTITLEMENTS_PAYLOAD' is a temporary key, replace with proper key when no longer needed
-  private getHybridUserEntitlements(): IUserEntitlementRequestItem[] {
-    return _.get(this.autoAssignTemplateData, 'USER_ENTITLEMENTS_PAYLOAD', []);
+  private getUserEntitlements(): { [key: string]: ICrCheckboxItemState } {
+    return _.get(this.autoAssignTemplateData, 'viewData.USER_ENTITLEMENT', {});
   }
 
   public findLicenseForOfferName(offerName: string): ILicenseUsage | undefined {
@@ -49,8 +53,9 @@ class LicenseSummaryController implements ng.IComponentController {
     return this.LicenseUsageUtilService.getTotalLicenseVolume(offerName, this.getSelectedLicenses());
   }
 
-  public findHybridUserEntitlement(entitlementName: string): IUserEntitlementRequestItem | undefined {
-    return _.find(this.getHybridUserEntitlements(), { entitlementName });
+  public hasUserEntitlement(entitlementName: string): boolean {
+    const userEntitlements = this.getUserEntitlements();
+    return _.get(userEntitlements, `${entitlementName}.isSelected`, false);
   }
 }
 

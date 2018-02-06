@@ -88,7 +88,7 @@ export class SuiteViewCtrl implements ng.IComponentController {
   public runSuiteAction(suite): void {
     const schedule: HtmSchedule = new HtmSchedule;
     if (suite.id) {
-      schedule.testSuiteMap = [{ id: suite.id }] as IRSuiteMap[];
+      schedule.testSuiteMap = [{ testsuiteId: suite.id }] as IRSuiteMap[];
       schedule.isImmediate = true;
       schedule.name = suite.name;
     }

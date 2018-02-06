@@ -8,7 +8,9 @@
     <div class="header-info-wrap">
       <div class="header-title">
         <span ng-bind="$ctrl.domainName" title="{{$ctrl.domainName}}"></span>
-        <a ng-if="$ctrl.isEdit" ng-click="$ctrl.onEditTD()" class="edit-td-name"><i class="edit-button icon icon-edit"></i></a>
+        <a href ng-if="$ctrl.isEdit" ng-click="$ctrl.onEditTD()" class="edit-td-name" aria-label="{{::'common.edit' | translate}}">
+          <i class="edit-button icon icon-edit"></i>
+        </a>
       </div>
     </div>
   </div>

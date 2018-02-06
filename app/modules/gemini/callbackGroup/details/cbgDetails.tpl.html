@@ -15,13 +15,21 @@
         <div class="header-info-wrap">
           <div class="header-title">
             <span title="{{$ctrl.model.groupName ? $ctrl.model.groupName : $ctrl.model.customerName}}">{{$ctrl.model.groupName ? $ctrl.model.groupName : $ctrl.model.customerName}}</span>
-            <a class="edit-td-name" ng-if="$ctrl.model.isEdit" ui-sref="gemCbgDetails.editCountry({obj: {info: $ctrl.model, customerId: $ctrl.customerId}})"><i class="edit-button icon icon-edit"></i></a>
+            <a class="edit-td-name"
+              ng-if="$ctrl.model.isEdit"
+              ui-sref="gemCbgDetails.editCountry({obj: {info: $ctrl.model, customerId: $ctrl.customerId}})"
+              aria-label="{{::'common.edit' | translate}}">
+              <i class="edit-button icon icon-edit"></i>
+            </a>
           </div>
         </div>
       </div>
     </cs-sp-header>
 
-    <cs-alert-banner ng-if="$ctrl.isShowCancelSubmission && !$ctrl.btnCancelSubmissionLoading" type="warning">{{::'gemini.cbgs.submissionMsg' | translate}} <a ng-click="$ctrl.onCancelSubmission()" translate="gemini.cbgs.cancelSubmissionLink"></a></cs-alert-banner>
+    <cs-alert-banner ng-if="$ctrl.isShowCancelSubmission && !$ctrl.btnCancelSubmissionLoading" type="warning">
+      <span translate="gemini.cbgs.submissionMsg"></span>
+      <a href ng-click="$ctrl.onCancelSubmission()" translate="gemini.cbgs.cancelSubmissionLink"></a>
+    </cs-alert-banner>
     <cs-alert-banner ng-if="$ctrl.isShowReject" type="danger">{{::'gemini.cbgs.rejectSubmissionMsg' | translate}}</cs-alert-banner>
 
     <div class="side-panel-container-view" ui-view="side-panel-container">
@@ -60,7 +68,7 @@
             <span class="section-name" translate="gemini.cbgs.remedyTicket"></span>
           </div>
           <div ng-if="!$ctrl.remedyTicketLoading && $ctrl.remedyTicket">
-            <p>{{::'gemini.cbgs.remedyTicket' | translate}}: <a ng-click="$ctrl.onOpenRemedyTicket()">{{$ctrl.remedyTicket.remedyTicketId}}</a></p>
+            <p>{{::'gemini.cbgs.remedyTicket' | translate}}: <a href ng-click="$ctrl.onOpenRemedyTicket()">{{$ctrl.remedyTicket.remedyTicketId}}</a></p>
             <p><small>{{::'gemini.cbgs.openedOn' | translate}} {{$ctrl.remedyTicket.createTime}} - {{$ctrl.remedyTicket.status}}</small></p>
           </div>
           <div ng-if="$ctrl.remedyTicketLoading">
@@ -68,12 +76,12 @@
           </div>
           <div class="section-title-row">
             <span class="section-name" translate="gemini.cbgs.request.labelCountries"></span>
-            <span class="pull-right" ng-if="$ctrl.model.isEdit"><a ui-sref="gemCbgDetails.editCountry({obj: {info: $ctrl.model, customerId: $ctrl.customerId}})" translate="common.edit" class="color-primary-base"></a></span>
+            <span class="pull-right" ng-if="$ctrl.model.isEdit">
+              <a ui-sref="gemCbgDetails.editCountry({obj: {info: $ctrl.model, customerId: $ctrl.customerId}})" translate="common.edit" class="color-primary-base"></a>
+            </span>
           </div>
           <div class="tag-container auto-scrollbar">
-              <span class="tag tag-country" ng-repeat="val in $ctrl.model.countries">
-                  <span>{{val.name}}</span>
-              </span>
+            <span class="tag tag-country" ng-repeat="val in $ctrl.model.countries">{{val.name}}</span>
           </div>
         </cs-sp-section>
 
@@ -81,7 +89,7 @@
           <div class="feature-list note-title">
             <ul>
               <li class="feature">
-                <a ui-sref="gemCbgDetails.notes({obj: {info: $ctrl.model, customerId: $ctrl.customerId}})">
+                <a href ui-sref="gemCbgDetails.notes({obj: {info: $ctrl.model, customerId: $ctrl.customerId}})">
                   <span class="feature-name" translate="gemini.cbgs.notes.notes"></span>
                   <span ng-if="!$ctrl.notes.length" class="feature-status" translate="gemini.cbgs.notes.noNotes"></span>
                   <span ng-if="$ctrl.notes.length" class="feature-status">{{$ctrl.notes.length}}</span>
@@ -103,7 +111,11 @@
               <p><small>{{log.createdDate}} {{log.actionTime}} {{::'gemini.cbgs.by' | translate}} {{log.userName}} {{!log.email ? '' : '(' + log.email + ')'}}</small></p>
               <p><small ng-if="log.moveSiteMsg">{{log.moveSiteMsg}}</small></p>
             </li>
-            <li><div ng-if="$ctrl.isShowAllHistories"><a href ng-click="$ctrl.onShowAllHistories()" translate="gemini.cbgs.showMore"></a></div></li>
+            <li>
+              <div ng-if="$ctrl.isShowAllHistories">
+                <a href ng-click="$ctrl.onShowAllHistories()" translate="gemini.cbgs.showMore"></a>
+              </div>
+            </li>
           </ul>
           <div ng-if="$ctrl.hisLoading">
             <i class="icon icon-spinner"></i>
@@ -111,9 +123,11 @@
         </cs-sp-section>
 
         <cs-sp-buttons ng-if="$ctrl.model.status === 'S'">
-          <button type="button" class="btn btn--primary" cs-btn loading="$ctrl.btnCancelSubmissionLoading"
-                  ng-click="$ctrl.onCancelSubmission()" ng-if="$ctrl.isShowCancelSubmission"
-                  ng-disabled="$ctrl.btnCancelSubmissionDisable">
+          <button cs-btn type="button"
+            class="btn btn--primary"
+            loading="$ctrl.btnCancelSubmissionLoading"
+            ng-click="$ctrl.onCancelSubmission()" ng-if="$ctrl.isShowCancelSubmission"
+            ng-disabled="$ctrl.btnCancelSubmissionDisable">
             <span translate="gemini.button.cancelSubmission"></span>
           </button>
         </cs-sp-buttons>

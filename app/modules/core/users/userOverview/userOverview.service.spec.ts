@@ -58,10 +58,13 @@ describe('Service: UserOverviewService', () => {
     describe('initial response', () => {
 
       it('should reject if getUser has an error', function () {
+        let err;
         this.$httpBackend.expectGET(/.*\/badf00d.*/g).respond(404);
-        const promise = this.UserOverviewService.getUser('badf00d');
+        this.UserOverviewService.getUser('badf00d').catch(response => {
+          err = response;
+        });
         this.$httpBackend.flush();
-        expect(promise).toBeRejected();
+        expect(err.status).toBe(404);
       });
 
       it('should parse valid user result into user and sqEntitlements', function () {
@@ -154,10 +157,12 @@ describe('Service: UserOverviewService', () => {
 
       it('should reject getUser if there is an error fetching data', function () {
         this.$httpBackend.expectGET(/.*\/userid.*/g).respond(400);
-
-        const promise = this.UserOverviewService.getUser('userid');
+        let err;
+        this.UserOverviewService.getUser('userid').catch(response => {
+          err = response;
+        });
         this.$httpBackend.flush();
-        expect(promise).toBeRejected();
+        expect(err.status).toBe(400);
       });
 
       it('should set pendingStatus true if entitlements is empty', function () {

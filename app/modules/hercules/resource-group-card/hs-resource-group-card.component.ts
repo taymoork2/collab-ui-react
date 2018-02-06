@@ -10,6 +10,7 @@ export class ResourceGroupCardController implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
+    private $translate: ng.translate.ITranslateService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private HybridServicesI18NService: HybridServicesI18NService,
   ) {}
@@ -22,6 +23,12 @@ export class ResourceGroupCardController implements ng.IComponentController {
     if (changes.forceOpen) {
       this.showDetails = changes.forceOpen.currentValue;
     }
+  }
+
+  public getResourceGroupSettingsAriaLabel(): string {
+    return this.$translate.instant('hercules.resourceGroupSettings.pageTitle', {
+      groupName: this.group.name,
+    });
   }
 
   public getStatusCssClass() {

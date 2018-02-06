@@ -14,6 +14,7 @@ import { PrivacySetting } from './privacySection/privacySettings.component';
 import { DirSyncSetting } from './dirsync/dirSyncSetting.component';
 import { DeviceBrandingSetting } from './branding/device-branding-setting.component';
 import { WebexVersionSetting } from './webexVersion/webex-version.component';
+import { WebexSiteManagementSetting } from './webexSiteManagement/webexSiteManagementSetting.component';
 import { SparkAssistantSetting } from './spark-assistant/spark-assistant-setting.component';
 
 export class SettingsCtrl {
@@ -32,6 +33,7 @@ export class SettingsCtrl {
   public fileSharingControl: SettingSection;
   public dirsync: SettingSection;
   public webexVersion: SettingSection;
+  public webexSiteManagement: SettingSection;
   public sparkAssistant: SettingSection;
 
   // Footer and broadcast controls
@@ -82,6 +84,8 @@ export class SettingsCtrl {
         this.initFileSharingControl();
         this.initRetention();
       }
+    } else {
+      this.webexSiteManagement = new WebexSiteManagementSetting();
     }
 
     const settingsToShow = _.get<any>(this.$stateParams, 'showSettings', null);
@@ -134,6 +138,8 @@ export class SettingsCtrl {
           }
           defered.resolve(true);
         }
+        defered.resolve(false);
+      }).catch(() => {
         defered.resolve(false);
       });
     } else {

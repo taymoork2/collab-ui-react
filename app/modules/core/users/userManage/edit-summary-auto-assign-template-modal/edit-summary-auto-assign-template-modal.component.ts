@@ -61,6 +61,7 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
   public back(): void {
     this.$state.go('users.manage.edit-auto-assign-template-modal', {
       autoAssignTemplateData: this.autoAssignTemplateData,
+      isEditTemplateMode: this.isEditTemplateMode,
     });
   }
 

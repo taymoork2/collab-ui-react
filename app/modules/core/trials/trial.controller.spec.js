@@ -48,6 +48,7 @@ describe('Controller: TrialCtrl:', function () {
     spyOn(Notification, 'success');
     spyOn(Notification, 'errorResponse');
     $state.modal = jasmine.createSpyObj('modal', ['close']);
+    $state.modal.result = $q.resolve();
     spyOn($state, 'go');
     spyOn($state, 'href');
     spyOn($window, 'open');
@@ -163,7 +164,7 @@ describe('Controller: TrialCtrl:', function () {
               message: 'An error occurred',
             },
           }));
-          controller.editTrial();
+          controller.editTrial().catch(_.noop);
           $scope.$apply();
         });
 
@@ -795,7 +796,7 @@ describe('Controller: TrialCtrl:', function () {
         it('should display notification if call to disable context service fails', function () {
           removeContextSpy.and.returnValue($q.reject('rejected'));
           controller.contextTrial.enabled = false;
-          controller.editTrial();
+          controller.editTrial().catch(_.noop);
           $scope.$apply();
           expect(TrialContextService.addService).not.toHaveBeenCalled();
           expect(TrialContextService.removeService).toHaveBeenCalled();
@@ -819,7 +820,7 @@ describe('Controller: TrialCtrl:', function () {
         it('should display notification if call to enable context service fails', function () {
           addContextSpy.and.returnValue($q.reject('rejected'));
           controller.contextTrial.enabled = true;
-          controller.editTrial();
+          controller.editTrial().catch(_.noop);
           $scope.$apply();
           expect(TrialContextService.addService).toHaveBeenCalled();
           expect(TrialContextService.removeService).not.toHaveBeenCalled();
@@ -912,7 +913,9 @@ describe('Controller: TrialCtrl:', function () {
     });
 
     it('should start in trial.info state', function () {
-      expect(controller.navStates).toEqual(['trial.info']);
+      // NOTE - disparity found while fixing PURS - code will always init to these states. It was not doing it
+      // previously due to error being generated and aborting before toggleTrial() was called in controller init
+      expect(controller.navStates).toEqual(['trial.info', 'trial.webex', 'trial.pstnDeprecated']);
     });
 
     it('should have correct navigation state order', function () {
@@ -1051,7 +1054,7 @@ describe('Controller: TrialCtrl:', function () {
 
         it('error should notify error', function () {
           spyOn(HuronCustomer, 'create').and.returnValue($q.reject());
-          controller.startTrial();
+          controller.startTrial().catch(_.noop);
           $scope.$apply();
           expect(Notification.errorResponse).toHaveBeenCalled();
           expect(Notification.errorResponse.calls.count()).toEqual(1);
@@ -1078,7 +1081,7 @@ describe('Controller: TrialCtrl:', function () {
 
         it('error should notify error', function () {
           spyOn(HuronCustomer, 'create').and.returnValue($q.reject());
-          controller.startTrial();
+          controller.startTrial().catch(_.noop);
           $scope.$apply();
           expect(Notification.errorResponse).toHaveBeenCalled();
           expect(Notification.errorResponse.calls.count()).toEqual(1);
@@ -1144,7 +1147,7 @@ describe('Controller: TrialCtrl:', function () {
           controller.callTrial.enabled = false;
           controller.roomSystemTrial.enabled = false;
           controller.sparkBoardTrial.enabled = false;
-          controller.startTrial();
+          controller.startTrial().catch(_.noop);
           $scope.$apply();
           expect(TrialContextService.addService).toHaveBeenCalled();
           expect(Notification.errorResponse).toHaveBeenCalledWith('rejected', 'trialModal.startTrialContextServiceError');
@@ -1190,7 +1193,7 @@ describe('Controller: TrialCtrl:', function () {
             message: 'An error occurred',
           },
         }));
-        controller.startTrial();
+        controller.startTrial().catch(_.noop);
         $scope.$apply();
       });
 
@@ -1494,7 +1497,7 @@ describe('Controller: TrialCtrl:', function () {
 
         it('error should notify error', function () {
           spyOn(HuronCustomer, 'create').and.returnValue($q.reject());
-          controller.startTrial();
+          controller.startTrial().catch(_.noop);
           $scope.$apply();
           expect(Notification.errorResponse).toHaveBeenCalled();
           expect(Notification.errorResponse.calls.count()).toEqual(1);
@@ -1526,7 +1529,7 @@ describe('Controller: TrialCtrl:', function () {
         });
         it('error should notify error', function () {
           spyOn(HuronCustomer, 'create').and.returnValue($q.reject());
-          controller.startTrial();
+          controller.startTrial().catch(_.noop);
           $scope.$apply();
           expect(Notification.errorResponse).toHaveBeenCalled();
           expect(Notification.errorResponse.calls.count()).toEqual(1);
@@ -1586,7 +1589,7 @@ describe('Controller: TrialCtrl:', function () {
           addContextSpy.and.returnValue($q.reject('rejected'));
           controller.contextTrial.enabled = true;
           controller.callTrial.enabled = false;
-          controller.startTrial();
+          controller.startTrial().catch(_.noop);
           $scope.$apply();
           expect(TrialContextService.addService).toHaveBeenCalled();
           expect(Notification.errorResponse).toHaveBeenCalledWith('rejected', 'trialModal.startTrialContextServiceError');
@@ -1686,7 +1689,7 @@ describe('Controller: TrialCtrl:', function () {
             message: 'An error occurred',
           },
         }));
-        controller.startTrial();
+        controller.startTrial().catch(_.noop);
         $scope.$apply();
       });
 
@@ -1789,6 +1792,8 @@ describe('Controller: TrialCtrl:', function () {
     });
 
     it('should populate name and email fields', function () {
+      spyOn(HuronCustomer, 'create').and.returnValue($q.resolve());
+      spyOn(TrialPstnService, 'createPstnEntityV2').and.returnValue($q.resolve());
       spyOn(TrialService, 'startTrial').and.returnValue($q.resolve(getJSONFixture('core/json/trials/trialAddResponse.json')));
       controller.startTrial();
       $scope.$apply();

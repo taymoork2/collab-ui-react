@@ -195,4 +195,16 @@ describe('Service: AutoAttendantHybridCareService', function () {
       $timeout.flush();
     });
   });
+
+  describe('setHybridandEPTConfiguration', function () {
+    it('should test setHybridandEPTConfiguration function when it is true', function () {
+      AutoAttendantHybridCareService.setHybridandEPTConfiguration(true);
+      expect(AutoAttendantHybridCareService.getHybridandEPTConfiguration()).toBeTruthy();
+    });
+
+    it('should test getHybridandEPTConfiguration function when it is false', function () {
+      AutoAttendantHybridCareService.setHybridandEPTConfiguration(false);
+      expect(AutoAttendantHybridCareService.getHybridandEPTConfiguration()).toBeFalsy();
+    });
+  });
 });

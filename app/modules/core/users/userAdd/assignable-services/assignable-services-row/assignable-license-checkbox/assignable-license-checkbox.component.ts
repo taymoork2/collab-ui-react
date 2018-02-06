@@ -53,11 +53,11 @@ class AssignableLicenseCheckboxController implements ng.IComponentController {
   }
 
   public get entryData(): IAssignableLicenseCheckboxState {
-    return _.get(this.autoAssignTemplateData, `${AssignableLicenseCheckboxController.itemCategory}["${this.itemId}"]`);
+    return _.get(this.autoAssignTemplateData, `viewData.${AssignableLicenseCheckboxController.itemCategory}["${this.itemId}"]`);
   }
 
   public set entryData(entryData: IAssignableLicenseCheckboxState) {
-    _.set(this.autoAssignTemplateData, `${AssignableLicenseCheckboxController.itemCategory}["${this.itemId}"]`, entryData);
+    _.set(this.autoAssignTemplateData, `viewData.${AssignableLicenseCheckboxController.itemCategory}["${this.itemId}"]`, entryData);
   }
 
   public get isSelected(): boolean {

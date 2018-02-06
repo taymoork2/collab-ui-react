@@ -36,10 +36,8 @@
                 ng-if="savingAwareEntitlement || (!callServiceAware.status && callServiceAware.currentPlaceEntitled)"></span>
         </div>
         <div class="columns small-2">
-          <span ng-if="callServiceAware.currentPlaceEntitled && callServiceAware.status && !savingAwareEntitlement"
-                class="hybrid-services-label right">
-            <a ui-sref="place-overview.hybrid-services-squared-fusion-uc.uc-history"
-               translate="hercules.userHistory.seeHistory"></a>
+          <span ng-if="callServiceAware.currentPlaceEntitled && callServiceAware.status && !savingAwareEntitlement" class="hybrid-services-label right">
+            <a ui-sref="place-overview.hybrid-services-squared-fusion-uc.uc-history" translate="hercules.userHistory.seeHistory"></a>
           </span>
         </div>
       </div>
@@ -51,7 +49,7 @@
         <div class="columns small-12"><span translate="addDeviceWizard.sparkCallConnect.mailId"></span><span>: {{mailID}}</span></div>
       </div>
       <div class="row collapse hybrid-services-label normal-line-height">{{'hercules.placeSidepanel.mail-id-explanation-part1' | translate}}
-        <a ng-click="editCloudberryServices(callServiceAware.id)">{{'hercules.placeSidepanel.mail-id-explanation-part2' | translate}}</a>
+        <a href ng-click="editCloudberryServices(callServiceAware.id)">{{'hercules.placeSidepanel.mail-id-explanation-part2' | translate}}</a>
       </div>
 
       <div class="row collapse">

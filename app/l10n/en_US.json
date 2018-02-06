@@ -3952,22 +3952,6 @@
       "reportsBanner": "Your report is being generated and may take up to a few hours or more. You can view the status in the list below or <a href ui-sref=\"{{sref}}\">generate another report</a>.",
       "generating": "Generating..."
     },
-    "originalConsole": {
-      "subheading": "Find all relevant data for a space.",
-      "reportNameNotEmpty": "Report Name can not be empty",
-      "reportNamePlaceholder": "Enter report name",
-      "startDate": "Start Date",
-      "endDate": "End Date",
-      "reportDateRange": "Date Range",
-      "noRangeSpecified": "No date range specified",
-      "takeMeToReports": "Take Me to Reports",
-      "dateTo": "to",
-      "endDateUntil": "until",
-      "endDateOnward": "onward",
-      "startDatePlaceholder": "Choose a Start Date",
-      "endDatePlaceholder": "Choose an End Date",
-      "generatedAt": "Generated At"
-    },
     "tabs": {
       "search": "Search",
       "reports": "Reports"
@@ -4360,7 +4344,7 @@
   "autoAttendant": {
     "code": "AA",
     "title": "Auto Attendant",
-    "warning": "Requires call service.",
+    "noCallWarningMessage" : "Requires call service. <a href ng-click=\"{{onclick}}\">Learn More</a>",
     "careModalDescription": "Play custom prompts and provide callers with menu options to route calls through your system.",
     "modalDescription": "Auto attendants play customized prompts and provide callers with menu options for routing their calls through your system.",
     "namePlaceholder": "Name the Auto Attendant",
@@ -7442,8 +7426,7 @@
       "callbackType": "Callback Template",
       "chatPlusCallbackType": "Chat+Callback Template",
       "virtualAssistant": "Virtual Assistant",
-      "noCallWarningMessage" : "Requires call service.",
-      "learnMoreLink": "Learn More"
+      "noCallWarningMessage" : "Requires call service. <a href ng-click=\"{{onclick}}\">Learn More</a>"
     },
     "settings": {
       "setUpCare": "Care",
@@ -8467,6 +8450,14 @@
     },
     "webexVersion": {
       "title": "Webex Version"
+    },
+
+    "webexSiteManagement": {
+      "title": "WebEx Sites",
+      "subsectionLabel": "Allow customers to manage WebEx Sites",
+      "subsectionDescription": "Customers can add, edit and delete WebEx sites in the customer portal of Cisco Spark Control Hub. Disabling this option will remove the user interface for managing WebEx sites for all of your customers.",
+      "allowSiteManagementByCustomer": "Allow customers to manage WebEx sites",
+      "siteManagementSettingUpdated": "Webex Site Management by customer setting has been updated"
     },
     "sipDomain": {
       "title": "Cisco Spark SIP Address",
@@ -10518,6 +10509,10 @@
     }
   },
   "hcs": {
+    "cardTitle": "Hosted Collaboration Service",
+    "description": "Extend Management services to Hosted Cloud Solution.",
+    "license": "License Management",
+    "upgrade": "Upgrade Management",
     "taas": {
       "testState": {
         "good": "Passed",
@@ -10585,5 +10580,6 @@
         "error": "Errors"
       }
     }
+
   }
 }

@@ -24,7 +24,8 @@
       </div>
 
       <div class="getExportcsv">
-        <a class="filterBtn" ng-click="$ctrl.onAdvanced = !$ctrl.onAdvanced">{{$ctrl.onAdvanced ? 'Less Filters' : 'More Filters' }}</a>
+        <!-- TODO: replace untranslated text -->
+        <a href class="filterBtn" ng-click="$ctrl.onAdvanced = !$ctrl.onAdvanced">{{$ctrl.onAdvanced ? 'Less Filters' : 'More Filters' }}</a>
         <span class="icon icon-download icon-2x" ng-if="!$ctrl.loading" ng-csv="$ctrl.onExportCSV()"></span>
       </div>
     </cs-page-sub-header-right>
@@ -38,22 +39,22 @@
           ng-model="$ctrl.data.siteSelected"
           options="$ctrl.data.siteOptions"
           on-change-fn="$ctrl.onSites()"
-          placeholder="$ctrl.data.sitePlaceholder"
-        ></cs-select>
+          placeholder="$ctrl.data.sitePlaceholder">
+        </cs-select>
       </div>
       <div class="col-sm-5">
         <cs-select
-                multi="true"
-                name="sesstionTypes"
-                plural="Sesstion Types"
-                singular="Sesstion Type"
-                max="$ctrl.data.sessionMax"
-                on-change-fn="$ctrl.onSession()"
-                options="$ctrl.data.sessionOptions"
-                ng-model="$ctrl.data.sessionSelected"
-                ng-if="$ctrl.data.sessionOptions.length"
-                placeholder="$ctrl.data.sessionPlaceholder"
-        ></cs-select>
+          multi="true"
+          name="sesstionTypes"
+          plural="Sesstion Types"
+          singular="Sesstion Type"
+          max="$ctrl.data.sessionMax"
+          on-change-fn="$ctrl.onSession()"
+          options="$ctrl.data.sessionOptions"
+          ng-model="$ctrl.data.sessionSelected"
+          ng-if="$ctrl.data.sessionOptions.length"
+          placeholder="$ctrl.data.sessionPlaceholder">
+        </cs-select>
       </div>
     </div>
 
@@ -66,8 +67,8 @@
           name="duration"
           ng-model="$ctrl.data.durationSelected"
           options="$ctrl.data.durationOptions"
-          on-change-fn="$ctrl.onDuration()"
-        ></cs-select>
+          on-change-fn="$ctrl.onDuration()">
+        </cs-select>
       </div>
     </div>
   </div>

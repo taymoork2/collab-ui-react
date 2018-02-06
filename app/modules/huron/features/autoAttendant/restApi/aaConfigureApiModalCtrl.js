@@ -166,7 +166,7 @@
 
     function getDynamicVariables() {
       dynamicVariablesList = [];
-      var dynamVarList = _.get(vm.menuEntry, 'actions[0].dynamicList', '');
+      var dynamVarList = _.get(vm.menuEntry, 'actions[0].url', '');
       _.forEach(dynamVarList, function (entry) {
         if (entry.isDynamic) {
           if (!_.includes(AACommonService.getprePopulatedSessionVariablesList(), (_.get(entry, 'action.eval.value', '')))) {

@@ -24,9 +24,11 @@
       >
     </assignable-services>
     <hybrid-services-entitlements-panel
-      entitlements-callback="$ctrl.recvHybridServicesEntitlementsPayload(entitlements)"
-      auto-assign-template-data="$ctrl.autoAssignTemplateData"
-      user-entitlements-state-data="$ctrl.autoAssignTemplateData.USER_ENTITLEMENTS_PAYLOAD"
+      allow-remove="true"
+      entitlements-callback="$ctrl.recvHybridServicesEntitlementsUpdate(entitlements)"
+      restore-instance="$ctrl.getHybridServices()"
+      restore-user-entitlements="$ctrl.getUserEntitlements()"
+      save-instance="$ctrl.setHybridServices(hybridServices)"
       >
     </hybrid-services-entitlements-panel>
   </div>

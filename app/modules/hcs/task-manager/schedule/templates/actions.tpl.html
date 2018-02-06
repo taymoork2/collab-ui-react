@@ -1,7 +1,12 @@
 <div class="grid-contents" ng-class="{'selected' : row.isSelected}">
     <span cs-dropdown class="actions-menu">
-      <button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle icon icon-three-dots"
-              ng-click="$event.stopPropagation();" ng-keydown="$event.stopPropagation();" ng-class="dropdown-toggle">
+      <button cs-dropdown-toggle
+        id="actionsButton"
+        class="btn--none dropdown-toggle icon icon-three-dots"
+        ng-click="$event.stopPropagation();"
+        ng-keydown="$event.stopPropagation();"
+        ng-class="dropdown-toggle"
+        aria-label="{{::'common.toggleMenu' | translate}}">
       </button>
       <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
         <li id="runScheduleOption">

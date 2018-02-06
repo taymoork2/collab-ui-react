@@ -5,7 +5,7 @@
       <li class="feature"
           ng-repeat="alarm in $ctrl.alarms"
           ng-class="{'list-item': !$first}">
-        <a ng-click="$ctrl.goToAlarm(alarm)">
+        <a href ng-click="$ctrl.goToAlarm(alarm)">
           <i ng-class="$ctrl.getSeverityIcon(alarm.severity)"></i>
           <span class="feature-name">{{alarm.title}}</span>
           <i class="feature-arrow"></i>

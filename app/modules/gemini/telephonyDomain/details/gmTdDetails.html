@@ -8,7 +8,7 @@
 
     <cs-alert-banner ng-if="$ctrl.model.isShowCancelSubmission && !$ctrl.model.btnCancelSubmissionLoading" type="warning">
       {{::'gemini.tds.submissionMsg' | translate}}
-      <a ng-click="$ctrl.onCancelSubmission()">{{::'gemini.cbgs.cancelSubmissionLink' | translate}}</a>
+      <a href ng-click="$ctrl.onCancelSubmission()" translate="gemini.cbgs.cancelSubmissionLink"></a>
     </cs-alert-banner>
 
     <cs-alert-banner ng-if="$ctrl.model.isShowReject" type="danger">
@@ -39,7 +39,7 @@
           <div class="feature-list">
             <ul>
               <li class="feature" ng-if="$ctrl.totalSites">
-                <a ui-sref="gmTdDetails.sites({data: {tds: $ctrl.tds, customerId: $ctrl.customerId, curTd: $ctrl.model}})">
+                <a href ui-sref="gmTdDetails.sites({data: {tds: $ctrl.tds, customerId: $ctrl.customerId, curTd: $ctrl.model}})">
                   <span class="feature-name" translate="gemini.cbgs.field.totalSites"></span>
                   <span class="feature-status">{{$ctrl.totalSites}}</span>
                   <i class="feature-arrow"></i>
@@ -76,7 +76,7 @@
               <i class="icon icon-spinner"></i>
             </div>
             <div ng-if="!$ctrl.remedyTicketLoading && $ctrl.remedyTicket">
-              <p class="remedyTicket">{{::'gemini.cbgs.remedyTicket' | translate}}: <a ng-click="$ctrl.onOpenRemedyTicket()">{{$ctrl.remedyTicket.remedyTicketId}}</a></p>
+              <p class="remedyTicket">{{::'gemini.cbgs.remedyTicket' | translate}}: <a href ng-click="$ctrl.onOpenRemedyTicket()">{{$ctrl.remedyTicket.remedyTicketId}}</a></p>
               <p>
                 <small>{{::'gemini.cbgs.openedOn' | translate}} {{$ctrl.remedyTicket.createTime}} -
                   {{$ctrl.remedyTicket.status}}
@@ -88,7 +88,7 @@
           <div class="feature-list">
             <ul>
               <li class="feature">
-                <a ng-click="$ctrl.onSeeAllPhoneNumbers()">
+                <a href ng-click="$ctrl.onSeeAllPhoneNumbers()">
                   <span class="feature-name" translate="gemini.tds.phoneNumbers"></span>
                   <span class="feature-status">{{$ctrl.telephonyNumberList.length}}</span>
                   <i class="feature-arrow"></i>
@@ -101,11 +101,13 @@
             <ul>
               <li ng-if="$ctrl.model.defaultToll">
                 <div class="defaultToll-item-num">
-                  <div><span class="ellipsis" popover-trigger="mouseenter" popover="{{$ctrl.model.defaultToll.phone}}">{{$ctrl.model.defaultToll.phone}}</span>
+                  <div>
+                    <span class="ellipsis" popover-trigger="mouseenter" popover="{{$ctrl.model.defaultToll.phone}}">{{$ctrl.model.defaultToll.phone}}</span>
                   </div>
                 </div>
                 <div class="defaultToll-item-num">
-                  <div><span class="ellipsis" popover-trigger="mouseenter" popover="{{$ctrl.model.defaultToll.label}}">{{$ctrl.model.defaultToll.label}}</span>
+                  <div>
+                    <span class="ellipsis" popover-trigger="mouseenter" popover="{{$ctrl.model.defaultToll.label}}">{{$ctrl.model.defaultToll.label}}</span>
                   </div>
                 </div>
                 <div class="defaultToll-item-toll">
@@ -114,8 +116,8 @@
               </li>
               <li ng-if="$ctrl.model.defaultTollFree">
                 <div class="defaultToll-item-num">
-                  <div><span class="ellipsis" popover-trigger="mouseenter"
-                             popover="{{$ctrl.model.defaultTollFree.phone}}">{{$ctrl.model.defaultTollFree.phone}}</span>
+                  <div>
+                    <span class="ellipsis" popover-trigger="mouseenter" popover="{{$ctrl.model.defaultTollFree.phone}}">{{$ctrl.model.defaultTollFree.phone}}</span>
                   </div>
                 </div>
                 <div class="defaultToll-item-num">
@@ -135,7 +137,7 @@
           <div class="feature-list note-title">
             <ul>
               <li class="feature">
-                <a ui-sref="gmTdDetails.notes({obj: {notes: $ctrl.notes, customerId: $ctrl.customerId, ccaDomainId: $ctrl.ccaDomainId}})">
+                <a href ui-sref="gmTdDetails.notes({obj: {notes: $ctrl.notes, customerId: $ctrl.customerId, ccaDomainId: $ctrl.ccaDomainId}})">
                   <span class="feature-name" translate="gemini.cbgs.notes.notes"></span>
                   <span ng-if="!$ctrl.notes.length" class="feature-status" translate="gemini.cbgs.notes.noNotes"></span>
                   <span ng-if="$ctrl.notes.length" class="feature-status">{{$ctrl.notes.length}}</span>
@@ -163,7 +165,11 @@
                 <small ng-if="log.moveSiteMsg">{{log.moveSiteMsg}}</small>
               </p>
             </li>
-            <li><div ng-if="$ctrl.isShowAllHistories"><a href ng-click="$ctrl.onShowAllHistories()" translate="gemini.cbgs.showMore"></a></div></li>
+            <li>
+              <div ng-if="$ctrl.isShowAllHistories">
+                <a href ng-click="$ctrl.onShowAllHistories()" translate="gemini.cbgs.showMore"></a>
+              </div>
+            </li>
           </ul>
           <div ng-if="$ctrl.hisLoading">
             <i class="icon icon-spinner"></i>
@@ -171,9 +177,12 @@
         </cs-sp-section>
 
         <cs-sp-buttons ng-if="$ctrl.model.status === 'S'">
-          <button type="button" class="btn btn--primary" cs-btn loading="$ctrl.model.btnCancelSubmissionLoading"
-                  ng-click="$ctrl.onCancelSubmission()" ng-if="$ctrl.model.isShowCancelSubmission"
-                  ng-disabled="$ctrl.model.btnCancelSubmissionDisable">
+          <button cs-btn type="button"
+            class="btn btn--primary"
+            loading="$ctrl.model.btnCancelSubmissionLoading"
+            ng-click="$ctrl.onCancelSubmission()"
+            ng-if="$ctrl.model.isShowCancelSubmission"
+            ng-disabled="$ctrl.model.btnCancelSubmissionDisable">
             <span translate="gemini.button.cancelSubmission"></span>
           </button>
         </cs-sp-buttons>
