@@ -6240,7 +6240,7 @@
       "title": "Unified CM SIP Trunk",
       "description": "Enter the SIP trunk address to connect the Hybrid Media cluster to your Unified Communications Manager. This connection provides optimized video callback.",
       "placeholder": "Enter the SIP trunk address...",
-      "example": "Example: sips://203.0.113.0:5062"
+      "example": "Example:sips://203.0.113.0:5062"
     },
     "trustedSip": {
       "success": "Trusted SIP source(s) saved successfully.",
