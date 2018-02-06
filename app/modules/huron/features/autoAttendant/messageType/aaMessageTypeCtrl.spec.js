@@ -84,6 +84,10 @@ describe('Controller: AAMessageTypeCtrl', function () {
                       attributes: [
                       ],
                     },
+                  }, {
+                    nodeName: 'P',
+                    innerText: 'Test String for copy paste scenario',
+
                   }],
                   className: 'dynamic-prompt aa-message-height',
                   id: 'messageTypeopenHours0',
@@ -310,6 +314,39 @@ describe('Controller: AAMessageTypeCtrl', function () {
         ctrl.saveDynamicUi($event);
         expect(ctrl.actionEntry.dynamicList[0].say.value).toEqual('this is test say message');
         expect(ctrl.actionEntry.dynamicList[1].say.value).toEqual('Test Attribute');
+        expect(ctrl.actionEntry.dynamicList[1].isDynamic).toEqual(true);
+      });
+
+      it('should be able to create dynamicList with P Node', function () {
+        var ctrl;
+        var $event = {
+          keyCode: 8,
+        };
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
+        action.dynamicList = [{
+          say: {
+            value: '',
+            voice: '',
+          },
+          isDynamic: false,
+          htmlModel: '',
+        }];
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(action);
+
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+        // setup the options menu
+        ctrl = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+
+        ctrl.actionEntry = menuEntry.actions[0];
+        expect(ctrl.actionEntry.dynamicList[0].say.value).toEqual('');
+        ctrl.saveDynamicUi($event);
+        expect(ctrl.actionEntry.dynamicList[0].say.value).toEqual('this is test say message');
+        expect(ctrl.actionEntry.dynamicList[1].say.value).toEqual('Test Attribute');
+        expect(ctrl.actionEntry.dynamicList[2].say.value).toEqual('Test String for copy paste scenario');
         expect(ctrl.actionEntry.dynamicList[1].isDynamic).toEqual(true);
       });
 
