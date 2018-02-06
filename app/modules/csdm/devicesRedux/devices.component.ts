@@ -446,8 +446,6 @@ export class DevicesCtrl implements ng.IComponentController {
       },
     };
   }
-
-  //TODO end this is a duplicate from devices.controller.ts in squared
 }
 
 export class DevicesComponent implements ng.IComponentOptions {
