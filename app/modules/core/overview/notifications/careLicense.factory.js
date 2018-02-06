@@ -6,7 +6,7 @@
     .factory('OverviewCareLicenseNotification', OverviewCareLicenseNotification);
 
   /* @ngInject */
-  function OverviewCareLicenseNotification($state) {
+  function OverviewCareLicenseNotification($modal, $state) {
     return {
       createNotification: function createNotification(text, linkText) {
         var notification = {
@@ -15,7 +15,14 @@
           canDismiss: true,
           dismiss: function () {},
           link: function () {
-            $state.go('my-company.subscriptions');
+            if ($state.isHybridToggleEnabled) {
+              $modal.open({
+                template: '<care-voice-features-modal dismiss="$dismiss()" class="care-modal"></care-voice-features-modal>',
+              });
+              this.dismiss();
+            } else {
+              $state.go('my-company.subscriptions');
+            }
           },
           linkText: linkText,
           name: 'careLicense',
