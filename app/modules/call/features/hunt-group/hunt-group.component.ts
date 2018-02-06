@@ -124,6 +124,7 @@ class HuntGroupCtrl implements ng.IComponentController {
     if (_.isNull(_.get(fbDestination, 'number') || _.isUndefined(_.get(fbDestination, 'number')))) {
       this.form.$setValidity('', false, this.form);
     }
+
     this.form.$setDirty();
     this.checkForChanges();
   }

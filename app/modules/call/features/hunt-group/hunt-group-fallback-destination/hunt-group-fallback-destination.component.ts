@@ -1,5 +1,5 @@
 import { FallbackDestination } from 'modules/call/features/shared/call-feature-fallback-destination';
-import { DestinationRule } from 'modules/call/features/hunt-group';
+import { DestinationRule, HuntGroupNumber, HuntMethod } from 'modules/call/features/hunt-group';
 
 class HuntGroupFallbackDestinationCtrl implements ng.IComponentController {
 
@@ -9,6 +9,8 @@ class HuntGroupFallbackDestinationCtrl implements ng.IComponentController {
   public onChangeDestinationRuleFn: Function;
   public onChangeDestinationFn: Function;
   public onChangeAlternateFn: Function;
+  public numbers: HuntGroupNumber[];
+  public method: HuntMethod;
   public options: number[] = [2, 5, 10, 30, 60];
   public fallbackDestForm: ng.IFormController;
 
@@ -65,6 +67,8 @@ export class HuntGroupFallbackDestinationComponent implements ng.IComponentOptio
     destinationRule: '<',
     fallbackDestination: '<',
     alternateDestination: '<',
+    method: '<',
+    numbers: '<',
     onChangeDestinationRuleFn: '&',
     onChangeDestinationFn: '&',
     onChangeAlternateFn: '&',
