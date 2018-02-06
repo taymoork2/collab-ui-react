@@ -18,16 +18,16 @@ export class HybridContextActiveCardComponent implements ng.IComponentOptions {
         <i class="icon icon-question-circle" tooltip="{{::'servicesOverview.cards.hybridContext.description' | translate}}" tooltip-placement="bottom-right" tabindex="0" tooltip-trigger="focus mouseenter"></i>
       </div>
       <div class="active-card_content">
+        <div class="active-card_section">
+          <div class="active-card_title" translate="servicesOverview.cards.shared.resources"></div>
+          <div class="active-card_action"><a ui-sref="context-resources" translate="servicesOverview.cards.shared.viewAll"></a></div>
+        </div>
         <div class="active-card_section" ng-if="!$ctrl.isPartnerAdmin">
           <div class="active-card_title" translate="servicesOverview.cards.shared.service"></div>
           <div class="active-card_action">
             <a ui-sref="context-fields" translate="servicesOverview.cards.hybridContext.buttons.fields"></a><br>
             <a ui-sref="context-fieldsets" translate="servicesOverview.cards.hybridContext.buttons.fieldsets"></a>
           </div>
-        </div>
-        <div class="active-card_section">
-          <div class="active-card_title" translate="servicesOverview.cards.shared.resources"></div>
-          <div class="active-card_action"><a ui-sref="context-resources" translate="servicesOverview.cards.shared.viewAll"></a></div>
         </div>
       </div>
       <div class="active-card_footer">

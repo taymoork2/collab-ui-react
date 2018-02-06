@@ -2283,6 +2283,10 @@
       "domain-not-verified": "The domain for this Directory URI must be verified for this service to function properly. ",
       "navigateToCallSettings": "Verify the domain in <a href ng-click=\"{{onclick}}\">Call Service Settings</a>."
     },
+    "capacity": {
+      "label": "Capacity: {{capacity}}%",
+      "toolTip": "Capacity: {{capacity}}%<br>Users assigned: {{total}} of {{max}}"
+    },
     "sipExplanation": {
       "line1": "You can use one of the following address formats:",
       "line2": "SRV domain (_sips._tcp.<strong>sipmtls.example.com</strong>)",
@@ -9166,9 +9170,10 @@
     "userIsMissingEntitlements": "The current user has no Hybrid Services entitlements.",
     "userStatusesSummary": {
       "users": "Users",
-      "inError": "users in error",
-      "inPending": "users in pending activation",
-      "active": "users active",
+      "assigned": "{total, plural, =1{# user assigned} other{# users assigned}}",
+      "inError": "in error",
+      "inPending": "in pending activation",
+      "active": "active",
       "enableUsers": "Enable users"
     },
     "cards": {
@@ -10585,6 +10590,5 @@
         "error": "Errors"
       }
     }
-
   }
 }

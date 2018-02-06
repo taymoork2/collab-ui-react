@@ -1,0 +1,21 @@
+card-capacity-bar {
+  .capacity-container {
+    display: flex;
+  }
+
+  .progress,
+  progressbar {
+    width: 100px;
+  }
+
+  .capacity-label {
+    font-size: .75rem;
+    margin-right: 1rem;
+  }
+
+  .progressbar-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+}
