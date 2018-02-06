@@ -67,7 +67,14 @@
 
   <div ng-if="$ctrl.isCareEnabled" class="small-4 columns column-paid column__care">
     <div ng-if="$ctrl.careLicenses.length">
-      <div translate="onboardModal.contactCenter" class="license__category"></div>
+      <div class="license__category">
+        <span translate="onboardModal.contactCenter" class="license__category"></span>
+        <cr-icon-info
+          l10n-tooltip="userManage.autoAssignTemplate.edit.careDisabledTooltip"
+          tooltip-placement="bottom"
+          >
+        </cr-icon-info>
+      </div>
 
       <!-- care - K1 -->
       <assignable-license-checkbox
