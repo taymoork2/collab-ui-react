@@ -264,7 +264,14 @@ require('./_user-roles.scss');
           return 1;
         } else if (hasRole(Config.backend_roles.readonly_admin)) {
           return 3;
-        } else if (hasAnyRole([Config.backend_roles.sales, Config.backend_roles.billing, Config.backend_roles.support, Config.backend_roles.application, Config.backend_roles.user_admin, Config.backend_roles.device_admin])) {
+        } else if (hasAnyRole([
+          Config.backend_roles.sales,
+          Config.backend_roles.billing,
+          Config.backend_roles.support,
+          Config.backend_roles.application,
+          Config.backend_roles.user_admin,
+          Config.backend_roles.device_admin,
+        ])) {
           return 2;
         }
       }
@@ -369,18 +376,14 @@ require('./_user-roles.scss');
             roleName: Config.roles.reports,
             roleState: Config.roleState.inactive,
           });
-          if ($scope.showUserRole) {
-            roles.push({
-              roleName: Config.roles.user_admin,
-              roleState: Config.roleState.inactive,
-            });
-          }
-          if ($scope.showDeviceRole) {
-            roles.push({
-              roleName: Config.roles.device_admin,
-              roleState: Config.roleState.inactive,
-            });
-          }
+          roles.push({
+            roleName: Config.roles.user_admin,
+            roleState: Config.roleState.inactive,
+          });
+          roles.push({
+            roleName: Config.roles.device_admin,
+            roleState: Config.roleState.inactive,
+          });
           break;
         case 2: // Some admin roles
           roles.push({
@@ -407,18 +410,14 @@ require('./_user-roles.scss');
             roleName: Config.roles.reports,
             roleState: checkPartialRoles($scope.rolesObj.supportAdminValue),
           });
-          if ($scope.showUserRole) {
-            roles.push({
-              roleName: Config.roles.user_admin,
-              roleState: checkPartialRoles($scope.rolesObj.userAdminValue),
-            });
-          }
-          if ($scope.showDeviceRole) {
-            roles.push({
-              roleName: Config.roles.device_admin,
-              roleState: checkPartialRoles($scope.rolesObj.deviceAdminValue),
-            });
-          }
+          roles.push({
+            roleName: Config.roles.user_admin,
+            roleState: checkPartialRoles($scope.rolesObj.userAdminValue),
+          });
+          roles.push({
+            roleName: Config.roles.device_admin,
+            roleState: checkPartialRoles($scope.rolesObj.deviceAdminValue),
+          });
           break;
         case 3: // Readonly admin
           roles.push({
@@ -445,18 +444,14 @@ require('./_user-roles.scss');
             roleName: Config.roles.reports,
             roleState: Config.roleState.inactive,
           });
-          if ($scope.showUserRole) {
-            roles.push({
-              roleName: Config.roles.user_admin,
-              roleState: Config.roleState.inactive,
-            });
-          }
-          if ($scope.showDeviceRole) {
-            roles.push({
-              roleName: Config.roles.device_admin,
-              roleState: Config.roleState.inactive,
-            });
-          }
+          roles.push({
+            roleName: Config.roles.user_admin,
+            roleState: Config.roleState.inactive,
+          });
+          roles.push({
+            roleName: Config.roles.device_admin,
+            roleState: Config.roleState.inactive,
+          });
           break;
       }
 
