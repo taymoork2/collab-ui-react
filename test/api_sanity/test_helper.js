@@ -366,6 +366,26 @@ var getAccessToken = function (req, code) {
   });
 };
 
+var deleteOrgToken = function (req, token, user) {
+  return new Promise(function (resolve, reject) {
+    var orgId = auth[user].org
+    var options = {
+      url: `https://idbroker.webex.com/idb/oauth2/v1/tokens?orgid=${orgId}&clientid=${clientId}`,
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Host': 'idbroker.webex.com',
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+    };
+    req.delete(options, function (err, res, body) {
+      if (err) {
+        console.error(err, body);
+        reject(new Error('Failed to delete Access Token from CI. Status: ' + (res != null ? res.statusCode : undefined)));
+      }
+    });
+  });
+};
+
 module.exports = {
   getBearerToken: function (user, callback) {
     var creds = auth[user];
@@ -398,6 +418,23 @@ module.exports = {
     } catch (_error) {
       throw new Error('Unable to parse JSON: ' + data);
     }
+  },
+  deleteToken: function (token, user, callback) {
+    var creds = auth[user];
+    if (!creds) {
+      var message = 'Credentials for ' + user + ' not found';
+      console.error(message);
+      return Promise.reject(message);
+    }
+    var jar = request.jar();
+    var req = request.defaults({
+      jar: jar,
+    });
+    return deleteOrgToken(req, token, user)
+      .catch(function (error) {
+        console.error('Unable to get remove token.', error);
+        return Promise.reject(error)
+      }).then(callback);
   },
   auth: auth,
 };
