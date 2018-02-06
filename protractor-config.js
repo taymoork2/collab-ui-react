@@ -12,6 +12,7 @@ var processEnvUtil = require('./utils/processEnvUtil')();
 var args = require('yargs').argv;
 var _ = require('lodash');
 var remote = require('selenium-webdriver/remote');
+var helper = require('./test/api_sanity/test_helper.js');
 
 // http proxy agent is required if the host running the 'e2e' task is behind a proxy (ex. a Jenkins slave)
 // - sauce executors are connected out to the world through the host's network
@@ -24,6 +25,7 @@ var VERY_LONG_TIMEOUT = 1000 * 60 * 5;
 var E2E_FAIL_RETRY = appConfig.e2eFailRetry;
 var NEWLINE = '\n';
 var ANIMATION_DURATION_MS = 300;
+var sessionRefreshToken = '';
 
 var maxInstances;
 if (process.env.SAUCE__MAX_INSTANCES) {
@@ -87,6 +89,21 @@ exports.config = {
   // A base URL for your application under test. Calls to protractor.get()
   // with relative paths will be prepended with this.
   baseUrl: getLaunchUrl(args),
+
+  // beforeLaunch A callback function called once configs are read but before
+  // any environment setup. This will only run once, and is run before
+  // onPrepare. You can specify a file containing code to run by setting
+  // beforeLaunch to the filename string.
+  beforeLaunch: function () {
+    // Get a refresh token that all access tokens from provisioner will
+    // be created under so that after all tests are run, the refresh token
+    // will be deleted and take all access tokens with it in order to prevent
+    // reaching the 750 token limit
+    return helper.getBearerToken('huron-ui-test-partner')
+      .then(function (bearer) {
+        sessionRefreshToken = bearer;
+      });
+  },
 
   onPrepare: function () {
     global._ = require('lodash');
@@ -284,6 +301,18 @@ exports.config = {
 
     return browser.getProcessedConfig()
       .then(initReporters);
+  },
+
+  // A callback function called once all tests have finished running and the
+  // WebDriver instance has been shut down. It is passed the exit code (0 if
+  // the tests passed). If you want asynchronous code to be executed before
+  // the program exits, afterLaunch must return a promise. This is called only
+  // once before the program exits (after onCleanUp)
+  afterLaunch: function () {
+    // After all tests have run and webdriver is shut down, this will make
+    // a call to idbroker and delete the refresh token and all associated
+    // access tokens for this test session
+    return helper.deleteToken(sessionRefreshToken, 'huron-ui-test-partner');
   },
 
   jasmineNodeOpts: {
