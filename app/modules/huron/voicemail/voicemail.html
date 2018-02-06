@@ -1,6 +1,10 @@
 <form name="$ctrl.form" novalidate role="form" class="cs-form">
   <cs-sp-buttons ng-if="$ctrl.form.$dirty">
-    <button cs-btn loading="$ctrl.saveInProcess" class="btn btn--primary" ng-click="$ctrl.save()" ng-disabled="$ctrl.form.$invalid || $ctrl.saveInProcess" type="submit || "$ctrl.enableVoicemail != "$ctrl.enableVoicemail") >
+    <button cs-btn type="submit"
+      loading="$ctrl.saveInProcess"
+      class="btn btn--primary"
+      ng-click="$ctrl.save()"
+      ng-disabled="$ctrl.form.$invalid || $ctrl.saveInProcess">
       <span translate="common.save"></span>
     </button>
     <button cs-btn ng-click="$ctrl.reset()">

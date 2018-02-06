@@ -21,7 +21,7 @@
   <div class="unlicensed-user-list" ng-if="unlicensed > 0">
     <div class="gridStyle grid-checkbox" ui-grid="convertGridOptions" ui-grid-selection ui-grid-save-state ></div>
   </div>
-  <div class="noUnlicensedUsers" ng-if="unlicensed == 0">
+  <div class="noUnlicensedUsers" ng-if="unlicensed === 0">
     <h2 translate="usersPage.convertUserNoneFound"></h2>
     <h3 translate="usersPage.convertUserTryAgain"></h3>
   </div>

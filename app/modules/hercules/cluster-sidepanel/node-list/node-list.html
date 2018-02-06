@@ -11,7 +11,7 @@
       <h6 class="feature">{{host.hostname}}</h6>
       <ul>
         <li class="feature" ng-repeat="connector in host.connectors | orderBy: $ctrl.sortConnectors ">
-          <a ng-if="connector.connectorType === 'c_mgmt' || connector.connectorType == 'c_ucmc' || connector.connectorType == 'c_cal'"
+          <a ng-if="connector.connectorType === 'c_mgmt' || connector.connectorType === 'c_ucmc' || connector.connectorType === 'c_cal'"
              ui-sref="expressway-cluster-sidepanel.host-details({host: host.hostname, hostSerial: connector.hostSerial, specificType: connector.connectorType})"
           >
             <cs-statusindicator ng-model="connector.extendedProperties.state.cssClass"></cs-statusindicator>

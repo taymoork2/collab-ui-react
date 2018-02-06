@@ -77,11 +77,11 @@
         <div class="cs-radio-group">
           <div class="radioDisplay">
             <input cs-input type="radio" ng-model="redirectResource.ovaType" id="full" name="redirectResource" value="1" cs-input-label="{{'mediaFusion.add-resource-dialog.fullOva' | translate}}" class="radioNoTranform"
-              ng-disabled="redirectResource.radio == 1">
+              ng-disabled="redirectResource.radio === 1">
           </div>
           <div class="radioDisplay">
             <input cs-input type="radio" ng-model="redirectResource.ovaType" id="demo" name="redirectResource" value="0" cs-input-label="{{'mediaFusion.add-resource-dialog.demoOva' | translate}}" class="radioNoTranform"
-              ng-disabled="redirectResource.radio == 1">
+              ng-disabled="redirectResource.radio === 1">
           </div>
         </div>
       </form>
@@ -96,10 +96,10 @@
     </div>
     <br>
     <br>
-    <div ng-show="redirectResource.ovaType == 1">
+    <div ng-show="redirectResource.ovaType === 1">
       <h5 translate="mediaFusion.add-resource-dialog.noRetryInfo"></h5>
     </div>
-    <div ng-show="redirectResource.ovaType == 0">
+    <div ng-show="redirectResource.ovaType === 0">
       <h5 translate="mediaFusion.add-resource-dialog.noRetryDemoInfo"></h5>
     </div>
     <div class="addResourceBodyInfo">

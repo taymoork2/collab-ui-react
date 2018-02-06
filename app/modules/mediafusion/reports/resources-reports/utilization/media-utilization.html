@@ -2,8 +2,8 @@
   <article class="media-service-card header-padding">
     <graphheader>
         <span class='report-section-header' translate='mediaFusion.metrics.utilizationTitle'></span>
-        <i class='icon icon-info-outline icon-large' tooltip="{{::'mediaFusion.metrics.graphDescription.utilizationOrgDesc' | translate}}" tooltip-class="metrics-tooltip" ng-if="$ctrl.parentcntrl.clusterSelected == $ctrl.parentcntrl.allClusters"></i>
-        <i class='icon icon-info-outline icon-large' tooltip="{{::'mediaFusion.metrics.graphDescription.utilizationClusterDesc' | translate}}" tooltip-class="metrics-tooltip" ng-if="$ctrl.parentcntrl.clusterSelected != $ctrl.parentcntrl.allClusters"></i>
+        <i class='icon icon-info-outline icon-large' tooltip="{{::'mediaFusion.metrics.graphDescription.utilizationOrgDesc' | translate}}" tooltip-class="metrics-tooltip" ng-if="$ctrl.parentcntrl.clusterSelected === $ctrl.parentcntrl.allClusters"></i>
+        <i class='icon icon-info-outline icon-large' tooltip="{{::'mediaFusion.metrics.graphDescription.utilizationClusterDesc' | translate}}" tooltip-class="metrics-tooltip" ng-if="$ctrl.parentcntrl.clusterSelected !== $ctrl.parentcntrl.allClusters"></i>
         <div id="utilization-export-div"></div>
     </graphheader>
     <section>
