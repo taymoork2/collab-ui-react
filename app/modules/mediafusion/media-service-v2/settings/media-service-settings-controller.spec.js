@@ -1,15 +1,17 @@
 'use strict';
 
 describe('Controller: MediaServiceSettingsControllerV2', function () {
-  var controller, Analytics;
+  var controller;
 
   beforeEach(angular.mock.module('Mediafusion'));
+  afterEach(cleanup);
 
-  beforeEach(inject(function ($controller, _Analytics_) {
-    Analytics = _Analytics_;
-    controller = $controller('MediaServiceSettingsControllerV2', {
-      Analytics: Analytics,
-    });
+  function cleanup() {
+    controller = undefined;
+  }
+
+  beforeEach(inject(function ($controller) {
+    controller = $controller('MediaServiceSettingsControllerV2', {});
   }));
 
   it('controller should be defined', function () {

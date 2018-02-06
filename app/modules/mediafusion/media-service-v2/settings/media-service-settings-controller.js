@@ -2,12 +2,11 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceSettingsControllerV2($stateParams, Analytics) {
+  function MediaServiceSettingsControllerV2(Analytics) {
     var vm = this;
     vm.config = '';
     vm.serviceType = 'mf_mgmt';
     vm.serviceId = 'squared-fusion-media';
-    vm.cluster = $stateParams.cluster;
 
     vm.deactivateModalOptions = {
       template: require('modules/mediafusion/media-service-v2/settings/confirm-disable-dialog.html'),

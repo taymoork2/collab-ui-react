@@ -4,11 +4,10 @@ import notificationsModuleName from 'modules/core/notifications';
 
 export default angular
   .module('mediafusion.media-service-v2.components.video-quality-section', [
-    hybridServicesClusterServiceModuleName,
-    notificationsModuleName,
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/scripts/services/org.service'),
+    hybridServicesClusterServiceModuleName,
+    notificationsModuleName,
   ])
   .component('videoQualitySection', new VideoQualitySectionComponent())
   .name;
-
