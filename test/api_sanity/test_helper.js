@@ -70,22 +70,27 @@ var auth = {
   'huron-ui-test-partner': {
     user: 'huron.ui.test.partner@gmail.com',
     pass: 'Cisco@1234!',
-    org: '2381e2e2-e912-4d33-8fe2-021216906eb9',
+    org: '555daf76-091b-40a0-b3b9-f6ef33084599',
   },
   'huron-ui-test-partner-h-i1238': {
     user: 'huron.ui.test.partner+hi1238@gmail.com',
     pass: 'Cisco@1234!',
-    org: '2381e2e2-e912-4d33-8fe2-021216906eb9',
+    org: '555daf76-091b-40a0-b3b9-f6ef33084599',
   },
   'huron-ui-test-partner-h-i1484': {
     user: 'huron.ui.test.partner+hi1484@gmail.com',
     pass: 'Cisco@1234!',
-    org: '2381e2e2-e912-4d33-8fe2-021216906eb9',
+    org: '555daf76-091b-40a0-b3b9-f6ef33084599',
+  },
+  'huron-ui-test-partner-h-cos-trial': {
+    user: 'huron.ui.test.partner+hcostrial@gmail.com',
+    pass: 'Cisco@1234!',
+    org: '555daf76-091b-40a0-b3b9-f6ef33084599',
   },
   'huron-ui-test-partner-prod': {
     user: 'huron.ui.test.partner+production@gmail.com',
     pass: 'Cisco@1234!',
-    org: 'b93be93e-5f57-4977-9db9-3d1e6dc12dca',
+    org: '555daf76-091b-40a0-b3b9-f6ef33084599',
   },
   'invite-admin': {
     user: 'pbr-invite-user@squared2webex.com',

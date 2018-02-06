@@ -46,4 +46,12 @@ describe('Component:care hybrid feature modal', () => {
       template: '<customer-support-template-modal dismiss="$dismiss()" class="care-modal"></customer-support-template-modal>',
     });
   });
+
+  it('learnMoreLink function call for opening the care voice features Modal.', function () {
+    this.controller.learnMoreLink();
+    expect(this.$scope.dismiss).not.toHaveBeenCalled();
+    expect(this.$modal.open).toHaveBeenCalledWith({
+      template: '<care-voice-features-modal dismiss="$dismiss()" class="care-modal"></care-voice-features-modal>',
+    });
+  });
 });

@@ -32,6 +32,11 @@
     background: $brand-white;
     border-bottom: 1px solid $gray-light-3;
 
+    .page-sub-header {
+      border-bottom: none;
+      background-color: transparent;
+    }
+
     .menu-container {
       padding-bottom: 5px;
 

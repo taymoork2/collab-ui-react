@@ -336,16 +336,30 @@
           } else {
             attributes = node.attributes;
           }
-          var ele = '<aa-insertion-element element-text="' + attributes[0].value + '" read-as="' + attributes[1].value + '" element-id="' + attributes[2].value + '"id="' + attributes[2].value + '" contenteditable="false""></aa-insertion-element>';
-          opt = {
-            say: {
-              value: attributes[0].value,
-              voice: '',
-              as: attributes[1].value,
-            },
-            isDynamic: true,
-            htmlModel: encodeURIComponent(ele),
-          };
+          var nodeEleText = _.get(attributes, 'element-text');
+          var nodeReadAs = _.get(attributes, 'read-as');
+          var nodeId = _.get(attributes, 'element-id');
+          if (!_.isUndefined(nodeEleText) && !_.isUndefined(nodeReadAs) && !_.isUndefined(nodeId)) {
+            var ele = '<aa-insertion-element element-text="' + nodeEleText.value + '" read-as="' + nodeReadAs.value + '" element-id="' + nodeId.value + '"id="' + nodeId.value + '" contenteditable="false""></aa-insertion-element>';
+            opt = {
+              say: {
+                value: nodeEleText.value,
+                voice: '',
+                as: nodeReadAs.value,
+              },
+              isDynamic: true,
+              htmlModel: encodeURIComponent(ele),
+            };
+          } else {
+            opt = {
+              say: {
+                value: '',
+                voice: '',
+              },
+              isDynamic: false,
+              htmlModel: '',
+            };
+          }
         }
         finalList.push(opt);
       });

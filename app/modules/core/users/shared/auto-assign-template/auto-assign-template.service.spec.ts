@@ -96,6 +96,53 @@ describe('Service: AutoAssignTemplateService:', () => {
     });
   });
 
+  describe('isDefaultAutoAssignTemplateActivated():', () => {
+    it('should resolve the state of isEnabledForOrg if a default template exists', function () {
+      let isActivated;
+      spyOn(this.AutoAssignTemplateService, 'getDefaultTemplate').and.returnValue(this.$q.resolve({}));
+      spyOn(this.AutoAssignTemplateService, 'isEnabledForOrg').and.returnValue(this.$q.resolve(false));
+
+      // has template, but isEnabledForOrg is false
+      this.AutoAssignTemplateService.isDefaultAutoAssignTemplateActivated().then(_isActivated => isActivated = _isActivated);
+      this.$scope.$apply();
+      expect(isActivated).toBe(false);
+
+      // has template and isEnabledForOrg is true
+      this.AutoAssignTemplateService.isEnabledForOrg.and.returnValue(this.$q.resolve(true));
+      this.AutoAssignTemplateService.isDefaultAutoAssignTemplateActivated().then(_isActivated => isActivated = _isActivated);
+      this.$scope.$apply();
+      expect(isActivated).toBe(true);
+
+      // isEnabledForOrg is true, but doesn't have template
+      this.AutoAssignTemplateService.getDefaultTemplate.and.returnValue(this.$q.resolve(undefined));
+      this.AutoAssignTemplateService.isDefaultAutoAssignTemplateActivated().then(_isActivated => isActivated = _isActivated);
+      this.$scope.$apply();
+      expect(isActivated).toBe(false);
+    });
+
+    it('should resolve false if either request fails', function () {
+      let isActivated;
+      spyOn(this.AutoAssignTemplateService, 'getDefaultTemplate').and.returnValue(this.$q.resolve({}));
+      spyOn(this.AutoAssignTemplateService, 'isEnabledForOrg').and.returnValue(this.$q.resolve(true));
+
+      this.AutoAssignTemplateService.isDefaultAutoAssignTemplateActivated().then(_isActivated => isActivated = _isActivated);
+      this.$scope.$apply();
+      expect(isActivated).toBe(true);
+
+      this.AutoAssignTemplateService.getDefaultTemplate.and.returnValue(this.$q.resolve({}));
+      this.AutoAssignTemplateService.isEnabledForOrg.and.returnValue(this.$q.reject());
+      this.AutoAssignTemplateService.isDefaultAutoAssignTemplateActivated().then(_isActivated => isActivated = _isActivated);
+      this.$scope.$apply();
+      expect(isActivated).toBe(false);
+
+      this.AutoAssignTemplateService.getDefaultTemplate.and.returnValue(this.$q.reject());
+      this.AutoAssignTemplateService.isEnabledForOrg.and.returnValue(this.$q.resolve(true));
+      this.AutoAssignTemplateService.isDefaultAutoAssignTemplateActivated().then(_isActivated => isActivated = _isActivated);
+      this.$scope.$apply();
+      expect(isActivated).toBe(false);
+    });
+  });
+
   describe('createTemplate():', () => {
     it('should call POST on the internal endpoint url with the given payload', function () {
       this.$httpBackend.expectPOST(this.endpointUrl, { foo: 'bar' }).respond(200);

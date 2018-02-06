@@ -81,14 +81,14 @@ describe('Controller: WebExSiteRowCtrl', function () {
   });
   it('can correctly initialize cross luach to SiteAdmin home page', function () {
     controller.linkToSiteAdminHomePage('abc.webex.com');
-    expect(controller.siteAdminUrl).toBe('https://abc.webex.com/admin');
+    expect(controller.siteAdminUrl).toBe('https://abc.webex.com/wbxadmin/default.do?siteurl=abc');
     expect(controller.accessToken).toBe(accessToken);
   });
 
   it('can correctly initialize cross luach to SiteAdmin linked page', function () {
     controller.linkToSiteAdminLinkedPage('abc.webex.com');
     var expectRsult = [];
-    expectRsult.push('https://abc.webex.com/admin');
+    expectRsult.push('https://abc.webex.com/wbxadmin/default.do?siteurl=abc');
     expectRsult.push('&mainPage=');
     expectRsult.push(encodeURIComponent('accountlinking.do?siteUrl='));
     expectRsult.push('abc');

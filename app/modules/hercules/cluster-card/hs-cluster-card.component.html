@@ -3,7 +3,7 @@
     <header>
       <h4>{{::$ctrl.cluster.name}}</h4>
       <div ng-if="$ctrl.showLinkToNodesPage()" class="cluster-nodes-link">
-        <a ng-click="$ctrl.openNodes($ctrl.cluster.targetType, $ctrl.cluster.id)">
+        <a href ng-click="$ctrl.openNodes($ctrl.cluster.targetType, $ctrl.cluster.id)">
           <span translate="hercules.fusion.list.nodes" translate-values="{count: $ctrl.countHosts($ctrl.cluster)}" translate-interpolation="messageformat"></span>
           <span class="badge badge-{{$ctrl.cluster.extendedProperties.alarmsBadgeCss}}" ng-if="$ctrl.cluster.extendedProperties.alarms !== 'none'" translate="hercules.alarms.alarms"></span>
           <span class="badge warning" ng-if="$ctrl.cluster.extendedProperties.maintenanceMode === 'on'" translate="hercules.fusion.list.maintenance"></span>
@@ -39,7 +39,7 @@
           </div>
           <div class="connection-status-services">
             <div class="connection-status-service" ng-repeat="serviceStatus in $ctrl.cluster.extendedProperties.servicesStatuses | filter: {serviceId: '!squared-fusion-mgmt'} | orderBy:'serviceId':false:$ctrl.hybridServicesComparator" ng-if="serviceStatus.total > 0">
-              <a ng-click="$ctrl.openService(serviceStatus.serviceId, $ctrl.cluster.id)">
+              <a href ng-click="$ctrl.openService(serviceStatus.serviceId, $ctrl.cluster.id)">
                 <cs-statusindicator ng-model="serviceStatus.state.cssClass"></cs-statusindicator>
                 <span ng-if="serviceStatus.serviceId !== 'squared-fusion-cal'">{{::'overview.cards.hybrid.services.' + serviceStatus.serviceId | translate}}</span>
                 <span ng-if="serviceStatus.serviceId === 'squared-fusion-cal'" translate="hercules.cloudExtensions.serviceNames.squared-fusion-cal"></span>
@@ -63,7 +63,7 @@
       </div>
     </div>
     <footer ng-if="!($ctrl.cluster.extendedProperties.isEmpty && $ctrl.cluster.targetType === 'c_mgmt')">
-      <a ng-if="!$ctrl.hideFooter($ctrl.cluster)" ng-click="$ctrl.openSettings($ctrl.cluster.targetType, $ctrl.cluster.id)" translate="hercules.fusion.list.settings"></a>
+      <a href ng-if="!$ctrl.hideFooter($ctrl.cluster)" ng-click="$ctrl.openSettings($ctrl.cluster.targetType, $ctrl.cluster.id)" translate="hercules.fusion.list.settings"></a>
     </footer>
 
     <div class="row cluster-list-body empty-cluster-body" ng-if="$ctrl.cluster.extendedProperties.isEmpty && $ctrl.cluster.targetType === 'c_mgmt'">
@@ -71,7 +71,10 @@
         <p translate="hercules.fusion.list.complete-registration"></p>
         <div class="center button-row">
           <button class="btn" ng-click="$ctrl.openDeleteConfirm($ctrl.cluster)" translate="common.remove"></button>
-          <button class="btn btn--primary" ng-click="$ctrl.goToExpressway($ctrl.cluster.extendedProperties.allowedRedirectTarget.hostname)" translate="hercules.fusion.list.go-to-expressway"></button>
+          <button class="btn btn--primary"
+            ng-click="$ctrl.goToExpressway($ctrl.cluster.extendedProperties.allowedRedirectTarget.hostname)"
+            translate="hercules.fusion.list.go-to-expressway">
+          </button>
         </div>
       </div>
       <div class="medium-12" ng-if="!$ctrl.cluster.extendedProperties.allowedRedirectTarget">

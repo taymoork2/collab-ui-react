@@ -3,6 +3,7 @@ import { ServicesOverviewMessageCard } from './cloud/message-card';
 import { ServicesOverviewMeetingCard } from './cloud/meeting-card';
 import { ServicesOverviewCallCard } from './cloud/cloud-call-card';
 import { ServicesOverviewCareCard } from './cloud/care-card';
+import { ServicesOverviewHcsCard } from './hcs/hcs-card';
 
 import { Config } from 'modules/core/config/config';
 import { CloudConnectorService, CCCService, ICCCService } from 'modules/hercules/services/calendar-cloud-connector.service';
@@ -24,6 +25,7 @@ export class ServicesOverviewController implements ng.IComponentController {
     new ServicesOverviewMeetingCard(this.Authinfo),
     new ServicesOverviewCallCard(this.Authinfo, this.Config),
     new ServicesOverviewCareCard(this.Authinfo),
+    new ServicesOverviewHcsCard(this.Authinfo),
   ];
 
   // ⚠️ The properties below are exclusive to the new cards coming with the office 365 feature
@@ -74,6 +76,7 @@ export class ServicesOverviewController implements ng.IComponentController {
       huronEnterprisePrivateTrunking: this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking),
       hI1638: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1638),
       hybridCare: this.FeatureToggleService.supports(this.FeatureToggleService.features.hybridCare),
+      hcs: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHostedCloudService),
     });
 
     features
@@ -82,7 +85,7 @@ export class ServicesOverviewController implements ng.IComponentController {
         this.forwardEvent('hybridCareToggleEventHandler', response.hybridCare);
         this.forwardEvent('hI1484FeatureToggleEventhandler', response.hI1484);
         this.forwardEvent('sparkCallCdrReportingFeatureToggleEventhandler', response.hI802);
-
+        // this.forwardEvent('atlasHybridCloudServiceHandler', response.hcs);
         // Used by hybrid cards
         if (this.Authinfo.isFusionUC() || ((this.Authinfo.hasCallLicense() || this.Authinfo.hasCareLicense()) && response.hybridCare)) {
           this._servicesToDisplay.push('squared-fusion-uc');
@@ -269,6 +272,16 @@ export class ServicesOverviewController implements ng.IComponentController {
     } else if (property === 'status') {
       return _.get(_.find(servicesStatuses, { serviceId: serviceId }), property, 'notAvailable');
     }
+  }
+
+  public getHcsCards() {
+    return _.filter(this.cards, {
+      cardType: CardType.hcs,
+    });
+  }
+
+  public isPartnerAdmin() {
+    return this.Authinfo.isPartnerAdmin();
   }
 }
 

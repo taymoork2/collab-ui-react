@@ -4,13 +4,12 @@
       <div class="title div-word-wrapper" ng-show="!updateIncidentCtrl.isEditingTitle">
         <h3 ng-class="updateIncidentCtrl.incidentForUpdate.impact">
             {{ updateIncidentCtrl.incidentForUpdate.incidentName }}
-          <a id="editTitle" ng-click="updateIncidentCtrl.showEditTitle()" translate="common.edit"></a>
+          <a href id="editTitle" ng-click="updateIncidentCtrl.showEditTitle()" translate="common.edit"></a>
         </h3>
       </div>
 
       <div class="edit-title" ng-show="updateIncidentCtrl.isEditingTitle">
-        <input id="editIncidentName" type="text" class="cs-input"
-               ng-model="updateIncidentCtrl.incidentNameForEdit" maxlength="200"/>
+        <input id="editIncidentName" type="text" class="cs-input" ng-model="updateIncidentCtrl.incidentNameForEdit" maxlength="200"/>
 
         <cs-select
           id="editIncidentImpactStatus"
@@ -19,11 +18,11 @@
         </cs-select>
 
         <button cs-btn
-                id="saveModifyIncidentBtn"
-                class="btn btn--primary"
-                ng-disabled="!updateIncidentCtrl.isValidForTitle()"
-                loading="updateIncidentCtrl.isSavingTitle"
-                ng-click="updateIncidentCtrl.saveTitle()">
+          id="saveModifyIncidentBtn"
+          class="btn btn--primary"
+          ng-disabled="!updateIncidentCtrl.isValidForTitle()"
+          loading="updateIncidentCtrl.isSavingTitle"
+          ng-click="updateIncidentCtrl.saveTitle()">
           <span translate="common.save"></span>
         </button>
 
@@ -37,9 +36,7 @@
       <div class="sub-section">
         <label class="cs-input__label" translate="gss.incidentsPage.incidentStatus"></label>
         <div class="cs-radio-group clearfix">
-          <input
-            cs-input
-            type="radio"
+          <input cs-input type="radio"
             id="{{ ::radio.id }}"
             value="{{ ::radio.value }}"
             ng-model="updateIncidentCtrl.incidentForUpdate.status"
@@ -50,7 +47,7 @@
         <div ng-show="updateIncidentCtrl.isIncidentStatusResolved()">
           <h6 ng-if="!updateIncidentCtrl.isShowSetComponentTips">
             <span translate="gss.setComponentTips"></span>
-            <a ng-click="updateIncidentCtrl.setOperationalForComponents()" translate="gss.setComponentTipsLink"></a>
+            <a href ng-click="updateIncidentCtrl.setOperationalForComponents()" translate="gss.setComponentTipsLink"></a>
           </h6>
 
           <h6 ng-if="updateIncidentCtrl.isShowSetComponentTips" translate="gss.setComponentText"></h6>
@@ -77,12 +74,16 @@
               </div>
 
               <div class="columns medium-2">
-                <a ng-show="!groupComponent.isOverridden" ng-click="updateIncidentCtrl.toggleOverridden(groupComponent)"
-                   translate="gss.useDerivedStatus">
+                <a href
+                  ng-if="!groupComponent.isOverridden"
+                  ng-click="updateIncidentCtrl.toggleOverridden(groupComponent)"
+                  translate="gss.useDerivedStatus">
                 </a>
 
-                <a ng-show="groupComponent.isOverridden" ng-click="updateIncidentCtrl.toggleOverridden(groupComponent)"
-                   translate="gss.overrideStatus">
+                <a href
+                  ng-if="groupComponent.isOverridden"
+                  ng-click="updateIncidentCtrl.toggleOverridden(groupComponent)"
+                  translate="gss.overrideStatus">
                 </a>
               </div>
 
@@ -138,11 +139,16 @@
               <strong>{{ updateIncidentCtrl.getLocalizedIncidentStatus(message.status) }}</strong>
               <div class="div-word-wrapper msg-inner-wrapper">{{ message.message }}</div>
               <div>
-                <a class="edit-message-link" ng-click="updateIncidentCtrl.showEditMessage(message)"
-                   translate="common.edit">
+                <a href
+                  class="edit-message-link"
+                  ng-click="updateIncidentCtrl.showEditMessage(message)"
+                  translate="common.edit">
                 </a>
-                <a class="edit-message-link" ng-if="!updateIncidentCtrl.isIncidentStatusResolved()" ng-click="updateIncidentCtrl.deleteMessage(message)"
-                   translate="common.delete">
+                <a href
+                  class="edit-message-link"
+                  ng-if="!updateIncidentCtrl.isIncidentStatusResolved()"
+                  ng-click="updateIncidentCtrl.deleteMessage(message)"
+                  translate="common.delete">
                 </a>
               </div>
             </div>
@@ -176,12 +182,16 @@
               <span>{{ message.lastModifiedTime | date: "MMM d, y HH:mm" : "UTC" }} UTC</span>
             </div>
             <div>
-              <a ng-show="!message.isShowAffectedComponents"
-                 ng-click="updateIncidentCtrl.showAffectedComponents(message)" translate="gss.showAffectedComponents">
+              <a href
+                ng-if="!message.isShowAffectedComponents"
+                ng-click="updateIncidentCtrl.showAffectedComponents(message)"
+                translate="gss.showAffectedComponents">
               </a>
 
-              <a ng-show="message.isShowAffectedComponents"
-                 ng-click="updateIncidentCtrl.hideAffectedComponent(message)" translate="gss.hideAffectedComponents">
+              <a href
+                ng-if="message.isShowAffectedComponents"
+                ng-click="updateIncidentCtrl.hideAffectedComponent(message)"
+                translate="gss.hideAffectedComponents">
               </a>
             </div>
 
