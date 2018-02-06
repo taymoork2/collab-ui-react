@@ -1,6 +1,6 @@
 import moduleName from './index';
 
-describe('Component: licenseSummary:', () => {
+describe('Component: autoAssignTemplateSummary:', () => {
   beforeEach(function() {
     this.initModules(moduleName);
     this.injectDependencies(

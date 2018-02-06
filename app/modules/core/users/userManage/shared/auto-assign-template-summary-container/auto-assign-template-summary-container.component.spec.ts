@@ -8,7 +8,7 @@ type Test = atlas.test.IComponentTest<AutoAssignTemplateSummaryContainerControll
   AutoAssignTemplateService: AutoAssignTemplateService,
 }, {
   components: {
-    licenseSummary: atlas.test.IComponentSpy<AutoAssignTemplateSummaryComponent>,
+    autoAssignTemplateSummary: atlas.test.IComponentSpy<AutoAssignTemplateSummaryComponent>,
   },
   getDefaultStateDataDeferred: ng.IDeferred<any>,
 }>;
@@ -16,11 +16,11 @@ type Test = atlas.test.IComponentTest<AutoAssignTemplateSummaryContainerControll
 describe('Component: autoAssignTemplateSummaryContainer:', () => {
   beforeEach(function (this: Test) {
     this.components = {
-      licenseSummary: this.spyOnComponent('autoAssignTemplateSummary'),
+      autoAssignTemplateSummary: this.spyOnComponent('autoAssignTemplateSummary'),
     };
     this.initModules(
       moduleName,
-      this.components.licenseSummary,
+      this.components.autoAssignTemplateSummary,
     );
     this.injectDependencies(
       'AutoAssignTemplateService',
@@ -38,7 +38,7 @@ describe('Component: autoAssignTemplateSummaryContainer:', () => {
     }
 
     describe('with initial autoAssignTemplateData', () => {
-      it('should immediately show license-summary without needing to load data', function (this: Test) {
+      it('should immediately show auto-assign-template-summary without needing to load data', function (this: Test) {
         this.$scope.myAutoAssignTemplateData = 'fake-auto-assign-template-data';
         this.compileComponent('autoAssignTemplateSummaryContainer', {
           titleKey: 'my-title-key',
@@ -53,12 +53,12 @@ describe('Component: autoAssignTemplateSummaryContainer:', () => {
         expect(this.view.find(View.LICENSE_SUMMARY)).toExist();
 
         expect(this.AutoAssignTemplateService.getDefaultStateData).not.toHaveBeenCalled();
-        expect(this.components.licenseSummary.bindings[0].autoAssignTemplateData).toBe('fake-auto-assign-template-data');
+        expect(this.components.autoAssignTemplateSummary.bindings[0].autoAssignTemplateData).toBe('fake-auto-assign-template-data');
       });
     });
 
     describe('without initial autoAssignTemplateData', () => {
-      it('should show loading before license-summary loads with autoAssignTemplateData', function (this: Test) {
+      it('should show loading before auto-assign-template-summary loads with autoAssignTemplateData', function (this: Test) {
         this.compileComponent('autoAssignTemplateSummaryContainer', {
           titleKey: 'my-title-key',
           descriptionKey: 'my-description-key',
@@ -77,7 +77,7 @@ describe('Component: autoAssignTemplateSummaryContainer:', () => {
 
         expect(this.view.find(View.LOADING_SPINNER)).not.toExist();
         expect(this.view.find(View.LICENSE_SUMMARY)).toExist();
-        expect(this.components.licenseSummary.bindings[0].autoAssignTemplateData).toBe('fake-auto-assign-template-data');
+        expect(this.components.autoAssignTemplateSummary.bindings[0].autoAssignTemplateData).toBe('fake-auto-assign-template-data');
       });
     });
   });
