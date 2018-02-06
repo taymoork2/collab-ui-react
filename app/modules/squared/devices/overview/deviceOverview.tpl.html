@@ -254,13 +254,13 @@
         <div class="form-group" ng-show="deviceOverview.currentDevice.hasAdvancedSettings" cr-feature-toggle feature-show="atlas-devices-advanced-settings">
           <label class="col-sm-4 control-label" translate="spacesPage.advancedSettings.advancedSettings"></label>
           <div class="col-sm-8">
-            <a sq-click-promise="deviceOverview.showAdvancedSettingsDialog()" translate="spacesPage.advancedSettings.launchAdvancedSettings"></a>
+            <a href sq-click-promise="deviceOverview.showAdvancedSettingsDialog()" translate="spacesPage.advancedSettings.launchAdvancedSettings"></a>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-4 control-label" translate="spacesPage.remoteAccessKey.ciscoSupport"></label>
           <div class="col-sm-8">
-            <a sq-click-promise="deviceOverview.showRemoteSupportDialog()" translate="spacesPage.remoteAccessKey.remoteAccessKey"></a>
+            <a href sq-click-promise="deviceOverview.showRemoteSupportDialog()" translate="spacesPage.remoteAccessKey.remoteAccessKey"></a>
             <p class="form-control-static warningFaxes">This key enables Cisco Support to resolve system issues remotely.</p>
           </div>
         </div>

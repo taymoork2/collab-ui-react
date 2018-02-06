@@ -96,7 +96,7 @@
   <span ng-show="vm.isSearching" cs-loader class="loader-example--small"></span>
   <span ng-show="vm.noSearchResults" translate="placesPage.botAuthorizations.noUserFound"></span>
   <div>
-    <a ng-show="vm.showAdd()" ng-click="vm.startAdding()" class="icon icon-add-outline icon-2x"></a>
+    <a href ng-if="vm.showAdd()" ng-click="vm.startAdding()" class="icon icon-add-outline icon-2x"></a>
   </div>
 </div>
 

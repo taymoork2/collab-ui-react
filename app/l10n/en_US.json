@@ -8451,6 +8451,14 @@
     "webexVersion": {
       "title": "Webex Version"
     },
+
+    "webexSiteManagement": {
+      "title": "WebEx Sites",
+      "subsectionLabel": "Allow customers to manage WebEx Sites",
+      "subsectionDescription": "Customers can add, edit and delete WebEx sites in the customer portal of Cisco Spark Control Hub. Disabling this option will remove the user interface for managing WebEx sites for all of your customers.",
+      "allowSiteManagementByCustomer": "Allow customers to manage WebEx sites",
+      "siteManagementSettingUpdated": "Webex Site Management by customer setting has been updated"
+    },
     "sipDomain": {
       "title": "Cisco Spark SIP Address",
       "subsectionLabel": "SIP Domain Prefix",

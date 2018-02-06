@@ -490,8 +490,8 @@ require('./_support.scss');
       });
     };
 
-    var clientLogTemplate = '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.downloadLog(row.entity.fullFilename)"><span><i class="icon icon-download"></i></a></div>';
-    var metadataTemplate = '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.openExtendedMetadata(row.entity.metadata)"><i class="icon icon-data"></i></a></div>';
+    var clientLogTemplate = '<div class="grid-icon ui-grid-cell-contents"><a href ng-click="grid.appScope.downloadLog(row.entity.fullFilename)"><span><i class="icon icon-download"></i></a></div>';
+    var metadataTemplate = '<div class="grid-icon ui-grid-cell-contents"><a href ng-click="grid.appScope.openExtendedMetadata(row.entity.metadata)"><i class="icon icon-data"></i></a></div>';
 
     $scope.gridOptions = {
       data: 'userLogs',

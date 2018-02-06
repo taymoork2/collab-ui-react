@@ -118,14 +118,19 @@
           <h6 translate="trialModal.pstn.addrFound"></h6>
           <h5>{{$ctrl.emergency.emergencyAddress.address1}} {{$ctrl.emergency.emergencyAddress.address2}}</h5>
           <h5>{{$ctrl.emergency.emergencyAddress.city}}, {{$ctrl.emergency.emergencyAddress.state}}, {{$ctrl.emergency.emergencyAddress.zip}}</h5>
-          <a href="" class="primary" ng-click="$ctrl.resetAddress()" translate="trialModal.pstn.addrRetry"></a>
+          <a href class="primary" ng-click="$ctrl.resetAddress()" translate="trialModal.pstn.addrRetry"></a>
         </div>
         <div class="saved-address" ng-if="!$ctrl.showAddressEntry">
           <cs-overview-loader loading="$ctrl.loadingAddress" size="sm"></cs-overview-loader>
           <span class="row h5">{{$ctrl.emergency.emergencyAddress.address1 | uppercase}}, {{$ctrl.emergency.emergencyAddress.address2 | uppercase}}</span>
           <span class="row h5">{{$ctrl.emergency.emergencyAddress.city | uppercase}}, {{$ctrl.emergency.emergencyAddress.state | uppercase}} {{$ctrl.emergency.emergencyAddress.zip}}</span>
         </div>
-        <a href="" class="modify-button h6" ng-click="$ctrl.modifyAddress()" ng-if="$ctrl.emergency.status !== 'PENDING' && $ctrl.emergency.emergencyNumber !== $ctrl.companyEmergencyNumber && !$ctrl.showAddressEntry" translate="common.modify"></a>
+        <a href
+          class="modify-button h6"
+          ng-click="$ctrl.modifyAddress()"
+          ng-if="$ctrl.emergency.status !== 'PENDING' && $ctrl.emergency.emergencyNumber !== $ctrl.companyEmergencyNumber && !$ctrl.showAddressEntry"
+          translate="common.modify">
+        </a>
         <div ng-class="{warning: $ctrl.emergency.status === 'PENDING'}">
           <div class="cs-input__messages">
             <div class="message">{{::'serviceAddress.pending' | translate}}</div>
