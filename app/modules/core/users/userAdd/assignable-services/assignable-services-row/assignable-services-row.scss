@@ -13,16 +13,10 @@ assignable-services-row {
       line-height: 1.625rem;
       margin-top: 0;
       margin-bottom: 0.25rem;
+    }
 
-      cr-icon-info {
-        .icon.icon-info {
-          margin-left: 3px;
-
-          + span.tooltip.tip-bottom {
-            margin-top: 5px;
-          }
-        }
-      }
+    .license__category-text {
+      margin-right: 0.5rem;
     }
 
     assignable-advanced-meetings {
