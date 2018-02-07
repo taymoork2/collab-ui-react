@@ -10,26 +10,27 @@
     <span translate="userManage.autoAssignTemplate.edit.note"></span>
     <a>
       <i class="icon icon-info"
+        tabindex="0"
         tooltip="{{::'userManage.autoAssignTemplate.edit.tooltip' | translate}}"
         tooltip-placement="bottom"
         tooltip-trigger="focus mouseenter"
-        tooltip-animation="false"></i>
+        tooltip-animation="false"
+        aria-label="{{::'userManage.autoAssignTemplate.edit.tooltip' | translate}}">
+      </i>
     </a>
   </p>
   <div class="modal-content__assignable-services">
     <assignable-services
       subscriptions="$ctrl.sortedSubscriptions"
       on-update="$ctrl.recvUpdate($event)"
-      auto-assign-template-data="$ctrl.autoAssignTemplateData"
-      >
+      auto-assign-template-data="$ctrl.autoAssignTemplateData">
     </assignable-services>
     <hybrid-services-entitlements-panel
       allow-remove="true"
       entitlements-callback="$ctrl.recvHybridServicesEntitlementsUpdate(entitlements)"
       restore-instance="$ctrl.getHybridServices()"
       restore-user-entitlements="$ctrl.getUserEntitlements()"
-      save-instance="$ctrl.setHybridServices(hybridServices)"
-      >
+      save-instance="$ctrl.setHybridServices(hybridServices)">
     </hybrid-services-entitlements-panel>
   </div>
 </multi-step-modal>

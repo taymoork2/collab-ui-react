@@ -10,7 +10,7 @@ export class HybridDataSecurityActiveCardComponent implements ng.IComponentOptio
     <article>
       <div class="active-card_header">
         <h4 translate="servicesOverview.cards.hybridDataSecurity.title"></h4>
-        <i class="icon icon-question-circle" tooltip="{{::'servicesOverview.cards.hybridDataSecurity.description' | translate}}" tooltip-placement="bottom-right" tabindex="0" tooltip-trigger="focus mouseenter"></i>
+        <i class="icon icon-question-circle" tooltip="{{::'servicesOverview.cards.hybridDataSecurity.description' | translate}}" tooltip-placement="bottom-right" tabindex="0" tooltip-trigger="focus mouseenter" aria-label="{{::'servicesOverview.cards.hybridDataSecurity.description' | translate}}"></i>
       </div>
       <div class="active-card_content">
         <div class="active-card_section">

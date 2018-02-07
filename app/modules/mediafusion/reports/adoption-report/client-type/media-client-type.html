@@ -4,7 +4,13 @@
       <span class='report-section-header' ng-if="$ctrl.parentcntrl.clientTypeSelected === $ctrl.parentcntrl.clientTypeOptions[0].value" translate='mediaFusion.metrics.clientTypeHeading'></span>
       <span class='report-section-header' ng-if="$ctrl.parentcntrl.clientTypeSelected === $ctrl.parentcntrl.clientTypeOptions[1].value" translate='mediaFusion.metrics.clientTypeHeadingOnPrem'></span>
       <span class='report-section-header' ng-if="$ctrl.parentcntrl.clientTypeSelected === $ctrl.parentcntrl.clientTypeOptions[2].value" translate='mediaFusion.metrics.clientTypeHeadingCloud'></span>
-      <i class='icon icon-info-outline icon-large' tooltip="{{::'mediaFusion.metrics.graphDescription.clientTypeDesc' | translate}}" tooltip-class="metrics-tooltip"></i>
+      <i class='icon icon-info-outline icon-large'
+        tabindex="0"
+        tooltip="{{::'mediaFusion.metrics.graphDescription.clientTypeDesc' | translate}}"
+        tooltip-trigger="mouseenter focus"
+        tooltip-class="metrics-tooltip"
+        aria-label="{{::'mediaFusion.metrics.graphDescription.clientTypeDesc' | translate}}">
+      </i>
       <div id="client-type-div"></div>
     </graphheader>
     <section>
