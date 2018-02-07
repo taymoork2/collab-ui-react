@@ -6,6 +6,7 @@ import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-s
 import { HybridServiceUserSidepanelHelperService, IEntitlementNameAndState } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
 import { HybridServicesI18NService } from 'modules/hercules/services/hybrid-services-i18n.service';
 import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
+import { UserOverviewService } from 'modules/core/users/userOverview/userOverview.service';
 
 class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
 
@@ -15,7 +16,6 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
 
   private userId: string;
   private userEmailAddress: string;
-  private userUpdatedCallback: Function;
   private preferredWebExSiteName: string;
   public isInvitePending: boolean;
   private allUserEntitlements: HybridServiceId[];
@@ -30,9 +30,9 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
   public userStatus: IUserStatusWithExtendedMessages;
   public lastStateChangeText: string;
 
-  public orgHasExpresswayBasedCalendarEnabled: boolean;
-  public orgHasOffice365Enabled: boolean;
-  public orgHasGoogleEnabled: boolean;
+  private orgHasExpresswayBasedCalendarEnabled: boolean;
+  private orgHasOffice365Enabled: boolean;
+  private orgHasGoogleEnabled: boolean;
 
   public exchangeAndOffice365Name = this.$translate.instant('hercules.cloudExtensions.exchange');
   public googleName = this.$translate.instant('hercules.cloudExtensions.google');
@@ -46,6 +46,7 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
     private $translate: ng.translate.ITranslateService,
     private CloudConnectorService: CloudConnectorService,
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
@@ -54,14 +55,11 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
     private HybridServicesUtilsService: HybridServicesUtilsService,
     private Notification: Notification,
     private USSService: USSService,
+    private UserOverviewService: UserOverviewService,
   ) { }
 
-  public $onInit() {
-    this.processDataFromCommonIdentity();
-  }
-
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
-    const { userId, userEmailAddress,  userUpdatedCallback, preferredWebExSiteName, isInvitePending, allUserEntitlements } = changes;
+    const { userId, userEmailAddress, preferredWebExSiteName } = changes;
     if (userId && userId.currentValue) {
       this.userId = userId.currentValue;
       this.loadUserData();
@@ -69,24 +67,14 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
     if (userEmailAddress && userEmailAddress.currentValue) {
       this.userEmailAddress = userEmailAddress.currentValue;
     }
-    if (userUpdatedCallback && userUpdatedCallback.currentValue) {
-      this.userUpdatedCallback = userUpdatedCallback.currentValue;
-    }
     if (preferredWebExSiteName && preferredWebExSiteName.currentValue) {
       this.preferredWebExSiteName = preferredWebExSiteName.currentValue;
-    }
-    if (isInvitePending && isInvitePending.currentValue) {
-      this.isInvitePending = isInvitePending.currentValue;
-    }
-    if (allUserEntitlements && allUserEntitlements.currentValue) {
-      this.allUserEntitlements = allUserEntitlements.currentValue;
-      this.processDataFromCommonIdentity();
     }
   }
 
   private loadUserData(): ng.IPromise<void> {
     this.loadingPage = true;
-    return this.getDataFromUSS()
+    return this.getUserData()
       .then(this.getDataFromCCC)
       .then(this.getDataFromFMS)
       .finally(() => {
@@ -118,11 +106,18 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
 
   private userHasEntitlement = (entitlement: HybridServiceId): boolean => this.allUserEntitlements && this.allUserEntitlements.indexOf(entitlement) > -1;
 
-  private getDataFromUSS = (): ng.IPromise<void> => {
-    return this.USSService.getStatusesForUser(this.userId)
-      .then((statuses) => {
-        this.userMicrosoftCalendarStatus = _.find(statuses, { serviceId: 'squared-fusion-cal' });
-        this.userGoogleCalendarStatus = _.find(statuses, { serviceId: 'squared-fusion-gcal' });
+  private getUserData = (): ng.IPromise<void> => {
+    const promises: ng.IPromise<any>[] = [
+      this.UserOverviewService.getUser(this.userId),
+      this.USSService.getStatusesForUser(this.userId),
+    ];
+    return this.$q.all(promises)
+      .then(([commonIdentityUserData, ussStatuses]) => {
+        this.allUserEntitlements = commonIdentityUserData.user.entitlements;
+        this.isInvitePending = commonIdentityUserData.user.pendingStatus;
+        this.processDataFromCommonIdentity();
+        this.userMicrosoftCalendarStatus = _.find(ussStatuses, { serviceId: 'squared-fusion-cal' });
+        this.userGoogleCalendarStatus = _.find(ussStatuses, { serviceId: 'squared-fusion-gcal' });
         this.userStatus = this.userMicrosoftCalendarStatus || this.userGoogleCalendarStatus;
         if (this.userStatus && this.userStatus.connectorId) {
           this.connectorId = this.userStatus.connectorId;
@@ -207,6 +202,22 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
     this.selectedEntitledToggle = this.originalEntitledToggle;
   }
 
+  public selectedCalendarTypeNotEnabledInOrg(): boolean {
+    return ((this.selectedCalendarType === 'squared-fusion-gcal' && !this.orgHasGoogleCalendarSetup()) || (this.selectedCalendarType === 'squared-fusion-cal' && !this.orgHasMicrosoftCalendarSetup()));
+  }
+
+  private orgHasMicrosoftCalendarSetup(): boolean {
+    return this.orgHasExpresswayBasedCalendarEnabled || this.orgHasOffice365Enabled;
+  }
+
+  private orgHasGoogleCalendarSetup(): boolean {
+    return this.orgHasOffice365Enabled;
+  }
+
+  public hasChangedCalendarType(): boolean {
+    return this.selectedCalendarType !== this.originalCalendarType;
+  }
+
   public save() {
     this.savingPage = true;
 
@@ -242,17 +253,7 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
 
         this.originalCalendarType = this.selectedCalendarType;
         this.originalEntitledToggle = this.selectedEntitledToggle;
-        return this.getDataFromUSS()
-          .then(() => {
-            this.userUpdatedCallback({
-              options: {
-                calendarServiceEntitled: this.selectedEntitledToggle,
-                calendarType: this.selectedCalendarType,
-                refresh: true,
-              },
-            });
-            this.userHasBothCalendarEntitlements = false;
-          });
+        return this.getUserData();
       })
       .catch((error) => {
         this.Notification.error('hercules.userSidepanel.not-updated-specific', {
@@ -275,9 +276,6 @@ export class HybridCalendarServiceUserSettingsComponent implements ng.IComponent
   public bindings = {
     userId: '<',
     userEmailAddress: '<',
-    userUpdatedCallback: '&',
     preferredWebExSiteName: '<',
-    isInvitePending: '<',
-    allUserEntitlements: '<',
   };
 }
