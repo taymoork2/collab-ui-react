@@ -355,11 +355,12 @@ describe('Service: Trial Service:', function () {
           });
 
           it('should bubble up rejection that that caused "getTrial" to reject', function () {
-            this.TrialService.getTrialPeriodData(fakeTrialId).catch(function (reason) {
-              expect(reason).toEqual({
-                message: 'getTrial failed',
+            this.TrialService.getTrialPeriodData(fakeTrialId).then(fail)
+              .catch(function (reason) {
+                expect(reason).toEqual({
+                  message: 'getTrial failed',
+                });
               });
-            });
           });
         });
       });

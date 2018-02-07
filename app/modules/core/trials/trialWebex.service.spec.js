@@ -202,11 +202,11 @@ describe('Service: Webex Trial Service', function () {
           audioPartnerName: 'someaudiopartnerhere@gmail.com',
         },
       };
-      var errorResponse = { status: 400, message: 'Invalid Request' };
-      this.$httpBackend.whenPOST(this.UrlConfig.getAdminServiceUrl() + 'subscriptions/' + subscriptionId + '/provision').respond(errorResponse);
-      this.TrialWebexService.provisionSubscription(payload, subscriptionId).catch(function (response) {
-        expect(response.status).toBe(400);
-      });
+      this.$httpBackend.whenPOST(this.UrlConfig.getAdminServiceUrl() + 'subscriptions/' + subscriptionId + '/provision').respond(400);
+      this.TrialWebexService.provisionSubscription(payload, subscriptionId).then(fail)
+        .catch(function (response) {
+          expect(response.status).toBe(400);
+        });
       this.$httpBackend.flush();
     });
   });
