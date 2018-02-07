@@ -4,6 +4,7 @@ describe('Component: editAutoAssignTemplateModal:', () => {
   beforeEach(function () {
     this.initModules(moduleName);
     this.injectDependencies(
+      '$controller',
       '$httpBackend',
       '$q',
       '$scope',
@@ -76,6 +77,62 @@ describe('Component: editAutoAssignTemplateModal:', () => {
     it('should track the event when the modal is dismissed', function () {
       this.view.find('button.close[aria-label="common.close"]').click();
       expect(this.Analytics.trackAddUsers).toHaveBeenCalledWith(this.Analytics.eventNames.CANCEL_MODAL);
+    });
+
+    it('isHybridCallSelected should be true if squaredFusionUC.isSelected is true and call license should be disabled', function () {
+      this.$scope.fakePrevState = 'fake-prev-state';
+      _.set(this.autoAssignTemplateData, 'viewData.USER_ENTITLEMENT.squaredFusionUC.isSelected', true);
+      _.set(this.autoAssignTemplateData, 'viewData.LICENSE', {
+        isDisabled: this.controller.isHybridCallSelected,
+        license: {
+          offerName: 'CO',
+        },
+      });
+      this.compileComponent('editAutoAssignTemplateModal', {
+        prevState: 'fakePrevState',
+        isEditTemplateMode: false,
+        autoAssignTemplateData: this.autoAssignTemplateData,
+        dismiss: 'dismiss',
+      });
+      expect(this.controller.isHybridCallSelected).toBe(true);
+      expect(this.autoAssignTemplateData.viewData.LICENSE.isDisabled).toBe(true);
+    });
+
+    it('should disable huron call licenses if "recvHybridServicesEntitlementsUpdate()" is called with an active hybrid call entitlement', function () {
+      this.$scope.fakePrevState = 'fake-prev-state';
+      _.set(this.autoAssignTemplateData, 'viewData.LICENSE', {
+        'fake-license-id-1': {
+          isDisabled: false,
+          license: {
+            offerName: 'CO',
+          },
+        },
+        'fake-license-id-2': {
+          isDisabled: false,
+          license: {
+            offerName: 'CO',
+          },
+        },
+        'fake-license-id-3': {
+          isDisabled: false,
+          license: {
+            offerName: 'MS',
+          },
+        },
+      });
+      this.compileComponent('editAutoAssignTemplateModal', {
+        autoAssignTemplateData: this.autoAssignTemplateData,
+      });
+      const fakeEntitlements = [{
+        entitlementName: 'squaredFusionUC',
+        entitlementState: 'ACTIVE',
+      }];
+      spyOn(this.controller, 'updateHuronCallLicenses').and.callThrough();
+      this.controller.recvHybridServicesEntitlementsUpdate(fakeEntitlements);
+      expect(this.controller.updateHuronCallLicenses).toHaveBeenCalled();
+      expect(this.controller.autoAssignTemplateData.viewData.LICENSE['fake-license-id-1'].isDisabled).toBe(true);
+      expect(this.controller.autoAssignTemplateData.viewData.LICENSE['fake-license-id-2'].isDisabled).toBe(true);
+      expect(this.controller.autoAssignTemplateData.viewData.LICENSE['fake-license-id-3'].isDisabled).toBe(false);
     });
   });
 });
