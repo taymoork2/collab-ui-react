@@ -37,6 +37,7 @@ export class HybridIMPActiveCardComponent implements ng.IComponentOptions {
         <div class="active-card_section">
           <div class="active-card_title" translate="servicesOverview.cards.shared.resources"></div>
           <div class="active-card_action"><a ui-sref="imp-service.list" translate="servicesOverview.cards.shared.viewAll"></a></div>
+          <card-capacity-bar ng-if="$ctrl.hasCapacityFeatureToggle" connector-type="'c_imp'" clusters="$ctrl.clusters" summary="$ctrl.userStatusesSummary"></card-capacity-bar>
         </div>
         <div class="active-card_section">
           <div class="active-card_title" translate="servicesOverview.cards.shared.service"></div>
@@ -52,6 +53,8 @@ export class HybridIMPActiveCardComponent implements ng.IComponentOptions {
     </article>
   `;
   public bindings = {
+    clusters: '<',
+    hasCapacityFeatureToggle: '<',
     serviceStatus: '<',
   };
 }

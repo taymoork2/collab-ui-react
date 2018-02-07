@@ -51,7 +51,7 @@ export class CardCapacityBarComponent implements ng.IComponentOptions {
   public controller = CardCapacityBarController;
   // TODO: proper translation
   public template = `
-    <div tooltip-html-unsafe="{{$ctrl.tooltip}}" class="capacity-container">
+    <div ng-if="$ctrl.maxUsers > 0" tooltip-html-unsafe="{{$ctrl.tooltip}}" class="capacity-container">
       <div class="capacity-label" translate="hercules.capacity.label" translate-value-capacity="{{$ctrl.capacity}}"></div>
       <div class="progressbar-container"><progressbar max="100" value="$ctrl.capacity" type="{{$ctrl.progressBarType}}"></progressbar></div>
     </div>

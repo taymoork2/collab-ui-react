@@ -3,8 +3,7 @@ import { Notification } from 'modules/core/notifications';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 export class CalendarServiceContainerController extends ExpresswayContainerController {
-
-  public tabs: any = [{
+  public tabs = [{
     title: this.$translate.instant('common.resources'),
     state: 'calendar-service.list',
   }, {
@@ -37,14 +36,20 @@ export class CalendarServiceContainerController extends ExpresswayContainerContr
     ServiceDescriptorService: ServiceDescriptorService,
     ServiceStateChecker,
     USSService,
+    private hasCapacityFeatureToggle,
   ) {
     super($modal, $state, $timeout, Notification, ServiceDescriptorService, ServiceStateChecker, USSService, ['squared-fusion-cal'], 'c_cal');
     this.clusterId = this.$stateParams['clusterId'];
     if (this.$stateParams['backState']) {
       this.backState = this.$stateParams['backState'];
     }
+    if (this.hasCapacityFeatureToggle) {
+      this.tabs.push({
+        title: this.$translate.instant('common.users'),
+        state: 'calendar-service.users',
+      });
+    }
   }
-
 }
 
 angular
