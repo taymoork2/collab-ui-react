@@ -984,8 +984,8 @@
     }
 
     function saveTrialPstn(customerOrgId, customerName, customerEmail, country) {
-      var newOrgCondition = vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled;
-      var existingOrgCondition = ((vm.callTrial.enabled && !vm.preset.call) || (vm.roomSystemTrial.enabled && !vm.preset.roomSystems) || (vm.sparkBoardTrial.enabled && !vm.preset.sparkBoardTrial));
+      var newOrgCondition = vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled || vm.careTrial.enabled;
+      var existingOrgCondition = ((vm.callTrial.enabled && !vm.preset.call) || (vm.roomSystemTrial.enabled && !vm.preset.roomSystems) || (vm.sparkBoardTrial.enabled && !vm.preset.sparkBoardTrial) || (vm.careTrial.enabled && !vm.preset.care));
       var hasValueChanged = !isExistingOrg() ? newOrgCondition : existingOrgCondition;
       var countryCode;
 
