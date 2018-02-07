@@ -3,6 +3,8 @@ import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-t
 
 class AssignableLicenseCheckboxController implements ng.IComponentController {
   private static readonly itemCategory = AssignableServicesItemCategory.LICENSE;
+  public isSelected: boolean;
+  public isDisabled: boolean;
   private itemId: string;
   private license: ILicenseUsage;
   private autoAssignTemplateData: IAutoAssignTemplateData;
@@ -18,8 +20,8 @@ class AssignableLicenseCheckboxController implements ng.IComponentController {
     // - 'entryData' might already be populated (ie. 'autoAssignTemplateData' was composed somewhere else)
     // - initialize with default properties, but override if an entry already existed
     this.entryData = _.assignIn({
-      isSelected: false,
-      isDisabled: false,
+      isSelected: !!this.isSelected,
+      isDisabled: !!this.isDisabled,
       license: this.license,
     }, this.entryData);
   }
@@ -60,11 +62,11 @@ class AssignableLicenseCheckboxController implements ng.IComponentController {
     _.set(this.autoAssignTemplateData, `viewData.${AssignableLicenseCheckboxController.itemCategory}["${this.itemId}"]`, entryData);
   }
 
-  public get isSelected(): boolean {
+  public isSelectedLicense(): boolean {
     return this.entryData.isSelected;
   }
 
-  public get isDisabled(): boolean {
+  public isDisabledLicense(): boolean {
     return this.entryData.isDisabled || !this.isLicenseStatusOk() || !this.hasVolume();
   }
 
@@ -83,6 +85,8 @@ export class AssignableLicenseCheckboxComponent implements ng.IComponentOptions 
   public template = require('./assignable-license-checkbox.html');
   public transclude = true;
   public bindings = {
+    isSelected: '<?',
+    isDisabled: '<?',
     license: '<',
     l10nLabel: '@',
     onUpdate: '&',

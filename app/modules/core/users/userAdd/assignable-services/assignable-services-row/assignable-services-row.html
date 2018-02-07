@@ -67,20 +67,19 @@
 
   <div ng-if="$ctrl.isCareEnabled" class="small-4 columns column-paid column__care">
     <div ng-if="$ctrl.careLicenses.length">
-      <div translate="onboardModal.contactCenter" class="license__category"></div>
+      <div class="license__category">
+        <span translate="onboardModal.contactCenter" class="license__category-text"></span><cr-icon-info
+          l10n-tooltip="userManage.autoAssignTemplate.edit.careDisabledTooltip"
+          tooltip-placement="bottom"
+          >
+        </cr-icon-info>
+      </div>
 
       <!-- care - K1 -->
       <assignable-license-checkbox
         license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CDC)"
+        is-disabled="$ctrl.disableCareLicenseSelection()"
         l10n-label="onboardModal.paidCDC"
-        on-update="$ctrl.onUpdate({ $event: $event })"
-        auto-assign-template-data="$ctrl.autoAssignTemplateData">
-      </assignable-license-checkbox>
-
-      <!-- care - K2 -->
-      <assignable-license-checkbox
-        license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CVC)"
-        l10n-label="onboardModal.paidCVC"
         on-update="$ctrl.onUpdate({ $event: $event })"
         auto-assign-template-data="$ctrl.autoAssignTemplateData">
       </assignable-license-checkbox>
