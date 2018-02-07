@@ -5,7 +5,7 @@ import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-t
 import { OfferName } from 'modules/core/shared';
 import { ICrCheckboxItemState } from 'modules/core/users/shared/cr-checkbox-item/cr-checkbox-item.component';
 
-class LicenseSummaryController implements ng.IComponentController {
+class AutoAssignTemplateSummaryController implements ng.IComponentController {
   private advancedMeetingLicenses: ILicenseUsage[];
   private advancedMeetingSiteUrls: string[];
   private autoAssignTemplateData: IAutoAssignTemplateData;
@@ -59,9 +59,9 @@ class LicenseSummaryController implements ng.IComponentController {
   }
 }
 
-export class LicenseSummaryComponent implements ng.IComponentOptions {
-  public controller = LicenseSummaryController;
-  public template = require('./license-summary.html');
+export class AutoAssignTemplateSummaryComponent implements ng.IComponentOptions {
+  public controller = AutoAssignTemplateSummaryController;
+  public template = require('./auto-assign-template-summary.html');
   public bindings = {
     autoAssignTemplateData: '<',
   };
