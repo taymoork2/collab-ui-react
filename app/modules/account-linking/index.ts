@@ -17,7 +17,7 @@ import linkedSitesGridModule from 'modules/account-linking/sites-list';
 import * as userServiceModuleName from 'modules/core/scripts/services/user.service.js';
 
 export default angular
-  .module('account-linking', [
+  .module('Accountlinking', [
     require('angular-translate'),
     require('@collabui/collab-ui-ng').default,
     authInfoModule,

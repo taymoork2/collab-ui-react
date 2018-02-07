@@ -1,6 +1,6 @@
 describe('Controller: OverviewCtrl', function () {
   beforeEach(function () {
-    this.initModules('Core', 'Huron', 'Sunlight', 'Hercules');
+    this.initModules('Core', 'Huron', 'Sunlight', 'Hercules', 'Accountlinking');
     this.injectDependencies(
       '$controller',
       '$filter',
@@ -27,7 +27,8 @@ describe('Controller: OverviewCtrl', function () {
       'SunlightReportService',
       'SunlightUtilitiesService',
       'LocalStorage',
-      'TrialService'
+      'TrialService',
+      'LinkedSitesService'
     );
 
     this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/1/v1/Users/me').respond(200);
@@ -108,8 +109,6 @@ describe('Controller: OverviewCtrl', function () {
 
     spyOn(this.PrivateTrunkService, 'getPrivateTrunk').and.returnValue(this.$q.resolve({ resources: [] }));
     spyOn(this.ServiceDescriptorService, 'getServiceStatus').and.returnValue(this.$q.resolve({ state: 'unknown' }));
-
-
     this.initController = function () {
       this.controller = this.$controller('OverviewCtrl', {
         $q: this.$q,
@@ -135,6 +134,7 @@ describe('Controller: OverviewCtrl', function () {
         SunlightConfigService: this.SunlightConfigService,
         LocalStorage: this.LocalStorage,
         TrialService: this.TrialService,
+        LinkedSitesService: this.LinkedSitesService
       });
       this.$scope.$apply();
     };
@@ -469,4 +469,21 @@ describe('Controller: OverviewCtrl', function () {
       expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS);
     });
   });
+
+  describe('AccountLinking20 notification', function () {
+
+    it('should not be displayed if account linked sites doesnt need', function () {
+      var TOTAL_NOTIFICATIONS = 8;
+      spyOn(this.LinkedSitesService, 'linkedSitesNotConfigured').and.returnValue(this.$q.resolve(false));
+      this.initController();
+      expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS);
+    })
+
+    it('should be displayed if account linked sites needs setup', function () {
+      var TOTAL_NOTIFICATIONS = 8;
+      spyOn(this.LinkedSitesService, 'linkedSitesNotConfigured').and.returnValue(this.$q.resolve(true));
+      this.initController();
+      expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS + 1);
+    })
+  })
 });
