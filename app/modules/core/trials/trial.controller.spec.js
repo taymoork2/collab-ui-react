@@ -839,6 +839,7 @@ describe('Controller: TrialCtrl:', function () {
           );
 
           controller.contextTrial.enabled = true;
+          controller.careTrial.enabled = true;
           controller.advanceCareTrial.enabled = true;
           controller.editTrial();
 
@@ -981,7 +982,6 @@ describe('Controller: TrialCtrl:', function () {
           controller.pstnTrial.enabled = false;
           controller.sparkBoardTrial.enabled = false;
           controller.roomSystemTrial.enabled = false;
-          controller.careTrial.enabled = false;
           controller.startTrial();
           $scope.$apply();
         });
@@ -1001,7 +1001,6 @@ describe('Controller: TrialCtrl:', function () {
           controller.pstnTrial.enabled = false;
           controller.roomSystemTrial.enabled = false;
           controller.sparkBoardTrial.enabled = false;
-          controller.careTrial.enabled = false;
           controller.startTrial(callback);
           $scope.$apply();
         });
@@ -1021,7 +1020,6 @@ describe('Controller: TrialCtrl:', function () {
           controller.roomSystemTrial.enabled = false;
           controller.pstnTrial.enabled = false;
           controller.sparkBoardTrial.enabled = false;
-          controller.careTrial.enabled = false;
           controller.startTrial();
           $scope.$apply();
         });
@@ -1137,7 +1135,6 @@ describe('Controller: TrialCtrl:', function () {
           controller.callTrial.enabled = false;
           controller.sparkBoardTrial.enabled = false;
           controller.roomSystemTrial.enabled = false;
-          controller.careTrial.enabled = false;
           controller.startTrial();
           $scope.$apply();
           expect(TrialContextService.addService).toHaveBeenCalled();
@@ -1150,7 +1147,6 @@ describe('Controller: TrialCtrl:', function () {
           controller.callTrial.enabled = false;
           controller.roomSystemTrial.enabled = false;
           controller.sparkBoardTrial.enabled = false;
-          controller.careTrial.enabled = false;
           controller.startTrial().catch(_.noop);
           $scope.$apply();
           expect(TrialContextService.addService).toHaveBeenCalled();
@@ -1597,6 +1593,34 @@ describe('Controller: TrialCtrl:', function () {
           $scope.$apply();
           expect(TrialContextService.addService).toHaveBeenCalled();
           expect(Notification.errorResponse).toHaveBeenCalledWith('rejected', 'trialModal.startTrialContextServiceError');
+        });
+
+        it('doesn\'t notify on ORGANIZATION_REGISTERED_USING_API if care trial is enabled', function () {
+          addContextSpy.and.returnValue(
+            $q.reject({
+              data: {
+                error: {
+                  statusText: orgAlreadyRegistered,
+                },
+              },
+            })
+          );
+
+          controller.contextTrial.enabled = true;
+          controller.callTrial.enabled = false;
+          controller.careTrial.enabled = true;
+          controller.advanceCareTrial.enabled = true;
+          controller.startTrial();
+
+          // Check if button is greyed out, depending on form element being touched (in this case, true)
+          // Should evaluate to false
+          var greyedOut = controller.hasRegisteredContextService({ $pristine: false });
+
+          $scope.$apply();
+
+          expect(greyedOut).toBe(false);
+          expect(TrialContextService.addService).toHaveBeenCalled();
+          expect(Notification.errorResponse).not.toHaveBeenCalled();
         });
 
         it('doesn\'t notify on ORGANIZATION_REGISTERED_USING_API if care trial is disabled', function () {
