@@ -1,18 +1,14 @@
-/* eslint-env es6 */
-
-'use strict';
-
-const _ = require('lodash');
-const exceptionSubstrings = ['l10n'];
+var _ = require('lodash');
+var exceptionSubstrings = ['l10n'];
 
 function looserKebabCase(str) {
   // e.g. 'l-10-n-title'
-  const initialPassKebabCase = _.kebabCase(str);
-  let result = initialPassKebabCase;
+  var initialPassKebabCase = _.kebabCase(str);
+  var result = initialPassKebabCase;
 
-  _.forEach(exceptionSubstrings, (exceptionSubstring) => {
+  _.forEach(exceptionSubstrings, function (exceptionSubstring) {
     // e.g. /l10n/gi
-    const re = new RegExp(exceptionSubstring, 'gi');
+    var re = new RegExp(exceptionSubstring, 'gi');
 
     // early-out if regex not found
     if (!re.test(str)) {
@@ -20,10 +16,10 @@ function looserKebabCase(str) {
     }
 
     // e.g. 'l-10-n'
-    const substrToBeReplaced = _.kebabCase(exceptionSubstring);
+    var substrToBeReplaced = _.kebabCase(exceptionSubstring);
 
     // e.g. /l-10-n/g
-    const substrToBeReplacedAsRegEx = new RegExp(substrToBeReplaced, 'g');
+    var substrToBeReplacedAsRegEx = new RegExp(substrToBeReplaced, 'g');
 
     // e.g. 'l-10-n-title'.replace(/l-10-n/g, 'l10n');
     result = result.replace(substrToBeReplacedAsRegEx, exceptionSubstring);
