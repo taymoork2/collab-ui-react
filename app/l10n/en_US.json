@@ -2451,12 +2451,13 @@
       "readResourceGroupsFailed": "Could not read Resource Groups. Try again later.",
       "refreshUserFailed": "Unable to refresh the user status. Please try again later.",
       "refreshUserDidNoGood": "Unable to get the user status. Please contact support if the problem persists.",
-      "couldNotReadConnectStatus": "Unable to read Call Service Connect organization status. Please contact support if the problem persists.",
-      "notEnabledInOrg": "Not enabled in organization",
+      "couldNotReadStatus": "Unable to read Call Service organization status. Please contact support if the problem persists.",
       "enableAwareFirst": "Aware must be enabled before the user can be enabled for Connect. Enable it in the <a href ng-click=\"{{onclick}}\">Call Service Aware panel</a>.",
       "disableAwareHeader": "Disable Services",
       "disableAwareMessage": "Are you sure? By disabling Call Service Aware, Call Service Connect will also be disabled for this user.",
       "errorMessages": {
+        "cannotReadUserDataFromCI": "Could not read user's licensing data.",
+        "cannotReadOrgDataFromFMS": "Could not read service activation status.",
         "cannotReadDeviceDataFromUSS": "Unable to read device's activation status.",
         "cannotReadDeviceDataFromUSSPartnerAdmin": "Unable to read device's activation status. This could indicate a caching problem, try logging out and in again to clear the user cache.",
         "cannotReadUserDataFromUSS": "Unable to read user's activation status.",
@@ -2484,6 +2485,7 @@
       "error": "Error",
       "unknown": "Unknown",
       "notFound": "Status not found",
+      "pendingNotSetup": "Pending – Service Not Setup",
       "accountNotActivated": "Account Not Activated"
     },
     "serviceNames": {
@@ -2617,7 +2619,8 @@
       "couldNotReadOffice365Status": "Could not read organization's Office 365 configuration. The information above might be incomplete.",
       "couldNotReadGoogleCalendarStatus": "Could not read organization's Google Calendar configuration. The information above might be incomplete.",
       "couldNotReadFMSStatus": "Could not read organization's Expressway-based Hybrid Services configuration. The information above might be incomplete.",
-      "entitledToHuron": "Licensed for Spark Call"
+      "entitledToHuron": "Licensed for Spark Call",
+      "serviceNotEnabledInCloud": "This service is not set up. The user will be in a pending activation or error state until setup has been completed."
     },
     "alarms": {
       "affectedNodes": "Affected Nodes",
