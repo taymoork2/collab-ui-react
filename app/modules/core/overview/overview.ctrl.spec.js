@@ -134,7 +134,7 @@ describe('Controller: OverviewCtrl', function () {
         SunlightConfigService: this.SunlightConfigService,
         LocalStorage: this.LocalStorage,
         TrialService: this.TrialService,
-        LinkedSitesService: this.LinkedSitesService
+        LinkedSitesService: this.LinkedSitesService,
       });
       this.$scope.$apply();
     };
@@ -471,19 +471,18 @@ describe('Controller: OverviewCtrl', function () {
   });
 
   describe('AccountLinking20 notification', function () {
-
     it('should not be displayed if no sites need configuration', function () {
       var TOTAL_NOTIFICATIONS = 8;
       spyOn(this.LinkedSitesService, 'linkedSitesNotConfigured').and.returnValue(this.$q.resolve(false));
       this.initController();
       expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS);
-    })
+    });
 
     it('should be displayed if one or several sites needs configuration', function () {
       var TOTAL_NOTIFICATIONS = 8;
       spyOn(this.LinkedSitesService, 'linkedSitesNotConfigured').and.returnValue(this.$q.resolve(true));
       this.initController();
       expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS + 1);
-    })
-  })
+    });
+  });
 });
