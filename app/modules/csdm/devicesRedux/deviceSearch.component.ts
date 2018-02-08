@@ -18,6 +18,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
   private searchDelayTimer: ng.IPromise<any> | null;
   private static readonly SEARCH_DELAY_MS = 200;
   private interactedWithSearch = false;
+  private bulletCreated = false;
   private queryCounter: number = 0;
 
   get inputActive(): boolean {
@@ -26,7 +27,8 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
 
   set inputActive(value: boolean) {
     this._inputActive = value;
-    this.showSuggestions = value && this.interactedWithSearch;
+    this.showSuggestions = value && this.interactedWithSearch && !this.bulletCreated;
+    this.bulletCreated = false;
   }
 
   public suggestions: ISuggestionDropdown;
@@ -114,6 +116,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     this.searchObject.setWorkingElementText(bullet.toQuery());
     this.setFocusToInputField();
     bullet.setBeingEdited(true);
+    this.suggestions.updateBasedOnInput(this.searchObject);
   }
 
   public clearSearchInput() {
@@ -183,7 +186,8 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     }
     this.searchObject.submitWorkingElement();
     this.searchChange(true);
-    this.suggestions.updateBasedOnInput(this.searchObject);
+    this.showSuggestions = false;
+    this.bulletCreated = true;
   }
 
   public onSearchInputKeyDown($keyEvent: KeyboardEvent) {
