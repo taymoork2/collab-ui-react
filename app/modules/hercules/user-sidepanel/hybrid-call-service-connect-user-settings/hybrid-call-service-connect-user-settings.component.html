@@ -15,7 +15,8 @@
   <cs-sp-section class="hybrid-services-user-sidepanel">
     <div class="section-title-row">
       <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-ec"></span>
-      <cs-toggle-switch toggle-id="callServiceConnectEntitledToggle"
+      <cs-toggle-switch ng-if="!$ctrl.loadingPage"
+                        toggle-id="callServiceConnectEntitledToggle"
                         ng-model="$ctrl.entitledToggle"
                         cs-change="$ctrl.changeEntitlement(toggleValue)"
                         size="small"
@@ -28,27 +29,34 @@
     <div>
       <p class="hybrid-service-description">{{'hercules.cloudExtensions.serviceDescriptions.squared-fusion-ec' | translate}}</p>
 
-      <div class="row collapse"
-           ng-if="$ctrl.userStatusAware">
+      <p ng-if="!$ctrl.loadingPage && $ctrl.showSaveButton() && !$ctrl.isServiceEnabledInFMS() && !$ctrl.isInvitePending && $ctrl.entitledToggle">
+        <hybrid-services-sidepanel-message severity="'warning'" translation-key="'hercules.cloudExtensions.serviceNotEnabledInCloud'"></hybrid-services-sidepanel-message>
+      </p>
+
+      <div class="row collapse">
         <div class="columns small-3">
           <span class="hybrid-services-label">{{::'cloudExtensions.status' | translate}}:</span>
         </div>
         <div class="columns small-7 normal-line-height"
              ng-if="!$ctrl.loadingPage">
             <span class="hybrid-services-label"
-                  ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatusConnect"
+                  ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatusConnect && $ctrl.isServiceEnabledInFMS()"
                   ng-class="'status-' + $ctrl.userStatusConnect.state"
                   id="callServiceconnectStatus"
                   translate="hercules.activationStatus.{{$ctrl.getStatus($ctrl.userStatusConnect)}}"></span>
 
           <span class="hybrid-services-label last-state-change-timestamp"
-                ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatusConnect && $ctrl.lastStateChangeText">
+                ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatusConnect && $ctrl.lastStateChangeText && $ctrl.isServiceEnabledInFMS()">
             {{$ctrl.lastStateChangeText}}
             </span>
 
           <span class="hybrid-services-label"
                 ng-if="$ctrl.isInvitePending"
                 translate="hercules.activationStatus.accountNotActivated"></span>
+
+          <span class="hybrid-services-label status-off"
+                ng-if="$ctrl.userIsCurrentlyEntitled && !$ctrl.isServiceEnabledInFMS()"
+                translate="hercules.activationStatus.pendingNotSetup"></span>
 
           <span class="hybrid-services-label status-off"
                 ng-if="!$ctrl.userIsCurrentlyEntitled && !$ctrl.couldNotReadUser && !$ctrl.isInvitePending"
@@ -72,7 +80,7 @@
             </span>
         </div>
 
-        <div class="row collapse" ng-if="$ctrl.userStatusConnect.messages.length">
+        <div class="row collapse" ng-if="$ctrl.userStatusConnect.messages.length && $ctrl.isServiceEnabledInFMS()">
           <div class="columns small-3">
             <span class="history-label">{{'cloudExtensions.details' | translate}}:</span>
           </div>

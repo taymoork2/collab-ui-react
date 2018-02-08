@@ -28,15 +28,15 @@
       {{gridRow.title}}&nbsp;{{gridRow.value}}
     </p>
 
-    <p ng-if="( 'importCompletedWithErr' == siteCSVResult.csvStatusObj.status )">
+    <p ng-if="( 'importCompletedWithErr' === siteCSVResult.csvStatusObj.status )">
       <webex-csv-download type='webeximport'
                           filedownloadurl={{siteCSVResult.downloadFileUrl}}
                           filename={{siteCSVResult.downloadFileName}}></webex-csv-download>
     </p>
   </div>
 
-  <div ng-if="( 'exportCompletedNoErr' == siteCSVResult.csvStatusObj.status ) ||
-              ( 'exportCompletedWithErr' == siteCSVResult.csvStatusObj.status )"
+  <div ng-if="( 'exportCompletedNoErr' === siteCSVResult.csvStatusObj.status ) ||
+              ( 'exportCompletedWithErr' === siteCSVResult.csvStatusObj.status )"
        class="modal-footer">
 
     <webex-csv-download type='webexexport'

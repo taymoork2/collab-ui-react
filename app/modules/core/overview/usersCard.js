@@ -9,7 +9,7 @@
     .factory('OverviewUsersCard', OverviewUsersCard);
 
   /* @ngInject */
-  function OverviewUsersCard($q, $rootScope, $state, $timeout, $translate, Config, DirSyncService, FeatureToggleService, ModalService, Orgservice) {
+  function OverviewUsersCard($q, $rootScope, $state, $timeout, $translate, Config, DirSyncService, FeatureToggleService, ModalService, MultiDirSyncService, Orgservice) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -106,11 +106,22 @@
               $rootScope.ssoEnabled = true;
             }
           }
-          var dirSyncPromise = (DirSyncService.requiresRefresh() ? DirSyncService.refreshStatus() : $q.resolve());
-          dirSyncPromise.finally(function () {
-            card.dirsyncEnabled = DirSyncService.isDirSyncEnabled();
-            card.isUpdating = false;
-          });
+
+          if (card.features.atlasF6980MultiDirSync) {
+            MultiDirSyncService.getEnabledDomains().then(function (enabledDomains) {
+              card.dirsyncEnabled = enabledDomains.length > 0;
+            }).catch(function () {
+              card.dirsyncEnabled = false;
+            }).finally(function () {
+              card.isUpdating = false;
+            });
+          } else {
+            var dirSyncPromise = (DirSyncService.requiresRefresh() ? DirSyncService.refreshStatus() : $q.resolve());
+            dirSyncPromise.finally(function () {
+              card.dirsyncEnabled = DirSyncService.isDirSyncEnabled();
+              card.isUpdating = false;
+            });
+          }
         };
 
         function goToUsersConvert(options) {
@@ -187,6 +198,7 @@
         function initFeatureToggles() {
           return $q.all({
             atlasF3745AutoAssignLicenses: FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus(),
+            atlasF6980MultiDirSync: FeatureToggleService.atlasF6980MultiDirSyncGetStatus(),
           }).then(function (features) {
             card.features = features;
           });

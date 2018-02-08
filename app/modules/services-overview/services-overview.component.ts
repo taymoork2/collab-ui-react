@@ -20,6 +20,7 @@ import { TaskManagerService } from 'modules/hcs/task-manager';
 type AllService = ICCCService | IPrivateTrunkResourceWithStatus | IServiceStatusWithSetup;
 
 export class ServicesOverviewController implements ng.IComponentController {
+  // TODO: rewrite the following properties with proper AngularJS 1.5+ components
   private cards: ServicesOverviewCard[] = [
     new ServicesOverviewMessageCard(this.Authinfo, this.MessengerInteropService),
     new ServicesOverviewMeetingCard(this.Authinfo),
@@ -28,7 +29,6 @@ export class ServicesOverviewController implements ng.IComponentController {
     new ServicesOverviewHcsCard(this.Authinfo),
   ];
 
-  // ⚠️ The properties below are exclusive to the new cards coming with the office 365 feature
   private urlParams: ng.ui.IStateParamsService;
   public _servicesToDisplay: HybridServiceId[] = []; // made public for easier testing
   public _servicesActive: HybridServiceId[] = []; // made public for easier testing
@@ -37,6 +37,7 @@ export class ServicesOverviewController implements ng.IComponentController {
   public trunks: IPrivateTrunkResourceWithStatus[] | null = null;
   public servicesStatuses: AllService[] = [];
   public loadingHybridServicesCards = true;
+  public hasCapacityFeatureToggle: boolean;
 
   /* @ngInject */
   constructor(
@@ -69,14 +70,15 @@ export class ServicesOverviewController implements ng.IComponentController {
       });
 
     const features = this.$q.all({
+      atlasHybridCapacity: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridCapacity),
       atlasHybridImp: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridImp),
       atlasOffice365Support: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasOffice365Support),
+      hcs: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHostedCloudService),
       hI1484: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484),
+      hI1638: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1638),
       hI802: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI802),
       huronEnterprisePrivateTrunking: this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking),
-      hI1638: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1638),
       hybridCare: this.FeatureToggleService.supports(this.FeatureToggleService.features.hybridCare),
-      hcs: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHostedCloudService),
     });
 
     features
@@ -85,8 +87,9 @@ export class ServicesOverviewController implements ng.IComponentController {
         this.forwardEvent('hybridCareToggleEventHandler', response.hybridCare);
         this.forwardEvent('hI1484FeatureToggleEventhandler', response.hI1484);
         this.forwardEvent('sparkCallCdrReportingFeatureToggleEventhandler', response.hI802);
-        // this.forwardEvent('atlasHybridCloudServiceHandler', response.hcs);
+
         // Used by hybrid cards
+        this.hasCapacityFeatureToggle = response.atlasHybridCapacity;
         if (this.Authinfo.isFusionUC() || ((this.Authinfo.hasCallLicense() || this.Authinfo.hasCareLicense()) && response.hybridCare)) {
           this._servicesToDisplay.push('squared-fusion-uc');
         }

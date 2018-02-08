@@ -220,15 +220,45 @@ export class EvaService {
    * @param orgId
    * @param email
    * @param defaultSpaceId
-   * @param iconUrl URL to avatar icon file
    * returns {ng.IPromise<any>} promise
    */
-  public updateExpertAssistant(expertAssistantId: string, name: string, orgId: string, email: string, defaultSpaceId: string, iconUrl?: string): ng.IPromise<void> {
+  public updateExpertAssistant(expertAssistantId: string, name: string, orgId: string, email: string, defaultSpaceId: string): ng.IPromise<void> {
     return this.getExpertAssistantResource(orgId || this.Authinfo.getOrgId(), expertAssistantId)
       .update({
         name: name,
         email: email,
         defaultSpaceId: defaultSpaceId,
+      }).$promise;
+  }
+
+  /**
+   * obtain resource for Expert Virtual Assistant Icon Update API Rest call.
+   * @param orgId
+   * @param expertAssistantId
+   * @returns {IConfigurationResource}
+   */
+  private getExpertAssistantIconResource(orgId: string, expertAssistantId: string): IConfigurationResource {
+    const  baseUrl = this.UrlConfig.getEvaServiceUrl();
+    return <IConfigurationResource>this.$resource(baseUrl + 'config/organization/:orgId/expert-assistant/:expertAssistantId/icon', {
+      orgId,
+      expertAssistantId,
+    }, {
+      update: {
+        method: 'PUT',
+      },
+    });
+  }
+
+  /**
+   * update icon of an identified expert virtual assistant
+   * @param expertAssistantId
+   * @param orgId
+   * @param iconUrl URL to avatar icon file
+   * returns {ng.IPromise<any>} promise
+   */
+  public updateExpertAssistantIcon(expertAssistantId: string, orgId: string, iconUrl: string): ng.IPromise<void> {
+    return this.getExpertAssistantIconResource(orgId || this.Authinfo.getOrgId(), expertAssistantId)
+      .update({
         icon: iconUrl,
       }).$promise;
   }

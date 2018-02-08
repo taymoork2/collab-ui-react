@@ -14,12 +14,12 @@ export class HybridMediaActiveCardComponent implements ng.IComponentOptions {
       </div>
       <div class="active-card_content">
         <div class="active-card_section">
-          <div class="active-card_title" translate="servicesOverview.cards.shared.service"></div>
-          <div class="active-card_action"><a ui-sref="media-service-v2.settings" translate="servicesOverview.cards.shared.configure"></a></div>
-        </div>
-        <div class="active-card_section">
           <div class="active-card_title" translate="servicesOverview.cards.shared.resources"></div>
           <div class="active-card_action"><a ui-sref="media-service-v2.list" translate="servicesOverview.cards.shared.viewAll"></a></div>
+        </div>
+        <div class="active-card_section">
+          <div class="active-card_title" translate="servicesOverview.cards.shared.service"></div>
+          <div class="active-card_action"><a ui-sref="media-service-v2.settings" translate="servicesOverview.cards.shared.configure"></a></div>
         </div>
       </div>
       <div class="active-card_footer">

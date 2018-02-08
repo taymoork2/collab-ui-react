@@ -1,2 +1,2 @@
-<user-statuses-bar user-statuses="vm.userStatusesSummary"></user-statuses-bar>
+<user-statuses-bar ng-if="!vm.hasCapacityFeatureToggle" class="on-resource-page" user-statuses="vm.userStatusesSummary"></user-statuses-bar>
 <hybrid-service-cluster-list service-id="'squared-fusion-uc'" cluster-id="vm.clusterId" state="call-service.list"></hybrid-service-cluster-list>

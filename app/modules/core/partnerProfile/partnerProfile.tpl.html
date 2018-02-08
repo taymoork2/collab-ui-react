@@ -40,7 +40,7 @@
           </div>
         </div>
         <!-- cisco rep -->
-        <div id="ciscoRepPanel" class="columns small-12 form-section cisco-rep-panel" ng-hide="rep == null || partner == null">
+        <div id="ciscoRepPanel" class="columns small-12 form-section cisco-rep-panel" ng-hide="rep === null || partner === null">
           <h4 ng-if="isPartner" translate="partnerProfile.ciscoRep"></h4>
           <h4 ng-if="!isPartner" translate="customerProfile.supportContacts"></h4>
           <div ng-show="rep !== null" class="form-spacing">

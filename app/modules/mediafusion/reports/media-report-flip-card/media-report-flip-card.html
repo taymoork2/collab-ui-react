@@ -10,7 +10,7 @@
         <div ng-if="$ctrl.value !== $ctrl.parentcntrl.noData" ng-class="{'no-display': $ctrl.chartOptions.isShow===true}">
           <div class="call-counts">
             <span tooltip="{{$ctrl.tooltipValue}}" class="cardTooltipClass">{{$ctrl.value}}</span>
-            <i class='icon media-scroll-icon icon-presentation' ng-class="{'no-display': $ctrl.headername != $ctrl.parentcntrl.availabilityCardHeading || !$ctrl.value}" scroll-on-click></i>
+            <i class='icon media-scroll-icon icon-presentation' ng-class="{'no-display': $ctrl.headername !== $ctrl.parentcntrl.availabilityCardHeading || !$ctrl.value}" scroll-on-click></i>
           </div>
           <span class="partically-unavailable" ng-class="{'no-display': $ctrl.parentcntrl.clusterUnavailablityFlag===false}"><i class="icon icon-warning"></i><span translate="mediaFusion.metrics.clusterPartiallyInService"></span></span>
           <div class="spinner-position" ng-if="!$ctrl.value && $ctrl.value !== 0">

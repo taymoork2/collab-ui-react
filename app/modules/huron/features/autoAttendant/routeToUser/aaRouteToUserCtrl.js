@@ -52,8 +52,12 @@
     var orgHasHybridEnabled = false;
     var CONSTANTS = {};
 
+    CONSTANTS.ciscouc = 'ciscouc';
     CONSTANTS.spark = 'spark';
     CONSTANTS.work = 'work';
+    CONSTANTS.hybridUser = 'hybridUser';
+    CONSTANTS.sparkCallUser = 'sparkCallUser';
+    CONSTANTS.sparkOnlyUser = 'sparkOnlyUser';
     CONSTANTS.squaredFusionEc = 'squared-fusion-ec';
     CONSTANTS.squaredFusionUc = 'squared-fusion-uc';
 
@@ -99,6 +103,10 @@
         action = _.get(action.then, 'queueSettings.fallback.actions[0]', action.then);
       }
       action.setValue(vm.userSelected.id);
+      if (orgHasHybridEnabled) {
+        _.set(action, 'type', vm.userSelected.type);
+        _.set(action, 'sipURI', vm.userSelected.sipUri);
+      }
     }
 
     function getNameAsPerPriority(user) {
@@ -288,6 +296,21 @@
       return defer.promise;
     }
 
+    function getUserType(user) {
+      if (!_.isEmpty(user.entitlements) && (_.indexOf(user.entitlements, CONSTANTS.spark) > -1)) {
+        var isHybridUser = (_.indexOf(user.entitlements, CONSTANTS.squaredFusionEc) > -1) && (_.indexOf(user.entitlements, CONSTANTS.squaredFusionUc) > -1);
+        var isSparkCallUser = (_.indexOf(user.entitlements, CONSTANTS.ciscouc) > -1);
+        if (isHybridUser) {
+          return CONSTANTS.hybridUser;
+        } else if (isSparkCallUser) {
+          return CONSTANTS.sparkCallUser;
+        } else {
+          return CONSTANTS.sparkOnlyUser;
+        }
+      }
+      return undefined;
+    }
+
     function getHybridUserPhoneNumber(phoneNumbers) {
       var result;
       if (!_.isEmpty(phoneNumbers) && phoneNumbers.length > 0) {
@@ -304,20 +327,15 @@
       // This function can be used for getting all users or retrieve the already selected user on load
       // pushUser parameter is set to true when getting all users and set to false when retrieving already selected user
       if (orgHasHybridEnabled) {
-        if (!_.isEmpty(user.entitlements) && (_.indexOf(user.entitlements, CONSTANTS.spark) > -1)) {
-          var isUserHybrid = (_.indexOf(user.entitlements, CONSTANTS.squaredFusionEc) > -1) && (_.indexOf(user.entitlements, CONSTANTS.squaredFusionUc) > -1);
-
-          if (isUserHybrid) {
-            var phoneNumber = getHybridUserPhoneNumber(_.get(user, 'phoneNumbers'));
-            if (!_.isUndefined(phoneNumber)) {
-              return (pushUser) ? updateUserData(user, phoneNumber.value) : formatName(user, phoneNumber.value);
-            } else {
-              // when hybrid user do not have an extension
-              return (pushUser) ? updateHybridUserDataWithoutExtension(user) : getHybridUserDescription(user);
-            }
+        if (_.isEqual(getUserType(user), CONSTANTS.sparkOnlyUser)) {
+          return (pushUser) ? updateUserData(user, _.capitalize(CONSTANTS.spark)) : formatName(user, _.capitalize(CONSTANTS.spark));
+        } else if (_.isEqual(getUserType(user), CONSTANTS.hybridUser)) {
+          var phoneNumber = getHybridUserPhoneNumber(_.get(user, 'phoneNumbers'));
+          if (!_.isUndefined(phoneNumber)) {
+            return (pushUser) ? updateUserData(user, phoneNumber.value) : formatName(user, phoneNumber.value);
           } else {
-            // when user is call free
-            return (pushUser) ? updateUserData(user, _.capitalize(CONSTANTS.spark)) : formatName(user, _.capitalize(CONSTANTS.spark));
+            // when hybrid user do not have an extension
+            return (pushUser) ? updateHybridUserDataWithoutExtension(user) : getHybridUserDescription(user);
           }
         }
       }
@@ -337,6 +355,8 @@
       vm.users.push({
         description: name,
         id: user.id,
+        type: CONSTANTS.hybridUser,
+        sipUri: getUserSipUri(user),
       });
     }
 
@@ -344,10 +364,22 @@
       return (_.size(vm.users) < vm.sort.fullLoad);
     }
 
+    function getUserSipUri(user) {
+      if (!_.isUndefined(user.sipAddresses)) {
+        var sipAddress = _.find(user.sipAddresses, ['type', 'cloud-calling']);
+        if (!_.isEmpty(sipAddress)) {
+          return _.get(sipAddress, 'value');
+        }
+      }
+      return undefined;
+    }
+
     function updateUserData(user, extension) {
       vm.users.push({
         description: formatName(user, extension),
         id: user.id,
+        type: getUserType(user),
+        sipUri: getUserSipUri(user),
       });
     }
 

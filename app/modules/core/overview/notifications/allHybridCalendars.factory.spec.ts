@@ -103,7 +103,8 @@ describe('OverviewAllHybridCalendarsNotification', () => {
     it ('should reject the promise if all services already have been set up, to force the parent to clear the notification', () => {
       HybridServicesClusterService.serviceIsSetUp.and.returnValue($q.resolve(true));
       CloudConnectorService.getService.and.returnValues($q.resolve({ setup: true }), $q.resolve({ setup: true }));
-      OverviewAllHybridCalendarsNotification.createNotification($state, CloudConnectorService, HybridServicesClusterService, HybridServicesFlagService, HybridServicesUtilsService).catch(err => {
+      OverviewAllHybridCalendarsNotification.createNotification($state, CloudConnectorService, HybridServicesClusterService, HybridServicesFlagService, HybridServicesUtilsService).then(fail)
+      .catch(err => {
         expect(err.message).toBe('Hybrid Calendar already set up');
       });
     });
@@ -121,7 +122,8 @@ describe('OverviewAllHybridCalendarsNotification', () => {
     it ('should reject the promise if something goes wrong when getting data from FMS', () => {
       HybridServicesClusterService.serviceIsSetUp.and.returnValue($q.reject('ERROR!'));
       CloudConnectorService.getService.and.returnValues($q.resolve({ setup: true }), $q.resolve({ setup: true }));
-      OverviewAllHybridCalendarsNotification.createNotification($state, CloudConnectorService, HybridServicesClusterService, HybridServicesFlagService, HybridServicesUtilsService).catch(err => {
+      OverviewAllHybridCalendarsNotification.createNotification($state, CloudConnectorService, HybridServicesClusterService, HybridServicesFlagService, HybridServicesUtilsService).then(fail)
+      .catch(err => {
         expect(err.message).toBe('Could not reach one or more services');
       });
       $scope.$apply();
@@ -130,7 +132,8 @@ describe('OverviewAllHybridCalendarsNotification', () => {
     it ('should reject the promise if something goes wrong when getting data from CCC', () => {
       HybridServicesClusterService.serviceIsSetUp.and.returnValue($q.resolve(true));
       CloudConnectorService.getService.and.returnValues($q.reject('ERROR!'), $q.resolve({ setup: true }));
-      OverviewAllHybridCalendarsNotification.createNotification($state, CloudConnectorService, HybridServicesClusterService, HybridServicesFlagService, HybridServicesUtilsService).catch(err => {
+      OverviewAllHybridCalendarsNotification.createNotification($state, CloudConnectorService, HybridServicesClusterService, HybridServicesFlagService, HybridServicesUtilsService).then(fail)
+      .catch(err => {
         expect(err.message).toBe('Could not reach one or more services');
       });
       $scope.$apply();

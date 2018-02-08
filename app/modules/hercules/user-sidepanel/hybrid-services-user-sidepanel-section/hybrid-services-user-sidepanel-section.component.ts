@@ -6,6 +6,7 @@ import { CloudConnectorService } from 'modules/hercules/services/calendar-cloud-
 import { IUserStatusWithExtendedMessages, USSService } from 'modules/hercules/services/uss.service';
 import { Notification } from 'modules/core/notifications';
 import { HybridServiceUserSidepanelHelperService } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
+import { IUserData, UserOverviewService } from 'modules/core/users/userOverview/userOverview.service';
 
 interface IServiceSetupStatus {
   id: HybridServiceId;
@@ -23,8 +24,8 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
   public atlasHybridImpFeatureToggle: boolean;
 
   private servicesOrgIsEntitledTo: HybridServiceId[];
-  private servicesUserCanBeEnabledFor: HybridServiceId[] = [];
-  public servicesWithStatuses: IServiceSetupStatus[] = [];
+  private servicesEnabledInOrganization: HybridServiceId[] = [];
+  private enabledServicesWithStatuses: IServiceSetupStatus[] = [];
 
   public couldNotReadStatusesFromFMS: boolean;
   public couldNotReadOffice365Status: boolean;
@@ -46,7 +47,7 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
     private Notification: Notification,
     private ServiceDescriptorService: ServiceDescriptorService,
-    private Userservice,
+    private UserOverviewService: UserOverviewService,
     private USSService: USSService,
   ) { }
 
@@ -54,8 +55,6 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
     const { user } = changes;
     if (user && user.currentValue) {
       this.userId = user.currentValue.id;
-      this.userEntitlements = user.currentValue.entitlements;
-      this.isInvitePending = this.Userservice.isInvitePending(user.currentValue);
     }
     this.init();
   }
@@ -87,13 +86,14 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
         this.loadingPage = true;
 
         // Some serviceIds could have been enabled both places. Kill duplicates now, and starting building up data structures for the template.
-        this.servicesUserCanBeEnabledFor = _.uniq(this.servicesUserCanBeEnabledFor);
-        this.servicesWithStatuses = _.map(this.servicesUserCanBeEnabledFor, (serviceId) => {
+        this.servicesEnabledInOrganization = _.uniq(this.servicesEnabledInOrganization);
+        this.enabledServicesWithStatuses = _.map(this.servicesEnabledInOrganization, (serviceId) => {
           return {
             id: serviceId,
           };
         });
       })
+      .then(this.getUserFromCommonIdentity)
       .then(this.getStatusesInUSS)
       .then(this.checkInvalidCombinations)
       .then(this.subscribeToUserStatusUpdates)
@@ -103,15 +103,11 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
 
   }
 
-  public serviceIsOnForUser(serviceId: HybridServiceId): boolean {
-    return _.some(this.servicesWithStatuses, (serviceWithStatus) => {
+  public userIsEnabledInUSS(serviceId: HybridServiceId): boolean {
+    return _.some(this.enabledServicesWithStatuses, (serviceWithStatus) => {
       return serviceId === serviceWithStatus.id && _.get(serviceWithStatus, 'status.entitled');
     });
   }
-
-  public showService = (serviceId: HybridServiceId): boolean => _.includes(this.servicesUserCanBeEnabledFor, serviceId);
-
-  public orgHasOneOrMoreServicesEnabled = (): boolean => this.servicesUserCanBeEnabledFor.length > 0;
 
   private userHasEntitlement = (entitlement: HybridServiceId | 'ciscouc'): boolean => this.userEntitlements && this.userEntitlements.indexOf(entitlement) > -1;
 
@@ -126,13 +122,13 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
 
   public getStatus(serviceId: HybridServiceId): 'unknown' | 'not_entitled' | 'error' | 'pending_activation' | 'activated' {
 
-    let serviceWithStatus: IServiceSetupStatus = _.find(this.servicesWithStatuses, (serviceWithStatus) => {
+    let serviceWithStatus: IServiceSetupStatus = _.find(this.enabledServicesWithStatuses, (serviceWithStatus) => {
       return serviceWithStatus.id === serviceId;
     });
 
     // for Hybrid Call, we need to aggregate the status from Aware and Connect
     if (serviceWithStatus && serviceId === 'squared-fusion-uc') {
-      const connectStatus = _.find(this.servicesWithStatuses, (serviceWithStatus) => serviceWithStatus.id === 'squared-fusion-ec');
+      const connectStatus = _.find(this.enabledServicesWithStatuses, (serviceWithStatus) => serviceWithStatus.id === 'squared-fusion-ec');
       serviceWithStatus = this.getMostSignificantStatus([serviceWithStatus, connectStatus]);
     }
     return this.USSService.decorateWithStatus(serviceWithStatus.status);
@@ -156,7 +152,7 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
         const enabledServices = this.ServiceDescriptorService.filterEnabledServices(servicesInFMS);
         _.forEach(this.servicesOrgIsEntitledTo, (service) => {
           if (_.some(enabledServices, (s) => s.id === service)) {
-            this.servicesUserCanBeEnabledFor.push(service);
+            this.servicesEnabledInOrganization.push(service);
           }
         });
       })
@@ -173,10 +169,10 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
     return this.HybridServicesUtilsService.allSettled(promises)
       .then((response) => {
         if (_.get(response[0], 'status') === 'fulfilled' && _.get(response[0], 'value.provisioned')) {
-          this.servicesUserCanBeEnabledFor.push('squared-fusion-cal');
+          this.servicesEnabledInOrganization.push('squared-fusion-cal');
         }
         if (_.get(response[1], 'status') === 'fulfilled' && _.get(response[1], 'value.provisioned')) {
-          this.servicesUserCanBeEnabledFor.push('squared-fusion-gcal');
+          this.servicesEnabledInOrganization.push('squared-fusion-gcal');
         }
         if (_.get(response[0], 'status') === 'rejected') {
           this.couldNotReadOffice365Status = true;
@@ -187,10 +183,22 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
       });
   }
 
+
+  private getUserFromCommonIdentity = (): ng.IPromise<void> => {
+    return this.UserOverviewService.getUser(this.userId)
+      .then((commonIdentityUserData: IUserData) => {
+        this.userEntitlements = commonIdentityUserData.user.entitlements;
+        this.isInvitePending = commonIdentityUserData.user.pendingStatus;
+      })
+      .catch((error) => {
+        this.Notification.errorWithTrackingId(error, 'hercules.userSidepanel.errorMessages.cannotReadUserDataFromCI');
+      });
+  }
+
   private getStatusesInUSS = (): ng.IPromise<void> => {
     return this.USSService.getStatusesForUser(this.userId)
       .then((userStatuses: IUserStatusWithExtendedMessages[]) => {
-        _.forEach(this.servicesWithStatuses, (service: IServiceSetupStatus) => {
+        _.forEach(this.enabledServicesWithStatuses, (service: IServiceSetupStatus) => {
           service.status = _.find(userStatuses, (status) => {
             return service.id === status.serviceId;
           });
@@ -210,65 +218,14 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
 
   private checkInvalidCombinations = (): void => {
     // Calling will not work if a user is enabled for Huron and Hybrid Call at the same time. Just disable the Hybrid Call section.
-    if (this.userHasEntitlement('ciscouc') && _.includes(this.servicesUserCanBeEnabledFor, 'squared-fusion-uc')) {
+    if (this.userHasEntitlement('ciscouc') && _.includes(this.servicesEnabledInOrganization, 'squared-fusion-uc')) {
       this.userIsEnabledForHuron = true;
     }
 
     // Being entitled to both hybrid calendar types will give very strange results. We must warn.
     if (this.userHasEntitlement('squared-fusion-cal') && this.userHasEntitlement('squared-fusion-gcal') &&
-      _.includes(this.servicesUserCanBeEnabledFor, 'squared-fusion-cal') && _.includes(this.servicesUserCanBeEnabledFor, 'squared-fusion-gcal')) {
+      _.includes(this.servicesEnabledInOrganization, 'squared-fusion-cal') && _.includes(this.servicesEnabledInOrganization, 'squared-fusion-gcal')) {
       this.bothCalendarTypesWarning = true;
-    }
-  }
-
-  public userUpdatedCallback = (options) => {
-    if (!_.isUndefined(options.callServiceAware)) {
-      if (!options.callServiceAware) {
-        _.pull(this.userEntitlements, 'squared-fusion-uc');
-      } else {
-        if (!_.includes(this.userEntitlements, 'squared-fusion-uc')) {
-          this.userEntitlements.push('squared-fusion-uc');
-        }
-      }
-    }
-    if (!_.isUndefined(options.callServiceConnect)) {
-      if (!options.callServiceConnect) {
-        _.pull(this.userEntitlements, 'squared-fusion-ec');
-      } else {
-        if (!_.includes(this.userEntitlements, 'squared-fusion-ec')) {
-          this.userEntitlements.push('squared-fusion-ec');
-        }
-      }
-    }
-    if (!_.isUndefined(options.hybridMessaging)) {
-      if (!options.hybridMessaging) {
-        _.pull(this.userEntitlements, 'spark-hybrid-impinterop');
-      } else {
-        if (!_.includes(this.userEntitlements, 'spark-hybrid-impinterop')) {
-          this.userEntitlements.push('spark-hybrid-impinterop');
-        }
-      }
-    }
-    if (!_.isUndefined(options.calendarServiceEntitled)) {
-      if (!options.calendarServiceEntitled) {
-        _.pull(this.userEntitlements, 'squared-fusion-cal');
-        _.pull(this.userEntitlements, 'squared-fusion-gcal');
-      } else {
-        if (options.calendarType === 'squared-fusion-cal' && !_.includes(this.userEntitlements, 'squared-fusion-cal')) {
-          this.userEntitlements.push('squared-fusion-cal');
-          _.pull(this.userEntitlements, 'squared-fusion-gcal');
-        }
-        if (options.calendarType === 'squared-fusion-gcal' && !_.includes(this.userEntitlements, 'squared-fusion-gcal')) {
-          this.userEntitlements.push('squared-fusion-gcal');
-          _.pull(this.userEntitlements, 'squared-fusion-cal');
-        }
-      }
-    }
-    if (options.refresh) {
-      if (!_.isUndefined(this.userSubscriptionTimer)) {
-        this.$timeout.cancel(this.userSubscriptionTimer);
-      }
-      this.init();
     }
   }
 
@@ -276,11 +233,7 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
     if (this.userIsEnabledForHuron && serviceId === 'squared-fusion-uc') {
       return;
     }
-    this.$state.go(`user-overview.hybrid-services-${serviceId}`, {
-      userUpdatedCallback: this.userUpdatedCallback,
-      allUserEntitlements: this.userEntitlements,
-      isInvitePending: this.isInvitePending,
-    });
+    this.$state.go(`user-overview.hybrid-services-${serviceId}`);
   }
 
 }

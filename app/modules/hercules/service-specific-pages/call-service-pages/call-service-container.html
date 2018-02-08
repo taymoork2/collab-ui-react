@@ -6,8 +6,8 @@
       <hybrid-services-notifications filter-tag="'squared-fusion-uc'"></hybrid-services-notifications>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
-      <user-status-report-button user-statuses="vm.userStatusesSummary"></user-status-report-button>
-      <add-hybrid-resource-button modal-window-options="vm.addResourceModal" allow-partner-registration="true"></add-hybrid-resource-button>
+      <user-status-report-button ng-if="!vm.hasCapacityFeatureToggle" user-statuses="vm.userStatusesSummary"></user-status-report-button>
+      <add-hybrid-resource-button ng-if="vm.displayAddResourceButton()" modal-window-options="vm.addResourceModal" allow-partner-registration="true"></add-hybrid-resource-button>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
   <div ui-view="callServiceView" class="content-container"></div>

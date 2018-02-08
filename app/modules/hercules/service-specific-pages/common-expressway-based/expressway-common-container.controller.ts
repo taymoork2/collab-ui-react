@@ -6,6 +6,7 @@ export abstract class ExpresswayContainerController {
 
   public backState = 'services-overview';
   public userStatusesSummary = [];
+  public tabs: any[] = [];
   protected subscribeStatusesSummary: any;
 
   /* @ngInject */
@@ -63,4 +64,7 @@ export abstract class ExpresswayContainerController {
     });
   }
 
+  protected displayAddResourceButton(): boolean {
+    return this.$state.current.name === this.tabs[0].state;
+  }
 }

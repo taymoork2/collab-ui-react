@@ -58,6 +58,10 @@ export interface ICluster {
   targetType: ClusterTargetType;
   upgradeSchedule: IUpgradeSchedule;
   upgradeScheduleUrl: string;
+  userCapacities?: {
+    // TODO: is there a way to tell TS that it's ConnectorType not string?
+    [connectorType: string]: number;
+  };
   url: string;
 }
 
@@ -90,6 +94,12 @@ export interface IExtendedClusterServiceStatus {
 
 export interface IHost {
   connectors: IConnector[];
+  hardware?: {
+    cpus: number;
+    hostType: 'virtual' | 'physical' | 'unknown';
+    totalDisk: string;
+    totalMemory: string;
+  };
   hostname: string;
   lastMaintenanceModeEnabledTimestamp: string;
   maintenanceMode: ConnectorMaintenanceMode;
@@ -144,6 +154,7 @@ export interface IConnector {
   runningVersion: string;
   state: ConnectorState;
   upgradeState: ConnectorUpgradeState;
+  userCapacity?: number;
   url: string;
 }
 

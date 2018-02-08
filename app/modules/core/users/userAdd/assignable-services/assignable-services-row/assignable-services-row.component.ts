@@ -95,6 +95,13 @@ class AssignableServicesRowController implements ng.IComponentController {
     return this.MessengerInteropService.hasMessengerLicense();
   }
 
+  // notes:
+  // - as of 2018-02-02, because Care licenses are allocated in a non-standard way, we disallow them
+  //   from being included as selectable items in auto-assign templates
+  public disableCareLicenseSelection() {
+    return (_.get(this.$state, 'current.name') === 'users.manage.edit-auto-assign-template-modal');
+  }
+
   public recvUpdate($event): void {
     this.showContent = $event.item.showContent;
     this.onUpdate({

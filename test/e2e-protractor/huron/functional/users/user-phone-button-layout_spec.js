@@ -9,7 +9,7 @@ const CallUserLine = new CallUserPlacePage();
 const UserPhoneButtonLayout = new CallUserPhoneButtonLayoutPage();
 
 /* globals, navigation, users, telephony */
-describe('Huron Functional: user-phone-button-layout', () => {
+xdescribe('Huron Functional: user-phone-button-layout', () => {
   const customer = huronCustomer({
     test: 'user-phone-btn-layout',
     users: { noOfUsers: 1 },
@@ -222,7 +222,7 @@ describe('Huron Functional: user-phone-button-layout', () => {
         // should see Edit button for Feature None
         utils.expectIsDisplayed(UserPhoneButtonLayout.firstEmptyDeleteButton);
       });
-        
+
       it('should be able to delete feature none ', () => {
         UserPhoneButtonLayout.firstFeatureNoneLabel.getText().then((initialFeatureNoneName) => {
           utils.click(UserPhoneButtonLayout.firstEmptyDeleteButton);
@@ -231,6 +231,6 @@ describe('Huron Functional: user-phone-button-layout', () => {
           utils.expectNotText(UserPhoneButtonLayout.firstFeatureNoneLabel, initialFeatureNoneName);
         });
       });
-    }); 
+    });
   });
-});
+}).pend('Toggle phone button layout has been disabled system-wide. Disabled pending further investigation');

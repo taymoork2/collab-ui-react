@@ -112,7 +112,7 @@ export class ServiceDescriptorService {
       .then(this.extractData);
   }
 
-  public isServiceEnabled(serviceId: HybridServiceId) {
+  public isServiceEnabled(serviceId: HybridServiceId): ng.IPromise<boolean> {
     return this.getServices()
       .then((services) => {
         const service = _.find(services, { id: serviceId });

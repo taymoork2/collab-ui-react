@@ -34,11 +34,11 @@ export class HybridCalendarGoogleActiveCardComponent implements ng.IComponentOpt
         <div class="active-card_logo active-card_logo--google"><img src="/images/hybrid-services/Google_Calendar_logo_small.png" alt="{{::'servicesOverview.cards.hybridCalendar.googleTitle' | translate}}"></div>
       </div>
       <div class="active-card_content">
+        <card-users-summary summary="$ctrl.userStatusesSummary"></card-users-summary>
         <div class="active-card_section">
           <div class="active-card_title" translate="servicesOverview.cards.shared.service"></div>
           <div class="active-card_action"><a ui-sref="google-calendar-service.settings" translate="servicesOverview.cards.shared.configure"></a></div>
         </div>
-        <card-users-summary summary="$ctrl.userStatusesSummary"></card-users-summary>
       </div>
       <div class="active-card_footer">
         <a ui-sref="google-calendar-service.settings">

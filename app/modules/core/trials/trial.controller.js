@@ -240,6 +240,7 @@
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(), //TODO add true for shipping testing.
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; }),
         huronPstn: FeatureToggleService.supports(FeatureToggleService.features.huronPstn),
+        hybridCare: FeatureToggleService.supports(FeatureToggleService.features.hybridCare),
       };
       if (!vm.isNewTrial()) {
         promises.tcHasService = TrialContextService.trialHasService(vm.currentTrial.customerOrgId);
@@ -262,6 +263,7 @@
           vm.devicesModal.enabled = vm.canSeeDevicePage;
           vm.defaultCountryList = results.huronCountryList;
           vm.huronPstn = results.huronPstn;
+          vm.hybridCare = results.hybridCare;
 
           if (vm.huronPstn) {
             vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstn', 'trial.call'];
@@ -984,8 +986,8 @@
     }
 
     function saveTrialPstn(customerOrgId, customerName, customerEmail, country) {
-      var newOrgCondition = vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled;
-      var existingOrgCondition = ((vm.callTrial.enabled && !vm.preset.call) || (vm.roomSystemTrial.enabled && !vm.preset.roomSystems) || (vm.sparkBoardTrial.enabled && !vm.preset.sparkBoardTrial));
+      var newOrgCondition = vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled || (vm.careTrial.enabled && vm.hybridCare);
+      var existingOrgCondition = ((vm.callTrial.enabled && !vm.preset.call) || (vm.roomSystemTrial.enabled && !vm.preset.roomSystems) || (vm.sparkBoardTrial.enabled && !vm.preset.sparkBoardTrial) || (vm.careTrial.enabled && !vm.preset.care && vm.hybridCare));
       var hasValueChanged = !isExistingOrg() ? newOrgCondition : existingOrgCondition;
       var countryCode;
 

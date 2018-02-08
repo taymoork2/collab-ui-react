@@ -3,13 +3,3 @@
 user-manage-dir-sync-auto-assign-license-summary {
   @include keep-flex-container(column);
 }
-
-.user-manage-dir-sync-auto-assign-license-summary {
-  &__icon-spinner--large {
-    font-size: 7rem;
-    margin: 2rem auto;
-  }
-  &__license-summary {
-    margin-top: 1rem;
-  }
-}

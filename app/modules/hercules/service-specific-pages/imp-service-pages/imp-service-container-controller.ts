@@ -3,8 +3,7 @@ import { Notification } from 'modules/core/notifications';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 export class ImpServiceContainerController extends ExpresswayContainerController {
-
-  public tabs: any = [{
+  public tabs = [{
     title: this.$translate.instant('common.resources'),
     state: 'imp-service.list',
   }, {
@@ -24,6 +23,8 @@ export class ImpServiceContainerController extends ExpresswayContainerController
     type: 'small',
   };
 
+  public clusterId: string;
+
   /* @ngInject */
   constructor(
     $modal,
@@ -31,18 +32,24 @@ export class ImpServiceContainerController extends ExpresswayContainerController
     $timeout: ng.ITimeoutService,
     private $stateParams: ng.ui.IStateParamsService,
     private $translate: ng.translate.ITranslateService,
-    public clusterId: string,
     Notification: Notification,
     ServiceDescriptorService: ServiceDescriptorService,
     ServiceStateChecker,
     USSService,
+    private hasCapacityFeatureToggle,
   ) {
     super($modal, $state, $timeout, Notification, ServiceDescriptorService, ServiceStateChecker, USSService, ['spark-hybrid-impinterop'], 'c_imp');
+    this.clusterId = this.$stateParams['clusterId'];
     if (this.$stateParams['backState']) {
       this.backState = this.$stateParams['backState'];
     }
+    if (this.hasCapacityFeatureToggle) {
+      this.tabs.push({
+        title: this.$translate.instant('common.users'),
+        state: 'imp-service.users',
+      });
+    }
   }
-
 }
 
 angular
