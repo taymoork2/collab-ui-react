@@ -2287,7 +2287,8 @@
     },
     "capacity": {
       "label": "Capacity: {{capacity}}%",
-      "toolTip": "Capacity: {{capacity}}%<br>Users assigned: {{total}} of {{max}}"
+      "toolTip": "Capacity: {{capacity}}%<br>Users assigned: {{total}} of {{max}}",
+      "ariaLabel": "Capacity: {{capacity}}% Users assigned: {{total}} of {{max}}"
     },
     "userStatuses": {
       "summaryTitle": "User Status Summary",

@@ -1,24 +1,25 @@
 <div ng-if="grid.appScope.isEdit"
-     ng-mouseover="row.entity.isEdit=true"
-     class="ui-grid-cell-contents"
-     ng-class="{'error': row.entity.validation.phone.invalid || row.entity.duplicatedRowValidation.invalid}"
-     tooltip-class="tn-error"
-     tooltip-placement="right"
-     tooltip-append-to-body="true"
-     tooltip-is-open="row.entity.validation.phone.show"
-     tooltip-html-unsafe="{{row.entity.validation.phone.message}}">
-  <input id="{{row.uid}}-phone"
-         placeholder="Phone Number"
-         cs-input
-         maxlength="32"
-         type="text"
-         ng-disabled="grid.appScope.submitLoading"
-         title="{{row.entity.phone}}"
-         ng-change="grid.appScope.changePhone(row, '{{row.entity.phone}}')"
-         ng-model="row.entity.phone">
+  ng-mouseover="row.entity.isEdit=true"
+  class="ui-grid-cell-contents"
+  ng-class="{'error': row.entity.validation.phone.invalid || row.entity.duplicatedRowValidation.invalid}"
+  tabindex="0"
+  tooltip-class="tn-error"
+  tooltip-placement="right"
+  tooltip-append-to-body="true"
+  tooltip-is-open="row.entity.validation.phone.show"
+  tooltip-html-unsafe="{{row.entity.validation.phone.message}}"
+  aria-label="{{row.entity.validation.phone.ariaLabel}}">
+  <input  cs-input type="text"
+    id="{{row.uid}}-phone"
+    placeholder="Phone Number"
+    maxlength="32"
+    ng-disabled="grid.appScope.submitLoading"
+    title="{{row.entity.phone}}"
+    ng-change="grid.appScope.changePhone(row, '{{row.entity.phone}}')"
+    ng-model="row.entity.phone">
 </div>
 <div ng-if="!grid.appScope.isEdit"
-     class="ui-grid-cell-contents read-only-text"
-     title="{{row.entity.phone}}">
+  class="ui-grid-cell-contents read-only-text"
+  title="{{row.entity.phone}}">
   {{row.entity.phone}}
 </div>

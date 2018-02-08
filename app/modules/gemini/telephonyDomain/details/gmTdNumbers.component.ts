@@ -261,10 +261,11 @@ class GmTdNumbersCtrl implements ng.IComponentController {
       this.$element.find('#' + row.uid + '-tollType').find('.select-toggle').focus();
     }
     if (status === DNIS_TYPE.NON_CCA) {
-      const message = this.TelephonyNumberValidateService.getValidationMessage('dnisNumberNotAvailable');
+      const key = 'dnisNumberNotAvailable';
 
       row.entity.validation.dnisNumberFormat.invalid = true;
-      row.entity.validation.dnisNumberFormat.message = message;
+      row.entity.validation.dnisNumberFormat.message = this.TelephonyNumberValidateService.getValidationMessage(key);
+      row.entity.validation.dnisNumberFormat.ariaLabel = this.TelephonyNumberValidateService.getValidationAriaLabel(key);
       row.entity.validation.dnisNumberFormat.show = true;
 
       this.$element.find('#' + row.uid + '-dnisNumberFormat').focus();

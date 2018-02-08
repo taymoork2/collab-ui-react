@@ -91,18 +91,20 @@
 
       <div class="tk-example-datepicker start-time pull-right" >
         <div class="example-indent"
-             ng-click="$ctrl.onChangeDate()"
-             tooltip-class="tn-search-error"
-             tooltip-append-to-body="true"
-             tooltip-is-open="$ctrl.errMsg.datePicker !==''"
-             tooltip-html-unsafe="{{$ctrl.errMsg.datePicker}}"
-             ng-class="{'error': $ctrl.errMsg.datePicker !==''}">
+          ng-click="$ctrl.onChangeDate()"
+          tabindex="0"
+          tooltip-class="tn-search-error"
+          tooltip-append-to-body="true"
+          tooltip-is-open="$ctrl.errMsg.datePicker !== ''"
+          tooltip-html-unsafe="{{$ctrl.errMsg.datePicker}}"
+          ng-class="{'error': $ctrl.errMsg.datePicker !==''}"
+          aria-label="{{$ctrl.errMsg.datePicker}}">
 
           <cs-datepicker
-                  ng-model="$ctrl.startDate"
-                  placeholder="{{::'webexReports.placeholder-date' | translate}}"
-                  first-enabled-date="{{$ctrl.dateRange.start.firstEnableDate}}"
-                  last-enabled-date="{{$ctrl.dateRange.start.lastEnableDate}}">
+            ng-model="$ctrl.startDate"
+            placeholder="{{::'webexReports.placeholder-date' | translate}}"
+            first-enabled-date="{{$ctrl.dateRange.start.firstEnableDate}}"
+            last-enabled-date="{{$ctrl.dateRange.start.lastEnableDate}}">
           </cs-datepicker>
         </div>
       </div>

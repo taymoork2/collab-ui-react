@@ -8,6 +8,7 @@ class CardCapacityBarController implements ng.IComponentController {
   public capacity = 0;
   public maxUsers = 0;
   public tooltip: string = '';
+  public tooltipAriaLabel: string = '';
   public progressBarType: 'success' | 'warning' | 'danger' = 'success';
 
   /* @ngInject */
@@ -42,6 +43,11 @@ class CardCapacityBarController implements ng.IComponentController {
           total: summary[0].total,
           max: this.maxUsers,
         });
+        this.tooltipAriaLabel = this.$translate.instant('hercules.capacity.ariaLabel', {
+          capacity: this.capacity,
+          total: summary[0].total,
+          max: this.maxUsers,
+        });
       }
     }
   }
@@ -51,7 +57,7 @@ export class CardCapacityBarComponent implements ng.IComponentOptions {
   public controller = CardCapacityBarController;
   // TODO: proper translation
   public template = `
-    <div ng-if="$ctrl.maxUsers > 0" tooltip-html-unsafe="{{$ctrl.tooltip}}" class="capacity-container">
+    <div ng-if="$ctrl.maxUsers > 0" tabindex="0" tooltip-html-unsafe="{{$ctrl.tooltip}}" tooltip-trigger="mouseenter focus" class="capacity-container" aria-label="{{$ctrl.tooltipAriaLabel}}">
       <div class="capacity-label" translate="hercules.capacity.label" translate-value-capacity="{{$ctrl.capacity}}"></div>
       <div class="progressbar-container"><progressbar max="100" value="$ctrl.capacity" type="{{$ctrl.progressBarType}}"></progressbar></div>
     </div>

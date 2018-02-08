@@ -4,11 +4,14 @@
       <div class="pull-left searchfilter">
         <div class="searchbox">
           <div class="searchinput"
-               tooltip-class="tn-search-error"
-               tooltip-append-to-body="true"
-               tooltip-is-open="$ctrl.errMsg.search !==''"
-               tooltip-html-unsafe="{{$ctrl.errMsg.search}}"
-               ng-class="{'error': $ctrl.errMsg.search !==''}">
+            tabindex="0"
+            tooltip-class="tn-search-error"
+            tooltip-append-to-body="true"
+            tooltip-is-open="$ctrl.errMsg.search !==''"
+            tooltip-html-unsafe="{{$ctrl.errMsg.search}}"
+            tooltip-trigger="mouseenter focus"
+            aria-label="{{$ctrl.errMsg.ariaLabel}}"
+            ng-class="{'error': $ctrl.errMsg.search !==''}">
 
             <i class="icon icon-search" ng-click="$ctrl.onGetSearch();"></i>
             <input id="searchFilter"
@@ -24,12 +27,14 @@
         <span ng-show="$ctrl.isDatePickerShow"  class="span-flex ng-hide">
           <div class="tk-example-datepicker start-time" >
             <div class="example-indent"
-                 ng-click="$ctrl.onChangeDate()"
-                 tooltip-class="tn-search-error"
-                 tooltip-append-to-body="true"
-                 tooltip-is-open="$ctrl.errMsg.datePicker !==''"
-                 tooltip-html-unsafe="{{$ctrl.errMsg.datePicker}}"
-                 ng-class="{'error': $ctrl.errMsg.datePicker !==''}">
+              ng-click="$ctrl.onChangeDate()"
+              tooltip-class="tn-search-error"
+              tooltip-append-to-body="true"
+              tooltip-is-open="$ctrl.errMsg.datePicker !==''"
+              tooltip-html-unsafe="{{$ctrl.errMsg.datePicker}}"
+              tooltip-trigger="mouseenter focus"
+              ng-class="{'error': $ctrl.errMsg.datePicker !==''}"
+              aria-label="{{$ctrl.errMsg.datePickerAriaLabel}}">
 
               <cs-datepicker
                 ng-model="$ctrl.startDate"

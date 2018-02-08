@@ -8,6 +8,11 @@ import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-ser
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
 
+interface ITooltipData {
+  tooltip?: string;
+  ariaLabel?: string;
+}
+
 export class MySubscriptionCtrl implements ng.IController {
   private readonly HEADER_BROADCAST = 'TOGGLE_HEADER_BANNER';
 
@@ -132,20 +137,23 @@ export class MySubscriptionCtrl implements ng.IController {
   }
 
   // generating the subscription view tooltips
-  private generateTooltip(offer: IOfferData, usage?: number, volume?: number): string | undefined {
+  private generateTooltip(offer: IOfferData, usage?: number, volume?: number): ITooltipData {
+    const tooltipData: ITooltipData = {};
     if (_.isNumber(volume)) {
-      let tooltip = this.$translate.instant('subscriptions.licenseTypes.' + offer.offerName) + '<br>';
+      tooltipData.tooltip = `${this.$translate.instant(`subscriptions.licenseTypes.${offer.offerName}`)}<br>`;
+      tooltipData.ariaLabel = this.$translate.instant(`subscriptions.licenseTypes.${offer.offerName} `);
       if (this.useTotal(offer) || !_.isNumber(usage)) {
-        tooltip += this.$translate.instant('subscriptions.licenses') + volume;
+        tooltipData.tooltip += this.$translate.instant('subscriptions.licenses') + volume;
+        tooltipData.ariaLabel += ` ${this.$translate.instant('subscriptions.licenses')}${volume}`;
       } else if (usage > volume) {
-        tooltip += this.$translate.instant('subscriptions.usage') + `<span class="warning">${usage}/${volume}</span>`;
+        tooltipData.tooltip += `${this.$translate.instant('subscriptions.usage')}<span class="warning">${usage}/${volume}</span>`;
+        tooltipData.ariaLabel += ` ${this.$translate.instant('subscriptions.usage')}${usage}/${volume}`;
       } else {
-        tooltip += this.$translate.instant('subscriptions.usage') + `${usage}/${volume}`;
+        tooltipData.tooltip += `${this.$translate.instant('subscriptions.usage')}${usage}/${volume}`;
+        tooltipData.ariaLabel += ` ${this.$translate.instant('subscriptions.usage')}${usage}/${volume}`;
       }
-      return tooltip;
-    } else {
-      return;
     }
+    return tooltipData;
   }
 
   // combines licenses for the license view
@@ -475,6 +483,7 @@ export class MySubscriptionCtrl implements ng.IController {
   }
 
   private generateOffer(license: any, subIndex: number, licenseIndex: number) {
+    const tooltipData: ITooltipData = this.generateTooltip(license, license.usage, license.volume);
     const offer: IOfferData = {
       licenseId: license.licenseId,
       licenseType: license.licenseType,
@@ -482,7 +491,8 @@ export class MySubscriptionCtrl implements ng.IController {
       offerName: license.offerName,
       volume: license.volume,
       id: 'donutId' + subIndex + licenseIndex,
-      tooltip: this.generateTooltip(license, license.usage, license.volume),
+      tooltip: tooltipData.tooltip,
+      tooltipAriaLabel: tooltipData.ariaLabel,
     };
 
     if (this.useTotal(offer)) {

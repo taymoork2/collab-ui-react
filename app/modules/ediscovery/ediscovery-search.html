@@ -43,8 +43,14 @@
               <span class="search-spacing search-text small-gap">
                 <span translate="common.dateRange"></span>
                 <i ng-if="ediscoverySearchCtrl.showHover()"
-                tooltip-html-unsafe="{{'ediscovery.searchParameters.dateRangeTooltip' | translate}}" tooltip-placement="right" tooltip-class="cs-datepicker-tooltip"
-                class="icon icon-info"></i>
+                  tabindex="0"
+                  tooltip-html-unsafe="{{::'ediscovery.searchParameters.dateRangeTooltip' | translate}}"
+                  tooltip-placement="right"
+                  tooltip-class="cs-datepicker-tooltip"
+                  tooltip-trigger="mouseenter focus"
+                  class="icon icon-info"
+                  aria-label="{{::'ediscovery.searchParameters.dateRangeTooltip' | translate}}">
+                </i>
               </span>
             </div>
           </div>
