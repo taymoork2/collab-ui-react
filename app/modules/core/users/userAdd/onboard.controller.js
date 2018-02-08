@@ -8,7 +8,7 @@ require('./_user-add.scss');
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, Analytics, Authinfo, Config, FeatureToggleService, DialPlanService, Log, LogMetricsService, MessengerInteropService, NAME_DELIMITER, Notification, OnboardService, OnboardStore, Orgservice, TelephonyInfoService, LocationsService, NumberService, Userservice, Utils, UserCsvService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, Analytics, Authinfo, AutoAssignTemplateModel, Config, FeatureToggleService, DialPlanService, Log, LogMetricsService, MessengerInteropService, NAME_DELIMITER, Notification, OnboardService, OnboardStore, Orgservice, TelephonyInfoService, LocationsService, NumberService, Userservice, Utils, UserCsvService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
     var vm = this;
 
     // reset corresponding scope properties in OnboardStore each time this controller initializes
@@ -1505,6 +1505,32 @@ require('./_user-add.scss');
       return OnboardService.huronCallEntitlement;
     };
 
+    function convertUsersCallback() {
+      if ($scope.convertSelectedList.length > 0 && convertProps.convertCancelled === false && convertBacked === false) {
+        convertUsersInBatch();
+      } else {
+        convertPending = false;
+        if (convertBacked === false) {
+          $scope.btnConvertLoad = false;
+          $state.go('users.convert.results', {
+            convertPending: convertPending,
+            convertUsersFlow: $scope.convertUsersFlow,
+            numUpdatedUsers: $scope.numUpdatedUsers,
+            numAddedUsers: $scope.numAddedUsers,
+            results: $scope.results,
+          });
+        } else {
+          $state.go('users.convert', {});
+        }
+        var msg = 'Migrated ' + $scope.numUpdatedUsers + ' users';
+        var migratedata = {
+          totalUsers: convertUsersCount,
+          successfullyConverted: $scope.numUpdatedUsers,
+        };
+        LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('convertUsers'), LogMetricsService.getEventAction('buttonClick'), 200, convertStartTime, $scope.numUpdatedUsers, migratedata);
+      }
+    }
+
     function entitleUserCallback(data, status, method, headers) {
       initResults();
       $scope.numAddedUsers = 0;
@@ -1631,28 +1657,7 @@ require('./_user-add.scss');
           resetUsersfield();
         }
       } else {
-        if ($scope.convertSelectedList.length > 0 && convertProps.convertCancelled === false && convertBacked === false) {
-          convertUsersInBatch();
-        } else {
-          if (convertBacked === false) {
-            $scope.btnConvertLoad = false;
-            $state.go('users.convert.results', {
-              convertPending: convertPending,
-              convertUsersFlow: $scope.convertUsersFlow,
-              numUpdatedUsers: $scope.numUpdatedUsers,
-              numAddedUsers: $scope.numAddedUsers,
-              results: $scope.results,
-            });
-          } else {
-            $state.go('users.convert', {});
-          }
-          var msg = 'Migrated ' + $scope.numUpdatedUsers + ' users';
-          var migratedata = {
-            totalUsers: convertUsersCount,
-            successfullyConverted: $scope.numUpdatedUsers,
-          };
-          LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('convertUsers'), LogMetricsService.getEventAction('buttonClick'), 200, convertStartTime, $scope.numUpdatedUsers, migratedata);
-        }
+        convertUsersCallback();
       }
     }
 
@@ -1850,7 +1855,11 @@ require('./_user-add.scss');
       $scope.convertUsersFlow = true;
       convertPending = false;
       // TODO if auto-assign, should go to summary screen
-      $state.go('users.convert.services', {});
+      if (AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated) {
+        $state.go('users.convert.auto-assign-license-summary');
+      } else {
+        $state.go('users.convert.services', {});
+      }
     };
 
     $scope.convertUsersNext = function () {
@@ -1914,11 +1923,16 @@ require('./_user-add.scss');
             user.assignedDn = userArray[0].assignedDn;
             user.externalNumber = userArray[0].externalNumber;
             successMovedUsers.push(user);
+
+            if (AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated) {
+              $scope.results.resultList.push(user);
+              $scope.numUpdatedUsers++;
+            }
           }
         }
 
         // TODO if auto-assign, should not update users
-        if (successMovedUsers.length > 0) {
+        if (!AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated && successMovedUsers.length > 0) {
           var entitleList = [];
           var licenseList = [];
           if (Authinfo.hasAccount()) {
@@ -1930,29 +1944,7 @@ require('./_user-add.scss');
           convertPending = false;
           Userservice.updateUsers(successMovedUsers, licenseList, entitleList, 'convertUser', entitleUserCallback);
         } else {
-          if ($scope.convertSelectedList.length > 0 && convertProps.convertCancelled === false && convertBacked === false) {
-            convertUsersInBatch();
-          } else {
-            convertPending = false;
-            if (convertBacked === false) {
-              $scope.btnConvertLoad = false;
-              $state.go('users.convert.results', {
-                convertPending: convertPending,
-                convertUsersFlow: $scope.convertUsersFlow,
-                numUpdatedUsers: $scope.numUpdatedUsers,
-                numAddedUsers: $scope.numAddedUsers,
-                results: $scope.results,
-              });
-            } else {
-              $state.go('users.convert', {});
-            }
-            var msg = 'Migrated ' + $scope.numUpdatedUsers + ' users';
-            var migratedata = {
-              totalUsers: convertUsersCount,
-              successfullyConverted: $scope.numUpdatedUsers,
-            };
-            LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('convertUsers'), LogMetricsService.getEventAction('buttonClick'), 200, convertStartTime, $scope.numUpdatedUsers, migratedata);
-          }
+          convertUsersCallback();
         }
       });
     }

@@ -10,10 +10,6 @@ export class UserConvertAutoAssignLicenseSummaryController implements ng.ICompon
     this.$state.go('users.convert');
   }
 
-  public save() {
-    // TODO add convert functionality
-  }
-
   public dismissModal() {
     this.dismiss();
   }
@@ -24,5 +20,6 @@ export class UserConvertAutoAssignLicenseSummaryComponent implements ng.ICompone
   public template = require('./user-convert-auto-assign-license-summary.html');
   public bindings = {
     dismiss: '&',
+    save: '&',
   };
 }
