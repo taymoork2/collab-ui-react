@@ -233,7 +233,7 @@ describe('Huron Functional: place-line-settings', () => {
         utils.expectIsDisplayed(callUserPlacePage.sharedLine.title);
       });
 
-      it('Add a member', () => {
+      it('should add a member', () => {
         utils.sendKeys(callUserPlacePage.sharedLine.inputMember, PLACES[0].name);
         browser.driver.sleep(1000);
         utils.sendKeys(callUserPlacePage.sharedLine.inputMember, protractor.Key.ENTER);
@@ -244,7 +244,7 @@ describe('Huron Functional: place-line-settings', () => {
           notifications.assertSuccess();
         });
       });
-      it('Remove a member', () => {
+      it('should remove a member', () => {
         utils.expectIsDisplayed(callUserPlacePage.sharedLine.accordionMember);
         utils.expectText(callUserPlacePage.sharedLine.accordionMember, PLACES[0].name);
         utils.click(callUserPlacePage.sharedLine.sharedMember);

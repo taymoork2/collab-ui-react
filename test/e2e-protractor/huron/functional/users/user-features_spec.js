@@ -35,10 +35,10 @@ describe('Huron Functional: user-features', () => {
     utils.click(CallUser.usersList.searchFilter);
     utils.searchAndClick(USERS[0].email);
     utils.expectIsDisplayed(users.servicesPanel);
-    utils.expectIsDisplayed(users.communicationsService);
+    utils.expectIsDisplayed(users.communicationService);
   });
   it('should navigate to call details view', () => {
-    utils.click(users.communicationsService);
+    utils.click(users.communicationService);
     utils.expectIsDisplayed(CallUser.callOverview.features.title);
     utils.expectIsDisplayed(CallUser.callOverview.features.singleNumberReach);
     utils.expectIsDisplayed(CallUser.callOverview.features.speedDials);
@@ -186,7 +186,7 @@ describe('Huron Functional: user-features', () => {
                 utils.dragAndDrop(SpeedDialsPage.speedDialEntries.first(), SpeedDialsPage.speedDialEntries.last());
                 utils.expectNotText(SpeedDialsPage.firstSpeedDialEntryLabel, initialFirstSpeedDialName);
               });
-            });
+            }).pend('This feature does not work currently in protractor. Workarounds have not been successful');
           });
           it('should be able to save reordered speed dials', () => {
             utils.click(SpeedDialsPage.speedDialSaveButton);
