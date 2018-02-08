@@ -188,6 +188,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     this.searchChange(true);
     this.showSuggestions = false;
     this.bulletCreated = true;
+    this.suggestions.updateBasedOnInput(this.searchObject);
   }
 
   public onSearchInputKeyDown($keyEvent: KeyboardEvent) {
