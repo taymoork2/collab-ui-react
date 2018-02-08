@@ -1,6 +1,6 @@
 import { ICluster, IClusterPropertySet } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
-import { Notification } from 'modules/core/notifications';
+import { SipRegistrationSectionService } from './sip-registration-section.service';
 
 class SipRegistrationSectionCtrl implements ng.IComponentController {
 
@@ -17,7 +17,7 @@ class SipRegistrationSectionCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private HybridServicesClusterService: HybridServicesClusterService,
-    private Notification: Notification,
+    private SipRegistrationSectionService: SipRegistrationSectionService,
   ) { }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
@@ -38,16 +38,7 @@ class SipRegistrationSectionCtrl implements ng.IComponentController {
   }
 
   public saveSipTrunk(): void {
-    const payload: IClusterPropertySet = {
-      'mf.ucSipTrunk': this.sipConfigUrl,
-    };
-    this.HybridServicesClusterService.setProperties(this.clusterId, payload)
-      .then(() => {
-        this.Notification.success('mediaFusion.sipconfiguration.success');
-      })
-      .catch((error) => {
-        this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
-      });
+    this.SipRegistrationSectionService.saveSipTrunkUrl(this.sipConfigUrl, this.clusterId);
   }
 
 }

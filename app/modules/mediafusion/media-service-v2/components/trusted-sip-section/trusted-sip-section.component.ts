@@ -1,6 +1,6 @@
-import { ICluster, IClusterPropertySet } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
-import { Notification } from 'modules/core/notifications';
+import { ICluster, IClusterPropertySet } from 'modules/hercules/hybrid-services.types';
+import { TrustedSipSectionService } from './trusted-sip-section.service';
 
 interface ITag {
   text: string;
@@ -11,9 +11,7 @@ class TrustedSipSectionCtrl implements ng.IComponentController {
   public hasMfTrustedSipToggle: boolean;
   public clusterId: string;
   public cluster: ICluster;
-
   public trustedsipconfiguration: ITag[] = [];
-
   public trustedSip = {
     title: 'mediaFusion.trustedSip.title',
   };
@@ -21,7 +19,7 @@ class TrustedSipSectionCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private HybridServicesClusterService: HybridServicesClusterService,
-    private Notification: Notification,
+    private TrustedSipSectionService: TrustedSipSectionService,
   ) { }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
@@ -33,7 +31,7 @@ class TrustedSipSectionCtrl implements ng.IComponentController {
     }
   }
 
-  private getProperties(clusterId) {
+  public getProperties(clusterId) {
     this.HybridServicesClusterService.getProperties(clusterId)
       .then((properties: IClusterPropertySet) => {
         let rawTrustedSipConfigurationData;
@@ -57,18 +55,8 @@ class TrustedSipSectionCtrl implements ng.IComponentController {
   }
 
   public saveTrustedSip(): void {
-    const payload: IClusterPropertySet = {
-      'mf.trustedSipSources': _.map(this.trustedsipconfiguration, 'text').join(', '),
-    };
-    this.HybridServicesClusterService.setProperties(this.clusterId, payload)
-      .then(() => {
-        this.Notification.success('mediaFusion.trustedSip.success');
-      })
-      .catch((error) => {
-        this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
-      });
+    this.TrustedSipSectionService.saveSipConfigurations(this.trustedsipconfiguration, this.clusterId);
   }
-
 }
 
 export class TrustedSipSectionComponent implements ng.IComponentOptions {
@@ -78,4 +66,3 @@ export class TrustedSipSectionComponent implements ng.IComponentOptions {
     cluster: '<',
   };
 }
-
