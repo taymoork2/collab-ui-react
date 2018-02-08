@@ -1153,7 +1153,7 @@
           })
           .state('users.convert.results', {
             views: {
-              'usersAdd@users.add': {
+              'usersConvert@users.convert': {
                 template: '<add-users-results-modal dismiss="$dismiss()" convert-pending="$resolve.convertPending" convert-users-flow="$resolve.convertUsersFlow" num-updated-users="$resolve.numUpdatedUsers" num-added-users="$resolve.numAddedUsers" results="$resolve.results"></add-users-results-modal>',
               },
             },
