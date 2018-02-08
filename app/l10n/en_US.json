@@ -8538,9 +8538,8 @@
       "title": "Cisco Spark Assistant",
       "subsectionLabel": "Enable Cisco Spark Assistant",
       "description": "Allows users to perform various actions such as, make calls, start meetings, using their voice",
-      "termsOfService": "Cisco Spark Assistant terms of service ",
       "success": "Successfully updated Spark Assistant",
-      "failure": "Spark Assistant update failed"
+      "failure": "Cisco Spark Assistant update failed"
     },
     "externalCommunication": {
       "title": "External Communication",
