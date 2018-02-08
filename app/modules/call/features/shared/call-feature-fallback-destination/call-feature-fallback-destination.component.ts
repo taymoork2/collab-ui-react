@@ -5,6 +5,7 @@ import { Line } from 'modules/huron/lines/services/line';
 import { FeatureMemberService } from 'modules/huron/features/services';
 import { HuronVoicemailService } from 'modules/huron/voicemail';
 import { CallDestinationTranslateService, ICallDestinationTranslate } from 'modules/call/shared/call-destination-translate';
+import { HuntGroupNumber, HuntMethod } from 'modules/call/features/hunt-group';
 
 class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
   public fallbackDestination: FallbackDestination;
@@ -23,6 +24,8 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
   public thumbnailSrc: string | undefined = undefined;
   public isAlternate: boolean;
   public index: string = '';
+  public huntGroupNumbers: HuntGroupNumber[];
+  public huntGroupMethod: HuntMethod;
 
   private inputTranslations: ICallDestinationTranslate;
   public featurePromise;
@@ -107,9 +110,11 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
 
   public getMemberList(value: any): ng.IPromise<any[]> {
     if (isNaN(value)) {
-      return this.MemberService.getMemberList(value, true, undefined, undefined, undefined, undefined, undefined, undefined, _.get(this.location, 'uuid', undefined)).then((members) => members);
+      return this.MemberService.getMemberList(value, true, undefined, undefined, undefined, undefined, undefined, undefined, _.get(this.location, 'uuid', undefined)).then(members => members);
     } else {
-      return this.NumberService.getNumberList(value, NumberType.INTERNAL, true, undefined, undefined, undefined, _.get(this.location, 'uuid', undefined)).then(numbers => numbers);
+      return this.NumberService.getNumberList(value, NumberType.INTERNAL, true, undefined, undefined, undefined, _.get(this.location, 'uuid', undefined)).then(numbers => {
+        return _.filter(numbers, (num) => (this.huntGroupMethod !== <any>'DA_BROADCAST') || !_.find(this.huntGroupNumbers, (hg) => hg.number === num.internal));
+      });
     }
   }
 
@@ -204,6 +209,8 @@ export class CallFeatureFallbackDestinationComponent implements ng.IComponentOpt
     isNew: '<',
     isAlternate: '<',
     onChangeFn: '&',
+    huntGroupNumbers: '<',
+    huntGroupMethod: '<',
     location: '<',
   };
 }

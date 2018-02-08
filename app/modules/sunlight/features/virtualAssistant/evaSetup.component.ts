@@ -46,6 +46,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
         vaAvatar: {
           enabled: true,
           fileValue: '',
+          oldFileValue: '',
           avatarError: this.avatarErrorType.NO_ERROR,
           uploadCanceled: false,
           avatarImageSrc: '/images/evaAvatarDefaultIcon.png',
@@ -117,9 +118,10 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
       this.template.ownerId = this.$stateParams.template.ownerId;
       this.template.ownerDetails = this.$stateParams.template.ownerDetails;
 
-      if (this.$stateParams.template.icon) {
+      if (this.$stateParams.template.iconURL) {
         this.avatarUploadState = this.avatarState.PREVIEW;
-        this.template.configuration.pages.vaAvatar.fileValue = this.$stateParams.template.icon;
+        this.template.configuration.pages.vaAvatar.fileValue = this.$stateParams.template.iconURL;
+        this.template.configuration.pages.vaAvatar.oldFileValue = this.$stateParams.template.iconURL;
       }
     }
     this.loadDefaultSpaceOptions();
@@ -311,8 +313,21 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     const controller = this;
     controller.service.updateExpertAssistant(templateId, name, orgId, email, defaultSpaceId, avatarDataUrl)
       .then(function () {
-        controller.handleFeatureUpdate();
-        controller.writeMetrics();
+        // Update the icon only if it has changed
+        if (avatarDataUrl !== controller.template.configuration.pages.vaAvatar.oldFileValue) {
+          controller.service.updateExpertAssistantIcon(templateId, orgId, avatarDataUrl)
+            .then(function () {
+              controller.handleFeatureUpdate();
+              controller.writeMetrics();
+            })
+            .catch(function (response) {
+              controller.handleFeatureError(response);
+              controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.updateConfigFailureText'));
+            });
+        } else {
+          controller.handleFeatureUpdate();
+          controller.writeMetrics();
+        }
       })
       .catch(function (response) {
         controller.handleFeatureError(response);

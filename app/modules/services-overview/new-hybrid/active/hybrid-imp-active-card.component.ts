@@ -33,15 +33,15 @@ export class HybridIMPActiveCardComponent implements ng.IComponentOptions {
         <i class="icon icon-question-circle" tooltip="{{::'servicesOverview.cards.hybridImp.description' | translate}}" tooltip-placement="bottom-right" tabindex="0" tooltip-trigger="focus mouseenter"></i>
       </div>
       <div class="active-card_content">
-        <div class="active-card_section">
-          <div class="active-card_title" translate="servicesOverview.cards.shared.service"></div>
-          <div class="active-card_action"><a ui-sref="imp-service.settings" translate="servicesOverview.cards.shared.configure"></a></div>
-        </div>
+        <card-users-summary summary="$ctrl.userStatusesSummary"></card-users-summary>
         <div class="active-card_section">
           <div class="active-card_title" translate="servicesOverview.cards.shared.resources"></div>
           <div class="active-card_action"><a ui-sref="imp-service.list" translate="servicesOverview.cards.shared.viewAll"></a></div>
         </div>
-        <card-users-summary summary="$ctrl.userStatusesSummary"></card-users-summary>
+        <div class="active-card_section">
+          <div class="active-card_title" translate="servicesOverview.cards.shared.service"></div>
+          <div class="active-card_action"><a ui-sref="imp-service.settings" translate="servicesOverview.cards.shared.configure"></a></div>
+        </div>
       </div>
       <div class="active-card_footer">
         <a ui-sref="imp-service.list">

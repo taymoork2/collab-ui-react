@@ -27,13 +27,15 @@ describe('Service : AccountOrgService', function () {
 
   describe('it should catch illegal parameter passes and', function () {
     it('should verify that a valid OrgID is passed to getAppSecurity and setAppSecurity', function () {
-      this.AccountOrgService.getAppSecurity().catch(function (response) {
-        expect(response).toBe('A Valid organization ID must be Entered');
-      });
+      this.AccountOrgService.getAppSecurity().then(fail)
+        .catch(function (response) {
+          expect(response).toBe('A Valid organization ID must be Entered');
+        });
 
-      this.AccountOrgService.setAppSecurity().catch(function (response) {
-        expect(response).toBe('A Valid organization ID must be Entered');
-      });
+      this.AccountOrgService.setAppSecurity().then(fail)
+        .catch(function (response) {
+          expect(response).toBe('A Valid organization ID must be Entered');
+        });
     });
   });
 

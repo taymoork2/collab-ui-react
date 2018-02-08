@@ -53,6 +53,7 @@
         userOrgId: null,
         commPartnerOrgId: null,
         roomPartnerOrgId: null,
+        carePartnerOrgId: null,
         customerAdminEmail: null,
       };
     }
@@ -207,6 +208,9 @@
                   hasCVCOffer = true;
                 }
                 careLicenses.push(service);
+
+                // store the partner for Care license
+                authData.carePartnerOrgId = license.partnerOrgId;
                 break;
               case Config.licenseTypes.CMR:
                 service = new ServiceFeature($translate.instant('onboardModal.cmr'), accountIndex + 1, 'cmrRadio', license);
@@ -252,6 +256,10 @@
       getRoomPartnerOrgId: function () {
         // The orgId of the partner who enabled SHARED_DEVICES license
         return authData.roomPartnerOrgId;
+      },
+      getCarePartnerOrgId: function () {
+        // The orgId of the partner who enabled CARE license
+        return authData.carePartnerOrgId;
       },
       // When partner logs in, it will be the partner admin email
       // but partner admin chooses to login to customer portal it will be customer admin email
@@ -615,7 +623,7 @@
         if (this.isPartner()) {
           return this.getOrgId();
         }
-        return this.getCommPartnerOrgId() || this.getRoomPartnerOrgId() || this.getOrgId();
+        return this.getCommPartnerOrgId() || this.getRoomPartnerOrgId() || this.getCarePartnerOrgId() || this.getOrgId();
       },
       addEntitlement: function (entitlementObj) {
         var entitlement = _.get(entitlementObj, 'ciName');

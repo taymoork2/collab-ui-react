@@ -1089,5 +1089,55 @@
 		}
 	}]
 }]
+},
+  "Test7": {
+  "actionSets": 
+  [  
+  {
+    "name": "openHours",
+    "actions": [
+      {
+        "play": {
+          "voice": "Vanessa"
+        }
+      },
+      {
+        "runActionsOnInput": {
+          "language": "",
+          "voice": "",
+          "prompts": {
+            "playList": [],
+            "sayList": [],
+            "announcements": [
+              {
+                "say": {
+                  "value": "",
+                  "voice": "Vanessa"
+                }
+              }
+            ]
+          },
+          "attempts": 4,
+          "inputs": [],
+          "incompleteInputActions": [],
+          "rawInputActions": []
+        }
+      },
+      {
+        "routeToUser": {
+          "id": "1958c860-0b52-4d76-bdb5-7824181fbbb0"
+        }
+      },
+      {
+        "disconnect": {
+          "treatment": "none"
+        }
+      }
+    ]
+  }],
+  "defaultActionSet": "openHours",
+  "scheduleEventTypeMap": {
+    "open": "openHours"
+  }
 }
 }

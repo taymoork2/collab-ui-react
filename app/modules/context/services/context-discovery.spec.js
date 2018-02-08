@@ -75,9 +75,10 @@ describe('Service: Cotext Discovery factory', function () {
   it('should get error if no service name provided', function () {
     var deferred = this.$q.defer();
     spyOn(this.$q, 'reject').and.returnValue(deferred.promise);
-    this.Discovery.getEndpointForService('').catch(function (error) {
-      expect(error).toBe('No service name specified.');
-    });
+    this.Discovery.getEndpointForService('').then(fail)
+      .catch(function (error) {
+        expect(error).toBe('No service name specified.');
+      });
     this.Discovery.getEndpointForService().catch(function (error) {
       expect(error).toBe('No service name specified.');
     });
@@ -85,15 +86,17 @@ describe('Service: Cotext Discovery factory', function () {
 
   it('should get error if non-existing service name provided', function () {
     this.$httpBackend.whenGET(contextDiscoveryUrl).respond(200, discoveryData);
-    this.Discovery.getEndpointForService('dummyService').catch(function (error) {
-      expect(error).toBe('Context Service Dictionary endpoint not found.');
-    });
+    this.Discovery.getEndpointForService('dummyService').then(fail)
+      .catch(function (error) {
+        expect(error).toBe('Context Service Dictionary endpoint not found.');
+      });
     this.$httpBackend.flush();
   });
 
   it('should get error when HTTP response GET discovery Url fails', function () {
     this.$httpBackend.whenGET(contextDiscoveryUrl).respond(500, 'This is error data from http server');
     this.Discovery.getEndpointForService('dictionary')
+      .then(fail)
       .catch(function (errorResponse) {
         expect(errorResponse.data).toBe('This is error data from http server');
         expect(errorResponse.status).toBe(500);
@@ -102,10 +105,11 @@ describe('Service: Cotext Discovery factory', function () {
   });
 
   it('should get error when response to get discovery Url does not contain discovery endpoint', function () {
-    this.$httpBackend.whenGET(contextDiscoveryUrl).respond(200, badDiscoveryData, 'Error happened');
+    this.$httpBackend.whenGET(contextDiscoveryUrl).respond(500, badDiscoveryData, 'Error happened');
     this.Discovery.getEndpointForService('dictionary')
-      .catch(function (error) {
-        expect(error).toBe('Context Service Dictionary endpoint not found.');
+      .then(fail)
+      .catch(function (response) {
+        expect(response.status).toBe(500);
       });
     this.$httpBackend.flush();
   });

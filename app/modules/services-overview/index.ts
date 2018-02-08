@@ -1,6 +1,7 @@
 import './services-overview.scss';
 
 import { CardUsersSummaryComponent } from 'modules/services-overview/new-hybrid/card-users-summary/card-users-summary.component';
+import { CardCapacityBarComponent } from 'modules/services-overview/new-hybrid/card-capacity-bar/card-capacity-bar.component';
 import { EnableUsersModalComponent } from 'modules/services-overview/new-hybrid/enable-users-modal/enable-users-modal.component';
 import { EPTActiveCardComponent } from 'modules/services-overview/new-hybrid/active/ept-active-card.component';
 import { EPTInactiveCardComponent } from 'modules/services-overview/new-hybrid/inactive/ept-inactive-card.component';
@@ -48,6 +49,7 @@ export default angular
     require('modules/hcs/task-manager/shared').default,
   ])
   .component('cardUsersSummary', new CardUsersSummaryComponent())
+  .component('cardCapacityBar', new CardCapacityBarComponent())
   .component('enableUsersModal', new EnableUsersModalComponent())
   .component('eptActiveCard', new EPTActiveCardComponent())
   .component('eptInactiveCard', new EPTInactiveCardComponent())

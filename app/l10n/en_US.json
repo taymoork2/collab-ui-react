@@ -357,7 +357,8 @@
         "description": "Select the services that you want to provide to users.",
         "note": "Note: If you select more than one Message or Call license, only one license will be assigned to each user.",
         "tooltip": "If one subscription runs out of licenses, the next selected subscription automatically assigns more.",
-        "usage": "Usage: {{ usage }}/{{ volume }}"
+        "usage": "Usage: {{ usage }}/{{ volume }}",
+        "careDisabledTooltip": "Care licenses are only assigned to Care agents."
       },
       "editSummary": {
         "title": "Set Up Auto-Assign Template",
@@ -374,6 +375,10 @@
     "autoAssignLicenseSummaryForDirSync": {
       "header": "License Summary",
       "description": "You've enabled Auto-Assign. All synchronized users will be assigned the following licenses automatically."
+    },
+    "autoAssignLicenseSummaryForConvert": {
+      "header": "License Summary",
+      "description": "You've enabled Auto-Assign. Users will be assigned the following licenses automatically."
     }
   },
   "userTaskManagerModal": {
@@ -2277,6 +2282,10 @@
     "domain-verification": {
       "domain-not-verified": "The domain for this Directory URI must be verified for this service to function properly. ",
       "navigateToCallSettings": "Verify the domain in <a href ng-click=\"{{onclick}}\">Call Service Settings</a>."
+    },
+    "capacity": {
+      "label": "Capacity: {{capacity}}%",
+      "toolTip": "Capacity: {{capacity}}%<br>Users assigned: {{total}} of {{max}}"
     },
     "sipExplanation": {
       "line1": "You can use one of the following address formats:",
@@ -8021,6 +8030,10 @@
         "duplicateName": "The {{ featureName }} must have a unique name.\nClick the back arrow to return to the Name page and enter a valid name.",
         "invalidName": "The {{ featureName }} name is invalid.\nClick the back arrow to return to the Name page and enter a valid name.",
         "invalidIcon": "The {{ featureName }} avatar is invalid.\nClick the back arrow to return to the Avatar page and upload a valid avatar.",
+        "invalidIconFileType": "The supported file type of the {{ featureName }} avatar is PNG.\nClick the back arrow to return to the Avatar page and upload a valid avatar.",
+        "invalidIconTooLarge": "The image file size of the {{ featureName }} avatar must be less than 1 MB. \nClick the back arrow to return to the Avatar page and upload a valid avatar.",
+        "invalidIconCorrupted": "The {{ featureName }} avatar is invalid.\nClick the back arrow to return to the Avatar page and upload a valid avatar.",
+        "invalidIconDimensions" : "The dimensions of the {{ featureName }} avatar must be exactly 512 x 512 pixels.\nClick the back arrow to return to the Avatar page and upload a valid avatar.",
         "invalidEmail": "The email you entered is invalid.\nClick the back arrow to return to the Email page and enter a valid email."
       },
       "createTitle": "Create {{ featureName }}",
@@ -8077,11 +8090,13 @@
         "preview": "Avatar Preview",
         "fileBrowser": "file browser",
         "uploadingImage": "Uploading image...",
-        "uploadDesc": "Upload a PNG of maximum 1MB. For best results make sure that your image has a transparent background with no padding.",
+        "uploadDesc": "Upload a PNG of 512 x 512 pixels and maximum 1 MB. For best results make sure that your image has a transparent background with no padding.",
         "dragDropDesc": "Drag and drop a file or use the ",
         "errorUnsupportedFile": "Cannot upload unsupported file. Supported file type is PNG.",
         "errorOverMaxFileSizeLimit": "The image file size must be less than 1 MB.",
-        "errorUploadFile": "Cannot upload image. Try again."
+        "errorUploadFile": "Cannot upload image. Try again.",
+        "errorInvalidIcon": "The {{ featureName }} avatar is invalid.",
+        "errorInvalidIconDimensions" : "The dimensions of the {{ featureName }} avatar must be exactly 512 x 512 pixels."
       },
       "summary": {
         "cvaDesc": "You have configured {{ name }}. To use the assisted service feature in your organization's chat application, add your assistant to a Customer Support Template.",
@@ -9161,9 +9176,10 @@
     "userIsMissingEntitlements": "The current user has no Hybrid Services entitlements.",
     "userStatusesSummary": {
       "users": "Users",
-      "inError": "users in error",
-      "inPending": "users in pending activation",
-      "active": "users active",
+      "assigned": "{total, plural, =1{# user assigned} other{# users assigned}}",
+      "inError": "in error",
+      "inPending": "in pending activation",
+      "active": "active",
       "enableUsers": "Enable users"
     },
     "cards": {
@@ -10580,6 +10596,5 @@
         "error": "Errors"
       }
     }
-
   }
 }

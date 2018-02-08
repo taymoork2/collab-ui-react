@@ -1,6 +1,6 @@
 import moduleName from './index';
 
-describe('Component: licenseSummaryItem:', () => {
+describe('Component: autoAssignTemplateSummaryItem:', () => {
   beforeEach(function() {
     this.initModules(moduleName);
     this.injectDependencies(
@@ -14,12 +14,12 @@ describe('Component: licenseSummaryItem:', () => {
 
   describe('primary behaviors (view):', () => {
     it('should render nothing', function () {
-      this.compileComponent('licenseSummaryItem', {});
-      expect(this.view.find('.license-summary-item').length).toBe(0);
+      this.compileComponent('autoAssignTemplateSummaryItem', {});
+      expect(this.view.find('.auto-assign-template-summary-item').length).toBe(0);
     });
 
     it('should render given a title, usage and volume', function () {
-      this.compileComponent('licenseSummaryItem', {
+      this.compileComponent('autoAssignTemplateSummaryItem', {
         totalUsage: 3,
         totalVolume: 3,
         l10nTitle: this.$scope.fakeLabel,

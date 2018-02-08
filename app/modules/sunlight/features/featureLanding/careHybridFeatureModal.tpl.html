@@ -13,7 +13,7 @@
           ng-repeat="ftIcon in feature.icons">
               <i class="icon {{ftIcon}}" ng-if="ftIcon"></i>
           </label>
-        <label class="feature-icon-circle {{feature.color}}" ng-if="feature.id == 'AA'">
+        <label class="feature-icon-circle {{feature.color}}" ng-if="feature.id === 'AA'">
             {{feature.code | translate}}
           </label>
       </div>

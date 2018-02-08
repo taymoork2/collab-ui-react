@@ -46,7 +46,7 @@
       </cs-card-layout>
       <cs-card-layout class="two-thirds">
         <div ng-repeat="sec in nav.webexReportsObject.reports.sections">
-          <cs-card class="cs-card--large" ng-if="$index != 0">
+          <cs-card class="cs-card--large" ng-if="$index !== 0">
             <article>
               <header id="{{sec.section_name}}" name="{{sec.section_name}}" class="no-bullet">
                 <h3 xml:lang={{sec.lang}}>

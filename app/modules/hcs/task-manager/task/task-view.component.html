@@ -9,9 +9,9 @@
             </button>
         </cs-page-sub-header-right>
     </cs-page-sub-header>
-    <div ng-if="$ctrl.pageState != $ctrl.STATE_NEW" class="test-content content-container">
+    <div ng-if="$ctrl.pageState !== $ctrl.STATE_NEW" class="test-content content-container">
         <!-- Show Reload page when all location requests fail-->
-        <div ng-if="$ctrl.pageState == $ctrl.STATE_RELOAD">
+        <div ng-if="$ctrl.pageState === $ctrl.STATE_RELOAD">
             <div class="features-reload">
                 <p class="h4" translate="huronFeatureDetails.sorryMessage"></p>
                 <div class="h2" translate="huronFeatureDetails.reloadMessage"></div>
@@ -19,10 +19,10 @@
             </div>
         </div>
         <!--Show Spinner Icon until controller receives data from back-end-->
-        <div grid-spinner="$ctrl.pageState == $ctrl.STATE_LOADING"></div>
+        <div grid-spinner="$ctrl.pageState === $ctrl.STATE_LOADING"></div>
 
         <!-- Show Cards whenever data is received by controller-->
-        <div ng-if="$ctrl.pageState == $ctrl.STATE_SHOW">
+        <div ng-if="$ctrl.pageState === $ctrl.STATE_SHOW">
           <div class="cs-card-container">
             <cs-card-layout>
               <cs-card ng-repeat="test in $ctrl.tests" class="cs-card--small header-bar grey overview-card grey">

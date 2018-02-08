@@ -4,7 +4,7 @@ import { IToolkitModalService } from 'modules/core/modal';
 
 import './card-users-summary.scss';
 
-type SimpleSummary = Pick<IExtendedStatusSummary, 'activated' | 'error' | 'notActivated'>;
+type SimpleSummary = Pick<IExtendedStatusSummary, 'activated' | 'error' | 'notActivated' | 'total'>;
 
 class CardUsersSummaryController implements ng.IComponentController {
   public summary: IExtendedStatusSummary;
@@ -13,6 +13,7 @@ class CardUsersSummaryController implements ng.IComponentController {
     activated: 0,
     error: 0,
     notActivated: 0,
+    total: 0,
   };
   public state: 'error' | 'pending' | 'activated' | 'noUsers' = 'noUsers';
 
@@ -24,6 +25,7 @@ class CardUsersSummaryController implements ng.IComponentController {
   public $onChanges(changes: { summary: ng.IChangesObject<IExtendedStatusSummary[]> }) {
     if (changes.summary && changes.summary.currentValue) {
       this.sum = _.reduce(changes.summary.currentValue, (acc, summary) => {
+        // TODO: Find why not 'squared-fusion-ec'???
         if (!this.serviceId && summary.serviceId && summary.serviceId !== 'squared-fusion-ec') {
           this.serviceId = summary.serviceId;
         }
@@ -31,11 +33,13 @@ class CardUsersSummaryController implements ng.IComponentController {
           activated: summary.activated + acc.activated,
           error: summary.error + acc.error,
           notActivated: summary.notActivated + acc.notActivated,
+          total: summary.total + acc.total,
         };
       }, {
         activated: 0,
         error: 0,
         notActivated: 0,
+        total: 0,
       });
       if (this.sum.error > 0) {
         this.state = 'error';
@@ -74,15 +78,13 @@ export class CardUsersSummaryComponent implements ng.IComponentOptions {
   public template = `
     <div class="active-card_section">
       <div class="active-card_title" translate="servicesOverview.userStatusesSummary.users"></div>
+      <p ng-if="$ctrl.sum.total > 0"><a href ng-click="$ctrl.openUserStatusReportModal()" translate="servicesOverview.userStatusesSummary.assigned" translate-value-total="{{$ctrl.sum.total}}" translate-interpolation="messageformat"></a></p>
       <div ng-switch="$ctrl.state">
         <div ng-switch-when="error" class="active-card_action">
           <a href ng-click="$ctrl.openUserStatusReportModal()"><span class="badge badge--outline badge--round">{{$ctrl.sum.error}}</span> <span translate="servicesOverview.userStatusesSummary.inError"></span></a>
         </div>
         <div ng-switch-when="pending" class="active-card_action">
           <a href ng-click="$ctrl.openUserStatusReportModal()"><span class="badge badge--outline badge--round">{{$ctrl.sum.notActivated}}</span> <span translate="servicesOverview.userStatusesSummary.inPending"></span></a>
-        </div>
-        <div ng-switch-when="activated" class="active-card_action">
-          <a href ng-click="$ctrl.openUserStatusReportModal()"><span class="badge badge--outline badge--round">{{$ctrl.sum.activated}}</span> <span translate="servicesOverview.userStatusesSummary.active"></span></a>
         </div>
         <div ng-switch-when="noUsers" class="active-card_action">
           <a href ng-click="$ctrl.openEnableUsersModal()"><span translate="servicesOverview.userStatusesSummary.enableUsers"></span></a>
