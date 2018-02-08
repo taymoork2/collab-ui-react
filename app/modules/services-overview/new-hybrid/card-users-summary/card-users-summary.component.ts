@@ -2,12 +2,9 @@ import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
 import { IExtendedStatusSummary } from 'modules/hercules/services/uss.service';
 import { IToolkitModalService } from 'modules/core/modal';
 
-import './card-users-summary.scss';
-
 type SimpleSummary = Pick<IExtendedStatusSummary, 'activated' | 'error' | 'notActivated' | 'total'>;
 
 class CardUsersSummaryController implements ng.IComponentController {
-  public summary: IExtendedStatusSummary;
   public serviceId: HybridServiceId;
   public sum: SimpleSummary = {
     activated: 0,
@@ -20,15 +17,17 @@ class CardUsersSummaryController implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $modal: IToolkitModalService,
+    private $state: ng.ui.IStateService,
   ) {}
 
   public $onChanges(changes: { summary: ng.IChangesObject<IExtendedStatusSummary[]> }) {
     if (changes.summary && changes.summary.currentValue) {
       this.sum = _.reduce(changes.summary.currentValue, (acc, summary) => {
-        // TODO: Find why not 'squared-fusion-ec'???
+        // "Hijack" the reduce function to set which serviceId is relevant in this context
         if (!this.serviceId && summary.serviceId && summary.serviceId !== 'squared-fusion-ec') {
           this.serviceId = summary.serviceId;
         }
+
         return {
           activated: summary.activated + acc.activated,
           error: summary.error + acc.error,
@@ -53,19 +52,17 @@ class CardUsersSummaryController implements ng.IComponentController {
     }
   }
 
-  public openUserStatusReportModal() {
-    this.$modal.open({
-      controller: 'ExportUserStatusesController',
-      controllerAs: 'exportUserStatusesCtrl',
-      template: require('modules/hercules/service-specific-pages/components/user-status-report/export-user-statuses.html'),
-      type: 'small',
-      resolve: {
-        userStatusSummary: () => this.summary,
-      },
-    });
+  public openUserStatusTab(): void {
+    if (this.serviceId === 'squared-fusion-cal') {
+      this.$state.go('calendar-service.users');
+    } else if (this.serviceId === 'squared-fusion-uc') {
+      this.$state.go('call-service.users');
+    } else if (this.serviceId === 'spark-hybrid-impinterop') {
+      this.$state.go('imp-service.users');
+    }
   }
 
-  public openEnableUsersModal() {
+  public openEnableUsersModal(): void {
     this.$modal.open({
       type: 'small',
       template: `<enable-users-modal class="modal-content" service-id="'${this.serviceId}'" dismiss="$dismiss()" close="$close()"></enable-users-modal>`,
@@ -78,13 +75,13 @@ export class CardUsersSummaryComponent implements ng.IComponentOptions {
   public template = `
     <div class="active-card_section">
       <div class="active-card_title" translate="servicesOverview.userStatusesSummary.users"></div>
-      <p ng-if="$ctrl.sum.total > 0"><a href ng-click="$ctrl.openUserStatusReportModal()" translate="servicesOverview.userStatusesSummary.assigned" translate-value-total="{{$ctrl.sum.total}}" translate-interpolation="messageformat"></a></p>
+      <p ng-if="$ctrl.sum.total > 0"><a href ng-click="$ctrl.openUserStatusTab()" translate="servicesOverview.userStatusesSummary.assigned" translate-value-total="{{$ctrl.sum.total}}" translate-interpolation="messageformat"></a></p>
       <div ng-switch="$ctrl.state">
         <div ng-switch-when="error" class="active-card_action">
-          <a href ng-click="$ctrl.openUserStatusReportModal()"><span class="badge badge--outline badge--round">{{$ctrl.sum.error}}</span> <span translate="servicesOverview.userStatusesSummary.inError"></span></a>
+          <span class="badge badge--outline badge--round">{{$ctrl.sum.error}}</span> <span translate="servicesOverview.userStatusesSummary.inError"></span>
         </div>
         <div ng-switch-when="pending" class="active-card_action">
-          <a href ng-click="$ctrl.openUserStatusReportModal()"><span class="badge badge--outline badge--round">{{$ctrl.sum.notActivated}}</span> <span translate="servicesOverview.userStatusesSummary.inPending"></span></a>
+          <span class="badge badge--outline badge--round">{{$ctrl.sum.notActivated}}</span> <span translate="servicesOverview.userStatusesSummary.inPending"></span>
         </div>
         <div ng-switch-when="noUsers" class="active-card_action">
           <a href ng-click="$ctrl.openEnableUsersModal()"><span translate="servicesOverview.userStatusesSummary.enableUsers"></span></a>

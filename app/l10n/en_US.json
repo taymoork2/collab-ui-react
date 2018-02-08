@@ -2287,6 +2287,12 @@
       "label": "Capacity: {{capacity}}%",
       "toolTip": "Capacity: {{capacity}}%<br>Users assigned: {{total}} of {{max}}"
     },
+    "userStatuses": {
+      "summaryTitle": "User Status Summary",
+      "reportTitle": "User Status Report",
+      "description": "The exported report will be a list of users, their state and related details. You can select the type of information that you want included in the report:",
+      "createButton": "Create Report"
+    },
     "sipExplanation": {
       "line1": "You can use one of the following address formats:",
       "line2": "SRV domain (_sips._tcp.<strong>sipmtls.example.com</strong>)",

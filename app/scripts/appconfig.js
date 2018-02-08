@@ -5024,6 +5024,11 @@
             },
             parent: 'main',
             abstract: true,
+            resolve: {
+              hasCapacityFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCapacity);
+              },
+            },
           })
           .state('calendar-service.list', {
             url: '/services/calendar',
@@ -5041,6 +5046,14 @@
             views: {
               calendarServiceView: {
                 template: '<calendar-service-settings-page></calendar-service-settings-page>',
+              },
+            },
+          })
+          .state('calendar-service.users', {
+            url: '/services/calendar/users',
+            views: {
+              calendarServiceView: {
+                template: '<calendar-service-users-page></calendar-service-users-page>',
               },
             },
           })
@@ -5077,6 +5090,11 @@
               clusterId: null,
             },
             parent: 'main',
+            resolve: {
+              hasCapacityFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCapacity);
+              },
+            },
           })
           .state('call-service.list', {
             url: '/services/call',
@@ -5097,6 +5115,14 @@
               },
             },
           })
+          .state('call-service.users', {
+            url: '/services/call/users',
+            views: {
+              callServiceView: {
+                template: '<call-service-users-page></call-service-users-page>',
+              },
+            },
+          })
           .state('imp-service', {
             template: require('modules/hercules/service-specific-pages/imp-service-pages/imp-service-container.html'),
             controller: 'ImpServiceContainerController',
@@ -5107,9 +5133,23 @@
             },
             parent: 'main',
             resolve: {
-              clusterId: /* @ngInject */ function ($stateParams) {
-                return $stateParams.clusterId;
+              hasCapacityFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCapacity);
               },
+            },
+          })
+          .state('imp-service.list', {
+            url: '/services/imp',
+            views: {
+              impServiceView: {
+                template: require('modules/hercules/service-specific-pages/imp-service-pages/imp-service-resources.html'),
+              },
+              controller: /* @ngInject */ function (Analytics) {
+                return Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_IMP_LIST);
+              },
+            },
+            params: {
+              clusterId: null,
             },
           })
           .state('imp-service.settings', {
@@ -5125,15 +5165,12 @@
               },
             },
           })
-          .state('imp-service.list', {
-            url: '/services/imp',
+          .state('imp-service.users', {
+            url: '/services/imp/users',
             views: {
               impServiceView: {
-                template: require('modules/hercules/service-specific-pages/imp-service-pages/imp-service-resources.html'),
+                template: '<imp-service-users-page></imp-service-users-page>',
               },
-            },
-            params: {
-              clusterId: null,
             },
           })
           .state('private-trunk-settings', {
