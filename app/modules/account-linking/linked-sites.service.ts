@@ -9,10 +9,24 @@ export class LinkedSitesService {
               private Userservice,
               private LinkedSitesWebExService,
               private LinkedSitesMockService,
-              private Notification: Notification) {
+              private Notification: Notification,
+              private FeatureToggleService) {
   }
 
   public init(): void {
+  }
+
+  public linkedSitesNotConfigured(): ng.IPromise<boolean> {
+    return this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasAccountLinkingPhase2)
+      .then( (supports) => {
+        if (supports === true) {
+          const linkedSites = this.Authinfo.getConferenceServicesWithLinkedSiteUrl();
+          return (!!linkedSites && linkedSites.length > 0);
+        }
+      }).catch( (error) => {
+        this.$log.debug('Problems fetching feature toggle: ', error);
+        return false;
+      });
   }
 
   public filterSites(): ng.IPromise<IACSiteInfo[]> {
