@@ -8727,6 +8727,7 @@
     "pendingActivation": "Pending Activation",
     "onlineOnly1": "Purchases from Cisco Online Marketplace only.",
     "onlineOnly2": "Cisco and Cisco Partner invoices are not listed here.",
+    "invoiceError": "An error occurred while generating a link to the invoice because the buyer could not be found in the identity system (CI).",
     "loadError": "An error occurred while loading order history."
   },
   "ciRoles": {
