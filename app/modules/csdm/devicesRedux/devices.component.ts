@@ -208,7 +208,6 @@ export class DevicesCtrl implements ng.IComponentController {
     this.fetchAsyncSettings();
   }
 
-  //TODO this is a duplicate from devices.controller.ts in squared  extract to class or maintain
   private fetchAsyncSettings() {
     const ataPromise = this.FeatureToggleService.csdmATAGetStatus().then((result: boolean) => {
       this.showATA = result;
