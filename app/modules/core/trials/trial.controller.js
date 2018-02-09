@@ -237,6 +237,7 @@
         atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         ftAdvanceCareTrials: FeatureToggleService.atlasCareInboundTrialsGetStatus(),
+        ftK1Promotion: FeatureToggleService.atlasCareCvcToCdcMigrationGetStatus(),
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(), //TODO add true for shipping testing.
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; }),
         huronPstn: FeatureToggleService.supports(FeatureToggleService.features.huronPstn),
@@ -254,6 +255,7 @@
           vm.showContextServiceTrial = true;
           vm.showBasicCare = results.ftCareTrials;
           vm.showAdvanceCare = results.ftAdvanceCareTrials;
+          vm.k1Promotion = results.ftK1Promotion;
           vm.showCare = vm.showBasicCare || vm.showAdvanceCare;
           vm.sbTrial = results.atlasDarling;
           vm.atlasTrialsShipDevicesEnabled = results.ftShipDevices;
