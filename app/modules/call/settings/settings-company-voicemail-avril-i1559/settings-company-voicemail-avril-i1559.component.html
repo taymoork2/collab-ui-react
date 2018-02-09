@@ -5,23 +5,19 @@
     toggle-id="companyVoicemailToggle"
     name="companyVoicemailToggle"
     size="small"
-    cs-change="$ctrl.onCompanyVoicemailChange(toggleValue)">
+    cs-change="$ctrl.onCompanyVoicemailChange(toggleValue)"
+    cs-aria-label="{{::'serviceSetupModal.companyVoicemail' | translate}}">
   </cs-toggle-switch>
   <div ng-if="$ctrl.companyVoicemailEnabled" class="save-popup-margin">
     <label class="control-label" translate="serviceSetupModal.vmDeliveryMethods"></label>
-    <input
-      cs-input
-      type="checkbox"
+    <input cs-input type="checkbox"
       ng-model="$ctrl.localAvrilFeatures.VM2T"
       id="voicemailToPhone"
       name="voicemailToPhone"
       ng-change="$ctrl.onVoicemailToPhoneChanged()"
       cs-input-label="{{::'serviceSetupModal.voicemailToPhoneLabel' | translate}}">
     <div ng-if="$ctrl.localAvrilFeatures.VM2T" class="indent-left">
-      <p
-        class="description-block"
-        translate="serviceSetupModal.voicemailToPhoneDescriptionText">
-      </p>
+      <p class="description-block" translate="serviceSetupModal.voicemailToPhoneDescriptionText"></p>
       <div class="medium-5 external-voicemail-number">
         <cs-select
           name="companyVoicemailNumber"
@@ -35,18 +31,14 @@
         </cs-select>
       </div>
     </div>
-    <input
-      cs-input
-      type="checkbox"
+    <input cs-input type="checkbox"
       ng-model="$ctrl.localAvrilFeatures.VM2E"
       id="voicemailToEmail"
       name="voicemailToEmail"`
       ng-change="$ctrl.onVoicemailFeaturesChanged()"
       cs-input-label="{{::'serviceSetupModal.voicemailToEmailLabel' | translate}}">
       <div class="cs-checkbox-group" ng-if="$ctrl.localAvrilFeatures.VM2E">
-        <input
-          cs-input
-          type="checkbox"
+        <input cs-input type="checkbox"
           id="emailWithAttachment"
           name="emailWithAttachment"
           ng-model="$ctrl.localAvrilFeatures.VM2E_Attachment"
@@ -75,9 +67,7 @@
       </div>
     <div>
       <div ng-if="$ctrl.avrilI1559">
-        <input
-        cs-input
-        type="checkbox"
+        <input cs-input type="checkbox"
         ng-model="$ctrl.localAvrilFeatures.VM2S"
         id="voicemailToSpark"
         name="voicemailToSpark"
@@ -85,9 +75,7 @@
         ng-change="$ctrl.onVoicemailFeaturesChanged(value)"
         cs-input-label="{{::'serviceSetupModal.voicemailToSparkLabel' | translate}}">
         <div class="cs-checkbox-group" ng-if="$ctrl.localAvrilFeatures.VM2S || !$ctrl.isMessageEntitled">
-          <input
-            cs-input
-            type="checkbox"
+          <input cs-input type="checkbox"
             id="sparkWithAttachment"
             name="sparkWithAttachment"
             ng-model="$ctrl.localAvrilFeatures.VM2S_Attachment"
@@ -110,9 +98,7 @@
       <div>
         <label ng-class="{ 'disable-color': !$ctrl.isMessageEntitled}" class="control-label" translate="serviceSetupModal.vmPinManagement"></label>
         <p ng-class="{ 'disable-color': !$ctrl.isMessageEntitled, 'description-block': $ctrl.isMessageEntitled}" translate="serviceSetupModal.vmPinHelp"></p>
-        <input
-          cs-input
-          type="checkbox"
+        <input cs-input type="checkbox"
           ng-model="$ctrl.localAvrilFeatures.VMOTP"
           ng-disabled="!$ctrl.isMessageEntitled"
           id="enableOTP"

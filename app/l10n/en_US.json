@@ -1645,6 +1645,7 @@
     "proPackTooltip": "This premium feature is available with Pro Pack. Contact your partner to learn more.",
     "provision": "Provision",
     "quantity": "Qty",
+    "readonly": "Readonly",
     "releaseChannel": "Release Channel",
     "remove": "Remove",
     "rename": "Rename",
