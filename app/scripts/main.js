@@ -109,6 +109,7 @@
     'Hercules',
     'Huron',
     'Sunlight',
+    require('modules/csdm/services').default,
     require('modules/squared/devices/services/CsdmCacheUpdater'),
     require('modules/squared/devices/services/CsdmPoller'),
     require('modules/squared/helpdesk').default,
