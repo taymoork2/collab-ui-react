@@ -21,25 +21,30 @@ describe('DeviceBrandingSettingCtrl', () => {
 
   const imageFile = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUp/hOeZ81YAAAACklEQVQIW2NgAAAAAgABYkBPaAAAAABJRU5ErkJggg==';
 
-  describe('with existing branding', function () {
+  describe('with existing branding', () => {
     let lightLogoUrl, darkLogoUrl, halfwakeLogoUrl, notifyUrl;
     beforeEach(function () {
       lightLogoUrl = this.UrlConfig.getAdminServiceUrl() + 'organizations/' + this.Authinfo.getOrgId() + '/config/files/8AAFF7C25CCE77B2015CCE77E5050001';
       darkLogoUrl = this.UrlConfig.getAdminServiceUrl() + 'organizations/' + this.Authinfo.getOrgId() + '/config/files/8AAFF7C25CCE77B2015CCE77E5050003';
       halfwakeLogoUrl = this.UrlConfig.getAdminServiceUrl() + 'organizations/' + this.Authinfo.getOrgId() + '/config/files/8AAFF7C25CCE77B2015CCE77E5050009';
       notifyUrl = this.UrlConfig.getCsdmServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/devices/update';
-      this.$httpBackend.whenGET(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/branding').respond(200, {
-        value: {
-          logoLight: { url: lightLogoUrl },
-          logoDark: { url: darkLogoUrl },
-          halfwakeBackground: { url: halfwakeLogoUrl },
-        },
-      });
+      this.$httpBackend.whenGET(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/userinterface.halfwakebackground')
+        .respond(200, {
+          value: { url: halfwakeLogoUrl },
+        });
+      this.$httpBackend.whenGET(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/userinterface.halfwakebranding')
+        .respond(200, {
+          value: { url: lightLogoUrl },
+        });
+      this.$httpBackend.whenGET(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/userinterface.branding')
+        .respond(200, {
+          value: { url: darkLogoUrl },
+        });
       this.$httpBackend.whenGET(lightLogoUrl + '/tempUrl').respond(200, { tempURL: 'light URL' });
       this.$httpBackend.whenGET(darkLogoUrl + '/tempUrl').respond(200, { tempURL: 'dark URL' });
       this.$httpBackend.whenGET(halfwakeLogoUrl + '/tempUrl').respond(200, { tempURL: 'halfwake URL' });
     });
-    describe('on init', function () {
+    describe('on init', () => {
       beforeEach(function () {
         initComponent.apply(this);
       });
@@ -95,13 +100,18 @@ describe('DeviceBrandingSettingCtrl', () => {
               });
 
               // should save branding
-              this.$httpBackend.expectPUT(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/branding').respond(204, {
-                value: {
-                  logoLight: { url: 'lightlogo2' },
-                  logoDark: { url: 'darklogo2' },
-                  halfwakeBackground: { url: 'halfwakelogo2' },
-                },
-              });
+              this.$httpBackend.expectPUT(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/userinterface.halfwakebackground')
+                .respond(204, {
+                  value: { url: 'halfwakelogo2' },
+                });
+              this.$httpBackend.expectPUT(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/userinterface.halfwakebranding')
+                .respond(204, {
+                  value: { url: 'lightlogo2' },
+                });
+              this.$httpBackend.expectPUT(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/userinterface.branding')
+                .respond(204, {
+                  value: { url: 'darklogo2' },
+                });
 
               //should delete old files
               this.$httpBackend.expectDELETE(halfwakeLogoUrl).respond(204);
@@ -116,7 +126,7 @@ describe('DeviceBrandingSettingCtrl', () => {
               this.$httpBackend.flush();
             });
 
-            it('should delete old files and not show error', function () {
+            it('should delete old files and not show error1', function () {
               expect(this.Notification.errorResponse).not.toHaveBeenCalled();
             });
           });
@@ -153,13 +163,10 @@ describe('DeviceBrandingSettingCtrl', () => {
               });
 
               // should save branding
-              this.$httpBackend.expectPUT(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/branding').respond(204, {
-                value: {
-                  logoLight: { url: lightLogoUrl },
-                  logoDark: { url: 'darklogo2' },
-                  halfwakeBackground: { url: halfwakeLogoUrl },
-                },
-              });
+              this.$httpBackend.expectPUT(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/userinterface.branding')
+                .respond(204, {
+                  value: { url: 'darklogo2' },
+                });
 
               //should delete old files
               this.$httpBackend.expectDELETE(darkLogoUrl).respond(204);
@@ -195,21 +202,29 @@ describe('DeviceBrandingSettingCtrl', () => {
           describe('with full success', () => {
             beforeEach(function () {
               // should save branding without logoDark
-              this.$httpBackend.expectPUT(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/branding',
+              this.$httpBackend.expectPUT(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/userinterface.halfwakebackground',
                 {
                   value: {
-                    logoLight: { url: lightLogoUrl },
-                    // logoDark: undefined,
-                    halfwakeBackground: { url: halfwakeLogoUrl },
+                    source: 'Spark',
+                    url: halfwakeLogoUrl,
                   },
                   enforced: false,
                 })
                 .respond(204, {
-                  value: {
-                    logoLight: { url: lightLogoUrl },
-                    halfwakeBackground: { url: halfwakeLogoUrl },
-                  },
+                  value: { url: 'halfwakelogo2' },
                 });
+              this.$httpBackend.expectPUT(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/userinterface.halfwakebranding',
+                {
+                  value: {
+                    source: 'Spark',
+                    url: lightLogoUrl,
+                  },
+                  enforced: false,
+                })
+                .respond(204, {
+                  value: { url: lightLogoUrl },
+                });
+              this.$httpBackend.expectDELETE(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/userinterface.branding').respond(204)
 
               //should delete old files
               this.$httpBackend.expectDELETE(darkLogoUrl).respond(204);
@@ -233,7 +248,9 @@ describe('DeviceBrandingSettingCtrl', () => {
 
   describe('with no existing branding', () => {
     beforeEach(function () {
-      this.$httpBackend.whenGET(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/branding').respond(404, {});
+      this.$httpBackend.whenGET(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/userinterface.branding').respond(404, {});
+      this.$httpBackend.whenGET(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/userinterface.halfwakebranding').respond(404, {});
+      this.$httpBackend.whenGET(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/userinterface.halfwakebackground').respond(404, {});
     });
 
     describe('on init', () => {
@@ -281,13 +298,18 @@ describe('DeviceBrandingSettingCtrl', () => {
               });
 
               // should save branding
-              this.$httpBackend.expectPUT(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/branding').respond(204, {
-                value: {
-                  logoLight: { url: 'lightlogo2' },
-                  logoDark: { url: 'darklogo2' },
-                  halfwakeBackground: { url: 'halfwakelogo2' },
-                },
-              });
+              this.$httpBackend.expectPUT(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/userinterface.halfwakebackground')
+                .respond(204, {
+                  value: { url: 'halfwakelogo2' },
+                });
+              this.$httpBackend.expectPUT(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/userinterface.halfwakebranding')
+                .respond(204, {
+                  value: { url: 'lightlogo2' },
+                });
+              this.$httpBackend.expectPUT(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/userinterface.branding')
+                .respond(204, {
+                  value: { url: 'darklogo2' },
+                });
 
               const notifyUrl = this.UrlConfig.getCsdmServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/devices/update';
               //should notify all devices
@@ -410,12 +432,15 @@ describe('DeviceBrandingSettingCtrl', () => {
 
               // should save branding
               this.$httpBackend
-                .expectPUT(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/branding',
-                  { value: { logoLight: { url: downloadUrl } }, enforced: false })
+                .expectPUT(this.UrlConfig.getLyraServiceUrl() + '/configuration/rules/organization/' + this.Authinfo.getOrgId() + '/userinterface.halfwakebranding'
+                  , {
+                    value: {
+                      source: 'Spark',
+                      url: downloadUrl,
+                    }, enforced: false,
+                  })
                 .respond(204, {
-                  value: {
-                    logoLight: { url: 'lightlogo2' },
-                  },
+                  value: { url: 'lightlogo2' },
                 });
 
               const notifyUrl = this.UrlConfig.getCsdmServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/devices/update';
