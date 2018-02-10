@@ -1,5 +1,5 @@
 import { ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
-import { IAutoAssignTemplateData, IUserEntitlementsViewState } from 'modules/core/users/shared/auto-assign-template/auto-assign-template.interfaces';
+import { IAutoAssignTemplateData, IAutoAssignTemplateDataViewData, IAutoAssignTemplateResponse, IUserEntitlementsViewState } from 'modules/core/users/shared/auto-assign-template/auto-assign-template.interfaces';
 import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template/auto-assign-template.service';
 import { IHybridServices } from 'modules/core/users/userAdd/hybrid-services-entitlements-panel/hybrid-services-entitlements-panel.service';
 import { IUserEntitlementRequestItem, UserEntitlementState } from 'modules/core/users/shared/onboard/onboard.interfaces';
@@ -130,7 +130,36 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
     return existingItemEnabledStatus === isSelected;
   }
 
-  public hasSelectionChanges(): boolean {
+  public allowNext(): boolean {
+    return this.hasSelectionChanges() && this.targetStateViewDataHasSelections();
+  }
+
+  private mkTargetStateViewData(): IAutoAssignTemplateDataViewData {
+    const template: IAutoAssignTemplateResponse = _.get(this.autoAssignTemplateData, 'apiData.template');
+
+    // start with template to populate view data
+    const result = this.AutoAssignTemplateService.toViewData(template);
+
+    // combine it with 'LICENSE' and 'USER_ENTITLEMENT' selections from user changes
+    _.forEach([
+      AssignableServicesItemCategory.LICENSE,
+      AssignableServicesItemCategory.USER_ENTITLEMENT,
+    ], (itemCategory) => {
+      _.assignIn(result[itemCategory], _.get(this.autoAssignTemplateData, `userChangesData.${itemCategory}`));
+    });
+    return result;
+  }
+
+  private targetStateViewDataHasSelections(): boolean {
+    const targetStateViewData = this.mkTargetStateViewData();
+    const licenseSelections = _.get(targetStateViewData, AssignableServicesItemCategory.LICENSE);
+    const hasLicenseSelections = _.some(licenseSelections, { isSelected: true });
+    const userEntitlementSelections = _.get(targetStateViewData, AssignableServicesItemCategory.USER_ENTITLEMENT);
+    const hasUserEntitlementSelections = _.some(userEntitlementSelections, { isSelected: true });
+    return hasLicenseSelections || hasUserEntitlementSelections;
+  }
+
+  private hasSelectionChanges(): boolean {
     const hasNoChanges =
       _.isEmpty(_.get(this.autoAssignTemplateData, `userChangesData.${AssignableServicesItemCategory.LICENSE}`)) &&
       _.isEmpty(_.get(this.autoAssignTemplateData, `userChangesData.${AssignableServicesItemCategory.USER_ENTITLEMENT}`));
