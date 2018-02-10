@@ -5,6 +5,8 @@ import { IHybridServices } from 'modules/core/users/userAdd/hybrid-services-enti
 import { IUserEntitlementRequestItem, UserEntitlementState } from 'modules/core/users/shared/onboard/onboard.interfaces';
 import { OfferName } from 'modules/core/shared';
 import { IAssignableLicenseCheckboxState } from 'modules/core/users/userAdd/assignable-services/shared/license-usage-util.interfaces';
+import { ICrCheckboxItemState } from 'modules/core/users/shared/cr-checkbox-item/cr-checkbox-item.component';
+import { AssignableServicesItemCategory } from 'modules/core/users/userAdd/assignable-services/shared/license-usage-util.interfaces';
 
 class EditAutoAssignTemplateModalController implements ng.IComponentController {
 
@@ -56,27 +58,101 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
     });
   }
 
-  public recvUpdate($event): void {
-    const itemId = _.get($event, 'itemId');
-    const itemCategory = _.get($event, 'itemCategory');
-    const item = _.get($event, 'item');
+  public recvUpdate($event: {
+    itemId: string;
+    itemCategory: AssignableServicesItemCategory;
+    item: ICrCheckboxItemState;
+  }): void {
+    const { itemId, itemCategory, item } = $event;
     if (!itemId || !itemCategory || !item) {
       return;
     }
+
+    // update view data entry
+    this.updateAutoAssignTemplateDataViewData({ itemId, itemCategory, item });
+
+    // track user input change to determine whether to unlock "next" button
+    const isSelected = item.isSelected;
+    this.trackItemSelectionChange({ itemId, itemCategory, isSelected });
+  }
+
+  private updateAutoAssignTemplateDataViewData(viewDataItem: {
+    itemId: string;
+    itemCategory: AssignableServicesItemCategory;
+    item: ICrCheckboxItemState;
+  }): void {
+    const { itemId, itemCategory, item } = viewDataItem;
+
     // notes:
     // - item id can potentially contain period chars ('.')
     // - so we wrap interpolated value in double-quotes to prevent unintended deep property creation
     _.set(this.autoAssignTemplateData, `viewData.${itemCategory}["${itemId}"]`, item);
   }
 
+  private trackItemSelectionChange(itemSelectionChange: {
+    itemId: string;
+    itemCategory: AssignableServicesItemCategory;
+    isSelected: boolean;
+  }): void {
+    const { itemId, itemCategory, isSelected } = itemSelectionChange;
+    // notes:
+    // - if a checkbox is selected twice, it effectively means "no change"
+    // - we represent this by tracking the first change, and then deleting the entry on the second
+    const existingItem: ICrCheckboxItemState = _.get(this.autoAssignTemplateData, `userChangesData.${itemCategory}.["${itemId}"]`);
+    if (existingItem) {
+      // - delete item only if it is actually changing its selection state
+      if (existingItem.isSelected !== isSelected) {
+        _.unset(this.autoAssignTemplateData, `userChangesData.${itemCategory}["${itemId}"]`);
+      }
+      return;
+    }
+
+    // early out if change is already represented by the corresponding item in existing template
+    if (this.isChangeAlreadyRepresented({ itemId, itemCategory, isSelected })) {
+      return;
+    }
+
+    // no entry yet, track it
+    _.set(this.autoAssignTemplateData, `userChangesData.${itemCategory}.["${itemId}"]`, { isSelected });
+  }
+
+  private isChangeAlreadyRepresented(itemSelectionChange: {
+    itemId: string;
+    itemCategory: AssignableServicesItemCategory;
+    isSelected: boolean;
+  }): boolean {
+    const { itemId, itemCategory, isSelected } = itemSelectionChange;
+    const existingItem = this.AutoAssignTemplateService.getLicenseOrUserEntitlement(itemId, itemCategory, this.autoAssignTemplateData);
+    if (!existingItem) {
+      return !isSelected;
+    }
+    const existingItemEnabledStatus = this.AutoAssignTemplateService.getIsEnabled(existingItem, itemCategory);
+    return existingItemEnabledStatus === isSelected;
+  }
+
+  public hasSelectionChanges(): boolean {
+    const hasNoChanges =
+      _.isEmpty(_.get(this.autoAssignTemplateData, `userChangesData.${AssignableServicesItemCategory.LICENSE}`)) &&
+      _.isEmpty(_.get(this.autoAssignTemplateData, `userChangesData.${AssignableServicesItemCategory.USER_ENTITLEMENT}`));
+    return !hasNoChanges;
+  }
+
   public recvHybridServicesEntitlementsUpdate(entitlements: IUserEntitlementRequestItem[]): void {
     _.forEach(entitlements, (entitlement) => {
       const { entitlementName, entitlementState } = entitlement;
       const isSelected = entitlementState === UserEntitlementState.ACTIVE;
-      _.set(this.autoAssignTemplateData, `viewData.USER_ENTITLEMENT.${entitlementName}`, {
+      const itemId = entitlementName;
+      const itemCategory = AssignableServicesItemCategory.USER_ENTITLEMENT;
+      const item = {
         isSelected: isSelected,
         isDisabled: false,
-      });
+      };
+
+      // update view data entry
+      this.updateAutoAssignTemplateDataViewData({ itemId, itemCategory, item });
+
+      // track user input change to determine whether to unlock "next" button
+      this.trackItemSelectionChange({ itemId, itemCategory, isSelected });
     });
     this.updateHuronCallLicenses();
   }
@@ -108,7 +184,7 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
   }
 
   public getUserEntitlements(): IUserEntitlementsViewState {
-    return _.get(this.autoAssignTemplateData, `viewData.USER_ENTITLEMENT`);
+    return _.get(this.autoAssignTemplateData, `viewData.${AssignableServicesItemCategory.USER_ENTITLEMENT}`);
   }
 
   public getHybridServices(): IHybridServices {
