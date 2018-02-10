@@ -8,7 +8,7 @@ import { IAssignableLicenseCheckboxState } from 'modules/core/users/userAdd/assi
 import { ICrCheckboxItemState } from 'modules/core/users/shared/cr-checkbox-item/cr-checkbox-item.component';
 import { AssignableServicesItemCategory } from 'modules/core/users/userAdd/assignable-services/shared/license-usage-util.interfaces';
 
-class EditAutoAssignTemplateModalController implements ng.IComponentController {
+export class EditAutoAssignTemplateModalController implements ng.IComponentController {
 
   private prevState: string;
   private dismiss: Function;
