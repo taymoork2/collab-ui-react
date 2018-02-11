@@ -1,7 +1,7 @@
 import moduleName from './index';
 
 describe('SipRegistrationSectionCtrl', () => {
-  let $componentController, $scope, $q, HybridServicesClusterService;
+  let $componentController, $scope, $q, HybridServicesClusterService, SipRegistrationSectionService;
 
   beforeEach(angular.mock.module(moduleName));
 
@@ -13,20 +13,22 @@ describe('SipRegistrationSectionCtrl', () => {
   beforeEach(initSpies);
   afterEach(cleanup);
 
-  function dependencies (_$componentController_, _$q_, $rootScope, _HybridServicesClusterService_) {
+  function dependencies (_$componentController_, _$q_, $rootScope, _HybridServicesClusterService_, _SipRegistrationSectionService_) {
     $componentController = _$componentController_;
     $q = _$q_;
     $scope = $rootScope.$new();
     HybridServicesClusterService = _HybridServicesClusterService_;
+    SipRegistrationSectionService = _SipRegistrationSectionService_;
   }
 
   function cleanup() {
-    $componentController = $scope = $q = HybridServicesClusterService = undefined;
+    $componentController = $scope = $q = HybridServicesClusterService = SipRegistrationSectionService = undefined;
   }
 
   function initSpies() {
-    spyOn(HybridServicesClusterService, 'setProperties').and.returnValue($q.resolve({}));
     spyOn(HybridServicesClusterService, 'getProperties');
+    spyOn(HybridServicesClusterService, 'setProperties').and.returnValue($q.resolve({}));
+    spyOn(SipRegistrationSectionService, 'saveSipTrunkUrl').and.returnValue($q.resolve({}));
   }
 
   function initController(cluster?: ICluster) {
@@ -55,7 +57,6 @@ describe('SipRegistrationSectionCtrl', () => {
   });
 
   it('should save a SIP trunk with the correct data', () => {
-    HybridServicesClusterService.getProperties.and.returnValue($q.resolve({}));
     const cluster = {
       id: 'fake-id',
     };
@@ -63,9 +64,7 @@ describe('SipRegistrationSectionCtrl', () => {
     const ctrl = initController(cluster);
     ctrl.sipurlconfiguration = sipUrl;
     ctrl.saveSipTrunk();
-    expect(HybridServicesClusterService.setProperties).toHaveBeenCalledWith(cluster.id, jasmine.objectContaining({
-      'mf.ucSipTrunk': sipUrl,
-    }));
+    expect(SipRegistrationSectionService.saveSipTrunkUrl).toHaveBeenCalledWith(ctrl.sipurlconfiguration, cluster.id);
   });
 
 });

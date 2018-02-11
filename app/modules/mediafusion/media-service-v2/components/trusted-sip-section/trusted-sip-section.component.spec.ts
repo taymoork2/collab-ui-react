@@ -2,7 +2,7 @@ import moduleName from './index';
 
 describe('TrustedSipSectionCtrl', () => {
 
-  let $componentController, $scope, $q, HybridServicesClusterService;
+  let $componentController, $scope, $q, HybridServicesClusterService, TrustedSipSectionService;
 
   beforeEach(angular.mock.module(moduleName));
 
@@ -14,20 +14,22 @@ describe('TrustedSipSectionCtrl', () => {
   beforeEach(initSpies);
   afterEach(cleanup);
 
-  function dependencies (_$componentController_, $rootScope, _$q_, _HybridServicesClusterService_) {
+  function dependencies (_$componentController_, $rootScope, _$q_, _HybridServicesClusterService_, _TrustedSipSectionService_) {
     $componentController = _$componentController_;
     $scope = $rootScope.$new();
     $q = _$q_;
     HybridServicesClusterService = _HybridServicesClusterService_;
+    TrustedSipSectionService = _TrustedSipSectionService_;
   }
 
   function cleanup() {
-    $componentController = $scope = $q = HybridServicesClusterService = undefined;
+    $componentController = $scope = $q = HybridServicesClusterService = TrustedSipSectionService = undefined;
   }
 
   function initSpies() {
     spyOn(HybridServicesClusterService, 'setProperties').and.returnValue($q.resolve({}));
     spyOn(HybridServicesClusterService, 'getProperties');
+    spyOn(TrustedSipSectionService, 'saveSipConfigurations');
   }
 
   function initController(cluster?: ICluster) {
@@ -84,7 +86,6 @@ describe('TrustedSipSectionCtrl', () => {
 
   it('should save a list of trusted SIP sources with the correct data', () => {
     HybridServicesClusterService.getProperties.and.returnValue($q.resolve({}));
-
     const cluster = {
       id: 'fake-id',
     };
@@ -98,9 +99,7 @@ describe('TrustedSipSectionCtrl', () => {
     const ctrl = initController(cluster);
     ctrl.trustedsipconfiguration = sipSources;
     ctrl.saveTrustedSip();
-    expect(HybridServicesClusterService.setProperties).toHaveBeenCalledWith(cluster.id, jasmine.objectContaining({
-      'mf.trustedSipSources': `${source1}, ${source2}`,
-    }));
+    expect(TrustedSipSectionService.saveSipConfigurations).toHaveBeenCalledWith(ctrl.trustedsipconfiguration, cluster.id);
   });
 
 });
