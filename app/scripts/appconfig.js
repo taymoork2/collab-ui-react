@@ -1153,7 +1153,7 @@
           })
           .state('users.convert.results', {
             views: {
-              'usersAdd@users.add': {
+              'usersConvert@users.convert': {
                 template: '<add-users-results-modal dismiss="$dismiss()" convert-pending="$resolve.convertPending" convert-users-flow="$resolve.convertUsersFlow" num-updated-users="$resolve.numUpdatedUsers" num-added-users="$resolve.numAddedUsers" results="$resolve.results"></add-users-results-modal>',
               },
             },
@@ -4235,6 +4235,34 @@
             url: '/nodes',
             template: '<hybrid-services-nodes-page back-state="$resolve.backState" cluster-id="$resolve.id"></hybrid-services-nodes-page>',
           })
+          .state('context-cluster-sidepanel', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<cluster-sidepanel-overview cluster-type="\'cs_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType"></cluster-sidepanel-overview>',
+              },
+              'header@context-cluster-sidepanel': {
+                template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'),
+              },
+              'side-panel-container@context-cluster-sidepanel': {
+                template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-content.html'),
+              },
+            },
+            // If data not present, $state.current.data.displayName can't be changed
+            data: {},
+            params: {
+              clusterId: null,
+              connectorType: null,
+            },
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
+              connectorType: /* @ngInject */ function ($stateParams) {
+                return $stateParams.connectorType;
+              },
+            },
+          })
           .state('context-fields', {
             url: '/services/context/fields',
             parent: 'context',
@@ -4418,31 +4446,12 @@
               displayName: translateDisplayName('sidePanelBreadcrumb.fields'),
             },
           })
-          .state('context-cluster-sidepanel', {
-            parent: 'sidepanel',
+          .state('context-settings', {
+            url: '/services/context/settings',
+            parent: 'context',
             views: {
-              'sidepanel@': {
-                template: '<cluster-sidepanel-overview cluster-type="\'cs_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType"></cluster-sidepanel-overview>',
-              },
-              'header@context-cluster-sidepanel': {
-                template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'),
-              },
-              'side-panel-container@context-cluster-sidepanel': {
-                template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-content.html'),
-              },
-            },
-            // If data not present, $state.current.data.displayName can't be changed
-            data: {},
-            params: {
-              clusterId: null,
-              connectorType: null,
-            },
-            resolve: {
-              id: /* @ngInject */ function ($stateParams) {
-                return $stateParams.clusterId;
-              },
-              connectorType: /* @ngInject */ function ($stateParams) {
-                return $stateParams.connectorType;
+              contextServiceView: {
+                template: '<context-settings></context-settings>',
               },
             },
           })

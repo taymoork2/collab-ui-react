@@ -9,12 +9,14 @@
   <cs-sp-section class="hybrid-services-user-sidepanel">
     <div class="section-title-row">
       <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-cal"></span>
-      <cs-toggle-switch ng-if="!$ctrl.loadingPage"
-                        toggle-id="calendarServiceEntitledToggle"
-                        ng-model="$ctrl.selectedEntitledToggle"
-                        cs-change="$ctrl.changeEntitlement(toggleValue)"
-                        size="small"
-                        is-disabled="$ctrl.savingPage">
+      <cs-toggle-switch
+        ng-if="!$ctrl.loadingPage"
+        toggle-id="calendarServiceEntitledToggle"
+        ng-model="$ctrl.selectedEntitledToggle"
+        cs-change="$ctrl.changeEntitlement(toggleValue)"
+        size="small"
+        is-disabled="$ctrl.savingPage"
+        cs-aria-label="{{::'hercules.cloudExtensions.serviceNames.squared-fusion-cal' | translate}}">
       </cs-toggle-switch>
       <span cs-loader
             class="hybrid-services-label loader-example--small"

@@ -16,7 +16,13 @@
       <div class="section-title-row">
         <span class="section-name" translate="voicemailPanel.title"></span>
       </div>
-      <cs-toggle-switch ng-model="$ctrl.enableVoicemail" toggle-id="enableVoicemail" name="enableVoicemail" size="small"></cs-toggle-switch>
+      <cs-toggle-switch
+        ng-model="$ctrl.enableVoicemail"
+        toggle-id="enableVoicemail"
+        name="enableVoicemail"
+        size="small"
+        cs-aria-label="{{::'voicemailPanel.title' | translate}}">
+      </cs-toggle-switch>
       <br>
       <br>
       <p><small translate='voicemailPanel.voicemailNote'></small></p>

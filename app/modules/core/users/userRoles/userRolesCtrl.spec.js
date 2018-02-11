@@ -482,6 +482,14 @@ describe('Controller: UserRolesCtrl', function () {
             roleState: 'INACTIVE',
           },
           {
+            roleName: 'User_Admin',
+            roleState: 'INACTIVE',
+          },
+          {
+            roleName: 'Device_Admin',
+            roleState: 'INACTIVE',
+          },
+          {
             roleName: 'Help_Desk',
             roleState: 'INACTIVE',
           },
@@ -540,6 +548,14 @@ describe('Controller: UserRolesCtrl', function () {
             roleState: 'INACTIVE',
           },
           {
+            roleName: 'User_Admin',
+            roleState: 'INACTIVE',
+          },
+          {
+            roleName: 'Device_Admin',
+            roleState: 'INACTIVE',
+          },
+          {
             roleName: 'Help_Desk',
             roleState: 'INACTIVE',
           },
@@ -595,6 +611,14 @@ describe('Controller: UserRolesCtrl', function () {
           },
           {
             roleName: 'Reports',
+            roleState: 'INACTIVE',
+          },
+          {
+            roleName: 'User_Admin',
+            roleState: 'INACTIVE',
+          },
+          {
+            roleName: 'Device_Admin',
             roleState: 'INACTIVE',
           },
           {

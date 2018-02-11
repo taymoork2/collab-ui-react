@@ -83,15 +83,17 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
           if (buyerEmail !== adminEmail) {
             adminEmail = buyerEmail;
           }
-          this.MyCompanyOrdersService.getUserId(adminEmail).then(userId => {
-            // generate the URL to display the Digital River invoice
-            const product = _.includes(orderDetail.productDescriptionList, this.Config.onlineProducts.webex)
-              ? this.Config.onlineProducts.webex : this.Config.onlineProducts.spark;
-            this.DigitalRiverService.getInvoiceUrl(orderDetail.externalOrderId, product, userId)
-              .then((invoiceUrl: string): void => {
-                orderDetail.invoiceURL = invoiceUrl;
-              });
-          });
+          const orgId = this.Authinfo.getOrgId();
+          this.MyCompanyOrdersService.getUserId(orgId, adminEmail)
+            .then(userId => {
+              // generate the URL to display the Digital River invoice
+              const product = _.includes(orderDetail.productDescriptionList, this.Config.onlineProducts.webex)
+                ? this.Config.onlineProducts.webex : this.Config.onlineProducts.spark;
+              this.DigitalRiverService.getInvoiceUrl(orderDetail.externalOrderId, product, userId)
+                .then((invoiceUrl: string): void => {
+                  orderDetail.invoiceURL = invoiceUrl;
+                });
+            });
         }
         this.orderDetailList.push(orderDetail);
       });
@@ -115,7 +117,11 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
     this.Analytics.trackEvent(this.Analytics.sections.ONLINE_ORDER.eventNames.VIEW_INVOICE, {
       orderId: row.externalOrderId,
     });
-    this.DigitalRiverService.logout();
+    if (row.invoiceURL) {
+      this.DigitalRiverService.logout();
+    } else {
+      this.Notification.error('myCompanyOrders.invoiceError');
+    }
   }
 
   private initGridOptions(): void {
