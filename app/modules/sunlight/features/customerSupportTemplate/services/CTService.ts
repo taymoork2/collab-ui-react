@@ -87,10 +87,17 @@ export class CTService {
     });
   }
 
-  public generateCodeSnippet(templateId: uuid) {
+  public generateCodeSnippet(templateId: uuid, templateName: String) {
     const appName = this.UrlConfig.getSunlightBubbleUrl();
     const orgId = this.Authinfo.getOrgId();
+    const orgName = this.Authinfo.getOrgName();
+    const templateNameHelpText = this.$translate.instant('careChatTpl.embedCodeSnippet.templateNameHelpText',
+      { templateName: templateName });
+    const orgNameHelpText = this.$translate.instant('careChatTpl.embedCodeSnippet.orgNameHelpText',
+      { orgName: orgName });
     return '<script>\n' +
+      '//' + templateNameHelpText + '\n' +
+      '//' + orgNameHelpText + '\n' +
       '  (function(document, script) {\n' +
       '  var bubbleScript = document.createElement(script);\n' +
       '  e = document.getElementsByTagName(script)[0];\n' +
@@ -210,6 +217,9 @@ export class CTService {
       resolve: {
         templateId: function () {
           return templateId;
+        },
+        templateName: function () {
+          return templateName;
         },
         templateHeader: function () {
           return header + templateName;
