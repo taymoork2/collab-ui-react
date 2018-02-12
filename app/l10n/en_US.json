@@ -8000,6 +8000,7 @@
     "chatting": "Chatting",
     "chattingMessage": "Chat in progress...",
     "downloadEmbedCode": "Download Embed Code",
+    "embedCodeHowToUseInfo": "Paste this code snippet in your web page &lt;head&gt; container",
     "embed-code": {
       "no-verified-domains": {
         "warn": "There are no verified domains for your organization. Care templates work on any domains by default. Go to Settings page to add and verify domains in order to restrict them to work only for your organization's domains.",
@@ -8017,6 +8018,10 @@
     },
     "embedCodeFor": "Embed Code for ",
     "embedCodeWarnMsg_callback": "It is important to verify all domains where you want to use callback template. You will not be able to embed callback template on unverified domains.",
+    "embedCodeSnippet": {
+      "templateNameHelpText": "Name of the Customer Support Template: {{templateName}}",
+      "orgNameHelpText": "Name of the Organization: {{orgName}}"
+    },
     "configureOrgLogoMsg": "Go to Settings page to modify your organization logo",
     "virtualAssistant": {
       "featureText": {
