@@ -115,6 +115,7 @@ class LinkedSitesComponentCtrl implements ng.IComponentController {
       launchWebexFn: this.launchWebexFn,
       setAccountLinkingModeFn: this.setAccountLinkingModeFn,
     };
+    this.$log.info('Launching wizard from sites component with params:', params);
     this.$state.go('site-list.linked.details.wizard', params);
   }
 
