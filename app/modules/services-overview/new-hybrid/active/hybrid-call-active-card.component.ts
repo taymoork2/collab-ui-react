@@ -1,9 +1,10 @@
-import { USSService, IExtendedStatusSummary } from 'modules/hercules/services/uss.service';
+import { USSService, IExtendedStatusByClusters, IExtendedStatusSummary } from 'modules/hercules/services/uss.service';
 
 class HybridCallActiveCardController implements ng.IComponentController {
   private subscribeStatusesSummary: any;
 
   public userStatusesSummary: IExtendedStatusSummary[] | undefined;
+  public userStatusesByClustersSummary: IExtendedStatusByClusters[] | undefined;
 
   /* @ngInject */
   constructor(
@@ -21,6 +22,7 @@ class HybridCallActiveCardController implements ng.IComponentController {
 
   private extractSummary() {
     this.userStatusesSummary = this.USSService.extractSummaryForAService(['squared-fusion-uc', 'squared-fusion-ec']);
+    this.userStatusesByClustersSummary = this.USSService.extractSummaryForClusters(['squared-fusion-uc', 'squared-fusion-ec']);
   }
 }
 
@@ -37,7 +39,7 @@ export class HybridCallActiveCardComponent implements ng.IComponentOptions {
         <div class="active-card_section">
           <div class="active-card_title" translate="servicesOverview.cards.shared.resources"></div>
           <div class="active-card_action"><a ui-sref="call-service.list" translate="servicesOverview.cards.shared.viewAll"></a></div>
-          <card-capacity-bar ng-if="$ctrl.hasCapacityFeatureToggle" connector-type="'c_ucmc'" clusters="$ctrl.clusters" summary="$ctrl.userStatusesSummary"></card-capacity-bar>
+          <card-capacity-bar ng-if="$ctrl.hasCapacityFeatureToggle" connector-type="'c_ucmc'" clusters="$ctrl.clusters" summary="$ctrl.userStatusesByClustersSummary"></card-capacity-bar>
         </div>
         <div class="active-card_section">
           <div class="active-card_title" translate="servicesOverview.cards.shared.service"></div>

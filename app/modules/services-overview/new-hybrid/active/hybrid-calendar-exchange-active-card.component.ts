@@ -1,9 +1,10 @@
-import { USSService, IExtendedStatusSummary } from 'modules/hercules/services/uss.service';
+import { USSService, IExtendedStatusByClusters, IExtendedStatusSummary } from 'modules/hercules/services/uss.service';
 
 class HybridCalendarExchangeActiveCardController implements ng.IComponentController {
   private subscribeStatusesSummary: any;
 
   public userStatusesSummary: IExtendedStatusSummary[] | undefined;
+  public userStatusesByClustersSummary: IExtendedStatusByClusters[] | undefined;
 
   /* @ngInject */
   constructor(
@@ -21,6 +22,7 @@ class HybridCalendarExchangeActiveCardController implements ng.IComponentControl
 
   private extractSummary() {
     this.userStatusesSummary = this.USSService.extractSummaryForAService(['squared-fusion-cal']);
+    this.userStatusesByClustersSummary = this.USSService.extractSummaryForClusters(['squared-fusion-cal']);
   }
 }
 
@@ -38,7 +40,7 @@ export class HybridCalendarExchangeActiveCardComponent implements ng.IComponentO
         <div class="active-card_section">
           <div class="active-card_title" translate="servicesOverview.cards.shared.resources"></div>
           <div class="active-card_action"><a ui-sref="calendar-service.list" translate="servicesOverview.cards.shared.viewAll"></a></div>
-          <card-capacity-bar ng-if="$ctrl.hasCapacityFeatureToggle" connector-type="'c_cal'" clusters="$ctrl.clusters" summary="$ctrl.userStatusesSummary"></card-capacity-bar>
+          <card-capacity-bar ng-if="$ctrl.hasCapacityFeatureToggle" connector-type="'c_cal'" clusters="$ctrl.clusters" summary="$ctrl.userStatusesByClustersSummary"></card-capacity-bar>
         </div>
         <div class="active-card_section">
           <div class="active-card_title" translate="servicesOverview.cards.shared.service"></div>
