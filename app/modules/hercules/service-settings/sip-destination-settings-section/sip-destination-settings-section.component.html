@@ -5,25 +5,7 @@
     </p>
     <p translate="servicesOverview.cards.privateTrunk.destination"></p>
     <div class="row">
-      <form ng-if="!$ctrl.showSIPTestTool" name="inputSipDestinationForm" ng-submit="$ctrl.updateSipDomain()" class="hercules-sip-destination-table">
-        <input cs-input type="text"
-          cs-input-group-size="medium-7"
-          ng-disabled="$ctrl.savingSip"
-          placeholder="{{'hercules.settings.call.sipDomainPlaceholder' | translate}} "
-          ng-class="{ 'hercules-input-error': $ctrl.warnSipDestination() }"
-          id="sipDomain"
-          ng-model="$ctrl.sipDomain"
-          required>
-        <button cs-btn type="button"
-          loading="$ctrl.savingSip"
-          class="btn btn--primary"
-          id="updateSipDomain"
-          ng-click="$ctrl.updateSipDomain()"
-          ng-disabled="inputSipDestinationForm.$invalid || $ctrl.savingSip">
-          <span translate="common.save"></span>
-        </button>
-      </form>
-      <form ng-if="$ctrl.showSIPTestTool" name="inputSipDestinationForm" class="hercules-sip-destination-table">
+      <form name="inputSipDestinationForm" class="hercules-sip-destination-table">
         <input cs-input type="text"
           cs-input-group-size="medium-7"
           ng-disabled="$ctrl.savingSip"
