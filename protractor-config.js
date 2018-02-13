@@ -12,6 +12,7 @@ var processEnvUtil = require('./utils/processEnvUtil')();
 var args = require('yargs').argv;
 var _ = require('lodash');
 var remote = require('selenium-webdriver/remote');
+var helper = require('./test/api_sanity/test_helper');
 
 // http proxy agent is required if the host running the 'e2e' task is behind a proxy (ex. a Jenkins slave)
 // - sauce executors are connected out to the world through the host's network
@@ -24,6 +25,7 @@ var VERY_LONG_TIMEOUT = 1000 * 60 * 5;
 var E2E_FAIL_RETRY = appConfig.e2eFailRetry;
 var NEWLINE = '\n';
 var ANIMATION_DURATION_MS = 300;
+var TEST_PARTNER = 'huron-ui-test-partner';
 
 var maxInstances;
 if (process.env.SAUCE__MAX_INSTANCES) {
@@ -87,6 +89,26 @@ exports.config = {
   // A base URL for your application under test. Calls to protractor.get()
   // with relative paths will be prepended with this.
   baseUrl: getLaunchUrl(args),
+
+  // beforeLaunch A callback function called once configs are read but before
+  // any environment setup. This will only run once, and is run before
+  // onPrepare. You can specify a file containing code to run by setting
+  // beforeLaunch to the filename string.
+  beforeLaunch: function () {
+    var sauceOrg = '';
+    if (process.env.SAUCE__ORG_NAME != undefined) {
+      sauceOrg = process.env.SAUCE__ORG_NAME;
+    }
+    if (sauceOrg === TEST_PARTNER) {
+      return helper.getBearerToken(sauceOrg)
+        .then(function (token) {
+          helper.deleteToken(token, sauceOrg);
+        })
+        .then(function () {
+          helper.getBearerToken(sauceOrg);
+        });
+    }
+  },
 
   onPrepare: function () {
     global._ = require('lodash');

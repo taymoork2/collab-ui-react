@@ -5,7 +5,7 @@ export class LinkedSitesWebExService {
   private readonly webexSimUrl: string = 'http://localhost:3000';
   private readonly ciSiteLinkingPath: string = '/wbxadmin/api/v1/sites/thissite/cilinking';
   private readonly ciAccountSyncPath: string = '/wbxadmin/api/v1/sites/thissite/cilinking/userlinkingstatus';
-  private readonly domainsPath: string = '/wbxadmin/api/v1/sites/thissite/useremaildomains?limit=20';
+  private readonly domainsPath: string = '/wbxadmin/api/v1/sites/thissite/useremaildomains';
   private readonly useSimulator: boolean = false; // NB do not check in as true
 
   // TODO Remove this whitelist when no longer needed
@@ -33,14 +33,16 @@ export class LinkedSitesWebExService {
               private WebExXmlApiFact) {
   }
 
-  // TODO Handle error situations
   public getTicket(siteUrl: string): ng.IPromise<any> {
     // TODO Add .dmz on site url
     this.$log.debug('getTicket', siteUrl);
-    return this.WebExXmlApiFact.getSessionTicket(siteUrl, this.WebExUtilsFact.getSiteName(siteUrl));
+    return this.WebExXmlApiFact.getSessionTicket(siteUrl, this.WebExUtilsFact.getSiteName(siteUrl))
+      .catch((error) => {
+        this.$log.debug('GetTicket failed:', error);
+        throw error;
+      });
   }
 
-  // TODO Handle error situations
   public getCiSiteLinking(siteUrl: string): ng.IPromise<any> {
     return this.getTicket(siteUrl).then((ticket: string) => {
       let urlToUse = this.useSimulator ? this.webexSimUrl : this.getSiteApiUrl(siteUrl);
@@ -58,7 +60,6 @@ export class LinkedSitesWebExService {
     });
   }
 
-  // TODO Handle error situations
   public setCiSiteLinking(siteUrl: string, mode: string): ng.IPromise<IACWebexSiteinfoResponse | IACWebexSiteError> {
     return this.getTicket(siteUrl).then((ticket: string) => {
       let urlToUse = this.useSimulator ? this.webexSimUrl : this.getSiteApiUrl(siteUrl);
@@ -73,12 +74,31 @@ export class LinkedSitesWebExService {
         this.$log.debug('setCiSiteLinking', response);
         return <IACWebexSiteinfoResponse> response.data;
       }, (error) => {
-        this.$log.debug('getCiSiteLinking', error);
+        this.$log.error('setCiSiteLinking error:', error);
         throw error;
       });
     });
   }
 
+  public setLinkAllUsers(siteUrl: string, linkAllUsers: string): ng.IPromise<IACWebexSiteinfoResponse | IACWebexSiteError> {
+    return this.getTicket(siteUrl).then((ticket: string) => {
+      let urlToUse = this.useSimulator ? this.webexSimUrl : this.getSiteApiUrl(siteUrl);
+      urlToUse += this.ciSiteLinkingPath;
+      this.$log.debug('WebeEx API url', urlToUse);
+
+      return this.$http.patch(urlToUse, {
+        linkAllUsers: linkAllUsers,
+      }, {
+        headers: { Authorization: 'Ticket ' + ticket },
+      }).then((response) => {
+        this.$log.debug('setLinkAllUsers', response);
+        return <IACWebexSiteinfoResponse> response.data;
+      }, (error) => {
+        this.$log.error('setLinkAllUsers error:', error);
+        throw error;
+      });
+    });
+  }
 
   public getCiAccountSync(siteUrl: string): ng.IPromise<any> {
     this.$log.debug('webex.service getCiAccountSync');
@@ -86,14 +106,13 @@ export class LinkedSitesWebExService {
       this.$log.debug('webex.service ticket:', ticket);
       let urlToUse = this.useSimulator ? this.webexSimUrl : this.getSiteApiUrl(siteUrl);
       urlToUse += this.ciAccountSyncPath;
-      this.$log.debug('WebeEx API url', urlToUse);
       return this.$http.get(urlToUse, {
         headers: { Authorization: 'Ticket ' + ticket },
       }).then((response) => {
         this.$log.debug('getCiAccountSync', response);
         return response.data;
       }).catch((error) => {
-        this.$log.debug('getCiAccountSync', error);
+        this.$log.error('getCiAccountSync error:', error);
         throw error;
       });
     });
@@ -118,13 +137,12 @@ export class LinkedSitesWebExService {
     doQuery();
     return deferred.promise;
   }
-
   private getDomains(siteUrl: string): ng.IPromise<any> {
     return this.getTicket(siteUrl).then((ticket: string) => {
       let urlToUse = this.useSimulator ? this.webexSimUrl : this.getSiteApiUrl(siteUrl);
       urlToUse += this.domainsPath;
       this.$log.debug('WebeEx API url', urlToUse);
-      return this.$http.get(urlToUse, {
+      return this.$http.get(urlToUse + '?limit=20', {
         headers: { Authorization: 'Ticket ' + ticket },
       }).then((response) => {
         this.$log.debug('LinkedSitesWebExService.getDomains', response);
@@ -135,7 +153,7 @@ export class LinkedSitesWebExService {
           return response.data;
         }
       }).catch((error) => {
-        this.$log.debug('getDomains', error);
+        this.$log.debug('getDomains error:', error);
         throw error;
       });
     });

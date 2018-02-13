@@ -39,7 +39,6 @@ module.exports = {
   atlasHelpDeskOrderSearch: 'atlas-helpdesk-order-search',
   atlasHelpDeskOrderSetup: 'atlas-helpdesk-order-setup',
   atlasHybridAuditLog: 'atlas-hybrid-audit-log',
-  atlasHybridCallDiagnosticTool: 'atlas-hybrid-call-diagnostic-tool',
   atlasHybridCallUserTestTool: 'atlas-hybrid-call-user-test-tool',
   atlasHybridCapacity: 'atlas-hybrid-capacity',
   atlasHybridCucmSupport: 'atlas-hybrid-cucm-support',

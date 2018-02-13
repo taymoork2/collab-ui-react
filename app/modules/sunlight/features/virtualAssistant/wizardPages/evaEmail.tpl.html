@@ -2,22 +2,25 @@
   <div class="email-form" ng-form="$ctrl.emailForm">
     <div class="input-section">
       <input ng-if="!($ctrl.isEditFeature)" class="h3 ct-input ct-input-no-border ct-input-no-focus"
-             name="input"
-             placeholder="{{$ctrl.getText('email.namePlaceholder')}}"
-             ng-model="$ctrl.template.configuration.pages.evaEmail.value"
-             autocomplete="off"
-             focus-on
-             unique-email
-             ng-model-options="{ debounce: 500 }"
-             ng-maxlength="$ctrl.maxEmailLength"
-             ng-pattern="$ctrl.validateEmailChars">
+        name="input"
+        placeholder="{{$ctrl.getText('email.namePlaceholder')}}"
+        ng-model="$ctrl.template.configuration.pages.evaEmail.value"
+        autocomplete="off"
+        focus-on
+        unique-email
+        ng-model-options="{ debounce: 500 }"
+        ng-maxlength="$ctrl.maxEmailLength"
+        ng-pattern="$ctrl.validateEmailChars">
       <span ng-if="$ctrl.isEditFeature" id="disabled-input-wrapper"
-            tooltip="{{$ctrl.getText('email.disabledTooltip')}}"
-            tooltip-placement="top">
+        tabindex="0"
+        tooltip="{{$ctrl.getText('email.disabledTooltip')}}"
+        tooltip-placement="top"
+        tooltip-trigger="mouseenter focus"
+        aria-label="{{$ctrl.getText('email.disabledTooltip')}}">
         <input id="disabledEmailInput" class="h3 ct-input ct-input-no-border ct-input-no-focus ct-input-disabled"
-             name="input"
-             ng-model="$ctrl.template.configuration.pages.evaEmail.value"
-             ng-disabled="true">
+          name="input"
+          ng-model="$ctrl.template.configuration.pages.evaEmail.value"
+          ng-disabled="true">
       </span>
       <p class="ct-input-hint" ng-class="$ctrl.emailForm.input.$valid || $ctrl.emailForm.input.$pending ? 'ct-input-valid-border' : 'ct-input-invalid-border'">
         {{$ctrl.getText('email.nameHint')}}

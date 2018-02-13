@@ -15,8 +15,16 @@
       </span>
     </a>
   </div>
-  <div class="status-container" ng-if="$ctrl.downloading" ng-click="$ctrl.goToDownload()"
-    tooltip-placement="bottom" tooltip="{{$ctrl.downloadingMessage}}" tooltip-animation="false" tooltip-append-to-body="true">
+  <div
+    class="status-container"
+    ng-if="$ctrl.downloading"
+    ng-click="$ctrl.goToDownload()"
+    tooltip-placement="bottom"
+    tooltip="{{$ctrl.downloadingMessage}}"
+    tooltip-animation="false"
+    tooltip-append-to-body="true"
+    tooltip-trigger="focus mouseenter"
+    aria-label="{{$ctrl.downloadingMessage}}">
       <i class="icon icon-spinner"></i>
       <span class='status-message'>{{::$ctrl.statusMessage}}</span>
   </div>

@@ -9,7 +9,7 @@ const CallUserLine = new CallUserPlacePage();
 const UserPhoneButtonLayout = new CallUserPhoneButtonLayoutPage();
 
 /* globals, navigation, users, telephony */
-xdescribe('Huron Functional: user-phone-button-layout', () => {
+describe('Huron Functional: user-phone-button-layout', () => {
   const customer = huronCustomer({
     test: 'user-phone-btn-layout',
     users: { noOfUsers: 1 },
@@ -38,10 +38,10 @@ xdescribe('Huron Functional: user-phone-button-layout', () => {
     utils.click(CallUser.usersList.searchFilter);
     utils.searchAndClick(USERS[0].email);
     utils.expectIsDisplayed(users.servicesPanel);
-    utils.expectIsDisplayed(users.communicationsService);
+    utils.expectIsDisplayed(users.communicationService);
   });
   it('should navigate to call details view', () => {
-    utils.click(users.communicationsService);
+    utils.click(users.communicationService);
     utils.expectIsDisplayed(CallUser.callOverview.features.title);
     utils.expectIsDisplayed(CallUser.callOverview.features.singleNumberReach);
     utils.expectIsDisplayed(CallUser.callOverview.features.speedDials);
@@ -233,4 +233,4 @@ xdescribe('Huron Functional: user-phone-button-layout', () => {
       });
     });
   });
-}).pend('Toggle phone button layout has been disabled system-wide. Disabled pending further investigation');
+}).pend('Phone button layout toggle still disabled. There is a JIRA to resolve this.')

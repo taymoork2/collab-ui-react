@@ -7,25 +7,8 @@
   <span class="h2" translate="hercules.nodesPage.noNodes"></span>
 </div>
 
-<div ng-if="!$ctrl.loading && $ctrl.data.nodes.length > 0 && $ctrl.nextUpgradeStartTime">
-  <cs-alert-banner type="info" closeable="true" ng-if="$ctrl.connectorTypesWithUpgrade.length > 0">
-    <span translate="hercules.nodesPage.alertBannerNumber"
-      translate-value-count="{{$ctrl.connectorTypesWithUpgrade.length}}"
-      translate-interpolation="messageformat">
-    </span>
-    <span translate="hercules.nodesPage.alertBannerTime"
-      translate-values="{date: $ctrl.nextUpgradeStartTime, count: $ctrl.connectorTypesWithUpgrade.length}"
-      translate-interpolation="messageformat">
-    </span>
-    <br>
-    <span class="upgrade-link"
-      ng-repeat="service in $ctrl.connectorTypesWithUpgrade"
-      translate="hercules.nodesPage.alertBannerLink"
-      translate-value-service="{{::'hercules.shortConnectorNameFromConnectorType.'+service|translate}}"
-      translate-value-onclick="$ctrl.openUpgradeModal(service)"
-      translate-compile>
-    </span>
-  </cs-alert-banner>
+<div ng-if="!$ctrl.loading && $ctrl.data.nodes.length > 0">
+  <connector-upgrade-banner nodes="$ctrl.data.nodes" cluster="$ctrl.clusterCache" on-modal-closed="$ctrl.reloadDataCallback(options)"></connector-upgrade-banner>
   <table>
     <thead>
       <tr>

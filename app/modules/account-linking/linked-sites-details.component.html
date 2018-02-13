@@ -22,6 +22,9 @@
   <div ng-hide="$ctrl.selectedSiteInfo.isSiteAdmin" class="read-only-site">
     <span translate="accountLinking.siteDetails.dontHaveAdminRights"></span>
   </div>
+  <div ng-if="$ctrl.selectedSiteInfo.accountInfoErrors.length > 0 || $ctrl.selectedSiteInfo.siteInfoErrors.length > 0" class="errors-in-data">
+    <span translate="accountLinking.errors.unableToRetrieveSomeData"></span>
+  </div>
 
   <cs-sp-container>
 
@@ -35,10 +38,6 @@
           <li class="feature">
             <span class="feature-name" translate="accountLinking.siteDetails.siteName"></span>
             <span class="feature-details">{{$ctrl.selectedSiteInfo.linkedSiteUrl}}</span>
-          </li>
-          <li class="feature">
-            <span class="feature-name" translate="accountLinking.siteDetails.licenseType"></span>
-            <span class="feature-details">?</span>
           </li>
         </ul>
       </div>
@@ -65,7 +64,20 @@
           </li>
           <li class="feature">
             <span class="feature-name" translate="accountLinking.siteDetails.linkedAccounts"></span>
-            <span class="feature-details">{{$ctrl.selectedSiteInfo.linkingStatus.accountsLinked}}/{{$ctrl.selectedSiteInfo.linkingStatus.totalWebExAccounts}}</span>
+            <span class="feature-details" ng-if="$ctrl.selectedSiteInfo.linkingStatus.accountsLinked !== undefined && $ctrl.selectedSiteInfo.linkingStatus.totalWebExAccounts !== undefined">
+              {{$ctrl.selectedSiteInfo.linkingStatus.accountsLinked}}/{{$ctrl.selectedSiteInfo.linkingStatus.totalWebExAccounts}}</span>
+          </li>
+          <li class="feature">
+            <span class="feature-name" translate="accountLinking.siteDetails.automaticLinking"
+              tooltip="{{::$ctrl.automaticLinkingTooltipText | translate}}" tooltip-placement="top-left">
+            </span>
+            <cs-toggle-switch ng-if="$ctrl.selectedSiteInfo.isSiteAdmin && $ctrl.isAutomaticMode()" ng-model="$ctrl.selectedSiteInfo.linkAllUsers"
+              size="small"
+              is-disabled="$ctrl.linkAllUsersNotAllowed"
+              toggle-id="linkAllUsers"
+              name="linkAllUsers"
+              cs-change="$ctrl.linkAllUsersChange(toggleValue)">
+            </cs-toggle-switch>
           </li>
         </ul>
       </div>

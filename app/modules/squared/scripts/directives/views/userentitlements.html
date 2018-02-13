@@ -7,11 +7,14 @@
           <i
             ng-switch-when="messengerInterop"
             class="icon icon-info"
+            tabindex="0"
             tooltip="{{::'usersPage.ciscoSparkJabberInteropTooltip' | translate}}"
             tooltip-trigger="focus mouseenter"
             tooltip-class="long-msg"
             tooltip-placement="top"
-            tooltip-animation="false"></i>
+            tooltip-animation="false"
+            aria-label="{{::'usersPage.ciscoSparkJabberInteropTooltip' | translate}}">
+          </i>
         </span>
       </div>
     </div>
