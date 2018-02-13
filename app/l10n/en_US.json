@@ -2286,8 +2286,16 @@
       "navigateToCallSettings": "Verify the domain in <a href ng-click=\"{{onclick}}\">Call Service Settings</a>."
     },
     "capacity": {
+      "filterLabel": "Filter to view resource groups & capacity",
       "label": "Capacity: {{capacity}}%",
-      "usersAssigned": "Users assigned: {{total}} of {{max}}"
+      "labelNA": "Capacity: N/A",
+      "tooltip": "Capacity: {{capacity}}%<br>Users assigned: {{total}} of {{max}}",
+      "tooltipUnassigned": "<em>Clusters not in a resource group</em><br>Capacity: {{capacity}}%<br>Users assigned: {{total}} of {{max}}",
+      "tooltipNA": "Choose a filter on the left to view capacity for clusters that don't belong to a resource group or clusters in specific resources groups",
+      "tooltipNoConnectors": "No connectors can host users",
+      "allClusters": "All clusters",
+      "noInARG": "Clusters not in a resource group",
+      "clustersIn": "Clusters in {{name}}"
     },
     "userStatuses": {
       "summaryTitle": "User Status Summary",

@@ -91,26 +91,6 @@ Special stuff currently used for out own mail input field...
   }
 }
 
-.hercules-clusters-list {
-  position: relative;
-
-  .clusters-list-loading {
-    position: absolute;
-    top: 200px;
-    left: 0;
-    right: 0;
-    text-align: center;
-
-    .with-user-statuses-bar & {
-      top: 50px;
-    }
-  }
-
-  .centered-info-pane {
-    padding: 10% !important;
-  }
-}
-
 .hercules-cluster-settings {
   .section-title-row {
     align-items: center;

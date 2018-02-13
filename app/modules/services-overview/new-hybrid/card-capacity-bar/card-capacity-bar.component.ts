@@ -33,8 +33,15 @@ class CardCapacityBarController implements ng.IComponentController {
         .sum()
         .value();
 
-      // Keeping the relevant cluster ids around is useful to read users stt=atuses
-      this.relevantClusterIds = _.map(unassignedClusters, 'id');
+      // Keeping the relevant cluster ids around is useful to read users statuses
+      this.relevantClusterIds = _.reduce(unassignedClusters, (acc, cluster) => {
+        acc.push(cluster.id);
+        // The data we get from the User Statuses summary could use the legacy device id instead of the current cluster id
+        if (cluster.legacyDeviceClusterId) {
+          acc.push(cluster.legacyDeviceClusterId);
+        }
+        return acc;
+      }, <string[]>[]);
     }
 
     if (changes.summary && changes.summary.currentValue) {
@@ -43,6 +50,7 @@ class CardCapacityBarController implements ng.IComponentController {
       let users = 0;
       if (summary.length > 0) {
         users = _.sum(_.map(summary, summary => {
+          // TODO: also check device ID…
           if (_.includes(this.relevantClusterIds, summary.id)) {
             return summary.users;
           }
@@ -55,7 +63,7 @@ class CardCapacityBarController implements ng.IComponentController {
       } else if (this.capacity > 60) {
         this.progressBarType = 'warning';
       }
-      this.tooltip = this.$translate.instant('hercules.capacity.toolTip', {
+      this.tooltip = this.$translate.instant('hercules.capacity.tooltipUnassigned', {
         capacity: this.capacity,
         total: users,
         max: this.maxUsers,

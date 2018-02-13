@@ -239,7 +239,7 @@
           }
         }
       }).catch(function (error) {
-        Notification.errorWithTrackingId(error, 'hercules.error.couldNotGetServices');
+        Notification.errorWithTrackingId(error, 'hercules.errors.couldNotGetServices');
       });
     }
 

@@ -21,8 +21,8 @@ class HybridCallActiveCardController implements ng.IComponentController {
   }
 
   private extractSummary() {
-    this.userStatusesSummary = this.USSService.extractSummaryForAService(['squared-fusion-uc', 'squared-fusion-ec']);
-    this.userStatusesByClustersSummary = this.USSService.extractSummaryForClusters(['squared-fusion-uc', 'squared-fusion-ec']);
+    this.userStatusesSummary = this.USSService.extractSummaryForAService(['squared-fusion-uc']);
+    this.userStatusesByClustersSummary = this.USSService.extractSummaryForClusters(['squared-fusion-uc']);
   }
 }
 
