@@ -13,6 +13,7 @@ module.exports = {
   atlasCareAutomatedRouteTrials: 'care-automated-routing',
   atlasCareChatAssistant: 'care-chat-assistant',
   atlasCareChatToVideoTrials: 'care-chat-to-video-trials',
+  atlasCareWebcallReportTrials: 'care-webcall-report-trials',
   atlasCareInboundTrials: 'atlas-care-inbound-trials',
   atlasCareProactiveChatTrials: 'atlas-care-proactiveChat-trials',
   atlasCareTrials: 'atlas-care-trials',
