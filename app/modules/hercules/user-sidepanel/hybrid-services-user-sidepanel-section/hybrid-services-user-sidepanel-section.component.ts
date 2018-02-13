@@ -22,6 +22,8 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
 
   public isInvitePending: boolean;
   public atlasHybridImpFeatureToggle: boolean;
+  private userLicenseIDs: string[];
+  public isLicensed: boolean;
 
   private servicesOrgIsEntitledTo: HybridServiceId[];
   private servicesEnabledInOrganization: HybridServiceId[] = [];
@@ -55,7 +57,9 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
     const { user } = changes;
     if (user && user.currentValue) {
       this.userId = user.currentValue.id;
+      this.userLicenseIDs = user.currentValue.licenseID;
     }
+    this.isLicensed = this.userIsLicensed();
     this.init();
   }
 
@@ -101,6 +105,14 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
         this.loadingPage = false;
       });
 
+  }
+
+  private userIsLicensed(): boolean {
+    return !(_.size(this.Authinfo.getLicenses()) > 0 && !this.hasCaaSLicense());
+  }
+
+  private hasCaaSLicense(): boolean {
+    return _.map(this.userLicenseIDs || [], (licenseString) => licenseString.split('_')[0]).length > 0;
   }
 
   public userIsEnabledInUSS(serviceId: HybridServiceId): boolean {
