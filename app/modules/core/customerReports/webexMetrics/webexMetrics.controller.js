@@ -183,7 +183,7 @@
       if (!vm.features.hasMetricsSite && _.isEqual(stateName, vm.webexMetrics.states.diagnostics.state)) {
         isRedirected = true;
       }
-      if (!vm.features.isSystemOn && _.isEqual(stateName, vm.webexMetrics.states.system.state)) {
+      if (!(vm.features.isSystemOn && isCiscoUser()) && _.isEqual(stateName, vm.webexMetrics.states.system.state)) {
         isRedirected = true;
       }
       if (!vm.features.isInternalOn && _.isEqual(stateName, vm.webexMetrics.states.dashboard.state)) {
@@ -431,11 +431,11 @@
         hasMetricsSite: WebexMetricsService.hasMetricsSites(),
         isMEIOn: false, //FeatureToggleService.webexMEIGetStatus(),
         isSystemOn: FeatureToggleService.webexSystemGetStatus(),
-        isInternalOn: FeatureToggleService.webexInternalGetStatus(),
+        isInternalOn: false, //FeatureToggleService.webexInternalGetStatus(),
       };
       $q.all(promises).then(function (features) {
         vm.features = features;
-        if (features.isSystemOn) {
+        if (features.isSystemOn && isCiscoUser()) {
           vm.metricsOptions.splice(0, 0, vm.webexMetrics.states.system);
         }
         if (features.isInternalOn) {
@@ -453,6 +453,12 @@
         }
         $timeout(goMetricsInitState, 0);
       });
+    }
+
+    function isCiscoUser() {
+      var isCiscoUser = false;
+      isCiscoUser = Authinfo.getOrgId() === '1eb65fdf-9643-417f-9974-ad72cae0e10f';
+      return isCiscoUser;
     }
 
     function updateIframe() {
