@@ -1,10 +1,12 @@
 import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
 import { IExtendedStatusSummary } from 'modules/hercules/services/uss.service';
 import { IToolkitModalService } from 'modules/core/modal';
+import { FeatureToggleService } from 'modules/core/featureToggle';
 
 type SimpleSummary = Pick<IExtendedStatusSummary, 'activated' | 'error' | 'notActivated' | 'total'>;
 
 class CardUsersSummaryController implements ng.IComponentController {
+  public summary: IExtendedStatusSummary;
   public serviceId: HybridServiceId;
   public sum: SimpleSummary = {
     activated: 0,
@@ -13,12 +15,21 @@ class CardUsersSummaryController implements ng.IComponentController {
     total: 0,
   };
   public state: 'error' | 'pending' | 'activated' | 'noUsers' = 'noUsers';
+  private hasCapacityFeatureToggle: boolean;
 
   /* @ngInject */
   constructor(
     private $modal: IToolkitModalService,
     private $state: ng.ui.IStateService,
+    private FeatureToggleService: FeatureToggleService,
   ) {}
+
+  public $onInit(): void {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridCapacity)
+      .then(support => {
+        this.hasCapacityFeatureToggle = support;
+      });
+  }
 
   public $onChanges(changes: { summary: ng.IChangesObject<IExtendedStatusSummary[]> }) {
     if (changes.summary && changes.summary.currentValue) {
@@ -53,12 +64,24 @@ class CardUsersSummaryController implements ng.IComponentController {
   }
 
   public openUserStatusTab(): void {
-    if (this.serviceId === 'squared-fusion-cal') {
-      this.$state.go('calendar-service.users');
-    } else if (this.serviceId === 'squared-fusion-uc') {
-      this.$state.go('call-service.users');
-    } else if (this.serviceId === 'spark-hybrid-impinterop') {
-      this.$state.go('imp-service.users');
+    if (this.hasCapacityFeatureToggle) {
+      if (this.serviceId === 'squared-fusion-cal') {
+        this.$state.go('calendar-service.users');
+      } else if (this.serviceId === 'squared-fusion-uc') {
+        this.$state.go('call-service.users');
+      } else if (this.serviceId === 'spark-hybrid-impinterop') {
+        this.$state.go('imp-service.users');
+      }
+    } else {
+      this.$modal.open({
+        controller: 'ExportUserStatusesController',
+        controllerAs: 'exportUserStatusesCtrl',
+        template: require('modules/hercules/service-specific-pages/components/user-status-report/export-user-statuses.html'),
+        type: 'small',
+        resolve: {
+          userStatusSummary: () => this.summary,
+        },
+      });
     }
   }
 
