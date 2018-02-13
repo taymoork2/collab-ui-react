@@ -696,7 +696,7 @@ describe('Care Setup Assistant Ctrl', function () {
       controller.selectedTemplateProfile = controller.profiles.org;
       expect(controller.profileSettingInfo()).toEqual('careChatTpl.orgEvaSettingInfo');
       controller.selectedTemplateProfile = controller.profiles.agent;
-      expect(controller.profileSettingInfo()).toEqual('careChatTpl.userSettingInfo')
+      expect(controller.profileSettingInfo()).toEqual('careChatTpl.userSettingInfo');
     });
 
     it('should set profile setting info message based on cva is selected or not when EVA is selected', function () {
@@ -720,7 +720,7 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.getLocalizedOrgOrAgentInfo('orgHeader')).toEqual('careChatTpl.org');
       expect(controller.getLocalizedOrgOrAgentInfo('agentHeader')).toEqual('careChatTpl.user_cva');
       expect(controller.getLocalizedOrgOrAgentInfo('orgInfo')).toEqual('careChatTpl.profile_org_info_cva_eva');
-      expect(controller.getLocalizedOrgOrAgentInfo('agentInfo')).toEqual('careChatTpl.profile_user_info_cva')
+      expect(controller.getLocalizedOrgOrAgentInfo('agentInfo')).toEqual('careChatTpl.profile_user_info_cva');
     });
 
     it('should set user preview names based on selected profile when EVA is selected', function () {
