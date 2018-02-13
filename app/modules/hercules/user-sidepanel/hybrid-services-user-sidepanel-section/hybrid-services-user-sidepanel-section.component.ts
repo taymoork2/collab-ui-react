@@ -188,7 +188,7 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
     return this.UserOverviewService.getUser(this.userId)
       .then((commonIdentityUserData: IUserData) => {
         this.userEntitlements = commonIdentityUserData.user.entitlements;
-        this.isInvitePending = commonIdentityUserData.user.pendingStatus;
+        this.isInvitePending = !this.UserOverviewService.userHasActivatedAccountInCommonIdentity(commonIdentityUserData.user);
       })
       .catch((error) => {
         this.Notification.errorWithTrackingId(error, 'hercules.userSidepanel.errorMessages.cannotReadUserDataFromCI');
