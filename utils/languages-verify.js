@@ -7,6 +7,7 @@ const L10N_LANGUAGE_VALUE_REGEX = /(value:\s'[a-z]{2}_[A-Z]{2}')/g;
 const L10N_LANGUAGE_REGEX = /[a-z]{2}_[A-Z]{2}/;
 const L10N_LANGUAGE_CONFIGS = 'app/modules/core/l10n/languages.ts';
 
+const PLURAL_KEYWORD_REGEX = /{.*,\s*\bplural\b\s*,/;
 const PLURAL_DISALLOWED_KEYWORDS = [
   'zero',
   'one',
@@ -89,6 +90,14 @@ ${invalidMessageFormatSyntaxString}
 ${variableDifferencesWithEnglishString}
     `);
   }
+  const imbalancedBrackets = findImbalancedBrackets(flatTranslations);
+  if (!_.isEmpty(imbalancedBrackets)) {
+    hasError = true;
+    const imbalancedBracketsFormatSyntaxString = formatObjectToMultilineString(imbalancedBrackets);
+    console.error(`[ERROR] ${languageFile} contains unmatched brackets:
+
+${imbalancedBracketsFormatSyntaxString}`);
+  }
 });
 
 if (hasError) {
@@ -96,7 +105,7 @@ if (hasError) {
 }
 
 function filterDisallowedPluralKeywords(value) {
-  return _.includes(value, 'plural,') && _.some(PLURAL_DISALLOWED_REGEXPS, keywordRegExp => keywordRegExp.test(value));
+  return PLURAL_KEYWORD_REGEX.test(value) && _.some(PLURAL_DISALLOWED_REGEXPS, keywordRegExp => keywordRegExp.test(value));
 }
 
 function getDisallowedPluralKeywordTranslations(translationObj) {
@@ -104,7 +113,7 @@ function getDisallowedPluralKeywordTranslations(translationObj) {
 }
 
 function filterMissingOtherPluralKeyword(value) {
-  return _.includes(value, 'plural,') && !PLURAL_OTHER_REGEXP.test(value);
+  return PLURAL_KEYWORD_REGEX.test(value) && !PLURAL_OTHER_REGEXP.test(value);
 }
 
 function getMissingOtherPluralKeywordTranslations(translationObj) {
@@ -175,4 +184,24 @@ function getVariableDifferenceTranslations(checkObj, origObj) {
 
 function formatObjectToMultilineString(obj) {
   return _.map(obj, (value, key) => `${key}: ${value}`).join('\n');
+}
+
+function findImbalancedBrackets(translations) {
+  let imbalancedBrackets = {
+  };
+
+  _.forEach(translations, function (value, key) {
+    let str = value;
+
+    if (PLURAL_KEYWORD_REGEX.test(value)) {
+      let opens = str.match(/\{/g) || [];
+      let closes = str.match(/\}/g) || [];
+
+      if (opens.length !== closes.length) {
+        imbalancedBrackets[key] = value;
+      }
+    }
+  });
+
+  return imbalancedBrackets;
 }

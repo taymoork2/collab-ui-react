@@ -73,9 +73,10 @@ describe('Service: Huron Customer', function () {
 
     it('should handle an error', function () {
       $httpBackend.expectPOST(HuronConfig.getCmiUrl() + '/common/customers').respond(500);
-      HuronCustomer.create('123', 'My Customer', 'myCustomer@cisco.com').catch(function (response) {
-        expect(response.status).toEqual(500);
-      });
+      HuronCustomer.create('123', 'My Customer', 'myCustomer@cisco.com').then(fail)
+        .catch(function (response) {
+          expect(response.status).toEqual(500);
+        });
       $httpBackend.flush();
     });
 
@@ -86,7 +87,7 @@ describe('Service: Huron Customer', function () {
         name: 'My Customer',
       });
       $httpBackend.expectPUT(HuronConfig.getCmiUrl() + '/common/customers/123').respond(200);
-      HuronCustomer.create('123', 'My Customer', 'myCustomer@cisco.com').catch(function (response) {
+      HuronCustomer.create('123', 'My Customer', 'myCustomer@cisco.com').then(function (response) {
         expect(response.status).toEqual(200);
       });
       $httpBackend.flush();

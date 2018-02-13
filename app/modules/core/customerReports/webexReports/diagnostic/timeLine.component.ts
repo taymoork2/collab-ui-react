@@ -359,7 +359,7 @@ class TimeLine implements ng.IComponentController {
     g.append('p').text('Join Meeting Time').append('i').attr('class', 'icon icon-info-outline')
     .on('mouseover', () => {
       const msgArr = [
-        { key: `<p class="text-center">Join Meeting Time is<br>calculated in seconds.<br>Good: < 6 seconds<br>Fair: 7-10 seconds<br>Poor: > 10 seconds<br>Not Available: No information</p>` },
+        { key: `<p class="text-center">Join Meeting Time is<br>calculated in seconds.<br>Good: < 10 seconds<br>Fair: 10-20 seconds<br>Poor: > 20 seconds<br>Not Available: No information</p>` },
       ];
       const pos = this.$element.find('.legend p i').first().position();
       this.makeTips({ arr: msgArr }, pos.top - 10, pos.left + 17);
@@ -380,7 +380,7 @@ class TimeLine implements ng.IComponentController {
     const node = d3.select('.startPoint');
     node.moveToFront();
     _.forEach(data, (item) => {
-      const classKey = _.parseInt(item.jmtQuality) - 1;
+      const classKey = this.getJoinMeetingQualityIndex(item);
       const dotId = `#myDot${item.guestId}-${item.userId}-${item.joinTime}`;
       const nodeData: any = _.find(this.data.data, { guestId: item.guestId, userId: item.userId, joinTime: item.joinTime });
       const nodey = _.get(nodeData, 'y1', 0);
@@ -391,7 +391,7 @@ class TimeLine implements ng.IComponentController {
         d3.select(dotId)
         .attr('class', 'goodCircle')
         .attr('joinMeetingTime', item.joinMeetingTime)
-        .attr('jmtQuality', this.legendInfo.circle[_.parseInt(item.jmtQuality) - 1]);
+        .attr('jmtQuality', this.legendInfo.circle[classKey]);
       } else if (classKey === 1) {
         d3.select(dotId).remove();
         newS = this.drawTriangle(node, { x: nodex, y: nodey - 9 });
@@ -402,7 +402,7 @@ class TimeLine implements ng.IComponentController {
 
       if (newS) {
         newS.on('mouseover', () => {
-          const qualityKey = _.parseInt(item.jmtQuality) - 1;
+          const qualityKey = this.getJoinMeetingQualityIndex(item);
           const quality = this.legendInfo.circle[qualityKey] === 'N/A' ? '' : this.legendInfo.circle[qualityKey];
           const msgArr = [
             { key: (quality ? `${quality} ` : '') + 'Join Meeting Time' },
@@ -414,6 +414,21 @@ class TimeLine implements ng.IComponentController {
         .on('mouseout', () => this.hideTips());
       }
     });
+  }
+
+  private getJoinMeetingQualityIndex(data) {
+    let index = 3;
+    if (!(_.isUndefined(data.joinMeetingTime) || _.isNull(data.joinMeetingTime))) {
+      const jmt = data.joinMeetingTime * 1;
+      if (jmt < 10) {
+        index = 0;
+      } else if (jmt >= 10 && jmt <= 20) {
+        index = 1;
+      } else {
+        index = 2;
+      }
+    }
+    return index;
   }
 
   private setLineColor(data) {

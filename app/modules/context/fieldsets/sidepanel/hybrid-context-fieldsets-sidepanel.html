@@ -24,9 +24,14 @@
             <div ng-switch-when="true">
               <span class="feature">
                 <span class="feature-name" translate="context.dictionary.status"></span>
-                <span class="feature-details"
-                  tooltip-class="context-tooltip" tooltip="{{$ctrl.inUseTooltipMessage}}" tooltip-placement="bottom"
-                >
+                <span
+                  class="feature-details"
+                  tabindex="0"
+                  tooltip-class="context-tooltip"
+                  tooltip="{{$ctrl.inUseTooltipMessage}}"
+                  tooltip-placement="bottom"
+                  tooltip-trigger="mouseenter focus"
+                  aria-label="{{$ctrl.inUseTooltipMessage}}">
                   <i class="icon icon-circle status-indicator success"></i>
                   <span class="context-status-block" translate="context.dictionary.inUse"></span>
                 </span>
@@ -35,9 +40,14 @@
             <div ng-switch-when="false">
               <span class="feature">
                 <span class="feature-name" translate="context.dictionary.status"></span>
-                <span class="feature-details"
-                  tooltip-class="context-tooltip" tooltip="{{$ctrl.inUseTooltipMessage}}" tooltip-placement="bottom"
-                >
+                <span
+                  class="feature-details"
+                  tabindex="0"
+                  tooltip-class="context-tooltip"
+                  tooltip="{{$ctrl.inUseTooltipMessage}}"
+                  tooltip-placement="bottom"
+                  tooltip-trigger="mouseenter focus"
+                  aria-label="{{$ctrl.inUseTooltipMessage}}">
                   <i class="icon icon-circle status-indicator"></i>
                   <span class="context-status-block" translate="context.dictionary.notInUse"></span>
                 </span>

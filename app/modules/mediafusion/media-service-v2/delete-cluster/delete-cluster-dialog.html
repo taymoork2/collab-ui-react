@@ -114,7 +114,6 @@
   <div ng-show="deleteClust.radioModel === 1 && deleteClust.noOfHost > 0">
     <button
       class="btn btn--primary pull-right"
-      id="convertActionButton"
       ng-click="deleteClust.continue()"
       ng-disabled="!deleteClust.canContinue()"
       ng-hide="deleteClust.ngDisable"
@@ -125,10 +124,9 @@
       </span>
     </button>
   </div>
-  <div ng-show="deleteClust.radioModel === 2">
+  <div ng-show="deleteClust.radioModel === 2 && deleteClust.clusters.length === 1">
     <button
       class="btn btn--negative pull-right"
-      id="convertActionButton"
       ng-click="deleteClust.deleteCluster()"
       ng-disabled="!deleteClust.checkboxModel || !deleteClust.lastClusterCheckboxModel"
       aria-label="{{::'mediaFusion.clusters.deletecluster' | translate}}">
@@ -138,10 +136,21 @@
       </span>
     </button>
   </div>
+  <div ng-show="deleteClust.radioModel === 2 && deleteClust.clusters.length !== 1">
+      <button
+        class="btn btn--negative pull-right"
+        ng-click="deleteClust.deleteCluster()"
+        ng-disabled="!deleteClust.checkboxModel"
+        aria-label="{{::'mediaFusion.clusters.deletecluster' | translate}}">
+        <span ng-if="!saving" translate="mediaFusion.clusters.deletecluster"></span>
+        <span ng-if="saving">
+          <i class="icon icon-spinner"></i>
+        </span>
+      </button>
+    </div>
   <div ng-show="deleteClust.clusters.length === 1 && deleteClust.noOfHost < 1">
     <button
       class="btn btn--negative pull-right"
-      id="convertActionButton"
       ng-click="deleteClust.deleteCluster()"
       ng-disabled="!deleteClust.alertCheckboxModel"
       aria-label="{{::'mediaFusion.clusters.deletecluster' | translate}}">
@@ -153,7 +162,6 @@
   </div>
   <button
     class="btn pull-right"
-    id="convertCancelButton"
     ng-click="$dismiss()"
     style="margin-right: 10px"
     translate="mediaFusion.clusters.cancel">

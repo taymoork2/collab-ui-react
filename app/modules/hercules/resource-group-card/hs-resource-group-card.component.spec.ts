@@ -14,13 +14,21 @@ describe('Component: hsResourceGroupCard', function () {
       this.initModules(hsResourceGroupCardModule);
       this.injectDependencies(
         '$scope',
+        '$translate',
       );
       this.$scope.groupMock = groupMock;
       this.compileComponent('hsResourceGroupCard', { resourceGroup: 'groupMock' });
+      spyOn(this.$translate, 'instant').and.callThrough();
     });
 
     it('should bind to the correct group', function () {
       expect(this.controller.group.id).toEqual(groupMock.id);
+    });
+
+    it('getResourceGroupSettingsAriaLabel() should return expected aria-label', function () {
+      const label = 'hercules.resourceGroupSettings.pageTitle';
+      expect(this.controller.getResourceGroupSettingsAriaLabel()).toEqual(label);
+      expect(this.$translate.instant).toHaveBeenCalledWith(label, { groupName: groupMock.name });
     });
 
     describe('hasZeroClusters()', function () {

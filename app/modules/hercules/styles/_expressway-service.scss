@@ -192,36 +192,6 @@ Special stuff currently used for out own mail input field...
   }
 }
 
-.user-statuses-card {
-  display: flex;
-  flex-direction: column;
-  margin-right: 3rem;
-}
-
-.user-statuses-title {
-  color: $gray-dark-2;
-}
-
-.user-statuses-content {
-  display: flex;
-  margin: 0;
-  color: $gray-dark-1;
-  font-size: 0.875rem;
-
-  .red {
-    color: $color-alerts-base;
-  }
-
-  span {
-    font-size: 0.875rem;
-  }
-
-  li {
-    list-style-type: none;
-    margin-right: 1rem;
-  }
-}
-
 .hercules-sip-settings {
   .c-nub {
     max-width: 300px;

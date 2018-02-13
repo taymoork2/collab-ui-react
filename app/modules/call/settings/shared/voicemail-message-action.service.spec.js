@@ -39,9 +39,10 @@ describe('Service: VoicemailMessageAction', function () {
     it('should get messageAction', function () {
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voicemail/customers/1/usertemplates/1/messageactions').respond([]);
 
-      VoicemailMessageAction.get('1').catch(function (err) {
-        expect(err).toBe('Failed to get voicemail to email settings.');
-      });
+      VoicemailMessageAction.get('1').then(fail)
+        .catch(function (err) {
+          expect(err).toBe('Failed to get voicemail to email settings.');
+        });
       $httpBackend.flush();
     });
   });

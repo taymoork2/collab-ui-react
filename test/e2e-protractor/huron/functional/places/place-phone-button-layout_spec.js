@@ -69,6 +69,7 @@ describe('Huron Functional: place-phone-button-layout', () => {
       utils.expectIsNotDisplayed(UserPhoneButtonLayout.firstLineDeleteButton);
     });
   });
+
   describe('Phone Button Layout Action Menu', () => {
     beforeAll(() => {
       utils.click(UserPhoneButtonLayout.actionMenu);
@@ -180,7 +181,7 @@ describe('Huron Functional: place-phone-button-layout', () => {
       beforeAll(() => {
         utils.click(CallPlace.callSubMenu);
         utils.click(CallPlace.callOverview.features.phoneButtonLayout);
-        utils.expectIsDisplayed(UserPhoneButtonLayout.firstSpeedDialEntryLabel); 
+        utils.expectIsDisplayed(UserPhoneButtonLayout.firstSpeedDialEntryLabel);
       });
       it('should see a list of speed dials phone buttons that can be deleted', () => {
         utils.expectCountToBeGreater(UserPhoneButtonLayout.speedDialEntries, 0);
@@ -200,7 +201,7 @@ describe('Huron Functional: place-phone-button-layout', () => {
       });
     });
 
-    describe('Feature None Action Menu', () => { 
+    describe('Feature None Action Menu', () => {
       const DESTINATION_TYPE_EMPTY = 'Empty';
       const DESTINATION_LABEL = 'None';
       beforeAll(() => {
@@ -228,7 +229,7 @@ describe('Huron Functional: place-phone-button-layout', () => {
           utils.expectNotText(UserPhoneButtonLayout.firstFeatureNoneLabel, initialFeatureNoneName);
         });
       });
-    }); 
+    });
   });
-});       
+}).pend('Phone button layout toggle still disabled. There is a JIRA to resolve this.')
 

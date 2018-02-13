@@ -14,7 +14,9 @@
     tabindex="0"
     tooltip-append-to-body="true"
     tooltip="{{::'siteList.siteSettings' | translate}}"
-    tooltip-trigger="focus mouseenter"></i>
+    tooltip-trigger="focus mouseenter"
+    aria-label="{{::'siteList.siteSettings' | translate}}">
+  </i>
 
   <!-- display enabled config icon and tooltip -->
   <i ng-if="row.entity.showSiteLinks && !row.entity.isError"
@@ -25,5 +27,7 @@
     tabindex="0"
     tooltip-append-to-body="true"
     tooltip="{{::'siteList.siteSettings' | translate}}"
-    tooltip-trigger="focus mouseenter"></i>
+    tooltip-trigger="focus mouseenter"
+    aria-label="{{::'siteList.siteSettings' | translate}}">
+  </i>
 </span>

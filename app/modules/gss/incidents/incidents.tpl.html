@@ -39,19 +39,21 @@
           </div>
 
           <div class="columns medium-4">
-            <a class="pull-right"
-               ng-click="incidentsCtrl.deleteIncident(incident)"
-               translate="common.delete">
+            <a href class="pull-right"
+              ng-click="incidentsCtrl.deleteIncident(incident)"
+              translate="common.delete">
             </a>
 
-            <a class="pull-right"
-               ng-click="incidentsCtrl.updateIncident(incident, 'update')"
-               ng-if="!(incidentsCtrl.isResolved(incident.status))" translate="common.update">
+            <a href class="pull-right"
+              ng-click="incidentsCtrl.updateIncident(incident, 'update')"
+              ng-if="!(incidentsCtrl.isResolved(incident.status))"
+              translate="common.update">
             </a>
 
-            <a class="pull-right"
-               ng-click="incidentsCtrl.updateIncident(incident, 'view')"
-               ng-if="incidentsCtrl.isResolved(incident.status)" translate="gss.incidentsPage.viewIncident">
+            <a href class="pull-right"
+              ng-click="incidentsCtrl.updateIncident(incident, 'view')"
+              ng-if="incidentsCtrl.isResolved(incident.status)"
+              translate="gss.incidentsPage.viewIncident">
             </a>
           </div>
         </div>

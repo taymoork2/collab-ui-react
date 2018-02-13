@@ -4,10 +4,15 @@ describe('OverviewUsersCard', function () {
     this.injectDependencies(
       '$q',
       '$rootScope',
+      'DirSyncService',
       'FeatureToggleService',
+      'MultiDirSyncService',
       'Orgservice',
       'OverviewUsersCard'
     );
+    spyOn(this.FeatureToggleService, 'atlasF6980MultiDirSyncGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.DirSyncService, 'requiresRefresh').and.returnValue(false);
+    spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(false);
 
     this.convertUserData = {
       success: true,
@@ -93,6 +98,53 @@ describe('OverviewUsersCard', function () {
 
           expect(this.card.features.atlasF3745AutoAssignLicenses).toBe(false);
           expect(this.card.autoAssignLicensesStatus).not.toBeDefined();
+        });
+      });
+    });
+
+    describe('atlasF6980MultiDirSyncGetStatus', function () {
+      it('should hit DirSyncService when the toggle returns false', function () {
+        this.card = this.OverviewUsersCard.createCard();
+        this.$rootScope.$apply();
+        this.card.orgEventHandler({ success: true });
+        this.$rootScope.$apply();
+
+        expect(this.DirSyncService.requiresRefresh).toHaveBeenCalledTimes(1);
+        expect(this.DirSyncService.isDirSyncEnabled).toHaveBeenCalledTimes(1);
+        expect(this.card.dirsyncEnabled).toBe(false);
+        expect(this.card.isUpdating).toBe(false);
+      });
+
+      describe('when the toggle is true', function () {
+        beforeEach(function () {
+          spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(false));
+          this.FeatureToggleService.atlasF6980MultiDirSyncGetStatus.and.returnValue(this.$q.resolve(true));
+
+          var fixture = getJSONFixture('core/json/settings/multiDirsync.json');
+          spyOn(this.MultiDirSyncService, 'getEnabledDomains').and.returnValue(this.$q.resolve([_.cloneDeep(fixture.dirsyncRow)]));
+        });
+
+        it('should hit MultiDirSyncService and display true when there are domains when the toggle returns true', function () {
+          this.card = this.OverviewUsersCard.createCard();
+          this.$rootScope.$apply();
+          this.card.orgEventHandler({ success: true });
+          this.$rootScope.$apply();
+
+          expect(this.MultiDirSyncService.getEnabledDomains).toHaveBeenCalledTimes(1);
+          expect(this.card.dirsyncEnabled).toBe(true);
+          expect(this.card.isUpdating).toBe(false);
+        });
+
+        it('should hit MultiDirSyncService and display false when there are no domains when the toggle returns true', function () {
+          this.MultiDirSyncService.getEnabledDomains.and.returnValue(this.$q.reject('error'));
+          this.card = this.OverviewUsersCard.createCard();
+          this.$rootScope.$apply();
+          this.card.orgEventHandler({ success: true });
+          this.$rootScope.$apply();
+
+          expect(this.MultiDirSyncService.getEnabledDomains).toHaveBeenCalledTimes(1);
+          expect(this.card.dirsyncEnabled).toBe(false);
+          expect(this.card.isUpdating).toBe(false);
         });
       });
     });

@@ -32,21 +32,25 @@
                   aria-label="{{careSetupAssistant.overviewPageTooltipText(card.name)}}"
                   tabindex="0"
                   ng-keypress="careSetupAssistant.enterNextPage($event)">
-                  <cs-toggle-switch ng-model="careSetupAssistant.getCardConfig(card.name).enabled"
+                  <cs-toggle-switch
+                    ng-model="careSetupAssistant.getCardConfig(card.name).enabled"
                     toggle-id={{card.name}}
                     is-disabled="true"
                     size="small"
                     cs-aria-label="{{::careSetupAssistant.getLocalisedText('careChatTpl.ctOverview.' + card.name + '.desc') | translate}}"
-                    ng-keypress="careSetupAssistant.enterNextPage($event)">
+                    ng-keypress="careSetupAssistant.enterNextPage($event)"
+                    cs-aria-label="{{:careSetupAssistant.getLocalisedText('careChatTpl.ctOverview.' + card.name + '.title'}}">
                   </cs-toggle-switch>
                 </div>
               </div>
               <div ng-switch-default>
-                <cs-toggle-switch ng-model="careSetupAssistant.getCardConfig(card.name).enabled"
+                <cs-toggle-switch
+                  ng-model="careSetupAssistant.getCardConfig(card.name).enabled"
                   toggle-id={{card.name}}
                   size="small"
                   cs-aria-label="{{::careSetupAssistant.getLocalisedText('careChatTpl.ctOverview.' + card.name + '.desc') | translate}}"
-                  ng-keypress="careSetupAssistant.enterNextPage($event)">
+                  ng-keypress="careSetupAssistant.enterNextPage($event)"
+                  cs-aria-label="{{:careSetupAssistant.getLocalisedText('careChatTpl.ctOverview.' + card.name + '.title'}}">
                 </cs-toggle-switch>
               </div>
             </div>

@@ -21,12 +21,15 @@ class Meetingdetails implements ng.IComponentController {
     private SearchService: SearchService,
     private $timeout: ng.ITimeoutService,
     private $stateParams: ng.ui.IStateParamsService,
+    private $q: ng.IQService,
   ) {
     this.data = {
       voip: {},
       video: {},
       voipReqtimes: 0,
       videoReqtimes: 0,
+      voipTimer: null,
+      videoTimer: null,
       currentQos: 'voip',
     };
   }
@@ -41,10 +44,10 @@ class Meetingdetails implements ng.IComponentController {
   public onChangeQOS(qos) {
     this.loading = true;
     this.data.currentQos = qos;
-    this.lineColor = this.data[qos];
-    this.pstnData = qos === 'voip' ? this.data.pstn : undefined;
+    this.lineColor = _.cloneDeep(this.data[qos]);
+    this.pstnData = qos === 'voip' ? _.cloneDeep(this.data.pstn) : undefined;
     if (this.data.cmr) {
-      this.cmrData = qos === 'voip' ? this.data.cmr.audio : this.data.cmr.video;
+      this.cmrData = qos === 'voip' ? _.cloneDeep(this.data.cmr.audio) : _.cloneDeep(this.data.cmr.video);
     }
     this.$timeout(() => this.loading = false, 200);
   }
@@ -52,7 +55,6 @@ class Meetingdetails implements ng.IComponentController {
   private getParticipants() {
     this.SearchService.getUniqueParticipants(this.conferenceID)
       .then((res: any) => {
-        this.loading = false;
         const timeZone = this.SearchService.getStorage('timeZone');
         const wom = this.SearchService.getStorage('webexOneMeeting');
         const lines = _.map(res, (item) => this.formateLine(_.get(item, 'participants')));
@@ -61,11 +63,16 @@ class Meetingdetails implements ng.IComponentController {
         const ids = this.getAllIds(lines);
         const pstnIds = this.getFilterIds(res);
         const cmrIds = this.getFilterIds(res, 'cmr');
-        this.getJoinMeetingTime();
-        this.voipQOS(ids);
-        this.videoQOS(ids);
-        this.pstnQOS(pstnIds);
-        this.cmrQOS(cmrIds);
+
+        const cachePromises: ng.IPromise<any>[] = [];
+        cachePromises.push(this.getJoinMeetingTime());
+        cachePromises.push(this.voipQOS(ids));
+        cachePromises.push(this.videoQOS(ids));
+        cachePromises.push(this.pstnQOS(pstnIds));
+        cachePromises.push(this.cmrQOS(cmrIds));
+        this.$q.all(cachePromises).finally(() => {
+          this.loading = false;
+        });
       })
       .catch((err) => {
         this.loading = true;
@@ -74,26 +81,26 @@ class Meetingdetails implements ng.IComponentController {
   }
 
   private getJoinMeetingTime() {
-    this.SearchService.getJoinMeetingTime(this.conferenceID)
+    return this.SearchService.getJoinMeetingTime(this.conferenceID)
       .then( res => this.circleColor = res );
   }
 
   private voipQOS(ids) {
-    this.SearchService.getQOS(this.conferenceID, ids, 'voip-network-qos')
+    return this.SearchService.getQOS(this.conferenceID, ids, 'voip-network-qos')
     .then( res => this.getLineCircleData(res, 'voip') );
   }
 
   private videoQOS(ids) {
-    this.SearchService.getQOS(this.conferenceID, ids, 'video-network-qos')
+    return this.SearchService.getQOS(this.conferenceID, ids, 'video-network-qos')
     .then( res => this.getLineCircleData(res, 'video') );
   }
 
   private pstnQOS(ids) { // TODO, will discuss with backend to optimize the response data.
     if (!_.size(ids)) {
-      return;
+      return this.$q.reject();
     }
 
-    this.SearchService.getQOS(this.conferenceID, ids, 'pstn-qos')
+    return this.SearchService.getQOS(this.conferenceID, ids, 'pstn-qos')
     .then((res: any) => {
       const obj = {};
       _.map(res, (item: any, key) => {
@@ -114,10 +121,10 @@ class Meetingdetails implements ng.IComponentController {
 
   private cmrQOS(ids) {
     if (!_.size(ids)) {
-      return;
+      return this.$q.reject();
     }
 
-    this.SearchService.getQOS(this.conferenceID, ids, 'cmr-qos')
+    return this.SearchService.getQOS(this.conferenceID, ids, 'cmr-qos')
     .then((res: any) => {
       const obj = { audio: {}, video: {} };
       _.forEach(res, (item: any, key: any) => {
@@ -196,11 +203,14 @@ class Meetingdetails implements ng.IComponentController {
     });
 
     _.assignIn(this.data[qosName], obj);
-    this.lineColor = _.get(this.data, 'currentQos') === qosName ? this.data[qosName] : this.lineColor;
+    this.lineColor = _.get(this.data, 'currentQos') === qosName ? _.cloneDeep(this.data[qosName]) : this.lineColor;
 
     if (_.size(retryIds) && this.data[`${qosName}Reqtimes`] < 5) {
-      this.data[`${qosName}Reqtimes`] += 1;
-      qosName === 'voip' ? this.voipQOS(_.join(retryIds)) : this.videoQOS(_.join(retryIds));
+      this.$timeout.cancel(this.data[`${qosName}Timer`]);
+      this.data[`${qosName}Timer`] = this.$timeout(() => {
+        this.data[`${qosName}Reqtimes`] += 1;
+        qosName === 'voip' ? this.voipQOS(_.join(retryIds)) : this.videoQOS(_.join(retryIds));
+      }, 5000);
     }
   }
 

@@ -1130,6 +1130,13 @@
               },
             },
           })
+          .state('users.convert.auto-assign-license-summary', {
+            views: {
+              'usersConvert@users.convert': {
+                template: '<user-convert-auto-assign-license-summary dismiss="$dismiss()"></user-convert-auto-assign-license-summary>',
+              },
+            },
+          })
           .state('users.convert.services', {
             views: {
               'usersConvert@users.convert': {
@@ -1146,7 +1153,7 @@
           })
           .state('users.convert.results', {
             views: {
-              'usersAdd@users.add': {
+              'usersConvert@users.convert': {
                 template: '<add-users-results-modal dismiss="$dismiss()" convert-pending="$resolve.convertPending" convert-users-flow="$resolve.convertUsersFlow" num-updated-users="$resolve.numUpdatedUsers" num-added-users="$resolve.numAddedUsers" results="$resolve.results"></add-users-results-modal>',
               },
             },
@@ -1616,7 +1623,7 @@
           .state('user-overview.hybrid-services-spark-hybrid-impinterop', {
             views: {
               'side-panel-container@user-overview': {
-                template: '<hybrid-message-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)" is-invite-pending="$resolve.isInvitePending" all-user-entitlements="$resolve.allUserEntitlements"></hybrid-message-user-settings>',
+                template: '<hybrid-message-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName"></hybrid-message-user-settings>',
               },
             },
             data: {},
@@ -1627,21 +1634,7 @@
               userName: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentUser.userName;
               },
-              userUpdatedCallback: /* @ngInject */ function ($stateParams) {
-                return $stateParams.userUpdatedCallback;
-              },
-              isInvitePending: /* @ngInject */ function ($stateParams) {
-                return $stateParams.isInvitePending;
-              },
-              allUserEntitlements: /* @ngInject */ function ($stateParams) {
-                return $stateParams.allUserEntitlements;
-              },
               displayName: translateDisplayName('hercules.hybridServiceNames.spark-hybrid-impinterop'),
-            },
-            params: {
-              userUpdatedCallback: _.noop,
-              isInvitePending: null,
-              allUserEntitlements: null,
             },
           })
           .state('user-overview.hybrid-services-spark-hybrid-impinterop.history', {
@@ -1659,13 +1652,12 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-cal', {
-            template: '<hybrid-calendar-service-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)" preferred-web-ex-site-name="$resolve.preferredWebExSiteName" all-user-entitlements="$resolve.allUserEntitlements" is-invite-pending="$resolve.isInvitePending"></hybrid-calendar-service-user-settings>',
-            data: {},
-            params: {
-              userUpdatedCallback: _.noop,
-              isInvitePending: null,
-              allUserEntitlements: null,
+            views: {
+              'side-panel-container@user-overview': {
+                template: '<hybrid-calendar-service-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" preferred-web-ex-site-name="$resolve.preferredWebExSiteName" is-invite-pending="$resolve.isInvitePending"></hybrid-calendar-service-user-settings>',
+              },
             },
+            data: {},
             resolve: {
               userId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentUser.id;
@@ -1673,17 +1665,8 @@
               userName: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentUser.userName;
               },
-              userUpdatedCallback: /* @ngInject */ function ($stateParams) {
-                return $stateParams.userUpdatedCallback;
-              },
-              allUserEntitlements: /* @ngInject */ function ($stateParams) {
-                return $stateParams.allUserEntitlements;
-              },
               preferredWebExSiteName: /* @ngInject */ function ($stateParams, HybridServiceUserSidepanelHelperService) {
                 return HybridServiceUserSidepanelHelperService.getPreferredWebExSiteName($stateParams.currentUser, $stateParams.orgInfo);
-              },
-              isInvitePending: /* @ngInject */ function ($stateParams) {
-                return $stateParams.isInvitePending;
               },
               displayName: translateDisplayName('hercules.serviceNames.squared-fusion-cal'),
             },
@@ -1703,12 +1686,12 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-uc', {
-            template: '<hybrid-call-service-aggregated-section user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)" is-invite-pending="$resolve.isInvitePending"></hybrid-call-service-aggregated-section>',
-            data: {},
-            params: {
-              userUpdatedCallback: _.noop,
-              isInvitePending: null,
+            views: {
+              'side-panel-container@user-overview': {
+                template: '<hybrid-call-service-aggregated-section user-id="$resolve.userId" user-email-address="$resolve.userName"></hybrid-call-service-aggregated-section>',
+              },
             },
+            data: {},
             resolve: {
               userId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentUser.id;
@@ -1716,28 +1699,19 @@
               userName: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentUser.userName;
               },
-              userUpdatedCallback: /* @ngInject */ function ($stateParams) {
-                return $stateParams.userUpdatedCallback;
-              },
-              isInvitePending: /* @ngInject */ function ($stateParams) {
-                return $stateParams.isInvitePending;
-              },
               displayName: translateDisplayName('hercules.serviceNames.squared-fusion-uc'),
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-uc.aware-settings', {
             views: {
               'side-panel-container@user-overview': {
-                template: '<hybrid-call-service-aware-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)" is-invite-pending="$resolve.isInvitePending" all-user-entitlements="$resolve.allUserEntitlements"></hybrid-call-service-aware-user-settings>',
+                template: '<hybrid-call-service-aware-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress"></hybrid-call-service-aware-user-settings>',
               },
             },
             data: {},
             params: {
               userId: '',
               userEmailAddress: '',
-              onEntitlementChange: Function,
-              isInvitePending: null,
-              allUserEntitlements: null,
             },
             resolve: {
               userId: /* @ngInject */ function ($stateParams) {
@@ -1746,15 +1720,6 @@
               displayName: translateDisplayName('sidePanelBreadcrumb.aware'),
               userEmailAddress: /* @ngInject */ function ($stateParams) {
                 return $stateParams.userEmailAddress;
-              },
-              onEntitlementChange: /* @ngInject */ function ($stateParams) {
-                return $stateParams.onEntitlementChange;
-              },
-              isInvitePending: /* @ngInject */ function ($stateParams) {
-                return $stateParams.isInvitePending;
-              },
-              allUserEntitlements: /* @ngInject */ function ($stateParams) {
-                return $stateParams.allUserEntitlements;
               },
             },
           })
@@ -1775,16 +1740,13 @@
           .state('user-overview.hybrid-services-squared-fusion-uc.connect-settings', {
             views: {
               'side-panel-container@user-overview': {
-                template: '<hybrid-call-service-connect-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)" user-test-tool-feature-toggled="$resolve.userTestToolFeatureToggled" is-invite-pending="$resolve.isInvitePending" all-user-entitlements="$resolve.allUserEntitlements"></hybrid-call-service-connect-user-settings>',
+                template: '<hybrid-call-service-connect-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" user-test-tool-feature-toggled="$resolve.userTestToolFeatureToggled"></hybrid-call-service-connect-user-settings>',
               },
             },
             data: {},
             params: {
               userId: '',
               userEmailAddress: '',
-              onEntitlementChange: Function,
-              isInvitePending: null,
-              allUserEntitlements: null,
             },
             resolve: {
               displayName: translateDisplayName('sidePanelBreadcrumb.connect'),
@@ -1794,17 +1756,8 @@
               userEmailAddress: /* @ngInject */ function ($stateParams) {
                 return $stateParams.userEmailAddress;
               },
-              onEntitlementChange: /* @ngInject */ function ($stateParams) {
-                return $stateParams.onEntitlementChange;
-              },
               userTestToolFeatureToggled: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCallUserTestTool);
-              },
-              isInvitePending: /* @ngInject */ function ($stateParams) {
-                return $stateParams.isInvitePending;
-              },
-              allUserEntitlements: /* @ngInject */ function ($stateParams) {
-                return $stateParams.allUserEntitlements;
               },
             },
           })
@@ -4282,6 +4235,34 @@
             url: '/nodes',
             template: '<hybrid-services-nodes-page back-state="$resolve.backState" cluster-id="$resolve.id"></hybrid-services-nodes-page>',
           })
+          .state('context-cluster-sidepanel', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<cluster-sidepanel-overview cluster-type="\'cs_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType"></cluster-sidepanel-overview>',
+              },
+              'header@context-cluster-sidepanel': {
+                template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'),
+              },
+              'side-panel-container@context-cluster-sidepanel': {
+                template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-content.html'),
+              },
+            },
+            // If data not present, $state.current.data.displayName can't be changed
+            data: {},
+            params: {
+              clusterId: null,
+              connectorType: null,
+            },
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
+              connectorType: /* @ngInject */ function ($stateParams) {
+                return $stateParams.connectorType;
+              },
+            },
+          })
           .state('context-fields', {
             url: '/services/context/fields',
             parent: 'context',
@@ -4465,31 +4446,12 @@
               displayName: translateDisplayName('sidePanelBreadcrumb.fields'),
             },
           })
-          .state('context-cluster-sidepanel', {
-            parent: 'sidepanel',
+          .state('context-settings', {
+            url: '/services/context/settings',
+            parent: 'context',
             views: {
-              'sidepanel@': {
-                template: '<cluster-sidepanel-overview cluster-type="\'cs_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType"></cluster-sidepanel-overview>',
-              },
-              'header@context-cluster-sidepanel': {
-                template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'),
-              },
-              'side-panel-container@context-cluster-sidepanel': {
-                template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-content.html'),
-              },
-            },
-            // If data not present, $state.current.data.displayName can't be changed
-            data: {},
-            params: {
-              clusterId: null,
-              connectorType: null,
-            },
-            resolve: {
-              id: /* @ngInject */ function ($stateParams) {
-                return $stateParams.clusterId;
-              },
-              connectorType: /* @ngInject */ function ($stateParams) {
-                return $stateParams.connectorType;
+              contextServiceView: {
+                template: '<context-settings></context-settings>',
               },
             },
           })
@@ -5017,6 +4979,11 @@
             },
             parent: 'main',
             abstract: true,
+            resolve: {
+              hasCapacityFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCapacity);
+              },
+            },
           })
           .state('calendar-service.list', {
             url: '/services/calendar',
@@ -5034,6 +5001,14 @@
             views: {
               calendarServiceView: {
                 template: '<calendar-service-settings-page></calendar-service-settings-page>',
+              },
+            },
+          })
+          .state('calendar-service.users', {
+            url: '/services/calendar/users',
+            views: {
+              calendarServiceView: {
+                template: '<calendar-service-users-page></calendar-service-users-page>',
               },
             },
           })
@@ -5070,6 +5045,11 @@
               clusterId: null,
             },
             parent: 'main',
+            resolve: {
+              hasCapacityFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCapacity);
+              },
+            },
           })
           .state('call-service.list', {
             url: '/services/call',
@@ -5090,6 +5070,14 @@
               },
             },
           })
+          .state('call-service.users', {
+            url: '/services/call/users',
+            views: {
+              callServiceView: {
+                template: '<call-service-users-page></call-service-users-page>',
+              },
+            },
+          })
           .state('imp-service', {
             template: require('modules/hercules/service-specific-pages/imp-service-pages/imp-service-container.html'),
             controller: 'ImpServiceContainerController',
@@ -5100,9 +5088,23 @@
             },
             parent: 'main',
             resolve: {
-              clusterId: /* @ngInject */ function ($stateParams) {
-                return $stateParams.clusterId;
+              hasCapacityFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCapacity);
               },
+            },
+          })
+          .state('imp-service.list', {
+            url: '/services/imp',
+            views: {
+              impServiceView: {
+                template: require('modules/hercules/service-specific-pages/imp-service-pages/imp-service-resources.html'),
+              },
+              controller: /* @ngInject */ function (Analytics) {
+                return Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_IMP_LIST);
+              },
+            },
+            params: {
+              clusterId: null,
             },
           })
           .state('imp-service.settings', {
@@ -5118,15 +5120,12 @@
               },
             },
           })
-          .state('imp-service.list', {
-            url: '/services/imp',
+          .state('imp-service.users', {
+            url: '/services/imp/users',
             views: {
               impServiceView: {
-                template: require('modules/hercules/service-specific-pages/imp-service-pages/imp-service-resources.html'),
+                template: '<imp-service-users-page></imp-service-users-page>',
               },
-            },
-            params: {
-              clusterId: null,
             },
           })
           .state('private-trunk-settings', {

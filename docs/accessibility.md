@@ -42,6 +42,22 @@ Please note that anything that can be clicked by, or otherwise interact with, th
 </ul>
 ```
 
+## Toggle Switches
+
+Our toggle switches are the cs-toggle-switch from collab-ui.  While these are automatically added to the tab-index, they will all need an aria-label added.  The tag `cs-aria-label` is used to pass a string into the toggle switch that is then applied internally to the aspect of the switch in the tabindex.
+
+Example:
+```typescript
+<cs-toggle-switch
+  ng-model="$ctrl.modal"
+  toggle-id="toggleId"
+  cs-change="$ctrl.onChange()"
+  cs-true-value="false"
+  cs-false-value="true"
+  cs-aria-label="{{::'common.translatedText' | translate}}">
+</cs-toggle-switch>
+```
+
 ## Tooltips
 
 As noted in the [aria-label](#aria-label-and-screen-readers) section, tooltips are not automatically added to the tabindex, nor do they automatically react to receiving keyboard focus.  Please ensure that all tooltips on the page have `focus` included as a `tooltip-trigger`, a `tabindex` of 0 and an `aria-label` that matches the displayed text of the tooltip.  In cases where the tooltip displays html in addition to the text, the text provided to the `aria-label` should not include the html elements.

@@ -26,17 +26,13 @@ describe('Me Service', () => {
     it('should return a promise that resolves to "me" user data', function () {
       this.$httpBackend.expectGET(/.*\/Users\/me\b.*/).respond(200, meResponse);
 
-      this.MeService.getMe()
-        .then((response) => {
-          expect(response.status).toEqual(200);
-          expect(response.data).toEqual(meData);
-        })
-        .catch(() => {
-          expect('failed to get Me data from httpBackend').toBeFalsy();
-        });
-
+      let resp;
+      this.MeService.getMe().then(response => {
+        resp = response;
+      });
       this.$httpBackend.flush();
+      expect(resp.status).toEqual(200);
+      expect(resp.data).toEqual(meData);
     });
-
   });
 });
