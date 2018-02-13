@@ -8175,7 +8175,24 @@
         "createSpecificFailureText": "Failed to save {{ featureName }} {{ inputItem }}.",
         "updateConfigFailureText": "Failed to save {{ featureName }}."
       }
-    }
+    },
+    "profileEvaDesc": "Configure how your organization or individual user is visually represented.",
+    "userDisplayName": "Show user’s display name",
+    "userAlias": "Show user’s alias (agents only)",
+    "userNamePreview": "User display name",
+    "userProfileTooltip": "Click to preview profile for users in your organization.",
+    "profile_user_info_cva": "Use a unique Customer Virtual Assistant profile to distinguish it from users in your organization.",
+    "user_cva": "Customer Virtual Assistant and Users",
+    "profile_org_info_cva_eva": "Use a single profile to represent the Customer Virtual Assistant and all users in your organization.",
+    "user_alias_desc": "Expert users do not have an alias, so their Cisco Spark account name is always displayed.",
+    "display_text_desc": "The display text is the same as the agent's profile in Cisco Spark Care or the expert's profile in Cisco Spark.",
+    "userSettingInfo": "You cannot change the default user avatar seen in the Preview.",
+    "orgEvaSettingInfo": "You can change the logo seen in the Preview on the Settings page.",
+    "profile_org_info_eva": "Use a single profile to represent all users in your organization.",
+    "user_non_cva": "Individual Users",
+    "user_info_non_cva": "Use unique profiles to represent the different users in your organization.",
+    "helpTextWaitingEVA": "Customers see this message while waiting for a response to their request.",
+    "waitingMessageEVA": "Someone will help you shortly…"
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",
