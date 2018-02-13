@@ -5,16 +5,15 @@
 
   /* @ngInject */
   function WebExUserSettings2Ctrl(
-    $scope,
     $rootScope,
-    $log,
+    $sce,
+    $scope,
     $state,
     $stateParams,
     $translate,
-    $sce,
-    WebExUserSettingsFact,
     Authinfo,
-    UrlConfig
+    UrlConfig,
+    WebExUserSettingsFact
   ) {
     $scope.loading = WebExUserSettingsFact.loading;
     // Localize the breadcrumb
@@ -30,6 +29,12 @@
       locale = 'es_MX'; //mexican spanish
     }
     $scope.localeParam = locale;
+
+    $scope.submitAdvancedSettingsForm = function () {
+      if ($scope.advancedSettingsForm) {
+        $scope.advancedSettingsForm.$$element[0].submit();
+      }
+    };
 
     $scope.trustSrc = function (src) {
       return $sce.trustAsResourceUrl(src);
@@ -52,12 +57,6 @@
 
     $scope.callBackTeleconfChkboxClick = function () {
       // var funcName = "callBackTeleconfChkboxClick()";
-      // var logMsg = "";
-
-      // logMsg = funcName + ": " + "\n" +
-      //   "callBackTeleconf.value=" + $scope.userSettingsModel.telephonyPriviledge.callBackTeleconf.value + "\n" +
-      //   "callInTeleconf.value=" + $scope.userSettingsModel.telephonyPriviledge.callInTeleconf.value;
-      // $log.log(logMsg);
 
       if ($scope.userSettingsModel.telephonyPriviledge.callBackTeleconf.value) {
         if (!$scope.userSettingsModel.telephonyPriviledge.callInTeleconf.value) {
@@ -67,11 +66,6 @@
             $scope.userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled
           ) ? 2 : 1;
         }
-
-        // logMsg = funcName + ": " + "\n" +
-        //   "callInTeleconf.value=" + $scope.userSettingsModel.telephonyPriviledge.callInTeleconf.value + "\n" +
-        //   "selectedCallInTollType=" + $scope.userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType;
-        // $log.log(logMsg);
       } else {
         $scope.userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.value = false;
       }
@@ -95,8 +89,6 @@
     }; // btnReset2()
 
     //----------------------------------------------------------------------//
-
-    $log.log('Show panel4');
 
     $scope.userSettingsModel = WebExUserSettingsFact.getUserSettingsModel();
   } // WebExUserSettings2Ctrl()
