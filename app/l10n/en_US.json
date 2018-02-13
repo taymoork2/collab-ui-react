@@ -5664,7 +5664,9 @@
     "trialDuration": "Trial Duration",
     "callServiceDisabled": "This service is temporarily unavailable for trial.",
     "managedBy": "Managed by {{org}}",
-    "anotherPartner": "another partner"
+    "anotherPartner": "another partner",
+    "kOneContents": "Includes video chat and automated chat support using a virtual assistant.",
+    "kTwoContents": "Includes video chat and automated chat support using a virtual assistant."
   },
   "status": {
     "noResults": "No results available.",
