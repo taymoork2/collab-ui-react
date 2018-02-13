@@ -4,8 +4,10 @@
 </div>
 <div class="modal-body schedulerModal" ng-form="$ctrl.scheduleForm">
   <div class="date-input" ng-click="$ctrl.onChangeDate()">
+    <!-- TODO: update placeholder text to translation -->
     <cs-datepicker ng-required="true" large-datepicker required id="runDate" ng-model="$ctrl.runDate" placeholder="Choose a day" view-format="MM-DD"></cs-datepicker>
     <br>
+    <!-- TODO: update placeholder text to translation -->
     <input cs-timepicker twentyfourhour="true" ng-required="true" type="text" id="runTime" ng-model="$ctrl.runTime" placeholder="Choose a time to run" />
   </div>
   {{$ctrl.dateObj.timeVal}}
