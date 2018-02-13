@@ -4,11 +4,15 @@ class LinkedSitesDetailsComponentCtrl implements ng.IComponentController {
 
   public selectedSiteInfo: IACSiteInfo;
   public actionList;
+  public linkAllUsers: boolean;
+  public linkAllUsersNotAllowed: boolean = false;
 
   public webexPage: IGotoWebex;
 
   public showWizardFn: Function;
   public launchWebexFn: Function;
+
+  public automaticLinkingTooltipText: string = 'accountLinking.siteDetails.automaticLinkingTooltip';
 
   /* @ngInject */
   constructor(private $log: ng.ILogService,
@@ -39,6 +43,11 @@ class LinkedSitesDetailsComponentCtrl implements ng.IComponentController {
   public isAutomaticMode(): boolean {
     return (this.selectedSiteInfo.linkingMode === LinkingMode.AUTO_AGREEMENT ||
     this.selectedSiteInfo.linkingMode === LinkingMode.AUTO_VERIFY_DOMAIN);
+  }
+
+  public linkAllUsersChange(value) {
+    this.$log.debug('linkAllUsersChange', value);
+    this.$log.debug('linkAllUsersChange', this.selectedSiteInfo);
   }
 
 }

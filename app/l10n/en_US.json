@@ -9234,7 +9234,8 @@
         "title": "Meeting",
         "description": "WebEx Meeting Center and Cisco Spark configurations for your organization and individuals.",
         "SPDescription": "WebEx Meeting Center and Cisco Spark configurations.",
-        "pmrText": "Configure your Personal Meeting Room"
+        "pmrText": "Configure your Personal Meeting Room",
+        "viewWebExSites": "View WebEx Sites"
       },
       "call": {
         "title": "Call",
@@ -10515,7 +10516,9 @@
       "setAccountLinkingModeError": "Setting Account Linking Mode Failed with : {{message}}",
       "getCiSiteLinkingError": "Failed getting linking info with : {{message}}",
       "getCiAccountSyncError": "Failed getting account sync with : {{message}}",
-      "getDomainsError": "Failed getting domains with : {{message}}"
+      "getDomainsError": "Failed getting domains with : {{message}}",
+      "unableToRetrieveSomeData": "Unable to retrieve some data",
+      "unableToRetrieveData": "Unable to retrieve data"
     },
     "grid": {
       "header": {
@@ -10550,13 +10553,16 @@
       "viewReports": "View Reports",
       "dontHaveAdminRights": "You don't have administrative privileges for this site.",
       "legacyWebexLicense": "Legacy WebEx License",
-      "launchWebexSiteAdmin": "Launch WebEx Site Admin"
+      "launchWebexSiteAdmin": "Launch WebEx Site Admin",
+      "automaticLinking": "Automatic Linking",
+      "automaticLinkingTooltip": "All WebEx accounts listed in the verified domains will be linked, including existing unlinked accounts and future new accounts."
     },
     "wizard": {
       "title": "WebEx Accounts Linking Mode",
       "siteName": "Site Name: {{siteName}}",
       "enrolledWebexSiteName": "Enrolled WebEx Site Name",
-      "webexSite": "WebEx Site"
+      "webexSite": "WebEx Site",
+      "agreementAcceptLabel": "I have read and accept the agreement"
     }
   },
   "hcs": {

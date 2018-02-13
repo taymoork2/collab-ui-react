@@ -65,6 +65,8 @@ class LinkedSitesComponentCtrl implements ng.IComponentController {
       return;
     }
 
+    site.siteInfoErrors = [];
+    site.accountInfoErrors = [];
     if (site.webexInfo.siteInfoPromise) {
       site.webexInfo.siteInfoPromise.then((si: IACWebexSiteinfoResponse) => {
         // TODO: Other ways to solve this mismatch between WebEx mode empty meaning unset ?
@@ -74,16 +76,34 @@ class LinkedSitesComponentCtrl implements ng.IComponentController {
         site.linkingMode = si.accountLinkingMode;
         site.linkingModeDisplay = this.modeDisplayNameLookup[si.accountLinkingMode];
         site.supportAgreementLinkingMode = si.supportAgreementLinkingMode;
+        site.linkAllUsers = si.linkAllUsers;
+      }).catch( (error) => {
+        if (site.siteInfoErrors) {
+          site.siteInfoErrors.push(error);
+          //TODO: Some error situations gives too many toasters... how to reduce...
+          //this.Notification.error('accountLinking.errors.getCiSiteLinkingError', { message: error });
+          this.$log.error('getCiSiteLinkingError', error);
+        }
       });
     }
     if (site.webexInfo.ciAccountSyncPromise) {
       site.webexInfo.ciAccountSyncPromise.then((status: IACLinkingStatus) => {
         site.linkingStatus = status;
+      }).catch( (error) => {
+        if (site.accountInfoErrors) {
+          site.accountInfoErrors.push(error);
+          //TODO: Some error situations gives too many toasters... how to reduce...
+          //this.Notification.error('accountLinking.errors.getCiAccountSyncError', { message: error });
+          this.$log.error('getCiAccountSyncError', error);
+        }
       });
     }
     if (site.webexInfo.domainsPromise) {
       site.webexInfo.domainsPromise.then((domainBlob: IACWebexDomainsResponse) => {
         site.domains = domainBlob.emailDomains;
+      }).catch( (error) => {
+        this.Notification.error('accountLinking.errors.getDomainsError', { message: error });
+        this.$log.error('getDomainsError', error);
       });
     }
 

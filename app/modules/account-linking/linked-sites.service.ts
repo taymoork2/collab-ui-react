@@ -1,7 +1,8 @@
 import { IACSiteInfo, IACLinkingStatus, IACWebexSiteinfoResponse, LinkingMode } from './account-linking.interface';
-import { Notification } from 'modules/core/notifications';
 
 export class LinkedSitesService {
+
+  private useMockSites: boolean = false;
 
   /* @ngInject */
   constructor(private $log: ng.ILogService,
@@ -9,7 +10,6 @@ export class LinkedSitesService {
               private Userservice,
               private LinkedSitesWebExService,
               private LinkedSitesMockService,
-              private Notification: Notification,
               private FeatureToggleService) {
   }
 
@@ -48,13 +48,20 @@ export class LinkedSitesService {
         };
       });
       this.$log.debug('return realSites', sites);
-
-      return sites.concat(this.LinkedSitesMockService.getMockSites());
+      if (this.useMockSites) {
+        return sites.concat(this.LinkedSitesMockService.getMockSites());
+      } else {
+        return sites;
+      }
     });
   }
 
-  public setCiSiteLinking(linkedSiteUrl, mode) {
+  public setCiSiteLinking(linkedSiteUrl: string, mode: string) {
     return this.LinkedSitesWebExService.setCiSiteLinking(linkedSiteUrl, mode);
+  }
+
+  public setLinkAllUsers(linkedSiteUrl: string, linkAllUsers: boolean) {
+    return this.LinkedSitesWebExService.setLinkAllUsers(linkedSiteUrl, linkAllUsers);
   }
 
   // TODO Add interface for data returned
@@ -77,7 +84,7 @@ export class LinkedSitesService {
         return si;
       } else {
         this.$log.debug('getSiteInfo error', error);
-        this.Notification.error('accountLinking.errors.getCiSiteLinkingError', { message: error.data.errorMsg });
+        throw error;
       }
     });
   }
@@ -92,7 +99,7 @@ export class LinkedSitesService {
         return null;
       } else {
         this.$log.debug('getCiAccountSync error', error);
-        this.Notification.error('accountLinking.errors.getCiAccountSyncError', { message: error.data.errorMsg });
+        throw error;
       }
     });
   }
@@ -107,7 +114,7 @@ export class LinkedSitesService {
         return null;
       } else {
         this.$log.debug('getDomains error', error);
-        this.Notification.error('accountLinking.errors.getDomainsError', { message: error.data.errorMsg });
+        throw error;
       }
     });
   }
