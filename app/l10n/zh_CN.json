@@ -18,7 +18,7 @@
     "agree": "接受 ",
     "ciscoSpark": "Cisco Spark",
     "version": "版本：{{version}}",
-    "copyright1": "版权所有 © 2017 Cisco Systems。",
+    "copyright1": "版权所有 © 2018 Cisco Systems。",
     "copyright2": "保留所有权利。",
     "description": "Cisco Spark 是一个提供消息（IM）、语音和视频呼叫功能的团队协作应用程序。",
     "loggingOut": "正在注销..."
@@ -201,8 +201,9 @@
       "manualLabelNew": "手动添加或修改用户",
       "manualDetails": "您只需要掌握电子邮件地址就可添加和/或编辑多达 {{maxUsersInManual}} 名用户。",
       "manualDetailsNew": "添加或修改多达 {{maxUsersInManual}} 名用户。",
+      "dirSyncModifyAll": "修改所有已同步的用户",
       "bulkLabel": "用 CSV 文件导出和导入用户",
-      "bulkLabelNew": "批量添加或修改用户",
+      "bulkLabelNew": "以 CSV 方式添加或修改用户",
       "bulkDetails": "一次添加和编辑多达 {{maxUsersInCSV}} 名用户的最佳方法。",
       "bulkDetailsNew": "使用 CSV 文件添加或修改多达 {{maxUsersInCSV}} 名用户。",
       "advancedLabel": "启用目录同步",
@@ -214,16 +215,30 @@
       "directorySynchronization": "目录同步",
       "directorySynchronizationEnableLabel": "启用目录同步",
       "directorySynchronizationDisableLabel": "禁用目录同步",
-      "enabled": "已启用",
-      "disabled": "已禁用",
+      "turnOnDirSync": "打开目录同步",
       "licenses": "许可证",
       "autoAssignLicenses": "自动分配许可证",
       "setUpAutoAssignTemplate": "设置自动分配模板",
       "modifyUsers": "修改用户",
       "moreOptions": {
         "modifyAutoAssign": "修改自动分配模板",
+        "activateAutoAssign": "激活自动分配",
         "deactivateAutoAssign": "停用自动分配",
         "deleteAutoAssign": "删除自动分配模板"
+      },
+      "modifyAutoAssign": {
+        "title": "修改自动分配模板",
+        "modifySuccess": "已成功修改您的许可证模板。系统将会自动为新用户分配许可证。",
+        "modifyError": "模板加载失败。"
+      },
+      "activateAutoAssign": {
+        "activateSuccess": "您已激活自动分配许可证模板",
+        "activateError": "模板激活失败。"
+      },
+      "deactivateAutoAssign": {
+        "description": "将不会自动为新用户分配许可证。现有用户的许可证将不受影响。您希望继续此操作吗？",
+        "deactivateSuccess": "您已停用自动分配许可证模板",
+        "deactivateError": "模板停用失败。"
       },
       "deleteAutoAssignModal": {
         "title": "删除自动分配模板",
@@ -253,7 +268,7 @@
       "manualDetails": "您只需要掌握电子邮件地址就可编辑多达 {{maxUsersInManual}} 名用户。",
       "bulkLabel": "用 CSV 文件导出和修改用户",
       "bulkDetails": "一次编辑多达 {{maxUsersInCSV}} 名用户的最佳办法。",
-      "advancedLabel": "修改所有同步的用户",
+      "advancedLabel": "修改所有已同步的用户",
       "advancedDetails": "向所有用户添加新许可证。"
     },
     "emailSuppress": {
@@ -324,7 +339,7 @@
       "retrying": "正在重试...",
       "retryingIn": "在以下时间后重试：",
       "retryingUsers": "{users, plural, other{# 个用户}}",
-      "exportUserList": "导出用户列表。"
+      "exportUserList": "导出用户列表"
     },
     "advanced": {
       "title": "高级",
@@ -350,7 +365,15 @@
         "description": "以下许可证将会自动分配给新用户。",
         "saveSuccess": "已成功设置您的许可证模板。系统将会自动为新用户分配许可证。",
         "saveError": "保存许可证模板时发生错误。请重试。"
+      },
+      "csv": {
+        "warningTitle": "自动分配 CSV 规则",
+        "warningMessage": "如果要对新用户应用自动分配模板，请将许可证字段留空；或者也可输入 True 或 False 指定许可证，而不应用自动分配模板。现有用户不受自动分配模板的影响。"
       }
+    },
+    "autoAssignLicenseSummaryForDirSync": {
+      "header": "许可证摘要",
+      "description": "您已启用自动分配功能。系统将自动为所有已同步的用户分配以下许可证。"
     }
   },
   "userTaskManagerModal": {
@@ -394,7 +417,6 @@
     "call": "呼叫",
     "subscriptionIdError": "加载订阅标识时发生错误",
     "hybridServices": "混合服务",
-    "hybridServicesWarning": "至少为用户分配一个许可证以启用混合服务",
     "freeCollab": "免费公共协作服务",
     "licCollab": "授权协作服务",
     "siteAdminUrl": "登录以进行管理",
@@ -426,6 +448,7 @@
     "careServices": "聊天和回呼",
     "careVoiceServices": "聊天、回呼和入站呼叫",
     "enableCallInfo": "基于语音的交互需要使用 Cisco Spark 呼叫。",
+    "enableCallInfoToggle": "您必须具有 Cisco Spark 呼叫或混合呼叫，才能使用 Spark Care 语音功能。",
     "paidContactCenterVoice": "聊天、回呼和入站呼叫",
     "paidContactCenter": "聊天和回呼",
     "enterpriseEdition": "企业版 {{capacity}}",
@@ -455,6 +478,11 @@
       "other": "未授权，状态：{{status}}"
     },
     "enableCareInformationText": "选择“消息”以激活 Care。"
+  },
+  "onboardSummaryForAutoAssignModal": {
+    "title": "自动分配许可证",
+    "header": "许可证摘要",
+    "description": "您已启用自动分配功能。将为新用户自动分配以下许可证。"
   },
   "usersPreview": {
     "groupPreview": "群：",
@@ -506,6 +534,7 @@
     "deviceTab": "设备",
     "placeTab": "地方",
     "reportTab": "报告",
+    "taasOverviewTab": "TaaS",
     "supportTab": "支持",
     "logsTab": "日志",
     "logsTabDesc": "查看用户日志",
@@ -760,6 +789,9 @@
       "diagnostics": "诊断",
       "classic": "经典版",
       "webexClassic": "WebEx 经典版",
+      "dashboard": "控制板",
+      "JMS": "JMS",
+      "JMT": "JMT",
       "meetingUsage": "会议使用",
       "joinMeetingTime": "加入会议时间",
       "webexReportInMashup": "CHP 报告",
@@ -777,7 +809,7 @@
     "start": "开始",
     "hostID": "主持人标识",
     "details": "详细信息",
-    "created": "已创建",
+    "created": "已创建的会议",
     "duration": "持续时间",
     "hostName": "主机名称",
     "site": "站点名称 (ID)",
@@ -817,7 +849,7 @@
     },
     "meetingStatus": {
       "ended": "已结束",
-      "inProcess": "进行中"
+      "inProgress": "正在进行"
     },
     "connectionFields": {
       "voIP": "网络语音",
@@ -1158,8 +1190,9 @@
     "logLocusId": "Locus 标识",
     "logCallStart": "呼叫开始时间",
     "logAction": "客户端日志",
-    "callflowLogsAction": "呼叫日志",
-    "callflowAction": "呼叫流程图",
+    "feedbackId": "反馈标识",
+    "correlationId": "相关性标识",
+    "metadata": "元数据",
     "errEmptyinput": "“搜索输入”不得为空。",
     "errLogQuery": "检索日志失败。状态：{{status}}",
     "inputPlaceholder": "输入搜索词（电子邮件地址、用户标识、Locus 标识等等）",
@@ -1204,16 +1237,14 @@
     "externally": "在外部",
     "reportingUrl": "报告 URL：",
     "help": "帮助",
-    "faqs": "常见问题解答",
     "helpUrl": "帮助 URL：",
     "sendFeedback": "Cisco 反馈",
-    "sso": "SSO",
-    "roles": "角色",
     "readOnlyHeader": "只读",
     "readOnlyAccessNotEnabled": "帮助台只读访问尚未启用。您可以在帐户设置中更改此项",
     "downloadLogFailed": "下载日志失败",
     "callflowResultsFailed": "下载与日志文件对应的呼叫流结果失败",
     "status": "Cisco Spark 状态",
+    "extendedMetadata": "日志元数据",
     "tabs": {
       "status": "状态",
       "logs": "日志",
@@ -1337,10 +1368,12 @@
     "manualCodes": {
       "100": "未使用",
       "200": "转移；修改非 CI WebEx 站点",
-      "210": "创建非 CI 站点（新）",
+      "210": "创建非 CI 站点",
+      "220": "站点不支持自动预配置。",
       "300": "TSP 音频到 WebEx 音频/纯 VoIP；TSP 合作伙伴至直接客户转移",
       "400": "WebEx 音频/纯 VoIP 到 TSP 音频；直接客户至 TSP 合作伙伴转移",
       "450": "修改 MP 音频",
+      "460": "修改无法识别的音频类型",
       "500": "需要手动创建外观方案",
       "600": "CCASP 音频设置、修改、取消、暂停/继续或音频更改",
       "650": "CCA 企业版设置、取消",
@@ -1352,6 +1385,10 @@
       "910": "针对非 CI 站点的 CMR 更改",
       "920": "TSP 合作伙伴至合作伙伴的转移",
       "930": "非 CI 站点的会话切换",
+      "940": "CMR 需要 MC",
+      "950": "降价销售",
+      "960": "CMR - 数据中心不支持 CMR",
+      "970": "站点的主要语言和辅助语言重复",
       "1000": "Messenger"
     }
   },
@@ -1494,12 +1531,15 @@
     "active": "活动",
     "add": "添加",
     "agree": "同意",
+    "alarm": "警报",
     "alert": "提示",
     "all": "全部",
     "and": "和",
     "apply": "应用",
     "assign": "分配",
     "assigned": "已分配",
+    "authorize": "授权",
+    "automatic": "自动",
     "back": "上一步",
     "begin": "开始",
     "cancel": "取消",
@@ -1511,6 +1551,8 @@
     "completed": "已完成",
     "confirm": "确认",
     "continue": "继续",
+    "copy": "复制",
+    "copiedToClipboard": "数据已复制到剪贴板",
     "copyToClipboard": "复制到剪贴板",
     "create": "创建",
     "dateRange": "日期范围",
@@ -1540,6 +1582,7 @@
     "hideAllAdminUsers": "隐藏管理员",
     "history": "历史记录",
     "id": "标识",
+    "ifErrorRemains": "如果错误仍存在，请单击您的用户名，然后选择<strong>反馈</strong>提交支持申请以进行进一步调查。",
     "incorrectFormat": "错误的格式",
     "info": "信息",
     "invalidEmail": "此电子邮件地址无效。",
@@ -1552,12 +1595,19 @@
     "invalidUrl": "此 URL 无效。",
     "invalidZipCode": "邮政编码不正确",
     "ipAddress": "IP 地址",
+    "iUnderstand": "我明白",
+    "keys": {
+      "activated": "已激活",
+      "deactivated": "已停用"
+    },
     "language": "语言",
     "lastName": "姓氏",
     "learnMore": "了解详情。",
     "leave": "离开",
+    "loading": "正在加载",
     "memberCount": "{{count}} 个成员",
     "members": "成员",
+    "message": "消息",
     "metrics": "度量",
     "modal": "模式",
     "modify": "修改",
@@ -1573,6 +1623,7 @@
     "off": "关",
     "offline": "离线",
     "ok": "确定",
+    "OK": "确定",
     "on": "开",
     "online": "在线",
     "open": "开启",
@@ -1582,6 +1633,7 @@
     "pending": "待解决",
     "play": "播放",
     "postpone": "推迟",
+    "previous": "上一步",
     "primary": "主要",
     "proceed": "继续",
     "processingEllipsis": "正在处理...",
@@ -1597,6 +1649,7 @@
     "resources": "资源",
     "result": "结果",
     "retry": "重试",
+    "reload": "重新载入",
     "save": "保存",
     "saveLabel": "要保存更改吗？",
     "search": "搜索",
@@ -1610,6 +1663,7 @@
     "service": "服务",
     "settings": "设置",
     "setUp": "设置",
+    "shared": "共享了",
     "showAllAdminUsers": "显示全部 {{numUsers}} 位管理员",
     "showLess": "显示更少内容",
     "showMore": "显示更多内容",
@@ -1621,12 +1675,14 @@
     "test": "测验",
     "to": "收件人",
     "toggleData": "切换数据",
+    "toggleMenu": "切换菜单",
     "total": "总计",
     "trackingId": "追踪 ID：{{trackingId}}。",
     "tryAgain": "请重试",
     "trySearchAgain": "尝试其他搜索。",
     "turnOff": "关闭",
     "type": "类型",
+    "unableToCopy": "无法将数据复制到剪贴板",
     "unassigned": "未分配",
     "unknown": "未知",
     "update": "更新",
@@ -1741,6 +1797,7 @@
     "setUpHybridDataSecurity": "使用混合数据安全服务创建本地部署的安全域。",
     "careLicenseMsgMissingText": "“消息”对于 Care 服务是必需的。要启用“消息”，",
     "careLicenseCallMissingText": "“呼叫”对于基于语音的 Care 服务是必需的。要启用“呼叫”，",
+    "careLicenseCallMissingTextToggle": "要使用 Spark Care 语音功能，请联系合作伙伴启用 Spark 呼叫或设置混合呼叫和企业 SIP 中继。",
     "careLicenseMsgAndCallMissingText": "“消息”和“呼叫”各自对于聊天和语音交互之类的 Care 服务是必需的。要启用“消息”和“呼叫”，",
     "careLicenseLinkText": "请联系您的合作伙伴或 Cisco 销售部门。",
     "proPackNotification": "通过 Pro Pack 发挥 Spark Control Hub 的全部作用。",
@@ -1839,8 +1896,8 @@
     "steeringDigitDescription": "指定用户在向外部拨打电话时必须拨打的数字。",
     "emergencyAddressDescription": "这是将用于紧急服务的缺省地址。各个用户或地方的设备可以覆盖此地址。",
     "extension": "分机号",
-    "extensionLength": "分机长度",
-    "extensionLengthDescription": "指定用户在向内部拨打电话时必须拨打的总位数。",
+    "extensionLength": "长度",
+    "extensionLengthDescription": "选择内部呼叫的拨打位数。",
     "extensionLengthHelpText": "设置之后，此值仅可以在未分配分机的情况下更改。",
     "extensionLengthServicesHelpText": "仅在未分配分机的情况下启用。",
     "extensionLengthServicesHelpTextForLocation": "仅在未分配分机且只配置一个位置时启用。",
@@ -1866,8 +1923,8 @@
     "steeringDigitChangeWarning": "更改外拨号位将导致以相同数字开头的分机遇到拨号延时。请确保分机号开头数字与外拨号位不同。",
     "extensionRangeChangeWarning": "更改外拨号位将导致以相同数字开头的分机遇到拨号延时。请确保分机号开头数字与外拨号位不同。",
     "siteCodeDescription": "指定标识特定站点的唯一编号。",
-    "internalExtensionRange": "内部分机范围",
-    "internalNumberRangeDescription": "指定内部号码的范围。长度必须为 {{length}} 位数字。",
+    "internalExtensionRange": "范围",
+    "internalNumberRangeDescription": "指定号码范围，最大位数为 {{length}}。",
     "extensionError": "分机无效： ",
     "companyVoicemail": "公司语音邮件",
     "companyVoicemailDesc": "为公司开启语音邮件。外部拨入号码在各个位置设定。",
@@ -1877,7 +1934,7 @@
     "vmDeliveryMethodsHelpText": "为您的组织自定义语音邮件传递选项。除了电话传递，您还可以让用户在 Cisco Spark 和/或电子邮件中检索语音邮件附件。我们不能保证下载的语音邮件附件的安全性。",
     "companyVoicemailDescription": "选择保留用于从公司外部拨入语音邮件的一个电话号码。",
     "to": "收件人",
-    "addMoreExtensionRanges": "添加更多分机范围",
+    "addMoreExtensionRanges": "添加范围",
     "emptyNumber": "“数目”不得为空",
     "notANumber": " 不是有效的数字",
     "saveSuccess": "已成功保存呼叫设置",
@@ -2173,6 +2230,8 @@
     "saving": "正在保存...",
     "errorAddr": "输入的地址无效，请重新输入。",
     "failedToDelete": "无法删除设备。原因：",
+    "searchLinkExpired": "搜索链接已过期。",
+    "searchLinkBad": "搜索链接无效。",
     "deviceAccess": "设备访问",
     "remoteAccessKey": {
       "ciscoSupport": "Cisco 支持",
@@ -2250,7 +2309,7 @@
       "modalText2": "选择要包含在报告中的信息类型：",
       "modalNote": "注：包含的用户越多，生成报告所需的时间就越长。",
       "modalCTA": "导出至 CSV",
-      "guesstimate": "估计时长为 {{minutes}} 分钟 {{seconds}} 秒的选项",
+      "noUsersFound": "找不到用户。请等待几分钟，然后重试。",
       "userNotFound": "未找到",
       "readingUserStatuses": "正在读取用户状态...",
       "readingConnectors": "正在读取集群分配信息...",
@@ -2330,8 +2389,7 @@
       "intro": "您将删除 Expressway 集群 {{clusterName}} 中的 {{serviceName}}。",
       "settingsWillBeWiped": "此项行为将删除 {{connectorName}}，并删除所有的连接器的本地设置。",
       "notDeregistered": "{{clusterName}} 仍会向 Cisco Collaboration Cloud 进行注册，且此 Expressway 集群仍能够用于托管混合服务。",
-      "lastClusterWarning": "这是该组织运行 {{connectorName}} 的最后一个集群。如果您停用 {{connectorName}}，则在添加更多资源之前，您的用户将无法使用这项服务。要想针对该组织及其用户完全停用这项服务，请转至 {{serviceName}} 设置页面。",
-      "iUnderstand": "我明白"
+      "lastClusterWarning": "这是该组织运行 {{connectorName}} 的最后一个集群。如果您停用 {{connectorName}}，则在添加更多资源之前，您的用户将无法使用这项服务。要想针对该组织及其用户完全停用这项服务，请转至 {{serviceName}} 设置页面。"
     },
     "clusters": {
       "listing": {
@@ -2369,20 +2427,28 @@
       "connected": "已连接"
     },
     "userSidepanel": {
-      "warningInvitePending": "此用户尚未接受加入 Cisco Spark 的邀请。您仍然可以启用 {{ServiceName}}，但是在该用户登录之前，激活将不会取得成功。",
+      "warningInvitePendingNotEntitled": "此用户尚未接受加入 Cisco Spark 的邀请。您仍然可以启用 {{ServiceName}}，但是必须等用户接受邀请之后才能进行服务激活。",
+      "warningInvitePendingActivation": "混合服务激活将在用户接受加入 Cisco Spark 的邀请之后开始。",
       "entitlements-dont-exist": "{{userName}} 的服务许可证不存在。",
       "previously-updated": "无法保存许可证。许可证可能分配到了其他地方。",
       "not-updated": "无法为 {{userName}} 更新许可证。",
       "not-updated-specific": "无法为 {{userName}} 更新许可证。服务器返回了以下错误消息：{{error}}。",
       "readResourceGroupsFailed": "无法读取资源组。请稍后重试。",
-      "readUserStatusFailed": "无法读取当前的用户状态。请稍后重试。",
       "refreshUserFailed": "无法刷新用户状态。请稍后重试。",
       "refreshUserDidNoGood": "无法获取用户状态。如果问题依然存在，请联系支持人员。",
       "couldNotReadConnectStatus": "无法读取呼叫服务连接组织状态。如果问题依然存在，请联系支持人员。",
       "notEnabledInOrg": "未在组织中启用",
       "enableAwareFirst": "必须先启用感知才能允许用户连接。请在<a href ng-click=\"{{onclick}}\">“呼叫服务感知”面板</a>中启用它。",
       "disableAwareHeader": "禁用服务",
-      "disableAwareMessage": "确定吗？如果禁用呼叫服务感知，也将对此用户禁用呼叫服务连接。"
+      "disableAwareMessage": "确定吗？如果禁用呼叫服务感知，也将对此用户禁用呼叫服务连接。",
+      "errorMessages": {
+        "cannotReadDeviceDataFromUSS": "无法读取设备的激活状态。",
+        "cannotReadDeviceDataFromUSSPartnerAdmin": "无法读取设备的激活状态。这可能表明存在缓存问题，请尝试注销并重新登录来清除用户缓存。",
+        "cannotReadUserDataFromUSS": "无法读取用户的激活状态。",
+        "cannotReadUserDataFromUSSPartnerAdmin": "无法读取用户的激活状态。这可能表明存在缓存问题，请尝试注销并重新登录来清除用户缓存。",
+        "cannotReadOrgDataFromFMS": "无法读取组织的基于 Expressway 的混合服务数据。",
+        "cannotReadOrgDataFromFMSPartnerAdmin": "无法读取组织基于 Expressway 的混合服务数据。这可能表明存在缓存问题，请尝试注销并重新登录来清除用户缓存。"
+      }
     },
     "placeSidepanel": {
       "hybridCallNotActivated": "我们将在 Cisco Unified Communications Manager 中检查用户帐户。这最多花费 30 分钟。稍后，回头检查状态。",
@@ -2402,7 +2468,8 @@
       "activated": "已激活",
       "error": "错误",
       "unknown": "未知",
-      "notFound": "未找到状态"
+      "notFound": "未找到状态",
+      "accountNotActivated": "帐户尚未激活"
     },
     "serviceNames": {
       "squared-fusion-uc": "呼叫服务",
@@ -2414,7 +2481,7 @@
       "contact-center-context": "Context Service",
       "squared-fusion-ec": "呼叫服务连接",
       "squared-fusion-ec.full": "呼叫服务连接",
-      "squared-fusion-mgmt": "Expressway 管理服务",
+      "squared-fusion-mgmt": "管理服务",
       "spark-hybrid-impinterop": "消息服务"
     },
     "hybridServiceNames": {
@@ -2439,7 +2506,7 @@
       "contact-center-context": "Context Connector",
       "squared-fusion-ec": "Call Connector",
       "squared-fusion-mgmt": "Management Connector",
-      "spark-hybrid-impinterop": "Hybrid Message Connector"
+      "spark-hybrid-impinterop": "Message Connector"
     },
     "connectorNameFromConnectorType": {
       "c_cal": "Calendar Connector",
@@ -2451,7 +2518,7 @@
       "cs_context": "Context Connector",
       "ucm_mgmt": "Management Connector",
       "c_serab": "Serviceability Connector",
-      "c_imp": "Hybrid Message Connector"
+      "c_imp": "Message Connector"
     },
     "shortConnectorNameFromConnectorType": {
       "c_cal": "日历",
@@ -2530,7 +2597,6 @@
       "google": "谷歌日历",
       "notSetup": "当前未设置",
       "sinceTime": "自 {{timestamp}} 起",
-      "noLicensedServices": "此用户必须已针对混合服务配置一个或多个授权服务。",
       "entitledToBothCalendarsShort": "多个日历授权",
       "entitledToBothCalendars": "该用户当前有权使用这两种日历类型。要清除错误，请禁用该用户的日历服务，然后重新启用。",
       "couldNotReadOffice365Status": "无法读取组织的 Office 365 配置。上述信息可能不完整。",
@@ -2559,22 +2625,8 @@
       "editSettingsLink": "编辑集群设置",
       "editTrunkSettingsLink": "编辑资源设置",
       "softwareUpgrade": "软件升级",
-      "currentVersion": "当前版本",
-      "newVersion": "新版本",
-      "explanation": "您即将把 Expressway 集群中所有节点上的 {{connectorType}} 更新至 {{newVersion}} 版",
-      "releaseNotesLinkText": "请参见 {{connectorType}} {{newVersion}} 的发行说明",
-      "releaseNotes": "发行说明",
-      "pending": "待解决",
-      "upgrade": "升级",
       "upgradeNow": "立即升级",
-      "upgradesAutomatically": "自动升级",
-      "upgradeProcessInitiating": "正在启动版本 {{version}} 升级...",
-      "upgradingHost": "正在将 {{host}} 升级至 {{version}}",
-      "upgradeDone": "已完成升级！",
-      "upToDate": "此集群上的 {{connectorType}} 是最新版本。",
-      "upgradePossible": "{{connectorType}} 已有新版本：{{availableVersion}}。",
-      "urgentUpgrade": "{{connectorType}} 有紧急升级可用：{{availableVersion}}。",
-      "upgradeWarning": "该集群拥有一个或多个节点，在这些节点上 {{ManagementConnector}} 未将更新发送到 {{CiscoCollaborationCloud}}。我们建议您在开始升级之前保持 {{ManagementConnector}} 在线。"
+      "upgradesAutomatically": "自动升级"
     },
     "connectorUpgrade": {
       "title": "连接器升级",
@@ -2623,6 +2675,11 @@
       "deregisterConfirmRemoval": "确认删除",
       "deregisterConfirmationText": "您即将从 Cisco Collaboration Cloud 中取消注册 <strong>{{clusterName}}</strong>。",
       "deregisterConfirmPopup": "已成功将 {{clusterName}} 从 Cisco Collaboration Cloud 中删除。"
+    },
+    "office365ReAuthorizationComponent": {
+      "title": "授权",
+      "label": "重新授权 Office 365",
+      "description": "如果您从 Office 365 环境中删除了 Cisco Spark Control Hub 授权，请单击“授权”来重设读写权限。"
     },
     "deactivateServiceComponent": {
       "deactivateServiceLabel": "停用 {{serviceName}}",
@@ -2690,7 +2747,7 @@
       "authorization": {
         "title": "使用 G Suite 帐户授权 Cisco Collaboration Cloud",
         "line1": "要为您的用户启用混合日历服务，您必须使用 G Suite 帐户授权 Cisco Collaboration Cloud。",
-        "item1": "在新的标签页中，打开 <a href=\"https://admin.google.com/AdminHome\" target=\"_blank\">G Suite 帐户控制板</a>，然后转至“安全”。",
+        "item1": "在新的标签页中，打开 <a href=\"https://admin.google.com/AdminHome\" target=\"_blank\">G Suite 帐户控制板</a>，然后转至<strong>安全</strong>。",
         "item2": "单击<strong>显示更多</strong>，然后单击<strong>高级设置</strong>。",
         "item3": "单击<strong>管理 API 客户端访问</strong>。",
         "item4": "将客户端名称和范围复制到剪贴板。",
@@ -2753,7 +2810,7 @@
         "heading": "文档和软件",
         "headingDoc": "文档",
         "headingSoftware": "软件",
-        "help": "请访问<a href=\"{{helpLink}}\" target=\"_blank\">帮助中心</a>了解 {{localizedServiceName}} 的更多信息。",
+        "help": "请参阅<a href=\"{{helpLink}}\" target=\"_blank\">部署文档</a>了解 {{localizedServiceName}} 的更多信息。",
         "downloadExpressway": "从 <a href=\"{{downloadLink}}\" target=\"_blank\">software.cisco.com</a> 下载 Cisco Expressway 软件。",
         "downloadECP": "<a href=\"{{downloadLink}}\" target=\"_blank\">下载 {{serviceName}} 软件</a>。",
         "downloadDemoHybridMedia": "<a href=\"{{downloadLink}}\" target=\"_blank\">下载完整版软件镜像</a><br>（全功能，可用于混合媒体的生产部署）<br> <a href=\"{{downloadDemoLink}}\" target=\"_blank\">下载演示版软件镜像</a> <br>（有限的功能，有效期为 90 天，仅可用于混合媒体的演示部署）"
@@ -2857,14 +2914,11 @@
         "description": "如果需要更新或恢复 G Suite API 客户端访问，请单击以下按钮检索客户端名称和范围。",
         "cta": "更新",
         "provisioningResults": {
-          "OK": "Google Calendar 与混合日历服务相集成。",
-          "BAD_API_ACCESS_SETTINGS": "未启用站点验证 API。请转至 console.developers.google.com 将其启用。",
-          "DATABASE_ERROR": "无法连接内部数据库。请稍后重试。",
-          "SITE_VERIFICATION_FAILURE": "域验证步骤失败。请务必按照文档中的域验证步骤进行操作。",
-          "SECURITY_FAILURE": "安全故障。",
-          "INPUT_PARSING_FAILURE": "无法解析数据私钥。请在 console.developers.google.com 上重新生成项目的数据私钥，然后重试。",
-          "GENERAL_ERROR": "出现未知错误。如果该错误再次出现，请联系支持人员。",
-          "INVALID_CREDENTIALS": "服务帐户凭证无效。"
+          "OK": "混合日历服务已成功应用到 Office 365 组织。",
+          "GENERAL_ERROR": "发生意外错误。",
+          "TEST_ACCOUNT_NONEXISTENT": "测试帐户凭证不起作用。请使用具有 Exchange Online 邮箱且获得许可的 Office 365 用户重新进行测试。",
+          "INVALID_SESSION_ID": "无效的会话标识。请在设置页面上重新授权 Office 365。",
+          "BAD_ADMIN_CONSENT": "我们遇到了 Office 365 组织的授权错误。请转到混合日历 Office 365 设置页面，然后重新授权。"
         }
       },
       "hybridCalendarCommon": {
@@ -3140,7 +3194,7 @@
       "releaseChannelHeader": "发布通道",
       "releaseChannelClusterDescription": "为所有在此集群内运行的“混合服务”选择发布通道。",
       "releaseChannelResourceGroupDescription": "为所有在此组内运行的“混合服务”选择发布通道。",
-      "expresswayTip": "要更改此集群的发布通道，请更改缺省发布通道，或将其分配到拥有首选发布通道的资源组。",
+      "newExpresswayTip": "无法更改单个 Expressway 集群的发布通道。要更改该集群的发布通道，请更改缺省发布通道，或将该集群分配到拥有首选发布通道的资源组。请参阅<a href=\"https://collaborationhelp.cisco.com/article/kkibf0\" target=\"_blank\">文档</a>以获取指导。",
       "releaseChannelTip": "要更改此集群的发布通道，请将其分配到拥有首选发布通道的资源组。",
       "releaseChannelSaved": "成功保存了发布通道",
       "orgHasNoAccessToChannel": "资源组已通过 “{{currentReleaseChannel}}” 发布通道进行配置，后者不再能为您的组织所使用。将发布通道设置为 “{{stableReleaseChannel}}” 以还原服务。",
@@ -3333,6 +3387,157 @@
           "description": "未将任何集群分配到用户的资源组。请检查集群配置，然后重试。"
         }
       }
+    },
+    "office365SetupModal": {
+      "title": "混合日历设置",
+      "subtitle": "Office 365 设置",
+      "subtitleReAuth": "Office 365 再授权",
+      "line1": "混合日历服务需要相应权限才能代表您的用户访问 Office 365。",
+      "line2": "单击<strong>授权</strong>登录到 Microsoft 并接受该服务的权限。",
+      "line3": "接受后，您的浏览器应当从此处重定向回去。如果并未立即重定向，请返回到 <a target=\"_blank\" href=\"https://admin.ciscospark.com\">admin.ciscospark.com</a>，然后重新开始此过程。"
+    },
+    "office365SuccessModal": {
+      "test": {
+        "subtitle": "测试帐户",
+        "inputLabel": "输入希望用于测试与 Exchange Online 的连接的 Office 365 帐户。"
+      },
+      "success": {
+        "subtitle": "设置完成",
+        "line1": "您准备好为 Office 365 用户启用混合日历服务：",
+        "line2": "通过<a href ng-click=\"{{onclick}}\">用户页面</a>分别对其启用。",
+        "line3": "使用 <a href ng-click=\"{{onclick}}\">CSV 模板</a>对其批量启用。",
+        "line4": "有关更多信息，请转到<a href=\"https://collaborationhelp.cisco.com\" target=\"_blank\">协作帮助</a>。"
+      }
+    },
+    "office365FailureModal": {
+      "subtitle": "授权期间出现错误",
+      "errorCode": "错误代码：{{code}}。"
+    },
+    "eventHistory": {
+      "pageTitle": "警报、状态和升级历史记录",
+      "featureDescription": "查看最近 7 天中所有已发出并已解决的警报、连接器状态更改以及集群配置更改。",
+      "viewHistory": "查看历史记录",
+      "noEventsFound": "找不到任何事件",
+      "cannotReadEventData": "无法读取事件历史记录数据",
+      "cannotReadResourceNames": "无法读取资源名称。缺省设置为不对任何特定资源进行筛选。",
+      "scheduledTask": "已安排的任务",
+      "automatic": "自动",
+      "allServices": "所有服务",
+      "allResources": "所有资源",
+      "serviceFilter": "服务过滤器：",
+      "resourceFilter": "资源过滤器：",
+      "dataSince": "自以下情况以来的事件",
+      "connectorProvisioned": "已向集群供应版本为 {{newVersion}} 的 {{connectorName}}",
+      "connectorDeprovisioned": "{{connectorName}} 已从集群中删除",
+      "connectorProvisioningChanged": "已启动 {{connectorName}} 向 {{newVersion}} 的升级",
+      "serviceEnabled": "{{serviceName}} 已启用",
+      "serviceDisabled": "{{serviceName}} 已禁用",
+      "newUpgradeSchedule": "新的升级计划：{{newSchedule}}",
+      "clusterRenamed": "集群名称已更新",
+      "resourceGroupChanged": "资源组已更改",
+      "releaseChannelChanged": "发布通道已更改",
+      "connectorEventTitles": {
+        "downloading": "正在下载 {{connectorType}}",
+        "installing": "正在安装 {{connectorType}}",
+        "not_installed": "{{connectorType}} 未安装",
+        "disabled": "{{connectorType}} 已禁用",
+        "not_initialized": "{{connectorType}} 未初始化",
+        "not_operational": "{{connectorType}} 不可使用",
+        "not_configured": "{{connectorType}} 未配置",
+        "running": "版本为 {{version}} 的 {{connectorType}} 正在运行并可使用"
+      },
+      "table": {
+        "event": "事件",
+        "severity": "严重级别",
+        "type": "类型",
+        "service": "服务",
+        "resource": "资源",
+        "performedBy": "执行者",
+        "time": "时间",
+        "critical": "紧急",
+        "error": "错误",
+        "warning": "警告",
+        "info": "信息",
+        "resolved": "已解决",
+        "ignored": "忽略",
+        "none": "无"
+      },
+      "eventClasses": {
+        "cluster": "群集",
+        "connector": "连接器",
+        "alarm": "警报",
+        "service": "服务"
+      },
+      "sidepanel": {
+        "header": "事件详细信息",
+        "description": "描述",
+        "connectorEvents": {
+          "provideInfoBelow": "建立支持案例时请提供以下信息。",
+          "not_installed": "Expressway 报告 {{localizedConnectorName}} 未安装。进行全新部署时会短暂出现该状态。在进行升级时也可能出现该状态。",
+          "not_installed-help": "如果该状态持续数分钟，那么可能某个步骤配置错误，需要管理员进行修复。Expressway 的 Management Connector 可能已发出警报，该警报可帮助您进行故障诊断。",
+          "disabled": "{{localizedConnectorName}} 的版本为 {{softwareVersion}}，但 Expressway 上已禁用该连接器。连接器不应该保持禁用状态：您可以登录到 Expressway Web 界面启动它，或者使用 Cisco Spark Control Hub 中的集群配置页面将其卸载。",
+          "downloading": "正在从 Cisco Collaboration Cloud 下载版本为 {{softwareVersion}} 的 {{localizedConnectorName}}。系统将在下载完成后对其进行安装。",
+          "installing": "版本为 {{softwareVersion}} 的 {{localizedConnectorName}} 已从 Cisco Collaboration Cloud 下载完成，现在正在 Expressway 上对其进行安装。正常情况下，不到一分钟即可完成安装。",
+          "not_configured": "已安装版本为 {{softwareVersion}} 的 {{localizedConnectorName}}，但未配置该连接器。请登录到 Expressway 对其进行配置，然后启动该连接器。",
+          "initializing": "已安装版本为 {{softwareVersion}} 的 {{localizedConnectorName}}，但新的软件仍在运行，并且尚未初始化。为满负荷运行且托管众多用户的连接器初始化该连接器软件可能需要耗用数小时。",
+          "not_operational": "版本为 {{softwareVersion}} 的 {{localizedConnectorName}} 正在运行，但系统报告该软件不可使用。不应该出现这种情况，需要管理员干预对其进行更正。",
+          "running": "正在运行的 {{localizedConnectorName}} 软件版本为 {{softwareVersion}}，并且可以使用。在升级或全新安装成功完成后，应该出现该状态。"
+        },
+        "alarmEvents": {
+          "alarmRaisedEmailsSentTitle": "有关新警报的电子邮件已发送",
+          "alarmResolvedEmailsSentTitle": "有关已解决警报的电子邮件已发送",
+          "alarmRaised": "已在 Expressway 节点 {{hostname}} 上发出一个警报。",
+          "alarmRaised-description": "Expressway 提供了以下警报描述：<strong>{{description}}</strong>",
+          "alarmResolved": "节点 {{hostname}} 上标题为<strong>{{title}}</strong>的警报已解决。",
+          "alarmDebounced": "Expressway 上发出了标题为<strong>{{title}}</strong>的警报，系统在数分钟内已将其标记为“已解决”。",
+          "alarmDebounced-help": "该警报的解决速度太快，以至于 Cisco Collaboration Cloud 未能发送有关该警报的电子邮件通知。通常不必担心自动解决的警报，也无需管理员干预，除非持续多次发出此类警报。",
+          "alarmRaisedNotificationSent": "Cisco Collaboration Cloud 已将节点 {{hostname}} 上标题为<strong>{{title}}</strong>的新警报的相关信息以电子邮件方式发送给 {{recipientCount}} 个收件人。",
+          "alarmResolvedNotificationSent": "Cisco Collaboration Cloud 已经将电子邮件发送给 {{recipientCount}} 个收件人，因为节点 {{hostname}} 上标题为<strong>{{title}}</strong>的警报已标记为“已解决”。"
+        },
+        "clusterEvents": {
+          "firstUpgradeSchedule": "已使用下列升级计划配置 Expressway 集群中的所有连接器：{{upgradeSchedule}}",
+          "changedUpgradeSchedule": "{{username}} 已更改 Expressway 集群中所有连接器的升级计划。新计划为：{{newSchedule}}。先前的升级计划为：{{oldSchedule}}。",
+          "automatedProvisioningChange": "{{connectorName}} 目标版本已更改为 {{newValue}}。计划的升级中已执行该操作。",
+          "automatedProvisioning": "已向 Expressway 集群供应 {{connectorName}}。系统已自动执行该操作。",
+          "automatedDeprovisioning": "Expressway 集群将不再运行 {{connectorName}}。",
+          "manualProvisioningChange": "{{connectorName}} 目标版本已更改为 {{newValue}}。该升级已由 {{username}} 手动触发。",
+          "manualProvisioning": "{{username}} 已向 Expressway 集群供应 {{connectorName}}。执行该操作的原因可能是用户创建了新集群，也可能是用户向现有集群添加了 {{connectorName}}。",
+          "manualDeprovisioning": "{{username}} 更改了 Expressway 配置，因此系统会将 {{connectorName}} 从所有集群节点中删除。",
+          "upgradeHelpText": " 集群中的每个节点将开始按序升级到新版本。当所有节点均为新的软件版本，并且系统向 Cisco Collaboration Cloud 报告所有节点均可以使用时，升级即已成功。",
+          "provisioningAddedHelpText": "管理员必须以主成员身份登录到 Expressway，并且在所有集群节点上安装了 {{connectorName}} 软件后对其进行配置。",
+          "provisioningRemovedHelpText": "系统将卸载该软件，所有本地配置将被删除。",
+          "automatedDeprovisioningHelpText": "对 Cisco Spark 组织的配置所作的更改（例如，删除某项授权或者取消激活某个服务）会导致该配置发生更改。",
+          "renamed": "{{username}} 对集群进行了重命名。新名称为 {{newName}}，旧名称为 {{oldName}}。",
+          "nameAssigned": "{{username}} 已将集群名称配置为 {{name}}。",
+          "resourceGroupIntro": "{{username}} 更改了集群的资源组。",
+          "previouslyNotInResourceGroup": "新的资源组名称为：<strong>{{newGroup}}</strong>。该集群先前不属于资源组。",
+          "changedResourceGroup": "新的资源组名称为：<strong>{{newGroup}}</strong>。该集群先前属于 {{oldGroup}}。",
+          "removedResourceGroup": "该集群不再属于资源组。该集群先前属于 {{oldGroup}}。",
+          "changedReleaseChannel": "{{username}} 更改了集群的发布通道。",
+          "oldAndNewReleaseChannel": "新的发布通道为：<strong>{{newReleaseChannel}}</strong>。旧的发布通道为：{{oldReleaseChannel}}。",
+          "changedReleaseChannelHelp": "如果将集群移入或移出资源组，或者集群的现有资源组更改了其关联的发布通道，那么 Expressway 集群的发布通道可能会更改。"
+        },
+        "serviceActivationEvents": {
+          "serviceEnabled": "{{username}} 已激活 Cisco Spark 组织中的 {{serviceName}}。在管理员用户注册可运行 {{connectorName}} 的 Expressway 集群，或向现有 Expressway 集群添加首个 {{connectorName}} 后，通常会出现此情况。",
+          "callServiceConnectEnabled": "{{username}} 已激活 Cisco Spark 组织中的 {{serviceName}}。所有运行 {{connectorName}} 的 Expressway 集群也将自动用于 {{serviceName}}。",
+          "serviceDisabled": "{{username}} 已禁用 Cisco Spark 组织中的 {{serviceName}}。",
+          "serviceDisabledHelpText": "系统会自动删除用户的 {{serviceName}} 授权，并自动卸载所有 Expressway 集群中的 {{connectorName}}。",
+          "serviceDisabledHelpTextCallServiceConnect": "系统会自动删除用户的 {{serviceName}} 授权，并删除远程设备配置。"
+        },
+        "technicalDetails": {
+          "heading": "技术详情",
+          "tooltip": "客户数据始终以匿名方式存储在 Cisco Collaboration Cloud 中。如果您需要 Cisco 调查此事件，请在该部分中向 Cisco 技术支持提供信息。",
+          "resourceName": "资源名称：",
+          "clusterId": "集群标识：",
+          "connectorId": "连接器标识：",
+          "connectorType": "连接器类型：",
+          "alarmId": "警报标识：",
+          "softwareVersion": "软件版本：",
+          "timestamp": "时间戳：",
+          "userId": "用户标识：",
+          "trackingId": "跟踪标识："
+        }
+      }
     }
   },
   "context": {
@@ -3365,6 +3570,10 @@
       "actions": "操作",
       "dateUpdated": "更新日期",
       "update": "编辑",
+      "unknownAdminAuthorizationStatus": "无法检索注册状态。请刷新浏览器重试。",
+      "resource": {
+        "notAuthorized": "您无权管理该组织的混合上下文资源。"
+      },
       "fieldPage": {
         "associatedFieldsets": "相关字段集",
         "associatedFieldsetsError": "无法检索到相关字段集。",
@@ -3417,7 +3626,8 @@
         "optionRequired": "此字段为必填项。",
         "optionsLabelWithCount": "选项数 ({{count}})",
         "optionsLabel": "选项",
-        "optionsDetailLabel": "此单选字段中的选项列表。"
+        "optionsDetailLabel": "此单选字段中的选项列表。",
+        "notAuthorized": "您无权管理该组织的混合上下文字段。"
       },
       "fieldsetPage": {
         "fieldsetId": "字段集标识",
@@ -3448,7 +3658,8 @@
         "notInUseTooltip": "不与任何对象关联的字段集。",
         "limitReached": "已达到最多字段集",
         "fieldMaxLimitReached": "已达到字段集中的最多字段。",
-        "fieldsetLimitReadFailed": "无法检索到字段集限制。刷新您的浏览器以重试"
+        "fieldsetLimitReadFailed": "无法检索到字段集限制。刷新您的浏览器以重试",
+        "notAuthorized": "您无权管理该组织的混合上下文字段集。"
       }
     }
   },
@@ -3879,11 +4090,22 @@
     "addAnotherSite": "添加其他站点",
     "meetingSettings": "会议设置",
     "meetingSettingsDescription": "“服务设置”的此步骤将帮助创建一个或多个新的 WebEx 站点。如果您已经有现成站点，而且不想设置任何新站点，单击“下一步”继续即可。",
-    "meetingCenterLicensesRemaining": "Meeting Center 剩余许可证",
-    "enterpriseEditionLicensesRemaining": "企业版剩余许可证",
-    "eventCenterLicensesRemaining": "Event Center 剩余许可证",
-    "trainingCenterLicensesRemaining": "Training Center 剩余许可证",
-    "supportCenterLicensesRemaining": "Support Center 剩余许可证",
+    "centerTypes": {
+      "EE": "企业版",
+      "MC": "Meeting Center",
+      "EC": "Event Center",
+      "TC": "Training Center",
+      "SC": "Support Center"
+    },
+    "centerTypesInits": {
+      "EE": "EE",
+      "MC": "MC",
+      "EC": "EC",
+      "TC": "TC",
+      "SC": "SC"
+    },
+    "centerTypeLicensesRemaining": "{{centerType}} 许可证剩余",
+    "centerTypeLicenses": "{{centerType}} 许可证",
     "tspPartnerRequired": "您已经为音频计划购买 TSP。需要有合作伙伴才能提供此服务。",
     "chooseTSPPartner": "选择 TSP 供应商",
     "conferencingAudioProvided": "会议音频：由 {{partner}} 提供的 {{service}}",
@@ -3937,6 +4159,7 @@
     "sharedLicenseTooltip": "每个共享会议许可证允许授权最多 250 个用户作为会议主持人。共享会议主持人可以无限制地举行会议，但每个共享会议许可证只支持 1 个并发会议。",
     "namedLicenses": "指定用户许可证",
     "careTooltip": "所有的 Care 用户都必须拥有 Cisco Spark 消息许可证。此外，他们还需要拥有 Cisco Spark 呼叫许可证才能进行基于语音的交互。",
+    "careTooltipToggle": "您必须具有 Cisco Spark 消息许可证，才能使用 Spark Care。如果要使用语音功能，您还需具有 Cisco Spark 呼叫或混合呼叫许可证。",
     "partnerProvidedAudio": "合作伙伴提供的音频",
     "webexProvidedAudio": "WebEx 提供的音频",
     "meetingsInSpark": "Cisco Spark 25 人多方会议",
@@ -4098,8 +4321,10 @@
   "sparkAssistant": {
     "title": "Cisco Spark 助手",
     "enableAssistant": "启用 Cisco Spark 助手",
-    "description": "允许用户使用语音执行各种操作，例如，发起呼叫、开始会议",
-    "termOfService": "Spark 助手服务条款 "
+    "description": "允许用户使用语音执行各种操作，例如，发起呼叫、开始会议。",
+    "termOfService": "Spark 助手服务条款",
+    "optout": "禁用 Cisco Spark 助手",
+    "optoutConfirm": "如果禁用 Cisco Spark 助手，您在任何受支持的设备上都将无法使用语音命令。"
   },
   "reports": {
     "title": "报告",
@@ -4135,12 +4360,15 @@
   "autoAttendant": {
     "code": "AA",
     "title": "自动语音应答",
+    "warning": "需要呼叫服务。",
+    "careModalDescription": "播放自定义的提示并为呼叫者提供用于通过系统路由呼叫的菜单选项。",
     "modalDescription": "自动语音应答播放自定义的提示并为呼叫者提供用于通过系统路由呼叫的菜单选项。",
     "namePlaceholder": "指定自动语音应答",
     "repeatMenu": "重复次数",
     "queueSettings": "队列设置",
     "maxWaitTime": "最长等候时间",
     "periodicTime": "定期通告频率",
+    "errorReadDoRestCredential": "读取 {{name}} 失败：缺少一个或多个 REST API 凭证。",
     "errorReadCe": "读取 {{name}} 失败：{{statusText}} ({{status}})。",
     "successCreateCe": "成功创建了 {{name}}。",
     "successDeleteCe": "成功删除了 {{name}}。",
@@ -4167,10 +4395,10 @@
     "actionCallerInputHint": "存储呼叫者提供的信息。",
     "actionCallerInputHelp": "存储呼叫者提供的信息。",
     "invalidCharacter": "输入的字符无效。",
-    "dialByExtensionRoutingPrefix" : "限制为路由前缀",
-    "routingPrefix" : "路由前缀",
-    "dialByExtensionRoutingPrefixHelpText" : "如果不选择该项，则用户必须输入路由前缀加上分机号。",
-    "selectRoutingPrefix" : "选择",
+    "dialByExtensionRoutingPrefix": "限制为路由前缀",
+    "routingPrefix": "路由前缀",
+    "dialByExtensionRoutingPrefixHelpText": "如果不选择该项，则用户必须输入路由前缀加上分机号。",
+    "selectRoutingPrefix": "选择",
     "callerInputCnvtDigit": "将数字输入转换为文本字符串值。",
     "callerInputMaxLenStr": "字符串最大长度",
     "varNamesDependenciesTitle": "变量依赖性",
@@ -4182,9 +4410,9 @@
     "usernameRequiredMsg": "用户名为必填项。",
     "usernameTooLongMsg": "用户名超出了 128 个字符的长度限制。",
     "passwordTooLongMsg": "密码超出了 128 个字符的长度限制",
-    "configureApiAuthentication": "使用基本验证" ,
-    "restApiUserName":"用户名",
-    "restApiPassword":"密码",
+    "configureApiAuthentication": "使用基本验证",
+    "restApiUserName": "用户名",
+    "restApiPassword": "密码",
     "callerInputValue": "输入值",
     "callerInputLabel": "名称",
     "callerInputNamePlaceHolder": "名称变量",
@@ -4467,15 +4695,18 @@
     "AABusinessHours": "工作时间",
     "AABusinessHoursDesc": "带自定义操作的简单开放/关闭安排。",
     "variables": "变量：",
-    "configureApiHeading":"请求测试并响应分配",
-    "configureApiHeadingHelperText":"为 url 中定义的变量提供测试数据，以便测试 REST API 的连接和响应。",
-    "configureApiHelpertext":"下面的值将输入到 URL 中，仅用于测试和响应分配。",
-    "restApiResponseVar":"响应变量",
-    "restApiResponseVal":"响应值",
-    "restApiCustomVar":"自定义变量",
-    "customVariablesAssignmentHelpText":"选择“自定义变量”以分配要在呼叫流程中使用的 REST API 中的响应值。",
-    "Variables":"变量",
-    "value":"值"
+    "configureApiHeading": "请求测试并响应分配",
+    "configureApiHeadingHelperText": "为 url 中定义的变量提供测试数据，以便测试 REST API 的连接和响应。",
+    "configureApiHelpertext": "下面的值将输入到 URL 中，仅用于测试和响应分配。",
+    "restApiResponseVar": "响应变量",
+    "restApiResponseVal": "响应值",
+    "restApiCustomVar": "自定义变量",
+    "customVariablesAssignmentHelpText": "选择“自定义变量”以分配要在呼叫流程中使用的 REST API 中的响应值。",
+    "Variables": "变量",
+    "value": "值",
+    "restApiUrlHelperText": "输入要调用的 REST API 的安全 URL。单击“添加动态文本”在 URL 中插入变量。",
+    "completeHttpsError": "输入使用 HTTPS 协议的完整 URL。",
+    "secureHttpsError": "只能输入安全的 HTTPS URL。"
   },
   "callPark": {
     "code": "CP",
@@ -4811,12 +5042,11 @@
   "singleNumberReachPanel": {
     "title": "单一号码存取",
     "description": "通过单号码联系 (SNR)，您可以让来电拨通分机和您在此处同时指定的其他线路。",
-    "description2": "打开单号码联系功能，指定您希望同时接通的线路。",
     "snrOffDescription": "当前已禁用一号通。“目的地”被设为 ",
     "deleteConfirmMsg": "确定要删除吗？",
     "confirmDelete": "确认删除",
     "remove": "删除",
-    "snrRemoteDestinationNumber": "当该线路被呼叫时，下列电话号码将同时接通：",
+    "snrRemoteDestinationNumber": "当以上选中线路被呼叫时，下列电话号码将同时响铃：",
     "snrRemoteDestinationNumberPlaceholder": "输入号码",
     "snrWaitSeconds": "指示在呼叫转移到工作语音邮件前您希望所有线路响铃的持续时间。",
     "toggle": "单一号码存取",
@@ -4825,7 +5055,8 @@
     "removeSuccess": "单一号码存取配置移除成功",
     "error": "单一号码存取配置失败。",
     "unitedStates": "美国",
-    "austrailia": "澳大利亚"
+    "austrailia": "澳大利亚",
+    "chooseLines": "请选择要响铃的线路："
   },
   "speedDials": {
     "title": "快速拨号数字",
@@ -4953,7 +5184,14 @@
     "privatePstnTrunk": "专用 PSTN 中继",
     "setupService": "设置 PSTN 服务",
     "setupNumbers": "设置 PSTN 号码",
+    "orderSummary": "订单摘要",
     "addPhoneNumbers": "添加电话号码",
+    "prPortParagraph": "公司的授权签字人将收到一封电子邮件，要求提交代理授权信。此信函中的信息必须与旧运营商掌握的信息相符。例如，信函中列出的地址应该是失去合同的运营商记录在案的帐单地址。",
+    "prPortDate": "申请号码转网的日期是 {{date}}",
+    "prPortCarrier": "将会发送一封电子邮件，其中注明将进行号码转网的公司订单承诺 (FOC) 日期。如果您需要协商不同的转网日期，请联系 {{carrier}}。",
+    "prPortNumbers": "以下 {{count}} 个号码将从失去合同的运营商转网：",
+    "prDIDNumbers": "将添加以下 {{count}} 个号码：",
+    "prTollNumbers": "将添加以下 {{count}} 个免费号码：",
     "placeOrder": "下单",
     "orderBlock": "订单阻止号码",
     "newNumbersTab": "标准号码",
@@ -5025,6 +5263,11 @@
     "tollFreeTitle": "通过输入有效的区号来搜索和添加免费电话号码。有效的免费区号包括{{areaCodes}}",
     "unableToAddTollFreeNumbers": "无法添加免费号码，因为客户 PSTN 合同不完整。请提醒客户签署并提交合同。",
     "unableToAddPortedNumbers": "无法添加转网号码，因为客户 PSTN 合同不完整。请提醒客户签署并提交合同。",
+    "unableToAddTollFreeNumbersShort": "无法添加免费号码，因为客户 PSTN 合同不完整。",
+    "unableToAddPortedNumbersShort": "无法添加转网号码，因为客户 PSTN 合同不完整。",
+    "initContract": "启动与 {{carrier}} 的合同签署流程",
+    "initContractTitle": "启动合同",
+    "initContractReview": "您尚未添加任何号码，可以提交此订单，启动与 {{carrier}} 的合同签署流程。在合同签署之后，您可以将号码转网或添加免费号码",
     "pstnSelector": {
       "searchPlaceholder": "输入区号和/或号码前缀",
       "searchDesc": "例如 972 或 972867",
@@ -5075,7 +5318,7 @@
     },
     "tos": {
       "title": "服务条款",
-      "copyright": "版权所有 2017 Cisco Systems。保留所有权利。",
+      "copyright": "版权所有 2018 Cisco Systems。保留所有权利。",
       "info": "Cisco Spark 是一个提供消息（IM）、语音和视频呼叫功能的团队协作应用程序。",
       "noticeTitle": "重要声明与免责声明",
       "notice": "请重定向至以下页面，阅读您的电信运营商协议。我们将在您阅读并同意这些协议后发放 PSTN 号码。",
@@ -5264,6 +5507,7 @@
       "sx10": "SX10",
       "dx80": "DX80",
       "mx300": "Mx300（上限 {{max}}）",
+      "roomKit": "Room Kit（上限 {{max}}）",
       "phone8865": "8865",
       "phone8845": "8845",
       "phone7832": "7832",
@@ -5271,7 +5515,7 @@
       "phone7841": "7841",
       "quantity": "数量",
       "invalidQuantity": "数量必须介于 {{min}} 和 {{max}} 之间",
-      "invalidQuantityMx300": "数量必须为 {{qty}}",
+      "invalidQuantitySingle": "数量必须为 {{qty}}",
       "invalidTotalQuantity": "整个订单必须有 {{min}} 至 {{max}} 台设备",
       "invalidRoomSystemsQuantity": "仅限 {{max}} 台 Cisco Spark 协作室设备",
       "invalidPhonesQuantity": "仅限 {{max}} 台个人座机和共享座机",
@@ -5433,7 +5677,7 @@
     "daysLeftToRenew": "续订时间剩余 {count, plural, other{# 天}}",
     "expiringToday": "将于今天到期",
     "expired": "已过期",
-    "expiredWithGracePeriod": "立即购买：距试用许可证被删除还有：{count, plural, other {# 天}}。",
+    "expiredWithGracePeriod": "立即购买：距试用许可证被删除还有：{count, plural, =0{最后一天} other {# 天}}。",
     "needsSetup": "需要设置",
     "suspended": "此帐户已挂起。",
     "licenseInfoNotAvailable": "无可用许可证信息。",
@@ -5506,7 +5750,6 @@
     "deleteOrgConfirmMsg": "确定要永久删除客户“{{orgName}}”吗？",
     "deleteOrgHmsError": "客户“{{orgName}}”的混合媒体服务当前处于活动状态，请在删除该客户之前停用混合媒体服务。",
     "deleteOrg": "删除客户",
-    "iUnderstand": "我明白",
     "deleteOrgSuccess": "已成功删除 {{orgName}}",
     "deleteOrgError": "未删除 {{orgName}}。",
     "pstnOrders": "PSTN 订单和导入",
@@ -5525,6 +5768,7 @@
     "domains": "域",
     "quantityWithValue": "数量：{{quantity}}",
     "anotherPartner": "（另一个合作伙伴）",
+    "customerOrdered": "（客户已预配置）",
     "filters": {
       "placeholder": "请选择过滤条件...",
       "filter": "过滤",
@@ -5663,7 +5907,7 @@
     "notifyCustLater": "稍后通知客户",
     "emailSuccessText": "电子邮件已成功发送给客户。",
     "emailFailText": "发送电子邮件时出错",
-    "inputPlacehoder": "输入电话号码，以逗号分隔",
+    "inputPlacehoder": "输入电话号码，以逗号分隔。",
     "didFormatHelpText": "例如：{{examples}}",
     "didAlreadyExist": "电话号码已存在。"
   },
@@ -5820,7 +6064,8 @@
       "exchangeHelp": "此即启用 Exchange 日历",
       "googleTitle": "Google Calendar",
       "googleHelp": "此即启用 Google Calendar",
-      "calendarEmail": "日历邮箱的电子邮件地址"
+      "calendarEmail": "日历邮箱的电子邮件地址",
+      "calendarEmailHelp": "此地址不应是其他位置已经使用的电子邮件地址，也不应属于某个用户。"
     },
     "editCalendarService": {
       "title": "设置混合日历服务",
@@ -5831,7 +6076,8 @@
       "step1": "在 Cisco Unified Communications Manager 中，创建一个用户帐户和一条关联的线路，这些项目将代表此地方。<a href='https://www.cisco.com/go/hybrid-services'>请参见文档获取帮助。</a>",
       "step2": "查找用户帐户的邮件标识。<br>a) 登录到 Cisco Unified CM 管理<br>b) 选择“用户管理 &gt; 最终用户”，然后找到并单击帐户。<br>邮件标识就在“用户信息”下面。",
       "step3": "在下面输入邮件标识，以将此地方连接到现有的 Unified CM 帐户。<br>此邮件标识确保将正确的用户帐户与此地方连接以进行混合呼叫。",
-      "mailId": "邮件标识"
+      "mailId": "邮件标识",
+      "mailIdHelp": "此标识不应是其他位置已经使用的邮件标识，也不应是属于某个用户的电子邮件地址。"
     },
     "showActivationCode": {
       "activationCode": "激活码",
@@ -6038,21 +6284,11 @@
       "body2": "如果要再次使用此节点，您将需要重新对其注册。"
     },
     "metrics": {
-      "titlev2": "报告阶段 2 POC",
-      "historical": "历史",
-      "realTime": "实时",
       "today": "最近 24 小时",
-      "today2": "最近 24 小时",
       "last4Hours": "最近 4 小时",
-      "yesterday": "昨天",
-      "yesterday2": "昨天",
       "week": "上周",
-      "week2": "上周",
       "month": "上月",
-      "month2": "上月",
       "threeMonths": "最近 3 个月",
-      "threeMonths2": "最近 3 个月",
-      "lastRefresh": "上次刷新时间",
       "clusterAvailability": "集群可用性",
       "callVolumes": "呼叫活动",
       "callLocal": "内部呼叫次数",
@@ -6114,8 +6350,6 @@
       "availabilityStatus": "可用性状态",
       "clusterTitle": "群集",
       "clusterNodeTitle": "集群/节点",
-      "lowAvailableClusters": "低可用性群集",
-      "clusterTakingMoreCalls": "托管更多呼叫数目的群集",
       "totalMeetings": "会议总数",
       "meetOnPrem": "用于会议的资源",
       "clientTypes": "客户端类型",
@@ -6131,8 +6365,9 @@
       "onPremisesHeading": "本地部署",
       "cloudHeading": "云",
       "hybridHeading": "云端和本地部署",
-      "othersHeading": "其他",
+      "othersHeading": "另  个",
       "callsBallon": "呼叫：",
+      "cloudconnectivityissues": "云连接性问题",
       "clientType": {
         "android": "Android",
         "blackberry": "黑莓",
@@ -6156,7 +6391,7 @@
       },
       "mobile": "移动",
       "cardDescription": {
-        "clientTypeDesc": "组织中使用的常见会议客户端类型的摘要。<br><b>Cisco Spark 桌面</b>：Windows、MAC OSX 和 Web 浏览器<br> <b>Cisco Spark 移动</b>：iPhone、Android 和 iPad。<br><b>Cisco Spark 设备</b>：TelePresence 协作室设备、Cisco Spark Board。<br><b>其他</b>：不属于上述类别的任何未知终端或客户端。",
+        "clientTypeDesc": "组织中使用的常见会议客户端类型的摘要。<br><b>Cisco Spark 桌面</b>：Windows、macOS 和 Web 浏览器<br> <b>Cisco Spark 移动</b>：iPhone、Android 和 iPad。<br><b>Cisco Spark 设备</b>：Cisco 协作室设备、Cisco Spark Board。<br><b>其他</b>：不属于上述类别的任何未知终端或客户端。",
         "totalCallsDesc": "<b>云呼叫</b>：因为没有连接到企业网络或者受制于强制政策，无法利用企业混合媒体节点的呼叫数量。<br> <b>溢出到云端</b>：在企业内部发起但溢入云端集群的呼叫数量。<br> <b>本地部署</b>：托管在任何企业集群上的呼叫数量。",
         "totalCallsClusterDesc": "<b>由此集群重定向</b>：因为无法由此集群托管而被重定向的呼叫数量。<br><b>本地部署</b>：托管在任何企业集群上的呼叫数量。",
         "meetsHostTypeDesc": "根据组织呼叫的托管位置生成的会议摘要。<br><b>本地部署</b>：会议和参加者被托管在企业集群上<br><b>云端</b>：会议和参加者被托管在云端集群上<br><b>云端和本地部署</b>：会议和参加者以级联的形式被托管在企业和云端集群之间",
@@ -6205,7 +6440,6 @@
       "moveTo": "移至：",
       "cancel": "取消",
       "continue": "继续",
-      "deregisterAllconfirmation": "我知道，此集群中的所有节点将自动取消注册且此集群将永久删除。我也知道，我无法撤销此操作。",
       "unabletomovenodes": "无法移动/删除 {{nodes}} 按下“取消”并重试",
       "clusterdeleteSuccess": "已成功删除 {{clustername}}",
       "clusterCreationFailed": "创建新集群失败：{{enteredCluster}}",
@@ -6215,24 +6449,9 @@
       "stable": "稳定",
       "beta": "测试版",
       "latest": "最新",
-      "errorMsg": "在删除此集群之前，您必须将此集群中的所有节点移至另一集群或取消注册所有节点。"
-    },
-    "upgradeClusters": {
-      "title": "软件升级",
-      "text1": "在升级时，此混合媒体节点将进入维护模式。在 2 小时后，此节点将升级，所有新呼叫将重定向至可用节点或云端。",
-      "text2": "2 小时后，节点将升级。",
-      "upgradeNow": "立即升级",
-      "upToDate": "软件已是最新版本。",
-      "installing": "正在安装软件。",
-      "sw-upgrade-title": "软件升级",
-      "sw-upgrade-text": "新软件现已推出。",
-      "upgradeWarning": "此集群具有一个或多个离线节点。建议启动升级前先使所有节点上线。",
-      "pending": "待解决",
-      "upgradingHost": "正在将 {{host}} 升级至 {{version}}",
-      "upgradeProcessInitiating": "正在启动版本 {{version}} 升级...",
-      "upgradeDone": "已完成升级！",
-      "success": "集群将马上开始升级。",
-      "error": "升级集群出错。请稍后重试。"
+      "errorMsg": "在删除此集群之前，您必须将此集群中的所有节点移至另一集群或取消注册所有节点。",
+      "deregisterWarning": "系统将自动取消注册该集群中的所有节点，并且将永久移除该集群。该操作无法撤消。",
+      "deactivateWarning": "这是该组织最后一个混合媒体集群。如果将其删除，系统将取消激活该服务。"
     },
     "reassign": {
       "reassignHost": "重新指定主机",
@@ -6255,7 +6474,7 @@
       "confirmation_check": "我明白，一旦停用混合媒体服务，上述集群将会取消注册，所有的未来会议都将被托管在云中，而且此操作无法撤消。",
       "button_deactivate": "停用",
       "success": "已成功停用您的混合媒体服务。",
-      "error": "取消注册集群时出错。请稍后重试。",
+      "error": "无法取消激活混合媒体服务。",
       "step": "步骤 ",
       "of": " 2"
     },
@@ -6319,8 +6538,8 @@
       "meeting-duration-title": "会议持续时间"
     },
     "mediaServiceActivationFailure": "关于启用服务的问题",
-    "mediaMicroserviceFailure": "由于服务连接问题，尚未对您的组织启用混合媒体服务路由。如果问题仍然存在，请通过 admin.ciscospark.com 提交状况。",
-    "mediaNetworkFailure": "由于网络连接问题，尚未对您的组织启用混合媒体服务。如果问题仍然存在，请通过 admin.ciscospark.com 提交状况。",
+    "mediaMicroserviceFailure": "尚未为您的组织启用混合媒体服务，原因是启用混合媒体服务路由失败。请通过 admin.ciscospark.com 提交支持申请来解决问题。",
+    "mediaEntitlementEnablementFailure": "尚未为您的组织启用混合媒体服务，原因是未将需要的许可证应用到您的组织。请通过 admin.ciscospark.com 提交支持申请来解决问题。",
     "delete": "删除",
     "cancel": "取消",
     "actionsHeader": "操作",
@@ -6954,6 +7173,10 @@
     "redistributeLicenses": "重新分发许可证",
     "redistributeLicensesDesc": "请指定在各站点放置的许可证数量",
     "redistributeLicensesDesc2": "您必须分配所有许可证，各站点至少必须拥有一个许可证。",
+    "redistributeLicensesValidMessages": {
+      "allLicensesAssigned": "已分配所有许可证。",
+      "allSitesHaveLicense": "每个站点至少有一个许可证。"
+    },
     "redistributeLicensesDelete": "<strong>要完成站点删除：</strong>WebEx 站点 <strong>{{siteUrl}}</strong> 已做好删除准备。首先，您必须向此次订阅中剩余站点重新分配许可证。",
     "redistributeRejectModalTitle": "无法重新分发许可证",
     "redistributeRejectModalBodyOnlySite": "由于只有一个站点，您无法在站点之间重新分发许可证。",
@@ -6994,6 +7217,9 @@
     "status": "状态",
     "cluster": "群集",
     "sipUri": "目录 URI",
+    "primaryDN": "主 DN",
+    "telephoneNumber": "电话号码",
+    "ucmCluster": "UCM FQDN",
     "details": "详细信息"
   },
   "validation": {
@@ -7052,8 +7278,8 @@
         "message": "系统软件将不进行更新。"
       },
       "soontobedeactivated": {
-        "type": "设备将很快被停用",
-        "message": "此设备已离线超过几个星期。要避免停用，请确保它在 {{expireInDays}} 天内在线。"
+        "type": "设备凭证即将过期",
+        "message": "此设备已离线超过几个星期。要避免失去 Spark 激活状态，请确保它在 {{expireInDays}} 天内在线。"
       },
       "ntpstatus": {
         "type": "无法访问时间服务器",
@@ -7182,6 +7408,7 @@
   "sunlightDetails": {
     "title": "服务",
     "status": "状态： ",
+    "numberTitle": "号",
     "settingsTitle": "设置",
     "featuresTitle": "功能",
     "sorryMessage": "很抱歉，出现一些问题 ",
@@ -7203,15 +7430,20 @@
       "newCareTemplateModalTitle": "新建 Care 功能",
       "newVirtualAssistantModalTitle": "创建新虚拟助手",
       "newCustomerSupportTemplateModalTitle": "创建新客户支持模板",
+      "newWebTemplateModalTitle": "新建 Web 模板",
       "noCareFeatures": "当前登录用户不可使用 Care 功能",
       "selectCHDesc": "创建定义客户支持聊天体验的聊天模板。",
       "selectCADesc": "创建定义客户如何请求回呼的模板。",
       "selectCHCADesc": "创建定义客户支持聊天体验和客户如何请求回呼的模板。",
-      "selectCSTDesc": "创建定义您通过聊天和回呼得到的客户支持体验的 Web 模板。",
+      "selectCSTDesc": "创建客户支持模板，定义客户如何通过多种渠道与您联系。",
+      "selectWTDesc": "创建定义您通过聊天和回呼得到的客户支持体验的 Web 模板。",
       "chatType": "聊天模板",
+      "webTemplate": "Web 模板",
       "callbackType": "回呼模板",
       "chatPlusCallbackType": "聊天+回呼模板",
-      "virtualAssistant": "虚拟助手"
+      "virtualAssistant": "虚拟助手",
+      "noCallWarningMessage" : "需要呼叫服务。",
+      "learnMoreLink": "了解详情。"
     },
     "settings": {
       "setUpCare": "服务",
@@ -7254,6 +7486,7 @@
       "routingChangeWarnMsgLine3": "用户需要再次登录才能根据新路由接收任务。"
     },
     "featuresNotYetConfiguredPage": {
+      "addNumbers": "添加号码",
       "createCareTemplate": "创建 Care 模板",
       "createCareTemplateDesc": "Care 模板是客户联系客服的工具。",
       "MessageLicenseMissing": "消息功能为 Care 模板的必需功能。要启用消息功能，<a href ng-click=\"{{onclick}}\">请联系您的合作伙伴或 Cisco 销售人员</a>",
@@ -7300,6 +7533,18 @@
     "reloadMessage": "请尝试重新加载页面",
     "feature": "功能"
   },
+  "careVoiceFeatures": {
+    "title": "启用 Spark Care 语音功能",
+    "heading": "选择呼叫服务可启用 Spark Care 语音功能：",
+    "enableSparkCall": "启用 Spark 呼叫",
+    "scDescription": "允许 Spark Care 客服使用 Spark 呼叫，以获取语音功能。",
+    "enableSC": "请联系合作伙伴启用 Spark 呼叫。",
+    "contactPartner": "<a href = #>联系合作伙伴</a>",
+    "useHybridCall": "使用混合呼叫",
+    "hcDescription": "允许 Spark Care 客服使用本地基础设施，以获取语音功能。",
+    "enableHybrid": "设置混合呼叫和企业专用中继以支持组织使用 Cisco Unified Communications Manager。",
+    "setUpHybrid": "<a href ng-click=\"{{onsetuphybrid}}\">设置混合呼叫</a><br><a href ng-click=\"{{onsetuptrunk}}\">设置企业专用中继</a>"
+  },
   "placesPage": {
     "nameHeader": "名称",
     "typeHeader": "类型",
@@ -7320,9 +7565,10 @@
     "failedToSaveChanges": "无法保存对地方的更改。原因：",
     "failedToDelete": "无法删除地方。原因：",
     "botAuthorizations": {
-      "title": "地点 API 访问",
+      "title": "设备 API 访问",
       "header": "当前对属于“{{ placeName }}”的设备的访问权限",
       "subHeader": "以下 BOT 和用户有权访问设备 API。具有完全访问权限便可控制属于此地点的所有设备。请确保您信任此来源。",
+      "subHeaderUser": "以下 BOT 和用户有权访问设备 API。具有完全访问权限便可控制属于此用户的所有设备。请确保您信任此来源。",
       "table": {
         "name": "授权给",
         "role": "访问级别",
@@ -7368,10 +7614,10 @@
     "deleteNumberTextBase": "确定要删除此电话号码吗？{{ isApiImplementationSwivel }}。",
     "deleteNumberTextStandard": "将会永久删除它。请向 PSTN 提供商确认帐单更改",
     "deleteNumberTextBYOP": "号码将立即返回给您",
-    "headerLabelInternalNumber":"internalNumber",
-    "headerLabelExternalNumber":"phoneNumber",
-    "headerLabelUserId":"assignedTo",
-    "headerLabelLocation":"地点"
+    "headerLabelInternalNumber": "internalNumber",
+    "headerLabelExternalNumber": "phoneNumber",
+    "headerLabelUserId": "assignedTo",
+    "headerLabelLocation": "地点"
   },
   "messengerCiSync": {
     "orgInfoSection": {
@@ -7433,11 +7679,18 @@
     "dirsyncStatusHeading": "通用身份目录同步",
     "dirsyncStatusTooltip": "要访问 Cisco Spark 平台功能，WebEx Messenger 用户需要与通用身份服务同步。"
   },
+  "careAddNumberTpl": {
+    "emergencyAcknowledge": "我知道在企业级 IP 电话网络上拨打紧急号码可能无效。",
+    "addNumbers": "添加号码",
+    "pstnNumbers": "PSTN 号码",
+    "internalDialing": "内部拨号",
+    "duplicateNumber": "{{number}} 是重复数字。"
+  },
   "careChatTpl": {
     "editAction": "编辑",
     "deleteFeatureTextConfirmation": "确定要删除 {{ featureName }} 吗？",
-    "deleteVaFeatureTextConfirmation": "确定要删除 {{ featureName }} 吗？<br>删除客户虚拟助手会将它从所有客户支持模板删除。客户将无法再与虚拟助手互动。",
-    "deleteEvaFeatureTextConfirmation": "确定要删除 {{ featureName }} 吗？<br>您无法再将聊天请求上报到 Cisco Spark 专家空间。",
+    "deleteVaFeatureTextConfirmation": "确定要删除 {{ featureName }} 吗？删除客户虚拟助手会将它从所有客户支持模板删除。客户将无法再与虚拟助手互动。",
+    "deleteEvaFeatureTextConfirmation": "确定要删除 {{ featureName }} 吗？您无法再将聊天请求上报到 Cisco Spark 专家空间。",
     "createSuccessText": "您已成功创建 {{ featureName }}。",
     "createTemplateFailureText": "创建 Care 模板失败。",
     "editSuccessText": "对 {{ featureName }} 的更改已成功保存。",
@@ -7462,6 +7715,20 @@
     "profile_chat": "品牌和标识",
     "profile_callback": "品牌和标识",
     "profile_chatPlusCallback": "聊天品牌和标识",
+    "chatEscalationBehavior_chat": "聊天上报行为",
+    "chatEscalationBehavior_callback": "聊天上报行为",
+    "chatEscalationBehavior_chatPlusCallback": "聊天上报行为",
+    "chatEscalatioAgent": "仅客服",
+    "chatEscalatioExpert": "仅专家",
+    "chatEscalatioAgentPlusExpert": "客服和专家",
+    "chatEscalatioAgentDesc": "使用 Cisco Spark Care 桌面发送给客服的聊天请求。",
+    "chatEscalatioExpertDesc": "发送给在专家空间工作的 Cisco Spark 用户的聊天请求。",
+    "chatEscalatioAgentPlusExpertDesc": "同时发送给客服和专家的聊天请求。",
+    "chatEscalatioAgentTooltip": "<br>在“Care 设置”页面<br>上配置的路由方法可确定上报<br>选择客服的方式。",
+    "chatEscalatioExpertTooltip": "专家虚拟助手<br>管理向 Cisco <br> Spark 的上报。在“Care 功能”页面上配置该助手<br>。",
+    "chatEscalatioAgentPlusExpertTooltip": "接受的聊天请求已<br>从所有队列中删除并且无法重新上报。<br> <br><br>在“Care 设置”页面上<br>配置的路由方法可确定客服选择。专家虚拟助手选择一个要在 Cisco Spark 中上报到的专家空间。",
+    "learnMoreLink": "进一步了解",
+    "evaTemplateHeader": "从此聊天中选择要向其上报请求的对象：",
     "ctVirtualAssistantPageTitle": "客户虚拟助手",
     "overview": "模板概览",
     "chatStatusMessages_chat": "状态消息",
@@ -7492,13 +7759,19 @@
     "profile_agent_info": "使用多个唯一的配置文件来呈现贵组织中的不同客服。",
     "profile_org_info_cva": "使用单个配置文件来呈现客户虚拟助手和贵组织中的所有客服。",
     "profile_agent_info_cva": "使用多个唯一的配置文件来呈现您的客户虚拟助手和在聊天中更换的客服。 ",
+    "chatEscalationBehaviorDesc": "定义客户聊天请求要上报到何处。",
     "default_cva_name": "虚拟助手",
     "overviewDesc_chat": "切换卡片以自定义您希望客户在请求与客服聊天时看到的屏幕",
     "overviewDesc_callback": "切换卡片以自定义您希望客户在请求客服回呼时看到的屏幕",
     "overviewDesc_chatPlusCallback": "切换卡片以自定义您希望客户在请求与客服聊天或回呼时看到的屏幕",
     "customerInfoDesc_chat": "这是客户在与客服聊天前填写信息的屏幕",
+    "customerInfoDesc_chat_expert": "请使用以下属性收集客户信息，并确定客户请求的主题，以方便上报至 Cisco Spark\n 专家空间。",
     "customerInfoDesc_callback": "这是客户在请求客服回呼时填写信息的屏幕",
+    "evaSpaceDetailsText": "，您的专家虚拟助手位于 Cisco Spark 中的 {{numberOfEvaSpaces}} 个专家空间中：",
+    "evaSpaceDetailsTextOneSpace": "，您的专家虚拟助手位于 Cisco Spark 中的 1 个专家空间中：",
+    "evaDefaultName": "EVA",
     "customerInfoToggleTooltipMessage": "此屏幕是该模板必需的，不能被禁用。",
+    "agentUnavailableToggleTooltipMessage": "您只能向专家上报，因此不需要“客服不可用”配置。要启用向客服上报，请编辑“聊天上报行为”设置。",
     "virtualAssistantToggleTooltipMessage": "请先在“功能”页面中配置客户虚拟助手，再启用此功能。您也可以稍后配置您的助手并启用此功能。",
     "getVirtualAssistantListError": "获取已配置的虚拟助手列表时出错。",
     "virtualAssistantSelector": "客户虚拟助手",
@@ -7583,6 +7856,11 @@
     "image": "图像",
     "displayText": "显示文本",
     "orgSettingInfo": "您可以在“设置”页面上更改组织徽标。",
+    "evaSettingInfo": "要启用向专家上报，请在“Care 功能”页面上创建专家虚拟助手。",
+    "evaEnabledSettingInfo": "关于配置聊天上报行为。",
+    "escalationEnabledRequiredInfo": "要求填写这个使用类别类型的字段，有助于更好地将请求上报给 Cisco Spark 专家空间。 ",
+    "escalationEnabledCategoryInfo": "添加包含专家虚拟助手空间名称关键字的类别选项。 ",
+    "escalationDetailsDefaultSpace": "（缺省空间）",
     "agentSettingInfo": "您无法更改在预览中看到的缺省客服头像。",
     "agentMsg": "你好，我需要关于 MFI 密钥的帮助。",
     "agentMsgTime": "10:10",
@@ -7609,11 +7887,23 @@
     "helpTextWaitingVirtualAssistant": "如果您使用客户虚拟助手，此消息表示从自动化支持切换为人工互动。",
     "helpTextChatting": "如果客户在互动过程中最小化聊天窗口，就会看到此消息。",
     "helpTextLeaveRoom": "当客服退出聊天并结束互动时，客户会看到此消息。",
+    "assistantTooltip": "此模板中使用 {{assistantType}} {{assistantName}}。",
     "filterType": {
       "chat": "客户支持模板",
       "callback": "客户支持模板",
       "chatPlusCallback": "客户支持模板",
       "virtualAssistant": "虚拟助手"
+    },
+    "featureCard": {
+      "spacesInUseText": "专家空间：{{ numOfSpaces }}",
+      "templatesInUseText": "模板：{{ numOfTemplates }}",
+      "unavailableSpacesInUseText": "使用情况数据不可用",
+      "evaPopoverMainHeader": "专家虚拟助手使用情况",
+      "popoverSpacesHeader": "Cisco Spark 中的专家空间：{{ numOfSpaces }}",
+      "popoverDefaultSpace": "（缺省空间）",
+      "popoverErrorMessage": "无法检索到此专家虚拟助手的使用情况数据。请稍后重试。",
+      "cvaPopoverMainHeader": "客户虚拟助手使用情况",
+      "popoverTemplatesHeader": "客户支持模板：{{ numOfTemplates }}"
     },
     "ctValidation": {
       "errorChar250": "字符长度不能大于 250。",
@@ -7703,7 +7993,8 @@
     "downloadEmbedCode": "下载嵌入代码",
     "embed-code": {
       "no-verified-domains": {
-        "warn": "没有适用于您的组织的验证域。缺省情况下，Care 模板可用于任何域。转至“设置”页面添加和验证域以限制它们仅用于您的组织的域。"
+        "warn": "没有适用于您的组织的验证域。缺省情况下，Care 模板可用于任何域。转至“设置”页面添加和验证域以限制它们仅用于您的组织的域。",
+        "warn_v1": "没有适用于您的组织的验证域。缺省情况下，Care 模板可用于任何域。转至“全球组织”设置页面添加和验证域以限制它们仅用于您的组织的域。"
       },
       "verified-domains": {
         "info": "这些是您的组织的验证域：",
@@ -7711,7 +8002,8 @@
       },
       "domain-fetch-error": {
         "info": "为您的组织加载验证域时出错。请重试。",
-        "warn": "缺省情况下，Care 模板可用于任何域。转至“设置”页面添加和验证域以限制它们仅用于您的组织的域。"
+        "warn": "缺省情况下，Care 模板可用于任何域。转至“设置”页面添加和验证域以限制它们仅用于您的组织的域。",
+        "warn_v1": "缺省情况下，Care 模板可用于任何域。转至“全球组织”设置页面添加和验证域以限制它们仅用于您的组织的域。"
       }
     },
     "embedCodeFor": "嵌入代码 ",
@@ -7737,8 +8029,16 @@
           "code": "eva",
           "type": "专家<br>虚拟助手",
           "selectDesc": "创建将 Cisco Spark 空间中的主题专家与具有聊天请求的客户连接的虚拟助手。",
-          "disabledTooltip": "贵组织只能拥有一个专家虚拟助手。要更改现有专家虚拟助手的设置，请在“功能”页面中编辑。"
+          "disabledTooltip": "贵组织只能拥有一个专家虚拟助手。要更改现有专家虚拟助手的设置，请在“功能”页面中编辑。",
+          "nonAdminEditDeleteWarning": "您无权编辑或删除此虚拟助手。请联系所有者 {{owner}} 以请求这些操作之一。"
         }
+      },
+      "invalidInput": {
+        "invalidAccessToken": "Dialogflow 客户端访问令牌无效。\n单击后退箭头返回到“对话集成”页面，然后输入有效的令牌。",
+        "duplicateName": "{{ featureName }} 必须有唯一的名称。\n单击后退箭头返回到“名称”页面，然后输入有效的名称。",
+        "invalidName": "{{ featureName }} 名称无效。\n单击后退箭头返回到“名称”页面，然后输入有效的名称。",
+        "invalidIcon": "{{ featureName }} 头像无效。\n单击后退箭头返回到“头像”页面，然后上传有效的头像。",
+        "invalidEmail": "您输入的电子邮件无效。\n单击后退箭头返回到“电子邮件”页面，然后输入有效的电子邮件。"
       },
       "createTitle": "创建 {{ featureName }}",
       "editTitle": "编辑 {{ featureName }}",
@@ -7749,10 +8049,7 @@
         "boxTitle": "创建 {{ featureName }} 之前先创建 Dialogflow 客服。",
         "boxDesc": "使用自然语言对话在 Dialogflow 中构建自动化客服。集成的 {{ featureName }} 使用该内置对话与客户进行交互，并根据需要将对话上报给真实客服。",
         "boxRadioOne": "不，我没有预配置的 Dialogflow 客服",
-        "boxRadioOneDesc1": "转至 ",
-        "boxRadioDialogflow": "Dialogflow",
-        "boxRadioOneDesc2": " 以创建客服。要开始创建，请参阅 ",
-        "boxRadioDialogflowDoc": "Dialogflow 文档",
+        "boxRadioOneDesc": "转至 <a href=\"https://dialogflow.com\" target=\"_blank\">Dialogflow</a> 创建客服。关于如何开始，请参阅 <a href=\"https://dialogflow.com/docs/getting-started/basics\" target=\"_blank\">Dialogflow 文档</a>",
         "boxRadioTwo": "是的，我有预配置的 Dialogflow 客服并已做好继续操作的准备",
         "boxRadioTwoDesc": "单击该箭头以继续集成 Dialogflow 客服与 {{ featureName }}"
       },
@@ -7775,7 +8072,7 @@
       "accessToken": {
         "title": "完成对话框集成",
         "desc": "完成对话框集成以实现在客户交互中使用自然对话",
-        "boxDesc": "每个 Dialogflow 客服都有唯一的客户端访问令牌存储在客服设置中。在完成对话集成之前，从您配置的 Dialogflow 客服设置中复制该令牌，将它输入到这里，然后单击“验证”来检查令牌。",
+        "boxDesc": "每个 Dialogflow 客服在客服设置中都存储有唯一的客户端访问令牌。在完成 Dialogflow 配置之后，从您的客服设置中复制该令牌，将它输入到这里，以完成集成。",
         "inputLabel": "Dialogflow 客户端访问令牌",
         "validateButtonText": "验证",
         "maxLengthError": "客户端访问令牌的长度不能超过 128 个字符。",
@@ -7812,8 +8109,6 @@
         "errorCreateTemplate": "无法保存 {{ featureName }}。请重试。",
         "invalidEmailError": "您输入的电子邮件无效。请输入有效的电子邮件。",
         "duplicateEmailError": "您输入的电子邮件已存在。请输入具有唯一性的电子邮件。",
-        "invalidNameError": "专家虚拟助手的名称无效。请输入一个有效的名称。",
-        "invalidAvatarError": "专家虚拟助手的头像无效。请上传一个有效的头像。",
         "editWarning": "在 Cisco Spark 中显示对专家虚拟助手的更改前，可能会出现延迟。"
       },
       "overview": {
@@ -7847,7 +8142,7 @@
         "boxStepOne": "在 Cisco Spark 中创建更多专家空间。",
         "boxStepOneTooltip": "为每个空间提供唯一的主题名称，从而帮助 {{ featureName }} 从聊天中匹配相应空间的关键字。",
         "boxStepTwo": "将专家虚拟助手添加至专家空间。",
-        "boxStepTwoTooltip": "配置好 {{ featureName }} 之后，使用指定的 @sparkbot.io 电子邮件将助手添加至专家空间。",
+        "boxStepTwoTooltip": "配置好 {{ featureName }} 之后，使用您指定的 @sparkbot.io 电子邮件将助手添加至您的专家空间。",
         "boxStepThree": "为所创建的专家空间添加用户。",
         "boxStepThreeTooltip": "添加适合的用户，其可以解答客户有关专家空间主题的问题。",
         "boxStepFour": "在客户支持模板中配置 Cisco Spark 聊天上报功能。",
@@ -7860,6 +8155,7 @@
         "getConfigFailureText": "加载 {{ featureName }} 失败。",
         "deleteConfigFailureText": "删除 {{ featureName }} 失败。",
         "createConfigFailureText": "保存 {{ featureName }} 失败。",
+        "createEvaFailureText": "无法保存专家虚拟助手。每个组织只能有一个专家虚拟助手。您可以在“功能”页面中编辑现有的专家虚拟助手。",
         "createSpecificFailureText": "保存 {{ featureName }} {{ inputItem }} 失败。",
         "updateConfigFailureText": "保存 {{ featureName }} 失败。"
       }
@@ -8227,7 +8523,9 @@
       "title": "Cisco Spark 助手",
       "subsectionLabel": "启用 Cisco Spark 助手",
       "description": "允许用户使用语音执行各种操作，例如，发起呼叫、开始会议",
-      "termsOfService": "Cisco Spark 助手服务条款 "
+      "termsOfService": "Cisco Spark 助手服务条款 ",
+      "success": "成功更新了 Spark 助手",
+      "failure": "Spark 助手更新失败"
     },
     "externalCommunication": {
       "title": "外部通信",
@@ -8247,7 +8545,9 @@
       "desktopApps": "桌面应用程序",
       "webApp": "Web 应用程序",
       "mobileApps": "移动应用程序",
-      "bots": "Bot"
+      "bots": "Bot",
+      "disableWhiteboardsTitle": "禁用白板",
+      "disableWhiteboardsDescription": "限制文件共享控制也将禁用白板"
     },
     "support": {
       "title": "支持",
@@ -8269,7 +8569,7 @@
       "status": "状态",
       "enabled": "已启用",
       "disabled": "已禁用",
-      "turnOffDirSync": "关闭目录同步",
+      "turnOffDirSync": "关闭所有目录同步",
       "turnOnDirSync": "如何打开目录同步",
       "connectorsTitle": "Directory Connector",
       "deregister": "取消注册",
@@ -8282,6 +8582,29 @@
       "deregisterWarning": "请先卸载 Directory Connector 再取消注册。",
       "deregisterSuccess": "已成功取消注册 Directory Connector“{{name}}”。",
       "deregisterFailed": "未能取消注册 Directory Connector“{{name}}”。"
+    },
+    "multiDirsync": {
+      "loading": "更新状态",
+      "title": "目录同步",
+      "connectorError": "停用 {{connectorName}} 时出错。",
+      "description": "同步时将自动从您的目录添加新用户。可以在 Cisco Directory Connector 中直接更新。",
+      "deactivate": "停用 {{connectorName}}",
+      "deactivateConnectorMessage": "一旦停用服务器，您将不再收到运行状况报告。如果这是最后一个活动的工作服务器，将其停用时云同步也将停止。确定要停用此服务器吗？",
+      "degraded": "已降级",
+      "deleteAllError": "停用所有 Directory Connector 时出错。",
+      "deleteError": "取消激活 {{domainName}} 时出错。",
+      "domainsError": "检索目录同步数据时遇到问题。",
+      "operational": "可工作的",
+      "outage": "断电",
+      "pcOnline": "PC 服务器联机",
+      "pcOffline": "PC 服务器脱机",
+      "seeAllDomains": "查看所有已注册的域",
+      "turnOff": "关闭 {{domainName}}",
+      "turnOffAllMessage": "此步骤将关闭所有来自 Directory Connector 的同步。一旦禁用该同步，您只能手动管理用户，而且这些用户将不再出现于 Active Directory。确定要关闭所有同步吗？",
+      "turnOffAllTitle": "关闭所有同步",
+      "turnOffDomainMessage": "一旦关闭域，云同步就会停止。您必须通过 Directory Connector 启用该同步。确定要将其关闭吗？",
+      "turnOffDirSync": "关闭所有目录同步",
+      "turnOnDirSync": "如何打开目录同步"
     }
   },
   "my-company": {
@@ -8309,6 +8632,7 @@
     "hybridDataSecurity": "混合数据安全",
     "less": "更少",
     "licenses": "许可证：",
+    "licensing": "HCS",
     "licenseSummary": "许可证摘要",
     "licenseSummaryEnterprise": "企业的许可证摘要",
     "licenseSummaryOnline": "{{name}} 的许可证摘要",
@@ -8578,11 +8902,6 @@
       "singlematch": "个匹配",
       "matches": "个匹配"
     },
-    "extended-data-dialog": {
-      "copy": "复制",
-      "copiedToClipboard": "数据已复制到剪贴板",
-      "unableToCopy": "无法将数据复制到剪贴板"
-    },
     "verification": "验证",
     "resend": "重新发送邀请",
     "resendSuccess": "已成功发送邀请。",
@@ -8674,9 +8993,9 @@
       "title": "日历 (Exchange/Office 365)"
     },
     "hybridServicesOrganization": {
-      "fmsError": "无法读取组织基于本地部署的混合服务状态。如果错误仍存在，请单击您的用户名，然后选择<strong>反馈</strong>提交支持申请以进行进一步调查。",
-      "office365Error": "无法读取组织基于云的 Office 365 状态。如果错误仍存在，请单击您的用户名，然后选择<strong>反馈</strong>提交支持申请以进行进一步调查。",
-      "googleCalendarError": "无法读取组织的 Google Calendar 状态。如果错误仍存在，请单击您的用户名，然后选择<strong>反馈</strong>提交支持申请以进行进一步调查。"
+      "fmsError": "无法读取组织基于本地部署的混合服务状态。",
+      "office365Error": "无法读取组织基于云端的 Office 365 状态。",
+      "googleCalendarError": "无法读取组织的 Google Calendar 状态。"
     }
   },
   "partnerManagement": {
@@ -8891,6 +9210,7 @@
         "title": "服务",
         "description": "您的组织的客户关怀通道配置。",
         "buttons": {
+          "numbers": "号",
           "features": "功能",
           "settings": "设置"
         }
@@ -8947,7 +9267,20 @@
           "matchingEmails": "在 Cisco Spark、WebEx 和 Google 中完全匹配的用户电子邮件地址。",
           "aclAdminAccount": "（可选）如果您使用协作室资源，那么需要已被授权访问控制列表 (ACL) 管理帐户。",
           "removeHangouts": "（可选）删除会议活动中的 Google 环聊"
+        },
+        "office365Prerequisites": {
+          "title": "混合日历 (Office) 前提条件",
+          "intro": "将此核对表配合 Office 365 部署文档使用。确保完成在 Office 365 组织中部署混合日历的所有必要前提。",
+          "officeOrganization": "使用 Exchange Online 帐户的 Office 365 组织对组织中的用户负责。设置期间，您必须能够以全局管理员身份登录才能授予应用程序权限",
+          "webExSite": "对于 @webex 安排，WBS31 或更高版本的 Cisco WebEx 站点",
+          "sparkOrganization": "至少具有基本会议和业务消息 (M1) 的 Cisco Spark 组织",
+          "matchingEmails": "用户必须已激活 Cisco Spark 帐户，其电子邮件地址与 Cisco Spark、WebEx 和 Exchange Online 中的完全匹配"
         }
+      },
+      "hybridTesting": {
+        "title": "混合测试",
+        "description": "运行各种测试套组或测试来验证终端是否正常工作",
+        "edit": "编辑套组"
       },
       "hybridCall": {
         "title": "混合呼叫",
@@ -9143,8 +9476,6 @@
         "hybridDestination": "使用为混合呼叫连接配置的一个或多个 Expressway-E ",
         "addSipDestination": "添加 SIP 目标",
         "certificateTitle": "证书",
-        "certificateDescription": "选择要使用 Cisco Collaboration 缺省信任列表提供的证书还是上传您自己的证书。",
-        "certificateDescriptionNew": "选择要使用 Cisco Collaboration Cloud 缺省信任列表提供的证书还是上传您自己的证书。",
         "certDescNew": "使用 <a href=\"{{href}}\" target=\"_blank\">Cisco Collaboration Cloud 缺省信任列表提供的证书</a>",
         "upload": "或者上传您自己的证书。若使用自己的证书，请确保主机名在已验证域中",
         "click": "如需帮助，请<a href=\"{{href}}\" target=\"_blank\">单击此处</a>。",
@@ -9204,7 +9535,8 @@
     "line2": "如需帮助启用用户，请参阅<a href=\"http://www.cisco.com/go/hybrid-services-calendar\" target=\"_blank\">文档</a>。"
   },
   "readOnlyModal": {
-    "banner": "您现在处于只读模式"
+    "title": "只读模式",
+    "message": "您正在只读模式下查看应用程序。将不接受任何更改。"
   },
   "readOnlyMessages": {
     "notAllowed": "在只读模式中不允许。未执行操作。"
@@ -10066,7 +10398,7 @@
     "settingsLock": "设置锁定",
     "settingsLockUpdated": "设置锁定已更新",
     "settingsLockTooltip": "开启设置锁定功能，以防设备被意外更改。有些设置将无法进行访问。",
-    "deviceApis": "设备 API",
+    "deviceApis": "设备 API 访问",
     "deviceApiViewEdit": "查看/编辑访问权限"
   },
   "mediaMgrModal": {
@@ -10133,6 +10465,37 @@
       "link": "将用户关联到",
       "post": "Cisco Spark - 体验 WebEx 会议的新方式"
     },
+    "notification": {
+      "linkText": "入门",
+      "infoText": "将帐户关联到 Cisco Spark - 体验 WebEx 会议的新方式"
+    },
+    "errors": {
+      "setAccountLinkingModeError": "设置帐户关联模式失败，并显示：{{message}}",
+      "getCiSiteLinkingError": "获取关联信息失败，并显示：{{message}}",
+      "getCiAccountSyncError": "获取帐户同步失败，并显示：{{message}}",
+      "getDomainsError": "获取域失败，并显示：{{message}}"
+    },
+    "grid": {
+      "header": {
+        "siteUrl": "站点 URL",
+        "accountLinkingStatus": "状态",
+        "accountLinkingMode": "模式",
+        "linkedAccounts": "已关联帐户",
+        "action": "操作"
+      },
+      "actions": {
+        "launchWebExSiteAdmin": "启动 WebEx 站点管理",
+        "webExReports": "WebEx 报告",
+        "accountLinkingProgress": "帐户关联进度",
+        "changeLinkingMethod": "更改关联方式"
+      }
+    },
+    "linkingMode": {
+      "unset": "未设置",
+      "manual": "手动",
+      "auto_agreement": "达成一致",
+      "auto_verifiedDomain": "已验证域"
+    },
     "siteDetails": {
       "breadCrumb": "概览",
       "siteInfo": "站点信息",
@@ -10140,42 +10503,86 @@
       "licenseType": "许可证类型",
       "modify": "修改",
       "linkingMode": "关联模式",
-      "linkedUsers": "已关联用户",
+      "linkedAccounts": "已关联帐户",
       "siteUsageReports": "站点使用报告",
       "viewReports": "查看报告",
-      "readOnly": "您没有此站点的管理权限。",
+      "dontHaveAdminRights": "您没有此站点的管理权限。",
       "legacyWebexLicense": "传统 WebEx 许可证",
       "launchWebexSiteAdmin": "启动 WebEx 站点管理"
     },
     "wizard": {
-      "title": "WebEx 用户关联模式",
+      "title": "WebEx 帐户关联模式",
       "siteName": "站点名称：{{siteName}}",
-      "mode": {
-        "automatic": {
-          "title": "自动",
-          "intro": "受邀用户将不会收到任何邀请电子邮件，将对其 Cisco Spark 帐户进行预先验证。潜在影响。",
-          "agreementLabel": "无电子邮件 - 通过协议",
-          "agreementLabelHelp": "Cisco 可以代表您关联您的用户，而不发送任何电子邮件，这样，您便可以跳过许多操作步骤。下一步就是签署协议。",
-          "verifyDomainLabel": "无电子邮件 - 已验证域",
-          "verifyDomainLabelHelp": "您必须验证您的域，或者启用 SSO 和目录同步。",
-          "agreementTitle": "Cisco Spark 协议",
-          "agreementInfo": "请仔细阅读本协议并在下方按“接受”",
-          "agreementIntro": "Cisco 将验证您站点上的所有域。有些域将不进行验证，例如：gmail.com、yahoo.com",
-          "agreementText": "",
-          "agreementAcceptLabel": "我已阅读并接受本协议。",
-          "agreementAcceptTitle": "自动关联，无电子邮件 - 通过协议",
-          "agreementAcceptInfo": "用户关联可能需要长达 24 小时才能完成。请转到“服务”&gt;“WebEx 站点列表”查看进度。完成后，用户便可使用 Cisco Spark 并体验最佳的会议质量。",
-          "verifyDomainTitle": "自动关联，无电子邮件 - 已验证域",
-          "verifyDomainInfo": "您必须验证您的域，或者启用 SSO 和目录同步",
-          "verifyDomainButton": "验证域"
-        },
-        "manual": {
-          "title": "手动",
-          "intro": "受邀用户将会收到邀请电子邮件，用以激活其 Cisco Spark 帐户。",
-          "info": "当您邀请用户加入 Cisco Spark 时，Cisco 将发送邀请电子邮件。现在就登录 WebEx 站点管理并邀请用户加入 Cisco Spark",
-          "manualLabel": "发送电子邮件",
-          "manualLabelHelp": "当您邀请用户加入 Cisco Spark 时，Cisco 将发送邀请电子邮件"
-        }
+      "enrolledWebexSiteName": "已注册 WebEx 站点名称",
+      "webexSite": "WebEx 站点"
+    }
+  },
+  "hcs": {
+    "taas": {
+      "testState": {
+        "good": "已通过",
+        "failed": "失败",
+        "running": "正在运行..."
+      },
+      "suiteView": {
+        "title": "套组",
+        "createSuite": "创建套组",
+        "runSuite": "运行套组",
+        "editSuite": "编辑",
+        "copySuite": "复制",
+        "scheduleSuite": "安排",
+        "deleteSuite": "删除",
+        "resources": "资源",
+        "results": "获取上次测试运行结果",
+        "schedule": "安排",
+        "successTitle": "您的测试正在运行！",
+        "successRun": "要查看结果，请单击卡中的链接",
+        "errorRun": "安排时出了问题",
+        "goToResults": "查看结果"
+      },
+      "taskView": {
+        "title": "测试",
+        "addTest": "创建测试",
+        "editTest": "编辑",
+        "copyTest": "复制",
+        "deleteTest": "删除"
+      },
+      "createSuiteModal": {
+        "title": "添加套组",
+        "suiteName": "套组名称"
+      },
+      "scheduleCreateModal": {
+        "title": "安排测试"
+      },
+      "scheduleView": {
+        "title": "安排",
+        "scheduleName": "安排名称",
+        "scheduledDate": "日期，时间",
+        "scheduledSuite": "安排的套组",
+        "actionHeader": "操作",
+        "runSchedule": "立即运行",
+        "copySchedule": "复制安排",
+        "editSchedule": "编辑安排",
+        "deleteSchedule": "删除此安排",
+        "scheduleCreate": "创建安排"
+      },
+      "resourcesView": {
+        "createResource": "创建资源"
+      },
+      "resourcesCreateModal": {
+        "title": "创建资源",
+        "instructions": "请使用以下表单创建用于测试的资源，可以是 IP 电话、Camelot、MMR 等。",
+        "resourceName": "资源名称",
+        "resourceDetails": "资源详情"
+      },
+      "resultView": {
+        "suiteName": "套组名称",
+        "taskName": "任务名称",
+        "startTime": "任务开始时间",
+        "pass": "已通过",
+        "fail": "失败",
+        "skip": "已跳过",
+        "error": "错误"
       }
     }
   }
