@@ -69,7 +69,7 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
     return this.$q.all(promises)
       .then(([commonIdentityUserData, [userStatusAware, userStatusConnect]]) => {
         this.allUserEntitlements = commonIdentityUserData.user.entitlements;
-        this.isInvitePending = commonIdentityUserData.user.pendingStatus;
+        this.isInvitePending = !this.UserOverviewService.userHasActivatedAccountInCommonIdentity(commonIdentityUserData.user);
         this.userStatusAware = userStatusAware;
         this.userStatusConnect = userStatusConnect;
         this.entitledToggle = this.userIsCurrentlyEntitled = this.userHasEntitlement('squared-fusion-ec');

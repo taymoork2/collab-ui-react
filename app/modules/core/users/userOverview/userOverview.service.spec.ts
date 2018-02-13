@@ -3,7 +3,7 @@ import testModule from './index';
 describe('Service: UserOverviewService', () => {
 
   beforeEach(function () {
-    this.initModules(testModule, 'WebExApp', 'Huron');
+    this.initModules(testModule);
     this.injectDependencies(
       '$httpBackend',
       'UserOverviewService',
@@ -149,6 +149,13 @@ describe('Service: UserOverviewService', () => {
       it('should return true if user has lastLoginTime', function () {
         this.updatedUser.meta.lastLoginTime = '09/06/2017 09:50 AM';
         expect(this.UserOverviewService.getAccountActiveStatus(this.updatedUser)).toBeTruthy();
+      });
+      it('should not be confused with whether or not the user ever has activated his or her account in Common Identity', function () {
+        const neverActivatedUser = {
+          accountStatus: ['pending'],
+        };
+        expect(this.UserOverviewService.getAccountActiveStatus(neverActivatedUser)).toBeFalsy();
+        expect(this.UserOverviewService.userHasActivatedAccountInCommonIdentity(neverActivatedUser)).toBeFalsy();
       });
 
     });
