@@ -26,10 +26,16 @@ class Meetingdetails implements ng.IComponentController {
     this.data = {
       voip: {},
       video: {},
+      pstn: {},
+      cmr: {},
       voipReqtimes: 0,
       videoReqtimes: 0,
+      pstnReqtimes: 0,
+      cmrReqtimes: 0,
       voipTimer: null,
       videoTimer: null,
+      pstnTimer: null,
+      cmrTimer: null,
       currentQos: 'voip',
     };
   }
@@ -103,19 +109,34 @@ class Meetingdetails implements ng.IComponentController {
     return this.SearchService.getQOS(this.conferenceID, ids, 'pstn-qos')
     .then((res: any) => {
       const obj = {};
-      _.map(res, (item: any, key) => {
-        obj[key] = [];
-        _.forEach(item.items, (item_) => {
-          const data = _.cloneDeep(item_);
-          const arr_ = data.tahoeQuality;
-          _.unset(data, 'tahoeQuality');
+      const retryIds: String[] = [];
 
-          const arr__ = _.map(arr_, item__ => _.assignIn({ type: 'PSTN', nodeId: key, quality: this.getPSTNQuality(item__) }, item__, data));
-          obj[key] = _.concat(obj[key], arr__);
-        });
+      _.map(res, (item: any, key: string) => {
+        obj[key] = [];
+        if (item.completed) {
+          _.forEach(item.items, (item_) => {
+            const data = _.cloneDeep(item_);
+            const arr_ = data.tahoeQuality;
+            _.unset(data, 'tahoeQuality');
+
+            const arr__ = _.map(arr_, item__ => _.assignIn({ type: 'PSTN', nodeId: key, quality: this.getPSTNQuality(item__) }, item__, data));
+            obj[key] = _.concat(obj[key], arr__);
+          });
+        } else {
+          retryIds.push(key);
+        }
       });
-      this.data.pstn = obj;
-      this.pstnData = _.get(this.data, 'currentQos') === 'voip' ? this.data.pstn : this.pstnData;
+      _.assignIn(this.data.pstn, obj);
+      this.pstnData = _.get(this.data, 'currentQos') === 'voip' ? _.cloneDeep(this.data.pstn) : this.pstnData;
+
+      const qosName = 'pstn';
+      if (_.size(retryIds) && this.data[`${qosName}Reqtimes`] < 5) {
+        this.$timeout.cancel(this.data[`${qosName}Timer`]);
+        this.data[`${qosName}Timer`] = this.$timeout(() => {
+          this.data[`${qosName}Reqtimes`] += 1;
+          this.pstnQOS(_.join(retryIds));
+        }, 3000);
+      }
     });
   }
 
@@ -127,24 +148,39 @@ class Meetingdetails implements ng.IComponentController {
     return this.SearchService.getQOS(this.conferenceID, ids, 'cmr-qos')
     .then((res: any) => {
       const obj = { audio: {}, video: {} };
+      const retryIds: String[] = [];
+
       _.forEach(res, (item: any, key: any) => {
         obj.audio[key] = [];
         obj.video[key] = [];
-        _.forEach(item.items, (item_) => {
-          const data = _.cloneDeep(item_);
-          const audioQos = data.audioQos;
-          const videoQos = data.videoQos;
-          _.unset(data, 'audioQos');
-          _.unset(data, 'videoQos');
-          const audioArr = _.map(audioQos.VCS, item__ => _.assignIn({ type: 'VoIP', nodeId: key, quality: this.getCMRQuality(item__) }, item__, data));
-          const videoArr = _.map(videoQos.VCS, item__ => _.assignIn({ type: 'Video', nodeId: key, quality: this.getCMRQuality(item__) }, item__, data));
+        if (item.completed) {
+          _.forEach(item.items, (item_) => {
+            const data = _.cloneDeep(item_);
+            const audioQos = data.audioQos;
+            const videoQos = data.videoQos;
+            _.unset(data, 'audioQos');
+            _.unset(data, 'videoQos');
+            const audioArr = _.map(audioQos.VCS, item__ => _.assignIn({ type: 'VoIP', nodeId: key, quality: this.getCMRQuality(item__) }, item__, data));
+            const videoArr = _.map(videoQos.VCS, item__ => _.assignIn({ type: 'Video', nodeId: key, quality: this.getCMRQuality(item__) }, item__, data));
 
-          obj.audio[key] = _.concat(obj.audio[key], audioArr);
-          obj.video[key] = _.concat(obj.video[key], videoArr);
-        });
+            obj.audio[key] = _.concat(obj.audio[key], audioArr);
+            obj.video[key] = _.concat(obj.video[key], videoArr);
+          });
+        } else {
+          retryIds.push(key);
+        }
       });
-      this.data.cmr = obj;
-      this.cmrData = _.get(this.data, 'currentQos') === 'voip' ? obj.audio : obj.video;
+      _.assignIn(this.data.cmr, obj);
+      this.cmrData = _.get(this.data, 'currentQos') === 'voip' ? _.cloneDeep(this.data.cmr.audio) : _.cloneDeep(this.data.cmr.video);
+
+      const qosName = 'cmr';
+      if (_.size(retryIds) && this.data[`${qosName}Reqtimes`] < 5) {
+        this.$timeout.cancel(this.data[`${qosName}Timer`]);
+        this.data[`${qosName}Timer`] = this.$timeout(() => {
+          this.data[`${qosName}Reqtimes`] += 1;
+          this.cmrQOS(_.join(retryIds));
+        }, 3000);
+      }
     });
   }
 
@@ -210,7 +246,7 @@ class Meetingdetails implements ng.IComponentController {
       this.data[`${qosName}Timer`] = this.$timeout(() => {
         this.data[`${qosName}Reqtimes`] += 1;
         qosName === 'voip' ? this.voipQOS(_.join(retryIds)) : this.videoQOS(_.join(retryIds));
-      }, 5000);
+      }, 3000);
     }
   }
 
