@@ -25,6 +25,15 @@
       display: inline-block;
     }
   }
+
+  .errors-in-data {
+    background-color: $color-red-light;
+    border-top: 4px solid $color-yellow-dark;
+    text-align: center;
+    span {
+      display: inline-block;
+    }
+  }
 }
 
 .account-linking {
@@ -65,7 +74,16 @@
 
   .waiting {
     font-size: 0.5rem;
-    opacity: 0.3;
+    opacity: 0.4;
+  }
+
+  .faded {
+    opacity: 0.4;
+  }
+
+  .error-table-entry {
+    color: $color-red-light;
+    opacity: 0.6;
   }
 
 }
@@ -74,6 +92,9 @@
 }
 
 .account-linking-wizard {
+  .wizard-title {
+    margin-top: 0rem !important;
+  }
   h5 {
     font-weight: bold;
     padding-bottom: 1rem;
@@ -99,6 +120,9 @@
   }
   .icon-info-text {
     font-size: 2rem;
+  }
+  .icon-circle-check-mark-success {
+    color: $green-base;
   }
 
   .domain-right {

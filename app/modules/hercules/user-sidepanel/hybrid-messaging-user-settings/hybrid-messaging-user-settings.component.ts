@@ -71,7 +71,7 @@ class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController 
     return this.$q.all(promises)
       .then(([commonIdentityUserData, ussStatuses]) => {
         this.allUserEntitlements = commonIdentityUserData.user.entitlements;
-        this.isInvitePending = commonIdentityUserData.user.pendingStatus;
+        this.isInvitePending = !this.UserOverviewService.userHasActivatedAccountInCommonIdentity(commonIdentityUserData.user);
         this.entitledToggle = this.userIsCurrentlyEntitled = this.userHasEntitlement('spark-hybrid-impinterop');
         this.userStatus = _.find(ussStatuses, { serviceId: 'spark-hybrid-impinterop' });
         if (this.userStatus && this.userStatus.connectorId) {

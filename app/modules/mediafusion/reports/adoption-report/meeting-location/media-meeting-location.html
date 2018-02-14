@@ -2,7 +2,13 @@
   <article class="media-service-card header-padding">
     <graphheader>
       <span class='report-section-header' translate='mediaFusion.metrics.meetingLocationTitle'></span>
-      <i class='icon icon-info-outline icon-large' tooltip="{{::'mediaFusion.metrics.graphDescription.meetHostTypeDesc' | translate}}" tooltip-class="metrics-tooltip"></i>
+      <i class='icon icon-info-outline icon-large'
+        tabinddex="0"
+        tooltip="{{::'mediaFusion.metrics.graphDescription.meetHostTypeDesc' | translate}}"
+        tooltip-class="metrics-tooltip"
+        tooltip-trigger="mouseenter focus"
+        aria-label="{{::'mediaFusion.metrics.graphDescription.meetHostTypeDesc' | translate}}">
+      </i>
       <div id="meeting-location-div"></div>
     </graphheader>
     <section>

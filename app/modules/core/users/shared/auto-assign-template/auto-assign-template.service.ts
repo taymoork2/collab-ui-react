@@ -1,8 +1,9 @@
 import { ILicenseRequestItem, ILicenseResponseItem, IUserEntitlementRequestItem, IAutoAssignTemplateRequestPayload, LicenseChangeOperation, UserEntitlementName, UserEntitlementState } from 'modules/core/users/shared/onboard/onboard.interfaces';
 import { AssignableServicesItemCategory, IAssignableLicenseCheckboxState, ILicenseUsage, ILicenseUsageMap, ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
 import { MessengerInteropService } from 'modules/core/users/userAdd/shared/messenger-interop/messenger-interop.service';
-import { IAutoAssignTemplateData, IAutoAssignTemplateResponse, IUserEntitlementsViewState } from 'modules/core/users/shared/auto-assign-template/auto-assign-template.interfaces';
+import { IAutoAssignTemplateData, IAutoAssignTemplateDataViewData, IAutoAssignTemplateResponse, IUserEntitlementsViewState } from 'modules/core/users/shared/auto-assign-template/auto-assign-template.interfaces';
 import { ICrCheckboxItemState } from 'modules/core/users/shared/cr-checkbox-item/cr-checkbox-item.component';
+
 
 export class AutoAssignTemplateService {
 
@@ -120,13 +121,20 @@ export class AutoAssignTemplateService {
     }, {});
   }
 
+  public toViewData(template: IAutoAssignTemplateResponse | undefined, subscriptions: ISubscription[] = []): IAutoAssignTemplateDataViewData {
+    const assignedLicenses = _.get(template, 'licenses', []);
+    const allLicenses = this.getAllLicenses(subscriptions);
+    const userEntitlements = _.get(template, 'userEntitlements', []);
+    return {
+      LICENSE: this.mkLicenseEntries(assignedLicenses, allLicenses),
+      USER_ENTITLEMENT: this.mkUserEntitlementEntries(userEntitlements),
+    };
+  }
+
   public toAutoAssignTemplateData(template: IAutoAssignTemplateResponse, subscriptions: ISubscription[]): IAutoAssignTemplateData {
     const autoAssignTemplateData = this.initAutoAssignTemplateData();
 
-    const assignedLicenses = template.licenses;
-    const allLicenses = this.getAllLicenses(subscriptions);
-    autoAssignTemplateData.viewData.LICENSE = this.mkLicenseEntries(assignedLicenses, allLicenses);
-    autoAssignTemplateData.viewData.USER_ENTITLEMENT = this.mkUserEntitlementEntries(template.userEntitlements);
+    autoAssignTemplateData.viewData = this.toViewData(template, subscriptions);
     autoAssignTemplateData.apiData.subscriptions = subscriptions;
     autoAssignTemplateData.apiData.template = template;
     return autoAssignTemplateData;
@@ -194,13 +202,40 @@ export class AutoAssignTemplateService {
   }
 
   private isLicenseIdInTemplate(licenseId: string, autoAssignTemplateData: IAutoAssignTemplateData): boolean {
-    const templateLicenseItems: ILicenseResponseItem[] = _.get(autoAssignTemplateData, 'apiData.template.licenses');
-    return !!_.find(templateLicenseItems, { id: licenseId });
+    return !!this.findLicense(autoAssignTemplateData, { id: licenseId });
   }
 
   private isUserEntitlementNameInTemplate(userEntitlementName: UserEntitlementName, autoAssignTemplateData: IAutoAssignTemplateData): boolean {
+    return !!this.findUserEntitlement(autoAssignTemplateData, { entitlementName: userEntitlementName });
+  }
+
+  public findLicense(autoAssignTemplateData: IAutoAssignTemplateData, criteria: Object): ILicenseResponseItem {
+    const templateLicenseItems: ILicenseResponseItem[] = _.get(autoAssignTemplateData, 'apiData.template.licenses');
+    return _.find(templateLicenseItems, criteria);
+  }
+
+  public findUserEntitlement(autoAssignTemplateData: IAutoAssignTemplateData, criteria: Object): IUserEntitlementRequestItem {
     const templateUserEntitlementItems: IUserEntitlementRequestItem[] = _.get(autoAssignTemplateData, 'apiData.template.userEntitlements');
-    return !!_.find(templateUserEntitlementItems, { entitlementName: userEntitlementName });
+    return _.find(templateUserEntitlementItems, criteria);
+  }
+
+  public getLicenseOrUserEntitlement(itemId: string, itemCategory: AssignableServicesItemCategory, autoAssignTemplateData: IAutoAssignTemplateData): ILicenseResponseItem | IUserEntitlementRequestItem | undefined {
+    if (itemCategory === AssignableServicesItemCategory.LICENSE) {
+      return this.findLicense(autoAssignTemplateData, { id: itemId });
+    }
+    if (itemCategory === AssignableServicesItemCategory.USER_ENTITLEMENT) {
+      return this.findUserEntitlement(autoAssignTemplateData, { entitlementName: itemId });
+    }
+  }
+
+  public getIsEnabled(itemFromTemplate: ILicenseResponseItem | IUserEntitlementRequestItem | undefined, itemCategory: AssignableServicesItemCategory): boolean {
+    if (itemCategory === AssignableServicesItemCategory.LICENSE) {
+      return _.get(itemFromTemplate, 'idOperation') === LicenseChangeOperation.ADD;
+    }
+    if (itemCategory === AssignableServicesItemCategory.USER_ENTITLEMENT) {
+      return _.get(itemFromTemplate, 'entitlementState') === UserEntitlementState.ACTIVE;
+    }
+    return false;
   }
 
   public initAutoAssignTemplateData(): IAutoAssignTemplateData {

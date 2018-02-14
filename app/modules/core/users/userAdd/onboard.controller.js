@@ -1500,6 +1500,11 @@ require('./_user-add.scss');
       $scope.hybridServicesEntitlements = entitlements;
     };
 
+    //TODO: remove when 'OnboardService.huronCallEntitlement' is no longer needed 2/12/18 chrispha
+    $scope.isHuronCallLicenseSelected = function () {
+      return OnboardService.huronCallEntitlement;
+    };
+
     function entitleUserCallback(data, status, method, headers) {
       initResults();
       $scope.numAddedUsers = 0;

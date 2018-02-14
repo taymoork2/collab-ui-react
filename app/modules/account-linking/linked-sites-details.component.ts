@@ -4,11 +4,15 @@ class LinkedSitesDetailsComponentCtrl implements ng.IComponentController {
 
   public selectedSiteInfo: IACSiteInfo;
   public actionList;
+  public linkAllUsers: boolean;
+  public linkAllUsersNotAllowed: boolean = false;
 
   public webexPage: IGotoWebex;
 
   public showWizardFn: Function;
   public launchWebexFn: Function;
+
+  public automaticLinkingTooltipText: string = 'accountLinking.siteDetails.automaticLinkingTooltip';
 
   /* @ngInject */
   constructor(private $log: ng.ILogService,
@@ -20,13 +24,10 @@ class LinkedSitesDetailsComponentCtrl implements ng.IComponentController {
 
   public $onInit() {
     this.$log.debug('LinkedSitesDetailsComponentCtrl $onInit, selectedSiteInfo:', this.selectedSiteInfo);
-    // this.$rootScope.$on('ACCOUNT_LINKING_CHANGE', (_event: angular.IAngularEvent, siteInfo, webexData): void => {
-    //   this.selectedSiteInfo.linkingMode = webexData.accountLinkingMode;
-    // });
   }
 
   public modifyLinkingMethod() {
-    this.$log.info('Modify linking method by showingw wizard using siteinfo:', this.selectedSiteInfo);
+    this.$log.info('Modify linking method by showing wizard using siteinfo:', this.selectedSiteInfo);
     this.showWizardFn({ siteInfo: this.selectedSiteInfo });
   }
 
@@ -34,14 +35,19 @@ class LinkedSitesDetailsComponentCtrl implements ng.IComponentController {
     this.$state.go('reports.webex-metrics', { siteUrl: siteUrl });
   }
 
-  public launchSiteAdmin(siteUrl) {
-    this.$log.info('Launch Webex site admin from details for site', siteUrl);
-    this.launchWebexFn({ site: siteUrl, useHomepage: false });
+  public launchSiteAdmin(siteInfo) {
+    this.$log.info('Launch Webex site admin from details for siteInfo:', siteInfo);
+    this.launchWebexFn({ site: siteInfo, useHomepage: false });
   }
 
   public isAutomaticMode(): boolean {
     return (this.selectedSiteInfo.linkingMode === LinkingMode.AUTO_AGREEMENT ||
     this.selectedSiteInfo.linkingMode === LinkingMode.AUTO_VERIFY_DOMAIN);
+  }
+
+  public linkAllUsersChange(value) {
+    this.$log.debug('linkAllUsersChange', value);
+    this.$log.debug('linkAllUsersChange', this.selectedSiteInfo);
   }
 
 }

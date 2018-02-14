@@ -9,7 +9,7 @@ const CallPlaceLine = new CallUserPlacePage();
 const UserPhoneButtonLayout = new CallUserPhoneButtonLayoutPage();
 
 /* globals, navigation, users, telephony */
-xdescribe('Huron Functional: place-phone-button-layout', () => {
+describe('Huron Functional: place-phone-button-layout', () => {
   const customer = huronCustomer({
     test: 'place-phone-button-layout',
     offers: ['CALL', 'ROOMSYSTEMS'],
@@ -231,5 +231,5 @@ xdescribe('Huron Functional: place-phone-button-layout', () => {
       });
     });
   });
-}).pend('Toggle phone button layout has been disabled system-wide. Disabled pending further investigation');
+}).pend('Phone button layout toggle still disabled. There is a JIRA to resolve this.')
 

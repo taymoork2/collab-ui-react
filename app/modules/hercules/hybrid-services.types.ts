@@ -49,7 +49,9 @@ export interface IUpgradeSchedule {
 }
 
 export interface ICluster {
+  allowedRegistrationHostsUrl: string;
   connectors: IConnector[];
+  createdAt: string;
   id: string;
   name: string;
   provisioning: IConnectorProvisioning[];
@@ -77,8 +79,9 @@ export interface IExtendedClusterFusion extends IClusterWithExtendedConnectors {
 export interface IClusterExtendedProperties {
   alarms: string; //  'none' | 'warning' | 'error';
   alarmsBadgeCss: string;
-  allowedRedirectTarget: IAllowedRegistrationHost | undefined;
+  allowedRedirectTarget?: IAllowedRegistrationHost;
   hasUpgradeAvailable: boolean;
+  isUpgradeUrgent: boolean;
   isEmpty: boolean;
   maintenanceMode: ConnectorMaintenanceMode;
   registrationTimedOut: boolean;
@@ -101,9 +104,9 @@ export interface IHost {
     totalMemory: string;
   };
   hostname: string;
-  lastMaintenanceModeEnabledTimestamp: string;
+  lastMaintenanceModeEnabledTimestamp?: string;
   maintenanceMode: ConnectorMaintenanceMode;
-  platform?: 'expressway';
+  platform?: 'ecp' | 'expressway';
   platformVersion?: string;
   serial: string;
   url: string;
@@ -146,11 +149,13 @@ export interface IConnector {
   connectorStatus?: IConnectorStatus;
   connectorType: ConnectorType;
   createdAt: string;
+  hostname: string;
   hostSerial: string;
   hostUrl: string;
-  hostname: string;
   id: string;
   maintenanceMode: 'on' | 'off';
+  platform?: 'ecp' | 'expressway';
+  platformVersion?: string;
   runningVersion: string;
   state: ConnectorState;
   upgradeState: ConnectorUpgradeState;
@@ -165,25 +170,10 @@ export interface IConnectorStatus {
   operational: boolean;
   userCapacity?: number;
   services: {
-    onprem: {
-      address: string;
-      type: 'uc_service' | 'cal_service' | 'mercury' | 'common_identity' | 'encryption_service' | 'cmr' | 'ebex_files' | 'fms';
-      httpProxy: string;
-      state: 'ok' | 'error';
-      stateDescription: string;
-      mercury?: {
-        route: string;
-        dataCenter: string;
-      };
-    }[];
-    cloud: {
-      address: string;
-      type: 'ucm_cti' | 'ucm_axl' | 'exchange' | 'kms';
-      version: string;
-      state: 'ok' | 'error';
-      stateDescription: string;
-    }[];
+    onprem: any[];
+    cloud: any[];
   };
+  state: string;
   users?: {
     assignedRoomCount: number;
     assignedUserCount: number;
@@ -200,6 +190,7 @@ export interface IConnectorExtendedProperties {
   alarms: string; //  'none' | 'warning' | 'error';
   alarmsBadgeCss: string; // duplicate of AlarmCSSClass
   hasUpgradeAvailable: boolean;
+  isUpgradeUrgent: boolean;
   maintenanceMode: ConnectorMaintenanceMode;
   state: IConnectorStateDetails;
 }

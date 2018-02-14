@@ -1654,7 +1654,7 @@
           .state('user-overview.hybrid-services-squared-fusion-cal', {
             views: {
               'side-panel-container@user-overview': {
-                template: '<hybrid-calendar-service-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" preferred-web-ex-site-name="$resolve.preferredWebExSiteName" is-invite-pending="$resolve.isInvitePending"></hybrid-calendar-service-user-settings>',
+                template: '<hybrid-calendar-service-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" preferred-web-ex-site-name="$resolve.preferredWebExSiteName"></hybrid-calendar-service-user-settings>',
               },
             },
             data: {},

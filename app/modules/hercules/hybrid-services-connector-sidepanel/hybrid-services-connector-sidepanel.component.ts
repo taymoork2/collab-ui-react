@@ -1,9 +1,9 @@
-import { IConnector } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 import { FeatureToggleService } from 'modules/core/featureToggle';
+import { ISimplifiedConnector } from '../hybrid-services-nodes-page/hybrid-services-nodes-page.component';
 
 class HybridServicesConnectorSidepanelCtrl implements ng.IComponentController {
-  public connector: IConnector;
+  public connector: ISimplifiedConnector;
   public titleKey: string;
   public hasEventHistoryFeatureToggle = false;
 

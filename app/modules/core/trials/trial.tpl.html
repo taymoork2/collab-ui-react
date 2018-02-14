@@ -119,6 +119,7 @@
               ng-model="trial.careTrial.enabled"
               ng-disabled="trial._helpers.messageOfferDisabledExpression() || trial.preset.care"
               cs-input-label="{{::'trials.care' | translate}}">
+            <p class="cs-input__help-text" translate="trials.kOneContents" ng-if="trial.k1Promotion"></p>
 
             <input cs-input type="number"
               id="trialCareLicenseCount" name="trialCareLicenseCount"
@@ -139,6 +140,8 @@
               ng-model="trial.advanceCareTrial.enabled"
               ng-disabled="trial._helpers.messageOfferDisabledExpression() || trial.preset.advanceCare"
               cs-input-label="{{::'trials.advanceCare' | translate}}">
+            <p class="cs-input__help-text" translate="trials.kTwoContents" ng-if="trial.k1Promotion"></p>
+
             <input cs-input type="number"
               id="trialAdvanceCareLicenseCount" name="trialAdvanceCareLicenseCount"
               ng-model="trial.advanceCareTrial.details.quantity"

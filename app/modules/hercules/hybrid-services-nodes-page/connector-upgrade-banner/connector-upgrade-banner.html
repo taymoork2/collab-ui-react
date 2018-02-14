@@ -1,0 +1,46 @@
+<div ng-if="$ctrl.connectorTypesWithUpgrade.length === 1">
+  <div ng-if="$ctrl.connectorTypesWithUpgrade[0].upgradable === 'yes' || $ctrl.connectorTypesWithUpgrade[0].upgradable === 'yes_but_mixed_state'">
+    <cs-alert-banner type="{{$ctrl.getBannerAlertType($ctrl.connectorTypesWithUpgrade)}}">
+      <span ng-if="$ctrl.connectorTypesWithUpgrade[0].isUpgradeUrgent" translate="hercules.nodesPage.alertUrgentUpgradeAvailableFor" translate-value-connector="{{::$ctrl.connectorTypesWithUpgrade[0].connectorTypeTranslationKey}}"></span>
+      <span ng-if="!$ctrl.connectorTypesWithUpgrade[0].isUpgradeUrgent" translate="hercules.nodesPage.alertUpgradeAvailableFor" translate-value-connector="{{::$ctrl.connectorTypesWithUpgrade[0].connectorTypeTranslationKey}}"></span>
+      <a href ng-click="$ctrl.openUpgradeModal($ctrl.connectorTypesWithUpgrade[0])" translate="hercules.nodesPage.alertInstallNow"></a>
+    </cs-alert-banner>
+  </div>
+  <div ng-if="$ctrl.connectorTypesWithUpgrade[0].upgradable === 'no_because_maintenance'">
+    <cs-alert-banner type="{{$ctrl.getBannerAlertType($ctrl.connectorTypesWithUpgrade)}}">
+      <div ng-if="$ctrl.connectorTypesWithUpgrade[0].isUpgradeUrgent">
+        <span ng-if="$ctrl.connectorTypesWithUpgrade[0].isUpgradeUrgent" translate="hercules.nodesPage.alertUrgentUpgradeAvailableFor" translate-value-connector="{{::$ctrl.connectorTypesWithUpgrade[0].connectorTypeTranslationKey}}"></span><br />
+        <span translate="hercules.nodesPage.alertDisableMaintenanceMode"></span>
+      </div>
+      <div ng-if="!$ctrl.connectorTypesWithUpgrade[0].isUpgradeUrgent">
+        <span ng-if="!$ctrl.connectorTypesWithUpgrade[0].isUpgradeUrgent" translate="hercules.nodesPage.alertUpgradeAvailableFor" translate-value-connector="{{::$ctrl.connectorTypesWithUpgrade[0].connectorTypeTranslationKey}}"></span><br />
+        <span translate="hercules.nodesPage.alertDisableMaintenanceMode"></span>
+      </div>
+    </cs-alert-banner>
+  </div>
+  <div ng-if="$ctrl.connectorTypesWithUpgrade[0].upgradable === 'no_because_offline' || $ctrl.connectorTypesWithUpgrade[0].upgradable === 'no_because_mixed_state'">
+    <cs-alert-banner type="{{$ctrl.getBannerAlertType($ctrl.connectorTypesWithUpgrade)}}">
+      <div ng-if="$ctrl.connectorTypesWithUpgrade[0].isUpgradeUrgent">
+        <span ng-if="$ctrl.connectorTypesWithUpgrade[0].isUpgradeUrgent" translate="hercules.nodesPage.alertUrgentUpgradeAvailableFor" translate-value-connector="{{::$ctrl.connectorTypesWithUpgrade[0].connectorTypeTranslationKey}}"></span><br />
+        <span translate="hercules.nodesPage.alertenableTheNodes"></span>
+      </div>
+      <div ng-if="!$ctrl.connectorTypesWithUpgrade[0].isUpgradeUrgent">
+        <span ng-if="!$ctrl.connectorTypesWithUpgrade[0].isUpgradeUrgent" translate="hercules.nodesPage.alertUpgradeAvailableFor" translate-value-connector="{{::$ctrl.connectorTypesWithUpgrade[0].connectorTypeTranslationKey}}"></span><br />
+        <span translate="hercules.nodesPage.alertenableTheNodes"></span>
+      </div>
+    </cs-alert-banner>
+  </div>
+</div>
+<div ng-if="$ctrl.connectorTypesWithUpgrade.length > 1">
+  <cs-alert-banner type="{{$ctrl.getBannerAlertType($ctrl.connectorTypesWithUpgrade)}}">
+    <span translate="hercules.nodesPage.alertUpgradesAvailable"></span>
+    <span ng-repeat="connectorUpgrade in $ctrl.connectorTypesWithUpgrade">
+      <a ng-if="connectorUpgrade.upgradable === 'yes' || connectorUpgrade.upgradable === 'yes_but_mixed_state'" href ng-click="$ctrl.openUpgradeModal(connectorUpgrade)">
+        <span translate="hercules.nodesPage.alertUpgradeConnectorNow" translate-value-connector="{{::connectorUpgrade.connectorTypeTranslationKey}}"></span><span ng-if="connectorUpgrade.isUpgradeUrgent"> <span translate="hercules.nodesPage.alertUrgent"></span></span>
+      </a>
+      <span ng-if="connectorUpgrade.upgradable === 'no_because_maintenance'" translate="hercules.nodesPage.alertDisableMaintenanceModeFor" translate-value-connector="{{::connectorUpgrade.connectorTypeTranslationKey}}"></span>
+      <span ng-if="connectorUpgrade.upgradable === 'no_because_offline' || connectorUpgrade.upgradable === 'no_because_mixed_state'" translate="hercules.nodesPage.alertenableTheNodesFor" translate-value-connector="{{::connectorUpgrade.connectorTypeTranslationKey}}"></span>
+      <span ng-if="!$last">&nbsp;</span>
+    </span>
+  </cs-alert-banner>
+</div>
