@@ -351,13 +351,15 @@
 
     function updateHybridUserDataWithoutExtension(user) {
       var name = getHybridUserDescription(user);
-
-      vm.users.push({
-        description: name,
-        id: user.id,
-        type: CONSTANTS.hybridUser,
-        sipUri: getUserSipUri(user),
-      });
+      var alreadyExistingUser = _.filter(vm.users, ['description', name]);
+      if (alreadyExistingUser.length === 0) {
+        vm.users.push({
+          description: name,
+          id: user.id,
+          type: CONSTANTS.hybridUser,
+          sipUri: getUserSipUri(user),
+        });
+      }
     }
 
     function checkIfUsersLengthLessThanFullLoad() {
@@ -375,12 +377,16 @@
     }
 
     function updateUserData(user, extension) {
-      vm.users.push({
-        description: formatName(user, extension),
-        id: user.id,
-        type: getUserType(user),
-        sipUri: getUserSipUri(user),
-      });
+      var userDescription = formatName(user, extension);
+      var alreadyExistingUser = _.filter(vm.users, ['description', userDescription]);
+      if (alreadyExistingUser.length === 0) {
+        vm.users.push({
+          description: userDescription,
+          id: user.id,
+          type: getUserType(user),
+          sipUri: getUserSipUri(user),
+        });
+      }
     }
 
     function checkForRouteToVU(action, routeToName) {
