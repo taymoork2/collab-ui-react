@@ -100,10 +100,10 @@ describe('Huron Functional: add-user', () => {
       utils.sendKeys(CallUser.usersList.searchFilter, USER_EMAIL + protractor.Key.ENTER);
       utils.click(CallUser.usersList.userFirstName);
       utils.expectIsDisplayed(users.servicesPanel);
-      utils.expectIsDisplayed(users.communicationsService);
+      utils.expectIsDisplayed(users.communicationService);
     });
     it('should navigate to call details view', () => {
-      utils.click(users.communicationsService);
+      utils.click(users.communicationService);
       utils.expectIsDisplayed(CallUser.callOverview.directoryNumbers.title);
       utils.expectIsDisplayed(CallUser.callOverview.features.title);
       utils.expectIsDisplayed(CallUser.callOverview.directoryNumbers.number);

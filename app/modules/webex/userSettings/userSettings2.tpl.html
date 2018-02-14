@@ -89,47 +89,47 @@
             </cs-checkbox>
 
             <div class="indentedCheckbox">
-    <div ng-if="!userSettingsModel.telephonyPriviledge.telephonyType.isTspAudio">
-              <div ng-if="userSettingsModel.telephonyPriviledge.callInTeleconf.value">
-                <cs-radio label="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].label"
-                  value="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].value"
-                  name="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].name"
-                  id="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].id"
-                  isdisabled="!userSettingsModel.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled"
-                  ng-model="userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType"
-                  ng-if="userSettingsModel.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled">
-                </cs-radio>
+              <div ng-if="!userSettingsModel.telephonyPriviledge.telephonyType.isTspAudio">
+                <div ng-if="userSettingsModel.telephonyPriviledge.callInTeleconf.value">
+                  <cs-radio label="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].label"
+                    value="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].value"
+                    name="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].name"
+                    id="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].id"
+                    isdisabled="!userSettingsModel.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled"
+                    ng-model="userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType"
+                    ng-if="userSettingsModel.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled">
+                  </cs-radio>
 
-                <cs-radio label="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].label"
-                  value="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].value"
-                  name="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].name"
-                  id="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].id"
-                  isdisabled="!userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled"
-                  ng-model="userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType"
-                  ng-if="userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled">
-                </cs-radio>
+                  <cs-radio label="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].label"
+                    value="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].value"
+                    name="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].name"
+                    id="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].id"
+                    isdisabled="!userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled"
+                    ng-model="userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType"
+                    ng-if="userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled">
+                  </cs-radio>
+                </div>
+
+                <div ng-if="!userSettingsModel.telephonyPriviledge.callInTeleconf.value">
+                  <cs-radio label="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].label"
+                    value="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].value"
+                    name="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].name"
+                    id="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].id"
+                    isdisabled="true"
+                    ng-model="userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType"
+                    ng-if="userSettingsModel.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled">
+                  </cs-radio>
+
+                  <cs-radio label="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].label"
+                    value="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].value"
+                    name="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].name"
+                    id="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].id"
+                    isdisabled="true"
+                    ng-model="userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType"
+                    ng-if="userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled">
+                  </cs-radio>
+                </div>
               </div>
-
-              <div ng-if="!userSettingsModel.telephonyPriviledge.callInTeleconf.value">
-                <cs-radio label="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].label"
-                  value="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].value"
-                  name="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].name"
-                  id="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].id"
-                  isdisabled="true"
-                  ng-model="userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType"
-                  ng-if="userSettingsModel.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled">
-                </cs-radio>
-
-                <cs-radio label="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].label"
-                  value="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].value"
-                  name="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].name"
-                  id="userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].id"
-                  isdisabled="true"
-                  ng-model="userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType"
-                  ng-if="userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled">
-                </cs-radio>
-              </div>
-            </div>
 
               <div ng-if="userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.isSiteEnabled">
                 <cs-checkbox ckid={{userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.id}}
@@ -160,8 +160,7 @@
                          ng-click="callBackTeleconfChkboxClick()">
             </cs-checkbox>
 
-            <div class="indentedCheckbox"
-                 ng-if="userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.isSiteEnabled">
+            <div class="indentedCheckbox" ng-if="userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.isSiteEnabled">
               <cs-checkbox ckid={{userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.id}}
                 name={{userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.id}}
                 label={{userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.label}}
@@ -235,7 +234,7 @@
         </div>
         <!-- End of Other Privileges -->
 
-        <a href ng-click="document.getElementById('hiddenButton').click();">
+        <a href ng-click="submitAdvancedSettingsForm()">
           <p class="popout-link">
             <span id="webexUserAdminLink" name="webexUserAdminLink" translate="webexUserSettingLabels.advancedLinkLabel"></span>
           </p>
@@ -246,7 +245,7 @@
 </form>
 
 <!-- Start of WebEx advanced linkout form -->
-<form name="advancedSettings"
+<form name="advancedSettingsForm"
   action="{{trustSrc(webexAdvancedUrl)}}"
   method="post"
   target="webexSiteAdmin">
@@ -254,26 +253,19 @@
   <input id="adminEmail"
     type="hidden"
     name="adminEmail"
-    ng-model="advancedSettings.adminEmail"
+    ng-model="advancedSettingsForm.adminEmail"
     value="{{adminEmailParam}}">
 
   <input id="userEmail"
     type="hidden"
     name="userEmail"
-    ng-model="advancedSettings.userEmail"
+    ng-model="advancedSettingsForm.userEmail"
     value="{{userEmailParam}}">
 
   <input id="locale"
     type="hidden"
     name="locale"
-    ng-model="advancedSettings.locale"
+    ng-model="advancedSettingsForm.locale"
     value="{{localeParam}}">
-
-  <button id="hiddenButton"
-    type="submit"
-    style="background-color:#ff00ff;cursor:pointer;width:100px;display:none;"
-    ng-click="this.parentElement.submit();"
-    aria-label="{{::'common.submit' | translate}}">
-  </button>
 </form>
 <!-- End of WebEx advanced linkout form -->

@@ -30,7 +30,7 @@ export class HybridIMPActiveCardComponent implements ng.IComponentOptions {
     <article>
       <div class="active-card_header">
         <h4 translate="servicesOverview.cards.hybridImp.title"></h4>
-        <i class="icon icon-question-circle" tooltip="{{::'servicesOverview.cards.hybridImp.description' | translate}}" tooltip-placement="bottom-right" tabindex="0" tooltip-trigger="focus mouseenter"></i>
+        <i class="icon icon-question-circle" tooltip="{{::'servicesOverview.cards.hybridImp.description' | translate}}" tooltip-placement="bottom-right" tabindex="0" tooltip-trigger="focus mouseenter" aria-label="{{::'servicesOverview.cards.hybridImp.description' | translate}}"></i>
       </div>
       <div class="active-card_content">
         <card-users-summary summary="$ctrl.userStatusesSummary"></card-users-summary>

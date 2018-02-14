@@ -28,14 +28,15 @@ yarn protractor-babel --specs  ./test/e2e-protractor/huron/functional/call-setti
 export SAUCE__MAX_INSTANCES="2"
 export SAUCE__USERNAME="atlas-web-limited"
 export SAUCE__ACCESS_KEY="b99c8bc7-4a28-4d87-8cd8-eba7c688d48c"
+export SAUCE__ORG_NAME="huron-ui-test-partner"
 
-yarn protractor-babel -- --specs ./test/e2e-protractor/huron/functional/<test name>.js --int
+yarn protractor-babel --specs ./test/e2e-protractor/huron/functional/<test name>.js --int
 
 ```
 
 * Ruuning all files in a given directory change directory to huron and apply the cmd.
 ```
-yarn protractor-babel -- --suite huron --int
+yarn protractor-babel --suite huron --int
 
 ```
 

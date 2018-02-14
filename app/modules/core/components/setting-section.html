@@ -3,7 +3,16 @@
     <h4 class="section__title">
       {{::$ctrl.setting.title|translate}}
       <i ng-if="$ctrl.setting.icon && !$ctrl.setting.tooltipText" class="icon info-icon" ng-class="$ctrl.setting.icon"></i>
-      <i ng-if="$ctrl.setting.icon && $ctrl.setting.tooltipText" class="icon info-icon has-tooltip" ng-class="$ctrl.setting.icon" tooltip="{{::$ctrl.setting.tooltipText | translate}}" tooltip-append-to-body="true" tooltip-placement="right" tooltip-trigger="focus mouseenter" tabindex="0" aria-label="{{::$ctrl.setting.tooltipText | translate}}"></i>
+      <i ng-if="$ctrl.setting.icon && $ctrl.setting.tooltipText"
+        class="icon info-icon has-tooltip"
+        ng-class="$ctrl.setting.icon"
+        tooltip="{{::$ctrl.setting.tooltipText | translate}}"
+        tooltip-append-to-body="true"
+        tooltip-placement="right"
+        tooltip-trigger="focus mouseenter"
+        tabindex="0"
+        aria-label="{{::$ctrl.setting.tooltipText | translate}}">
+      </i>
     </h4>
     <p class="section__description" ng-if="$ctrl.setting.description" translate="{{$ctrl.setting.description}}"></p>
   </div>
@@ -11,7 +20,15 @@
     <div class="sub-section" ng-if="$ctrl.setting.subsectionLabel">
       <h5 class="sub-section__label" ng-class="{'subheader': $ctrl.setting.badge && $ctrl.setting.tooltipText}">
         {{::$ctrl.setting.subsectionLabel | translate}}&nbsp;
-        <cr-pro-pack-icon ng-if="$ctrl.setting.badge && $ctrl.setting.tooltipText" tooltip="{{::$ctrl.setting.tooltipText | translate}}" tooltip-append-to-body="true" tooltip-placement="right" tooltip-trigger="focus mouseenter" tabindex="0" aria-label="{{::$ctrl.setting.tooltipText | translate}}"></cr-pro-pack-icon>
+        <cr-pro-pack-icon
+          ng-if="$ctrl.setting.badge && $ctrl.setting.tooltipText"
+          tooltip="{{::$ctrl.setting.tooltipText | translate}}"
+          tooltip-append-to-body="true"
+          tooltip-placement="right"
+          tooltip-trigger="focus mouseenter"
+          tabindex="0"
+          aria-label="{{::$ctrl.setting.tooltipText | translate}}">
+        </cr-pro-pack-icon>
       </h5>
     </div>
     <p class="sub-section__description" ng-if="$ctrl.setting.subsectionDescription" translate="{{$ctrl.setting.subsectionDescription}}"></p>

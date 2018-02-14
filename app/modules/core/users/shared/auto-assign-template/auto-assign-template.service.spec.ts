@@ -1,8 +1,8 @@
 import moduleName from './index';
 
 import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template/auto-assign-template.interfaces';
-import { IUserEntitlementRequestItem } from 'modules/core/users/shared/onboard/onboard.interfaces';
-import { IAssignableLicenseCheckboxState } from 'modules/core/users/userAdd/assignable-services/shared/license-usage-util.interfaces';
+import { IUserEntitlementRequestItem, LicenseChangeOperation, UserEntitlementState } from 'modules/core/users/shared/onboard/onboard.interfaces';
+import { AssignableServicesItemCategory, IAssignableLicenseCheckboxState } from 'modules/core/users/userAdd/assignable-services/shared/license-usage-util.interfaces';
 
 describe('Service: AutoAssignTemplateService:', () => {
   beforeEach(function() {
@@ -33,7 +33,6 @@ describe('Service: AutoAssignTemplateService:', () => {
     this.autoAssignTemplateData = {};
     _.set(this.autoAssignTemplateData, 'subscriptions', undefined);
     _.set(this.autoAssignTemplateData, 'LICENSE', { subscriptionId: 'fake-subscriptionId-1' });
-    _.set(this.autoAssignTemplateData, 'USER_ENTITLEMENTS_PAYLOAD', undefined);
   });
 
   beforeEach(function () {
@@ -280,30 +279,50 @@ describe('Service: AutoAssignTemplateService:', () => {
     });
   });
 
-  describe('toAutoAssignTemplateData():', () => {
-    it('should compose state data object with "apiData", "otherData", and "viewData" properties', function () {
+  describe('toViewData():', () => {
+    it('should convert a template response and an optional subscription list to view data', function () {
       spyOn(this.AutoAssignTemplateService, 'getAllLicenses').and.returnValue('fake-allLicenses-result');
       spyOn(this.AutoAssignTemplateService, 'mkLicenseEntries').and.returnValue('fake-mkLicenseEntries-result');
       spyOn(this.AutoAssignTemplateService, 'mkUserEntitlementEntries').and.returnValue('fake-mkUserEntitlementEntries-result');
-      spyOn(this.AutoAssignTemplateService, 'initAutoAssignTemplateData').and.callThrough();
-      const fakeAutoAssignTemplate = {
-        licenses: 'fake-template-licenses-arg',
-        userEntitlements: 'fake-template-userEntitlements-arg',
+      const fakeTemplate = {
+        licenses: 'fake-licenses',
+        userEntitlements:  'fake-userEntitlements',
       };
-      const result = this.AutoAssignTemplateService.toAutoAssignTemplateData(fakeAutoAssignTemplate, 'fake-subscriptions-arg');
+      const fakeSubscriptions = 'fake-subscriptions';
 
-      expect(this.AutoAssignTemplateService.initAutoAssignTemplateData).toHaveBeenCalled();
-      expect(this.AutoAssignTemplateService.getAllLicenses).toHaveBeenCalledWith('fake-subscriptions-arg');
-      expect(this.AutoAssignTemplateService.mkLicenseEntries).toHaveBeenCalledWith('fake-template-licenses-arg', 'fake-allLicenses-result');
-      expect(this.AutoAssignTemplateService.mkUserEntitlementEntries).toHaveBeenCalledWith('fake-template-userEntitlements-arg');
-      expect(result.apiData).toEqual({
-        subscriptions: 'fake-subscriptions-arg',
-        template: fakeAutoAssignTemplate,
-      });
-      expect(result.viewData).toEqual({
+      let result = this.AutoAssignTemplateService.toViewData(fakeTemplate, fakeSubscriptions);
+      expect(this.AutoAssignTemplateService.getAllLicenses).toHaveBeenCalledWith(fakeSubscriptions);
+      expect(this.AutoAssignTemplateService.mkLicenseEntries).toHaveBeenCalledWith('fake-licenses', 'fake-allLicenses-result');
+      expect(this.AutoAssignTemplateService.mkUserEntitlementEntries).toHaveBeenCalledWith('fake-userEntitlements');
+      expect(result).toEqual({
         LICENSE: 'fake-mkLicenseEntries-result',
         USER_ENTITLEMENT: 'fake-mkUserEntitlementEntries-result',
       });
+
+      // if no subscriptions arg is passsed, arg is defaulted to "[]"
+      result = this.AutoAssignTemplateService.toViewData(fakeTemplate);
+      expect(this.AutoAssignTemplateService.getAllLicenses).toHaveBeenCalledWith([]);
+    });
+  });
+
+  describe('toAutoAssignTemplateData():', () => {
+    it('should compose state data object with "apiData", "otherData", and "viewData" properties', function () {
+      spyOn(this.AutoAssignTemplateService, 'initAutoAssignTemplateData').and.callThrough();
+      spyOn(this.AutoAssignTemplateService, 'toViewData').and.returnValue('fake-toViewData-result');
+      const fakeTemplate = {
+        licenses: 'fake-licenses',
+        userEntitlements: 'fake-userEntitlements',
+      };
+      const fakeSubscriptions = 'fake-subscriptions';
+      const result = this.AutoAssignTemplateService.toAutoAssignTemplateData(fakeTemplate, fakeSubscriptions);
+
+      expect(this.AutoAssignTemplateService.initAutoAssignTemplateData).toHaveBeenCalled();
+      expect(this.AutoAssignTemplateService.toViewData).toHaveBeenCalledWith(fakeTemplate, fakeSubscriptions);
+      expect(result.apiData).toEqual({
+        subscriptions: 'fake-subscriptions',
+        template: fakeTemplate,
+      });
+      expect(result.viewData).toBe('fake-toViewData-result');
       expect(result.otherData).toEqual({});
     });
   });
@@ -525,11 +544,20 @@ describe('Service: AutoAssignTemplateService:', () => {
       const autoAssignTemplateData = {} as IAutoAssignTemplateData;
       _.set(autoAssignTemplateData, 'apiData.template.licenses', [
         { id: 'fake-license-id-1' },
-        { id: 'fake-license-id-2' },
       ]);
       expect(this.AutoAssignTemplateService.isLicenseIdInTemplate('fake-license-id-1', autoAssignTemplateData)).toBe(true);
-      expect(this.AutoAssignTemplateService.isLicenseIdInTemplate('fake-license-id-2', autoAssignTemplateData)).toBe(true);
       expect(this.AutoAssignTemplateService.isLicenseIdInTemplate('foo', autoAssignTemplateData)).toBe(false);
+    });
+  });
+
+  describe('findLicense():', () => {
+    it('should find a license in the existing template', function () {
+      const autoAssignTemplateData = {} as IAutoAssignTemplateData;
+      _.set(autoAssignTemplateData, 'apiData.template.licenses', [
+        { id: 'fake-license-id-1' },
+      ]);
+      expect(this.AutoAssignTemplateService.findLicense(autoAssignTemplateData, { id: 'fake-license-id-1' })).toEqual({ id: 'fake-license-id-1' });
+      expect(this.AutoAssignTemplateService.findLicense(autoAssignTemplateData, { id: 'foo' })).not.toBeDefined();
     });
   });
 
@@ -538,15 +566,70 @@ describe('Service: AutoAssignTemplateService:', () => {
       const autoAssignTemplateData = {} as IAutoAssignTemplateData;
       _.set(autoAssignTemplateData, 'apiData.template.userEntitlements', [
         { entitlementName: 'fake-user-entitlement-1' },
-        { entitlementName: 'fake-user-entitlement-2' },
       ]);
       expect(this.AutoAssignTemplateService.isUserEntitlementNameInTemplate('fake-user-entitlement-1', autoAssignTemplateData)).toBe(true);
-      expect(this.AutoAssignTemplateService.isUserEntitlementNameInTemplate('fake-user-entitlement-2', autoAssignTemplateData)).toBe(true);
       expect(this.AutoAssignTemplateService.isUserEntitlementNameInTemplate('foo', autoAssignTemplateData)).toBe(false);
     });
   });
 
-  describe('isUserEntitlementNameInTemplate():', () => {
+  describe('findUserEntitlement():', () => {
+    it('should find a user-entitlement in the existing template', function () {
+      const autoAssignTemplateData = {} as IAutoAssignTemplateData;
+      _.set(autoAssignTemplateData, 'apiData.template.userEntitlements', [
+        { entitlementName: 'fake-user-entitlement-1' },
+      ]);
+      let result = this.AutoAssignTemplateService.findUserEntitlement(autoAssignTemplateData, { entitlementName: 'fake-user-entitlement-1' });
+      expect(result).toEqual({ entitlementName: 'fake-user-entitlement-1' });
+      result = this.AutoAssignTemplateService.findUserEntitlement(autoAssignTemplateData, { entitlementName: 'foo' });
+      expect(result).not.toBeDefined();
+    });
+  });
+
+  describe('getLicenseOrUserEntitlement()', () => {
+    it('should get either license or user-entitlement from the existing template', function () {
+      const itemId = 'fake-itemId';
+      const autoAssignTemplateData = {} as IAutoAssignTemplateData;
+      spyOn(this.AutoAssignTemplateService, 'findLicense').and.returnValue('fake-findLicense-result');
+      spyOn(this.AutoAssignTemplateService, 'findUserEntitlement').and.returnValue('fake-findUserEntitlement-result');
+
+      let itemCategory = AssignableServicesItemCategory.LICENSE;
+      let result = this.AutoAssignTemplateService.getLicenseOrUserEntitlement(itemId, itemCategory, autoAssignTemplateData);
+      expect(result).toBe('fake-findLicense-result');
+
+      itemCategory = AssignableServicesItemCategory.USER_ENTITLEMENT;
+      result = this.AutoAssignTemplateService.getLicenseOrUserEntitlement(itemId, itemCategory, autoAssignTemplateData);
+      expect(result).toBe('fake-findUserEntitlement-result');
+
+      result = this.AutoAssignTemplateService.getLicenseOrUserEntitlement(itemId, 'foo', autoAssignTemplateData);
+      expect(result).not.toBeDefined();
+    });
+  });
+
+  describe('getIsEnabled()', () => {
+    it('should return "true" if item is a license with an add operation, or a user-entitlement with an active status, "false" otherwise', function () {
+      let result = this.AutoAssignTemplateService.getIsEnabled({ idOperation: LicenseChangeOperation.ADD }, AssignableServicesItemCategory.LICENSE);
+      expect(result).toBe(true);
+      result = this.AutoAssignTemplateService.getIsEnabled({ idOperation: LicenseChangeOperation.REMOVE }, AssignableServicesItemCategory.LICENSE);
+      expect(result).toBe(false);
+
+      result = this.AutoAssignTemplateService.getIsEnabled({ entitlementState: UserEntitlementState.ACTIVE }, AssignableServicesItemCategory.USER_ENTITLEMENT);
+      expect(result).toBe(true);
+      result = this.AutoAssignTemplateService.getIsEnabled({ entitlementState: UserEntitlementState.INACTIVE }, AssignableServicesItemCategory.USER_ENTITLEMENT);
+      expect(result).toBe(false);
+
+      // category is invalid
+      result = this.AutoAssignTemplateService.getIsEnabled({ idOperation: LicenseChangeOperation.ADD }, 'foo');
+      expect(result).toBe(false);
+      result = this.AutoAssignTemplateService.getIsEnabled({ idOperation: LicenseChangeOperation.REMOVE }, 'foo');
+      expect(result).toBe(false);
+      result = this.AutoAssignTemplateService.getIsEnabled({ entitlementState: UserEntitlementState.ACTIVE }, 'foo');
+      expect(result).toBe(false);
+      result = this.AutoAssignTemplateService.getIsEnabled({ entitlementState: UserEntitlementState.INACTIVE }, 'foo');
+      expect(result).toBe(false);
+    });
+  });
+
+  describe('initAutoAssignTemplateData():', () => {
     it('should return a skeleton object suitable for populating auto-assign template data', function () {
       expect(this.AutoAssignTemplateService.initAutoAssignTemplateData()).toEqual({
         viewData: {},

@@ -1654,7 +1654,7 @@
           .state('user-overview.hybrid-services-squared-fusion-cal', {
             views: {
               'side-panel-container@user-overview': {
-                template: '<hybrid-calendar-service-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" preferred-web-ex-site-name="$resolve.preferredWebExSiteName" is-invite-pending="$resolve.isInvitePending"></hybrid-calendar-service-user-settings>',
+                template: '<hybrid-calendar-service-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" preferred-web-ex-site-name="$resolve.preferredWebExSiteName"></hybrid-calendar-service-user-settings>',
               },
             },
             data: {},
@@ -1984,7 +1984,7 @@
           .state('site-list.linked.details.wizard', {
             views: {
               'modal@': {
-                template: '<account-linking-wizard dismiss="$dismiss()" site-info="$resolve.siteInfo" operation="$resolve.operation" launch-webex-fn="$resolve.launchWebexFn(site, useHomepage)" set-account-linking-mode-fn="$resolve.setAccountLinkingModeFn(siteUrl, mode)"></account-linking-wizard>',
+                template: '<account-linking-wizard dismiss="$dismiss()" site-info="$resolve.siteInfo" operation="$resolve.operation" launch-webex-fn="$resolve.launchWebexFn(site, useHomepage)" set-account-linking-mode-fn="$resolve.setAccountLinkingModeFn(siteUrl, mode, domains)"></account-linking-wizard>',
                 resolve: {
                   modalInfo: function ($state) {
                     $state.params.modalClass = 'account-linking-wizard-custom';

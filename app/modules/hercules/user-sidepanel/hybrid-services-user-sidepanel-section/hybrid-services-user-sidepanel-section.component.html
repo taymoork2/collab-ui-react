@@ -2,7 +2,8 @@
   <div class="section-title-row">
     <span class="section-name" translate="cloudExtensions.cloudExtensions"></span>
   </div>
-  <div class="feature-list hybrid-services-user-sidepanel">
+  <p ng-if="!$ctrl.isLicensed" translate="hercules.cloudExtensions.noLicensedServices"></p>
+  <div class="feature-list hybrid-services-user-sidepanel" ng-if="$ctrl.isLicensed">
     <ul>
 
       <!-- Hybrid Calendar -->
