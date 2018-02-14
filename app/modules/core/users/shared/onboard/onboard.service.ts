@@ -559,6 +559,15 @@ export default class OnboardService {
     };
   }
 
+  public updateUserLicense(
+    userList: IUserNameAndEmail[],
+    licenseList: any[],
+  ): ng.IPromise<IOnboardedUsersAggregateResult> {
+    return (this.Userservice.onboardUsersLegacy(userList, null, licenseList) as ng.IHttpPromise<IOnboardUsersResponse>)
+      .then(response => this.parseUpdatedUsers(response))
+      .then(parsedResponse => this.aggregateResponses([parsedResponse]));
+  }
+
   public trackOnboardSaveEvent(options: {
     numAddedUsers: number,
     numUpdatedUsers: number,
