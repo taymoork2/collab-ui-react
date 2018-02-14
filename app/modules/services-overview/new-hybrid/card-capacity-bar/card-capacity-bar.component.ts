@@ -38,16 +38,16 @@ class CardCapacityBarController implements ng.IComponentController {
         } else if (this.capacity > 60) {
           this.progressBarType = 'warning';
         }
-        this.tooltip = this.$translate.instant('hercules.capacity.toolTip', {
+
+        const capacity = this.$translate.instant('hercules.capacity.label', {
           capacity: this.capacity,
+        });
+        const usersAssigned = this.$translate.instant('hercules.capacity.usersAssigned', {
           total: summary[0].total,
           max: this.maxUsers,
         });
-        this.tooltipAriaLabel = this.$translate.instant('hercules.capacity.ariaLabel', {
-          capacity: this.capacity,
-          total: summary[0].total,
-          max: this.maxUsers,
-        });
+        this.tooltip = `${capacity}<br>${usersAssigned}`;
+        this.tooltipAriaLabel = `${capacity} ${usersAssigned}`;
       }
     }
   }

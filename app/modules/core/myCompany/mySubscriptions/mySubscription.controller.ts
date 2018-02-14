@@ -140,17 +140,21 @@ export class MySubscriptionCtrl implements ng.IController {
   private generateTooltip(offer: IOfferData, usage?: number, volume?: number): ITooltipData {
     const tooltipData: ITooltipData = {};
     if (_.isNumber(volume)) {
-      tooltipData.tooltip = `${this.$translate.instant(`subscriptions.licenseTypes.${offer.offerName}`)}<br>`;
-      tooltipData.ariaLabel = this.$translate.instant(`subscriptions.licenseTypes.${offer.offerName} `);
+      const offerLabel = this.$translate.instant(`subscriptions.licenseTypes.${offer.offerName}`);
+
       if (this.useTotal(offer) || !_.isNumber(usage)) {
-        tooltipData.tooltip += this.$translate.instant('subscriptions.licenses') + volume;
-        tooltipData.ariaLabel += ` ${this.$translate.instant('subscriptions.licenses')}${volume}`;
-      } else if (usage > volume) {
-        tooltipData.tooltip += `${this.$translate.instant('subscriptions.usage')}<span class="warning">${usage}/${volume}</span>`;
-        tooltipData.ariaLabel += ` ${this.$translate.instant('subscriptions.usage')}${usage}/${volume}`;
+        const licenseLabel = this.$translate.instant('subscriptions.licenses');
+
+        tooltipData.tooltip = `${offerLabel}<br>${licenseLabel}${volume}`;
+        tooltipData.ariaLabel = `${offerLabel} ${licenseLabel}${volume}`;
       } else {
-        tooltipData.tooltip += `${this.$translate.instant('subscriptions.usage')}${usage}/${volume}`;
-        tooltipData.ariaLabel += ` ${this.$translate.instant('subscriptions.usage')}${usage}/${volume}`;
+        const usageLabel = this.$translate.instant('subscriptions.usage');
+        tooltipData.ariaLabel = `${offerLabel} ${usageLabel}${usage}/${volume}`;
+        if (usage > volume) {
+          tooltipData.tooltip = `${offerLabel}<br>${usageLabel}<span class="warning">${usage}/${volume}</span>`;
+        } else {
+          tooltipData.tooltip = `${offerLabel}<br>${usageLabel}${usage}/${volume}`;
+        }
       }
     }
     return tooltipData;

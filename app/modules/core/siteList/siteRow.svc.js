@@ -382,7 +382,7 @@
                     //Tooltip display
                     var offerCode = $translate.instant('helpdesk.licenseDisplayNames.' + mc.offerCode, {
                       capacity: mc.capacity,
-                    })
+                    });
                     siteRow.licenseTooltipDisplay += '<br>' + offerCode;
                     siteRow.licenseAriaLabel += ' ' + offerCode;
 
