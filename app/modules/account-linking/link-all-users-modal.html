@@ -1,0 +1,17 @@
+<div class="modal-header">
+  <h3 ng-if="!linkAllUsers">Automatic Linking</h3>
+  <h3 ng-if="linkAllUsers">Stop Automatic Linking</h3>
+</div>
+<div class="modal-body">
+  <span ng-if="!linkAllUsers">
+    All WebEx accounts listed in the verified domains will be linked, including existing unlinked accounts and future new accounts.
+  </span>
+  <span ng-if="linkAllUsers">
+    By stopping automatic linking, future new accounts will nor be linked to Cisco Spark.
+  </span>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" ng-click="$dismiss('CANCEL')">Cancel</button>
+  <button ng-if="!linkAllUsers" class="btn btn-primary" ng-click="$close('LINK_START')">Link Now</button>
+  <button ng-if="linkAllUsers" class="btn btn-primary" ng-click="$close('LINK_STOP')">Stop</button>
+</div>
