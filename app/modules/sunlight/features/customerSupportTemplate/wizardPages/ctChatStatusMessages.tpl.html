@@ -58,7 +58,7 @@
                 ng-model-options="{ allowInvalid: true }"
                 placeholder="{{::'careChatTpl.leaveRoomMessage' | translate}}"
                 ng-keypress="careSetupAssistant.enterNextPage($event)"/>
-              <div class="chat-status-help-text body-small" translate="careChatTpl.helpTextLeaveRoom">
+              <div class="chat-status-help-text body-small">{{careSetupAssistant.helpTextLeaveRoom()}}
               </div>
             </div>
           </section>

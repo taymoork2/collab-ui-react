@@ -1234,6 +1234,14 @@
       }
     };
 
+    vm.helpTextLeaveRoom = function () {
+      if (isExpertEscalationSelected()) {
+        return $translate.instant('careChatTpl.helpTextLeaveRoomEVA');
+      } else {
+        return $translate.instant('careChatTpl.helpTextLeaveRoom');
+      }
+    };
+
     function isAgentUnavailablePageValid() {
       return isValidField(vm.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText, vm.lengthConstants.multiLineMaxCharLimit) &&
         vm.isInputValid(vm.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText);
@@ -1495,6 +1503,8 @@
       vm.selectedAgentProfile = isExpertEscalationSelected() ? vm.userNames.displayName : vm.agentNames.displayName;
       vm.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = isExpertEscalationSelected() ?
         $translate.instant('careChatTpl.waitingMessageEVA') : $translate.instant('careChatTpl.waitingMessage');
+      vm.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = isExpertEscalationSelected() ?
+        $translate.instant('careChatTpl.leaveRoomMessageEVA') : $translate.instant('careChatTpl.leaveRoomMessage');
       vm.agentNamePreview = isExpertEscalationSelected() ? $translate.instant('careChatTpl.userNamePreview') :
         $translate.instant('careChatTpl.agentNamePreview');
     }

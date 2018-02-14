@@ -8209,7 +8209,9 @@
     "user_non_cva": "Individual Users",
     "user_info_non_cva": "Use unique profiles to represent the different users in your organization.",
     "helpTextWaitingEVA": "Customers see this message while waiting for a response to their request.",
-    "waitingMessageEVA": "Someone will help you shortly…"
+    "waitingMessageEVA": "Someone will help you shortly…",
+    "helpTextLeaveRoomEVA": "Customers see this message when the user interacting with them ends the chat.",
+    "leaveRoomMessageEVA": "Chat has ended"
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",
