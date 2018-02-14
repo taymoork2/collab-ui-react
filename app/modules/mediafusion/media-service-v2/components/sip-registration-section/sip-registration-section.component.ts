@@ -9,6 +9,7 @@ class SipRegistrationSectionCtrl implements ng.IComponentController {
   public clusterId: string;
   public cluster: ICluster;
   public sipConfigUrl: string | undefined;
+  public isWizard: boolean = false;
 
   public sipRegistration = {
     title: 'mediaFusion.sipconfiguration.title',
@@ -21,11 +22,13 @@ class SipRegistrationSectionCtrl implements ng.IComponentController {
   ) { }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
-    const { cluster } = changes;
+    const { cluster, isWizard } = changes;
     if (cluster && cluster.currentValue) {
       this.cluster = cluster.currentValue;
       this.clusterId = this.cluster.id;
       this.getProperties(this.clusterId);
+    } else if ( isWizard && isWizard.currentValue) {
+      this.isWizard = isWizard.currentValue;
     }
   }
 
@@ -48,6 +51,7 @@ export class SipRegistrationSectionComponent implements ng.IComponentOptions {
   public template = require('./sip-registration-section.tpl.html');
   public bindings = {
     cluster: '<',
+    isWizard: '=',
   };
 }
 
