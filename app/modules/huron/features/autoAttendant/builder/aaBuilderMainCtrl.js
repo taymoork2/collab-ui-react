@@ -263,6 +263,7 @@
       }
 
       AutoAttendantCeMenuModelService.updateDefaultActionSet(vm.aaModel.aaRecord, vm.ui.hasClosedHours);
+      vm.aaModel.aaRecord.assignedTimeZone = vm.ui.timeZone.id;
     }
 
     // Set the numbers in CMI with error details (involves multiple saves in the AANumberAssignmentService service)
