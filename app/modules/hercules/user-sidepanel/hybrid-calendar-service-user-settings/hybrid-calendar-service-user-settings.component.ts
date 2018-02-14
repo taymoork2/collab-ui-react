@@ -211,7 +211,7 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
   }
 
   private orgHasGoogleCalendarSetup(): boolean {
-    return this.orgHasOffice365Enabled;
+    return this.orgHasGoogleEnabled;
   }
 
   public hasChangedCalendarType(): boolean {
