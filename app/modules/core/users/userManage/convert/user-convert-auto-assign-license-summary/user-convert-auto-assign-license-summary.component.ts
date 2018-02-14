@@ -21,5 +21,6 @@ export class UserConvertAutoAssignLicenseSummaryComponent implements ng.ICompone
   public bindings = {
     dismiss: '&',
     save: '&',
+    saveLoading: '<',
   };
 }

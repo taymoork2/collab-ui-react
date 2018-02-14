@@ -1133,7 +1133,7 @@
           .state('users.convert.auto-assign-license-summary', {
             views: {
               'usersConvert@users.convert': {
-                template: '<user-convert-auto-assign-license-summary save="convertUsers()" dismiss="$dismiss()"></user-convert-auto-assign-license-summary>',
+                template: '<user-convert-auto-assign-license-summary save="convertUsers()" save-loading="btnConvertLoad" dismiss="$dismiss()"></user-convert-auto-assign-license-summary>',
               },
             },
           })
