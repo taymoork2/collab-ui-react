@@ -60,14 +60,27 @@ export class LinkedSitesWebExService {
     });
   }
 
-  public setCiSiteLinking(siteUrl: string, mode: string): ng.IPromise<IACWebexSiteinfoResponse | IACWebexSiteError> {
+  public setCiSiteLinking(siteUrl: string, mode: string, domains?: string[]): ng.IPromise<IACWebexSiteinfoResponse | IACWebexSiteError> {
     return this.getTicket(siteUrl).then((ticket: string) => {
       let urlToUse = this.useSimulator ? this.webexSimUrl : this.getSiteApiUrl(siteUrl);
       urlToUse += this.ciSiteLinkingPath;
       this.$log.debug('WebeEx API url', urlToUse);
 
+      let data = {};
+      if (domains === undefined) {
+        data = {
+          accountLinkingMode: mode,
+        };
+      } else {
+        data = {
+          accountLinkingMode: mode,
+          trustedDomains: domains,
+        };
+      }
+
       return this.$http.patch(urlToUse, {
         accountLinkingMode: mode,
+        trustedDomains: domains,
       }, {
         headers: { Authorization: 'Ticket ' + ticket },
       }).then((response) => {
@@ -142,7 +155,9 @@ export class LinkedSitesWebExService {
       let urlToUse = this.useSimulator ? this.webexSimUrl : this.getSiteApiUrl(siteUrl);
       urlToUse += this.domainsPath;
       this.$log.debug('WebeEx API url', urlToUse);
-      return this.$http.get(urlToUse + '?limit=20', {
+      // TODO: Currently fetching a limited number of domains from webex.
+      //       Waiting for a better solution to handle domains
+      return this.$http.get(urlToUse + '?limit=40', {
         headers: { Authorization: 'Ticket ' + ticket },
       }).then((response) => {
         this.$log.debug('LinkedSitesWebExService.getDomains', response);

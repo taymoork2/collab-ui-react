@@ -37,7 +37,8 @@
     ng-show="$ctrl.fsmState === 'domainsList'"
     next-func="$ctrl.next(event)"
     back-func="$ctrl.back()"
-    domains="$ctrl.domains"
+    domains-func="$ctrl.getDomains(from, to)"
+    public-domains-func="$ctrl.getPublicDomains(from, to)"
     siteinfo="$ctrl.siteInfo"
   >
   </account-linking-wizard-domainslist>

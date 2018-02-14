@@ -38,8 +38,18 @@
     <div class="columns medium-5 medium-offset-1">
       <div class="align-top">
         <h5>Public Consumer Domains</h5>
-        <p>gmail.com</p>
-        <p>yahoo.com</p>
+        <div class="row">
+          <div class="columns medium-6">
+            <p ng-repeat="d in $ctrl.getPublicDomains(0,10)" class="domain">
+              {{d}}
+            </p>
+          </div>
+          <div class="columns medium-6">
+            <p ng-repeat="d in $ctrl.getPublicDomains(10,20)" class="domain domain-right">
+              {{d}}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
     <div class="columns medium-2"></div>

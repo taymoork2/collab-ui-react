@@ -1,10 +1,10 @@
 import { WizardEvent } from './../account-linking-wizard.component';
-import { IACSiteInfo } from './../../account-linking.interface';
 
 class AccountLinkingWizardDomainslistComponentCtrl implements ng.IComponentController {
 
   private nextFunc: Function;
-  public siteinfo: IACSiteInfo;
+  private publicDomainsFunc: Function;
+  private domainsFunc: Function;
 
   /* @ngInject */
   constructor(private $log: ng.ILogService) {
@@ -14,16 +14,23 @@ class AccountLinkingWizardDomainslistComponentCtrl implements ng.IComponentContr
     this.$log.info('init AccountLinkingWizardDomainslistComponentCtrl');
   }
 
-  public getDomains(from, to) {
-    if (this.siteinfo.domains) {
-      return this.siteinfo.domains.slice(from, to);
-    }
-  }
-
   public next() {
     this.nextFunc({ event: WizardEvent.next });
   }
 
+  public getPublicDomains(from, to) {
+    return this.publicDomainsFunc({
+      from: from,
+      to: to,
+    });
+  }
+
+  public getDomains(from, to) {
+    return this.domainsFunc({
+      from: from,
+      to: to,
+    });
+  }
 }
 
 export class AccountLinkingWizardDomainslistComponent implements ng.IComponentOptions {
@@ -33,6 +40,7 @@ export class AccountLinkingWizardDomainslistComponent implements ng.IComponentOp
   public bindings = {
     nextFunc: '&',
     backFunc: '&',
-    siteinfo: '<',
+    domainsFunc: '&',
+    publicDomainsFunc: '&',
   };
 }

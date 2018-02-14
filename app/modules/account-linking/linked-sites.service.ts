@@ -56,8 +56,8 @@ export class LinkedSitesService {
     });
   }
 
-  public setCiSiteLinking(linkedSiteUrl: string, mode: string) {
-    return this.LinkedSitesWebExService.setCiSiteLinking(linkedSiteUrl, mode);
+  public setCiSiteLinking(linkedSiteUrl: string, mode: string, domains?: string[]) {
+    return this.LinkedSitesWebExService.setCiSiteLinking(linkedSiteUrl, mode, domains);
   }
 
   public setLinkAllUsers(linkedSiteUrl: string, linkAllUsers: boolean) {
