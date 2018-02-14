@@ -104,13 +104,16 @@
               <div class="row ct-attribute-row ct-customer-info-category-input right-inner-addon" ng-if="attribute.name === 'type' && attribute.value.id === 'category'">
                 <div class="escalation-required-info escalation-required-info-category" ng-if="careSetupAssistant.isExpertEscalationSelected()">
                   <span  class="msg" translate="careChatTpl.escalationEnabledCategoryInfo"></span>
-                  <span popover-html="careSetupAssistant.evaSpaceTooltipData"
-                        popover-placement="auto right"
-                        popover-trigger="click"
-                        popover-append-to-body="false"
-                        class="icon icon-question-circle icon-eva-details"
-                        ng-class="{'icon-eva-details-toggle': careSetupAssistant.isPopoverActive}"
-                        ng-click="careSetupAssistant.popoverClicked()">
+                  <span
+                    tabindex="0"
+                    popover-html="careSetupAssistant.evaSpaceTooltipData"
+                    popover-placement="auto right"
+                    popover-trigger="click"
+                    popover-append-to-body="false"
+                    class="icon icon-question-circle icon-eva-details"
+                    ng-class="{'icon-eva-details-toggle': careSetupAssistant.isPopoverActive}"
+                    ng-click="careSetupAssistant.popoverClicked()"
+                    aria-label="{{careSetupAssistant.evaSpaceTooltipAriaLabel}}">
                   </span>
                 </div>
                 <i class="icon icon-add-contain ct-add-contain" ng-click="careSetupAssistant.addCategoryOption()"></i>
