@@ -48,6 +48,9 @@ describe('Controller: Care Reports Controller', function () {
   }, {
     name: 'voice',
     label: 'careReportsPage.media_type_voice',
+  }, {
+    name: 'webcall',
+    label: 'careReportsPage.media_type_webcall',
   },
 
   ];
@@ -87,6 +90,7 @@ describe('Controller: Care Reports Controller', function () {
       spyOn(DummyCareReportService, 'dummyOrgStatsData');
       spyOn(Notification, 'errorResponse');
       spyOn(FeatureToggleService, 'atlasCareChatToVideoTrialsGetStatus').and.returnValue(deferredFeatureToggle.promise);
+      spyOn(FeatureToggleService, 'atlasCareWebcallReportTrialsGetStatus').and.returnValue(deferredFeatureToggle.promise);
       Object.keys(CareReportsService).forEach(function (key) {
         spyOn(CareReportsService, key).and.returnValue([{}, {}]);
       });
@@ -180,6 +184,7 @@ describe('Controller: Care Reports Controller', function () {
       });
       $scope.$digest();
       $timeout.flush();
+      expect(controller.mediaTypeOptions.length).toEqual(5);
       expect(controller.isVideoFeatureEnabled).toEqual(false);
       expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([0]);
       expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_snapshot_stats', 0, 'chat', true]);
@@ -284,6 +289,16 @@ describe('Controller: Care Reports Controller', function () {
       expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_stats', 4, 'callback']);
       expect(SunlightReportService.getReportingData.calls.argsFor(1)).not.toEqual(['org_snapshot_stats', 1, 'callback']);
     });
+
+    it('should send options for last 3 months on selection for video calls / webcall media type', function () {
+      controller.timeSelected = timeOptions[4];
+      controller.mediaTypeSelected = mediaTypeOptions[4];
+      controller.filtersUpdate();
+      $timeout.flush();
+      expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([4]);
+      expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_stats', 4, 'webcall']);
+      expect(SunlightReportService.getReportingData.calls.argsFor(1)).not.toEqual(['org_snapshot_stats', 1, 'webcall']);
+    });
   });
 
   describe('CareReportsController - Show Drill-down table data', function () {
@@ -306,6 +321,24 @@ describe('Controller: Care Reports Controller', function () {
       };
       controller.showTable(testOnSuccess, notCalled, controller.mediaTypeSelected, controller.timeSelected);
       expect(SunlightReportService.getAllUsersAggregatedData.calls.argsFor(0)).toEqual(['all_user_stats', 0, 'chat']);
+      deferredTableData.resolve({
+        data: allUserFifteenMinutesStats.data,
+        isWebcallDataPresent: {},
+      });
+      $scope.$digest();
+    });
+
+    it('should fetch drill-down data on clicking show for webcall media type', function (done) {
+      controller.timeSelected = timeOptions[0];
+      controller.mediaTypeSelected = mediaTypeOptions[4];
+      controller.filtersUpdate();
+      $timeout.flush();
+      var testOnSuccess = function (data) {
+        expect(data).toBeDefined();
+        done();
+      };
+      controller.showTable(testOnSuccess, notCalled, controller.mediaTypeSelected, controller.timeSelected);
+      expect(SunlightReportService.getAllUsersAggregatedData.calls.argsFor(0)).toEqual(['all_user_stats', 0, 'webcall']);
       deferredTableData.resolve({
         data: allUserFifteenMinutesStats.data,
         isWebcallDataPresent: {},
