@@ -212,6 +212,7 @@
       displayName: $translate.instant('careChatTpl.userDisplayName'),
       alias: $translate.instant('careChatTpl.userAlias'),
     };
+    vm.userDetails = isExpertEscalationSelected() ? vm.userNames : vm.agentNames;
     vm.selectedAgentProfile = isExpertEscalationSelected() ? vm.userNames.displayName : vm.agentNames.displayName;
     vm.agentNamePreview = isExpertEscalationSelected() ? $translate.instant('careChatTpl.userNamePreview') :
       $translate.instant('careChatTpl.agentNamePreview');
@@ -351,6 +352,7 @@
             displayName : alias;
           vm.orgName = config.mediaSpecificConfiguration.displayText;
           vm.logoUrl = config.mediaSpecificConfiguration.orgLogoUrl;
+          vm.userDetails = isExpertEscalationSelected() ? vm.userNames : vm.agentNames;
           setAgentProfile();
         }
         vm.timings.startTime.label = config.pages.offHours.schedule.timings.startTime;

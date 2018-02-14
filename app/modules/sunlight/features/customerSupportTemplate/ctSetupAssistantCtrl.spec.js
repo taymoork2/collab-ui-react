@@ -653,7 +653,7 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.isExpertEscalationSelected()).toEqual(false);
     });
 
-    it('expert and agentplusexpert radio button should be enabled when expert is persent for the org', function () {
+    it('expert and agentplusexpert radio button should be enabled when expert is present for the org', function () {
       var configMock = Object.assign({}, existingTemplateData, {
         configuration: Object.assign({}, existingTemplateData.configuration, {
           routingLabel: 'expert',
@@ -742,7 +742,7 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.agentNamePreview).toEqual('careChatTpl.userNamePreview');
     });
 
-    it('expert and agentplusexpert radio button should be disabled when expert is not persent for the org', function () {
+    it('expert and agentplusexpert radio button should be disabled when expert is not present for the org', function () {
       inject(intializeCtrl('chat'));
       resolveTogglePromise();
       controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
