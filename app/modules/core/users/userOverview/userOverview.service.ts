@@ -257,6 +257,10 @@ export class UserOverviewService {
     }
   }
 
+  public userHasActivatedAccountInCommonIdentity(user: IUser): boolean {
+    return !_.includes(user.accountStatus, 'pending');
+  }
+
   public getAccountActiveStatus(user: IUser): boolean {
     // is there a sign-up date for the user?
     if (!_.isEmpty(user.entitlements)) {
