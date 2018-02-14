@@ -1475,6 +1475,7 @@ describe('Care Setup Assistant Ctrl', function () {
         resolve: {
           templateId: jasmine.any(Function),
           templateHeader: jasmine.any(Function),
+          templateName: jasmine.any(Function),
         },
       });
       expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
@@ -1513,6 +1514,7 @@ describe('Care Setup Assistant Ctrl', function () {
         resolve: {
           templateId: jasmine.any(Function),
           templateHeader: jasmine.any(Function),
+          templateName: jasmine.any(Function),
         },
       });
       expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {

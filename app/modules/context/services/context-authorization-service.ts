@@ -1,5 +1,6 @@
 export interface IContextAdminAuthorizationService {
   getAdminAuthorizationStatus(): IPromise<AdminAuthorizationStatus>;
+  synchronizeAdmins(): IPromise<ng.IHttpResponse<{}>>;
 }
 
 export enum AdminAuthorizationStatus {
@@ -54,6 +55,36 @@ export class ContextAdminAuthorizationService implements IContextAdminAuthorizat
               return AdminAuthorizationStatus.UNKNOWN;
             }
           });
+      });
+  }
+
+  /**
+   * Get the list of Partner Administrators
+   * @returns {IPromise<string[]>} a string array of partner admin IDs
+   */
+  protected getPartnerAdminIDs(): IPromise<string[]> {
+    const partnerAdminListUrl = this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/users/partneradmins';
+    return this.$http.get(partnerAdminListUrl)
+      .then(response => {
+        return _.map(_.get(response.data, 'partners', []), 'id');
+      });
+  }
+
+  /**
+   * Synchronize Administrator permissions - both Customer and Partner admins
+   * @returns {IPromise<angular.IHttpResponse<{}>>}
+   */
+  public synchronizeAdmins(): IPromise<ng.IHttpResponse<{}>> {
+    const synchronizeAdminsUrl = this.UrlConfig.getContextCcfsUrl() + '/admin/authorizationSync';
+    const payload: any = {
+      orgId: this.Authinfo.getOrgId(),
+      partnerIds: [],
+    };
+
+    return this.getPartnerAdminIDs()
+      .then(partnerAdminIDs => {
+        payload.partnerIds = partnerAdminIDs;
+        return this.$http.post(synchronizeAdminsUrl, payload);
       });
   }
 }

@@ -75,7 +75,7 @@
                   value="{{option.id}}"
                   cs-input-label="{{option.text}}"
                   ng-keypress="careSetupAssistant.enterNextPage($event)"/>
-                  <div class="escalation-required-info" ng-if="careSetupAssistant.isExpertEscalationSelected() && option.id == 'required' && careSetupAssistant.checkIfTypeCategory(careSetupAssistant.activeItem.attributes)">
+                  <div class="escalation-required-info" ng-if="careSetupAssistant.isExpertEscalationSelected() && option.id === 'required' && careSetupAssistant.checkIfTypeCategory(careSetupAssistant.activeItem.attributes)">
                     <span  class="msg" translate="careChatTpl.escalationEnabledRequiredInfo"></span><a ng-href="{{careSetupAssistant.evaLearnMoreLink}}" translate="careChatTpl.learnMoreLink" target="_blank"></a>
                   </div>
                   </div>
@@ -101,7 +101,7 @@
                   <div>{{:: 'careChatTpl.ctValidation.errorTypeDuplicate' | translate}}</div>
                 </div>
               </div>
-              <div class="row ct-attribute-row ct-customer-info-category-input right-inner-addon" ng-if="attribute.name == 'type' && attribute.value.id == 'category'">
+              <div class="row ct-attribute-row ct-customer-info-category-input right-inner-addon" ng-if="attribute.name === 'type' && attribute.value.id === 'category'">
                 <div class="escalation-required-info escalation-required-info-category" ng-if="careSetupAssistant.isExpertEscalationSelected()">
                   <span  class="msg" translate="careChatTpl.escalationEnabledCategoryInfo"></span>
                   <span popover-html="careSetupAssistant.evaSpaceTooltipData"

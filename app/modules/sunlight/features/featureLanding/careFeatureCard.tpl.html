@@ -36,10 +36,12 @@
             <span ng-repeat="feature in careFeature.features">
               <i
                 class="icon {{careFeature.featureIcons[feature.featureType]}} cta icon-lg"
+                tabindex="0"
                 tooltip="{{careFeaturesCtrl.featureToolTip(feature.featureType, feature.name)}}"
                 tooltip-trigger="mouseenter focus"
                 tooltip-placement="top-left"
-                tooltip-animation="false">
+                tooltip-animation="false"
+                aria-label="{{careFeaturesCtrl.featureToolTip(feature.featureType, feature.name)}}">
               </i>
             </span>
           </div>

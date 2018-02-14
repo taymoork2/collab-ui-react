@@ -204,7 +204,12 @@ export class Config {
     readonly_admin: 'id_readonly_admin',
     tech_support: 'atlas-portal.cisco.techsupport',
     user_admin: 'id_user_admin',
+    /*
+    / TODO: When 'atlas-portal.deviceadmin' is phased out, 'id_device_admin' will become device_admin
+    /       For now, assigning one role should assign them both.
+    */
     device_admin: 'atlas-portal.deviceadmin',
+    ci_device_admin: 'id_device_admin',
   };
 
   public readonly roles = {

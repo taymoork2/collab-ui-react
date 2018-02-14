@@ -98,6 +98,7 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     spyOn(this.Analytics, 'trackReportsEvent');
     spyOn(this.Authinfo, 'setEmails');
     spyOn(this.Authinfo, 'isReadOnlyAdmin').and.returnValue(true);
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue('1eb65fdf-9643-417f-9974-ad72cae0e10f');
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.WebexMetricsService, 'getMetricsSites').and.returnValue(this.$q.resolve(['go.webex.com', 'alpha.webex.com']));
     spyOn(this.WebexMetricsService, 'hasMetricsSites').and.returnValue(this.$q.resolve(true));
@@ -148,14 +149,17 @@ describe('Controller: WebEx Metrics Ctrl', function () {
   it('should set the metrics tab depends on the rules', function () {
     var testMetricsOptions = [
       testWebexMetrics.states.system,
-      testWebexMetrics.states.dashboard,
+      /*testWebexMetrics.states.dashboard,
       testWebexMetrics.states.jms,
       testWebexMetrics.states.jmt,
+      for hiding those tabs
+      */
       testWebexMetrics.states.metrics,
       testWebexMetrics.states.diagnostics,
       // testWebexMetrics.states.mei, for hiding the MEI tab
       testWebexMetrics.states.classic,
     ];
+
     expect(this.controller.metricsOptions).toEqual(testMetricsOptions);
   });
 

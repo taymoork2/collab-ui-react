@@ -8,7 +8,7 @@
        <cs-select refresh-data-fn="aaDecisionCtrl.refreshVarSelects()" ng-switch-when="sessionVariable" name="ifSessionVariable" is-warn="{{ aaDecisionCtrl.isWarn }}" warn-msg="{{ aaDecisionCtrl.varMissingWarning }}" ng-model="aaDecisionCtrl.sessionVarOption" options="aaDecisionCtrl.sessionVarOptions" icon="icon-chevron-down" placeholder="aaDecisionCtrl.selectVariablePlaceholder" ng-change="aaDecisionCtrl.setIfDecision()">
        </cs-select>
     </div>
-    <p ng-if="aaDecisionCtrl.ifOption.value != 'callerReturned' && aaDecisionCtrl.ifOption.value != ''" translate="autoAttendant.actionIs"></p>
+    <p ng-if="aaDecisionCtrl.ifOption.value !== 'callerReturned' && aaDecisionCtrl.ifOption.value !== ''" translate="autoAttendant.actionIs"></p>
     <div ng-switch-when="Original-Caller-Number">
       <textarea class="aa-decision-textarea" aa-keypress ng-change="aaDecisionCtrl.update('Original-Caller-Number')" ng-model="aaDecisionCtrl.ifOption.buffer" type="text" id="aaDecisionCallerNumber{{ schedule + index }}" name="callerNumberCalled" rows="4" maxlength="2000"></textarea>
       <p class="cs-input__help-text" translate="autoAttendant.callerNumberInfo"></p>

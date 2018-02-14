@@ -3,7 +3,7 @@ import { Notification } from 'modules/core/notifications';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 export class CallServiceContainerController extends ExpresswayContainerController {
-  public tabs: any = [{
+  public tabs = [{
     title: this.$translate.instant('common.resources'),
     state: 'call-service.list',
   }, {
@@ -36,12 +36,19 @@ export class CallServiceContainerController extends ExpresswayContainerControlle
     ServiceDescriptorService: ServiceDescriptorService,
     ServiceStateChecker,
     USSService,
+    private hasCapacityFeatureToggle,
   ) {
     super($modal, $state, $timeout, Notification, ServiceDescriptorService, ServiceStateChecker, USSService, ['squared-fusion-uc'], 'c_ucmc');
     this.addConnectIfEnabled();
     this.clusterId = this.$stateParams['clusterId'];
     if (this.$stateParams['backState']) {
       this.backState = this.$stateParams['backState'];
+    }
+    if (this.hasCapacityFeatureToggle) {
+      this.tabs.push({
+        title: this.$translate.instant('common.users'),
+        state: 'call-service.users',
+      });
     }
   }
 

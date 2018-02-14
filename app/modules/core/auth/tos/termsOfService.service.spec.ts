@@ -100,10 +100,9 @@ describe('TOSService', () => {
 
       this.TOSService.openTOSModal();
       mockTosModal.dismiss.calls.reset(); // openTOSModal calls dismiss, so reset spy
-      this.TOSService.acceptTOS().catch( function() {
-        expect(mockTosModal.dismiss).not.toHaveBeenCalled();
-      });
+      this.TOSService.acceptTOS().catch(_.noop);
       this.$rootScope.$digest();
+      expect(mockTosModal.dismiss).not.toHaveBeenCalled();
     });
 
   });

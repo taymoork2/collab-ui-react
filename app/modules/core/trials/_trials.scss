@@ -164,6 +164,12 @@
       color: $color-primary-base;
     }
   }
+
+  .cs-input__help-text {
+    margin-left: 2rem;
+    margin-bottom: 0.5rem;
+    margin-top: -0.5rem;
+  }
 }
 
 .small-hint {
@@ -289,4 +295,7 @@
     color: $color-alerts-base;
     display: block;
   }
+
 }
+
+

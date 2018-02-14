@@ -120,7 +120,7 @@
         <div class="row showgrid">
           <h4 class="filter-label" ng-click="cdrLadderDiagram.isSessionIDPairsCollapsed = !cdrLadderDiagram.isSessionIDPairsCollapsed">
             {{::"cdrLadderDiagram.localRemoteSessionIds" | translate}}
-            <span ng-class="{ 'icon icon-arrow-down' : cdrLadderDiagram.isSessionIDPairsCollapsed == true, 'icon icon-arrow-up' : cdrLadderDiagram.isSessionIDPairsCollapsed == false }"></span>
+            <span ng-class="{ 'icon icon-arrow-down' : cdrLadderDiagram.isSessionIDPairsCollapsed === true, 'icon icon-arrow-up' : cdrLadderDiagram.isSessionIDPairsCollapsed === false }"></span>
           </h4>
         </div>
         <div class="row showgrid">
@@ -139,7 +139,7 @@
         <div class="row showgrid">
           <h4 class="filter-label" ng-click="cdrLadderDiagram.isHostNameCollapsed = !cdrLadderDiagram.isHostNameCollapsed">
             {{::"cdrLadderDiagram.hostname" | translate}}
-            <span ng-class="{ 'icon icon-arrow-down' : cdrLadderDiagram.isHostNameCollapsed == true, 'icon icon-arrow-up' : cdrLadderDiagram.isHostNameCollapsed == false }"></span>
+            <span ng-class="{ 'icon icon-arrow-down' : cdrLadderDiagram.isHostNameCollapsed === true, 'icon icon-arrow-up' : cdrLadderDiagram.isHostNameCollapsed === false }"></span>
           </h4>
         </div>
         <div class="row showgrid">

@@ -2,7 +2,7 @@ import hybridCallServiceAwareUserSettingsModuleName from './index';
 
 describe('hybridCallServiceAwareUserSettings', () => {
 
-  let $componentController, $q, $scope, ctrl, DomainManagementService, HybridServiceUserSidepanelHelperService, ModalService, UCCService, UriVerificationService;
+  let $componentController, $q, $scope, ctrl, DomainManagementService, HybridServiceUserSidepanelHelperService, ModalService, UCCService, UriVerificationService, UserOverviewService;
 
   beforeEach(function () {
     this.initModules(hybridCallServiceAwareUserSettingsModuleName);
@@ -12,7 +12,7 @@ describe('hybridCallServiceAwareUserSettings', () => {
   beforeEach(initSpies);
   afterEach(cleanup);
 
-  function dependencies (_$componentController_, _$q_, $rootScope, _DomainManagementService_, _HybridServiceUserSidepanelHelperService_, _ModalService_, _UCCService_, _UriVerificationService_) {
+  function dependencies (_$componentController_, _$q_, $rootScope, _DomainManagementService_, _HybridServiceUserSidepanelHelperService_, _ModalService_, _UCCService_, _UriVerificationService_, _UserOverviewService_) {
     $componentController = _$componentController_;
     $q = _$q_;
     $scope = $rootScope;
@@ -21,10 +21,11 @@ describe('hybridCallServiceAwareUserSettings', () => {
     ModalService = _ModalService_;
     UCCService = _UCCService_;
     UriVerificationService = _UriVerificationService_;
+    UserOverviewService = _UserOverviewService_;
   }
 
   function cleanup() {
-    $componentController = ctrl = $scope = DomainManagementService = HybridServiceUserSidepanelHelperService = UCCService = UriVerificationService = undefined;
+    $componentController = ctrl = $scope = DomainManagementService = HybridServiceUserSidepanelHelperService = UCCService = UriVerificationService = UserOverviewService = undefined;
   }
 
   function initSpies() {
@@ -36,26 +37,26 @@ describe('hybridCallServiceAwareUserSettings', () => {
     spyOn(ModalService, 'open').and.returnValue({
       result: $q.resolve(),
     });
+    spyOn(UserOverviewService, 'getUser');
   }
 
-  function initController(callback: Function = _.noop, allUserEntitlements: string[] = ['squared-fusion-uc']) {
+  function initController() {
     ctrl = $componentController('hybridCallServiceAwareUserSettings', {}, {
       userId: '1234',
       userEmailAddress: 'test@example.org',
-      entitlementUpdatedCallback: callback,
     });
     ctrl.$onInit();
-    ctrl.$onChanges({
-      allUserEntitlements: {
-        currentValue: allUserEntitlements,
-      },
-    });
     $scope.$apply();
   }
 
   it('should read the Aware status and update internal entitlement data when user is *not* entitled', () => {
     HybridServiceUserSidepanelHelperService.getDataFromUSS.and.returnValue($q.resolve({}));
-    initController(_.noop, ['']);
+    UserOverviewService.getUser.and.returnValue($q.resolve({
+      user: {
+        entitlements: [],
+      },
+    }));
+    initController();
 
     expect(HybridServiceUserSidepanelHelperService.getDataFromUSS.calls.count()).toBe(1);
     expect(ctrl.userIsCurrentlyEntitled).toBe(false);
@@ -64,7 +65,12 @@ describe('hybridCallServiceAwareUserSettings', () => {
   it('should read the Aware status and update internal entitlement data when user is entitled', () => {
     HybridServiceUserSidepanelHelperService.getDataFromUSS.and.returnValue($q.resolve([{}, {}]));
     UCCService.getUserDiscovery.and.returnValue($q.resolve({}));
-    initController(_.noop, ['squared-fusion-uc']);
+    UserOverviewService.getUser.and.returnValue($q.resolve({
+      user: {
+        entitlements: ['squared-fusion-uc'],
+      },
+    }));
+    initController();
     ctrl.$onInit();
     $scope.$apply();
     expect(ctrl.userIsCurrentlyEntitled).toBe(true);
@@ -82,6 +88,11 @@ describe('hybridCallServiceAwareUserSettings', () => {
     UCCService.getUserDiscovery.and.returnValue($q.resolve({
       directoryURI: expectedDirectoryURI,
     }));
+    UserOverviewService.getUser.and.returnValue($q.resolve({
+      user: {
+        entitlements: ['squared-fusion-uc'],
+      },
+    }));
     initController();
 
     expect(UCCService.getUserDiscovery.calls.count()).toBe(1);
@@ -96,8 +107,13 @@ describe('hybridCallServiceAwareUserSettings', () => {
 
     HybridServiceUserSidepanelHelperService.getDataFromUSS.and.returnValue($q.resolve([{}, {}]));
     UCCService.getUserDiscovery.and.returnValue($q.resolve({}));
+    UserOverviewService.getUser.and.returnValue($q.resolve({
+      user: {
+        entitlements: ['squared-fusion-uc', 'squared-fusion-ec'],
+      },
+    }));
 
-    initController(_.noop, ['squared-fusion-uc', 'squared-fusion-ec']);
+    initController();
 
     ctrl.entitledToggle = false;
     ctrl.save();
@@ -115,8 +131,13 @@ describe('hybridCallServiceAwareUserSettings', () => {
     }];
     HybridServiceUserSidepanelHelperService.getDataFromUSS.and.returnValue($q.resolve([{}, {}]));
     UCCService.getUserDiscovery.and.returnValue($q.resolve({}));
+    UserOverviewService.getUser.and.returnValue($q.resolve({
+      user: {
+        entitlements: ['squared-fusion-uc', 'squared-fusion-ec'],
+      },
+    }));
 
-    initController(_.noop, ['squared-fusion-uc', 'squared-fusion-ec']);
+    initController();
 
     ctrl.newEntitlementValue = false;
     ctrl.saveData();
@@ -132,8 +153,13 @@ describe('hybridCallServiceAwareUserSettings', () => {
     }];
     HybridServiceUserSidepanelHelperService.getDataFromUSS.and.returnValue($q.resolve([{}, {}]));
     UCCService.getUserDiscovery.and.returnValue($q.resolve({}));
+    UserOverviewService.getUser.and.returnValue($q.resolve({
+      user: {
+        entitlements: [],
+      },
+    }));
 
-    initController(_.noop, ['squared-fusion-uc', 'squared-fusion-ec']);
+    initController();
 
     ctrl.newEntitlementValue = true;
     ctrl.saveData();
@@ -141,25 +167,23 @@ describe('hybridCallServiceAwareUserSettings', () => {
     expect(HybridServiceUserSidepanelHelperService.saveUserEntitlements).toHaveBeenCalledWith('1234', 'test@example.org', expectedEntitlements);
   });
 
-  it('should on save call the callback, after waiting a bit and probing USS for fresh data', () => {
+  it('should probe USS for fresh data after a save', () => {
 
-    const callbackSpy = jasmine.createSpy('callback');
     HybridServiceUserSidepanelHelperService.getDataFromUSS.and.returnValue($q.resolve([{}, {}]));
     UCCService.getUserDiscovery.and.returnValue($q.resolve({}));
+    UserOverviewService.getUser.and.returnValue($q.resolve({
+      user: {
+        entitlements: [],
+      },
+    }));
 
-    initController(callbackSpy, ['squared-fusion-uc']);
+    initController();
 
     ctrl.newEntitlementValue = true;
     ctrl.saveData();
     $scope.$apply();
 
     expect(HybridServiceUserSidepanelHelperService.getDataFromUSS.calls.count()).toBe(2);
-    expect(callbackSpy.calls.count()).toBe(1);
-    expect(callbackSpy).toHaveBeenCalledWith({
-      options: {
-        entitledToAware: true,
-      },
-    });
 
   });
 

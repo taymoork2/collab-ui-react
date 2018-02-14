@@ -22,6 +22,7 @@ describe('Component: ToggleSwitchWithReadOnly:', () => {
       value: 'isFakeToggleTrue',
       toggleId: 'fake-toggle-1',
       onChangeFn: 'onChangeFn(toggleValue)',
+      csAriaLabel: 'ariaLabel',
     });
   }
 
@@ -48,5 +49,28 @@ describe('Component: ToggleSwitchWithReadOnly:', () => {
     initComponent.call(this);
     this.view.find('input#fake-toggle-1').click();
     expect(this.$scope.onChangeFn).toHaveBeenCalledWith(newToggleValue);
+  });
+
+  describe('ariaLabel', function () {
+    it('should return default aria-label when cs-aria-label is not set', function () {
+      this.$scope.isReadOnly = true;
+      this.$scope.isFakeToggleTrue = true;
+      initComponent.call(this);
+
+      expect(this.controller.ariaLabel).toEqual('ariaLabel');
+    });
+
+    it('should return default aria-label when cs-aria-label is not set', function () {
+      this.$scope.isReadOnly = true;
+      this.$scope.isFakeToggleTrue = true;
+      initComponent.call(this);
+      this.compileComponent('toggle-switch-with-read-only', {
+        isReadOnly: 'isReadOnly',
+        value: 'isFakeToggleTrue',
+        toggleId: 'fake-toggle-1',
+      });
+
+      expect(this.controller.ariaLabel).toEqual('common.readonly');
+    });
   });
 });

@@ -3,6 +3,9 @@
     <button type="button" class="close" ng-click="$dismiss()" aria-label="{{::'common.close' | translate}}"></button>
     <span class="h3 modal-title sunlight-ellipsis-text" ng-attr-title="{{embedCodeCtrl.templateHeader}}" ng-bind="embedCodeCtrl.templateHeader"></span>
   </div>
+  <div class="modal-body ct-embed-code-use-instruction" style="padding-bottom:0rem">
+    <h5 class="embed-instruction" translate="careChatTpl.embedCodeHowToUseInfo"></h5>
+  </div>
   <div class="modal-body ct-embed-code-area lead">
     <textarea class="script-area" rows=20 readonly ng-bind="embedCodeCtrl.embedCodeSnippet"></textarea>
   </div>

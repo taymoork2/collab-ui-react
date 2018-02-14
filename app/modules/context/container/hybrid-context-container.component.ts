@@ -20,6 +20,7 @@ class HybridContextContainerController implements ng.IComponentController {
   constructor(
     private $translate: ng.translate.ITranslateService,
     private Authinfo: Authinfo,
+    private FeatureToggleService,
   ) {}
 
   public $onInit() {
@@ -37,6 +38,16 @@ class HybridContextContainerController implements ng.IComponentController {
         state: 'context-fieldsets',
       });
     }
+    // Add settings tab
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasContextServiceOnboarding)
+      .then(supports => {
+        if (supports) {
+          this.tabs.push({
+            title: this.$translate.instant('servicesOverview.cards.hybridContext.buttons.settings'),
+            state: 'context-settings',
+          });
+        }
+      });
     // Set default backState if it is not provided
     this.backState = this.backState || 'services-overview';
   }

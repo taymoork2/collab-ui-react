@@ -17,7 +17,13 @@
       <cs-sp-section>
         <div class="section-title-row">
           <span class="section-name" translate="singleNumberReachPanel.title"></span>
-          <cs-toggle-switch ng-model="$ctrl.snrData.snr.enableMobileConnect" toggle-id="enableSnr" name="enableSnr" size="small"></cs-toggle-switch>
+          <cs-toggle-switch
+            ng-model="$ctrl.snrData.snr.enableMobileConnect"
+            toggle-id="enableSnr"
+            name="enableSnr"
+            size="small"
+            cs-aria-label="{{::'singleNumberReachPanel.title' | translate}}">
+          </cs-toggle-switch>
         </div>
         <p translate="singleNumberReachPanel.description"></p>
         <div class="form-group-wrapper" ng-if="$ctrl.snrData.snr.enableMobileConnect">

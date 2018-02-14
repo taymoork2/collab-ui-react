@@ -7,7 +7,7 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($q, $rootScope, $state, $scope, Authinfo, CardUtils, SunlightUtilitiesService, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, ProPackService, LearnMoreBannerService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SetupWizardService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService, PrivateTrunkService, ServiceDescriptorService) {
+  function OverviewCtrl($q, $rootScope, $state, $scope, Authinfo, CardUtils, SunlightUtilitiesService, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, ProPackService, LearnMoreBannerService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SetupWizardService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService, PrivateTrunkService, ServiceDescriptorService, LinkedSitesService) {
     var vm = this;
     var PSTN_TOS_ACCEPT = require('modules/huron/pstn/pstnTermsOfService').PSTN_TOS_ACCEPT;
     var PSTN_ESA_DISCLAIMER_ACCEPT = require('modules/huron/pstn/pstn.const').PSTN_ESA_DISCLAIMER_ACCEPT;
@@ -94,6 +94,13 @@ require('./_overview.scss');
         vm.notifications.push(OverviewNotificationFactory.createSetupNotification());
         resizeNotifications();
       }
+
+      LinkedSitesService.linkedSitesNotConfigured().then(function (showNotification) {
+        if (showNotification === true) {
+          vm.notifications.push(OverviewNotificationFactory.createLinkedSitesNotification($state));
+          resizeNotifications();
+        }
+      });
 
       var hybridServiceNotificationFlags = _.chain([
         Config.entitlements.fusion_cal,

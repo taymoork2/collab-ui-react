@@ -4,8 +4,16 @@
 </div>
 <div class="modal-body">
   <div class="care-new-feature-modal" ng-if="!$ctrl.loading">
-    <div class="feature-card-container" ng-repeat="feature in $ctrl.features" ng-click="feature.disabled || $ctrl.ok((feature.id))"
-            ng-disabled="{{feature.disabled}}" ng-if="$ctrl.features.length !== 0" tooltip="{{feature.disabledTooltip | translate}}" tooltip-placement="right" tooltip-enable="{{feature.disabled}}">
+    <div class="feature-card-container"
+      ng-repeat="feature in $ctrl.features"
+      ng-click="feature.disabled || $ctrl.ok((feature.id))"
+      ng-disabled="{{feature.disabled}}"
+      ng-if="$ctrl.features.length !== 0"
+      tooltip="{{feature.disabledTooltip | translate}}"
+      tooltip-placement="right"
+      tooltip-enable="{{feature.disabled}}"
+      tooltip-trigger="mouseenter focus"
+      aria-label="{{feature.disabledTooltip | translate}}">
         <div class="feature-icon-container">
           <label class="feature-icon-circle {{feature.color}}" ng-if="feature.icons.length !== 0"
                  ng-class="{'feature-icon-disabled': feature.disabled}" ng-repeat="ftIcon in feature.icons">
@@ -23,8 +31,8 @@
         <span translate="{{feature.description}}" translate-value-onclick="$ctrl.purchaseLink()" translate-compile />
       </p>
       <div class= "feature-warning-container" ng-if= "feature.showWarning">
-          <i class="icon {{feature.warningIcon}} feature-icon-color"></i> 
-          <span translate="{{feature.warning}}" translate-value-onclick="$ctrl.learnMoreLink()" translate-compile />
+        <i class="icon {{feature.warningIcon}} feature-icon-color"></i>
+        <span translate="{{feature.warning}}" translate-value-onclick="$ctrl.learnMoreLink()" translate-compile />
       </div>
     </div>
     <div ng-if="$ctrl.features.length === 0">

@@ -32,6 +32,7 @@ describe('Service: CustomerAdministratorService', function () {
   describe('Service must catch illegal parameter passes', function () {
     it('should verify that a valid ID is passed to getCustomerAdmins', function () {
       CustomerAdministratorService.getCustomerAdmins()
+        .then(fail)
         .catch(function (response) {
           expect(response).toBe('A Customer Organization Id must be passed');
         });
@@ -39,6 +40,7 @@ describe('Service: CustomerAdministratorService', function () {
 
     it('should verify that a valid ID is passed to removeCustomerAdmin', function () {
       CustomerAdministratorService.removeCustomerAdmin()
+        .then(fail)
         .catch(function (response) {
           expect(response).toBe('A Customer Organization Id must be passed');
         });
@@ -53,9 +55,7 @@ describe('Service: CustomerAdministratorService', function () {
     it('should reject if customerOrgId is invalid', function () {
       var rejectCalled = false;
       CustomerAdministratorService.addCustomerAdmin(user, null)
-        .then(function () {
-          expect('response called').toBeFalsy();
-        })
+        .then(fail)
         .catch(function () {
           rejectCalled = true;
           expect('reject called').toBeTruthy();
@@ -69,9 +69,7 @@ describe('Service: CustomerAdministratorService', function () {
     it('should reject when user is invalid', function () {
       var rejectCalled = false;
       CustomerAdministratorService.addCustomerAdmin(null, 'aabbccdd')
-        .then(function () {
-          expect('response called').toBeFalsy();
-        })
+        .then(fail)
         .catch(function () {
           rejectCalled = true;
           expect('reject called').toBeTruthy();
@@ -95,9 +93,6 @@ describe('Service: CustomerAdministratorService', function () {
 
       var rejectCalled = false;
       CustomerAdministratorService.addCustomerAdmin(user, 'aabbccdd')
-        .then(function () {
-          expect('response called').toBeTruthy();
-        })
         .catch(function () {
           rejectCalled = true;
           expect('reject called').toBeFalsey();
@@ -144,6 +139,7 @@ describe('Service: CustomerAdministratorService', function () {
 
       var rejectCalled = false;
       CustomerAdministratorService.removeCustomerAdmin(fakeUser, null)
+        .then(fail)
         .catch(function () {
           rejectCalled = true;
         })

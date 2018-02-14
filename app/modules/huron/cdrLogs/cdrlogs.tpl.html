@@ -162,7 +162,7 @@
           <cs-accordion-group ng-repeat="call in cdr.gridData" display-status="{{cdr.statusAvalibility(call)}}" show-caret="true">
             <cs-accordion-heading>
               <span ng-click="cdr.resize()">
-                <span class="icon " ng-class="{ 'icon-error' : cdr.statusAvalibility(call) == 'danger'}"></span> {{cdr.getAccordionHeader(call)}}
+                <span class="icon " ng-class="{ 'icon-error' : cdr.statusAvalibility(call) === 'danger'}"></span> {{cdr.getAccordionHeader(call)}}
               <span class="pull-right caret"></span>
               </span>
             </cs-accordion-heading>

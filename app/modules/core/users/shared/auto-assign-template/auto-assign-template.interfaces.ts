@@ -3,22 +3,30 @@ import { ILicenseResponseItem, IUserEntitlementRequestItem } from 'modules/core/
 import { IHybridServices } from 'modules/core/users/userAdd/hybrid-services-entitlements-panel/hybrid-services-entitlements-panel.service';
 import { ICrCheckboxItemState } from 'modules/core/users/shared/cr-checkbox-item/cr-checkbox-item.component';
 
+export interface ILicensesViewState {
+  [key: string]: IAssignableLicenseCheckboxState;
+}
+
 export interface IUserEntitlementsViewState {
   [key: string]: ICrCheckboxItemState;
 }
 
-export interface IAutoAssignTemplateData {
-  viewData: {
-    LICENSE?: {
-      [key: string]: IAssignableLicenseCheckboxState;
+export interface IAutoAssignTemplateDataUserChangesData {
+  LICENSE?: ILicensesViewState;
+  USER_ENTITLEMENT?: IUserEntitlementsViewState;
+}
+
+export interface IAutoAssignTemplateDataViewData extends IAutoAssignTemplateDataUserChangesData {
+  SUBSCRIPTION?: {
+    [key: string]: {
+      showContent: boolean;
     };
-    SUBSCRIPTION?: {
-      [key: string]: {
-        showContent: boolean;
-      };
-    };
-    USER_ENTITLEMENT?: IUserEntitlementsViewState;
   };
+}
+
+export interface IAutoAssignTemplateData {
+  userChangesData?: IAutoAssignTemplateDataUserChangesData;
+  viewData: IAutoAssignTemplateDataViewData;
   otherData: {
     hybridServices?: IHybridServices;
   };

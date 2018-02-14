@@ -172,8 +172,9 @@ describe('ExportUserStatusesController', function () {
       expect(ExcelService.downloadFile).toHaveBeenCalled();
     });
     it('should not actually finish export when exportCanceled is true', function () {
-      vm.exportCanceled = true;
+      vm.progress.exportCanceled = true;
       vm.exportCSV()
+        .then(fail)
         .catch(function (err) {
           expect(err).toEqual('User Status Report download canceled');
         });

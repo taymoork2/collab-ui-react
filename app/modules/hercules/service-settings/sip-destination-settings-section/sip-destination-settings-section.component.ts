@@ -1,4 +1,3 @@
-import { FeatureToggleService } from 'modules/core/featureToggle';
 import { IUSSOrg, USSService } from 'modules/hercules/services/uss.service';
 import { Notification } from 'modules/core/notifications/notification.service';
 import { IFormattedResult } from 'modules/hercules/services/l2sip-service';
@@ -21,21 +20,12 @@ class SipDestinationSettingsSectionComponentCtrl implements ng.IComponentControl
   constructor(
     private $modal: IToolkitModalService,
     private Authinfo,
-    private FeatureToggleService: FeatureToggleService,
     private Notification: Notification,
     private USSService: USSService,
   ) {}
 
   public $onInit() {
-    this.showSIPTestToolCheck();
     this.getUSSData();
-  }
-
-  private showSIPTestToolCheck(): void {
-    this.FeatureToggleService.hasFeatureToggleOrIsTestOrg(this.FeatureToggleService.features.atlasHybridCallDiagnosticTool)
-      .then((showFeature) => {
-        this.showSIPTestTool = showFeature;
-      });
   }
 
   private getUSSData(): void {
@@ -45,7 +35,7 @@ class SipDestinationSettingsSectionComponentCtrl implements ng.IComponentControl
       });
   }
 
-  public updateSipDomain(): void {
+  private updateSipDomain(): void {
     this.savingSip = true;
     const orgInfo: IUSSOrg = {
       id: this.Authinfo.getOrgId(),

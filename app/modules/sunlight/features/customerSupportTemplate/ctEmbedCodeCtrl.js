@@ -5,9 +5,9 @@
     .module('Sunlight')
     .controller('EmbedCodeCtrl', EmbedCodeCtrl);
 
-  function EmbedCodeCtrl($window, CTService, SunlightConfigService, templateId, templateHeader) {
+  function EmbedCodeCtrl($window, CTService, SunlightConfigService, templateId, templateHeader, templateName) {
     var vm = this;
-    vm.embedCodeSnippet = CTService.generateCodeSnippet(templateId);
+    vm.embedCodeSnippet = CTService.generateCodeSnippet(templateId, templateName);
     vm.downloadEmbedCode = downloadEmbedCode;
     vm.templateHeader = templateHeader;
     vm.isLoading = true;

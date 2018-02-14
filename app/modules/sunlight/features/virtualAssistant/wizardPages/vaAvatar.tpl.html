@@ -10,7 +10,7 @@
   <div ng-switch="$ctrl.avatarUploadState" block-view="true">
 
     <div ng-switch-when="SELECT|PREVIEW" ng-switch-when-separator="|" class="va-dash-box" ngf-drop="$ctrl.uploadAvatar($file)" ngf-drag-over-class="'dragover'" ngf-multiple="false">
-        <span ng-if="$ctrl.avatarUploadState == 'SELECT'">
+        <span ng-if="$ctrl.avatarUploadState === 'SELECT'">
           <div>
             <div class="va-img-circle">
               <img class="va-img" ngf-src="$ctrl.template.configuration.pages.vaAvatar.avatarImageSrc"></img>
@@ -20,7 +20,7 @@
           <p class="va-upload-desc">{{$ctrl.getText('avatar.uploadDesc')}}</p>
         </span>
 
-        <span ng-if="$ctrl.avatarUploadState == 'PREVIEW'">
+        <span ng-if="$ctrl.avatarUploadState === 'PREVIEW'">
           <div>
             <div class="va-img-circle">
               <img class="va-img" ngf-src="$ctrl.template.configuration.pages.vaAvatar.fileValue"></img>
@@ -55,7 +55,8 @@
       <span ng-switch-when="FileTypeError"> {{$ctrl.getText('avatar.errorUnsupportedFile')}}</span>
       <span ng-switch-when="FileSizeError"> {{$ctrl.getText('avatar.errorOverMaxFileSizeLimit')}}</span>
       <span ng-switch-when="FileUploadError"> {{$ctrl.getText('avatar.errorUploadFile')}}</span>
-      <span ng-switch-when="InvalidFile"> {{$ctrl.getText('invalidInput.invalidIcon')}}</span>
+      <span ng-switch-when="InvalidFile"> {{$ctrl.getText('avatar.errorInvalidIcon')}}</span>
+      <span ng-switch-when="InvalidIconDimensions"> {{$ctrl.getText('avatar.errorInvalidIconDimensions')}}</span>
     </div>
   </div>
 </div>

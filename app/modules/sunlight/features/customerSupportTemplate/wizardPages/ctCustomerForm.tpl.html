@@ -8,7 +8,7 @@
         for="text-{{fieldName}}">{{getLabel(field)}}</label>
       <label
         class="ct-input__label h6 labelText textOverflow"
-        ng-show="isRequired(field) != 'required'">
+        ng-show="isRequired(field) !== 'required'">
         <em id="opt-{{fieldName}}" translate="careChatTpl.optionalText"></em></label>
     </div>
 

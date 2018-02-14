@@ -1,4 +1,4 @@
-<div ng-if="( 'webexexport' == webexCsvDownload.type )">
+<div ng-if="( 'webexexport' === webexCsvDownload.type )">
   <a href id="download-csv-{{webexCsvDownload.type}}" ng-click="webexCsvDownload.downloadCsv()">
     <!--
       * Removing button from tabindex to prevent redundancy

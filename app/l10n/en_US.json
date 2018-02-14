@@ -357,7 +357,8 @@
         "description": "Select the services that you want to provide to users.",
         "note": "Note: If you select more than one Message or Call license, only one license will be assigned to each user.",
         "tooltip": "If one subscription runs out of licenses, the next selected subscription automatically assigns more.",
-        "usage": "Usage: {{ usage }}/{{ volume }}"
+        "usage": "Usage: {{ usage }}/{{ volume }}",
+        "careDisabledTooltip": "Care licenses are only assigned to Care agents."
       },
       "editSummary": {
         "title": "Set Up Auto-Assign Template",
@@ -374,6 +375,10 @@
     "autoAssignLicenseSummaryForDirSync": {
       "header": "License Summary",
       "description": "You've enabled Auto-Assign. All synchronized users will be assigned the following licenses automatically."
+    },
+    "autoAssignLicenseSummaryForConvert": {
+      "header": "License Summary",
+      "description": "You've enabled Auto-Assign. Users will be assigned the following licenses automatically."
     }
   },
   "userTaskManagerModal": {
@@ -1640,6 +1645,7 @@
     "proPackTooltip": "This premium feature is available with Pro Pack. Contact your partner to learn more.",
     "provision": "Provision",
     "quantity": "Qty",
+    "readonly": "Readonly",
     "releaseChannel": "Release Channel",
     "remove": "Remove",
     "rename": "Rename",
@@ -2278,6 +2284,16 @@
       "domain-not-verified": "The domain for this Directory URI must be verified for this service to function properly. ",
       "navigateToCallSettings": "Verify the domain in <a href ng-click=\"{{onclick}}\">Call Service Settings</a>."
     },
+    "capacity": {
+      "label": "Capacity: {{capacity}}%",
+      "toolTip": "Capacity: {{capacity}}%<br>Users assigned: {{total}} of {{max}}"
+    },
+    "userStatuses": {
+      "summaryTitle": "User Status Summary",
+      "reportTitle": "User Status Report",
+      "description": "The exported report will be a list of users, their state and related details. You can select the type of information that you want included in the report:",
+      "createButton": "Create Report"
+    },
     "sipExplanation": {
       "line1": "You can use one of the following address formats:",
       "line2": "SRV domain (_sips._tcp.<strong>sipmtls.example.com</strong>)",
@@ -2436,12 +2452,13 @@
       "readResourceGroupsFailed": "Could not read Resource Groups. Try again later.",
       "refreshUserFailed": "Unable to refresh the user status. Please try again later.",
       "refreshUserDidNoGood": "Unable to get the user status. Please contact support if the problem persists.",
-      "couldNotReadConnectStatus": "Unable to read Call Service Connect organization status. Please contact support if the problem persists.",
-      "notEnabledInOrg": "Not enabled in organization",
+      "couldNotReadStatus": "Unable to read Call Service organization status. Please contact support if the problem persists.",
       "enableAwareFirst": "Aware must be enabled before the user can be enabled for Connect. Enable it in the <a href ng-click=\"{{onclick}}\">Call Service Aware panel</a>.",
       "disableAwareHeader": "Disable Services",
       "disableAwareMessage": "Are you sure? By disabling Call Service Aware, Call Service Connect will also be disabled for this user.",
       "errorMessages": {
+        "cannotReadUserDataFromCI": "Could not read user's licensing data.",
+        "cannotReadOrgDataFromFMS": "Could not read service activation status.",
         "cannotReadDeviceDataFromUSS": "Unable to read device's activation status.",
         "cannotReadDeviceDataFromUSSPartnerAdmin": "Unable to read device's activation status. This could indicate a caching problem, try logging out and in again to clear the user cache.",
         "cannotReadUserDataFromUSS": "Unable to read user's activation status.",
@@ -2469,6 +2486,7 @@
       "error": "Error",
       "unknown": "Unknown",
       "notFound": "Status not found",
+      "pendingNotSetup": "Pending – Service Not Setup",
       "accountNotActivated": "Account Not Activated"
     },
     "serviceNames": {
@@ -2597,12 +2615,14 @@
       "google": "Google Calendar",
       "notSetup": "Not currently set up",
       "sinceTime": "since {{timestamp}}",
+      "noLicensedServices": "This user must have one or more licensed services to be configured for Hybrid Services.",
       "entitledToBothCalendarsShort": "Multiple Calendar Entitlements",
       "entitledToBothCalendars": "This user is currently entitled to both calendar types. To clear the error, disable calendar service for the user and then enable it again.",
       "couldNotReadOffice365Status": "Could not read organization's Office 365 configuration. The information above might be incomplete.",
       "couldNotReadGoogleCalendarStatus": "Could not read organization's Google Calendar configuration. The information above might be incomplete.",
       "couldNotReadFMSStatus": "Could not read organization's Expressway-based Hybrid Services configuration. The information above might be incomplete.",
-      "entitledToHuron": "Licensed for Spark Call"
+      "entitledToHuron": "Licensed for Spark Call",
+      "serviceNotEnabledInCloud": "This service is not set up. The user will be in a pending activation or error state until setup has been completed."
     },
     "alarms": {
       "affectedNodes": "Affected Nodes",
@@ -2633,7 +2653,9 @@
       "text": "You are about to update {{name}} connectors to {{version}}.",
       "releaseNotes": "Release Notes",
       "releaseNotesLink": "Open in a new tab",
-      "upgradeNow": "Upgrade Now"
+      "upgradeNow": "Upgrade Now",
+      "warning1": "Some nodes in this clusters are either offline or in maintenance mode. These nodes will not be upgraded until they are back online.",
+      "warning2": "We recommend that you bring all nodes online before initiating an upgrade."
     },
     "expresswayClusterSettings": {
       "upgradeScheduleHeader": "Upgrade",
@@ -3260,9 +3282,16 @@
         "title": "Disable maintenance mode",
         "message": "Are you sure you want to disable maintenance mode for this node?"
       },
-      "alertBannerNumber": "{count, plural, =1{Upgrade for connectors available!} other{Upgrades for connectors available!}}",
-      "alertBannerTime": "{count, plural, =1{It} other{They}} will be applied on {date}.",
-      "alertBannerLink": "<a href ng-click=\"{{onclick}}\">Upgrade {{service}} connectors now</a>.",
+      "alertDisableMaintenanceMode": "To install, disable maintenance mode on the nodes.",
+      "alertDisableMaintenanceModeFor": "To install {{connector}}, disable maintenance mode on the nodes.",
+      "alertenableTheNodes": "To install, bring the nodes back online first.",
+      "alertenableTheNodesFor": "To install {{connector}}, bring the nodes back online first.",
+      "alertInstallNow": "Install now…",
+      "alertUpgradeAvailableFor": "Upgrade available for {{connector}}.",
+      "alertUpgradeConnectorNow": "Upgrade {{connector}} now.",
+      "alertUpgradesAvailable": "Upgrades available.",
+      "alertUrgent": "(urgent)",
+      "alertUrgentUpgradeAvailableFor": "Urgent upgrade available for {{connector}}.",
       "instructions": "Instructions"
     },
     "hybridServicesConnectorSidepanel": {
@@ -3660,6 +3689,14 @@
         "fieldMaxLimitReached": "Maximum fields in fieldset reached.",
         "fieldsetLimitReadFailed": "Unable to retrieve fieldsets limit. Refresh your browser to try again",
         "notAuthorized": "You are not authorized to manage Hybrid Context fieldsets for this organization."
+      },
+      "settingPage": {
+        "adminAuthorization": "Administrator Authorization",
+        "adminAuthorizationDescription": "Synchronize administrative permissions for your organization.",
+        "unauthorizedTooltip": "To synchronize permissions, contact an authorized administrator.",
+        "synchronize": "Synchronize",
+        "synchronizationSuccessful": "Administration permissions synchronized successfully.",
+        "synchronizationFailure": "Cannot synchronize administrative permissions. Try again."
       }
     }
   },
@@ -5628,7 +5665,9 @@
     "trialDuration": "Trial Duration",
     "callServiceDisabled": "This service is temporarily unavailable for trial.",
     "managedBy": "Managed by {{org}}",
-    "anotherPartner": "another partner"
+    "anotherPartner": "another partner",
+    "kOneContents": "Includes video chat and automated chat support using a virtual assistant.",
+    "kTwoContents": "Includes video chat and automated chat support using a virtual assistant."
   },
   "status": {
     "noResults": "No results available.",
@@ -7974,6 +8013,7 @@
     "chatting": "Chatting",
     "chattingMessage": "Chat in progress...",
     "downloadEmbedCode": "Download Embed Code",
+    "embedCodeHowToUseInfo": "Paste this code snippet in your web page &lt;head&gt; container",
     "embed-code": {
       "no-verified-domains": {
         "warn": "There are no verified domains for your organization. Care templates work on any domains by default. Go to Settings page to add and verify domains in order to restrict them to work only for your organization's domains.",
@@ -7991,6 +8031,10 @@
     },
     "embedCodeFor": "Embed Code for ",
     "embedCodeWarnMsg_callback": "It is important to verify all domains where you want to use callback template. You will not be able to embed callback template on unverified domains.",
+    "embedCodeSnippet": {
+      "templateNameHelpText": "Name of the Customer Support Template: {{templateName}}",
+      "orgNameHelpText": "Name of the Organization: {{orgName}}"
+    },
     "configureOrgLogoMsg": "Go to Settings page to modify your organization logo",
     "virtualAssistant": {
       "featureText": {
@@ -8021,6 +8065,10 @@
         "duplicateName": "The {{ featureName }} must have a unique name.\nClick the back arrow to return to the Name page and enter a valid name.",
         "invalidName": "The {{ featureName }} name is invalid.\nClick the back arrow to return to the Name page and enter a valid name.",
         "invalidIcon": "The {{ featureName }} avatar is invalid.\nClick the back arrow to return to the Avatar page and upload a valid avatar.",
+        "invalidIconFileType": "The supported file type of the {{ featureName }} avatar is PNG.\nClick the back arrow to return to the Avatar page and upload a valid avatar.",
+        "invalidIconTooLarge": "The image file size of the {{ featureName }} avatar must be less than 1 MB. \nClick the back arrow to return to the Avatar page and upload a valid avatar.",
+        "invalidIconCorrupted": "The {{ featureName }} avatar is invalid.\nClick the back arrow to return to the Avatar page and upload a valid avatar.",
+        "invalidIconDimensions" : "The dimensions of the {{ featureName }} avatar must be exactly 512 x 512 pixels.\nClick the back arrow to return to the Avatar page and upload a valid avatar.",
         "invalidEmail": "The email you entered is invalid.\nClick the back arrow to return to the Email page and enter a valid email."
       },
       "createTitle": "Create {{ featureName }}",
@@ -8077,11 +8125,13 @@
         "preview": "Avatar Preview",
         "fileBrowser": "file browser",
         "uploadingImage": "Uploading image...",
-        "uploadDesc": "Upload a PNG of maximum 1MB. For best results make sure that your image has a transparent background with no padding.",
+        "uploadDesc": "Upload a PNG of 512 x 512 pixels and maximum 1 MB. For best results make sure that your image has a transparent background with no padding.",
         "dragDropDesc": "Drag and drop a file or use the ",
         "errorUnsupportedFile": "Cannot upload unsupported file. Supported file type is PNG.",
         "errorOverMaxFileSizeLimit": "The image file size must be less than 1 MB.",
-        "errorUploadFile": "Cannot upload image. Try again."
+        "errorUploadFile": "Cannot upload image. Try again.",
+        "errorInvalidIcon": "The {{ featureName }} avatar is invalid.",
+        "errorInvalidIconDimensions" : "The dimensions of the {{ featureName }} avatar must be exactly 512 x 512 pixels."
       },
       "summary": {
         "cvaDesc": "You have configured {{ name }}. To use the assisted service feature in your organization's chat application, add your assistant to a Customer Support Template.",
@@ -8514,9 +8564,8 @@
       "title": "Cisco Spark Assistant",
       "subsectionLabel": "Enable Cisco Spark Assistant",
       "description": "Allows users to perform various actions such as, make calls, start meetings, using their voice",
-      "termsOfService": "Cisco Spark Assistant terms of service ",
       "success": "Successfully updated Spark Assistant",
-      "failure": "Spark Assistant update failed"
+      "failure": "Cisco Spark Assistant update failed"
     },
     "externalCommunication": {
       "title": "External Communication",
@@ -8695,6 +8744,7 @@
     "pendingActivation": "Pending Activation",
     "onlineOnly1": "Purchases from Cisco Online Marketplace only.",
     "onlineOnly2": "Cisco and Cisco Partner invoices are not listed here.",
+    "invoiceError": "An error occurred while generating a link to the invoice because the buyer could not be found in the identity system (CI).",
     "loadError": "An error occurred while loading order history."
   },
   "ciRoles": {
@@ -9161,9 +9211,10 @@
     "userIsMissingEntitlements": "The current user has no Hybrid Services entitlements.",
     "userStatusesSummary": {
       "users": "Users",
-      "inError": "users in error",
-      "inPending": "users in pending activation",
-      "active": "users active",
+      "assigned": "{total, plural, =1{# user assigned} other{# users assigned}}",
+      "inError": "in error",
+      "inPending": "in pending activation",
+      "active": "active",
       "enableUsers": "Enable users"
     },
     "cards": {
@@ -9184,7 +9235,8 @@
         "title": "Meeting",
         "description": "WebEx Meeting Center and Cisco Spark configurations for your organization and individuals.",
         "SPDescription": "WebEx Meeting Center and Cisco Spark configurations.",
-        "pmrText": "Configure your Personal Meeting Room"
+        "pmrText": "Configure your Personal Meeting Room",
+        "viewWebExSites": "View WebEx Sites"
       },
       "call": {
         "title": "Call",
@@ -9396,7 +9448,8 @@
         "buttons": {
           "resources": "Resources",
           "fields": "Fields",
-          "fieldsets": "Fieldsets"
+          "fieldsets": "Fieldsets",
+          "settings": "Settings"
         }
       },
       "privateTrunk": {
@@ -10464,7 +10517,9 @@
       "setAccountLinkingModeError": "Setting Account Linking Mode Failed with : {{message}}",
       "getCiSiteLinkingError": "Failed getting linking info with : {{message}}",
       "getCiAccountSyncError": "Failed getting account sync with : {{message}}",
-      "getDomainsError": "Failed getting domains with : {{message}}"
+      "getDomainsError": "Failed getting domains with : {{message}}",
+      "unableToRetrieveSomeData": "Unable to retrieve some data",
+      "unableToRetrieveData": "Unable to retrieve data"
     },
     "grid": {
       "header": {
@@ -10499,13 +10554,16 @@
       "viewReports": "View Reports",
       "dontHaveAdminRights": "You don't have administrative privileges for this site.",
       "legacyWebexLicense": "Legacy WebEx License",
-      "launchWebexSiteAdmin": "Launch WebEx Site Admin"
+      "launchWebexSiteAdmin": "Launch WebEx Site Admin",
+      "automaticLinking": "Automatic Linking",
+      "automaticLinkingTooltip": "All WebEx accounts listed in the verified domains will be linked, including existing unlinked accounts and future new accounts."
     },
     "wizard": {
       "title": "WebEx Accounts Linking Mode",
       "siteName": "Site Name: {{siteName}}",
       "enrolledWebexSiteName": "Enrolled WebEx Site Name",
-      "webexSite": "WebEx Site"
+      "webexSite": "WebEx Site",
+      "agreementAcceptLabel": "I have read and accept the agreement"
     }
   },
   "hcs": {
@@ -10580,6 +10638,5 @@
         "error": "Errors"
       }
     }
-
   }
 }

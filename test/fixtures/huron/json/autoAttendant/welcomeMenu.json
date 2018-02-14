@@ -33,7 +33,9 @@
       }, {
         "routeToUser": {
           "description": "user 1",
-          "id": "0000"
+          "id": "0000",
+          "userType": "sparkOnlyUser",
+          "sipURI": "user@webex.cisco.com"
         }
       }, {
         "routeToVoiceMail": {
@@ -89,7 +91,9 @@
         "true":[
           {
             "routeToUser":{ 
-              "id":"RouteToUserId"
+              "id":"RouteToUserId",
+              "sipURI": "user@webex.cisco.com",
+              "userType": "ciscoSparkUser"
             }
           } 
        ]
@@ -1336,5 +1340,88 @@
         ]
       }
     ]
-  }
+  },
+  "ceWelcomeForRouteToUser": {
+    "callExperienceName": "AA Welcome",
+    "assignedResources": [{
+      "trigger": "incomingCall",
+      "type": "directoryNumber",
+      "id": "e7d68d8c-9e92-4330-a881-5fc9ace1f7d3"
+    }],
+    "defaultActionSet": "openHours",
+    "scheduleEventTypeMap": {
+      "open": "openHours"
+    },
+    "actionSets": [{
+      "name": "openHours",
+      "actions": [{
+        "play": {
+          "description": "Welcome prompt",
+          "url": "file1.avi",
+          "voice": "Vanessa",
+          "deleteUrl": "file1.avi"
+        }
+      }, {
+        "routeToUser": {
+          "description": "user 1",
+          "id": "0000",
+          "userType": "sparkOnlyUser",
+          "sipURI": "user@webex.cisco.com"
+        }
+      }, {
+      "conditional": {
+        "expression":"var%20func%20%3D%20function%20()%20%7B%20return%20this%5B''%5D%20!%3D%20this%5B''%5D%3B%20%7D%3B",
+        "true":[
+          {
+            "routeToUser":{ 
+              "id":"RouteToUserId",
+              "sipURI": "user@webex.cisco.com",
+              "userType": "sparkCallUser"
+            }
+          } 
+       ],
+       "false":[
+       {
+         "say": {
+           "value": ""
+           }
+       }],
+       "varsUsed": [""]
+      }
+    }, {
+    "runActionsOnInput": {
+      "description": "",
+      "prompts": {
+        "announcements": [
+          {
+            "say": {
+              "value": "hi",
+              "voice": "Vanessa"
+            }
+          }
+        ],
+        "description": ""
+      },
+      "inputs": [
+        {
+          "description": "",
+          "input": "0",
+          "actions": [
+           {
+              "routeToUser": {
+                "id": "6d936aba-7bc5-41d4-b042-6ea2b01a6284",
+                "userType": "sparkOnlyUser",
+                "sipURI": "user@webex.cisco.com"
+              }
+            }
+          ]
+        }
+      ],
+      "attempts": 4,
+      "language": "",
+      "voice": ""
+    }
+    }]
+      }]
+    }
 }

@@ -151,6 +151,8 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
   private convertTrunkResourceToCluster(trunks: IPrivateTrunkResourceWithStatus[]): IExtendedClusterFusion[] {
     return _.map(trunks, trunk => {
       return <IExtendedClusterFusion>{
+        allowedRegistrationHostsUrl: '',
+        createdAt: '',
         connectors: [],
         id: trunk.uuid,
         name: trunk.name,
@@ -176,6 +178,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
           alarmsBadgeCss: '',
           allowedRedirectTarget: undefined,
           hasUpgradeAvailable: false,
+          isUpgradeUrgent: false,
           isEmpty: false,
           maintenanceMode: 'off',
           registrationTimedOut: false,

@@ -5,8 +5,9 @@
     </div>
     <div class="feature-list">
       <ul>
-        <li class="feature">
-          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.aware-settings({userId: $ctrl.userId, userEmailAddress: $ctrl.userEmailAddress, onEntitlementChange: $ctrl.onEntitlementChanges, isInvitePending: $ctrl.isInvitePending, allUserEntitlements: $ctrl.allUserEntitlements })">
+        <li class="feature"
+            ng-hide="!$ctrl.callServiceAwareEnabledForOrg">
+          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.aware-settings({userId: $ctrl.userId, userEmailAddress: $ctrl.userEmailAddress })">
             <span class="feature-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-uc"></span>
             <span ng-if="!$ctrl.userHasEntitlement('squared-fusion-uc')">
               <span ng-if="!$ctrl.loadingPage"
@@ -29,8 +30,28 @@
           </a>
         </li>
         <li class="feature"
+            ng-hide="$ctrl.callServiceAwareEnabledForOrg">
+          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.aware-settings({userId: $ctrl.userId, userEmailAddress: $ctrl.userEmailAddress })">
+            <span class="feature-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-uc"></span>
+            <span ng-if="!$ctrl.userHasEntitlement('squared-fusion-uc')">
+              <span ng-if="!$ctrl.loadingPage"
+                    class="feature-status status-off"
+                    translate="common.off"></span>
+            </span>
+            <span ng-if="$ctrl.userHasEntitlement('squared-fusion-uc')">
+              <span ng-if="!$ctrl.loadingPage"
+                    class="feature-status status-off"
+                    translate="hercules.activationStatus.pendingNotSetup"></span>
+            </span>
+            <span cs-loader
+                  ng-if="$ctrl.loadingPage"
+                  class="feature-list-loader"></span>
+            <i class="feature-arrow"></i>
+          </a>
+        </li>
+        <li class="feature"
             ng-hide="!$ctrl.callServiceConnectEnabledForOrg">
-          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.connect-settings({userId: $ctrl.userId, userEmailAddress: $ctrl.userEmailAddress, onEntitlementChange: $ctrl.onEntitlementChanges, isInvitePending: $ctrl.isInvitePending, allUserEntitlements: $ctrl.allUserEntitlements })">
+          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.connect-settings({userId: $ctrl.userId, userEmailAddress: $ctrl.userEmailAddress })">
             <span class="feature-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-ec"></span>
             <span ng-if="!$ctrl.userHasEntitlement('squared-fusion-ec')">
               <span ng-if="!$ctrl.loadingPage"
@@ -54,11 +75,22 @@
         </li>
         <li class="feature"
             ng-hide="$ctrl.callServiceConnectEnabledForOrg">
-          <a>
+          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.connect-settings({userId: $ctrl.userId, userEmailAddress: $ctrl.userEmailAddress })">
             <span class="feature-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-ec"></span>
-            <span ng-if="!$ctrl.callServiceConnect && !$ctrl.loadingPage"
-                  class="feature-status status-off"
-                  translate="hercules.userSidepanel.notEnabledInOrg"></span>
+            <span ng-if="!$ctrl.userHasEntitlement('squared-fusion-ec')">
+              <span ng-if="!$ctrl.loadingPage"
+                    class="feature-status status-off"
+                    translate="common.off"></span>
+            </span>
+            <span ng-if="$ctrl.userHasEntitlement('squared-fusion-ec')">
+              <span ng-if="!$ctrl.loadingPage"
+                    class="feature-status status-off"
+                    translate="hercules.activationStatus.pendingNotSetup"></span>
+            </span>
+            <span cs-loader
+                  ng-if="$ctrl.loadingPage"
+                  class="feature-list-loader"></span>
+            <i class="feature-arrow"></i>
           </a>
         </li>
       </ul>

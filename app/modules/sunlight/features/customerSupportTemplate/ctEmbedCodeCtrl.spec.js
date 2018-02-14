@@ -22,6 +22,7 @@ describe('Chat template embed code control', function () {
         templateId: 'abc123',
         templateHeader: 'chat template header',
         SunlightConfigService: SunlightConfigService,
+        templateName: 'dummyTemplate',
       });
     };
     fakeCodeSnippet = 'some_fake_script';

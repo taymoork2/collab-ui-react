@@ -1,4 +1,3 @@
-import { LinkingOperation } from './../account-linking.interface';
 import { IACSiteInfo } from './../account-linking.interface';
 
 class LinkedSitesGridComponentCtrl implements ng.IComponentController {
@@ -10,7 +9,7 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
   public sitesInfo: any;
   public onSiteSelectedFn: Function;
   public launchWebexFn: Function;
-  public webexPage;
+  public showWizardFn: Function;
 
   private selectedRow;
 
@@ -18,7 +17,6 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
   constructor(
     private $log: ng.ILogService,
     private $state: ng.ui.IStateService,
-    //private $rootScope: ng.IRootScopeService,
     private $translate,
     private uiGridConstants: uiGrid.IUiGridConstants,
   ) {
@@ -116,10 +114,9 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
   }
 
   public modifyLinkingMethod(siteInfo) {
-    this.$state.go('site-list.linked.details.wizard', {
-      siteInfo: siteInfo, //TODO: url or the whole object ????
-      operation: LinkingOperation.Modify,
-      launchWebexFn: this.launchWebexFn,
+    this.$log.debug('Modify linking method by launching wizard with siteInfo:', siteInfo);
+    this.showWizardFn({
+      siteInfo: siteInfo,
     });
   }
 
@@ -137,7 +134,6 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
     this.launchWebexFn({
       site: siteInfo,
       useHomepage: true,
-      launchWebexFn: this.launchWebexFn,
     });
   }
 
@@ -168,5 +164,6 @@ export class LinkedSitesGridComponent implements ng.IComponentOptions {
     sitesInfo: '<',
     onSiteSelectedFn: '&',
     launchWebexFn: '&',
+    showWizardFn: '&',
   };
 }

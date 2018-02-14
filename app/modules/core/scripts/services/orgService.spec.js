@@ -64,19 +64,21 @@ describe('orgService', function () {
   it('should fail to get an organization for a given orgId', function () {
     var callback = jasmine.createSpy('callback');
     this.$httpBackend.when('GET', this.UrlConfig.getScomUrl() + '/' + this.Authinfo.getOrgId()).respond(500, {});
-    this.Orgservice.getOrg(callback, this.Authinfo.getOrgId()).catch(function (response) {
-      expect(response.status).toBe(500);
-      expect(callback.calls.count()).toBe(1);
-      expect(callback.calls.argsFor(0)[0].success).toBe(false);
-    });
+    this.Orgservice.getOrg(callback, this.Authinfo.getOrgId()).then(fail)
+      .catch(function (response) {
+        expect(response.status).toBe(500);
+        expect(callback.calls.count()).toBe(1);
+        expect(callback.calls.argsFor(0)[0].success).toBe(false);
+      });
     this.$httpBackend.flush();
   });
 
   it('should fail to get an organization for a given orgId and reject the returned promise', function () {
     this.$httpBackend.expect('GET', this.UrlConfig.getScomUrl() + '/' + this.Authinfo.getOrgId()).respond(500, {});
-    this.Orgservice.getOrg(_.noop, this.Authinfo.getOrgId()).catch(function (response) {
-      expect(response.status).toBe(500);
-    });
+    this.Orgservice.getOrg(_.noop, this.Authinfo.getOrgId()).then(fail)
+      .catch(function (response) {
+        expect(response.status).toBe(500);
+      });
     this.$httpBackend.flush();
   });
 
@@ -92,11 +94,12 @@ describe('orgService', function () {
   it('should fail to get an organization for getOrgId provided by Authinfo', function () {
     var callback = jasmine.createSpy('callback');
     this.$httpBackend.when('GET', this.UrlConfig.getScomUrl() + '/' + this.Authinfo.getOrgId()).respond(500, {});
-    this.Orgservice.getOrg(callback, this.Authinfo.getOrgId()).catch(function (response) {
-      expect(response.status).toBe(500);
-      expect(callback.calls.count()).toBe(1);
-      expect(callback.calls.argsFor(0)[0].success).toBe(false);
-    });
+    this.Orgservice.getOrg(callback, this.Authinfo.getOrgId()).then(fail)
+      .catch(function (response) {
+        expect(response.status).toBe(500);
+        expect(callback.calls.count()).toBe(1);
+        expect(callback.calls.argsFor(0)[0].success).toBe(false);
+      });
     this.$httpBackend.flush();
   });
 
@@ -123,11 +126,12 @@ describe('orgService', function () {
   it('should fail to get an admin organization for a given orgId', function () {
     var callback = jasmine.createSpy('callback');
     this.$httpBackend.when('GET', this.UrlConfig.getAdminServiceUrl() + 'organizations/' + this.Authinfo.getOrgId() + '?disableCache=false').respond(500, {});
-    this.Orgservice.getAdminOrg(callback, this.Authinfo.getOrgId()).catch(function (response) {
-      expect(response.status).toBe(500);
-      expect(callback.calls.count()).toBe(1);
-      expect(callback.calls.argsFor(0)[0].success).toBe(false);
-    });
+    this.Orgservice.getAdminOrg(callback, this.Authinfo.getOrgId()).then(fail)
+      .catch(function (response) {
+        expect(response.status).toBe(500);
+        expect(callback.calls.count()).toBe(1);
+        expect(callback.calls.argsFor(0)[0].success).toBe(false);
+      });
     this.$httpBackend.flush();
   });
 
@@ -143,11 +147,12 @@ describe('orgService', function () {
   it('should fail to get an admin organization for getOrgId provided by Authinfo', function () {
     var callback = jasmine.createSpy('callback');
     this.$httpBackend.when('GET', this.UrlConfig.getAdminServiceUrl() + 'organizations/' + this.Authinfo.getOrgId() + '?disableCache=false').respond(500, {});
-    this.Orgservice.getAdminOrg(callback, this.Authinfo.getOrgId()).catch(function (response) {
-      expect(response.status).toBe(500);
-      expect(callback.calls.count()).toBe(1);
-      expect(callback.calls.argsFor(0)[0].success).toBe(false);
-    });
+    this.Orgservice.getAdminOrg(callback, this.Authinfo.getOrgId()).then(fail)
+      .catch(function (response) {
+        expect(response.status).toBe(500);
+        expect(callback.calls.count()).toBe(1);
+        expect(callback.calls.argsFor(0)[0].success).toBe(false);
+      });
     this.$httpBackend.flush();
   });
 
@@ -162,9 +167,10 @@ describe('orgService', function () {
 
   it('should fail to get an admin organization for getOrgId provided by Authinfo when called as a promise', function () {
     this.$httpBackend.when('GET', this.UrlConfig.getAdminServiceUrl() + 'organizations/' + this.Authinfo.getOrgId() + '?disableCache=false').respond(500, {});
-    this.Orgservice.getAdminOrgAsPromise(this.Authinfo.getOrgId()).catch(function (response) {
-      expect(response.data.success).toBe(false);
-    });
+    this.Orgservice.getAdminOrgAsPromise(this.Authinfo.getOrgId()).then(fail)
+      .catch(function (response) {
+        expect(response.data.success).toBe(false);
+      });
     this.$httpBackend.flush();
   });
 
@@ -421,9 +427,10 @@ describe('orgService', function () {
     };
     this.$httpBackend.when('GET', this.UrlConfig.getScomUrl() + '/' + this.Authinfo.getOrgId() + '?disableCache=true').respond(200, {});
     this.$httpBackend.when('PATCH', this.UrlConfig.getAdminServiceUrl() + 'organizations/' + this.Authinfo.getOrgId() + '/settings', payload).respond(500, {});
-    this.Orgservice.setOrgSettings(this.Authinfo.getOrgId(), payload).catch(function (response) {
-      expect(response.status).toBe(500);
-    });
+    this.Orgservice.setOrgSettings(this.Authinfo.getOrgId(), payload).then(fail)
+      .catch(function (response) {
+        expect(response.status).toBe(500);
+      });
     this.$httpBackend.flush();
   });
 
@@ -449,26 +456,29 @@ describe('orgService', function () {
   });
 
   it('should verify that a proper setting is passed to setEftSetting call', function () {
-    this.Orgservice.setEftSetting().catch(function (response) {
-      expect(response).toBe('A proper EFT setting and organization ID is required.');
-    });
+    this.Orgservice.setEftSetting().then(fail)
+      .catch(function (response) {
+        expect(response).toBe('A proper EFT setting and organization ID is required.');
+      });
 
-    this.Orgservice.setEftSetting('false').catch(function (response) {
-      expect(response).toBe('A proper EFT setting and organization ID is required.');
-    });
+    this.Orgservice.setEftSetting('false').then(fail)
+      .catch(function (response) {
+        expect(response).toBe('A proper EFT setting and organization ID is required.');
+      });
 
-    this.Orgservice.getEftSetting().catch(function (response) {
-      expect(response).toBe('An organization ID is required.');
-    });
+    this.Orgservice.getEftSetting().then(fail)
+      .catch(function (response) {
+        expect(response).toBe('An organization ID is required.');
+      });
   });
 
   xit('should get the EFT setting for the org', function () {
     var currentOrgId = '555';
-    this.$httpBackend.whenGET(this.eftSettingRegex).respond([200, {
+    this.$httpBackend.whenGET(this.eftSettingRegex).respond(200, {
       data: {
         isEFT: false,
       },
-    }]);
+    });
     this.Orgservice.getEftSetting(currentOrgId).then(function (response) {
       expect(response.data.isEFT).toBe(false);
     });
@@ -477,17 +487,18 @@ describe('orgService', function () {
 
   it('should fail to get the EFT setting for the org', function () {
     var currentOrgId = '555';
-    this.$httpBackend.whenGET(this.eftSettingRegex).respond([404, {}]);
-    this.Orgservice.getEftSetting(currentOrgId).catch(function (response) {
-      expect(response.status).toBe(404);
-    });
+    this.$httpBackend.whenGET(this.eftSettingRegex).respond(404);
+    this.Orgservice.getEftSetting(currentOrgId).then(fail)
+      .catch(function (response) {
+        expect(response.status).toBe(404);
+      });
     this.$httpBackend.flush();
   });
 
   it('should successfully set the EFT setting for the org', function () {
     var currentOrgId = '555';
     var isEFT = true;
-    this.$httpBackend.whenPUT(this.eftSettingRegex).respond([200, {}]);
+    this.$httpBackend.whenPUT(this.eftSettingRegex).respond(200, {});
     this.Orgservice.setEftSetting(isEFT, currentOrgId).then(function (response) {
       expect(response.status).toBe(200);
     });
@@ -497,10 +508,11 @@ describe('orgService', function () {
   it('should fail to set the EFT setting for the org', function () {
     var currentOrgId = '555';
     var isEFT = true;
-    this.$httpBackend.whenPUT(this.eftSettingRegex).respond([404, {}]);
-    this.Orgservice.setEftSetting(isEFT, currentOrgId).catch(function (response) {
-      expect(response.status).toBe(404);
-    });
+    this.$httpBackend.whenPUT(this.eftSettingRegex).respond(404);
+    this.Orgservice.setEftSetting(isEFT, currentOrgId).then(fail)
+      .catch(function (response) {
+        expect(response.status).toBe(404);
+      });
     this.$httpBackend.flush();
   });
 
@@ -531,17 +543,19 @@ describe('orgService', function () {
       this.patchRequest.respond({
         status: 'DUPLICATE',
       });
-      this.Orgservice.updateDisplayName('123', 'new display name').catch(function (err) {
-        expect(err).toBe('helpdesk.org.duplicateName');
-      });
+      this.Orgservice.updateDisplayName('123', 'new display name').then(fail)
+        .catch(function (err) {
+          expect(err).toBe('helpdesk.org.duplicateName');
+        });
       this.$httpBackend.flush();
     });
 
     it('should reject on error', function () {
       this.patchRequest.respond(500);
-      this.Orgservice.updateDisplayName('123', 'new display name').catch(function (response) {
-        expect(response.status).toBe(500);
-      });
+      this.Orgservice.updateDisplayName('123', 'new display name').then(fail)
+        .catch(function (response) {
+          expect(response.status).toBe(500);
+        });
       this.$httpBackend.flush();
     });
   });
@@ -574,9 +588,10 @@ describe('orgService', function () {
 
     it('should reject on error', function () {
       this.patchRequest.respond(500);
-      this.Orgservice.validateDisplayName('123', 'new display name').catch(function (response) {
-        expect(response.status).toBe(500);
-      });
+      this.Orgservice.validateDisplayName('123', 'new display name').then(fail)
+        .catch(function (response) {
+          expect(response.status).toBe(500);
+        });
       this.$httpBackend.flush();
     });
   });

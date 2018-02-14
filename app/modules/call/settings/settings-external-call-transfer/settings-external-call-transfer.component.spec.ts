@@ -22,7 +22,7 @@ describe('Component: externalTransfer', () => {
       this.$scope.$apply();
     });
 
-    it('should have a toggle  ', function() {
+    it('should have a toggle ', function() {
       expect(this.view).toContainElement(EXTERNAL_TRANSFER_TOGGLE);
     });
 
