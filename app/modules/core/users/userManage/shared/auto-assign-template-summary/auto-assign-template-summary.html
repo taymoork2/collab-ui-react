@@ -1,44 +1,55 @@
-<table class="auto-assign-template-summary">
-  <tbody>
-    <!-- MESSAGE ROW -->
-    <tr ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.MS) || $ctrl.hasUserEntitlement($ctrl.ENTITLEMENT_NAME.MESSENGER_INTEROP)">
-      <th class="medium-1">
-        <h5 class="title-offer-name" translate="onboardModal.message"></h5>
-      </th>
-
-      <!-- Message License -->
-      <td ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.MS)">
+<div class="auto-assign-template-summary">
+  <!-- MESSAGE ROW -->
+  <div class="message summary__group">
+    <div class="summary__group-header">
+      <h5 translate="onboardModal.message"></h5>
+    </div>
+    <div class="summary__group-body">
+      <div ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.MS)"
+        class="summary__group-item medium-6"
+        >
         <auto-assign-template-summary-item
           l10n-title="onboardModal.paidCiscoSparkMessaging"
           total-usage="$ctrl.getTotalLicenseUsage($ctrl.OFFER_NAME.MS)"
           total-volume="$ctrl.getTotalLicenseVolume($ctrl.OFFER_NAME.MS)">
         </auto-assign-template-summary-item>
-      </td>
+      </div>
 
       <!-- Jabber Interop entitlement -->
-      <td ng-if="$ctrl.hasUserEntitlement($ctrl.ENTITLEMENT_NAME.MESSENGER_INTEROP)">
+      <div ng-if="$ctrl.hasUserEntitlement($ctrl.ENTITLEMENT_NAME.MESSENGER_INTEROP)"
+        class="summary__group-item medium-6"
+        >
         <h6 translate="onboardModal.ciscoSparkJabberInterop">
-      </td>
-    </tr>
+      </div>
+    </div>
+  </div>
 
-    <!-- MEETING ROW -->
-    <tr ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CF) || $ctrl.advancedMeetingLicenses.length > 0">
-      <th class="medium-1">
-        <h5 class="title-offer-name" translate="onboardModal.meeting"></h5>
-      </th>
-
-      <!-- Basic Meeting -->
-      <td ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CF)">
-        <auto-assign-template-summary-item
-          l10n-title="firstTimeWizard.meetingsInSpark"
-          total-usage="$ctrl.getTotalLicenseUsage($ctrl.OFFER_NAME.CF)"
-          total-volume="$ctrl.getTotalLicenseVolume($ctrl.OFFER_NAME.CF)">
-          </auto-assign-template-summary-item>
-      </td>
+  <!-- MEETING ROW -->
+  <div ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CF) || $ctrl.advancedMeetingLicenses.length > 0"
+    class="meeting summary__group"
+    >
+    <div class="summary__group-header">
+      <h5 translate="onboardModal.meeting"></h5>
+    </div>
+    <div class="summary__group-body">
+      <!-- basic meeting -->
+      <div class="basic-meeting medium-6">
+        <div ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CF)"
+          class="summary__group-item"
+          >
+          <auto-assign-template-summary-item
+            l10n-title="firstTimeWizard.meetingsInSpark"
+            total-usage="$ctrl.getTotalLicenseUsage($ctrl.OFFER_NAME.CF)"
+            total-volume="$ctrl.getTotalLicenseVolume($ctrl.OFFER_NAME.CF)">
+            </auto-assign-template-summary-item>
+        </div>
+      </div>
 
       <!-- advanced meeting (webex variants) -->
-      <td ng-if="$ctrl.advancedMeetingLicenses.length > 0">
-        <div ng-repeat="license in $ctrl.advancedMeetingLicenses track by license.licenseId">
+      <div class="advanced-meeting medium-6">
+        <div ng-repeat="license in $ctrl.advancedMeetingLicenses track by license.licenseId"
+          class="summary__group-item"
+          >
           <auto-assign-template-summary-item
             l10n-title="{{:: 'subscriptions.licenseTypes.' + license.offerName }}"
             total-usage="$ctrl.getTotalLicenseUsage(license.offerName)"
@@ -46,63 +57,82 @@
             site-url="{{ license.offerName === $ctrl.OFFER_NAME.CMR ? '' : license.siteUrl }}">
           </auto-assign-template-summary-item>
         </div>
-      </td>
-    </tr>
+      </div>
+    </div>
+  </div>
 
-    <!-- CALL ROW -->
-    <tr ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CO)">
-      <th class="medium-1">
-        <h5 class="title-offer-name" translate="onboardModal.call"></h5>
-      </th>
-
-      <td ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CO)">
+  <!-- CALL ROW -->
+  <div ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CO)"
+    class="call summary__group"
+    >
+    <div class="summary__group-header">
+      <h5 translate="onboardModal.call"></h5>
+    </div>
+    <div class="summary__group-body">
+      <div ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CO)"
+        class="summary__group-item medium-6"
+        >
         <auto-assign-template-summary-item
           l10n-title="onboardModal.paidSparkCall"
           total-usage="$ctrl.getTotalLicenseUsage($ctrl.OFFER_NAME.CO)"
           total-volume="$ctrl.getTotalLicenseVolume($ctrl.OFFER_NAME.CO)">
         </auto-assign-template-summary-item>
-      </td>
-    </tr>
+      </div>
+    </div>
+  </div>
 
-    <!-- CARE ROW -->
-    <tr ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CDC) || $ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CVC)">
-      <th class="medium-1">
-        <h5 class="title-offer-name" translate="onboardModal.contactCenter"></h5>
-      </th>
-
+  <!-- CARE ROW -->
+  <div ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CDC) || $ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CVC)"
+    class="care summary__group"
+    >
+    <div class="summary__group-header">
+      <h5 translate="onboardModal.contactCenter"></h5>
+    </div>
+    <div class="summary__group-body">
       <!-- K1 -->
-      <td ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CDC)">
+      <div ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CDC)"
+        class="summary__group-item medium-6"
+        >
         <auto-assign-template-summary-item
           l10n-title="onboardModal.paidCDC"
           total-usage="$ctrl.getTotalLicenseUsage($ctrl.OFFER_NAME.CDC)"
           total-volume="$ctrl.getTotalLicenseVolume($ctrl.OFFER_NAME.CDC)">
         </auto-assign-template-summary-item>
-      </td>
+      </div>
 
       <!-- K2 -->
-      <td ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CVC)">
+      <div ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CVC)"
+        class="summary__group-item medium-6"
+        >
         <auto-assign-template-summary-item
           l10n-title="onboardModal.paidCVC"
           total-usage="$ctrl.getTotalLicenseUsage($ctrl.OFFER_NAME.CVC)"
           total-volume="$ctrl.getTotalLicenseVolume($ctrl.OFFER_NAME.CVC)">
         </auto-assign-template-summary-item>
-      </td>
-    </tr>
+      </div>
+    </div>
+  </div>
 
-    <!-- HYBRID SERVICES ROW  -->
-    <!-- TODO: add logic for checking 'hybrid message' after enabling it for test org 'Atlas_Test_int--ft--atlas-f3745-auto-assign-licenses' -->
-    <tr ng-if="$ctrl.hasUserEntitlement($ctrl.ENTITLEMENT_NAME.SQUARED_FUSION_UC) || $ctrl.hasUserEntitlement($ctrl.ENTITLEMENT_NAME.SQUARED_FUSION_CAL)">
-      <th class="medium-1">
-        <h5 class="title-offer-name" translate="onboardModal.hybridServices"></h5>
-      </th>
-
-      <td ng-if="$ctrl.hasUserEntitlement($ctrl.ENTITLEMENT_NAME.SQUARED_FUSION_CAL)">
+  <!-- HYBRID SERVICES ROW  -->
+  <!-- FIXME (mipark2): revisit ng-if -->
+  <div ng-if="$ctrl.hasUserEntitlement($ctrl.ENTITLEMENT_NAME.SQUARED_FUSION_UC) || $ctrl.hasUserEntitlement($ctrl.ENTITLEMENT_NAME.SQUARED_FUSION_CAL)"
+    class="hybrid-services-entitlements summary__group"
+    >
+    <div class="summary__group-header">
+      <h5 translate="onboardModal.hybridServices"></h5>
+    </div>
+    <div class="summary__group-body">
+      <div ng-if="$ctrl.hasUserEntitlement($ctrl.ENTITLEMENT_NAME.SQUARED_FUSION_CAL)"
+        class="summary__group-item medium-6"
+        >
         <h6 translate="hercules.cloudExtensions.exchange"></h6>
-      </td>
+      </div>
 
-      <td ng-if="$ctrl.hasUserEntitlement($ctrl.ENTITLEMENT_NAME.SQUARED_FUSION_UC)">
+      <div ng-if="$ctrl.hasUserEntitlement($ctrl.ENTITLEMENT_NAME.SQUARED_FUSION_UC)"
+        class="summary__group-item medium-6"
+        >
         <h6 translate="hercules.serviceNames.squared-fusion-uc.full"></h6>
-      </td>
-    </tr>
-  </tbody>
-</table>
+      </div>
+    </div>
+  </div>
+</div>
