@@ -1,6 +1,8 @@
 <div class="auto-assign-template-summary">
   <!-- MESSAGE ROW -->
-  <div class="message summary__group">
+  <div ng-if="$ctrl.hasMessageRow()"
+    class="message summary__group"
+    >
     <div class="summary__group-header">
       <h5 translate="onboardModal.message"></h5>
     </div>
@@ -25,7 +27,7 @@
   </div>
 
   <!-- MEETING ROW -->
-  <div ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CF) || $ctrl.advancedMeetingLicenses.length > 0"
+  <div ng-if="$ctrl.hasMeetingRow()"
     class="meeting summary__group"
     >
     <div class="summary__group-header">
@@ -33,10 +35,10 @@
     </div>
     <div class="summary__group-body">
       <!-- basic meeting -->
-      <div class="basic-meeting medium-6">
-        <div ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CF)"
-          class="summary__group-item"
-          >
+      <div ng-if="$ctrl.hasBasicMeetings()"
+        class="basic-meeting medium-6"
+        >
+        <div class="summary__group-item">
           <auto-assign-template-summary-item
             l10n-title="firstTimeWizard.meetingsInSpark"
             total-usage="$ctrl.getTotalLicenseUsage($ctrl.OFFER_NAME.CF)"
@@ -46,7 +48,9 @@
       </div>
 
       <!-- advanced meeting (webex variants) -->
-      <div class="advanced-meeting medium-6">
+      <div ng-if="$ctrl.hasAdvancedMeetings()"
+        class="advanced-meeting medium-6"
+        >
         <div ng-repeat="license in $ctrl.advancedMeetingLicenses track by license.licenseId"
           class="summary__group-item"
           >
@@ -62,7 +66,7 @@
   </div>
 
   <!-- CALL ROW -->
-  <div ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CO)"
+  <div ng-if="$ctrl.hasCallRow()"
     class="call summary__group"
     >
     <div class="summary__group-header">
@@ -82,7 +86,7 @@
   </div>
 
   <!-- CARE ROW -->
-  <div ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CDC) || $ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CVC)"
+  <div ng-if="$ctrl.hasCareRow()"
     class="care summary__group"
     >
     <div class="summary__group-header">
@@ -114,8 +118,7 @@
   </div>
 
   <!-- HYBRID SERVICES ROW  -->
-  <!-- FIXME (mipark2): revisit ng-if -->
-  <div ng-if="$ctrl.hasUserEntitlement($ctrl.ENTITLEMENT_NAME.SQUARED_FUSION_UC) || $ctrl.hasUserEntitlement($ctrl.ENTITLEMENT_NAME.SQUARED_FUSION_CAL)"
+  <div ng-if="$ctrl.hasHybridServicesEntitlementsRow()"
     class="hybrid-services-entitlements summary__group"
     >
     <div class="summary__group-header">
