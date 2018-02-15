@@ -384,9 +384,11 @@
       filtersUpdate();
     }
 
-    FeatureToggleService.atlasCareWebcallReportTrialsGetStatus().then(function () {
-      mediaTypes.push(MEDIA_TYPE_WEBCALL);
-      setMediaTypeOptions(mediaTypes);
+    FeatureToggleService.atlasCareWebcallReportTrialsGetStatus().then(function (result) {
+      if (result === true) {
+        mediaTypes.push(MEDIA_TYPE_WEBCALL);
+        setMediaTypeOptions(mediaTypes);
+      }
     }).catch(function () {});
 
     var featurePromise = $q.all([FeatureToggleService.atlasCareChatToVideoTrialsGetStatus(),

@@ -184,8 +184,22 @@ describe('Controller: Care Reports Controller', function () {
       });
       $scope.$digest();
       $timeout.flush();
-      expect(controller.mediaTypeOptions.length).toEqual(5);
+      expect(controller.mediaTypeOptions.length).toEqual(4);
       expect(controller.isVideoFeatureEnabled).toEqual(false);
+      expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([0]);
+      expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_snapshot_stats', 0, 'chat', true]);
+      expect(SunlightReportService.getReportingData.calls.argsFor(1)).toEqual(['org_stats', 0, 'chat']);
+    });
+
+    it('should make calls to data services with correct options when feature flags are true', function () {
+      deferredFeatureToggle.resolve(true);
+      deferredChatConfig.resolve({
+        data: { videoCallEnabled: true },
+      });
+      $scope.$digest();
+      $timeout.flush();
+      expect(controller.mediaTypeOptions.length).toEqual(5);
+      expect(controller.isVideoFeatureEnabled).toEqual(true);
       expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([0]);
       expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_snapshot_stats', 0, 'chat', true]);
       expect(SunlightReportService.getReportingData.calls.argsFor(1)).toEqual(['org_stats', 0, 'chat']);
