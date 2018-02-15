@@ -1,0 +1,8 @@
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/settings/colors';
+
+usage-line {
+  font-family: $brand-font-regular;
+  font-size: 0.75rem;
+  color: $gray-base;
+}
