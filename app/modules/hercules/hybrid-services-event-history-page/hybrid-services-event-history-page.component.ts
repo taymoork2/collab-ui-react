@@ -28,7 +28,6 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
   public clusterId: string;
   public connectorId: string;
   public serviceId: HybridServiceId | 'all';
-  public resourceFilter: string;
   public earliestTimestampSearched: string;
 
   public backState: string = 'expressway-cluster.nodes';
@@ -79,10 +78,6 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
 
   public serviceFilterChanged(): void {
     this.serviceId = this.selectedServiceFilter.value;
-  }
-
-  public resourceFilterChanged(): void {
-    this.resourceFilter = this.selectedResourceFilter.value;
   }
 
   private getResourceNames(): ng.IPromise<void> {
