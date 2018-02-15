@@ -18,89 +18,99 @@ export class TelephonyNumberValidateService {
   ) { }
 
   public validatePhone(row) {
-    let invalid, message = '';
+    let invalid, message, ariaLabel = '';
 
     const phone = _.trim(row.entity.phone);
     if (!phone.length) {
       invalid = true;
-      message = this.getValidationMessage('fieldRequired', { field: 'Phone Number' });
+      ariaLabel = this.getValidationLabel('fieldRequired', { field: 'Phone Number' });
+      message = this.createTooltip(ariaLabel);
     } else if (!phoneNumberPattern.test(phone)) {
       invalid = true;
-      message = this.getValidationMessage('PhoneNumberInvalidFormat');
+      ariaLabel = this.getValidationLabel('PhoneNumberInvalidFormat');
+      message = this.createTooltip(ariaLabel);
     } else if (!_.inRange(_.replace(phone, /[^0-9]/ig, '').length, 7, 33)) {
       invalid = true;
-      message = this.getValidationMessage('PhoneNumberLengthRange');
+      ariaLabel = this.getValidationLabel('PhoneNumberLengthRange');
+      message = this.createTooltip(ariaLabel);
     }
 
-    this.setFieldInvalid(row, 'phone', invalid, message);
+    this.setFieldInvalid(row, 'phone', invalid, message, ariaLabel);
     return !invalid;
   }
 
   public validateLabel(row) {
-    let invalid, message = '';
+    let invalid, message, ariaLabel = '';
 
     const label = _.trim(row.entity.label);
     if (!label.length) {
       invalid = true;
-      message = this.getValidationMessage('fieldRequired', { field: 'Phone Label' });
+      ariaLabel = this.getValidationLabel('fieldRequired', { field: 'Phone Label' });
+      message = this.createTooltip(ariaLabel);
     } else if (_.gt(this.gemService.getByteLength(label), 85)) {
       invalid = true;
-      message = this.getValidationMessage('PhoneLabelInvalidFormat');
+      ariaLabel = this.getValidationLabel('PhoneLabelInvalidFormat');
+      message = this.createTooltip(ariaLabel);
     }
 
-    this.setFieldInvalid(row, 'label', invalid, message);
+    this.setFieldInvalid(row, 'label', invalid, message, ariaLabel);
     return !invalid;
   }
 
   public validateAccessNumber(row) {
-    let invalid, message = '';
+    let invalid, message, ariaLabel = '';
 
     const accessNumber = _.trim(row.entity.dnisNumberFormat);
     if (!accessNumber.length) {
       invalid = true;
-      message = this.getValidationMessage('fieldRequired', { field: 'Access Number' });
+      ariaLabel = this.getValidationLabel('fieldRequired', { field: 'Access Number' });
+      message = this.createTooltip(ariaLabel);
     } else if (!accessNumberPattern.test(accessNumber)) {
       invalid = true;
-      message = this.getValidationMessage('AccessNumberInvalidFormat');
+      ariaLabel = this.getValidationLabel('AccessNumberInvalidFormat');
+      message = this.createTooltip(ariaLabel);
     }
 
-    this.setFieldInvalid(row, 'dnisNumberFormat', invalid, message);
+    this.setFieldInvalid(row, 'dnisNumberFormat', invalid, message, ariaLabel);
     return !invalid;
   }
 
   public validateTollType(row) {
-    let invalid, message = '';
+    let invalid, message, ariaLabel = '';
 
     if (!row.entity.tollType.value.length) {
       invalid = true;
-      message = this.getValidationMessage('fieldRequired', { field: 'Toll Type' });
+      ariaLabel = this.getValidationLabel('fieldRequired', { field: 'Toll Type' });
+      message = this.createTooltip(ariaLabel);
     }
 
-    this.setFieldInvalid(row, 'tollType', invalid, message);
+    this.setFieldInvalid(row, 'tollType', invalid, message, ariaLabel);
     return !invalid;
   }
 
   public validateCallType(row) {
-    let invalid, message = '';
+    let invalid, message, ariaLabel = '';
 
     if (!row.entity.callType.value.length) {
       invalid = true;
-      message = this.getValidationMessage('fieldRequired', { field: 'Call Type' });
+      ariaLabel = this.getValidationLabel('fieldRequired', { field: 'Call Type' });
+      message = this.createTooltip(ariaLabel);
     }
 
-    this.setFieldInvalid(row, 'callType', invalid, message);
+    this.setFieldInvalid(row, 'callType', invalid, message, ariaLabel);
     return !invalid;
   }
 
   public validateCountry(row) {
-    let invalid, message = '';
+    let invalid, message, ariaLabel = '';
 
     if (!row.entity.country.value) {
       invalid = true;
-      message = this.getValidationMessage('fieldRequired', { field: 'Country' });
+      ariaLabel = this.getValidationLabel('fieldRequired', { field: 'Country' });
+      message = this.createTooltip(ariaLabel);
     }
 
-    this.setFieldInvalid(row, 'country', invalid, message);
+    this.setFieldInvalid(row, 'country', invalid, message, ariaLabel);
     return !invalid;
   }
 
@@ -387,9 +397,10 @@ export class TelephonyNumberValidateService {
     return result;
   }
 
-  private setFieldInvalid(row, field, invalid, message) {
+  private setFieldInvalid(row, field, invalid, message, ariaLabel) {
     row.entity.validation[field].invalid = invalid;
     row.entity.validation[field].message = message;
+    row.entity.validation[field].ariaLabel = ariaLabel;
     row.entity.validation[field].show = invalid && message;
   }
 
@@ -397,9 +408,15 @@ export class TelephonyNumberValidateService {
     return 'gemini.tds.submit.validation.' + key;
   }
 
-  public getValidationMessage(key: string, params: any = undefined) {
-    const body = this.$translate.instant(this.getValidationKey(key), params);
-    return '<div class="tn-error-msg">' + body + '</div>';
+  public createTooltip(label: string) {
+    return `<div class="tn-error-msg">${label}</div>`;
   }
 
+  public getValidationLabel(key: string, params: any = undefined): string {
+    return this.$translate.instant(this.getValidationKey(key), params);
+  }
+
+  public getValidationMessage(key: string, params: any = undefined) {
+    return this.createTooltip(this.getValidationLabel(key, params));
+  }
 }
