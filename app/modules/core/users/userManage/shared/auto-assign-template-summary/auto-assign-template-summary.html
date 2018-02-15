@@ -1,7 +1,7 @@
 <table class="auto-assign-template-summary">
   <tbody>
     <!-- MESSAGE ROW -->
-    <tr ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.MS) || $ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.MSGR)">
+    <tr ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.MS) || $ctrl.hasUserEntitlement($ctrl.ENTITLEMENT_NAME.MESSENGER_INTEROP)">
       <th class="medium-1">
         <h5 class="title-offer-name" translate="onboardModal.message"></h5>
       </th>
