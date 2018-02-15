@@ -366,7 +366,7 @@ var getAccessToken = function (req, code) {
   });
 };
 
-var deleteOrgToken = function (req, token, user) {
+var deleteThisOrgToken = function (req, token, user) {
   return new Promise(function (resolve, reject) {
     var orgId = auth[user].org
     var options = {
@@ -380,14 +380,15 @@ var deleteOrgToken = function (req, token, user) {
     req.delete(options, function (err, res, body) {
       if (err) {
         console.error(err, body);
-        reject(new Error('Failed to delete Access Token from CI. Status: ' + (res != null ? res.statusCode : undefined)));
+        reject(new Error('Failed to delete Access Token from CI. Status: ' + (res ? res.statusCode : undefined)));
       }
+      resolve();
     });
   });
 };
 
 module.exports = {
-  getBearerToken: function (user, callback) {
+  getBearerToken: function (user) {
     var creds = auth[user];
     if (!creds) {
       var message = 'Credentials for ' + user + ' not found';
@@ -406,7 +407,6 @@ module.exports = {
       .then(function (authCode) {
         return getAccessToken(req, authCode);
       })
-      .then(callback)
       .catch(function (error) {
         console.error('Unable to get bearer token.', error);
         return Promise.reject(error);
@@ -419,22 +419,18 @@ module.exports = {
       throw new Error('Unable to parse JSON: ' + data);
     }
   },
-  deleteToken: function (token, user, callback) {
+  deleteAllOrgTokens: function (token, user) {
     var creds = auth[user];
     if (!creds) {
       var message = 'Credentials for ' + user + ' not found';
       console.error(message);
       return Promise.reject(message);
     }
-    var jar = request.jar();
-    var req = request.defaults({
-      jar: jar,
-    });
-    return deleteOrgToken(req, token, user)
+    return deleteThisOrgToken(request, token, user)
       .catch(function (error) {
         console.error('Unable to get remove token.', error);
         return Promise.reject(error)
-      }).then(callback);
+      });
   },
   auth: auth,
 };
