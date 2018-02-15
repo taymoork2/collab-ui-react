@@ -83,8 +83,11 @@ class AutoAssignTemplateSummaryController implements ng.IComponentController {
   }
 
   public hasHybridServicesEntitlementsRow(): boolean {
-    // FIXME (mipark2): add missing entitlements
-    return this.hasUserEntitlement(this.ENTITLEMENT_NAME.SQUARED_FUSION_UC) || this.hasUserEntitlement(this.ENTITLEMENT_NAME.SQUARED_FUSION_CAL);
+    return this.hasUserEntitlement(this.ENTITLEMENT_NAME.SPARK_HYBRID_IMP_INTEROP) ||
+      this.hasUserEntitlement(this.ENTITLEMENT_NAME.SQUARED_FUSION_CAL) ||
+      this.hasUserEntitlement(this.ENTITLEMENT_NAME.SQUARED_FUSION_GCAL) ||
+      this.hasUserEntitlement(this.ENTITLEMENT_NAME.SQUARED_FUSION_UC) ||
+      this.hasUserEntitlement(this.ENTITLEMENT_NAME.SQUARED_FUSION_EC);
   }
 }
 

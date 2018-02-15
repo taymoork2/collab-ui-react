@@ -33,10 +33,10 @@
     <div class="summary__group-header">
       <h5 translate="onboardModal.meeting"></h5>
     </div>
-    <div class="summary__group-body">
+    <div class="summary__group-body--2-col">
       <!-- basic meeting -->
       <div ng-if="$ctrl.hasBasicMeetings()"
-        class="basic-meeting medium-6"
+        class="basic-meeting summary__subgroup--1-col medium-6"
         >
         <div class="summary__group-item">
           <auto-assign-template-summary-item
@@ -49,7 +49,7 @@
 
       <!-- advanced meeting (webex variants) -->
       <div ng-if="$ctrl.hasAdvancedMeetings()"
-        class="advanced-meeting medium-6"
+        class="advanced-meeting summary__subgroup--1-col medium-6"
         >
         <div ng-repeat="license in $ctrl.advancedMeetingLicenses track by license.licenseId"
           class="summary__group-item"
@@ -124,17 +124,35 @@
     <div class="summary__group-header">
       <h5 translate="onboardModal.hybridServices"></h5>
     </div>
-    <div class="summary__group-body">
+    <div class="summary__group-body--2-col-wrap">
+      <div ng-if="$ctrl.hasUserEntitlement($ctrl.ENTITLEMENT_NAME.SPARK_HYBRID_IMP_INTEROP)"
+        class="summary__group-item medium-6"
+        >
+        <h6 translate="hercules.serviceNames.spark-hybrid-impinterop"></h6>
+      </div>
+
       <div ng-if="$ctrl.hasUserEntitlement($ctrl.ENTITLEMENT_NAME.SQUARED_FUSION_CAL)"
         class="summary__group-item medium-6"
         >
         <h6 translate="hercules.cloudExtensions.exchange"></h6>
       </div>
 
+      <div ng-if="$ctrl.hasUserEntitlement($ctrl.ENTITLEMENT_NAME.SQUARED_FUSION_GCAL)"
+        class="summary__group-item medium-6"
+        >
+        <h6 translate="hercules.cloudExtensions.google"></h6>
+      </div>
+
       <div ng-if="$ctrl.hasUserEntitlement($ctrl.ENTITLEMENT_NAME.SQUARED_FUSION_UC)"
         class="summary__group-item medium-6"
         >
         <h6 translate="hercules.serviceNames.squared-fusion-uc.full"></h6>
+      </div>
+
+      <div ng-if="$ctrl.hasUserEntitlement($ctrl.ENTITLEMENT_NAME.SQUARED_FUSION_EC)"
+        class="summary__group-item medium-6"
+        >
+        <h6 translate="hercules.serviceNames.squared-fusion-ec"></h6>
       </div>
     </div>
   </div>
