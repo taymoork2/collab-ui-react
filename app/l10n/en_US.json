@@ -358,7 +358,8 @@
         "note": "Note: If you select more than one Message or Call license, only one license will be assigned to each user.",
         "tooltip": "If one subscription runs out of licenses, the next selected subscription automatically assigns more.",
         "usage": "Usage: {{ usage }}/{{ volume }}",
-        "careDisabledTooltip": "Care licenses are only assigned to Care agents."
+        "careDisabledTooltip": "Care licenses are only assigned to Care agents.",
+        "warningFooter": "At least one service needs to be selected to continue."
       },
       "editSummary": {
         "title": "Set Up Auto-Assign Template",
