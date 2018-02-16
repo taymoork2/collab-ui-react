@@ -108,5 +108,10 @@ describe('Component: multiStepModal:', () => {
       expect(this.view.find('button.btn.custom-finish').length).toBe(1);
       expect(this.view.find('button.btn.custom-finish [translate="fake.label"]').length).toBe(1);
     });
+
+    it('should render a warning footer message if one is provided', function () {
+      this.compileTemplate('<multi-step-modal l10n-warning-footer="fake.footerMsg" cancel="_.noop()"></multi-step-modal>');
+      expect(this.view.find('.modal-footer__warning h6[translate="fake.footerMsg"]').length).toBe(1);
+    });
   });
 });
