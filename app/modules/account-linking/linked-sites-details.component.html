@@ -67,13 +67,12 @@
             <span class="feature-details" ng-if="$ctrl.selectedSiteInfo.linkingStatus.accountsLinked !== undefined && $ctrl.selectedSiteInfo.linkingStatus.totalWebExAccounts !== undefined">
               {{$ctrl.selectedSiteInfo.linkingStatus.accountsLinked}}/{{$ctrl.selectedSiteInfo.linkingStatus.totalWebExAccounts}}</span>
           </li>
-          <li class="feature">
+          <li class="feature" ng-if="$ctrl.selectedSiteInfo.isSiteAdmin && $ctrl.isAutomaticMode()">
             <span class="feature-name" translate="accountLinking.siteDetails.automaticLinking"
               tooltip="{{::$ctrl.automaticLinkingTooltipText | translate}}" tooltip-placement="top-left">
             </span>
-            <cs-toggle-switch ng-if="$ctrl.selectedSiteInfo.isSiteAdmin && $ctrl.isAutomaticMode()" ng-model="$ctrl.selectedSiteInfo.linkAllUsers"
+            <cs-toggle-switch ng-model="$ctrl.selectedSiteInfo.linkAllUsers"
               size="small"
-              is-disabled="$ctrl.linkAllUsersNotAllowed"
               toggle-id="linkAllUsers"
               name="linkAllUsers"
               cs-change="$ctrl.linkAllUsersChange(toggleValue)">

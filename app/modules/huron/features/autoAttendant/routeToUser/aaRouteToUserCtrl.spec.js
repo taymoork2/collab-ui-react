@@ -518,9 +518,9 @@ describe('Controller: AARouteToUserCtrl', function () {
         $httpBackend.flush();
 
         $scope.$apply();
-        expect(controller.users.length).toBe(8);
-        expect(controller.users[3].description).toBe(result);
-        expect(controller.users[3].type).toBe('sparkOnlyUser');
+        expect(controller.users.length).toBe(6);
+        expect(controller.users[0].description).toBe(result);
+        expect(controller.users[0].type).toBe('sparkOnlyUser');
       });
 
       it('should show user email id when dispalyName, firstname and lasname are empty', function () {
@@ -537,8 +537,8 @@ describe('Controller: AARouteToUserCtrl', function () {
         $httpBackend.flush();
 
         $scope.$apply();
-        expect(controller.users.length).toBe(8);
-        expect(controller.users[6].description).toBe(result);
+        expect(controller.users.length).toBe(6);
+        expect(controller.users[2].description).toBe(result);
       });
 
       it('should show user lastname when dispalyName and firstName is empty', function () {
@@ -555,9 +555,9 @@ describe('Controller: AARouteToUserCtrl', function () {
         $httpBackend.flush();
 
         $scope.$apply();
-        expect(controller.users.length).toBe(8);
-        expect(controller.users[2].description).toBe(result);
-        expect(controller.users[2].sipUri).toBe('admin@webex.cisco.com');
+        expect(controller.users.length).toBe(6);
+        expect(controller.users[0].description).toBe(result);
+        expect(controller.users[0].sipUri).toBe('admin@webex.cisco.com');
       });
 
       it('should show hybrid user with extension when phoneNumbers exist in response', function () {
@@ -574,9 +574,9 @@ describe('Controller: AARouteToUserCtrl', function () {
         $httpBackend.flush();
 
         $scope.$apply();
-        expect(controller.users[0].description).toBe(result);
-        expect(controller.users[0].type).toBe('hybridUser');
-        expect(controller.users[0].sipUri).toBe('alanHybrid@webex.cisco.com');
+        expect(controller.users[3].description).toBe(result);
+        expect(controller.users[3].type).toBe('hybridUser');
+        expect(controller.users[3].sipUri).toBe('alanHybrid@webex.cisco.com');
       });
 
       it('should show hybrid user email when displayName is same as email in response and extension does not exist', function () {
@@ -593,9 +593,9 @@ describe('Controller: AARouteToUserCtrl', function () {
         $httpBackend.flush();
 
         $scope.$apply();
-        expect(controller.users[5].description).toBe(result);
-        expect(controller.users[5].type).toBe('hybridUser');
-        expect(controller.users[5].sipUri).toBeUndefined();
+        expect(controller.users[4].description).toBe(result);
+        expect(controller.users[4].type).toBe('hybridUser');
+        expect(controller.users[4].sipUri).toBeUndefined();
       });
 
       it('should show hybrid user firstName lastName along with email, when user displayName does not exist and type and work are undefined in response', function () {
@@ -612,9 +612,9 @@ describe('Controller: AARouteToUserCtrl', function () {
         $httpBackend.flush();
 
         $scope.$apply();
-        expect(controller.users[1].description).toBe(result);
-        expect(controller.users[1].type).toBe('hybridUser');
-        expect(controller.users[1].sipUri).toBeUndefined();
+        expect(controller.users[5].description).toBe(result);
+        expect(controller.users[5].type).toBe('hybridUser');
+        expect(controller.users[5].sipUri).toBeUndefined();
       });
     });
 

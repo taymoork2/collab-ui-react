@@ -987,7 +987,8 @@
     "media_type_chat": "Chats",
     "media_type_callback": "Callbacks",
     "media_type_voice": "Inbound Calls",
-    "media_type_webcall": "Chat with Video",
+    "media_type_webcall": "Video Calls",
+    "media_type_chat_with_video": "Chat with Video",
     "taskDataGetError": "There was an error while loading the {{dataType}} data.",
     "tableDataGetError": "There was an error while loading the detailed efficient user data.",
     "errorLoadingName": "Error Loading Name",
@@ -2286,7 +2287,7 @@
     },
     "capacity": {
       "label": "Capacity: {{capacity}}%",
-      "toolTip": "Capacity: {{capacity}}%<br>Users assigned: {{total}} of {{max}}"
+      "usersAssigned": "Users assigned: {{total}} of {{max}}"
     },
     "userStatuses": {
       "summaryTitle": "User Status Summary",
@@ -3175,7 +3176,7 @@
       "noGroupSelected": "None",
       "noGroupSelectedOnPlace": "No resource group (default)",
       "failedToSetGroup": "Failed to set Resource Group.",
-      "resourceGroupSaved": "Resource Group saved.",
+      "resourceGroupSaved": "Resource Group changed. The user will automatically be reassigned to a cluster in the new Resource Group within the next couple of minutes.",
       "groupHasBeenDeleted": "The user is assigned to a resource group that could not be found. Remove the assignment from the resource group to restore service.",
       "groupIsEmptyWarning": "Could not find cluster with {{ConnectorName}}. Select another Resource Group, or configure a new cluster with {{ConnectorName}}."
     },
@@ -3414,6 +3415,29 @@
         "clusterNotAssignedToResourceGroup": {
           "title": "No cluster assigned to resource group",
           "description": "No cluster assigned to the user's resource group. Check the cluster configuration and then try again."
+        }
+      },
+      "custom": {
+        "noClusterFoundAndNoCurrentResourceGroup": {
+          "description": "No {{connectorType}} found. Activation will be retried once you configure at least one cluster with {{connectorType}}, or you move the user to a resource group where at least one cluster runs {{connectorType}}."
+        },
+        "noClusterFoundAndUserIsInResourceGroup": {
+          "description": "No {{connectorType}} found in user's resource group. Activation will be retried once you configure at least one cluster with {{connectorType}} in the user's current resource group, or you move the user to a resource group where at least one cluster runs {{connectorType}}."
+        },
+        "serviceIsNotOperationalInResourceGroup": {
+          "description": "No operational {{connectorType}} found in user's resource group. The user will automatically be assigned to a {{connectorType}} once one becomes operational. You can alternatively try to move the user to another resource group, or remove the user's resource group assignment."
+        },
+        "serviceIsNotOperationalUserNotInResourceGroup": {
+          "description": "No operational {{connectorType}} found. The user will automatically be assigned to a {{connectorType}} once one becomes operational. You can alternatively try to move the user into a resource group."
+        },
+        "serviceIsNotOperationalInOrganization": {
+          "description": "{{serviceName}} appears to be not operational. The user will automatically be assigned to a {{connectorType}} once the service becomes operational again."
+        },
+        "serviceIsImpairedInOrganization": {
+          "description": "{{serviceName}} is impaired. This could happen during connector upgrades, if you have single-node Expressway clusters. The user will be retried when a {{connectorType}} becomes running and operational."
+        },
+        "noClusterFoundAndNoResourceGroupInOrganization": {
+          "description": "No {{connectorType}} found. Activation will be retried once you configure at least one cluster with {{connectorType}}."
         }
       }
     },
@@ -8192,7 +8216,26 @@
         "createSpecificFailureText": "Failed to save {{ featureName }} {{ inputItem }}.",
         "updateConfigFailureText": "Failed to save {{ featureName }}."
       }
-    }
+    },
+    "profileEvaDesc": "Configure how your organization or individual user is visually represented.",
+    "userDisplayName": "Show user’s display name",
+    "userAlias": "Show user’s alias (agents only)",
+    "userNamePreview": "User display name",
+    "userProfileTooltip": "Click to preview profile for users in your organization.",
+    "profile_user_info_cva": "Use a unique Customer Virtual Assistant profile to distinguish it from users in your organization.",
+    "user_cva": "Customer Virtual Assistant and Users",
+    "profile_org_info_cva_eva": "Use a single profile to represent the Customer Virtual Assistant and all users in your organization.",
+    "user_alias_desc": "Expert users do not have an alias, so their Cisco Spark account name is always displayed.",
+    "display_text_desc": "The display text is the same as the agent's profile in Cisco Spark Care or the expert's profile in Cisco Spark.",
+    "userSettingInfo": "You cannot change the default user avatar seen in the Preview.",
+    "orgEvaSettingInfo": "You can change the logo seen in the Preview on the Settings page.",
+    "profile_org_info_eva": "Use a single profile to represent all users in your organization.",
+    "user_non_cva": "Individual Users",
+    "user_info_non_cva": "Use unique profiles to represent the different users in your organization.",
+    "helpTextWaitingEVA": "Customers see this message while waiting for a response to their request.",
+    "waitingMessageEVA": "Someone will help you shortly…",
+    "helpTextLeaveRoomEVA": "Customers see this message when the user interacting with them ends the chat.",
+    "leaveRoomMessageEVA": "Chat has ended"
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",

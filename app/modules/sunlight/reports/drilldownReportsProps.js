@@ -54,7 +54,7 @@
       }
     }
 
-    function taskIncomingDrilldownProps(timeSelected, shouldDisplayWebcall, setStateToEmpty) {
+    function taskIncomingDrilldownProps(timeSelected, shouldDisplayWebcall, shouldDisplayVideoCall, setStateToEmpty) {
       var props = {
         description: function () {
           return $translate.instant('taskIncoming.drilldownDescription', {
@@ -90,8 +90,8 @@
                   return getClassName(grid, row);
                 },
               }, {
-                field: 'tasksHandled',
-                id: 'tasksHandled',
+                field: shouldDisplayVideoCall ? 'webcallTasksHandled' : 'tasksHandled',
+                id: shouldDisplayVideoCall ? 'webcallTasksHandled' : 'tasksHandled',
                 displayName: shouldDisplayWebcall ? $translate.instant('careReportsPage.media_type_chat') :
                   $translate.instant('taskIncoming.tasksHandled'),
                 enableFiltering: false,
@@ -116,7 +116,7 @@
         props.table.gridOptions.columnDefs.push({
           field: 'webcallTasksHandled',
           id: 'webcallTasksHandled',
-          displayName: $translate.instant('careReportsPage.media_type_webcall'),
+          displayName: $translate.instant('careReportsPage.media_type_chat_with_video'),
           enableFiltering: false,
           width: '40%',
           sortable: true,
@@ -210,7 +210,7 @@
       return _.merge(getDefaultProps(), props);
     }
 
-    function avgCsatDrilldownProps(timeSelected, shouldDisplayWebcall, setStateToEmpty) {
+    function avgCsatDrilldownProps(timeSelected, shouldDisplayWebcall, shouldDisplayVideoCall, setStateToEmpty) {
       var props = {
         description: function () {
           return $translate.instant('averageCsat.drilldownDescription', {
@@ -246,8 +246,8 @@
                   return getClassName(grid, row);
                 },
               }, {
-                field: 'avgCsatScore',
-                id: 'averageCsat',
+                field: shouldDisplayVideoCall ? 'avgWebcallCsatScore' : 'avgCsatScore',
+                id: shouldDisplayVideoCall ? 'avgWebcallCsatScore' : 'averageCsat',
                 displayName: shouldDisplayWebcall ? $translate.instant('careReportsPage.media_type_chat') :
                   $translate.instant('averageCsat.averageCsat'),
                 enableFiltering: false,
@@ -273,7 +273,7 @@
         props.table.gridOptions.columnDefs.push({
           field: 'avgWebcallCsatScore',
           id: 'avgWebcallCsatScore',
-          displayName: $translate.instant('careReportsPage.media_type_webcall'),
+          displayName: $translate.instant('careReportsPage.media_type_chat_with_video'),
           enableFiltering: false,
           cellFilter: 'careAvgCSAT',
           width: '40%',
@@ -287,7 +287,7 @@
       return _.merge(getDefaultProps(), props);
     }
 
-    function taskTimeDrilldownProps(timeSelected, shouldDisplayWebcall, setStateToEmpty) {
+    function taskTimeDrilldownProps(timeSelected, shouldDisplayWebcall, shouldDisplayVideoCall, setStateToEmpty) {
       var props = {
         description: function () {
           return $translate.instant('taskTime.drilldownDescription', {
@@ -323,8 +323,8 @@
                   return getClassName(grid, row);
                 },
               }, {
-                field: 'avgHandleTime',
-                id: 'avgHandleTime',
+                field: shouldDisplayVideoCall ? 'avgWebcallHandleTime' : 'avgHandleTime',
+                id: shouldDisplayVideoCall ? 'avgWebcallHandleTime' : 'avgHandleTime',
                 displayName: shouldDisplayWebcall ? $translate.instant('careReportsPage.media_type_chat') :
                   $translate.instant('taskTime.averageHandleTime'),
                 cellFilter: 'careTime',
@@ -350,7 +350,7 @@
         props.table.gridOptions.columnDefs.push({
           field: 'avgWebcallHandleTime',
           id: 'avgWebcallHandleTime',
-          displayName: $translate.instant('careReportsPage.media_type_webcall'),
+          displayName: $translate.instant('careReportsPage.media_type_chat_with_video'),
           cellFilter: 'careTime',
           enableFiltering: false,
           width: '40%',

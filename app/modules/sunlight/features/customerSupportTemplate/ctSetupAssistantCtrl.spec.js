@@ -587,7 +587,7 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.isExpertOnlyEscalationSelected()).toEqual(false);
     });
 
-    it('correct details for expert space should be set when expert is persent for the org and agent is selected', function () {
+    it('correct details for expert space should be set when expert is present for the org and agent is selected', function () {
       var configMock = Object.assign({}, existingTemplateData, {
         configuration: Object.assign({}, existingTemplateData.configuration, {
           routingLabel: 'agent',
@@ -606,7 +606,7 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.evaSpaceTooltipData.indexOf('HR help room') !== -1);
     });
 
-    it('correct details for expert space should be set when expert is persent for the org and expert is selected', function () {
+    it('correct details for expert space should be set when expert is present for the org and expert is selected', function () {
       var configMock = Object.assign({}, existingTemplateData, {
         configuration: Object.assign({}, existingTemplateData.configuration, {
           routingLabel: 'expert',
@@ -625,7 +625,7 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.evaSpaceTooltipData.indexOf('HR help room') !== -1);
     });
 
-    it('correct details for expert space should be set when expert is persent for the org and agentplusexpert is selected', function () {
+    it('correct details for expert space should be set when expert is present for the org and agentplusexpert is selected', function () {
       var configMock = Object.assign({}, existingTemplateData, {
         configuration: Object.assign({}, existingTemplateData.configuration, {
           routingLabel: 'agentplusexpert',
@@ -653,7 +653,7 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.isExpertEscalationSelected()).toEqual(false);
     });
 
-    it('expert and agentplusexpert radio button should be enabled when expert is persent for the org', function () {
+    it('expert and agentplusexpert radio button should be enabled when expert is present for the org', function () {
       var configMock = Object.assign({}, existingTemplateData, {
         configuration: Object.assign({}, existingTemplateData.configuration, {
           routingLabel: 'expert',
@@ -668,7 +668,81 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.evaDataModel[2].isDisabled).toEqual(false);
     });
 
-    it('expert and agentplusexpert radio button should be disabled when expert is not persent for the org', function () {
+    it('should set correct profile description when eva is configured', function () {
+      var configMock = Object.assign({}, existingTemplateData, {
+        configuration: Object.assign({}, existingTemplateData.configuration, {
+          routingLabel: 'expert',
+        }),
+      });
+      inject(intializeCtrl('chat', configMock, true));
+      resolveTogglePromise();
+      controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
+      controller.template.name = templateName;
+      expect(controller.evaConfig.isEvaConfigured).toEqual(true);
+      expect(controller.profileDesc()).toEqual('careChatTpl.profileEvaDesc');
+    });
+
+    it('should set correct profile setting info message based on selected profile when eva is configured', function () {
+      var configMock = Object.assign({}, existingTemplateData, {
+        configuration: Object.assign({}, existingTemplateData.configuration, {
+          routingLabel: 'expert',
+        }),
+      });
+      inject(intializeCtrl('chat', configMock, true));
+      resolveTogglePromise();
+      controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
+      controller.template.name = templateName;
+      expect(controller.evaConfig.isEvaConfigured).toEqual(true);
+      controller.selectedTemplateProfile = controller.profiles.org;
+      expect(controller.profileSettingInfo()).toEqual('careChatTpl.orgEvaSettingInfo');
+      controller.selectedTemplateProfile = controller.profiles.agent;
+      expect(controller.profileSettingInfo()).toEqual('careChatTpl.userSettingInfo');
+    });
+
+    it('should set profile setting info message based on cva is selected or not when EVA is selected', function () {
+      var configMock = Object.assign({}, existingTemplateData, {
+        configuration: Object.assign({}, existingTemplateData.configuration, {
+          routingLabel: 'expert',
+        }),
+      });
+      inject(intializeCtrl('chat', configMock, true));
+      resolveTogglePromise();
+      controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
+      controller.template.name = templateName;
+      expect(controller.evaConfig.isEvaConfigured).toEqual(true);
+      resolveLogoPromise();
+      controller.template.configuration.virtualAssistant.enabled = false;
+      expect(controller.getLocalizedOrgOrAgentInfo('orgHeader')).toEqual('careChatTpl.org');
+      expect(controller.getLocalizedOrgOrAgentInfo('agentHeader')).toEqual('careChatTpl.user_non_cva');
+      expect(controller.getLocalizedOrgOrAgentInfo('orgInfo')).toEqual('careChatTpl.profile_org_info_eva');
+      expect(controller.getLocalizedOrgOrAgentInfo('agentInfo')).toEqual('careChatTpl.user_info_non_cva');
+      controller.template.configuration.virtualAssistant.enabled = true;
+      expect(controller.getLocalizedOrgOrAgentInfo('orgHeader')).toEqual('careChatTpl.org');
+      expect(controller.getLocalizedOrgOrAgentInfo('agentHeader')).toEqual('careChatTpl.user_cva');
+      expect(controller.getLocalizedOrgOrAgentInfo('orgInfo')).toEqual('careChatTpl.profile_org_info_cva_eva');
+      expect(controller.getLocalizedOrgOrAgentInfo('agentInfo')).toEqual('careChatTpl.profile_user_info_cva');
+    });
+
+    it('should set user preview names based on selected profile when EVA is selected', function () {
+      var configMock = Object.assign({}, existingTemplateData, {
+        configuration: Object.assign({}, existingTemplateData.configuration, {
+          routingLabel: 'expert',
+        }),
+      });
+      inject(intializeCtrl('chat', configMock, true));
+      resolveTogglePromise();
+      controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
+      controller.template.name = templateName;
+      expect(controller.evaConfig.isEvaConfigured).toEqual(true);
+      controller.selectedAgentProfile = controller.userNames.alias;
+      controller.setAgentProfile();
+      expect(controller.agentNamePreview).toEqual('careChatTpl.agentAliasPreview');
+      controller.selectedAgentProfile = controller.userNames.displayName;
+      controller.setAgentProfile();
+      expect(controller.agentNamePreview).toEqual('careChatTpl.userNamePreview');
+    });
+
+    it('expert and agentplusexpert radio button should be disabled when expert is not present for the org', function () {
       inject(intializeCtrl('chat'));
       resolveTogglePromise();
       controller.currentState = controller.states[CHAT_ESCALATION_BEHAVIOR];
@@ -802,6 +876,11 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.getLocalizedOrgOrAgentInfo('agentHeader')).toEqual('careChatTpl.agent_cva');
       expect(controller.getLocalizedOrgOrAgentInfo('orgInfo')).toEqual('careChatTpl.profile_org_info_cva');
       expect(controller.getLocalizedOrgOrAgentInfo('agentInfo')).toEqual('careChatTpl.profile_agent_info_cva');
+    });
+
+    it('should set profile description to default', function () {
+      resolveLogoPromise();
+      expect(controller.profileDesc()).toEqual('careChatTpl.profileDesc');
     });
 
     it('should display bot icon when virtual assistant toggle is enabled and Customer Virtual Assistant and Agents is selected', function () {

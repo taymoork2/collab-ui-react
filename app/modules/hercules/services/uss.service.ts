@@ -63,7 +63,7 @@ export interface IMessage {
   title?: string;
 }
 
-interface IMessageExtended extends IMessage {
+export interface IMessageExtended extends IMessage {
   iconClass: string;
 }
 

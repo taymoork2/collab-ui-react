@@ -226,7 +226,7 @@ require('./_overview.scss');
               .createCareLicenseNotification('homePage.careLicenseCallMissingText', 'homePage.careLicenseLinkText'));
           } else if (!hasCall && (!vm.pt && !vm.ept) && vm.careToggle) {
             vm.notifications.push(OverviewNotificationFactory
-              .createCareLicenseNotification('homePage.careLicenseCallMissingTextToggle', 'careChatTpl.learnMoreLink'));
+              .createCareLicenseNotification('homePage.careLicenseCallMissingTextToggle', 'careChatTpl.learnMoreLink', FeatureToggleService));
           }
         }
       }).catch(function (response) {

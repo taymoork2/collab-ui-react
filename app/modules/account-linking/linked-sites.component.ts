@@ -161,8 +161,8 @@ class LinkedSitesComponentCtrl implements ng.IComponentController {
       return siteInfo.linkedSiteUrl === linkedsiteUrl;
     });
   }
-  public setAccountLinkingModeFn = (linkedSiteUrl, mode: LinkingMode) => {
-    this.LinkedSitesService.setCiSiteLinking(linkedSiteUrl, mode).then((data: IACWebexSiteinfoResponse) => {
+  public setAccountLinkingModeFn = (linkedSiteUrl, mode: LinkingMode, domains?: string[]) => {
+    this.LinkedSitesService.setCiSiteLinking(linkedSiteUrl, mode, domains).then((data: IACWebexSiteinfoResponse) => {
       if (data.accountLinkingMode) {
         //this.$rootScope.$emit('ACCOUNT_LINKING_CHANGE', this.siteInfo, data);
         const selectedSite: IACSiteInfo = this.getSiteInfoForSite(linkedSiteUrl);

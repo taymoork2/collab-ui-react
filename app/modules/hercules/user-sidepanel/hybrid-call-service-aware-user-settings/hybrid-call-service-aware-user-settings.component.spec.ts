@@ -46,6 +46,11 @@ describe('hybridCallServiceAwareUserSettings', () => {
       userEmailAddress: 'test@example.org',
     });
     ctrl.$onInit();
+    ctrl.$onChanges({
+      userId: {
+        currentValue: '1234',
+      },
+    });
     $scope.$apply();
   }
 

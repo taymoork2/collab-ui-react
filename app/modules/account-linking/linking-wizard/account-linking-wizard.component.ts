@@ -1,4 +1,4 @@
-import { LinkingOperation, IACSiteInfo, LinkingMode, IGotoWebex } from './../account-linking.interface';
+import { LinkingOperation, IACSiteInfo, LinkingMode } from './../account-linking.interface';
 import { WizardFsm, SpecialEvent, IFsmTransitionCallback } from './account-linking-wizard-fsm';
 
 enum AccountLinkingWizardState {
@@ -47,13 +47,58 @@ class AccountLinkingWizardComponentCtrl implements ng.IComponentController {
   public event: string | undefined  = undefined;
   public final: boolean = false;
   public initial: boolean = true;
-
-  public webexPage: IGotoWebex;
-
   public fsm: WizardFsm<WizardState, WizardEvent>;
   public buttons: IOperatioButton[] = [];
 
-  public domainsList;
+  // TODO: Remove hardcoded list and put the public domains
+  //       list another place where it's easily maintainable and visible
+  public publicDomainsList = [
+    'gmail.com',
+    'yahoo.com',
+    'hotmail.com',
+    'aol.com',
+    'comcast.net',
+    'msn.net',
+    'sbcglobal.net',
+    'verizon.net',
+    'roadrunner.com',
+    'mailinator.com',
+    'icloud.com',
+    'att.net',
+    'yahoo.co.uk',
+    'hotmail.co.uk',
+    'mac.com',
+    'outlook.com',
+    'live.com',
+    'mail.ru',
+    'yahoo.fr',
+    'qq.com',
+    'ymail.com',
+    '163.com',
+    'gmx.de',
+    'hotmail.fr',
+    'yahoo.co.in',
+    'yahoo.es',
+    'web.de',
+    'cox.net',
+    'googlemail.com',
+    'blackhole.io',
+    'rediffmail.com',
+    'bellsouth.net',
+    'yahoo.ca',
+    '126.com',
+    'orange.fr',
+    'earthlink.net',
+    'rocketmail.com',
+    'me.com',
+    'zoho.com'];
+
+  // public testDomainsList = [
+  //   'wx2.example.com',
+  //   'example.com',
+  // ];
+
+  private DEBUG_TRANSITION: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -117,8 +162,24 @@ class AccountLinkingWizardComponentCtrl implements ng.IComponentController {
     });
   }
 
-  private setAccountLinkingMode(mode: LinkingMode) {
-    this.setAccountLinkingModeFn({ siteUrl: this.siteInfo.linkedSiteUrl, mode: mode });
+  private setAccountLinkingMode(mode: LinkingMode, domains?: String[]) {
+    this.setAccountLinkingModeFn({ siteUrl: this.siteInfo.linkedSiteUrl, mode: mode, domains: domains });
+  }
+
+  public getDomains(from, to) {
+    return this.listDomainsNotInPublicDomainsList(this.siteInfo.domains).slice(from, to);
+  }
+
+  public getPublicDomains(from, to) {
+    return this.listDomainsMatchingPublicDomainsList(this.siteInfo.domains).slice(from, to);
+  }
+
+  private listDomainsMatchingPublicDomainsList(domains: String[]) {
+    return _.intersection(domains, this.publicDomainsList);
+  }
+
+  private listDomainsNotInPublicDomainsList(domains: String[]) {
+    return _.difference(domains, this.publicDomainsList);
   }
 
   private buildFsm() {
@@ -162,7 +223,9 @@ class AccountLinkingWizardComponentCtrl implements ng.IComponentController {
     this.fsm
       .from(WizardState.agreementAccepted, WizardEvent.next)
       .action(() => {
-        this.setAccountLinkingMode(LinkingMode.AUTO_AGREEMENT);
+        // TODO: Currentlu returning only 20 of the filtered domain entries.
+        //       Waiting for a better solution to handle domains.
+        this.setAccountLinkingMode(LinkingMode.AUTO_AGREEMENT, this.getDomains(0, 19));
         this.launchWebex();
       });
     this.fsm
@@ -193,8 +256,9 @@ class AccountLinkingWizardComponentCtrl implements ng.IComponentController {
   }
 
   private transitionCallbackFunc = (info: IFsmTransitionCallback) => {
-    //TODO: Remove this debug info before release !
-    this.showTransitions(info);
+    if (this.DEBUG_TRANSITION === true) {
+      this.showTransitions(info);
+    }
   }
 
   private showTransitions = (info: IFsmTransitionCallback) => {

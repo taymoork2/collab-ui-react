@@ -1,4 +1,10 @@
+import { IToolkitModalService } from 'modules/core/modal';
 import { IACSiteInfo, IGotoWebex, LinkingMode } from './account-linking.interface';
+import { LinkedSitesService } from './linked-sites.service';
+
+interface ILinkAllUsersModalScope extends ng.IScope {
+  linkAllUsers?: boolean;
+}
 
 class LinkedSitesDetailsComponentCtrl implements ng.IComponentController {
 
@@ -17,7 +23,9 @@ class LinkedSitesDetailsComponentCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(private $log: ng.ILogService,
               private $state: ng.ui.IStateService,
-              //private $rootScope: ng.IRootScopeService,
+              private $modal: IToolkitModalService,
+              private $scope: ng.IScope,
+              private LinkedSitesService: LinkedSitesService,
   ) {
     this.$log.debug('LinkedSitesDetailsComponentCtrl constructor, stateParams:');
   }
@@ -48,6 +56,27 @@ class LinkedSitesDetailsComponentCtrl implements ng.IComponentController {
   public linkAllUsersChange(value) {
     this.$log.debug('linkAllUsersChange', value);
     this.$log.debug('linkAllUsersChange', this.selectedSiteInfo);
+    const modalScope: ILinkAllUsersModalScope = this.$scope.$new();
+    modalScope.linkAllUsers = this.selectedSiteInfo.linkAllUsers;
+    const currLinkAllUsers = this.selectedSiteInfo.linkAllUsers;
+    const modal = this.$modal.open({
+      type: 'dialog',
+      template: require('modules/account-linking/link-all-users-modal.html'),
+      modalClass: 'link-all-users',
+      scope: modalScope,
+    });
+    this.$log.debug('modal', modal);
+    modal.result.then((result) => {
+      this.$log.debug('result', result);
+      if (result === 'LINK_START') {
+        this.LinkedSitesService.setLinkAllUsers(this.selectedSiteInfo.linkedSiteUrl, true);
+      } else if (result === 'LINK_STOP') {
+        this.LinkedSitesService.setLinkAllUsers(this.selectedSiteInfo.linkedSiteUrl, false);
+      }
+    }, (reject) => {
+      this.$log.debug('reject', reject);
+      this.selectedSiteInfo.linkAllUsers = currLinkAllUsers;
+    });
   }
 
 }

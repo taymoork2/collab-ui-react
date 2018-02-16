@@ -23,7 +23,7 @@
                 placeholder="{{::'careChatTpl.waitingMessage' | translate}}"
                 ng-keypress="careSetupAssistant.enterNextPage($event)"/>
             <div class="chat-status-waiting-help-text">
-              <span class="chat-status-help-text body-small" translate="careChatTpl.helpTextWaiting"></span>
+              <span class="chat-status-help-text body-small">{{careSetupAssistant.helpTextWaiting()}}</span>
               <span class="chat-status-help-text body-small" ng-show='careSetupAssistant.isCareAssistantEnabled' translate="careChatTpl.helpTextWaitingVirtualAssistant"></span>
             </div>
           </div>
@@ -58,7 +58,7 @@
                 ng-model-options="{ allowInvalid: true }"
                 placeholder="{{::'careChatTpl.leaveRoomMessage' | translate}}"
                 ng-keypress="careSetupAssistant.enterNextPage($event)"/>
-              <div class="chat-status-help-text body-small" translate="careChatTpl.helpTextLeaveRoom">
+              <div class="chat-status-help-text body-small">{{careSetupAssistant.helpTextLeaveRoom()}}
               </div>
             </div>
           </section>
