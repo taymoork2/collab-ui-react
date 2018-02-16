@@ -38,7 +38,6 @@ require('./_overview.scss');
     vm.isEnterpriseCustomer = isEnterpriseCustomer;
     vm.dismissNotification = dismissNotification;
     vm.notificationComparator = notificationComparator;
-    vm.ftHuronPstn = false;
     vm.ftEnterpriseTrunking = false;
     vm.showUserTaskManagerModal = showUserTaskManagerModal;
 
@@ -255,13 +254,9 @@ require('./_overview.scss');
           }
         });
 
-      FeatureToggleService.supports(FeatureToggleService.features.huronPstn).then(function (result) {
-        vm.ftHuronPstn = result;
-
-        FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking).then(function (result) {
-          vm.ftEnterpriseTrunking = result;
-          getEsaDisclaimerStatus();
-        });
+      FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking).then(function (result) {
+        vm.ftEnterpriseTrunking = result;
+        getEsaDisclaimerStatus();
       });
 
       FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus().then(function (toggle) {
@@ -294,16 +289,9 @@ require('./_overview.scss');
           if (customer.trial) {
             PstnService.getCustomerTrialV2(vm.orgData.id).then(function (trial) {
               if (!_.has(trial, 'acceptedDate')) {
-                if (vm.ftHuronPstn) {
-                  //This is the new TS version of ToS
-                  vm.pstnToSNotification = OverviewNotificationFactory.createPstnTermsOfServiceNotification();
-                  vm.notifications.push(vm.pstnToSNotification);
-                  $scope.$on(PSTN_TOS_ACCEPT, onPstnToSAccept);
-                } else {
-                  vm.pstnToSNotification = OverviewNotificationFactory.createPSTNToSNotification();
-                  vm.notifications.push(vm.pstnToSNotification);
-                  $scope.$on(PSTN_TOS_ACCEPT, onPstnToSAccept);
-                }
+                vm.pstnToSNotification = OverviewNotificationFactory.createPstnTermsOfServiceNotification();
+                vm.notifications.push(vm.pstnToSNotification);
+                $scope.$on(PSTN_TOS_ACCEPT, onPstnToSAccept);
               }
             });
           }

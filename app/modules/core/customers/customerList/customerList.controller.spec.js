@@ -245,7 +245,7 @@ describe('Controller: CustomerListCtrl', function () {
       $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + testOrg.customerOrgId + '/numbers?type=external').respond(noNumberResponse);
       controller.addNumbers(testOrg);
       $httpBackend.flush();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+      expect($state.go).toHaveBeenCalledWith('pstnWizard', {
         customerId: testOrg.customerOrgId,
         customerName: testOrg.customerName,
         customerEmail: testOrg.customerEmail,
@@ -258,7 +258,7 @@ describe('Controller: CustomerListCtrl', function () {
       $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + testOrg.customerOrgId).respond(200);
       controller.addNumbers(testOrg);
       $httpBackend.flush();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+      expect($state.go).toHaveBeenCalledWith('pstnWizard', {
         customerId: testOrg.customerOrgId,
         customerName: testOrg.customerName,
         customerEmail: testOrg.customerEmail,
@@ -463,7 +463,7 @@ describe('Controller: CustomerListCtrl', function () {
       $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
       $httpBackend.flush();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+      expect($state.go).toHaveBeenCalledWith('pstnWizard', {
         customerId: org.customerOrgId,
         customerName: org.customerName,
         customerEmail: org.customerEmail,
@@ -484,7 +484,7 @@ describe('Controller: CustomerListCtrl', function () {
       $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
       $httpBackend.flush();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+      expect($state.go).toHaveBeenCalledWith('pstnWizard', {
         customerId: org.customerOrgId,
         customerName: org.customerName,
         customerEmail: org.customerEmail,
@@ -502,7 +502,7 @@ describe('Controller: CustomerListCtrl', function () {
       $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
       $httpBackend.flush();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+      expect($state.go).toHaveBeenCalledWith('pstnWizard', {
         customerId: org.customerOrgId,
         customerName: org.customerName,
         customerEmail: org.customerEmail,
@@ -524,7 +524,7 @@ describe('Controller: CustomerListCtrl', function () {
       $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
       $httpBackend.flush();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+      expect($state.go).toHaveBeenCalledWith('pstnWizard', {
         customerId: org.customerOrgId,
         customerName: org.customerName,
         customerEmail: org.customerEmail,
