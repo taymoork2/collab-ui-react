@@ -104,8 +104,19 @@
         <div class="columns small-3">
           <span class="hybrid-services-label">{{'cloudExtensions.details' | translate}}:</span>
         </div>
-        <div class="columns small-9" ng-if="!$ctrl.loadingPage">
-          <user-status-messages class="hybrid-services-label" messages="$ctrl.userStatus.messages"></user-status-messages>
+        <div class="columns small-9" ng-if="!$ctrl.loadingPage" class="hybrid-services-label">
+
+
+          <user-status-messages messages="$ctrl.userStatus.messages"
+                                resource-group-id="$ctrl.resourceGroupId"
+                                human-readable="true"
+                                connector-type="'c_cal'"
+                                ng-if="!$ctrl.userOwnedByCCC && $ctrl.selectedCalendarType === 'squared-fusion-cal'">
+
+          </user-status-messages>
+          <user-status-messages messages="$ctrl.userStatus.messages"
+                                ng-if="$ctrl.userOwnedByCCC || $ctrl.selectedCalendarType === 'squared-fusion-gcal'">
+          </user-status-messages>
         </div>
         <div class="columns small-9" ng-if="$ctrl.loadingPage">
           <span cs-loader class="hybrid-services-label loader-example--small"></span>
@@ -154,6 +165,7 @@
   <hybrid-services-resource-group-selector ng-if="$ctrl.selectedCalendarType !== 'squared-fusion-gcal' && !$ctrl.loading"
                                            user-id="$ctrl.userId"
                                            service-id="'squared-fusion-cal'"
+                                           refresh-callback="$ctrl.resourceGroupRefreshCallback()"
                                            user-owned-by-c-c-c="$ctrl.userOwnedByCCC" ></hybrid-services-resource-group-selector>
 
 </cs-sp-container>

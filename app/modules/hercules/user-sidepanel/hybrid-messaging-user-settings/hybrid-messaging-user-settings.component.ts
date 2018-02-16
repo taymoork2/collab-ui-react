@@ -27,6 +27,8 @@ class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController 
 
   private connectorId: string;
 
+  public resourceGroupId: string;
+
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
@@ -80,6 +82,10 @@ class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController 
 
         if (this.userStatus && this.userStatus.lastStateChange) {
           this.lastStateChangeText = this.HybridServicesI18NService.getTimeSinceText(this.userStatus.lastStateChange);
+        }
+
+        if (this.userStatus && this.userStatus.resourceGroupId) {
+          this.resourceGroupId = this.userStatus.resourceGroupId;
         }
       })
       .catch((error) => {
@@ -139,6 +145,10 @@ class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController 
 
   public getStatus(status) {
     return this.USSService.decorateWithStatus(status);
+  }
+
+  public resourceGroupRefreshCallback() {
+    this.getUserData(this.userId);
   }
 
 }
