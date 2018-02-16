@@ -3176,7 +3176,7 @@
       "noGroupSelected": "None",
       "noGroupSelectedOnPlace": "No resource group (default)",
       "failedToSetGroup": "Failed to set Resource Group.",
-      "resourceGroupSaved": "Resource Group saved.",
+      "resourceGroupSaved": "Resource Group changed. The user will automatically be reassigned to a cluster in the new Resource Group within the next couple of minutes.",
       "groupHasBeenDeleted": "The user is assigned to a resource group that could not be found. Remove the assignment from the resource group to restore service.",
       "groupIsEmptyWarning": "Could not find cluster with {{ConnectorName}}. Select another Resource Group, or configure a new cluster with {{ConnectorName}}."
     },
@@ -3415,6 +3415,29 @@
         "clusterNotAssignedToResourceGroup": {
           "title": "No cluster assigned to resource group",
           "description": "No cluster assigned to the user's resource group. Check the cluster configuration and then try again."
+        }
+      },
+      "custom": {
+        "noClusterFoundAndNoCurrentResourceGroup": {
+          "description": "No {{connectorType}} found. Activation will be retried once you configure at least one cluster with {{connectorType}}, or you move the user to a resource group where at least one cluster runs {{connectorType}}."
+        },
+        "noClusterFoundAndUserIsInResourceGroup": {
+          "description": "No {{connectorType}} found in user's resource group. Activation will be retried once you configure at least one cluster with {{connectorType}} in the user's current resource group, or you move the user to a resource group where at least one cluster runs {{connectorType}}."
+        },
+        "serviceIsNotOperationalInResourceGroup": {
+          "description": "No operational {{connectorType}} found in user's resource group. The user will automatically be assigned to a {{connectorType}} once one becomes operational. You can alternatively try to move the user to another resource group, or remove the user's resource group assignment."
+        },
+        "serviceIsNotOperationalUserNotInResourceGroup": {
+          "description": "No operational {{connectorType}} found. The user will automatically be assigned to a {{connectorType}} once one becomes operational. You can alternatively try to move the user into a resource group."
+        },
+        "serviceIsNotOperationalInOrganization": {
+          "description": "{{serviceName}} appears to be not operational. The user will automatically be assigned to a {{connectorType}} once the service becomes operational again."
+        },
+        "serviceIsImpairedInOrganization": {
+          "description": "{{serviceName}} is impaired. This could happen during connector upgrades, if you have single-node Expressway clusters. The user will be retried when a {{connectorType}} becomes running and operational."
+        },
+        "noClusterFoundAndNoResourceGroupInOrganization": {
+          "description": "No {{connectorType}} found. Activation will be retried once you configure at least one cluster with {{connectorType}}."
         }
       }
     },

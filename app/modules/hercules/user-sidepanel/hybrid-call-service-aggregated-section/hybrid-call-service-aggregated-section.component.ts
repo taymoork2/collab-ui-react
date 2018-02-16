@@ -76,6 +76,10 @@ class HybridCallServiceAggregatedSectionCtrl implements ng.IComponentController 
 
   public userHasEntitlement = (entitlement: HybridServiceId): boolean => this.allUserEntitlements && this.allUserEntitlements.indexOf(entitlement) > -1;
 
+  public resourceGroupRefreshCallback() {
+    this.getUserData(this.userId);
+  }
+
 }
 
 export class HybridCallServiceAggregatedSectionComponent implements ng.IComponentOptions {
