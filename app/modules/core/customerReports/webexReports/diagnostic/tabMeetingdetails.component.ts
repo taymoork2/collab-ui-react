@@ -76,9 +76,11 @@ class Meetingdetails implements ng.IComponentController {
         cachePromises.push(this.videoQOS(ids));
         cachePromises.push(this.pstnQOS(pstnIds));
         cachePromises.push(this.cmrQOS(cmrIds));
-        this.$q.all(cachePromises).finally(() => {
-          this.loading = false;
-        });
+        this.$q.all(cachePromises)
+          .catch(_.noop)
+          .finally(() => {
+            this.loading = false;
+          });
       })
       .catch((err) => {
         this.loading = true;

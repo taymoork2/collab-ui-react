@@ -24,11 +24,12 @@ describe('Component: gmTdHeader', () => {
 
   function initComponent(viaHttp: boolean = false, httpError: boolean = false) {
     if (viaHttp) {
-      this.gemService.getRemedyTicket.and.returnValue(this.$q.resolve( this.mockData ));
-
-      if (httpError) {
-        this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
-      }
+      this.gemService.getRemedyTicket.and.callFake(() => {
+        if (httpError) {
+          return this.$q.reject({ status: 404 });
+        }
+        return this.$q.resolve(this.mockData);
+      });
     } else {
       this.gemService.setStorage('remedyTicket', { status: 'Canceled', ticketUrl: '' });
     }

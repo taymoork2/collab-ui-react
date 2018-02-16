@@ -28,12 +28,12 @@ export class OnboardSummaryForAutoAssignModalController implements ng.IComponent
     });
   }
 
-  public save(): void {
+  public save(): ng.IPromise<any> {
     this.saveLoading = true;
     const licenses = [];
     const userEntitlements = [];
 
-    this.OnboardService.onboardUsersInChunks(this.userList, userEntitlements, licenses)
+    return this.OnboardService.onboardUsersInChunks(this.userList, userEntitlements, licenses)
       .catch((rejectedResponse) => {
         // notes:
         // - potentially multiple 'Userservice.onboardUsersLegacy()' calls could have been made
@@ -44,6 +44,7 @@ export class OnboardSummaryForAutoAssignModalController implements ng.IComponent
       })
       .then((aggregateResult: IOnboardedUsersAggregateResult) => {
         this.$state.go('users.add.results', aggregateResult);
+        return this.$q.resolve();
       });
   }
 }

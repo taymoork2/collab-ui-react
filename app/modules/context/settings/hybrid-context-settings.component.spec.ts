@@ -75,8 +75,8 @@ describe('HybridContextSettingsComponent', function () {
   });
 
   it('should show error notification when synchronization has failed', function (done) {
-    spyOn(this.ContextAdminAuthorizationService, 'synchronizeAdmins').and.returnValue(this.$q.reject());
     this.compileComponent('context-settings');
+    spyOn(this.ContextAdminAuthorizationService, 'synchronizeAdmins').and.returnValue(this.$q.reject());
     this.controller.isSynchronizationInProgress = true;
     this.controller.synchronize()
       .then(() => {
