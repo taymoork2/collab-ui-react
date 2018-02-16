@@ -2305,7 +2305,7 @@
     },
     "sipExplanation": {
       "line1": "You can use one of the following address formats:",
-      "line2": "SRV domain (_sips._tcp.<strong>sipmtls.example.com</strong>)",
+      "line2": "SRV domain (use the <strong>sipmtls.example.com</strong> from _sips._tcp.<strong>sipmtls.example.com</strong>)",
       "line3": "Hostname/FQDN:port (<strong>exp-e.example.com:5062</strong>)",
       "line4": "IP address:port (<strong>203.0.113.0:5062</strong>)",
       "line5": "See <a href=\"https://www.cisco.com/go/spark-calling-branch-office\" target=\"_blank\">Configure the Enterprise Private Trunk Connection</a> if you need further help.",
