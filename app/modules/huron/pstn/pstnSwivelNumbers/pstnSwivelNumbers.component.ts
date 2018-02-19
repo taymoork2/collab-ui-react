@@ -106,7 +106,7 @@ export class PstnSwivelNumbersCtrl implements ng.IComponentController {
           return token.value;
         }));
       });
-    } else if (!this.PhoneNumberService.internationalNumberValidator(e.attrs.value)) {
+    } else if (!this.PhoneNumberService.numberNANPValidator(e.attrs.value)) {
       angular.element(e.relatedTarget).addClass('invalid');
       e.attrs.invalid = true;
       this.invalidCount++;
@@ -125,7 +125,7 @@ export class PstnSwivelNumbersCtrl implements ng.IComponentController {
   public editToken(e): void {
     this.removeNumber(e.attrs.value);
     // If invalid token, show the label text in the edit input
-    if (!this.PhoneNumberService.internationalNumberValidator(e.attrs.value)) {
+    if (!this.PhoneNumberService.numberNANPValidator(e.attrs.value)) {
       e.attrs.value = e.attrs.label;
       this.invalidCount--;
     }

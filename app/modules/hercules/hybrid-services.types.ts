@@ -53,6 +53,7 @@ export interface ICluster {
   connectors: IConnector[];
   createdAt: string;
   id: string;
+  legacyDeviceClusterId?: string;
   name: string;
   provisioning: IConnectorProvisioning[];
   releaseChannel: string;

@@ -1,3 +1,5 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+
 card-capacity-bar {
   .capacity-container {
     display: flex;
@@ -6,6 +8,17 @@ card-capacity-bar {
   .progress,
   progressbar {
     width: 100px;
+  }
+
+  .tooltip  {
+    > .c-nub {
+      min-width: 15rem;
+    }
+
+    em {
+      color: $gray-light-1;
+      font-style: normal;
+    }
   }
 
   .capacity-label {
