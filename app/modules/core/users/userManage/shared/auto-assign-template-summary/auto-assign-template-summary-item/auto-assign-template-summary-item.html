@@ -1,11 +1,11 @@
 <div class="root">
-  <div class="donut">
+  <div class="summary-item__donut">
     <cs-donut value="$ctrl.totalUsage"
       max="$ctrl.totalVolume" ssize="32" tsize="10"
       class="text-center">
     </cs-donut>
   </div>
-  <div class="license-count">
+  <div class="summary-item__body">
     <h6 translate="{{:: $ctrl.l10nTitle}}"></h6>
     <advanced-meeting-site-url
       ng-if="$ctrl.siteUrl"

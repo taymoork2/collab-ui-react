@@ -1,21 +1,23 @@
-@import '~@collabui/collab-ui/scss/settings/typography';
-@import '~@collabui/collab-ui/scss/settings/colors';
-
 auto-assign-template-summary-item {
   .root {
     display: flex;
   }
 
-  .donut {
+  .summary-item__donut {
     width: 2rem;
   }
 
-  h6 {
-    font-family: $brand-font-regular;
-    color: $gray-dark-2;
-  }
-
-  .license-count {
+  .summary-item__body {
     margin-left: 1rem;
+
+    advanced-meeting-site-url {
+      display: block;
+      padding-bottom: .25rem;
+    }
+
+    .body-small {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
   }
 }
