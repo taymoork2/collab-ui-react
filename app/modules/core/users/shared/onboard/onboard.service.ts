@@ -378,8 +378,8 @@ export default class OnboardService {
     options: {
       chunkSize?: number,
       shouldUpdateUsers?: boolean,
-      licenseList?: any[],
-      entitlementList?: any[],
+      licenseList?: ILicenseRequestItem[],
+      entitlementList?: IUserEntitlementRequestItem[],
     },
   ): ng.IPromise<IOnboardedUsersAggregateResult> {
     const {
@@ -414,8 +414,8 @@ export default class OnboardService {
   private updateMigratedUsers(
     response: ng.IHttpResponse<IMigrateUsersResponse>,
     origConvertUsersList: IConvertUserEntity[],
-    licenseList: any[],
-    entitlementList: any[],
+    licenseList: ILicenseRequestItem[],
+    entitlementList: IUserEntitlementRequestItem[],
   ): IParsedOnboardedUserResponse | ng.IPromise<IParsedOnboardedUserResponse> {
     const parsedMigratedUsers = this.parseMigratedUsers(response);
     const [
@@ -491,16 +491,14 @@ export default class OnboardService {
             userResult.message = this.$translate.instant('onboardModal.result.400094', {
               status: httpStatus,
             });
-            userResult.alertType = AlertType.DANGER;
           } else if (_.includes(userResponseItem.message!, 'DN_IS_FALLBACK')) {
             userResult.message = this.$translate.instant('onboardModal.result.deleteUserDnFallbackError');
-            userResult.alertType = AlertType.DANGER;
           } else {
             userResult.message = this.$translate.instant('onboardModal.result.other', {
               status: httpStatus,
             });
-            userResult.alertType = AlertType.DANGER;
           }
+          userResult.alertType = AlertType.DANGER;
           break;
         }
       }
@@ -546,8 +544,8 @@ export default class OnboardService {
     const numUpdatedUsers = _.sumBy(responses, response => response.numUpdatedUsers);
     const numAddedUsers = _.sumBy(responses, response => response.numAddedUsers);
     const resultList = _.flatMap(responses, response => response.resultList);
-    const errors: string[] = _.compact(_.map(resultList, result => result.errorMsg!));
-    const warnings: string[] = _.compact(_.map(resultList, result => result.warningMsg!));
+    const errors = _.compact(_.map(resultList, result => result.errorMsg!));
+    const warnings = _.compact(_.map(resultList, result => result.warningMsg!));
     return {
       numUpdatedUsers: numUpdatedUsers,
       numAddedUsers: numAddedUsers,

@@ -65,7 +65,6 @@ var UsersPage = function () {
 
   this.addUsers = element(by.id('addUsers'));
   this.addUsersField = element(by.id('usersfield-tokenfield'));
-  this.closeAddUsers = element(by.css('.modal-header button.close'));
   this.invalid = element(by.css('.invalid'));
   this.close = element(by.css('.close'));
 

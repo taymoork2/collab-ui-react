@@ -1333,13 +1333,11 @@ require('./_user-add.scss');
         populateScopeBindingsFromAggregateResult(aggregateResults);
 
         $rootScope.$broadcast('Userservice::updateUsers');
-        $scope.$dismiss();
         if ($scope.results.errors.length) {
           Notification.notify($scope.results.errors, 'error');
           return;
         }
-
-        resetUsersfield();
+        $scope.$dismiss();
       }).finally(function () {
         $rootScope.$broadcast('USER_LIST_UPDATED');
         $scope.btnSaveEntLoad = false;
@@ -1371,16 +1369,6 @@ require('./_user-add.scss');
 
     // TODO (mipark2): rm this if determined no longer needed (see: '$scope.manualEntryNext()')
     $scope.invalidcount = OnboardStore['users.add.manual'].invalidcount;
-
-    var resetUsersfield = function () {
-      return OnboardService.resetUsersfield($scope);
-    };
-
-    // TODO (mipark2): rm this if no longer needed:
-    $scope.clearPanel = function () {
-      resetUsersfield();
-      initResults();
-    };
 
     $scope.fixBulkErrors = function () {
       if (isFTW) {

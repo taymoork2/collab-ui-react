@@ -1,4 +1,4 @@
-import { IOnboardedUserResult, UserEntitlementState, IUserProvisionStatusResponse, IUserStatusResponse } from 'modules/core/users/shared/onboard/onboard.interfaces';
+import { IOnboardedUserResult, IUserProvisionStatusResponse, IUserStatusResponse, UserEntitlementState } from 'modules/core/users/shared/onboard/onboard.interfaces';
 
 import moduleName from './index';
 
@@ -273,7 +273,7 @@ describe('OnboardService:', () => {
   });
 
   describe('convertUsersInChunks():', () => {
-    it('should chunk user list, call "Userservice.migrateUsers()" per list, and update migrated users as needed"', function () {
+    it('should chunk user list, call "Userservice.migrateUsers()" per list, and update migrated users as needed', function () {
       const fakeUserList = ['fake-user-1'];
       const fakeLicenseList = ['fake-license-1'];
       const fakeEntitlementList = ['fake-entitlement-1'];
@@ -283,7 +283,7 @@ describe('OnboardService:', () => {
         licenseList: fakeLicenseList,
         entitlementList: fakeEntitlementList,
       };
-      const fakeMigrateUsersResponse = 'fake-migrate-uesrs-response';
+      const fakeMigrateUsersResponse = 'fake-migrate-users-response';
       const fakeUpdateMigratedUsersResponse = 'fake-update-migrated-users-response';
       const fakeParseMigratedUsersResponse = 'fake-parse-migrated-users-response';
       const fakeAggregateResponse = {
@@ -685,7 +685,7 @@ describe('OnboardService:', () => {
       });
 
       expect(this.LogMetricsService.logMetrics).toHaveBeenCalledWith(
-        jasmine.any(String), // msg
+        'Migrated fake-updated-users users',
         jasmine.any(String), // eventType
         jasmine.any(String), // eventAction
         200,

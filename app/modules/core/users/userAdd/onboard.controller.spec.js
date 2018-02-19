@@ -5,8 +5,44 @@ var onboardModuleName = require('modules/core/users/shared/onboard').default;
 
 describe('OnboardCtrl: Ctrl', function () {
   function init() {
-    this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp', csvDownloadModule, onboardModuleName);
-    this.injectDependencies('$httpBackend', '$modal', '$q', '$scope', '$state', '$stateParams', '$previousState', '$timeout', 'Analytics', 'Authinfo', 'CsvDownloadService', 'DialPlanService', 'FeatureToggleService', 'MessengerInteropService', 'Notification', 'OnboardService', 'Orgservice', 'SyncService', 'SunlightConfigService', 'TelephonyInfoService', 'NumberService', 'Userservice', 'UrlConfig', 'WebExUtilsFact', 'ServiceSetup', 'LogMetricsService');
+    this.initModules(
+      'Core',
+      'Hercules',
+      'Huron',
+      'Messenger',
+      'Sunlight',
+      'WebExApp',
+      csvDownloadModule,
+      onboardModuleName
+    );
+    this.injectDependencies(
+      '$httpBackend',
+      '$modal',
+      '$previousState',
+      '$q',
+      '$scope',
+      '$state',
+      '$stateParams',
+      '$timeout',
+      'Analytics',
+      'Authinfo',
+      'CsvDownloadService',
+      'DialPlanService',
+      'FeatureToggleService',
+      'LogMetricsService',
+      'MessengerInteropService',
+      'Notification',
+      'NumberService',
+      'OnboardService',
+      'Orgservice',
+      'ServiceSetup',
+      'SunlightConfigService',
+      'SyncService',
+      'TelephonyInfoService',
+      'UrlConfig',
+      'Userservice',
+      'WebExUtilsFact'
+    );
     initDependencySpies.apply(this);
   }
 

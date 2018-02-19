@@ -55,7 +55,6 @@ var LandingPage = function () {
   this.convertNextButton = element(by.id('convertNextButton'));
   this.btnConvert = element(by.id('btnConvert'));
   this.btnBack = element(by.id('btnBack'));
-  this.closeAddUser = element(by.css('.modal-header button.close'));
   this.closeConvertUser = element(by.css('.modal-header button.close'));
   this.unlicensedUserRow = element(by.css('.ui-grid-selection-row-header-buttons'));
   this.userBtn = element(by.css('.btn--user '));
