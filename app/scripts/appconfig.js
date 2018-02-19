@@ -1862,6 +1862,20 @@
               displayName: translateDisplayName('usersPreview.rolesAndSecurity'),
             },
           })
+          .state('user-overview.linked-webex-sites', {
+            views: {
+              'side-panel-container@user-overview': {
+                template: '<linked-sites-user-settings user-id="$resolve.userId"></linked-sites-user-settings>',
+              },
+            },
+            data: {},
+            resolve: {
+              userId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentUser.id;
+              },
+              displayName: translateDisplayName('accountLinking.userSidepanel.linkedAccounts'),
+            },
+          })
 
           // FOR Development: allow editing of user's feature toggles
           .state('edit-featuretoggles', {

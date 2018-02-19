@@ -10616,6 +10616,12 @@
       "enrolledWebexSiteName": "Enrolled WebEx Site Name",
       "webexSite": "WebEx Site",
       "agreementAcceptLabel": "I have read and accept the agreement"
+    },
+    "userSidepanel": {
+      "webexLinkedAccounts": "WebEx Linked Accounts",
+      "linkedAccounts": "Linked Accounts",
+      "webexPreferredSite": "Preferred WebEx Site",
+      "webexPMR": "Personal Meeting Room"
     }
   },
   "hcs": {

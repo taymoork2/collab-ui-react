@@ -24,7 +24,7 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
   }
 
   function cleanup() {
-    $componentController = $componentController = $q = $scope = CloudConnectorService =  HybridServiceUserSidepanelHelperService = USSService = UserOverviewService = ServiceDescriptorService = undefined;
+    $componentController = $q = $scope = CloudConnectorService =  HybridServiceUserSidepanelHelperService = USSService = UserOverviewService = ServiceDescriptorService = undefined;
   }
 
   function initSpies() {

@@ -1,0 +1,30 @@
+<cs-sp-container>
+  <cs-sp-section ng-if="$ctrl.haveLinkedWebexSites()">
+    <div class="section-title-row">
+      <span class="section-name" translate="accountLinking.userSidepanel.linkedAccounts"></span>
+    </div>
+
+    <!-- Linked WebEx sites -->
+    <div class="section-name">
+        <span class="section-name" ng-repeat="site in $ctrl.linkedTrainSiteNames">
+          <div class="section-name">
+            <span class="feature-status">{{ site }}</span>
+          </div>
+        </span>
+    </div>
+
+    <!-- Preferred Webex Site -->
+    <div class="section-title-row">
+      <span class="section-name" translate="accountLinking.userSidepanel.webexPreferredSite"></span>
+      <span class="feature-status">{{$ctrl.getPreferredWebExSite()}}</span>
+    </div>
+
+    <!-- Personal meeting room -->
+    <!--div class="section-title-row">
+      <span class="section-name" translate="accountLinking.userSidepanel.webexPMR"></span>
+      <span class="feature-status"></span>
+    </div-->
+
+  </cs-sp-section>
+
+</cs-sp-container>
