@@ -284,7 +284,8 @@
       "instructions": "Enter up to {{maxUsers}} users to modify.",
       "tooManyUsers": "The user list exceeds the limit of {{maxUsers}}. To update more than {{maxUsers}} users, please use the bulk CSV template.",
       "ad": {
-        "unsyncedUsers": "Some users are not currently synchronized with Active Directory. Please add them with Cisco Directory Connector, and then modify them after they synchronize to the cloud."
+        "unsyncedUsers": "Some users are not currently synchronized with Active Directory. Please add them with Cisco Directory Connector, and then modify them after they synchronize to the cloud.",
+        "existingUsers": "The Auto-Assign License template is enabled. You can onlly modify existing users from the User page or using CSV upload."
       }
     },
     "bulk": {
