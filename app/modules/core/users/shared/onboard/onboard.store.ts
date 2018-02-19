@@ -21,9 +21,7 @@ export interface IOnboardScopeForUsersAdd {
   };
 }
 
-export interface IOnboardScopeForUsersConvert {
-  convertCancelled: boolean;
-}
+export interface IOnboardScopeForUsersConvert {}
 
 export enum OnboardCtrlBoundUIStates {
   ALL = 'all',
@@ -97,8 +95,6 @@ export default class OnboardStore {
   }
 
   private initUsersConvert(): IOnboardScopeForUsersConvert {
-    return {
-      convertCancelled: false,
-    };
+    return {};
   }
 }

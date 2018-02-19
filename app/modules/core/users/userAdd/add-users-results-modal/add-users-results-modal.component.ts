@@ -1,9 +1,7 @@
 import { IOnboardedUsersResultsErrorsAndWarnings } from 'modules/core/users/shared/onboard/onboard.interfaces';
 import OnboardService from 'modules/core/users/shared/onboard/onboard.service';
-import OnboardStore from 'modules/core/users/shared/onboard/onboard.store';
 
 export class AddUsersResultsModalController implements ng.IComponentController {
-  public convertPending: boolean;
   public convertUsersFlow: boolean;
   public dismiss: Function;
   public numAddedUsers: number;
@@ -16,21 +14,11 @@ export class AddUsersResultsModalController implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     private Analytics,
     private OnboardService: OnboardService,
-    private OnboardStore: OnboardStore,
   ) {}
 
   public dismissModal(): void {
-    if (!this.convertUsersFlow) {
-      this.Analytics.trackAddUsers(this.Analytics.eventNames.CANCEL_MODAL);
-      this.dismiss();
-    }
-
-    // TODO (mipark2): understand original intent of 'convertPending' and 'convertCancelled' booleans and update
-    if (this.convertPending === true) {
-      this.OnboardStore['users.convert'].convertCancelled = true;
-    } else {
-      this.dismiss();
-    }
+    this.Analytics.trackAddUsers(this.Analytics.eventNames.CANCEL_MODAL);
+    this.dismiss();
   }
 
   public goToUsersPage(): void {
@@ -58,7 +46,6 @@ export class AddUsersResultsModalComponent implements ng.IComponentOptions {
   public controller = AddUsersResultsModalController;
   public template = require('./add-users-results-modal.html');
   public bindings = {
-    convertPending: '<',
     convertUsersFlow: '<',
     dismiss: '&',
     numUpdatedUsers: '<',

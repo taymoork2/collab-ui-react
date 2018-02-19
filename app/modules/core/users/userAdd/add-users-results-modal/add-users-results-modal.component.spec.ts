@@ -8,7 +8,6 @@ type Test = atlas.test.IComponentTest<AddUsersResultsModalController, {
   $state;
   Analytics;
   OnboardService;
-  OnboardStore;
 }, {
   components: {
     multiStepModal: atlas.test.IComponentSpy<MultiStepModalComponent>;
@@ -33,7 +32,6 @@ describe('Component: addUsersResultsModal:', () => {
       '$state',
       'Analytics',
       'OnboardService',
-      'OnboardStore',
     );
     this.$scope.fakeConvertUsersFlow = false;
     this.$scope.fakeConvertPending = false;
@@ -105,18 +103,9 @@ describe('Component: addUsersResultsModal:', () => {
     describe('dismissModal():', () => {
       it('should track the event', function (this: Test) {
         spyOn(this.Analytics, 'trackAddUsers');
-        this.$scope.fakeConvertUsersFlow = false;
         initComponent.call(this);
         this.controller.dismissModal();
         expect(this.Analytics.trackAddUsers).toHaveBeenCalledWith(this.Analytics.eventNames.CANCEL_MODAL);
-      });
-
-      it('should set "convertCancelled" property in OnboardStore to true if a convert was pending', function (this: Test) {
-        this.$scope.fakeConvertUsersFlow = true;
-        this.$scope.fakeConvertPending = true;
-        initComponent.call(this);
-        this.controller.dismissModal();
-        expect(this.OnboardStore['users.convert'].convertCancelled).toBe(true);
       });
     });
 
