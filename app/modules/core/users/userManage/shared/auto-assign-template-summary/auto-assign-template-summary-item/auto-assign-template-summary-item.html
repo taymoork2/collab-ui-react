@@ -1,19 +1,17 @@
-<div class="root">
-  <div class="summary-item__donut">
-    <cs-donut value="$ctrl.totalUsage"
-      max="$ctrl.totalVolume" ssize="32" tsize="10"
-      class="text-center">
-    </cs-donut>
-  </div>
-  <div class="summary-item__body">
-    <h6 translate="{{:: $ctrl.l10nTitle}}"></h6>
-    <advanced-meeting-site-url
-      ng-if="$ctrl.siteUrl"
-      site-url="{{::$ctrl.siteUrl}}">
-    </advanced-meeting-site-url>
-    <usage-line
-      usage="$ctrl.totalUsage"
-      volume="$ctrl.totalVolume">
-    </usage-line>
-  </div>
+<div class="summary-item__donut">
+  <cs-donut value="$ctrl.totalUsage"
+    max="$ctrl.totalVolume" ssize="32" tsize="10"
+    class="text-center">
+  </cs-donut>
+</div>
+<div class="summary-item__body">
+  <h6 translate="{{:: $ctrl.l10nTitle}}"></h6>
+  <advanced-meeting-site-url
+    ng-if="$ctrl.siteUrl"
+    site-url="{{::$ctrl.siteUrl}}">
+  </advanced-meeting-site-url>
+  <usage-line
+    usage="$ctrl.totalUsage"
+    volume="$ctrl.totalVolume">
+  </usage-line>
 </div>
