@@ -37,7 +37,12 @@
         <cs-sp-section>
           <div class="row">
             <div class="pull-left medium-9">
-              <span class="feature-name ellipsis spanBlock" popover-trigger="mouseenter" popover="{{$ctrl.model.customerAttribute}}">{{::'gemini.cbgs.field.alias' | translate}}: {{$ctrl.model.customerAttribute}}</span>
+              <span class="feature-name ellipsis spanBlock"
+                tabindex="0"
+                popover-trigger="mouseenter focus"
+                popover="{{$ctrl.model.customerAttribute}}">
+                {{::'gemini.cbgs.field.alias' | translate}}: {{$ctrl.model.customerAttribute}}
+              </span>
             </div>
             <div class="columns medium-3">
               <span class="pull-right" ng-if="$ctrl.model.status">

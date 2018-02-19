@@ -69,6 +69,7 @@
     vm.setEvaTemplateData = setEvaTemplateData;
     vm.evaLearnMoreLink = 'https://www.cisco.com/go/create-template';
     vm.evaSpaceTooltipData = '';
+    vm.evaSpaceTooltipAriaLabel = '';
     vm.isExpertEscalationSelected = isExpertEscalationSelected;
     vm.isExpertOnlyEscalationSelected = isExpertOnlyEscalationSelected;
     vm.setRequiredValue = setRequiredValue;
@@ -2054,16 +2055,26 @@
       listSpaces.then(function (spaces) {
         if (spaces && spaces.items && spaces.items.length >= 1) {
           var numSpaces = spaces.items.length;
+          var evaOrgName = getEvaName(evaForOrg);
           if (numSpaces === 1) {
-            vm.evaSpaceTooltipData = getEvaName(evaForOrg) + $translate.instant('careChatTpl.evaSpaceDetailsTextOneSpace');
+            var evaSpaceDetailsTextOneSpace = $translate.instant('careChatTpl.evaSpaceDetailsTextOneSpace');
+
+            vm.evaSpaceTooltipData = evaOrgName + evaSpaceDetailsTextOneSpace;
+            vm.evaSpaceTooltipAriaLabel = evaOrgName + evaSpaceDetailsTextOneSpace;
           } else {
-            vm.evaSpaceTooltipData = getEvaName(evaForOrg) + $translate.instant('careChatTpl.evaSpaceDetailsText', { numberOfEvaSpaces: numSpaces });
+            var evaSpaceDetailsText = $translate.instant('careChatTpl.evaSpaceDetailsText', { numberOfEvaSpaces: numSpaces });
+
+            vm.evaSpaceTooltipData = evaOrgName + evaSpaceDetailsText;
+            vm.evaSpaceTooltipAriaLabel = evaOrgName + evaSpaceDetailsText;
           }
           _.forEach(spaces.items, function (space) {
             if (space.title) {
               vm.evaSpaceTooltipData += '<li>' + space.title + '</li>';
+              vm.evaSpaceTooltipAriaLabel += ' ' + space.title;
               if (space.default) {
-                vm.evaSpaceTooltipData += '<div>' + '    ' + $translate.instant('careChatTpl.escalationDetailsDefaultSpace') + '<div>';
+                var defaultSpace = $translate.instant('careChatTpl.escalationDetailsDefaultSpace');
+                vm.evaSpaceTooltipData += '<div>' + '    ' + defaultSpace + '<div>';
+                vm.evaSpaceTooltipAriaLabel += ' ' + defaultSpace;
               }
             }
           });
@@ -2074,7 +2085,9 @@
     }
 
     function setSpaceDataAsError() {
-      vm.evaSpaceTooltipData = '<div class="feature-card-popover-error">' + $translate.instant('careChatTpl.featureCard.popoverErrorMessage') + '</div>';
+      var popoverErrorMessage = $translate.instant('careChatTpl.featureCard.popoverErrorMessage');
+      vm.evaSpaceTooltipData = '<div class="feature-card-popover-error">' + popoverErrorMessage + '</div>';
+      vm.evaSpaceTooltipAriaLabel = popoverErrorMessage;
     }
 
     function isEvaObjectValid(evaObj) {
