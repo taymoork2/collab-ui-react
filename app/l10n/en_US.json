@@ -671,6 +671,14 @@
     "releaseChannelToggleFailure": "Allow Release Channel update failed. Please try again later.",
     "orgReadFailed": "Unable to read organization details"
   },
+  "organizationDeleteModal": {
+    "deleteButton": "Close Account",
+    "goBack": "Go Back",
+    "confirmTitle": "Are you sure?",
+    "confirmBody": "Closing your account cannot be undone except by resubscribing. Also, you may not be able to get back your WebEx site name.",
+    "accountClosedTitle": "Your account in closed",
+    "accountClosedBody": "To resubscribe please visit <a href=\"http://{{href}}\" target=\"_blank\">{{href}}</a>"
+  },
   "templatesPage": {
     "title": "MANAGE TEMPLATES"
   },

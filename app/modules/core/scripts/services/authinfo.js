@@ -602,6 +602,15 @@
           return license.offerName === Config.offerCodes.MGMTPRO;
         });
       },
+      isOnlineCustomer: function () {
+        return _.some(this.getCustomerAccounts(), { customerType: 'Online' });
+      },
+      isOnlineOnlyCustomer: function () {
+        return _.every(this.getCustomerAccounts(), { customerType: 'Online' });
+      },
+      isOnlinePaid: function () {
+        return _.some(this.getSubscriptions(), { orderingTool: 'DIGITAL_RIVER' });
+      },
       getLicenseIsTrial: function (licenseType, entitlement) {
         var isTrial = _.chain(authData.licenses)
           .reduce(function (isTrial, license) {

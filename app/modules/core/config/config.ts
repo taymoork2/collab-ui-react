@@ -90,6 +90,7 @@ export class Config {
   public readonly customerTypes = {
     enterprise: 'Enterprise',
     pending: 'Pending',
+    online: 'Online',
   };
 
   public readonly entitlements = {

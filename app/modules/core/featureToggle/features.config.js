@@ -54,6 +54,8 @@ module.exports = {
   atlasMediaServicePhaseTwo: 'atlas-media-service-phase-two',
   atlasMediaServiceTrustedSIP: 'atlas-media-service-trusted-sip',
   atlasMyCompanyBillingTab: 'atlas-my-company-billing-tab',
+  atlasOnlineDeleteOrg: 'atlas-online-delete-org',
+  atlasEnterpriseDeleteOrg: 'atlas-enterprise-delete-org',
   atlasNewCiDataModel: 'atlas-new-ci-data-model',
   atlasNewRoomSystems: 'atlas-new-roomSystems',
   atlasNewUserExport: 'atlas-new-user-export',
