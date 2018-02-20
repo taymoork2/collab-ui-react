@@ -9,12 +9,13 @@
     .factory('OverviewUsersCard', OverviewUsersCard);
 
   /* @ngInject */
-  function OverviewUsersCard($q, $rootScope, $state, $timeout, $translate, Config, DirSyncService, FeatureToggleService, ModalService, MultiDirSyncService, Orgservice) {
+  function OverviewUsersCard($q, $rootScope, $state, $timeout, $translate, AutoAssignTemplateService, Config, DirSyncService, FeatureToggleService, ModalService, MultiDirSyncService, Orgservice) {
     return {
       createCard: function createCard() {
         var card = {};
         card.features = {};
-        card.autoAssignLicensesStatus = undefined;
+        card.isAutoAssignTemplateActive = false;
+        card.hasAutoAssignDefaultTemplate = false;
 
         card.name = 'overview.cards.users.title';
         card.template = usersCardTemplatePath;
@@ -177,22 +178,15 @@
         card.showEditAutoAssignTemplateModal = function () {
           $state.go('users.list').then(function () {
             $timeout(function () {
-              $state.go('users.manage.edit-auto-assign-template-modal', {
-                prevState: 'users.manage.picker',
+              AutoAssignTemplateService.gotoEditAutoAssignTemplate({
+                isEditTemplateMode: card.hasAutoAssignDefaultTemplate,
               });
             });
           });
         };
 
         card.getAutoAssignLicensesStatusCssClass = function () {
-          var cssClassNames = {
-            ACTIVATED: 'success',
-            DEACTIVATED: 'warning',
-          };
-          if (_.isNil(card.autoAssignLicensesStatus)) {
-            return 'disabled';
-          }
-          return cssClassNames[card.autoAssignLicensesStatus];
+          return card.isAutoAssignTemplateActive ? 'success' : 'disabled';
         };
 
         function initFeatureToggles() {
@@ -204,18 +198,20 @@
           });
         }
 
-        // TODO: f3745 - rip this out once backend is available
-        function initFakeValues() {
-          // TODO: f3745 - apply logic for values returned by backend, once known
-          // - currently assume enum of ('ACTIVATED'|'DEACTIVATED'|null)
+        function initAutoAssignTemplate() {
           if (card.features.atlasF3745AutoAssignLicenses) {
-            card.autoAssignLicensesStatus = 'ACTIVATED';
-            // card.autoAssignLicensesStatus = 'DEACTIVATED';
-            // card.autoAssignLicensesStatus = null;
+            AutoAssignTemplateService.hasDefaultTemplate().then(function (hasDefaultTemplate) {
+              card.hasAutoAssignDefaultTemplate = hasDefaultTemplate;
+              if (hasDefaultTemplate) {
+                AutoAssignTemplateService.isEnabledForOrg().then(function (isActivated) {
+                  card.isAutoAssignTemplateActive = isActivated;
+                });
+              }
+            });
           }
         }
 
-        initFeatureToggles().then(initFakeValues);
+        initFeatureToggles().then(initAutoAssignTemplate);
 
         return card;
       },

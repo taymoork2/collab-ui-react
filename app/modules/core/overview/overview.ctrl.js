@@ -7,7 +7,7 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($q, $rootScope, $state, $scope, Authinfo, CardUtils, SunlightUtilitiesService, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, ProPackService, LearnMoreBannerService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SetupWizardService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService, PrivateTrunkService, ServiceDescriptorService, LinkedSitesService) {
+  function OverviewCtrl($q, $rootScope, $scope, $state, Authinfo, AutoAssignTemplateService, CardUtils, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, HybridServicesFlagService, HybridServicesUtilsService, LearnMoreBannerService, LinkedSitesService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, PrivateTrunkService, ProPackService, PstnService, ReportsService, ServiceDescriptorService, SetupWizardService, SunlightReportService, SunlightUtilitiesService, TrialService, UrlConfig) {
     var vm = this;
     var PSTN_TOS_ACCEPT = require('modules/huron/pstn/pstnTermsOfService').PSTN_TOS_ACCEPT;
     var PSTN_ESA_DISCLAIMER_ACCEPT = require('modules/huron/pstn/pstn.const').PSTN_ESA_DISCLAIMER_ACCEPT;
@@ -261,7 +261,11 @@ require('./_overview.scss');
 
       FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus().then(function (toggle) {
         if (toggle) {
-          vm.notifications.push(OverviewNotificationFactory.createAutoAssignNotification());
+          AutoAssignTemplateService.hasDefaultTemplate().then(function (hasDefaultTemplate) {
+            if (!hasDefaultTemplate) {
+              vm.notifications.push(OverviewNotificationFactory.createAutoAssignNotification());
+            }
+          });
         }
       });
 

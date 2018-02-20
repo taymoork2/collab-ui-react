@@ -7,6 +7,7 @@ import { OfferName } from 'modules/core/shared';
 import { IAssignableLicenseCheckboxState } from 'modules/core/users/userAdd/assignable-services/shared/license-usage-util.interfaces';
 import { ICrCheckboxItemState } from 'modules/core/users/shared/cr-checkbox-item/cr-checkbox-item.component';
 import { AssignableServicesItemCategory } from 'modules/core/users/userAdd/assignable-services/shared/license-usage-util.interfaces';
+import { Notification } from 'modules/core/notifications';
 
 export class EditAutoAssignTemplateModalController implements ng.IComponentController {
 
@@ -18,27 +19,30 @@ export class EditAutoAssignTemplateModalController implements ng.IComponentContr
 
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
     private $state: ng.ui.IStateService,
     private Analytics,
     private AutoAssignTemplateService: AutoAssignTemplateService,
+    private Notification: Notification,
   ) {}
 
   public $onInit(): void {
     this.prevState = _.get<string>(this.$state, 'params.prevState', 'users.manage.picker');
     this.isEditTemplateMode = !!this.isEditTemplateMode;
 
-    // restore state if provided
-    if (this.autoAssignTemplateData) {
-      this.sortedSubscriptions = _.get(this.autoAssignTemplateData, 'apiData.subscriptions');
-      return;
-    }
-
-    // otherwise use default initialization
-    this.autoAssignTemplateData = this.AutoAssignTemplateService.initAutoAssignTemplateData();
-    this.AutoAssignTemplateService.getSortedSubscriptions()
-      .then(sortedSubscriptions => {
-        this.sortedSubscriptions = sortedSubscriptions;
-        this.autoAssignTemplateData.apiData.subscriptions = sortedSubscriptions;
+    this.$q.resolve()
+      .then(() => {
+        if (!this.autoAssignTemplateData) {
+          return this.AutoAssignTemplateService.getDefaultStateData()
+            .then(autoAssignTemplateData => this.autoAssignTemplateData = autoAssignTemplateData)
+            .catch(response => {
+              this.Notification.errorResponse(response, 'userManage.org.modifyAutoAssign.modifyError');
+              this.back();
+            });
+        }
+      })
+      .finally(() => {
+        this.sortedSubscriptions = _.get(this.autoAssignTemplateData, 'apiData.subscriptions', []);
       });
   }
 
@@ -239,6 +243,6 @@ export class EditAutoAssignTemplateModalComponent implements ng.IComponentOption
     prevState: '<',
     isEditTemplateMode: '<',
     autoAssignTemplateData: '<',
-    dismiss: '&?',
+    dismiss: '&',
   };
 }

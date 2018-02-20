@@ -21,7 +21,9 @@
       </i>
     </a>
   </p>
-  <div class="modal-content__assignable-services">
+  <div class="modal-content__assignable-services"
+    ng-if="$ctrl.autoAssignTemplateData"
+  >
     <assignable-services
       subscriptions="$ctrl.sortedSubscriptions"
       on-update="$ctrl.recvUpdate($event)"
@@ -35,5 +37,10 @@
       save-instance="$ctrl.setHybridServices(hybridServices)"
       is-huron-call-license-selected="$ctrl.isHuronCallLicenseSelected">
     </hybrid-services-entitlements-panel>
+  </div>
+  <div class="text-center"
+    ng-if="!$ctrl.autoAssignTemplateData"
+  >
+    <i class="icon icon-spinner icon-5x"></i>
   </div>
 </multi-step-modal>
