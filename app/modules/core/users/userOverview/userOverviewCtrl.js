@@ -4,7 +4,7 @@
   module.exports = UserOverviewCtrl;
 
   /* @ngInject */
-  function UserOverviewCtrl($scope, $state, $stateParams, $translate, $window, $q, Authinfo, Config, DirSyncService, FeatureToggleService, MessengerInteropService, Notification, Userservice, UserOverviewService) {
+  function UserOverviewCtrl($scope, $state, $stateParams, $translate, $window, $q, Authinfo, Config, DirSyncService, FeatureToggleService, MessengerInteropService, Notification, Orgservice, Userservice, UserOverviewService) {
     var vm = this;
 
     vm.savePreferredLanguage = savePreferredLanguage;
@@ -26,6 +26,7 @@
     vm.hasAccount = Authinfo.hasAccount();
     vm.isFusion = Authinfo.isFusion();
     vm.isFusionCal = Authinfo.isFusionCal();
+    vm.goToUserDetails = goToUserDetails;
     vm.enableAuthCodeLink = enableAuthCodeLink;
     vm.disableAuthCodeLink = disableAuthCodeLink;
     vm.getUserPhoto = Userservice.getUserPhoto;
@@ -88,6 +89,14 @@
         getCurrentUser();
       });
 
+      Orgservice.getOrgCacheOption(function (data) {
+        if (data.success) {
+          vm.dirsyncEnabled = data.dirsyncEnabled;
+        }
+      }, null, {
+        cache: true,
+      });
+
       vm.services = [];
 
       initServices();
@@ -113,6 +122,12 @@
           vm.entitlements = response.sqEntitlements;
           init();
         });
+    }
+
+    function goToUserDetails() {
+      if (!vm.dirsyncEnabled) {
+        $state.go('user-overview.user-profile');
+      }
     }
 
     function initActionList() {

@@ -7,11 +7,15 @@
   </div>
   <div class="header-info">
     <div class="header-info-wrap">
-      <a href id="rolesChevron" ui-sref="user-overview.user-profile">
+      <!-- should be removed from the tabindex when dirsyncEnabled is true because click goes nowhere -->
+      <a id="rolesChevron"
+        ng-class="{'default-cursor': userOverview.dirsyncEnabled}"
+        ng-click="userOverview.goToUserDetails()"
+        tabindex="{{userOverview.dirsyncEnabled ? -1 : 0}}">
         <i class="feature-arrow"></i>
         <div class="header-title">
           <span>{{userOverview.titleCard}}</span>
-          <i class="edit-button icon icon-edit" aria-label="{{::'common.edit' | translate}}"></span></i>
+          <i class="edit-button icon icon-edit" ng-if="!userOverview.dirsyncEnabled" aria-label="{{::'common.edit' | translate}}"></i>
         </div>
         <div ng-if="userOverview.subTitleCard" class="header-sub-info user-header-title">{{userOverview.subTitleCard}}</div>
       </a>
