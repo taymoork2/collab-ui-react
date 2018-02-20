@@ -4,6 +4,7 @@ describe('OverviewUsersCard', function () {
     this.injectDependencies(
       '$q',
       '$rootScope',
+      'AutoAssignTemplateService',
       'DirSyncService',
       'FeatureToggleService',
       'MultiDirSyncService',
@@ -79,25 +80,53 @@ describe('OverviewUsersCard', function () {
 
   describe('feature-toggle behaviors:', function () {
     describe('atlas-f3745-auto-assign-licenses:', function () {
+      beforeEach(function () {
+        spyOn(this.AutoAssignTemplateService, 'hasDefaultTemplate').and.returnValue(this.$q.resolve(true));
+        spyOn(this.AutoAssignTemplateService, 'isEnabledForOrg').and.returnValue(this.$q.resolve(true));
+      });
       describe('enabled:', function () {
-        it('should set "autoAssignLicensesStatus" property', function () {
+        it('should set proper flags for an existing and active template', function () {
           spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(true));
           this.card = this.OverviewUsersCard.createCard();
           this.$rootScope.$apply();
 
           expect(this.card.features.atlasF3745AutoAssignLicenses).toBe(true);
-          expect(this.card.autoAssignLicensesStatus).toBeDefined();
+          expect(this.card.hasAutoAssignDefaultTemplate).toBe(true);
+          expect(this.card.isAutoAssignTemplateActive).toBe(true);
+          expect(this.card.getAutoAssignLicensesStatusCssClass()).toBe('success');
+
+          this.AutoAssignTemplateService.isEnabledForOrg.and.returnValue(this.$q.resolve(false));
+          this.card = this.OverviewUsersCard.createCard();
+          this.$rootScope.$apply();
+
+          expect(this.card.features.atlasF3745AutoAssignLicenses).toBe(true);
+          expect(this.card.hasAutoAssignDefaultTemplate).toBe(true);
+          expect(this.card.isAutoAssignTemplateActive).toBe(false);
+          expect(this.card.getAutoAssignLicensesStatusCssClass()).toBe('disabled');
+
+          this.AutoAssignTemplateService.hasDefaultTemplate.and.returnValue(this.$q.resolve(false));
+          this.card = this.OverviewUsersCard.createCard();
+          this.$rootScope.$apply();
+
+          expect(this.card.features.atlasF3745AutoAssignLicenses).toBe(true);
+          expect(this.card.hasAutoAssignDefaultTemplate).toBe(false);
+          expect(this.card.isAutoAssignTemplateActive).toBe(false);
+          expect(this.card.getAutoAssignLicensesStatusCssClass()).toBe('disabled');
         });
       });
 
       describe('disabled:', function () {
-        it('should not set "autoAssignLicensesStatus" property', function () {
+        it('should not use AutoAssignTemplateService or enable flags', function () {
           spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(false));
           this.card = this.OverviewUsersCard.createCard();
           this.$rootScope.$apply();
 
+          expect(this.AutoAssignTemplateService.hasDefaultTemplate).not.toHaveBeenCalled();
+          expect(this.AutoAssignTemplateService.isEnabledForOrg).not.toHaveBeenCalled();
           expect(this.card.features.atlasF3745AutoAssignLicenses).toBe(false);
-          expect(this.card.autoAssignLicensesStatus).not.toBeDefined();
+          expect(this.card.hasAutoAssignDefaultTemplate).toBe(false);
+          expect(this.card.isAutoAssignTemplateActive).toBe(false);
+          expect(this.card.getAutoAssignLicensesStatusCssClass()).toBe('disabled');
         });
       });
     });
