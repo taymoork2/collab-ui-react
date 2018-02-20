@@ -199,9 +199,9 @@
     masonry-layout "^4.1.1"
     moment "^2.10.6"
 
-"@collabui/collab-ui@~5.3.3", "@collabui/collab-ui@~5.3.5":
-  version "5.3.5"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui/-/@collabui/collab-ui-5.3.5.tgz#930e75e879fdb436a8c3d21953942b044471db47"
+"@collabui/collab-ui@~5.3.3", "@collabui/collab-ui@~5.3.6":
+  version "5.3.6"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui/-/@collabui/collab-ui-5.3.6.tgz#4e3d84b844a340248546a2f6693dc5a5042c5161"
   dependencies:
     "@collabui/collab-ui-icons" "~1.0.4"
 
