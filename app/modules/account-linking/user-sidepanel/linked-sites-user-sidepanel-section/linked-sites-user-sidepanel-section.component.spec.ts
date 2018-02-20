@@ -4,13 +4,13 @@ describe('LinkedSitesUserSidepanelSectionComponent', () => {
 
   let $componentController, $q, $scope;
 
-  const defaultUser = {
+  let defaultUser: any = {
     name: 'Julius Caesar',
     entitlements: [],
   };
 
-  afterAll(function () {
-    this.defaultUser = undefined;
+  afterAll(() => {
+    defaultUser = undefined;
   });
 
   beforeEach(function () {

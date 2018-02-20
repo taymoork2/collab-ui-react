@@ -32,6 +32,8 @@ class LinkedSitesUserSettingsComponentCtrl implements ng.IComponentController {
     return !_.isEmpty(this.linkedTrainSiteNames);
   }
 
+  // TODO: migrate this logic to a UserOverviewService method
+  // There is also a 'UserPreferencesService', but seems for a specific purpose right now
   private parseUserPreferences(userPreferenceKeyValPairs: string[]): Object {
     return _.reduce(userPreferenceKeyValPairs, (result, keyValPair) => {
       keyValPair = keyValPair ? keyValPair : '';
