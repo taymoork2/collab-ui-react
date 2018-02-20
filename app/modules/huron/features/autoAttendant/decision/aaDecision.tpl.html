@@ -3,7 +3,7 @@
     <cs-select id="ifDecision{{ schedule + index }}" name="ifDecision" ng-model="aaDecisionCtrl.ifOption" options="aaDecisionCtrl.ifOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" refresh-data-fn="aaDecisionCtrl.refreshIfSelects()" placeholder="aaDecisionCtrl.selectConditionPlaceholder" ng-change="aaDecisionCtrl.setIfDecision()">
     </cs-select>
   </div>
-  <div ng-switch="aaDecisionCtrl.ifOption.value">
+  <div ng-switch="aaDecisionCtrl.ifOption.value" id="decisionID">
      <div ng-class= "{'session-variable' : aaDecisionCtrl.isWarn}">
        <cs-select refresh-data-fn="aaDecisionCtrl.refreshVarSelects()" ng-switch-when="sessionVariable" name="ifSessionVariable" is-warn="{{ aaDecisionCtrl.isWarn }}" warn-msg="{{ aaDecisionCtrl.varMissingWarning }}" ng-model="aaDecisionCtrl.sessionVarOption" options="aaDecisionCtrl.sessionVarOptions" icon="icon-chevron-down" placeholder="aaDecisionCtrl.selectVariablePlaceholder" ng-change="aaDecisionCtrl.setIfDecision()">
        </cs-select>
