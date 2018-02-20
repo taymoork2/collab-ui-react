@@ -1,22 +1,23 @@
-import linkedSitesUserSettingsModuleName from './index';
+import moduleName from './index';
 
 describe('LinkedSitesUserSettingsCtrl', () => {
 
-  let $componentController, $q, $scope, UserOverviewService;
+  let $componentController, $q, $scope, UserOverviewService, Notification;
 
   beforeEach(function () {
-    this.initModules(linkedSitesUserSettingsModuleName);
+    this.initModules(moduleName);
   });
 
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   afterEach(cleanup);
 
-  function dependencies(_$componentController_, _$q_, _$rootScope_, _UserOverviewService_) {
+  function dependencies(_$componentController_, _$q_, _$rootScope_, _UserOverviewService_, _Notification_) {
     $componentController = _$componentController_;
     $q = _$q_;
     $scope = _$rootScope_.$new();
     UserOverviewService = _UserOverviewService_;
+    Notification = _Notification_;
   }
 
   function cleanup() {
@@ -50,11 +51,11 @@ describe('LinkedSitesUserSettingsCtrl', () => {
 
     expect(UserOverviewService.getUser.calls.count()).toBe(1);
     expect(UserOverviewService.getUser).toHaveBeenCalledWith(userId);
-    expect(ctrl.haveLinkedWebexSites()).toBeFalsy();
-    expect(ctrl.getPreferredWebExSite()).toEqual('');
+    expect(ctrl.hasLinkedWebexSites()).toBe(false);
+    expect(ctrl.getPreferredWebExSite()).toBe('');
   });
 
-  it('should haveLinkedWebexSites return true when linkedTrainSiteNames attribute is set', () => {
+  it('should hasLinkedWebexSites return true when linkedTrainSiteNames attribute is set', () => {
     UserOverviewService.getUser.and.returnValue($q.resolve({
       user: {
         linkedTrainSiteNames: ['testsite.webex.com'],
@@ -65,8 +66,8 @@ describe('LinkedSitesUserSettingsCtrl', () => {
     const userId = '9876';
     const ctrl = initController(userId);
 
-    expect(ctrl.haveLinkedWebexSites()).toBeTruthy();
-    expect(ctrl.getPreferredWebExSite()).toEqual('');
+    expect(ctrl.hasLinkedWebexSites()).toBe(true);
+    expect(ctrl.getPreferredWebExSite()).toBe('');
   });
 
   it('should return preferredWebexSite when userPreferences have the correct attribute set', () => {
@@ -80,8 +81,8 @@ describe('LinkedSitesUserSettingsCtrl', () => {
     const userId = '9876';
     const ctrl = initController(userId);
 
-    expect(ctrl.haveLinkedWebexSites()).toBeTruthy();
-    expect(ctrl.getPreferredWebExSite()).toEqual('testsite.webex.com');
+    expect(ctrl.hasLinkedWebexSites()).toBe(true);
+    expect(ctrl.getPreferredWebExSite()).toBe('testsite.webex.com');
   });
 
 });

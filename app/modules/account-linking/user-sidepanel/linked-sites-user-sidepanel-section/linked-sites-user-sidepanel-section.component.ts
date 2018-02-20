@@ -1,15 +1,11 @@
-import { FeatureToggleService } from 'modules/core/featureToggle/index';
-
 class LinkedSitesUserSidepanelSectionComponentCtrl implements ng.IComponentController {
 
   private userId: string;
   private linkedTrainSiteNames: string[];
-  public atlasAccountLinkingPhase2: boolean;
 
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
-    private FeatureToggleService: FeatureToggleService,
   ) { }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
@@ -20,23 +16,16 @@ class LinkedSitesUserSidepanelSectionComponentCtrl implements ng.IComponentContr
     }
   }
 
-  public $onInit() {
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasAccountLinkingPhase2)
-      .then((supported) => {
-        this.atlasAccountLinkingPhase2 = supported;
-      });
-  }
-
-  public haveLinkedWebexSites(): boolean {
+  public hasLinkedWebexSites(): boolean {
     return !_.isEmpty(this.linkedTrainSiteNames);
   }
 
-  public numberOfLinkedWebexSites(): number {
-    return this.haveLinkedWebexSites() ? this.linkedTrainSiteNames.length : 0;
+  public numLinkedWebexSites(): number {
+    return _.size(this.linkedTrainSiteNames);
   }
 
   public clickViewLinkedWebexSites() {
-    if (!this.haveLinkedWebexSites()) {
+    if (!this.hasLinkedWebexSites()) {
       return;
     }
     this.$state.go('user-overview.linked-webex-sites');

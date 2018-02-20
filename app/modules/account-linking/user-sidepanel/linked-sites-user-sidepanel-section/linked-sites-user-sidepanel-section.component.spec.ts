@@ -1,35 +1,33 @@
-import linkedSitesUserSidepanelModuleName from './index';
+import moduleName from './index';
 
 describe('LinkedSitesUserSidepanelSectionComponent', () => {
 
-  let $componentController, $q, $scope, FeatureToggleService;
+  let $componentController, $q, $scope;
 
   const defaultUser = {
     name: 'Julius Caesar',
     entitlements: [],
   };
 
+  afterAll(function () {
+    this.defaultUser = undefined;
+  });
+
   beforeEach(function () {
-    this.initModules(linkedSitesUserSidepanelModuleName);
+    this.initModules(moduleName);
   });
 
   beforeEach(inject(dependencies));
-  beforeEach(initSpies);
   afterEach(cleanup);
 
-  function dependencies (_$componentController_, _$q_, $rootScope, _FeatureToggleService_) {
+  function dependencies (_$componentController_, _$q_, $rootScope) {
     $componentController = _$componentController_;
     $q = _$q_;
     $scope = $rootScope.$new();
-    FeatureToggleService = _FeatureToggleService_;
-  }
-
-  function initSpies() {
-    spyOn(FeatureToggleService, 'supports');
   }
 
   function cleanup() {
-    $componentController = $q = $scope = FeatureToggleService = undefined;
+    $componentController = $q = $scope = undefined;
   }
 
   function initController(user?) {
@@ -41,34 +39,26 @@ describe('LinkedSitesUserSidepanelSectionComponent', () => {
         currentValue: user || defaultUser,
       },
     });
-    ctrl.$onInit();
     $scope.$apply();
     return ctrl;
   }
 
-  it('should have feature toggle set to false by default on init', () => {
-    FeatureToggleService.supports.and.returnValue($q.resolve(false));
-
+  it('should hasLinkedWebexSites to be false if user does not have linkedTrainSiteNames', () => {
     const ctrl = initController();
 
-    expect(FeatureToggleService.supports).toHaveBeenCalled();
-    expect(ctrl.atlasAccountLinkingPhase2).toBeFalsy();
-    expect(ctrl.haveLinkedWebexSites()).toBeFalsy();
-    expect(ctrl.numberOfLinkedWebexSites()).toEqual(0);
+    expect(ctrl.hasLinkedWebexSites()).toBe(false);
+    expect(ctrl.numLinkedWebexSites()).toBe(0);
   });
 
-  it('should haveLinkedWebexSites to be true if attribute is set with correct value', () => {
-    FeatureToggleService.supports.and.returnValue($q.resolve(true));
+  it('should hasLinkedWebexSites to be true if attribute is set with correct value', () => {
     const userWithLinkedTrainSiteNames = {
       linkedTrainSiteNames: ['testsite.webex.com', 'testsite2.webex.com'],
     };
 
     const ctrl = initController(userWithLinkedTrainSiteNames);
 
-    expect(FeatureToggleService.supports).toHaveBeenCalled();
-    expect(ctrl.atlasAccountLinkingPhase2).toBeTruthy();
-    expect(ctrl.haveLinkedWebexSites()).toBeTruthy();
-    expect(ctrl.numberOfLinkedWebexSites()).toEqual(2);
+    expect(ctrl.hasLinkedWebexSites()).toBe(true);
+    expect(ctrl.numLinkedWebexSites()).toBe(2);
   });
 
 });

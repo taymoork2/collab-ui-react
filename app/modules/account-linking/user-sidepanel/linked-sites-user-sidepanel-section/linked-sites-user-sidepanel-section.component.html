@@ -1,14 +1,16 @@
-<cs-sp-section class="hybrid-services-user-sidepanel" ng-if="$ctrl.atlasAccountLinkingPhase2 && $ctrl.haveLinkedWebexSites()">
-  <div class="section-title-row">
-    <span class="section-name" translate="accountLinking.userSidepanel.webexLinkedAccounts"></span>
-  </div>
+<div cr-feature-toggle feature-show="atlas-account-linking-phase2" ng-if="$ctrl.hasLinkedWebexSites()">
+  <cs-sp-section>
+    <div class="section-title-row">
+      <span class="section-name" translate="accountLinking.userSidepanel.webexLinkedAccounts"></span>
+    </div>
 
-  <div class="feature">
-    <a href ng-click="$ctrl.clickViewLinkedWebexSites()">
-      <i class="feature-icon icon-circle-group"></i>
-      <span class="feature-name" translate="accountLinking.userSidepanel.linkedAccounts"></span>
-      <span class="feature-status">{{$ctrl.numberOfLinkedWebexSites()}}</span>
-      <i class="feature-arrow"></i>
-    </a>
-  </div>
-</cs-sp-section>
+    <div class="feature">
+      <a href ng-click="$ctrl.clickViewLinkedWebexSites()">
+        <i class="feature-icon icon-circle-group"></i>
+        <span class="feature-name" translate="accountLinking.userSidepanel.linkedAccounts"></span>
+        <span class="feature-status">{{$ctrl.numLinkedWebexSites()}}</span>
+        <i class="feature-arrow"></i>
+      </a>
+    </div>
+  </cs-sp-section>
+</div>

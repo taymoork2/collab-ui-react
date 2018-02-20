@@ -1,15 +1,17 @@
-import { UserOverviewService } from 'modules/core/users/userOverview/userOverview.service';
+import { Notification } from 'modules/core/notifications';
+import { UserOverviewService } from 'modules/core/users/userOverview';
 
 class LinkedSitesUserSettingsComponentCtrl implements ng.IComponentController {
 
   private userId: string;
   private linkedTrainSiteNames: string[];
-  private userPreferences: string[];
+  private userPreferences: object;
 
   /* @ngInject */
   constructor(
     private UserOverviewService: UserOverviewService,
-  ) { }
+    private Notification: Notification,
+    ) { }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
     const { userId } = changes;
@@ -18,28 +20,31 @@ class LinkedSitesUserSettingsComponentCtrl implements ng.IComponentController {
       this.UserOverviewService.getUser(this.userId)
         .then((response) => {
           this.linkedTrainSiteNames = response.user.linkedTrainSiteNames;
-          this.userPreferences = response.user.userPreferences;
+          this.userPreferences = this.parseUserPreferences(_.get(response, 'user.userPreferences', []));
         })
         .catch((error) => {
-          throw error;
+          this.Notification.errorWithTrackingId(error, 'accountLinking.errors.unableToRetrieveData');
         });
     }
   }
 
-  public haveLinkedWebexSites(): boolean {
+  public hasLinkedWebexSites(): boolean {
     return !_.isEmpty(this.linkedTrainSiteNames);
   }
 
+  private parseUserPreferences(userPreferenceKeyValPairs: string[]): Object {
+    return _.reduce(userPreferenceKeyValPairs, (result, keyValPair) => {
+      keyValPair = keyValPair ? keyValPair : '';
+
+      const sanitizedKeyValPair = keyValPair .replace(/"/g, '');
+      const [key, val] = _.split(sanitizedKeyValPair, ':');
+      result[key] = val;
+      return result;
+    }, {});
+  }
+
   public getPreferredWebExSite(): string {
-    if (!_.isEmpty(this.userPreferences)) {
-      const preferredSite = _.find(this.userPreferences, function (userPreference) {
-        return userPreference.indexOf('preferredWebExSite') > 0;
-      });
-      if (_.isString(preferredSite)) {
-        return preferredSite.substring(preferredSite.indexOf(':') + 1).replace(/"/g, '');
-      }
-    }
-    return '';
+    return _.get(this.userPreferences, 'preferredWebExSite', '');
   }
 
 }
