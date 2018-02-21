@@ -294,6 +294,7 @@ describe('Huron Auto Attendant', function () {
       utils.sendKeys(autoattendant.sayMessageInput, "Welcome to the AA");
       utils.click(autoattendant.sayMessageDynamicButton)
       utils.wait(autoattendant.dynamicVariable, 320000);
+      utils.wait(autoattendant.dynamicVariable, 320000);
       utils.click(autoattendant.readAs);
       utils.click(autoattendant.readAsVariable);
       utils.click(autoattendant.dynamicVariable);
@@ -336,6 +337,7 @@ describe('Huron Auto Attendant', function () {
       utils.sendKeys(autoattendant.phonesayMessageInput, "Press a key at the menu");
       utils.click(autoattendant.phoneMenuAddDynamicTextButton);
       utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.wait(autoattendant.dynamicVariable, 320000);
       utils.click(autoattendant.readAs);
       utils.click(autoattendant.readAsVariable);
       utils.click(autoattendant.dynamicVariable);
@@ -638,6 +640,7 @@ describe('Huron Auto Attendant', function () {
       utils.sendKeys(autoattendant.dialByMessageInput, "Enter the Extension");
       utils.click(autoattendant.dialByExtensionDynamicButton);
       utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.wait(autoattendant.dynamicVariable, 320000);
       utils.click(autoattendant.dynamicVariable);
       utils.wait(autoattendant.dynamicVariable, 120000);
       utils.click(autoattendant.variable);
@@ -725,6 +728,7 @@ describe('Huron Auto Attendant', function () {
         //utils.sendKeys(autoattendant.callerMessageInput, "Extension");
         utils.click(autoattendant.callerInputDynamicButton);
         utils.wait(autoattendant.dynamicVariable, 120000);
+        utils.wait(autoattendant.dynamicVariable, 320000);
         utils.click(autoattendant.dynamicVariable);
         utils.wait(autoattendant.dynamicVariable, 120000);
         utils.click(autoattendant.variable);
@@ -769,7 +773,9 @@ describe('Huron Auto Attendant', function () {
 
       utils.click(autoattendant.decisionIf);
 
-      utils.wait(autoattendant.decisionIf, 120000);
+      utils.expectIsDisplayed(autoattendant.ifDropDown);
+      utils.wait(autoattendant.ifDropDown, 3600000);
+      browser.driver.sleep(5000);
 
       utils.click(autoattendant.decisionIfDropDownOptions);
 
@@ -811,10 +817,10 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.addschedule);
 
       utils.click(autoattendant.starttime);
-      autoattendant.starttime.sendKeys(autoattendant.starttime, '1', protractor.Key.TAB, '00', protractor.Key.TAB, 'A');
+      //autoattendant.starttime.sendKeys(autoattendant.starttime, '1', protractor.Key.TAB, '00', protractor.Key.TAB, 'A');
 
       utils.click(autoattendant.endtime);
-      autoattendant.endtime.sendKeys(autoattendant.starttime, '5', protractor.Key.TAB, '00', protractor.Key.TAB, 'P');
+      //autoattendant.endtime.sendKeys(autoattendant.starttime, '5', protractor.Key.TAB, '00', protractor.Key.TAB, 'P');
 
       utils.expectIsDisabled(autoattendant.modalsave);
       utils.click(autoattendant.day1);
