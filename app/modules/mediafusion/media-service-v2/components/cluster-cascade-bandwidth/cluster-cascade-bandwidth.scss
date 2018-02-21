@@ -1,3 +1,4 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
 cluster-cascade-bandwidth {
   .cascade-input-div {
     display: flex;
@@ -9,11 +10,11 @@ cluster-cascade-bandwidth {
   .input-error {
     input,
     input:focus {
-      border-color: #FF8170;
-      background: #FFADA3;
+      border-color: $color-red-darker;
+      background: $color-red-base;
     }
     .cs-input__help-text {
-      color: #FF8170;
+      color: $color-red-dark;
     }
   }
 }

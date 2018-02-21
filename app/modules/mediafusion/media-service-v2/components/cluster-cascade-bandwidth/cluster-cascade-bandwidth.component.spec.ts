@@ -23,7 +23,7 @@ describe('ClusterCascadeBandwidthController', () => {
   }
 
   function cleanup() {
-    $componentController = $q = $scope = HybridServicesClusterService = undefined;
+    $componentController = $q = $scope = ClusterCascadeBandwidthService = HybridServicesClusterService = undefined;
   }
 
   function initSpies() {
@@ -36,11 +36,7 @@ describe('ClusterCascadeBandwidthController', () => {
     const ctrl = $componentController('clusterCascadeBandwidth', {}, {});
     ctrl.$onChanges({
       cluster: {
-        previousValue: undefined,
         currentValue: cluster,
-        isFirstChange() {
-          return true;
-        },
       },
     });
     $scope.$apply();

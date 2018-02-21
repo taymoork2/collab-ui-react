@@ -7,7 +7,7 @@ export class ClusterCascadeBandwidthController implements ng.IComponentControlle
   public inValidValue: boolean = true;
   public clusterId: string;
   public cluster: ICluster;
-  public cascadeBandwidthConfiguration: number | 42;
+  public cascadeBandwidthConfiguration: number = 42;
   public bandwidthError: boolean = false;
 
   public clusterBandwidth = {
