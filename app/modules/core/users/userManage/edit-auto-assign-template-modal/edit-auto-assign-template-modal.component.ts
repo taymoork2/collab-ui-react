@@ -224,7 +224,7 @@ export class EditAutoAssignTemplateModalController implements ng.IComponentContr
     _.set(this.autoAssignTemplateData, `otherData.hybridServices`, hybridServices);
   }
 
-  public getFooterWarningL10nKey(): string {
+  public get footerWarningL10nKey(): string {
     if (!this.isEditTemplateMode || this.targetStateViewDataHasSelections()) {
       return '';
     }

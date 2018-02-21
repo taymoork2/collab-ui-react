@@ -461,19 +461,19 @@ describe('Component: editAutoAssignTemplateModal:', () => {
       });
     });
 
-    describe('getFooterWarningL10nKey():', () => {
+    describe('(get) footerWarningL10nKey:', () => {
       it('should return empty string if not in edit template mode, or if the pending template has selections', function () {
         this.controller.isEditTemplateMode = false;
-        expect(this.controller.getFooterWarningL10nKey()).toBe('');
+        expect(this.controller.footerWarningL10nKey).toBe('');
         this.controller.isEditTemplateMode = true;
         spyOn(this.controller, 'targetStateViewDataHasSelections').and.returnValue(true);
-        expect(this.controller.getFooterWarningL10nKey()).toBe('');
+        expect(this.controller.footerWarningL10nKey).toBe('');
       });
 
       it('should return l10n key for footer warning message if in edit mode and pending template has no selections', function () {
         this.controller.isEditTemplateMode = true;
         spyOn(this.controller, 'targetStateViewDataHasSelections').and.returnValue(false);
-        expect(this.controller.getFooterWarningL10nKey()).toBe('userManage.autoAssignTemplate.edit.warningFooter');
+        expect(this.controller.footerWarningL10nKey).toBe('userManage.autoAssignTemplate.edit.warningFooter');
       });
     });
   });
