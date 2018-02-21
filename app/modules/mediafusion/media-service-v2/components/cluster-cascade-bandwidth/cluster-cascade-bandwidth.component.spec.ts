@@ -2,7 +2,7 @@ import moduleName from './index';
 
 describe('ClusterCascadeBandwidthController', () => {
 
-  let $componentController, $scope, $q, ClusterCascadeBandwidthService, HybridServicesClusterService;
+  let $componentController, $q, $scope, ClusterCascadeBandwidthService, HybridServicesClusterService;
 
   interface ICluster {
     id: string;
@@ -14,16 +14,16 @@ describe('ClusterCascadeBandwidthController', () => {
   beforeEach(initSpies);
   afterEach(cleanup);
 
-  function dependencies(_$componentController_, $rootScope, _$q_, _ClusterCascadeBandwidthService_, _HybridServicesClusterService_) {
+  function dependencies(_$componentController_, _$q_, $rootScope, _ClusterCascadeBandwidthService_, _HybridServicesClusterService_) {
     $componentController = _$componentController_;
-    $scope = $rootScope.$new();
     $q = _$q_;
+    $scope = $rootScope.$new();
     ClusterCascadeBandwidthService = _ClusterCascadeBandwidthService_;
     HybridServicesClusterService = _HybridServicesClusterService_;
   }
 
   function cleanup() {
-    $componentController = $scope = $q = HybridServicesClusterService = undefined;
+    $componentController = $q = $scope = HybridServicesClusterService = undefined;
   }
 
   function initSpies() {

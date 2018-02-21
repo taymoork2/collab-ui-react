@@ -29,7 +29,7 @@ export class ClusterCascadeBandwidthController implements ng.IComponentControlle
     }
   }
 
-  public validate() {
+  public validate(): void {
     this.bandwidthChange = true;
     this.inValidValue = true;
     if (this.cascadeBandwidthConfiguration >= 5 && this.cascadeBandwidthConfiguration <= 50) {
@@ -40,7 +40,7 @@ export class ClusterCascadeBandwidthController implements ng.IComponentControlle
     }
   }
 
-  private getProperties(clusterId) {
+  private getProperties(clusterId): void {
     this.HybridServicesClusterService.getProperties(clusterId)
       .then((properties: IClusterPropertySet) => {
         const cascadeBandwidth = properties['mf.maxCascadeBandwidth'];
