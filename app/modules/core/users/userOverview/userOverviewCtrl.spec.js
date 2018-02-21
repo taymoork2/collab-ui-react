@@ -20,8 +20,8 @@ describe('Controller: UserOverviewCtrl', function () {
       'Config',
       'FeatureToggleService',
       'MessengerInteropService',
+      'MultiDirSyncService',
       'Notification',
-      'Orgservice',
       'ServiceSetup',
       'UrlConfig',
       'UserOverviewService',
@@ -44,12 +44,7 @@ describe('Controller: UserOverviewCtrl', function () {
     var _this = this;
 
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(this.pristineCurrentUser.meta.organizationID);
-    spyOn(this.Orgservice, 'getOrgCacheOption').and.callFake(function (callback) {
-      callback({
-        success: true,
-        dirsyncEnabled: false,
-      });
-    });
+    spyOn(this.MultiDirSyncService, 'isDirsyncEnabled').and.returnValue(this.$q.resolve(false));
 
     this.getUserSpy = spyOn(this.UserOverviewService, 'getUser').and.callFake(function () {
       var getUserResponse = {
@@ -158,26 +153,13 @@ describe('Controller: UserOverviewCtrl', function () {
       expect(msgState.actionAvailable).toBe(true);
     });
 
-    it('should set dirsyncEnabled based on what is returned by the Orgservice call', function () {
+    it('should set dirsyncEnabled based on what is returned by the MultiDirSyncService call', function () {
       initController.apply(this);
       expect(this.controller.dirsyncEnabled).toBe(false);
 
-      this.Orgservice.getOrgCacheOption.and.callFake(function (callback) {
-        callback({
-          success: true,
-          dirsyncEnabled: true,
-        });
-      });
+      this.MultiDirSyncService.isDirsyncEnabled.and.returnValue(this.$q.resolve(true));
       initController.apply(this);
       expect(this.controller.dirsyncEnabled).toBe(true);
-
-      this.Orgservice.getOrgCacheOption.and.callFake(function (callback) {
-        callback({
-          success: false,
-        });
-      });
-      initController.apply(this);
-      expect(this.controller.dirsyncEnabled).toBe(false);
     });
   });
 

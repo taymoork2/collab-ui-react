@@ -4,7 +4,7 @@
   module.exports = UserOverviewCtrl;
 
   /* @ngInject */
-  function UserOverviewCtrl($scope, $state, $stateParams, $translate, $window, $q, Authinfo, Config, DirSyncService, FeatureToggleService, MessengerInteropService, Notification, Orgservice, Userservice, UserOverviewService) {
+  function UserOverviewCtrl($scope, $state, $stateParams, $translate, $window, $q, Authinfo, Config, DirSyncService, FeatureToggleService, MessengerInteropService, MultiDirSyncService, Notification, Userservice, UserOverviewService) {
     var vm = this;
 
     vm.savePreferredLanguage = savePreferredLanguage;
@@ -21,7 +21,7 @@
     vm.subTitleCard = '';
     vm.resendInvitation = resendInvitation;
     vm.pendingStatus = false;
-    vm.dirsyncEnabled = false;
+    vm.dirsyncEnabled = true;
     vm.isCSB = Authinfo.isCSB();
     vm.hasAccount = Authinfo.hasAccount();
     vm.isFusion = Authinfo.isFusion();
@@ -89,12 +89,8 @@
         getCurrentUser();
       });
 
-      Orgservice.getOrgCacheOption(function (data) {
-        if (data.success) {
-          vm.dirsyncEnabled = data.dirsyncEnabled;
-        }
-      }, null, {
-        cache: true,
+      MultiDirSyncService.isDirsyncEnabled().then(function (isEnabled) {
+        vm.dirsyncEnabled = isEnabled;
       });
 
       vm.services = [];

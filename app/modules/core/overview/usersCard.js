@@ -23,6 +23,7 @@
         card.icon = 'icon-circle-user';
         card.isUpdating = true;
         card.showLicenseCard = false;
+        card.isDirsyncEnabled = false;
 
         card.unlicensedUsersHandler = function (data) {
           if (data.success) {
@@ -99,6 +100,7 @@
           }
         }
 
+        var featuresPromise = initFeatureToggles().then(initAutoAssignTemplate);
         card.orgEventHandler = function (data) {
           if (data.success) {
             card.ssoEnabled = data.ssoEnabled || false;
@@ -108,21 +110,21 @@
             }
           }
 
-          if (card.features.atlasF6980MultiDirSync) {
-            MultiDirSyncService.getEnabledDomains().then(function (enabledDomains) {
-              card.dirsyncEnabled = enabledDomains.length > 0;
-            }).catch(function () {
-              card.dirsyncEnabled = false;
-            }).finally(function () {
-              card.isUpdating = false;
-            });
-          } else {
-            var dirSyncPromise = (DirSyncService.requiresRefresh() ? DirSyncService.refreshStatus() : $q.resolve());
-            dirSyncPromise.finally(function () {
-              card.dirsyncEnabled = DirSyncService.isDirSyncEnabled();
-              card.isUpdating = false;
-            });
-          }
+          featuresPromise.finally(function () {
+            if (card.features.atlasF6980MultiDirSync) {
+              MultiDirSyncService.isDirsyncEnabled().then(function (enabledDomains) {
+                card.dirsyncEnabled = enabledDomains;
+              }).finally(function () {
+                card.isUpdating = false;
+              });
+            } else {
+              var dirSyncPromise = (DirSyncService.requiresRefresh() ? DirSyncService.refreshStatus() : $q.resolve());
+              dirSyncPromise.finally(function () {
+                card.dirsyncEnabled = DirSyncService.isDirSyncEnabled();
+                card.isUpdating = false;
+              });
+            }
+          });
         };
 
         function goToUsersConvert(options) {
@@ -210,8 +212,6 @@
             });
           }
         }
-
-        initFeatureToggles().then(initAutoAssignTemplate);
 
         return card;
       },
