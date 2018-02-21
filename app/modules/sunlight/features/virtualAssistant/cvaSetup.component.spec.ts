@@ -287,6 +287,26 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, true, false);
     });
 
+    it('Next page keyboard shortcut should not work if name field is invalid', function () {
+      controller.template.configuration.pages.vaName.nameValue = '';
+      const ENTER_KEYPRESS_EVENT = {
+        which: KeyCodes.ENTER,
+      };
+      spyOn(controller, 'nextPage');
+      controller.enterNextPage(ENTER_KEYPRESS_EVENT);
+      expect(controller.nextPage).not.toHaveBeenCalled();
+    });
+
+    it('space keyboard shortcut should not trigger next page', function () {
+      controller.template.configuration.pages.vaName.nameValue = 'testName';
+      const SPACE_KEYPRESS_EVENT = {
+        which: KeyCodes.SPACE,
+      };
+      spyOn(controller, 'nextPage');
+      controller.enterNextPage(SPACE_KEYPRESS_EVENT);
+      expect(controller.nextPage).not.toHaveBeenCalled();
+    });
+
     it('Next button on Name Page disabled when nameValue is only spaces', function () {
       controller.template.configuration.pages.vaName.nameValue = '  ';
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, true, false);

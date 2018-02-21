@@ -25,7 +25,7 @@ describe('Service: BulkEnableVmService', () => {
 
   it('can get SparkCallUserCount', function() {
     const userlistServiceUrl = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) +
-    '?filter=active%20eq%20true%20and%20entitlements%20eq%20%22ciscouc%22&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings&count=1000';
+    '?filter=active%20eq%20true%20and%20entitlements%20eq%20%22ciscouc%22&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,linkedTrainSiteNames,licenseID,userSettings,userPreferences&count=1000';
 
     this.$httpBackend.expectGET(userlistServiceUrl).respond(200, { totalResults: '20' });
     spyOn(this.BulkEnableVmService, 'getSparkCallUserCountRetry').and.callThrough();

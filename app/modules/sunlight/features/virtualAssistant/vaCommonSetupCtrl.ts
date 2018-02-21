@@ -174,17 +174,28 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
    * evaluate the passed event to trip a condition.
    * @param $event
    */
-  public keydown($event: KeyboardEvent): void {
+  public enterNextPage($event: KeyboardEvent): void {
     switch ($event.which) {
+      // don't uses space as keyboard shortcut since names can have spaces
       case KeyCodes.ENTER:
-      case KeyCodes.SPACE:
-        this.nextPage();
+        // only advance to next page it next button is enabled
+        if (this.nextButton()) {
+          this.nextPage();
+        }
         break;
       default:
         break;
     }
   }
 
+  /**
+   * should next button be rendered.
+   * each subclass should override this
+   * @returns {boolean}
+   */
+  public nextButton(): any {
+    return false;
+  }
   /**
    * should previous button be rendered.
    * @returns {boolean}

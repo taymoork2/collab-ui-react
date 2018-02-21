@@ -1862,6 +1862,20 @@
               displayName: translateDisplayName('usersPreview.rolesAndSecurity'),
             },
           })
+          .state('user-overview.linked-webex-sites', {
+            views: {
+              'side-panel-container@user-overview': {
+                template: '<linked-sites-user-settings user-id="$resolve.userId"></linked-sites-user-settings>',
+              },
+            },
+            data: {},
+            resolve: {
+              userId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentUser.id;
+              },
+              displayName: translateDisplayName('accountLinking.userSidepanel.linkedAccounts'),
+            },
+          })
 
           // FOR Development: allow editing of user's feature toggles
           .state('edit-featuretoggles', {
@@ -3686,11 +3700,6 @@
             controller: 'TrialDeviceController',
             controllerAs: 'callTrial',
           })
-          .state('trial.pstnDeprecated', {
-            template: require('modules/core/trials/trialPstn.tpl.html'),
-            controller: 'TrialPstnCtrl',
-            controllerAs: 'pstnTrial',
-          })
           .state('trial.pstn', {
             template: '<uc-pstn-trial-setup class="modal-content" dismiss="$dismiss()"></uc-pstn-trial-setup>',
             controller: 'TrialPstnCtrl',
@@ -3815,62 +3824,6 @@
               refreshFn: /* @ngInject */ function ($stateParams) {
                 return $stateParams.refreshFn;
               },
-            },
-          })
-          .state('pstnSetup', {
-            parent: 'modal',
-            params: {
-              customerId: {},
-              customerName: {},
-              customerEmail: {},
-              customerCommunicationLicenseIsTrial: {},
-              customerRoomSystemsLicenseIsTrial: {},
-              refreshFn: function () {},
-            },
-            views: {
-              'modal@': {
-                template: '<div ui-view></div>',
-                controller: 'PstnSetupCtrl',
-                controllerAs: 'pstnSetup',
-              },
-              '@pstnSetup': {
-                template: require('modules/huron/pstnSetup/pstnProviders/pstnProviders.tpl.html'),
-                controller: 'PstnProvidersCtrl',
-                controllerAs: 'pstnProviders',
-              },
-            },
-          })
-          .state('pstnSetup.contractInfo', {
-            template: require('modules/huron/pstnSetup/pstnContractInfo/pstnContractInfo.tpl.html'),
-            controller: 'PstnContractInfoCtrl',
-            controllerAs: 'pstnContractInfo',
-          })
-          .state('pstnSetup.serviceAddress', {
-            template: require('modules/huron/pstnSetup/pstnServiceAddress/pstnServiceAddress.tpl.html'),
-            controller: 'PstnServiceAddressCtrl',
-            controllerAs: 'pstnServiceAddress',
-          })
-          .state('pstnSetup.orderNumbers', {
-            template: require('modules/huron/pstnSetup/pstnNumbers/pstnNumbers.tpl.html'),
-            controller: 'PstnNumbersCtrl',
-            controllerAs: 'pstnNumbers',
-          })
-          .state('pstnSetup.swivelNumbers', {
-            template: require('modules/huron/pstnSetup/pstnSwivelNumbers/pstnSwivelNumbers.tpl.html'),
-            controller: 'PstnSwivelNumbersCtrl',
-            controllerAs: 'pstnSwivelNumbers',
-          })
-          .state('pstnSetup.review', {
-            template: require('modules/huron/pstnSetup/pstnReview/pstnReview.tpl.html'),
-            controller: 'PstnReviewCtrl',
-            controllerAs: 'pstnReview',
-          })
-          .state('pstnSetup.nextSteps', {
-            template: require('modules/huron/pstnSetup/pstnNextSteps/pstnNextSteps.tpl.html'),
-            controller: 'PstnNextStepsCtrl',
-            controllerAs: 'pstnNextSteps',
-            params: {
-              portOrders: null,
             },
           })
           .state('hurondetailsBase', {
