@@ -1,29 +1,17 @@
 <div class="modal-body">
-
   <div class="row">
     <div class="columns medium-6 medium-offset-3">
       <div class="center">
-
         <i class="icon icon-circle-check-mark-success"></i>
-        <p class="icon-info-text">Link Accounts</p>
-
-        <p>
-          You're about to direct to WebEx Site Administration where you can link your WebEx accounts to Cisco Spark.
-        </p>
+        <p class="icon-info-text" translate="accountLinking.wizard.linkAccounts"></p>
+        <p translate="accountLinking.wizard.linkAccountsTxt"></p>
       </div>
     </div>
   </div>
 
 </div>
 <div class="modal-footer">
-  <button class="btn"
-          ng-click="$ctrl.backFunc()">
-    Back
-  </button>
-  <button class="btn btn--primary"
-          ng-click="$ctrl.next()">
-    Start Linking Accounts
-
-  </button>
+  <button class="btn" ng-click="$ctrl.backFunc()" translate="common.back"></button>
+  <button class="btn btn--primary" ng-click="$ctrl.next()" translate="accountLinking.wizard.startLinkingAccounts"></button>
 
 </div>

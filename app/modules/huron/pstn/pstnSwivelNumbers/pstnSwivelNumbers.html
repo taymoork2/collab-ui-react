@@ -1,4 +1,4 @@
-<div class="pstn-swivel-numbers" ng-if="$ctrl.i387FeatureToggle && $ctrl.hPstnFeatureToggle">
+<div class="pstn-swivel-numbers" ng-if="$ctrl.i387FeatureToggle">
   <div class="flex-space-between">
       <span class="h4" translate="pstnSetup.addPhoneNumbers"></span>
       <span class="h4" translate="pstnSetup.privatePstnTrunk"></span>
@@ -9,7 +9,7 @@
   tokenoptions="$ctrl.tokenoptions"
   tokenmethods="$ctrl.tokenmethods"></cs-token-field>
 </div>
-<div class="did-input" ng-if="!($ctrl.i387FeatureToggle && $ctrl.hPstnFeatureToggle)">
+<div class="did-input" ng-if="!($ctrl.i387FeatureToggle)">
   <cs-token-field tokens="$ctrl.number" tokenfieldid="$ctrl.tokenfieldid" tokenplaceholder="$ctrl.tokenplaceholder" tokenoptions="$ctrl.tokenoptions" tokenmethods="$ctrl.tokenmethods"></cs-token-field>
   <div class="cs-input-group cs-input-checkbox" ng-if="!$ctrl.noAcknowledge">
       <input id="swivelEmergencyAcknowledge" name="swivelEmergencyAcknowledge"

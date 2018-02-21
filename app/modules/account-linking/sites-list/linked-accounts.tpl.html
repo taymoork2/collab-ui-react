@@ -4,6 +4,7 @@
 <div class="ui-grid-cell-contents" ng-if="row.entity.accountInfoErrors.length === 0 && row.entity.linkingStatus.accountsLinked === undefined">
   <div cs-loader class="waiting"/>
 </div>
-<div translate="accountLinking.errors.unableToRetrieveData" class="ui-grid-cell-contents faded error-table-entry" ng-if="row.entity.accountInfoErrors.length > 0" >
+<div class="ui-grid-cell-contents faded error-table-entry" ng-if="row.entity.accountInfoErrors.length > 0" >
+ {{row.entity.accountInfoErrors[0]}}
 </div>
 

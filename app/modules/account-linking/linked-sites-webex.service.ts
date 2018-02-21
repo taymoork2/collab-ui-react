@@ -54,7 +54,7 @@ export class LinkedSitesWebExService {
         this.$log.debug('getCiSiteLinking', response);
         return response.data;
       }).catch ((error) => {
-        this.$log.debug('getCiSiteLinking', error);
+        this.$log.debug('getCiSiteLinking error in webexservice:', error);
         throw error;
       });
     });
@@ -77,11 +77,7 @@ export class LinkedSitesWebExService {
           trustedDomains: domains,
         };
       }
-
-      return this.$http.patch(urlToUse, {
-        accountLinkingMode: mode,
-        trustedDomains: domains,
-      }, {
+      return this.$http.patch(urlToUse, data, {
         headers: { Authorization: 'Ticket ' + ticket },
       }).then((response) => {
         this.$log.debug('setCiSiteLinking', response);
@@ -125,7 +121,7 @@ export class LinkedSitesWebExService {
         this.$log.debug('getCiAccountSync', response);
         return response.data;
       }).catch((error) => {
-        this.$log.error('getCiAccountSync error:', error);
+        this.$log.error('getCiAccountSync in Webexservice:', error);
         throw error;
       });
     });
@@ -168,7 +164,7 @@ export class LinkedSitesWebExService {
           return response.data;
         }
       }).catch((error) => {
-        this.$log.debug('getDomains error:', error);
+        this.$log.debug('getDomains error in Webexservice::', error);
         throw error;
       });
     });

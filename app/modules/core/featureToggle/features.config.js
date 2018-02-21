@@ -147,7 +147,6 @@ module.exports = {
   huronNetworkLocaleSE: 'huron-l10n-network-locale-se',
   huronPhoneButtonLayout: 'h-i1238',
   huronPlaceMOHEnable: 'huron-place-moh-enable',
-  huronPstn: 'h-pstn',
   hybridCare: 'hybrid-care',
   iosActionBar: 'ios-action-bar',
   iosAecType: 'ios-aec-type',

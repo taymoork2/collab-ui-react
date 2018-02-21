@@ -23,7 +23,10 @@
               <div class="feature-name">{{::'gemini.tds.field.partnerTdName' | translate}}:</div>
             </div>
             <div class="pull-left medium-6">
-              <div popover-trigger="mouseenter" popover="{{$ctrl.model.customerAttribute.length > 33 ? $ctrl.model.customerAttribute : ''}}">
+              <div
+                tabindex="0"
+                popover-trigger="mouseenter focus"
+                popover="{{$ctrl.model.customerAttribute.length > 33 ? $ctrl.model.customerAttribute : ''}}">
                 <div class="feature-name ellipsis">{{$ctrl.model.customerAttribute}}</div>
               </div>
             </div>
@@ -63,7 +66,10 @@
               <div class="feature-name">{{::'gemini.tds.noteToCisco' | translate}}</div>
             </div>
             <div class="pull-right medium-8">
-              <div class="ellipsis" popover-trigger="mouseenter" popover="{{$ctrl.model.noteToCiscoTeam.length > 41 ? $ctrl.model.noteToCiscoTeam : ''}}">
+              <div class="ellipsis"
+                tabindex="0"
+                popover-trigger="mouseenter focus"
+                popover="{{$ctrl.model.noteToCiscoTeam.length > 41 ? $ctrl.model.noteToCiscoTeam : ''}}">
                 <div class="feature-name ellipsis text-right">{{$ctrl.model.noteToCiscoTeam}}</div>
               </div>
             </div>
@@ -102,12 +108,22 @@
               <li ng-if="$ctrl.model.defaultToll">
                 <div class="defaultToll-item-num">
                   <div>
-                    <span class="ellipsis" popover-trigger="mouseenter" popover="{{$ctrl.model.defaultToll.phone}}">{{$ctrl.model.defaultToll.phone}}</span>
+                    <span class="ellipsis"
+                      tabindex="0"
+                      popover-trigger="mouseenter focus"
+                      popover="{{$ctrl.model.defaultToll.phone}}">
+                      {{$ctrl.model.defaultToll.phone}}
+                    </span>
                   </div>
                 </div>
                 <div class="defaultToll-item-num">
                   <div>
-                    <span class="ellipsis" popover-trigger="mouseenter" popover="{{$ctrl.model.defaultToll.label}}">{{$ctrl.model.defaultToll.label}}</span>
+                    <span class="ellipsis"
+                      tabindex="0"
+                      popover-trigger="mouseenter focus"
+                      popover="{{$ctrl.model.defaultToll.label}}">
+                      {{$ctrl.model.defaultToll.label}}
+                    </span>
                   </div>
                 </div>
                 <div class="defaultToll-item-toll">
@@ -117,12 +133,22 @@
               <li ng-if="$ctrl.model.defaultTollFree">
                 <div class="defaultToll-item-num">
                   <div>
-                    <span class="ellipsis" popover-trigger="mouseenter" popover="{{$ctrl.model.defaultTollFree.phone}}">{{$ctrl.model.defaultTollFree.phone}}</span>
+                    <span class="ellipsis"
+                      tabindex="0"
+                      popover-trigger="mouseenter focus"
+                      popover="{{$ctrl.model.defaultTollFree.phone}}">
+                      {{$ctrl.model.defaultTollFree.phone}}
+                    </span>
                   </div>
                 </div>
                 <div class="defaultToll-item-num">
-                  <div><span class="ellipsis" popover-trigger="mouseenter"
-                             popover="{{$ctrl.model.defaultTollFree.label}}">{{$ctrl.model.defaultTollFree.label}}</span>
+                  <div>
+                    <span class="ellipsis"
+                      tabindex="0"
+                      popover-trigger="mouseenter focus"
+                      popover="{{$ctrl.model.defaultTollFree.label}}">
+                      {{$ctrl.model.defaultTollFree.label}}
+                    </span>
                   </div>
                 </div>
                 <div class="defaultToll-item-toll">

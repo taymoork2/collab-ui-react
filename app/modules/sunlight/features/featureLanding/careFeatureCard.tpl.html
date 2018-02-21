@@ -56,7 +56,14 @@
           <div class="embed-code-txt h6 left ellipsis">
             <div class="usage" ng-if="careFeature.featureType === 'customerVirtualAssistant'">
               <span class="usage-text">{{careFeaturesCtrl.templatesInUseText(careFeature)}}</span>
-              <button ng-click="$event.stopPropagation()" popover-html="careFeature.templatesHtmlPopover" popover-placement="auto right" popover-append-to-body="false" class="icon icon-question-circle"></button>
+              <button
+                ng-click="$event.stopPropagation()"
+                popover-html="careFeature.templatesHtmlPopover"
+                popover-placement="auto right"
+                popover-append-to-body="false"
+                class="icon icon-question-circle"
+                aria-label="{{careFeature.templatesHtmlPopover}}">
+              </button>
             </div>
             <div class="email" ng-if="careFeature.email">{{careFeature.email}}</div>
             <div class="usage" ng-if="careFeature.featureType === 'expertVirtualAssistant'">
@@ -67,7 +74,8 @@
                 popover-html="careFeature.templatesHtmlPopover + '<br>' + careFeature.spacesHtmlPopover"
                 popover-placement="auto right"
                 popover-append-to-body="false"
-                class="icon icon-question-circle">
+                class="icon icon-question-circle"
+                aria-label="{{careFeature.templatesHtmlPopove + ' ' + careFeature.spacesHtmlPopove}}">
               </button>
             </div>
           </div>

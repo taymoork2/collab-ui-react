@@ -4,7 +4,6 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
   public gridApi;
   public siteInfo;
   public gridConfig;
-  public loading: boolean = true;
 
   public sitesInfo: any;
   public onSiteSelectedFn: Function;
@@ -27,7 +26,6 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
     if (ch.sitesInfo && ch.sitesInfo.currentValue) {
       this.sitesInfo = ch.sitesInfo.currentValue;
       this.gridConfig.data = this.sitesInfo;
-      this.loading = !this.loading;
       this.gridApi.core.notifyDataChange(this.uiGridConstants.dataChange.ALL);
     }
   }
@@ -165,5 +163,6 @@ export class LinkedSitesGridComponent implements ng.IComponentOptions {
     onSiteSelectedFn: '&',
     launchWebexFn: '&',
     showWizardFn: '&',
+    loading: '<',
   };
 }

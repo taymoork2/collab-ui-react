@@ -274,6 +274,8 @@
   angular.module('AccountLinking', [
     'Core',
     require('modules/account-linking').default,
+    require('modules/account-linking/user-sidepanel/linked-sites-user-sidepanel-section').default,
+    require('modules/account-linking/user-sidepanel/linked-sites-user-settings').default,
   ]);
 
   module.exports = angular.module('Main', [

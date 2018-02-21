@@ -23,7 +23,7 @@
     <span translate="accountLinking.siteDetails.dontHaveAdminRights"></span>
   </div>
   <div ng-if="$ctrl.selectedSiteInfo.accountInfoErrors.length > 0 || $ctrl.selectedSiteInfo.siteInfoErrors.length > 0" class="errors-in-data">
-    <span translate="accountLinking.errors.unableToRetrieveSomeData"></span>
+    <span>{{$ctrl.selectedSiteInfo.siteInfoErrors[0]}}</span>
   </div>
 
   <cs-sp-container>

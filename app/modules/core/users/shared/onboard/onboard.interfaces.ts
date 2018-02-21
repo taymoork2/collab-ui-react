@@ -55,23 +55,67 @@ export interface IAutoAssignTemplateRequestPayload {
   userEntitlements: IUserEntitlementRequestItem[];
 }
 
+interface IErrorInfo {
+  errorCode: number;
+  description: string;
+}
+
+export interface IUserStatusResponse {
+  email: string;
+  uuid?: string;
+  displayName?: string;
+  name?: string;
+  status?: number;
+  httpStatus?: number;
+  message?: string;
+  emailMessageId?: string;
+  errorList?: IErrorInfo[];
+}
+
+export interface IUserProvisionStatusResponse extends IUserStatusResponse {
+  entitled?: string[];
+  unentitled?: string[];
+  roles?: string[];
+}
+
+export interface IConvertUserEntity {
+  userName: string;
+  assignedDn?: any;
+  externalNumber?: any;
+}
+
 export interface IUserNameAndEmail {
   address: string;
   name: string;
 }
 
-export interface IOnboardedUserResult {
-  email: string;
-  message?: string;
-  httpStatus: number;
+export interface IMigrateUsersResponse {
+  userResponse: IUserStatusResponse[];
 }
+
+export interface IUpdateUsersResponse {
+  userResponse: IUserProvisionStatusResponse[];
+}
+
+export interface IOnboardUsersResponse {
+  userResponse: IUserProvisionStatusResponse[];
+}
+
+export type IOnboardedUserResult = IUserProvisionStatusResponse;
 
 export interface IParsedOnboardedUserResult {
   email: string;
-  message: string | undefined;
-  alertType: 'success' | 'warning' | 'danger' | undefined;
+  message?: string;
+  alertType?: 'success' | 'warning' | 'danger';
   warningMsg?: string;
   errorMsg?: string;
+  httpStatus?: number;
+}
+
+export interface IParsedOnboardedUserResponse {
+  resultList: IParsedOnboardedUserResult[];
+  numUpdatedUsers: number;
+  numAddedUsers: number;
 }
 
 export interface IOnboardedUsersResultsErrorsAndWarnings {
