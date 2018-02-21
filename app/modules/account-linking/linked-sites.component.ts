@@ -6,7 +6,7 @@ import { Notification } from 'modules/core/notifications/notification.service';
 class LinkedSitesComponentCtrl implements ng.IComponentController {
   public gridApi: uiGrid.IGridApi;
   public sitesInfo: IACSiteInfo[];
-
+  public loading = false;
   private modeDisplayNameLookup = {};
 
   public webexSiteLaunchDetails;
@@ -33,23 +33,27 @@ class LinkedSitesComponentCtrl implements ng.IComponentController {
       if (supported === false) {
         this.$log.warn('Illegal state');
       } else {
-        this.LinkedSitesService.filterSites().then((sites: IACSiteInfo[]) => {
-          this.$log.debug('LinkedSitesService.filterSites, sites = ', sites);
-          if (sites.length > 0) {
-            this.sitesInfo = sites;
-            _.each(this.sitesInfo, (site: IACSiteInfo) => {
-              // TODO: Optimize. We probably dont want to fire away too many requests at the same time.
-              //       Could be a problem when there are MANY sites...
-              this.updateWebexDetailsWhenAvailable(site);
-            });
-
-            this.showWizardIfRequired(this.originator);
-          } else {
-            // TODO: Handle this case in the UI
-            this.$log.warn('No linked sites');
-          }
-        });
+        this.filterSites();
       }
+    });
+  }
+
+  private filterSites() {
+    this.loading = true;
+    this.LinkedSitesService.filterSites().then((sites: IACSiteInfo[]) => {
+      if (sites.length > 0) {
+        this.sitesInfo = sites;
+        _.each(this.sitesInfo, (site: IACSiteInfo) => {
+          // TODO: Optimize. We probably dont want to fire away too many requests at the same time.
+          //       Could be a problem when there are MANY sites...
+          this.updateWebexDetailsWhenAvailable(site);
+        });
+        this.showWizardIfRequired(this.originator);
+      } else {
+        // TODO: Handle this case in the UI
+        this.$log.warn('No linked sites');
+      }
+      this.loading = false;
     });
   }
 
@@ -79,10 +83,8 @@ class LinkedSitesComponentCtrl implements ng.IComponentController {
         site.linkAllUsers = si.linkAllUsers;
       }).catch( (error) => {
         if (site.siteInfoErrors) {
-          site.siteInfoErrors.push(error);
-          //TODO: Some error situations gives too many toasters... how to reduce...
-          //this.Notification.error('accountLinking.errors.getCiSiteLinkingError', { message: error });
-          this.$log.error('getCiSiteLinkingError', error);
+          this.$log.error('getCiSiteLinkingError in linked-sites component:', error);
+          site.siteInfoErrors.push(this.resolveErrorText(error));
         }
       });
     }
@@ -91,10 +93,8 @@ class LinkedSitesComponentCtrl implements ng.IComponentController {
         site.linkingStatus = status;
       }).catch( (error) => {
         if (site.accountInfoErrors) {
-          site.accountInfoErrors.push(error);
-          //TODO: Some error situations gives too many toasters... how to reduce...
-          //this.Notification.error('accountLinking.errors.getCiAccountSyncError', { message: error });
-          this.$log.error('getCiAccountSyncError', error);
+          this.$log.error('getCiAccountSyncError in linked-sites component:', error);
+          site.accountInfoErrors.push(this.resolveErrorText(error));
         }
       });
     }
@@ -103,14 +103,26 @@ class LinkedSitesComponentCtrl implements ng.IComponentController {
         site.domains = domainBlob.emailDomains;
       }).catch( (error) => {
         this.Notification.error('accountLinking.errors.getDomainsError', { message: error });
-        this.$log.error('getDomainsError', error);
+        this.$log.error('getDomainsError in linked-sites component:', error);
       });
     }
 
   }
 
+  // Starting to add some relevate webex error cases in accountlinking
+  // TODO: Use text directly from webex or do translations ?
+  public resolveErrorText(error): string {
+    if (error === '999999') {
+      return 'WebEx authentication problem [Webex: 999999]';
+    } else if (error === '030048') {
+      return 'WebEx authentication problem [Webex: 030048]';
+    } else {
+      return 'Unable to retrieve som data';
+    }
+  }
+
   private showWizardIfRequired(originator: LinkingOriginator) {
-    this.$log.warn('For now, just select first from the following list:', this.sitesInfo);
+    //TODO: Should not show wizard if site is already linked
     const selectedSiteInfo = this.sitesInfo[0];
     if (originator === LinkingOriginator.Banner && selectedSiteInfo.isSiteAdmin === true) {
       if (this.sitesInfo.length === 1) {
