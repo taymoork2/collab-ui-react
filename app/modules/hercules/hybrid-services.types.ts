@@ -270,6 +270,7 @@ export interface IClusterPropertySet {
   'mf.ucSipTrunk'?: string;
   'mf.videoQuality'?: string;
   'mf.trustedSipSources'?: string;
+  'mf.maxCascadeBandwidth'?: number;
   'fms.releaseChannel'?: string;
   'fms.calendarAssignmentType'?: 'standard' | 'activeActive';
   'fms.callManagerAssignmentType'?: 'standard' | 'activeActive';

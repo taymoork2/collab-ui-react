@@ -2,7 +2,7 @@ import moduleName from './index';
 
 describe('HybridMediaClusterSettingsCtrl', () => {
 
-  let $componentController, $scope, $q, HybridServicesClusterService;
+  let $componentController, $scope, $q, HybridServicesClusterService ;
 
   beforeEach(angular.mock.module(moduleName));
 

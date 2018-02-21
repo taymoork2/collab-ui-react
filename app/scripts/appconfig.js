@@ -2218,11 +2218,19 @@
           })
           .state('dgc.tab.meetingdetail', {
             url: '/diagnostics/meeting/:cid',
-            views: { tabContent: { template: '<dgc-tab-meetingdetail></dgc-tab-meetingdetail>' } },
+            views: {
+              tabContent: {
+                template: '<dgc-tab-meetingdetail></dgc-tab-meetingdetail>',
+              },
+            },
           })
           .state('dgc.tab.participants', {
             url: '/diagnostics/participants/:cid',
-            views: { tabContent: { template: '<dgc-tab-participants></dgc-tab-participants>' } },
+            views: {
+              tabContent: {
+                template: '<dgc-tab-participants></dgc-tab-participants>',
+              },
+            },
           })
           .state('reports.webex-metrics.classic', {
             url: '/classic',
@@ -4734,7 +4742,7 @@
           })
           .state('mediafusion-cluster.settings', {
             url: '/settings',
-            template: '<hybrid-media-cluster-settings cluster-id="$resolve.id" has-mf-phase-two-toggle="$resolve.hasMFFeatureToggle" has-mf-trusted-sip-toggle="$resolve.hasMFSIPFeatureToggle"></hybrid-media-cluster-settings>',
+            template: '<hybrid-media-cluster-settings cluster-id="$resolve.id" has-mf-phase-two-toggle="$resolve.hasMFFeatureToggle" has-mf-trusted-sip-toggle="$resolve.hasMFSIPFeatureToggle"has-mf-cascade-bw-config-toggle="$resolve.hasMFCascadeBwConfigToggle"></hybrid-media-cluster-settings>',
             resolve: {
               id: /* @ngInject */ function ($stateParams) {
                 return $stateParams.id;
@@ -4744,6 +4752,9 @@
               },
               hasMFSIPFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceTrustedSIP);
+              },
+              hasMFCascadeBwConfigToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceCascadeBwConfig);
               },
             },
           })

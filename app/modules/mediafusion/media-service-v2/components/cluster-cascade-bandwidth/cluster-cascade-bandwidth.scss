@@ -1,0 +1,19 @@
+cluster-cascade-bandwidth {
+  .cascade-input-div {
+    display: flex;
+  }
+  .cascade-span {
+    margin-left: 15px;
+    margin-top: 5px;
+  }
+  .input-error {
+    input,
+    input:focus {
+      border-color: #FF8170;
+      background: #FFADA3;
+    }
+    .cs-input__help-text {
+      color: #FF8170;
+    }
+  }
+}

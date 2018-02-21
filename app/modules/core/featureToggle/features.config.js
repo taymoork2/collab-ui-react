@@ -49,6 +49,7 @@ module.exports = {
   atlasITProPackPurchased: 'atlas-it-pro-pack-purchased',
   atlasJabberInterop: 'atlas-jabber-interop',
   atlasJira2126UseAltEndpoint: 'atlas-jira-2126-use-alt-endpoint',
+  atlasMediaServiceCascadeBwConfig: 'atlas-media-service-cascade-bw-config',
   atlasMediaServiceMultipleInsights: 'atlas-media-service-multiple-insights',
   atlasMediaServicePhaseTwo: 'atlas-media-service-phase-two',
   atlasMediaServiceTrustedSIP: 'atlas-media-service-trusted-sip',

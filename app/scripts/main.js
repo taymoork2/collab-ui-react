@@ -216,7 +216,12 @@
     require('modules/hds/services/hds.service'),
   ]);
 
-  angular.module('Mediafusion', ['Core', 'Hercules', 'Squared']);
+  angular.module('Mediafusion', [
+    'Core',
+    'Hercules',
+    'Squared',
+    require('modules/mediafusion/media-service-v2/components/cluster-cascade-bandwidth').default,
+  ]);
 
   angular.module('WebExApp', [
     'Core',
