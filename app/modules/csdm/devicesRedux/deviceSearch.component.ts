@@ -48,6 +48,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
               private $timeout: ng.ITimeoutService,
               private DeviceSearchTranslator: SearchTranslator,
               private Analytics,
+              private $state,
               private CsdmUpgradeChannelService) {
     const upgradeChannelsAvailable = this.CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(channels => {
       return channels.length > 1;
@@ -130,6 +131,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
   }
 
   public userSetFocusToInputField() {
+    this.$state.sidepanel.close();
     this.interactedWithSearch = true;
     this.setFocusToInputField();
   }
