@@ -240,7 +240,6 @@
         ftK1Promotion: FeatureToggleService.atlasCareCvcToCdcMigrationGetStatus(),
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(), //TODO add true for shipping testing.
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; }),
-        huronPstn: FeatureToggleService.supports(FeatureToggleService.features.huronPstn),
         hybridCare: FeatureToggleService.supports(FeatureToggleService.features.hybridCare),
       };
       if (!vm.isNewTrial()) {
@@ -264,12 +263,9 @@
           vm.canSeeDevicePage = !isTestOrg || overrideTestOrg;
           vm.devicesModal.enabled = vm.canSeeDevicePage;
           vm.defaultCountryList = results.huronCountryList;
-          vm.huronPstn = results.huronPstn;
           vm.hybridCare = results.hybridCare;
 
-          if (vm.huronPstn) {
-            vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstn', 'trial.call'];
-          }
+          vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstn', 'trial.call'];
 
           var initResults = (vm.isExistingOrg()) ? getExistingOrgInitResults(results, vm.hasCallEntitlement, vm.preset, vm.paidServices) : getNewOrgInitResults(results, vm.hasCallEntitlement, vm.stateDefaults);
           _.merge(vm, initResults);
@@ -353,13 +349,7 @@
       setViewState('trial.webex', hasEnabledWebexTrial());
       setViewState('trial.pstn', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
       setViewState('trial.emergAddress', TrialPstnService.getCarrierCapability('E911'));
-
-      if (vm.huronPstn) {
-        setViewState('trial.pstn', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
-      } else {
-        setViewState('trial.pstnDeprecated', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
-      }
-
+      setViewState('trial.pstn', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
       addRemoveStates();
     }
 
