@@ -2,4 +2,8 @@
 
 usage-line {
   color: $gray-base;
+
+  .cr-checkbox-item--disabled & {
+    color: inherit;
+  }
 }
