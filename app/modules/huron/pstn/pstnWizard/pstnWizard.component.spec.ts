@@ -30,7 +30,6 @@ describe('Component: PstnWizardComponent', () => {
       'PstnModel',
       'PstnService',
       'PstnWizardService',
-      'PstnServiceAddressService',
       'HuronCountryService',
       'FeatureToggleService',
       '$rootScope',
