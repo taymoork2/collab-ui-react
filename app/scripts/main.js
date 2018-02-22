@@ -207,7 +207,6 @@
     require('modules/hercules/user-sidepanel/hybrid-services-sidepanel-error-message').default,
     require('modules/hercules/user-sidepanel/hybrid-services-user-homed-cluster-and-hostname').default,
     require('modules/hercules/user-sidepanel/hybrid-services-user-sidepanel-section').default,
-    require('modules/hercules/user-sidepanel/user-status-messages').default,
   ]);
 
   angular.module('HDS', [
@@ -220,7 +219,12 @@
     'Core',
     'Hercules',
     'Squared',
+    require('modules/mediafusion/media-service-v2/components/add-resource-section').default,
+    require('modules/mediafusion/media-service-v2/components/cluster-creation-final').default,
+    require('modules/mediafusion/media-service-v2/components/sip-registration-section').default,
+    require('modules/mediafusion/media-service-v2/components/trusted-sip-section').default,
     require('modules/mediafusion/media-service-v2/components/cluster-cascade-bandwidth').default,
+    require('modules/mediafusion/media-service-v2/components/hybrid-media-upgrade-schedule').default,
   ]);
 
   angular.module('WebExApp', [

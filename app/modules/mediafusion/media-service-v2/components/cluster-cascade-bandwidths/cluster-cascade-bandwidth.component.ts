@@ -8,10 +8,9 @@ export class ClusterCascadeBandwidthController implements ng.IComponentControlle
   public clusterId: string;
   public cluster: ICluster;
   private onCascadeBandwidthUpdate?: Function;
-  public cascadeBandwidthConfiguration: number = 42;
+  public cascadeBandwidthConfiguration: number | 42;
   public bandwidthError: boolean = false;
   public isWizard: boolean = false;
-
 
   public clusterBandwidth = {
     title: 'mediaFusion.clusterBandwidth.title',
@@ -24,7 +23,7 @@ export class ClusterCascadeBandwidthController implements ng.IComponentControlle
   ) { }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
-    const { cluster , isWizard } = changes;
+    const { cluster, isWizard } = changes;
     if (cluster && cluster.currentValue) {
       this.cluster = cluster.currentValue;
       this.clusterId = this.cluster.id;
@@ -34,10 +33,11 @@ export class ClusterCascadeBandwidthController implements ng.IComponentControlle
     }
   }
 
-  public validate(): void {
+  public validate() {
+    // this.cascadeBandwidthConfiguration = '66';
     this.bandwidthChange = true;
     this.inValidValue = true;
-    if (this.cascadeBandwidthConfiguration >= 5 && this.cascadeBandwidthConfiguration <= 50) {
+    if (this.cascadeBandwidthConfiguration >= 5 && this.cascadeBandwidthConfiguration <= 55) {
       this.inValidValue = false;
       this.bandwidthError = false;
     } else {
@@ -48,11 +48,14 @@ export class ClusterCascadeBandwidthController implements ng.IComponentControlle
     }
   }
 
-  private getProperties(clusterId): void {
+  private getProperties(clusterId) {
     this.HybridServicesClusterService.getProperties(clusterId)
       .then((properties: IClusterPropertySet) => {
+        //if (!_.isUndefined(properties['mf.maxCascadeBandwidth'])) {
         const cascadeBandwidth = properties['mf.maxCascadeBandwidth'];
         this.cascadeBandwidthConfiguration = cascadeBandwidth ? cascadeBandwidth : this.cascadeBandwidthConfiguration;
+        // this.cascadeBandwidthConfiguration = properties['mf.maxCascadeBandwidth'] as string;
+        //}
       });
   }
 

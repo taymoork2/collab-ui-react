@@ -11,7 +11,7 @@ export class ClusterCascadeBandwidthService {
     private Notification: Notification,
   ) { }
 
-  public saveCascadeConfig(clusterId: string, cascadeBandwidthConfiguration: number): void {
+  public saveCascadeConfig(clusterId: string, cascadeBandwidthConfiguration: number) {
     if (_.isUndefined(cascadeBandwidthConfiguration)) {
       cascadeBandwidthConfiguration = 42;
     }

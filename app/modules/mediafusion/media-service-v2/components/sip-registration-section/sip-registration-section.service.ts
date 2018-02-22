@@ -1,9 +1,8 @@
 import { IClusterPropertySet } from 'modules/hercules/hybrid-services.types';
-
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { Notification } from 'modules/core/notifications';
 
-export class ClusterCascadeBandwidthService {
+export class SipRegistrationSectionService {
 
   /* @ngInject */
   constructor(
@@ -11,16 +10,13 @@ export class ClusterCascadeBandwidthService {
     private Notification: Notification,
   ) { }
 
-  public saveCascadeConfig(clusterId: string, cascadeBandwidthConfiguration: number): void {
-    if (_.isUndefined(cascadeBandwidthConfiguration)) {
-      cascadeBandwidthConfiguration = 42;
-    }
+  public saveSipTrunkUrl(sipConfigUrl: string | undefined, clusterId: string): void {
     const payload: IClusterPropertySet = {
-      'mf.maxCascadeBandwidth': cascadeBandwidthConfiguration,
+      'mf.ucSipTrunk': sipConfigUrl,
     };
     this.HybridServicesClusterService.setProperties(clusterId, payload)
       .then(() => {
-        this.Notification.success('mediaFusion.clusterBandwidth.success');
+        this.Notification.success('mediaFusion.sipconfiguration.success');
       })
       .catch((error) => {
         this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
