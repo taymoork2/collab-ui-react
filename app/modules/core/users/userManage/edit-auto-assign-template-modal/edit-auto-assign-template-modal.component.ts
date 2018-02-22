@@ -229,7 +229,7 @@ export class EditAutoAssignTemplateModalController implements ng.IComponentContr
   }
 
   public get footerWarningL10nKey(): string {
-    if (!this.isEditTemplateMode || this.targetStateViewDataHasSelections()) {
+    if (!this.isEditTemplateMode || this.targetStateViewDataHasSelections() || !this.autoAssignTemplateData) {
       return '';
     }
     return 'userManage.autoAssignTemplate.edit.warningFooter';
