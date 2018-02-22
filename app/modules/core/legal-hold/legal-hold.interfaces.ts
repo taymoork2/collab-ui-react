@@ -1,11 +1,11 @@
-import { MatterState } from './legal-hold.enum';
+import { MatterState } from './legal-hold.enums';
 
 export interface IMatterJsonData {
   orgId: string;
   createdBy: string;
   caseId: string;
   creationDate: Date;
-  releaseDate?: Date | null;
+  releaseDate?: Date;
   matterName: string;
   matterDescription: string;
   matterState?: MatterState;
@@ -16,6 +16,5 @@ export interface ICustodian {
   userId: string;
   firstName: string;
   lastName: string;
-
 }
 

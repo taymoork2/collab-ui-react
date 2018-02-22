@@ -3,7 +3,7 @@ import { MatterState } from './legal-hold.enums';
 import { IMatterJsonData } from './legal-hold.interfaces';
 
 export class Matter {
-  public releaseDate: Date | null;
+  public releaseDate: Date | undefined;
   public state: MatterState = MatterState.ACTIVE;
   public userList?: string[];
 
@@ -38,23 +38,21 @@ export class Matter {
     };
 
     if (this.userList) {
-      data['usersUUIDList'] = this.userList;
+      data.usersUUIDList = this.userList;
     }
     return data;
   }
 
-  public static matterFromResponseData(data: {}, caseId?: string): Matter {
-    const matter = new Matter(data['orgId'],
-      caseId || data['caseId'], data['createdBy'], data['creationDate'], data['matterName'],
-      data['matterDescription']);
-    const userList = data['usersUUIDList'];
-    if (!_.isEmpty(userList) && _.isArray(userList)) {
-      matter.userList = data['usersUUIDList'];
+  public static matterFromResponseData(responseData: IMatterJsonData): Matter {
+    const { orgId, caseId, createdBy, creationDate, matterName, matterDescription, usersUUIDList } = responseData;
+    const matter = new Matter(orgId, caseId, createdBy, creationDate, matterName, matterDescription);
+    if (!_.isEmpty(usersUUIDList)) {
+      matter.userList = usersUUIDList;
     }
     return matter;
   }
 
-  public release(releaseDate: Date) {
+  public releaseMatter(releaseDate: Date) {
     this.state = MatterState.RELEASED;
     this.releaseDate = releaseDate;
   }

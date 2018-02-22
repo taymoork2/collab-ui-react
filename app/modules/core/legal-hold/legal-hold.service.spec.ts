@@ -3,11 +3,13 @@ import { LegalHoldService } from './legal-hold.service';
 import { Actions } from './legal-hold.service';
 import { Matter } from './matter.model';
 import { ICustodian } from './legal-hold.interfaces';
+import { Authinfo } from 'modules/core/scripts/services/authinfo';
+import { UrlConfig } from 'modules/core/config/urlConfig';
 
 type Test = atlas.test.IServiceTest<{
-  Authinfo;
-  UrlConfig;
+  Authinfo: Authinfo;
   LegalHoldService: LegalHoldService;
+  UrlConfig: UrlConfig;
 }>;
 
 describe('Service: LegalHoldService', () => {
@@ -34,7 +36,7 @@ describe('Service: LegalHoldService', () => {
   });
 
   describe('Basic matter functions', () => {
-    it('should create a matter', function (this: Test) {
+    it('should create a matter passes without flush', function (this: Test) {
       const matter = Matter.matterFromResponseData(this.matterList[1]);
       this.Authinfo.getUserId.and.returnValue(this.matterList[1]['createdBy']);
       const data = {
@@ -55,7 +57,7 @@ describe('Service: LegalHoldService', () => {
     it('should read the matter', function (this: Test) {
       const matter = this.matterList[1];
       const resultMatter = Matter.matterFromResponseData(matter);
-      this.$httpBackend.expectGET(`${this.URL}${Actions.READ}?orgId=123&caseId=case456`).respond(200, matter);
+      this.$httpBackend.expectGET(`${this.URL}${Actions.READ}&orgId=123&caseId=case456`).respond(200, matter);
       expect(this.LegalHoldService.readMatter('123', 'case456')).toBeResolvedWith(resultMatter);
     });
 
@@ -126,7 +128,7 @@ describe('Service: LegalHoldService', () => {
   describe('Retrieving user info from email address', function (this: Test) {
     it('and reject if user is not found', function () {
       this.$httpBackend.expectGET(this.getUserUrl + 'test1%40gmail.com').respond(404);
-      expect(this.LegalHoldService.getUserId('test1@gmail.com')).toBeRejectedWith(jasmine.objectContaining({ status: 404 }));
+      expect(this.LegalHoldService.getCustodian('test1@gmail.com')).toBeRejectedWith(jasmine.objectContaining({ status: 404 }));
     });
 
     it('should return userId and first and last names if user is found', function () {
@@ -142,7 +144,7 @@ describe('Service: LegalHoldService', () => {
         otherProp: 'something else',
       };
       this.$httpBackend.expectGET(this.getUserUrl + 'test%40gmail.com').respond(200, expResponse);
-      expect(this.LegalHoldService.getUserId('test@gmail.com')).toBeResolvedWith(expResult);
+      expect(this.LegalHoldService.getCustodian('test@gmail.com')).toBeResolvedWith(expResult);
     });
   });
 });
