@@ -62,6 +62,7 @@ class CareFeatureModalCtrl implements ng.IComponentController {
       templateStr = '<virtual-assistant-modal dismiss="$dismiss()" class="care-modal"></virtual-assistant-modal>';
     }
     if (featureId === 'appleBusinessChat') {
+      this.$state.go('care.' + featureId);
       this.dismiss();
       return;
     }

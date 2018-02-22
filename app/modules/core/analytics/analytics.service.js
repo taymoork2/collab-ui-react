@@ -242,8 +242,15 @@
       APPLE_BUSINESS_CHAT: {
         name: 'Apple Business Chat operations',
         eventNames: {
-          ABC_DELETE_SUCCESS: 'Apple Business Chat deleted',
-          ABC_DELETE_FAILURE: 'Apple Business Chat deletion failed',
+          ABC_DELETE_SUCCESS: 'ABC deleted',
+          ABC_DELETE_FAILURE: 'ABC deletion failed',
+          ABC_BUSINESS_ID_PAGE: 'ABC Business Id',
+          ABC_NAME_PAGE: 'ABC Name',
+          ABC_CVA_SELECTION_PAGE: 'ABC Customer Virtual Assistant Selection',
+          ABC_SUMMARY_PAGE: 'ABC Summary',
+          ABC_START_FINISH: 'ABC the entire wizard',
+          ABC_CREATE_SUCCESS: 'ABC created',
+          ABC_CREATE_FAILURE: 'ABC creation failed',
         },
       },
       ONLINE_ORDER: {

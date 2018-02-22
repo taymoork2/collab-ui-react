@@ -31,7 +31,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
           startTimeInMillis: 0,
           eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_OVERVIEW_PAGE,
         },
-        vaName: {
+        name: {
           enabled: true,
           nameValue: '',
           startTimeInMillis: 0,
@@ -111,7 +111,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     if (this.$stateParams.isEditFeature) {
       this.isEditFeature = true;
       this.template.templateId = this.$stateParams.template.id;
-      this.template.configuration.pages.vaName.nameValue = this.$stateParams.template.name;
+      this.template.configuration.pages.name.nameValue = this.$stateParams.template.name;
       const emailAddress = this.$stateParams.template.email;
       this.template.configuration.pages.evaEmail.value = emailAddress.substring(0, emailAddress.indexOf('@'));
       this.template.configuration.pages.evaDefaultSpace.selectedDefaultSpace.id = this.$stateParams.template.defaultSpaceId;
@@ -135,7 +135,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     switch (this.currentState) {
       case 'evaOverview':
         return true;
-      case 'vaName':
+      case 'name':
         return this.isNamePageValid();
       case 'evaEmail':
         return this.isEmailPageValid();
@@ -227,7 +227,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
   }
 
   public submitFeature(): void {
-    const name = this.template.configuration.pages.vaName.nameValue.trim();
+    const name = this.template.configuration.pages.name.nameValue.trim();
     const emailPrefix = this.template.configuration.pages.evaEmail.value.trim();
     const email = `${emailPrefix}@sparkbot.io`;
     this.creatingTemplate = true;
@@ -280,7 +280,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
   }
 
   public isNameValid(): boolean {
-    const name = (this.template.configuration.pages.vaName.nameValue || '').trim();
+    const name = (this.template.configuration.pages.name.nameValue || '').trim();
     const isLengthValid = (_.get(name, 'length', 0) <= this.maxNameLength);
 
     if (this.nameForm && name) {
@@ -291,7 +291,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
   }
 
   public isNamePageValid(): boolean {
-    const name = (this.template.configuration.pages.vaName.nameValue || '').trim();
+    const name = (this.template.configuration.pages.name.nameValue || '').trim();
     return name !== '' && this.isNameValid();
   }
 

@@ -9,7 +9,7 @@ describe('Apple Business Chat Service', () => {
   const TEST_BUSINESS_ID = 'my-business-id';
   const ABC_CONFIG_URL = 'abc/config/organization/' + TEST_ORG_ID + '/businessId/' + TEST_BUSINESS_ID;
   const ABC_CONFIG_URL_REGEX = new RegExp('.*/' + ABC_CONFIG_URL);
-  let AbcService: AbcService, $httpBackend;
+  let AbcService: AbcService, $httpBackend, $state;
 
   const spiedUrlConfig = {
     getMediaManagerUrl: jasmine.createSpy('getMediaManagerUrl').and.returnValue(SERVICE_URL),
@@ -47,14 +47,23 @@ describe('Apple Business Chat Service', () => {
     });
   });
 
-  beforeEach(inject(function (_$httpBackend_, _AbcService_) {
+  beforeEach(inject(function (_$httpBackend_, _AbcService_, _$state_) {
     $httpBackend = _$httpBackend_;
     AbcService = _AbcService_;
+    $state = _$state_;
   }));
 
   afterEach(function () {
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it('service Card goto Service should do just that', function () {
+    const goSpy = spyOn($state, 'go');
+    AbcService.abcServiceCard.goToService($state, { type: 'abc' });
+    expect(goSpy).toHaveBeenCalledWith('care.appleBusinessChat', {
+      type: 'abc',
+    });
   });
 
   describe('addAbcConfig', () => {

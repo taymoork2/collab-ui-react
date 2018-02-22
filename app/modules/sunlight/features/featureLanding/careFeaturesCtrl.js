@@ -41,13 +41,13 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     vm.filteredListOfFeatures = [];
     vm.pageState = pageStates.loading;
     vm.cardColor = {};
-    vm.featureToolTip = function (type, name) {
+    vm.featureToolTip = function (type, assistantName, name) {
       var assistantType = {
         cva: $translate.instant('careChatTpl.virtualAssistant.cva.featureText.name'),
         eva: $translate.instant('careChatTpl.virtualAssistant.eva.featureText.name'),
       };
       return $translate.instant('careChatTpl.assistantTooltip',
-        { assistantType: assistantType[type], assistantName: name });
+        { assistantType: assistantType[type], assistantName: assistantName, name: name });
     };
     vm.placeholder = {
       name: 'Search',

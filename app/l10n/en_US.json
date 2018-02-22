@@ -7969,7 +7969,7 @@
     "helpTextWaitingVirtualAssistant": "If you are using a Customer Virtual Assistant, this message indicates transition from automated support to human interaction.",
     "helpTextChatting": "Customers see this if they minimize the chat window during an ongoing interaction.",
     "helpTextLeaveRoom": "Customers see this when an agent exits the chat and ends the interaction.",
-    "assistantTooltip": "The {{assistantType}} {{assistantName}} is used in this template.",
+    "assistantTooltip": "The {{assistantType}} {{assistantName}} is used by {{name}}.",
     "filterValue": {
       "customerSupportTemplates": "Customer Support Templates",
       "virtualAssistants": "Virtual Assistants",
@@ -8100,10 +8100,37 @@
       "orgNameHelpText": "Name of the Organization: {{orgName}}"
     },
     "configureOrgLogoMsg": "Go to Settings page to modify your organization logo",
+    "commonWizard": {
+      "createTitle": "Create {{ featureName }}",
+      "editTitle": "Edit {{ featureName }}",
+      "cancelDialog": "Do you want to discard your\n {{ featureName }}?"
+    },
     "appleBusinessChat": {
       "featureText": {
+        "name": "Apple Business Chat",
         "type": "Apple Business Chat",
-        "selectDesc": "Create Apple business chat experience for your customers to reach out to agents using iMessage."
+        "selectDesc": "Configure Apple Business Chat to define how your customers reach you using iMessage."
+      },
+      "businessId": {
+        "title": "Apple Business Chat ID Verification",
+        "inputLabel": "Apple Business Chat ID",
+        "helpText": "Complete your Apple Business Chat registration <a href=\"{{href}}\" target=\"_blank\">here</a> and enter your unique organization ID to proceed."
+      },
+      "name": {
+        "namePlaceholder": "Enter Name",
+        "nameHint": "Specify the {{ featureName }} name",
+        "errorChar250": "Name cannot exceed 250 characters.",
+        "invalidChars": "Name cannot contain the following characters: <>"
+      },
+      "cvaSelection": {
+        "virtualAssistantPageTitle": "Customer Virtual Assistant (Optional)",
+        "virtualAssistantDesc": "Select a preconfigured Customer Virtual Assistant who provides initial automated support in your Apple Business Chat experience",
+        "virtualAssistantSelector": "Customer Virtual Assistant",
+        "virtualAssistantSelectText": "Select ..."
+      },
+      "summary": {
+        "abcDesc": "You have configured {{ name }}.\nClick Finish to save the configuration.",
+        "saveErrorMessage": "Cannot save {{ featureName }}. Try again."
       }
     },
     "virtualAssistant": {
@@ -8140,9 +8167,6 @@
         "invalidIconDimensions": "The dimensions of the {{ featureName }} avatar must be exactly 512 x 512 pixels.\nClick the back arrow to return to the Avatar page and upload a valid avatar.",
         "invalidEmail": "The email you entered is invalid.\nClick the back arrow to return to the Email page and enter a valid email."
       },
-      "createTitle": "Create {{ featureName }}",
-      "editTitle": "Edit {{ featureName }}",
-      "cancelDialog": "Do you want to discard your\n {{ featureName }}?",
       "configOverview": {
         "title": "{{ featureName }} Configuration Requirements",
         "desc": "Review the prerequisites for creating a {{ featureName }}",
