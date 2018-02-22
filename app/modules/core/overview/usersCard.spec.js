@@ -12,6 +12,7 @@ describe('OverviewUsersCard', function () {
       'OverviewUsersCard'
     );
     spyOn(this.FeatureToggleService, 'atlasF6980MultiDirSyncGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.DirSyncService, 'requiresRefresh').and.returnValue(false);
     spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(false);
 
@@ -85,8 +86,8 @@ describe('OverviewUsersCard', function () {
         spyOn(this.AutoAssignTemplateService, 'isEnabledForOrg').and.returnValue(this.$q.resolve(true));
       });
       describe('enabled:', function () {
-        it('should set proper flags for an existing and active template', function () {
-          spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(true));
+        it('should set "autoAssignLicensesStatus" property', function () {
+          this.FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus.and.returnValue(this.$q.resolve(true));
           this.card = this.OverviewUsersCard.createCard();
           this.$rootScope.$apply();
 
@@ -116,8 +117,7 @@ describe('OverviewUsersCard', function () {
       });
 
       describe('disabled:', function () {
-        it('should not use AutoAssignTemplateService or enable flags', function () {
-          spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(false));
+        it('should not set "autoAssignLicensesStatus" property', function () {
           this.card = this.OverviewUsersCard.createCard();
           this.$rootScope.$apply();
 
@@ -146,32 +146,29 @@ describe('OverviewUsersCard', function () {
 
       describe('when the toggle is true', function () {
         beforeEach(function () {
-          spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(false));
           this.FeatureToggleService.atlasF6980MultiDirSyncGetStatus.and.returnValue(this.$q.resolve(true));
-
-          var fixture = getJSONFixture('core/json/settings/multiDirsync.json');
-          spyOn(this.MultiDirSyncService, 'getEnabledDomains').and.returnValue(this.$q.resolve([_.cloneDeep(fixture.dirsyncRow)]));
         });
 
         it('should hit MultiDirSyncService and display true when there are domains when the toggle returns true', function () {
+          spyOn(this.MultiDirSyncService, 'isDirsyncEnabled').and.returnValue(this.$q.resolve(true));
           this.card = this.OverviewUsersCard.createCard();
           this.$rootScope.$apply();
           this.card.orgEventHandler({ success: true });
           this.$rootScope.$apply();
 
-          expect(this.MultiDirSyncService.getEnabledDomains).toHaveBeenCalledTimes(1);
+          expect(this.MultiDirSyncService.isDirsyncEnabled).toHaveBeenCalledTimes(1);
           expect(this.card.dirsyncEnabled).toBe(true);
           expect(this.card.isUpdating).toBe(false);
         });
 
         it('should hit MultiDirSyncService and display false when there are no domains when the toggle returns true', function () {
-          this.MultiDirSyncService.getEnabledDomains.and.returnValue(this.$q.reject('error'));
+          spyOn(this.MultiDirSyncService, 'isDirsyncEnabled').and.returnValue(this.$q.resolve(false));
           this.card = this.OverviewUsersCard.createCard();
           this.$rootScope.$apply();
           this.card.orgEventHandler({ success: true });
           this.$rootScope.$apply();
 
-          expect(this.MultiDirSyncService.getEnabledDomains).toHaveBeenCalledTimes(1);
+          expect(this.MultiDirSyncService.isDirsyncEnabled).toHaveBeenCalledTimes(1);
           expect(this.card.dirsyncEnabled).toBe(false);
           expect(this.card.isUpdating).toBe(false);
         });

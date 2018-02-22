@@ -4,7 +4,7 @@
   module.exports = UserOverviewCtrl;
 
   /* @ngInject */
-  function UserOverviewCtrl($scope, $state, $stateParams, $translate, $window, $q, Authinfo, Config, DirSyncService, FeatureToggleService, MessengerInteropService, Notification, Userservice, UserOverviewService) {
+  function UserOverviewCtrl($scope, $state, $stateParams, $translate, $window, $q, Authinfo, Config, DirSyncService, FeatureToggleService, MessengerInteropService, MultiDirSyncService, Notification, Userservice, UserOverviewService) {
     var vm = this;
 
     vm.savePreferredLanguage = savePreferredLanguage;
@@ -21,11 +21,12 @@
     vm.subTitleCard = '';
     vm.resendInvitation = resendInvitation;
     vm.pendingStatus = false;
-    vm.dirsyncEnabled = false;
+    vm.dirsyncEnabled = true;
     vm.isCSB = Authinfo.isCSB();
     vm.hasAccount = Authinfo.hasAccount();
     vm.isFusion = Authinfo.isFusion();
     vm.isFusionCal = Authinfo.isFusionCal();
+    vm.goToUserDetails = goToUserDetails;
     vm.enableAuthCodeLink = enableAuthCodeLink;
     vm.disableAuthCodeLink = disableAuthCodeLink;
     vm.getUserPhoto = Userservice.getUserPhoto;
@@ -88,6 +89,10 @@
         getCurrentUser();
       });
 
+      MultiDirSyncService.isDirsyncEnabled().then(function (isEnabled) {
+        vm.dirsyncEnabled = isEnabled;
+      });
+
       vm.services = [];
 
       initServices();
@@ -113,6 +118,12 @@
           vm.entitlements = response.sqEntitlements;
           init();
         });
+    }
+
+    function goToUserDetails() {
+      if (!vm.dirsyncEnabled) {
+        $state.go('user-overview.user-profile');
+      }
     }
 
     function initActionList() {

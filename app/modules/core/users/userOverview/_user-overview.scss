@@ -29,8 +29,13 @@
   }
 }
 
-.user-header-title {
-  max-width: 90%;
+.header-info {
+  .default-cursor {
+    cursor: default;
+  }
+  .user-header-title {
+    max-width: 90%;
+  }
 }
 
 // taking the calculation from toolkit (100vh - 140px) and subtracting
