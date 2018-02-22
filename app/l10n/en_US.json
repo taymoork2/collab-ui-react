@@ -199,8 +199,10 @@
       "typeInstructions": "Select a method to upload and/or modify users and the services they use.",
       "manualLabel": "Manually add or modify users",
       "manualLabelNew": "Manually Add or Modify Users",
+      "manualLabelTemplateEnabled": "Manually Add Users",
       "manualDetails": "All you need are email addresses to add and/or edit up to {{maxUsersInManual}} users.",
       "manualDetailsNew": "Add or Modify up to {{maxUsersInManual}} users.",
+      "manualDetailsTemplateEnabled": "Add up {{maxUsersInManual}} users.",
       "dirSyncModifyAll": "Modify All Synchronized Users",
       "bulkLabel": "Export and import users with a CSV file",
       "bulkLabelNew": "CSV Add or Modify Users",
@@ -281,7 +283,9 @@
     "manual": {
       "titleModify": "Manually Modify Users",
       "titleAddModify": "Manually Add or Modify Users",
+      "titleAdd": "Manually Add Users",
       "instructions": "Enter up to {{maxUsers}} users to modify.",
+      "instructionsForAdd": "Enter up to {{maxUsers}} users to add.",
       "tooManyUsers": "The user list exceeds the limit of {{maxUsers}}. To update more than {{maxUsers}} users, please use the bulk CSV template.",
       "ad": {
         "unsyncedUsers": "Some users are not currently synchronized with Active Directory. Please add them with Cisco Directory Connector, and then modify them after they synchronize to the cloud.",
