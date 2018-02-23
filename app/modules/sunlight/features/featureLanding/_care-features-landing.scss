@@ -74,9 +74,8 @@
     color: $color-yellow-darker;
     max-width: rem-calc(400);
 
-    .warning-text{
+    .warning-text {
       @include vr-spacing(pl, 0.25);
-      font-family: CiscoSans;
       letter-spacing: 0px;
       font-size: rem-calc(10);
       line-height: rem-calc(14);

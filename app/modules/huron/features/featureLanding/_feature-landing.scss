@@ -125,6 +125,27 @@
     background-color: $gray-light-4;
     text-align: center;
   }
+
+  // Atlas
+  .cs-card.hoverable {
+    article {
+      &.hover,
+      &:focus {
+        .card-section-num,
+        .card-members {
+          color: $color-white;
+        }
+      }
+      section {
+        justify-content: flex-end;
+      }
+    }
+    header a {
+      color: $gray-light-2;
+      line-height: 2;
+      padding-right: .5rem;
+    }
+  }
 }
 
 .card-icon-color-AA {
@@ -294,29 +315,6 @@ $toolkit-alerts: #d3385e;
           background-color: $toolkit-attention;
         }
       }
-    }
-  }
-}
-
-// Atlas
-.features-content {
-  .cs-card.hoverable {
-    article {
-      &.hover,
-      &:focus {
-        .card-section-num,
-        .card-members {
-          color: $color-white;
-        }
-      }
-      section {
-        justify-content: flex-end;
-      }
-    }
-    header a {
-      color: $gray-light-2;
-      line-height: 2;
-      padding-right: .5rem;
     }
   }
 }

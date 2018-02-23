@@ -52,6 +52,27 @@
 
       @include vr-spacing(mt, 0.2);
       @include vr-spacing(ml, 0.2);
+
+      .icon-info{
+        color: $gray-light-1;
+
+        &:hover{
+          color: $color-blue-base;
+        }
+      }
+
+      .tooltip{
+        background: $gray-dark-3;
+        border-radius: rem-calc(2px);
+        @include vr-spacing(p, 0);
+
+        .c-nub{
+          color: $white;
+          font-size: rem-calc(12px);
+          line-height: rem-calc(16px);
+          padding: rem-calc(16px);
+        }
+      }
     }
 
     .ct-info{
@@ -92,31 +113,6 @@
 
       .msg{
         @include vr-spacing(pl,0.2);
-      }
-    }
-
-    .ct-info-icon {
-
-      .icon-info{
-        color: $gray-light-1;
-
-        &:hover{
-          color: $color-blue-base;
-        }
-
-      }
-
-      .tooltip{
-        background: $gray-dark-3;
-        border-radius: rem-calc(2px);
-        @include vr-spacing(p, 0);
-
-        .c-nub{
-          color: $white;
-          font-size: rem-calc(12px);
-          line-height: rem-calc(16px);
-          padding: rem-calc(16px);
-        }
       }
     }
 }

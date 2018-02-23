@@ -1,3 +1,5 @@
+@import '~@collabui/collab-ui/scss/settings/fonts';
+
 .aa-rest-api-url {
   width: 25rem;
 }
@@ -22,7 +24,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   color: #F5A623;
-  font-family: "CiscoSansTT Regular", "Helvetica Neue", Helvetica, Arial;
+  font-family: $brand-font-regular;
   font-style: normal;
   font-weight: normal;
   font-size: .75rem;
@@ -154,8 +156,8 @@ label {
 }
 
 .aa-rest-error-icon::before {
-  content: '\F1B7';
-  font-family: collab-ui-icons;
+  @extend %icon-error;
+  font-family: $icon-font-name;
   float: left;
   font-size: 1rem;
 }
