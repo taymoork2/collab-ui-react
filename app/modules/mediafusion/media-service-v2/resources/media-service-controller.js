@@ -7,16 +7,14 @@
     vm.backState = $stateParams.backState || 'services-overview';
 
     // Added for cs-page-header
-    vm.tabs = [
-      {
-        title: $translate.instant('common.resources'),
-        state: 'media-service-v2.list',
-      }, {
-        title: $translate.instant('common.settings'),
-        state: 'media-service-v2.settings',
-      },
-    ];
-    if (!hasMfClusterWizardFeatureToggle) {
+    vm.tabs = [{
+      title: $translate.instant('common.resources'),
+      state: 'media-service-v2.list',
+    }, {
+      title: $translate.instant('common.settings'),
+      state: 'media-service-v2.settings',
+    }];
+    if (hasMfClusterWizardFeatureToggle) {
       vm.addResourceModal = {
         type: 'modal',
         controller: 'clusterCreationWizardController',

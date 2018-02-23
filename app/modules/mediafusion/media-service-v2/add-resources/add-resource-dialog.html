@@ -9,12 +9,8 @@
   <div ng-show="redirectResource.yesProceed && !redirectResource.enableRedirectToTarget && !redirectResource.showDownloadableOption">
     <div>
       <h5 class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.yesInfo1"></h5>
-      <h5 class="addResourceFQDN"
-        tabindex="0"
-        tooltip="{{::'mediaFusion.add-resource-dialog.fqdn' | translate}}"
-        tooltip-trigger="mouseenter focus"
-        translate="mediaFusion.add-resource-dialog.yesInfo2"
-        aria-label="{{::'mediaFusion.add-resource-dialog.fqdn' | translate}}">
+      <h5 class="addResourceFQDN" tabindex="0" tooltip="{{::'mediaFusion.add-resource-dialog.fqdn' | translate}}" tooltip-trigger="mouseenter focus"
+        translate="mediaFusion.add-resource-dialog.yesInfo2" aria-label="{{::'mediaFusion.add-resource-dialog.fqdn' | translate}}">
       </h5>
       <h5 class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.yesInfo3"></h5>
     </div>
@@ -34,12 +30,8 @@
         <div class="row showgrid">
           <div class="columns medium-5">
             <p class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.text3V1"></p>
-            <p class="addResourceFQDN"
-              tabindex="0"
-              tooltip="{{'mediaFusion.add-resource-dialog.fqdn' | translate}}"
-              tooltip-trigger="mouseenter focus"
-              translate="mediaFusion.add-resource-dialog.yesInfo2"
-              aria-label="mediaFusion.add-resource-dialog.yesInfo2">
+            <p class="addResourceFQDN" tabindex="0" tooltip="{{'mediaFusion.add-resource-dialog.fqdn' | translate}}" tooltip-trigger="mouseenter focus"
+              translate="mediaFusion.add-resource-dialog.yesInfo2" aria-label="mediaFusion.add-resource-dialog.yesInfo2">
             </p>
             <p class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.text3V3"></p>
           </div>
@@ -52,8 +44,7 @@
   </div>
   <div ng-show="redirectResource.enableRedirectToTarget">
     <h3>
-      <span translate="mediaFusion.add-resource-dialog.grant-registration-success-header-old-cluster"
-        translate-values="{hostname: redirectResource.hostName || '', clustername: redirectResource.selectedCluster || ''}"></span>
+      <span translate="mediaFusion.add-resource-dialog.grant-registration-success-header-old-cluster" translate-values="{hostname: redirectResource.hostName || '', clustername: redirectResource.selectedCluster || ''}"></span>
     </h3>
     <br>
     <p>
@@ -83,12 +74,12 @@
       <form name="myAddResourceDownloadForm">
         <div class="cs-radio-group">
           <div class="radioDisplay">
-            <input cs-input type="radio" ng-model="redirectResource.ovaType" id="full" name="redirectResource" value="1" cs-input-label="{{'mediaFusion.add-resource-dialog.fullOva' | translate}}" class="radioNoTranform"
-              ng-disabled="redirectResource.radio === 1">
+            <input cs-input type="radio" ng-model="redirectResource.ovaType" id="full" name="redirectResource" value="1" cs-input-label="{{'mediaFusion.add-resource-dialog.fullOva' | translate}}"
+              class="radioNoTranform" ng-disabled="redirectResource.radio === 1">
           </div>
           <div class="radioDisplay">
-            <input cs-input type="radio" ng-model="redirectResource.ovaType" id="demo" name="redirectResource" value="0" cs-input-label="{{'mediaFusion.add-resource-dialog.demoOva' | translate}}" class="radioNoTranform"
-              ng-disabled="redirectResource.radio === 1">
+            <input cs-input type="radio" ng-model="redirectResource.ovaType" id="demo" name="redirectResource" value="0" cs-input-label="{{'mediaFusion.add-resource-dialog.demoOva' | translate}}"
+              class="radioNoTranform" ng-disabled="redirectResource.radio === 1">
           </div>
         </div>
       </form>
@@ -111,8 +102,8 @@
     </div>
     <div class="addResourceBodyInfo">
       <p>
-        {{'mediaFusion.add-resource-dialog.noDesc1' | translate}} <a href="https://www.cisco.com/go/hybrid-services-media"
-          target='_blank'>{{'mediaFusion.add-resource-dialog.noDesc2' | translate}}</a>
+        {{'mediaFusion.add-resource-dialog.noDesc1' | translate}}
+        <a href="https://www.cisco.com/go/hybrid-services-media" target='_blank'>{{'mediaFusion.add-resource-dialog.noDesc2' | translate}}</a>
       </p>
     </div>
     <!--div class="addResourceBodyInfo">
@@ -130,9 +121,16 @@
     </button>
   </div>
   <div ng-hide="redirectResource.noProceed || redirectResource.enableRedirectToTarget || !redirectResource.fromClusters">
-    <button class="btn" ng-click="redirectResource.back()">
-      <span translate="mediaFusion.add-resource-dialog.back"></span>
-    </button>
+    <span ng-show="redirectResource.yesNoPage">
+      <button class="btn" ng-click="redirectResource.closeSetupModal()">
+        <span translate="mediaFusion.add-resource-dialog.cancel"></span>
+      </button>
+    </span>
+    <span ng-show="!redirectResource.yesNoPage">
+      <button class="btn" ng-click="redirectResource.back()">
+        <span translate="mediaFusion.add-resource-dialog.back"></span>
+      </button>
+    </span>
     <button class="btn activate-button btn--primary" ng-click="redirectResource.next()" ng-disabled="!redirectResource.canGoNext()">
       <span translate="mediaFusion.add-resource-dialog.next"></span>
     </button>

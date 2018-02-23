@@ -9,7 +9,7 @@
     WizardSelector();
 
     function WizardSelector() {
-      if (!hasMfClusterWizardFeatureToggle) {
+      if (hasMfClusterWizardFeatureToggle) {
         $modal.open({
           type: 'modal',
           controller: 'clusterCreationWizardController',

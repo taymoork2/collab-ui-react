@@ -1,24 +1,20 @@
 import { IExtendedClusterFusion, HybridServiceId, ICluster } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { HybridServicesExtrasService } from 'modules/hercules/services/hybrid-services-extras.service';
-//import { ProPackService } from 'modules/core/proPack/proPack.service';
 import { Notification } from 'modules/core/notifications/notification.service';
 
 export class AddResourceSectionService {
 
   /* @ngInject */
   constructor(
-    private $q: ng.IQService,
-    //private $state: ng.ui.IStateService,
-    private $window: ng.IWindowService,
-    //private $stateParams,
-    private $translate: ng.translate.ITranslateService,
     private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesExtrasService: HybridServicesExtrasService,
-    //private ProPackService: ProPackService,
     private MediaServiceActivationV2,
     private MediaClusterServiceV2,
     private Notification: Notification,
+    private $q: ng.IQService,
+    private $window: ng.IWindowService,
+    private $translate: ng.translate.ITranslateService,
   ) { }
 
   private clusterDetail: ICluster;
@@ -42,43 +38,43 @@ export class AddResourceSectionService {
 
   private getClusterList() {
     return this.HybridServicesClusterService.getAll()
-    .then((clusters) => {
-      return this.clusters = _.filter(clusters, {
-        targetType: 'mf_mgmt',
-      });
-    })
-    .catch(() => []);
+      .then((clusters) => {
+        return this.clusters = _.filter(clusters, {
+          targetType: 'mf_mgmt',
+        });
+      })
+      .catch(() => []);
   }
 
   public updateClusterLists() {
     const clusterList: any = [];
     return this.getClusterList()
-        .then((clusters) => {
-          _.each(clusters, (cluster) => {
-            if (cluster.targetType === 'mf_mgmt') {
-              clusterList.push(cluster.name);
-              _.each(cluster.connectors, (connector) => {
-                if ('running' === connector.state) {
-                  this.onlineNodeList.push(connector.hostname);
-                } else {
-                  this.offlineNodeList.push(connector.hostname);
-                }
-              });
-            }
-          });
-          this.clusterList = clusterList;
-          this.clusterList = _.sortBy(this.clusterList, (cluster) => {
-            return cluster.toLowerCase();
-          });
-          return this.clusterList;
+      .then((clusters) => {
+        _.each(clusters, (cluster) => {
+          if (cluster.targetType === 'mf_mgmt') {
+            clusterList.push(cluster.name);
+            _.each(cluster.connectors, (connector) => {
+              if ('running' === connector.state) {
+                this.onlineNodeList.push(connector.hostname);
+              } else {
+                this.offlineNodeList.push(connector.hostname);
+              }
+            });
+          }
         });
+        this.clusterList = clusterList;
+        this.clusterList = _.sortBy(this.clusterList, (cluster) => {
+          return cluster.toLowerCase();
+        });
+        return this.clusterList;
+      });
   }
 
-  public onlineNodes () {
+  public onlineNodes() {
     return this.onlineNodeList;
   }
 
-  public offlineNodes () {
+  public offlineNodes() {
     return this.offlineNodeList;
   }
   public addRedirectTargetClicked(hostName: string, enteredCluster) {
@@ -131,7 +127,7 @@ export class AddResourceSectionService {
     return this.clusterDetail;
   }
 
-  public selectClusterId () {
+  public selectClusterId() {
     return this.selectedClusterId;
   }
 
@@ -213,5 +209,5 @@ export class AddResourceSectionService {
       });
     }
   }*/
-
 }
+
