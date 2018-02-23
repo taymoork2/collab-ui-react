@@ -260,6 +260,12 @@
       integration: 'https://int-expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
       prod: 'https://expert-assistant.produs1.ciscoccservice.com/expert-assistant/v1/',
     },
+    MediaManagerUrl: {
+      dev: 'https://int-media-manager.appstaging.ciscoccservice.com/media-manager/v1/',
+      cfe: 'https://int-media-manager.appstaging.ciscoccservice.com/media-manager/v1/',
+      integration: 'https://int-media-manager.appstaging.ciscoccservice.com/media-manager/v1/',
+      prod: 'https://media-manager.produs1.ciscoccservice.com/media-manager/v1/',
+    },
     AdminBatchServiceUrl: {
       dev: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
       cfe: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
