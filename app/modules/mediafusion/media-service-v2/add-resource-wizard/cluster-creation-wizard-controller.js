@@ -6,11 +6,11 @@
     .controller('clusterCreationWizardController', clusterCreationWizardController);
 
   /* @ngInject */
-  function clusterCreationWizardController($translate, $state, $log, $modalInstance, firstTimeSetup, $modal, AddResourceSectionService, TrustedSipSectionService, SipRegistrationSectionService, ClusterCascadeBandwidthService, HybridMediaUpgradeScheduleService, hasMfFeatureToggle, hasMfSIPFeatureToggle) {
+  function clusterCreationWizardController($translate, $state, $log, $modalInstance, firstTimeSetup, $modal, AddResourceSectionService, TrustedSipSectionService, SipRegistrationSectionService, ClusterCascadeBandwidthService, HybridMediaUpgradeScheduleService, hasMfFeatureToggle, hasMfSIPFeatureToggle, hasMfCascadeBwConfigToggle) {
     var vm = this;
     vm.isSuccess = true;
     vm.closeSetupModal = closeSetupModal;
-    vm.finish = finish;
+    vm.createCluster = createCluster;
     vm.clusterlist = [];
     vm.hostName = '';
     vm.clusterName = '';
@@ -25,14 +25,12 @@
     vm.canGoNext = canGoNext;
     vm.hasMfFeatureToggle = hasMfFeatureToggle;
     vm.hasMfSIPFeatureToggle = hasMfSIPFeatureToggle;
-    //vm.clusterDetail = '';
     vm.nextCheck = false;
     vm.totalSteps = 3;
     vm.currentStep = 0;
     vm.next = next;
     vm.back = back;
 
-    //$log.log('hasMfPhaseTwoToggle' + hasMfPhaseTwoToggle);
     vm.upgradeSchedule = [{
       value: 0,
       label: $translate.instant('hercules.expresswayClusterSettings.upgradeScheduleHeader'),
@@ -53,10 +51,9 @@
     }];
 
     vm.headerSelected = vm.headerOptions[0];
-    $log.log('hasMFFeatureToggle' + hasMfFeatureToggle + 'hasMFSIPFeatureToggle' + hasMfSIPFeatureToggle);
-    //headerSelection();
+    $log.log('hasMFFeatureToggle' + hasMfFeatureToggle + 'hasMFSIPFeatureToggle' + hasMfSIPFeatureToggle + 'hasMfCascadeBwConfigToggle' + hasMfCascadeBwConfigToggle);
 
-    function finish() {
+    function createCluster() {
       $modalInstance.close();
       if (newClusterCheck()) {
         AddResourceSectionService.addRedirectTargetClicked(vm.hostName, vm.clusterName).then(function () {
@@ -98,12 +95,14 @@
         vm.clusterName = someData.clusterName;
       }
     }
+
     function cascadeBandwidthUpdatedData(someData) {
       if (!_.isUndefined(someData.cascadeBandwidth)) {
         $log.log('cascadeBandwidth' + JSON.stringify(someData.cascadeBandwidth));
         vm.cascadeBandwidth = someData.cascadeBandwidth;
       }
     }
+
     function upgradeScheduleUpdatedData(someData) {
       if (!_.isUndefined(someData.upgradeSchedule)) {
         $log.log('formData' + JSON.stringify(someData.upgradeSchedule));
@@ -117,12 +116,14 @@
         vm.sipConfigUrl = someData.sipConfigUrl;
       }
     }
+
     function trustedSipConfigUpdatedData(someData) {
       if (!_.isUndefined(someData.trustedsipconfiguration)) {
         $log.log('trustedsipconfiguration' + JSON.stringify(someData.trustedsipconfiguration));
         vm.trustedsipconfiguration = someData.trustedsipconfiguration;
       }
     }
+
     function newClusterCheck() {
       if (vm.clusterlist.indexOf(vm.clusterName) > -1) {
         return true;
@@ -132,12 +133,13 @@
     }
 
     function clusterSettingsCheck() {
-      if (vm.hasMfFeatureToggle && vm.hasMfSIPFeatureToggle) {
+      if (vm.hasMfFeatureToggle && vm.hasMfSIPFeatureToggle && hasMfCascadeBwConfigToggle) {
         return true;
       } else {
         return false;
       }
     }
+
     function next() {
       vm.currentStep += 1;
       if (vm.currentStep <= 3) {
@@ -168,15 +170,6 @@
       }
     }
 
-    /*function isNextCheck() {
-      if (vm.hostName && vm.clusterName) {
-        $log.log('1' + vm.hostName);
-        return true;
-      } else {
-        $log.log('2' + vm.clusterName);
-        return false;
-      }
-    }*/
     function canGoNext() {
       if (vm.hostName && vm.clusterName) {
         return true;
@@ -186,6 +179,7 @@
         return false;
       }
     }
+
     function back() {
       vm.currentStep -= 1;
       if (vm.currentStep <= 3) {

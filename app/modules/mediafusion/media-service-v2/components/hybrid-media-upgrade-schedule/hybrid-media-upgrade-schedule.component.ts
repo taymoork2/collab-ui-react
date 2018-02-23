@@ -35,7 +35,6 @@ class HybridMediaUpgradeScheduleCtrl implements ng.IComponentController {
       if (_.isEmpty(oldValue) || newValue === oldValue) {
         return;
       }
-      //Write code here to send the formData to the parent
       if (_.isFunction(this.onUpgradeScheduleUpdate)) {
         this.onUpgradeScheduleUpdate({ someData: { upgradeSchedule: this.formData } });
       } else {

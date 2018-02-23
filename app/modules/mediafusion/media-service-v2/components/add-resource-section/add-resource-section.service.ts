@@ -151,7 +151,7 @@ export class AddResourceSectionService {
     return this.MediaServiceActivationV2.enableMediaService(this.currentServiceId);
   }
 
-  public createFirstTimeSetupCluster(hostName, enteredCluster) {
+  /*public createFirstTimeSetupCluster(hostName, enteredCluster) {
     const deferred = this.$q.defer();
     this.HybridServicesClusterService.preregisterCluster(enteredCluster, 'stable', 'mf_mgmt').then((result) => {
       deferred.resolve();
@@ -185,7 +185,7 @@ export class AddResourceSectionService {
       this.Notification.errorWithTrackingId(error, errorMessage);
     });
     return deferred.promise;
-  }
+  }*/
 
   /*public redirectToTargetAndCloseWindowClicked(hostName, enteredCluster) {
     //this.$state.modal.close();

@@ -82,9 +82,6 @@ export class AddResourceSectionController implements ng.IComponentController {
     }
   }
 
-  public isValidHostname(hostname) {
-    return hostname && hostname.length >= 3;
-  }
 }
 
 export class AddResourceSectionComponent implements ng.IComponentOptions {

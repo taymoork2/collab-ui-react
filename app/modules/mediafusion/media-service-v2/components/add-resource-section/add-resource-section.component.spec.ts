@@ -1,6 +1,6 @@
 /*import addResourceSection from './index';
 
-//type Test = atlas.test.IComponentTest<AddResourceSectionController, {}, {}>;
+// type Test = atlas.test.IComponentTest<AddResourceSectionComponent, {}, {}>;
 
 describe('Component: AddResourceSectionComponent:', () => {
   let $componentController, $state, $scope, $q, HybridServicesClusterService, HybridServicesExtrasService,
@@ -12,7 +12,7 @@ describe('Component: AddResourceSectionComponent:', () => {
   beforeEach(initSpies);
   afterEach(cleanup);
 
-  function dependencies (_$componentController_, _$state_, _$q_, $rootScope, _HybridServicesClusterService_, _HybridServicesExtrasService_,_MediaServiceActivationV2_,_MediaClusterServiceV2_) {
+  function dependencies(_$componentController_, _$state_, _$q_, $rootScope, _HybridServicesClusterService_, _HybridServicesExtrasService_, _MediaServiceActivationV2_, _MediaClusterServiceV2_) {
     $componentController = _$componentController_;
     $state = _$state_;
     $q = _$q_;
@@ -43,7 +43,7 @@ describe('Component: AddResourceSectionComponent:', () => {
     spyOn(HybridServicesClusterService, 'preregisterCluster').and.returnValue($q.resolve({
       id: '12345',
     }));
-    spyOn(this.HybridServicesExtrasService, 'addPreregisteredClusterToAllowList').and.returnValue(this.$q.resolve({}));
+    spyOn(HybridServicesExtrasService, 'addPreregisteredClusterToAllowList').and.returnValue(this.$q.resolve({}));
     spyOn(MediaServiceActivationV2, 'enableMediaService');
     spyOn(MediaServiceActivationV2, 'enableMediaServiceEntitlements');
     spyOn(MediaClusterServiceV2, 'getPropertySets').and.returnValue($q.resolve({
@@ -53,18 +53,17 @@ describe('Component: AddResourceSectionComponent:', () => {
     }));
     //spyOn(MediaClusterServiceV2, 'createPropertySet').and.returnValue($q.resolve(respnse));
     //spyOn(MediaClusterServiceV2, 'updatePropertySetById').and.returnValue($q.resolve(respnse));
-  };
+  }
 
-  /*describe('primary behaviors (view):', () => {
-    it('...', function (this: Test) {
-      // TODO: implement
+  describe('primary behaviors (view):', function () {
+    it('...', function () {
+      expect(true).toBeTruthy();
     });
   });
 
-  describe('primary behaviors (controller):', () => {
-    it('...', function (this: Test) {
+  describe('primary behaviors (controller):', function () {
+    it('...', function () {
       // TODO: implement
     });
   });
 });*/
-

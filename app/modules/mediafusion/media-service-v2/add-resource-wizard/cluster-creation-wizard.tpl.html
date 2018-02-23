@@ -56,7 +56,7 @@
     ng-disabled="!clusterCreationWizard.canGoNext()">
       <span translate="mediaFusion.add-resource-dialog.next"></span>
     </button>
-    <button ng-show="clusterCreationWizard.currentStep === 3" class="btn activate-button btn--primary" ng-click="clusterCreationWizard.finish()">
+    <button ng-show="clusterCreationWizard.currentStep === 3" class="btn activate-button btn--primary" ng-click="clusterCreationWizard.createCluster()">
       <span translate="mediaFusion.easyConfig.toNode"></span>
     </button>
   </div>
