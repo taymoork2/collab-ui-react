@@ -232,12 +232,12 @@
         "modifyError": "Template failed to load."
       },
       "activateAutoAssign": {
-        "activateSuccess": "You've activated the Auto-Assign License Template",
+        "activateSuccess": "You've activated the Auto-Assign Template",
         "activateError": "Templated failed to activate."
       },
       "deactivateAutoAssign": {
         "description": "Licenses won't be assigned to new users automatically. Existing users' licenses won't be affected. Do you want to continue?",
-        "deactivateSuccess": "You've deactivated the Auto-Assign License Template",
+        "deactivateSuccess": "You've deactivated the Auto-Assign Template",
         "deactivateError": "Template failed to deactivate."
       },
       "deleteAutoAssignModal": {
@@ -285,7 +285,7 @@
       "tooManyUsers": "The user list exceeds the limit of {{maxUsers}}. To update more than {{maxUsers}} users, please use the bulk CSV template.",
       "ad": {
         "unsyncedUsers": "Some users are not currently synchronized with Active Directory. Please add them with Cisco Directory Connector, and then modify them after they synchronize to the cloud.",
-        "existingUsers": "The Auto-Assign License template is enabled. You can only modify existing users from the User page or using CSV upload."
+        "existingUsers": "The Auto-Assign Template is enabled. You can only modify existing users from the User page or using CSV upload."
       }
     },
     "bulk": {
