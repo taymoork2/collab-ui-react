@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  module.exports = MediaClusterServiceV2;
+
   /* @ngInject */
   function MediaClusterServiceV2($http, Authinfo, HybridServicesClusterService, UrlConfig) {
     function extractDataFromResponse(res) {
@@ -40,8 +42,4 @@
       updatePropertySetById: updatePropertySetById,
     };
   }
-
-  angular
-    .module('Mediafusion')
-    .service('MediaClusterServiceV2', MediaClusterServiceV2);
 }());
