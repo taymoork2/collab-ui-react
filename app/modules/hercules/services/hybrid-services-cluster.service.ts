@@ -241,17 +241,6 @@ export class HybridServicesClusterService {
       .then(this.addUserCount);
   }
 
-  public getStatusForService(serviceId: HybridServiceId, clusterList: IExtendedClusterFusion[]): IServiceStatusWithSetup {
-    const status = this.processClustersToAggregateStatusForService(serviceId, clusterList);
-    const serviceStatus = {
-      serviceId: serviceId,
-      setup: this.processClustersToSeeIfServiceIsSetup(serviceId, clusterList),
-      status: status,
-      cssClass: this.HybridServicesClusterStatesService.getServiceStatusCSSClassFromLabel(status),
-    };
-    return serviceStatus;
-  }
-
   public getUnassignedClusters(clusters: ICluster[]): ICluster[] {
     return _.filter(clusters, (cluster) => cluster.resourceGroupId === undefined);
   }
@@ -296,27 +285,6 @@ export class HybridServicesClusterService {
     return this.HybridServicesClusterStatesService.getServiceStatusDetails(connectors).name;
   }
 
-  public processClustersToSeeIfServiceIsSetup(serviceId: HybridServiceId, clusterList: ICluster[]): boolean {
-    const connectorType = this.HybridServicesUtilsService.serviceId2ConnectorType(serviceId);
-    if (!connectorType) {
-      return false; // Cannot recognize service, default to *not* enabled
-    }
-
-    if (serviceId === 'squared-fusion-media') {
-      return _.some(clusterList, { targetType: 'mf_mgmt' });
-    } else if (serviceId === 'contact-center-context') {
-      return _.some(clusterList, { targetType: 'cs_mgmt' });
-    } else if (serviceId === 'spark-hybrid-datasecurity') {
-      return _.some(clusterList, { targetType: 'hds_app' });
-    } else {
-      return _.chain(clusterList)
-        .map('provisioning')
-        .flatten()
-        .some({ connectorType: connectorType })
-        .value();
-    }
-  }
-
   public provisionConnector(clusterId: string, connectorType: ConnectorType): ng.IPromise<''> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}/provisioning/actions/add/invoke?connectorType=${connectorType}`;
     return this.$http.post<''>(url, null)
@@ -324,13 +292,6 @@ export class HybridServicesClusterService {
       .then((res) => {
         this.clearCache();
         return res;
-      });
-  }
-
-  public serviceIsSetUp(serviceId: HybridServiceId): ng.IPromise<boolean> {
-    return this.getAll()
-      .then((clusterList) => {
-        return this.processClustersToSeeIfServiceIsSetup(serviceId, clusterList);
       });
   }
 

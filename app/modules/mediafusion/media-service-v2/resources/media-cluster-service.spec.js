@@ -1,7 +1,9 @@
 'use strict';
 
+var moduleName = require('./index').default;
+
 describe('Service: MediaClusterServiceV2', function () {
-  beforeEach(angular.mock.module('Mediafusion'));
+  beforeEach(angular.mock.module(moduleName));
   var $httpBackend, Service, Authinfo;
 
   beforeEach(inject(function (_$httpBackend_, _MediaClusterServiceV2_, _Authinfo_) {

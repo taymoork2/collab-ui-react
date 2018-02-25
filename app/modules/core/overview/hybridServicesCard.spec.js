@@ -9,7 +9,8 @@ describe('OverviewHybridServicesCard', function () {
       'FeatureToggleService',
       'CloudConnectorService',
       'HybridServicesClusterService',
-      'OverviewHybridServicesCard'
+      'OverviewHybridServicesCard',
+      'ServiceDescriptorService'
     );
 
     this.jsonData = getJSONFixture('hercules/nothing-provisioned-cluster-list.json');
@@ -27,10 +28,18 @@ describe('OverviewHybridServicesCard', function () {
         cssClass: 'default',
       };
     });
+    spyOn(this.ServiceDescriptorService, 'getServices');
   });
 
   it('should not show card when no services are set up', function () {
     this.HybridServicesClusterService.getAll.and.returnValue(this.$q.resolve(_.cloneDeep(this.jsonData)));
+    this.ServiceDescriptorService.getServices.and.returnValue(this.$q.resolve([{
+      id: 'squared-fusion-cal',
+      enabled: false,
+    }, {
+      id: 'squared-fusion-uc',
+      enabled: false,
+    }]));
     var card = this.OverviewHybridServicesCard.createCard();
     this.$rootScope.$apply();
 
@@ -39,6 +48,19 @@ describe('OverviewHybridServicesCard', function () {
 
   it('should not show a service that is not set up', function () {
     this.HybridServicesClusterService.getAll.and.returnValue(this.$q.resolve(_.cloneDeep(this.jsonData)));
+    this.ServiceDescriptorService.getServices.and.returnValue(this.$q.resolve([{
+      id: 'squared-fusion-cal',
+      enabled: false,
+    }, {
+      id: 'squared-fusion-uc',
+      enabled: false,
+    }, {
+      id: 'squared-fusion-media',
+      enabled: false,
+    }, {
+      id: 'spark-hybrid-impinterop',
+      enabled: false,
+    }]));
     var card = this.OverviewHybridServicesCard.createCard();
     this.$rootScope.$apply();
 
@@ -50,11 +72,13 @@ describe('OverviewHybridServicesCard', function () {
 
   it('should show the card when services are set up', function () {
     this.HybridServicesClusterService.getAll.and.returnValue(this.$q.resolve(_.cloneDeep(this.clusterData)));
-    spyOn(this.HybridServicesClusterService, 'getStatusForService').and.returnValue({
-      serviceId: '',
-      setup: true,
-      status: 'operational',
-    });
+    this.ServiceDescriptorService.getServices.and.returnValue(this.$q.resolve([{
+      id: 'squared-fusion-cal',
+      enabled: true,
+    }, {
+      id: 'squared-fusion-uc',
+      enabled: false,
+    }]));
 
     var card = this.OverviewHybridServicesCard.createCard();
     this.$rootScope.$apply();
@@ -64,13 +88,13 @@ describe('OverviewHybridServicesCard', function () {
 
   it('should not show Call if it is not set up, but still show Calendar', function () {
     this.HybridServicesClusterService.getAll.and.returnValue(this.$q.resolve(_.cloneDeep(this.clusterData)));
-    spyOn(this.HybridServicesClusterService, 'getStatusForService').and.callFake(function (serviceId) {
-      return {
-        serviceId: serviceId,
-        setup: serviceId === 'squared-fusion-cal',
-        status: 'operational',
-      };
-    });
+    this.ServiceDescriptorService.getServices.and.returnValue(this.$q.resolve([{
+      id: 'squared-fusion-cal',
+      enabled: true,
+    }, {
+      id: 'squared-fusion-uc',
+      enabled: false,
+    }]));
 
     var card = this.OverviewHybridServicesCard.createCard();
     this.$rootScope.$apply();
@@ -90,6 +114,7 @@ describe('OverviewHybridServicesCard', function () {
         return { serviceId: 'squared-fusion-cal', setup: false, cssClass: 'default' };
       }
     });
+    this.ServiceDescriptorService.getServices.and.returnValue(this.$q.resolve([]));
     var card = this.OverviewHybridServicesCard.createCard();
     this.$rootScope.$apply();
 
@@ -100,9 +125,10 @@ describe('OverviewHybridServicesCard', function () {
   it('should show the card even when the Google Calendar lookup fails, if at least one other service is set up in FMS', function () {
     this.HybridServicesClusterService.getAll.and.returnValue(this.$q.resolve(_.cloneDeep(this.jsonData)));
     this.CloudConnectorService.getService.and.returnValue(this.$q.reject({}));
-    spyOn(this.HybridServicesClusterService, 'getStatusForService').and.returnValue({
-      setup: true,
-    });
+    this.ServiceDescriptorService.getServices.and.returnValue(this.$q.resolve([{
+      id: 'squared-fusion-uc',
+      enabled: true,
+    }]));
     var card = this.OverviewHybridServicesCard.createCard();
     this.$rootScope.$apply();
     expect(card.enabled).toBe(true);

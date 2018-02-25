@@ -154,7 +154,7 @@ require('./_overview.scss');
                     }
                   });
               } else if (flag.name === hybridCallHighAvailability && Authinfo.isEntitled(Config.entitlements.fusion_uc)) {
-                HybridServicesClusterService.serviceIsSetUp('squared-fusion-uc')
+                ServiceDescriptorService.isServiceEnabled('squared-fusion-uc')
                   .then(function (isSetup) {
                     if (isSetup) {
                       return HybridServicesClusterService.serviceHasHighAvailability('c_ucmc')
@@ -170,7 +170,7 @@ require('./_overview.scss');
                 FeatureToggleService.supports(FeatureToggleService.features.atlasOffice365Support)
                   .then(function (supported) {
                     if (supported) {
-                      OverviewNotificationFactory.createAllHybridCalendarsNotification($state, CloudConnectorService, HybridServicesClusterService, HybridServicesFlagService, HybridServicesUtilsService)
+                      OverviewNotificationFactory.createAllHybridCalendarsNotification($state, CloudConnectorService, ServiceDescriptorService, HybridServicesFlagService, HybridServicesUtilsService)
                         .then(function (allHybridCalendarsNotification) {
                           vm.notifications.push(allHybridCalendarsNotification);
                           resizeNotifications();
