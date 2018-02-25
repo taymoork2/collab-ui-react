@@ -88,8 +88,15 @@
           <div class="columns small-3">
             <span class="history-label">{{'cloudExtensions.details' | translate}}:</span>
           </div>
-          <div class="columns small-9">
-            <user-status-messages messages="$ctrl.userStatus.messages"></user-status-messages>
+          <div class="columns small-9" ng-if="!$ctrl.loadingPage">
+            <user-status-messages messages="$ctrl.userStatus.messages"
+                                  human-readable="true"
+                                  resource-group-id="$ctrl.resourceGroupId"
+                                  connector-type="'c_imp'">
+            </user-status-messages>
+          </div>
+          <div class="columns small-9" ng-if="$ctrl.loadingPage">
+            <span cs-loader class="hybrid-services-label loader-example--small"></span>
           </div>
         </div>
 
@@ -105,6 +112,8 @@
   </cs-sp-section>
 
   <hybrid-services-resource-group-selector user-id="$ctrl.userId"
-                                           service-id="'spark-hybrid-impinterop'"></hybrid-services-resource-group-selector>
+                                           resource-group-id="$ctrl.resourceGroupId"
+                                           service-id="'spark-hybrid-impinterop'"
+                                           refresh-callback="$ctrl.resourceGroupRefreshCallback()"></hybrid-services-resource-group-selector>
 
 </cs-sp-container>

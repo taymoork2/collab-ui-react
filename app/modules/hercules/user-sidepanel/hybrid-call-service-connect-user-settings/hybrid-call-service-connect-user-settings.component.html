@@ -86,8 +86,15 @@
           <div class="columns small-3">
             <span class="history-label">{{'cloudExtensions.details' | translate}}:</span>
           </div>
-          <div class="columns small-9">
-            <user-status-messages messages="$ctrl.userStatusConnect.messages"></user-status-messages>
+          <div class="columns small-9" ng-if="!$ctrl.loadingPage">
+            <user-status-messages messages="$ctrl.userStatusConnect.messages"
+                                  human-readable="true"
+                                  resource-group-id="$ctrl.resourceGroupId"
+                                  connector-type="'c_ucmc'">
+            </user-status-messages>
+          </div>
+          <div class="columns small-9" ng-if="$ctrl.loadingPage">
+            <span cs-loader class="hybrid-services-label loader-example--small"></span>
           </div>
         </div>
 

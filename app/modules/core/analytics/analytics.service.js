@@ -254,6 +254,12 @@
           EXPAND_DEVICE: 'CSDM expand device',
         },
       },
+      ORGANIZATION: {
+        name: 'Organization',
+        eventNames: {
+          DELETE: 'Organization Delete',
+        },
+      },
     };
 
     var service = {

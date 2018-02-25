@@ -18,7 +18,7 @@ class CareNumbersCtrl implements ng.IComponentController {
   public gridApi: uiGrid.IGridApi;
   public timeoutVal: number = 1000;
   public timer: any = undefined;
-  public hPstn: boolean = false;
+
   public columnDefs = [{
     field: 'siteToSiteNumber',
     displayName: this.$translate.instant('linesPage.internalNumberHeader'),
@@ -104,12 +104,10 @@ class CareNumbersCtrl implements ng.IComponentController {
       pt: this.PrivateTrunkService.getPrivateTrunk(),
       ept: this.ServiceDescriptorService.getServiceStatus('ept'),
       ft: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484),
-      ft2: this.FeatureToggleService.supports(this.FeatureToggleService.features.huronPstn),
     }).then((response) => {
       this.trunks = response.pt.resources.length !== 0;
       this.eptStatus = response.ept.state !== 'unknown';
       this.ishI1484 = response.ft;
-      this.hPstn = response.ft2;
 
       if (!this.ishI1484) {
         this.columnDefs.splice(0, 1);

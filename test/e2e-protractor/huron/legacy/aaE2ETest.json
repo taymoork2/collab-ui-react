@@ -13,7 +13,7 @@
 			}, {
 				"isDynamic": true,
 				"say": {
-					"value": "Original-Caller-Area-Code",
+					"value": "Original-Called-Number",
 					"voice": "Jordi"
 				}
 			}, {
@@ -54,7 +54,7 @@
 						}, {
 							"isDynamic": true,
 							"say": {
-								"value": "Original-Caller-Area-Code",
+								"value": "Original-Called-Number",
 								"voice": "Jordi"
 							}
 						}, {
@@ -112,7 +112,7 @@
 			}, {
 				"isDynamic": true,
 				"say": {
-					"value": "Original-Caller-Area-Code",
+					"value": "Original-Called-Number",
 					"voice": "Jordi"
 				}
 			}, {
@@ -153,7 +153,7 @@
 						}, {
 							"isDynamic": true,
 							"say": {
-								"value": "Original-Caller-Area-Code",
+								"value": "Original-Called-Number",
 								"voice": "Jordi"
 							}
 						}, {
@@ -190,7 +190,7 @@
 				"input": "0",
 				"actions": [{
 					"repeatActionsOnInput": {
-						"level": 0
+						"level":0
 					}
 				}]
 			}],
@@ -218,7 +218,7 @@
 			}, {
 				"isDynamic": true,
 				"say": {
-					"value": "Original-Caller-Area-Code",
+					"value": "Original-Called-Number",
 					"voice": "Jordi"
 				}
 			}, {
@@ -259,7 +259,7 @@
 						}, {
 							"isDynamic": true,
 							"say": {
-								"value": "Original-Caller-Area-Code",
+								"value": "Original-Called-Number",
 								"voice": "Jordi"
 							}
 						}, {
@@ -330,7 +330,7 @@
 			}, {
 				"isDynamic": true,
 				"say": {
-					"value": "Original-Caller-Area-Code",
+					"value": "Original-Called-Number",
 					"voice": "Jordi"
 				}
 			}, {
@@ -394,7 +394,7 @@
 						}, {
 							"isDynamic": true,
 							"say": {
-								"value": "Original-Caller-Area-Code",
+								"value": "Original-Called-Number",
 								"voice": "Jordi"
 							}
 						}, {
@@ -465,7 +465,7 @@
 			}, {
 				"isDynamic": true,
 				"say": {
-					"value": "Original-Caller-Area-Code",
+					"value": "Original-Called-Number",
 					"voice": "Jordi"
 				}
 			}, {
@@ -544,7 +544,7 @@
 						}, {
 							"isDynamic": true,
 							"say": {
-								"value": "Original-Caller-Area-Code",
+								"value": "Original-Called-Number",
 								"voice": "Jordi"
 							}
 						}, {
@@ -670,7 +670,7 @@
 			}, {
 				"isDynamic": true,
 				"say": {
-					"value": "Original-Caller-Area-Code",
+					"value": "Original-Called-Number",
 					"voice": "Jordi"
 				}
 			}, {
@@ -749,7 +749,7 @@
 						}, {
 							"isDynamic": true,
 							"say": {
-								"value": "Original-Caller-Area-Code",
+								"value": "Original-Called-Number",
 								"voice": "Jordi"
 							}
 						}, {
@@ -846,7 +846,7 @@
 			}, {
 				"isDynamic": true,
 				"say": {
-					"value": "Original-Caller-Area-Code",
+					"value": "Original-Called-Number",
 					"voice": "Jordi"
 				}
 			}, {
@@ -925,7 +925,7 @@
 						}, {
 							"isDynamic": true,
 							"say": {
-								"value": "Original-Caller-Area-Code",
+								"value": "Original-Called-Number",
 								"voice": "Jordi"
 							}
 						}, {
@@ -995,7 +995,7 @@
 						}, {
 							"isDynamic": true,
 							"say": {
-								"value": "Original-Caller-Area-Code",
+								"value": "Original-Called-Number",
 								"voice": "Jordi"
 							}
 						}, {

@@ -40,8 +40,6 @@
       </li>
 
       <li class="status-block__item auto-assign-licenses" cr-feature-toggle feature-show="atlas-f3745-auto-assign-licenses">
-        <!-- TODO: f3745 - apply logic for values returned by backend, once known -->
-        <!-- - currently assume enum of ('ACTIVATED'|'DEACTIVATED'|null) -->
         <i class="icon icon-circle status-indicator" ng-class="card.getAutoAssignLicensesStatusCssClass()"></i>
         <span translate="overview.cards.users.autoAssignLicenses"></span>
         <a href ng-click="card.showEditAutoAssignTemplateModal()" aria-label="{{::'overview.cards.users.autoAssignLicenses' | translate}}">

@@ -5,6 +5,7 @@ import { AssignableServicesComponent } from 'modules/core/users/userAdd/assignab
 import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template';
 import { EditAutoAssignTemplateModalController } from './edit-auto-assign-template-modal.component';
 import { HybridServicesEntitlementsPanelComponent } from 'modules/core/users/userAdd/hybrid-services-entitlements-panel/hybrid-services-entitlements-panel.component';
+import { Notification } from 'modules/core/notifications';
 
 type Test = atlas.test.IComponentTest<EditAutoAssignTemplateModalController, {
   $httpBackend: ng.IHttpBackendService,
@@ -13,11 +14,13 @@ type Test = atlas.test.IComponentTest<EditAutoAssignTemplateModalController, {
   $state: ng.ui.IStateService,
   Analytics: Analytics,
   AutoAssignTemplateService: AutoAssignTemplateService,
+  Notification: Notification,
 }, {
   components: {
-    assignableServices: atlas.test.IComponentSpy<AssignableServicesComponent>;
-    hybridServicesEntitlementsPanel: atlas.test.IComponentSpy<HybridServicesEntitlementsPanelComponent>;
-  };
+    assignableServices: atlas.test.IComponentSpy<AssignableServicesComponent>,
+    hybridServicesEntitlementsPanel: atlas.test.IComponentSpy<HybridServicesEntitlementsPanelComponent>,
+  },
+  getDefaultStateDataDeferred: ng.IDeferred<any>,
 }>;
 
 describe('Component: editAutoAssignTemplateModal:', () => {
@@ -38,9 +41,12 @@ describe('Component: editAutoAssignTemplateModal:', () => {
       '$state',
       'Analytics',
       'AutoAssignTemplateService',
+      'Notification',
     );
     this.autoAssignTemplateData = {};
     this.$scope.dismiss = _.noop;
+    this.getDefaultStateDataDeferred = this.$q.defer();
+    spyOn(this.AutoAssignTemplateService, 'getDefaultStateData').and.returnValue(this.getDefaultStateDataDeferred.promise);
   });
 
   afterEach(function (this: Test) {
@@ -48,9 +54,17 @@ describe('Component: editAutoAssignTemplateModal:', () => {
     this.$httpBackend.verifyNoOutstandingRequest();
   });
 
+  enum View {
+    ASSIGNABLE_SERVICES = 'assignable-services',
+    BACK_BUTTON = 'button.btn.back',
+    CLOSE_BUTTON = 'button.close[aria-label="common.close"]',
+    HYBRID_SERVICES = 'hybrid-services-entitlements-panel',
+    LOADING_SPINNER = '.text-center .icon.icon-5x.icon-spinner',
+    NEXT_BUTTON = 'button.btn.next',
+  }
+
   describe('primary behaviors (view):', () => {
     beforeEach(function (this: Test) {
-      spyOn(this.AutoAssignTemplateService, 'getSortedSubscriptions').and.returnValue(this.$q.resolve([]));
       this.compileComponent('editAutoAssignTemplateModal', {});
     });
 
@@ -63,20 +77,47 @@ describe('Component: editAutoAssignTemplateModal:', () => {
     });
 
     it('should always render a back and a next button', function (this: Test) {
-      expect(this.view.find('button.btn.back').length).toBe(1);
-      expect(this.view.find('button.btn.next').length).toBe(1);
+      expect(this.view.find(View.BACK_BUTTON)).toExist();
+      expect(this.view.find(View.NEXT_BUTTON)).toExist();
     });
 
-    it('should render render an "assignable-services" element', function (this: Test) {
-      expect(this.view.find('assignable-services[subscriptions]').length).toBe(1);
-      expect(this.view.find('assignable-services[on-update]').length).toBe(1);
-      expect(this.view.find('assignable-services[auto-assign-template-data]').length).toBe(1);
+    it('should render loading until getDefaultStateData() resolves', function (this: Test) {
+      expect(this.view.find(View.LOADING_SPINNER)).toExist();
+      expect(this.view.find(View.ASSIGNABLE_SERVICES)).not.toExist();
+      expect(this.view.find(View.HYBRID_SERVICES)).not.toExist();
+
+      this.getDefaultStateDataDeferred.resolve(this.autoAssignTemplateData);
+      this.$scope.$apply();
+
+      expect(this.view.find(View.LOADING_SPINNER)).not.toExist();
+      expect(this.view.find(View.ASSIGNABLE_SERVICES)).toExist();
+      expect(this.view.find(View.HYBRID_SERVICES)).toExist();
+    });
+
+    it('should show an error and go back to the previous state if getDefaultStateData() rejects', function (this: Test) {
+      spyOn(this.controller, 'back');
+      spyOn(this.Notification, 'errorResponse');
+
+      this.getDefaultStateDataDeferred.reject('fake-get-default-state-data-rejection');
+      this.$scope.$apply();
+
+      expect(this.Notification.errorResponse).toHaveBeenCalledWith('fake-get-default-state-data-rejection', 'userManage.org.modifyAutoAssign.modifyError');
+      expect(this.controller.back).toHaveBeenCalled();
+    });
+
+    it('should not show loading if autoAssignTemplateData is provided to component', function (this: Test) {
+      this.compileComponent('editAutoAssignTemplateModal', {
+        autoAssignTemplateData: this.autoAssignTemplateData,
+      });
+      expect(this.view.find(View.LOADING_SPINNER)).not.toExist();
+      expect(this.view.find(View.ASSIGNABLE_SERVICES)).toExist();
+      expect(this.view.find(View.HYBRID_SERVICES)).toExist();
     });
   });
 
   describe('primary behaviors (child component bindings):', () => {
     beforeEach(function (this: Test) {
-      spyOn(this.AutoAssignTemplateService, 'getSortedSubscriptions').and.returnValue(this.$q.resolve([]));
+      this.getDefaultStateDataDeferred.resolve(this.autoAssignTemplateData);
       this.compileComponent('editAutoAssignTemplateModal', {});
     });
 
@@ -98,7 +139,6 @@ describe('Component: editAutoAssignTemplateModal:', () => {
       spyOn(this.$state, 'go');
       _.set(this.autoAssignTemplateData, 'subscriptions', []);
       spyOn(this.Analytics, 'trackAddUsers');
-      spyOn(this.AutoAssignTemplateService, 'getSortedSubscriptions').and.returnValue(this.$q.resolve([]));
       this.compileComponent('editAutoAssignTemplateModal', {
         prevState: "'fake-previous-state'",
         isEditTemplateMode: true,
@@ -108,12 +148,12 @@ describe('Component: editAutoAssignTemplateModal:', () => {
     });
 
     it('should navigate to previous state when back button is clicked', function (this: Test) {
-      this.view.find('button.btn.back').click();
+      this.view.find(View.BACK_BUTTON).click();
       expect(this.$state.go).toHaveBeenCalledWith('users.manage.picker');
     });
 
     it('should navigate to the next state when next button is clicked', function (this: Test) {
-      this.view.find('button.btn.next').click();
+      this.view.find(View.NEXT_BUTTON).click();
       expect(this.$state.go).toHaveBeenCalledWith('users.manage.edit-summary-auto-assign-template-modal', {
         autoAssignTemplateData: this.autoAssignTemplateData,
         isEditTemplateMode: true,
@@ -121,7 +161,7 @@ describe('Component: editAutoAssignTemplateModal:', () => {
     });
 
     it('should track the event when the modal is dismissed', function (this: Test) {
-      this.view.find('button.close[aria-label="common.close"]').click();
+      this.view.find(View.CLOSE_BUTTON).click();
       expect(this.Analytics.trackAddUsers).toHaveBeenCalledWith(this.Analytics.eventNames.CANCEL_MODAL);
     });
 
@@ -184,7 +224,6 @@ describe('Component: editAutoAssignTemplateModal:', () => {
 
   describe('helper methods:', () => {
     beforeEach(function () {
-      spyOn(this.AutoAssignTemplateService, 'getSortedSubscriptions').and.returnValue(this.$q.resolve([]));
       this.compileComponent('editAutoAssignTemplateModal', {
         autoAssignTemplateData: {
           viewData: {},
@@ -458,6 +497,33 @@ describe('Component: editAutoAssignTemplateModal:', () => {
         expect(this.controller.hasSelectionChanges()).toBe(false);
         _.set(this.controller, `autoAssignTemplateData.userChangesData.${AssignableServicesItemCategory.USER_ENTITLEMENT}.fakeUserEntitlementId`, 'fake-user-entitlement-item');
         expect(this.controller.hasSelectionChanges()).toBe(true);
+      });
+    });
+
+    describe('(get) footerWarningL10nKey:', () => {
+      it('should return empty string if not in edit template mode, if the pending template has selections, or "autoAssignTemplateData" property is not initialized yet', function () {
+        spyOn(this.controller, 'targetStateViewDataHasSelections');
+        this.controller.isEditTemplateMode = false;
+        this.controller.targetStateViewDataHasSelections.and.returnValue(true);
+        this.controller.autoAssignTemplateData = undefined;
+        expect(this.controller.footerWarningL10nKey).toBe('');
+
+        this.controller.isEditTemplateMode = true;
+        this.controller.targetStateViewDataHasSelections.and.returnValue(true);
+        this.controller.autoAssignTemplateData = undefined;
+        expect(this.controller.footerWarningL10nKey).toBe('');
+
+        this.controller.isEditTemplateMode = true;
+        this.controller.targetStateViewDataHasSelections.and.returnValue(false);
+        this.controller.autoAssignTemplateData = undefined;
+        expect(this.controller.footerWarningL10nKey).toBe('');
+      });
+
+      it('should return l10n key for footer warning message if in edit mode, pending template has no selections, and "autoAssignTemplateData" property has been initialized', function () {
+        this.controller.isEditTemplateMode = true;
+        spyOn(this.controller, 'targetStateViewDataHasSelections').and.returnValue(false);
+        this.controller.autoAssignTemplateData = 'fake-autoAssignTemplateData';
+        expect(this.controller.footerWarningL10nKey).toBe('userManage.autoAssignTemplate.edit.warningFooter');
       });
     });
   });

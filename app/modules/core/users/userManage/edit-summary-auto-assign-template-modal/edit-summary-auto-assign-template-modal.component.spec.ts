@@ -34,9 +34,6 @@ describe('Component: editSummaryAutoAssignTemplateModal:', () => {
       'AutoAssignTemplateService',
     );
     this.$scope.dismissSpy = jasmine.createSpy('dismissSpy');
-    spyOn(this.AutoAssignTemplateService, 'getDefaultTemplate').and.returnValue(this.$q.resolve({
-      templateId: 'fake-template-id',
-    }));
   });
 
   describe('primary behaviors (view):', () => {
@@ -62,7 +59,13 @@ describe('Component: editSummaryAutoAssignTemplateModal:', () => {
 
   describe('save():', () => {
     beforeEach(function (this: Test) {
-      this.autoAssignTemplateData = {};
+      this.autoAssignTemplateData = {
+        apiData: {
+          template: {
+            templateId: 'fake-template-id',
+          },
+        },
+      };
       spyOn(this.AutoAssignTemplateService, 'autoAssignTemplateDataToPayload').and.returnValue('fake-autoAssignTemplateDataToPayload-result');
       spyOn(this.AutoAssignTemplateService, 'createTemplate').and.returnValue(this.$q.resolve({}));
       spyOn(this.AutoAssignTemplateService, 'updateTemplate').and.returnValue(this.$q.resolve({}));

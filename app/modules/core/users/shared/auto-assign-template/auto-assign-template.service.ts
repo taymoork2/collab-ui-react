@@ -13,6 +13,7 @@ export class AutoAssignTemplateService {
   constructor(
     private $http: ng.IHttpService,
     private $q: ng.IQService,
+    private $state: ng.ui.IStateService,
     private Authinfo,
     private MessengerInteropService: MessengerInteropService,
     private Orgservice,
@@ -27,19 +28,23 @@ export class AutoAssignTemplateService {
     return `${this.UrlConfig.getAdminServiceUrl()}organizations/${this.Authinfo.getOrgId()}/settings/autoLicenseAssignment`;
   }
 
-  public getTemplates(): ng.IPromise<any> {
-    return this.$http.get(this.autoAssignTemplateUrl).then(response => response.data);
+  public getTemplates(): ng.IPromise<IAutoAssignTemplateResponse[]> {
+    return this.$http.get<IAutoAssignTemplateResponse[]>(this.autoAssignTemplateUrl).then(response => response.data);
   }
 
-  public getDefaultTemplate(): ng.IPromise<any> {
+  public getDefaultTemplate(): ng.IPromise<IAutoAssignTemplateResponse | undefined> {
     return this.getTemplates()
       .then(templates => {
         return _.find(templates, { name: this.DEFAULT });
       })
-      .catch(response => {
+      .catch<IAutoAssignTemplateResponse | undefined>(response => {
         // resolve with undefined for 404s (will be fairly common when fetching auto-assign templates)
         return (response.status === 404) ? undefined : this.$q.reject(response);
       });
+  }
+
+  public hasDefaultTemplate(): ng.IPromise<boolean> {
+    return this.getDefaultTemplate().then(template => !!template);
   }
 
   public isEnabledForOrg(): ng.IPromise<boolean> {
@@ -48,10 +53,10 @@ export class AutoAssignTemplateService {
 
   public isDefaultAutoAssignTemplateActivated(): ng.IPromise<boolean> {
     return this.$q.all({
-      defaultTemplate: this.getDefaultTemplate(),
+      hasDefaultTemplate: this.hasDefaultTemplate(),
       isEnabledForOrg: this.isEnabledForOrg(),
     }).then(responses => {
-      if (!responses.defaultTemplate) {
+      if (!responses.hasDefaultTemplate) {
         return false;
       }
       return responses.isEnabledForOrg;
@@ -86,7 +91,7 @@ export class AutoAssignTemplateService {
     return this.$http.delete(`${this.autoAssignTemplateUrl}/${templateId}`);
   }
 
-  public autoAssignTemplateDataToPayload(autoAssignTemplateData: IAutoAssignTemplateData): any {
+  public autoAssignTemplateDataToPayload(autoAssignTemplateData: IAutoAssignTemplateData): IAutoAssignTemplateRequestPayload {
     return this.mkPayload(autoAssignTemplateData);
   }
 
@@ -131,7 +136,7 @@ export class AutoAssignTemplateService {
     };
   }
 
-  public toAutoAssignTemplateData(template: IAutoAssignTemplateResponse, subscriptions: ISubscription[]): IAutoAssignTemplateData {
+  public toAutoAssignTemplateData(template: IAutoAssignTemplateResponse | undefined, subscriptions: ISubscription[]): IAutoAssignTemplateData {
     const autoAssignTemplateData = this.initAutoAssignTemplateData();
 
     autoAssignTemplateData.viewData = this.toViewData(template, subscriptions);
@@ -140,12 +145,29 @@ export class AutoAssignTemplateService {
     return autoAssignTemplateData;
   }
 
-  public getDefaultStateData() {
+  public getDefaultStateData(): ng.IPromise<IAutoAssignTemplateData> {
     return this.$q.all({
       defaultAutoAssignTemplate: this.getDefaultTemplate(),
       subscriptions: this.getSortedSubscriptions(),
     })
     .then(results => this.toAutoAssignTemplateData(results.defaultAutoAssignTemplate, results.subscriptions));
+  }
+
+  public gotoEditAutoAssignTemplate(options: {
+    autoAssignTemplateData?: IAutoAssignTemplateData,
+    isEditTemplateMode?: boolean,
+    prevState?: string,
+  } = {}) {
+    const {
+      autoAssignTemplateData,
+      isEditTemplateMode = true,
+      prevState = 'users.manage.picker',
+    } = options;
+    this.$state.go('users.manage.edit-auto-assign-template-modal', {
+      autoAssignTemplateData,
+      isEditTemplateMode,
+      prevState,
+    });
   }
 
   public getSortedSubscriptions(): ng.IPromise<ISubscription[]> {

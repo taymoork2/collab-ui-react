@@ -95,17 +95,14 @@ exports.config = {
   // onPrepare. You can specify a file containing code to run by setting
   // beforeLaunch to the filename string.
   beforeLaunch: function () {
-    var sauceOrg = '';
-    if (process.env.SAUCE__ORG_NAME != undefined) {
-      sauceOrg = process.env.SAUCE__ORG_NAME;
+    var e2eDeleteOrg = '';
+    if (process.env.E2E__ORG_DELETE_TOKENS !== undefined) {
+      e2eDeleteOrg = process.env.E2E__ORG_DELETE_TOKENS;
     }
-    if (sauceOrg === TEST_PARTNER) {
-      return helper.getBearerToken(sauceOrg)
+    if (e2eDeleteOrg === TEST_PARTNER) {
+      return helper.getBearerToken(e2eDeleteOrg)
         .then(function (token) {
-          helper.deleteToken(token, sauceOrg);
-        })
-        .then(function () {
-          helper.getBearerToken(sauceOrg);
+          return helper.deleteAllOrgTokens(token, e2eDeleteOrg);
         });
     }
   },

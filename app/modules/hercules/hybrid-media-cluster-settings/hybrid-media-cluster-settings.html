@@ -21,11 +21,13 @@
       <trusted-sip-section cluster="$ctrl.cluster"></trusted-sip-section>
     </div>
 
+    <div ng-if="$ctrl.hasMfCascadeBwConfigToggle">
+      <cluster-cascade-bandwidth cluster="$ctrl.cluster" class="needs-border-top"></cluster-cascade-bandwidth>
+    </div>
+
     <release-channel-section cluster="$ctrl.cluster"></release-channel-section>
 
-    <hs-rename-and-deregister-cluster-section
-      cluster="$ctrl.cluster"
-      deregister-modal-options="$ctrl.deregisterModalOptions">
+    <hs-rename-and-deregister-cluster-section cluster="$ctrl.cluster" deregister-modal-options="$ctrl.deregisterModalOptions">
     </hs-rename-and-deregister-cluster-section>
 
   </div>

@@ -7,6 +7,11 @@
 </div>
 
 <div class="modal-footer" ng-if="::$ctrl.showFooter()">
+  <div ng-if="$ctrl.l10nWarningFooter"
+    class="modal-footer__warning"
+    >
+    <h6 translate="{{$ctrl.l10nWarningFooter}}"></h6>
+  </div>
   <button type="button" class="btn cancel"
     ng-if="$ctrl.cancel && !$ctrl.cancelRemoved"
     ng-disabled="$ctrl.cancelDisabled"

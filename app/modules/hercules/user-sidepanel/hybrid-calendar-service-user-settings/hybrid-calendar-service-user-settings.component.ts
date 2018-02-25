@@ -29,6 +29,7 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
   public userGoogleCalendarStatus: IUserStatusWithExtendedMessages;
   public userStatus: IUserStatusWithExtendedMessages;
   public lastStateChangeText: string;
+  public resourceGroupId: string;
 
   private orgHasExpresswayBasedCalendarEnabled: boolean;
   private orgHasOffice365Enabled: boolean;
@@ -127,6 +128,9 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
         }
         if (this.userStatus && this.userStatus.owner === 'ccc') {
           this.userOwnedByCCC = true;
+        }
+        if (this.userStatus && this.userStatus.resourceGroupId) {
+          this.resourceGroupId = this.userStatus.resourceGroupId;
         }
       })
       .catch((error) => {
@@ -266,6 +270,10 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
         this.loadingPage = false;
       });
 
+  }
+
+  public resourceGroupRefreshCallback() {
+    this.loadUserData();
   }
 
 }

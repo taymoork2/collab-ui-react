@@ -6,6 +6,7 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
 
   public hasMfPhaseTwoToggle: boolean;
   public hasMfTrustedSipToggle: boolean;
+  public hasMfCascadeBwConfigToggle: boolean;
   public clusterId: string;
   public cluster: ICluster;
   public clusterList: IExtendedClusterFusion[] = [];
@@ -68,5 +69,6 @@ export class HybridMediaClusterSettingsComponent implements ng.IComponentOptions
     clusterId: '<',
     hasMfPhaseTwoToggle: '<',
     hasMfTrustedSipToggle: '<',
+    hasMfCascadeBwConfigToggle: '<',
   };
 }

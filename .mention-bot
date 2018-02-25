@@ -14,10 +14,18 @@
       ".githooks/**/*",
       "bin/**/*",
       "config/**/*",
+      "karma/**/*",
+      "karma.conf.js",
+      "postcss.config.js",
       "protractor/**/*",
+      "protractor-config.js",
+      "protractor.conf.js",
       "sauce/**/*",
+      "tsconfig.json",
+      "tslint.json",
       "utils/**/*",
-      "webpack/**/*"
+      "webpack/**/*",
+      "webpack.config.js"
     ]
   }, {
     "name": "WebExSquared/atlas-web-core-team",
@@ -53,7 +61,10 @@
       "app/modules/sunlight/**/*"
     ]
   }],
-  "fileBlacklist": ["app/l10n/*.json", "yarn.lock"],
+  "fileBlacklist": [
+    "app/l10n/*.json",
+    "yarn.lock"
+  ],
   "userBlacklist": [
     "admolla",
     "atlas-ui-bot-gen",

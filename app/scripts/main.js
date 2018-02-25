@@ -207,6 +207,7 @@
     require('modules/hercules/user-sidepanel/hybrid-services-sidepanel-error-message').default,
     require('modules/hercules/user-sidepanel/hybrid-services-user-homed-cluster-and-hostname').default,
     require('modules/hercules/user-sidepanel/hybrid-services-user-sidepanel-section').default,
+    require('modules/hercules/user-sidepanel/user-status-messages').default,
   ]);
 
   angular.module('HDS', [
@@ -221,6 +222,7 @@
     'Squared',
     require('modules/mediafusion/media-service-v2/components/sip-registration-section').default,
     require('modules/mediafusion/media-service-v2/components/trusted-sip-section').default,
+    require('modules/mediafusion/media-service-v2/components/cluster-cascade-bandwidth').default,
   ]);
 
   angular.module('WebExApp', [
@@ -279,6 +281,8 @@
   angular.module('AccountLinking', [
     'Core',
     require('modules/account-linking').default,
+    require('modules/account-linking/user-sidepanel/linked-sites-user-sidepanel-section').default,
+    require('modules/account-linking/user-sidepanel/linked-sites-user-settings').default,
   ]);
 
   module.exports = angular.module('Main', [

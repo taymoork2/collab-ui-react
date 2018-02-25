@@ -7,7 +7,7 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($q, $rootScope, $state, $scope, Authinfo, CardUtils, SunlightUtilitiesService, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, ProPackService, LearnMoreBannerService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SetupWizardService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService, PrivateTrunkService, ServiceDescriptorService, LinkedSitesService) {
+  function OverviewCtrl($q, $rootScope, $scope, $state, Authinfo, AutoAssignTemplateService, CardUtils, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, HybridServicesFlagService, HybridServicesUtilsService, LearnMoreBannerService, LinkedSitesService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, PrivateTrunkService, ProPackService, PstnService, ReportsService, ServiceDescriptorService, SetupWizardService, SunlightReportService, SunlightUtilitiesService, TrialService, UrlConfig) {
     var vm = this;
     var PSTN_TOS_ACCEPT = require('modules/huron/pstn/pstnTermsOfService').PSTN_TOS_ACCEPT;
     var PSTN_ESA_DISCLAIMER_ACCEPT = require('modules/huron/pstn/pstn.const').PSTN_ESA_DISCLAIMER_ACCEPT;
@@ -38,7 +38,6 @@ require('./_overview.scss');
     vm.isEnterpriseCustomer = isEnterpriseCustomer;
     vm.dismissNotification = dismissNotification;
     vm.notificationComparator = notificationComparator;
-    vm.ftHuronPstn = false;
     vm.ftEnterpriseTrunking = false;
     vm.showUserTaskManagerModal = showUserTaskManagerModal;
 
@@ -255,18 +254,18 @@ require('./_overview.scss');
           }
         });
 
-      FeatureToggleService.supports(FeatureToggleService.features.huronPstn).then(function (result) {
-        vm.ftHuronPstn = result;
-
-        FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking).then(function (result) {
-          vm.ftEnterpriseTrunking = result;
-          getEsaDisclaimerStatus();
-        });
+      FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking).then(function (result) {
+        vm.ftEnterpriseTrunking = result;
+        getEsaDisclaimerStatus();
       });
 
       FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus().then(function (toggle) {
         if (toggle) {
-          vm.notifications.push(OverviewNotificationFactory.createAutoAssignNotification());
+          AutoAssignTemplateService.hasDefaultTemplate().then(function (hasDefaultTemplate) {
+            if (!hasDefaultTemplate) {
+              vm.notifications.push(OverviewNotificationFactory.createAutoAssignNotification());
+            }
+          });
         }
       });
 
@@ -294,16 +293,9 @@ require('./_overview.scss');
           if (customer.trial) {
             PstnService.getCustomerTrialV2(vm.orgData.id).then(function (trial) {
               if (!_.has(trial, 'acceptedDate')) {
-                if (vm.ftHuronPstn) {
-                  //This is the new TS version of ToS
-                  vm.pstnToSNotification = OverviewNotificationFactory.createPstnTermsOfServiceNotification();
-                  vm.notifications.push(vm.pstnToSNotification);
-                  $scope.$on(PSTN_TOS_ACCEPT, onPstnToSAccept);
-                } else {
-                  vm.pstnToSNotification = OverviewNotificationFactory.createPSTNToSNotification();
-                  vm.notifications.push(vm.pstnToSNotification);
-                  $scope.$on(PSTN_TOS_ACCEPT, onPstnToSAccept);
-                }
+                vm.pstnToSNotification = OverviewNotificationFactory.createPstnTermsOfServiceNotification();
+                vm.notifications.push(vm.pstnToSNotification);
+                $scope.$on(PSTN_TOS_ACCEPT, onPstnToSAccept);
               }
             });
           }

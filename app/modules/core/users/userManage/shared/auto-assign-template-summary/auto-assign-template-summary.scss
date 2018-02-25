@@ -1,34 +1,58 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
 
 auto-assign-template-summary {
-  .auto-assign-template-summary {
-    border: 1px $gray-light-2 solid;
-    border-collapse: collapse;
-    display: inherit;
+  .summary__group {
+    border: 1px solid $gray-light-2;
+    border-bottom: 0;
+    margin-top: -1px;
+    display: flex;
 
-    tbody {
-      display: inline-block;
+    &:last-child {
+      border-bottom: 1px solid $gray-light-2;
     }
 
-    tr {
-      display: block;
-      border-top: 1px $gray-light-2 solid;
+    .summary__group-header {
+      padding: 1rem 1.5rem;
+      white-space: nowrap;
+      flex: 1;
     }
 
-    tr:first-child {
-      border-top: none;
-      border-bottom: none;
+    .summary__group-body,
+    .summary__group-body--2-col,
+    .summary__group-body--2-col-wrap {
+      border-left: 1px solid $gray-light-2;
+      display: flex;
+      flex: 6 1 0;
+      padding: 0;
     }
 
-    th {
-      background-color: white;
-      border-right: 1px $gray-light-2 solid;
+    .summary__group-item {
+      padding: 1rem 1.5rem;
+      flex: 0 1 auto;
     }
 
-    .title-offer-name {
-      margin-top: 1rem;
-      color: $gray-dark-2;
-      width: 4.5rem;
+    .summary__subgroup--1-col {
+      &:nth-child(n+2) {
+        border-left: 1px solid $gray-light-2;
+      }
+
+      .summary__group-item:nth-child(n+2) {
+        padding-top: 0;
+      }
+    }
+
+    .summary__group-body--2-col-wrap {
+      flex-flow: row wrap;
+
+      // first 2 elements - rm bottom padding
+      .summary__group-item:nth-child(-n+2) {
+        padding-bottom: 0;
+      }
+
+      // 3rd element on up - add top padding
+      .summary__group-item:nth-child(n+3) {
+        padding-top: 0.25rem;
+      }
     }
   }
 }

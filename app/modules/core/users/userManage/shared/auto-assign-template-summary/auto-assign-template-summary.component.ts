@@ -57,6 +57,38 @@ class AutoAssignTemplateSummaryController implements ng.IComponentController {
     const userEntitlements = this.getUserEntitlements();
     return _.get(userEntitlements, `${entitlementName}.isSelected`, false);
   }
+
+  public hasMessageRow(): boolean {
+    return !!this.findLicenseForOfferName(this.OFFER_NAME.MS) || this.hasUserEntitlement(this.ENTITLEMENT_NAME.MESSENGER_INTEROP);
+  }
+
+  public hasMeetingRow(): boolean {
+    return this.hasBasicMeetings() || this.hasAdvancedMeetings();
+  }
+
+  public hasBasicMeetings(): boolean {
+    return !!this.findLicenseForOfferName(this.OFFER_NAME.CF);
+  }
+
+  public hasAdvancedMeetings(): boolean {
+    return !_.isEmpty(this.advancedMeetingLicenses);
+  }
+
+  public hasCallRow(): boolean {
+    return !!this.findLicenseForOfferName(this.OFFER_NAME.CO);
+  }
+
+  public hasCareRow(): boolean {
+    return !!this.findLicenseForOfferName(this.OFFER_NAME.CDC) || !!this.findLicenseForOfferName(this.OFFER_NAME.CVC);
+  }
+
+  public hasHybridServicesEntitlementsRow(): boolean {
+    return this.hasUserEntitlement(this.ENTITLEMENT_NAME.SPARK_HYBRID_IMP_INTEROP) ||
+      this.hasUserEntitlement(this.ENTITLEMENT_NAME.SQUARED_FUSION_CAL) ||
+      this.hasUserEntitlement(this.ENTITLEMENT_NAME.SQUARED_FUSION_GCAL) ||
+      this.hasUserEntitlement(this.ENTITLEMENT_NAME.SQUARED_FUSION_UC) ||
+      this.hasUserEntitlement(this.ENTITLEMENT_NAME.SQUARED_FUSION_EC);
+  }
 }
 
 export class AutoAssignTemplateSummaryComponent implements ng.IComponentOptions {
