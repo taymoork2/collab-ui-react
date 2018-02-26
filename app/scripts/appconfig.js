@@ -5232,12 +5232,9 @@
           })
           .state('hybrid-services-event-history-page', {
             parent: 'main',
-            url: '/services/clusters/history?cluster=clusterId&serviceId&connectorId',
+            url: '/services/clusters/history?clusterId&serviceId&connectorId',
             template: '<hybrid-services-event-history-page cluster-id="$resolve.clusterId" connector-id="$resolve.connectorId" service-id="$resolve.serviceId" resource-filter="$resolve.resourceFilter"></hybrid-services-event-history-page>',
             params: {
-              clusterId: null,
-              connectorId: null,
-              serviceId: null,
               resourceFilter: null,
             },
             resolve: {
