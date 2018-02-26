@@ -90,6 +90,7 @@
       </div>
       <p class="user-manage__text--margin">
         <a href
+          ng-if="!umoc.isUserAdminUser"
           ng-click="umoc.handleDirSyncService()"
           translate="{{ umoc.dirSyncText }}">
         </a>
@@ -108,7 +109,7 @@
     </div>
   </div>
 
-  <hr class="user-manage__hr">
+  <hr class="user-manage__hr" ng-if="(umoc.multiDirSyncToggle && !umoc.isUserAdminUser) || !umoc.multiDirSyncToggle">
   <div class="row collapse user-manage__row">
     <div class="columns medium-5">
       <h4 translate="userManage.org.licenses"></h4>

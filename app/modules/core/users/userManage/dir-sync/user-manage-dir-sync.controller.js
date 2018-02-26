@@ -72,7 +72,7 @@
 
       // The dir-sync call will always be an error for User Admins, but they should be able to try to update dir-sync users regardless
       eventListeners.push($rootScope.$on('add-user-dirsync-error', function () {
-        if (!vm.isUserAdmin) {
+        if (!vm.isUserAdmin()) {
           vm.isNextDisabled = true;
           vm.dirSyncStatusMessage = $translate.instant('userManage.ad.dirSyncError');
           Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.SYNC_ERROR, null, { error: 'Directory Sync Error' });
