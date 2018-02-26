@@ -8500,8 +8500,8 @@
       },
       "hybrid": {
         "title": "Hybrid Services",
-        "googleCalendarError": "Could not reach the service for Google Calendar.",
-        "o365CalendarError": "Could not reach the service for Office 365.",
+        "googleCalendarError": "Could not reach the service for Google Calendar. Its status may be reported inaccurately during this session.",
+        "o365CalendarError": "Could not reach the service for Office 365. Its status may be reported inaccurately during this session.",
         "herculesError": "Could not reach the service for Cisco Spark Hybrid Services.",
         "herculesErrorAuthentication": "Could not validate partner admin's access rights in customer organization. This could indicate a caching problem. Try logging out and in again, and contact Cisco support if the problem persists.",
         "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Spark Platform.",
