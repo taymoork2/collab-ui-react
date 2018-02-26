@@ -121,31 +121,41 @@ class LaunchAdvancedSettingsController {
   private connectToEndpoint() {
 
     const endpointInitialContactTimeout = 10000;
+    const endpointOrigin = 'http://' + this.currentDevice.ip;
 
     const createEndpointWindow = (endpointOrigin, currentDevice): Window => {
 
-      function createForwardingPageHtml($sanitize, endpointOrigin, connectingText, title) {
-        return `<html><head><title>${$sanitize(title)}</title></head><br><body><h4>${$sanitize(connectingText)}</h4></body>
-                <script>window.location.assign('${endpointOrigin}/cloud-login');</script></html>`;
-      }
+      //The script section of the following HTML must not be modified unless you also update the CSP HASH in csp-prod.config.js
+      // ('sha256-E3qyvWEre3hLTLqSD0ZjpBC7Z/JnIcf7Y46QHbwN0EU=')
+      const forwardingPageHtml = `<html><head><title>Waiting for connection</title></head><br><body><h4 id="connecting"></h4></body>
+                <script>
+                  window.addEventListener('message', function(event) {
+                    if (event.origin === window.location.origin) {
+                      document.title = event.data.connectingtitle;
+                      document.getElementById("connecting").innerHTML = event.data.connectingtext;
+                      window.location.assign(event.data.endpointorigin + '/cloud-login');
+                    }
+                  });
+                </script>
+                </html>`;
+
+      const forwardingWindow = this.$window.open('about:blank', '_blank', '');
+      forwardingWindow.document.write(forwardingPageHtml);
 
       const getText = (templateName, device) => {
         let template = this.$translate.instant('spacesPage.advancedSettings.' + templateName);
         template = template.replace('{name}', (device.displayName || ''));
         return template.replace('{product}', (device.product || ''));
       };
+      const connectingText = this.$sanitize(getText('connecting', currentDevice));
+      const connectingTitle = this.$sanitize(getText('connectingTitle', currentDevice));
 
-      const forwardingPageHtml = createForwardingPageHtml(this.$sanitize,
-        endpointOrigin,
-        getText('connecting', currentDevice),
-        getText('connectingTitle', currentDevice));
-
-      const forwardingWindow = this.$window.open('about:blank', '_blank', '');
-      forwardingWindow.document.write(forwardingPageHtml);
+      forwardingWindow.postMessage({
+        connectingtitle: connectingTitle,
+        connectingtext: connectingText,
+        endpointorigin: endpointOrigin}, forwardingWindow.location.origin);
       return forwardingWindow;
     };
-
-    const endpointOrigin = 'http://' + this.currentDevice.ip;
 
     this.WindowEventService.registerEventListener('message', this.handleMessageEvent.bind(this), this.$scope);
 
