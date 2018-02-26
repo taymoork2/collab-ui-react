@@ -220,6 +220,8 @@
     'Core',
     'Hercules',
     'Squared',
+    require('modules/mediafusion/media-service-v2/components/sip-registration-section').default,
+    require('modules/mediafusion/media-service-v2/components/trusted-sip-section').default,
     require('modules/mediafusion/media-service-v2/activation').default,
     require('modules/mediafusion/media-service-v2/components/add-resource-section').default,
     require('modules/mediafusion/media-service-v2/components/cluster-creation-final').default,

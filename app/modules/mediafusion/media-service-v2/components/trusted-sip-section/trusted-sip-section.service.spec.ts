@@ -1,17 +1,18 @@
 import TrustedSipModule from './index';
 
-describe('TrustedSipSectionService', () => {
+describe('TrustedSipSectionService', function () {
   beforeEach(function () {
     this.initModules(TrustedSipModule);
     this.injectDependencies(
       '$httpBackend',
+      '$q',
       'TrustedSipSectionService',
       'HybridServicesClusterService',
       'Notification',
     );
     spyOn(this.Notification, 'error');
     spyOn(this.Notification, 'errorWithTrackingId');
-    spyOn(this.HybridServicesClusterService, 'setProperties');
+    spyOn(this.HybridServicesClusterService, 'setProperties').and.returnValue(this.$q.resolve({}));
   });
 
   afterEach(function () {
@@ -19,8 +20,8 @@ describe('TrustedSipSectionService', () => {
     this.$httpBackend.verifyNoOutstandingRequest();
   });
 
-  describe('saveSipConfigurations', () => {
-    it('should save a list of trusted SIP sources with the correct data', () => {
+  describe('saveSipConfigurations', function () {
+    it('should save a list of trusted SIP sources with the correct data', function () {
       const cluster = {
         id: 'fake-id',
       };

@@ -26,7 +26,7 @@ describe('SipRegistrationSectionCtrl', () => {
   }
 
   function initSpies() {
-    spyOn(HybridServicesClusterService, 'getProperties');
+    spyOn(HybridServicesClusterService, 'getProperties').and.returnValue($q.resolve({}));
     spyOn(HybridServicesClusterService, 'setProperties').and.returnValue($q.resolve({}));
     spyOn(SipRegistrationSectionService, 'saveSipTrunkUrl').and.returnValue($q.resolve({}));
   }
@@ -60,11 +60,9 @@ describe('SipRegistrationSectionCtrl', () => {
     const cluster = {
       id: 'fake-id',
     };
-    const sipUrl = 'sip://10.30.60.100';
     const ctrl = initController(cluster);
-    ctrl.sipurlconfiguration = sipUrl;
     ctrl.saveSipTrunk();
-    expect(SipRegistrationSectionService.saveSipTrunkUrl).toHaveBeenCalledWith(ctrl.sipurlconfiguration, cluster.id);
+    expect(SipRegistrationSectionService.saveSipTrunkUrl).toHaveBeenCalled();
   });
 
 });

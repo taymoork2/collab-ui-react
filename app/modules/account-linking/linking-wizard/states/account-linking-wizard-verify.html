@@ -1,24 +1,22 @@
 <div class="modal-body">
   <div class="row">
     <div class="columns medium-4">
-      <h4 translate="accountLinking.wizard.verifyDomainsHeader"></h4>
+      <h4 class="wizard-info-title" translate="accountLinking.wizard.verifyDomainsHeader"></h4>
       <p>
-        <span translate="accountLinking.wizard.verifyDomains"></span>
+        <span class="wizard-info" translate="accountLinking.wizard.verifyDomains"></span>
         <a href="#"
           tooltip-placement="right"
           tooltip-html-unsafe="{{:: 'accountLinking.wizard.exceptionsTooltip' | translate}}"
           translate="accountLinking.wizard.exceptions">
         </a>
       </p>
-      <!-- TODO: Check -->
-      <!-- <p>Exceptions</p> -->
     </div>
     <div class="columns medium-5 medium-offset-1">
       <div class="align-top">
         <input cs-input type="radio" ng-model="$ctrl.selection" id="signAgreement" name="signAgreement" value="signAgreement" cs-input-label="{{:: 'accountLinking.wizard.signAgreement' | translate}}">
-        <p class="input-info" translate="accountLinking.wizard.legalAgreement"></p>
+        <p class="wizard-info" class="input-info" translate="accountLinking.wizard.legalAgreement"></p>
         <input cs-input type="radio" ng-model="$ctrl.selection" id="verifyNow" name="verifyNow" value="verifyNow" cs-input-label="{{:: 'accountLinking.wizard.verifyNow' | translate}}" />
-        <p class="input-info" translate="accountLinking.wizard.verifyDomainsToken"></p>
+        <p class="wizard-info" class="input-info" translate="accountLinking.wizard.verifyDomainsToken"></p>
       </div>
     </div>
     <div class="columns medium-2"></div>

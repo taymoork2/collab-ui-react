@@ -1,11 +1,6 @@
-import { IExtendedClusterFusion, ICluster, IClusterPropertySet } from 'modules/hercules/hybrid-services.types';
+import { IExtendedClusterFusion, ICluster } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
-import { Notification } from 'modules/core/notifications';
 import { IDeregisterModalOptions } from 'modules/hercules/rename-and-deregister-cluster-section/hs-rename-and-deregister-cluster.component';
-
-interface ITag {
-  text: string;
-}
 
 class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
 
@@ -15,9 +10,6 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
   public clusterId: string;
   public cluster: ICluster;
   public clusterList: IExtendedClusterFusion[] = [];
-
-  public sipurlconfiguration: string | undefined;
-  public trustedsipconfiguration: ITag[] = [];
 
   public deregisterModalOptions: IDeregisterModalOptions | undefined = {
     resolve: {
@@ -31,18 +23,10 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
   public upgradeSchedule = {
     title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader',
   };
-  public sipRegistration = {
-    title: 'mediaFusion.sipconfiguration.title',
-  };
-
-  public trustedSip = {
-    title: 'mediaFusion.trustedSip.title',
-  };
 
   /* @ngInject */
   constructor(
     private HybridServicesClusterService: HybridServicesClusterService,
-    private Notification: Notification,
   ) { }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
@@ -51,8 +35,7 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
     if (clusterId && clusterId.currentValue) {
       this.clusterId = clusterId.currentValue;
       this.updateClusterList()
-        .then(() => this.loadCluster(clusterId.currentValue))
-        .then(() => this.getProperties(clusterId.currentValue));
+      .then(() => this.loadCluster(clusterId.currentValue));
     }
   }
 
@@ -74,58 +57,6 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
         this.clusterList = _.filter(clusters, {
           targetType: 'mf_mgmt',
         });
-      });
-  }
-
-  private getProperties(clusterId) {
-    this.HybridServicesClusterService.getProperties(clusterId)
-      .then((properties: IClusterPropertySet) => {
-        if (!_.isUndefined(properties['mf.ucSipTrunk'])) {
-          this.sipurlconfiguration = properties['mf.ucSipTrunk'];
-        }
-        let rawTrustedSipConfigurationData;
-        if (!_.isUndefined(properties['mf.trustedSipSources'])) {
-          rawTrustedSipConfigurationData = properties['mf.trustedSipSources'];
-        }
-        let sipArray: ITag[] = [];
-        if (!_.isUndefined(rawTrustedSipConfigurationData)) {
-          sipArray = _.map(rawTrustedSipConfigurationData.split(','), (value: string) => {
-            return {
-              text: value.trim(),
-            };
-          }) as ITag[];
-        }
-        if (rawTrustedSipConfigurationData !== '') {
-          this.trustedsipconfiguration = sipArray;
-        } else {
-          this.trustedsipconfiguration = [];
-        }
-      });
-  }
-
-  public saveSipTrunk() {
-    const payload: IClusterPropertySet = {
-      'mf.ucSipTrunk': this.sipurlconfiguration,
-    };
-    this.HybridServicesClusterService.setProperties(this.clusterId, payload)
-      .then(() => {
-        this.Notification.success('mediaFusion.sipconfiguration.success');
-      })
-      .catch((error) => {
-        this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
-      });
-  }
-
-  public saveTrustedSip() {
-    const payload: IClusterPropertySet = {
-      'mf.trustedSipSources': _.map(this.trustedsipconfiguration, 'text').join(', '),
-    };
-    this.HybridServicesClusterService.setProperties(this.clusterId, payload)
-      .then(() => {
-        this.Notification.success('mediaFusion.trustedSip.success');
-      })
-      .catch((error) => {
-        this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
       });
   }
 
