@@ -1,7 +1,5 @@
-// TODO: use as-appropriate
-// @import '~@collabui/collab-ui/scss/settings/typography';
-// @import '~@collabui/collab-ui/scss/settings/colors';
-// @import 'styles/partials/mixins';  // <- for 'keep-flex()'
+@import '~@collabui/collab-ui/scss/settings/colors';
+
 add-resource-section {
   .cluster-creation-final {
     button {
@@ -47,27 +45,11 @@ add-resource-section {
   .addResourceInlineBlock {
     display: initial;
   }
-  
-  .addResourceFQDN {
-    display: initial;
-    color: #0387b8;
-  }
 
-  .ip-check-error {
-    input,
-    input:focus {
-      border-color: #FF8170;
-      background: #FFADA3;
-    }
-    .cs-input__help-text {
-      display: block;
-      color: #FF8170;
-    }
-  }
-  .no-error {
-    .cs-input__help-text {
-      display: none;
-    }
+  .node-error {
+    line-height: .95rem;
+    font-size: .75em;
+    color: $color-red-dark;
   }
     
 }

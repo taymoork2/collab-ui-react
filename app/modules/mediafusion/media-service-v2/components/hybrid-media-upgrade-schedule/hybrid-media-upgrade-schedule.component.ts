@@ -13,7 +13,6 @@ class HybridMediaUpgradeScheduleCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private $scope: ng.IScope,
     private $translate: ng.translate.ITranslateService,
     private TimezoneService,
   ) { }
@@ -29,18 +28,13 @@ class HybridMediaUpgradeScheduleCtrl implements ng.IComponentController {
       scheduleTimeZone: this.formOptions.timeZone[393],
       scheduleDay: this.formOptions.day[0],
     };
-    this.$scope.$watch(() => {
-      return this.formData;
-    }, (newValue, oldValue) => {
-      if (_.isEmpty(oldValue) || newValue === oldValue) {
-        return;
-      }
-      if (_.isFunction(this.onUpgradeScheduleUpdate)) {
-        this.onUpgradeScheduleUpdate({ someData: { upgradeSchedule: this.formData } });
-      } else {
-        this.onUpgradeScheduleUpdate({ someData: { upgradeSchedule: this.formData } });
-      }
-    }, true);
+
+  }
+
+  public onFormDataChanged () {
+    if (_.isFunction(this.onUpgradeScheduleUpdate)) {
+      this.onUpgradeScheduleUpdate({ someData: { upgradeSchedule: this.formData } });
+    }
   }
 
   private labelForTime(time) {

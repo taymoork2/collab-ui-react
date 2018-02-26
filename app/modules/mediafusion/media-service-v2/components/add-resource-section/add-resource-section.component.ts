@@ -22,7 +22,6 @@ export class AddResourceSectionController implements ng.IComponentController {
   public hostName: string = '';
   public helpText: string;
   public ipCheck: string;
-  public ipError: boolean = false;
   public onlinenode: boolean = false;
   public offlinenode: boolean = false;
   public iponlineCheck: string = '';
@@ -60,20 +59,18 @@ export class AddResourceSectionController implements ng.IComponentController {
       this.onHostUpdate({ someData: { hostName: this.hostName } });
     }
     if ((this.onlineNodeList.indexOf(this.hostName) > -1)) {
-      this.iponlineCheck = this.$translate.instant('mediaFusion.add-resource-dialog.serverOnline');
-      this.ipError = true;
       this.onlinenode = true;
+      this.offlinenode = false;
     } else if ((this.offlineNodeList.indexOf(this.hostName) > -1)) {
-      this.ipofflineCheck = this.$translate.instant('mediaFusion.add-resource-dialog.serverOffline');
-      this.ipError = true;
+      this.onlinenode = false;
       this.offlinenode = true;
     } else {
-      this.ipError = false;
-      this.ipCheck = '';
+      this.onlinenode = false;
+      this.offlinenode = false;
     }
   }
 
-  public online() {
+  /*public online() {
     if ((this.onlineNodeList.indexOf(this.hostName) > -1)) {
       this.onlinenode = true;
       this.iponlineCheck = this.$translate.instant('mediaFusion.add-resource-dialog.serverOnline');
@@ -86,7 +83,7 @@ export class AddResourceSectionController implements ng.IComponentController {
       this.offlinenode = true;
       return true;
     }
-  }
+  }*/
 
   public validateClusterName () {
     if (_.isFunction(this.onClusterUpdate)) {
@@ -94,10 +91,8 @@ export class AddResourceSectionController implements ng.IComponentController {
     }
     if ((this.clusterList.indexOf(this.enteredCluster) > -1)) {
       this.clusterExist = true;
-      this.clusterExistError = this.$translate.instant('mediaFusion.easyConfig.clusterExistError');
     } else {
       this.clusterExist = false;
-      this.helpText = this.$translate.instant('mediaFusion.easyConfig.clusterHelpText');
     }
   }
 

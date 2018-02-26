@@ -10,6 +10,7 @@
       labelfield="label"
       valuefield="value"
       ng-model="$ctrl.formData.scheduleTime"
+      ng-change="$ctrl.onFormDataChanged()"
       options="$ctrl.formOptions.time"
       placeholder="'Select a time'"
       >
@@ -21,6 +22,7 @@
       valuefield="value"
       input-placeholder="sel.inputPlaceholder"
       ng-model="$ctrl.formData.scheduleDay"
+      ng-change="$ctrl.onFormDataChanged()"
       options="$ctrl.formOptions.day"
       placeholder="'Select a day'"
       >
@@ -32,6 +34,7 @@
       valuefield="value"
       filter="true"
       ng-model="$ctrl.formData.scheduleTimeZone"
+      ng-change="$ctrl.onFormDataChanged()"
       options="$ctrl.formOptions.timeZone"
       placeholder="'Select a timezone'"
       >

@@ -1,21 +1,22 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
 
 trusted-sip-section {
-    .tags-input.ng-invalid .tags {
+    tags-input.ng-invalid .tags {
         border-color: $color-alerts-base;
         box-shadow: none;
     }
     
-    .tags-input .host {
+    tags-input .host {
         border: 1px solid $gray-light-2;
         border-radius: 5px;
     }
     
-    .tags-input .tags {
+    tags-input .tags {
         border-radius: 4px;
         box-shadow: none;
         border: none !important;
         padding: 5px !important;
+        margin-right: 10px !important;
     
         &:hover {
           border-color: $gray-light-1;
@@ -39,6 +40,9 @@ trusted-sip-section {
     
         .input.invalid-tag {
           color: $brand-danger;
+        }
+        .input {
+          width: 100%;
         }
     }
 }

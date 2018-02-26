@@ -31,18 +31,6 @@ class HybridMediaReleaseChannelController implements ng.IComponentController {
     .then(() => {
       this.releaseChannelSelected = this.releaseChannelOptions[0];
     });
-    /*this.$scope.$watch(() => {
-      return this.releaseChannelSelected;
-    }, (newValue, oldValue) => {
-      if (_.isEmpty(oldValue) || newValue === oldValue) {
-        return;
-      }
-    if (_.isFunction(this.onReleaseChannelUpdate)) {
-      this.onReleaseChannelUpdate({ someData: { releaseChannel: this.releaseChannelSelected } });
-    } else {
-      this.onReleaseChannelUpdate({ someData: { releaseChannel: this.releaseChannelSelected } });
-    }*/
-    //}, true);
   }
 
   private populateReleaseChannelOptions() {
@@ -65,13 +53,9 @@ class HybridMediaReleaseChannelController implements ng.IComponentController {
   }
 
   public releaseChannelChanged() {
-    //send this this.releaseChannelSelected to the controller
     if (_.isFunction(this.onReleaseChannelUpdate)) {
       this.onReleaseChannelUpdate({ someData: { releaseChannel: this.releaseChannelSelected } });
-    } else {
-      this.onReleaseChannelUpdate({ someData: { releaseChannel: this.releaseChannelSelected } });
     }
-    //return this.releaseChannelSelected;
   }
 }
 
