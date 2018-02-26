@@ -10,10 +10,14 @@
 }
 
 .modal-content.link-all-users.dialog {
-  height: 210px;
+  height: 207px;
   width: 380px;
   h3 {
     text-align: center;
+    color: $gray-dark-2;
+  }
+  .modal-info {
+    color: $gray-base;
   }
 }
 
@@ -99,7 +103,7 @@
 
   .error-table-entry {
     color: $color-red-light;
-    opacity: 0.6;
+    opacity: 0.8;
   }
 
 }

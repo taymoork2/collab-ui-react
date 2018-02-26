@@ -100,7 +100,7 @@ describe('Component: linkedSites', () => {
         it('getting error known error response from webex api shall indicate error with more specific info', function () {
           this.siteInfoDefer.resolve(this.$q.reject('999999'));
           this.$scope.$apply();
-          expect(this.controller.sitesInfo[0].siteInfoErrors).toEqual(['WebEx authentication problem [Webex: 999999]']);
+          expect(this.controller.sitesInfo[0].siteInfoErrors).toEqual(['You don\'t have access to this site. [999999]']);
         });
       });
     });
