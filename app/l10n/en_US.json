@@ -10702,7 +10702,6 @@
     "cardTitle": "Hosted Collaboration Service",
     "description": "Extend Cloud services to Hosted Cloud Solution.",
     "addService": "Add a Service",
-    "inventory": "Inventory",
     "agentInstallFiles": "Agent Install Files",
     "license": {
       "title": "HCS Licenses",
@@ -10715,6 +10714,12 @@
       "description": "Extend Upgrade services to Hosted Cloud Solution.",
       "sftp": "SFTP Servers",
       "softwareProfiles": "Software Profiles"
+    },
+    "inventory": {
+      "title": "Inventory"
+    },
+    "installFiles": {
+      "title": "Install Files"
     },
     "taas": {
       "testState": {

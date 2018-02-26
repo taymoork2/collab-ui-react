@@ -3099,12 +3099,36 @@
           })
           .state('hcs', {
             parent: 'partner',
-            template: '<div ui-view></div>',
+            template: require('modules/hcs/shared/base/hcs-shared-base.html'),
             absract: true,
           })
-          .state('hcs.hcs-inventory', {
+          .state('hcs.shared', {
+            parent: 'hcs',
+            views: {
+              header: {
+                template: '<hcs-shared-header></hcs-shared-header>',
+              },
+              main: {
+                template: '<div ui-view></div>',
+              },
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/hcs/shared/base'));
+                }, 'call-details');
+              }),
+            },
+          })
+          .state('hcs.shared.inventory', {
+            parent: 'hcs.shared',
             url: '/hcs/inventory',
             template: '<hcs-inventory></hcs-inventory>',
+          })
+          .state('hcs.shared.installFiles', {
+            parent: 'hcs.shared',
+            url: '/hcs/install-files',
+            template: '<hcs-install-files></hcs-install-files>',
           })
           .state('taasSuites', {
             parent: 'main',

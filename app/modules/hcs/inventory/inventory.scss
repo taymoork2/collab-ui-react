@@ -1,0 +1,9 @@
+@import '~@collabui/collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
+.hcs-inventory-container {
+  .row + .column-header {
+    padding-top: .7rem;
+  }
+}

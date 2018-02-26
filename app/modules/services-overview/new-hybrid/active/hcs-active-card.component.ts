@@ -14,8 +14,8 @@ export class HcsActiveCardComponent implements ng.IComponentOptions {
       </div>
       <div class="active-card_content">
         <div class="active-card_section">
-          <div class="active-card_title" translate="hcs.inventory"></div>
-          <div class="active-card_action"><a translate="hcs.agentInstallFiles"></a></div>
+          <div class="active-card_title" translate="hcs.inventory.title"></div>
+          <div class="active-card_action"><a translate="hcs.inventory.title"></a></div>
         </div>
         <div class="active-card_section">
           <div class="active-card_title" translate="hcs.agentInstallFiles"></div>
