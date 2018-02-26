@@ -96,6 +96,12 @@ export class SetupWizardService {
     });
   }
 
+  public getExistingConferenceServiceDetails(externalSubscriptionId: string): ng.IPromise<any> {
+    const servicesDetailsUrl = `${this.UrlConfig.getAdminServiceUrl()}subscriptions/orderDetail?externalSubscriptionId=${externalSubscriptionId}`;
+    return this.$http.get(servicesDetailsUrl).then(response => _.get(response, 'data', {}))
+    .catch(() => {});
+  }
+
   public getActingPendingSubscriptionOptionSelection(): IOption {
     const options = this.getPendingSubscriptionOptions();
     const matchingOption = _.find(options, {

@@ -39,6 +39,10 @@
       on-upgrade-schedule-update="clusterCreationWizard.upgradeScheduleUpdatedData(someData)"
       ng-show="clusterCreationWizard.currentStep === 2">
     </hybrid-media-upgrade-schedule>
+    <hybrid-media-release-channel
+       on-release-channel-update="clusterCreationWizard.releaseChannelUpdatedData(someData)"
+      ng-show="clusterCreationWizard.currentStep === 2">
+     </hybrid-media-release-channel>
     <cluster-creation-final
      cluster="clusterCreationWizard.clusterName"
      host="clusterCreationWizard.hostName"

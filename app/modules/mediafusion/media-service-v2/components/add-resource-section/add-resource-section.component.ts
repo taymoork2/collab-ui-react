@@ -69,7 +69,18 @@ export class AddResourceSectionController implements ng.IComponentController {
     }
   }
 
-  public validateClusterName() {
+  public online() {
+    if ((this.onlineNodeList.indexOf(this.hostName) > -1)) {
+      return true;
+    }
+  }
+  public offline() {
+    if ((this.offlineNodeList.indexOf(this.hostName) > -1)) {
+      return true;
+    }
+  }
+
+  public validateClusterName () {
     if (_.isFunction(this.onClusterUpdate)) {
       this.onClusterUpdate({ someData: { clusterName: this.enteredCluster } });
     }

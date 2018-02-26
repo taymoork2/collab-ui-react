@@ -9,7 +9,7 @@
     .factory('OverviewHybridServicesCard', OverviewHybridServicesCard);
 
   /* @ngInject */
-  function OverviewHybridServicesCard($q, Authinfo, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, HybridServicesUtilsService, Notification) {
+  function OverviewHybridServicesCard($q, Authinfo, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, HybridServicesClusterStatesService, HybridServicesUtilsService, Notification, ServiceDescriptorService) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -33,9 +33,12 @@
               clusterList: HybridServicesClusterService.getAll(),
               gcalService: Authinfo.isEntitled(Config.entitlements.fusion_gcal) ? CloudConnectorService.getService('squared-fusion-gcal') : $q.resolve({ setup: false }),
               o365Service: featureToggles.atlasOffice365Support ? CloudConnectorService.getService('squared-fusion-o365') : $q.resolve({ setup: false }),
+              serviceStatuses: ServiceDescriptorService.getServices(),
               featureToggles: featureToggles,
             });
           }).then(function (response) {
+            var serviceStatuses = [];
+            var statusInFMS = {};
             if (response.gcalService.status === 'fulfilled') {
               if (Authinfo.isEntitled(Config.entitlements.fusion_gcal)) {
                 card.serviceList.push(response.gcalService.value);
@@ -50,24 +53,71 @@
             } else {
               Notification.errorWithTrackingId(response.o365Service.reason, 'overview.cards.hybrid.o365CalendarError');
             }
+            if (response.serviceStatuses.status === 'fulfilled') {
+              serviceStatuses = response.serviceStatuses.value;
+            } else {
+              Notification.errorWithTrackingId(response.serviceStatuses.reason, 'overview.cards.hybrid.herculesError');
+            }
             if (response.clusterList.status === 'fulfilled') {
               if (Authinfo.isEntitled(Config.entitlements.fusion_cal)) {
-                card.serviceList.push(HybridServicesClusterService.getStatusForService('squared-fusion-cal', response.clusterList.value));
+                statusInFMS = _.find(serviceStatuses, function (service) {
+                  return service.id === 'squared-fusion-cal';
+                });
+                card.serviceList.push({
+                  serviceId: 'squared-fusion-cal',
+                  cssClass: HybridServicesClusterStatesService.getServiceStatusCSSClassFromLabel(HybridServicesClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', response.clusterList.value)),
+                  setup: statusInFMS && statusInFMS.enabled,
+                });
               }
               if (Authinfo.isEntitled(Config.entitlements.fusion_uc)) {
-                card.serviceList.push(HybridServicesClusterService.getStatusForService('squared-fusion-uc', response.clusterList.value));
+                statusInFMS = _.find(serviceStatuses, function (service) {
+                  return service.id === 'squared-fusion-uc';
+                });
+                card.serviceList.push({
+                  serviceId: 'squared-fusion-uc',
+                  cssClass: HybridServicesClusterStatesService.getServiceStatusCSSClassFromLabel(HybridServicesClusterService.processClustersToAggregateStatusForService('squared-fusion-uc', response.clusterList.value)),
+                  setup: statusInFMS && statusInFMS.enabled,
+                });
               }
               if (Authinfo.isEntitled(Config.entitlements.imp) && _.get(response, 'featureToggles.value.hybridImp')) {
-                card.serviceList.push(HybridServicesClusterService.getStatusForService('spark-hybrid-impinterop', response.clusterList.value));
+                statusInFMS = _.find(serviceStatuses, function (service) {
+                  return service.id === 'spark-hybrid-impinterop';
+                });
+                card.serviceList.push({
+                  serviceId: 'spark-hybrid-impinterop',
+                  cssClass: HybridServicesClusterStatesService.getServiceStatusCSSClassFromLabel(HybridServicesClusterService.processClustersToAggregateStatusForService('spark-hybrid-impinterop', response.clusterList.value)),
+                  setup: statusInFMS && statusInFMS.enabled,
+                });
               }
               if (Authinfo.isEntitled(Config.entitlements.mediafusion)) {
-                card.serviceList.push(HybridServicesClusterService.getStatusForService('squared-fusion-media', response.clusterList.value));
+                statusInFMS = _.find(serviceStatuses, function (service) {
+                  return service.id === 'squared-fusion-media';
+                });
+                card.serviceList.push({
+                  serviceId: 'squared-fusion-media',
+                  cssClass: HybridServicesClusterStatesService.getServiceStatusCSSClassFromLabel(HybridServicesClusterService.processClustersToAggregateStatusForService('squared-fusion-media', response.clusterList.value)),
+                  setup: statusInFMS && statusInFMS.enabled,
+                });
               }
               if (Authinfo.isEntitled(Config.entitlements.hds)) {
-                card.serviceList.push(HybridServicesClusterService.getStatusForService('spark-hybrid-datasecurity', response.clusterList.value));
+                statusInFMS = _.find(serviceStatuses, function (service) {
+                  return service.id === 'spark-hybrid-datasecurity';
+                });
+                card.serviceList.push({
+                  serviceId: 'spark-hybrid-datasecurity',
+                  cssClass: HybridServicesClusterStatesService.getServiceStatusCSSClassFromLabel(HybridServicesClusterService.processClustersToAggregateStatusForService('spark-hybrid-datasecurity', response.clusterList.value)),
+                  setup: statusInFMS && statusInFMS.enabled,
+                });
               }
               if (Authinfo.isEntitled(Config.entitlements.context)) {
-                card.serviceList.push(HybridServicesClusterService.getStatusForService('contact-center-context', response.clusterList.value));
+                statusInFMS = _.find(serviceStatuses, function (service) {
+                  return service.id === 'contact-center-context';
+                });
+                card.serviceList.push({
+                  serviceId: 'contact-center-context',
+                  cssClass: HybridServicesClusterStatesService.getServiceStatusCSSClassFromLabel(HybridServicesClusterService.processClustersToAggregateStatusForService('contact-center-context', response.clusterList.value)),
+                  setup: statusInFMS && statusInFMS.enabled,
+                });
               }
             } else {
               if (_.get(response, 'clusterList.reason.status') === 403 && Authinfo.isCustomerLaunchedFromPartner()) {

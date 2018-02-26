@@ -6,7 +6,7 @@
     .controller('HDSServiceController', HDSServiceController);
 
   /* @ngInject */
-  function HDSServiceController($modal, $state, $stateParams, $translate, Authinfo, HybridServicesClusterService) {
+  function HDSServiceController($modal, $state, $stateParams, $translate, Authinfo, ServiceDescriptorService) {
     var vm = this;
     vm.backState = $stateParams.backState || 'services-overview';
     vm.pageTitle = 'hds.resources.page_title';
@@ -32,7 +32,7 @@
       },
     };
 
-    HybridServicesClusterService.serviceIsSetUp('spark-hybrid-datasecurity')
+    ServiceDescriptorService.isServiceEnabled('spark-hybrid-datasecurity')
       .then(function (enabled) {
         if (!enabled) {
           vm.addResourceModal.resolve.firstTimeSetup = true;

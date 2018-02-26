@@ -31,19 +31,15 @@
             <div class="columns medium-8 inputHostNameForm">
               <input cs-input type="text" ng-model="$ctrl.hostName"
               ng-change="$ctrl.validateHostName()"
-              cs-input-help-text="{{$ctrl.iponlineCheck ? $ctrl.iponlineCheck : ''}}"
               placeholder="{{'mediaFusion.easyConfig.enterNode' | translate}}">
+              <!--p class="cs-input__help-text">Possible errors include: required, min length = 5 and max length = 10</p-->
+        <div class="cs-input__messages" role="alert" ng-if='ipError'>
+          <div class="message" ng-if='$ctrl.ipError' >This field is required</div>
+          <div class="message" ng-if='$ctrl.ipError' >Your field is too short</div>
+        </div>
               <div class="cs-input__messages" ng-messages-multiple role="alert">
                   <div class="message" ng-bind-html="$ctrl.iponlineCheck" ></div>
               </div>
             </div>
-
-            <!--tags-input add-on-blur="true"
-            placeholder="{{'mediaFusion.easyConfig.enterNode' | translate}}"
-            ng-model="$ctrl.hostName"
-            ng-change="$ctrl.validateHostName()"
-            type="text"
-            allowed-tags-pattern="$ctrl.onlineNodeList"
-</tags-input>-->
         </div>
 </setting-section>

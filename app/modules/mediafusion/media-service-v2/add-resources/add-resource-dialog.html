@@ -113,24 +113,17 @@
 </div>
 <div class="modal-footer">
   <div ng-hide="redirectResource.noProceed || redirectResource.enableRedirectToTarget || redirectResource.fromClusters">
-    <button class="btn" ng-click="redirectResource.closeSetupModal()">
-      <span translate="mediaFusion.add-resource-dialog.cancel"></span>
+    <button class="btn" ng-click="redirectResource.back()">
+      <span translate="mediaFusion.add-resource-dialog.back"></span>
     </button>
     <button class="btn activate-button btn--primary" ng-click="redirectResource.next()" ng-disabled="!redirectResource.canGoNext()">
       <span translate="mediaFusion.add-resource-dialog.next"></span>
     </button>
   </div>
   <div ng-hide="redirectResource.noProceed || redirectResource.enableRedirectToTarget || !redirectResource.fromClusters">
-    <span ng-show="redirectResource.yesNoPage">
-      <button class="btn" ng-click="redirectResource.closeSetupModal()">
-        <span translate="mediaFusion.add-resource-dialog.cancel"></span>
-      </button>
-    </span>
-    <span ng-show="!redirectResource.yesNoPage">
-      <button class="btn" ng-click="redirectResource.back()">
-        <span translate="mediaFusion.add-resource-dialog.back"></span>
-      </button>
-    </span>
+    <button class="btn" ng-click="redirectResource.closeSetupModal()">
+      <span translate="mediaFusion.add-resource-dialog.cancel"></span>
+    </button>
     <button class="btn activate-button btn--primary" ng-click="redirectResource.next()" ng-disabled="!redirectResource.canGoNext()">
       <span translate="mediaFusion.add-resource-dialog.next"></span>
     </button>

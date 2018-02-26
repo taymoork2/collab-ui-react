@@ -1,6 +1,6 @@
 import './webex-site.scss';
 
-import { IWebExSite, IConferenceLicense, IWebexProvisioningParams, IWebexSiteDetail } from 'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
+import { IWebExSite, IConferenceLicense, IWebexProvisioningParams, IWebexSiteDetail, ICenterDetails } from 'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
 import { SetupWizardService } from 'modules/core/setupWizard/setup-wizard.service';
 import { Config } from 'modules/core/config/config';
 
@@ -25,10 +25,20 @@ export class WebExSiteService {
 
   /* @ngInject */
   constructor(
+    private $q,
     private Authinfo,
     private Config: Config,
     private SetupWizardService: SetupWizardService,
   ) { }
+
+  public getCenterDetailsForAllSubscriptions(): { [key: string]: ICenterDetails[] } {
+    const externalIds: string[] = _.map(this.Authinfo.getSubscriptions(), 'externalSubscriptionId');
+    const centerDetailsPromises: ng.IPromise<any>[] = [];
+    _.forEach(externalIds, (subId) => {
+      centerDetailsPromises.push(this.SetupWizardService.getExistingConferenceServiceDetails(subId));
+    });
+    return this.$q.all(centerDetailsPromises).then((dataResults) => dataResults);
+  }
 
   public getExistingSites(confServicesInActingSubscription): IWebExSite[] {
     return _.map(confServicesInActingSubscription, (license: IConferenceLicense) => {

@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  module.exports = MediaServiceControllerV2;
+
   /* @ngInject */
   function MediaServiceControllerV2($modal, $state, $stateParams, $translate, Authinfo, HybridServicesClusterService, hasMfFeatureToggle, hasMfSIPFeatureToggle, hasMfCascadeBwConfigToggle, hasMfClusterWizardFeatureToggle) {
     var vm = this;
@@ -45,7 +47,7 @@
     }
 
 
-    HybridServicesClusterService.serviceIsSetUp('squared-fusion-media')
+    ServiceDescriptorService.isServiceEnabled('squared-fusion-media')
       .then(function (enabled) {
         if (enabled) {
           vm.addResourceModal.resolve.firstTimeSetup = false;
@@ -63,8 +65,4 @@
         }
       });
   }
-
-  angular
-    .module('Mediafusion')
-    .controller('MediaServiceControllerV2', MediaServiceControllerV2);
 }());

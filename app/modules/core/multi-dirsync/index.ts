@@ -5,6 +5,7 @@ import { DirsyncRowComponent } from './dirsync-row/dirsync-row.component';
 
 import modalModuleName from 'modules/core/modal';
 import notificationModuleName from 'modules/core/notifications';
+const orgServiceModule = require('modules/core/scripts/services/org.service');
 
 import './multi-dirsync.scss';
 
@@ -15,6 +16,7 @@ export default angular.module('core.settings.multi-dirsync', [
   require('@collabui/collab-ui-ng').default,
   modalModuleName,
   notificationModuleName,
+  orgServiceModule,
 ])
   .component('multiDirsyncSection', new MultiDirSyncSectionComponent())
   .component('multiDirsyncSetting', new MultiDirSyncSettingComponent())

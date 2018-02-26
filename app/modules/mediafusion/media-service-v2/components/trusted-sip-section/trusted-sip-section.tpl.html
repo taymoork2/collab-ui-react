@@ -3,8 +3,8 @@
     <h5 class="sub-section__label" translate="mediaFusion.trustedSip.title"></h5>
     <p class="sub-section__description" translate="mediaFusion.trustedSip.description"></p>
     <tags-input add-on-blur="true"
-                on-tag-added="$ctrl.trustedSipUpdate()"
-                on-tag-removed="$ctrl.trustedSipUpdate()"
+                on-tag-added="$ctrl.saveTrustedSip()"
+                on-tag-removed="$ctrl.saveTrustedSip()"
                 placeholder="{{:: 'mediaFusion.trustedSip.placeholder' | translate}}"
                 ng-if="!$ctrl.isWizard"
                 ng-model="$ctrl.trustedsipconfiguration"

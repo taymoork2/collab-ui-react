@@ -16,8 +16,10 @@ import { MessengerInteropService } from 'modules/core/users/userAdd/shared/messe
 import { Notification } from 'modules/core/notifications';
 import { ProPackService }  from 'modules/core/proPack/proPack.service';
 import { TaskManagerService } from 'modules/hcs/task-manager';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
+import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 
-type AllService = ICCCService | IPrivateTrunkResourceWithStatus | IServiceStatusWithSetup;
+type AllService = ICCCService | IServiceStatusWithSetup;
 
 export class ServicesOverviewController implements ng.IComponentController {
   // TODO: rewrite the following properties with proper AngularJS 1.5+ components
@@ -33,8 +35,8 @@ export class ServicesOverviewController implements ng.IComponentController {
   public _servicesToDisplay: HybridServiceId[] = []; // made public for easier testing
   public _servicesActive: HybridServiceId[] = []; // made public for easier testing
   public _servicesInactive: HybridServiceId[] = []; // made public for easier testing
-  public clusters: IExtendedClusterFusion[] | null = null;
-  public trunks: IPrivateTrunkResourceWithStatus[] | null = null;
+  public clusters: IExtendedClusterFusion[];
+  public trunks: IPrivateTrunkResourceWithStatus[];
   public servicesStatuses: AllService[] = [];
   public loadingHybridServicesCards = true;
   public hasCapacityFeatureToggle: boolean;
@@ -50,11 +52,13 @@ export class ServicesOverviewController implements ng.IComponentController {
     private Config: Config,
     private EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
     private FeatureToggleService: FeatureToggleService,
+    private HcsTestManagerService: TaskManagerService,
     private HybridServicesClusterService: HybridServicesClusterService,
+    private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private MessengerInteropService: MessengerInteropService,
     private Notification: Notification,
     private ProPackService: ProPackService,
-    private HcsTestManagerService: TaskManagerService,
+    private ServiceDescriptorService: ServiceDescriptorService,
   ) {}
 
   public $onInit() {
@@ -127,10 +131,8 @@ export class ServicesOverviewController implements ng.IComponentController {
       })
       .then((clusters) => {
         this.clusters = clusters;
-        const promises = _.map(this._servicesToDisplay, (serviceId) => {
-          if (_.includes(['squared-fusion-uc', 'squared-fusion-cal', 'squared-fusion-media', 'spark-hybrid-datasecurity', 'contact-center-context', 'spark-hybrid-impinterop'], serviceId)) {
-            return this.HybridServicesClusterService.getStatusForService(serviceId, clusters);
-          } else if (_.includes(['squared-fusion-gcal', 'squared-fusion-o365'], serviceId)) {
+        const promises = _.compact(_.map(this._servicesToDisplay, (serviceId) => {
+          if (_.includes(['squared-fusion-gcal', 'squared-fusion-o365'], serviceId)) {
             // TODO: When the backend returns an error, we should say "we don't know" instead of considering `setup: false`
             return this.CloudConnectorService.getService(serviceId as CCCService)
               .catch(() => ({
@@ -157,12 +159,32 @@ export class ServicesOverviewController implements ng.IComponentController {
               setup: false,
             }));
           }
-        });
+        }));
+        // Now get all from FMS
+        if (_.some(['squared-fusion-uc', 'squared-fusion-cal', 'squared-fusion-media', 'spark-hybrid-datasecurity', 'contact-center-context', 'spark-hybrid-impinterop'], (serviceId) => _.includes(this._servicesToDisplay, serviceId))) {
+          promises.push(this.ServiceDescriptorService.getServices()
+            .then((servicesStatusesFromFMS) => {
+              return _.compact(_.map(servicesStatusesFromFMS, (serviceStatus) => {
+                // For some services, we rather trust data from CCC or Huron. For some services, we don't care, because they have no card in the Services Overview page.
+                if (!_.includes(['squared-fusion-gcal', 'ept', 'squared-fusion-khaos', 'squared-fusion-servicability', 'squared-fusion-ec', 'squared-fusion-mgmt'], serviceStatus.id)) {
+                  const status = this.HybridServicesClusterService.processClustersToAggregateStatusForService(serviceStatus.id, this.clusters);
+                  return {
+                    serviceId: serviceStatus.id,
+                    setup: serviceStatus.enabled,
+                    status: status,
+                    cssClass: this.HybridServicesClusterStatesService.getServiceStatusCSSClassFromLabel(status),
+                  };
+                }
+              }));
+            }));
+        }
         return this.$q.all<any[]>(promises)
           .then((servicesStatuses) => {
+            servicesStatuses = _.flatten(servicesStatuses);
             this.servicesStatuses = servicesStatuses;
-            _.forEach(this._servicesToDisplay, (serviceId, i) => {
-              if (servicesStatuses[i].setup) {
+            _.forEach(this._servicesToDisplay, (serviceId) => {
+              const serviceStatus: IServiceStatusWithSetup = _.find(this.servicesStatuses, (status: IServiceStatusWithSetup) =>  status.serviceId === serviceId);
+              if (serviceStatus && serviceStatus.setup) {
                 this._servicesActive.push(serviceId);
               } else {
                 this._servicesInactive.push(serviceId);

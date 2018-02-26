@@ -6,7 +6,11 @@
     .controller('AddResourceControllerClusterViewV2', AddResourceControllerClusterViewV2);
 
   /* @ngInject */
+<<<<<<< Updated upstream
   function AddResourceControllerClusterViewV2($translate, $state, $stateParams, $window, $q, AddResourceCommonServiceV2, ProPackService, $modalInstance) {
+=======
+  function AddResourceControllerClusterViewV2($translate, $state, $stateParams, $modalInstance, $window, $q, AddResourceCommonServiceV2, ProPackService) {
+>>>>>>> Stashed changes
     var vm = this;
     vm.clusterList = [];
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
@@ -19,6 +23,7 @@
     vm.popup = '';
     vm.selectedClusterId = '';
     vm.firstTimeSetup = $state.params.firstTimeSetup;
+    vm.wizard = $stateParams.wizard;
     vm.closeSetupModal = closeSetupModal;
     vm.currentServiceId = 'squared-fusion-media';
     vm.radio = 1;
@@ -60,7 +65,7 @@
 
     function back() {
       if (!vm.yesProceed) {
-        $stateParams.wizard.back();
+        vm.wizard.back();
       } else if (vm.enableRedirectToTarget) {
         vm.enableRedirectToTarget = false;
       } else {

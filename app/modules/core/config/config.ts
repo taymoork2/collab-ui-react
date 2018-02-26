@@ -168,6 +168,14 @@ export class Config {
     'webexSupportCenter',
   ];
 
+  public readonly webexTypeCodes = [
+    'EE',
+    'EC',
+    'MC',
+    'TC',
+    'SC',
+  ];
+
   public readonly freeLicenses = [
     'messaging',
     'communications',

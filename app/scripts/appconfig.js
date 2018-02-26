@@ -2035,7 +2035,20 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<webex-add-site-modal  modal-title="\'firstTimeWizard.addWebexSite\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site-modal>',
+                template: '<webex-add-site-modal  center-details-for-all-subscriptions="$resolve.centerDetailsForAllSubscriptions" center-details="$resolve.centerDetails" modal-title="\'firstTimeWizard.addWebexSite\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site-modal>',
+              },
+            },
+            params: {
+              centerDetails: null,
+              centerDetailsForAllSubscriptions: null,
+
+            },
+            resolve: {
+              centerDetails: /* @ngInject */ function ($stateParams) {
+                return $stateParams['centerDetails'];
+              },
+              centerDetailsForAllSubscriptions: /* @ngInject */ function ($stateParams) {
+                return $stateParams['centerDetailsForAllSubscriptions'];
               },
             },
           })
@@ -2043,15 +2056,19 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<webex-add-site-modal subscription-id="$resolve.subscriptionId" single-step="3" modal-title="\'webexSiteManagement.redistributeLicenses\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site-modal>',
+                template: '<webex-add-site-modal subscription-id="$resolve.subscriptionId" center-details="$resolve.centerDetails" single-step="3" modal-title="\'webexSiteManagement.redistributeLicenses\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site-modal>',
               },
             },
             params: {
               subscriptionId: null,
+              centerDetails: null,
             },
             resolve: {
               subscriptionId: /* @ngInject */ function ($stateParams) {
                 return $stateParams['subscriptionId'];
+              },
+              centerDetails: /* @ngInject */ function ($stateParams) {
+                return $stateParams['centerDetails'];
               },
             },
           })
@@ -2059,16 +2076,20 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<webex-delete-site-modal subscription-id="$resolve.subscriptionId" site-url="$resolve.siteUrl" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-delete-site-modal>',
+                template: '<webex-delete-site-modal subscription-id="$resolve.subscriptionId" site-url="$resolve.siteUrl" center-details="$resolve.centerDetails" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-delete-site-modal>',
               },
             },
             params: {
               subscriptionId: null,
+              centerDetails: null,
               siteUrl: null,
             },
             resolve: {
               subscriptionId: /* @ngInject */ function ($stateParams) {
                 return $stateParams['subscriptionId'];
+              },
+              centerDetails: /* @ngInject */ function ($stateParams) {
+                return $stateParams['centerDetails'];
               },
               siteUrl: /* @ngInject */ function ($stateParams) {
                 return $stateParams['siteUrl'];
@@ -4844,12 +4865,12 @@
           })
           .state('add-resource.mediafusion.hostname', {
             parent: 'main',
-            controller: 'AddResourceMainController',
-            //modalClass: 'redirect-add-resource',
-            resolve: {
-              id: /* @ngInject */ function ($stateParams) {
-                return $stateParams.id;
+            views: {
+              'main@': {
+                controller: 'AddResourceMainController',
               },
+            },
+            resolve: {
               hasMfClusterWizardFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceClusterWizard);
               },
@@ -4870,29 +4891,6 @@
               fromClusters: true,
             },
           })
-          /*.state('add-resource.mediafusion.hostname', {
-            parent: 'modal',
-            views: {
-              'modal@': {
-                controller: 'AddResourceControllerClusterViewV2',
-                controllerAs: 'redirectResource',
-                template: require('modules/mediafusion/media-service-v2/add-resources/cluster-creation.html'),
-                //template: require('modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html'),
-                //modalClass: 'redirect-add-resource',
-                //controller: 'ClusterCreationController',
-                //controllerAs: 'clusterCreation',
-                //template: require('modules/mediafusion/media-service-v2/cluster-creation.html'),
-                //modalClass: 'cluster-creation',
-                modalClass: 'redirect-add-resource',
-              },
-            },
-            params: {
-              wizard: null,
-              firstTimeSetup: false,
-              yesProceed: false,
-              fromClusters: true,
-            },
-          })*/
           .state('add-resource.mediafusion.name', {
             parent: 'modalSmall',
             views: {

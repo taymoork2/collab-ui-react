@@ -1,9 +1,11 @@
 'use strict';
 
+var moduleName = require('./index').default;
+
 describe('Controller: MediaServiceControllerV2', function () {
   var $controller, controller;
 
-  beforeEach(angular.mock.module('Mediafusion'));
+  beforeEach(angular.mock.module(moduleName));
 
   beforeEach(inject(function (_$controller_) {
     $controller = _$controller_;

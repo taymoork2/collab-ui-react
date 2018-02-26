@@ -501,17 +501,28 @@ describe('Component: editAutoAssignTemplateModal:', () => {
     });
 
     describe('(get) footerWarningL10nKey:', () => {
-      it('should return empty string if not in edit template mode, or if the pending template has selections', function () {
+      it('should return empty string if not in edit template mode, if the pending template has selections, or "autoAssignTemplateData" property is not initialized yet', function () {
+        spyOn(this.controller, 'targetStateViewDataHasSelections');
         this.controller.isEditTemplateMode = false;
+        this.controller.targetStateViewDataHasSelections.and.returnValue(true);
+        this.controller.autoAssignTemplateData = undefined;
         expect(this.controller.footerWarningL10nKey).toBe('');
+
         this.controller.isEditTemplateMode = true;
-        spyOn(this.controller, 'targetStateViewDataHasSelections').and.returnValue(true);
+        this.controller.targetStateViewDataHasSelections.and.returnValue(true);
+        this.controller.autoAssignTemplateData = undefined;
+        expect(this.controller.footerWarningL10nKey).toBe('');
+
+        this.controller.isEditTemplateMode = true;
+        this.controller.targetStateViewDataHasSelections.and.returnValue(false);
+        this.controller.autoAssignTemplateData = undefined;
         expect(this.controller.footerWarningL10nKey).toBe('');
       });
 
-      it('should return l10n key for footer warning message if in edit mode and pending template has no selections', function () {
+      it('should return l10n key for footer warning message if in edit mode, pending template has no selections, and "autoAssignTemplateData" property has been initialized', function () {
         this.controller.isEditTemplateMode = true;
         spyOn(this.controller, 'targetStateViewDataHasSelections').and.returnValue(false);
+        this.controller.autoAssignTemplateData = 'fake-autoAssignTemplateData';
         expect(this.controller.footerWarningL10nKey).toBe('userManage.autoAssignTemplate.edit.warningFooter');
       });
     });

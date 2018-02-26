@@ -1,6 +1,6 @@
 import './webex-site.scss';
 
-import { IWebExSite, IConferenceLicense } from 'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
+import { IWebExSite, IConferenceLicense, ICenterDetails } from 'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
 import { SetupWizardService } from 'modules/core/setupWizard/setup-wizard.service';
 import { WebExSiteService, Actions } from './webex-site.service';
 import { Notification } from 'modules/core/notifications';
@@ -10,6 +10,7 @@ class WebexDeleteSiteModalController implements ng.IComponentController {
 
   // parameters for child controls
   public sitesArray: IWebExSite[] = [];
+  public centerDetails: ICenterDetails[];
   public existingWebexSites: IWebExSite[];
   public conferenceLicensesInSubscription: IConferenceLicense[];
   public siteUrl: string;
@@ -34,7 +35,7 @@ class WebexDeleteSiteModalController implements ng.IComponentController {
   ) { }
 
   public $onChanges(changes: ng.IOnChangesObject): void {
-    if (changes.subscriptionId) {
+    if (changes.subscriptionId && changes.subscriptionId.currentValue) {
       this.changeCurrentSubscription(changes.subscriptionId.currentValue);
     }
   }
@@ -111,6 +112,7 @@ export class WebexDeleteSiteModalComponent implements ng.IComponentOptions {
   public template = require('./webex-delete-site-modal.html');
   public bindings = {
     subscriptionId: '<',
+    centerDetails: '<?',
     dismiss: '&',
     siteUrl: '<',
   };

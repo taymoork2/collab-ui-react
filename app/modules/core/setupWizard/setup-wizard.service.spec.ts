@@ -24,6 +24,7 @@ describe('Service: SetupWizard Service', function () {
     this.webexTrialMixed = _.clone(getJSONFixture('core/json/authInfo/complexCustomerCases/accountWithTrial.json'));
     this.webexTrialOnly = _.clone(getJSONFixture('core/json/authInfo/complexCustomerCases/aboutToConvert.json'));
     this.noWebexTrial = _.clone(getJSONFixture('core/json/authInfo/complexCustomerCases/customerWithCCASP.json'));
+    this.centerDetails = _.clone(getJSONFixture('core/json/setupWizard/meeting-settings/centerDetails.json'));
     spyOn(this.Authinfo, 'getSubscriptions').and.returnValue(this.authinfoPendingSubscriptions);
     spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(this.conferenceServices);
     spyOn(this.SetupWizardService, 'validateTransferCode');
@@ -345,6 +346,22 @@ describe('Service: SetupWizard Service', function () {
       expect(result).toBeTruthy();
       result = this.SetupWizardService.isSubscriptionEnterprise('Sub100449');
       expect(result).toBeFalsy();
+    });
+  });
+  describe('getting existing conference service details:', function () {
+    it ('should return results from the api', function () {
+      this.$httpBackend.expectGET(`${this.UrlConfig.getAdminServiceUrl()}subscriptions/orderDetail?externalSubscriptionId=Sub-os090944`).respond(200, this.centerDetails);
+      this.SetupWizardService.getExistingConferenceServiceDetails('Sub-os090944').then((result) => {
+        expect(result).toEqual(this.centerDetails);
+      });
+      this.$httpBackend.flush();
+    });
+    it ('should return an empty object if the service call fails', function () {
+      this.$httpBackend.expectGET(`${this.UrlConfig.getAdminServiceUrl()}subscriptions/orderDetail?externalSubscriptionId=Sub-os090944`).respond(500, 'error-in-request', null, 'error');
+      this.SetupWizardService.getExistingConferenceServiceDetails('Sub-os090944').catch((result) => {
+        expect(result).toEqual({});
+      });
+      this.$httpBackend.flush();
     });
   });
 });
