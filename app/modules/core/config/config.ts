@@ -587,6 +587,7 @@ export class Config {
       'taas',
       'taasSuits',
       'partner-services-overview',
+      'hcs',
     ],
     PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'pstn', 'pstnWizard', 'video'],
     CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],

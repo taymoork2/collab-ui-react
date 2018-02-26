@@ -3097,6 +3097,15 @@
               },
             },
           })
+          .state('hcs', {
+            parent: 'partner',
+            template: '<div ui-view></div>',
+            absract: true,
+          })
+          .state('hcs.hcs-inventory', {
+            url: '/hcs/inventory',
+            template: '<hcs-inventory></hcs-inventory>',
+          })
           .state('taasSuites', {
             parent: 'main',
             url: '/taasSuite',
