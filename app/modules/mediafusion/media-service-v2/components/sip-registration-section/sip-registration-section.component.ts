@@ -54,4 +54,3 @@ export class SipRegistrationSectionComponent implements ng.IComponentOptions {
     isWizard: '=',
   };
 }
-
