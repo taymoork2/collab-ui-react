@@ -1,8 +1,9 @@
 'use strict';
 
-describe('Care Feature Ctrl should', function () {
-  var controller, $controller, $filter, $q, $rootScope, $state, $scope, Authinfo, CareFeatureList, CvaService, EvaService, getAADeferred,
-    Log, Notification, deferred, callbackDeferred, chatPlusCallbackDeferred, cvaDeferred, evaDeferred, evaSpacesDeferred, $translate, SparkService, getPersonDeferred, FeatureToggleService, AutoAttendantCeInfoModelService;
+describe('Care Feature Ctrl', function () {
+  var controller, $controller, $filter, $q, $rootScope, $state, $scope, Authinfo, CareFeatureList, CvaService, EvaService, aaDeferred,
+    Log, Notification, deferred, callbackDeferred, chatPlusCallbackDeferred, cvaDeferred, evaDeferred, evaSpacesDeferred, $translate,
+    SparkService, getPersonDeferred, FeatureToggleService, AutoAttendantCeInfoModelService, abcDeferred, AbcService;
 
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('Test-Org-Id'),
@@ -13,8 +14,7 @@ describe('Care Feature Ctrl should', function () {
 
   var listOfAAs = getJSONFixture('huron/json/autoAttendant/aaList.json');
   var templateList = getJSONFixture('sunlight/json/features/chatTemplates/chatTemplateList.json');
-  var emptyListOfAAs = [];
-  var emptyListOfCTs = [];
+  var emptyListOfData = [];
   var justOneChatTemplate = templateList[0];
 
   var getTemplatesSuccess = function (mediaType, data) {
@@ -105,6 +105,25 @@ describe('Care Feature Ctrl should', function () {
     };
   };
 
+  var listABCsSuccess = function () {
+    return {
+      items: [
+        {
+          id: 'ID 1',
+          name: 'Apple Business Chat Dev Config',
+        },
+        {
+          id: 'ID 2',
+          name: 'Apple Business Chat PR Config',
+        },
+        {
+          id: 'ID 3',
+          name: 'Apple Business Chat Staging Config',
+        },
+      ],
+    };
+  };
+
   var listEvaSpacesSuccess = function () {
     return {
       items: [
@@ -179,7 +198,7 @@ describe('Care Feature Ctrl should', function () {
     $provide.value('Authinfo', spiedAuthinfo);
   }));
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$filter_, _$state_, _$q_, _Authinfo_, _CareFeatureList_, _Notification_, _Log_, _$translate_, _CvaService_, _EvaService_, _SparkService_, _AutoAttendantCeInfoModelService_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$filter_, _$controller_, _$q_, _$translate_, _$state_, _$rootScope_, _AbcService_, _AutoAttendantCeInfoModelService_, _Authinfo_, _CareFeatureList_, _CvaService_, _EvaService_, _FeatureToggleService_, _Log_, _Notification_, _SparkService_) {
     $rootScope = _$rootScope_;
     $filter = _$filter_;
     $controller = _$controller_;
@@ -191,6 +210,7 @@ describe('Care Feature Ctrl should', function () {
     CareFeatureList = _CareFeatureList_;
     CvaService = _CvaService_;
     EvaService = _EvaService_;
+    AbcService = _AbcService_;
     Log = _Log_;
     Notification = _Notification_;
     SparkService = _SparkService_;
@@ -203,17 +223,18 @@ describe('Care Feature Ctrl should', function () {
     chatPlusCallbackDeferred = $q.defer();
     cvaDeferred = $q.defer();
     evaDeferred = $q.defer();
-    getPersonDeferred = $q.defer();
+    abcDeferred = $q.defer();
     evaSpacesDeferred = $q.defer();
-    getAADeferred = $q.defer();
+    aaDeferred = $q.defer();
     getPersonDeferred = $q.defer();
-    spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue(getAADeferred.promise);
+    spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue(aaDeferred.promise);
     spyOn(CareFeatureList, 'getChatTemplates').and.returnValue(deferred.promise);
     spyOn(CareFeatureList, 'getCallbackTemplates').and.returnValue(callbackDeferred.promise);
     spyOn(CareFeatureList, 'getChatPlusCallbackTemplates').and.returnValue(chatPlusCallbackDeferred.promise);
     spyOn(CvaService.featureList, 'getFeature').and.returnValue(cvaDeferred.promise);
     spyOn(EvaService.featureList, 'getFeature').and.returnValue(evaDeferred.promise);
     spyOn(EvaService, 'getExpertAssistantSpaces').and.returnValue(evaSpacesDeferred.promise);
+    spyOn(AbcService.featureList, 'getFeature').and.returnValue(abcDeferred.promise);
     spyOn($translate, 'instant').and.returnValue('messageKey');
     spyOn($state, 'go');
     spyOn(SparkService, 'getPerson').and.returnValue(getPersonDeferred.promise);
@@ -223,6 +244,8 @@ describe('Care Feature Ctrl should', function () {
     $state.isVirtualAssistantEnabled = true;
     // Turned on expert virtual assistant enabled flag
     $state.isExpertVirtualAssistantEnabled = true;
+    // Turned on ABC enabled flag
+    $state.isAppleBusinessChatEnabled = true;
   }));
 
   var getAllTemplatesDeferred = function () {
@@ -231,10 +254,11 @@ describe('Care Feature Ctrl should', function () {
     chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     cvaDeferred.resolve(listCVAsSuccess());
     evaDeferred.resolve(listEVAsSuccess());
+    abcDeferred.resolve(listABCsSuccess());
     getPersonDeferred.resolve(ownerDetails);
   };
 
-  describe('Feature Toogle for Hybrid is disabled', function () {
+  describe('Feature Toggle for Hybrid is disabled', function () {
     beforeEach(function () {
       spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
       controller = $controller('CareFeaturesCtrl', {
@@ -254,7 +278,7 @@ describe('Care Feature Ctrl should', function () {
       $scope.$apply();
     });
 
-    it('initialize and get the list of templates and update pageState ', function () {
+    it('should initialize and get the list of templates and update pageState ', function () {
       expect(controller.pageState).toEqual('Loading');
       getAllTemplatesDeferred();
       evaSpacesDeferred.resolve(listEvaSpacesSuccess());
@@ -262,7 +286,7 @@ describe('Care Feature Ctrl should', function () {
       expect(controller.pageState).toEqual('ShowFeatures');
     });
 
-    it('initialize and populate template counts under customerVirtualAssistant feature', function () {
+    it('should initialize and populate template counts under customerVirtualAssistant feature', function () {
       expect(controller.pageState).toEqual('Loading');
       getAllTemplatesDeferred();
       evaSpacesDeferred.resolve(listEvaSpacesSuccess());
@@ -283,25 +307,26 @@ describe('Care Feature Ctrl should', function () {
       expect(cvaFeature2.templates.length).toEqual(0);
     });
 
-    it('initialize and show error page when get templates fails ', function () {
+    it('should initialize and show error page when get templates fails ', function () {
       expect(controller.pageState).toEqual('Loading');
       deferred.reject(getTemplateFailure);
       $scope.$apply();
       expect(controller.pageState).toEqual('Error');
     });
 
-    it('initialize and show New Feature page when templates are empty ', function () {
+    it('should initialize and show New Feature page when templates are empty ', function () {
       expect(controller.pageState).toEqual('Loading');
-      deferred.resolve(getTemplatesSuccess('chat', emptyListOfCTs));
-      callbackDeferred.resolve(getTemplatesSuccess('callback', emptyListOfCTs));
-      chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', emptyListOfCTs));
-      cvaDeferred.resolve(getTemplatesSuccess('virtualAssistant', emptyListOfCTs));
-      evaDeferred.resolve(getTemplatesSuccess('virtualAssistant', emptyListOfCTs));
+      deferred.resolve(emptyListOfData);
+      callbackDeferred.resolve(emptyListOfData);
+      chatPlusCallbackDeferred.resolve(emptyListOfData);
+      cvaDeferred.resolve(emptyListOfData);
+      evaDeferred.resolve(emptyListOfData);
+      abcDeferred.resolve(emptyListOfData);
       $scope.$apply();
       expect(controller.pageState).toEqual('NewFeature');
     });
 
-    it('initalize and populate expert spaces under expertVirtualAssistant feature', function () {
+    it('should initialize and populate expert spaces under expertVirtualAssistant feature', function () {
       spyOn(controller, 'generateHtmlPopover').and.returnValue('aHtmlString');
       expect(controller.pageState).toEqual('Loading');
       getAllTemplatesDeferred();
@@ -324,7 +349,7 @@ describe('Care Feature Ctrl should', function () {
       });
     });
 
-    it('initalize and populate EVA usage data warning under expertVirtualAssistant feature', function () {
+    it('should initalize and populate EVA usage data warning under expertVirtualAssistant feature', function () {
       spyOn(controller, 'generateHtmlPopover').and.returnValue('aHtmlString');
       expect(controller.pageState).toEqual('Loading');
       getAllTemplatesDeferred();
@@ -346,7 +371,7 @@ describe('Care Feature Ctrl should', function () {
       });
     });
 
-    it('able to call delete function and in turn the $state service ', function () {
+    it('should be able to call delete function and in turn the $state service ', function () {
       deferred.resolve(getTemplatesSuccess('chat', templateList));
       callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
       chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
@@ -360,7 +385,7 @@ describe('Care Feature Ctrl should', function () {
       });
     });
 
-    it('able to receive the CARE_FEATURE_DELETED event when template gets deleted and template should be deleted from local copy', function () {
+    it('should be able to receive the CARE_FEATURE_DELETED event when template gets deleted and template should be deleted from local copy', function () {
       deferred.resolve(getTemplatesSuccess('chat', templateList));
       callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
       chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
@@ -375,10 +400,10 @@ describe('Care Feature Ctrl should', function () {
       expect(controller.filteredListOfFeatures).not.toEqual(jasmine.arrayContaining([featureTobBeDeleted]));
     });
 
-    it('able to receive the CARE_FEATURE_DELETED event when template gets deleted and change pageState to NewFeature when no templates to show', function () {
+    it('should be able to receive the CARE_FEATURE_DELETED event when template gets deleted and change pageState to NewFeature when no templates to show', function () {
       deferred.resolve(getTemplatesSuccess('chat', [justOneChatTemplate]));
-      callbackDeferred.resolve(getTemplatesSuccess('callback', emptyListOfCTs));
-      chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', emptyListOfCTs));
+      callbackDeferred.resolve(emptyListOfData);
+      chatPlusCallbackDeferred.resolve(emptyListOfData);
       $scope.$apply();
       var featureTobBeDeleted = justOneChatTemplate;
       controller.deleteCareFeature(featureTobBeDeleted, $event);
@@ -417,7 +442,7 @@ describe('Care Feature Ctrl should', function () {
       getAllTemplatesDeferred();
       $scope.$apply();
       controller.setFilter('all');
-      expect(controller.filteredListOfFeatures.length).toEqual(templateList.length + 7); // plus 7 for Virtual Assistants
+      expect(controller.filteredListOfFeatures.length).toEqual(templateList.length + 10); // plus 10 for Virtual Assistants + ABC
     });
 
     it('should filter the list of templates to zero length', function () {
@@ -427,35 +452,26 @@ describe('Care Feature Ctrl should', function () {
       expect(controller.filteredListOfFeatures.length).toEqual(0);
     });
 
-    it('set the view to searched data and the chat template should come first and then callback template', function () {
+    it('should filter the searched data from all cards and it is case insensitive', function () {
       getAllTemplatesDeferred();
       $scope.$apply();
+      controller.setFilter('all');
       controller.searchData('Dev');
-      expect(controller.filteredListOfFeatures.length).toEqual(5);
+      expect(controller.filteredListOfFeatures.length).toEqual(6);
       expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
       expect(controller.filteredListOfFeatures[1].name).toEqual('Sunlight Callback Dev Template');
       expect(controller.filteredListOfFeatures[2].name).toEqual('Sunlight Chat+Callback Dev Template');
-      expect(controller.filteredListOfFeatures[3].name).toEqual('Customer Virtual Assistant Dev Config');
-      expect(controller.filteredListOfFeatures[4].name).toEqual('Expert Virtual Assistant Dev Config');
-    });
-
-    it('set the view to the searched data which is case insensitive and the chat template should come first and then callback template', function () {
-      getAllTemplatesDeferred();
-      $scope.$apply();
-      controller.searchData('Dev');
-      expect(controller.filteredListOfFeatures.length).toEqual(5);
-      expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
-      expect(controller.filteredListOfFeatures[1].name).toEqual('Sunlight Callback Dev Template');
-      expect(controller.filteredListOfFeatures[2].name).toEqual('Sunlight Chat+Callback Dev Template');
-      expect(controller.filteredListOfFeatures[3].name).toEqual('Customer Virtual Assistant Dev Config');
-      expect(controller.filteredListOfFeatures[4].name).toEqual('Expert Virtual Assistant Dev Config');
+      expect(controller.filteredListOfFeatures[3].name).toEqual('Apple Business Chat Dev Config');
+      expect(controller.filteredListOfFeatures[4].name).toEqual('Customer Virtual Assistant Dev Config');
+      expect(controller.filteredListOfFeatures[5].name).toEqual('Expert Virtual Assistant Dev Config');
       controller.searchData('dev');
-      expect(controller.filteredListOfFeatures.length).toEqual(5);
+      expect(controller.filteredListOfFeatures.length).toEqual(6);
       expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
       expect(controller.filteredListOfFeatures[1].name).toEqual('Sunlight Callback Dev Template');
       expect(controller.filteredListOfFeatures[2].name).toEqual('Sunlight Chat+Callback Dev Template');
-      expect(controller.filteredListOfFeatures[3].name).toEqual('Customer Virtual Assistant Dev Config');
-      expect(controller.filteredListOfFeatures[4].name).toEqual('Expert Virtual Assistant Dev Config');
+      expect(controller.filteredListOfFeatures[3].name).toEqual('Apple Business Chat Dev Config');
+      expect(controller.filteredListOfFeatures[4].name).toEqual('Customer Virtual Assistant Dev Config');
+      expect(controller.filteredListOfFeatures[5].name).toEqual('Expert Virtual Assistant Dev Config');
     });
 
     it('should filter the searched data from the list of Customer Support Templates only', function () {
@@ -467,7 +483,7 @@ describe('Care Feature Ctrl should', function () {
       expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
     });
 
-    it('should filter the searched data from the list of Virtual Assistant templates only', function () {
+    it('should filter the searched data from the list of Virtual Assistant only', function () {
       getAllTemplatesDeferred();
       $scope.$apply();
       controller.searchData('Dev');
@@ -475,6 +491,15 @@ describe('Care Feature Ctrl should', function () {
       expect(controller.filteredListOfFeatures.length).toEqual(2);
       expect(controller.filteredListOfFeatures[0].name).toEqual('Customer Virtual Assistant Dev Config');
       expect(controller.filteredListOfFeatures[1].name).toEqual('Expert Virtual Assistant Dev Config');
+    });
+
+    it('should filter the searched data from the list of Apple Business Chats only', function () {
+      getAllTemplatesDeferred();
+      $scope.$apply();
+      controller.searchData('Dev');
+      controller.setFilter('appleBusinessChat');
+      expect(controller.filteredListOfFeatures.length).toEqual(1);
+      expect(controller.filteredListOfFeatures[0].name).toEqual('Apple Business Chat Dev Config');
     });
 
     it('should show warning and not allow delete of EVA if user does not have access', function () {
@@ -487,7 +512,7 @@ describe('Care Feature Ctrl should', function () {
       expect(controller.filteredListOfFeatures[4].name).toEqual('Expert Virtual Assistant Different Owner Config');
     });
 
-    it('spacesInUseText should return the accurate number of expert spaces', function () {
+    it('should return the accurate number of expert spaces', function () {
       var evaFeature = {
         id: 'Expert Virtual Assistant Feature',
         email: 'evaTest1@cisco.com',
@@ -500,7 +525,7 @@ describe('Care Feature Ctrl should', function () {
       });
     });
 
-    it('spacesInUseText should return the expected EVA usage data warning', function () {
+    it('should return the expected EVA usage data warning', function () {
       var evaFeature = {
         id: 'Expert Virtual Assistant Feature',
         email: 'evaTest1@cisco.com',
@@ -511,7 +536,7 @@ describe('Care Feature Ctrl should', function () {
       expect($translate.instant).toHaveBeenCalledWith('careChatTpl.featureCard.unavailableSpacesInUseText');
     });
 
-    it('generateHtmlPopover should return expected html string with multiple expert spaces', function () {
+    it('should return expected html string with multiple expert spaces', function () {
       var evaFeature = {
         id: 'Expert Virtual Assistant Feature',
         email: 'evaTest1@cisco.com',
@@ -537,7 +562,7 @@ describe('Care Feature Ctrl should', function () {
       expect(htmlString).toEqual(htmlExpected);
     });
 
-    it('generateHtmlPopover should return expected html string when EVA usage data is unavailable', function () {
+    it('should return expected html string when EVA usage data is unavailable', function () {
       var evaFeature = {
         id: 'Expert Virtual Assistant Feature',
         email: 'evaTest1@cisco.com',
@@ -550,8 +575,8 @@ describe('Care Feature Ctrl should', function () {
     });
 
     it('should not push AutoAttendant feature in feature tab if Hybrid toggle is disabled', function () {
-      expect(controller.features.length).toBe(5);
-      expect(controller.filters.length).toBe(3);
+      expect(controller.features.length).toBe(6);
+      expect(controller.filters.length).toBe(4);
     });
   });
 
@@ -562,42 +587,44 @@ describe('Care Feature Ctrl should', function () {
         $scope: $scope,
         $state: $state,
         $filter: $filter,
+        $translate: $translate,
+        AbcService: AbcService,
+        AutoAttendantCeInfoModelService: AutoAttendantCeInfoModelService,
         Authinfo: Authinfo,
         CareFeatureList: CareFeatureList,
-        Log: Log,
-        Notification: Notification,
-        $translate: $translate,
         CvaService: CvaService,
         EvaService: EvaService,
+        Log: Log,
+        Notification: Notification,
         SparkService: SparkService,
-        AutoAttendantCeInfoModelService: AutoAttendantCeInfoModelService,
       });
       $scope.$apply();
     });
     it('should push the AutoAttendant feature in Feature tab if Hybrid Toggle is enabled', function () {
-      getAADeferred.resolve(getAAListSuccessResp(emptyListOfAAs));
+      aaDeferred.resolve(emptyListOfData);
       $scope.$apply();
-      expect(controller.features.length).toBe(6);
-      expect(controller.filters.length).toBe(4);
+      expect(controller.features.length).toBe(7);
+      expect(controller.filters.length).toBe(5);
     });
 
     it('should get list of AAs and if there is any data, should change the pageState to showFeatures', function () {
       expect(controller.pageState).toBe('Loading');
       getAllTemplatesDeferred();
       evaSpacesDeferred.resolve(listEvaSpacesSuccess());
-      getAADeferred.resolve(ceInfosList());
+      aaDeferred.resolve(ceInfosList());
       $scope.$apply();
       expect(controller.pageState).toBe('ShowFeatures');
     });
 
     it('should get list of AAs and if data received is empty, should change the pageSate to newFeature', function () {
       expect(controller.pageState).toBe('Loading');
-      getAADeferred.resolve(getAAListSuccessResp(emptyListOfAAs));
-      deferred.resolve(getTemplatesSuccess('chat', emptyListOfCTs));
-      callbackDeferred.resolve(getTemplatesSuccess('callback', emptyListOfCTs));
-      chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', emptyListOfCTs));
-      cvaDeferred.resolve(getTemplatesSuccess('virtualAssistant', emptyListOfCTs));
-      evaDeferred.resolve(getTemplatesSuccess('virtualAssistant', emptyListOfCTs));
+      aaDeferred.resolve(emptyListOfData);
+      deferred.resolve(emptyListOfData);
+      callbackDeferred.resolve(emptyListOfData);
+      chatPlusCallbackDeferred.resolve(emptyListOfData);
+      cvaDeferred.resolve(emptyListOfData);
+      evaDeferred.resolve(emptyListOfData);
+      abcDeferred.resolve(emptyListOfData);
       $scope.$apply();
       expect(controller.pageState).toBe('NewFeature');
     });
@@ -618,7 +645,7 @@ describe('Care Feature Ctrl should', function () {
       });
     });
 
-    it('should Not delete an AA with dependencies', function () {
+    it('should not delete an AA with dependencies', function () {
       spyOn(Notification, 'error');
       $scope.$apply();
       controller.filteredListOfFeatures = AAs;
@@ -641,12 +668,13 @@ describe('Care Feature Ctrl should', function () {
     });
 
     it('should filter a list of AAs', function () {
-      deferred.resolve(getTemplatesSuccess('chat', emptyListOfCTs));
-      callbackDeferred.resolve(getTemplatesSuccess('callback', emptyListOfCTs));
-      chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', emptyListOfCTs));
-      cvaDeferred.resolve(getTemplatesSuccess('virtualAssistant', emptyListOfCTs));
-      evaDeferred.resolve(getTemplatesSuccess('virtualAssistant', emptyListOfCTs));
-      getAADeferred.resolve(getAAListSuccessResp(listOfAAs));
+      deferred.resolve(emptyListOfData);
+      callbackDeferred.resolve(emptyListOfData);
+      chatPlusCallbackDeferred.resolve(emptyListOfData);
+      cvaDeferred.resolve(emptyListOfData);
+      evaDeferred.resolve(emptyListOfData);
+      abcDeferred.resolve(emptyListOfData);
+      aaDeferred.resolve(getAAListSuccessResp(listOfAAs));
       $scope.$apply();
       controller.setFilter('AA');
       expect(controller.filteredListOfFeatures.length).toBe(3);
@@ -655,7 +683,7 @@ describe('Care Feature Ctrl should', function () {
 
     it('should search list of AAs', function () {
       getAllTemplatesDeferred();
-      getAADeferred.resolve(getAAListSuccessResp(listOfAAs));
+      aaDeferred.resolve(getAAListSuccessResp(listOfAAs));
       $scope.$apply();
       controller.searchData('Third');
       controller.setFilter('all');

@@ -11,7 +11,9 @@ class CareFeatureModalCtrl implements ng.IComponentController {
   constructor(
     public $modal,
     public $state,
-    public Authinfo) {
+    public Authinfo,
+    public AbcService,
+  ) {
   }
 
   /**
@@ -29,6 +31,10 @@ class CareFeatureModalCtrl implements ng.IComponentController {
       color: 'feature-cst-color',
       disabled: false,
     });
+
+    if (this.$state.isAppleBusinessChatEnabled) {
+      serviceCards.push(this.AbcService.abcServiceCard);
+    }
 
     if (this.$state.isVirtualAssistantEnabled) {
       serviceCards.push({ //Virtual Assistant
@@ -55,7 +61,10 @@ class CareFeatureModalCtrl implements ng.IComponentController {
     if (featureId === 'virtualAssistant') {
       templateStr = '<virtual-assistant-modal dismiss="$dismiss()" class="care-modal"></virtual-assistant-modal>';
     }
-
+    if (featureId === 'appleBusinessChat') {
+      this.dismiss();
+      return;
+    }
     this.$modal.open({
       template: templateStr,
     });

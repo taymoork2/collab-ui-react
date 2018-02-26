@@ -42,6 +42,9 @@
       .cta {
         color: $color-violet-darker;
       }
+      .abc {
+        color: $color-green-dark;
+      }
       .icon {
         @include vr-spacing(pl, 0.5);
         display: block;
@@ -341,6 +344,10 @@ header > p > span.badge {
       color: $color-violet-darker;
     }
 
+    .feature-abc-color {
+      color: $color-green-dark;
+    }
+
     .feature-cst-color {
       color: $color-people-base;
     }
@@ -435,6 +442,22 @@ header > p > span.badge {
     .badge {
       border-color: $color-mint-darker;
       color: $color-mint-darker;
+    }
+  }
+
+  &.abc {
+    article {
+      &.hover,
+      &:focus {
+        background-color: $color-green-dark;
+        header {
+          background-color: $color-green-dark;
+        }
+      }
+    }
+    .badge {
+      border-color: $color-green-dark;
+      color: $color-green-dark;
     }
   }
 }

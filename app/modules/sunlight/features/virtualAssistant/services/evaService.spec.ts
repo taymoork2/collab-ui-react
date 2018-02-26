@@ -31,11 +31,18 @@ describe('Care Expert Virtual Assistant Service', function () {
     }),
   };
 
+  const spiedCareFeatureListService = {
+    filterConstants: {
+      virtualAssistant: jasmine.createSpy('virtualAssistant').and.returnValue('virtualAssistant'),
+    },
+  };
+
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value('UrlConfig', spiedUrlConfig);
     $provide.value('Authinfo', spiedAuthinfo);
     $provide.value('SparkService', spiedSparkService);
+    $provide.value('CareFeatureList', spiedCareFeatureListService);
   }));
 
   beforeEach(inject(function (_$httpBackend_, _EvaService_, _$state_, $q, _$rootScope_) {
