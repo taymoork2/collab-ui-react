@@ -27,7 +27,7 @@
         ng-show="clusterCreationWizard.currentStep === 1">
     </trusted-sip-section>
     </div>
-    <div ng-if="clusterCreationWizard.hasMfSIPFeatureToggle">
+    <div ng-if="clusterCreationWizard.hasMfCascadeBwConfigToggle">
       <cluster-cascade-bandwidth 
         on-cascade-bandwidth-update="clusterCreationWizard.cascadeBandwidthUpdatedData(someData)"
         cluster="clusterCreationWizard.clusterDetail"

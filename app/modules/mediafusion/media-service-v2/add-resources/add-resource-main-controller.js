@@ -33,12 +33,6 @@
           controllerAs: 'redirectResource',
           template: require('modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html'),
           modalClass: 'redirect-add-resource',
-          /*resolve: {
-            wizard: null,
-            firstTimeSetup: false,
-            yesProceed: false,
-            fromClusters: true,
-          },*/
           params: {
             wizard: null,
             firstTimeSetup: false,

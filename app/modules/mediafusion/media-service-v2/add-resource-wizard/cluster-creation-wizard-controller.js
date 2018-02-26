@@ -6,7 +6,7 @@
     .controller('clusterCreationWizardController', clusterCreationWizardController);
 
   /* @ngInject */
-  function clusterCreationWizardController($translate, $state, $log, $modalInstance, firstTimeSetup, $modal, AddResourceSectionService, TrustedSipSectionService, SipRegistrationSectionService, ClusterCascadeBandwidthService, HybridMediaUpgradeScheduleService, HybridMediaReleaseChannelService, hasMfFeatureToggle, hasMfSIPFeatureToggle, hasMfCascadeBwConfigToggle) {
+  function clusterCreationWizardController($translate, $state, $modalInstance, firstTimeSetup, $modal, AddResourceSectionService, TrustedSipSectionService, SipRegistrationSectionService, ClusterCascadeBandwidthService, HybridMediaUpgradeScheduleService, HybridMediaReleaseChannelService, hasMfFeatureToggle, hasMfSIPFeatureToggle, hasMfCascadeBwConfigToggle) {
     var vm = this;
     vm.isSuccess = true;
     vm.closeSetupModal = closeSetupModal;
@@ -53,7 +53,6 @@
     }];
 
     vm.headerSelected = vm.headerOptions[0];
-    $log.log('hasMFFeatureToggle' + hasMfFeatureToggle + 'hasMFSIPFeatureToggle' + hasMfSIPFeatureToggle + 'hasMfCascadeBwConfigToggle' + hasMfCascadeBwConfigToggle);
 
     function createCluster() {
       $modalInstance.close();
@@ -64,14 +63,12 @@
         });
       } else {
         AddResourceSectionService.addRedirectTargetClicked(vm.hostName, vm.clusterName).then(function () {
-          // get thre response, if its new cluster do all necessary service calls
           AddResourceSectionService.redirectPopUpAndClose(vm.hostName, vm.clusterName);
           vm.clusterId = AddResourceSectionService.selectClusterId();
           vm.clusterDetail = AddResourceSectionService.selectedClusterDetails();
-          $log.log('Json' + JSON.stringify(vm.clusterDetail));
-          TrustedSipSectionService.saveSipConfigurations(vm.trustedsipconfiguration, vm.clusterId);
-          SipRegistrationSectionService.saveSipTrunkUrl(vm.sipConfigUrl, vm.clusterId);
-          ClusterCascadeBandwidthService.saveCascadeConfig(vm.clusterId, vm.cascadeBandwidth);
+          if (vm.hasMfFeatureToggle) SipRegistrationSectionService.saveSipTrunkUrl(vm.sipConfigUrl, vm.clusterId);
+          if (vm.hasMfSIPFeatureToggle) TrustedSipSectionService.saveSipConfigurations(vm.trustedsipconfiguration, vm.clusterId);
+          if (vm.hasMfCascadeBwConfigToggle) ClusterCascadeBandwidthService.saveCascadeConfig(vm.clusterId, vm.cascadeBandwidth);
           HybridMediaReleaseChannelService.saveReleaseChannel(vm.clusterId, vm.releaseChannel);
           HybridMediaUpgradeScheduleService.updateUpgradeScheduleAndUI(vm.formDataForUpgradeSchedule, vm.clusterId);
         });
@@ -80,28 +77,24 @@
 
     function childHasUpdatedData(someData) {
       if (!_.isUndefined(someData.clusterlist)) {
-        $log.log('cluster list' + JSON.stringify(someData.clusterlist));
         vm.clusterlist = someData.clusterlist;
       }
     }
 
     function hostUpdateData(someData) {
       if (!_.isUndefined(someData.hostName)) {
-        $log.log('special' + JSON.stringify(someData.hostName));
         vm.hostName = someData.hostName;
       }
     }
 
     function clusterUpdatedData(someData) {
       if (!_.isUndefined(someData.clusterName)) {
-        $log.log('clusterName' + JSON.stringify(someData.clusterName));
         vm.clusterName = someData.clusterName;
       }
     }
 
     function cascadeBandwidthUpdatedData(someData) {
       if (!_.isUndefined(someData.cascadeBandwidth)) {
-        $log.log('cascadeBandwidth' + JSON.stringify(someData));
         vm.cascadeBandwidth = someData.cascadeBandwidth;
         vm.validCascadeBandwidth = someData.inValidBandwidth;
       }
@@ -109,28 +102,24 @@
 
     function upgradeScheduleUpdatedData(someData) {
       if (!_.isUndefined(someData.upgradeSchedule)) {
-        $log.log('formData' + JSON.stringify(someData.upgradeSchedule));
         vm.formDataForUpgradeSchedule = someData.upgradeSchedule;
       }
     }
 
     function releaseChannelUpdatedData(someData) {
       if (!_.isUndefined(someData.releaseChannel)) {
-        $log.log('releaseChannel' + JSON.stringify(someData.releaseChannel));
         vm.releaseChannel = someData.releaseChannel;
       }
     }
 
     function sipConfigUrlUpdatedData(someData) {
       if (!_.isUndefined(someData.sipConfigUrl)) {
-        $log.log('sipConfigUrl' + JSON.stringify(someData.sipConfigUrl));
         vm.sipConfigUrl = someData.sipConfigUrl;
       }
     }
 
     function trustedSipConfigUpdatedData(someData) {
       if (!_.isUndefined(someData.trustedsipconfiguration)) {
-        $log.log('trustedsipconfiguration' + JSON.stringify(someData.trustedsipconfiguration));
         vm.trustedsipconfiguration = someData.trustedsipconfiguration;
       }
     }

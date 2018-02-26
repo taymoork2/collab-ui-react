@@ -9,7 +9,7 @@ export class AddResourceSectionService {
   constructor(
     private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesExtrasService: HybridServicesExtrasService,
-    private MediaServiceActivationV2,
+    //private MediaServiceActivationV2,
     private MediaClusterServiceV2,
     private Notification: Notification,
     private $q: ng.IQService,
@@ -78,8 +78,6 @@ export class AddResourceSectionService {
     return this.offlineNodeList;
   }
   public addRedirectTargetClicked(hostName: string, enteredCluster) {
-    //vm.clusterDetail = null;
-
     //Checking if value in selected cluster is in cluster list
     _.each(this.clusters, (cluster) => {
       if (cluster.name === enteredCluster) {
@@ -139,7 +137,7 @@ export class AddResourceSectionService {
     this.$window.open('https://' + encodeURIComponent(hostName) + '/?clusterName=' + encodeURIComponent(enteredCluster) + '&clusterId=' + encodeURIComponent(this.selectedClusterId));
   }
 
-  public enableMediaServiceEntitlements() {
+  /*public enableMediaServiceEntitlements() {
     return this.MediaServiceActivationV2.enableMediaServiceEntitlements();
   }
 
@@ -147,7 +145,7 @@ export class AddResourceSectionService {
     return this.MediaServiceActivationV2.enableMediaService(this.currentServiceId);
   }
 
-  /*public createFirstTimeSetupCluster(hostName, enteredCluster) {
+  public createFirstTimeSetupCluster(hostName, enteredCluster) {
     const deferred = this.$q.defer();
     this.HybridServicesClusterService.preregisterCluster(enteredCluster, 'stable', 'mf_mgmt').then((result) => {
       deferred.resolve();

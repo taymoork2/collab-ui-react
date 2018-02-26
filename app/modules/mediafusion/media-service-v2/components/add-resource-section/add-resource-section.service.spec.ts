@@ -12,7 +12,7 @@ describe('Service: AddResourceSectionService', function () {
       'AddResourceSectionService',
       'HybridServicesClusterService',
       'HybridServicesExtrasService',
-      'MediaServiceActivationV2',
+      //'MediaServiceActivationV2',
       'MediaClusterServiceV2',
     );
     spyOn(this.HybridServicesClusterService, 'setProperties').and.returnValue(this.$q.resolve({}));

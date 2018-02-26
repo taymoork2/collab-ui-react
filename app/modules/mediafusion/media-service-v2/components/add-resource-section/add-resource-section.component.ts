@@ -23,6 +23,8 @@ export class AddResourceSectionController implements ng.IComponentController {
   public helpText: string;
   public ipCheck: string;
   public ipError: boolean = false;
+  public onlinenode: boolean = false;
+  public offlinenode: boolean = false;
   public iponlineCheck: string = '';
   public ipofflineCheck: string = '';
   public selectedCluster: string = '';
@@ -60,9 +62,11 @@ export class AddResourceSectionController implements ng.IComponentController {
     if ((this.onlineNodeList.indexOf(this.hostName) > -1)) {
       this.iponlineCheck = this.$translate.instant('mediaFusion.add-resource-dialog.serverOnline');
       this.ipError = true;
+      this.onlinenode = true;
     } else if ((this.offlineNodeList.indexOf(this.hostName) > -1)) {
-      this.iponlineCheck = this.$translate.instant('mediaFusion.add-resource-dialog.serverOffline');
+      this.ipofflineCheck = this.$translate.instant('mediaFusion.add-resource-dialog.serverOffline');
       this.ipError = true;
+      this.offlinenode = true;
     } else {
       this.ipError = false;
       this.ipCheck = '';
@@ -71,11 +75,15 @@ export class AddResourceSectionController implements ng.IComponentController {
 
   public online() {
     if ((this.onlineNodeList.indexOf(this.hostName) > -1)) {
+      this.onlinenode = true;
+      this.iponlineCheck = this.$translate.instant('mediaFusion.add-resource-dialog.serverOnline');
       return true;
     }
   }
   public offline() {
     if ((this.offlineNodeList.indexOf(this.hostName) > -1)) {
+      this.ipofflineCheck = this.$translate.instant('mediaFusion.add-resource-dialog.serverOffline');
+      this.offlinenode = true;
       return true;
     }
   }

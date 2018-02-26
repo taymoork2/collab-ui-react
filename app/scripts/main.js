@@ -220,6 +220,7 @@
     'Core',
     'Hercules',
     'Squared',
+    require('modules/mediafusion/media-service-v2/activation').default,
     require('modules/mediafusion/media-service-v2/components/add-resource-section').default,
     require('modules/mediafusion/media-service-v2/components/cluster-creation-final').default,
     require('modules/mediafusion/media-service-v2/components/sip-registration-section').default,
@@ -227,6 +228,7 @@
     require('modules/mediafusion/media-service-v2/components/cluster-cascade-bandwidth').default,
     require('modules/mediafusion/media-service-v2/components/hybrid-media-upgrade-schedule').default,
     require('modules/mediafusion/media-service-v2/components/hybrid-media-release-channel').default,
+    require('modules/mediafusion/media-service-v2/resources').default,
   ]);
 
   angular.module('WebExApp', [
