@@ -16,7 +16,6 @@ function webpackConfig(env) {
     preload: ['scripts/preload'],
     bootstrap: ['polyfills', 'bootstrap'],
     styles: ['styles/app'],
-    newrelic: ['config/newrelic'],
   };
 
   config.output = {
