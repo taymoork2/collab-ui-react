@@ -47,7 +47,11 @@ export class ResourceGroupService {
 
   public remove(resourceGroupId: string, orgId?: string): ng.IPromise<EmptyHTTPResponse> {
     return this.$http.delete<EmptyHTTPResponse>(`${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/resourceGroups/${resourceGroupId}`)
-      .then(this.extractDataFromResponse);
+      .then(this.extractDataFromResponse)
+      .then((res) => {
+        this.HybridServicesClusterService.clearCache();
+        return res;
+      });
   }
 
   public setName(resourceGroupId: string, name: string, orgId?: string): ng.IPromise<EmptyHTTPResponse> {
