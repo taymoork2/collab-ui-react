@@ -2,20 +2,20 @@
 
   <div class="row">
     <div class="columns medium-4">
-      <h4 translate="accountLinking.wizard.webExDomains"></h4>
-      <p translate="accountLinking.wizard.webExDomainsTxt"></p>
+      <h4 class="wizard-info-title" translate="accountLinking.wizard.webExDomains"></h4>
+      <p class="wizard-info" translate="accountLinking.wizard.webExDomainsTxt"></p>
     </div>
     <div class="columns medium-5 medium-offset-1">
       <div class="align-top">
-        <h5 translate="accountLinking.wizard.ciscoWebExDomains"></h5>
+        <h5 class="wizard-info-title" translate="accountLinking.wizard.ciscoWebExDomains"></h5>
         <div class="row">
           <div class="columns medium-6">
-            <p ng-repeat="d in $ctrl.getDomains(0,10)" class="domain">
+            <p class="wizard-info" ng-repeat="d in $ctrl.getDomains(0,10)" class="domain">
               {{d}}
             </p>
           </div>
           <div class="columns medium-6">
-            <p ng-repeat="d in $ctrl.getDomains(10,20)" class="domain domain-right">
+            <p class="wizard-info" ng-repeat="d in $ctrl.getDomains(10,20)" class="domain domain-right">
               {{d}}
             </p>
           </div>
@@ -27,20 +27,20 @@
   <hr/>
   <div class="row">
     <div class="columns medium-4">
-      <h4 translate="accountLinking.wizard.publicDomains"></h4>
-      <p translate="accountLinking.wizard.publicDomainsTxt"></p>
+      <h4 class="wizard-info-title" translate="accountLinking.wizard.publicDomains"></h4>
+      <p class="wizard-info" translate="accountLinking.wizard.publicDomainsTxt"></p>
     </div>
     <div class="columns medium-5 medium-offset-1">
       <div class="align-top">
-        <h5 translate="accountLinking.wizard.publicConsumerDomains"></h5>
+        <h5 class="wizard-info-title" translate="accountLinking.wizard.publicConsumerDomains"></h5>
         <div class="row">
           <div class="columns medium-6">
-            <p ng-repeat="d in $ctrl.getPublicDomains(0,10)" class="domain">
+            <p class="wizard-info" ng-repeat="d in $ctrl.getPublicDomains(0,10)" class="domain">
               {{d}}
             </p>
           </div>
           <div class="columns medium-6">
-            <p ng-repeat="d in $ctrl.getPublicDomains(10,20)" class="domain domain-right">
+            <p class="wizard-info" ng-repeat="d in $ctrl.getPublicDomains(10,20)" class="domain domain-right">
               {{d}}
             </p>
           </div>
