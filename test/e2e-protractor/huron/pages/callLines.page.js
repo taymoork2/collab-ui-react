@@ -9,7 +9,7 @@ export class CallLinesPage {
     this.orderHistory = element(by.css('span.order-history'));
     this.iconSearch = element(by.css('i.icon.icon-search'));
     this.internalExt = element(by.cssContainingText('.ui-grid-header-cell-label', 'Internal Extension'));
-    this.phoneNumbers = element(by.cssContainingText('.ui-grid-header-cell-label', 'Phone Numbers'));
+    this.phoneNumbers = element(by.cssContainingText('.ui-grid-header-cell-label', 'Phone Number'));
     this.assignedTo = element(by.cssContainingText('.ui-grid-header-cell-label', 'Assigned to'));
     this.actionsBtn = element(by.cssContainingText('.ui-grid-header-cell-label', 'Actions'));
     this.ascendingFirstEle = element.all(by.repeater('(rowRenderIndex, row) in rowContainer.renderedRows')).get(0);

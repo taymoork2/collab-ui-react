@@ -1079,6 +1079,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       this.$scope.vm.ui.ceInfo = this.ce2CeInfo();
       this.$scope.vm.ui.builder = {};
       this.$scope.vm.ui.builder.ceInfo_name = 'AAA2';
+      this.$scope.vm.ui.timeZone = this.timeZone;
     });
 
     it('should write UI CeInfo into model', function () {
@@ -1096,6 +1097,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(this.AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalledWith(this.$scope.vm.aaModel.aaRecord, 'openHours', this.$scope.vm.ui.openHours);
       expect(this.AutoAttendantCeMenuModelService.deleteCombinedMenu).toHaveBeenCalledWith(this.$scope.vm.aaModel.aaRecord, 'closedHours');
       expect(this.AutoAttendantCeMenuModelService.deleteCombinedMenu).toHaveBeenCalledWith(this.$scope.vm.aaModel.aaRecord, 'holidays');
+      expect(this.$scope.vm.aaModel.aaRecord.assignedTimeZone).toEqual(this.$scope.vm.ui.timeZone.id);
     });
 
     it('should write closedHours menu into model', function () {
@@ -1107,6 +1109,7 @@ describe('Controller: AABuilderMainCtrl', function () {
 
       expect(this.AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalledWith(this.$scope.vm.aaModel.aaRecord, 'closedHours', this.$scope.vm.ui.closedHours);
       expect(this.AutoAttendantCeMenuModelService.deleteCombinedMenu).toHaveBeenCalledWith(this.$scope.vm.aaModel.aaRecord, 'holidays');
+      expect(this.$scope.vm.aaModel.aaRecord.assignedTimeZone).toEqual(this.$scope.vm.ui.timeZone.id);
     });
 
     it('should write holidays menu into model', function () {
@@ -1119,6 +1122,7 @@ describe('Controller: AABuilderMainCtrl', function () {
 
       expect(this.AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalledWith(this.$scope.vm.aaModel.aaRecord, 'holidays', this.$scope.vm.ui.holidays, this.$scope.vm.ui.holidaysValue);
       expect(this.AutoAttendantCeMenuModelService.deleteCombinedMenu).toHaveBeenCalledWith(this.$scope.vm.aaModel.aaRecord, 'closedHours');
+      expect(this.$scope.vm.aaModel.aaRecord.assignedTimeZone).toEqual(this.$scope.vm.ui.timeZone.id);
     });
   });
 

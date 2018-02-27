@@ -9,7 +9,13 @@
   <div ng-show="redirectResource.yesProceed && !redirectResource.enableRedirectToTarget && !redirectResource.showDownloadableOption">
     <div>
       <h5 class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.yesInfo1"></h5>
-      <h5 class="addResourceFQDN" tooltip="{{'mediaFusion.add-resource-dialog.fqdn' | translate}}" translate="mediaFusion.add-resource-dialog.yesInfo2"></h5>
+      <h5 class="addResourceFQDN"
+        tabindex="0"
+        tooltip="{{::'mediaFusion.add-resource-dialog.fqdn' | translate}}"
+        tooltip-trigger="mouseenter focus"
+        translate="mediaFusion.add-resource-dialog.yesInfo2"
+        aria-label="{{::'mediaFusion.add-resource-dialog.fqdn' | translate}}">
+      </h5>
       <h5 class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.yesInfo3"></h5>
     </div>
     <form name="inputHostNameForm" class="inputHostNameForm">
@@ -17,8 +23,7 @@
         <br>
         <div class="row showgrid">
           <div class="columns medium-5">
-            <p translate="mediaFusion.add-resource-dialog.text1V2">
-            </p>
+            <p translate="mediaFusion.add-resource-dialog.text1V2"></p>
           </div>
           <div class="columns medium-6 inputHostNameForm">
             <cs-select combo="true" ng-model="redirectResource.selectedCluster" options="redirectResource.clusterList" placeholder="redirectResource.selectPlaceholder">
@@ -28,15 +33,18 @@
         <br>
         <div class="row showgrid">
           <div class="columns medium-5">
-            <p class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.text3V1" />
-            <p class="addResourceFQDN" tooltip="{{'mediaFusion.add-resource-dialog.fqdn' | translate}}" translate="mediaFusion.add-resource-dialog.yesInfo2"
-            />
-            <p class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.text3V3"
-            />
+            <p class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.text3V1"></p>
+            <p class="addResourceFQDN"
+              tabindex="0"
+              tooltip="{{'mediaFusion.add-resource-dialog.fqdn' | translate}}"
+              tooltip-trigger="mouseenter focus"
+              translate="mediaFusion.add-resource-dialog.yesInfo2"
+              aria-label="mediaFusion.add-resource-dialog.yesInfo2">
+            </p>
+            <p class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.text3V3"></p>
           </div>
           <div class="columns medium-6 inputHostNameForm">
-            <input class="cs-input" ng-model="redirectResource.hostName" placeholder="{{'mediaFusion.add-resource-dialog.hostname-placeholder' | translate}} "
-              type="text">
+            <input type="text" class="cs-input" ng-model="redirectResource.hostName" placeholder="{{::'mediaFusion.add-resource-dialog.hostname-placeholder' | translate}}">
           </div>
         </div>
       </div>
@@ -49,8 +57,7 @@
     </h3>
     <br>
     <p>
-      <span translate="mediaFusion.add-resource-dialog.grant-success-information">
-      </span>
+      <span translate="mediaFusion.add-resource-dialog.grant-success-information"></span>
     </p>
   </div>
   <div ng-hide="!redirectResource.showDownloadableOption">
@@ -77,11 +84,11 @@
         <div class="cs-radio-group">
           <div class="radioDisplay">
             <input cs-input type="radio" ng-model="redirectResource.ovaType" id="full" name="redirectResource" value="1" cs-input-label="{{'mediaFusion.add-resource-dialog.fullOva' | translate}}" class="radioNoTranform"
-              ng-disabled="redirectResource.radio == 1">
+              ng-disabled="redirectResource.radio === 1">
           </div>
           <div class="radioDisplay">
             <input cs-input type="radio" ng-model="redirectResource.ovaType" id="demo" name="redirectResource" value="0" cs-input-label="{{'mediaFusion.add-resource-dialog.demoOva' | translate}}" class="radioNoTranform"
-              ng-disabled="redirectResource.radio == 1">
+              ng-disabled="redirectResource.radio === 1">
           </div>
         </div>
       </form>
@@ -96,10 +103,10 @@
     </div>
     <br>
     <br>
-    <div ng-show="redirectResource.ovaType == 1">
+    <div ng-show="redirectResource.ovaType === 1">
       <h5 translate="mediaFusion.add-resource-dialog.noRetryInfo"></h5>
     </div>
-    <div ng-show="redirectResource.ovaType == 0">
+    <div ng-show="redirectResource.ovaType === 0">
       <h5 translate="mediaFusion.add-resource-dialog.noRetryDemoInfo"></h5>
     </div>
     <div class="addResourceBodyInfo">

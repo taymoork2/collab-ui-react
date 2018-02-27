@@ -1,6 +1,6 @@
 <cr-checkbox-item ng-if="$ctrl.license"
-  is-selected="$ctrl.isSelected"
-  is-disabled="$ctrl.isDisabled"
+  is-selected="$ctrl.isSelectedLicense()"
+  is-disabled="$ctrl.isDisabledLicense()"
   item-id="$ctrl.itemId"
   l10n-label="{{:: $ctrl.l10nLabel }}"
   on-update="$ctrl.recvChange($event)"

@@ -69,12 +69,10 @@
       margin-left: 0.25rem;
       padding: 0;
       border: 0px;
-
       li {
         display: inline;
         margin-right: 1rem;
-        font-size: 1rem;
-
+        font-family: "CiscoSansTT Light";
         &:hover {
           cursor: pointer;
           color: $color-primary-base;
@@ -83,10 +81,12 @@
           color: $color-primary-base;
         }
         .link {
-          color: $gray-light-1;
-          font-size: 1rem;
           border: 0px;
           outline: none;
+        }
+        span {
+          font-size:1rem;
+          color: $gray-2;
         }
       }
     }

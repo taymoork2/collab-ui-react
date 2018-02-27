@@ -36,10 +36,12 @@
             <span ng-repeat="feature in careFeature.features">
               <i
                 class="icon {{careFeature.featureIcons[feature.featureType]}} cta icon-lg"
+                tabindex="0"
                 tooltip="{{careFeaturesCtrl.featureToolTip(feature.featureType, feature.name)}}"
                 tooltip-trigger="mouseenter focus"
                 tooltip-placement="top-left"
-                tooltip-animation="false">
+                tooltip-animation="false"
+                aria-label="{{careFeaturesCtrl.featureToolTip(feature.featureType, feature.name)}}">
               </i>
             </span>
           </div>
@@ -54,7 +56,14 @@
           <div class="embed-code-txt h6 left ellipsis">
             <div class="usage" ng-if="careFeature.featureType === 'customerVirtualAssistant'">
               <span class="usage-text">{{careFeaturesCtrl.templatesInUseText(careFeature)}}</span>
-              <button ng-click="$event.stopPropagation()" popover-html="careFeature.templatesHtmlPopover" popover-placement="auto right" popover-append-to-body="false" class="icon icon-question-circle"></button>
+              <button
+                ng-click="$event.stopPropagation()"
+                popover-html="careFeature.templatesHtmlPopover"
+                popover-placement="auto right"
+                popover-append-to-body="false"
+                class="icon icon-question-circle"
+                aria-label="{{careFeature.templatesHtmlPopover}}">
+              </button>
             </div>
             <div class="email" ng-if="careFeature.email">{{careFeature.email}}</div>
             <div class="usage" ng-if="careFeature.featureType === 'expertVirtualAssistant'">
@@ -65,7 +74,8 @@
                 popover-html="careFeature.templatesHtmlPopover + '<br>' + careFeature.spacesHtmlPopover"
                 popover-placement="auto right"
                 popover-append-to-body="false"
-                class="icon icon-question-circle">
+                class="icon icon-question-circle"
+                aria-label="{{careFeature.templatesHtmlPopove + ' ' + careFeature.spacesHtmlPopove}}">
               </button>
             </div>
           </div>

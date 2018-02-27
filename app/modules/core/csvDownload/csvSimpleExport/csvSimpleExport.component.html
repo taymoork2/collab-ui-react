@@ -1,8 +1,12 @@
-<div class="csv-simple-export" ng-click="$ctrl.beginExport()" aria-label="{{$ctrl.activeTooltip}}"
+<div
+  class="csv-simple-export"
+  ng-click="$ctrl.beginExport()"
   tooltip="{{$ctrl.activeTooltip}}"
   tooltip-placement="{{$ctrl.tooltipPlacement}}"
   tooltip-animation="false"
-  tooltip-append-to-body="true">
+  tooltip-append-to-body="true"
+  tooltip-trigger="focus mouseenter"
+  aria-label="{{$ctrl.activeTooltip}}">
   <span ng-if="!$ctrl.exporting">
     <i class="icon icon-content-share icon-lg"></i>
   </span>

@@ -21,6 +21,7 @@ require('./_site-list.scss');
     accountLinkingPhase2,
     Auth,
     Authinfo,
+    Config,
     ModalService,
     Notification,
     SetupWizardService,
@@ -42,10 +43,21 @@ require('./_site-list.scss');
       vm.showGridData = false;
       vm.canAddSite = WebExSiteRowService.canAddSite();
       vm.isAdminPage = Utils.isAdminPage();
+      vm.subscriptions = Authinfo.getSubscriptions();
       WebExSiteRowService.shouldShowSiteManagement(showSiteMgmntEmailPattern).then(function (result) {
         vm.isShowAddSite = result;
       });
       vm.initializeData();
+      WebExSiteService.getCenterDetailsForAllSubscriptions().then(function (results) {
+        _.forEach(results, function (subscription) {
+          var matchingSubscription = _.find(vm.subscriptions, { subscriptionId: subscription.subscriptionId });
+          if (matchingSubscription) {
+            subscription.externalSubscriptionId = matchingSubscription.externalSubscriptionId;
+            subscription.purchasedServices = vm.filterPurchasedServicesArray(subscription.purchasedServices);
+          }
+        });
+        vm.allCenterDetailsForSubscriptions = results;
+      });
     };
 
     vm.initializeData = function () {
@@ -75,7 +87,7 @@ require('./_site-list.scss');
 
     vm.redistributeLicenses = function (entity) {
       if (vm.canModify(entity)) {
-        $state.go('site-list-distribute-licenses', { subscriptionId: entity.billingServiceId });
+        $state.go('site-list-distribute-licenses', { subscriptionId: entity.billingServiceId, centerDetails: vm.getCenterDetailsForSingleSubscription(entity.billingServiceId) });
       } else {
         showRejectionModal(actions.REDISTRIBUTE, isOnlySiteInSubscription(entity));
       }
@@ -83,7 +95,7 @@ require('./_site-list.scss');
 
     vm.addSite = function () {
       if (WebExSiteRowService.hasNonPendingSubscriptions()) {
-        $state.go('site-list-add');
+        $state.go('site-list-add', { centerDetailsForAllSubscriptions: vm.allCenterDetailsForSubscriptions });
       } else {
         showRejectionModal(actions.ADD, false);
       }
@@ -91,6 +103,17 @@ require('./_site-list.scss');
 
     vm.canModify = function (entity) {
       return !isOnlySiteInSubscription(entity) && !SetupWizardService.isSubscriptionPending(entity.billingServiceId);
+    };
+
+    vm.getCenterDetailsForSingleSubscription = function (externalSubId) {
+      var singleSub = _.find(vm.allCenterDetailsForSubscriptions, { externalSubscriptionId: externalSubId });
+      return _.get(singleSub, 'purchasedServices', []);
+    };
+
+    vm.filterPurchasedServicesArray = function (purchasedServicesArray) {
+      return _.filter(purchasedServicesArray, function (service) {
+        return _.includes(Config.webexTypeCodes, service.serviceName);
+      });
     };
 
     //if we are checking a single subscription - we pass the entity. If entity is not passed
@@ -143,7 +166,7 @@ require('./_site-list.scss');
             Notification.errorWithTrackingId(response, 'webexSiteManagement.deleteSiteFailureToaster');
           });
       } else { //open modal to redistribute licenses
-        $state.go('site-list-delete', { subscriptionId: subscriptionId, siteUrl: siteUrl });
+        $state.go('site-list-delete', { subscriptionId: subscriptionId, siteUrl: siteUrl, centerDetails: vm.getCenterDetailsForSingleSubscription(subscriptionId) });
       }
     }
 

@@ -569,6 +569,8 @@
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.routeToUser)) {
         action = new Action('routeToUser', inAction.routeToUser.id);
+        _.set(action, 'type', _.get(inAction, 'routeToUser.userType'));
+        _.set(action, 'sipURI', _.get(inAction, 'routeToUser.sipURI'));
         setDescription(action, inAction.routeToUser);
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.routeToVoiceMail)) {
@@ -719,6 +721,8 @@
         }
         if (inAction.conditional.true[0].routeToUser) {
           action.then = new Action('routeToUser', inAction.conditional.true[0].routeToUser.id);
+          _.set(action, 'then.type', _.get(inAction, 'conditional.true[0].routeToUser.userType'));
+          _.set(action, 'then.sipURI', _.get(inAction, 'conditional.true[0].routeToUser.sipURI'));
         }
         if (inAction.conditional.true[0].routeToVoiceMail) {
           action.then = new Action('routeToVoiceMail', inAction.conditional.true[0].routeToVoiceMail.id);
@@ -1410,6 +1414,8 @@
               newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
             } else if (actionName === 'routeToUser') {
               newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
+              _.set(newActionArray[i][actionName], 'userType', _.get(menuEntry, 'actions[0].type'));
+              _.set(newActionArray[i][actionName], 'sipURI', _.get(menuEntry, 'actions[0].sipURI'));
             } else if (actionName === 'disconnect') {
               if (menuEntry.actions[0].getValue() && menuEntry.actions[0].getValue() !== 'none') {
                 newActionArray[i][actionName].treatment = menuEntry.actions[0].getValue();
@@ -1511,6 +1517,10 @@
       /* special case routeToQueue */
       if (_.get(action.then, 'name') === 'routeToQueue') {
         destObj = populateRouteToQueue(action.then);
+      } else if (_.get(action.then, 'name') === 'routeToUser') {
+        destObj[tag] = action.then.value;
+        destObj['userType'] = _.get(action, 'then.type');
+        destObj['sipURI'] = _.get(action, 'then.sipURI');
       } else {
         destObj[tag] = action.then.value;
       }
@@ -1607,6 +1617,8 @@
           newActionArray[i][actionName].id = val;
         } else if (actionName === 'routeToUser') {
           newActionArray[i][actionName].id = val;
+          _.set(newActionArray[i][actionName], 'userType', actions[i].type);
+          _.set(newActionArray[i][actionName], 'sipURI', actions[i].sipURI);
         } else if (actionName === 'goto') {
           newActionArray[i][actionName].ceid = val;
         } else if (actionName === 'routeToSipEndpoint') {

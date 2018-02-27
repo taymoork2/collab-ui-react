@@ -360,6 +360,15 @@
               htmlModel: '',
             };
           }
+        } else if (node.nodeName === 'P') {
+          opt = {
+            say: {
+              value: node.innerText,
+              voice: '',
+            },
+            isDynamic: false,
+            htmlModel: '',
+          };
         }
         finalList.push(opt);
       });

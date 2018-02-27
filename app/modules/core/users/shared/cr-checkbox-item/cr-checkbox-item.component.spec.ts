@@ -67,7 +67,7 @@ describe('Component: crCheckboxItem:', () => {
 
     it('should transclude its contents', function () {
       initComponent.call(this, '<span>fake-contents</span>');
-      expect(this.view.find('.assignable_item_checkbox__description')).toContainText('fake-contents');
+      expect(this.view.find('.cr-checkbox-item__description')).toContainText('fake-contents');
     });
   });
 

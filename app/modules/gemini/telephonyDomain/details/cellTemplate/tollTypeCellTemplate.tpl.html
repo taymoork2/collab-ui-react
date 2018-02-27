@@ -1,20 +1,22 @@
 <div id="{{row.uid}}-tollType"
-     ng-if="grid.appScope.isEdit"
-     ng-mouseover="row.entity.isEdit=true"
-     class="ui-grid-cell-contents select-overflow"
-     ng-class="{'error': row.entity.validation.tollType.invalid}"
-     tooltip-class="tn-error"
-     tooltip-append-to-body="true"
-     tooltip-is-open="row.entity.validation.tollType.show"
-     tooltip-html-unsafe="{{row.entity.validation.tollType.message}}">
+  ng-if="grid.appScope.isEdit"
+  ng-mouseover="row.entity.isEdit=true"
+  class="ui-grid-cell-contents select-overflow"
+  tabindex="0"
+  ng-class="{'error': row.entity.validation.tollType.invalid}"
+  tooltip-class="tn-error"
+  tooltip-append-to-body="true"
+  tooltip-is-open="row.entity.validation.tollType.show"
+  tooltip-html-unsafe="{{row.entity.validation.tollType.message}}"
+  aria-label="{{row.entity.validation.tollType.ariaLabel}}">
   <cs-select ng-if="row.entity.isEdit"
-             is-disabled="row.entity.typeDisabled || grid.appScope.submitLoading"
-             title="{{row.entity.tollType.label}}"
-             options="grid.appScope.tollTypeOptions"
-             on-change-fn="grid.appScope.changeTollType(row)"
-             labelfield="label"
-             valuefield="value"
-             ng-model="row.entity.tollType">
+    is-disabled="row.entity.typeDisabled || grid.appScope.submitLoading"
+    title="{{row.entity.tollType.label}}"
+    options="grid.appScope.tollTypeOptions"
+    on-change-fn="grid.appScope.changeTollType(row)"
+    labelfield="label"
+    valuefield="value"
+    ng-model="row.entity.tollType">
   </cs-select>
   <div ng-if="!row.entity.isEdit" class="select-list">
     <span class="select-toggle form-control" tabindex="0" aria-expanded="false" ng-class="{ disabled: row.entity.typeDisabled || grid.appScope.submitLoading }">
@@ -24,7 +26,7 @@
   </div>
 </div>
 <div ng-if="!grid.appScope.isEdit"
-     class="ui-grid-cell-contents read-only-text"
-     title="{{row.entity.tollType.label}}">
+  class="ui-grid-cell-contents read-only-text"
+  title="{{row.entity.tollType.label}}">
   {{row.entity.tollType.label}}
 </div>

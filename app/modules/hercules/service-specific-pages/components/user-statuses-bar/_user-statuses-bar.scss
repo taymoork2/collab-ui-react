@@ -1,10 +1,36 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
 
-$user-statuses-bar-height: 7.25rem;
-
 user-statuses-bar {
-  display: flex;
-  padding: 2rem;
-  border-bottom: 1px solid $gray-light-3;
-  height: $user-statuses-bar-height;
+  &.on-resource-page {
+    .cs-form__section {
+      padding: 2rem;
+    }
+
+    .cs-form__section .section__content .sub-section__description,
+    .cs-form__section .section__content .sub-section {
+      margin-bottom: 0;
+    }
+  }
+
+  .section__content {
+    display: flex;
+  }
+
+  .sub-section + .sub-section {
+    margin-left: 2rem;
+  }
+
+  .sub-section__label div {
+    display: inline;
+  }
+
+  .user-statuses-content {
+    display: flex;
+    margin: 0;
+
+    li {
+      list-style-type: none;
+      margin-right: 1rem;
+    }
+  }
 }

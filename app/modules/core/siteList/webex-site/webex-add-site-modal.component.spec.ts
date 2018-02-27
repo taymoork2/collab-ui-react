@@ -13,6 +13,15 @@ describe('Component: WebexAddSiteModalComponent', function () {
     this.injectDependencies('$componentController', '$q', '$rootScope', '$scope', 'Authinfo', 'Config', 'SetupWizardService', 'WebExSiteService');
     this.$scope.fixtures = {
       subscriptionId: '123',
+      centerDetails: {
+        Sub100448: [{
+          centerType: 'MC',
+          quantity: '30',
+        }, {
+          centerType: 'TC',
+          quantity: '30',
+        }],
+      },
     };
 
     initSpies.apply(this);

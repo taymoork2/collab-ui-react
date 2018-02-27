@@ -1,8 +1,10 @@
 <div class="ui-grid-cell-contents" ng-if="row.entity.linkingStatus.accountsLinked !== undefined">
   {{row.entity.linkingStatus.accountsLinked}} / {{row.entity.linkingStatus.totalWebExAccounts}}
 </div>
-<div class="ui-grid-cell-contents" ng-if="row.entity.linkingStatus.accountsLinked === undefined">
+<div class="ui-grid-cell-contents" ng-if="row.entity.accountInfoErrors.length === 0 && row.entity.linkingStatus.accountsLinked === undefined">
   <div cs-loader class="waiting"/>
 </div>
-
+<div class="ui-grid-cell-contents faded error-table-entry" ng-if="row.entity.accountInfoErrors.length > 0" >
+ {{row.entity.accountInfoErrors[0]}}
+</div>
 

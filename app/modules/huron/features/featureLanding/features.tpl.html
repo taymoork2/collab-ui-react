@@ -12,15 +12,15 @@
   </cs-page-sub-header>
 
   <!--Show Create New Feature Page if no features exists-->
-  <div ng-if="huronFeaturesCtrl.pageState == 'NewFeature'" class="no-features-available">
+  <div ng-if="huronFeaturesCtrl.pageState === 'NewFeature'" class="no-features-available">
     <div class="h1 nothing-to-see" translate="huronHuntGroup.featuresNotYetConfiguredPage.nothingToSee"></div>
     <div class="h4 lets-customize" translate="huronHuntGroup.featuresNotYetConfiguredPage.letsCustomize"></div>
     <div><button class="btn btn--people btn--large" ng-click="huronFeaturesCtrl.openModal()" translate="huronHuntGroup.newFeatureButtonText"></button></div>
   </div>
 
-  <div ng-if="huronFeaturesCtrl.pageState != 'NewFeature'" class="features-content content-container">
+  <div ng-if="huronFeaturesCtrl.pageState !== 'NewFeature'" class="features-content content-container">
     <!--Show Reload page when all feature requests fail-->
-    <div ng-if="huronFeaturesCtrl.pageState == 'Reload'">
+    <div ng-if="huronFeaturesCtrl.pageState === 'Reload'">
       <div class="features-reload">
         <p class="h4" translate="huronFeatureDetails.sorryMessage"></p>
         <div class="h2" translate="huronFeatureDetails.reloadMessage"></div>
@@ -28,10 +28,10 @@
       </div>
     </div>
     <!--Show Spinner Icon until controller receives data from back-end-->
-    <div grid-spinner="huronFeaturesCtrl.pageState == 'Loading'"></div>
+    <div grid-spinner="huronFeaturesCtrl.pageState === 'Loading'"></div>
 
     <!-- Show Cards whenever data is received by controller-->
-    <feature-cards ng-if="huronFeaturesCtrl.pageState == 'showFeatures'"></feature-cards>
+    <feature-cards ng-if="huronFeaturesCtrl.pageState === 'showFeatures'"></feature-cards>
   </div>
 </div>
 <div class="features-loading" ng-if="huronFeaturesCtrl.loading">

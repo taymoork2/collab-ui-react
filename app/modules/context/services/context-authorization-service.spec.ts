@@ -2,6 +2,11 @@ import { AdminAuthorizationStatus } from './context-authorization-service';
 
 describe('ContextAdminAuthorizationService', () => {
   const CCFS_URL = 'https://ccfs.appstaging.ciscoccservice.com/v1/';
+  const ORG_ID = '12345';
+  const partnerAdminList = [
+    'testPartner1',
+    'testPartner2',
+  ];
 
   beforeEach(function () {
     this.initModules('Context');
@@ -13,7 +18,7 @@ describe('ContextAdminAuthorizationService', () => {
       'UrlConfig',
       'FeatureToggleService',
     );
-    spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue(ORG_ID);
   });
 
   afterEach(function () {
@@ -74,6 +79,61 @@ describe('ContextAdminAuthorizationService', () => {
           })
           .catch(fail);
       });
+    });
+  });
+
+  describe('getPartnerAdminIDs', function () {
+
+    it('should successfully return an array of 2 partners from calling getPartnerAdminIDs', function () {
+      const adminUrl = this.UrlConfig.getAdminServiceUrl() + 'organization/' + ORG_ID + '/users/partneradmins';
+
+      this.$httpBackend.expectGET(adminUrl).respond(200, {
+        partners: [{ id: 'testPartner1' }, { id: 'testPartner2' }],
+      });
+
+      this.ContextAdminAuthorizationService.getPartnerAdminIDs()
+        .then(result => {
+          expect(result[0]).toBe(partnerAdminList[0]);
+          expect(result[1]).toBe(partnerAdminList[1]);
+          expect(result.length).toBe(2);
+        })
+        .catch(fail);
+      this.$httpBackend.flush();
+    });
+  });
+
+  describe('synchronizeAdmins', function () {
+
+    const synchronizeAdminsUrl = 'https://ccfs.appstaging.ciscoccservice.com/v1/admin/authorizationSync';
+    const payload: any = {
+      orgId: ORG_ID,
+      partnerIds: partnerAdminList,
+    };
+
+    it('should synchronize Admins', function () {
+      spyOn(this.ContextAdminAuthorizationService, 'getPartnerAdminIDs').and.returnValue(this.$q.resolve(partnerAdminList));
+
+      this.$httpBackend.expectPOST(synchronizeAdminsUrl, payload).respond(200);
+      this.ContextAdminAuthorizationService.synchronizeAdmins()
+        .then(function (response) {
+          expect(response.status).toBe(200);
+        })
+        .catch(fail);
+      this.$httpBackend.flush();
+    });
+
+    it('should throw an error if synchronize fails ', function () {
+      spyOn(this.ContextAdminAuthorizationService, 'getPartnerAdminIDs').and.returnValue(this.$q.resolve(partnerAdminList));
+
+      this.$httpBackend.expectPOST(synchronizeAdminsUrl, payload).respond(400);
+      this.ContextAdminAuthorizationService.synchronizeAdmins()
+        .then(function () {
+          fail('Should have rejected.');
+        })
+        .catch(function (response) {
+          expect(response.status).toBe(400);
+        });
+      this.$httpBackend.flush();
     });
   });
 });

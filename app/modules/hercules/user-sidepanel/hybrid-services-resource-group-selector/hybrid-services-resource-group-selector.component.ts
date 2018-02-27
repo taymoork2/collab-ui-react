@@ -26,6 +26,8 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
   public showButtons = false;
   public loading = false;
 
+  private refreshCallback: Function;
+
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
@@ -43,7 +45,7 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
   }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
-    const { userId, resourceGroupId, serviceId, userOwnedByCCC } = changes;
+    const { userId, resourceGroupId, serviceId, userOwnedByCCC, refreshCallback } = changes;
     if (userId && userId.currentValue) {
       this.userId = userId.currentValue;
     }
@@ -56,6 +58,9 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
     }
     if (userOwnedByCCC && userOwnedByCCC.currentValue) {
       this.userOwnedByCCC = userOwnedByCCC.currentValue;
+    }
+    if (refreshCallback && refreshCallback.currentValue) {
+      this.refreshCallback = refreshCallback.currentValue;
     }
   }
 
@@ -131,6 +136,7 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
         this.setShouldShowButtons();
         this.cannotFindResourceGroup = false;
         this.Notification.success('hercules.resourceGroups.resourceGroupSaved');
+        this.refreshCallback();
       })
       .catch((error) => {
         this.Notification.errorWithTrackingId(error, 'hercules.resourceGroups.failedToSetGroup');
@@ -174,5 +180,6 @@ export class HybridServicesResourceGroupSelectorComponent implements ng.ICompone
     resourceGroupId: '<',
     serviceId: '<',
     userOwnedByCCC: '<',
+    refreshCallback: '&',
   };
 }

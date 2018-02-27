@@ -11,7 +11,9 @@
       tabindex="0"
       tooltip-append-to-body="true"
       tooltip="{{::'siteList.siteReports' | translate}}"
-      tooltip-trigger="focus mouseenter"></i>
+      tooltip-trigger="focus mouseenter"
+      aria-label="{{::'siteList.siteReports' | translate}}">
+    </i>
 
     <span ng-if="row.entity.showSiteLinks && !row.entity.isError"
           id="{{row.entity.license.siteUrl}}_reportsAvailable"
@@ -25,7 +27,9 @@
         tabindex="0"
         tooltip-append-to-body="true"
         tooltip="{{::'webexSiteReports.adminReportNotEnabled' | translate}}"
-        tooltip-trigger="focus mouseenter"></i>
+        tooltip-trigger="focus mouseenter"
+        aria-label="{{::'webexSiteReports.adminReportNotEnabled' | translate}}">
+      </i>
 
       <!-- display enabled reports icon and error tooltip -->
       <i ng-if="row.entity.isAdminReportEnabled"
@@ -36,6 +40,8 @@
         tabindex="0"
         tooltip-append-to-body="true"
         tooltip="{{::'siteList.siteReports' | translate}}"
-      tooltip-trigger="focus mouseenter"></i>
+        tooltip-trigger="focus mouseenter"
+        aria-label="{{::'siteList.siteReports' | translate}}">
+      </i>
     </span>
   </span>

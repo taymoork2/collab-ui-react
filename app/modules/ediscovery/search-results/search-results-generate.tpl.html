@@ -38,7 +38,15 @@
       <span ng-if="!ediscoverySearchCtrl.cancellingReport"
             ng-click="ediscoverySearchCtrl.cancelReport(ediscoverySearchCtrl.report.id)"
             class="cancel-icon">
-        <i class="icon icon-remove" tooltip-placement="top" cs-tooltip="{{'ediscovery.reportsList.cancelReport' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"></i>
+        <i class="icon icon-remove"
+          tabindex="0"
+          tooltip-placement="top"
+          tooltip="{{::'ediscovery.reportsList.cancelReport' | translate}}"
+          tooltip-animation="false"
+          tooltip-append-to-body="true"
+          tooltip-trigger="focus mouseenter"
+          aria-label="{{::'ediscovery.reportsList.cancelReport' | translate}}">
+        </i>
       </span>
       <span ng-if="ediscoverySearchCtrl.cancellingReport" class="cancel-icon">
         <i class="icon icon-spinner"></i>

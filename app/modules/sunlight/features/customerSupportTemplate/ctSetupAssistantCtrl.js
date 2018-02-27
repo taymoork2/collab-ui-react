@@ -69,6 +69,7 @@
     vm.setEvaTemplateData = setEvaTemplateData;
     vm.evaLearnMoreLink = 'https://www.cisco.com/go/create-template';
     vm.evaSpaceTooltipData = '';
+    vm.evaSpaceTooltipAriaLabel = '';
     vm.isExpertEscalationSelected = isExpertEscalationSelected;
     vm.isExpertOnlyEscalationSelected = isExpertOnlyEscalationSelected;
     vm.setRequiredValue = setRequiredValue;
@@ -131,6 +132,9 @@
       orgInfo: $translate.instant('careChatTpl.profile_org_info_cva'),
       agentHeader: $translate.instant('careChatTpl.agent_cva'),
       agentInfo: $translate.instant('careChatTpl.profile_agent_info_cva'),
+      userInfo: $translate.instant('careChatTpl.profile_user_info_cva'),
+      userHeader: $translate.instant('careChatTpl.user_cva'),
+      orgInfoEVA: $translate.instant('careChatTpl.profile_org_info_cva_eva'),
     };
 
     vm.nonCVAMessage = {
@@ -138,22 +142,45 @@
       agentHeader: $translate.instant('careChatTpl.agent'),
       orgInfo: $translate.instant('careChatTpl.profile_org_info'),
       agentInfo: $translate.instant('careChatTpl.profile_agent_info'),
+      orgInfoEVA: $translate.instant('careChatTpl.profile_org_info_eva'),
+      userHeader: $translate.instant('careChatTpl.user_non_cva'),
+      userInfo: $translate.instant('careChatTpl.user_info_non_cva'),
     };
 
     function brandingPageTooltipText(profileType) {
       if (profileType === 'bot') {
         return $translate.instant('careChatTpl.botProfileTooltip');
       } else {
-        return $translate.instant('careChatTpl.agentProfileTooltip');
+        if (isExpertEscalationSelected()) {
+          return $translate.instant('careChatTpl.userProfileTooltip');
+        } else {
+          return $translate.instant('careChatTpl.agentProfileTooltip');
+        }
       }
     }
 
     function getLocalizedOrgOrAgentInfo(msgType) {
       vm.isCVAEnabled = vm.template.configuration.virtualAssistant ? vm.template.configuration.virtualAssistant.enabled : false;
       if (vm.isCVAEnabled) {
-        return vm.cvaMessage[msgType];
+        if (msgType === 'agentInfo' && isExpertEscalationSelected()) {
+          return vm.cvaMessage['userInfo'];
+        } else if (msgType === 'agentHeader' && isExpertEscalationSelected()) {
+          return vm.cvaMessage['userHeader'];
+        } else if (msgType === 'orgInfo' && isExpertEscalationSelected()) {
+          return vm.cvaMessage['orgInfoEVA'];
+        } else {
+          return vm.cvaMessage[msgType];
+        }
       } else {
-        return vm.nonCVAMessage[msgType];
+        if (msgType === 'agentInfo' && isExpertEscalationSelected()) {
+          return vm.nonCVAMessage['userInfo'];
+        } else if (msgType === 'agentHeader' && isExpertEscalationSelected()) {
+          return vm.nonCVAMessage['userHeader'];
+        } else if (msgType === 'orgInfo' && isExpertEscalationSelected()) {
+          return vm.nonCVAMessage['orgInfoEVA'];
+        } else {
+          return vm.nonCVAMessage[msgType];
+        }
       }
     }
 
@@ -182,8 +209,14 @@
       displayName: $translate.instant('careChatTpl.agentDisplayName'),
       alias: $translate.instant('careChatTpl.agentAlias'),
     };
-    vm.selectedAgentProfile = vm.agentNames.displayName;
-    vm.agentNamePreview = $translate.instant('careChatTpl.agentNamePreview');
+    vm.userNames = {
+      displayName: $translate.instant('careChatTpl.userDisplayName'),
+      alias: $translate.instant('careChatTpl.userAlias'),
+    };
+    vm.userDetails = isExpertEscalationSelected() ? vm.userNames : vm.agentNames;
+    vm.selectedAgentProfile = isExpertEscalationSelected() ? vm.userNames.displayName : vm.agentNames.displayName;
+    vm.agentNamePreview = isExpertEscalationSelected() ? $translate.instant('careChatTpl.userNamePreview') :
+      $translate.instant('careChatTpl.agentNamePreview');
     vm.logoFile = '';
     vm.logoUploaded = false;
     vm.logoUrl = undefined;
@@ -314,10 +347,13 @@
         if (config.mediaType === vm.mediaTypes.chat || config.mediaType === vm.mediaTypes.chatPlusCallback) {
           vm.selectedTemplateProfile = config.mediaSpecificConfiguration.useOrgProfile ?
             vm.profiles.org : vm.profiles.agent;
+          var displayName = isExpertEscalationSelected() ? vm.agentNames.displayName : vm.userNames.displayName;
+          var alias = isExpertEscalationSelected() ? vm.userNames.alias : vm.agentNames.alias;
           vm.selectedAgentProfile = config.mediaSpecificConfiguration.useAgentRealName ?
-            vm.agentNames.displayName : vm.agentNames.alias;
+            displayName : alias;
           vm.orgName = config.mediaSpecificConfiguration.displayText;
           vm.logoUrl = config.mediaSpecificConfiguration.orgLogoUrl;
+          vm.userDetails = isExpertEscalationSelected() ? vm.userNames : vm.agentNames;
           setAgentProfile();
         }
         vm.timings.startTime.label = config.pages.offHours.schedule.timings.startTime;
@@ -1185,6 +1221,29 @@
         Notification.error(notifyMessage);
       }
     }
+    vm.waitingText = function () {
+      if (isExpertEscalationSelected()) {
+        return $translate.instant('careChatTpl.waitingMessageEVA');
+      } else {
+        return $translate.instant('careChatTpl.waitingMessage');
+      }
+    };
+
+    vm.helpTextWaiting = function () {
+      if (isExpertEscalationSelected()) {
+        return $translate.instant('careChatTpl.helpTextWaitingEVA');
+      } else {
+        return $translate.instant('careChatTpl.helpTextWaiting');
+      }
+    };
+
+    vm.helpTextLeaveRoom = function () {
+      if (isExpertEscalationSelected()) {
+        return $translate.instant('careChatTpl.helpTextLeaveRoomEVA');
+      } else {
+        return $translate.instant('careChatTpl.helpTextLeaveRoom');
+      }
+    };
 
     function isAgentUnavailablePageValid() {
       return isValidField(vm.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText, vm.lengthConstants.multiLineMaxCharLimit) &&
@@ -1443,6 +1502,14 @@
       var agentPageDisabled = vm.template.configuration.pages['agentUnavailable'];
       agentPageDisabled.enabled = !isExpertOnlyEscalationSelected();
       vm.template.configuration.pages['agentUnavailable'] = agentPageDisabled;
+      vm.userDetails = isExpertEscalationSelected() ? vm.userNames : vm.agentNames;
+      vm.selectedAgentProfile = isExpertEscalationSelected() ? vm.userNames.displayName : vm.agentNames.displayName;
+      vm.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = isExpertEscalationSelected() ?
+        $translate.instant('careChatTpl.waitingMessageEVA') : $translate.instant('careChatTpl.waitingMessage');
+      vm.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = isExpertEscalationSelected() ?
+        $translate.instant('careChatTpl.leaveRoomMessageEVA') : $translate.instant('careChatTpl.leaveRoomMessage');
+      vm.agentNamePreview = isExpertEscalationSelected() ? $translate.instant('careChatTpl.userNamePreview') :
+        $translate.instant('careChatTpl.agentNamePreview');
     }
 
     vm.isInputValid = function (input) {
@@ -1688,7 +1755,8 @@
     function setTemplateProfile() {
       vm.template.configuration.mediaSpecificConfiguration = {
         useOrgProfile: vm.selectedTemplateProfile === vm.profiles.org,
-        useAgentRealName: vm.selectedAgentProfile === vm.agentNames.displayName,
+        useAgentRealName: (vm.selectedAgentProfile === vm.agentNames.displayName ||
+        vm.selectedAgentProfile === vm.userNames.displayName),
         orgLogoUrl: vm.logoUrl,
         displayText: vm.getAttributeParam('value', 'organization', 'welcomeHeader'),
       };
@@ -1707,16 +1775,37 @@
         vm.agentNamePreview = $translate.instant('careChatTpl.agentAliasPreview');
       } else if (vm.selectedAgentProfile === vm.agentNames.displayName) {
         vm.agentNamePreview = $translate.instant('careChatTpl.agentNamePreview');
+      } else if (vm.selectedAgentProfile === vm.userNames.alias) {
+        vm.agentNamePreview = $translate.instant('careChatTpl.agentAliasPreview');
+      } else if (vm.selectedAgentProfile === vm.userNames.displayName) {
+        vm.agentNamePreview = $translate.instant('careChatTpl.userNamePreview');
       }
     }
 
     vm.profileSettingInfo = function () {
       if (vm.selectedTemplateProfile === vm.profiles.agent) {
-        return $translate.instant('careChatTpl.agentSettingInfo');
+        if (isExpertEscalationSelected()) {
+          return $translate.instant('careChatTpl.userSettingInfo');
+        } else {
+          return $translate.instant('careChatTpl.agentSettingInfo');
+        }
       } else {
-        return $translate.instant('careChatTpl.orgSettingInfo');
+        if (isExpertEscalationSelected()) {
+          return $translate.instant('careChatTpl.orgEvaSettingInfo');
+        } else {
+          return $translate.instant('careChatTpl.orgSettingInfo');
+        }
       }
     };
+
+    vm.profileDesc = function () {
+      if (isExpertEscalationSelected()) {
+        return $translate.instant('careChatTpl.profileEvaDesc');
+      } else {
+        return $translate.instant('careChatTpl.profileDesc');
+      }
+    };
+
     vm.toggleBotAgentSelection = function (selectedToggle) {
       vm.selectedAvater = selectedToggle;
     };
@@ -1966,16 +2055,26 @@
       listSpaces.then(function (spaces) {
         if (spaces && spaces.items && spaces.items.length >= 1) {
           var numSpaces = spaces.items.length;
+          var evaOrgName = getEvaName(evaForOrg);
           if (numSpaces === 1) {
-            vm.evaSpaceTooltipData = getEvaName(evaForOrg) + $translate.instant('careChatTpl.evaSpaceDetailsTextOneSpace');
+            var evaSpaceDetailsTextOneSpace = $translate.instant('careChatTpl.evaSpaceDetailsTextOneSpace');
+
+            vm.evaSpaceTooltipData = evaOrgName + evaSpaceDetailsTextOneSpace;
+            vm.evaSpaceTooltipAriaLabel = evaOrgName + evaSpaceDetailsTextOneSpace;
           } else {
-            vm.evaSpaceTooltipData = getEvaName(evaForOrg) + $translate.instant('careChatTpl.evaSpaceDetailsText', { numberOfEvaSpaces: numSpaces });
+            var evaSpaceDetailsText = $translate.instant('careChatTpl.evaSpaceDetailsText', { numberOfEvaSpaces: numSpaces });
+
+            vm.evaSpaceTooltipData = evaOrgName + evaSpaceDetailsText;
+            vm.evaSpaceTooltipAriaLabel = evaOrgName + evaSpaceDetailsText;
           }
           _.forEach(spaces.items, function (space) {
             if (space.title) {
               vm.evaSpaceTooltipData += '<li>' + space.title + '</li>';
+              vm.evaSpaceTooltipAriaLabel += ' ' + space.title;
               if (space.default) {
-                vm.evaSpaceTooltipData += '<div>' + '    ' + $translate.instant('careChatTpl.escalationDetailsDefaultSpace') + '<div>';
+                var defaultSpace = $translate.instant('careChatTpl.escalationDetailsDefaultSpace');
+                vm.evaSpaceTooltipData += '<div>' + '    ' + defaultSpace + '<div>';
+                vm.evaSpaceTooltipAriaLabel += ' ' + defaultSpace;
               }
             }
           });
@@ -1986,7 +2085,9 @@
     }
 
     function setSpaceDataAsError() {
-      vm.evaSpaceTooltipData = '<div class="feature-card-popover-error">' + $translate.instant('careChatTpl.featureCard.popoverErrorMessage') + '</div>';
+      var popoverErrorMessage = $translate.instant('careChatTpl.featureCard.popoverErrorMessage');
+      vm.evaSpaceTooltipData = '<div class="feature-card-popover-error">' + popoverErrorMessage + '</div>';
+      vm.evaSpaceTooltipAriaLabel = popoverErrorMessage;
     }
 
     function isEvaObjectValid(evaObj) {

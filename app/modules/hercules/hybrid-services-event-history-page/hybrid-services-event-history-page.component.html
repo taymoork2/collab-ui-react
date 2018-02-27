@@ -18,8 +18,7 @@
       <form>
         <div class="filter-dropdown">
           <cs-select ng-model="$ctrl.selectedResourceFilter"
-                     options="$ctrl.resourcesOptions"
-                     on-change-fn="$ctrl.resourceFilterChanged()">
+                     options="$ctrl.resourcesOptions">
           </cs-select>
         </div>
       </form>
@@ -33,7 +32,7 @@
   </cs-page-sub-header>
   <hybrid-services-cluster-status-history-table service-id="$ctrl.serviceId"
                                                 connector-id="$ctrl.connectorId"
-                                                resource-filter="$ctrl.resourceFilter"
+                                                resource-filter="$ctrl.selectedResourceFilter.value"
                                                 cluster-id="$ctrl.clusterId"
                                                 earliest-timestamp-searched-updated="$ctrl.earliestTimestampSearchedUpdated(options)">
   </hybrid-services-cluster-status-history-table>

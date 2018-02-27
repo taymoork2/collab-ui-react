@@ -14,7 +14,9 @@
     tabindex="0"
     tooltip-append-to-body="true"
     tooltip="{{::'siteList.siteCsvColumnHeader' | translate}}"
-    tooltip-trigger="focus mouseenter"></i>
+    tooltip-trigger="focus mouseenter"
+    aria-label="{{::'siteList.siteCsvColumnHeader' | translate}}">
+  </i>
 
   <!-- display disabled CSV icon and unsupported tooltip -->
   <i ng-if="row.entity.showSiteLinks && row.entity.showCSVInfo && !row.entity.isError && !row.entity.isCSVSupported"
@@ -24,12 +26,14 @@
     tabindex="0"
     tooltip-append-to-body="true"
     tooltip="{{::'siteList.siteCSVNotAvailableTooltip' | translate}}"
-    tooltip-trigger="focus mouseenter"></i>
+    tooltip-trigger="focus mouseenter"
+    aria-label="{{::'siteList.siteCSVNotAvailableTooltip' | translate}}">
+  </i>
 
   <span ng-if="row.entity.showSiteLinks && row.entity.showCSVInfo && row.entity.isCSVSupported">
 
     <!-- display disabled CSV icon and in progress spinner -->
-    <span ng-if="(row.entity.csvStatusObj.status == 'exportInProgress') || (row.entity.csvStatusObj.status == 'importInProgress')">
+    <span ng-if="(row.entity.csvStatusObj.status === 'exportInProgress') || (row.entity.csvStatusObj.status === 'importInProgress')">
 
       <i id="{{row.entity.license.siteUrl}}_csvDisabled"
         name="{{row.entity.license.siteUrl}}_csvDisabled"
@@ -37,15 +41,18 @@
         tabindex="0"
         tooltip-append-to-body="true"
         tooltip="{{::'siteList.siteCsvColumnHeader' | translate}}"
-        tooltip-trigger="focus mouseenter"></i>
+        tooltip-trigger="focus mouseenter"
+        aria-label="{{::'siteList.siteCsvColumnHeader' | translate}}">
+      </i>
 
       &nbsp;&nbsp;&nbsp;
 
-      <span ng-if="row.entity.csvStatusObj.status == 'exportInProgress'"
+      <span ng-if="row.entity.csvStatusObj.status === 'exportInProgress'"
         tabindex="0"
         tooltip-append-to-body="true"
         tooltip="{{::'siteList.exportInProgressTooltip' | translate}}"
-        tooltip-trigger="focus mouseenter">
+        tooltip-trigger="focus mouseenter"
+        aria-label="{{::'siteList.exportInProgressTooltip' | translate}}">
 
         <i id="{{row.entity.license.siteUrl}}_csvSpinner"
           name="{{row.entity.license.siteUrl}}_csvSpinner"
@@ -53,11 +60,12 @@
         <span translate="siteList.siteCsvExportInProgressLinkLabel"></span>
       </span>
 
-      <span ng-if="row.entity.csvStatusObj.status == 'importInProgress'"
+      <span ng-if="row.entity.csvStatusObj.status === 'importInProgress'"
         tabindex="0"
         tooltip-append-to-body="true"
         tooltip="{{::'siteList.importInProgressTooltip' | translate}}"
-        tooltip-trigger="focus mouseenter">
+        tooltip-trigger="focus mouseenter"
+        aria-label="{{::'siteList.importInProgressTooltip' | translate}}">
 
         <i id="{{row.entity.license.siteUrl}}_csvSpinner"
           name="{{row.entity.license.siteUrl}}_csvSpinner"
@@ -67,7 +75,7 @@
     </span>
 
     <!-- display enabled CSV icon -->
-    <span ng-if="(row.entity.csvStatusObj.status != 'importInProgress') && (row.entity.csvStatusObj.status != 'exportInProgress')">
+    <span ng-if="(row.entity.csvStatusObj.status !== 'importInProgress') && (row.entity.csvStatusObj.status !== 'exportInProgress')">
 
       <i id="{{row.entity.license.siteUrl}}_csvEnabled"
         name="{{row.entity.license.siteUrl}}_csvEnabled"
@@ -75,13 +83,15 @@
         ui-sref="site-csv({siteRow:row.entity})"
         tooltip-append-to-body="true"
         tooltip="{{::'siteList.siteCsvColumnHeader' | translate}}"
-        tooltip-trigger="focus mouseenter"></i>
+        tooltip-trigger="focus mouseenter"
+        aria-label="{{::'siteList.siteCsvColumnHeader' | translate}}">
+      </i>
 
       <!-- display export/import results link -->
-      <span ng-if="(row.entity.csvStatusObj.status == 'exportCompletedNoErr') ||
-                    (row.entity.csvStatusObj.status == 'exportCompletedWithErr') ||
-                    (row.entity.csvStatusObj.status == 'importCompletedNoErr') ||
-                    (row.entity.csvStatusObj.status == 'importCompletedWithErr')">
+      <span ng-if="(row.entity.csvStatusObj.status === 'exportCompletedNoErr') ||
+                    (row.entity.csvStatusObj.status === 'exportCompletedWithErr') ||
+                    (row.entity.csvStatusObj.status === 'importCompletedNoErr') ||
+                    (row.entity.csvStatusObj.status === 'importCompletedWithErr')">
 
         &nbsp;&nbsp;&nbsp;
 
@@ -90,13 +100,13 @@
             ui-sref="site-csv-results({siteRow:row.entity})">
 
           <!-- display export results link -->
-          <span ng-if="(row.entity.csvStatusObj.status == 'exportCompletedNoErr') ||
-                        (row.entity.csvStatusObj.status == 'exportCompletedWithErr')"
+          <span ng-if="(row.entity.csvStatusObj.status === 'exportCompletedNoErr') ||
+                        (row.entity.csvStatusObj.status === 'exportCompletedWithErr')"
                 translate="siteList.siteCsvExportResultsLinkLabel"></span>
 
           <!-- display import results link -->
-          <span ng-if="(row.entity.csvStatusObj.status == 'importCompletedNoErr') ||
-                        (row.entity.csvStatusObj.status == 'importCompletedWithErr')"
+          <span ng-if="(row.entity.csvStatusObj.status === 'importCompletedNoErr') ||
+                        (row.entity.csvStatusObj.status === 'importCompletedWithErr')"
                 translate="siteList.siteCsvImportResultsLinkLabel"></span>
         </a>
       </span>

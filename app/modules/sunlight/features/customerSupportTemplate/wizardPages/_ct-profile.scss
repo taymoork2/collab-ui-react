@@ -318,6 +318,7 @@
     @include vr-spacing(pt, 0);
     font-family: "CiscoSansTT Light";
     font-size: 12px;
+    padding: 0px;
   }
 
   .org-setting-info {
@@ -334,5 +335,11 @@
       letter-spacing: 0;
       line-height: 16px;
     }
+  }
+  .user-alias-info {
+    margin-left: 30px;
+  }
+  .user-alias-info-text {
+    font-size: 10px;
   }
 }

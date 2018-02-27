@@ -33,7 +33,7 @@
 
     function getPartnerUsers(str) {
       str = encodeURIComponent(str);
-      var url = partnerScimUrl + encodeURI('?filter=active eq true and userName sw "') + str + encodeURI('" or name.givenName sw "') + str + encodeURI('" or name.familyName sw "') + str + encodeURI('" or displayName sw "') + str + encodeURI('"&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID&sortBy=name&sortOrder=ascending');
+      var url = partnerScimUrl + encodeURI('?filter=active eq true and userName sw "') + str + encodeURI('" or name.givenName sw "') + str + encodeURI('" or name.familyName sw "') + str + encodeURI('" or displayName sw "') + str + encodeURI('"&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,linkedTrainSiteNames,licenseID,userSettings,userPreferences&sortBy=name&sortOrder=ascending');
 
       return $http.get(url);
     }

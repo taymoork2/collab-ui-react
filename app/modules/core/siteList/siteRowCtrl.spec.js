@@ -55,6 +55,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
     spyOn(SetupWizardService, 'isSubscriptionPending').and.returnValue(false);
     spyOn(SetupWizardService, 'isSubscriptionEnterprise').and.returnValue(true);
     spyOn(SetupWizardService, 'getEnterpriseSubscriptionListWithStatus').and.returnValue([{}]);
+    spyOn(WebExSiteService, 'getCenterDetailsForAllSubscriptions').and.returnValue($q.resolve([]));
     spyOn(WebExSiteService, 'deleteSite').and.returnValue($q.resolve(true));
     spyOn(TokenService, 'getAccessToken').and.returnValue(accessToken);
     spyOn($modal, 'open').and.returnValue({ result: $q.resolve() });
@@ -180,8 +181,9 @@ describe('Controller: WebExSiteRowCtrl', function () {
       controller.deleteSite(entity);
       $scope.$digest();
       var modalCallArgs = $modal.open.calls.mostRecent().args[0];
+      expect(WebExSiteService.getCenterDetailsForAllSubscriptions).toHaveBeenCalled();
       expect(modalCallArgs.template.indexOf(expectedModalTitle) > -1);
-      expect(state.go).toHaveBeenCalledWith('site-list-delete', { subscriptionId: '123', siteUrl: 'ag-test1-org.webex.com' });
+      expect(state.go).toHaveBeenCalledWith('site-list-delete', { subscriptionId: '123', siteUrl: 'ag-test1-org.webex.com', centerDetails: [] });
       expect(WebExSiteService.deleteSite).not.toHaveBeenCalled();
     });
 
@@ -291,7 +293,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
     it('should launch license redistribution if there are more than 2 sites in subscription and subscription is not pending', function () {
       expect(controller.canModify(entity)).toBeTruthy();
       controller.redistributeLicenses(entity);
-      expect(state.go).toHaveBeenCalledWith('site-list-distribute-licenses', { subscriptionId: '123' });
+      expect(state.go).toHaveBeenCalledWith('site-list-distribute-licenses', { subscriptionId: '123', centerDetails: [] });
     });
     it('should NOT launch license redistribution and should show appropriate modal if subscription is pending', function () {
       var expectedModalTitle = '<h3 class="modal-title" translate="webexSiteManagement.redistributeRejectModalTitle"></h3>';

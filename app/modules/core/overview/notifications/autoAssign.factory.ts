@@ -1,7 +1,10 @@
 import { IOverviewPageNotification } from 'modules/core/overview/overviewPage.types';
+import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template/auto-assign-template.service';
 
 /* @ngInject */
-export function OverviewAutoAssignNotificationFactory($state: ng.ui.IStateService): any {
+export function OverviewAutoAssignNotificationFactory(
+  AutoAssignTemplateService: AutoAssignTemplateService,
+) {
 
   function createNotification(): IOverviewPageNotification {
     return {
@@ -10,8 +13,8 @@ export function OverviewAutoAssignNotificationFactory($state: ng.ui.IStateServic
       canDismiss: true,
       dismiss: () => {},
       link: () => {
-        $state.go('users.manage.edit-auto-assign-template-modal', {
-          prevState: 'users.manage.picker',
+        AutoAssignTemplateService.gotoEditAutoAssignTemplate({
+          isEditTemplateMode: false,
         });
       },
       linkText: 'homePage.autoAssignLink',

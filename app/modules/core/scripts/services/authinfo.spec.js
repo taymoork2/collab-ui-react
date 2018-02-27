@@ -502,6 +502,110 @@ describe('Authinfo:', function () {
     });
   });
 
+  describe('Online customer', function () {
+    var Authinfo;
+
+    beforeEach(function () {
+      Authinfo = setupUser();
+      var accountData = {
+        customers: [{
+          customerId: '1',
+          customerType: 'Online',
+        }, {
+          customerId: '2',
+          customerType: 'Online',
+        }],
+      };
+      Authinfo.updateAccountInfo(accountData);
+    });
+
+    it('isOnlineCustomer should return true if any customer is Online', function () {
+      expect(Authinfo.isOnlineCustomer()).toBeTruthy();
+    });
+
+    it('isOnlineOnlyCustomer should return true if all customers are Online', function () {
+      expect(Authinfo.isOnlineOnlyCustomer()).toBeTruthy();
+    });
+  });
+
+  describe('Online and Enterprise customer', function () {
+    var Authinfo;
+
+    beforeEach(function () {
+      Authinfo = setupUser();
+      var accountData = {
+        customers: [{
+          customerId: '1',
+          customerType: 'Online',
+        }, {
+          customerId: '2',
+          customerType: 'Enterprise',
+        }],
+      };
+      Authinfo.updateAccountInfo(accountData);
+    });
+
+    it('isOnlineCustomer should return true if any customer is Online', function () {
+      expect(Authinfo.isOnlineCustomer()).toBeTruthy();
+    });
+
+    it('isOnlineOnlyCustomer should return false if some customerss are not Online', function () {
+      expect(Authinfo.isOnlineOnlyCustomer()).toBeFalsy();
+    });
+  });
+
+  describe('Online trial customer', function () {
+    var Authinfo;
+
+    beforeEach(function () {
+      Authinfo = setupUser();
+      var accountData = {
+        customers: [{
+          customerId: '1',
+          customerType: 'Online',
+          subscriptions: [{
+            orderingTool: 'CISCO_ONLINE_OPC',
+            licenses: [{
+              licenseType: 'CONFERENCING',
+              linkedSiteUrl: 'www.abc.com',
+            }],
+          }],
+        }],
+      };
+      Authinfo.updateAccountInfo(accountData);
+    });
+
+    it('isOnlinePaid should return false if Online customer has a trial subscription', function () {
+      expect(Authinfo.isOnlinePaid()).toBeFalsy();
+    });
+  });
+
+  describe('Online paid customer', function () {
+    var Authinfo;
+
+    beforeEach(function () {
+      Authinfo = setupUser();
+      var accountData = {
+        customers: [{
+          customerId: '1',
+          customerType: 'Online',
+          subscriptions: [{
+            orderingTool: 'DIGITAL_RIVER',
+            licenses: [{
+              licenseType: 'CONFERENCING',
+              linkedSiteUrl: 'www.abc.com',
+            }],
+          }],
+        }],
+      };
+      Authinfo.updateAccountInfo(accountData);
+    });
+
+    it('isOnlinePaid should return true if Online customer has a paid subscription', function () {
+      expect(Authinfo.isOnlinePaid()).toBeTruthy();
+    });
+  });
+
   it('isPremium should return false when there are no premium licenses', function () {
     var Authinfo = setupUser();
     var accountData = {};

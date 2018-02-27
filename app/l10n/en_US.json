@@ -232,12 +232,12 @@
         "modifyError": "Template failed to load."
       },
       "activateAutoAssign": {
-        "activateSuccess": "You've activated the Auto-Assign License Template",
+        "activateSuccess": "You've activated the Auto-Assign Template",
         "activateError": "Templated failed to activate."
       },
       "deactivateAutoAssign": {
         "description": "Licenses won't be assigned to new users automatically. Existing users' licenses won't be affected. Do you want to continue?",
-        "deactivateSuccess": "You've deactivated the Auto-Assign License Template",
+        "deactivateSuccess": "You've deactivated the Auto-Assign Template",
         "deactivateError": "Template failed to deactivate."
       },
       "deleteAutoAssignModal": {
@@ -284,7 +284,8 @@
       "instructions": "Enter up to {{maxUsers}} users to modify.",
       "tooManyUsers": "The user list exceeds the limit of {{maxUsers}}. To update more than {{maxUsers}} users, please use the bulk CSV template.",
       "ad": {
-        "unsyncedUsers": "Some users are not currently synchronized with Active Directory. Please add them with Cisco Directory Connector, and then modify them after they synchronize to the cloud."
+        "unsyncedUsers": "Some users are not currently synchronized with Active Directory. Please add them with Cisco Directory Connector, and then modify them after they synchronize to the cloud.",
+        "existingUsers": "The Auto-Assign Template is enabled. You can only modify existing users from the User page or using CSV upload."
       }
     },
     "bulk": {
@@ -357,7 +358,9 @@
         "description": "Select the services that you want to provide to users.",
         "note": "Note: If you select more than one Message or Call license, only one license will be assigned to each user.",
         "tooltip": "If one subscription runs out of licenses, the next selected subscription automatically assigns more.",
-        "usage": "Usage: {{ usage }}/{{ volume }}"
+        "usage": "Usage: {{ usage }}/{{ volume }}",
+        "careDisabledTooltip": "Care licenses are only assigned to Care agents.",
+        "warningFooter": "At least one service needs to be selected to continue."
       },
       "editSummary": {
         "title": "Set Up Auto-Assign Template",
@@ -374,6 +377,10 @@
     "autoAssignLicenseSummaryForDirSync": {
       "header": "License Summary",
       "description": "You've enabled Auto-Assign. All synchronized users will be assigned the following licenses automatically."
+    },
+    "autoAssignLicenseSummaryForConvert": {
+      "header": "License Summary",
+      "description": "You've enabled Auto-Assign. Users will be assigned the following licenses automatically."
     }
   },
   "userTaskManagerModal": {
@@ -663,6 +670,14 @@
     "releaseChannelToggleSuccess": "Allow Release Channel update successful",
     "releaseChannelToggleFailure": "Allow Release Channel update failed. Please try again later.",
     "orgReadFailed": "Unable to read organization details"
+  },
+  "organizationDeleteModal": {
+    "deleteButton": "Close Account",
+    "goBack": "Go Back",
+    "confirmTitle": "Are you sure?",
+    "confirmBody": "Closing your account cannot be undone except by resubscribing. Also, you may not be able to get back your WebEx site name.",
+    "accountClosedTitle": "Your account in closed",
+    "accountClosedBody": "To resubscribe please visit <a href=\"http://{{href}}\" target=\"_blank\">{{href}}</a>"
   },
   "templatesPage": {
     "title": "MANAGE TEMPLATES"
@@ -982,7 +997,8 @@
     "media_type_chat": "Chats",
     "media_type_callback": "Callbacks",
     "media_type_voice": "Inbound Calls",
-    "media_type_webcall": "Chat with Video",
+    "media_type_webcall": "Video Calls",
+    "media_type_chat_with_video": "Chat with Video",
     "taskDataGetError": "There was an error while loading the {{dataType}} data.",
     "tableDataGetError": "There was an error while loading the detailed efficient user data.",
     "errorLoadingName": "Error Loading Name",
@@ -1640,6 +1656,7 @@
     "proPackTooltip": "This premium feature is available with Pro Pack. Contact your partner to learn more.",
     "provision": "Provision",
     "quantity": "Qty",
+    "readonly": "Readonly",
     "releaseChannel": "Release Channel",
     "remove": "Remove",
     "rename": "Rename",
@@ -2278,9 +2295,27 @@
       "domain-not-verified": "The domain for this Directory URI must be verified for this service to function properly. ",
       "navigateToCallSettings": "Verify the domain in <a href ng-click=\"{{onclick}}\">Call Service Settings</a>."
     },
+    "capacity": {
+      "filterLabel": "Filter to view resource groups & capacity",
+      "label": "Capacity: {{capacity}}%",
+      "labelNA": "Capacity: N/A",
+      "tooltip": "Capacity: {{capacity}}%<br>Users assigned: {{total}} of {{max}}",
+      "tooltipUnassigned": "<em>Clusters not in a resource group</em><br>Capacity: {{capacity}}%<br>Users assigned: {{total}} of {{max}}",
+      "tooltipNA": "Choose a filter on the left to view capacity for clusters that don't belong to a resource group or clusters in specific resources groups",
+      "tooltipNoConnectors": "No connectors can host users",
+      "allClusters": "All clusters",
+      "noInARG": "Clusters not in a resource group",
+      "clustersIn": "Clusters in {{name}}"
+    },
+    "userStatuses": {
+      "summaryTitle": "User Status Summary",
+      "reportTitle": "User Status Report",
+      "description": "The exported report will be a list of users, their state and related details. You can select the type of information that you want included in the report:",
+      "createButton": "Create Report"
+    },
     "sipExplanation": {
       "line1": "You can use one of the following address formats:",
-      "line2": "SRV domain (_sips._tcp.<strong>sipmtls.example.com</strong>)",
+      "line2": "SRV domain (use the <strong>sipmtls.example.com</strong> from _sips._tcp.<strong>sipmtls.example.com</strong>)",
       "line3": "Hostname/FQDN:port (<strong>exp-e.example.com:5062</strong>)",
       "line4": "IP address:port (<strong>203.0.113.0:5062</strong>)",
       "line5": "See <a href=\"https://www.cisco.com/go/spark-calling-branch-office\" target=\"_blank\">Configure the Enterprise Private Trunk Connection</a> if you need further help.",
@@ -2436,12 +2471,13 @@
       "readResourceGroupsFailed": "Could not read Resource Groups. Try again later.",
       "refreshUserFailed": "Unable to refresh the user status. Please try again later.",
       "refreshUserDidNoGood": "Unable to get the user status. Please contact support if the problem persists.",
-      "couldNotReadConnectStatus": "Unable to read Call Service Connect organization status. Please contact support if the problem persists.",
-      "notEnabledInOrg": "Not enabled in organization",
+      "couldNotReadStatus": "Unable to read Call Service organization status. Please contact support if the problem persists.",
       "enableAwareFirst": "Aware must be enabled before the user can be enabled for Connect. Enable it in the <a href ng-click=\"{{onclick}}\">Call Service Aware panel</a>.",
       "disableAwareHeader": "Disable Services",
       "disableAwareMessage": "Are you sure? By disabling Call Service Aware, Call Service Connect will also be disabled for this user.",
       "errorMessages": {
+        "cannotReadUserDataFromCI": "Could not read user's licensing data.",
+        "cannotReadOrgDataFromFMS": "Could not read service activation status.",
         "cannotReadDeviceDataFromUSS": "Unable to read device's activation status.",
         "cannotReadDeviceDataFromUSSPartnerAdmin": "Unable to read device's activation status. This could indicate a caching problem, try logging out and in again to clear the user cache.",
         "cannotReadUserDataFromUSS": "Unable to read user's activation status.",
@@ -2469,6 +2505,7 @@
       "error": "Error",
       "unknown": "Unknown",
       "notFound": "Status not found",
+      "pendingNotSetup": "Pending – Service Not Setup",
       "accountNotActivated": "Account Not Activated"
     },
     "serviceNames": {
@@ -2597,12 +2634,14 @@
       "google": "Google Calendar",
       "notSetup": "Not currently set up",
       "sinceTime": "since {{timestamp}}",
+      "noLicensedServices": "This user must have one or more licensed services to be configured for Hybrid Services.",
       "entitledToBothCalendarsShort": "Multiple Calendar Entitlements",
       "entitledToBothCalendars": "This user is currently entitled to both calendar types. To clear the error, disable calendar service for the user and then enable it again.",
       "couldNotReadOffice365Status": "Could not read organization's Office 365 configuration. The information above might be incomplete.",
       "couldNotReadGoogleCalendarStatus": "Could not read organization's Google Calendar configuration. The information above might be incomplete.",
       "couldNotReadFMSStatus": "Could not read organization's Expressway-based Hybrid Services configuration. The information above might be incomplete.",
-      "entitledToHuron": "Licensed for Spark Call"
+      "entitledToHuron": "Licensed for Spark Call",
+      "serviceNotEnabledInCloud": "This service is not set up. The user will be in a pending activation or error state until setup has been completed."
     },
     "alarms": {
       "affectedNodes": "Affected Nodes",
@@ -2633,7 +2672,9 @@
       "text": "You are about to update {{name}} connectors to {{version}}.",
       "releaseNotes": "Release Notes",
       "releaseNotesLink": "Open in a new tab",
-      "upgradeNow": "Upgrade Now"
+      "upgradeNow": "Upgrade Now",
+      "warning1": "Some nodes in this clusters are either offline or in maintenance mode. These nodes will not be upgraded until they are back online.",
+      "warning2": "We recommend that you bring all nodes online before initiating an upgrade."
     },
     "expresswayClusterSettings": {
       "upgradeScheduleHeader": "Upgrade",
@@ -2891,6 +2932,7 @@
           "UnexpectedException": "Unexpected Exception"
         },
         "fixes": {
+          "Connecting": "TCP Connection failure: Check network connectivity, connection speed, and/or firewall configuration. Search for ‘connect failure’ in the <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Troubleshooting Documentation</a.",
           "IOFailure": "TCP failure: TCP read/write failure: Please try again. If the error persists, check network connectivity, firewall configuration, and Mutual TLS configuration. Search for ‘socket failure’ in the <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Troubleshooting Documentation</a.",
           "NoDNSHopsFound": "DNS Lookup failed. Check that a DNS or SRV record exists for your SIP Destination and that it resolves to one or more valid IP addresses. Search for ‘DNS SRV’ in the <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Troubleshooting Documentation</a>.",
           "PingFailed": "SIP ping failed.",
@@ -3153,7 +3195,7 @@
       "noGroupSelected": "None",
       "noGroupSelectedOnPlace": "No resource group (default)",
       "failedToSetGroup": "Failed to set Resource Group.",
-      "resourceGroupSaved": "Resource Group saved.",
+      "resourceGroupSaved": "Resource Group changed. The user will automatically be reassigned to a cluster in the new Resource Group within the next couple of minutes.",
       "groupHasBeenDeleted": "The user is assigned to a resource group that could not be found. Remove the assignment from the resource group to restore service.",
       "groupIsEmptyWarning": "Could not find cluster with {{ConnectorName}}. Select another Resource Group, or configure a new cluster with {{ConnectorName}}."
     },
@@ -3260,9 +3302,16 @@
         "title": "Disable maintenance mode",
         "message": "Are you sure you want to disable maintenance mode for this node?"
       },
-      "alertBannerNumber": "{count, plural, =1{Upgrade for connectors available!} other{Upgrades for connectors available!}}",
-      "alertBannerTime": "{count, plural, =1{It} other{They}} will be applied on {date}.",
-      "alertBannerLink": "<a href ng-click=\"{{onclick}}\">Upgrade {{service}} connectors now</a>.",
+      "alertDisableMaintenanceMode": "To install, disable maintenance mode on the nodes.",
+      "alertDisableMaintenanceModeFor": "To install {{connector}}, disable maintenance mode on the nodes.",
+      "alertenableTheNodes": "To install, bring the nodes back online first.",
+      "alertenableTheNodesFor": "To install {{connector}}, bring the nodes back online first.",
+      "alertInstallNow": "Install now…",
+      "alertUpgradeAvailableFor": "Upgrade available for {{connector}}.",
+      "alertUpgradeConnectorNow": "Upgrade {{connector}} now.",
+      "alertUpgradesAvailable": "Upgrades available.",
+      "alertUrgent": "(urgent)",
+      "alertUrgentUpgradeAvailableFor": "Urgent upgrade available for {{connector}}.",
       "instructions": "Instructions"
     },
     "hybridServicesConnectorSidepanel": {
@@ -3385,6 +3434,29 @@
         "clusterNotAssignedToResourceGroup": {
           "title": "No cluster assigned to resource group",
           "description": "No cluster assigned to the user's resource group. Check the cluster configuration and then try again."
+        }
+      },
+      "custom": {
+        "noClusterFoundAndNoCurrentResourceGroup": {
+          "description": "No {{connectorType}} found. Activation will be retried once you configure at least one cluster with {{connectorType}}, or you move the user to a resource group where at least one cluster runs {{connectorType}}."
+        },
+        "noClusterFoundAndUserIsInResourceGroup": {
+          "description": "No {{connectorType}} found in user's resource group. Activation will be retried once you configure at least one cluster with {{connectorType}} in the user's current resource group, or you move the user to a resource group where at least one cluster runs {{connectorType}}."
+        },
+        "serviceIsNotOperationalInResourceGroup": {
+          "description": "No operational {{connectorType}} found in user's resource group. The user will automatically be assigned to a {{connectorType}} once one becomes operational. You can alternatively try to move the user to another resource group, or remove the user's resource group assignment."
+        },
+        "serviceIsNotOperationalUserNotInResourceGroup": {
+          "description": "No operational {{connectorType}} found. The user will automatically be assigned to a {{connectorType}} once one becomes operational. You can alternatively try to move the user into a resource group."
+        },
+        "serviceIsNotOperationalInOrganization": {
+          "description": "{{serviceName}} appears to be not operational. The user will automatically be assigned to a {{connectorType}} once the service becomes operational again."
+        },
+        "serviceIsImpairedInOrganization": {
+          "description": "{{serviceName}} is impaired. This could happen during connector upgrades, if you have single-node Expressway clusters. The user will be retried when a {{connectorType}} becomes running and operational."
+        },
+        "noClusterFoundAndNoResourceGroupInOrganization": {
+          "description": "No {{connectorType}} found. Activation will be retried once you configure at least one cluster with {{connectorType}}."
         }
       }
     },
@@ -3660,6 +3732,14 @@
         "fieldMaxLimitReached": "Maximum fields in fieldset reached.",
         "fieldsetLimitReadFailed": "Unable to retrieve fieldsets limit. Refresh your browser to try again",
         "notAuthorized": "You are not authorized to manage Hybrid Context fieldsets for this organization."
+      },
+      "settingPage": {
+        "adminAuthorization": "Administrator Authorization",
+        "adminAuthorizationDescription": "Synchronize administrative permissions for your organization.",
+        "unauthorizedTooltip": "To synchronize permissions, contact an authorized administrator.",
+        "synchronize": "Synchronize",
+        "synchronizationSuccessful": "Administration permissions synchronized successfully.",
+        "synchronizationFailure": "Cannot synchronize administrative permissions. Try again."
       }
     }
   },
@@ -4344,7 +4424,7 @@
   "autoAttendant": {
     "code": "AA",
     "title": "Auto Attendant",
-    "noCallWarningMessage" : "Requires call service. <a href ng-click=\"{{onclick}}\">Learn More</a>",
+    "noCallWarningMessage": "Requires call service. <a href ng-click=\"{{onclick}}\">Learn More</a>",
     "careModalDescription": "Play custom prompts and provide callers with menu options to route calls through your system.",
     "modalDescription": "Auto attendants play customized prompts and provide callers with menu options for routing their calls through your system.",
     "namePlaceholder": "Name the Auto Attendant",
@@ -5628,7 +5708,9 @@
     "trialDuration": "Trial Duration",
     "callServiceDisabled": "This service is temporarily unavailable for trial.",
     "managedBy": "Managed by {{org}}",
-    "anotherPartner": "another partner"
+    "anotherPartner": "another partner",
+    "kOneContents": "Includes video chat and automated chat support using a virtual assistant.",
+    "kTwoContents": "Includes video chat and automated chat support using a virtual assistant."
   },
   "status": {
     "noResults": "No results available.",
@@ -6241,6 +6323,13 @@
       "description": "Enter the SIP trunk address to connect the Hybrid Media cluster to your Unified Communications Manager. This connection provides optimized video callback.",
       "placeholder": "Enter the SIP trunk address...",
       "example": "Example: sips://203.0.113.0:5062"
+    },
+    "clusterBandwidth": {
+      "success": "Maximum cluster cascade bandwidth saved successfully.",
+      "title": "Maximum cluster cascade bandwidth",
+      "description": "Enter the maximum bandwidth (in megabits per second) that Hybrid Media Service clusters should use for cascades to the cloud. The lowest amount allows for one active 720p stream.",
+      "range": "Enter a value between 5 to 50",
+      "mbps": "Mbps"
     },
     "trustedSip": {
       "success": "Trusted SIP source(s) saved successfully.",
@@ -7426,7 +7515,7 @@
       "callbackType": "Callback Template",
       "chatPlusCallbackType": "Chat+Callback Template",
       "virtualAssistant": "Virtual Assistant",
-      "noCallWarningMessage" : "Requires call service. <a href ng-click=\"{{onclick}}\">Learn More</a>"
+      "noCallWarningMessage": "Requires call service. <a href ng-click=\"{{onclick}}\">Learn More</a>"
     },
     "settings": {
       "setUpCare": "Care",
@@ -7974,6 +8063,7 @@
     "chatting": "Chatting",
     "chattingMessage": "Chat in progress...",
     "downloadEmbedCode": "Download Embed Code",
+    "embedCodeHowToUseInfo": "Paste this code snippet in your web page &lt;head&gt; container",
     "embed-code": {
       "no-verified-domains": {
         "warn": "There are no verified domains for your organization. Care templates work on any domains by default. Go to Settings page to add and verify domains in order to restrict them to work only for your organization's domains.",
@@ -7991,6 +8081,10 @@
     },
     "embedCodeFor": "Embed Code for ",
     "embedCodeWarnMsg_callback": "It is important to verify all domains where you want to use callback template. You will not be able to embed callback template on unverified domains.",
+    "embedCodeSnippet": {
+      "templateNameHelpText": "Name of the Customer Support Template: {{templateName}}",
+      "orgNameHelpText": "Name of the Organization: {{orgName}}"
+    },
     "configureOrgLogoMsg": "Go to Settings page to modify your organization logo",
     "virtualAssistant": {
       "featureText": {
@@ -8021,6 +8115,10 @@
         "duplicateName": "The {{ featureName }} must have a unique name.\nClick the back arrow to return to the Name page and enter a valid name.",
         "invalidName": "The {{ featureName }} name is invalid.\nClick the back arrow to return to the Name page and enter a valid name.",
         "invalidIcon": "The {{ featureName }} avatar is invalid.\nClick the back arrow to return to the Avatar page and upload a valid avatar.",
+        "invalidIconFileType": "The supported file type of the {{ featureName }} avatar is PNG.\nClick the back arrow to return to the Avatar page and upload a valid avatar.",
+        "invalidIconTooLarge": "The image file size of the {{ featureName }} avatar must be less than 1 MB. \nClick the back arrow to return to the Avatar page and upload a valid avatar.",
+        "invalidIconCorrupted": "The {{ featureName }} avatar is invalid.\nClick the back arrow to return to the Avatar page and upload a valid avatar.",
+        "invalidIconDimensions": "The dimensions of the {{ featureName }} avatar must be exactly 512 x 512 pixels.\nClick the back arrow to return to the Avatar page and upload a valid avatar.",
         "invalidEmail": "The email you entered is invalid.\nClick the back arrow to return to the Email page and enter a valid email."
       },
       "createTitle": "Create {{ featureName }}",
@@ -8077,11 +8175,13 @@
         "preview": "Avatar Preview",
         "fileBrowser": "file browser",
         "uploadingImage": "Uploading image...",
-        "uploadDesc": "Upload a PNG of maximum 1MB. For best results make sure that your image has a transparent background with no padding.",
+        "uploadDesc": "Upload a PNG of 512 x 512 pixels and maximum 1 MB. For best results make sure that your image has a transparent background with no padding.",
         "dragDropDesc": "Drag and drop a file or use the ",
         "errorUnsupportedFile": "Cannot upload unsupported file. Supported file type is PNG.",
         "errorOverMaxFileSizeLimit": "The image file size must be less than 1 MB.",
-        "errorUploadFile": "Cannot upload image. Try again."
+        "errorUploadFile": "Cannot upload image. Try again.",
+        "errorInvalidIcon": "The {{ featureName }} avatar is invalid.",
+        "errorInvalidIconDimensions": "The dimensions of the {{ featureName }} avatar must be exactly 512 x 512 pixels."
       },
       "summary": {
         "cvaDesc": "You have configured {{ name }}. To use the assisted service feature in your organization's chat application, add your assistant to a Customer Support Template.",
@@ -8142,7 +8242,26 @@
         "createSpecificFailureText": "Failed to save {{ featureName }} {{ inputItem }}.",
         "updateConfigFailureText": "Failed to save {{ featureName }}."
       }
-    }
+    },
+    "profileEvaDesc": "Configure how your organization or individual user is visually represented.",
+    "userDisplayName": "Show user’s display name",
+    "userAlias": "Show user’s alias (agents only)",
+    "userNamePreview": "User display name",
+    "userProfileTooltip": "Click to preview profile for users in your organization.",
+    "profile_user_info_cva": "Use a unique Customer Virtual Assistant profile to distinguish it from users in your organization.",
+    "user_cva": "Customer Virtual Assistant and Users",
+    "profile_org_info_cva_eva": "Use a single profile to represent the Customer Virtual Assistant and all users in your organization.",
+    "user_alias_desc": "Expert users do not have an alias, so their Cisco Spark account name is always displayed.",
+    "display_text_desc": "The display text is the same as the agent's profile in Cisco Spark Care or the expert's profile in Cisco Spark.",
+    "userSettingInfo": "You cannot change the default user avatar seen in the Preview.",
+    "orgEvaSettingInfo": "You can change the logo seen in the Preview on the Settings page.",
+    "profile_org_info_eva": "Use a single profile to represent all users in your organization.",
+    "user_non_cva": "Individual Users",
+    "user_info_non_cva": "Use unique profiles to represent the different users in your organization.",
+    "helpTextWaitingEVA": "Customers see this message while waiting for a response to their request.",
+    "waitingMessageEVA": "Someone will help you shortly…",
+    "helpTextLeaveRoomEVA": "Customers see this message when the user interacting with them ends the chat.",
+    "leaveRoomMessageEVA": "Chat has ended"
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",
@@ -8381,8 +8500,8 @@
       },
       "hybrid": {
         "title": "Hybrid Services",
-        "googleCalendarError": "Could not reach the service for Google Calendar.",
-        "o365CalendarError": "Could not reach the service for Office 365.",
+        "googleCalendarError": "Could not reach the service for Google Calendar. Its status may be reported inaccurately during this session.",
+        "o365CalendarError": "Could not reach the service for Office 365. Its status may be reported inaccurately during this session.",
         "herculesError": "Could not reach the service for Cisco Spark Hybrid Services.",
         "herculesErrorAuthentication": "Could not validate partner admin's access rights in customer organization. This could indicate a caching problem. Try logging out and in again, and contact Cisco support if the problem persists.",
         "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Spark Platform.",
@@ -8514,9 +8633,8 @@
       "title": "Cisco Spark Assistant",
       "subsectionLabel": "Enable Cisco Spark Assistant",
       "description": "Allows users to perform various actions such as, make calls, start meetings, using their voice",
-      "termsOfService": "Cisco Spark Assistant terms of service ",
       "success": "Successfully updated Spark Assistant",
-      "failure": "Spark Assistant update failed"
+      "failure": "Cisco Spark Assistant update failed"
     },
     "externalCommunication": {
       "title": "External Communication",
@@ -8695,6 +8813,7 @@
     "pendingActivation": "Pending Activation",
     "onlineOnly1": "Purchases from Cisco Online Marketplace only.",
     "onlineOnly2": "Cisco and Cisco Partner invoices are not listed here.",
+    "invoiceError": "An error occurred while generating a link to the invoice because the buyer could not be found in the identity system (CI).",
     "loadError": "An error occurred while loading order history."
   },
   "ciRoles": {
@@ -9161,9 +9280,10 @@
     "userIsMissingEntitlements": "The current user has no Hybrid Services entitlements.",
     "userStatusesSummary": {
       "users": "Users",
-      "inError": "users in error",
-      "inPending": "users in pending activation",
-      "active": "users active",
+      "assigned": "{total, plural, =1{# user assigned} other{# users assigned}}",
+      "inError": "in error",
+      "inPending": "in pending activation",
+      "active": "active",
       "enableUsers": "Enable users"
     },
     "cards": {
@@ -9184,7 +9304,8 @@
         "title": "Meeting",
         "description": "WebEx Meeting Center and Cisco Spark configurations for your organization and individuals.",
         "SPDescription": "WebEx Meeting Center and Cisco Spark configurations.",
-        "pmrText": "Configure your Personal Meeting Room"
+        "pmrText": "Configure your Personal Meeting Room",
+        "viewWebExSites": "View WebEx Sites"
       },
       "call": {
         "title": "Call",
@@ -9396,7 +9517,8 @@
         "buttons": {
           "resources": "Resources",
           "fields": "Fields",
-          "fieldsets": "Fieldsets"
+          "fieldsets": "Fieldsets",
+          "settings": "Settings"
         }
       },
       "privateTrunk": {
@@ -10464,7 +10586,9 @@
       "setAccountLinkingModeError": "Setting Account Linking Mode Failed with : {{message}}",
       "getCiSiteLinkingError": "Failed getting linking info with : {{message}}",
       "getCiAccountSyncError": "Failed getting account sync with : {{message}}",
-      "getDomainsError": "Failed getting domains with : {{message}}"
+      "getDomainsError": "Failed getting domains with : {{message}}",
+      "unableToRetrieveSomeData": "Unable to retrieve some data",
+      "unableToRetrieveData": "Unable to retrieve data"
     },
     "grid": {
       "header": {
@@ -10499,13 +10623,74 @@
       "viewReports": "View Reports",
       "dontHaveAdminRights": "You don't have administrative privileges for this site.",
       "legacyWebexLicense": "Legacy WebEx License",
-      "launchWebexSiteAdmin": "Launch WebEx Site Admin"
+      "launchWebexSiteAdmin": "Launch WebEx Site Admin",
+      "automaticLinking": "Automatic Linking",
+      "automaticLinkingTooltip": "All WebEx accounts listed in the verified domains will be linked, including existing unlinked accounts and future new accounts.",
+      "linkAllUsers": {
+        "startLinkingHeader": "Automatic Linking",
+        "stopLinkingHeader": "Stop Automatic Linking",
+        "cancel": "Cancel",
+        "start": "Link Now",
+        "stop": "stop",
+        "startLinking": "All WebEx accounts listed in the verified domains will be linked, including existing unlinked accounts and future new accounts.",
+        "stopLinking": "By stopping automatic linking, future new accounts will nor be linked to Cisco Spark."
+      }
     },
     "wizard": {
-      "title": "WebEx Accounts Linking Mode",
+      "title": "Verify WebEx Linked Accounts",
       "siteName": "Site Name: {{siteName}}",
-      "enrolledWebexSiteName": "Enrolled WebEx Site Name",
-      "webexSite": "WebEx Site"
+      "enrolledWebexSiteName": "Enrolled WebEx Site",
+      "webexSite": "WebEx Site",
+      "agreementAcceptLabel": "I have read and accept the agreement",
+      "policyHeader": "Cisco Security Policies",
+      "verifyUser": "Why Verify WebEx Users ?",
+      "verifyUserP1": "- Cisco Spark uses innovative encryption for each Spark Space.",
+      "verifyUserP2": "- Each user is authenticated and authorized to access a Spark Space and obtain an encryption key.",
+      "verifyUserP3": "Users verify their accounts by clicking a secure link within the email they receive.",
+      "verifyHow": "How do you verify a user?",
+      "verifyAccounts": "Verify Accounts",
+      "noEmails": "Don't want users to receive linking emails?",
+      "noEmailsP1": "When you verify Cisco Spark accounts, invited users will not receive an email. No user action is required.",
+      "noEmailsP2": "If you don't want your users to receive an email, click \"Verify\" below and you will see the following options:",
+      "noEmailsP3": "Verify Domain",
+      "noEmailsP4": "by entering a TXT record in your DNS.",
+      "noEmailsP5": "Sign a Legal Agreement",
+      "noEmailsP6": "that gives the you a 3 month grace period to enter a TXT record in your DNS",
+      "noEmailsP7": "If you want users to receive linking emails when invited, click \"Receive Email\" and invite users from WebEx Site Administration.",
+      "verify": "Verify",
+      "receiveEmail": "Receive Email",
+      "verifyDomainsHeader": "Verify Domains",
+      "verifyDomains": "Verify your domain and ensure the security and integrity of your organization. Users belonging to verified domains will not be sent an email to verify their email address.",
+      "legalAgreement": "Sign a Legal Agreement that allows your organization to verify your domains within a grace period. Cisco gives you a 3 month grace period to add a TXT record to your DNS so as to prove ownership of the domain.",
+      "verifyDomainsToken": "Cisco provides a token to add to your Domain Host’s DNS TXT record. Cisco confirms that you own the domain by checking for this token on your DNS server. Once the verification is completed, go to WebEx Site Administration and begin inviting users to Cisco Spark. Users in Verified Domains will not receive linking emails.",
+      "signAgreement": "Sign Legal Agreement",
+      "verifyNow": "Verify Now",
+      "webExDomains": "WebEx Domains",
+      "webExDomainsTxt": "Cisco will link WebEx accounts in these domains, without sending any emails to users.",
+      "ciscoWebExDomains": "Cisco WebEx Domains",
+      "publicDomains": "Public Domains",
+      "publicDomainsTxt": "The domains listed here are claimed by other organizations and will not be included in the legal agreement. Cisco will send linking emails to users in these domains to prove they own the email address.",
+      "publicConsumerDomains": "Public Consumer Domains",
+      "fetchingDomains": "Fetching Domains",
+      "fetchingDomainsTxt": "It may take several minutes to get the full list of your domains.",
+      "linkAccounts": "Link Accounts",
+      "linkAccountsTxt": "You're about to be directed to WebEx Site Administration where you can begin to link your WebEx accounts to Cisco Spark.",
+      "ciscoSparkAgreement": "Cisco Spark Agreement",
+      "ciscoSparkAgreementTxt": "Please read the agreement thoroughly and accept below. This will give you 3 months to verify you own the domains by entering a TXT record in your DNS.",
+      "verifyDomainsTxt": "You're about to go to the page where you can verify your domain. Once the verification is complete, you must invite users from WebEx Site Administration. Invited users belonging to verified domains will not receive an email.",
+      "startLinkingAccounts": "Start Linking Accounts",
+      "setupSuccess": "Setup Successfully",
+      "setupSuccessTxt": "Next, sign in to WebEx Site Administration and start linking accounts.",
+      "exceptions": "Exceptions",
+      "exceptionsTooltip": "Users from consumer email domains (e.g. gmail.com, outlook.com, etc.) or from domains that are not verified by the admin will allways receive an email to ensure they are who they say they are.",
+      "receiveEmailMoreInfo": "Note",
+      "receiveEmailInfo": "If you already have domains verified in Cisco Spark Control Hub, users in those domains will not receive emails."
+    },
+    "userSidepanel": {
+      "webexLinkedAccounts": "WebEx Linked Accounts",
+      "linkedAccounts": "Linked Accounts",
+      "webexPreferredSite": "Preferred WebEx Site",
+      "webexPMR": "Personal Meeting Room"
     }
   },
   "hcs": {
@@ -10580,6 +10765,5 @@
         "error": "Errors"
       }
     }
-
   }
 }

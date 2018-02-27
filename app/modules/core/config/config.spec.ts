@@ -31,7 +31,6 @@ describe('Config', function () {
     expect(this.Config.roleStates.PARTNER_SALES_ADMIN).toContain('partnerreports');
     expect(this.Config.roleStates.PARTNER_SALES_ADMIN).toContain('trialAdd');
     expect(this.Config.roleStates.PARTNER_SALES_ADMIN).toContain('trialEdit');
-    expect(this.Config.roleStates.PARTNER_SALES_ADMIN).toContain('pstnSetup');
     expect(this.Config.roleStates.PARTNER_SALES_ADMIN).not.toContain('settings');
   });
 

@@ -1,21 +1,21 @@
 <div class="device-card">
   <div style="display: flex; align-items: center; flex-wrap: wrap">
     <i
-      ng-if="!device.image && device.type != 'group' && device.needsActivation"
+      ng-if="!device.image && device.type !== 'group' && device.needsActivation"
       class="icon icon-3x icon-circle-unlock"
     />
     <i
-      ng-if="!device.image && device.type != 'group' && !device.needsActivation"
+      ng-if="!device.image && device.type !== 'group' && !device.needsActivation"
       class="icon icon-3x icon-circle-telepresence"
     />
     <i
-      ng-if="!device.image && device.type == 'group'"
+      ng-if="!device.image && device.type === 'group'"
       class="icon icon-3x icon-circle-group"
     />
     <img ng-if="device.image" ng-src="{{device.image}}">
     <!--<i-->
       <!--class="overlay"-->
-      <!--ng-if="device.type != 'group' && !device.needsActivation"-->
+      <!--ng-if="device.type !== 'group' && !device.needsActivation"-->
       <!--ng-class="device.cssColorClass"-->
     <!--/>-->
 
@@ -32,7 +32,7 @@
           <div class="ellipsis" ng-if="lctrl.search && !device.needsActivation">
             <!-- search -->
             <span
-              ng-if="device.filterMatch != 'diagnosticsEvent' && device.filterMatch !='product' && lctrl.deviceProps[device.filterMatch]">
+              ng-if="device.filterMatch !== 'diagnosticsEvent' && device.filterMatch !='product' && lctrl.deviceProps[device.filterMatch]">
               {{lctrl.deviceProps[device.filterMatch || 'readableState']}}:
             </span>
             <span

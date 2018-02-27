@@ -10,6 +10,12 @@
     var EMPTY = 'empty';
     var RESIZE_DELAY_IN_MS = 600;
 
+    var MEDIA_TYPE_ALL_TASKS = 'all';
+    var MEDIA_TYPE_CHAT = 'chat';
+    var MEDIA_TYPE_CALLBACK = 'callback';
+    var MEDIA_TYPE_VOICE = 'voice';
+    var MEDIA_TYPE_WEBCALL = 'webcall';
+
     vm.showChartWithoutBreakdown = {
       taskIncoming: EMPTY,
       taskTime: EMPTY,
@@ -81,7 +87,12 @@
 
     vm.shouldVideoDrillDownBeDisplayed = function (isDataPresent) {
       var selectedMediaType = vm.mediaTypeSelected.name;
-      return vm.isVideoFeatureEnabled && selectedMediaType === 'chat' && (vm.isVideoCallEnabled || isDataPresent);
+      return vm.isVideoFeatureEnabled && selectedMediaType === MEDIA_TYPE_CHAT && (vm.isVideoCallEnabled || isDataPresent);
+    };
+
+    vm.shouldWebcallDrillDownBeDisplayed = function (isDataPresent) {
+      var selectedMediaType = vm.mediaTypeSelected.name;
+      return selectedMediaType === MEDIA_TYPE_WEBCALL && isDataPresent;
     };
 
     vm.timeSelected = vm.timeOptions[0];
@@ -91,27 +102,33 @@
     }
 
     vm.filtersUpdate = filtersUpdate;
+    var mediaTypes = [MEDIA_TYPE_ALL_TASKS, MEDIA_TYPE_CHAT, MEDIA_TYPE_CALLBACK, MEDIA_TYPE_VOICE];
+    setMediaTypeOptions(mediaTypes);
 
-    var mediaTypes = ['all', 'chat', 'callback', 'voice'];
-    vm.mediaTypeOptions = _.map(mediaTypes, function (name, i) {
-      return {
-        value: i,
-        name: name,
-        label: $translate.instant('careReportsPage.media_type_' + name),
-      };
-    });
+    function setMediaTypeOptions(mediaTypes) {
+      vm.mediaTypeOptions = _.map(mediaTypes, function (name, i) {
+        return {
+          value: i,
+          name: name,
+          label: $translate.instant('careReportsPage.media_type_' + name),
+        };
+      });
+    }
 
     vm.mediaTypeSelected = vm.mediaTypeOptions[1];
     vm.callbackFeature = false;
 
     function setDrillDownProps(webcallDataPresent, isDataEmpty) {
       vm.taskIncomingDrilldownProps = DrillDownReportProps.taskIncomingDrilldownProps(timeSelected,
-        vm.shouldVideoDrillDownBeDisplayed(webcallDataPresent.isTotalHandledPresent), isDataEmpty);
+        vm.shouldVideoDrillDownBeDisplayed(webcallDataPresent.isTotalHandledPresent),
+        vm.shouldWebcallDrillDownBeDisplayed(webcallDataPresent.isTotalHandledPresent), isDataEmpty);
       vm.taskOfferedDrilldownProps = DrillDownReportProps.taskOfferedDrilldownProps(timeSelected, isDataEmpty);
       vm.avgCsatDrilldownProps = DrillDownReportProps.avgCsatDrilldownProps(timeSelected,
-        vm.shouldVideoDrillDownBeDisplayed(webcallDataPresent.isAvgCSATPresent), isDataEmpty);
+        vm.shouldVideoDrillDownBeDisplayed(webcallDataPresent.isAvgCSATPresent),
+        vm.shouldWebcallDrillDownBeDisplayed(webcallDataPresent.isTotalHandledPresent), isDataEmpty);
       vm.taskTimeDrilldownProps = DrillDownReportProps.taskTimeDrilldownProps(timeSelected,
-        vm.shouldVideoDrillDownBeDisplayed(webcallDataPresent.isAvgHandleTimePresent), isDataEmpty);
+        vm.shouldVideoDrillDownBeDisplayed(webcallDataPresent.isAvgHandleTimePresent),
+        vm.shouldWebcallDrillDownBeDisplayed(webcallDataPresent.isTotalHandledPresent), isDataEmpty);
     }
 
     function filtersUpdate() {
@@ -366,6 +383,13 @@
       vm.isVideoCallEnabled = isVideoCallEnabled;
       filtersUpdate();
     }
+
+    FeatureToggleService.atlasCareWebcallReportTrialsGetStatus().then(function (result) {
+      if (result === true) {
+        mediaTypes.push(MEDIA_TYPE_WEBCALL);
+        setMediaTypeOptions(mediaTypes);
+      }
+    }).catch(function () {});
 
     var featurePromise = $q.all([FeatureToggleService.atlasCareChatToVideoTrialsGetStatus(),
       SunlightConfigService.getChatConfig()]);

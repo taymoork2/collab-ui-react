@@ -1,13 +1,14 @@
 import * as URL from 'url';
-import { ConnectorType, ICluster } from 'modules/hercules/hybrid-services.types';
+import { ICluster } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesExtrasService } from 'modules/hercules/services/hybrid-services-extras.service';
 import { Notification } from 'modules/core/notifications';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
+import { IConnectorUpgrade } from 'modules/hercules/hybrid-services-nodes-page/connector-upgrade-banner/connector-upgrade-banner.component';
 
 interface IUpgrade {
-  connectorType: ConnectorType;
-  connectorName: string;
   availableVersion: string;
+  connectorName: string;
+  connectorUpgrade: IConnectorUpgrade;
   releaseNotes: string;
   releaseNotesUrl: string | undefined;
 }
@@ -21,7 +22,7 @@ export class ConnectorUpgradeController {
     private $modalInstance,
     private $translate: ng.translate.ITranslateService,
     private cluster: ICluster,
-    private connectorType: ConnectorType,
+    private connectorUpgrade: IConnectorUpgrade,
     private Analytics,
     private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesExtrasService: HybridServicesExtrasService,
@@ -33,10 +34,10 @@ export class ConnectorUpgradeController {
   public upgrade() {
     this.Analytics.trackHybridServiceEvent(this.Analytics.sections.HS_NAVIGATION.eventNames.START_CONNECTOR_UPGRADE, {
       'Cluster Id': this.cluster.id,
-      'Connector Type': this.connectorType,
+      'Connector Type': this.connectorUpgrade.connectorType,
     });
     this.upgrading = true;
-    this.HybridServicesClusterService.upgradeSoftware(this.cluster.id, this.connectorType)
+    this.HybridServicesClusterService.upgradeSoftware(this.cluster.id, this.connectorUpgrade.connectorType)
       .then(() => {
         this.$modalInstance.close();
       })
@@ -49,15 +50,15 @@ export class ConnectorUpgradeController {
   }
 
   private init(): void {
-    this.HybridServicesExtrasService.getReleaseNotes(this.cluster.releaseChannel, this.connectorType)
+    this.HybridServicesExtrasService.getReleaseNotes(this.cluster.releaseChannel, this.connectorUpgrade.connectorType)
       .then((releaseNotes) => {
-        const availableVersion = _.find(this.cluster.provisioning, { connectorType: this.connectorType }).availableVersion;
+        const availableVersion = _.find(this.cluster.provisioning, { connectorType: this.connectorUpgrade.connectorType }).availableVersion;
         const urlParts = URL.parse(releaseNotes);
         const releaseNotesUrl = urlParts.hostname !== null ? urlParts.href : '';
         this.upgradeInfo = {
-          connectorType: this.connectorType,
-          connectorName: this.$translate.instant(`hercules.shortConnectorNameFromConnectorType.${this.connectorType}`),
           availableVersion: availableVersion,
+          connectorName: this.$translate.instant(`hercules.shortConnectorNameFromConnectorType.${this.connectorUpgrade.connectorType}`),
+          connectorUpgrade: this.connectorUpgrade,
           releaseNotes: releaseNotes,
           releaseNotesUrl: releaseNotesUrl,
         };

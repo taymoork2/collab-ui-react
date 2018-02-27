@@ -97,7 +97,6 @@
     require('modules/core/customerReports').default,
     require('modules/core/partnerReports').default,
     require('modules/gemini/reports').default,
-    require('modules/account-linking/banner').default,
     require('modules/core/siteList/webex-site').default,
     require('modules/core/overview/notifications').default,
   ])
@@ -160,6 +159,7 @@
     require('modules/core/users/userAdd').default,
     require('modules/hercules/cluster-card').default,
     require('modules/hercules/connector-upgrade-modal/connector-upgrade-modal.controller').default,
+    require('modules/hercules/fusion-pages/add-resource/common').default,
     require('modules/hercules/google-calendar-settings/google-calendar-config-section/google-calendar-second-time-setup').default,
     require('modules/hercules/hybrid-media-cluster-settings').default,
     require('modules/hercules/hybrid-services-cluster-list-with-cards').default,
@@ -176,7 +176,10 @@
     require('modules/hercules/service-settings/calendar-service-setup').default,
     require('modules/hercules/service-settings/call-service-settings-page').default,
     require('modules/hercules/service-settings/sip-destination-settings-section').default,
+    require('modules/hercules/service-specific-pages/components/calendar-service-users-page').default,
+    require('modules/hercules/service-specific-pages/components/call-service-users-page').default,
     require('modules/hercules/service-specific-pages/components/cluster-list/hybrid-service-cluster-list.component').default,
+    require('modules/hercules/service-specific-pages/components/imp-service-users-page').default,
     require('modules/hercules/service-specific-pages/components/user-status-report').default,
     require('modules/hercules/services/calendar-cloud-connector.service').default,
     require('modules/hercules/services/enterprise-private-trunk-service').default,
@@ -205,6 +208,7 @@
     require('modules/hercules/user-sidepanel/hybrid-services-sidepanel-error-message').default,
     require('modules/hercules/user-sidepanel/hybrid-services-user-homed-cluster-and-hostname').default,
     require('modules/hercules/user-sidepanel/hybrid-services-user-sidepanel-section').default,
+    require('modules/hercules/user-sidepanel/user-status-messages').default,
   ]);
 
   angular.module('HDS', [
@@ -218,6 +222,11 @@
     'Hercules',
     'Squared',
     require('modules/mediafusion/media-service-v2/components/video-quality-section').default,
+    require('modules/mediafusion/media-service-v2/components/sip-registration-section').default,
+    require('modules/mediafusion/media-service-v2/components/trusted-sip-section').default,
+    require('modules/mediafusion/media-service-v2/activation').default,
+    require('modules/mediafusion/media-service-v2/components/cluster-cascade-bandwidth').default,
+    require('modules/mediafusion/media-service-v2/resources').default,
   ]);
 
   angular.module('WebExApp', [
@@ -276,6 +285,8 @@
   angular.module('AccountLinking', [
     'Core',
     require('modules/account-linking').default,
+    require('modules/account-linking/user-sidepanel/linked-sites-user-sidepanel-section').default,
+    require('modules/account-linking/user-sidepanel/linked-sites-user-settings').default,
   ]);
 
   module.exports = angular.module('Main', [

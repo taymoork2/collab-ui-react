@@ -1,40 +1,47 @@
 <cs-sp-section>
-    <section-title title-key="usersPreview.userDetails"></section-title>
-    <div class="feature-list">
-        <ul ng-if="::!$ctrl.dirsyncEnabled">
-          <!--Adding a  section for Location details-->
-            <li class="feature" ng-if="$ctrl.ishI1484 && $ctrl.hasSparkCall">
-              <a href ng-click="$ctrl.openPanel()">
-                <span class="feature-name" translate="usersPreview.location"></span>
-                <span class="feature-details feature-label feature-status">{{$ctrl.userLocation}}</span>
-                  <i class="feature-arrow"></i>
-              </a>
-            </li>
-            <li class="feature" ng-repeat="userDetail in $ctrl.details track by $index">
-                <a href ng-click="$ctrl.action(userDetail)" ng-class="{'no-services': !userDetail.actionAvailable}">
-                    <span class="feature-name">{{userDetail.name}}</span>
-                    <span class="feature-details feature-label" ng-if="userDetail.detail"
-                        ng-class="{'feature-arrow-match': $ctrl.hasActionAvailable && !userDetail.actionAvailable, 'feature-status': $ctrl.hasActionAvailable, 'feature-details': !$ctrl.hasActionAvailable}">
-                        {{userDetail.detail}}</span>
-                    <span class="feature-details feature-label" ng-if="!userDetail.detail"
-                        ng-class="{'feature-arrow-match': $ctrl.hasActionAvailable && !userDetail.actionAvailable, 'feature-status': $ctrl.hasActionAvailable, 'feature-details': !$ctrl.hasActionAvailable}">
-                        {{'usersPreview.notConfigured' | translate}}
-                    </span>
-                    <i class="feature-arrow" ng-if="userDetail.actionAvailable"></i>
-                </a>
-            </li>
-        </ul>
-        <ul ng-if="::$ctrl.dirsyncEnabled">
-            <li class="feature" ng-repeat="userDetail in $ctrl.details track by $index">
-                <span class="feature-name">{{userDetail.name}}</span>
-                <span class="feature-details feature-label" ng-if="userDetail.detail">{{userDetail.detail}}</span>
-                <span class="feature-details feature-label" ng-if="!userDetail.detail">
-                    {{'usersPreview.notConfigured' | translate}}
-                </span>
-                <span class="feature-details feature-label">
-                    <i class="icon icon-info" tooltip-placement="left" tooltip="{{'usersPreview.dirsyncToolTip' | translate}}"></i>
-                </span>
-            </li>
-        </ul>
-    </div>
+  <section-title title-key="usersPreview.userDetails"></section-title>
+  <div class="feature-list">
+    <ul ng-if="::!$ctrl.dirsyncEnabled">
+      <!--Adding a  section for Location details-->
+      <li class="feature" ng-if="$ctrl.ishI1484 && $ctrl.hasSparkCall">
+        <a href ng-click="$ctrl.openPanel()">
+          <span class="feature-name" translate="usersPreview.location"></span>
+          <span class="feature-details feature-label feature-status">{{$ctrl.userLocation}}</span>
+            <i class="feature-arrow"></i>
+        </a>
+      </li>
+      <li class="feature" ng-repeat="userDetail in $ctrl.details track by $index">
+        <a href ng-click="$ctrl.action(userDetail)" ng-class="{'no-services': !userDetail.actionAvailable}">
+          <span class="feature-name">{{userDetail.name}}</span>
+          <span class="feature-details feature-label"
+            ng-if="userDetail.detail"
+            ng-class="{'feature-arrow-match': $ctrl.hasActionAvailable && !userDetail.actionAvailable, 'feature-status': $ctrl.hasActionAvailable, 'feature-details': !$ctrl.hasActionAvailable}">
+            {{userDetail.detail}}
+          </span>
+          <span class="feature-details feature-label"
+            ng-if="!userDetail.detail"
+            ng-class="{'feature-arrow-match': $ctrl.hasActionAvailable && !userDetail.actionAvailable, 'feature-status': $ctrl.hasActionAvailable, 'feature-details': !$ctrl.hasActionAvailable}">
+            {{::'usersPreview.notConfigured' | translate}}
+          </span>
+          <i class="feature-arrow" ng-if="userDetail.actionAvailable"></i>
+        </a>
+      </li>
+    </ul>
+    <ul ng-if="::$ctrl.dirsyncEnabled">
+      <li class="feature" ng-repeat="userDetail in $ctrl.details track by $index">
+        <span class="feature-name">{{userDetail.name}}</span>
+        <span class="feature-details feature-label" ng-if="userDetail.detail">{{userDetail.detail}}</span>
+        <span class="feature-details feature-label" ng-if="!userDetail.detail">{{::'usersPreview.notConfigured' | translate}}</span>
+        <span class="feature-details feature-label">
+          <i class="icon icon-info"
+            tabindex="0"
+            tooltip-placement="left"
+            tooltip="{{'usersPreview.dirsyncToolTip' | translate}}"
+            tooltip-trigger="mouseenter focus"
+            aria-label="{{'usersPreview.dirsyncToolTip' | translate}}">
+          </i>
+        </span>
+      </li>
+    </ul>
+  </div>
 </cs-sp-section>

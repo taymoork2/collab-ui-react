@@ -21,8 +21,8 @@
         <div class="row">
           <div class="small-11 columns">
             <span ng-if="aaMediaUpload.progress < 100" translate="fileUpload.uploading"></span>
-            <span ng-if="aaMediaUpload.progress == 100" translate="fileUpload.success"></span>
-            <span class="icon icon-check green" ng-if="aaMediaUpload.progress == 100"></span>
+            <span ng-if="aaMediaUpload.progress === 100" translate="fileUpload.success"></span>
+            <span class="icon icon-check green" ng-if="aaMediaUpload.progress === 100"></span>
             <span class="progressbar-label"></span>
             <span class="progressbar-progress">{{ aaMediaUpload.progress }}%</span>
           </div>

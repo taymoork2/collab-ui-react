@@ -1,8 +1,20 @@
-<div class="user-statuses-card" ng-repeat="summary in $ctrl.userStatuses | orderBy: 'serviceId' : true ">
-  <div class="user-statuses-title"><span translate="{{::'hercules.cloudExtensions.serviceNames.' + summary.serviceId}}"></span>&nbsp;–&nbsp;<span translate="hercules.overview.status"></span></div>
-  <ul class="user-statuses-content">
-    <li><span translate="hercules.overview.activated"></span>: {{summary.activated}}</li>
-    <li><span translate="hercules.overview.pending"></span>: {{summary.notActivated}}</li>
-    <li><span translate="hercules.overview.error"></span>: <span ng-class="{'red': summary.error > 0}">{{summary.error}}</span></li>
-  </ul>
+<div class="cs-form__section">
+  <div class="section__info">
+    <h4 class="section__title" translate="hercules.userStatuses.summaryTitle"></h4>
+  </div>
+  <div class="section__content">
+    <div class="sub-section" ng-repeat="summary in $ctrl.userStatuses | orderBy:'serviceId':true">
+      <h5 class="sub-section__label">
+        <div translate="{{::'hercules.cloudExtensions.serviceNames.' + summary.serviceId}}"></div>:
+        <div translate="servicesOverview.userStatusesSummary.assigned" translate-value-total="{{summary.total}}" translate-interpolation="messageformat"></div>
+      </h5>
+      <div class="sub-section__description">
+        <ul class="user-statuses-content">
+          <li><span translate="hercules.overview.activated"></span>: {{summary.activated}}</li>
+          <li><span translate="hercules.overview.pending"></span>: {{summary.notActivated}}</li>
+          <li><span translate="hercules.overview.error"></span>: <span class="badge badge--outline badge--round">{{summary.error}}</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </div>

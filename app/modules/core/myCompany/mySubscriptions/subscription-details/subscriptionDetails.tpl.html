@@ -10,7 +10,15 @@
   </h5>
 
   <div class="pro-pack-column" ng-if="$ctrl.getProPackStatus()">
-    <div class="detail" ng-class="{'tooltip-present': !$ctrl.getView()}" tooltip-html-unsafe="{{::$ctrl.subscription.proPack.tooltip}}" tooltip-enable="!$ctrl.getView() && $ctrl.subscription.proPack.tooltip" tooltip-placement="top-left" tooltip-class="subscription-tooltip" tooltip-append-to-body="true">
+    <div class="detail"
+      ng-class="{'tooltip-present': !$ctrl.getView()}"
+      tabindex="0"
+      tooltip-html-unsafe="{{::$ctrl.subscription.proPack.tooltip}}"
+      tooltip-enable="!$ctrl.getView() && $ctrl.subscription.proPack.tooltip"
+      tooltip-placement="top-left"
+      tooltip-class="subscription-tooltip"
+      tooltip-append-to-body="true"
+      aria-label="{{::$ctrl.subscription.proPack.tooltipAriaLabel}}">
       <span class="h6">{{::$ctrl.getLicenseName($ctrl.subscription.proPack.offerName)}}</span>
       <cr-pro-pack-icon></cr-pro-pack-icon>
       <div class="detail-break match-icon" ng-if="$ctrl.getView()">

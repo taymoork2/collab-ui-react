@@ -216,7 +216,7 @@ export class L2SipService {
       result.type = 'error';
     }
     let currentTarget: string | null = null;
-    const formattedTests = steps.reduce((acc, step) => {
+    const formattedTests = steps.reduce((acc, step, index, collection) => {
       if (step.type === 'Connecting') {
         currentTarget = step.description;
         acc[currentTarget] = <IFormattedTest>{
@@ -237,7 +237,13 @@ export class L2SipService {
         } else if (step.type === 'SocketReadWriteFailure') {
           (acc[(currentTarget as string)] as IFormattedTest).socket = { status: 'error', type: step.type };
         } else if (step.type === 'IOFailure') {
-          (acc[(currentTarget as string)] as IFormattedTest).socket = { status: 'error', type: step.type, error: `${step.description} ${step.exception}` };
+          const previousStep = collection[index - 1];
+          // If "IOFailure" is following "Connecting", then modify the previous step
+          if (previousStep.type === 'Connecting') {
+            (acc[currentTarget!] as IFormattedTest).connecting = { status: 'error', type: previousStep.type, error: `${step.description} ${step.exception}` };
+          } else {
+            (acc[(currentTarget as string)] as IFormattedTest).socket = { status: 'error', type: step.type, error: `${step.description} ${step.exception}` };
+          }
         }
       } else if (step.type === 'SSLHandshakeCompleted') {
         (acc[(currentTarget as string)] as IFormattedTest).sslHandshake = { status: 'success' };

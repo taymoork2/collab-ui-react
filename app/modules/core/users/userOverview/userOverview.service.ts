@@ -13,6 +13,8 @@ export interface IUser {
   pendingStatus: boolean;
   userSettings: string[];
   trainSiteNames: string[];
+  linkedTrainSiteNames: string[];
+  userPreferences: string[];
   roles: string[];
   invitations?: IServiceInvitations;
 }
@@ -30,6 +32,8 @@ export class User implements IUser {
   public pendingStatus: boolean;
   public userSettings: string[];
   public trainSiteNames: string[];
+  public linkedTrainSiteNames: string[];
+  public userPreferences: string[];
   public roles: string[];
   public invitations?: IServiceInvitations;
 
@@ -45,6 +49,8 @@ export class User implements IUser {
     pendingStatus: false,
     userSettings: [],
     trainSiteNames: [],
+    linkedTrainSiteNames: [],
+    userPreferences: [],
     roles: [],
   }) {
     _.extend(this, obj);
@@ -255,6 +261,10 @@ export class UserOverviewService {
     } else {
       return [];
     }
+  }
+
+  public userHasActivatedAccountInCommonIdentity(user: IUser): boolean {
+    return !_.includes(user.accountStatus, 'pending');
   }
 
   public getAccountActiveStatus(user: IUser): boolean {

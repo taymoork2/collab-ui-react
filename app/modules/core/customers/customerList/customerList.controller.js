@@ -765,7 +765,7 @@ require('./_customer-list.scss');
       return ExternalNumberService.isTerminusCustomer(org.customerOrgId)
         .then(function (response) {
           if (response) {
-            return $state.go('pstnSetup', {
+            return $state.go('pstnWizard', {
               customerId: org.customerOrgId,
               customerName: org.customerName,
               customerEmail: org.customerEmail,

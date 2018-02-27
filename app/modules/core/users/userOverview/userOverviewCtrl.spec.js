@@ -12,8 +12,20 @@ var preferredLanguageDetails = {
 describe('Controller: UserOverviewCtrl', function () {
   function init() {
     this.initModules(testModule, 'WebExApp', 'Sunlight', 'Huron');
-    this.injectDependencies('$controller', '$q', '$scope', 'Authinfo', 'Config', 'FeatureToggleService',
-      'MessengerInteropService', 'Notification', 'ServiceSetup', 'UrlConfig', 'UserOverviewService', 'Userservice',
+    this.injectDependencies(
+      '$controller',
+      '$q',
+      '$scope',
+      'Authinfo',
+      'Config',
+      'FeatureToggleService',
+      'MessengerInteropService',
+      'MultiDirSyncService',
+      'Notification',
+      'ServiceSetup',
+      'UrlConfig',
+      'UserOverviewService',
+      'Userservice',
       'Utils');
     initData.apply(this);
     initDependencySpies.apply(this);
@@ -32,6 +44,7 @@ describe('Controller: UserOverviewCtrl', function () {
     var _this = this;
 
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(this.pristineCurrentUser.meta.organizationID);
+    spyOn(this.MultiDirSyncService, 'isDirsyncEnabled').and.returnValue(this.$q.resolve(false));
 
     this.getUserSpy = spyOn(this.UserOverviewService, 'getUser').and.callFake(function () {
       var getUserResponse = {
@@ -138,6 +151,15 @@ describe('Controller: UserOverviewCtrl', function () {
       initController.apply(this);
       msgState = _.find(this.controller.services, { state: 'messaging' });
       expect(msgState.actionAvailable).toBe(true);
+    });
+
+    it('should set dirsyncEnabled based on what is returned by the MultiDirSyncService call', function () {
+      initController.apply(this);
+      expect(this.controller.dirsyncEnabled).toBe(false);
+
+      this.MultiDirSyncService.isDirsyncEnabled.and.returnValue(this.$q.resolve(true));
+      initController.apply(this);
+      expect(this.controller.dirsyncEnabled).toBe(true);
     });
   });
 

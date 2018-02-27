@@ -6,7 +6,7 @@
     .factory('OverviewNotificationFactory', OverviewNotificationFactory);
 
   /* @ngInject */
-  function OverviewNotificationFactory(OverviewCrashLogNotification, OverviewSetupNotification, OverviewUrgentUpgradeNotification, OverviewCalendarNotification, OverviewGoogleCalendarNotification, OverviewCallConnectNotification, OverviewCallAwareNotification, OverviewCloudSipUriNotification, OverviewDevicesNotification, OverviewHybridMediaNotification, OverviewDataSecurityNotification, OverviewPSTNToSNotification, OverviewCareLicenseNotification, OverviewPstnTermsOfServiceNotification, OverviewEsaDisclaimerNotification, CallServiceHighAvailability, OverviewHybridMessagingNotification, OverviewAllHybridCalendarsNotification, OverviewCareNotSetupNotification, OverviewAutoAssignNotificationFactory) {
+  function OverviewNotificationFactory(OverviewCrashLogNotification, OverviewSetupNotification, OverviewUrgentUpgradeNotification, OverviewCalendarNotification, OverviewGoogleCalendarNotification, OverviewCallConnectNotification, OverviewCallAwareNotification, OverviewCloudSipUriNotification, OverviewDevicesNotification, OverviewHybridMediaNotification, OverviewDataSecurityNotification, OverviewCareLicenseNotification, OverviewPstnTermsOfServiceNotification, OverviewEsaDisclaimerNotification, CallServiceHighAvailability, OverviewHybridMessagingNotification, OverviewAllHybridCalendarsNotification, OverviewCareNotSetupNotification, OverviewAutoAssignNotificationFactory, LinkedSiteNotification) {
     return {
       createCrashLogNotification: OverviewCrashLogNotification.createNotification,
       createSetupNotification: OverviewSetupNotification.createNotification,
@@ -21,13 +21,13 @@
       createHybridMediaNotification: OverviewHybridMediaNotification.createNotification,
       createHybridDataSecurityNotification: OverviewDataSecurityNotification.createNotification,
       createHybridMessagingNotification: OverviewHybridMessagingNotification.createNotification,
-      createPSTNToSNotification: OverviewPSTNToSNotification.createNotification,
       createCareLicenseNotification: OverviewCareLicenseNotification.createNotification,
       createPstnTermsOfServiceNotification: OverviewPstnTermsOfServiceNotification.createNotification,
       createEsaDisclaimerNotification: OverviewEsaDisclaimerNotification.createNotification,
       createCallServiceHighAvailability: CallServiceHighAvailability.createNotification,
       createCareNotSetupNotification: OverviewCareNotSetupNotification.createNotification,
       createAutoAssignNotification: OverviewAutoAssignNotificationFactory.createNotification,
+      createLinkedSitesNotification: LinkedSiteNotification.createNotification,
     };
   }
 })();
