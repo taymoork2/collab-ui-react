@@ -10695,9 +10695,22 @@
   },
   "hcs": {
     "cardTitle": "Hosted Collaboration Service",
-    "description": "Extend Management services to Hosted Cloud Solution.",
-    "license": "License Management",
-    "upgrade": "Upgrade Management",
+    "description": "Extend Cloud services to Hosted Cloud Solution.",
+    "addService": "Add a Service",
+    "inventory": "Inventory",
+    "agentInstallFiles": "Agent Install Files",
+    "license": {
+      "title": "HCS Licenses",
+      "description": "Extend Licensing services to Hosted Cloud Solution.",
+      "perpetual": "Perpetual",
+      "subscriptions": "Subscriptions"
+    },
+    "upgrade": {
+      "title": "HCS Upgrade Settings",
+      "description": "Extend Upgrade services to Hosted Cloud Solution.",
+      "sftp": "SFTP Servers",
+      "softwareProfiles": "Software Profiles"
+    },
     "taas": {
       "testState": {
         "good": "Passed",
