@@ -217,7 +217,7 @@ describe('Controller: DevicesReduxCtrl', () => {
       expect(controller.exporting).toBeTruthy();
 
       controller.exportStatus(100);
-      expect(Notification.success).toHaveBeenCalledWith('spacesPage.export.deviceListReadyForDownload', 'spacesPage.export.exportCompleted');
+      expect(Notification.success).toHaveBeenCalledWith('spacesPage.export.deviceListReadyForDownload', undefined, 'spacesPage.export.exportCompleted');
       expect(controller.exporting).toBeFalsy();
     });
 
