@@ -1171,6 +1171,10 @@ require('./_user-add.scss');
             licenseList.push(new LicenseFeature($scope.messageFeatures[1].licenses[0].licenseId, false));
           }
         }
+        // only keep add-operations in 'additive'-mode
+        if (action === 'additive') {
+          licenseList = _.filter(licenseList, { idOperation: 'ADD' });
+        }
 
         // Conferencing: depends on model (standard vs. CMR)
         var cidListAdd = getConfIdList(true);
@@ -1481,7 +1485,7 @@ require('./_user-add.scss');
 
     /* Used by the hybrid services component, because you need at least one paid license to enable hybrid services  */
     $scope.userIsLicensed = function () {
-      return !_.isEmpty(getAccountLicenses());
+      return !_.isEmpty(getAccountLicenses('additive'));
     };
 
     $scope.hybridServicesEntitlements = [];
