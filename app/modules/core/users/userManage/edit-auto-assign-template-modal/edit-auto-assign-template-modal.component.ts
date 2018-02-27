@@ -47,9 +47,8 @@ export class EditAutoAssignTemplateModalController implements ng.IComponentContr
   }
 
   public get hasLicenseSelections(): boolean {
-    return _.some(this.sortedSubscriptions, (subscription) => {
-      return !_.isEmpty(subscription.licenses);
-    });
+    const targetStateViewData = this.mkTargetStateViewData();
+    return this.targetStateHasLicenseSelections(targetStateViewData);
   }
 
   public dismissModal(): void {
@@ -162,11 +161,17 @@ export class EditAutoAssignTemplateModalController implements ng.IComponentContr
 
   private targetStateViewDataHasSelections(): boolean {
     const targetStateViewData = this.mkTargetStateViewData();
+    return this.targetStateHasLicenseSelections(targetStateViewData) || this.targetStateHasUserEntitlementSelections(targetStateViewData);
+  }
+
+  private targetStateHasLicenseSelections(targetStateViewData: IAutoAssignTemplateDataViewData): boolean {
     const licenseSelections = _.get(targetStateViewData, AssignableServicesItemCategory.LICENSE);
-    const hasLicenseSelections = _.some(licenseSelections, { isSelected: true });
+    return _.some(licenseSelections, { isSelected: true });
+  }
+
+  private targetStateHasUserEntitlementSelections(targetStateViewData: IAutoAssignTemplateDataViewData): boolean {
     const userEntitlementSelections = _.get(targetStateViewData, AssignableServicesItemCategory.USER_ENTITLEMENT);
-    const hasUserEntitlementSelections = _.some(userEntitlementSelections, { isSelected: true });
-    return hasLicenseSelections || hasUserEntitlementSelections;
+    return _.some(userEntitlementSelections, { isSelected: true });
   }
 
   private hasSelectionChanges(): boolean {

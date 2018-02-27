@@ -465,26 +465,45 @@ describe('Component: editAutoAssignTemplateModal:', () => {
     });
 
     describe('targetStateViewDataHasSelections()', () => {
-      it('should return true target view state has either a license or user-entitlement entry that is selected', function () {
+      it('should return true if either "targetStateHasLicenseSelections()" or "targetStateHasUserEntitlementSelections()" return true', function () {
+        spyOn(this.controller, 'mkTargetStateViewData');
+        spyOn(this.controller, 'targetStateHasLicenseSelections').and.returnValue(false);
+        spyOn(this.controller, 'targetStateHasUserEntitlementSelections').and.returnValue(false);
+        expect(this.controller.targetStateViewDataHasSelections()).toBe(false);
+
+        this.controller.targetStateHasLicenseSelections.and.returnValue(true);
+        this.controller.targetStateHasUserEntitlementSelections.and.returnValue(false);
+        expect(this.controller.targetStateViewDataHasSelections()).toBe(true);
+
+        this.controller.targetStateHasLicenseSelections.and.returnValue(false);
+        this.controller.targetStateHasUserEntitlementSelections.and.returnValue(true);
+        expect(this.controller.targetStateViewDataHasSelections()).toBe(true);
+
+        this.controller.targetStateHasLicenseSelections.and.returnValue(true);
+        this.controller.targetStateHasUserEntitlementSelections.and.returnValue(true);
+        expect(this.controller.targetStateViewDataHasSelections()).toBe(true);
+      });
+    });
+
+    describe('targetStateHasLicenseSelections()', () => {
+      it('should return true if at least one license item in view data is selected', function () {
         const fakeViewData = {};
+        expect(this.controller.targetStateHasLicenseSelections(fakeViewData)).toBe(false);
+        _.set(fakeViewData, `${AssignableServicesItemCategory.LICENSE}.fakeLicenseId`, { isSelected: false });
+        expect(this.controller.targetStateHasLicenseSelections(fakeViewData)).toBe(false);
         _.set(fakeViewData, `${AssignableServicesItemCategory.LICENSE}.fakeLicenseId`, { isSelected: true });
-        spyOn(this.controller, 'mkTargetStateViewData').and.returnValue(fakeViewData);
-        expect(this.controller.targetStateViewDataHasSelections()).toBe(true);
+        expect(this.controller.targetStateHasLicenseSelections(fakeViewData)).toBe(true);
+      });
+    });
 
-        _.set(fakeViewData, `${AssignableServicesItemCategory.LICENSE}.fakeLicenseId.isSelected`, false);
-        expect(this.controller.targetStateViewDataHasSelections()).toBe(false);
-
-        _.unset(fakeViewData, `${AssignableServicesItemCategory.LICENSE}.fakeLicenseId`);
-        expect(this.controller.targetStateViewDataHasSelections()).toBe(false);
-
+    describe('targetStateHasUserEntitlementSelections()', () => {
+      it('should return true if at least one user-entitlement item in view data is selected', function () {
+        const fakeViewData = {};
+        expect(this.controller.targetStateHasUserEntitlementSelections(fakeViewData)).toBe(false);
+        _.set(fakeViewData, `${AssignableServicesItemCategory.USER_ENTITLEMENT}.fakeUserEntitlementId`, { isSelected: false });
+        expect(this.controller.targetStateHasUserEntitlementSelections(fakeViewData)).toBe(false);
         _.set(fakeViewData, `${AssignableServicesItemCategory.USER_ENTITLEMENT}.fakeUserEntitlementId`, { isSelected: true });
-        expect(this.controller.targetStateViewDataHasSelections()).toBe(true);
-
-        _.set(fakeViewData, `${AssignableServicesItemCategory.USER_ENTITLEMENT}.fakeUserEntitlementId.isSelected`, false);
-        expect(this.controller.targetStateViewDataHasSelections()).toBe(false);
-
-        _.unset(fakeViewData, `${AssignableServicesItemCategory.USER_ENTITLEMENT}.fakeUserEntitlementId`);
-        expect(this.controller.targetStateViewDataHasSelections()).toBe(false);
+        expect(this.controller.targetStateHasUserEntitlementSelections(fakeViewData)).toBe(true);
       });
     });
 
