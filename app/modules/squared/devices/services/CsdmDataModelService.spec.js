@@ -25,7 +25,6 @@ describe('Service: CsdmDataModelService', function () {
   var huronPlaceWithoutDeviceUrl = placesUrl + '938d9c32-huronPlaceWithoutDevice-88d7c1a7f63ev';
 
   var initialDeviceMap;
-  var initialDevice1Reference;
   var initialDeviceCount;
   var initialPlaceMap;
   var initialPlaceCount;
@@ -69,7 +68,6 @@ describe('Service: CsdmDataModelService', function () {
       initialPlaceMap = placesMap;
       initialDeviceMapPromise.then(function (deviceMap) {
         initialDeviceMap = deviceMap;
-        initialDevice1Reference = initialDeviceMap[device1Url];
         initialDeviceCount = Object.keys(initialDeviceMap).length;
       });
     });
