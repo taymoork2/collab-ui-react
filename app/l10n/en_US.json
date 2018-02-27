@@ -6239,7 +6239,8 @@
     "roles": "Roles",
     "helpdesk": "Help Desk",
     "orderadmin": "Order Admin",
-    "compliance": "Compliance"
+    "compliance": "Compliance",
+    "cca": "CCA (Cloud Connected Audio)"
   },
   "mohManagement": {
     "title": "Media On Hold",

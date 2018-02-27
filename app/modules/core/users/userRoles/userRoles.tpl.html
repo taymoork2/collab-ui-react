@@ -174,6 +174,21 @@
                     class="icon icon-information role-information"
                     tabindex="0"></i>
                 </div>
+
+                <div class="admin-options indent-checkbox" ng-if="showCCAAdminRole" ng-repeat="ccaAdminRole in ccaAdminRoles | orderBy: 'name' track by ccaAdminRole.name">
+                  <input cs-input type="checkbox"
+                    id="{{::ccaAdminRole.name}}"
+                    cs-input-label="{{::ccaAdminRole.displayName}}"
+                    ng-model="ccaAdminRole.active"
+                    ng-change="partialCheckboxes()"
+                    ng-disabled="isNotEditable">
+                  <i aria-label="{{::ccaAdminRole.description}}"
+                    tooltip-html-unsafe="{{::ccaAdminRole.tooltip}}"
+                    tooltip-placement="right"
+                    tooltip-trigger="focus mouseenter"
+                    class="icon icon-information role-information"
+                    tabindex="0"></i>
+                </div>
               </div>
 
               <div class="admin-roles-panel" ng-if="showHelpDeskRole">
@@ -240,6 +255,27 @@
                     tabindex="0"></i>
                 </div>
               </div>
+
+              <div class="admin-roles-panel" ng-if="showCCARoles">
+                <p class="edit-title" translate="rolesPanel.cca"></p>
+                <div ng-if="loadingCCARoles">
+                  <i class="icon icon icon-spinner"></i>
+                </div>
+                <div class="admin-options" ng-repeat="ccaRole in ccaRoles | orderBy: 'name' track by ccaRole.name">
+                  <input cs-input type="checkbox"
+                    id="{{::ccaRole.name}}"
+                    cs-input-label="{{::ccaRole.displayName}}"
+                    ng-model="ccaRole.active"
+                    ng-disabled="isNotEditable">
+                  <i aria-label="{{::ccaRole.description}}"
+                    tooltip="{{::ccaRole.tooltip}}"
+                    tooltip-placement="right"
+                    tooltip-trigger="focus mouseenter"
+                    class="icon icon-information role-information"
+                    tabindex="0"></i>
+                </div>
+              </div>
+
             </div>
           </form>
         </div>

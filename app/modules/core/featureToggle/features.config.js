@@ -21,6 +21,7 @@ module.exports = {
   atlasComplianceRole: 'atlas-compliance-role',
   atlasContextServiceOnboarding: 'context-onboarding-trials',
   atlasCsvImportTaskManager: 'atlas-csv-import-task-manager',
+  atlasCCARole: 'atlas-cca-role',
   atlasDarling: 'atlas-darling',
   atlasDataRetentionSettings: 'atlas-data-retention-settings',
   atlasDeviceExport: 'atlas-device-export',
