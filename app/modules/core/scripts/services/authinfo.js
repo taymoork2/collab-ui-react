@@ -426,7 +426,7 @@
         return this.hasRole(Config.roles.full_admin);
       },
       isOnline: function () {
-        return _.eq(authData.customerType, 'Online');
+        return !this.isPartner() && !this.isPartnerSalesAdmin() && _.eq(authData.customerType, 'Online');
       },
       isPending: function () {
         return _.eq(authData.customerType, 'Pending');
