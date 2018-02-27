@@ -1,6 +1,6 @@
 describe('Controller: OverviewCtrl', function () {
   beforeEach(function () {
-    this.initModules('Core', 'Huron', 'Sunlight', 'Hercules');
+    this.initModules('Core', 'Huron', 'Sunlight', 'Hercules', 'Accountlinking');
     this.injectDependencies(
       '$controller',
       '$filter',
@@ -11,6 +11,7 @@ describe('Controller: OverviewCtrl', function () {
       '$state',
       '$translate',
       'Authinfo',
+      'AutoAssignTemplateService',
       'Config',
       'FeatureToggleService',
       'HybridServicesClusterService',
@@ -27,7 +28,8 @@ describe('Controller: OverviewCtrl', function () {
       'SunlightReportService',
       'SunlightUtilitiesService',
       'LocalStorage',
-      'TrialService'
+      'TrialService',
+      'LinkedSitesService'
     );
 
     this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/1/v1/Users/me').respond(200);
@@ -78,6 +80,7 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(this.ProPackService, 'hasProPackEnabledAndNotPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.AutoAssignTemplateService, 'hasDefaultTemplate').and.returnValue(this.$q.resolve(false));
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
     spyOn(this.LearnMoreBannerService, 'isElementVisible').and.returnValue(true);
 
@@ -108,8 +111,6 @@ describe('Controller: OverviewCtrl', function () {
 
     spyOn(this.PrivateTrunkService, 'getPrivateTrunk').and.returnValue(this.$q.resolve({ resources: [] }));
     spyOn(this.ServiceDescriptorService, 'getServiceStatus').and.returnValue(this.$q.resolve({ state: 'unknown' }));
-
-
     this.initController = function () {
       this.controller = this.$controller('OverviewCtrl', {
         $q: this.$q,
@@ -135,6 +136,7 @@ describe('Controller: OverviewCtrl', function () {
         SunlightConfigService: this.SunlightConfigService,
         LocalStorage: this.LocalStorage,
         TrialService: this.TrialService,
+        LinkedSitesService: this.LinkedSitesService,
       });
       this.$scope.$apply();
     };
@@ -464,9 +466,30 @@ describe('Controller: OverviewCtrl', function () {
   describe('Auto Assign Notification - set up now', function () {
     it('should not display if atlasF3745AutoAssignLicenses is false', function () {
       var TOTAL_NOTIFICATIONS = 7;
+      this.AutoAssignTemplateService.hasDefaultTemplate.and.returnValue(this.$q.resolve(true));
+      this.initController();
+      expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS);
+
+      this.AutoAssignTemplateService.hasDefaultTemplate.and.returnValue(this.$q.resolve(false)); // not relevant, just the original scenario
       this.FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus.and.returnValue(this.$q.resolve(false));
       this.initController();
       expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS);
+    });
+  });
+
+  describe('AccountLinking20 notification', function () {
+    it('should not be displayed if no sites need configuration', function () {
+      var TOTAL_NOTIFICATIONS = 8;
+      spyOn(this.LinkedSitesService, 'linkedSitesNotConfigured').and.returnValue(this.$q.resolve(false));
+      this.initController();
+      expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS);
+    });
+
+    it('should be displayed if one or several sites needs configuration', function () {
+      var TOTAL_NOTIFICATIONS = 8;
+      spyOn(this.LinkedSitesService, 'linkedSitesNotConfigured').and.returnValue(this.$q.resolve(true));
+      this.initController();
+      expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS + 1);
     });
   });
 });

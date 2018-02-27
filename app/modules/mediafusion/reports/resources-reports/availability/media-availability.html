@@ -1,14 +1,14 @@
 <cs-card id='availability-card' class="cs-card--full media-metrics-report-card">
   <article class="media-service-card header-padding">
     <graphheader>
-      <span class='report-section-header' translate='mediaFusion.metrics.clusterAvailabilityCardHeading' ng-if="$ctrl.parentcntrl.clusterSelected == $ctrl.parentcntrl.allClusters"></span>
-      <i class='icon icon-info-outline icon-large' tooltip-html="$ctrl.parentcntrl.clusterInServiceOrgDesc" tooltip-class="metrics-tooltip" ng-if="$ctrl.parentcntrl.clusterSelected == $ctrl.parentcntrl.allClusters"></i>
-      <span class='report-section-header' translate='mediaFusion.metrics.nodeAvailabilityCardHeading' ng-if="$ctrl.parentcntrl.clusterSelected != $ctrl.parentcntrl.allClusters"></span>
-      <i class='icon icon-info-outline icon-large' tooltip-html="$ctrl.parentcntrl.clusterInServiceClusterDesc" tooltip-class="metrics-tooltip" ng-if="$ctrl.parentcntrl.clusterSelected != $ctrl.parentcntrl.allClusters"></i>
+      <span class='report-section-header' translate='mediaFusion.metrics.clusterAvailabilityCardHeading' ng-if="$ctrl.parentcntrl.clusterSelected === $ctrl.parentcntrl.allClusters"></span>
+      <i class='icon icon-info-outline icon-large' tooltip-html="$ctrl.parentcntrl.clusterInServiceOrgDesc" tooltip-class="metrics-tooltip" ng-if="$ctrl.parentcntrl.clusterSelected === $ctrl.parentcntrl.allClusters"></i>
+      <span class='report-section-header' translate='mediaFusion.metrics.nodeAvailabilityCardHeading' ng-if="$ctrl.parentcntrl.clusterSelected !== $ctrl.parentcntrl.allClusters"></span>
+      <i class='icon icon-info-outline icon-large' tooltip-html="$ctrl.parentcntrl.clusterInServiceClusterDesc" tooltip-class="metrics-tooltip" ng-if="$ctrl.parentcntrl.clusterSelected !== $ctrl.parentcntrl.allClusters"></i>
       <div id="availability-div"></div>
     </graphheader>
     <section>
-      <div class="availability-reports" ng-class="{'availabilityCursor': $ctrl.parentcntrl.clusterSelected == $ctrl.parentcntrl.allClusters}">
+      <div class="availability-reports" ng-class="{'availabilityCursor': $ctrl.parentcntrl.clusterSelected === $ctrl.parentcntrl.allClusters}">
         <div id="availabilitydiv" class="barchart" ng-class="{'availability-chart': !$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.availabilityStatus) && !$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.availabilityStatus)}"></div>
         <div class="spinner-position" ng-if="$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.availabilityStatus)">
           <i class='icon icon-spinner icon-2x'></i>

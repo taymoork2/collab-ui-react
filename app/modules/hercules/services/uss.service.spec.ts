@@ -126,6 +126,7 @@ describe('Service: USSService', function () {
         .respond(500);
 
       USSService.getStatusesForUser('123')
+        .then(fail)
         .catch(function (error) {
           expect(error.status).toBe(500);
         });

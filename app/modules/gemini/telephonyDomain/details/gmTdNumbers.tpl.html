@@ -10,7 +10,9 @@
       </cs-page-sub-header-left>
 
       <cs-page-sub-header-right>
-        <h6 class="text-left"><a ng-click="$ctrl.downloadTemplate()" translate="gemini.tds.request.download.csvTemplate"></a></h6>
+        <h6 class="text-left">
+          <a href ng-click="$ctrl.downloadTemplate()" translate="gemini.tds.request.download.csvTemplate"></a>
+        </h6>
         <div ng-if="!$ctrl.exportLoading" class="no-animate">
           <a href
             ng-if="$ctrl.ccaDomainId"
@@ -25,7 +27,7 @@
               <i class="icon icon-download icon-lg"></i>
             </button>
           </a>
-          <a href ng-if="!$ctrl.ccaDomainId" class="export-users">
+          <a href ng-if="!$ctrl.ccaDomainId" class="export-users" aria-label="{{::'common.download' | translate}}">
             <!-- button removed from tabindex to prevent redundancy with <a> element wrapper -->
             <button class="btn--none" tabindex="-1">
               <i class="icon icon-download icon-lg"></i>
@@ -35,6 +37,7 @@
         <div
           ng-if="$ctrl.exportLoading"
           class="btn btn-none no-animate"
+          tabindex="0"
           tooltip="{{::'gemini.export.exportInProcess' | translate}}"
           tooltip-trigger="focus mouseenter"
           aria-label="{{::'gemini.export.exportInProcess' | translate}}">

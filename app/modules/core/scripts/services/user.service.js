@@ -37,7 +37,6 @@
       bulkOnboardUsers: bulkOnboardUsers,
       deactivateUser: deactivateUser,
       isHuronUser: isHuronUser,
-      isInvitePending: isInvitePending,
       resendInvitation: resendInvitation,
       sendSparkWelcomeEmail: sendSparkWelcomeEmail,
       getUserPhoto: getUserPhoto,
@@ -353,32 +352,17 @@
       });
     }
 
-    function migrateUsers(users, callback) {
+    function migrateUsers(users) {
+      var usersWithEmail = _.map(users, function (user) {
+        return {
+          email: user.userName,
+        };
+      });
       var requestBody = {
-        users: [],
+        users: usersWithEmail,
       };
 
-      for (var x in users) {
-        var user = {
-          email: users[x].userName,
-        };
-        requestBody.users.push(user);
-      }
-
-      $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users/migrate', requestBody)
-        .then(function (response) {
-          var data = response.data;
-          data = _.isObject(data) ? data : {};
-          data.success = true;
-          callback(data, response.status);
-        })
-        .catch(function (response) {
-          var data = response.data;
-          data = _.isObject(data) ? data : {};
-          data.success = false;
-          data.status = response.status;
-          callback(data, response.status);
-        });
+      return $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users/migrate', requestBody);
     }
 
     // DEPRECATED
@@ -715,10 +699,6 @@
 
     function isHuronUser(allEntitlements) {
       return _.indexOf(allEntitlements, Config.entitlements.huron) >= 0;
-    }
-
-    function isInvitePending(user) {
-      return user.pendingStatus;
     }
 
     function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {

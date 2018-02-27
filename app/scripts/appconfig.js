@@ -1130,6 +1130,13 @@
               },
             },
           })
+          .state('users.convert.auto-assign-license-summary', {
+            views: {
+              'usersConvert@users.convert': {
+                template: '<user-convert-auto-assign-license-summary save="convertUsers()" save-loading="btnConvertLoad" dismiss="$dismiss()"></user-convert-auto-assign-license-summary>',
+              },
+            },
+          })
           .state('users.convert.services', {
             views: {
               'usersConvert@users.convert': {
@@ -1146,7 +1153,7 @@
           })
           .state('users.convert.results', {
             views: {
-              'usersAdd@users.add': {
+              'usersConvert@users.convert': {
                 template: '<add-users-results-modal dismiss="$dismiss()" convert-pending="$resolve.convertPending" convert-users-flow="$resolve.convertUsersFlow" num-updated-users="$resolve.numUpdatedUsers" num-added-users="$resolve.numAddedUsers" results="$resolve.results"></add-users-results-modal>',
               },
             },
@@ -1616,7 +1623,7 @@
           .state('user-overview.hybrid-services-spark-hybrid-impinterop', {
             views: {
               'side-panel-container@user-overview': {
-                template: '<hybrid-message-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)" is-invite-pending="$resolve.isInvitePending" all-user-entitlements="$resolve.allUserEntitlements"></hybrid-message-user-settings>',
+                template: '<hybrid-message-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName"></hybrid-message-user-settings>',
               },
             },
             data: {},
@@ -1627,21 +1634,7 @@
               userName: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentUser.userName;
               },
-              userUpdatedCallback: /* @ngInject */ function ($stateParams) {
-                return $stateParams.userUpdatedCallback;
-              },
-              isInvitePending: /* @ngInject */ function ($stateParams) {
-                return $stateParams.isInvitePending;
-              },
-              allUserEntitlements: /* @ngInject */ function ($stateParams) {
-                return $stateParams.allUserEntitlements;
-              },
               displayName: translateDisplayName('hercules.hybridServiceNames.spark-hybrid-impinterop'),
-            },
-            params: {
-              userUpdatedCallback: _.noop,
-              isInvitePending: null,
-              allUserEntitlements: null,
             },
           })
           .state('user-overview.hybrid-services-spark-hybrid-impinterop.history', {
@@ -1659,13 +1652,12 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-cal', {
-            template: '<hybrid-calendar-service-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)" preferred-web-ex-site-name="$resolve.preferredWebExSiteName" all-user-entitlements="$resolve.allUserEntitlements" is-invite-pending="$resolve.isInvitePending"></hybrid-calendar-service-user-settings>',
-            data: {},
-            params: {
-              userUpdatedCallback: _.noop,
-              isInvitePending: null,
-              allUserEntitlements: null,
+            views: {
+              'side-panel-container@user-overview': {
+                template: '<hybrid-calendar-service-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" preferred-web-ex-site-name="$resolve.preferredWebExSiteName"></hybrid-calendar-service-user-settings>',
+              },
             },
+            data: {},
             resolve: {
               userId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentUser.id;
@@ -1673,17 +1665,8 @@
               userName: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentUser.userName;
               },
-              userUpdatedCallback: /* @ngInject */ function ($stateParams) {
-                return $stateParams.userUpdatedCallback;
-              },
-              allUserEntitlements: /* @ngInject */ function ($stateParams) {
-                return $stateParams.allUserEntitlements;
-              },
               preferredWebExSiteName: /* @ngInject */ function ($stateParams, HybridServiceUserSidepanelHelperService) {
                 return HybridServiceUserSidepanelHelperService.getPreferredWebExSiteName($stateParams.currentUser, $stateParams.orgInfo);
-              },
-              isInvitePending: /* @ngInject */ function ($stateParams) {
-                return $stateParams.isInvitePending;
               },
               displayName: translateDisplayName('hercules.serviceNames.squared-fusion-cal'),
             },
@@ -1703,12 +1686,12 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-uc', {
-            template: '<hybrid-call-service-aggregated-section user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)" is-invite-pending="$resolve.isInvitePending"></hybrid-call-service-aggregated-section>',
-            data: {},
-            params: {
-              userUpdatedCallback: _.noop,
-              isInvitePending: null,
+            views: {
+              'side-panel-container@user-overview': {
+                template: '<hybrid-call-service-aggregated-section user-id="$resolve.userId" user-email-address="$resolve.userName"></hybrid-call-service-aggregated-section>',
+              },
             },
+            data: {},
             resolve: {
               userId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentUser.id;
@@ -1716,28 +1699,19 @@
               userName: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentUser.userName;
               },
-              userUpdatedCallback: /* @ngInject */ function ($stateParams) {
-                return $stateParams.userUpdatedCallback;
-              },
-              isInvitePending: /* @ngInject */ function ($stateParams) {
-                return $stateParams.isInvitePending;
-              },
               displayName: translateDisplayName('hercules.serviceNames.squared-fusion-uc'),
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-uc.aware-settings', {
             views: {
               'side-panel-container@user-overview': {
-                template: '<hybrid-call-service-aware-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)" is-invite-pending="$resolve.isInvitePending" all-user-entitlements="$resolve.allUserEntitlements"></hybrid-call-service-aware-user-settings>',
+                template: '<hybrid-call-service-aware-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress"></hybrid-call-service-aware-user-settings>',
               },
             },
             data: {},
             params: {
               userId: '',
               userEmailAddress: '',
-              onEntitlementChange: Function,
-              isInvitePending: null,
-              allUserEntitlements: null,
             },
             resolve: {
               userId: /* @ngInject */ function ($stateParams) {
@@ -1746,15 +1720,6 @@
               displayName: translateDisplayName('sidePanelBreadcrumb.aware'),
               userEmailAddress: /* @ngInject */ function ($stateParams) {
                 return $stateParams.userEmailAddress;
-              },
-              onEntitlementChange: /* @ngInject */ function ($stateParams) {
-                return $stateParams.onEntitlementChange;
-              },
-              isInvitePending: /* @ngInject */ function ($stateParams) {
-                return $stateParams.isInvitePending;
-              },
-              allUserEntitlements: /* @ngInject */ function ($stateParams) {
-                return $stateParams.allUserEntitlements;
               },
             },
           })
@@ -1775,16 +1740,13 @@
           .state('user-overview.hybrid-services-squared-fusion-uc.connect-settings', {
             views: {
               'side-panel-container@user-overview': {
-                template: '<hybrid-call-service-connect-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)" user-test-tool-feature-toggled="$resolve.userTestToolFeatureToggled" is-invite-pending="$resolve.isInvitePending" all-user-entitlements="$resolve.allUserEntitlements"></hybrid-call-service-connect-user-settings>',
+                template: '<hybrid-call-service-connect-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" user-test-tool-feature-toggled="$resolve.userTestToolFeatureToggled"></hybrid-call-service-connect-user-settings>',
               },
             },
             data: {},
             params: {
               userId: '',
               userEmailAddress: '',
-              onEntitlementChange: Function,
-              isInvitePending: null,
-              allUserEntitlements: null,
             },
             resolve: {
               displayName: translateDisplayName('sidePanelBreadcrumb.connect'),
@@ -1794,17 +1756,8 @@
               userEmailAddress: /* @ngInject */ function ($stateParams) {
                 return $stateParams.userEmailAddress;
               },
-              onEntitlementChange: /* @ngInject */ function ($stateParams) {
-                return $stateParams.onEntitlementChange;
-              },
               userTestToolFeatureToggled: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCallUserTestTool);
-              },
-              isInvitePending: /* @ngInject */ function ($stateParams) {
-                return $stateParams.isInvitePending;
-              },
-              allUserEntitlements: /* @ngInject */ function ($stateParams) {
-                return $stateParams.allUserEntitlements;
               },
             },
           })
@@ -1907,6 +1860,20 @@
             data: {},
             resolve: {
               displayName: translateDisplayName('usersPreview.rolesAndSecurity'),
+            },
+          })
+          .state('user-overview.linked-webex-sites', {
+            views: {
+              'side-panel-container@user-overview': {
+                template: '<linked-sites-user-settings user-id="$resolve.userId"></linked-sites-user-settings>',
+              },
+            },
+            data: {},
+            resolve: {
+              userId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentUser.id;
+              },
+              displayName: translateDisplayName('accountLinking.userSidepanel.linkedAccounts'),
             },
           })
 
@@ -2031,7 +1998,7 @@
           .state('site-list.linked.details.wizard', {
             views: {
               'modal@': {
-                template: '<account-linking-wizard dismiss="$dismiss()" site-info="$resolve.siteInfo" operation="$resolve.operation" launch-webex-fn="$resolve.launchWebexFn(site, useHomepage)" set-account-linking-mode-fn="$resolve.setAccountLinkingModeFn(siteUrl, mode)"></account-linking-wizard>',
+                template: '<account-linking-wizard dismiss="$dismiss()" site-info="$resolve.siteInfo" operation="$resolve.operation" launch-webex-fn="$resolve.launchWebexFn(site, useHomepage)" set-account-linking-mode-fn="$resolve.setAccountLinkingModeFn(siteUrl, mode, domains)"></account-linking-wizard>',
                 resolve: {
                   modalInfo: function ($state) {
                     $state.params.modalClass = 'account-linking-wizard-custom';
@@ -2068,7 +2035,20 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<webex-add-site-modal  modal-title="\'firstTimeWizard.addWebexSite\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site-modal>',
+                template: '<webex-add-site-modal  center-details-for-all-subscriptions="$resolve.centerDetailsForAllSubscriptions" center-details="$resolve.centerDetails" modal-title="\'firstTimeWizard.addWebexSite\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site-modal>',
+              },
+            },
+            params: {
+              centerDetails: null,
+              centerDetailsForAllSubscriptions: null,
+
+            },
+            resolve: {
+              centerDetails: /* @ngInject */ function ($stateParams) {
+                return $stateParams['centerDetails'];
+              },
+              centerDetailsForAllSubscriptions: /* @ngInject */ function ($stateParams) {
+                return $stateParams['centerDetailsForAllSubscriptions'];
               },
             },
           })
@@ -2076,15 +2056,19 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<webex-add-site-modal subscription-id="$resolve.subscriptionId" single-step="3" modal-title="\'webexSiteManagement.redistributeLicenses\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site-modal>',
+                template: '<webex-add-site-modal subscription-id="$resolve.subscriptionId" center-details="$resolve.centerDetails" single-step="3" modal-title="\'webexSiteManagement.redistributeLicenses\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site-modal>',
               },
             },
             params: {
               subscriptionId: null,
+              centerDetails: null,
             },
             resolve: {
               subscriptionId: /* @ngInject */ function ($stateParams) {
                 return $stateParams['subscriptionId'];
+              },
+              centerDetails: /* @ngInject */ function ($stateParams) {
+                return $stateParams['centerDetails'];
               },
             },
           })
@@ -2092,16 +2076,20 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<webex-delete-site-modal subscription-id="$resolve.subscriptionId" site-url="$resolve.siteUrl" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-delete-site-modal>',
+                template: '<webex-delete-site-modal subscription-id="$resolve.subscriptionId" site-url="$resolve.siteUrl" center-details="$resolve.centerDetails" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-delete-site-modal>',
               },
             },
             params: {
               subscriptionId: null,
+              centerDetails: null,
               siteUrl: null,
             },
             resolve: {
               subscriptionId: /* @ngInject */ function ($stateParams) {
                 return $stateParams['subscriptionId'];
+              },
+              centerDetails: /* @ngInject */ function ($stateParams) {
+                return $stateParams['centerDetails'];
               },
               siteUrl: /* @ngInject */ function ($stateParams) {
                 return $stateParams['siteUrl'];
@@ -2265,11 +2253,19 @@
           })
           .state('dgc.tab.meetingdetail', {
             url: '/diagnostics/meeting/:cid',
-            views: { tabContent: { template: '<dgc-tab-meetingdetail></dgc-tab-meetingdetail>' } },
+            views: {
+              tabContent: {
+                template: '<dgc-tab-meetingdetail></dgc-tab-meetingdetail>',
+              },
+            },
           })
           .state('dgc.tab.participants', {
             url: '/diagnostics/participants/:cid',
-            views: { tabContent: { template: '<dgc-tab-participants></dgc-tab-participants>' } },
+            views: {
+              tabContent: {
+                template: '<dgc-tab-participants></dgc-tab-participants>',
+              },
+            },
           })
           .state('reports.webex-metrics.classic', {
             url: '/classic',
@@ -3725,11 +3721,6 @@
             controller: 'TrialDeviceController',
             controllerAs: 'callTrial',
           })
-          .state('trial.pstnDeprecated', {
-            template: require('modules/core/trials/trialPstn.tpl.html'),
-            controller: 'TrialPstnCtrl',
-            controllerAs: 'pstnTrial',
-          })
           .state('trial.pstn', {
             template: '<uc-pstn-trial-setup class="modal-content" dismiss="$dismiss()"></uc-pstn-trial-setup>',
             controller: 'TrialPstnCtrl',
@@ -3854,62 +3845,6 @@
               refreshFn: /* @ngInject */ function ($stateParams) {
                 return $stateParams.refreshFn;
               },
-            },
-          })
-          .state('pstnSetup', {
-            parent: 'modal',
-            params: {
-              customerId: {},
-              customerName: {},
-              customerEmail: {},
-              customerCommunicationLicenseIsTrial: {},
-              customerRoomSystemsLicenseIsTrial: {},
-              refreshFn: function () {},
-            },
-            views: {
-              'modal@': {
-                template: '<div ui-view></div>',
-                controller: 'PstnSetupCtrl',
-                controllerAs: 'pstnSetup',
-              },
-              '@pstnSetup': {
-                template: require('modules/huron/pstnSetup/pstnProviders/pstnProviders.tpl.html'),
-                controller: 'PstnProvidersCtrl',
-                controllerAs: 'pstnProviders',
-              },
-            },
-          })
-          .state('pstnSetup.contractInfo', {
-            template: require('modules/huron/pstnSetup/pstnContractInfo/pstnContractInfo.tpl.html'),
-            controller: 'PstnContractInfoCtrl',
-            controllerAs: 'pstnContractInfo',
-          })
-          .state('pstnSetup.serviceAddress', {
-            template: require('modules/huron/pstnSetup/pstnServiceAddress/pstnServiceAddress.tpl.html'),
-            controller: 'PstnServiceAddressCtrl',
-            controllerAs: 'pstnServiceAddress',
-          })
-          .state('pstnSetup.orderNumbers', {
-            template: require('modules/huron/pstnSetup/pstnNumbers/pstnNumbers.tpl.html'),
-            controller: 'PstnNumbersCtrl',
-            controllerAs: 'pstnNumbers',
-          })
-          .state('pstnSetup.swivelNumbers', {
-            template: require('modules/huron/pstnSetup/pstnSwivelNumbers/pstnSwivelNumbers.tpl.html'),
-            controller: 'PstnSwivelNumbersCtrl',
-            controllerAs: 'pstnSwivelNumbers',
-          })
-          .state('pstnSetup.review', {
-            template: require('modules/huron/pstnSetup/pstnReview/pstnReview.tpl.html'),
-            controller: 'PstnReviewCtrl',
-            controllerAs: 'pstnReview',
-          })
-          .state('pstnSetup.nextSteps', {
-            template: require('modules/huron/pstnSetup/pstnNextSteps/pstnNextSteps.tpl.html'),
-            controller: 'PstnNextStepsCtrl',
-            controllerAs: 'pstnNextSteps',
-            params: {
-              portOrders: null,
             },
           })
           .state('hurondetailsBase', {
@@ -4282,6 +4217,34 @@
             url: '/nodes',
             template: '<hybrid-services-nodes-page back-state="$resolve.backState" cluster-id="$resolve.id"></hybrid-services-nodes-page>',
           })
+          .state('context-cluster-sidepanel', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<cluster-sidepanel-overview cluster-type="\'cs_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType"></cluster-sidepanel-overview>',
+              },
+              'header@context-cluster-sidepanel': {
+                template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'),
+              },
+              'side-panel-container@context-cluster-sidepanel': {
+                template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-content.html'),
+              },
+            },
+            // If data not present, $state.current.data.displayName can't be changed
+            data: {},
+            params: {
+              clusterId: null,
+              connectorType: null,
+            },
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
+              connectorType: /* @ngInject */ function ($stateParams) {
+                return $stateParams.connectorType;
+              },
+            },
+          })
           .state('context-fields', {
             url: '/services/context/fields',
             parent: 'context',
@@ -4465,31 +4428,12 @@
               displayName: translateDisplayName('sidePanelBreadcrumb.fields'),
             },
           })
-          .state('context-cluster-sidepanel', {
-            parent: 'sidepanel',
+          .state('context-settings', {
+            url: '/services/context/settings',
+            parent: 'context',
             views: {
-              'sidepanel@': {
-                template: '<cluster-sidepanel-overview cluster-type="\'cs_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType"></cluster-sidepanel-overview>',
-              },
-              'header@context-cluster-sidepanel': {
-                template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'),
-              },
-              'side-panel-container@context-cluster-sidepanel': {
-                template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-content.html'),
-              },
-            },
-            // If data not present, $state.current.data.displayName can't be changed
-            data: {},
-            params: {
-              clusterId: null,
-              connectorType: null,
-            },
-            resolve: {
-              id: /* @ngInject */ function ($stateParams) {
-                return $stateParams.clusterId;
-              },
-              connectorType: /* @ngInject */ function ($stateParams) {
-                return $stateParams.connectorType;
+              contextServiceView: {
+                template: '<context-settings></context-settings>',
               },
             },
           })
@@ -4772,7 +4716,7 @@
           })
           .state('mediafusion-cluster.settings', {
             url: '/settings',
-            template: '<hybrid-media-cluster-settings cluster-id="$resolve.id" has-mf-phase-two-toggle="$resolve.hasMFFeatureToggle" has-mf-trusted-sip-toggle="$resolve.hasMFSIPFeatureToggle"></hybrid-media-cluster-settings>',
+            template: '<hybrid-media-cluster-settings cluster-id="$resolve.id" has-mf-phase-two-toggle="$resolve.hasMFFeatureToggle" has-mf-trusted-sip-toggle="$resolve.hasMFSIPFeatureToggle" has-mf-cascade-bw-config-toggle="$resolve.hasMFCascadeBwConfigToggle"></hybrid-media-cluster-settings>',
             resolve: {
               id: /* @ngInject */ function ($stateParams) {
                 return $stateParams.id;
@@ -4782,6 +4726,9 @@
               },
               hasMFSIPFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceTrustedSIP);
+              },
+              hasMFCascadeBwConfigToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceCascadeBwConfig);
               },
             },
           })
@@ -5017,6 +4964,11 @@
             },
             parent: 'main',
             abstract: true,
+            resolve: {
+              hasCapacityFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCapacity);
+              },
+            },
           })
           .state('calendar-service.list', {
             url: '/services/calendar',
@@ -5034,6 +4986,14 @@
             views: {
               calendarServiceView: {
                 template: '<calendar-service-settings-page></calendar-service-settings-page>',
+              },
+            },
+          })
+          .state('calendar-service.users', {
+            url: '/services/calendar/users',
+            views: {
+              calendarServiceView: {
+                template: '<calendar-service-users-page></calendar-service-users-page>',
               },
             },
           })
@@ -5070,6 +5030,11 @@
               clusterId: null,
             },
             parent: 'main',
+            resolve: {
+              hasCapacityFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCapacity);
+              },
+            },
           })
           .state('call-service.list', {
             url: '/services/call',
@@ -5090,6 +5055,14 @@
               },
             },
           })
+          .state('call-service.users', {
+            url: '/services/call/users',
+            views: {
+              callServiceView: {
+                template: '<call-service-users-page></call-service-users-page>',
+              },
+            },
+          })
           .state('imp-service', {
             template: require('modules/hercules/service-specific-pages/imp-service-pages/imp-service-container.html'),
             controller: 'ImpServiceContainerController',
@@ -5100,9 +5073,23 @@
             },
             parent: 'main',
             resolve: {
-              clusterId: /* @ngInject */ function ($stateParams) {
-                return $stateParams.clusterId;
+              hasCapacityFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCapacity);
               },
+            },
+          })
+          .state('imp-service.list', {
+            url: '/services/imp',
+            views: {
+              impServiceView: {
+                template: require('modules/hercules/service-specific-pages/imp-service-pages/imp-service-resources.html'),
+              },
+              controller: /* @ngInject */ function (Analytics) {
+                return Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_IMP_LIST);
+              },
+            },
+            params: {
+              clusterId: null,
             },
           })
           .state('imp-service.settings', {
@@ -5118,15 +5105,12 @@
               },
             },
           })
-          .state('imp-service.list', {
-            url: '/services/imp',
+          .state('imp-service.users', {
+            url: '/services/imp/users',
             views: {
               impServiceView: {
-                template: require('modules/hercules/service-specific-pages/imp-service-pages/imp-service-resources.html'),
+                template: '<imp-service-users-page></imp-service-users-page>',
               },
-            },
-            params: {
-              clusterId: null,
             },
           })
           .state('private-trunk-settings', {
@@ -5248,12 +5232,9 @@
           })
           .state('hybrid-services-event-history-page', {
             parent: 'main',
-            url: '/services/clusters/history?cluster=clusterId&serviceId&connectorId',
+            url: '/services/clusters/history?clusterId&serviceId&connectorId',
             template: '<hybrid-services-event-history-page cluster-id="$resolve.clusterId" connector-id="$resolve.connectorId" service-id="$resolve.serviceId" resource-filter="$resolve.resourceFilter"></hybrid-services-event-history-page>',
             params: {
-              clusterId: null,
-              connectorId: null,
-              serviceId: null,
               resourceFilter: null,
             },
             resolve: {

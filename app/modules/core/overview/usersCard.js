@@ -9,12 +9,13 @@
     .factory('OverviewUsersCard', OverviewUsersCard);
 
   /* @ngInject */
-  function OverviewUsersCard($q, $rootScope, $state, $timeout, $translate, Config, DirSyncService, FeatureToggleService, ModalService, Orgservice) {
+  function OverviewUsersCard($q, $rootScope, $state, $timeout, $translate, AutoAssignTemplateService, Config, DirSyncService, FeatureToggleService, ModalService, MultiDirSyncService, Orgservice) {
     return {
       createCard: function createCard() {
         var card = {};
         card.features = {};
-        card.autoAssignLicensesStatus = undefined;
+        card.isAutoAssignTemplateActive = false;
+        card.hasAutoAssignDefaultTemplate = false;
 
         card.name = 'overview.cards.users.title';
         card.template = usersCardTemplatePath;
@@ -22,6 +23,7 @@
         card.icon = 'icon-circle-user';
         card.isUpdating = true;
         card.showLicenseCard = false;
+        card.isDirsyncEnabled = false;
 
         card.unlicensedUsersHandler = function (data) {
           if (data.success) {
@@ -98,6 +100,7 @@
           }
         }
 
+        var featuresPromise = initFeatureToggles().then(initAutoAssignTemplate);
         card.orgEventHandler = function (data) {
           if (data.success) {
             card.ssoEnabled = data.ssoEnabled || false;
@@ -106,10 +109,21 @@
               $rootScope.ssoEnabled = true;
             }
           }
-          var dirSyncPromise = (DirSyncService.requiresRefresh() ? DirSyncService.refreshStatus() : $q.resolve());
-          dirSyncPromise.finally(function () {
-            card.dirsyncEnabled = DirSyncService.isDirSyncEnabled();
-            card.isUpdating = false;
+
+          featuresPromise.finally(function () {
+            if (card.features.atlasF6980MultiDirSync) {
+              MultiDirSyncService.isDirsyncEnabled().then(function (enabledDomains) {
+                card.dirsyncEnabled = enabledDomains;
+              }).finally(function () {
+                card.isUpdating = false;
+              });
+            } else {
+              var dirSyncPromise = (DirSyncService.requiresRefresh() ? DirSyncService.refreshStatus() : $q.resolve());
+              dirSyncPromise.finally(function () {
+                card.dirsyncEnabled = DirSyncService.isDirSyncEnabled();
+                card.isUpdating = false;
+              });
+            }
           });
         };
 
@@ -166,44 +180,38 @@
         card.showEditAutoAssignTemplateModal = function () {
           $state.go('users.list').then(function () {
             $timeout(function () {
-              $state.go('users.manage.edit-auto-assign-template-modal', {
-                prevState: 'users.manage.picker',
+              AutoAssignTemplateService.gotoEditAutoAssignTemplate({
+                isEditTemplateMode: card.hasAutoAssignDefaultTemplate,
               });
             });
           });
         };
 
         card.getAutoAssignLicensesStatusCssClass = function () {
-          var cssClassNames = {
-            ACTIVATED: 'success',
-            DEACTIVATED: 'warning',
-          };
-          if (_.isNil(card.autoAssignLicensesStatus)) {
-            return 'disabled';
-          }
-          return cssClassNames[card.autoAssignLicensesStatus];
+          return card.isAutoAssignTemplateActive ? 'success' : 'disabled';
         };
 
         function initFeatureToggles() {
           return $q.all({
             atlasF3745AutoAssignLicenses: FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus(),
+            atlasF6980MultiDirSync: FeatureToggleService.atlasF6980MultiDirSyncGetStatus(),
           }).then(function (features) {
             card.features = features;
           });
         }
 
-        // TODO: f3745 - rip this out once backend is available
-        function initFakeValues() {
-          // TODO: f3745 - apply logic for values returned by backend, once known
-          // - currently assume enum of ('ACTIVATED'|'DEACTIVATED'|null)
+        function initAutoAssignTemplate() {
           if (card.features.atlasF3745AutoAssignLicenses) {
-            card.autoAssignLicensesStatus = 'ACTIVATED';
-            // card.autoAssignLicensesStatus = 'DEACTIVATED';
-            // card.autoAssignLicensesStatus = null;
+            AutoAssignTemplateService.hasDefaultTemplate().then(function (hasDefaultTemplate) {
+              card.hasAutoAssignDefaultTemplate = hasDefaultTemplate;
+              if (hasDefaultTemplate) {
+                AutoAssignTemplateService.isEnabledForOrg().then(function (isActivated) {
+                  card.isAutoAssignTemplateActive = isActivated;
+                });
+              }
+            });
           }
         }
-
-        initFeatureToggles().then(initFakeValues);
 
         return card;
       },

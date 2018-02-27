@@ -1,31 +1,16 @@
 <div class="modal-body">
-
   <div class="row">
-
-    <div class="columns medium-12">
+    <div class="columns medium-8 medium-offset-2">
       <div class="center">
-
-        <i class="icon icon-circle-check-mark-success"></i>
-        <p class="icon-info-text">Verify Domain</p>
-
-        <p>
-          You are about to direct to the page where you can verify domain, once the verification is completed, you must
-          invite users from WebEx Ste Administration adn invited users belong to verified domains will not be sent an
-          email.
-        </p>
+        <i class="icon icon-webex wizard-info-title"></i>
+        <p class="icon-info-text wizard-info-title" translate="accountLinking.wizard.verifyDomainsHeader"></p>
+        <p class="wizard-info" translate="accountLinking.wizard.verifyDomainsTxt"></p>
       </div>
     </div>
   </div>
 
 </div>
 <div class="modal-footer">
-  <button class="btn"
-          ng-click="$ctrl.backFunc()">
-    Back
-  </button>
-  <button class="btn btn--primary"
-          ng-click="$ctrl.next()">
-    Verify Domain
-  </button>
-
+  <button class="btn" ng-click="$ctrl.backFunc()" translate="common.back"></button>
+  <button class="btn btn--primary" ng-click="$ctrl.next()" translate="accountLinking.wizard.verifyDomainsHeader"></button>
 </div>

@@ -121,6 +121,7 @@ describe('Auth Service', function () {
         code: 'argToGetNewAccessToken',
         state: '123-abc-456',
       })
+        .then(fail)
         .catch(function (response) {
           expect(response.status).toBe(500);
         });
@@ -134,6 +135,7 @@ describe('Auth Service', function () {
         code: 'argToGetNewAccessToken',
         state: '123-abc-456',
       })
+        .then(fail)
         .catch(function (response) {
           expect(response).toBe(undefined);
         });
@@ -170,12 +172,13 @@ describe('Auth Service', function () {
         .expectPOST('url', 'accessCodeUrl', assertCredentials)
         .respond(500);
 
-      Auth.refreshAccessToken().catch(function (response) {
-        expect(response.status).toBe(500);
-        expect(SessionStorage.get.calls.argsFor(0)[0]).toBe('refreshToken');
-        expect(OAuthConfig.getOauthAccessCodeUrl.calls.argsFor(0)[0]).toBe('fromStorage');
-        expect(TokenService.completeLogout).toHaveBeenCalled();
-      });
+      Auth.refreshAccessToken().then(fail)
+        .catch(function (response) {
+          expect(response.status).toBe(500);
+          expect(SessionStorage.get.calls.argsFor(0)[0]).toBe('refreshToken');
+          expect(OAuthConfig.getOauthAccessCodeUrl.calls.argsFor(0)[0]).toBe('fromStorage');
+          expect(TokenService.completeLogout).toHaveBeenCalled();
+        });
 
       $httpBackend.flush();
     });
@@ -183,12 +186,13 @@ describe('Auth Service', function () {
     it('should reject refresh access token if no refresh token', function () {
       SessionStorage.get.and.returnValue(undefined);
 
-      Auth.refreshAccessToken().catch(function (response) {
-        expect(response).toBe('refreshtoken not found');
-        expect(SessionStorage.get.calls.argsFor(0)[0]).toBe('refreshToken');
-        expect(OAuthConfig.getOauthAccessCodeUrl.calls.argsFor(0)[0]).toBe(undefined);
-        expect(TokenService.completeLogout).toHaveBeenCalled();
-      });
+      Auth.refreshAccessToken().then(fail)
+        .catch(function (response) {
+          expect(response).toBe('refreshtoken not found');
+          expect(SessionStorage.get.calls.argsFor(0)[0]).toBe('refreshToken');
+          expect(OAuthConfig.getOauthAccessCodeUrl.calls.argsFor(0)[0]).toBe(undefined);
+          expect(TokenService.completeLogout).toHaveBeenCalled();
+        });
 
       $rootScope.$apply();
     });
@@ -255,10 +259,11 @@ describe('Auth Service', function () {
         .expectPOST('access_token_url')
         .respond(500);
 
-      Auth.refreshAccessTokenAndResendRequest().catch(function (response) {
-        expect(response.status).toBe(500);
-        expect(TokenService.completeLogout).toHaveBeenCalledWith('logoutUrl');
-      });
+      Auth.refreshAccessTokenAndResendRequest().then(fail)
+        .catch(function (response) {
+          expect(response.status).toBe(500);
+          expect(TokenService.completeLogout).toHaveBeenCalledWith('logoutUrl');
+        });
 
       $httpBackend.flush();
     });
@@ -329,9 +334,10 @@ describe('Auth Service', function () {
         .expectPOST('url', 'data', assertCredentials)
         .respond(500);
 
-      Auth.setAccessToken().catch(function (response) {
-        expect(response.status).toBe(500);
-      });
+      Auth.setAccessToken().then(fail)
+        .catch(function (response) {
+          expect(response.status).toBe(500);
+        });
 
       $httpBackend.flush();
     });
@@ -436,10 +442,11 @@ describe('Auth Service', function () {
         .expectGET('OauthListTokenUrl')
         .respond(500);
 
-      Auth.logoutAndRedirectTo('customLogoutUrl').catch(function (response) {
-        expect(response.status).toBe(500);
-        expect(TokenService.completeLogout).toHaveBeenCalledWith('customLogoutUrl');
-      });
+      Auth.logoutAndRedirectTo('customLogoutUrl').then(fail)
+        .catch(function (response) {
+          expect(response.status).toBe(500);
+          expect(TokenService.completeLogout).toHaveBeenCalledWith('customLogoutUrl');
+        });
 
       $httpBackend.flush();
     });

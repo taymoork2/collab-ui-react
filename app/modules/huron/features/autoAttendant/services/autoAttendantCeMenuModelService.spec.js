@@ -9,6 +9,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   var wmenu;
 
   var ceWelcome;
+  var ceWelcomeForRouteToUser;
   var ceWelcomeNoDescription;
   var ceWelcomeNoDescriptionTemp;
   var welcomeMenu;
@@ -138,6 +139,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     wmenu = getJSONFixture('huron/json/autoAttendant/welcomeMenu.json');
     ceWelcome = wmenu.ceWelcome;
+    ceWelcomeForRouteToUser = wmenu.ceWelcomeForRouteToUser;
     ceWelcomeNoDescription = wmenu.ceWelcomeNoDescription;
     ceWelcomeNoDescriptionTemp = wmenu.ceWelcomeNoDescriptionTemp;
     welcomeMenu = wmenu.welcomeMenu;
@@ -158,7 +160,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   }));
 
   afterEach(function () {
-    AutoAttendantCeMenuModelService = AARestModelService = wmenu = ceWelcome = ceWelcomeNoDescription = ceWelcomeNoDescriptionTemp = welcomeMenu = ceMenuFull = wmenuWithAnnouncements = ceWelcomeMenuWithOldQueue = ceWelcomeWithQueue = ceWelcomeWithAnnouncements = ceWelcomeWithAnnouncementsKeys = ceMenuWithDynaSay = ceMenuWithoutDynaSay = ceMenuWithEmptyDynaSay = ceMenuWithAnnouncementsPlay = ceMenuWithAnnouncementsPlayWithoutValidDescription = ceWelcomeWithoutDynaSay = ceWelcomeWithEmpDynamicSay = undefined;
+    AutoAttendantCeMenuModelService = AARestModelService = wmenu = ceWelcome = ceWelcomeNoDescription = ceWelcomeNoDescriptionTemp = welcomeMenu = ceWelcomeForRouteToUser = ceMenuFull = wmenuWithAnnouncements = ceWelcomeMenuWithOldQueue = ceWelcomeWithQueue = ceWelcomeWithAnnouncements = ceWelcomeWithAnnouncementsKeys = ceMenuWithDynaSay = ceMenuWithoutDynaSay = ceMenuWithEmptyDynaSay = ceMenuWithAnnouncementsPlay = ceMenuWithAnnouncementsPlayWithoutValidDescription = ceWelcomeWithoutDynaSay = ceWelcomeWithEmpDynamicSay = undefined;
   });
 
   describe('createAnnouncements for menuEntry with announcements with dynamic', function () {
@@ -268,12 +270,28 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       });
     });
   });
-  describe('getWelcomeMenu with oldQueueDef', function () {
+  describe('getWelcomeMenu', function () {
     it('should return welcomeMenu from parsing ceWelcome', function () {
-      var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcomeWithQueue, 'openHours');
+      var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcomeForRouteToUser, 'openHours');
       _.each(_.keys(_welcomeMenu), function (key) {
         expect(_.isEqual(welcomeMenu[key], _welcomeMenu[key]));
       });
+      expect(_.get(_welcomeMenu, 'entries[1].actions[0].type')).toBe('sparkOnlyUser');
+      expect(_.get(_welcomeMenu, 'entries[1].actions[0].sipURI')).toBe('user@webex.cisco.com');
+      expect(_.get(_welcomeMenu, 'entries[2].actions[0].then.type')).toBe('sparkCallUser');
+      expect(_.get(_welcomeMenu, 'entries[2].actions[0].then.sipURI')).toBe('user@webex.cisco.com');
+      expect(_.get(_welcomeMenu.entries[3], 'entries[0].actions[0].type')).toBe('sparkOnlyUser');
+      expect(_.get(_welcomeMenu.entries[3], 'entries[0].actions[0].sipURI')).toBe('user@webex.cisco.com');
+      var _ceRecord = _.cloneDeep(ceInfos[0]);
+
+      _ceRecord.defaultActionSet = 'openHours';
+      _ceRecord.scheduleEventTypeMap = {
+        open: 'openHours',
+      };
+      _ceRecord.callExperienceName = 'AA Welcome';
+      expect(AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'openHours', _welcomeMenu)).toBe(true);
+
+      expect(angular.equals(_ceRecord, ceWelcomeForRouteToUser)).toBe(true);
     });
   });
   describe('getWelcomeMenu with oldQueueDef and dynamic toggle on', function () {

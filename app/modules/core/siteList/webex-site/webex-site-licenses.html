@@ -16,8 +16,8 @@
   <div class="license_distrib__row--centerTypes">
     <div ng-repeat="center in $ctrl.centerDetails track by $index">
       <section>
-        <p translate="firstTimeWizard.centerTypeLicensesRemaining" translate-values="{centerType: $ctrl.getCenterTypeInits(center.centerType)}"></p>
-        <h3 ng-class="{'error': ($ctrl.getLicensesRemaining(center.centerType) < 0)}">{{$ctrl.getLicensesRemaining(center.centerType)}}</h3>
+        <p translate="firstTimeWizard.centerTypeLicensesRemaining" translate-values="{centerType: $ctrl.getCenterTypeInits(center.serviceName)}"></p>
+        <h3 ng-class="{'error': ($ctrl.getLicensesRemaining(center.serviceName) < 0)}">{{$ctrl.getLicensesRemaining(center.serviceName)}}</h3>
       </section>
     </div>
   </div>

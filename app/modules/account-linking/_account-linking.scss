@@ -2,7 +2,27 @@
 @import '~@collabui/collab-ui/scss/settings/typography';
 @import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 
+.link-all-modal {
+  h3, section {
+    text-align: center;
+    margin: 1.5rem;
+  }
+}
+
+.modal-content.link-all-users.dialog {
+  height: 207px;
+  width: 380px;
+  h3 {
+    text-align: center;
+    color: $gray-dark-2;
+  }
+  .modal-info {
+    color: $gray-base;
+  }
+}
+
 .account-linking-side-panel-section {
+
   .webex-header-image {
     .icon {
       font-size: 60px;
@@ -19,6 +39,15 @@
 
   .read-only-site {
     background-color: $color-yellow-light;
+    border-top: 4px solid $color-yellow-dark;
+    text-align: center;
+    span {
+      display: inline-block;
+    }
+  }
+
+  .errors-in-data {
+    background-color: $color-red-light;
     border-top: 4px solid $color-yellow-dark;
     text-align: center;
     span {
@@ -65,7 +94,16 @@
 
   .waiting {
     font-size: 0.5rem;
-    opacity: 0.3;
+    opacity: 0.4;
+  }
+
+  .faded {
+    opacity: 0.4;
+  }
+
+  .error-table-entry {
+    color: $color-red-light;
+    opacity: 0.8;
   }
 
 }
@@ -74,6 +112,27 @@
 }
 
 .account-linking-wizard {
+
+  .legal-agreement {
+    max-height: 30rem;
+    overflow-y: scroll;
+
+    p {
+      padding-right: 1rem;
+    }
+  }
+
+  .wizard-info {
+    color: $gray-base;
+  }
+
+  .wizard-info-title {
+    color: $gray-dark-2;
+  }
+
+  .wizard-title {
+    margin-top: 0rem !important;
+  }
   h5 {
     font-weight: bold;
     padding-bottom: 1rem;
@@ -99,6 +158,9 @@
   }
   .icon-info-text {
     font-size: 2rem;
+  }
+  .icon-circle-check-mark-success {
+    color: $green-base;
   }
 
   .domain-right {

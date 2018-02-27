@@ -15,6 +15,7 @@ import manageUsersSharedModuleName from './shared';
 import dirSyncModuleName from './dir-sync';
 import usersSharedAutoAssignTemplateModuleName from 'modules/core/users/shared/auto-assign-template';
 import crActionCardsModuleName from 'modules/core/users/shared/cr-action-cards';
+import convertModuleName from './convert';
 
 export default angular
   .module('core.users.userManage', [
@@ -35,6 +36,7 @@ export default angular
     dirSyncModuleName,
     usersSharedAutoAssignTemplateModuleName,
     crActionCardsModuleName,
+    convertModuleName,
   ])
   .controller('UserManageOrgController', require('./userManageOrg.controller'))
   .name;

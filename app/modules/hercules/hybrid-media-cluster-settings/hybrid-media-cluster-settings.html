@@ -1,5 +1,5 @@
 <div class="fusion-cluster-settings">
-
+  
   <div class="cs-form">
     <setting-section setting="$ctrl.upgradeSchedule">
       <div class="sub-section">
@@ -14,39 +14,20 @@
     </setting-section>
 
     <div ng-if="$ctrl.hasMfPhaseTwoToggle">
-      <setting-section setting="$ctrl.sipRegistration" class="needs-border-top">
-        <div class="sub-section">
-          <h5 class="sub-section__label" translate="mediaFusion.sipconfiguration.title"></h5>
-          <p class="sub-section__description" translate="mediaFusion.sipconfiguration.description"></p>
-          <input cs-input type="text" id="sipurlconfiguration" placeholder="{{:: 'mediaFusion.sipconfiguration.placeholder' | translate}}"
-                 ng-model="$ctrl.sipurlconfiguration" cs-input-group-size="medium-4" cs-input-help-text="{{:: 'mediaFusion.sipconfiguration.example' | translate}}">
-          <button type="button" class="btn media-service-btn-padding" ng-click="$ctrl.saveSipTrunk()" translate="common.save"></button>
-        </div>
-      </setting-section>
+      <sip-registration-section cluster="$ctrl.cluster" is-wizard="false"></sip-registration-section>
     </div>
 
     <div ng-if="$ctrl.hasMfTrustedSipToggle">
-      <setting-section setting="$ctrl.trustedSip" class="needs-border-top">
-        <div class="sub-section">
-          <h5 class="sub-section__label" translate="mediaFusion.trustedSip.title"></h5>
-          <p class="sub-section__description" translate="mediaFusion.trustedSip.description"></p>
-          <tags-input add-on-blur="true"
-                      on-tag-added="$ctrl.saveTrustedSip()"
-                      on-tag-removed="$ctrl.saveTrustedSip()"
-                      placeholder="{{:: 'mediaFusion.trustedSip.placeholder' | translate}}"
-                      ng-model="$ctrl.trustedsipconfiguration"
-                      type="text"
-                      allowed-tags-pattern="((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)|((?!:\/\/)([a-zA-Z0-9]+\.)?[a-zA-Z0-9][a-zA-Z0-9-]+\.[a-zA-Z]{2,6}))">
-          </tags-input>
-        </div>
-      </setting-section>
+      <trusted-sip-section cluster="$ctrl.cluster"></trusted-sip-section>
+    </div>
+
+    <div ng-if="$ctrl.hasMfCascadeBwConfigToggle">
+      <cluster-cascade-bandwidth cluster="$ctrl.cluster" class="needs-border-top"></cluster-cascade-bandwidth>
     </div>
 
     <release-channel-section cluster="$ctrl.cluster"></release-channel-section>
 
-    <hs-rename-and-deregister-cluster-section
-      cluster="$ctrl.cluster"
-      deregister-modal-options="$ctrl.deregisterModalOptions">
+    <hs-rename-and-deregister-cluster-section cluster="$ctrl.cluster" deregister-modal-options="$ctrl.deregisterModalOptions">
     </hs-rename-and-deregister-cluster-section>
 
   </div>

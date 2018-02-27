@@ -459,114 +459,12 @@ describe('Service: HybridServicesClusterService', function () {
     });
   });
 
-  describe('processClustersToSeeIfServiceIsSetup()', function () {
-
-    describe('Org with Call and Calendar', function () {
-
-      // Test cluster: Two clusters where Call is installed on one cluster, and Calendar is installed on both clusters
-      let baseClusters: IExtendedClusterFusion[];
-      beforeEach(function () {
-        jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
-        baseClusters = getJSONFixture('hercules/fusion-cluster-service-test-clusters.json');
-      });
-
-      it('should find that Call is enabled', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-uc', baseClusters)).toBe(true);
-      });
-
-      it('should find that Calendar is enabled', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-cal', baseClusters)).toBe(true);
-      });
-
-      it('should find that Management is enabled', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-mgmt', baseClusters)).toBe(true);
-      });
-
-      // TypeScript no longer let us use invalid services…
-      // it('should find that InvalidService is *not* enabled', function () {
-      //   expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-invalid-service', baseClusters)).toBe(false);
-      // });
-
-      it('should find that Media is *not* enabled', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-media', baseClusters)).toBe(false);
-      });
-    });
-
-    describe('Disco Systems, an org with Call, Calendar, and Media,', function () {
-
-      // Test clusters: Disco Systems, org
-      let discothequeClusters: IExtendedClusterFusion[];
-      beforeEach(function () {
-        jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
-        discothequeClusters = getJSONFixture('hercules/disco-systems-cluster-list.json');
-      });
-
-      it('should find that Media is enabled in the Discotheque org', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-media', discothequeClusters)).toBe(true);
-      });
-
-      it('should find that Call is enabled in the Discotheque org', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-uc', discothequeClusters)).toBe(true);
-      });
-
-      it('should find that Calendar is enabled in the Discotheque org', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-cal', discothequeClusters)).toBe(true);
-      });
-
-    });
-
-    describe('Empty Clusters Corp', function () {
-
-      // Test clusters: Empty Hybrid Media Corp org
-      let clusters: IExtendedClusterFusion[];
-      beforeEach(function () {
-        jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
-        clusters = getJSONFixture('hercules/empty-clusters-corp-cluster-list.json');
-      });
-
-      it('should find that Media is enabled', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-media', clusters)).toBe(true);
-      });
-
-      it('should find that Call is **not** enabled', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-uc', clusters)).toBe(false);
-      });
-
-      it('should find that Calendar is **not** enabled', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-cal', clusters)).toBe(false);
-      });
-
-    });
-
-    describe('An org with nothing at all,', function () {
-
-      // Test clusters: Two clusters, with nothing provisioned and nothing installed
-      let clustersWithNothingInstalled: IExtendedClusterFusion[];
-      beforeEach(function () {
-        jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
-        clustersWithNothingInstalled = getJSONFixture('hercules/nothing-provisioned-cluster-list.json');
-      });
-
-      it('should find that Media is *dis*-abled', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-media', clustersWithNothingInstalled)).toBe(false);
-      });
-
-      it('should find that Call is *dis*-abled', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-uc', clustersWithNothingInstalled)).toBe(false);
-      });
-
-      it('should find that Calendar is *dis*-abled', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-cal', clustersWithNothingInstalled)).toBe(false);
-      });
-
-    });
-
-  });
-
   describe('serviceHasHighAvailability() and hasOnlyOneExpresswayWithConnectorProvisioned()', () => {
 
     function createExpresswayCluster(connectorType: ConnectorType): IExtendedClusterFusion {
       return {
+        allowedRegistrationHostsUrl: '',
+        createdAt: '',
         connectors: [],
         id: String(_.random(10)),
         name: String(connectorType + _.random(10)),
@@ -575,6 +473,7 @@ describe('Service: HybridServicesClusterService', function () {
           alarmsBadgeCss: 'success',
           allowedRedirectTarget: undefined,
           hasUpgradeAvailable: false,
+          isUpgradeUrgent: false,
           isEmpty: true,
           maintenanceMode: 'on',
           registrationTimedOut: false,
@@ -621,6 +520,7 @@ describe('Service: HybridServicesClusterService', function () {
           alarms: '',
           alarmsBadgeCss: '',
           hasUpgradeAvailable: false,
+          isUpgradeUrgent: false,
           maintenanceMode: 'off',
           state: {
             name: 'running',

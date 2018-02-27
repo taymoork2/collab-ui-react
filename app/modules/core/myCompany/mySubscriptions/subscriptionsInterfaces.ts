@@ -41,6 +41,7 @@ export interface IOfferData {
   offerName: string;
   siteUrl?: string;
   tooltip?: string;
+  tooltipAriaLabel?: string;
   totalUsage?: number;
   usage?: number;
   volume: number;

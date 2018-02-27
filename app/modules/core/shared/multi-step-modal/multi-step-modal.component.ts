@@ -22,6 +22,7 @@ export class MultiStepModalComponent implements ng.IComponentOptions {
   public transclude = true;
   public bindings = {
     l10nTitle: '@',
+    l10nWarningFooter: '@?',
     dismiss: '&?',
     close: '&?',
     cancel: '&?',

@@ -72,7 +72,8 @@ describe('RateLimitInterceptor', () => {
 
   it('should retry until some error code', function () {
     this.$httpBackend.expectGET(this.URL).respond(503);
-    this.$http.get(this.URL).catch(response => {
+    this.$http.get(this.URL).then(fail)
+    .catch(response => {
       expect(response.status).toBe(500);
       this.expectOperationalMetric(0, {
         state: 'retry',
@@ -98,7 +99,8 @@ describe('RateLimitInterceptor', () => {
 
   it('should retry until max retry delay', function () {
     this.$httpBackend.expectGET(this.URL).respond(503);
-    this.$http.get(this.URL).catch(response => {
+    this.$http.get(this.URL).then(fail)
+    .catch(response => {
       expect(response.status).toBe(429);
       this.expectOperationalMetric(0, {
         state: 'retry',

@@ -1,4 +1,12 @@
 <div class="org-list">
-  <cs-page-header title="{{$ctrl.title}}" title-name="{{$ctrl.title}}" back="true" back-url="$ctrl.backState" tabs="$ctrl.tabs" class="gm-header"></cs-page-header>
+  <cs-page-header
+    title="{{$ctrl.title}}"
+    title-name="{{$ctrl.title}}"
+    back="true"
+    back-url="$ctrl.backState"
+    back-aria-label="{{::'common.back' | translate}}"
+    tabs="$ctrl.tabs"
+    class="gm-header">
+  </cs-page-header>
   <div ui-view></div>
 </div>

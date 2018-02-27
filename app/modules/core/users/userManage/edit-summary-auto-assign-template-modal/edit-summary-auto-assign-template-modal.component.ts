@@ -5,7 +5,6 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
   private dismiss: Function;
   private autoAssignTemplateData: IAutoAssignTemplateData;
   private isEditTemplateMode: boolean;
-  private templateId: string;
   public saveLoading = false;
 
   /* @ngInject */
@@ -17,12 +16,16 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
   ) {}
 
   public $onInit(): void {
-    this.templateId = '';
+    if (this.autoAssignTemplateData) {
+      return;
+    }
 
-    this.AutoAssignTemplateService.getDefaultTemplate()
-      .then((defaultTemplate) => {
-        this.templateId = defaultTemplate.templateId;
-      });
+    this.AutoAssignTemplateService.getDefaultStateData()
+      .then(autoAssignTemplateData => this.autoAssignTemplateData = autoAssignTemplateData);
+  }
+
+  private get templateId(): string {
+    return _.get(this.autoAssignTemplateData, 'apiData.template.templateId', '');
   }
 
   private updateTemplate(payload: IAutoAssignTemplateRequestPayload): void {
@@ -59,7 +62,7 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
   }
 
   public back(): void {
-    this.$state.go('users.manage.edit-auto-assign-template-modal', {
+    this.AutoAssignTemplateService.gotoEditAutoAssignTemplate({
       autoAssignTemplateData: this.autoAssignTemplateData,
       isEditTemplateMode: this.isEditTemplateMode,
     });
@@ -76,7 +79,7 @@ export class EditSummaryAutoAssignTemplateModalComponent implements ng.IComponen
   public controller = EditSummaryAutoAssignTemplateModalController;
   public template = require('./edit-summary-auto-assign-template-modal.html');
   public bindings = {
-    dismiss: '&?',
+    dismiss: '&',
     isEditTemplateMode: '<',
     autoAssignTemplateData: '<',
   };

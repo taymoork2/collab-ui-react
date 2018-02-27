@@ -90,6 +90,7 @@ export class Config {
   public readonly customerTypes = {
     enterprise: 'Enterprise',
     pending: 'Pending',
+    online: 'Online',
   };
 
   public readonly entitlements = {
@@ -167,6 +168,14 @@ export class Config {
     'webexSupportCenter',
   ];
 
+  public readonly webexTypeCodes = [
+    'EE',
+    'EC',
+    'MC',
+    'TC',
+    'SC',
+  ];
+
   public readonly freeLicenses = [
     'messaging',
     'communications',
@@ -204,7 +213,12 @@ export class Config {
     readonly_admin: 'id_readonly_admin',
     tech_support: 'atlas-portal.cisco.techsupport',
     user_admin: 'id_user_admin',
+    /*
+    / TODO: When 'atlas-portal.deviceadmin' is phased out, 'id_device_admin' will become device_admin
+    /       For now, assigning one role should assign them both.
+    */
     device_admin: 'atlas-portal.deviceadmin',
+    ci_device_admin: 'id_device_admin',
   };
 
   public readonly roles = {
@@ -382,7 +396,6 @@ export class Config {
       'private-trunk-redirect',
       'customerPstnOrdersOverview',
       'externalNumberDelete',
-      'pstnSetup',
       'pstnWizard',
       'call-locations',
       'call-locations-add',
@@ -568,7 +581,6 @@ export class Config {
       'trialEdit',
       'profile',
       'pstn',
-      'pstnSetup',
       'pstnWizard',
       'video',
       'settings',
@@ -576,7 +588,7 @@ export class Config {
       'taasSuits',
       'partner-services-overview',
     ],
-    PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'pstn', 'pstnSetup', 'pstnWizard', 'video'],
+    PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'pstn', 'pstnWizard', 'video'],
     CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
     //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
     User: ['drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],

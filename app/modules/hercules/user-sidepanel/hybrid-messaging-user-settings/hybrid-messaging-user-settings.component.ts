@@ -3,12 +3,16 @@ import { HybridServicesI18NService } from 'modules/hercules/services/hybrid-serv
 import { Notification } from 'modules/core/notifications/notification.service';
 import { USSService, IUserStatusWithExtendedMessages } from 'modules/hercules/services/uss.service';
 import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
+import { UserOverviewService } from 'modules/core/users/userOverview/userOverview.service';
 
 class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController {
 
   public userId;
   public userEmailAddress;
   public isInvitePending: boolean;
+  private serviceIsEnabledInFMS: boolean;
+  private allUserEntitlements: HybridServiceId[];
 
   public loadingPage = true;
   public savingPage = false;
@@ -22,48 +26,66 @@ class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController 
   public newEntitlementValue: boolean | undefined;
 
   private connectorId: string;
-  private userUpdatedCallback: Function;
+
+  public resourceGroupId: string;
 
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
     private HybridServicesI18NService: HybridServicesI18NService,
     private Notification: Notification,
+    private ServiceDescriptorService: ServiceDescriptorService,
     private USSService: USSService,
+    private UserOverviewService: UserOverviewService,
   ) { }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
-    const { userId, userEmailAddress, isInvitePending, allUserEntitlements } = changes;
+    const { userId, userEmailAddress } = changes;
     if (userId && userId.currentValue) {
       this.userId = userId.currentValue;
-      this.getDataFromUSS(this.userId);
+      this.getUserData(this.userId);
+      this.getServiceSetupStatus();
     }
     if (userEmailAddress && userEmailAddress.currentValue) {
       this.userEmailAddress = userEmailAddress.currentValue;
     }
-    if (isInvitePending && isInvitePending.currentValue) {
-      this.isInvitePending = isInvitePending.currentValue;
-    }
-    if (allUserEntitlements && allUserEntitlements.currentValue) {
-      this.entitledToggle = this.userIsCurrentlyEntitled = this.userHasEntitlement('spark-hybrid-impinterop', allUserEntitlements.currentValue);
-    }
   }
 
-  private userHasEntitlement = (entitlement: HybridServiceId, allUserEntitlements: HybridServiceId[]): boolean => allUserEntitlements && allUserEntitlements.indexOf(entitlement) > -1;
+  private userHasEntitlement = (entitlement: HybridServiceId): boolean => this.allUserEntitlements && this.allUserEntitlements.indexOf(entitlement) > -1;
 
-  private getDataFromUSS = (userId: string) => {
-    this.loadingPage = true;
-    return this.USSService.getStatusesForUser(userId)
-      .then((statuses) => {
-        this.userStatus = _.find(statuses, { serviceId: 'spark-hybrid-impinterop' });
+  private getServiceSetupStatus(): ng.IPromise<void> {
+    return this.ServiceDescriptorService.isServiceEnabled('spark-hybrid-impinterop')
+      .then((isSetup) => {
+        this.serviceIsEnabledInFMS = isSetup;
       })
-      .then(() => {
+      .catch((error) => {
+        this.Notification.errorWithTrackingId(error, 'hercules.userSidepanel.errorMessages.cannotReadOrgDataFromFMS');
+      });
+  }
+
+  private getUserData = (userId: string) => {
+    this.loadingPage = true;
+    const promises: ng.IPromise<any>[] = [
+      this.UserOverviewService.getUser(userId),
+      this.USSService.getStatusesForUser(userId),
+    ];
+    return this.$q.all(promises)
+      .then(([commonIdentityUserData, ussStatuses]) => {
+        this.allUserEntitlements = commonIdentityUserData.user.entitlements;
+        this.isInvitePending = !this.UserOverviewService.userHasActivatedAccountInCommonIdentity(commonIdentityUserData.user);
+        this.entitledToggle = this.userIsCurrentlyEntitled = this.userHasEntitlement('spark-hybrid-impinterop');
+        this.userStatus = _.find(ussStatuses, { serviceId: 'spark-hybrid-impinterop' });
         if (this.userStatus && this.userStatus.connectorId) {
           this.connectorId = this.userStatus.connectorId;
         }
 
         if (this.userStatus && this.userStatus.lastStateChange) {
           this.lastStateChangeText = this.HybridServicesI18NService.getTimeSinceText(this.userStatus.lastStateChange);
+        }
+
+        if (this.userStatus && this.userStatus.resourceGroupId) {
+          this.resourceGroupId = this.userStatus.resourceGroupId;
         }
       })
       .catch((error) => {
@@ -82,6 +104,10 @@ class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController 
       });
   }
 
+  public isServiceEnabledInFMS(): boolean {
+    return !this.serviceIsEnabledInFMS;
+  }
+
   public saveData() {
     this.savingPage = true;
 
@@ -91,24 +117,7 @@ class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController 
     }];
 
     this.HybridServiceUserSidepanelHelperService.saveUserEntitlements(this.userId, this.userEmailAddress, entitlements)
-      .then(() => {
-        this.userUpdatedCallback({
-          options: {
-            hybridMessaging: this.newEntitlementValue,
-            refresh: true,
-          },
-        });
-      })
-      .then(() => {
-        if (!this.newEntitlementValue) {
-          this.userIsCurrentlyEntitled = false;
-        } else {
-          this.userIsCurrentlyEntitled = true;
-        }
-        this.newEntitlementValue = undefined;
-        return this.userId;
-      })
-      .then(this.getDataFromUSS)
+      .then(() => this.getUserData(this.userId))
       .catch((error) => {
         this.Notification.error('hercules.userSidepanel.not-updated-specific', {
           userName: this.userEmailAddress,
@@ -138,6 +147,10 @@ class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController 
     return this.USSService.decorateWithStatus(status);
   }
 
+  public resourceGroupRefreshCallback() {
+    this.getUserData(this.userId);
+  }
+
 }
 
 export class HybridMessageUserSettingsComponent implements ng.IComponentOptions {
@@ -146,8 +159,5 @@ export class HybridMessageUserSettingsComponent implements ng.IComponentOptions 
   public bindings = {
     userId: '<',
     userEmailAddress: '<',
-    userUpdatedCallback: '&',
-    isInvitePending: '<',
-    allUserEntitlements: '<',
   };
 }

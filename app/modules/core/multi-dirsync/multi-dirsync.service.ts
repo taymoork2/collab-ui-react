@@ -4,14 +4,18 @@ import { IToolkitModalService, IToolkitModalSettings } from 'modules/core/modal'
 
 export class MultiDirSyncService {
   private readonly ENABLED = 'ENABLED';
+  private isRefreshed: boolean = false;
+  private isEnabled: boolean = false;
 
   /* @ngInject */
   public constructor(
     private $http: ng.IHttpService,
     private $translate: ng.translate.ITranslateService,
+    private $q: ng.IQService,
     private Authinfo,
     private ModalService: IToolkitModalService,
     private Notification: Notification,
+    private Orgservice,
     private UrlConfig,
   ) {}
 
@@ -44,7 +48,36 @@ export class MultiDirSyncService {
         }
       });
 
+      this.isRefreshed = true;
+      this.isEnabled = responseArray.length > 0;
+
       return responseArray;
+    });
+  }
+
+  public isDirsyncEnabled(): ng.IPromise<boolean> {
+    return this.$q((resolve) => {
+      if (this.isRefreshed) {
+        resolve(this.isEnabled);
+      } else {
+        let promise: ng.IPromise<any>;
+        if (this.Authinfo.isAdmin()) {
+          promise = this.getEnabledDomains().catch(() => {
+            this.isRefreshed = true;
+            this.isEnabled = false;
+          });
+        } else { // User Admins, for example, are unable to hit the dirsync APIs and should fall back to OrgService
+          promise = this.Orgservice.getOrg(_.noop, null, {
+            basicInfo: true,
+          }).then((response) => {
+            this.isRefreshed = true;
+            this.isEnabled = _.get(response, 'data.dirsyncEnabled', false);
+          });
+        }
+        promise.finally(() => {
+          resolve(this.isEnabled);
+        });
+      }
     });
   }
 
@@ -114,6 +147,7 @@ export class MultiDirSyncService {
       URL += `/domains/${domain}`;
     }
 
+    this.isRefreshed = false;
     return this.$http.patch(URL, {}, {
       params: {
         enabled: false,
@@ -122,6 +156,7 @@ export class MultiDirSyncService {
   }
 
   private deleteConnector(name: string) {
+    this.isRefreshed = false;
     return this.$http.delete(`${this.baseUrl}connector`, {
       params: { name },
     });

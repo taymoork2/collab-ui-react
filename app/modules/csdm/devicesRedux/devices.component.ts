@@ -46,7 +46,7 @@ export class DevicesCtrl implements ng.IComponentController {
   constructor(private $modal: IToolkitModalService,
               AccountOrgService,
               private DeviceExportService,
-              private $translate: ng.translate.ITranslateService,
+              $translate: ng.translate.ITranslateService,
               private Notification: Notification,
               private WizardFactory,
               private $state,
@@ -170,14 +170,11 @@ export class DevicesCtrl implements ng.IComponentController {
     if (percent === 100) {
       this.exportProgressDialog.close();
       this.exporting = false;
-      const title = this.$translate.instant('spacesPage.export.exportCompleted');
-      const text = this.$translate.instant('spacesPage.export.deviceListReadyForDownload');
-      this.Notification.success(text, title);
+      this.Notification.success('spacesPage.export.deviceListReadyForDownload', undefined, 'spacesPage.export.exportCompleted');
     } else if (percent === -1) {
       this.exportProgressDialog.close();
       this.exporting = false;
-      const warn = this.$translate.instant('spacesPage.export.deviceExportFailedOrCancelled');
-      this.Notification.warning(warn);
+      this.Notification.warning('spacesPage.export.deviceExportFailedOrCancelled');
     }
   }
 

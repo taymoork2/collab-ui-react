@@ -19,6 +19,7 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
+    private $state: ng.ui.IStateService,
     private FeatureToggleService: FeatureToggleService,
     private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesI18NService: HybridServicesI18NService,
@@ -28,7 +29,6 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
   public clusterId: string;
   public connectorId: string;
   public serviceId: HybridServiceId | 'all';
-  public resourceFilter: string;
   public earliestTimestampSearched: string;
 
   public backState: string = 'expressway-cluster.nodes';
@@ -55,7 +55,9 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
   public selectedServiceFilter: IServiceFilterOptions;
 
   public $onInit() {
-    if (this.serviceId === 'squared-fusion-mgmt') {
+    if (this.serviceId === 'all') {
+      this.selectedServiceFilter = this.servicesOptions[0];
+    } else if (this.serviceId === 'squared-fusion-mgmt') {
       this.selectedServiceFilter = this.servicesOptions[1];
     } else if (this.serviceId === 'squared-fusion-cal') {
       this.selectedServiceFilter = this.servicesOptions[2];
@@ -79,10 +81,7 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
 
   public serviceFilterChanged(): void {
     this.serviceId = this.selectedServiceFilter.value;
-  }
-
-  public resourceFilterChanged(): void {
-    this.resourceFilter = this.selectedResourceFilter.value;
+    this.$state.go('.', { serviceId: this.serviceId }, { notify: false });
   }
 
   private getResourceNames(): ng.IPromise<void> {

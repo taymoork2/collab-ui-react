@@ -17,12 +17,12 @@
               ng-class="deviceOverview.currentDevice.cssColorClass">
             </i>
             <span>{{deviceOverview.currentDevice.state.readableState}}</span>
-            <span ng-show="deviceOverview.currentDevice.state.key == 'OFFLINE_EXPIRED'">
+            <span ng-show="deviceOverview.currentDevice.state.key === 'OFFLINE_EXPIRED'">
               <i><span translate="deviceOverviewPage.offlineLong"></span></i><br>
               <span translate="CsdmStatus.connectionStatus.DISCONNECTED"></span>
             </span>
             <span ng-hide="deviceOverview.currentDevice.isOnline || !deviceOverview.currentDevice.lastConnectionTime">{{'deviceOverviewPage.lastSeen' | translate}} {{deviceOverview.currentDevice.lastConnectionTime}}</span>
-            <span ng-show="deviceOverview.currentDevice.state.key == 'OFFLINE_EXPIRED'"><br><a href ng-click="deviceOverview.reactivateRoomDevice()" translate="deviceOverviewPage.reactivate"></a></span>
+            <span ng-show="deviceOverview.currentDevice.state.key === 'OFFLINE_EXPIRED'"><br><a href ng-click="deviceOverview.reactivateRoomDevice()" translate="deviceOverviewPage.reactivate"></a></span>
           </div>
         </div>
         <div ng-show="deviceOverview.currentDevice.supportsCustomTags">
@@ -229,7 +229,15 @@
         <div class="form-group" ng-show="deviceOverview.currentDevice.isATA && deviceOverview.showT38">
           <label class="col-sm-4 control-label" translate="ataSettings.t38Label"></label>
           <div class="col-sm-8">
-            <cs-toggle-switch is-disabled="deviceOverview.updatingT38Settings || deviceOverview.disableAtaRebootSettings" cs-change="deviceOverview.saveT38Settings()" ng-model="deviceOverview.faxEnabled" toggle-id="faxEnabled" name="faxEnabled" size="small"></cs-toggle-switch>
+            <cs-toggle-switch
+              is-disabled="deviceOverview.updatingT38Settings || deviceOverview.disableAtaRebootSettings"
+              cs-change="deviceOverview.saveT38Settings()"
+              cs-aria-label="{{::'ataSettings.t38Label' | translate}}"
+              ng-model="deviceOverview.faxEnabled"
+              toggle-id="faxEnabled"
+              name="faxEnabled"
+              size="small">
+            </cs-toggle-switch>
             <p class="form-control-static warningFaxes" translate="ataSettings.t38Warning"></p>
             <div class="col-sm-4 updatingAta" ng-show="deviceOverview.updatingT38Settings">
               <div cs-loader class="loader-example--small"></div>
@@ -239,7 +247,15 @@
         <div class="form-group" ng-show="deviceOverview.currentDevice.isATA && deviceOverview.cpcFeatureToggle">
           <label class="col-sm-4 control-label" translate="ataSettings.cpcLabel"></label>
           <div class="col-sm-8">
-            <cs-toggle-switch is-disabled="deviceOverview.updatingCpcSettings || deviceOverview.disableAtaRebootSettings" cs-change="deviceOverview.saveCpcSettings()" ng-model="deviceOverview.cpcEnabled" toggle-id="cpcEnabled" name="cpcEnabled" size="small"></cs-toggle-switch>
+            <cs-toggle-switch
+              is-disabled="deviceOverview.updatingCpcSettings || deviceOverview.disableAtaRebootSettings"
+              cs-change="deviceOverview.saveCpcSettings()"
+              cs-aria-label="{{::'ataSettings.cpcLabel' | translate}}"
+              ng-model="deviceOverview.cpcEnabled"
+              toggle-id="cpcEnabled"
+              name="cpcEnabled"
+              size="small">
+            </cs-toggle-switch>
             <p class="form-control-static warningFaxes" translate="ataSettings.cpcWarning"></p>
             <div class="col-sm-4 updatingAta" ng-show="deviceOverview.updatingCpcSettings">
               <div cs-loader class="loader-example--small"></div>
@@ -254,13 +270,13 @@
         <div class="form-group" ng-show="deviceOverview.currentDevice.hasAdvancedSettings" cr-feature-toggle feature-show="atlas-devices-advanced-settings">
           <label class="col-sm-4 control-label" translate="spacesPage.advancedSettings.advancedSettings"></label>
           <div class="col-sm-8">
-            <a sq-click-promise="deviceOverview.showAdvancedSettingsDialog()" translate="spacesPage.advancedSettings.launchAdvancedSettings"></a>
+            <a href sq-click-promise="deviceOverview.showAdvancedSettingsDialog()" translate="spacesPage.advancedSettings.launchAdvancedSettings"></a>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-4 control-label" translate="spacesPage.remoteAccessKey.ciscoSupport"></label>
           <div class="col-sm-8">
-            <a sq-click-promise="deviceOverview.showRemoteSupportDialog()" translate="spacesPage.remoteAccessKey.remoteAccessKey"></a>
+            <a href sq-click-promise="deviceOverview.showRemoteSupportDialog()" translate="spacesPage.remoteAccessKey.remoteAccessKey"></a>
             <p class="form-control-static warningFaxes">This key enables Cisco Support to resolve system issues remotely.</p>
           </div>
         </div>

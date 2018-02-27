@@ -2,7 +2,7 @@ import './onboard-summary-for-auto-assign-modal.scss';
 
 import * as analyticsModuleName from 'modules/core/analytics';
 import coreSharedModuleName from 'modules/core/shared';
-import licenseSummaryModuleName from 'modules/core/users/userManage/shared/license-summary';
+import autoAssignTemplateSummaryContainerModuleName from 'modules/core/users/userManage/shared/auto-assign-template-summary-container';
 import notificationsModuleName from 'modules/core/notifications';
 import onboardModuleName from 'modules/core/users/shared/onboard';
 import userAddSharedModuleName from 'modules/core/users/userAdd/shared';
@@ -13,7 +13,7 @@ export default angular.module('core.users.userManage.onboard-summary-for-auto-as
   require('@collabui/collab-ui-ng').default,
   analyticsModuleName,
   coreSharedModuleName,
-  licenseSummaryModuleName,
+  autoAssignTemplateSummaryContainerModuleName,
   notificationsModuleName,
   onboardModuleName,
   userAddSharedModuleName,

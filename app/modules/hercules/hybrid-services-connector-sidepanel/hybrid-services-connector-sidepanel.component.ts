@@ -1,11 +1,12 @@
-import { IConnector } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 import { FeatureToggleService } from 'modules/core/featureToggle';
+import { ISimplifiedConnector } from '../hybrid-services-nodes-page/hybrid-services-nodes-page.component';
 
 class HybridServicesConnectorSidepanelCtrl implements ng.IComponentController {
-  public connector: IConnector;
+  public connector: ISimplifiedConnector;
   public titleKey: string;
   public hasEventHistoryFeatureToggle = false;
+  public serviceId = this.HybridServicesUtilsService.connectorType2ServicesId(this.connector.connectorType)[0];
 
   /* @ngInject */
   constructor(
@@ -22,14 +23,6 @@ class HybridServicesConnectorSidepanelCtrl implements ng.IComponentController {
     this.titleKey = `hercules.connectorNameFromConnectorType.${this.connector.connectorType}`;
     this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridAuditLog)
       .then((supported) => this.hasEventHistoryFeatureToggle = supported);
-  }
-
-  public goToEventHistoryPage() {
-    this.$state.go('hybrid-services-event-history-page', {
-      clusterId: this.connector.clusterId,
-      connectorId: this.connector.id,
-      serviceId: this.HybridServicesUtilsService.connectorType2ServicesId(this.connector.connectorType)[0],
-    });
   }
 }
 

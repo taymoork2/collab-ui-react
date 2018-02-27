@@ -281,13 +281,8 @@
       }
     }
 
-    FeatureToggleService.supports(FeatureToggleService.features.huronPstn)
-      .then(function (supported) {
-        vm.hPstn = supported;
-      });
-
     function showProviderDetails() {
-      var state = vm.hPstn ? 'pstnWizard' : 'pstnSetup';
+      var state = 'pstnWizard';
       return $state.go(state, {
         customerId: Authinfo.getOrgId(),
         customerName: Authinfo.getOrgName(),

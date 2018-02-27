@@ -16,7 +16,7 @@
     <div ng-repeat="button in card.getButtons()">
       <a ng-if="!button.routerState && !button.externalLink" class="disabled" ng-class="button.buttonClass">{{::button.name | translate}}</a>
       <a ng-if="button.routerState && !button.onClick" ui-sref="{{button.routerState}}" ng-class="button.buttonClass">{{::button.name | translate}}</a>
-      <a ng-if="button.routerState && button.onClick" ng-click="button.onClick()" ng-class="button.buttonClass">{{::button.name | translate}}</a>
+      <a href ng-if="button.routerState && button.onClick" ng-click="button.onClick()" ng-class="button.buttonClass">{{::button.name | translate}}</a>
       <a ng-if="button.externalLink" href="{{button.externalLink}}" target="_blank" ng-class="button.buttonClass">{{::button.name | translate}}</a>
     </div>
     <div ng-if="card.getShowMoreButton()">

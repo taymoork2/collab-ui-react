@@ -77,8 +77,8 @@
     <p ng-class="{'domain-space': !vm.showSaveButton}">
       <a href class="redirect-link" translate="firstTimeWizard.setSipDomainLink" ng-click="vm.openSipHelpWiki()"></a>
     </p>
-
-    <p class="domain domain-space-two" translate="firstTimeWizard.reservedSubdomains"></p>
+    <br>
+    <p class="domain" translate="firstTimeWizard.reservedSubdomains"></p>
     <div class="domain-space">
       <i class="icon icon-error domain-icon domain-error" ng-if="vm.form.$invalid && !vm.emptyOrUnchangedInput()"></i>
       <i class="icon icon-check domain-icon domain-success" ng-if="!vm.form.$invalid && vm.verified"></i>
@@ -93,8 +93,9 @@
     <p ng-if="!vm.sipForm && vm.isSSAReserved && !vm.isCsc" class="domain-space">
       <a href id="editSubdomainLink" class="redirect-link" translate="firstTimeWizard.editSubdomain" ng-click="vm.editSubdomain()"></a>
     </p>
+    <br>
+    <p class="domain" ng-if="vm.sipForm || !vm.isSSAReserved" translate="firstTimeWizard.enterSubdomain"></p>
 
-    <p class="domain domain-space-two" ng-if="vm.sipForm || !vm.isSSAReserved" translate="firstTimeWizard.enterSubdomain"></p>
     <form ng-show="vm.sipForm || !vm.isSSAReserved" name="vm.form" novalidate role="form" class="domain-form">
       <div class="domain-input" ng-if="vm.sipForm || !vm.isSSAReserved">
         <input cs-input type="text"
@@ -106,15 +107,20 @@
           ng-maxlength="40"
           ng-model="vm.inputValue">
       </div>
-      <div ng-if="vm.sipForm || !vm.isSSAReserved" class="domain-buttons">
+      <div class="domain-buttons" ng-if="vm.sipForm || !vm.isSSAReserved">
         <button cs-btn type="button"
-          class="btn btn--cta"
+          class="btn btn--cta domain-button"
           loading="vm.isSubdomainLoading"
           ng-click="vm.verifyAvailabilityAndValidity()"
           ng-disabled="vm.emptyOrUnchangedInput() || this.saving">
           <span translate="firstTimeWizard.setSipDomainCheckAvailability"></span>
         </button>
-        <button type="button" class="btn" translate="common.cancel" ng-click="vm.toggleSipForm(); vm.resetFocus();" ng-disabled="this.saving"></button>
+        <button type="button"
+          class="btn"
+          translate="common.cancel"
+          ng-click="vm.toggleSipForm(); vm.resetFocus();"
+          ng-disabled="this.saving">
+        </button>
       </div>
     </form>
   </p></div>

@@ -20,9 +20,10 @@
       <input id="display-key" type="text" ng-model="rs.currentDevice.rsuKey" readonly>
     </h3>
     <div class="remote-support-buttons">
-      <a sq-clipboard="rs.currentDevice.rsuKey"><i class="icon icon-clipboard"></i> <span>Copy to Clipboard</span></a>
-      <a ng-show="rs.currentDevice.isOnline" sq-click-promise="rs.resetRsuKeyAndWait()"><i class="icon icon-reset"></i> <span>Reset Key</span></a>
-      <div ng-show="!rs.currentDevice.isOnline"><i class="icon icon-reset"></i> <span>Reset Key</span></div>
+      <!-- TODO: replace text with translation -->
+      <a href sq-clipboard="rs.currentDevice.rsuKey"><i class="icon icon-clipboard"></i> <span>Copy to Clipboard</span></a>
+      <a href ng-if="rs.currentDevice.isOnline" sq-click-promise="rs.resetRsuKeyAndWait()"><i class="icon icon-reset"></i> <span>Reset Key</span></a>
+      <div ng-if="!rs.currentDevice.isOnline"><i class="icon icon-reset"></i> <span>Reset Key</span></div>
     </div>
   </div>
   </div>

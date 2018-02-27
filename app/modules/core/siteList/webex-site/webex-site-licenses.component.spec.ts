@@ -55,8 +55,8 @@ describe('Component: WebexSiteLicensesComponent', function () {
   describe('When first opened', () => {
     it('should get centerDetails and distributedLicensesArray correctly', function () {
       const expectedCenterDetails = [
-        { centerType: 'MC', volume: 100 },
-        { centerType: 'EE', volume: 200 },
+        { serviceName: 'MC', quantity: 100 },
+        { serviceName: 'EE', quantity: 200 },
       ];
       expect(this.controller.centerDetails).toEqual(expectedCenterDetails);
       expect(this.controller.distributedLicensesArray.length).toBe(3);

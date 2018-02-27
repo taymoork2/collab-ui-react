@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  // TODO: Update all callback functions to be promises instead
+
   var angularCacheModule = require('angular-cache');
   var angularResourceModule = require('angular-resource');
   var angularTranslateModule = require('angular-translate');

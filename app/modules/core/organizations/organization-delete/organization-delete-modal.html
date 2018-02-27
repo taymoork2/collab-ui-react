@@ -1,0 +1,22 @@
+<div class="modal-header">
+  <h3 class="modal-title">{{$ctrl.title}}</h3>
+</div>
+<div class="organization-delete-modal-body modal-body">
+  <span ng-if="$ctrl.state === $ctrl.states.DELETING">{{$ctrl.body}}</span>
+  <span ng-if="$ctrl.state === $ctrl.states.COMPLETE" translate="organizationDeleteModal.accountClosedBody" translate-values="{href: $ctrl.href}"></span>
+</div>
+<div class="modal-footer">
+  <button
+    class="btn btn--default"
+    ng-click="$ctrl.close()">
+    <span>{{$ctrl.closeButtonText}}</span>
+  </button>
+  <button
+    ng-if="$ctrl.state === $ctrl.states.DELETING"
+    cs-btn
+    class="btn btn--negative"
+    ng-click="$ctrl.deleteOrg()"
+    loading="$ctrl.deleteLoading">
+    <span translate="organizationDeleteModal.deleteButton"></span>
+  </button>
+</div>

@@ -9,6 +9,7 @@ export interface IOnboardScopeForUsersAdd {
   currentUserCount: number;
   invalidcount: number;
   invalidDirSyncUsersCount: number;
+  invalidNewUserCount: number;
   model: {
     emailAddress?: string;
     firstName?: any;
@@ -21,9 +22,7 @@ export interface IOnboardScopeForUsersAdd {
   };
 }
 
-export interface IOnboardScopeForUsersConvert {
-  convertCancelled: boolean;
-}
+export interface IOnboardScopeForUsersConvert {}
 
 export enum OnboardCtrlBoundUIStates {
   ALL = 'all',
@@ -81,6 +80,7 @@ export default class OnboardStore {
       currentUserCount: 0,
       invalidcount: 0,
       invalidDirSyncUsersCount: 0,
+      invalidNewUserCount: 0,
       model: {
         emailAddress: undefined,
         firstName: undefined,
@@ -97,8 +97,6 @@ export default class OnboardStore {
   }
 
   private initUsersConvert(): IOnboardScopeForUsersConvert {
-    return {
-      convertCancelled: false,
-    };
+    return {};
   }
 }

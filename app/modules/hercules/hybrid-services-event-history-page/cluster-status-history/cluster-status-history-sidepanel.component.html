@@ -306,7 +306,13 @@
 
       <div class="section-title-row section-name">
         <span translate="hercules.eventHistory.sidepanel.technicalDetails.heading"></span>
-        <i class="icon icon-question-circle" tooltip-placement="left" tooltip="{{::'hercules.eventHistory.sidepanel.technicalDetails.tooltip' | translate}}"></i>
+        <i class="icon icon-question-circle"
+          tabindex="0"
+          tooltip-placement="left"
+          tooltip="{{::'hercules.eventHistory.sidepanel.technicalDetails.tooltip' | translate}}"
+          tooltip-trigger="focus mouseenter"
+          aria-label="{{::'hercules.eventHistory.sidepanel.technicalDetails.tooltip' | translate}}">
+        </i>
       </div>
 
       <div class="row collapse" ng-if="$ctrl.eventItem.clusterId">

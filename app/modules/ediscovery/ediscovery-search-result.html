@@ -16,7 +16,14 @@
           </div>
           <div class="date-range-tooltip">
             <span class="result-title" translate="ediscovery.searchResults.dateRange"></span>
-            <i ng-if="ediscoverySearchCtrl.showHover()" tooltip="{{'ediscovery.searchParameters.dateRangeTooltip' | translate}}" tooltip-placement="right" class="icon icon-info"></i>
+            <i ng-if="ediscoverySearchCtrl.showHover()"
+              tabindex="0"
+              tooltip="{{::'ediscovery.searchParameters.dateRangeTooltip' | translate}}"
+              tooltip-placement="right"
+              tooltip-trigger="focus mouseenter"
+              class="icon icon-info"
+              aria-label="{{::'ediscovery.searchParameters.dateRangeTooltip' | translate}}">
+            </i>
           </div>
           <p class="result-info">{{ediscoverySearchCtrl.searchCriteria.startDate}} - {{ediscoverySearchCtrl.searchCriteria.endDate}}</p>
           <p class="result-title" translate="ediscovery.searchResults.messages"></p>

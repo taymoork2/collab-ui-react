@@ -15,6 +15,7 @@
     cs-change="$ctrl.onChange({restriction: restriction.restriction, blocked:!restriction.blocked})"
     cs-true-value="false"
     cs-false-value="true"
+    cs-aria-label="{{::$ctrl.getTitle(restriction.restriction) | translate}}"
     is-disabled="$ctrl.disableControl">
   </cs-toggle-switch>
 </div>

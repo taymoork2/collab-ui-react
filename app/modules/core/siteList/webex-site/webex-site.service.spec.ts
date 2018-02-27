@@ -4,6 +4,8 @@ describe('Service: WebExSite Service', function () {
   beforeEach(function init() {
     this.initModules(module);
     this.injectDependencies(
+      '$q',
+      '$scope',
       'Authinfo',
       'SetupWizardService',
       'WebExSiteService',

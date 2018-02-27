@@ -54,7 +54,7 @@ describe('Care Expert Virtual Assistant Service', function () {
     $httpBackend = $state = $rootScope = evaSparkDeferred = undefined;
   });
 
-  it('service Card goto Service should do just that', function () {
+  it('should go to the right service', function () {
     const goSpy = spyOn($state, 'go');
     EvaService.evaServiceCard.goToService($state, { type: 'virtualAssistant' });
     expect(goSpy).toHaveBeenCalledWith('care.expertVirtualAssistant', {
@@ -62,7 +62,7 @@ describe('Care Expert Virtual Assistant Service', function () {
     });
   });
 
-  it('URL should support getExpertAssistant for me', function () {
+  it('should support getExpertAssistant for me', function () {
     const url = new RegExp('.*/organization/' + TEST_ORG_ID + '/expert-assistant/' + TEST_EXPERT_VA_ID);
     const eva = {
       id: '7cc2966d-e697-4c32-8be9-413c1bfae585',
@@ -84,7 +84,7 @@ describe('Care Expert Virtual Assistant Service', function () {
     $rootScope.$apply(); // flush mocked spark listPeopleByIds
   });
 
-  it('URL should support listExpertAssistants for me', function () {
+  it('should support listExpertAssistants for me', function () {
     const url = new RegExp('.*/organization/' + TEST_ORG_ID + '/expert-assistant');
     const evaList = {
       items: [{
@@ -111,7 +111,7 @@ describe('Care Expert Virtual Assistant Service', function () {
     expect(result).toEqual(expectedEvaList);
   });
 
-  it('URL should support listExpertAssistants for other owner', function () {
+  it('should support listExpertAssistants for other owner', function () {
     const url = new RegExp('.*/organization/' + TEST_ORG_ID + '/expert-assistant');
     const evaList = {
       items: [{
@@ -138,7 +138,7 @@ describe('Care Expert Virtual Assistant Service', function () {
     expect(result).toEqual(expectedEvaList);
   });
 
-  it('URL should support getExpertAssistant for other Owner', function () {
+  it('should support getExpertAssistant for other Owner', function () {
     const url = new RegExp('.*/organization/' + TEST_ORG_ID + '/expert-assistant/' + TEST_EXPERT_VA_ID);
     const eva = {
       id: '7cc2966d-e697-4c32-8be9-413c1bfae585',
@@ -160,7 +160,7 @@ describe('Care Expert Virtual Assistant Service', function () {
     $rootScope.$apply(); // flush mocked spark listPeopleByIds
   });
 
-  it('URL should support deleteExpertAssistant', function () {
+  it('should support deleteExpertAssistant', function () {
     const url = new RegExp('.*/organization/' + TEST_ORG_ID + '/expert-assistant/' + TEST_EXPERT_VA_ID);
     $httpBackend.expectDELETE(url).respond(200);
     EvaService.deleteExpertAssistant(TEST_EXPERT_VA_ID, TEST_ORG_ID);
@@ -187,19 +187,27 @@ describe('Care Expert Virtual Assistant Service', function () {
     $httpBackend.flush();
   });
 
-  it('URL should support updateExpertAssistant', function () {
+  it('should support updateExpertAssistant', function () {
     const url = new RegExp('.*/organization/' + TEST_ORG_ID + '/expert-assistant/' + TEST_EXPERT_VA_ID);
     $httpBackend.expectPUT(url, {
       name: TEST_EXPERT_VA_NAME,
       email: TEST_EMAIL,
-      icon: TEST_ICON_URL,
       defaultSpaceId: DEFAULT_SPACE_ID,
     }).respond(200);
-    EvaService.updateExpertAssistant(TEST_EXPERT_VA_ID, TEST_EXPERT_VA_NAME, TEST_ORG_ID, TEST_EMAIL, DEFAULT_SPACE_ID, TEST_ICON_URL);
+    EvaService.updateExpertAssistant(TEST_EXPERT_VA_ID, TEST_EXPERT_VA_NAME, TEST_ORG_ID, TEST_EMAIL, DEFAULT_SPACE_ID);
     $httpBackend.flush();
   });
 
-  it('URL should support addExpertAssistant', function () {
+  it('should support updateExpertAssistantIcon', function () {
+    const url = new RegExp('.*/organization/' + TEST_ORG_ID + '/expert-assistant/' + TEST_EXPERT_VA_ID + '/icon');
+    $httpBackend.expectPUT(url, {
+      icon: TEST_ICON_URL,
+    }).respond(200);
+    EvaService.updateExpertAssistantIcon(TEST_EXPERT_VA_ID, TEST_ORG_ID, TEST_ICON_URL);
+    $httpBackend.flush();
+  });
+
+  it('should support addExpertAssistant', function () {
     const url = new RegExp('.*/organization/' + TEST_ORG_ID + '/expert-assistant');
     const expectedResponse = { expertAssistantId: TEST_EXPERT_VA_ID };
     $httpBackend
@@ -221,7 +229,7 @@ describe('Care Expert Virtual Assistant Service', function () {
     expect(result).toEqual(expectedResponse);
   });
 
-  it('getWarningIfNotOwner for feature owned by other should indicate warning', function () {
+  it('should indicate warning for getWarningIfNotOwner for feature owned by other', function () {
     const expectedResult = {
       valid: false,
       warning: {
@@ -237,7 +245,7 @@ describe('Care Expert Virtual Assistant Service', function () {
     expect(actualResult).toEqual(expectedResult);
   });
 
-  it('getWarningIfNotOwner for feature owned by me should indicate no warning', function () {
+  it('should indicate no warning for getWarningIfNotOwner for feature owned by me', function () {
     const expectedResult = {
       valid: true,
     };

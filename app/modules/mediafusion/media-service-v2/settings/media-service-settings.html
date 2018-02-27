@@ -6,9 +6,13 @@
         <div class="sub-section">
           <h5 class="sub-section__label" translate="mediaFusion.videoQuality.title"></h5>
           <p class="sub-section__description" translate="mediaFusion.videoQuality.description"></p>
-          <cs-toggle-switch ng-model="mediaServiceSettings.enableVideoQuality" ng-click="mediaServiceSettings.setEnableVideoQuality()"
-            toggle-id="toggleEnableVideoQuality" name="toggleEnableVideoQuality" size="small">
-
+          <cs-toggle-switch
+            ng-model="mediaServiceSettings.enableVideoQuality"
+            ng-click="mediaServiceSettings.setEnableVideoQuality()"
+            toggle-id="toggleEnableVideoQuality"
+            name="toggleEnableVideoQuality"
+            size="small"
+            cs-aria-label="{{::'mediaFusion.videoQuality.description' | translate}}">
           </cs-toggle-switch>
         </div>
       </setting-section>

@@ -91,26 +91,6 @@ Special stuff currently used for out own mail input field...
   }
 }
 
-.hercules-clusters-list {
-  position: relative;
-
-  .clusters-list-loading {
-    position: absolute;
-    top: 200px;
-    left: 0;
-    right: 0;
-    text-align: center;
-
-    .with-user-statuses-bar & {
-      top: 50px;
-    }
-  }
-
-  .centered-info-pane {
-    padding: 10% !important;
-  }
-}
-
 .hercules-cluster-settings {
   .section-title-row {
     align-items: center;
@@ -189,36 +169,6 @@ Special stuff currently used for out own mail input field...
     padding-top: 1rem;
     padding-bottom: 1rem;
     height: $user-statuses-bar-height - 2rem;
-  }
-}
-
-.user-statuses-card {
-  display: flex;
-  flex-direction: column;
-  margin-right: 3rem;
-}
-
-.user-statuses-title {
-  color: $gray-dark-2;
-}
-
-.user-statuses-content {
-  display: flex;
-  margin: 0;
-  color: $gray-dark-1;
-  font-size: 0.875rem;
-
-  .red {
-    color: $color-alerts-base;
-  }
-
-  span {
-    font-size: 0.875rem;
-  }
-
-  li {
-    list-style-type: none;
-    margin-right: 1rem;
   }
 }
 

@@ -1,7 +1,8 @@
 <cs-page-header
   title-name="{{$ctrl.title}}"
   back="true"
-  back-url="$ctrl.huronFeaturesUrl">
+  back-url="$ctrl.huronFeaturesUrl"
+  back-aria-label="{{::'common.back' | translate}}">
 </cs-page-header>
 <div class="loading-container" ng-if="$ctrl.isLoading">
   <i class='icon icon-spinner'></i>

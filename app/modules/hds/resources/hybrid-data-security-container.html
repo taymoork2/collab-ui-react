@@ -1,5 +1,11 @@
 <div class="hds-service hds hds-fix-paragraphs">
-    <cs-page-header title-name="{{'hds.resources.page_title' | translate}}" tabs="hdsServiceController.tabs" back="true" back-url="hdsServiceController.backState"></cs-page-header>
+    <cs-page-header
+      title-name="{{'hds.resources.page_title' | translate}}"
+      tabs="hdsServiceController.tabs"
+      back="true"
+      back-url="hdsServiceController.backState"
+      back-aria-label="{{::'common.back' | translate}}">
+    </cs-page-header>
     <cs-page-sub-header>
       <cs-page-sub-header-right>
         <add-hybrid-resource-button modal-window-options="hdsServiceController.addResourceModal"></add-hybrid-resource-button>

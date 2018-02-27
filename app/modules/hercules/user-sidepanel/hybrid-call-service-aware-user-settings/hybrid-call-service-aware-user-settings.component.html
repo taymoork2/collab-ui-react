@@ -15,11 +15,14 @@
     <cs-sp-section class="hybrid-services-user-sidepanel">
       <div class="section-title-row">
         <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-uc"></span>
-        <cs-toggle-switch toggle-id="callServiceAwareEntitledToggle"
-                          ng-model="$ctrl.entitledToggle"
-                          cs-change="$ctrl.changeEntitlement(toggleValue)"
-                          size="small"
-                          is-disabled="!$ctrl.loadingPage && $ctrl.couldNotReadUser">
+        <cs-toggle-switch
+          ng-if="!$ctrl.loadingPage"
+          toggle-id="callServiceAwareEntitledToggle"
+          ng-model="$ctrl.entitledToggle"
+          cs-change="$ctrl.changeEntitlement(toggleValue)"
+          size="small"
+          is-disabled="!$ctrl.loadingPage && $ctrl.couldNotReadUser"
+          cs-aria-label="{{::'hercules.cloudExtensions.serviceNames.squared-fusion-uc' | translate}}">
         </cs-toggle-switch>
         <span cs-loader
               class="hybrid-services-label loader-example--small"
@@ -28,6 +31,10 @@
       <div>
       <p class="hybrid-service-description">{{'hercules.cloudExtensions.serviceDescriptions.squared-fusion-uc' | translate}}</p>
 
+        <p ng-if="!$ctrl.loadingPage && $ctrl.showSaveButton() && !$ctrl.isServiceEnabledInFMS() && !$ctrl.isInvitePending && $ctrl.entitledToggle">
+          <hybrid-services-sidepanel-message severity="'warning'" translation-key="'hercules.cloudExtensions.serviceNotEnabledInCloud'"></hybrid-services-sidepanel-message>
+        </p>
+
         <div class="row collapse">
           <div class="columns small-3">
             <span class="hybrid-services-label">{{::'cloudExtensions.status' | translate}}:</span>
@@ -35,19 +42,23 @@
           <div class="columns small-7 normal-line-height"
                ng-if="!$ctrl.loadingPage">
             <span class="hybrid-services-label"
-                  ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatusAware"
+                  ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatusAware && $ctrl.isServiceEnabledInFMS()"
                   ng-class="'status-' + $ctrl.userStatusAware.state"
                   id="callServiceAwareStatus"
                   translate="hercules.activationStatus.{{$ctrl.getStatus($ctrl.userStatusAware)}}"></span>
 
             <span class="hybrid-services-label last-state-change-timestamp"
-                  ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatusAware && $ctrl.lastStateChangeText">
+                  ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatusAware && $ctrl.lastStateChangeText && $ctrl.isServiceEnabledInFMS()">
             {{$ctrl.lastStateChangeText}}
             </span>
 
             <span class="hybrid-services-label"
                   ng-if="$ctrl.isInvitePending"
                   translate="hercules.activationStatus.accountNotActivated"></span>
+
+            <span class="hybrid-services-label status-off"
+                  ng-if="$ctrl.userStatusAware && !$ctrl.isServiceEnabledInFMS()"
+                  translate="hercules.activationStatus.pendingNotSetup"></span>
 
             <span class="hybrid-services-label status-off"
                   ng-if="!$ctrl.userIsCurrentlyEntitled && !$ctrl.couldNotReadUser && !$ctrl.isInvitePending"
@@ -73,69 +84,66 @@
             </span>
           </div>
 
-          <div class="row collapse" ng-if="$ctrl.userStatusAware.messages.length">
+          <div class="row collapse" ng-if="$ctrl.userStatusAware.messages.length && $ctrl.isServiceEnabledInFMS()">
             <div class="columns small-3">
               <span class="history-label">{{'cloudExtensions.details' | translate}}:</span>
             </div>
-            <div class="columns small-9">
-              <user-status-messages messages="$ctrl.userStatusAware.messages"></user-status-messages>
+            <div class="columns small-9" ng-if="!$ctrl.loadingPage">
+              <user-status-messages messages="$ctrl.userStatusAware.messages"
+                                    human-readable="true"
+                                    resource-group-id="$ctrl.resourceGroupId"
+                                    connector-type="'c_ucmc'"></user-status-messages>
+            </div>
+            <div class="columns small-9" ng-if="$ctrl.loadingPage">
+              <span cs-loader class="hybrid-services-label loader-example--small"></span>
             </div>
           </div>
         </div>
 
         <hybrid-services-user-homed-cluster-and-hostname ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.connectorId"
                                                          connector-id="$ctrl.connectorId"></hybrid-services-user-homed-cluster-and-hostname>
+        <div ng-if="$ctrl.isServiceEnabledInFMS()">
 
-        <div class="row collapse" ng-if="$ctrl.directoryUri || ($ctrl.userStatusAware.state === 'error' || $ctrl.userStatusAware.state === 'activated')">
+        <div class="row collapse" ng-if="$ctrl.directoryUri">
           <div class="columns small-3">
             <span class="hybrid-services-label">{{::'cloudExtensions.sipUri' | translate}}:</span>
           </div>
           <div class="columns small-9">
             <span ng-if="$ctrl.directoryUri"
                   class="hybrid-services-label">{{$ctrl.directoryUri}}</span>
-            <span ng-if="!$ctrl.directoryUri"
-                  class="hybrid-services-label status-error"
-                  translate="common.notFound"></span>
           </div>
         </div>
 
-        <div class="row collapse" ng-if="$ctrl.primaryDn || ($ctrl.userStatusAware.state === 'error' || $ctrl.userStatusAware.state === 'activated')">
+        <div class="row collapse" ng-if="$ctrl.primaryDn">
           <div class="columns small-3">
             <span class="hybrid-services-label">{{::'cloudExtensions.primaryDN' | translate}}:</span>
           </div>
           <div class="columns small-9">
             <span ng-if="$ctrl.primaryDn"
                   class="hybrid-services-label">{{$ctrl.primaryDn}}</span>
-            <span ng-if="!$ctrl.primaryDn"
-                  class="hybrid-services-label status-error"
-                  translate="common.notFound"></span>
           </div>
         </div>
 
-        <div class="row collapse" ng-if="$ctrl.telephoneNumber || ($ctrl.userStatusAware.state === 'error' || $ctrl.userStatusAware.state === 'activated')">
+        <div class="row collapse" ng-if="$ctrl.telephoneNumber">
           <div class="columns small-3">
             <span class="hybrid-services-label">{{::'cloudExtensions.telephoneNumber' | translate}}:</span>
           </div>
           <div class="columns small-9">
             <span ng-if="$ctrl.telephoneNumber"
                   class="hybrid-services-label">{{$ctrl.telephoneNumber}}</span>
-            <span ng-if="!$ctrl.telephoneNumber"
-                  class="hybrid-services-label status-error"
-                  translate="common.notFound"></span>
           </div>
         </div>
 
-        <div class="row collapse" ng-if="$ctrl.ucmCluster || ($ctrl.userStatusAware.state === 'error' || $ctrl.userStatusAware.state === 'activated')">
+        <div class="row collapse" ng-if="$ctrl.ucmCluster">
           <div class="columns small-3">
             <span class="hybrid-services-label">{{::'cloudExtensions.ucmCluster' | translate}}:</span>
           </div>
           <div class="columns small-9">
             <span ng-if="$ctrl.ucmCluster"
                   class="hybrid-services-label">{{$ctrl.ucmCluster}}</span>
-            <span ng-if="!$ctrl.ucmCluster"
-                  class="hybrid-services-label status-error"
-                  translate="common.notFound"></span>
           </div>
+        </div>
+
         </div>
 
         <hs-is-invite-pending-warning ng-if="$ctrl.isInvitePending"

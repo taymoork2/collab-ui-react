@@ -35,7 +35,7 @@
         <span ng-if=!$ctrl.hasVerifiedDomain>
           <i class="icon icon-warning domain-warning-icon"></i>
           <span translate="servicesOverview.cards.privateTrunk.prerequisites.noDomains"></span>
-          <a translate="servicesOverview.cards.privateTrunk.prerequisites.verifyDomain" ng-click="$ctrl.gotoSettings()"></a>
+          <a href translate="servicesOverview.cards.privateTrunk.prerequisites.verifyDomain" ng-click="$ctrl.gotoSettings()"></a>
         </span>
         <span ng-if=$ctrl.hasVerifiedDomain>
           <i class="icon icon-check domain-good-icon"></i>

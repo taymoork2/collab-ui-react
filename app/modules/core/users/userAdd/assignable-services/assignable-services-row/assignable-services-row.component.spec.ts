@@ -4,6 +4,7 @@ describe('Component: assignableServicesRow:', () => {
   beforeEach(function() {
     this.initModules(moduleName);
     this.injectDependencies(
+      '$state',
       '$scope',
       'LicenseUsageUtilService',
     );
@@ -140,6 +141,18 @@ describe('Component: assignableServicesRow:', () => {
 
       this.controller.getTotalLicenseVolume('foo');
       expect(this.LicenseUsageUtilService.getTotalLicenseVolume).toHaveBeenCalledWith('foo', this.controller.licenses);
+    });
+
+    describe('disableCareLicenseSelection():', () => {
+      it('should return true if UI state is currently the edit auto-assign template', function () {
+        this.compileComponent('assignableServicesRow', {
+          subscription: 'fakeSubscription',
+        });
+        _.set(this.$state, 'current.name', 'foo');
+        expect(this.controller.disableCareLicenseSelection()).toBe(false);
+        _.set(this.$state, 'current.name', 'users.manage.edit-auto-assign-template-modal');
+        expect(this.controller.disableCareLicenseSelection()).toBe(true);
+      });
     });
   });
 });

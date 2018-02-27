@@ -1,19 +1,20 @@
 import CalendarCloudConnectorServiceModuleName, { CloudConnectorService } from 'modules/hercules/services/calendar-cloud-connector.service';
-import HybridServicesClusterServiceModuleName, { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
+import HybridServicesClusterServiceModuleName from 'modules/hercules/services/hybrid-services-cluster.service';
 import FlagServiceModuleName, { HybridServicesFlagService } from 'modules/hercules/services/hs-flag-service';
 import { BadgeType, IOverviewPageNotification } from 'modules/core/overview/overviewPage.types';
 import HybridServicesUtilsServiceModuleName, { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 export class OverviewAllHybridCalendarsNotification {
 
   public createNotification($state: ng.ui.IStateService,
                             CloudConnectorService: CloudConnectorService,
-                            HybridServicesClusterService: HybridServicesClusterService,
+                            ServiceDescriptorService: ServiceDescriptorService,
                             HybridServicesFlagService: HybridServicesFlagService,
                             HybridServicesUtilsService: HybridServicesUtilsService): ng.IPromise<IOverviewPageNotification> {
 
     const promises: ng.IPromise<any>[] = [
-      HybridServicesClusterService.serviceIsSetUp('squared-fusion-cal'),
+      ServiceDescriptorService.isServiceEnabled('squared-fusion-cal'),
       CloudConnectorService.getService('squared-fusion-gcal'),
       CloudConnectorService.getService('squared-fusion-o365'),
     ];
