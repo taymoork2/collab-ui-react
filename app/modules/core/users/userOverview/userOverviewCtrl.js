@@ -198,6 +198,25 @@
       return hasLicense(OfferName.EE) || hasLicense(OfferName.MC) || hasLicense(OfferName.TC) || hasLicense(OfferName.SC) || hasLicense(OfferName.EC) || hasLicense(OfferName.CMR);
     }
 
+    function hasConfLicense() {
+      var confLicenses = _.map(Authinfo.getConferenceServices(), 'license');
+      var licenseIds = [];
+      _.forEach(confLicenses, function (license) {
+        if (license.offerName === OfferName.CF) {
+          licenseIds.push(license.licenseId);
+        }
+      });
+
+      var returnValue = false;
+      _.forEach(vm.currentUser.licenseID, function (userLicense) {
+        if (licenseIds.indexOf(userLicense) >= 0) {
+          returnValue = true;
+        }
+      });
+
+      return returnValue;
+    }
+
     function getUserFeatures() {
       // to see user features, you must either be a support member or a team member
       if (!canQueryUserFeatures()) {
@@ -274,7 +293,7 @@
       if (hasAdvancedMeetings()) {
         confState.detail = $translate.instant('onboardModal.paidAdvancedConferencing');
         confState.actionAvailable = getDisplayableServices('CONFERENCING') || _.isArray(vm.currentUser.trainSiteNames);
-      } else if (UserOverviewService.userHasEntitlement(vm.currentUser, 'squared-syncup') && hasLicense(OfferName.CF)) {
+      } else if (hasConfLicense()) {
         confState.detail = $translate.instant('onboardModal.paidConf');
       }
       vm.services.push(confState);
