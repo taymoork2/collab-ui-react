@@ -46,7 +46,7 @@ export class EditAutoAssignTemplateModalController implements ng.IComponentContr
       });
   }
 
-  public get hasAssignableLicenses(): boolean {
+  public get hasLicenseSelections(): boolean {
     return _.some(this.sortedSubscriptions, (subscription) => {
       return !_.isEmpty(subscription.licenses);
     });

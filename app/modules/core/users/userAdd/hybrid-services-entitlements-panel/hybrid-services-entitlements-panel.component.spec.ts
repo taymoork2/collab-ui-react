@@ -217,7 +217,7 @@ describe('Component Controller: hybridServicesPanelCtrl', function () {
     this.compileComponent('hybridServicesEntitlementsPanel');
     this.controller.entitlementsCallback = jasmine.createSpy('entitlementsCallback');
     this.controller.$onChanges({
-      hasAssignableLicenses: {
+      hasLicenseSelections: {
         previousValue: true,
         currentValue: false,
         isFirstChange: function () {
