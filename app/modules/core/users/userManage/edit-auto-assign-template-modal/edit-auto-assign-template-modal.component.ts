@@ -46,6 +46,12 @@ export class EditAutoAssignTemplateModalController implements ng.IComponentContr
       });
   }
 
+  public get hasAssignableLicenses(): boolean {
+    return _.some(this.sortedSubscriptions, (subscription) => {
+      return !_.isEmpty(subscription.licenses);
+    });
+  }
+
   public dismissModal(): void {
     this.Analytics.trackAddUsers(this.Analytics.eventNames.CANCEL_MODAL);
     this.dismiss();

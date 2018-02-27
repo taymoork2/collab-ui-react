@@ -212,6 +212,26 @@ describe('Component Controller: hybridServicesPanelCtrl', function () {
     expect(this.controller.services.hybridMessage.enabled).toBe(true);
   });
 
+  it('should use the callback with an empty entitlement list when a user no longer has a paid license', function () {
+    initMockServices.call(this, ['squared-fusion-uc', 'squared-fusion-ec'], []);
+    this.compileComponent('hybridServicesEntitlementsPanel');
+    this.controller.entitlementsCallback = jasmine.createSpy('entitlementsCallback');
+    this.controller.$onChanges({
+      hasAssignableLicenses: {
+        previousValue: true,
+        currentValue: false,
+        isFirstChange: function () {
+          return false;
+        },
+      },
+    });
+
+    expect(this.controller.entitlementsCallback).toHaveBeenCalledWith({
+      entitlements: [],
+    });
+    expect(this.controller.entitlementsCallback.calls.count()).toBe(1);
+  });
+
   it('should initialize "services" property from "restoreInstance" input binding if provided', function () {
     initMockServices.call(this, ['squared-fusion-uc'], []);
     this.$scope.fakeRestoreInstance = {

@@ -424,6 +424,7 @@
     "call": "Call",
     "subscriptionIdError": "An error occurred loading your subscription ids",
     "hybridServices": "Hybrid Services",
+    "hybridServicesWarning": "Assign at least one license to enable Hybrid Services for the user",
     "freeCollab": "Free Public Collaboration Services",
     "licCollab": "Licensed Collaboration Services",
     "siteAdminUrl": "Sign-in to manage",

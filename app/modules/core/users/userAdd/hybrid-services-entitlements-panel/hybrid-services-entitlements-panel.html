@@ -15,6 +15,7 @@
         <input type="checkbox"
                ng-model="$ctrl.services.hybridMessage.entitled"
                id="spark-hybrid-impinterop"
+               ng-disabled="!$ctrl.hasAssignableLicenses"
                ng-change="$ctrl.setEntitlements()"/>
         <label class="cs-checkbox" for="spark-hybrid-impinterop">
           <span translate="hercules.serviceNames.spark-hybrid-impinterop"></span>
@@ -27,6 +28,7 @@
         <input type="checkbox"
                ng-model="$ctrl.services.calendarEntitled"
                id="squared-fusion-cal"
+               ng-disabled="!$ctrl.hasAssignableLicenses"
                ng-change="$ctrl.setEntitlements()"/>
         <label class="cs-checkbox" for="squared-fusion-cal">
           <span translate="hercules.serviceNames.squared-fusion-cal"></span>
@@ -63,7 +65,7 @@
         <input type="checkbox"
                ng-model="$ctrl.services.callServiceAware.entitled"
                id="squared-fusion-uc"
-               ng-disabled="$ctrl.hasHuronCallEntitlement()"
+               ng-disabled="$ctrl.hasHuronCallEntitlement() || !$ctrl.hasAssignableLicenses"
                ng-change="$ctrl.setEntitlements()"/>
         <label class="cs-checkbox" for="squared-fusion-uc">
           <span translate="hercules.serviceNames.squared-fusion-uc.full"></span>
@@ -74,12 +76,17 @@
                  ng-model="$ctrl.services.callServiceConnect.entitled"
                  id="squared-fusion-ec"
                  ng-change="$ctrl.setEntitlements()"
-                 ng-disabled="$ctrl.hasHuronCallEntitlement() || !$ctrl.services.callServiceAware.entitled" />
+                 ng-disabled="$ctrl.hasHuronCallEntitlement() || !$ctrl.services.callServiceAware.entitled || !$ctrl.hasAssignableLicenses"/>
           <label class="cs-checkbox" for="squared-fusion-ec">
             <span translate="hercules.serviceNames.squared-fusion-ec"></span>
           </label>
         </div>
       </div>
     </div>
+  </div>
+  <div class="row full flex-row">
+    <span class="hybrid-service-warning"
+          ng-hide="$ctrl.hasAssignableLicenses"
+          translate="onboardModal.hybridServicesWarning"></span>
   </div>
 </div>
