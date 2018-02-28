@@ -6,6 +6,7 @@ import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-t
 
 export class ManualAddUsersModalController implements ng.IComponentController {
   public isDirSyncEnabled: boolean;
+  public isDefaultAutoAssignTemplateActivated: boolean;
   public maxUsersInManual: number;
   public model: any;
   private dismiss?: Function;
@@ -30,6 +31,7 @@ export class ManualAddUsersModalController implements ng.IComponentController {
     // TODO: rm use of 'OnboardStore' once shared references in '$scope' in 'OnboardCtrl' are removed
     this.scopeData = this.OnboardStore[OnboardCtrlBoundUIStates.USERS_ADD_MANUAL];
     this.isDirSyncEnabled = this.DirSyncService.isDirSyncEnabled();
+    this.isDefaultAutoAssignTemplateActivated = this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated;
     this.model = this.scopeData.model;
     this.maxUsersInManual = this.OnboardService.maxUsersInManual;
 
@@ -51,7 +53,7 @@ export class ManualAddUsersModalController implements ng.IComponentController {
   }
 
   public get useDefaultAutoAssignTemplate(): boolean {
-    return !_.isEmpty(this.autoAssignTemplateData) && this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated;
+    return !_.isEmpty(this.autoAssignTemplateData) && this.isDefaultAutoAssignTemplateActivated;
   }
 
   public dismissModal(): void {
@@ -132,6 +134,18 @@ export class ManualAddUsersModalController implements ng.IComponentController {
 
   public getNumUsersInTokenField(): number {
     return this.OnboardService.getNumUsersInTokenField();
+  }
+
+  public get l10nTitleKey(): string {
+    if (this.isDefaultAutoAssignTemplateActivated) {
+      return 'userManage.manual.titleAdd';
+    }
+
+    return this.isDirSyncEnabled ? 'userManage.manual.titleModify' : 'userManage.manual.titleAddModify';
+  }
+
+  public get l10nInstructionKey(): string {
+    return this.isDefaultAutoAssignTemplateActivated ? 'userManage.manual.instructionsForAdd' : 'userManage.manual.instructions';
   }
 }
 

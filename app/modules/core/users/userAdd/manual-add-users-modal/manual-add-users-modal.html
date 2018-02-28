@@ -6,9 +6,8 @@
   next-disabled="!$ctrl.allowNext()"
   class="onboard-users"
   >
-  <h4 ng-if="!$ctrl.isDirSyncEnabled" translate="userManage.manual.titleAddModify"></h4>
-  <h4 ng-if="$ctrl.isDirSyncEnabled" translate="userManage.manual.titleModify"></h4>
-  <p translate="userManage.manual.instructions" translate-values="{ maxUsers: $ctrl.maxUsersInManual }"></p>
+  <h4 translate="{{ $ctrl.l10nTitleKey }}"></h4>
+  <p translate="{{ $ctrl.l10nInstructionKey }}" translate-values="{ maxUsers: $ctrl.maxUsersInManual }"></p>
   <br>
   <cr-onboard-users></cr-onboard-users>
   <div class="error-msg error-invalid-dirsync" ng-if="$ctrl.scopeData.invalidDirSyncUsersCount > 0">
