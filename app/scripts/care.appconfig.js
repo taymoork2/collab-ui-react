@@ -79,6 +79,12 @@
             $state.isSparkCallConfigured = AutoAttendantHybridCareService.isSparkCallConfigured();
           },
         },
+        isAppleBusinessChatEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
+          return FeatureToggleService.supports(FeatureToggleService.features.careApplebuschatBasicEnable)
+            .then(function (isEnabled) {
+              $state.isAppleBusinessChatEnabled = isEnabled;
+            });
+        },
       })
       .state('care.setupAssistant', {
         url: '/setupAssistant/:type',
