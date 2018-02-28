@@ -57,6 +57,7 @@ hybrid-service-cluster-list {
 
   .ui-grid-cell-contents {
     padding-left: 2rem;
+    height: 100%;
   }
 
   .service-status-content {
@@ -66,9 +67,5 @@ hybrid-service-cluster-list {
   .cluster-icon {
     top: 8px;
     padding-right: 10px;
-  }
-
-  .ui-grid-cell-contents {
-    height: 100%;
   }
 }

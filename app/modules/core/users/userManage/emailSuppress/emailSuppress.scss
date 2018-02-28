@@ -1,4 +1,5 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/fonts';
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 user-manage-email-suppress {
@@ -52,7 +53,7 @@ user-manage-email-suppress {
         right: 0.65rem;
       }
       p {
-        font-family: 'CiscoSansTT Light';
+        font-family: $brand-font-light;
         font-size: 1.625em;
       }
     }

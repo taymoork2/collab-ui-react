@@ -14,6 +14,7 @@ module.exports = {
         'while',
       ]
     }],
+    'no-descending-specificity': null,
     'selector-type-no-unknown': null,
   },
 };

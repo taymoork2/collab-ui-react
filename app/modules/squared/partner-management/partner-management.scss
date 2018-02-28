@@ -108,17 +108,14 @@
     .card-header {
       padding-left: 0px;
       padding-bottom: 32px;
+      font-family: $brand-font-thin;
+      font-size: 24px;
+      color: $gray-dark-1;
     }
 
     .card-spinner {
       padding-right: 100px;
       padding-top: 40px;
-    }
-
-    .card-header {
-      font-family: $brand-font-thin;
-      font-size: 24px;
-      color: $gray-dark-1;
     }
 
     .card-details {

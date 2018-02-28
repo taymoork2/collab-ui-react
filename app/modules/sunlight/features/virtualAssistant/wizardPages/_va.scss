@@ -1,3 +1,5 @@
+@import '~@collabui/collab-ui/scss/settings/fonts';
+
 @import 'cva-config-overview';
 @import 'cva-dialog-integration';
 @import 'cva-access-token';
@@ -18,7 +20,7 @@
 
 .input-label {
   @include vr-spacing(mt, 2.3125);
-  font-family: 'CiscoSansTT Regular';
+  font-family: $brand-font-regular;
   font-size: 20px;
   color: $gray-dark-2;
   letter-spacing: 0;

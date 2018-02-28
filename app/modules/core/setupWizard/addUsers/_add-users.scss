@@ -1,5 +1,6 @@
 // TODO refactor valid scss into other files and remove
 @import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/fonts';
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 .users-download-csv {
@@ -170,7 +171,7 @@
       .total {
         font-size: 64px;
         line-height: 1;
-        font-family: 'CiscoSansTT Thin';
+        font-family: $brand-font-thin;
       }
 
       .total-title {
