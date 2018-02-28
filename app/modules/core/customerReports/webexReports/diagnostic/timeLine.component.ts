@@ -368,7 +368,13 @@ class TimeLine implements ng.IComponentController {
     g.append('p').text('Meeting Quality').append('i').attr('class', 'icon icon-info-outline')
     .on('mouseover', () => {
       const msgArr = [
-        { key: `<p class="text-center">PSTN Quality is measured <br>with MOS Score. Score of<br>1-2 indicates poor quality.<br>VoIP and Video quality are<br>measured with latency and<br> packet loss. Either > 5%<br>packet loss or > 400ms<br>latency(and > 20ms jitter for <br>TPs) indicates poor quality.</p>` },
+        { key: `<p class="text-center">PSTN quality is measured by a MOS Score. <br>
+          Scores of 4.0-5.0 are Good, <br>
+          3.0-3.9 are Fair and below 3.0 are Poor.<br>
+          VoIP and Video quality are measures<br> with latency and packet loss.<br>
+          Packet loss < 3.0% and latency < 300ms = Good<br>
+          Packet loss > 5.0% and latency > 400ms = Poor<br>
+          If neither of the above, then the quality is Fair</p>` },
       ];
       const pos = this.$element.find('.legend p i').last().position();
       this.makeTips({ arr: msgArr }, pos.top - 10, pos.left + 17);

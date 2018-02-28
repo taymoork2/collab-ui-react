@@ -113,9 +113,9 @@ class LinkedSitesComponentCtrl implements ng.IComponentController {
   // TODO: Use text directly from webex or do translations ?
   public resolveErrorText(error): string {
     if (error === '999999') {
-      return 'WebEx authentication problem [Webex: 999999]';
+      return 'You don\'t have access to this site. [999999]';
     } else if (error === '030048') {
-      return 'WebEx authentication problem [Webex: 030048]';
+      return 'You don\'t have access to this site. [030048]';
     } else {
       return 'Unable to retrieve som data';
     }
