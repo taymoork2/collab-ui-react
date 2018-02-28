@@ -3,6 +3,7 @@ import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-s
 
 export class HybridMediaUpgradeScheduleService {
 
+  private everyDayData = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
   /* @ngInject */
   constructor(
     private HybridServicesClusterService: HybridServicesClusterService,
@@ -12,7 +13,7 @@ export class HybridMediaUpgradeScheduleService {
     return this.HybridServicesClusterService.setUpgradeSchedule(clusterId, {
       scheduleTime: data.scheduleTime.value,
       scheduleTimeZone: data.scheduleTimeZone.value,
-      scheduleDays: data.scheduleDay.value,
+      scheduleDays: this.everyDayData,
     });
   }
 

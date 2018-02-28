@@ -5,6 +5,10 @@ class HybridMediaUpgradeScheduleCtrl implements ng.IComponentController {
   public errorMessage: string = '';
   private KEYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
   private onUpgradeScheduleUpdate: Function;
+  public daily = [{
+    label: this.$translate.instant('weekDays.daily'),
+    value: 'everyDay',
+  }];
 
 
   public upgradeScheduleTitle = {
@@ -26,7 +30,7 @@ class HybridMediaUpgradeScheduleCtrl implements ng.IComponentController {
     this.formData = {
       scheduleTime: this.formOptions.time[3],
       scheduleTimeZone: this.formOptions.timeZone[393],
-      scheduleDay: this.formOptions.day[0],
+      scheduleDay: this.formOptions.day,
     };
 
   }
@@ -72,8 +76,7 @@ class HybridMediaUpgradeScheduleCtrl implements ng.IComponentController {
         value: day,
       };
     });
-    // if USA, put Sunday first
-    return (currentLanguage === 'en_US') ? [days.pop()].concat(days) : days;
+    return  (currentLanguage === 'en_US') ? [days.pop()].concat(days) : days;
   }
 
   private labelForTimezone(zone): string {

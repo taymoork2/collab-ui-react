@@ -12,9 +12,6 @@ export class ClusterCascadeBandwidthService {
   ) { }
 
   public saveCascadeConfig(clusterId: string, cascadeBandwidthConfiguration: number): void {
-    if (_.isUndefined(cascadeBandwidthConfiguration)) {
-      cascadeBandwidthConfiguration = 42;
-    }
     const payload: IClusterPropertySet = {
       'mf.maxCascadeBandwidth': cascadeBandwidthConfiguration,
     };

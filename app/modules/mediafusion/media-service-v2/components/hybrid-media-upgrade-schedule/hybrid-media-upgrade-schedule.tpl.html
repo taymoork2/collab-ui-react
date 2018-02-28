@@ -21,9 +21,9 @@
       labelfield="label"
       valuefield="value"
       input-placeholder="sel.inputPlaceholder"
-      ng-model="$ctrl.formData.scheduleDay"
+      ng-model="$ctrl.daily[0]"
       ng-change="$ctrl.onFormDataChanged()"
-      options="$ctrl.formOptions.day"
+      options="$ctrl.daily"
       placeholder="'Select a day'"
       >
     </cs-select>

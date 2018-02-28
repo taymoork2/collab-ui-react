@@ -68,9 +68,9 @@
           vm.clusterDetail = AddResourceSectionService.selectedClusterDetails();
           if (vm.hasMfFeatureToggle) SipRegistrationSectionService.saveSipTrunkUrl(vm.sipConfigUrl, vm.clusterId);
           if (vm.hasMfSIPFeatureToggle) TrustedSipSectionService.saveSipConfigurations(vm.trustedsipconfiguration, vm.clusterId);
-          if (vm.hasMfCascadeBwConfigToggle) ClusterCascadeBandwidthService.saveCascadeConfig(vm.clusterId, vm.cascadeBandwidth);
-          HybridMediaReleaseChannelService.saveReleaseChannel(vm.clusterId, vm.releaseChannel);
-          HybridMediaUpgradeScheduleService.updateUpgradeScheduleAndUI(vm.formDataForUpgradeSchedule, vm.clusterId);
+          if (vm.hasMfCascadeBwConfigToggle && !_.isUndefined(vm.cascadeBandwidth)) ClusterCascadeBandwidthService.saveCascadeConfig(vm.clusterId, vm.cascadeBandwidth);
+          if (!_.isUndefined(vm.releaseChannel)) HybridMediaReleaseChannelService.saveReleaseChannel(vm.clusterId, vm.releaseChannel);
+          if (!_.isUndefined(vm.formDataForUpgradeSchedule)) HybridMediaUpgradeScheduleService.updateUpgradeScheduleAndUI(vm.formDataForUpgradeSchedule, vm.clusterId);
         });
       }
     }
