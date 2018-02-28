@@ -1773,6 +1773,7 @@
     "nextBtn": "Next",
     "convertUsers": "Convert Unlicensed Users",
     "unlicensedUsers": "Unlicensed Users",
+    "licensesNeedToBeRedistributed": "The license count is off for WebEx sites associated with subscription {{subscriptionId}}. Please redistribute licenses among your WebEx sites.",
     "convertUsersText": "Convert employees to a licensed user who have signed up for Cisco Spark on their own with a company email address.  Licensed users receive additional enterprise features, and are subject to your organization’s policies and administration.",
     "convertUsersDirSyncEnabledWarning": "Users cannot be converted while Directory Synchronization is enabled. Disable Directory Synchronization from the Settings page in order to convert users.",
     "convertError": " could not be converted. Contact support for assistance converting this user.",

@@ -10,6 +10,15 @@ describe('Controller: WebExSiteRowCtrl', function () {
     data: fakeGridData,
   };
 
+  var centerDetails = [
+    {
+      purchasedServices: {
+        serviceName: 'MC',
+        quantity: '20',
+      },
+    },
+  ];
+
   var accessToken = 'Token ABCDERFGHIJK';
   var licensesGroupedBySites = _.groupBy(getJSONFixture('core/json/authInfo/webexLicenses.json'), 'siteUrl');
 
@@ -55,7 +64,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
     spyOn(SetupWizardService, 'isSubscriptionPending').and.returnValue(false);
     spyOn(SetupWizardService, 'isSubscriptionEnterprise').and.returnValue(true);
     spyOn(SetupWizardService, 'getEnterpriseSubscriptionListWithStatus').and.returnValue([{}]);
-    spyOn(WebExSiteService, 'getCenterDetailsForAllSubscriptions').and.returnValue($q.resolve([]));
+    spyOn(WebExSiteService, 'getAllCenterDetailsFromSubscriptions').and.returnValue($q.resolve(centerDetails));
     spyOn(WebExSiteService, 'deleteSite').and.returnValue($q.resolve(true));
     spyOn(TokenService, 'getAccessToken').and.returnValue(accessToken);
     spyOn($modal, 'open').and.returnValue({ result: $q.resolve() });
@@ -79,6 +88,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
     expect(controller.showGridData).toBe(true);
     expect(controller.gridOptions).not.toEqual(null);
     expect(controller.gridOptions.data.siteUrl).toEqual('abc.webex.com');
+    expect(controller.allCenterDetailsForSubscriptions).toBeDefined();
   });
   it('can correctly initialize cross luach to SiteAdmin home page', function () {
     controller.linkToSiteAdminHomePage('abc.webex.com');
@@ -181,7 +191,6 @@ describe('Controller: WebExSiteRowCtrl', function () {
       controller.deleteSite(entity);
       $scope.$digest();
       var modalCallArgs = $modal.open.calls.mostRecent().args[0];
-      expect(WebExSiteService.getCenterDetailsForAllSubscriptions).toHaveBeenCalled();
       expect(modalCallArgs.template.indexOf(expectedModalTitle) > -1);
       expect(state.go).toHaveBeenCalledWith('site-list-delete', { subscriptionId: '123', siteUrl: 'ag-test1-org.webex.com', centerDetails: [] });
       expect(WebExSiteService.deleteSite).not.toHaveBeenCalled();

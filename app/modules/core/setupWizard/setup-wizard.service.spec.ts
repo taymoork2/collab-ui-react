@@ -24,7 +24,7 @@ describe('Service: SetupWizard Service', function () {
     this.webexTrialMixed = _.clone(getJSONFixture('core/json/authInfo/complexCustomerCases/accountWithTrial.json'));
     this.webexTrialOnly = _.clone(getJSONFixture('core/json/authInfo/complexCustomerCases/aboutToConvert.json'));
     this.noWebexTrial = _.clone(getJSONFixture('core/json/authInfo/complexCustomerCases/customerWithCCASP.json'));
-    this.centerDetails = _.clone(getJSONFixture('core/json/setupWizard/meeting-settings/centerDetails.json'));
+    this.centerDetails = _.clone(getJSONFixture('core/json/setupWizard/meeting-settings/centerDetails.json')[0]);
     spyOn(this.Authinfo, 'getSubscriptions').and.returnValue(this.authinfoPendingSubscriptions);
     spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(this.conferenceServices);
     spyOn(this.SetupWizardService, 'validateTransferCode');
