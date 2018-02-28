@@ -116,6 +116,7 @@
     require('modules/squared/helpdesk/components/hybrid-services-org-card').default,
     require('modules/squared/partner-management').default,
     require('modules/squared/provisioning-console').default,
+    require('modules/squared/devices/addDeviceNew/Wizard').default,
   ]);
 
   angular.module('DigitalRiver', ['Core']);
