@@ -54,16 +54,6 @@ export class DeviceBrandingController implements ng.IComponentController {
         this.setFilesFromBrandingSetting(null, false);
       }
     });
-
-    // this.CsdmConfigurationService.getRuleForOrg('branding')
-    //   .then((brandingSetting) => {
-    //     this.setFilesFromBrandingSetting(brandingSetting, false);
-    //   })
-    //   .catch((response) => {
-    //     if (response && response.status === 404) {
-    //       this.setFilesFromBrandingSetting({}, false);
-    //     }
-    //   });
   }
 
   private setFilesFromBrandingSetting(brandingSetting: IBrandingRules | null, reset) {
@@ -71,7 +61,6 @@ export class DeviceBrandingController implements ng.IComponentController {
       this.resetFiles();
     }
     if (brandingSetting && (brandingSetting.logoDark || brandingSetting.logoLight || brandingSetting.wakeup)) {
-
       this.logolight.url = _.get<string>(brandingSetting, 'logoLight.value.url');
       this.logolight.changed = false;
       this.logolight.fetchTempDownloadUrl();
@@ -126,7 +115,7 @@ export class DeviceBrandingController implements ng.IComponentController {
         this.setFilesFromBrandingSetting(results.settings, true);
         return this.CsdmConfigurationService.notifyOrgSetting();
       })
-      .then(_results => {
+      .then(() => {
         this.Notification.success('partnerProfile.processing');
       })
       .catch((error) => {
@@ -144,51 +133,41 @@ export class DeviceBrandingController implements ng.IComponentController {
         wakeup: this.generateDeleteRulePromise(DeviceBrandingController.halfwakeBackgroundRule),
         logoLight: this.generateDeleteRulePromise(DeviceBrandingController.halfwakeBrandingRule),
         logoDark: this.generateDeleteRulePromise(DeviceBrandingController.brandingLogoRule),
-        // combined: this.CsdmConfigurationService.deleteRuleForOrg('branding')
-        //   .then(() => {
-        //     return {};
-        //   }, _error => {}),
       });
     } else {
       return this.$q.all({
-        wakeup: this.halfwakeBackground.url
-          ? this.generateUpdateRulePromise(DeviceBrandingController.halfwakeBackgroundRule, this.halfwakeBackground.url)
-          : this.generateDeleteRulePromise(DeviceBrandingController.halfwakeBackgroundRule),
-        logoLight: this.logolight.url
-          ? this.generateUpdateRulePromise(DeviceBrandingController.halfwakeBrandingRule, this.logolight.url)
-          : this.generateDeleteRulePromise(DeviceBrandingController.halfwakeBrandingRule),
-        logoDark: this.logodark.url
-          ? this.generateUpdateRulePromise(DeviceBrandingController.brandingLogoRule, this.logodark.url)
-          : this.generateDeleteRulePromise(DeviceBrandingController.brandingLogoRule),
-        // combined: this.CsdmConfigurationService.deleteRuleForOrg('branding')
-        //   .then(() => {
-        //     return {};
-        //   }),
+        wakeup: this.generateSavePromise(this.halfwakeBackground, DeviceBrandingController.halfwakeBackgroundRule),
+        logoLight: this.generateSavePromise(this.logolight, DeviceBrandingController.halfwakeBrandingRule),
+        logoDark: this.generateSavePromise(this.logodark, DeviceBrandingController.brandingLogoRule),
       }).then((rules: IBrandingRules) => {
         return rules;
       });
     }
   }
 
-  private generateDeleteRulePromise(type: String): IPromise<null> {
+  private generateSavePromise(imgFile: ImgFile, fileType: string): IPromise<IConfigRule<IBrandingRule> | null> {
+    return imgFile.url
+      ? imgFile.changed
+        ? this.generateUpdateRulePromise(fileType, imgFile.url)
+        : this.$q.resolve(null)
+      : this.generateDeleteRulePromise(fileType);
+  }
+
+  private generateDeleteRulePromise(type: string): IPromise<null> {
     return this.CsdmConfigurationService.deleteRuleForOrg(type)
       .then(() => {
         return null;
-      }, _error => null);
+      }, () => null);
   }
 
-  private generateUpdateRulePromise(type: String, url: String) {
+  private generateUpdateRulePromise(type: string, url: string) {
     return this.CsdmConfigurationService.updateRuleForOrg<IBrandingRule>(type,
       {
         source: 'Spark',
         url: url,
       })
       .then(p => {
-        console.info('success update');
         return p.data;
-      }, _error => {
-        console.info('failure update');
-        return null;
       });
   }
 
@@ -212,7 +191,12 @@ export class DeviceBrandingController implements ng.IComponentController {
   private static fetchRule(getRulePromise: ng.IPromise<any>): ng.IPromise<IConfigRule<IBrandingRule>> {
     return getRulePromise.then(
       r => r,
-      _error => null,
+      error => {
+        if (error.status === 404) {
+          return null;
+        }
+        throw error;
+      },
     );
   }
 }

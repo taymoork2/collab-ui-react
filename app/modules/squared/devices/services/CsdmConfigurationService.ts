@@ -15,27 +15,26 @@ export class CsdmConfigurationService {
     this.notifyUrl = UrlConfig.getCsdmServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/update';
   }
 
-  public getRuleForPlace<T>(cisUuid, key): IPromise<IConfigRule<T>>  {
+  public getRuleForPlace<T>(cisUuid: string, key: string): IPromise<IConfigRule<T>>  {
     return this.$http.get<IConfigRule<T>>(this.configUrl + '/organization/' + this.Authinfo.getOrgId() + '/accounts/' + cisUuid + '/' + key).then((res) => {
       return res.data;
     });
   }
 
-  public updateRuleForPlace(cisUuid, key, value) {
+  public updateRuleForPlace<T>(cisUuid: string, key: string, value): IHttpPromise<IConfigRule<T>> {
     return this.$http.put(this.configUrl + '/organization/' + this.Authinfo.getOrgId() + '/accounts/' + cisUuid + '/' + key, {
       value: value,
       enforced: false,
     });
   }
 
-  public getRuleForOrg<T>(key): IPromise<IConfigRule<T>> {
+  public getRuleForOrg<T>(key: string): IPromise<IConfigRule<T>> {
     return this.$http.get<IConfigRule<T>>(this.configUrl + '/organization/' + this.Authinfo.getOrgId() + '/' + key).then((res) => {
       return res.data;
     });
   }
 
-  public updateRuleForOrg<T>(key, value): IHttpPromise<IConfigRule<T>> {
-    console.info('update rule', key, value);
+  public updateRuleForOrg<T>(key: string, value): IHttpPromise<IConfigRule<T>> {
     return this.$http.put<IConfigRule<T>>(this.configUrl + '/organization/' + this.Authinfo.getOrgId() + '/' + key, {
       value: value,
       enforced: false,
@@ -52,7 +51,7 @@ export class CsdmConfigurationService {
     });
   }
 
-  public deleteRuleForOrg(key) {
+  public deleteRuleForOrg(key: string) {
     return this.$http.delete(this.configUrl + '/organization/' + this.Authinfo.getOrgId() + '/' + key);
   }
 }

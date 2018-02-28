@@ -1,4 +1,6 @@
 import './deviceSettings.scss';
+import { CsdmConfigurationService } from '../../devices/services/CsdmConfigurationService';
+import { CsdmUpgradeChannelService } from '../../devices/services/CsdmUpgradeChannelService';
 
 class DeviceSettings implements ng.IComponentController {
   public ownerType: string;
@@ -21,8 +23,8 @@ class DeviceSettings implements ng.IComponentController {
   constructor(
     private $translate: ng.translate.ITranslateService,
     private FeatureToggleService,
-    private CsdmUpgradeChannelService,
-    private CsdmConfigurationService,
+    private CsdmUpgradeChannelService: CsdmUpgradeChannelService,
+    private CsdmConfigurationService: CsdmConfigurationService,
     private Notification,
     private BotAuthorizationsModal,
   ) {}
