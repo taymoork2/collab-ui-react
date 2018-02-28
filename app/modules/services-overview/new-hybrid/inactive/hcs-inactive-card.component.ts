@@ -1,10 +1,10 @@
+import { HcsSetupModalService } from 'modules/hcs/services';
 
 export class HcsInactiveCardController implements ng.IComponentController {
-  public loading = false;
-  public canSetup = true;
 
   /* @ngInject */
   constructor(
+    public HcsSetupModalService: HcsSetupModalService,
   ) {}
 
   public $onInit(): void {
@@ -12,7 +12,7 @@ export class HcsInactiveCardController implements ng.IComponentController {
   }
 
   public openSetUp(): void {
-  //   this.PrivateTrunkPrereqService.openSetupModal();
+    this.HcsSetupModalService.openSetupModal();
   }
 }
 
@@ -24,7 +24,7 @@ export class HcsInactiveCardComponent implements ng.IComponentOptions {
         <h4 translate="hcs.cardTitle"></h4>
          <p translate="hcs.description"></p>
       </div>
-      <div class="active-card_content">
+      <div class="inactive-card_content">
       </div>
       <div class="inactive-card_footer" ng-if="!$ctrl.loading">
         <p><button class="btn btn--primary" ng-disabled="!$ctrl.canSetup" ng-click="$ctrl.openSetUp()" translate="servicesOverview.genericButtons.setup"></button></p>
