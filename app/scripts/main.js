@@ -266,6 +266,9 @@
     require('modules/hcs/task-manager/suite').default,
     require('modules/hcs/task-manager/task').default,
     require('modules/hcs/task-manager/results').default,
+    require('modules/hcs/shared').default,
+    require('modules/hcs/inventory').default,
+    require('modules/hcs/install-files').default,
   ]);
 
   angular.module('ServicesOverview', [
