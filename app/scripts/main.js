@@ -315,8 +315,8 @@
 
   // require all modules first
   requireAll(require.context('modules/', true, /\.module\.(js|ts)$/));
-  // require all other app files - ignore bootstrap.js, preload.js, newrelic
-  requireAll(require.context('../', true, /\.\/(?!.*(\.spec|bootstrap.js$|scripts\/preload.js$|\/newrelic\/.*.js$)).*\.(js|ts)$/));
+  // require all other app files - ignore bootstrap.js, preload.js
+  requireAll(require.context('../', true, /\.\/(?!.*(\.spec|bootstrap.js$|scripts\/preload.js$)).*\.(js|ts)$/));
   // require all other assets
   requireAll(require.context('../', true, /\.(jpg|png|svg|ico|csv|pdf)$/));
 
