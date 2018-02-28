@@ -3,7 +3,6 @@ import { ServicesOverviewMessageCard } from './cloud/message-card';
 import { ServicesOverviewMeetingCard } from './cloud/meeting-card';
 import { ServicesOverviewCallCard } from './cloud/cloud-call-card';
 import { ServicesOverviewCareCard } from './cloud/care-card';
-import { ServicesOverviewHcsCard } from './hcs/hcs-card';
 
 import { Config } from 'modules/core/config/config';
 import { CloudConnectorService, CCCService, ICCCService } from 'modules/hercules/services/calendar-cloud-connector.service';
@@ -28,7 +27,6 @@ export class ServicesOverviewController implements ng.IComponentController {
     new ServicesOverviewMeetingCard(this.Authinfo),
     new ServicesOverviewCallCard(this.Authinfo, this.Config),
     new ServicesOverviewCareCard(this.Authinfo),
-    new ServicesOverviewHcsCard(this.Authinfo),
   ];
 
   private urlParams: ng.ui.IStateParamsService;
@@ -77,7 +75,7 @@ export class ServicesOverviewController implements ng.IComponentController {
       atlasHybridCapacity: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridCapacity),
       atlasHybridImp: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridImp),
       atlasOffice365Support: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasOffice365Support),
-      hcs: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHostedCloudService),
+      atlasHostedCloudService: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHostedCloudService),
       hI1484: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484),
       hI1638: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1638),
       hI802: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI802),
@@ -121,8 +119,10 @@ export class ServicesOverviewController implements ng.IComponentController {
         if (response.atlasHybridImp && this.Authinfo.isFusionIMP()) {
           this._servicesToDisplay.push('spark-hybrid-impinterop');
         }
-        if (response.hI1638 && this.Authinfo.isCustomerLaunchedFromPartner()) {
-          this._servicesToDisplay.push('spark-hybrid-testing');
+        if (response.atlasHostedCloudService && this.isPartnerAdmin()) {
+          this._servicesToDisplay.push('hcs');
+          this._servicesToDisplay.push('hcs-licensing');
+          this._servicesToDisplay.push('hcs-upgrade');
         }
       })
       .then(() => {
@@ -158,6 +158,16 @@ export class ServicesOverviewController implements ng.IComponentController {
               serviceId: serviceId,
               setup: false,
             }));
+          } else if (serviceId === 'hcs') {
+            return {
+              serviceId: serviceId,
+              setup: true,
+            };
+          } else if (serviceId === 'hcs-licensing' || serviceId === 'hcs-upgrade') {
+            return {
+              serviceId: serviceId,
+              setup: true,
+            };
           }
         }));
         // Now get all from FMS
@@ -297,12 +307,6 @@ export class ServicesOverviewController implements ng.IComponentController {
     } else if (property === 'status') {
       return _.get(_.find(servicesStatuses, { serviceId: serviceId }), property, 'notAvailable');
     }
-  }
-
-  public getHcsCards() {
-    return _.filter(this.cards, {
-      cardType: CardType.hcs,
-    });
   }
 
   public isPartnerAdmin() {
