@@ -151,6 +151,20 @@
           },
         },
       })
+      .state('care.abcService', {
+        url: '/abcService',
+        parent: 'care.Details',
+        template: '<abc-setup dismiss="$dismiss()" template="$resolve.template"></abc-setup>',
+        params: {
+          isEditFeature: null,
+          template: null,
+        },
+        resolve: {
+          template: /* @ngIngect */ function ($stateParams) {
+            return $stateParams.template;
+          },
+        },
+      })
       .state('care.Features.DeleteFeature', {
         parent: 'modalDialog',
         views: {
