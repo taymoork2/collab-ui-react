@@ -33,7 +33,7 @@ describe('Controller: AABuilderContainerCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, _$modal_, _AAModelService_, _AAUiModelService_, _AAValidationService_) {
+  beforeEach(inject(function ($q, _$rootScope_, _$modal_, _AAModelService_, _AAUiModelService_, _AAValidationService_, ExternalNumberPoolService, InternalNumberPoolService) {
     $scope = _$rootScope_;
     $modal = _$modal_;
 
@@ -45,6 +45,8 @@ describe('Controller: AABuilderContainerCtrl', function () {
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
 
     spyOn($modal, 'open').and.returnValue(fakeModal);
+    spyOn(ExternalNumberPoolService, 'query').and.returnValue({ $promise: $q.resolve([]) });
+    spyOn(InternalNumberPoolService, 'query').and.returnValue({ $promise: $q.resolve([]) });
 
     this.compileComponent('aaBuilderContainer');
   }));
@@ -54,6 +56,7 @@ describe('Controller: AABuilderContainerCtrl', function () {
       spyOn(AAValidationService, 'isValidCES').and.returnValue(false);
 
       this.controller.openScheduleModal();
+      $scope.$apply();
 
       expect($modal.open).not.toHaveBeenCalled();
     });

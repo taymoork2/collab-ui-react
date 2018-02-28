@@ -12,7 +12,9 @@ describe('Component: SuiteViewComponent',  () => {
       '$modal',
       '$q',
     );
-    spyOn(this.HcsTestManagerService, 'getTests').and.returnValue(this.$q.reject());
+    spyOn(this.HcsTestManagerService, 'getTests').and.callFake(() => {
+      return this.$q.reject();
+    });
     spyOn(this.$state, 'go');
     this.compileComponent('taasSuiteView', {});
   });

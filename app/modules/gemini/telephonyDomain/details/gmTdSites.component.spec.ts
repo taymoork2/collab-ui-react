@@ -3,12 +3,13 @@ import testModule from '../index';
 describe('Component: gmTdSites', () => {
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', '$state', '$httpBackend', '$stateParams', 'Notification', 'TelephonyDomainService', 'PreviousState', '$modal');
+    this.injectDependencies('$q', '$state', '$httpBackend', '$stateParams', 'Notification', 'TelephonyDomainService', 'PreviousState', 'UrlConfig', '$modal');
     initSpies.apply(this);
     initComponent.apply(this);
   });
 
   function initSpies() {
+    this.$httpBackend.whenGET(this.UrlConfig.getGeminiUrl() + 'countries').respond(200);
     spyOn(this.PreviousState, 'go');
     spyOn(this.Notification, 'errorResponse');
     spyOn(this.$modal, 'open').and.returnValue({ result: this.$q.resolve() });

@@ -36,11 +36,12 @@ describe('Component: gmTdNotesView', () => {
 
     const notes: any[] = [];
     if (viaHttp) {
-      if (httpError) {
-        this.TelephonyDomainService.getHistories.and.returnValue(this.$q.reject( { status: 404 } ));
-      } else {
-        this.TelephonyDomainService.getHistories.and.returnValue(this.$q.resolve(this.mockData));
-      }
+      this.TelephonyDomainService.getHistories.and.callFake(() => {
+        if (httpError) {
+          return this.$q.reject({ status: 404 });
+        }
+        return this.$q.resolve(this.mockData);
+      });
     } else {
       for (let i = 0; i < 10; i++) {
         notes.push({

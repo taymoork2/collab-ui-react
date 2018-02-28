@@ -15,13 +15,15 @@ describe('Component: callForward', () => {
   beforeEach(function() {
     this.initModules(callForwardModule);
     this.injectDependencies(
-      '$scope', '$q',
+      '$scope', '$q', '$httpBackend',
     );
     this.$scope.userVoicemailEnabled = true;
     this.$scope.isPrimary = true;
     this.$scope.callForward = new CallForward();
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
     this.$scope.ownerType = 'users';
+
+    this.$httpBackend.whenGET(/.*\/organization\/scim\/v1\/Orgs\//).respond(200, { data: { countryCode: 'US' } });
   });
 
   function initComponent() {
@@ -32,6 +34,7 @@ describe('Component: callForward', () => {
       onChangeFn: 'onChangeFn(callForward)',
       isPrimary: 'isPrimary',
     });
+    this.$httpBackend.flush();
   }
 
   describe('Call Forward None (initial state)', () => {

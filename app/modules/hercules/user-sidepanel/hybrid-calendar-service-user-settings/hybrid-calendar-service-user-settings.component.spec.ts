@@ -31,7 +31,7 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
     spyOn(USSService, 'getStatusesForUser');
     spyOn(UserOverviewService, 'getUser');
     spyOn(CloudConnectorService, 'getService');
-    spyOn(ServiceDescriptorService, 'isServiceEnabled');
+    spyOn(ServiceDescriptorService, 'isServiceEnabled').and.returnValue($q.resolve());
     spyOn(HybridServiceUserSidepanelHelperService, 'saveUserEntitlements').and.returnValue($q.resolve({}));
   }
 

@@ -138,7 +138,9 @@ describe('Controller: EdiscoverySearchController', function () {
   });
 
   describe('Create report with error', function () {
-    beforeEach(function () {
+    it('received from atlas backend', function () {
+      initController.apply(this);
+      var errorNotification = spyOn(this.Notification, 'errorWithTrackingId');
       promise = this.$q.reject({
         config: {
           headers: {
@@ -155,12 +157,9 @@ describe('Controller: EdiscoverySearchController', function () {
         },
       });
 
-      spyOn(this.EdiscoveryService, 'createReport').and.returnValue(promise);
-      initController.apply(this);
-    });
-
-    it('received from atlas backend', function () {
-      var errorNotification = spyOn(this.Notification, 'errorWithTrackingId');
+      spyOn(this.EdiscoveryService, 'createReport').and.callFake(function () {
+        return promise;
+      });
       this.ediscoverySearchController.createReport();
       this.$scope.$apply();
       expect(errorNotification).toHaveBeenCalled();
@@ -177,7 +176,6 @@ describe('Controller: EdiscoverySearchController', function () {
       });
 
       spyOn(this.EdiscoveryService, 'createReport').and.returnValue(promise);
-      spyOn(this.EdiscoveryService, 'generateReport').and.returnValue(this.$q.reject());
       spyOn(this.EdiscoveryService, 'patchReport').and.returnValue(this.$q.resolve({}));
       spyOn(this.EdiscoveryService, 'getReport').and.returnValue(promise);
       spyOn(this.Notification, 'errorWithTrackingId').and.callFake(function () {
@@ -187,6 +185,7 @@ describe('Controller: EdiscoverySearchController', function () {
 
     it('received from avalon backend', function () {
       initController.apply(this);
+      spyOn(this.EdiscoveryService, 'generateReport').and.returnValue(this.$q.reject());
       this.ediscoverySearchController.searchCriteria.roomId = 'whatever';
       this.ediscoverySearchController.searchCriteria.endDate = moment().format();
       this.ediscoverySearchController.searchCriteria.startDate = moment().subtract(1, 'day').format();
