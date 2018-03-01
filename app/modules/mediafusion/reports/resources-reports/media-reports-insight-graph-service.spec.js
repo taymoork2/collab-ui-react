@@ -9,7 +9,11 @@ describe('Service: Media Reports Insight Graph Service', function () {
   vm.multipleInsightData = vm.participantDistributionGraphData;
   vm.nodesUnavailable = 'mediaFusion.metrics.nodesUnavailable';
   vm.redirectCluster = 'mediaFusion.metrics.callsRedirectedCluster';
-  vm.cloudConnectivityIssues = 'mediaFusion.metrics.cloudconnectivityissues';
+  vm.cloudConnectivityIssues = 'mediaFusion.metrics.cloudConnectivityIssues';
+  vm.clusterInServiceBelow75 = 'mediaFusion.metrics.clusterInServiceBelow75';
+  vm.clusterUtilizationAbove75 = 'mediaFusion.metrics.clusterUtilizationAbove75';
+  vm.allCallsRedirected = 'mediaFusion.metrics.allCallsRedirected';
+
   vm.bullett = 'images/mf_insight_16.png';
   vm.insightCloud = 'insight_cloudParticipants';
   vm.insight1 = vm.redirectCluster + ' ' + 2;
@@ -33,8 +37,8 @@ describe('Service: Media Reports Insight Graph Service', function () {
 
       vm.checkForDefined(ParticipantsData);
       expect(ParticipantsData.graphData[1].insight_cloudParticipants).toEqual(vm.nodesUnavailable);
-      expect(ParticipantsData.graphData[5].insight_cloudParticipants).toEqual(vm.insight3);
-      expect(ParticipantsData.graphData[4].insight_cloudParticipants).toEqual(vm.insight3 + '<br>' + vm.nodesUnavailable + '<br>');
+      expect(ParticipantsData.graphData[4].insight_cloudParticipants).toEqual(vm.insight3 + '<br>' + vm.clusterInServiceBelow75 + '<br>');
+      expect(ParticipantsData.graphData[5].insight_cloudParticipants).toEqual(vm.insight3 + '<br>' + vm.clusterUtilizationAbove75 + '<br>' + vm.allCallsRedirected + '<br>');
       expect(ParticipantsData.graphData[1].bullet_cloudParticipants).toEqual(vm.bullett);
       expect(ParticipantsData.graphs[0].descriptionField).toEqual(vm.insightCloud);
     });
@@ -43,9 +47,9 @@ describe('Service: Media Reports Insight Graph Service', function () {
       var MultipleInsightData = vm.InsightGraphService.getAdjustedInsightData(vm.multipleInsightData);
 
       vm.checkForDefined(MultipleInsightData);
-      expect(MultipleInsightData.graphData[1]['insight_3968ec71-8075-4ef9-b9e9-18f2eb8c1fef']).toEqual(vm.insight3 + '<br>' + vm.cloudConnectivityIssues);
-      expect(MultipleInsightData.graphData[1]['insight_fc0a6cc1-98e6-42d8-b366-d6e82e426c17']).toEqual(vm.insight1 + '<br>' + vm.cloudConnectivityIssues);
-      expect(MultipleInsightData.graphData[1]['insight_548d05ce-99ac-4d78-a926-3f18afd88064']).toEqual(vm.insight2 + '<br>' + vm.cloudConnectivityIssues);
+      expect(MultipleInsightData.graphData[1]['insight_3968ec71-8075-4ef9-b9e9-18f2eb8c1fef']).toEqual(vm.insight3 + '<br>' + vm.cloudConnectivityIssues + '<br>');
+      expect(MultipleInsightData.graphData[1]['insight_fc0a6cc1-98e6-42d8-b366-d6e82e426c17']).toEqual(vm.insight1 + '<br>' + vm.cloudConnectivityIssues + '<br>');
+      expect(MultipleInsightData.graphData[1]['insight_548d05ce-99ac-4d78-a926-3f18afd88064']).toEqual(vm.insight2 + '<br>' + vm.cloudConnectivityIssues + '<br>');
     });
   });
 });

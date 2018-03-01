@@ -228,8 +228,12 @@
       });
     }
 
-    function getNumberOfParticipantData(time) {
-      vm.numberOfParticipantUrl = '/participants_activity_with_insights';
+    function getNumberOfParticipantData(time, multipleinsight) {
+      if (multipleinsight) {
+        vm.numberOfParticipantUrl = '/participants_activity_with_multiple_insights';//url for multiple insight
+      } else {
+        vm.numberOfParticipantUrl = '/participants_activity_with_insights';
+      }
       var returnData = {
         graphData: [],
         graphs: [],

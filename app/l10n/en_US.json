@@ -6445,7 +6445,10 @@
       "hybridHeading": "Cloud and On-Premises",
       "othersHeading": "Others",
       "callsBallon": "Calls:",
-      "cloudconnectivityissues": "Cloud Connectivity Issues",
+      "cloudConnectivityIssues": "Cloud Connectivity Issues",
+      "clusterInServiceBelow75": " Clusters in service below 75%",
+      "clusterUtilizationAbove75": "Cluster Utilisation above 75%",
+      "allCallsRedirected": "Call Redirects observed in all Clusters",
       "clientType": {
         "android": "Android",
         "blackberry": "BlackBerry",
