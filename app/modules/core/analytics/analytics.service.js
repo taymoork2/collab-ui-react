@@ -239,6 +239,13 @@
           EVA_DELETE_FAILURE: 'Expert VA deletion failed',
         },
       },
+      APPLE_BUSINESS_CHAT: {
+        name: 'Apple Business Chat operations',
+        eventNames: {
+          ABC_DELETE_SUCCESS: 'Apple Business Chat deleted',
+          ABC_DELETE_FAILURE: 'Apple Business Chat deletion failed',
+        },
+      },
       ONLINE_ORDER: {
         name: 'Online Orders',
         eventNames: {
