@@ -11,6 +11,7 @@ class CustomerReportsHeaderCtrl {
     private WebexMetricsService,
     private $translate: ng.translate.ITranslateService,
   ) {
+
     if (this.Authinfo.isCare()) {
       this.headerTabs.push({
         title: this.$translate.instant('reportsPage.careTab'),
@@ -39,6 +40,12 @@ class CustomerReportsHeaderCtrl {
         title: this.$translate.instant('reportsPage.usageReports.usageReportTitle'),
         state: 'reports.device-usage',
       });
+      if (features.autoLicenseEnabled) {
+        this.headerTabs.push({
+          title: this.$translate.instant('reportsPage.autoLicense'),
+          state: 'reports.autoLicense',
+        });
+      }
       if (this.$state.current.name === 'reports') {
         this.goToFirstReportsTab();
       }
@@ -54,6 +61,7 @@ class CustomerReportsHeaderCtrl {
     isMfEnabled: this.MediaServiceActivationV2.getMediaServiceState(),
     webexMetrics: this.FeatureToggleService.webexMetricsGetStatus(),
     proPackEnabled: this.ProPackService.hasProPackEnabled(),
+    autoLicenseEnabled: this.FeatureToggleService.autoLicenseGetStatus(),
   };
 
   public checkWebex(): void {
