@@ -73,11 +73,13 @@ export class OnlineUpgradeService {
       return this.cancelSubscription(_.get<string>(subscription, 'externalSubscriptionId'))
         .catch((response) => {
           hasError = true;
-          this.Notification.errorWithTrackingId(response, 'subscriptions.cancelError');
+          this.Notification.errorWithTrackingId(response, 'onlineUpgradeModal.cancelError');
         });
     })).then(() => {
       if (hasError) {
         return this.$q.reject();
+      } else {
+        isFreemiumFlag = true;
       }
     });
   }
@@ -135,8 +137,9 @@ export class OnlineUpgradeService {
   private hasExpiredSubscriptions(): boolean {
     const subscriptions = this.Authinfo.getSubscriptions();
     return (!!subscriptions.length &&
-            (_.every(subscriptions, subscription => this.isSubscriptionCancelledOrExpired(subscription) ||
+            (_.every(subscriptions, subscription =>
             (subscriptions.length === 1 && this.isFreemiumSubscription(subscriptions[0]) ||
+            this.isSubscriptionCancelledOrExpired(subscription) ||
             (subscriptions.length === 1 && this.isPendingSubscription(subscriptions[0]))))));
   }
 
