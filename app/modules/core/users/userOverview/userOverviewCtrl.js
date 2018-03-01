@@ -23,6 +23,7 @@
     vm.resendInvitation = resendInvitation;
     vm.pendingStatus = false;
     vm.dirsyncEnabled = true;
+    vm.hasLinkedSites = false;
     vm.isCSB = Authinfo.isCSB();
     vm.hasAccount = Authinfo.hasAccount();
     vm.isFusion = Authinfo.isFusion();
@@ -95,6 +96,7 @@
       });
 
       vm.services = [];
+      vm.hasLinkedSites = !_.isEmpty(vm.currentUser.linkedTrainSiteNames);
 
       initServices();
       initActionList();
@@ -122,7 +124,7 @@
     }
 
     function goToUserDetails() {
-      if (!vm.dirsyncEnabled) {
+      if (!vm.dirsyncEnabled && !vm.hasLinkedSites) {
         $state.go('user-overview.user-profile');
       }
     }
