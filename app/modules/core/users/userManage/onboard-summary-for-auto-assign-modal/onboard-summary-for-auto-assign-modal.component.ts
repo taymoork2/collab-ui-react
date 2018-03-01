@@ -1,4 +1,4 @@
-import { IOnboardedUsersAggregateResult, IUserNameAndEmail } from 'modules/core/users/shared/onboard/onboard.interfaces';
+import { OnboardMethod, IOnboardedUsersAggregateResult, IUserNameAndEmail } from 'modules/core/users/shared/onboard/onboard.interfaces';
 import OnboardService from 'modules/core/users/shared/onboard/onboard.service';
 import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 
@@ -32,8 +32,9 @@ export class OnboardSummaryForAutoAssignModalController implements ng.IComponent
     this.saveLoading = true;
     const licenses = [];
     const userEntitlements = [];
+    const onboardMethod = OnboardMethod.MANUAL;
 
-    return this.OnboardService.onboardUsersInChunks(this.userList, userEntitlements, licenses)
+    return this.OnboardService.onboardUsersInChunks(this.userList, userEntitlements, licenses, onboardMethod)
       .catch((rejectedResponse) => {
         // notes:
         // - potentially multiple 'Userservice.onboardUsersLegacy()' calls could have been made
