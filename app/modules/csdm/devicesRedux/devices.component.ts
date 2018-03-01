@@ -189,7 +189,7 @@ export class DevicesCtrl implements ng.IComponentController {
   public searchResultChanged(result: SearchResult) {
     if (this.searchObject.lastGoodQuery) {
       const compressedQuery = this.SearchRequestCompressor.compress(this.searchObject.lastGoodQuery);
-      if (this.$state.current.name === 'devices.search' || compressedQuery) {
+      if (this.$state.current.name === 'devices.search' || this.$state.current.name === 'device-overview' || compressedQuery) {
         this.$state.transitionTo('devices.search', { q: compressedQuery },
           { reload: false, inherit: true, notify: false });
       }
