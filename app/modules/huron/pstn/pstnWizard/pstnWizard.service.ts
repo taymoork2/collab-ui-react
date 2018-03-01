@@ -44,8 +44,7 @@ export class PstnWizardService {
     private $q: ng.IQService,
     private PstnModel: PstnModel,
     private PstnService: PstnService,
-    private PstnServiceAddressService,              //Site based
-    private PstnAddressService: PstnAddressService, //Location based
+    private PstnAddressService: PstnAddressService, //Location & Site based
     private LocationsService: LocationsService,
     private Notification: Notification,
     private $translate: ng.translate.ITranslateService,
@@ -162,43 +161,38 @@ export class PstnWizardService {
   }
 
   public initSites(): ng.IPromise<any> {
-    return this.PstnServiceAddressService.listCustomerSites(this.PstnModel.getCustomerId())
-      .then(sites => {
-        //Currently only one site per customer -- removing sites for locations
-        //If we have sites, set the flag and store the first site address
-        if (_.isArray(sites) && _.size(sites)) {
-          this.PstnModel.setSiteExists(true);
-          const serviceAddress = _.get(sites[0], 'serviceAddress');
-          const address = new Address();
-          address.streetAddress = _.get<string>(serviceAddress, 'serviceStreetNumber') + ' ' + _.get<string>(serviceAddress, 'serviceStreetName');
-          address.city = _.get<string>(serviceAddress, 'serviceCity');
-          address.state = _.get<string>(serviceAddress, 'serviceState');
-          address.zip = _.get<string>(serviceAddress, 'serviceZip');
-          address.default = true;
-          address.validated = true;
-          this.PstnModel.setServiceAddress(address);
-        }
-      })
+    return this.PstnAddressService.getBySite(this.PstnModel.getCustomerId())
       .catch(response => {
         //TODO temp remove 500 status after terminus if fixed
         if (response && response.status !== 404 && response.status !== 500) {
           this.Notification.errorResponse(response, 'pstnSetup.listSiteError');
         }
+      })
+      .then((address: Address) => {
+        if (address.validated) {
+          address.default = true;
+          this.PstnModel.setSiteExists(true);
+          this.PstnModel.setServiceAddress(address);
+        } else {
+          this.PstnModel.setSiteExists(false);
+        }
       });
   }
 
   private createSite(): ng.IPromise<any> {
-      // Only create site for API providers
+    // Only create site for providers that suport the site address API
     if (this.provider.apiImplementation !== 'SWIVEL' && !this.PstnModel.isSiteExists()) {
-      return this.PstnServiceAddressService.createCustomerSite(this.PstnModel.getCustomerId(), this.PstnModel.getCustomerName(), this.PstnModel.getServiceAddress())
-        .then(() => {
-          this.PstnModel.setSiteExists(true);
-          return true;
-        })
-        .catch(response => {
-          this.Notification.errorResponse(response, 'pstnSetup.siteCreateError');
-          return this.$q.reject(response);
-        });
+      return this.PstnAddressService.createBySite(
+        this.PstnModel.getCustomerId(),
+        this.PstnModel.getCustomerName(),
+        this.PstnModel.getServiceAddress(),
+      ).catch(response => {
+        this.Notification.errorResponse(response, 'pstnSetup.siteCreateError');
+        return this.$q.reject(response);
+      }).then(() => {
+        this.PstnModel.setSiteExists(true);
+        return true;
+      });
     } else {
       return this.$q.resolve(true);
     }

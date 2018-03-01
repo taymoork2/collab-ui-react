@@ -1,3 +1,5 @@
+@import '~@collabui/collab-ui/scss/settings/fonts';
+
 .ct-customer {
   align-items: center;
 
@@ -94,7 +96,7 @@
     .popover-content {
       color: $gray-dark-2;
       cursor: pointer;
-      font-family: 'CiscoSansTT Light';
+      font-family: $brand-font-light;
       font-size: rem-calc(11.2px);
       line-height: rem-calc(16px);
       padding: rem-calc(16px);
@@ -123,14 +125,14 @@
   .welcomeText {
     @include vr-spacing(mb, 0);
 
-    font-family: 'CiscoSansTT Light';
+    font-family: $brand-font-light;
     font-size: rem-calc(22px);
     color: $color-primary-base;
     max-width: 100%;
   }
 
   .orgText {
-    font-family: 'CiscoSansTT Light';
+    font-family: $brand-font-light;
     font-size: rem-calc(16px);
     color: $gray-dark-2;
     margin-bottom: 0;
@@ -166,7 +168,7 @@
     @include vr-spacing(ml, 1);
     @include vr-spacing(mb, 0.1);
 
-    font-family: 'CiscoSansTT Light';
+    font-family: $brand-font-light;
     color: $gray-dark-2;
   }
 
@@ -190,7 +192,7 @@
     cursor: default;
     color: $gray-dark-1;
     pointer-events: none;
-    font-family: 'CiscoSansTT Light';
+    font-family: $brand-font-light;
     font-size: rem-calc(16px);
     width: 90%;
 
@@ -216,7 +218,7 @@
     border-color: $gray-light-3;
     cursor: default;
     pointer-events: none;
-    font-family: 'CiscoSansTT Light';
+    font-family: $brand-font-light;
     font-size: rem-calc(16px);
     width: 90%;
     background-color: $white !important;
@@ -270,7 +272,7 @@
     .ct-default-msg {
       text-align: center;
       flex: 0;
-      font-family: 'CiscoSansTT Light';
+      font-family: $brand-font-light;
       color: $gray-dark-1;
     }
   }
@@ -282,7 +284,7 @@
     @include vr-spacing(mb, 0);
     @include vr-spacing(mt, 0);
 
-    font: italic 12px 'CiscoSansTT Regular';
+    font: italic 12px $brand-font-regular;
     color: $gray-light-1;
   }
 
@@ -291,7 +293,7 @@
     @include vr-spacing(ml, 1);
     @include vr-spacing(pt, 0.5);
 
-    font-family: 'CiscoSansTT Regular';
+    font-family: $brand-font-regular;
   }
 
   .ct-attribute-field-textbox {
@@ -301,7 +303,7 @@
 
     @include vr-spacing(ml, 1);
 
-    font-family: 'CiscoSansTT Light';
+    font-family: $brand-font-light;
     width: 90%;
   }
 
@@ -312,7 +314,7 @@
 
     @include vr-spacing(ml, 1);
 
-    font-family: 'CiscoSansTT Light';
+    font-family: $brand-font-light;
     width: 90%;
 
     > div > div > a {
@@ -325,7 +327,7 @@
     @include vr-spacing(mt, 1);
     @include vr-spacing(mb, 0);
 
-    font-family: 'CiscoSansTT Light';
+    font-family: $brand-font-light;
   }
 
   .ct-flex-container {
@@ -342,7 +344,7 @@
         color: $color-attention-base;
       }
       .category-validation-warning {
-        font-family: 'CiscoSansTT Regular';
+        font-family: $brand-font-regular;
         padding-top: 0;
         margin-left: 1rem;
       }

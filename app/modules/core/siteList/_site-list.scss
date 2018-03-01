@@ -1,4 +1,5 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/fonts';
 @import '~@collabui/collab-ui/scss/settings/typography';
 @import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 
@@ -72,7 +73,7 @@
       li {
         display: inline;
         margin-right: 1rem;
-        font-family: "CiscoSansTT Light";
+        font-family: $brand-font-light;
         &:hover {
           cursor: pointer;
           color: $color-primary-base;

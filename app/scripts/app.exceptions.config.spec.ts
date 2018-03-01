@@ -1,8 +1,5 @@
-declare let newrelic;
-
 describe('$exceptionHandler', function () {
   beforeEach(function () {
-    newrelic = jasmine.createSpyObj('newrelic', ['noticeError', 'setCurrentRouteName']);
     this.initModules('wx2AdminWebClientApp');
     angular.mock.module(($provide, $exceptionHandlerProvider) => {
       $provide.value('BadService', {
@@ -13,12 +10,13 @@ describe('$exceptionHandler', function () {
       $exceptionHandlerProvider.mode('log');
     });
 
-    this.injectDependencies('$httpBackend', '$scope', 'BadService');
+    this.injectDependencies(
+      '$exceptionHandler',
+      '$httpBackend',
+      '$scope',
+      'BadService',
+    );
     this.$httpBackend.whenGET('l10n/en_US.json').respond(200);
-  });
-
-  afterEach(function () {
-    newrelic = undefined;
   });
 
   it('should invoke handler on uncaught errors', function () {
@@ -26,6 +24,6 @@ describe('$exceptionHandler', function () {
       this.BadService.badFunction();
     });
 
-    expect(newrelic.noticeError.calls.mostRecent().args[0].message).toBe('bad problem');
+    expect(this.$exceptionHandler.errors[0][0].message).toBe('bad problem');
   });
 });

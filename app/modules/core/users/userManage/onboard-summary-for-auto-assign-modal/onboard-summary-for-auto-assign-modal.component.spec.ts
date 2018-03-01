@@ -114,10 +114,10 @@ describe('Component: onboardSummaryForAutoAssignModal:', () => {
 
       it('should notify and reject if onboard API call rejects', function (this: Test) {
         this.$scope.fakeUserList = ['fake-user-1'];
-        spyOn(this.OnboardService, 'onboardUsersInChunks').and.returnValue(this.$q.reject('fake-reject-response'));
         spyOn(this.Notification, 'errorResponse');
         initComponent.call(this);
-        this.controller.save();
+        spyOn(this.OnboardService, 'onboardUsersInChunks').and.returnValue(this.$q.reject('fake-reject-response'));
+        this.controller.save().catch(_.noop);
         this.$scope.$apply();
         expect(this.Notification.errorResponse).toHaveBeenCalledWith('fake-reject-response');
       });

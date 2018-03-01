@@ -29,7 +29,7 @@ When there is important text on the screen that should be announced by screen re
 ```
 Specifying a number greater than 0 for the tabindex will override the default order of the page.  In this case, regardless of where the anchor element is in the html, it will be the second element in the tabindex.  This is not a recommended use of the tabindex, however, as changes to other parts of the html can cause elements locked to a specific place in the tabindex to break the page flow.
 
-## aria-label
+## Aria Tags
 
 It's important that everything in the tabindex be announced by screen readers.  When testing the keyboard accessibility aspects of any page, please ensure that your browser has a screen reader active to verify all expected information is announced.  The majority of focusable items will likely already have text in the page that is subsequently announced by the screen reader.  However, page items represented by icons, such as (x) close buttons or (?) info tooltips, do not have text on the page and thus do not announce anything (except possibly input-type, button role, or 'link') when tabbed to.  Aria-labels are to be used in these cases to assign text for the screen-reader to read without cluttering up the html with `<span>` elements that are hidden by css.
 
@@ -37,22 +37,21 @@ It's important that everything in the tabindex be announced by screen readers.  
 ```html
 <button type="button" class="close" ng-click="$dismiss()" aria-label="{{::'common.close' | translate}}"></button>
 ```
-- Tooltips are not automatically added to the tabindex and, unless they're on a button or an anchor element, will require `tabindex="0"` to be included
+- Search boxes or other text inputs lacking `placeholder` tags should include `aria-placeholder`
 ```html
-<i class="icon info-icon"
-  tooltip="{{::'tooltip.demo | translate}}"
-  tooltip-trigger="focus mouseenter"
-  tabindex="0"
-  aria-label="{{::'tooltip.demo | translate}}"></i>
+<input cs-input type="text" aria-placeholder="{{:: $ctrl.placeholderText }}">
 ```
-
-Please note that anything that can be clicked by, or otherwise interact with, the mouse should be accessible via keyboard.
+- Text inputs or selects with auto-complete should include `aria-autocomplete`: acceptable values for the tag are 'inline', 'list', 'both', or 'none'
+```html
+<input cs-input type="text" aria-autocomplete="list">
+```
+- For more information on aria tags and their uses, checkout the [MDN web docs](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA), the [W3C Aria Rules](https://w3c.github.io/using-aria/), or the [Aria Cheat Sheet](http://karlgroves-sandbox.com/CheatSheets/ARIA-Cheatsheet.html).
 
 ## How to test for keyboard and screen reader accessibility
 
 1. Get a screen reader for your browser.  There's a list on [Wikipedia](https://en.wikipedia.org/wiki/List_of_screen_readers) that can help you get started.  Chrome Vox, for example, is a particularly simple to use option that is highly customizable and easily turned on or off as needed.
 
-2. With the screen reader on, log in to Atlas.  Using the tab and enter/space buttons, navigate to your new page or feature.  Do not use your mouse for navigation.  Move the pointer off screen somewhere and only use the tab/enter/space/escape/arrow buttons for navigation.  (If navigation from the overview page to the location where your new code is located is broken, please check to see if this is something you can easily fix yourself before using the mouse to bypass that section.  If it isn't an easy fix, check step five for information on where to open an accessibility sub-task Jira.)
+2. With the screen reader on, log in to Atlas.  Using the tab and enter/space buttons, navigate to your new page or feature.  Do not use your mouse for navigation.  Move the pointer off screen somewhere and only use the tab/enter/space/escape/arrow buttons for navigation.  (If navigation from the overview page to the location where your new code is located is broken, please check to see if this is something you can easily fix yourself before using the mouse to bypass that section.  If it isn't an easy fix, check step five for information on where to open an accessibility Jira.)
 
 3. Verify that upon arriving at your new code, focus moves to the correct place.  On page load, focus should jump to the start of the page.  On a modal, sidepanel, or overlay panel, focus should jump to the interior html of the component to facilitate keyboard capture.
 
@@ -69,14 +68,14 @@ Please note that anything that can be clicked by, or otherwise interact with, th
   * All draggable lists should be reorderable using tab and the arrow keys.  For more information on creating keyboard compliant draggable lists, check the examples for the [DraggableService](#draggable-lists) below.
   * Footer elements should always be at the end of the tabindex for that page and should thus also be at the bottom of the `.html` file.
 
-5. If you run into difficulty navigating the page at any time or have elements that lack meaningful labels when the screen reader announces them, those should be rectified before checking in your code.  There is a list of [elements](#element-types) below that include explanations and examples for fixing any tabindex or aria related issues.
-  * If you encounter keyboard accessibility issues in code outside of the scope of the user story or Jira you're working, please check those as well.  If its a small issue, such as a missing `href` or an `ng-click` that doesn't trigger correctly on key presses, you should go ahead and fix it.  If its a larger issue, such as a problem with a toolkit component, then please open a Jira as a sub-task of [ATLAS-1856](https://jira-eng-chn-sjc1.cisco.com/jira/browse/ATLAS-1856).
-  * For more information on what to do if a toolkit keyboard accessibility issue is encountered, please check the [toolkit section](#toolkit-keyboard-navigation-integration) below, as a github issue will also need to be raised.
+5. If you run into difficulty navigating the page at any time or have elements that lack meaningful labels when the screen reader announces them, those should be rectified before checking in your code.  There is a list of [elements](#element-types-and-services) below that include explanations and examples for fixing any tabindex or aria related issues.
+  * If you encounter keyboard accessibility issues in code outside of the scope of the user story or Jira that you're working, please check those as well.  If it's a small issue, such as a missing `href` or an `ng-click` that doesn't trigger correctly on key presses, you should go ahead and fix it.  If its a larger issue, such as a problem with a toolkit component, then please open a [Jira](https://jira-eng-gpk2.cisco.com/jira/secure/CreateIssue!default.jspa).
+  * For more information on existing or previous keyboard Jiras, check out [ATLAS-1856](https://jira-eng-chn-sjc1.cisco.com/jira/browse/ATLAS-1856) and [ATLAS-1434](https://jira-eng-gpk2.cisco.com/jira/browse/ATLAS-1434).  For more information on what to do if a toolkit keyboard accessibility issue is encountered, please check the [toolkit section](#toolkit-keyboard-navigation-integration) below, as a github issue will also need to be raised.
   * If you open up a keyboard related Jira, don't just open it and forget about it.  If you're too busy to fix the Jira yourself at the time you open it, please remember to come back to it when you have time to either verify it has been fixed or to pick the Jira up yourself so that Atlas continues to increase keyboard accessibility across all pages.
 
 ---
 
-# Element Types
+# Element Types And Services
 
 ## Anchor element
 
@@ -98,184 +97,9 @@ Please note that anything that can be clicked by, or otherwise interact with, th
   </li>
 </ul>
 ```
-
-## Accessibility Service
-
-There is now a service, the AccessibilityService, that has been created for generic accessibility related functions.  This includes the `setFocus` function, which takes in three variables: `elem: ng.IRootElementService, identifier: string, time?: number`.
-
-Example:
-```typescript
-this.AccessibilityService.setFocus(this.$element, '#elementId');
-```
-or
-```typescript
-this.AccessibilityService.setFocus(this.$element, '#elementId', 1000); // timeout added to allow page transition animation to complete
-```
-
-Focusing on an element from the controller is useful when a page is loading and the first focusable element is part of a component used in multiple places or when a page has already loaded but focus needs to automatically shift based on an interaction with page.  Some examples of this would be when clicking 'edit' on a dropdown list, deleting a selected element from a list, or after selecting a save/cancel option (causing the save/cancel buttons to disappear).
-
-Additionally there is the `isVisible` function which checks the visibility of an element based on a locator.  The function accepts the following arguments: `locator: string, elem?: ng.IRootElementService`.
-
-Example:
-```typescript
-this.AccessibilityService.isVisible('.locator-class', this.$element);
-// or
-this.AccessibilityService.isVisible('.other-locator');
-```
-
-There is currently one readonly variable - `public readobly MODAL = '.modal-content';` - which should not be sent with a `this.$element` to allow checking the visibility a modal to prevent erroneous ESC key interactions.  See `helpdesk-org.controller.js` for an example of this usage.
-
-## Grids
-
-Currently Atlas uses ui-grid for pages where large amounts of data are being displayed as a table or grid.  ui-grid does not have native keyboard support, but is instead added by a component currently located in Atlas core called cs-grid.  For more information on cs-grid check the [ui-grid accessibility](./ui-grid-accessibility.md) page.
-
-## Draggable lists
-
-Atlas currently utilizes [Dragular](https://www.npmjs.com/package/dragular) to create drag and drop lists.  However, Dragular does not have any keyboard support.  To remedy this, the DraggableService has been created in order to streamline inserting keyboard support into drag and drop lists.  DraggableService has a single function: `createDraggableInstance`.  This function creates a new instance of DraggableInstance, which has two public variables - `reordering: boolean` and `selectedItem?: any` - and one public function - `keyPress`.  To control whether the list is draggable, `reordering` should be toggled between `true` and `false`; `true` for when the list is draggable and `false` for when its static.  `reordering` defaults to `true`.  `selectedItem` is the list item currently selected when navigating via keyboard while the list is draggable.  When reordering is set to `false`, `selectedItem` should be reset to `undefined`.
-
-To utilize the DraggableService:
-- The service, and the associated class, can be imported from 'modules/core/accessibility'
-```typescript
-import { DraggableService, DraggableInstance } from 'modules/core/accessibility';
-```
-
-- First create a draggable instance
-```typescript
-private draggableInstance: DraggableInstance;
-...
-  this.draggableInstance = this.DraggableService.createDraggableInstance({
-      elem: this.$element,
-      identifier: '#containerId',
-      transitClass: 'reorder-class',
-      itemIdentifier: '#itemId',
-      list: this.draggableList,
-    });
-```
-
-- Make sure the html setup matches the id/classes used in the creation of the draggableInstance (do not forget to set the tabindex)
-```html
-<div id="containerId">
-  <div ng-repeat="item in $ctrl.draggableList" id="itemId{{$index}}" ng-class="{'reorder-class': $ctrl.isReordering()}" tabindex="{{$ctrl.isReordering() ? 0 : -1}}" ng-keydown="$ctrl.itemKeyPress($event, item)">
-    <!-- Unique Content Here -->
-    <div ng-if="$ctrl.isReordering()">
-      <i class="icon icon-tables" ng-class="{'selected': $ctrl.isSelectedItem(item)}"></i>
-    </div>
-  </div>
-</div>
-```
-
-- There will need to be keypress, isReordering, and isSelected functions added to the controller for use in the html
-```typescript
-public itemKeyPress($event: KeyboardEvent, item: IListItem) {
-  if (!this.isReordering()) {
-    return;
-  } else {
-    this.draggableInstance = this.DraggableService.keyPress($event, item);
-    this.draggableList = this.draggableInstance.list;
-  }
-}
-
-public isReordering(): boolean {
-  return _.get(this.draggableInstance, 'reordering', false);
-}
-
-public isSelectedItem(item: IListItem): boolean {
-  return item === this.draggableInstance.selectedItem;
-}
-```
-
-- Remember that the DraggableInstance starts with `reordering` as `true` and must be toggled on/off is the list is only sometimes draggable.
-
-- `cs-card-member` can be utilized with draggable using the tags `cs-index`, `is-selected`, and `cs-reorder-keypress`
-```html
-<div id="cardContainer" ng-class="{'card-reorder': $ctrl.isReordering}">
-  <cs-card-member
-    ng-repeat="card in $ctrl.cards track by $index"
-    cs-type="{{::card.cardType}}"
-    cs-member-type="{{::card.type}}"
-    cs-complex-card-type="{{::card.complexCardType}}"
-    cs-id="card.id"
-    cs-index="$index"
-    cs-title="card.name"
-    cs-reordering="$ctrl.isReordering"
-    cs-reorder-keypress="$ctrl.itemKeypress($event, id)"
-    is-selected="$ctrl.isSelectedItem(member)"
-    delete-aria-label="{{::'common.delete' | translate}}"
-    toggle-aria-label="{{::'common.toggleData' | translate}}">
-  </cs-card-member>
-</div>
-```
-
-## Keyboard Events and Keycodes
-
-Keyboard events and mouse click events don't always match up as expected; when tabbing through the page please verify that the enter/space/escape/etc. keys all work as expected.  Additionally, some components may require special behavior for certain keys, such as when navigating through a list with arrow keys.  There is now a KeyCodes enum, found under `'modules/core/accessibility'` that can be imported (`.ts`) or required (`.js`) as necessary.
-
-Example:
-```html
-<div tabindex="0" ng-click="$ctrl.doSomethingOnClick()" ng-keypress="$ctrl.doSomethingOnKeypress($event)"></div>
-```
-```typescript
-import { KeyCodes } from 'modules/core/accessibility';
-...
-public doSomethingOnClick(): void { /*stuff happens here*/ }
-
-public doSomethingOnKeypress($event: KeyboardEvent): void {
-  switch ($event.which) {
-    case: KeyCodes.ENTER:
-    case: KeyCodes.SPACE:
-      this.doSomethingOnClick();
-      break;
-    case: KeyCodes.Up:
-      this.upArrow();
-      break;
-    case: KeyCodes.DOWN:
-      this.downArrow();
-      break;
-  }
-}
-```
-or
-```javascript
-var KeyCodes = require('modules/core/accessibility').KeyCodes;
-...
-vm.doSomethingOnClick = function () { /*stuff happens here*/ };
-
-vm.doSomethingOnKeypress = function ($event) {
-  switch ($event.which) {
-    case: KeyCodes.ENTER:
-    case: KeyCodes.SPACE:
-      vm.doSomethingOnClick();
-      break;
-    case: KeyCodes.Up:
-      vm.upArrow();
-      break;
-    case: KeyCodes.DOWN:
-      vm.downArrow();
-      break;
-  }
-};
-```
-
-Notes: Currently Atlas is checking against [`.keyCode`](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode) and [`.which`](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/which), both of which are deprecated but use the same numerical keyvalues to represent keypresses.  Atlas should migrate to using [`.key`](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key) in the future.  However, the [keyvalues](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values) returned by `.key` are not the same numerical values used by `.keyCode` and `.which`.  While `.key` can be used now, please keep in mind that all of Atlas will need to be updated to `.key` and make your code decisions based on what will make migration easier down the road.
-
-## Maintaining Focus
-
-Ideally, visible focus should never be lost when enteracting with Atlas via keyboard.  To that end, please ensure that when the page changes in some way, focus is moved to the expected element.  In many cases, focus should remain the same as it was before the page updated, such as when an `ng-if` causes hidden parts of a form to appear.  In other cases, focus should be automatically updated either by tags in the html causing focus to automatically shift to the correct element or by the controller.
-
-### focus-on
-
-In the html, the `focus-on` tag can be added to an element to cause it to immediately grab focus after being rendered.  This is ideal when loading a new page, as it will cause focus to immediately jump to this element.
-
-Example:
-```html
-<input type="text" focus-on />
-```
-
-Warning: Be very careful about using `focus-on` to draw focus to an element.  Some components are used in multiple places and an element in those components may need to be automatically focused on when it's a single page in a model but not when it's a single part of an overall settings page.  In these cases, `focus-on` can cause focus to jump to the wrong place on some pages and the [AccessibilityService](#accessibility-service) should be used to set focus instead.
-
 ## Toolkit Keyboard Navigation Integration
 
-Currently the toolkit is not fully keyboard accessible.  When encountering problems with keyboard accessibility on Atlas, please verify whether the issues are stemming from a toolkit component, such as cs-select or cs-searchfield, and open a sub-task on Jira [ATLAS-1856](https://jira-eng-chn-sjc1.cisco.com/jira/browse/ATLAS-1856) detailing the issues with the component encountered, which page on Atlas it can be reproduced on, and what the correct keyboard interaction for this component should be.  Issues with the toolkit may include components that are not keyboard navigable, or are not fully keyboard navigable, or components that are lacking aria-labels.
+Currently the toolkit is not fully keyboard accessible.  When encountering problems with keyboard accessibility on Atlas, please verify whether the issues are stemming from a toolkit component, such as cs-select or cs-searchfield, and open a Jira detailing the issues with the component encountered, which page on Atlas it can be reproduced on, and what the correct keyboard interaction for this component should be.  Issues with the toolkit may include components that are not keyboard navigable, or are not fully keyboard navigable, or components that are lacking aria-labels.
 
 Below is an incomplete list of current toolkit elements that either need to be added to the tabindex, have aria-labels added, or have common tabindex related problems.
 
@@ -477,4 +301,193 @@ Examples:
   tooltip-trigger="focus mouseenter"
   tabindex="0"
   aria-label="{{::$ctrl.getTextOnly()}}"></i>
+```
+
+## Accessibility Service
+
+There is now a service, the `AccessibilityService`, that has been created for generic accessibility related functions.  This includes the `setFocus` function, which takes in three variables: `elem: ng.IRootElementService, identifier: string, time?: number`.
+
+Example:
+```typescript
+this.AccessibilityService.setFocus(this.$element, '#elementId');
+```
+or
+```typescript
+this.AccessibilityService.setFocus(this.$element, '#elementId', 1000); // timeout added to allow page transition animation to complete
+```
+
+Focusing on an element from the controller is useful when a page is loading and the first focusable element is part of a component used in multiple places or when a page has already loaded but focus needs to automatically shift based on an interaction with page.  Some examples of this would be when clicking 'edit' on a dropdown list, deleting a selected element from a list, or after selecting a save/cancel option (causing the save/cancel buttons to disappear).
+
+Additionally there is the `isVisible` function which checks the visibility of an element based on a locator.  The function accepts the following arguments: `locator: string, elem?: ng.IRootElementService`.
+
+Example:
+```typescript
+this.AccessibilityService.isVisible('.locator-class', this.$element);
+// or
+this.AccessibilityService.isVisible('.other-locator');
+```
+
+There is currently one readonly variable - `public readonly MODAL = '.modal-content';`.  If `this.AccessibilityService.MODAL` is used for checking modal visibility - such as when verifying the correct escape key behavior - the optional `elem` variable should not be passed in to `isVisible` with it, as the modal is not appended to the component that creates it.
+
+Example:
+```typescript
+// This will search the entire page for '.modal-content'; if a modal is present then it will be found appended to the top of the <body>
+this.AccessibilityService.isVisible(this.AccessibilityService.MODAL);
+
+// This will search only the component for '.modal-content'; even if a modal is present on screen, the function will never find it
+this.AccessibilityService.isVisible(this.AccessibilityService.MODAL, this.$element);
+```
+
+## Grids
+
+Currently Atlas uses ui-grid for pages where large amounts of data are being displayed as a table or grid.  ui-grid does not have native keyboard support, but is instead added by a component currently located in Atlas core called cs-grid.  For more information on cs-grid check the [ui-grid accessibility](./ui-grid-accessibility.md) page.
+
+## Draggable lists
+
+Atlas currently utilizes [Dragular](https://www.npmjs.com/package/dragular) to create drag and drop lists.  However, Dragular does not have any keyboard support.  To remedy this, the DraggableService has been created in order to streamline inserting keyboard support into drag and drop lists.  DraggableService has a single function: `createDraggableInstance`.  This function creates a new instance of DraggableInstance, which has two public variables - `reordering: boolean` and `selectedItem?: any` - and one public function - `keyPress`.  To control whether the list is draggable, `reordering` should be toggled between `true` and `false`; `true` for when the list is draggable and `false` for when its static.  `reordering` defaults to `true`.  `selectedItem` is the list item currently selected when navigating via keyboard while the list is draggable.  When reordering is set to `false`, `selectedItem` should be reset to `undefined`.
+
+To utilize the DraggableService:
+- The service, and the associated class, can be imported from 'modules/core/accessibility'
+```typescript
+import { DraggableService, DraggableInstance } from 'modules/core/accessibility';
+```
+
+- First create a draggable instance
+```typescript
+private draggableInstance: DraggableInstance;
+...
+  this.draggableInstance = this.DraggableService.createDraggableInstance({
+      elem: this.$element,
+      identifier: '#containerId',
+      transitClass: 'reorder-class',
+      itemIdentifier: '#itemId',
+      list: this.draggableList,
+    });
+```
+
+- Make sure the html setup matches the id/classes used in the creation of the draggableInstance (do not forget to set the tabindex)
+```html
+<div id="containerId">
+  <div ng-repeat="item in $ctrl.draggableList" id="itemId{{$index}}" ng-class="{'reorder-class': $ctrl.isReordering()}" tabindex="{{$ctrl.isReordering() ? 0 : -1}}" ng-keydown="$ctrl.itemKeyPress($event, item)">
+    <!-- Unique Content Here -->
+    <div ng-if="$ctrl.isReordering()">
+      <i class="icon icon-tables" ng-class="{'selected': $ctrl.isSelectedItem(item)}"></i>
+    </div>
+  </div>
+</div>
+```
+
+- There will need to be keypress, isReordering, and isSelected functions added to the controller for use in the html
+```typescript
+public itemKeyPress($event: KeyboardEvent, item: IListItem) {
+  if (!this.isReordering()) {
+    return;
+  } else {
+    this.draggableInstance = this.DraggableService.keyPress($event, item);
+    this.draggableList = this.draggableInstance.list;
+  }
+}
+
+public isReordering(): boolean {
+  return _.get(this.draggableInstance, 'reordering', false);
+}
+
+public isSelectedItem(item: IListItem): boolean {
+  return item === this.draggableInstance.selectedItem;
+}
+```
+
+- Remember that the DraggableInstance starts with `reordering` as `true` and must be toggled on/off is the list is only sometimes draggable.
+
+- `cs-card-member` can be utilized with draggable using the tags `cs-index`, `is-selected`, and `cs-reorder-keypress`
+```html
+<div id="cardContainer" ng-class="{'card-reorder': $ctrl.isReordering}">
+  <cs-card-member
+    ng-repeat="card in $ctrl.cards track by $index"
+    cs-type="{{::card.cardType}}"
+    cs-member-type="{{::card.type}}"
+    cs-complex-card-type="{{::card.complexCardType}}"
+    cs-id="card.id"
+    cs-index="$index"
+    cs-title="card.name"
+    cs-reordering="$ctrl.isReordering"
+    cs-reorder-keypress="$ctrl.itemKeypress($event, id)"
+    is-selected="$ctrl.isSelectedItem(member)"
+    delete-aria-label="{{::'common.delete' | translate}}"
+    toggle-aria-label="{{::'common.toggleData' | translate}}">
+  </cs-card-member>
+</div>
+```
+
+---
+
+# Miscellaneous
+
+## Keyboard Events and Keycodes
+
+Keyboard events and mouse click events don't always match up as expected; when tabbing through the page please verify that the enter/space/escape/etc. keys all work as expected.  Additionally, some components may require special behavior for certain keys, such as when navigating through a list with arrow keys.  There is now a `KeyCodes` enum, found under `'modules/core/accessibility'` that can be imported as necessary.
+
+Example:
+```html
+<div tabindex="0" ng-click="$ctrl.doSomethingOnClick()" ng-keypress="$ctrl.doSomethingOnKeypress($event)"></div>
+```
+```typescript
+import { KeyCodes } from 'modules/core/accessibility';
+...
+public doSomethingOnClick(): void { /*stuff happens here*/ }
+
+public doSomethingOnKeypress($event: KeyboardEvent): void {
+  switch ($event.which) {
+    case: KeyCodes.ENTER:
+    case: KeyCodes.SPACE:
+      this.doSomethingOnClick();
+      break;
+    case: KeyCodes.Up:
+      this.upArrow();
+      break;
+    case: KeyCodes.DOWN:
+      this.downArrow();
+      break;
+  }
+}
+```
+
+Notes: Currently Atlas is checking against [`.keyCode`](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode) and [`.which`](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/which), both of which are deprecated but use the same numerical keyvalues to represent keypresses.  Atlas should migrate to using [`.key`](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key) in the future.  However, the [keyvalues](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values) returned by `.key` are not the same numerical values used by `.keyCode` and `.which`.  While `.key` can be used now, please keep in mind that all of Atlas will need to be updated to `.key` and make your code decisions based on what will make migration easier down the road.
+
+## Maintaining Focus
+
+Ideally, visible focus should never be lost when interacting with Atlas via keyboard.  To that end, please ensure that when the page changes in some way, focus is moved to the expected element.  In many cases, focus should remain the same as it was before the page updated, such as when an `ng-if` causes hidden parts of a form to appear.  In other cases, focus should be automatically updated either by tags in the html causing focus to automatically shift to the correct element or by the controller.
+
+### focus-on
+
+In the html, the `focus-on` tag can be added to an element to cause it to immediately grab focus after being rendered.  This is ideal when loading a new page, as it will cause focus to immediately jump to this element.
+
+Example:
+```html
+<input type="text" focus-on />
+```
+
+Warning: Be very careful about using `focus-on` to draw focus to an element.  Some components are used in multiple places and an element in those components may need to be automatically focused on when it's a single page in a model but not when it's a single part of an overall settings page.  In these cases, `focus-on` can cause focus to jump to the wrong place on some pages and the [AccessibilityService](#accessibility-service) should be used to set focus instead.
+
+## ng-if vs ng-show and ng-hide
+
+[ng-if](https://docs.angularjs.org/api/ng/directive/ngIf) adds or removes a section of html based on an expression.  Similarly, [ng-show](https://docs.angularjs.org/api/ng/directive/ngShow) and [ng-hide](https://docs.angularjs.org/api/ng/directive/ngHide) will change the visibility of a section of html based on an expression.  While the three directives fulfill similar purposes, `ng-show` and `ng-hide` should be avoided if at all possible as hidden html may still be part of the tabindex.  Tooltips, for example, will still be accessible even when not visible.  `ng-if`, however, completely removes the elements from the DOM tree and thus also removes them from the tabindex.
+
+Examples:
+```html
+<!-- tooltip hidden with ng-show/hide will still be keyboard accessible when not visible because tabindex="0" places it in the tabindex regardless -->
+<i class="icon info-icon"
+  ng-show="$ctrl.show"
+  tooltip="{{::'tooltip.demo' | translate}}"
+  tooltip-trigger="focus mouseenter"
+  tabindex="0"
+  aria-label="{{::'tooltip.demo' | translate}}"></i>
+
+<!-- ng-if removes the tooltip from the DOM when the expression is false -->
+<i class="icon info-icon"
+  ng-if="$ctrl.show"
+  tooltip="{{::'tooltip.demo' | translate}}"
+  tooltip-trigger="focus mouseenter"
+  tabindex="0"
+  aria-label="{{::'tooltip.demo' | translate}}"></i>
 ```

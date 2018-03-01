@@ -3,7 +3,7 @@
 
   /* @ngInject */
 
-  function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptorService, UrlConfig, USSService, HybridServicesExtrasService) {
+  function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmSearchService, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptorService, UrlConfig, USSService, HybridServicesExtrasService) {
     var urlBase = UrlConfig.getAdminServiceUrl();
     var orgCache = CacheFactory.get('helpdeskOrgCache');
     var service = {
@@ -65,13 +65,6 @@
         deleteOnExpire: 'aggressive',
       });
     }
-    var devicesInOrgCache = CacheFactory.get('helpdeskDevicesInOrgCache');
-    if (!devicesInOrgCache) {
-      devicesInOrgCache = new CacheFactory('helpdeskDevicesInOrgCache', {
-        maxAge: 180 * 1000,
-        deleteOnExpire: 'aggressive',
-      });
-    }
     var userCache = CacheFactory.get('helpdeskUserCache');
     if (!userCache) {
       userCache = new CacheFactory('helpdeskUserCache', {
@@ -115,7 +108,15 @@
     }
 
     function extractDevice(res) {
-      return CsdmConverter.convertCloudberryDevice(res.data);
+      return convertCsdmDevice(res.data);
+    }
+
+    function convertCsdmDevice(device) {
+      var d = CsdmConverter.convertCloudberryDevice(device);
+      d.id = device.url.split('?')[0].split('/').pop();
+      d.encoded_id = encodeURIComponent(device.url.split('/').pop());
+      d.isHuronDevice = false; //We render devices from csdm as csdm devices until huron cards are fixed.
+      return d;
     }
 
     function extractOrg(res) {
@@ -332,17 +333,9 @@
       if (useMock()) {
         return deferredResolve(filterDevices(searchString, CsdmConverter.convertCloudberryDevices(HelpdeskMockData.devices), limit));
       }
-      var devices = devicesInOrgCache.get(orgId);
-      if (devices) {
-        return deferredResolve(filterDevices(searchString, devices, limit));
-      }
-      return $http
-        .get(UrlConfig.getCsdmServiceUrl() + '/organization/' + encodeURIComponent(orgId) + '/devices?checkOnline=false&isHelpDesk=true')
-        .then(function (res) {
-          var devices = CsdmConverter.convertCloudberryDevices(res.data);
-          devicesInOrgCache.put(orgId, devices);
-          return filterDevices(searchString, devices, limit);
-        });
+      return CsdmSearchService.searchWithQueryString(searchString, orgId, limit, 'helpdesk').then(function (searchRes) {
+        return _.map(searchRes.data.hits.hits, convertCsdmDevice);
+      });
     }
 
     function getCloudberryDevice(orgId, deviceId) {
@@ -353,8 +346,9 @@
         });
         return deferredResolve(device);
       }
+
       return $http
-        .get(UrlConfig.getCsdmServiceUrl() + '/organization/' + orgId + '/devices/' + deviceId + '?isHelpDesk=true&checkOnline=true')
+        .get(UrlConfig.getCsdmServiceUrl() + '/organization/' + encodeURIComponent(orgId) + '/devices/' + deviceId + ((deviceId.indexOf('?') > 0) ? '&' : '?') + 'isHelpDesk=true&checkOnline=true')
         .then(extractDevice);
     }
 

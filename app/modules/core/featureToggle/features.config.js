@@ -91,6 +91,7 @@ module.exports = {
   calsvcOneButtonToPushInterval: 'calsvc-OneButtonToPush-interval',
   calsvcShowPreferredSiteName: 'calsvc-show-preferred-sitename',
   calsvcWebexMeetingRegistries: 'calsvc_webex_meeting_registries',
+  careApplebuschatBasicEnable: 'care-applebuschat-basic-enable',
   ceAllowNolockdown: 'ce-allow-nolockdown',
   clientRingbackV2: 'client-ringback-v2',
   cloudberryPersonalMode: 'ce-enable-personal-mode',

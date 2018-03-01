@@ -99,6 +99,7 @@
     require('modules/gemini/reports').default,
     require('modules/core/siteList/webex-site').default,
     require('modules/core/overview/notifications').default,
+    require('modules/core/legal-hold').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('addressparser', require('emailjs-addressparser'));
@@ -109,6 +110,7 @@
     'Hercules',
     'Huron',
     'Sunlight',
+    require('modules/csdm/services').default,
     require('modules/squared/devices/services/CsdmCacheUpdater'),
     require('modules/squared/devices/services/CsdmPoller'),
     require('modules/squared/helpdesk').default,
@@ -268,6 +270,9 @@
     require('modules/hcs/task-manager/suite').default,
     require('modules/hcs/task-manager/task').default,
     require('modules/hcs/task-manager/results').default,
+    require('modules/hcs/shared').default,
+    require('modules/hcs/inventory').default,
+    require('modules/hcs/install-files').default,
   ]);
 
   angular.module('ServicesOverview', [
@@ -318,8 +323,8 @@
 
   // require all modules first
   requireAll(require.context('modules/', true, /\.module\.(js|ts)$/));
-  // require all other app files - ignore bootstrap.js, preload.js, newrelic
-  requireAll(require.context('../', true, /\.\/(?!.*(\.spec|bootstrap.js$|scripts\/preload.js$|\/newrelic\/.*.js$)).*\.(js|ts)$/));
+  // require all other app files - ignore bootstrap.js, preload.js
+  requireAll(require.context('../', true, /\.\/(?!.*(\.spec|bootstrap.js$|scripts\/preload.js$)).*\.(js|ts)$/));
   // require all other assets
   requireAll(require.context('../', true, /\.(jpg|png|svg|ico|csv|pdf)$/));
 

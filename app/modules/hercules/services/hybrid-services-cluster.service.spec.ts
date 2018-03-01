@@ -340,14 +340,15 @@ describe('Service: HybridServicesClusterService', function () {
   });
 
   describe('preregister Expressway cluster', function () {
+    beforeEach(function () {
+      spyOn(HybridServicesClusterService, 'clearCache');
+    });
 
-    afterEach(verifyHttpBackend);
-
-    function verifyHttpBackend() {
+    afterEach(function () {
       $httpBackend.flush();
       $httpBackend.verifyNoOutstandingExpectation();
       $httpBackend.verifyNoOutstandingRequest();
-    }
+    });
 
     it('should provision management and calendar connectors', function () {
 
@@ -678,7 +679,6 @@ describe('Service: HybridServicesClusterService', function () {
   });
 
   describe('addExtendedPropertiesToClusters', () => {
-
     it('should get a list of allowed redirect targets if the cluster is empty, and the cluster is an Expressway', () => {
       const clusterId = 'Romelu Lukaku';
       const clusters = [{
@@ -688,7 +688,7 @@ describe('Service: HybridServicesClusterService', function () {
       }];
       $httpBackend
         .expectGET(`http://elg.no/organizations/0FF1C3/clusters/${clusterId}/allowedRegistrationHosts`)
-        .respond(200, {});
+        .respond(200, { items: [] });
       HybridServicesClusterService.addExtendedPropertiesToClusters(clusters);
       $httpBackend.flush();
       $httpBackend.verifyNoOutstandingExpectation();

@@ -56,7 +56,7 @@
               //if has quote or comma,
           ?
           //add quotes around string
-        '"' + string.concat('"')
+          '"' + string.concat('"')
           :
           //otherwise return string
           string

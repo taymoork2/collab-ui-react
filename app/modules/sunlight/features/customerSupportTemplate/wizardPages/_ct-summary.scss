@@ -12,7 +12,6 @@
 
   .edit-message {
     @include vr-spacing(pt, 1.2);
-    font-family: CiscoSans;
     color: $color-attention-darker;
     line-height: initial;
     display: flex;
