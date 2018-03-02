@@ -2484,7 +2484,6 @@
       "disableAwareMessage": "Are you sure? By disabling Call Service Aware, Call Service Connect will also be disabled for this user.",
       "errorMessages": {
         "cannotReadUserDataFromCI": "Could not read user's licensing data.",
-        "cannotReadOrgDataFromFMS": "Could not read service activation status.",
         "cannotReadDeviceDataFromUSS": "Unable to read device's activation status.",
         "cannotReadDeviceDataFromUSSPartnerAdmin": "Unable to read device's activation status. This could indicate a caching problem, try logging out and in again to clear the user cache.",
         "cannotReadUserDataFromUSS": "Unable to read user's activation status.",
