@@ -13,7 +13,6 @@ export default angular.module('mediafusion.media-service-v2.components.add-resou
   NotificationModuleName,
   hybridServicesExtrasServiceModuleName,
   hybridServicesClusterServiceModuleName,
-  AddResourceSectionService,
 ])
   .component('addResourceSection', new AddResourceSectionComponent())
   .service('AddResourceSectionService', AddResourceSectionService)

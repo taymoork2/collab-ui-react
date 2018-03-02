@@ -9,7 +9,6 @@ export class AddResourceSectionService {
   constructor(
     private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesExtrasService: HybridServicesExtrasService,
-    //private MediaServiceActivationV2,
     private MediaClusterServiceV2,
     private Notification: Notification,
     private $q: ng.IQService,
@@ -136,76 +135,4 @@ export class AddResourceSectionService {
   public redirectPopUpAndClose(hostName, enteredCluster) {
     this.$window.open('https://' + encodeURIComponent(hostName) + '/?clusterName=' + encodeURIComponent(enteredCluster) + '&clusterId=' + encodeURIComponent(this.selectedClusterId));
   }
-
-  /*public enableMediaServiceEntitlements() {
-    return this.MediaServiceActivationV2.enableMediaServiceEntitlements();
-  }
-
-  public enableMediaService() {
-    return this.MediaServiceActivationV2.enableMediaService(this.currentServiceId);
-  }
-
-  public createFirstTimeSetupCluster(hostName, enteredCluster) {
-    const deferred = this.$q.defer();
-    this.HybridServicesClusterService.preregisterCluster(enteredCluster, 'stable', 'mf_mgmt').then((result) => {
-      deferred.resolve();
-      this.selectedClusterId = result.id;
-      // Cluster created, now creating a property set for video quality
-      const payLoad = {
-        type: 'mf.group',
-        name: 'videoQualityPropertySet',
-        properties: {
-          'mf.videoQuality': 'false',
-        },
-      };
-      this.MediaClusterServiceV2.createPropertySet(payLoad)
-        .then((response) => {
-          const videoPropertySetId = response.data.id;
-          const clusterPayload = {
-            assignedClusters: this.selectedClusterId,
-          };
-          // Assign it the property set with cluster id
-          this.MediaClusterServiceV2.updatePropertySetById(videoPropertySetId, clusterPayload)
-            .then('', (err) => {
-              this.Notification.errorWithTrackingId(err, 'mediaFusion.videoQuality.error');
-            });
-        });
-      this.whiteListHost(hostName, this.selectedClusterId);
-    }, (error) => {
-      deferred.reject();
-      const errorMessage = this.$translate.instant('mediaFusion.clusters.clusterCreationFailed', {
-        enteredCluster: enteredCluster,
-      });
-      this.Notification.errorWithTrackingId(error, errorMessage);
-    });
-    return deferred.promise;
-  }*/
-
-  /*public redirectToTargetAndCloseWindowClicked(hostName, enteredCluster) {
-    //this.$state.modal.close();
-    if (this.firstTimeSetup) {
-      this.$q.all(this.enableMediaServiceEntitlements()).then((result) => {
-        const resultRhesos = result[0];
-        const resultSparkCall = result[1];
-        if (!_.isUndefined(resultRhesos) && !_.isUndefined(resultSparkCall)) {
-          //create cluster
-          //on success call media service activation service enableMediaService
-          this.createFirstTimeSetupCluster(hostName, enteredCluster).then(() => {
-            //call the rest of the services which needs to be enabled
-            this.enableMediaService();
-            //this.redirectPopUpAndClose(hostName, enteredCluster);
-          }).then(() => {
-            this.$state.go('media-service-v2.list');
-          });
-        } else {
-          this.$state.go('services-overview', {}, { reload: true });
-        }
-      });
-    } else {
-      this.addRedirectTargetClicked(hostName, enteredCluster).then(() => {
-        //this.redirectPopUpAndClose(hostName, enteredCluster);
-      });
-    }
-  }*/
 }
-

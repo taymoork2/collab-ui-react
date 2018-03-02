@@ -6,7 +6,6 @@ export class ClusterCreationFinalController implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private $log: ng.ILogService,
   ) { }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
@@ -17,7 +16,6 @@ export class ClusterCreationFinalController implements ng.IComponentController {
     if (host && host.currentValue) {
       this.hostName = host.currentValue;
     }
-    this.$log.log('host' + this.hostName);
   }
 
 

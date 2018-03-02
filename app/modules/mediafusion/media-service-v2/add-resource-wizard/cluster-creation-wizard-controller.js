@@ -58,7 +58,6 @@
       $modalInstance.close();
       if (newClusterCheck()) {
         AddResourceSectionService.addRedirectTargetClicked(vm.hostName, vm.clusterName).then(function () {
-          // get thre response, if its new cluster do all necessary service calls
           AddResourceSectionService.redirectPopUpAndClose(vm.hostName, vm.clusterName);
         });
       } else {

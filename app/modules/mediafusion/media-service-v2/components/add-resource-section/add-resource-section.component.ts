@@ -70,21 +70,6 @@ export class AddResourceSectionController implements ng.IComponentController {
     }
   }
 
-  /*public online() {
-    if ((this.onlineNodeList.indexOf(this.hostName) > -1)) {
-      this.onlinenode = true;
-      this.iponlineCheck = this.$translate.instant('mediaFusion.add-resource-dialog.serverOnline');
-      return true;
-    }
-  }
-  public offline() {
-    if ((this.offlineNodeList.indexOf(this.hostName) > -1)) {
-      this.ipofflineCheck = this.$translate.instant('mediaFusion.add-resource-dialog.serverOffline');
-      this.offlinenode = true;
-      return true;
-    }
-  }*/
-
   public validateClusterName () {
     if (_.isFunction(this.onClusterUpdate)) {
       this.onClusterUpdate({ someData: { clusterName: this.enteredCluster } });

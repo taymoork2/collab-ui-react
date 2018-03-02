@@ -1,5 +1,3 @@
-import './cluster-creation-final.scss';
-
 import { ClusterCreationFinalComponent } from './cluster-creation-final.component';
 
 export default angular.module('mediafusion.media-service-v2.components.cluster-creation-final', [

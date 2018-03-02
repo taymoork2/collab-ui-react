@@ -29,11 +29,11 @@ describe('Service: HybridMediaUpgradeScheduleService', function () {
           value: 'some-time-zone',
         },
         scheduleDay: {
-          value: 'some-day',
+          value: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
         },
       };
       this.HybridMediaUpgradeScheduleService.updateUpgradeScheduleAndUI(upgradeScheduleData, cluster);
-      expect(this.HybridServicesClusterService.setUpgradeSchedule).toHaveBeenCalledWith(cluster.id, jasmine.objectContaining({
+      expect(this.HybridServicesClusterService.setUpgradeSchedule).toHaveBeenCalledWith(jasmine.objectContaining({ id: cluster.id }), jasmine.objectContaining({
         scheduleTime: upgradeScheduleData.scheduleTime.value,
         scheduleTimeZone: upgradeScheduleData.scheduleTimeZone.value,
         scheduleDays: upgradeScheduleData.scheduleDay.value,

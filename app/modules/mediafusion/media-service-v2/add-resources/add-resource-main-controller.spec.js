@@ -1,18 +1,15 @@
 'use strict';
 
-var moduleName = require('./index').default;
-
-describe('Controller: MediaServiceControllerV2', function () {
+describe('Controller: AddResourceMainController', function () {
+  beforeEach(angular.mock.module('Mediafusion'));
   var $controller, controller;
-
-  beforeEach(angular.mock.module(moduleName));
 
   beforeEach(inject(function (_$controller_) {
     $controller = _$controller_;
   }));
 
   beforeEach(function () {
-    controller = $controller('MediaServiceControllerV2', {
+    controller = $controller('AddResourceMainController', {
       hasMfFeatureToggle: true,
       hasMfSIPFeatureToggle: true,
       hasMfCascadeBwConfigToggle: true,
@@ -20,7 +17,7 @@ describe('Controller: MediaServiceControllerV2', function () {
     });
   });
 
-  it('controller should be defined', function () {
+  it('AddResourceMainController should be defined', function () {
     expect(controller).toBeDefined();
   });
 });
