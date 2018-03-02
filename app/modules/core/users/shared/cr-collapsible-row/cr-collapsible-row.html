@@ -1,8 +1,14 @@
-<div class="row__header" ng-class="$ctrl.headerClass">
+<div class="row__header"
+  ng-class="$ctrl.headerClass"
+>
   {{:: $ctrl.rowTitle }}
   <i class="icon toggle"
     ng-class="$ctrl.showContent ? 'icon-chevron-up': 'icon-chevron-down'"
-    ng-click="$ctrl.toggleContent()"></i>
+    ng-click="$ctrl.toggleContent()"
+  ></i>
 </div>
-<div class="row full flex-row row__content" ng-class="$ctrl.contentClass" ng-show="$ctrl.showContent" ng-transclude>
-</div>
+<div ng-show="$ctrl.showContent"
+  class="row full flex-row row__content"
+  ng-class="$ctrl.contentClass"
+  ng-transclude
+></div>
