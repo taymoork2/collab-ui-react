@@ -54,7 +54,7 @@ describe('Component: assignableServicesRow:', () => {
           autoAssignTemplateData: 'fakeAutoAssignTemplateData',
         });
         expect(this.view.find('.subscription__header .icon.toggle')).toHaveClass('icon-chevron-down');
-        expect(this.view.find('.subscription__content')).toHaveClass('ng-hide');
+        expect(this.view.find('.subscription__content')).not.toExist();
       });
     });
   });

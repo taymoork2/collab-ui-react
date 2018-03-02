@@ -23,10 +23,10 @@ describe('Component: crCollapsibleRow:', () => {
     it('should have a viewable content area toggled by an icon', function () {
       expect(this.view.find('.row__header .icon.toggle').length).toBe(1);
       expect(this.view.find('.row__header .icon.toggle')).toHaveClass('icon-chevron-up');
-      expect(this.view.find('.row__content')).not.toHaveClass('ng-hide');
+      expect(this.view.find('.row__content')).toExist();
       this.view.find('.row__header .icon.toggle').click();
       expect(this.view.find('.row__header .icon.toggle')).toHaveClass('icon-chevron-down');
-      expect(this.view.find('.row__content')).toHaveClass('ng-hide');
+      expect(this.view.find('.row__content')).not.toExist();
     });
 
     it('should call "onUpdate()" output binding when toggled', function () {

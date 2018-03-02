@@ -7,7 +7,7 @@
     ng-click="$ctrl.toggleContent()"
   ></i>
 </div>
-<div ng-show="$ctrl.showContent"
+<div ng-if="$ctrl.showContent"
   class="row full flex-row row__content"
   ng-class="$ctrl.contentClass"
   ng-transclude
