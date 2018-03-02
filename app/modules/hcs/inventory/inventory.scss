@@ -3,7 +3,7 @@
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 .hcs-inventory-container {
-  .row.column-header {
+  .inventory-list-header {
     padding: 0.75rem 0rem 0.5rem 2.75rem;
   }
 
@@ -13,7 +13,7 @@
 
   .cs-card--full {
     article {
-      .row {
+      .inventory-list-item {
         padding: 2rem 0rem;
 
         .columns.medium-6 {

@@ -5,7 +5,7 @@
   </cs-page-sub-header-left>
 </cs-page-sub-header>
 <div class="hcs-inventory-container">
-  <div class="row column-header">
+  <div class="row inventory-list-header">
     <div class="columns medium-6">Customer/ Group Name</div>
     <div class="columns medium-3">Number of Clusters</div>
     <div class="columns medium-3">Status</div>
@@ -13,7 +13,7 @@
   <cs-card-layout block-view="true">
     <cs-card class="cs-card--full detail-view"  ng-class="{ 'subscription-expanded': subscription.viewAll }" ng-repeat="inventory in $ctrl.inventoryList track by inventory.id">
       <article><section>
-          <div class="row">
+          <div class="row inventory-list-item">
             <div class="columns medium-6">
               {{inventory.name && inventory.name || ('common.unassigned' | translate)}}
             </div>
