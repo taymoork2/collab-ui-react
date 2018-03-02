@@ -211,6 +211,7 @@
     require('modules/hercules/user-sidepanel/hybrid-services-sidepanel-error-message').default,
     require('modules/hercules/user-sidepanel/hybrid-services-user-homed-cluster-and-hostname').default,
     require('modules/hercules/user-sidepanel/hybrid-services-user-sidepanel-section').default,
+    require('modules/hercules/user-sidepanel/user-status-messages').default,
   ]);
 
   angular.module('HDS', [
