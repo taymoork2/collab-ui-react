@@ -520,11 +520,11 @@ describe('Authinfo:', function () {
     });
 
     it('isOnlineCustomer should return true if any customer is Online', function () {
-      expect(Authinfo.isOnlineCustomer()).toBeTruthy();
+      expect(Authinfo.isOnlineCustomer()).toBe(true);
     });
 
     it('isOnlineOnlyCustomer should return true if all customers are Online', function () {
-      expect(Authinfo.isOnlineOnlyCustomer()).toBeTruthy();
+      expect(Authinfo.isOnlineOnlyCustomer()).toBe(true);
     });
   });
 
@@ -546,11 +546,11 @@ describe('Authinfo:', function () {
     });
 
     it('isOnlineCustomer should return true if any customer is Online', function () {
-      expect(Authinfo.isOnlineCustomer()).toBeTruthy();
+      expect(Authinfo.isOnlineCustomer()).toBe(true);
     });
 
     it('isOnlineOnlyCustomer should return false if some customerss are not Online', function () {
-      expect(Authinfo.isOnlineOnlyCustomer()).toBeFalsy();
+      expect(Authinfo.isOnlineOnlyCustomer()).toBe(false);
     });
   });
 
@@ -576,7 +576,7 @@ describe('Authinfo:', function () {
     });
 
     it('isOnlinePaid should return false if Online customer has a trial subscription', function () {
-      expect(Authinfo.isOnlinePaid()).toBeFalsy();
+      expect(Authinfo.isOnlinePaid()).toBe(false);
     });
   });
 
@@ -602,7 +602,28 @@ describe('Authinfo:', function () {
     });
 
     it('isOnlinePaid should return true if Online customer has a paid subscription', function () {
-      expect(Authinfo.isOnlinePaid()).toBeTruthy();
+      expect(Authinfo.isOnlinePaid()).toBe(true);
+    });
+  });
+
+  describe('Online customer converted to partner sales admin', function () {
+    var Authinfo;
+
+    beforeEach(function () {
+      Authinfo = setupUser({
+        roles: ['PARTNER_SALES_ADMIN'],
+      });
+      var accountData = {
+        customers: [{
+          customerId: '1',
+          customerType: 'Online',
+        }],
+      };
+      Authinfo.updateAccountInfo(accountData);
+    });
+
+    it('isOnline should return false if customer is a partner', function () {
+      expect(Authinfo.isOnline()).toBe(false);
     });
   });
 

@@ -19,6 +19,18 @@ describe('Apple Business Chat Service', () => {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue(TEST_ORG_ID),
   };
 
+  const spiedCareFeatureListService = {
+    filterConstants: {
+      virtualAssistant: jasmine.createSpy('virtualAssistant').and.returnValue('virtualAssistant'),
+    },
+  };
+
+  const spiedCvaService = {
+    featureList: {
+      icons: jasmine.createSpy('icons').and.returnValue(['icon']),
+    },
+  };
+
   const abcData = {
     name: TEST_ABC_NAME,
     cvaId: TEST_CVA_ID,
@@ -30,6 +42,8 @@ describe('Apple Business Chat Service', () => {
     angular.mock.module(function ($provide) {
       $provide.value('UrlConfig', spiedUrlConfig);
       $provide.value('Authinfo', spiedAuthinfo);
+      $provide.value('CareFeatureList', spiedCareFeatureListService);
+      $provide.value('CvaService', spiedCvaService);
     });
   });
 

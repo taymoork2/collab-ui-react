@@ -10,12 +10,10 @@ export class AbcService {
   public abcServiceCard = {
     id: 'appleBusinessChat',
     type: 'appleBusinessChat',
-    mediaType: 'appleBusinessChat', // for filter
-    code: this.getMessageKey('featureText.code'),
     label: this.getMessageKey('featureText.type'),
     description: this.getMessageKey('featureText.selectDesc'),
     icons: ['icon-message'],
-    color: 'feature-va-color',
+    color: 'feature-abc-color',
     disabled: false,
     goToService: this.goToService.bind(this),
   };
@@ -28,9 +26,16 @@ export class AbcService {
     formatter: this.formatAppleConfigList.bind(this),
     i18n: 'careChatTpl.chatTemplate',
     isEmpty: false,
-    color: 'cta',
+    color: 'abc',
     icons: this.abcServiceCard.icons,
+    featureIcons: { cva: this.CvaService.featureList.icons[0] },
     data: [],
+  };
+
+  // Feature List Filter definition. describes how to filter this feature
+  public featureFilter = {
+    name: this.$translate.instant('careChatTpl.filterValue.appleBusinessChat'),
+    filterValue: this.CareFeatureList.filterConstants.appleBusinessChat,
   };
 
   /* @ngInject */
@@ -39,6 +44,8 @@ export class AbcService {
     private $resource: ng.resource.IResourceService,
     private Authinfo,
     private UrlConfig,
+    private CvaService,
+    private CareFeatureList,
   ) {
   }
 
@@ -47,7 +54,7 @@ export class AbcService {
    * @returns {string}
    */
   public getFeatureName(): string {
-    return this.$translate.instant('careChatTpl.virtualAssistant.abc.featureText.name');
+    return this.$translate.instant('careChatTpl.appleBusinessChat.featureText.name');
   }
 
   /**
@@ -56,7 +63,7 @@ export class AbcService {
    * @returns {string}
    */
   public getMessageKey(textIdExtension: string): string {
-    return 'careChatTpl.virtualAssistant.abc.' + textIdExtension;
+    return 'careChatTpl.appleBusinessChat.' + textIdExtension;
   }
 
   /**
@@ -155,10 +162,11 @@ export class AbcService {
   private formatAppleConfigList(list: any, feature: any): any[] {
     const service = this;
     const formattedList = _.map(list.items, function (item: any) {
-      item.mediaType = service.abcServiceCard.mediaType;
       item.featureType = feature.name;
       item.color = feature.color;
       item.icons = feature.icons;
+      item.featureIcons = feature.featureIcons;
+      item.filterValue = service.CareFeatureList.filterConstants.appleBusinessChat;
       return item;
     });
 

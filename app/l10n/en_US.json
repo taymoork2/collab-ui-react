@@ -7996,11 +7996,15 @@
     "helpTextChatting": "Customers see this if they minimize the chat window during an ongoing interaction.",
     "helpTextLeaveRoom": "Customers see this when an agent exits the chat and ends the interaction.",
     "assistantTooltip": "The {{assistantType}} {{assistantName}} is used in this template.",
-    "filterType": {
-      "chat": "Customer Support Template",
-      "callback": "Customer Support Template",
-      "chatPlusCallback": "Customer Support Template",
-      "virtualAssistant": "Virtual Assistant"
+    "filterValue": {
+      "customerSupportTemplates": "Customer Support Templates",
+      "virtualAssistants": "Virtual Assistants",
+      "appleBusinessChat": "Apple Business Chat"
+    },
+    "badgeName": {
+      "customerSupport": "Customer Support Template",
+      "virtualAssistant": "Virtual Assistant",
+      "appleBusinessChat": "Apple Business Chat"
     },
     "featureCard": {
       "spacesInUseText": "Expert Spaces: {{ numOfSpaces }}",
@@ -8122,11 +8126,16 @@
       "orgNameHelpText": "Name of the Organization: {{orgName}}"
     },
     "configureOrgLogoMsg": "Go to Settings page to modify your organization logo",
+    "appleBusinessChat": {
+      "featureText": {
+        "type": "Apple Business Chat",
+        "selectDesc": "Create Apple business chat experience for your customers to reach out to agents using iMessage."
+      }
+    },
     "virtualAssistant": {
       "featureText": {
         "selectDesc": "Create virtual assistants that can provide automated chat support to customers, or manage escalated chat requests in Cisco Spark.",
-        "virtualAssistant": "Virtual Assistant",
-        "mediaType": "Virtual Assistants"
+        "virtualAssistant": "Virtual Assistant"
       },
       "cva": {
         "featureText": {
