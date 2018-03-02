@@ -74,6 +74,4 @@ describe('Controller: Auto License Ctrl', function () {
   it('should get the right parameters', function () {
     expect(this.controller.sparkMetrics.appData.appId).toBe(this.testQBSData.appName);
   });
-
 });
-
