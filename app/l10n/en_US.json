@@ -364,7 +364,8 @@
         "tooltip": "If one subscription runs out of licenses, the next selected subscription automatically assigns more.",
         "usage": "Usage: {{ usage }}/{{ volume }}",
         "careDisabledTooltip": "Care licenses are only assigned to Care agents.",
-        "warningFooter": "At least one service needs to be selected to continue."
+        "warningFooter": "At least one service needs to be selected to continue.",
+        "rowTitle": "Subscription: {{ subscriptionId }}"
       },
       "editSummary": {
         "title": "Set Up Auto-Assign Template",
