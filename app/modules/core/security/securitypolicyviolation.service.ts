@@ -11,11 +11,13 @@ export class SecurityPolicyViolationService {
   ) { }
 
   public init() {
-    this.$window.addEventListener('securitypolicyviolation', (e: Event) => {
-      if (this.Auth.isLoggedIn()) {
-        this.sendContentSecurityViolationToInflux(e);
-      }
-    });
+    this.$window.addEventListener('securitypolicyviolation', this.onSecurityPolicyViolation);
+  }
+
+  public onSecurityPolicyViolation(e: Event): void {
+    if (this.Auth.isLoggedIn()) {
+      this.sendContentSecurityViolationToInflux(e);
+    }
   }
 
   /* For the time being we will massage violations into operation
