@@ -135,7 +135,7 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
       spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve({}));
       spyOn(ServiceDescriptorService, 'getServices');
       spyOn(USSService, 'getStatusesForUser').and.returnValue($q.resolve({}));
-      spyOn(UserOverviewService, 'getUser');
+      spyOn(UserOverviewService, 'getUser').and.returnValue($q.resolve());
     }
 
     it('should check status with CloudConnectorService if the org is entitled to Google Calendar ', () => {

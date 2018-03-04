@@ -606,7 +606,7 @@
     }
 
     function setNumberOfParticipantData() {
-      MediaReportsService.getNumberOfParticipantData(vm.timeSelected).then(function (response) {
+      MediaReportsService.getNumberOfParticipantData(vm.timeSelected, vm.hasMFMultipleInsightFeatureToggle).then(function (response) {
         if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
           setDummyNumberOfParticipant();
         } else {

@@ -18,7 +18,6 @@ export class CvaService {
   public cvaServiceCard = {
     id: 'customerVirtualAssistant',
     type: 'customerVirtualAssistant',
-    mediaType: 'virtualAssistant', // for filter
     code: this.getMessageKey('featureText.code'),
     label: this.getMessageKey('featureText.type'),
     description: this.getMessageKey('featureText.selectDesc'),
@@ -43,8 +42,8 @@ export class CvaService {
   };
   // Feature List Filter definition. describes how to filter this feature
   public featureFilter = {
-    name: this.$translate.instant('careChatTpl.virtualAssistant.featureText.mediaType'),
-    filterValue: this.cvaServiceCard.mediaType,
+    name: this.$translate.instant('careChatTpl.filterValue.virtualAssistants'),
+    filterValue: this.CareFeatureList.filterConstants.virtualAssistant,
   };
 
 
@@ -56,6 +55,7 @@ export class CvaService {
     private Authinfo,
     private UrlConfig,
     private $q: any,
+    private CareFeatureList,
   ) {
   }
 
@@ -260,11 +260,11 @@ export class CvaService {
       if (!item.name) {
         item.name = item.templateId;
       }
-      item.mediaType = service.cvaServiceCard.mediaType;
       item.featureType = feature.name;
       item.color = feature.color;
       item.icons = feature.icons;
       item.templates = [];
+      item.filterValue = service.CareFeatureList.filterConstants.virtualAssistant;
       return item;
     });
     return _.sortBy(formattedList, function (item: any) {

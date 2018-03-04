@@ -24,7 +24,7 @@
             <div class="care-badge">
               <!--if careFeature.name is undefined then show cardName othewise mediaType  -->
               <span class="badge badge--outline primary" ng-if="!careFeature.name" translate="huronFeatureDetails.aa"></span>
-              <span  class="badge badge--outline" ng-if="careFeature.name" translate="careChatTpl.filterType.{{careFeature.mediaType}}"></span>
+              <span  class="badge badge--outline" ng-if="careFeature.name" translate="careChatTpl.badgeName.{{careFeature.filterValue}}"></span>
             </div>
             <div class="care-icon">
               <span ng-repeat="icon in careFeature.icons">
@@ -81,7 +81,7 @@
           </div>
           <!-- if mediaType is undefined then do not show the download icon button -->
           <div class="right icon icon-download"
-            ng-if="careFeature.mediaType && careFeature.mediaType !== 'virtualAssistant'"
+            ng-if="careFeature.mediaType"
             ng-click="careFeaturesCtrl.openEmbedCodeModal(careFeature, $event)"
             ng-keydown="careFeaturesCtrl.openEmbedCodeModalKeypress(careFeature, $event)"
             aria-label="{{::'common.download' | translate}}"></div>

@@ -46,7 +46,6 @@ module.exports = {
     'https://*.webexconnect.com',
     'https://api.dialogflow.com', // Virtual Assistant testing dialogflow token
     'https://api.mixpanel.com',
-    'https://bam.nr-data.net', // New Relic Browser
     'https://cdn.mxpnl.com',
     'https://rpbtqlkhsn006.webex.com',
     'wss://mercury-connection-a.wbx2.com',
@@ -63,7 +62,6 @@ module.exports = {
     'https://*.localytics.com',
     'https://*.rackcdn.com',
     'http://*.rackcdn.com', // Expert Virtual Assistant avatar icon
-    'https://bam.nr-data.net', // New Relic Browser
   ],
   // valid sources for sources for JavaScript
   scriptSrc: [
@@ -75,8 +73,6 @@ module.exports = {
     'https://api.mixpanel.com', // Mixpanel
     'https://cdn.mxpnl.com', // Mixpanel
     'https://buy.ciscospark.com', // Digital River
-    'https://js-agent.newrelic.com', // New Relic Browser
-    'https://bam.nr-data.net', // New Relic Browser
   ],
   // valid sources for sources for stylesheets
   styleSrc: [

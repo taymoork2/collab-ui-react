@@ -78,6 +78,12 @@
           isSparkCallConfigured: /* @ngInject */ function (AutoAttendantHybridCareService, $state) {
             $state.isSparkCallConfigured = AutoAttendantHybridCareService.isSparkCallConfigured();
           },
+          isAppleBusinessChatEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
+            return FeatureToggleService.supports(FeatureToggleService.features.careApplebuschatBasicEnable)
+              .then(function (isEnabled) {
+                $state.isAppleBusinessChatEnabled = isEnabled;
+              });
+          },
         },
       })
       .state('care.setupAssistant', {
@@ -140,6 +146,20 @@
           isEditFeature: /* @ngInject */ function ($stateParams) {
             return $stateParams.isEditFeature;
           },
+          template: /* @ngIngect */ function ($stateParams) {
+            return $stateParams.template;
+          },
+        },
+      })
+      .state('care.abcService', {
+        url: '/abcService',
+        parent: 'care.Details',
+        template: '<abc-setup dismiss="$dismiss()" template="$resolve.template"></abc-setup>',
+        params: {
+          isEditFeature: null,
+          template: null,
+        },
+        resolve: {
           template: /* @ngIngect */ function ($stateParams) {
             return $stateParams.template;
           },

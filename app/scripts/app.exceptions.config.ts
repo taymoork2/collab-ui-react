@@ -13,11 +13,11 @@ export default class ExceptionHandlerConfig {
 function extendExceptionHandler (
   $delegate: ng.IExceptionHandlerService,
 ): ng.IExceptionHandlerService {
-  return (exception: Error, cause?: string) => {
+  const errorHandler = (exception: Error, cause?: string) => {
     $delegate(exception, cause);
 
-    if (typeof newrelic !== 'undefined') {
-      newrelic.noticeError(exception);
-    }
+    // TODO (brspence): add error tracking
   };
+
+  return _.assignIn(errorHandler, $delegate);
 }

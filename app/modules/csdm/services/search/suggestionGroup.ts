@@ -36,17 +36,17 @@ export interface ISuggestionGroup extends ISuggestionAndGroupForUi {
 }
 
 interface ISuggestionGroupParams {
-  searchString?: string;
-  readableField?: string;
+  defaultRank?: number;
   field?: string;
+  hidden?: boolean;
+  isFieldSuggestion?: boolean;
+  limit?: Limit;
+  permanentRank?: number;
+  rank?: number;
+  readableField?: string;
+  searchString?: string;
   textTranslationKey?: string;
   textTranslationParams?: { [p: string]: string } | null;
-  isFieldSuggestion?: boolean;
-  rank?: number;
-  defaultRank?: number;
-  permanentRank?: number;
-  limit?: Limit;
-  hidden?: boolean;
 }
 
 abstract class SuggestionGroupBase implements ISuggestionGroup {
@@ -60,7 +60,7 @@ abstract class SuggestionGroupBase implements ISuggestionGroup {
   public field: string;
   public textTranslationKey: string;
   public textTranslationParams: { [p: string]: string } | null;
-  public isFieldSuggestion? = true;
+  public isFieldSuggestion: boolean | undefined = true;
   public rank: number;
   private defaultRank: number;
   private permanentRank?: number;

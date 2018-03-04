@@ -199,8 +199,10 @@
       "typeInstructions": "Select a method to upload and/or modify users and the services they use.",
       "manualLabel": "Manually add or modify users",
       "manualLabelNew": "Manually Add or Modify Users",
+      "manualLabelTemplateEnabled": "Manually Add Users",
       "manualDetails": "All you need are email addresses to add and/or edit up to {{maxUsersInManual}} users.",
       "manualDetailsNew": "Add or Modify up to {{maxUsersInManual}} users.",
+      "manualDetailsTemplateEnabled": "Add up {{maxUsersInManual}} users.",
       "dirSyncModifyAll": "Modify All Synchronized Users",
       "bulkLabel": "Export and import users with a CSV file",
       "bulkLabelNew": "CSV Add or Modify Users",
@@ -281,7 +283,9 @@
     "manual": {
       "titleModify": "Manually Modify Users",
       "titleAddModify": "Manually Add or Modify Users",
+      "titleAdd": "Manually Add Users",
       "instructions": "Enter up to {{maxUsers}} users to modify.",
+      "instructionsForAdd": "Enter up to {{maxUsers}} users to add.",
       "tooManyUsers": "The user list exceeds the limit of {{maxUsers}}. To update more than {{maxUsers}} users, please use the bulk CSV template.",
       "ad": {
         "unsyncedUsers": "Some users are not currently synchronized with Active Directory. Please add them with Cisco Directory Connector, and then modify them after they synchronize to the cloud.",
@@ -424,6 +428,7 @@
     "call": "Call",
     "subscriptionIdError": "An error occurred loading your subscription ids",
     "hybridServices": "Hybrid Services",
+    "hybridServicesWarning": "Assign at least one license to enable Hybrid Services for the user",
     "freeCollab": "Free Public Collaboration Services",
     "licCollab": "Licensed Collaboration Services",
     "siteAdminUrl": "Sign-in to manage",
@@ -6440,7 +6445,10 @@
       "hybridHeading": "Cloud and On-Premises",
       "othersHeading": "Others",
       "callsBallon": "Calls:",
-      "cloudconnectivityissues": "Cloud Connectivity Issues",
+      "cloudConnectivityIssues": "Cloud Connectivity Issues",
+      "clusterInServiceBelow75": " Clusters in service below 75%",
+      "clusterUtilizationAbove75": "Cluster Utilisation above 75%",
+      "allCallsRedirected": "Call Redirects observed in all Clusters",
       "clientType": {
         "android": "Android",
         "blackberry": "BlackBerry",
@@ -7960,11 +7968,15 @@
     "helpTextChatting": "Customers see this if they minimize the chat window during an ongoing interaction.",
     "helpTextLeaveRoom": "Customers see this when an agent exits the chat and ends the interaction.",
     "assistantTooltip": "The {{assistantType}} {{assistantName}} is used in this template.",
-    "filterType": {
-      "chat": "Customer Support Template",
-      "callback": "Customer Support Template",
-      "chatPlusCallback": "Customer Support Template",
-      "virtualAssistant": "Virtual Assistant"
+    "filterValue": {
+      "customerSupportTemplates": "Customer Support Templates",
+      "virtualAssistants": "Virtual Assistants",
+      "appleBusinessChat": "Apple Business Chat"
+    },
+    "badgeName": {
+      "customerSupport": "Customer Support Template",
+      "virtualAssistant": "Virtual Assistant",
+      "appleBusinessChat": "Apple Business Chat"
     },
     "featureCard": {
       "spacesInUseText": "Expert Spaces: {{ numOfSpaces }}",
@@ -8086,11 +8098,16 @@
       "orgNameHelpText": "Name of the Organization: {{orgName}}"
     },
     "configureOrgLogoMsg": "Go to Settings page to modify your organization logo",
+    "appleBusinessChat": {
+      "featureText": {
+        "type": "Apple Business Chat",
+        "selectDesc": "Create Apple business chat experience for your customers to reach out to agents using iMessage."
+      }
+    },
     "virtualAssistant": {
       "featureText": {
         "selectDesc": "Create virtual assistants that can provide automated chat support to customers, or manage escalated chat requests in Cisco Spark.",
-        "virtualAssistant": "Virtual Assistant",
-        "mediaType": "Virtual Assistants"
+        "virtualAssistant": "Virtual Assistant"
       },
       "cva": {
         "featureText": {
@@ -10695,9 +10712,27 @@
   },
   "hcs": {
     "cardTitle": "Hosted Collaboration Service",
-    "description": "Extend Management services to Hosted Cloud Solution.",
-    "license": "License Management",
-    "upgrade": "Upgrade Management",
+    "description": "Extend Cloud services to Hosted Cloud Solution.",
+    "addService": "Add a Service",
+    "agentInstallFiles": "Agent Install Files",
+    "license": {
+      "title": "HCS Licenses",
+      "description": "Extend Licensing services to Hosted Cloud Solution.",
+      "perpetual": "Perpetual",
+      "subscriptions": "Subscriptions"
+    },
+    "upgrade": {
+      "title": "HCS Upgrade Settings",
+      "description": "Extend Upgrade services to Hosted Cloud Solution.",
+      "sftp": "SFTP Servers",
+      "softwareProfiles": "Software Profiles"
+    },
+    "inventory": {
+      "title": "Inventory"
+    },
+    "installFiles": {
+      "title": "Install Files"
+    },
     "taas": {
       "testState": {
         "good": "Passed",

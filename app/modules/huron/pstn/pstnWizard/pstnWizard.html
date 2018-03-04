@@ -53,8 +53,13 @@
         <cs-tab ng-if="$ctrl.showTollFreeNumbers">
           <cs-tab-heading translate="pstnSetup.newTollFreeTab"></cs-tab-heading>
           <div class="numbers-new" ng-if="!$ctrl.showOrderForm()">
-            <div translate="pstnSetup.unableToAddTollFreeNumbersShort"></div>
-            <a href translate="pstnSetup.initContract" translate-value-carrier="{{$ctrl.carrierName}}" ng-click="$ctrl.sendContract()"></a>
+            <div ng-if="!$ctrl.hasStandardOrder()">
+              <div translate="pstnSetup.unableToAddTollFreeNumbersShort"></div>
+              <a href translate="pstnSetup.initContract" translate-value-carrier="{{$ctrl.carrierName}}" ng-click="$ctrl.sendContract()"></a>
+            </div>
+            <div ng-if="$ctrl.hasStandardOrder()">
+              <span translate="pstnSetup.unableToAddTollFreeNumbers"></span>
+            </div>
           </div>
           <div ng-if="$ctrl.showOrderForm()">
             <div ng-if="!$ctrl.showContractUnSigned()">
@@ -75,8 +80,13 @@
         <cs-tab ng-if="$ctrl.showPortNumbers">
           <cs-tab-heading translate="pstnSetup.portNumbersTab"></cs-tab-heading>
           <div class="numbers-new" ng-if="!$ctrl.showOrderForm()">
-            <div translate="pstnSetup.unableToAddPortedNumbersShort"></div>
-            <a href translate="pstnSetup.initContract" translate-value-carrier="{{$ctrl.carrierName}}" ng-click="$ctrl.sendContract()"></a>
+            <div ng-if="!$ctrl.hasStandardOrder()">
+              <div translate="pstnSetup.unableToAddPortedNumbersShort"></div>
+              <a href translate="pstnSetup.initContract" translate-value-carrier="{{$ctrl.carrierName}}" ng-click="$ctrl.sendContract()"></a>
+            </div>
+            <div ng-if="$ctrl.hasStandardOrder()">
+              <span translate="pstnSetup.unableToAddPortedNumbers"></span>
+            </div>
           </div>
           <div ng-if="$ctrl.showOrderForm()">
             <div ng-if="!$ctrl.showContractUnSigned()">

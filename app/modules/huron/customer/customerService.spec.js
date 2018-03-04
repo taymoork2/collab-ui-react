@@ -62,9 +62,9 @@ describe('Service: Huron Customer', function () {
     });
 
     it('should not update voice customer if pstn reseller is not found', function () {
-      PstnService.listResellerCarriers.and.returnValue($q.reject({
-        status: 404,
-      }));
+      PstnService.listResellerCarriers.and.callFake(function () {
+        return $q.reject({ status: 404 });
+      });
       $httpBackend.expectPOST(HuronConfig.getCmiUrl() + '/common/customers').respond(201);
       HuronCustomer.create('123', 'My Customer', 'myCustomer@cisco.com');
       $httpBackend.flush();
@@ -88,7 +88,8 @@ describe('Service: Huron Customer', function () {
       });
       $httpBackend.expectPUT(HuronConfig.getCmiUrl() + '/common/customers/123').respond(200);
       HuronCustomer.create('123', 'My Customer', 'myCustomer@cisco.com').then(function (response) {
-        expect(response.status).toEqual(200);
+        // NOTE: HuronCustomer.create() is coded to not return anything in success case
+        expect(response).toBe(undefined);
       });
       $httpBackend.flush();
     });

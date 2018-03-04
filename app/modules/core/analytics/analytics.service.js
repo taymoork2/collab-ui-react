@@ -6,7 +6,7 @@
   module.exports = Analytics;
 
   /* @ngInject */
-  function Analytics($q, $state, Authinfo, Config, MetricsService, Orgservice, TrialService, UrlConfig, UserListService) {
+  function Analytics($document, $location, $q, $state, Authinfo, Config, MetricsService, Orgservice, TrialService, UrlConfig, UserListService) {
     var DiagnosticKey = require('../metrics').DiagnosticKey;
     var NO_EVENT_NAME = 'eventName not passed';
 
@@ -357,11 +357,29 @@
           properties[prefix + key] = value;
         }
       });
+
+      _.set(properties, '$current_url', cleanUrl($location.absUrl()));
+      _.set(properties, '$referrer', cleanUrl((_.get($document, '[0].referrer'))));
+
       _init()
         .then(function () {
           service._track(eventName, properties);
         })
         .catch(_.noop); // don't log error, legit reasons to fail
+    }
+
+    function cleanUrl(url) {
+      var REDACTED = '***';
+      var urlSearchAndReplacePairs = [
+        {
+          search: /\/search\/.*/,
+          replace: '/search/' + REDACTED,
+        },
+      ];
+      _.forEach(urlSearchAndReplacePairs, function (pair) {
+        url = _.replace(url, pair.search, pair.replace);
+      });
+      return url;
     }
 
     /**

@@ -14,8 +14,6 @@
     $rootScope.exporting = false;
     var LOGIN_STATE = 'login';
 
-    setNewRelicRouteName(LOGIN_STATE);
-
     function timeoutReportLoadingMetrics() {
       $timeout(MetricsService.reportLoadingMetrics.bind(MetricsService));
     }
@@ -133,8 +131,6 @@
     );
 
     $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-      setNewRelicRouteName(toState.name);
-
       // TrackingId is generated/incremented on each request
       // Clear the current TrackingId when a new state is loaded
       TrackingId.clear();
@@ -146,12 +142,5 @@
       // Add Body Class to the $rootScope on stateChange
       $rootScope.bodyClass = _.get(toState, 'data.bodyClass') || _.replace(toState.name, /\./g, '-') + '-state';
     });
-
-    function setNewRelicRouteName(name) {
-      if (typeof newrelic !== 'undefined') {
-        /* global newrelic */
-        newrelic.setCurrentRouteName(name);
-      }
-    }
   }
 })();

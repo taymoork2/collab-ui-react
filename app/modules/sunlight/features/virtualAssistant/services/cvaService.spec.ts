@@ -19,11 +19,18 @@ describe('Care Customer Virtual Assistant Service', function () {
     getOrgName: jasmine.createSpy('getOrgName').and.returnValue('VirtualAssistant test org'),
   };
 
+  const spiedCareFeatureListService = {
+    filterConstants: {
+      virtualAssistant: jasmine.createSpy('virtualAssistant').and.returnValue('virtualAssistant'),
+    },
+  };
+
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value('UrlConfig', spiedUrlConfig);
     $provide.value('Authinfo', spiedAuthinfo);
+    $provide.value('CareFeatureList', spiedCareFeatureListService);
   }));
 
   beforeEach(inject(function (_$httpBackend_, _CvaService_, _$state_) {

@@ -76,9 +76,11 @@ class Meetingdetails implements ng.IComponentController {
         cachePromises.push(this.videoQOS(ids));
         cachePromises.push(this.pstnQOS(pstnIds));
         cachePromises.push(this.cmrQOS(cmrIds));
-        this.$q.all(cachePromises).finally(() => {
-          this.loading = false;
-        });
+        this.$q.all(cachePromises)
+          .catch(_.noop)
+          .finally(() => {
+            this.loading = false;
+          });
       })
       .catch((err) => {
         this.loading = true;
@@ -93,12 +95,42 @@ class Meetingdetails implements ng.IComponentController {
 
   private voipQOS(ids) {
     return this.SearchService.getQOS(this.conferenceID, ids, 'voip-network-qos')
-    .then( res => this.getLineCircleData(res, 'voip') );
+    .then((res: any) => {
+      this.getVoipVideoQOS(res, 'voip');
+    });
   }
 
   private videoQOS(ids) {
     return this.SearchService.getQOS(this.conferenceID, ids, 'video-network-qos')
-    .then( res => this.getLineCircleData(res, 'video') );
+    .then((res: any) => {
+      this.getVoipVideoQOS(res, 'video');
+    });
+  }
+
+  private getVoipVideoQOS(res, qosName) {
+    _.map(res, (item: any) => {
+      if (item.items && item.items.length > 0) {
+        _.forEach(item.items, (node) => {
+          node.dataQuality = this.getVoipVideoQuality(node);
+        });
+      }
+    });
+    this.getLineCircleData(res, qosName);
+  }
+
+  private getVoipVideoQuality(node) {
+    const lossRate = node.packageLossRate * 100;
+    const latency = node.latency * 1;
+
+    let dataQuality = 0;
+    if (lossRate < 3 && latency < 300) {
+      dataQuality = 1;
+    } else if (lossRate > 5 && latency > 400) {
+      dataQuality = 3;
+    } else {
+      dataQuality = 2;
+    }
+    return dataQuality;
   }
 
   private pstnQOS(ids) { // TODO, will discuss with backend to optimize the response data.
@@ -198,7 +230,7 @@ class Meetingdetails implements ng.IComponentController {
   private getPSTNQuality(item) {
     let quality = 'Fair';
     const audioMos = _.parseInt(item.audioMos);
-    if ( audioMos > 3 ) {
+    if ( audioMos >= 4 ) {
       quality = 'Good';
     } else if ( audioMos < 3 && audioMos > 0 ) {
       quality = 'Poor';

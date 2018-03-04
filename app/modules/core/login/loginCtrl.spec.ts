@@ -23,11 +23,14 @@ describe('Login directive', () => {
   function initSpies() {
     spyOn(Auth, 'authorize').and.returnValue($q.resolve({}));
     spyOn(ApiCacheManagementService, 'invalidateHybridServicesCaches');
-    spyOn(Authinfo, 'isCustomerLaunchedFromPartner');
-    spyOn(Authinfo, 'isReadOnlyAdmin');
+    spyOn(ApiCacheManagementService, 'warmUpAsynchronousCaches');
+    spyOn(Authinfo, 'isCustomerLaunchedFromPartner').and.returnValue(true);
+    spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(false);
     spyOn(HybridServicesExtrasService, 'invalidateHybridUserCache');
     spyOn(USSService, 'invalidateHybridUserCache');
-    spyOn($state, 'go');
+    spyOn($state, 'go').and.callFake(() => {
+      return $q.resolve();
+    });
   }
 
   afterEach(function () {
@@ -48,7 +51,6 @@ describe('Login directive', () => {
   });
 
   it('should not try to invalidate the hybrid services caches for read-only admins', () => {
-    Authinfo.isCustomerLaunchedFromPartner.and.returnValue(true);
     Authinfo.isReadOnlyAdmin.and.returnValue(true);
     initDirective();
 
@@ -56,16 +58,12 @@ describe('Login directive', () => {
   });
 
   it('should try to invalidate the hybrid services caches for partners that have launched into customer orgs', () => {
-    Authinfo.isCustomerLaunchedFromPartner.and.returnValue(true);
-    Authinfo.isReadOnlyAdmin.and.returnValue(false);
     initDirective();
 
     expect(ApiCacheManagementService.invalidateHybridServicesCaches).toHaveBeenCalled();
   });
 
   it('should go to the overview page after a cache invalidation attempt, even if the API calls to FMS or USS fail', () => {
-    Authinfo.isCustomerLaunchedFromPartner.and.returnValue(true);
-    Authinfo.isReadOnlyAdmin.and.returnValue(false);
     ApiCacheManagementService.invalidateHybridServicesCaches.and.callThrough();
     HybridServicesExtrasService.invalidateHybridUserCache.and.returnValue($q.reject({}));
     initDirective();

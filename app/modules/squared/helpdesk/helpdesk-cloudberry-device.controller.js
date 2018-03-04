@@ -7,7 +7,7 @@
   function HelpdeskCloudberryDeviceController($stateParams, $window, AccessibilityService, Authinfo, HelpdeskLogService, HelpdeskService, Notification, WindowLocation) {
     $('body').css('background', 'white');
     var vm = this;
-    vm.deviceId = $stateParams.id;
+    vm.deviceId = decodeURIComponent($stateParams.id);
     vm.orgId = $stateParams.orgId;
     vm.device = $stateParams.device;
     vm.keyPressHandler = keyPressHandler;

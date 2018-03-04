@@ -26,14 +26,14 @@
          "cloudParticipants":"5.0",
          "onPremParticipants":"0.0",
          "bullet_cloudParticipants": "round",
-         "insight_cloudParticipants": "Redirected by Cluster 5,Nodes Unavailable 1",
+         "insight_cloudParticipants": "Redirected by Cluster 5,1002",
          "time":"2017-02-20T10:41:51.135Z"
       },
       {
          "cloudParticipants":"5.0",
          "onPremParticipants":"0.0",
          "bullet_cloudParticipants": "round",
-         "insight_cloudParticipants": "Redirected by Cluster 5",
+         "insight_cloudParticipants": "Redirected by Cluster 5,1003,1004",
          "time":"2017-02-20T10:51:51.119Z"
       },
       {

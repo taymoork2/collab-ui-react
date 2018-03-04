@@ -152,7 +152,7 @@ class CloudberryDevice implements IDevice {
     this.update = (updated) => {
       this.displayName = updated.displayName;
     };
-    this.image = 'images/devices-hi/' + (obj.imageFilename || 'unknown.png');
+    this.image = 'images/devices-hi/' + (obj.imageFilename || obj.imageFileName || 'unknown.png');
   }
 }
 

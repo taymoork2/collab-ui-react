@@ -2,6 +2,8 @@ import testModule from './index';
 import { WebexSiteManagementController } from './webexSiteManagementSetting.controller';
 
 describe('Controller: WebexSiteManagementController', function () {
+  let orgData;
+
   beforeEach(function () {
     this.initModules(testModule);
     this.injectDependencies(
@@ -16,6 +18,15 @@ describe('Controller: WebexSiteManagementController', function () {
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('ABC123');
     spyOn(this.Orgservice, 'setOrgSettings').and.returnValue(this.$q.resolve());
     spyOn(this.Notification, 'success');
+    spyOn(this.Orgservice, 'getOrg').and.callFake((callback) => {
+      callback(orgData, 200);
+    });
+
+    // Init orgData
+    orgData = {
+      success: true,
+      orgSettings: {},
+    };
   });
 
   function initController(): void {
@@ -27,27 +38,12 @@ describe('Controller: WebexSiteManagementController', function () {
       basicInfo: true,
     };
     it('should get the org service and read the settings correctly', function () {
-      const orgData = {
-        success: true,
-        orgSettings: {
-          allowSiteManagementByCustomer: false,
-        },
-      };
-      spyOn(this.Orgservice, 'getOrg').and.callFake((callback) => {
-        callback(orgData, 200);
-      });
+      orgData.orgSettings.allowSiteManagementByCustomer = false;
       initController.apply(this);
       expect(this.Orgservice.getOrg).toHaveBeenCalledWith(jasmine.any(Function), 'ABC123', params);
       expect(this.controller.allowSiteManagementByCustomer).toBe(false);
     });
     it('should get set the flag to default true if the setting is not initialized', function () {
-      const orgData = {
-        success: true,
-        orgSettings: {},
-      };
-      spyOn(this.Orgservice, 'getOrg').and.callFake((callback) => {
-        callback(orgData, 200);
-      });
       initController.apply(this);
       expect(this.Orgservice.getOrg).toHaveBeenCalledWith(jasmine.any(Function), 'ABC123', params);
       expect(this.controller.allowSiteManagementByCustomer).toBe(true);

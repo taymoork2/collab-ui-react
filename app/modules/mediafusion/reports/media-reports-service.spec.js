@@ -66,6 +66,8 @@ describe('Service: Media Reports Service', function () {
     vm.availabilityCard = vm.baseUrl + '/agg_availability/?relativeTime=4h';
     vm.participantDistributionUrl = vm.baseUrl + '/clusters_call_volume_with_insights/?relativeTime=4h';
     vm.participantDistributionMultipleInsightsUrl = vm.baseUrl + '/clusters_call_volume_with_multiple_insights/?relativeTime=4h';
+    vm.participantActivityUrl = vm.baseUrl + '/participants_activity_with_insights/?relativeTime=4h';
+    vm.participantActivityMultipleInsightsUrl = vm.baseUrl + '/participants_activity_with_multiple_insights/?relativeTime=4h';
     vm.clientTypeUrl = vm.baseUrl + '/client_type_trend/?relativeTime=4h';
     vm.meetingLcationUrl = vm.baseUrl + '/meeting_location_trend/?relativeTime=4h';
     vm.participant_change = vm.baseUrl + '/overflow_participant_change/?relativeTime=4h';
@@ -156,6 +158,40 @@ describe('Service: Media Reports Service', function () {
       expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(0);
 
       vm.MediaReportsService.getParticipantDistributionData(vm.timeFilter, vm.allClusters, true).then(function (response) {
+        expect(response).toEqual({
+          graphData: [],
+          graphs: [],
+        });
+        expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
+      });
+
+      vm.$httpBackend.flush();
+    });
+  });
+
+  describe('Participant Activity:', function () {
+    it('should notify an error for Participant Activity Call failure', function () {
+      vm.$httpBackend.whenGET(vm.participantActivityUrl).respond(500, vm.error);
+      expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(0);
+
+      vm.MediaReportsService.getNumberOfParticipantData(vm.timeFilter, false).then(function (response) {
+        expect(response).toEqual({
+          graphData: [],
+          graphs: [],
+        });
+        expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
+      });
+
+      vm.$httpBackend.flush();
+    });
+  });
+
+  describe('Participant Activity:', function () {
+    it('should notify an error for Participant Activity with Multiple Insights Call failure', function () {
+      vm.$httpBackend.whenGET(vm.participantActivityMultipleInsightsUrl).respond(500, vm.error);
+      expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(0);
+
+      vm.MediaReportsService.getNumberOfParticipantData(vm.timeFilter, true).then(function (response) {
         expect(response).toEqual({
           graphData: [],
           graphs: [],

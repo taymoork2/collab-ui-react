@@ -125,6 +125,17 @@ export class TerminusService {
     });
   }
 
+  public customerSite<T>(): IGenericResource<T> {
+    return <IGenericResource<T>>this.$resource(this.HuronConfig.getTerminusUrl() + '/customers/:customerId/sites/:siteId', {}, {
+      save: {
+        headers: {
+          'Access-Control-Expose-Headers': 'Location',
+        },
+        method: 'POST',
+      },
+    });
+  }
+
   public customerLocations<T>(): IGenericResource<T> {
     return <IGenericResource<T>>this.$resource(this.HuronConfig.getTerminusV2Url() + '/customers/:customerId/locations/:locationId', {}, {
       save: {

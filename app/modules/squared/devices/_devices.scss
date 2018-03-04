@@ -4,33 +4,6 @@
 @import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
-.sq-devices-page {
-  @extend %grid-subheader;
-  @extend %page-background-white;
-
-  .grid-contents {
-    height: inherit;
-  }
-
-  .ui-grid-cell:first-child,
-  .ui-grid-header-cell:first-child {
-    border-right: 0px;
-
-    .space_avatar {
-      margin: 4px 5px 4px 30px;
-      width: 35px;
-    }
-  }
-  .export-button {
-    font-size: 1.5rem;
-    padding-right: 2rem;
-  }
-  .export-button:hover {
-    cursor: pointer;
-    color: $link-color;
-  }
-}
-
 .remote-support-modal-success,
 .remote-support-modal-warning {
   padding: 10px 20px;
@@ -91,7 +64,7 @@
 
   i {
     font-size: 7em;
-
+    color: $gray-light-1;
     @include vr-spacing(mb, 1.5);
   }
 
@@ -112,10 +85,6 @@
     @media screen and (max-width: 640px) {
       width: 90%;
     }
-  }
-
-  i {
-    color: $gray-light-1;
   }
 }
 
@@ -774,15 +743,12 @@ sq-places-page-overview,
       }
     }
 
-    input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-    }
-
     input[type=range]:focus {
       outline: none;
     }
 
     input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
       margin-top: -3px;
       width: 20px;
       height: 20px;

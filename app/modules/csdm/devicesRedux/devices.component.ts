@@ -189,7 +189,7 @@ export class DevicesCtrl implements ng.IComponentController {
   public searchResultChanged(result: SearchResult) {
     if (this.searchObject.lastGoodQuery) {
       const compressedQuery = this.SearchRequestCompressor.compress(this.searchObject.lastGoodQuery);
-      if (this.$state.current.name === 'devices.search' || compressedQuery) {
+      if (this.$state.current.name === 'devices.search' || this.$state.current.name === 'device-overview' || compressedQuery) {
         this.$state.transitionTo('devices.search', { q: compressedQuery },
           { reload: false, inherit: true, notify: false });
       }
@@ -205,7 +205,6 @@ export class DevicesCtrl implements ng.IComponentController {
     this.fetchAsyncSettings();
   }
 
-  //TODO this is a duplicate from devices.controller.ts in squared  extract to class or maintain
   private fetchAsyncSettings() {
     const ataPromise = this.FeatureToggleService.csdmATAGetStatus().then((result: boolean) => {
       this.showATA = result;
@@ -443,8 +442,6 @@ export class DevicesCtrl implements ng.IComponentController {
       },
     };
   }
-
-  //TODO end this is a duplicate from devices.controller.ts in squared
 }
 
 export class DevicesComponent implements ng.IComponentOptions {

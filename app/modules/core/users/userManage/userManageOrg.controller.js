@@ -45,6 +45,16 @@
           return isDefaultAutoAssignTemplateActivated() ? SUCCESS : undefined;
         },
       },
+      manualLabelText: {
+        get: function () {
+          return isDefaultAutoAssignTemplateActivated() ? 'userManage.org.manualLabelTemplateEnabled' : 'userManage.org.manualLabelNew';
+        },
+      },
+      manualDetailsText: {
+        get: function () {
+          return isDefaultAutoAssignTemplateActivated() ? 'userManage.org.manualDetailsTemplateEnabled' : 'userManage.org.manualDetailsNew';
+        },
+      },
     });
 
     vm.initFeatureToggles = initFeatureToggles;

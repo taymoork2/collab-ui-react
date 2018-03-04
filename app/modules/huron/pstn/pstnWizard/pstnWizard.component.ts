@@ -80,8 +80,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(private PstnModel: PstnModel,
-              private PstnServiceAddressService,              //Site Based
-              private PstnAddressService: PstnAddressService, //Location Based
+              private PstnAddressService: PstnAddressService, //Location & Site Based
               private Notification: Notification,
               private $state: ng.ui.IStateService,
               private $window: ng.IWindowService,
@@ -132,11 +131,6 @@ export class PstnWizardCtrl implements ng.IComponentController {
     if (!this.ftHI1635) {
       return true;
     }
-    //If a Standard number is in the order cart allow the OrderForm flow to be true
-    //Nomally the showContractUnSigned() will be false.
-    if (this.orderCart && this.orderCart.length > 0) {
-      return true;
-    }
     //If the customer doesn't exist (false), that means contract has not been sent
     return this.PstnModel.isCustomerExists();
   }
@@ -145,11 +139,15 @@ export class PstnWizardCtrl implements ng.IComponentController {
     if (!this.ftHI1635) {
       return false;
     }
-    //Anything but the signed state and at least 1 order in the cart should show the unsigned message.
-    if (this.orderCart && this.orderCart.length > 0 && this.PstnModel.getContractStatus() !== ContractStatus.Signed) {
+    return this.PstnModel.getContractStatus() === ContractStatus.UnSigned;
+  }
+
+  public hasStandardOrder() {
+    //If a Standard number is in the order cart allow the OrderForm flow to be true
+    if (this.orderCart && this.orderCart.length > 0) {
       return true;
     }
-    return this.PstnModel.getContractStatus() === ContractStatus.UnSigned;
+    return false;
   }
 
   public sendContract(): void {
@@ -441,33 +439,17 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   public validateAddress(): void {
     this.loading = true;
-
-    if (this.ftLocation) {
-      this.PstnAddressService.lookup(this.PstnModel.getProviderId(), this.address)
-      .then((address: Address | null) => {
-        if (address) {
-          this.address = address;
-          this.PstnModel.setServiceAddress(_.cloneDeep(address));
-        } else {
-          this.Notification.error('pstnSetup.serviceAddressNotFound');
-        }
-      })
-      .catch(error => this.Notification.errorResponse(error))
-      .finally(() => this.loading = false);
-    } else {
-      this.PstnServiceAddressService.lookupAddressV2(this.address, this.PstnModel.getProviderId())
-      .then(address => {
-        if (address) {
-          this.address = address;
-          this.PstnModel.setServiceAddress(address);
-          this.address.validated = true;
-        } else {
-          this.Notification.error('pstnSetup.serviceAddressNotFound');
-        }
-      })
-      .catch(response => this.Notification.errorResponse(response))
-      .finally(() => this.loading = false);
-    }
+    this.PstnAddressService.lookup(this.PstnModel.getProviderId(), this.address)
+    .then((address: Address | null) => {
+      if (address) {
+        this.address = address;
+        this.PstnModel.setServiceAddress(_.cloneDeep(address));
+      } else {
+        this.Notification.error('pstnSetup.serviceAddressNotFound');
+      }
+    })
+    .catch(error => this.Notification.errorResponse(error))
+    .finally(() => this.loading = false);
   }
 
   public resetAddress(): void {
