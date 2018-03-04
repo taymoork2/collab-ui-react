@@ -11,6 +11,7 @@ class VideoQualitySectionCtrl implements ng.IComponentController {
   public videoQuality = {
     title: 'mediaFusion.videoQuality.title',
   };
+  public orgId = this.Authinfo.getOrgId();
 
   /* @ngInject */
   constructor(
@@ -20,14 +21,17 @@ class VideoQualitySectionCtrl implements ng.IComponentController {
     private Notification: Notification,
     private Orgservice,
   ) {
-    this.getOrgSettings();
+    this.determineVideoQuality();
   }
 
-  private getOrgSettings(): void {
-    this.Orgservice.getOrg((response) => {
-      const videoQuality: boolean = _.get(response, 'orgSettings.isMediaFusionFullQualityVideo');
-      this.enableVideoQuality = videoQuality ? videoQuality : false;
-      this.MediaClusterServiceV2.getPropertySets()
+  private determineVideoQuality() {
+    const params = {
+      disableCache: true,
+    };
+    this.Orgservice.getOrg(_.noop, null, params)
+     .then(response => {
+       this.enableVideoQuality  = _.get(response.data, 'orgSettings.isMediaFusionFullQualityVideo', false);
+       this.MediaClusterServiceV2.getPropertySets()
         .then((propertySets) => {
           if (propertySets.length > 0) {
             this.videoPropertySet = _.filter(propertySets, {
@@ -40,7 +44,7 @@ class VideoQualitySectionCtrl implements ng.IComponentController {
             this.createPropertySetAndAssignClusters();
           }
         });
-    }, null, { disableCache: true });
+     });
   }
 
   private createPropertySetAndAssignClusters(): void {
@@ -63,7 +67,6 @@ class VideoQualitySectionCtrl implements ng.IComponentController {
               assignedClusters: _.map(this.clusters, 'id'),
             };
             this.MediaClusterServiceV2.updatePropertySetById(this.videoPropertySetId, clusterPayload)
-              .then(_.noop)
               .catch((error) => {
                 this.Notification.errorWithTrackingId(error, 'mediaFusion.videoQuality.error');
               });
@@ -111,6 +114,4 @@ class VideoQualitySectionCtrl implements ng.IComponentController {
 export class VideoQualitySectionComponent implements ng.IComponentOptions {
   public controller = VideoQualitySectionCtrl;
   public template = require('./video-quality-section.tpl.html');
-  public bindings = {
-  };
 }

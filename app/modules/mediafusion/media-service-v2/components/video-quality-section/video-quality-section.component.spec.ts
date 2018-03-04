@@ -4,7 +4,6 @@ describe('VideoQualitySectionCtrl', () => {
 
   let $componentController, $httpBackend, $q, $scope, HybridServicesClusterService, MediaClusterServiceV2, Notification, Orgservice;
 
-  beforeEach(angular.mock.module('Mediafusion'));
   beforeEach(angular.mock.module(moduleName));
 
   const sampleCluster = [{
@@ -60,7 +59,7 @@ describe('VideoQualitySectionCtrl', () => {
     return ctrl;
   }
 
-  it('check if setEnableVideoQuality sets the tag if videoPropertySetId is present', function () {
+  it('should check if setEnableVideoQuality sets the tag if videoPropertySetId is present', function () {
     spyOn(MediaClusterServiceV2, 'updatePropertySetById').and.returnValue($q.resolve({}));
     const controller = initController();
     controller.enableVideoQuality = true;
@@ -72,7 +71,7 @@ describe('VideoQualitySectionCtrl', () => {
     expect(Notification.success).toHaveBeenCalled();
   });
 
-  it('check if setEnableVideoQuality if videoPropertySetId is present has error we get notification', function () {
+  it('should check if setEnableVideoQuality if videoPropertySetId is present has error we get notification', function () {
     spyOn(MediaClusterServiceV2, 'updatePropertySetById').and.returnValue($q.reject());
     const controller = initController();
     controller.enableVideoQuality = true;
@@ -84,7 +83,7 @@ describe('VideoQualitySectionCtrl', () => {
     expect(Notification.errorWithTrackingId).toHaveBeenCalled();
   });
 
-  it('check if setEnableVideoQuality gets property sets if videoPropertySetId is null', function () {
+  it('should check if setEnableVideoQuality gets property sets if videoPropertySetId is null', function () {
     spyOn(MediaClusterServiceV2, 'getPropertySets').and.returnValue($q.resolve({}));
     const controller = initController();
     controller.enableVideoQuality = true;
@@ -95,7 +94,7 @@ describe('VideoQualitySectionCtrl', () => {
     expect(MediaClusterServiceV2.getPropertySets).toHaveBeenCalled();
   });
 
-  it('check if createPropertySetAndAssignClusters creates propertysets and assigns clusters', function () {
+  it('should check if createPropertySetAndAssignClusters creates propertysets and assigns clusters', function () {
     spyOn(MediaClusterServiceV2, 'updatePropertySetById').and.returnValue($q.resolve({}));
     const controller = initController();
     controller.createPropertySetAndAssignClusters();
@@ -107,7 +106,7 @@ describe('VideoQualitySectionCtrl', () => {
     expect(controller.videoPropertySetId).toBe('1234');
   });
 
-  it('check if createPropertySetAndAssignClusters creates propertysets and assigns clusters has errors we get notification', function () {
+  it('should check if createPropertySetAndAssignClusters creates propertysets and assigns clusters has errors we get notification', function () {
     spyOn(MediaClusterServiceV2, 'updatePropertySetById').and.returnValue($q.reject());
     const controller = initController();
     controller.createPropertySetAndAssignClusters();
