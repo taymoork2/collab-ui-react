@@ -162,6 +162,7 @@ export class AbcService {
   private formatAppleConfigList(list: any, feature: any): any[] {
     const service = this;
     const formattedList = _.map(list.items, function (item: any) {
+      item.templateId = item.id;
       item.featureType = feature.name;
       item.color = feature.color;
       item.icons = feature.icons;

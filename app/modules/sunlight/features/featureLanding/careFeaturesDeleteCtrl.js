@@ -6,7 +6,7 @@
     .controller('CareFeaturesDeleteCtrl', CareFeaturesDeleteCtrl);
 
   /* @ngInject */
-  function CareFeaturesDeleteCtrl($rootScope, $scope, $stateParams, $timeout, Analytics, CardUtils, CareFeatureList, CvaService, EvaService, Log, Notification) {
+  function CareFeaturesDeleteCtrl($rootScope, $scope, $stateParams, $timeout, AbcService, Analytics, CardUtils, CareFeatureList, CvaService, EvaService, Log, Notification) {
     var vm = this;
     vm.deleteFeature = deleteFeature;
     vm.deleteBtnDisabled = false;
@@ -19,6 +19,8 @@
       vm.confirmationText = 'careChatTpl.deleteVaFeatureTextConfirmation';
     } else if (vm.featureType === EvaService.evaServiceCard.id) {
       vm.confirmationText = 'careChatTpl.deleteEvaFeatureTextConfirmation';
+    } else if (vm.featureType === AbcService.abcServiceCard.id) {
+      vm.confirmationText = 'careChatTpl.deleteAbcFeatureTextConfirmation';
     }
 
     function deleteFeature() {
@@ -34,6 +36,10 @@
         deleteFunc = EvaService.deleteExpertAssistant.bind(EvaService);
         deleteSuccessEvent = Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_DELETE_SUCCESS;
         deleteFailureEvent = Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_DELETE_FAILURE;
+      } else if (vm.featureType === AbcService.abcServiceCard.id) {
+        deleteFunc = AbcService.deleteAbcConfig.bind(AbcService);
+        deleteSuccessEvent = Analytics.sections.APPLE_BUSINESS_CHAT.eventNames.ABC_DELETE_SUCCESS;
+        deleteFailureEvent = Analytics.sections.APPLE_BUSINESS_CHAT.eventNames.ABC_DELETE_FAILURE;
       }
       deleteFunc(vm.featureId).then(function () {
         deleteSuccess(deleteSuccessEvent);
