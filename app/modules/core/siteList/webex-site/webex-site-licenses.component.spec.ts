@@ -5,7 +5,7 @@ describe('Component: WebexSiteLicensesComponent', function () {
 
   beforeEach(function () {
     this.initModules(module);
-    this.injectDependencies('$componentController', '$q', '$rootScope', '$scope', 'Config', 'SetupWizardService');
+    this.injectDependencies('$componentController', '$q', '$rootScope', '$scope', 'Config', 'SetupWizardService', 'WebExSiteService');
     this.$scope.fixtures = {
       sitesArray: [{
         siteUrl: 'abc.dmz',
@@ -35,6 +35,10 @@ describe('Component: WebexSiteLicensesComponent', function () {
         centerType: 'EE',
         quantity: 100,
       }],
+      centerDetails: [
+        { serviceName: 'MC', quantity: 100 },
+        { serviceName: 'EE', quantity: 200 },
+      ],
     };
 
     initSpies.apply(this);
@@ -50,15 +54,13 @@ describe('Component: WebexSiteLicensesComponent', function () {
   function initSpies() {
     this.$scope.onDistributionChangeFn = jasmine.createSpy('onDistributionChangeFn');
     spyOn(this.SetupWizardService, 'getConferenceLicensesBySubscriptionId').and.returnValue(licenses.confLicenses);
+    spyOn(this.WebExSiteService, 'extractCenterDetailsFromSingleSubscription').and.returnValue(this.$scope.fixtures.centerDetails);
   }
 
   describe('When first opened', () => {
     it('should get centerDetails and distributedLicensesArray correctly', function () {
-      const expectedCenterDetails = [
-        { serviceName: 'MC', quantity: 100 },
-        { serviceName: 'EE', quantity: 200 },
-      ];
-      expect(this.controller.centerDetails).toEqual(expectedCenterDetails);
+      expect(this.controller.centerDetails).toEqual(this.$scope.fixtures.centerDetails);
+      expect(this.WebExSiteService.extractCenterDetailsFromSingleSubscription).toHaveBeenCalled();
       expect(this.controller.distributedLicensesArray.length).toBe(3);
       expect(this.controller.distributedLicensesArray[0].length).toBe(2);
     });
