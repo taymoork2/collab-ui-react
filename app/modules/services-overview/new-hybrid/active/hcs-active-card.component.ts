@@ -15,11 +15,11 @@ export class HcsActiveCardComponent implements ng.IComponentOptions {
       <div class="active-card_content">
         <div class="active-card_section">
           <div class="active-card_title" translate="hcs.inventory.title"></div>
-          <div class="active-card_action"><a translate="hcs.inventory.title"></a></div>
+          <div class="active-card_action"><a ui-sref="hcs.shared.inventory" translate="hcs.inventory.title"></a></div>
         </div>
         <div class="active-card_section">
           <div class="active-card_title" translate="hcs.agentInstallFiles"></div>
-          <div class="active-card_action"><a translate="hcs.agentInstallFiles"></a></div>
+          <div class="active-card_action"><a ui-sref="hcs.shared.installFiles" translate="hcs.agentInstallFiles"></a></div>
         </div>
       </div>
       <div class="inactive-card_footer">
