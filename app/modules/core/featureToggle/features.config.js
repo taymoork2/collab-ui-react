@@ -78,6 +78,7 @@ module.exports = {
   atlasWebexSiteManagementSetting: 'atlas-webex-site-management-setting',
   atMentions: 'at-mentions',
   audioPairing: 'audio-pairing',
+  autoLicense: 'auto-license',
   avrilI1558: 'avril-i1558',
   avrilI1559: 'avril-i1559',
   avrilVmEnable: 'avril-vm-enable',

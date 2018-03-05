@@ -89,6 +89,7 @@ describe('Controller: Customer Reports Ctrl', function () {
     beforeEach(function () {
       spyOn(this.MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(this.$q.resolve(true));
       spyOn(this.FeatureToggleService, 'webexMetricsGetStatus').and.returnValue(this.$q.resolve(true));
+      spyOn(this.FeatureToggleService, 'autoLicenseGetStatus').and.returnValue(this.$q.resolve(true));
       spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(true));
       spyOn(this.WebexMetricsService, 'hasClassicEnabled').and.returnValue(this.$q.resolve([true]));
       spyOn(this.WebexMetricsService, 'checkWebexAccessiblity').and.returnValue(this.$q.resolve([true]));

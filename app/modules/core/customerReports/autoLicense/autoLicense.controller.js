@@ -3,17 +3,16 @@
 
   angular
     .module('core.customer-reports')
-    .controller('SparkMetricsCtrl', SparkMetricsCtrl);
+    .controller('AutoLicenseCtrl', AutoLicenseCtrl);
 
   /* @ngInject */
-  function SparkMetricsCtrl(
+  function AutoLicenseCtrl(
     $sce,
     $scope,
     $window,
     Analytics,
     Authinfo,
     Notification,
-    ProPackService,
     QlikService,
     Userservice
   ) {
@@ -21,17 +20,6 @@
 
     vm.sparkMetrics = {};
 
-    vm.sparkMetrics.views = [
-      {
-        view: 'Basic',
-        appName: 'basic_spark_v1',
-      },
-      {
-        view: 'Premium',
-        appName: 'premium_spark_v1',
-      },
-    ];
-    vm.reportView = vm.sparkMetrics.views[0];
     vm.init = init;
 
     init();
@@ -44,7 +32,7 @@
           if (data.success) {
             if (data.emails) {
               Authinfo.setEmails(data.emails);
-              generateWebexMetricsUrl();
+              loadMetricsReport();
             }
           }
         }
@@ -60,14 +48,6 @@
       }
     }
 
-    function generateWebexMetricsUrl() {
-      ProPackService.hasProPackPurchased().then(function (isPurchased) {
-        if (isPurchased) {
-          vm.reportView = vm.sparkMetrics.views[1];
-        }
-        loadMetricsReport();
-      });
-    }
 
     function loadMetricsReport() {
       var userInfo = {
@@ -75,15 +55,13 @@
         email: Authinfo.getPrimaryEmail(),
       };
 
-      var viewType = _.get(vm, 'reportView.view');
-
       // var getSparkReportData = _.get(QlikService, 'getSparkReportQBSfor' + viewType + 'Url');
       var getSparkReportData = _.get(QlikService, 'getQBSInfo');
 
       if (!_.isFunction(getSparkReportData)) {
         return;
       }
-      getSparkReportData('spark', viewType, userInfo).then(function (data) {
+      getSparkReportData('license', '', userInfo).then(function (data) {
         vm.sparkMetrics.appData = {
           ticket: data.ticket,
           appId: data.appName,
@@ -92,12 +70,9 @@
           persistent: data.isPersistent,
           vID: Authinfo.getOrgId(),
         };
-        //TODO remove this 'if' segment, if QBS can handle this parameter
-        if (vm.sparkMetrics.appData.persistent === 'false') {
-          vm.sparkMetrics.appData.appId = vm.reportView.appName;
-        }
-        var QlikMashupChartsUrl = _.get(QlikService, 'getQlikMashupUrl')(vm.sparkMetrics.appData.qrp, 'spark', viewType);
+        var QlikMashupChartsUrl = _.get(QlikService, 'getQlikMashupUrl')(vm.sparkMetrics.appData.qrp, 'license', '');
         vm.sparkMetrics.appData.url = QlikMashupChartsUrl;
+        vm.sparkMetrics.appData.appId = 'license';
 
         updateIframe();
       })

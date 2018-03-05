@@ -2167,6 +2167,16 @@
               },
             },
           })
+          .state('reports.autoLicense', {
+            url: '/sparkAutoLicense',
+            views: {
+              tabContent: {
+                controllerAs: 'nav',
+                controller: 'AutoLicenseCtrl',
+                template: require('modules/core/customerReports/autoLicense/autoLicense.tpl.html'),
+              },
+            },
+          })
           .state('reports.webex-metrics', {
             url: '/webexMetrics',
             views: {
