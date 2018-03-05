@@ -1,7 +1,5 @@
 import moduleName from './index';
 
-import { SecurityPolicyViolationService } from './securitypolicyviolation.service';
-
 describe('SecurityPolicyViolationService', () => {
   beforeEach(function () {
     this.initModules(moduleName);
@@ -9,18 +7,20 @@ describe('SecurityPolicyViolationService', () => {
       '$window',
       'Auth',
       'MetricsService',
-      'SecurityPolicyViolationService'
+      'SecurityPolicyViolationService',
+      'WindowEventService',
     );
     this.eventName = 'securitypolicyviolation';
     spyOn(this.MetricsService, 'trackOperationalMetric');
+    spyOn(this.Auth, 'isLoggedIn').and.returnValue(true);
   });
 
   describe('Response to a securitypolicyviolation event', () => {
     it('should trigger listener and expect the metrics service to have been called', function () {
-      spyOn(this.SecurityPolicyViolationService.onSecurityPolicyViolation).and.callThrough();
+      spyOn(this.SecurityPolicyViolationService, 'onSecurityPolicyViolation').and.callThrough();
       this.SecurityPolicyViolationService.init();
       this.$window.dispatchEvent(new Event(this.eventName));
-      expect(this.onSecurityPolicyViolation).toHaveBeenCalledTimes(1);
+      expect(this.SecurityPolicyViolationService.onSecurityPolicyViolation).toHaveBeenCalledTimes(1);
       expect(this.MetricsService.trackOperationalMetric).toHaveBeenCalled();
     });
   });

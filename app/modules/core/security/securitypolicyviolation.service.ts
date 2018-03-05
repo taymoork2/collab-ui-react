@@ -1,17 +1,20 @@
 import { MetricsService } from 'modules/core/metrics';
 import { OperationalKey } from 'modules/core/metrics/metrics.keys';
+import { WindowEventService } from 'modules/core/window';
 
 
 export class SecurityPolicyViolationService {
   /* @ngInject */
   constructor(
-    private $window: ng.IWindowService,
+    private WindowEventService: WindowEventService,
     private Auth,
     private MetricsService: MetricsService,
   ) { }
 
   public init() {
-    this.$window.addEventListener('securitypolicyviolation', this.onSecurityPolicyViolation);
+    this.WindowEventService.registerEventListener('securitypolicyviolation', (e) => {
+      this.onSecurityPolicyViolation(e);
+    });
   }
 
   public onSecurityPolicyViolation(e: Event): void {
@@ -26,11 +29,11 @@ export class SecurityPolicyViolationService {
   private sendContentSecurityViolationToInflux(data) {
     const key = OperationalKey.CSP_VIOLATION;
     const props = {
-      blockedUri: _.get(data, 'csp-report.blocked-uri'),
-      documentUri: _.get(data, 'csp-report.document-uri'),
-      lineNumber: _.get(data, 'csp-report.line-number'),
-      scriptSample: _.get(data, 'csp-report.script-sample'),
-      violatedDirectrive: _.get(data, 'csp-report.violated-directive'),
+      blocked_uri: _.get(data, 'blockedURI'),
+      document_uri: _.get(data, 'documentURI'),
+      line_number: _.get(data, 'lineNumber'),
+      script_sample: _.get(data, 'sample'),
+      violated_directive: _.get(data, 'violatedDirective'),
     };
 
     return this.MetricsService.trackOperationalMetric(key, props);
