@@ -1,5 +1,5 @@
 import linkedSites from './index';
-import { LinkingOperation, IACSiteInfo, IACLinkingStatus, IACWebexSiteinfoResponse, IACWebexPromises, LinkingOriginator } from './account-linking.interface';
+import { IACSiteInfo, IACLinkingStatus, IACWebexSiteinfoResponse, IACWebexPromises, LinkingOriginator } from './account-linking.interface';
 
 describe('Component: linkedSites', () => {
 
@@ -16,6 +16,7 @@ describe('Component: linkedSites', () => {
       '$log',
       'LinkedSitesService',
       '$state',
+      '$modal',
       '$q',
       'FeatureToggleService',
       'Notification',
@@ -23,6 +24,7 @@ describe('Component: linkedSites', () => {
   });
 
   beforeEach(function () {
+    spyOn(this.$modal, 'open');
     spyOn(this.$state, 'go');
 
     this.siteInfoDefer = <ng.IPromise<IACWebexSiteinfoResponse>>this.$q.defer();
@@ -62,6 +64,7 @@ describe('Component: linkedSites', () => {
       this.controller = this.$componentController('linkedSites', {
         LinkedSitesService: this.LinkedSitesService,
         $state: this.$state,
+        $modal: this.$modal,
       }, {});
       this.controller.originator = LinkingOriginator.Banner;
     });
@@ -148,15 +151,7 @@ describe('Component: linkedSites', () => {
         this.filterSitesDeferred.resolve([this.siteWithAdmin1]);
         this.controller.$onInit();
         this.$scope.$apply();
-        expect(this.$state.go).toHaveBeenCalledWith(
-          'site-list.linked.details.wizard',
-          {
-            siteInfo: jasmine.any(Object),
-            operation: LinkingOperation.New,
-            launchWebexFn: jasmine.any(Function),
-            setAccountLinkingModeFn: jasmine.any(Function),
-          },
-        );
+        expect(this.$modal.open).toHaveBeenCalled();
       });
 
       it('go to linkes sites list if admin for several sites that need accountlinking', function () {
