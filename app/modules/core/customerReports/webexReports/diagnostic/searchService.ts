@@ -1,3 +1,84 @@
+export interface IMeetingDetail {
+  meetingBasicInfo: Object;
+  features: Object;
+  connection: Object;
+  sessions: any[];
+}
+
+export interface ICallType {
+  completed: Boolean;
+  description: string;
+  items: any[];
+}
+
+export interface IUniqueParticipant {
+  sessionType: string;
+  userId: string;
+  guestId: string;
+  platform: string;
+  browser: string;
+  userName: string;
+  participants: any[];
+}
+
+export interface IParticipant {
+  joinTime: number;
+  leaveTime: number;
+  userName: string;
+  duration: number;
+  reason: string;
+  platform: string;
+  browser: string;
+  clientIP: string;
+  gatewayIP: string;
+  userId: string;
+  guestId: string;
+  conferenceID: string;
+  sessionType: string;
+  nodeId: string;
+}
+
+export interface IJoinTime {
+  joinTime: number;
+  userName: string;
+  userId: string;
+  guestId: string;
+  joinMeetingTime: string;
+  jmtQuality: string;
+}
+
+export interface IMeeting {
+  conferenceID: string;
+  status: number;
+  meetingName: string;
+  conferenceDate: string;
+  startTime: string;
+  Duration: string;
+  endTime: string;
+  meetingType: string;
+  meetingNumber: string;
+  siteID: number;
+  startTime_: string;
+  endTime_: string;
+  duration: number;
+  hostName: string;
+  status_: string;
+  numberOfParticipants: number;
+}
+
+export interface IQos {
+  [key: string]: Object;
+}
+
+export interface ICallLegs {
+  tahoeInfo: Object[];
+  videoInfo: Object[];
+  voIPInfo: Object[];
+}
+export interface IServerTime {
+  timestamp: number;
+}
+
 export class SearchService {
   private url;
   private data: any = {};
@@ -11,42 +92,52 @@ export class SearchService {
     this.url = `${this.UrlConfig.getGeminiUrl()}`;
   }
 
-  public getMeetings(data) {
+  public getMeetings(data): ng.IPromise<IMeeting[]> {
     const url = `${this.url}meetings`;
-    return this.$http.post(url, data).then(this.extractData);
+    return this.$http.post<IMeeting[]>(url, data).then(this.extractData);
   }
 
-  public getMeetingDetail(conferenceID) {
+  public getMeetingDetail(conferenceID: string): ng.IPromise<IMeetingDetail> {
     const url = `${this.url}meetings/${conferenceID}/meeting-detail`;
-    return this.$http.get(url).then(this.extractData);
+    return this.$http.get<IMeetingDetail>(url).then(this.extractData);
   }
 
-  public getUniqueParticipants(conferenceID) {
+  public getUniqueParticipants(conferenceID: string): ng.IPromise<IUniqueParticipant[]> {
     const url = `${this.url}meetings/${conferenceID}/unique-participants`;
-    return this.$http.get(url).then(this.extractData);
+    return this.$http.get<IUniqueParticipant[]>(url).then(this.extractData);
   }
 
-  public getParticipants(conferenceID) {
+  public getParticipants(conferenceID: string): ng.IPromise<IParticipant[]> {
     const url = `${this.url}meetings/${conferenceID}/participants`;
-    return this.$http.get(url).then(this.extractData);
+    return this.$http.get<IParticipant[]>(url).then(this.extractData);
   }
 
-  public getQOS(conferenceID, nodeID, qosName) {
+  public getPSTNCallInType(conferenceID: string, nodeId: string): ng.IPromise<ICallType> {
+    const url = `${this.url}meetings/${conferenceID}/participants/${nodeId}/pstncallintype`;
+    return this.$http.get<ICallType>(url).then(this.extractData);
+  }
+
+  public getQOS(conferenceID: string, nodeID: string, qosName: string): ng.IPromise<IQos> {
     const url = `${this.url}meetings/${conferenceID}/${qosName}?nodeIds=${nodeID}`;
-    return this.$http.get(url).then(this.extractData);
+    return this.$http.get<IQos>(url).then(this.extractData);
   }
 
-  public getJoinMeetingTime(conferenceID) {
+  public getCallLegs(conferenceID: string): ng.IPromise<ICallLegs> {
+    const url = `${this.url}meetings/${conferenceID}/call-legs`;
+    return this.$http.get<ICallLegs>(url).then(this.extractData);
+  }
+
+  public getJoinMeetingTime(conferenceID: string): ng.IPromise<IJoinTime> {
     const url = `${this.url}meetings/${conferenceID}/participants/join-meeting-time`;
-    return this.$http.get(url).then(this.extractData);
+    return this.$http.get<IJoinTime>(url).then(this.extractData);
   }
 
-  public getServerTime() {
+  public getServerTime(): ng.IPromise<IServerTime> {
     const url = `${this.url}server`;
-    return this.$http.get(url).then(this.extractData);
+    return this.$http.get<IServerTime>(url).then(this.extractData);
   }
 
-  public getStatus(num) {
+  public getStatus(num: number): string {
     const statusArr = ['inProgress', 'ended'];
     return this.$translate.instant('webexReports.meetingStatus.' + statusArr[num - 1]);
   }
@@ -70,16 +161,16 @@ export class SearchService {
     return moment.utc(date).utcOffset(offset).format('YYYY-MM-DD hh:mm:ss A');
   }
 
-  public getOffset(timeZone) {
+  public getOffset(timeZone: any): string {
     const tz = timeZone ? timeZone : moment.tz.guess();
     return moment().tz(tz).format('Z');
   }
 
-  public getGuess(tz) {
+  public getGuess(tz: string): string {
     return tz ? '' : moment.tz.guess();
   }
 
-  public getNames(tz) {
+  public getNames(tz: string): string | string[] {
     return tz ? '' : moment.tz.names();
   }
 
@@ -104,7 +195,7 @@ export class SearchService {
     return arr[key] ? arr[key] : 'Other';
   }
 
-  public getParticipantEndReson(endReson) {
+  public getParticipantEndReson(endReson: string): string {
     if (endReson === null) {
       return '';
     }
@@ -122,11 +213,15 @@ export class SearchService {
     }
 
     if (platform === 10) {
-      return { icon: 'icon-devices', name: 'TelePresence' };
+      return { icon: 'icon-devices', name: '' };
+    }
+
+    if (platform === 15) {
+      return { icon: 'icon-application', name: 'Thin Client' };
     }
 
     if (sessionType === 25 || platform === 9) {
-      return { icon: 'icon-phone', name: 'IP Phone' };
+      return { icon: 'icon-phone', name: 'Phone' };
     }
 
     if (platform < 7) {
@@ -136,7 +231,12 @@ export class SearchService {
     return { icon: '', name: 'Other' };
   }
 
-  public getDuration(duration) {
+  public getRealDevice(conferenceID: string, nodeID: string): ng.IPromise<ICallType> {
+    const url = `${this.url}meetings/${conferenceID}/participants/${nodeID}/device`;
+    return this.$http.get<ICallType>(url).then(this.extractData);
+  }
+
+  public getDuration(duration: number): string {
     if (!duration) {
       return '';
     }
@@ -149,7 +249,7 @@ export class SearchService {
     return hours ? `${hours}:${minutes}:${seconds}` : `${minutes}:${seconds}`;
   }
 
-  private extractData(response) {
+  private extractData<T>(response: ng.IHttpResponse<T>): T {
     return _.get(response, 'data');
   }
 }

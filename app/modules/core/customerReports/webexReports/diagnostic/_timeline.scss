@@ -104,18 +104,22 @@ $tl-padding-right: 30px;
     }
 
     .goodLine {
-      stroke-dasharray: 0;
+      stroke-dasharray: none;
       stroke: $color-green-base;
     }
 
     .fairLine {
-      stroke-dasharray: 0;
+      stroke-dasharray: none;
       stroke: $color-yellow-base;
     }
 
     .poorLine {
+      stroke-dasharray: none;
       stroke: #FF503C;
-      stroke-dasharray: 1, 7;
+    }
+
+    .defaultLine {
+      stroke-dasharray: none;
     }
   }
 
@@ -166,6 +170,9 @@ $tl-padding-right: 30px;
           width: 120px;
         }
       }
+    }
+    .legendLine {
+      padding: 0;
     }
     text {
       stroke-width: 1;

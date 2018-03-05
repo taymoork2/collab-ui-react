@@ -84,7 +84,6 @@ describe('Component: dgcTabMeetingdetail', () => {
     this.initModules(testModule);
     this.injectDependencies('$q', 'SearchService', 'Notification', '$timeout');
 
-    initSpies.apply(this);
     this.SearchService.setStorage('webexOneMeeting', this.meeting);
   });
 
@@ -101,12 +100,14 @@ describe('Component: dgcTabMeetingdetail', () => {
   }
 
   it('Should get correct conferenceId from view', function () {
+    initSpies.call(this);
     initComponent.call(this);
 
     expect(this.view.find(this.createdTimeNode)).toHaveText('2017-11-11');
   });
 
   it('should get sourceData and circleColor data', function () {
+    initSpies.call(this);
     this.SearchService.getQOS.and.returnValue(this.$q.resolve(this.pstnQOS));
     this.SearchService.getUniqueParticipants.and.returnValue(this.$q.resolve(this.uniqueParticipants));
     initComponent.call(this);
@@ -114,6 +115,7 @@ describe('Component: dgcTabMeetingdetail', () => {
   });
 
   it('should get correct data  when call onChangeQOS', function () {
+    initSpies.call(this);
     this.SearchService.getQOS.and.returnValue(this.$q.resolve(this.cmrQOS));
     this.SearchService.getUniqueParticipants.and.returnValue(this.$q.resolve(this.uniqueParticipants));
     initComponent.call(this);
@@ -124,8 +126,94 @@ describe('Component: dgcTabMeetingdetail', () => {
   });
 
   it('Should call Notification.errorResponse when response status is 404', function () {
+    initSpies.call(this);
     this.SearchService.getUniqueParticipants.and.returnValue(this.$q.reject({ status: 404 }));
     initComponent.call(this);
     expect(this.Notification.errorResponse).toHaveBeenCalled();
+  });
+
+  it('Should get "Good" voip quality', function() {
+    initComponent.call(this);
+    expect(this.controller.getVoipVideoQuality({latency: 100, packageLossRate: 0.01, }, 'voip')).toBe(1);
+  });
+
+  it('Should get "Fair" voip quality', function() {
+    initComponent.call(this);
+    expect(this.controller.getVoipVideoQuality({latency: 400, packageLossRate: 0.04, }, 'voip')).toBe(2);
+  });
+
+  it('Should get "Bad" voip quality', function() {
+    initComponent.call(this);
+    expect(this.controller.getVoipVideoQuality({latency: 500, packageLossRate: 0.06, }, 'voip')).toBe(3);
+  });
+
+  it('Should get "Good" video quality', function() {
+    initComponent.call(this);
+    expect(this.controller.getVoipVideoQuality({latency: 100, packageLossRate: 0.01, }, 'video')).toBe(1);
+  });
+
+  it('Should get "Bad" video quality', function() {
+    initComponent.call(this);
+    expect(this.controller.getVoipVideoQuality({latency: 500, packageLossRate: 0.06, }, 'video')).toBe(3);
+  });
+
+  it('Should retry to get PSTN QOS data', function() {
+    initComponent.call(this);
+    const mockData = { "16797697": {completed: false, items: [], }, };
+    spyOn(this.SearchService, 'getQOS').and.callFake(function () {
+      return {
+        then: function (callback) {
+          return callback(mockData);
+        },
+      };
+    });
+    
+    this.controller.data['pstnReqtimes'] = 4;
+    this.controller.pstnQOS(['16797697']);
+    this.$timeout.flush();
+    expect(this.controller.data['pstnReqtimes']).toBe(5);
+  });
+
+  it('Should retry to get CMR QOS data', function() {
+    initComponent.call(this);
+    const mockData = { "16797697": {completed: false, items: [], }, };
+    spyOn(this.SearchService, 'getQOS').and.callFake(function () {
+      return {
+        then: function (callback) {
+          return callback(mockData);
+        },
+      };
+    });
+    
+    this.controller.data['cmrReqtimes'] = 4;
+    this.controller.cmrQOS(['16797697']);
+    this.$timeout.flush();
+    expect(this.controller.data['cmrReqtimes']).toBe(5);
+  });
+
+  it('Should get line circle data', function () {
+    initComponent.call(this);
+    const mockData = { "16797697": {completed: false, items: [], }, };
+    
+    this.controller.data['voipReqtimes'] = 4;
+    this.controller.getLineCircleData(mockData, 'voip');
+    this.$timeout.flush();
+    expect(this.controller.data['voipReqtimes']).toBe(5);
+  });
+
+  it('Should handle Call-Legs data', function() {
+    initComponent.call(this);
+    const mockData = {"tahoeInfo": [{"nodeId": "16797697", }], "voIPInfo": [{"nodeId": "16797697", }], "videoInfo": [{"nodeId": "16797697", }], };
+    spyOn(this.SearchService, 'getCallLegs').and.callFake(function () {
+      return {
+        then: function (callback) {
+          return callback(mockData);
+        },
+      };
+    });
+
+    const mockParam = [{"sessionType": "0", "platform": "10", "participants": [{"nodeId": "18797105", }], }, {"sessionType": "0", "platform": "0", "participants": [{"nodeId": "28991123", }], }];
+    this.controller.callLegs(mockParam);
+    expect(this.controller.callLegsData).toBeDefined();
   });
 });
