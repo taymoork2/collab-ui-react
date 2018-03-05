@@ -1995,42 +1995,6 @@
               },
             },
           })
-          .state('site-list.linked.details.wizard', {
-            views: {
-              'modal@': {
-                template: '<account-linking-wizard dismiss="$dismiss()" site-info="$resolve.siteInfo" operation="$resolve.operation" launch-webex-fn="$resolve.launchWebexFn(site, useHomepage)" set-account-linking-mode-fn="$resolve.setAccountLinkingModeFn(siteUrl, mode, domains)"></account-linking-wizard>',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'account-linking-wizard-custom';
-                  },
-                },
-              },
-            },
-            params: {
-              siteInfo: null,
-              operation: null,
-              launchWebexFn: null,
-              setAccountLinkingModeFn: null,
-            },
-            resolve: {
-              siteInfo: /*@ngInject */ function ($stateParams) {
-                return $stateParams['siteInfo'];
-              },
-              operation: /*@ngInject */ function ($stateParams) {
-                return $stateParams['operation'];
-              },
-              launchWebexFn: /*@ngInject */ function ($stateParams) {
-                return $stateParams['launchWebexFn'];
-              },
-              setAccountLinkingModeFn: /*@ngInject */ function ($stateParams) {
-                return $stateParams['setAccountLinkingModeFn'];
-              },
-            },
-            onEnter: modalOnEnter({
-              type: 'full',
-            }),
-            onExit: modalOnExit,
-          })
           .state('site-list-add', {
             parent: 'modal',
             views: {
