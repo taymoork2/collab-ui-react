@@ -142,6 +142,19 @@ describe('Controller: UserOverviewCtrl', function () {
       expect(this.controller.currentUser.trainSiteNames).toHaveLength(1);
     });
 
+    it('should set hasLinkedSites to false by default', function () {
+      initController.apply(this);
+      expect(this.controller.hasLinkedSites).toBe(false);
+    });
+
+    it('should set hasLinkedSites to true if linkedTrainsSiteNames is not empty', function () {
+      initController.apply(this);
+      this.updatedUser.linkedTrainSiteNames = ['testLinkSite'];
+      this.$scope.$broadcast('USER_LIST_UPDATED');
+      this.$scope.$digest();
+      expect(this.controller.hasLinkedSites).toBe(true);
+    });
+
     it('should have available messaging actions if user has assignable jabber interop entitlement', function () {
       initController.apply(this);
       var msgState = _.find(this.controller.services, { state: 'messaging' });
