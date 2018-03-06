@@ -35,6 +35,15 @@ export enum LicenseChangeOperation {
   REMOVE = 'REMOVE',
 }
 
+export enum OnboardMethod {
+  API = 'API',
+  MANUAL = 'MANUAL',
+  CSV = 'CSV',
+  DIRSYNC = 'DIRSYNC',
+  CONVERT = 'CONVERT',
+  OTHER = 'OTHER',
+}
+
 export interface IUserEntitlementRequestItem {
   entitlementName: UserEntitlementName;
   entitlementState: UserEntitlementState;

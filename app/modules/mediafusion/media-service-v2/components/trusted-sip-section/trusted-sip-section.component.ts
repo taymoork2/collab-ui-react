@@ -56,14 +56,11 @@ class TrustedSipSectionCtrl implements ng.IComponentController {
           this.trustedsipconfiguration = [];
         }
       });
-    /*if (_.isFunction(this.onTrustedSipConfigurationUpdate)) {
-      this.onTrustedSipConfigurationUpdate({ someData: { trustedsipconfiguration: this.trustedsipconfiguration } });
-    }*/
   }
 
   public trustedSipUpdate () {
     if (_.isFunction(this.onTrustedSipConfigurationUpdate)) {
-      this.onTrustedSipConfigurationUpdate({ someData: { trustedsipconfiguration: this.trustedsipconfiguration } });
+      this.onTrustedSipConfigurationUpdate({ response: { trustedsipconfiguration: this.trustedsipconfiguration } });
     }
   }
   public saveTrustedSip(): void {

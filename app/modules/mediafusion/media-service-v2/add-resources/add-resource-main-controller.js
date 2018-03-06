@@ -5,14 +5,14 @@
     .module('Mediafusion')
     .controller('AddResourceMainController', AddResourceMainController);
   /* @ngInject */
-  function AddResourceMainController($modal, hasMfFeatureToggle, hasMfSIPFeatureToggle, hasMfCascadeBwConfigToggle, hasMfClusterWizardFeatureToggle) {
+  function AddResourceMainController($modal, hasMfCascadeBwConfigToggle, hasMfClusterWizardFeatureToggle, hasMfFeatureToggle, hasMfSIPFeatureToggle) {
     WizardSelector();
 
     function WizardSelector() {
       if (hasMfClusterWizardFeatureToggle) {
         $modal.open({
           type: 'modal',
-          controller: 'clusterCreationWizardController',
+          controller: 'ClusterCreationWizardController',
           controllerAs: 'clusterCreationWizard',
           template: require('modules/mediafusion/media-service-v2/add-resource-wizard/cluster-creation-wizard.tpl.html'),
           modalClass: 'redirect-add-resource',

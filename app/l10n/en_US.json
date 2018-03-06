@@ -364,7 +364,8 @@
         "tooltip": "If one subscription runs out of licenses, the next selected subscription automatically assigns more.",
         "usage": "Usage: {{ usage }}/{{ volume }}",
         "careDisabledTooltip": "Care licenses are only assigned to Care agents.",
-        "warningFooter": "At least one service needs to be selected to continue."
+        "warningFooter": "At least one service needs to be selected to continue.",
+        "rowTitle": "Subscription: {{ subscriptionId }}"
       },
       "editSummary": {
         "title": "Set Up Auto-Assign Template",
@@ -724,6 +725,7 @@
     "webex": "WebEx Classic",
     "devReports": "Development Customer Reports",
     "sparkReports": "Cisco Spark",
+    "autoLicense": "Onboarding",
     "downloadOptions": "Download Options",
     "careTab": "Care",
     "careTabDesc": "Cloud Contact Center",
@@ -1773,6 +1775,7 @@
     "nextBtn": "Next",
     "convertUsers": "Convert Unlicensed Users",
     "unlicensedUsers": "Unlicensed Users",
+    "licensesNeedToBeRedistributed": "The license count is off for WebEx sites associated with subscription {{subscriptionId}}. Please redistribute licenses among your WebEx sites.",
     "convertUsersText": "Convert employees to a licensed user who have signed up for Cisco Spark on their own with a company email address.  Licensed users receive additional enterprise features, and are subject to your organization’s policies and administration.",
     "convertUsersDirSyncEnabledWarning": "Users cannot be converted while Directory Synchronization is enabled. Disable Directory Synchronization from the Settings page in order to convert users.",
     "convertError": " could not be converted. Contact support for assistance converting this user.",
@@ -2482,7 +2485,6 @@
       "disableAwareMessage": "Are you sure? By disabling Call Service Aware, Call Service Connect will also be disabled for this user.",
       "errorMessages": {
         "cannotReadUserDataFromCI": "Could not read user's licensing data.",
-        "cannotReadOrgDataFromFMS": "Could not read service activation status.",
         "cannotReadDeviceDataFromUSS": "Unable to read device's activation status.",
         "cannotReadDeviceDataFromUSSPartnerAdmin": "Unable to read device's activation status. This could indicate a caching problem, try logging out and in again to clear the user cache.",
         "cannotReadUserDataFromUSS": "Unable to read user's activation status.",
@@ -7799,6 +7801,7 @@
     "deleteFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?",
     "deleteVaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}? Deleting the Customer Virtual Assistant removes it from all Customer Support Templates. Customers can no longer interact with the virtual assistant.",
     "deleteEvaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}? You can no longer escalate chat requests to Cisco Spark expert spaces.",
+    "deleteAbcFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}? All customer interactions will be deleted. Customers can no longer use iMessage to interact with Spark Care agents or Customer Virtual Assistants.",
     "createSuccessText": "You have successfully created {{ featureName }}.",
     "createTemplateFailureText": "Failed to create Care template.",
     "editSuccessText": "Changes to {{ featureName }} are successfully saved.",
@@ -10747,13 +10750,19 @@
       "title": "HCS Licenses",
       "description": "Extend Licensing services to Hosted Cloud Solution.",
       "perpetual": "Perpetual",
-      "subscriptions": "Subscriptions"
+      "subscriptions": "Subscriptions",
+      "laas": "License as a Service"
     },
     "upgrade": {
       "title": "HCS Upgrade Settings",
       "description": "Extend Upgrade services to Hosted Cloud Solution.",
       "sftp": "SFTP Servers",
-      "softwareProfiles": "Software Profiles"
+      "softwareProfiles": "Software Profiles",
+      "uaas": "Upgrade as a Service"
+    },
+    "setup": {
+      "titleServices": "Choose Services",
+      "selectDescription": "Choose the HCS Service for Setup"
     },
     "inventory": {
       "title": "Inventory"

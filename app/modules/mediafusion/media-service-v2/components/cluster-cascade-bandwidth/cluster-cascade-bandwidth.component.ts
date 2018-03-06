@@ -44,7 +44,7 @@ export class ClusterCascadeBandwidthController implements ng.IComponentControlle
       this.bandwidthError = true;
     }
     if (_.isFunction(this.onCascadeBandwidthUpdate)) {
-      this.onCascadeBandwidthUpdate({ someData: { cascadeBandwidth: this.cascadeBandwidthConfiguration , inValidBandwidth : this.inValidValue } });
+      this.onCascadeBandwidthUpdate({ response: { cascadeBandwidth: this.cascadeBandwidthConfiguration , inValidBandwidth : this.inValidValue } });
     }
   }
 

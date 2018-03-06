@@ -37,7 +37,7 @@ class HybridMediaUpgradeScheduleCtrl implements ng.IComponentController {
 
   public onFormDataChanged () {
     if (_.isFunction(this.onUpgradeScheduleUpdate)) {
-      this.onUpgradeScheduleUpdate({ someData: { upgradeSchedule: this.formData } });
+      this.onUpgradeScheduleUpdate({ response: { upgradeSchedule: this.formData } });
     }
   }
 

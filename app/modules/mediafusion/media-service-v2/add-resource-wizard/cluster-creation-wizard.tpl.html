@@ -1,66 +1,65 @@
 <div class="modal-header">
-    <button type="button" class="close" ng-click="clusterCreationWizard.closeSetupModal()" aria-label="{{::'common.close' | translate}}"></button>
-    <h5 class="modal-title">{{clusterCreationWizard.headerSelected.label}}
-      <span {{clusterCreationWizard.headerSelected.label}}></span>
-      </h5>
+  <button type="button" class="close" ng-click="clusterCreationWizard.closeSetupModal()" aria-label="{{::'common.close' | translate}}"></button>
+  <h5 class="modal-title">{{clusterCreationWizard.headerSelected.label}}
+    <span {{clusterCreationWizard.headerSelected.label}}></span>
+  </h5>
+</div>
+<div class="modal-body">
+  <add-resource-section
+    on-cluster-list-update="clusterCreationWizard.clusterListUpdated(response)"
+    on-host-name-update= "clusterCreationWizard.hostNameUpdated(response)"
+    on-cluster-name-update= "clusterCreationWizard.clusterNameUpdated(response)"
+    ng-show="clusterCreationWizard.currentStep === 0">
+  </add-resource-section>
+  <div ng-if="clusterCreationWizard.hasMfFeatureToggle">
+    <sip-registration-section 
+      cluster="clusterCreationWizard.clusterDetail"
+      is-wizard="true"
+      on-sip-config-url-update=  "clusterCreationWizard.sipConfigUrlUpdated(response)"
+      ng-show="clusterCreationWizard.currentStep === 1">
+    </sip-registration-section>
   </div>
-  <div class="modal-body">
-    <add-resource-section
-      on-data-update="clusterCreationWizard.childHasUpdatedData(someData)"
-      on-host-update= "clusterCreationWizard.hostUpdateData(someData)"
-      on-cluster-update= "clusterCreationWizard.clusterUpdatedData(someData)"
-      ng-show="clusterCreationWizard.currentStep === 0">
-    </add-resource-section>
-    <div ng-if="clusterCreationWizard.hasMfFeatureToggle">
-      <sip-registration-section 
-        cluster="clusterCreationWizard.clusterDetail"
-        is-wizard="true"
-        on-sip-config-url-update=  "clusterCreationWizard.sipConfigUrlUpdatedData(someData)"
-        ng-show="clusterCreationWizard.currentStep === 1">
-      </sip-registration-section>
-    </div>
-    <div ng-if="clusterCreationWizard.hasMfSIPFeatureToggle">
-      <trusted-sip-section 
-        is-wizard="true"
-        cluster="clusterCreationWizard.clusterDetail"
-        on-trusted-sip-configuration-update = "clusterCreationWizard.trustedSipConfigUpdatedData(someData)"
-        ng-show="clusterCreationWizard.currentStep === 1">
-    </trusted-sip-section>
-    </div>
-    <div ng-if="clusterCreationWizard.hasMfCascadeBwConfigToggle">
-      <cluster-cascade-bandwidth 
-        on-cascade-bandwidth-update="clusterCreationWizard.cascadeBandwidthUpdatedData(someData)"
-        cluster="clusterCreationWizard.clusterDetail"
-        is-wizard="true"
-        ng-show="clusterCreationWizard.currentStep === 1">
-      </cluster-cascade-bandwidth>
-    </div>
-    <hybrid-media-upgrade-schedule
-      on-upgrade-schedule-update="clusterCreationWizard.upgradeScheduleUpdatedData(someData)"
-      ng-show="clusterCreationWizard.currentStep === 2">
-    </hybrid-media-upgrade-schedule>
-    <hybrid-media-release-channel
-       on-release-channel-update="clusterCreationWizard.releaseChannelUpdatedData(someData)"
-      ng-show="clusterCreationWizard.currentStep === 2">
-     </hybrid-media-release-channel>
-    <cluster-creation-final
-     cluster="clusterCreationWizard.clusterName"
-     host="clusterCreationWizard.hostName"
-     ng-show="clusterCreationWizard.currentStep === 3">
-    </cluster-creation-final>
+  <div ng-if="clusterCreationWizard.hasMfSIPFeatureToggle">
+    <trusted-sip-section 
+      is-wizard="true"
+      cluster="clusterCreationWizard.clusterDetail"
+      on-trusted-sip-configuration-update = "clusterCreationWizard.trustedSipConfigUpdated(response)"
+      ng-show="clusterCreationWizard.currentStep === 1">
+  </trusted-sip-section>
   </div>
-  <div class="modal-footer">
-    <button ng-show="clusterCreationWizard.currentStep === 0" class="btn" ng-click="clusterCreationWizard.closeSetupModal()">
-      <span translate="mediaFusion.add-resource-dialog.cancel"></span>
-    </button>
-    <button ng-hide="clusterCreationWizard.currentStep === 0" class="btn" ng-click="clusterCreationWizard.back()">
-        <span translate="mediaFusion.add-resource-dialog.back"></span>
-      </button>
-    <button ng-hide="clusterCreationWizard.currentStep === 3" class="btn activate-button btn--primary" ng-click="clusterCreationWizard.next()"
-    ng-disabled="!clusterCreationWizard.canGoNext()">
-      <span translate="mediaFusion.add-resource-dialog.next"></span>
-    </button>
-    <button ng-show="clusterCreationWizard.currentStep === 3" class="btn activate-button btn--primary" ng-click="clusterCreationWizard.createCluster()">
-      <span translate="mediaFusion.easyConfig.toNode"></span>
-    </button>
+  <div ng-if="clusterCreationWizard.hasMfCascadeBwConfigToggle">
+    <cluster-cascade-bandwidth 
+      on-cascade-bandwidth-update="clusterCreationWizard.cascadeBandwidthUpdated(response)"
+      cluster="clusterCreationWizard.clusterDetail"
+      is-wizard="true"
+      ng-show="clusterCreationWizard.currentStep === 1">
+    </cluster-cascade-bandwidth>
   </div>
+  <hybrid-media-upgrade-schedule
+    on-upgrade-schedule-update="clusterCreationWizard.upgradeScheduleUpdated(response)"
+    ng-show="clusterCreationWizard.currentStep === 2">
+  </hybrid-media-upgrade-schedule>
+  <hybrid-media-release-channel
+      on-release-channel-update="clusterCreationWizard.releaseChannelUpdated(response)"
+    ng-show="clusterCreationWizard.currentStep === 2">
+    </hybrid-media-release-channel>
+  <cluster-creation-final
+    cluster="clusterCreationWizard.clusterName"
+    host="clusterCreationWizard.hostName"
+    ng-show="clusterCreationWizard.currentStep === 3">
+  </cluster-creation-final>
+</div>
+<div class="modal-footer">
+  <button ng-show="clusterCreationWizard.currentStep === 0" class="btn" ng-click="clusterCreationWizard.closeSetupModal()">
+    <span translate="mediaFusion.add-resource-dialog.cancel"></span>
+  </button>
+  <button ng-hide="clusterCreationWizard.currentStep === 0" class="btn" ng-click="clusterCreationWizard.back()">
+    <span translate="mediaFusion.add-resource-dialog.back"></span>
+  </button>
+  <button ng-hide="clusterCreationWizard.currentStep === 3" class="btn activate-button btn--primary" ng-click="clusterCreationWizard.next()" ng-disabled="!clusterCreationWizard.canGoNext()">
+    <span translate="mediaFusion.add-resource-dialog.next"></span>
+  </button>
+  <button ng-show="clusterCreationWizard.currentStep === 3" class="btn activate-button btn--primary" ng-click="clusterCreationWizard.createCluster()">
+    <span translate="mediaFusion.easyConfig.toNode"></span>
+  </button>
+</div>

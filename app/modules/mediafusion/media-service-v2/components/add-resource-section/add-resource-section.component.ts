@@ -30,38 +30,32 @@ export class AddResourceSectionController implements ng.IComponentController {
   public selectPlaceHolder: string;
   public clusterExist: boolean = false;
   public clusterExistError: string;
-  private onClusterUpdate?: Function;
-  private onDataUpdate?: Function;
-  private onHostUpdate?: Function;
+  private onClusterNameUpdate?: Function;
+  private onClusterListUpdate?: Function;
+  private onHostNameUpdate?: Function;
 
   public $onInit(): void {
-    //this.firstTimeSetup = (this.$state.current.name === 'services-overview');
     this.selectPlaceHolder = this.$translate.instant('mediaFusion.easyConfig.existingCluster');
     this.AddResourceSectionService.updateClusterLists().then((clusterList) => {
       this.clusterList = clusterList;
-      if (_.isFunction(this.onDataUpdate)) {
-        this.onDataUpdate({ someData: { clusterlist: this.clusterList } });
+      if (_.isFunction(this.onClusterListUpdate)) {
+        this.onClusterListUpdate({ response: { clusterlist: this.clusterList } });
       }
     }).catch((error) => {
       this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
     });
     this.onlineNodeList = this.AddResourceSectionService.onlineNodes();
     this.offlineNodeList = this.AddResourceSectionService.offlineNodes();
-    /*this.$q.all({
-      proPackEnabled: this.ProPackService.hasProPackPurchased(),
-    }).then((toggles) => {
-      this.proPackEnabled = toggles.proPackEnabled;
-    });*/
   }
 
   public validateHostName() {
-    if (_.isFunction(this.onHostUpdate)) {
-      this.onHostUpdate({ someData: { hostName: this.hostName } });
+    if (_.isFunction(this.onHostNameUpdate)) {
+      this.onHostNameUpdate({ response: { hostName: this.hostName } });
     }
-    if ((this.onlineNodeList.indexOf(this.hostName) > -1)) {
+    if (_.includes(this.onlineNodeList, this.hostName)) {
       this.onlinenode = true;
       this.offlinenode = false;
-    } else if ((this.offlineNodeList.indexOf(this.hostName) > -1)) {
+    } else if (_.includes(this.offlineNodeList, this.hostName)) {
       this.onlinenode = false;
       this.offlinenode = true;
     } else {
@@ -71,14 +65,10 @@ export class AddResourceSectionController implements ng.IComponentController {
   }
 
   public validateClusterName () {
-    if (_.isFunction(this.onClusterUpdate)) {
-      this.onClusterUpdate({ someData: { clusterName: this.enteredCluster } });
+    if (_.isFunction(this.onClusterNameUpdate)) {
+      this.onClusterNameUpdate({ response: { clusterName: this.enteredCluster } });
     }
-    if ((this.clusterList.indexOf(this.enteredCluster) > -1)) {
-      this.clusterExist = true;
-    } else {
-      this.clusterExist = false;
-    }
+    return this.clusterExist = (_.includes(this.clusterList, this.enteredCluster)) ? true : false;
   }
 
 }
@@ -87,8 +77,8 @@ export class AddResourceSectionComponent implements ng.IComponentOptions {
   public controller = AddResourceSectionController;
   public template = require('./add-resource-section.tpl.html');
   public bindings = {
-    onDataUpdate: '&?',
-    onHostUpdate: '&?',
-    onClusterUpdate: '&?',
+    onClusterListUpdate: '&?',
+    onClusterNameUpdate: '&?',
+    onHostNameUpdate: '&?',
   };
 }

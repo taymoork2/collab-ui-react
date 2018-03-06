@@ -232,6 +232,7 @@
     require('modules/mediafusion/media-service-v2/components/hybrid-media-upgrade-schedule').default,
     require('modules/mediafusion/media-service-v2/components/sip-registration-section').default,
     require('modules/mediafusion/media-service-v2/components/trusted-sip-section').default,
+    require('modules/mediafusion/media-service-v2/components/video-quality-section').default,
     require('modules/mediafusion/media-service-v2/resources').default,
   ]);
 
@@ -274,6 +275,8 @@
     require('modules/hcs/shared').default,
     require('modules/hcs/inventory').default,
     require('modules/hcs/install-files').default,
+    require('modules/hcs/services').default,
+    require('modules/hcs/setup').default,
   ]);
 
   angular.module('ServicesOverview', [

@@ -43,7 +43,7 @@ class SipRegistrationSectionCtrl implements ng.IComponentController {
 
   public sipUpdate () {
     if (_.isFunction(this.onSipConfigUrlUpdate)) {
-      this.onSipConfigUrlUpdate({ someData: { sipConfigUrl: this.sipConfigUrl } });
+      this.onSipConfigUrlUpdate({ response: { sipConfigUrl: this.sipConfigUrl } });
     }
   }
   public saveSipTrunk(): void {

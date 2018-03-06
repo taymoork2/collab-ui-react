@@ -1,46 +1,65 @@
 <setting-section setting="$ctrl.addResourceSection">
-        <div class="sub-section">
-          <h5 class="sub-section__label" translate="mediaFusion.easyConfig.clusterInfo"></h5>
-          <p class="sub-section__description" translate="mediaFusion.easyConfig.createMessage"></p>
-          <form name="myRadioForm">
-            <div class="cs-radio-group radioGroup">
-                <div class="cs-input-group cs-input-radio">
-                  <input cs-input type="radio" ng-model="$ctrl.radio" id="mf-add-resource-section-new" name="addResource" ng-value='1' cs-input-label="{{'mediaFusion.easyConfig.enterCluster' | translate}}">
-                  <div ng-show="$ctrl.radio === 1" class="columns medium-11 inputHostNameForm">
-                    <input cs-input type="text"
-                    ng-model="$ctrl.enteredCluster"
-                    ng-change="$ctrl.validateClusterName()"
-                    cs-input-help-text="{{:: 'mediaFusion.easyConfig.clusterHelpText' | translate}}"
-                    placeholder="{{'mediaFusion.easyConfig.enterCluster' | translate}} ">
-                    <div role="alert" ng-show='$ctrl.clusterExist'>
-                        <div class="node-error" ng-if="$ctrl.clusterExist" translate="mediaFusion.easyConfig.clusterExistError"></div>
-                    </div>
-                  </div>
-                  <input cs-input type="radio" ng-model="$ctrl.radio" id="mf-add-resource-section-existing" name="addResource" ng-value='0' cs-input-label="{{'mediaFusion.easyConfig.existingCluster' | translate}}" >
-                  <div class="row" ng-show="$ctrl.radio === 0">
-                      <div class="columns medium-11">
-                        <cs-select ng-model="$ctrl.enteredCluster" options="$ctrl.clusterList" labelfield="label"
-                        ng-change="$ctrl.validateClusterName()" placeholder="$ctrl.selectPlaceHolder">
-                        </cs-select>
-                      </div>
-                  </div>
-                </div>
+  <div class="sub-section">
+    <h5 class="sub-section__label" translate="mediaFusion.easyConfig.clusterInfo"></h5>
+    <p class="sub-section__description" translate="mediaFusion.easyConfig.createMessage"></p>
+    <form name="myRadioForm">
+      <div class="cs-radio-group radioGroup">
+        <div class="cs-input-group cs-input-radio">
+          <input 
+            cs-input 
+            type="radio"
+            ng-model="$ctrl.radio"
+            id="mf-add-resource-section-new" 
+            name="addResource" 
+            ng-value='1' 
+            cs-input-label="{{'mediaFusion.easyConfig.enterCluster' | translate}}">
+          <div ng-show="$ctrl.radio === 1" class="columns medium-11 inputHostNameForm">
+            <input 
+              cs-input 
+              type="text"
+              ng-model="$ctrl.enteredCluster"
+              ng-change="$ctrl.validateClusterName()"
+              cs-input-help-text="{{:: 'mediaFusion.easyConfig.clusterHelpText' | translate}}"
+              placeholder="{{'mediaFusion.easyConfig.enterCluster' | translate}} ">
+            <div role="alert" ng-show='$ctrl.clusterExist'>
+              <div class="node-error" ng-if="$ctrl.clusterExist" translate="mediaFusion.easyConfig.clusterExistError"></div>
             </div>
-          </form>
-        </div>
-        <div class="sub-section">
-            <h5 class="sub-section__label" translate="mediaFusion.easyConfig.mediaNode"></h5>
-            <p class="sub-section__description" translate="mediaFusion.easyConfig.mediaNodeMessage"></p>
-            <div class="columns medium-8 inputHostNameForm">
-              <input cs-input type="text" ng-model="$ctrl.hostName"
-              messages="$ctrl.errorMsg.general"
-              ng-change="$ctrl.validateHostName()"
-              placeholder="{{'mediaFusion.easyConfig.enterNode' | translate}}">    
-
-              <div role="alert" ng-show='$ctrl.onlinenode || $ctrl.offlinenode'>
-                  <div class="node-error" ng-if="$ctrl.onlinenode" translate="mediaFusion.add-resource-dialog.serverOnline"></div>
-                  <div class="node-error" ng-if="$ctrl.offlinenode" translate="mediaFusion.add-resource-dialog.serverOffline"></div>
-              </div>
+          </div>
+          <input 
+            cs-input 
+            type="radio"
+            ng-model="$ctrl.radio" 
+            id="mf-add-resource-section-existing" 
+            name="addResource" 
+            ng-value='0' 
+            cs-input-label="{{'mediaFusion.easyConfig.existingCluster' | translate}}" >
+          <div class="row" ng-show="$ctrl.radio === 0">
+            <div class="columns medium-11">
+              <cs-select 
+                ng-model="$ctrl.enteredCluster" 
+                options="$ctrl.clusterList" 
+                labelfield="label"
+                ng-change="$ctrl.validateClusterName()" 
+                placeholder="$ctrl.selectPlaceHolder">
+              </cs-select>
             </div>
+          </div>
         </div>
+      </div>
+    </form>
+  </div>
+  <div class="sub-section">
+    <h5 class="sub-section__label" translate="mediaFusion.easyConfig.mediaNode"></h5>
+    <p class="sub-section__description" translate="mediaFusion.easyConfig.mediaNodeMessage"></p>
+    <div class="columns medium-8 inputHostNameForm">
+      <input cs-input type="text" ng-model="$ctrl.hostName"
+        messages="$ctrl.errorMsg.general"
+        ng-change="$ctrl.validateHostName()"
+        placeholder="{{'mediaFusion.easyConfig.enterNode' | translate}}">    
+      <div role="alert" ng-show='$ctrl.onlinenode || $ctrl.offlinenode'>
+        <div class="node-error" ng-if="$ctrl.onlinenode" translate="mediaFusion.add-resource-dialog.serverOnline"></div>
+        <div class="node-error" ng-if="$ctrl.offlinenode" translate="mediaFusion.add-resource-dialog.serverOffline"></div>
+      </div>
+    </div>
+  </div>
 </setting-section>

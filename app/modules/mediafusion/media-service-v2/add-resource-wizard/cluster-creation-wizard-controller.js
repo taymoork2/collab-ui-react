@@ -3,10 +3,10 @@
 
   angular
     .module('Mediafusion')
-    .controller('clusterCreationWizardController', clusterCreationWizardController);
+    .controller('ClusterCreationWizardController', ClusterCreationWizardController);
 
   /* @ngInject */
-  function clusterCreationWizardController($translate, $state, $modalInstance, firstTimeSetup, $modal, AddResourceSectionService, TrustedSipSectionService, SipRegistrationSectionService, ClusterCascadeBandwidthService, HybridMediaUpgradeScheduleService, HybridMediaReleaseChannelService, hasMfFeatureToggle, hasMfSIPFeatureToggle, hasMfCascadeBwConfigToggle) {
+  function ClusterCreationWizardController($modal, $modalInstance, $state, $translate, AddResourceSectionService, ClusterCascadeBandwidthService, HybridMediaReleaseChannelService, HybridMediaUpgradeScheduleService, SipRegistrationSectionService, TrustedSipSectionService, firstTimeSetup, hasMfCascadeBwConfigToggle, hasMfFeatureToggle, hasMfSIPFeatureToggle) {
     var vm = this;
     vm.isSuccess = true;
     vm.closeSetupModal = closeSetupModal;
@@ -15,14 +15,14 @@
     vm.hostName = '';
     vm.clusterName = '';
     vm.firstTimeSetup = firstTimeSetup;
-    vm.childHasUpdatedData = childHasUpdatedData;
-    vm.hostUpdateData = hostUpdateData;
-    vm.clusterUpdatedData = clusterUpdatedData;
-    vm.cascadeBandwidthUpdatedData = cascadeBandwidthUpdatedData;
-    vm.sipConfigUrlUpdatedData = sipConfigUrlUpdatedData;
-    vm.trustedSipConfigUpdatedData = trustedSipConfigUpdatedData;
-    vm.upgradeScheduleUpdatedData = upgradeScheduleUpdatedData;
-    vm.releaseChannelUpdatedData = releaseChannelUpdatedData;
+    vm.clusterListUpdated = clusterListUpdated;
+    vm.hostNameUpdated = hostNameUpdated;
+    vm.clusterNameUpdated = clusterNameUpdated;
+    vm.cascadeBandwidthUpdated = cascadeBandwidthUpdated;
+    vm.sipConfigUrlUpdated = sipConfigUrlUpdated;
+    vm.trustedSipConfigUpdated = trustedSipConfigUpdated;
+    vm.upgradeScheduleUpdated = upgradeScheduleUpdated;
+    vm.releaseChannelUpdated = releaseChannelUpdated;
     vm.canGoNext = canGoNext;
     vm.hasMfFeatureToggle = hasMfFeatureToggle;
     vm.hasMfSIPFeatureToggle = hasMfSIPFeatureToggle;
@@ -74,69 +74,47 @@
       }
     }
 
-    function childHasUpdatedData(someData) {
-      if (!_.isUndefined(someData.clusterlist)) {
-        vm.clusterlist = someData.clusterlist;
-      }
+    function clusterListUpdated(response) {
+      if (!_.isUndefined(response.clusterlist)) vm.clusterlist = response.clusterlist;
     }
 
-    function hostUpdateData(someData) {
-      if (!_.isUndefined(someData.hostName)) {
-        vm.hostName = someData.hostName;
-      }
+    function hostNameUpdated(response) {
+      if (!_.isUndefined(response.hostName)) vm.hostName = response.hostName;
     }
 
-    function clusterUpdatedData(someData) {
-      if (!_.isUndefined(someData.clusterName)) {
-        vm.clusterName = someData.clusterName;
-      }
+    function clusterNameUpdated(response) {
+      if (!_.isUndefined(response.clusterName)) vm.clusterName = response.clusterName;
     }
 
-    function cascadeBandwidthUpdatedData(someData) {
-      if (!_.isUndefined(someData.cascadeBandwidth)) {
-        vm.cascadeBandwidth = someData.cascadeBandwidth;
-        vm.validCascadeBandwidth = someData.inValidBandwidth;
-      }
+    function upgradeScheduleUpdated(response) {
+      if (!_.isUndefined(response.upgradeSchedule)) vm.formDataForUpgradeSchedule = response.upgradeSchedule;
     }
 
-    function upgradeScheduleUpdatedData(someData) {
-      if (!_.isUndefined(someData.upgradeSchedule)) {
-        vm.formDataForUpgradeSchedule = someData.upgradeSchedule;
-      }
+    function releaseChannelUpdated(response) {
+      if (!_.isUndefined(response.releaseChannel)) vm.releaseChannel = response.releaseChannel;
     }
 
-    function releaseChannelUpdatedData(someData) {
-      if (!_.isUndefined(someData.releaseChannel)) {
-        vm.releaseChannel = someData.releaseChannel;
-      }
+    function sipConfigUrlUpdated(response) {
+      if (!_.isUndefined(response.sipConfigUrl)) vm.sipConfigUrl = response.sipConfigUrl;
     }
 
-    function sipConfigUrlUpdatedData(someData) {
-      if (!_.isUndefined(someData.sipConfigUrl)) {
-        vm.sipConfigUrl = someData.sipConfigUrl;
-      }
+    function trustedSipConfigUpdated(response) {
+      if (!_.isUndefined(response.trustedsipconfiguration)) vm.trustedsipconfiguration = response.trustedsipconfiguration;
     }
 
-    function trustedSipConfigUpdatedData(someData) {
-      if (!_.isUndefined(someData.trustedsipconfiguration)) {
-        vm.trustedsipconfiguration = someData.trustedsipconfiguration;
+    function cascadeBandwidthUpdated(response) {
+      if (!_.isUndefined(response.cascadeBandwidth)) {
+        vm.cascadeBandwidth = response.cascadeBandwidth;
+        vm.validCascadeBandwidth = response.inValidBandwidth;
       }
     }
 
     function newClusterCheck() {
-      if (vm.clusterlist.indexOf(vm.clusterName) > -1) {
-        return true;
-      } else {
-        return false;
-      }
+      return (_.includes(vm.clusterlist, vm.clusterName));
     }
 
     function clusterSettingsCheck() {
-      if (vm.hasMfFeatureToggle || vm.hasMfSIPFeatureToggle || vm.hasMfCascadeBwConfigToggle) {
-        return true;
-      } else {
-        return false;
-      }
+      return (vm.hasMfFeatureToggle || vm.hasMfSIPFeatureToggle || vm.hasMfCascadeBwConfigToggle);
     }
 
     function next() {

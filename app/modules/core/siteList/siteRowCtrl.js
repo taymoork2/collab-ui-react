@@ -21,7 +21,6 @@ require('./_site-list.scss');
     accountLinkingPhase2,
     Auth,
     Authinfo,
-    Config,
     ModalService,
     Notification,
     SetupWizardService,
@@ -48,14 +47,7 @@ require('./_site-list.scss');
         vm.isShowAddSite = result;
       });
       vm.initializeData();
-      WebExSiteService.getCenterDetailsForAllSubscriptions().then(function (results) {
-        _.forEach(results, function (subscription) {
-          var matchingSubscription = _.find(vm.subscriptions, { subscriptionId: subscription.subscriptionId });
-          if (matchingSubscription) {
-            subscription.externalSubscriptionId = matchingSubscription.externalSubscriptionId;
-            subscription.purchasedServices = vm.filterPurchasedServicesArray(subscription.purchasedServices);
-          }
-        });
+      WebExSiteService.getAllCenterDetailsFromSubscriptions().then(function (results) {
         vm.allCenterDetailsForSubscriptions = results;
       });
     };
@@ -108,12 +100,6 @@ require('./_site-list.scss');
     vm.getCenterDetailsForSingleSubscription = function (externalSubId) {
       var singleSub = _.find(vm.allCenterDetailsForSubscriptions, { externalSubscriptionId: externalSubId });
       return _.get(singleSub, 'purchasedServices', []);
-    };
-
-    vm.filterPurchasedServicesArray = function (purchasedServicesArray) {
-      return _.filter(purchasedServicesArray, function (service) {
-        return _.includes(Config.webexTypeCodes, service.serviceName);
-      });
     };
 
     //if we are checking a single subscription - we pass the entity. If entity is not passed

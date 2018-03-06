@@ -27,7 +27,7 @@ class LinkedSitesDetailsComponentCtrl implements ng.IComponentController {
               private $scope: ng.IScope,
               private LinkedSitesService: LinkedSitesService,
   ) {
-    this.$log.debug('LinkedSitesDetailsComponentCtrl constructor, stateParams:');
+    this.$log.debug('LinkedSitesDetailsComponentCtrl constructor');
   }
 
   public $onInit() {
@@ -35,8 +35,10 @@ class LinkedSitesDetailsComponentCtrl implements ng.IComponentController {
   }
 
   public modifyLinkingMethod() {
-    this.$log.info('Modify linking method by showing wizard using siteinfo:', this.selectedSiteInfo);
-    this.showWizardFn({ siteInfo: this.selectedSiteInfo });
+    this.$log.debug('Modify linking method from details slidin by launching wizard with siteInfo:', this.selectedSiteInfo);
+    this.showWizardFn({
+      siteInfo: this.selectedSiteInfo,
+    });
   }
 
   public showReports(siteUrl) {

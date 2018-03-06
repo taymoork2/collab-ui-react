@@ -7,13 +7,12 @@ export class AddResourceSectionService {
 
   /* @ngInject */
   constructor(
+    private $window: ng.IWindowService,
+    private $translate: ng.translate.ITranslateService,
     private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesExtrasService: HybridServicesExtrasService,
     private MediaClusterServiceV2,
     private Notification: Notification,
-    private $q: ng.IQService,
-    private $window: ng.IWindowService,
-    private $translate: ng.translate.ITranslateService,
   ) { }
 
   private clusterDetail: ICluster;
@@ -49,17 +48,15 @@ export class AddResourceSectionService {
     const clusterList: any = [];
     return this.getClusterList()
       .then((clusters) => {
-        _.each(clusters, (cluster) => {
-          if (cluster.targetType === 'mf_mgmt') {
-            clusterList.push(cluster.name);
-            _.each(cluster.connectors, (connector) => {
-              if ('running' === connector.state) {
-                this.onlineNodeList.push(connector.hostname);
-              } else {
-                this.offlineNodeList.push(connector.hostname);
-              }
-            });
-          }
+        _.forEach(clusters, (cluster) => {
+          clusterList.push(cluster.name);
+          _.forEach(cluster.connectors, (connector) => {
+            if ('running' === connector.state) {
+              this.onlineNodeList.push(connector.hostname);
+            } else {
+              this.offlineNodeList.push(connector.hostname);
+            }
+          });
         });
         this.clusterList = clusterList;
         this.clusterList = _.sortBy(this.clusterList, (cluster) => {
@@ -78,14 +75,9 @@ export class AddResourceSectionService {
   }
   public addRedirectTargetClicked(hostName: string, enteredCluster) {
     //Checking if value in selected cluster is in cluster list
-    _.each(this.clusters, (cluster) => {
-      if (cluster.name === enteredCluster) {
-        this.clusterDetail = cluster;
-      }
-    });
+    this.clusterDetail = _.find(this.clusters, { name: enteredCluster });
     if (_.isUndefined(this.clusterDetail)) {
-      const deferred = this.$q.defer();
-      this.HybridServicesClusterService.preregisterCluster(enteredCluster, 'stable', 'mf_mgmt')
+      return this.HybridServicesClusterService.preregisterCluster(enteredCluster, 'stable', 'mf_mgmt')
         .then((resp) => {
           this.clusterDetail = resp;
           this.selectedClusterId = resp.id;
@@ -105,7 +97,7 @@ export class AddResourceSectionService {
                 }
               }
             });
-          deferred.resolve(this.whiteListHost(hostName, this.selectedClusterId));
+          return this.whiteListHost(hostName, this.selectedClusterId);
         })
         .catch((error) => {
           const errorMessage = this.$translate.instant('mediaFusion.clusters.clusterCreationFailed', {
@@ -113,7 +105,6 @@ export class AddResourceSectionService {
           });
           this.Notification.errorWithTrackingId(error, errorMessage);
         });
-      return deferred.promise;
     } else {
       this.selectedClusterId = this.clusterDetail.id;
       return this.whiteListHost(hostName, this.selectedClusterId);

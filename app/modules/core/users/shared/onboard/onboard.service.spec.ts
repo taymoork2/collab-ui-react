@@ -95,6 +95,7 @@ describe('OnboardService:', () => {
       const fakeUsersList = ['fake-user-1'];
       const fakeEntitlementsList = 'fake-entitlements-list';
       const fakeLicensesList = 'fake-licenses-list';
+      const fakeOnboardMethod = 'fake-onboard-method';
       const fakeOptions = {
         chunkSize: 1,
       };
@@ -114,7 +115,7 @@ describe('OnboardService:', () => {
       spyOn(this.OnboardService, 'aggregateResponses').and.returnValue(fakeAggResponse);
       spyOn(this.OnboardService, 'trackOnboardSaveEvent');
 
-      this.OnboardService.onboardUsersInChunks(fakeUsersList, fakeEntitlementsList, fakeLicensesList, fakeOptions)
+      this.OnboardService.onboardUsersInChunks(fakeUsersList, fakeEntitlementsList, fakeLicensesList, fakeOnboardMethod, fakeOptions)
         .then((result) => {
           expect(result).toEqual(fakeAggResponse);
           expect(this.Userservice.onboardUsers.calls.count()).toBe(1);
@@ -129,7 +130,7 @@ describe('OnboardService:', () => {
           this.Userservice.onboardUsers.calls.reset();
           this.OnboardService.parseOnboardedUsers.calls.reset();
           this.OnboardService.trackOnboardSaveEvent.calls.reset();
-          return this.OnboardService.onboardUsersInChunks(fakeUsersList, fakeEntitlementsList, fakeLicensesList, fakeOptions);
+          return this.OnboardService.onboardUsersInChunks(fakeUsersList, fakeEntitlementsList, fakeLicensesList, fakeOnboardMethod, fakeOptions);
         })
         .then((result) => {
           // resolved value is always the return value of 'aggregateResponses()' (spied for this test)
@@ -154,7 +155,7 @@ describe('OnboardService:', () => {
           this.Userservice.onboardUsers.calls.reset();
           this.OnboardService.parseOnboardedUsers.calls.reset();
           this.OnboardService.trackOnboardSaveEvent.calls.reset();
-          return this.OnboardService.onboardUsersInChunks(fakeUsersList, fakeEntitlementsList, fakeLicensesList, fakeOptions);
+          return this.OnboardService.onboardUsersInChunks(fakeUsersList, fakeEntitlementsList, fakeLicensesList, fakeOnboardMethod, fakeOptions);
         })
         .then((result) => {
           expect(result).toEqual(fakeAggResponse);

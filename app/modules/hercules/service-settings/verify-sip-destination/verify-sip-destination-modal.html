@@ -3,8 +3,11 @@
   <h4 class="modal-title" translate="hercules.settings.verifySipDestination.title"></h4>
 </div>
 <div class="modal-body new-verify-sip-destination-modal">
-  <div ng-if="vm.resultSet.type === 'error'">
+  <div ng-if="vm.resultSet.type === 'no_dns_hops_found'">
     <span class="fail" translate="hercules.settings.verifySipDestination.fixes.NoDNSHopsFound"></span>
+  </div>
+  <div ng-if="vm.resultSet.type === 'unexpected_exception'">
+    <span class="fail" translate="hercules.settings.verifySipDestination.fixes.UnexpectedError"></span>
   </div>
   <div ng-if="vm.resultSet.type === 'ip'">
     <div class="row collapse padding-adjustment">

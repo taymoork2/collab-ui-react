@@ -117,9 +117,11 @@ class AccountLinkingWizardComponentCtrl implements ng.IComponentController {
 
   public $onInit() {
     // TODO Fetch possible existing mode (from webex ?)
-    this.$log.debug('onInit AccountLinkingWizardStateController');
-    this.$log.debug('siteInfo:', this.siteInfo);
-    this.$log.debug('operation:', this.operation);
+    this.$log.debug('onInit AccountLinkingWizardStateController, data:', {
+      siteInfo: this.siteInfo,
+      operation: this.operation,
+      launchWebexFn: this.launchWebexFn,
+    });
   }
 
   public hasEvent(): boolean {
@@ -148,15 +150,18 @@ class AccountLinkingWizardComponentCtrl implements ng.IComponentController {
     this.dismiss();
   }
 
-  public launchWebex() {
+  public launchWebex(): void {
     this.$log.info('Launch WebEx from wizard...');
-
-    this.launchWebexFn({ site: this.siteInfo, useHomepage: false });
+    this.launchWebexFn({
+      site: this.siteInfo,
+      useHomepage: false,
+    });
     this.closeModal();
   }
 
   private gotoDomainsSettings(): void {
     this.$log.info('Goto domains settings page from wizard...');
+    this.closeModal();
     this.$state.go('settings', {
       showSettings: 'domains',
     });
@@ -223,7 +228,7 @@ class AccountLinkingWizardComponentCtrl implements ng.IComponentController {
     this.fsm
       .from(WizardState.agreementAccepted, WizardEvent.next)
       .action(() => {
-        // TODO: Currentlu returning only 20 of the filtered domain entries.
+        // TODO: Currently returning only 20 of the filtered domain entries.
         //       Waiting for a better solution to handle domains.
         this.setAccountLinkingMode(LinkingMode.AUTO_AGREEMENT, this.getDomains(0, 19));
         this.launchWebex();

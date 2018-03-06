@@ -762,6 +762,7 @@ require('./_user-csv.scss');
               directLine: directLine,
               licenses: licenseList,
               entitlements: entitleList,
+              onboardMethod: 'CSV',
             };
             if (vm.handleHybridServicesResourceGroups) {
               user.resourceGroups = {};

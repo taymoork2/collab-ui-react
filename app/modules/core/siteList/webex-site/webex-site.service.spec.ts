@@ -10,9 +10,79 @@ describe('Service: WebExSite Service', function () {
       'SetupWizardService',
       'WebExSiteService',
     );
+    const subscriptions = [
+      {
+        subscriptionId: 'db820f2c-7e2f-442e-8974-75cdc6ba0d3d',
+        externalSubscriptionId: 'ex123',
+      },
+      {
+        subscriptionId: '284bcf35-dc0e-441c-ae1b-11a255959016',
+        externalSubscriptionId: 'ex456',
+      },
+    ];
     this.allLicenses = getJSONFixture('core/json/authInfo/complexCustomerCases/customerWithCCASPActiveLicenses.json').allLicenses;
+    const allCenterDetails = getJSONFixture('core/json/setupWizard/meeting-settings/centerDetails.json');
+    this.allConferenceLicenses = getJSONFixture('core/json/setupWizard/sites/conference-licenses.json');
     spyOn(this.Authinfo, 'getLicenses').and.returnValue(this.allLicenses);
     spyOn(this.SetupWizardService, 'updateSitesInActiveSubscription');
+    spyOn(this.SetupWizardService, 'getConferenceLicensesBySubscriptionId').and.callFake(function (subId) {
+      if (subId === 'ex123') {
+        return this.allConferenceLicenses[0];
+      }
+      if (subId === 'ex456') {
+        return this.allConferenceLicenses[1];
+      }
+    });
+    spyOn(this.SetupWizardService, 'getExistingConferenceServiceDetails').and.callFake(function(subId) {
+      if (subId === 'ex123') {
+        return allCenterDetails[0];
+      }
+      if (subId === 'ex456') {
+        return allCenterDetails[1];
+      }
+    });
+    spyOn(this.Authinfo, 'getSubscriptions').and.returnValue(subscriptions);
+  });
+
+  describe('getting center details for all subscriptions', function () {
+    beforeEach(function () {
+      this.WebExSiteService.getAllCenterDetailsFromSubscriptions();
+      this.$scope.$apply();
+    });
+    it('should call the server once for each subscrption', function () {
+      expect(this.SetupWizardService.getExistingConferenceServiceDetails).toHaveBeenCalledTimes(2);
+    });
+    it('should assign the filtered results to the centerDetailsFromSubscriptions property', function () {
+      expect(this.WebExSiteService.centerDetailsFromSubscriptions.length).toBe(2);
+      expect(this.WebExSiteService.centerDetailsFromSubscriptions[0].externalSubscriptionId).toBe('ex123');
+      expect(this.WebExSiteService.centerDetailsFromSubscriptions[0].purchasedServices.length).toBe(4);
+    });
+  });
+
+  describe('When looking for subscriptions that have mismatched license counts', function () {
+    beforeEach(function () {
+      this.WebExSiteService.getAllCenterDetailsFromSubscriptions();
+      this.$scope.$apply();
+    });
+    it('should return a list of subscriptions with licenses that need redistributing', function () {
+      this.WebExSiteService.findSubscriptionsWithUnsyncedLicenses().then(function(result) {
+        expect(result.length).toBe(1);
+        expect(result[0].externalSubscriptionId).toBe('ex123');
+      });
+      this.$scope.$apply();
+    });
+  });
+
+  describe('When extracting center details from licenses', function () {
+    it('correctly gets and formats the center details', function () {
+      const expectedResults = [
+        {
+          serviceName: 'MC',
+          quantity: 30,
+        },
+      ];
+      expect(this.WebExSiteService.extractCenterDetailsFromSingleSubscription(this.allConferenceLicenses[1])).toEqual(expectedResults);
+    });
   });
 
 

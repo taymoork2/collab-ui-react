@@ -19,7 +19,7 @@
     if (hasMfClusterWizardFeatureToggle) {
       vm.addResourceModal = {
         type: 'modal',
-        controller: 'clusterCreationWizardController',
+        controller: 'ClusterCreationWizardController',
         controllerAs: 'clusterCreationWizard',
         template: require('modules/mediafusion/media-service-v2/add-resource-wizard/cluster-creation-wizard.tpl.html'),
         resolve: {

@@ -9,13 +9,13 @@
     <div class="header-info-wrap">
       <!-- should be removed from the tabindex when dirsyncEnabled is true because click goes nowhere -->
       <a id="rolesChevron"
-        ng-class="{'default-cursor': userOverview.dirsyncEnabled}"
+        ng-class="{'default-cursor': userOverview.dirsyncEnabled || userOverview.hasLinkedSites}"
         ng-click="userOverview.goToUserDetails()"
-        tabindex="{{userOverview.dirsyncEnabled ? -1 : 0}}">
+        tabindex="{{userOverview.dirsyncEnabled || userOverview.hasLinkedSites ? -1 : 0}}">
         <i class="feature-arrow"></i>
         <div class="header-title">
           <span>{{userOverview.titleCard}}</span>
-          <i class="edit-button icon icon-edit" ng-if="!userOverview.dirsyncEnabled" aria-label="{{::'common.edit' | translate}}"></i>
+          <i class="edit-button icon icon-edit" ng-if="!userOverview.dirsyncEnabled && !userOverview.hasLinkedSites" aria-label="{{::'common.edit' | translate}}"></i>
         </div>
         <div ng-if="userOverview.subTitleCard" class="header-sub-info user-header-title">{{userOverview.subTitleCard}}</div>
       </a>

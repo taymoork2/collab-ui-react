@@ -31,12 +31,12 @@ describe('AddResourceControllerClusterViewV2', function () {
 
     this.initController = function () {
       this.controller = this.$controller('AddResourceControllerClusterViewV2', {
+        $modalInstance: this.mockModal,
         $q: this.$q,
-        $translate: this.$translate,
         $state: this.$state,
+        $translate: this.$translate,
         AddResourceCommonServiceV2: this.AddResourceCommonServiceV2,
         ProPackService: this.ProPackService,
-        $modalInstance: this.mockModal,
       });
       this.$scope.$apply();
     };

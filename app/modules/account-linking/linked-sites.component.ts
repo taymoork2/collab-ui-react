@@ -2,6 +2,7 @@ import { LinkedSitesService } from './linked-sites.service';
 import { IACWebexDomainsResponse, IGotoWebex, IACSiteInfo, LinkingOriginator, LinkingOperation, IACLinkingStatus, IACWebexSiteinfoResponse, LinkingMode } from './account-linking.interface';
 import { FeatureToggleService } from 'modules/core/featureToggle';
 import { Notification } from 'modules/core/notifications/notification.service';
+import { IToolkitModalService } from 'modules/core/modal';
 
 class LinkedSitesComponentCtrl implements ng.IComponentController {
   public gridApi: uiGrid.IGridApi;
@@ -16,6 +17,7 @@ class LinkedSitesComponentCtrl implements ng.IComponentController {
   constructor(
     private $log: ng.ILogService,
     private $state: ng.ui.IStateService,
+    private $modal: IToolkitModalService,
     private $translate: ng.translate.ITranslateService,
     private LinkedSitesService: LinkedSitesService,
     private FeatureToggleService: FeatureToggleService,
@@ -27,7 +29,7 @@ class LinkedSitesComponentCtrl implements ng.IComponentController {
 
   public $onInit = () => {
     this.initModeTranslations();
-    this.$log.debug('LinkedSitesComponentCtrl $onInit');
+    this.$log.debug('LinkedSitesComponentCtrl $onInit, originator:', this.originator);
 
     this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasAccountLinkingPhase2).then( (supported) => {
       if (supported === false) {
@@ -141,14 +143,43 @@ class LinkedSitesComponentCtrl implements ng.IComponentController {
     this.showWizard(siteInfo);
   }
   private showWizard = (siteInfo) => {
-    const params = {
-      siteInfo: siteInfo,
-      operation: LinkingOperation.New,
-      launchWebexFn: this.launchWebexFn,
-      setAccountLinkingModeFn: this.setAccountLinkingModeFn,
-    };
-    this.$log.info('Launching wizard from sites component with params:', params);
-    this.$state.go('site-list.linked.details.wizard', params);
+    const launchWebexFn = this.launchWebexFn;
+    const setAccountLinkingModeFn = this.setAccountLinkingModeFn;
+    this.$modal.open({
+      template: '<account-linking-wizard dismiss="$dismiss()" site-info="$ctrl.siteInfo" operation="$ctrl.operation" launch-webex-fn="$ctrl.launchWebexFn(site, useHomepage)" set-account-linking-mode-fn="$ctrl.setAccountLinkingModeFn(siteUrl, mode, domains)"></account-linking-wizard>',
+      controller: [
+        'siteInfo',
+        'operation',
+        'launchWebexFn',
+        'setAccountLinkingModeFn',
+        function (siteInfo,
+                  operation,
+                  launchWebexFn,
+                  setAccountLinkingModeFn,
+        ) {
+          this.siteInfo = siteInfo;
+          this.operation = operation;
+          this.launchWebexFn = launchWebexFn;
+          this.setAccountLinkingModeFn = setAccountLinkingModeFn;
+        }],
+      modalClass: 'account-linking-wizard-custom',
+      controllerAs: '$ctrl',
+      resolve: {
+        siteInfo: function () {
+          return siteInfo;
+        },
+        operation: function () {
+          return LinkingOperation.New; // differ between New and Modify
+        },
+        launchWebexFn: function () {
+          return launchWebexFn;
+        },
+        setAccountLinkingModeFn: function () {
+          return setAccountLinkingModeFn;
+        },
+      },
+      type: 'full',
+    });
   }
 
   public onSiteSelectedFn = (selectedSiteInfo) => {

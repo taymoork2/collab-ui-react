@@ -1,0 +1,10 @@
+<multi-step-modal
+  l10n-title="hcs.setup.titleServices"
+  dismiss="$ctrl.dismissModal()"
+  next="$ctrl.nextStep()"
+  back="$ctrl.back()"
+  next-disabled="$ctrl.disableNext()">
+  <setup-service-selection ng-if="$ctrl.currentStepIndex === 1"
+    on-change-fn="$ctrl.setSelectedHcsService(selection)">
+  </setup-service-selection >
+</multi-step-modal>

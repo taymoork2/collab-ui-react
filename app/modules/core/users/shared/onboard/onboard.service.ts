@@ -187,6 +187,7 @@ export default class OnboardService {
     usersList: IUserNameAndEmail[],
     entitleList: IUserEntitlementRequestItem[],
     licenseList: ILicenseRequestItem[],
+    onboardMethod: string,
     options: {
       chunkSize?: number,
       servicesSelected?: {},
@@ -205,6 +206,7 @@ export default class OnboardService {
         users: usersListChunk,
         licenses: licenseList,
         userEntitlements: entitleList,
+        onboardMethod: onboardMethod,
       }) as ng.IHttpPromise<IOnboardUsersResponse>)
       .then((response) => {
         return this.parseOnboardedUsers(response);
