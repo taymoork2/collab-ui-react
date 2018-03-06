@@ -6,7 +6,7 @@
     .controller('AddResourceControllerClusterViewV2', AddResourceControllerClusterViewV2);
 
   /* @ngInject */
-  function AddResourceControllerClusterViewV2($translate, $state, $stateParams, $window, $q, AddResourceCommonServiceV2, ProPackService) {
+  function AddResourceControllerClusterViewV2($translate, $state, $stateParams, $window, $q, AddResourceCommonServiceV2, ProPackService, $modalInstance) {
     var vm = this;
     vm.clusterList = [];
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
@@ -29,6 +29,7 @@
     vm.showDownloadableOption = vm.fromClusters;
     vm.canGoNext = canGoNext;
     vm.getAppTitle = getAppTitle;
+    vm.yesNoPage = true;
 
     var proPackEnabled = undefined;
     $q.all({
@@ -47,14 +48,14 @@
     }
 
     function redirectToTargetAndCloseWindowClicked(hostName, enteredCluster) {
-      $state.modal.close();
+      $modalInstance.dismiss();
       AddResourceCommonServiceV2.addRedirectTargetClicked(hostName, enteredCluster).then(function () {
         AddResourceCommonServiceV2.redirectPopUpAndClose(hostName, enteredCluster, vm.selectedClusterId, vm.firstTimeSetup);
       });
     }
 
     function closeSetupModal() {
-      $state.modal.close();
+      $modalInstance.dismiss();
     }
 
     function back() {
@@ -63,6 +64,7 @@
       } else if (vm.enableRedirectToTarget) {
         vm.enableRedirectToTarget = false;
       } else {
+        vm.yesNoPage = true;
         vm.yesProceed = false;
         vm.showDownloadableOption = true;
       }
@@ -78,10 +80,12 @@
           $window.open('https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/hybrid-media-demo/hybridmedia_demo.ova');
         }
       } else if (vm.yesProceed) {
+        vm.yesNoPage = false;
         if (!_.isUndefined(vm.selectedCluster) && vm.selectedCluster != '' && !_.isUndefined(vm.hostName)) {
           vm.enableRedirectToTarget = true;
         }
       } else {
+        vm.yesNoPage = false;
         vm.yesProceed = true;
         vm.showDownloadableOption = false;
       }
