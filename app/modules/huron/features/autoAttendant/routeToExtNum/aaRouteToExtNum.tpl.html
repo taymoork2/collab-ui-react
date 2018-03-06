@@ -9,17 +9,6 @@
     e164-phone-number="aaRouteToExtNum.getPhoneNumber()" fields="aaRouteToExtNum.countryList" 
     on-change-fn="aaRouteToExtNum.saveUiModel(model)">
     </cs-phone-number>
-  
-    <!-- <input 
-      ng-if = "aaRouteToExtNum.typeOfPhoneNumberSelected === aaRouteToExtNum.routeToExtOptions[1]"
-    cs-input type="text" placeholder="{{ :: 'autoAttendant.enterExtensionPlaceholder' | translate }}" 
-    ng-pattern = "/^[0-9]*$/"
-    ng-model="aaRouteToExtNum.extension"
-    cs-input-group-size="medium-12"
-    ng-minlength="aaRouteToExtNum.extensionMinLength" 
-    ng-maxlength = "aaRouteToExtNum.extensionMaxLength" ng-required="true"
-    maxlength="10"
-    ng-keyup="aaRouteToExtNum.saveUiModel(aaRouteToExtNum.extension)"> -->
 
     <input ng-if = "aaRouteToExtNum.typeOfPhoneNumberSelected === aaRouteToExtNum.routeToExtOptions[1]"
     ng-init = "aaRouteToExtNum.model.phoneNumberInput.phoneNumber = ''"

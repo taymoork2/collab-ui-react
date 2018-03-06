@@ -247,12 +247,13 @@ describe('Controller: AARouteToExtNumCtrl', function () {
       });
     });
 
-    describe('should check for both phoneNumber and extension', function() {
-      beforeEach(function() {
+    describe('should check for both phoneNumber and extension', function () {
+      beforeEach(function () {
         aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
         $scope.fromRouteCall = true;
+        spyOn(AutoAttendantHybridCareService, 'getHybridandEPTConfiguration').and.returnValue(false);
       });
-      it('should have phone number type extension', function() {
+      it('should have phone number type extension', function () {
         var phoneNumber = '5555';
         var action = AutoAttendantCeMenuModelService.newCeActionEntry('route', phoneNumber);
         aaUiModel[schedule].entries[0].addAction(action);
@@ -265,7 +266,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
         expect(controller.model.phoneNumberInput.extension).toEqual(phoneNumber);
       });
 
-      it('should have phone number type extension', function() {
+      it('should have phone number type extension', function () {
         var phoneNumber = '+91-95343221';
         var action = AutoAttendantCeMenuModelService.newCeActionEntry('route', phoneNumber);
         aaUiModel[schedule].entries[0].addAction(action);
@@ -277,8 +278,14 @@ describe('Controller: AARouteToExtNumCtrl', function () {
         expect(controller.menuEntry.actions[0].name).toEqual('route');
         expect(controller.model.phoneNumberInput.phoneNumber).toEqual(phoneNumber);
       });
+    });
 
-      it('extension should be undefined in case the user is hybrid', function() {
+    describe('For Hybrid user', function () {
+      it('extension should be undefined in case the user is hybrid', function () {
+        aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+        $scope.fromRouteCall = true;
+        spyOn(AutoAttendantHybridCareService, 'getHybridandEPTConfiguration').and.returnValue(true);
+
         var phoneNumber = '+91-95343221';
         var action = AutoAttendantCeMenuModelService.newCeActionEntry('route', phoneNumber);
         aaUiModel[schedule].entries[0].addAction(action);
