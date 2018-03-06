@@ -2,6 +2,11 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
+.filter-dropdown.filter-inventory {
+  width: 40%;
+  margin-right: rem-calc(2);
+}
+
 .hcs-inventory-container {
   .inventory-list-header {
     padding: 0.75rem 0rem 0.5rem 2.75rem;

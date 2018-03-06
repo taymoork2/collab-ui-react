@@ -10767,16 +10767,19 @@
       "title": "Inventory"
     },
     "installFiles": {
-      "title": "Install Files",
-      "setupTitle": "Create Agent Install Files",
+      "addFile": "Add File",
+      "copFile": "COP file",
       "description": "Create an Agent Install File.  This file is required to register your nodes and will take some time to create.",
-      "fileName": "File Name",
-      "enterFileName": "Enter a file name",
-      "httpProxy": "HTTP Proxy",
-      "placeholderHttpProxy": "Enter HTTP Proxy IP Address or Domain Name",
       "duplicateProxy": "Duplicate HTTP Proxy Address",
-      "invalidPortError": "Port can be 0 or range between {{min}} and {{max}}"
-
+      "enterFileName": "Enter a file name",
+      "fileName": "File Name",
+      "httpProxies": "HTTP Proxies",
+      "httpProxy": "HTTP Proxy",
+      "invalidPortError": "Port can be 0 or range between {{min}} and {{max}}",
+      "placeholderHttpProxy": "Enter HTTP Proxy IP Address or Domain Name",
+      "setupTitle": "Create Agent Install Files",
+      "tarFile": ".tar file",
+      "title": "Install Files"
     },
     "taas": {
       "testState": {

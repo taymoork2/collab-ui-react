@@ -1,1 +1,50 @@
-HCS Install Files Component.
+<cs-page-sub-header>
+    <cs-page-sub-header-left>
+      <cs-searchfilter ng-model="$ctrl.placeholder.count" search-item-fn="$ctrl.filterList(searchStr)" clear-aria-text="{{::'common.clear' | translate}}" search-placeholder-text="{{::'common.search' | translate}}">
+      </cs-searchfilter>
+    </cs-page-sub-header-left>
+    <cs-page-sub-header-right>
+      <button class="btn btn--primary" ng-click="$ctrl.addLocation()">
+        <span translate="hcs.installFiles.addFile"></span>
+      </button>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+  <div class="cs-card-container install-file-container">
+    <cs-card-layout>
+      <cs-card class="cs-card--small header-background hoverable" ng-repeat="installFile in $ctrl.installFilesList">
+        <article ng-click="$ctrl.cardSelected()" hover-delay>
+          <header>
+            <div class="header-with-right-icon">
+              <p class="h4 ellipsis" title="Card Name">{{installFile.name}}</p>
+              <div class="right card-icon-div ">
+                <button type="button" class="close"
+                  ng-click="$ctrl.closeCard()"
+                  ng-keydown=""
+                  aria-label="{{::'common.delete' | translate}}"></button>
+              </div>
+            </div>
+            <p class="h6">{{installFile.version}}</p>
+          </header>
+          <section class="card-body">
+            <div class="card-section">
+              <div class="card-section-item" translate="hcs.installFiles.httpProxies"></div>
+              <div class="card-section-item">
+                <span ng-repeat="proxie in $ctrl.proxieRange(0, installFile.httpProxies.length -1)">
+                  <span ng-if="proxie === 0">{{installFile.httpProxies[proxie]}}</span>
+                  <span ng-if="proxie > 0">, {{installFile.httpProxies[proxie]}}</span>
+                </span>
+              </div>
+            </div>
+          </section>
+          <footer class="install-file-footer">
+            <span class="footer-item">
+              <a href translate="hcs.installFiles.tarFile"></a>
+            </span>
+            <span class="footer-item">
+              <a href translate="hcs.installFiles.copFile"></a>
+            </span>
+          </footer>
+        </article>
+      </cs-card>
+    </cs-card-layout>
+  </div>
