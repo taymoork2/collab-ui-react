@@ -146,7 +146,7 @@ class AccountLinkingWizardComponentCtrl implements ng.IComponentController {
 
   public cancelModal() {
     if (this.LOG_TRANSITION_METRICS === true) {
-      this.logMetrics({ operation: 'cancelWizard', fromState: this.fsmState }, this.LogMetricsService.eventType.accountlinkingOperation);
+      this.logMetrics({ operation: 'cancelWizard', fromState: this.fsmState }, this.LogMetricsService.eventType.accountlinkingWizardOperation);
     }
     this.dismiss();
   }
