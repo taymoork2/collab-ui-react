@@ -2,7 +2,7 @@ import moduleName from './index';
 
 describe('LinkedSitesUserSettingsCtrl', () => {
 
-  let $componentController, $q, $scope, UserOverviewService, Notification;
+  let $componentController, $q, $scope, UserOverviewService;
 
   beforeEach(function () {
     this.initModules(moduleName);
@@ -12,12 +12,11 @@ describe('LinkedSitesUserSettingsCtrl', () => {
   beforeEach(initSpies);
   afterEach(cleanup);
 
-  function dependencies(_$componentController_, _$q_, _$rootScope_, _UserOverviewService_, _Notification_) {
+  function dependencies(_$componentController_, _$q_, _$rootScope_, _UserOverviewService_) {
     $componentController = _$componentController_;
     $q = _$q_;
     $scope = _$rootScope_.$new();
     UserOverviewService = _UserOverviewService_;
-    Notification = _Notification_;
   }
 
   function cleanup() {

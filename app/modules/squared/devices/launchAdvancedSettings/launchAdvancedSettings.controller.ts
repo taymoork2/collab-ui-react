@@ -18,7 +18,7 @@ class LaunchAdvancedSettingsController {
 
   public states: { connect: IDialogState, offline: IDialogState, unsupportedSoftwareVersion: IDialogState, unavailable: IDialogState };
   public state: IDialogState;
-  private endpointWindow: Window;
+  private endpointWindow?: Window;
   private timeoutPromise: ng.IPromise<void>;
   private SHA512 = require('crypto-js/sha512');
 
@@ -137,13 +137,18 @@ class LaunchAdvancedSettingsController {
     const endpointInitialContactTimeout = 10000;
     const endpointOrigin = 'http://' + this.currentDevice.ip;
 
-    const createEndpointWindow = (endpointOrigin, currentDevice): Window => {
+    const createEndpointWindow = (endpointOrigin, currentDevice): Window | undefined => {
       const forwardingPageHtml =
         `<html><head><title>Waiting for connection</title></head><br>
           <body><h4 id="connecting"></h4></body>
           ${this.forwardingPageScript}
         </html>`;
       const forwardingWindow = this.$window.open('about:blank', '_blank', '');
+
+      if (!forwardingWindow) {
+        return;
+      }
+
       forwardingWindow.document.write(forwardingPageHtml);
 
       const getText = (templateName, device) => {
@@ -172,7 +177,9 @@ class LaunchAdvancedSettingsController {
     this.timeoutPromise = this.$timeout(() => {
 
       this.changeState(this.states.unavailable);
-      this.endpointWindow.close();
+      if (this.endpointWindow) {
+        this.endpointWindow.close();
+      }
 
     }, endpointInitialContactTimeout);
   }

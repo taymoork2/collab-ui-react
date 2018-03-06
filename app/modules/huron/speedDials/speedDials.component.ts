@@ -26,14 +26,14 @@ class SpeedDialCtrl implements ng.IComponentController {
   private copyList: ISpeedDial[] | undefined;
   private newLabel: string;
   private newNumber: string;
-  private labelMessages: IValidationMessages;
-  private numberMessages: IValidationMessages;
-  private customTranslations: ITranslationMessages;
-  private inputTranslations: ICallDestinationTranslate;
-  private customNumberValidationPatern: RegExp;
-  private actionList: IActionItem[];
+  public labelMessages: IValidationMessages;
+  public numberMessages: IValidationMessages;
+  public customTranslations: ITranslationMessages;
+  public inputTranslations: ICallDestinationTranslate;
+  public customNumberValidationPatern: RegExp;
+  public actionList: IActionItem[];
   private actionListCopy: IActionItem[] = [];
-  private callDestInputs: string[];
+  public callDestInputs: string[];
   private optionSelected: string = '';
   private draggableInstance: DraggableInstance;
 

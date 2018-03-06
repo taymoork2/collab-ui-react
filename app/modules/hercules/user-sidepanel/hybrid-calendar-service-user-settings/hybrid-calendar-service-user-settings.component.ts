@@ -16,7 +16,7 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
 
   private userId: string;
   private userEmailAddress: string;
-  private preferredWebExSiteName: string;
+  public preferredWebExSiteName: string;
   public isInvitePending: boolean;
   private allUserEntitlements: HybridServiceId[];
 

@@ -39,7 +39,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
   public searchObject: SearchObject;
   private searchInteraction: SearchInteraction;
   public searchResult: Device[];
-  private isSearching: boolean;
+  public isSearching: boolean;
 
   /* @ngInject */
   constructor(private CsdmSearchService: CsdmSearchService,

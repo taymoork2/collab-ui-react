@@ -15,7 +15,6 @@ export interface IOrderList {
 
 export class MyCompanyOrdersService {
   private ordersService: ng.resource.IResourceClass<ng.resource.IResource<IOrderList>>;
-  private userIdURL: ng.resource.IResourceClass<ng.resource.IResource<IOrderList>>;
 
   /* @ngInject */
   constructor(
@@ -26,7 +25,6 @@ export class MyCompanyOrdersService {
     private UserListService,
   ) {
     this.ordersService = this.$resource(this.UrlConfig.getAdminServiceUrl() + 'commerce/purchaseorders/customer/:customerId');
-    this.userIdURL = this.$resource(this.UrlConfig.getAdminServiceUrl() + 'user?email=:emailAddress');
   }
 
   public getOrderDetails(): ng.IPromise<any[]> {

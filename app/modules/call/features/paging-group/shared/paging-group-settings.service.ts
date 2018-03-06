@@ -6,7 +6,6 @@ import { Notification } from 'modules/core/notifications';
 
 export class PagingGroupSettingsService {
   private pagingGroupCopy: PagingGroup;
-  private errors: string[] = [];
   private missingMembers: boolean = false;
   private missingInitiators: boolean = false;
 
@@ -40,7 +39,6 @@ export class PagingGroupSettingsService {
   }
 
   public get(pagingGroupId: string) {
-    this.errors = [];
     return this.getPagingGroup(pagingGroupId)
       .then(pagingGroup => {
         this.pagingGroupCopy = this.clonePagingGroupData(pagingGroup);

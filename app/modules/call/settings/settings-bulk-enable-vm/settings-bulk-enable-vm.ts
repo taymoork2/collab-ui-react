@@ -1,7 +1,7 @@
 export class BulkEnableVmError {
-  private userId: string | null;
-  private errorStatus: number | undefined;
-  private statusText: string | null | undefined;
+  public userId: string | null;
+  public errorStatus: number | undefined;
+  public statusText: string | null | undefined;
   public trackingID: string | null | undefined;
   constructor(userId: string,
               errorStatus: number ,

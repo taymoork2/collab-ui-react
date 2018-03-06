@@ -1,7 +1,7 @@
 class HybridServicesIsInvitePendingWarningComponentCtrl implements ng.IComponentController {
 
-  private isEntitled: boolean;
-  private wasEntitled: boolean;
+  public isEntitled: boolean;
+  public wasEntitled: boolean;
   public serviceName: string;
 
   /* @ngInject */

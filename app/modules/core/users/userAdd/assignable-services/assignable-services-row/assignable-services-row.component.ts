@@ -12,12 +12,12 @@ class AssignableServicesRowController implements ng.IComponentController {
   private autoAssignTemplateData: IAutoAssignTemplateData;
   private onUpdate: Function;
   private licenses: ILicenseUsage[];
-  private messageLicenses: ILicenseUsage[];
-  private callLicenses: ILicenseUsage[];
-  private careLicenses: ILicenseUsage[];
-  private basicMeetingLicenses: ILicenseUsage[];
-  private advancedMeetingLicenses: ILicenseUsage[];
-  private advancedMeetingSiteUrls: string[];
+  public messageLicenses: ILicenseUsage[];
+  public callLicenses: ILicenseUsage[];
+  public careLicenses: ILicenseUsage[];
+  public basicMeetingLicenses: ILicenseUsage[];
+  public advancedMeetingLicenses: ILicenseUsage[];
+  public advancedMeetingSiteUrls: string[];
   private _subscriptionLabel: string;
 
   /* @ngInject */

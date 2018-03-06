@@ -2,7 +2,6 @@ require('./_domainManagement.scss');
 
 export class DomainManageVerifyCtrl {
   private _domain;
-  private _loggedOnUser;
   private _error;
   private _loadTime;
 
@@ -14,7 +13,6 @@ export class DomainManageVerifyCtrl {
     private LogMetricsService,
   ) {
     this._domain = this.$state.params.domain;
-    this._loggedOnUser = this.$state.params.loggedOnUser;
     this._loadTime = moment();
 
     if (this._domain && this._domain.text && !this._domain.token) {

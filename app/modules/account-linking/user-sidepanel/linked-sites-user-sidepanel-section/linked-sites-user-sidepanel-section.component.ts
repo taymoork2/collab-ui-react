@@ -1,6 +1,5 @@
 class LinkedSitesUserSidepanelSectionComponentCtrl implements ng.IComponentController {
 
-  private userId: string;
   private linkedTrainSiteNames: string[];
 
   /* @ngInject */
@@ -11,7 +10,6 @@ class LinkedSitesUserSidepanelSectionComponentCtrl implements ng.IComponentContr
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
     const { user } = changes;
     if (user && user.currentValue) {
-      this.userId = user.currentValue.id;
       this.linkedTrainSiteNames = user.currentValue.linkedTrainSiteNames;
     }
   }

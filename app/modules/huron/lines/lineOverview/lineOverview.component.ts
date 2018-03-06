@@ -63,7 +63,7 @@ class LineOverview implements ng.IComponentController {
   // Data from services
   public lineOverviewData: LineOverviewData;
   public lineMediaOptions: IOption[] = [];
-  private userVoicemailEnabled: boolean = false;
+  public userVoicemailEnabled: boolean = false;
   private isHI1484: boolean = false;
   /* @ngInject */
   constructor(

@@ -8,16 +8,16 @@ class DeviceSettings implements ng.IComponentController {
   public ownerDisplayName: string;
   public deviceList: any;
 
-  private upgradeChannelOptions;
+  public upgradeChannelOptions;
   private shouldShowUpgradeChannel;
   private selectedUpgradeChannel;
-  private updatingUpgradeChannel;
-  private unsupportedDeviceTypeForUpgradeChannel: string;
+  public updatingUpgradeChannel;
+  public unsupportedDeviceTypeForUpgradeChannel: string;
 
-  private shouldShowSettingsLockDown;
+  public shouldShowSettingsLockDown;
   private _settingsLockedDown;
-  private updatingSettingsLockDown;
-  private unsupportedDeviceTypeForSettingsLockDown: string;
+  public updatingSettingsLockDown;
+  public unsupportedDeviceTypeForSettingsLockDown: string;
 
   /* @ngInject */
   constructor(

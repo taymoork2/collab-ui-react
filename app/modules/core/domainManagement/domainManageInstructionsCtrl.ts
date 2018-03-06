@@ -2,8 +2,6 @@ require('./_domainManagement.scss');
 
 export class DomainManageInstructionsCtrl {
   private _domain;
-  private _email;
-  private _loggedOnUser;
   private _loadTime;
 
   /* @ngInject */
@@ -14,8 +12,6 @@ export class DomainManageInstructionsCtrl {
     private LogMetricsService,
   ) {
     this._domain = this.$stateParams.domain;
-    this._loggedOnUser = this.$stateParams.loggedOnUser;
-    this._email = this._loggedOnUser.email;
     this._loadTime = moment();
     this.recordMetrics({
       msg: 'open',

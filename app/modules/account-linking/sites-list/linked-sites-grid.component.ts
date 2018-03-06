@@ -92,7 +92,7 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
     this.gridConfig.multiSelect = false;
     this.gridConfig.modifierKeysToMultiSelect = false;
     this.gridConfig.noUnselect = true;
-    this.gridConfig.onRegisterApi = function(gridApi) {
+    this.gridConfig.onRegisterApi = (gridApi) => {
       this.gridApi = gridApi;
       this.gridApi.grid.element.on('click', (event) => {
         this.$log.debug('grid clicked', event);
@@ -103,7 +103,7 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
         }
       });
       this.gridApi.selection.on.rowSelectionChanged.call(this, null, this.showDetails);
-    }.bind(this);
+    };
   }
 
   public showDetails = (selectedRow) => {

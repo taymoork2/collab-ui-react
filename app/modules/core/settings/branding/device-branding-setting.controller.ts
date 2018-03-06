@@ -27,7 +27,7 @@ export class DeviceBrandingController implements ng.IComponentController {
   public logodark: ImgFile;
   private _useDefaultBranding = true;
   private useDefaultBrandingInitialValue = true;
-  private applyInProgress = false;
+  public applyInProgress = false;
 
   /* @ngInject */
   constructor(private Upload, private $q: ng.IQService, private Notification, private $state,
