@@ -271,6 +271,8 @@
     require('modules/hcs/shared').default,
     require('modules/hcs/inventory').default,
     require('modules/hcs/install-files').default,
+    require('modules/hcs/services').default,
+    require('modules/hcs/setup').default,
   ]);
 
   angular.module('ServicesOverview', [

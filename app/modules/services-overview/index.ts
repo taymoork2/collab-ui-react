@@ -29,7 +29,8 @@ import { HybridTestingActiveCardComponent } from 'modules/services-overview/new-
 import { HcsActiveCardComponent } from 'modules/services-overview/new-hybrid/active/hcs-active-card.component';
 import { HcsInactiveCardComponent } from 'modules/services-overview/new-hybrid/inactive/hcs-inactive-card.component';
 import { HcsUpgradeActiveCardComponent } from 'modules/services-overview/new-hybrid/active/hcs-upgrade-active-card.component';
-import { HcsLicenseActiveCardComponent } from 'modules/services-overview/new-hybrid/active/hcs-license-active-card.component.';
+import { HcsLicenseActiveCardComponent } from 'modules/services-overview/new-hybrid/active/hcs-license-active-card.component';
+
 export default angular
   .module('services-overview', [
     require('angular-translate'),

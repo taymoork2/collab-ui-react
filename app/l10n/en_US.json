@@ -10722,13 +10722,19 @@
       "title": "HCS Licenses",
       "description": "Extend Licensing services to Hosted Cloud Solution.",
       "perpetual": "Perpetual",
-      "subscriptions": "Subscriptions"
+      "subscriptions": "Subscriptions",
+      "laas": "License as a Service"
     },
     "upgrade": {
       "title": "HCS Upgrade Settings",
       "description": "Extend Upgrade services to Hosted Cloud Solution.",
       "sftp": "SFTP Servers",
-      "softwareProfiles": "Software Profiles"
+      "softwareProfiles": "Software Profiles",
+      "uaas": "Upgrade as a Service"
+    },
+    "setup": {
+      "titleServices": "Choose Services",
+      "selectDescription": "Choose the HCS Service for Setup"
     },
     "inventory": {
       "title": "Inventory"
