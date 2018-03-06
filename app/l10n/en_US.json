@@ -295,11 +295,13 @@
     "bulk": {
       "ad": {
         "title": "Bulk Modify Users",
-        "instructions": "Export the current user attributes, edit the CSV file, and then import the edited version to update these users."
+        "instructions": "Export the current user attributes, edit the CSV file, and then import the edited version to update these users.",
+        "subscriptionReminder": "This method requires the uploaded content to match current license subcriptions. To update users, export the current user template below to edit user attributes. Once completed, upload changes."
       },
       "org": {
         "title": "Bulk Add or Modify Users",
-        "instructions": "Export the current user attributes, edit the CSV file, and then import the edited version to add or update users."
+        "instructions": "Export the current user attributes, edit the CSV file, and then import the edited version to add or update users.",
+        "subscriptionReminder": "This method requires the uploaded content to match current license subcriptions. To add or update users, export the current user template below to edit user attributes. Once completed, upload changes."
       },
       "import": {
         "label": "Import",
@@ -4067,6 +4069,7 @@
     "uploadCsvBadHeaders": "Missing required headers in CSV",
     "csvMaxSizeError": "File size is above the maximum of 10 MB.",
     "csvMaxLinesError": "The CSV contains more users than the maximum allowed. Please reduce the number of users to {{max}} or less and upload the CSV again.",
+    "csvHeaderNameMismatch": "The uploaded file contains an unrecognized column name '{{name}}'. Use the latest template to proceed.",
     "processCsvStep": "Processing CSV",
     "processing": "Processing...",
     "canceling": "Canceling...",

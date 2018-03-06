@@ -42,6 +42,11 @@ require('./_user-csv.scss');
       isAtlasCsvImportTaskManagerToggled = toggled;
     });
 
+    var isAtlasUserCsvSubscriptionEnable = false;
+    FeatureToggleService.atlasUserCsvSubscriptionEnableGetStatus().then(function (toggled) {
+      isAtlasUserCsvSubscriptionEnable = toggled;
+    });
+
     CsvDownloadService.getCsv('headers').then(function (csvData) {
       orgHeaders = _.cloneDeep(csvData.columns || []);
     }).catch(function (response) {
@@ -146,7 +151,16 @@ require('./_user-csv.scss');
             if (_.indexOf(csvUsersArray[0], USER_ID_EMAIL_HEADER) > -1) {
               csvHeaders = csvUsersArray.shift();
               if (csvUsersArray.length > 0 && csvUsersArray.length <= maxUsers) {
-                vm.isCsvValid = true;
+                // if header names don't match in multiple subscriptions
+                var mismatchHeaderName = findMismatchHeader(orgHeaders, csvHeaders);
+                if (mismatchHeaderName) {
+                  Notification.error('firstTimeWizard.csvHeaderNameMismatch', {
+                    name: mismatchHeaderName,
+                  });
+                  vm.resetFile();
+                } else {
+                  vm.isCsvValid = true;
+                }
               } else {
                 warnCsvUserCount();
                 vm.resetFile();
@@ -417,6 +431,33 @@ require('./_user-csv.scss');
       } else {
         return -1;
       }
+    }
+
+    function findMismatchHeader(serverHeaders, userHeaders) {
+      var index = -1;
+      var isValid = true;
+      var mismatchColumnName = '';
+
+      if (!isAtlasUserCsvSubscriptionEnable) {
+        return '';
+      }
+
+      if (!serverHeaders || !userHeaders) {
+        return '';
+      } else {
+        _.forEach(userHeaders, function (uHeader) {
+          if (isValid) {
+            index = _.findIndex(serverHeaders, function (sHeader) {
+              return sHeader.name === uHeader || sHeader.name === renamedHeaders[uHeader];
+            });
+            if (index === -1) {
+              isValid = false;
+              mismatchColumnName = uHeader;
+            }
+          }
+        });
+      }
+      return mismatchColumnName;
     }
 
     function generateHeaders(serverHeaders, userHeaders) {

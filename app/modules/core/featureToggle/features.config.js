@@ -74,6 +74,7 @@ module.exports = {
   atlasSubdomainUpdate: 'atlas-subdomain-update',
   atlasSuppressOnboardingEmail: 'atlas-suppress-onboarding-email',
   atlasTrialsShipDevices: 'atlasTrialsShipDevices',
+  atlasUserCsvSubscriptionEnable: 'atlas-user-csv-subscription-enable',
   atlasVirtualAssistantEnable: 'atlas-virtual-assistant-enable',
   atlasWebexAddSite: 'atlas-webex-add-site',
   atlasWebexSiteManagementSetting: 'atlas-webex-site-management-setting',
