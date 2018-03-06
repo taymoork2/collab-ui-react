@@ -526,7 +526,8 @@
       }, {
         "route": {
           "description": "Operator",
-          "destination": "1111"
+          "destination": "1111",
+          "destType": "extension"
         }
       }, {
         "say": {

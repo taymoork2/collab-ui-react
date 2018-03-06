@@ -64,7 +64,11 @@
       </div>
       <div class="row aa-rest-margin">
         <ng-form name="formUsername" class="large-4 medium-4 small-12 columns">
-          <input cs-input insert-element="insertElement" ng-keyup="aaConfigureApiModal.isBasicCredentialUpdated()" ng-disabled="!aaConfigureApiModal.basicAuthButton" ng-required="aaConfigureApiModal.displayWarning()" ng-model="aaConfigureApiModal.username" name="restUsername" ng-minlength= "aaConfigureApiModal.usernameMinLength" ng-maxlength= "aaConfigureApiModal.usernameMaxLength" cs-input-messages="aaConfigureApiModal.validationUsernameMsgs" id="userNameInput" cs-input-label= "{{ :: 'autoAttendant.restApiUserName' | translate }}">
+          <input cs-input insert-element="insertElement" ng-keyup="aaConfigureApiModal.isBasicCredentialUpdated()" 
+          ng-disabled="!aaConfigureApiModal.basicAuthButton" ng-required="aaConfigureApiModal.displayWarning()" 
+          ng-model="aaConfigureApiModal.username" name="restUsername" ng-minlength= "aaConfigureApiModal.usernameMinLength" 
+          ng-maxlength= "aaConfigureApiModal.usernameMaxLength" cs-input-messages="aaConfigureApiModal.validationUsernameMsgs" 
+          id="userNameInput" cs-input-label= "{{ :: 'autoAttendant.restApiUserName' | translate }}">
         </ng-form>
         <div class="row">
           <ng-form name="formPassword" class="large-4 medium-4 small-12 columns">

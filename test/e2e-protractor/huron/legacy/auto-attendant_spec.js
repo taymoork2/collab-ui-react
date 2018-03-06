@@ -72,6 +72,42 @@ describe('Huron Auto Attendant', function () {
 
     }, 120000);
 
+    it('should add route to external number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+      
+      utils.click(autoattendant.repeatPlus);
+      //Add Route to Phone Number
+      utils.click(autoattendant.phoneMenuKeys.last());
+      utils.click(autoattendant.phoneMenuKeyOptions.last().all(by.tagName('li')).last());
+      utils.click(autoattendant.phoneMenuAction.last());
+      utils.click(autoattendant.phoneMenuActionOptions.last().element(by.linkText('Route to Phone Number')));
+      utils.click(autoattendant.phoneMenuActionTargets.last().element(by.name('phoneinput')));
+
+      // a bad external number should not allow save
+      utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.name('phoneinput')), "1111111111");
+
+      utils.expectIsDisabled(autoattendant.saveButton);
+
+      // but a good phone number should be able to be saved
+      utils.clear(autoattendant.phoneMenuActionTargets.last().element(by.name('phoneinput')));
+      utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.name('phoneinput')), "4084741234");
+
+      // save and assert successful update message
+
+      utils.expectIsEnabled(autoattendant.saveButton);
+
+      utils.click(autoattendant.saveButton);
+      utils.wait(autoattendant.saveButton, 120000);
+      flow = browser.controlFlow();
+      flow.execute(function () {
+    return aaGetCeUtils.validateCesDefinition(ceInfos.Test1.actionSets);
+        });
+      utils.wait(autoattendant.saveButton, 120000);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+
+      utils.expectIsDisabled(autoattendant.saveButton);
+
+    }, 120000);
+
     it('should add Dial By Extension (in MultiSite Enabled tenant) via New Step action selection to the new auto attendant named' + deleteUtils.testAAName + '"', function () {
 
       // We are depending on menu order for this test, so if the Add New Step menu gets new steps or gets
