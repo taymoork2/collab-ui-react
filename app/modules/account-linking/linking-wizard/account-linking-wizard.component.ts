@@ -40,6 +40,7 @@ class AccountLinkingWizardComponentCtrl implements ng.IComponentController {
   public siteInfo: IACSiteInfo;
   public operation: LinkingOperation;
   public launchWebexFn: Function;
+  public launchSettingsFn: Function;
   public setAccountLinkingModeFn: Function;
   public dismiss: Function;
 
@@ -99,12 +100,13 @@ class AccountLinkingWizardComponentCtrl implements ng.IComponentController {
   // ];
 
   private DEBUG_TRANSITION: boolean = false;
-
+  private LOG_TRANSITION_METRICS = true;
   /* @ngInject */
   constructor(
     private $log: ng.ILogService,
     private $state: ng.ui.IStateService,
-  ) {
+    private LogMetricsService,
+) {
     // TODO: Use this to distinguish between fresh linking or modified linking in the UI
     if (this.operation === null) {
       this.operation = LinkingOperation.Modify;
@@ -143,6 +145,9 @@ class AccountLinkingWizardComponentCtrl implements ng.IComponentController {
   }
 
   public cancelModal() {
+    if (this.LOG_TRANSITION_METRICS === true) {
+      this.logMetrics({ operation: 'cancelWizard', fromState: this.fsmState }, this.LogMetricsService.eventType.accountlinkingOperation);
+    }
     this.dismiss();
   }
 
@@ -264,6 +269,10 @@ class AccountLinkingWizardComponentCtrl implements ng.IComponentController {
     if (this.DEBUG_TRANSITION === true) {
       this.showTransitions(info);
     }
+    if (this.LOG_TRANSITION_METRICS === true) {
+      this.logMetrics(info, this.LogMetricsService.eventType.accountlinkingWizardOperation);
+    }
+
   }
 
   private showTransitions = (info: IFsmTransitionCallback) => {
@@ -278,6 +287,18 @@ class AccountLinkingWizardComponentCtrl implements ng.IComponentController {
       });
     }
     this.$log.debug('-----------------------------------------------------------------------');
+  }
+
+  private logMetrics(info, eventType) {
+    this.LogMetricsService.logMetrics(
+      'accountlinking20',
+      eventType,
+      this.LogMetricsService.eventAction.buttonClick,
+      200,
+      moment(),
+      1,
+      info,
+    );
   }
 }
 
