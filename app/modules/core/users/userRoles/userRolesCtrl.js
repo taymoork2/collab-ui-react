@@ -102,7 +102,6 @@ require('./_user-roles.scss');
         '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.assignRoles + '</li></ul>',
     };
 
-    $scope.isUserAdminUser = Authinfo.isUserAdminUser();
     $scope.showOrderAdminRole = false;
     $scope.showComplianceRole = false;
     $scope.updateRoles = updateRoles;
@@ -208,8 +207,8 @@ require('./_user-roles.scss');
       });
 
       if ($scope.currentUser) {
-        $scope.isEditingSelf = ($scope.currentUser.id === Authinfo.getUserId());
-        $scope.isNotEditable = $scope.isUserAdminUser && hasRole(Config.backend_roles.full_admin);
+        // Should not be able to edit user roles if logged in user is User Admin or they're viewing their own settings
+        $scope.isNotEditable = ($scope.currentUser.id === Authinfo.getUserId()) || Authinfo.isUserAdminUser();
       }
 
       // reset the form to match the currentUser
@@ -579,7 +578,7 @@ require('./_user-roles.scss');
     }
 
     function supportCheckboxes() {
-      if ($scope.isEditingSelf) {
+      if ($scope.isNotEditable) {
         return;
       }
       $scope.rolesObj.supportAdminValue = true;
@@ -589,7 +588,7 @@ require('./_user-roles.scss');
     }
 
     function partialCheckboxes() {
-      if ($scope.isEditingSelf) {
+      if ($scope.isNotEditable) {
         return;
       }
       $scope.rolesObj.adminRadioValue = 2;
