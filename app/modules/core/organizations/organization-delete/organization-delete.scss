@@ -1,9 +1,19 @@
-.organization-delete-modal {
-    display: flex;
-    justify-content: center;
-    padding-bottom: 1.5rem;
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import 'styles/partials/mixins';
+
+organization-delete-modal {
+  @include keep-flex-container(column);
 }
 
-.organization-delete-modal-body {
-    min-height: 160px;
+.organization-delete-modal {
+  &__intro {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 25px;
+  }
+
+  &__intro-icon {
+    color: $color-green;
+  }
 }

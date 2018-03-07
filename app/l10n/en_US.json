@@ -680,12 +680,30 @@
     "orgReadFailed": "Unable to read organization details"
   },
   "organizationDeleteModal": {
-    "deleteButton": "Close Account",
+    "title": {
+      "accountExpired": "Account Expired",
+      "deleteAccount": "Delete Account"
+    },
+    "moveOrDelete": "There are users that are part of your organization in Cisco's identity system. You can delete the users when your account is closed or you can move their accounts and assign them to Free Cisco Spark.",
+    "moveUsers": "Move users to Free Cisco Spark",
+    "deleteUsers": "Delete users",
+    "deleteButton": "Delete Account",
     "goBack": "Go Back",
     "confirmTitle": "Are you sure?",
     "confirmBody": "Closing your account cannot be undone except by resubscribing. Also, you may not be able to get back your WebEx site name.",
-    "accountClosedTitle": "Your account in closed",
-    "accountClosedBody": "To resubscribe please visit <a href=\"http://{{href}}\" target=\"_blank\">{{href}}</a>"
+    "accountClosedTitle": "Your account is closed",
+    "accountClosedBody": "To resubscribe please visit <a href=\"{{href}}\" target=\"_blank\">{{href}}</a>",
+    "deleteOrg": "Delete {{orgName}}",
+    "checkBoxes": "Check all the boxes below to acknowledge the consequences of deleting this organization.",
+    "singleUserMove": "You will be moved to the Spark Consumer organization and all Spark data will be deleted, including posts in Spark spaces and license assignments",
+    "singleUserDelete": "Your user data will be deleted, including posts in Spark spaces and license assignments",
+    "multiUserMove": "All users will be moved to the Spark Consumer organization and all Spark data will be deleted, including posts in Spark spaces and license assignments",
+    "multiUserDelete": "All users and user data will be deleted, including posts in Spark spaces and license assignments",
+    "allUsersMove": "All users and user data will be deleted, including posts in Spark spaces and license assignments",
+    "allData": "All WebEx data will be deleted, including WebEx meeting URLs and meeting recordings",
+    "allDevices": "All devices will be deregistered, including Cisco IP phones, Cisco Spark Boards and Cisco TelePresence video conferencing endpoints",
+    "notReversible": "Deleting an organization and related data is NOT REVERSIBLE",
+    "customerPermission": "You have your customer's permission to delete their organization"
   },
   "templatesPage": {
     "title": "MANAGE TEMPLATES"
@@ -8801,7 +8819,10 @@
     "info": "Info",
     "order": "Order History",
     "billing": "Billing Info",
-    "loadError": "An error occurred while loading the page"
+    "loadError": "An error occurred while loading the page",
+    "closeAccount": "Close Account",
+    "closeAccountWarning": "Closing your account will cancel all your subscriptions, remove your account from Cisco's identity system and deregister your WebEx sites.",
+    "closeAccountNote": "Please note that closing your account cannot be reversed except by resubscribing."
   },
   "subscriptions": {
     "activeUsers": "Active Users",

@@ -100,6 +100,7 @@
     require('modules/core/siteList/webex-site').default,
     require('modules/core/overview/notifications').default,
     require('modules/core/legal-hold').default,
+    require('modules/core/organizations/organization-delete').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('addressparser', require('emailjs-addressparser'));
