@@ -262,8 +262,8 @@ describe('Controller: AARouteToExtNumCtrl', function () {
         var controller = $controller('AARouteToExtNumCtrl', {
           $scope: $scope,
         });
-        expect(controller.menuEntry.actions[0].name).toEqual('route');
-        expect(controller.model.phoneNumberInput.extension).toEqual(phoneNumber);
+        expect(_.get(controller.menuEntry.actions[0], 'name')).toBe('route');
+        expect(_.get(controller.model.phoneNumberInput, 'extension')).toEqual(phoneNumber);
       });
 
       it('should have phone number type extension', function () {
@@ -275,8 +275,8 @@ describe('Controller: AARouteToExtNumCtrl', function () {
         var controller = $controller('AARouteToExtNumCtrl', {
           $scope: $scope,
         });
-        expect(controller.menuEntry.actions[0].name).toEqual('route');
-        expect(controller.model.phoneNumberInput.phoneNumber).toEqual(phoneNumber);
+        expect(_.get(controller.menuEntry.actions[0], 'name')).toBe('route');
+        expect(_.get(controller.model.phoneNumberInput, 'phoneNumber')).toEqual(phoneNumber);
       });
     });
 
@@ -294,9 +294,9 @@ describe('Controller: AARouteToExtNumCtrl', function () {
         var controller = $controller('AARouteToExtNumCtrl', {
           $scope: $scope,
         });
-        expect(controller.menuEntry.actions[0].name).toEqual('route');
-        expect(controller.model.phoneNumberInput.phoneNumber).toEqual(phoneNumber);
-        expect(controller.model.phoneNumberInput.extension).toEqual('');
+        expect(_.get(controller.menuEntry.actions[0], 'name')).toBe('route');
+        expect(_.get(controller.model.phoneNumberInput, 'phoneNumber')).toEqual(phoneNumber);
+        expect(_.get(controller.model.phoneNumberInput, 'extension')).toEqual('');
       });
     });
   });

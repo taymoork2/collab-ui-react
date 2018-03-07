@@ -6,7 +6,7 @@
     .controller('AARouteToExtNumCtrl', AARouteToExtNumCtrl);
 
   /* @ngInject */
-  function AARouteToExtNumCtrl($scope, $translate, AutoAttendantHybridCareService, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
+  function AARouteToExtNumCtrl($scope, $translate, AAUiModelService, AACommonService, AutoAttendantCeMenuModelService, AutoAttendantHybridCareService) {
     var vm = this;
     var conditional = 'conditional';
 
@@ -46,7 +46,7 @@
     vm.getPhoneNumber = getPhoneNumber;
     vm.selectRoutingPrefix = $translate.instant('autoAttendant.selectRoutingPrefix');
     vm.extensionMinLength = 3;
-    vm.extensionmaxLength = 10;
+    vm.extensionMaxLength = 10;
     vm.orgHasHybridEnabled = false;
     vm.validationMessages = {
       required: 'Extension field cannot be empty',
@@ -75,6 +75,8 @@
         action = _.get(action.then, 'queueSettings.fallback.actions[0]', action.then);
       }
       vm.orgHasHybridEnabled = AutoAttendantHybridCareService.getHybridandEPTConfiguration();
+
+      // value will hold either phone number or extension
       var value = action.getValue();
       if (!vm.orgHasHybridEnabled) {
         if (!_.isEmpty(value)) {
