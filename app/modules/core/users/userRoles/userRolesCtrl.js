@@ -109,6 +109,7 @@ require('./_user-roles.scss');
     $scope.clearCheckboxes = clearCheckboxes;
     $scope.supportCheckboxes = supportCheckboxes;
     $scope.partialCheckboxes = partialCheckboxes;
+    $scope.hasUserOrDeviceAdmin = hasUserOrDeviceAdmin;
     $scope.orderadminOnCheckedHandler = orderadminOnCheckedHandler;
     $scope.helpdeskOnCheckedHandler = helpdeskOnCheckedHandler;
     $scope.partnerManagementOnCheckedHandler = partnerManagementOnCheckedHandler;
@@ -585,6 +586,10 @@ require('./_user-roles.scss');
       $scope.rolesObj.adminRadioValue = 2;
       $scope.rolesEdit.form.$dirty = true;
       checkAdminDisplayName();
+    }
+
+    function hasUserOrDeviceAdmin() {
+      return $scope.rolesObj.userAdminValue || $scope.rolesObj.deviceAdminValue;
     }
 
     function partialCheckboxes() {
