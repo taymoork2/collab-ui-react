@@ -1,7 +1,7 @@
 <form novalidate name="countrySelectForm" class="aa-country-select">
   <div ng-if = "!aaRouteToExtNum.orgHasHybridEnabled">
     <cs-select ng-model="aaRouteToExtNum.typeOfPhoneNumberSelected" options="aaRouteToExtNum.routeToExtOptions" 
-    placeholder="aaRouteToExtNum.selectRoutingPrefix" icon="icon-chevron-down" filter="false">
+    placeholder="aaRouteToExtNum.selectRoutingPrefix" id = "select-phone-number" icon="icon-chevron-down" filter="false">
     </cs-select>
   
     <cs-phone-number ng-if = "aaRouteToExtNum.typeOfPhoneNumberSelected === aaRouteToExtNum.routeToExtOptions[0]" 
@@ -12,7 +12,7 @@
 
     <input ng-if = "aaRouteToExtNum.typeOfPhoneNumberSelected === aaRouteToExtNum.routeToExtOptions[1]"
     ng-init = "aaRouteToExtNum.model.phoneNumberInput.phoneNumber = ''"
-    cs-input type="text" id="directiveValidation" name="firstName" 
+    cs-input type="text" id="extension"
     placeholder="{{ :: 'autoAttendant.enterExtensionPlaceholder' | translate }}" 
     ng-model="aaRouteToExtNum.model.phoneNumberInput.extension"
     cs-input-group-size="medium-12"
