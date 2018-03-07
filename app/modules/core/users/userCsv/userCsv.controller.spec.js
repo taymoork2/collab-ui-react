@@ -36,9 +36,9 @@ describe('userCsv.controller', function () {
     spyOn(this.ServiceDescriptorService, 'getServices').and.returnValue(this.$q.resolve(this.fusionServices));
     spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
-        return this.$q.resolve(_this.headers);
+        return _this.$q.resolve(_this.headers);
       } else {
-        return this.$q.resolve({});
+        return _this.$q.resolve({});
       }
     });
 
@@ -48,6 +48,9 @@ describe('userCsv.controller', function () {
 
     spyOn(this.FeatureToggleService, 'getFeaturesForUser').and.returnValue(this.getMyFeatureToggles);
     spyOn(this.FeatureToggleService, 'supports').and.callFake(function () {
+      return _this.$q.resolve(false);
+    });
+    spyOn(this.FeatureToggleService, 'atlasCsvImportTaskManagerGetStatus').and.callFake(function () {
       return _this.$q.resolve(false);
     });
     spyOn(this.FeatureToggleService, 'atlasUserCsvSubscriptionEnableGetStatus').and.callFake(function () {

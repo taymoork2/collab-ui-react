@@ -296,12 +296,12 @@
       "ad": {
         "title": "Bulk Modify Users",
         "instructions": "Export the current user attributes, edit the CSV file, and then import the edited version to update these users.",
-        "subscriptionReminder": "This method requires the uploaded content to match current license subcriptions. To update users, export the current user template below to edit user attributes. Once completed, upload changes."
+        "subscriptionReminder": "This method requires the uploaded content to match current license subscriptions. To update users, export the current user template below to edit user attributes. Once completed, upload changes."
       },
       "org": {
         "title": "Bulk Add or Modify Users",
         "instructions": "Export the current user attributes, edit the CSV file, and then import the edited version to add or update users.",
-        "subscriptionReminder": "This method requires the uploaded content to match current license subcriptions. To add or update users, export the current user template below to edit user attributes. Once completed, upload changes."
+        "subscriptionReminder": "This method requires the uploaded content to match current license subscriptions. To add or update users, export the current user template below to edit user attributes. Once completed, upload changes."
       },
       "import": {
         "label": "Import",

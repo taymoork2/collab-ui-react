@@ -2,6 +2,7 @@
 @import '~@collabui/collab-ui/scss/settings/fonts';
 @import '~@collabui/collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+@import 'styles/partials/mixins';
 
 .dialog-padding {
   @include vr-spacing(mh, 1.5);
@@ -38,6 +39,17 @@
 }
 
 // Style the Upload/Export page
+.user-csv-bulk-center {
+  @include keep-flex-container(column);
+  align-items: center;
+  justify-content: center;
+
+  i.larger {
+      font-size: 7em;
+      @include vr-spacing(mb, 3);
+  }
+}
+
 .user-csv-bulk {
   display: flex;
   flex-flow: column nowrap;

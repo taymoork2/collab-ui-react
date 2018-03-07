@@ -20,6 +20,7 @@ require('./_user-csv.scss');
     vm.isCsvValid = false;
     vm.handleHybridServicesResourceGroups = false;
     vm.hybridServicesUserProps = [];
+    vm.isLoading = true;
 
     var maxUsers = UserCsvService.maxUsersInCSV;
     var csvUsersArray = [];
@@ -38,19 +39,17 @@ require('./_user-csv.scss');
     var NO_RESOURCE_GROUP = '**no resource group**';
 
     var isAtlasCsvImportTaskManagerToggled = false;
-    FeatureToggleService.atlasCsvImportTaskManagerGetStatus().then(function (toggled) {
-      isAtlasCsvImportTaskManagerToggled = toggled;
-    });
-
-    var isAtlasUserCsvSubscriptionEnable = false;
-    FeatureToggleService.atlasUserCsvSubscriptionEnableGetStatus().then(function (toggled) {
-      isAtlasUserCsvSubscriptionEnable = toggled;
-    });
-
-    CsvDownloadService.getCsv('headers').then(function (csvData) {
-      orgHeaders = _.cloneDeep(csvData.columns || []);
-    }).catch(function (response) {
-      Notification.errorResponse(response, 'firstTimeWizard.downloadHeadersError');
+    var isAtlasUserCsvSubscriptionEnabled = false;
+    $q.all({
+      isAtlasCsvImportTaskManagerToggled: FeatureToggleService.atlasCsvImportTaskManagerGetStatus(),
+      isAtlasUserCsvSubscriptionEnabled: FeatureToggleService.atlasUserCsvSubscriptionEnableGetStatus(),
+      headers: CsvDownloadService.getCsv('headers'),
+    }).then(function (promiseData) {
+      isAtlasCsvImportTaskManagerToggled = promiseData.isAtlasCsvImportTaskManagerToggled;
+      isAtlasUserCsvSubscriptionEnabled = promiseData.isAtlasUserCsvSubscriptionEnabled;
+      orgHeaders = _.cloneDeep(promiseData.headers.columns || []);
+    }).finally(function () {
+      vm.isLoading = false;
     });
 
     vm.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
@@ -143,35 +142,34 @@ require('./_user-csv.scss');
     vm.validateCsv = function () {
       setUploadProgress(0);
       vm.isCsvValid = false;
+
       try {
-        if (vm.model.file) {
-          // only validate if there is a file to test
-          csvUsersArray = $.csv.toArrays(vm.model.file);
-          if (_.isArray(csvUsersArray) && csvUsersArray.length > 0 && _.isArray(csvUsersArray[0])) {
-            if (_.indexOf(csvUsersArray[0], USER_ID_EMAIL_HEADER) > -1) {
-              csvHeaders = csvUsersArray.shift();
-              if (csvUsersArray.length > 0 && csvUsersArray.length <= maxUsers) {
-                // if header names don't match in multiple subscriptions
-                var mismatchHeaderName = findMismatchHeader(orgHeaders, csvHeaders);
-                if (mismatchHeaderName) {
-                  Notification.error('firstTimeWizard.csvHeaderNameMismatch', {
-                    name: mismatchHeaderName,
-                  });
-                  vm.resetFile();
-                } else {
-                  vm.isCsvValid = true;
-                }
-              } else {
-                warnCsvUserCount();
-                vm.resetFile();
-              }
-            } else {
-              Notification.error('firstTimeWizard.uploadCsvBadHeaders');
-              vm.resetFile();
-            }
-          } else {
-            Notification.error('firstTimeWizard.uploadCsvBadFormat');
+        if (!vm.model.file) {
+          return;
+        }
+        csvUsersArray = $.csv.toArrays(vm.model.file);
+        if (!_.isArray(csvUsersArray) || _.isEmpty(csvUsersArray) || !_.isArray(csvUsersArray[0])) {
+          Notification.error('firstTimeWizard.uploadCsvBadFormat');
+          vm.resetFile();
+        } else if (_.indexOf(csvUsersArray[0], USER_ID_EMAIL_HEADER) === -1) {
+          Notification.error('firstTimeWizard.uploadCsvBadHeaders');
+          vm.resetFile();
+        } else {
+          csvHeaders = csvUsersArray.shift();
+          if (_.isEmpty(csvUsersArray) || _.size(csvUsersArray) > maxUsers) {
+            warnCsvUserCount();
             vm.resetFile();
+          } else {
+            // check if header names don't match in multiple subscriptions
+            var mismatchHeaderName = findMismatchHeader(orgHeaders, csvHeaders);
+            if (mismatchHeaderName) {
+              Notification.error('firstTimeWizard.csvHeaderNameMismatch', {
+                name: mismatchHeaderName,
+              });
+              vm.resetFile();
+            } else {
+              vm.isCsvValid = true;
+            }
           }
         }
       } catch (e) {
@@ -434,30 +432,16 @@ require('./_user-csv.scss');
     }
 
     function findMismatchHeader(serverHeaders, userHeaders) {
-      var index = -1;
-      var isValid = true;
-      var mismatchColumnName = '';
-
-      if (!isAtlasUserCsvSubscriptionEnable) {
-        return '';
+      if (!isAtlasUserCsvSubscriptionEnabled || !serverHeaders || !userHeaders) {
+        return undefined;
       }
 
-      if (!serverHeaders || !userHeaders) {
-        return '';
-      } else {
-        _.forEach(userHeaders, function (uHeader) {
-          if (isValid) {
-            index = _.findIndex(serverHeaders, function (sHeader) {
-              return sHeader.name === uHeader || sHeader.name === renamedHeaders[uHeader];
-            });
-            if (index === -1) {
-              isValid = false;
-              mismatchColumnName = uHeader;
-            }
-          }
+      // Find if there's any mis-matched header names
+      return _.find(userHeaders, function (uHeader) {
+        return !_.some(serverHeaders, function (sHeader) {
+          return sHeader.name === uHeader || sHeader.name === renamedHeaders[uHeader];
         });
-      }
-      return mismatchColumnName;
+      });
     }
 
     function generateHeaders(serverHeaders, userHeaders) {
