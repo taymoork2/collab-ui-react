@@ -25,7 +25,6 @@ export class InventoryComponent implements ng.IComponentOptions {
 
 export class InventoryCtrl implements ng.IComponentController {
   private timer;
-  private showManagedDataRefresh: boolean;
   private timeoutVal: number;
   private tempFilterOptions: (string| undefined)[];
 
@@ -127,12 +126,10 @@ export class InventoryCtrl implements ng.IComponentController {
       }
       if (str.length >= 1 || str === '') {
         //search function
-        this.showManagedDataRefresh = true;
         this.inventoryListData = this.inventoryListData.filter(inventory => {
           const inventoryName = _.get(inventory, 'name', 'Unassigned');
           return (_.includes(inventoryName.toLowerCase(), str.toLowerCase()));
         });
-        this.showManagedDataRefresh = false;
       }
     }, this.timeoutVal);
   }
