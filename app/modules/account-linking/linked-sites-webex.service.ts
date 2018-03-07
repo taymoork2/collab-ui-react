@@ -53,16 +53,13 @@ export class LinkedSitesWebExService {
       let urlToUse = this.useSimulator ? this.webexSimUrl : this.getSiteApiUrl(siteUrl);
       urlToUse += this.ciSiteLinkingPath;
       this.$log.debug('WebeEx API url', urlToUse);
-      const startTime = moment();
       return this.$http.get(urlToUse, {
         headers: { Authorization: 'Ticket ' + ticket },
       }).then((response) => {
         this.$log.debug('getCiSiteLinking', response);
-        this.logMetrics('getCiSiteLinking', response, startTime, moment());
         return response.data;
       }).catch ((error) => {
         this.$log.debug('getCiSiteLinking error in webexservice:', error);
-        this.logMetrics('getCiSiteLinking', error, startTime, moment());
         throw error;
       });
     });
@@ -104,18 +101,18 @@ export class LinkedSitesWebExService {
       let urlToUse = this.useSimulator ? this.webexSimUrl : this.getSiteApiUrl(siteUrl);
       urlToUse += this.ciSiteLinkingPath;
       this.$log.debug('WebeEx API url', urlToUse);
-      const startTime = moment();
+      //const startTime = moment();
       return this.$http.patch(urlToUse, {
         linkAllUsers: linkAllUsers,
       }, {
         headers: { Authorization: 'Ticket ' + ticket },
       }).then((response) => {
         this.$log.debug('setLinkAllUsers', response);
-        this.logMetrics('setLinkAllUsers', response, startTime, moment());
+        //this.logMetrics('setLinkAllUsers', response, startTime, moment());
         return <IACWebexSiteinfoResponse> response.data;
       }, (error) => {
         this.$log.error('setLinkAllUsers error:', error);
-        this.logMetrics('setLinkAllUsers', error, startTime, moment());
+        //this.logMetrics('setLinkAllUsers', error, startTime, moment());
         throw error;
       });
     });
@@ -127,16 +124,13 @@ export class LinkedSitesWebExService {
       this.$log.debug('webex.service ticket:', ticket);
       let urlToUse = this.useSimulator ? this.webexSimUrl : this.getSiteApiUrl(siteUrl);
       urlToUse += this.ciAccountSyncPath;
-      const startTime = moment();
       return this.$http.get(urlToUse, {
         headers: { Authorization: 'Ticket ' + ticket },
       }).then((response) => {
         this.$log.debug('getCiAccountSync', response);
-        this.logMetrics('getCiAccountSync', response, startTime, moment());
         return response.data;
       }).catch((error) => {
         this.$log.error('getCiAccountSync in Webexservice:', error);
-        this.logMetrics('getCiAccountSync', error, startTime, moment());
         throw error;
       });
     });
@@ -145,10 +139,15 @@ export class LinkedSitesWebExService {
   public getDomainsWithRetry(siteUrl: string): ng.IPromise<any> {
     const deferred = this.$q.defer();
     const self = this;
+    let queries = 0;
+    const startTime = moment();
     function doQuery() {
+      queries++;
       self.getDomains(siteUrl).then((data) => {
         if (data && !data.retry) {
           self.$log.debug('doQuery resolve', data);
+          data['retries'] = queries;
+          //self.logMetrics('getDomains', data, startTime, moment());
           deferred.resolve(data);
         } else {
           self.$log.debug('doQuery retry');
@@ -156,6 +155,10 @@ export class LinkedSitesWebExService {
             doQuery();
           }, 5000);
         }
+      }).catch( (error) => {
+        error[queries] = queries;
+        this.logMetrics('setLinkAllUsers', error, startTime, moment());
+        return error;
       });
     }
     doQuery();
@@ -168,13 +171,10 @@ export class LinkedSitesWebExService {
       this.$log.debug('WebeEx API url', urlToUse);
       // TODO: Currently fetching a limited number of domains from webex.
       //       Waiting for a better solution to handle domains
-      const startTime = moment();
       return this.$http.get(urlToUse + '?limit=40', {
         headers: { Authorization: 'Ticket ' + ticket },
       }).then((response) => {
         this.$log.debug('getDomains', response);
-        this.logMetrics('getDomains', response, startTime, moment());
-
         // Check if it is a 202 status, why is Retry-After header not present ?
         if (response.status === 202) {
           return { retry: true };
@@ -183,7 +183,6 @@ export class LinkedSitesWebExService {
         }
       }).catch((error) => {
         this.$log.debug('getDomains error in Webexservice::', error);
-        this.logMetrics('getDomains', error, startTime, moment());
         throw error;
       });
     });
@@ -215,7 +214,7 @@ export class LinkedSitesWebExService {
     this.LogMetricsService.logMetrics(
       'accountlinking20',
       this.LogMetricsService.eventType.accountlinkingOperation,
-      this.LogMetricsService.eventAction.buttonClick, // Well, not excactly...
+      this.LogMetricsService.eventAction.pageLoad,
       200,
       moment(),
       1,
