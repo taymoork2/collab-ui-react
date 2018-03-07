@@ -1,6 +1,6 @@
 import { HybridServicesClusterStatusHistoryTableComponent } from './cluster-status-history-table.component';
 import { HybridServicesClusterStatusHistorySidepanelComponent } from './cluster-status-history-sidepanel.component';
-import './_cluster-status-history.scss';
+import './cluster-status-history-table.scss';
 import hybridServicesEventHistoryServiceModuleName from 'modules/hercules/services/hybrid-services-event-history.service';
 
 export default angular

@@ -67,7 +67,7 @@ module.exports = {
   scriptSrc: [
     '\'self\'',
     '\'unsafe-eval\'',
-    '\'sha256-YllLHRtar0IQ3QT7XKv04yy985FgoG331hfzTbkk2Z4=\'', // Devices page advanced settings launch: ATLAS-2913
+    '\'sha256-5zmUxCaNKNz+kTngvNTF8srDs9p8XHdW0oh+h9q46KQ=\'', // Devices page advanced settings launch: ATLAS-2913
     'https://*.localytics.com',
     'https://*.webex.com',
     'https://api.mixpanel.com', // Mixpanel
