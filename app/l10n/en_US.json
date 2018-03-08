@@ -2917,6 +2917,7 @@
           "DNSHostNameFound": "DNS Hostname Found",
           "DNSIpFound": "DNS IP Found",
           "DNSSvrFound": "DNS SRV Record Found",
+          "InvalidSIPDestination": "Invalid SIP Destination",
           "IOFailure": "Input/Output Failure",
           "NoAnswer": "No Answer",
           "NoDNSHopsFound": "No DNS Hops Found",
@@ -2940,6 +2941,7 @@
         },
         "fixes": {
           "Connecting": "TCP Connection failure: Check network connectivity, connection speed, and/or firewall configuration. Search for ‘connect failure’ in the <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Troubleshooting Documentation</a.",
+          "InvalidSIPDestination": "{{domain}} is not a valid SIP destination. Please check the help text below.",
           "IOFailure": "TCP failure: TCP read/write failure: Please try again. If the error persists, check network connectivity, firewall configuration, and Mutual TLS configuration. Search for ‘socket failure’ in the <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Troubleshooting Documentation</a.",
           "NoDNSHopsFound": "DNS Lookup failed. Check that a DNS or SRV record exists for your SIP Destination and that it resolves to one or more valid IP addresses. Search for ‘DNS SRV’ in the <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Troubleshooting Documentation</a>.",
           "PingFailed": "SIP ping failed.",

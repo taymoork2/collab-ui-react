@@ -10,9 +10,9 @@ interface ITestResultSet {
 
 class SipDestinationSettingsSectionComponentCtrl implements ng.IComponentController {
 
-  public showSIPTestTool: boolean = false;
   public savingSip: boolean = false;
   public sipDomain: string;
+  public originalValue: string;
   public sipDestinationTestSucceeded: boolean | undefined;
   public sipDestinationTestResultSet: ITestResultSet;
 
@@ -62,6 +62,7 @@ class SipDestinationSettingsSectionComponentCtrl implements ng.IComponentControl
   public onResultReady = (succeeded: boolean, resultSet: ITestResultSet) => {
     this.sipDestinationTestSucceeded = succeeded;
     this.sipDestinationTestResultSet = resultSet;
+    this.originalValue = _.clone(this.sipDomain);
   }
 
   /* Callback from the verify-sip-destination component  */
