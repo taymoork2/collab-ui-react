@@ -1,0 +1,23 @@
+<div class="abc-business-id">
+  <div class="ct-title">
+    <span class="h3">{{$ctrl.getText('businessId.title')}}</span>
+  </div>
+  <div class="cs-card-container ct-virtual-assistant ct-sa-content">
+    <cs-card-layout block-view="true" class="va-card-center">
+      <cs-card class="va-card va-box business-id-box center-card-content">
+        <div ng-form="$ctrl.businessIdForm">
+          <div class="cs-input-group medium-12 columns">
+            <label class="cs-input__label input-label" for="idInput">{{$ctrl.getText('businessId.inputLabel')}}</label>
+            <div class="input-row">
+              <input cs-input type="text" focus-on
+                name="idInput"
+                autocomplete="off"
+                ng-model="$ctrl.template.configuration.pages.abcBusinessId.value">
+            </div>
+            <p class="h6" translate="careChatTpl.appleBusinessChat.businessId.helpText" translate-value-href="https://register.apple.com/business-chat"></p>
+          </div>
+        </div>
+      </cs-card>
+    </cs-card-layout>
+  </div>
+</div>

@@ -60,7 +60,7 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
           startTimeInMillis: 0,
           eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_ACCESS_TOKEN_PAGE,
         },
-        vaName: {
+        name: {
           enabled: true,
           nameValue: '',
           startTimeInMillis: 0,
@@ -120,7 +120,7 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
       this.isEditFeature = true;
       this.template.templateId = this.$stateParams.template.id;
       this.template.configuration.pages.cvaConfigOverview.isDialogflowAgentConfigured = true;
-      this.template.configuration.pages.vaName.nameValue = this.$stateParams.template.name;
+      this.template.configuration.pages.name.nameValue = this.$stateParams.template.name;
       this.template.configuration.pages.cvaAccessToken.accessTokenValue = this.$stateParams.template.config.token;
       this.template.configuration.pages.cvaAccessToken.invalidToken = false;
       this.template.configuration.pages.cvaAccessToken.needsValidation = false;
@@ -163,7 +163,7 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
       case 'cvaAccessToken':
         this.unsetFocus();
         return this.isAccessTokenValid();
-      case 'vaName':
+      case 'name':
         this.unsetFocus();
         return this.isNamePageValid() && !this.isAvatarUploading();
       case 'vaAvatar':
@@ -212,12 +212,12 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
         controller.tokenFormErrors[key] = controller.tokenForm.$error[key];
       });
     }
-    if (currentState === 'vaName' &&
-      _.isEmpty(this.template.configuration.pages.vaName.nameValue) &&
+    if (currentState === 'name' &&
+      _.isEmpty(this.template.configuration.pages.name.nameValue) &&
       !_.isEmpty(this.nameForm) &&
       !this.nameForm.$valid) {
       //Name was validated and failed validation. The actual value is in the nameform, so set our value to that; JIRA CA-104
-      this.template.configuration.pages.vaName.nameValue = this.nameForm.nameInput.$viewValue;
+      this.template.configuration.pages.name.nameValue = this.nameForm.nameInput.$viewValue;
     }
   }
 
@@ -225,7 +225,7 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
    * submit the collected template of data for storage.
    */
   public submitFeature(): void {
-    const name = this.template.configuration.pages.vaName.nameValue.trim();
+    const name = this.template.configuration.pages.name.nameValue.trim();
     const config = this.createConfigurationObject(); // Note: this is our point of extensibility as other types besides dialogflow are supported.
     this.creatingTemplate = true;
     const avatarDataUrl = this.template.configuration.pages.vaAvatar.fileValue;
@@ -299,12 +299,12 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
       && !this.template.configuration.pages.cvaAccessToken.invalidToken;
   }
   public isNameValid(): boolean {
-    const name = (this.template.configuration.pages.vaName.nameValue || '').trim();
+    const name = (this.template.configuration.pages.name.nameValue || '').trim();
     return this.isNameLengthValid(name) && this.isUniqueName(name);
   }
 
   public isNamePageValid(): boolean {
-    const name = (this.template.configuration.pages.vaName.nameValue || '').trim();
+    const name = (this.template.configuration.pages.name.nameValue || '').trim();
     return name !== '' && this.isNameValid();
   }
 
@@ -328,7 +328,7 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     let isUnique = !_.find(list, function (cva: any) {
       return cva.id !== controller.template.templateId && cva.name.toLowerCase() === name.toLowerCase();
     });
-    const nameWithError = this.template.configuration.pages.vaName.nameWithError;
+    const nameWithError = this.template.configuration.pages.name.nameWithError;
     if (!_.isEmpty(nameWithError)) {
       //this can happen if we already tried to save to the server and got a duplicate name error that was not caught by the above check
       isUnique = isUnique && name.toLowerCase() !== nameWithError;
