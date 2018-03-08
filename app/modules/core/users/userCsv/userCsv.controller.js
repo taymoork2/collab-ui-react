@@ -48,6 +48,8 @@ require('./_user-csv.scss');
       isAtlasCsvImportTaskManagerToggled = promiseData.isAtlasCsvImportTaskManagerToggled;
       isAtlasUserCsvSubscriptionEnabled = promiseData.isAtlasUserCsvSubscriptionEnabled;
       orgHeaders = _.cloneDeep(promiseData.headers.columns || []);
+    }).catch(function (response) {
+      Notification.errorResponse(response);
     }).finally(function () {
       vm.isLoading = false;
     });
@@ -147,31 +149,37 @@ require('./_user-csv.scss');
         if (!vm.model.file) {
           return;
         }
+
         csvUsersArray = $.csv.toArrays(vm.model.file);
         if (!_.isArray(csvUsersArray) || _.isEmpty(csvUsersArray) || !_.isArray(csvUsersArray[0])) {
           Notification.error('firstTimeWizard.uploadCsvBadFormat');
           vm.resetFile();
-        } else if (_.indexOf(csvUsersArray[0], USER_ID_EMAIL_HEADER) === -1) {
+          return;
+        }
+
+        if (_.indexOf(csvUsersArray[0], USER_ID_EMAIL_HEADER) === -1) {
           Notification.error('firstTimeWizard.uploadCsvBadHeaders');
           vm.resetFile();
-        } else {
-          csvHeaders = csvUsersArray.shift();
-          if (_.isEmpty(csvUsersArray) || _.size(csvUsersArray) > maxUsers) {
-            warnCsvUserCount();
-            vm.resetFile();
-          } else {
-            // check if header names don't match in multiple subscriptions
-            var mismatchHeaderName = findMismatchHeader(orgHeaders, csvHeaders);
-            if (mismatchHeaderName) {
-              Notification.error('firstTimeWizard.csvHeaderNameMismatch', {
-                name: mismatchHeaderName,
-              });
-              vm.resetFile();
-            } else {
-              vm.isCsvValid = true;
-            }
-          }
+          return;
         }
+
+        csvHeaders = csvUsersArray.shift();
+        if (_.isEmpty(csvUsersArray) || _.size(csvUsersArray) > maxUsers) {
+          warnCsvUserCount();
+          vm.resetFile();
+          return;
+        }
+
+        var mismatchHeaderName = findMismatchHeader(orgHeaders, csvHeaders);
+        if (mismatchHeaderName) {
+          Notification.error('firstTimeWizard.csvHeaderNameMismatch', {
+            name: mismatchHeaderName,
+          });
+          vm.resetFile();
+          return;
+        }
+
+        vm.isCsvValid = true;
       } catch (e) {
         Notification.error('firstTimeWizard.uploadCsvBadFormat');
         vm.resetFile();

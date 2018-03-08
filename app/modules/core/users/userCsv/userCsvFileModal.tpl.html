@@ -3,12 +3,12 @@
   <h3 class="modal-title" translate="usersPage.manageUsers"></h3>
 </div>
 <div class="modal-body" ng-if="csv.isLoading">
-    <div class="user-csv-bulk-center">
-        <i class="icon icon-spinner larger"></i>
-      </div>
+  <div class="user-csv-bulk--center text-center">
+    <i class="icon icon-spinner icon-5x"></i>
+  </div>
 </div>
 <div class="modal-body user-csv-bulk" ng-if="!csv.isLoading">
-    <div ng-if="csv.isDirSyncEnabled">
+  <div ng-if="csv.isDirSyncEnabled">
     <h4 translate="userManage.bulk.ad.title"></h4>
     <p cr-feature-toggle feature-hide="atlas-user-csv-subscription-enable" translate="userManage.bulk.ad.instructions"></p>
     <p cr-feature-toggle feature-show="atlas-user-csv-subscription-enable" translate="userManage.bulk.ad.subscriptionReminder"></p>
