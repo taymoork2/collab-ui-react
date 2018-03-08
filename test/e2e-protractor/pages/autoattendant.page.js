@@ -14,7 +14,7 @@ var AutoAttendantPage = function () {
   this.selectPhoneNumberInDropdown = this.selectPhoneNumber.element(by.css('div.dropdown-menu')).element(by.linkText('Telephone Number'));
   this.selectExtensionInDropdown = this.selectPhoneNumber.element(by.css('div.dropdown-menu')).element(by.linkText('Extension'));
   this.phoneNumberActionTarget = element(by.css('div.aa-route-action')).element(by.name('phoneinput'));
-  this.extensionActionTarget = element(by.css('div.aa-route-action')).element(by.id('extension'));
+  this.extensionActionTarget = element(by.css('div.aa-route-action')).element(by.name('routeToExtension'));
 
   this.firstTimeZone = 'Africa/Abidjan';
   this.routeQueueDetail = element(by.id('route-queue-detail'));
