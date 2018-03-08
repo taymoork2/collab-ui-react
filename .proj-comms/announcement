@@ -1,19 +1,15 @@
 ## Notice to all contributors:
 
-The toolkit packages are moving to the collab-npm repository, and will be
-published to the `@collabui` namespace.
+There have been a couple changes to unit test execution:
 
-If you are seeing this message AND you have a live PR open currently, please
-ensure that your changeset uses the updated namespace:
+- code coverage is disabled by default
+  - can be enabled with the `--env.coverage` flag
+  - coverage instrumentation is resource-intensive
+  - most users don't check coverage on every test run, but can still enable when desired
+  - coverage is still generated and calculated for Jenkins builds
 
-e.g. update `require(...)` statements
-```
-require('collab-ui-ng')            // <- old
-require('@collabui/collab-ui-ng')  // <- new
-```
-
-e.g. update `@import ...` statements
-```
-@import '~collab-ui/scss/...'            // <- old
-@import '~@collabui/collab-ui/scss/...'  // <- new
-```
+- karma default browser changed to headless Chrome
+  - behavior more aligned with full Chrome browser used in debug mode
+  - executes tests faster and is more responsive
+  - can be remotely debugged with chrome://inspect
+  - if needed, can fallback to PhantomJS with `--phantomjs` flag
