@@ -4778,7 +4778,10 @@
     "restApiUrlHelperText": "Enter the secure URL of the REST API to invoke. Click the 'Add Dynamic text' to insert variables in the URL.",
     "completeHttpsError": "Enter the complete URL including the protocol, HTTPS.",
     "secureHttpsError": "Enter only secure HTTPS URLs.",
-    "enterExtensionPlaceholder":"Enter Extension"
+    "enterExtensionPlaceholder": "Enter Extension",
+    "extensionPatternError": "Only digits are allowed",
+    "extensionMinLengthError": "Extension length should be in the limit of 3-10 digits",
+    "extensionRequiredError": "Extension field cannot be empty"
   },
   "callPark": {
     "code": "CP",
