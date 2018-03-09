@@ -1,0 +1,45 @@
+<div class="cs-form__section">
+  <div class="section__info">
+    <h4 class="section__title">SIP Destination</h4>
+  </div>
+  <div class="section__content">
+    <div class="sub-section">
+      <h5 class="sub-section__label">Default SIP Destination Override</h5>
+      <p class="sub-section__description">Override the default SIP Destination configured for Hybrid Call Connect in the organization. Review your organization SIP Destinations and certificates from the certificates from the <a href="">Hybrid Call Settings page.</a></p>
+      <div cs-loader class="loader-example--small" ng-if="$ctrl.loading"></div>
+      <form name="defaultSIPDomainOverrideForm" ng-if="!$ctrl.loading">
+        <div class="cs-checkbox-group">
+          <input
+            cs-input
+            type="checkbox"
+            ng-model="$ctrl.override"
+            ng-change="$ctrl.changeOverride()"
+            id="override"
+            name="override"
+            cs-input-label="Override default SIP Destination">
+        </div>
+        <div class="row" ng-if="!$ctrl.override">
+          <input
+            cs-input
+            type="text"
+            cs-input-group-size="medium-7"
+            ng-model="$ctrl.defaultSipDomain"
+            disabled>
+        </div>
+        <div class="row" ng-if="$ctrl.override">
+          <input
+            cs-input
+            type="text"
+            cs-input-group-size="medium-7"
+            ng-model="$ctrl.defaultSipDomain"
+            required>
+          <verify-sip-destination
+            destination-url="$ctrl.sipDomain"
+            on-destination-save="$ctrl.onDestinationSave(warn)"
+            on-test-started="$ctrl.onTestStarted()"
+            on-result-ready="$ctrl.onResultReady(succeeded, resultSet)"></verify-sip-destination>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

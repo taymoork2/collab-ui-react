@@ -1,4 +1,6 @@
 <div class="cs-form">
+  <cluster-sip-destination-section ng-if="$ctrl.hasHybridGlobalCallServiceConnectFature" cluster="$ctrl.cluster"></cluster-sip-destination-section>
+
   <setting-section setting="$ctrl.upgradeSchedule">
     <div class="sub-section">
       <h5 class="sub-section__label" translate="hercules.settings.scheduleUpgrade.title"></h5>
@@ -49,6 +51,8 @@
       <p class="sub-section__description" translate="hercules.expresswayClusterSettings.noHybridServicesProvisioned"></p>
     </div>
   </setting-section>
+
+  <!-- <cluster-sip-destination-section ng-if="$ctrl.hasHybridGlobalCallServiceConnectFature" cluster="$ctrl.cluster"></cluster-sip-destination-section> -->
 
   <hs-rename-and-deregister-cluster-section
     cluster="$ctrl.cluster"

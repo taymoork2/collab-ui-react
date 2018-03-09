@@ -2,6 +2,7 @@ import { Notification } from 'modules/core/notifications';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { ConnectorType } from 'modules/hercules/hybrid-services.types';
 import { ResourceGroupService } from 'modules/hercules/services/resource-group.service';
+import { FeatureToggleService } from 'modules/core/featureToggle';
 
 interface IResourceGroupOptions {
   label: string;
@@ -14,6 +15,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
   public enabledServices: string[] = [];
   public cluster: any;
   public clusterId: string;
+  public hasHybridGlobalCallServiceConnectFature: boolean;
   public resourceGroupOptions: IResourceGroupOptions[];
   public originalResourceGroup: IResourceGroupOptions;
   public selectedResourceGroup: IResourceGroupOptions;
@@ -32,12 +34,20 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
     private $modal,
     private $rootScope: ng.IRootScopeService,
     private $translate: ng.translate.ITranslateService,
+    private FeatureToggleService: FeatureToggleService,
     private HybridServicesClusterService: HybridServicesClusterService,
     private Notification: Notification,
     private ResourceGroupService: ResourceGroupService,
   ) {
     this.buildResourceOptions = this.buildResourceOptions.bind(this);
     this.getCurrentResourceGroup = this.getCurrentResourceGroup.bind(this);
+  }
+
+  public $onInit() {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridGlobalCallServiceConnect)
+      .then(support => {
+        this.hasHybridGlobalCallServiceConnectFature = support;
+      });
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
