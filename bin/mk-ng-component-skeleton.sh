@@ -156,11 +156,11 @@ function print_component_scss {
 // TODO: use as-appropriate
 // @import '~@collabui/collab-ui/scss/settings/typography';
 // @import '~@collabui/collab-ui/scss/settings/colors';
-// @import 'styles/partials/mixins';  // <- for 'keep-flex()'
+// @import 'styles/partials/mixins';  // <- for 'keep-flex-container()'
 
 ${html_element_name} {
   // TODO: use as-appropriate
-  // @include keep-flex();
+  // @include keep-flex-container();
 }
 _EOF
 }
