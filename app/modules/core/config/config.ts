@@ -569,6 +569,7 @@ export class Config {
       'taasSchedule',
       'taasServiceManager',
       'taasResults',
+      'sso-certificate',
     ],
     Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'dgc'],
     Tech_Support: ['gss'],

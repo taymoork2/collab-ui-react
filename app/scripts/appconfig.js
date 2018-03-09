@@ -1207,6 +1207,20 @@
               task: undefined,
             },
           })
+          .state('sso-certificate', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<div ui-view></div>',
+              },
+            },
+          })
+          .state('sso-certificate.check-certificate', {
+            template: '<check-certificate dismiss="$dismiss()"></check-certificate>',
+          })
+          .state('sso-certificate.certificate-type', {
+            template: '<certificate-type dismiss="$dismiss()"></certificate-type>',
+          })
           .state('editService', {
             parent: 'modal',
             resolve: {

@@ -1,0 +1,48 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import 'styles/partials/mixins';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
+check-certificate, certificate-type {
+  @include keep-flex-container(column);
+
+  .reveal-modal.full & .modal-body {
+    align-items: center;
+    > * {
+      max-width: 450px;
+    }
+  }
+
+  .content {
+    margin: auto;
+
+    &__icon {
+      @include vr-spacing(mb, 3);
+      color: $green-base;
+    }
+
+    &__paragraph {
+      font-family: 'CiscoSansTT Light';
+      font-size: 1.5em;
+      font-weight: normal;
+      color: $gray-darkest;
+      width: 450px;
+      @include vr-spacing(mb, 2);
+      p {
+        font-size: 1rem;
+      }
+      &--space {
+        height: 5rem;
+      }
+    }
+
+    &__radio {
+      @include vr-spacing(mb, 3);
+      span {
+        font-size: 1rem;
+      }
+      label {
+        color: $gray-darker;
+      }
+    }
+  }
+}

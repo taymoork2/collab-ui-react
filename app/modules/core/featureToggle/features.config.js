@@ -73,6 +73,7 @@ module.exports = {
   atlasSetupSiteUserManagement: 'atlas-setup-site-user-management',
   atlasSipUriDomain: 'atlas-sip-uri-domain',
   atlasSparkAssistant: 'atlas-spark-assistant',
+  atlasSsoCertificateUpdate: 'atlas-sso-certificate-update',
   atlasSubdomainUpdate: 'atlas-subdomain-update',
   atlasSuppressOnboardingEmail: 'atlas-suppress-onboarding-email',
   atlasTrialsShipDevices: 'atlasTrialsShipDevices',
