@@ -68,9 +68,12 @@
               {{$ctrl.selectedSiteInfo.linkingStatus.accountsLinked}}/{{$ctrl.selectedSiteInfo.linkingStatus.totalWebExAccounts}}</span>
           </li>
           <li class="feature" ng-if="$ctrl.selectedSiteInfo.isSiteAdmin && $ctrl.isAutomaticMode()">
-            <span class="feature-name" translate="accountLinking.siteDetails.automaticLinking"
-              tooltip="{{::$ctrl.automaticLinkingTooltipText | translate}}" tooltip-placement="top-left">
-            </span>
+            <text-tooltip
+              cs-class="feature-name"
+              cs-tooltip-placement="top-left"
+              cs-tooltip-text="{{::$ctrl.automaticLinkingTooltipText | translate}}">
+              {{::'accountLinking.siteDetails.automaticLinking' | translate}}
+            </text-tooltip>
             <cs-toggle-switch ng-model="$ctrl.selectedSiteInfo.linkAllUsers"
               size="small"
               toggle-id="linkAllUsers"

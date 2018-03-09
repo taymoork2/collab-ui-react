@@ -16,15 +16,14 @@
         translate="userManage.ad.adStatusDetails">
       </p>
       <p class="user-manage-dir-sync__text--margin">
-        <a href
+        <text-tooltip
           ng-if="!umadc.isUserAdmin()"
-          ng-click="umadc.onTurnOffDS()"
-          translate="userManage.ad.turnOffDS"
-          tooltip="{{::'userManage.ad.turnOffDSToolTip'|translate}}"
-          tooltip-placement="bottom"
-          tooltip-trigger="mouseover focus"
-          aria-label="{{:: 'userManage.ad.turnOffDS' | translate}} {{::'userManage.ad.turnOffDSToolTip' | translate}}"
-          tabindex="0"></a>
+          cs-aria-label="{{:: 'userManage.ad.turnOffDS' | translate}} {{::'userManage.ad.turnOffDSToolTip' | translate}}"
+          cs-tooltip-placement="bottom"
+          cs-tooltip-text="{{::'userManage.ad.turnOffDSToolTip'|translate}}"
+          on-click-fn="umadc.onTurnOffDS()">
+          {{::'userManage.ad.turnOffDS' | translate}}
+        </text-tooltip>
       </p>
     </div>
   </div>
