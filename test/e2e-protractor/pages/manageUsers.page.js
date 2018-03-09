@@ -24,11 +24,6 @@ var manageUsersPage = function () {
     cancelButton: element(by.css('.reveal-modal.dialog .modal-content .modal-footer button:not(.btn--primary)')),
   };
 
-  // Auto-Assign Licenses
-  this.autoAssignLicenses = {
-    title: element(by.css('.modal-header > h3[translate]')),
-  };
-
   // add or modify users
   this.select = {
     title: element(by.css('.modal-body h4:first-of-type')),
@@ -99,6 +94,13 @@ var manageUsersPage = function () {
     updatedUsers: element(by.css('.updated-users .total')),
     errorUsers: element(by.css('.error-users .total')),
     uploadComplete: element(by.css('.user-csv-results .upload-complete .progressbar-label span.progressbar-label:first-child')),
+  };
+
+  this.autoAssignTemplate = {
+    createTemplate: {
+      title: element(by.cssContainingText('.modal-header > h3', 'Set Up Auto-Assign Template')),
+      subtitle: element(by.cssContainingText('.modal-body > h4', 'Add Services for Users')),
+    },
   };
 };
 
