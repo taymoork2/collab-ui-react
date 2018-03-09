@@ -129,6 +129,7 @@
   ],
   "devDependencies": {
     "@atlas/eslint-plugin-atlas-ui": "^5.0.0",
+    "@atlas/stylelint-atlas-ui": "^1.2.0",
     "@types/amcharts": "^0.0.39",
     "@types/angular": "~1.6",
     "@types/angular-mocks": "~1.5",
