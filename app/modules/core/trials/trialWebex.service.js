@@ -86,6 +86,7 @@
           434057: 'domainInvalid',
           439012: 'duplicateSite',
           439015: 'duplicateSite',
+          431205: 'duplicateSite',
           431397: 'duplicateSite',
         };
         var isValid = (data.isValid === 'true');

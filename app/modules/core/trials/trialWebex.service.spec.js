@@ -113,6 +113,19 @@ describe('Service: Webex Trial Service', function () {
       this.$httpBackend.flush();
     });
 
+    it('should fail to validate due to "Site brand name exists in DNS. " error', function () {
+      this.$httpBackend.whenPOST(this.UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
+        properties: [{
+          isValid: 'false',
+          errorCode: '431205',
+        }],
+      });
+      this.TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
+        expect(response.isValid).toBe(false);
+      });
+      this.$httpBackend.flush();
+    });
+
     it('should fail to validate a valid site url when errorCode is unknown', function () {
       this.$httpBackend.whenPOST(this.UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
         properties: [{
