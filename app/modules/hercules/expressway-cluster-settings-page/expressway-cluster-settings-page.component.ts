@@ -1,6 +1,7 @@
 import { Notification } from 'modules/core/notifications';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { ConnectorType } from 'modules/hercules/hybrid-services.types';
+import { ResourceGroupService } from 'modules/hercules/services/resource-group.service';
 
 interface IResourceGroupOptions {
   label: string;
@@ -33,7 +34,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private HybridServicesClusterService: HybridServicesClusterService,
     private Notification: Notification,
-    private ResourceGroupService,
+    private ResourceGroupService: ResourceGroupService,
   ) {
     this.buildResourceOptions = this.buildResourceOptions.bind(this);
     this.getCurrentResourceGroup = this.getCurrentResourceGroup.bind(this);
@@ -239,7 +240,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
 
 export class ExpresswayClusterSettingsPageComponent implements ng.IComponentOptions {
   public controller = ExpresswayClusterSettingsPageCtrl;
-  public template = require('modules/hercules/expressway-cluster-settings-page/expressway-cluster-settings-page.html');
+  public template = require('./expressway-cluster-settings-page.html');
   public bindings = {
     clusterId: '<',
   };

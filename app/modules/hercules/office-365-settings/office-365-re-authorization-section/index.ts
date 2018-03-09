@@ -1,5 +1,3 @@
-import './office-365-re-authorization-section.scss';
-
 import { Office365ReAuthorizationSectionComponent } from './office-365-re-authorization-section.component';
 
 export default angular.module('hercules.office-365-settings.office-365-re-authorization-section', [

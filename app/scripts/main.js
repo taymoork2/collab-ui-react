@@ -163,6 +163,7 @@
     require('modules/core/users/userAdd').default,
     require('modules/hercules/cluster-card').default,
     require('modules/hercules/connector-upgrade-modal/connector-upgrade-modal.controller').default,
+    require('modules/hercules/expressway-cluster-settings-page/index.ts').default,
     require('modules/hercules/fusion-pages/add-resource/common').default,
     require('modules/hercules/google-calendar-settings/google-calendar-config-section/google-calendar-second-time-setup').default,
     require('modules/hercules/hybrid-media-cluster-settings').default,
