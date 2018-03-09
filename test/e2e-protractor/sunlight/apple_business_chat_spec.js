@@ -23,6 +23,7 @@ describe('Apple Business Chat', () => {
       utils.expectIsNotDisplayed(careAppleBusinessChatPage.setUpLeftBtn);
       utils.expectIsDisplayed(careAppleBusinessChatPage.setUpTitle);
       utils.sendKeys(careAppleBusinessChatPage.businessId, 'ABC_ID');
+      utils.expectIsEnabled(careAppleBusinessChatPage.businessId);
       utils.expectIsDisplayed(careAppleBusinessChatPage.setUpRightBtn);
     });
 
@@ -73,6 +74,32 @@ describe('Apple Business Chat', () => {
       utils.clear(utils.searchField);
       utils.sendKeys(utils.searchField, ABCTestName);
       utils.expectIsNotDisplayed(careChatTemplateSetupPage.chatTemplateName);
+    });
+  });
+
+  describe('Deep launch with businessId query parameter', () => {
+    it('should display Business Id page with populated businessId input field', function () {
+      const businessId = '1234-5678';
+      navigation.navigateTo('/services/careDetails/abcService?businessId=' + encodeURIComponent(businessId))
+      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpTitle);
+      utils.expectValueToBeSet(careAppleBusinessChatPage.businessId, businessId);
+      utils.expectIsDisabled(careAppleBusinessChatPage.businessId);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpRightBtn);
+    });
+
+    it('should proceed to Name page', function () {
+      utils.click(careAppleBusinessChatPage.setUpRightBtn);
+      const expectedHint = 'Specify the Apple Business Chat name';
+      utils.waitForText(careAppleBusinessChatPage.nameHint, expectedHint);
+      utils.sendKeys(careAppleBusinessChatPage.name, ABCTestName);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpLeftBtn);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpRightBtn);
+    });
+
+    it('should successfully cancel the ABC creation wizard', function () {
+      utils.click(careAppleBusinessChatPage.cancelBtn);
+      utils.click(careAppleBusinessChatPage.confirmCancelBtn);
+      utils.expectIsDisplayed(careLandingPage.careFeature);
     });
   });
 });

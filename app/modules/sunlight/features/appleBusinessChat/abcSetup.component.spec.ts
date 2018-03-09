@@ -7,21 +7,25 @@ describe('Care ABC Setup Component', () => {
   const OrgId = 'Test-Org-Id';
   const pages = [
     {
+      enabled: true,
       name: 'abcBusinessId',
       previousButtonState: 'hidden',
       nextButtonState: false,
     },
     {
+      enabled: true,
       name: 'name',
       previousButtonState: true,
       nextButtonState: false,
     },
     {
+      enabled: true,
       name: 'abcCvaSelection',
       previousButtonState: true,
       nextButtonState: true,
     },
     {
+      enabled: true,
       name: 'abcSummary',
       previousButtonState: true,
       nextButtonState: 'hidden',
@@ -82,10 +86,6 @@ describe('Care ABC Setup Component', () => {
       'Notification',
     );
 
-    afterEach(function () {
-      controller = listCvaConfigsDeferred = undefined;
-    });
-
     listCvaConfigsDeferred = this.$q.defer();
     spyOn(this.$modal, 'open');
     spyOn(this.Notification, 'success');
@@ -97,12 +97,22 @@ describe('Care ABC Setup Component', () => {
     spyOn(Date, 'now').and.returnValues(10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10);
     spyOn(this.CvaService, 'listConfigs').and.returnValue(listCvaConfigsDeferred.promise);
 
+    this.initComponent = (businessId?: string) => {
+      this.$scope.myBusinessId = businessId;
+      this.compileComponent('abc-setup', {
+        dismiss: 'dismiss()',
+        businessId: 'myBusinessId',
+      });
 
-    this.compileComponent('abc-setup', {
-      dismiss: 'dismiss()',
-    });
+      controller = this.controller;
+      return controller;
+    };
 
-    controller = this.controller;
+    controller = this.initComponent();
+  });
+
+  afterEach(function () {
+    controller = listCvaConfigsDeferred = undefined;
   });
 
   function checkStateOfNavigationButtons(pageIndex: number, previousButtonState: any, nextButtonState: any): void {
@@ -139,10 +149,6 @@ describe('Care ABC Setup Component', () => {
   });
 
   describe('Page Structures', function () {
-    beforeEach(function () {
-      this.$scope.$apply();
-    });
-
     it('States correlate to pages', function () {
       expect(controller.states).toEqual(expectedStates);
     });
@@ -201,17 +207,15 @@ describe('Care ABC Setup Component', () => {
     const NAME_PAGE_INDEX = 1;
     const BUSINESS_ID_PAGE_INDEX = 0;
 
-    beforeEach(function () {
-      controller.nameForm = getForm('nameInput');
-    });
-
     describe('Business Id Page', function () {
+      const testBusinessId = '12345';
+
       beforeEach(function () {
         controller.currentState = controller.states[BUSINESS_ID_PAGE_INDEX];
       });
 
       it('should have the next button enabled when value is not empty', function () {
-        controller.template.configuration.pages.abcBusinessId.value = '1234_9999';
+        controller.template.configuration.pages.abcBusinessId.value = testBusinessId;
         checkStateOfNavigationButtons(BUSINESS_ID_PAGE_INDEX, 'hidden', true);
       });
 
@@ -219,10 +223,18 @@ describe('Care ABC Setup Component', () => {
         controller.template.configuration.pages.abcBusinessId.value = '';
         checkStateOfNavigationButtons(BUSINESS_ID_PAGE_INDEX, 'hidden', false);
       });
+
+      it('should populate and disable business Id input field with the query param if deep launched', function () {
+        controller = this.initComponent(testBusinessId);
+        expect(controller.template.configuration.pages.abcBusinessId.value).toEqual(testBusinessId);
+        expect(controller.template.configuration.pages.abcBusinessId.enabled).toEqual(false);
+        checkStateOfNavigationButtons(BUSINESS_ID_PAGE_INDEX, 'hidden', true);
+      });
     });
 
     describe('Name Page', function () {
       beforeEach(function () {
+        controller.nameForm = getForm('nameInput');
         controller.currentState = controller.states[NAME_PAGE_INDEX];
       });
 

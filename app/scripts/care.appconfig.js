@@ -187,15 +187,18 @@
         },
       })
       .state('care.appleBusinessChat', {
-        url: '/abcService',
+        url: '/abcService?businessId',
         parent: 'care.Details',
-        template: '<abc-setup dismiss="$dismiss()" template="$resolve.template"></abc-setup>',
+        template: '<abc-setup dismiss="$dismiss()" template="$resolve.template" business-id="$resolve.businessId"></abc-setup>',
         params: {
           template: null,
         },
         resolve: {
           template: /* @ngIngect */ function ($stateParams) {
             return $stateParams.template;
+          },
+          businessId: /* @ngIngect */ function ($stateParams) {
+            return $stateParams.businessId;
           },
         },
       })

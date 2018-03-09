@@ -12,7 +12,8 @@
               <input cs-input type="text" focus-on
                 name="idInput"
                 autocomplete="off"
-                ng-model="$ctrl.template.configuration.pages.abcBusinessId.value">
+                ng-model="$ctrl.template.configuration.pages.abcBusinessId.value"
+                ng-disabled="!$ctrl.template.configuration.pages.abcBusinessId.enabled">
             </div>
             <p class="h6" translate="careChatTpl.appleBusinessChat.businessId.helpText" translate-value-href="https://register.apple.com/business-chat"></p>
           </div>
