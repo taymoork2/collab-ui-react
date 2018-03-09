@@ -299,6 +299,9 @@
     var HOLIDAYS_SCHEDULE_EVENT = 'holiday';
 
     var dynAnnounceToggle = false;
+    var CONSTANTS = {};
+    CONSTANTS.phoneNumber = 'phoneNumber';
+    CONSTANTS.extension = 'extension';
 
     var service = {
       getWelcomeMenu: getWelcomeMenu,
@@ -318,6 +321,7 @@
       isCeMenu: isCeMenu,
       isCeMenuEntry: isCeMenuEntry,
       setDynAnnounceToggle: setDynAnnounceToggle,
+      checkIfEnteredValueIsPhoneNumber: checkIfEnteredValueIsPhoneNumber,
 
       newCeMenu: function () {
         return new CeMenu();
@@ -1410,6 +1414,11 @@
               // newActionArray[i][actionName].url = MediaResourceService.getFileUrl(menuEntry.actions[0].getValue());
             } else if (actionName === 'route') {
               newActionArray[i][actionName].destination = menuEntry.actions[0].getValue();
+              if (checkIfEnteredValueIsPhoneNumber(menuEntry.actions[0].getValue())) {
+                newActionArray[i][actionName].destType = CONSTANTS.phoneNumber;
+              } else {
+                newActionArray[i][actionName].destType = CONSTANTS.extension;
+              }
             } else if (actionName === 'routeToVoiceMail') {
               newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
             } else if (actionName === 'routeToUser') {
@@ -1468,6 +1477,11 @@
       return newActionArray;
     }
 
+    function checkIfEnteredValueIsPhoneNumber(number) {
+      // returns true when entered value is phonenumber starting with +. Returns false in case entered value is an extension
+      return (_.startsWith(number, '+'));
+    }
+
     function createResponseBlock(action) {
       var responseActions = [];
       var newVariable = $translate.instant('autoAttendant.newVariable');
@@ -1521,6 +1535,13 @@
         destObj[tag] = action.then.value;
         destObj['userType'] = _.get(action, 'then.type');
         destObj['sipURI'] = _.get(action, 'then.sipURI');
+      } else if (_.get(action.then, 'name') === 'route') {
+        destObj[tag] = action.then.value;
+        if (checkIfEnteredValueIsPhoneNumber(destObj[tag])) {
+          destObj.destType = CONSTANTS.phoneNumber;
+        } else {
+          destObj.destType = CONSTANTS.extension;
+        }
       } else {
         destObj[tag] = action.then.value;
       }
@@ -1607,6 +1628,11 @@
           // newActionArray[i][actionName].url = MediaResourceService.getFileUrl(val);
         } else if (actionName === 'route') {
           newActionArray[i][actionName].destination = val;
+          if (checkIfEnteredValueIsPhoneNumber(val)) {
+            newActionArray[i][actionName].destType = CONSTANTS.phoneNumber;
+          } else {
+            newActionArray[i][actionName].destType = CONSTANTS.extension;
+          }
         } else if (actionName === 'routeToExtension') {
           newActionArray[i][actionName].destination = val;
         } else if (actionName === 'routeToEsn') {

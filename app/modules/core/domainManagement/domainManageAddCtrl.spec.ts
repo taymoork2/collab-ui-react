@@ -4,10 +4,9 @@ declare let punycode: any;
 
 describe('DomainManagementAddCtrl', () => {
 
-  let Config, $q, $rootScope, DomainManagementAddCtrl, DomainManagementService;
+  let $q, $rootScope, DomainManagementAddCtrl, DomainManagementService;
   beforeEach(angular.mock.module(testModule));
-  beforeEach(inject((_$q_, _$rootScope_, $controller, $translate, _Config_, _DomainManagementService_) => {
-    Config = _Config_;
+  beforeEach(inject((_$q_, _$rootScope_, $controller, $translate, _DomainManagementService_) => {
     $q = _$q_;
     $rootScope = _$rootScope_;
     DomainManagementService = _DomainManagementService_;

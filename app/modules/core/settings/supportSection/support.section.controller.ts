@@ -121,10 +121,10 @@ export class SupportSettingsController {
   ) {
     this.$q.all({
       proPackEnabled: this.ProPackService.hasProPackPurchased(),
-      csdmDeviceBranding: this.FeatureToggleService.csdmDeviceBrandingGetStatus(),
+      csdmDeviceSupport: this.FeatureToggleService.csdmDeviceSupportGetStatus(),
     }).then((toggles: any): void => {
       this.proPackEnabled = toggles.proPackEnabled;
-      this.csdmShowSupportSectionToggle = toggles.csdmDeviceBranding;
+      this.csdmShowSupportSectionToggle = toggles.csdmDeviceSupport;
     });
 
     this.orgId = Authinfo.getOrgId();
@@ -276,7 +276,7 @@ export class SupportSettingsController {
   }
 
   private initDeviceSupportText() {
-    this.CsdmConfigurationService.getRuleForOrg('support')
+    this.CsdmConfigurationService.getRuleForOrg('userinterface.custommessage')
       .then((supportSetting) => {
         this.setDeviceSupportTextFromSetting(supportSetting);
       })
@@ -306,7 +306,7 @@ export class SupportSettingsController {
   public saveDeviceSupportText() {
     this.savingProgress = true;
     if (!this.customDeviceSupportText.enable || !this.customDeviceSupportText.text) {
-      this.CsdmConfigurationService.deleteRuleForOrg('support')
+      this.CsdmConfigurationService.deleteRuleForOrg('userinterface.custommessage')
         .then(() => {
           this.setDeviceSupportTextFromSetting({});
         })
@@ -314,7 +314,7 @@ export class SupportSettingsController {
         .catch(this.notifyError.bind(this))
         .finally(this.stopLoading.bind(this));
     } else {
-      this.CsdmConfigurationService.updateRuleForOrg('support', { deviceSupportText: this.customDeviceSupportText.text })
+      this.CsdmConfigurationService.updateRuleForOrg('userinterface.custommessage', { deviceSupportText: this.customDeviceSupportText.text })
         .then((result) => {
           this.setDeviceSupportTextFromSetting(_.get(result, 'data'));
         })

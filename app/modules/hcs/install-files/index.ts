@@ -1,3 +1,4 @@
+import './install-files.scss';
 import { InstallFilesComponent } from './install-files.component';
 
 export default angular

@@ -1,8 +1,14 @@
 <cs-page-sub-header>
   <cs-page-sub-header-left>
-    <cs-searchfilter ng-model="$ctrl.placeholder.count" search-item-fn="$ctrl.filterList(searchStr)" clear-aria-text="{{::'common.clear' | translate}}" search-placeholder-text="{{::'common.search' | translate}}">
+    <cs-searchfilter search-item-fn="$ctrl.searchInventoryList(searchStr)" clear-aria-text="{{::'common.clear' | translate}}" search-placeholder-text="{{::'common.search' | translate}}">
     </cs-searchfilter>
+    <div>
+      <span translate="common.all"/> <span class="count">{{$ctrl.inventoryListData.length}}</span>
+    </div>
   </cs-page-sub-header-left>
+  <cs-page-sub-header-right>
+      <cs-select class="filter-dropdown filter-inventory" ng-model="$ctrl.filter.selected" options="$ctrl.filter.options" placeholder="$ctrl.filter.placeholder" multi="true" singular="{{::$ctrl.filter.singular}}" plural="{{::$ctrl.filter.plural}}" on-change-fn="$ctrl.onChangeFilters()"></cs-select>
+  </cs-page-sub-header-right>
 </cs-page-sub-header>
 <div class="hcs-inventory-container">
   <div class="row inventory-list-header">
@@ -11,7 +17,7 @@
     <div class="columns medium-3">Status</div>
   </div>
   <cs-card-layout block-view="true">
-    <cs-card class="cs-card--full detail-view"  ng-class="{ 'subscription-expanded': subscription.viewAll }" ng-repeat="inventory in $ctrl.inventoryList track by inventory.id">
+    <cs-card class="cs-card--full detail-view"  ng-class="{ 'subscription-expanded': subscription.viewAll }" ng-repeat="inventory in $ctrl.inventoryListData track by inventory.id">
       <article><section>
           <div class="row inventory-list-item">
             <div class="columns medium-6">

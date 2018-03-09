@@ -5,7 +5,6 @@ import { EPTInactiveCardController } from 'modules/services-overview/new-hybrid/
 
 describe('Component: EPTInactiveCardController', () => {
   let $componentController: ng.IComponentControllerService;
-  let $httpBackend: ng.IHttpBackendService;
   let $q: ng.IQService;
   let $scope: ng.IScope;
   let ctrl: EPTInactiveCardController;
@@ -15,9 +14,8 @@ describe('Component: EPTInactiveCardController', () => {
   beforeEach(angular.mock.module(componentModule));
   beforeEach(inject(dependencies));
 
-  function dependencies(_$componentController_, _$httpBackend_, _$q_, _$rootScope_, _PrivateTrunkPrereqService_) {
+  function dependencies(_$componentController_, _$q_, _$rootScope_, _PrivateTrunkPrereqService_) {
     $componentController = _$componentController_;
-    $httpBackend = _$httpBackend_;
     $q = _$q_;
     $scope = _$rootScope_.$new();
     PrivateTrunkPrereqService = _PrivateTrunkPrereqService_;

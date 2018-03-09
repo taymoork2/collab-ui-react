@@ -1,8 +1,8 @@
 class AdvancedMeetingLicenseDescriptionController implements ng.IComponentController {
 
   private isCloudSharedMeeting: boolean;
-  private l10nLicenseDescription: string;
-  private l10nLicenseDescriptionTooltip: string;
+  public l10nLicenseDescription: string;
+  public l10nLicenseDescriptionTooltip: string;
 
   /* @ngInject */
   constructor(

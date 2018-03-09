@@ -11,22 +11,22 @@ export class ShowActivationCodeCtrl extends WizardCtrl {
   private account: IAccountData;
   private showATA: boolean;
   private showPersonal: boolean;
-  private failure: boolean;
-  private showEmail: boolean;
-  private hideBackButton: boolean;
+  public failure: boolean;
+  public showEmail: boolean;
+  public hideBackButton: boolean;
   private selectedUser: IRecipientUser;
-  private qrCode: string | undefined;
-  private timeLeft: string;
-  private showPersonalText: boolean;
-  private showCloudberryText: boolean;
-  private showHuronWithATAText: boolean;
-  private showHuronWithoutATAText: boolean;
-  private friendlyActivationCode: string;
-  private isLoading: boolean;
+  public qrCode: string | undefined;
+  public timeLeft: string;
+  public showPersonalText: boolean;
+  public showCloudberryText: boolean;
+  public showHuronWithATAText: boolean;
+  public showHuronWithoutATAText: boolean;
+  public friendlyActivationCode: string;
+  public isLoading: boolean;
   private activationCode: string;
   private expiryTime: any;
   private timezone: string;
-  private foundUser: string;
+  public foundUser: string;
 
   /* @ngInject */
   constructor($q: angular.IQService,

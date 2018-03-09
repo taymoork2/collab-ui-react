@@ -1,5 +1,5 @@
 describe('placeOverview component', () => {
-  let Authinfo, FeatureToggleService, CsdmDataModelService, CsdmCodeService, WizardFactory, $httpBackend, UrlConfig,
+  let Authinfo, FeatureToggleService, CsdmCodeService, $httpBackend, UrlConfig,
     $state, $scope, $q, Userservice, ServiceDescriptorService, PlaceCallOverviewService, LocationsService;
 
   let $stateParams;
@@ -11,8 +11,6 @@ describe('placeOverview component', () => {
 
   beforeEach(inject((_$q_,
                      _Authinfo_,
-                     _CsdmDataModelService_,
-                     _WizardFactory_,
                      _$httpBackend_,
                      _UrlConfig_,
                      _$state_,
@@ -27,8 +25,6 @@ describe('placeOverview component', () => {
                      _Userservice_) => {
     $q = _$q_;
     Authinfo = _Authinfo_;
-    CsdmDataModelService = _CsdmDataModelService_;
-    WizardFactory = _WizardFactory_;
     $httpBackend = _$httpBackend_;
     UrlConfig = _UrlConfig_;
     $state = _$state_;
@@ -53,8 +49,8 @@ describe('placeOverview component', () => {
   };
 
   describe('on init', () => {
-    let showATA, showHybrid, currentDevice, deviceName, displayName, email, userCisUuid, placeCisUuid, orgId, PlaceCallOverviewData, siteLanguages, locationData;
-    let adminFirstName, adminLastName, adminDisplayName, adminUserName, adminCisUuid, adminOrgId, goStateName,
+    let showATA, showHybrid, deviceName, displayName, email, userCisUuid, placeCisUuid, orgId, PlaceCallOverviewData, siteLanguages, locationData;
+    let adminFirstName, adminLastName, adminDisplayName, adminUserName, adminCisUuid, adminOrgId,
       goStateData;
     beforeEach(() => {
 
@@ -72,10 +68,6 @@ describe('placeOverview component', () => {
       adminUserName = 'adminUserName';
       adminCisUuid = 'adminCisUuid';
       adminOrgId = 'adminOrgId';
-      currentDevice = {
-        displayName: deviceName,
-        cisUuid: placeCisUuid,
-      };
       PlaceCallOverviewData = {
         siteLevelPreferredLanguage: 'en_US',
         preferredLanguageOptions: ['de_DE', 'en_US'],
@@ -168,8 +160,7 @@ describe('placeOverview component', () => {
         spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(showHybrid));
         spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve({}));
 
-        spyOn($state, 'go').and.callFake((stateName, stateData) => {
-          goStateName = stateName;
+        spyOn($state, 'go').and.callFake((_stateName, stateData) => {
           goStateData = stateData;
         });
 
@@ -284,19 +275,13 @@ describe('placeOverview component', () => {
   });
 
   describe('invoke editCloudberryServices', () => {
-    let goStateName, goStateData;
-    let showATA, showHybrid, currentDevice, deviceName, displayName, email, userCisUuid, orgId, entitlements, placeUuid, siteLanguages, locationData;
+    let goStateData;
+    let showATA, showHybrid, deviceName, orgId, entitlements, placeUuid, siteLanguages, locationData;
     beforeEach(() => {
       showATA = true;
       showHybrid = true;
       deviceName = 'deviceName';
-      displayName = 'displayName';
-      email = 'email@address.com';
-      userCisUuid = 'userCisUuid';
       orgId = 'orgId';
-      currentDevice = {
-        displayName: deviceName,
-      };
       entitlements = ['entitlement'];
       placeUuid = '9avs8y9q2v9aw98';
       siteLanguages = ['de_DE', 'en_US'];
@@ -327,8 +312,7 @@ describe('placeOverview component', () => {
         currentUser.id = uid;
         callback(currentUser, 200);
       });
-      spyOn($state, 'go').and.callFake((stateName, stateData) => {
-        goStateName = stateName;
+      spyOn($state, 'go').and.callFake((_stateName, stateData) => {
         goStateData = stateData;
       });
       $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);

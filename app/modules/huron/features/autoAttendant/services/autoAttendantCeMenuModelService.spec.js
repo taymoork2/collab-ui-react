@@ -865,4 +865,18 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       expect(_.isUndefined(_ceRecord.scheduleEventTypeMap.holiday)).toBe(true);
     });
   });
+
+  describe('should test checkIfEnteredValueIsPhoneNumber function', function () {
+    it('should return true in case of phone number', function () {
+      var phoneNumber = '+91954322322';
+      AutoAttendantCeMenuModelService.checkIfEnteredValueIsPhoneNumber(phoneNumber);
+      expect(AutoAttendantCeMenuModelService.checkIfEnteredValueIsPhoneNumber(phoneNumber)).toBe(true);
+    });
+
+    it('should return false in case of extension', function () {
+      var extension = '9999';
+      AutoAttendantCeMenuModelService.checkIfEnteredValueIsPhoneNumber(extension);
+      expect(AutoAttendantCeMenuModelService.checkIfEnteredValueIsPhoneNumber(extension)).toBe(false);
+    });
+  });
 });

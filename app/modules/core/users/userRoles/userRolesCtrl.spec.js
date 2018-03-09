@@ -663,32 +663,26 @@ describe('Controller: UserRolesCtrl', function () {
       });
     });
 
-    describe('should disallow some/all editing based on', function () {
-      it('whether it is editing self', function () {
+    describe('Editing Roles should be', function () {
+      it('disallowed when it is editing self', function () {
         Authinfo.getUserId.and.returnValue(currentUser.id);
         initController();
 
-        expect($scope.isEditingSelf).toBe(true);
-        expect($scope.isUserAdminUser).toBe(false);
-        expect($scope.isNotEditable).toBe(false);
+        expect($scope.isNotEditable).toBe(true);
       });
 
-      it('whether it is a User_Admin', function () {
+      it('disallowed when the logged in user is a User Admin', function () {
         spyOn(Authinfo, 'isUserAdminUser').and.returnValue(true);
         currentUser.roles = [];
         initController();
 
-        expect($scope.isEditingSelf).toBe(false);
-        expect($scope.isUserAdminUser).toBe(true);
-        expect($scope.isNotEditable).toBe(false);
+        expect($scope.isNotEditable).toBe(true);
       });
 
-      it('whether it is a User_Admin looking at a Full_Admin', function () {
-        spyOn(Authinfo, 'isUserAdminUser').and.returnValue(true);
+      it('allowed when the logged in user is not a User Admin and is not editing self', function () {
+        currentUser.roles = [];
         initController();
 
-        expect($scope.isEditingSelf).toBe(false);
-        expect($scope.isUserAdminUser).toBe(true);
         expect($scope.isNotEditable).toBe(false);
       });
     });

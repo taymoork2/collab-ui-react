@@ -133,7 +133,6 @@ export class UserOverviewService {
     private SunlightConfigService,
     private ServiceSetup,
     private Userservice,
-    private $translate,
   ) {
     this.invitationResource = this.$resource(this.UrlConfig.getAdminServiceUrl() + 'organization/:customerId/invitations/:userId', {
       customerId: '@customerId',
@@ -311,13 +310,6 @@ export class UserOverviewService {
       return language_code;
     }
     return _.toLower(userLangSplit[0]) + '_' + _.toUpper(userLangSplit[1]);
-  }
-
-  private get DEFAULT_LANG() {
-    return {
-      label: this.$translate.instant('languages.englishAmerican'),
-      value: 'en_US',
-    };
   }
 
   public updateUserPreferredLanguage(userId: string, languageCode: string) {

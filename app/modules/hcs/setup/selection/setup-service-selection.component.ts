@@ -1,16 +1,16 @@
-interface ICheckbox {
-  license: Boolean;
-  upgrade: Boolean;
-}
+import { ICheckbox } from 'modules/hcs/setup/hcs-setup';
+
 export class SetupServiceSelectionController implements ng.IComponentController {
-  public hcsServiceSelectionChkBox: ICheckbox;
+  public hcsServiceSelectionChkBox: ICheckbox = { license: false, upgrade: false };
   public onChangeFn: Function;
   /* @ngInject */
   constructor(
   ) {}
 
   public processChange() {
-    this.onChangeFn(this.hcsServiceSelectionChkBox);
+    this.onChangeFn({
+      selected: this.hcsServiceSelectionChkBox,
+    });
   }
 }
 

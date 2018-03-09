@@ -20,7 +20,7 @@ interface IOrg {
 class HelpDeskHybridServicesOrgCardComponentCtrl implements ng.IComponentController {
 
   private hybridServiceIds: HybridServiceId[] = ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-media', 'spark-hybrid-datasecurity', 'contact-center-context', 'spark-hybrid-impinterop'];
-  private hybridServicesCard: IHybridCard;
+  public hybridServicesCard: IHybridCard;
   private org: IOrg;
   public isConsumerOrg = false;
   public loadingHSData: boolean;

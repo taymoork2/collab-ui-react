@@ -2917,6 +2917,7 @@
           "DNSHostNameFound": "DNS Hostname Found",
           "DNSIpFound": "DNS IP Found",
           "DNSSvrFound": "DNS SRV Record Found",
+          "InvalidSIPDestination": "Invalid SIP Destination",
           "IOFailure": "Input/Output Failure",
           "NoAnswer": "No Answer",
           "NoDNSHopsFound": "No DNS Hops Found",
@@ -2940,6 +2941,7 @@
         },
         "fixes": {
           "Connecting": "TCP Connection failure: Check network connectivity, connection speed, and/or firewall configuration. Search for ‘connect failure’ in the <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Troubleshooting Documentation</a.",
+          "InvalidSIPDestination": "{{domain}} is not a valid SIP destination. Please check the help text below.",
           "IOFailure": "TCP failure: TCP read/write failure: Please try again. If the error persists, check network connectivity, firewall configuration, and Mutual TLS configuration. Search for ‘socket failure’ in the <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Troubleshooting Documentation</a.",
           "NoDNSHopsFound": "DNS Lookup failed. Check that a DNS or SRV record exists for your SIP Destination and that it resolves to one or more valid IP addresses. Search for ‘DNS SRV’ in the <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Troubleshooting Documentation</a>.",
           "PingFailed": "SIP ping failed.",
@@ -4777,7 +4779,8 @@
     "value": "Value",
     "restApiUrlHelperText": "Enter the secure URL of the REST API to invoke. Click the 'Add Dynamic text' to insert variables in the URL.",
     "completeHttpsError": "Enter the complete URL including the protocol, HTTPS.",
-    "secureHttpsError": "Enter only secure HTTPS URLs."
+    "secureHttpsError": "Enter only secure HTTPS URLs.",
+    "enterExtensionPlaceholder":"Enter Extension"
   },
   "callPark": {
     "code": "CP",
@@ -7998,7 +8001,7 @@
     "helpTextWaitingVirtualAssistant": "If you are using a Customer Virtual Assistant, this message indicates transition from automated support to human interaction.",
     "helpTextChatting": "Customers see this if they minimize the chat window during an ongoing interaction.",
     "helpTextLeaveRoom": "Customers see this when an agent exits the chat and ends the interaction.",
-    "assistantTooltip": "The {{assistantType}} {{assistantName}} is used in this template.",
+    "assistantTooltip": "The {{assistantType}} {{assistantName}} is used by {{name}}.",
     "filterValue": {
       "customerSupportTemplates": "Customer Support Templates",
       "virtualAssistants": "Virtual Assistants",
@@ -8129,10 +8132,37 @@
       "orgNameHelpText": "Name of the Organization: {{orgName}}"
     },
     "configureOrgLogoMsg": "Go to Settings page to modify your organization logo",
+    "commonWizard": {
+      "createTitle": "Create {{ featureName }}",
+      "editTitle": "Edit {{ featureName }}",
+      "cancelDialog": "Do you want to discard your\n {{ featureName }}?"
+    },
     "appleBusinessChat": {
       "featureText": {
+        "name": "Apple Business Chat",
         "type": "Apple Business Chat",
-        "selectDesc": "Create Apple business chat experience for your customers to reach out to agents using iMessage."
+        "selectDesc": "Configure Apple Business Chat to define how your customers reach you using iMessage."
+      },
+      "businessId": {
+        "title": "Apple Business Chat ID Verification",
+        "inputLabel": "Apple Business Chat ID",
+        "helpText": "Complete your Apple Business Chat registration <a href=\"{{href}}\" target=\"_blank\">here</a> and enter your unique organization ID to proceed."
+      },
+      "name": {
+        "namePlaceholder": "Enter Name",
+        "nameHint": "Specify the {{ featureName }} name",
+        "errorChar250": "Name cannot exceed 250 characters.",
+        "invalidChars": "Name cannot contain the following characters: <>"
+      },
+      "cvaSelection": {
+        "virtualAssistantPageTitle": "Customer Virtual Assistant (Optional)",
+        "virtualAssistantDesc": "Select a preconfigured Customer Virtual Assistant who provides initial automated support in your Apple Business Chat experience",
+        "virtualAssistantSelector": "Customer Virtual Assistant",
+        "virtualAssistantSelectText": "Select ..."
+      },
+      "summary": {
+        "abcDesc": "You have configured {{ name }}.\nClick Finish to save the configuration.",
+        "saveErrorMessage": "Cannot save {{ featureName }}. Try again."
       }
     },
     "virtualAssistant": {
@@ -8169,9 +8199,6 @@
         "invalidIconDimensions": "The dimensions of the {{ featureName }} avatar must be exactly 512 x 512 pixels.\nClick the back arrow to return to the Avatar page and upload a valid avatar.",
         "invalidEmail": "The email you entered is invalid.\nClick the back arrow to return to the Email page and enter a valid email."
       },
-      "createTitle": "Create {{ featureName }}",
-      "editTitle": "Edit {{ featureName }}",
-      "cancelDialog": "Do you want to discard your\n {{ featureName }}?",
       "configOverview": {
         "title": "{{ featureName }} Configuration Requirements",
         "desc": "Review the prerequisites for creating a {{ featureName }}",
@@ -8868,6 +8895,7 @@
     "atlas-portal.support": "Support",
     "atlas-portal.reports": "Reports",
     "atlas-portal.billing": "Billing",
+    "atlas-portal.deviceadmin": "Device Admin",
     "atlas-portal.cisco.partnermgmt": "Partner Management",
     "atlas-portal.cisco.partnermgmtTooltip": "Access to Partner Management",
     "atlas-portal.partner.helpdesk": "Help Desk Support",
@@ -8878,6 +8906,7 @@
     "atlas-portal.partner.salesadmin": "Sales Admin",
     "id_full_admin": "Full Admin",
     "id_readonly_admin": "Read-only Admin",
+    "id_user_admin": "User Admin",
     "user": "User",
     "ciscouc.devops": "Cisco Spark Call Devops",
     "ciscouc.devsupport": "Cisco Spark Call Dev Support",
@@ -10768,6 +10797,18 @@
       "title": "Inventory"
     },
     "installFiles": {
+      "addFile": "Add File",
+      "copFile": "COP file",
+      "description": "Create an Agent Install File.  This file is required to register your nodes and will take some time to create.",
+      "duplicateProxy": "Duplicate HTTP Proxy Address",
+      "enterFileName": "Enter a file name",
+      "fileName": "File Name",
+      "httpProxies": "HTTP Proxies",
+      "httpProxy": "HTTP Proxy",
+      "invalidPortError": "Port can be 0 or range between {{min}} and {{max}}",
+      "placeholderHttpProxy": "Enter HTTP Proxy IP Address or Domain Name",
+      "setupTitle": "Create Agent Install Files",
+      "tarFile": ".tar file",
       "title": "Install Files"
     },
     "taas": {

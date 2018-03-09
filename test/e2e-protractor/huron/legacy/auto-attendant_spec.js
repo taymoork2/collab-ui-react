@@ -436,6 +436,8 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phoneMenuKeyOptions.last().all(by.tagName('li')).last());
       utils.click(autoattendant.phoneMenuAction.last());
       utils.click(autoattendant.phoneMenuActionOptions.last().element(by.linkText('Route to Phone Number')));
+      utils.click(autoattendant.selectPhoneNumber);
+      utils.click(autoattendant.selectPhoneNumberInDropdown);
       utils.click(autoattendant.phoneMenuActionTargets.last().element(by.name('phoneinput')));
 
       // a bad external number should not allow save
@@ -794,6 +796,8 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.decisionThenDropDownOptions);
 
       utils.wait(autoattendant.decisionPhoneNumber, 120000);
+      utils.click(autoattendant.selectPhoneNumber);
+      utils.click(autoattendant.selectPhoneNumberInDropdown);
       utils.sendKeys(autoattendant.decisionPhoneNumber, "2065551234");
 
     }, 120000);
@@ -996,6 +1000,47 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.saveBtn);
       utils.click(autoattendant.saveButton);
     });
+
+    it('should add route call to phone number as well as extension', function () {
+      autoattendant.scrollIntoView(autoattendant.addStepLast);
+      utils.click(autoattendant.addStepLast);
+      utils.expectIsDisplayed(autoattendant.newStep);
+      utils.click(autoattendant.newStepMenu);
+
+      // 4th/last menu option is Route Call
+      utils.click(autoattendant.newStepSelectRouteCall);
+
+      // stop here as the complete menu has been tested elsewhere
+      utils.expectIsDisplayed(autoattendant.routeCall);
+      utils.click(autoattendant.routeCallChoose);
+      browser.driver.sleep(1000);
+      utils.click(autoattendant.routeToPhoneNumber);
+
+      //selecting route to phone number in dropdown
+      utils.click(autoattendant.selectPhoneNumber);
+      utils.click(autoattendant.selectPhoneNumberInDropdown);
+      utils.click(autoattendant.phoneNumberActionTarget);
+      utils.sendKeys(autoattendant.phoneNumberActionTarget, "4084741234");
+
+      // save and assert successful update message
+      utils.wait(autoattendant.saveButton, 100000);
+      utils.expectIsEnabled(autoattendant.saveButton);
+      utils.click(autoattendant.saveButton);
+
+      //selecting route to extension in dropdown
+      utils.click(autoattendant.selectPhoneNumber);
+      utils.click(autoattendant.selectExtensionInDropdown);
+      utils.click(autoattendant.extensionActionTarget);
+
+      utils.sendKeys(autoattendant.extensionActionTarget, "2222");
+      utils.wait(autoattendant.saveButton, 100000);
+
+      // save and assert successful update message
+      utils.expectIsEnabled(autoattendant.saveButton);
+
+      utils.click(autoattendant.saveButton);
+      utils.wait(autoattendant.saveButton, 120000);
+    }, 120000);
 
 
     it('should close AA edit and return to landing page', function () {

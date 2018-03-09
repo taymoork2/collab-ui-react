@@ -1,7 +1,7 @@
 import { HybridServicesNodesPageComponent } from './hybrid-services-nodes-page.component';
 import connectorUpgradeBannerModuleName from './connector-upgrade-banner';
 
-require('./_hybrid-services-nodes-page.scss');
+require('./hybrid-services-nodes-page.scss');
 
 export default angular
   .module('hercules.nodes-page', [
