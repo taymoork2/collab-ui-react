@@ -94,9 +94,7 @@
                 </div>
 
                 <div class="admin-options" id="partial-admin-options">
-                  <input
-                    cs-input
-                    type="radio"
+                  <input cs-input type="radio"
                     ng-model="rolesObj.adminRadioValue"
                     ng-value="partialAdmin.value"
                     name="adminRoles"
@@ -140,7 +138,7 @@
                     cs-input-label="{{::'rolesPanel.supportAdmin' | translate}}"
                     ng-model="rolesObj.supportAdminValue"
                     ng-change="partialCheckboxes()"
-                    ng-disabled="isNotEditable">
+                    ng-disabled="isNotEditable || hasUserOrDeviceAdmin()">
                   <i aria-label="{{::roleTooltips.supportAdminAria}}"
                     tooltip-html-unsafe="{{::roleTooltips.supportAdmin}}"
                     tooltip-placement="right"
@@ -154,7 +152,7 @@
                     cs-input-label="{{::'rolesPanel.userAdmin' | translate}}"
                     ng-model="rolesObj.userAdminValue"
                     ng-change="partialCheckboxes()"
-                    ng-disabled="isNotEditable">
+                    ng-disabled="isNotEditable || rolesObj.supportAdminValue">
                   <i aria-label="{{::roleTooltips.userAdminAria}}"
                     tooltip-html-unsafe="{{::roleTooltips.userAdmin}}"
                     tooltip-placement="right"
@@ -168,7 +166,7 @@
                     cs-input-label="{{::'rolesPanel.deviceAdmin' | translate}}"
                     ng-model="rolesObj.deviceAdminValue"
                     ng-change="partialCheckboxes()"
-                    ng-disabled="isNotEditable">
+                    ng-disabled="isNotEditable || rolesObj.supportAdminValue">
                   <i aria-label="{{::roleTooltips.deviceAdmin}}"
                     tooltip-html-unsafe="{{::roleTooltips.deviceAdmin}}"
                     tooltip-placement="right"
