@@ -1,7 +1,7 @@
 import moduleName from './index';
 
 import { UserEntitlementName } from 'modules/core/users/shared/onboard/onboard.interfaces';
-import { OfferName } from 'modules/core/shared';
+import { OfferName } from 'modules/core/shared/offer-name';
 
 describe('Component: autoAssignTemplateSummary:', () => {
   beforeEach(function() {

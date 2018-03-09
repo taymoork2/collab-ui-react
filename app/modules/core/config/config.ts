@@ -1,5 +1,5 @@
 import { LocalStorageService } from 'modules/core/storage/localStorage.service';
-import { OfferName } from 'modules/core/shared';
+import { OfferName } from 'modules/core/shared/offer-name';
 
 interface IRoleStates {
   Application: string[];
