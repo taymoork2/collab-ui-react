@@ -4397,7 +4397,7 @@
   "sparkAssistant": {
     "title": "Cisco Spark Assistant",
     "enableAssistant": "Enable Cisco Spark Assistant",
-    "description": "Allows users to perform various actions such as, make calls, start meetings, using their voice.",
+    "description": "Allows users to perform various actions, such as make calls and start meetings, using their voice.",
     "termOfService": "Spark Assistant terms of service",
     "optout": "Disable Cisco Spark Assistant",
     "optoutConfirm": "If you disable the Cisco Spark Assistant, you won't be able to use voice commands on any of the supported devices."
