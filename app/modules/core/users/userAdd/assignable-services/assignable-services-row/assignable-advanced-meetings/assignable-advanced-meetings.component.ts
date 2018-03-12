@@ -1,5 +1,7 @@
 import { ILicenseUsage, IOnUpdateParam } from 'modules/core/users/userAdd/assignable-services/shared';
+import { LicenseUsageUtilService } from 'modules/core/users/userAdd/assignable-services/shared/license-usage-util.service';
 import { OfferName } from 'modules/core/shared/offer-name';
+import { OfferNameService } from 'modules/core/shared/offer-name/offer-name.service';
 
 class AssignableAdvancedMeetingsController implements ng.IComponentController {
   private licenses: ILicenseUsage[];
@@ -8,8 +10,8 @@ class AssignableAdvancedMeetingsController implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private OfferNameService,
-    private LicenseUsageUtilService,
+    private OfferNameService: OfferNameService,
+    private LicenseUsageUtilService: LicenseUsageUtilService,
   ) {}
 
   public $onInit(): void {
