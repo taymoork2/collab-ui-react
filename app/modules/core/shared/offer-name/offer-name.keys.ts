@@ -17,3 +17,12 @@ export enum OfferName {
   TSP = 'TSP',         // Telephony Service Provider
   CCASP = 'CCASP',     // Cloud Connected Audio - Service Partners
 }
+
+export enum AdvancedMeetingOfferName {
+  CMR = OfferName.CMR, // Collaboration Meeting Room (WebEx)
+  EC = OfferName.EC,   // Event Center (WebEx)
+  EE = OfferName.EE,   // Enterprise Edition (WebEx)
+  MC = OfferName.MC,   // Meeting Center (WebEx)
+  SC = OfferName.SC,   // Support Center (WebEx)
+  TC = OfferName.TC,   // Training Center (WebEx)
+}
