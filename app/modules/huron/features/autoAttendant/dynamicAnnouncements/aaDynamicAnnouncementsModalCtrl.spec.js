@@ -71,7 +71,8 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
 
     describe('with session variables', function () {
       beforeEach(function () {
-        spyOn(AASessionVariableService, 'getSessionVariables').and.returnValue(q.resolve(customVarJson));
+        var var_names = _.clone(customVarJson[0].var_name);
+        spyOn(AASessionVariableService, 'getSessionVariables').and.returnValue(q.resolve(var_names));
         spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
         spyOn(AACommonService, 'sortByProperty').and.callThrough();
         controller = $controller('AADynamicAnnouncementsModalCtrl', {
@@ -86,7 +87,7 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
 
       it('should validate controller creation', function () {
         expect(controller).toBeDefined();
-        expect(controller.variableOptions.length).toBe(6);
+        expect(controller.variableOptions.length).toBe(10);
         expect(controller.readAsOptions.length).toBe(4);
       });
     });

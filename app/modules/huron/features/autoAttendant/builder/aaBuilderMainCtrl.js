@@ -172,20 +172,23 @@
             status: response.status,
           });
         });
-      }).finally(function () {
-        FeatureToggleService.supports(FeatureToggleService.features.atlasHybridEnable)
-          .then(function (results) {
-            if (results && $rootScope.isCare === true) {
-              $state.go('care.Features');
-              $rootScope.isCare = false;
-            } else {
+      })
+      // unAsignAssigned - calls error notification itself, so no-op here is fine
+        .catch(_.noop)
+        .finally(function () {
+          FeatureToggleService.supports(FeatureToggleService.features.atlasHybridEnable)
+            .then(function (results) {
+              if (results && $rootScope.isCare === true) {
+                $state.go('care.Features');
+                $rootScope.isCare = false;
+              } else {
+                $state.go('huronfeatures');
+              }
+            })
+            .catch(function () {
               $state.go('huronfeatures');
-            }
-          })
-          .catch(function () {
-            $state.go('huronfeatures');
-          });
-      });
+            });
+        });
     }
 
     function populateUiModel() {

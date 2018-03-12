@@ -109,7 +109,9 @@
       var modalInstance = dialogModal(vm.dialogModalTypes.overwrite, vm.dialogModalTypes);
       modalInstance.result.then(function () {
         continueUpload(file);
-      }).finally(modalClosed);
+      })
+        .catch(_.noop)
+        .finally(modalClosed);
     }
 
     //upload set up ui model and state info
@@ -205,7 +207,9 @@
         } else {
           modalAction();
         }
-      }).finally(modalClosed);
+      })
+        .catch(_.noop)
+        .finally(modalClosed);
     }
 
     function dialogModal(type, types) {
