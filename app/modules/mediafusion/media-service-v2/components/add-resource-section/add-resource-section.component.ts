@@ -41,16 +41,16 @@ export class AddResourceSectionController implements ng.IComponentController {
       if (_.isFunction(this.onClusterListUpdate)) {
         this.onClusterListUpdate({ response: { clusterlist: this.clusterList } });
       }
+      if (this.clusterList.length === 0) {
+        this.isDiabled = true;
+        this.selectPlaceHolder = this.$translate.instant('mediaFusion.easyConfig.noCluster');
+      } else {
+        this.isDiabled = false;
+        this.selectPlaceHolder = this.$translate.instant('mediaFusion.easyConfig.existingCluster');
+      }
     }).catch((error) => {
       this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
     });
-    if (this.clusterList.length === 0) {
-      this.isDiabled = true;
-      this.selectPlaceHolder = this.$translate.instant('mediaFusion.easyConfig.noCluster');
-    } else {
-      this.isDiabled = false;
-      this.selectPlaceHolder = this.$translate.instant('mediaFusion.easyConfig.existingCluster');
-    }
     this.onlineNodeList = this.AddResourceSectionService.onlineNodes();
     this.offlineNodeList = this.AddResourceSectionService.offlineNodes();
   }

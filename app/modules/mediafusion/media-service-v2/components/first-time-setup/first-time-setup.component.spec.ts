@@ -3,9 +3,7 @@ import moduleName from './index';
 describe('Component: firstTimeSetup:', () => {
   let $componentController, $q, $scope, controller, ProPackService;
 
-  //beforeEach(angular.mock.module('Mediafusion'));
   beforeEach(angular.mock.module(moduleName));
-
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
@@ -15,13 +13,13 @@ describe('Component: firstTimeSetup:', () => {
   });
 
   function initSpies() {
-    spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
+    spyOn(ProPackService, 'hasProPackPurchased').and.returnValue($q.resolve(false));
   }
 
-  function dependencies(_$componentController_, _$q_, $rootScope, _ProPackService_) {
+  function dependencies(_$componentController_, $rootScope, _$q_, _ProPackService_) {
     $componentController = _$componentController_;
-    $q = _$q_;
     $scope = $rootScope.$new();
+    $q = _$q_;
     ProPackService = _ProPackService_;
   }
   function initController() {
@@ -31,11 +29,8 @@ describe('Component: firstTimeSetup:', () => {
 
   describe('atlasProPackGetStatus - ', function () {
     it('getAppTitle should return pro name if ProPackService is true', function () {
-      expect(this.controller.getAppTitle()).toEqual('loginPage.titleNew');
-
-      this.ProPackService.hasProPackPurchased.and.returnValue(this.$q.resolve(true));
       initController();
-      expect(this.controller.getAppTitle()).toEqual('loginPage.titlePro');
+      expect(controller.getAppTitle()).toEqual('loginPage.titleNew');
     });
   });
 });

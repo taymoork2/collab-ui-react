@@ -2,12 +2,11 @@ import moduleName from './index';
 
 describe('HybridMediaEmailNotificationCtrl', function () {
 
-  let $componentController, $scope, $q, ServiceDescriptorService;
+  let $componentController, controller, $scope, $q, ServiceDescriptorService;
 
   beforeEach(angular.mock.module(moduleName));
 
   beforeEach(inject(dependencies));
-  beforeEach(initSpies);
   afterEach(cleanup);
 
   function dependencies (_$componentController_, $rootScope, _$q_, _ServiceDescriptorService_) {
@@ -18,22 +17,18 @@ describe('HybridMediaEmailNotificationCtrl', function () {
   }
 
   function cleanup() {
-    $componentController = $scope = $q = ServiceDescriptorService = undefined;
-  }
-
-  function initSpies() {
-    const dummyEmailSubscribers = ['sample@cisco.com'];
-    spyOn(ServiceDescriptorService, 'getEmailSubscribers').and.returnValue($q.resolve({ dummyEmailSubscribers }));
+    $componentController = controller = $scope = $q = ServiceDescriptorService = undefined;
   }
 
   function initController(bindings = {}) {
-    const ctrl = $componentController('hybridMediaEmailNotification', { $scope: {} }, bindings);
-    return ctrl;
+    controller = $componentController('hybridMediaEmailNotification', { $scope: {} }, bindings);
+    controller.$onInit();
   }
 
   it('should get cluster data from FMS when initializing', function () {
-    const controller = initController();
-    controller.$onInit();
+    const dummyEmailSubscribers = ['sample@cisco.com'];
+    spyOn(ServiceDescriptorService, 'getEmailSubscribers').and.returnValue($q.resolve({ dummyEmailSubscribers }));
+    initController();
     expect(controller.emailSubscribers).toBe([{ text: 'sample@cisco.com' }]);
   });
 

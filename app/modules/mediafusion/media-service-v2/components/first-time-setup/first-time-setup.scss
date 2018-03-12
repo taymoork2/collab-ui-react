@@ -41,6 +41,10 @@ first-time-setup {
     color: #666;
   }
 
+  .stick-bottom {
+    position: absolute !important;
+    bottom: 0;
+  }
   .inputHostNameForm {
     padding-top: 1rem;
   }

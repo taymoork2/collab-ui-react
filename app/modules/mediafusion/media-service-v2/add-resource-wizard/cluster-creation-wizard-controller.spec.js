@@ -10,19 +10,23 @@ describe('ClusterCreationWizardController', function () {
       '$translate',
       'AddResourceSectionService',
       'ClusterCascadeBandwidthService',
-      'HybridMediaUpgradeScheduleService',
+      'HybridMediaEmailNotificationService',
       'HybridMediaReleaseChannelService',
+      'HybridMediaUpgradeScheduleService',
       'SipRegistrationSectionService',
-      'TrustedSipSectionService'
+      'TrustedSipSectionService',
+      'VideoQualitySectionService'
     );
 
     spyOn(this.AddResourceSectionService, 'addRedirectTargetClicked').and.returnValue(this.$q.resolve({}));
     spyOn(this.AddResourceSectionService, 'redirectPopUpAndClose').and.returnValue(this.$q.resolve({}));
     spyOn(this.ClusterCascadeBandwidthService, 'saveCascadeConfig').and.returnValue(this.$q.resolve({}));
+    spyOn(this.HybridMediaEmailNotificationService, 'saveEmailSubscribers').and.returnValue(this.$q.resolve({}));
     spyOn(this.HybridMediaReleaseChannelService, 'saveReleaseChannel').and.returnValue(this.$q.resolve({}));
     spyOn(this.HybridMediaUpgradeScheduleService, 'updateUpgradeScheduleAndUI').and.returnValue(this.$q.resolve({}));
     spyOn(this.SipRegistrationSectionService, 'saveSipTrunkUrl').and.returnValue(this.$q.resolve({}));
     spyOn(this.TrustedSipSectionService, 'saveSipConfigurations').and.returnValue(this.$q.resolve({}));
+    spyOn(this.VideoQualitySectionService, 'setVideoQuality').and.returnValue(this.$q.resolve({}));
 
     this.mockModal = { dismiss: jasmine.createSpy('dismiss'), close: jasmine.createSpy('close') };
 
@@ -32,16 +36,19 @@ describe('ClusterCreationWizardController', function () {
         $modalInstance: this.mockModal,
         $state: this.$state,
         $translate: this.$translate,
+        AddResourceSectionService: this.AddResourceSectionService,
+        ClusterCascadeBandwidthService: this.ClusterCascadeBandwidthService,
+        HybridMediaEmailNotificationService: this.HybridMediaEmailNotificationService,
+        HybridMediaReleaseChannelService: this.HybridMediaReleaseChannelService,
+        HybridMediaUpgradeScheduleService: this.HybridMediaUpgradeScheduleService,
+        SipRegistrationSectionService: this.SipRegistrationSectionService,
+        TrustedSipSectionService: this.TrustedSipSectionService,
+        VideoQualitySectionService: this.VideoQualitySectionService,
         firstTimeSetup: false,
+        yesProceed: true,
+        hasMfCascadeBwConfigToggle: true,
         hasMfFeatureToggle: true,
         hasMfSIPFeatureToggle: true,
-        hasMfCascadeBwConfigToggle: true,
-        AddResourceSectionService: this.AddResourceSectionService,
-        TrustedSipSectionService: this.TrustedSipSectionService,
-        SipRegistrationSectionService: this.SipRegistrationSectionService,
-        ClusterCascadeBandwidthService: this.ClusterCascadeBandwidthService,
-        HybridMediaUpgradeScheduleService: this.HybridMediaUpgradeScheduleService,
-        HybridMediaReleaseChannelService: this.HybridMediaReleaseChannelService,
       });
       this.$scope.$apply();
     };
@@ -49,11 +56,13 @@ describe('ClusterCreationWizardController', function () {
   });
 
   it('AddResourceSectionService redirectPopUpAndClose should be called for redirectToTargetAndCloseWindowClicked', function () {
+    this.controller.emailSubscribers = 'sample@cisco.com';
     this.controller.createCluster();
     this.$scope.$apply();
     expect(this.AddResourceSectionService.addRedirectTargetClicked).toHaveBeenCalled();
     expect(this.AddResourceSectionService.redirectPopUpAndClose).toHaveBeenCalled();
     expect(this.SipRegistrationSectionService.saveSipTrunkUrl).toHaveBeenCalled();
+    expect(this.HybridMediaEmailNotificationService.saveEmailSubscribers).toHaveBeenCalled();
     expect(this.TrustedSipSectionService.saveSipConfigurations).toHaveBeenCalled();
   });
 
@@ -95,7 +104,7 @@ describe('ClusterCreationWizardController', function () {
   });
 
   it('ClusterCreationWizardController canGoNext should enable the next button when the feild is filled', function () {
-    this.controller.currentStep = 0;
+    this.controller.currentStep = 2;
     this.controller.hostName = 'sampleHost';
     this.controller.clusterName = 'sampleCluster';
     this.controller.canGoNext();

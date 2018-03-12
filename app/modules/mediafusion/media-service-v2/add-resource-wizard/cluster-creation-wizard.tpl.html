@@ -5,13 +5,13 @@
   </h5>
 </div>
 <div class="modal-body" style="position:relative; padding-bottom:0">
-    <first-time-setup
+  <first-time-setup
     yes-proceed="clusterCreationWizard.yesProceed"
     no-proceed="clusterCreationWizard.noProceed"
     on-radio-update="clusterCreationWizard.radioSelected(response)"
     on-ova-type-update="clusterCreationWizard.ovaTypeSelected(response)"
-    ng-show="clusterCreationWizard.currentStep === 0 || clusterCreationWizard.currentStep === 1"
-    ></first-time-setup>
+    ng-show="clusterCreationWizard.currentStep === 0 || clusterCreationWizard.currentStep === 1">
+  </first-time-setup>
   <add-resource-section
     on-cluster-list-update="clusterCreationWizard.clusterListUpdated(response)"
     on-host-name-update= "clusterCreationWizard.hostNameUpdated(response)"
@@ -55,6 +55,8 @@
     ng-show="clusterCreationWizard.currentStep === 5">
   </hybrid-media-email-notification>
   <video-quality-section
+    is-wizard="true"
+    on-video-quality-update="clusterCreationWizard.videoQualityUpdated(response)"
     ng-show="clusterCreationWizard.currentStep === 5">
   </video-quality-section>
   <cluster-creation-final

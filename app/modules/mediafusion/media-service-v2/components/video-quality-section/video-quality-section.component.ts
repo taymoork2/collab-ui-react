@@ -7,6 +7,8 @@ class VideoQualitySectionCtrl implements ng.IComponentController {
 
   public clusters: ICluster[] = [];
   public enableVideoQuality: boolean = false;
+  public isWizard: boolean = false;
+  public onVideoQualityUpdate: Function;
   public videoPropertySet = [];
   public videoPropertySetId = null;
   public videoQuality = {
@@ -23,7 +25,15 @@ class VideoQualitySectionCtrl implements ng.IComponentController {
     private Orgservice,
     private VideoQualitySectionService: VideoQualitySectionService,
   ) {
-    this.determineVideoQuality();
+  }
+
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
+    const { isWizard } = changes;
+    if (isWizard && isWizard.currentValue) {
+      this.isWizard = isWizard.currentValue;
+    } else {
+      this.determineVideoQuality();
+    }
   }
 
   private determineVideoQuality() {
@@ -77,7 +87,13 @@ class VideoQualitySectionCtrl implements ng.IComponentController {
   }
 
   public setEnableVideoQuality(): void {
-    this.VideoQualitySectionService.setVideoQuality(this.enableVideoQuality, this.videoPropertySetId);
+    if (this.isWizard) {
+      if (_.isFunction(this.onVideoQualityUpdate)) {
+        this.onVideoQualityUpdate({ response: { videoQuality: this.enableVideoQuality , videoPropertySetId : this.videoPropertySetId } });
+      }
+    } else {
+      this.VideoQualitySectionService.setVideoQuality(this.enableVideoQuality, this.videoPropertySetId);
+    }
   }
 
 
@@ -86,4 +102,8 @@ class VideoQualitySectionCtrl implements ng.IComponentController {
 export class VideoQualitySectionComponent implements ng.IComponentOptions {
   public controller = VideoQualitySectionCtrl;
   public template = require('./video-quality-section.tpl.html');
+  public bindings = {
+    isWizard: '=',
+    onVideoQualityUpdate: '&?',
+  };
 }

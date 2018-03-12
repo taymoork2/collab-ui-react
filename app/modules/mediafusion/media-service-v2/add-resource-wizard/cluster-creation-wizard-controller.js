@@ -6,7 +6,7 @@
     .controller('ClusterCreationWizardController', ClusterCreationWizardController);
 
   /* @ngInject */
-  function ClusterCreationWizardController($modal, $modalInstance, $q, $state, $translate, $window, AddResourceSectionService, ClusterCascadeBandwidthService, HybridMediaEmailNotificationService, HybridMediaReleaseChannelService, HybridMediaUpgradeScheduleService, SipRegistrationSectionService, TrustedSipSectionService, firstTimeSetup, yesProceed, hasMfCascadeBwConfigToggle, hasMfFeatureToggle, hasMfSIPFeatureToggle) {
+  function ClusterCreationWizardController($modal, $modalInstance, $q, $state, $translate, $window, AddResourceSectionService, ClusterCascadeBandwidthService, HybridMediaEmailNotificationService, HybridMediaReleaseChannelService, HybridMediaUpgradeScheduleService, SipRegistrationSectionService, TrustedSipSectionService, VideoQualitySectionService, firstTimeSetup, yesProceed, hasMfCascadeBwConfigToggle, hasMfFeatureToggle, hasMfSIPFeatureToggle) {
     var vm = this;
     vm.isSuccess = true;
     vm.closeSetupModal = closeSetupModal;
@@ -26,6 +26,7 @@
     vm.sipConfigUrlUpdated = sipConfigUrlUpdated;
     vm.trustedSipConfigUpdated = trustedSipConfigUpdated;
     vm.upgradeScheduleUpdated = upgradeScheduleUpdated;
+    vm.videoQualityUpdated = videoQualityUpdated;
     vm.releaseChannelUpdated = releaseChannelUpdated;
     vm.canGoNext = canGoNext;
     vm.hasMfFeatureToggle = hasMfFeatureToggle;
@@ -98,6 +99,7 @@
           AddResourceSectionService.redirectPopUpAndClose(vm.hostName, vm.clusterName);
           vm.clusterId = AddResourceSectionService.selectClusterId();
           vm.clusterDetail = AddResourceSectionService.selectedClusterDetails();
+          if (!_.isUndefined(vm.videoQuality)) VideoQualitySectionService.setVideoQuality(vm.videoQuality, vm.videoPropertySetId);
           if (vm.hasMfFeatureToggle) SipRegistrationSectionService.saveSipTrunkUrl(vm.sipConfigUrl, vm.clusterId);
           if (vm.hasMfSIPFeatureToggle) TrustedSipSectionService.saveSipConfigurations(vm.trustedsipconfiguration, vm.clusterId);
           if (vm.hasMfCascadeBwConfigToggle && !_.isUndefined(vm.cascadeBandwidth)) ClusterCascadeBandwidthService.saveCascadeConfig(vm.clusterId, vm.cascadeBandwidth);
@@ -115,6 +117,12 @@
     }
     function ovaTypeSelected(response) {
       vm.ovaType = response.ovaType;
+    }
+    function videoQualityUpdated(response) {
+      if (!_.isUndefined(response.videoQuality)) {
+        vm.videoQuality = response.videoQuality;
+        vm.videoPropertySetId = response.videoPropertySetId;
+      }
     }
     function clusterListUpdated(response) {
       if (!_.isUndefined(response.clusterlist)) vm.clusterlist = response.clusterlist;
