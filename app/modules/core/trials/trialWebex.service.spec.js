@@ -70,6 +70,7 @@ describe('Service: Webex Trial Service', function () {
       });
       this.TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.isValid).toBe(false);
+        expect(response.errorCode).toBe('domainInvalid');
       });
       this.$httpBackend.flush();
     });
@@ -83,6 +84,7 @@ describe('Service: Webex Trial Service', function () {
       });
       this.TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.isValid).toBe(false);
+        expect(response.errorCode).toBe('duplicateSite');
       });
       this.$httpBackend.flush();
     });
@@ -96,6 +98,7 @@ describe('Service: Webex Trial Service', function () {
       });
       this.TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.isValid).toBe(false);
+        expect(response.errorCode).toBe('duplicateSite');
       });
       this.$httpBackend.flush();
     });
@@ -109,11 +112,12 @@ describe('Service: Webex Trial Service', function () {
       });
       this.TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.isValid).toBe(false);
+        expect(response.errorCode).toBe('duplicateSite');
       });
       this.$httpBackend.flush();
     });
 
-    it('should fail to validate due to "Site brand name exists in DNS. " error', function () {
+    it('should fail to validate with duplicateSite error due to 431205: "Site brand name exists in DNS." error code', function () {
       this.$httpBackend.whenPOST(this.UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
         properties: [{
           isValid: 'false',
@@ -122,6 +126,7 @@ describe('Service: Webex Trial Service', function () {
       });
       this.TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.isValid).toBe(false);
+        expect(response.errorCode).toBe('duplicateSite');
       });
       this.$httpBackend.flush();
     });
