@@ -11,7 +11,6 @@ export class IdleTimeoutService {
   private idleSetter;
   private logoutEvent = '';
   private static readonly LOGIN_EVENT = 'Core::loginCompleted';
-  private keepAliveEvent = '';
   private keepAliveDeregistrer;
   private isInitialized = false;
 
@@ -28,7 +27,6 @@ export class IdleTimeoutService {
     private WindowEventService: WindowEventService,
   ) {
     this.logoutEvent = 'logout' + this.Config.getEnv();
-    this.keepAliveEvent = this.Config.idleTabKeepAliveEvent;
 
   }
 

@@ -43,6 +43,10 @@
   flex-flow: column nowrap;
   justify-content: flex-start;
 
+  &--center {
+    margin: auto;
+  }
+
   ul {
     @include vr-spacing(mt, 1);
 

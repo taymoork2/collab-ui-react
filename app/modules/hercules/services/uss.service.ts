@@ -201,12 +201,13 @@ export class USSService {
     if (!this.cachedUserStatusSummary) {
       return [];
     }
-    return _.map(servicesId, (serviceId) => {
+    const result = _.map(servicesId, (serviceId) => {
       return {
         ...this.cachedUserStatusSummary.countsByState[serviceId],
         serviceId: serviceId,
       };
     });
+    return result;
   }
 
   public extractSummaryForClusters(servicesId: HybridServiceId[]): IExtendedStatusByClusters[] {

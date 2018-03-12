@@ -1,7 +1,7 @@
 {
   "name": "wx2adminwebclient",
   "private": true,
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "",
   "author": "Cisco Systems, Inc.",
   "license": "Copyright 2013-2017 Cisco Systems, Inc.",
@@ -51,11 +51,11 @@
   ],
   "dependencies": {
     "@atlas/bmmp": "=0.0.4",
-    "@ciscospark/internal-plugin-encryption": "1.23.4",
-    "@ciscospark/internal-plugin-metrics": "1.23.4",
-    "@ciscospark/internal-plugin-search": "1.23.4",
-    "@ciscospark/plugin-logger": "1.23.4",
-    "@ciscospark/spark-core": "1.23.4",
+    "@ciscospark/internal-plugin-encryption": "1.28.5",
+    "@ciscospark/internal-plugin-metrics": "1.28.5",
+    "@ciscospark/internal-plugin-search": "1.28.5",
+    "@ciscospark/plugin-logger": "1.28.5",
+    "@ciscospark/spark-core": "1.28.5",
     "@collabui/collab-amcharts": "~3.19.4",
     "@collabui/collab-ui": "~5.3.6",
     "@collabui/collab-ui-formly": "~2.0.3",
@@ -125,8 +125,7 @@
   },
   "//devDependencies": [
     "TODO: upgrade @types/lodash and refactor for undefined return types",
-    "TODO: upgrade @types/jquery@^3.x after it removes es2015 library dependencies",
-    "TODO: upgrade typescript and allow minor versions after fixing breaking changes"
+    "TODO: upgrade @types/jquery@^3.x after it removes es2015 library dependencies"
   ],
   "devDependencies": {
     "@atlas/eslint-plugin-atlas-ui": "^5.0.0",
@@ -229,7 +228,7 @@
     "tslint-eslint-rules": "^5.0.0",
     "tslint-jasmine-rules": "^1.3.0",
     "tslint-loader": "^3.3.0",
-    "typescript": "~2.5.3",
+    "typescript": "^2.7.2",
     "unparse-args": "^1.1.0",
     "webpack": "^3.11.0",
     "webpack-bundle-analyzer": "^2.10.0",

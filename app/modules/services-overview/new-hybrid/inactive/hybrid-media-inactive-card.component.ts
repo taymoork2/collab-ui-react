@@ -1,10 +1,32 @@
+import { FeatureToggleService } from 'modules/core/featureToggle';
 import { IToolkitModalService } from 'modules/core/modal';
 
 class HybridMediaInactiveCardController implements ng.IComponentController {
+  public hasMfClusterWizardFeatureToggle: boolean = false;
+  public hasMfFeatureToggle: boolean = false;
+  public hasMfSIPFeatureToggle: boolean = false;
+  public hasMfCascadeBwConfigToggle: boolean = false;
+
   /* @ngInject */
   constructor(
     private $modal: IToolkitModalService,
+    private FeatureToggleService: FeatureToggleService,
   ) {}
+
+  public $onInit = () => {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasMediaServiceClusterWizard).then( (supported) => {
+      this.hasMfClusterWizardFeatureToggle = supported;
+    });
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasMediaServicePhaseTwo).then( (supported) => {
+      this.hasMfFeatureToggle = supported;
+    });
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasMediaServiceTrustedSIP).then( (supported) => {
+      this.hasMfSIPFeatureToggle = supported;
+    });
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasMediaServiceCascadeBwConfig).then( (supported) => {
+      this.hasMfCascadeBwConfigToggle = supported;
+    });
+  }
 
   public openPrerequisites(): void {
     this.$modal.open({
@@ -15,17 +37,33 @@ class HybridMediaInactiveCardController implements ng.IComponentController {
   }
 
   public openSetUp(): void {
-    this.$modal.open({
-      resolve: {
-        firstTimeSetup: true,
-        yesProceed: true,
-      },
-      type: 'small',
-      controller: 'RedirectAddResourceControllerV2',
-      controllerAs: 'redirectResource',
-      template: require('modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html'),
-      modalClass: 'redirect-add-resource',
-    });
+    if (this.hasMfClusterWizardFeatureToggle) {
+      this.$modal.open({
+        resolve: {
+          firstTimeSetup: true,
+          yesProceed: true,
+          hasMfFeatureToggle: this.hasMfFeatureToggle,
+          hasMfSIPFeatureToggle: this.hasMfSIPFeatureToggle,
+          hasMfCascadeBwConfigToggle: this.hasMfCascadeBwConfigToggle,
+        },
+        type: 'modal',
+        controller: 'ClusterCreationWizardController',
+        controllerAs: 'clusterCreationWizard',
+        template: require('modules/mediafusion/media-service-v2/add-resource-wizard/cluster-creation-wizard.tpl.html'),
+      });
+    } else {
+      this.$modal.open({
+        resolve: {
+          firstTimeSetup: true,
+          yesProceed: true,
+        },
+        type: 'small',
+        controller: 'RedirectAddResourceControllerV2',
+        controllerAs: 'redirectResource',
+        template: require('modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html'),
+        modalClass: 'redirect-add-resource',
+      });
+    }
   }
 }
 

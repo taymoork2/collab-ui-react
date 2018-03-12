@@ -6,7 +6,8 @@
     <p translate="servicesOverview.cards.privateTrunk.destination"></p>
     <div class="row">
       <form name="inputSipDestinationForm" class="hercules-sip-destination-table">
-        <input cs-input type="text"
+        <div class="input-line">
+          <input cs-input type="text"
           cs-input-group-size="medium-7"
           ng-disabled="$ctrl.savingSip"
           placeholder="{{'hercules.settings.call.sipDomainPlaceholder' | translate}} "
@@ -19,12 +20,27 @@
           on-destination-save="$ctrl.onDestinationSave(warn)"
           on-test-started="$ctrl.onTestStarted()"
           on-result-ready="$ctrl.onResultReady(succeeded, resultSet)"></verify-sip-destination>
-        <div ng-show="$ctrl.sipDestinationTestSucceeded !== undefined" class="sip-destination-test-summary">
-          <i ng-if="$ctrl.sipDestinationTestSucceeded" class="icon icon-checkbox"></i>
-          <span ng-if="$ctrl.sipDestinationTestSucceeded" translate="hercules.settings.verifySipDestination.testSucceeded"></span>
-          <i ng-if="!$ctrl.sipDestinationTestSucceeded" class="icon icon-error"></i>
-          <span ng-if="!$ctrl.sipDestinationTestSucceeded" translate="hercules.settings.verifySipDestination.testFailed"></span>
+        </div>
+        <div ng-show="$ctrl.sipDestinationTestSucceeded" class="sip-destination-test-summary">
+          <i class="icon icon-checkbox"></i>
+          <span translate="hercules.settings.verifySipDestination.testSucceeded"></span>
           <span>
+            <a href ng-click="$ctrl.openSipTestResults()" translate="hercules.settings.verifySipDestination.viewTestResults"></a>
+          </span>
+        </div>
+        <div ng-show="$ctrl.sipDestinationTestSucceeded === false" class="sip-destination-test-summary">
+          <i ng-if="!$ctrl.sipDestinationTestSucceeded" class="icon icon-error"></i>
+          <span ng-if="$ctrl.sipDestinationTestResultSet.type === 'no_dns_hops_found'">
+            <span class="fail" translate="hercules.settings.verifySipDestination.fixes.NoDNSHopsFound"></span>
+          </span>
+          <span ng-if="$ctrl.sipDestinationTestResultSet.type === 'invalid_sip_destination'">
+            <span class="fail" translate="hercules.settings.verifySipDestination.fixes.InvalidSIPDestination" translate-value-domain="{{$ctrl.originalValue}}"></span>
+          </span>
+          <span ng-if="$ctrl.sipDestinationTestResultSet.type === 'unexpected_exception'">
+            <span class="fail" translate="hercules.settings.verifySipDestination.fixes.UnexpectedError"></span>
+          </span>
+          <span ng-if="$ctrl.sipDestinationTestResultSet.type === 'ip' || $ctrl.sipDestinationTestResultSet.type === 'dnssrv' || $ctrl.sipDestinationTestResultSet.type === 'dnshost'" translate="hercules.settings.verifySipDestination.testFailed"></span>
+          <span ng-if="$ctrl.sipDestinationTestResultSet.type === 'ip' || $ctrl.sipDestinationTestResultSet.type === 'dnssrv' || $ctrl.sipDestinationTestResultSet.type === 'dnshost'">
             <a href ng-click="$ctrl.openSipTestResults()" translate="hercules.settings.verifySipDestination.viewTestResults"></a>
           </span>
         </div>

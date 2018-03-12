@@ -19,7 +19,8 @@
       }, {
         "route": {
           "description": "Operator",
-          "destination": "1111"
+          "destination": "+91-4546777",
+          "destType": "phoneNumber"
         }
       }, {
         "disconnect": {

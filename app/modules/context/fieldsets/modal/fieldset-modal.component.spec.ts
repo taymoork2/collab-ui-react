@@ -3,7 +3,7 @@ import { PropertyConstants } from 'modules/context/services/context-property-ser
 
 describe('Component: context fieldset modal', () => {
 
-  let fieldsetServiceCreateSpy, fieldServiceSpy, fieldsetServiceUpdateSpy;
+  let fieldsetServiceCreateSpy, fieldsetServiceUpdateSpy;
   let formIsSetDirty;
 
   const MOCK_ORG_ID: string = 'mock-org-id';
@@ -72,7 +72,7 @@ describe('Component: context fieldset modal', () => {
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(MOCK_ORG_ID);
     spyOn(this.PropertyService, 'getProperty').and.returnValue(this.$q.reject( { status: 404, statusText: 'mocked error' } ));
     fieldsetServiceCreateSpy = spyOn(this.ContextFieldsetsService, 'createAndGetFieldset').and.returnValue(this.$q.resolve(mockedFieldset));
-    fieldServiceSpy = spyOn(this.ContextFieldsService, 'getFields').and.returnValue(this.$q.resolve(mockedFields));
+    spyOn(this.ContextFieldsService, 'getFields').and.returnValue(this.$q.resolve(mockedFields));
     fieldsetServiceUpdateSpy = spyOn(this.ContextFieldsetsService, 'updateAndGetFieldset').and.returnValue(this.$q.resolve(mockedUpdateFieldset));
 
     this.$scope.callback = jasmine.createSpy('callback');

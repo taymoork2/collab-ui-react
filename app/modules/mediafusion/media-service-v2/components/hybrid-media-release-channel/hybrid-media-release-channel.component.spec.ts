@@ -21,7 +21,7 @@ describe('Component: hybridMediaReleaseChannel', function () {
 
   function initController() {
     controller = $componentController('hybridMediaReleaseChannel', { $scope: {} }, {});
-    controller.onInit();
+    controller.$onInit();
   }
 
   it('should have the defaults', function () {

@@ -1,0 +1,8 @@
+hcs-setup-modal {
+  margin: initial !important; // FIXME: investigate problem higher up the DOM tree requiring this override
+}
+
+.hcs-service-setup__title {
+  padding-bottom: 1.5rem;
+}
+

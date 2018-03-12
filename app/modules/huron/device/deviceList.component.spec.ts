@@ -1,16 +1,14 @@
 describe('deviceList component', () => {
-  let $q, $scope, $componentController, FeatureToggleService;
+  let $scope, $componentController;
 
   beforeEach(angular.mock.module('Core'));
 
-  beforeEach(inject((_$q_,
-                     $rootScope,
-                     _$componentController_,
-                     _FeatureToggleService_) => {
-    $q = _$q_;
+  beforeEach(inject((
+    $rootScope,
+    _$componentController_,
+  ) => {
     $scope = $rootScope.$new();
     $componentController = _$componentController_;
-    FeatureToggleService = _FeatureToggleService_;
   }));
 
   const initController = () => {

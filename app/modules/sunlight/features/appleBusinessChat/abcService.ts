@@ -14,6 +14,7 @@ export class AbcService {
     description: this.getMessageKey('featureText.selectDesc'),
     icons: ['icon-message'],
     color: 'feature-abc-color',
+    style: 'abc-icon',
     disabled: false,
     goToService: this.goToService.bind(this),
   };
@@ -162,6 +163,7 @@ export class AbcService {
   private formatAppleConfigList(list: any, feature: any): any[] {
     const service = this;
     const formattedList = _.map(list.items, function (item: any) {
+      item.templateId = item.id;
       item.featureType = feature.name;
       item.color = feature.color;
       item.icons = feature.icons;
@@ -184,7 +186,7 @@ export class AbcService {
    * @returns {String} id of Service
    */
   private goToService($state: ng.ui.IStateService, params?: object): string {
-    $state.go('care.abcService', _.assign({
+    $state.go('care.appleBusinessChat', _.assign({
       type: params,
     }, params));
     return this.abcServiceCard.id;

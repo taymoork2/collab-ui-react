@@ -31,7 +31,7 @@ export class PstnSwivelNumbersCtrl implements ng.IComponentController {
   public tokenmethods: TokenMethods;
   public acknowledge: boolean;
   public invalidCount: number = 0;
-  private i387FeatureToggle: boolean;
+  public i387FeatureToggle: boolean;
 
   /* @ngInject */
   constructor(private $timeout: ng.ITimeoutService,

@@ -27,6 +27,16 @@ $tl-padding-right: 30px;
     fill: $color-red-base;
     stroke: $color-red-base;
   }
+  
+  .unitStr {
+    color: $gray-1;
+    display: inline-block;
+    position: absolute;
+    font-size: 11px;
+    bottom: 0;
+    right: 50px;
+  }
+
   .yaxis {
     display: inline-block;
     position: absolute;

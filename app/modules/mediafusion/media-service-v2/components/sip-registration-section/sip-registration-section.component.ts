@@ -9,6 +9,7 @@ class SipRegistrationSectionCtrl implements ng.IComponentController {
   public clusterId: string;
   public cluster: ICluster;
   public sipConfigUrl: string | undefined;
+  private onSipConfigUrlUpdate?: Function;
   public isWizard: boolean = false;
 
   public sipRegistration = {
@@ -40,6 +41,11 @@ class SipRegistrationSectionCtrl implements ng.IComponentController {
       });
   }
 
+  public sipUpdate () {
+    if (_.isFunction(this.onSipConfigUrlUpdate)) {
+      this.onSipConfigUrlUpdate({ response: { sipConfigUrl: this.sipConfigUrl } });
+    }
+  }
   public saveSipTrunk(): void {
     this.SipRegistrationSectionService.saveSipTrunkUrl(this.sipConfigUrl, this.clusterId);
   }
@@ -52,5 +58,7 @@ export class SipRegistrationSectionComponent implements ng.IComponentOptions {
   public bindings = {
     cluster: '<',
     isWizard: '=',
+    onSipConfigUrlUpdate: '&?',
   };
 }
+

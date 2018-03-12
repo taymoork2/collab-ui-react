@@ -1,6 +1,6 @@
 'use strict';
 
-describe('clusterCreationWizardController', function () {
+describe('ClusterCreationWizardController', function () {
   beforeEach(function () {
     this.initModules('Mediafusion');
     this.injectDependencies('$controller',
@@ -18,19 +18,20 @@ describe('clusterCreationWizardController', function () {
 
     spyOn(this.AddResourceSectionService, 'addRedirectTargetClicked').and.returnValue(this.$q.resolve({}));
     spyOn(this.AddResourceSectionService, 'redirectPopUpAndClose').and.returnValue(this.$q.resolve({}));
-    spyOn(this.TrustedSipSectionService, 'saveSipConfigurations').and.returnValue(this.$q.resolve({}));
-    spyOn(this.SipRegistrationSectionService, 'saveSipTrunkUrl').and.returnValue(this.$q.resolve({}));
     spyOn(this.ClusterCascadeBandwidthService, 'saveCascadeConfig').and.returnValue(this.$q.resolve({}));
     spyOn(this.HybridMediaReleaseChannelService, 'saveReleaseChannel').and.returnValue(this.$q.resolve({}));
     spyOn(this.HybridMediaUpgradeScheduleService, 'updateUpgradeScheduleAndUI').and.returnValue(this.$q.resolve({}));
+    spyOn(this.SipRegistrationSectionService, 'saveSipTrunkUrl').and.returnValue(this.$q.resolve({}));
+    spyOn(this.TrustedSipSectionService, 'saveSipConfigurations').and.returnValue(this.$q.resolve({}));
 
     this.mockModal = { dismiss: jasmine.createSpy('dismiss'), close: jasmine.createSpy('close') };
 
     this.initController = function () {
-      this.controller = this.$controller('clusterCreationWizardController', {
+      this.controller = this.$controller('ClusterCreationWizardController', {
         $q: this.$q,
-        $translate: this.$translate,
+        $modalInstance: this.mockModal,
         $state: this.$state,
+        $translate: this.$translate,
         firstTimeSetup: false,
         hasMfFeatureToggle: true,
         hasMfSIPFeatureToggle: true,
@@ -41,7 +42,6 @@ describe('clusterCreationWizardController', function () {
         ClusterCascadeBandwidthService: this.ClusterCascadeBandwidthService,
         HybridMediaUpgradeScheduleService: this.HybridMediaUpgradeScheduleService,
         HybridMediaReleaseChannelService: this.HybridMediaReleaseChannelService,
-        $modalInstance: this.mockModal,
       });
       this.$scope.$apply();
     };
@@ -60,14 +60,14 @@ describe('clusterCreationWizardController', function () {
   it('controller update cluster list', function () {
     var sampleData = {};
     sampleData.clusterlist = 'Sample Cluster';
-    this.controller.childHasUpdatedData(sampleData);
+    this.controller.clusterListUpdated(sampleData);
     expect(this.controller.clusterlist).toBe('Sample Cluster');
   });
 
-  it('controller update hostUpdateData', function () {
+  it('controller update hostNameUpdated', function () {
     var sampleData = {};
     sampleData.hostName = 'Sample Host';
-    this.controller.hostUpdateData(sampleData);
+    this.controller.hostNameUpdated(sampleData);
     expect(this.controller.hostName).toBe('Sample Host');
   });
 
@@ -75,7 +75,7 @@ describe('clusterCreationWizardController', function () {
     var sampleData = {};
     sampleData.cascadeBandwidth = 45;
     sampleData.inValidBandwidth = true;
-    this.controller.cascadeBandwidthUpdatedData(sampleData);
+    this.controller.cascadeBandwidthUpdated(sampleData);
     expect(this.controller.cascadeBandwidth).toBe(45);
     expect(this.controller.validCascadeBandwidth).toBe(true);
   });
@@ -83,11 +83,18 @@ describe('clusterCreationWizardController', function () {
   it('controller update cluster list', function () {
     var sampleData = {};
     sampleData.trustedsipconfiguration = 'Sample.123';
-    this.controller.trustedSipConfigUpdatedData(sampleData);
+    this.controller.trustedSipConfigUpdated(sampleData);
     expect(this.controller.trustedsipconfiguration).toBe('Sample.123');
   });
 
-  it('clusterCreationWizardController canGoNext should enable the next button when the feild is filled', function () {
+  it('controller radio for ova downlaod selected', function () {
+    var sampleData = {};
+    sampleData.radio = '0';
+    this.controller.radioSelected(sampleData);
+    expect(this.controller.radio).toBe('0');
+  });
+
+  it('ClusterCreationWizardController canGoNext should enable the next button when the feild is filled', function () {
     this.controller.currentStep = 0;
     this.controller.hostName = 'sampleHost';
     this.controller.clusterName = 'sampleCluster';

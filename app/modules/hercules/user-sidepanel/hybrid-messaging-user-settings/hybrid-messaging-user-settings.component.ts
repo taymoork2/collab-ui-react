@@ -25,7 +25,7 @@ class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController 
   public userIsCurrentlyEntitled: boolean = false;
   public newEntitlementValue: boolean | undefined;
 
-  private connectorId: string;
+  public connectorId: string;
 
   public resourceGroupId: string;
 

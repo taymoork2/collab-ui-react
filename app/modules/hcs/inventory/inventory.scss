@@ -2,8 +2,37 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
+.filter-dropdown.filter-inventory {
+  width: 40%;
+  margin-right: rem-calc(2);
+}
+
 .hcs-inventory-container {
-  .row + .column-header {
-    padding-top: .7rem;
+  .inventory-list-header {
+    padding: 0.75rem 0rem 0.5rem 2.75rem;
+  }
+
+  .cs-card-layout {
+    margin: 0rem 0.625rem;
+  }
+
+  .cs-card--full {
+    article {
+      .inventory-list-item {
+        padding: 2rem 0rem;
+
+        .columns.medium-6 {
+          padding-left: 1.125rem;
+        }
+
+        .columns.medium-3 {
+          padding-left: 6rem;
+        }
+
+        .columns.medium-2 {
+          padding-left: 2.25rem;
+        }
+      }
+    }
   }
 }

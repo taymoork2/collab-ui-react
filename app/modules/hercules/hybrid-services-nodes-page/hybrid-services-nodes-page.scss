@@ -15,15 +15,42 @@ hybrid-services-nodes-page {
 
   table {
     border-collapse: collapse;
-  }
 
-  table thead tr {
-    border-top: 0;
-    border-bottom: 1px solid transparent;
-  }
+    thead {
+      tr {
+        background: $gray-light-4;
+        border-top: 0;
+        border-bottom: 1px solid transparent;
 
-  table tbody tr {
-    border-bottom: 1px solid $gray-light-3;
+        th {
+          white-space: nowrap;
+          // border: 1px solid $gray-light-3;
+          background-color: $gray-light-4;
+          font-size: 16px;
+          color: $gray-dark-2;
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid $gray-light-3;
+      }
+    }
+
+    thead tr th,
+    tbody tr td {
+      padding: 10px 16px 10px 20px;
+      line-height: 1.5rem;
+
+      &:first-child {
+        padding-left: 2rem;
+      }
+
+      &:last-child {
+        padding-right: 2rem;
+      }
+    }
   }
 
   tr.connector-row-filler {
@@ -31,28 +58,12 @@ hybrid-services-nodes-page {
     border: 0;
   }
 
-  table thead tr th {
-    font-size: 16px;
-    color: $gray-dark-2;
-    background-color: $gray-light-3;
-
-    &:last-child {
-      border: 0;
-    }
-  }
-
-  table thead tr th,
-  table tbody tr td {
-    padding: 10px 16px 10px 20px;
-    line-height: 1.5rem;
-  }
-
   .hostname td {
     border-top: 2px $color-primary-light solid;
   }
 
   .nodename {
-    color: $gray-dark-4;
+    color: $gray-dark-3;
     font-family: $brand-font-bold;
   }
 

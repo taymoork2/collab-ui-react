@@ -78,7 +78,7 @@ export class EmergencyServicesService {
             .map(externalNumber => externalNumber.pattern).value();
         });
       }).catch(() => {
-        return this.ExternalNumberService.refreshNumbers(this.Authinfo.getOrgId()).then(() => {
+        return this.ExternalNumberService.refreshNumbers(this.Authinfo.getOrgId(), undefined, filter).then(() => {
           return _.chain(this.ExternalNumberService.getAssignedNumbers())
             .map(externalNumber => externalNumber.pattern).value();
         });

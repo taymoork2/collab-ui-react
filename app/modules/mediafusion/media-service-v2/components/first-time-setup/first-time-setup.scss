@@ -21,7 +21,7 @@ first-time-setup {
     font-size: 0.75rem;
   }
 
-  .padding privacy {
+  .paddingPrivacy {
     padding-bottom: 200px;
   }
 
@@ -35,6 +35,10 @@ first-time-setup {
 
   .myAddResourceDownloadForm {
     padding-left: 31px;
+  }
+  .myAddResourceDownloadForm > div {
+    margin-bottom: 1em;
+    color: #666;
   }
 
   .inputHostNameForm {

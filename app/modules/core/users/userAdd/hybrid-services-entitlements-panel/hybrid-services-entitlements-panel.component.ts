@@ -14,10 +14,10 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
 
   private allowRemove: boolean;
   private isHuronCallLicenseSelected: boolean;
-  private isEnabled = false;
+  public isEnabled = false;
   private entitlements: IUserEntitlementRequestItem[] = [];
   private saveInstance: Function;
-  private showCalendarChoice: boolean;
+  public showCalendarChoice: boolean;
   private services: IHybridServices;
   private entitlementsCallback: Function;
   private restoreInstance: IHybridServices;

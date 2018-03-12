@@ -45,6 +45,16 @@ interface INoDNSHopsFoundStep {
   severity: 'Error';
 }
 
+interface IInvalidSIPDestination {
+  type: 'InvalidSIPDestination';
+  severity: 'Error';
+}
+
+interface IUnexpectedExceptionStep {
+  type: 'UnexpectedException';
+  severity: 'Error';
+}
+
 interface IServerTestBeginStep {
   type: 'ServerTestBegin';
   severity: 'Info';
@@ -119,7 +129,7 @@ interface ISocketReadWriteFailureStep {
   exception: string;
 }
 
-type FirstStep = IDNSSvrFoundStep | IDNSHostNameFoundStep | IDNSIpFoundStep | INoDNSHopsFoundStep;
+type FirstStep = IDNSSvrFoundStep | IDNSHostNameFoundStep | IDNSIpFoundStep | INoDNSHopsFoundStep | IInvalidSIPDestination | IUnexpectedExceptionStep;
 export type VerificationStep = FirstStep | IServerTestBeginStep | IConnectingTest | ISocketConnectedStep | ISSLHandshakeCompletedStep | IPingSucceededStep | IPingFailedStep | IServerTestEndStep | IIOFailureStep | ISSLHandshakeFailureStep | ISocketTimedOutStep | ISocketConnectionFailureStep | ISocketReadWriteFailureStep;
 
 export type StepSeverity = 'Info' | 'Warn' | 'Error';
@@ -139,7 +149,7 @@ interface IFormattedTest {
 }
 
 export interface IFormattedResult {
-  type: 'error' | 'ip' | 'dnssrv' | 'dnshost';
+  type: 'unexpected_exception' | 'invalid_sip_destination' | 'no_dns_hops_found' | 'ip' | 'dnssrv' | 'dnshost';
   meta: {
     dns: string;
     fqdns: string[];
@@ -186,9 +196,8 @@ export class L2SipService {
   }
 
   public formatSipTestResult(steps: VerificationStep[]): IFormattedResult {
-    // TODO: Handle UnexpectedException
     const result: IFormattedResult = {
-      type: 'error',
+      type: 'unexpected_exception',
       meta: {
         dns: '',
         fqdns: [],
@@ -213,7 +222,11 @@ export class L2SipService {
       result.type = 'ip';
       result.meta.ips.push(firstStep.hop.host);
     } else if (firstStep.type === 'NoDNSHopsFound') {
-      result.type = 'error';
+      result.type = 'no_dns_hops_found';
+    } else if (firstStep.type === 'InvalidSIPDestination') {
+      result.type = 'invalid_sip_destination';
+    } else if (firstStep.type === 'UnexpectedException') {
+      result.type = 'unexpected_exception';
     }
     let currentTarget: string | null = null;
     const formattedTests = steps.reduce((acc, step, index, collection) => {

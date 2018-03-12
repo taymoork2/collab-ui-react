@@ -219,6 +219,8 @@ export class Config {
     */
     device_admin: 'atlas-portal.deviceadmin',
     ci_device_admin: 'id_device_admin',
+    cca_full_admin: 'cca-portal.full_admin',
+    cca_readonly_admin: 'cca-portal.readonly_admin',
   };
 
   public readonly roles = {

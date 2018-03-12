@@ -392,8 +392,9 @@
       var users = options.users;
       var licenses = options.licenses;
       var userEntitlements = options.userEntitlements;
+      var onboardMethod = options.onboardMethod;
       var cancelPromise = options.cancelPromise;
-      var payload = service._helpers.mkOnboardUsersPayload(users, licenses, userEntitlements);
+      var payload = service._helpers.mkOnboardUsersPayload(users, licenses, userEntitlements, onboardMethod);
       return service._helpers.onboardUsersAPI(payload, cancelPromise);
     }
 
@@ -409,10 +410,11 @@
       return $http.delete(userUrl + 'organization/' + Authinfo.getOrgId() + '/user?email=' + encodeURIComponent(userData.email));
     }
 
-    function mkOnboardUsersPayload(users, _licenses, _userEntitlements) {
+    function mkOnboardUsersPayload(users, _licenses, _userEntitlements, _onboardMethod) {
       // default 'licenses' and 'userEntitlements' to empty lists if falsey
       var licenses = _licenses || [];
       var userEntitlements = _userEntitlements || [];
+      var onboardMethod = _onboardMethod || null;
 
       var usersPayload = _.map(users, function (user) {
         // early-out if email is falsey
@@ -425,6 +427,7 @@
         _.set(sanitizedUser, 'email', userEmail);
         _.set(sanitizedUser, 'licenses', licenses);
         _.set(sanitizedUser, 'userEntitlements', userEntitlements);
+        _.set(sanitizedUser, 'onboardMethod', onboardMethod);
 
         // set 'name' property only if both 'givenName' or 'familyName' are truthy
         _.set(sanitizedUser, 'name', tokenParseFirstLastName(user.name));
@@ -442,6 +445,10 @@
         }
         if (_.size(userEntitlements)) {
           sanitizedUser.userEntitlements = buildUserSpecificProperties(user, userEntitlements);
+        }
+
+        if (!_.isNull(onboardMethod)) {
+          _.set(sanitizedUser, 'onboardMethod', onboardMethod);
         }
 
         return sanitizedUser;
@@ -463,6 +470,7 @@
       hasSameLicenses = _.isBoolean(hasSameLicenses) ? hasSameLicenses : false;
       var licenses = (!_.isUndefined(thisParams) && _.isArray(thisParams.licenses)) ? thisParams.licenses : undefined;
       var entitlements = (!_.isUndefined(thisParams) && _.isArray(thisParams.entitlements)) ? thisParams.entitlements : undefined;
+      var onboardMethod = !_.isNull(users[0].onboardMethod) ? users[0].onboardMethod : null;
       var userPayload = {
         users: [],
       };
@@ -480,6 +488,7 @@
           },
           userEntitlements: null,
           licenses: null,
+          onboardMethod: null,
         };
 
         if (userEmail.length > 0) {
@@ -490,6 +499,10 @@
           }
           if (displayName) {
             user.displayName = displayName;
+          }
+
+          if (!_.isNull(onboardMethod)) {
+            user.onboardMethod = onboardMethod;
           }
 
           var theLicenses = (hasSameLicenses) ? licenses || [] : userData.licenses || [];

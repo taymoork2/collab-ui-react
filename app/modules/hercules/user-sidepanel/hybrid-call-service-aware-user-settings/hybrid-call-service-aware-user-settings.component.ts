@@ -27,7 +27,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
   public newEntitlementValue: boolean | undefined;
 
   public userStatusAware: IUserStatusWithExtendedMessages | undefined;
-  private userStatusConnect: IUserStatusWithExtendedMessages | undefined;
+  public userStatusConnect: IUserStatusWithExtendedMessages | undefined;
   public lastStateChangeText: string = '';
 
   public connectorId: string;

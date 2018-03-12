@@ -16,20 +16,18 @@
       title: $translate.instant('common.settings'),
       state: 'media-service-v2.settings',
     }];
-    if (!hasMfClusterWizardFeatureToggle) {
+    if (hasMfClusterWizardFeatureToggle) {
       vm.addResourceModal = {
         type: 'modal',
-        controller: 'clusterCreationWizardController',
+        controller: 'ClusterCreationWizardController',
         controllerAs: 'clusterCreationWizard',
         template: require('modules/mediafusion/media-service-v2/add-resource-wizard/cluster-creation-wizard.tpl.html'),
         resolve: {
+          firstTimeSetup: true,
+          yesProceed: true,
           hasMfFeatureToggle: hasMfFeatureToggle,
           hasMfSIPFeatureToggle: hasMfSIPFeatureToggle,
           hasMfCascadeBwConfigToggle: hasMfCascadeBwConfigToggle,
-        },
-        params: {
-          firstTimeSetup: true,
-          yesProceed: true,
         },
       };
     } else {

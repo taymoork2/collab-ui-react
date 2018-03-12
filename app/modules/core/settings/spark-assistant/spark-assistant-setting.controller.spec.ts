@@ -4,17 +4,16 @@ import { SparkAssistantSettingController } from './spark-assistant-setting.contr
 describe('Controller: SparkAssistantSettingController', () => {
 
   let $scope, $controller, $q;
-  let Authinfo, SparkAssistantService;
+  let SparkAssistantService;
   let controller: SparkAssistantSettingController;
 
   beforeEach(angular.mock.module(testModule));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies($rootScope, _$controller_, _Authinfo_, _SparkAssistantService_, _$q_) {
+  function dependencies($rootScope, _$controller_, _SparkAssistantService_, _$q_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
-    Authinfo = _Authinfo_;
     $q = _$q_;
     SparkAssistantService = _SparkAssistantService_;
   }

@@ -22,6 +22,7 @@ class TimeLine implements ng.IComponentController {
       domain: [],
       endTime: 0,
       startTime: 0,
+      unitStr: 'Hour:Min',
       xAxisFormat: '%I:%M %p',
       gridVerticalLineNum: 12,
       gridHorizontalLineNum: 7,
@@ -68,7 +69,6 @@ class TimeLine implements ng.IComponentController {
     this.data.startTime = this.sourceData.startTime;
     this.data.gridHorizontalLineNum = this.getGridHorizontalLineHum();
     this.option.height = this.getCanvasHeight();
-
     this.coordinate = {
       x: this.option.paddingLeft,
       y: this.option.paddingTop,
@@ -141,16 +141,23 @@ class TimeLine implements ng.IComponentController {
     this.dataToline({ data: data, append: 'svg:line', class: 'gridVerticalLine' });
   }
 
+  private showUnitStr() {
+    d3.select('.yaxis')
+    .append('div')
+    .attr('class', 'unitStr')
+    .text(this.data.unitStr);
+  }
+
   private setDomain(): void {
-    const tickSize = this.getTickSize();
-    const ticks = this.getTicks(tickSize);
-    this.data.domain = [ticks[0], ticks[_.size(ticks) - 1]];
+    const interval = this.getInterval();
+    const ticks = this.getTicks(interval);
+    this.data.domain = [this.timestampToDate(ticks[0]), this.timestampToDate(ticks[_.size(ticks) - 1])];
     this.time2line = d3.time.scale()
     .domain(this.data.domain)
     .range([this.coordinate.x, this.coordinate.endX]);
 
     this.data.tickValues = _.map(ticks, item => this.timestampToDate(item));
-    this.drawGrid(tickSize, this.data.domain);
+    this.drawGrid(interval, ticks);
   }
 
   private xAxis(): void {
@@ -237,7 +244,7 @@ class TimeLine implements ng.IComponentController {
 
   private yAxis(): void {
     const data = _.uniqBy(this.data.data, 'filterId');
-    const g = d3.select('.timelineSvg').insert('div', 'svg').attr('class', 'yaxis');
+    const g = d3.select('.timelineSvg').insert('div', 'svg').attr('class', 'yaxis').attr('style', `height: ${this.option.height}px`);
     g.selectAll('.yaxis')
       .data(data)
       .enter()
@@ -254,6 +261,8 @@ class TimeLine implements ng.IComponentController {
         this.makeTips({ arr: msgArr }, item.y1 - 15, this.option.paddingLeft - 40 );
       })
       .on('mouseout', () => this.hideTips()).text(item => `${item.userName}`).append('i').attr('class', item => `icon ${item.deviceIcon}`);
+
+    this.showUnitStr();
   }
 
   private drawCircle(node, class_, pos) {
@@ -526,16 +535,28 @@ class TimeLine implements ng.IComponentController {
     return typeObj[type];
   }
 
-  private getTickSize(): number {
+  private getInterval(): number {
     let i = 1;
     let startTime = 0;
-    let tickSize = 60 * 1000;
-    while (startTime + tickSize * 6 < this.sourceData.endTime) {
-      tickSize = i <= 5 ? i * 60 * 1000 : (i - 5) * 5 * 60 * 1000;
-      startTime = _.floor(this.sourceData.startTime / tickSize) * tickSize;
+    const unit = this.getUnit();
+    let interval = unit;
+    while (startTime + interval * 6 < this.sourceData.endTime) {
+      interval = i <= 5 ? i * unit : (i - 5) * 5 * unit;
+      startTime = _.floor(this.sourceData.startTime / interval) * interval;
       i += 1;
     }
-    return tickSize;
+    return interval;
+  }
+
+  private getUnit() {
+    const duration = this.sourceData.endTime - this.sourceData.startTime;
+    let unit = 60 * 1000;
+    if (duration <= 55 * 6 * 1000) {
+      unit = 1 * 1000;
+      this.data.unitStr = 'Min:Sec';
+      this.data.xAxisFormat = '%M:%S %p';
+    }
+    return unit;
   }
 
   private getTicks(tickSize) {

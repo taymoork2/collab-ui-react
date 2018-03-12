@@ -26,7 +26,7 @@ class HybridMediaReleaseChannelController implements ng.IComponentController {
     private ResourceGroupService,
   ) {}
 
-  public onInit() {
+  public $onInit() {
     this.populateReleaseChannelOptions()
     .then(() => {
       this.releaseChannelSelected = this.releaseChannelOptions[0];
@@ -54,7 +54,7 @@ class HybridMediaReleaseChannelController implements ng.IComponentController {
 
   public releaseChannelChanged() {
     if (_.isFunction(this.onReleaseChannelUpdate)) {
-      this.onReleaseChannelUpdate({ someData: { releaseChannel: this.releaseChannelSelected } });
+      this.onReleaseChannelUpdate({ response: { releaseChannel: this.releaseChannelSelected } });
     }
   }
 }

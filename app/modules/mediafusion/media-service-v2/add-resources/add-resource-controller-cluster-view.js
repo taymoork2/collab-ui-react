@@ -6,7 +6,7 @@
     .controller('AddResourceControllerClusterViewV2', AddResourceControllerClusterViewV2);
 
   /* @ngInject */
-  function AddResourceControllerClusterViewV2($translate, $state, $stateParams, $window, $q, AddResourceCommonServiceV2, ProPackService, $modalInstance) {
+  function AddResourceControllerClusterViewV2($modalInstance, $q, $state, $stateParams, $translate, $window, AddResourceCommonServiceV2, ProPackService) {
     var vm = this;
     vm.clusterList = [];
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');

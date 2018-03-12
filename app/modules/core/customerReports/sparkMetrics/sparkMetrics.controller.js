@@ -36,15 +36,6 @@
 
     init();
 
-    function generateWebexMetricsUrl() {
-      ProPackService.hasProPackPurchased().then(function (isPurchased) {
-        if (isPurchased) {
-          vm.reportView = vm.sparkMetrics.views[1];
-        }
-        loadMetricsReport();
-      });
-    }
-
     function init() {
       setViewHeight();
       Userservice.getUser(
@@ -67,6 +58,15 @@
       } else {
         vm.iframeContainerClass = 'sparkMetricsContent';
       }
+    }
+
+    function generateWebexMetricsUrl() {
+      ProPackService.hasProPackPurchased().then(function (isPurchased) {
+        if (isPurchased) {
+          vm.reportView = vm.sparkMetrics.views[1];
+        }
+        loadMetricsReport();
+      });
     }
 
     function loadMetricsReport() {

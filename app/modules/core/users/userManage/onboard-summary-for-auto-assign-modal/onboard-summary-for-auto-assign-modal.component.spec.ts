@@ -108,7 +108,7 @@ describe('Component: onboardSummaryForAutoAssignModal:', () => {
         initComponent.call(this);
         this.controller.save();
         this.$scope.$apply();
-        expect(this.OnboardService.onboardUsersInChunks).toHaveBeenCalledWith(['fake-user-1'], [], []);
+        expect(this.OnboardService.onboardUsersInChunks).toHaveBeenCalledWith(['fake-user-1'], [], [], 'MANUAL');
         expect(this.$state.go).toHaveBeenCalledWith('users.add.results', 'fake-aggregateResult');
       });
 

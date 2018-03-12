@@ -102,9 +102,10 @@ describe('User Service', function () {
         users: 'fake-users-arg',
         licenses: 'fake-licenses-arg',
         userEntitlements: 'fake-userEntitlements-arg',
+        onboardMethod: 'fake-onboardMethod-arg',
         cancelPromise: 'fake-cancelPromise-arg',
       });
-      expect(this.Userservice._helpers.mkOnboardUsersPayload).toHaveBeenCalledWith('fake-users-arg', 'fake-licenses-arg', 'fake-userEntitlements-arg');
+      expect(this.Userservice._helpers.mkOnboardUsersPayload).toHaveBeenCalledWith('fake-users-arg', 'fake-licenses-arg', 'fake-userEntitlements-arg', 'fake-onboardMethod-arg');
       expect(this.Userservice._helpers.onboardUsersAPI).toHaveBeenCalledWith('fake-mkOnboardUsersPayload-result', 'fake-cancelPromise-arg');
       expect(result).toBe('fake-onboardUsersAPI-result');
     });
@@ -122,6 +123,7 @@ describe('User Service', function () {
           email: 'user1@example.com',
           licenses: [],
           userEntitlements: [],
+          onboardMethod: null,
         }],
       });
 
@@ -135,6 +137,7 @@ describe('User Service', function () {
           email: 'user1@example.com',
           licenses: [],
           userEntitlements: [],
+          onboardMethod: null,
         }, {
           name: {
             givenName: 'john',
@@ -143,6 +146,7 @@ describe('User Service', function () {
           email: 'user2@example.com',
           licenses: [],
           userEntitlements: [],
+          onboardMethod: null,
         }],
       });
     });

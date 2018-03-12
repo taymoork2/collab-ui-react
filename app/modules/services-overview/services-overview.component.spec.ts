@@ -23,8 +23,6 @@ describe('ServicesOverviewController', () => {
   let HybridServicesClusterStatesService;
 
   // Spies
-  let getConferenceServicesWithoutSiteUrl: jasmine.Spy;
-  let getConferenceServicesWithLinkedSiteUrl: jasmine.Spy;
   let getRoles: jasmine.Spy;
   let isFusionUC: jasmine.Spy;
   let isFusionCal: jasmine.Spy;
@@ -36,18 +34,14 @@ describe('ServicesOverviewController', () => {
   let isFusionIMP: jasmine.Spy;
   let getService: jasmine.Spy;
   let fetch: jasmine.Spy;
-  let supports: jasmine.Spy;
-  let getAll: jasmine.Spy;
   let getStatusForService: jasmine.Spy;
-  let getCssClass: jasmine.Spy;
-  let processClustersToAggregateStatusForService: jasmine.Spy;
 
   beforeEach(angular.mock.module(moduleName));
   beforeEach(inject(dependencies));
   beforeEach(() => {
     enabledFeatureToggles = [];
-    getConferenceServicesWithoutSiteUrl = spyOn(Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue(false);
-    getConferenceServicesWithLinkedSiteUrl = spyOn(Authinfo, 'getConferenceServicesWithLinkedSiteUrl').and.returnValue(false);
+    spyOn(Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue(false);
+    spyOn(Authinfo, 'getConferenceServicesWithLinkedSiteUrl').and.returnValue(false);
     getRoles = spyOn(Authinfo, 'getRoles').and.returnValue([]);
     isFusionUC = spyOn(Authinfo, 'isFusionUC').and.returnValue(false);
     isFusionCal = spyOn(Authinfo, 'isFusionCal').and.returnValue(false);
@@ -59,11 +53,11 @@ describe('ServicesOverviewController', () => {
     isFusionIMP = spyOn(Authinfo, 'isFusionIMP').and.returnValue(false);
     getService = spyOn(CloudConnectorService, 'getService').and.returnValue($q.resolve({}));
     fetch = spyOn(EnterprisePrivateTrunkService, 'fetch').and.returnValue($q.resolve([]));
-    supports = spyOn(FeatureToggleService, 'supports').and.callFake((name) => $q.resolve(_.includes(enabledFeatureToggles, name)));
-    getAll = spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve([]));
-    processClustersToAggregateStatusForService = spyOn(HybridServicesClusterService, 'processClustersToAggregateStatusForService').and.returnValue($q.resolve({}));
+    spyOn(FeatureToggleService, 'supports').and.callFake((name) => $q.resolve(_.includes(enabledFeatureToggles, name)));
+    spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve([]));
+    spyOn(HybridServicesClusterService, 'processClustersToAggregateStatusForService').and.returnValue($q.resolve({}));
     getStatusForService = spyOn(ServiceDescriptorService, 'getServices').and.returnValue($q.resolve({}));
-    getCssClass = spyOn(HybridServicesClusterStatesService, 'getServiceStatusCSSClassFromLabel').and.returnValue('success');
+    spyOn(HybridServicesClusterStatesService, 'getServiceStatusCSSClassFromLabel').and.returnValue('success');
   });
 
   function dependencies(_$componentController_, _$q_, _$rootScope_, _Authinfo_, _CloudConnectorService_, _Config_, _EnterprisePrivateTrunkService_, _FeatureToggleService_, _HybridServicesClusterService_, _HybridServicesClusterStatesService_, _ServiceDescriptorService_) {

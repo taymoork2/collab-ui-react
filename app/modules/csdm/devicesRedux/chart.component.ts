@@ -8,7 +8,7 @@ import { SearchObject } from '../services/search/searchObject';
 class Chart implements ng.IComponentController {
   private currentAggregations: NamedAggregation[] = [];
   private selectedAggregation?: BucketHolder;
-  private chart: AmCharts.AmChart;
+  public chart: AmCharts.AmChart;
   public legend: IBuckedDataChart[] = [];
   private baseChart = 'chartArea';
   public chartTitle: string;

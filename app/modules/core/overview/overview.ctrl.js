@@ -7,7 +7,37 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($q, $rootScope, $scope, $state, Authinfo, AutoAssignTemplateService, CardUtils, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, HybridServicesFlagService, HybridServicesUtilsService, LearnMoreBannerService, LinkedSitesService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, PrivateTrunkService, ProPackService, PstnService, ReportsService, ServiceDescriptorService, SetupWizardService, SunlightReportService, SunlightUtilitiesService, TrialService, UrlConfig) {
+  function OverviewCtrl($q,
+    $rootScope,
+    $scope,
+    $state,
+    Authinfo,
+    AutoAssignTemplateService,
+    CardUtils,
+    CloudConnectorService,
+    Config,
+    FeatureToggleService,
+    HybridServicesClusterService,
+    HybridServicesFlagService,
+    HybridServicesUtilsService,
+    LearnMoreBannerService,
+    LinkedSitesService,
+    Log, Notification,
+    Orgservice,
+    OverviewCardFactory,
+    OverviewNotificationFactory,
+    PrivateTrunkService,
+    ProPackService,
+    PstnService,
+    ReportsService,
+    ServiceDescriptorService,
+    SetupWizardService,
+    SubscriptionWithUnsyncedLicensesNotificationService,
+    SunlightReportService,
+    SunlightUtilitiesService,
+    TrialService,
+    UrlConfig,
+    WebExSiteService) {
     var vm = this;
     var PSTN_TOS_ACCEPT = require('modules/huron/pstn/pstnTermsOfService').PSTN_TOS_ACCEPT;
     var PSTN_ESA_DISCLAIMER_ACCEPT = require('modules/huron/pstn/pstn.const').PSTN_ESA_DISCLAIMER_ACCEPT;
@@ -228,6 +258,7 @@ require('./_overview.scss');
               .createCareLicenseNotification('homePage.careLicenseCallMissingTextToggle', 'careChatTpl.learnMoreLink', FeatureToggleService));
           }
         }
+        checkForUnsyncedSubscriptionLicenses();
       }).catch(function (response) {
         Notification.errorWithTrackingId(response, 'firstTimeWizard.sparkDomainManagementServiceErrorMessage');
       });
@@ -280,6 +311,14 @@ require('./_overview.scss');
           vm.notifications.push(OverviewNotificationFactory.createCareNotSetupNotification());
           resizeNotifications();
         }
+      });
+    }
+
+    function checkForUnsyncedSubscriptionLicenses() {
+      WebExSiteService.findSubscriptionsWithUnsyncedLicenses().then(function (results) {
+        _.forEach(results, function (unsyncedSubscription) {
+          vm.notifications.push(SubscriptionWithUnsyncedLicensesNotificationService.createNotification(unsyncedSubscription));
+        });
       });
     }
 
