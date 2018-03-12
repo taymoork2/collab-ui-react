@@ -236,32 +236,150 @@ describe('Care Expert Virtual Assistant Service', function () {
     expect(result).toEqual(expectedResponse);
   });
 
-  it('should indicate warning for getWarningIfNotOwner for feature owned by other', function () {
-    const expectedResult = {
-      valid: false,
-      warning: {
-        message: 'careChatTpl.virtualAssistant.eva.featureText.nonAdminEditDeleteWarning',
-        args: { owner: TEST_OWNER_PERSON_DETAILS.displayName },
-      },
-    };
+  it('should return false for canIEditThisEva for feature owned by other', function () {
     const testFeature = {
       ownerId: TEST_OWNER_PERSON_DETAILS.id,
       ownerDetails: TEST_OWNER_PERSON_DETAILS,
     };
-    const actualResult = EvaService.getWarningIfNotOwner(testFeature);
-    expect(actualResult).toEqual(expectedResult);
+    expect(EvaService.canIEditThisEva(testFeature)).toBeFalsy();
   });
 
-  it('should indicate no warning for getWarningIfNotOwner for feature owned by me', function () {
-    const expectedResult = {
-      valid: true,
-    };
+  it('should return true for canIEditThisEva for feature owned by me', function () {
     const testFeature = {
       ownerId: TEST_MY_PERSON_ID,
       ownerDetails: {},
     };
-    const actualResult = EvaService.getWarningIfNotOwner(testFeature);
-    expect(actualResult).toEqual(expectedResult);
+    expect(EvaService.canIEditThisEva(testFeature)).toBeTruthy();
+  });
 
+  it('should return the owner name for getEvaOwner', function () {
+    const testFeature = {
+      ownerId: TEST_OWNER_PERSON_DETAILS.id,
+      ownerDetails: TEST_OWNER_PERSON_DETAILS,
+    };
+    expect(EvaService.getEvaOwner(testFeature)).toEqual(TEST_OWNER_PERSON_DETAILS.displayName);
+  });
+
+
+  it('should return one EVA when it is missing the default expert space', function () {
+    const url = new RegExp('.*/organization/' + TEST_ORG_ID + '/expert-assistant');
+    const evaList = {
+      items: [{
+        id: '7cc2966d-e697-4c32-8be9-413c1bfae585',
+        name: 'HI',
+        ownerId: TEST_MY_PERSON_ID,
+        spaces: [],
+      }],
+    };
+    const expectedEva = {
+      id: evaList.items[0].id,
+      name: evaList.items[0].name,
+      ownerId: TEST_MY_PERSON_ID,
+      ownerDetails: TEST_MY_PERSON_DETAILS,
+      spaces: [],
+    };
+    let result = {};
+    $httpBackend.expectGET(url).respond(200, evaList);
+    EvaService.getMissingDefaultSpaceEva(TEST_ORG_ID).then(function (response) {
+      result = response;
+    });
+    $httpBackend.flush();
+    expect(result).toEqual(expectedEva);
+  });
+
+  it('should not return any EVA when it has a default expert space', function () {
+    const url = new RegExp('.*/organization/' + TEST_ORG_ID + '/expert-assistant');
+    const evaList = {
+      items: [{
+        id: '7cc2966d-e697-4c32-8be9-413c1bfae585',
+        name: 'HI',
+        orgId: TEST_ORG_ID,
+        ownerId: TEST_MY_PERSON_ID,
+        spaces: [{
+          id: '123',
+          title: 'test',
+          default: true,
+        }],
+      }],
+    };
+    let result = {};
+    $httpBackend.expectGET(url).respond(200, evaList);
+    EvaService.getMissingDefaultSpaceEva(TEST_ORG_ID).then(function (response) {
+      if (response) {
+        result = response;
+      }
+    });
+    $httpBackend.flush();
+    expect(result).toEqual({});
+  });
+
+  it('should return one EVA when default is set to false', function () {
+    const url = new RegExp('.*/organization/' + TEST_ORG_ID + '/expert-assistant');
+    const evaList = {
+      items: [{
+        id: '7cc2966d-e697-4c32-8be9-413c1bfae585',
+        name: 'HI',
+        orgId: TEST_ORG_ID,
+        ownerId: TEST_MY_PERSON_ID,
+        spaces: [{
+          id: '1234',
+          title: 'test',
+          default: false,
+        }],
+      }],
+    };
+    const expectedEva = {
+      id: evaList.items[0].id,
+      name: evaList.items[0].name,
+      orgId: TEST_ORG_ID,
+      ownerId: TEST_MY_PERSON_ID,
+      ownerDetails: TEST_MY_PERSON_DETAILS,
+      spaces: [{
+        id: '1234',
+        title: 'test',
+        default: false,
+      }],
+    };
+    let result = {};
+    $httpBackend.expectGET(url).respond(200, evaList);
+    EvaService.getMissingDefaultSpaceEva(TEST_ORG_ID).then(function (response) {
+      result = response;
+    });
+    $httpBackend.flush();
+    expect(result).toEqual(expectedEva);
+  });
+
+  it('should return one EVA when it does not has a default expert space', function () {
+    const url = new RegExp('.*/organization/' + TEST_ORG_ID + '/expert-assistant');
+    const evaList = {
+      items: [{
+        id: '7cc2966d-e697-4c32-8be9-413c1bfae585',
+        name: 'HI',
+        orgId: TEST_ORG_ID,
+        ownerId: TEST_MY_PERSON_ID,
+        spaces: [{
+          id: '1234',
+          title: 'test',
+        }],
+      }],
+    };
+    const expectedEva = {
+      id: evaList.items[0].id,
+      name: evaList.items[0].name,
+      orgId: TEST_ORG_ID,
+      ownerId: TEST_MY_PERSON_ID,
+      ownerDetails: TEST_MY_PERSON_DETAILS,
+      spaces: [{
+        id: '1234',
+        title: 'test',
+      }],
+    };
+    let result = {};
+    $httpBackend.expectGET(url).respond(200, evaList);
+    EvaService.getMissingDefaultSpaceEva(TEST_ORG_ID).then(function (response) {
+      result = response;
+    });
+    $httpBackend.flush();
+    expect(result).toEqual(expectedEva);
   });
 });

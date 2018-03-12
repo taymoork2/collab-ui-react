@@ -29,7 +29,8 @@ describe('Controller: OverviewCtrl', function () {
       'SunlightUtilitiesService',
       'LocalStorage',
       'TrialService',
-      'LinkedSitesService'
+      'LinkedSitesService',
+      'EvaService'
     );
 
     this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/1/v1/Users/me').respond(200);
@@ -138,6 +139,7 @@ describe('Controller: OverviewCtrl', function () {
         LocalStorage: this.LocalStorage,
         TrialService: this.TrialService,
         LinkedSitesService: this.LinkedSitesService,
+        EvaService: this.EvaService,
       });
       this.$scope.$apply();
     };
@@ -491,6 +493,21 @@ describe('Controller: OverviewCtrl', function () {
       spyOn(this.LinkedSitesService, 'linkedSitesNotConfigured').and.returnValue(this.$q.resolve(true));
       this.initController();
       expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS + 1);
+    });
+  });
+
+  describe('Expert Virtual Assistant notification', function () {
+    var TOTAL_NOTIFICATIONS = 8;
+    it('should display the Expert Virtual Assistant Notification if there is an EVA missing default space', function () {
+      spyOn(this.EvaService, 'getMissingDefaultSpaceEva').and.returnValue(this.$q.resolve({ name: 'evaTest' }));
+      this.initController();
+      expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS + 1);
+    });
+
+    it('should not display the Expert Virtual Assistant Notification', function () {
+      spyOn(this.EvaService, 'getMissingDefaultSpaceEva').and.returnValue(this.$q.resolve());
+      this.initController();
+      expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS);
     });
   });
 });

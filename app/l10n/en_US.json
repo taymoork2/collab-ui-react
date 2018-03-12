@@ -1878,7 +1878,10 @@
     "setUpCareSecondaryNotification": "Looks like you haven’t set up Cisco Spark Care yet!",
     "setUpCareLinkText": "Setup Care Service",
     "autoAssignText": "Manage your licenses in a productive way with the Auto-Assign template.",
-    "autoAssignLink": "Set Up Now"
+    "autoAssignLink": "Set Up Now",
+    "goToEditNow": "Edit Now",
+    "evaMissingDefaultSpace": "The Expert Virtual Assistant <b>{{name}}</b> was removed from its default Cisco Spark space. Edit <b>{{name}}</b> to select a new default space.",
+    "evaMissingDefaultSpaceAndNoPermission": "The Expert Virtual Assistant was removed from its default Cisco Spark space. Contact <b>{{owner}}</b> to assign a new default space."
   },
   "inviteModal": {
     "title": "Service Entitlement",
@@ -8247,7 +8250,9 @@
           "type": "Expert <br> Virtual Assistant",
           "selectDesc": "Create a virtual assistant who connects subject matter experts in Cisco Spark spaces to customers with chat requests.",
           "disabledTooltip": "You can only have one Expert Virtual Assistant for your organization. To change the settings of your existing Expert Virtual Assistant, edit it from the Features page.",
-          "nonAdminEditDeleteWarning": "You are not authorized to edit or delete this virtual assistant. Contact the owner, {{owner}}, to request one of these actions."
+          "nonAdminEditDeleteWarning": "You are not authorized to change this virtual assistant. Contact {{owner}} to make changes.",
+          "nonAdminNoDefaultSpace": "Expert Virtual Assistant was removed from its default Cisco Spark space. Contact {{owner}} to assign a new default space.",
+          "noDefaultSpaceWarning": "Expert Virtual Assistant is not in a default Cisco Spark space. Edit the configuration."
         }
       },
       "invalidInput": {
@@ -8353,7 +8358,8 @@
         "boxDesc": "The {{ featureName }} uses the default space as a fallback to escalate requests that are not matched with any other expert space topics. Ensure that users who can respond to customer requests are in this space.",
         "learnMoreLink": "Learn more",
         "placeHolder": "Search and select an existing Cisco Spark space",
-        "noteInfo": "If the space you want to use is not in this list, create the space in Cisco Spark. Then restart the wizard to see and select the new space in the list."
+        "noteInfo": "If the space you want to use is not in this list, create the space in Cisco Spark. Then restart the wizard to see and select the new space in the list.",
+        "noDefaultWarning": "The Expert Virtual Assistant was removed from the selected Cisco Spark space. Click next to designate it as the default Cisco Spark space or choose a different space."
       },
       "configurationSteps": {
         "title": "Required Configuration in Cisco Spark",

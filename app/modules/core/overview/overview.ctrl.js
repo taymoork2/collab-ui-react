@@ -18,6 +18,7 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
     CardUtils,
     CloudConnectorService,
     Config,
+    EvaService,
     FeatureToggleService,
     HybridServicesClusterService,
     HybridServicesFlagService,
@@ -309,6 +310,31 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
       TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
         vm.trialDaysLeft = daysLeft;
       });
+    }
+
+    // Show Warning if there is an EVA that's missing default expert space
+    if (Authinfo.isCare() && Authinfo.isCustomerAdmin()) {
+      FeatureToggleService.supports(FeatureToggleService.features.atlasExpertVirtualAssistantEnable)
+        .then(function (isEnabled) {
+          if (isEnabled) {
+            EvaService.getMissingDefaultSpaceEva()
+              .then(function (eva) {
+                if (!_.isEmpty(eva)) {
+                  var linkText = 'homePage.goToEditNow';
+                  var text = 'homePage.evaMissingDefaultSpace';
+                  var owner = '';
+                  var access = EvaService.canIEditThisEva(eva);
+                  if (!access) {
+                    linkText = '';
+                    text = 'homePage.evaMissingDefaultSpaceAndNoPermission';
+                    owner = EvaService.getEvaOwner(eva);
+                  }
+                  vm.notifications.push(OverviewNotificationFactory.createEvaMissingDefaultSpaceNotification($state, eva, linkText, text, owner));
+                  resizeNotifications();
+                }
+              });
+          }
+        });
     }
 
     if (Authinfo.isCare() && Authinfo.isCustomerAdmin()) {

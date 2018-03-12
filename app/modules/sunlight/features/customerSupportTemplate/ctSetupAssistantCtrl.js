@@ -2042,8 +2042,7 @@
           if (isEvaObjectValid(evaForOrg)) {
             vm.selectedEVA.id = evaForOrg.id;
             vm.selectedEVA.name = evaForOrg.name;
-            var listSpaces = EvaService.getExpertAssistantSpaces(evaForOrg.id, evaForOrg.orgId);
-            getEvaSpaceDetailsText(listSpaces, evaForOrg);
+            getEvaSpaceDetailsText(evaForOrg);
           } else {
             setSpaceDataAsError();
           }
@@ -2051,37 +2050,36 @@
       });
     }
 
-    function getEvaSpaceDetailsText(listSpaces, evaForOrg) {
-      listSpaces.then(function (spaces) {
-        if (spaces && spaces.items && spaces.items.length >= 1) {
-          var numSpaces = spaces.items.length;
-          var evaOrgName = getEvaName(evaForOrg);
-          if (numSpaces === 1) {
-            var evaSpaceDetailsTextOneSpace = $translate.instant('careChatTpl.evaSpaceDetailsTextOneSpace');
+    function getEvaSpaceDetailsText(evaForOrg) {
+      var spaces = evaForOrg.spaces;
+      if (spaces && spaces.length >= 0) {
+        var numSpaces = spaces.length;
+        var evaOrgName = getEvaName(evaForOrg);
+        if (numSpaces === 1) {
+          var evaSpaceDetailsTextOneSpace = $translate.instant('careChatTpl.evaSpaceDetailsTextOneSpace');
 
-            vm.evaSpaceTooltipData = evaOrgName + evaSpaceDetailsTextOneSpace;
-            vm.evaSpaceTooltipAriaLabel = evaOrgName + evaSpaceDetailsTextOneSpace;
-          } else {
-            var evaSpaceDetailsText = $translate.instant('careChatTpl.evaSpaceDetailsText', { numberOfEvaSpaces: numSpaces });
-
-            vm.evaSpaceTooltipData = evaOrgName + evaSpaceDetailsText;
-            vm.evaSpaceTooltipAriaLabel = evaOrgName + evaSpaceDetailsText;
-          }
-          _.forEach(spaces.items, function (space) {
-            if (space.title) {
-              vm.evaSpaceTooltipData += '<li>' + space.title + '</li>';
-              vm.evaSpaceTooltipAriaLabel += ' ' + space.title;
-              if (space.default) {
-                var defaultSpace = $translate.instant('careChatTpl.escalationDetailsDefaultSpace');
-                vm.evaSpaceTooltipData += '<div>' + '    ' + defaultSpace + '<div>';
-                vm.evaSpaceTooltipAriaLabel += ' ' + defaultSpace;
-              }
-            }
-          });
+          vm.evaSpaceTooltipData = evaOrgName + evaSpaceDetailsTextOneSpace;
+          vm.evaSpaceTooltipAriaLabel = evaOrgName + evaSpaceDetailsTextOneSpace;
         } else {
-          setSpaceDataAsError();
+          var evaSpaceDetailsText = $translate.instant('careChatTpl.evaSpaceDetailsText', { numberOfEvaSpaces: numSpaces });
+
+          vm.evaSpaceTooltipData = evaOrgName + evaSpaceDetailsText;
+          vm.evaSpaceTooltipAriaLabel = evaOrgName + evaSpaceDetailsText;
         }
-      });
+        _.forEach(spaces, function (space) {
+          if (space.title) {
+            vm.evaSpaceTooltipData += '<li>' + space.title + '</li>';
+            vm.evaSpaceTooltipAriaLabel += ' ' + space.title;
+            if (space.default) {
+              var defaultSpace = $translate.instant('careChatTpl.escalationDetailsDefaultSpace');
+              vm.evaSpaceTooltipData += '<div>' + '    ' + defaultSpace + '<div>';
+              vm.evaSpaceTooltipAriaLabel += ' ' + defaultSpace;
+            }
+          }
+        });
+      } else {
+        setSpaceDataAsError();
+      }
     }
 
     function setSpaceDataAsError() {

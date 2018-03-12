@@ -10,6 +10,7 @@
   .cs-card article {
     section {
       @include vr-spacing(pb, 1);
+      height: rem-calc(72);
     }
   }
 
@@ -75,7 +76,6 @@
     @include vr-spacing(ph, 1.5);
     display: flex;
     color: $color-yellow-darker;
-    max-width: rem-calc(400);
 
     .warning-text {
       @include vr-spacing(pl, 0.25);
@@ -118,6 +118,10 @@
 
   .card-header {
     height: rem-calc(110);
+
+    h4 {
+      padding: 0;
+    }
 
     .icon-color {
       color: $gray-light;
@@ -460,6 +464,11 @@ header > p > span.badge {
       color: $color-green-dark;
     }
   }
+}
+
+.cs-card + .tooltip {
+  @include vr-spacing(mt, 10);
+  pointer-events: none;
 }
 
 .popover-content {

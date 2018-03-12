@@ -19,6 +19,8 @@ export class EvaService {
     disabled: false,
     disabledTooltip:  this.getMessageKey('featureText.disabledTooltip'),
     editDeleteWarning: this.getMessageKey('featureText.nonAdminEditDeleteWarning'),
+    noDefaultSpaceWarning: this.getMessageKey('featureText.noDefaultSpaceWarning'),
+    noDefaultSpaceAndNoAccess: this.getMessageKey('featureText.nonAdminNoDefaultSpace'),
     goToService: this.goToService.bind(this),
   };
 
@@ -121,26 +123,6 @@ export class EvaService {
         item.ownerDetails = item.ownerId === mePersonDetails.id ? mePersonDetails : _.get(ownerMap, item.ownerId, {});
       });
       return { items: expertAssistants.items };
-    });
-  }
-  /**
-   * obtain resource for Expert Virtual Assistant Stats API Rest calls.
-   * @param orgId
-   * @param expertAssistantId
-   * @returns {IConfigurationResource}
-   */
-  private getExpertAssistantStatsResource(orgId: string, expertAssistantId?: string): IConfigurationResource {
-    const  baseUrl = this.UrlConfig.getEvaServiceUrl();
-    return <IConfigurationResource>this.$resource(baseUrl + 'config/organization/:orgId/expert-assistant/stats/:expertAssistantId', {
-      orgId: orgId,
-      expertAssistantId: expertAssistantId,
-    }, {
-      update: {
-        method: 'PUT',
-      },
-      save: {
-        method: 'POST',
-      },
     });
   }
 
@@ -263,34 +245,17 @@ export class EvaService {
       }).$promise;
   }
 
-  /**
-   * get a list of expert virutal assistant spaces
-   * @param expertAssistantId
-   * @param orgId
-   * returns {ng.IPromise<any>} promise
-   */
-  public getExpertAssistantSpaces(expertAssistantId: string, orgId: string): ng.IPromise<any> {
-    return this.getExpertAssistantStatsResource(orgId || this.Authinfo.getOrgId(), expertAssistantId)
-      .get().$promise;
+  public canIEditThisEva(feature: any): boolean {
+    return feature.ownerId === this.SparkService.getMyPersonId();
   }
 
   /**
-   * Check passed feature: if user isn't owner then indicate invalid with warning
-   *  otherwise indicate valid
+   * Return the name of the admin that created this Expert Virtual Assistant
    * @param feature
-   * @returns {{valid: boolean; warning?: {message: string; args: any}}}
+   * @returns {string}
    */
-  public getWarningIfNotOwner(feature: any): { valid: boolean, warning?: { message: string, args: any } } {
-    if (feature.ownerId === this.SparkService.getMyPersonId()) {
-      return { valid: true };
-    }
-    return {
-      valid: false,
-      warning: {
-        message: this.evaServiceCard.editDeleteWarning,
-        args: { owner: _.get(feature, 'ownerDetails.displayName', '') },
-      },
-    };
+  public getEvaOwner(feature: any): string {
+    return _.get(feature, 'ownerDetails.displayName', '');
   }
 
   /**
@@ -304,7 +269,7 @@ export class EvaService {
     const formattedList = _.map(list.items, function (item: any) {
       item.templateId = item.id;
       if (!item.name) {
-        item.name = item.templateId;
+        item.name = service.getFeatureName();
       }
       item.featureType = feature.name;
       item.color = feature.color;
@@ -368,6 +333,18 @@ export class EvaService {
       };
       fileReader.readAsDataURL(fileObject);
     });
+  }
+
+  public getMissingDefaultSpaceEva(orgId?: string): ng.IPromise<any> {
+    const service = this;
+    return this.listExpertAssistants(orgId || this.Authinfo.getOrgId())
+      .then(function (expertAssistants) {
+        return _.find(expertAssistants.items, service.isMissingDefaultSpace);
+      });
+  }
+
+  public isMissingDefaultSpace(feature: any) {
+    return !_.find(feature.spaces, 'default');
   }
 }
 export default angular
