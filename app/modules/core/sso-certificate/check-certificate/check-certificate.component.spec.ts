@@ -1,30 +1,36 @@
-import checkCertificateModuleName from './index';
+import ssoCertificateModuleName, {
+  SsoCertificateService,
+} from '../index';
 import { CheckCertificateController } from './check-certificate.component';
 import { MultiStepModalComponent } from 'modules/core/shared/multi-step-modal/multi-step-modal.component';
 import { CertificateCheck } from '../sso-certificate.constants';
 
-type Test = atlas.test.IComponentTest<CheckCertificateController, {}, {
+type Test = atlas.test.IComponentTest<CheckCertificateController, {
+  SsoCertificateService: SsoCertificateService;
+}, {
   components: {
     multiStepModal: atlas.test.IComponentSpy<MultiStepModalComponent>;
   };
 }>;
 
 describe('Component: checkCertificate:', () => {
-  const CONTENT_TOP = '.sso-certificate-content-top';
-  const CONTENT_BOTTOM = '.sso-certificate-content-bottom';
-  const CONTENT_RADIO = '.cs-radio-group';
+  const DIALOG_CONTENT = '.sso-certificate-content-check-certificate';
+  const CONTENT_RADIO = '.sso-certificate-content__radio';
+  const CONTENT_ACTION1 = '.sso-certificate-content__paragraph-action1';
 
   beforeEach(function (this: Test) {
     this.components = {
       multiStepModal: this.spyOnComponent('multiStepModal'),
     };
     this.initModules(
-      checkCertificateModuleName,
+      ssoCertificateModuleName,
       this.components.multiStepModal,
     );
     this.injectDependencies(
-      // TODO: add dependencies here
+      'SsoCertificateService',
     );
+
+    spyOn(this.SsoCertificateService, 'getAllCiCertificates').and.returnValue(this.$q.resolve());
   });
 
   function initComponent(this: Test) {
@@ -41,20 +47,19 @@ describe('Component: checkCertificate:', () => {
       expect(this.controller.dismiss).toHaveBeenCalled();
     });
 
-    it('should show content top', function (this: Test) {
-      expect(this.view.find(CONTENT_TOP)).toExist();
+    it('should show dialog content', function (this: Test) {
+      expect(this.view.find(DIALOG_CONTENT)).toExist();
     });
 
     it('should show radio boxes', function (this: Test) {
       expect(this.view.find(CONTENT_RADIO)).toExist();
     });
 
-    it('should show content bottom', function (this: Test) {
-      expect(this.view.find(CONTENT_BOTTOM)).toExist();
+    it('should not show action1 text', function (this: Test) {
+      expect(this.view.find(CONTENT_ACTION1)).not.toExist();
     });
 
     it('should show the Next button as disabled', function (this: Test) {
-      expect(this.controller.nextRemoved).toBeFalsy();
       expect(this.controller.nextDisabled).toBeTruthy();
     });
 
@@ -66,23 +71,28 @@ describe('Component: checkCertificate:', () => {
   describe('component behavior', () => {
     beforeEach(initComponent);
 
-    it('should show the Next button when SIGNING type radio box is chosen', function (this: Test) {
-      this.controller.certificateCheckValue = CertificateCheck.SIGNING_AUTHN;
+    it('should have called function to add the latest certificate to the org', function (this: Test) {
+      expect(this.SsoCertificateService.getAllCiCertificates).toHaveBeenCalled();
+    });
+
+    it('should show the Next button as enabled when SIGNING type radio box is chosen', function (this: Test) {
+      this.controller.certificateCheckValue = CertificateCheck.SIGNING;
       this.controller.onCertificateCheckValueChanged();
       this.$scope.$apply();
 
-      expect(this.controller.nextRemoved).toBeFalsy();
       expect(this.controller.nextDisabled).toBeFalsy();
       expect(this.controller.submitRemoved).toBeTruthy();
+      expect(this.view.find(CONTENT_ACTION1)).toExist();
     });
 
-    it('should not show the Next button when NONE type radio box is chosen', function (this: Test) {
+    it('should show the Next button as disabled when NONE type radio box is chosen', function (this: Test) {
       this.controller.certificateCheckValue = CertificateCheck.NONE;
       this.controller.onCertificateCheckValueChanged();
       this.$scope.$apply();
 
-      expect(this.controller.nextRemoved).toBeTruthy();
+      expect(this.controller.nextDisabled).toBeTruthy();
       expect(this.controller.submitRemoved).toBeFalsy();
+      expect(this.view.find(CONTENT_ACTION1)).toExist();
     });
   });
 });

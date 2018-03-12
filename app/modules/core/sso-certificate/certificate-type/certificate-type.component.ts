@@ -16,7 +16,9 @@ export class CertificateTypeController implements ng.IComponentController {
   ) {}
 
   public next(): void {
-    // TO-DO go to next dialog
+    this.$state.go('sso-certificate.download-metadata-file', {
+      isMultiple: this.certificateTypeValue === CertificateType.MULTIPLE,
+    });
   }
 
   public back(): void {

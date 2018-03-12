@@ -1,20 +1,33 @@
-import { IToolkitModalService, IToolkitModalSettings } from 'modules/core/modal';
 import { CertificateCheck } from '../sso-certificate.constants';
+import { SsoCertificateService } from '../sso-certificate.service';
+import { Notification } from 'modules/core/notifications';
 
 export class CheckCertificateController implements ng.IComponentController {
   public dismiss: Function;
-  public nextRemoved = false;
   public nextDisabled = true;
   public submitRemoved = true;
   public certificateCheckValue = CertificateCheck.NEITHER;
   public certificateCheck = CertificateCheck;
+  public isLoading = true;
 
   /* @ngInject */
   constructor(
+    private $rootScope: ng.IRootScopeService,
     private $state: ng.ui.IStateService,
-    private $translate: ng.translate.ITranslateService,
-    private ModalService: IToolkitModalService,
+    private SsoCertificateService: SsoCertificateService,
+    private Notification: Notification,
   ) {}
+
+  public $onInit(): void {
+    // Get lastest certificate ID
+    this.SsoCertificateService.getAllCiCertificates()
+      .catch((response) => {
+        this.Notification.errorResponse(response);
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
+  }
 
   public dismissModal(): void {
     this.dismiss();
@@ -25,29 +38,23 @@ export class CheckCertificateController implements ng.IComponentController {
   }
 
   public submit(): void {
-    const options = <IToolkitModalSettings>{
-      type: 'dialog',
-      hideTitle: true,
-      message: this.$translate.instant('ssoCertificateModal.noActionConfirmation'),
-      dismiss: this.$translate.instant('common.yes'),
-      close: this.$translate.instant('common.no'),
-    };
-    this.ModalService.open(options).result
+    this.SsoCertificateService.addLatestCertificateToOrg()
       .then(() => {
-        _.noop();
-      }, () => {
-        // TO-DO update with the latest certificate
+        this.SsoCertificateService.switchMetadata();
+      })
+      .then(() => {
+        this.$rootScope.$broadcast('DISMISS_SSO_CERTIFICATE_NOTIFICATION');
+        this.Notification.success('ssoCertificateModal.noActionSuccess');
         this.dismiss();
       });
   }
 
   public onCertificateCheckValueChanged(): void {
-    if (this.certificateCheckValue === CertificateCheck.SIGNING_AUTHN) {
-      this.submitRemoved = true;
+    if (this.certificateCheckValue !== CertificateCheck.NONE) {
       this.nextDisabled = false;
-      this.nextRemoved = false;
+      this.submitRemoved = true;
     } else if (this.certificateCheckValue === CertificateCheck.NONE) {
-      this.nextRemoved = true;
+      this.nextDisabled = true;
       this.submitRemoved = false;
     }
   }

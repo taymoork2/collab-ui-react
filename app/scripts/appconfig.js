@@ -1221,6 +1221,15 @@
           .state('sso-certificate.certificate-type', {
             template: '<certificate-type dismiss="$dismiss()"></certificate-type>',
           })
+          .state('sso-certificate.download-metadata-file', {
+            template: '<download-metadata-file dismiss="$dismiss()"></download-metadata-file>',
+            params: {
+              isMultiple: undefined,
+            },
+          })
+          .state('sso-certificate.test-sso', {
+            template: '<test-sso dismiss="$dismiss()"></test-sso>',
+          })
           .state('editService', {
             parent: 'modal',
             resolve: {

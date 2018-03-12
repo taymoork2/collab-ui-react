@@ -2,36 +2,75 @@
 @import 'styles/partials/mixins';
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
-check-certificate, certificate-type {
+check-certificate, certificate-type, download-metadata-file, test-sso {
   @include keep-flex-container(column);
 
   .reveal-modal.full & .modal-body {
     align-items: center;
   }
 
-  .sso-certificate-content-top {
+  .sso-certificate-content {
     @include keep-flex-container(column);
-    align-items: center;
-    max-width: 400px !important; // override modal-body direct child max-width
-    margin: 6rem auto 3rem;
+
+    &-check-certificate {
+      max-width: 26.125rem !important; // override modal-body direct child max-width
+    }
+
+    &-certificate-type {
+      max-width: 25rem !important; // override modal-body direct child max-width
+    }
+
+    &-download-metadata-file {
+      max-width: 31.25rem !important; // override modal-body direct child max-width
+    }
+
+    &-test-sso {
+      max-width: 25rem !important; // override modal-body direct child max-width
+    }
 
     &__icon {
-      @include vr-spacing(mb, 3);
+      align-self: center;
+      @include vr-spacing(mt, 6);
+      @include vr-spacing(mb, 4);
       color: $green-base;
     }
 
-    &__paragraph {
+    &__paragraph-question {
+      p {
+        font-size: 1.25rem;
+      }
+      @include vr-spacing(mb, 1.5);
+    }
+
+    &__radio {
+      @include vr-spacing(mb, 1.75);
+    }
+
+    &__paragraph-action1 {
+      p {
+        font-size: 1rem;
+      }
+      @include vr-spacing(mb, 0.5);
+    }
+
+    &__paragraph-action2 {
+      p {
+        font-size: 0.875rem;
+      }
       @include vr-spacing(mb, 2);
     }
-  }
 
-  .sso-certificate-content-bottom {
-    @include keep-flex-container(column);
-    align-items: center;
-    max-width: 500px !important; // override modal-body direct child max-width
+    &__paragraph-title {
+      align-self: center;
+      p {
+        font-size: 1.25rem;
+      }
+      @include vr-spacing(mb, 1.5);
+    }
 
-    &__paragraph {
-      @include vr-spacing(mb, 2);
+    &__button {
+      align-self: center;
+      @include vr-spacing(mb, 3.75);
     }
   }
 }
