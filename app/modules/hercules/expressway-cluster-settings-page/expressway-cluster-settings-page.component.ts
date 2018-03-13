@@ -15,7 +15,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
   public enabledServices: string[] = [];
   public cluster: any;
   public clusterId: string;
-  public hasHybridGlobalCallServiceConnectFature: boolean;
+  public hasHybridGlobalCallServiceConnectFeature: boolean;
   public resourceGroupOptions: IResourceGroupOptions[];
   public originalResourceGroup: IResourceGroupOptions;
   public selectedResourceGroup: IResourceGroupOptions;
@@ -46,7 +46,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
   public $onInit() {
     this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridGlobalCallServiceConnect)
       .then(support => {
-        this.hasHybridGlobalCallServiceConnectFature = support;
+        this.hasHybridGlobalCallServiceConnectFeature = support;
       });
   }
 

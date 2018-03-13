@@ -1,40 +1,43 @@
 <div class="cs-form__section">
   <div class="section__info">
-    <h4 class="section__title">SIP Destination</h4>
+    <h4 class="section__title" translate="hercules.clusterSipDestination.configSection.title"></h4>
   </div>
   <div class="section__content">
     <div class="sub-section">
-      <h5 class="sub-section__label">Default SIP Destination Override</h5>
-      <p class="sub-section__description">Override the default SIP Destination configured for Hybrid Call Connect in the organization. Review your organization SIP Destinations and certificates from the certificates from the <a href="">Hybrid Call Settings page.</a></p>
-      <!-- TODO: Handle Hybrid Call Connector not set up -->
-      <div ng-if="!$ctrl.clusterHasCallService">
-        <p>0 Call Connectors on this cluster bruh.</p>
+      <h5 class="sub-section__label" translate="hercules.clusterSipDestination.configSection.label"></h5>
+      <p class="sub-section__description" translate="hercules.clusterSipDestination.configSection.description"></a></p>
+      <div ng-if="$ctrl.state === 'not_a_call_cluster'">
+        <p translate="hercules.clusterSipDestination.configSection.warningNotCallCluster"></p>
       </div>
-      <div ng-if="$ctrl.clusterHasCallService">
-        <div cs-loader class="loader-example--small" ng-if="$ctrl.loading"></div>
-        <div ng-form="$ctrl.defaultSIPDomainOverrideForm" ng-if="!$ctrl.loading">
-          <div class="cs-checkbox-group">
-            <input
-              cs-input
-              type="checkbox"
-              ng-model="$ctrl.override"
-              ng-change="$ctrl.changeOverride()"
-              id="override"
-              name="override"
-              cs-input-label="Override default SIP Destination">
-          </div>
-          <div class="row" ng-if="!$ctrl.override">
-            <input
-              cs-input
-              type="text"
-              cs-input-group-size="medium-7"
-              ng-model="$ctrl.defaultSipDomain"
-              disabled>
-          </div>
-          <div class="row" ng-if="$ctrl.override">
-            <sip-destination-input sip-domain="$ctrl.defaultSipDomain" cluster-id="$ctrl.cluster.id"></sip-destination-input>
-          </div>
+      <div ng-if="$ctrl.state === 'connect_not_set_up'">
+        <p translate="hercules.clusterSipDestination.configSection.warningCallConnectNotSetup"></p>
+      </div>
+      <div ng-if="$ctrl.state === 'loading'" cs-loader class="loader-example--small"></div>
+      <div ng-if="$ctrl.state === 'ok'" ng-form="$ctrl.defaultSIPDomainOverrideForm">
+        <div class="cs-checkbox-group">
+          <input
+            cs-input
+            type="checkbox"
+            ng-model="$ctrl.override"
+            ng-change="$ctrl.changeOverride()"
+            id="override"
+            name="override"
+            cs-input-label="{{::'hercules.clusterSipDestination.configSection.inputLabel' | translate}}">
         </div>
+        <div class="row" ng-if="!$ctrl.override">
+          <input
+            cs-input
+            type="text"
+            cs-input-group-size="medium-7"
+            ng-model="$ctrl.defaultSipDomain"
+            disabled>
+        </div>
+        <div class="row" ng-if="$ctrl.override">
+          <sip-destination-input sip-domain="$ctrl.defaultSipDomain" cluster-id="$ctrl.cluster.id"></sip-destination-input>
+        </div>
+      </div>
+      <div ng-if="$ctrl.state === 'unknown'">
+        <p translate="hercules.clusterSipDestination.configSection.unknownState"></p>
       </div>
     </div>
   </div>

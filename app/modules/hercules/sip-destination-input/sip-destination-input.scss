@@ -1,4 +1,5 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
+@import 'styles/partials/mixins';
 
 sip-destination-input {
   .hercules-sip-destination-table {
@@ -53,11 +54,19 @@ sip-destination-input {
       }
     }
   }
+
   .sip-details {
     margin-top: 0.75rem;
 
     p, ul {
       font-size: 0.75rem;
     }
+  }
+
+  .saving-spinner {
+    align-self: center;
+    margin-left: 0.5rem;
+    @include keep-flex-container();
+    align-items: left;
   }
 }

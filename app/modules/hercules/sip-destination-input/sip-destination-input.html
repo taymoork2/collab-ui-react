@@ -16,6 +16,9 @@
         on-destination-save="$ctrl.onDestinationSave(warn)"
         on-test-started="$ctrl.onTestStarted()"
         on-result-ready="$ctrl.onResultReady(succeeded, resultSet)"></verify-sip-destination>
+      <div class="saving-spinner" ng-if="$ctrl.savingSip">
+        <i class="icon icon-spinner"></i>
+      </div>
     </div>
     <div ng-show="$ctrl.sipDestinationTestSucceeded" class="sip-destination-test-summary">
       <i class="icon icon-checkbox"></i>
@@ -40,9 +43,6 @@
         <a href ng-click="$ctrl.openSipTestResults()" translate="hercules.settings.verifySipDestination.viewTestResults"></a>
       </span>
     </div>
-    <span class="right" ng-if="$ctrl.savingSip">
-      <i class="icon icon-spinner"></i>
-    </span>
   </form>
   <div class="cs-input__help-text sip-details">
     <div translate="hercules.sipExplanation.line1"></div>

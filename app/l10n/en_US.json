@@ -2323,6 +2323,22 @@
       "domain-not-verified": "The domain for this Directory URI must be verified for this service to function properly. ",
       "navigateToCallSettings": "Verify the domain in <a href ng-click=\"{{onclick}}\">Call Service Settings</a>."
     },
+    "clusterSipDestination": {
+      "removeModal": {
+        "title": "Remove SIP Destination Override",
+        "message": "Do you want to revert this cluster SIP destination override and use the default one instead?",
+        "notification": "SIP Destination Override successfully removed."
+      },
+      "configSection": {
+        "title": "SIP Destination",
+        "label": "Default SIP Destination Override",
+        "description": "Override the default SIP Destination configured for Hybrid Call Connect in the organization. Review your organization SIP Destinations and certificates from the certificates from the <a ui-sref=\"call-service.settings\">Hybrid Call Settings page.</a>",
+        "warningNotCallCluster": "⚠️ This cluster is not provisioned to support Hybrid Call (Connect).",
+        "warningCallConnectNotSetup": "⚠️ Hybrid Call Connect is not setup.",
+        "inputLabel": "Override default SIP Destination",
+        "unknownState": "Sorry, we could not load information about SIP Destination Override"
+      }
+    },
     "capacity": {
       "filterLabel": "Filter to view resource groups & capacity",
       "label": "Capacity: {{capacity}}%",
