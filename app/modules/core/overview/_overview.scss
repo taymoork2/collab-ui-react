@@ -156,13 +156,17 @@
   }
 
   .user-card {
-    // height: auto !important;
     header {
       text-align: left;
 
       .icon-circle-user {
         top: auto;
       }
+    }
+
+    &--auto-assign-enabled {
+      padding: 1rem 1.5rem 2rem;
+      display: inline-block;
     }
 
     section {
@@ -182,10 +186,40 @@
         }
       }
 
+      .onboard-block {
+        padding: 1rem;
+        margin-left: 0;
+
+        .onboard-nr {
+          color: $color-mint-base;
+        }
+
+        .onboard-users-text {
+          margin: 0 1rem;
+        }
+      }
+
       .status-block {
         @extend .hybrid-card;
 
-        border-top: 1px solid $gray-light-2;
+        &.user-border {
+          border-top: 1px solid $gray-light-2;
+        }
+
+        &--auto-assign-enabled {
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          padding-top: 1rem;
+
+          @media #{$small-only} {
+            border-top: 1px solid $gray-light-2;
+          }
+
+          @media #{$medium-up} {
+            border-left: 1px solid $gray-light-2;
+          }
+        }
 
         ul {
           margin: 1rem 0;

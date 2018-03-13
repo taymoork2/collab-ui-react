@@ -9,7 +9,7 @@
     .factory('OverviewUsersCard', OverviewUsersCard);
 
   /* @ngInject */
-  function OverviewUsersCard($q, $rootScope, $state, $timeout, $translate, AutoAssignTemplateService, Config, DirSyncService, FeatureToggleService, ModalService, MultiDirSyncService, Orgservice) {
+  function OverviewUsersCard($q, $rootScope, $state, $timeout, $translate, Authinfo, AutoAssignTemplateService, Config, DirSyncService, FeatureToggleService, ModalService, MultiDirSyncService, Orgservice, UserListService) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -36,6 +36,18 @@
             }
           }
         };
+
+        function getNumberOnboardedUsers() {
+          var params = {
+            orgId: Authinfo.getOrgId(),
+          };
+          UserListService.listUsersAsPromise(params).then(function (response) {
+            var numUsers = response.data.Resources.length;
+            card.usersOnboarded = numUsers >= 3000 ? '3000+' : numUsers;
+          }).catch(function () {
+            card.usersOnboarded = $translate.instant('overview.cards.users.onboardError');
+          });
+        }
 
         function getUnassignedLicenses() {
           Orgservice.getLicensesUsage().then(function (response) {
@@ -195,13 +207,17 @@
           return $q.all({
             atlasF3745AutoAssignLicenses: FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus(),
             atlasF6980MultiDirSync: FeatureToggleService.atlasF6980MultiDirSyncGetStatus(),
+            autoLicense: FeatureToggleService.autoLicenseGetStatus(),
           }).then(function (features) {
             card.features = features;
+            card.cardClass = card.features.atlasF3745AutoAssignLicenses ? 'cs-card--x-large user-card' : 'cs-card--medium user-card';
           });
         }
 
         function initAutoAssignTemplate() {
           if (card.features.atlasF3745AutoAssignLicenses) {
+            card.name = 'overview.cards.users.onboardTitle';
+            getNumberOnboardedUsers();
             AutoAssignTemplateService.hasDefaultTemplate().then(function (hasDefaultTemplate) {
               card.hasAutoAssignDefaultTemplate = hasDefaultTemplate;
               if (hasDefaultTemplate) {
