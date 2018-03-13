@@ -31,6 +31,10 @@ interface IStatusSummaryForAService {
   notActivatedWithWarning: number;
   total: number;
 }
+interface ICusterSipDomain {
+  clusterId: string;
+  sipDomain: string;
+}
 
 export interface IExtendedStatusByClusters {
   id: string;
@@ -329,6 +333,28 @@ export class USSService {
           serviceId: 'squared-fusion-cal',
         },
       })
+      .then(this.extractData);
+  }
+
+  public getSipDomainForClusters(orgId = this.Authinfo.getOrgId()): ng.IPromise<ICusterSipDomain[]> {
+    return this.$http
+      .get<{ items: ICusterSipDomain[] }>(`${this.USSUrl}/orgs/${orgId}/clusterSipDomains`)
+      .then(this.extractData)
+      .then(response => response.items);
+  }
+
+  public addSipDomainForCluster(clusterId: string, sipDomain: string, orgId = this.Authinfo.getOrgId()): ng.IPromise<IUSSOrg> {
+    return this.$http
+      .post<IUSSOrg>(`${this.USSUrl}/orgs/${orgId}/clusterSipDomains`, {
+        clusterId: clusterId,
+        sipDomain: sipDomain,
+      })
+      .then(this.extractData);
+  }
+
+  public removeSipDomainForCluster(clusterId: string, orgId = this.Authinfo.getOrgId()): ng.IPromise<''> {
+    return this.$http
+      .delete<''>(`${this.USSUrl}/orgs/${orgId}/clusterSipDomains/${clusterId}`)
       .then(this.extractData);
   }
 

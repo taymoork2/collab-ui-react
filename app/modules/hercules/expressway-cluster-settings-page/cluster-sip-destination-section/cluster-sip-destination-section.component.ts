@@ -8,35 +8,35 @@ export class ClusterSipDestinationSectionController implements ng.IComponentCont
   public loading = true;
   public override: boolean;
   public clusterHasCallService: boolean;
+  public defaultSIPDomainOverrideForm: ng.IFormController;
 
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
-    private $timeout: ng.ITimeoutService,
     private Authinfo,
     // private Notification: Notification,
     private USSService: USSService,
   ) {}
 
   public $onInit() {
-    // TODO: use this property in the template
     this.clusterHasCallService = this.cluster.provisioning.some(provisioning => provisioning.connectorType === 'c_ucmc');
     this.$q.all({
       defaultSipDomain: this.USSService.getOrg(this.Authinfo.getOrgId()).then(org => org.sipDomain),
-      currentClusterSipDomain: this.$timeout(() => {}, 2000).then(() => this.$q.resolve('')), // TODO: use USS
+      currentClustersSipDomain: this.USSService.getSipDomainForClusters(),
     })
     .then(result => {
       this.defaultSipDomain = result.defaultSipDomain;
-      this.override = result.currentClusterSipDomain !== '';
+      const clusterSipDomain = _.find(result.currentClustersSipDomain, { clusterId: this.cluster.id });
+      this.override = clusterSipDomain && clusterSipDomain.sipDomain !== '';
     })
     .finally(() => {
       this.loading = false;
     });
-    // TODO: fetch current configuration for the cluster
   }
 
-  public updateClusterSIPDomain(domain: string) {
-    window.console.warn(domain);
+  public changeOverride(): void {
+    // console.warn('changeOverride()', this.override);
+    // console.warn('this.defaultSIPDomainOverrideForm', this.defaultSIPDomainOverrideForm);
   }
 }
 

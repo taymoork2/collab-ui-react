@@ -204,6 +204,7 @@
     require('modules/hercules/services/ucc-service').default,
     require('modules/hercules/services/uri-verification-service').default,
     require('modules/hercules/services/uss.service').default,
+    require('modules/hercules/sip-destination-input').default,
     require('modules/hercules/user-sidepanel/hybrid-calendar-preferred-webex-site').default,
     require('modules/hercules/user-sidepanel/hybrid-calendar-service-user-settings').default,
     require('modules/hercules/user-sidepanel/hybrid-call-service-aggregated-section').default,

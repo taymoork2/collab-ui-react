@@ -43,19 +43,20 @@ describe('SipDestinationSettingsSectionComponentCtrl', () => {
     expect(ctrl.sipDomain).toBe(expectedSipDomain);
   });
 
-  it('should save data in USS', () => {
-    const newSipDomain = 'united.no';
-    const ctrl = initController();
-    ctrl.$onInit();
-    ctrl.sipDomain = newSipDomain;
-    ctrl.updateSipDomain();
-    $scope.$apply();
+  // TODO: move the following test to app/modules/hercules/sip-destination-input/sip-destination-input.component.spec.ts
+  // it('should save data in USS', () => {
+  //   const newSipDomain = 'united.no';
+  //   const ctrl = initController();
+  //   ctrl.$onInit();
+  //   ctrl.sipDomain = newSipDomain;
+  //   ctrl.updateSipDomain();
+  //   $scope.$apply();
 
-    expect(USSService.updateOrg.calls.count()).toBe(1);
-    expect(USSService.updateOrg).toHaveBeenCalledWith(jasmine.objectContaining({
-      id: '1234',
-      sipDomain: newSipDomain,
-    }));
-  });
+  //   expect(USSService.updateOrg.calls.count()).toBe(1);
+  //   expect(USSService.updateOrg).toHaveBeenCalledWith(jasmine.objectContaining({
+  //     id: '1234',
+  //     sipDomain: newSipDomain,
+  //   }));
+  // });
 
 });
