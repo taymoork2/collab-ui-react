@@ -3105,6 +3105,11 @@
             url: '/hcs/install-files',
             template: '<hcs-install-files></hcs-install-files>',
           })
+          .state('hcs.subscription', {
+            parent: 'partner',
+            url: '/hcs/subscription',
+            template: '<hcs-licenses-subscription></hcs-licenses-subscription>',
+          })
           .state('taasSuites', {
             parent: 'main',
             url: '/taasSuite',

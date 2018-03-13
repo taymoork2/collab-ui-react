@@ -1,0 +1,59 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
+
+.hcs-license-subscription-list {
+  @extend %grid-subheader;
+
+  .ui-grid {
+    .standardColumn,
+    .telepresenceColumn,
+    .otherColumn {
+      text-align: center;
+    }
+    .statusColumn {
+      text-align: left;
+    }
+    .ui-grid-cell.standard {
+      text-align: center;
+    }
+
+    .ui-grid-row {
+      border-bottom: none;
+      background-color: $white;
+
+      &:hover {
+        background-color: $gray-light-4;
+      }
+    }
+  }
+
+  &.ui-grid-cell:first-child,
+  .ui-grid-header-cell {
+    text-align: center;
+  }
+
+  .ui-grid-header-cell.customer,
+  .ui-grid-header-cell.subscriptionId,
+  .ui-grid-header-cell.status {
+    text-align: left;
+  }
+
+  .ui-grid-header-cell-primary-focus .ui-grid-icon-down-dir i {
+    float: right;
+  }
+}
+
+.hcs-license-subscription-list .page-sub-header .export-lines i {
+  color: $gray-dark-1;
+  font-size: $h3-font-size;
+  margin-left: 1rem;
+  cursor: pointer;
+  padding-left: 0;
+}
+
+.hcs-license-subscription-list .page-sub-header .export-lines {
+  display: inline-block;
+  height: 22px;
+}

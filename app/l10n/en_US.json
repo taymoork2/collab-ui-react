@@ -10811,11 +10811,20 @@
     "addService": "Add a Service",
     "agentInstallFiles": "Agent Install Files",
     "license": {
-      "title": "HCS Licenses",
+      "all": "All",
       "description": "Extend Licensing services to Hosted Cloud Solution.",
+      "invalid": "Invalid",
+      "laas": "License as a Service",
+      "other": "Other",
       "perpetual": "Perpetual",
+      "standard": "Standard",
+      "status": "Status",
       "subscriptions": "Subscriptions",
-      "laas": "License as a Service"
+      "subscriptionId": "Subscription ID",
+      "telepresence": "Telepresence",
+      "hcsTitle": "HCS Licenses",
+      "title": "Licenses",
+      "valid": "Valid"
     },
     "upgrade": {
       "title": "HCS Upgrade Settings",
