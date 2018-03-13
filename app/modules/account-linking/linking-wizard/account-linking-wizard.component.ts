@@ -1,5 +1,6 @@
 import { LinkingOperation, IACSiteInfo, LinkingMode } from './../account-linking.interface';
 import { WizardFsm, SpecialEvent, IFsmTransitionCallback } from './account-linking-wizard-fsm';
+import { DiagnosticKey } from '../../core/metrics/metrics.keys';
 
 enum AccountLinkingWizardState {
   Welcome = 'Welcome',
@@ -105,7 +106,7 @@ class AccountLinkingWizardComponentCtrl implements ng.IComponentController {
   constructor(
     private $log: ng.ILogService,
     private $state: ng.ui.IStateService,
-    private LogMetricsService,
+    private MetricsService,
 ) {
     // TODO: Use this to distinguish between fresh linking or modified linking in the UI
     if (this.operation === null) {
@@ -146,7 +147,7 @@ class AccountLinkingWizardComponentCtrl implements ng.IComponentController {
 
   public cancelModal() {
     if (this.LOG_TRANSITION_METRICS === true) {
-      this.logMetrics({ operation: 'cancelWizard', fromState: this.fsmState }, this.LogMetricsService.eventType.accountlinkingWizardOperation);
+      this.logMetrics({ operation: 'cancelWizard', fromState: this.fsmState });
     }
     this.dismiss();
   }
@@ -270,7 +271,7 @@ class AccountLinkingWizardComponentCtrl implements ng.IComponentController {
       this.showTransitions(info);
     }
     if (this.LOG_TRANSITION_METRICS === true) {
-      this.logMetrics(info, this.LogMetricsService.eventType.accountlinkingWizardOperation);
+      this.logMetrics(info);
     }
 
   }
@@ -289,16 +290,11 @@ class AccountLinkingWizardComponentCtrl implements ng.IComponentController {
     this.$log.debug('-----------------------------------------------------------------------');
   }
 
-  private logMetrics(info, eventType) {
-    this.LogMetricsService.logMetrics(
-      'accountlinking20',
-      eventType,
-      this.LogMetricsService.eventAction.buttonClick,
-      200,
-      moment(),
-      1,
-      info,
-    );
+  private logMetrics(info) {
+    this.MetricsService.trackDiagnosticMetric(DiagnosticKey.ACCOUNT_LINKING_WIZARD_OPERATION, {
+      operation: 'buttonClick',
+      info: info,
+    });
   }
 }
 

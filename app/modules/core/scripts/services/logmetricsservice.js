@@ -69,8 +69,6 @@
         domainManageInstructions: 'DOMAININST',
         helpdeskSearch: 'HELPDESKSEARCH',
         helpdeskOperation: 'HELPDESKOPERATION',
-        accountlinkingWizardOperation: 'ACCOUNTLINKINGWIZARDOPERATION',
-        accountlinkingOperation: 'ACCOUNTLINKINGOPERATION',
         deviceUsageReportOperation: 'DEVICEUSAGEREPORTOPERATION',
         careTemplateInit: 'CARETEMPLATEINIT',
         careTemplateFinish: 'CARETEMPLATEFINISH',

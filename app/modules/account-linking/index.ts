@@ -15,7 +15,6 @@ import accountLinkingWizardModule from 'modules/account-linking/linking-wizard';
 import notificationsModule from 'modules/core/notifications';
 import linkedSitesGridModule from 'modules/account-linking/sites-list';
 import * as userServiceModuleName from 'modules/core/scripts/services/user.service.js';
-import * as logMetricsServiceModuleName from 'modules/core/scripts/services/logmetricsservice';
 
 export default angular
   .module('Accountlinking', [
@@ -29,7 +28,6 @@ export default angular
     notificationsModule,
     linkedSitesGridModule,
     userServiceModuleName,
-    logMetricsServiceModuleName,
   ])
 
   .component('linkedSites', new LinkedSitesComponent())

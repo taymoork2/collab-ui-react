@@ -1,4 +1,5 @@
 import { IACWebexSiteinfoResponse, IACWebexSiteError } from './account-linking.interface';
+import { DiagnosticKey } from '../core/metrics/metrics.keys';
 
 export class LinkedSitesWebExService {
 
@@ -31,7 +32,7 @@ export class LinkedSitesWebExService {
               private $q: ng.IQService,
               private WebExUtilsFact,
               private WebExXmlApiFact,
-              private LogMetricsService,
+              private MetricsService,
   ) {
   }
 
@@ -139,26 +140,20 @@ export class LinkedSitesWebExService {
   public getDomainsWithRetry(siteUrl: string): ng.IPromise<any> {
     const deferred = this.$q.defer();
     const self = this;
-    let queries = 0;
-    const startTime = moment();
+    let retries = 0;
     function doQuery() {
-      queries++;
       self.getDomains(siteUrl).then((data) => {
+        data['retries'] = retries;
         if (data && !data.retry) {
           self.$log.debug('doQuery resolve', data);
-          data['retries'] = queries;
-          //self.logMetrics('getDomains', data, startTime, moment());
           deferred.resolve(data);
         } else {
+          retries ++;
           self.$log.debug('doQuery retry');
           self.$timeout(() => {
             doQuery();
           }, 5000);
         }
-      }).catch( (error) => {
-        error[queries] = queries;
-        this.logMetrics('setLinkAllUsers', error, startTime, moment());
-        return error;
       });
     }
     doQuery();
@@ -169,12 +164,14 @@ export class LinkedSitesWebExService {
       let urlToUse = this.useSimulator ? this.webexSimUrl : this.getSiteApiUrl(siteUrl);
       urlToUse += this.domainsPath;
       this.$log.debug('WebeEx API url', urlToUse);
+      const startTime = moment();
       // TODO: Currently fetching a limited number of domains from webex.
       //       Waiting for a better solution to handle domains
       return this.$http.get(urlToUse + '?limit=40', {
         headers: { Authorization: 'Ticket ' + ticket },
       }).then((response) => {
         this.$log.debug('getDomains', response);
+        this.logMetrics('getDomains', response, startTime, moment());
         // Check if it is a 202 status, why is Retry-After header not present ?
         if (response.status === 202) {
           return { retry: true };
@@ -183,6 +180,7 @@ export class LinkedSitesWebExService {
         }
       }).catch((error) => {
         this.$log.debug('getDomains error in Webexservice::', error);
+        this.logMetrics('getDomains', error, startTime, moment());
         throw error;
       });
     });
@@ -211,18 +209,10 @@ export class LinkedSitesWebExService {
   }
 
   private logMetrics(requestType: string, data: any, startTime: any, endTime: any) {
-    this.LogMetricsService.logMetrics(
-      'accountlinking20',
-      this.LogMetricsService.eventType.accountlinkingOperation,
-      this.LogMetricsService.eventAction.pageLoad,
-      200,
-      moment(),
-      1,
-      {
-        requestType: requestType,
-        duration: endTime - startTime,
-        parameters: data,
-      },
-    );
+    this.MetricsService.trackDiagnosticMetric(DiagnosticKey.ACCOUNT_LINKING_OPERATION, {
+      operation: requestType,
+      duration: endTime - startTime,
+      response: data,
+    });
   }
 }
