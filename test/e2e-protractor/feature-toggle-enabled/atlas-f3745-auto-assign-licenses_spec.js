@@ -42,11 +42,45 @@ describe('Auto-Assign Licenses', function () {
       it('should have an item in the notifications column highlighting Auto-Assign Licenses', function () {
         utils.expectIsDisplayed(overview.notificationItems.autoAssign.bodyText);
         utils.click(overview.notificationItems.autoAssign.link);
-        utils.expectIsDisplayed(manageUsers.autoAssignTemplate.createTemplate.title);
         utils.expectIsDisplayed(manageUsers.autoAssignTemplate.createTemplate.subtitle);
         utils.clickEscape();
         utils.click(navigation.homeTab);
       });
+    });
+  });
+
+  describe('create template:', function () {
+    it('should start creating a new auto-assign template from the users tab', function () {
+      utils.click(navigation.usersTab);
+      utils.click(manageUsers.buttons.manageUsers);
+      utils.click(manageUsers.links.setupAutoAssignTemplate);
+      utils.expectIsDisplayed(manageUsers.autoAssignTemplate.createTemplate.subtitle);
+    });
+
+    it('should verify default button behavior', function () {
+      utils.expectIsEnabled(manageUsers.buttons.back);
+      utils.expectIsDisabled(manageUsers.buttons.next);
+    });
+
+    it('should have at least one subscription with one messaging license', function () {
+      utils.expectIsDisplayed(manageUsers.autoAssignTemplate.assignableServices.licenses.messaging.firstLicense);
+    });
+
+    it('should proceed once a license (any license) is selected', function () {
+      utils.click(manageUsers.autoAssignTemplate.assignableServices.licenses.messaging.firstLicense);
+      utils.expectIsEnabled(manageUsers.buttons.next);
+      utils.click(manageUsers.buttons.next);
+    });
+
+    it('should display auto-assign template summary', function () {
+      utils.expectIsDisplayed(manageUsers.autoAssignTemplate.templateSummary.summary);
+      utils.expectIsDisplayed(manageUsers.autoAssignTemplate.templateSummary.messagingItem);
+    });
+
+    it('should save the auto-assign template', function () {
+      utils.expectIsEnabled(manageUsers.buttons.save);
+      utils.click(manageUsers.buttons.save);
+      utils.expectIsDisplayed(manageUsers.autoAssignTemplate.createTemplate.successNotification);
     });
   });
 });

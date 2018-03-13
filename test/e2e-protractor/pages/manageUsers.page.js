@@ -5,6 +5,10 @@ var manageUsersPage = function () {
 
   //this.usersListEmails = element.all(by.css('.ui-grid-canvas .ui-grid-cell.ui-grid-coluiGrid-0009 .ui-grid-cell-contents'));
 
+  this.links = {
+    setupAutoAssignTemplate: element(by.css('.auto-assign .auto-assign__setup-link')),
+  };
+
   this.buttons = {
     manageUsers: element(by.id('manageUsers')),
     modalCloseButton: element(by.id('closeManageUsers')),
@@ -100,6 +104,18 @@ var manageUsersPage = function () {
     createTemplate: {
       title: element(by.cssContainingText('.modal-header > h3', 'Set Up Auto-Assign Template')),
       subtitle: element(by.cssContainingText('.modal-body > h4', 'Add Services for Users')),
+      successNotification: element(by.cssContainingText('.toast.toast-success [ng-bind="message"]', 'Your license template has been set up successfully')),
+    },
+    assignableServices: {
+      licenses: {
+        messaging: {
+          firstLicense: element.all(by.cssContainingText('assignable-services label[for^="MS_"]', 'Cisco Spark Messaging')).first(),
+        },
+      },
+    },
+    templateSummary: {
+      summary: element(by.css('auto-assign-template-summary')),
+      messagingItem: element(by.cssContainingText('auto-assign-template-summary h6', 'Cisco Spark Messaging')),
     },
   };
 };
