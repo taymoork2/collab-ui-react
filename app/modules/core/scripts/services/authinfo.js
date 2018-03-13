@@ -553,6 +553,7 @@
       },
       isDeviceMgmt: function () {
         // All orgs should now have access to device management regardless off entitlements.
+        // TODO (bnordlun): remove usage eventually.
         return true;
       },
       isWebexSquared: function () {
