@@ -352,10 +352,6 @@
               var count = 0;
               siteRow.licenseTooltipDisplay = '';
               siteRow.licenseAriaLabel = '';
-              if (siteRow.isPending) {
-                siteRow.licenseTooltipDisplay = $translate.instant('siteList.licenseUnavailableTooltip');
-                siteRow.licenseAriaLabel = $translate.instant('siteList.licenseUnavailableTooltip');
-              }
 
               //Get the site's MC, EC, SC, TC, CMR license information
               //MC
@@ -574,10 +570,13 @@
                 siteRow.multipleWebexServicesLicensed = true;
                 siteRow.licenseTypeContentDisplay = $translate.instant('siteList.multipleLicenses');
                 siteRow.licenseTooltipDisplay = _.replace(siteRow.licenseTooltipDisplay, '<br>', '');
-              } else if (!siteRow.isPending) {
+              } else if (count === 1) {
                 siteRow.multipleWebexServicesLicensed = false;
                 siteRow.licenseTooltipDisplay = null;
                 siteRow.licenseAriaLabel = null;
+              } else if (siteRow.isPending) {
+                siteRow.licenseTooltipDisplay = $translate.instant('siteList.licenseUnavailableTooltip');
+                siteRow.licenseAriaLabel = $translate.instant('siteList.licenseUnavailableTooltip');
               }
 
               siteRow.showLicenseTypes = true;

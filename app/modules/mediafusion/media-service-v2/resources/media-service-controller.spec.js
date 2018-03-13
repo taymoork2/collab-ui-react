@@ -12,7 +12,12 @@ describe('Controller: MediaServiceControllerV2', function () {
   }));
 
   beforeEach(function () {
-    controller = $controller('MediaServiceControllerV2');
+    controller = $controller('MediaServiceControllerV2', {
+      hasMfFeatureToggle: true,
+      hasMfSIPFeatureToggle: true,
+      hasMfCascadeBwConfigToggle: true,
+      hasMfClusterWizardFeatureToggle: true,
+    });
   });
 
   it('controller should be defined', function () {

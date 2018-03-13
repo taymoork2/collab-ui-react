@@ -70,7 +70,6 @@ export class HighlightMask {
   private static highlightMark = '-';
   private static noHighlightMark = ' ';
   private static blockedHighlightMark = 'x';
-  private maskHasBeenUpdated: boolean;
 
   constructor(input: string | undefined) {
     input = input || '';
@@ -85,9 +84,6 @@ export class HighlightMask {
     for (let i = start; i < (start + length) && i < this.mask.length; i++) {
       if (this.mask[i] === HighlightMask.noHighlightMark) {
         this.mask[i] = HighlightMask.highlightMark;
-        this.maskHasBeenUpdated = true;
-      } else if (this.mask[i] === HighlightMask.highlightMark) {
-        this.maskHasBeenUpdated = true;
       }
     }
   }

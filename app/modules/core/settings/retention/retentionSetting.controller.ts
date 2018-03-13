@@ -8,7 +8,7 @@ export enum RETENTION_TYPES {
 export class RetentionSettingController {
   public dataLoaded = false;
   private orgId: string;
-  private proPackPurchased = false;
+  public proPackPurchased = false;
   public RETENTION_TYPES = RETENTION_TYPES;
 
   // default is to keep until storage is full => -1

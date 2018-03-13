@@ -1,0 +1,23 @@
+<div ng-form="hcsSelectionForm">
+  <h4 translate="hcs.installFiles.setupTitle" class="hcs-service-setup__title"></h4>
+  <input
+    cs-input
+    type="text"
+    ng-model="$ctrl.fileName"
+    id="installFilename"
+    name="installFilename"
+    required="true"
+    ng-change="$ctrl.setInstallFileInfo()"
+    cs-input-messages="$ctrl.messages"
+    cs-input-label="{{:: 'hcs.installFiles.fileName' | translate}}">
+    <h4 translate="hcs.installFiles.httpProxy"></h4>
+    <div>
+      <cs-token-field
+        tokens="$ctrl.httpProxyToken"
+        tokenfieldid="$ctrl.tokenfieldid"
+        tokenoptions="$ctrl.tokenoptions"
+        tokenplaceholder="ctrl.tokenplaceholder"
+        tokenmethods="$ctrl.tokenmethods">
+      </cs-token-field>
+    </div>
+</div>

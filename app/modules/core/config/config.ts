@@ -1,5 +1,5 @@
 import { LocalStorageService } from 'modules/core/storage/localStorage.service';
-import { OfferName } from 'modules/core/shared';
+import { OfferName } from 'modules/core/shared/offer-name';
 
 interface IRoleStates {
   Application: string[];
@@ -219,6 +219,8 @@ export class Config {
     */
     device_admin: 'atlas-portal.deviceadmin',
     ci_device_admin: 'id_device_admin',
+    cca_full_admin: 'cca-portal.full_admin',
+    cca_readonly_admin: 'cca-portal.readonly_admin',
   };
 
   public readonly roles = {

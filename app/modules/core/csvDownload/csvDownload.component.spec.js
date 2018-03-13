@@ -142,6 +142,8 @@ describe('csvDownload', function () {
       this.$httpBackend.flush();
 
       // finish download - changeAnchorAttrToDownloadState
+      // prevent programmatic click of the anchor which downloads file and breaks in headless chrome
+      downloadAnchor[0].onclick = function () { return false; };
       this.$timeout.flush(300);
       expect(downloadAnchor.attr('href')).toContain('blob');
       expect(downloadAnchor.attr('download')).toBe('template.csv');

@@ -27,8 +27,6 @@ export class WizardFsm<STATE, EVENT> {
   private transitions: ITransition<STATE, EVENT | SpecialEvent>[] = [];
   private currTrans: ITransition<STATE, EVENT | SpecialEvent>;
 
-  private waitForActionFinish = false;
-
   constructor(
     private currState: STATE,
     private callbackFunc?: Function,
@@ -97,16 +95,13 @@ export class WizardFsm<STATE, EVENT> {
     let actionResult;
 
     if (transition && transition.to) {
-      this.waitForActionFinish = true;
       if (transition.action) {
         //this.currStateActionResultPromise = this.$q.when(transition.action(this.currState, event, transition.to));
         actionResult = transition.action(this.currState, event, transition.to);
-        this.waitForActionFinish = false;
       }
 
       if (transition.actionPromise) {
         actionResultPromise = transition.actionPromise(this.currState, event, transition.to).then((result) => {
-          this.waitForActionFinish = false;
           this.callBack(this.currState, transition.to, event, startTime, problems);
           this.currState = transition.to;
           return result;

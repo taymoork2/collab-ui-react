@@ -9,12 +9,13 @@ var HttpStatus = require('http-status-codes');
     .controller('CareLocalSettingsCtrl', CareLocalSettingsCtrl);
 
   /* @ngInject */
-  function CareLocalSettingsCtrl($element, $interval, $location, $q, $scope, $translate, AccessibilityService, AutoAttendantConfigService, Authinfo, FeatureToggleService, Log, Notification, ModalService, SunlightUtilitiesService, SunlightConfigService, URService) {
+  function CareLocalSettingsCtrl($element, $interval, $location, $q, $scope, $translate, AccessibilityService, AutoAttendantConfigService, Authinfo, ContextAdminAuthorizationService, FeatureToggleService, Log, Notification, ModalService, SunlightUtilitiesService, SunlightConfigService, URService) {
     var vm = this;
 
     vm.ONBOARDED = 'onboarded';
     vm.NOT_ONBOARDED = 'notOnboarded';
     vm.IN_PROGRESS = 'inProgress';
+    vm.ADMIN_AUTHORIZED = 'Authorized';
 
     vm.status = {
       UNKNOWN: 'Unknown',
@@ -59,6 +60,7 @@ var HttpStatus = require('http-status-codes');
     vm.featureToggles = {
       showRouterToggle: false,
       chatToVideoFeatureToggle: false,
+      contextServiceOnboardingFeatureToggle: false,
     };
 
     var maxChatCount = 5;
@@ -83,6 +85,28 @@ var HttpStatus = require('http-status-codes');
     };
 
     vm.chatCountOptions = _.range(1, 6);
+
+    vm.isAdminAuthorized = false;
+    vm.isSynchronizationInProgress = false;
+    vm.synchronizeButtonTooltip = '';
+
+    vm.synchronize = function () {
+      vm.isSynchronizationInProgress = true;
+      return ContextAdminAuthorizationService.synchronizeAdmins()
+        .then(function () {
+          Notification.success('context.dictionary.settingPage.synchronizationSuccessful');
+        })
+        .catch(function () {
+          Notification.error('context.dictionary.settingPage.synchronizationFailure');
+        })
+        .finally(function () {
+          vm.isSynchronizationInProgress = false;
+        });
+    };
+
+    vm.isSynchronizationDisabled = function () {
+      return vm.isSynchronizationInProgress || !vm.isAdminAuthorized;
+    };
 
     $scope.$on('$locationChangeStart', function (event, next) {
       if ($scope.orgConfigForm.$dirty) {
@@ -610,6 +634,10 @@ var HttpStatus = require('http-status-codes');
         vm.featureToggles.chatToVideoFeatureToggle = result && Authinfo.isCare();
       });
 
+      FeatureToggleService.supports(FeatureToggleService.features.atlasContextServiceOnboarding).then(function (supports) {
+        vm.featureToggles.contextServiceOnboardingFeatureToggle = supports;
+      });
+
       var sunlightPromise;
       URService.getQueue(vm.defaultQueueId).then(function (result) {
         vm.defaultQueueStatus = vm.status.SUCCESS;
@@ -634,6 +662,15 @@ var HttpStatus = require('http-status-codes');
           AccessibilityService.setFocus($element, '#ccfsBtn');
         }
       });
+
+      ContextAdminAuthorizationService.getAdminAuthorizationStatus()
+        .then(function (status) {
+          vm.isAdminAuthorized = (status === vm.ADMIN_AUTHORIZED);
+        })
+        .then(function () {
+          vm.synchronizeButtonTooltip = !vm.isAdminAuthorized
+            ? $translate.instant('context.dictionary.settingPage.unauthorizedTooltip') : '';
+        });
     }
 
     init();

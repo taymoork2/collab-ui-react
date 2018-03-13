@@ -295,11 +295,13 @@
     "bulk": {
       "ad": {
         "title": "Bulk Modify Users",
-        "instructions": "Export the current user attributes, edit the CSV file, and then import the edited version to update these users."
+        "instructions": "Export the current user attributes, edit the CSV file, and then import the edited version to update these users.",
+        "subscriptionReminder": "This method requires the uploaded content to match current license subscriptions. To update users, export the current user template below to edit user attributes. Once completed, upload changes."
       },
       "org": {
         "title": "Bulk Add or Modify Users",
-        "instructions": "Export the current user attributes, edit the CSV file, and then import the edited version to add or update users."
+        "instructions": "Export the current user attributes, edit the CSV file, and then import the edited version to add or update users.",
+        "subscriptionReminder": "This method requires the uploaded content to match current license subscriptions. To add or update users, export the current user template below to edit user attributes. Once completed, upload changes."
       },
       "import": {
         "label": "Import",
@@ -678,12 +680,30 @@
     "orgReadFailed": "Unable to read organization details"
   },
   "organizationDeleteModal": {
-    "deleteButton": "Close Account",
+    "title": {
+      "accountExpired": "Account Expired",
+      "deleteAccount": "Delete Account"
+    },
+    "moveOrDelete": "There are users that are part of your organization in Cisco's identity system. You can delete the users when your account is closed or you can move their accounts and assign them to Free Cisco Spark.",
+    "moveUsers": "Move users to Free Cisco Spark",
+    "deleteUsers": "Delete users",
+    "deleteButton": "Delete Account",
     "goBack": "Go Back",
     "confirmTitle": "Are you sure?",
     "confirmBody": "Closing your account cannot be undone except by resubscribing. Also, you may not be able to get back your WebEx site name.",
-    "accountClosedTitle": "Your account in closed",
-    "accountClosedBody": "To resubscribe please visit <a href=\"http://{{href}}\" target=\"_blank\">{{href}}</a>"
+    "accountClosedTitle": "Your account is closed",
+    "accountClosedBody": "To resubscribe please visit <a href=\"{{href}}\" target=\"_blank\">{{href}}</a>",
+    "deleteOrg": "Delete {{orgName}}",
+    "checkBoxes": "Check all the boxes below to acknowledge the consequences of deleting this organization.",
+    "singleUserMove": "You will be moved to the Spark Consumer organization and all Spark data will be deleted, including posts in Spark spaces and license assignments",
+    "singleUserDelete": "Your user data will be deleted, including posts in Spark spaces and license assignments",
+    "multiUserMove": "All users will be moved to the Spark Consumer organization and all Spark data will be deleted, including posts in Spark spaces and license assignments",
+    "multiUserDelete": "All users and user data will be deleted, including posts in Spark spaces and license assignments",
+    "allUsersMove": "All users and user data will be deleted, including posts in Spark spaces and license assignments",
+    "allData": "All WebEx data will be deleted, including WebEx meeting URLs and meeting recordings",
+    "allDevices": "All devices will be deregistered, including Cisco IP phones, Cisco Spark Boards and Cisco TelePresence video conferencing endpoints",
+    "notReversible": "Deleting an organization and related data is NOT REVERSIBLE",
+    "customerPermission": "You have your customer's permission to delete their organization"
   },
   "templatesPage": {
     "title": "MANAGE TEMPLATES"
@@ -2917,6 +2937,7 @@
           "DNSHostNameFound": "DNS Hostname Found",
           "DNSIpFound": "DNS IP Found",
           "DNSSvrFound": "DNS SRV Record Found",
+          "InvalidSIPDestination": "Invalid SIP Destination",
           "IOFailure": "Input/Output Failure",
           "NoAnswer": "No Answer",
           "NoDNSHopsFound": "No DNS Hops Found",
@@ -2940,6 +2961,7 @@
         },
         "fixes": {
           "Connecting": "TCP Connection failure: Check network connectivity, connection speed, and/or firewall configuration. Search for ‘connect failure’ in the <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Troubleshooting Documentation</a.",
+          "InvalidSIPDestination": "{{domain}} is not a valid SIP destination. Please check the help text below.",
           "IOFailure": "TCP failure: TCP read/write failure: Please try again. If the error persists, check network connectivity, firewall configuration, and Mutual TLS configuration. Search for ‘socket failure’ in the <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Troubleshooting Documentation</a.",
           "NoDNSHopsFound": "DNS Lookup failed. Check that a DNS or SRV record exists for your SIP Destination and that it resolves to one or more valid IP addresses. Search for ‘DNS SRV’ in the <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Troubleshooting Documentation</a>.",
           "PingFailed": "SIP ping failed.",
@@ -4065,6 +4087,7 @@
     "uploadCsvBadHeaders": "Missing required headers in CSV",
     "csvMaxSizeError": "File size is above the maximum of 10 MB.",
     "csvMaxLinesError": "The CSV contains more users than the maximum allowed. Please reduce the number of users to {{max}} or less and upload the CSV again.",
+    "csvHeaderNameMismatch": "The uploaded file contains an unrecognized column name '{{name}}'. Use the latest template to proceed.",
     "processCsvStep": "Processing CSV",
     "processing": "Processing...",
     "canceling": "Canceling...",
@@ -4388,14 +4411,6 @@
       "overCapacity": "Capacity exceeded for data center, please contact Cisco T.A.C. for further assistance.",
       "capacityFail": "Failed to activate and check capacity"
     }
-  },
-  "sparkAssistant": {
-    "title": "Cisco Spark Assistant",
-    "enableAssistant": "Enable Cisco Spark Assistant",
-    "description": "Allows users to perform various actions such as, make calls, start meetings, using their voice.",
-    "termOfService": "Spark Assistant terms of service",
-    "optout": "Disable Cisco Spark Assistant",
-    "optoutConfirm": "If you disable the Cisco Spark Assistant, you won't be able to use voice commands on any of the supported devices."
   },
   "reports": {
     "title": "Reports",
@@ -4777,7 +4792,8 @@
     "value": "Value",
     "restApiUrlHelperText": "Enter the secure URL of the REST API to invoke. Click the 'Add Dynamic text' to insert variables in the URL.",
     "completeHttpsError": "Enter the complete URL including the protocol, HTTPS.",
-    "secureHttpsError": "Enter only secure HTTPS URLs."
+    "secureHttpsError": "Enter only secure HTTPS URLs.",
+    "enterExtensionPlaceholder":"Enter Extension"
   },
   "callPark": {
     "code": "CP",
@@ -6233,7 +6249,8 @@
     "roles": "Roles",
     "helpdesk": "Help Desk",
     "orderadmin": "Order Admin",
-    "compliance": "Compliance"
+    "compliance": "Compliance",
+    "cca": "CCA (Cloud Connected Audio)"
   },
   "mohManagement": {
     "title": "Media On Hold",
@@ -6324,6 +6341,34 @@
     "report_title": "Hybrid Media Service Report",
     "add-resource-button": "Add Resource",
     "genericError": "An unexpected error occurred. Please try again later.",
+    "easyConfig": {
+      "titleV2": "Register Hybrid Media Node",
+      "clusterInfo": "Cluster info",
+      "createMessage": "Create a new or select an existing Hybrid Media Cluster where you want to add the Hybrid Media Node.",
+      "enterCluster": "Create a new cluster",
+      "clusterHelpText": "We reccomend using the geografical location of the cluster as a name",
+      "clusterExistError": "Cluster already exists,try a different Cluster Name",
+      "existingCluster": "Select an existing cluster",
+      "mediaNode": "Media node",
+      "mediaNodeMessage": "Enter the FQDN or IP address of the Hybrid Media Node that you want to register with Cisco Collaboration Cloud.",
+      "enterNode": "Enter FQDN or IP address",
+      "requiredclusterconfig": "Required Cluster Configuration",
+      "optionalclusterconfig": "Optional Cluster Configuration",
+      "finaltitle": "Finish Hybrid Media Registration",
+      "toNode": "Go to Node",
+      "successmsg": "You can now register your Hybrid Media Node to Cisco Collaboration cloud.",
+      "nodedetails": "Node IP Address/FQDN:",
+      "cluster": "Cluster:",
+      "upgradeschedule": "Upgrade Schedule",
+      "grant-success-information": "Go to your Hybrid Media Node within one hour to finish registration.Hybrid Media Node will be ready to<br> use as soon as you finish registration.",
+      "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to the Cisco Collaboration Cloud.<br> Node IP Address/FQDN: {{hostname}} Cluster: {{clustername}}"
+    },
+    "clusterBandwidth": {
+      "success": "Macimum cluster cascade bandwidth saved successfully.",
+      "title": "Maximum cluster cascade bandwidth",
+      "description": "Enter the maximum bandwidth (in megabits per second) that Hybrid Media Service clusters should use for cascades to the cloud. The lowest amount allows for one active 720p stream.",
+      "range": "Enter a value between 5 to 50"
+    },
     "sipconfiguration": {
       "success": "Unified CM SIP Trunk saved successfully.",
       "title": "Unified CM SIP Trunk",
@@ -7970,7 +8015,7 @@
     "helpTextWaitingVirtualAssistant": "If you are using a Customer Virtual Assistant, this message indicates transition from automated support to human interaction.",
     "helpTextChatting": "Customers see this if they minimize the chat window during an ongoing interaction.",
     "helpTextLeaveRoom": "Customers see this when an agent exits the chat and ends the interaction.",
-    "assistantTooltip": "The {{assistantType}} {{assistantName}} is used in this template.",
+    "assistantTooltip": "The {{assistantType}} {{assistantName}} is used by {{name}}.",
     "filterValue": {
       "customerSupportTemplates": "Customer Support Templates",
       "virtualAssistants": "Virtual Assistants",
@@ -8101,10 +8146,37 @@
       "orgNameHelpText": "Name of the Organization: {{orgName}}"
     },
     "configureOrgLogoMsg": "Go to Settings page to modify your organization logo",
+    "commonWizard": {
+      "createTitle": "Create {{ featureName }}",
+      "editTitle": "Edit {{ featureName }}",
+      "cancelDialog": "Do you want to discard your\n {{ featureName }}?"
+    },
     "appleBusinessChat": {
       "featureText": {
+        "name": "Apple Business Chat",
         "type": "Apple Business Chat",
-        "selectDesc": "Create Apple business chat experience for your customers to reach out to agents using iMessage."
+        "selectDesc": "Configure Apple Business Chat to define how your customers reach you using iMessage."
+      },
+      "businessId": {
+        "title": "Apple Business Chat ID Verification",
+        "inputLabel": "Apple Business Chat ID",
+        "helpText": "Complete your Apple Business Chat registration <a href=\"{{href}}\" target=\"_blank\">here</a> and enter your unique organization ID to proceed."
+      },
+      "name": {
+        "namePlaceholder": "Enter Name",
+        "nameHint": "Specify the {{ featureName }} name",
+        "errorChar250": "Name cannot exceed 250 characters.",
+        "invalidChars": "Name cannot contain the following characters: <>"
+      },
+      "cvaSelection": {
+        "virtualAssistantPageTitle": "Customer Virtual Assistant (Optional)",
+        "virtualAssistantDesc": "Select a preconfigured Customer Virtual Assistant who provides initial automated support in your Apple Business Chat experience",
+        "virtualAssistantSelector": "Customer Virtual Assistant",
+        "virtualAssistantSelectText": "Select ..."
+      },
+      "summary": {
+        "abcDesc": "You have configured {{ name }}.\nClick Finish to save the configuration.",
+        "saveErrorMessage": "Cannot save {{ featureName }}. Try again."
       }
     },
     "virtualAssistant": {
@@ -8141,9 +8213,6 @@
         "invalidIconDimensions": "The dimensions of the {{ featureName }} avatar must be exactly 512 x 512 pixels.\nClick the back arrow to return to the Avatar page and upload a valid avatar.",
         "invalidEmail": "The email you entered is invalid.\nClick the back arrow to return to the Email page and enter a valid email."
       },
-      "createTitle": "Create {{ featureName }}",
-      "editTitle": "Edit {{ featureName }}",
-      "cancelDialog": "Do you want to discard your\n {{ featureName }}?",
       "configOverview": {
         "title": "{{ featureName }} Configuration Requirements",
         "desc": "Review the prerequisites for creating a {{ featureName }}",
@@ -8652,9 +8721,11 @@
     "sparkAssistant": {
       "title": "Cisco Spark Assistant",
       "subsectionLabel": "Enable Cisco Spark Assistant",
-      "description": "Allows users to perform various actions such as, make calls, start meetings, using their voice",
+      "description": "Allows users to perform various actions, such as make calls and start meetings, using their voice.",
       "success": "Successfully updated Spark Assistant",
-      "failure": "Cisco Spark Assistant update failed"
+      "failure": "Cisco Spark Assistant update failed",
+      "optout": "Disable Cisco Spark Assistant",
+      "optoutConfirm": "If you disable the Cisco Spark Assistant, you won't be able to use voice commands on any of the supported devices."
     },
     "externalCommunication": {
       "title": "External Communication",
@@ -8742,7 +8813,10 @@
     "info": "Info",
     "order": "Order History",
     "billing": "Billing Info",
-    "loadError": "An error occurred while loading the page"
+    "loadError": "An error occurred while loading the page",
+    "closeAccount": "Close Account",
+    "closeAccountWarning": "Closing your account will cancel all your subscriptions, remove your account from Cisco's identity system and deregister your WebEx sites.",
+    "closeAccountNote": "Please note that closing your account cannot be reversed except by resubscribing."
   },
   "subscriptions": {
     "activeUsers": "Active Users",
@@ -8840,6 +8914,7 @@
     "atlas-portal.support": "Support",
     "atlas-portal.reports": "Reports",
     "atlas-portal.billing": "Billing",
+    "atlas-portal.deviceadmin": "Device Admin",
     "atlas-portal.cisco.partnermgmt": "Partner Management",
     "atlas-portal.cisco.partnermgmtTooltip": "Access to Partner Management",
     "atlas-portal.partner.helpdesk": "Help Desk Support",
@@ -8850,6 +8925,7 @@
     "atlas-portal.partner.salesadmin": "Sales Admin",
     "id_full_admin": "Full Admin",
     "id_readonly_admin": "Read-only Admin",
+    "id_user_admin": "User Admin",
     "user": "User",
     "ciscouc.devops": "Cisco Spark Call Devops",
     "ciscouc.devsupport": "Cisco Spark Call Dev Support",
@@ -10740,6 +10816,18 @@
       "title": "Inventory"
     },
     "installFiles": {
+      "addFile": "Add File",
+      "copFile": "COP file",
+      "description": "Create an Agent Install File.  This file is required to register your nodes and will take some time to create.",
+      "duplicateProxy": "Duplicate HTTP Proxy Address",
+      "enterFileName": "Enter a file name",
+      "fileName": "File Name",
+      "httpProxies": "HTTP Proxies",
+      "httpProxy": "HTTP Proxy",
+      "invalidPortError": "Port can be 0 or range between {{min}} and {{max}}",
+      "placeholderHttpProxy": "Enter HTTP Proxy IP Address or Domain Name",
+      "setupTitle": "Create Agent Install Files",
+      "tarFile": ".tar file",
       "title": "Install Files"
     },
     "taas": {

@@ -2,12 +2,11 @@ import { ILicenseUsage } from 'modules/core/users/userAdd/assignable-services/sh
 import { UserEntitlementName } from 'modules/core/users/shared/onboard/onboard.interfaces';
 import { IAssignableLicenseCheckboxState } from 'modules/core/users/userAdd/assignable-services/shared/license-usage-util.interfaces';
 import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template/auto-assign-template.interfaces';
-import { OfferName } from 'modules/core/shared';
+import { OfferName } from 'modules/core/shared/offer-name';
 import { ICrCheckboxItemState } from 'modules/core/users/shared/cr-checkbox-item/cr-checkbox-item.component';
 
 class AutoAssignTemplateSummaryController implements ng.IComponentController {
   private advancedMeetingLicenses: ILicenseUsage[];
-  private advancedMeetingSiteUrls: string[];
   private autoAssignTemplateData: IAutoAssignTemplateData;
   public readonly ENTITLEMENT_NAME = UserEntitlementName;
   public OFFER_NAME = OfferName;
@@ -19,7 +18,6 @@ class AutoAssignTemplateSummaryController implements ng.IComponentController {
 
   public $onInit(): void {
     this.advancedMeetingLicenses = this.getAdvancedMeetingLicenses();
-    this.advancedMeetingSiteUrls = this.getAdvancedMeetingSiteUrls();
   }
 
   private getSelectedLicenses(): ILicenseUsage[] {
@@ -31,10 +29,6 @@ class AutoAssignTemplateSummaryController implements ng.IComponentController {
 
   private getAdvancedMeetingLicenses(): ILicenseUsage[] {
     return this.LicenseUsageUtilService.getAdvancedMeetingLicenses(this.getSelectedLicenses());
-  }
-
-  private getAdvancedMeetingSiteUrls(): string[] {
-    return this.LicenseUsageUtilService.getAdvancedMeetingSiteUrls(this.getSelectedLicenses());
   }
 
   private getUserEntitlements(): { [key: string]: ICrCheckboxItemState } {

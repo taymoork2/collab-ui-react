@@ -103,7 +103,7 @@ function phase_2 {
 
     time nice -10 yarn build --env.nolint --env.noprogress --env.nocacheloader --devtool source-map
 
-    nice -15 yarn test --env.noprogress
+    nice -15 yarn test --phantomjs --env.noprogress --env.coverage
     set +e
 
     # e2e tests

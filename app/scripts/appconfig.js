@@ -2836,6 +2836,7 @@
             data: {},
             params: {
               currentAddress: {},
+              currentHuronDevice: {},
               currentNumber: '',
               status: '',
               staticNumber: '',
@@ -4720,6 +4721,11 @@
           .state('mediafusion-cluster.nodes', {
             url: '/nodes',
             template: '<hybrid-services-nodes-page back-state="$resolve.backState" cluster-id="$resolve.id"></hybrid-services-nodes-page>',
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.id;
+              },
+            },
           })
           .state('mediafusion-cluster.settings', {
             url: '/settings',
@@ -4866,13 +4872,24 @@
             abstract: true,
           })
           .state('add-resource.mediafusion.hostname', {
-            parent: 'modalSmall',
+            parent: 'main',
             views: {
-              'modal@': {
-                controller: 'AddResourceControllerClusterViewV2',
-                controllerAs: 'redirectResource',
-                template: require('modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html'),
-                modalClass: 'redirect-add-resource',
+              'main@': {
+                controller: 'AddResourceMainController',
+              },
+            },
+            resolve: {
+              hasMfClusterWizardFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceClusterWizard);
+              },
+              hasMfFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwo);
+              },
+              hasMfSIPFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceTrustedSIP);
+              },
+              hasMfCascadeBwConfigToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceCascadeBwConfig);
               },
             },
             params: {
@@ -5350,6 +5367,20 @@
             controller: 'MediaServiceControllerV2',
             controllerAs: 'med',
             parent: 'main',
+            resolve: {
+              hasMfClusterWizardFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceClusterWizard);
+              },
+              hasMfFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwo);
+              },
+              hasMfSIPFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceTrustedSIP);
+              },
+              hasMfCascadeBwConfigToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceCascadeBwConfig);
+              },
+            },
             params: {
               backState: null,
               clusterId: null,

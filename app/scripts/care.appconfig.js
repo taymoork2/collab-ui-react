@@ -151,12 +151,11 @@
           },
         },
       })
-      .state('care.abcService', {
+      .state('care.appleBusinessChat', {
         url: '/abcService',
         parent: 'care.Details',
         template: '<abc-setup dismiss="$dismiss()" template="$resolve.template"></abc-setup>',
         params: {
-          isEditFeature: null,
           template: null,
         },
         resolve: {

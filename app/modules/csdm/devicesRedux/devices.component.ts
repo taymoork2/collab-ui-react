@@ -29,7 +29,7 @@ export class DevicesCtrl implements ng.IComponentController {
   private csdmHybridCalendarFeature: boolean;
   private csdmHybridCallFeature: boolean;
   private csdmMultipleDevicesPerPlaceFeature: boolean;
-  private deviceExportFeature: boolean;
+  public deviceExportFeature: boolean;
   public exporting: boolean;
   private exportProgressDialog: ng.ui.bootstrap.IModalServiceInstance;
   private adminUserDetails: {

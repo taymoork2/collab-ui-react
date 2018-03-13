@@ -137,11 +137,11 @@
             row.totalSites = _.size(row.callbackGroupSites);
           });
           vm.isDownload = !!_.size(res);
-          vm.gridRefresh = false;
         })
         .catch(function (err) {
-          Notification.errorResponse(err, 'gemini.errorCode.genericError');
-          vm.gridRefresh = true;
+          Notification.errorResponse(err, 'errors.statusError', { status: err.status });
+        }).finally(function () {
+          vm.gridRefresh = false;
         });
     }
   }

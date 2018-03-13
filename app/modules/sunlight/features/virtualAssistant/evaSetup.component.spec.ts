@@ -11,7 +11,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       nextButtonState: true,
     },
     {
-      name: 'vaName',
+      name: 'name',
       previousButtonState: true,
       nextButtonState: false,
     },
@@ -211,30 +211,31 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     beforeEach(function () {
       deferred = this.$q.defer();
       spyOn(controller, 'getText').and.returnValue(deferred.promise);
+      spyOn(controller, 'getCommonText').and.returnValue(deferred.promise);
     });
 
     it('getTitle', function () {
       controller.getTitle();
-      expect(controller.getText).toHaveBeenCalledWith('createTitle');
+      expect(controller.getCommonText).toHaveBeenCalledWith('createTitle');
     });
 
     it('getTitle with isEditFeature true', function () {
       controller.isEditFeature = true;
       controller.getTitle();
-      expect(controller.getText).toHaveBeenCalledWith('editTitle');
+      expect(controller.getCommonText).toHaveBeenCalledWith('editTitle');
     });
 
     it('getSummaryDescription', function () {
-      controller.template.configuration.pages.vaName.nameValue = 'testName';
+      controller.template.configuration.pages.name.nameValue = 'testName';
       controller.getSummaryDescription();
-      expect(controller.getText).toHaveBeenCalledWith('summary.evaDesc', { name: controller.template.configuration.pages.vaName.nameValue });
+      expect(controller.getText).toHaveBeenCalledWith('summary.evaDesc', { name: controller.template.configuration.pages.name.nameValue });
     });
 
     it('getSummaryDescription with isEditFeature true', function () {
       controller.isEditFeature = true;
-      controller.template.configuration.pages.vaName.nameValue = 'testName';
+      controller.template.configuration.pages.name.nameValue = 'testName';
       controller.getSummaryDescription();
-      expect(controller.getText).toHaveBeenCalledWith('summary.evaDescEdit', { name: controller.template.configuration.pages.vaName.nameValue });
+      expect(controller.getText).toHaveBeenCalledWith('summary.evaDescEdit', { name: controller.template.configuration.pages.name.nameValue });
     });
 
     it('cancelModal', function () {
@@ -359,13 +360,13 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     });
   });
 
-  describe('vaName Page', function () {
+  describe('name Page', function () {
     beforeEach(function () {
       controller.nameForm = getForm('nameInput');
     });
 
     it ('isNameValid to return true when name input field is populated and less than maxNameLength', function () {
-      controller.template.configuration.pages.vaName.nameValue = 'testUser';
+      controller.template.configuration.pages.name.nameValue = 'testUser';
 
       const isNameValid = controller.isNameValid();
       expect(controller.nameForm.nameInput.$setValidity).toHaveBeenCalledWith(controller.NameErrorMessages.ERROR_CHAR_50, true);
@@ -373,14 +374,14 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     });
 
     it ('isNameValid to return false when name input field is empty', function () {
-      controller.template.configuration.pages.vaName.nameValue = '';
+      controller.template.configuration.pages.name.nameValue = '';
 
       const isNameValid = controller.isNameValid();
       expect(isNameValid).toBe(true);
     });
 
     it ('isNameValid to return false when name is longer than maxNameLength', function () {
-      controller.template.configuration.pages.vaName.nameValue = '123456789012345678901234567890123456789012345678901';
+      controller.template.configuration.pages.name.nameValue = '123456789012345678901234567890123456789012345678901';
 
       const isNameValid = controller.isNameValid();
       expect(controller.nameForm.nameInput.$setValidity).toHaveBeenCalledWith(controller.NameErrorMessages.ERROR_CHAR_50, false);
@@ -388,7 +389,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     });
 
     it ('isNamePageValid to return false when name input field is empty', function () {
-      controller.template.configuration.pages.vaName.nameValue = '';
+      controller.template.configuration.pages.name.nameValue = '';
 
       spyOn(this.controller, 'isNameValid').and.returnValue(true);
       const isNameValid = controller.isNamePageValid();
@@ -508,7 +509,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       expect(controller.saveTemplateErrorOccurred).toBeFalsy();
       controller.isEditFeature = true;
       const testName = 'My Test EVA';
-      controller.template.configuration.pages.vaName.nameValue = testName;
+      controller.template.configuration.pages.name.nameValue = testName;
       spyOn(this.$state, 'go');
       updateDeferred.resolve({
         success: true,

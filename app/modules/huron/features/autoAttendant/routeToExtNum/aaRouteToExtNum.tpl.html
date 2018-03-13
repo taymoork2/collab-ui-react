@@ -1,4 +1,32 @@
 <form novalidate name="countrySelectForm" class="aa-country-select">
-  <cs-phone-number e164-phone-number="aaRouteToExtNum.getPhoneNumber()" fields="aaRouteToExtNum.countryList" on-change-fn="aaRouteToExtNum.saveUiModel(model)" >
-  </cs-phone-number>
+  <div ng-if = "!aaRouteToExtNum.orgHasHybridEnabled">
+    <cs-select ng-model="aaRouteToExtNum.typeOfPhoneNumberSelected" options="aaRouteToExtNum.routeToExtOptions" 
+    placeholder="aaRouteToExtNum.selectRoutingPrefix" id = "select-phone-number" icon="icon-chevron-down" filter="false">
+    </cs-select>
+  
+    <cs-phone-number ng-if = "aaRouteToExtNum.typeOfPhoneNumberSelected === aaRouteToExtNum.routeToExtOptions[0]" 
+    ng-init = "aaRouteToExtNum.model.phoneNumberInput.extension = ''"
+    e164-phone-number="aaRouteToExtNum.getPhoneNumber()" fields="aaRouteToExtNum.countryList" 
+    on-change-fn="aaRouteToExtNum.saveUiModel(model)">
+    </cs-phone-number>
+
+    <input ng-if = "aaRouteToExtNum.typeOfPhoneNumberSelected === aaRouteToExtNum.routeToExtOptions[1]"
+    ng-init = "aaRouteToExtNum.model.phoneNumberInput.phoneNumber = ''"
+    cs-input type="text" name="routeToExtension"
+    placeholder="{{ :: 'autoAttendant.enterExtensionPlaceholder' | translate }}" 
+    ng-model="aaRouteToExtNum.model.phoneNumberInput.extension"
+    cs-input-group-size="medium-12"
+    cs-input-messages="aaRouteToExtNum.validationMessages"
+    ng-minlength="aaRouteToExtNum.extensionMinLength" 
+    ng-maxlength="aaRouteToExtNum.extensionMaxLength"
+    ng-pattern = "/^[0-9]*$/"
+    ng-required="true"
+    ng-keyup="aaRouteToExtNum.saveUiModel(aaRouteToExtNum.model.phoneNumberInput.extension)"
+    maxlength = "10">
+  </div>
+  <div ng-if = "aaRouteToExtNum.orgHasHybridEnabled">
+    <cs-phone-number e164-phone-number="aaRouteToExtNum.getPhoneNumber()" fields="aaRouteToExtNum.countryList" 
+    on-change-fn="aaRouteToExtNum.saveUiModel(model)" >
+    </cs-phone-number>
+  </div>
 </form>

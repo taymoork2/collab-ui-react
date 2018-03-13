@@ -308,7 +308,7 @@ describe('Syncing verified domains with care', function () {
 
   beforeEach(angular.mock.module(testModule));
 
-  let $httpBackend, DomainManagementService: any, UrlConfig, Authinfo, $rootScope, scomUrl, sunlightConfigUrl;
+  let $httpBackend, DomainManagementService: any, Authinfo, scomUrl, sunlightConfigUrl;
 
   beforeEach(() => {
     angular.mock.module($provide => {
@@ -325,12 +325,10 @@ describe('Syncing verified domains with care', function () {
     });
   });
 
-  beforeEach(inject(($injector, _DomainManagementService_, _UrlConfig_, _$rootScope_) => {
-    UrlConfig = _UrlConfig_;
+  beforeEach(inject(($injector, _DomainManagementService_, _UrlConfig_) => {
     DomainManagementService = _DomainManagementService_;
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend.when('GET', 'l10n/en_US.json').respond({});
-    $rootScope = _$rootScope_;
     scomUrl = _UrlConfig_.getScomUrl() + '/mockOrgId';
     sunlightConfigUrl = _UrlConfig_.getSunlightConfigServiceUrl() + '/organization/mockOrgId/chat';
   }));

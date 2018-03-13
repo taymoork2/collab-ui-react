@@ -9,7 +9,7 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
   private userId: string;
   private resourceGroupId: string;
   private serviceId: HybridServiceId;
-  private userOwnedByCCC: boolean;
+  public userOwnedByCCC: boolean;
   private connectorType: ConnectorType | undefined;
 
   public localizedConnectorName: string;

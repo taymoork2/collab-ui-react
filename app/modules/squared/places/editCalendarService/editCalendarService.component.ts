@@ -11,13 +11,12 @@ import { IQService } from 'angular';
 class EditCalendarService implements ng.IComponentController {
   private dismiss: Function;
   public emailOfMailbox: string;
-  private initialMailBox: string;
   private wizardData: IWizardData;
   private static fusionCal = 'squared-fusion-cal';
   private static fusionGCal = 'squared-fusion-gcal';
   public calService = '';
   private initialCalService: string;
-  private isLoading: boolean;
+  public isLoading: boolean;
   public externalCalendarIdentifier: string;
   private isFirstStep: boolean = false;
   public title: string;
@@ -87,7 +86,6 @@ class EditCalendarService implements ng.IComponentController {
         }
         if (existingCalLinks) {
           this.calService = existingCalLinks.providerID;
-          this.initialMailBox = existingCalLinks.accountGUID;
           this.emailOfMailbox = existingCalLinks.accountGUID;
         }
       });

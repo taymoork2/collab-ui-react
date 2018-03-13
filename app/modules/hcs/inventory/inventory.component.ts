@@ -4,6 +4,19 @@ interface IInventoryObject {
   clusterCount: number;
   status: string;
 }
+interface IFilterObject {
+  value?: any;
+  label: string | undefined;
+  menu?: any;
+  isSelected?: boolean;
+}
+interface IFilterComponent {
+  selected: IFilterObject[];
+  placeholder: string;
+  singular: string;
+  plural: string;
+  options: IFilterObject[];
+}
 
 export class InventoryComponent implements ng.IComponentOptions {
   public controller = InventoryCtrl;
@@ -11,17 +24,28 @@ export class InventoryComponent implements ng.IComponentOptions {
 }
 
 export class InventoryCtrl implements ng.IComponentController {
-  public placeholder = {
-    name: this.$translate.instant('common.all'),
-    filterValue: 'all',
-    count: 0,
-  };
+  private timer;
+  private timeoutVal: number;
+  private tempFilterOptions: (string| undefined)[];
+
   public inventoryList: IInventoryObject[] = [];
+  public inventoryListData: IInventoryObject[] = [];
+  public filter: IFilterComponent = {
+    selected: [],
+    placeholder: this.$translate.instant('customerPage.filters.placeholder'),
+    singular: this.$translate.instant('customerPage.filters.filter'),
+    plural: this.$translate.instant('customerPage.filters.filters'),
+    options: [],
+  };
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
-  ) {}
+    private $timeout: ng.ITimeoutService,
+  ) {
+    this.timer = 0;
+    this.timeoutVal = 1000;
+  }
 
   public $onInit(): void {
     this.inventoryList.push({
@@ -59,9 +83,54 @@ export class InventoryCtrl implements ng.IComponentController {
       clusterCount: 4,
       status: 'Active',
     });
+    this.inventoryListData = this.inventoryList;
+    this.tempFilterOptions = _.uniq(this.inventoryList.map(item => _.get(item, 'status')));
+    this.tempFilterOptions.map(filterOption => {
+      this.filter.options.push({
+        value: filterOption,
+        label: filterOption,
+      });
+    });
   }
 
-  public filterList(): void {
-    //implement search function.
+  public onChangeFilters(): void {
+    //implement filter function.
+    if (this.filter.selected.length >= 1) {
+      this.inventoryListData = this.inventoryList.filter(inventory => {
+        let present: boolean = false;
+        this.filter.selected.forEach(selected => {
+          if (selected.value) {
+            if (selected.value === inventory.status) {
+              present = true;
+            }
+          }
+        });
+        return present;
+      });
+    } else {
+      this.inventoryListData = this.inventoryList;
+    }
+  }
+
+  public searchInventoryList(str) {
+    if (this.timer) {
+      this.$timeout.cancel(this.timer);
+      this.timer = 0;
+    }
+
+    this.timer = this.$timeout(() => {
+      //CI requires search strings to be at least three characters
+      this.inventoryListData = this.inventoryList;
+      if (this.filter.selected.length >= 1) {
+        this.onChangeFilters();
+      }
+      if (str.length >= 1 || str === '') {
+        //search function
+        this.inventoryListData = this.inventoryListData.filter(inventory => {
+          const inventoryName = _.get(inventory, 'name', 'Unassigned');
+          return (_.includes(inventoryName.toLowerCase(), str.toLowerCase()));
+        });
+      }
+    }, this.timeoutVal);
   }
 }

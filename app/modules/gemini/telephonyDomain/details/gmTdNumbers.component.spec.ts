@@ -60,9 +60,7 @@ describe('Component: gmTdNumbers', () => {
     spyOn(this.TelephonyDomainService, 'postTelephonyDomain').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'exportNumbersToCSV').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'getDownloadUrl').and.returnValue('downloadUrl');
-    spyOn(this.WindowLocation, 'set').and.callFake(function (url) {
-      url = '';
-    });
+    spyOn(this.WindowLocation, 'set');
   }
 
   function initConstObjectAndAllOptions() {

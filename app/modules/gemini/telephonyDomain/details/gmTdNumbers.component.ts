@@ -43,8 +43,8 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   private callTypeOptions: any[] = [];
   private defaultNumberOptions: any[] = [];
   private globalDisplayOptions: any[] = [];
-  private _countryOptions: any[] = [];
-  private countryOptions: any[] = [];
+  public _countryOptions: any[] = [];
+  public countryOptions: any[] = [];
   private isHiddenOptions: any[] = [];
   private phoneAndLabelLength: number = 0;
 

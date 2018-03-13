@@ -3,7 +3,7 @@
 </div>
 <div class="online-upgrade-modal-body modal-body">
     <span>{{$ctrl.bodyText}}</span>
-    <span>{{$ctrl.cancelBodyText}}</span>
+    <span ng-if="$ctrl.showCancelButton">{{$ctrl.cancelBodyText}}</span>
 </div>
 <div class="online-upgrade-modal">
   <button

@@ -220,23 +220,21 @@ describe('crUserCsvResults Component', () => {
   /////////////
 
   describe('Controller', function () {
-
-    const bindings = {
-      csvData: this.fakeCsv,
-      onCancelImport: jasmine.createSpy('onStatusChange'),
-    };
-
     beforeEach(function () {
-      initController.apply(this, [bindings]);
+      this.bindings = {
+        csvData: this.fakeCsv,
+        onCancelImport: jasmine.createSpy('onStatusChange'),
+      };
+      initController.call(this, this.bindings);
     });
 
     it('should set csv data in scope to supplied', function () {
-      expect(this.controller.csvData).toBe(bindings.csvData);
+      expect(this.controller.csvData).toBe(this.bindings.csvData);
     });
 
     it('should call cancel callback when onCancelImport() called', function () {
       this.controller.onCancelImport();
-      expect(bindings.onCancelImport).toHaveBeenCalled();
+      expect(this.bindings.onCancelImport).toHaveBeenCalled();
     });
 
   });

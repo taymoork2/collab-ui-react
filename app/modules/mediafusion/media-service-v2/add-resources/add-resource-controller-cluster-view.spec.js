@@ -20,9 +20,8 @@ describe('AddResourceControllerClusterViewV2', function () {
     spyOn(this.AddResourceCommonServiceV2, 'updateClusterLists').and.returnValue(this.$q.resolve({}));
     spyOn(this.$window, 'open');
 
-    this.$state.modal = {
-      close: _.noop,
-    };
+    this.mockModal = { dismiss: jasmine.createSpy('dismiss') };
+
     this.$state.params = {
       wizard: {},
       firstTimeSetup: false,
@@ -32,9 +31,10 @@ describe('AddResourceControllerClusterViewV2', function () {
 
     this.initController = function () {
       this.controller = this.$controller('AddResourceControllerClusterViewV2', {
+        $modalInstance: this.mockModal,
         $q: this.$q,
-        $translate: this.$translate,
         $state: this.$state,
+        $translate: this.$translate,
         AddResourceCommonServiceV2: this.AddResourceCommonServiceV2,
         ProPackService: this.ProPackService,
       });

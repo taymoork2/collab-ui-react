@@ -1,5 +1,5 @@
 import { HybridServicesEventHistoryPageComponent } from './hybrid-services-event-history-page.component';
-import './_hybrid-services-event-history-page.scss';
+import './hybrid-services-event-history-page.scss';
 import featureToggleServiceModuleName from 'modules/core/featureToggle';
 import hybridServicesClusterServiceModuleName from 'modules/hercules/services/hybrid-services-cluster.service';
 import notificationModuleName from 'modules/core/notifications';
