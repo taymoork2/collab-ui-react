@@ -305,6 +305,7 @@ export class Config {
     CMR: 'CMR',
     CARE: 'CARE',
     ADVANCE_CARE: 'ADVANCE_CARE',
+    MANAGEMENT: 'MANAGEMENT',
   };
 
   public readonly setupTypes = {
