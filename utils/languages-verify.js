@@ -20,6 +20,19 @@ const VARIABLE_DIFFERENCE_KEY_WHITELIST = [
   'pagingGroup.sayInvalidChar', // TODO 2017-10-16 remove after next language drop
 ];
 
+// Not ideal to have these in language files.
+// Sometimes though a key is calculated dynamically, and some of the keys have values that should not be localized.
+// A suggested improvement on this: https://jira-eng-gpk2.cisco.com/jira/browse/ATLAS-3258
+const STATIC_ACROSS_LANGUAGES_KEY_LIST = [
+  'reportsPage.usageReports.deviceOptions.sparkBoard',
+  'trials.sparkBoardSystem',
+  'customerPage.sparkBoard',
+  'filters.sparkBoard',
+  'mediaFusion.metrics.clientType.board',
+  'subscriptions.licenseTypes.SB',
+  'helpdesk.licenseDisplayNames.SB',
+];
+
 // eg. one{, one {, one  {
 const PLURAL_DISALLOWED_REGEXPS = _.map(PLURAL_DISALLOWED_KEYWORDS, keyword => new RegExp(keyword + '( ?)+{'));
 
@@ -90,6 +103,20 @@ ${invalidMessageFormatSyntaxString}
 ${variableDifferencesWithEnglishString}
     `);
   }
+
+  const deviatingTranslations = getDeviatingTranslations(flatTranslations, englishFlatTranslations);
+  if (!_.isEmpty(deviatingTranslations)) {
+    hasError = true;
+    const deviatingTranslationsFromEnglishString = _.map(deviatingTranslations, (val, key) => {
+      const englishValue = englishFlatTranslations[key];
+      return `${key} (${fileName}): ${val}\n${key} (en_US): ${englishValue}`;
+    }).join('\n-----\n');
+    console.error(`[ERROR] ${languageFile} contains values that do not match the source for static texts in ${L10N_ENGLISH_FILE}:
+
+${deviatingTranslationsFromEnglishString}
+    `);
+  }
+
   const imbalancedBrackets = findImbalancedBrackets(flatTranslations);
   if (!_.isEmpty(imbalancedBrackets)) {
     hasError = true;
@@ -179,6 +206,19 @@ function getVariableDifferenceTranslations(checkObj, origObj) {
     if (diffVariableNames.length) {
       return true;
     }
+  });
+}
+
+function getDeviatingTranslations(checkObj, origObj) {
+  return _.pickBy(checkObj, (value, key) => {
+    if (!_.includes(STATIC_ACROSS_LANGUAGES_KEY_LIST, key)) {
+      return false;
+    }
+    const origValue = origObj[key];
+    if (!origValue) {
+      return false;
+    }
+    return value !== origValue;
   });
 }
 
