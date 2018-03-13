@@ -1,5 +1,5 @@
 import accountLinkingModule from './index';
-import { DiagnosticKey } from "../core/metrics/metrics.keys";
+import { DiagnosticKey } from '../core/metrics/metrics.keys';
 
 describe('Service: LinkedSitesWebExService', () => {
 
