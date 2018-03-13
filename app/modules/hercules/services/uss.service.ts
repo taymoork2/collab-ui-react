@@ -31,7 +31,7 @@ interface IStatusSummaryForAService {
   notActivatedWithWarning: number;
   total: number;
 }
-interface ICusterSipDomain {
+interface IClusterSipDomain {
   clusterId: string;
   sipDomain: string;
 }
@@ -336,19 +336,25 @@ export class USSService {
       .then(this.extractData);
   }
 
-  public getSipDomainForClusters(orgId = this.Authinfo.getOrgId()): ng.IPromise<ICusterSipDomain[]> {
+  public getSipDomainForClusters(orgId = this.Authinfo.getOrgId()): ng.IPromise<IClusterSipDomain[]> {
     return this.$http
-      .get<{ items: ICusterSipDomain[] }>(`${this.USSUrl}/orgs/${orgId}/clusterSipDomains`)
+      .get<{ items: IClusterSipDomain[] }>(`${this.USSUrl}/orgs/${orgId}/clusterSipDomains`)
       .then(this.extractData)
       .then(response => response.items);
   }
 
-  public addSipDomainForCluster(clusterId: string, sipDomain: string, orgId = this.Authinfo.getOrgId()): ng.IPromise<IUSSOrg> {
+  public addSipDomainForCluster(clusterId: string, sipDomain: string, orgId = this.Authinfo.getOrgId()): ng.IPromise<any> {
     return this.$http
-      .post<IUSSOrg>(`${this.USSUrl}/orgs/${orgId}/clusterSipDomains`, {
+      .post<any>(`${this.USSUrl}/orgs/${orgId}/clusterSipDomains`, {
         clusterId: clusterId,
         sipDomain: sipDomain,
       })
+      .then(this.extractData);
+  }
+
+  public deleteSipDomainForCluster(clusterId: string, orgId = this.Authinfo.getOrgId()): ng.IPromise<any> {
+    return this.$http
+      .delete<any>(`${this.USSUrl}/orgs/${orgId}/clusterSipDomains/${clusterId}`)
       .then(this.extractData);
   }
 

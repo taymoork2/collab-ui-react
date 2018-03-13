@@ -39,7 +39,7 @@ export class SipDestinationInputController implements ng.IComponentController {
           this.Notification.errorWithTrackingId(error, 'hercules.errors.sipDomainInvalid');
         })
         .finally(() => {
-          // this.savingSip = false;
+          this.savingSip = false;
         });
     } else {
       this.USSService.addSipDomainForCluster(this.clusterId, this.sipDomain)
@@ -50,7 +50,7 @@ export class SipDestinationInputController implements ng.IComponentController {
             this.Notification.errorWithTrackingId(error, 'hercules.errors.sipDomainInvalid');
           })
           .finally(() => {
-            // this.savingSip = false;
+            this.savingSip = false;
           });
     }
   }

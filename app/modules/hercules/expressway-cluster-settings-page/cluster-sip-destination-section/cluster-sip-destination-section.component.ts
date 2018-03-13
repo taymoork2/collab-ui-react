@@ -56,7 +56,7 @@ export class ClusterSipDestinationSectionController implements ng.IComponentCont
         btnType: 'primary',
       }).result
       .then(() => {
-        return this.USSService.addSipDomainForCluster(this.cluster.id, '')
+        return this.USSService.deleteSipDomainForCluster(this.cluster.id)
           .then(() => {
             // Display again the default SIP destination
             this.defaultSipDomain = this.defaultSipDomainCopy;
