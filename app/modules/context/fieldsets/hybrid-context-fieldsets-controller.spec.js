@@ -20,7 +20,6 @@ describe('HybridContextFieldsetsCtrl', function () {
     },
   };
 
-  beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Context'));
 
   beforeEach(inject(dependencies));
