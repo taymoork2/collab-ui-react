@@ -12,7 +12,7 @@ type Test = atlas.test.IComponentTest<CertificateTypeController, {}, {
 describe('Component: certificateType:', () => {
   const CONTENT_TOP = '.sso-certificate-content-top';
   const CONTENT_BOTTOM = '.sso-certificate-content-bottom';
-  const CONTENT_RADIO = '.sso-certificate-content-top__radio';
+  const CONTENT_RADIO = '.cs-radio-group';
 
   beforeEach(function (this: Test) {
     this.components = {

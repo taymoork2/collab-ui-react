@@ -10,7 +10,9 @@ check-certificate, certificate-type {
   }
 
   .sso-certificate-content-top {
-    max-width: 400px !important;
+    @include keep-flex-container(column);
+    align-items: center;
+    max-width: 400px !important; // override modal-body direct child max-width
     margin: 6rem auto 3rem;
 
     &__icon {
@@ -21,14 +23,12 @@ check-certificate, certificate-type {
     &__paragraph {
       @include vr-spacing(mb, 2);
     }
-
-    &__radio {
-      margin: auto 4rem;
-    }
   }
 
   .sso-certificate-content-bottom {
-    max-width: 500px !important;
+    @include keep-flex-container(column);
+    align-items: center;
+    max-width: 500px !important; // override modal-body direct child max-width
 
     &__paragraph {
       @include vr-spacing(mb, 2);
