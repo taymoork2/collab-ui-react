@@ -1,0 +1,19 @@
+<div class="cr-table"
+  ng-if="$ctrl.tableFields.length > 0" role="table">
+  <div class="cr-table__header" role="row">
+    <div class="cr-table__row">
+      <span ng-repeat="col in $ctrl.tableFields track by $index"
+        class="cr-table__column--header cr-table__column-{{$index}}"
+        ng-class="$first ? 'cr-table__column-first' : 'cr-table__column-not-first'"
+        translate="{{:: col.fieldL10nLabel}}" role="columnheader" ></span>
+    </div>
+  </div>
+  <div class="cr-table__body">
+    <div class="cr-table__row"
+      ng-repeat="data in $ctrl.tableRecords track by $index" role="row">
+      <span ng-repeat="col in $ctrl.tableFields"
+        class="cr-table__column cr-table__column-{{$index}}"
+        ng-class="$first ? 'cr-table__column-first' : 'cr-table__column-not-first'">{{data[col.fieldName]}}</span>
+    </div>
+  </div>
+</div>
