@@ -5,14 +5,14 @@
   next-disabled="$ctrl.nextDisabled"
   back="$ctrl.back()"
   >
-  <div class="sso-certificate-content text-center">
-    <div class="sso-certificate-content__icon">
+  <div class="sso-certificate-content-top text-center">
+    <div class="sso-certificate-content-top__icon">
       <i class="icon icon-circle-check-mark-success icon-5x"></i>
     </div>
-    <div class="sso-certificate-content__paragraph text-center">
+    <div class="sso-certificate-content-top__paragraph text-center">
       <p><strong>{{::'ssoCertificateModal.certificateType' | translate}}</strong></p>
     </div>
-    <div class="sso-certificate-content__radio cs-radio-group text-left">
+    <div class="sso-certificate-content-top__radio cs-radio-group text-left">
       <input cs-input type="radio"
               ng-model="$ctrl.certificateTypeValue"
               name="certificateRadio"
@@ -28,11 +28,13 @@
               value="{{$ctrl.certificateType.SINGLE}}"
               cs-input-label="{{:: 'ssoCertificateModal.singleCertificate' | translate}}">
     </div>
+  </div>
+  <div class="sso-certificate-content-bottom text-center">
     <div ng-if="$ctrl.certificateTypeValue === $ctrl.certificateType.SINGLE">
-      <div class="sso-certificate-content__paragraph text-center">
+      <div class="sso-certificate-content-bottom__paragraph text-center">
         <p><strong>{{::'ssoCertificateModal.singleCertificateWarning' | translate}}</strong></p>
       </div>
-      <div class="sso-certificate-content__paragraph text-center">
+      <div class="sso-certificate-content-bottom__paragraph text-center">
         <p>{{::'ssoCertificateModal.singleCertificateMessage' | translate}}</p>
       </div>
     </div>

@@ -10,7 +10,9 @@ type Test = atlas.test.IComponentTest<CertificateTypeController, {}, {
 }>;
 
 describe('Component: certificateType:', () => {
-  const CONTENT_RADIO = '.sso-certificate-content__radio';
+  const CONTENT_TOP = '.sso-certificate-content-top';
+  const CONTENT_BOTTOM = '.sso-certificate-content-bottom';
+  const CONTENT_RADIO = '.sso-certificate-content-top__radio';
 
   beforeEach(function (this: Test) {
     this.components = {
@@ -39,8 +41,16 @@ describe('Component: certificateType:', () => {
       expect(this.controller.dismiss).toHaveBeenCalled();
     });
 
+    it('should show content top', function (this: Test) {
+      expect(this.view.find(CONTENT_TOP)).toExist();
+    });
+
     it('should show radio boxes', function (this: Test) {
       expect(this.view.find(CONTENT_RADIO)).toExist();
+    });
+
+    it('should show content bottom', function (this: Test) {
+      expect(this.view.find(CONTENT_BOTTOM)).toExist();
     });
 
     it('should show the Next button as disabled', function (this: Test) {

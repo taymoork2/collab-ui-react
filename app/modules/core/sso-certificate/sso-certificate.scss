@@ -7,13 +7,11 @@ check-certificate, certificate-type {
 
   .reveal-modal.full & .modal-body {
     align-items: center;
-    > * {
-      max-width: 450px;
-    }
   }
 
-  .sso-certificate-content {
-    margin: auto;
+  .sso-certificate-content-top {
+    max-width: 400px !important;
+    margin: 6rem auto 3rem;
 
     &__icon {
       @include vr-spacing(mb, 3);
@@ -21,12 +19,19 @@ check-certificate, certificate-type {
     }
 
     &__paragraph {
-      width: 450px;
       @include vr-spacing(mb, 2);
     }
 
     &__radio {
-      @include vr-spacing(mb, 3);
+      margin: auto 4rem;
+    }
+  }
+
+  .sso-certificate-content-bottom {
+    max-width: 500px !important;
+
+    &__paragraph {
+      @include vr-spacing(mb, 2);
     }
   }
 }
