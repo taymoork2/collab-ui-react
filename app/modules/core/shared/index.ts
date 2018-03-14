@@ -1,3 +1,4 @@
+import asyncIntervalModuleName from './async-interval';
 import crIconInfoModuleName from './cr-icon-info';
 import crProgressbarModuleName from './cr-progressbar';
 import multiStepModalModuleName from './multi-step-modal';
@@ -11,6 +12,7 @@ export { StringUtilService };
 
 export default angular
   .module('core.shared', [
+    asyncIntervalModuleName,
     crIconInfoModuleName,
     crProgressbarModuleName,
     multiStepModalModuleName,
