@@ -10,12 +10,12 @@
         <h5 class="wizard-info-title" translate="accountLinking.wizard.ciscoWebExDomains"></h5>
         <div class="row">
           <div class="columns medium-6">
-            <p class="wizard-info" ng-repeat="d in $ctrl.getDomains(0,10)" class="domain">
+            <p class="wizard-info domain" ng-repeat="d in $ctrl.getDomains(0,10)">
               {{d}}
             </p>
           </div>
           <div class="columns medium-6">
-            <p class="wizard-info" ng-repeat="d in $ctrl.getDomains(10,20)" class="domain domain-right">
+            <p class="wizard-info domain domain-right" ng-repeat="d in $ctrl.getDomains(10,20)">
               {{d}}
             </p>
           </div>
