@@ -50,7 +50,7 @@ describe('Auto-Assign Licenses', function () {
   });
 
   describe('create template:', function () {
-    it('should start creating a new auto-assign template from the users tab', function () {
+    it('should start the wizard for a new auto-assign template from the users tab', function () {
       utils.click(navigation.usersTab);
       utils.click(manageUsers.buttons.manageUsers);
       utils.click(manageUsers.links.setupAutoAssignTemplate);
@@ -80,7 +80,18 @@ describe('Auto-Assign Licenses', function () {
     it('should save the auto-assign template', function () {
       utils.expectIsEnabled(manageUsers.buttons.save);
       utils.click(manageUsers.buttons.save);
-      utils.expectIsDisplayed(manageUsers.autoAssignTemplate.createTemplate.successNotification);
+      utils.expectIsDisplayed(manageUsers.autoAssignTemplate.notifications.createSuccess);
+    });
+  });
+
+  describe('delete template:', function () {
+    it('should delete the default auto-assign template', function () {
+      utils.click(navigation.usersTab);
+      utils.click(manageUsers.buttons.manageUsers);
+      utils.click(manageUsers.autoAssignTemplate.optionsMenu.toggleButton);
+      utils.click(manageUsers.autoAssignTemplate.optionsMenu.delete);
+      utils.click(manageUsers.autoAssignTemplate.optionsMenu.deleteConfirm);
+      utils.expectIsDisplayed(manageUsers.autoAssignTemplate.notifications.deleteSuccess);
     });
   });
 });
