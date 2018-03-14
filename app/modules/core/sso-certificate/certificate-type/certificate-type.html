@@ -18,14 +18,14 @@
               name="certificateRadio"
               ng-change="$ctrl.onCertificateTypeValueChanged()"
               id="multiple"
-              value="{{$ctrl.certificateType.MULTIPLE}}"
+              ng-value="::$ctrl.certificateType.MULTIPLE"
               cs-input-label="{{:: 'ssoCertificateModal.multipleCertificates' | translate}}">
       <input cs-input type="radio"
               ng-model="$ctrl.certificateTypeValue"
               name="certificateRadio"
               ng-change="$ctrl.onCertificateTypeValueChanged()"
               id="single"
-              value="{{$ctrl.certificateType.SINGLE}}"
+              ng-value="::$ctrl.certificateType.SINGLE"
               cs-input-label="{{:: 'ssoCertificateModal.singleCertificate' | translate}}">
     </div>
   </div>
