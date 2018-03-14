@@ -2918,7 +2918,13 @@
         "certificatesUpload": "Upload",
         "certificatesModalHeading": "Remove Certificate",
         "sipDomainHeading": "SIP Destination",
-        "sipDomainPlaceholder": "sipmtls.example.com"
+        "sipDomainPlaceholder": "sipmtls.example.com",
+        "sipDestinationsOverview": {
+          "title": "SIP Destinations overview",
+          "description": "Review all the SIP Destinations configured in the organization and see the clusters they are configured on.",
+          "tableTitle1": "SIP Destination",
+          "tableTitle2": "Used on"
+        }
       },
       "verifySipDestination": {
         "title": "Verify SIP Destination",
