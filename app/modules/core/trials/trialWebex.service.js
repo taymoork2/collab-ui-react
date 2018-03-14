@@ -19,6 +19,11 @@
   /* @ngInject */
   function TrialWebexService($http, $q, Config, UrlConfig, WebexOrderStatusResource, Notification, SetupWizardService) {
     var _trialData;
+    var _siteValidationResponseMessage = {
+      VALID_SITE: 'validSite',
+      DOMAIN_INVALID: 'domainInvalid',
+      DUPLICATE_SITE: 'duplicateSite',
+    };
     var service = {
       getData: getData,
       reset: reset,
@@ -82,12 +87,12 @@
       return $http(config).then(function (response) {
         var data = _.get(response, 'data.properties[0]', {});
         var errorCodes = {
-          0: 'validSite',
-          434057: 'domainInvalid',
-          439012: 'duplicateSite',
-          439015: 'duplicateSite',
-          431205: 'duplicateSite',
-          431397: 'duplicateSite',
+          0: _siteValidationResponseMessage.VALID_SITE,
+          434057: _siteValidationResponseMessage.DOMAIN_INVALID,
+          439012: _siteValidationResponseMessage.DUPLICATE_SITE,
+          439015: _siteValidationResponseMessage.DUPLICATE_SITE,
+          431205: _siteValidationResponseMessage.DUPLICATE_SITE,
+          431397: _siteValidationResponseMessage.DUPLICATE_SITE,
         };
         var isValid = (data.isValid === 'true');
         var doesNotExist = (data.isExist !== 'true');
