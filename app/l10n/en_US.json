@@ -10869,7 +10869,9 @@
     },
     "installFiles": {
       "addFile": "Add File",
+      "clusterCount": "Number of Clusters",
       "copFile": "COP file",
+      "customerName": "Customer/ Group Name",
       "description": "Create an Agent Install File.  This file is required to register your nodes and will take some time to create.",
       "duplicateProxy": "Duplicate HTTP Proxy Address",
       "enterFileName": "Enter a file name",
@@ -10879,6 +10881,7 @@
       "invalidPortError": "Port can be 0 or range between {{min}} and {{max}}",
       "placeholderHttpProxy": "Enter HTTP Proxy IP Address or Domain Name",
       "setupTitle": "Create Agent Install Files",
+      "status": "Status",
       "tarFile": ".tar file",
       "title": "Install Files"
     },
