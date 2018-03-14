@@ -16,6 +16,8 @@ const NavigationPage = require('../pages/navigation.page');
 const navigation = new NavigationPage();
 const NotificationsPage = require('../pages/notifications.page');
 const notifications = new NotificationsPage();
+const UsersPage = require('../pages/users.page');
+const users = new UsersPage();
 const utils = require('../utils/test.utils');
 
 describe('Auto-Assign Licenses', function () {
@@ -83,6 +85,33 @@ describe('Auto-Assign Licenses', function () {
       utils.expectIsEnabled(manageUsers.buttons.save);
       utils.click(manageUsers.buttons.save);
       notifications.assertSuccess('Your license template has been set up successfully');
+    });
+  });
+
+  describe('manual onboard a user using auto-assign template:', function () {
+    const testUserEmail = utils.randomTestGmail();
+
+    it('should add a new user', function () {
+      utils.click(navigation.usersTab);
+      utils.click(manageUsers.buttons.manageUsers);
+      utils.click(manageUsers.actionCards.manualAddUsers);
+      utils.click(manageUsers.buttons.next);
+      utils.click(users.addUsersField);
+      utils.sendKeys(users.addUsersField, testUserEmail + protractor.Key.ENTER);
+      utils.click(manageUsers.buttons.next);
+      utils.click(manageUsers.buttons.save);
+      utils.click(manageUsers.buttons.finish);
+    });
+
+    it('should validate that newly onboarded user has the message license', function () {
+      utils.searchAndClick(testUserEmail);
+      utils.expectIsDisplayed(users.messageService);
+      utils.expectIsNotDisplayed(users.messageServiceFree);
+      utils.click(users.closeSidePanel);
+    });
+
+    it('cleanup user', function () {
+      utils.deleteIfUserExists(testUserEmail);
     });
   });
 

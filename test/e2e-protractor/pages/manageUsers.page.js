@@ -3,10 +3,8 @@
 var manageUsersPage = function () {
   this.modal = element(by.css('.modal-content > div > div'));
 
-  //this.usersListEmails = element.all(by.css('.ui-grid-canvas .ui-grid-cell.ui-grid-coluiGrid-0009 .ui-grid-cell-contents'));
-
-  this.links = {
-    setupAutoAssignTemplate: element(by.cssContainingText('.auto-assign .auto-assign__setup-link', 'Set up Auto-Assign Template')),
+  this.actionCards = {
+    manualAddUsers: element(by.cssContainingText('cr-action-card h4', 'Manually Add Users')),
   };
 
   this.buttons = {
@@ -19,6 +17,10 @@ var manageUsersPage = function () {
     submit: element(by.buttonText('Submit')),
     done: element(by.buttonText('Done')),
     finish: element(by.buttonText('Finish')),
+  };
+
+  this.links = {
+    setupAutoAssignTemplate: element(by.cssContainingText('.auto-assign .auto-assign__setup-link', 'Set up Auto-Assign Template')),
   };
 
   this.modalDialog = {
