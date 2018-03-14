@@ -4,6 +4,7 @@
 
 var config = require('./test.config.js');
 var request = require('request');
+var getCecId = require('../../../utils/getCecId');
 var EC = protractor.ExpectedConditions;
 var path = require('path');
 var fs = require('fs');
@@ -75,15 +76,19 @@ exports.randomTestRoom = function () {
   return 'atlas-' + this.randomId();
 };
 
+exports.getJenkinsBuildTag = function () {
+  return process.env.BUILD_TAG || `atlas-web--${getCecId()}`;
+};
+
 exports.randomTestGmail = function () {
-  return 'collabctg+' + this.getDateTimeString() + '_' + this.randomId() + '@gmail.com';
+  return 'collabctg+' + this.getJenkinsBuildTag() + '_' + this.getDateTimeString() + '@gmail.com';
 };
 
 exports.randomTestGmailwithSalt = function (salt) {
   if (!isSauce) {
     salt = 'LOC_' + salt;
   }
-  return 'collabctg+' + salt + '_' + this.getDateTimeString() + '_' + this.randomId() + '@gmail.com';
+  return 'collabctg+' + salt + '_' + this.getJenkinsBuildTag() + '_' + this.getDateTimeString() + '@gmail.com';
 };
 
 exports.sendRequest = function (options) {
