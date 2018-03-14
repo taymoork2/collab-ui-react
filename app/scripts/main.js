@@ -261,7 +261,10 @@
     require('modules/sunlight/numbers/addNumbers').default,
   ]);
 
-  angular.module('Context', ['Core']);
+  angular.module('Context', [
+    'Core',
+    require('modules/context/services/context-authorization-service').default,
+  ]);
 
   angular.module('GSS', ['Core']);
 
