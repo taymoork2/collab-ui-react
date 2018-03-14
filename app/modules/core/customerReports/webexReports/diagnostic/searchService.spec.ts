@@ -209,7 +209,7 @@ describe('Service: searchService', () => {
 
   it('should get correct CMR device name when call getRealDevice', function () {
 
-    const mockData = {completed: true, items: [{"deviceType": 'SIP', }], };
+    const mockData = { completed: true, items: [{ deviceType: 'SIP' }] };
     const url = `${this.UrlConfig.getGeminiUrl()}meetings/${this.conferenceID}/participants/${this.nodeId}/device`;
     this.$httpBackend.expectGET(url).respond(200, mockData);
     this.SearchService.getRealDevice(this.conferenceID, this.nodeId)

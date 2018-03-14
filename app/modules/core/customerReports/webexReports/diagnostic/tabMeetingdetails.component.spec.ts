@@ -134,32 +134,32 @@ describe('Component: dgcTabMeetingdetail', () => {
 
   it('Should get "Good" voip quality', function() {
     initComponent.call(this);
-    expect(this.controller.getVoipVideoQuality({latency: 100, packageLossRate: 0.01, }, 'voip')).toBe(1);
+    expect(this.controller.getVoipVideoQuality({ latency: 100, packageLossRate: 0.01 }, 'voip')).toBe(1);
   });
 
   it('Should get "Fair" voip quality', function() {
     initComponent.call(this);
-    expect(this.controller.getVoipVideoQuality({latency: 400, packageLossRate: 0.04, }, 'voip')).toBe(2);
+    expect(this.controller.getVoipVideoQuality({ latency: 400, packageLossRate: 0.04 }, 'voip')).toBe(2);
   });
 
   it('Should get "Bad" voip quality', function() {
     initComponent.call(this);
-    expect(this.controller.getVoipVideoQuality({latency: 500, packageLossRate: 0.06, }, 'voip')).toBe(3);
+    expect(this.controller.getVoipVideoQuality({ latency: 500, packageLossRate: 0.06 }, 'voip')).toBe(3);
   });
 
   it('Should get "Good" video quality', function() {
     initComponent.call(this);
-    expect(this.controller.getVoipVideoQuality({latency: 100, packageLossRate: 0.01, }, 'video')).toBe(1);
+    expect(this.controller.getVoipVideoQuality({ latency: 100, packageLossRate: 0.01 }, 'video')).toBe(1);
   });
 
   it('Should get "Bad" video quality', function() {
     initComponent.call(this);
-    expect(this.controller.getVoipVideoQuality({latency: 500, packageLossRate: 0.06, }, 'video')).toBe(3);
+    expect(this.controller.getVoipVideoQuality({ latency: 500, packageLossRate: 0.06 }, 'video')).toBe(3);
   });
 
   it('Should retry to get PSTN QOS data', function() {
     initComponent.call(this);
-    const mockData = { "16797697": {completed: false, items: [], }, };
+    const mockData = { 16797697: { completed: false, items: [] } };
     spyOn(this.SearchService, 'getQOS').and.callFake(function () {
       return {
         then: function (callback) {
@@ -167,7 +167,7 @@ describe('Component: dgcTabMeetingdetail', () => {
         },
       };
     });
-    
+
     this.controller.data['pstnReqtimes'] = 4;
     this.controller.pstnQOS(['16797697']);
     this.$timeout.flush();
@@ -176,7 +176,7 @@ describe('Component: dgcTabMeetingdetail', () => {
 
   it('Should retry to get CMR QOS data', function() {
     initComponent.call(this);
-    const mockData = { "16797697": {completed: false, items: [], }, };
+    const mockData = { 16797697: { completed: false, items: [] } };
     spyOn(this.SearchService, 'getQOS').and.callFake(function () {
       return {
         then: function (callback) {
@@ -184,7 +184,7 @@ describe('Component: dgcTabMeetingdetail', () => {
         },
       };
     });
-    
+
     this.controller.data['cmrReqtimes'] = 4;
     this.controller.cmrQOS(['16797697']);
     this.$timeout.flush();
@@ -193,8 +193,8 @@ describe('Component: dgcTabMeetingdetail', () => {
 
   it('Should get line circle data', function () {
     initComponent.call(this);
-    const mockData = { "16797697": {completed: false, items: [], }, };
-    
+    const mockData = { 16797697: { completed: false, items: [] } };
+
     this.controller.data['voipReqtimes'] = 4;
     this.controller.getLineCircleData(mockData, 'voip');
     this.$timeout.flush();
@@ -203,7 +203,7 @@ describe('Component: dgcTabMeetingdetail', () => {
 
   it('Should handle Call-Legs data', function() {
     initComponent.call(this);
-    const mockData = {"tahoeInfo": [{"nodeId": "16797697", }], "voIPInfo": [{"nodeId": "16797697", }], "videoInfo": [{"nodeId": "16797697", }], };
+    const mockData = { tahoeInfo: [{ nodeId: '16797697' }], voIPInfo: [{ nodeId: '16797697' }], videoInfo: [{ nodeId: '16797697' }] };
     spyOn(this.SearchService, 'getCallLegs').and.callFake(function () {
       return {
         then: function (callback) {
@@ -212,7 +212,7 @@ describe('Component: dgcTabMeetingdetail', () => {
       };
     });
 
-    const mockParam = [{"sessionType": "0", "platform": "10", "participants": [{"nodeId": "18797105", }], }, {"sessionType": "0", "platform": "0", "participants": [{"nodeId": "28991123", }], }];
+    const mockParam = [{ sessionType: '0', platform: '10', participants: [{ nodeId: '18797105' }] }, { sessionType: '0', platform: '0', participants: [{ nodeId: '28991123' }] }];
     this.controller.callLegs(mockParam);
     expect(this.controller.callLegsData).toBeDefined();
   });

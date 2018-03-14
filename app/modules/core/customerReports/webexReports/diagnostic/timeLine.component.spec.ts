@@ -91,9 +91,9 @@ describe('Component: dgcTimeLine', () => {
     initComponent.call(this, bindings);
 
     spyOn(this.controller, 'makeTips').and.returnValue(0);
-    const mockTollFreeData = {User: 'Normal User', };
-    const mockMsgArr = [{key: 'Join Time', value: '1', }, {key: 'Leave Time', value: '2', }];
-    const mockItem = {device: 'Phone', userName: 'User', };
+    const mockTollFreeData = { User: 'Normal User' };
+    const mockMsgArr = [{ key: 'Join Time', value: '1' }, { key: 'Leave Time', value: '2' }];
+    const mockItem = { device: 'Phone', userName: 'User' };
     this.controller.getPSTNCallInType(mockTollFreeData, mockMsgArr, mockItem);
     expect(mockMsgArr[1].value).toBe('Normal User');
   });
@@ -173,7 +173,7 @@ describe('Component: dgcTimeLine', () => {
     initComponent.call(this, bindings);
 
     const msgArr = [ { key: 'SIP', value: '' }];
-    const mockData = {"items": [{"deviceType": "SIP"}], };
+    const mockData = { items : [{ deviceType: 'SIP' }] };
     spyOn(this.SearchService, 'getRealDevice').and.callFake(function () {
       return {
         then: function (callback) {
@@ -182,7 +182,7 @@ describe('Component: dgcTimeLine', () => {
       };
     });
 
-    const mockParam = {"platform": "10", };
+    const mockParam = { platform: '10' };
     this.controller.tip = {
       transition: () => { return this.controller.tip; },
       html: (ht) => { this.controller.tip.t(ht); return this.controller.tip; },
