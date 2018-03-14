@@ -154,7 +154,7 @@ export class LinkedSitesMockService {
           siteInfoPromise: this.$timeout( () => {
             return <IACWebexSiteinfoResponse> {
               accountLinkingMode: LinkingMode.UNSET,
-              supportAgreementLinkingMode: true,
+              supportAgreementLinkingMode: false,
             };
           }, 1000),
         },

@@ -10796,7 +10796,9 @@
       "exceptions": "Exceptions",
       "exceptionsTooltip": "Users from consumer email domains (e.g. gmail.com, outlook.com, etc.) or from domains that are not verified by the admin will allways receive an email to ensure they are who they say they are.",
       "receiveEmailMoreInfo": "Note",
-      "receiveEmailInfo": "If you already have domains verified in Cisco Spark Control Hub, users in those domains will not receive emails."
+      "receiveEmailInfo": "If you already have domains verified in Cisco Spark Control Hub, users in those domains will not receive emails.",
+      "signAgreementNote": "Info",
+      "signAgreementTooltip": "Your WebEx Site is not entitled to utilize Sign Legal Agreement. Contact Cisco Collaboration Help for information concerning your WebEx Site's entitlement to Sign Legal Agreement."
     },
     "userSidepanel": {
       "webexLinkedAccounts": "WebEx Linked Accounts",

@@ -13,10 +13,25 @@
     </div>
     <div class="columns medium-5 medium-offset-1">
       <div class="align-top">
-        <input cs-input type="radio" ng-model="$ctrl.selection" id="signAgreement" name="signAgreement" value="signAgreement" cs-input-label="{{:: 'accountLinking.wizard.signAgreement' | translate}}">
-        <p class="wizard-info" class="input-info" translate="accountLinking.wizard.legalAgreement"></p>
+        <div class="row collapse">
+          <div class="columns medium-6">
+            <input ng-disabled="!$ctrl.siteInfo.supportAgreementLinkingMode" cs-input type="radio" ng-model="$ctrl.selection" id="signAgreement" name="signAgreement" value="signAgreement" cs-input-label="{{:: 'accountLinking.wizard.signAgreement' | translate}}">
+          </div>
+          <div class="columns medium-6">
+            <a href="#"
+               ng-hide="$ctrl.siteInfo.supportAgreementLinkingMode"
+               tooltip-placement="bottom-right"
+               tooltip-html-unsafe="{{:: 'accountLinking.wizard.signAgreementTooltip' | translate}}">
+              <span class="signAgreementTooltipIcon icon icon-info"></span>
+            </a>
+          </div>
+        </div>
+        <p class="wizard-info" ng-show="!$ctrl.siteInfo.supportAgreementLinkingMode">
+        </p>
+        <p ng-class="{'disabled-text': !$ctrl.siteInfo.supportAgreementLinkingMode, 'wizard-info': $ctrl.siteInfo.supportAgreementLinkingMode}" translate="accountLinking.wizard.legalAgreement"></p>
+
         <input cs-input type="radio" ng-model="$ctrl.selection" id="verifyNow" name="verifyNow" value="verifyNow" cs-input-label="{{:: 'accountLinking.wizard.verifyNow' | translate}}" />
-        <p class="wizard-info" class="input-info" translate="accountLinking.wizard.verifyDomainsToken"></p>
+        <p class="wizard-info" translate="accountLinking.wizard.verifyDomainsToken"></p>
       </div>
     </div>
     <div class="columns medium-2"></div>

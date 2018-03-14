@@ -122,12 +122,20 @@
     }
   }
 
+  .disabled-text {
+    color: $gray-light-2;
+  }
+
   .wizard-info {
     color: $gray-base;
   }
 
   .wizard-info-title {
     color: $gray-dark-2;
+  }
+
+  .signAgreementTooltipIcon {
+    font-size: 14px !important;
   }
 
   .wizard-title {

@@ -32,7 +32,12 @@ export class LinkedSitesService {
   public filterSites(): ng.IPromise<IACSiteInfo[]> {
     const sites: IACSiteInfo[] = this.assembleSiteInfo();
     return this.populateIsSiteAdmin(sites).then( () => {
-      return sites;
+      if (this.useMockSites) {
+        this.$log.warn('Adding mock sites');
+        return sites.concat(this.LinkedSitesMockService.getMockSites());
+      } else {
+        return sites;
+      }
     }).catch( () => {
       //TODO?: Should the isSiteAdmin field be populated with unknown in this case ?
       return sites;
@@ -64,13 +69,7 @@ export class LinkedSitesService {
         },
       };
     });
-    if (this.useMockSites) {
-      this.$log.warn('Adding mock sites');
-      return sites.concat(this.LinkedSitesMockService.getMockSites());
-    } else {
-      return sites;
-    }
-
+    return sites;
   }
 
   public setCiSiteLinking(linkedSiteUrl: string, mode: string, domains?: string[]) {

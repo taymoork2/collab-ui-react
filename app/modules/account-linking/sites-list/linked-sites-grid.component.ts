@@ -119,7 +119,7 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
   }
 
   public allowModifyingLinkingMode(selectedRowInfo: IACSiteInfo): boolean {
-    return selectedRowInfo.isSiteAdmin === true && selectedRowInfo.supportAgreementLinkingMode === true;
+    return selectedRowInfo.isSiteAdmin === true;
   }
 
   public gotoWebexListSitesPage(siteInfo) {
