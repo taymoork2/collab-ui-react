@@ -7,7 +7,8 @@ import { Notification } from '../../core/notifications';
  */
 class SettingsController implements ng.IComponentController {
 
-  public isAdminAuthorized: Boolean = false;
+  public isAdminUnauthorized: Boolean = false;
+  public isUnknown: Boolean = true;
   public isSynchronizationInProgress: Boolean = false;
   public synchronizeButtonTooltip: string = '';
 
@@ -16,6 +17,7 @@ class SettingsController implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     protected ContextAdminAuthorizationService: ContextAdminAuthorizationService,
     protected Notification: Notification,
+    private $log: ng.ILogService,
   ) {}
 
   /**
@@ -24,20 +26,44 @@ class SettingsController implements ng.IComponentController {
    */
   public $onInit() {
     this.ContextAdminAuthorizationService.getAdminAuthorizationStatus()
-      .then(status => this.isAdminAuthorized = (status === AdminAuthorizationStatus.AUTHORIZED))
+      .then(status => {
+        this.isAdminUnauthorized = (status === AdminAuthorizationStatus.UNAUTHORIZED);
+        this.isUnknown = (status === AdminAuthorizationStatus.UNKNOWN);
+      })
       .then(() => this.synchronizeButtonTooltip =
-        !this.isAdminAuthorized ? this.$translate.instant('context.dictionary.settingPage.unauthorizedTooltip') : '');
+        this.isAdminUnauthorized || this.isUnknown ? this.$translate.instant('context.dictionary.settingPage.unauthorizedTooltip') : '');
   }
 
   /**
    * Used to Synchronized Administrative permissions to admins (both Partner admins and customer org admins)
    */
   public synchronize() {
+    const invalidAdminType = 'INVALID_ADMIN_TYPE_FOR_MIGRATION';
     this.isSynchronizationInProgress = true;
-    return this.ContextAdminAuthorizationService.synchronizeAdmins()
-      .then(() => this.Notification.success('context.dictionary.settingPage.synchronizationSuccessful'))
-      .catch(() => this.Notification.error('context.dictionary.settingPage.synchronizationFailure'))
-      .finally(() => this.isSynchronizationInProgress = false);
+
+    return this.synchronizeAdminsOrMigrateOrganization()
+    .then(() => this.Notification.success('context.dictionary.settingPage.synchronizationSuccessful'))
+    .catch(response => {
+      const statusText = _.get(response, 'data.error.statusText');
+      if (statusText === invalidAdminType) {
+        this.Notification.error('context.dictionary.settingPage.invalidAdminType');
+      } else {
+        this.Notification.error('context.dictionary.settingPage.synchronizationFailure');
+      }
+    })
+    .finally(() => this.isSynchronizationInProgress = false);
+  }
+
+  protected synchronizeAdminsOrMigrateOrganization() {
+    return this.ContextAdminAuthorizationService.isMigrationNeeded().then((isMigrationNeeded) => {
+      if (isMigrationNeeded) {
+        this.$log.info(`Calling MigrateOrganization Api since function isMigrationNeeded returns ${isMigrationNeeded} `);
+        return this.ContextAdminAuthorizationService.migrateOrganization();
+      } else {
+        this.$log.info(`Calling SynchronizeAdmins Api since function isMigrationNeeded returns ${isMigrationNeeded} `);
+        return this.ContextAdminAuthorizationService.synchronizeAdmins();
+      }
+    });
   }
 
   /**
@@ -45,7 +71,7 @@ class SettingsController implements ng.IComponentController {
    * @returns {Boolean | boolean}
    */
   protected disableSynchronization() {
-    return this.isSynchronizationInProgress || !this.isAdminAuthorized;
+    return this.isSynchronizationInProgress || this.isAdminUnauthorized || this.isUnknown;
   }
 }
 

@@ -3715,7 +3715,8 @@
       "update": "Edit",
       "unknownAdminAuthorizationStatus": "Cannot retrieve registration status. Refresh your browser to try again.",
       "resource": {
-        "notAuthorized": "You are not authorized to manage Hybrid Context resources for this organization."
+        "notAuthorized": "You are not authorized to manage Hybrid Context resources for this organization.",
+        "needsMigration": "Click Synchronize on the Settings page to enable adding resources."
       },
       "fieldPage": {
         "associatedFieldsets": "Associated Fieldsets",
@@ -3770,7 +3771,8 @@
         "optionsLabelWithCount": "Options ({{count}})",
         "optionsLabel": "Options",
         "optionsDetailLabel": "List of options in this single select field.",
-        "notAuthorized": "You are not authorized to manage Hybrid Context fields for this organization."
+        "notAuthorized": "You are not authorized to manage Hybrid Context fields for this organization.",
+        "needsMigration": "Click Synchronize on the Settings page to enable field creation."
       },
       "fieldsetPage": {
         "fieldsetId": "Fieldset ID",
@@ -3802,7 +3804,8 @@
         "limitReached": "Maximum fieldsets reached",
         "fieldMaxLimitReached": "Maximum fields in fieldset reached.",
         "fieldsetLimitReadFailed": "Unable to retrieve fieldsets limit. Refresh your browser to try again",
-        "notAuthorized": "You are not authorized to manage Hybrid Context fieldsets for this organization."
+        "notAuthorized": "You are not authorized to manage Hybrid Context fieldsets for this organization.",
+        "needsMigration": "Click Synchronize on the Settings page to enable fieldset creation."
       },
       "settingPage": {
         "adminAuthorization": "Administrator Authorization",
@@ -3810,7 +3813,8 @@
         "unauthorizedTooltip": "To synchronize permissions, contact an authorized administrator.",
         "synchronize": "Synchronize",
         "synchronizationSuccessful": "Administration permissions synchronized successfully.",
-        "synchronizationFailure": "Cannot synchronize administrative permissions. Try again."
+        "invalidAdminType":"Contact an authorized administrator to update your organization.",
+        "synchronizationFailure": "Cannot update your organization. Try again."
       }
     }
   },

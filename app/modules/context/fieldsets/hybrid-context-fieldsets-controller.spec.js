@@ -879,6 +879,15 @@ describe('HybridContextFieldsetsCtrl', function () {
         expect(controller.adminAuthorizationStatus).toBe(AdminAuthorizationStatus.UNKNOWN);
         expect(controller.newButtonTooltip).toBe($translate.instant('context.dictionary.unknownAdminAuthorizationStatus'));
       });
+
+      it('should set the tooltip if admin needs migration ', function () {
+        ContextAdminAuthorizationService.getAdminAuthorizationStatus.and.returnValue($q.resolve(AdminAuthorizationStatus.NEEDS_MIGRATION));
+        controller = initController();
+        $scope.$apply();
+
+        expect(controller.adminAuthorizationStatus).toBe(AdminAuthorizationStatus.NEEDS_MIGRATION);
+        expect(controller.newButtonTooltip).toBe($translate.instant('context.dictionary.fieldsetPage.needsMigration'));
+      });
     });
   });
 
