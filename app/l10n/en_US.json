@@ -6030,7 +6030,7 @@
     "macAddr": "MAC Address",
     "sipUrl": "SIP Address",
     "issues": "Issues",
-    "lastSeen": "since:",
+    "lastSeen": "Last seen online:",
     "offlineLong": "(offline for over 8 weeks)",
     "reactivate": "Reactivate",
     "channelUpdated": "Software Update Channel updated",
