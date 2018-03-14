@@ -5,34 +5,34 @@
   next-disabled="$ctrl.nextDisabled"
   back="$ctrl.back()"
   >
-  <div class="content text-center">
-    <div class="content__icon">
+  <div class="sso-certificate-content text-center">
+    <div class="sso-certificate-content__icon">
       <i class="icon icon-circle-check-mark-success icon-5x"></i>
     </div>
-    <div class="content__paragraph text-center">
+    <div class="sso-certificate-content__paragraph text-center">
       <p><strong>{{::'ssoCertificateModal.certificateType' | translate}}</strong></p>
     </div>
-    <div class="content__radio cs-radio-group text-left">
+    <div class="sso-certificate-content__radio cs-radio-group text-left">
       <input cs-input type="radio"
-              ng-model="$ctrl.certificateType"
+              ng-model="$ctrl.certificateTypeValue"
               name="certificateRadio"
-              ng-change="$ctrl.onCertificateTypeChanged('MULTIPLE')"
+              ng-change="$ctrl.onCertificateTypeValueChanged()"
               id="multiple"
-              value="MULTIPLE"
+              value="{{$ctrl.certificateType.MULTIPLE}}"
               cs-input-label="{{:: 'ssoCertificateModal.multipleCertificates' | translate}}">
       <input cs-input type="radio"
-              ng-model="$ctrl.certificateType"
+              ng-model="$ctrl.certificateTypeValue"
               name="certificateRadio"
-              ng-change="$ctrl.onCertificateTypeChanged('SINGLE')"
+              ng-change="$ctrl.onCertificateTypeValueChanged()"
               id="single"
-              value="SINGLE"
+              value="{{$ctrl.certificateType.SINGLE}}"
               cs-input-label="{{:: 'ssoCertificateModal.singleCertificate' | translate}}">
     </div>
-    <div class="content__paragraph--space">
-      <div class="content__paragraph text-center" ng-show="$ctrl.certificateType === 'SINGLE'">
+    <div ng-if="$ctrl.certificateTypeValue === $ctrl.certificateType.SINGLE">
+      <div class="sso-certificate-content__paragraph text-center">
         <p><strong>{{::'ssoCertificateModal.singleCertificateWarning' | translate}}</strong></p>
       </div>
-      <div class="content__paragraph text-center" ng-show="$ctrl.certificateType === 'SINGLE'">
+      <div class="sso-certificate-content__paragraph text-center">
         <p>{{::'ssoCertificateModal.singleCertificateMessage' | translate}}</p>
       </div>
     </div>

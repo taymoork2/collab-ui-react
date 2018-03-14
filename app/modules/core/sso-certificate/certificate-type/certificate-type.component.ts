@@ -1,8 +1,10 @@
+import { CertificateType } from '../sso-certificate.constants';
+
 export class CertificateTypeController implements ng.IComponentController {
   public dismiss: Function;
-  public nextRemoved = true;
   public nextDisabled = true;
-  public certificateType = '';
+  public certificateTypeValue = CertificateType.NEITHER;
+  public certificateType = CertificateType;
 
   public dismissModal(): void {
     this.dismiss();
@@ -21,10 +23,8 @@ export class CertificateTypeController implements ng.IComponentController {
     this.$state.go('sso-certificate.check-certificate');
   }
 
-  public onCertificateTypeChanged(type: String): void {
-    if (type) {
-      this.nextDisabled = false;
-    }
+  public onCertificateTypeValueChanged(): void {
+    this.nextDisabled = false;
   }
 }
 

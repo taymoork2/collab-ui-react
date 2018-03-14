@@ -12,7 +12,7 @@ check-certificate, certificate-type {
     }
   }
 
-  .content {
+  .sso-certificate-content {
     margin: auto;
 
     &__icon {
@@ -21,28 +21,12 @@ check-certificate, certificate-type {
     }
 
     &__paragraph {
-      font-family: 'CiscoSansTT Light';
-      font-size: 1.5em;
-      font-weight: normal;
-      color: $gray-darkest;
       width: 450px;
       @include vr-spacing(mb, 2);
-      p {
-        font-size: 1rem;
-      }
-      &--space {
-        height: 5rem;
-      }
     }
 
     &__radio {
       @include vr-spacing(mb, 3);
-      span {
-        font-size: 1rem;
-      }
-      label {
-        color: $gray-darker;
-      }
     }
   }
 }

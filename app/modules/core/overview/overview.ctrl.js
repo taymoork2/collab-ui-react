@@ -1,4 +1,6 @@
 require('./_overview.scss');
+var SsoCertExpNotificationService = require('modules/core/overview/notifications/ssoCertificateExpirationNotification.service').SsoCertificateExpirationNotificationService;
+
 (function () {
   'use strict';
 
@@ -336,7 +338,7 @@ require('./_overview.scss');
       var today = moment();
       var certificateExpirationDate = moment(_.get(vm.orgData, 'hostedSpPrimaryCertExpiration'));
       var daysDiff = certificateExpirationDate.diff(today, 'days');
-      if (daysDiff <= 120) {
+      if (daysDiff <= SsoCertExpNotificationService.CERTIFICATE_EXPIRATION_DAYS) {
         vm.notifications.push(SsoCertificateExpirationNotificationService.createNotification(daysDiff));
         resizeNotifications();
       }

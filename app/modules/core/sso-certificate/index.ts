@@ -1,7 +1,7 @@
 import checkCertificateModuleName from './check-certificate';
 import CertificateTypeModuleName from './certificate-type';
 
-export default angular.module('core.auth.sso-certificate', [
+export default angular.module('core.sso-certificate', [
   require('angular-translate'),
   require('@collabui/collab-ui-ng').default,
   checkCertificateModuleName,

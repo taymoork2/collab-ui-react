@@ -1,6 +1,7 @@
 import { IOverviewPageNotification } from 'modules/core/overview/overviewPage.types';
 
 export class SsoCertificateExpirationNotificationService {
+  public static readonly CERTIFICATE_EXPIRATION_DAYS = 120;
 
   /* @ngInject */
   constructor (

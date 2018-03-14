@@ -1,22 +1,23 @@
-import checkCertificateModuleName from './index';
-import { CheckCertificateController } from './check-certificate.component';
+import certificateTypeModuleName from './index';
+import { CertificateTypeController } from './certificate-type.component';
 import { MultiStepModalComponent } from 'modules/core/shared/multi-step-modal/multi-step-modal.component';
+import { CertificateType } from '../sso-certificate.constants';
 
-type Test = atlas.test.IComponentTest<CheckCertificateController, {}, {
+type Test = atlas.test.IComponentTest<CertificateTypeController, {}, {
   components: {
     multiStepModal: atlas.test.IComponentSpy<MultiStepModalComponent>;
   };
 }>;
 
-describe('Component: checkCertificate:', () => {
-  const CONTENT_RADIO = '.content__radio';
+describe('Component: certificateType:', () => {
+  const CONTENT_RADIO = '.sso-certificate-content__radio';
 
   beforeEach(function (this: Test) {
     this.components = {
       multiStepModal: this.spyOnComponent('multiStepModal'),
     };
     this.initModules(
-      checkCertificateModuleName,
+      certificateTypeModuleName,
       this.components.multiStepModal,
     );
     this.injectDependencies(
@@ -25,7 +26,7 @@ describe('Component: checkCertificate:', () => {
   });
 
   function initComponent(this: Test) {
-    this.compileComponent('checkCertificate', {});
+    this.compileComponent('certificateType', {});
   }
 
   describe('initial state', () => {
@@ -43,33 +44,27 @@ describe('Component: checkCertificate:', () => {
     });
 
     it('should show the Next button as disabled', function (this: Test) {
-      expect(this.controller['nextRemoved']).toBeFalsy();
-      expect(this.controller['nextDisabled']).toBeTruthy();
-    });
-
-    it('should not show the Submit button', function (this: Test) {
-      expect(this.controller['submitRemoved']).toBeTruthy();
+      expect(this.controller.nextDisabled).toBeTruthy();
     });
   });
 
   describe('component behavior', () => {
     beforeEach(initComponent);
 
-    it('should show the Next button when SIGNING type radio box is chosen', function (this: Test) {
-      this.controller['onCertificateTypeChanged']('SIGNING');
+    it('should show the Next button when MULTIPLE type radio box is chosen', function (this: Test) {
+      this.controller.certificateTypeValue = CertificateType.MULTIPLE;
+      this.controller.onCertificateTypeValueChanged();
       this.$scope.$apply();
 
-      expect(this.controller['nextRemoved']).toBeFalsy();
-      expect(this.controller['nextDisabled']).toBeFalsy();
-      expect(this.controller['submitRemoved']).toBeTruthy();
+      expect(this.controller.nextDisabled).toBeFalsy();
     });
 
-    it('should not show the Next button when NONE type radio box is chosen', function (this: Test) {
-      this.controller['onCertificateTypeChanged']('NONE');
+    it('should also show the Next button when SINGLE type radio box is chosen', function (this: Test) {
+      this.controller.certificateTypeValue = CertificateType.SINGLE;
+      this.controller.onCertificateTypeValueChanged();
       this.$scope.$apply();
 
-      expect(this.controller['nextRemoved']).toBeTruthy();
-      expect(this.controller['submitRemoved']).toBeFalsy();
+      expect(this.controller.nextDisabled).toBeFalsy();
     });
   });
 });

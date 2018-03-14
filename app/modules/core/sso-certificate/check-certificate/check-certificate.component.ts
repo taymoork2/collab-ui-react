@@ -1,11 +1,13 @@
 import { IToolkitModalService, IToolkitModalSettings } from 'modules/core/modal';
+import { CertificateCheck } from '../sso-certificate.constants';
 
 export class CheckCertificateController implements ng.IComponentController {
   public dismiss: Function;
   public nextRemoved = false;
   public nextDisabled = true;
   public submitRemoved = true;
-  public certificateType = '';
+  public certificateCheckValue = CertificateCheck.NEITHER;
+  public certificateCheck = CertificateCheck;
 
   /* @ngInject */
   constructor(
@@ -39,12 +41,12 @@ export class CheckCertificateController implements ng.IComponentController {
       });
   }
 
-  public onCertificateTypeChanged(type: String): void {
-    if (type === 'SIGNING') {
+  public onCertificateCheckValueChanged(): void {
+    if (this.certificateCheckValue === CertificateCheck.SIGNING_AUTHN) {
       this.submitRemoved = true;
       this.nextDisabled = false;
       this.nextRemoved = false;
-    } else if (type === 'NONE') {
+    } else if (this.certificateCheckValue === CertificateCheck.NONE) {
       this.nextRemoved = true;
       this.submitRemoved = false;
     }

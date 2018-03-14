@@ -8,40 +8,42 @@
   custom-finish-removed="$ctrl.submitRemoved"
   custom-finish-l10n-label="common.submit"
   >
-  <div class="content text-center">
-    <div class="content__icon">
+  <div class="sso-certificate-content text-center">
+    <div class="sso-certificate-content__icon">
       <i class="icon icon-circle-check-mark-success icon-5x"></i>
     </div>
-    <div class="content__paragraph text-left">
+    <div class="sso-certificate-content__paragraph text-left">
       <p><strong>{{::'ssoCertificateModal.checkCertificate' | translate}}</strong></p>
     </div>
-    <div class="content__radio cs-radio-group text-left">
+    <div class="sso-certificate-content__radio cs-radio-group text-left">
       <input cs-input type="radio"
-              ng-model="$ctrl.certificateType"
+              ng-model="$ctrl.certificateCheckValue"
               name="certificateRadio"
-              ng-change="$ctrl.onCertificateTypeChanged('SIGNING')"
-              id="signing"
-              value="SIGNING"
+              ng-change="$ctrl.onCertificateCheckValueChanged()"
+              id="signingAuthN"
+              value="{{$ctrl.certificateCheck.SIGNING_AUTHN}}"
               cs-input-label="{{::'ssoCertificateModal.signingAuthN' | translate}}">
       <input cs-input type="radio"
-              ng-model="$ctrl.certificateType"
+              ng-model="$ctrl.certificateCheckValue"
               name="certificateRadio"
-              ng-change="$ctrl.onCertificateTypeChanged('NONE')"
+              ng-change="$ctrl.onCertificateCheckValueChanged()"
               id="none"
-              value="NONE"
+              value="{{$ctrl.certificateCheck.NONE}}"
               cs-input-label="{{::'ssoCertificateModal.noneApply' | translate}}">
     </div>
-    <div class="content__paragraph--space">
-      <div class="content__paragraph text-center" ng-show="$ctrl.certificateType === 'SIGNING'">
+    <div ng-if="$ctrl.certificateCheckValue === $ctrl.certificateCheck.SIGNING_AUTHN">
+      <div class="sso-certificate-content__paragraph text-center">
         <p><strong>{{::'ssoCertificateModal.needToUpdateCertificate' | translate}}</strong></p>
       </div>
-      <div class="content__paragraph text-center" ng-show="$ctrl.certificateType === 'SIGNING'">
+      <div class="sso-certificate-content__paragraph text-center">
         <p>{{::'ssoCertificateModal.proceedToNextStep' | translate}}</p>
       </div>
-      <div class="content__paragraph text-center" ng-show="$ctrl.certificateType === 'NONE'">
+    </div>
+    <div ng-if="$ctrl.certificateCheckValue === $ctrl.certificateCheck.NONE">
+      <div class="sso-certificate-content__paragraph text-center">
         <p><strong>{{::'ssoCertificateModal.noActionRequired' | translate}}</strong></p>
       </div>
-      <div class="content__paragraph text-center" ng-show="$ctrl.certificateType === 'NONE'">
+      <div class="sso-certificate-content__paragraph text-center">
         <p>{{::'ssoCertificateModal.noActionReason' | translate}}</p>
       </div>
     </div>
