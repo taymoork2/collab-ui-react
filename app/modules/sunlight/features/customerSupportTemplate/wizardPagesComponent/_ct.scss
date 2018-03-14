@@ -1,0 +1,119 @@
+@import 'ct-name';
+@import 'ct-customer';
+@import 'ct-feedback';
+@import 'ct-profile';
+@import 'ct-overview';
+@import 'ct-agentunavailable';
+@import 'ct-offhours';
+@import 'ct-chat-status-messages';
+@import 'ct-summary';
+@import 'ct-proactive-prompt';
+@import 'ct-virtual-assistant';
+@import 'embed-code-screen';
+@import 'ct-chat-escalation-behavior';
+
+// These variables define the height of chat template setup assistant page title and desc
+$ct-title-height: 48px;
+$ct-desc-height: 32px;
+
+.careChatSetup {
+  @extend %content-header;
+
+  .cs-setupassistant--content {
+    .cs-card-container {
+      @include vr-spacing(p, 0);
+    }
+  }
+}
+
+.care-chat {
+  &.overlay-panel {
+    cs-setup-assistant {
+      width: 100%;
+    }
+  }
+
+  .panel-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+  }
+}
+
+.ct-confirmation-header {
+  text-align: center;
+}
+
+.ct-confirmation-body {
+  .ct-confirmation-message {
+    font-size: $h6-font-size;
+    font-family: $brand-font-light;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    @include vr-spacing(mt, 0.75);
+  }
+}
+
+.sa-form {
+  margin-top: 0;
+}
+
+.ct-title {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  color: $gray-dark-2;
+}
+
+.ct-title-icon {
+  @include vr-spacing(pr, 0.75);
+
+  font-size: 3rem;
+}
+
+.ct-title-desc {
+  text-align: center;
+  color: $gray-base;
+}
+
+.ct-sa-content {
+  display: block;
+  height: calc(100vh - #{($top-bar-height + $page-header-height + $ct-title-height + $ct-desc-height)});
+  overflow: auto;
+
+  .cs-card section ul {
+    @include vr-spacing(p, 0);
+  }
+}
+
+.ct-card {
+  @include vr-spacing(ml, 2);
+  @include vr-spacing(mt, 5);
+
+  width: rem-calc(366px);
+  height: rem-calc(458px);
+  display: flex;
+  flex-flow: column;
+
+  .ct-card-info {
+    text-align: center;
+    color: $gray-dark-1;
+  }
+
+  .ct-article {
+    box-shadow: none;
+    border: 1px solid $gray-light-1;
+  }
+
+  .articleHeight {
+    height: 100%;
+  }
+}
+
+.ct-card-center {
+  justify-content: center;
+  width: 100% !important;
+}
