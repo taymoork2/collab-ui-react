@@ -20,7 +20,7 @@ interface IFilterComponent {
 
 export class InventoryListComponent implements ng.IComponentOptions {
   public controller = InventoryListCtrl;
-  public template = require('./inventory.component.html');
+  public template = require('./inventory-list.component.html');
 }
 
 export class InventoryListCtrl implements ng.IComponentController {
@@ -44,7 +44,6 @@ export class InventoryListCtrl implements ng.IComponentController {
   constructor(
     private $translate: ng.translate.ITranslateService,
     private $timeout: ng.ITimeoutService,
-    //private $log: ng.ILogService,
   ) {
     this.timer = 0;
     this.timeoutVal = 1000;
