@@ -53,6 +53,10 @@ describe('Controller: AARouteToQueueCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
+  beforeEach(inject(function (CustomVariableService, $q) {
+    spyOn(CustomVariableService, 'listCustomVariables').and.returnValue($q.resolve([]));
+  }));
+
   beforeEach(inject(function (_$controller_, _$rootScope_, _$modal_, _$q_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;

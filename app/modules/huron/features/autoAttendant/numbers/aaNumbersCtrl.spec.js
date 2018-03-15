@@ -365,17 +365,17 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       errorSpy = jasmine.createSpy('error');
       AANotificationService.errorResponse = errorSpy;
 
-      spyOn(AANumberAssignmentService, 'formatAAExtensionResourcesBasedOnCMI').and.returnValue($q.reject({
-        statusText: 'server error',
-        status: 500,
-      }));
-
+      spyOn(AANumberAssignmentService, 'formatAAExtensionResourcesBasedOnCMI').and.callFake(function () {
+        return $q.reject({
+          statusText: 'server error',
+          status: 500,
+        });
+      });
 
       controller.addNumber({
         value: '1234',
       });
 
-      $scope.$apply();
       $httpBackend.flush();
 
       expect(errorSpy).toHaveBeenCalled();

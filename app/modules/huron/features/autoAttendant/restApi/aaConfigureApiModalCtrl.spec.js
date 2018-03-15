@@ -40,6 +40,10 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
   }));
   beforeEach(angular.mock.module('Huron'));
 
+  beforeEach(inject(function (CustomVariableService, $q) {
+    spyOn(CustomVariableService, 'listCustomVariables').and.returnValue($q.resolve([]));
+  }));
+
   beforeEach(inject(function ($controller, $q, _$rootScope_, _$translate_, _$window_, _AutoAttendantCeMenuModelService_, _AACommonService_, _AASessionVariableService_, _AAUiModelService_, _RestApiService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
