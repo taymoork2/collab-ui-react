@@ -10879,6 +10879,15 @@
     "inventory": {
       "title": "Inventory"
     },
+    "clustersList": {
+      "title":"Clusters"
+    },
+    "nodesList": {
+      "title":"Nodes"
+    },
+    "upgradePage": {
+      "title": "Upgrades"
+    },
     "installFiles": {
       "addFile": "Add File",
       "clusterCount": "Number of Clusters",

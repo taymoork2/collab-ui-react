@@ -1,0 +1,43 @@
+<cs-page-header
+  class="huron-tabs"
+  title-name="{{$ctrl.customerName && $ctrl.customerName || ('common.unassigned' | translate)}}"
+  back="$ctrl.back"
+  back-url="$ctrl.backState"
+  back-aria-label="{{::'common.back' | translate}}"
+  tabs="$ctrl.tabs">
+</cs-page-header>
+<div class="cs-card-container cluster-list-container">
+  <cs-card-layout>
+    <cs-card class="cs-card--medium" ng-repeat="cluster in $ctrl.clusterList">
+      <article>
+        <header>
+          <div class="header">
+            <p class="cluster-name" title="Card Name">{{cluster.name}}</p>
+          </div>
+          <p class="cluster-type">{{cluster.type}}</p>
+        </header>
+        <section class="card-body">
+          <div class="card-section">
+            <div class="card-section-header">{{cluster.nodes.length}} nodes</div>
+            <div class="card-section-item row" ng-repeat="node in cluster.nodes">
+              <div class="columns medium-2">{{node.name}}</div>
+              <div class="columns medium-6">{{node.type}}</div>
+              <div class="columns medium-4" ng-switch="node.status">
+                <i ng-switch-when="Needs Assigned" class="icon icon-circle status-indicator danger"></i>
+                <i ng-switch-when="Needs Accepted" class="icon icon-circle status-indicator warning"></i>
+                <i ng-switch-when="Active" class="icon icon-circle status-indicator success"></i>
+                <i ng-switch-when="Agent Inactive" class="icon icon-circle status-indicator danger"></i>
+                  {{node.status}}
+              </div>
+            </div>
+          </div>
+        </section>
+        <footer class="cluster-list-footer">
+          <div>
+            <a>Settings</a>
+          </div>
+        </footer>
+      </article>
+    </cs-card>
+  </cs-card-layout>
+</div>

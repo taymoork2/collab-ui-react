@@ -21,7 +21,7 @@ class HcsSharedHeaderComponentCtrl implements ng.IComponentController {
         if (enabled) {
           this.tabs.push({
             title: this.$translate.instant('hcs.inventory.title'),
-            state: 'hcs.shared.inventory',
+            state: 'hcs.shared.inventoryList',
           }, {
             title: this.$translate.instant('hcs.installFiles.title'),
             state: 'hcs.shared.installFiles',
@@ -33,6 +33,6 @@ class HcsSharedHeaderComponentCtrl implements ng.IComponentController {
 
 export class HcsSharedHeaderComponent implements ng.IComponentOptions {
   public controller = HcsSharedHeaderComponentCtrl;
-  public template = require('modules/hcs/shared/base/hcs-shared-header.component.html');
+  public template = require('modules/hcs/shared/hcs-base/hcs-shared-header.component.html');
   public bindings = { };
 }

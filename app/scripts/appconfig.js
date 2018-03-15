@@ -3088,7 +3088,7 @@
           })
           .state('hcs', {
             parent: 'partner',
-            template: require('modules/hcs/shared/base/hcs-shared-base.html'),
+            template: require('modules/hcs/shared/hcs-base/hcs-shared-base.html'),
             absract: true,
           })
           .state('hcs.shared', {
@@ -3104,15 +3104,15 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/hcs/shared/base'));
-                }, 'call-details');
+                  done(require('modules/hcs/shared/hcs-base'));
+                }, 'hcs-shared-template');
               }),
             },
           })
-          .state('hcs.shared.inventory', {
+          .state('hcs.shared.inventoryList', {
             parent: 'hcs.shared',
             url: '/hcs/inventory',
-            template: '<hcs-inventory></hcs-inventory>',
+            template: '<hcs-inventory-list></hcs-inventory-list>',
           })
           .state('hcs.shared.installFiles', {
             parent: 'hcs.shared',
@@ -3123,6 +3123,23 @@
             parent: 'partner',
             url: '/hcs/subscription',
             template: '<hcs-licenses-subscription></hcs-licenses-subscription>',
+          })
+          .state('hcs.clusterList', {
+            url: '/hcs/inventory/:id/clusters',
+            parent: 'partner',
+            template: '<hcs-cluster-list customer-id="$resolve.customerId" customer-name="$resolve.customerName"></hcs-cluster-list>',
+            params: {
+              customerId: '',
+              customerName: '',
+            },
+            resolve: {
+              customerId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerId;
+              },
+              customerName: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerName;
+              },
+            },
           })
           .state('taasSuites', {
             parent: 'main',
