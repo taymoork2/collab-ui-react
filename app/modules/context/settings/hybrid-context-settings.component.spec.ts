@@ -1,12 +1,11 @@
 import { AdminAuthorizationStatus } from '../services/context-authorization-service';
-import contextSettings from './hybrid-context-settings.component';
 
 describe('HybridContextSettingsComponent', function () {
 
   // let adminAuthStatusSpy, adminSyncSpy;
 
   beforeEach(function () {
-    this.initModules('Core', 'Context', contextSettings);
+    this.initModules('Context');
     this.injectDependencies(
       '$q',
       '$scope',

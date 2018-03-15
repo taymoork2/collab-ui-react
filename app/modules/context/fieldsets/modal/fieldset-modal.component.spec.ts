@@ -1,4 +1,3 @@
-import fieldsetModule from './fieldset-modal.component';
 import { PropertyConstants } from 'modules/context/services/context-property-service';
 
 describe('Component: context fieldset modal', () => {
@@ -53,7 +52,7 @@ describe('Component: context fieldset modal', () => {
   }];
 
   beforeEach(function () {
-    this.initModules('Core', 'Huron', 'Context', fieldsetModule);
+    this.initModules('Context');
     this.injectDependencies(
       '$q',
       '$scope',

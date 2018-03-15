@@ -73,7 +73,6 @@ describe('Component: Fieldset SidePanel', function () {
     // spies
     var deleteSpy, getInUseSpy, modalSpy;
 
-    beforeEach(angular.mock.module('Core'));
     beforeEach(angular.mock.module('Context'));
 
     // need to cleanup here to prevent more memory leaks
@@ -287,7 +286,7 @@ describe('Component: Fieldset SidePanel', function () {
    */
   describe('fieldset-edit feature is present', function () {
     beforeEach(function () {
-      this.initModules('Core', 'Context');
+      this.initModules('Context');
       this.injectDependencies(
         '$q',
         'ContextFieldsetsService',

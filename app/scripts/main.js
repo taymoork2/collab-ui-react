@@ -265,7 +265,7 @@
 
   angular.module('Context', [
     'Core',
-    require('modules/context/services/context-authorization-service').default,
+    require('modules/context/services').default,
   ]);
 
   angular.module('GSS', ['Core']);
