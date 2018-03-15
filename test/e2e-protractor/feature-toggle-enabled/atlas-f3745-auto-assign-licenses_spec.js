@@ -94,6 +94,9 @@ describe('Auto-Assign Licenses', function () {
       utils.click(manageUsers.autoAssignTemplate.optionsMenu.delete);
       utils.click(manageUsers.autoAssignTemplate.optionsMenu.deleteConfirm);
       notifications.assertSuccess('Template was deleted successfully');
+      utils.click(manageUsers.buttons.modalCloseButton);
+      utils.click(manageUsers.buttons.manageUsers);
+      utils.expectIsDisplayed(manageUsers.links.setupAutoAssignTemplate);
     });
   });
 });

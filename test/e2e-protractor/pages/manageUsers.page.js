@@ -6,7 +6,7 @@ var manageUsersPage = function () {
   //this.usersListEmails = element.all(by.css('.ui-grid-canvas .ui-grid-cell.ui-grid-coluiGrid-0009 .ui-grid-cell-contents'));
 
   this.links = {
-    setupAutoAssignTemplate: element(by.css('.auto-assign .auto-assign__setup-link')),
+    setupAutoAssignTemplate: element(by.cssContainingText('.auto-assign .auto-assign__setup-link', 'Set up Auto-Assign Template')),
   };
 
   this.buttons = {
