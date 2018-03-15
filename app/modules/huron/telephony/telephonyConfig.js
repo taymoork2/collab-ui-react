@@ -68,6 +68,10 @@
       getToggleUrl: function () {
         return 'https://toggle.' + this.getBaseDomain() + '/toggle/api/v3';
       },
+
+      getRialtoUrl: function () {
+        return 'https://minerva.' + this.getBaseDomain() + '/api/v1/demo/rialto';
+      },
     };
     return config;
   }
