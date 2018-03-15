@@ -18,12 +18,12 @@ interface IFilterComponent {
   options: IFilterObject[];
 }
 
-export class InventoryComponent implements ng.IComponentOptions {
-  public controller = InventoryCtrl;
+export class InventoryListComponent implements ng.IComponentOptions {
+  public controller = InventoryListCtrl;
   public template = require('./inventory.component.html');
 }
 
-export class InventoryCtrl implements ng.IComponentController {
+export class InventoryListCtrl implements ng.IComponentController {
   private timer;
   private timeoutVal: number;
   private tempFilterOptions: (string| undefined)[];
@@ -44,7 +44,6 @@ export class InventoryCtrl implements ng.IComponentController {
   constructor(
     private $translate: ng.translate.ITranslateService,
     private $timeout: ng.ITimeoutService,
-    //private $log: ng.ILogService,
   ) {
     this.timer = 0;
     this.timeoutVal = 1000;
@@ -112,10 +111,6 @@ export class InventoryCtrl implements ng.IComponentController {
     }, this.timeoutVal);
   }
 
-  public filterInventoryFunction() {
-    this.searchFilterFunction();
-  }
-
   public searchFilterFunction() {
     //to start search either filter should be added or search string should be greater than 2.
     if (this.filter.selected.length >= 1 || this.currentSearchString.length > 1) {
@@ -123,13 +118,9 @@ export class InventoryCtrl implements ng.IComponentController {
         let present: boolean = false;
         // if only filter and no search
         if (this.filter.selected.length >= 1 && this.currentSearchString.length === 0) {
-          this.filter.selected.forEach(selected => {
-            if (selected.value) {
-              if (selected.value === inventory.status) {
-                present = true;
-              }
-            }
-          });
+          if (_.find(this.filter.selected, (selected) => selected.value === inventory.status)) {
+            present = true;
+          }
         } else if (this.filter.selected.length === 0 && this.currentSearchString.length > 1) {
           // if only search and no filter
           const inventoryName = _.get(inventory, 'name', 'Unassigned');
@@ -137,14 +128,9 @@ export class InventoryCtrl implements ng.IComponentController {
         } else {
           // if both search and filter
           const inventoryName = _.get(inventory, 'name', 'Unassigned');
-          this.filter.selected.forEach(selected => {
-            if (selected.value) {
-              //filter value should match and string should match
-              if (selected.value === inventory.status && _.includes(inventoryName.toLowerCase(), this.currentSearchString.toLocaleLowerCase())) {
-                present = true;
-              }
-            }
-          });
+          if (_.find(this.filter.selected, (selected) => selected.value === inventory.status && _.includes(inventoryName.toLowerCase(), this.currentSearchString.toLocaleLowerCase()))) {
+            present = true;
+          }
         }
         return present;
       });

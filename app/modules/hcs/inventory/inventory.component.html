@@ -7,7 +7,7 @@
     </div>
   </cs-page-sub-header-left>
   <cs-page-sub-header-right>
-      <cs-select class="filter-dropdown filter-inventory" ng-model="$ctrl.filter.selected" options="$ctrl.filter.options" placeholder="$ctrl.filter.placeholder" multi="true" singular="{{::$ctrl.filter.singular}}" plural="{{::$ctrl.filter.plural}}" on-change-fn="$ctrl.filterInventoryFunction()"></cs-select>
+      <cs-select class="filter-dropdown filter-inventory" ng-model="$ctrl.filter.selected" options="$ctrl.filter.options" placeholder="$ctrl.filter.placeholder" multi="true" singular="{{::$ctrl.filter.singular}}" plural="{{::$ctrl.filter.plural}}" on-change-fn="$ctrl.searchFilterFunction()"></cs-select>
   </cs-page-sub-header-right>
 </cs-page-sub-header>
 <div class="hcs-inventory-container">
