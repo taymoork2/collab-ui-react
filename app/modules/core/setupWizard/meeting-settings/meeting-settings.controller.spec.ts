@@ -4,6 +4,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
   const actingSubscriptions = _.clone(getJSONFixture('core/json/customerSubscriptions/getSubscriptionsData.json'));
   const conferenceServices = _.clone(getJSONFixture('core/json/authInfo/confServices.json'));
   const actingSubscription = _.find(actingSubscriptions, { subscriptionId: '235235-2352532-42352311d-87235221-d05b7c3523596f577' });
+  const transferredSubscriptionServices = _.find(actingSubscriptions, { subscriptionId: '2675675-2365756-42365756-8767575-d05b7c67657' });
   const savedDataFromMeetingSetup = _.clone(getJSONFixture('core/json/setupWizard/meeting-settings/savedSitesData.json'));
 
   beforeEach(function () {
@@ -26,6 +27,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
     spyOn(this.TrialTimeZoneService, 'getTimeZones').and.returnValue(this.$q.resolve({}));
     spyOn(this.SetupWizardService, 'getPendingAudioLicenses').and.returnValue([{ offerName: 'TSP' }]);
     spyOn(this.SetupWizardService, 'getActingSubscriptionLicenses').and.returnValue(actingSubscription['licenses']);
+    spyOn(this.SetupWizardService, 'getActingSubscriptionPendingTransferServices').and.returnValue(transferredSubscriptionServices['licenses']);
     spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(conferenceServices);
     spyOn(this.SetupWizardService, 'validateCCASPPartner').and.returnValue(this.$q.resolve({ isValid: true }));
     spyOn(this.SetupWizardService, 'hasPendingCCASPPackage').and.returnValue(true);
@@ -48,10 +50,18 @@ describe('Controller: MeetingSettingsCtrl', () => {
 
     it('should find existing WebEx licenses on acting subscription and push them to sitesArray', function () {
       expect(this.SetupWizardService.getActingSubscriptionLicenses).toHaveBeenCalled();
-      expect(this.controller.sitesArray.length).toBe(2);
+      expect(this.controller.sitesArray.length).toBe(3);
       const hasSiteUrlFromActiveLicense = _.some(this.controller.sitesArray, { siteUrl: 'frankSinatraTest.dmz' });
       expect(this.controller.sitesArray[0]['keepExistingSite']).toBeTruthy();
       expect(hasSiteUrlFromActiveLicense).toBe(true);
+    });
+
+    it('should extract WebEx licenses from transferred subscription services on acting subscription and push them to sitesArray', function () {
+      expect(this.SetupWizardService.getActingSubscriptionPendingTransferServices).toHaveBeenCalled();
+      expect(this.controller.webexSitesFromTransferredSubscriptionServices.length).toBe(1);
+      const hasSiteUrlFromTransferredWebexLicence = _.some(this.controller.sitesArray, { siteUrl: 'shafiTest.dmz' });
+      expect(this.controller.sitesArray[0]['keepExistingSite']).toBeTruthy();
+      expect(hasSiteUrlFromTransferredWebexLicence).toBe(true);
     });
 
     it('should find existing trial WebEx licenses on acting subscription and push them to sitesArray', function () {
@@ -71,7 +81,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
     it('should set the user management setup type correctly', function () {
       const sparkSetupSite = _.find(this.controller.sitesArray, { siteUrl: 'frankSinatraTest.dmz' });
       const legacySetupSite = _.find(this.controller.sitesArray, { siteUrl: 'frankSinatraTestWX.dmz' });
-      expect(this.controller.sitesArray.length).toEqual(2);
+      expect(this.controller.sitesArray.length).toEqual(3);
       expect(sparkSetupSite['setupType']).toBeUndefined();
       expect(legacySetupSite.hasOwnProperty('setupType')).toBeTruthy();
       expect(legacySetupSite['setupType']).toEqual(this.Config.setupTypes.legacy);

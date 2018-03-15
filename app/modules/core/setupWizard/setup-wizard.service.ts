@@ -9,6 +9,8 @@ interface IPendingSubscription {
   orderId: string;
   orderingTool?: string;
   pendingLicenses: IPendingLicense[];
+  // Services from another subscription that are to be transferred to current acting subscription
+  pendingTransferServices?: IPendingLicense[];
   pendingServiceOrderUUID: string;
   subscriptionId: string;
 }
@@ -148,6 +150,10 @@ export class SetupWizardService {
     return _.get(this.actingSubscription, 'pendingLicenses', []);
   }
 
+  public getActingSubscriptionPendingTransferServices(): IConferenceLicense[] {
+    return _.get(this.actingSubscription, 'pendingTransferServices', []);
+  }
+
   public getPendingOrderStatusDetails(pendingServiceOrderUUID) {
     if (!_.isString(pendingServiceOrderUUID)) {
       return this.$q.reject('No valid pendingServiceOrderUUID passed');
@@ -284,6 +290,8 @@ export class SetupWizardService {
           externalSubscriptionId: pendingSubscription.externalSubscriptionId,
           licenses: pendingSubscription.licenses,
           pendingServiceOrderUUID: pendingSubscription.pendingServiceOrderUUID!,
+          // Services from another subscription that are to be transferred to current acting subscription
+          pendingTransferServices: pendingSubscriptionResponse.pendingTransferServices,
           subscriptionId: pendingSubscription.subscriptionId!,
           orderingTool: pendingSubscription.orderingTool,
         });
@@ -296,7 +304,7 @@ export class SetupWizardService {
     });
   }
 
-  private getPendingLicensesFromExternalSubscription(externalSubscriptionId) {
+  public getPendingLicensesFromExternalSubscription(externalSubscriptionId: string) {
     if (!_.isString(externalSubscriptionId)) {
       return this.$q.reject('An invalid subscriptionId was passed.');
     }
@@ -309,6 +317,8 @@ export class SetupWizardService {
     return {
       orderId: this.formatWebOrderId(_.get<string>(response, 'data.webOrderId', '')),
       pendingLicenses: _.get<IPendingLicense[]>(response, 'data.licenseFeatures', []),
+      // Services from another subscription that are to be transfer to current acting subscription
+      pendingTransferServices: _.get<IPendingLicense[]>(response, 'data.pendingTransferServices', []),
     };
   }
 

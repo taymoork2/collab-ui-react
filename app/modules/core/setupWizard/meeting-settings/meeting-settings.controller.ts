@@ -3,6 +3,7 @@ import { Config } from 'modules/core/config/config';
 import { IConferenceLicense, IConferenceService, IPendingLicense, IWebexLicencesPayload, IWebExSite } from './meeting-settings.interface';
 import { WebExSite, ExistingWebExSite } from './meeting-settings.model';
 import { SetupWizardService } from '../setup-wizard.service';
+import { Notification } from 'modules/core/notifications';
 
 interface ICCASPData {
   partnerOptions: string[];
@@ -35,6 +36,7 @@ export class MeetingSettingsCtrl {
   public ccaspForm: ng.IFormController;
   public existingTrialSites: ExistingWebExSite[] = [];
   public existingWebexSites: WebExSite[] = [];
+  public webexSitesFromTransferredSubscriptionServices: WebExSite[] = [];
   public disableValidateButton: boolean = false;
   public timeZoneOptions = this.TrialTimeZoneService.getTimeZones();
   public sitesArray: IWebExSite[] = [];
@@ -69,7 +71,7 @@ export class MeetingSettingsCtrl {
     private Analytics,
     private Authinfo,
     private Config: Config,
-    private Notification,
+    private Notification: Notification,
     private SetupWizardService: SetupWizardService,
     private TrialTimeZoneService,
     private TrialWebexService,
@@ -91,6 +93,12 @@ export class MeetingSettingsCtrl {
     });
     this.existingTrialSites = this.findExistingWebexTrialSites();
     this.existingWebexSites = this.findExistingWebexSites();
+
+    /* Sometimes subscription services are transferred to another subscription;
+    those WebEx sites need to be merged into the new subscription. */
+    const pendingTransferServices = this.SetupWizardService.getActingSubscriptionPendingTransferServices();
+    this.webexSitesFromTransferredSubscriptionServices = this.findExistingWebexSites(pendingTransferServices);
+    this.existingWebexSites = this.existingWebexSites.concat(this.webexSitesFromTransferredSubscriptionServices);
 
     // If user clicked back after setting WebEx sites in the meeting-settings tab, we want to preserve the entered sites
     const webexSitesData = this.TrialWebexService.getProvisioningWebexSitesData();
@@ -176,10 +184,11 @@ export class MeetingSettingsCtrl {
     return existingTrialSites;
   }
 
-  // In the case of modify orders, the order will apply to an active subscription.
-  // If we have WebEx licenses, we need pull those siteUrls and include them in the provision context
-  public findExistingWebexSites(): WebExSite[] {
-    const actingSubscriptionLicenses = this.SetupWizardService.getActingSubscriptionLicenses();
+  /* In the case of modify orders, the order will apply to an active subscription.
+  If we have WebEx licenses, we need to pull those siteUrls and include them in
+  the provisioning context. */
+
+  public findExistingWebexSites(actingSubscriptionLicenses = this.SetupWizardService.getActingSubscriptionLicenses()): WebExSite[] {
     const includedOfferNames = [this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC];
     let existingConferenceServicesInActingSubscripton = _.filter(actingSubscriptionLicenses, (license: IConferenceLicense) =>
       _.includes(includedOfferNames, license.offerName)) as IConferenceLicense[];
@@ -189,7 +198,6 @@ export class MeetingSettingsCtrl {
     });
     // Create an array of existing sites
     const existingWebexSites = _.map(existingConferenceServicesInActingSubscripton, (license) => {
-
       return new WebExSite({
         siteUrl: _.replace(_.get<string>(license, 'siteUrl'), this.Config.siteDomainUrl.webexUrl, ''),
         quantity: license.volume,
@@ -198,6 +206,7 @@ export class MeetingSettingsCtrl {
         isCIUnifiedSite: license.isCIUnifiedSite,
       });
     });
+
     return existingWebexSites;
   }
 
