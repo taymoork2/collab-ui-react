@@ -14,6 +14,8 @@ const ManageUsersPage = require('../pages/manageUsers.page');
 const manageUsers = new ManageUsersPage();
 const NavigationPage = require('../pages/navigation.page');
 const navigation = new NavigationPage();
+const NotificationsPage = require('../pages/notifications.page');
+const notifications = new NotificationsPage();
 const utils = require('../utils/test.utils');
 
 describe('Auto-Assign Licenses', function () {
@@ -80,7 +82,7 @@ describe('Auto-Assign Licenses', function () {
     it('should save the auto-assign template', function () {
       utils.expectIsEnabled(manageUsers.buttons.save);
       utils.click(manageUsers.buttons.save);
-      utils.expectIsDisplayed(manageUsers.autoAssignTemplate.notifications.createSuccess);
+      notifications.assertSuccess('Your license template has been set up successfully');
     });
   });
 
@@ -91,7 +93,7 @@ describe('Auto-Assign Licenses', function () {
       utils.click(manageUsers.autoAssignTemplate.optionsMenu.toggleButton);
       utils.click(manageUsers.autoAssignTemplate.optionsMenu.delete);
       utils.click(manageUsers.autoAssignTemplate.optionsMenu.deleteConfirm);
-      utils.expectIsDisplayed(manageUsers.autoAssignTemplate.notifications.deleteSuccess);
+      notifications.assertSuccess('Template was deleted successfully');
     });
   });
 });

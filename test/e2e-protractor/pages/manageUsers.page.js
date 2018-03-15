@@ -106,10 +106,6 @@ var manageUsersPage = function () {
       delete: element(by.cssContainingText('auto-assign-template-manage-options .actions-menu li', 'Delete Auto-Assign Template')),
       deleteConfirm: element(by.cssContainingText('.modal-footer .btn', 'Delete')),
     },
-    notifications: {
-      createSuccess: element(by.cssContainingText('.toast.toast-success [ng-bind="message"]', 'Your license template has been set up successfully')),
-      deleteSuccess: element(by.cssContainingText('.toast.toast-success [ng-bind="message"]', 'Template was deleted successfully')),
-    },
     createTemplate: {
       title: element(by.cssContainingText('.modal-header > h3', 'Set Up Auto-Assign Template')),
       subtitle: element(by.cssContainingText('.modal-body > h4', 'Add Services for Users')),
