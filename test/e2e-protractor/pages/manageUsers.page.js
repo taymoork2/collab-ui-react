@@ -11,7 +11,7 @@ var manageUsersPage = function () {
 
   this.buttons = {
     manageUsers: element(by.id('manageUsers')),
-    modalCloseButton: element(by.id('closeManageUsers')),
+    modalCloseButton: element(by.css('.modal-header .close[aria-label="Close"]')),
 
     next: element(by.buttonText('Next')),
     save: element(by.buttonText('Save')),
