@@ -136,11 +136,14 @@ describe('Service: LegalHoldService', () => {
         userId: '123',
         firstName: 'Jane',
         lastName: 'Doe',
+        orgId: '12345',
+        emailAddress: 'test@gmail.com',
       };
       const expResponse = {
         id: '123',
         firstName: 'Jane',
         lastName: 'Doe',
+        orgId: '12345',
         otherProp: 'something else',
       };
       this.$httpBackend.expectGET(this.getUserUrl + 'test%40gmail.com').respond(200, expResponse);

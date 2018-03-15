@@ -1632,6 +1632,7 @@
     "download": "Download",
     "edit": "Edit",
     "email": "Email",
+    "emailAddress": "Email Address",
     "emailAddressesDonotMatch": "Email Addresses do not match",
     "enable": "Enable",
     "enabled": "Enabled",
@@ -2338,7 +2339,6 @@
     "chart": {
       "total": "Total: {{totalValue}}"
     }
-
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -4119,6 +4119,73 @@
       "reports": "Reports"
     }
   },
+  "legalHold": {
+    "title": "Legal Matters",
+    "matterList": {
+      "title": "Matters",
+      "name": "Matter Name",
+      "description": "Description",
+      "state": "State",
+      "filter": {
+        "placeholder": "Placeholder",
+        "active": "Active",
+        "released": "Released"
+      },
+      "new": "New Matter"
+    },
+    "matterNew": {},
+    "custodianImport": {
+      "fileBrowser": "Browse...",
+      "errorCsvBadFormat": "CSV is not in correct format",
+      "errorCsvMaxSizeError": "File size is above the maximum of 10 MB.",
+      "errorCsvExceedsMax": "The user list exceeds the limit of {{maxUsers}}",
+      "errorCanceledByUser": "Import canceled by user",
+      "errorDifferentOrg": "User belongs to a different org",
+      "errorUserNotFound": "User not found",
+      "errorUnknown": "Unknown error",
+      "downloadTemplate": "Download CSV Template",
+      "csvOnly": "CSV format only.",
+      "uploading": "Uploading",
+      "invalidUsers": "Invalid Users",
+      "exportErrors": "Export errors to CSV",
+      "emailAddress": "Email Address",
+      "usersAdded": "Users Added",
+      "usersRemoved": "Users Removed",
+      "errorsFileName": "ImportErrors.csv",
+      "cancelImportTitle": "Cancel Import",
+      "add": {
+        "title": "Add Custodians",
+        "description": "Added users will have all content in current and newly joined or created spaces placed on hold. If a user leaves a space that space’s data will be held until the matter is released.",
+        "statusTitle": "Add Custodians Status",
+        "resultPartial": "Some users successfully added, but invalid users were detected in {{fileName}}. Update your file and try again.",
+        "resultSuccess": "Users successfully added with {{fileName}}.",
+        "resultFailure": "Invalid users were detected in {{fileName}}. No users were added.",
+        "resultCanceled": "User import has been canceled",
+        "cancelConfirm": "Are you sure you want to cancel your import? If you stop your import, no users will be added"
+
+      },
+      "new": {
+        "title": "Add Custodians",
+        "description": "Added users will have all content in current and newly joined or created spaces placed on hold. If a user leaves a space that space’s data will be held until the matter is released.",
+        "statusTitle": "Add Custodians Status",
+        "resultPartial": "Matter successfully created but invalid users were detected in {{fileName}}. Update your file and try again by using Manage Custodians Feature.",
+        "resultSuccess": "Matter created and users successfully added with {{fileName}}. Update users anytime with the Manage Custodians feature",
+        "resultCanceled": "User import has been canceled but matter has been created",
+        "resultFailure": "Matter successfully created but invalid users were detected in {{fileName}}. Update your file and try again by using Manage Custodians Feature."
+      },
+      "remove": {
+        "title": "Remove Custodians",
+        "description": "Removed users will not longer have their content placed on hold",
+        "statusTitle": "Remove Custodians Status",
+        "resultPartial": "Some users successfully removed, but invalid users were detected in {{fileName}}. Update your file and try again.",
+        "resultSuccess": "Users successfully removed with {{fileName}}.",
+        "resultFailure": "Invalid users were detected in {{fileName}}. No users were removed.",
+        "resultCanceled": "User import has been canceled",
+        "cancelConfirm": "Are you sure you want to cancel your import? If you stop your import, no users will be removed"
+
+      }
+    }
+  },
   "firstTimeWizard": {
     "required": "This field is required.",
     "termsAndConditions": "Terms and Conditions",
@@ -5159,7 +5226,6 @@
     "customNumberValidation": "Field can contain digits 0 to 9 and +. For example: +15556667777.",
     "saveConfirmation": "Do you want to save your changes?",
     "invalidNameError": "Custom Name is invalid. Characters from the set [ \" % < > [ ] & | { } ] are not allowed."
-
   },
   "autoAnswerPanel": {
     "title": "Auto Answer",
@@ -5605,7 +5671,6 @@
       "userTotals": "{{users}} of {{licenses}} licenses used",
       "daysSinceExp": "Expired {count, plural, =1{# day} other{# days}} ago"
     }
-
   },
   "trialModal": {
     "addTrial": {
@@ -8717,12 +8782,10 @@
         "customBrandImageLogo": "Custom brand image and brand logo (light) applied",
         "customBrandLogo": "Custom brand logo (dark) applied"
       }
-
     },
     "webexVersion": {
       "title": "Webex Version"
     },
-
     "webexSiteManagement": {
       "title": "WebEx Sites",
       "subsectionLabel": "Allow customers to manage WebEx Sites",

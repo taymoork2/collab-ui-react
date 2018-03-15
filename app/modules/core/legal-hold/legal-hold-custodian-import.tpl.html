@@ -1,0 +1,98 @@
+<div ng-if="$ctrl.currentStep === $ctrl.ImportStepEnum.UPLOAD">
+  <div class="row">
+    <input id="userFileUpload"
+      tabindex="-1"
+      name="userFileUpload"
+      type="file"
+      cr-file-read
+      file="$ctrl.file"
+      file-name="$ctrl.fileName"
+      class="inputfile"
+      file-max-size="10"
+      file-max-size-error="$ctrl.onFileSizeError()"
+      file-type="text/csv, application/csv, application/vnd.ms-excel"
+      file-suffix="csv"
+      file-type-error="$ctrl.onFileTypeError()" />
+    <label class="cs-input__label "
+      for="dcustodianCsv">
+      <span translate="{{::$ctrl.title}}"></span>
+    </label>
+    <div class="cs-input-group medium-12">
+      <input cs-input
+        type="text"
+        value="{{$ctrl.fileName}}"
+        name="custodianCsv"
+        cs-input-group-size="medium-{{::$ctrl.styleFileInputWidth}}"
+      />
+      <div class="cs-input-group medium-{{12 - $ctrl.styleFileInputWidth}} columns ">
+        <label for="userFileUpload"
+          tabindex="0"
+          translate="legalHold.custodianImport.fileBrowser"
+          class="btn">
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="medium-{{::$ctrl.styleFileInputWidth}}">
+      <p class="cs-input-group">
+        <span translate="legalHold.custodianImport.csvOnly"></span>&nbsp;
+        <span translate="{{::$ctrl.description}}"></span>
+      </p>
+      <p>
+        <a href
+          ng-csv="$ctrl.getTemplate()"
+          aria-label="{{:: 'common.download' | translate}}"
+          filename="{{:: $ctrl.l10nFileName | translate}}">{{:: 'legalHold.custodianImport.downloadTemplate' | translate}}
+          </a>
+      </p>
+    </div>
+  </div>
+</div>
+<div ng-if="$ctrl.currentStep === $ctrl.ImportStepEnum.CONVERT">
+  <div class="row">
+    <h4 translate="{{:: $ctrl.title}}"></h4>
+    <div class="medium-8 medium-offset-2">
+      <cr-progressbar ng-if="$ctrl.ImportStepEnum.CONVERT"
+        progressbar-label="$ctrl.progressLabel"
+        progressbar-filename="$ctrl.fileName"
+        progressbar-value="$ctrl.progress"
+        progressbar-is-processing="true"
+        progressbar-on-cancel="$ctrl.onCancelImport()"> </cr-progressbar>
+    </div>
+  </div>
+</div>
+<div class="import-results medium-{{$ctrl.styleResultsWidth}}"
+  ng-class="$ctrl.resultClass"
+  ng-if="$ctrl.currentStep === $ctrl.ImportStepEnum.RESULT">
+  <h4 translate="{{:: $ctrl.statusTitle}}"></h4>
+  <div class="cs-input-group">
+    <p translate="{{:: $ctrl.resultString}}"
+      translate-values="{fileName: $ctrl.fileName}"></p>
+  </div>
+  <div ng-if="$ctrl.resultStatus!==$ctrl.ImportResultStatusEnum.CANCELED">
+    <div class="medium-8 cs-input-group">
+      <cr-users-tile-totals new-total="'0'"
+        updated-total="$ctrl.result.success.length"
+        error-label="{{:: 'legalHold.custodianImport.invalidUsers' | translate}}"
+        updated-label="{{:: $ctrl.actionPerformed | translate }}"
+        hide-new="true"
+        error-total="$ctrl.result.error.length"> </cr-users-tile-totals>
+    </div>
+    <div class="row cs-input-group">
+      <h5 class="pull-left" translate="legalHold.custodianImport.invalidUsers"></h5>
+      <h6 class="pull-right">
+        <a href
+          class="custodian-list__export-csv"
+          ng-csv="$ctrl.getErrorsForCsv()"
+          filename="{{:: 'legalHold.custodianImport.errorsFileName' | translate}}"
+          quote-strings="true"
+          aria-label="{{::'common.download' | translate}}"> {{:: 'legalHold.custodianImport.exportErrors' | translate }}
+          </a>
+        </h6>
+    </div>
+    <cr-table ng-if="$ctrl.result.error.length > 0"
+      table-records="$ctrl.errorData"
+      table-fields=":: $ctrl.errorTableMetadata"></cr-table>
+  </div>
+</div>

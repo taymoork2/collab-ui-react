@@ -1,0 +1,56 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/fonts';
+@import '~@collabui/collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+@import 'styles/partials/mixins';
+.matter-list {
+  padding-top: 6rem;
+}
+
+.reveal-modal.full .modal-content.legalhold-modal {
+  margin: 0;
+}
+
+.legalhold-detail-state .side-panel-full-height {
+  z-index: 1100;
+}
+
+.inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+label[for=userFileUpload] {
+  margin-left: .5rem;
+}
+
+.import-results.success {
+  cr-users-tile-totals .user-tile-total+.user-tile-total {
+    visibility: hidden;
+  }
+}
+
+cr-table {
+  .custodian-list {
+    &__title {
+      margin-bottom: 0.5rem;
+    }
+    &__export-csv {
+      align-self: flex-end;
+      margin-bottom: 0.5rem;
+    }
+  }
+  .cr-table {
+    &__column,
+    &__column--header {
+      &:first-child {
+        width: 400px;
+        text-align: left;
+      }
+    }
+  }
+}
