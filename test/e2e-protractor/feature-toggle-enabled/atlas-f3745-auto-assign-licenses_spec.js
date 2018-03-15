@@ -110,6 +110,18 @@ describe('Auto-Assign Licenses', function () {
       utils.click(users.closeSidePanel);
     });
 
+    it('should NOT allow manual onboarding of existing user (because auto-assign template is active)', function () {
+      utils.click(navigation.usersTab);
+      utils.click(manageUsers.buttons.manageUsers);
+      utils.click(manageUsers.actionCards.manualAddUsers);
+      utils.click(manageUsers.buttons.next);
+      utils.click(users.addUsersField);
+      utils.sendKeys(users.addUsersField, testUserEmail + protractor.Key.ENTER);
+      utils.expectIsDisplayed(manageUsers.manual.errors.autoAssignTemplateEnabledCannotOnboardExistingUser);
+      utils.expectIsDisabled(manageUsers.buttons.next);
+      utils.click(manageUsers.buttons.modalCloseButton);
+    });
+
     it('cleanup user', function () {
       utils.deleteIfUserExists(testUserEmail);
     });

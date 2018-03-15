@@ -69,6 +69,10 @@ var manageUsersPage = function () {
       plusIcon: element(by.css('.plus-icon-active')),
       tokenField: element(by.id('usersfield')),
     },
+
+    errors: {
+      autoAssignTemplateEnabledCannotOnboardExistingUser: element(by.cssContainingText('.error-msg p', 'The Auto-Assign Template is enabled. You can only modify existing users')),
+    },
   };
 
   // Bulk Modify Users
