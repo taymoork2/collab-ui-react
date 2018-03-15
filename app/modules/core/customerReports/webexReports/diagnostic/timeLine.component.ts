@@ -36,6 +36,7 @@ class TimeLine implements ng.IComponentController {
   }
 
   public $onInit() {
+    if (!this.sourceData) { return; }
     this.addFnToD3();
     this.initParameters();
 
@@ -48,6 +49,7 @@ class TimeLine implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
+    if (!this.sourceData) { return; }
     const { circleColor, lineColor, pstnData, cmrData, callLegsData } = changes;
     _.debounce(() => {
       if (_.get(lineColor, 'currentValue')) {

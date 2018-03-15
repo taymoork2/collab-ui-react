@@ -88,7 +88,7 @@ class Meetingdetails implements ng.IComponentController {
           });
       })
       .catch((err) => {
-        this.loading = true;
+        this.loading = false;
         this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
       });
   }
