@@ -116,7 +116,7 @@
       return undefined;
     }
 
-    function isURLActive(deleteUrl) {
+    function isUrlActive(deleteUrl) {
       var urlActive = false;
       var activeResources;
       if (isReset) {
@@ -160,7 +160,7 @@
     function deleteResources(ctrl) {
       var target = _.get(ctrl, 'uploads', []);
       _.each(target, function (value) {
-        if (_.has(value, 'deleteUrl') && !_.isEmpty(value.deleteUrl) && !isURLActive(value.deleteUrl)) {
+        if (_.has(value, 'deleteUrl') && !_.isEmpty(value.deleteUrl) && !isUrlActive(value.deleteUrl)) {
           httpDeleteRetry(value.deleteUrl, 0);
         }
       });
