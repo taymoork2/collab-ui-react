@@ -13,10 +13,6 @@ export class WizardFactory {
   }
 }
 
-angular
-  .module('Squared')
-  .service('WizardFactory', WizardFactory);
-
 class Wizard {
 
   constructor($state, private wizardState, private $timeout: ITimeoutService) {
@@ -66,3 +62,8 @@ class Wizard {
     return this.wizardState;
   }
 }
+
+export default angular
+  .module('Csdm.wizard-factory', [])
+  .service('WizardFactory', WizardFactory)
+  .name;

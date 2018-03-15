@@ -23,8 +23,9 @@ describe('Component: linkedSiteGrid', () => {
         uiGridConstants: {},
       }, {});
     });
-    it('initial data is loading', function() {
-      expect(this.controller.loading).toBeTruthy();
+    it('defines a grid', function() {
+      this.controller.$onInit();
+      expect(this.controller.gridConfig).toExist();
     });
 
   });

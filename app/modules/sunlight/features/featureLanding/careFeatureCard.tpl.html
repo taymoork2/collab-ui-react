@@ -5,8 +5,8 @@
         <header class="card-header">
           <div class="header-with-right-icon">
             <!-- For AutoAttedant the Feature name is careFeature.cardName otherwise careFeature.name -->
-            <p class="h4 ellipsis" ng-if="careFeature.name" title="{{careFeature.name}}"> {{careFeature.name}} </p>
-            <p class="h4 ellipsis" ng-if="!careFeature.name" title="{{careFeature.cardName}}"> {{careFeature.cardName}} </p>
+            <p class="h4 ellipsis" ng-if="careFeature.filterValue !== 'AA'" title="{{careFeature.name}}"> {{careFeature.name}} </p>
+            <p class="h4 ellipsis" ng-if="careFeature.filterValue === 'AA'" title="{{careFeature.cardName}}"> {{careFeature.cardName}} </p>
             <div class="right">
               <a href
                 class="icon icon-link icon-color"
@@ -22,9 +22,8 @@
           </div>
           <div class="care-sub-header">
             <div class="care-badge">
-              <!--if careFeature.name is undefined then show cardName othewise mediaType  -->
-              <span class="badge badge--outline primary" ng-if="!careFeature.name" translate="huronFeatureDetails.aa"></span>
-              <span  class="badge badge--outline" ng-if="careFeature.name" translate="careChatTpl.filterType.{{careFeature.mediaType}}"></span>
+              <span class="badge badge--outline primary" ng-if="careFeature.filterValue === 'AA'" translate="huronFeatureDetails.aa"></span>
+              <span  class="badge badge--outline" ng-if="careFeature.filterValue !== 'AA'" translate="careChatTpl.badgeName.{{careFeature.filterValue}}"></span>
             </div>
             <div class="care-icon">
               <span ng-repeat="icon in careFeature.icons">
@@ -36,10 +35,12 @@
             <span ng-repeat="feature in careFeature.features">
               <i
                 class="icon {{careFeature.featureIcons[feature.featureType]}} cta icon-lg"
-                tooltip="{{careFeaturesCtrl.featureToolTip(feature.featureType, feature.name)}}"
+                tabindex="0"
+                tooltip="{{careFeaturesCtrl.featureToolTip(feature.featureType, feature.name, careFeature.name)}}"
                 tooltip-trigger="mouseenter focus"
                 tooltip-placement="top-left"
-                tooltip-animation="false">
+                tooltip-animation="false"
+                aria-label="{{careFeaturesCtrl.featureToolTip(feature.featureType, feature.name, careFeature.name)}}">
               </i>
             </span>
           </div>
@@ -54,7 +55,14 @@
           <div class="embed-code-txt h6 left ellipsis">
             <div class="usage" ng-if="careFeature.featureType === 'customerVirtualAssistant'">
               <span class="usage-text">{{careFeaturesCtrl.templatesInUseText(careFeature)}}</span>
-              <button ng-click="$event.stopPropagation()" popover-html="careFeature.templatesHtmlPopover" popover-placement="auto right" popover-append-to-body="false" class="icon icon-question-circle"></button>
+              <button
+                ng-click="$event.stopPropagation()"
+                popover-html="careFeature.templatesHtmlPopover"
+                popover-placement="auto right"
+                popover-append-to-body="false"
+                class="icon icon-question-circle"
+                aria-label="{{careFeature.templatesHtmlPopover}}">
+              </button>
             </div>
             <div class="email" ng-if="careFeature.email">{{careFeature.email}}</div>
             <div class="usage" ng-if="careFeature.featureType === 'expertVirtualAssistant'">
@@ -65,13 +73,14 @@
                 popover-html="careFeature.templatesHtmlPopover + '<br>' + careFeature.spacesHtmlPopover"
                 popover-placement="auto right"
                 popover-append-to-body="false"
-                class="icon icon-question-circle">
+                class="icon icon-question-circle"
+                aria-label="{{careFeature.templatesHtmlPopove + ' ' + careFeature.spacesHtmlPopove}}">
               </button>
             </div>
           </div>
           <!-- if mediaType is undefined then do not show the download icon button -->
           <div class="right icon icon-download"
-            ng-if="careFeature.mediaType && careFeature.mediaType !== 'virtualAssistant'"
+            ng-if="careFeature.mediaType"
             ng-click="careFeaturesCtrl.openEmbedCodeModal(careFeature, $event)"
             ng-keydown="careFeaturesCtrl.openEmbedCodeModalKeypress(careFeature, $event)"
             aria-label="{{::'common.download' | translate}}"></div>

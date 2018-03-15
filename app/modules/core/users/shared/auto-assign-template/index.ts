@@ -14,6 +14,7 @@ export {
 export * from './auto-assign-template.interfaces';
 
 export default angular.module('core.users.shared.auto-assign-template', [
+  require('angular-ui-router'),
   authinfoModuleName,
   messengerInteropModuleName,
   orgServiceModuleName,

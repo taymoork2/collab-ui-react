@@ -3,7 +3,7 @@
   <div ng-if="siteList.tabs.length > 0" class="tabs-container">
     <ul class="menu">
       <li class="link" ng-repeat="tab in siteList.tabs">
-        <span class="table-filter" ui-sref="{{tab.state}}" ui-sref-active="{'active':tab.state + '.**'}" translate="{{tab.title}}"></span>
+        <span ui-sref="{{tab.state}}" ui-sref-active="{'active':tab.state + '.**'}" translate="{{tab.title}}"></span>
       </li>
     </ul>
   </div>

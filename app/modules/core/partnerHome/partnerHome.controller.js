@@ -8,7 +8,7 @@ require('./_partner-landing-trials.scss');
     .controller('PartnerHomeCtrl', PartnerHomeCtrl);
 
   /* @ngInject */
-  function PartnerHomeCtrl($scope, $state, $window, $translate, Analytics, Authinfo, CardUtils, Log, Notification, Orgservice, PartnerService, TrialService) {
+  function PartnerHomeCtrl($scope, $state, $window, $translate, Analytics, Authinfo, CardUtils, Log, Notification, Orgservice, PartnerService, TrialService, FeatureToggleService) {
     $scope.currentDataPosition = 0;
 
     $scope.daysExpired = 5;
@@ -24,6 +24,9 @@ require('./_partner-landing-trials.scss');
     $scope.getDaysAgo = getDaysAgo;
     $scope.ariaTrialLabel = ariaTrialLabel;
     $scope.ariaExpLabel = ariaExpLabel;
+    $scope.notifications = [];
+    $scope.hcsFeatureToggle = false;
+    $scope.cardSize = 'cs-card--large';
 
     init();
 
@@ -31,6 +34,14 @@ require('./_partner-landing-trials.scss');
       if (!$scope.isCustomerPartner) {
         getTrialsList();
       }
+
+      FeatureToggleService.supports(FeatureToggleService.features.atlasHostedCloudService).then(function (result) {
+        $scope.hcsFeatureToggle = result;
+        if ($scope.hcsFeatureToggle) {
+          $scope.cardSize = 'cs-card--medium';
+        }
+        CardUtils.resize();
+      });
 
       $scope.activeCount = 0;
       if ($scope.activeList) {

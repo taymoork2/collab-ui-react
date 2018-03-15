@@ -63,6 +63,7 @@ describe('Controller: TrialCtrl:', function () {
     spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'atlasCareCvcToCdcMigrationGetStatus').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
       return $q.resolve(_.includes(enabledFeatureToggles, param));
     });
@@ -914,11 +915,11 @@ describe('Controller: TrialCtrl:', function () {
     it('should start in trial.info state', function () {
       // NOTE - disparity found while fixing PURS - code will always init to these states. It was not doing it
       // previously due to error being generated and aborting before toggleTrial() was called in controller init
-      expect(controller.navStates).toEqual(['trial.info', 'trial.webex', 'trial.pstnDeprecated']);
+      expect(controller.navStates).toEqual(['trial.info', 'trial.webex', 'trial.pstn']);
     });
 
     it('should have correct navigation state order', function () {
-      expect(controller.navOrder).toEqual(['trial.info', 'trial.webex', 'trial.pstnDeprecated', 'trial.emergAddress', 'trial.call']);
+      expect(controller.navOrder).toEqual(['trial.info', 'trial.webex', 'trial.pstn', 'trial.call']);
     });
 
     it('should transition state', function () {
@@ -1377,7 +1378,7 @@ describe('Controller: TrialCtrl:', function () {
     });
 
     it('should have correct navigation state order', function () {
-      expect(controller.navOrder).toEqual(['trial.info', 'trial.webex', 'trial.pstnDeprecated', 'trial.emergAddress', 'trial.call']);
+      expect(controller.navOrder).toEqual(['trial.info', 'trial.webex', 'trial.pstn', 'trial.call']);
     });
 
     it('should transition state', function () {

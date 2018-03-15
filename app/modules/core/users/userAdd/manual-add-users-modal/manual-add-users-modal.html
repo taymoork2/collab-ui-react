@@ -6,15 +6,17 @@
   next-disabled="!$ctrl.allowNext()"
   class="onboard-users"
   >
-  <h4 ng-if="!$ctrl.isDirSyncEnabled" translate="userManage.manual.titleAddModify"></h4>
-  <h4 ng-if="$ctrl.isDirSyncEnabled" translate="userManage.manual.titleModify"></h4>
-  <p translate="userManage.manual.instructions" translate-values="{ maxUsers: $ctrl.maxUsersInManual }"></p>
+  <h4 translate="{{ $ctrl.l10nTitleKey }}"></h4>
+  <p translate="{{ $ctrl.l10nInstructionKey }}" translate-values="{ maxUsers: $ctrl.maxUsersInManual }"></p>
   <br>
   <cr-onboard-users></cr-onboard-users>
-  <div class="unsynced-users error-invalid-dirsync" ng-if="$ctrl.scopeData.invalidDirSyncUsersCount > 0">
+  <div class="error-msg error-invalid-dirsync" ng-if="$ctrl.scopeData.invalidDirSyncUsersCount > 0">
     <span class="icon icon-error icon-lg"></span><p translate="userManage.manual.ad.unsyncedUsers"></p>
   </div>
-  <div class="unsynced-users error-over-max-users" ng-if="$ctrl.getNumUsersInTokenField() > $ctrl.maxUsersInManual">
+  <div class="error-msg error-over-max-users" ng-if="$ctrl.getNumUsersInTokenField() > $ctrl.maxUsersInManual">
     <span class="icon icon-error icon-lg"></span><p translate="userManage.manual.tooManyUsers" translate-values="{ maxUsers: $ctrl.maxUsersInManual }"></p>
+  </div>
+  <div class="error-msg" ng-if="$ctrl.scopeData.invalidNewUserCount > 0">
+    <span class="icon icon-error icon-lg"></span><p translate="userManage.manual.ad.existingUsers"></p>
   </div>
 </multi-step-modal>

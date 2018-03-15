@@ -11,10 +11,12 @@ describe('Service: DirectoryNumberOptionsService', () => {
       'DirectoryNumberOptionsService',
       '$q',
       'LocationsService',
+      'NumberService',
       '$rootScope',
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
+    spyOn(this.NumberService, 'getNumberList').and.callThrough();
 
     const internalNumbersResponse: IDirectoryNumber[] = [
       { pattern: '12345' },
@@ -54,17 +56,22 @@ describe('Service: DirectoryNumberOptionsService', () => {
   describe('getInternalNumbers function toggle OFF', function () {
 
     it('should get internal numbers list', function () {
+      this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/numbers?assigned=false&deprecated=true&type=internal')
+        .respond(200);
       this.DirectoryNumberOptionsService.getInternalNumberOptions().then(() => {
-        expect(this.NumberService.getNumberList).toHaveBeenCalledWith(null, undefined, undefined, null, null, null, null, null);
+        expect(this.NumberService.getNumberList).toHaveBeenCalledWith(undefined, 'internal', false);
       });
+      this.$httpBackend.flush();
     });
 
     it('should reject the promise on a failed response', function () {
       this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/numbers?assigned=false&deprecated=true&type=internal')
         .respond(500);
-      const promise = this.DirectoryNumberOptionsService.getInternalNumberOptions();
+      this.DirectoryNumberOptionsService.getInternalNumberOptions().then(fail)
+        .catch(response => {
+          expect(response.status).toBe(500);
+        });
       this.$httpBackend.flush();
-      expect(promise).toBeRejected();
     });
   });
 
@@ -81,9 +88,11 @@ describe('Service: DirectoryNumberOptionsService', () => {
     it('should reject the promise on a failed response', function () {
       this.$httpBackend.expectGET(this.HuronConfig.getCmiUrl() + '/voice/customers/' + this.Authinfo.getOrgId() + '/externalnumberpools?directorynumber=&externalnumbertype=Fixed+Line+or+Mobile&order=pattern')
         .respond(500);
-      const promise = this.DirectoryNumberOptionsService.getExternalNumberOptions();
+      this.DirectoryNumberOptionsService.getExternalNumberOptions().then(fail)
+        .catch(response => {
+          expect(response.status).toBe(500);
+        });
       this.$httpBackend.flush();
-      expect(promise).toBeRejected();
     });
 
     it('should get external numbers list and query for a specific unassigned DID pattern sorted by pattern', function () {
@@ -144,12 +153,14 @@ describe('Service: DirectoryNumberOptionsService', () => {
   describe('getInternalNumbers function with toggles', function () {
     beforeEach(function () {
       this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(true));
+      this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/numbers?assigned=false&deprecated=false&type=internal')
+        .respond(200);
     });
     it('should get internal numbers list with LocationId when locationId is passed when featureToggle is ON', function () {
       this.DirectoryNumberOptionsService.getInternalNumberOptions(undefined, undefined, this.locationId).then(() => {
-        expect(this.NumberService.getNumberList).toHaveBeenCalledWith(null, undefined, undefined, null, null, null, null, this.locationId);
+        expect(this.NumberService.getNumberList).not.toHaveBeenCalledWith();
       });
-      this.$rootScope.$digest();
+      this.$httpBackend.flush();
     });
   });
 

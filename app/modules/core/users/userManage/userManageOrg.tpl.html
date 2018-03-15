@@ -90,6 +90,7 @@
       </div>
       <p class="user-manage__text--margin">
         <a href
+          ng-if="!umoc.isUserAdminUser"
           ng-click="umoc.handleDirSyncService()"
           translate="{{ umoc.dirSyncText }}">
         </a>
@@ -108,7 +109,7 @@
     </div>
   </div>
 
-  <hr class="user-manage__hr">
+  <hr class="user-manage__hr" ng-if="(umoc.multiDirSyncToggle && !umoc.isUserAdminUser) || !umoc.multiDirSyncToggle">
   <div class="row collapse user-manage__row">
     <div class="columns medium-5">
       <h4 translate="userManage.org.licenses"></h4>
@@ -149,10 +150,10 @@
     <cr-action-cards-container class="columns medium-12">
       <cr-action-card ng-click="umoc.onNext(umoc.ManageType.MANUAL)">
         <cr-action-card-header>
-          <h4 translate="userManage.org.manualLabelNew"></h4>
+          <h4 translate="{{ umoc.manualLabelText }}"></h4>
         </cr-action-card-header>
         <cr-action-card-section>
-          <h6 translate="userManage.org.manualDetailsNew" translate-values="{maxUsersInManual: umoc.maxUsersInManual}"></h6>
+          <h6 translate="{{ umoc.manualDetailsText }}" translate-values="{maxUsersInManual: umoc.maxUsersInManual}"></h6>
         </cr-action-card-section>
         <cr-action-card-footer>
           <p>

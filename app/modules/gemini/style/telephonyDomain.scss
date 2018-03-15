@@ -235,9 +235,9 @@
 
   .tn-error-msg {
     &::before {
-      font-family: "Cisco_Toolkit_Icons";
-      color: #f96452;
-      content: '\E0B0';
+      @extend %icon-error;
+      font-family: $icon-font-name;
+      color: $color-alerts-base;
       margin-right: 4px;
       vertical-align: top;
     }

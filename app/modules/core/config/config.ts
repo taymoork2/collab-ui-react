@@ -1,5 +1,5 @@
 import { LocalStorageService } from 'modules/core/storage/localStorage.service';
-import { OfferName } from 'modules/core/shared';
+import { OfferName } from 'modules/core/shared/offer-name';
 
 interface IRoleStates {
   Application: string[];
@@ -90,6 +90,7 @@ export class Config {
   public readonly customerTypes = {
     enterprise: 'Enterprise',
     pending: 'Pending',
+    online: 'Online',
   };
 
   public readonly entitlements = {
@@ -167,6 +168,14 @@ export class Config {
     'webexSupportCenter',
   ];
 
+  public readonly webexTypeCodes = [
+    'EE',
+    'EC',
+    'MC',
+    'TC',
+    'SC',
+  ];
+
   public readonly freeLicenses = [
     'messaging',
     'communications',
@@ -210,6 +219,8 @@ export class Config {
     */
     device_admin: 'atlas-portal.deviceadmin',
     ci_device_admin: 'id_device_admin',
+    cca_full_admin: 'cca-portal.full_admin',
+    cca_readonly_admin: 'cca-portal.readonly_admin',
   };
 
   public readonly roles = {
@@ -359,7 +370,6 @@ export class Config {
       'callpickupedit',
       'device-overview',
       'devices',
-      'devices-redux',
       'didadd',
       'huntgroups',
       'huronCallPark',
@@ -388,7 +398,6 @@ export class Config {
       'private-trunk-redirect',
       'customerPstnOrdersOverview',
       'externalNumberDelete',
-      'pstnSetup',
       'pstnWizard',
       'call-locations',
       'call-locations-add',
@@ -546,6 +555,13 @@ export class Config {
       'userRedirect',
       'userprofile',
       'users',
+      'addDeviceFlow',
+      'device-overview',
+      'devices',
+      'place-overview',
+      'places',
+      'huronsettings',
+      'huronlines',
       'customerPstnOrdersOverview',
       'taasSuites',
       'taasTaskView',
@@ -553,6 +569,7 @@ export class Config {
       'taasSchedule',
       'taasServiceManager',
       'taasResults',
+      'sso-certificate',
     ],
     Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'dgc'],
     Tech_Support: ['gss'],
@@ -574,15 +591,15 @@ export class Config {
       'trialEdit',
       'profile',
       'pstn',
-      'pstnSetup',
       'pstnWizard',
       'video',
       'settings',
       'taas',
       'taasSuits',
       'partner-services-overview',
+      'hcs',
     ],
-    PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'pstn', 'pstnSetup', 'pstnWizard', 'video'],
+    PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'pstn', 'pstnWizard', 'video'],
     CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
     //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
     User: ['drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
@@ -606,7 +623,7 @@ export class Config {
     Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports'],
     Partner_Management: ['partnerManagement'],
     User_Admin: ['user-overview', 'userprofile', 'users', 'userRedirect', 'editService', 'addDeviceFlow'],
-    Device_Admin: ['device-overview', 'devices', 'addDeviceFlow', 'devices-redux', 'place-overview', 'places'],
+    Device_Admin: ['device-overview', 'devices', 'addDeviceFlow', 'place-overview', 'places'],
   };
 
   private readonly TEST_ENV_CONFIG: string = 'TEST_ENV_CONFIG';

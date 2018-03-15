@@ -26,7 +26,7 @@ describe('Controller: PartnerProfileCtrl', function () {
     spyOn(this.UserListService, 'listPartners');
     spyOn(this.Orgservice, 'getOrg');
     spyOn(this.BrandService, 'getLogoUrl').and.returnValue(this.$q.resolve('logoUrl'));
-    spyOn(this.FeatureToggleService, 'csdmDeviceBrandingGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'csdmDeviceSupportGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.WebexClientVersion, 'getWbxClientVersions').and.returnValue(this.$q.resolve());
     spyOn(this.WebexClientVersion, 'getPartnerIdGivenOrgId').and.returnValue(this.$q.resolve());

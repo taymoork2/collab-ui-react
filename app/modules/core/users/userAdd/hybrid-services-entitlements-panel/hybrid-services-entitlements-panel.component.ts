@@ -13,10 +13,11 @@ interface IExtendedServiceDescription extends IServiceDescription {
 class HybridServicesEntitlementsPanelController implements ng.IComponentController {
 
   private allowRemove: boolean;
-  private isEnabled = false;
+  private isHuronCallLicenseSelected: boolean;
+  public isEnabled = false;
   private entitlements: IUserEntitlementRequestItem[] = [];
   private saveInstance: Function;
-  private showCalendarChoice: boolean;
+  public showCalendarChoice: boolean;
   private services: IHybridServices;
   private entitlementsCallback: Function;
   private restoreInstance: IHybridServices;
@@ -129,6 +130,7 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
     }
     this.isEnabled = this.services.hasCalendarService() || this.services.hasCallService() || this.services.hasHybridMessageService();
     this.saveInstance({ hybridServices: this.services });
+    this.setEntitlements();
   }
 
   private getServiceIfEnabledInFMS(services: IServiceDescription[], id: HybridServiceId, options?: { isPreselected: boolean }): IExtendedServiceDescription | null {
@@ -171,7 +173,37 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
   }
 
   public hasHuronCallEntitlement() {
-    return this.HybridServicesEntitlementsPanelService.hasHuronCallEntitlement();
+    return !!this.isHuronCallLicenseSelected;
+  }
+
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
+    const { isHuronCallLicenseSelected, hasLicenseSelections } = changes;
+    if (isHuronCallLicenseSelected && !!isHuronCallLicenseSelected.currentValue) {
+      if (_.has(this.services, 'callServiceAware')) {
+        _.set(this.services, 'callServiceAware.entitled', false);
+      }
+
+      if (_.has(this.services, 'callServiceConnect')) {
+        _.set(this.services, 'callServiceConnect.entitled', false);
+      }
+    }
+    if (hasLicenseSelections && !hasLicenseSelections.currentValue && hasLicenseSelections.previousValue) {
+      this.clearSelectedHybridServicesEntitlements();
+    }
+  }
+
+  public clearSelectedHybridServicesEntitlements(): void {
+    this.services.calendarEntitled = false;
+    if (this.services.callServiceAware) {
+      this.services.callServiceAware.entitled = false;
+    }
+    if (this.services.callServiceConnect) {
+      this.services.callServiceConnect.entitled = false;
+    }
+    if (this.services.hybridMessage) {
+      this.services.hybridMessage.entitled = false;
+    }
+    this.setEntitlements();
   }
 }
 
@@ -184,5 +216,7 @@ export class HybridServicesEntitlementsPanelComponent implements ng.IComponentOp
     restoreInstance: '<',
     restoreUserEntitlements: '<',
     saveInstance: '&',
+    isHuronCallLicenseSelected: '<',
+    hasLicenseSelections: '<',
   };
 }

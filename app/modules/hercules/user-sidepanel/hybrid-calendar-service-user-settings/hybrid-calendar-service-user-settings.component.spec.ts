@@ -2,7 +2,7 @@ import hybridCalendarServiceUserSettingsModuleName from './index';
 
 describe('HybridCalendarServiceUserSettingsCtrl', () => {
 
-  let $componentController, $q, $scope, CloudConnectorService, HybridServicesClusterService, HybridServiceUserSidepanelHelperService, USSService, UserOverviewService;
+  let $componentController, $q, $scope, CloudConnectorService, HybridServiceUserSidepanelHelperService, USSService, UserOverviewService, ServiceDescriptorService;
 
   beforeEach(function () {
     this.initModules(hybridCalendarServiceUserSettingsModuleName);
@@ -12,26 +12,26 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
   beforeEach(initSpies);
   afterEach(cleanup);
 
-  function dependencies (_$componentController_, _$q_, _$rootScope_, _CloudConnectorService_, _HybridServicesClusterService_, _HybridServiceUserSidepanelHelperService_, _USSService_, _UserOverviewService_) {
+  function dependencies (_$componentController_, _$q_, _$rootScope_, _CloudConnectorService_, _HybridServiceUserSidepanelHelperService_, _USSService_, _UserOverviewService_, _ServiceDescriptorService_) {
     $componentController = _$componentController_;
     $q = _$q_;
     $scope = _$rootScope_.$new();
     CloudConnectorService = _CloudConnectorService_;
-    HybridServicesClusterService = _HybridServicesClusterService_;
     HybridServiceUserSidepanelHelperService = _HybridServiceUserSidepanelHelperService_;
     USSService = _USSService_;
     UserOverviewService = _UserOverviewService_;
+    ServiceDescriptorService = _ServiceDescriptorService_;
   }
 
   function cleanup() {
-    $componentController = $componentController = $q = $scope = CloudConnectorService = HybridServicesClusterService = HybridServiceUserSidepanelHelperService = USSService = UserOverviewService = undefined;
+    $componentController = $q = $scope = CloudConnectorService =  HybridServiceUserSidepanelHelperService = USSService = UserOverviewService = ServiceDescriptorService = undefined;
   }
 
   function initSpies() {
     spyOn(USSService, 'getStatusesForUser');
     spyOn(UserOverviewService, 'getUser');
     spyOn(CloudConnectorService, 'getService');
-    spyOn(HybridServicesClusterService, 'serviceIsSetUp');
+    spyOn(ServiceDescriptorService, 'isServiceEnabled').and.returnValue($q.resolve());
     spyOn(HybridServiceUserSidepanelHelperService, 'saveUserEntitlements').and.returnValue($q.resolve({}));
   }
 
@@ -57,7 +57,7 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
     }));
     USSService.getStatusesForUser.and.returnValue($q.resolve({}));
     CloudConnectorService.getService.and.returnValue($q.resolve({}));
-    HybridServicesClusterService.serviceIsSetUp.and.returnValue($q.resolve(true));
+    ServiceDescriptorService.isServiceEnabled.and.returnValue($q.resolve(true));
 
     const userId = '9876';
     initController(userId);
@@ -69,8 +69,8 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
     expect(CloudConnectorService.getService.calls.count()).toBe(2);
     expect(CloudConnectorService.getService).toHaveBeenCalledWith('squared-fusion-o365');
     expect(CloudConnectorService.getService).toHaveBeenCalledWith('squared-fusion-gcal');
-    expect(HybridServicesClusterService.serviceIsSetUp.calls.count()).toBe(1);
-    expect(HybridServicesClusterService.serviceIsSetUp).toHaveBeenCalledWith('squared-fusion-cal');
+    expect(ServiceDescriptorService.isServiceEnabled.calls.count()).toBe(1);
+    expect(ServiceDescriptorService.isServiceEnabled).toHaveBeenCalledWith('squared-fusion-cal');
   });
 
   it('should default the radio buttons to Microsoft calendar if the user has no entitlements whatsoever', () => {
@@ -93,7 +93,7 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
     }), $q.resolve({
       provisioned: false,
     }));
-    HybridServicesClusterService.serviceIsSetUp.and.returnValue($q.resolve(true));
+    ServiceDescriptorService.isServiceEnabled.and.returnValue($q.resolve(true));
 
     const ctrl = initController('something');
 
@@ -107,7 +107,7 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
     }), $q.resolve({
       provisioned: true,
     }));
-    HybridServicesClusterService.serviceIsSetUp.and.returnValue($q.resolve(false));
+    ServiceDescriptorService.isServiceEnabled.and.returnValue($q.resolve(false));
 
     const ctrl = initController('something', 'something@example.org');
 
@@ -121,7 +121,7 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
     }), $q.resolve({
       provisioned: true,
     }));
-    HybridServicesClusterService.serviceIsSetUp.and.returnValue($q.resolve(true));
+    ServiceDescriptorService.isServiceEnabled.and.returnValue($q.resolve(true));
 
     const ctrl = initController('something', 'something@example.org');
 
@@ -141,7 +141,7 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
     }), $q.resolve({
       provisioned: true,
     }));
-    HybridServicesClusterService.serviceIsSetUp.and.returnValue($q.resolve(true));
+    ServiceDescriptorService.isServiceEnabled.and.returnValue($q.resolve(true));
 
     const ctrl = initController('something', '');
     expect(ctrl.originalCalendarType).toBe('squared-fusion-cal');
@@ -159,7 +159,7 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
     }), $q.resolve({
       provisioned: true,
     }));
-    HybridServicesClusterService.serviceIsSetUp.and.returnValue($q.resolve(true));
+    ServiceDescriptorService.isServiceEnabled.and.returnValue($q.resolve(true));
 
     const ctrl = initController('something', '');
     expect(ctrl.originalCalendarType).toBe('squared-fusion-gcal');
@@ -177,7 +177,7 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
     }), $q.resolve({
       provisioned: true,
     }));
-    HybridServicesClusterService.serviceIsSetUp.and.returnValue($q.resolve(true));
+    ServiceDescriptorService.isServiceEnabled.and.returnValue($q.resolve(true));
 
     const ctrl = initController('something', '');
     expect(ctrl.originalCalendarType).toBe('squared-fusion-cal');
@@ -192,7 +192,7 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
     }));
     USSService.getStatusesForUser.and.returnValue($q.resolve({}));
     CloudConnectorService.getService.and.returnValue($q.resolve());
-    HybridServicesClusterService.serviceIsSetUp.and.returnValue($q.resolve(true));
+    ServiceDescriptorService.isServiceEnabled.and.returnValue($q.resolve(true));
 
     const expectedUserId = 'ree2k';
     const expectedEmailAddress = 'kjetil@r.ee';
@@ -218,7 +218,7 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
     }));
     USSService.getStatusesForUser.and.returnValue($q.resolve({}));
     CloudConnectorService.getService.and.returnValue($q.resolve());
-    HybridServicesClusterService.serviceIsSetUp.and.returnValue($q.resolve(true));
+    ServiceDescriptorService.isServiceEnabled.and.returnValue($q.resolve(true));
 
     const expectedUserId = 'ree2k';
     const expectedEmailAddress = 'kjetil@r.ee';
@@ -239,7 +239,7 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
   it('should refresh the user in USS after saving Exchange/Office365 entitlements', () => {
     USSService.getStatusesForUser.and.returnValue($q.resolve([]));
     CloudConnectorService.getService.and.returnValue($q.resolve());
-    HybridServicesClusterService.serviceIsSetUp.and.returnValue($q.resolve(true));
+    ServiceDescriptorService.isServiceEnabled.and.returnValue($q.resolve(true));
 
     const userId = '1234-5678-9988';
     const ctrl = initController(userId, 'something');
@@ -255,7 +255,7 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
   it('should refresh the user in USS after saving Google Calendar entitlements', () => {
     USSService.getStatusesForUser.and.returnValue($q.resolve([]));
     CloudConnectorService.getService.and.returnValue($q.resolve());
-    HybridServicesClusterService.serviceIsSetUp.and.returnValue($q.resolve(true));
+    ServiceDescriptorService.isServiceEnabled.and.returnValue($q.resolve(true));
 
     const userId = '1234-5678-9988';
     const ctrl = initController(userId, 'something');
@@ -271,7 +271,7 @@ describe('HybridCalendarServiceUserSettingsCtrl', () => {
   it('should refresh the user in USS after disentitling', () => {
     USSService.getStatusesForUser.and.returnValue($q.resolve([]));
     CloudConnectorService.getService.and.returnValue($q.resolve());
-    HybridServicesClusterService.serviceIsSetUp.and.returnValue($q.resolve(true));
+    ServiceDescriptorService.isServiceEnabled.and.returnValue($q.resolve(true));
 
     const userId = '1234-5678-9988';
     const ctrl = initController(userId, 'something');

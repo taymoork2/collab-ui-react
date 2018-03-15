@@ -23,6 +23,7 @@
       webexDashboard: ['system_webex_v1', 'webex-report-dashboard'],
       webexJMS: ['system_webex_v1', 'webex-report-jms'],
       webexJMT: ['system_webex_v1', 'webex-report-jmt'],
+      license: ['basic_license_v1', 'license'],
     };
     var service = {
       getQBSInfo: getQBSInfo,

@@ -123,7 +123,14 @@
               </div>
               <!-- this section holds the icons to the right of the phone buttons -->
               <div ng-if="!$ctrl.editing && !$ctrl.isReordering()">
-                <i ng-if="phoneButton.callPickupEnabled" tooltip="{{$ctrl.getTooltipText(phoneButton)}}" tooltip-placement="left" tooltip-trigger="mouseenter focus" class="icon icon-info phonebuttonlayout-spacing-edit"></i>
+                <i ng-if="phoneButton.callPickupEnabled"
+                  tabindex="0"
+                  tooltip="{{$ctrl.getTooltipText(phoneButton)}}"
+                  tooltip-placement="left"
+                  tooltip-trigger="mouseenter focus"
+                  class="icon icon-info phonebuttonlayout-spacing-edit"
+                  aria-label="{{$ctrl.getTooltipText(phoneButton)}}">
+                </i>
                 <a href ng-if="phoneButton.isEditable" class="icon icon-edit phonebuttonlayout-spacing-edit" ng-click="$ctrl.setEdit(phoneButton)"></a>
                 <a href ng-if="phoneButton.isDeletable" class="icon icon-trash" ng-click="$ctrl.delete(phoneButton)"></a>
               </div>

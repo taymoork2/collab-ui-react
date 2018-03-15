@@ -8,17 +8,7 @@
     <div class="device-wizard view-activation-code" id="printActivationCode" print-element-margin="3rem 3rem">
       <h4 translate="addDeviceWizard.showActivationCode.activationCode"></h4>
       <p class="wizardDescription">
-        <span ng-if="showActivationCode.showPersonalText"
-              translate="addDeviceWizard.showActivationCode.plugInPersonal"
-              translate-values="{ belongsTo: showActivationCode.account.name }"></span>
-        <span ng-if="showActivationCode.showHuronWithoutATAText"
-              translate="addDeviceWizard.showActivationCode.plugInDeskPhone"
-              translate-values="{ belongsTo: showActivationCode.account.name }"></span>
-        <span ng-if="showActivationCode.showHuronWithATAText"
-              translate="addDeviceWizard.showActivationCode.plugInDeskPhoneExtra"
-              translate-values="{ belongsTo: showActivationCode.account.name }"></span>
-        <span ng-if="showActivationCode.showCloudberryText"
-              translate="addDeviceWizard.showActivationCode.plugInRoomSystem"
+        <span translate="addDeviceWizard.showActivationCode.plugInDevice"
               translate-values="{ belongsTo: showActivationCode.account.name }"></span>
         <br>
         <span ng-if="showActivationCode.account.type === 'personal'"
@@ -40,8 +30,10 @@
             {{showActivationCode.friendlyActivationCode}}
           </h2>
         </div>
-        <p class="expiryTime" translate="addDeviceWizard.showActivationCode.expires"
+        <p class="qr-footnote expiryTime" translate="addDeviceWizard.showActivationCode.expires"
            translate-values="{ expiryDate: showActivationCode.getExpiresOn() }" tabindex="0"></p>
+        <p class="qr-footnote" ng-if="showActivationCode.codeOnlyForPhones" translate="addDeviceWizard.showActivationCode.codeOnlyForPhones"></p>
+        <p class="qr-footnote" ng-if="showActivationCode.codeNotForPhones" translate="addDeviceWizard.showActivationCode.codeOnlyForRoomDevices"></p>
       </div>
     </div>
 

@@ -8,7 +8,12 @@
         <div class="no-data" ng-if="$ctrl.value === $ctrl.parentcntrl.noData" ng-class="{'no-display': $ctrl.chartOptions.isShow==true}">{{$ctrl.value}}</div>
         <div ng-if="$ctrl.value !== $ctrl.parentcntrl.noData" ng-class="{'no-display': $ctrl.chartOptions.isShow==true}">
           <div class="call-counts" ng-class="{'negetive-indicate' : $ctrl.parentcntrl.cardIndicatorDiff > 0 && $ctrl.headername === $ctrl.parentcntrl.second_card_heading, 'positive-indicate' : $ctrl.parentcntrl.cardIndicatorDiff < 0 && $ctrl.headername === $ctrl.parentcntrl.second_card_heading}">
-            <span ng-if="$ctrl.headername !== $ctrl.parentcntrl.second_card_heading" tooltip="{{$ctrl.tooltipValue}}" class="cardTooltipClass">
+            <span ng-if="$ctrl.headername !== $ctrl.parentcntrl.second_card_heading"
+              class="cardTooltipClass"
+              tabindex="0"
+              tooltip="{{$ctrl.tooltipValue}}"
+              tooltip-trigger="mouseenter focus"
+              aria-label="{{$ctrl.tooltipValue}}">
               {{$ctrl.value}}
             </span>
             <span ng-if="$ctrl.headername === $ctrl.parentcntrl.second_card_heading" class="cardTooltipClass">{{$ctrl.parentcntrl.overflowPercentage}}<span ng-if="$ctrl.parentcntrl.overflowPercentage" class="cardTooltipClass">%</span>

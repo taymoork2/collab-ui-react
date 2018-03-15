@@ -5,18 +5,12 @@ import { SearchTranslator } from './searchTranslator';
 import { FieldQuery, OperatorAnd, OperatorOr } from './searchElement';
 
 describe('converting search string', () => {
-  let translate;
 
   beforeEach(function () {
     this.initModules(searchModule);
     this.injectDependencies('$translate');
-    translate = this.$translate;
     spyOn(this.$translate, 'instant').and.callFake(key => 'translated.' + key);
     spyOn(this.$translate, 'proposedLanguage').and.returnValue('nb_NO');
-  });
-
-  afterEach(() => {
-    translate = null;
   });
 
   it('product:sx10 should give searchObjectWith product=sx10', function () {

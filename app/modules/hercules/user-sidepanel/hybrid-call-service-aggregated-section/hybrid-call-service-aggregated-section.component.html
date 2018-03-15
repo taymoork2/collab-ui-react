@@ -99,5 +99,6 @@
 
   <hybrid-services-resource-group-selector user-id="$ctrl.userId"
                                            resource-group-id="$ctrl.resourceGroupId"
-                                           service-id="'squared-fusion-uc'"></hybrid-services-resource-group-selector>
+                                           service-id="'squared-fusion-uc'"
+                                           refresh-callback="$ctrl.resourceGroupRefreshCallback()"></hybrid-services-resource-group-selector>
 </cs-sp-container>

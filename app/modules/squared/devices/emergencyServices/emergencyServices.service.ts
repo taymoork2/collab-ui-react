@@ -40,7 +40,7 @@ export class EmergencyServicesService {
   }
 
   public getInitialData(): IEmergencyServicesData {
-    this.currentDevice = this.$stateParams.currentDevice;
+    this.currentDevice = this.$stateParams.currentHuronDevice;
     this.huronDeviceService = this.$stateParams.huronDeviceService;
     const emergencyData = {
       emergencyNumber: this.$stateParams.currentNumber,
@@ -78,7 +78,7 @@ export class EmergencyServicesService {
             .map(externalNumber => externalNumber.pattern).value();
         });
       }).catch(() => {
-        return this.ExternalNumberService.refreshNumbers(this.Authinfo.getOrgId()).then(() => {
+        return this.ExternalNumberService.refreshNumbers(this.Authinfo.getOrgId(), undefined, filter).then(() => {
           return _.chain(this.ExternalNumberService.getAssignedNumbers())
             .map(externalNumber => externalNumber.pattern).value();
         });

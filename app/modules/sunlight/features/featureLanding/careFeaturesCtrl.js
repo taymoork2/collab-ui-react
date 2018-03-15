@@ -12,10 +12,11 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     });
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, $rootScope, AutoAttendantCeInfoModelService, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, CvaService, EvaService, FeatureToggleService, HuronFeaturesListService) {
+  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, $rootScope, AbcService, AutoAttendantCeInfoModelService, Authinfo, CardUtils, CareFeatureList, CvaService, CTService, EvaService, FeatureToggleService, HuronFeaturesListService, Log, Notification) {
     var vm = this;
     vm.isVirtualAssistantEnabled = $state.isVirtualAssistantEnabled;
     vm.isExpertVirtualAssistantEnabled = $state.isExpertVirtualAssistantEnabled;
+    vm.isAppleBusinessChatEnabled = $state.isAppleBusinessChatEnabled;
     vm.init = init;
 
     var pageStates = {
@@ -30,6 +31,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     var listOfNonVaFeatures = [];
     var featureToBeDeleted = {};
     var listOfAAFeatures = [];
+    var listOfABCFeatures = [];
 
     vm.searchData = searchData;
     vm.deleteCareFeature = deleteCareFeature;
@@ -39,19 +41,20 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     vm.filteredListOfFeatures = [];
     vm.pageState = pageStates.loading;
     vm.cardColor = {};
-    vm.featureToolTip = function (type, name) {
+    vm.featureToolTip = function (type, assistantName, name) {
       var assistantType = {
         cva: $translate.instant('careChatTpl.virtualAssistant.cva.featureText.name'),
         eva: $translate.instant('careChatTpl.virtualAssistant.eva.featureText.name'),
       };
       return $translate.instant('careChatTpl.assistantTooltip',
-        { assistantType: assistantType[type], assistantName: name });
+        { assistantType: assistantType[type], assistantName: assistantName, name: name });
     };
     vm.placeholder = {
       name: 'Search',
     };
     vm.aaModel = {};
     vm.filterText = '';
+    vm.filterValue = '';
     vm.template = null;
     vm.openNewCareFeatureModal = openNewCareFeatureModal;
     vm.spacesInUseText = spacesInUseText;
@@ -106,10 +109,15 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
       name: $translate.instant('common.all'),
       filterValue: CareFeatureList.filterConstants.all,
     }, {
-      name: $translate.instant('common.customerSupportTemplates'),
+      name: $translate.instant('careChatTpl.filterValue.customerSupportTemplates'),
       filterValue: CareFeatureList.filterConstants.customerSupport,
     },
     ];
+
+    if (vm.isAppleBusinessChatEnabled) {
+      vm.features.push(AbcService.featureList);
+      vm.filters.push(AbcService.featureFilter);
+    }
 
     if (vm.isVirtualAssistantEnabled) {
       vm.features.push(CvaService.featureList);
@@ -168,11 +176,15 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
             case 'AA':
               listOfAAFeatures = listOfAAFeatures.concat(vm.features[i].data);
               break;
+            case 'appleBusinessChat':
+              listOfABCFeatures = listOfABCFeatures.concat(vm.features[i].data);
+              break;
             default:
               listOfNonVaFeatures = listOfNonVaFeatures.concat(vm.features[i].data);
               break;
           }
         }
+        generateCvaInUseForABC();
         generateTemplateCountAndSpaceUsage();
         //by default "all" filter is the selected
         vm.filteredListOfFeatures = _.clone(listOfAllFeatures);
@@ -197,6 +209,27 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
         .finally(function () {
           settingFeatures();
         });
+    }
+
+    /**
+     * Find the CVA name using the id for the ABC config objects
+     */
+    function generateCvaInUseForABC() {
+      _.forEach(listOfABCFeatures, function (item) {
+        if (!_.isEmpty(item.cvaId)) {
+          var cva = _.find(listOfCvaFeatures, function (cvaFeature) {
+            return cvaFeature.id === item.cvaId;
+          });
+          if (cva) {
+            var feature = {};
+            feature.featureType = 'cva';
+            feature.name = cva.name;
+            feature.id = cva.id;
+            item.features = [];
+            item.features.push(feature);
+          }
+        }
+      });
     }
 
     /**
@@ -360,14 +393,15 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
     //Switches Data that populates the Features tab
     function setFilter(filterValue) {
-      vm.filteredListOfFeatures = CareFeatureList.filterCards(listOfAllFeatures, filterValue, vm.filterText);
+      vm.filterValue = filterValue || 'all';
+      vm.filteredListOfFeatures = CareFeatureList.filterCards(listOfAllFeatures, vm.filterValue, vm.filterText);
       reInstantiateMasonry();
     }
 
     /* This function does an in-page search for the string typed in search box*/
     function searchData(searchStr) {
       vm.filterText = searchStr;
-      vm.filteredListOfFeatures = CareFeatureList.filterCards(listOfAllFeatures, 'all', vm.filterText);
+      vm.filteredListOfFeatures = CareFeatureList.filterCards(listOfAllFeatures, vm.filterValue, vm.filterText);
       reInstantiateMasonry();
     }
 
@@ -518,6 +552,16 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     //list is updated by deleting a feature
     $scope.$on('CARE_FEATURE_DELETED', function () {
       listOfAllFeatures.splice(listOfAllFeatures.indexOf(featureToBeDeleted), 1);
+      // remove deleted feature from abc's in use
+      if (featureToBeDeleted.featureType === CvaService.cvaServiceCard.id) {
+        _.find(listOfAllFeatures, function (feature) {
+          if (feature.featureType === AbcService.abcServiceCard.id) {
+            if (feature.features && feature.features[0].id === featureToBeDeleted.id) {
+              feature.features = [];
+            }
+          }
+        });
+      }
       vm.filteredListOfFeatures = listOfAllFeatures;
       featureToBeDeleted = {};
       if (listOfAllFeatures.length === 0) {

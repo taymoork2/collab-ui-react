@@ -1,3 +1,5 @@
+@import '~@collabui/collab-ui/scss/settings/fonts';
+
 /**********************************************
  *  TODO:
  *  These styles need to be moved to the proper
@@ -113,7 +115,7 @@ label {
 }
 
 .close {
-  color: white;
+  color: black;
   opacity: 0.7;
 
   &:hover {
@@ -378,17 +380,6 @@ td a {
   height: 30px;
 }
 
-#fileToUploadTextHolder {
-  position: absolute;
-  opacity: 0.01;
-  -moz-opacity: 0.01;
-  filter: alpha(opacity=0);
-  display: inline;
-  cursor: pointer;
-  width: 162px;
-  height: 31px;
-}
-
 #fileToUploadBtnHolder {
   position: absolute;
   opacity: 0.01;
@@ -396,8 +387,6 @@ td a {
   filter: alpha(opacity=0);
   display: inline;
   cursor: pointer;
-  width: 91px;
-  height: 35px;
   z-index: 1;
 }
 
@@ -474,10 +463,6 @@ input[type='file']::-webkit-file-upload-button {
   width: 500px;
 }
 
-.close {
-  color: black;
-}
-
 .dirgridStyle {
   margin-top: 10px;
   width: 450px;
@@ -525,62 +510,12 @@ input[type='file']::-webkit-file-upload-button {
   cursor: pointer;
 }
 
-.header-text {
-  opacity: 1;
-  font-size: 32px;
-  font-family: 'CiscoSansTT Extra Light', $icon-font-name;
-  color: #444;
-  -webkit-font-smoothing: antialiased;
-}
-
 .cancel-color {
   color: #666;
 }
 
 .cancel-color:hover {
   color: black;
-}
-
-.row-spacing {
-  margin-top: 2%;
-  margin-bottom: 9%;
-}
-
-.modal-trials-header {
-  padding: 20px;
-  border-bottom: 0px;
-  background-color: #fff;
-}
-
-.modal-options {
-  font-weight: bold;
-  font-size: 14px;
-  font-family: Arial;
-  float: right;
-  padding-top: 5px;
-}
-
-.modal-card {
-  background-color: #f3f3f6;
-  margin-bottom: 5px;
-  padding: 15px 15px 15px 20px;
-  color: #444 !important;
-}
-
-.modal-form-control {
-  width: 8em;
-  padding-left: 5px;
-}
-
-.modal-trials-body {
-  padding-top: 0px;
-}
-
-.modal-trials-footer {
-  margin-top: 0px;
-  padding-top: 0px;
-  padding-bottom: 20px;
-  border-top: 0px;
 }
 
 .ellipsis-trials {
@@ -598,19 +533,6 @@ input[type='file']::-webkit-file-upload-button {
 
 .edit-header {
   padding-bottom: 50px;
-}
-
-.license-count-modal {
-  position: absolute;
-  right: 20px;
-  font-family: 'CiscoSansTT Light';
-  font-size: 24px;
-  color: #444;
-  top: -20px;
-}
-
-.license-count-first-modal {
-  color: #ff1300 !important;
 }
 
 .nav > li:focus,
@@ -634,7 +556,7 @@ input[type='file']::-webkit-file-upload-button {
 }
 
 .processorder-text {
-  font-family: HelveticaNeue-Light;
+  font-family: $brand-font-light;
   font-size: 25px;
   color: #797979;
   padding-top: 29px;
@@ -643,7 +565,7 @@ input[type='file']::-webkit-file-upload-button {
 .dummy-data-message {
   font-size: 46px;
   color: #ccc;
-  font-family: 'CiscoSansTT Thin';
+  font-family: $brand-font-thin;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);

@@ -6,6 +6,7 @@ describe('Component: assignableServicesRow:', () => {
     this.injectDependencies(
       '$state',
       '$scope',
+      '$translate',
       'LicenseUsageUtilService',
     );
     this.$scope.fakeSubscription = {
@@ -30,9 +31,8 @@ describe('Component: assignableServicesRow:', () => {
         });
       });
 
-      it('should render with a subscription id', function () {
+      it('should render with a subscription header', function () {
         expect(this.view.find('.subscription__header').length).toBe(1);
-        expect(this.view.find('.subscription__header')).toContainText('fake-subscriptionId-1');
       });
 
       it('should have at least 3 columns initially and 4 if "isCareEnabled" is true', function () {
@@ -54,7 +54,7 @@ describe('Component: assignableServicesRow:', () => {
           autoAssignTemplateData: 'fakeAutoAssignTemplateData',
         });
         expect(this.view.find('.subscription__header .icon.toggle')).toHaveClass('icon-chevron-down');
-        expect(this.view.find('.subscription__content')).toHaveClass('ng-hide');
+        expect(this.view.find('.subscription__content')).not.toExist();
       });
     });
   });
@@ -82,6 +82,7 @@ describe('Component: assignableServicesRow:', () => {
     });
 
     it('should initialize properties as appropriate', function () {
+      spyOn(this.$translate, 'instant').and.returnValue('fake-$translate-instant-result');
       this.compileComponent('assignableServicesRow', {
         subscription: 'fakeSubscriptionWithLicenses',
       });
@@ -89,6 +90,10 @@ describe('Component: assignableServicesRow:', () => {
       expect(this.controller.basicMeetingLicenses.length).toBe(1);  // ['CF']
       expect(this.controller.advancedMeetingLicenses.length).toBe(2);  // ['MC', 'CMR']
       expect(this.controller.advancedMeetingSiteUrls.length).toBe(1);  // ['fake-site-1']
+      expect(this.$translate.instant).toHaveBeenCalledWith('userManage.autoAssignTemplate.edit.rowTitle', {
+        subscriptionId: 'fake-subscriptionId-2',
+      });
+      expect(this.controller._subscriptionLabel).toBe('fake-$translate-instant-result');
 
       this.compileComponent('assignableServicesRow', {
         subscription: 'fakeSubscription',

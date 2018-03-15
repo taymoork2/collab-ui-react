@@ -57,6 +57,15 @@ describe('Service: searchService', () => {
     this.$httpBackend.flush();
   });
 
+  it('should get correct data when call getPSTNCallInType', function () {
+    const mockData = { completed: true, description: 'Return results.', items: [{ pstnCallInType: 'TollFree' }] };
+    const url = `${this.UrlConfig.getGeminiUrl()}meetings/${this.conferenceID}/participants/${this.nodeId}/pstncallintype`;
+    this.$httpBackend.expectGET(url).respond(200, mockData);
+    this.SearchService.getPSTNCallInType(this.conferenceID, this.nodeId)
+      .then( res => expect(res.items[0].pstnCallInType).toBeDefined()).catch(fail);
+    this.$httpBackend.flush();
+  });
+
   it('should get correct data when call getQOS', function () {
     const qosName = 'pstn';
     const mockData = { 2454212: { completed: true, items: [] } };
@@ -64,6 +73,16 @@ describe('Service: searchService', () => {
     this.$httpBackend.expectGET(url).respond(200, mockData);
     this.SearchService.getQOS(this.conferenceID, this.nodeId, qosName)
       .then( res => expect(res[this.nodeId]).toBeDefined());
+
+    this.$httpBackend.flush();
+  });
+
+  it('should get correct data when call getCallLegs', function () {
+    const mockData = { tahoeInfo: [], videoInfo: [], voIPInfo: [] };
+    const url = `${this.UrlConfig.getGeminiUrl()}meetings/${this.conferenceID}/call-legs`;
+    this.$httpBackend.expectGET(url).respond(200, mockData);
+    this.SearchService.getCallLegs(this.conferenceID)
+      .then( res => expect(res['tahoeInfo']).toBeDefined()).catch(fail);
 
     this.$httpBackend.flush();
   });
@@ -103,18 +122,18 @@ describe('Service: searchService', () => {
     expect(wm.status).toEqual('Ended');
   });
 
-  it('should get correct data when call utcDateByTimezone', function () {
+  xit('should get correct data when call utcDateByTimezone', function () {
     const data = '2017-08-02 07:44:30.0';
-    moment.tz.setDefault('America/Chicago');
-    this.SearchService.setStorage('timeZone', 'America/Chicago');
+    moment.tz.setDefault('Asia/Shanghai');
+    this.SearchService.setStorage('timeZone', 'Asia/Shanghai');
     const data_ = this.SearchService.utcDateByTimezone(data);
-    expect(data_).toBe('2017-08-02 01:44:30 AM');
+    expect(data_).toBe('2017-08-02 03:44:30 PM');
   });
 
   it('should get correct data when call getOffset', function () {
-    moment.tz.setDefault('America/Chicago');
-    const data = this.SearchService.getOffset('America/Chicago');
-    expect(data).toEqual('-06:00');
+    moment.tz.setDefault('Asia/Shanghai');
+    const data = this.SearchService.getOffset('Asia/Shanghai');
+    expect(data).toEqual('+08:00');
   });
 
   it('should get correct data when call getGuess', function () {
@@ -129,10 +148,10 @@ describe('Service: searchService', () => {
 
   it('should get correct data when call timestampToDate', function () {
     const timestamp = 1512543365000;
-    moment.tz.setDefault('America/Chicago');
-    this.SearchService.setStorage('timeZone', 'America/Chicago');
+    moment.tz.setDefault('Asia/Shanghai');
+    this.SearchService.setStorage('timeZone', 'Asia/Shanghai');
     const data_ = this.SearchService.timestampToDate(timestamp, 'hh:mm');
-    expect(data_).toBe('12:56');
+    expect(data_).toBe('02:56');
   });
 
   it('should get correct data when call getBrowser', function () {
@@ -172,11 +191,12 @@ describe('Service: searchService', () => {
 
     obj = { sessionType: '25', platform: '9' };
     device = this.SearchService.getDevice(obj);
-    expect(device.name).toBe('IP Phone');
+    expect(device.name).toBe('Phone');
 
     obj = { platform: '10' };
     device = this.SearchService.getDevice(obj);
     expect(device.icon).toBe('icon-devices');
+    expect(device.name).toBe('');
 
     obj = { platform: '8' };
     device = this.SearchService.getDevice(obj);
@@ -185,6 +205,17 @@ describe('Service: searchService', () => {
     obj = { platform: '6' };
     device = this.SearchService.getDevice(obj);
     expect(device.name).toBe('Javascript: Other');
+  });
+
+  it('should get correct CMR device name when call getRealDevice', function () {
+
+    const mockData = { completed: true, items: [{ deviceType: 'SIP' }] };
+    const url = `${this.UrlConfig.getGeminiUrl()}meetings/${this.conferenceID}/participants/${this.nodeId}/device`;
+    this.$httpBackend.expectGET(url).respond(200, mockData);
+    this.SearchService.getRealDevice(this.conferenceID, this.nodeId)
+      .then( res => expect(res.items[0].deviceType).toBe('SIP')).catch(fail);
+
+    this.$httpBackend.flush();
   });
 
   it('', function () {

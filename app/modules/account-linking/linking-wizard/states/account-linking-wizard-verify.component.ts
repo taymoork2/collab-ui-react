@@ -1,9 +1,11 @@
 import { WizardEvent } from './../account-linking-wizard.component';
+import { IACSiteInfo } from './../../account-linking.interface';
 
 class AccountLinkingWizardVerifyComponentCtrl implements ng.IComponentController {
 
   private nextFunc: Function;
   public selection: string;
+  public siteInfo: IACSiteInfo;
 
   /* @ngInject */
   constructor(private $log: ng.ILogService) {
@@ -37,6 +39,7 @@ export class AccountLinkingWizardVerifyComponent implements ng.IComponentOptions
   public controller = AccountLinkingWizardVerifyComponentCtrl;
   public template = require('./account-linking-wizard-verify.html');
   public bindings = {
+    siteInfo: '<',
     nextFunc: '&',
     backFunc: '&',
   };

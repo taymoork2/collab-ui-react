@@ -18,7 +18,7 @@
     "agree": "Acceptera ",
     "ciscoSpark": "Cisco Spark",
     "version": "Version: {{version}}",
-    "copyright1": "Upphovsrätt © 2017 Cisco Systems.",
+    "copyright1": "Upphovsrätt © 2018 Cisco Systems.",
     "copyright2": "Med ensamrätt.",
     "description": "Cisco Spark är ett samarbetsprogram som tillhandahåller snabbmeddelanden samt funktioner för röst- och videosamtal.",
     "loggingOut": "Loggar ut ..."
@@ -201,8 +201,9 @@
       "manualLabelNew": "Lägg till eller ändra användare manuellt",
       "manualDetails": "Allt du behöver är e-postadresser för att lägga till och/eller redigera upp till {{maxUsersInManual}} användare.",
       "manualDetailsNew": "Lägg till eller ändra upp till {{maxUsersInManual}} användare.",
+      "dirSyncModifyAll": "Ändra alla synkroniserade användare",
       "bulkLabel": "Exportera och importera användare med en CSV-fil",
-      "bulkLabelNew": "Lägg till eller ändra flera användare samtidigt",
+      "bulkLabelNew": "Lägg till eller ändra användare med CSV",
       "bulkDetails": "Bästa metoden för att lägga till och redigera upp till {{maxUsersInCSV}} användare åt gången.",
       "bulkDetailsNew": "Lägg till eller ändra upp till {{maxUsersInCSV}} användare med en CSV-fil.",
       "advancedLabel": "Aktivera katalogsynkronisering",
@@ -214,16 +215,30 @@
       "directorySynchronization": "Katalogsynkronisering",
       "directorySynchronizationEnableLabel": "Aktivera katalogsynkronisering",
       "directorySynchronizationDisableLabel": "Inaktivera katalogsynkronisering",
-      "enabled": "Aktiverad",
-      "disabled": "Inaktiverad",
+      "turnOnDirSync": "Aktivera katalogsynkronisering",
       "licenses": "Licenser",
       "autoAssignLicenses": "Tilldela licenser automatiskt",
       "setUpAutoAssignTemplate": "Konfigurera mall för automatisk tilldelning",
       "modifyUsers": "Ändra användare",
       "moreOptions": {
         "modifyAutoAssign": "Ändra mall för automatisk tilldelning",
+        "activateAutoAssign": "Aktivera automatisk tilldelning",
         "deactivateAutoAssign": "Inaktivera automatisk tilldelning",
         "deleteAutoAssign": "Ta bort mall för automatisk tilldelning"
+      },
+      "modifyAutoAssign": {
+        "title": "Ändra mall för automatisk tilldelning",
+        "modifySuccess": "Licensmallen har ändrats. Nya användare kommer att tilldelas licenser automatiskt.",
+        "modifyError": "Mallen kunde inte läsas in."
+      },
+      "activateAutoAssign": {
+        "activateSuccess": "Du har aktiverat licensmallen för automatisk tilldelning",
+        "activateError": "Mallen kunde inte aktiveras."
+      },
+      "deactivateAutoAssign": {
+        "description": "Nya användare kommer inte att tilldelas licenser automatiskt. Befintliga användarlicenser påverkas inte. Vill du fortsätta?",
+        "deactivateSuccess": "Du har inaktiverat licensmallen för automatisk tilldelning",
+        "deactivateError": "Mallen kunde inte inaktiveras."
       },
       "deleteAutoAssignModal": {
         "title": "Ta bort mall för automatisk tilldelning",
@@ -350,7 +365,15 @@
         "description": "Nya användare kommer att tilldelas nedanstående licenser automatiskt.",
         "saveSuccess": "Licensmallen har konfigurerats. Nya användare kommer att tilldelas licenser automatiskt.",
         "saveError": "Ett fel uppstod när licensmallen sparades. Försök igen."
+      },
+      "csv": {
+        "warningTitle": "Tilldela CSV-regler automatiskt",
+        "warningMessage": "Lämna licensfälten tomma om du vill tillämpa mallen för automatisk tilldelning på en ny användare. Eller ange licenser genom att skriva True eller False, så tillämpas inte mallen för automatisk tilldelning. Befintliga användare påverkas inte av mallen för automatisk tilldelning."
       }
+    },
+    "autoAssignLicenseSummaryForDirSync": {
+      "header": "Licenssammanfattning",
+      "description": "Du har aktiverat automatisk tilldelning. Alla synkroniserade användare kommer att tilldelas följande licenser automatiskt."
     }
   },
   "userTaskManagerModal": {
@@ -394,7 +417,6 @@
     "call": "Samtal",
     "subscriptionIdError": "Ett fel inträffade medan dina prenumerations-id:n lästes in",
     "hybridServices": "Hybrid-tjänster",
-    "hybridServicesWarning": "Tilldela minst en licens för att aktivera Hybrid-tjänster för användaren",
     "freeCollab": "Gratis offentliga samarbetstjänster",
     "licCollab": "Licensierade samarbetstjänster",
     "siteAdminUrl": "Logga in för att hantera",
@@ -426,6 +448,7 @@
     "careServices": "Chatt och återuppringning",
     "careVoiceServices": "Chatt, återuppringning och inkommande samtal",
     "enableCallInfo": "Cisco Spark-samtal krävs för röstbaserade interaktioner.",
+    "enableCallInfoToggle": "Du måste ha Cisco Spark-samtal eller Hybrid-samtal för att använda Spark Care-röstfunktioner.",
     "paidContactCenterVoice": "Chatt, återuppringning och inkommande samtal",
     "paidContactCenter": "Chatt och återuppringning",
     "enterpriseEdition": "Företagsversion {{capacity}}",
@@ -455,6 +478,11 @@
       "other": "ej berättigad, status: {{status}}"
     },
     "enableCareInformationText": "Välj meddelande för att aktivera Hjälptjänsten."
+  },
+  "onboardSummaryForAutoAssignModal": {
+    "title": "Tilldela licenser automatiskt",
+    "header": "Licenssammanfattning",
+    "description": "Du har aktiverat automatisk tilldelning. Nya användare kommer att tilldelas följande licenser automatiskt."
   },
   "usersPreview": {
     "groupPreview": "Grupp:",
@@ -506,6 +534,7 @@
     "deviceTab": "Enheter",
     "placeTab": "Platser",
     "reportTab": "Rapporter",
+    "taasOverviewTab": "TaaS",
     "supportTab": "Support",
     "logsTab": "Loggar",
     "logsTabDesc": "Granska användarloggar",
@@ -740,7 +769,7 @@
       "deviceOptions": {
         "all": "Alla",
         "roomSystems": "Cisco Spark-paket för rum, DX-, MX- och SX-serierna",
-        "sparkBoard": "Cisco Spark-forum"
+        "sparkBoard": "Cisco Spark Board"
       },
       "export": {
         "deviceUsageExportTitle": "Exportera användningsattribut för enheten till CSV",
@@ -760,6 +789,9 @@
       "diagnostics": "Diagnostik",
       "classic": "Classic",
       "webexClassic": "WebEx Classic",
+      "dashboard": "Instrumentpanel",
+      "JMS": "JMS",
+      "JMT": "JMT",
       "meetingUsage": "Mötesanvändning",
       "joinMeetingTime": "Delta i mötestid",
       "webexReportInMashup": "CHP-rapporter",
@@ -777,7 +809,7 @@
     "start": "Starta",
     "hostID": "Värd-ID",
     "details": "Detaljer",
-    "created": "Skapad",
+    "created": "Mötet har skapats",
     "duration": "Varaktighet",
     "hostName": "Värdnamn",
     "site": "Platsnamn (ID)",
@@ -817,7 +849,7 @@
     },
     "meetingStatus": {
       "ended": "Avslutades",
-      "inProcess": "Pågår"
+      "inProgress": "Pågående"
     },
     "connectionFields": {
       "voIP": "Internettelefoni (VoIP)",
@@ -1158,8 +1190,9 @@
     "logLocusId": "Locus-ID",
     "logCallStart": "Samtalets starttid",
     "logAction": "Klientloggar",
-    "callflowLogsAction": "Samtalsloggar",
-    "callflowAction": "Samtalsflödesdiagram",
+    "feedbackId": "Feedback-id",
+    "correlationId": "Korrelations-id",
+    "metadata": "Metadata",
     "errEmptyinput": "Sökfältet får inte vara tomt.",
     "errLogQuery": "Kunde inte hämta loggar. Status: {{status}}",
     "inputPlaceholder": "Ange sökterm (e-postadress, användar-ID, Locus-ID etc.)",
@@ -1204,16 +1237,14 @@
     "externally": "externt",
     "reportingUrl": "Rapporterings-URL:",
     "help": "Hjälp",
-    "faqs": "Vanliga frågor",
     "helpUrl": "Hjälp-URL:",
     "sendFeedback": "Cisco-feedback",
-    "sso": "Enkel anslutning (SSO)",
-    "roles": "Roller",
     "readOnlyHeader": "Skrivskyddad behörighet",
     "readOnlyAccessNotEnabled": "Supporten har inte beviljats skrivskyddad åtkomst. Du kan ändra detta i dina kontoinställningar.",
     "downloadLogFailed": "Kunde inte hämta logg",
     "callflowResultsFailed": "Kunde inte hämta samtalsflödesresultat som motsvarar loggfilen",
     "status": "Cisco Spark-status",
+    "extendedMetadata": "Logga metadata",
     "tabs": {
       "status": "Status",
       "logs": "Loggar",
@@ -1337,10 +1368,12 @@
     "manualCodes": {
       "100": "Ej utnyttjad",
       "200": "Överföring; Ändra för icke CI-WebEx-webbplats",
-      "210": "Skapa icke CI-webbplats (ny)",
+      "210": "Skapa en webbplats utan CI",
+      "220": "Webbplatsen stöder inte automatiskt tillhandahållande",
       "300": "TSP till WebEx-ljud/endast VoIP; Överföring från TSP-partner till direktkund",
       "400": "WebEx/endast VoIP till TSP-ljud; Överföring från direktkund till partner",
       "450": "Ändra MP-ljud",
+      "460": "Ändra okänd ljudtyp",
       "500": "Manuell märkning krävs",
       "600": "CCASP-ljudinställning, Ändra, Avbryt, Stäng av/återuppta eller Ändra ljud",
       "650": "CCA-Enterprise-inställning, Avbryt",
@@ -1352,6 +1385,10 @@
       "910": "CMR-ändringar för icke CI-webbplatser",
       "920": "Överföring från TSP-partner till partner",
       "930": "Sessionsväxling för webbplatser utan CI",
+      "940": "CMR kräver MC",
+      "950": "Sälj billigare",
+      "960": "CMR – datacentret stöder inte CMR",
+      "970": "Kopiera det primära språket och de ytterligare språken på webbplatsen",
       "1000": "Messenger"
     }
   },
@@ -1494,12 +1531,15 @@
     "active": "Aktiv",
     "add": "Lägg till",
     "agree": "Godkänner",
+    "alarm": "Larm",
     "alert": "Avisering",
     "all": "Alla",
     "and": "och",
     "apply": "Tillämpa",
     "assign": "Tilldela",
     "assigned": "Tilldelad",
+    "authorize": "Gör behörig",
+    "automatic": "Automatiskt",
     "back": "Tillbaka",
     "begin": "Börja",
     "cancel": "Avbryt",
@@ -1511,6 +1551,8 @@
     "completed": "Avslutad",
     "confirm": "Bekräfta",
     "continue": "Fortsätt",
+    "copy": "Kopiera",
+    "copiedToClipboard": "Data kopierades till urklipp",
     "copyToClipboard": "Kopiera till urklipp",
     "create": "Skapa",
     "dateRange": "Datumintervall",
@@ -1540,6 +1582,7 @@
     "hideAllAdminUsers": "Dölj administratörer",
     "history": "Historik",
     "id": "ID",
+    "ifErrorRemains": "Om felet kvarstår klickar du på ditt användarnamn och väljer sedan <strong>Feedback</strong> för att öppna ett ärende för vidare undersökning.",
     "incorrectFormat": "Felaktigt format",
     "info": "Information",
     "invalidEmail": "Detta är inte en giltig e-postadress.",
@@ -1552,12 +1595,19 @@
     "invalidUrl": "Detta är inte en giltig URL.",
     "invalidZipCode": "Felaktigt postnummer",
     "ipAddress": "IP-adress",
+    "iUnderstand": "Jag förstår",
+    "keys": {
+      "activated": "Aktiverad",
+      "deactivated": "Inaktiverad"
+    },
     "language": "Språk",
     "lastName": "Efternamn",
     "learnMore": "Mer information",
     "leave": "Lämna",
+    "loading": "Läser in",
     "memberCount": "{{count}} medlemmar",
     "members": "Medlemmar",
+    "message": "Skicka meddelande till",
     "metrics": "Metrik",
     "modal": "Modal",
     "modify": "Ändra",
@@ -1573,6 +1623,7 @@
     "off": "Av",
     "offline": "Offline",
     "ok": "Ok",
+    "OK": "OK",
     "on": "På",
     "online": "Online",
     "open": "Öppna",
@@ -1582,6 +1633,7 @@
     "pending": "Väntande",
     "play": "Spela upp",
     "postpone": "Senarelägg",
+    "previous": "Föregående",
     "primary": "Primär",
     "proceed": "Fortsätt",
     "processingEllipsis": "Bearbetar ...",
@@ -1597,6 +1649,7 @@
     "resources": "Resurser",
     "result": "Resultat",
     "retry": "Försök igen",
+    "reload": "Läs in igen",
     "save": "Spara",
     "saveLabel": "Vill du spara dina ändringar?",
     "search": "Sök",
@@ -1610,6 +1663,7 @@
     "service": "Tjänst",
     "settings": "Inställningar",
     "setUp": "Installera",
+    "shared": "Delade",
     "showAllAdminUsers": "Visa alla {{numUsers}} administratörer",
     "showLess": "Visa mindre",
     "showMore": "Visa mer",
@@ -1621,12 +1675,14 @@
     "test": "Test",
     "to": "till",
     "toggleData": "Växla data",
+    "toggleMenu": "Visa/dölj meny",
     "total": "Totalt",
     "trackingId": "Spårnings-id: {{trackingId}}.",
     "tryAgain": "Försök igen",
     "trySearchAgain": "Prova en annan sökning.",
     "turnOff": "Stäng av",
     "type": "Typ",
+    "unableToCopy": "Kunde inte kopiera data till urklipp",
     "unassigned": "Ej tilldelad",
     "unknown": "Okänt",
     "update": "Uppdatera",
@@ -1741,6 +1797,7 @@
     "setUpHybridDataSecurity": "Skapa ett lokalt säkerhetsområde med Hybrid-datasäkerhet.",
     "careLicenseMsgMissingText": "Meddelandet är obligatoriskt för omsorgstjänster. För att aktivera meddelande",
     "careLicenseCallMissingText": "Samtal är obligatoriskt för röstbaserade omsorgstjänster. För att aktivera Samtal",
+    "careLicenseCallMissingTextToggle": "Om du vill använda Spark Care-röstfunktioner ber du partnern att aktivera Spark-samtal eller konfigurera Hybrid-samtal och SIP-trunking för företag.",
     "careLicenseMsgAndCallMissingText": "Meddelande och Samtal är obligatoriska för omsorgstjänster som chatt och röststyrning. För att aktivera Meddelande och Samtal",
     "careLicenseLinkText": "kontakta din parter eller Ciscos försäljningsavdelning.",
     "proPackNotification": "Frigör alla möjligheter hos Spark Control Hub med Pro-paketet.",
@@ -1839,8 +1896,8 @@
     "steeringDigitDescription": "Ange vilken siffra användarna måste trycka på innan de kan ringa ett utgående samtal.",
     "emergencyAddressDescription": "Detta är standardadressen som används för akuttjänster. Denna kan åsidosättas av användare eller platsenheter.",
     "extension": "Anknytning",
-    "extensionLength": "Anknytningslängd",
-    "extensionLengthDescription": "Ange det totala antalet siffror användare måste slå innan ett internt samtal placeras.",
+    "extensionLength": "Längd",
+    "extensionLengthDescription": "Välj det antal siffror som slås för ett internt samtal.",
     "extensionLengthHelpText": "Efter att man har ställt in detta värde kan det bara ändras om det inte finns några tilldelade anknytningar.",
     "extensionLengthServicesHelpText": "Är endast aktiverad när inga anknytningar har tilldelats.",
     "extensionLengthServicesHelpTextForLocation": "Är endast aktiverad när inga anknytningar har tilldelats och endast en plats har konfigurerats.",
@@ -1866,8 +1923,8 @@
     "steeringDigitChangeWarning": "Ändring av siffran för utgående samtal resulterar i uppringningsfördröjningar för anknytningar som börjar med samma siffra. Säkerställ att anknytningen inte börjar med samma siffra som siffran för utgående samtal.",
     "extensionRangeChangeWarning": "Ändring av siffran för utgående samtal resulterar i uppringningsfördröjningar för anknytningar som börjar med samma siffra. Säkerställ att anknytningen inte börjar med samma siffra som siffran för utgående samtal.",
     "siteCodeDescription": "Ange ett unikt nummer som identifierar en specifik plats.",
-    "internalExtensionRange": "Internt anknytningsintervall",
-    "internalNumberRangeDescription": "Ange intervallet för interna nummer. Måste vara {{length}} siffror.",
+    "internalExtensionRange": "Intervall",
+    "internalNumberRangeDescription": "Ange ett nummerintervall med max {{length}} siffror.",
     "extensionError": "Anknytning ej giltig: ",
     "companyVoicemail": "Företagsröstbrevlåda",
     "companyVoicemailDesc": "Aktivera röstbrevlådan för företaget. Nummer för extern uppringning ställs in på platserna.",
@@ -1877,7 +1934,7 @@
     "vmDeliveryMethodsHelpText": "Anpassa röstbrevlådans leveransalternativ för din organisation. Utöver telefonleverans kan du låta användarna hämta meddelanden i röstbrevlådan som bilagor i Cisco Spark, e-postmeddelanden eller både och. Nedladdade röstbrevlådebilagor är inte säkra.",
     "companyVoicemailDescription": "Välj ett telefonnummer att reservera för att ringa upp röstbrevlådan utanför företaget.",
     "to": "till",
-    "addMoreExtensionRanges": "Lägg till fler anknytningsintervall",
+    "addMoreExtensionRanges": "Lägg till intervall",
     "emptyNumber": "Nummerfältet får inte vara tomt",
     "notANumber": " är inte ett giltigt nummer",
     "saveSuccess": "Uppringningsinställningar sparades",
@@ -2173,6 +2230,8 @@
     "saving": "Sparar ...",
     "errorAddr": "Adressen du angav är ogiltig, försök igen.",
     "failedToDelete": "Kunde inte ta bort enhet. Orsak:",
+    "searchLinkExpired": "Söklänken är utgången.",
+    "searchLinkBad": "Söklänken är ogiltig.",
     "deviceAccess": "Enhetsåtkomst",
     "remoteAccessKey": {
       "ciscoSupport": "Cisco support",
@@ -2250,7 +2309,7 @@
       "modalText2": "Välj typen av information som du vill inkludera i rapporten:",
       "modalNote": "Obs! Det tar längre tid att skapa rapporten ju fler användare som inkluderas.",
       "modalCTA": "Exportera till CSV",
-      "guesstimate": "Valet är beräknat till {{minutes}} min {{seconds}} sek",
+      "noUsersFound": "Inga användare hittades. Vänta ett par minuter och försök igen.",
       "userNotFound": "Hittades ej",
       "readingUserStatuses": "Läser in användarstatus ...",
       "readingConnectors": "Läser in klustertilldelningar ...",
@@ -2330,8 +2389,7 @@
       "intro": "Du håller på att ta bort {{serviceName}} från Expressway-klustret {{clusterName}}.",
       "settingsWillBeWiped": "Denna åtgärd tar bort {{connectorName}} och raderar kontaktdonets alla lokala inställningar.",
       "notDeregistered": "{{clusterName}} avregistreras inte från Cisco Collaboration Cloud och Expressway-klustret kan fortfarande användas som värd för hybridtjänster.",
-      "lastClusterWarning": "Detta är det sista klustret som kör {{connectorName}} för denna organisation. Om du avaktiverar {{connectorName}} kommer tjänsten att vara otillgänglig för användarna tills du lägger till fler resurser. Du kan inaktivera tjänsten för denna organisation och dess användare genom att gå till inställningssidan för {{serviceName}}.",
-      "iUnderstand": "Jag förstår"
+      "lastClusterWarning": "Detta är det sista klustret som kör {{connectorName}} för denna organisation. Om du avaktiverar {{connectorName}} kommer tjänsten att vara otillgänglig för användarna tills du lägger till fler resurser. Du kan inaktivera tjänsten för denna organisation och dess användare genom att gå till inställningssidan för {{serviceName}}."
     },
     "clusters": {
       "listing": {
@@ -2369,20 +2427,28 @@
       "connected": "Ansluten"
     },
     "userSidepanel": {
-      "warningInvitePending": "Den här användaren har ännu inte accepterat inbjudan att delta i Cisco Spark. Du kan fortfarande aktivera {{ServiceName}}, men aktiveringen kommer inte att lyckas förrän användaren har loggat in.",
+      "warningInvitePendingNotEntitled": "Användaren har ännu inte accepterat inbjudan att delta i Cisco Spark. Du kan fortfarande aktivera {{ServiceName}}, men tjänstens aktivering dröjer tills inbjudan har accepterats.",
+      "warningInvitePendingActivation": "Aktiveringen av Hybrid-tjänsterna påbörjas när användaren accepterar inbjudan att delta i Cisco Spark.",
       "entitlements-dont-exist": "Det finns inga tjänstebehörigheter för {{userName}}.",
       "previously-updated": "Kunde inte spara licenser. De har tilldelats någon annanstans.",
       "not-updated": "Det gick inte att uppdatera licenser för {{userName}}.",
       "not-updated-specific": "Det gick inte att uppdatera licenser för {{userName}}. Servern gav följande felmeddelande: {{error}}.",
       "readResourceGroupsFailed": "Kunde inte läsa in resursgrupper. Försök igen senare.",
-      "readUserStatusFailed": "Kan inte läsa aktuell användarstatus. Försök igen senare.",
       "refreshUserFailed": "Kan inte uppdatera användarstatus. Försök igen senare.",
       "refreshUserDidNoGood": "Kan inte hämta användarstatus. Kontakta support om problemet kvarstår.",
       "couldNotReadConnectStatus": "Kan inte läsa in organisationsstatus för samtalstjänsten Connect. Kontakta support om problemet kvarstår.",
       "notEnabledInOrg": "Inte aktiverad i organisationen",
       "enableAwareFirst": "Aware måste aktiveras innan användaren kan använda Connect. Aktivera tjänsten i panelen <a href ng-click=\"{{onclick}}\">Samtalstjänsten Aware</a>.",
       "disableAwareHeader": "Inaktivera tjänster",
-      "disableAwareMessage": "Är du säker? Inaktiverar du samtalstjänsten Aware kommer även samtalstjänsten Connect att inaktiveras för denna användare."
+      "disableAwareMessage": "Är du säker? Inaktiverar du samtalstjänsten Aware kommer även samtalstjänsten Connect att inaktiveras för denna användare.",
+      "errorMessages": {
+        "cannotReadDeviceDataFromUSS": "Det gick inte att läsa enhetens aktiveringsstatus.",
+        "cannotReadDeviceDataFromUSSPartnerAdmin": "Det gick inte att läsa enhetens aktiveringsstatus. Detta kan röra sig om ett cachelagringsproblem. Prova att logga ut och in igen för att rensa användarcachen.",
+        "cannotReadUserDataFromUSS": "Det gick inte att läsa användarens aktiveringsstatus.",
+        "cannotReadUserDataFromUSSPartnerAdmin": "Det gick inte att läsa användarens aktiveringsstatus. Detta kan röra sig om ett cachelagringsproblem. Prova att logga ut och in igen för att rensa användarcachen.",
+        "cannotReadOrgDataFromFMS": "Det gick inte att läsa organisationens Expressway-baserade data för Hybrid-tjänster.",
+        "cannotReadOrgDataFromFMSPartnerAdmin": "Det gick inte att läsa organisationens Expressway-baserade data för Hybrid-tjänster. Detta kan röra sig om ett cachelagringsproblem. Prova att logga ut och in igen för att rensa användarcachen."
+      }
     },
     "placeSidepanel": {
       "hybridCallNotActivated": "Vi söker efter användarkontot i Cisco Unified Communications Manager (CUCM). Detta kan ta upp till 30 minuter. Kontrollera statusen senare.",
@@ -2402,7 +2468,8 @@
       "activated": "Aktiverad",
       "error": "Fel",
       "unknown": "Okänt",
-      "notFound": "Status hittades inte"
+      "notFound": "Status hittades inte",
+      "accountNotActivated": "Konto inte aktiverat"
     },
     "serviceNames": {
       "squared-fusion-uc": "Samtalstjänst",
@@ -2411,10 +2478,10 @@
       "squared-fusion-gcal": "Kalendertjänst",
       "squared-fusion-o365": "Kalendertjänst",
       "squared-fusion-media": "Mediatjänst",
-      "contact-center-context": "Tjänsten Context",
+      "contact-center-context": "Context Service",
       "squared-fusion-ec": "Anslut samtalstjänst",
       "squared-fusion-ec.full": "Anslut samtalstjänst",
-      "squared-fusion-mgmt": "Expressway-hanteringstjänst",
+      "squared-fusion-mgmt": "Hanteringstjänst",
       "spark-hybrid-impinterop": "Meddelandetjänst"
     },
     "hybridServiceNames": {
@@ -2439,7 +2506,7 @@
       "contact-center-context": "Sammanhangsanslutning",
       "squared-fusion-ec": "Samtalsanslutning",
       "squared-fusion-mgmt": "Hanteringsanslutning",
-      "spark-hybrid-impinterop": "Hybrid-meddelandeanslutning"
+      "spark-hybrid-impinterop": "Meddelandeanslutning"
     },
     "connectorNameFromConnectorType": {
       "c_cal": "Kalenderanslutning",
@@ -2451,7 +2518,7 @@
       "cs_context": "Sammanhangsanslutning",
       "ucm_mgmt": "Hanteringsanslutning",
       "c_serab": "Kontakt för servicemöjlighet",
-      "c_imp": "Hybrid-meddelandeanslutning"
+      "c_imp": "Meddelandeanslutning"
     },
     "shortConnectorNameFromConnectorType": {
       "c_cal": "Kalender",
@@ -2480,7 +2547,7 @@
       "mf_mgmt": "Hybrid Media",
       "hds_app": "Hybrid-datasäkerhet",
       "ucm_mgmt": "Cisco Unified CM",
-      "cs_mgmt": "Tjänsten Context",
+      "cs_mgmt": "Context Service",
       "ept": "Privat trunk"
     },
     "serviceDescriptions": {
@@ -2530,7 +2597,6 @@
       "google": "Google-kalender",
       "notSetup": "För närvarande inte konfigurerat",
       "sinceTime": "sedan {{timestamp}}",
-      "noLicensedServices": "Användaren måste ha en eller flera licensierade tjänster för att konfigureras för Hybrid-tjänster.",
       "entitledToBothCalendarsShort": "Flera kalenderrättigheter",
       "entitledToBothCalendars": "Denna användare har för närvarande rättigheter till båda kalendertyperna. Åtgärda felet genom att inaktivera kalendertjänsten för användaren och sedan aktivera tjänsten igen.",
       "couldNotReadOffice365Status": "Det gick inte att läsa organisationens Office 365-konfiguration. Informationen ovan kan vara inkomplett.",
@@ -2559,22 +2625,8 @@
       "editSettingsLink": "Redigera klusterinställningar",
       "editTrunkSettingsLink": "Redigera resursinställningar",
       "softwareUpgrade": "Programuppgradering",
-      "currentVersion": "Aktuell version",
-      "newVersion": "Ny version",
-      "explanation": "Du är på väg att uppgradera {{connectorType}} till version {{newVersion}} på alla noder i ditt Expressway-kluster",
-      "releaseNotesLinkText": "Se versionsinformation om {{connectorType}} {{newVersion}}",
-      "releaseNotes": "Versionsinformation",
-      "pending": "Väntande",
-      "upgrade": "Uppgradera",
       "upgradeNow": "Uppgradera nu",
-      "upgradesAutomatically": "Uppgraderar automatiskt",
-      "upgradeProcessInitiating": "Påbörjar uppgraderingen till version {{version}} …",
-      "upgradingHost": "Uppgraderar {{host}} till {{version}}",
-      "upgradeDone": "Uppgradering slutförd!",
-      "upToDate": "{{connectorType}} är uppdaterad i detta kluster.",
-      "upgradePossible": "En ny version finns tillgänglig för {{connectorType}}: {{availableVersion}}.",
-      "urgentUpgrade": "En viktig uppgradering finns tillgänglig för {{connectorType}}: {{availableVersion}}.",
-      "upgradeWarning": "Det här klustret har en eller flera noder där {{ManagementConnector}} inte skickar uppdateringar till {{CiscoCollaborationCloud}}. Det rekommenderas att {{ManagementConnector}} tas online innan en uppgradering påbörjas."
+      "upgradesAutomatically": "Uppgraderar automatiskt"
     },
     "connectorUpgrade": {
       "title": "Anslutningsuppgradering",
@@ -2623,6 +2675,11 @@
       "deregisterConfirmRemoval": "Bekräfta borttagning",
       "deregisterConfirmationText": "Du är på väg att avregistrera <strong>{{clusterName}}</strong> från Cisco Collaboration Cloud.",
       "deregisterConfirmPopup": "{{clusterName}} togs bort från Cisco Collaboration Cloud."
+    },
+    "office365ReAuthorizationComponent": {
+      "title": "Behörighet",
+      "label": "Tillåta Office 365 igen",
+      "description": "Klicka på Tillåt för att återställa läs- och skrivbehörigheterna om du har tagit bort behörigheten för Cisco Spark-kontrollhubb från Office 365-miljön."
     },
     "deactivateServiceComponent": {
       "deactivateServiceLabel": "Inaktivera {{serviceName}}",
@@ -2690,7 +2747,7 @@
       "authorization": {
         "title": "Tillåt Cisco Collaboration Cloud på ditt G Suite-konto",
         "line1": "För att aktivera Hybrid-kalendertjänst för dina användare måste du tillåta Cisco Collaboration Cloud på ditt G Suite-konto.",
-        "item1": "Öppna kontrollpanelen till ditt <a href=\"https://admin.google.com/AdminHome\" target=\"_blank\">G Suite-konto</a> i en ny flik och gå sedan till Säkerhet.",
+        "item1": "Öppna <a href=\"https://admin.google.com/AdminHome\" target=\"_blank\">instrumentpanelen till ditt G Suite-konto</a> i en ny flik och gå sedan till <strong>Säkerhet</strong>.",
         "item2": "Klicka på <strong>Visa mer</strong> och sedan på <strong>Avancerade inställningar</strong>.",
         "item3": "Klicka på <strong>Hantera åtkomst för API-klienten</strong>.",
         "item4": "Kopiera klientnamnet och omfattningen till urklipp.",
@@ -2753,7 +2810,7 @@
         "heading": "Dokumentation och programvara",
         "headingDoc": "Dokumentation",
         "headingSoftware": "Program",
-        "help": "Besök <a href=\"{{helpLink}}\" target=\"_blank\">Hjälpcentralen</a> för mer information om {{localizedServiceName}}.",
+        "help": "Se <a href=\"{{helpLink}}\" target=\"_blank\">distributionsdokumentationen</a> för mer information om {{localizedServiceName}}.",
         "downloadExpressway": "Hämta programvaran Cisco Expressway från <a href=\"{{downloadLink}}\" target=\"_blank\">software.cisco.com</a>.",
         "downloadECP": "<a href=\"{{downloadLink}}\" target=\"_blank\">Hämta programvaran till {{serviceName}}</a>.",
         "downloadDemoHybridMedia": "<a href=\"{{downloadLink}}\" target=\"_blank\">Hämta fullständig programbild</a><br> (full kapacitet och används för produktionsdistributioner av Hybrid Media)<br> <a href=\"{{downloadDemoLink}}\" target=\"_blank\">Hämta demoprogrambild</a> <br>(med begränsad kapacitet, 90 dagars livslängd och används endast för demonstrationer av Hybrid Media)"
@@ -2857,14 +2914,11 @@
         "description": "Om du behöver uppdatera eller återställa din G Suite API-klientåtkomst hämtar du klientnamnet och omfattningen genom att klicka på knappen nedan.",
         "cta": "Uppdatera",
         "provisioningResults": {
-          "OK": "Google Kalender är integrerad med Hybrid-kalendertjänst.",
-          "BAD_API_ACCESS_SETTINGS": "Webbplatsens verifierings-API är inte aktiverat. Gå till console.developers.google.com för att aktivera det.",
-          "DATABASE_ERROR": "Det går inte att ansluta till den interna databasen. Försök igen senare.",
-          "SITE_VERIFICATION_FAILURE": "Domänens verifieringssteg misslyckades. Kontrollera att du följt domänkontrollstegen i dokumentationen.",
-          "SECURITY_FAILURE": "Säkerhetsfel.",
-          "INPUT_PARSING_FAILURE": "Den hemliga nyckeln kan inte syntaxanalyseras. Generera en ny till projektet på console.developers.google.com och försök igen.",
-          "GENERAL_ERROR": "Ett oväntat fel uppstod. Kontakta support om felet återkommer.",
-          "INVALID_CREDENTIALS": "Inloggningsuppgifterna till tjänsten är ogiltiga."
+          "OK": "Hybrid-kalendertjänsten är installerad med Office 365-organisationen.",
+          "GENERAL_ERROR": "Ett oväntat fel inträffade.",
+          "TEST_ACCOUNT_NONEXISTENT": "Inloggningsuppgifterna för testkontot fungerade inte. Prova igen med en licensierad Office 365-användare med en Exchange Online-postlåda.",
+          "INVALID_SESSION_ID": "Ogiltigt sessions-ID. Tillåt Office 365 igen från inställningssidan.",
+          "BAD_ADMIN_CONSENT": "Vi påträffade ett behörighetsfel med Office 365-organisationen. Gå till inställningssidan för Hybrid-kalender (Office 365) och tillåt igen."
         }
       },
       "hybridCalendarCommon": {
@@ -3139,9 +3193,9 @@
     "releaseChannelSection": {
       "releaseChannelHeader": "Kanal för offentliggörande",
       "releaseChannelClusterDescription": "Välj utgivningskanal för alla Hybrid-tjänster som körs i detta kluster.",
-      "releaseChannelResourceGroupDescription": "Välj utgivningskanal för alla Hybrid-tjänster som körs i denna grupp.",
-      "expresswayTip": "För att ändra utgivningskanal för detta kluster måste du ändra standardutgivningskanalen eller tilldela klustret till en resursgrupp som använder den önskade utgivningskanalen.",
-      "releaseChannelTip": "För att ändra utgivningskanal för detta kluster måste du tilldela det till en resursgrupp med önskad utgivningskanal.",
+      "releaseChannelResourceGroupDescription": "Välj lanseringskanal för alla Hybrid-tjänster som körs i denna grupp.",
+      "newExpresswayTip": "Det går inte att ändra lanseringskanal för individuella Expressway-kluster. Om du vill ändra lanseringskanalen för detta kluster måste du ändra standardlanseringskanalen eller tilldela klustret till en resursgrupp med den föredragna lanseringskanalen. Se <a href=\"https://collaborationhelp.cisco.com/article/kkibf0\" target=\"_blank\">dokumentationen</a> för hjälp.",
+      "releaseChannelTip": "För att ändra lanseringskanal för detta kluster måste du tilldela det till en resursgrupp med önskad lanseringskanal.",
       "releaseChannelSaved": "Utgivningskanalen har sparats",
       "orgHasNoAccessToChannel": "Resursgruppen har konfigurerats för utgivningskanalen ”{{currentReleaseChannel}}”, som inte längre är tillgänglig för er organisation. Ställ in utgivningskanalen på ”{{stableReleaseChannel}}” för att återställa tjänsten.",
       "clusterHasNotTheDefault": "Detta Expressway-kluster använder en annan utgivningskanal än standardkanalen. Välj standardutgivningskanalen ({{releaseChannel}}) för att undvika motsättningar mellan Hybrid-tjänster.",
@@ -3333,6 +3387,157 @@
           "description": "Inget kluster har tilldelats till användarens resursgrupp. Kontrollera klusterkonfigurationen och försök igen."
         }
       }
+    },
+    "office365SetupModal": {
+      "title": "Ställ in Hybrid-kalender",
+      "subtitle": "Konfiguration av Office 365",
+      "subtitleReAuth": "Tillåta Office 365 igen",
+      "line1": "Hybrid-kalendertjänsten behöver behörighet till Office 365 för dina användare.",
+      "line2": "Klicka på <strong>Tillåt</strong> för att logga in på Microsoft och acceptera behörigheter för tjänsten.",
+      "line3": "När du accepterar bör webbläsaren omdirigera dig tillbaka hit. Om du inte har omdirigerats efter en kort stund går du tillbaka till <a target=\"_blank\" href=\"https://admin.ciscospark.com\">admin.ciscospark.com</a> och går igenom denna process igen."
+    },
+    "office365SuccessModal": {
+      "test": {
+        "subtitle": "Testkonto",
+        "inputLabel": "Ange det Office 365-konto du vill använda för att testa anslutningen till Exchange Online."
+      },
+      "success": {
+        "subtitle": "Konfiguration har slutförts",
+        "line1": "Du kan nu aktivera Hybrid-kalendertjänsten för dina Office 365-användare:",
+        "line2": "Aktivera dem manuellt på <a href ng-click=\"{{onclick}}\">användarsidan</a>.",
+        "line3": "Aktivera flera samtidigt med hjälp av <a href ng-click=\"{{onclick}}\">CSV-mallen</a>.",
+        "line4": "Mer information finns i <a href=\"https://collaborationhelp.cisco.com\" target=\"_blank\">Samarbetshjälp</a>."
+      }
+    },
+    "office365FailureModal": {
+      "subtitle": "Ett fel uppstod vid auktoriseringen",
+      "errorCode": "Felkod: {{code}}."
+    },
+    "eventHistory": {
+      "pageTitle": "Larm, status och uppgraderingshistorik",
+      "featureDescription": "Visa alla utlösta och åtgärdade larm, statusändringar för anslutningar och ändringar av klusterkonfigurationer under de senaste 7 dagarna.",
+      "viewHistory": "Visa historik",
+      "noEventsFound": "Inga händelser hittades",
+      "cannotReadEventData": "Det gick inte att läsa data för händelsehistorik",
+      "cannotReadResourceNames": "Det gick inte att läsa resursnamn. Växlar till standardvärdet utan filtrering utifrån en specifik resurs.",
+      "scheduledTask": "Schemalagd uppgift",
+      "automatic": "Automatiskt",
+      "allServices": "Alla tjänster",
+      "allResources": "Alla resurser",
+      "serviceFilter": "Filter för tjänster:",
+      "resourceFilter": "Resursfilter:",
+      "dataSince": "Händelser sedan",
+      "connectorProvisioned": "Klustret tillhandahålls med {{connectorName}} version {{newVersion}}",
+      "connectorDeprovisioned": "{{connectorName}} har tagits bort från klustret",
+      "connectorProvisioningChanged": "{{connectorName}} uppgradering till {{newVersion}} har inletts",
+      "serviceEnabled": "{{serviceName}} har aktiverats",
+      "serviceDisabled": "{{serviceName}} har inaktiverats",
+      "newUpgradeSchedule": "Nytt uppgraderingsschema: {{newSchedule}}",
+      "clusterRenamed": "Klusternamn har uppdaterats",
+      "resourceGroupChanged": "Resursgrupp har ändrats",
+      "releaseChannelChanged": "Lanseringskanal har ändrats",
+      "connectorEventTitles": {
+        "downloading": "{{connectorType}} laddas ned",
+        "installing": "{{connectorType}} installeras",
+        "not_installed": "{{connectorType}} har inte installerats",
+        "disabled": "{{connectorType}} har inaktiverats",
+        "not_initialized": "{{connectorType}} har inte initierats",
+        "not_operational": "{{connectorType}} ej i drift",
+        "not_configured": "{{connectorType}} har inte konfigurerats",
+        "running": "{{connectorType}} version {{version}} körs och fungerar"
+      },
+      "table": {
+        "event": "Händelse",
+        "severity": "Allvarlighetsgrad",
+        "type": "Typ",
+        "service": "Tjänst",
+        "resource": "Resurs",
+        "performedBy": "Utförs av",
+        "time": "Tid",
+        "critical": "Kritisk",
+        "error": "Fel",
+        "warning": "Varning",
+        "info": "Information",
+        "resolved": "Lösta",
+        "ignored": "Ignorera",
+        "none": "Inget"
+      },
+      "eventClasses": {
+        "cluster": "Kluster",
+        "connector": "Anslutning",
+        "alarm": "Larm",
+        "service": "Tjänst"
+      },
+      "sidepanel": {
+        "header": "Händelseinformation",
+        "description": "Beskrivning",
+        "connectorEvents": {
+          "provideInfoBelow": "Uppge informationen nedan när du skapar ett supportärende.",
+          "not_installed": "Expressway rapporterar att {{localizedConnectorName}} inte har installerats. Denna status förväntas under en kort tid för nya distributioner och kan även inträffa under uppgraderingar.",
+          "not_installed-help": "Om denna status varar i mer än några minuter är det troligt att något är felaktigt konfigurerat och administratörsåtgärd krävs för att lösa problemet. Expressways hanteringsanslutning kan ha utlöst ett larm som kan hjälpa dig med felsökningen.",
+          "disabled": "{{localizedConnectorName}} är på version {{softwareVersion}} men anslutningsprogrammet har inaktiverats i Expressway. Anslutningsprogram bör inte hållas inaktiverade. Logga antingen in i Expressways webbgränssnitt för att starta det eller avinstallera det med hjälp av klusterkonfigurationssidan i Cisco Spark-kontrollhubben.",
+          "downloading": "Version {{softwareVersion}} av {{localizedConnectorName}} laddas ned från Cisco Collaboration Cloud. Den installeras när den har laddats ned.",
+          "installing": "{{localizedConnectorName}} version {{softwareVersion}} har laddats ned från Cisco Collaboration Cloud och installeras nu i Expressway. Installationen brukar ta mindre än en minut.",
+          "not_configured": "{{localizedConnectorName}} version {{softwareVersion}} har installerats men anslutningsprogrammet har inte konfigurerats. Logga in i Expressway för att konfigurera det och starta sedan anslutningsprogrammet.",
+          "initializing": "{{localizedConnectorName}} version {{softwareVersion}} har installerats men den nya programvaran håller på att startas och har inte initierats än. Det kan ta flera timmar att initiera programvara för anslutningsprogram som körs på full kapacitet och har många användare.",
+          "not_operational": "{{localizedConnectorName}} version {{softwareVersion}} körs men rapporterar att programvaran inte fungerar. Detta förväntas inte och administratörsåtgärd krävs för att lösa problemet.",
+          "running": "Programvaran {{localizedConnectorName}} kör version {{softwareVersion}} och fungerar. Detta är den förväntade statusen efter en lyckad uppgradering eller nyinstallation."
+        },
+        "alarmEvents": {
+          "alarmRaisedEmailsSentTitle": "E-postmeddelande skickat om nytt larm",
+          "alarmResolvedEmailsSentTitle": "E-postmeddelande skickat om åtgärdat larm",
+          "alarmRaised": "Ett larm har utlösts i Expressway-noden {{hostname}}.",
+          "alarmRaised-description": "Expressway tillhandahöll följande larmbeskrivning: <strong>{{description}}</strong>",
+          "alarmResolved": "Larmet med benämningen <strong>{{title}}</strong> har åtgärdats på noden {{hostname}}.",
+          "alarmDebounced": "Ett larm med benämningen <strong>{{title}}</strong> har utlösts i Expressway och sedan markerats som åtgärdat inom några minuter.",
+          "alarmDebounced-help": "Detta larm åtgärdades så snabbt att Cisco Collaboration Cloud inte skickade något e-postmeddelande om det. Larm som åtgärdas av sig själva är normalt inget att oroa sig för och kräver inga administratörsåtgärder såvida de inte återkommer under en längre tid.",
+          "alarmRaisedNotificationSent": "Cisco Collaboration Cloud har skickat e-postmeddelanden till {{recipientCount}} mottagare om det nya larmet med benämningen <strong>{{title}}</strong> på noden {{hostname}}.",
+          "alarmResolvedNotificationSent": "Cisco Collaboration Cloud har skickat e-postmeddelanden till {{recipientCount}} mottagare eftersom larmet med benämningen <strong>{{title}}</strong> på noden {{hostname}} markerades som åtgärdat."
+        },
+        "clusterEvents": {
+          "firstUpgradeSchedule": "Alla anslutningar i Expressway-klustret har konfigurerats med följande uppgraderingsschema: {{upgradeSchedule}}",
+          "changedUpgradeSchedule": "{{username}} har ändrat uppgraderingsschemat för alla anslutningsprogram i Expressway-klustret. Det nya schemat är: {{newSchedule}}. Det tidigare uppgraderingsschemat var: {{oldSchedule}}.",
+          "automatedProvisioningChange": "Målversionen för {{connectorName}} har ändrats till {{newValue}}. Detta gjordes som en del av en schemalagd uppgradering.",
+          "automatedProvisioning": "Expressway-klustret tillhandahålls med {{connectorName}}. Detta skedde automatiskt.",
+          "automatedDeprovisioning": "Expressway-klustret kör inte längre {{connectorName}}.",
+          "manualProvisioningChange": "Målversionen för {{connectorName}} har ändrats till {{newValue}}. Uppgraderingen utlöstes manuellt av {{username}}.",
+          "manualProvisioning": "{{username}} tillhandahöll Expressway-klustret med {{connectorName}}. Detta inträffade antingen på grund av att användaren skapade ett nytt kluster eller för att han eller hon lade till {{connectorName}} i ett befintligt kluster.",
+          "manualDeprovisioning": "{{username}} har ändrat Expressway-konfigurationen så att {{connectorName}} tas bort från alla klusternoder.",
+          "upgradeHelpText": " Alla noder i klustret börjar uppgraderas sekventiellt till den nya versionen. Uppgraderingen är färdig när alla noder använder den nya programvaruversionen och har rapporterat till Cisco Collaboration Cloud att de fungerar.",
+          "provisioningAddedHelpText": "En administratör måste logga in i Expressways huvudmotpart och konfigurera {{connectorName}}-programvaran när den har installerats i alla klusternoder.",
+          "provisioningRemovedHelpText": "Programvaran avinstalleras och alla lokala konfigurationer tas bort.",
+          "automatedDeprovisioningHelpText": "Denna konfigurationsändring inträffade på grund av en ändring i Cisco Spark-organisationens konfiguration, till exempel på grund av att en rättighet togs bort eller en tjänst inaktiverades.",
+          "renamed": "{{username}} har bytt namn på klustret. Det nya namnet är {{newName}} och det gamla namnet var {{oldName}}.",
+          "nameAssigned": "{{username}} har konfigurerat klusternamnet till {{name}}.",
+          "resourceGroupIntro": "{{username}} har ändrat klustrets resursgrupp.",
+          "previouslyNotInResourceGroup": "Den nya resursgruppen heter: <strong>{{newGroup}}</strong>. Klustret tillhörde inte någon resursgrupp tidigare.",
+          "changedResourceGroup": "Den nya resursgruppen heter: <strong>{{newGroup}}</strong>. Klustret tillhörde tidigare {{oldGroup}}.",
+          "removedResourceGroup": "Klustret tillhör inte längre en resursgrupp. Klustret tillhörde tidigare {{oldGroup}}.",
+          "changedReleaseChannel": "{{username}} har ändrat klustrets lanseringskanal.",
+          "oldAndNewReleaseChannel": "Den nya lanseringskanalen är: <strong>{{newReleaseChannel}}</strong>. Den gamla lanseringskanalen var: {{oldReleaseChannel}}.",
+          "changedReleaseChannelHelp": "Ett Expressway-klusters lanseringskanal kan ändras antingen genom att klustret flyttas till eller från en resursgrupp eller om dess befintliga resursgrupp ändrar den lanseringskanal som den är associerad med."
+        },
+        "serviceActivationEvents": {
+          "serviceEnabled": "{{username}} har aktiverat {{serviceName}} i Cisco Spark-organisationen. Detta inträffar normalt när en administratör registrerar ett Expressway-kluster som kör {{connectorName}} eller lägger till det första {{connectorName}} i ett befintligt Expressway-kluster.",
+          "callServiceConnectEnabled": "{{username}} har aktiverat {{serviceName}} i Cisco Spark-organisationen. Alla Expressway-kluster som kör {{connectorName}} används automatiskt även för {{serviceName}}.",
+          "serviceDisabled": "{{username}} har inaktiverat {{serviceName}} i Cisco Spark-organisationen.",
+          "serviceDisabledHelpText": "Rättigheterna till {{serviceName}} tas automatiskt bort från användarna och {{connectorName}} avinstalleras automatiskt från alla Expressway-kluster.",
+          "serviceDisabledHelpTextCallServiceConnect": "Rättigheterna till {{serviceName}} tas automatiskt bort från användarna och konfigurationer för fjärrenheter raderas."
+        },
+        "technicalDetails": {
+          "heading": "Teknisk information",
+          "tooltip": "Kunddata lagras alltid anonymiserad i Cisco Collaboration Cloud. Tillhandahåll informationen i detta avsnitt till Ciscos tekniska support om du behöver hjälp av Cisco för att utreda händelsen.",
+          "resourceName": "Resursnamn:",
+          "clusterId": "Kluster-ID:",
+          "connectorId": "ID för anslutning:",
+          "connectorType": "Anslutningstyp:",
+          "alarmId": "Larm-ID:",
+          "softwareVersion": "Programvaruversion:",
+          "timestamp": "Tidsstämpel:",
+          "userId": "Användar-ID:",
+          "trackingId": "Spårnings-ID:"
+        }
+      }
     }
   },
   "context": {
@@ -3365,6 +3570,10 @@
       "actions": "Åtgärder",
       "dateUpdated": "Uppdaterat den",
       "update": "Redigera",
+      "unknownAdminAuthorizationStatus": "Det går inte att hämta registreringsstatusen. Uppdatera webbläsaren och försök igen.",
+      "resource": {
+        "notAuthorized": "Du har inte behörighet att hantera Hybrid Context-resurser för denna organisation."
+      },
       "fieldPage": {
         "associatedFieldsets": "Kopplade fältuppsättningar",
         "associatedFieldsetsError": "Kunde inte hämta tillhörande fältuppsättningar.",
@@ -3417,7 +3626,8 @@
         "optionRequired": "Detta fält är obligatoriskt.",
         "optionsLabelWithCount": "Alternativ ({{count}})",
         "optionsLabel": "Alternativ",
-        "optionsDetailLabel": "Lista över alternativ i detta envalsfält."
+        "optionsDetailLabel": "Lista över alternativ i detta envalsfält.",
+        "notAuthorized": "Du har inte behörighet att hantera Hybrid Context-fält för denna organisation."
       },
       "fieldsetPage": {
         "fieldsetId": "Fältuppsättnings-ID",
@@ -3448,7 +3658,8 @@
         "notInUseTooltip": "Fältuppsättningen är inte kopplad till några objekt.",
         "limitReached": "Maximalt antal fältuppsättningar har uppnåtts.",
         "fieldMaxLimitReached": "Maximalt antal fält i fältuppsättningen har uppnåtts.",
-        "fieldsetLimitReadFailed": "Kunde inte hämta fältuppsättningsbegränsningen. Uppdatera webbläsaren och försök igen"
+        "fieldsetLimitReadFailed": "Kunde inte hämta fältuppsättningsbegränsningen. Uppdatera webbläsaren och försök igen",
+        "notAuthorized": "Du har inte behörighet att hantera Hybrid Context-fältuppsättningar för denna organisation."
       }
     }
   },
@@ -3879,11 +4090,22 @@
     "addAnotherSite": "Lägg till en webbplats",
     "meetingSettings": "Mötesinställningar",
     "meetingSettingsDescription": "Det här steget i konfigureringen av tjänster hjälper till att skapa en eller flera nya WebEx-webbplatser. Om du redan har befintliga platser och inte vill konfigurera nya klickar du bara på Nästa för att fortsätta.",
-    "meetingCenterLicensesRemaining": "Återstående licenser i Meeting Center",
-    "enterpriseEditionLicensesRemaining": "Återstående Enterprise-versionslicenser",
-    "eventCenterLicensesRemaining": "Återstående Event Center-licenser",
-    "trainingCenterLicensesRemaining": "Återstående Training Center-licenser",
-    "supportCenterLicensesRemaining": "Återstående Support Center-licenser",
+    "centerTypes": {
+      "EE": "Enterprise-versionen",
+      "MC": "Meeting Center",
+      "EC": "Event Center {}",
+      "TC": "Training Center {}",
+      "SC": "Support Center"
+    },
+    "centerTypesInits": {
+      "EE": "EE",
+      "MC": "MC",
+      "EC": "EC",
+      "TC": "TC",
+      "SC": "SD"
+    },
+    "centerTypeLicensesRemaining": "{{centerType}} licenser kvar",
+    "centerTypeLicenses": "{{centerType}} licenser",
     "tspPartnerRequired": "Du har köpt TSP för ditt ljudabonnemang. Du behöver en partner som tillhandahåller denna tjänst.",
     "chooseTSPPartner": "Välj TSP-leverantör",
     "conferencingAudioProvided": "Konferensljud: {{service}} som tillhandahålls av {{partner}}",
@@ -3937,6 +4159,7 @@
     "sharedLicenseTooltip": "Varje delade möteslicens ger behörighet till upp till 250 användare att vara mötesvärdar. Värdar som har en delad möteslicens kan hålla i ett obegränsat antal möten, men endast ett möte per delad möteslicens kan hållas vid en viss tidpunkt.",
     "namedLicenses": "Licenser för specifika användare",
     "careTooltip": "Alla Care-användare måste ha en licens för Cisco Spark-meddelanden. De behöver även en licens för Cisco Spark-samtal för röstbaserade interaktioner.",
+    "careTooltipToggle": "Du måste ha en licens för Cisco Spark-meddelanden för att använda Spark Care. Du behöver även en licens för Cisco Spark-samtal eller Hybrid-samtal om du vill ha röstfunktioner.",
     "partnerProvidedAudio": "Partnertillhandahållet ljud",
     "webexProvidedAudio": "WebEx-tillhandahållet ljud",
     "meetingsInSpark": "Cisco Spark-flerpersonsmöten med 25 personer",
@@ -4098,8 +4321,10 @@
   "sparkAssistant": {
     "title": "Cisco Spark Assistant",
     "enableAssistant": "Aktivera Cisco Spark Assistant",
-    "description": "Låter användare utföra vissa åtgärder genom att använda sin röst, till exempel ringa samtal och starta möten",
-    "termOfService": "Servicevillkor för Spark Assistant "
+    "description": "Låter användare utföra vissa åtgärder genom att använda sin röst, till exempel ringa samtal och starta möten.",
+    "termOfService": "Servicevillkor för Spark Assistant",
+    "optout": "Inaktivera Cisco Spark Assistant",
+    "optoutConfirm": "Om du inaktiverar Cisco Spark Assistant kan du inte använda röstkommandon på någon av de enheter som stöds."
   },
   "reports": {
     "title": "Rapporter",
@@ -4135,13 +4360,16 @@
   "autoAttendant": {
     "code": "AA",
     "title": "Autosvar",
+    "warning": "Kräver samtalstjänst.",
+    "careModalDescription": "Spela upp anpassade uppmaningar och förse inringare med menyalternativ för att dirigera samtal genom ditt system.",
     "modalDescription": "Autoassistenter spelar upp anpassade uppmaningar och tillhandahåller uppringaren med menyalternativ för omdirigering av samtal genom ditt system.",
     "namePlaceholder": "Ange namn på autoassistent",
     "repeatMenu": "Upprepa",
     "queueSettings": "Köinställningar",
     "maxWaitTime": "Maximal väntetid",
     "periodicTime": "Frekvens för regelbundna upplysningar",
-    "errorReadCe": "Kunde inte läsa {{name}}: {{name}}: {{statusText}} ({{status}}).",
+    "errorReadDoRestCredential": "Det gick inte att läsa {{name}}: En eller flera REST API-inloggningsuppgifter saknas.",
+    "errorReadCe": "Det gick inte att läsa {{name}}: {{name}}: {{statusText}} ({{status}}).",
     "successCreateCe": "{{name}} skapades.",
     "successDeleteCe": "{{name}} togs bort.",
     "successUpdateCe": "{{name}} uppdaterades.",
@@ -4167,10 +4395,10 @@
     "actionCallerInputHint": "Spara information som inringaren tillhandahåller.",
     "actionCallerInputHelp": "Spara information som inringaren tillhandahåller.",
     "invalidCharacter": "Ett ogiltigt tecken har angivits.",
-    "dialByExtensionRoutingPrefix" : "Begränsa till omkopplingsprefix",
-    "routingPrefix" : "Omkopplingsprefix",
-    "dialByExtensionRoutingPrefixHelpText" : "Om det inte markerats måste användaren ange omkopplingsprefixet plus tillägget.",
-    "selectRoutingPrefix" : "Välj",
+    "dialByExtensionRoutingPrefix": "Begränsa till omkopplingsprefix",
+    "routingPrefix": "Omkopplingsprefix",
+    "dialByExtensionRoutingPrefixHelpText": "Om det inte markerats måste användaren ange omkopplingsprefixet plus tillägget.",
+    "selectRoutingPrefix": "Välj",
     "callerInputCnvtDigit": "Konvertera sifferinmatning till textsträngsvärde.",
     "callerInputMaxLenStr": "Strängens maxlängd",
     "varNamesDependenciesTitle": "Variabla beroenden",
@@ -4182,9 +4410,9 @@
     "usernameRequiredMsg": "Användarnamn krävs.",
     "usernameTooLongMsg": "Användarnamnet överskrider maxlängden på 128 tecken.",
     "passwordTooLongMsg": "Lösenordet överskrider maxlängden på 128 tecken",
-    "configureApiAuthentication": "Använd grundläggande autentisering" ,
-    "restApiUserName":"Användarnamn",
-    "restApiPassword":"Lösenord",
+    "configureApiAuthentication": "Använd grundläggande autentisering",
+    "restApiUserName": "Användarnamn",
+    "restApiPassword": "Lösenord",
     "callerInputValue": "Inmatat värde",
     "callerInputLabel": "Namn",
     "callerInputNamePlaceHolder": "Namnvariabel",
@@ -4467,15 +4695,18 @@
     "AABusinessHours": "Kontorstider",
     "AABusinessHoursDesc": "Enkelt schema för öppet/stängt med anpassade åtgärder.",
     "variables": "Variabler:",
-    "configureApiHeading":"Begär test- och svarstidstilldelning",
-    "configureApiHeadingHelperText":"Ange testdata för variablerna som definieras i URL-adressen för att testa anslutningen till och svarstiden på din REST API.",
-    "configureApiHelpertext":"Värdena nedan kommer endast att anges i URL-adressen i koppling med test- och svarstidstilldelningar.",
-    "restApiResponseVar":"Variabel för svarstid",
-    "restApiResponseVal":"Svarstidsvärde",
-    "restApiCustomVar":"Anpassad variabel",
-    "customVariablesAssignmentHelpText":"Välj inställningsbara variabler för att tilldela värdet av svarstiderna från REST API för användning i samtalsflödet.",
-    "Variables":"Variabler",
-    "value":"Värde"
+    "configureApiHeading": "Begär test- och svarstidstilldelning",
+    "configureApiHeadingHelperText": "Ange testdata för variablerna som definieras i URL-adressen för att testa anslutningen till och svarstiden på din REST API.",
+    "configureApiHelpertext": "Värdena nedan kommer endast att anges i URL-adressen i koppling med test- och svarstidstilldelningar.",
+    "restApiResponseVar": "Variabel för svarstid",
+    "restApiResponseVal": "Svarstidsvärde",
+    "restApiCustomVar": "Anpassad variabel",
+    "customVariablesAssignmentHelpText": "Välj inställningsbara variabler för att tilldela värdet av svarstiderna från REST API för användning i samtalsflödet.",
+    "Variables": "Variabler",
+    "value": "Värde",
+    "restApiUrlHelperText": "Starta REST API genom att ange den säkra URL:en. Klicka på Lägg till dynamisk text för att infoga variabler i URL:en.",
+    "completeHttpsError": "Ange hela URL:en med protokollet, HTTPS.",
+    "secureHttpsError": "Ange endast säkra HTTPS URL:er."
   },
   "callPark": {
     "code": "CP",
@@ -4811,12 +5042,11 @@
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
     "description": "Med Single Number Reach (SNR) kan du låta inkommande samtal dirigeras till anknytningen och andra nummer som du anger här ringas upp samtidigt.",
-    "description2": "Aktivera Single Number Reach och ange vilka nummer du vill ska ringas upp samtidigt.",
     "snrOffDescription": "Single Number Reach är för närvarande inaktiverat. Destinationen är inställd på ",
     "deleteConfirmMsg": "Är du säker på att du vill ta bort?",
     "confirmDelete": "Bekräfta borttagning",
     "remove": "Ta bort",
-    "snrRemoteDestinationNumber": "När numret rings upp rings följande telefonnummer upp samtidigt:",
+    "snrRemoteDestinationNumber": "När numren ovan rings upp rings följande telefonnummer upp samtidigt:",
     "snrRemoteDestinationNumberPlaceholder": "Ange nummer",
     "snrWaitSeconds": "Ange hur lång tid du vill att alla numren ska ringas upp innan samtalet dirigeras till röstbrevlådan på ditt jobb.",
     "toggle": "Single Number Reach",
@@ -4825,7 +5055,8 @@
     "removeSuccess": "Konfiguration av Single Number Reach togs bort",
     "error": "Konfiguration av Single Number Reach misslyckades.",
     "unitedStates": "USA",
-    "austrailia": "Australien"
+    "austrailia": "Australien",
+    "chooseLines": "Välj vilka nummer som ska ringas upp:"
   },
   "speedDials": {
     "title": "Snabbuppringningsnummer",
@@ -4953,7 +5184,14 @@
     "privatePstnTrunk": "Privat PSTN-trunk",
     "setupService": "Konfigurera PSTN-tjänst",
     "setupNumbers": "Konfigurera PSTN-nummer",
+    "orderSummary": "Beställningssammanfattning",
     "addPhoneNumbers": "Lägg till telefonnummer",
+    "prPortParagraph": "Företagets behöriga undertecknare får ett e-postmeddelande som ber denne skicka en fullmakt (Letter of Agency). Informationen i fullmakten måste stämma överens med informationen hos den tidigare nätoperatören. Till exempel så måste adressen i fullmakten stämma överens med faktureringsadressen som är registrerad hos den tidigare operatören.",
+    "prPortDate": "Följande datum har begärts för nummerporteringen: {{date}}",
+    "prPortCarrier": "Ett e-postmeddelande skickas med det fasta datum då numren kommer att porteras. Kontakta {{carrier}} om du behöver förhandla fram ett annat porteringsdatum.",
+    "prPortNumbers": "Följande {{count}} telefonnummer kommer att porteras från den tidigare nätoperatören:",
+    "prDIDNumbers": "Följande {{count}} nummer kommer att läggas till:",
+    "prTollNumbers": "Följande {{count}} avgiftsfria nummer kommer att läggas till:",
     "placeOrder": "Beställ",
     "orderBlock": "Beställ blocknummer",
     "newNumbersTab": "Standardnummer",
@@ -5025,6 +5263,11 @@
     "tollFreeTitle": "Sök och lägg till avgiftsfria telefonnummer genom att ange ett giltigt riktnummer. Giltiga avgiftsfria riktnummer är {{areaCodes}}",
     "unableToAddTollFreeNumbers": "Det gick inte att lägga till avgiftsfria nummer eftersom kundens PSTN-avtal är ofullständigt. Påminn kunden om att skriva under och skicka in avtalet.",
     "unableToAddPortedNumbers": "Det gick inte att lägga till dirigerade nummer eftersom kundens PSTN-avtal är ofullständigt. Påminn kunden om att skriva under och skicka in avtalet.",
+    "unableToAddTollFreeNumbersShort": "Det gick inte att lägga till avgiftsfria nummer eftersom kundens PSTN-avtal är ofullständigt.",
+    "unableToAddPortedNumbersShort": "Det gick inte att lägga till dirigerade nummer eftersom kundens PSTN-avtal är ofullständigt.",
+    "initContract": "Starta processen för att signera avtalet med {{carrier}}",
+    "initContractTitle": "Starta avtal",
+    "initContractReview": "Du har inte lagt till några nummer. Du kan starta processen för att signera avtalet med {{carrier}} genom att göra den här beställningen. När avtalet har signerats kan du dirigera nummer eller lägga till avgiftsfria nummer",
     "pstnSelector": {
       "searchPlaceholder": "Ange riktnummer och/eller nummerprefix",
       "searchDesc": "t.ex. 972 eller 972867",
@@ -5075,7 +5318,7 @@
     },
     "tos": {
       "title": "servicevillkor",
-      "copyright": "Upphovsrätt © 2017 Cisco Systems. Med ensamrätt.",
+      "copyright": "Upphovsrätt © 2018 Cisco Systems. Med ensamrätt.",
       "info": "Cisco Spark är ett samarbetsprogram som tillhandahåller snabbmeddelanden samt funktioner för röst- och videosamtal.",
       "noticeTitle": "VIKTIGA ANMÄRKNINGAR OCH FRISKRIVNINGAR",
       "notice": "Vidarebefordra till följande sida och läs igenom avtalen från din leverantör. Dina PSTN-nummer kommer att göras tillgängliga efter att du har läst och samtyckt till dessa avtal.",
@@ -5264,6 +5507,7 @@
       "sx10": "SX10",
       "dx80": "DX80",
       "mx300": "MX300 (gräns: {{max}})",
+      "roomKit": "Paket för rum (högst {{max}})",
       "phone8865": "8865",
       "phone8845": "8845",
       "phone7832": "7832",
@@ -5271,7 +5515,7 @@
       "phone7841": "7841",
       "quantity": "Antal",
       "invalidQuantity": "Antalet måste vara mellan {{min}} och {{max}}",
-      "invalidQuantityMx300": "Antalet måste vara {{qty}}",
+      "invalidQuantitySingle": "Antalet måste vara {{qty}}",
       "invalidTotalQuantity": "Hela beställningen måste innehålla mellan {{min}} och {{max}} enheter",
       "invalidRoomSystemsQuantity": "Begränsat till {{max}} Cisco Spark-rumsenheter",
       "invalidPhonesQuantity": "Begränsat till {{max}} personliga telefoner och deladet skrivbords-telefoner",
@@ -5384,7 +5628,7 @@
     "supportedLocationWarning": "Markera kryssrutan ovan för att intyga att kunden befinner sig på en plats som stöds för Cisco Spark",
     "context": "Aktivera kontexttjänsten för Cisco Unified Contact Center.",
     "roomSystem": "Cisco Spark-paket för rum, DX-, MX- och SX-serierna",
-    "sparkBoardSystem": "Cisco Spark-forum",
+    "sparkBoardSystem": "Cisco Spark Board",
     "roomSysUsOnly": "Cisco Spark-rumsenhet (för närvarande endast i USA)",
     "expireWarningMsg": "Din provperiod utgår om {{numDaysLeft}} dag(ar).",
     "expiredMsg": "Din provperiod har löpt ut.",
@@ -5488,7 +5732,7 @@
     "myOrganization": "Min organisation",
     "meetingParty": "Flerpersonsmöte med 25 personer",
     "roomSystem": "Cisco Spark-paket för rum, DX-, MX- och SX-serierna",
-    "sparkBoard": "Cisco Spark-forum",
+    "sparkBoard": "Cisco Spark Board",
     "branding": "Kundmärkning",
     "MS": "Skicka meddelande till",
     "CF": "Möte",
@@ -5506,7 +5750,6 @@
     "deleteOrgConfirmMsg": "Är du säker på att du vill ta bort kunden ”{{orgName}}” permanent?",
     "deleteOrgHmsError": "För kunden ”{{orgName}}” är Hybrid Media-tjänsten för närvarande aktiv. Inaktivera Hybrid Media-tjänsten innan du tar bort kunden.",
     "deleteOrg": "Radera kund",
-    "iUnderstand": "Jag förstår",
     "deleteOrgSuccess": "{{orgName}} har tagits bort",
     "deleteOrgError": "{{orgName}} togs inte bort.",
     "pstnOrders": "PSTN-ordrar och importer",
@@ -5525,6 +5768,7 @@
     "domains": "Domäner",
     "quantityWithValue": "Kvantitet: {{quantity}}",
     "anotherPartner": "(Annan partner)",
+    "customerOrdered": "(Tillhandahålls av kunden)",
     "filters": {
       "placeholder": "Välj ett filter ...",
       "filter": "Filter",
@@ -5534,7 +5778,7 @@
       "call": "Samtal",
       "webexOverview": "WebEx",
       "roomSystem": "Rumsenheter",
-      "sparkBoard": "Cisco Spark-forum",
+      "sparkBoard": "Cisco Spark Board",
       "care": "Ta hand om",
       "trialAccounts": "Testkonton ({{count}})",
       "activeAccounts": "Inköpta konton ({{count}})",
@@ -5663,7 +5907,7 @@
     "notifyCustLater": "Avisera kunden senare",
     "emailSuccessText": "E-postmeddelandet skickades till kunden.",
     "emailFailText": "Kunde inte skicka e-postmeddelande",
-    "inputPlacehoder": "Ange telefonnummer avgränsade med kommatecken",
+    "inputPlacehoder": "Ange telefonnummer avgränsade med kommatecken.",
     "didFormatHelpText": "Till exempel: {{examples}}",
     "didAlreadyExist": "Telefonnumret finns redan."
   },
@@ -5820,7 +6064,8 @@
       "exchangeHelp": "Detta aktiverar Exchange-kalender",
       "googleTitle": "Google-kalender",
       "googleHelp": "Detta aktiverar Google Kalender",
-      "calendarEmail": "E-postadress till kalenderns postlåda"
+      "calendarEmail": "E-postadress till kalenderns postlåda",
+      "calendarEmailHelp": "Detta ska inte vara en e-postadress som redan används på en annan plats och den bör inte tillhöra en användare."
     },
     "editCalendarService": {
       "title": "Konfigurera Hybrid-kalendertjänst",
@@ -5831,7 +6076,8 @@
       "step1": "Skapa ett användarkonto och en tillhörande linje i Cisco Unified Communications Manager (CUCM). Objekten kommer att representera denna plats. <a href='https://www.cisco.com/go/hybrid-services'>Se dokumentationen för mer information.</a>",
       "step2": "Leta efter användarkontots adress-ID. <br>a) Logga in på Cisco Unified CM Administration<br>b) Välj Användarhantering &gt; Slutanvändare och leta sedan efter kontot och klicka på det. <br>Adress-ID:et står angivet under ”Användarinformation”.",
       "step3": "Ange adress-ID:et nedan för att ansluta denna plats till det befintliga Unified CM-kontot.<br>Detta adress-id garanterar att rätt användarkonto är anslutet till denna plats för hybridsamtal.",
-      "mailId": "Adress-ID"
+      "mailId": "Adress-ID",
+      "mailIdHelp": "Detta ska inte vara ett adress-ID som redan används på en annan plats och det bör inte vara en e-postadress som tillhör en användare."
     },
     "showActivationCode": {
       "activationCode": "Aktiveringskod",
@@ -6038,21 +6284,11 @@
       "body2": "För att göra noden tillgänglig igen måste du registrera den."
     },
     "metrics": {
-      "titlev2": "Rapportfas 2 POC",
-      "historical": "Historiskt",
-      "realTime": "Realtid",
       "today": "Senaste 24 timmarna",
-      "today2": "Senaste 24 timmarna",
       "last4Hours": "Senaste 4 timmarna",
-      "yesterday": "Igår",
-      "yesterday2": "Igår",
       "week": "Förra veckan",
-      "week2": "förra veckan",
       "month": "Förra månaden",
-      "month2": "förra månaden",
       "threeMonths": "Senaste tre månaderna",
-      "threeMonths2": "senaste tre månaderna",
-      "lastRefresh": "Senast uppdaterad den",
       "clusterAvailability": "Klustertillgänglighet för",
       "callVolumes": "Samtalsaktivitet",
       "callLocal": "Interna samtal",
@@ -6114,8 +6350,6 @@
       "availabilityStatus": "Tillgänglighetsstatus",
       "clusterTitle": "Kluster",
       "clusterNodeTitle": "Kluster/nod",
-      "lowAvailableClusters": "Kluster med låg tillgänglighet",
-      "clusterTakingMoreCalls": "Kluster servar fler antal samtal",
       "totalMeetings": "Totalt antal möten",
       "meetOnPrem": "Resurser som används för möten",
       "clientTypes": "Klienttyper",
@@ -6133,6 +6367,7 @@
       "hybridHeading": "Molnbaserat och internt",
       "othersHeading": "andra",
       "callsBallon": "Samtal:",
+      "cloudconnectivityissues": "Anslutningsproblem till molnet",
       "clientType": {
         "android": "Android",
         "blackberry": "BlackBerry",
@@ -6141,7 +6376,7 @@
         "iphone": "iPhone",
         "jabber": "Jabber",
         "sip": "SIP",
-        "board": "Cisco Spark-forum",
+        "board": "Cisco Spark Board",
         "test": "Test",
         "tp": "Tele Presence",
         "uc": "UC",
@@ -6156,8 +6391,8 @@
       },
       "mobile": "Mobil",
       "cardDescription": {
-        "clientTypeDesc": "Sammanfattning av gemensamma kategorier av mötesklienter som används i en organisation.<br><b>Cisco Spark Desktop</b>: Windows, MAC OSX, webbläsare<br> <b>Cisco Spark Mobile</b>: iPhone, Android, iPad.<br><b>Cisco Spark-enheter</b>: Rumsenhet för TelePresence, Cisco Spark Board.<br><b>Övrigt</b>: Alla okända slutpunkter eller klienter som inte passar in i de andra kategorierna.",
-        "totalCallsDesc": "<b>Molnbaserade samtal</b>: Antal samtal som inte kunde använda företagets Hybrid Media-noder eftersom det inte fanns någon anslutning till företagets nätverk eller på grund av att de omfattas av tillämpad princip.<br> <b>Spillt över till molnet</b>: Antal samtal som gjorts i ett företag men som spillt över till ett molnkluster.<br> <b>Internt</b>: Antal samtal som tillhandahålls på något av företagets kluster.",
+        "clientTypeDesc": "Sammanfattning av vanliga kategorier av mötesklienter som används i en organisation.<br><b>Cisco Spark Desktop</b>: Windows, MacOS, webbläsare<br> <b>Cisco Spark Mobile</b>: iPhone, Android, iPad.<br><b>Cisco Spark-enheter</b>: Cisco rumsenhet, Cisco Spark Board.<br><b>Övriga</b>: Alla okända klienter eller slutpunkter som inte passar i de andra kategorierna.",
+        "totalCallsDesc": "<b>Molnbaserade samtal</b>: Antal samtal som inte kunde använda företagets medienoder för hybrid eftersom det inte fanns någon anslutning till företagets nätverk eller på grund av att de omfattas av tillämpad princip.<br> <b>Spillt över till molnet</b>: Antal samtal som gjorts i ett företag men som spillt över till ett molnkluster.<br> <b>Internt</b>: Antal samtal som tillhandahålls på något av företagets kluster.",
         "totalCallsClusterDesc": "<b>Omdirigerade av detta kluster</b>: Antal samtal som inte kunde tillhandahållas av det här klustret och därmed har omdirigerats.<br><b>Internt</b>: Antal samtal tillhandahålls på något av företagets kluster.",
         "meetsHostTypeDesc": "Sammanfattning av möten baserad på var organisationens samtal tillhandahölls.<br><b>Internt</b>: Möte och mötesdeltagare som tillhandahölls på företagets kluster<br><b>Moln</b>: Möte och mötesdeltagare tillhandahölls på molnkluster<br><b>Moln och internt</b>: Möte och deltagare fördelades mellan företags- och molnkluster.",
         "redirect": ": Antal samtal som inte kunde tillhandahållas av det här klustret och som därmed har omdirigerats.",
@@ -6205,7 +6440,6 @@
       "moveTo": "Flytta till:",
       "cancel": "Avbryt",
       "continue": "Fortsätt",
-      "deregisterAllconfirmation": "Jag förstår att alla noder i detta kluster kommer att avregistreras automatiskt, och att klustret kommer att tas bort permanent. Jag förstår också att jag inte kan ångra denna åtgärd.",
       "unabletomovenodes": "Kunde inte flytta/desarmera {{nodes}} tryck avbryt och försök igen",
       "clusterdeleteSuccess": "Tog bort {{clustername}}",
       "clusterCreationFailed": "Kunde inte skapa nytt kluster: {{enteredCluster}}",
@@ -6215,24 +6449,9 @@
       "stable": "STABIL",
       "beta": "BETA",
       "latest": "SENASTE",
-      "errorMsg": "Innan du kan bort detta kluster måste du först flytta alla noder till ett annat kluster eller avregistrera alla noder."
-    },
-    "upgradeClusters": {
-      "title": "Programuppgradering",
-      "text1": "Under uppgraderingen kommer denna Hybrid Media-nod att gå in i underhållsläge. Efter två2 timmar kommer denna nod att uppgraderas och nya samtal kommer att omdirigeras till en tillgänglig nod eller till molnet.",
-      "text2": "Efter två timmar kommer noden att uppgraderas.",
-      "upgradeNow": "Uppgradera nu",
-      "upToDate": "Programvaran är uppdaterad.",
-      "installing": "Programvaran installeras.",
-      "sw-upgrade-title": "Programuppgradering",
-      "sw-upgrade-text": "Ny programvara finns tillgänglig.",
-      "upgradeWarning": "Detta kluster har en eller flera offline-noder. Vi rekommenderar att du kopplar upp samtliga noder innan du initierar en uppgradering.",
-      "pending": "Väntande",
-      "upgradingHost": "Uppgraderar {{host}} till {{version}}",
-      "upgradeProcessInitiating": "Påbörjar uppgraderingen till version {{version}} …",
-      "upgradeDone": "Uppgradering slutförd!",
-      "success": "Klustret kommer att påbörja uppgraderingen inom kort.",
-      "error": "Ett fel inträffade vid uppgradering av kluster. Försök igen senare."
+      "errorMsg": "Innan du kan bort detta kluster måste du först flytta alla noder till ett annat kluster eller avregistrera alla noder.",
+      "deregisterWarning": "Alla noder i detta kluster avregistreras automatiskt och klustret flyttas permanent. Åtgärden kan inte ångras.",
+      "deactivateWarning": "Detta är det sista Hybrid Media-klustret för denna organisation. Om du tar bort det inaktiveras tjänsten."
     },
     "reassign": {
       "reassignHost": "Omplacera värd",
@@ -6255,7 +6474,7 @@
       "confirmation_check": "Jag är införstådd med att ovanstående kluster kommer att avregistreras när jag avaktiverar Hybrid Media-tjänsten och att alla ytterligare möten kommer att tillhandahållas i molnet och att denna åtgärd inte går att ångra.",
       "button_deactivate": "Inaktivera",
       "success": "Din Hybrid Media-tjänst har inaktiverats.",
-      "error": "Kunde inte avregistrera kluster. Försök igen lite senare.",
+      "error": "Det gick inte att inaktivera Hybrid Media-tjänsten.",
       "step": "Steg ",
       "of": " av 2"
     },
@@ -6319,8 +6538,8 @@
       "meeting-duration-title": "Mötets varaktighet"
     },
     "mediaServiceActivationFailure": "Problem med att aktivera tjänsten",
-    "mediaMicroserviceFailure": "På grund av ett problem med att ansluta till tjänsten kunde inte omkoppling av Hybrid Media-tjänsten aktiveras för din organisation. Om problemet kvarstår kan du öppna ett ärende via admin.ciscospark.com.",
-    "mediaNetworkFailure": "På grund av ett problem med nätverksanslutningen kunde inte omkoppling av Hybrid Media-tjänsten aktiveras för din organisation. Om problemet kvarstår kan du öppna ett ärende via admin.ciscospark.com.",
+    "mediaMicroserviceFailure": "Hybrid Media-tjänsten aktiverades inte för din organisation eftersom det inte gick att aktivera omkopplingen av Hybrid Media-tjänsten. Öppna ett supportärende via admin.ciscospark.com att få problemet åtgärdat.",
+    "mediaEntitlementEnablementFailure": "Hybrid Media-tjänsten aktiverades inte för din organisation eftersom de nödvändiga licenserna inte tillämpas på din organisation. Öppna ett supportärende via admin.ciscospark.com att få problemet åtgärdat.",
     "delete": "Ta bort",
     "cancel": "Avbryt",
     "actionsHeader": "Åtgärder",
@@ -6584,7 +6803,7 @@
     "common_reports": "Allmänna rapporter",
     "training_center": "Training Center {}",
     "event_center": "Event Center {}",
-    "support_center": "Support Center {}",
+    "support_center": "Support Center",
     "remote_access": "Remote Access",
     "meeting_in_progess": "Möten pågår",
     "meeting_usage": "Mötesanvändning",
@@ -6954,6 +7173,10 @@
     "redistributeLicenses": "Omdistribuera licenser",
     "redistributeLicensesDesc": "Ange hur många licenser du vill sätta på varje webbplats",
     "redistributeLicensesDesc2": "Du måste tilldela alla licenser och varje webbplats måste ha minst en licens.",
+    "redistributeLicensesValidMessages": {
+      "allLicensesAssigned": "Alla licenser har tilldelats.",
+      "allSitesHaveLicense": "Varje webbplats har minst en licens."
+    },
     "redistributeLicensesDelete": "<strong>Så här slutför du borttagningen av webbplatsen:</strong> WebEx-webbplatsen <strong>{{siteUrl}}</strong> kan nu tas bort. Du måste först tilldela licenserna från webbplatsen till de återstående webbplatserna i prenumerationen.",
     "redistributeRejectModalTitle": "Det går inte att omdistribuera licenserna",
     "redistributeRejectModalBodyOnlySite": "Du kan inte omdistribuera licenser mellan webbplatser eftersom det endast finns en webbplats.",
@@ -6994,6 +7217,9 @@
     "status": "Status",
     "cluster": "Kluster",
     "sipUri": "Katalog-URI",
+    "primaryDN": "Primär DN",
+    "telephoneNumber": "Telefonnummer",
+    "ucmCluster": "UCM FQDN",
     "details": "Detaljer"
   },
   "validation": {
@@ -7052,8 +7278,8 @@
         "message": "Systemets programvara kommer inte att uppdateras."
       },
       "soontobedeactivated": {
-        "type": "Enheten kommer snart att inaktiveras",
-        "message": "Den här enheten har varit offline i flera veckor. Se till att den kopplas upp inom {{expireInDays}} dagar för att undvika inaktivering."
+        "type": "Enhetens inloggningsuppgifter upphör snart att gälla",
+        "message": "Den här enheten har varit offline i flera veckor. Se till att den kopplas upp inom {{expireInDays}} dagar för att undvika Spark-inaktivering."
       },
       "ntpstatus": {
         "type": "Tidsserver kan ej nås",
@@ -7182,6 +7408,7 @@
   "sunlightDetails": {
     "title": "Ta hand om",
     "status": "Status: ",
+    "numberTitle": "Nummer",
     "settingsTitle": "Inställningar",
     "featuresTitle": "Funktioner",
     "sorryMessage": "Tyvärr gick något fel ",
@@ -7203,15 +7430,20 @@
       "newCareTemplateModalTitle": "Skapa en ny Care-funktion",
       "newVirtualAssistantModalTitle": "Skapa ny virtuell kundassistent",
       "newCustomerSupportTemplateModalTitle": "Skapa ny kundsupportmall",
+      "newWebTemplateModalTitle": "Skapa en ny webbmall",
       "noCareFeatures": "Hjälp-funktionerna är inte tillgängliga för nuvarande inloggning",
       "selectCHDesc": "Skapa en chattmall som definierar din upplevelse av kundsupportchatt.",
       "selectCADesc": "Skapa en mall som definierar hur dina kunder begär en återuppringning.",
       "selectCHCADesc": "Skapa en mall som definierar både upplevelsen av kundsupportchatt och hur dina kunder begär en återuppringning.",
-      "selectCSTDesc": "Skapa webbmallar som definierar din upplevelse av kundsupportchatt och återuppringning.",
+      "selectCSTDesc": "Skapa kundsupport mallar som definierar hur dina kunder når dig via flera kanaler.",
+      "selectWTDesc": "Skapa webbmallar som definierar din upplevelse av kundsupportchatt och återuppringning.",
       "chatType": "Chattmall",
+      "webTemplate": "Webbmall",
       "callbackType": "Återuppringningsmall",
       "chatPlusCallbackType": "Mall för chatt + återuppringning",
-      "virtualAssistant": "Virtuell assistent"
+      "virtualAssistant": "Virtuell assistent",
+      "noCallWarningMessage" : "Kräver samtalstjänst.",
+      "learnMoreLink": "Mer information"
     },
     "settings": {
       "setUpCare": "Ta hand om",
@@ -7254,6 +7486,7 @@
       "routingChangeWarnMsgLine3": "Användarna måste logga in igen för att ta emot uppgifter som baseras på den nya dirigeringen."
     },
     "featuresNotYetConfiguredPage": {
+      "addNumbers": "Lägg till nummer",
       "createCareTemplate": "Skapa en hjälpmall",
       "createCareTemplateDesc": "En kundtjänstmall är det som används av kunden för att kontakta kundtjänst.",
       "MessageLicenseMissing": "Meddelande är obligatoriskt för Care-mallar. Aktivera meddelande <a href ng-click=\"{{onclick}}\">genom att kontakta din partner eller Ciscos försäljningsavdelning</a>",
@@ -7300,6 +7533,18 @@
     "reloadMessage": "Försök att läsa in sidan igen",
     "feature": "Funktion"
   },
+  "careVoiceFeatures": {
+    "title": "Aktivera Spark Care-röstfunktioner",
+    "heading": "Välj en samtalstjänst för att aktivera Spark Care-röstfunktioner:",
+    "enableSparkCall": "Aktivera Spark-samtal",
+    "scDescription": "Låt Spark Care-agenter använda Spark-samtal för röstfunktioner.",
+    "enableSC": "Kontakta din partner för att aktivera Spark-samtal.",
+    "contactPartner": "<a href = #>Kontakta partner</a>",
+    "useHybridCall": "Använd Hybrid-samtal",
+    "hcDescription": "Låt Spark Care-agenter använda lokal infrastruktur för röstfunktioner.",
+    "enableHybrid": "Konfigurera Hybrid-samtal och Enterprise Private Trunking för att låta din organisation använda Cisco Unified Communications Manager.",
+    "setUpHybrid": "<a href ng-click=\"{{onsetuphybrid}}\">Konfigurera Hybrid-samtal</a><br><a href ng-click=\"{{onsetuptrunk}}\">Konfigurera Enterprise Private Trunking</a>"
+  },
   "placesPage": {
     "nameHeader": "Namn",
     "typeHeader": "Typ",
@@ -7320,9 +7565,10 @@
     "failedToSaveChanges": "Kunde inte spara ändringar till platsen. Orsak:",
     "failedToDelete": "Kunde inte ta bort plats. Orsak:",
     "botAuthorizations": {
-      "title": "Platser med API-åtkomst",
+      "title": "Åtkomst till enheternas API:er",
       "header": "Aktuell åtkomst för enheter som tillhör ”{{ placeName }}”",
       "subHeader": "Följande bottar och användare har behörighet att komma åt enheternas API:er. Fullständig åtkomst ger kontroll över alla enheter som tillhör den här platsen. Försäkra dig om att du litar på källan.",
+      "subHeaderUser": "Följande bottar och användare har behörighet att komma åt enheternas API:er. Fullständig åtkomst ger kontroll över alla enheter som tillhör den här användaren. Försäkra dig om att du litar på källan.",
       "table": {
         "name": "Behörig att",
         "role": "Åtkomstnivå",
@@ -7368,10 +7614,10 @@
     "deleteNumberTextBase": "Är du säker på att du vill ta bort det här telefonnumret? {{ isApiImplementationSwivel }}.",
     "deleteNumberTextStandard": "Telefonnumret kommer att tas bort permanent. Se över faktureringsändringar med PSTN-leverantören",
     "deleteNumberTextBYOP": "Numret kommer att skickas tillbaka till dig omedelbart",
-    "headerLabelInternalNumber":"interntNummer",
-    "headerLabelExternalNumber":"telefonnummer",
-    "headerLabelUserId":"tilldelatTill",
-    "headerLabelLocation":"plats"
+    "headerLabelInternalNumber": "interntNummer",
+    "headerLabelExternalNumber": "telefonnummer",
+    "headerLabelUserId": "tilldelatTill",
+    "headerLabelLocation": "plats"
   },
   "messengerCiSync": {
     "orgInfoSection": {
@@ -7433,11 +7679,18 @@
     "dirsyncStatusHeading": "Katalogsynkronisering för gemensam identitet",
     "dirsyncStatusTooltip": "För att komma åt Cisco Spark-plattformsfunktioner måste WebEx Messenger-användare vara synkroniserade med Common Identity-tjänsten."
   },
+  "careAddNumberTpl": {
+    "emergencyAcknowledge": "Jag förstår att det kanske inte fungerar att ringa nödnummer på ett företagsklassat IP-telefoninätverk.",
+    "addNumbers": "Lägg till nummer",
+    "pstnNumbers": "PSTN-nummer",
+    "internalDialing": "Intern uppringning",
+    "duplicateNumber": "{{number}} är ett dubblettnummer."
+  },
   "careChatTpl": {
     "editAction": "Redigera",
     "deleteFeatureTextConfirmation": "Är du säker på att du vill ta bort {{ featureName }}?",
-    "deleteVaFeatureTextConfirmation": "Är du säker på att du vill ta bort {{ featureName }}?<br>Om du tar bort den virtuella kundassistenten tas den bort från alla kundsupportmallar. Kunderna kan inte längre kommunicera med den virtuella assistenten.",
-    "deleteEvaFeatureTextConfirmation": "Vill du ta bort {{ featureName }}?<br>Du kan inte längre eskalera chattbegäranden till expertutrymmen i Cisco Spark.",
+    "deleteVaFeatureTextConfirmation": "Är du säker på att du vill ta bort {{ featureName }}? Om du tar bort den virtuella kundassistenten tas den bort från alla kundsupportmallar. Kunderna kan inte längre kommunicera med den virtuella assistenten.",
+    "deleteEvaFeatureTextConfirmation": "Vill du ta bort {{ featureName }}? Du kan inte längre eskalera chattbegäranden till expertutrymmen i Cisco Spark.",
     "createSuccessText": "Du har skapat {{ featureName }}.",
     "createTemplateFailureText": "Kunde inte skapa Hjälptjänstmall.",
     "editSuccessText": "Ändringar för {{ featureName }} har sparats.",
@@ -7462,6 +7715,20 @@
     "profile_chat": "Varumärkesprofilering och identitet",
     "profile_callback": "Varumärkesprofilering och identitet",
     "profile_chatPlusCallback": "Varumärkesprofilering och identitet vid chatt",
+    "chatEscalationBehavior_chat": "Beteende för chatteskalering",
+    "chatEscalationBehavior_callback": "beteende för chatteskalering",
+    "chatEscalationBehavior_chatPlusCallback": "Beteende för chatteskalering",
+    "chatEscalatioAgent": "Endast agenter",
+    "chatEscalatioExpert": "Endast experter",
+    "chatEscalatioAgentPlusExpert": "Agenter och experter",
+    "chatEscalatioAgentDesc": "Chattbegäranden som erbjuds agenter med Cisco Spark Care Desktop.",
+    "chatEscalatioExpertDesc": "Chattbegäranden som erbjuds Cisco Spark-användare som arbetar i expertutrymmen.",
+    "chatEscalatioAgentPlusExpertDesc": "Chattbegäranden som erbjuds agenter och experter samtidigt.",
+    "chatEscalatioAgentTooltip": "Dirigeringsmetoden som är konfigurerad <br> på inställningssidan för Care<br> bestämmer hur eskaleringen <br> väljer agenter.",
+    "chatEscalatioExpertTooltip": "Den virtuella expertassistenten <br> hanterar eskalering till Cisco <br> Spark. Konfigurera assistenten <br> på sidan för Care-funktioner.",
+    "chatEscalatioAgentPlusExpertTooltip": "En accepterad chattbegäran <br> tas bort från alla köer och kan inte eskaleras igen. <br> <br> Dirigeringsmetoden som är konfigurerad <br> på inställningssidan för Care <br> bestämmer valet av agent. Den virtuella expertassistenten väljer ett expertutrymme att eskalera till i Cisco Spark.",
+    "learnMoreLink": "Mer information",
+    "evaTemplateHeader": "Välj till vem begäranden från denna chatt ska eskaleras:",
     "ctVirtualAssistantPageTitle": "Virtuell kundassistent",
     "overview": "Mallöversikt",
     "chatStatusMessages_chat": "Statusmeddelanden",
@@ -7492,13 +7759,19 @@
     "profile_agent_info": "Använd unika profiler för att representera olika agenter i din organisation.",
     "profile_org_info_cva": "Använd en gemensam profil för att representera den virtuella kundassistenten och alla agenter i din organisation.",
     "profile_agent_info_cva": "Använd unika profiler för att representera din virtuella kundassistent och agenter som alternerar under en chatt. ",
+    "chatEscalationBehaviorDesc": "Definiera vart kundchattbegäranden eskaleras.",
     "default_cva_name": "Virtuell assistent",
     "overviewDesc_chat": "Växla mellan korten för att anpassa vilka sidor du vill att kunder ska se när de begär att få chatta med kundtjänst",
     "overviewDesc_callback": "Växla mellan korten för att anpassa vilka sidor du vill att kunder ska se när de begär att bli uppringda av kundtjänst",
     "overviewDesc_chatPlusCallback": "Växla mellan korten för att anpassa vilka sidor du vill att kunder ska se när de begär att få chatta med eller bli uppringda av kundtjänst",
     "customerInfoDesc_chat": "Detta är den skärm som kunden fyller i för att börja chatta med en agent",
+    "customerInfoDesc_chat_expert": "Använd dessa attribut för att samla in kundinformation och underlätta eskalering till ett Cisco Spark-\nexpertutrymme genom att identifiera ämnet i kundens begäran.",
     "customerInfoDesc_callback": "Detta är den sida som kunden fyller i för att begära att bli uppringda av en agent",
+    "evaSpaceDetailsText": ", din virtuella expertassistent, är i {{numberOfEvaSpaces}} expertutrymmen i Cisco Spark:",
+    "evaSpaceDetailsTextOneSpace": ", din virtuella expertassistent, är i 1 expertutrymme i Cisco Spark:",
+    "evaDefaultName": "EVA",
     "customerInfoToggleTooltipMessage": "Denna sida måste användas i mallen och kan inte inaktiveras.",
+    "agentUnavailableToggleTooltipMessage": "Du eskalerar endast till experter, så konfigurationen Agent ej tillgänglig krävs inte. För att möjliggöra eskalering till agenter redigerar du inställningarna för Beteende för chatteskalering.",
     "virtualAssistantToggleTooltipMessage": "Konfigurera en virtuell kundassistent via sidan Funktioner innan du aktiverar detta. Du kan också konfigurera assistenten nu och vänta med att aktivera funktionen till ett senare tillfälle.",
     "getVirtualAssistantListError": "Fel vid hämtning av en lista med konfigurerade virtuella assistenter.",
     "virtualAssistantSelector": "Virtuell kundassistent",
@@ -7583,6 +7856,11 @@
     "image": "Bild",
     "displayText": "Visa text",
     "orgSettingInfo": "Du kan ändra organisationens logotyp på sidan Inställningar.",
+    "evaSettingInfo": "Aktivera eskalering till experter genom att skapa en virtuell expertassistent på sidan med Care-funktioner.",
+    "evaEnabledSettingInfo": "om hur du konfigurerar beteende för chatteskalering.",
+    "escalationEnabledRequiredInfo": "Om detta fält är obligatoriskt vid kategoritypen blir eskaleringen av begäran till Cisco Sparks expertutrymmen bättre. ",
+    "escalationEnabledCategoryInfo": "Lägg till kategorialternativ som innehåller nyckelord från namnen på utrymmena för din virtuella expertassistent. ",
+    "escalationDetailsDefaultSpace": "(Standardutrymme)",
     "agentSettingInfo": "Du kan inte ändra den standardavatar för agenten som visas i förhandsgranskningen.",
     "agentMsg": "Hej! Jag behöver hjälp med MFI-tangenten.",
     "agentMsgTime": "Kl. 10.10",
@@ -7603,17 +7881,29 @@
     "typePhone": "Telefon",
     "typeCustom": "Anpassat",
     "typeReason": "Orsak",
-    "categoryHintText": "Lägg till kategorialternativ som frågor, fakturering ...",
+    "categoryHintText": "Lägg till kategorialt. som frågor, fakturering ...",
     "categoryWarningText": "Lägg till minst ett kategorialternativ.",
     "helpTextWaiting": "Kunderna ser detta medan de väntar på att en agent ska besvara deras meddelande.",
     "helpTextWaitingVirtualAssistant": "Om du använder en virtuell kundassistent anger det här meddelandet att det sker en övergång från automatisk support till mänsklig interaktion.",
     "helpTextChatting": "Kunderna ser detta om de minimerar chattfönstret under en pågående interaktion.",
     "helpTextLeaveRoom": "Kunderna ser detta när en agent lämnar chatten och avslutar interaktionen.",
+    "assistantTooltip": "{{assistantType}} {{assistantName}} används i den här mallen.",
     "filterType": {
       "chat": "Kundsupportmall",
       "callback": "Kundsupportmall",
       "chatPlusCallback": "Kundsupportmall",
       "virtualAssistant": "Virtuell assistent"
+    },
+    "featureCard": {
+      "spacesInUseText": "Expertutrymmen: {{ numOfSpaces }}",
+      "templatesInUseText": "Mallar: {{ numOfTemplates }}",
+      "unavailableSpacesInUseText": "Användningsdata inte tillgängliga",
+      "evaPopoverMainHeader": "Användning av virtuell expertassistent",
+      "popoverSpacesHeader": "Expertutrymmen i Cisco Spark: {{ numOfSpaces }}",
+      "popoverDefaultSpace": "(Standardutrymme)",
+      "popoverErrorMessage": "Det går inte att hämta användningsdata för den virtuella expertassistenten. Försök igen senare.",
+      "cvaPopoverMainHeader": "Användning av virtuell kundassistent",
+      "popoverTemplatesHeader": "Kundsupportmallar: {{ numOfTemplates }}"
     },
     "ctValidation": {
       "errorChar250": "Inte fler än 250 tecken.",
@@ -7703,7 +7993,8 @@
     "downloadEmbedCode": "Hämta inbäddningskod",
     "embed-code": {
       "no-verified-domains": {
-        "warn": "Det finns inga verifierade domäner för din organisation. Mallar till Hjälptjänsten fungerar som standard på alla domäner. Gå till sidan Inställningar om du vill lägga till och verifiera domäner och på sätt begränsa dem så att de endast fungerar med din organisations domäner."
+        "warn": "Det finns inga verifierade domäner för din organisation. Mallar till Hjälptjänsten fungerar som standard på alla domäner. Gå till sidan Inställningar om du vill lägga till och verifiera domäner och på sätt begränsa dem så att de endast fungerar med din organisations domäner.",
+        "warn_v1": "Det finns inga verifierade domäner för din organisation. Mallar till Hjälptjänsten fungerar som standard på alla domäner. Gå till sidan för inställningar för globala organisationer om du vill lägga till och verifiera domäner och på sätt begränsa dem så att de endast fungerar med din organisations domäner."
       },
       "verified-domains": {
         "info": "Följande är din organisations verifierade domäner:",
@@ -7711,7 +8002,8 @@
       },
       "domain-fetch-error": {
         "info": "Ett fel inträffade vid inläsning av din organisations verifierade domäner. Försök igen.",
-        "warn": "Mallar till Hjälptjänsten fungerar som standard på alla domäner. Gå till sidan Inställningar om du vill lägga till och verifiera domäner och på sätt begränsa dem så att de endast fungerar med din organisations domäner."
+        "warn": "Mallar till Hjälptjänsten fungerar som standard på alla domäner. Gå till sidan Inställningar om du vill lägga till och verifiera domäner och på sätt begränsa dem så att de endast fungerar med din organisations domäner.",
+        "warn_v1": "Mallar till Hjälptjänsten fungerar som standard på alla domäner. Gå till sidan för inställningar för globala organisationer om du vill lägga till och verifiera domäner och på sätt begränsa dem så att de endast fungerar med din organisations domäner."
       }
     },
     "embedCodeFor": "Bädda in kod för ",
@@ -7737,8 +8029,16 @@
           "code": "eva",
           "type": "Virtuell <br> expertassistent",
           "selectDesc": "Skapa en virtuell assistent som kopplar ämnesexperter i Cisco Spark-utrymmen till kunder med chattbegäranden.",
-          "disabledTooltip": "Du kan bara ha en virtuell expertassistent för din organisation. Du kan ändra inställningarna för din befintliga virtuella expertassistent på sidan Funktioner."
+          "disabledTooltip": "Du kan bara ha en virtuell expertassistent för din organisation. Du kan ändra inställningarna för din befintliga virtuella expertassistent på sidan Funktioner.",
+          "nonAdminEditDeleteWarning": "Du har inte behörighet att redigera eller ta bort denna virtuella assistent. Kontakta ägaren, {{owner}}, för att begära en av dessa åtgärder."
         }
+      },
+      "invalidInput": {
+        "invalidAccessToken": "Klientåtkomst-token för Dialogflow är ogiltig.\nKlicka på bakåtpilen för att återgå till dialogintegreringssidan och ange en giltig token.",
+        "duplicateName": "{{ featureName }} måste ha ett unikt namn.\nKlicka på bakåtpilen för att återgå till namnsidan och ange ett giltigt namn.",
+        "invalidName": "{{ featureName }} har ett ogiltigt namn.\nKlicka på bakåtpilen för att återgå till namnsidan och ange ett giltigt namn.",
+        "invalidIcon": "{{ featureName }} har en ogiltig avatar.\nKlicka på bakåtpilen för att återgå till avatarsidan och ladda upp en giltig avatar.",
+        "invalidEmail": "Den e-postadress som du angav är ogiltig.\nKlicka på bakåtpilen för att återgå till e-postsidan och ange en giltig e-postadress."
       },
       "createTitle": "Skapa {{ featureName }}",
       "editTitle": "Redigera {{ featureName }}",
@@ -7749,10 +8049,7 @@
         "boxTitle": "Skapa en Dialogflow-agent innan du skapar din {{ featureName }}.",
         "boxDesc": "Skapa en automatisk agent i Dialogflow med en naturlig dialog. Den integrerade {{ featureName }} använder den inbyggda dialogen för att interagera med dina kunder och eskalera ärenden till verkliga agenter vid behov.",
         "boxRadioOne": "Nej, jag har inte någon förkonfigurerad Dialogflow-agent",
-        "boxRadioOneDesc1": "Gå till ",
-        "boxRadioDialogflow": "Dialogflow",
-        "boxRadioOneDesc2": " för att skapa en agent. Kom igång med hjälp av ",
-        "boxRadioDialogflowDoc": "Dialogflow-dokumentation",
+        "boxRadioOneDesc": "Gå till <a href=\"https://dialogflow.com\" target=\"_blank\">Dialogflow</a> för att skapa en agent. Se <a href=\"https://dialogflow.com/docs/getting-started/basics\" target=\"_blank\">Dialogflow-dokumentationen för att komma igång.</a>",
         "boxRadioTwo": "Ja, jag har en förkonfigurerad Dialogflow-agent och är redo att gå vidare",
         "boxRadioTwoDesc": "Klicka på pilen för att fortsätta att integrera din Dialogflow-agent med en {{ featureName }}"
       },
@@ -7775,7 +8072,7 @@
       "accessToken": {
         "title": "Slutför dialogintegreringen",
         "desc": "Slutför integreringen så aktiveras användningen av en naturlig dialog vid interaktion med kunderna",
-        "boxDesc": "Varje Dialogflow-agent har en unik token för klientåtkomst som lagras i agentinställningarna. Kopiera denna token från dina konfigurerade Dialogflow-agentinställningar, ange den här och klicka på ”Validera” för att kontrollera denna token innan du slutför dialogintegreringen.",
+        "boxDesc": "Varje Dialogflow-agent har en unik token för klientåtkomst som lagras i agentinställningarna. När du är klar med Dialogflow-konfigurationen kopierar du din token för klientåtkomst från inställningarna för agenten och anger den här för att slutföra integreringen.",
         "inputLabel": "Klientåtkomst-token för Dialogflow",
         "validateButtonText": "Bekräfta",
         "maxLengthError": "Token för klientåtkomst kan inte vara längre än 128 tecken.",
@@ -7812,8 +8109,6 @@
         "errorCreateTemplate": "Det går inte att spara {{ featureName }}. Försök igen.",
         "invalidEmailError": "E-postadressen som du angav är ogiltig. Ange en giltig e-postadress.",
         "duplicateEmailError": "E-postadressen som du angav finns redan. Ange en unik e-postadress.",
-        "invalidNameError": "Namnet på den virtuella expertassistenten är ogiltigt. Ange ett giltigt namn.",
-        "invalidAvatarError": "Avataren för den virtuella expertassistenten är ogiltig. Ladda upp en giltig avatar.",
         "editWarning": "Det kan vara en fördröjning innan du ser ändringarna för din virtuella expertassistent i Cisco Spark."
       },
       "overview": {
@@ -7860,6 +8155,7 @@
         "getConfigFailureText": "Det gick inte att ladda {{ featureName }}.",
         "deleteConfigFailureText": "Det gick inte att ta bort {{ featureName }}.",
         "createConfigFailureText": "Det gick inte att spara {{ featureName }}.",
+        "createEvaFailureText": "Det går inte att spara den virtuella expertassistenten. Du kan bara ha en virtuell expertassistent per organisation. Du kan redigera en befintlig virtuell expertassistent på sidan Funktioner.",
         "createSpecificFailureText": "Det gick inte att spara {{ featureName }} {{ inputItem }}.",
         "updateConfigFailureText": "Det gick inte att spara {{ featureName }}."
       }
@@ -8227,7 +8523,9 @@
       "title": "Cisco Spark Assistant",
       "subsectionLabel": "Aktivera Cisco Spark Assistant",
       "description": "Låter användare utföra vissa åtgärder genom att använda sin röst, till exempel ringa samtal och starta möten",
-      "termsOfService": "Servicevillkor för Cisco Spark Assistant "
+      "termsOfService": "Servicevillkor för Cisco Spark Assistant ",
+      "success": "Spark Assistant är uppdaterad",
+      "failure": "Det gick inte att uppdatera Spark Assistant"
     },
     "externalCommunication": {
       "title": "Extern kommunikation",
@@ -8247,7 +8545,9 @@
       "desktopApps": "Skrivbordsprogram",
       "webApp": "Webbprogram",
       "mobileApps": "Mobilappar",
-      "bots": "Bots"
+      "bots": "Bots",
+      "disableWhiteboardsTitle": "Inaktivera whiteboard",
+      "disableWhiteboardsDescription": "Att begränsa fildelningskontroll innebär att whiteboardtavlor också inaktiveras"
     },
     "support": {
       "title": "Support",
@@ -8269,7 +8569,7 @@
       "status": "Status",
       "enabled": "Aktiverad",
       "disabled": "Inaktiverad",
-      "turnOffDirSync": "Stäng av katalogsynkronisering",
+      "turnOffDirSync": "Stäng av all katalogsynkronisering",
       "turnOnDirSync": "Så här aktiverar du katalogsynkronisering",
       "connectorsTitle": "Kataloganslutningar",
       "deregister": "Avregistrera",
@@ -8282,6 +8582,29 @@
       "deregisterWarning": "Avinstallera kataloganslutningar innan du avregistrerar.",
       "deregisterSuccess": "Kataloganslutningen '{{name}}' har avregistrerats.",
       "deregisterFailed": "Det gick inte att avregistrera kataloganslutningen '{{name}}'."
+    },
+    "multiDirsync": {
+      "loading": "Uppdateringsstatus",
+      "title": "Katalogsynkronisering",
+      "connectorError": "Ett fel inträffade vid inaktiveringen av {{connectorName}}.",
+      "description": "Nya användare kommer automatiskt att läggas till från din katalog när den synkroniseras. Uppdateringar kan göras direkt i Cisco Directory Connector.",
+      "deactivate": "Inaktivera {{connectorName}}",
+      "deactivateConnectorMessage": "När du inaktiverar servern får du inte längre en hälsorapport. Molnsynkroniseringen stoppas om detta är den sista aktiva fungerande servern. Vill du inaktivera den här servern?",
+      "degraded": "Degraderad",
+      "deleteAllError": "There was an error while deactivating all Directory Connector.",
+      "deleteError": "Ett fel inträffade vid inaktiveringen av {{domainName}}.",
+      "domainsError": "Ett problem uppstod vid hämtningen av katalogsynkroniseringsdata.",
+      "operational": "Operativ",
+      "outage": "Driftsavbrott",
+      "pcOnline": "PC-server online",
+      "pcOffline": "PC-server offline",
+      "seeAllDomains": "Se alla registrerade domäner",
+      "turnOff": "Stäng av {{domainName}}",
+      "turnOffAllMessage": "Detta steg stänger av all synkronisering med Directory Connector. När synkroniseringen är inaktiverad kan du endast hantera användare manuellt och de visas inte i Active Directory. Vill du stänga av all synkronisering?",
+      "turnOffAllTitle": "Stäng av all synkronisering",
+      "turnOffDomainMessage": "När domänen är avstängd stoppas molnsynkroniseringen. Du måste aktivera synkroniseringen från Directory Connector. Vill du stänga av den?",
+      "turnOffDirSync": "Stäng av all katalogsynkronisering",
+      "turnOnDirSync": "Så här aktiverar du katalogsynkronisering"
     }
   },
   "my-company": {
@@ -8309,6 +8632,7 @@
     "hybridDataSecurity": "Hybrid-datasäkerhet",
     "less": "Mindre",
     "licenses": "Licenser:",
+    "licensing": "HCS",
     "licenseSummary": "Licenssammanfattning",
     "licenseSummaryEnterprise": "Licenssammanfattning för företag",
     "licenseSummaryOnline": "Licenssammanfattning för {{name}}",
@@ -8342,7 +8666,7 @@
       "CMR": "WebEx mötesrum för samarbete (CMR)",
       "CO": "Cisco Spark-samtal",
       "SD": "Cisco Spark-paket för rum, DX-, MX- och SX-serierna",
-      "SB": "Cisco Spark-forum",
+      "SB": "Cisco Spark Board",
       "CDC": "Chatt och återuppringning",
       "CVC": "Chatt, återuppringning och inkommande samtal",
       "MGMTPRO": "Pro-paket",
@@ -8537,7 +8861,7 @@
       "CMR": "Mötesrum för samarbete",
       "ST": "Lagring",
       "SD": "Cisco Spark-paket för rum, DX-, MX- och SX-serierna",
-      "SB": "Cisco Spark-forum",
+      "SB": "Cisco Spark Board",
       "linkedSite": "Äldre WebEx-licens",
       "CDC": "Chatt och återuppringning",
       "CVC": "Chatt, återuppringning och inkommande samtal",
@@ -8577,11 +8901,6 @@
       "nohistory": "Ingen sökhistorik",
       "singlematch": "träff",
       "matches": "träffar"
-    },
-    "extended-data-dialog": {
-      "copy": "Kopiera",
-      "copiedToClipboard": "Data kopierades till urklipp",
-      "unableToCopy": "Kunde inte kopiera data till urklipp"
     },
     "verification": "Verifiering",
     "resend": "Skicka inbjudan på nytt",
@@ -8674,9 +8993,9 @@
       "title": "Kalender (Exchange/Office 365)"
     },
     "hybridServicesOrganization": {
-      "fmsError": "Det gick inte att läsa organisationens statusar för lokalt baserade hybrid-tjänster. Om felet kvarstår kan du klicka på ditt användarnamn och sedan välja <strong>Feedback</strong> för att öppna ett ärende för vidare undersökning.",
-      "office365Error": "Det gick inte att läsa organisationens status för molnbaserade Office 365. Om felet kvarstår kan du klicka på ditt användarnamn och sedan välja <strong>Feedback</strong> för att öppna ett ärende för vidare undersökning.",
-      "googleCalendarError": "Det gick inte att läsa organisationens status för Google Kalender. Om felet kvarstår kan du klicka på ditt användarnamn och sedan välja <strong>Feedback</strong> för att öppna ett ärende för vidare undersökning."
+      "fmsError": "Kunde inte att läsa status för organisationens interna hybridtjänster.",
+      "office365Error": "Kunde inte läsa status för organisationens molnbaserade Office 365.",
+      "googleCalendarError": "Kunde inte läsa status för organisationens Google Kalender."
     }
   },
   "partnerManagement": {
@@ -8796,7 +9115,7 @@
     },
     "unclaim": {
       "header": "Fordran om att friställa domän",
-      "unclaim": "Friställ",
+      "unclaim": "Version",
       "description": "Du är på väg att friställa följande domän:",
       "warning": "Denna domän kan nu verifieras och reserveras av andra organisationer."
     },
@@ -8891,6 +9210,7 @@
         "title": "Ta hand om",
         "description": "Konfiguration av kundtjänstkanaler för din organisation.",
         "buttons": {
+          "numbers": "Nummer",
           "features": "Funktioner",
           "settings": "Inställningar"
         }
@@ -8947,7 +9267,20 @@
           "matchingEmails": "Användarnas e-postadresser som är exakta matchningar i Cisco Spark, WebEx och Google.",
           "aclAdminAccount": "(Valfritt) Om du använder rumsresurser, ett auktoriserat ACL Admin-konto.",
           "removeHangouts": "(Valfritt) Ta bort Google Hangouts i möteshändelser"
+        },
+        "office365Prerequisites": {
+          "title": "Förutsättningar för Hybrid-kalender (Office)",
+          "intro": "Använd denna checklista tillsammans med distributionsdokumenten för Office 365. Se till att alla förutsättningar som krävs för distribution av Hybrid-kalendertjänsten i Office 365-organisationen är uppfyllda.",
+          "officeOrganization": "En Office 365-organisation med Exchange Online-konton för användare i organisationen. Under konfigurationen måste du kunna logga in som global administratör för att tilldela programbehörigheter",
+          "webExSite": "För @webex-schemaläggning, en Cisco WebEx-webbplats på WBS31 eller senare",
+          "sparkOrganization": "En Cisco Spark-organisation med lägsta tillåtna antal grundläggande möten och affärsmeddelanden (M1)",
+          "matchingEmails": "Användare måste ha aktiverat Cisco Spark-konton med e-postadresser som är exakt samma i Cisco Spark, WebEx och Exchange Online"
         }
+      },
+      "hybridTesting": {
+        "title": "Hybrid-test",
+        "description": "Kör olika testprogram eller tester för att bekräfta att slutpunkterna fungerar",
+        "edit": "Redigera programsviter"
       },
       "hybridCall": {
         "title": "Hybrid-samtal",
@@ -9143,8 +9476,6 @@
         "hybridDestination": "Använd en eller flera Expressway-E som har konfigurerats för Hybrid-samtalstjänsten Connect ",
         "addSipDestination": "Lägg till SIP-destination",
         "certificateTitle": "Certifikat",
-        "certificateDescription": "Välj om du vill använda de certifikat som tillhandahålls i Cisco Collaborations standardlista över betrodda certifikat eller överför ditt eget.",
-        "certificateDescriptionNew": "Välj om du vill använda de certifikat som tillhandahålls i Cisco Collaboration Clouds standardlista över betrodda certifikat eller överför ditt eget.",
         "certDescNew": "Använd certifikat som tillhandahålls i <a href=\"{{href}}\" target=\"_blank\">Cisco Collaboration Clouds standardlista över betrodda certifikat</a>",
         "upload": "eller överför ditt eget. Om du använder ett eget certifikat måste du se till att värdnamnen finns på en verifierad domän",
         "click": "För mer information <a href=\"{{href}}\" target=\"_blank\">klicka här</a>.",
@@ -9204,7 +9535,8 @@
     "line2": "Se <a href=\"http://www.cisco.com/go/hybrid-services-calendar\" target=\"_blank\">dokumentationen</a> om du behöver hjälp med att aktivera användare."
   },
   "readOnlyModal": {
-    "banner": "Du är i skrivskyddat läge"
+    "title": "Skrivskyddat läge",
+    "message": "Du visar programmet i skrivskyddat läge. Inga ändringar godkänns."
   },
   "readOnlyMessages": {
     "notAllowed": "Ej tillåtet i skrivskyddat läge. Åtgärden utfördes inte."
@@ -10066,7 +10398,7 @@
     "settingsLock": "Inställningslås",
     "settingsLockUpdated": "Inställningslås har uppdaterats",
     "settingsLockTooltip": "Aktivera inställningslåset för att förhindra oönskade ändringar av enheten. Vissa inställningar blir otillgängliga.",
-    "deviceApis": "Enhetens API:er",
+    "deviceApis": "Åtkomst till enheternas API:er",
     "deviceApiViewEdit": "Visa/redigera åtkomst"
   },
   "mediaMgrModal": {
@@ -10133,6 +10465,37 @@
       "link": "Länka dina användare",
       "post": "till Cisco Spark – Ett nytt sätt att uppleva WebEx-möten"
     },
+    "notification": {
+      "linkText": "Kom igång",
+      "infoText": "Länka dina konton till Cisco Spark – Ett nytt sätt att uppleva WebEx-möten"
+    },
+    "errors": {
+      "setAccountLinkingModeError": "Inställningen av kontolänkningsläget misslyckades med: {{message}}",
+      "getCiSiteLinkingError": "Kunde inte hämta länkningsinformationen med: {{message}}",
+      "getCiAccountSyncError": "Kunde inte hämta kontosynkronisering med: {{message}}",
+      "getDomainsError": "Kunde inte hämta domäner med: {{message}}"
+    },
+    "grid": {
+      "header": {
+        "siteUrl": "Webbplats-URL",
+        "accountLinkingStatus": "Status",
+        "accountLinkingMode": "Läge",
+        "linkedAccounts": "Länkande konton",
+        "action": "Åtgärd"
+      },
+      "actions": {
+        "launchWebExSiteAdmin": "Starta WebEx-webbplatsadmin",
+        "webExReports": "WebEx-rapporter",
+        "accountLinkingProgress": "Kontolänkningsförlopp",
+        "changeLinkingMethod": "Ändra länkningsmetod"
+      }
+    },
+    "linkingMode": {
+      "unset": "Inte angett",
+      "manual": "Manuell",
+      "auto_agreement": "Avtal",
+      "auto_verifiedDomain": "Verifierad domän"
+    },
     "siteDetails": {
       "breadCrumb": "Översikt",
       "siteInfo": "Webbplatsinformation",
@@ -10140,42 +10503,86 @@
       "licenseType": "Licenstyp",
       "modify": "Ändra",
       "linkingMode": "Länkningsläge",
-      "linkedUsers": "Länkade användare",
+      "linkedAccounts": "Länkande konton",
       "siteUsageReports": "Användarrapporter för webbplats",
       "viewReports": "Visa rapporter",
-      "readOnly": "Du har inte administratörsbehörighet för den här webbplatsen.",
+      "dontHaveAdminRights": "Du har inte administratörsbehörighet för den här webbplatsen.",
       "legacyWebexLicense": "Äldre WebEx-licens",
       "launchWebexSiteAdmin": "Starta WebEx-webbplatsadmin"
     },
     "wizard": {
-      "title": "Länkningsläge för WebEx-användare",
+      "title": "WebEx-kontolänkningsläge",
       "siteName": "Webbplatsnamn: {{siteName}}",
-      "mode": {
-        "automatic": {
-          "title": "Automatiskt",
-          "intro": "Inbjudna användare kommer INTE att få någon e-postinbjudan, utan deras Cisco Spark-konton kommer redan att vara verifierade. Detta kan få möjliga följder.",
-          "agreementLabel": "Inga e-postmeddelanden – via avtal",
-          "agreementLabelHelp": "Cisco kan länka dina användare å dina vägnar utan att skicka några e-postmeddelanden, så du kan hoppa över flera steg. I nästa steg skriver du under ett avtal.",
-          "verifyDomainLabel": "Inga e-postmeddelanden – verifierad domän",
-          "verifyDomainLabelHelp": "Du måste få dina domäner verifierade eller aktivera SSO och Directory Sync.",
-          "agreementTitle": "Cisco Spark-avtal",
-          "agreementInfo": "Läs avtalet noggrant och godkänn längst ned",
-          "agreementIntro": "Cisco kommer att verifiera alla domäner på din webbplats. Vissa domäner kommer INTE att verifieras, till exempel: gmail.com, yahoo.com",
-          "agreementText": "",
-          "agreementAcceptLabel": "Jag har läst avtalet och godkänner det.",
-          "agreementAcceptTitle": "Automatisk länkning, inga e-postmeddelanden via avtal",
-          "agreementAcceptInfo": "Länkning av användare kan ta upp till 24 timmar. Gå till Tjänster &gt; WebEx-webbplatslista för att se statusen. När den är slutförd kan dina användare använda Cisco Spark och uppleva den högsta möteskvaliteten.",
-          "verifyDomainTitle": "Automatisk länkning, inga e-postmeddelanden – verifierad domän",
-          "verifyDomainInfo": "Du måste verifiera din domän eller aktivera SSO och Directory Sync",
-          "verifyDomainButton": "Verifiera domän"
-        },
-        "manual": {
-          "title": "Manuell",
-          "intro": "Inbjudna användare kommer att få ett e-postmeddelande med en inbjudan om att aktivera sitt Cisco Spark-konto.",
-          "info": "Cisco kommer att skicka ut e-postinbjudningar när du bjuder in användare till Cisco Spark. Logga in på WebEx-webbplatsadmin och bjud in användare till Cisco Spark",
-          "manualLabel": "Skicka e-postmeddelande",
-          "manualLabelHelp": "Cisco kommer att skicka e-postinbjudningar när du bjuder in användare till Cisco Spark"
-        }
+      "enrolledWebexSiteName": "Namn på registrerad WebEx-webbplats",
+      "webexSite": "WebEx-webbplats"
+    }
+  },
+  "hcs": {
+    "taas": {
+      "testState": {
+        "good": "Godkänt",
+        "failed": "Misslyckades",
+        "running": "Körs ..."
+      },
+      "suiteView": {
+        "title": "Programsviter",
+        "createSuite": "Skapa programsvit",
+        "runSuite": "Kör programsvit",
+        "editSuite": "Redigera",
+        "copySuite": "Kopiera",
+        "scheduleSuite": "Schema",
+        "deleteSuite": "Ta bort",
+        "resources": "Resurser",
+        "results": "Hämta resultat för senast körda tester",
+        "schedule": "Schemaläggning",
+        "successTitle": "Ditt test körs!",
+        "successRun": "Klicka på länken i kortet för att se resultatet",
+        "errorRun": "Något gick fel med schemaläggningen",
+        "goToResults": "Visa resultat"
+      },
+      "taskView": {
+        "title": "Tester",
+        "addTest": "Skapa test",
+        "editTest": "Redigera",
+        "copyTest": "Kopiera",
+        "deleteTest": "Ta bort"
+      },
+      "createSuiteModal": {
+        "title": "Lägg till en programsvit",
+        "suiteName": "Svitnamn"
+      },
+      "scheduleCreateModal": {
+        "title": "Schemalägg ett test"
+      },
+      "scheduleView": {
+        "title": "Scheman",
+        "scheduleName": "Schemanamn",
+        "scheduledDate": "Datum, tid",
+        "scheduledSuite": "Schemalagda programsviter",
+        "actionHeader": "Åtgärder",
+        "runSchedule": "Kör nu",
+        "copySchedule": "Kopiera schema",
+        "editSchedule": "Redigera schema",
+        "deleteSchedule": "Ta bort detta schema",
+        "scheduleCreate": "Skapa schema"
+      },
+      "resourcesView": {
+        "createResource": "Skapa resurs"
+      },
+      "resourcesCreateModal": {
+        "title": "Skapa en resurs",
+        "instructions": "Använd detta formulär för att skapa en resurs som ska användas till testning. Kan vara en IP-telefon, Camelot, MMR och så vidare.",
+        "resourceName": "Resursens namn",
+        "resourceDetails": "Resursinformation"
+      },
+      "resultView": {
+        "suiteName": "Svitnamn",
+        "taskName": "Uppgiftsnamn",
+        "startTime": "Uppgiftens starttid",
+        "pass": "Godkänt",
+        "fail": "Misslyckades",
+        "skip": "Ignorerad",
+        "error": "Fel"
       }
     }
   }

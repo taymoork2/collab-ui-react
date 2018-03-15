@@ -13,7 +13,12 @@ describe('Component: accountLinkingWizardComponent', () => {
       domainsPromise: {},
       siteInfoPromise: {},
     },
-    domains: [],
+    domains: [
+      'hotmail.com',
+      'myFancyCompany.com',
+      'yahoo.fr',
+      'myFancyCompany2',
+    ],
   };
 
   beforeEach(function () {
@@ -22,6 +27,7 @@ describe('Component: accountLinkingWizardComponent', () => {
       '$log',
       '$componentController',
       '$state',
+      'MetricsService',
     );
   });
 
@@ -46,8 +52,24 @@ describe('Component: accountLinkingWizardComponent', () => {
       expect(this.controller.fsmState).toEqual(WizardState.entry);
     });
 
-  });
+    describe('filtering by public domains list', () => {
+      it('list entries that are ALSO in the public domains list', function() {
+        const domains = this.controller.getPublicDomains();
+        expect(domains).toEqual([
+          'hotmail.com',
+          'yahoo.fr',
+        ]);
+      });
 
+      it('list domains that are NOT in the public domains list', function() {
+        const domains = this.controller.getDomains();
+        expect(domains).toEqual([
+          'myFancyCompany.com',
+          'myFancyCompany2',
+        ]);
+      });
+    });
+  });
 
   describe('view', () => {
 

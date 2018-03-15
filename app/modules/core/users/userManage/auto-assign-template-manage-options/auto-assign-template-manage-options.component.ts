@@ -9,8 +9,6 @@ class AutoAssignTemplateManageOptionsController implements ng.IComponentControll
 
   /* @ngInject */
   constructor(
-    private $q: ng.IQService,
-    private $state: ng.ui.IStateService,
     private $translate,
     private AutoAssignTemplateService: AutoAssignTemplateService,
     private ModalService,
@@ -18,21 +16,7 @@ class AutoAssignTemplateManageOptionsController implements ng.IComponentControll
   ) {}
 
   public modifyAutoAssignTemplate() {
-    this.$q.all({
-      defaultAutoAssignTemplate: this.AutoAssignTemplateService.getDefaultTemplate(),
-      subscriptions: this.AutoAssignTemplateService.getSortedSubscriptions(),
-    })
-    .then((results) => {
-      const autoAssignTemplateData = this.AutoAssignTemplateService.toAutoAssignTemplateData(results.defaultAutoAssignTemplate, results.subscriptions);
-      this.$state.go('users.manage.edit-auto-assign-template-modal', {
-        prevState: 'users.manage.picker',
-        autoAssignTemplateData: autoAssignTemplateData,
-        isEditTemplateMode: true,
-      });
-    })
-    .catch((response) => {
-      this.Notification.errorResponse(response, 'userManage.org.modifyAutoAssign.modifyError');
-    });
+    this.AutoAssignTemplateService.gotoEditAutoAssignTemplate();
   }
 
   public activateAutoAssignTemplate() {

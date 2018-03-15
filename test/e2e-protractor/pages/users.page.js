@@ -50,6 +50,7 @@ var UsersPage = function () {
   this.closeSidePanel = element(by.css('.panel-close'));
   this.messagingService = element(by.cssContainingText('.feature', 'Message')).element(by.css('.feature-arrow'));
   this.communicationsService = element(by.cssContainingText('.feature', 'Call')).element(by.css('.feature-arrow'));
+  this.communicationService = element.all(by.cssContainingText('.feature', 'Call')).first().element(by.css('.feature-arrow'));
   this.conferencingService = element(by.cssContainingText('.feature', 'Meeting')).element(by.css('.feature-arrow'));
   this.contactCenterService = element(by.cssContainingText('.feature', 'Care')).element(by.css('.feature-arrow'));
   this.sunlightUserPanel = element(by.cssContainingText('.section-title-row', 'Channels'));
@@ -64,7 +65,6 @@ var UsersPage = function () {
 
   this.addUsers = element(by.id('addUsers'));
   this.addUsersField = element(by.id('usersfield-tokenfield'));
-  this.closeAddUsers = element(by.id('closeAddUser'));
   this.invalid = element(by.css('.invalid'));
   this.close = element(by.css('.close'));
 

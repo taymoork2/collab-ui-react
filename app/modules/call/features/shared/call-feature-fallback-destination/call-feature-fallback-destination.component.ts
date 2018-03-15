@@ -27,7 +27,7 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
   public huntGroupNumbers: HuntGroupNumber[];
   public huntGroupMethod: HuntMethod;
 
-  private inputTranslations: ICallDestinationTranslate;
+  public inputTranslations: ICallDestinationTranslate;
   public featurePromise;
   public location;
 

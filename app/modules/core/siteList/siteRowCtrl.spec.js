@@ -10,6 +10,15 @@ describe('Controller: WebExSiteRowCtrl', function () {
     data: fakeGridData,
   };
 
+  var centerDetails = [
+    {
+      purchasedServices: {
+        serviceName: 'MC',
+        quantity: '20',
+      },
+    },
+  ];
+
   var accessToken = 'Token ABCDERFGHIJK';
   var licensesGroupedBySites = _.groupBy(getJSONFixture('core/json/authInfo/webexLicenses.json'), 'siteUrl');
 
@@ -55,6 +64,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
     spyOn(SetupWizardService, 'isSubscriptionPending').and.returnValue(false);
     spyOn(SetupWizardService, 'isSubscriptionEnterprise').and.returnValue(true);
     spyOn(SetupWizardService, 'getEnterpriseSubscriptionListWithStatus').and.returnValue([{}]);
+    spyOn(WebExSiteService, 'getAllCenterDetailsFromSubscriptions').and.returnValue($q.resolve(centerDetails));
     spyOn(WebExSiteService, 'deleteSite').and.returnValue($q.resolve(true));
     spyOn(TokenService, 'getAccessToken').and.returnValue(accessToken);
     spyOn($modal, 'open').and.returnValue({ result: $q.resolve() });
@@ -78,6 +88,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
     expect(controller.showGridData).toBe(true);
     expect(controller.gridOptions).not.toEqual(null);
     expect(controller.gridOptions.data.siteUrl).toEqual('abc.webex.com');
+    expect(controller.allCenterDetailsForSubscriptions).toBeDefined();
   });
   it('can correctly initialize cross luach to SiteAdmin home page', function () {
     controller.linkToSiteAdminHomePage('abc.webex.com');
@@ -181,7 +192,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
       $scope.$digest();
       var modalCallArgs = $modal.open.calls.mostRecent().args[0];
       expect(modalCallArgs.template.indexOf(expectedModalTitle) > -1);
-      expect(state.go).toHaveBeenCalledWith('site-list-delete', { subscriptionId: '123', siteUrl: 'ag-test1-org.webex.com' });
+      expect(state.go).toHaveBeenCalledWith('site-list-delete', { subscriptionId: '123', siteUrl: 'ag-test1-org.webex.com', centerDetails: [] });
       expect(WebExSiteService.deleteSite).not.toHaveBeenCalled();
     });
 
@@ -291,7 +302,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
     it('should launch license redistribution if there are more than 2 sites in subscription and subscription is not pending', function () {
       expect(controller.canModify(entity)).toBeTruthy();
       controller.redistributeLicenses(entity);
-      expect(state.go).toHaveBeenCalledWith('site-list-distribute-licenses', { subscriptionId: '123' });
+      expect(state.go).toHaveBeenCalledWith('site-list-distribute-licenses', { subscriptionId: '123', centerDetails: [] });
     });
     it('should NOT launch license redistribution and should show appropriate modal if subscription is pending', function () {
       var expectedModalTitle = '<h3 class="modal-title" translate="webexSiteManagement.redistributeRejectModalTitle"></h3>';

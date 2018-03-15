@@ -1,4 +1,4 @@
-[
+[[
   {
     "offerName": "EC",
     "licenseType": "CONFERENCING",
@@ -62,4 +62,18 @@
     "isTrial": false,
     "status": "ACTIVE"
   }
+],
+[
+  {
+    "offerName": "MC",
+    "licenseType": "CONFERENCING",
+    "billingServiceId": "Sub-012",
+    "volume": 30,
+    "isTrial": false,
+    "status": "ACTIVE",
+    "siteUrl": "someSite2.dmz.webex.com",
+    "isCIUnifiedSite": true,
+    "siteId": "583342"
+  }
+]
 ]

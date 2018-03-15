@@ -3,7 +3,7 @@
   <cs-page-header title-name="{{'overview.pageTitle' | translate}}"></cs-page-header>
   <div class="cs-card-container">
     <cs-card-layout>
-      <cs-card class="cs-card--large">
+      <cs-card ng-class="cardSize">
         <article class="trials-card">
           <header id="activeTrials" class="trialTitle">
             <span class="h4" translate="partnerHomePage.trialsHeading"></span>
@@ -68,7 +68,7 @@
           </footer>
         </article>
       </cs-card>
-      <cs-card class="cs-card--large">
+      <cs-card ng-class="cardSize" >
         <article ng-controller="OverviewReportsCtrl">
           <header>
             <div class="row collapse">
@@ -95,6 +95,21 @@
                 <h3 class="dummy-data-message" translate="reportsPage.noData" ng-if="entitlementStatus === 'no-data'"></h3>
               </div>
             </div>
+          </section>
+        </article>
+      </cs-card>
+      <cs-card class="cs-card--medium side-info-card" ng-if="hcsFeatureToggle">
+        <article>
+          <header>
+            <div translate="homePage.notifications"></div>
+          </header>
+          <section class="monitoring-panel" ng-if="notifications.length === 0">
+            <div class="notification-style">
+              <span translate="overview.nonotifications"></span>
+            </div>
+            </section>
+
+          <section class="monitoring-panel" ng-if="notifications.length > 0">
           </section>
         </article>
       </cs-card>

@@ -1,6 +1,11 @@
 <div class="fusion-resource-group-settings">
 
-  <cs-page-header title-name="{{rgsCtrl.title | translate:rgsCtrl.titleValues}}" back="true" back-url="rgsCtrl.backState"></cs-page-header>
+  <cs-page-header
+    title-name="{{rgsCtrl.title | translate:rgsCtrl.titleValues}}"
+    back="true"
+    back-url="rgsCtrl.backState"
+    back-aria-label="{{::'common.back' | translate}}">
+  </cs-page-header>
 
   <div class="cs-form" ng-if="rgsCtrl.group">
     <setting-section setting="rgsCtrl.clusters">

@@ -1,4 +1,4 @@
-import { IOnboardedUsersAggregateResult, IUserNameAndEmail } from 'modules/core/users/shared/onboard/onboard.interfaces';
+import { OnboardMethod, IOnboardedUsersAggregateResult, IUserNameAndEmail } from 'modules/core/users/shared/onboard/onboard.interfaces';
 import OnboardService from 'modules/core/users/shared/onboard/onboard.service';
 import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 
@@ -28,12 +28,13 @@ export class OnboardSummaryForAutoAssignModalController implements ng.IComponent
     });
   }
 
-  public save(): void {
+  public save(): ng.IPromise<any> {
     this.saveLoading = true;
     const licenses = [];
     const userEntitlements = [];
+    const onboardMethod = OnboardMethod.MANUAL;
 
-    this.OnboardService.onboardUsersInChunks(this.userList, userEntitlements, licenses)
+    return this.OnboardService.onboardUsersInChunks(this.userList, userEntitlements, licenses, onboardMethod)
       .catch((rejectedResponse) => {
         // notes:
         // - potentially multiple 'Userservice.onboardUsersLegacy()' calls could have been made
@@ -44,6 +45,7 @@ export class OnboardSummaryForAutoAssignModalController implements ng.IComponent
       })
       .then((aggregateResult: IOnboardedUsersAggregateResult) => {
         this.$state.go('users.add.results', aggregateResult);
+        return this.$q.resolve();
       });
   }
 }

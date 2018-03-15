@@ -10,8 +10,10 @@
     require('modules/core/shared').default,
     require('modules/core/auth/tos').default,
     require('modules/core/auth/user').default,
+    require('modules/core/auth/read-only').default,
     require('modules/core/auth/auth'),
     require('modules/core/auth/token.service'),
+    require('modules/core/sso-certificate').default,
     require('modules/core/modal').default,
     'core.body',
     require('modules/core/accessibility').default,
@@ -55,7 +57,6 @@
     require('modules/bmmp/learn-more-banner').default,
     require('modules/core/account').default,
     require('modules/core/banner').default,
-    require('modules/core/auth/read-only').default,
     require('modules/core/csgrid').default,
     require('modules/core/users/userOverview').default,
     require('modules/core/analytics'),
@@ -99,6 +100,8 @@
     require('modules/gemini/reports').default,
     require('modules/core/siteList/webex-site').default,
     require('modules/core/overview/notifications').default,
+    require('modules/core/legal-hold').default,
+    require('modules/core/organizations/organization-delete').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('addressparser', require('emailjs-addressparser'));
@@ -109,6 +112,7 @@
     'Hercules',
     'Huron',
     'Sunlight',
+    require('modules/csdm/services').default,
     require('modules/squared/devices/services/CsdmCacheUpdater'),
     require('modules/squared/devices/services/CsdmPoller'),
     require('modules/squared/helpdesk').default,
@@ -116,6 +120,7 @@
     require('modules/squared/helpdesk/components/hybrid-services-org-card').default,
     require('modules/squared/partner-management').default,
     require('modules/squared/provisioning-console').default,
+    require('modules/squared/devices/addDeviceNew/Wizard').default,
   ]);
 
   angular.module('DigitalRiver', ['Core']);
@@ -159,6 +164,8 @@
     require('modules/core/users/userAdd').default,
     require('modules/hercules/cluster-card').default,
     require('modules/hercules/connector-upgrade-modal/connector-upgrade-modal.controller').default,
+    require('modules/hercules/expressway-cluster-settings-page/index.ts').default,
+    require('modules/hercules/fusion-pages/add-resource/common').default,
     require('modules/hercules/google-calendar-settings/google-calendar-config-section/google-calendar-second-time-setup').default,
     require('modules/hercules/hybrid-media-cluster-settings').default,
     require('modules/hercules/hybrid-services-cluster-list-with-cards').default,
@@ -198,6 +205,7 @@
     require('modules/hercules/services/ucc-service').default,
     require('modules/hercules/services/uri-verification-service').default,
     require('modules/hercules/services/uss.service').default,
+    require('modules/hercules/sip-destination-input').default,
     require('modules/hercules/user-sidepanel/hybrid-calendar-preferred-webex-site').default,
     require('modules/hercules/user-sidepanel/hybrid-calendar-service-user-settings').default,
     require('modules/hercules/user-sidepanel/hybrid-call-service-aggregated-section').default,
@@ -207,6 +215,7 @@
     require('modules/hercules/user-sidepanel/hybrid-services-sidepanel-error-message').default,
     require('modules/hercules/user-sidepanel/hybrid-services-user-homed-cluster-and-hostname').default,
     require('modules/hercules/user-sidepanel/hybrid-services-user-sidepanel-section').default,
+    require('modules/hercules/user-sidepanel/user-status-messages').default,
   ]);
 
   angular.module('HDS', [
@@ -215,7 +224,21 @@
     require('modules/hds/services/hds.service'),
   ]);
 
-  angular.module('Mediafusion', ['Core', 'Hercules', 'Squared']);
+  angular.module('Mediafusion', [
+    'Core',
+    'Hercules',
+    'Squared',
+    require('modules/mediafusion/media-service-v2/activation').default,
+    require('modules/mediafusion/media-service-v2/components/add-resource-section').default,
+    require('modules/mediafusion/media-service-v2/components/cluster-cascade-bandwidth').default,
+    require('modules/mediafusion/media-service-v2/components/cluster-creation-final').default,
+    require('modules/mediafusion/media-service-v2/components/hybrid-media-release-channel').default,
+    require('modules/mediafusion/media-service-v2/components/hybrid-media-upgrade-schedule').default,
+    require('modules/mediafusion/media-service-v2/components/sip-registration-section').default,
+    require('modules/mediafusion/media-service-v2/components/trusted-sip-section').default,
+    require('modules/mediafusion/media-service-v2/components/video-quality-section').default,
+    require('modules/mediafusion/media-service-v2/resources').default,
+  ]);
 
   angular.module('WebExApp', [
     'Core',
@@ -239,7 +262,10 @@
     require('modules/sunlight/numbers/addNumbers').default,
   ]);
 
-  angular.module('Context', ['Core']);
+  angular.module('Context', [
+    'Core',
+    require('modules/context/services/context-authorization-service').default,
+  ]);
 
   angular.module('GSS', ['Core']);
 
@@ -253,6 +279,11 @@
     require('modules/hcs/task-manager/suite').default,
     require('modules/hcs/task-manager/task').default,
     require('modules/hcs/task-manager/results').default,
+    require('modules/hcs/shared').default,
+    require('modules/hcs/inventory').default,
+    require('modules/hcs/install-files').default,
+    require('modules/hcs/services').default,
+    require('modules/hcs/setup').default,
   ]);
 
   angular.module('ServicesOverview', [
@@ -273,6 +304,8 @@
   angular.module('AccountLinking', [
     'Core',
     require('modules/account-linking').default,
+    require('modules/account-linking/user-sidepanel/linked-sites-user-sidepanel-section').default,
+    require('modules/account-linking/user-sidepanel/linked-sites-user-settings').default,
   ]);
 
   module.exports = angular.module('Main', [
@@ -301,8 +334,8 @@
 
   // require all modules first
   requireAll(require.context('modules/', true, /\.module\.(js|ts)$/));
-  // require all other app files - ignore bootstrap.js, preload.js, newrelic
-  requireAll(require.context('../', true, /\.\/(?!.*(\.spec|bootstrap.js$|scripts\/preload.js$|\/newrelic\/.*.js$)).*\.(js|ts)$/));
+  // require all other app files - ignore bootstrap.js, preload.js
+  requireAll(require.context('../', true, /\.\/(?!.*(\.spec|bootstrap.js$|scripts\/preload.js$)).*\.(js|ts)$/));
   // require all other assets
   requireAll(require.context('../', true, /\.(jpg|png|svg|ico|csv|pdf)$/));
 

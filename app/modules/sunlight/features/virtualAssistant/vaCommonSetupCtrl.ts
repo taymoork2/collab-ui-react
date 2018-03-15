@@ -1,5 +1,5 @@
+import { CommonSetupCtrl } from '../commonSetupCtrl';
 import { IToolkitModalService } from 'modules/core/modal';
-import { KeyCodes } from 'modules/core/accessibility';
 import * as _ from 'lodash';
 
 export interface IScopeWithController extends ng.IScope {
@@ -8,38 +8,14 @@ export interface IScopeWithController extends ng.IScope {
 /**
  * VaCommonSetupCtrl
  */
-export class VaCommonSetupCtrl implements ng.IComponentController {
+export class VaCommonSetupCtrl extends CommonSetupCtrl {
 
-  public animationTimeout = 10;
-
-  public animation = '';
-  public maxNameLength = 50;
-  public service;
   public logoUrl = '';
   public logoFile = '';
   public logoUploaded = false;
-  public isEditFeature = false;
-  public orgName = this.Authinfo.getOrgName();
-  public orgId = this.Authinfo.getOrgId();
-  public creatingTemplate = false;
-  public templateButtonText = this.$translate.instant('common.finish');
-  public saveTemplateErrorOccurred = false;
-  public cancelModalText = {};
-  public nameForm: ng.IFormController;
   public escalationIntentUrl: string;
-  public currentState = '';
-  public template;
-  public states;
-  public userHasAccess = true;
   public evaAlreadyExisted = false;
-  public retryButtonDisabled = false;
   public summaryErrorMessage: string;
-
-  public NameErrorMessages = {
-    DUPLICATE_ERROR: 'duplicate_error',
-    ERROR_CHAR_50: 'error_char_50',
-    PROCESSING: 'processing',
-  };
 
   // Avatar file error
   public avatarErrorType = {
@@ -75,6 +51,7 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
     public Notification,
     public UrlConfig,
   ) {
+    super($element, $modal, $scope, $state, $timeout, $translate, $window, Analytics, Authinfo, Notification, UrlConfig);
     const controller = this;
     (<IScopeWithController>this.$scope).controller = controller; // used by ctCancelModal to not be tied to 1 controller.
     controller.CTService.getLogoUrl().then(function (url) {
@@ -96,23 +73,11 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
   }
 
   /**
-   * Obtain title for this series of modal pages
-   * @returns {string}
-   */
-  public getTitle(): string {
-    if (this.isEditFeature) {
-      return this.getText('editTitle');
-    } else {
-      return this.getText('createTitle');
-    }
-  }
-
-  /**
    * obtain description for summary page
    * @returns {*}
    */
   public getSummaryDescription(): string {
-    const vaName = this.template.configuration.pages.vaName.nameValue;
+    const name = this.template.configuration.pages.name.nameValue;
     let textString = 'summary.cvaDesc';
     if (this.template.configuration.mediaType === 'expertVirtualAssistant') {
       textString = 'summary.evaDesc';
@@ -120,7 +85,7 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
     if (this.isEditFeature) {
       textString += 'Edit';
     }
-    return this.getText(textString, { name: vaName });
+    return this.getText(textString, { name });
   }
 
   /**
@@ -134,55 +99,6 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
       msgKey = 'name.nameHintEva';
     }
     return this.getText(msgKey, { featureName });
-  }
-
-  /**
-   * open up the 'Cancel' modal with certain text.
-   */
-  public cancelModal(): void {
-    const featureName = this.service.getFeatureName();
-    const cancelDialogKey = this.isEditFeature ? 'careChatTpl.cancelEditDialog' : 'careChatTpl.cancelCreateDialog';
-    const cancelText = this.$translate.instant(cancelDialogKey, { featureName });
-
-    this.cancelModalText = {
-      cancelHeader: this.$translate.instant('careChatTpl.cancelHeader'),
-      cancelDialog: cancelText,
-      continueButton: this.$translate.instant('careChatTpl.continueButton'),
-      confirmButton: this.$translate.instant('careChatTpl.confirmButton'),
-    };
-    this.$modal.open({
-      template: require('modules/sunlight/features/customerSupportTemplate/wizardPages/ctCancelModal.tpl.html'),
-      type: 'dialog',
-      scope: this.$scope,
-    });
-  }
-  /**
-   * evaluate the passed keyCode to trip a condition.
-   * @param keyCode
-   */
-  public evalKeyPress(keyCode: number): void {
-    switch (keyCode) {
-      case KeyCodes.ESCAPE:
-        this.cancelModal();
-        break;
-      default:
-        break;
-    }
-  }
-
-  /**
-   * evaluate the passed event to trip a condition.
-   * @param $event
-   */
-  public keydown($event: KeyboardEvent): void {
-    switch ($event.which) {
-      case KeyCodes.ENTER:
-      case KeyCodes.SPACE:
-        this.nextPage();
-        break;
-      default:
-        break;
-    }
   }
 
   /**
@@ -202,47 +118,17 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
     return (this.getPageIndex() > 0 && !this.isAvatarUploading());
   }
 
-  public onPageLoad(): void {
-    this.onPageLoaded(this.currentState);
-  }
-
-  /**
-   * called when page corresponding to newState is loaded event
-   * @param {string} newState
-   */
-  public onPageLoaded(newState: string): void {
-    this.template.configuration.pages[newState].startTimeInMillis = Date.now();
-  }
-  /**
-   * Move forward to next page in modal series.
-   */
-  public nextPage(): void {
-    // This is to clear a possible error issued during image loading. For instance one attempts to drag-drop a JPG,
-    // the file is invalid, the message is displayed, and it must be cleared when toggling between pages.
-    this.template.configuration.pages.vaAvatar.avatarError = this.avatarErrorType.NO_ERROR;
-
-    const controller = this;
-    const durationInMillis = Date.now() -
-      controller.template.configuration.pages[controller.currentState].startTimeInMillis;
-    const analyticProps = { durationInMillis: durationInMillis };
-    controller.Analytics.trackEvent(controller.template.configuration.pages[controller.currentState].eventName, analyticProps);
-    controller.animation = 'slide-left';
-    controller.$timeout(function () {
-      controller.currentState = controller.getAdjacentEnabledState(controller.getPageIndex(), 1);
-    }, controller.animationTimeout);
-  }
-
   /**
    * conduct certain actions for the just before moving to previous page from another.
    * @param {string} currentState State before moving to previous page.
    */
   public beforePreviousPage(currentState: string): void {
-    if (currentState === 'vaName' &&
-      _.isEmpty(this.template.configuration.pages.vaName.nameValue) &&
+    if (currentState === 'name' &&
+      _.isEmpty(this.template.configuration.pages.name.nameValue) &&
       !_.isEmpty(this.nameForm) &&
       !this.nameForm.$valid) {
       //Name was validated and failed validation. The actual value is in the nameform, so set our value to that; JIRA CA-104
-      this.template.configuration.pages.vaName.nameValue = this.nameForm.nameInput.$viewValue;
+      this.template.configuration.pages.name.nameValue = this.nameForm.nameInput.$viewValue;
     }
   }
   /**
@@ -410,30 +296,6 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
     return 'careChatTpl.virtualAssistant.' + textIdExtension;
   }
 
-  /**
-   * obtain the current index of the page associated with the current state.
-   * @returns {number|Number}
-   */
-  private getPageIndex(): number {
-    return this.states.indexOf(this.currentState);
-  }
-
-  /**
-   * Obtain the state 'jump' places away from the 'current' position
-   * @param current
-   * @param jump
-   * @returns {*}
-   */
-  private getAdjacentEnabledState(current: number, jump: number): string {
-    const next = current + jump;
-    const last = this.states.length - 1;
-    if (next > last) {
-      return this.states[last];
-    } else {
-      return this.states[next];
-    }
-  }
-
   private translateWithFallback(messageKey: string, fallbackText: string, translateReplacements?: object): string {
     const translationKey = this.getMessageKey(messageKey);
     const translation = this.$translate.instant(translationKey, translateReplacements);
@@ -459,7 +321,7 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
       switch (errorType) {
         case 'invalidInput.duplicateName':
           //save current name so we can check against it when user goes back to name page to change the name
-          this.template.configuration.pages.vaName.nameWithError = this.template.configuration.pages.vaName.nameValue;
+          this.template.configuration.pages.name.nameWithError = this.template.configuration.pages.name.nameValue;
           break;
         case 'invalidInput.invalidAccessToken':
           this.template.configuration.pages.cvaAccessToken.invalidToken = true;
@@ -474,55 +336,6 @@ export class VaCommonSetupCtrl implements ng.IComponentController {
 
   public displayGenericErrorMessage(): boolean {
     return this.saveTemplateErrorOccurred && !this.creatingTemplate && !this.evaAlreadyExisted;
-  }
-
-  /**
-   * handle template edit error for user who does not have access.
-   */
-  public handleUserAccessForEditError(): void {
-    this.creatingTemplate = false;
-    this.saveTemplateErrorOccurred = false;
-    this.userHasAccess = false;
-    this.templateButtonText = this.$translate.instant('common.finish');
-  }
-
-  /**
-   * handle the result of successful feature update and store
-   * @param response
-   * @param templateId
-   */
-  public handleFeatureUpdate(): void {
-    this.creatingTemplate = false;
-    this.$state.go('care.Features');
-    const successMsg = 'careChatTpl.editSuccessText';
-    this.Notification.success(successMsg, {
-      featureName: this.template.configuration.pages.vaName.nameValue,
-    });
-  }
-
-  /**
-   * handle result of successful feature create and store
-   * @param headers
-   */
-  public handleFeatureCreation(): void {
-    this.creatingTemplate = false;
-    this.$state.go('care.Features');
-    this.Notification.success('careChatTpl.createSuccessText', {
-      featureName: this.template.configuration.pages.vaName.nameValue,
-    });
-  }
-
-  /**
-   * open file browser on Enter/Space Keypress
-   * @param $event
-   */
-  public openFileBrowser($event: KeyboardEvent) {
-    switch ($event.which) {
-      case KeyCodes.ENTER:
-      case KeyCodes.SPACE:
-        this.$element.find('.file-browser-ctrl').click();
-        break;
-    }
   }
 
   /**

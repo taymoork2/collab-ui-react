@@ -25,7 +25,9 @@ class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController 
   public userIsCurrentlyEntitled: boolean = false;
   public newEntitlementValue: boolean | undefined;
 
-  private connectorId: string;
+  public connectorId: string;
+
+  public resourceGroupId: string;
 
   /* @ngInject */
   constructor(
@@ -71,7 +73,7 @@ class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController 
     return this.$q.all(promises)
       .then(([commonIdentityUserData, ussStatuses]) => {
         this.allUserEntitlements = commonIdentityUserData.user.entitlements;
-        this.isInvitePending = commonIdentityUserData.user.pendingStatus;
+        this.isInvitePending = !this.UserOverviewService.userHasActivatedAccountInCommonIdentity(commonIdentityUserData.user);
         this.entitledToggle = this.userIsCurrentlyEntitled = this.userHasEntitlement('spark-hybrid-impinterop');
         this.userStatus = _.find(ussStatuses, { serviceId: 'spark-hybrid-impinterop' });
         if (this.userStatus && this.userStatus.connectorId) {
@@ -80,6 +82,10 @@ class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController 
 
         if (this.userStatus && this.userStatus.lastStateChange) {
           this.lastStateChangeText = this.HybridServicesI18NService.getTimeSinceText(this.userStatus.lastStateChange);
+        }
+
+        if (this.userStatus && this.userStatus.resourceGroupId) {
+          this.resourceGroupId = this.userStatus.resourceGroupId;
         }
       })
       .catch((error) => {
@@ -139,6 +145,10 @@ class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController 
 
   public getStatus(status) {
     return this.USSService.decorateWithStatus(status);
+  }
+
+  public resourceGroupRefreshCallback() {
+    this.getUserData(this.userId);
   }
 
 }

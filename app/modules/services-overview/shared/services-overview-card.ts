@@ -39,9 +39,9 @@ const servicesOverviewCardTemplatePath = require('ngtemplate-loader?module=Hercu
 export abstract class ServicesOverviewCard {
 
   private cardType: CardType;
-  private description: string;
-  private icon: string;
-  private template: string;
+  public description: string;
+  public icon: string;
+  public template: string;
   public cardClass: string;
   public active: boolean;
   public display: boolean;

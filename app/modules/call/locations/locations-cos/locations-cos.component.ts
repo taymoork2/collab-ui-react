@@ -10,7 +10,7 @@ class LocationClassOfServiceCtrl implements ng.IComponentController {
   private callTrial: boolean;
   private roomSystemsTrial: boolean;
   private cosTrialToggle: boolean;
-  private disableControl: boolean = true;
+  public disableControl: boolean = true;
   private NATIONAL_CALLS: string = 'DIALINGCOSTAG_NATIONAL';
   private INTERNATIONAL_CALLS: string = 'DIALINGCOSTAG_INTERNATIONAL';
   private MOBILE_CALLS: string = 'DIALINGCOSTAG_MOBILE';

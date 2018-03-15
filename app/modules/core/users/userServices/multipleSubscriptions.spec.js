@@ -62,6 +62,14 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
         expect(controller.selectedSubscription).toEqual('svcid-integ-sunnyway-1a');
         expect(controller.showLicenses('svcid-integ-sunnyway-1a', false)).toEqual(true);
       });
+
+      it('should only show service section if there are licenses for the selected subscription', function () {
+        var services = _.cloneDeep(getJSONFixture('core/json/authInfo/messagingServices.json')).singleLicense;
+        expect(controller.showSection(services)).toBe(false);
+
+        controller.selectedSubscription = services[0].license.billingServiceId;
+        expect(controller.showSection(services)).toBe(true);
+      });
     });
 
     describe('for trial subscriptions', function () {
@@ -76,6 +84,7 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
         expect(controller.oneBilling).toEqual(false);
         expect(controller.showLicenses('', true)).toEqual(true);
       });
+
       it('should place trial subscription at the bottom of the subscription selection dropdown', function () {
         var trialOption = 'Trial';
         expect(controller.subscriptionOptions[controller.subscriptionOptions.length - 1]).toEqual(trialOption);

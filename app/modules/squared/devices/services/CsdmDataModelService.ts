@@ -5,7 +5,6 @@ import { CsdmDeviceService } from './CsdmDeviceService';
 import { CsdmCodeService } from './CsdmCodeService';
 import IDeferred = ng.IDeferred;
 import ITimeoutService = ng.ITimeoutService;
-import { CsdmHubFactory, CsdmPollerFactory } from './CsdmPoller';
 import { CsdmConverter } from './CsdmConverter';
 import { CsdmCacheUpdater } from './CsdmCacheUpdater';
 import IPlace = csdm.IPlace;
@@ -37,9 +36,7 @@ export class CsdmDataModelService implements ICsdmDataModelService {
               private CsdmCodeService: CsdmCodeService,
               private CsdmPlaceService: CsdmPlaceService,
               CsdmHuronOrgDeviceService,
-              private CsdmPoller: CsdmPollerFactory,
               private CsdmConverter: CsdmConverter,
-              private CsdmHubFactory: CsdmHubFactory,
               private Authinfo) {
 
     this.placesUrl = CsdmPlaceService.getPlacesUrl();
@@ -534,14 +531,6 @@ export class CsdmDataModelService implements ICsdmDataModelService {
       });
       return searchRes;
     });
-  }
-
-  public devicePollerOn(event, listener, opts) {
-    const hub = this.CsdmHubFactory.create();
-    this.CsdmPoller.create(() => {
-      return this.fetchDevices();
-    }, hub);
-    hub.on(event, listener, opts);
   }
 }
 module.exports =

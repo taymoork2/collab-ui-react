@@ -26,6 +26,10 @@ import { Office365TestModalComponent } from 'modules/services-overview/new-hybri
 import { ServicesOverviewComponent } from 'modules/services-overview/services-overview.component';
 import { HybridTestingInactiveCardComponent } from 'modules/services-overview/new-hybrid/inactive/hybrid-testing-inactive-card.component';
 import { HybridTestingActiveCardComponent } from 'modules/services-overview/new-hybrid/active/hybrid-testing-active-card.component';
+import { HcsActiveCardComponent } from 'modules/services-overview/new-hybrid/active/hcs-active-card.component';
+import { HcsInactiveCardComponent } from 'modules/services-overview/new-hybrid/inactive/hcs-inactive-card.component';
+import { HcsUpgradeActiveCardComponent } from 'modules/services-overview/new-hybrid/active/hcs-upgrade-active-card.component';
+import { HcsLicenseActiveCardComponent } from 'modules/services-overview/new-hybrid/active/hcs-license-active-card.component';
 
 export default angular
   .module('services-overview', [
@@ -74,4 +78,8 @@ export default angular
   .component('servicesOverview', new ServicesOverviewComponent())
   .component('hybridTestingInactiveCard', new HybridTestingInactiveCardComponent())
   .component('hybridTestingActiveCard', new HybridTestingActiveCardComponent())
+  .component('hcsActiveCard', new HcsActiveCardComponent())
+  .component('hcsInactiveCard', new HcsInactiveCardComponent())
+  .component('hcsUpgradeActiveCard', new HcsUpgradeActiveCardComponent())
+  .component('hcsLicenseActiveCard', new HcsLicenseActiveCardComponent())
   .name;

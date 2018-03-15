@@ -1,23 +1,24 @@
 <div ng-if="grid.appScope.isEdit"
-     ng-mouseover="row.entity.isEdit=true"
-     class="ui-grid-cell-contents"
-     ng-class="{'error': row.entity.validation.label.invalid || row.entity.duplicatedRowValidation.invalid}"
-     tooltip-class="tn-error"
-     tooltip-append-to-body="true"
-     tooltip-is-open="row.entity.validation.label.show"
-     tooltip-html-unsafe="{{row.entity.validation.label.message}}">
-  <input id="{{row.uid}}-label"
-         placeholder="Phone Label"
-         cs-input
-         maxlength="85"
-         ng-disabled="grid.appScope.submitLoading"
-         type="text"
-         title="{{row.entity.label}}"
-         ng-change="grid.appScope.changeLabel(row, '{{row.entity.label}}')"
-         ng-model="row.entity.label">
+  ng-mouseover="row.entity.isEdit=true"
+  class="ui-grid-cell-contents"
+  ng-class="{'error': row.entity.validation.label.invalid || row.entity.duplicatedRowValidation.invalid}"
+  tabindex="0"
+  tooltip-class="tn-error"
+  tooltip-append-to-body="true"
+  tooltip-is-open="row.entity.validation.label.show"
+  tooltip-html-unsafe="{{row.entity.validation.label.message}}"
+  aria-label="{{row.entity.validation.label.ariaLabel}}">
+  <input cs-input type="text"
+    id="{{row.uid}}-label"
+    placeholder="Phone Label"
+    maxlength="85"
+    ng-disabled="grid.appScope.submitLoading"
+    title="{{row.entity.label}}"
+    ng-change="grid.appScope.changeLabel(row, '{{row.entity.label}}')"
+    ng-model="row.entity.label">
 </div>
 <div ng-if="!grid.appScope.isEdit"
-     class="ui-grid-cell-contents read-only-text"
-     title="{{row.entity.label}}">
+  class="ui-grid-cell-contents read-only-text"
+  title="{{row.entity.label}}">
   {{row.entity.label}}
 </div>

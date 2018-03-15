@@ -9,7 +9,6 @@ class CcaReportsTabs implements ng.IComponentController {
   public chartsData;
   private csvData: any = [];
 
-  private today: string;
   public endDate: string;
   public startDate: string;
   public errMsg: any = {};
@@ -56,7 +55,6 @@ class CcaReportsTabs implements ng.IComponentController {
   }
 
   private initDateRange() {
-    this.today = moment().format('YYYY-MM-DD');
     this.startDate = moment().subtract(97, 'days').format('YYYY-MM-DD');
 
     this.endDate = moment().subtract(4, 'days').format('YYYY-MM-DD');

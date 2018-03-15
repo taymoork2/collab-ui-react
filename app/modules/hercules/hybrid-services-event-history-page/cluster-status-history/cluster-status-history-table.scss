@@ -1,0 +1,66 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+
+hybrid-services-cluster-status-history-table {
+  display: block;
+
+  table {
+    border-collapse: collapse;
+
+    thead {
+      tr {
+        background: $gray-light-4;
+        border-top: 0;
+        border-bottom: 1px solid transparent;
+
+        th {
+          font-size: 16px;
+          border: 1px solid $gray-light-3;
+          background-color: $gray-light-4;
+          color: $gray-dark-2;
+          white-space: nowrap;
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        td {
+          border: 1px solid $gray-light-3;
+        }
+      }
+    }
+
+    thead tr th,
+    tbody tr td {
+      padding: 10px 16px 10px 20px;
+      line-height: 1.5rem;
+
+      &:first-child {
+        padding-left: 2rem;
+      }
+
+      &:last-child {
+        padding-right: 2rem;
+      }
+    }
+  }
+
+  tbody tr {
+    &:hover {
+      background-color: $color-primary-lighter;
+    }
+
+    &.active {
+      background-color: $color-primary-base;
+
+      td {
+        color: #fff;
+      }
+    }
+  }
+
+  .no-events-found {
+    margin-left: 2em;
+    margin-top: 2em;
+  }
+}

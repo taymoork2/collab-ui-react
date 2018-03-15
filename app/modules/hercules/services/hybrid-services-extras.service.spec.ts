@@ -3,7 +3,7 @@ import { HybridServicesExtrasService } from './hybrid-services-extras.service';
 describe('ClusterService', () => {
   beforeEach(angular.mock.module('Hercules'));
 
-  let $rootScope, $httpBackend, HybridServicesExtrasService: HybridServicesExtrasService;
+  let $httpBackend, HybridServicesExtrasService: HybridServicesExtrasService;
 
   beforeEach(angular.mock.module(function ($provide) {
     const Authinfo = {
@@ -16,8 +16,7 @@ describe('ClusterService', () => {
     $provide.value('UrlConfig', UrlConfig);
   }));
 
-  beforeEach(inject(function (_$rootScope_, _$httpBackend_, _HybridServicesExtrasService_) {
-    $rootScope = _$rootScope_;
+  beforeEach(inject(function (_$httpBackend_, _HybridServicesExtrasService_) {
     $httpBackend = _$httpBackend_;
     HybridServicesExtrasService = _HybridServicesExtrasService_;
   }));

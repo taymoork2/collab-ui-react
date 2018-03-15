@@ -187,6 +187,7 @@
             conferenceService.licenseTypeContentDisplay = null;
             conferenceService.licenseTypeId = newSiteUrl + '_';
             conferenceService.licenseTooltipDisplay = null;
+            conferenceService.licenseAriaLabel = null;
             conferenceService.MCLicensed = false;
             conferenceService.ECLicensed = false;
             conferenceService.SCLicensed = false;
@@ -241,6 +242,7 @@
             conferenceService.siteUrl = newSiteUrl;
             conferenceService.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.linkedSite');
             conferenceService.licenseTooltipDisplay = $translate.instant('helpdesk.licenseDisplayNames.linkedSite');
+            conferenceService.licenseAriaLabel = $translate.instant('helpdesk.licenseDisplayNames.linkedSite');
 
             _this.addSiteRow(conferenceService);
           }
@@ -264,6 +266,7 @@
           site.isPending = true;
           site.licenseTypeContentDisplay = $translate.instant('siteList.unavailable');
           site.licenseTooltipDisplay = $translate.instant('siteList.licenseUnavailableTooltip');
+          site.licenseAriaLabel = $translate.instant('siteList.licenseUnavailableTooltip');
           var siteDuplicate = _.find(_this.siteRows.gridData, { siteUrl: site.siteUrl });
           if (siteDuplicate) {
             siteDuplicate.isPending = true;
@@ -348,9 +351,7 @@
               var siteUrl = siteRow.license.siteUrl;
               var count = 0;
               siteRow.licenseTooltipDisplay = '';
-              if (siteRow.isPending) {
-                siteRow.licenseTooltipDisplay = $translate.instant('siteList.licenseUnavailableTooltip');
-              }
+              siteRow.licenseAriaLabel = '';
 
               //Get the site's MC, EC, SC, TC, CMR license information
               //MC
@@ -375,9 +376,11 @@
                     siteRow.licenseTypeId = siteRow.licenseTypeId + 'MC' + mc.capacity + '-';
 
                     //Tooltip display
-                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + '<br>' + $translate.instant('helpdesk.licenseDisplayNames.' + mc.offerCode, {
+                    var offerCode = $translate.instant('helpdesk.licenseDisplayNames.' + mc.offerCode, {
                       capacity: mc.capacity,
                     });
+                    siteRow.licenseTooltipDisplay += '<br>' + offerCode;
+                    siteRow.licenseAriaLabel += ' ' + offerCode;
 
                     count++;
                   }
@@ -408,9 +411,11 @@
                     siteRow.licenseTypeId = siteRow.licenseTypeId + 'EE' + ee.capacity + '-';
 
                     //Tooltip display
-                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + '<br>' + $translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
+                    var offerCode = $translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
                       capacity: ee.capacity,
                     });
+                    siteRow.licenseTooltipDisplay += '<br>' + offerCode;
+                    siteRow.licenseAriaLabel += ' ' + offerCode;
 
                     count++;
                   }
@@ -441,9 +446,11 @@
                     siteRow.licenseTypeId = siteRow.licenseTypeId + 'CMR' + cmr.capacity + '-';
 
                     //Tooltip display
-                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + '<br>' + $translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
+                    var offerCode = $translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
                       capacity: cmr.capacity,
                     });
+                    siteRow.licenseTooltipDisplay += '<br>' + offerCode;
+                    siteRow.licenseAriaLabel += ' ' + offerCode;
 
                     count++;
                   }
@@ -474,9 +481,11 @@
                     siteRow.licenseTypeId = siteRow.licenseTypeId + 'EC' + ec.capacity + '-';
 
                     //Tooltip display
-                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + '<br>' + $translate.instant('helpdesk.licenseDisplayNames.' + ec.offerCode, {
+                    var offerCode = $translate.instant('helpdesk.licenseDisplayNames.' + ec.offerCode, {
                       capacity: ec.capacity,
                     });
+                    siteRow.licenseTooltipDisplay += '<br>' + offerCode;
+                    siteRow.licenseAriaLabel += ' ' + offerCode;
 
                     count++;
                   }
@@ -507,9 +516,11 @@
                     siteRow.licenseTypeId = siteRow.licenseTypeId + 'SC' + sc.capacity + '-';
 
                     //Tooltip display
-                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + '<br>' + $translate.instant('helpdesk.licenseDisplayNames.' + sc.offerCode, {
+                    var offerCode = $translate.instant('helpdesk.licenseDisplayNames.' + sc.offerCode, {
                       capacity: sc.capacity,
                     });
+                    siteRow.licenseTooltipDisplay += '<br>' + offerCode;
+                    siteRow.licenseAriaLabel += ' ' + offerCode;
 
                     count++;
                   }
@@ -540,9 +551,11 @@
                     siteRow.licenseTypeId = siteRow.licenseTypeId + 'TC' + tc.capacity + '-';
 
                     //Tooltip display
-                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + '<br>' + $translate.instant('helpdesk.licenseDisplayNames.' + tc.offerCode, {
+                    var offerCode = $translate.instant('helpdesk.licenseDisplayNames.' + tc.offerCode, {
                       capacity: tc.capacity,
                     });
+                    siteRow.licenseTooltipDisplay += '<br>' + offerCode;
+                    siteRow.licenseAriaLabel += ' ' + offerCode;
 
                     count++;
                   }
@@ -557,14 +570,14 @@
                 siteRow.multipleWebexServicesLicensed = true;
                 siteRow.licenseTypeContentDisplay = $translate.instant('siteList.multipleLicenses');
                 siteRow.licenseTooltipDisplay = _.replace(siteRow.licenseTooltipDisplay, '<br>', '');
-              } else if (!siteRow.isPending) {
+              } else if (count === 1) {
                 siteRow.multipleWebexServicesLicensed = false;
                 siteRow.licenseTooltipDisplay = null;
+                siteRow.licenseAriaLabel = null;
+              } else if (siteRow.isPending) {
+                siteRow.licenseTooltipDisplay = $translate.instant('siteList.licenseUnavailableTooltip');
+                siteRow.licenseAriaLabel = $translate.instant('siteList.licenseUnavailableTooltip');
               }
-
-              // logMsg = funcName + ": " + "\n" +
-              //   "siteRow=" + JSON.stringify(siteRow);
-              //$log.log(logMsg);
 
               siteRow.showLicenseTypes = true;
             } // processGridForLicense()

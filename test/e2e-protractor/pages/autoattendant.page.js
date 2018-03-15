@@ -10,8 +10,13 @@ var AutoAttendantPage = function () {
   this.key1 = '1';
   this.key2 = '2';
 
-  this.firstTimeZone = 'Africa/Abidjan';
+  this.selectPhoneNumber = element(by.id('select-phone-number'));
+  this.selectPhoneNumberInDropdown = this.selectPhoneNumber.element(by.css('div.dropdown-menu')).element(by.linkText('Telephone Number'));
+  this.selectExtensionInDropdown = this.selectPhoneNumber.element(by.css('div.dropdown-menu')).element(by.linkText('Extension'));
+  this.phoneNumberActionTarget = element(by.css('div.aa-route-action')).element(by.name('phoneinput'));
+  this.extensionActionTarget = element(by.css('div.aa-route-action')).element(by.name('routeToExtension'));
 
+  this.firstTimeZone = 'Africa/Abidjan';
   this.routeQueueDetail = element(by.id('route-queue-detail'));
   this.rqDropDownOptions = element(by.id('route-queue-detail')).all(by.tagName('li'));
   this.phoneMenu = element(by.css('div.aa-panel-body[name="Phone Menu"]'));
@@ -156,9 +161,10 @@ var AutoAttendantPage = function () {
 
   this.decisionFirst = element.all(by.css('div.aa-panel-body[name="Decision"]')).all(by.cssContainingText('h3', 'If')).first();
   this.decisionIf = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="ifDecision"] + div span.select-toggle'));
-  this.decisionIfDropDownOptions = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="ifDecision"] + div div.dropdown-menu')).all(by.tagName('li')).get(6);
+  this.decisionIfDropDownOptions = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="ifDecision"] + div div.dropdown-menu')).all(by.tagName('li')).get(5);
   this.decisionIfSession = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="ifSessionVariable"] + div span.select-toggle'));
 
+  this.ifDropDown = element(by.id('decisionID'));
   this.decisionIfSessionVarDropDownOptions = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="ifSessionVariable"] + div div.dropdown-menu')).all(by.tagName('li')).get(0);
 
   this.decisionCountryCodeTextArea = element.all(by.name('countryCode')).first();
@@ -169,7 +175,7 @@ var AutoAttendantPage = function () {
   this.decisionPhoneNumber = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.name('phoneinput'));
 
   this.callerInputFirst = element.all(by.css('div.aa-panel-body[name="Caller Input"]')).all(by.cssContainingText('h3', 'Caller Input')).first();
-  this.callerInputGetDigits = element(by.cssContainingText('cs-checkbox', 'Convert digit input to text string value'));
+  this.callerInputGetDigits = element(by.cssContainingText('div.cs-input-checkbox', 'Convert digit input to text string value'));
   this.callerInputTextFirst = element.all(by.name('callerInput')).first();
   this.callerInputNameVariable = element(by.name('callerInputNameVariable'));
   this.callerInputAddAction = element(by.name('aa-caller-input-add-action'));
@@ -381,6 +387,7 @@ var AutoAttendantPage = function () {
   this.routeCall = element(by.css('div.aa-panel-body[name="Route Call"]'));
   this.routeCallChoose = this.routeCall.element(by.css('div.dropdown'));
   this.routeExternal = this.routeCall.element(by.css('div.dropdown-menu')).all(by.tagName('li')).last();
+  this.routeToPhoneNumber = this.routeCall.element(by.css('div.dropdown-menu')).all(by.tagName('li')).get(3);
   this.routeQueueCall = this.routeCall.element(by.css('div.dropdown-menu')).all(by.tagName('li')).get(1);
   this.routeToUserForHybridTenant = this.routeCall.element(by.css('div.dropdown-menu')).all(by.tagName('li')).get(3);
   this.chooseRoutetoUserOption = this.routeCall.element(by.css('div.aa-route-action')).element(by.css('div.select-list'));

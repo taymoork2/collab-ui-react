@@ -27,6 +27,16 @@ $tl-padding-right: 30px;
     fill: $color-red-base;
     stroke: $color-red-base;
   }
+  
+  .unitStr {
+    color: $gray-1;
+    display: inline-block;
+    position: absolute;
+    font-size: 11px;
+    bottom: 0;
+    right: 50px;
+  }
+
   .yaxis {
     display: inline-block;
     position: absolute;
@@ -94,18 +104,22 @@ $tl-padding-right: 30px;
     }
 
     .goodLine {
-      stroke-dasharray: 0;
+      stroke-dasharray: none;
       stroke: $color-green-base;
     }
 
     .fairLine {
-      stroke-dasharray: 0;
+      stroke-dasharray: none;
       stroke: $color-yellow-base;
     }
 
     .poorLine {
+      stroke-dasharray: none;
       stroke: #FF503C;
-      stroke-dasharray: 1, 7;
+    }
+
+    .defaultLine {
+      stroke-dasharray: none;
     }
   }
 
@@ -144,6 +158,8 @@ $tl-padding-right: 30px;
       margin-top: 20px;
       display: inline-block;
       box-sizing: border-box;
+      text-align: center;
+      padding: 0 3rem;
 
       div {
         width: 75px;
@@ -155,9 +171,8 @@ $tl-padding-right: 30px;
         }
       }
     }
-    .legendCircle, .legendLine {
-      text-align: center;
-      padding: 0 3rem;
+    .legendLine {
+      padding: 0;
     }
     text {
       stroke-width: 1;

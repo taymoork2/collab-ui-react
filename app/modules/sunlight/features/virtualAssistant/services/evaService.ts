@@ -10,7 +10,6 @@ export class EvaService {
   public evaServiceCard = {
     id: 'expertVirtualAssistant',
     type: 'expertVirtualAssistant',
-    mediaType: 'virtualAssistant', // for filter
     code: this.getMessageKey('featureText.code'),
     label: this.getMessageKey('featureText.type'),
     description: this.getMessageKey('featureText.selectDesc'),
@@ -44,6 +43,7 @@ export class EvaService {
     private UrlConfig,
     private $q: ng.IQService,
     private SparkService,
+    private CareFeatureList,
   ) {
   }
 
@@ -306,11 +306,11 @@ export class EvaService {
       if (!item.name) {
         item.name = item.templateId;
       }
-      item.mediaType = service.evaServiceCard.mediaType;
       item.featureType = feature.name;
       item.color = feature.color;
       item.icons = feature.icons;
       item.templates = [];
+      item.filterValue = service.CareFeatureList.filterConstants.virtualAssistant;
       return item;
     });
     return _.sortBy(formattedList, function (item: any) {

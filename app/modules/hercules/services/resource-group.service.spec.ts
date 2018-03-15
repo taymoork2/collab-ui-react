@@ -1,11 +1,10 @@
-import { ResourceGroupService } from 'modules/hercules/services/resource-group.service';
+import moduleName, { ResourceGroupService } from 'modules/hercules/services/resource-group.service';
 import { ConnectorType } from 'modules/hercules/hybrid-services.types';
 
 describe('Service: ResourceGroupService', function () {
   let ResourceGroupService: ResourceGroupService, $httpBackend, $rootScope, HybridServicesClusterService, $q;
 
-  beforeEach(angular.mock.module('Hercules'));
-  beforeEach(angular.mock.module('core.urlconfig'));
+  beforeEach(angular.mock.module(moduleName));
   beforeEach(angular.mock.module(mockDependencies));
   beforeEach(inject(dependencies));
 

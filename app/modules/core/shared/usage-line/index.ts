@@ -1,3 +1,5 @@
+import './usage-line.scss';
+
 import { UsageLineComponent } from './usage-line.component';
 
 export default angular.module('core.shared.usage-line', [

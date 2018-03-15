@@ -1,5 +1,5 @@
 import linkedSites from './index';
-import { LinkingOperation, IACSiteInfo, IACLinkingStatus, IACWebexSiteinfoResponse, IACWebexPromises, LinkingOriginator } from './account-linking.interface';
+import { IACSiteInfo, IACLinkingStatus, IACWebexSiteinfoResponse, IACWebexPromises, LinkingOriginator } from './account-linking.interface';
 
 describe('Component: linkedSites', () => {
 
@@ -16,6 +16,7 @@ describe('Component: linkedSites', () => {
       '$log',
       'LinkedSitesService',
       '$state',
+      '$modal',
       '$q',
       'FeatureToggleService',
       'Notification',
@@ -23,6 +24,7 @@ describe('Component: linkedSites', () => {
   });
 
   beforeEach(function () {
+    spyOn(this.$modal, 'open');
     spyOn(this.$state, 'go');
 
     this.siteInfoDefer = <ng.IPromise<IACWebexSiteinfoResponse>>this.$q.defer();
@@ -53,8 +55,6 @@ describe('Component: linkedSites', () => {
       webexInfo: <IACWebexPromises> this.webexInfo,
     };
 
-    this.filterSitesDeferred = this.$q.defer();
-    spyOn(this.LinkedSitesService, 'filterSites').and.returnValue(this.filterSitesDeferred.promise);
 
   });
 
@@ -64,12 +64,15 @@ describe('Component: linkedSites', () => {
       this.controller = this.$componentController('linkedSites', {
         LinkedSitesService: this.LinkedSitesService,
         $state: this.$state,
+        $modal: this.$modal,
       }, {});
       this.controller.originator = LinkingOriginator.Banner;
     });
 
     describe('feature toggle not set', () => {
       it('prevent data mining if feature toggle not set', function() {
+        this.filterSitesDeferred = this.$q.defer();
+        spyOn(this.LinkedSitesService, 'filterSites').and.returnValue(this.filterSitesDeferred.promise);
         spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
         this.filterSitesDeferred.resolve([this.siteWithAdmin1]);
         this.controller.$onInit();
@@ -78,9 +81,38 @@ describe('Component: linkedSites', () => {
       });
     });
 
-    describe('feature toggle set', () => {
+    describe('unhappy cases', () => {
       beforeEach(function () {
         spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
+      });
+
+      describe('error from webex api', () => {
+        beforeEach( function() {
+          this.filterSitesDeferred = this.$q.defer();
+          spyOn(this.LinkedSitesService, 'filterSites').and.returnValue(this.filterSitesDeferred.promise);
+          this.controller.$onInit();
+          this.filterSitesDeferred.resolve([this.siteWithAdmin1]);
+        });
+
+        it('getting error response from webex api shall indicate error', function () {
+          this.siteInfoDefer.resolve(this.$q.reject('error'));
+          this.$scope.$apply();
+          expect(this.controller.sitesInfo[0].siteInfoErrors).toEqual(['Unable to retrieve som data']);
+        });
+
+        it('getting error known error response from webex api shall indicate error with more specific info', function () {
+          this.siteInfoDefer.resolve(this.$q.reject('999999'));
+          this.$scope.$apply();
+          expect(this.controller.sitesInfo[0].siteInfoErrors).toEqual(['You don\'t have access to this site. [999999]']);
+        });
+      });
+    });
+
+    describe('happy clappy cases', () => {
+      beforeEach(function () {
+        spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
+        this.filterSitesDeferred = this.$q.defer();
+        spyOn(this.LinkedSitesService, 'filterSites').and.returnValue(this.filterSitesDeferred.promise);
       });
 
       it('get webex sites list', function () {
@@ -88,6 +120,7 @@ describe('Component: linkedSites', () => {
         this.filterSitesDeferred.resolve([this.siteWithAdmin1]);
         this.$scope.$apply();
         expect(this.controller.sitesInfo[0].linkedSiteUrl).toEqual('CoolSiteUrl');
+        expect(this.controller.loading).toBeFalsy();
 
       });
 
@@ -118,15 +151,7 @@ describe('Component: linkedSites', () => {
         this.filterSitesDeferred.resolve([this.siteWithAdmin1]);
         this.controller.$onInit();
         this.$scope.$apply();
-        expect(this.$state.go).toHaveBeenCalledWith(
-          'site-list.linked.details.wizard',
-          {
-            siteInfo: jasmine.any(Object),
-            operation: LinkingOperation.New,
-            launchWebexFn: jasmine.any(Function),
-            setAccountLinkingModeFn: jasmine.any(Function),
-          },
-        );
+        expect(this.$modal.open).toHaveBeenCalled();
       });
 
       it('go to linkes sites list if admin for several sites that need accountlinking', function () {

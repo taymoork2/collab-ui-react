@@ -1,4 +1,6 @@
 require('./_overview.scss');
+var SsoCertExpNotificationService = require('modules/core/overview/notifications/ssoCertificateExpirationNotification.service').SsoCertificateExpirationNotificationService;
+
 (function () {
   'use strict';
 
@@ -7,7 +9,38 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($q, $rootScope, $state, $scope, Authinfo, CardUtils, SunlightUtilitiesService, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, ProPackService, LearnMoreBannerService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SetupWizardService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService, PrivateTrunkService, ServiceDescriptorService, LinkedSitesService) {
+  function OverviewCtrl($q,
+    $rootScope,
+    $scope,
+    $state,
+    Authinfo,
+    AutoAssignTemplateService,
+    CardUtils,
+    CloudConnectorService,
+    Config,
+    FeatureToggleService,
+    HybridServicesClusterService,
+    HybridServicesFlagService,
+    HybridServicesUtilsService,
+    LearnMoreBannerService,
+    LinkedSitesService,
+    Log, Notification,
+    Orgservice,
+    OverviewCardFactory,
+    OverviewNotificationFactory,
+    PrivateTrunkService,
+    ProPackService,
+    PstnService,
+    ReportsService,
+    ServiceDescriptorService,
+    SetupWizardService,
+    SsoCertificateExpirationNotificationService,
+    SubscriptionWithUnsyncedLicensesNotificationService,
+    SunlightReportService,
+    SunlightUtilitiesService,
+    TrialService,
+    UrlConfig,
+    WebExSiteService) {
     var vm = this;
     var PSTN_TOS_ACCEPT = require('modules/huron/pstn/pstnTermsOfService').PSTN_TOS_ACCEPT;
     var PSTN_ESA_DISCLAIMER_ACCEPT = require('modules/huron/pstn/pstn.const').PSTN_ESA_DISCLAIMER_ACCEPT;
@@ -38,7 +71,6 @@ require('./_overview.scss');
     vm.isEnterpriseCustomer = isEnterpriseCustomer;
     vm.dismissNotification = dismissNotification;
     vm.notificationComparator = notificationComparator;
-    vm.ftHuronPstn = false;
     vm.ftEnterpriseTrunking = false;
     vm.showUserTaskManagerModal = showUserTaskManagerModal;
 
@@ -155,7 +187,7 @@ require('./_overview.scss');
                     }
                   });
               } else if (flag.name === hybridCallHighAvailability && Authinfo.isEntitled(Config.entitlements.fusion_uc)) {
-                HybridServicesClusterService.serviceIsSetUp('squared-fusion-uc')
+                ServiceDescriptorService.isServiceEnabled('squared-fusion-uc')
                   .then(function (isSetup) {
                     if (isSetup) {
                       return HybridServicesClusterService.serviceHasHighAvailability('c_ucmc')
@@ -171,7 +203,7 @@ require('./_overview.scss');
                 FeatureToggleService.supports(FeatureToggleService.features.atlasOffice365Support)
                   .then(function (supported) {
                     if (supported) {
-                      OverviewNotificationFactory.createAllHybridCalendarsNotification($state, CloudConnectorService, HybridServicesClusterService, HybridServicesFlagService, HybridServicesUtilsService)
+                      OverviewNotificationFactory.createAllHybridCalendarsNotification($state, CloudConnectorService, ServiceDescriptorService, HybridServicesFlagService, HybridServicesUtilsService)
                         .then(function (allHybridCalendarsNotification) {
                           vm.notifications.push(allHybridCalendarsNotification);
                           resizeNotifications();
@@ -195,6 +227,7 @@ require('./_overview.scss');
       $q.all({
         orgDetails: Orgservice.getOrg(_.noop, Authinfo.getOrgId(), params),
         featureToggle: FeatureToggleService.supports(FeatureToggleService.features.hybridCare),
+        isAtlasSsoCertificateUpdateToggled: FeatureToggleService.atlasSsoCertificateUpdateGetStatus(),
         pt: PrivateTrunkService.getPrivateTrunk(),
         ept: ServiceDescriptorService.getServiceStatus('ept'),
       }).then(function (response) {
@@ -226,9 +259,12 @@ require('./_overview.scss');
               .createCareLicenseNotification('homePage.careLicenseCallMissingText', 'homePage.careLicenseLinkText'));
           } else if (!hasCall && (!vm.pt && !vm.ept) && vm.careToggle) {
             vm.notifications.push(OverviewNotificationFactory
-              .createCareLicenseNotification('homePage.careLicenseCallMissingTextToggle', 'careChatTpl.learnMoreLink'));
+              .createCareLicenseNotification('homePage.careLicenseCallMissingTextToggle', 'careChatTpl.learnMoreLink', FeatureToggleService));
           }
         }
+
+        checkForUnsyncedSubscriptionLicenses();
+        checkForSsoCertificateExpiration(response.isAtlasSsoCertificateUpdateToggled);
       }).catch(function (response) {
         Notification.errorWithTrackingId(response, 'firstTimeWizard.sparkDomainManagementServiceErrorMessage');
       });
@@ -255,18 +291,18 @@ require('./_overview.scss');
           }
         });
 
-      FeatureToggleService.supports(FeatureToggleService.features.huronPstn).then(function (result) {
-        vm.ftHuronPstn = result;
-
-        FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking).then(function (result) {
-          vm.ftEnterpriseTrunking = result;
-          getEsaDisclaimerStatus();
-        });
+      FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking).then(function (result) {
+        vm.ftEnterpriseTrunking = result;
+        getEsaDisclaimerStatus();
       });
 
       FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus().then(function (toggle) {
         if (toggle) {
-          vm.notifications.push(OverviewNotificationFactory.createAutoAssignNotification());
+          AutoAssignTemplateService.hasDefaultTemplate().then(function (hasDefaultTemplate) {
+            if (!hasDefaultTemplate) {
+              vm.notifications.push(OverviewNotificationFactory.createAutoAssignNotification());
+            }
+          });
         }
       });
 
@@ -284,6 +320,30 @@ require('./_overview.scss');
       });
     }
 
+    function checkForUnsyncedSubscriptionLicenses() {
+      WebExSiteService.findSubscriptionsWithUnsyncedLicenses().then(function (results) {
+        _.forEach(results, function (unsyncedSubscription) {
+          vm.notifications.push(SubscriptionWithUnsyncedLicensesNotificationService.createNotification(unsyncedSubscription));
+        });
+      });
+    }
+
+    function checkForSsoCertificateExpiration(isAtlasSsoCertificateUpdateToggled) {
+      var ssoEnabled = _.get(vm.orgData, 'ssoEnabled');
+
+      if (!ssoEnabled || !isAtlasSsoCertificateUpdateToggled) {
+        return;
+      }
+
+      var today = moment();
+      var certificateExpirationDate = moment(_.get(vm.orgData, 'hostedSpPrimaryCertExpiration'));
+      var daysDiff = certificateExpirationDate.diff(today, 'days');
+      if (daysDiff <= SsoCertExpNotificationService.CERTIFICATE_EXPIRATION_DAYS) {
+        vm.notifications.push(SsoCertificateExpirationNotificationService.createNotification(daysDiff));
+        resizeNotifications();
+      }
+    }
+
     function getTOSStatus() {
       //Don't allow the Parner to accept ToS for the customer
       if (Authinfo.isCustomerLaunchedFromPartner()) {
@@ -294,16 +354,9 @@ require('./_overview.scss');
           if (customer.trial) {
             PstnService.getCustomerTrialV2(vm.orgData.id).then(function (trial) {
               if (!_.has(trial, 'acceptedDate')) {
-                if (vm.ftHuronPstn) {
-                  //This is the new TS version of ToS
-                  vm.pstnToSNotification = OverviewNotificationFactory.createPstnTermsOfServiceNotification();
-                  vm.notifications.push(vm.pstnToSNotification);
-                  $scope.$on(PSTN_TOS_ACCEPT, onPstnToSAccept);
-                } else {
-                  vm.pstnToSNotification = OverviewNotificationFactory.createPSTNToSNotification();
-                  vm.notifications.push(vm.pstnToSNotification);
-                  $scope.$on(PSTN_TOS_ACCEPT, onPstnToSAccept);
-                }
+                vm.pstnToSNotification = OverviewNotificationFactory.createPstnTermsOfServiceNotification();
+                vm.notifications.push(vm.pstnToSNotification);
+                $scope.$on(PSTN_TOS_ACCEPT, onPstnToSAccept);
               }
             });
           }

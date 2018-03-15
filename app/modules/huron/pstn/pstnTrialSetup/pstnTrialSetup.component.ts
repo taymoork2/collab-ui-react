@@ -80,8 +80,7 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
               private $scope: ICustomScope,
               private $timeout: ng.ITimeoutService,
               private Analytics,
-              private PstnServiceAddressService,              //Site Based
-              private PstnAddressService: PstnAddressService, //Location Based
+              private PstnAddressService: PstnAddressService, //Site and Location Based
               private $translate: ng.translate.ITranslateService,
               private HuronCompassService: HuronCompassService,
               private FeatureToggleService) {
@@ -270,52 +269,29 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
     this.addressLoading = true;
     this.validation = true;
 
-    if (this.ftLocation) {
-      const address: Address = new Address();
-      address.streetAddress = this.trialData.details.emergAddr.streetAddress;
-      address.unit = this.trialData.details.emergAddr.unit;
-      address.city = this.trialData.details.emergAddr.city;
-      address.state = this.trialData.details.emergAddr.state;
-      address.zip = this.trialData.details.emergAddr.zip;
-      address.country = this.PstnModel.getCountryCode();
-      this.PstnAddressService.lookup(this.trialData.details.pstnProvider.uuid, address)
-      .then((_address: Address | null) => {
-        if (_address) {
-          this.addressFound = true;
-          this.readOnly = true;
-          _.extend(this.trialData.details.emergAddr, _address);
-        } else {
-          this.validation = false;
-          this.Notification.error('trialModal.pstn.error.noAddress');
-          this.Analytics.trackTrialSteps(this.Analytics.eventNames.VALIDATION_ERROR, this.parentTrialData, { value: this.trialData.details.emergAddr, error: this.$translate.instant('trialModal.pstn.error.noAddress') });
-        }
-      })
-      .finally(() => {
-        this.addressLoading = false;
-      });
-      return;
-    }
-    return this.PstnServiceAddressService.lookupAddressV2({
-      streetAddress: this.trialData.details.emergAddr.streetAddress,
-      unit: this.trialData.details.emergAddr.unit,
-      city: this.trialData.details.emergAddr.city,
-      state: this.trialData.details.emergAddr.state,
-      zip: this.trialData.details.emergAddr.zip,
-    }, this.trialData.details.pstnProvider.uuid)
-      .then(response => {
-        if (!_.isUndefined(response)) {
-          this.addressFound = true;
-          this.readOnly = true;
-          _.extend(this.trialData.details.emergAddr, response);
-        } else {
-          this.validation = false;
-          this.Notification.error('trialModal.pstn.error.noAddress');
-          this.Analytics.trackTrialSteps(this.Analytics.eventNames.VALIDATION_ERROR, this.parentTrialData, { value: this.trialData.details.emergAddr, error: this.$translate.instant('trialModal.pstn.error.noAddress') });
-        }
-      })
-      .finally(() => {
-        this.addressLoading = false;
-      });
+    const address: Address = new Address();
+    address.streetAddress = this.trialData.details.emergAddr.streetAddress;
+    address.unit = this.trialData.details.emergAddr.unit;
+    address.city = this.trialData.details.emergAddr.city;
+    address.state = this.trialData.details.emergAddr.state;
+    address.zip = this.trialData.details.emergAddr.zip;
+    address.country = this.PstnModel.getCountryCode();
+    this.PstnAddressService.lookup(this.trialData.details.pstnProvider.uuid, address)
+    .then((_address: Address | null) => {
+      if (_address) {
+        this.addressFound = true;
+        this.readOnly = true;
+        _.extend(this.trialData.details.emergAddr, _address);
+      } else {
+        this.validation = false;
+        this.Notification.error('trialModal.pstn.error.noAddress');
+        this.Analytics.trackTrialSteps(this.Analytics.eventNames.VALIDATION_ERROR, this.parentTrialData, { value: this.trialData.details.emergAddr, error: this.$translate.instant('trialModal.pstn.error.noAddress') });
+      }
+    })
+    .finally(() => {
+      this.addressLoading = false;
+    });
+    return;
   }
 
   public resetAddress(): void {

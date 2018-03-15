@@ -78,6 +78,12 @@
           isSparkCallConfigured: /* @ngInject */ function (AutoAttendantHybridCareService, $state) {
             $state.isSparkCallConfigured = AutoAttendantHybridCareService.isSparkCallConfigured();
           },
+          isAppleBusinessChatEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
+            return FeatureToggleService.supports(FeatureToggleService.features.careApplebuschatBasicEnable)
+              .then(function (isEnabled) {
+                $state.isAppleBusinessChatEnabled = isEnabled;
+              });
+          },
         },
       })
       .state('care.setupAssistant', {
@@ -91,6 +97,41 @@
           isEditFeature: null,
         },
         resolve: {
+          isCareProactiveChatTrialsEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
+            return FeatureToggleService.supports(FeatureToggleService.features.atlasCareProactiveChatTrials)
+              .then(function (isEnabled) {
+                $state.isCareProactiveChatTrialsEnabled = isEnabled;
+              });
+          },
+          isCareAssistantEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
+            return FeatureToggleService.supports(FeatureToggleService.features.atlasVirtualAssistantEnable)
+              .then(function (isEnabled) {
+                $state.isCareAssistantEnabled = isEnabled;
+              });
+          },
+          isEvaFlagEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
+            return FeatureToggleService.supports(FeatureToggleService.features.atlasExpertVirtualAssistantEnable)
+              .then(function (isEnabled) {
+                $state.isEvaFlagEnabled = isEnabled;
+              });
+          },
+        },
+      })
+      .state('care.setupAssistant_new', {
+        url: '/setupAssistant_new/:type',
+        parent: 'care.Details',
+        template: '<ct-setup-assistant-component dismiss="$dismiss()" is-edit-feature="$resolve.isEditFeature" template="$resolve.template"></ct-setup-assistant-component>',
+        params: {
+          template: null,
+          isEditFeature: null,
+        },
+        resolve: {
+          isEditFeature: /* @ngInject */ function ($stateParams) {
+            return $stateParams.isEditFeature;
+          },
+          template: /* @ngIngect */ function ($stateParams) {
+            return $stateParams.template;
+          },
           isCareProactiveChatTrialsEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
             return FeatureToggleService.supports(FeatureToggleService.features.atlasCareProactiveChatTrials)
               .then(function (isEnabled) {
@@ -140,6 +181,19 @@
           isEditFeature: /* @ngInject */ function ($stateParams) {
             return $stateParams.isEditFeature;
           },
+          template: /* @ngIngect */ function ($stateParams) {
+            return $stateParams.template;
+          },
+        },
+      })
+      .state('care.appleBusinessChat', {
+        url: '/abcService',
+        parent: 'care.Details',
+        template: '<abc-setup dismiss="$dismiss()" template="$resolve.template"></abc-setup>',
+        params: {
+          template: null,
+        },
+        resolve: {
           template: /* @ngIngect */ function ($stateParams) {
             return $stateParams.template;
           },

@@ -90,6 +90,6 @@ export class ContextAdminAuthorizationService implements IContextAdminAuthorizat
 }
 
 export default angular
-  .module('Context')
+  .module('context.services.context-authorization-service', [])
   .service('ContextAdminAuthorizationService', ContextAdminAuthorizationService)
   .name;

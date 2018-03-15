@@ -241,17 +241,6 @@ export class HybridServicesClusterService {
       .then(this.addUserCount);
   }
 
-  public getStatusForService(serviceId: HybridServiceId, clusterList: IExtendedClusterFusion[]): IServiceStatusWithSetup {
-    const status = this.processClustersToAggregateStatusForService(serviceId, clusterList);
-    const serviceStatus = {
-      serviceId: serviceId,
-      setup: this.processClustersToSeeIfServiceIsSetup(serviceId, clusterList),
-      status: status,
-      cssClass: this.HybridServicesClusterStatesService.getServiceStatusCSSClassFromLabel(status),
-    };
-    return serviceStatus;
-  }
-
   public getUnassignedClusters(clusters: ICluster[]): ICluster[] {
     return _.filter(clusters, (cluster) => cluster.resourceGroupId === undefined);
   }
@@ -296,27 +285,6 @@ export class HybridServicesClusterService {
     return this.HybridServicesClusterStatesService.getServiceStatusDetails(connectors).name;
   }
 
-  public processClustersToSeeIfServiceIsSetup(serviceId: HybridServiceId, clusterList: ICluster[]): boolean {
-    const connectorType = this.HybridServicesUtilsService.serviceId2ConnectorType(serviceId);
-    if (!connectorType) {
-      return false; // Cannot recognize service, default to *not* enabled
-    }
-
-    if (serviceId === 'squared-fusion-media') {
-      return _.some(clusterList, { targetType: 'mf_mgmt' });
-    } else if (serviceId === 'contact-center-context') {
-      return _.some(clusterList, { targetType: 'cs_mgmt' });
-    } else if (serviceId === 'spark-hybrid-datasecurity') {
-      return _.some(clusterList, { targetType: 'hds_app' });
-    } else {
-      return _.chain(clusterList)
-        .map('provisioning')
-        .flatten()
-        .some({ connectorType: connectorType })
-        .value();
-    }
-  }
-
   public provisionConnector(clusterId: string, connectorType: ConnectorType): ng.IPromise<''> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}/provisioning/actions/add/invoke?connectorType=${connectorType}`;
     return this.$http.post<''>(url, null)
@@ -324,13 +292,6 @@ export class HybridServicesClusterService {
       .then((res) => {
         this.clearCache();
         return res;
-      });
-  }
-
-  public serviceIsSetUp(serviceId: HybridServiceId): ng.IPromise<boolean> {
-    return this.getAll()
-      .then((clusterList) => {
-        return this.processClustersToSeeIfServiceIsSetup(serviceId, clusterList);
       });
   }
 
@@ -360,13 +321,14 @@ export class HybridServicesClusterService {
         .map((connector) => connector.alarms)
         .flatten<IConnectorAlarm>()
         .value();
-      // to test
+      // TODO: add unit tests
       let alarms: 'none' | 'warning' | 'error' = 'none'; // this type is duplicate of what's inside hybrid-services.types.ts?
       if (allClusterAlarms.length > 0) {
         alarms = _.some(allClusterAlarms, (alarm) => alarm.severity === 'critical' || alarm.severity === 'error') ? 'error' : 'warning';
       }
-      // to test
+      // TODO: add unit tests
       const hasUpgradeAvailable = _.some(cluster.connectors, (connector) => connector.extendedProperties.hasUpgradeAvailable);
+      const isUpgradeUrgent = _.some(cluster.connectors, (connector) => connector.extendedProperties.isUpgradeUrgent);
       // no_nodes_registered or not_registered if _.size(connectors) === 0
       if (isClusterEmpty && cluster.targetType === 'c_mgmt') {
         return this.HybridServicesExtrasService.getPreregisteredClusterAllowList(cluster.id)
@@ -382,6 +344,7 @@ export class HybridServicesClusterService {
                 alarmsBadgeCss: 'danger',
                 allowedRedirectTarget: allowList[0],
                 hasUpgradeAvailable: hasUpgradeAvailable,
+                isUpgradeUrgent: isUpgradeUrgent,
                 isEmpty: isClusterEmpty,
                 maintenanceMode: this.getMaintenanceModeForCluster(cluster),
                 registrationTimedOut: _.isUndefined(allowList[0]),
@@ -398,6 +361,7 @@ export class HybridServicesClusterService {
             alarmsBadgeCss: 'danger',
             allowedRedirectTarget: undefined,
             hasUpgradeAvailable: hasUpgradeAvailable,
+            isUpgradeUrgent: isUpgradeUrgent,
             isEmpty: isClusterEmpty,
             maintenanceMode: this.getMaintenanceModeForCluster(cluster),
             registrationTimedOut: false,
@@ -454,14 +418,16 @@ export class HybridServicesClusterService {
     if (connector.alarms.length > 0) {
       alarms = _.some(connector.alarms, (alarm) => alarm.severity === 'critical' || alarm.severity === 'error') ? 'error' : 'warning';
     }
+    const relevantProvisioning = _.find(cluster.provisioning, { connectorType: connector.connectorType });
     return {
       ...connector,
       extendedProperties: {
         alarms: alarms,
         alarmsBadgeCss: 'danger',
         state: this.HybridServicesClusterStatesService.getConnectorStateDetails(connector),
-        hasUpgradeAvailable: this.hasConnectorUpgradeAvailable(connector, cluster.provisioning), // to test
-        maintenanceMode: this.getMaintenanceModeForConnector(connector), // to test
+        hasUpgradeAvailable: relevantProvisioning && this.hasConnectorUpgradeAvailable(connector, relevantProvisioning), // TODO: add unit tests
+        isUpgradeUrgent: relevantProvisioning && this.isConnectorUpgradeUrgent(connector, relevantProvisioning), // TODO: add unit tests
+        maintenanceMode: this.getMaintenanceModeForConnector(connector), // TODO: add unit tests
       },
     };
   }
@@ -620,18 +586,17 @@ export class HybridServicesClusterService {
     return _.sortBy(clusters, ['targetType', 'name']);
   }
 
-  private hasConnectorUpgradeAvailable(connector: IConnector, provisioning: IConnectorProvisioning[]): boolean {
-    const provisioningType = _.find(provisioning, { connectorType: connector.connectorType });
-    if (provisioningType) {
-      // Upgrade available if:
-      // - has the right type
-      // - is not currently upgrading
-      // - version is different from the available version
-      return provisioningType.connectorType === connector.connectorType &&
-        connector.upgradeState === 'upgraded' &&
-        !_.isUndefined(provisioningType.availableVersion) && connector.runningVersion !== provisioningType.availableVersion;
-    }
-    return false;
+  private hasConnectorUpgradeAvailable(connector: IConnector, provisioning: IConnectorProvisioning): boolean {
+    // Upgrade available if:
+    // - is not currently upgrading
+    // - version is different from the available version
+    return provisioning.connectorType === connector.connectorType &&
+      connector.upgradeState === 'upgraded' &&
+      !_.isUndefined(provisioning.availableVersion) && connector.runningVersion !== provisioning.availableVersion;
+  }
+
+  private isConnectorUpgradeUrgent(connector: IConnector, provisioning: IConnectorProvisioning): boolean {
+    return this.hasConnectorUpgradeAvailable(connector, provisioning) && provisioning.availablePackageIsUrgent;
   }
 
   private getMaintenanceModeForConnector(connector: IConnector): ConnectorMaintenanceMode {

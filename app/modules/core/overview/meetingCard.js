@@ -67,7 +67,7 @@
         card.provisioningEventHandler = function (productProvStatus) {
           if (_.some(productProvStatus, { status: 'PENDING_PARM', productName: 'WX' })) {
             card.needsWebExSetup = true;
-          } else if (_.some(productProvStatus, { status: 'PROVISIONING', productName: 'WX' })) {
+          } else if (someMeetingsAreNotProvisioned(productProvStatus)) {
             card.isProvisioning = true;
           }
         };
@@ -76,6 +76,12 @@
           card.needsWebExSetup = false;
           card.isProvisioning = true;
         });
+
+        var someMeetingsAreNotProvisioned = function (productProvStatus) {
+          return _.some(productProvStatus, function (status) {
+            return status.productName === 'WX' && status.status !== 'PROVISIONED';
+          });
+        };
 
         $scope.$on('$destroy', meetingServicesSetupSuccessDeregister);
 

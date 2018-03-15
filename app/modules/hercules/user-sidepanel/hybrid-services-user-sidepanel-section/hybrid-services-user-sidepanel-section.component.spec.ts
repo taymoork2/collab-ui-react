@@ -30,6 +30,7 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
 
     function mockDependencies($provide) {
       const Authinfo = {
+        getLicenses: jasmine.createSpy('getLicenses').and.returnValue(['license1', 'license2']),
         isEntitled: jasmine.createSpy('isEntitled').and.callFake(service => (service === 'squared-fusion-cal' || service === 'squared-fusion-uc' || service === 'spark-hybrid-impinterop')),
         getOrgId: jasmine.createSpy('getOrgId').and.returnValue('12'),
       };
@@ -69,6 +70,22 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
       }));
     }
 
+    it('should not show the section if there are no licenses assigned to the user', () => {
+      const unlicensedUser = {
+        licenseID: [],
+      };
+      const controller = initController(unlicensedUser);
+      expect(controller.isLicensed).toBe(false);
+    });
+
+    it('should show the section if there is at least one paid license assigned to the user', () => {
+      const licensedUser = {
+        licenseID: ['This is a paid license'],
+      };
+      const controller = initController(licensedUser);
+      expect(controller.isLicensed).toBe(true);
+    });
+
     it('should amend the services list with setup data from FMS', () => {
       const controller = initController();
       expect(controller.enabledServicesWithStatuses.length).toBe(2);
@@ -90,6 +107,7 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
 
     function mockDependencies($provide) {
       const Authinfo = {
+        getLicenses: jasmine.createSpy('getLicenses').and.returnValue(['license1', 'license2']),
         isEntitled: jasmine.createSpy('isEntitled').and.callFake((service) => {
           return (service === 'squared-fusion-gcal' || service === 'squared-fusion-cal');
         }),
@@ -117,7 +135,7 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
       spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve({}));
       spyOn(ServiceDescriptorService, 'getServices');
       spyOn(USSService, 'getStatusesForUser').and.returnValue($q.resolve({}));
-      spyOn(UserOverviewService, 'getUser');
+      spyOn(UserOverviewService, 'getUser').and.returnValue($q.resolve());
     }
 
     it('should check status with CloudConnectorService if the org is entitled to Google Calendar ', () => {
@@ -193,6 +211,7 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
 
     function mockDependencies($provide) {
       const Authinfo = {
+        getLicenses: jasmine.createSpy('getLicenses').and.returnValue(['license1', 'license2']),
         isEntitled: jasmine.createSpy('isEntitled').and.callFake(service => (service === 'squared-fusion-uc' || service === 'spark-hybrid-impinterop')),
         getOrgId: jasmine.createSpy('getOrgId').and.returnValue('12'),
       };

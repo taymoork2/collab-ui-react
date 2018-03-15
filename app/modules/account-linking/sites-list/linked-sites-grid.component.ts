@@ -1,16 +1,14 @@
-import { LinkingOperation } from './../account-linking.interface';
 import { IACSiteInfo } from './../account-linking.interface';
 
 class LinkedSitesGridComponentCtrl implements ng.IComponentController {
   public gridApi;
   public siteInfo;
   public gridConfig;
-  public loading: boolean = true;
 
   public sitesInfo: any;
   public onSiteSelectedFn: Function;
   public launchWebexFn: Function;
-  public webexPage;
+  public showWizardFn: Function;
 
   private selectedRow;
 
@@ -18,7 +16,6 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
   constructor(
     private $log: ng.ILogService,
     private $state: ng.ui.IStateService,
-    //private $rootScope: ng.IRootScopeService,
     private $translate,
     private uiGridConstants: uiGrid.IUiGridConstants,
   ) {
@@ -29,7 +26,6 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
     if (ch.sitesInfo && ch.sitesInfo.currentValue) {
       this.sitesInfo = ch.sitesInfo.currentValue;
       this.gridConfig.data = this.sitesInfo;
-      this.loading = !this.loading;
       this.gridApi.core.notifyDataChange(this.uiGridConstants.dataChange.ALL);
     }
   }
@@ -96,7 +92,7 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
     this.gridConfig.multiSelect = false;
     this.gridConfig.modifierKeysToMultiSelect = false;
     this.gridConfig.noUnselect = true;
-    this.gridConfig.onRegisterApi = function(gridApi) {
+    this.gridConfig.onRegisterApi = (gridApi) => {
       this.gridApi = gridApi;
       this.gridApi.grid.element.on('click', (event) => {
         this.$log.debug('grid clicked', event);
@@ -107,7 +103,7 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
         }
       });
       this.gridApi.selection.on.rowSelectionChanged.call(this, null, this.showDetails);
-    }.bind(this);
+    };
   }
 
   public showDetails = (selectedRow) => {
@@ -116,15 +112,14 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
   }
 
   public modifyLinkingMethod(siteInfo) {
-    this.$state.go('site-list.linked.details.wizard', {
-      siteInfo: siteInfo, //TODO: url or the whole object ????
-      operation: LinkingOperation.Modify,
-      launchWebexFn: this.launchWebexFn,
+    this.$log.debug('Modify linking method by launching wizard with siteInfo:', siteInfo);
+    this.showWizardFn({
+      siteInfo: siteInfo,
     });
   }
 
   public allowModifyingLinkingMode(selectedRowInfo: IACSiteInfo): boolean {
-    return selectedRowInfo.isSiteAdmin === true && selectedRowInfo.supportAgreementLinkingMode === true;
+    return selectedRowInfo.isSiteAdmin === true;
   }
 
   public gotoWebexListSitesPage(siteInfo) {
@@ -137,7 +132,6 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
     this.launchWebexFn({
       site: siteInfo,
       useHomepage: true,
-      launchWebexFn: this.launchWebexFn,
     });
   }
 
@@ -168,5 +162,7 @@ export class LinkedSitesGridComponent implements ng.IComponentOptions {
     sitesInfo: '<',
     onSiteSelectedFn: '&',
     launchWebexFn: '&',
+    showWizardFn: '&',
+    loading: '<',
   };
 }

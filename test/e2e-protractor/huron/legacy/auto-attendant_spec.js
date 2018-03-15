@@ -294,6 +294,7 @@ describe('Huron Auto Attendant', function () {
       utils.sendKeys(autoattendant.sayMessageInput, "Welcome to the AA");
       utils.click(autoattendant.sayMessageDynamicButton)
       utils.wait(autoattendant.dynamicVariable, 320000);
+      utils.wait(autoattendant.dynamicVariable, 320000);
       utils.click(autoattendant.readAs);
       utils.click(autoattendant.readAsVariable);
       utils.click(autoattendant.dynamicVariable);
@@ -336,6 +337,7 @@ describe('Huron Auto Attendant', function () {
       utils.sendKeys(autoattendant.phonesayMessageInput, "Press a key at the menu");
       utils.click(autoattendant.phoneMenuAddDynamicTextButton);
       utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.wait(autoattendant.dynamicVariable, 320000);
       utils.click(autoattendant.readAs);
       utils.click(autoattendant.readAsVariable);
       utils.click(autoattendant.dynamicVariable);
@@ -434,6 +436,8 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phoneMenuKeyOptions.last().all(by.tagName('li')).last());
       utils.click(autoattendant.phoneMenuAction.last());
       utils.click(autoattendant.phoneMenuActionOptions.last().element(by.linkText('Route to Phone Number')));
+      utils.click(autoattendant.selectPhoneNumber);
+      utils.click(autoattendant.selectPhoneNumberInDropdown);
       utils.click(autoattendant.phoneMenuActionTargets.last().element(by.name('phoneinput')));
 
       // a bad external number should not allow save
@@ -638,6 +642,7 @@ describe('Huron Auto Attendant', function () {
       utils.sendKeys(autoattendant.dialByMessageInput, "Enter the Extension");
       utils.click(autoattendant.dialByExtensionDynamicButton);
       utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.wait(autoattendant.dynamicVariable, 320000);
       utils.click(autoattendant.dynamicVariable);
       utils.wait(autoattendant.dynamicVariable, 120000);
       utils.click(autoattendant.variable);
@@ -725,6 +730,7 @@ describe('Huron Auto Attendant', function () {
         //utils.sendKeys(autoattendant.callerMessageInput, "Extension");
         utils.click(autoattendant.callerInputDynamicButton);
         utils.wait(autoattendant.dynamicVariable, 120000);
+        utils.wait(autoattendant.dynamicVariable, 320000);
         utils.click(autoattendant.dynamicVariable);
         utils.wait(autoattendant.dynamicVariable, 120000);
         utils.click(autoattendant.variable);
@@ -769,7 +775,9 @@ describe('Huron Auto Attendant', function () {
 
       utils.click(autoattendant.decisionIf);
 
-      utils.wait(autoattendant.decisionIf, 120000);
+      utils.expectIsDisplayed(autoattendant.ifDropDown);
+      utils.wait(autoattendant.ifDropDown, 3600000);
+      browser.driver.sleep(5000);
 
       utils.click(autoattendant.decisionIfDropDownOptions);
 
@@ -788,6 +796,8 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.decisionThenDropDownOptions);
 
       utils.wait(autoattendant.decisionPhoneNumber, 120000);
+      utils.click(autoattendant.selectPhoneNumber);
+      utils.click(autoattendant.selectPhoneNumberInDropdown);
       utils.sendKeys(autoattendant.decisionPhoneNumber, "2065551234");
 
     }, 120000);
@@ -811,10 +821,10 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.addschedule);
 
       utils.click(autoattendant.starttime);
-      autoattendant.starttime.sendKeys(autoattendant.starttime, '1', protractor.Key.TAB, '00', protractor.Key.TAB, 'A');
+      //autoattendant.starttime.sendKeys(autoattendant.starttime, '1', protractor.Key.TAB, '00', protractor.Key.TAB, 'A');
 
       utils.click(autoattendant.endtime);
-      autoattendant.endtime.sendKeys(autoattendant.starttime, '5', protractor.Key.TAB, '00', protractor.Key.TAB, 'P');
+      //autoattendant.endtime.sendKeys(autoattendant.starttime, '5', protractor.Key.TAB, '00', protractor.Key.TAB, 'P');
 
       utils.expectIsDisabled(autoattendant.modalsave);
       utils.click(autoattendant.day1);
@@ -990,6 +1000,47 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.saveBtn);
       utils.click(autoattendant.saveButton);
     });
+
+    it('should add route call to phone number as well as extension', function () {
+      autoattendant.scrollIntoView(autoattendant.addStepLast);
+      utils.click(autoattendant.addStepLast);
+      utils.expectIsDisplayed(autoattendant.newStep);
+      utils.click(autoattendant.newStepMenu);
+
+      // 4th/last menu option is Route Call
+      utils.click(autoattendant.newStepSelectRouteCall);
+
+      // stop here as the complete menu has been tested elsewhere
+      utils.expectIsDisplayed(autoattendant.routeCall);
+      utils.click(autoattendant.routeCallChoose);
+      browser.driver.sleep(1000);
+      utils.click(autoattendant.routeToPhoneNumber);
+
+      //selecting route to phone number in dropdown
+      utils.click(autoattendant.selectPhoneNumber);
+      utils.click(autoattendant.selectPhoneNumberInDropdown);
+      utils.click(autoattendant.phoneNumberActionTarget);
+      utils.sendKeys(autoattendant.phoneNumberActionTarget, "4084741234");
+
+      // save and assert successful update message
+      utils.wait(autoattendant.saveButton, 100000);
+      utils.expectIsEnabled(autoattendant.saveButton);
+      utils.click(autoattendant.saveButton);
+
+      //selecting route to extension in dropdown
+      utils.click(autoattendant.selectPhoneNumber);
+      utils.click(autoattendant.selectExtensionInDropdown);
+      utils.click(autoattendant.extensionActionTarget);
+
+      utils.sendKeys(autoattendant.extensionActionTarget, "2222");
+      utils.wait(autoattendant.saveButton, 100000);
+
+      // save and assert successful update message
+      utils.expectIsEnabled(autoattendant.saveButton);
+
+      utils.click(autoattendant.saveButton);
+      utils.wait(autoattendant.saveButton, 120000);
+    }, 120000);
 
 
     it('should close AA edit and return to landing page', function () {

@@ -27,7 +27,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
   public newEntitlementValue: boolean | undefined;
 
   public userStatusAware: IUserStatusWithExtendedMessages | undefined;
-  private userStatusConnect: IUserStatusWithExtendedMessages | undefined;
+  public userStatusConnect: IUserStatusWithExtendedMessages | undefined;
   public lastStateChangeText: string = '';
 
   public connectorId: string;
@@ -37,6 +37,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
   public ucmCluster: string;
 
   public domainVerificationError = false;
+  public resourceGroupId: string;
 
   /* @ngInject */
   constructor(
@@ -57,9 +58,6 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
 
   public $onInit() {
     this.getServiceSetupStatus();
-    if (this.userId) {
-      this.getUserData(this.userId);
-    }
   }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
@@ -94,7 +92,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
     return this.$q.all(promises)
       .then(([commonIdentityUserData, [userStatusAware, userStatusConnect]]) => {
         this.allUserEntitlements = commonIdentityUserData.user.entitlements;
-        this.isInvitePending = commonIdentityUserData.user.pendingStatus;
+        this.isInvitePending = !this.UserOverviewService.userHasActivatedAccountInCommonIdentity(commonIdentityUserData.user);
         this.userStatusAware = userStatusAware;
         this.userStatusConnect = userStatusConnect;
         this.entitledToggle = this.userIsCurrentlyEntitled = this.userHasEntitlement('squared-fusion-uc');
@@ -106,6 +104,10 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
 
         if (this.userStatusAware && this.userStatusAware.lastStateChange) {
           this.lastStateChangeText = this.HybridServicesI18NService.getTimeSinceText(this.userStatusAware.lastStateChange);
+        }
+
+        if (this.userStatusAware && this.userStatusAware.resourceGroupId) {
+          this.resourceGroupId = this.userStatusAware.resourceGroupId;
         }
 
         if (this.userIsCurrentlyEntitled && this.userStatusAware) {

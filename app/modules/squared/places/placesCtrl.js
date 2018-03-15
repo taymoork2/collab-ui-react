@@ -112,8 +112,12 @@ require('../devices/_devices.scss');
             }).length > 0;
         };
 
-        vm.numDevices = function (place) {
-          return _.size(place.devices);
+        vm.deviceTypes = function (devices) {
+          return _.chain(devices)
+            .values()
+            .map('product')
+            .join(', ')
+            .value();
         };
 
         vm.showPlaceDetails = function (place) {
@@ -148,16 +152,11 @@ require('../devices/_devices.scss');
             sortCellFiltered: true,
             cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showPlaceDetails(row.entity)" cell-value="row.entity.displayName"></cs-grid-cell>',
           }, {
-            field: 'readableType',
-            displayName: $translate.instant('placesPage.typeHeader'),
-            sortable: true,
-            cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showPlaceDetails(row.entity)" cell-value="row.entity.readableType"></cs-grid-cell>',
-          }, {
             field: 'devices',
             displayName: $translate.instant('placesPage.deviceHeader'),
             sortable: true,
-            sortingAlgorithm: sortNoDevicesFn,
-            cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showPlaceDetails(row.entity)" cell-value="grid.appScope.numDevices(row.entity)"></cs-grid-cell>',
+            sortingAlgorithm: sortDeviceTypes,
+            cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showPlaceDetails(row.entity)" cell-value="grid.appScope.deviceTypes(row.entity.devices)"></cs-grid-cell>',
           }, {
             field: 'action',
             displayName: $translate.instant('placesPage.actionHeader'),
@@ -254,8 +253,14 @@ require('../devices/_devices.scss');
           return 1;
         }
 
-        function sortNoDevicesFn(a, b) {
-          return _.size(a) - _.size(b);
+        function sortDeviceTypes(a, b) {
+          if (a) {
+            var typesA = vm.deviceTypes(a);
+            if (typesA && typesA.localeCompare) {
+              return typesA.localeCompare(vm.deviceTypes(b));
+            }
+          }
+          return -1;
         }
 
         init();

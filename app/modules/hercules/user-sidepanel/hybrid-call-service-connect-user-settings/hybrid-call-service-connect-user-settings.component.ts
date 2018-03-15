@@ -25,6 +25,7 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
   public entitledToggle: boolean = false;
   public userIsCurrentlyEntitled: boolean = false;
   public newEntitlementValue: boolean | undefined;
+  public resourceGroupId: string;
 
   public userTestToolFeatureToggled: boolean;
 
@@ -69,12 +70,16 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
     return this.$q.all(promises)
       .then(([commonIdentityUserData, [userStatusAware, userStatusConnect]]) => {
         this.allUserEntitlements = commonIdentityUserData.user.entitlements;
-        this.isInvitePending = commonIdentityUserData.user.pendingStatus;
+        this.isInvitePending = !this.UserOverviewService.userHasActivatedAccountInCommonIdentity(commonIdentityUserData.user);
         this.userStatusAware = userStatusAware;
         this.userStatusConnect = userStatusConnect;
         this.entitledToggle = this.userIsCurrentlyEntitled = this.userHasEntitlement('squared-fusion-ec');
         if (this.userStatusConnect && this.userStatusConnect.lastStateChange) {
           this.lastStateChangeText = this.HybridServicesI18NService.getTimeSinceText(this.userStatusConnect.lastStateChange);
+        }
+        if (this.userStatusAware && this.userStatusAware.resourceGroupId) {
+          /* The Aware Resource Group is also used for Connect  */
+          this.resourceGroupId = this.userStatusAware.resourceGroupId;
         }
       })
       .catch((error) => {

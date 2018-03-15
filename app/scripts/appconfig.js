@@ -1133,7 +1133,7 @@
           .state('users.convert.auto-assign-license-summary', {
             views: {
               'usersConvert@users.convert': {
-                template: '<user-convert-auto-assign-license-summary dismiss="$dismiss()"></user-convert-auto-assign-license-summary>',
+                template: '<user-convert-auto-assign-license-summary save="convertUsers()" save-loading="btnConvertLoad" dismiss="$dismiss()"></user-convert-auto-assign-license-summary>',
               },
             },
           })
@@ -1206,6 +1206,20 @@
               },
               task: undefined,
             },
+          })
+          .state('sso-certificate', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<div ui-view></div>',
+              },
+            },
+          })
+          .state('sso-certificate.check-certificate', {
+            template: '<check-certificate dismiss="$dismiss()"></check-certificate>',
+          })
+          .state('sso-certificate.certificate-type', {
+            template: '<certificate-type dismiss="$dismiss()"></certificate-type>',
           })
           .state('editService', {
             parent: 'modal',
@@ -1654,7 +1668,7 @@
           .state('user-overview.hybrid-services-squared-fusion-cal', {
             views: {
               'side-panel-container@user-overview': {
-                template: '<hybrid-calendar-service-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" preferred-web-ex-site-name="$resolve.preferredWebExSiteName" is-invite-pending="$resolve.isInvitePending"></hybrid-calendar-service-user-settings>',
+                template: '<hybrid-calendar-service-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" preferred-web-ex-site-name="$resolve.preferredWebExSiteName"></hybrid-calendar-service-user-settings>',
               },
             },
             data: {},
@@ -1862,6 +1876,20 @@
               displayName: translateDisplayName('usersPreview.rolesAndSecurity'),
             },
           })
+          .state('user-overview.linked-webex-sites', {
+            views: {
+              'side-panel-container@user-overview': {
+                template: '<linked-sites-user-settings user-id="$resolve.userId"></linked-sites-user-settings>',
+              },
+            },
+            data: {},
+            resolve: {
+              userId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentUser.id;
+              },
+              displayName: translateDisplayName('accountLinking.userSidepanel.linkedAccounts'),
+            },
+          })
 
           // FOR Development: allow editing of user's feature toggles
           .state('edit-featuretoggles', {
@@ -1981,47 +2009,24 @@
               },
             },
           })
-          .state('site-list.linked.details.wizard', {
-            views: {
-              'modal@': {
-                template: '<account-linking-wizard dismiss="$dismiss()" site-info="$resolve.siteInfo" operation="$resolve.operation" launch-webex-fn="$resolve.launchWebexFn(site, useHomepage)" set-account-linking-mode-fn="$resolve.setAccountLinkingModeFn(siteUrl, mode)"></account-linking-wizard>',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'account-linking-wizard-custom';
-                  },
-                },
-              },
-            },
-            params: {
-              siteInfo: null,
-              operation: null,
-              launchWebexFn: null,
-              setAccountLinkingModeFn: null,
-            },
-            resolve: {
-              siteInfo: /*@ngInject */ function ($stateParams) {
-                return $stateParams['siteInfo'];
-              },
-              operation: /*@ngInject */ function ($stateParams) {
-                return $stateParams['operation'];
-              },
-              launchWebexFn: /*@ngInject */ function ($stateParams) {
-                return $stateParams['launchWebexFn'];
-              },
-              setAccountLinkingModeFn: /*@ngInject */ function ($stateParams) {
-                return $stateParams['setAccountLinkingModeFn'];
-              },
-            },
-            onEnter: modalOnEnter({
-              type: 'full',
-            }),
-            onExit: modalOnExit,
-          })
           .state('site-list-add', {
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<webex-add-site-modal  modal-title="\'firstTimeWizard.addWebexSite\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site-modal>',
+                template: '<webex-add-site-modal  center-details-for-all-subscriptions="$resolve.centerDetailsForAllSubscriptions" center-details="$resolve.centerDetails" modal-title="\'firstTimeWizard.addWebexSite\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site-modal>',
+              },
+            },
+            params: {
+              centerDetails: null,
+              centerDetailsForAllSubscriptions: null,
+
+            },
+            resolve: {
+              centerDetails: /* @ngInject */ function ($stateParams) {
+                return $stateParams['centerDetails'];
+              },
+              centerDetailsForAllSubscriptions: /* @ngInject */ function ($stateParams) {
+                return $stateParams['centerDetailsForAllSubscriptions'];
               },
             },
           })
@@ -2029,15 +2034,19 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<webex-add-site-modal subscription-id="$resolve.subscriptionId" single-step="3" modal-title="\'webexSiteManagement.redistributeLicenses\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site-modal>',
+                template: '<webex-add-site-modal subscription-id="$resolve.subscriptionId" center-details="$resolve.centerDetails" single-step="3" modal-title="\'webexSiteManagement.redistributeLicenses\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site-modal>',
               },
             },
             params: {
               subscriptionId: null,
+              centerDetails: null,
             },
             resolve: {
               subscriptionId: /* @ngInject */ function ($stateParams) {
                 return $stateParams['subscriptionId'];
+              },
+              centerDetails: /* @ngInject */ function ($stateParams) {
+                return $stateParams['centerDetails'];
               },
             },
           })
@@ -2045,16 +2054,20 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<webex-delete-site-modal subscription-id="$resolve.subscriptionId" site-url="$resolve.siteUrl" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-delete-site-modal>',
+                template: '<webex-delete-site-modal subscription-id="$resolve.subscriptionId" site-url="$resolve.siteUrl" center-details="$resolve.centerDetails" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-delete-site-modal>',
               },
             },
             params: {
               subscriptionId: null,
+              centerDetails: null,
               siteUrl: null,
             },
             resolve: {
               subscriptionId: /* @ngInject */ function ($stateParams) {
                 return $stateParams['subscriptionId'];
+              },
+              centerDetails: /* @ngInject */ function ($stateParams) {
+                return $stateParams['centerDetails'];
               },
               siteUrl: /* @ngInject */ function ($stateParams) {
                 return $stateParams['siteUrl'];
@@ -2129,6 +2142,16 @@
                 controllerAs: 'nav',
                 controller: 'SparkMetricsCtrl',
                 template: require('modules/core/customerReports/sparkMetrics/sparkMetrics.tpl.html'),
+              },
+            },
+          })
+          .state('reports.autoLicense', {
+            url: '/sparkAutoLicense',
+            views: {
+              tabContent: {
+                controllerAs: 'nav',
+                controller: 'AutoLicenseCtrl',
+                template: require('modules/core/customerReports/autoLicense/autoLicense.tpl.html'),
               },
             },
           })
@@ -2218,11 +2241,19 @@
           })
           .state('dgc.tab.meetingdetail', {
             url: '/diagnostics/meeting/:cid',
-            views: { tabContent: { template: '<dgc-tab-meetingdetail></dgc-tab-meetingdetail>' } },
+            views: {
+              tabContent: {
+                template: '<dgc-tab-meetingdetail></dgc-tab-meetingdetail>',
+              },
+            },
           })
           .state('dgc.tab.participants', {
             url: '/diagnostics/participants/:cid',
-            views: { tabContent: { template: '<dgc-tab-participants></dgc-tab-participants>' } },
+            views: {
+              tabContent: {
+                template: '<dgc-tab-participants></dgc-tab-participants>',
+              },
+            },
           })
           .state('reports.webex-metrics.classic', {
             url: '/classic',
@@ -2819,6 +2850,7 @@
             data: {},
             params: {
               currentAddress: {},
+              currentHuronDevice: {},
               currentNumber: '',
               status: '',
               staticNumber: '',
@@ -3053,6 +3085,44 @@
                 return $stateParams;
               },
             },
+          })
+          .state('hcs', {
+            parent: 'partner',
+            template: require('modules/hcs/shared/base/hcs-shared-base.html'),
+            absract: true,
+          })
+          .state('hcs.shared', {
+            parent: 'hcs',
+            views: {
+              header: {
+                template: '<hcs-shared-header></hcs-shared-header>',
+              },
+              main: {
+                template: '<div ui-view></div>',
+              },
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/hcs/shared/base'));
+                }, 'call-details');
+              }),
+            },
+          })
+          .state('hcs.shared.inventory', {
+            parent: 'hcs.shared',
+            url: '/hcs/inventory',
+            template: '<hcs-inventory></hcs-inventory>',
+          })
+          .state('hcs.shared.installFiles', {
+            parent: 'hcs.shared',
+            url: '/hcs/install-files',
+            template: '<hcs-install-files></hcs-install-files>',
+          })
+          .state('hcs.subscription', {
+            parent: 'partner',
+            url: '/hcs/subscription',
+            template: '<hcs-licenses-subscription></hcs-licenses-subscription>',
           })
           .state('taasSuites', {
             parent: 'main',
@@ -3678,11 +3748,6 @@
             controller: 'TrialDeviceController',
             controllerAs: 'callTrial',
           })
-          .state('trial.pstnDeprecated', {
-            template: require('modules/core/trials/trialPstn.tpl.html'),
-            controller: 'TrialPstnCtrl',
-            controllerAs: 'pstnTrial',
-          })
           .state('trial.pstn', {
             template: '<uc-pstn-trial-setup class="modal-content" dismiss="$dismiss()"></uc-pstn-trial-setup>',
             controller: 'TrialPstnCtrl',
@@ -3807,62 +3872,6 @@
               refreshFn: /* @ngInject */ function ($stateParams) {
                 return $stateParams.refreshFn;
               },
-            },
-          })
-          .state('pstnSetup', {
-            parent: 'modal',
-            params: {
-              customerId: {},
-              customerName: {},
-              customerEmail: {},
-              customerCommunicationLicenseIsTrial: {},
-              customerRoomSystemsLicenseIsTrial: {},
-              refreshFn: function () {},
-            },
-            views: {
-              'modal@': {
-                template: '<div ui-view></div>',
-                controller: 'PstnSetupCtrl',
-                controllerAs: 'pstnSetup',
-              },
-              '@pstnSetup': {
-                template: require('modules/huron/pstnSetup/pstnProviders/pstnProviders.tpl.html'),
-                controller: 'PstnProvidersCtrl',
-                controllerAs: 'pstnProviders',
-              },
-            },
-          })
-          .state('pstnSetup.contractInfo', {
-            template: require('modules/huron/pstnSetup/pstnContractInfo/pstnContractInfo.tpl.html'),
-            controller: 'PstnContractInfoCtrl',
-            controllerAs: 'pstnContractInfo',
-          })
-          .state('pstnSetup.serviceAddress', {
-            template: require('modules/huron/pstnSetup/pstnServiceAddress/pstnServiceAddress.tpl.html'),
-            controller: 'PstnServiceAddressCtrl',
-            controllerAs: 'pstnServiceAddress',
-          })
-          .state('pstnSetup.orderNumbers', {
-            template: require('modules/huron/pstnSetup/pstnNumbers/pstnNumbers.tpl.html'),
-            controller: 'PstnNumbersCtrl',
-            controllerAs: 'pstnNumbers',
-          })
-          .state('pstnSetup.swivelNumbers', {
-            template: require('modules/huron/pstnSetup/pstnSwivelNumbers/pstnSwivelNumbers.tpl.html'),
-            controller: 'PstnSwivelNumbersCtrl',
-            controllerAs: 'pstnSwivelNumbers',
-          })
-          .state('pstnSetup.review', {
-            template: require('modules/huron/pstnSetup/pstnReview/pstnReview.tpl.html'),
-            controller: 'PstnReviewCtrl',
-            controllerAs: 'pstnReview',
-          })
-          .state('pstnSetup.nextSteps', {
-            template: require('modules/huron/pstnSetup/pstnNextSteps/pstnNextSteps.tpl.html'),
-            controller: 'PstnNextStepsCtrl',
-            controllerAs: 'pstnNextSteps',
-            params: {
-              portOrders: null,
             },
           })
           .state('hurondetailsBase', {
@@ -4731,10 +4740,15 @@
           .state('mediafusion-cluster.nodes', {
             url: '/nodes',
             template: '<hybrid-services-nodes-page back-state="$resolve.backState" cluster-id="$resolve.id"></hybrid-services-nodes-page>',
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.id;
+              },
+            },
           })
           .state('mediafusion-cluster.settings', {
             url: '/settings',
-            template: '<hybrid-media-cluster-settings cluster-id="$resolve.id" has-mf-phase-two-toggle="$resolve.hasMFFeatureToggle" has-mf-trusted-sip-toggle="$resolve.hasMFSIPFeatureToggle"></hybrid-media-cluster-settings>',
+            template: '<hybrid-media-cluster-settings cluster-id="$resolve.id" has-mf-phase-two-toggle="$resolve.hasMFFeatureToggle" has-mf-trusted-sip-toggle="$resolve.hasMFSIPFeatureToggle" has-mf-cascade-bw-config-toggle="$resolve.hasMFCascadeBwConfigToggle"></hybrid-media-cluster-settings>',
             resolve: {
               id: /* @ngInject */ function ($stateParams) {
                 return $stateParams.id;
@@ -4744,6 +4758,9 @@
               },
               hasMFSIPFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceTrustedSIP);
+              },
+              hasMFCascadeBwConfigToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceCascadeBwConfig);
               },
             },
           })
@@ -4874,13 +4891,24 @@
             abstract: true,
           })
           .state('add-resource.mediafusion.hostname', {
-            parent: 'modalSmall',
+            parent: 'main',
             views: {
-              'modal@': {
-                controller: 'AddResourceControllerClusterViewV2',
-                controllerAs: 'redirectResource',
-                template: require('modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html'),
-                modalClass: 'redirect-add-resource',
+              'main@': {
+                controller: 'AddResourceMainController',
+              },
+            },
+            resolve: {
+              hasMfClusterWizardFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceClusterWizard);
+              },
+              hasMfFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwo);
+              },
+              hasMfSIPFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceTrustedSIP);
+              },
+              hasMfCascadeBwConfigToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceCascadeBwConfig);
               },
             },
             params: {
@@ -5247,12 +5275,9 @@
           })
           .state('hybrid-services-event-history-page', {
             parent: 'main',
-            url: '/services/clusters/history?cluster=clusterId&serviceId&connectorId',
+            url: '/services/clusters/history?clusterId&serviceId&connectorId',
             template: '<hybrid-services-event-history-page cluster-id="$resolve.clusterId" connector-id="$resolve.connectorId" service-id="$resolve.serviceId" resource-filter="$resolve.resourceFilter"></hybrid-services-event-history-page>',
             params: {
-              clusterId: null,
-              connectorId: null,
-              serviceId: null,
               resourceFilter: null,
             },
             resolve: {
@@ -5361,6 +5386,20 @@
             controller: 'MediaServiceControllerV2',
             controllerAs: 'med',
             parent: 'main',
+            resolve: {
+              hasMfClusterWizardFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceClusterWizard);
+              },
+              hasMfFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwo);
+              },
+              hasMfSIPFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceTrustedSIP);
+              },
+              hasMfCascadeBwConfigToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceCascadeBwConfig);
+              },
+            },
             params: {
               backState: null,
               clusterId: null,

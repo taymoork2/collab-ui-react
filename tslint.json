@@ -61,7 +61,6 @@
     "no-focused-tests": true,
     "no-trailing-whitespace": true,
     "no-invalid-template-strings": true,
-    "no-irregular-whitespace": true,
     "no-reference": true,
     "no-string-throw": true,
     "no-unused-expression": true,
@@ -81,7 +80,7 @@
       "check-else",
       "check-whitespace"
     ],
-    "prefer-const": "true",
+    "prefer-const": true,
     "quotemark": [
       true,
       "single",
@@ -99,6 +98,7 @@
         "SwitchCase": 1
       }
     ],
+    "ter-no-irregular-whitespace": true,
     "trailing-comma": [
       true,
       {

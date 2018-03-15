@@ -17,7 +17,6 @@ export class CsdmHubFactory {
 class Subscription {
   private listener;
   private event: any;
-  private eventCount: number;
   private channels;
   private emitListenerRemoved;
 
@@ -27,8 +26,6 @@ class Subscription {
     this.emitListenerRemoved = emitListenerRemoved;
 
     this.event = event;
-
-    this.eventCount = 0;
   }
 
   public cancel() {
@@ -38,7 +35,6 @@ class Subscription {
 
   public notify(args) {
     this.listener.apply(this, args);
-    this.eventCount++;
   }
 }
 

@@ -6,7 +6,7 @@
   module.exports = Analytics;
 
   /* @ngInject */
-  function Analytics($q, $state, Authinfo, Config, MetricsService, Orgservice, TrialService, UrlConfig, UserListService) {
+  function Analytics($document, $location, $q, $state, Authinfo, Config, MetricsService, Orgservice, TrialService, UrlConfig, UserListService) {
     var DiagnosticKey = require('../metrics').DiagnosticKey;
     var NO_EVENT_NAME = 'eventName not passed';
 
@@ -239,6 +239,20 @@
           EVA_DELETE_FAILURE: 'Expert VA deletion failed',
         },
       },
+      APPLE_BUSINESS_CHAT: {
+        name: 'Apple Business Chat operations',
+        eventNames: {
+          ABC_DELETE_SUCCESS: 'ABC deleted',
+          ABC_DELETE_FAILURE: 'ABC deletion failed',
+          ABC_BUSINESS_ID_PAGE: 'ABC Business Id',
+          ABC_NAME_PAGE: 'ABC Name',
+          ABC_CVA_SELECTION_PAGE: 'ABC Customer Virtual Assistant Selection',
+          ABC_SUMMARY_PAGE: 'ABC Summary',
+          ABC_START_FINISH: 'ABC the entire wizard',
+          ABC_CREATE_SUCCESS: 'ABC created',
+          ABC_CREATE_FAILURE: 'ABC creation failed',
+        },
+      },
       ONLINE_ORDER: {
         name: 'Online Orders',
         eventNames: {
@@ -252,6 +266,12 @@
           PERFORM_SEARCH: 'CSDM dev search',
           SELECT_SUGGESTION: 'CSDM Suggestion',
           EXPAND_DEVICE: 'CSDM expand device',
+        },
+      },
+      ORGANIZATION: {
+        name: 'Organization',
+        eventNames: {
+          DELETE: 'Organization Delete',
         },
       },
     };
@@ -351,11 +371,29 @@
           properties[prefix + key] = value;
         }
       });
+
+      _.set(properties, '$current_url', cleanUrl($location.absUrl()));
+      _.set(properties, '$referrer', cleanUrl((_.get($document, '[0].referrer'))));
+
       _init()
         .then(function () {
           service._track(eventName, properties);
         })
         .catch(_.noop); // don't log error, legit reasons to fail
+    }
+
+    function cleanUrl(url) {
+      var REDACTED = '***';
+      var urlSearchAndReplacePairs = [
+        {
+          search: /\/search\/.*/,
+          replace: '/search/' + REDACTED,
+        },
+      ];
+      _.forEach(urlSearchAndReplacePairs, function (pair) {
+        url = _.replace(url, pair.search, pair.replace);
+      });
+      return url;
     }
 
     /**

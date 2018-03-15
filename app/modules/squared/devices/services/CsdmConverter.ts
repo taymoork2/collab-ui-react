@@ -102,7 +102,7 @@ class CloudberryDevice implements IDevice {
   public readonly type: string;
   public mac: string;
   public ip: any;
-  private createTime: string;
+  public createTime: string;
   public product: string;
   public productFamily: string;
   public hasIssues: boolean;
@@ -113,10 +113,10 @@ class CloudberryDevice implements IDevice {
   public upgradeChannel: { label: string; value: string };
   public readableActiveInterface: string;
   public diagnosticsEvents: { type: string; message: string }[];
-  private rsuKey: string;
-  private hasRemoteSupport: boolean;
-  private hasAdvancedSettings: boolean;
-  private update: (updated) => any;
+  public rsuKey: string;
+  public hasRemoteSupport: boolean;
+  public hasAdvancedSettings: boolean;
+  public update: (updated) => any;
 
   constructor(helper: Helper, obj) {
     this.url = obj.url;
@@ -152,7 +152,7 @@ class CloudberryDevice implements IDevice {
     this.update = (updated) => {
       this.displayName = updated.displayName;
     };
-    this.image = 'images/devices-hi/' + (obj.imageFilename || 'unknown.png');
+    this.image = 'images/devices-hi/' + (obj.imageFilename || obj.imageFileName || 'unknown.png');
   }
 }
 
@@ -184,8 +184,8 @@ class HuronDevice implements IDevice {
   public tags: string[];
   public readonly type: string;
   public isHuronDevice: boolean;
-  private huronId: string;
-  private addOnModuleCount: number;
+  public huronId: string;
+  public addOnModuleCount: number;
 
   constructor(helper: Helper, obj) {
     this.url = obj.url;
@@ -493,8 +493,8 @@ export class Helper {
 }
 
 class Code implements ICode {
-  private expiryTime: any;
-  private activationCode: string;
+  public expiryTime: any;
+  public activationCode: string;
 
   constructor(obj) {
     this.expiryTime = obj.expiryTime;
@@ -514,11 +514,11 @@ class Place implements IPlaceExtended {
   public displayName: string;
   public externalLinkedAccounts: any[] | undefined;
   public tags: string[];
-  private numbers: string[];
-  private canDelete: boolean;
+  public numbers: string[];
+  public canDelete: boolean;
   public accountType: string;
   public image: string;
-  private codes: Map<string, Code>;
+  public codes: Map<string, Code>;
 
   constructor(helper: Helper, converter: CsdmConverter, obj) {
     this.updateFrom(helper, converter, obj);

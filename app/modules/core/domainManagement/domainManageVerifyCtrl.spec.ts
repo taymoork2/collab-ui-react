@@ -1,14 +1,12 @@
 import testModule from './index';
 
 describe('DomainManagementVerifyCtrl', () => {
-  let Config, Controller, $rootScope, $q, Translate, Injector, DomainManagementService;
+  let Controller, $rootScope, $q, Translate, DomainManagementService;
   beforeEach(angular.mock.module(testModule));
 
-  beforeEach(inject((_$rootScope_, $injector, $controller, $translate, _$q_, _Config_, _DomainManagementService_) => {
-    Config = _Config_;
+  beforeEach(inject((_$rootScope_, $controller, $translate, _$q_, _DomainManagementService_) => {
     Translate = $translate;
     Controller = $controller;
-    Injector = $injector;
     $q = _$q_;
     $rootScope = _$rootScope_;
     DomainManagementService = _DomainManagementService_;

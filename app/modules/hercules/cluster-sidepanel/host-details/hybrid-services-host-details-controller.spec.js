@@ -13,9 +13,9 @@ describe('HybridServicesHostDetailsController: ', function () {
     HybridServicesClusterStatesService = _HybridServicesClusterStatesService_;
 
     var mockResult = {
+      id: 'abc123',
       connectors: [
         {
-          clusterId: 'abc123',
           hostSerial: '123456',
           connectorType: 'hds_app',
           hostname: 'hds.abc.com',

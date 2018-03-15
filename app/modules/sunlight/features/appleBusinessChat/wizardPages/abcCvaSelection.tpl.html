@@ -1,0 +1,36 @@
+<div class="abc-cva-selection">
+  <div class="ct-title">
+    <span class="h3">{{$ctrl.getText('cvaSelection.virtualAssistantPageTitle')}}</span>
+  </div>
+  <div class="h5 ct-title-desc">{{$ctrl.getText('cvaSelection.virtualAssistantDesc')}}</div>
+  <div class="cs-card-container ct-virtual-assistant ct-sa-content">
+    <cs-card-layout block-view="true" class="va-card-center">
+      <cs-card class="ct-card">
+        <article class="profile-attributes ct-article">
+          <section ct-attribute-right-section ct-flex-topleft>
+            <div class="h4 subheader-text"  translate="careChatTpl.virtualAssistantSelector"></div>
+
+            <div class="row ct-attribute-row">
+              <cs-select
+                id="virtualAssistantSelect"
+                name="virtualAssistantSelect"
+                ng-model="$ctrl.template.configuration.pages.abcCvaSelection.selectedCVA"
+                options="$ctrl.template.configuration.pages.abcCvaSelection.configuredCVAs"
+                labelfield="name"
+                valuefield="id"
+                placeholder="$ctrl.getText('cvaSelection.virtualAssistantSelectText')"
+                filter="false">
+              </cs-select>
+            </div>
+
+            <div class="setting-info">
+              <span><i class="icon icon-info"></i></span>
+              <span class="setting-info-text" translate="careChatTpl.virtualAssistantSettingInfo"></span>
+            </div>
+
+          </section>
+        </article>
+      </cs-card>
+    </cs-card-layout>
+  </div>
+</div>

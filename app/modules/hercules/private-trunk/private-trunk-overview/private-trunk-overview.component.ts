@@ -6,7 +6,7 @@ export class PrivateTrunkOverviewCtrl implements ng.IComponentController {
   public back: boolean = true;
   public backState: string;
   public hasPrivateTrunkFeatureToggle: boolean;
-  public tabs: [{ 'title': String, 'state': String }];
+  public tabs: { title: string, state: string }[];
   public modalOptions: any = {
     template: '<private-trunk-setup class="modal-content" dismiss="$dismiss()"></private-trunk-setup>',
     type: 'full',

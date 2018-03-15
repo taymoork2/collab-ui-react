@@ -2,11 +2,11 @@ import { USSService, IUserStatusWithExtendedMessages } from 'modules/hercules/se
 import { Notification } from 'modules/core/notifications/notification.service';
 import { CloudConnectorService } from 'modules/hercules/services/calendar-cloud-connector.service';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
-import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { HybridServiceUserSidepanelHelperService, IEntitlementNameAndState } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
 import { HybridServicesI18NService } from 'modules/hercules/services/hybrid-services-i18n.service';
 import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
 import { UserOverviewService } from 'modules/core/users/userOverview/userOverview.service';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
 
@@ -16,7 +16,7 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
 
   private userId: string;
   private userEmailAddress: string;
-  private preferredWebExSiteName: string;
+  public preferredWebExSiteName: string;
   public isInvitePending: boolean;
   private allUserEntitlements: HybridServiceId[];
 
@@ -29,6 +29,7 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
   public userGoogleCalendarStatus: IUserStatusWithExtendedMessages;
   public userStatus: IUserStatusWithExtendedMessages;
   public lastStateChangeText: string;
+  public resourceGroupId: string;
 
   private orgHasExpresswayBasedCalendarEnabled: boolean;
   private orgHasOffice365Enabled: boolean;
@@ -50,12 +51,12 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private CloudConnectorService: CloudConnectorService,
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
-    private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesI18NService: HybridServicesI18NService,
     private HybridServicesUtilsService: HybridServicesUtilsService,
     private Notification: Notification,
     private USSService: USSService,
     private UserOverviewService: UserOverviewService,
+    private ServiceDescriptorService: ServiceDescriptorService,
   ) { }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
@@ -114,7 +115,7 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
     return this.$q.all(promises)
       .then(([commonIdentityUserData, ussStatuses]) => {
         this.allUserEntitlements = commonIdentityUserData.user.entitlements;
-        this.isInvitePending = commonIdentityUserData.user.pendingStatus;
+        this.isInvitePending = !this.UserOverviewService.userHasActivatedAccountInCommonIdentity(commonIdentityUserData.user);
         this.processDataFromCommonIdentity();
         this.userMicrosoftCalendarStatus = _.find(ussStatuses, { serviceId: 'squared-fusion-cal' });
         this.userGoogleCalendarStatus = _.find(ussStatuses, { serviceId: 'squared-fusion-gcal' });
@@ -127,6 +128,9 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
         }
         if (this.userStatus && this.userStatus.owner === 'ccc') {
           this.userOwnedByCCC = true;
+        }
+        if (this.userStatus && this.userStatus.resourceGroupId) {
+          this.resourceGroupId = this.userStatus.resourceGroupId;
         }
       })
       .catch((error) => {
@@ -162,7 +166,7 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
   }
 
   private getDataFromFMS = (): ng.IPromise<void> => {
-    return this.HybridServicesClusterService.serviceIsSetUp('squared-fusion-cal')
+    return this.ServiceDescriptorService.isServiceEnabled('squared-fusion-cal')
       .then((isSetup) => {
         this.orgHasExpresswayBasedCalendarEnabled = isSetup;
       })
@@ -211,7 +215,7 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
   }
 
   private orgHasGoogleCalendarSetup(): boolean {
-    return this.orgHasOffice365Enabled;
+    return this.orgHasGoogleEnabled;
   }
 
   public hasChangedCalendarType(): boolean {
@@ -266,6 +270,10 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
         this.loadingPage = false;
       });
 
+  }
+
+  public resourceGroupRefreshCallback() {
+    this.loadUserData();
   }
 
 }

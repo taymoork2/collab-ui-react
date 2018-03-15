@@ -1,0 +1,40 @@
+<setting-section setting="$ctrl.upgradeScheduleTitle">
+  <div class="sub-section">
+    <h5 class="sub-section__label" translate="hercules.settings.scheduleUpgrade.title"></h5>
+    <p class="sub-section__description" translate="hercules.settings.scheduleUpgrade.description"></p>
+  </div>
+  <div class="upgrade-schedule-form" ng-init="$ctrl.onInit()">
+    <cs-select
+      class="upgrade-schedule-time"
+      is-disabled="$ctrl.syncing"
+      labelfield="label"
+      valuefield="value"
+      ng-model="$ctrl.formData.scheduleTime"
+      ng-change="$ctrl.onFormDataChanged()"
+      options="$ctrl.formOptions.time"
+      placeholder="'Select a time'">
+    </cs-select>
+    <cs-select
+      class="upgrade-schedule-day"
+      is-disabled="true"
+      labelfield="label"
+      valuefield="value"
+      input-placeholder="sel.inputPlaceholder"
+      ng-model="$ctrl.daily[0]"
+      ng-change="$ctrl.onFormDataChanged()"
+      options="$ctrl.daily"
+      placeholder="'Select a day'">
+    </cs-select>
+    <cs-select
+      class="upgrade-schedule-timezone"
+      is-disabled="$ctrl.syncing"
+      labelfield="label"
+      valuefield="value"
+      filter="true"
+      ng-model="$ctrl.formData.scheduleTimeZone"
+      ng-change="$ctrl.onFormDataChanged()"
+      options="$ctrl.formOptions.timeZone"
+      placeholder="'Select a timezone'">
+    </cs-select>
+  </div>
+</setting-section>

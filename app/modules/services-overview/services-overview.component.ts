@@ -3,7 +3,6 @@ import { ServicesOverviewMessageCard } from './cloud/message-card';
 import { ServicesOverviewMeetingCard } from './cloud/meeting-card';
 import { ServicesOverviewCallCard } from './cloud/cloud-call-card';
 import { ServicesOverviewCareCard } from './cloud/care-card';
-import { ServicesOverviewHcsCard } from './hcs/hcs-card';
 
 import { Config } from 'modules/core/config/config';
 import { CloudConnectorService, CCCService, ICCCService } from 'modules/hercules/services/calendar-cloud-connector.service';
@@ -16,8 +15,10 @@ import { MessengerInteropService } from 'modules/core/users/userAdd/shared/messe
 import { Notification } from 'modules/core/notifications';
 import { ProPackService }  from 'modules/core/proPack/proPack.service';
 import { TaskManagerService } from 'modules/hcs/task-manager';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
+import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 
-type AllService = ICCCService | IPrivateTrunkResourceWithStatus | IServiceStatusWithSetup;
+type AllService = ICCCService | IServiceStatusWithSetup;
 
 export class ServicesOverviewController implements ng.IComponentController {
   // TODO: rewrite the following properties with proper AngularJS 1.5+ components
@@ -26,15 +27,14 @@ export class ServicesOverviewController implements ng.IComponentController {
     new ServicesOverviewMeetingCard(this.Authinfo),
     new ServicesOverviewCallCard(this.Authinfo, this.Config),
     new ServicesOverviewCareCard(this.Authinfo),
-    new ServicesOverviewHcsCard(this.Authinfo),
   ];
 
   private urlParams: ng.ui.IStateParamsService;
   public _servicesToDisplay: HybridServiceId[] = []; // made public for easier testing
   public _servicesActive: HybridServiceId[] = []; // made public for easier testing
   public _servicesInactive: HybridServiceId[] = []; // made public for easier testing
-  public clusters: IExtendedClusterFusion[] | null = null;
-  public trunks: IPrivateTrunkResourceWithStatus[] | null = null;
+  public clusters: IExtendedClusterFusion[];
+  public trunks: IPrivateTrunkResourceWithStatus[];
   public servicesStatuses: AllService[] = [];
   public loadingHybridServicesCards = true;
   public hasCapacityFeatureToggle: boolean;
@@ -50,11 +50,13 @@ export class ServicesOverviewController implements ng.IComponentController {
     private Config: Config,
     private EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
     private FeatureToggleService: FeatureToggleService,
+    private HcsTestManagerService: TaskManagerService,
     private HybridServicesClusterService: HybridServicesClusterService,
+    private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private MessengerInteropService: MessengerInteropService,
     private Notification: Notification,
     private ProPackService: ProPackService,
-    private HcsTestManagerService: TaskManagerService,
+    private ServiceDescriptorService: ServiceDescriptorService,
   ) {}
 
   public $onInit() {
@@ -73,7 +75,7 @@ export class ServicesOverviewController implements ng.IComponentController {
       atlasHybridCapacity: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridCapacity),
       atlasHybridImp: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridImp),
       atlasOffice365Support: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasOffice365Support),
-      hcs: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHostedCloudService),
+      atlasHostedCloudService: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHostedCloudService),
       hI1484: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484),
       hI1638: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1638),
       hI802: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI802),
@@ -117,8 +119,10 @@ export class ServicesOverviewController implements ng.IComponentController {
         if (response.atlasHybridImp && this.Authinfo.isFusionIMP()) {
           this._servicesToDisplay.push('spark-hybrid-impinterop');
         }
-        if (response.hI1638 && this.Authinfo.isCustomerLaunchedFromPartner()) {
-          this._servicesToDisplay.push('spark-hybrid-testing');
+        if (response.atlasHostedCloudService && this.isPartnerAdmin()) {
+          this._servicesToDisplay.push('hcs');
+          this._servicesToDisplay.push('hcs-licensing');
+          this._servicesToDisplay.push('hcs-upgrade');
         }
       })
       .then(() => {
@@ -127,10 +131,8 @@ export class ServicesOverviewController implements ng.IComponentController {
       })
       .then((clusters) => {
         this.clusters = clusters;
-        const promises = _.map(this._servicesToDisplay, (serviceId) => {
-          if (_.includes(['squared-fusion-uc', 'squared-fusion-cal', 'squared-fusion-media', 'spark-hybrid-datasecurity', 'contact-center-context', 'spark-hybrid-impinterop'], serviceId)) {
-            return this.HybridServicesClusterService.getStatusForService(serviceId, clusters);
-          } else if (_.includes(['squared-fusion-gcal', 'squared-fusion-o365'], serviceId)) {
+        const promises = _.compact(_.map(this._servicesToDisplay, (serviceId) => {
+          if (_.includes(['squared-fusion-gcal', 'squared-fusion-o365'], serviceId)) {
             // TODO: When the backend returns an error, we should say "we don't know" instead of considering `setup: false`
             return this.CloudConnectorService.getService(serviceId as CCCService)
               .catch(() => ({
@@ -156,13 +158,43 @@ export class ServicesOverviewController implements ng.IComponentController {
               serviceId: serviceId,
               setup: false,
             }));
+          } else if (serviceId === 'hcs') {
+            return {
+              serviceId: serviceId,
+              setup: true,
+            };
+          } else if (serviceId === 'hcs-licensing' || serviceId === 'hcs-upgrade') {
+            return {
+              serviceId: serviceId,
+              setup: true,
+            };
           }
-        });
+        }));
+        // Now get all from FMS
+        if (_.some(['squared-fusion-uc', 'squared-fusion-cal', 'squared-fusion-media', 'spark-hybrid-datasecurity', 'contact-center-context', 'spark-hybrid-impinterop'], (serviceId) => _.includes(this._servicesToDisplay, serviceId))) {
+          promises.push(this.ServiceDescriptorService.getServices()
+            .then((servicesStatusesFromFMS) => {
+              return _.compact(_.map(servicesStatusesFromFMS, (serviceStatus) => {
+                // For some services, we rather trust data from CCC or Huron. For some services, we don't care, because they have no card in the Services Overview page.
+                if (!_.includes(['squared-fusion-gcal', 'ept', 'squared-fusion-khaos', 'squared-fusion-servicability', 'squared-fusion-ec', 'squared-fusion-mgmt'], serviceStatus.id)) {
+                  const status = this.HybridServicesClusterService.processClustersToAggregateStatusForService(serviceStatus.id, this.clusters);
+                  return {
+                    serviceId: serviceStatus.id,
+                    setup: serviceStatus.enabled,
+                    status: status,
+                    cssClass: this.HybridServicesClusterStatesService.getServiceStatusCSSClassFromLabel(status),
+                  };
+                }
+              }));
+            }));
+        }
         return this.$q.all<any[]>(promises)
           .then((servicesStatuses) => {
+            servicesStatuses = _.flatten(servicesStatuses);
             this.servicesStatuses = servicesStatuses;
-            _.forEach(this._servicesToDisplay, (serviceId, i) => {
-              if (servicesStatuses[i].setup) {
+            _.forEach(this._servicesToDisplay, (serviceId) => {
+              const serviceStatus: IServiceStatusWithSetup = _.find(this.servicesStatuses, (status: IServiceStatusWithSetup) =>  status.serviceId === serviceId);
+              if (serviceStatus && serviceStatus.setup) {
                 this._servicesActive.push(serviceId);
               } else {
                 this._servicesInactive.push(serviceId);
@@ -275,12 +307,6 @@ export class ServicesOverviewController implements ng.IComponentController {
     } else if (property === 'status') {
       return _.get(_.find(servicesStatuses, { serviceId: serviceId }), property, 'notAvailable');
     }
-  }
-
-  public getHcsCards() {
-    return _.filter(this.cards, {
-      cardType: CardType.hcs,
-    });
   }
 
   public isPartnerAdmin() {

@@ -55,7 +55,7 @@ class HybridCallServiceAggregatedSectionCtrl implements ng.IComponentController 
     this.$q.all(promises)
       .then(([commonIdentityUserData, [userStatusAware, userStatusConnect]]) => {
         this.allUserEntitlements = commonIdentityUserData.user.entitlements;
-        this.isInvitePending = commonIdentityUserData.user.pendingStatus;
+        this.isInvitePending = !this.UserOverviewService.userHasActivatedAccountInCommonIdentity(commonIdentityUserData.user);
         this.callServiceAware = userStatusAware;
         this.callServiceConnect = userStatusConnect;
         if (this.callServiceAware && this.callServiceAware.resourceGroupId) {
@@ -75,6 +75,10 @@ class HybridCallServiceAggregatedSectionCtrl implements ng.IComponentController 
   }
 
   public userHasEntitlement = (entitlement: HybridServiceId): boolean => this.allUserEntitlements && this.allUserEntitlements.indexOf(entitlement) > -1;
+
+  public resourceGroupRefreshCallback() {
+    this.getUserData(this.userId);
+  }
 
 }
 

@@ -31,4 +31,8 @@
   cvc-care-feature="cvcCareFeature"
   care-features="careFeatures"
   ></cr-services-panels>
-<hybrid-services-entitlements-panel entitlements-callback="updateHybridServicesEntitlements(entitlements)"></hybrid-services-entitlements-panel>
+<hybrid-services-entitlements-panel
+  entitlements-callback="updateHybridServicesEntitlements(entitlements)"
+  is-huron-call-license-selected="isHuronCallLicenseSelected()"
+  has-license-selections="userIsLicensed()"
+></hybrid-services-entitlements-panel>

@@ -13,6 +13,8 @@ export interface IUser {
   pendingStatus: boolean;
   userSettings: string[];
   trainSiteNames: string[];
+  linkedTrainSiteNames: string[];
+  userPreferences: string[];
   roles: string[];
   invitations?: IServiceInvitations;
 }
@@ -30,6 +32,8 @@ export class User implements IUser {
   public pendingStatus: boolean;
   public userSettings: string[];
   public trainSiteNames: string[];
+  public linkedTrainSiteNames: string[];
+  public userPreferences: string[];
   public roles: string[];
   public invitations?: IServiceInvitations;
 
@@ -45,6 +49,8 @@ export class User implements IUser {
     pendingStatus: false,
     userSettings: [],
     trainSiteNames: [],
+    linkedTrainSiteNames: [],
+    userPreferences: [],
     roles: [],
   }) {
     _.extend(this, obj);
@@ -127,7 +133,6 @@ export class UserOverviewService {
     private SunlightConfigService,
     private ServiceSetup,
     private Userservice,
-    private $translate,
   ) {
     this.invitationResource = this.$resource(this.UrlConfig.getAdminServiceUrl() + 'organization/:customerId/invitations/:userId', {
       customerId: '@customerId',
@@ -257,6 +262,10 @@ export class UserOverviewService {
     }
   }
 
+  public userHasActivatedAccountInCommonIdentity(user: IUser): boolean {
+    return !_.includes(user.accountStatus, 'pending');
+  }
+
   public getAccountActiveStatus(user: IUser): boolean {
     // is there a sign-up date for the user?
     if (!_.isEmpty(user.entitlements)) {
@@ -301,13 +310,6 @@ export class UserOverviewService {
       return language_code;
     }
     return _.toLower(userLangSplit[0]) + '_' + _.toUpper(userLangSplit[1]);
-  }
-
-  private get DEFAULT_LANG() {
-    return {
-      label: this.$translate.instant('languages.englishAmerican'),
-      value: 'en_US',
-    };
   }
 
   public updateUserPreferredLanguage(userId: string, languageCode: string) {

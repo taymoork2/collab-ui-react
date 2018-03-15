@@ -7,7 +7,7 @@
     <aa-message-type aa-from-sub-menu={{fromSubMenu}} aa-menu-id={{menuId}} aa-key-index={{menuKeyIndex}} aa-index="index" aa-schedule="{{schedule}}"></aa-message-type>
   </div>
   <div class="row" ng-if="aaDialByExtCtrl.checkBoxDisplayed">
-    <div class="aa-routing-prefix-text">
+    <div class="aa-routing-prefix-text" class="aa-routing-prefix-text">
       <input cs-input type="checkbox"
         id="cnvt_chk_{{schedule + menuId + menuKeyIndex}}"
         cs-input-label="{{:: 'autoAttendant.dialByExtensionRoutingPrefix' | translate }}"
@@ -69,7 +69,7 @@
     </div>
   </div>
   <div class="row" ng-if="aaDialByExtCtrl.checkBoxDisplayed">
-    <div class="aa-routing-prefix-text">
+    <div class="aa-routing-prefix-text" class="aa-routing-prefix-text">
       <input cs-input type="checkbox"
         id="cnvt_chk_{{schedule + index}}"
         cs-input-label="{{:: 'autoAttendant.dialByExtensionRoutingPrefix' | translate }}"

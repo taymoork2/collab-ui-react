@@ -426,7 +426,7 @@
         return this.hasRole(Config.roles.full_admin);
       },
       isOnline: function () {
-        return _.eq(authData.customerType, 'Online');
+        return !this.isPartner() && !this.isPartnerSalesAdmin() && _.eq(authData.customerType, 'Online');
       },
       isPending: function () {
         return _.eq(authData.customerType, 'Pending');
@@ -552,7 +552,9 @@
         return isEntitled(Config.entitlements.hds);
       },
       isDeviceMgmt: function () {
-        return isEntitled(Config.entitlements.room_system);
+        // All orgs should now have access to device management regardless off entitlements.
+        // TODO (bnordlun): remove usage eventually.
+        return true;
       },
       isWebexSquared: function () {
         return isEntitled(Config.entitlements.squared);
@@ -601,6 +603,15 @@
         return _.some(authData.licenses, function (license) {
           return license.offerName === Config.offerCodes.MGMTPRO;
         });
+      },
+      isOnlineCustomer: function () {
+        return _.some(this.getCustomerAccounts(), { customerType: 'Online' });
+      },
+      isOnlineOnlyCustomer: function () {
+        return _.every(this.getCustomerAccounts(), { customerType: 'Online' });
+      },
+      isOnlinePaid: function () {
+        return _.some(this.getSubscriptions(), { orderingTool: 'DIGITAL_RIVER' });
       },
       getLicenseIsTrial: function (licenseType, entitlement) {
         var isTrial = _.chain(authData.licenses)

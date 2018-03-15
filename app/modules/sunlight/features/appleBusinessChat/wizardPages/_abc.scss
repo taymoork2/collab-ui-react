@@ -1,0 +1,54 @@
+.center-card-content {
+  text-align: center;
+}
+
+.abc-cva-selection {
+  .ct-sa-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .cs-card article.ct-article {
+    height: rem-calc(202px);
+
+    section {
+      overflow: visible;
+    }
+  }
+}
+
+.abc-business-id {
+  .ct-sa-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .business-id-box {
+    @include vr-spacing(mt, 0);
+    @include vr-spacing(pl, 2.5);
+    @include vr-spacing(pr, 6.5);
+    @include vr-spacing(pb, 1);
+    max-width: rem-calc(612px);
+    width: rem-calc(612px);
+    text-align: left;
+
+    .input-label {
+      @include vr-spacing(mv, 1.25);
+      @include vr-spacing(mb, .75);
+    }
+
+    .input-row {
+      @include vr-spacing(mv, 1);
+
+      input {
+        width: rem-calc(464px);
+      }
+    }
+
+    .abc-link {
+      font-size: rem-calc(14px);
+    }
+  }
+}

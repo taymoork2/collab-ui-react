@@ -1,10 +1,11 @@
 .ct-summary {
-  @include vr-spacing(mt, 11);
 
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
+
+  height: calc(100vh - #{($top-bar-height + $page-header-height)});
 
   .success-icon {
     color: $color-cta-base;
@@ -12,7 +13,6 @@
 
   .edit-message {
     @include vr-spacing(pt, 1.2);
-    font-family: CiscoSans;
     color: $color-attention-darker;
     line-height: initial;
     display: flex;
@@ -30,6 +30,7 @@
 
     text-align: center;
     width: 100%;
+    white-space: pre-wrap;
   }
 
   > button {
