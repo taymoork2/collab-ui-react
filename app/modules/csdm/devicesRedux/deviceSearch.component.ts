@@ -131,7 +131,9 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
   }
 
   public userSetFocusToInputField() {
-    this.$state.sidepanel.close();
+    if (this.$state.sidepanel) {
+      this.$state.sidepanel.close();
+    }
     this.interactedWithSearch = true;
     this.setFocusToInputField();
   }
@@ -183,6 +185,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
         this.searchObject.setWorkingElementText(suggestion.searchString);
         this.searchChange(true);
         this.suggestions.updateBasedOnInput(this.searchObject);
+        this.setFocusToInputField();
         return;
       }
     }
