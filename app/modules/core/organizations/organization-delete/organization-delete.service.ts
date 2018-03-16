@@ -6,6 +6,7 @@ export class OrganizationDeleteService {
   /* @ngInject */
   constructor(
     private $modal: IToolkitModalService,
+    private $q,
     private Authinfo,
     private DirSyncService,
     private FeatureToggleService,
@@ -17,12 +18,13 @@ export class OrganizationDeleteService {
         if (!toggle || !this.Authinfo.isOnlineOnlyCustomer() || this.Authinfo.isOnlinePaid()) {
           return false;
         }
-        return this.DirSyncService.refreshStatus()
-        .then(() => {
-          return !this.DirSyncService.isDirSyncEnabled();
-        }).catch(() => {
-          return false;
-        });
+        const dirSyncPromise = (this.DirSyncService.requiresRefresh() ? this.DirSyncService.refreshStatus() : this.$q.resolve());
+        return dirSyncPromise
+          .then(() => {
+            return !this.DirSyncService.isDirSyncEnabled();
+          }).catch(() => {
+            return false;
+          });
       });
   }
 
