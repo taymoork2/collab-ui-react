@@ -2,6 +2,7 @@ import { HcsSetupModalComponent } from './hcs-setup-modal.component';
 import HcsSetupModalService  from 'modules/hcs/services';
 import setupServiceSelectionModule from 'modules/hcs/setup/selection';
 import setupAgentInstallFilesModule from 'modules/hcs/setup/agent-install-file';
+import setupSftpServerModule from 'modules/hcs/setup/hcs-setup-sftp';
 import './_hcs-setup.scss';
 export * from './hcs-setup';
 
@@ -12,6 +13,7 @@ export default angular
     HcsSetupModalService,
     setupServiceSelectionModule,
     setupAgentInstallFilesModule,
+    setupSftpServerModule,
   ])
   .component('hcsSetupModal', new HcsSetupModalComponent())
   .name;
