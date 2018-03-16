@@ -1,7 +1,7 @@
 class AsyncInterval {
   constructor(
-    public interval: ng.IPromise<any> | undefined,
-    public intervalFunction: () => ng.IPromise<any>,
+    public interval: ng.IPromise<any>,
+    public callbackFunction: () => ng.IPromise<any>,
     public isBusy = false,
   ) {}
 }
@@ -12,7 +12,7 @@ class AsyncInterval {
  * unbound amount of asynchronous callbacks and overloading servers with requests.
  */
 export class AsyncIntervalService {
-  private intervals: AsyncInterval[] = [];
+  private asyncIntervals: AsyncInterval[] = [];
 
   /* @ngInject */
   constructor(
@@ -20,32 +20,30 @@ export class AsyncIntervalService {
   ) {}
 
   public interval(func: () => ng.IPromise<any>, delay: number, count?: number, invokeApply?: boolean, ...args: any[]): IPromise<any> {
-    const interval = this.$interval(() => {
-      const foundInterval = _.find(this.intervals, _interval => _interval.interval === interval);
-      if (!foundInterval || foundInterval.isBusy) {
+    const intervalInstance = this.$interval(() => {
+      const foundAsyncInterval = _.find(this.asyncIntervals, asyncInterval => asyncInterval.interval === intervalInstance);
+      if (!foundAsyncInterval || foundAsyncInterval.isBusy) {
         return;
       }
 
-      foundInterval.isBusy = true;
-      foundInterval.intervalFunction().finally(() => {
-        foundInterval.isBusy = false;
+      foundAsyncInterval.isBusy = true;
+      foundAsyncInterval.callbackFunction().finally(() => {
+        foundAsyncInterval.isBusy = false;
       });
     }, delay, count, invokeApply, ...args);
 
-    this.intervals.push(new AsyncInterval(interval, func));
+    this.asyncIntervals.push(new AsyncInterval(intervalInstance, func));
 
-    return interval;
+    return intervalInstance;
   }
 
   public cancel(interval?: ng.IPromise<any>): boolean {
-    const foundInterval = _.find(this.intervals, _interval => _interval.interval === interval);
-    if (!foundInterval) {
+    const foundAsyncInterval = _.find(this.asyncIntervals, asyncInterval => asyncInterval.interval === interval);
+    if (!foundAsyncInterval) {
       return false;
     }
 
-    _.pull(this.intervals, foundInterval);
-    const cancelStatus = this.$interval.cancel(foundInterval.interval!);
-    foundInterval.interval = undefined;
-    return cancelStatus;
+    _.pull(this.asyncIntervals, foundAsyncInterval);
+    return this.$interval.cancel(foundAsyncInterval.interval);
   }
 }
