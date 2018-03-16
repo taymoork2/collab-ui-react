@@ -481,6 +481,7 @@
     "careVoiceServices": "Chat, Callback and Inbound Call",
     "enableCallInfo": "Cisco Spark Call is required for voice-based interactions.",
     "enableCallInfoToggle": "You must have Cisco Spark Call or Hybrid Call to use Spark Care voice features.",
+    "contextUnauthorized": "To modify Spark Care services for this user, contact an authorized administrator",
     "paidContactCenterVoice": "Chat, Callback and Inbound Call",
     "paidContactCenter": "Chat and Callback",
     "enterpriseEdition": "Enterprise Edition {{capacity}}",
