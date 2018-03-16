@@ -6119,7 +6119,7 @@
       "deskPhoneLicenseWarning": "Your organization must purchase Cisco Spark Call licenses first. Contact your partner or Cisco Sales for more information.",
       "otherCiscoDevice": "Other Cisco device",
       "roomSystem": "Room Device",
-      "roomSystemExamplesExpanded": "e.g. Cisco Spark Board, Voice, Share, Room Kit, DX, MX and SX series",
+      "roomSystemExamplesExpanded": "e.g. Cisco Spark Board, Room Kit, DX, MX and SX series",
       "roomSystemLicenseWarning": "Your organization must purchase Cisco Spark Room Device licenses first. Contact your partner or Cisco Sales for more information."
     },
     "chooseAccountType": {
