@@ -1,7 +1,4 @@
-// TODO: use as-appropriate
-// @import '~@collabui/collab-ui/scss/settings/typography';
-// @import '~@collabui/collab-ui/scss/settings/colors';
-// @import 'styles/partials/mixins';  // <- for 'keep-flex()'
+@import '~@collabui/collab-ui/scss/settings/colors';
 
 first-time-setup {
   button {
@@ -29,7 +26,7 @@ first-time-setup {
     padding-top: 1rem;
   }
 
-  .myAddResourceForm .cs-radio-group {
+  .preRegisterClusterForm .cs-radio-group {
     padding-top: 1rem;
   }
 
@@ -38,7 +35,7 @@ first-time-setup {
   }
   .myAddResourceDownloadForm > div {
     margin-bottom: 1em;
-    color: #666;
+    color: $gray-darker;
   }
 
   .stick-bottom {

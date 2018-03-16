@@ -129,7 +129,7 @@ export class AddResourceSectionService {
   }
 
   public enableMediaServiceEntitlements() {
-    return this.MediaServiceActivationV2.enableMediaServiceEntitlements();
+    return this.MediaServiceActivationV2.enableMediaServiceEntitlementsWizard();
   }
 
   public enableMediaService() {

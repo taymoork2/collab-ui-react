@@ -6,8 +6,8 @@
 </div>
 <div class="modal-body" style="position:relative; padding-bottom:0">
   <first-time-setup
-    yes-proceed="clusterCreationWizard.yesProceed"
-    no-proceed="clusterCreationWizard.noProceed"
+    cluster-creation="clusterCreationWizard.clusterCreation"
+    ova-download="clusterCreationWizard.ovaDownload"
     on-radio-update="clusterCreationWizard.radioSelected(response)"
     on-ova-type-update="clusterCreationWizard.ovaTypeSelected(response)"
     ng-show="clusterCreationWizard.currentStep === 0 || clusterCreationWizard.currentStep === 1">
@@ -51,6 +51,7 @@
     ng-show="clusterCreationWizard.currentStep === 4">
   </hybrid-media-release-channel>
   <hybrid-media-email-notification
+    email="$clusterCreationWizard.pemail"
     on-email-update="clusterCreationWizard.emailUpdated(response)"
     ng-show="clusterCreationWizard.currentStep === 5">
   </hybrid-media-email-notification>
@@ -64,21 +65,25 @@
     host="clusterCreationWizard.hostName"
     ng-show="clusterCreationWizard.currentStep === 6">
   </cluster-creation-final>
+  <hybrid-media-entitlement-failure
+    entitlement-failure="clusterCreationWizard.entitlementFailure"
+    ng-show="clusterCreationWizard.currentStep === 7">
+  </hybrid-media-entitlement-failure>
 </div>
 <div class="modal-footer">
   <button ng-show="clusterCreationWizard.currentStep === 0 || clusterCreationWizard.currentStep === 2" class="btn" ng-click="clusterCreationWizard.closeSetupModal()">
     <span translate="mediaFusion.add-resource-dialog.cancel"></span>
   </button>
-  <button ng-hide="clusterCreationWizard.currentStep === 0 || clusterCreationWizard.currentStep === 1 || clusterCreationWizard.currentStep === 2" class="btn" ng-click="clusterCreationWizard.back()">
+  <button ng-hide="clusterCreationWizard.currentStep === 0 || clusterCreationWizard.currentStep === 1 || clusterCreationWizard.currentStep === 2 || clusterCreationWizard.currentStep === 7" class="btn" ng-click="clusterCreationWizard.back()">
     <span translate="mediaFusion.add-resource-dialog.back"></span>
   </button>
-  <button ng-hide="clusterCreationWizard.currentStep === 1 || clusterCreationWizard.currentStep === 6" class="btn activate-button btn--primary" ng-click="clusterCreationWizard.next()" ng-disabled="!clusterCreationWizard.canGoNext()">
+  <button ng-hide="clusterCreationWizard.currentStep === 1 || clusterCreationWizard.currentStep === 6 || clusterCreationWizard.currentStep === 7" class="btn activate-button btn--primary" cs-btn loading="clusterCreationWizard.loading" ng-click="clusterCreationWizard.next()" ng-disabled="!clusterCreationWizard.canGoNext()">
     <span translate="mediaFusion.add-resource-dialog.next"></span>
   </button>
-  <button ng-show="clusterCreationWizard.currentStep === 1" class="btn activate-button btn--primary" ng-click="clusterCreationWizard.closeSetupModal(true)">
+  <button ng-show="clusterCreationWizard.currentStep === 1 || clusterCreationWizard.currentStep === 7" class="btn activate-button btn--primary" ng-click="clusterCreationWizard.closeSetupModal(true)">
       <span translate="common.ok"></span>
     </button>
-  <button ng-show="clusterCreationWizard.currentStep === 6" class="btn activate-button btn--primary" ng-click="clusterCreationWizard.createCluster()">
+  <button ng-show="clusterCreationWizard.currentStep === 6" class="btn btn--primary" ng-click="clusterCreationWizard.createCluster()">
     <span translate="mediaFusion.easyConfig.toNode"></span>
   </button>
 </div>

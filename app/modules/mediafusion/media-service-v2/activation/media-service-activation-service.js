@@ -37,6 +37,15 @@
       return [enableRhesosEntitlement().catch(recoverProm), enableCallServiceEntitlement().catch(recoverProm)];
     }
 
+    function enableMediaServiceEntitlementsWizard() {
+      return [enableRhesosEntitlement().catch(recoverPromFailure), enableCallServiceEntitlement().catch(recoverPromFailure)];
+    }
+
+    function recoverPromFailure(errorResponse) {
+      var errormsg = Notification.getTrackingId(errorResponse);
+      return errormsg;
+    }
+
     function enableMediaService(serviceId) {
       ServiceDescriptorService.enableService(serviceId).then('', function () {
         Notification.error('mediaFusion.mediaServiceActivationFailure');
@@ -215,6 +224,7 @@
       deactivateHybridMedia: deactivateHybridMedia,
       disableMFOrgSettingsForDevOps: disableMFOrgSettingsForDevOps,
       enableMediaServiceEntitlements: enableMediaServiceEntitlements,
+      enableMediaServiceEntitlementsWizard: enableMediaServiceEntitlementsWizard,
     };
   }
 })();

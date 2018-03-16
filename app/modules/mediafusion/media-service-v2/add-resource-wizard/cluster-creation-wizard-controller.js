@@ -6,16 +6,17 @@
     .controller('ClusterCreationWizardController', ClusterCreationWizardController);
 
   /* @ngInject */
-  function ClusterCreationWizardController($modal, $modalInstance, $q, $state, $translate, $window, AddResourceSectionService, ClusterCascadeBandwidthService, HybridMediaEmailNotificationService, HybridMediaReleaseChannelService, HybridMediaUpgradeScheduleService, SipRegistrationSectionService, TrustedSipSectionService, VideoQualitySectionService, firstTimeSetup, yesProceed, hasMfCascadeBwConfigToggle, hasMfFeatureToggle, hasMfSIPFeatureToggle) {
+  function ClusterCreationWizardController($modal, $modalInstance, $q, $state, $translate, $window, firstTimeSetup, yesProceed, Authinfo, AddResourceSectionService, ClusterCascadeBandwidthService, HybridMediaEmailNotificationService, HybridMediaReleaseChannelService, HybridMediaUpgradeScheduleService, ServiceDescriptorService, SipRegistrationSectionService, TrustedSipSectionService, VideoQualitySectionService, hasMfCascadeBwConfigToggle, hasMfFeatureToggle, hasMfSIPFeatureToggle) {
     var vm = this;
-    vm.isSuccess = true;
+    vm.serviceId = 'squared-fusion-media';
+    vm.loading = false;
     vm.closeSetupModal = closeSetupModal;
     vm.createCluster = createCluster;
     vm.clusterlist = [];
     vm.hostName = '';
     vm.clusterName = '';
     vm.firstTimeSetup = firstTimeSetup;
-    vm.yesProceed = yesProceed;
+    vm.clusterCreation = yesProceed;
     vm.radioSelected = radioSelected;
     vm.ovaTypeSelected = ovaTypeSelected;
     vm.emailUpdated = emailUpdated;
@@ -32,8 +33,7 @@
     vm.hasMfFeatureToggle = hasMfFeatureToggle;
     vm.hasMfSIPFeatureToggle = hasMfSIPFeatureToggle;
     vm.hasMfCascadeBwConfigToggle = hasMfCascadeBwConfigToggle;
-    vm.nextCheck = false;
-    vm.totalSteps = 6;
+    vm.totalSteps = 7;
     vm.currentStep = 0;
     vm.next = next;
     vm.back = back;
@@ -48,10 +48,10 @@
       label: $translate.instant('mediaFusion.easyConfig.titleV2'),
     }, {
       value: 1,
-      label: $translate.instant('mediaFusion.easyConfig.requiredclusterconfig'),
+      label: $translate.instant('mediaFusion.easyConfig.hmsconfig'),
     }, {
       value: 2,
-      label: $translate.instant('mediaFusion.easyConfig.optionalclusterconfig'),
+      label: $translate.instant('mediaFusion.easyConfig.hmsconfig'),
     }, {
       value: 3,
       label: $translate.instant('mediaFusion.easyConfig.serviceconfig'),
@@ -64,7 +64,8 @@
 
     if (vm.firstTimeSetup) {
       vm.currentStep = 0;
-    } else if (!vm.yesProceed) {
+      getPrimaryEmail();
+    } else if (!vm.clusterCreation) {
       vm.currentStep = 0;
     } else {
       vm.currentStep = 2;
@@ -75,16 +76,29 @@
       AdditionalCluster();
     }
 
+    function getPrimaryEmail() {
+      var email = Authinfo.getPrimaryEmail();
+      ServiceDescriptorService.setEmailSubscribers(vm.serviceId, email);
+    }
+
     function firstTimeCluster() {
-      $q.all(AddResourceSectionService.enableMediaServiceEntitlements()).then(function (result) {
+      return $q.all(AddResourceSectionService.enableMediaServiceEntitlements()).then(function (result) {
         var resultRhesos = result[0];
         var resultSparkCall = result[1];
-        if (!_.isUndefined(resultRhesos) && !_.isUndefined(resultSparkCall)) {
-          //create cluster
-          //on success call media service activation service enableMediaService
-          AddResourceSectionService.enableMediaService();
+        if (resultRhesos.status === 204 && resultSparkCall.status === 204) {
+          vm.loading = false;
+          vm.currentStep = 2;
+          return vm.loading && vm.currentStep;
+        } else if (resultRhesos.status === 204) {
+          vm.entitlementFailure = resultSparkCall;
+          vm.currentStep = 7;
+          vm.loading = false;
+          return vm.loading && vm.currentStep;
         } else {
-          $state.go('services-overview', {}, { reload: true });
+          vm.entitlementFailure = resultRhesos;
+          vm.currentStep = 7;
+          vm.loading = false;
+          return vm.loading && vm.currentStep;
         }
       });
     }
@@ -96,6 +110,7 @@
         });
       } else {
         AddResourceSectionService.addRedirectTargetClicked(vm.hostName, vm.clusterName).then(function () {
+          if (vm.firstTimeSetup) AddResourceSectionService.enableMediaService();
           AddResourceSectionService.redirectPopUpAndClose(vm.hostName, vm.clusterName);
           vm.clusterId = AddResourceSectionService.selectClusterId();
           vm.clusterDetail = AddResourceSectionService.selectedClusterDetails();
@@ -118,18 +133,25 @@
     function ovaTypeSelected(response) {
       vm.ovaType = response.ovaType;
     }
+
     function videoQualityUpdated(response) {
       if (!_.isUndefined(response.videoQuality)) {
         vm.videoQuality = response.videoQuality;
         vm.videoPropertySetId = response.videoPropertySetId;
       }
     }
+
     function clusterListUpdated(response) {
       if (!_.isUndefined(response.clusterlist)) vm.clusterlist = response.clusterlist;
     }
 
     function hostNameUpdated(response) {
-      if (!_.isUndefined(response.hostName)) vm.hostName = response.hostName;
+      if (!_.isUndefined(response.hostName)) {
+        vm.hostName = response.hostName;
+        vm.validNode = response.validNode;
+        vm.onlineNode = response.onlineNode;
+        vm.offlineNode = response.offlineNode;
+      }
     }
 
     function clusterNameUpdated(response) {
@@ -179,7 +201,7 @@
             break;
           case 1:
             if (vm.radio === '0') {
-              vm.noProceed = true;
+              vm.ovaDownload = true;
               if (vm.ovaType === '1') {
                 $window.open('https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova');
               } else {
@@ -187,12 +209,12 @@
               }
             } else {
               if (vm.firstTimeSetup) {
-                vm.currentStep = 2;
-                vm.yesProceed = true;
+                vm.loading = true;
+                vm.currentStep = 0;
                 firstTimeCluster();
               } else {
                 vm.currentStep = 2;
-                vm.yesProceed = true;
+                vm.clusterCreation = true;
               }
             }
             vm.headerSelected = vm.headerOptions[0];
@@ -228,6 +250,9 @@
           case 6:
             vm.headerSelected = vm.headerOptions[4];
             break;
+          case 7:
+            vm.headerSelected = vm.headerOptions[0];
+            break;
         }
       }
     }
@@ -238,9 +263,9 @@
           return true;
         }
       } else if (vm.currentStep === 2) {
-        if (vm.hostName && vm.clusterName) {
+        if (vm.hostName && vm.clusterName && vm.validNode && !vm.onlineNode && !vm.offlineNode) {
           return true;
-        } else if (!_.isUndefined(vm.hostName) && vm.hostName != '' && !_.isUndefined(vm.clusterName) && vm.clusterName != '') {
+        } else if (!_.isUndefined(vm.hostName) && vm.hostName != '' && vm.validNode && !vm.onlineNode && !vm.offlineNode && !_.isUndefined(vm.clusterName) && vm.clusterName != '') {
           return true;
         } else {
           return false;
@@ -313,6 +338,9 @@
             }
           case 6:
             vm.headerSelected = vm.headerOptions[4];
+            break;
+          case 7:
+            vm.headerSelected = vm.headerOptions[0];
             break;
         }
       }

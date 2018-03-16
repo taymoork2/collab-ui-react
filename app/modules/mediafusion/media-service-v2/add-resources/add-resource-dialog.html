@@ -36,7 +36,10 @@
               <p class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.text3V3"></p>
             </div>
             <div class="columns medium-6 inputHostNameForm">
-              <input type="text" class="cs-input" ng-model="redirectResource.hostName" placeholder="{{::'mediaFusion.add-resource-dialog.hostname-placeholder' | translate}}">
+              <input type="text" class="cs-input" ng-model="redirectResource.hostName" ng-change="redirectResource.validateHostName()" placeholder="{{::'mediaFusion.add-resource-dialog.hostname-placeholder' | translate}}">
+              <div role="alert" ng-show='!redirectResource.validNode'>
+                  <div class="node-error" ng-if="!$ctrl.validIPCheck" translate="mediaFusion.easyConfig.invalidip"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -94,10 +97,10 @@
       </div>
       <br>
       <br>
-      <div ng-show="redirectResource.ovaType === 1">
+      <div ng-show="redirectResource.ovaType === '1'">
         <h5 translate="mediaFusion.add-resource-dialog.noRetryInfo"></h5>
       </div>
-      <div ng-show="redirectResource.ovaType === 0">
+      <div ng-show="redirectResource.ovaType === '0'">
         <h5 translate="mediaFusion.add-resource-dialog.noRetryDemoInfo"></h5>
       </div>
       <div class="addResourceBodyInfo">

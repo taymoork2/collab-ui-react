@@ -3,8 +3,8 @@ import { ProPackService } from 'modules/core/proPack/proPack.service';
 export class FirstTimeSetupController implements ng.IComponentController {
 
   public proPackEnabled: boolean;
-  public yesProceed: boolean = false;
-  public noProceed: boolean = false;
+  public clusterCreation: boolean = false;
+  public ovaDownload: boolean = false;
   public radio: string;
   public ovaType: string;
   private onRadioUpdate?: Function;
@@ -26,12 +26,12 @@ export class FirstTimeSetupController implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
-    const { yesProceed , noProceed } = changes;
-    if (yesProceed && yesProceed.currentValue) {
-      this.yesProceed = yesProceed.currentValue;
+    const { clusterCreation , ovaDownload } = changes;
+    if (clusterCreation && clusterCreation.currentValue) {
+      this.clusterCreation = clusterCreation.currentValue;
     }
-    if (noProceed && noProceed.currentValue) {
-      this.noProceed = noProceed.currentValue;
+    if (ovaDownload && ovaDownload.currentValue) {
+      this.ovaDownload = ovaDownload.currentValue;
     }
   }
 
@@ -56,8 +56,8 @@ export class FirstTimeSetupComponent implements ng.IComponentOptions {
   public controller = FirstTimeSetupController;
   public template = require('./first-time-setup.html');
   public bindings = {
-    yesProceed: '<',
-    noProceed: '<',
+    clusterCreation: '<',
+    ovaDownload: '<',
     onRadioUpdate: '&?',
     onOvaTypeUpdate: '&?',
   };

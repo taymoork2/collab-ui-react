@@ -22,8 +22,10 @@
     vm.radio = 1;
     vm.ovaType = 1;
     vm.noProceed = false;
+    vm.validNode = true;
     vm.yesProceed = yesProceed;
     vm.canGoNext = canGoNext;
+    vm.validateHostName = validateHostName;
 
     AddResourceCommonServiceV2.updateClusterLists().then(function (clusterList) {
       vm.clusterList = clusterList;
@@ -103,10 +105,14 @@
       }
     }
 
+    function validateHostName() {
+      vm.validNode = AddResourceCommonServiceV2.validateHostName(vm.hostName);
+    }
+
     function canGoNext() {
       if (vm.firstTimeSetup && vm.showDownloadableOption) {
         return true;
-      } else if (vm.yesProceed && !_.isUndefined(vm.hostName) && vm.hostName != '' && !_.isUndefined(vm.selectedCluster) && vm.selectedCluster != '') {
+      } else if (vm.yesProceed && !_.isUndefined(vm.hostName) && vm.hostName != '' && vm.validNode && !_.isUndefined(vm.selectedCluster) && vm.selectedCluster != '') {
         return true;
       } else {
         return false;

@@ -52,12 +52,13 @@
   <div class="sub-section">
     <h5 class="sub-section__label" translate="mediaFusion.easyConfig.mediaNode"></h5>
     <p class="sub-section__description" translate="mediaFusion.easyConfig.mediaNodeMessage"></p>
-    <div class="columns medium-8 inputHostNameForm">
+    <div class="columns medium-8 inputHostNameForm" ng-class="{'input-error': !$ctrl.validNodeCheck || $ctrl.onlinenode || $ctrl.offlinenode}">
       <input cs-input type="text" ng-model="$ctrl.hostName"
         messages="$ctrl.errorMsg.general"
         ng-change="$ctrl.validateHostName()"
         placeholder="{{'mediaFusion.easyConfig.enterNode' | translate}}">    
-      <div role="alert" ng-show='$ctrl.onlinenode || $ctrl.offlinenode'>
+      <div role="alert" ng-show='!$ctrl.validNodeCheck || $ctrl.onlinenode || $ctrl.offlinenode'>
+          <div class="node-error" ng-if="!$ctrl.validNodeCheck" translate="mediaFusion.easyConfig.invalidip"></div>
         <div class="node-error" ng-if="$ctrl.onlinenode" translate="mediaFusion.add-resource-dialog.serverOnline"></div>
         <div class="node-error" ng-if="$ctrl.offlinenode" translate="mediaFusion.add-resource-dialog.serverOffline"></div>
       </div>

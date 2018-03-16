@@ -21,7 +21,7 @@ export class AddResourceSectionController implements ng.IComponentController {
   public enteredCluster: string = '';
   public hostName: string = '';
   public helpText: string;
-  public ipCheck: string;
+  public validNodeCheck: boolean = true;
   public isDiabled: boolean = false;
   public onlinenode: boolean = false;
   public offlinenode: boolean = false;
@@ -56,9 +56,7 @@ export class AddResourceSectionController implements ng.IComponentController {
   }
 
   public validateHostName() {
-    if (_.isFunction(this.onHostNameUpdate)) {
-      this.onHostNameUpdate({ response: { hostName: this.hostName } });
-    }
+    this.validNodeCheck = (this.validateNode(this.hostName));
     if (_.includes(this.onlineNodeList, this.hostName)) {
       this.onlinenode = true;
       this.offlinenode = false;
@@ -68,6 +66,18 @@ export class AddResourceSectionController implements ng.IComponentController {
     } else {
       this.onlinenode = false;
       this.offlinenode = false;
+    }
+    if (_.isFunction(this.onHostNameUpdate)) {
+      this.onHostNameUpdate({ response: { hostName: this.hostName, validNode: this.validNodeCheck, onlineNode: this.onlinenode, offlineNode: this.offlinenode  } });
+    }
+  }
+
+  private validateNode(ip) {
+    if (ip === '') {
+      return true;
+    } else {
+      const regex = new RegExp(/^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)|((?!:\/\/)([a-zA-Z0-9-]+\.)?[a-zA-Z0-9-][a-zA-Z0-9-]+\.[a-zA-Z]{2,6}))$/g);
+      return regex.test(ip);
     }
   }
 

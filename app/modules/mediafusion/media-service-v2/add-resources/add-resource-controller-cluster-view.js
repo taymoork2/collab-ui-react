@@ -24,11 +24,13 @@
     vm.radio = 1;
     vm.ovaType = 1;
     vm.noProceed = false;
+    vm.validNode = true;
     vm.yesProceed = $state.params.yesProceed;
     vm.fromClusters = $state.params.fromClusters;
     vm.showDownloadableOption = vm.fromClusters;
     vm.canGoNext = canGoNext;
     vm.getAppTitle = getAppTitle;
+    vm.validateHostName = validateHostName;
     vm.yesNoPage = true;
 
     var proPackEnabled = undefined;
@@ -91,10 +93,14 @@
       }
     }
 
+    function validateHostName() {
+      vm.validNode = AddResourceCommonServiceV2.validateHostName(vm.hostName);
+    }
+
     function canGoNext() {
       if (vm.fromClusters && !vm.yesProceed) {
         return true;
-      } else if (vm.yesProceed && !_.isUndefined(vm.hostName) && vm.hostName != '' && !_.isUndefined(vm.selectedCluster) && vm.selectedCluster != '') {
+      } else if (vm.yesProceed && !_.isUndefined(vm.hostName) && vm.hostName != '' && vm.validNode && !_.isUndefined(vm.selectedCluster) && vm.selectedCluster != '') {
         return true;
       } else {
         return false;

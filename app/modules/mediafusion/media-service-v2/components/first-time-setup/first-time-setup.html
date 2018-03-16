@@ -1,7 +1,7 @@
-<div ng-show="!$ctrl.noProceed">
+<div ng-show="!$ctrl.ovaDownload">
   <h5 translate="mediaFusion.easyConfig.firstStep"></h5>
-  <div class="myAddResourceForm">
-    <form name="myAddResourceForm">
+  <div class="preRegisterClusterForm">
+    <form name="preRegisterClusterForm">
       <div class="cs-radio-group">
         <div class="radioDisplay">
           <input cs-input type="radio" ng-model="$ctrl.radio" id="yes" name="redirectResource" value="1" ng-change="$ctrl.radioSelector(value)" cs-input-label="{{'mediaFusion.add-resource-dialog.yesProceed' | translate}}"
@@ -33,7 +33,7 @@
     <p class="small privacy" translate="hercules.serviceHelpInfo.servicePrivacyStatement"></p>
   </div>
 </div>
-<div ng-show="$ctrl.noProceed">
+<div ng-show="$ctrl.ovaDownload">
   <div>
     <h5 translate="mediaFusion.add-resource-dialog.noInfoNew" translate-values="{appTitle: $ctrl.getAppTitle()}"></h5>
   </div>

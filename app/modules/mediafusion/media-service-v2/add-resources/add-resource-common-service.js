@@ -116,6 +116,11 @@
       return MediaServiceActivationV2.enableMediaService(vm.currentServiceId);
     }
 
+    function validateHostName(hostName) {
+      var regex = new RegExp(/^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)|((?!:\/\/)([a-zA-Z0-9-]+\.)?[a-zA-Z0-9-][a-zA-Z0-9-]+\.[a-zA-Z]{2,6}))$/g);
+      return regex.test(hostName);
+    }
+
     function createFirstTimeSetupCluster(hostName, enteredCluster) {
       var deferred = $q.defer();
       HybridServicesClusterService.preregisterCluster(enteredCluster, 'stable', 'mf_mgmt').then(function (result) {
@@ -159,6 +164,7 @@
       enableMediaServiceEntitlements: enableMediaServiceEntitlements,
       createFirstTimeSetupCluster: createFirstTimeSetupCluster,
       enableMediaService: enableMediaService,
+      validateHostName: validateHostName,
     };
   }
   angular
