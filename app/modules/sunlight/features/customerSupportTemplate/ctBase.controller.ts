@@ -11,12 +11,14 @@ export class CtBaseController implements ng.IComponentController {
     public $stateParams: ng.ui.IStateParamsService,
     public TemplateWizardService,
     public CTService,
+    public $translate: ng.translate.ITranslateService,
   ) {
     this.isEditFeature = this.$stateParams.isEditFeature;
     this.currentState = this.TemplateWizardService.currentState;
 
     this.template = TemplateWizardService.template;
     this.lengthValidationConstants = this.CTService.getLengthValidationConstants();
+
   }
 
   public $onInit() {
@@ -29,6 +31,10 @@ export class CtBaseController implements ng.IComponentController {
 
   public EmptyValidationFunction(): boolean {
     return true;
+  }
+
+  public getLocalisedText(name): string {
+    return this.$translate.instant(name + '_' + this.TemplateWizardService.selectedMediaType());
   }
 
 }

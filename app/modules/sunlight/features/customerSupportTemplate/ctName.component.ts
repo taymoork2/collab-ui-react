@@ -1,5 +1,4 @@
 import { CtBaseController } from './ctBase.controller';
-//import TemplateWizardService from "./services/TemplateWizard.service";
 
 class CtNameController extends CtBaseController {
 
@@ -8,11 +7,12 @@ class CtNameController extends CtBaseController {
     public $stateParams: ng.ui.IStateParamsService,
     public TemplateWizardService,
     public CTService,
+    public $translate: ng.translate.ITranslateService,
   ) {
-    super($stateParams, TemplateWizardService, CTService);
+    super($stateParams, TemplateWizardService, CTService, $translate);
   }
 
-  public onInit() {
+  public $onInit(): void {
     this.isValid();
   }
 
@@ -26,25 +26,21 @@ class CtNameController extends CtBaseController {
   }
 
   public isValid() {
-    this.TemplateWizardService.pageValidationResult.name =
+    this.TemplateWizardService.pageValidationResult.isNameValid =
       !this.isNameEmpty() &&
       this.validateNameLength() &&
       this.isInputValid(this.template.name);
-    return this.TemplateWizardService.pageValidationResult.name;
+    return this.TemplateWizardService.pageValidationResult.isNameValid;
   }
 
   public isNameEmpty() {
     return this.template.name.length === this.lengthValidationConstants.empty;
   }
-
 }
 
 export class CtNameComponent implements ng.IComponentOptions {
   public controller = CtNameController;
-  public controllerAs = 'careSetupAssistant';
   public template = require('modules/sunlight/features/customerSupportTemplate/wizardPagesComponent/ctName.tpl.html');
-
-
 }
 
 export default angular
