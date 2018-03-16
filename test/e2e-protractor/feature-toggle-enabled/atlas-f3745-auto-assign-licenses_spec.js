@@ -98,15 +98,7 @@ describe('Auto-Assign Licenses', function () {
 
   describe('manual onboard a user using auto-assign template:', function () {
     it('should add a new user', function () {
-      utils.click(navigation.usersTab);
-      utils.click(manageUsers.buttons.manageUsers);
-      utils.click(manageUsers.actionCards.manualAddUsers);
-      utils.click(manageUsers.buttons.next);
-      utils.click(users.addUsersField);
-      utils.sendKeys(users.addUsersField, testUserEmail1 + protractor.Key.ENTER);
-      utils.click(manageUsers.buttons.next);
-      utils.click(manageUsers.buttons.save);
-      utils.click(manageUsers.buttons.finish);
+      users.createUserWithAutoAssignTemplate(testUserEmail1);
     });
 
     it('should validate that newly onboarded user has the message license', function () {
