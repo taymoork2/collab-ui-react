@@ -2,13 +2,13 @@ import moduleName from './index';
 import { HybridServicesUserSidepanelSectionComponentCtrl } from './hybrid-services-user-sidepanel-section.component';
 
 type Test = atlas.test.IComponentTest<HybridServicesUserSidepanelSectionComponentCtrl, {
-  AsyncIntervalService,
   Authinfo,
   CloudConnectorService,
   FeatureToggleService,
   ServiceDescriptorService,
   UserOverviewService
   USSService,
+  WaitingIntervalService,
 }>;
 
 describe('HybridServicesUserSidepanelSectionComponent', () => {
@@ -20,13 +20,13 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
     };
     this.initModules(moduleName);
     this.injectDependencies(
-      'AsyncIntervalService',
       'Authinfo',
       'CloudConnectorService',
       'FeatureToggleService',
       'ServiceDescriptorService',
       'UserOverviewService',
       'USSService',
+      'WaitingIntervalService',
     );
   });
 
@@ -180,8 +180,8 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
         id: 'squared-fusion-uc',
         enabled: true,
       }]));
-      spyOn(this.AsyncIntervalService, 'interval').and.returnValue('fake-interval');
-      spyOn(this.AsyncIntervalService, 'cancel');
+      spyOn(this.WaitingIntervalService, 'interval').and.returnValue('fake-interval');
+      spyOn(this.WaitingIntervalService, 'cancel');
     });
 
     it('should call USS with the correct userId', function (this: Test) {
@@ -214,12 +214,12 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
       this.initComponent({});
 
       expect(this.USSService.getStatusesForUser.calls.count()).toBe(1);
-      expect(this.AsyncIntervalService.cancel).toHaveBeenCalledTimes(1); // $onChanges cancels before starting interval
-      expect(this.AsyncIntervalService.interval).toHaveBeenCalledTimes(1);
+      expect(this.WaitingIntervalService.cancel).toHaveBeenCalledTimes(1); // $onChanges cancels before starting interval
+      expect(this.WaitingIntervalService.interval).toHaveBeenCalledTimes(1);
       expect(this.controller['intervalPromise']).toBeDefined();
 
       this.controller.$onDestroy();
-      expect(this.AsyncIntervalService.cancel).toHaveBeenCalledTimes(2);
+      expect(this.WaitingIntervalService.cancel).toHaveBeenCalledTimes(2);
       expect(this.controller['intervalPromise']).not.toBeDefined();
     });
   });

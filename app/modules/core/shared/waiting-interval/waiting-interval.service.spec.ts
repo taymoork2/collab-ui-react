@@ -1,18 +1,18 @@
 import testModule from './index';
-import { AsyncIntervalService } from './async-interval.service';
+import { WaitingIntervalService } from './waiting-interval.service';
 
 type Test = atlas.test.IServiceTest<{
   $interval: ng.IIntervalService,
-  AsyncIntervalService: AsyncIntervalService,
+  WaitingIntervalService: WaitingIntervalService,
 }>;
 
-describe('AsyncIntervalService:', () => {
+describe('WaitingIntervalService:', () => {
   beforeEach(function (this: Test) {
     this.initModules(testModule);
     this.injectDependencies(
       '$q',
       '$interval',
-      'AsyncIntervalService',
+      'WaitingIntervalService',
     );
 
     jasmine.clock().install();
@@ -34,7 +34,7 @@ describe('AsyncIntervalService:', () => {
       });
     });
     it('should invoke interval function whenever async is not busy until interval is cancelled', function (this: Test) {
-      const testInterval = this.AsyncIntervalService.interval(() => {
+      const testInterval = this.WaitingIntervalService.interval(() => {
         return this.intervalFunction();
       }, INTERVAL_DURATION);
       this.$interval.flush(INTERVAL_DURATION - 1);
@@ -63,7 +63,7 @@ describe('AsyncIntervalService:', () => {
       // resolve the async interval function so interval function can fire again
       this.intervalDeferred.resolve();
       // cancel the interval so it doesn't fire anymore
-      this.AsyncIntervalService.cancel(testInterval);
+      this.WaitingIntervalService.cancel(testInterval);
 
       this.$interval.flush(INTERVAL_DURATION);
       expect(this.intervalFunction).toHaveBeenCalledTimes(3);

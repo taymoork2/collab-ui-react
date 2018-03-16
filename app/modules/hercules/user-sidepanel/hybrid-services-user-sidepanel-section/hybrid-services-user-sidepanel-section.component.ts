@@ -7,7 +7,7 @@ import { IUserStatusWithExtendedMessages, USSService } from 'modules/hercules/se
 import { Notification } from 'modules/core/notifications';
 import { HybridServiceUserSidepanelHelperService } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
 import { IUserData, UserOverviewService } from 'modules/core/users/userOverview/userOverview.service';
-import { AsyncIntervalService } from 'modules/core/shared/async-interval/async-interval.service';
+import { WaitingIntervalService } from 'modules/core/shared/waiting-interval/waiting-interval.service';
 
 interface IServiceSetupStatus {
   id: HybridServiceId;
@@ -42,7 +42,6 @@ export class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComp
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
-    private AsyncIntervalService: AsyncIntervalService,
     private Authinfo,
     private CloudConnectorService: CloudConnectorService,
     private FeatureToggleService: FeatureToggleService,
@@ -52,6 +51,7 @@ export class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComp
     private ServiceDescriptorService: ServiceDescriptorService,
     private UserOverviewService: UserOverviewService,
     private USSService: USSService,
+    private WaitingIntervalService: WaitingIntervalService,
   ) { }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
@@ -78,13 +78,13 @@ export class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComp
   }
 
   private initInterval() {
-    this.intervalPromise = this.AsyncIntervalService.interval(() => {
+    this.intervalPromise = this.WaitingIntervalService.interval(() => {
       return this.loadData();
     }, 10000);
   }
 
   private cancelInterval() {
-    this.AsyncIntervalService.cancel(this.intervalPromise);
+    this.WaitingIntervalService.cancel(this.intervalPromise);
     this.intervalPromise = undefined;
   }
 

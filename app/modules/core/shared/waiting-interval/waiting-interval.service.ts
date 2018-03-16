@@ -1,4 +1,4 @@
-class AsyncInterval {
+class WaitingInterval {
   constructor(
     public interval: ng.IPromise<any>,
     public callbackFunction: () => ng.IPromise<any>,
@@ -11,8 +11,8 @@ class AsyncInterval {
  * when the previous callback is still being resolved. Otherwise we run the risk of queueing an
  * unbound amount of asynchronous callbacks and overloading servers with requests.
  */
-export class AsyncIntervalService {
-  private asyncIntervals: AsyncInterval[] = [];
+export class WaitingIntervalService {
+  private waitingIntervals: WaitingInterval[] = [];
 
   /* @ngInject */
   constructor(
@@ -21,29 +21,29 @@ export class AsyncIntervalService {
 
   public interval(func: () => ng.IPromise<any>, delay: number, count?: number, invokeApply?: boolean, ...args: any[]): IPromise<any> {
     const intervalInstance = this.$interval(() => {
-      const foundAsyncInterval = _.find(this.asyncIntervals, asyncInterval => asyncInterval.interval === intervalInstance);
-      if (!foundAsyncInterval || foundAsyncInterval.isBusy) {
+      const foundWaitingInterval = _.find(this.waitingIntervals, waitingInterval => waitingInterval.interval === intervalInstance);
+      if (!foundWaitingInterval || foundWaitingInterval.isBusy) {
         return;
       }
 
-      foundAsyncInterval.isBusy = true;
-      foundAsyncInterval.callbackFunction().finally(() => {
-        foundAsyncInterval.isBusy = false;
+      foundWaitingInterval.isBusy = true;
+      foundWaitingInterval.callbackFunction().finally(() => {
+        foundWaitingInterval.isBusy = false;
       });
     }, delay, count, invokeApply, ...args);
 
-    this.asyncIntervals.push(new AsyncInterval(intervalInstance, func));
+    this.waitingIntervals.push(new WaitingInterval(intervalInstance, func));
 
     return intervalInstance;
   }
 
   public cancel(interval?: ng.IPromise<any>): boolean {
-    const foundAsyncInterval = _.find(this.asyncIntervals, asyncInterval => asyncInterval.interval === interval);
-    if (!foundAsyncInterval) {
+    const foundWaitingInterval = _.find(this.waitingIntervals, waitingInterval => waitingInterval.interval === interval);
+    if (!foundWaitingInterval) {
       return false;
     }
 
-    _.pull(this.asyncIntervals, foundAsyncInterval);
-    return this.$interval.cancel(foundAsyncInterval.interval);
+    _.pull(this.waitingIntervals, foundWaitingInterval);
+    return this.$interval.cancel(foundWaitingInterval.interval);
   }
 }
