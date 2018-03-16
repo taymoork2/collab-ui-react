@@ -94,7 +94,7 @@ describe('CareLocalSettingsCtrl', function () {
   describe('Controller: Care Local Settings', function () {
     beforeEach(function () {
       this.initModules(
-        'Context', 'Sunlight'
+        'Sunlight'
       );
     });
     beforeEach(initDependencies);
@@ -272,7 +272,7 @@ describe('CareLocalSettingsCtrl', function () {
   describe('For Admin user, Care Settings - when org has K2 entitlement', function () {
     beforeEach(function () {
       this.initModules(
-        'Context', 'Sunlight'
+        'Sunlight'
       );
     });
     beforeEach(initDependencies);
@@ -430,7 +430,7 @@ describe('CareLocalSettingsCtrl', function () {
   describe('Partner Logged in as org admin: Care Settings - when org has K2 entitlement', function () {
     beforeEach(function () {
       this.initModules(
-        'Context', 'Sunlight'
+        'Sunlight'
       );
     });
     beforeEach(initDependencies);
@@ -589,7 +589,7 @@ describe('CareLocalSettingsCtrl', function () {
   describe('Admin logged in: Care Settings - when org has K2 entitlement', function () {
     beforeEach(function () {
       this.initModules(
-        'Context', 'Sunlight'
+        'Sunlight'
       );
     });
     beforeEach(initDependencies);
@@ -765,7 +765,7 @@ describe('CareLocalSettingsCtrl', function () {
   describe('Care Settings - Routing Toggling', function () {
     beforeEach(function () {
       this.initModules(
-        'Context', 'Sunlight'
+        'Sunlight'
       );
     });
     beforeEach(initDependencies);
@@ -860,7 +860,7 @@ describe('CareLocalSettingsCtrl', function () {
   describe('AA CS Onboarding ', function () {
     beforeEach(function () {
       this.initModules(
-        'Context', 'Sunlight'
+        'Sunlight'
       );
     });
     beforeEach(initDependencies);
@@ -1008,7 +1008,7 @@ describe('CareLocalSettingsCtrl', function () {
   describe('AA CS Onboarding ', function () {
     beforeEach(function () {
       this.initModules(
-        'Context', 'Sunlight'
+        'Sunlight'
       );
     });
     beforeEach(initDependencies);
@@ -1177,7 +1177,7 @@ describe('CareLocalSettingsCtrl', function () {
   describe('Synchronize Admin Authorization', function () {
     beforeEach(function () {
       this.initModules(
-        'Context', 'Sunlight'
+        'Sunlight'
       );
     });
     beforeEach(initDependencies);

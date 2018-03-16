@@ -1,8 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('Context')
-    .service('ContextFieldsService', contextFieldsService);
+  module.exports = contextFieldsService;
 
   var searchPath = '/dictionary/field/v1/search';
   var createPath = '/dictionary/field/v1';
@@ -10,7 +9,7 @@
   var MAX_ENTRIES_FOR_FIELD_SEARCH = 1500;
 
   /* @ngInject */
-  function contextFieldsService($http, Discovery) {
+  function contextFieldsService($http, ContextDiscovery) {
     var service = {
       getFields: getFields,
       createField: createField,
@@ -25,7 +24,7 @@
 
     //get fields based on dictionary URL returned from discovery
     function getFields() {
-      return Discovery.getEndpointForService('dictionary')
+      return ContextDiscovery.getEndpointForService('dictionary')
         .then(function (dictionaryUrl) {
           var searchQuery = 'id:*';
           return $http.get(dictionaryUrl + searchPath, {
@@ -47,7 +46,7 @@
     }
 
     function getField(id) {
-      return Discovery.getEndpointForService('dictionary')
+      return ContextDiscovery.getEndpointForService('dictionary')
         .then(function (dictionaryUrl) {
           return $http.get(dictionaryUrl + idPath + id);
         })
@@ -57,7 +56,7 @@
     }
 
     function createField(data) {
-      return Discovery.getEndpointForService('dictionary')
+      return ContextDiscovery.getEndpointForService('dictionary')
         .then(function (dictionaryUrl) {
           return $http.post(dictionaryUrl + createPath, data);
         });
@@ -71,7 +70,7 @@
     }
 
     function updateField(data) {
-      return Discovery.getEndpointForService('dictionary')
+      return ContextDiscovery.getEndpointForService('dictionary')
         .then(function (dictionaryUrl) {
           return $http.put(dictionaryUrl + idPath + data.id, data);
         });
@@ -85,7 +84,7 @@
     }
 
     function deleteField(id) {
-      return Discovery.getEndpointForService('dictionary')
+      return ContextDiscovery.getEndpointForService('dictionary')
         .then(function (dictionaryUrl) {
           return $http.delete(dictionaryUrl + idPath + id);
         });

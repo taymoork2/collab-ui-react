@@ -1,5 +1,5 @@
 import { AssignableServicesItemCategory, ILicenseUsage, ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
-import { OfferName } from 'modules/core/shared';
+import { OfferName } from 'modules/core/shared/offer-name';
 import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
 import { MessengerInteropService } from 'modules/core/users/userAdd/shared/messenger-interop/messenger-interop.service';
 

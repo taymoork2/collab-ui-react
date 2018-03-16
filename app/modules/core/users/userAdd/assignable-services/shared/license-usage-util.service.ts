@@ -1,14 +1,14 @@
 import { ILicenseUsage } from './license-usage-util.interfaces';
 import { Config } from 'modules/core/config/config';
-import { OfferName } from 'modules/core/shared';
+import { OfferName } from 'modules/core/shared/offer-name';
+import { OfferNameService } from 'modules/core/shared/offer-name/offer-name.service';
 
 export class LicenseUsageUtilService {
-
-  public static readonly ADVANCED_MEETING_OFFER_NAMES = [OfferName.CMR, OfferName.EC, OfferName.EE, OfferName.MC, OfferName.TC];
 
   /* @ngInject */
   constructor(
     private Config: Config,
+    private OfferNameService: OfferNameService,
   ) {}
 
   public filterLicenses(filterOptions: Object, licenses: ILicenseUsage[]): ILicenseUsage[] {
@@ -45,7 +45,7 @@ export class LicenseUsageUtilService {
 
   public getAdvancedMeetingLicenses(licenses: ILicenseUsage[]): ILicenseUsage[] {
     return _.filter(licenses, (license) => {
-      return _.includes(LicenseUsageUtilService.ADVANCED_MEETING_OFFER_NAMES, _.get(license, 'offerName'));
+      return this.OfferNameService.isAdvancedMeetingOfferName(_.get(license, 'offerName'));
     });
   }
 

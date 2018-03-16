@@ -1,4 +1,6 @@
 require('./_overview.scss');
+var SsoCertExpNotificationService = require('modules/core/overview/notifications/ssoCertificateExpirationNotification.service').SsoCertificateExpirationNotificationService;
+
 (function () {
   'use strict';
 
@@ -32,6 +34,7 @@ require('./_overview.scss');
     ReportsService,
     ServiceDescriptorService,
     SetupWizardService,
+    SsoCertificateExpirationNotificationService,
     SubscriptionWithUnsyncedLicensesNotificationService,
     SunlightReportService,
     SunlightUtilitiesService,
@@ -224,6 +227,7 @@ require('./_overview.scss');
       $q.all({
         orgDetails: Orgservice.getOrg(_.noop, Authinfo.getOrgId(), params),
         featureToggle: FeatureToggleService.supports(FeatureToggleService.features.hybridCare),
+        isAtlasSsoCertificateUpdateToggled: FeatureToggleService.atlasSsoCertificateUpdateGetStatus(),
         pt: PrivateTrunkService.getPrivateTrunk(),
         ept: ServiceDescriptorService.getServiceStatus('ept'),
       }).then(function (response) {
@@ -258,7 +262,9 @@ require('./_overview.scss');
               .createCareLicenseNotification('homePage.careLicenseCallMissingTextToggle', 'careChatTpl.learnMoreLink', FeatureToggleService));
           }
         }
+
         checkForUnsyncedSubscriptionLicenses();
+        checkForSsoCertificateExpiration(response.isAtlasSsoCertificateUpdateToggled);
       }).catch(function (response) {
         Notification.errorWithTrackingId(response, 'firstTimeWizard.sparkDomainManagementServiceErrorMessage');
       });
@@ -320,6 +326,22 @@ require('./_overview.scss');
           vm.notifications.push(SubscriptionWithUnsyncedLicensesNotificationService.createNotification(unsyncedSubscription));
         });
       });
+    }
+
+    function checkForSsoCertificateExpiration(isAtlasSsoCertificateUpdateToggled) {
+      var ssoEnabled = _.get(vm.orgData, 'ssoEnabled');
+
+      if (!ssoEnabled || !isAtlasSsoCertificateUpdateToggled) {
+        return;
+      }
+
+      var today = moment();
+      var certificateExpirationDate = moment(_.get(vm.orgData, 'hostedSpPrimaryCertExpiration'));
+      var daysDiff = certificateExpirationDate.diff(today, 'days');
+      if (daysDiff <= SsoCertExpNotificationService.CERTIFICATE_EXPIRATION_DAYS) {
+        vm.notifications.push(SsoCertificateExpirationNotificationService.createNotification(daysDiff));
+        resizeNotifications();
+      }
     }
 
     function getTOSStatus() {

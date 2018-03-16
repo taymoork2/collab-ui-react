@@ -1,5 +1,3 @@
-import fieldModalComponent from './hybrid-context-field-modal.component';
-
 describe('field modal component', () => {
 
   let createServiceSpy, updateServiceSpy;
@@ -24,7 +22,7 @@ describe('field modal component', () => {
   };
 
   beforeEach(function () {
-    this.initModules('Core', 'Huron', 'Context', fieldModalComponent);
+    this.initModules('Context');
     this.injectDependencies(
       '$q',
       '$scope',

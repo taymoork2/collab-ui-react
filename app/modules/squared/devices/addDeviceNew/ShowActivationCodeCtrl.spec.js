@@ -44,7 +44,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
   describe('Initialization', function () {
     it('sets all the necessary fields', function () {
       var title = 'title';
-      var showPersonal = true;
       var deviceType = 'testDevice';
       var accountType = 'testAccount';
       var deviceName = 'deviceName';
@@ -59,7 +58,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
           return {
             data: {
               title: title,
-              showPersonal: showPersonal,
               account: {
                 deviceType: deviceType,
                 type: accountType,
@@ -80,7 +78,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
       initController();
 
       expect(controller.title).toBe(title);
-      expect(controller.showPersonal).toBe(showPersonal);
       expect(controller.account.deviceType).toBe(deviceType);
       expect(controller.account.type).toBe(accountType);
       expect(controller.account.name).toBe(deviceName);
@@ -159,72 +156,9 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
           accountType = 'personal';
         });
 
-        describe('when showPersonal is on', function () {
-          beforeEach(function () {
-            showPersonal = true;
-          });
-
-          describe('and isEntitledToHuron is false', function () {
-            beforeEach(function () {
-              isEntitledToHuron = false;
-              initController();
-            });
-
-            it('only text for Cloudberry is shown', function () {
-              expect(controller.showPersonalText).toBeFalsy();
-              expect(controller.showHuronWithATAText).toBeFalsy();
-              expect(controller.showHuronWithoutATAText).toBeFalsy();
-              expect(controller.showCloudberryText).toBeTruthy();
-            });
-          });
-
-          describe('and isEntitledToHuron is true', function () {
-            beforeEach(function () {
-              isEntitledToHuron = true;
-              initController();
-            });
-
-            it('only text for personal is shown', function () {
-              expect(controller.showPersonalText).toBeTruthy();
-              expect(controller.showHuronWithATAText).toBeFalsy();
-              expect(controller.showHuronWithoutATAText).toBeFalsy();
-              expect(controller.showCloudberryText).toBeFalsy();
-            });
-          });
-        });
-
-        describe('when showPersonal is off', function () {
-          beforeEach(function () {
-            showPersonal = false;
-          });
-
-          describe('and showATA is on', function () {
-            beforeEach(function () {
-              showATA = true;
-              initController();
-            });
-
-            it('only text for huron with ATA is shown', function () {
-              expect(controller.showPersonalText).toBeFalsy();
-              expect(controller.showHuronWithATAText).toBeTruthy();
-              expect(controller.showHuronWithoutATAText).toBeFalsy();
-              expect(controller.showCloudberryText).toBeFalsy();
-            });
-          });
-
-          describe('and showATA is off', function () {
-            beforeEach(function () {
-              showATA = false;
-              initController();
-            });
-
-            it('only text for huron without ATA is shown', function () {
-              expect(controller.showPersonalText).toBeFalsy();
-              expect(controller.showHuronWithATAText).toBeFalsy();
-              expect(controller.showHuronWithoutATAText).toBeTruthy();
-              expect(controller.showCloudberryText).toBeFalsy();
-            });
-          });
+        it('no code warnings are shown', function () {
+          expect(controller.codeOnlyForPhones).toBeFalsy();
+          expect(controller.codeNotForPhones).toBeFalsy();
         });
       });
 
@@ -239,45 +173,21 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             initController();
           });
 
-          it('only text for Cloudberry is shown', function () {
-            expect(controller.showPersonalText).toBeFalsy();
-            expect(controller.showHuronWithATAText).toBeFalsy();
-            expect(controller.showHuronWithoutATAText).toBeFalsy();
-            expect(controller.showCloudberryText).toBeTruthy();
+          it('code warning not for phones is shown', function () {
+            expect(controller.codeOnlyForPhones).toBeFalsy();
+            expect(controller.codeNotForPhones).toBeTruthy();
           });
         });
 
         describe('and deviceType is huron', function () {
           beforeEach(function () {
             deviceType = 'huron';
-          });
-
-          describe('and showATA is on', function () {
-            beforeEach(function () {
-              showATA = true;
-              initController();
-            });
-
-            it('only text for huron with ATA is shown', function () {
-              expect(controller.showPersonalText).toBeFalsy();
-              expect(controller.showHuronWithATAText).toBeTruthy();
-              expect(controller.showHuronWithoutATAText).toBeFalsy();
-              expect(controller.showCloudberryText).toBeFalsy();
-            });
-          });
-        });
-
-        describe('and showATA is off', function () {
-          beforeEach(function () {
-            showATA = false;
             initController();
           });
 
-          it('only text for huron without ATA is shown', function () {
-            expect(controller.showPersonalText).toBeFalsy();
-            expect(controller.showHuronWithATAText).toBeFalsy();
-            expect(controller.showHuronWithoutATAText).toBeTruthy();
-            expect(controller.showCloudberryText).toBeFalsy();
+          it('code warning only for phones is shown', function () {
+            expect(controller.codeOnlyForPhones).toBeTruthy();
+            expect(controller.codeNotForPhones).toBeFalsy();
           });
         });
       });

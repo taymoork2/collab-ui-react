@@ -5,7 +5,6 @@ describe('Component: fields sidepanel', function () {
   var deleteFieldSpy, membershipReturnSpy, modalSpy;
   var AdminAuthorizationStatus = require('modules/context/services/context-authorization-service').AdminAuthorizationStatus;
 
-  beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Context'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);

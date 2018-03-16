@@ -5,7 +5,6 @@ describe('Component: HybridContextResourcesComponent', function () {
   var AdminAuthorizationStatus = require('modules/context/services/context-authorization-service').AdminAuthorizationStatus;
 
   beforeEach(angular.mock.module('Context'));
-  beforeEach(angular.mock.module('Core'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   beforeEach(initController);

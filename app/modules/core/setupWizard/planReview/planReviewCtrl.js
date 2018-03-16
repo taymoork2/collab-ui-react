@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  var OfferName = require('modules/core/shared').OfferName;
+  var OfferName = require('modules/core/shared/offer-name').OfferName;
 
   angular
     .module('Core')

@@ -1,0 +1,72 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import 'styles/partials/mixins';
+
+sip-destination-input {
+  .hercules-sip-destination-table {
+    margin: 0;
+
+    .btn {
+      margin: 0 !important; // override .hercules .btn--primary
+      flex: 0 0 auto;
+    }
+
+    .btn:first-of-type {
+      margin-left: 10px !important;
+    }
+
+    .icon-error {
+      color: $color-alerts-base;
+    }
+
+    .icon-checkbox {
+      color: $color-cta-base;
+    }
+
+    .hercules-input-error {
+      background-color: $color-red-light !important;
+      border-color: $color-red-base !important;
+    }
+
+    .cs-input-group {
+      margin-bottom: 0;
+    }
+
+    .input-line {
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .sip-destination-test-summary {
+      display: flex;
+      align-items: flex-start;
+
+      i {
+        margin-right: 0.3rem;
+        margin-top: 0.1rem;
+      }
+
+      span {
+        font-size: 12px;
+      }
+
+      span + span {
+        margin-left: 0.5rem;
+      }
+    }
+  }
+
+  .sip-details {
+    margin-top: 0.75rem;
+
+    p, ul {
+      font-size: 0.75rem;
+    }
+  }
+
+  .saving-spinner {
+    align-self: center;
+    margin-left: 0.5rem;
+    @include keep-flex-container();
+    align-items: left;
+  }
+}

@@ -1,91 +1,74 @@
-import { IUSSOrg, USSService } from 'modules/hercules/services/uss.service';
-import { Notification } from 'modules/core/notifications/notification.service';
-import { IFormattedResult } from 'modules/hercules/services/l2sip-service';
-import { IToolkitModalService } from 'modules/core/modal/index';
+import { USSService } from 'modules/hercules/services/uss.service';
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
+import { FeatureToggleService } from 'modules/core/featureToggle';
 
-interface ITestResultSet {
-  succeeded: boolean;
-  resultSet: IFormattedResult[];
+interface ITableData {
+  defaultDomain: {
+    id: string;
+    name: string;
+  }[];
+  specificDomains: {
+    [domain: string]: {
+      id: string;
+      name: string;
+    }[];
+  };
 }
 
 class SipDestinationSettingsSectionComponentCtrl implements ng.IComponentController {
-
-  public savingSip: boolean = false;
   public sipDomain: string;
-  public originalValue: string;
-  public sipDestinationTestSucceeded: boolean | undefined;
-  public sipDestinationTestResultSet: ITestResultSet;
+  public hasHybridGlobalCallServiceConnectFeature: boolean;
+  public tableData: ITableData = {
+    defaultDomain: [],
+    specificDomains: {},
+  };
 
   /* @ngInject */
   constructor(
-    private $modal: IToolkitModalService,
+    private $q: ng.IQService,
     private Authinfo,
-    private Notification: Notification,
+    private FeatureToggleService: FeatureToggleService,
+    private HybridServicesClusterService: HybridServicesClusterService,
     private USSService: USSService,
   ) {}
 
   public $onInit() {
-    this.getUSSData();
-  }
+    this.$q.all({
+      hasHybridGlobalCallServiceConnectFeature: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridGlobalCallServiceConnect),
+      defaultSipDomain: this.USSService.getOrg(this.Authinfo.getOrgId()).then(org => org.sipDomain),
+      clustersSipDomain: this.USSService.getSipDomainForClusters(),
+      callClusters: this.HybridServicesClusterService.getAll().then(clusters => {
+        return clusters.filter(cluster => {
+          return cluster.provisioning.some(provisioning => provisioning.connectorType === 'c_ucmc');
+        }).map(cluster => {
+          return {
+            id: cluster.id,
+            name: cluster.name,
+          };
+        });
+      }),
+    })
+    .then(result => {
+      this.sipDomain = result.defaultSipDomain;
+      this.hasHybridGlobalCallServiceConnectFeature = result.hasHybridGlobalCallServiceConnectFeature;
 
-  private getUSSData(): void {
-    this.USSService.getOrg(this.Authinfo.getOrgId())
-      .then((org: IUSSOrg) => {
-        this.sipDomain = org.sipDomain;
+      this.tableData.defaultDomain = result.callClusters.filter(cluster => {
+        return !_.find(result.clustersSipDomain, { clusterId: cluster.id });
       });
-  }
 
-  private updateSipDomain(): void {
-    this.savingSip = true;
-    const orgInfo: IUSSOrg = {
-      id: this.Authinfo.getOrgId(),
-      sipDomain: this.sipDomain,
-    };
-    this.USSService.updateOrg(orgInfo)
-      .then(() => {
-        this.Notification.success('hercules.errors.sipDomainSaved');
-      })
-      .catch((error) => {
-        this.Notification.errorWithTrackingId(error, 'hercules.errors.sipDomainInvalid');
-      })
-      .finally(() => {
-        this.savingSip = false;
-      });
-  }
-
-  /* Callback from the verify-sip-destination component  */
-  public onDestinationSave = () => {
-    this.updateSipDomain();
-  }
-
-  /* Callback from the verify-sip-destination component  */
-  public onResultReady = (succeeded: boolean, resultSet: ITestResultSet) => {
-    this.sipDestinationTestSucceeded = succeeded;
-    this.sipDestinationTestResultSet = resultSet;
-    this.originalValue = _.clone(this.sipDomain);
-  }
-
-  /* Callback from the verify-sip-destination component  */
-  public onTestStarted = () => {
-    this.sipDestinationTestSucceeded = undefined;
-  }
-
-  public openSipTestResults(): void {
-    this.$modal.open({
-      resolve: {
-        resultSet: () => this.sipDestinationTestResultSet,
-      },
-      controller: 'VerifySipDestinationModalController',
-      controllerAs: 'vm',
-      template: require('modules/hercules/service-settings/verify-sip-destination/verify-sip-destination-modal.html'),
-      type: 'full',
+      this.tableData.specificDomains = result.clustersSipDomain.reduce((acc, info) => {
+        if (!acc[info.sipDomain]) {
+          acc[info.sipDomain] = [];
+        }
+        const clusterInfo = {
+          id: info.clusterId,
+          name: _.find(result.callClusters, { id: info.clusterId }).name,
+        };
+        acc[info.sipDomain].push(clusterInfo);
+        return acc;
+      }, {});
     });
   }
-
-  public warnSipDestination(): boolean {
-    return this.sipDestinationTestSucceeded !== undefined && !this.sipDestinationTestSucceeded;
-  }
-
 }
 
 export class SipDestinationSettingsSectionComponent implements ng.IComponentOptions {

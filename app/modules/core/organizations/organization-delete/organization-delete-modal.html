@@ -1,20 +1,66 @@
 <div class="modal-header">
-  <h3 class="modal-title">{{$ctrl.title}}</h3>
+  <h3 class="modal-title" translate="{{::$ctrl.l10nTitle}}"></h3>
 </div>
-<div class="organization-delete-modal-body modal-body">
-  <span ng-if="$ctrl.state === $ctrl.states.DELETING">{{$ctrl.body}}</span>
-  <span ng-if="$ctrl.state === $ctrl.states.COMPLETE" translate="organizationDeleteModal.accountClosedBody" translate-values="{href: $ctrl.href}"></span>
+<div class="modal-body">
+  <div ng-if="$ctrl.state === $ctrl.states.USER_ACTION">
+    <div class="organization-delete-modal__intro">
+      <span>{{::'organizationDeleteModal.moveOrDelete'|translate}}</span>
+    </div>
+    <div class="cs-radio-group">
+      <input cs-input type="radio"
+        ng-model="$ctrl.action"
+        id="moveUsers"
+        name="userAction"
+        ng-value="$ctrl.actions.MOVE"
+        cs-input-label="{{::'organizationDeleteModal.moveUsers'|translate}}">
+      <input cs-input type="radio"
+        ng-model="$ctrl.action"
+        id="deleteUsers"
+        name="userAction"
+        ng-value="$ctrl.actions.DELETE"
+        cs-input-label="{{::'organizationDeleteModal.deleteUsers'|translate}}">
+    </div>
+  </div>
+  <div ng-if="$ctrl.state === $ctrl.states.DELETE_ORG">
+    <div class="organization-delete-modal__intro">
+      <i class="icon icon-check icon-lg organization-delete-modal__intro-icon"></i>
+      <span>{{::'organizationDeleteModal.checkBoxes'|translate}}</span>
+    </div>
+    <div class="cs-checkbox-group" ng-repeat="text in $ctrl.checkBoxText track by $index" ng-if="$ctrl.state === $ctrl.states.DELETE_ORG">
+      <input class="checkbox-text" cs-input type="checkbox"
+        ng-model="$ctrl.checked[$index]"
+        id="text{{$index}}"
+        name="text{{$index}}"
+        ng-change="$ctrl.checkboxesChanged()"
+        cs-input-label="{{::'organizationDeleteModal.' + text | translate}}">
+    </div>
+  </div>
 </div>
 <div class="modal-footer">
   <button
     class="btn btn--default"
+    id="cancelButton"
+    ng-disabled="$ctrl.deleteLoading"
     ng-click="$ctrl.close()">
-    <span>{{$ctrl.closeButtonText}}</span>
+    <span>{{::'common.cancel' | translate}}</span>
   </button>
-  <button
-    ng-if="$ctrl.state === $ctrl.states.DELETING"
+  <button ng-show="$ctrl.state === $ctrl.states.USER_ACTION"
+    class="btn btn--primary"
+    id="continueButton"
+    ng-click="$ctrl.continue()">
+    <span>{{::'common.next' | translate}}</span>
+  </button>
+  <button ng-show="$ctrl.state === $ctrl.states.DELETE_ORG"
+    ng-disabled="$ctrl.deleteLoading"
+    id="backButton"
+    ng-click="$ctrl.back()">
+    <span translate="common.back"></span>
+  </button>
+  <button ng-show="$ctrl.state === $ctrl.states.DELETE_ORG"
+    ng-disabled="!$ctrl.allChecked"
     cs-btn
     class="btn btn--negative"
+    id="deleteButton"
     ng-click="$ctrl.deleteOrg()"
     loading="$ctrl.deleteLoading">
     <span translate="organizationDeleteModal.deleteButton"></span>

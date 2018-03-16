@@ -15,6 +15,86 @@ export class CTService {
   ) {
   }
 
+  public typeOptions = [{
+    id: 'email',
+    text: this.$translate.instant('careChatTpl.typeEmail'),
+    dictionaryType: {
+      fieldSet: 'cisco.base.customer',
+      fieldName: 'Context_Work_Email',
+    },
+  }, {
+    id: 'name',
+    text: this.$translate.instant('careChatTpl.typeName'),
+    dictionaryType: {
+      fieldSet: 'cisco.base.customer',
+      fieldName: 'Context_First_Name',
+    },
+  }, {
+    id: 'category',
+    text: this.$translate.instant('careChatTpl.typeCategory'),
+    dictionaryType: {
+      fieldSet: 'cisco.base.ccc.pod',
+      fieldName: 'category',
+    },
+  }, {
+    id: 'phone',
+    text: this.$translate.instant('careChatTpl.typePhone'),
+    dictionaryType: {
+      fieldSet: 'cisco.base.customer',
+      fieldName: 'Context_Mobile_Phone',
+    },
+  }, {
+    id: 'id',
+    text: this.$translate.instant('careChatTpl.typeId'),
+    dictionaryType: {
+      fieldSet: 'cisco.base.customer',
+      fieldName: 'Context_Customer_External_ID',
+    },
+  }, {
+    id: 'custom',
+    text: this.$translate.instant('careChatTpl.typeCustom'),
+    dictionaryType: {
+      fieldSet: 'cisco.base.ccc.pod',
+      fieldName: 'cccCustom',
+    },
+  }, {
+    id: 'reason',
+    text: this.$translate.instant('careChatTpl.typeReason'),
+    dictionaryType: {
+      fieldSet: 'cisco.base.ccc.pod',
+      fieldName: 'cccChatReason',
+    },
+  }];
+
+  public categoryTypeOptions = [{
+    text: this.$translate.instant('careChatTpl.categoryTextCustomer'),
+    id: 'customerInfo',
+
+  }, {
+    text: this.$translate.instant('careChatTpl.categoryTextRequest'),
+    id: 'requestInfo',
+  }];
+
+  public requiredOptions = [{
+    text: this.$translate.instant('careChatTpl.requiredField'),
+    id: 'required',
+  }, {
+    text: this.$translate.instant('careChatTpl.optionalField'),
+    id: 'optional',
+  }];
+
+  public getCategoryTypeObject = function (typeId) {
+    return _.find(this.categoryTypeOptions, {
+      id: typeId,
+    });
+  };
+
+  public getTypeObject = function (typeId) {
+    return _.find(this.typeOptions, {
+      id: typeId,
+    });
+  };
+
   public getPromptTimeOptions() {
     return [
       { label: this.$translate.instant('careChatTpl.promptTimeOption1'), value: 30 },

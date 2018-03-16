@@ -1,5 +1,5 @@
 import { LocalStorageService } from 'modules/core/storage/localStorage.service';
-import { OfferName } from 'modules/core/shared';
+import { OfferName } from 'modules/core/shared/offer-name';
 
 interface IRoleStates {
   Application: string[];
@@ -305,6 +305,7 @@ export class Config {
     CMR: 'CMR',
     CARE: 'CARE',
     ADVANCE_CARE: 'ADVANCE_CARE',
+    MANAGEMENT: 'MANAGEMENT',
   };
 
   public readonly setupTypes = {
@@ -555,6 +556,13 @@ export class Config {
       'userRedirect',
       'userprofile',
       'users',
+      'addDeviceFlow',
+      'device-overview',
+      'devices',
+      'place-overview',
+      'places',
+      'huronsettings',
+      'huronlines',
       'customerPstnOrdersOverview',
       'taasSuites',
       'taasTaskView',
@@ -562,6 +570,7 @@ export class Config {
       'taasSchedule',
       'taasServiceManager',
       'taasResults',
+      'sso-certificate',
     ],
     Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'dgc'],
     Tech_Support: ['gss'],

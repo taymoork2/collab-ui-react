@@ -1,6 +1,10 @@
 import { ConnectorType, ICluster, IResourceGroup, IReleaseChannelsResponse } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
+import * as authinfoModuleName from 'modules/core/scripts/services/authinfo';
+import * as urlConfigModuleName from 'modules/core/config/urlConfig';
+import hybridServicesClusterServiceModuleName from 'modules/hercules/services/hybrid-services-cluster.service';
+
 export interface IResourceGroupOptionPair {
   label: string;
   value: string;
@@ -145,6 +149,12 @@ export class ResourceGroupService {
 }
 
 export default angular
-  .module('hercules.resource-group-service', [])
+  .module('hercules.resource-group-service', [
+    require('angular-translate'),
+    require('@collabui/collab-ui-ng').default,
+    authinfoModuleName,
+    hybridServicesClusterServiceModuleName,
+    urlConfigModuleName,
+  ])
   .service('ResourceGroupService', ResourceGroupService)
   .name;

@@ -784,6 +784,15 @@ describe('Partner Service -', function () {
         expect(PartnerService.helpers.isDisplayableService(licenseInfo, options)).toBe(false);
       });
 
+      it('should return FALSE from isDisplayableService for audio license', function () {
+        var licenseInfo = {
+          licenseType: Config.licenseTypes.AUDIO,
+          volume: 10,
+        };
+        var options = { isTrial: false, isCareEnabled: true, isAdvanceCareEnabled: true };
+        expect(PartnerService.helpers.isDisplayableService(licenseInfo, options)).toBe(false);
+      });
+
       it('should return the value of the toggle  from isDisplayableService for care license', function () {
         var licenseInfo = {
           licenseType: Config.licenseTypes.CARE,

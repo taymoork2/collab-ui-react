@@ -1207,6 +1207,20 @@
               task: undefined,
             },
           })
+          .state('sso-certificate', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<div ui-view></div>',
+              },
+            },
+          })
+          .state('sso-certificate.check-certificate', {
+            template: '<check-certificate dismiss="$dismiss()"></check-certificate>',
+          })
+          .state('sso-certificate.certificate-type', {
+            template: '<certificate-type dismiss="$dismiss()"></certificate-type>',
+          })
           .state('editService', {
             parent: 'modal',
             resolve: {
@@ -2836,6 +2850,7 @@
             data: {},
             params: {
               currentAddress: {},
+              currentHuronDevice: {},
               currentNumber: '',
               status: '',
               staticNumber: '',
@@ -3103,6 +3118,11 @@
             parent: 'hcs.shared',
             url: '/hcs/install-files',
             template: '<hcs-install-files></hcs-install-files>',
+          })
+          .state('hcs.subscription', {
+            parent: 'partner',
+            url: '/hcs/subscription',
+            template: '<hcs-licenses-subscription></hcs-licenses-subscription>',
           })
           .state('taasSuites', {
             parent: 'main',

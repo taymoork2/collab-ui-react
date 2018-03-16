@@ -9,18 +9,14 @@ import { IWindowService } from 'angular';
 
 export class ShowActivationCodeCtrl extends WizardCtrl {
   private account: IAccountData;
-  private showATA: boolean;
-  private showPersonal: boolean;
   public failure: boolean;
   public showEmail: boolean;
   public hideBackButton: boolean;
   private selectedUser: IRecipientUser;
   public qrCode: string | undefined;
   public timeLeft: string;
-  public showPersonalText: boolean;
-  public showCloudberryText: boolean;
-  public showHuronWithATAText: boolean;
-  public showHuronWithoutATAText: boolean;
+  public codeOnlyForPhones: boolean;
+  public codeNotForPhones: boolean;
   public friendlyActivationCode: string;
   public isLoading: boolean;
   private activationCode: string;
@@ -44,8 +40,6 @@ export class ShowActivationCodeCtrl extends WizardCtrl {
               private $window: IWindowService) {
     super($q, $stateParams);
 
-    this.showATA = this.wizardData.showATA;
-    this.showPersonal = this.wizardData.showPersonal;
     this.failure = false;
     this.account = {
       name: this.wizardData.account.name,
@@ -68,29 +62,11 @@ export class ShowActivationCodeCtrl extends WizardCtrl {
     };
     this.qrCode = undefined;
     this.timeLeft = '';
-    if (this.account.type === 'personal') {
-      if (this.showPersonal) {
-        if (this.account.isEntitledToHuron) {
-          this.showPersonalText = true;
-        } else {
-          this.showCloudberryText = true;
-        }
-      } else {
-        if (this.showATA) {
-          this.showHuronWithATAText = true;
-        } else {
-          this.showHuronWithoutATAText = true;
-        }
-      }
-    } else {
+    if (this.account.type === 'shared') {
       if (this.account.deviceType === 'huron') {
-        if (this.showATA) {
-          this.showHuronWithATAText = true;
-        } else {
-          this.showHuronWithoutATAText = true;
-        }
+        this.codeOnlyForPhones = true;
       } else {
-        this.showCloudberryText = true;
+        this.codeNotForPhones = true;
       }
     }
 

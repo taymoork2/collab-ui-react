@@ -34,6 +34,8 @@ class AbcSetupCtrl extends CommonSetupCtrl {
   public validateNameChars = /[<>]/i;
   public businessIdForm: ng.IFormController;
 
+  private businessId: string;
+
   public template = {
     templateId: '',
     name: '',
@@ -76,7 +78,6 @@ class AbcSetupCtrl extends CommonSetupCtrl {
     public $element: ng.IRootElementService,
     public $scope: ng.IScope,
     public $state: ng.ui.IStateService,
-    public $stateParams: ng.ui.IStateParamsService,
     public $modal: IToolkitModalService,
     public $translate: ng.translate.ITranslateService,
     public $timeout: ng.ITimeoutService,
@@ -101,6 +102,11 @@ class AbcSetupCtrl extends CommonSetupCtrl {
    */
   public $onInit() {
     this.template.configuration.pages.abcBusinessId.startTimeInMillis = Date.now();
+
+    if (this.businessId) {
+      this.template.configuration.pages.abcBusinessId.value = this.businessId;
+      this.template.configuration.pages.abcBusinessId.enabled = false;
+    }
     this.loadCvaList();
   }
 
@@ -292,6 +298,7 @@ export class AbcSetupComponent implements ng.IComponentOptions {
   public template = require('modules/sunlight/features/appleBusinessChat/abcSetup.tpl.html');
   public bindings = {
     dismiss: '&',
+    businessId: '<',
   };
 }
 

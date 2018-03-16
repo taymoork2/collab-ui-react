@@ -354,16 +354,15 @@
       });
     }
 
-    function deleteOrg(currentOrgId) {
+    function deleteOrg(currentOrgId, deleteUsers) {
       if (!currentOrgId) {
         return $q.reject('currentOrgId is not set');
       }
+      if (_.isUndefined(deleteUsers)) {
+        deleteUsers = true;
+      }
       var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + currentOrgId;
-
-      return $http({
-        method: 'DELETE',
-        url: serviceUrl,
-      });
+      return $http.delete(serviceUrl, { params: { deleteUsers: deleteUsers } });
     }
 
     function listOrgs(filter) {
