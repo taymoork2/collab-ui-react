@@ -121,6 +121,44 @@ describe('Auto-Assign Licenses', function () {
     });
   });
 
+  describe('modify template:', function () {
+    it('should enter the wizard to modify the default auto-assign template from the users tab', function () {
+      utils.click(navigation.usersTab);
+      utils.click(manageUsers.buttons.manageUsers);
+      utils.click(manageUsers.autoAssignTemplate.optionsMenu.toggleButton);
+      utils.click(manageUsers.autoAssignTemplate.optionsMenu.modify);
+      utils.expectIsDisplayed(manageUsers.autoAssignTemplate.createTemplate.subtitle);
+    });
+
+    it('should have the first messaging license checkbox already selected', function () {
+      utils.expectCheckboxIsChecked(manageUsers.autoAssignTemplate.assignableServices.licenses.messaging.firstLicenseCheckbox, true);
+    });
+
+    it('should show an error message if no licenses are selected', function () {
+      utils.click(manageUsers.autoAssignTemplate.assignableServices.licenses.messaging.firstLicense);
+      utils.expectIsDisplayed(element(by.cssContainingText('.modal-footer__warning h6', 'At least one service needs to be selected to continue')));
+      utils.click(manageUsers.autoAssignTemplate.assignableServices.licenses.messaging.firstLicense);
+    });
+
+    it('should proceed once template has been modified (ie. any other previously-unselected license is selected)', function () {
+      utils.click(manageUsers.autoAssignTemplate.assignableServices.licenses.meeting.firstLicense);
+      utils.expectIsEnabled(manageUsers.buttons.next);
+      utils.click(manageUsers.buttons.next);
+    });
+
+    it('should display auto-assign template summary', function () {
+      utils.expectIsDisplayed(manageUsers.autoAssignTemplate.templateSummary.summary);
+      utils.expectIsDisplayed(manageUsers.autoAssignTemplate.templateSummary.messagingItem);
+      utils.expectIsDisplayed(manageUsers.autoAssignTemplate.templateSummary.meetingItem);
+    });
+
+    it('should save the auto-assign template', function () {
+      utils.expectIsEnabled(manageUsers.buttons.save);
+      utils.click(manageUsers.buttons.save);
+      notifications.assertSuccess('Your license template has been modified successfully');
+    });
+  });
+
   describe('delete template:', function () {
     it('should delete the default auto-assign template', function () {
       utils.click(navigation.usersTab);
