@@ -18,18 +18,20 @@ interface IFilterComponent {
   options: IFilterObject[];
 }
 
-export class InventoryComponent implements ng.IComponentOptions {
-  public controller = InventoryCtrl;
+export class InventoryListComponent implements ng.IComponentOptions {
+  public controller = InventoryListCtrl;
   public template = require('./inventory.component.html');
 }
 
-export class InventoryCtrl implements ng.IComponentController {
+export class InventoryListCtrl implements ng.IComponentController {
   private timer;
   private timeoutVal: number;
   private tempFilterOptions: (string| undefined)[];
 
   public inventoryList: IInventoryObject[] = [];
   public inventoryListData: IInventoryObject[] = [];
+  public currentSearchString: string = '';
+
   public filter: IFilterComponent = {
     selected: [],
     placeholder: this.$translate.instant('customerPage.filters.placeholder'),
@@ -93,44 +95,48 @@ export class InventoryCtrl implements ng.IComponentController {
     });
   }
 
-  public onChangeFilters(): void {
-    //implement filter function.
-    if (this.filter.selected.length >= 1) {
-      this.inventoryListData = this.inventoryList.filter(inventory => {
-        let present: boolean = false;
-        this.filter.selected.forEach(selected => {
-          if (selected.value) {
-            if (selected.value === inventory.status) {
-              present = true;
-            }
-          }
-        });
-        return present;
-      });
-    } else {
-      this.inventoryListData = this.inventoryList;
-    }
-  }
-
-  public searchInventoryList(str) {
+  public searchInventoryFunction(str) {
     if (this.timer) {
       this.$timeout.cancel(this.timer);
       this.timer = 0;
     }
 
     this.timer = this.$timeout(() => {
-      //CI requires search strings to be at least three characters
-      this.inventoryListData = this.inventoryList;
-      if (this.filter.selected.length >= 1) {
-        this.onChangeFilters();
+      if (str) {
+        this.currentSearchString = str;
+      } else {
+        this.currentSearchString = '';
       }
-      if (str.length >= 1 || str === '') {
-        //search function
-        this.inventoryListData = this.inventoryListData.filter(inventory => {
-          const inventoryName = _.get(inventory, 'name', 'Unassigned');
-          return (_.includes(inventoryName.toLowerCase(), str.toLowerCase()));
-        });
-      }
+      this.searchFilterFunction();
     }, this.timeoutVal);
+  }
+
+  public searchFilterFunction() {
+    //to start search either filter should be added or search string should be greater than 2.
+    if (this.filter.selected.length >= 1 || this.currentSearchString.length > 1) {
+      this.inventoryListData = this.inventoryList.filter(inventory => {
+        let present: boolean = false;
+        // if only filter and no search
+        if (this.filter.selected.length >= 1 && this.currentSearchString.length === 0) {
+          if (_.find(this.filter.selected, (selected) => selected.value === inventory.status)) {
+            present = true;
+          }
+        } else if (this.filter.selected.length === 0 && this.currentSearchString.length > 1) {
+          // if only search and no filter
+          const inventoryName = _.get(inventory, 'name', 'Unassigned');
+          present = _.includes(inventoryName.toLowerCase(), this.currentSearchString.toLocaleLowerCase());
+        } else {
+          // if both search and filter
+          const inventoryName = _.get(inventory, 'name', 'Unassigned');
+          if (_.find(this.filter.selected, (selected) => selected.value === inventory.status && _.includes(inventoryName.toLowerCase(), this.currentSearchString.toLocaleLowerCase()))) {
+            present = true;
+          }
+        }
+        return present;
+      });
+    } else {
+      //else return entire dataset
+      this.inventoryListData = this.inventoryList;
+    }
   }
 }

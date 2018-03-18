@@ -58,6 +58,10 @@ export class ContextAdminAuthorizationService implements IContextAdminAuthorizat
       });
   }
 
+  public isAdminAuthorized(): IPromise<boolean> {
+    return this.getAdminAuthorizationStatus().then((status: AdminAuthorizationStatus) => status === AdminAuthorizationStatus.AUTHORIZED);
+  }
+
   /**
    * Get the list of Partner Administrators
    * @returns {IPromise<string[]>} a string array of partner admin IDs

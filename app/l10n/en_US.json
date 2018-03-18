@@ -481,6 +481,7 @@
     "careVoiceServices": "Chat, Callback and Inbound Call",
     "enableCallInfo": "Cisco Spark Call is required for voice-based interactions.",
     "enableCallInfoToggle": "You must have Cisco Spark Call or Hybrid Call to use Spark Care voice features.",
+    "contextUnauthorized": "To modify Spark Care services for this user, contact an authorized administrator",
     "paidContactCenterVoice": "Chat, Callback and Inbound Call",
     "paidContactCenter": "Chat and Callback",
     "enterpriseEdition": "Enterprise Edition {{capacity}}",
@@ -2438,27 +2439,24 @@
       "registerNewExpresswayHelp": "Must match the value on the Expressway DNS settings: [System host name].[Domain name]",
       "addToExistingExpressway": "Select an existing Expressway cluster to add resources to this service.",
       "enterHostnamePlaceholder": "Enter Expressway hostname",
+      "completAndConfigure": "Complete registration and configure the connector",
       "willBeInstalled": "{{ConnectorName}} will be installed as soon as you finish registration, enabling the Expressway cluster for {{ServiceName}}.",
       "selectExisting": "Select an existing Expressway clusters",
       "selectClusterPlaceholder": "Select an Expressway cluster…",
       "selectClusterPlaceholderNoneFound": "No eligible clusters found",
-      "enterDisplayName": "Enter a name for the Expressway cluster",
-      "nameHelptext": "The cluster name is used for display purposes in Spark Control Hub.",
+      "enterDisplayName": "Enter a display name for the Expressway cluster",
+      "nameHelptext": "The cluster name is used for display purposes in Cisco Spark Control Hub.",
       "clusternameWatermark": "Enter cluster name…",
       "cannotCreateCluster": "Could not create cluster. Please try again later.",
       "cannotProvisionConnector": "Could not provision {{ConnectorName}}. Try again later.",
       "cannotFinalizeAllowlisting": "Could not finalize cluster provisioning. Try again later, or contact your Cisco technical support representative if the problem persists.",
       "connectorIsProvisioned": "The Expressway cluster {{ClusterName}} has been successfully provisioned with the following Hybrid Service:",
       "logInToConfigureThem": "{{ConnectorName}} will automatically be downloaded and installed on {{ClusterName}}, but you must <a href='https://{{hostname}}/fusionregistration' target='_blank'>log in to the Expressway</a> and configure and start {{ConnectorName}} to make it operational.",
-      "youMayNowRegister": "You may now register {{hostname}} with Cisco Collaboration Cloud",
       "registerResourceButton": "Go to Expressway",
       "cannotReadExpresswayList": "Failed to read list of existing Expressway clusters.",
       "confirmationDialogHeader": "Cancel Setup",
       "confirmationDialogBody": "Are you sure you want to cancel service setup?",
-      "setupScreenBodyAboutToSetup": "You are about to set up:",
-      "setupScreenBodyPrerequisites": "Verify that you have completed the prerequisites before you start configuring {{ServiceName}}.",
-      "setupScreenBodyLinks": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> for further information about {{ServiceName}} prerequisites.",
-      "go-to-your-expressway": "Go to your Expressway cluster's master peer within one hour to complete registration and configure {{ConnectorName}}.",
+      "newSetupScreenBodyAboutToSetup": "You are about to set up {{ServiceName}}. Verify that you have completed <strong>prerequisites</strong> before you start configuring {{ServiceName}}.",
       "selectResourceGroupPrompt": "Do you want to assign this Expressway cluster to a Resource Group?",
       "selectResourceGroup": "Select the Resource Group where you want to place the Expressway cluster.",
       "assignYes": "Yes, assign now",
@@ -2467,7 +2465,10 @@
       "couldNotReadResourceGroups": "Could not read Resource Groups.",
       "CouldNotSaveResourceGroup": "Resource Group could not be saved. Continue with the registration process, and then try assigning a Resource Group again later.",
       "hostnameRegistered": "This FQDN belongs to an Expressway cluster that is already registered with Cisco Collaboration Cloud. It is not necessary to register it as a new resource if you want to add more services to it.",
-      "partnersCannotConfigureClusters": "You cannot add this resource. A customer administrator must perform this step."
+      "partnersCannotConfigureClusters": "You cannot add this resource. A customer administrator must perform this step.",
+      "nextStepIsConfigure": "Next steps and cluster configuration",
+      "useTheNotifications": "Use the notifications <div class=\"notification-button success\"><div class=\"icon icon-bell\"></div><div class=\"notification-label\" translate=\"hercules.notificationDropdown.label\">2 Notifications</div></div> in the top left corner of {{ServiceName}} pages for next steps in configuration.",
+      "afterRegistration": "After registration, configure your new cluster. Click on the cluster and then “Edit cluster settings”."
     },
     "activateService": {
       "ingress": "Extend the Cloud to your On-Premise Environment",
@@ -2657,7 +2658,7 @@
       "squared-fusion-mgmt": "Management Service is the global configuration service for Calendar and Call Services. This page will be active after you activate one of these services."
     },
     "serviceHelpInfo": {
-      "servicePrivacyStatement": "Hybrid Service connectors collect and send certain information about your Hybrid Service deployment to the Cisco Collaboration Cloud. Hybrid Service microservices may also send commands to the connectors like upgrade, restart, and so on, to ensure that you receive the best service. For more information, <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>click here</a>."
+      "servicePrivacyStatement": "Hybrid Service connectors collect and send certain information about your Hybrid Service deployment to the Cisco Collaboration Cloud. Hybrid Service microservices may also send commands to the connectors like upgrade, restart, and so on, to ensure that you receive the best service. <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>Learn more</a>."
     },
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
@@ -6119,7 +6120,7 @@
       "deskPhoneLicenseWarning": "Your organization must purchase Cisco Spark Call licenses first. Contact your partner or Cisco Sales for more information.",
       "otherCiscoDevice": "Other Cisco device",
       "roomSystem": "Room Device",
-      "roomSystemExamplesExpanded": "e.g. Cisco Spark Board, Voice, Share, Room Kit, DX, MX and SX series",
+      "roomSystemExamplesExpanded": "e.g. Cisco Spark Board, Room Kit, DX, MX and SX series",
       "roomSystemLicenseWarning": "Your organization must purchase Cisco Spark Room Device licenses first. Contact your partner or Cisco Sales for more information."
     },
     "chooseAccountType": {
@@ -10841,6 +10842,7 @@
     "license": {
       "all": "All",
       "description": "Extend Licensing services to Hosted Cloud Solution.",
+      "hcsTitle": "HCS Licenses",
       "invalid": "Invalid",
       "laas": "License as a Service",
       "other": "Other",
@@ -10850,16 +10852,24 @@
       "subscriptions": "Subscriptions",
       "subscriptionId": "Subscription ID",
       "telepresence": "Telepresence",
-      "hcsTitle": "HCS Licenses",
       "title": "Licenses",
       "valid": "Valid"
     },
     "upgrade": {
       "title": "HCS Upgrade Settings",
       "description": "Extend Upgrade services to Hosted Cloud Solution.",
-      "sftp": "SFTP Servers",
       "softwareProfiles": "Software Profiles",
       "uaas": "Upgrade as a Service"
+    },
+    "sftp":  {
+      "confirmPassword": "Confirm Password",
+      "description": "Configure an SFTP Server to be used for upgrading software images.",
+      "directory": "Directory",
+      "name": "SFTP Server Name",
+      "password": "Password",
+      "passwordMismatch": "The password entered does not match",
+      "title": "SFTP Servers",
+      "userName": "User Name"
     },
     "setup": {
       "titleServices": "Choose Services",
@@ -10870,7 +10880,9 @@
     },
     "installFiles": {
       "addFile": "Add File",
+      "clusterCount": "Number of Clusters",
       "copFile": "COP file",
+      "customerName": "Customer/ Group Name",
       "description": "Create an Agent Install File.  This file is required to register your nodes and will take some time to create.",
       "duplicateProxy": "Duplicate HTTP Proxy Address",
       "enterFileName": "Enter a file name",
@@ -10880,6 +10892,7 @@
       "invalidPortError": "Port can be 0 or range between {{min}} and {{max}}",
       "placeholderHttpProxy": "Enter HTTP Proxy IP Address or Domain Name",
       "setupTitle": "Create Agent Install Files",
+      "status": "Status",
       "tarFile": ".tar file",
       "title": "Install Files"
     },

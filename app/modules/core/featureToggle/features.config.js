@@ -17,6 +17,7 @@ module.exports = {
   atlasCareInboundTrials: 'atlas-care-inbound-trials',
   atlasCareProactiveChatTrials: 'atlas-care-proactiveChat-trials',
   atlasCareTrials: 'atlas-care-trials',
+  atlasCareUseContextAdminAuthorization: 'atlas-care-use-context-admin-authorization',
   atlasCareWebcallReportTrials: 'care-webcall-report-trials',
   atlasComplianceRole: 'atlas-compliance-role',
   atlasContextServiceOnboarding: 'context-onboarding-trials',

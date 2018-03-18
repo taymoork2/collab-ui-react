@@ -5,9 +5,13 @@ var manageUsersPage = function () {
 
   //this.usersListEmails = element.all(by.css('.ui-grid-canvas .ui-grid-cell.ui-grid-coluiGrid-0009 .ui-grid-cell-contents'));
 
+  this.links = {
+    setupAutoAssignTemplate: element(by.cssContainingText('.auto-assign .auto-assign__setup-link', 'Set up Auto-Assign Template')),
+  };
+
   this.buttons = {
     manageUsers: element(by.id('manageUsers')),
-    modalCloseButton: element(by.id('closeManageUsers')),
+    modalCloseButton: element(by.css('.modal-header .close[aria-label="Close"]')),
 
     next: element(by.buttonText('Next')),
     save: element(by.buttonText('Save')),
@@ -22,11 +26,6 @@ var manageUsersPage = function () {
     exportButton: element(by.css('.reveal-modal.dialog .modal-content .modal-footer button.btn--primary')),
     exportWarningButton: element(by.css('.reveal-modal.dialog .modal-content .modal-footer button.btn--alert')),
     cancelButton: element(by.css('.reveal-modal.dialog .modal-content .modal-footer button:not(.btn--primary)')),
-  };
-
-  // Auto-Assign Licenses
-  this.autoAssignLicenses = {
-    title: element(by.css('.modal-header > h3[translate]')),
   };
 
   // add or modify users
@@ -99,6 +98,29 @@ var manageUsersPage = function () {
     updatedUsers: element(by.css('.updated-users .total')),
     errorUsers: element(by.css('.error-users .total')),
     uploadComplete: element(by.css('.user-csv-results .upload-complete .progressbar-label span.progressbar-label:first-child')),
+  };
+
+  this.autoAssignTemplate = {
+    optionsMenu: {
+      toggleButton: element(by.css('auto-assign-template-manage-options .actions-menu')),
+      delete: element(by.cssContainingText('auto-assign-template-manage-options .actions-menu li', 'Delete Auto-Assign Template')),
+      deleteConfirm: element(by.cssContainingText('.modal-footer .btn', 'Delete')),
+    },
+    createTemplate: {
+      title: element(by.cssContainingText('.modal-header > h3', 'Set Up Auto-Assign Template')),
+      subtitle: element(by.cssContainingText('.modal-body > h4', 'Add Services for Users')),
+    },
+    assignableServices: {
+      licenses: {
+        messaging: {
+          firstLicense: element.all(by.cssContainingText('assignable-services label[for^="MS_"]', 'Cisco Spark Messaging')).first(),
+        },
+      },
+    },
+    templateSummary: {
+      summary: element(by.css('auto-assign-template-summary')),
+      messagingItem: element(by.cssContainingText('auto-assign-template-summary h6', 'Cisco Spark Messaging')),
+    },
   };
 };
 

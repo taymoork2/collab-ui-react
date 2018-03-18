@@ -1,13 +1,17 @@
 import { HcsSetupModalService } from 'modules/hcs/services';
 import { ICheckbox } from './hcs-setup';
+import { ISftpServer } from './hcs-setup-sftp';
 
 export class HcsSetupModalCtrl implements ng.IComponentController {
-  private static readonly MAX_INDEX: number = 2;
+  private static readonly MAX_INDEX: number = 3;
   private static readonly FIRST_INDEX: number = 1;
 
   public currentStepIndex: number;
   public hcsServices: ICheckbox;
-  private nextEnabled: boolean = false;
+  public sftpServer: ISftpServer;
+  public nextEnabled: boolean = false;
+  public title: string;
+  public hcsSetupModalForm: ng.IFormController;
   /* @ngInject */
   constructor(
     public HcsSetupModalService: HcsSetupModalService,
@@ -19,18 +23,27 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
       this.currentStepIndex = HcsSetupModalCtrl.FIRST_INDEX;
     }
     this.hcsServices = { license: false, upgrade: false };
+    this.title = 'hcs.setup.titleServices';
+    if (this.hcsSetupModalForm) {
+      this.hcsSetupModalForm.$setPristine();
+    }
   }
 
   public nextStep(): void {
-    if (this.currentStepIndex < HcsSetupModalCtrl.MAX_INDEX) {
-      this.currentStepIndex = this.currentStepIndex + 1;
-      this.nextEnabled = false;
-    }
-    if (this.currentStepIndex === 1) {
-      //to-do Create Partner Service Entitlement
-    }
-    if (this.currentStepIndex === 2) {
-      //to-do Create Install files
+    this.currentStepIndex = this.currentStepIndex + 1;
+    switch (this.currentStepIndex) {
+      case 2:
+        this.title = 'hcs.installFiles.setupTitle';
+        this.nextEnabled = false;
+        break;
+      case 3:
+        this.title = 'hcs.sftp.title';
+        this.nextEnabled = false;
+        break;
+      case HcsSetupModalCtrl.MAX_INDEX:
+        break;
+      default:
+        this.nextEnabled = false;
     }
   }
 
@@ -46,6 +59,11 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
   public setAgentInstallFile(fileName: string, httpProxyList: string[]): void {
     this.nextEnabled = !_.isEmpty(fileName) && !_.isUndefined(httpProxyList) && httpProxyList.length > 0;
     //to-do
+  }
+
+  public setSftpServer(sftpServer: ISftpServer) {
+    this.nextEnabled = (sftpServer && this.hcsSetupModalForm.$valid);
+    this.sftpServer = sftpServer;
   }
 
   public dismissModal(): void {

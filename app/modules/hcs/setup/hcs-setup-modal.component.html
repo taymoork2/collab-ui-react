@@ -1,15 +1,18 @@
-
-  <multi-step-modal
-    l10n-title="hcs.setup.titleServices"
-    dismiss="$ctrl.dismissModal()"
-    next="$ctrl.nextStep()"
-    cancel="$ctrl.dismissModal()"
-    next-disabled="$ctrl.disableNext()">
+<multi-step-modal
+  l10n-title="{{$ctrl.title}}"
+  dismiss="$ctrl.dismissModal()"
+  next="$ctrl.nextStep()"
+  cancel="$ctrl.dismissModal()"
+  next-disabled="$ctrl.disableNext()">
+  <div ng-form="$ctrl.hcsSetupModalForm">
     <setup-service-selection ng-if="$ctrl.currentStepIndex === 1"
       on-change-fn="$ctrl.selectHcsService(selected)">
     </setup-service-selection >
     <setup-agent-install-file ng-if="$ctrl.currentStepIndex === 2"
       on-change-fn="$ctrl.setAgentInstallFile(fileName, httpProxyList)">
     </setup-agent-install-file >
-  </multi-step-modal>
-
+    <hcs-setup-sftp ng-if="$ctrl.currentStepIndex === 3"
+      on-change-fn="$ctrl.setSftpServer(sftpServer)">
+    </hcs-setup-sftp>
+  </div>
+</multi-step-modal>

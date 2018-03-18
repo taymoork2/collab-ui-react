@@ -66,6 +66,8 @@ require('./_user-add.scss');
     $scope.showExtensions = true;
     $scope.isResetEnabled = false;
 
+    $scope.isContextServiceAdminAuthorized = false;
+
     $scope.careRadioValue = {
       NONE: $translate.instant('onboardModal.paidNone'),
       K1: $translate.instant('onboardModal.paidCDC'),
@@ -608,6 +610,7 @@ require('./_user-add.scss');
     $scope.populateConf = populateConf;
     $scope.populateConfInvitations = populateConfInvitations;
     $scope.getAccountLicenses = getAccountLicenses;
+    $scope.getAccountLicensesForCare = getAccountLicensesForCare;
     $scope.setCareService = setCareService;
 
     $scope.messageFeatures.push(new ServiceFeature($translate.instant('onboardModal.msgFree'), 0, 'msgRadio', new FakeLicense('freeTeamRoom')));
@@ -1216,58 +1219,67 @@ require('./_user-add.scss');
           }
         }
 
-        // BEGIN: Care License provisioning for users
-        var selCareService = {};
-
-        // get the selected care service according to care radio button selected
-        switch ($scope.radioStates.careRadio) {
-          case $scope.careRadioValue.K1:
-            if ($scope.cdcCareFeature.license.licenseId) {
-              selCareService = $scope.cdcCareFeature;
-            }
-            break;
-          case $scope.careRadioValue.K2:
-            if ($scope.cvcCareFeature.license.licenseId) {
-              selCareService = $scope.cvcCareFeature;
-            }
-            break;
-          case $scope.careRadioValue.NONE:
-            selCareService = $scope.careFeatures[0];
-            break;
-        }
-
-        // push and remove licenses in licenseList as per selected care service
-        var licenseId = _.get(selCareService, 'license.licenseId', null);
-        if (licenseId) {
-          licenseList.push(new LicenseFeature(licenseId, true));
-
-          if (_.startsWith(licenseId, Config.offerCodes.CDC)) {
-            removeCareLicence($scope.cvcCareFeature, licenseList);
-          } else if (_.startsWith(licenseId, Config.offerCodes.CVC)) {
-            removeCareLicence($scope.cdcCareFeature, licenseList);
-          }
-        } else if (action === 'patch' && $scope.careRadioValue.NONE !== $scope.radioStates.initialCareRadioState) { // will get invoked when None is selected in care radio and  previous state was not none
-          removeCareLicence($scope.cdcCareFeature, licenseList);
-          removeCareLicence($scope.cvcCareFeature, licenseList);
-        }
-        // END: Care License provisioning for users
-
-        // Metrics for care entitlement for users
-        if ($scope.radioStates.careRadio !== $scope.radioStates.initialCareRadioState) {
-          if ($scope.radioStates.careRadio === $scope.careRadioValue.K1) {
-            LogMetricsService.logMetrics('Enabling care for user', LogMetricsService.getEventType('careEnabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
-          } else if ($scope.radioStates.careRadio === $scope.careRadioValue.K2) {
-            LogMetricsService.logMetrics('Enabling care for user', LogMetricsService.getEventType('careVoiceEnabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
-          }
-          if ($scope.radioStates.initialCareRadioState === $scope.careRadioValue.K1) {
-            LogMetricsService.logMetrics('Disabling care for user', LogMetricsService.getEventType('careDisabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
-          }
-          if ($scope.radioStates.initialCareRadioState === $scope.careRadioValue.K2) {
-            LogMetricsService.logMetrics('Disabling careVoice for user', LogMetricsService.getEventType('careVoiceDisabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
-          }
+        // BEGIN: Care License provisioning for users, check admin is authorized to CS
+        if ($scope.isContextServiceAdminAuthorized) {
+          var careLicenses = getAccountLicensesForCare(action);
+          licenseList = _.concat(licenseList, careLicenses);
         }
       }
       return licenseList.length === 0 ? null : licenseList;
+    }
+
+    function getAccountLicensesForCare(action) {
+      var selCareService = {};
+      var careLicenses = [];
+
+      // get the selected care service according to care radio button selected
+      switch ($scope.radioStates.careRadio) {
+        case $scope.careRadioValue.K1:
+          if ($scope.cdcCareFeature.license.licenseId) {
+            selCareService = $scope.cdcCareFeature;
+          }
+          break;
+        case $scope.careRadioValue.K2:
+          if ($scope.cvcCareFeature.license.licenseId) {
+            selCareService = $scope.cvcCareFeature;
+          }
+          break;
+        case $scope.careRadioValue.NONE:
+          selCareService = $scope.careFeatures[0];
+          break;
+      }
+
+      // push and remove licenses in licenseList as per selected care service
+      var licenseId = _.get(selCareService, 'license.licenseId', null);
+      if (licenseId) {
+        careLicenses.push(new LicenseFeature(licenseId, true));
+
+        if (_.startsWith(licenseId, Config.offerCodes.CDC)) {
+          removeCareLicence($scope.cvcCareFeature, careLicenses);
+        } else if (_.startsWith(licenseId, Config.offerCodes.CVC)) {
+          removeCareLicence($scope.cdcCareFeature, careLicenses);
+        }
+      } else if (action === 'patch' && $scope.careRadioValue.NONE !== $scope.radioStates.initialCareRadioState) { // will get invoked when None is selected in care radio and  previous state was not none
+        removeCareLicence($scope.cdcCareFeature, careLicenses);
+        removeCareLicence($scope.cvcCareFeature, careLicenses);
+      }
+      // END: Care License provisioning for users
+
+      // Metrics for care entitlement for users
+      if ($scope.radioStates.careRadio !== $scope.radioStates.initialCareRadioState) {
+        if ($scope.radioStates.careRadio === $scope.careRadioValue.K1) {
+          LogMetricsService.logMetrics('Enabling care for user', LogMetricsService.getEventType('careEnabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+        } else if ($scope.radioStates.careRadio === $scope.careRadioValue.K2) {
+          LogMetricsService.logMetrics('Enabling care for user', LogMetricsService.getEventType('careVoiceEnabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+        }
+        if ($scope.radioStates.initialCareRadioState === $scope.careRadioValue.K1) {
+          LogMetricsService.logMetrics('Disabling care for user', LogMetricsService.getEventType('careDisabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+        }
+        if ($scope.radioStates.initialCareRadioState === $scope.careRadioValue.K2) {
+          LogMetricsService.logMetrics('Disabling careVoice for user', LogMetricsService.getEventType('careVoiceDisabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+        }
+      }
+      return careLicenses;
     }
 
     function getCareFeature(offerName) {
@@ -2062,5 +2074,9 @@ require('./_user-add.scss');
         $scope.radioStates.careRadio = $scope.careRadioValue.NONE;
       }
     }
+
+    $scope.recvUpdateIsContextServiceAdminAuthorized = function (isAuthorized) {
+      $scope.isContextServiceAdminAuthorized = isAuthorized;
+    };
   }
 })();

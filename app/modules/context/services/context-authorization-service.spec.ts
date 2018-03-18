@@ -82,6 +82,28 @@ describe('ContextAdminAuthorizationService', () => {
     });
   });
 
+  describe('isAdminAuthorized', () => {
+    beforeEach(function () {
+      installPromiseMatchers();
+    });
+
+    it('should resolve with true if authorization status resolves with AdminAuthorizationStatus.AUTHORIZED' +
+      ', false otherwise', function () {
+      spyOn(this.ContextAdminAuthorizationService, 'getAdminAuthorizationStatus').and.returnValue(this.$q.resolve(AdminAuthorizationStatus.AUTHORIZED));
+      expect(this.ContextAdminAuthorizationService.isAdminAuthorized()).toBeResolvedWith(true);
+
+      // resolve w/ a value that is not AdminAuthorizationStatus.AUTHORIZED
+      this.ContextAdminAuthorizationService.getAdminAuthorizationStatus.and.returnValue(this.$q.resolve('foo'));
+      expect(this.ContextAdminAuthorizationService.isAdminAuthorized()).toBeResolvedWith(false);
+    });
+
+    it('should pass through rejection if underlying getAdminAuthorizationStatus() rejects ', function () {
+      spyOn(this.ContextAdminAuthorizationService, 'getAdminAuthorizationStatus')
+        .and.returnValue(this.$q.reject('fake-rejection-value'));
+      expect(this.ContextAdminAuthorizationService.isAdminAuthorized()).toBeRejectedWith('fake-rejection-value');
+    });
+  });
+
   describe('getPartnerAdminIDs', function () {
 
     it('should successfully return an array of 2 partners from calling getPartnerAdminIDs', function () {
