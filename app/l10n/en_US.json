@@ -6439,10 +6439,10 @@
       "nodedetails": "Node IP Address/FQDN:",
       "cluster": "Cluster:",
       "upgradeschedule": "Upgrade Schedule",
-      "completeregister": "1.Complete registration",
-      "testconfigure": "2.Test your configuration",
-      "testconfiguremsg": "Once you completed registration,you can test your configuration from the cluster settings",
-      "grant-success-information": "Go to your Hybrid Media Node within one hour to finish registration.Hybrid Media Node will be ready to<br> use as soon as you finish registration.",
+      "completeregister": "1. Complete registration",
+      "testconfigure": "2. Test your configuration",
+      "testconfiguremsg": "Once you completed registration, you can test your configuration from the cluster settings.",
+      "grant-success-information": "Go to your Hybrid Media Node within one hour to finish registration. Hybrid Media<br>will be ready to use as soon as you finish registration.",
       "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to the Cisco Collaboration Cloud.<br> Node IP Address/FQDN: {{hostname}} Cluster: {{clustername}}"
     },
     "clusterBandwidth": {

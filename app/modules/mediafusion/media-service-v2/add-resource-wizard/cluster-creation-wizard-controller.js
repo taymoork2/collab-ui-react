@@ -17,7 +17,7 @@
     vm.clusterName = '';
     vm.firstTimeSetup = firstTimeSetup;
     vm.clusterCreation = yesProceed;
-    vm.radioSelected = radioSelected;
+    vm.configureNode = configureNode;
     vm.ovaTypeSelected = ovaTypeSelected;
     vm.emailUpdated = emailUpdated;
     vm.clusterListUpdated = clusterListUpdated;
@@ -73,7 +73,7 @@
 
     function createCluster() {
       $modalInstance.close();
-      AdditionalCluster();
+      additionalCluster();
     }
 
     function getPrimaryEmail() {
@@ -103,7 +103,7 @@
       });
     }
 
-    function AdditionalCluster() {
+    function additionalCluster() {
       if (newClusterCheck()) {
         AddResourceSectionService.addRedirectTargetClicked(vm.hostName, vm.clusterName).then(function () {
           AddResourceSectionService.redirectPopUpAndClose(vm.hostName, vm.clusterName);
@@ -127,8 +127,8 @@
       }
     }
 
-    function radioSelected(response) {
-      vm.radio = response.radio;
+    function configureNode(response) {
+      vm.registerNode = response.registerNode;
     }
     function ovaTypeSelected(response) {
       vm.ovaType = response.ovaType;
@@ -200,7 +200,7 @@
             vm.headerSelected = vm.headerOptions[0];
             break;
           case 1:
-            if (vm.radio === '0') {
+            if (vm.registerNode === '0') {
               vm.ovaDownload = true;
               if (vm.ovaType === '1') {
                 $window.open('https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova');
@@ -259,7 +259,7 @@
 
     function canGoNext() {
       if (vm.currentStep === 0) {
-        if (!_.isUndefined(vm.radio)) {
+        if (!_.isUndefined(vm.registerNode)) {
           return true;
         }
       } else if (vm.currentStep === 2) {

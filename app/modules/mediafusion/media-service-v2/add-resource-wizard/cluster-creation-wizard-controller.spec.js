@@ -98,15 +98,18 @@ describe('ClusterCreationWizardController', function () {
 
   it('controller radio for ova downlaod selected', function () {
     var sampleData = {};
-    sampleData.radio = '0';
-    this.controller.radioSelected(sampleData);
-    expect(this.controller.radio).toBe('0');
+    sampleData.registerNode = '0';
+    this.controller.configureNode(sampleData);
+    expect(this.controller.registerNode).toBe('0');
   });
 
   it('ClusterCreationWizardController canGoNext should enable the next button when the feild is filled', function () {
     this.controller.currentStep = 2;
     this.controller.hostName = 'sampleHost';
     this.controller.clusterName = 'sampleCluster';
+    this.controller.validNode = true;
+    this.controller.onlineNode = false;
+    this.controller.offlineNode = false;
     this.controller.canGoNext();
     expect(this.controller.canGoNext()).toBeTruthy();
   });

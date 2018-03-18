@@ -5,9 +5,9 @@ export class FirstTimeSetupController implements ng.IComponentController {
   public proPackEnabled: boolean;
   public clusterCreation: boolean = false;
   public ovaDownload: boolean = false;
-  public radio: string;
+  public registerNode: string;
   public ovaType: string;
-  private onRadioUpdate?: Function;
+  private onRegisterNodeUpdate?: Function;
   private onOvaTypeUpdate?: Function;
 
   /* @ngInject */
@@ -39,9 +39,9 @@ export class FirstTimeSetupController implements ng.IComponentController {
     return this.proPackEnabled ? this.$translate.instant('loginPage.titlePro') : this.$translate.instant('loginPage.titleNew');
   }
 
-  public radioSelector () {
-    if (_.isFunction(this.onRadioUpdate)) {
-      this.onRadioUpdate({ response: { radio: this.radio } });
+  public registerNodeSelector () {
+    if (_.isFunction(this.onRegisterNodeUpdate)) {
+      this.onRegisterNodeUpdate({ response: { registerNode: this.registerNode } });
     }
   }
 
@@ -58,7 +58,7 @@ export class FirstTimeSetupComponent implements ng.IComponentOptions {
   public bindings = {
     clusterCreation: '<',
     ovaDownload: '<',
-    onRadioUpdate: '&?',
+    onRegisterNodeUpdate: '&?',
     onOvaTypeUpdate: '&?',
   };
 }

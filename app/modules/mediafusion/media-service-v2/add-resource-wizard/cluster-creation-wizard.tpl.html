@@ -8,7 +8,7 @@
   <first-time-setup
     cluster-creation="clusterCreationWizard.clusterCreation"
     ova-download="clusterCreationWizard.ovaDownload"
-    on-radio-update="clusterCreationWizard.radioSelected(response)"
+    on-register-node-update="clusterCreationWizard.configureNode(response)"
     on-ova-type-update="clusterCreationWizard.ovaTypeSelected(response)"
     ng-show="clusterCreationWizard.currentStep === 0 || clusterCreationWizard.currentStep === 1">
   </first-time-setup>

@@ -4,27 +4,27 @@
     <form name="preRegisterClusterForm">
       <div class="cs-radio-group">
         <div class="radioDisplay">
-          <input cs-input type="radio" ng-model="$ctrl.radio" id="yes" name="redirectResource" value="1" ng-change="$ctrl.radioSelector(value)" cs-input-label="{{'mediaFusion.add-resource-dialog.yesProceed' | translate}}"
+          <input cs-input type="radio" ng-model="$ctrl.registerNode" id="yes" name="redirectResource" value="1" ng-change="$ctrl.registerNodeSelector(value)" cs-input-label="{{'mediaFusion.add-resource-dialog.yesProceed' | translate}}"
             class="radioNoTranform">
         </div>
         <div class="radioDisplay">
-          <input cs-input type="radio" ng-model="$ctrl.radio" id="no" name="redirectResource" value="0" ng-change="$ctrl.radioSelector(value)" cs-input-label="{{'mediaFusion.add-resource-dialog.noProceed' | translate}}"
+          <input cs-input type="radio" ng-model="$ctrl.registerNode" id="no" name="redirectResource" value="0" ng-change="$ctrl.registerNodeSelector(value)" cs-input-label="{{'mediaFusion.add-resource-dialog.noProceed' | translate}}"
             class="radioNoTranform">
         </div>
       </div>
     </form>
   </div>
-  <div class="myAddResourceDownloadForm" ng-show="$ctrl.radio === '0'">
+  <div class="myAddResourceDownloadForm" ng-show="$ctrl.registerNode === '0'">
     <div translate="mediaFusion.add-resource-dialog.ovaHelpText"></div>
     <form name="myAddResourceDownloadForm">
       <div class="cs-radio-group">
         <div class="radioDisplay">
           <input cs-input type="radio" ng-model="$ctrl.ovaType" id="full" name="redirectResource" value="1" ng-change="$ctrl.ovaTypeSelector(value)" cs-input-label="{{'mediaFusion.add-resource-dialog.fullOva' | translate}}"
-            class="radioNoTranform" ng-disabled="$ctrl.radio === 1">
+            class="radioNoTranform" ng-disabled="$ctrl.registerNode === '1'">
         </div>
         <div class="radioDisplay">
           <input cs-input type="radio" ng-model="$ctrl.ovaType" id="demo" name="redirectResource" value="0" ng-change="$ctrl.ovaTypeSelector(value)" cs-input-label="{{'mediaFusion.add-resource-dialog.demoOva' | translate}}"
-            class="radioNoTranform" ng-disabled="$ctrl.radio === 1">
+            class="radioNoTranform" ng-disabled="$ctrl.registerNode === '1'">
         </div>
       </div>
     </form>
