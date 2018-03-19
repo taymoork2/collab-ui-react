@@ -9,8 +9,7 @@
         placeholder="{{'hercules.settings.call.sipDomainPlaceholder' | translate}}"
         ng-class="{ 'hercules-input-error': $ctrl.warnSipDestination() }"
         id="sipDomain"
-        ng-model="$ctrl.sipDomain"
-        required>
+        ng-model="$ctrl.sipDomain">
       <verify-sip-destination
         destination-url="$ctrl.sipDomain"
         on-destination-save="$ctrl.onDestinationSave(warn)"

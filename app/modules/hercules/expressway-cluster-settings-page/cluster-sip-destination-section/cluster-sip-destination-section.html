@@ -14,26 +14,43 @@
       </div>
       <div ng-if="$ctrl.state === 'loading'" cs-loader class="loader-example--small"></div>
       <div ng-if="$ctrl.state === 'ok'" ng-form="$ctrl.defaultSIPDomainOverrideForm">
-        <div class="cs-checkbox-group">
+        <div class="row">
           <input
             cs-input
-            type="checkbox"
+            type="radio"
             ng-model="$ctrl.override"
-            ng-change="$ctrl.changeOverride()"
-            id="override"
+            id="overrideInactive"
             name="override"
-            cs-input-label="{{::'hercules.clusterSipDestination.configSection.inputLabel' | translate}}">
+            value="inactive"
+            ng-change="$ctrl.changeOverride()"
+            cs-input-label="{{::'hercules.clusterSipDestination.configSection.inputLabelInactive' | translate}}">
         </div>
-        <div class="row" ng-if="!$ctrl.override">
+        <div class="row" ng-if="$ctrl.override === 'inactive'">
           <input
             cs-input
+            class="padded-element"
             type="text"
             cs-input-group-size="medium-7"
-            ng-model="$ctrl.defaultSipDomain"
+            ng-model="$ctrl.sipDomain"
             disabled>
         </div>
-        <div class="row" ng-if="$ctrl.override">
-          <sip-destination-input sip-domain="$ctrl.defaultSipDomain" cluster-id="$ctrl.cluster.id"></sip-destination-input>
+        <div class="row">
+          <input
+            cs-input
+            type="radio"
+            ng-model="$ctrl.override"
+            id="overrideActive"
+            name="override"
+            value="active"
+            ng-change="$ctrl.changeOverride()"
+            cs-input-label="{{::'hercules.clusterSipDestination.configSection.inputLabelActive' | translate}}">
+        </div>
+        <div class="row" ng-if="$ctrl.override === 'active'">
+          <sip-destination-input
+            class="padded-element"
+            sip-domain="$ctrl.sipDomain"
+            cluster-id="$ctrl.cluster.id"
+          ></sip-destination-input>
         </div>
       </div>
       <div ng-if="$ctrl.state === 'unknown'">
