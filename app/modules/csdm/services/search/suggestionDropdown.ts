@@ -202,7 +202,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
 
   public updateSuggestionsBasedOnSearchResult(searchResult: SearchResult,
                                               searchObject: SearchObject): void {
-    this.initialSearchResult = this.initialSearchResult || searchResult;
+    this.initialSearchResult = searchObject.query === '' ? searchResult : (this.initialSearchResult || searchResult);
 
     let allSuggestions: ISuggestionParam[] = [];
     if (searchResult) {
