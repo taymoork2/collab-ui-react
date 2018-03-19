@@ -141,10 +141,7 @@ var UsersPage = function () {
   this.titleField = element(by.id('titleField'));
   this.userTab = element(by.id('usertab'));
 
-  // TODO: rename 'rolesChevron' to something more appropriate
-  // - as of 2017-08-18, this 'a#rolesChevron' does NOT navigate to a UI state that offers anything
-  //   to do with role-management, only first/last/display name management
-  this.rolesChevron = element(by.css('#rolesChevron .header-title'));
+  this.userEditIcon = element(by.css('.header-title .icon-edit'));
 
   this.breadcrumb = {};
   this.breadcrumb.overview = element(by.cssContainingText('ul.breadcrumbs li a', 'Overview'));

@@ -35,8 +35,8 @@ describe('Org Entitlement flow', function () {
   });
 
   it('should display subdetails panel', function () {
-    utils.expectIsDisplayed(users.rolesChevron);
-    utils.click(users.rolesChevron);
+    utils.expectIsDisplayed(users.userEditIcon);
+    utils.click(users.userEditIcon);
     utils.expectIsDisplayed(roles.rolesDetailsPanel);
     utils.expectIsDisplayed(roles.emailInput);
     utils.expectIsDisplayed(roles.displayNameInput);
@@ -70,7 +70,7 @@ describe('Org Entitlement flow', function () {
   it('should verify user name change', function () {
     utils.click(users.closeSidePanel);
     utils.searchAndClick(testUser);
-    utils.click(users.rolesChevron);
+    utils.click(users.userEditIcon);
     utils.expectValueToBeSet(roles.displayNameInput, newDisplayName);
   });
 
