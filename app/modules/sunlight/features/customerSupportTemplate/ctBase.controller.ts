@@ -21,16 +21,19 @@ export class CtBaseController implements ng.IComponentController {
 
   }
 
+  public singleLineValidationMessage50;
+  public multiLineValidationMessage;
   public $onInit() {
     this.c.log('Base Controller inited');
+    this.singleLineValidationMessage50 = this.CTService.getValidationMessages(0, this.lengthValidationConstants.singleLineMaxCharLimit50);
+    this.multiLineValidationMessage = this.CTService.getValidationMessages(0, this.lengthValidationConstants.multiLineMaxCharLimit);
   }
+
+  public InvalidCharacters = /[<>]/i;
+
 
   public selectedMediaType(): String {
     return this.TemplateWizardService.selectedMediaType();
-  }
-
-  public EmptyValidationFunction(): boolean {
-    return true;
   }
 
   public getLocalisedText(name): string {

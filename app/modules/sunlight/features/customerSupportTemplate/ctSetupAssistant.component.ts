@@ -63,7 +63,7 @@ class CtSetupAssistantCtrl extends CtBaseController  {
   }
 
   private isStatusMessagesPageValid() {
-    return true;
+    return this.TemplateWizardService.pageValidationResult.chatStatusMsgValid || false;
   }
 
   private isVirtualAssistantPageValid() {

@@ -1,0 +1,122 @@
+.ct-chat-status-messages {
+  align-items: center;
+
+  @mixin placeholder {
+    /* stylelint-disable selector-no-vendor-prefix */
+    ::-webkit-input-placeholder {
+      @content;
+    }
+
+    :-moz-placeholder {
+      @content;
+    }
+
+    ::-moz-placeholder {
+      @content;
+    }
+
+    :-ms-input-placeholder {
+      @content;
+    }
+    /* stylelint-enable selector-no-vendor-prefix */
+  }
+
+  .cs-card {
+    width: rem-calc(575px);
+    height: rem-calc(467.8px);
+
+    @include vr-spacing(mt, 5);
+  }
+
+  .ct-article {
+    box-shadow: none;
+    border: 1px solid $gray-light-1;
+  }
+
+  .ct-status-section {
+    @include vr-spacing(pl, 2);
+    @include vr-spacing(pr, 2);
+  }
+
+  .ct-attribute-field-textbox {
+    @include vr-spacing(ml, 3);
+
+    @include placeholder {
+      line-height: rem-calc(12px);
+    }
+
+    @include vr-spacing(ml, 1);
+
+    font-family: $brand-font-cisco-TT-Light;
+    width: 100%;
+    height: 2rem;
+  }
+
+  .labelText {
+    @include vr-spacing(pt, 0.75);
+  }
+
+  .textOverflow {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .inputField {
+    @include vr-spacing(ml, 1);
+    @include vr-spacing(mb, 0.1);
+
+    color: $gray-dark-2;
+  }
+
+  .ct-flex-topleft {
+    justify-content: flex-start;
+    align-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .ct-attribute-section {
+    display: flex;
+    flex-flow: column;
+    background-color: $gray-light-4;
+
+    .ct-default-msg {
+      max-width: 60%;
+      text-align: center;
+      flex: 0;
+      color: $gray-dark-1;
+    }
+  }
+
+  .ct-attribute-field-label {
+    @include vr-spacing(mb, 0);
+    @include vr-spacing(ml, 1);
+
+    font-family: $brand-font-cisco-TT-Regular;
+  }
+
+  .ct-attribute-row {
+    width: 100%;
+    @include vr-spacing(mt, 1);
+  }
+
+  .margin-0 {
+    @include vr-spacing(m, 0);
+  }
+
+  .chat-status-help-text {
+    color: $gray-base;
+    letter-spacing: 0;
+    line-height: 16px;
+  }
+
+  .chat-status-waiting-help-text {
+    line-height: 16px;
+    text-align: justify;
+  }
+
+  .cs-input-group {
+    @include vr-spacing(mb, 0.25);
+    @include vr-spacing(mt, 0.5);
+  }
+}

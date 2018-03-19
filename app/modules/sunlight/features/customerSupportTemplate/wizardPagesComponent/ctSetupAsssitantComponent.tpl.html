@@ -64,11 +64,12 @@
                       ng-switch-when = "offHours"
                       ng-class="careChatSA.animation"></ct-off-hours-component></div>
 
-                    <div ct-chat-status-messages
-                         ng-switch-when = "chatStatusMessages"
-                         ng-class="careChatSA.animation"></div>
+                    <ct-chat-status-messages-component
+                      ng-switch-when = "chatStatusMessages"
+                      ng-class="careChatSA.animation"></ct-chat-status-messages-component>
 
-                    <div ct-summary
+
+                  <div ct-summary
                          ng-switch-when = "summary"
                          ng-class="careChatSA.animation"></div>
 
