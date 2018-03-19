@@ -1,4 +1,4 @@
-import { IBsftSettings, BsftSettings } from './bsft-settings';
+import { IBsftSettings, BsftSettings, IBsftCustomerStatus } from './bsft-settings';
 
 interface IBsftCustomerResource extends ng.resource.IResourceClass<ng.resource.IResource<IBsftSettings>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
@@ -41,5 +41,19 @@ export class BsftCustomerService {
     return this.bsftCustomerResource.save({
       customerId: this.Authinfo.getOrgId(),
     }, bsftSettings).$promise;
+  }
+
+  public getBsftCustomerStatus(customerId: string): IPromise<IBsftCustomerStatus> {
+    return this.bsftCustomerResource.get({
+      customerId: customerId,
+    }).$promise.then(response => {
+      return {
+        rialtoCustomerId: _.get(response, 'rialtoCustomerId'),
+        rialtoSiteId: _.get(response, 'rialtoSiteId'),
+        completed: _.get(response, 'completed'),
+        failed: _.get(response, 'failed'),
+        errorMessage: _.get(response, 'errorMessage'),
+      } as IBsftCustomerStatus;
+    });
   }
 }

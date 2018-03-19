@@ -1,6 +1,7 @@
-const DEFAULT_TIME_ZONE: string = 'America/Los_Angeles';
+const DEFAULT_TIME_ZONE: string = 'America/Phoenix';
 
 export interface IBsftSettings {
+  orgId: string;
   name: string;
   postalAddress: IPostalAddress | null;
   contactInfo: IContactInfo | null;
@@ -8,12 +9,14 @@ export interface IBsftSettings {
 }
 
 export class BsftSettings implements IBsftSettings {
+  public orgId: string;
   public name: string;
   public postalAddress: IPostalAddress | null;
   public contactInfo: IContactInfo | null;
   public site: ISite | null;
 
   constructor(bsftSettings: IBsftSettings = {
+    orgId: '',
     name: '',
     postalAddress: null,
     contactInfo: null,
@@ -133,4 +136,12 @@ export class Site implements Site {
     this.name = site.name;
     this.timeZone = site.timeZone;
   }
+}
+
+export interface IBsftCustomerStatus {
+  rialtoCustomerId: string;
+  rialtoSiteId: string;
+  completed: boolean;
+  failed: boolean;
+  errorMessage: string;
 }
