@@ -19,18 +19,12 @@ class CtOverviewController extends CtBaseController {
       this.TemplateWizardService.featureFlags.isCareProactiveChatTrialsEnabled,
       this.TemplateWizardService.featureFlags.isCareAssistantEnabled);
 
-    this.isValid();
-  }
-
-  public isValid() {
-    this.TemplateWizardService.pageValidationResult.overview = true;
-    return this.TemplateWizardService.pageValidationResult.isOverviewValid;
   }
 
   public overviewPageTooltipText(cardName) {
     switch (cardName) {
       case 'agentUnavailable': return this.$translate.instant('careChatTpl.agentUnavailableToggleTooltipMessage');
-      case 'customerInformation': return '';
+      case 'customerInformation':
       case 'customerInformationCallback': return this.$translate.instant('careChatTpl.customerInfoToggleTooltipMessage');
       case 'virtualAssistant': return this.$translate.instant('careChatTpl.virtualAssistantToggleTooltipMessage');
       default: return '';

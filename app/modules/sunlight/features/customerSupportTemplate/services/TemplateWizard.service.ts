@@ -21,7 +21,6 @@ export class TemplateWizardService {
   //TODO: each compoent will put it's validation status here
   public pageValidationResult = {
     isNameValid: false,
-    isOverviewValid: false,
   };
 
   //TODO: to set it from the right page

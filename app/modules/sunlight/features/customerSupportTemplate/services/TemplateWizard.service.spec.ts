@@ -10,9 +10,6 @@ describe('TemplateWizardService ', () => {
 
   }));
 
-  afterEach( function() {
-    //templateWizardService = none;
-  });
 
   it('getDefaultTemplate get the right template for mediaTye = chat', () => {
     expect(templateWizardService.getDefaultTemplate('chat').mediaType === 'chat').toBe(true);

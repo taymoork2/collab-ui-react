@@ -14,9 +14,10 @@
 
             <form name="careChatSetupForm" class="sa-form">
                 <div ng-switch on="careSetupAssistant.currentState">
-                    <div ng-switch-when="name" ng-class="careChatSA.animation">
-                        <ct-name-component ></ct-name-component>
-                    </div>
+                    <ct-name-component
+                            ng-switch-when="name"
+                            ng-class="careChatSA.animation">
+                    </ct-name-component>
 
                     <div ct-virtual-assistant
                          ng-switch-when = "virtualAssistant"
