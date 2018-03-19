@@ -2354,7 +2354,8 @@
         "description": "Override the default SIP Destination configured for Hybrid Call Connect in the organization. Review your organization SIP Destinations and certificates from the certificates from the <a ui-sref=\"call-service.settings\">Hybrid Call Settings page.</a>",
         "warningNotCallCluster": "⚠️ This cluster is not provisioned to support Hybrid Call (Connect).",
         "warningCallConnectNotSetup": "⚠️ Hybrid Call Connect is not setup.",
-        "inputLabel": "Override default SIP Destination",
+        "inputLabelActive": "Use cluster-specific SIP Destination",
+        "inputLabelInactive": "Use global SIP Destination",
         "unknownState": "Sorry, we could not load information about SIP Destination Override"
       }
     },

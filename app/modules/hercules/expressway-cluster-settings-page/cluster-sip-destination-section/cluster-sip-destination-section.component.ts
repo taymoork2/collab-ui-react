@@ -5,11 +5,11 @@ import { ServiceDescriptorService } from 'modules/hercules/services/service-desc
 
 export class ClusterSipDestinationSectionController implements ng.IComponentController {
   public cluster: IExtendedClusterFusion;
-  public defaultSipDomain: string;
-  public override: boolean;
+  public sipDomain: string;
+  public override: 'active' | 'inactive' = 'inactive';
   public clusterHasCallService: boolean;
   public defaultSIPDomainOverrideForm: ng.IFormController;
-  public defaultSipDomainCopy: string;
+  public defaultSipDomain: string;
   public state: 'loading' | 'connect_not_set_up' | 'not_a_call_cluster' | 'ok' | 'unknown' = 'loading';
 
   /* @ngInject */
@@ -30,9 +30,14 @@ export class ClusterSipDestinationSectionController implements ng.IComponentCont
       callServiceConnectIsEnabled: this.ServiceDescriptorService.isServiceEnabled('squared-fusion-ec'),
     })
     .then(result => {
-      this.defaultSipDomainCopy = this.defaultSipDomain = result.defaultSipDomain;
+      this.sipDomain = result.defaultSipDomain;
+      this.defaultSipDomain = _.clone(this.sipDomain);
       const clusterSipDomain = _.find(result.currentClustersSipDomain, { clusterId: this.cluster.id });
-      this.override = clusterSipDomain && clusterSipDomain.sipDomain !== '';
+      // override is using string because of the input type=radio from the toolkit, it works much better
+      this.override = !!(clusterSipDomain && clusterSipDomain.sipDomain !== '') ? 'active' : 'inactive';
+      if (this.override === 'active') {
+        this.sipDomain = clusterSipDomain.sipDomain;
+      }
 
       if (!result.callServiceConnectIsEnabled) {
         this.state = 'connect_not_set_up';
@@ -48,7 +53,7 @@ export class ClusterSipDestinationSectionController implements ng.IComponentCont
   }
 
   public changeOverride(): void {
-    if (!this.override) {
+    if (this.override === 'inactive') {
       this.ModalService.open({
         title: this.$translate.instant('hercules.clusterSipDestination.removeModal.title'),
         message: this.$translate.instant('hercules.clusterSipDestination.removeModal.message'),
@@ -59,16 +64,16 @@ export class ClusterSipDestinationSectionController implements ng.IComponentCont
         return this.USSService.deleteSipDomainForCluster(this.cluster.id)
           .then(() => {
             // Display again the default SIP destination
-            this.defaultSipDomain = this.defaultSipDomainCopy;
+            this.sipDomain = _.clone(this.defaultSipDomain);
             this.Notification.success('hercules.clusterSipDestination.removeModal.notification');
           });
       })
       .catch(() => {
-        this.override = true;
+        this.override = 'active';
       });
     } else {
       // Empty the input field
-      this.defaultSipDomain = '';
+      this.sipDomain = '';
     }
   }
 }
