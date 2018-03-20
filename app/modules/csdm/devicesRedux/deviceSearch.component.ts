@@ -197,8 +197,10 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
   }
 
   public onSearchInputKeyDown($keyEvent: KeyboardEvent) {
-    this.showSuggestions = true;
     if ($keyEvent && $keyEvent.keyCode) {
+      if (!$keyEvent.ctrlKey && !$keyEvent.altKey && !$keyEvent.shiftKey && !$keyEvent.metaKey) {
+        this.showSuggestions = true;
+      }
       switch ($keyEvent.keyCode) {
         case KeyCodes.BACKSPACE:
           const target = $keyEvent.target;
