@@ -397,7 +397,8 @@
     "cancelCsvError": "An error occurred canceling the CSV import.",
     "csvImport": "CSV Import",
     "backgroundTasksRunning": "Background tasks running...",
-    "startedAt": "Started at {{time}} on {{date}} by {{person}}",
+    "startedOn": "Started at {{time}} on {{date}}",
+    "startedBy": "Started at {{time}} on {{date}} by {{person}}",
     "taskStatus": {
       "canceled": "Canceled",
       "completed": "Completed",

@@ -24,7 +24,7 @@ describe('Service: UserTaskManagerService', () => {
       'UserTaskManagerService',
     );
 
-    this.taskList = _.cloneDeep(require('./test-tasks.json').taskManagerTasks);
+    this.taskList = _.cloneDeep(getJSONFixture('core/json/users/user-task-manager/test-tasks.json').taskManagerTasks);
 
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('123');
     this.URL = `${this.UrlConfig.getAdminBatchServiceUrl()}/customers/${this.Authinfo.getOrgId()}/jobs/general/useronboard`;
@@ -49,10 +49,10 @@ describe('Service: UserTaskManagerService', () => {
     });
 
     it('should get in process tasks', function (this: Test) {
-      this.$httpBackend.expectGET(`${this.URL}?status=CREATED,STARTING,STARTED,STOPPING`).respond({
+      this.$httpBackend.expectGET(this.URL).respond({
         items: this.taskList,
       });
-      expect(this.UserTaskManagerService.getInProcessTasks()).toBeResolvedWith(this.taskList);
+      expect(this.UserTaskManagerService.getInProcessTasks()).toBeResolvedWith([this.taskList[2]]);
     });
 
     it('should get a specific task', function (this: Test) {

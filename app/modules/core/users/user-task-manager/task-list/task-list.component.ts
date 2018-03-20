@@ -28,7 +28,7 @@ export class TaskListController implements ng.IComponentController {
     if (_.isUndefined(this.activeTask) || _.isUndefined(task)) {
       return false;
     }
-    return this.activeTask.jobInstanceId === task.jobInstanceId;
+    return this.activeTask.id === task.id;
   }
 }
 
