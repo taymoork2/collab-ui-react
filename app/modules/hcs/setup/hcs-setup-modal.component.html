@@ -14,5 +14,8 @@
     <hcs-setup-sftp ng-if="$ctrl.currentStepIndex === 3"
       on-change-fn="$ctrl.setSftpServer(sftpServer)">
     </hcs-setup-sftp>
+    <hcs-setup-software-profile ng-if="$ctrl.currentStepIndex === 4"
+      on-change-fn="$ctrl.setSoftwareProfile(profile)">
+    </hcs-setup-software-profile>
   </div>
 </multi-step-modal>

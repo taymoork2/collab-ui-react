@@ -1,4 +1,4 @@
-import { HcsSetupModalService } from 'modules/hcs/services/';
+import { HcsSetupModalService } from 'modules/hcs/shared/';
 class HcsActiveCardController implements ng.IComponentController {
   public loading = false;
   public canSetup = true; //false only if both services up

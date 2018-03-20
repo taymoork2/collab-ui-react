@@ -9,7 +9,6 @@ export class HcsSetupSftpController implements ng.IComponentController {
   public messages: Object;
   public validators: Object;
   public errors: Object;
-  // private passwdValid: boolean = false;
   public hcsSftpForm: ng.IFormController;
   /* @ngInject */
   constructor(

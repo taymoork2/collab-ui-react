@@ -10906,6 +10906,22 @@
       "tarFile": ".tar file",
       "title": "Install Files"
     },
+    "softwareProfiles": {
+      "cer": "Cisco Emergency Responder Version",
+      "cerPlace": "Choose CER Version",
+      "cucm": "Cisco Unified Communication Manager Version",
+      "cucmPlace": "Choose CUCM Version",
+      "desc": "Add a Software Profile, this profile can be assigned to a customer and used to ensure the versions on their unified communications instances are in sync with approved versions.",
+      "expway": "Cisco Expressway Version",
+      "expwayPlace": "Choose Expressway Version",
+      "name": "Software Profile Name",
+      "namePlace": "Enter Profile Name",
+      "plm": "Cisco Prime License Manager Version",
+      "plmPlace": "Choose PLM Version",
+      "title": "Create a Software Profile",
+      "ucxn": "Cisco Unity Connection Version",
+      "ucxnPlace": "Choose UCXN Version"
+    },
     "taas": {
       "testState": {
         "good": "Passed",

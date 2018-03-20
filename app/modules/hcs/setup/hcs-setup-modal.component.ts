@@ -1,14 +1,15 @@
-import { HcsSetupModalService } from 'modules/hcs/services';
-import { ICheckbox } from './hcs-setup';
+import { HcsSetupModalService } from 'modules/hcs/shared';
+import { ICheckbox, ISoftwareProfile } from './hcs-setup';
 import { ISftpServer } from './hcs-setup-sftp';
 
 export class HcsSetupModalCtrl implements ng.IComponentController {
-  private static readonly MAX_INDEX: number = 3;
+  private static readonly MAX_INDEX: number = 5;
   private static readonly FIRST_INDEX: number = 1;
 
   public currentStepIndex: number;
   public hcsServices: ICheckbox;
   public sftpServer: ISftpServer;
+  public softwareProfile: ISoftwareProfile;
   public nextEnabled: boolean = false;
   public title: string;
   public hcsSetupModalForm: ng.IFormController;
@@ -40,6 +41,10 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
         this.title = 'hcs.sftp.title';
         this.nextEnabled = false;
         break;
+      case 4:
+        this.title = 'hcs.softwareProfiles.title';
+        this.nextEnabled = false;
+        break;
       case HcsSetupModalCtrl.MAX_INDEX:
         break;
       default:
@@ -64,6 +69,11 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
   public setSftpServer(sftpServer: ISftpServer) {
     this.nextEnabled = (sftpServer && this.hcsSetupModalForm.$valid);
     this.sftpServer = sftpServer;
+  }
+
+  public setSoftwareProfile(profile: ISoftwareProfile) {
+    this.nextEnabled = ( profile && this.hcsSetupModalForm.$valid);
+    this.softwareProfile = profile;
   }
 
   public dismissModal(): void {
