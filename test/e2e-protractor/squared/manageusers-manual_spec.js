@@ -10,7 +10,7 @@ describe('Manage Users - Manual -', function () {
 
   var usersEmailOnly = _.times(2, function () {
     return {
-      email: utils.randomTestGmailwithSalt('manual'),
+      email: utils.randomTestGmailWithSalt('manual'),
       first: 'EmailOnly',
       last: 'McTestuser-' + utils.randomDid(),
     };
@@ -18,7 +18,7 @@ describe('Manage Users - Manual -', function () {
 
   var usersNamesAndEmail = _.times(2, function () {
     return {
-      email: utils.randomTestGmailwithSalt('manual'),
+      email: utils.randomTestGmailWithSalt('manual'),
       first: 'NamesAndEmail',
       last: 'McTestuser-' + utils.randomDid(),
     };

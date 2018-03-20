@@ -2,7 +2,7 @@
 
 describe('Onboard users with Hybrid Services', function () {
   var token;
-  var testUser = utils.randomTestGmailwithSalt('hybridservices');
+  var testUser = utils.randomTestGmailWithSalt('hybridservices');
 
   function expectHybridServices(calendar, callAware, callConnectBoolean) {
     utils.waitForText(users.hybridServices_sidePanel_Calendar, calendar);

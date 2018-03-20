@@ -12,17 +12,17 @@ var path = require('path');
 var fs = require('fs');
 
 var RETRY_COUNT = 5;
+let serialId = 0;
 
 exports.getUTCDateTimeString = function () {
   // notes:
   // - want human-readable format for easier troubleshooting
-  // - need millisecond precision for unique-enough email addresses
-  // - use year + month + day + hours + min + sec + millisec.
+  // - use year + month + day + hours + min + sec
   //
   // e.g.
-  // - March 19, 2018, 4:59:22.713 PM PDT => '20180319_235922_713'
-  // - March 19, 2018, 5:00:22.713 PM PDT => '20180320_000022_713'
-  return moment.utc().format('YYYYMMDD_HHmmss_SSS');
+  // - March 19, 2018, 4:59:22 PM PDT => '20180319_235922'
+  // - March 19, 2018, 5:00:22 PM PDT => '20180320_000022'
+  return moment.utc().format('YYYYMMDD_HHmmss');
 };
 
 exports.resolvePath = function (filePath) {
@@ -67,19 +67,31 @@ exports.getTestRunOwner = function () {
   return (processEnvUtil.isJenkins()) ? 'jenkins' : getCecId();
 };
 
-exports.randomTestGmail = function () {
-  return 'collabctg+' + this.getTestRunOwner() + '_' + this.getUTCDateTimeString() + '@gmail.com';
-};
+function mkEmailUserComponentSuffix(options) {
+  options = options || {};
+  let salt = options.salt || '';
+  salt = (!isSauce) ? `LOC_${salt}` : salt;
 
-exports.randomTestGmailwithSalt = function (salt) {
-  if (!isSauce) {
-    salt = 'LOC_' + salt;
-  }
+  // private counter
+  serialId = serialId + 1;
+
   // TODO:
   // - as of 2018-03-19, backend onboard API does not allow for email addresses where user-component is >=64 chars long
   // - work with backend team to remove this artificial limit
   // - then restore using full jenkins build tag instead of just 'jenkins'
-  return 'collabctg+' + salt + '_' + this.getTestRunOwner() + '_' + this.getUTCDateTimeString() + '@gmail.com';
+  const emailUserComponentSuffix = `${exports.getTestRunOwner()}_${exports.getUTCDateTimeString()}_${serialId}`;
+
+  // prepend salt if present
+  return (!!salt) ? `${salt}_${emailUserComponentSuffix}` : emailUserComponentSuffix;
+}
+
+exports.randomTestGmail = function (options) {
+  const emailUserComponentSuffix = mkEmailUserComponentSuffix(options);
+  return `collabctg+${emailUserComponentSuffix}@gmail.com`;
+};
+
+exports.randomTestGmailWithSalt = function (salt) {
+  return this.randomTestGmail({ salt: salt });
 };
 
 exports.sendRequest = function (options) {

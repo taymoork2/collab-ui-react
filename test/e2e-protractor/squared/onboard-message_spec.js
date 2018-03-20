@@ -6,7 +6,7 @@ var featureToggle = require('../utils/featureToggle.utils');
 
 describe('Onboard users with Message Service', function () {
   var token;
-  var testUser = utils.randomTestGmailwithSalt('message');
+  var testUser = utils.randomTestGmailWithSalt('message');
   var LICENSE = users.paidMsgCheckbox;
 
   function checkAndClickInterop(curState, targetState) {

@@ -4,7 +4,7 @@
 
 describe('Org Entitlement flow', function () {
   var token;
-  var testUser = utils.randomTestGmailwithSalt('roles');
+  var testUser = utils.randomTestGmailWithSalt('roles');
   var newLastName = 'Doe';
   var newDisplayName = 'John Doe ' + utils.randomId();
 
