@@ -3,12 +3,12 @@ import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-s
 import { FeatureToggleService } from 'modules/core/featureToggle';
 
 interface ITableData {
-  defaultDomain: {
+  defaultDestination: {
     id: string;
     name: string;
   }[];
-  specificDomains: {
-    [domain: string]: {
+  specificDestinations: {
+    [destination: string]: {
       id: string;
       name: string;
     }[];
@@ -16,11 +16,11 @@ interface ITableData {
 }
 
 class SipDestinationSettingsSectionComponentCtrl implements ng.IComponentController {
-  public sipDomain: string;
+  public sipDestination: string;
   public hasHybridGlobalCallServiceConnectFeature: boolean;
   public tableData: ITableData = {
-    defaultDomain: [],
-    specificDomains: {},
+    defaultDestination: [],
+    specificDestinations: {},
   };
 
   /* @ngInject */
@@ -35,8 +35,8 @@ class SipDestinationSettingsSectionComponentCtrl implements ng.IComponentControl
   public $onInit() {
     this.$q.all({
       hasHybridGlobalCallServiceConnectFeature: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridGlobalCallServiceConnect),
-      defaultSipDomain: this.USSService.getOrg(this.Authinfo.getOrgId()).then(org => org.sipDomain),
-      clustersSipDomain: this.USSService.getSipDomainForClusters(),
+      defaultSipDestination: this.USSService.getOrg(this.Authinfo.getOrgId()).then(org => org.sipDomain),
+      clustersSipDestination: this.USSService.getSipDestinationForClusters(),
       callClusters: this.HybridServicesClusterService.getAll().then(clusters => {
         return clusters.filter(cluster => {
           return cluster.provisioning.some(provisioning => provisioning.connectorType === 'c_ucmc');
@@ -49,14 +49,14 @@ class SipDestinationSettingsSectionComponentCtrl implements ng.IComponentControl
       }),
     })
     .then(result => {
-      this.sipDomain = result.defaultSipDomain;
+      this.sipDestination = result.defaultSipDestination;
       this.hasHybridGlobalCallServiceConnectFeature = result.hasHybridGlobalCallServiceConnectFeature;
 
-      this.tableData.defaultDomain = result.callClusters.filter(cluster => {
-        return !_.find(result.clustersSipDomain, { clusterId: cluster.id });
+      this.tableData.defaultDestination = result.callClusters.filter(cluster => {
+        return !_.find(result.clustersSipDestination, { clusterId: cluster.id });
       });
 
-      this.tableData.specificDomains = result.clustersSipDomain.reduce((acc, info) => {
+      this.tableData.specificDestinations = result.clustersSipDestination.reduce((acc, info) => {
         if (!acc[info.sipDomain]) {
           acc[info.sipDomain] = [];
         }
