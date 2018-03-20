@@ -12,21 +12,22 @@ describe('TemplateWizardService ', () => {
 
 
   it('getDefaultTemplate get the right template for mediaTye = chat', () => {
-    expect(templateWizardService.getDefaultTemplate('chat').mediaType === 'chat').toBe(true);
+    const template = templateWizardService.getDefaultTemplate('chat');
+    expect(template.configuration.mediaType === 'chat').toBe(true);
   });
 
   it('getDefaultTemplate get the right template for mediaTye = callback', () => {
-    expect(templateWizardService.getDefaultTemplate('chat').mediaType === 'callback').toBe(true);
+    expect(templateWizardService.getDefaultTemplate('callback').configuration.mediaType === 'callback').toBe(true);
   });
 
   it('getDefaultTemplate get the right template for mediaTye = chatpluscallback', () => {
-    expect(templateWizardService.getDefaultTemplate('chat').mediaType === 'chatpluscallback').toBe(true);
+    expect(templateWizardService.getDefaultTemplate('chatpluscallback').configuration.mediaType === 'chatpluscallback').toBe(true);
   });
 
   it('setSelectedMediaType to set the mediaType in the service and get the default template', () => {
     templateWizardService.setSelectedMediaType('chat');
     expect(templateWizardService.selectedMediaType() === 'chat').toBe(true);
-    expect(templateWizardService.template.mediaType === 'chat').toBe(true);
+    expect(templateWizardService.template.configuration.mediaType === 'chat').toBe(true);
   });
 
   it('setInitialState should set the starting state', () => {
