@@ -35,7 +35,7 @@ class CtSetupAssistantCtrl extends CtBaseController  {
   }
 
   private isOffHoursPageValid() {
-    return true;
+    return this.TemplateWizardService.pageValidationResult.offHoursValid || false;
   }
 
   private isProactivePromptPageValid() {
