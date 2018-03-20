@@ -35,6 +35,7 @@ module.exports = {
   atlasF2993NewDeviceRole: 'atlas-f2993-new-device-role',
   atlasF2993NewUserRole: 'atlas-f2993-new-user-role',
   atlasF3745AutoAssignLicenses: 'atlas-f3745-auto-assign-licenses',
+  atlasF5955LegalHold: 'atlas-f5955-legal-hold',
   atlasF6980MultiDirSync: 'atlas-f6980-multi-dir-sync',
   atlasF6980MultiDirSyncManageUsers: 'atlas-f6980-multi-dir-sync-manage-users',
   atlasFileSharingControlSettings: 'atlas-file-sharing-control-settings',

@@ -624,7 +624,7 @@ export class Config {
     ],
     Application: ['organizations', 'organization-overview'],
     Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch', 'provisioning', 'order-details'],
-    Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports'],
+    Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports', 'legalhold'],
     Partner_Management: ['partnerManagement'],
     User_Admin: ['user-overview', 'userprofile', 'users', 'userRedirect', 'editService', 'addDeviceFlow'],
     Device_Admin: ['device-overview', 'bulk-overview', 'devices', 'deviceBulkFlow', 'addDeviceFlow', 'place-overview', 'places'],

@@ -9,6 +9,7 @@ import coreUsersTileTotalsModuleName from 'modules/core/users/shared/cr-users-ti
 import modalServiceModule from 'modules/core/modal';
 import { LegalHoldService } from './legal-hold.service';
 import { LegalHoldCustodianImportComponent } from './legal-hold-custodian-import.component';
+import { LegalHoldLandingComponent } from './legal-hold-landing.component';
 
 export default angular
   .module('core.legal-hold', [
@@ -18,8 +19,9 @@ export default angular
     modalServiceModule,
     notificationModuleName,
     urlConfigModuleName,
-    coreUsersTileTotalsModuleName ,
+    coreUsersTileTotalsModuleName,
   ])
+  .component('legalHoldLanding', new LegalHoldLandingComponent())
   .component('legalHoldCustodianImport', new LegalHoldCustodianImportComponent())
   .service('LegalHoldService', LegalHoldService)
   .name;
