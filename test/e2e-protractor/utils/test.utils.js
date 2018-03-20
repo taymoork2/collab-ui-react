@@ -2,6 +2,7 @@
 
 /*global TIMEOUT, isSauce*/
 
+const moment = require('moment');
 var config = require('./test.config.js');
 var request = require('request');
 var getCecId = require('../../../utils/getCecId');
@@ -11,31 +12,16 @@ var fs = require('fs');
 
 var RETRY_COUNT = 5;
 
-exports.getDateTimeString = function () {
-  var now = new Date();
-  var year = now.getYear() - 100;
-  var month = now.getMonth() + 1;
-  var day = now.getDate();
-  var hour = now.getHours();
-  var minute = now.getMinutes();
-  var second = now.getSeconds();
-  if (month.toString().length == 1) {
-    month = '0' + month;
-  }
-  if (day.toString().length == 1) {
-    day = '0' + day;
-  }
-  if (hour.toString().length == 1) {
-    hour = '0' + hour;
-  }
-  if (minute.toString().length == 1) {
-    minute = '0' + minute;
-  }
-  if (second.toString().length == 1) {
-    second = '0' + second;
-  }
-  var dateTime = year.toString() + month.toString() + day.toString() + '_' + hour.toString() + minute.toString() + second.toString();
-  return dateTime;
+exports.getUTCDateTimeString = function () {
+  // notes:
+  // - want human-readable format for easier troubleshooting
+  // - need millisecond precision for unique-enough email addresses
+  // - use year + month + day + hours + min + sec + millisec.
+  //
+  // e.g.
+  // - March 19, 2018, 4:59:22.713 PM PDT => '20180319_235922_713'
+  // - March 19, 2018, 5:00:22.713 PM PDT => '20180320_000022_713'
+  return moment.utc().format('YYYYMMDD_HHmmss_SSS');
 };
 
 exports.resolvePath = function (filePath) {
@@ -81,14 +67,14 @@ exports.getJenkinsBuildTag = function () {
 };
 
 exports.randomTestGmail = function () {
-  return 'collabctg+' + this.getJenkinsBuildTag() + '_' + this.getDateTimeString() + '@gmail.com';
+  return 'collabctg+' + this.getJenkinsBuildTag() + '_' + this.getUTCDateTimeString() + '@gmail.com';
 };
 
 exports.randomTestGmailwithSalt = function (salt) {
   if (!isSauce) {
     salt = 'LOC_' + salt;
   }
-  return 'collabctg+' + salt + '_' + this.getJenkinsBuildTag() + '_' + this.getDateTimeString() + '@gmail.com';
+  return 'collabctg+' + salt + '_' + this.getJenkinsBuildTag() + '_' + this.getUTCDateTimeString() + '@gmail.com';
 };
 
 exports.sendRequest = function (options) {
