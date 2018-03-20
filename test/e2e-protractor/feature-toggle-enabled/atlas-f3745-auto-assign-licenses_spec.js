@@ -18,11 +18,19 @@ const NotificationsPage = require('../pages/notifications.page');
 const notifications = new NotificationsPage();
 const UsersPage = require('../pages/users.page');
 const users = new UsersPage();
+
 const utils = require('../utils/test.utils');
+const deleteUtils = require('../utils/delete.utils');
+
+let bearerToken;
+const testUserEmail1 = utils.randomTestGmail();
 
 describe('Auto-Assign Licenses', function () {
   it('should login as a customer full admin', function () {
-    login.login('ft--atlas-f3745-auto-assign-licenses', '#/overview');
+    login.login('ft--atlas-f3745-auto-assign-licenses', '#/overview')
+      .then(function (_bearerToken) {
+        bearerToken = _bearerToken;
+      });
   });
 
   describe('overview page:', function () {
@@ -89,22 +97,20 @@ describe('Auto-Assign Licenses', function () {
   });
 
   describe('manual onboard a user using auto-assign template:', function () {
-    const testUserEmail = utils.randomTestGmail();
-
     it('should add a new user', function () {
       utils.click(navigation.usersTab);
       utils.click(manageUsers.buttons.manageUsers);
       utils.click(manageUsers.actionCards.manualAddUsers);
       utils.click(manageUsers.buttons.next);
       utils.click(users.addUsersField);
-      utils.sendKeys(users.addUsersField, testUserEmail + protractor.Key.ENTER);
+      utils.sendKeys(users.addUsersField, testUserEmail1 + protractor.Key.ENTER);
       utils.click(manageUsers.buttons.next);
       utils.click(manageUsers.buttons.save);
       utils.click(manageUsers.buttons.finish);
     });
 
     it('should validate that newly onboarded user has the message license', function () {
-      utils.searchAndClick(testUserEmail);
+      utils.searchAndClick(testUserEmail1);
       utils.expectIsDisplayed(users.messageService);
       utils.expectIsNotDisplayed(users.messageServiceFree);
       utils.click(users.closeSidePanel);
@@ -116,14 +122,10 @@ describe('Auto-Assign Licenses', function () {
       utils.click(manageUsers.actionCards.manualAddUsers);
       utils.click(manageUsers.buttons.next);
       utils.click(users.addUsersField);
-      utils.sendKeys(users.addUsersField, testUserEmail + protractor.Key.ENTER);
+      utils.sendKeys(users.addUsersField, testUserEmail1 + protractor.Key.ENTER);
       utils.expectIsDisplayed(manageUsers.manual.errors.autoAssignTemplateEnabledCannotOnboardExistingUser);
       utils.expectIsDisabled(manageUsers.buttons.next);
       utils.click(manageUsers.buttons.modalCloseButton);
-    });
-
-    it('cleanup user', function () {
-      utils.deleteIfUserExists(testUserEmail);
     });
   });
 
@@ -139,5 +141,9 @@ describe('Auto-Assign Licenses', function () {
       utils.click(manageUsers.buttons.manageUsers);
       utils.expectIsDisplayed(manageUsers.links.setupAutoAssignTemplate);
     });
+  });
+
+  afterAll(function () {
+    deleteUtils.deleteUser(testUserEmail1, bearerToken);
   });
 });
