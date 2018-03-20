@@ -6,6 +6,7 @@ const moment = require('moment');
 var config = require('./test.config.js');
 var request = require('request');
 var getCecId = require('../../../utils/getCecId');
+var processEnvUtil = require('../../../utils/processEnvUtil')();
 var EC = protractor.ExpectedConditions;
 var path = require('path');
 var fs = require('fs');
@@ -62,19 +63,23 @@ exports.randomTestRoom = function () {
   return 'atlas-' + this.randomId();
 };
 
-exports.getJenkinsBuildTag = function () {
-  return process.env.BUILD_TAG || `atlas-web--${getCecId()}`;
+exports.getTestRunOwner = function () {
+  return (processEnvUtil.isJenkins()) ? 'jenkins' : getCecId();
 };
 
 exports.randomTestGmail = function () {
-  return 'collabctg+' + this.getJenkinsBuildTag() + '_' + this.getUTCDateTimeString() + '@gmail.com';
+  return 'collabctg+' + this.getTestRunOwner() + '_' + this.getUTCDateTimeString() + '@gmail.com';
 };
 
 exports.randomTestGmailwithSalt = function (salt) {
   if (!isSauce) {
     salt = 'LOC_' + salt;
   }
-  return 'collabctg+' + salt + '_' + this.getJenkinsBuildTag() + '_' + this.getUTCDateTimeString() + '@gmail.com';
+  // TODO:
+  // - as of 2018-03-19, backend onboard API does not allow for email addresses where user-component is >=64 chars long
+  // - work with backend team to remove this artificial limit
+  // - then restore using full jenkins build tag instead of just 'jenkins'
+  return 'collabctg+' + salt + '_' + this.getTestRunOwner() + '_' + this.getUTCDateTimeString() + '@gmail.com';
 };
 
 exports.sendRequest = function (options) {
