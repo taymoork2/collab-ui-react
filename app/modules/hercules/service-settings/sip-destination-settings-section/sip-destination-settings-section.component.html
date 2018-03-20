@@ -4,7 +4,7 @@
       <span class="sub-section__label" translate="hercules.settings.call.sipDomainHeading"></span>
     </p>
     <p translate="servicesOverview.cards.privateTrunk.destination"></p>
-    <sip-destination-input sip-domain="$ctrl.sipDomain"></sip-destination-input>
+    <sip-destination-input sip-destination="$ctrl.sipDestination"></sip-destination-input>
   </div>
 </div>
 <div class="sub-section" ng-if="$ctrl.hasHybridGlobalCallServiceConnectFeature">
@@ -19,15 +19,15 @@
     </thead>
     <tbody>
       <tr>
-        <td>{{::$ctrl.sipDomain}} ({{::'common.default' | translate | lowercase}})</td>
+        <td>{{::$ctrl.sipDestination}} ({{::'common.default' | translate | lowercase}})</td>
         <td>
-          <div ng-if="$ctrl.tableData.defaultDomain.length === 0">-</div>
-          <div ng-if="$ctrl.tableData.defaultDomain.length > 0" ng-repeat="cluster in $ctrl.tableData.defaultDomain | orderBy:'name'">
+          <div ng-if="$ctrl.tableData.defaultDestination.length === 0">-</div>
+          <div ng-if="$ctrl.tableData.defaultDestination.length > 0" ng-repeat="cluster in $ctrl.tableData.defaultDestination | orderBy:'name'">
             <a class="link-to-cluster" ui-sref="expressway-cluster.settings({id: cluster.id})">{{::cluster.name}}</a>
           </div>
         </td>
       </tr>
-      <tr ng-repeat="(domain, clusters) in $ctrl.tableData.specificDomains">
+      <tr ng-repeat="(domain, clusters) in $ctrl.tableData.specificDestinations">
         <td>{{::domain}}</td>
         <td>
           <div ng-repeat="cluster in clusters | orderBy:'name'">

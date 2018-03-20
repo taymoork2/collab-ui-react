@@ -5,7 +5,7 @@
   <div class="section__content">
     <div class="sub-section">
       <h5 class="sub-section__label" translate="hercules.clusterSipDestination.configSection.label"></h5>
-      <p class="sub-section__description" translate="hercules.clusterSipDestination.configSection.description"></a></p>
+      <p class="sub-section__description" translate="hercules.clusterSipDestination.configSection.description" translate-compile></a></p>
       <div ng-if="$ctrl.state === 'not_a_call_cluster'">
         <p translate="hercules.clusterSipDestination.configSection.warningNotCallCluster"></p>
       </div>
@@ -13,7 +13,7 @@
         <p translate="hercules.clusterSipDestination.configSection.warningCallConnectNotSetup"></p>
       </div>
       <div ng-if="$ctrl.state === 'loading'" cs-loader class="loader-example--small"></div>
-      <div ng-if="$ctrl.state === 'ok'" ng-form="$ctrl.defaultSIPDomainOverrideForm">
+      <div ng-if="$ctrl.state === 'ok'" ng-form="$ctrl.defaultSIPDestinationOverrideForm">
         <div class="row">
           <input
             cs-input
@@ -25,14 +25,14 @@
             ng-change="$ctrl.changeOverride()"
             cs-input-label="{{::'hercules.clusterSipDestination.configSection.inputLabelInactive' | translate}}">
         </div>
-        <div class="row" ng-if="$ctrl.override === 'inactive'">
+        <div class="row" ng-show="$ctrl.override === 'inactive'">
           <input
             cs-input
             class="padded-element"
             type="text"
             cs-input-group-size="medium-7"
-            ng-model="$ctrl.sipDomain"
-            disabled>
+            ng-model="$ctrl.sipDestination"
+            readonly>
         </div>
         <div class="row">
           <input
@@ -45,11 +45,12 @@
             ng-change="$ctrl.changeOverride()"
             cs-input-label="{{::'hercules.clusterSipDestination.configSection.inputLabelActive' | translate}}">
         </div>
-        <div class="row" ng-if="$ctrl.override === 'active'">
+        <div class="row" ng-show="$ctrl.override === 'active'">
           <sip-destination-input
             class="padded-element"
-            sip-domain="$ctrl.sipDomain"
             cluster-id="$ctrl.cluster.id"
+            sip-destination="$ctrl.sipDestination"
+            on-destination-saved="$ctrl.destinationSaved(sipDestination)"
           ></sip-destination-input>
         </div>
       </div>

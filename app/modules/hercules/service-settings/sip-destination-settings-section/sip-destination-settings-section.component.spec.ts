@@ -26,7 +26,7 @@ describe('SipDestinationSettingsSectionComponentCtrl', () => {
     spyOn(USSService, 'getOrg').and.returnValue($q.resolve({
       sipDomain: expectedSipDomain,
     }));
-    spyOn(USSService, 'getSipDomainForClusters').and.returnValue($q.resolve([]));
+    spyOn(USSService, 'getSipDestinationForClusters').and.returnValue($q.resolve([]));
     spyOn(USSService, 'updateOrg').and.returnValue($q.resolve());
   }
 
@@ -45,7 +45,7 @@ describe('SipDestinationSettingsSectionComponentCtrl', () => {
     ctrl.$onInit();
     $scope.$apply();
     expect(USSService.getOrg.calls.count()).toBe(1);
-    expect(ctrl.sipDomain).toBe(expectedSipDomain);
+    expect(ctrl.sipDestination).toBe(expectedSipDomain);
   });
 
   // TODO: move the following test to app/modules/hercules/sip-destination-input/sip-destination-input.component.spec.ts

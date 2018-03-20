@@ -336,7 +336,7 @@ export class USSService {
       .then(this.extractData);
   }
 
-  public getSipDomainForClusters(orgId = this.Authinfo.getOrgId()): ng.IPromise<IClusterSipDomain[]> {
+  public getSipDestinationForClusters(orgId = this.Authinfo.getOrgId()): ng.IPromise<IClusterSipDomain[]> {
     return this.$http
       .get<{ items: IClusterSipDomain[] }>(`${this.USSUrl}/orgs/${orgId}/clusterSipDomains`)
       .then(this.extractData)

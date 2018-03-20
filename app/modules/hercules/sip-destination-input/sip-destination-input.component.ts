@@ -10,11 +10,12 @@ interface ITestResultSet {
 
 export class SipDestinationInputController implements ng.IComponentController {
   public clusterId: string;
-  public sipDomain: string;
+  public sipDestination: string;
   public savingSip: boolean = false;
   public originalValue: string;
   public sipDestinationTestSucceeded: boolean | undefined;
   public sipDestinationTestResultSet: ITestResultSet;
+  public onDestinationSaved?: Function;
 
   /* @ngInject */
   constructor(
@@ -28,31 +29,23 @@ export class SipDestinationInputController implements ng.IComponentController {
     this.savingSip = true;
     const orgInfo: IUSSOrg = {
       id: this.Authinfo.getOrgId(),
-      sipDomain: this.sipDomain,
+      sipDomain: this.sipDestination,
     };
-    if (!this.clusterId) {
-      this.USSService.updateOrg(orgInfo)
-        .then(() => {
-          this.Notification.success('hercules.errors.sipDomainSaved');
-        })
-        .catch((error) => {
-          this.Notification.errorWithTrackingId(error, 'hercules.errors.sipDomainInvalid');
-        })
-        .finally(() => {
-          this.savingSip = false;
-        });
-    } else {
-      this.USSService.addSipDomainForCluster(this.clusterId, this.sipDomain)
-          .then(() => {
-            this.Notification.success('hercules.errors.sipDomainSaved');
-          })
-          .catch((error) => {
-            this.Notification.errorWithTrackingId(error, 'hercules.errors.sipDomainInvalid');
-          })
-          .finally(() => {
-            this.savingSip = false;
+    (this.clusterId ? this.USSService.addSipDomainForCluster(this.clusterId, this.sipDestination) : this.USSService.updateOrg(orgInfo))
+      .then(() => {
+        this.Notification.success('hercules.errors.sipDomainSaved');
+        if (this.onDestinationSaved) {
+          this.onDestinationSaved({
+            sipDestination: this.sipDestination,
           });
-    }
+        }
+      })
+      .catch((error) => {
+        this.Notification.errorWithTrackingId(error, 'hercules.errors.sipDomainInvalid');
+      })
+      .finally(() => {
+        this.savingSip = false;
+      });
   }
 
   /* Callback from the verify-sip-destination component  */
@@ -64,7 +57,7 @@ export class SipDestinationInputController implements ng.IComponentController {
   public onResultReady = (succeeded: boolean, resultSet: ITestResultSet) => {
     this.sipDestinationTestSucceeded = succeeded;
     this.sipDestinationTestResultSet = resultSet;
-    this.originalValue = _.clone(this.sipDomain);
+    this.originalValue = _.clone(this.sipDestination);
   }
 
   /* Callback from the verify-sip-destination component  */
@@ -94,6 +87,7 @@ export class SipDestinationInputComponent implements ng.IComponentOptions {
   public template = require('./sip-destination-input.html');
   public bindings = {
     clusterId: '<?',
-    sipDomain: '<',
+    sipDestination: '<',
+    onDestinationSaved: '&?',
   };
 }
