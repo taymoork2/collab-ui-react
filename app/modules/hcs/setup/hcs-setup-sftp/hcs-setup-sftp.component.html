@@ -7,7 +7,8 @@
     id="sftpName"
     name="sftpName"
     required="true"
-    ng-maxlength="$ctrl.MAX_LENGTH_NAME"
+    maxlength="$ctrl.MAX_LENGTH_NAME"
+    placeholder="{{::'hcs.sftp.namePlace' | translate}}"
     ng-change="$ctrl.processChange()"
     cs-input-messages="$ctrl.errors"
     cs-input-label="{{:: 'hcs.sftp.name' | translate}}">
@@ -19,6 +20,7 @@
     name="directory"
     ng-required="true"
     maxlength="$ctrl.MAX_LENGTH"
+    placeholder="{{::'hcs.sftp.dirPlace' | translate}}"
     ng-change="$ctrl.processChange()"
     cs-input-messages="$ctrl.messages"
     cs-input-label="{{:: 'hcs.sftp.directory' | translate}}">
@@ -30,6 +32,7 @@
     name="userName"
     ng-required="true"
     maxlength="$ctrl.MAX_LENGTH"
+    placeholder="{{::'hcs.sftp.userPlace' | translate}}"
     ng-change="$ctrl.processChange()"
     cs-input-messages="$ctrl.messages"
     cs-input-label="{{:: 'hcs.sftp.userName' | translate}}">
@@ -40,6 +43,7 @@
     id="password"
     name="password"
     ng-required="true"
+    placeholder="{{::'hcs.sftp.passwordPlace' | translate}}"
     ng-change="$ctrl.changePassword()"
     cs-input-messages="$ctrl.messages"
     cs-input-label="{{:: 'hcs.sftp.password' | translate}}">
@@ -50,6 +54,7 @@
     id="confirmpassword"
     name="confirmpassword"
     ng-required="true"
+    placeholder="{{::'hcs.sftp.passwordConfirmPlace' | translate}}"
     ng-change="$ctrl.processChange()"
     cs-input-messages="$ctrl.messages"
     cs-input-validators="$ctrl.validators"
