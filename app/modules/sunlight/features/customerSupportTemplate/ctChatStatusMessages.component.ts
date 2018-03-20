@@ -4,10 +4,10 @@ class CtChatStatusMessagesController extends CtBaseController {
   /* @ngInject*/
   constructor(
     public $stateParams: ng.ui.IStateParamsService,
-    public TemplateWizardService,
     public $translate: ng.translate.ITranslateService,
     public CTService,
     public SunlightConstantsService,
+    public TemplateWizardService,
   ) {
     super($stateParams, TemplateWizardService, CTService, $translate);
   }
@@ -28,21 +28,21 @@ class CtChatStatusMessagesController extends CtBaseController {
       _.includes(this.SunlightConstantsService.evaOptions, this.TemplateWizardService.template.configuration.routingLabel);
   }
 
-  public helpTextWaiting = function () {
+  public helpTextWaiting(): string {
     if (this.isExpertEscalationSelected()) {
       return this.$translate.instant('careChatTpl.helpTextWaitingEVA');
     } else {
       return this.$translate.instant('careChatTpl.helpTextWaiting');
     }
-  };
+  }
 
-  public helpTextLeaveRoom = function () {
+  public helpTextLeaveRoom(): string {
     if (this.isExpertEscalationSelected()) {
       return this.$translate.instant('careChatTpl.helpTextLeaveRoomEVA');
     } else {
       return this.$translate.instant('careChatTpl.helpTextLeaveRoom');
     }
-  };
+  }
 
   public isStatusMessagesPageValid(): boolean {
     const chatStatusMessagesObj = this.TemplateWizardService.template.configuration.chatStatusMessages.messages;
