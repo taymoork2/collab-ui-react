@@ -1,6 +1,6 @@
-import { CTService } from '../services/CTService';
+import { CTService } from 'modules/sunlight/features/customerSupportTemplate/services/CTService';
 import { Authinfo } from 'modules/core/scripts/services/authinfo';
-import { SunlightConstantsService } from '../../../services/SunlightConstantsService';
+import { SunlightConstantsService } from 'modules/sunlight/services/SunlightConstantsService';
 
 export class MediaSpecificConfiguration {
   public useOrgProfile: boolean = true;
@@ -275,13 +275,13 @@ export class ChatPages implements IPages {
   public customerInformation: CustomerInformation;
   public agentUnavailable: AgentUnavailable;
   public offHours: OffHours;
-  public feeback: Feedback;
+  public feedback: Feedback;
 
   constructor( authinfo: Authinfo, ctService: CTService, $translate: ng.translate.ITranslateService) {
     this.customerInformation = new CustomerInformation(authinfo, ctService, $translate);
     this.agentUnavailable = new AgentUnavailable($translate);
     this.offHours = new OffHours(ctService, $translate);
-    this.feeback = new Feedback($translate);
+    this.feedback = new Feedback($translate);
   }
 }
 

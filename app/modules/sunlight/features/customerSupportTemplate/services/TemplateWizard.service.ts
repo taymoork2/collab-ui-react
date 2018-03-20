@@ -18,16 +18,21 @@ export class TemplateWizardService {
   private states: string[] = [];
   public isEditFeature = false;
 
-  //each compoent will put it's validation status here
+  //TODO: each compoent will put it's validation status here
   public pageValidationResult = {
-    name: false,
+    isNameValid: false,
   };
+
+  //TODO: to set it from the right page
+  public hasConfiguredVirtualAssistantServices = false;
 
   private mediaType;
   public currentState;
   public activeItem;
   public cardMode;
   public template;
+  public featureFlags;
+  public evaConfig;
 
 
   // constants
@@ -67,12 +72,20 @@ export class TemplateWizardService {
   }
 
   public setInitialState(): void {
-    const featureFlags = {
-      //isProactiveFlagEnabled: vm.isCareProactiveChatTrialsEnabled,
-      //isEvaFlagEnabled: vm.evaConfig.isEvaFlagEnabled,
+    //TODO: feature flags to be handled
+    this.featureFlags = {
+      isCareAssistantEnabled: true,
+      isCareProactiveChatTrialsEnabled: true, //vm.isCareProactiveChatTrialsEnabled,
+      isEvaFlagEnabled: true, //vm.evaConfig.isEvaFlagEnabled,
     };
-    this.states = this.CTService.getStatesBasedOnType(this.selectedMediaType(), featureFlags);
+    this.states = this.CTService.getStatesBasedOnType(this.selectedMediaType(), this.featureFlags);
     this.currentState = this.states[0];
+
+    //TODO: Dummy impl:  to populate the eva config from chatEscalation page
+    this.evaConfig = {
+      isEvaFlagEnabled: this.featureFlags.isEvaFlagEnabled,
+      isEvaConfigured: true,
+    };
 
   }
 
@@ -113,6 +126,7 @@ export class TemplateWizardService {
     return (fieldDisplayText.length <= maxCharLimit);
   }
 
+  //TODO: to populate the logic
   private getProfileList() {
 
   }
@@ -121,6 +135,11 @@ export class TemplateWizardService {
     this.selectedAvater = this.isCVAEnabled ? 'bot' : 'agent';
   }
 
+  public isExpertOnlyEscalationSelected() {
+    // if eva is configured AND escalation to agent is not selected
+    return this.evaConfig.isEvaFlagEnabled && this.evaConfig.isEvaConfigured && this.template.configuration.routingLabel &&
+      this.template.configuration.routingLabel === this.SunlightConstantsService.routingLabels.EXPERT;
+  }
 }
 
 export default angular

@@ -14,7 +14,7 @@ class CtSetupAssistantCtrl extends CtBaseController  {
     public TemplateWizardService: TemplateWizardService,
     public CTService,
   ) {
-    super($stateParams, TemplateWizardService, CTService);
+    super($stateParams, TemplateWizardService, CTService, $translate);
 
     this.TemplateWizardService.setSelectedMediaType(this.$stateParams.type);
     this.TemplateWizardService.setInitialState();
@@ -43,7 +43,7 @@ class CtSetupAssistantCtrl extends CtBaseController  {
   }
 
   private isNamePageValid(): boolean {
-    return this.TemplateWizardService.pageValidationResult.name || false;
+    return this.TemplateWizardService.pageValidationResult.isNameValid || false;
   }
 
   private isCustomerInformationPageValid() {
@@ -128,7 +128,7 @@ class CtSetupAssistantCtrl extends CtBaseController  {
   }
 
   public previousButton() {
-    if (this.currentState === this.TemplateWizardService.getStates()[0  ]) {
+    if (this.currentState === this.TemplateWizardService.getStates()[0]) {
       return 'hidden';
     }
     return true;

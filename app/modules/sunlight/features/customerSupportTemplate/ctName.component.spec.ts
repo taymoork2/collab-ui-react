@@ -2,7 +2,6 @@ import ctNameComponentModule from './ctName.component';
 
 describe('In ctNameComponent, The controller', () => {
 
-  //let ctNameComponent: CtNameComponent ;
   let controller;
 
   beforeEach(function () {
