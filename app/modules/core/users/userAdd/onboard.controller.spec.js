@@ -1147,7 +1147,7 @@ describe('OnboardCtrl: Ctrl', function () {
           this.$stateParams.currentUser = {
             licenseID: ['CVC_va652e7d-cd34-4545-8f23-936b74359afd'],
             entitlements: ['cloud-contact-center'],
-            roles: ['spark.synckms', 'ciscouc.ces'],
+            roles: ['spark.synckms'],
             id: this.userId,
           };
         });
@@ -1225,7 +1225,7 @@ describe('OnboardCtrl: Ctrl', function () {
         this.$stateParams.currentUser = {
           licenseID: ['MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0', 'CVC_va652e7d-cd34-4545-8f23-936b74359afd'],
           entitlements: ['cloud-contact-center', 'contact-center-context', 'cloud-contact-center-inbound-voice'],
-          roles: ['spark.synckms', 'ciscouc.ces'],
+          roles: ['spark.synckms'],
           id: this.userId,
         };
       });

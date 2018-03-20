@@ -209,7 +209,6 @@ export class Config {
     orderadmin: 'atlas-portal.partner.orderadmin',
     partner_management: 'atlas-portal.cisco.partnermgmt',
     spark_synckms: 'spark.synckms',
-    ciscouc_ces: 'ciscouc.ces',
     readonly_admin: 'id_readonly_admin',
     tech_support: 'atlas-portal.cisco.techsupport',
     user_admin: 'id_user_admin',
