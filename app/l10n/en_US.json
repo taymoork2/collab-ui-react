@@ -7428,15 +7428,15 @@
     "errorCodes": {
       "mediaprotocol": {
         "type": "Network Ports Blocked",
-        "message": "Firewall may be blocking media on UDP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://collaborationhelp.cisco.com/article/en-us/n4vzhkx' class='issue-link'>Network Requirements for Cisco Spark Services (Administrators)</a>."
+        "message": "Firewall may be blocking media on UDP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://collaborationhelp.cisco.com/article/WBX000028782' class='issue-link'>Network Requirements for Cisco Spark Services (Administrators)</a>."
       },
       "tcpmediafallback": {
         "type": "Network Ports Blocked",
-        "message": "Firewall may be blocking media on UDP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://collaborationhelp.cisco.com/article/en-us/n4vzhkx' class='issue-link'>Network Requirements for Cisco Spark Services (Administrators)</a>."
+        "message": "Firewall may be blocking media on UDP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://collaborationhelp.cisco.com/article/WBX000028782' class='issue-link'>Network Requirements for Cisco Spark Services (Administrators)</a>."
       },
       "mediablockingdetected": {
         "type": "Network Ports Blocked",
-        "message": "Firewall may be blocking media on UDP and TCP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://collaborationhelp.cisco.com/article/en-us/n4vzhkx' class='issue-link'>Network Requirements for Cisco Spark Services (Administrators)</a>."
+        "message": "Firewall may be blocking media on UDP and TCP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://collaborationhelp.cisco.com/article/WBX000028782' class='issue-link'>Network Requirements for Cisco Spark Services (Administrators)</a>."
       },
       "temperaturecheck": {
         "type": "High temperature",
