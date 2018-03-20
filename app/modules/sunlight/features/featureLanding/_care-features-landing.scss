@@ -234,6 +234,10 @@
   }
 }
 
+.tooltip[popup-class="icon-tooltip"] .c-nub {
+  min-width: 250px;
+}
+
 header > p > span.badge {
   @include vr-spacing(pt, 1);
 }
@@ -488,6 +492,7 @@ header > p > span.badge {
 
   .feature-card-popover-error {
     @include vr-spacing(pb, .625);
+    font-family: $brand-font-light;
     font-size: rem-calc(12);
     word-break: normal;
   }
@@ -505,7 +510,7 @@ header > p > span.badge {
     }
 
     .header {
-      @include vr-spacing(mb, .5);
+      @include vr-spacing(mb, 1);
     }
 
     .sub-header {
