@@ -17,7 +17,7 @@
   </thead>
   <tbody>
     <tr ng-repeat="event in $ctrl.allEvents.items | orderBy:'timeStamp' track by $index" ng-click="$ctrl.openSidepanel(event)" ng-show="$ctrl.isFilterSetToService(event.connectorType) && $ctrl.isFilterSetToResource(event.hostname, event.clusterName)" ng-class="{'active': $ctrl.isSidepanelOpen(event)}">
-      <td>{{event.title}}</td>
+      <td>{{::event.title}}</td>
       <td ng-if="event.severity === 'critical'"><span class="badge badge--outline alert" translate="hercules.eventHistory.table.critical"></span></td>
       <td ng-if="event.severity === 'error'"><span class="badge badge--outline alert" translate="hercules.eventHistory.table.error"></span></td>
       <td ng-if="event.severity === 'warning'"><span class="badge badge--outline warning" translate="hercules.eventHistory.table.warning"></span></td>
@@ -25,12 +25,12 @@
       <td ng-if="event.severity === 'RESOLVED'"><span class="badge badge--outline success" translate="hercules.eventHistory.table.resolved"></span></td>
       <td ng-if="event.severity === 'IGNORED'"><span class="badge badge--outline warning" translate="hercules.eventHistory.table.ignored"></span></td>
       <td ng-if="event.severity === 'NONE'"><span translate="hercules.eventHistory.table.none"></span></td>
-      <td>{{$ctrl.getEventType(event)}}</td>
-      <td>{{$ctrl.parseServiceForCluster(event.connectorType)}}</td>
-      <td>{{event.resourceName}}</td>
-      <td ng-if="event.username">{{event.username}}</td>
-      <td ng-if="!event.username">{{event.userId}}</td>
-      <td>{{$ctrl.formatTime(event.timestamp)}}</td>
+      <td>{{::$ctrl.getEventType(event)}}</td>
+      <td>{{::$ctrl.parseServiceForCluster(event.connectorType)}}</td>
+      <td>{{::event.resourceName}}</td>
+      <td ng-if="event.username">{{::event.username}}</td>
+      <td ng-if="!event.username">{{::event.userId}}</td>
+      <td>{{::$ctrl.formatTime(event.timestamp)}}</td>
     </tr>
   </tbody>
 </table>
