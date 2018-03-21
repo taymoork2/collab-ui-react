@@ -424,7 +424,7 @@
         accountStatus: '',
         trialId: customer.trialId,
         customerOrgId: customer.customerOrgId || customer.id,
-        customerName: customer.customerName || customer.displayName,
+        customerName: customer.customerName || customer.displayName || '',
         customerEmail: customer.customerEmail || customer.email,
         endDate: edate,
         startDate: customer.startDate,
