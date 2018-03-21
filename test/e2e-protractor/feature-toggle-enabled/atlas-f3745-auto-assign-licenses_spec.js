@@ -24,6 +24,7 @@ const deleteUtils = require('../utils/delete.utils');
 
 let bearerToken;
 const testUserEmail1 = utils.randomTestGmail();
+const testUserEmail2 = utils.randomTestGmail();
 
 describe('Auto-Assign Licenses', function () {
   it('should login as a customer full admin', function () {
@@ -159,6 +160,21 @@ describe('Auto-Assign Licenses', function () {
     });
   });
 
+  describe('manual onboard a second user after modifying the auto-assign template:', function () {
+    it('should add a second new user', function () {
+      users.createUserWithAutoAssignTemplate(testUserEmail2);
+    });
+
+    it('should validate that newly onboarded user has both paid message and meeting licenses', function () {
+      utils.searchAndClick(testUserEmail2);
+      utils.expectIsDisplayed(users.messageService);
+      utils.expectIsNotDisplayed(users.messageServiceFree);
+      utils.expectIsDisplayed(users.meetingService);
+      utils.expectIsNotDisplayed(users.meetingServiceFree);
+      utils.click(users.closeSidePanel);
+    });
+  });
+
   describe('delete template:', function () {
     it('should delete the default auto-assign template', function () {
       utils.click(navigation.usersTab);
@@ -175,5 +191,6 @@ describe('Auto-Assign Licenses', function () {
 
   afterAll(function () {
     deleteUtils.deleteUser(testUserEmail1, bearerToken);
+    deleteUtils.deleteUser(testUserEmail2, bearerToken);
   });
 });
