@@ -87,9 +87,9 @@ export class ContactInfo implements IContactInfo {
   public telephoneNumber: ITelephoneNumber | null;
 
   constructor(contactInfo: IContactInfo = {
-    contactFirstName: '',
-    contactLastName: '',
-    emailAddress: '',
+    contactFirstName: 'Art',
+    contactLastName: 'Vandelay',
+    emailAddress: 'jlowery@cisco.com',
     telephoneNumber: null,
   }) {
     this.contactFirstName = contactInfo.contactFirstName;
@@ -144,4 +144,8 @@ export interface IBsftCustomerStatus {
   completed: boolean;
   failed: boolean;
   errorMessage: string;
+}
+
+export interface IBsftCustomerLogin {
+  crossLaunchUrl: string;
 }

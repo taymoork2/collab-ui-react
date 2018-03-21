@@ -1,16 +1,18 @@
-import { IBsftSettings, BsftSettings, IBsftCustomerStatus } from './bsft-settings';
+import { IBsftSettings, BsftSettings, IBsftCustomerStatus, IBsftCustomerLogin } from './bsft-settings';
 
 interface IBsftCustomerResource extends ng.resource.IResourceClass<ng.resource.IResource<IBsftSettings>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
 
+interface IBsftCustomerLoginResource extends ng.resource.IResourceClass<ng.resource.IResource<IBsftCustomerLogin>> {}
+
 export class BsftCustomerService {
   private bsftCustomerResource: IBsftCustomerResource;
+  private bsftCustomerLoginResource: IBsftCustomerLoginResource;
 
   /* @ngInject */
   constructor(
     private $resource: ng.resource.IResourceService,
-    private Authinfo,
     private HuronConfig,
   ) {
     const updateAction: ng.resource.IActionDescriptor = {
@@ -29,6 +31,7 @@ export class BsftCustomerService {
         update: updateAction,
         save: saveAction,
       });
+    this.bsftCustomerLoginResource = <IBsftCustomerLoginResource>this.$resource(`${this.HuronConfig.getRialtoUrl()}/customers/:customerId/login`, {}, {});
   }
 
   public getBsftCustomer(customerId: string): IPromise<BsftSettings> {
@@ -38,9 +41,7 @@ export class BsftCustomerService {
   }
 
   public createBsftCustomer(bsftSettings: BsftSettings) {
-    return this.bsftCustomerResource.save({
-      customerId: this.Authinfo.getOrgId(),
-    }, bsftSettings).$promise;
+    return this.bsftCustomerResource.save({}, bsftSettings).$promise;
   }
 
   public getBsftCustomerStatus(customerId: string): IPromise<IBsftCustomerStatus> {
@@ -54,6 +55,16 @@ export class BsftCustomerService {
         failed: _.get(response, 'failed'),
         errorMessage: _.get(response, 'errorMessage'),
       } as IBsftCustomerStatus;
+    });
+  }
+
+  public getBsftCustomerLogin(customerId: string): IPromise<IBsftCustomerLogin> {
+    return this.bsftCustomerLoginResource.get({
+      customerId: customerId,
+    }).$promise.then(response => {
+      return {
+        crossLaunchUrl: _.get(response, 'crossLaunchUrl'),
+      } as IBsftCustomerLogin;
     });
   }
 }

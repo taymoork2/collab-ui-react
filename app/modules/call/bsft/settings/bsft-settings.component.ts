@@ -16,6 +16,7 @@ class BsftSettingsCtrl implements ng.IComponentController {
     private Notification: Notification,
     private $q: ng.IQService,
     private $scope: ng.IScope,
+    private Authinfo,
     ) {}
 
   public $onInit(): void {
@@ -42,7 +43,11 @@ class BsftSettingsCtrl implements ng.IComponentController {
       .then(bsftOptions => this.bsftSettingsOptions = bsftOptions)
       .then(() => {
         return this.BsftSettingsService.get(this.uuid)
-          .then(bsftSettings => this.bsftSettingsData = bsftSettings)
+          .then(bsftSettings => {
+            this.bsftSettingsData = bsftSettings;
+            this.bsftSettingsData.bsftSettings.orgId = this.Authinfo.getOrgId();
+            this.bsftSettingsData.bsftSettings.name = this.Authinfo.getOrgName();
+          })
           .catch(error => this.Notification.processErrorResponse(error));
       });
   }
@@ -55,6 +60,16 @@ class BsftSettingsCtrl implements ng.IComponentController {
     _.set(this.bsftSettingsData.bsftSettings.site, 'timeZone', timeZone);
   }
 
+  public setupBsftNext(): ng.IPromise<void> {
+    return this.save();
+  }
+
+  public save(): ng.IPromise<void> {
+    this.loading = true;
+    return this.BsftSettingsService.save(this.bsftSettingsData.bsftSettings)
+      .then(() => {})
+      .finally(() => this.loading = false);
+  }
 }
 
 export class BsftSettingsComponent implements ng.IComponentOptions {
