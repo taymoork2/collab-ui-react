@@ -1,5 +1,7 @@
 describe('Apple Business Chat', () => {
   const ABCTestName = 'e2e-AppleBusinessChat- ' + utils.randomId();
+  const ABCTestRename = ABCTestName + '-NewName';
+  const ABCBusinessId = 'ABC_ID_' + utils.randomId();
 
   beforeAll(function () {
     login.login('expertvirtualassistant-admin', '#/services');
@@ -22,7 +24,7 @@ describe('Apple Business Chat', () => {
       utils.click(careFeatureLandingPage.createAppleBusinessChatButton);
       utils.expectIsNotDisplayed(careAppleBusinessChatPage.setUpLeftBtn);
       utils.expectIsDisplayed(careAppleBusinessChatPage.setUpTitle);
-      utils.sendKeys(careAppleBusinessChatPage.businessId, 'ABC_ID');
+      utils.sendKeys(careAppleBusinessChatPage.businessId, ABCBusinessId);
       utils.expectIsEnabled(careAppleBusinessChatPage.businessId);
       utils.expectIsDisplayed(careAppleBusinessChatPage.setUpRightBtn);
     });
@@ -41,6 +43,8 @@ describe('Apple Business Chat', () => {
       utils.expectIsDisplayed(careAppleBusinessChatPage.setUpTitle);
       utils.expectIsDisplayed(careAppleBusinessChatPage.setUpDesc);
       utils.expectIsDisplayed(careAppleBusinessChatPage.cvaDropdown);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpLeftBtn);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpRightBtn);
     });
 
     it('should proceed to Summary page', () => {
@@ -65,14 +69,63 @@ describe('Apple Business Chat', () => {
     });
   });
 
+  describe('Edit', () => {
+    it('Start Editing existing Apple Business Chat', function () {
+      utils.click(careLandingPage.editCardBtnOnCard);
+      utils.expectIsNotDisplayed(careAppleBusinessChatPage.setUpLeftBtn);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpTitle);
+      utils.expectIsDisabled(careAppleBusinessChatPage.businessId);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpRightBtn);
+      utils.expectIsEnabled(careAppleBusinessChatPage.setUpRightBtn);
+    });
+
+    it('should proceed to Name page and rename', () => {
+      utils.click(careAppleBusinessChatPage.setUpRightBtn);
+      const expectedHint = 'Specify the Apple Business Chat name';
+      utils.waitForText(careAppleBusinessChatPage.nameHint, expectedHint);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpLeftBtn);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpRightBtn);
+      utils.expectValueToContain(careVirtualAssistantTemplateSetupPage.name, ABCTestName);
+
+      utils.clear(careVirtualAssistantTemplateSetupPage.name);
+      utils.sendKeys(careVirtualAssistantTemplateSetupPage.name, ABCTestRename);
+    });
+
+    it('should display list of Customer Virtual Assistants', () => {
+      utils.click(careAppleBusinessChatPage.setUpRightBtn);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpTitle);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpDesc);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.cvaDropdown);
+    });
+
+    it('should proceed to Summary page', () => {
+      utils.click(careAppleBusinessChatPage.setUpRightBtn);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpLeftBtn);
+      utils.expectIsNotDisplayed(careAppleBusinessChatPage.setUpRightBtn);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.finishBtn);
+    });
+
+    it('should successfully Save/Finish', () => {
+      utils.click(careAppleBusinessChatPage.finishBtn);
+      notifications.assertSuccess('Changes to ' + ABCTestRename + ' are successfully saved.');
+    });
+  });
+
   describe('Delete', () => {
     it('should delete ABC', function () {
-      utils.click(careLandingPage.deleteCardBtnOnCard);
-      utils.click(careLandingPage.deleteTemplateOnModal);
-      notifications.assertSuccess(ABCTestName + ' has been deleted successfully.');
+      // Find the ABC first
       utils.click(utils.searchbox);
       utils.clear(utils.searchField);
-      utils.sendKeys(utils.searchField, ABCTestName);
+      utils.sendKeys(utils.searchField, ABCTestRename);
+      utils.waitForText(careLandingPage.foundCardName, ABCTestRename);
+
+      // Delete it
+      utils.click(careLandingPage.deleteCardBtnOnCard);
+      utils.click(careLandingPage.deleteTemplateOnModal);
+      notifications.assertSuccess(ABCTestRename + ' has been deleted successfully.');
+      utils.click(utils.searchbox);
+      utils.clear(utils.searchField);
+      utils.sendKeys(utils.searchField, ABCTestRename);
       utils.expectIsNotDisplayed(careChatTemplateSetupPage.chatTemplateName);
     });
   });
@@ -91,9 +144,6 @@ describe('Apple Business Chat', () => {
       utils.click(careAppleBusinessChatPage.setUpRightBtn);
       const expectedHint = 'Specify the Apple Business Chat name';
       utils.waitForText(careAppleBusinessChatPage.nameHint, expectedHint);
-      utils.sendKeys(careAppleBusinessChatPage.name, ABCTestName);
-      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpLeftBtn);
-      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpRightBtn);
     });
 
     it('should successfully cancel the ABC creation wizard', function () {

@@ -8230,6 +8230,7 @@
       },
       "summary": {
         "abcDesc": "You have configured {{ name }}.\nClick Finish to save the configuration.",
+        "abcDescEdit": "You have edited {{ name }}.\nClick Finish to save the configuration.",
         "saveErrorMessage": "Cannot save {{ featureName }}. Try again."
       }
     },

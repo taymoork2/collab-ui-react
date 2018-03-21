@@ -189,11 +189,15 @@
       .state('care.appleBusinessChat', {
         url: '/abcService?businessId',
         parent: 'care.Details',
-        template: '<abc-setup dismiss="$dismiss()" template="$resolve.template" business-id="$resolve.businessId"></abc-setup>',
+        template: '<abc-setup dismiss="$dismiss()"  is-edit-feature="$resolve.isEditFeature" template="$resolve.template" business-id="$resolve.businessId"></abc-setup>',
         params: {
+          isEditFeature: null,
           template: null,
         },
         resolve: {
+          isEditFeature: /* @ngInject */ function ($stateParams) {
+            return $stateParams.isEditFeature;
+          },
           template: /* @ngIngect */ function ($stateParams) {
             return $stateParams.template;
           },

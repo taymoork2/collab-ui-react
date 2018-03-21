@@ -541,8 +541,9 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       controller.submitFeature();
       this.$scope.$apply();
 
+      const featureNameObj = { featureName: 'careChatTpl.virtualAssistant.eva.featureText.name' };
       expect(controller.saveTemplateErrorOccurred).toBeTruthy();
-      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String));
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String), featureNameObj);
     });
 
     it('should show invalidIconDimensions if update icon fails on Edit', function () {
@@ -569,7 +570,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       this.$scope.$apply();
 
       expect(controller.saveTemplateErrorOccurred).toBeTruthy();
-      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(response, jasmine.any(String));
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(response, jasmine.any(String), { featureName: myTranslation });
       expect(controller.template.configuration.pages.vaAvatar.avatarError).toBe(controller.avatarErrorType.INVALID_ICON_DIMENSIONS);
       expect(controller.summaryErrorMessage).toBe(myTranslation);
     });
