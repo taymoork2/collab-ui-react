@@ -67,18 +67,6 @@ class Meetingdetails implements ng.IComponentController {
       .then((res: any) => {
         const timeZone = this.SearchService.getStorage('timeZone');
         const wom = this.SearchService.getStorage('webexOneMeeting');
-        let minTime = _.get(wom, 'startTime');
-        _.forEach(res, item => {
-          _.forEach(_.get(item, 'participants'), participant => {
-            const jTime = _.parseInt(_.get(participant, 'joinTime'));
-            if (jTime < minTime) {
-              minTime = jTime;
-            }
-          });
-        });
-        _.set(wom, 'startTime', minTime);
-        this.SearchService.setStorage('webexOneMeeting', wom);
-
         const lines = _.map(res, (item) => this.formateLine(_.get(item, 'participants')));
         this.dataSet = { lines: lines, endTime: _.get(wom, 'endTime'), startTime: _.get(wom, 'startTime'), offset: this.SearchService.getOffset(timeZone) };
 

@@ -182,6 +182,7 @@ class TimeLine implements ng.IComponentController {
       .attr('class', 'axis')
       .attr('transform', `translate(0, ${this.coordinate.endY})`)
       .call(xAxis);
+    this.svg.selectAll('.tick:last-of-type text').attr('x', -8);
   }
 
   private preData(): void {
@@ -210,12 +211,13 @@ class TimeLine implements ng.IComponentController {
   private drawStartGraph(): void {
     const circles = this.data.data;
     const g = this.svg.append('g').attr('class', 'startPoint');
+    const stopX = this.time2line(this.timestampToDate(this.sourceData.endTime));
     g.selectAll('.startPoint')
       .data(circles)
       .enter()
       .append('circle')
       .attr('r', 9)
-      .attr('transform', item => `translate(${item.x1}, ${item.y1})`)
+      .attr('transform', item => `translate(${item.x1 > stopX ? stopX : item.x1}, ${item.y1})`)
       .attr('id', item => `myDot${item.guestId}-${item.userId}-${item.joinTime}`)
       .on('mouseover', item => {
         const circleId = `#myDot${item.guestId}-${item.userId}-${item.joinTime}`;
@@ -644,8 +646,8 @@ class TimeLine implements ng.IComponentController {
     let unit = 60 * 1000;
     if (duration <= 55 * 6 * 1000) {
       unit = 1 * 1000;
-      this.data.unitStr = 'Min:Sec';
-      this.data.xAxisFormat = '%M:%S %p';
+      this.data.unitStr = 'Hour:Min:Sec';
+      this.data.xAxisFormat = '%I:%M:%S %p';
     }
     return unit;
   }
