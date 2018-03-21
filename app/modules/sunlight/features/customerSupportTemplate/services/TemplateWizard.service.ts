@@ -22,6 +22,7 @@ export class TemplateWizardService {
   public pageValidationResult = {
     isNameValid: false,
     chatStatusMsgValid: false,
+    offHoursValid: false,
   };
 
   //TODO: to set it from the right page
