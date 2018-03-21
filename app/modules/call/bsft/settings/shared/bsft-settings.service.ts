@@ -1,4 +1,4 @@
-import { BsftSettings } from './bsft-settings';
+import { BsftSettings, IBsftSettings } from './bsft-settings';
 import { BsftCustomerService } from './bsft-customer.service';
 import { Notification } from 'modules/core/notifications';
 
@@ -18,6 +18,14 @@ export class BsftSettingsService {
 
   public get(customerId?: string | undefined) {
     return this.getBsftSettingsData(customerId);
+  }
+
+  public save(bsftSettings: BsftSettings): IPromise<IBsftSettings> {
+    return this.BsftCustomerService.createBsftCustomer(bsftSettings)
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error));
+        return this.$q.reject();
+      });
   }
 
   private getBsftSettingsData(customerId) {
