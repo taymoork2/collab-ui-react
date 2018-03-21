@@ -27,7 +27,7 @@ class SetupAgentInstallFileCtrl implements ng.IComponentController {
   /* @ngInject*/
   constructor(
     private $timeout: ng.ITimeoutService,
-    public $translate,
+    public $translate: ng.translate.ITranslateService,
     private Notification: Notification,
   ) {
     this.tokenplaceholder = this.$translate.instant('hcs.installFiles.placeholderHttpProxy');

@@ -12,7 +12,7 @@ export class HcsSetupSftpController implements ng.IComponentController {
   public hcsSftpForm: ng.IFormController;
   /* @ngInject */
   constructor(
-    public $translate,
+    public $translate: ng.translate.ITranslateService,
   ) {
   }
   public $onInit() {
