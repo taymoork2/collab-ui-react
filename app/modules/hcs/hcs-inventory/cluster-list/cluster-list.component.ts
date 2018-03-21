@@ -27,9 +27,6 @@ export class ClusterListCtrl implements ng.IComponentController {
 
   public $onInit() {
     this.tabs.push({
-      title: this.$translate.instant('hcs.nodesList.title'),
-      state: 'hcs.nodesList',
-    }, {
       title: this.$translate.instant('hcs.clustersList.title'),
       state: 'hcs.clusterList',
     }, {
@@ -38,6 +35,7 @@ export class ClusterListCtrl implements ng.IComponentController {
     });
 
     this.clusterList = [{
+      id: 'a1234',
       name: 'sm-cucm-c1',
       type: 'CUCM',
       nodes: [
@@ -52,6 +50,7 @@ export class ClusterListCtrl implements ng.IComponentController {
         },
       ],
     }, {
+      id: 'x5678',
       name: 'sm-imp-c1',
       type: 'IM&P',
       nodes: [
@@ -66,6 +65,7 @@ export class ClusterListCtrl implements ng.IComponentController {
         },
       ],
     }, {
+      id: 'b1920',
       name: 'sm-uxcn-c2',
       type: 'UXCN',
       nodes: [
@@ -80,6 +80,7 @@ export class ClusterListCtrl implements ng.IComponentController {
         },
       ],
     }, {
+      id: 'm1212',
       name: 'sm-expr-c2',
       type: 'EXPR-E',
       nodes: [

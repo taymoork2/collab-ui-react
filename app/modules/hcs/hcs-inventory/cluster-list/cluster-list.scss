@@ -1,8 +1,6 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
-@import '~@collabui/collab-ui/scss/settings/typography';
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
-@import '~@collabui/collab-ui/scss/tools/mixins/vendor-prefixes';
-@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
+
 
 .cluster-list-container {
   padding-bottom: rem-calc(16);
@@ -15,18 +13,12 @@
     padding-bottom: 1.5rem;
     .cluster-name {
       padding: 0rem;
-      color: #000000;
-      font-size: rem-calc(20);
-      font-weight: 300;
-      line-height: rem-calc(32);
+      color: $gray-dark-4;
     }
 
     .cluster-type {
       padding: 0rem;
-      color: #343537;
-      font-size: rem-calc(20);
-      font-weight: 300;
-      line-height: rem-calc(32);
+      color: $gray-dark-3;
     }
   }
 
@@ -35,29 +27,25 @@
     .card-section {
       .card-section-header {
         padding-left: 0.5rem;
-        color: #000000;
-        font-size: rem-calc(16);
-        line-height: rem-calc(24);
+        color: $gray-dark-4;
         margin-bottom: rem-calc(22);
       }
       .card-section-item {
         margin-bottom: rem-calc(16);
-        .columns.medium-2, .columns.medium-6 {
-          color: #666666;
-          font-size: rem-calc(14);
+        .columns.medium-3, .columns.medium-6 {
+          color: $gray-base;
           font-weight: 300;
         }
 
-        .columns.medium-4 {
-          color: #000000;
-          font-size: 14px;
+        .columns.medium-3 {
+          color: $gray-dark-4;
         }
       }
     }
   }
 
   footer.cluster-list-footer {
-    border-top: 1px solid #c2c2c2;
+    border-top: 1px solid $gray-light-1;
     padding-top: 1rem;
     div {
       width: 100%;
