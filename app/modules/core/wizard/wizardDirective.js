@@ -61,7 +61,6 @@ require('./_wizard.scss');
     vm.numberOfSteps = $stateParams.numberOfSteps;
     vm.showStandardModal = $stateParams.showStandardModal;
 
-    vm.termsCheckbox = false;
     vm.isCustomerPartner = isCustomerPartner;
     vm.isFromPartnerLaunch = isFromPartnerLaunch;
     vm.hasDefaultButtons = hasDefaultButtons;
@@ -498,9 +497,9 @@ require('./_wizard.scss');
 
     $scope.$on('wizardNextText', function (event, action) {
       event.stopPropagation();
-      if (action == 'next') {
+      if (action === 'next') {
         vm.nextText = $translate.instant('common.next');
-      } else if (action == 'finish') {
+      } else if (action === 'finish') {
         vm.nextText = $translate.instant('common.save');
       }
     });
