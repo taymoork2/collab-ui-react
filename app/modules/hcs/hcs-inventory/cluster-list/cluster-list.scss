@@ -1,8 +1,6 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
-@import '~@collabui/collab-ui/scss/settings/typography';
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
-@import '~@collabui/collab-ui/scss/tools/mixins/vendor-prefixes';
-@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
+
 
 .cluster-list-container {
   padding-bottom: rem-calc(16);
@@ -15,7 +13,7 @@
     padding-bottom: 1.5rem;
     .cluster-name {
       padding: 0rem;
-      color: #000000;
+      color: $gray-dark-4;
       font-size: rem-calc(20);
       font-weight: 300;
       line-height: rem-calc(32);
@@ -23,7 +21,7 @@
 
     .cluster-type {
       padding: 0rem;
-      color: #343537;
+      color: $gray-dark-3;
       font-size: rem-calc(20);
       font-weight: 300;
       line-height: rem-calc(32);
@@ -35,7 +33,7 @@
     .card-section {
       .card-section-header {
         padding-left: 0.5rem;
-        color: #000000;
+        color: $gray-dark-4;
         font-size: rem-calc(16);
         line-height: rem-calc(24);
         margin-bottom: rem-calc(22);
@@ -43,13 +41,13 @@
       .card-section-item {
         margin-bottom: rem-calc(16);
         .columns.medium-2, .columns.medium-6 {
-          color: #666666;
+          color: $gray-base;
           font-size: rem-calc(14);
           font-weight: 300;
         }
 
         .columns.medium-4 {
-          color: #000000;
+          color: $gray-dark-4;
           font-size: 14px;
         }
       }
@@ -57,7 +55,7 @@
   }
 
   footer.cluster-list-footer {
-    border-top: 1px solid #c2c2c2;
+    border-top: 1px solid $gray-light-1;
     padding-top: 1rem;
     div {
       width: 100%;

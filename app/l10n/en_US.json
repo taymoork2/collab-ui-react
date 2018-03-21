@@ -10846,62 +10846,32 @@
     }
   },
   "hcs": {
-    "cardTitle": "Hosted Collaboration Service",
-    "description": "Extend Cloud services to Hosted Cloud Solution.",
     "addService": "Add a Service",
     "agentInstallFiles": "Agent Install Files",
-    "license": {
-      "all": "All",
-      "description": "Extend Licensing services to Hosted Cloud Solution.",
-      "hcsTitle": "HCS Licenses",
-      "invalid": "Invalid",
-      "laas": "License as a Service",
-      "other": "Other",
-      "perpetual": "Perpetual",
-      "standard": "Standard",
-      "status": "Status",
-      "subscriptions": "Subscriptions",
-      "subscriptionId": "Subscription ID",
-      "telepresence": "Telepresence",
-      "title": "Licenses",
-      "valid": "Valid"
-    },
-    "upgrade": {
-      "title": "HCS Upgrade Settings",
-      "description": "Extend Upgrade services to Hosted Cloud Solution.",
-      "softwareProfiles": "Software Profiles",
-      "uaas": "Upgrade as a Service"
-    },
-    "sftp":  {
-      "confirmPassword": "Confirm Password",
-      "description": "Configure an SFTP Server to be used for upgrading software images.",
-      "directory": "Directory",
-      "dirPlace": "Enter Directory",
-      "name": "IP Address/Hostname",
-      "namePlace": "Enter IP Address or Hostname",
-      "password": "Password",
-      "passwordPlace": "Enter password",
-      "passwordConfirmPlace": "Enter password",
-      "passwordMismatch": "The password entered does not match",
-      "title": "SFTP Servers",
-      "userName": "User Name",
-      "userPlace": "Enter User Name"
-    },
-    "setup": {
-      "titleServices": "Choose Services",
-      "selectDescription": "Choose the HCS Service for Setup"
-    },
-    "inventory": {
-      "title": "Inventory"
+    "cardTitle": "Hosted Collaboration Service",
+    "clusterDetail": {
+      "settings": {
+        "sftpLocation": {
+          "sectionHeader": "Default SFTP Location",
+          "sftpSelectLabel": "Choose the default SFTP Location for this cluster."
+        },
+        "nodes": {
+          "accept": "Accept",
+          "sectionHeader": "Nodes",
+          "verificationCode": "Verification Code"
+        },
+        "clustername": {
+          "clusterInputLabel": "Enter a new name for the cluster.",
+          "sectionHeader": "Cluster Name"
+        }
+      }
     },
     "clustersList": {
       "title":"Clusters"
     },
-    "nodesList": {
-      "title":"Nodes"
-    },
-    "upgradePage": {
-      "title": "Upgrades"
+    "description": "Extend Cloud services to Hosted Cloud Solution.",
+    "inventory": {
+      "title": "Inventory"
     },
     "installFiles": {
       "addFile": "Add File",
@@ -10922,6 +10892,44 @@
       "tarFile": ".tar file",
       "title": "Install Files"
     },
+    "license": {
+      "all": "All",
+      "description": "Extend Licensing services to Hosted Cloud Solution.",
+      "hcsTitle": "HCS Licenses",
+      "invalid": "Invalid",
+      "laas": "License as a Service",
+      "other": "Other",
+      "perpetual": "Perpetual",
+      "standard": "Standard",
+      "status": "Status",
+      "subscriptions": "Subscriptions",
+      "subscriptionId": "Subscription ID",
+      "telepresence": "Telepresence",
+      "title": "Licenses",
+      "valid": "Valid"
+    },
+    "nodesList": {
+      "title":"Nodes"
+    },
+    "setup": {
+      "titleServices": "Choose Services",
+      "selectDescription": "Choose the HCS Service for Setup"
+    },
+    "sftp":  {
+      "confirmPassword": "Confirm Password",
+      "description": "Configure an SFTP Server to be used for upgrading software images.",
+      "directory": "Directory",
+      "dirPlace": "Enter Directory",
+      "name": "IP Address/Hostname",
+      "namePlace": "Enter IP Address or Hostname",
+      "password": "Password",
+      "passwordPlace": "Enter password",
+      "passwordConfirmPlace": "Enter password",
+      "passwordMismatch": "The password entered does not match",
+      "title": "SFTP Servers",
+      "userName": "User Name",
+      "userPlace": "Enter User Name"
+    },
     "softwareProfiles": {
       "cer": "Cisco Emergency Responder Version",
       "cerPlace": "Choose CER Version",
@@ -10938,27 +10946,36 @@
       "ucxn": "Cisco Unity Connection Version",
       "ucxnPlace": "Choose UCXN Version"
     },
+    "suiteView": {
+      "title": "Suites",
+      "createSuite": "Create Suite",
+      "runSuite": "Run Suite",
+      "editSuite": "Edit",
+      "copySuite": "Copy",
+      "scheduleSuite": "Schedule",
+      "deleteSuite": "Delete",
+      "resources": "Resources",
+      "results": "Get last test run results",
+      "schedule": "Scheduling",
+      "successTitle": "Your test is running!",
+      "successRun": "To see results, click the link in the card",
+      "errorRun": "Something went wrong with scheduling",
+      "goToResults": "View Results"
+    },
+    "upgrade": {
+      "title": "HCS Upgrade Settings",
+      "description": "Extend Upgrade services to Hosted Cloud Solution.",
+      "softwareProfiles": "Software Profiles",
+      "uaas": "Upgrade as a Service"
+    },
+    "upgradePage": {
+      "title": "Upgrades"
+    },
     "taas": {
       "testState": {
         "good": "Passed",
         "failed": "Failed",
         "running": "Running..."
-      },
-      "suiteView": {
-        "title": "Suites",
-        "createSuite": "Create Suite",
-        "runSuite": "Run Suite",
-        "editSuite": "Edit",
-        "copySuite": "Copy",
-        "scheduleSuite": "Schedule",
-        "deleteSuite": "Delete",
-        "resources": "Resources",
-        "results": "Get last test run results",
-        "schedule": "Scheduling",
-        "successTitle": "Your test is running!",
-        "successRun": "To see results, click the link in the card",
-        "errorRun": "Something went wrong with scheduling",
-        "goToResults": "View Results"
       },
       "taskView": {
         "title": "Tests",

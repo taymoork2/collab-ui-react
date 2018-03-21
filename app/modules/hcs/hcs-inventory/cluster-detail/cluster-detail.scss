@@ -1,0 +1,74 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
+.section__content.node__info {
+  width: 75%;
+  .cs-card article {
+    height: rem-calc(180);
+    header.node-header {
+      padding: 1.125rem 0.5rem 0.5rem 1rem;
+      border-bottom: 1px solid $gray-light-1;
+      .node-name {
+        padding: 0rem 0rem 0rem 0rem;
+        font-size: rem-calc(16);
+        font-weight: 300;
+        line-height: rem-calc(24);
+        color: $gray-dark-4;
+
+        .node-type {
+          margin-left: rem-calc(4);
+          font-size: rem-calc(14);
+          line-height: rem-calc(20);
+          color: $gray-dark-3
+        }
+      }
+      .node-verification {
+        padding: 0rem 0rem 0rem 0rem;
+        font-size: rem-calc(12);
+        line-height: rem-calc(16);
+        color: $gray-base;
+      }
+    }
+
+    section.card-body {
+      padding: 1.125rem 1rem 0.5rem 1rem;
+      .card-section {
+        .card-section-item.node-status {
+          color: $gray-dark-4;
+          font-size: rem-calc(16);
+          line-height: rem-calc(22);
+        }
+        .card-section-item.node-ip {
+          font-size: rem-calc(12);
+          line-height: rem-calc(16);
+          color: $gray-base;
+          font-weight: 300;
+        }
+        .card-section-item.node-sftp {
+          margin-top: rem-calc(16);
+          font-size: rem-calc(14);
+          line-height: rem-calc(24);
+          color: $gray-base;
+          font-weight: 200;
+          .edit {
+            font-weight: 300;
+            margin-left: rem-calc(8);
+          }
+        }
+        .columns.medium-4 {
+          button {
+            border-radius: 100px;
+            float: right;
+          }
+        }
+      }
+    }
+  }
+
+  button.close.node-close:before {
+    font-size: rem-calc(14)
+  }
+  button.close.node-close {
+    font-size: rem-calc(14)
+  }
+}

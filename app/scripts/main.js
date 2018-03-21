@@ -286,6 +286,7 @@
     require('modules/hcs/shared').default,
     require('modules/hcs/hcs-inventory').default,
     require('modules/hcs/hcs-inventory/cluster-list').default,
+    require('modules/hcs/hcs-inventory/cluster-detail').default,
     require('modules/hcs/hcs-inventory/inventory-list').default,
     require('modules/hcs/install-files').default,
     require('modules/hcs/setup').default,

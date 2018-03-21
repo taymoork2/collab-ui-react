@@ -27,14 +27,14 @@
                 <i ng-switch-when="Needs Accepted" class="icon icon-circle status-indicator warning"></i>
                 <i ng-switch-when="Active" class="icon icon-circle status-indicator success"></i>
                 <i ng-switch-when="Agent Inactive" class="icon icon-circle status-indicator danger"></i>
-                  {{node.status}}
+                {{node.status}}
               </div>
             </div>
           </div>
         </section>
         <footer class="cluster-list-footer">
           <div>
-            <a>Settings</a>
+            <a ui-sref="hcs.clusterDetail({customerId: $ctrl.customerId, clusterId: cluster.id, clusterName: cluster.name})" translate="common.settings"></a>
           </div>
         </footer>
       </article>

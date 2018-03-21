@@ -3125,7 +3125,7 @@
             template: '<hcs-licenses-subscription></hcs-licenses-subscription>',
           })
           .state('hcs.clusterList', {
-            url: '/hcs/inventory/:id/clusters',
+            url: '/hcs/inventory/:customerId/clusters',
             parent: 'partner',
             template: '<hcs-cluster-list customer-id="$resolve.customerId" customer-name="$resolve.customerName"></hcs-cluster-list>',
             params: {
@@ -3138,6 +3138,27 @@
               },
               customerName: /* @ngInject */ function ($stateParams) {
                 return $stateParams.customerName;
+              },
+            },
+          })
+          .state('hcs.clusterDetail', {
+            url: '/hcs/inventory/:customerId/cluster/:clusterId',
+            parent: 'partner',
+            template: '<hcs-cluster-detail customer-id="$resolve.customerId" cluster-id="$resolve.clusterId" cluster-name="$resolve.clusterName"></hcs-cluster-detail>',
+            params: {
+              customerId: '',
+              clusterId: '',
+              clusterName: '',
+            },
+            resolve: {
+              customerId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerId;
+              },
+              clusterId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
+              clusterName: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterName;
               },
             },
           })
