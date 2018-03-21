@@ -14,6 +14,11 @@ interface IResourceFilterOptions {
   value: string;
 }
 
+export interface ITimeFilterOptions {
+  label: string;
+  value: 'last_day' | 'last_week' | 'last_2_weeks' | 'last_month';
+}
+
 class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
 
   /* @ngInject */
@@ -53,6 +58,21 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
     value: 'squared-fusion-uc',
   }];
   public selectedServiceFilter: IServiceFilterOptions;
+
+  public timeOptions: ITimeFilterOptions[] = [{
+    label: this.$translate.instant('hercules.eventHistory.lastDay'),
+    value: 'last_day',
+  }, {
+    label: this.$translate.instant('hercules.eventHistory.lastWeek'),
+    value: 'last_week',
+  }, {
+    label: this.$translate.instant('hercules.eventHistory.last2Weeks'),
+    value: 'last_2_weeks',
+  }, {
+    label: this.$translate.instant('hercules.eventHistory.last30Days'),
+    value: 'last_month',
+  }];
+  public selectedTimeFilter = this.timeOptions[0];
 
   public $onInit() {
     if (this.serviceId === 'all') {

@@ -35,14 +35,16 @@ describe('HybridServicesClusterStatusHistoryTableCtrl', () => {
     const controller = $componentController('hybridServicesClusterStatusHistoryTable', {}, {
       earliestTimestampSearchedUpdated: callback,
     });
-    controller.$onInit();
-    $scope.$apply();
     return controller;
   }
 
-  it('should call the provided callback function when we get a timestamp from HybridServicesEventHistoryService', () => {
+  it('should call the provided callback function when we get a time filter from HybridServicesEventHistoryService', () => {
     const callback = jasmine.createSpy('callback');
-    initController(callback);
+    const controller = initController(callback);
+    controller.$onChanges({ timeFilter: {
+      currentValue: 'last_week',
+    }});
+    $scope.$apply();
     expect(callback.calls.count()).toBe(1);
     expect(callback).toHaveBeenCalledWith(jasmine.objectContaining({
       options: {
