@@ -12,17 +12,17 @@
       <article>
         <header>
           <div class="header">
-            <p class="cluster-name" title="Card Name">{{cluster.name}}</p>
+            <h4 class="cluster-name" title="Card Name">{{cluster.name}}</h4>
           </div>
-          <p class="cluster-type">{{cluster.type}}</p>
+          <h4 class="cluster-type">{{cluster.type}}</h4>
         </header>
         <section class="card-body">
           <div class="card-section">
-            <div class="card-section-header">{{cluster.nodes.length}} nodes</div>
+            <div class="card-section-header h5">{{cluster.nodes.length}} nodes</div>
             <div class="card-section-item row" ng-repeat="node in cluster.nodes">
-              <div class="columns medium-2">{{node.name}}</div>
-              <div class="columns medium-6">{{node.type}}</div>
-              <div class="columns medium-4" ng-switch="node.status">
+              <div class="columns medium-3 h6">{{node.name}}</div>
+              <div class="columns medium-6 h6">{{node.type}}</div>
+              <div class="columns medium-3 h6" ng-switch="node.status">
                 <i ng-switch-when="Needs Assigned" class="icon icon-circle status-indicator danger"></i>
                 <i ng-switch-when="Needs Accepted" class="icon icon-circle status-indicator warning"></i>
                 <i ng-switch-when="Active" class="icon icon-circle status-indicator success"></i>

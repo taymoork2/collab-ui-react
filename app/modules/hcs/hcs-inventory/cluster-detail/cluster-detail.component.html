@@ -45,15 +45,15 @@
               <article ng-click="$ctrl.cardSelected()" hover-delay>
                 <header class="node-header">
                   <div class="header-with-right-icon">
-                    <p class="node-name" title="Node Name">{{node.name}}<span class="node-type">{{node.type}}</span></p>
-                    <div class="right card-icon-div ">
+                    <h5 class="node-name" title="Node Name">{{node.name}}<span class="node-type h6">{{node.type}}</span></h5>
+                    <div class="right card-icon-div">
                       <button type="button" class="close node-close"
                         ng-click="$ctrl.closeCard()"
                         ng-keydown=""
                         aria-label="{{::'common.delete' | translate}}"></button>
                     </div>
                   </div>
-                  <p class="node-verification">{{'hcs.clusterDetail.settings.nodes.verificationCode' | translate}}: {{node.verificationCode}}</p>
+                  <p class="node-verification body-small">{{'hcs.clusterDetail.settings.nodes.verificationCode' | translate}}: {{node.verificationCode}}</p>
                 </header>
                 <section class="card-body">
                   <div class="card-section">
@@ -63,7 +63,7 @@
                         <i ng-switch-when="Active" class="icon icon-circle status-indicator success"></i>
                       {{node.status}}
                     </div>
-                    <div class="card-section-item node-ip">{{node.ip}}</div>
+                    <div class="card-section-item node-ip body-small">{{node.ip}}</div>
                     <div class="row">
                       <div class="card-section-item node-sftp columns medium-8">{{node.sftpLocation}}<span><a class="edit" translate="common.edit"></a></span></div>
                       <div class="columns medium-4" ng-if="node.status === 'Needs acceptance'">

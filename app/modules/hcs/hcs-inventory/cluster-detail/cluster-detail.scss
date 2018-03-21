@@ -10,22 +10,15 @@
       border-bottom: 1px solid $gray-light-1;
       .node-name {
         padding: 0rem 0rem 0rem 0rem;
-        font-size: rem-calc(16);
-        font-weight: 300;
-        line-height: rem-calc(24);
         color: $gray-dark-4;
 
         .node-type {
           margin-left: rem-calc(4);
-          font-size: rem-calc(14);
-          line-height: rem-calc(20);
           color: $gray-dark-3
         }
       }
       .node-verification {
         padding: 0rem 0rem 0rem 0rem;
-        font-size: rem-calc(12);
-        line-height: rem-calc(16);
         color: $gray-base;
       }
     }
@@ -39,13 +32,11 @@
           line-height: rem-calc(22);
         }
         .card-section-item.node-ip {
-          font-size: rem-calc(12);
-          line-height: rem-calc(16);
           color: $gray-base;
-          font-weight: 300;
         }
         .card-section-item.node-sftp {
           margin-top: rem-calc(16);
+          padding-left: 0rem;
           font-size: rem-calc(14);
           line-height: rem-calc(24);
           color: $gray-base;

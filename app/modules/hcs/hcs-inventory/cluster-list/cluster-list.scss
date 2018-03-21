@@ -14,17 +14,11 @@
     .cluster-name {
       padding: 0rem;
       color: $gray-dark-4;
-      font-size: rem-calc(20);
-      font-weight: 300;
-      line-height: rem-calc(32);
     }
 
     .cluster-type {
       padding: 0rem;
       color: $gray-dark-3;
-      font-size: rem-calc(20);
-      font-weight: 300;
-      line-height: rem-calc(32);
     }
   }
 
@@ -34,21 +28,17 @@
       .card-section-header {
         padding-left: 0.5rem;
         color: $gray-dark-4;
-        font-size: rem-calc(16);
-        line-height: rem-calc(24);
         margin-bottom: rem-calc(22);
       }
       .card-section-item {
         margin-bottom: rem-calc(16);
-        .columns.medium-2, .columns.medium-6 {
+        .columns.medium-3, .columns.medium-6 {
           color: $gray-base;
-          font-size: rem-calc(14);
           font-weight: 300;
         }
 
-        .columns.medium-4 {
+        .columns.medium-3 {
           color: $gray-dark-4;
-          font-size: 14px;
         }
       }
     }
