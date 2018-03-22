@@ -340,7 +340,8 @@ export class USSService {
     return this.$http
       .get<{ items: IClusterSipDomain[] }>(`${this.USSUrl}/orgs/${orgId}/clusterSipDomains`)
       .then(this.extractData)
-      .then(response => response.items);
+      .then(response => response.items)
+      .catch(() => []); // HACK: while this API is not deployed to production, handle the 404 like this
   }
 
   public addSipDomainForCluster(clusterId: string, sipDomain: string, orgId = this.Authinfo.getOrgId()): ng.IPromise<any> {
