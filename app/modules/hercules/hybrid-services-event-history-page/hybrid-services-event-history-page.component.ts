@@ -16,7 +16,7 @@ interface IResourceFilterOptions {
 
 export interface ITimeFilterOptions {
   label: string;
-  value: 'last_day' | 'last_week' | 'last_2_weeks' | 'last_month';
+  value: 'last_day' | 'last_2_days' | 'last_week';
 }
 
 class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
@@ -62,14 +62,11 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
     label: this.$translate.instant('hercules.eventHistory.lastDay'),
     value: 'last_day',
   }, {
+    label: this.$translate.instant('hercules.eventHistory.last2Days'),
+    value: 'last_2_days',
+  }, {
     label: this.$translate.instant('hercules.eventHistory.lastWeek'),
     value: 'last_week',
-  }, {
-    label: this.$translate.instant('hercules.eventHistory.last2Weeks'),
-    value: 'last_2_weeks',
-  }, {
-    label: this.$translate.instant('hercules.eventHistory.last30Days'),
-    value: 'last_month',
   }];
   public selectedTimeFilter = this.timeOptions[0];
 
