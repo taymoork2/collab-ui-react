@@ -1,7 +1,10 @@
-<div ng-if="$ctrl.loadingPage">
+<div ng-if="$ctrl.loadingPage" class="loading-container-event-history">
   <span class="spinner-event-history">
     <i class="icon icon-spinner"></i>
   </span>
+</div>
+<div ng-if="$ctrl.allEvents.items.length === 0 && !$ctrl.loadingPage" class="no-events-found-container">
+  <p class="no-events-found" translate="hercules.eventHistory.noEventsFound"></p>
 </div>
 <table ng-if="$ctrl.allEvents.items.length > 1 && !$ctrl.loadingPage">
   <thead>
@@ -34,6 +37,3 @@
     </tr>
   </tbody>
 </table>
-<div ng-if="$ctrl.allEvents.items.length === 0 && !$ctrl.loadingPage">
-  <p class="no-events-found" translate="hercules.eventHistory.noEventsFound"></p>
-</div>

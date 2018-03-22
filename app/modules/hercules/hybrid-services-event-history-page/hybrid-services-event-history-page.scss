@@ -1,17 +1,28 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+
 hybrid-services-event-history-page {
   display: block;
 
+  .loading-container-event-history {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid $gray-light-3;
+  }
+
   .spinner-event-history {
     font-size: 4rem;
-    text-align: center;
-    display: inline-block;
-    margin-top: 7rem;
-    width: 100%;
+
+    .icon-spinner {
+      display: block;
+    }
   }
 
   .page-sub-header {
     flex-wrap: nowrap;
     height: auto;
+    border-bottom: 0;
   }
 
   .service-filter-container,
