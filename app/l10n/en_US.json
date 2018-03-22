@@ -10916,23 +10916,29 @@
       "valid": "Valid"
     },
     "nodesList": {
-      "title":"Nodes"
+      "title": "Nodes"
     },
     "setup": {
-      "titleServices": "Choose Services",
-      "selectDescription": "Choose the HCS Service for Setup"
+      "finish": "Finish",
+      "nextSteps": "Next Steps:",
+      "selectDescription": "Choose the HCS Service for Setup",
+      "titleServices": "Choose Services"
     },
     "sftp":  {
       "confirmPassword": "Confirm Password",
       "description": "Configure an SFTP Server to be used for upgrading software images.",
       "directory": "Directory",
       "dirPlace": "Enter Directory",
-      "name": "IP Address/Hostname",
-      "namePlace": "Enter IP Address or Hostname",
+      "error": "SFTP Server creation failed",
+      "name": "SFTP Server Name",
+      "namePlace": "Enter SFTP Server Name",
+      "server": "IP Address/Hostname",
+      "serverPlace": "Enter IP Address or Hostname",
       "password": "Password",
       "passwordPlace": "Enter password",
       "passwordConfirmPlace": "Enter password",
       "passwordMismatch": "The password entered does not match",
+      "success": "SFTP server has been successfully created",
       "title": "SFTP Servers",
       "userName": "User Name",
       "userPlace": "Enter User Name"

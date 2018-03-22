@@ -3,6 +3,7 @@ import { ISftpServer } from '../setup/hcs-setup-sftp';
 interface ISftpServerResource extends ng.resource.IResourceClass<ng.resource.IResource<ISftpServer>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<ISftpServer>>;
 }
+const UPGRADE_DEV_URL = 'http://rch-ads-165:9090/hcs-upgrade-service/api/v1'; //TBD-- FOR  local testing only
 
 export class HcsUpgradeService {
   private sftpServerResource: ISftpServerResource;
@@ -11,13 +12,12 @@ export class HcsUpgradeService {
   constructor(
     private $resource: ng.resource.IResourceService,
     private Authinfo,
-    private HuronConfig,
   ) {
     const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
     };
 
-    this.sftpServerResource = <ISftpServerResource>this.$resource(this.HuronConfig.getUpgradeUrl() + '/partners/{partnerId}/sftpServers/{sftpServerId}', {},
+    this.sftpServerResource = <ISftpServerResource>this.$resource(UPGRADE_DEV_URL + '/partners/:partnerId/sftpServers/:sftpServerId', {},
       {
         update: updateAction,
       });
@@ -37,7 +37,7 @@ export class HcsUpgradeService {
   }
 
   public updateSftpServer(_sftpServerId: string, sftpServer: ISftpServer) {
-    return this.sftpServerResource.save({
+    return this.sftpServerResource.update({
       partnerId: this.Authinfo.getOrgId(),
       sftpServerId: _sftpServerId,
     }, sftpServer).$promise;
