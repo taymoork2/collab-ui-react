@@ -1436,7 +1436,8 @@ require('./_user-add.scss');
       });
 
       var entitleList = [],
-        licenseList = [];
+        licenseList = [],
+        onboardMethod = 'MANUAL';
 
       // notes:
       // - start with all enabled entitlements
@@ -1454,7 +1455,7 @@ require('./_user-add.scss');
 
       entitleList = entitleList.concat(getHybridServicesEntitlements('add'));
 
-      return OnboardService.onboardUsersInChunks(usersList, entitleList, licenseList)
+      return OnboardService.onboardUsersInChunks(usersList, entitleList, licenseList, { onboardMethod: onboardMethod })
         .catch(function (rejectedResponse) {
           // notes:
           // - potentially multiple 'Userservice.onboardUsers()' calls could have been made

@@ -34,7 +34,7 @@ export class OnboardSummaryForAutoAssignModalController implements ng.IComponent
     const userEntitlements = [];
     const onboardMethod = OnboardMethod.MANUAL;
 
-    return this.OnboardService.onboardUsersInChunks(this.userList, userEntitlements, licenses, onboardMethod)
+    return this.OnboardService.onboardUsersInChunks(this.userList, userEntitlements, licenses, { onboardMethod })
       .catch((rejectedResponse) => {
         // notes:
         // - potentially multiple 'Userservice.onboardUsersLegacy()' calls could have been made
