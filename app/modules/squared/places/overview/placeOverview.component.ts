@@ -29,7 +29,7 @@ class PlaceOverview implements ng.IComponentController {
   private currentPlace: IPlace = <IPlace>{ devices: {} };
   private csdmHuronUserDeviceService;
   private adminUserDetails;
-  private showDeviceSettings = false;
+  public showDeviceSettings = false;
 
   public ishI1484: boolean = false;
 
@@ -57,7 +57,6 @@ class PlaceOverview implements ng.IComponentController {
     private ServiceDescriptorService: ServiceDescriptorService,
     private Userservice,
     private WizardFactory,
-    private CsdmUpgradeChannelService,
     public LocationsService: LocationsService,
     private PlaceCallOverviewService: PlaceCallOverviewService,
     private Notification: Notification,
@@ -76,6 +75,7 @@ class PlaceOverview implements ng.IComponentController {
       this.getPlaceLocation();
     }
     this.fetchAsyncSettings();
+    this.showDeviceSettings = this.currentPlace.type === 'cloudberry';
     this.setDisplayDescription();
     if (this.showLanguage()) {
       this.initPreferredLanguage();
@@ -225,20 +225,6 @@ class PlaceOverview implements ng.IComponentController {
 
     this.fetchDetailsForLoggedInUser();
 
-    if (this.currentPlace.type === 'cloudberry') {
-      this.FeatureToggleService.csdmPlaceGuiSettingsGetStatus().then(feature => {
-        if (feature) {
-          this.showDeviceSettings = true;
-        } else {
-          this.CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(channels => {
-            this.showDeviceSettings = this.showDeviceSettings || channels.length > 1;
-          });
-        }
-      });
-      this.FeatureToggleService.csdmApiAccessGetStatus().then((result: boolean) => {
-        this.showDeviceSettings = this.showDeviceSettings || result;
-      });
-    }
     this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
     .then(result => this.ishI1484 = result);
   }

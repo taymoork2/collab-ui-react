@@ -87,7 +87,6 @@ describe('placeOverview component', () => {
       spyOn(CsdmCodeService, 'createCodeForExisting').and.returnValue($q.resolve('0q9u09as09vu0a9sv'));
       spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(showATA));
       spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
-      spyOn(FeatureToggleService, 'csdmPlaceGuiSettingsGetStatus').and.returnValue($q.resolve({}));
       spyOn(ServiceDescriptorService, 'getServices').and.returnValue($q.resolve([]));
       $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/' + orgId + '/upgradeChannels').respond(200);
       spyOn(Authinfo, 'getOrgId').and.returnValue(orgId);
