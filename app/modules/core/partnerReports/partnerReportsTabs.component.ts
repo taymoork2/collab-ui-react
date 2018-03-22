@@ -6,6 +6,7 @@ class PartnerReportsTabs implements ng.IComponentController {
   /* @ngInject */
   public constructor(
     private $translate: ng.translate.ITranslateService,
+    private FeatureToggleService,
   ) {}
 
   public $onInit(): void {
@@ -19,6 +20,15 @@ class PartnerReportsTabs implements ng.IComponentController {
         title: this.$translate.instant(`reportsPage.ccaTab`),
       },
     ];
+
+    this.FeatureToggleService.atlasPartnerWebexReportsGetStatus().then((isPartnerWebexEnabled: boolean): void => {
+      if (isPartnerWebexEnabled) {
+        this.tabs.push({
+          state: `partnerreports.tab.webexreports.metrics`,
+          title: this.$translate.instant(`reportsPage.webexReports`),
+        });
+      }
+    });
   }
 }
 

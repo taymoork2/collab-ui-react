@@ -81,6 +81,7 @@
     require('modules/core/partnerReports/reportCard').default,
     require('modules/core/partnerReports/reportFilter').default,
     require('modules/core/partnerReports/reportSlider').default,
+    require('modules/core/partnerReports/webexReports').default,
     require('modules/core/partnerProfile/branding').default,
     require('modules/core/window').default,
     require('modules/online/digitalRiver').default, // TODO make core.myCompany independent module

@@ -1,3 +1,5 @@
+require('./spark-metrics-frame.scss');
+
 (function () {
   'use strict';
 
