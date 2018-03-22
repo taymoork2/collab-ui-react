@@ -1,7 +1,7 @@
 {
   "loginPage": {
-    "title": "Hub Kontrol Cisco Spark",
-    "titleNew": "Hub Kontrol Cisco Spark",
+    "title": "Cisco Spark Control Hub",
+    "titleNew": "Cisco Spark Control Hub",
     "titlePro": "Hub Kontrol Cisco Spark Pro",
     "login": "Masuk",
     "loading": "Memuat",
@@ -199,8 +199,10 @@
       "typeInstructions": "Pilih metode untuk mengunggah dan/atau mengubah pengguna dan layanan yang mereka gunakan.",
       "manualLabel": "Tambahkan atau ubah pengguna secara manual",
       "manualLabelNew": "Tambahkan atau Ubah Pengguna secara Manual",
+      "manualLabelTemplateEnabled": "Tambah pengguna secara manual",
       "manualDetails": "Anda hanya memerlukan alamat email untuk menambahkan dan/atau mengedit hingga {{maxUsersInManual}} pengguna.",
       "manualDetailsNew": "Tambahkan atau Ubah hingga {{maxUsersInManual}} pengguna.",
+      "manualDetailsTemplateEnabled": "Tambahkan {{maxUsersInManual}} pengguna.",
       "dirSyncModifyAll": "Ubah Semua Pengguna yang Diselaraskan",
       "bulkLabel": "Ekspor dan impor pengguna dengan file CSV",
       "bulkLabelNew": "Tambahkan CSV atau Ubah Pengguna",
@@ -281,20 +283,25 @@
     "manual": {
       "titleModify": "Ubah Pengguna secara Manual",
       "titleAddModify": "Tambahkan atau Ubah Pengguna secara Manual",
+      "titleAdd": "Tambah pengguna secara manual",
       "instructions": "Masukkan hingga {{maxUsers}} pengguna yang akan diubah.",
+      "instructionsForAdd": "Masukkan hingga {{maxUsers}} pengguna yang akan diubah.",
       "tooManyUsers": "Daftar pengguna melampaui batas maksimal {{maxUsers}}. Untuk memperbarui lebih dari {{maxUsers}} pengguna, gunakan templat CSV.",
       "ad": {
-        "unsyncedUsers": "Beberapa pengguna saat ini tidak diselaraskan dengan Direktori Aktif. Tambahkan pengguna ke Cisco Directory Connector, lalu ubah pengguna setelah diselaraskan dengan awan."
+        "unsyncedUsers": "Beberapa pengguna saat ini tidak diselaraskan dengan Direktori Aktif. Tambahkan pengguna ke Cisco Directory Connector, lalu ubah pengguna setelah diselaraskan dengan awan.",
+        "existingUsers": "Templat Lisensi Tetapkan Otomatis diaktifkan. Anda hanya dapat memodifikasi pengguna yang ada dari halaman Pengguna atau menggunakan unggah (upload) CSV."
       }
     },
     "bulk": {
       "ad": {
         "title": "Ubah Banyak Pengguna",
-        "instructions": "Ekspor atribut pengguna saat ini, edit file CSV, lalu impor versi yang sudah diedit untuk memperbarui pengguna tersebut."
+        "instructions": "Ekspor atribut pengguna saat ini, edit file CSV, lalu impor versi yang sudah diedit untuk memperbarui pengguna tersebut.",
+        "subscriptionReminder": "Metode ini mengharuskan konten yang diunggah cocok dengan langganan lisensi saat ini. Untuk memperbarui pengguna, ekspor templat pengguna saat ini yang ada di bawah ini untuk mengedit atribut pengguna. Setelah selesai, unggah perubahan."
       },
       "org": {
         "title": "Tambahkan atau Ubah Banyak Pengguna",
-        "instructions": "Ekspor atribut pengguna saat ini, edit file CSV, lalu impor versi yang sudah diedit untuk menambahkan atau memperbarui pengguna."
+        "instructions": "Ekspor atribut pengguna saat ini, edit file CSV, lalu impor versi yang sudah diedit untuk menambahkan atau memperbarui pengguna.",
+        "subscriptionReminder": "Metode ini mengharuskan konten yang diunggah cocok dengan langganan lisensi saat ini. Untuk menambah atau memperbarui pengguna, ekspor templat pengguna saat ini yang ada di bawah ini untuk mengedit atribut pengguna. Setelah selesai, unggah perubahan."
       },
       "import": {
         "label": "Impor",
@@ -357,7 +364,10 @@
         "description": "Pilih layanan yang ingin Anda sediakan kepada pengguna.",
         "note": "Catatan: Jika Anda memilih lebih dari satu lisensi Pesan atau Panggilan, hanya satu lisensi yang akan ditetapkan ke setiap pengguna.",
         "tooltip": "Jika satu langganan lisensinya berakhir, langganan yang dipilih berikutnya akan menetapkan lisensi secara otomatis.",
-        "usage": "Penggunaan: {{ usage }}/{{ volume }}"
+        "usage": "Penggunaan: {{ usage }}/{{ volume }}",
+        "careDisabledTooltip": "Lisensi Layanan hanya diberikan ke agen Layanan.",
+        "warningFooter": "Setidaknya satu layanan perlu dipilih untuk melanjutkan.",
+        "rowTitle": "Langganan: {{subscriptionId}}"
       },
       "editSummary": {
         "title": "Siapkan Templat Tetapkan Otomatis",
@@ -374,6 +384,10 @@
     "autoAssignLicenseSummaryForDirSync": {
       "header": "Ringkasan Lisensi",
       "description": "Anda telah mengaktifkan Tetapkan Otomatis. Semua pengguna yang diselaraskan akan diberi lisensi berikut secara otomatis."
+    },
+    "autoAssignLicenseSummaryForConvert": {
+      "header": "Ringkasan Lisensi",
+      "description": "Anda telah mengaktifkan Tetapkan Otomatis. Pengguna akan diberi lisensi berikut secara otomatis."
     }
   },
   "userTaskManagerModal": {
@@ -394,6 +408,23 @@
       "stoppedForMaintenance": "Dihentikan untuk Pemeliharaan",
       "processing": "Sedang memproses..."
     }
+  },
+  "ssoCertificateModal": {
+    "certificateExpirationWarning": "Sertifikat SSO mungkin kedaluwarsa dalam {{days}} hari. Harap periksa apakah Anda akan terdampak.",
+    "updateCertificate": "Perbarui Sertifikat SSO",
+    "checkCertificate": "Mari periksa apakah Anda perlu melakukan pembaruan ini. Apakah hal-hal berikut berlaku pada IdP Anda?",
+    "signingAuthN": "Menandatangani Permintaan AuthN atau Menandatangani Permintaan SLO atau Mengenkripsi Respons pengajuan ke SP",
+    "noneApply": "Semuanya tidak berlaku pada IdP saya",
+    "needToUpdateCertificate": "Anda harus memperbarui sertifikat.",
+    "proceedToNextStep": "Harap lanjutkan ke langkah berikutnya.",
+    "noActionRequired": "Kabar baik! Tidak perlu tindakan apa pun.",
+    "noActionReason": "Karena IdP Anda tidak menyimpan metadata otentikasi dalam sertifikat SSO, Anda tidak perlu melakukan tindakan apa pun.",
+    "noActionConfirmation": "Apakah Anda yakin pembaruan sertifikat SSO tidak diperlukan?",
+    "certificateType": "IdP jenis apa yang digunakan oleh perusahaan Anda?",
+    "multipleCertificates": "IdP yang mendukung beberapa sertifikat sekaligus",
+    "singleCertificate": "IdP yang mendukung satu sertifikat",
+    "singleCertificateWarning": "Lakukan Pembaruan Selama Waktu Menganggur.",
+    "singleCertificateMessage": "Lanjutkan ke langkah berikutnya pada saat waktu menganggur yang telah dijadwalkan. Selama sertifikat SSO diperbarui sebentar, otentikasi pengguna baru tidak akan diproses. Sesi saat ini akan disimpan."
   },
   "onboardModal": {
     "ciscoSparkJabberInterop": "Interop Cisco Spark / Jabber",
@@ -417,6 +448,7 @@
     "call": "Panggilan",
     "subscriptionIdError": "Terjadi kesalahan memuat id langganan Anda",
     "hybridServices": "Layanan Hybrid",
+    "hybridServicesWarning": "Tetapkan setidaknya satu lisensi untuk mengaktifkan Layanan Hybrid untuk pengguna",
     "freeCollab": "Layanan Kolaborasi Publik Gratis",
     "licCollab": "Layanan Kolaborasi Berlisensi",
     "siteAdminUrl": "Masuk untuk mengatur",
@@ -580,7 +612,7 @@
     "support": "Bantuan",
     "logout": "Keluar",
     "appTitle": "Cloud Collaboration Management",
-    "newAppTitle": "Hub Kontrol Cisco Spark",
+    "newAppTitle": "Cisco Spark Control Hub",
     "proAppTitle": "Hub Kontrol Cisco Spark Pro",
     "genericTitle": "Cisco Spark",
     "search": "Cari pengguna menurut nama atau email",
@@ -664,6 +696,32 @@
     "releaseChannelToggleFailure": "Izinkan Rilis Pelepasan gagal diperbarui. Coba lagi nanti.",
     "orgReadFailed": "Tidak dapat membaca perincian organisasi"
   },
+  "organizationDeleteModal": {
+    "title": {
+      "accountExpired": "Akun Telah Kedaluwarsa",
+      "deleteAccount": "Hapus Akun"
+    },
+    "moveOrDelete": "Ada pengguna yang menjadi bagian dari organisasi Anda di dalam sistem identitas Cisco. Anda dapat menghapus pengguna tersebut ketika akun Anda ditutup atau Anda dapat memindahkan akun mereka dan menetapkannya ke Cisco Spark Gratis.",
+    "moveUsers": "Pindahkan pengguna ke Cisco Spark Gratis",
+    "deleteUsers": "Hapus pengguna",
+    "deleteButton": "Hapus Akun",
+    "goBack": "Kembali",
+    "confirmTitle": "Apakah Anda yakin?",
+    "confirmBody": "Menutup akun Anda tidak dapat dibatalkan kecuali dengan berlangganan ulang. Selain itu, Anda mungkin tidak dapat mengembalikan nama situs WebEx Anda.",
+    "accountClosedTitle": "Akun Anda ditutup",
+    "accountClosedBody": "Untuk berlangganan kembali, harap kunjungi <a href=\"{{href}}\" target=\"_blank\">{{href}}</a>",
+    "deleteOrg": "Hapus {{orgName}}",
+    "checkBoxes": "Centang semua kotak di bawah ini untuk mengakui bahwa Anda mengetahui konsekuensi dari menghapus organisasi ini.",
+    "singleUserMove": "Anda akan dipindahkan ke organisasi Spark Consumer dan semua data Spark akan dihapus, termasuk posting di ruang Spark dan pemberian lisensi",
+    "singleUserDelete": "Data pengguna Anda akan dihapus, termasuk posting di ruang Spark dan pemberian lisensi",
+    "multiUserMove": "Semua pengguna akan dipindahkan ke organisasi Spark Consumer dan semua data Spark akan dihapus, termasuk posting di ruang Spark dan pemberian lisensi",
+    "multiUserDelete": "Semua pengguna dan data pengguna akan dihapus, termasuk posting di ruang Spark dan pemberian lisensi",
+    "allUsersMove": "Semua pengguna dan data pengguna akan dihapus, termasuk posting di ruang Spark dan pemberian lisensi",
+    "allData": "Semua data WebEx akan dihapus, termasuk URL rapat WebEx dan rekaman rapat",
+    "allDevices": "Semua perangkat akan didaftarkan ulang, termasuk telepon IP Cisco, Cisco Spark Board, dan titik akhir konferensi video Cisco TelePresence",
+    "notReversible": "Penghapusan organisasi dan data terkait TIDAK DAPAT DIBATALKAN",
+    "customerPermission": "Anda sudah mendapatkan izin pelanggan untuk menghapus organisasi mereka"
+  },
   "templatesPage": {
     "title": "KELOLA TEMPLAT"
   },
@@ -704,6 +762,7 @@
     "webex": "WebEx Klasik",
     "devReports": "Laporan Pelanggan Pengembangan",
     "sparkReports": "Cisco Spark",
+    "autoLicense": "Terdaftar",
     "downloadOptions": "Opsi Unduhan",
     "careTab": "Care",
     "careTabDesc": "Pusat Kontak Awan",
@@ -982,7 +1041,8 @@
     "media_type_chat": "Obrolan",
     "media_type_callback": "Panggil Kembali",
     "media_type_voice": "Panggilan Masuk",
-    "media_type_webcall": "Obrolan dengan Video",
+    "media_type_webcall": "Panggilan Video",
+    "media_type_chat_with_video": "Obrolan dengan Video",
     "taskDataGetError": "Terjadi kesalahan ketika memuat data {{dataType}}.",
     "tableDataGetError": "Terjadi kesalahan ketika memuat perincian data pengguna efisien.",
     "errorLoadingName": "Kesalahan Memuat Nama",
@@ -1092,7 +1152,7 @@
     "breakdownDescription": "Bagan ini menunjukkan perincian dari semua {{mediaType}} yang ditangani {{time}}. Arahkan kursor ke bagan untuk melihat detailnya.",
     "drilldownShow": "Tampilkan Pengguna Paling Aktif",
     "drilldownHide": "Sembunyikan pengguna paling aktif",
-    "drilldownTitle": "Most Active Users {{time}}",
+    "drilldownTitle": "Pengguna Paling Aktif {{time}}",
     "drilldownDescription": "{{time}}, ini adalah pengguna paling aktif. Tabel dapat diurutkan berdasarkan nama pengguna atau total jumlah tugas yang ditangani.",
     "drilldownErrorDescription": "Data ini sementara tidak tersedia. Server kami akan kembali bekerja, periksa kembali lagi secepatnya.",
     "drilldownEmptyDescription": "{{time}}, tidak ada pengguna yang aktif. Untuk melihat status pengguna dan mengirim ulang undangan yang masih tertunda, buka tab pengguna.",
@@ -1106,7 +1166,7 @@
     "desc": "Bagan ini menunjukkan {{mediaType}} yang diterima dan diabaikan berkaitan dengan total {{mediaType}} yang ditawarkan melalui pengarahan panggilan otomatis {{time}}. Arahkan kursor ke bagan untuk melihat detailnya.",
     "drilldownShow": "Tampilkan Pengguna Paling Aktif",
     "drilldownHide": "Sembunyikan pengguna paling aktif",
-    "drilldownTitle": "Most Active Users {{time}}",
+    "drilldownTitle": "Pengguna Paling Aktif {{time}}",
     "drilldownDescription": "{{time}}, ini adalah pengguna yang menerima jumlah tugas tertinggi yang ditawarkan ke mereka. Tabel dapat disortir berdasarkan nama pengguna, atau jumlah tugas yang ditawarkan, diterima dan diabaikan.",
     "drilldownErrorDescription": "Data ini sementara tidak tersedia. Server kami akan kembali bekerja, periksa kembali lagi secepatnya.",
     "drilldownEmptyDescription": "{{time}}, tidak ada pengguna yang aktif. Untuk melihat status pengguna dan mengirim ulang undangan yang masih tertunda, buka tab pengguna.",
@@ -1640,6 +1700,7 @@
     "proPackTooltip": "Fitur premium ini tersedia dengan Pro Pack. Hubungi mitra Anda untuk mempelajari lebih lanjut.",
     "provision": "Penyediaan",
     "quantity": "Jml",
+    "readonly": "Hanya baca",
     "releaseChannel": "Saluran Pelepasan",
     "remove": "Hapus",
     "rename": "Ganti nama",
@@ -1663,7 +1724,7 @@
     "service": "Layanan",
     "settings": "Pengaturan",
     "setUp": "Siapkan",
-    "shared": "Membagikan",
+    "shared": "Dibagikan",
     "showAllAdminUsers": "Tampilkan semua {{numUsers}} administrator",
     "showLess": "Tampilkan Lebih Sedikit",
     "showMore": "Tampilkan Lebih Banyak",
@@ -1688,6 +1749,7 @@
     "update": "Perbarui",
     "upgrade": "Tingkatkan",
     "upload": "Unggah",
+    "urgent": "Darurat",
     "user": "Pengguna",
     "users": "Pengguna",
     "validate": "Validasi",
@@ -1751,6 +1813,7 @@
     "nextBtn": "Berikutnya",
     "convertUsers": "Konversi Pengguna Tidak Berlisensi",
     "unlicensedUsers": "Pengguna Tidak Berlisensi",
+    "licensesNeedToBeRedistributed": "Penghitungan lisensi tidak aktif pada situs WebEx yang dikaitkan dengan langganan {{subscriptionId}}. Harap distribusikan ulang lisensi antar situs-situs WebEx Anda.",
     "convertUsersText": "Konversi karyawan yang telah mendaftar sendiri ke Cisco Spark dengan alamat email perusahaan menjadi pengguna berlisensi. Pengguna berlisensi mendapatkan fitur-fitur perusahaan tambahan, dan harus tunduk pada kebijakan dan administrasi organisasi Anda.",
     "convertUsersDirSyncEnabledWarning": "Pengguna tidak dapat dikonversi ketika Penyelarasan Direktori diaktifkan. Nonaktifkan Penyelarasan Direktori dari halaman Pengaturan untuk mengonversi pengguna.",
     "convertError": " tidak dapat dikonversi. Hubungi dukungan untuk bantuan mengonversi pengguna ini.",
@@ -1767,7 +1830,7 @@
     "unlicensedText": "Pengguna Tidak Berlisensi",
     "convertText": "Lihat dan konversi pengguna yang saat ini menggunakan versi gratis",
     "lastUpdated": "Sync terakhir",
-    "notifications": "Notifikasi",
+    "notifications": "Pemberitahuan",
     "todo": "Wajib dilakukan",
     "setUpYourTrial": "Atur Panggilan Cisco Spark Lanjutan untuk memulai uji coba.",
     "beginTrial": "Mulai Percobaan",
@@ -2278,9 +2341,43 @@
       "domain-not-verified": "Domain untuk URI Direktori ini harus diverifikasi agar layanan ini berfungsi dengan benar. ",
       "navigateToCallSettings": "Verifikasi domain di <a href ng-click=\"{{onclick}}\">Pengaturan Layanan Panggilan</a>."
     },
+    "clusterSipDestination": {
+      "removeModal": {
+        "title": "Hapus Penimpaan Tujuan SIP",
+        "message": "Anda yakin ingin menghapus penimpaan Tujuan SIP untuk klaster ini? Jika ya, klaster Expressway akan menggunakan Tujuan SIP default untuk merutekan semua panggilan hybrid. ",
+        "notification": "Penimpaan Tujuan SIP berhasil dihapus."
+      },
+      "configSection": {
+        "title": "Tujuan SIP",
+        "label": "Penimpaan Tujuan SIP Default",
+        "description": "Timpa Tujuan SIP default yang dikonfigurasi untuk Hybrid Call Connect di organisasi. Tinjau Tujuan SIP dan sertifikat organisasi Anda dari halaman<a ui-sref=\"call-service.settings\"> Pengaturan Hybrid Call.</a>",
+        "warningNotCallCluster": "⚠️ Klaster ini tidak dilengkapi untuk mendukung Hybrid Call (Connect).",
+        "warningCallConnectNotSetup": "⚠️ Hybrid Call Connect tidak diatur.",
+        "inputLabel": "Timpa Tujuan SIP default",
+        "unknownState": "Maaf, kami tidak dapat memuat informasi tentang Penimpaan Tujuan SIP"
+      }
+    },
+    "capacity": {
+      "filterLabel": "Filter untuk melihat grup sumber daya &amp; kapasitas",
+      "label": "Kapasitas: {{capacity}}%",
+      "labelNA": "Kapasitas: T/A",
+      "tooltip": "Kapasitas: {{capacity}}%<br>Pengguna yang diaktifkan: {{total}} dari {{max}}",
+      "tooltipUnassigned": "<em>Klaster tidak berada dalam kelompok sumber daya</em><br>Kapasitas: {{capacity}}%<br>Pengguna yang diaktifkan: {{total}} dari {{max}}",
+      "tooltipNA": "Pilih filter di sebelah kiri untuk melihat kapasitas klaster yang tidak termasuk dalam kelompok atau klaster sumber daya dalam kelompok sumber daya tertentu",
+      "tooltipNoConnectors": "Tidak ada konektor yang dapat menampung pengguna",
+      "allClusters": "Semua klaster",
+      "noInARG": "Klaster tidak ada dalam kelompok sumber",
+      "clustersIn": "Klaster di {{name}}"
+    },
+    "userStatuses": {
+      "summaryTitle": "Ringkasan Status Pengguna",
+      "reportTitle": "Laporan Status Pengguna",
+      "description": "Laporan yang diekspor akan menjadi daftar pengguna, statusnya, dan detail terkait. Anda dapat memilih jenis informasi yang ingin Anda sertakan dalam laporan:",
+      "createButton": "Buat Laporan"
+    },
     "sipExplanation": {
       "line1": "Anda dapat menggunakan salah satu format alamat berikut:",
-      "line2": "Domain SRV (_sips._tcp.<strong>sipmtls.example.com</strong>)",
+      "line2": "Domain SRV (gunakan <strong>sipmtls.example.com</strong> dari _sips._tcp.<strong>sipmtls.example.com</strong>)",
       "line3": "Nama host/FQDN:port (<strong>exp-e.example.com:5062</strong>)",
       "line4": "Alamat IP:port (<strong>203.0.113.0:5062</strong>)",
       "line5": "Lihat <a href=\"https://www.cisco.com/go/spark-calling-branch-office\" target=\"_blank\">Konfigurasi Sambungan Trunking Privat Perusahaan</a> jika Anda memerlukan bantuan lebih lanjut.",
@@ -2436,12 +2533,12 @@
       "readResourceGroupsFailed": "Tidak dapat membaca Grup Sumber Daya. Coba lagi nanti.",
       "refreshUserFailed": "Tidak dapat merefresh status pengguna. Coba lagi nanti.",
       "refreshUserDidNoGood": "Tidak dapat mendapatkan status pengguna. Hubungi dukungan jika masih ada masalah.",
-      "couldNotReadConnectStatus": "Tidak dapat membaca status organisasi Layanan Panggilan Connect. Harap hubungi dukungan jika masalah masih terjadi.",
-      "notEnabledInOrg": "Tidak diaktifkan di organisasi",
+      "couldNotReadStatus": "Tidak dapat membaca status organisasi Layanan Panggilan. Harap hubungi dukungan jika masalah masih terjadi.",
       "enableAwareFirst": "Aware harus diaktifkan agar pengguna dapat mengaktifkan Connect. Aktifkan di <a href ng-click=\"{{onclick}}\">panel Layanan Panggilan Aware</a>.",
       "disableAwareHeader": "Nonaktifkan Layanan",
       "disableAwareMessage": "Anda yakin? Dengan menonaktifkan Layanan Panggilan Aware, Layanan Panggilan Connect juga akan dinonaktifkan untuk pengguna ini.",
       "errorMessages": {
+        "cannotReadUserDataFromCI": "Tidak dapat membaca data lisensi pengguna.",
         "cannotReadDeviceDataFromUSS": "Tidak dapat membaca status aktivasi perangkat.",
         "cannotReadDeviceDataFromUSSPartnerAdmin": "Tidak dapat membaca status aktivasi perangkat. Hal ini dapat menunjukkan masalah cache, coba keluar dan masuk lagi untuk menghapus cache pengguna.",
         "cannotReadUserDataFromUSS": "Tidak dapat membaca status aktivasi pengguna.",
@@ -2469,6 +2566,7 @@
       "error": "Kesalahan",
       "unknown": "Tidak Diketahui",
       "notFound": "Status tidak ditemukan",
+      "pendingNotSetup": "Tertunda – Layanan Tidak Disiapkan",
       "accountNotActivated": "Akun Belum Diaktifkan"
     },
     "serviceNames": {
@@ -2597,12 +2695,14 @@
       "google": "Kalender Google",
       "notSetup": "Saat ini belum diatur",
       "sinceTime": "sejak {{timestamp}}",
+      "noLicensedServices": "Pengguna ini harus memiliki satu layanan berlisensi atau lebih untuk dikonfigurasikan untuk Layanan Hybrid.",
       "entitledToBothCalendarsShort": "Banyak Penetapan Kalender",
       "entitledToBothCalendars": "Pengguna ini saat ini memiliki wewenang untuk kedua jenis kalender. Untuk menghapus kesalahan, nonaktifkan layanan kalender untuk pengguna ini, lalu aktifkan lagi.",
       "couldNotReadOffice365Status": "Tidak bisa membaca konfigurasi Office 365 organisasi. Informasi di atas mungkin tidak lengkap.",
       "couldNotReadGoogleCalendarStatus": "Tidak bisa membaca konfigurasi Google Kalender organisasi. Informasi di atas mungkin tidak lengkap.",
       "couldNotReadFMSStatus": "Tidak bisa membaca konfigurasi Layanan Hybrid Expressway berbasis Expressway. Informasi di atas mungkin tidak lengkap.",
-      "entitledToHuron": "Berlisensi untuk Spark Call"
+      "entitledToHuron": "Berlisensi untuk Spark Call",
+      "serviceNotEnabledInCloud": "Layanan ini tidak disiapkan. Pengguna akan berada dalam status kesalahan atau aktivasi tertunda sampai penyiapan selesai."
     },
     "alarms": {
       "affectedNodes": "Nodus yang Terpengaruh",
@@ -2633,7 +2733,9 @@
       "text": "Anda akan memperbarui konektor {{name}} ke {{version}}.",
       "releaseNotes": "Catatan Versi",
       "releaseNotesLink": "Buka di tab baru",
-      "upgradeNow": "Perbarui Sekarang"
+      "upgradeNow": "Perbarui Sekarang",
+      "warning1": "Beberapa node dalam klaster ini sedang offline atau dalam mode pemeliharaan. Node ini tidak akan ditingkatkan sampai kembali online.",
+      "warning2": "Sebaiknya Anda membuat semua node menjadi online sebelum memulai peningkatan."
     },
     "expresswayClusterSettings": {
       "upgradeScheduleHeader": "Tingkatkan",
@@ -2747,7 +2849,7 @@
       "authorization": {
         "title": "Otorisasi Cisco Collaboration Cloud pada akun G Suite Anda",
         "line1": "Untuk mengaktifkan Layanan Kalender Hybrid bagi pengguna Anda, Anda harus mengotorisasi Cisco Collaboration Cloud pada akun G Suite Anda.",
-        "item1": "Di tab baru, buka dasbor akun G Suite Anda, kemudian masuk ke Keamanan.<a href=\"https://admin.google.com/AdminHome\" target=\"_blank\"></a><strong></strong>",
+        "item1": "Di tab baru, buka <a href=\"https://admin.google.com/AdminHome\" target=\"_blank\">dasbor akun G Suite</a> Anda, kemudian masuk ke <strong>Keamanan</strong>.",
         "item2": "Klik <strong>Tampilkan lebih banyak</strong> kemudian <strong>Pengaturan lanjutan</strong>.",
         "item3": "Klik <strong>Kelola Akses Klien API</strong>.",
         "item4": "Salin nama klien dan lingkup ke papan klip Anda.",
@@ -2834,7 +2936,13 @@
         "certificatesUpload": "Unggah",
         "certificatesModalHeading": "Hapus Sertifikat",
         "sipDomainHeading": "Tujuan SIP",
-        "sipDomainPlaceholder": "sipmtls.example.com"
+        "sipDomainPlaceholder": "sipmtls.example.com",
+        "sipDestinationsOverview": {
+          "title": "Ringkasan Tujuan SIP",
+          "description": "Tinjau semua Tujuan SIP yang dikonfigurasi dalam organisasi dan lihat klaster tempat mereka dikonfigurasi.",
+          "tableTitle1": "Tujuan SIP",
+          "tableTitle2": "Digunakan pada"
+        }
       },
       "verifySipDestination": {
         "title": "Verifikasi Tujuan SIP",
@@ -2869,6 +2977,7 @@
           "DNSHostNameFound": "Nama Host DNS Ditemukan",
           "DNSIpFound": "IP DNS Ditemukan",
           "DNSSvrFound": "Catatan SRV DNS Ditemukan",
+          "InvalidSIPDestination": "Tujuan SIP tidak valid",
           "IOFailure": "Kegagalan Masukan/Keluaran",
           "NoAnswer": "Tidak Ada Jawaban",
           "NoDNSHopsFound": "Tidak Ditemukan Hop DNS",
@@ -2891,6 +3000,8 @@
           "UnexpectedException": "Pengecualian Tidak Terduga"
         },
         "fixes": {
+          "Connecting": "Koneksi TCP gagal: Periksa konektivitas jaringan, kecepatan koneksi, dan/atau konfigurasi firewall. Cari ‘kegagalan sambungan’ dalam <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Dokumentasi Penyelesaian Masalah</a.",
+          "InvalidSIPDestination": "{{domain}} bukan tujuan SIP yang valid. Harap lihat teks bantuan di bawah ini.",
           "IOFailure": "Kegagalan TCP: Kegagalan pembacaan/penulisan TCP: Harap coba lagi. Jika kesalahan masih terjadi, periksa konektivitas jaringan, konfigurasi firewall, dan konfigurasi TLS Mutual. Cari ‘kegagalan soket’ di <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Dokumentasi Penyelesaian Masalah</a.",
           "NoDNSHopsFound": "Pencarian DNS gagal. Pastikan catatan DNS atau SRV tersedia untuk Destinasi SIP dan ditetapkan ke satu atau beberapa alamat IP yang valid. Cari ‘DNS SRV’ di <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Dokumentasi Penyelesaian Masalah</a>.",
           "PingFailed": "Ping SIP gagal.",
@@ -3153,7 +3264,7 @@
       "noGroupSelected": "Tidak Ada",
       "noGroupSelectedOnPlace": "Tidak ada grup sumber daya (standar)",
       "failedToSetGroup": "Gagal mengatur Grup Sumber Daya.",
-      "resourceGroupSaved": "Grup Sumber Daya disimpan.",
+      "resourceGroupSaved": "Kelompok Sumber Daya berubah. Pengguna otomatis akan ditetapkan kembali ke klaster di Kelompok Sumber Daya baru dalam beberapa menit berikutnya.",
       "groupHasBeenDeleted": "Pengguna ditugaskan ke grup sumber daya yang tidak dapat ditemukan. Hapus tugas dari grup sumber daya untuk memulihkan layanan.",
       "groupIsEmptyWarning": "Tidak dapat menemukan klaster dengan {{ConnectorName}}. Pilih Grup Sumber Daya lain, atau konfigurasikan klaster baru dengan {{ConnectorName}}."
     },
@@ -3260,9 +3371,16 @@
         "title": "Nonaktifkan mode pemeliharaan",
         "message": "Anda yakin ingin menonaktifkan mode pemeliharaan untuk nodus ini?"
       },
-      "alertBannerNumber": "{count, plural, =1{Peningkatan untuk konektor tersedia!} other{Peningkatan untuk konektor tersedia!}}",
-      "alertBannerTime": "{count, plural, =1{Peningkatan} other{Peningkatan}} akan diterapkan pada {date}.",
-      "alertBannerLink": "<a href ng-click=\"{{onclick}}\">Tingkatkan {{service}} konektor sekarang</a>.",
+      "alertDisableMaintenanceMode": "Untuk memasang, nonaktifkan mode pemeliharaan pada node.",
+      "alertDisableMaintenanceModeFor": "Untuk memasang {{connector}}, nonaktifkan mode pemeliharaan pada node.",
+      "alertenableTheNodes": "Untuk memasang, pastikan node kembali online lebih dahulu.",
+      "alertenableTheNodesFor": "Untuk memasang {{connector}}, pastikan node kembali online lebih dahulu.",
+      "alertInstallNow": "Pasang sekarang…",
+      "alertUpgradeAvailableFor": "Peningkatan tersedia untuk {{connector}}.",
+      "alertUpgradeConnectorNow": "Tingkatkan {{connector}} sekarang.",
+      "alertUpgradesAvailable": "Peningkatan tersedia.",
+      "alertUrgent": "(mendesak)",
+      "alertUrgentUpgradeAvailableFor": "Peningkatan mendesak tersedia untuk {{connector}}.",
       "instructions": "Instruksi"
     },
     "hybridServicesConnectorSidepanel": {
@@ -3386,6 +3504,29 @@
           "title": "Tidak ada klaster yang ditetapkan ke grup sumber daya",
           "description": "Tidak ada klaster yang ditetapkan ke grup sumber daya pengguna. Periksa konfigurasi klaster lalu coba lagi."
         }
+      },
+      "custom": {
+        "noClusterFoundAndNoCurrentResourceGroup": {
+          "description": "Tidak ditemukan {{connectorType}}. Aktivasi akan dicoba lagi setelah Anda mengonfigurasi setidaknya satu klaster yang berisi {{connectorType}}, atau Anda memindahkan pengguna ke kelompok sumber daya yang setidaknya berisi satu klaster {{connectorType}}."
+        },
+        "noClusterFoundAndUserIsInResourceGroup": {
+          "description": "Tidak ditemukan {{connectorType}} dalam kelompok sumber daya pengguna. Aktivasi akan dicoba lagi setelah Anda mengonfigurasi setidaknya satu klaster yang berisi {{connectorType}} dalam kelompok sumber daya pengguna saat ini, atau Anda memindahkan pengguna ke kelompok sumber daya yang setidaknya berisi satu klaster {{connectorType}}."
+        },
+        "serviceIsNotOperationalInResourceGroup": {
+          "description": "Tidak ditemukan {{connectorType}} operasional dalam kelompok sumber daya pengguna. Pengguna otomatis akan ditetapkan ke {{connectorType}} setelah mulai beroperasi. Atau, Anda dapat mencoba memindahkan pengguna ke kelompok sumber daya lain, atau menghapus penugasan kelompok sumber daya pengguna."
+        },
+        "serviceIsNotOperationalUserNotInResourceGroup": {
+          "description": "Tidak ditemukan {{connectorType}} operasional. Pengguna secara otomatis akan ditugaskan ke {{connectorType}} setelah mulai beroperasi. Anda dapat pula mencoba memindahkan pengguna ke suatu kelompok sumber daya."
+        },
+        "serviceIsNotOperationalInOrganization": {
+          "description": "{{serviceName}} sepertinya tidak beroperasi. Pengguna otomatis akan ditugaskan ke {{connectorType}} setelah layanan beroperasi kembali."
+        },
+        "serviceIsImpairedInOrganization": {
+          "description": "{{serviceName}} mengalami gangguan. Hal ini bisa terjadi selama peningkatan konektor, jika Anda memiliki klaster Expressway node tunggal. Pengguna akan dicoba lagi saat {{connectorType}} berjalan dan beroperasi."
+        },
+        "noClusterFoundAndNoResourceGroupInOrganization": {
+          "description": "Tidak ditemukan {{connectorType}}. Aktivasi akan dicoba lagi setelah Anda mengonfigurasi setidaknya satu klaster dengan {{connectorType}}."
+        }
       }
     },
     "office365SetupModal": {
@@ -3427,7 +3568,7 @@
       "serviceFilter": "Filter Layanan:",
       "resourceFilter": "Filter Sumber Daya:",
       "dataSince": "Kejadian sejak",
-      "connectorProvisioned": "Kluster telah diberi versi {{connectorName}} {{newVersion}}",
+      "connectorProvisioned": "Kluster telah diberi {{connectorName}} versi {{newVersion}}",
       "connectorDeprovisioned": "{{connectorName}} telah dihapus dari kluster",
       "connectorProvisioningChanged": "Peningkatan {{connectorName}} ke {{newVersion}} telah diinisiasi",
       "serviceEnabled": "{{serviceName}} telah diaktifkan",
@@ -3487,12 +3628,12 @@
           "alarmRaisedEmailsSentTitle": "Email terkirim tentang alarm baru",
           "alarmResolvedEmailsSentTitle": "Email terkirim tentang alarm yang sudah diatasi",
           "alarmRaised": "Sebuah alarm telah dimunculkan di node Expressway {{hostname}}.",
-          "alarmRaised-description": "Expressway memberikan keterangan alarm berikut: &lt;strong&gt;{{description}}&lt;/strong&gt;<strong></strong>",
-          "alarmResolved": "The alarm titled <strong>{{title}}</strong> has now been resolved on node {{hostname}}.",
-          "alarmDebounced": "Sebuah alarm berjudul &lt;strong&gt;{{title}}&lt;/strong&gt; muncul di Expressway, kemudian ditandai sebagai alarm yang telah diatasi dalam jangka waktu beberapa menit.<strong></strong>",
-          "alarmDebounced-help": "This alarm was resolved so quickly that Cisco Collaboration Cloud did not send an email notification about it. Alarms that auto-resolve are normally not a cause for concern, and do not require admin intervention unless they keep being raised for a substantial amount of time.",
-          "alarmRaisedNotificationSent": "Cisco Collaboration Cloud telah mengirimkan email kepada {{recipientCount}} penerima tentang alarm baru berjudul &lt;strong&gt;{{title}}&lt;/strong&gt; pada node {{hostname}}.<strong></strong>",
-          "alarmResolvedNotificationSent": "Cisco Collaboration Cloud telah mengirimkan email kepada {{recipientCount}} penerima karena alarm berjudul &lt;strong&gt;{{title}}&lt;/strong&gt; pada node {{hostname}} ditandai sebagai alarm yang telah diatasi.<strong></strong>"
+          "alarmRaised-description": "Expressway memberikan keterangan alarm berikut: <strong>{{description}}</strong>",
+          "alarmResolved": "Alarm berjudul <strong>{{title}}</strong> sekarang telah diatasi di node {{hostname}}.",
+          "alarmDebounced": "Sebuah alarm berjudul <strong>{{title}}</strong> muncul di Expressway, kemudian ditandai sebagai alarm yang telah diatasi dalam jangka waktu beberapa menit.",
+          "alarmDebounced-help": "Alarm ini diatasi dengan begitu cepat sehingga Cisco Collaboration Cloud tidak mengirimkan notifikasi email tentangnya. Alarm yang diatasi secara otomatis biasanya tidak perlu dikhawatirkan, dan tidak memerlukan intervensi admin kecuali alarm tersebut terus muncul dalam jangka waktu yang lama.",
+          "alarmRaisedNotificationSent": "Cisco Collaboration Cloud telah mengirimkan email kepada {{recipientCount}} penerima tentang alarm baru berjudul <strong>{{title}}</strong> pada node {{hostname}}.",
+          "alarmResolvedNotificationSent": "Cisco Collaboration Cloud telah mengirimkan email kepada {{recipientCount}} penerima karena alarm berjudul <strong>{{title}}</strong> pada node {{hostname}} ditandai sebagai alarm yang telah diatasi."
         },
         "clusterEvents": {
           "firstUpgradeSchedule": "Semua konektor di kluster Expressway telah dikonfigurasi dengan jadwal peningkatan berikut: {{upgradeSchedule}}",
@@ -3501,24 +3642,24 @@
           "automatedProvisioning": "Kluster Expressway telah diberi {{connectorName}}. Hal ini terjadi secara otomatis.",
           "automatedDeprovisioning": "Kluster Expressway tidak akan menjalankan {{connectorName}} lagi.",
           "manualProvisioningChange": "Versi target {{connectorName}} telah berubah menjadi {{newValue}}. Peningkatan dipicu secara manual oleh {{username}}.",
-          "manualProvisioning": "{{username}} memberikan {{connectorName}} kepada kluster Expressway. Hal ini dapat terjadi karena pengguna menciptakan kluster baru, atau karena ia telah menambahkan {{connectorName}} ke kelompok yang sudah ada.",
+          "manualProvisioning": "{{username}} memberikan {{connectorName}} kepada kluster Expressway. Hal ini dapat terjadi karena pengguna menciptakan kluster baru, atau karena ia telah menambahkan {{connectorName}} ke kluster yang sudah ada.",
           "manualDeprovisioning": "{{username}} mengubah konfigurasi Expressway agar {{connectorName}} dihapus dari semua node kluster.",
-          "upgradeHelpText": " Each node in the cluster will sequentially start to upgrade to the new version. The upgrade has succeeded when all nodes are on the new software version, and have reported to Cisco Collaboration Cloud that they are operational.",
+          "upgradeHelpText": " Setiap node di dalam kluster akan mulai ditingkatkan ke versi baru secara berurutan. Peningkatan berhasil bila semua node sudah berada pada versi perangkat lunak baru, dan telah melaporkan ke Cisco Collaboration Cloud bahwa mereka telah beroperasi.",
           "provisioningAddedHelpText": "Administrator harus masuk ke kelompok master Expressway dan mengonfigurasi perangkat lunak {{connectorName}} setelah diinstal pada semua node kluster.",
-          "provisioningRemovedHelpText": "The software will be uninstalled, and all local configuration deleted.",
-          "automatedDeprovisioningHelpText": "This configuration change happened because of a change to the Cisco Spark organization's configuration, for example because an entitlement was removed or a service was deactivated.",
+          "provisioningRemovedHelpText": "Perangkat lunak akan dihapus instalasinya, dan semua konfigurasi lokal akan dihapus.",
+          "automatedDeprovisioningHelpText": "Perubahan konfigurasi ini terjadi karena adanya perubahan pada konfigurasi organisasi Cisco Spark, misalnya karena ada hak yang dihapus atau layanan yang dinonaktifkan.",
           "renamed": "{{username}} mengganti nama kluster. Nama barunya adalah {{newName}}, dan nama lamanya adalah {{oldName}}.",
           "nameAssigned": "{{username}} mengonfigurasi nama kluster menjadi {{name}}.",
           "resourceGroupIntro": "{{username}} mengubah Grup Sumber daya kluster.",
-          "previouslyNotInResourceGroup": "Nama baru Grup Sumber Daya adalah: &lt;strong&gt;{{newGroup}}&lt;/strong&gt;. Kluster ini sebelumnya bukan bagian dari Grup Sumber Daya.<strong></strong>",
-          "changedResourceGroup": "Nama baru Grup Sumber Daya adalah: &lt;strong&gt;{{newGroup}}&lt;/strong&gt;. Kluster ini sebelumnya adalah bagian dari {{oldGroup}}.<strong></strong>",
+          "previouslyNotInResourceGroup": "Nama baru Grup Sumber Daya adalah: <strong>{{newGroup}}</strong>. Kluster ini sebelumnya bukan bagian dari Grup Sumber Daya.",
+          "changedResourceGroup": "Nama baru Grup Sumber Daya adalah: <strong>{{newGroup}}</strong>. Kluster ini sebelumnya adalah bagian dari {{oldGroup}}.",
           "removedResourceGroup": "Kluster tidak lagi menjadi bagian Grup Sumber Daya. Kluster ini sebelumnya adalah bagian dari {{oldGroup}}.",
           "changedReleaseChannel": "{{username}} mengubah Saluran Rilis kluster.",
-          "oldAndNewReleaseChannel": "Saluran Rilis yang baru adalah: &lt;strong&gt;{{newReleaseChannel}}&lt;/strong&gt;. Saluran Rilis yang lama adalah: {{oldReleaseChannel}}.<strong></strong>",
-          "changedReleaseChannelHelp": "An Expressway cluster's Release Channel can change either if the cluster is moved in or out of a Resource Group, or if its existing Resource Group changes its associated Release Channel."
+          "oldAndNewReleaseChannel": "Saluran Rilis yang baru adalah: <strong>{{newReleaseChannel}}</strong>. Saluran Rilis yang lama adalah: {{oldReleaseChannel}}.",
+          "changedReleaseChannelHelp": "Saluran Rilis kluster Expressway dapat berubah jika kluster dimasukkan atau dikeluarkan dari Grup Sumber Daya, atau jika Grup Sumber Daya yang ada mengubah Saluran Rilis yang terkait dengannya."
         },
         "serviceActivationEvents": {
-          "serviceEnabled": "{{username}} telah mengaktifkan {{serviceName}} dalam organisasi Cisco Spark. Hal ini biasanya terjadi ketika pengguna admin mendaftarkan kluster Expressway yang menjalankan {{connectorName}}, atau menambahkan {{connectorName}} pertama ke kluster Expressway yang sudah ada.",
+          "serviceEnabled": "{{username}} telah mengaktifkan {{username}} dalam organisasi Cisco Spark. Hal ini biasanya terjadi ketika pengguna admin mendaftarkan kluster Expressway yang menjalankan {{connectorName}}, atau menambahkan {{connectorName}} pertama ke kluster Expressway yang sudah ada.",
           "callServiceConnectEnabled": "{{username}} telah mengaktifkan {{serviceName}} dalam organisasi Cisco Spark. Semua kluster Expressway yang menjalankan {{connectorName}} akan digunakan juga untuk {{serviceName}} secara otomatis.",
           "serviceDisabled": "{{username}} telah menonaktifkan {{serviceName}} dalam organisasi Cisco Spark.",
           "serviceDisabledHelpText": "Hak {{serviceName}} dihapus secara otomatis dari para pengguna, dan {{connectorName}} dihapus instalasinya secara otomatis dari semua kluster Expressway.",
@@ -3565,7 +3706,7 @@
       "status": "Status",
       "inUse": "Sedang Digunakan",
       "notInUse": "Tidak Sedang Digunakan",
-      "base": "Cisco",
+      "base": "Cisko",
       "access": "Sumber",
       "actions": "Tindakan",
       "dateUpdated": "Tanggal Diperbarui",
@@ -3660,6 +3801,14 @@
         "fieldMaxLimitReached": "Jumlah maksimal bidang dalam kumpulan bidang telah tercapai.",
         "fieldsetLimitReadFailed": "Tidak bisa mengambil kembali batas kumpulan bidang. Segarkan browser Anda untuk mencoba lagi",
         "notAuthorized": "Anda tidak berwenang untuk mengelola rangkaian bidang Hybrid Context untuk organisasi ini."
+      },
+      "settingPage": {
+        "adminAuthorization": "Otorisasi Administrator",
+        "adminAuthorizationDescription": "Selaraskan izin administratif untuk organisasi Anda.",
+        "unauthorizedTooltip": "Untuk menyelaraskan izin, hubungi administrator resmi.",
+        "synchronize": "Selaraskan",
+        "synchronizationSuccessful": "Izin administrasi berhasil diselaraskan.",
+        "synchronizationFailure": "Tidak dapat menyelaraskan izin administratif. Coba lagi."
       }
     }
   },
@@ -3952,22 +4101,6 @@
       "reportsBanner": "Laporan Anda sedang dibuat dan mungkin perlu waktu hingga beberapa jam atau lebih. Anda dapat melihat status dalam daftar di bawah atau <a href ui-sref=\"{{sref}}\">membuat laporan lain</a>.",
       "generating": "Sedang membuat..."
     },
-    "originalConsole": {
-      "subheading": "Temukan semua data terkait untuk ruang ini.",
-      "reportNameNotEmpty": "Nama Laporan tidak boleh kosong",
-      "reportNamePlaceholder": "Masukkan nama laporan",
-      "startDate": "Tanggal Mulai",
-      "endDate": "Tanggal Berakhir",
-      "reportDateRange": "Rentang Tanggal",
-      "noRangeSpecified": "Belum menetapkan tanggal",
-      "takeMeToReports": "Antarkan Saya ke Laporan",
-      "dateTo": "ke",
-      "endDateUntil": "sampai",
-      "endDateOnward": "ke depan",
-      "startDatePlaceholder": "Pilih Tanggal Awal",
-      "endDatePlaceholder": "Pilih Tanggal Berakhir",
-      "generatedAt": "Dibuat Pada"
-    },
     "tabs": {
       "search": "Cari",
       "reports": "Laporan"
@@ -3994,6 +4127,7 @@
     "uploadCsvBadHeaders": "Header yang diwajibkan dalam CSV tidak ada",
     "csvMaxSizeError": "Ukuran file melebihi batas maksimal 10 MB.",
     "csvMaxLinesError": "CSV berisi pengguna lebih dari batas maksimal yang diizinkan. Perkecil jumlah pengguna menjadi {{max}} atau kurang lalu unggah lagi CSV.",
+    "csvHeaderNameMismatch": "File yang diunggah berisi nama kolom yang tidak dikenali '{{name}}'. Gunakan templat terbaru agar dapat melanjutkan.",
     "processCsvStep": "Sedang memproses CSV",
     "processing": "Sedang memproses...",
     "canceling": "Membatalkan...",
@@ -4145,7 +4279,7 @@
     "userManagementWhere": "Dimana Anda ingin menyediakan dan mengelola pengguna WebEx Anda?",
     "userManagementHelp": "Mana yang harus saya pilih",
     "userManagementWebEx": "Admin Situ WebEx",
-    "userManagementSpark": "Hub Kontrol Spark",
+    "userManagementSpark": "Spark Control Hub",
     "userManagementViaSpark": "Manajemen pengguna melalui Hub Kontrol Spark",
     "userManagementViaWebex": "Manajemen pengguna melalui Admin Situs WebEx",
     "theseWillBeYourWebExSites": "Ini akan menjadi {{siteCount}} situs WebEx. Jika Anda tidak memiliki situs baru yang ingin ditambahkan, cukup klik Berikutnya.",
@@ -4318,14 +4452,6 @@
       "capacityFail": "Gagal mengaktifkan dan memeriksa kapasitas"
     }
   },
-  "sparkAssistant": {
-    "title": "Asisten Cisco Spark",
-    "enableAssistant": "Aktifkan Asisten Cisco Spark",
-    "description": "Mengizinkan pengguna melakukan berbagai tindakan seperti melakukan panggilan, memulai rapat, menggunakan suara mereka.",
-    "termOfService": "Ketentuan penggunaan Asisten Spark",
-    "optout": "Nonaktifkan Asisten Cisco Spark",
-    "optoutConfirm": "Jika menonaktifkan Asisten Cisco Spark, Anda tidak akan dapat menggunakan perintah suara pada salah satu perangkat yang didukung."
-  },
   "reports": {
     "title": "Laporan",
     "engagementTab": "Hubungan",
@@ -4360,7 +4486,7 @@
   "autoAttendant": {
     "code": "AA",
     "title": "Asisten Otomatis",
-    "warning": "Memerlukan layanan panggilan.",
+    "noCallWarningMessage": "Memerlukan layanan panggilan. <a href ng-click=\"{{onclick}}\">Pelajari Lebih Lanjut</a>",
     "careModalDescription": "Putar perintah kustom dan berikan opsi menu kepada penelepon untuk merutekan panggilan melalui sistem.",
     "modalDescription": "Asisten Otomatis memainkan permintaan yang dikustomisasi dan memberi pemanggil opsi menu untuk mengarahkan panggilan melalui sistem Anda.",
     "namePlaceholder": "Sebutkan Asisten Otomatis",
@@ -4706,7 +4832,8 @@
     "value": "Nilai",
     "restApiUrlHelperText": "Masukkan URL aman API REST yang akan dipanggil. Klik 'Tambahkan Teks dinamis' untuk memasukkan variabel di URL.",
     "completeHttpsError": "Masukkan URL lengkap yang meliputi protokol, HTTPS.",
-    "secureHttpsError": "Masukkan hanya URL HTTPS yang aman."
+    "secureHttpsError": "Masukkan hanya URL HTTPS yang aman.",
+    "enterExtensionPlaceholder":"Masukkan Ekstensi"
   },
   "callPark": {
     "code": "CP",
@@ -4813,7 +4940,7 @@
     "removeMember": "Hapus Anggota",
     "memberTitle": "Anggota",
     "nameTitle": "Pengaturan Pengarahan Panggilan",
-    "notificationTitle": "Notifikasi",
+    "notificationTitle": "Pemberitahuan",
     "notificationTimer": "Pengatur Waktu Pemberitahuan",
     "timerHint": "Atur durasi waktu panggilan berdering sebelum memberitahu grup angkat panggilan.",
     "pickupHint": "Pemberitahuan Angkat Panggilan",
@@ -5644,7 +5771,9 @@
     "trialDuration": "Durasi Percobaan",
     "callServiceDisabled": "Layanan ini sementara tidak tersedia untuk percobaan.",
     "managedBy": "Dikelola oleh {{org}}",
-    "anotherPartner": "mitra lainnya"
+    "anotherPartner": "mitra lainnya",
+    "kOneContents": "Termasuk obrolan video dan dukungan obrolan otomatis menggunakan asisten virtual.",
+    "kTwoContents": "Termasuk obrolan video dan dukungan obrolan otomatis menggunakan asisten virtual."
   },
   "status": {
     "noResults": "Tidak ada hasil yang tersedia.",
@@ -5919,7 +6048,7 @@
     "macAddr": "Alamat MAC",
     "sipUrl": "Tambahkan orang baru ke tim?",
     "issues": "Diterbitkan",
-    "lastSeen": "sejak:",
+    "lastSeen": "Terakhir terlihat online:",
     "offlineLong": "(offline selama lebih dari 8 minggu)",
     "reactivate": "Aktifkan kembali",
     "channelUpdated": "Saluran Pembaruan Perangkat Lunak diperbarui",
@@ -5983,12 +6112,14 @@
       "deviceType": "Perangkat apa yang ingin Anda atur?",
       "deviceTypeInstructions": "Perangkat baru memerlukan kode aktivasi khusus yang harus dimasukkan pada saat penyetelan. Apa tipe perangkat yang ingin Anda aktifkan?",
       "deviceTypeNewPlace": "Perangkat apa yang Anda gunakan untuk mengatur tempat ini?",
+      "ciscoPhone": "Telepon Cisco",
       "deskPhone": "Telepon Meja",
-      "deskPhoneExamples": "Contoh: 8845, 8865 atau 8800",
-      "deskPhoneExamplesExtra": "contoh 8845, 8865, 8800 atau port Adaptor Telepon Analog",
+      "deskPhoneExamples": "Contoh Cisco 8845, 8865 dan 8800",
+      "deskPhoneExamplesExtra": "Contoh Cisco 8845, 8865, 8800 dan port Adaptor Telepon Analog",
       "deskPhoneLicenseWarning": "Organisasi Anda harus membeli lisensi Panggilan Spark terlebih dulu. Hubungi mitra atau divisi Penjualan Cisco untuk informasi lebih lanjut.",
+      "otherCiscoDevice": "Perangkat Cisco lainnya",
       "roomSystem": "Perangkat Kamar",
-      "roomSystemExamplesExpanded": "Misalnya seri Cisco Spark Board, Kit Kamar, DX, MX, atau SX",
+      "roomSystemExamplesExpanded": "Misalnya seri Cisco Spark Board, Suara, Bagikan, Kit Kamar, DX, MX, dan SX",
       "roomSystemLicenseWarning": "Organisasi Anda harus membeli lisensi Perangkat Kamar Cisco Spark terlebih dulu. Hubungi mitra atau divisi Penjualan Cisco untuk informasi lebih lanjut."
     },
     "chooseAccountType": {
@@ -6081,13 +6212,12 @@
     },
     "showActivationCode": {
       "activationCode": "Kode Aktivasi",
-      "plugInDeskPhone": "Bagikan kode ini dengan orang menyiapkan telepon meja milik <b>{{belongsTo}}</b>, atau masukkan dan pindai sendiri ketika diminta oleh perangkat.",
-      "plugInDeskPhoneExtra": "Bagikan kode ini dengan orang yang menyiapkan telepon meja (atau port adaptor telepon analog) milik <b>{{belongsTo}}</b>, atau masukkan atau pindai sendiri ketika diminta oleh perangkat.",
-      "plugInPersonal": "Bagikan kode ini dengan orang yang menyiapkan perangkat kamar milik <b>{{belongsTo}}</b>, atau masukkan atau pindai sendiri ketika diminta oleh perangkat.",
-      "plugInRoomSystem": "Bagikan kode ini dengan orang yang menyiapkan perangkat kamar milik <b>{{belongsTo}}</b>, atau masukkan atau pindai sendiri ketika diminta oleh perangkat.",
+      "plugInDevice": "Bagikan kode ini dengan orang yang menyiapkan perangkat kamar milik <b>{{belongsTo}}</b>, atau masukkan atau pindai sendiri ketika diminta oleh perangkat.",
       "onceActivePersonalDevice": "Setelah perangkat berhasil diaktifkan, Anda akan dapat menemukan dan mengonfigurasinya dalam Pengguna atau Perangkat.",
       "onceActiveSharedDevice": "Setelah perangkat berhasil diaktifkan, Anda akan dapat menemukan dan mengonfigurasi dalam Tempat atau Perangkat.",
       "expires": "Masa berlaku {{expiryDate}}",
+      "codeOnlyForPhones": "Kode ini hanya dapat digunakan untuk mengaktifkan Telepon Cisco",
+      "codeOnlyForRoomDevices": "Kode ini tidak dapat digunakan untuk mengaktifkan Telepon Cisco",
       "searchAnotherUser": "Atau cari pengguna lainnya",
       "failedToGenerateActivationCode": "Gagal membuat kode aktivasi. Alasan:",
       "failedResourceGroup": "Gagal mengatur grup sumber daya pada layanan. Silakan atur dari pengaturan layanan di tempat. Hal tersebut gagal dilakukan karena alasan berikut ini:",
@@ -6160,7 +6290,8 @@
     "roles": "Jabatan",
     "helpdesk": "Meja Bantuan",
     "orderadmin": "Pesan Admin",
-    "compliance": "Kepatuhan"
+    "compliance": "Kepatuhan",
+    "cca": "CCA (Cloud Connected Audio/Audio Terhubung ke Awan)"
   },
   "mohManagement": {
     "title": "Media On Hold",
@@ -6251,12 +6382,47 @@
     "report_title": "Laporan Layanan Media Hybrid",
     "add-resource-button": "Tambah Sumber Daya",
     "genericError": "Terjadi kesalahan tidak terduga. Coba lagi nanti.",
+    "easyConfig": {
+      "titleV2": "Daftarkan Nodus Media Hybrid",
+      "clusterInfo": "Info klaster",
+      "createMessage": "Buat baru atau pilih Klaster Media Hybrid yang ada tempat Anda ingin menambahkan Nodus Media Hybrid.",
+      "enterCluster": "Buat klaster baru",
+      "clusterHelpText": "Kami sarankan untuk menggunakan lokasi geografis klaster sebagai nama",
+      "clusterExistError": "Klaster sudah ada, coba Nama Klaster lain",
+      "existingCluster": "Pilih klaster yang sudah ada",
+      "mediaNode": "Nodus media",
+      "mediaNodeMessage": "Masukkan FQDN atau alamat IP Nodus Media Hybrid yang ingin Anda daftarkan ke Cisco Collaboration Cloud.",
+      "enterNode": "Masukkan FQDN atau alamat IP",
+      "requiredclusterconfig": "Konfigurasi Klaster Wajib",
+      "optionalclusterconfig": "Konfigurasi Klaster Opsional",
+      "finaltitle": "Selesaikan Pendaftaran Media Hybrid",
+      "toNode": "Kunjungi Nodus",
+      "successmsg": "Anda kini dapat mendaftarkan Nodus Media Hybrid ke Cisco Collaboration Cloud.",
+      "nodedetails": "Alamat IP Nodus/FQDN:",
+      "cluster": "Klaster:",
+      "upgradeschedule": "Jadwal Pemutakhiran",
+      "grant-success-information": "Buka Nodus Media Hybrid Anda dalam waktu satu jam setelah menyelesaikan pendaftaran. Nodus Media Hybrid akan siap<br> digunakan segera setelah Anda menyelesaikan pendaftaran.",
+      "grant-registration-success-header-old-cluster": "Anda kini dapat mendaftarkan Nodus Media Hybrid Anda pada Cisco Collaboration Cloud.<br> Alamat IP/FQDN Nodus: {{hostname}} Klaster: {{clustername}}"
+    },
+    "clusterBandwidth": {
+      "success": "Bandwidth kaskade klaster maksimum berhasil disimpan.",
+      "title": "Bandwidth kaskade klaster maksimum",
+      "description": "Masukkan bandwidth maksimum (dalam megabit per detik) yang harus digunakan oleh klaster Layanan Media Hybrid untuk kaskade ke awan. Jumlah terendah memungkinkan satu streaming 720p aktif.",
+      "range": "Masukkan nilai antara 5 sampai 50"
+    },
     "sipconfiguration": {
       "success": "CM SIP Trunk Gabungan berhasil disimpan.",
       "title": "CM SIP Trunk Gabungan",
       "description": "Masukkan alamat SIP trunk untuk terhubung dengan klaster Media Hybrid untuk Manajer Komunikasi Gabungan Anda. Sambungan ini menyedakan panggilan kembali video yang teroptimasi.",
       "placeholder": "Masukkan alamat SIP trunk...",
       "example": "Contohnya: sips://203.0.113.0:5062"
+    },
+    "clusterBandwidth": {
+      "success": "Bandwidth kaskade klaster maksimum berhasil disimpan.",
+      "title": "Bandwidth kaskade klaster maksimum",
+      "description": "Masukkan bandwidth maksimum (dalam megabit per detik) yang harus digunakan oleh klaster Layanan Media Hybrid untuk kaskade ke awan. Jumlah terendah memungkinkan satu streaming 720p aktif.",
+      "range": "Masukkan nilai antara 5 sampai 50",
+      "mbps": "Mbps"
     },
     "trustedSip": {
       "success": "sumber SIP terpercaya berhasil disimpan.",
@@ -6367,7 +6533,10 @@
       "hybridHeading": "Awan dan Di Tempat",
       "othersHeading": "Lainnya",
       "callsBallon": "Panggilan:",
-      "cloudconnectivityissues": "Masalah Konektivitas Awan",
+      "cloudConnectivityIssues": "Masalah Konektivitas Awan",
+      "clusterInServiceBelow75": " Klaster yang berfungsi di bawah 75%",
+      "clusterUtilizationAbove75": "Pemanfaatan Klaster di atas 75%",
+      "allCallsRedirected": "Pengalihan panggilan diamati di semua Klaster",
       "clientType": {
         "android": "Android",
         "blackberry": "BlackBerry",
@@ -7043,7 +7212,7 @@
   },
   "meetingInfoCard": {
     "meetingNumber": "Nomor Rapat:",
-    "host": "Penyelenggara:",
+    "host": "Host:",
     "duration": "Durasi:",
     "resource": "Sumber Daya:",
     "site": "Situs :"
@@ -7442,8 +7611,7 @@
       "callbackType": "Templat Panggil Kembali",
       "chatPlusCallbackType": "Templat Obrolan+Panggil Kembali",
       "virtualAssistant": "Asisten Virtual",
-      "noCallWarningMessage" : "Memerlukan layanan panggilan.",
-      "learnMoreLink": "Pelajari Selengkapnya"
+      "noCallWarningMessage": "Memerlukan layanan panggilan. <a href ng-click=\"{{onclick}}\">Pelajari Lebih Lanjut</a>"
     },
     "settings": {
       "setUpCare": "Care",
@@ -7547,8 +7715,7 @@
   },
   "placesPage": {
     "nameHeader": "Nama",
-    "typeHeader": "Tipe",
-    "deviceHeader": "Jumlah Perangkat",
+    "deviceHeader": "Berisi",
     "noneFound": "Tempat Tidak Ditemukan",
     "bigOrgSearchHeader": "Telusuri tempat",
     "bigOrgSearchText": "Daftar tempat tidak ditampilkan karena terdapat lebih dari 1000 tempat",
@@ -7691,6 +7858,7 @@
     "deleteFeatureTextConfirmation": "Apakah Anda yakin ingin menghapus {{ featureName }}?",
     "deleteVaFeatureTextConfirmation": "Yakin ingin menghapus {{ featureName }}? Menghapus Asisten Virtual Pelanggan akan menghapusnya dari semua Templat Dukungan Pelanggan. Pelanggan tidak lagi dapat berinteraksi dengan asisten virtual tersebut.",
     "deleteEvaFeatureTextConfirmation": "Yakin ingin menghapus {{ featureName }}? Anda tidak dapat lagi mengajukan permintaan obrolan ke ruang pakar Cisco Spark.",
+    "deleteAbcFeatureTextConfirmation": "Anda yakin ingin menghapus {{ featureName }}? Semua interaksi pelanggan akan dihapus. Pelanggan tidak dapat lagi menggunakan iMessage untuk berinteraksi dengan agen Spark Care atau Asisten Virtual Pelanggan.",
     "createSuccessText": "Anda telah berhasil membuat {{ featureName }}.",
     "createTemplateFailureText": "Gagal membuat templat Layanan.",
     "editSuccessText": "Perubahan pada {{ featureName }} berhasil disimpan.",
@@ -7887,12 +8055,16 @@
     "helpTextWaitingVirtualAssistant": "Jika Anda sedang menggunakan Asisten Virtual Pelanggan, pesan ini mengindikasikan transisi dari dukungan otomatis ke interaksi manusia.",
     "helpTextChatting": "Pelanggan melihat ini jika mereka menciutkan jendela obrolan selama interaksi berlangsung.",
     "helpTextLeaveRoom": "Pelanggan melihat ini ketika seorang agen keluar dari obrolan dan mengakhiri interaksi.",
-    "assistantTooltip": "{{assistantType}} {{assistantName}} digunakan dalam templat ini.",
-    "filterType": {
-      "chat": "Templat Dukungan Pelanggan",
-      "callback": "Templat Dukungan Pelanggan",
-      "chatPlusCallback": "Templat Dukungan Pelanggan",
-      "virtualAssistant": "Asisten Virtual"
+    "assistantTooltip": "{{assistantType}} {{assistantName}} digunakan oleh {{name}}.",
+    "filterValue": {
+      "customerSupportTemplates": "Templat Dukungan Pelanggan",
+      "virtualAssistants": "Asisten Virtual",
+      "appleBusinessChat": "Obrolan Bisnis Apple"
+    },
+    "badgeName": {
+      "customerSupport": "Templat Dukungan Pelanggan",
+      "virtualAssistant": "Asisten Virtual",
+      "appleBusinessChat": "Obrolan Bisnis Apple"
     },
     "featureCard": {
       "spacesInUseText": "Ruang Pakar: {{ numOfSpaces }}",
@@ -7991,6 +8163,7 @@
     "chatting": "Mengobrol",
     "chattingMessage": "Obrolan sedang berlangsung...",
     "downloadEmbedCode": "Unduh Kode Tertanam",
+    "embedCodeHowToUseInfo": "Tempel cuplikan kode ini di bagian &lt;head&gt; halaman web Anda",
     "embed-code": {
       "no-verified-domains": {
         "warn": "Tidak ada domain yang terverifikasi untuk organisasi Anda. Templat Layanan otomatis bekerja pada domain apappun. Masuk ke halaman Pengaturan untuk menambahkan dan memverifikasi domain untuk membatasinya agar hanya bekerja untuk domain organisasi Anda saja.",
@@ -8008,12 +8181,48 @@
     },
     "embedCodeFor": "Kode Tertanam untuk ",
     "embedCodeWarnMsg_callback": "Penting untuk memverifikasi semua domain tempat Anda ingin menggunakan templat panggil kembali. Anda tidak akan dapat menanam templat panggil kembali pada domain tidak terverifikasi.",
+    "embedCodeSnippet": {
+      "templateNameHelpText": "Nama Template Dukungan Pelanggan: {{templateName}}",
+      "orgNameHelpText": "Nama Organisasi: {{orgName}}"
+    },
     "configureOrgLogoMsg": "Buka halaman Pengaturan untuk mengubah logo organisasi",
+    "commonWizard": {
+      "createTitle": "Buat {{ featureName }}",
+      "editTitle": "Edit {{ featureName }}",
+      "cancelDialog": "Anda ingin membuang \n {{ featureName }} Anda?"
+    },
+    "appleBusinessChat": {
+      "featureText": {
+        "name": "Obrolan Bisnis Apple",
+        "type": "Obrolan Bisnis Apple",
+        "selectDesc": "Konfigurasi Obrolan Bisnis Apple untuk menentukan bagaimana pelanggan dapat menghubungi Anda menggunakan iMessage."
+      },
+      "businessId": {
+        "title": "Verifikasi ID Obrolan Bisnis Apple",
+        "inputLabel": "ID Obrolan Bisnis Apple",
+        "helpText": "Selesaikan pendaftaran Obrolan Bisnis Apple <a href=\"{{href}}\" target=\"_blank\">di sini</a> dan masukkan ID unik organisasi Anda untuk melanjutkan."
+      },
+      "name": {
+        "namePlaceholder": "Masukkan Nama",
+        "nameHint": "Tentukan nama {{ featureName }}",
+        "errorChar250": "Nama tidak boleh melebihi 250 karakter.",
+        "invalidChars": "Nama tidak boleh berisi karakter berikut: &lt;&gt;"
+      },
+      "cvaSelection": {
+        "virtualAssistantPageTitle": "Asisten Virtual Pelanggan (Opsional)",
+        "virtualAssistantDesc": "Pilih Asisten Virtual Pelanggan yang sudah dikonfigurasi sebelumnya yang menyediakan dukungan otomatis awal dalam pengalaman Obrolan Bisnis Apple Anda",
+        "virtualAssistantSelector": "Asisten Virtual Pelanggan",
+        "virtualAssistantSelectText": "Pilih…"
+      },
+      "summary": {
+        "abcDesc": "Anda telah mengonfigurasi {{ name }}.\nKlik Selesai untuk menyimpan konfigurasi.",
+        "saveErrorMessage": "Tidak dapat menyimpan {{ featureName }}. Coba lagi."
+      }
+    },
     "virtualAssistant": {
       "featureText": {
         "selectDesc": "Buat asisten virtual yang dapat memberikan dukungan obrolan otomatis kepada pelanggan, atau mengelola permintaan obrolan yang dieskalasikan di Cisco Spark.",
-        "virtualAssistant": "Asisten Virtual",
-        "mediaType": "Asisten Virtual"
+        "virtualAssistant": "Asisten Virtual"
       },
       "cva": {
         "featureText": {
@@ -8038,11 +8247,12 @@
         "duplicateName": "{{ featureName }} harus memiliki nama yang unik.\nKlik panah kembali untuk kembali ke halaman Nama dan masukkan nama yang valid.",
         "invalidName": "Nama {{ featureName }} tidak valid.\nKlik panah kembali untuk kembali ke halaman Nama dan masukkan nama yang valid.",
         "invalidIcon": "Avatar {{ featureName }} tidak valid.\nKlik panah kembali untuk kembali ke halaman Avatar dan mengunggah avatar yang valid.",
+        "invalidIconFileType": "Jenis file yang didukung untuk avatar {{ featureName }} adalah PNG.\nKlik panah kembali untuk kembali ke halaman Avatar dan mengunggah avatar yang valid.",
+        "invalidIconTooLarge": "Ukuran file gambar avatar {{featureName}} harus kurang dari 1 MB. \nKlik panah kembali untuk kembali ke halaman Avatar dan mengunggah avatar yang valid.",
+        "invalidIconCorrupted": "Avatar {{ featureName }} tidak valid.\nKlik panah kembali untuk kembali ke halaman Avatar dan mengunggah avatar yang valid.",
+        "invalidIconDimensions": "Dimensi avatar {{featureName}} harus berukuran 512 x 512 piksel. \nKlik panah kembali untuk kembali ke halaman Avatar dan mengunggah avatar yang valid.",
         "invalidEmail": "Email yang Anda masukkan tidak valid.\nKlik panah kembali untuk kembali ke halaman Email dan masukkan email yang valid."
       },
-      "createTitle": "Buat {{ featureName }}",
-      "editTitle": "Edit {{ featureName }}",
-      "cancelDialog": "Anda ingin membuang \n {{ featureName }} Anda?",
       "configOverview": {
         "title": "Persyaratan Konfigurasi {{ featureName }}",
         "desc": "Tinjau prasyarat untuk membuat {{ featureName }}",
@@ -8094,11 +8304,13 @@
         "preview": "Pratinjau Avatar",
         "fileBrowser": "browser file",
         "uploadingImage": "Mengunggah Gambar...",
-        "uploadDesc": "Batas unggah ukuran PNG maksimal 1MB. Untuk hasil terbaik, pastikan gambar memiliki latar transparan tanpa padding.",
+        "uploadDesc": "Unggah gambar PNG berukuran 512 x 512 piksel dan maksimum 1 MB. Untuk hasil terbaik, pastikan gambar memiliki latar belakang transparan tanpa padding.",
         "dragDropDesc": "Seret dan jatuhkan file atau gunakan ",
         "errorUnsupportedFile": "Tidak dapat mengunggah file yang tidak didukung. Jenis file yang didukung adalah PNG.",
         "errorOverMaxFileSizeLimit": "Ukuran file gambar harus kurang dari 1 MB.",
-        "errorUploadFile": "Tidak dapat mengunggah gambar. Coba lagi."
+        "errorUploadFile": "Tidak dapat mengunggah gambar. Coba lagi.",
+        "errorInvalidIcon": "Avatar {{featureName}} tidak valid.",
+        "errorInvalidIconDimensions": "Dimensi avatar {{featureName}} harus berukuran 512 x 512 piksel."
       },
       "summary": {
         "cvaDesc": "Anda telah mengonfigurasi {{ name }}. Untuk menggunakan fitur layanan dibantu dalam aplikasi obrolan organisasi Anda, tambahkan asisten Anda ke Templat Dukungan Pelanggan.",
@@ -8159,7 +8371,26 @@
         "createSpecificFailureText": "Gagal menyimpan {{inputItem}} {{ featureName }}.",
         "updateConfigFailureText": "Gagal menyimpan {{ featureName}}."
       }
-    }
+    },
+    "profileEvaDesc": "Konfigurasikan cara pengguna organisasi atau pribadi (or individu) Anda tampil secara visual.",
+    "userDisplayName": "Tampilkan nama tampilan pengguna",
+    "userAlias": "Tampilkan alias pengguna (khusus agen)",
+    "userNamePreview": "Nama tampilan pengguna",
+    "userProfileTooltip": "Klik untuk melakukan pratinjau profil bagi pengguna di organisasi Anda.",
+    "profile_user_info_cva": "Gunakan profil Asisten Virtual Pelanggan unik untuk membedakannya dari pengguna di organisasi Anda.",
+    "user_cva": "Asisten Virtual Pelanggan dan Pengguna",
+    "profile_org_info_cva_eva": "Gunakan satu profil untuk mewakilkan Asisten Virtual Pelanggan dan semua pengguna dalam organisasi Anda.",
+    "user_alias_desc": "Pengguna ahli tidak memiliki alias, jadi nama akun Cisco Spark mereka selalu ditampilkan.",
+    "display_text_desc": "Teks tampilan sama dengan profil agen di Cisco Spark Care atau profil ahli di Cisco Spark.",
+    "userSettingInfo": "Anda tidak dapat mengubah avatar default pengguna yang terlihat di Pratinjau.",
+    "orgEvaSettingInfo": "Anda dapat mengubah logo yang terlihat pada Pratinjau di halaman Pengaturan.",
+    "profile_org_info_eva": "Gunakan satu profil untuk mewakilkan semua pengguna dalam organisasi Anda.",
+    "user_non_cva": "Pengguna Individu",
+    "user_info_non_cva": "Gunakan profil unik untuk mewakili berbagai pengguna dalam organisasi Anda.",
+    "helpTextWaitingEVA": "Pelanggan melihat pesan ini ketika sedang menunggu tanggapan atas permintaan mereka.",
+    "waitingMessageEVA": "Seseorang akan segera membantu Anda...",
+    "helpTextLeaveRoomEVA": "Pelanggan melihat pesan ini ketika pengguna yang sedang berinteraksi dengan mereka mengakhiri obrolan.",
+    "leaveRoomMessageEVA": "Obrolan telah berakhir"
   },
   "huronHuntGroup": {
     "modalTitle": "Grup Berburu",
@@ -8398,8 +8629,8 @@
       },
       "hybrid": {
         "title": "Layanan Hybrid",
-        "googleCalendarError": "Tidak dapat menjangkau layanan untuk Google Kalender.",
-        "o365CalendarError": "Tidak dapat menjangkau layanan untuk Office 365.",
+        "googleCalendarError": "Tidak dapat menjangkau layanan untuk Google Kalender. Statusnya mungkin dilaporkan tidak akurat selama sesi ini.",
+        "o365CalendarError": "Tidak dapat menjangkau layanan untuk Office 365. Statusnya mungkin dilaporkan tidak akurat selama sesi ini.",
         "herculesError": "Tidak dapat menjangkau layanan untuk Layanan Hybrid Cisco Spark.",
         "herculesErrorAuthentication": "Tidak dapat memvalidasi hak akses admin mitra dalam organisasi pelanggan. Ini dapat menunjukkan masalah penangkapan. Coba keluar dan masuk lagi, dan hubungi dukungan Cisco jika masalahnya masih berlanjut.",
         "notEnabledText": "Layanan Hybrid memungkinkan Anda mengintegrasikan sistem lokal dengan Platform Cisco Spark.",
@@ -8468,6 +8699,14 @@
     "webexVersion": {
       "title": "Versi Webex"
     },
+
+    "webexSiteManagement": {
+      "title": "Situs WebEx",
+      "subsectionLabel": "Izinkan pelanggan mengelola Situs WebEx",
+      "subsectionDescription": "Pelanggan dapat menambahkan, mengedit, dan menghapus situs WebEx di portal pelanggan Hub Kontrol Cisco Spark. Menonaktifkan opsi ini akan menghapus antarmuka pengguna untuk mengelola situs WebEx bagi semua pelanggan Anda.",
+      "allowSiteManagementByCustomer": "Izinkan pelanggan mengelola situs WebEx",
+      "siteManagementSettingUpdated": "Manajemen Situs Webex menurut pengaturan pelanggan telah diperbarui"
+    },
     "sipDomain": {
       "title": "Alamat SIP Cisco Spark",
       "subsectionLabel": "Prefiks Domain SIP",
@@ -8522,10 +8761,11 @@
     "sparkAssistant": {
       "title": "Asisten Cisco Spark",
       "subsectionLabel": "Aktifkan Asisten Cisco Spark",
-      "description": "Memungkinkan pengguna melakukan berbagai tindakan seperti membuat panggilan, memulai rapat, menggunakan suara mereka",
-      "termsOfService": "Ketentuan layanan Asisten Cisco Spark ",
+      "description": "Mengizinkan pengguna melakukan berbagai tindakan seperti melakukan panggilan dan memulai rapat, menggunakan suara mereka.",
       "success": "Berhasil memperbarui Asisten Spark",
-      "failure": "Pembaruan Asisten Spark gagal"
+      "failure": "Pembaruan Asisten Cisco Spark gagal",
+      "optout": "Nonaktifkan Asisten Cisco Spark",
+      "optoutConfirm": "Jika menonaktifkan Asisten Cisco Spark, Anda tidak akan dapat menggunakan perintah suara pada salah satu perangkat yang didukung."
     },
     "externalCommunication": {
       "title": "Komunikasi Eksternal",
@@ -8613,7 +8853,10 @@
     "info": "Info",
     "order": "Riwayat Pesanan",
     "billing": "Info Penagihan",
-    "loadError": "Terjadi kesalahan ketika memuat halaman"
+    "loadError": "Terjadi kesalahan ketika memuat halaman",
+    "closeAccount": "Tutup Akun",
+    "closeAccountWarning": "Menutup akun Anda akan membatalkan semua langganan Anda, menghapus akun Anda dari sistem identitas Cisco dan menghapus pendaftaran situs WebEx Anda.",
+    "closeAccountNote": "Harap perhatikan bahwa penutupan akun tidak dapat dibatalkan kecuali dengan cara berlangganan kembali."
   },
   "subscriptions": {
     "activeUsers": "Pengguna Aktif",
@@ -8704,12 +8947,14 @@
     "pendingActivation": "Aktivasi Ditunda",
     "onlineOnly1": "Hanya Pembelian dari Cisco Online Marketplace.",
     "onlineOnly2": "Kwitansi Cisco dan Mitra Cisco tidak terdaftar di sini.",
+    "invoiceError": "Terjadi kesalahan saat membuat tautan ke faktur karena pembeli tidak dapat ditemukan di sistem identitas (CI).",
     "loadError": "Terjadi kesalahan saat memuat riwayat pesanan."
   },
   "ciRoles": {
     "atlas-portal.support": "Dukungan",
     "atlas-portal.reports": "Laporan",
     "atlas-portal.billing": "Penagihan",
+    "atlas-portal.deviceadmin": "Admin perangkat",
     "atlas-portal.cisco.partnermgmt": "Manajemen Mitra",
     "atlas-portal.cisco.partnermgmtTooltip": "Akses ke Manajemen Mitra",
     "atlas-portal.partner.helpdesk": "Dukungan Bantuan",
@@ -8720,6 +8965,7 @@
     "atlas-portal.partner.salesadmin": "Admin Penjualan",
     "id_full_admin": "Admin Penuh",
     "id_readonly_admin": "Admin Baca Saja",
+    "id_user_admin": "Admin pengguna",
     "user": "Pengguna",
     "ciscouc.devops": "Pengembangan Panggilan Cisco Spark",
     "ciscouc.devsupport": "Dukungan Pengembangan Panggilan Cisco Spark",
@@ -8914,7 +9160,7 @@
     "noMoreResults": "Batas hasil maksimal tercapai. Coba pencarian yang berbeda.",
     "huronNotActivated": "Tidak dapat mencari perangkat Panggilan Cisco Spark. Layanan suara tidak diaktifkan untuk pelanggan ini.",
     "primary": "Utama",
-    "shared": "Membagikan",
+    "shared": "Dibagikan",
     "primaryShared": "Utama Dibagikan",
     "sparkStatus": "Status Cisco Spark",
     "searchHelp": "Bantuan Pencarian",
@@ -9000,8 +9246,8 @@
   },
   "partnerManagement": {
     "browserTabHeaderTitle": "Manajemen Mitra",
-    "navHeaderTitle": "Hub Kontrol Cisco Spark",
-    "navHeaderTitleNew": "Hub Kontrol Cisco Spark",
+    "navHeaderTitle": "Cisco Spark Control Hub",
+    "navHeaderTitleNew": "Cisco Spark Control Hub",
     "navHeaderTitlePro": "Hub Kontrol Cisco Spark Pro",
     "back": "Kembali",
     "next": "Berikutnya",
@@ -9170,9 +9416,10 @@
     "userIsMissingEntitlements": "Pengguna saat ini tidak memiliki penetapan Layanan Hybrid.",
     "userStatusesSummary": {
       "users": "Pengguna",
-      "inError": "pengguna bermasalah",
-      "inPending": "pengguna dalam aktivasi ditunda",
-      "active": "pengguna aktif",
+      "assigned": "{total, plural, =1{# user enabled} other {# users enabled}}",
+      "inError": "kesalahan",
+      "inPending": "aktivasi tertunda",
+      "active": "aktif",
       "enableUsers": "Aktifkan pengguna"
     },
     "cards": {
@@ -9193,7 +9440,8 @@
         "title": "Rapat",
         "description": "Konfigurasi Pusat Rapat WebEx dan Cisco Spark untuk organisasi Anda dan pribadi.",
         "SPDescription": "Konfigurasi WebEx Meeting Center dan Cisco Spark.",
-        "pmrText": "Konfigurasi Kamar Rapat Pribadi Anda"
+        "pmrText": "Konfigurasi Kamar Rapat Pribadi Anda",
+        "viewWebExSites": "Lihat Situs WebEx"
       },
       "call": {
         "title": "Panggilan",
@@ -9405,7 +9653,8 @@
         "buttons": {
           "resources": "Sumber Daya",
           "fields": "Bidang",
-          "fieldsets": "Kumpulan bidang"
+          "fieldsets": "Kumpulan bidang",
+          "settings": "Pengaturan"
         }
       },
       "privateTrunk": {
@@ -10473,7 +10722,9 @@
       "setAccountLinkingModeError": "Gagal Mengatur Mode Penautan Akun dengan: {{message}}",
       "getCiSiteLinkingError": "Gagal mendapatkan info penautan dengan: {{message}}",
       "getCiAccountSyncError": "Gagal mendapatkan penyelarasan akun dengan: {{message}}",
-      "getDomainsError": "Gagal mendapatkan domain dengan: {{message}}"
+      "getDomainsError": "Gagal mendapatkan domain dengan: {{message}}",
+      "unableToRetrieveSomeData": "Tidak dapat mengambil beberapa data",
+      "unableToRetrieveData": "Tidak dapat mengambil data"
     },
     "grid": {
       "header": {
@@ -10508,16 +10759,128 @@
       "viewReports": "Lihat Laporan",
       "dontHaveAdminRights": "Anda tidak memiliki hak istimewa administratif untuk situs ini.",
       "legacyWebexLicense": "Lisensi WebEx Warisan",
-      "launchWebexSiteAdmin": "Luncurkan Admin Situs WebEx"
+      "launchWebexSiteAdmin": "Luncurkan Admin Situs WebEx",
+      "automaticLinking": "Penautan Otomatis",
+      "automaticLinkingTooltip": "Semua akun WebEx yang tercantum di domain terverifikasi akan ditautkan, termasuk akun yang saat ini tidak tertaut dan akun baru berikutnya.",
+      "linkAllUsers": {
+        "startLinkingHeader": "Penautan Otomatis",
+        "stopLinkingHeader": "Hentikan Penautan Otomatis",
+        "cancel": "Batal",
+        "start": "Tautkan Sekarang",
+        "stop": "berhenti",
+        "startLinking": "Semua akun WebEx yang tercantum di domain terverifikasi akan ditautkan, termasuk akun yang saat ini tidak tertaut dan akun baru berikutnya.",
+        "stopLinking": "Dengan menghentikan penautan otomatis, akun baru berikutnya juga tidak akan ditautkan ke Cisco Spark."
+      }
     },
     "wizard": {
-      "title": "Mode Penautan Akun WebEx",
+      "title": "Verifikasi Akun Tertut WebEx",
       "siteName": "Nama Situs: {{siteName}}",
-      "enrolledWebexSiteName": "Nama Situs WebEx yang Terdaftar",
-      "webexSite": "Situs WebEx"
+      "enrolledWebexSiteName": "Situs WebEx yang Didaftarkan",
+      "webexSite": "Situs WebEx",
+      "agreementAcceptLabel": "Saya sudah membaca dan menyetujui perjanjian ini",
+      "policyHeader": "Kebijakan Keamanan Cisco",
+      "verifyUser": "Mengapa Harus Memverifikasi Pengguna WebEx?",
+      "verifyUserP1": "- Cisco Spark menggunakan enkripsi inovatif untuk setiap Spark Space.",
+      "verifyUserP2": "- Setiap pengguna diautentikasi dan diberi wewenang untuk mengakses Spark Space dan mendapatkan kunci enkripsi.",
+      "verifyUserP3": "Pengguna memverifikasi akun mereka dengan mengeklik tautan yang aman di dalam email yang mereka terima.",
+      "verifyHow": "Bagaimana cara memverifikasi pengguna?",
+      "verifyAccounts": "Verifikasi Akun",
+      "noEmails": "Tidak ingin pengguna menerima email penautan?",
+      "noEmailsP1": "Saat Anda memverifikasi akun Spark Cisco, pengguna yang diundang tidak akan menerima email. Tidak ada tindakan pengguna yang diperlukan.",
+      "noEmailsP2": "Jika Anda tidak ingin pengguna menerima email, klik \"Verifikasi\" di bawah dan Anda akan melihat opsi berikut:",
+      "noEmailsP3": "Verifikasi Domain",
+      "noEmailsP4": "dengan memasukkan data TXT di DNS Anda.",
+      "noEmailsP5": "Tandatangani Perjanjian Hukum",
+      "noEmailsP6": "yang memberi Anda tenggang waktu 3 bulan untuk memasukkan data TXT di DNS",
+      "noEmailsP7": "Jika Anda ingin pengguna menerima email penautan saat diundang, klik \"Terima Email\" dan undang pengguna dari Administrasi Situs WebEx.",
+      "verify": "Verifikasi",
+      "receiveEmail": "Terima Email",
+      "verifyDomainsHeader": "Verifikasi Domain",
+      "verifyDomains": "Verifikasi domain Anda serta pastikan keamanan dan integritas organisasi Anda. Pengguna yang memiliki domain terverifikasi tidak akan menerima email yang meminta untuk memverifikasi alamat email mereka.",
+      "legalAgreement": "Tandatangani Perjanjian Hukum yang memungkinkan organisasi Anda memverifikasi domain dalam masa tenggang. Cisco memberi Anda tenggang waktu 3 bulan untuk menambahkan data TXT ke DNS untuk membuktikan kepemilikan domain.",
+      "verifyDomainsToken": "Cisco menyediakan token untuk ditambahkan ke data TXT DNS Host Domain Anda. Cisco mengonfirmasi kepemilikian domain Anda dengan memeriksa token ini di server DNS Anda. Setelah verifikasi selesai, buuka Administrasi Situs WebEx dan mulai mengundang pengguna ke Cisco Spark. Pengguna di Domain Terverifikasi tidak akan menerima email penautan.",
+      "signAgreement": "Tandatangani Perjanjian Hukum",
+      "verifyNow": "Verifikasi Sekarang",
+      "webExDomains": "Domain WebEx",
+      "webExDomainsTxt": "Cisco akan menautkan akun WebEx di domain ini, tanpa mengirim email kepada pengguna.",
+      "ciscoWebExDomains": "Domain WebEx Cisco",
+      "publicDomains": "Domain Publik",
+      "publicDomainsTxt": "Domain yang tercantum di sini adalah milik organisasi lain dan tidak akan disertakan dalam perjanjian hukum. Cisco akan mengirim email penautan kepada pengguna di domain ini untuk membuktikan bahwa alamat email tersebut adalah milik mereka.",
+      "publicConsumerDomains": "Domain Pelanggan Publik",
+      "fetchingDomains": "Mengambil Domain",
+      "fetchingDomainsTxt": "Mungkin perlu beberapa menit untuk mendapatkan daftar lengkap domain Anda.",
+      "linkAccounts": "Tautkan Akun",
+      "linkAccountsTxt": "Anda akan diarahkan ke Adimistrasi Situs WebEx tempat Anda dapat mulai menautkan akun WebEx ke Cisco Spark.",
+      "ciscoSparkAgreement": "Perjanjian Cisco Spark",
+      "ciscoSparkAgreementTxt": "Harap baca perjanjian secara saksama dan setujui di bawah. Perjanjian ini akan memberi Anda waktu 3 bulan untuk memverifikasi kepemilikan domain Anda dengan memasukkan data TXT di DNS.",
+      "verifyDomainsTxt": "Anda akan membuka halaman untuk memverifikasi domain. Setelah verifikasi selesai, Anda harus mengundang pengguna dari Administrasi Situs WebEx. Pengguna terundang yang termasuk dalam domain terverifikasi tidak akan menerima email.",
+      "startLinkingAccounts": "Mulai Menautkan Akun",
+      "setupSuccess": "Penyiapan Berhasil",
+      "setupSuccessTxt": "Selanjutnya, masuk ke Administrasi Situs WebEx dan mulai menautkan akun.",
+      "exceptions": "Pengecualian",
+      "exceptionsTooltip": "Pengguna dari domain email pelanggan (misalnya gmail.com, outlook.com, dll.) atau dari domain yang tidak diverifikasi oleh admin akan selalu menerima email untuk memastikan bahwa itu adalah mereka.",
+      "receiveEmailMoreInfo": "Catatan",
+      "receiveEmailInfo": "Jika Anda sudah memiliki domain yang diverifikasi di Hub Kontrol Cisco Spark, pengguna di domain tersebut tidak akan menerima email.",
+      "signAgreementNote": "Info",
+      "signAgreementTooltip": "Situs WebEx Anda tidak berhak untuk menggunakan Tandatangani Perjanjian Hukum. Hubungi Cisco Collaboration Help untuk mendapatkan informasi yang berhubungan dengan hak Situs WebEx Anda untuk menggunakan fitur Tandatangani Perjanjian Hukum."
+    },
+    "userSidepanel": {
+      "webexLinkedAccounts": "Akun Tertaut WebEx",
+      "linkedAccounts": "Akun Tertaut",
+      "webexPreferredSite": "Situs WebEx yang Dipilih",
+      "webexPMR": "Kamar Rapat Pribadi"
     }
   },
   "hcs": {
+    "cardTitle": "Layanan Kolaborasi yang Diselenggarakan",
+    "description": "Perluas layanan Awan ke Solusi Awan yang Diselenggarakan.",
+    "addService": "Tambah Layanan",
+    "agentInstallFiles": "File Instalasi Agen",
+    "license": {
+      "all": "Semua",
+      "description": "Perluas layanan Lisensi ke Solusi Awan yang Diselenggarakan.",
+      "invalid": "Tidak valid",
+      "laas": "Lisensikan sebagai Layanan",
+      "other": "Lainnya",
+      "perpetual": "Terus-menerus",
+      "standard": "Standard",
+      "status": "Status",
+      "subscriptions": "Langganan",
+      "subscriptionId": "ID Berlangganan",
+      "telepresence": "Telepresence",
+      "hcsTitle": "Lisensi HCS",
+      "title": "Lisensi",
+      "valid": "Valid"
+    },
+    "upgrade": {
+      "title": "Pengaturan Peningkatan HCS",
+      "description": "Perluas layanan Peningkatan ke Solusi Awan yang Diselenggarakan.",
+      "sftp": "Server SFTP",
+      "softwareProfiles": "Profil Perangkat Lunak",
+      "uaas": "Tingkatkan sebagai Layanan"
+    },
+    "setup": {
+      "titleServices": "Pilih Layanan",
+      "selectDescription": "Pilih Layanan HCS untuk Pengaturan"
+    },
+    "inventory": {
+      "title": "Inventaris"
+    },
+    "installFiles": {
+      "addFile": "Tambahkan File",
+      "copFile": "File COP",
+      "description": "Buat File Instalasi Agen. File ini diperlukan untuk mendaftarkan nodus Anda dan pembuatannya akan membutuhkan waktu beberapa lama.",
+      "duplicateProxy": "Duplikasikan Alamat Proxy HTTP",
+      "enterFileName": "Masukkan nama file",
+      "fileName": "Nama File",
+      "httpProxies": "Proxy HTTP",
+      "httpProxy": "Proxy HTTP",
+      "invalidPortError": "Port bisa berupa 0 atau berkisar antara {{min}} dan {{max}}",
+      "placeholderHttpProxy": "Masukkan Alamat IP Proxy HTTP atau Nama Domain",
+      "setupTitle": "Buat File Instalasi Agen",
+      "tarFile": "File .tar",
+      "title": "File Instalasi"
+    },
     "taas": {
       "testState": {
         "good": "Lulus",
