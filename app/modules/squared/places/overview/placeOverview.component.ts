@@ -19,7 +19,6 @@ class PlaceOverview implements ng.IComponentController {
   public showPstn: boolean = false;
   public showATA: boolean = false;
   public csdmHybridCallFeature: boolean = false;
-  private csdmHybridCalendarFeature = false;
   private hybridCalendarEnabledOnOrg = false;
   private hybridCallEnabledOnOrg = false;
   public generateCodeIsDisabled = true;
@@ -201,9 +200,6 @@ class PlaceOverview implements ng.IComponentController {
     this.FeatureToggleService.csdmHybridCallGetStatus().then(feature => {
       this.csdmHybridCallFeature = feature;
     });
-    this.FeatureToggleService.csdmPlaceCalendarGetStatus().then(feature => {
-      this.csdmHybridCalendarFeature = feature;
-    });
     this.ServiceDescriptorService.getServices().then(services => {
       this.hybridCalendarEnabledOnOrg = this.hybridCalendarEnabledOnOrg || _.chain(this.ServiceDescriptorService.filterEnabledServices(services)).filter(service => {
         return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
@@ -275,7 +271,6 @@ class PlaceOverview implements ng.IComponentController {
         function: 'editServices',
         title: 'usersPreview.editServices',
         csdmHybridCallFeature: this.csdmHybridCallFeature,
-        csdmHybridCalendarFeature: this.csdmHybridCalendarFeature,
         hybridCalendarEnabledOnOrg: this.hybridCalendarEnabledOnOrg,
         hybridCallEnabledOnOrg: this.hybridCallEnabledOnOrg,
         account: {
@@ -353,17 +348,12 @@ class PlaceOverview implements ng.IComponentController {
     this.$state.go('place-overview.' + feature.state);
   }
 
-  public anyHybridServiceToggle() {
-    return this.csdmHybridCalendarFeature || this.csdmHybridCallFeature;
-  }
-
   public onGenerateOtpFn(): void {
     const wizardState = {
       data: {
         function: 'showCode',
         showATA: this.showATA,
         csdmHybridCallFeature: this.csdmHybridCallFeature,
-        csdmHybridCalendarFeature: this.csdmHybridCalendarFeature,
         hybridCalendarEnabledOnOrg: this.hybridCalendarEnabledOnOrg,
         hybridCallEnabledOnOrg: this.hybridCallEnabledOnOrg,
         admin: this.adminUserDetails,

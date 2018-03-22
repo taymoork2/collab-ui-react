@@ -113,51 +113,9 @@ describe('placeOverview component', () => {
       });
     });
 
-    describe('with hybrid toggles', () => {
-      it('for hybrid calendar it should return true that a feature is on', () => {
-        spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(false));
-        spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve(true));
-
-        $stateParams = { currentPlace: { displayName: deviceName, type: 'cloudberry', cisUuid: 'sa0va9u02' } };
-        controller = initController($stateParams, $scope, $state);
-
-        controller.$onInit();
-        $scope.$apply();
-
-        expect(controller.anyHybridServiceToggle()).toBe(true);
-      });
-
-      it('for hybrid calendar it should return true that a feature is on', () => {
-        spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(true));
-        spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve(false));
-
-        $stateParams = { currentPlace: { displayName: deviceName, type: 'cloudberry', cisUuid: 'sa0va9u02' } };
-        controller = initController($stateParams, $scope, $state);
-
-        controller.$onInit();
-        $scope.$apply();
-
-        expect(controller.anyHybridServiceToggle()).toBe(true);
-      });
-
-      it('off for hybrid call and calendar should return false that a feature is on', () => {
-        spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(false));
-        spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve(false));
-
-        $stateParams = { currentPlace: { displayName: deviceName, type: 'cloudberry', cisUuid: 'sa0va9u02' } };
-        controller = initController($stateParams, $scope, $state);
-
-        controller.$onInit();
-        $scope.$apply();
-
-        expect(controller.anyHybridServiceToggle()).toBe(false);
-      });
-    });
-
     describe('and invoke onGenerateOtpFn', () => {
       beforeEach(() => {
         spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(showHybrid));
-        spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve({}));
 
         spyOn($state, 'go').and.callFake((_stateName, stateData) => {
           goStateData = stateData;
@@ -188,7 +146,6 @@ describe('placeOverview component', () => {
                 function: 'showCode',
                 showATA: true,
                 csdmHybridCallFeature: true,
-                csdmHybridCalendarFeature: false,
                 hybridCalendarEnabledOnOrg: false,
                 hybridCallEnabledOnOrg: false,
                 admin: {
@@ -242,7 +199,6 @@ describe('placeOverview component', () => {
                 function: 'showCode',
                 showATA: true,
                 csdmHybridCallFeature: showHybrid,
-                csdmHybridCalendarFeature: false,
                 hybridCalendarEnabledOnOrg: false,
                 hybridCallEnabledOnOrg: false,
                 admin: {
@@ -294,7 +250,6 @@ describe('placeOverview component', () => {
 
       spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(showATA));
       spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(showHybrid));
-      spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve({}));
       spyOn(ServiceDescriptorService, 'getServices').and.returnValue($q.resolve([]));
       spyOn(PlaceCallOverviewService, 'getSiteLanguages').and.returnValue($q.resolve(siteLanguages));
       spyOn(LocationsService, 'getLocation').and.returnValue($q.resolve(locationData));
@@ -342,7 +297,6 @@ describe('placeOverview component', () => {
             function: 'editServices',
             title: 'usersPreview.editServices',
             csdmHybridCallFeature: false,
-            csdmHybridCalendarFeature: false,
             hybridCalendarEnabledOnOrg: false,
             hybridCallEnabledOnOrg: false,
             account: {
