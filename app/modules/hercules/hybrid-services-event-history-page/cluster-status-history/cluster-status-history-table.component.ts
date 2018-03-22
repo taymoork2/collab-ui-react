@@ -18,7 +18,6 @@ class HybridServicesClusterStatusHistoryTableCtrl implements ng.IComponentContro
   public serviceFilter: HybridServiceId | 'all' = 'all';
   public resourceFilter: string = 'all';
   public timeFilter: ITimeFilterOptions['value'] = 'last_day';
-  public earliestTimestampSearchedUpdated: Function;
   private openedItem: IHybridServicesEventHistoryItem;
 
   /* @ngInject */
@@ -64,11 +63,6 @@ class HybridServicesClusterStatusHistoryTableCtrl implements ng.IComponentContro
     this.HybridServicesEventHistoryService.getAllEvents(clusterId, fromDate, toDate)
       .then((data) => {
         this.allEvents = data;
-        this.earliestTimestampSearchedUpdated({
-          options: {
-            earliestTimestampSearched: data.earliestTimestampSearched,
-          },
-        });
       })
       .catch((error) => {
         this.Notification.errorWithTrackingId(error, 'hercules.eventHistory.cannotReadEventData');
@@ -136,6 +130,5 @@ export class HybridServicesClusterStatusHistoryTableComponent implements ng.ICom
     serviceId: '<',
     resourceFilter: '<',
     timeFilter: '<',
-    earliestTimestampSearchedUpdated: '&',
   };
 }

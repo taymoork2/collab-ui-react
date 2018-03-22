@@ -34,7 +34,6 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
   public clusterId: string;
   public connectorId: string;
   public serviceId: HybridServiceId | 'all';
-  public earliestTimestampSearched: string;
 
   public backState: string = 'expressway-cluster.nodes';
 
@@ -136,14 +135,6 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
   }
 
   public formatTime = (timestamp: string): string => this.HybridServicesI18NService.getLocalTimestamp(timestamp);
-
-  /* Callback used by the table component  */
-  public earliestTimestampSearchedUpdated(options): void {
-    if (options.earliestTimestampSearched) {
-      this.earliestTimestampSearched = options.earliestTimestampSearched;
-    }
-  }
-
 }
 
 export class HybridServicesEventHistoryPageComponent implements ng.IComponentOptions {
