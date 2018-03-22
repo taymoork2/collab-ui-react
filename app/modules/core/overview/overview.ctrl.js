@@ -76,18 +76,24 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
     vm.showUserTaskManagerModal = showUserTaskManagerModal;
 
     ////////////////////////////////
+
     $q.all({
       enabledNotPurchased: ProPackService.hasProPackEnabledAndNotPurchased(),
       purchased: ProPackService.hasProPackPurchased(),
-    }).then(function (proPackToggle) {
-      proPackPurchased = proPackToggle.purchased;
+      broadsoft: FeatureToggleService.supports(FeatureToggleService.features.hI1776),
+    }).then(function (response) {
+      proPackPurchased = response.purchased;
 
-      if (proPackToggle.enabledNotPurchased && isEnterpriseCustomer()) {
+      if (response.enabledNotPurchased && isEnterpriseCustomer()) {
         $scope.$watch(function () {
           return LearnMoreBannerService.isElementVisible(LearnMoreBannerService.OVERVIEW_LOCATION);
         }, function (visible) {
           vm.showLearnMoreNotification = !visible;
         });
+      }
+
+      if (response.broadsoft) {
+        vm.cards.splice(2, 0, OverviewCardFactory.createBroadsoftCard());
       }
 
       init();

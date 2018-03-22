@@ -8607,6 +8607,10 @@
     "toSubscribe": "to subscribe",
     "nonotifications": "Currently, there are no notifications to display.",
     "cards": {
+      "broadsoft" : {
+        "title": "BroadSoft BroadCloud",
+        "launch": "Launch Broadsoft Portal"
+      },
       "users": {
         "title": "Users",
         "directorySynchronization": "Directory Synchronization",
