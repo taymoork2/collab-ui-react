@@ -60,20 +60,12 @@ describe('Component: legalHoldCustodianImport', () => {
     this.$scope.onFileValidation = jasmine.createSpy('onFileValidation');
     this.$scope.onConversionCompleted = jasmine.createSpy('onConversionCompleted');
     this.$scope.onImportInit = jasmine.createSpy('onImportInit');
+    this.$scope.mode = ImportMode.ADD;
   });
-
-  function getComponentTemplate(mode) {
-    return `<legal-hold-custodian-import
-  mode="'${mode}'"
-  on-file-validation="$ctrl.setFileValid(isValid, error)"
-  on-conversion-completed="$ctrl.addUsersToMatter(custodianLists)"
-  on-import-init="$ctrl.importComponentApi=importComponentApi;"></legal-hold-custodian-import>`;
-  }
 
   function initComponent(this: Test) {
     this.compileComponent('legalHoldCustodianImport', {
-      $timeout: this.$timeout,
-      mode: 'add',
+      mode: 'mode',
       onFileValidation: 'onFileValidation(isValid, error)',
       onConversionCompleted: 'onConversionCompleted(custodianLists)',
       onImportInit: 'onImportInit(importComponentApi)',
@@ -87,24 +79,28 @@ describe('Component: legalHoldCustodianImport', () => {
   }
 
   describe('initial state', () => {
-    beforeEach(initComponent);
     it('should display the file input only without the progress or results', function (this: Test) {
-      this.compileTemplate(getComponentTemplate(ImportMode.ADD));
-      const controller = this.view.controller('legalHoldCustodianImport');
-      expect(controller.currentStep).toBe(ImportStep.UPLOAD);
-      expect(this.view.find('input#userFileUpload').length).toBe(1);
+      initComponent.apply(this);
+      expect(this.controller.currentStep).toBe(ImportStep.UPLOAD);
+      expect(this.view.find('input#custodianImportInput').length).toBe(1);
     });
 
     it('should display l10 strings correctly depending on the mode property', function (this: Test) {
-      this.compileTemplate(getComponentTemplate(ImportMode.REMOVE));
+      this.$scope.mode = ImportMode.REMOVE;
+      this.$scope.$apply();
+      initComponent.apply(this);
       expect(this.view.controller('legalHoldCustodianImport').mode).toBe(ImportMode.REMOVE);
-      expect(this.view.controller('legalHoldCustodianImport').statusTitle).toBe('legalHold.custodianImport.remove.statusTitle');
-      this.compileTemplate(getComponentTemplate(ImportMode.ADD));
+      expect(this.view.controller('legalHoldCustodianImport').l10nStatusTitle).toBe('legalHold.custodianImport.remove.statusTitle');
+      this.$scope.mode = ImportMode.ADD;
+      this.$scope.$apply();
+      initComponent.apply(this);
       expect(this.view.controller('legalHoldCustodianImport').mode).toBe(ImportMode.ADD);
-      expect(this.view.controller('legalHoldCustodianImport').statusTitle).toBe('legalHold.custodianImport.add.statusTitle');
-      this.compileTemplate(getComponentTemplate(ImportMode.NEW));
+      expect(this.view.controller('legalHoldCustodianImport').l10nStatusTitle).toBe('legalHold.custodianImport.add.statusTitle');
+      this.$scope.mode = ImportMode.NEW;
+      this.$scope.$apply();
+      initComponent.apply(this);
       expect(this.view.controller('legalHoldCustodianImport').mode).toBe(ImportMode.NEW);
-      expect(this.view.controller('legalHoldCustodianImport').statusTitle).toBe('legalHold.custodianImport.new.statusTitle');
+      expect(this.view.controller('legalHoldCustodianImport').l10nStatusTitle).toBe('legalHold.custodianImport.new.statusTitle');
     });
 
     it('should publish api on init', function (this: Test) {

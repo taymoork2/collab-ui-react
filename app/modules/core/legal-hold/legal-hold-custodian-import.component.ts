@@ -26,6 +26,7 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
     {
       fieldName: 'emailAddress',
       fieldL10nLabel: 'common.emailAddress',
+      fieldClass: 'custodian-import__table-column--first',
     },
     {
       fieldName: 'error',
@@ -64,6 +65,7 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
   public result: IImportResult | undefined;
   private shouldCancel = false; // triggers cancelation
   public resultStatus: ImportResultStatus | undefined;
+  public progressLabel = this.$translate.instant('common.uploadingEllipsis');
 
   public CSV_IMPORT_HEADER = this.$translate.instant('common.emailAddress');
   public api: IImportComponentApi = {
@@ -86,6 +88,9 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
     private ModalService: IToolkitModalService,
 
   ) {
+  }
+
+  public $onInit() {
     this.$ = jQuery;
     this.$scope.$watch(() => {
       return this.file;
@@ -96,9 +101,6 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
         });
       }
     });
-  }
-
-  public $onInit() {
     this.setupDefaults();
     this.onImportInit({ importComponentApi: this.api });
   }
@@ -110,23 +112,19 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
     this.styleResultsWidth = this.styleResultsWidth || LegalHoldCustodianImportController.DEFAULTS.styleResultsWidth;
   }
 
-  public get title(): string {
+  public get l10nTitle(): string {
     return `legalHold.custodianImport.${this.mode}.title`;
   }
 
-  public get description(): string {
+  public get l10nDescription(): string {
     return `legalHold.custodianImport.${this.mode}.description`;
   }
 
-  public get statusTitle(): string {
+  public get l10nStatusTitle(): string {
     return `legalHold.custodianImport.${this.mode}.statusTitle`;
   }
 
-  public get resultPartial(): string {
-    return `legalHold.custodianImport.${this.mode}.resultPartial`;
-  }
-
-  public get resultString(): string {
+  public get l10nResultString(): string {
     switch (this.resultStatus) {
       case ImportResultStatus.FAILED:
         return `legalHold.custodianImport.${this.mode}.resultFailure`;
@@ -140,18 +138,10 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
   }
 
   public get resultClass(): string {
-    return this.resultStatus ? ImportResultStatus[this.resultStatus].toLowerCase() : '';
+    return this.resultStatus ? `custodianImport__results--${ImportResultStatus[this.resultStatus].toLowerCase()}` : '';
   }
 
-  public get resultSuccess(): string {
-    return `legalHold.custodianImport.${this.mode}.resultSuccess`;
-  }
-
-  public get resultFailure(): string {
-    return `legalHold.custodianImport.${this.mode}.resultFailure`;
-  }
-
-  public get actionPerformed(): string {
+  public get l10nActionPerformed(): string {
     return (this.mode === ImportMode.REMOVE) ? 'legalHold.custodianImport.usersRemoved' : 'legalHold.custodianImport.usersAdded';
   }
 
@@ -174,6 +164,7 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
     };
     this.ModalService.open(params).result.then(() => {
       this.shouldCancel = true;
+      this.progressLabel = this.$translate.instant('common.cancelingEllipsis');
     });
 
   }
@@ -290,8 +281,7 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
         })
         .catch((notFoundUser: ICustodian) => {
           returnResult.error.push(notFoundUser);
-        })
-        .finally(() => this.$q.resolve());
+        });
     });
     return this.$q.all(getCustodiansInChunkPromiseArr).then(() => {
       this.setUploadProgress();

@@ -4,6 +4,7 @@
     <div class="cr-table__row">
       <span ng-repeat="col in ::$ctrl.tableFields track by $index"
         class="cr-table__column--header cr-table__column-{{$index}}"
+        ng-class="::col.fieldClass"
         translate="{{:: col.fieldL10nLabel}}" role="columnheader"></span>
     </div>
   </div>
@@ -11,7 +12,8 @@
     <div class="cr-table__row"
       ng-repeat="data in $ctrl.tableRecords track by $index" role="row">
       <span ng-repeat="col in ::$ctrl.tableFields"
-        class="cr-table__column cr-table__column-{{$index}}">{{data[col.fieldName]}}</span>
+        class="cr-table__column cr-table__column-{{$index}}"
+        ng-class="::col.fieldClass">{{data[col.fieldName]}}</span>
     </div>
   </div>
 </div>
