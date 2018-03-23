@@ -1,17 +1,17 @@
-import { BaseTooltipCtrl, BASE_TOOLTIP_BINDINGS } from '../base-tooltip.controller';
+import { TooltipUtil, IBaseTooltipController } from 'modules/core/accessibility/tooltips/tooltip.util';
 
-const TEXT_TOOLTIP_BINDINGS = _.cloneDeep(BASE_TOOLTIP_BINDINGS);
+const TEXT_TOOLTIP_BINDINGS = TooltipUtil.mkBaseTooltipBindings();
 
-class TextTooltipCtrl extends BaseTooltipCtrl {
+class TextTooltipController implements ng.IComponentController, IBaseTooltipController {
   /* @ngInject */
   constructor() {
-    super();
+    _.assignIn(this, TooltipUtil.mkBaseTooltipController());
   }
 }
 
 export class TextTooltipComponent implements ng.IComponentOptions {
   public template = require('./text-tooltip.tpl.html');
-  public controller = TextTooltipCtrl;
+  public controller = TextTooltipController;
   public bindings = TEXT_TOOLTIP_BINDINGS;
   public transclude = true;
 }
