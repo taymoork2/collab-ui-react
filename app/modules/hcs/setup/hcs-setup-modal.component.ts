@@ -1,6 +1,7 @@
-import { HcsSetupModalService } from 'modules/hcs/shared';
+import { HcsSetupModalService, HcsUpgradeService } from 'modules/hcs/shared';
 import { ICheckbox, ISoftwareProfile } from './hcs-setup';
 import { ISftpServer } from './hcs-setup-sftp';
+import { Notification } from 'modules/core/notifications';
 
 export class HcsSetupModalCtrl implements ng.IComponentController {
   private static readonly MAX_INDEX: number = 5;
@@ -13,9 +14,12 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
   public nextEnabled: boolean = false;
   public title: string;
   public hcsSetupModalForm: ng.IFormController;
+
   /* @ngInject */
   constructor(
-    public HcsSetupModalService: HcsSetupModalService,
+    private HcsSetupModalService: HcsSetupModalService,
+    private HcsUpgradeService: HcsUpgradeService,
+    private Notification: Notification,
   ) {
   }
 
@@ -38,10 +42,10 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
         this.nextEnabled = false;
         break;
       case 3:
-        this.title = 'hcs.sftp.title';
         this.nextEnabled = false;
         break;
       case 4:
+        this.createSftp();
         this.title = 'hcs.softwareProfiles.title';
         this.nextEnabled = false;
         break;
@@ -50,6 +54,12 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
       default:
         this.nextEnabled = false;
     }
+  }
+
+  public createSftp(): void {
+    this.HcsUpgradeService.createSftpServer(this.sftpServer)
+      .then(() => this.Notification.success('hcs.sftp.success'))
+      .catch(e => this.Notification.error(e, 'hcs.sftp.error'));
   }
 
   public disableNext(): boolean  {
@@ -63,7 +73,6 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
 
   public setAgentInstallFile(fileName: string, httpProxyList: string[]): void {
     this.nextEnabled = !_.isEmpty(fileName) && !_.isUndefined(httpProxyList) && httpProxyList.length > 0;
-    //to-do
   }
 
   public setSftpServer(sftpServer: ISftpServer) {
