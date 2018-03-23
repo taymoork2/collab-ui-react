@@ -83,6 +83,7 @@ export class CsdmSearchService {
 }
 
 export enum Caller {
+  initialSearchAndAggregator = 'initialSearchAndAggregator',
   aggregator = 'aggregator',
   searchOrLoadMore = 'search',
   helpdesk = 'helpdesk',
