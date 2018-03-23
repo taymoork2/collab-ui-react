@@ -6,7 +6,7 @@ var featureToggle = require('../utils/featureToggle.utils');
 
 describe('Onboard users through Manual Invite', function () {
   var token;
-  var userList = [utils.randomTestGmailwithSalt('manual'), utils.randomTestGmailwithSalt('manual')];
+  var userList = [utils.randomTestGmailWithSalt('manual'), utils.randomTestGmailWithSalt('manual')];
 
   it('should login as an account admin', function () {
     login.login('account-admin', '#/users')

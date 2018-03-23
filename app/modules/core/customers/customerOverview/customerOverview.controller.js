@@ -436,7 +436,7 @@ require('./_customer-overview.scss');
     function goToSubview(service, options) {
       if (service.hasWebex || service.isMeeting) {
         var isTrial = _.get(options, 'isTrial', false);
-        var services = isTrial ? PartnerService.getTrialMeetingServices(vm.currentCustomer.licenseList) : service.sub;
+        var services = isTrial ? PartnerService.getTrialMeetingServices(vm.currentCustomer.licenseList, vm.currentCustomer.customerOrgId) : service.sub;
         $state.go('customer-overview.meetingDetail', {
           meetingLicenses: services,
         });

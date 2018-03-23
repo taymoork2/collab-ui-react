@@ -8,7 +8,7 @@
   var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
   /* @ngInject */
-  function AddResourceController($modal, $modalInstance, $state, $translate, $window, connectorType, firstTimeSetup, FmsOrgSettings, HybridServicesClusterService, HybridServicesExtrasService, HybridServicesUtilsService, Notification, ResourceGroupService, serviceId) {
+  function AddResourceController($modal, $modalInstance, $state, $translate, $window, connectorType, firstTimeSetup, FmsOrgSettings, HybridServicesClusterService, HybridServicesExtrasService, Notification, ResourceGroupService, serviceId) {
     var vm = this;
     vm.connectors = [];
     vm.warning = warning;
@@ -27,7 +27,7 @@
     vm.firstTimeSetup = firstTimeSetup;
     vm.welcomeScreenAccepted = !firstTimeSetup;
     vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
-    vm.localizedServiceName = $translate.instant('hercules.serviceNames.' + vm.serviceId);
+    vm.localizedServiceName = $translate.instant('hercules.hybridServiceNames.' + vm.serviceId);
     vm.localizedManagementConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
     vm.localizedAddNewExpressway = $translate.instant('hercules.addResourceDialog.registerNewExpressway');
     vm.localizedAddNewExpresswayHelp = $translate.instant('hercules.addResourceDialog.registerNewExpresswayHelp');
@@ -60,7 +60,6 @@
 
     vm.provisionExpresswayWithNewConnector = provisionExpresswayWithNewConnector;
     vm.addPreregisteredClusterToAllowList = addPreregisteredClusterToAllowList;
-    vm.getIconClassForService = getIconClassForService;
     vm.updateDropdownMenu = updateDropdownMenu;
 
     findAndPopulateExistingExpressways(vm.connectorType);
@@ -227,10 +226,6 @@
         });
     }
 
-    function getIconClassForService() {
-      return HybridServicesUtilsService.serviceId2Icon(vm.serviceId);
-    }
-
     function closeSetupModal() {
       if (!firstTimeSetup) {
         $modalInstance.close();
@@ -266,7 +261,7 @@
 
     vm.completeEnterHostnameScreen = function () {
       vm.chooseClusterName = true;
-      vm.clustername = '';
+      vm.clustername = _.clone(vm.hostname);
     };
 
     vm.inClusterNameSelectionScreen = function () {

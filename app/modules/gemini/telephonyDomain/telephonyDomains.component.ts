@@ -128,10 +128,12 @@ class TelephonyDomains implements ng.IComponentController {
           item.status_ = (item.status ? this.$translate.instant('gemini.cbgs.field.status.' + item.status) : '');
         });
         this.gridData = this.gridData_ = res;
-        this.gridRefresh = false;
       })
       .catch((err) => {
         this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
+      })
+      .finally(() => {
+        this.gridRefresh = false;
       });
   }
 

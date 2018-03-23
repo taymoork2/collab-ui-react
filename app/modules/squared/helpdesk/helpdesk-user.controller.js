@@ -27,6 +27,7 @@
         id: $stateParams.orgId,
       };
     }
+    vm.ignoreRole = ignoreRole;
     vm.resendInviteEmail = resendInviteEmail;
     vm.user = $stateParams.user;
     vm.userStatusesAsString = '';
@@ -59,6 +60,11 @@
     HelpdeskService.getUser(vm.orgId, vm.userId)
       .then(initUserView)
       .catch(vm._helpers.notifyError);
+
+    function ignoreRole(role) {
+      // Device Admins will have 2 device roles assigned but should only display the rolename once
+      return role === Config.backend_roles.ci_device_admin;
+    }
 
     function resendInviteEmail() {
       var trimmedUserData = {

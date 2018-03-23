@@ -1,0 +1,14 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import 'styles/partials/mixins';
+
+cluster-sip-destination-section {
+  @include keep-flex-container();
+
+  border-top: 1px solid $gray-light-2;
+
+  .padded-element {
+    display: block;
+    margin-left: 2rem;
+    margin-bottom: 1rem;
+  }
+}

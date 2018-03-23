@@ -1,12 +1,15 @@
 <div class="cs-card-container">
   <cs-card-layout>
-    <cs-card ng-repeat="careFeature in careFeaturesCtrl.filteredListOfFeatures" class="cs-card--small header-background hoverable" ng-class="careFeature.color">
+    <cs-card ng-repeat="careFeature in careFeaturesCtrl.filteredListOfFeatures" class="cs-card--medium header-background hoverable" ng-class="careFeature.color"
+             tooltip="{{careFeature.noAccessTooltip}}"
+             tooltip-placement="top-right"
+             tooltip-trigger="mouseenter focus">
       <article ng-click="careFeaturesCtrl.editCareFeature((careFeature), $event)" hover-delay>
         <header class="card-header">
           <div class="header-with-right-icon">
             <!-- For AutoAttedant the Feature name is careFeature.cardName otherwise careFeature.name -->
-            <p class="h4 ellipsis" ng-if="careFeature.name" title="{{careFeature.name}}"> {{careFeature.name}} </p>
-            <p class="h4 ellipsis" ng-if="!careFeature.name" title="{{careFeature.cardName}}"> {{careFeature.cardName}} </p>
+            <p class="h4 ellipsis" ng-if="careFeature.filterValue !== 'AA'" title="{{careFeature.name}}"> {{careFeature.name}} </p>
+            <p class="h4 ellipsis" ng-if="careFeature.filterValue === 'AA'" title="{{careFeature.cardName}}"> {{careFeature.cardName}} </p>
             <div class="right">
               <a href
                 class="icon icon-link icon-color"
@@ -22,9 +25,8 @@
           </div>
           <div class="care-sub-header">
             <div class="care-badge">
-              <!--if careFeature.name is undefined then show cardName othewise mediaType  -->
-              <span class="badge badge--outline primary" ng-if="!careFeature.name" translate="huronFeatureDetails.aa"></span>
-              <span  class="badge badge--outline" ng-if="careFeature.name" translate="careChatTpl.badgeName.{{careFeature.filterValue}}"></span>
+              <span class="badge badge--outline primary" ng-if="careFeature.filterValue === 'AA'" translate="huronFeatureDetails.aa"></span>
+              <span  class="badge badge--outline" ng-if="careFeature.filterValue !== 'AA'" translate="careChatTpl.badgeName.{{careFeature.filterValue}}"></span>
             </div>
             <div class="care-icon">
               <span ng-repeat="icon in careFeature.icons">
@@ -37,19 +39,20 @@
               <i
                 class="icon {{careFeature.featureIcons[feature.featureType]}} cta icon-lg"
                 tabindex="0"
-                tooltip="{{careFeaturesCtrl.featureToolTip(feature.featureType, feature.name)}}"
+                tooltip="{{careFeaturesCtrl.featureToolTip(feature.featureType, feature.name, careFeature.name)}}"
                 tooltip-trigger="mouseenter focus"
                 tooltip-placement="top-left"
                 tooltip-animation="false"
-                aria-label="{{careFeaturesCtrl.featureToolTip(feature.featureType, feature.name)}}">
+                tooltip-class="icon-tooltip"
+                aria-label="{{careFeaturesCtrl.featureToolTip(feature.featureType, feature.name, careFeature.name)}}">
               </i>
             </span>
           </div>
         </header>
         <section>
-          <div class="warning-sign" ng-if=!careFeaturesCtrl.userHasAccess(careFeature)>
+          <div class="warning-sign" ng-if=careFeaturesCtrl.showWarning(careFeature)>
             <i class="icon icon-lg icon-warning"></i>
-            <div class="warning-text">{{warning}}</div>
+            <div class="warning-text">{{careFeature.warning}}</div>
           </div>
         </section>
         <footer class="card-footer">
@@ -75,7 +78,7 @@
                 popover-placement="auto right"
                 popover-append-to-body="false"
                 class="icon icon-question-circle"
-                aria-label="{{careFeature.templatesHtmlPopove + ' ' + careFeature.spacesHtmlPopove}}">
+                aria-label="{{careFeature.templatesHtmlPopover + ' ' + careFeature.spacesHtmlPopover}}">
               </button>
             </div>
           </div>

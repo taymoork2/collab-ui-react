@@ -8,11 +8,11 @@ describe('Service: contextFieldsService', function () {
     this.initModules('Context');
     this.injectDependencies(
       'ContextFieldsService',
-      'Discovery',
+      'ContextDiscovery',
       '$q',
       '$httpBackend'
     );
-    spyOn(this.Discovery, 'getEndpointForService').and.returnValue(this.$q.resolve(dictionaryUrl));
+    spyOn(this.ContextDiscovery, 'getEndpointForService').and.returnValue(this.$q.resolve(dictionaryUrl));
   });
 
   afterEach(inject(function () {

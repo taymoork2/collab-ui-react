@@ -370,11 +370,16 @@ sq-places-page-overview,
         align-items: center;
         justify-content: flex-end;
         border: solid 1px #ebebec;
-        padding: 1px;
+        padding: 1px 24px 1px 24px;
         margin-top: 32px;
         margin-bottom: 16px;
         height: 251px;
         outline: none;
+
+        span {
+          text-align: center;
+          min-height: 48px;
+        }
       }
 
       .typeImageBox {
@@ -395,7 +400,7 @@ sq-places-page-overview,
       .typeButtonClicked,
       .typeButtonClicked:hover {
         border: solid 2px #049fd9;
-        padding: 0;
+        padding: 0 23px 0 23px;
       }
     }
 
@@ -522,8 +527,11 @@ sq-places-page-overview,
       height: 220px;
     }
 
-    .expiryTime {
+    .qr-footnote {
       font-size: 12px;
+    }
+
+    .expiryTime {
       margin-top: 8px;
     }
 

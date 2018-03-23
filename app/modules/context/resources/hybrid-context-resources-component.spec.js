@@ -5,7 +5,6 @@ describe('Component: HybridContextResourcesComponent', function () {
   var AdminAuthorizationStatus = require('modules/context/services/context-authorization-service').AdminAuthorizationStatus;
 
   beforeEach(angular.mock.module('Context'));
-  beforeEach(angular.mock.module('Core'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   beforeEach(initController);
@@ -29,7 +28,7 @@ describe('Component: HybridContextResourcesComponent', function () {
       ContextAdminAuthorizationService: ContextAdminAuthorizationService,
       $translate: $translate,
       $scope: $scope,
-      disableAddResourceButton: false,
+      disableAddResourceButton: true,
     });
     return ctrl;
   }
@@ -65,6 +64,15 @@ describe('Component: HybridContextResourcesComponent', function () {
 
       expect(ctrl.disableAddResourceButton).toBe(true);
       expect(ctrl.addResourceButtonTooltip).toBe($translate.instant('context.dictionary.unknownAdminAuthorizationStatus'));
+    });
+
+    it('should set tooltip and disable button, if admin needs migration', function () {
+      ContextAdminAuthorizationService.getAdminAuthorizationStatus.and.returnValue($q.resolve(AdminAuthorizationStatus.NEEDS_MIGRATION));
+      ctrl = initController();
+      $scope.$apply();
+
+      expect(ctrl.disableAddResourceButton).toBe(true);
+      expect(ctrl.addResourceButtonTooltip).toBe($translate.instant('context.dictionary.resource.needsMigration'));
     });
   });
 });

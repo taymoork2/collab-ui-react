@@ -2,7 +2,7 @@
 
 describe('Onboard users with Meeting Service', function () {
   var token;
-  var testUser = utils.randomTestGmailwithSalt('meetings');
+  var testUser = utils.randomTestGmailWithSalt('meetings');
   var LICENSE = users.paidMtgCheckbox;
 
   it('should login as an account admin', function () {

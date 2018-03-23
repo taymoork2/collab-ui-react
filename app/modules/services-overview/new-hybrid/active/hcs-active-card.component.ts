@@ -1,4 +1,4 @@
-import { HcsSetupModalService } from 'modules/hcs/services/';
+import { HcsSetupModalService } from 'modules/hcs/shared/';
 class HcsActiveCardController implements ng.IComponentController {
   public loading = false;
   public canSetup = true; //false only if both services up
@@ -21,7 +21,7 @@ export class HcsActiveCardComponent implements ng.IComponentOptions {
       </div>
       <div class="active-card_content active-card-center_content">
         <div class="active-card_section">
-          <div class="active-card_action"><a ui-sref="hcs.shared.inventory" translate="hcs.inventory.title"></a></div>
+          <div class="active-card_action"><a ui-sref="hcs.shared.inventoryList" translate="hcs.inventory.title"></a></div>
         </div>
         <div class="active-card_section">
           <div class="active-card_action"><a ui-sref="hcs.shared.installFiles" translate="hcs.agentInstallFiles"></a></div>

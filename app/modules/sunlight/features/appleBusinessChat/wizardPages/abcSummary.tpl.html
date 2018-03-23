@@ -1,0 +1,18 @@
+<div class="ct-summary">
+  <i class="icon icon-circle-check-mark-success icon-5x success-icon"></i>
+  <div class="h4 description">{{$ctrl.getSummaryDescription()}}</div>
+
+  <button cs-btn loading="$ctrl.creatingTemplate"
+          id="abcSetupFinishBtn"
+          ng-disabled="$ctrl.retryButtonDisabled"
+          class="btn btn--primary"
+          ng-click="$ctrl.submitFeature()"
+          focus-on>
+    {{$ctrl.templateButtonText}}
+  </button>
+
+  <div class="h6 retry-message" ng-if="$ctrl.displayGenericErrorMessage()">
+    <i class="icon icon-error"></i>
+    <span class="error-message">{{$ctrl.getText('summary.saveErrorMessage')}}</span>
+  </div>
+</div>

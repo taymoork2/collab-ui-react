@@ -1,4 +1,4 @@
-import moduleName, { IHybridServicesEventHistoryData } from './hybrid-services-event-history.service';
+import moduleName, { IHybridServicesEventHistoryData, HybridServicesEventHistoryService } from './hybrid-services-event-history.service';
 
 describe('HybridServicesEventHistoryService', () => {
 
@@ -6,7 +6,7 @@ describe('HybridServicesEventHistoryService', () => {
 
   describe('API usage', () => {
 
-    let HybridServicesClusterService, HybridServicesEventHistoryService;
+    let HybridServicesClusterService, HybridServicesEventHistoryService: HybridServicesEventHistoryService;
     let $httpBackend: ng.IHttpBackendService;
 
     const clusterId = 'something';
@@ -53,13 +53,13 @@ describe('HybridServicesEventHistoryService', () => {
     it('should take clusterId, orgId, timestamp, and userIds into account when getting data, and use five different APIs', () => {
 
       $httpBackend
-        .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/${orgId}/events/?clusterId=${clusterId}&fromTime=${timestamp}`)
+        .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/${orgId}/events/?clusterId=${clusterId}&fromTime=${timestamp}&toTime=${timestamp}`)
         .respond( {
           items: [resourceGroupEvent],
         });
 
       $httpBackend
-        .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/${orgId}/events/?type=ServiceEnabled&type=ServiceDisabled&fromTime=${timestamp}`)
+        .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/${orgId}/events/?type=ServiceEnabled&type=ServiceDisabled&fromTime=${timestamp}&toTime=${timestamp}`)
         .respond( { some: 'other data' });
 
       $httpBackend
@@ -74,20 +74,20 @@ describe('HybridServicesEventHistoryService', () => {
         .expectGET(`https://identity.webex.com/identity/scim/null/v1/Users/${userId}`)
         .respond( { some: 'user data' });
 
-      HybridServicesEventHistoryService.getAllEvents(clusterId, orgId, timestamp);
+      HybridServicesEventHistoryService.getAllEvents(clusterId, timestamp, timestamp, orgId);
       $httpBackend.flush();
     });
 
     it('should not do the check for resource group names if there are no resource group related events', () => {
 
       $httpBackend
-        .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/${orgId}/events/?clusterId=${clusterId}&fromTime=${timestamp}`)
+        .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/${orgId}/events/?clusterId=${clusterId}&fromTime=${timestamp}&toTime=${timestamp}`)
         .respond( {
           items: [clusterNameChangeEvent],
         });
 
       $httpBackend
-        .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/${orgId}/events/?type=ServiceEnabled&type=ServiceDisabled&fromTime=${timestamp}`)
+        .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/${orgId}/events/?type=ServiceEnabled&type=ServiceDisabled&fromTime=${timestamp}&toTime=${timestamp}`)
         .respond( { some: 'xxx' });
 
       $httpBackend
@@ -99,7 +99,7 @@ describe('HybridServicesEventHistoryService', () => {
         .respond( { some: 'zzz' });
 
       HybridServicesClusterService.clearCache();
-      HybridServicesEventHistoryService.getAllEvents(clusterId, orgId, timestamp);
+      HybridServicesEventHistoryService.getAllEvents(clusterId, timestamp, timestamp, orgId);
       $httpBackend.flush();
     });
 
@@ -122,7 +122,7 @@ describe('HybridServicesEventHistoryService', () => {
 
     const processEvents = (events, processResourceGroups = false): ng.IPromise<IHybridServicesEventHistoryData> => {
       $httpBackend
-        .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/null/events/?clusterId=&fromTime=time`)
+        .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/null/events/?clusterId=&fromTime=time&toTime=time`)
         .respond( {
           items: events,
         });
@@ -131,7 +131,7 @@ describe('HybridServicesEventHistoryService', () => {
           .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/null/resourceGroups`)
           .respond( { some: 'data' });
       }
-      return HybridServicesEventHistoryService.getAllEvents('', '', 'time');
+      return HybridServicesEventHistoryService.getAllEvents('', 'time', 'time', '');
     };
 
     describe('alarm events', () => {
@@ -598,12 +598,12 @@ describe('HybridServicesEventHistoryService', () => {
 
       const processServiceEvents = (events): ng.IPromise<IHybridServicesEventHistoryData> => {
         $httpBackend
-          .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/null/events/?clusterId=&fromTime=time`)
+          .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/null/events/?clusterId=&fromTime=time&toTime=time`)
           .respond( {
             items: [],
           });
         $httpBackend
-          .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/null/events/?type=ServiceEnabled&type=ServiceDisabled&fromTime=time`)
+          .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/null/events/?type=ServiceEnabled&type=ServiceDisabled&fromTime=time&toTime=time`)
           .respond( {
             items: events,
           });
@@ -611,7 +611,7 @@ describe('HybridServicesEventHistoryService', () => {
           .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/null?fields=@wide`)
           .respond( { some: 'stuff' });
 
-        return HybridServicesEventHistoryService.getAllEvents('', '', 'time');
+        return HybridServicesEventHistoryService.getAllEvents('', 'time', 'time', '');
       };
 
       // TODO: fix unsatisfied request
@@ -670,17 +670,17 @@ describe('HybridServicesEventHistoryService', () => {
 
       const processConnectorEvents = (events): ng.IPromise<IHybridServicesEventHistoryData> => {
         $httpBackend
-          .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/null/events/?clusterId=&fromTime=time`)
+          .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/null/events/?clusterId=&fromTime=time&toTime=time`)
           .respond( {
             items: events,
           });
         $httpBackend
-          .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/null/events/?type=ServiceEnabled&type=ServiceDisabled&fromTime=time`)
+          .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/null/events/?type=ServiceEnabled&type=ServiceDisabled&fromTime=time&toTime=time`)
           .respond( {
             items: [],
           });
 
-        return HybridServicesEventHistoryService.getAllEvents('', '', 'time');
+        return HybridServicesEventHistoryService.getAllEvents('', 'time', 'time', '');
       };
 
       it('should handle downloading connectors', (done) => {
@@ -912,7 +912,7 @@ describe('HybridServicesEventHistoryService', () => {
 
       it('should persist metadata for alarm events', (done) => {
         $httpBackend
-          .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/null/events/?clusterId=&fromTime=time`)
+          .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/null/events/?clusterId=&fromTime=time&toTime=time`)
           .respond( {
             items: [{
               context: {
@@ -927,7 +927,7 @@ describe('HybridServicesEventHistoryService', () => {
             }],
           });
 
-        HybridServicesEventHistoryService.getAllEvents('', '', 'time')
+        HybridServicesEventHistoryService.getAllEvents('', 'time', 'time', '')
           .then((data) => {
             expect(data.items[0].userId).toBe('12345');
             expect(data.items[0].principalType).toBe('MACHINE');
@@ -940,7 +940,7 @@ describe('HybridServicesEventHistoryService', () => {
 
       it('should persist metadata for cluster events', (done) => {
         $httpBackend
-          .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/null/events/?clusterId=&fromTime=time`)
+          .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/null/events/?clusterId=&fromTime=time&toTime=time`)
           .respond( {
             items: [{
               context: {
@@ -957,7 +957,7 @@ describe('HybridServicesEventHistoryService', () => {
             }],
           });
 
-        HybridServicesEventHistoryService.getAllEvents('', '', 'time')
+        HybridServicesEventHistoryService.getAllEvents('', 'time', 'time', '')
           .then((data) => {
             expect(data.items[0].userId).toBe('12345');
             expect(data.items[0].principalType).toBe('MACHINE');
@@ -970,7 +970,7 @@ describe('HybridServicesEventHistoryService', () => {
 
       it('should persist metadata for connector events', (done) => {
         $httpBackend
-          .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/null/events/?clusterId=&fromTime=time`)
+          .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/null/events/?clusterId=&fromTime=time&toTime=time`)
           .respond( {
             items: [{
               context: {
@@ -991,7 +991,7 @@ describe('HybridServicesEventHistoryService', () => {
             }],
           });
 
-        HybridServicesEventHistoryService.getAllEvents('', '', 'time')
+        HybridServicesEventHistoryService.getAllEvents('', 'time', 'time', '')
           .then((data) => {
             expect(data.items[0].userId).toBe('12345');
             expect(data.items[0].principalType).toBe('MACHINE');
@@ -1038,7 +1038,7 @@ describe('HybridServicesEventHistoryService', () => {
         });
 
         $httpBackend
-          .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/null/events/?clusterId=&fromTime=time`)
+          .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/null/events/?clusterId=&fromTime=time&toTime=time`)
           .respond( {
             items: [{
               context: {
@@ -1079,7 +1079,7 @@ describe('HybridServicesEventHistoryService', () => {
             }],
           });
 
-        HybridServicesEventHistoryService.getAllEvents('', '', 'time')
+        HybridServicesEventHistoryService.getAllEvents('', 'time', 'time', '')
           .then((data) => {
             expect(Userservice.getUserAsPromise.calls.count()).toBe(3);
             expect(Userservice.getUserAsPromise).toHaveBeenCalledWith('12345');
@@ -1097,7 +1097,7 @@ describe('HybridServicesEventHistoryService', () => {
       it('should use "Scheduled Task" for cluster events that were done automatically, "Automatic" for alarm and connectors events that are done automatically, and "Automatic" if the principal type is UNKOWN', (done) => {
 
         $httpBackend
-          .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/null/events/?clusterId=&fromTime=time`)
+          .expectGET(`https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/null/events/?clusterId=&fromTime=time&toTime=time`)
           .respond( {
             items: [{
               context: {
@@ -1135,7 +1135,7 @@ describe('HybridServicesEventHistoryService', () => {
             }],
           });
 
-        HybridServicesEventHistoryService.getAllEvents('', '', 'time')
+        HybridServicesEventHistoryService.getAllEvents('', 'time', 'time', '')
           .then((data) => {
             expect(data.items[0].username).toBe('hercules.eventHistory.scheduledTask');
             expect(data.items[1].username).toBe('hercules.eventHistory.automatic');

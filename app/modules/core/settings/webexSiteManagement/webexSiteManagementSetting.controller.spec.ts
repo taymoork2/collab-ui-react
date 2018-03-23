@@ -29,6 +29,10 @@ describe('Controller: WebexSiteManagementController', function () {
     };
   });
 
+  afterEach(() => {
+    orgData = undefined;
+  });
+
   function initController(): void {
     this.initController(WebexSiteManagementController, {});
   }

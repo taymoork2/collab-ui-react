@@ -785,59 +785,65 @@ describe('Controller: AAMessageTypeCtrl', function () {
         spyOn(c, 'getWarning').and.returnValue(false);
         expect(c.getWarning()).toBe(false);
       });
-      it('boradcast of CE Updated', function () {
-        var c;
-        var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
-        action.dynamicList = [{
-          say: {
-            value: 'dummy message',
-            voice: '',
-          },
-          isDynamic: true,
-          htmlModel: '',
-        }];
-        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-        menuEntry.addAction(action);
+      describe('broadcast', function () {
+        beforeEach(inject(function (CustomVariableService, $q) {
+          spyOn(CustomVariableService, 'listCustomVariables').and.returnValue($q.resolve([]));
+        }));
 
-        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
-        aaUiModel.openHours.addEntryAt(0, menuEntry);
+        it('broadcast of CE Updated', function () {
+          var c;
+          var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+          action.dynamicList = [{
+            say: {
+              value: 'dummy message',
+              voice: '',
+            },
+            isDynamic: true,
+            htmlModel: '',
+          }];
+          menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          menuEntry.addAction(action);
 
-        // setup the options menu
-        c = controller('AAMessageTypeCtrl', {
-          $scope: $scope,
+          aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+          aaUiModel.openHours.addEntryAt(0, menuEntry);
+
+          // setup the options menu
+          c = controller('AAMessageTypeCtrl', {
+            $scope: $scope,
+          });
+          $scope.$apply();
+          c.deletedSessionVariablesList = [];
+          $rootScope.$broadcast('CE Updated');
+          c.getWarning();
+          expect(c.getWarning()).toBe(true);
         });
-        $scope.$apply();
-        c.deletedSessionVariablesList = [];
-        $rootScope.$broadcast('CE Updated');
-        c.getWarning();
-        expect(c.getWarning()).toBe(true);
-      });
-      it('boradcast of CIVarNameChanged', function () {
-        var c;
-        var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
-        action.dynamicList = [{
-          say: {
-            value: 'dummy message',
-            voice: '',
-          },
-          isDynamic: true,
-          htmlModel: '',
-        }];
-        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-        menuEntry.addAction(action);
+        it('broadcast of CIVarNameChanged', function () {
+          var c;
+          var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+          action.dynamicList = [{
+            say: {
+              value: 'dummy message',
+              voice: '',
+            },
+            isDynamic: true,
+            htmlModel: '',
+          }];
+          menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          menuEntry.addAction(action);
 
-        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
-        aaUiModel.openHours.addEntryAt(0, menuEntry);
+          aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+          aaUiModel.openHours.addEntryAt(0, menuEntry);
 
-        // setup the options menu
-        c = controller('AAMessageTypeCtrl', {
-          $scope: $scope,
+          // setup the options menu
+          c = controller('AAMessageTypeCtrl', {
+            $scope: $scope,
+          });
+          $scope.$apply();
+          c.deletedSessionVariablesList = [];
+          $rootScope.$broadcast('CIVarNameChanged');
+          c.getWarning();
+          expect(c.getWarning()).toBe(true);
         });
-        $scope.$apply();
-        c.deletedSessionVariablesList = [];
-        $rootScope.$broadcast('CIVarNameChanged');
-        c.getWarning();
-        expect(c.getWarning()).toBe(true);
       });
     });
   });

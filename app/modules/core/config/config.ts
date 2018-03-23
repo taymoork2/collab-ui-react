@@ -1,5 +1,5 @@
 import { LocalStorageService } from 'modules/core/storage/localStorage.service';
-import { OfferName } from 'modules/core/shared';
+import { OfferName } from 'modules/core/shared/offer-name';
 
 interface IRoleStates {
   Application: string[];
@@ -209,7 +209,6 @@ export class Config {
     orderadmin: 'atlas-portal.partner.orderadmin',
     partner_management: 'atlas-portal.cisco.partnermgmt',
     spark_synckms: 'spark.synckms',
-    ciscouc_ces: 'ciscouc.ces',
     readonly_admin: 'id_readonly_admin',
     tech_support: 'atlas-portal.cisco.techsupport',
     user_admin: 'id_user_admin',
@@ -219,6 +218,8 @@ export class Config {
     */
     device_admin: 'atlas-portal.deviceadmin',
     ci_device_admin: 'id_device_admin',
+    cca_full_admin: 'cca-portal.full_admin',
+    cca_readonly_admin: 'cca-portal.readonly_admin',
   };
 
   public readonly roles = {
@@ -303,6 +304,7 @@ export class Config {
     CMR: 'CMR',
     CARE: 'CARE',
     ADVANCE_CARE: 'ADVANCE_CARE',
+    MANAGEMENT: 'MANAGEMENT',
   };
 
   public readonly setupTypes = {
@@ -553,6 +555,13 @@ export class Config {
       'userRedirect',
       'userprofile',
       'users',
+      'addDeviceFlow',
+      'device-overview',
+      'devices',
+      'place-overview',
+      'places',
+      'huronsettings',
+      'huronlines',
       'customerPstnOrdersOverview',
       'taasSuites',
       'taasTaskView',
@@ -560,6 +569,7 @@ export class Config {
       'taasSchedule',
       'taasServiceManager',
       'taasResults',
+      'sso-certificate',
     ],
     Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'dgc'],
     Tech_Support: ['gss'],

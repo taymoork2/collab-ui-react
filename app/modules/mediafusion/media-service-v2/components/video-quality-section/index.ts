@@ -1,4 +1,5 @@
 import { VideoQualitySectionComponent } from './video-quality-section.component';
+import { VideoQualitySectionService } from './video-quality-section.service';
 import hybridServicesClusterServiceModuleName from 'modules/hercules/services/hybrid-services-cluster.service';
 import notificationsModuleName from 'modules/core/notifications';
 
@@ -11,4 +12,5 @@ export default angular
     notificationsModuleName,
   ])
   .component('videoQualitySection', new VideoQualitySectionComponent())
+  .service('VideoQualitySectionService', VideoQualitySectionService)
   .name;

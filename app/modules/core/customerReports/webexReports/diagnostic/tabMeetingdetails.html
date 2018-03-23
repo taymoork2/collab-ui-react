@@ -10,6 +10,8 @@
     pstn-data="$ctrl.pstnData"
     line-color="$ctrl.lineColor"
     circle-color="$ctrl.circleColor"
+    call-legs-data="$ctrl.callLegsData"
+    tab-type="$ctrl.tabType"
     ng-if="!$ctrl.loading"></dgc-time-line>
   <div ng-if="$ctrl.loading" class="loading">
     <i class="icon icon-spinner icon-3x"></i>
@@ -32,6 +34,14 @@
       <h6 translate="webexReports.meetingType"></h6>
       <p>{{$ctrl.overview.meetingType}}</p>
     </li>
+    <li ng-if="$ctrl.overview.audioSession">
+      <h6>Audio</h6>
+      <p>{{$ctrl.overview.audioSession}}</p>
+    </li>
+    <li ng-if="$ctrl.overview.audioSession">
+      <h6>Video</h6>
+      <p>{{$ctrl.overview.videoSession}}</p>
+    </li>
   </ul>
   <ul class="overviewInfo">
     <li>
@@ -48,16 +58,3 @@
     </li>
   </ul>
 </div>
-
-<div class="sessionInfo">
-  <div class="info-box">
-    <h6 class="note">Features</h6>
-    <ul>
-      <li ng-repeat="val in $ctrl.featAndconn">
-        <h6 class="name">{{val.key}}</h6>
-        <small ng-class="{'green-color': val.class}">{{val.val}}</small>
-      </li>
-    </ul>
-  </div>
-</div>
-

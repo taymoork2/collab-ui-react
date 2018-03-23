@@ -14,6 +14,11 @@ interface IResourceFilterOptions {
   value: string;
 }
 
+export interface ITimeFilterOptions {
+  label: string;
+  value: 'last_day' | 'last_2_days' | 'last_week';
+}
+
 class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
 
   /* @ngInject */
@@ -29,7 +34,6 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
   public clusterId: string;
   public connectorId: string;
   public serviceId: HybridServiceId | 'all';
-  public earliestTimestampSearched: string;
 
   public backState: string = 'expressway-cluster.nodes';
 
@@ -53,6 +57,18 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
     value: 'squared-fusion-uc',
   }];
   public selectedServiceFilter: IServiceFilterOptions;
+
+  public timeOptions: ITimeFilterOptions[] = [{
+    label: this.$translate.instant('hercules.eventHistory.lastDay'),
+    value: 'last_day',
+  }, {
+    label: this.$translate.instant('hercules.eventHistory.last2Days'),
+    value: 'last_2_days',
+  }, {
+    label: this.$translate.instant('hercules.eventHistory.lastWeek'),
+    value: 'last_week',
+  }];
+  public selectedTimeFilter = this.timeOptions[0];
 
   public $onInit() {
     if (this.serviceId === 'all') {
@@ -116,14 +132,6 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
   }
 
   public formatTime = (timestamp: string): string => this.HybridServicesI18NService.getLocalTimestamp(timestamp);
-
-  /* Callback used by the table component  */
-  public earliestTimestampSearchedUpdated(options): void {
-    if (options.earliestTimestampSearched) {
-      this.earliestTimestampSearched = options.earliestTimestampSearched;
-    }
-  }
-
 }
 
 export class HybridServicesEventHistoryPageComponent implements ng.IComponentOptions {

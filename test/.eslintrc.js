@@ -68,6 +68,7 @@ module.exports = {
     careFeatureLandingPage: true,
     careChatTemplateSetupPage: true,
     careVirtualAssistantTemplateSetupPage: true,
+    careAppleBusinessChatPage: true,
     careSettingsPage: true,
     inject: true,
     invite: true,

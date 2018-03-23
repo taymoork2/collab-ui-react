@@ -4,14 +4,14 @@
 //DO NOT use export KTEST__MODULAR=true, this module is not self-contrained
 
 describe('Controller: UserRolesCtrl', function () {
-  var controller, $q, $scope, $state, $rootScope, $stateParams, $translate, Analytics, Auth, Config, Authinfo, Orgservice, $controller, Userservice, FeatureToggleService, Log, Notification, ProPackService, SessionStorage, EdiscoveryService;
+  var $q, $rootScope, $scope, $state, $stateParams, $translate, Analytics, Auth, Authinfo, Config, $controller, controller, EdiscoveryService, FeatureToggleService, Log, Notification, Orgservice, ProPackService, SessionStorage, UserRoleService, Userservice;
   var fakeUserJSONFixture = getJSONFixture('core/json/sipTestFakeUser.json');
   var careUserJSONFixture = getJSONFixture('core/json/users/careTestFakeUser.json');
   var currentUser = fakeUserJSONFixture.fakeUser1;
 
   beforeEach(angular.mock.module('Core'));
 
-  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$state_, _$stateParams_, _$translate_, _Analytics_, _Auth_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Notification_, _ProPackService_, _SessionStorage_) {
+  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$state_, _$stateParams_, _$translate_, _Analytics_, _Auth_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Notification_, _ProPackService_, _SessionStorage_, _UserRoleService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -30,6 +30,7 @@ describe('Controller: UserRolesCtrl', function () {
     Notification = _Notification_;
     ProPackService = _ProPackService_;
     SessionStorage = _SessionStorage_;
+    UserRoleService = _UserRoleService_;
 
     Userservice = {
       patchUserRoles: _.noop,
@@ -46,6 +47,14 @@ describe('Controller: UserRolesCtrl', function () {
     spyOn(Analytics, 'trackPremiumEvent').and.returnValue($q.resolve({}));
     spyOn(Authinfo, 'getOrgId').and.returnValue('we23f24-4f3f4f-cc7af705-6583-32r3r23r');
     spyOn(Authinfo, 'getUserId').and.returnValue('cc7af705-6583-4f58-b0b6-ea75df64da7e');
+
+    spyOn(UserRoleService, 'getCCARoles').and.returnValue($q.resolve([
+      {
+        key: 'CCA_Configuration_Write',
+        name: 'cca-portal.configuration_write',
+        displayName: 'Configuration (Full Privilege)',
+      },
+    ]));
 
     Orgservice = {
       getOrgCacheOption: _.noop,
@@ -87,6 +96,7 @@ describe('Controller: UserRolesCtrl', function () {
       Orgservice: Orgservice,
       SessionStorage: SessionStorage,
       Userservice: Userservice,
+      UserRoleService: UserRoleService,
     });
 
     $scope.$apply();
@@ -684,6 +694,57 @@ describe('Controller: UserRolesCtrl', function () {
         initController();
 
         expect($scope.isNotEditable).toBe(false);
+      });
+    });
+  });
+
+  describe('CCA Roles Block', function () {
+    it('should NOT show CCA roles by default', function () {
+      initController();
+
+      expect($scope.showCCARoles).toBe(false);
+      expect($scope.showCCAAdminRole).toBe(false);
+    });
+
+    describe('should show CCA admin roles if user is Cisco org', function () {
+      it('and customer admin', function () {
+        spyOn(Authinfo, 'isCisco').and.returnValue(true);
+        spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
+        initController();
+
+        expect($scope.showCCAAdminRole).toBe(true);
+      });
+
+      it('and readonly admin', function () {
+        spyOn(Authinfo, 'isCisco').and.returnValue(true);
+        spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(true);
+        initController();
+
+        expect($scope.showCCAAdminRole).toBe(true);
+      });
+    });
+
+    describe('should show CCA if user is Partner', function () {
+      beforeEach(function () {
+        SessionStorage.put('partnerOrgId', 'fakePartner');
+      });
+
+      afterEach(function () {
+        SessionStorage.pop('partnerOrgId');
+      });
+
+      it('and admin', function () {
+        spyOn(Authinfo, 'isAdmin').and.returnValue(true);
+        initController();
+
+        expect($scope.showCCARoles).toBe(true);
+      });
+
+      it('and readonly admin', function () {
+        spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(true);
+        initController();
+
+        expect($scope.showCCARoles).toBe(true);
       });
     });
   });

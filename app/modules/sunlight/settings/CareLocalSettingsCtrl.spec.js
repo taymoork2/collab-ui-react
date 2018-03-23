@@ -2,7 +2,7 @@
 
 describe('CareLocalSettingsCtrl', function () {
   function initDependencies() {
-    this.injectDependencies('$controller', '$httpBackend', '$interval', '$q', '$scope', 'AutoAttendantConfigService', 'Authinfo', 'FeatureToggleService', 'HuronConfig', 'Notification', 'SunlightConfigService', 'SunlightUtilitiesService', 'UrlConfig', 'URService');
+    this.injectDependencies('$controller', '$httpBackend', '$interval', '$q', '$scope', '$translate', 'AutoAttendantConfigService', 'Authinfo', 'ContextAdminAuthorizationService', 'FeatureToggleService', 'HuronConfig', 'Notification', 'SunlightConfigService', 'SunlightUtilitiesService', 'UrlConfig', 'URService');
     this.$scope.orgConfigForm = { dirty: false };
     this.orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
     this.userOrgId = 'aeba1221-ab12-cd34-de56-abcdef123456';
@@ -11,6 +11,8 @@ describe('CareLocalSettingsCtrl', function () {
       ONBOARDED: 'onboarded',
       NOT_ONBOARDED: 'notOnboarded',
       IN_PROGRESS: 'inProgress',
+      AUTHORIZED: 'Authorized',
+      UNAUTHORIZED: 'Unauthorized',
     };
     this.constants.status = {
       UNKNOWN: 'Unknown',
@@ -1169,6 +1171,99 @@ describe('CareLocalSettingsCtrl', function () {
       this.$scope.$apply();
       this.$interval.flush(10001);
       expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+    });
+  });
+
+  describe('Synchronize Admin Authorization', function () {
+    beforeEach(function () {
+      this.initModules(
+        'Sunlight'
+      );
+    });
+    beforeEach(initDependencies);
+    beforeEach(function () {
+      initSpies.call(this, this.orgId, true);
+
+      this.$scope.isAdminAuthorized = false;
+      this.$scope.synchronizeButtonTooltip = '';
+      this.$scope.isSynchronizationInProgress = false;
+    });
+
+    function initSynchronizeAdminSpies(isFeatureEnabled, adminAuthorizationStatus) {
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(isFeatureEnabled));
+      spyOn(this.ContextAdminAuthorizationService, 'getAdminAuthorizationStatus').and.returnValue(this.$q.resolve(adminAuthorizationStatus));
+    }
+
+    it('should setup admin authorization status correctly when admin is authorized', function () {
+      initSynchronizeAdminSpies.call(this, true, this.constants.AUTHORIZED);
+
+      initController.call(this);
+
+      expect(this.controller.isAdminAuthorized).toBe(true);
+      expect(this.controller.synchronizeButtonTooltip).toEqual('');
+    });
+
+    it('should setup admin authorization status correctly when admin is unauthorized', function () {
+      initSynchronizeAdminSpies.call(this, true, this.constants.UNAUTHORIZED);
+
+      initController.call(this);
+
+      expect(this.controller.isAdminAuthorized).toBe(false);
+      expect(this.controller.synchronizeButtonTooltip).not.toEqual('');
+    });
+
+    it('should setup admin authorization status correctly when admin is unknown', function () {
+      initSynchronizeAdminSpies.call(this, true, this.constants.status.UNKNOWN);
+
+      initController.call(this);
+
+      expect(this.controller.isAdminAuthorized).toBe(false);
+      expect(this.controller.synchronizeButtonTooltip).not.toEqual('');
+    });
+
+    it('should disable synchronization when sync is in progress', function () {
+      initSynchronizeAdminSpies.call(this, true, this.constants.AUTHORIZED);
+      initController.call(this);
+
+      this.controller.isSynchronizationInProgress = true;
+      this.controller.isAdminAuthorized = true;
+    });
+
+    it('should disable synchronization when admin is not authorized', function () {
+      initSynchronizeAdminSpies.call(this, true, this.constants.UNAUTHORIZED);
+      initController.call(this);
+
+      this.controller.isSynchronizationInProgress = false;
+      this.controller.isAdminAuthorized = false;
+      expect(this.controller.isSynchronizationDisabled()).toBe(true);
+    });
+
+    it('should show success notification when synchronization is successful', function (done) {
+      initSynchronizeAdminSpies.call(this, true, this.constants.AUTHORIZED);
+      spyOn(this.ContextAdminAuthorizationService, 'synchronizeAdmins').and.returnValue(this.$q.resolve());
+      spyOn(this.$translate, 'instant').and.callThrough();
+      spyOn(this.Notification, 'success');
+      initController.call(this);
+      this.controller.isSynchronizationInProgress = true;
+      this.controller.synchronize();
+      this.$scope.$apply();
+      expect(this.Notification.success).toHaveBeenCalledWith('context.dictionary.settingPage.synchronizationSuccessful');
+      expect(this.controller.isSynchronizationInProgress).toBe(false);
+      done();
+    });
+
+    it('should show error notification when synchronization has failed', function (done) {
+      initSynchronizeAdminSpies.call(this, true, this.constants.AUTHORIZED);
+      spyOn(this.ContextAdminAuthorizationService, 'synchronizeAdmins').and.returnValue(this.$q.reject());
+      spyOn(this.$translate, 'instant').and.callThrough();
+      spyOn(this.Notification, 'error');
+      initController.call(this);
+      this.controller.isSynchronizationInProgress = true;
+      this.controller.synchronize();
+      this.$scope.$apply();
+      expect(this.Notification.error).toHaveBeenCalledWith('context.dictionary.settingPage.synchronizationFailure');
+      expect(this.controller.isSynchronizationInProgress).toBe(false);
+      done();
     });
   });
 });

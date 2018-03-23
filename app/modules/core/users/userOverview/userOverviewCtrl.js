@@ -2,10 +2,10 @@
   'use strict';
 
   module.exports = UserOverviewCtrl;
-  var OfferName = require('modules/core/shared').OfferName;
+  var OfferName = require('modules/core/shared/offer-name').OfferName;
 
   /* @ngInject */
-  function UserOverviewCtrl($scope, $state, $stateParams, $translate, $window, $q, Authinfo, Config, DirSyncService, FeatureToggleService, MessengerInteropService, MultiDirSyncService, Notification, Userservice, UserOverviewService) {
+  function UserOverviewCtrl($scope, $state, $stateParams, $translate, $window, $q, Authinfo, Config, DirSyncService, FeatureToggleService, OfferNameService, MessengerInteropService, MultiDirSyncService, Notification, Userservice, UserOverviewService) {
     var vm = this;
 
     vm.savePreferredLanguage = savePreferredLanguage;
@@ -36,6 +36,9 @@
     vm.clickService = clickService;
     vm.clickUserDetailsService = clickUserDetailsService;
     vm.actionList = [];
+    vm._helpers = {
+      hasLicense: hasLicense,
+    };
     vm.hasSparkCall = false;
     var msgState = {
       name: $translate.instant('onboardModal.message'),
@@ -183,21 +186,18 @@
       return _.isArray(displayableServices) && (displayableServices.length > 0);
     }
 
-    function hasLicense(license) {
-      var userLicenses = vm.currentUser.licenseID;
-      if (userLicenses) {
-        for (var l = userLicenses.length - 1; l >= 0; l--) {
-          var licensePrefix = userLicenses[l].substring(0, license.length);
-          if (licensePrefix === license) {
-            return true;
-          }
-        }
-      }
-      return false;
+    function hasLicense(offerName) {
+      var licenseIds = vm.currentUser.licenseID;
+      return _.some(licenseIds, function (licenseId) {
+        return _.startsWith(licenseId, offerName);
+      });
     }
 
     function hasAdvancedMeetings() {
-      return hasLicense(OfferName.EE) || hasLicense(OfferName.MC) || hasLicense(OfferName.TC) || hasLicense(OfferName.SC) || hasLicense(OfferName.EC) || hasLicense(OfferName.CMR);
+      var advancedMeetingOfferNames = OfferNameService.getSortedAdvancedMeetingOfferNames();
+      return _.some(advancedMeetingOfferNames, function (advancedMeetingOfferName) {
+        return hasLicense(advancedMeetingOfferName);
+      });
     }
 
     function hasConfLicense() {

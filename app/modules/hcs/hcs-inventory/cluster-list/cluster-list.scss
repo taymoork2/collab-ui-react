@@ -1,0 +1,56 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
+
+.cluster-list-container {
+  padding-bottom: rem-calc(16);
+
+  .cs-card article {
+    height: rem-calc(380);
+  }
+
+  header {
+    padding-bottom: 1.5rem;
+    .cluster-name {
+      padding: 0rem;
+      color: $gray-dark-4;
+    }
+
+    .cluster-type {
+      padding: 0rem;
+      color: $gray-dark-3;
+    }
+  }
+
+  section {
+    padding-left: 1rem;
+    .card-section {
+      .card-section-header {
+        padding-left: 0.5rem;
+        color: $gray-dark-4;
+        margin-bottom: rem-calc(22);
+      }
+      .card-section-item {
+        margin-bottom: rem-calc(16);
+        .columns.medium-3, .columns.medium-6 {
+          color: $gray-base;
+          font-weight: 300;
+        }
+
+        .columns.medium-3 {
+          color: $gray-dark-4;
+        }
+      }
+    }
+  }
+
+  footer.cluster-list-footer {
+    border-top: 1px solid $gray-light-1;
+    padding-top: 1rem;
+    div {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+}

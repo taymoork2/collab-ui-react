@@ -552,7 +552,9 @@
         return isEntitled(Config.entitlements.hds);
       },
       isDeviceMgmt: function () {
-        return isEntitled(Config.entitlements.room_system);
+        // All orgs should now have access to device management regardless off entitlements.
+        // TODO (bnordlun): remove usage eventually.
+        return true;
       },
       isWebexSquared: function () {
         return isEntitled(Config.entitlements.squared);

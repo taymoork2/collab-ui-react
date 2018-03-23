@@ -6,10 +6,11 @@
     .factory('OverviewCardFactory', OverviewCardFactory);
 
   /* @ngInject */
-  function OverviewCardFactory(OverviewCallCard, OverviewMeetingCard, OverviewRoomSystemsCard, OverviewMessageCard, OverviewHybridServicesCard, OverviewUsersCard, OverviewCareCard) {
+  function OverviewCardFactory(OverviewBroadsoftCard, OverviewCallCard, OverviewMeetingCard, OverviewRoomSystemsCard, OverviewMessageCard, OverviewHybridServicesCard, OverviewUsersCard, OverviewCareCard) {
     return {
       createMessageCard: OverviewMessageCard.createCard,
       createMeetingCard: OverviewMeetingCard.createCard,
+      createBroadsoftCard: OverviewBroadsoftCard.createCard,
       createCallCard: OverviewCallCard.createCard,
       createCareCard: OverviewCareCard.createCard,
       createRoomSystemsCard: OverviewRoomSystemsCard.createCard,

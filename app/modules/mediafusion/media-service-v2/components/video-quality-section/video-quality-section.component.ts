@@ -1,11 +1,14 @@
 import { ICluster } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { Notification } from 'modules/core/notifications';
+import { VideoQualitySectionService } from './video-quality-section.service';
 
 class VideoQualitySectionCtrl implements ng.IComponentController {
 
   public clusters: ICluster[] = [];
   public enableVideoQuality: boolean = false;
+  public isWizard: boolean = false;
+  public onVideoQualityUpdate: Function;
   public videoPropertySet = [];
   public videoPropertySetId = null;
   public videoQuality = {
@@ -20,8 +23,17 @@ class VideoQualitySectionCtrl implements ng.IComponentController {
     private MediaClusterServiceV2,
     private Notification: Notification,
     private Orgservice,
+    private VideoQualitySectionService: VideoQualitySectionService,
   ) {
-    this.determineVideoQuality();
+  }
+
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
+    const { isWizard } = changes;
+    if (isWizard && isWizard.currentValue) {
+      this.isWizard = isWizard.currentValue;
+    } else {
+      this.determineVideoQuality();
+    }
   }
 
   private determineVideoQuality() {
@@ -75,43 +87,23 @@ class VideoQualitySectionCtrl implements ng.IComponentController {
   }
 
   public setEnableVideoQuality(): void {
-    const settings = {
-      isMediaFusionFullQualityVideo: this.enableVideoQuality,
-    };
-    this.Orgservice.setOrgSettings(this.Authinfo.getOrgId(), settings);
-    const payLoad = {
-      properties: {
-        'mf.videoQuality': this.enableVideoQuality,
-      },
-    };
-    if (this.videoPropertySetId === null) {
-      this.MediaClusterServiceV2.getPropertySets()
-        .then((propertySets) => {
-          if (propertySets.length > 0) {
-            const videoPropertySet = _.filter(propertySets, {
-              name: 'videoQualityPropertySet',
-            });
-            this.updatePropertySet(videoPropertySet[0], payLoad);
-          }
-        });
+    if (this.isWizard) {
+      if (_.isFunction(this.onVideoQualityUpdate)) {
+        this.onVideoQualityUpdate({ response: { videoQuality: this.enableVideoQuality , videoPropertySetId : this.videoPropertySetId } });
+      }
     } else {
-      this.updatePropertySet(this.videoPropertySetId, payLoad);
+      this.VideoQualitySectionService.setVideoQuality(this.enableVideoQuality, this.videoPropertySetId);
     }
   }
 
-  private updatePropertySet(videoPropertySet, payLoad) {
-    this.MediaClusterServiceV2.updatePropertySetById(videoPropertySet.id, payLoad)
-      .then(() => {
-        this.Notification.success('mediaFusion.videoQuality.success');
-      })
-      .catch((error) => {
-        this.Notification.errorWithTrackingId(error, 'mediaFusion.videoQuality.error');
-      });
-  }
 
 }
 
 export class VideoQualitySectionComponent implements ng.IComponentOptions {
   public controller = VideoQualitySectionCtrl;
   public template = require('./video-quality-section.tpl.html');
+  public bindings = {
+    isWizard: '=',
+    onVideoQualityUpdate: '&?',
+  };
 }

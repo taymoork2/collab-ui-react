@@ -1,0 +1,63 @@
+<div ng-form="$ctrl.hcsSftpForm">
+  <h4 translate="hcs.sftp.description" class="hcs-service-setup__title"></h4>
+  <input
+    cs-input
+    type="text"
+    ng-model="$ctrl.sftpServer.serverName"
+    id="sftpName"
+    name="sftpName"
+    required="true"
+    maxlength="$ctrl.MAX_LENGTH_NAME"
+    placeholder="{{::'hcs.sftp.namePlace' | translate}}"
+    ng-change="$ctrl.processChange()"
+    cs-input-messages="$ctrl.errors"
+    cs-input-label="{{:: 'hcs.sftp.name' | translate}}">
+  <input
+    cs-input
+    type="text"
+    ng-model="$ctrl.sftpServer.directory"
+    id="directory"
+    name="directory"
+    ng-required="true"
+    maxlength="$ctrl.MAX_LENGTH"
+    placeholder="{{::'hcs.sftp.dirPlace' | translate}}"
+    ng-change="$ctrl.processChange()"
+    cs-input-messages="$ctrl.messages"
+    cs-input-label="{{:: 'hcs.sftp.directory' | translate}}">
+  <input
+    cs-input
+    type="text"
+    ng-model="$ctrl.sftpServer.userName"
+    id="userName"
+    name="userName"
+    ng-required="true"
+    maxlength="$ctrl.MAX_LENGTH"
+    placeholder="{{::'hcs.sftp.userPlace' | translate}}"
+    ng-change="$ctrl.processChange()"
+    cs-input-messages="$ctrl.messages"
+    cs-input-label="{{:: 'hcs.sftp.userName' | translate}}">
+  <input
+    cs-input
+    type="password"
+    ng-model="$ctrl.sftpServer.password"
+    id="password"
+    name="password"
+    ng-required="true"
+    placeholder="{{::'hcs.sftp.passwordPlace' | translate}}"
+    ng-change="$ctrl.changePassword()"
+    cs-input-messages="$ctrl.messages"
+    cs-input-label="{{:: 'hcs.sftp.password' | translate}}">
+  <input
+    cs-input
+    type="password"
+    ng-model="$ctrl.confirmPasswd"
+    id="confirmpassword"
+    name="confirmpassword"
+    ng-required="true"
+    placeholder="{{::'hcs.sftp.passwordConfirmPlace' | translate}}"
+    ng-change="$ctrl.processChange()"
+    cs-input-messages="$ctrl.messages"
+    cs-input-validators="$ctrl.validators"
+    ng-model-options="{updateOn: 'default blur', debounce: { default: 1000, blur: 0 } }"
+    cs-input-label="{{:: 'hcs.sftp.confirmPassword' | translate}}">
+</div>

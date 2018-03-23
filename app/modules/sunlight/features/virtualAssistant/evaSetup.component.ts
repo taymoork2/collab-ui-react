@@ -23,6 +23,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     name: '',
     ownerId: '',
     ownerDetails: {},
+    missingDefaultSpace: false,
     configuration: {
       mediaType: this.EvaService.evaServiceCard.type,
       pages: {
@@ -31,7 +32,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
           startTimeInMillis: 0,
           eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_OVERVIEW_PAGE,
         },
-        vaName: {
+        name: {
           enabled: true,
           nameValue: '',
           startTimeInMillis: 0,
@@ -111,12 +112,13 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     if (this.$stateParams.isEditFeature) {
       this.isEditFeature = true;
       this.template.templateId = this.$stateParams.template.id;
-      this.template.configuration.pages.vaName.nameValue = this.$stateParams.template.name;
+      this.template.configuration.pages.name.nameValue = this.$stateParams.template.name;
       const emailAddress = this.$stateParams.template.email;
       this.template.configuration.pages.evaEmail.value = emailAddress.substring(0, emailAddress.indexOf('@'));
       this.template.configuration.pages.evaDefaultSpace.selectedDefaultSpace.id = this.$stateParams.template.defaultSpaceId;
       this.template.ownerId = this.$stateParams.template.ownerId;
       this.template.ownerDetails = this.$stateParams.template.ownerDetails;
+      this.template.missingDefaultSpace = this.$stateParams.template.missingDefaultSpace || this.EvaService.isMissingDefaultSpace(this.$stateParams.template);
 
       if (this.$stateParams.template.iconURL) {
         this.avatarUploadState = this.avatarState.PREVIEW;
@@ -135,7 +137,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     switch (this.currentState) {
       case 'evaOverview':
         return true;
-      case 'vaName':
+      case 'name':
         return this.isNamePageValid();
       case 'evaEmail':
         return this.isEmailPageValid();
@@ -227,17 +229,18 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
   }
 
   public submitFeature(): void {
-    const name = this.template.configuration.pages.vaName.nameValue.trim();
+    const name = this.template.configuration.pages.name.nameValue.trim();
     const emailPrefix = this.template.configuration.pages.evaEmail.value.trim();
     const email = `${emailPrefix}@sparkbot.io`;
     this.creatingTemplate = true;
     const avatarDataUrl = this.template.configuration.pages.vaAvatar.fileValue;
     const defaultSpaceId = this.template.configuration.pages.evaDefaultSpace.selectedDefaultSpace.id;
     if (this.isEditFeature) {
-      const result = this.EvaService.getWarningIfNotOwner(this.template);
-      if (!result.valid) {
+      const access = this.EvaService.canIEditThisEva(this.template);
+      if (!access) {
         this.handleUserAccessForEditError();
-        this.Notification.warning(result.warning.message, result.warning.args);
+        const owner = this.EvaService.getEvaOwner(this.template);
+        this.Notification.warning(this.EvaService.evaServiceCard.editDeleteWarning, { owner });
       } else {
         this.updateFeature(this.template.templateId, name, this.orgId, email, defaultSpaceId, avatarDataUrl);
       }
@@ -280,7 +283,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
   }
 
   public isNameValid(): boolean {
-    const name = (this.template.configuration.pages.vaName.nameValue || '').trim();
+    const name = (this.template.configuration.pages.name.nameValue || '').trim();
     const isLengthValid = (_.get(name, 'length', 0) <= this.maxNameLength);
 
     if (this.nameForm && name) {
@@ -291,7 +294,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
   }
 
   public isNamePageValid(): boolean {
-    const name = (this.template.configuration.pages.vaName.nameValue || '').trim();
+    const name = (this.template.configuration.pages.name.nameValue || '').trim();
     return name !== '' && this.isNameValid();
   }
 

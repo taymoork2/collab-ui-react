@@ -1,9 +1,7 @@
-import hybridContextContainer from './hybrid-context-container.component';
-
 describe('Component: Hybrid Context Container',  () => {
 
   beforeEach(function () {
-    this.initModules('Core', 'Context', hybridContextContainer);
+    this.initModules('Context');
     this.injectDependencies(
       '$q',
       '$scope',

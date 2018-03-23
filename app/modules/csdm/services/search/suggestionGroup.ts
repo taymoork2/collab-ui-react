@@ -370,42 +370,38 @@ export class BelongsToGroup extends SuggestionGroupBase {
   constructor(private searchTranslator: SearchTranslator) {
     super({ permanentRank: 8, field: QueryParser.Field_Displayname });
     this.readableField = this.searchTranslator.getTranslatedQueryFieldDisplayName(QueryParser.Field_Displayname);
-    this.hidden = true;
   }
 
   public updateBasedOnInput(currentEditedElement: SearchElement | null, totalCount: number | undefined = undefined): void {
-    if (!currentEditedElement) {
-      this.hidden = true;
-      return;
-    }
-    if (currentEditedElement instanceof FieldQuery && (currentEditedElement.getCommonField() === '' || currentEditedElement.field === this.field)) {
-      this.suggestions = [];
-      if (_.startsWith(_.toLower(this.readableField), _.toLower(currentEditedElement.toQuery()))) {
-        this.suggestions.push(new Suggestion(
-          this, {
-            count: undefined,
-            searchString: `${this.searchTranslator.translateQueryField(this.field)}:`,
-            readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(this.field),
-            field: this.field,
-            translatedText: '',
-            textTranslationKey: null,
-            textTranslationParams: null,
-            isInputBased: true,
-            isFieldSuggestion: true,
-          }));
-      }
-      this.suggestions.push(new Suggestion(
+    this.suggestions = [];
+    if (currentEditedElement instanceof FieldQuery
+      && !_.startsWith(_.toLower(this.readableField), _.toLower(currentEditedElement.toQuery()))
+      && (currentEditedElement.getCommonField() === ''
+        || currentEditedElement.field === this.field)) {
+      this.suggestions = [new Suggestion(
         this,
         {
-          searchString: `${QueryParser.Field_Displayname}:${currentEditedElement.toQuery()}`,
+          searchString: `${QueryParser.Field_Displayname}:${currentEditedElement.getQueryWithoutField()}`,
           readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(QueryParser.Field_Displayname),
           field: QueryParser.Field_Displayname,
           textTranslationKey: 'spacesPage.containingQuery',
           textTranslationParams: { query: currentEditedElement.getQueryWithoutField() || '...' },
           isInputBased: true,
-        }));
+        })];
+    } else {
+      this.suggestions = [new Suggestion(
+        this, {
+          count: undefined,
+          searchString: `${this.searchTranslator.translateQueryField(this.field)}:`,
+          readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(this.field),
+          field: this.field,
+          translatedText: '',
+          textTranslationKey: null,
+          textTranslationParams: null,
+          isInputBased: true,
+          isFieldSuggestion: true,
+        })];
     }
-    this.hidden = currentEditedElement.toQuery() === '' || currentEditedElement.getCommonField() !== '';
     super.updateBasedOnInput(currentEditedElement, totalCount);
   }
 

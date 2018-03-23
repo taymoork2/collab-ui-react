@@ -258,32 +258,25 @@ describe('Care Setup Assistant Ctrl', function () {
               name: 'Jhon Doe',
               id: '007',
               orgId: '12345',
+              spaces: [
+                {
+                  title: 'Spark Care room 1',
+                  default: true,
+                },
+                {
+                  title: 'HR help room',
+                  default: false,
+                },
+              ],
             }, {
               name: 'Trudy',
               id: '005',
               orgId: '12345',
+              spaces: [],
             },
           ] : [],
         };
         defered.resolve(result);
-        return defered.promise;
-      });
-
-      spyOn(EvaService, 'getExpertAssistantSpaces').and.callFake(function () {
-        var defered = $q.defer();
-        var space = {
-          items: isEditFeature ? [
-            {
-              title: 'Spark Care room 1',
-              default: true,
-            },
-            {
-              title: 'HR help room',
-              default: false,
-            },
-          ] : [],
-        };
-        defered.resolve(space);
         return defered.promise;
       });
 
@@ -601,9 +594,9 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.evaConfig.isEvaConfigured).toEqual(true);
       expect(controller.template.configuration.routingLabel).toEqual('agent');
       expect(controller.isExpertEscalationSelected()).toEqual(false);
-      expect(controller.evaSpaceTooltipData.indexOf('Jhon Doe') !== -1);
-      expect(controller.evaSpaceTooltipData.indexOf('Spark Care room 1') !== -1);
-      expect(controller.evaSpaceTooltipData.indexOf('HR help room') !== -1);
+      expect(controller.evaSpaceTooltipData.indexOf('Jhon Doe')).not.toBe(-1);
+      expect(controller.evaSpaceTooltipData.indexOf('Spark Care room 1')).not.toBe(-1);
+      expect(controller.evaSpaceTooltipData.indexOf('HR help room')).not.toBe(-1);
     });
 
     it('correct details for expert space should be set when expert is present for the org and expert is selected', function () {
@@ -620,9 +613,9 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.evaConfig.isEvaConfigured).toEqual(true);
       expect(controller.template.configuration.routingLabel).toEqual('expert');
       expect(controller.isExpertEscalationSelected()).toEqual(true);
-      expect(controller.evaSpaceTooltipData.indexOf('Jhon Doe') !== -1);
-      expect(controller.evaSpaceTooltipData.indexOf('Spark Care room 1') !== -1);
-      expect(controller.evaSpaceTooltipData.indexOf('HR help room') !== -1);
+      expect(controller.evaSpaceTooltipData.indexOf('Jhon Doe')).not.toBe(-1);
+      expect(controller.evaSpaceTooltipData.indexOf('Spark Care room 1')).not.toBe(-1);
+      expect(controller.evaSpaceTooltipData.indexOf('HR help room')).not.toBe(-1);
     });
 
     it('correct details for expert space should be set when expert is present for the org and agentplusexpert is selected', function () {
@@ -639,9 +632,9 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.evaConfig.isEvaConfigured).toEqual(true);
       expect(controller.template.configuration.routingLabel).toEqual('agentplusexpert');
       expect(controller.isExpertEscalationSelected()).toEqual(true);
-      expect(controller.evaSpaceTooltipData.indexOf('Jhon Doe') !== -1);
-      expect(controller.evaSpaceTooltipData.indexOf('Spark Care room 1') !== -1);
-      expect(controller.evaSpaceTooltipData.indexOf('HR help room') !== -1);
+      expect(controller.evaSpaceTooltipData.indexOf('Jhon Doe')).not.toBe(-1);
+      expect(controller.evaSpaceTooltipData.indexOf('Spark Care room 1')).not.toBe(-1);
+      expect(controller.evaSpaceTooltipData.indexOf('HR help room')).not.toBe(-1);
     });
 
     it('correct details for expert space should be set when expert is deleted', function () {

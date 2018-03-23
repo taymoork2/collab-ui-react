@@ -10,6 +10,7 @@
   .cs-card article {
     section {
       @include vr-spacing(pb, 1);
+      height: rem-calc(72);
     }
   }
 
@@ -29,11 +30,11 @@
     flex-wrap: wrap;
 
     .care-badge {
-      @include vr-spacing(pt, 0.5);
+      @include vr-spacing(mr, 0.5);
+      line-height: rem-calc(25);
     }
 
     .care-icon {
-      @include vr-spacing(pt, 0.8);
       display: inline-flex;
 
       .people {
@@ -46,12 +47,14 @@
         color: $color-green-dark;
       }
       .icon {
-        @include vr-spacing(pl, 0.5);
+        @include vr-spacing(pt, 0.5);
+        @include vr-spacing(pr, 0.5);
         display: block;
-        padding-top: rem-calc(3); // vr-spacing isn't specific enough
+      }
+      .icon-bot-five {
+        @include vr-spacing(pt, 0.3);
       }
     }
-
   }
 
   .care-features-icon {
@@ -63,7 +66,10 @@
 
     .icon {
       display: block;
-      padding-top: rem-calc(3); // vr-spacing isn't specific enough
+    }
+
+    .icon-bot-six {
+      margin-top: rem-calc(2); // vr-spacing isn't specific enough
     }
 
     span{
@@ -75,7 +81,6 @@
     @include vr-spacing(ph, 1.5);
     display: flex;
     color: $color-yellow-darker;
-    max-width: rem-calc(400);
 
     .warning-text {
       @include vr-spacing(pl, 0.25);
@@ -118,6 +123,10 @@
 
   .card-header {
     height: rem-calc(110);
+
+    h4 {
+      padding: 0;
+    }
 
     .icon-color {
       color: $gray-light;
@@ -223,6 +232,10 @@
   .tooltip-wrapper-div {
     display: inline-block;
   }
+}
+
+.tooltip[popup-class="icon-tooltip"] .c-nub {
+  min-width: 250px;
 }
 
 header > p > span.badge {
@@ -462,6 +475,11 @@ header > p > span.badge {
   }
 }
 
+.cs-card + .tooltip {
+  @include vr-spacing(mt, 10);
+  pointer-events: none;
+}
+
 .popover-content {
   @include vr-spacing(ph, 0.875);
   @include vr-spacing(pt, 0.625);
@@ -474,6 +492,7 @@ header > p > span.badge {
 
   .feature-card-popover-error {
     @include vr-spacing(pb, .625);
+    font-family: $brand-font-light;
     font-size: rem-calc(12);
     word-break: normal;
   }
@@ -491,7 +510,7 @@ header > p > span.badge {
     }
 
     .header {
-      @include vr-spacing(mb, .5);
+      @include vr-spacing(mb, 1);
     }
 
     .sub-header {

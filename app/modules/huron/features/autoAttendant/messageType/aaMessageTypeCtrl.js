@@ -36,6 +36,7 @@
     var uniqueId;
     var holdActionDesc;
     var holdActionValue;
+    var holdDeleteUrl;
     var dependentCeSessionVariablesList = [];
     var dynamicVariablesList = [];
     var ui;
@@ -170,6 +171,7 @@
     $scope.$on('CE Saved', function () {
       holdActionDesc = '';
       holdActionValue = '';
+      holdDeleteUrl = '';
     });
 
     function setMessageOptions() {
@@ -177,19 +179,23 @@
 
       var saveDesc = {};
       var saveValue = {};
+      var saveDeleteUrl = {};
 
       AACommonService.setSayMessageStatus(true);
 
       saveDesc = action.description;
       saveValue = action.value;
+      saveDeleteUrl = _.get(action, 'deleteUrl', '');
 
       action.description = holdActionDesc;
       action.value = holdActionValue;
+      action.deleteUrl = holdDeleteUrl;
 
       vm.messageInput = action.value;
 
       holdActionValue = saveValue;
       holdActionDesc = saveDesc;
+      holdDeleteUrl = saveDeleteUrl;
 
       //for holding dynamicList in case of retrieval needed when toggle b/w say and play
       if (isDynamicToggle() && vm.messageOption.value === vm.messageOptions[actionType.PLAY].value) {
@@ -227,6 +233,7 @@
           } else {
             action.name = vm.messageOptions[actionType.SAY].action;
           }
+          delete action.deleteUrl;
         }
       }
 
@@ -432,6 +439,7 @@
 
       holdActionDesc = '';
       holdActionValue = '';
+      holdDeleteUrl = '';
 
       switch (vm.messageType) {
         case messageType.MENUHEADER:

@@ -178,8 +178,7 @@ export class UserOverviewService {
 
     if (_.isEmpty(userData.user.entitlements)) {
 
-      const hasSyncKms = _.includes(userData.user.roles, this.Config.backend_roles.ciscouc_ces);
-      const hasCiscoucCES = _.includes(userData.user.roles, this.Config.backend_roles.ciscouc_ces);
+      const hasSyncKms = _.includes(userData.user.roles, this.Config.backend_roles.spark_synckms);
 
       promise = this.getInvitationsForUser(userData.user.id)
         .then((inviteResponse) => {
@@ -210,7 +209,7 @@ export class UserOverviewService {
               // check if this user exists in Sunlight config, and if so, update the Care Voice invitation
               return this.SunlightConfigService.getUserInfo(userData.user.id)
                 .then(() => {
-                  if (hasSyncKms && hasCiscoucCES && userData.user.invitations) {
+                  if (hasSyncKms && userData.user.invitations) {
                     userData.user.invitations.cc = true;
                   }
                 });

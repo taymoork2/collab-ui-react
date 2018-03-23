@@ -22,6 +22,7 @@ require('./_setup-wizard.scss');
   var callSettingsCallPickupCountryTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/serviceHuronCustomerCreate.html');
   var callSettingsSetupLocationTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/locationSetup.html');
   var callSettingsSetupSiteTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/serviceSetup.html');
+  var bsftSettingsSetupTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftSetup.html');
 
   var careSettingsTemplatePath = require('ngtemplate-loader?module=Core!./careSettings/careSettings.tpl.html');
 
@@ -40,6 +41,7 @@ require('./_setup-wizard.scss');
     var hasPendingCallLicenses = false;
     var hasPendingLicenses = false;
     var supportsHI1484 = false;
+    var supportsHI1776 = false;
     $scope.tabs = [];
     $scope.isTelstraCsbEnabled = false;
     $scope.isCSB = Authinfo.isCSB();
@@ -72,6 +74,11 @@ require('./_setup-wizard.scss');
           supportsHI1484 = _supportsHI1484;
         });
 
+      var hI1776Promise = FeatureToggleService.supports(FeatureToggleService.features.hI1776)
+        .then(function (_supportsHI1776) {
+          supportsHI1776 = _supportsHI1776;
+        });
+
       var adminOrgUsagePromise = Orgservice.getAdminOrgUsage()
         .then(function (subscriptions) {
           var licenses = _.flatMap(subscriptions, 'licenses');
@@ -85,6 +92,7 @@ require('./_setup-wizard.scss');
       var promises = [
         adminOrgUsagePromise,
         hI1484Promise,
+        hI1776Promise,
         pendingSubscriptionsPromise,
       ];
       return $q.all(promises);
@@ -271,6 +279,11 @@ require('./_setup-wizard.scss');
         template: callSettingsSetupSiteTemplatePath,
       };
 
+      var setupBsft = {
+        name: 'setupBsft',
+        template: bsftSettingsSetupTemplatePath,
+      };
+
       if (showCallSettings()) {
         $q.resolve($scope.isCustomerPresent).then(function (customer) {
           if (customer && hasPendingCallLicenses) {
@@ -302,10 +315,14 @@ require('./_setup-wizard.scss');
             });
           }
 
-          if (supportsHI1484) {
-            steps.push(setupLocation);
+          if (supportsHI1776) {
+            steps.push(setupBsft);
           } else {
-            steps.push(setupSite);
+            if (supportsHI1484) {
+              steps.push(setupLocation);
+            } else {
+              steps.push(setupSite);
+            }
           }
 
           tabs.splice(1, 0, {

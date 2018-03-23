@@ -109,7 +109,12 @@ export class EmergencyServicesCtrl {
   public save(): void {
     this.processing = true;
     if (!_.isEqual(this.emergency.emergencyNumber, this.EmergencyServicesService.getOriginalConfig().emergencyNumber)) {
-      this.EmergencyServicesService.save(this.emergency).then(() => this.validateAndSaveAddress());
+      this.EmergencyServicesService.save(this.emergency)
+        .then(() => this.validateAndSaveAddress())
+        .catch(error => {
+          this.Notification.errorResponse(error);
+        })
+        .finally(() => this.processing = false);
     } else {
       this.validateAndSaveAddress();
     }

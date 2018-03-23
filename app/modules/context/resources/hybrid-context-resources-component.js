@@ -20,7 +20,7 @@ require('./_resources.scss');
 
     ContextAdminAuthorizationService.getAdminAuthorizationStatus()
       .then(function (value) {
-        vm.disableAddResourceButton = (value === AdminAuthorizationStatus.UNKNOWN) || (value === AdminAuthorizationStatus.UNAUTHORIZED);
+        vm.disableAddResourceButton = (value !== AdminAuthorizationStatus.AUTHORIZED);
 
         if (vm.disableAddResourceButton) {
           switch (value) {
@@ -29,6 +29,9 @@ require('./_resources.scss');
               break;
             case AdminAuthorizationStatus.UNKNOWN:
               vm.addResourceButtonTooltip = $translate.instant('context.dictionary.unknownAdminAuthorizationStatus');
+              break;
+            case AdminAuthorizationStatus.NEEDS_MIGRATION:
+              vm.addResourceButtonTooltip = $translate.instant('context.dictionary.resource.needsMigration');
               break;
             default:
               break;

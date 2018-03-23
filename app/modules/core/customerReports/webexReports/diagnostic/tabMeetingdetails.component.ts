@@ -9,10 +9,12 @@ class Meetingdetails implements ng.IComponentController {
   public overview: Object;
   public cmrData: Object;
   public pstnData: Object;
+  public callLegsData: Object;
   public lineColor: Object;
   public circleColor: Object;
   public featAndconn: Object;
   public conferenceID: string;
+  public tabType: string = 'Audio';
   public loading: boolean = true;
 
   /* @ngInject */
@@ -55,6 +57,8 @@ class Meetingdetails implements ng.IComponentController {
     if (this.data.cmr) {
       this.cmrData = qos === 'voip' ? _.cloneDeep(this.data.cmr.audio) : _.cloneDeep(this.data.cmr.video);
     }
+    this.callLegsData = this.data.currentQos === 'voip' ? _.cloneDeep(this.SearchService.getStorage('audioEnabled')) : _.cloneDeep(this.SearchService.getStorage('videoEnabled'));
+    this.tabType = qos === 'voip' ? 'Audio' : 'Video';
     this.$timeout(() => this.loading = false, 200);
   }
 
@@ -71,6 +75,7 @@ class Meetingdetails implements ng.IComponentController {
         const cmrIds = this.getFilterIds(res, 'cmr');
 
         const cachePromises: ng.IPromise<any>[] = [];
+        cachePromises.push(this.callLegs(res));
         cachePromises.push(this.getJoinMeetingTime());
         cachePromises.push(this.voipQOS(ids));
         cachePromises.push(this.videoQOS(ids));
@@ -83,7 +88,7 @@ class Meetingdetails implements ng.IComponentController {
           });
       })
       .catch((err) => {
-        this.loading = true;
+        this.loading = false;
         this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
       });
   }
@@ -111,24 +116,31 @@ class Meetingdetails implements ng.IComponentController {
     _.map(res, (item: any) => {
       if (item.items && item.items.length > 0) {
         _.forEach(item.items, (node) => {
-          node.dataQuality = this.getVoipVideoQuality(node);
+          node.dataQuality = this.getVoipVideoQuality(node, qosName);
         });
       }
     });
     this.getLineCircleData(res, qosName);
   }
 
-  private getVoipVideoQuality(node) {
+  private getVoipVideoQuality(node, qosName) {
     const lossRate = node.packageLossRate * 100;
     const latency = node.latency * 1;
-
     let dataQuality = 0;
-    if (lossRate < 3 && latency < 300) {
-      dataQuality = 1;
-    } else if (lossRate > 5 && latency > 400) {
-      dataQuality = 3;
-    } else {
-      dataQuality = 2;
+    if (qosName === 'voip') {
+      if (lossRate < 3 && latency < 300) {
+        dataQuality = 1;
+      } else if (lossRate > 5 && latency > 400) {
+        dataQuality = 3;
+      } else {
+        dataQuality = 2;
+      }
+    } else if (qosName === 'video') {
+      if (lossRate < 3 && latency < 300) {
+        dataQuality = 1;
+      } else {
+        dataQuality = 3;
+      }
     }
     return dataQuality;
   }
@@ -214,6 +226,59 @@ class Meetingdetails implements ng.IComponentController {
         }, 3000);
       }
     });
+  }
+
+  private callLegs(participants) {
+    return this.SearchService.getCallLegs(this.conferenceID)
+              .then((res: {}) => {
+                const audioSession_: string[] = [];
+                let videoSession = 'No';
+                if (!_.isEmpty(res['tahoeInfo'])) {
+                  audioSession_.push('PSTN');
+                }
+                if (!_.isEmpty(res['voIPInfo'])) {
+                  audioSession_.push('VoIP');
+                }
+                if (!_.isEmpty(res['videoInfo'])) {
+                  videoSession = 'Yes';
+                }
+                this.overview['audioSession'] = audioSession_.join(' and ');
+                this.overview['videoSession'] = videoSession;
+
+                const audioEnabled = {}, videoEnabled = {};
+                _.forEach(res['tahoeInfo'], (info) => {
+                  audioEnabled[info.nodeId] = true;
+                });
+                _.forEach(res['voIPInfo'], (info) => {
+                  audioEnabled[info.nodeId] = true;
+                });
+                _.forEach(res['videoInfo'], (info) => {
+                  videoEnabled[info.nodeId] = true;
+                });
+
+                _.forEach(participants, (participant) => {
+                  if (participant.sessionType === '0' && participant.platform === '10') {
+                    _.forEach(participant.participants, (cmrUser) => {
+                      audioEnabled[cmrUser.nodeId] = true;
+                      videoEnabled[cmrUser.nodeId] = true;
+                    });
+                  } else {
+                    _.forEach(participant.participants, (otherUser) => {
+                      if (!audioEnabled[otherUser.nodeId]) {
+                        audioEnabled[otherUser.nodeId] = false;
+                      }
+                      if (!videoEnabled[otherUser.nodeId]) {
+                        videoEnabled[otherUser.nodeId] = false;
+                      }
+                    });
+                  }
+                });
+
+                this.SearchService.setStorage('audioEnabled', audioEnabled);
+                this.SearchService.setStorage('videoEnabled', videoEnabled);
+
+                this.callLegsData = this.data.currentQos === 'voip' ? audioEnabled : videoEnabled;
+              });
   }
 
   private getCMRQuality(item) {

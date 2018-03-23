@@ -1,0 +1,8 @@
+<div class="ui-grid-cell-contents" col-index="renderIndex">
+  <span ng-bind="row.entity.displayName"></span>
+  <div translate="hcs.license.standard"></div>
+  <span ng-if="row.entity.displayField===standard">{{grid.appScope.totalLicenses.hcs_standard.used}}&nbsp/&nbsp{{grid.appScope.totalLicenses.hcs_standard.purchased}}</span>
+  <span ui-grid-one-bind-id-grid="col.uid + '-sortdir-text'" ui-grid-visible="col.sort.direction">
+    <i style="padding-left: .5rem" class="ui-grid-header-cell-primary-focus " ng-class="{ ' icon icon-arrow-up': col.sort.direction === asc, 'icon icon-arrow-down': col.sort.direction === desc, 'ui-grid-icon-blank': !col.sort.direction }"></i>
+  </span>
+</div>

@@ -1,7 +1,8 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
 
 hybrid-services-cluster-status-history-table {
-  display: block;
+  display: flex;
+  min-height: calc(100vh - 11rem);
 
   table {
     border-collapse: collapse;
@@ -59,8 +60,12 @@ hybrid-services-cluster-status-history-table {
     }
   }
 
+  .no-events-found-container {
+    border-top: 1px solid $gray-light-3;
+    width: 100%;
+  }
+
   .no-events-found {
-    margin-left: 2em;
-    margin-top: 2em;
+    margin: 2rem 2rem 0;
   }
 }

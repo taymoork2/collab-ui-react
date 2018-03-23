@@ -1207,6 +1207,20 @@
               task: undefined,
             },
           })
+          .state('sso-certificate', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<div ui-view></div>',
+              },
+            },
+          })
+          .state('sso-certificate.check-certificate', {
+            template: '<check-certificate dismiss="$dismiss()"></check-certificate>',
+          })
+          .state('sso-certificate.certificate-type', {
+            template: '<certificate-type dismiss="$dismiss()"></certificate-type>',
+          })
           .state('editService', {
             parent: 'modal',
             resolve: {
@@ -2836,6 +2850,7 @@
             data: {},
             params: {
               currentAddress: {},
+              currentHuronDevice: {},
               currentNumber: '',
               status: '',
               staticNumber: '',
@@ -3073,7 +3088,7 @@
           })
           .state('hcs', {
             parent: 'partner',
-            template: require('modules/hcs/shared/base/hcs-shared-base.html'),
+            template: require('modules/hcs/shared/hcs-base/hcs-shared-base.html'),
             absract: true,
           })
           .state('hcs.shared', {
@@ -3089,20 +3104,63 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/hcs/shared/base'));
-                }, 'call-details');
+                  done(require('modules/hcs/shared/hcs-base'));
+                }, 'hcs-shared-template');
               }),
             },
           })
-          .state('hcs.shared.inventory', {
+          .state('hcs.shared.inventoryList', {
             parent: 'hcs.shared',
             url: '/hcs/inventory',
-            template: '<hcs-inventory></hcs-inventory>',
+            template: '<hcs-inventory-list></hcs-inventory-list>',
           })
           .state('hcs.shared.installFiles', {
             parent: 'hcs.shared',
             url: '/hcs/install-files',
             template: '<hcs-install-files></hcs-install-files>',
+          })
+          .state('hcs.subscription', {
+            parent: 'partner',
+            url: '/hcs/subscription',
+            template: '<hcs-licenses-subscription></hcs-licenses-subscription>',
+          })
+          .state('hcs.clusterList', {
+            url: '/hcs/inventory/:customerId/clusters',
+            parent: 'partner',
+            template: '<hcs-cluster-list customer-id="$resolve.customerId" customer-name="$resolve.customerName"></hcs-cluster-list>',
+            params: {
+              customerId: '',
+              customerName: '',
+            },
+            resolve: {
+              customerId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerId;
+              },
+              customerName: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerName;
+              },
+            },
+          })
+          .state('hcs.clusterDetail', {
+            url: '/hcs/inventory/:customerId/cluster/:clusterId',
+            parent: 'partner',
+            template: '<hcs-cluster-detail customer-id="$resolve.customerId" cluster-id="$resolve.clusterId" cluster-name="$resolve.clusterName"></hcs-cluster-detail>',
+            params: {
+              customerId: '',
+              clusterId: '',
+              clusterName: '',
+            },
+            resolve: {
+              customerId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerId;
+              },
+              clusterId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
+              clusterName: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterName;
+              },
+            },
           })
           .state('taasSuites', {
             parent: 'main',
@@ -4720,6 +4778,11 @@
           .state('mediafusion-cluster.nodes', {
             url: '/nodes',
             template: '<hybrid-services-nodes-page back-state="$resolve.backState" cluster-id="$resolve.id"></hybrid-services-nodes-page>',
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.id;
+              },
+            },
           })
           .state('mediafusion-cluster.settings', {
             url: '/settings',
@@ -4866,13 +4929,24 @@
             abstract: true,
           })
           .state('add-resource.mediafusion.hostname', {
-            parent: 'modalSmall',
+            parent: 'main',
             views: {
-              'modal@': {
-                controller: 'AddResourceControllerClusterViewV2',
-                controllerAs: 'redirectResource',
-                template: require('modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html'),
-                modalClass: 'redirect-add-resource',
+              'main@': {
+                controller: 'AddResourceMainController',
+              },
+            },
+            resolve: {
+              hasMfClusterWizardFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceClusterWizard);
+              },
+              hasMfFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwo);
+              },
+              hasMfSIPFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceTrustedSIP);
+              },
+              hasMfCascadeBwConfigToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceCascadeBwConfig);
               },
             },
             params: {
@@ -5350,6 +5424,20 @@
             controller: 'MediaServiceControllerV2',
             controllerAs: 'med',
             parent: 'main',
+            resolve: {
+              hasMfClusterWizardFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceClusterWizard);
+              },
+              hasMfFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwo);
+              },
+              hasMfSIPFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceTrustedSIP);
+              },
+              hasMfCascadeBwConfigToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceCascadeBwConfig);
+              },
+            },
             params: {
               backState: null,
               clusterId: null,

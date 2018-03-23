@@ -152,6 +152,32 @@ describe('Controller: AABuilderMainCtrl', function () {
     spyOn(this.$modalStack, 'dismiss');
     spyOn(this.AACommonService, 'isHybridEnabledOnOrg').and.returnValue(true);
     spyOn(this.AutoAttendantHybridCareService, 'isHybridAndEPTConfigured').and.returnValue(this.$q.resolve(true));
+    spyOn(this.AutoAttendantLocationService, 'getDefaultLocation').and.returnValue(
+      this.$q.resolve({
+        url: 'https://cmi.huron-int.com/api/v2/customers/9b82a3fa-de82-4ced-a3dd-0989081bd6df/locations/108655a5-899a-4885-9f65-f583b0a76132',
+        uuid: '108655a5-899a-4885-9f65-f583b0a76132',
+        name: 'Default Location',
+        timeZone: 'Twilight/Zone',
+        preferredLanguage: 'en_US',
+        defaultLocation: true,
+        regionCodeDialing: {
+          regionCode: null,
+          simplifiedNationalDialing: false,
+        },
+        callerIdNumber: null,
+        callerId: null,
+      }));
+
+    spyOn(this.AutoAttendantLocationService, 'listLocations').and.returnValue(
+      this.$q.resolve({
+        uuid: 'abc',
+        name: 'testLocation1',
+        locations: [{ routingPrefix: '6100' }],
+        defaultLocation: 'false',
+        userCount: 'null',
+        placeCount: 'null',
+        url: 'https://cmi.huron-int.com/api/v2/customers/abc/locations/abc',
+      }));
 
     // mock element
     this.elem = {
@@ -227,24 +253,9 @@ describe('Controller: AABuilderMainCtrl', function () {
 
   describe('getSystemDefaultTimeZone - multi site', function () {
     it('should retrieve the default system timezone', function () {
-      var defaultLoc = {
-        url: 'https://cmi.huron-int.com/api/v2/customers/9b82a3fa-de82-4ced-a3dd-0989081bd6df/locations/108655a5-899a-4885-9f65-f583b0a76132',
-        uuid: '108655a5-899a-4885-9f65-f583b0a76132',
-        name: 'Default Location',
-        timeZone: 'Twilight/Zone',
-        preferredLanguage: 'en_US',
-        defaultLocation: true,
-        regionCodeDialing: {
-          regionCode: null,
-          simplifiedNationalDialing: false,
-        },
-        callerIdNumber: null,
-        callerId: null,
-      };
       var successSpy = jasmine.createSpy('success');
 
       spyOn(this.AACommonService, 'isMultiSiteEnabled').and.returnValue(true);
-      spyOn(this.AutoAttendantLocationService, 'getDefaultLocation').and.returnValue(this.$q.resolve(defaultLoc));
       this.AutoAttendantLocationService.getDefaultLocation().then(successSpy);
       this.AANotificationService.error = jasmine.createSpy('error');
 
@@ -252,41 +263,32 @@ describe('Controller: AABuilderMainCtrl', function () {
       this.$scope.$apply();
 
       var args = successSpy.calls.mostRecent().args;
-      expect(args[0].timeZone).toBe(defaultLoc.timeZone);
+      expect(args[0].timeZone).toBe('Twilight/Zone');
     });
 
     it('populateRouitngPrefix', function () {
-      var locationList = {
-        uuid: 'abc',
-        name: 'testLocation1',
-        locations: [{ routingPrefix: '6100' }],
-        defaultLocation: 'false',
-        userCount: 'null',
-        placeCount: 'null',
-        url: 'https://cmi.huron-int.com/api/v2/customers/abc/locations/abc',
-      };
       spyOn(this.AACommonService, 'isMultiSiteEnabled').and.returnValue(true);
-      spyOn(this.AutoAttendantLocationService, 'listLocations').and.returnValue(this.$q.resolve(locationList));
       this.controller.populateRoutingLocation();
       this.$scope.$apply();
-      expect(this.controller.ui.routingPrefixOptions).toEqual(['6100']);
+      expect(this.controller.ui.routingPrefixOptions).toEqual(['6100', '6100']);
     });
   });
 
   describe('Error Notification for while populating routing locations', function () {
     it('populateRoutingLocation', function () {
-      var successSpy = jasmine.createSpy('success');
       spyOn(this.AACommonService, 'isMultiSiteEnabled').and.returnValue(true);
-      spyOn(this.AutoAttendantLocationService, 'listLocations').and.returnValue(this.$q.reject({
+      this.AutoAttendantLocationService.listLocations.and.returnValue(this.$q.reject({
         statusText: 'server error',
         status: 500,
       }));
-      this.AutoAttendantLocationService.getDefaultLocation().then(
-        successSpy
-      );
+      this.AutoAttendantLocationService.getDefaultLocation().catch(function (response) {
+        expect(response.status).toBe(500);
+      });
       this.AANotificationService.error = jasmine.createSpy('error');
 
-      this.controller.populateRoutingLocation();
+      this.controller.populateRoutingLocation().catch(function (response) {
+        expect(response).toBe(undefined);
+      });
       this.$scope.$apply();
       expect(this.AANotificationService.error).toHaveBeenCalled();
     });
@@ -548,12 +550,20 @@ describe('Controller: AABuilderMainCtrl', function () {
     });
 
     it('should report failure if an existing aaRecord with one REST block modified fails but other gets passed', function () {
+      var count = 0;
+      var ngq = this.$q;
       this.aaModel.aaRecords.push(this.rawCeInfo);
       this.aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
-      this.updateDoRestSpy.and.returnValues(this.$q.resolve(this.rawCeInfo), this.$q.reject({
-        statusText: 'server error',
-        status: 500,
-      }));
+      this.updateDoRestSpy.and.callFake(function () {
+        if (count === 0) {
+          count++;
+          return ngq.resolve(this.rawCeInfo);
+        }
+        return ngq.reject({
+          statusText: 'server error',
+          status: 500,
+        });
+      });
 
       this.controller.saveAARecords();
       this.$scope.$apply();
@@ -634,6 +644,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     });
 
     it('should report failure if AutoAttendantCeService.createCe() failed', function () {
+      spyOn(this.AANumberAssignmentService, 'getAANumberAssignments').and.returnValue(this.$q.resolve(''));
       this.aaModel.aaRecordUUID = '';
       this.createCeSpy.and.returnValue(this.$q.reject({
         statusText: 'server error',
@@ -723,6 +734,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     });
 
     it('should report failure if AutoAttendantCeService.updateCe() failed', function () {
+      spyOn(this.AANumberAssignmentService, 'getAANumberAssignments').and.returnValue(this.$q.resolve(''));
       this.aaModel.aaRecords.push(this.rawCeInfo);
       this.aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
       this.updateCeSpy.and.returnValue(this.$q.reject({

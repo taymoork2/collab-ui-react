@@ -20,6 +20,7 @@ require('./_user-csv.scss');
     vm.isCsvValid = false;
     vm.handleHybridServicesResourceGroups = false;
     vm.hybridServicesUserProps = [];
+    vm.isLoading = true;
 
     var maxUsers = UserCsvService.maxUsersInCSV;
     var csvUsersArray = [];
@@ -38,14 +39,19 @@ require('./_user-csv.scss');
     var NO_RESOURCE_GROUP = '**no resource group**';
 
     var isAtlasCsvImportTaskManagerToggled = false;
-    FeatureToggleService.atlasCsvImportTaskManagerGetStatus().then(function (toggled) {
-      isAtlasCsvImportTaskManagerToggled = toggled;
-    });
-
-    CsvDownloadService.getCsv('headers').then(function (csvData) {
-      orgHeaders = _.cloneDeep(csvData.columns || []);
+    var isAtlasUserCsvSubscriptionEnabled = false;
+    $q.all({
+      isAtlasCsvImportTaskManagerToggled: FeatureToggleService.atlasCsvImportTaskManagerGetStatus(),
+      isAtlasUserCsvSubscriptionEnabled: FeatureToggleService.atlasUserCsvSubscriptionEnableGetStatus(),
+      headers: CsvDownloadService.getCsv('headers'),
+    }).then(function (promiseData) {
+      isAtlasCsvImportTaskManagerToggled = promiseData.isAtlasCsvImportTaskManagerToggled;
+      isAtlasUserCsvSubscriptionEnabled = promiseData.isAtlasUserCsvSubscriptionEnabled;
+      orgHeaders = _.cloneDeep(promiseData.headers.columns || []);
     }).catch(function (response) {
-      Notification.errorResponse(response, 'firstTimeWizard.downloadHeadersError');
+      Notification.errorResponse(response);
+    }).finally(function () {
+      vm.isLoading = false;
     });
 
     vm.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
@@ -138,28 +144,42 @@ require('./_user-csv.scss');
     vm.validateCsv = function () {
       setUploadProgress(0);
       vm.isCsvValid = false;
+
       try {
-        if (vm.model.file) {
-          // only validate if there is a file to test
-          csvUsersArray = $.csv.toArrays(vm.model.file);
-          if (_.isArray(csvUsersArray) && csvUsersArray.length > 0 && _.isArray(csvUsersArray[0])) {
-            if (_.indexOf(csvUsersArray[0], USER_ID_EMAIL_HEADER) > -1) {
-              csvHeaders = csvUsersArray.shift();
-              if (csvUsersArray.length > 0 && csvUsersArray.length <= maxUsers) {
-                vm.isCsvValid = true;
-              } else {
-                warnCsvUserCount();
-                vm.resetFile();
-              }
-            } else {
-              Notification.error('firstTimeWizard.uploadCsvBadHeaders');
-              vm.resetFile();
-            }
-          } else {
-            Notification.error('firstTimeWizard.uploadCsvBadFormat');
-            vm.resetFile();
-          }
+        if (!vm.model.file) {
+          return;
         }
+
+        csvUsersArray = $.csv.toArrays(vm.model.file);
+        if (!_.isArray(csvUsersArray) || _.isEmpty(csvUsersArray) || !_.isArray(csvUsersArray[0])) {
+          Notification.error('firstTimeWizard.uploadCsvBadFormat');
+          vm.resetFile();
+          return;
+        }
+
+        if (_.indexOf(csvUsersArray[0], USER_ID_EMAIL_HEADER) === -1) {
+          Notification.error('firstTimeWizard.uploadCsvBadHeaders');
+          vm.resetFile();
+          return;
+        }
+
+        csvHeaders = csvUsersArray.shift();
+        if (_.isEmpty(csvUsersArray) || _.size(csvUsersArray) > maxUsers) {
+          warnCsvUserCount();
+          vm.resetFile();
+          return;
+        }
+
+        var mismatchHeaderName = findMismatchHeader(orgHeaders, csvHeaders);
+        if (mismatchHeaderName) {
+          Notification.error('firstTimeWizard.csvHeaderNameMismatch', {
+            name: mismatchHeaderName,
+          });
+          vm.resetFile();
+          return;
+        }
+
+        vm.isCsvValid = true;
       } catch (e) {
         Notification.error('firstTimeWizard.uploadCsvBadFormat');
         vm.resetFile();
@@ -417,6 +437,19 @@ require('./_user-csv.scss');
       } else {
         return -1;
       }
+    }
+
+    function findMismatchHeader(serverHeaders, userHeaders) {
+      if (!isAtlasUserCsvSubscriptionEnabled || !serverHeaders || !userHeaders) {
+        return undefined;
+      }
+
+      // Find if there's any mis-matched header names
+      return _.find(userHeaders, function (uHeader) {
+        return !_.some(serverHeaders, function (sHeader) {
+          return sHeader.name === uHeader || sHeader.name === renamedHeaders[uHeader];
+        });
+      });
     }
 
     function generateHeaders(serverHeaders, userHeaders) {
