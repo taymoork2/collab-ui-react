@@ -11,7 +11,6 @@ describe('SipCallSettingsController', () => {
   beforeEach(angular.mock.module(moduleName));
 
   beforeEach(inject(dependencies));
-  //beforeEach(initSpies);
   afterEach(cleanup);
 
   function dependencies(_$componentController_, _$q_, $rootScope) {
@@ -23,12 +22,6 @@ describe('SipCallSettingsController', () => {
   function cleanup() {
     $componentController = $q = $scope = undefined;
   }
-
-  /*function initSpies() {
-    spyOn(HybridServicesClusterService, 'getProperties');
-    spyOn(HybridServicesClusterService, 'setProperties').and.returnValue($q.resolve({}));
-    spyOn(ClusterCascadeBandwidthService, 'saveCascadeConfig').and.returnValue($q.resolve({}));
-  }*/
 
   function initController(cluster?: ICluster) {
     const ctrl = $componentController('sipCallSettings', {}, {});

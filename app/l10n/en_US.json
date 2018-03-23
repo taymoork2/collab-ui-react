@@ -6450,7 +6450,7 @@
       "nodedetails": "Node IP Address/FQDN:",
       "cluster": "Cluster:",
       "sipcalls": "SIP Calls",
-      "sipconfigure": "Configure your optional SIP Calls settings. You'll be able to test the configuration after you completed the registration.",
+      "sipconfigure": "Configure your optional SIP Calls settings.",
       "sipcheck": "I want to use SIP Calls on this cluster",
       "upgradeschedule": "Upgrade Schedule",
       "completeregister": "1. Complete registration",
