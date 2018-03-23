@@ -18,30 +18,16 @@
     on-cluster-name-update= "clusterCreationWizard.clusterNameUpdated(response)"
     ng-show="clusterCreationWizard.currentStep === 2">
   </add-resource-section>
-  <div ng-if="clusterCreationWizard.hasMfFeatureToggle">
-    <sip-registration-section 
-      cluster="clusterCreationWizard.clusterDetail"
-      is-wizard="true"
-      on-sip-config-url-update=  "clusterCreationWizard.sipConfigUrlUpdated(response)"
-      ng-show="clusterCreationWizard.currentStep === 3">
-    </sip-registration-section>
-  </div>
-  <div ng-if="clusterCreationWizard.hasMfSIPFeatureToggle">
-    <trusted-sip-section 
-      is-wizard="true"
-      cluster="clusterCreationWizard.clusterDetail"
-      on-trusted-sip-configuration-update = "clusterCreationWizard.trustedSipConfigUpdated(response)"
-      ng-show="clusterCreationWizard.currentStep === 3">
-  </trusted-sip-section>
-  </div>
-  <div ng-if="clusterCreationWizard.hasMfCascadeBwConfigToggle">
-    <cluster-cascade-bandwidth 
-      on-cascade-bandwidth-update="clusterCreationWizard.cascadeBandwidthUpdated(response)"
-      cluster="clusterCreationWizard.clusterDetail"
-      is-wizard="true"
-      ng-show="clusterCreationWizard.currentStep === 3">
-    </cluster-cascade-bandwidth>
-  </div>
+  <sip-call-settings
+    cluster="clusterCreationWizard.clusterDetail"
+    is-wizard="true"
+    mf-toggle="clusterCreationWizard.hasMfFeatureToggle"
+    mf-trusted-toggle="clusterCreationWizard.hasMfSIPFeatureToggle"
+    mf-cascade-toggle="clusterCreationWizard.hasMfCascadeBwConfigToggle"
+    on-sip-settings-update="clusterCreationWizard.sipSettingsUpdated(response)"
+    on-sip-settings-enabled-check="clusterCreationWizard.sipSettingsEnabledCheck(response)"
+    ng-show="clusterCreationWizard.currentStep === 3">
+  </sip-call-settings>
   <hybrid-media-upgrade-schedule
     on-upgrade-schedule-update="clusterCreationWizard.upgradeScheduleUpdated(response)"
     ng-show="clusterCreationWizard.currentStep === 4">

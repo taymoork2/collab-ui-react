@@ -1,0 +1,35 @@
+<setting-section setting="$ctrl.title" setting="$ctrl.description" class="needs-border-top">
+	<h5 class="sub-section__label" translate="mediaFusion.easyConfig.sipcalls"></h5>
+	<div class="cs-input-group cs-input-checkbox">
+			<input type="checkbox" id="alertCheckbox" ng-model="$ctrl.isSipSettingsEnabled" ng-change= "$ctrl.sipSettingsEnabled()">
+			<label for="alertCheckbox">
+				<span translate="mediaFusion.easyConfig.sipcheck"></span>
+			</label>
+		</div>
+		<div ng-if="$ctrl.mfToggle">
+			<sip-registration-section
+				cluster="$ctrl.cluster"
+				is-wizard="$ctrl.isWizard"
+				sip-settings-enabled="$ctrl.isSipSettingsEnabled"
+				on-sip-config-url-update="$ctrl.sipConfigUrlUpdated(response)">
+			</sip-registration-section>
+		</div>
+		<br>
+		<div ng-if="$ctrl.mfTrustedToggle">
+			<trusted-sip-section
+				cluster="$ctrl.cluster"
+				is-wizard="$ctrl.isWizard"
+				sip-settings-enabled="$ctrl.isSipSettingsEnabled"
+				on-trusted-sip-configuration-update = "$ctrl.trustedSipConfigUpdated(response)">
+			</trusted-sip-section>
+		</div>
+		<div ng-if="$ctrl.mfCascadeToggle">
+			<cluster-cascade-bandwidth
+				cluster="$ctrl.cluster"
+				is-wizard="$ctrl.isWizard"
+				sip-settings-enabled="$ctrl.isSipSettingsEnabled"
+				on-cascade-bandwidth-update="$ctrl.cascadeBandwidthUpdated(response)">
+			</cluster-cascade-bandwidth>
+	</div>
+</setting-section>
+      

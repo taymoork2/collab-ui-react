@@ -238,6 +238,7 @@
     require('modules/mediafusion/media-service-v2/components/hybrid-media-release-channel').default,
     require('modules/mediafusion/media-service-v2/components/hybrid-media-upgrade-schedule').default,
     require('modules/mediafusion/media-service-v2/components/hybrid-media-entitlement-failure').default,
+    require('modules/mediafusion/media-service-v2/components/sip-call-settings').default,
     require('modules/mediafusion/media-service-v2/components/sip-registration-section').default,
     require('modules/mediafusion/media-service-v2/components/trusted-sip-section').default,
     require('modules/mediafusion/media-service-v2/components/video-quality-section').default,

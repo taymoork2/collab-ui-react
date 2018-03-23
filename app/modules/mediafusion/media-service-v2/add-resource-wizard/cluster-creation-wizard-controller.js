@@ -10,6 +10,7 @@
     var vm = this;
     vm.serviceId = 'squared-fusion-media';
     vm.loading = false;
+    vm.isSipSettingsEnabled = true;
     vm.closeSetupModal = closeSetupModal;
     vm.createCluster = createCluster;
     vm.clusterlist = [];
@@ -23,9 +24,6 @@
     vm.clusterListUpdated = clusterListUpdated;
     vm.hostNameUpdated = hostNameUpdated;
     vm.clusterNameUpdated = clusterNameUpdated;
-    vm.cascadeBandwidthUpdated = cascadeBandwidthUpdated;
-    vm.sipConfigUrlUpdated = sipConfigUrlUpdated;
-    vm.trustedSipConfigUpdated = trustedSipConfigUpdated;
     vm.upgradeScheduleUpdated = upgradeScheduleUpdated;
     vm.videoQualityUpdated = videoQualityUpdated;
     vm.releaseChannelUpdated = releaseChannelUpdated;
@@ -33,6 +31,8 @@
     vm.hasMfFeatureToggle = hasMfFeatureToggle;
     vm.hasMfSIPFeatureToggle = hasMfSIPFeatureToggle;
     vm.hasMfCascadeBwConfigToggle = hasMfCascadeBwConfigToggle;
+    vm.sipSettingsUpdated = sipSettingsUpdated;
+    vm.sipSettingsEnabledCheck = sipSettingsEnabledCheck;
     vm.totalSteps = 7;
     vm.currentStep = 0;
     vm.next = next;
@@ -115,9 +115,9 @@
           vm.clusterId = AddResourceSectionService.selectClusterId();
           vm.clusterDetail = AddResourceSectionService.selectedClusterDetails();
           if (!_.isUndefined(vm.videoQuality)) VideoQualitySectionService.setVideoQuality(vm.videoQuality, vm.videoPropertySetId);
-          if (vm.hasMfFeatureToggle) SipRegistrationSectionService.saveSipTrunkUrl(vm.sipConfigUrl, vm.clusterId);
-          if (vm.hasMfSIPFeatureToggle) TrustedSipSectionService.saveSipConfigurations(vm.trustedsipconfiguration, vm.clusterId);
-          if (vm.hasMfCascadeBwConfigToggle && !_.isUndefined(vm.cascadeBandwidth)) ClusterCascadeBandwidthService.saveCascadeConfig(vm.clusterId, vm.cascadeBandwidth);
+          if (vm.hasMfFeatureToggle && vm.sipSettingEnabled) SipRegistrationSectionService.saveSipTrunkUrl(vm.sipConfigUrl, vm.clusterId);
+          if (vm.hasMfSIPFeatureToggle && vm.sipSettingEnabled) TrustedSipSectionService.saveSipConfigurations(vm.trustedsipconfiguration, vm.clusterId);
+          if (vm.hasMfCascadeBwConfigToggle && !_.isUndefined(vm.cascadeBandwidth) && vm.sipSettingEnabled) ClusterCascadeBandwidthService.saveCascadeConfig(vm.clusterId, vm.cascadeBandwidth);
           if (!_.isUndefined(vm.releaseChannel)) HybridMediaReleaseChannelService.saveReleaseChannel(vm.clusterId, vm.releaseChannel);
           if (!_.isUndefined(vm.formDataForUpgradeSchedule)) HybridMediaUpgradeScheduleService.updateUpgradeScheduleAndUI(vm.formDataForUpgradeSchedule, vm.clusterId);
           if (!_.isUndefined(vm.emailSubscribers)) HybridMediaEmailNotificationService.saveEmailSubscribers(vm.emailSubscribers);
@@ -166,24 +166,22 @@
       if (!_.isUndefined(response.releaseChannel)) vm.releaseChannel = response.releaseChannel;
     }
 
-    function sipConfigUrlUpdated(response) {
-      if (!_.isUndefined(response.sipConfigUrl)) vm.sipConfigUrl = response.sipConfigUrl;
-    }
-
-    function trustedSipConfigUpdated(response) {
-      if (!_.isUndefined(response.trustedsipconfiguration)) vm.trustedsipconfiguration = response.trustedsipconfiguration;
-    }
-
     function emailUpdated(response) {
       if (!_.isUndefined(response.emailSubscribers)) vm.emailSubscribers = response.emailSubscribers;
     }
-    function cascadeBandwidthUpdated(response) {
-      if (!_.isUndefined(response.cascadeBandwidth)) {
+
+    function sipSettingsUpdated(response) {
+      if (!_.isUndefined(response)) {
+        vm.sipConfigUrl = response.sipConfigUrl;
+        vm.trustedsipconfiguration = response.trustedsipconfiguration;
         vm.cascadeBandwidth = response.cascadeBandwidth;
         vm.validCascadeBandwidth = response.inValidBandwidth;
       }
     }
 
+    function sipSettingsEnabledCheck(response) {
+      if (!_.isUndefined(response.sipSettingEnabled)) vm.sipSettingEnabled = response.sipSettingEnabled;
+    }
     function newClusterCheck() {
       return (_.includes(vm.clusterlist, vm.clusterName));
     }
@@ -271,20 +269,24 @@
           return false;
         }
       } else if (vm.currentStep === 3) {
-        var sip = true;
-        var trust = true;
-        var cascasde = true;
-        if (vm.hasMfFeatureToggle) {
-          sip = ((!_.isUndefined(vm.sipConfigUrl) && vm.sipConfigUrl != ''));
-        }
-        if (vm.hasMfSIPFeatureToggle) {
-          trust = ((!_.isUndefined(vm.trustedsipconfiguration) && vm.trustedsipconfiguration != ''));
-        }
-        if (vm.hasMfCascadeBwConfigToggle) {
-          cascasde = !vm.validCascadeBandwidth;
-        }
+        if (!vm.sipSettingEnabled) {
+          return true;
+        } else {
+          var sip = true;
+          var trust = true;
+          var cascasde = true;
+          if (vm.hasMfFeatureToggle) {
+            sip = ((!_.isUndefined(vm.sipConfigUrl) && vm.sipConfigUrl != ''));
+          }
+          if (vm.hasMfSIPFeatureToggle) {
+            trust = ((!_.isUndefined(vm.trustedsipconfiguration) && vm.trustedsipconfiguration != ''));
+          }
+          if (vm.hasMfCascadeBwConfigToggle) {
+            cascasde = !vm.validCascadeBandwidth;
+          }
 
-        return sip && trust && cascasde;
+          return sip && trust && cascasde;
+        }
       } else {
         return true;
       }

@@ -1,11 +1,14 @@
-<setting-section setting="$ctrl.sipRegistration" class="needs-border-top">
-    <div class="sub-section">
-        <h5 class="sub-section__label" translate="mediaFusion.sipconfiguration.title"></h5>
-        <p class="sub-section__description" translate="mediaFusion.sipconfiguration.description"></p>
-        <div style="display:flex">
-            <input cs-input type="text" id="sipurlconfiguration" placeholder="{{:: 'mediaFusion.sipconfiguration.placeholder' | translate}}"
-                ng-model="$ctrl.sipConfigUrl" ng-change= "$ctrl.sipUpdate()" cs-input-group-size="medium-6" cs-input-help-text="{{:: 'mediaFusion.sipconfiguration.example' | translate}}">
-        </div>
-        <button type="button" class="btn btn-primary" ng-if="!$ctrl.isWizard" ng-click="$ctrl.saveSipTrunk()" translate="common.save"></button>
-    </div>
-</setting-section>
+<h5 class="sub-section__label" translate="mediaFusion.sipconfiguration.title"></h5>
+<p class="sub-section__description" translate="mediaFusion.sipconfiguration.description"></p>
+<div style="display:flex">
+	<input 
+		cs-input type="text"
+		id="sipurlconfiguration"
+		placeholder="{{:: 'mediaFusion.sipconfiguration.placeholder' | translate}}"
+		ng-model="$ctrl.sipConfigUrl"
+		ng-change= "$ctrl.sipUpdate()"
+		ng-disabled="!$ctrl.sipSettingsEnabled"
+		cs-input-group-size="medium-6"
+		cs-input-help-text="{{:: 'mediaFusion.sipconfiguration.example' | translate}}">
+</div>
+<button type="button" class="btn btn-primary" ng-if="!$ctrl.isWizard" ng-hide="!$ctrl.sipSettingsEnabled" ng-click="$ctrl.saveSipTrunk()" translate="common.save"></button>

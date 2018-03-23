@@ -13,17 +13,13 @@
       </div>
     </setting-section>
 
-    <div ng-if="$ctrl.hasMfPhaseTwoToggle">
-      <sip-registration-section cluster="$ctrl.cluster" is-wizard="false"></sip-registration-section>
-    </div>
-
-    <div ng-if="$ctrl.hasMfTrustedSipToggle">
-      <trusted-sip-section cluster="$ctrl.cluster"></trusted-sip-section>
-    </div>
-
-    <div ng-if="$ctrl.hasMfCascadeBwConfigToggle">
-      <cluster-cascade-bandwidth cluster="$ctrl.cluster" class="needs-border-top"></cluster-cascade-bandwidth>
-    </div>
+    <sip-call-settings
+      cluster="$ctrl.cluster"
+      is-wizard="false"
+      mf-toggle="$ctrl.hasMfFeatureToggle"
+      mf-trusted-toggle="$ctrl.hasMfSIPFeatureToggle"
+      mf-cascade-toggle="$ctrl.hasMfCascadeBwConfigToggle">
+    </sip-call-settings>
 
     <release-channel-section cluster="$ctrl.cluster"></release-channel-section>
 
