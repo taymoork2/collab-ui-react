@@ -13,6 +13,8 @@ export interface ILicenseUsage {
   offerName: OfferName;
   siteUrl: string;
   status: LicenseStatus;
+  usage: number;
+  volume: number;
 }
 
 export interface ILicenseUsageMap {
