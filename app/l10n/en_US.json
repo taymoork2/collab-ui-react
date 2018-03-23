@@ -10924,7 +10924,12 @@
       "finish": "Finish",
       "nextSteps": "Next Steps:",
       "selectDescription": "Choose the HCS Service for Setup",
-      "titleServices": "Choose Services"
+      "titleServices": "Choose Services",
+      "finishMsg": "Congratulations! You have set up HCS Services.",
+      "next1": "Once the Agent Install File completes it will show on the Agent Install File page to download it.",
+      "next2": "Install the Agent File on all Unified Communications instances you wish to manage.",
+      "next3": "The agent will register with the cloud service and the corresponding node will appear in the Inventory Page.",
+      "next4": "Once the nodes appear in the list, you can accept them and assign them to a customer or a group."
     },
     "sftp":  {
       "confirmPassword": "Confirm Password",
@@ -10940,6 +10945,7 @@
       "passwordPlace": "Enter password",
       "passwordConfirmPlace": "Enter password",
       "passwordMismatch": "The password entered does not match",
+      "setupTitle": "Create SFTP Server",
       "success": "SFTP server has been successfully created",
       "title": "SFTP Servers",
       "userName": "User Name",
@@ -10960,22 +10966,6 @@
       "title": "Create a Software Profile",
       "ucxn": "Cisco Unity Connection Version",
       "ucxnPlace": "Choose UCXN Version"
-    },
-    "suiteView": {
-      "title": "Suites",
-      "createSuite": "Create Suite",
-      "runSuite": "Run Suite",
-      "editSuite": "Edit",
-      "copySuite": "Copy",
-      "scheduleSuite": "Schedule",
-      "deleteSuite": "Delete",
-      "resources": "Resources",
-      "results": "Get last test run results",
-      "schedule": "Scheduling",
-      "successTitle": "Your test is running!",
-      "successRun": "To see results, click the link in the card",
-      "errorRun": "Something went wrong with scheduling",
-      "goToResults": "View Results"
     },
     "upgrade": {
       "title": "HCS Upgrade Settings",
@@ -11017,6 +11007,22 @@
         "editSchedule": "Edit Schedule",
         "deleteSchedule": "Delete this schedule",
         "scheduleCreate": "Create Schedule"
+      },
+      "suiteView": {
+        "title": "Suites",
+        "createSuite": "Create Suite",
+        "runSuite": "Run Suite",
+        "editSuite": "Edit",
+        "copySuite": "Copy",
+        "scheduleSuite": "Schedule",
+        "deleteSuite": "Delete",
+        "resources": "Resources",
+        "results": "Get last test run results",
+        "schedule": "Scheduling",
+        "successTitle": "Your test is running!",
+        "successRun": "To see results, click the link in the card",
+        "errorRun": "Something went wrong with scheduling",
+        "goToResults": "View Results"
       },
       "resourcesView": {
         "createResource": "Create Resource"
