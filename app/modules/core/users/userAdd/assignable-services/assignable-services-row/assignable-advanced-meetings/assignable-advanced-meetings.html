@@ -3,6 +3,7 @@
   <div ng-repeat="license in $ctrl.licenses track by license.licenseId">
     <assignable-license-checkbox
       license="license"
+      is-disabled="$ctrl.isLicenseDisabledByDefault(license)"
       l10n-label="{{:: 'subscriptions.licenseTypes.' + license.offerName }}"
       on-update="$ctrl.recvUpdate($event)"
       auto-assign-template-data="$ctrl.autoAssignTemplateData"

@@ -9,6 +9,7 @@ export enum LicenseStatus {
 
 export interface ILicenseUsage {
   billingServiceId: string;
+  isCIUnifiedSite: boolean;
   licenseId: string;
   offerName: OfferName;
   siteUrl: string;

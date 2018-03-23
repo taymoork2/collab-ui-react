@@ -68,4 +68,8 @@ export class LicenseUsageUtilService {
   public isSharedMeetingsLicense(license: ILicenseUsage): boolean {
     return _.get(license, 'licenseModel') === this.Config.licenseModel.cloudSharedMeeting;
   }
+
+  public isLegacyWebExLicense(license: ILicenseUsage): boolean {
+    return !_.get(license, 'isCIUnifiedSite', false);
+  }
 }

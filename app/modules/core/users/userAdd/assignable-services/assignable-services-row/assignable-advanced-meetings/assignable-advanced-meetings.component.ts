@@ -88,6 +88,10 @@ class AssignableAdvancedMeetingsController implements ng.IComponentController {
     return this.LicenseUsageUtilService.isSharedMeetingsLicense(license);
   }
 
+  public isLicenseDisabledByDefault(license: ILicenseUsage): boolean {
+    return this.LicenseUsageUtilService.isLegacyWebExLicense(license);
+  }
+
   // notes:
   // - a "buddy" license in this sense is the corresponding advanced meeting license with a
   //   matching 'siteUrl' property
