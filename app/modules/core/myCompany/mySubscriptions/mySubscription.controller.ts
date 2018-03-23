@@ -1,7 +1,7 @@
 import { Config } from 'modules/core/config/config';
 import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
 import { Notification } from 'modules/core/notifications';
-import { OnlineUpgradeService, IBmmpAttr, IProdInst } from 'modules/online/upgrade/upgrade.service';
+import { OnlineUpgradeService, IBmmpAttr, IProdInst } from 'modules/online/upgrade/shared/upgrade.service';
 import { IOfferData, IOfferWrapper, ISubscription, ISubscriptionCategory } from './subscriptionsInterfaces';
 import * as moment from 'moment';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';

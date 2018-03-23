@@ -1,5 +1,5 @@
 import subscriptionModule from './index';
-import { IProdInst } from 'modules/online/upgrade/upgrade.service';
+import { IProdInst } from 'modules/online/upgrade/shared/upgrade.service';
 
 describe('Controller: MySubscriptionCtrl', function () {
   const onlineIntSubId: string = 'intSubId';

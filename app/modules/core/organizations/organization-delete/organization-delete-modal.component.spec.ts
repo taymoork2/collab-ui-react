@@ -49,6 +49,7 @@ describe('Component: organizationDeleteModal', () => {
       this.$httpBackend.expectGET(this.userCountUrl).respond(200, {
         totalResults: 1,
       });
+      initComponent.call(this);
       this.controller.action = this.controller.actions.MOVE;
       this.view.find(CONTINUE_BUTTON).click();
       this.$scope.$apply();
@@ -62,6 +63,7 @@ describe('Component: organizationDeleteModal', () => {
       this.$httpBackend.expectGET(this.userCountUrl).respond(200, {
         totalResults: 2,
       });
+      initComponent.call(this);
       this.controller.action = this.controller.actions.DELETE;
       this.view.find(CONTINUE_BUTTON).click();
       this.$scope.$apply();
