@@ -573,6 +573,16 @@ exports.expectInputCheckbox = function (elem, value) {
   });
 };
 
+// notes:
+// - this is a more primitive implementation than the above methods
+// - a single 'input[type="checkbox"]' element is expected as the first arg
+// - TODO: investigate whether the above methods can be removed and if this method can replace them
+exports.expectCheckboxIsChecked = function (inputElem, isChecked) {
+  return this.wait(inputElem).then(function () {
+    return expect(inputElem.isSelected()).toBe(isChecked);
+  });
+};
+
 exports.expectRadioSelected = function (elem) {
   return this.wait(elem).then(function () {
     return browser.wait(function () {

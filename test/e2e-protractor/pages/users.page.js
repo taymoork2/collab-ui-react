@@ -280,6 +280,18 @@ var UsersPage = function () {
     utils.search(alias);
   };
 
+  this.createUserWithAutoAssignTemplate = function (testUserEmail) {
+    utils.click(navigation.usersTab);
+    utils.click(manageUsersPage.buttons.manageUsers);
+    utils.click(manageUsersPage.actionCards.manualAddUsers);
+    utils.click(manageUsersPage.buttons.next);
+    utils.click(this.addUsersField);
+    utils.sendKeys(this.addUsersField, testUserEmail + protractor.Key.ENTER);
+    utils.click(manageUsersPage.buttons.next);
+    utils.click(manageUsersPage.buttons.save);
+    utils.click(manageUsersPage.buttons.finish);
+  };
+
   this.clickServiceCheckbox = function (alias, expectedMsgState, expectedMtgState, clickService) {
     utils.clickUser(alias);
     utils.expectIsDisplayed(users.servicesPanel);
