@@ -84,11 +84,11 @@ class DgcTab implements ng.IComponentController {
         .then( res => {
           mbi.endTime = _.get(res, 'dateLong');
           this.SearchService.setStorage('webexOneMeeting.endTime', mbi.endTime);
-          details.duration_ = _.round((mbi.endTime - mbi.startTime) / 1000 / 60) + ` Min`;
+          details.duration_ = this.SearchService.toMinOrSec(mbi.endTime - mbi.startTime);
           this.loading = false;
         });
       } else {
-        details.duration_ = _.round(mbi.duration / 60) + ` Min`;
+        details.duration_ = this.SearchService.toMinOrSec(mbi.duration * 1000);
         this.loading = false;
       }
     });

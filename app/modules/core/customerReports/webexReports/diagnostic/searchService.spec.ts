@@ -10,6 +10,7 @@ describe('Service: searchService', () => {
   beforeEach(function () {
     this.initModules(testModule);
     this.injectDependencies('$q', 'SearchService', 'UrlConfig', '$httpBackend', '$translate');
+    spyOn(this.UrlConfig, 'getGeminiUrl').and.returnValue(this.UrlConfig.getDiagnosticUrl());
   });
 
   afterEach(function () {

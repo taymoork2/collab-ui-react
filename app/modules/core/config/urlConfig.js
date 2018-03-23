@@ -176,6 +176,12 @@
       integration: 'https://ccaportalbts.webex.com/pcs/api/v2/',
       prod: 'https://ccaportal.webex.com/pcs/api/v2/',
     },
+    DiagnosticUrl: {
+      dev: 'https://maestroqa.qa.webex.com/pcsdemo/pcs/api/v2/',
+      cfe: 'https://maestroqa.qa.webex.com/pcsdemo/pcs/api/v2/',
+      integration: 'https://sapmatsbts.webex.com/pcs/api/v2/',
+      prod: 'https://sapmats.webex.com/pcs/api/v2/',
+    },
     GssUrlWebexCHP: {
       dev: 'https://statusbts.webex.com/status',
       cfe: 'https://statusbts.webex.com/status',

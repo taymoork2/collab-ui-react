@@ -867,7 +867,12 @@
       "sparkReportInMashup": "Cisco Spark Reports",
       "webexReportWithTicket": "CHP Reports Login",
       "sparkReportWithTicket": "Cisco Spark Reports Login",
-      "errorRequest": "Authorization has been denied for this request"
+      "errorRequest": "Authorization has been denied for this request",
+      "CMR3DefaultDevice": "SIP Video Device",
+      "duration": "Duration",
+      "joinTime": "Join Time",
+      "notAvailable": "Not Available",
+      "callIn": "Call in"
     }
   },
   "webexReports": {
@@ -879,6 +884,10 @@
     "details": "Details",
     "created": "Meeting Created",
     "duration": "Duration",
+    "minute": "Min",
+    "second": "Sec",
+    "minutes": "Mins",
+    "seconds": "Secs",
     "hostName": "Host Name",
     "site": "Site Name(ID)",
     "hostEmail": "Host Email",

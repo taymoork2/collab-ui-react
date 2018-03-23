@@ -1855,7 +1855,7 @@
     "setUpPMRUrl": "立即設定 PMR",
     "setupPMRsiteNameModalTitle": "個人會議室設定",
     "setUpHybridMediaService": "可以使用「混合媒體服務」。延伸雲端媒體，以將內部部署資源用於通話和會議。",
-    "getStarted": "開始",
+    "getStarted": "入門",
     "urgentUpgrade": "<a ui-sref='{{link}}'>{{connector}}</a> 有緊急升級可用，將在下一次排定的升級期間升級。",
     "setUpHybridDataSecurity": "使用「混合資料安全」來建立內部部署安全領域。",
     "careLicenseMsgMissingText": "「訊息」對於 Care 服務而言是必要的。若要啟用「訊息」，請執行下列動作：",
