@@ -14,6 +14,7 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
   public nextEnabled: boolean = false;
   public title: string;
   public hcsSetupModalForm: ng.IFormController;
+  public cancelRemoved: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -42,17 +43,31 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
         this.nextEnabled = false;
         break;
       case 3:
-        this.nextEnabled = false;
+        if (!this.hcsServices.upgrade) {
+          this.title = 'hcs.setup.finish';
+          this.cancelRemoved = true;
+          this.nextEnabled = true;
+        } else {
+          this.title = 'hcs.sftp.setupTitle';
+          this.nextEnabled = false;
+        }
         break;
       case 4:
-        this.createSftp();
-        this.title = 'hcs.softwareProfiles.title';
-        this.nextEnabled = false;
+        if (!this.hcsServices.upgrade) {
+          this.dismissModal();
+        } else {
+          this.createSftp();
+          this.title = 'hcs.softwareProfiles.title';
+          this.nextEnabled = false;
+        }
         break;
       case HcsSetupModalCtrl.MAX_INDEX:
+        this.cancelRemoved = true;
+        this.nextEnabled = true;
+        this.title = 'hcs.setup.finish';
         break;
       default:
-        this.nextEnabled = false;
+        this.dismissModal();
     }
   }
 
