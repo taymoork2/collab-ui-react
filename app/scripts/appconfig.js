@@ -3127,17 +3127,13 @@
           .state('hcs.clusterList', {
             url: '/hcs/inventory/:customerId/clusters',
             parent: 'partner',
-            template: '<hcs-cluster-list customer-id="$resolve.customerId" customer-name="$resolve.customerName"></hcs-cluster-list>',
+            template: '<hcs-cluster-list customer-id="$resolve.customerId"></hcs-cluster-list>',
             params: {
               customerId: '',
-              customerName: '',
             },
             resolve: {
               customerId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.customerId;
-              },
-              customerName: /* @ngInject */ function ($stateParams) {
-                return $stateParams.customerName;
               },
             },
           })
@@ -3159,6 +3155,19 @@
               },
               clusterName: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterName;
+              },
+            },
+          })
+          .state('hcs.upgradeGroup', {
+            url: '/hcs/inventory/:customerId/upgrades',
+            parent: 'partner',
+            template: '<hcs-upgrade-group customer-id="$resolve.customerId"></hcs-upgrade-group>',
+            params: {
+              customerId: '',
+            },
+            resolve: {
+              customerId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerId;
               },
             },
           })

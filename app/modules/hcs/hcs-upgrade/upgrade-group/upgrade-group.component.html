@@ -1,0 +1,55 @@
+<cs-page-header
+  class="huron-tabs"
+  title-name="{{$ctrl.customerName && $ctrl.customerName || ('common.unassigned' | translate)}}"
+  back="$ctrl.back"
+  back-url="$ctrl.backState"
+  back-aria-label="{{::'common.back' | translate}}"
+  tabs="$ctrl.tabs">
+</cs-page-header>
+<div class="hcs-upgrade-group">
+  <div class="loading-container" ng-if="$ctrl.loading">
+    <i class="icon icon-spinner"></i>
+  </div>
+  <form novalidate name="$ctrl.form" ng-if="!$ctrl.loading" class="hcs-upgrade-group-main-container">
+    <!-- Software Version Profile -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="hcs.upgrade.upgradeGroup.softwareVersionProfile.sectionHeader"></h4>
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <label class="sub-section__label" translate="hcs.upgrade.upgradeGroup.softwareVersionProfile.selectLabel"></label>
+          <div class="display-flex">
+            <div class="medium-6">
+              <cs-select
+                name="softwareVersionSelect"
+                ng-model="$ctrl.softwareVersionSelected"
+                options="$ctrl.softwareVersionProfiles"
+                on-change-fn="$ctrl.onSoftwareVersionChanged()"
+                filter="false">
+              </cs-select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Upgrade Clusters -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="hcs.upgrade.upgradeGroup.upgrade.sectionHeader"></h4>
+      </div>
+      <div class="section__content cluster-grid">
+        <div class="sub-section">
+          <label class="sub-section__label" translate="hcs.upgrade.upgradeGroup.upgrade.gridLabel"></label>
+          <div class="row">
+            <hcs-upgrade-cluster-grid customer-id="$ctrl.customerId"></hcs-upgrade-cluster-grid>
+          </div>
+          <button class="btn btn--primary" ng-click="$ctrl.upgradeClusters()">
+            <span translate="hcs.upgrade.upgradeGroup.upgrade.upgradeButton"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <br />
+  </form>
+</div>

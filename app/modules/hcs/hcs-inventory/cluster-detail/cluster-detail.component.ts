@@ -29,18 +29,11 @@ export class ClusterDetailCtrl implements ng.IComponentController {
   public sftpLocationOptions: ISftpLocationOption[];
   public clusterNameInputMessages: ICsInputMessage;
   public clusterDetail: any;
-    /* @ngInject */
+
+  /* @ngInject */
   constructor() {}
 
   public $onInit(): void {
-    this.sftpLocationOptions = [{
-      label: 'sftpserver1',
-      value: 'sftpserver1',
-    }, {
-      label: 'sftpserver2',
-      value: 'sftpserver2',
-    }];
-
     this.sftpLocationSelected = { label: 'sftpserver1', value: 'sftpserver1' };
     this.clusterNameInputMessages = {
       required: 'This field is required',

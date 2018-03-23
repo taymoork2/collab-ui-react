@@ -10980,7 +10980,24 @@
       "title": "HCS Upgrade Settings",
       "description": "Extend Upgrade services to Hosted Cloud Solution.",
       "softwareProfiles": "Software Profiles",
-      "uaas": "Upgrade as a Service"
+      "uaas": "Upgrade as a Service",
+      "upgradeGroup": {
+        "softwareVersionProfile": {
+          "sectionHeader": "Software Version Profile",
+          "selectLabel": "Choose the software version profile for this cluster"
+        },
+        "upgrade": {
+          "gridColumn": {
+            "clusters": "Clusters",
+            "currentVersion": "Current Version",
+            "upgradeTo": "Upgrade to",
+            "status": "Status"
+          },
+          "gridLabel": "Choose the Clusters to Upgrade",
+          "sectionHeader": "Upgrade",
+          "upgradeButton": "Upgrade Selected"
+        }
+      }
     },
     "upgradePage": {
       "title": "Upgrades"
