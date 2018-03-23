@@ -8,7 +8,6 @@ export class ClusterListComponent implements ng.IComponentOptions {
   public template = require('./cluster-list.component.html');
   public bindings = {
     customerId: '<',
-    customerName: '<',
   };
 }
 
@@ -26,14 +25,17 @@ export class ClusterListCtrl implements ng.IComponentController {
   ) {}
 
   public $onInit() {
+    //get customer name from api
+    this.customerName = 'Betty\'s Flower Shop';
     this.tabs.push({
       title: this.$translate.instant('hcs.clustersList.title'),
-      state: 'hcs.clusterList',
+      state: `hcs.clusterList({customerId: '${this.customerId}'})`,
     }, {
       title: this.$translate.instant('hcs.upgradePage.title'),
-      state: 'hcs.upgradePage',
+      state: `hcs.upgradeGroup({customerId: '${this.customerId}'})`,
     });
 
+    //get cluster list from api
     this.clusterList = [{
       id: 'a1234',
       name: 'sm-cucm-c1',

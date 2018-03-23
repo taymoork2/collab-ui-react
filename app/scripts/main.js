@@ -288,6 +288,8 @@
     require('modules/hcs/hcs-inventory/cluster-list').default,
     require('modules/hcs/hcs-inventory/cluster-detail').default,
     require('modules/hcs/hcs-inventory/inventory-list').default,
+    require('modules/hcs/hcs-upgrade').default,
+    require('modules/hcs/hcs-upgrade/upgrade-group').default,
     require('modules/hcs/install-files').default,
     require('modules/hcs/setup').default,
   ]);
