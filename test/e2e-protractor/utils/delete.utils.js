@@ -1,10 +1,11 @@
 'use strict';
 
-/* global Promise */
+/* global exports, helper, Promise, protractor, require */
 
-var config = require('./test.config.js');
-var utils = require('./test.utils.js');
-var request = require('request');
+const config = require('./test.config.js');
+const utils = require('./test.utils.js');
+const request = require('request');
+const _ = require('lodash');
 
 exports.deleteUser = function (email, token) {
   return new Promise(function (resolve) {
@@ -120,7 +121,7 @@ exports.deleteTestAA = function (bearer, aaUrl) {
   aaDeleteTasks.push(exports.deleteNumberAssignments(aaUrl, bearer));
   aaDeleteTasks.push(exports.deleteTestSchedule(aaUrl, bearer));
   return Promise.all(aaDeleteTasks);
-}
+};
 
 // deleteTestAAs - Delete the Test AAs via the CES API
 //
@@ -244,4 +245,42 @@ exports.deleteTestSchedule = function (aaUrl, token) {
         }
       }
     });
+};
+
+function getAutoAssignTemplates(orgId, token) {
+  const options = {
+    method: 'get',
+    url: `${config.getAdminServiceUrl()}organizations/${orgId}/templates`,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token,
+    },
+  };
+  return utils.sendRequest(options).then(response => JSON.parse(response));
+}
+
+exports.deleteAllAutoAssignTemplates = function (orgId, token) {
+  return getAutoAssignTemplates(orgId, token)
+    .then(function (templates) {
+      function mkDeleteOptions(templateId) {
+        return {
+          method: 'delete',
+          url: `${config.getAdminServiceUrl()}organizations/${orgId}/templates/${templateId}`,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token,
+          },
+        };
+      }
+
+      const templateIds = _.map(templates, 'templateId');
+      const promises = _.map(templateIds, (templateId) => {
+        const deleteOptions = mkDeleteOptions(templateId);
+        return utils.sendRequest(deleteOptions);
+      });
+      return Promise.all(promises);
+    })
+    // This is primarily used for jasmine cleanup
+    // We don't want rejected promises to blowup the promise control flow
+    .catch(_.noop);
 };

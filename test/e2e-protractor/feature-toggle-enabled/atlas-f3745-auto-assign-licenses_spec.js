@@ -21,20 +21,22 @@ const users = new UsersPage();
 
 const utils = require('../utils/test.utils');
 const deleteUtils = require('../utils/delete.utils');
+const helper = require('../../api_sanity/test_helper.js');
 
 let bearerToken;
 const testUserEmail1 = utils.randomTestGmail();
 const testUserEmail2 = utils.randomTestGmail();
+const testAccountKey = 'ft--atlas-f3745-auto-assign-licenses';
 
 describe('Auto-Assign Licenses', function () {
   it('should login as a customer full admin', function () {
-    login.login('ft--atlas-f3745-auto-assign-licenses', '#/overview')
+    login.login(testAccountKey, '#/overview')
       .then(function (_bearerToken) {
         bearerToken = _bearerToken;
       });
   });
 
-  describe('overview page:', function () {
+  xdescribe('overview page:', function () {
     describe('overview card:', function () {
       it('should have a disabled entry "Auto-Assign Licenses" for the "Licenses" card', function () {
         utils.expectIsDisplayed(overview.cards.licenses.headerText);
@@ -97,7 +99,7 @@ describe('Auto-Assign Licenses', function () {
     });
   });
 
-  describe('manual onboard a user using auto-assign template:', function () {
+  xdescribe('manual onboard a user using auto-assign template:', function () {
     it('should add a new user', function () {
       users.createUserWithAutoAssignTemplate(testUserEmail1);
     });
@@ -122,7 +124,7 @@ describe('Auto-Assign Licenses', function () {
     });
   });
 
-  describe('modify template:', function () {
+  xdescribe('modify template:', function () {
     it('should enter the wizard to modify the default auto-assign template from the users tab', function () {
       utils.click(navigation.usersTab);
       utils.click(manageUsers.buttons.manageUsers);
@@ -160,7 +162,7 @@ describe('Auto-Assign Licenses', function () {
     });
   });
 
-  describe('manual onboard a second user after modifying the auto-assign template:', function () {
+  xdescribe('manual onboard a second user after modifying the auto-assign template:', function () {
     it('should add a second new user', function () {
       users.createUserWithAutoAssignTemplate(testUserEmail2);
     });
@@ -175,7 +177,7 @@ describe('Auto-Assign Licenses', function () {
     });
   });
 
-  describe('delete template:', function () {
+  xdescribe('delete template:', function () {
     it('should delete the default auto-assign template', function () {
       utils.click(navigation.usersTab);
       utils.click(manageUsers.buttons.manageUsers);
@@ -190,7 +192,11 @@ describe('Auto-Assign Licenses', function () {
   });
 
   afterAll(function () {
+    // delete all test users and auto-assign templates (as of 2018-03-23, there will only be one)
     deleteUtils.deleteUser(testUserEmail1, bearerToken);
     deleteUtils.deleteUser(testUserEmail2, bearerToken);
+
+    const testOrgId = helper.auth[testAccountKey].org;
+    deleteUtils.deleteAllAutoAssignTemplates(testOrgId, bearerToken);
   });
 });
