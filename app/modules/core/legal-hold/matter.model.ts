@@ -1,4 +1,3 @@
-
 import { MatterState } from './legal-hold.enums';
 import { IMatterJsonData } from './legal-hold.interfaces';
 

@@ -325,7 +325,9 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
             })
             .catch(function (response) {
               controller.handleFeatureError(response);
-              controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.updateConfigFailureText'));
+              controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.updateConfigFailureText'), {
+                featureName: controller.$translate.instant('careChatTpl.virtualAssistant.eva.featureText.name'),
+              });
             });
         } else {
           controller.handleFeatureUpdate();
@@ -334,7 +336,9 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
       })
       .catch(function (response) {
         controller.handleFeatureError(response);
-        controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.updateConfigFailureText'));
+        controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.updateConfigFailureText'), {
+          featureName: controller.$translate.instant('careChatTpl.virtualAssistant.eva.featureText.name'),
+        });
       });
   }
 }

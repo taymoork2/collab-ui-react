@@ -1,0 +1,104 @@
+<div ng-if="$ctrl.currentStep === $ctrl.ImportStepEnum.UPLOAD">
+  <div class="row">
+    <input id="custodianImportInput"
+      tabindex="-1"
+      name="custodianImportInput"
+      type="file"
+      cr-file-read
+      file="$ctrl.file"
+      file-name="$ctrl.fileName"
+      class="custodianImport__input--hidden"
+      file-max-size="10"
+      file-max-size-error="$ctrl.onFileSizeError()"
+      file-type="text/csv, application/csv, application/vnd.ms-excel"
+      file-suffix="csv"
+      file-type-error="$ctrl.onFileTypeError()" />
+    <label class="cs-input__label "
+      for="dcustodianCsv">
+      <span translate="{{::$ctrl.title}}"></span>
+    </label>
+    <div class="cs-input-group columns medium-12">
+      <input cs-input
+        type="text"
+        value="{{$ctrl.fileName}}"
+        name="custodianCsv"
+        cs-input-group-size="medium-{{::$ctrl.styleFileInputWidth}}"
+      />
+      <div class="cs-input-group columns medium-{{12 - $ctrl.styleFileInputWidth}}">
+        <label for="custodianImportInput"
+          tabindex="0"
+          translate="legalHold.custodianImport.fileBrowser"
+          class="btn custodianImport__input--label"> </label>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="columns medium-{{::$ctrl.styleFileInputWidth}}">
+      <p class="cs-input-group">
+        <span translate="legalHold.custodianImport.csvOnly"></span>&nbsp;
+        <span translate="{{::$ctrl.l10nDescription}}"></span>
+      </p>
+      <p>
+        <a href
+          ng-csv="$ctrl.getTemplate()"
+          aria-label="{{:: 'common.download' | translate}}"
+          filename="{{:: $ctrl.l10nFileName | translate}}">{{:: 'legalHold.custodianImport.downloadTemplate' | translate}}
+          </a>
+      </p>
+    </div>
+  </div>
+</div>
+<div ng-if="$ctrl.currentStep === $ctrl.ImportStepEnum.CONVERT">
+  <div class="row">
+    <h4 translate="{{:: $ctrl.l10nTitle}}"></h4>
+    <div class="columns medium-8 medium-offset-2">
+      <cr-progressbar ng-if="$ctrl.ImportStepEnum.CONVERT"
+        progressbar-label="$ctrl.progressLabel"
+        progressbar-filename="$ctrl.fileName"
+        progressbar-value="$ctrl.progress"
+        progressbar-is-processing="true"
+        progressbar-on-cancel="$ctrl.onCancelImport()"> </cr-progressbar>
+    </div>
+  </div>
+</div>
+<div class="custodianImport__results columns medium-{{$ctrl.styleResultsWidth}}"
+  ng-class="$ctrl.resultClass"
+  ng-if="$ctrl.currentStep === $ctrl.ImportStepEnum.RESULT">
+  <h4 translate="{{:: $ctrl.l10nStatusTitle}}"></h4>
+  <div class="cs-input-group">
+    <p translate="{{:: $ctrl.l10nResultString}}"
+      translate-values="{fileName: $ctrl.fileName}"></p>
+  </div>
+  <div ng-if="$ctrl.resultStatus!==$ctrl.ImportResultStatusEnum.CANCELED">
+    <div class="row">
+      <div class="columns cs-input-group"
+        ng-class="$ctrl.result.error.length > 0 ? 'medium-8' : 'medium-4'">
+        <cr-users-tile-totals new-total="'0'"
+          updated-total="$ctrl.result.success.length"
+          error-label="{{:: 'legalHold.custodianImport.invalidUsers' | translate}}"
+          updated-label="{{:: $ctrl.l10nActionPerformed | translate }}"
+          hide-new="true"
+          hide-errors-if-none="true"
+          error-total="$ctrl.result.error.length"> </cr-users-tile-totals>
+      </div>
+    </div>
+    <div class="row cs-input-group"
+      ng-if="$ctrl.result.error.length> 0">
+      <h5 class="pull-left"
+        translate="legalHold.custodianImport.invalidUsers"></h5>
+      <h6 class="pull-right">
+        <a href
+          class="custodianImport__results__export-csv"
+          ng-csv="$ctrl.getErrorsForCsv()"
+          filename="{{:: 'legalHold.custodianImport.errorsFileName' | translate}}"
+          quote-strings="true"
+          aria-label="{{::'common.download' | translate}}"> {{:: 'legalHold.custodianImport.exportErrors' | translate }}
+          </a>
+      </h6>
+    </div>
+    <cr-table class="custodianImport__results__table"
+      ng-if="$ctrl.result.error.length > 0"
+      table-records="$ctrl.errorData"
+      table-fields=":: $ctrl.errorTableMetadata"></cr-table>
+  </div>
+</div>

@@ -278,6 +278,24 @@
       integration: 'https://speech-services-manager.intb1.ciscospark.com/speech-services-manager/api/v1/',
       prod: 'https://speech-services-manager-a.wbx2.com/speech-services-manager/api/v1/',
     },
+    HcsLicenseServiceUrl: {
+      dev: 'https://licensing.scplatform.cloud/api/v1/',
+      cfe: 'https://licensing.scplatform.cloud/api/v1/',
+      integration: 'https://licensing.scplatform.cloud/api/v1/',
+      prod: 'https://licensing.scplatform.cloud/api/v1/', //TBD
+    },
+    HcsUpgradeServiceUrl: {
+      dev: 'https://upgrade.scplatform.cloud/api/v1/',
+      cfe: 'https://upgrade.scplatform.cloud/api/v1/',
+      integration: 'https://upgrade.scplatform.cloud/api/v1/',
+      prod: 'https://upgrade.scplatform.cloud/api/v1/', //TBD
+    },
+    HcsControllerServiceUrl: {
+      dev: 'https://controller.scplatform.cloud/api/v1/',
+      cfe: 'https://controller.scplatform.cloud/api/v1/',
+      integration: 'https://controller.scplatform.cloud/api/v1/',
+      prod: 'https://controller.scplatform.cloud/api/v1/', //TBD
+    },
     QlikReportAppUrl: 'https://%s/custportal/extensions/',
     ProdAdminServiceUrl: 'https://atlas-a.wbx2.com/admin/api/v1/',
     WebexAdvancedEditUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage',

@@ -12,7 +12,7 @@ export class TaskListItemController implements ng.IComponentController {
 
   public isTaskInProcess() {
     if (!_.isUndefined(this.task)) {
-      return this.UserTaskManagerService.isTaskInProcess(this.task.status);
+      return this.UserTaskManagerService.isTaskInProcess(this.task.latestExecutionStatus);
     } else {
       return false;
     }
@@ -20,7 +20,7 @@ export class TaskListItemController implements ng.IComponentController {
 
   public isTaskError() {
     if (!_.isUndefined(this.task)) {
-      return this.UserTaskManagerService.isTaskError(this.task.status);
+      return this.UserTaskManagerService.isTaskError(this.task.latestExecutionStatus);
     } else {
       return false;
     }
@@ -28,7 +28,7 @@ export class TaskListItemController implements ng.IComponentController {
 
   public isTaskCanceled() {
     if (!_.isUndefined(this.task)) {
-      return this.UserTaskManagerService.isTaskCanceled(this.task.status);
+      return this.UserTaskManagerService.isTaskCanceled(this.task.latestExecutionStatus);
     } else {
       return false;
     }

@@ -422,6 +422,15 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
           });
           return;
         }
+        if (feature.featureType === AbcService.abcServiceCard.id) {
+          AbcService.getAbcConfig(feature.templateId).then(function (template) {
+            AbcService.abcServiceCard.goToService($state, {
+              isEditFeature: true,
+              template: template,
+            });
+          });
+          return;
+        }
         CareFeatureList.getTemplate(feature.templateId).then(function (template) {
           $state.go('care.setupAssistant', {
             isEditFeature: true,
