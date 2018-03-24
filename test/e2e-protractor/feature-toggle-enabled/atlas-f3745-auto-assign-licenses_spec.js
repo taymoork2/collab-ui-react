@@ -36,7 +36,7 @@ describe('Auto-Assign Licenses', function () {
       });
   });
 
-  xdescribe('overview page:', function () {
+  describe('overview page:', function () {
     describe('overview card:', function () {
       it('should have a disabled entry "Auto-Assign Licenses" for the "Licenses" card', function () {
         utils.expectIsDisplayed(overview.cards.licenses.headerText);
@@ -99,7 +99,7 @@ describe('Auto-Assign Licenses', function () {
     });
   });
 
-  xdescribe('manual onboard a user using auto-assign template:', function () {
+  describe('manual onboard a user using auto-assign template:', function () {
     it('should add a new user', function () {
       users.createUserWithAutoAssignTemplate(testUserEmail1);
     });
@@ -124,7 +124,7 @@ describe('Auto-Assign Licenses', function () {
     });
   });
 
-  xdescribe('modify template:', function () {
+  describe('modify template:', function () {
     it('should enter the wizard to modify the default auto-assign template from the users tab', function () {
       utils.click(navigation.usersTab);
       utils.click(manageUsers.buttons.manageUsers);
@@ -162,7 +162,7 @@ describe('Auto-Assign Licenses', function () {
     });
   });
 
-  xdescribe('manual onboard a second user after modifying the auto-assign template:', function () {
+  describe('manual onboard a second user after modifying the auto-assign template:', function () {
     it('should add a second new user', function () {
       users.createUserWithAutoAssignTemplate(testUserEmail2);
     });
@@ -177,7 +177,7 @@ describe('Auto-Assign Licenses', function () {
     });
   });
 
-  xdescribe('delete template:', function () {
+  describe('delete template:', function () {
     it('should delete the default auto-assign template', function () {
       utils.click(navigation.usersTab);
       utils.click(manageUsers.buttons.manageUsers);
