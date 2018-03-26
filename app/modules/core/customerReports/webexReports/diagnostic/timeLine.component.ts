@@ -398,8 +398,8 @@ class TimeLine implements ng.IComponentController {
   private setLegend(): void {
     const g = d3.select('.timelineSvg').append('div').attr('class', 'legend').attr('style', `min-width: 1100px`);
     this.legendTitle(g);
-    g.append('div').attr('class', 'legendCircle').attr('style', 'padding: 0; width: 350px;');
-    g.append('div').attr('class', 'legendLine').attr('style', 'width: 520px; float: right;');
+    g.append('div').attr('class', 'legendCircle').attr('style', 'padding: 0; float: left;');
+    g.append('div').attr('class', 'legendLine').attr('style', 'float: right;');
     _.forEach(this.legendInfo.circle, val => {
       const colorZone = d3.select('.legendCircle').append('div');
       const svg = colorZone.append('svg:svg');
@@ -438,7 +438,7 @@ class TimeLine implements ng.IComponentController {
   }
 
   private legendTitle(g) {
-    g.append('p').text(this.$translate.instant('reportsPage.webexMetrics.joinMeetingTime')).attr('style', 'width: 350px;').append('i').attr('class', 'icon icon-info-outline')
+    g.append('p').text(this.$translate.instant('reportsPage.webexMetrics.joinMeetingTime')).attr('style', 'float: left;').append('i').attr('class', 'icon icon-info-outline')
     .on('mouseover', () => {
       const msgArr = [
         { key: `<p class="text-center">Join Meeting Time is<br>calculated in seconds.<br>Good: < 10 seconds<br>Fair: 10-20 seconds<br>Poor: > 20 seconds<br>Not Available: No information</p>` },
@@ -447,7 +447,7 @@ class TimeLine implements ng.IComponentController {
       this.makeTips({ arr: msgArr }, pos.top - 10, pos.left + 17);
     })
     .on('mouseout', () => this.hideTips());
-    g.append('p').text(`${this.tabType} Quality`).attr('style', 'width: 520px; float: right;').append('i').attr('class', 'icon icon-info-outline')
+    g.append('p').text(`${this.tabType} Quality`).attr('style', 'float: right;').append('i').attr('class', 'icon icon-info-outline')
     .on('mouseover', () => {
       let msg = '';
       if (this.tabType === 'Video') {

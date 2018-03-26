@@ -131,6 +131,7 @@ $tl-padding-right: 30px;
   }
 
   .legend {
+    overflow: hidden;
     padding-left: $tl-padding-left;
     padding-right:$tl-padding-right / 2;
     margin: 0;
@@ -156,7 +157,6 @@ $tl-padding-right: 30px;
       width: 50%;
       overflow: hidden;
       margin-top: 20px;
-      display: inline-block;
       box-sizing: border-box;
       text-align: center;
       padding: 0 3rem;
