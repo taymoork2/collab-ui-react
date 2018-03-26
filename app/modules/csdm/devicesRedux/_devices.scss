@@ -11,12 +11,35 @@
   .ui-grid-cell:first-child,
   .ui-grid-header-cell:first-child {
     border-right: 0;
-
+    .bulk-select {
+      margin-left: 12px;
+      box-shadow: unset;
+    }
+  }
+  .ui-grid {
+    .ui-grid-row > :first-child > :first-child {
+      .bulk-select {
+        margin-left: 12px;
+        box-shadow: unset;
+      }
+      .user-img,
+      .space_avatar {
+        margin-left: 30px;
+      }
+    }
+  }
+  .ui-grid-cell {
+    .user-img,
     .space_avatar {
-      margin: 4px 5px 4px 30px;
+      margin: 4px 5px 4px 4px;
       width: 35px;
     }
   }
+  .ui-grid-row.ui-grid-row-selected > [ui-grid-row] .ui-grid-cell {
+    background-color: #ECF9FC;
+    color: $gray-1;
+  }
+
   .clipboard-button {
     padding-left: 10px;
   }
@@ -352,6 +375,50 @@
         background: linear-gradient(rgba(255, 255, 255, 0), white, white);
         i {
           margin: 50px 0 5px;
+        }
+      }
+    }
+    .select-all-screen {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      background-color: transparentize($gray-lighter, 0.5);
+      z-index: 1;
+    }
+    .select-all-container {
+      position: relative;
+      width: inherit;
+      height: 0;
+      .select-all {
+        position: relative;
+        height: 100%;
+        top: 100px;
+        text-align: center;
+        z-index: 2;
+        i {
+          margin: 50px 0 5px;
+        }
+      }
+    }
+    .bulk-banner {
+      max-height: 0;
+      &.enable {
+        max-height: 50px;
+        transition: max-height .15s ease-in;
+        display: flex;
+        padding: 10px 2rem 10px 74px;
+        background-color: $blue;
+        width: 100%;
+        height: 2.8125rem;
+        color: $white;
+        .text, .spinner {
+          flex-grow: 2;
+        }
+        div {
+          height: 2rem;
+        }
+        i {
+          padding: 0.5rem;
         }
       }
     }

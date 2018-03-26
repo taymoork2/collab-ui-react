@@ -2834,6 +2834,56 @@
               deviceDeleted: null,
             },
           })
+          .state('bulk-overview', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<bulk></bulk>',
+              },
+            },
+            params: {
+              selectedDevices: [],
+              devicesDeleted: null,
+            },
+          })
+          .state('deviceBulkFlow', {
+            parent: 'modalSmall',
+            abstract: true,
+          })
+          .state('deviceBulkFlow.perform', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                template: '<bulk-modal ui-view dismiss="$dismiss()"></bulk-modal>',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'device-bulk-modal';
+                  },
+                },
+              },
+            },
+            params: {
+              bulkAction: null,
+              title: '',
+            },
+          })
+          .state('deviceBulkFlow.delete', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                template: '<bulk-delete ui-view dismiss="$dismiss()"></bulk-delete>',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'device-bulk-modal';
+                  },
+                },
+              },
+            },
+            params: {
+              selectedDevices: [],
+              title: 'deviceBulk.deleteDevicesTitle',
+            },
+          })
           .state('device-overview.emergencyServices', {
             parent: 'device-overview',
             views: {
