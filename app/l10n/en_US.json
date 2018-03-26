@@ -397,7 +397,8 @@
     "cancelCsvError": "An error occurred canceling the CSV import.",
     "csvImport": "CSV Import",
     "backgroundTasksRunning": "Background tasks running...",
-    "startedAt": "Started at {{time}} on {{date}} by {{person}}",
+    "startedOn": "Started at {{time}} on {{date}}",
+    "startedBy": "Started at {{time}} on {{date}} by {{person}}",
     "taskStatus": {
       "canceled": "Canceled",
       "completed": "Completed",
@@ -702,26 +703,26 @@
       "accountExpired": "Account Expired",
       "deleteAccount": "Delete Account"
     },
-    "moveOrDelete": "There are users that are part of your organization in Cisco's identity system. You can delete the users when your account is closed or you can move their accounts and assign them to Free Cisco Spark.",
-    "moveUsers": "Move users to Free Cisco Spark",
-    "deleteUsers": "Delete users",
-    "deleteButton": "Delete Account",
-    "goBack": "Go Back",
-    "confirmTitle": "Are you sure?",
-    "confirmBody": "Closing your account cannot be undone except by resubscribing. Also, you may not be able to get back your WebEx site name.",
-    "accountClosedTitle": "Your account is closed",
-    "accountClosedBody": "To resubscribe please visit <a href=\"{{href}}\" target=\"_blank\">{{href}}</a>",
+    "singleMoveOrDelete": "You can delete your account or you can convert to a free Cisco WebEx attendee license.",
+    "singleMoveUsers": "Convert to a free Cisco WebEx attendee license.",
+    "singleDeleteUsers": "Delete account.",
+    "multMoveOrDelete": "There are users that are part of your company account. You can delete the users or they can be moved to their own user accounts and assigned free Cisco WebEx attendee licenses.",
+    "multMoveUsers": "Assign users free Cisco WebEx attendee licenses.",
+    "multDeleteUsers": "Delete users.",
+    "checkBoxes": "Check all the boxes below to acknowledge the consequences of deleting your account.",
+    "notReversible": "Deleting an organization and related data is permanent and CANNOT be reversed.",
+    "singleUserMove": "You will be assigned a free Cisco WebEx attendee license.",
+    "singleUserDelete": "All user data will be deleted, including Cisco WebEx meeting URLs and meeting recordings.",
+    "multiUserMove": "All users will be given their own user accounts and assigned free Cisco WebEx attendee licenses.",
+    "multiUserDelete": "All users and data will be deleted, including Cisco WebEx meeting URLs and meeting recordings.",
+    "allData": "All Cisco WebEx data will be deleted, including Cisco WebEx meeting URLs and meeting recordings.",
+    "allDevices": "All devices will be deregistered, including Cisco IP phones, Cisco Spark Boards and Cisco TelePresence video conferencing endpoints.",
+    "customerPermission": "You have your customer's permission to delete their organization.",
+    "accountClosedTitle": "Your account is closed.",
+    "accountClosedBody": "To resubscribe, please visit <a href=\"{{href}}\" target=\"_blank\">{{href}}</a>",
     "deleteOrg": "Delete {{orgName}}",
-    "checkBoxes": "Check all the boxes below to acknowledge the consequences of deleting this organization.",
-    "singleUserMove": "You will be moved to the Spark Consumer organization and all Spark data will be deleted, including posts in Spark spaces and license assignments",
-    "singleUserDelete": "Your user data will be deleted, including posts in Spark spaces and license assignments",
-    "multiUserMove": "All users will be moved to the Spark Consumer organization and all Spark data will be deleted, including posts in Spark spaces and license assignments",
-    "multiUserDelete": "All users and user data will be deleted, including posts in Spark spaces and license assignments",
-    "allUsersMove": "All users and user data will be deleted, including posts in Spark spaces and license assignments",
-    "allData": "All WebEx data will be deleted, including WebEx meeting URLs and meeting recordings",
-    "allDevices": "All devices will be deregistered, including Cisco IP phones, Cisco Spark Boards and Cisco TelePresence video conferencing endpoints",
-    "notReversible": "Deleting an organization and related data is NOT REVERSIBLE",
-    "customerPermission": "You have your customer's permission to delete their organization"
+    "deleteButton": "Delete Account",
+    "goBack": "Go Back"
   },
   "templatesPage": {
     "title": "MANAGE TEMPLATES"
@@ -1631,6 +1632,7 @@
     "download": "Download",
     "edit": "Edit",
     "email": "Email",
+    "emailAddress": "Email Address",
     "emailAddressesDonotMatch": "Email Addresses do not match",
     "enable": "Enable",
     "enabled": "Enabled",
@@ -1750,6 +1752,7 @@
     "update": "Update",
     "upgrade": "Upgrade",
     "upload": "Upload",
+    "uploadingEllipsis": "Uploading...",
     "urgent": "Urgent",
     "user": "User",
     "users": "Users",
@@ -2337,7 +2340,6 @@
     "chart": {
       "total": "Total: {{totalValue}}"
     }
-
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -4118,6 +4120,73 @@
       "reports": "Reports"
     }
   },
+  "legalHold": {
+    "title": "Legal Matters",
+    "matterList": {
+      "title": "Matters",
+      "name": "Matter Name",
+      "description": "Description",
+      "state": "State",
+      "filter": {
+        "placeholder": "Placeholder",
+        "active": "Active",
+        "released": "Released"
+      },
+      "new": "New Matter"
+    },
+    "matterNew": {},
+    "custodianImport": {
+      "fileBrowser": "Browse...",
+      "errorCsvBadFormat": "CSV is not in correct format",
+      "errorCsvMaxSizeError": "File size is above the maximum of 10 MB.",
+      "errorCsvExceedsMax": "The user list exceeds the limit of {{maxUsers}}",
+      "errorCanceledByUser": "Import canceled by user",
+      "errorDifferentOrg": "User belongs to a different org",
+      "errorUserNotFound": "User not found",
+      "errorUnknown": "Unknown error",
+      "downloadTemplate": "Download CSV Template",
+      "csvOnly": "CSV format only.",
+      "uploading": "Uploading",
+      "invalidUsers": "Invalid Users",
+      "exportErrors": "Export errors to CSV",
+      "emailAddress": "Email Address",
+      "usersAdded": "Users Added",
+      "usersRemoved": "Users Removed",
+      "errorsFileName": "ImportErrors.csv",
+      "cancelImportTitle": "Cancel Import",
+      "add": {
+        "title": "Add Custodians",
+        "description": "Added users will have all content in current and newly joined or created spaces placed on hold. If a user leaves a space that space’s data will be held until the matter is released.",
+        "statusTitle": "Add Custodians Status",
+        "resultPartial": "Some users successfully added, but invalid users were detected in {{fileName}}. Update your file and try again.",
+        "resultSuccess": "Users successfully added with {{fileName}}.",
+        "resultFailure": "Invalid users were detected in {{fileName}}. No users were added.",
+        "resultCanceled": "User import has been canceled",
+        "cancelConfirm": "Are you sure you want to cancel your import? If you stop your import, no users will be added"
+
+      },
+      "new": {
+        "title": "Add Custodians",
+        "description": "Added users will have all content in current and newly joined or created spaces placed on hold. If a user leaves a space that space’s data will be held until the matter is released.",
+        "statusTitle": "Add Custodians Status",
+        "resultPartial": "Matter successfully created but invalid users were detected in {{fileName}}. Update your file and try again by using Manage Custodians Feature.",
+        "resultSuccess": "Matter created and users successfully added with {{fileName}}. Update users anytime with the Manage Custodians feature",
+        "resultCanceled": "User import has been canceled but matter has been created",
+        "resultFailure": "Matter successfully created but invalid users were detected in {{fileName}}. Update your file and try again by using Manage Custodians Feature."
+      },
+      "remove": {
+        "title": "Remove Custodians",
+        "description": "Removed users will not longer have their content placed on hold",
+        "statusTitle": "Remove Custodians Status",
+        "resultPartial": "Some users successfully removed, but invalid users were detected in {{fileName}}. Update your file and try again.",
+        "resultSuccess": "Users successfully removed with {{fileName}}.",
+        "resultFailure": "Invalid users were detected in {{fileName}}. No users were removed.",
+        "resultCanceled": "User import has been canceled",
+        "cancelConfirm": "Are you sure you want to cancel your import? If you stop your import, no users will be removed"
+
+      }
+    }
+  },
   "firstTimeWizard": {
     "required": "This field is required.",
     "termsAndConditions": "Terms and Conditions",
@@ -4845,7 +4914,10 @@
     "restApiUrlHelperText": "Enter the secure URL of the REST API to invoke. Click the 'Add Dynamic text' to insert variables in the URL.",
     "completeHttpsError": "Enter the complete URL including the protocol, HTTPS.",
     "secureHttpsError": "Enter only secure HTTPS URLs.",
-    "enterExtensionPlaceholder":"Enter Extension"
+    "enterExtensionPlaceholder": "Enter Extension",
+    "extensionPatternError": "Only digits are allowed",
+    "extensionMinLengthError": "Extension length should be in the limit of 3-10 digits",
+    "extensionRequiredError": "Extension field cannot be empty"
   },
   "callPark": {
     "code": "CP",
@@ -5158,7 +5230,6 @@
     "customNumberValidation": "Field can contain digits 0 to 9 and +. For example: +15556667777.",
     "saveConfirmation": "Do you want to save your changes?",
     "invalidNameError": "Custom Name is invalid. Characters from the set [ \" % < > [ ] & | { } ] are not allowed."
-
   },
   "autoAnswerPanel": {
     "title": "Auto Answer",
@@ -5604,7 +5675,6 @@
       "userTotals": "{{users}} of {{licenses}} licenses used",
       "daysSinceExp": "Expired {count, plural, =1{# day} other{# days}} ago"
     }
-
   },
   "trialModal": {
     "addTrial": {
@@ -8233,6 +8303,7 @@
       },
       "summary": {
         "abcDesc": "You have configured {{ name }}.\nClick Finish to save the configuration.",
+        "abcDescEdit": "You have edited {{ name }}.\nClick Finish to save the configuration.",
         "saveErrorMessage": "Cannot save {{ featureName }}. Try again."
       }
     },
@@ -8718,12 +8789,10 @@
         "customBrandImageLogo": "Custom brand image and brand logo (light) applied",
         "customBrandLogo": "Custom brand logo (dark) applied"
       }
-
     },
     "webexVersion": {
       "title": "Webex Version"
     },
-
     "webexSiteManagement": {
       "title": "WebEx Sites",
       "subsectionLabel": "Allow customers to manage WebEx Sites",
@@ -8879,8 +8948,8 @@
     "billing": "Billing Info",
     "loadError": "An error occurred while loading the page",
     "closeAccount": "Close Account",
-    "closeAccountWarning": "Closing your account will cancel all your subscriptions, remove your account from Cisco's identity system and deregister your WebEx sites.",
-    "closeAccountNote": "Please note that closing your account cannot be reversed except by resubscribing."
+    "closeAccountWarning": "Closing your account will cancel all your subscriptions, remove all user data, and deregister your Cisco WebEx sites.",
+    "closeAccountNote": "Closing your account cannot be reversed except by resubscribing."
   },
   "subscriptions": {
     "activeUsers": "Active Users",
@@ -8953,10 +9022,31 @@
     "freemiumTitle": "You have a free account",
     "freemiumBody": "Your free account doesn’t come with admin tools. If you’d like to see metrics and analytics, assign user licenses and more, you’ll need to upgrade to a paid plan.",
     "cancelButton": "Use Free Version",
-    "cancelError": "An error has occurred while canceling your subscription.",
+    "cancelError": "An error has occurred while converting your subscription to a free account.",
     "cancelSuccess": "You now have a free account.",
     "pendingTitle": "Setup Required",
-    "pendingBody": "Your WebEx service has not been set up. Please click the Get Started link in the email you received in order to finish setting up WebEx. The subject line of the email is 'Setup Your Cisco WebEx Service.'"
+    "pendingBody": "Your WebEx service has not been set up. Please click the Get Started link in the email you received in order to finish setting up WebEx. The subject line of the email is 'Setup Your Cisco WebEx Service.'",
+    "moreOptionsButton": "More Options",
+    "accountExpired": {
+      "suspended": "Your admin account has been suspended because your subscription has lapsed. To regain access, you must buy a subscription.",
+      "whatToDo": "What would you like to do?",
+      "buy": {
+        "header": "Buy",
+        "host": "Host Cisco WebEx Meetings up to 200 people",
+        "calling": "In-app calling",
+        "admin": "Admin access to Cisco Spark Control Hub"
+      },
+      "useFree": {
+        "header": "Use Free Cisco WebEx",
+        "meetings": "Free Cisco WebEx Meetings with 3 people",
+        "messaging": "Free Cisco Spark Messaging",
+        "button": "Use Free"
+      },
+      "deleteAccount": {
+        "header": "Delete Account",
+        "deregister": "Closing your account will deregister: {{orgName}}"
+      }
+    }
   },
   "myCompanyOrders": {
     "numberHeader": "Order Number",
@@ -10919,23 +11009,35 @@
       "valid": "Valid"
     },
     "nodesList": {
-      "title":"Nodes"
+      "title": "Nodes"
     },
     "setup": {
+      "finish": "Finish",
+      "nextSteps": "Next Steps:",
+      "selectDescription": "Choose the HCS Service for Setup",
       "titleServices": "Choose Services",
-      "selectDescription": "Choose the HCS Service for Setup"
+      "finishMsg": "Congratulations! You have set up HCS Services.",
+      "next1": "Once the Agent Install File completes it will show on the Agent Install File page to download it.",
+      "next2": "Install the Agent File on all Unified Communications instances you wish to manage.",
+      "next3": "The agent will register with the cloud service and the corresponding node will appear in the Inventory Page.",
+      "next4": "Once the nodes appear in the list, you can accept them and assign them to a customer or a group."
     },
     "sftp":  {
       "confirmPassword": "Confirm Password",
       "description": "Configure an SFTP Server to be used for upgrading software images.",
       "directory": "Directory",
       "dirPlace": "Enter Directory",
-      "name": "IP Address/Hostname",
-      "namePlace": "Enter IP Address or Hostname",
+      "error": "SFTP Server creation failed",
+      "name": "SFTP Server Name",
+      "namePlace": "Enter SFTP Server Name",
+      "server": "IP Address/Hostname",
+      "serverPlace": "Enter IP Address or Hostname",
       "password": "Password",
       "passwordPlace": "Enter password",
       "passwordConfirmPlace": "Enter password",
       "passwordMismatch": "The password entered does not match",
+      "setupTitle": "Create SFTP Server",
+      "success": "SFTP server has been successfully created",
       "title": "SFTP Servers",
       "userName": "User Name",
       "userPlace": "Enter User Name"
@@ -10956,27 +11058,28 @@
       "ucxn": "Cisco Unity Connection Version",
       "ucxnPlace": "Choose UCXN Version"
     },
-    "suiteView": {
-      "title": "Suites",
-      "createSuite": "Create Suite",
-      "runSuite": "Run Suite",
-      "editSuite": "Edit",
-      "copySuite": "Copy",
-      "scheduleSuite": "Schedule",
-      "deleteSuite": "Delete",
-      "resources": "Resources",
-      "results": "Get last test run results",
-      "schedule": "Scheduling",
-      "successTitle": "Your test is running!",
-      "successRun": "To see results, click the link in the card",
-      "errorRun": "Something went wrong with scheduling",
-      "goToResults": "View Results"
-    },
     "upgrade": {
       "title": "HCS Upgrade Settings",
       "description": "Extend Upgrade services to Hosted Cloud Solution.",
       "softwareProfiles": "Software Profiles",
-      "uaas": "Upgrade as a Service"
+      "uaas": "Upgrade as a Service",
+      "upgradeGroup": {
+        "softwareVersionProfile": {
+          "sectionHeader": "Software Version Profile",
+          "selectLabel": "Choose the software version profile for this cluster"
+        },
+        "upgrade": {
+          "gridColumn": {
+            "clusters": "Clusters",
+            "currentVersion": "Current Version",
+            "upgradeTo": "Upgrade to",
+            "status": "Status"
+          },
+          "gridLabel": "Choose the Clusters to Upgrade",
+          "sectionHeader": "Upgrade",
+          "upgradeButton": "Upgrade Selected"
+        }
+      }
     },
     "upgradePage": {
       "title": "Upgrades"
@@ -11012,6 +11115,22 @@
         "editSchedule": "Edit Schedule",
         "deleteSchedule": "Delete this schedule",
         "scheduleCreate": "Create Schedule"
+      },
+      "suiteView": {
+        "title": "Suites",
+        "createSuite": "Create Suite",
+        "runSuite": "Run Suite",
+        "editSuite": "Edit",
+        "copySuite": "Copy",
+        "scheduleSuite": "Schedule",
+        "deleteSuite": "Delete",
+        "resources": "Resources",
+        "results": "Get last test run results",
+        "schedule": "Scheduling",
+        "successTitle": "Your test is running!",
+        "successRun": "To see results, click the link in the card",
+        "errorRun": "Something went wrong with scheduling",
+        "goToResults": "View Results"
       },
       "resourcesView": {
         "createResource": "Create Resource"

@@ -1,0 +1,32 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
+
+.hcs-upgrade-group-main-container {
+  .section__content.cluster-grid {
+    width: 60%;
+
+    .sub-section__label {
+      margin-bottom: rem-calc(24);
+    }
+
+    .upgrade-cluster-grid {
+      height: rem-calc(240);
+      div.ui-grid-header {
+        border-bottom: none;
+      }
+      .cluster-grid-header {
+        background-color: $gray-light-2;
+        border-right: rem-calc(4) solid;
+        border-color: $white;
+      }
+      .cluster-grid-cell {
+        border-right: none;
+      }
+    }
+    button.btn--primary {
+      margin-top: rem-calc(8);
+      border-radius: rem-calc(100);
+    }
+  }
+}

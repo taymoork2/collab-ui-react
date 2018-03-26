@@ -1,0 +1,10 @@
+<div class="ui-grid-cell-contents align-left name-column">
+    <input
+    cs-input
+    type="checkbox"
+    ng-model="row.entity.selected"
+    id="checkbox{{row.entity.id}}"
+    name="checkbox{{row.entity.id}}"
+    cs-input-label="{{row.entity.clusterName}}"
+    ng-disabled="row.entity.clusterStatus === 'Compliant'">
+</div>

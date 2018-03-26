@@ -109,6 +109,7 @@ var manageUsersPage = function () {
   this.autoAssignTemplate = {
     optionsMenu: {
       toggleButton: element(by.css('auto-assign-template-manage-options .actions-menu')),
+      modify: element(by.cssContainingText('auto-assign-template-manage-options .actions-menu li', 'Modify Auto-Assign Template')),
       delete: element(by.cssContainingText('auto-assign-template-manage-options .actions-menu li', 'Delete Auto-Assign Template')),
       deleteConfirm: element(by.cssContainingText('.modal-footer .btn', 'Delete')),
     },
@@ -120,12 +121,18 @@ var manageUsersPage = function () {
       licenses: {
         messaging: {
           firstLicense: element.all(by.cssContainingText('assignable-services label[for^="MS_"]', 'Cisco Spark Messaging')).first(),
+          firstLicenseCheckbox: element.all(by.css('assignable-services input[type="checkbox"][name^="MS_"]')).first(),
+        },
+        meeting: {
+          firstLicense: element.all(by.cssContainingText('assignable-services label[for^="CF_"]', 'Cisco Spark 25 party Meetings')).first(),
+          firstLicenseCheckbox: element.all(by.css('assignable-services input[type="checkbox"][name^="CF_"]')).first(),
         },
       },
     },
     templateSummary: {
       summary: element(by.css('auto-assign-template-summary')),
       messagingItem: element(by.cssContainingText('auto-assign-template-summary h6', 'Cisco Spark Messaging')),
+      meetingItem: element(by.cssContainingText('auto-assign-template-summary h6', 'Cisco Spark 25 party Meetings')),
     },
   };
 };

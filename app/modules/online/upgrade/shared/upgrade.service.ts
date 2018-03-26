@@ -143,6 +143,11 @@ export class OnlineUpgradeService {
             (subscriptions.length === 1 && this.isPendingSubscription(subscriptions[0]))))));
   }
 
+  public hasFreemiumSubscription(): boolean {
+    const subscriptions = this.Authinfo.getSubscriptions();
+    return (subscriptions.length === 1 && this.isFreemiumSubscription(subscriptions[0]));
+  }
+
   public isFreemium(): boolean {
     return isFreemiumFlag;
   }

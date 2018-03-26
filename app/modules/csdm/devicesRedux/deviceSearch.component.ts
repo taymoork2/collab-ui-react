@@ -66,7 +66,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
       this.performSearch(searchObject, Caller.aggregator);
       initialSearch = false;
     }
-    this.performSearch(this.searchObject, initialSearch ? Caller.aggregator : Caller.searchOrLoadMore);
+    this.performSearch(this.searchObject, initialSearch ? Caller.initialSearchAndAggregator : Caller.searchOrLoadMore);
     this.$timeout(() => {
       //DOM has finished rendering
       this.setFocusToInputField();
@@ -75,10 +75,11 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
   }
 
   private updateSearchResult(result?: SearchResult, caller?: Caller) {
-    this.searchResultChanged({ result: result });
-
-    if (caller === Caller.aggregator) {
+    if (caller === Caller.aggregator || caller === Caller.initialSearchAndAggregator) {
       this.suggestions.setInitialSearchResult(result);
+    }
+    if (caller !== Caller.aggregator) {
+      this.searchResultChanged({ result: result });
     }
     this.suggestions.updateSuggestionsBasedOnSearchResult(result, this.searchObject);
   }

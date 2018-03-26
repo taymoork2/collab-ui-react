@@ -1,0 +1,203 @@
+{
+  "taskManagerTasks":[{
+    "csvFile": "421f02da-5399-480f-b7ba-50ad8ebfb7c9/testFile.csv_f6a802b9-bc20-413c-9ffb-d50d4eb65fec",
+    "id": "3c32ede0-3a9f-4d7e-8316-3524843fa233",
+    "targetCustomerId": "c4d6365d-5c32-4928-b481-5d51cbebc4a4",
+    "instanceId": 16,
+    "jobExecutionStatus": [
+      {
+        "id": 19,
+        "createdTime": 1520620488260,
+        "startTime": 1520620488268,
+        "endTime": 1520620499063,
+        "lastUpdatedTime": 1520620499068,
+        "status": "COMPLETED",
+        "exitStatus": "exitCode=COMPLETED;exitDescription="
+      },
+      {
+        "id": 18,
+        "createdTime": 1520620408240,
+        "startTime": 1520620408248,
+        "endTime": 1520620419043,
+        "lastUpdatedTime": 1520620419048,
+        "status": "COMPLETED",
+        "exitStatus": "exitCode=COMPLETED;exitDescription="
+      }
+    ],
+    "jobType": "useronboard",
+    "latestExecutionStatus": "COMPLETED",
+    "stepStatuses": [
+      {
+        "startTime": "2018-03-09T18:34:48.282Z",
+        "endTime": "2018-03-09T18:34:53.014Z",
+        "statusMessage": "COMPLETED",
+        "exitCode": "COMPLETED_WITH_ERRORS",
+        "lastUpdated": "2018-03-09T18:34:53.014Z",
+        "name": "useronboardPreProcess"
+      },
+      {
+        "startTime": "2018-03-09T18:34:53.023Z",
+        "endTime": "2018-03-09T18:34:59.060Z",
+        "statusMessage": "COMPLETED",
+        "exitCode": "COMPLETED",
+        "lastUpdated": "2018-03-09T18:34:59.060Z",
+        "name": "useronboardOnboardUsers"
+      }
+    ],
+    "counts": {
+      "usersCreated": 10,
+      "usersUpdated": 0,
+      "usersFailed": 5,
+      "totalUsers": 15
+    },
+    "exactMatchCsv": false
+  },
+  {
+    "csvFile": "421f02da-5399-480f-b7ba-50ad8ebfb7c9/testFile.csv_f6a802b9-bc20-413c-9ffb-d50d4eb65fec",
+    "id": "a0d8de3d-aa90-4509-8d3c-b535cb930b88",
+    "targetCustomerId": "c4d6365d-5c32-4928-b481-5d51cbebc4a4",
+    "instanceId": 15,
+    "jobExecutionStatus": [
+      {
+        "id": 18,
+        "createdTime": 1520617504407,
+        "startTime": 1520617504415,
+        "endTime": 1520617515305,
+        "lastUpdatedTime": 1520617515310,
+        "status": "COMPLETED",
+        "exitStatus": "exitCode=COMPLETED;exitDescription="
+      }
+    ],
+    "jobType": "useronboard",
+    "latestExecutionStatus": "COMPLETED",
+    "stepStatuses": [
+      {
+        "startTime": "2018-03-09T17:45:04.430Z",
+        "endTime": "2018-03-09T17:45:09.560Z",
+        "statusMessage": "COMPLETED",
+        "exitCode": "COMPLETED",
+        "lastUpdated": "2018-03-09T17:45:09.560Z",
+        "name": "useronboardPreProcess"
+      },
+      {
+        "startTime": "2018-03-09T17:45:09.569Z",
+        "endTime": "2018-03-09T17:45:15.302Z",
+        "statusMessage": "COMPLETED",
+        "exitCode": "COMPLETED",
+        "lastUpdated": "2018-03-09T17:45:15.302Z",
+        "name": "useronboardOnboardUsers"
+      }
+    ],
+    "counts": {
+      "usersCreated": 0,
+      "usersUpdated": 10,
+      "usersFailed": 0,
+      "totalUsers": 10
+    },
+    "exactMatchCsv": false
+  },
+  {
+    "csvFile": "421f02da-5399-480f-b7ba-50ad8ebfb7c9/testFile.csv_f6a802b9-bc20-413c-9ffb-d50d4eb65fec",
+    "name": "useronboard",
+    "id": "a0d8de3d-aa90-4509-853c-b535cb930b88",
+    "targetCustomerId": "c4d6365d-5c32-4928-b481-5d51cbebc4a4",
+    "instanceId": 15,
+    "jobExecutionStatus": [
+      {
+        "id": 18,
+        "createdTime": 1520617504407,
+        "startTime": 1520617504415,
+        "lastUpdatedTime": 1520617504417,
+        "status": "STARTED",
+        "exitStatus": "exitCode=UNKNOWN;exitDescription="
+      }
+    ],
+    "jobType": "useronboard",
+    "latestExecutionStatus": "STARTED",
+    "stepStatuses": [
+      {
+        "startTime": "2018-03-09T17:45:04.430Z",
+        "endTime": "2018-03-09T17:45:09.560Z",
+        "statusMessage": "COMPLETED",
+        "exitCode": "COMPLETED",
+        "lastUpdated": "2018-03-09T17:45:09.560Z",
+        "name": "useronboardPreProcess"
+      },
+      {
+        "startTime": "2018-03-09T17:45:09.569Z",
+        "statusMessage": "STARTED",
+        "exitCode": "EXECUTING",
+        "lastUpdated": "2018-03-09T17:45:09.569Z",
+        "name": "useronboardOnboardUsers"
+      }
+    ],
+    "counts": {
+      "usersCreated": 0,
+      "usersUpdated": 0,
+      "usersFailed": 0,
+      "totalUsers": 10
+    },
+    "exactMatchCsv": false
+  }],
+  "taskStatusTasks": [{
+    "csvFile": "421f02da-5399-480f-b7ba-50ad8ebfb7c9/testFile.csv_f6a802b9-bc20-413c-9ffb-d50d4eb65fec",
+    "name": "useronboard",
+    "id": "a0d8de3d-aa90-4509-853c-b535cb930b88",
+    "targetCustomerId": "c4d6365d-5c32-4928-b481-5d51cbebc4a4",
+    "instanceId": 15,
+    "jobExecutionStatus": [
+      {
+        "id": 18,
+        "createdTime": 1520617504407,
+        "startTime": 1520617504415,
+        "lastUpdatedTime": 1520617504417,
+        "status": "STARTED",
+        "exitStatus": "exitCode=UNKNOWN;exitDescription="
+      }
+    ],
+    "jobType": "useronboard",
+    "latestExecutionStatus": "STARTED",
+    "stepStatuses": [
+      {
+        "startTime": "2018-03-09T17:45:04.430Z",
+        "endTime": "2018-03-09T17:45:09.560Z",
+        "statusMessage": "COMPLETED",
+        "exitCode": "COMPLETED",
+        "lastUpdated": "2018-03-09T17:45:09.560Z",
+        "name": "useronboardPreProcess"
+      },
+      {
+        "startTime": "2018-03-09T17:45:09.569Z",
+        "statusMessage": "STARTED",
+        "exitCode": "EXECUTING",
+        "lastUpdated": "2018-03-09T17:45:09.569Z",
+        "name": "useronboardOnboardUsers"
+      }
+    ],
+    "counts": {
+      "usersCreated": 0,
+      "usersUpdated": 0,
+      "usersFailed": 0,
+      "totalUsers": 10
+    },
+    "exactMatchCsv": false
+  }],
+  "csvUploadResultsTasks": {
+    "csvFile": "421f02da-5399-480f-b7ba-50ad8ebfb7c9/testFile.csv_f6a802b9-bc20-413c-9ffb-d50d4eb65fec",
+    "id": "a0d8de3d-aa90-4509-8d3c-b535cb930b88",
+    "targetCustomerId": "c4d6365d-5c32-4928-b481-5d51cbebc4a4",
+    "instanceId": 15,
+    "jobType": "useronboard",
+    "latestExecutionStatus": "COMPLETED",
+    "startedDate": "Mar 3, 2018",
+    "startedTime": "6:30 pm",
+    "sourceUserId": "010e453a-865b-4d34-b3d9-daf94ab0805e",
+    "counts": {
+      "usersCreated": 10,
+      "usersUpdated": 10,
+      "usersFailed": 10,
+      "totalUsers": 100
+    },
+    "exactMatchCsv": false
+  }
+}
