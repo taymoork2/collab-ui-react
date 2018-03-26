@@ -239,7 +239,6 @@
         data: userData,
       })
         .then(function (response) {
-          $rootScope.$broadcast('USER_LIST_UPDATED');
           return response;
         });
     }
