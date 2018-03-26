@@ -3,6 +3,7 @@ import * as coreUrlConfigModule from 'modules/core/config/urlConfig';
 import { DeviceSearchConverter } from './deviceSearchConverter';
 import { SearchTranslator } from './search/searchTranslator';
 import { SearchRequestCompressor } from './search/searchRequestCompressor';
+import { CsdmBulkService } from './csdmBulk.service';
 
 export default angular
   .module('Csdm.services', [
@@ -16,4 +17,5 @@ export default angular
   .service('DeviceSearchConverter', DeviceSearchConverter)
   .service('DeviceSearchTranslator', SearchTranslator)
   .service('SearchRequestCompressor', SearchRequestCompressor)
+  .service('CsdmBulkService', CsdmBulkService)
   .name;

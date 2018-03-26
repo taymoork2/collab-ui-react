@@ -1637,6 +1637,7 @@
     "enable": "Enable",
     "enabled": "Enabled",
     "error": "Error",
+    "errors": "Errors",
     "fieldRequired": "This field is required",
     "finish": "Finish",
     "firstName": "First Name",
@@ -11151,5 +11152,22 @@
         "error": "Errors"
       }
     }
+  },
+  "deviceBulk": {
+    "1DeviceSelected": "1 device selected",
+    "xDevicesSelected": "{{nDevices}} devices selected",
+    "deleteDevicesTitle": "Delete Devices",
+    "deleteDevices": "Delete devices",
+    "exportAsCSV": "Export as CSV",
+    "editDevices": "Edit devices",
+    "deleteDevicesAreYouSure": "Are you sure you want to delete {{nDevices}} selected devices?",
+    "deleteDeviceAreYouSure": "Are you sure you want to delete the selected device?",
+    "changeCannotBeUndone": "This action cannot be undone.",
+    "deleteEmptyPlaces": "Delete any resulting empty places",
+    "deleted": "Deleted",
+    "deletionStoppedTitle": "Deletion stopped by user",
+    "deletionStoppedXDeleted": "{{nDevices}} devices were successfully deleted.",
+    "startedAt": "Started {{startTime}}",
+    "toResolveErrors": "To resolve errors please try again later or <a href='https://collaborationhelp.cisco.com/'>contact customer support</a>"
   }
 }

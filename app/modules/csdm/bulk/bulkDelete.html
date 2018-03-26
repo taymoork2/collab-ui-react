@@ -1,0 +1,30 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$ctrl.close()" aria-label="{{::'common.close' | translate}}"></button>
+  <div class="modal-title">{{$ctrl.title | translate}}</div>
+</div>
+
+<div class="modal-body">
+  <h5 class="lead"
+      ng-if="$ctrl.numberOfDevices === 1"
+      translate="deviceBulk.deleteDeviceAreYouSure"></h5>
+  <h5 class="lead"
+      ng-if="$ctrl.numberOfDevices > 1"
+      translate="deviceBulk.deleteDevicesAreYouSure"
+      translate-values="{nDevices: $ctrl.numberOfDevices}"></h5>
+  <h5><small translate="deviceBulk.changeCannotBeUndone"></small></h5>
+  <br>
+  <input cs-input
+         id="deleteEmptyPlace"
+         type="checkbox"
+         cs-input-label="{{ 'deviceBulk.deleteEmptyPlaces' | translate }}"
+         tooltip-placement="bottom"
+         tooltip="{{ 'deviceBulk.deleteEmptyPlaces' | translate }}"
+         aria-label="{{ 'deviceBulk.deleteEmptyPlaces' | translate }}"
+         ng-model="$ctrl.deleteEmptyPlaces" />
+  <input id="reallyDelete" cs-input type="checkbox" cs-input-label="REALLY delete?" ng-model="$ctrl.reallyDelete" />
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn--default" ng-click="$ctrl.close()" translate="common.cancel"></button>
+  <button class="btn btn--negative" ng-click="$ctrl.delete()" translate="common.delete"></button>
+</div>

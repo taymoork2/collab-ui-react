@@ -369,7 +369,9 @@ export class Config {
       'callPickupSetupAssistant',
       'callpickupedit',
       'device-overview',
+      'bulk-overview',
       'devices',
+      'deviceBulkFlow',
       'didadd',
       'huntgroups',
       'huronCallPark',
@@ -417,7 +419,9 @@ export class Config {
     'spark-room-system': [
       'addDeviceFlow',
       'device-overview',
+      'bulk-overview',
       'devices',
+      'deviceBulkFlow',
       'place-overview',
       'places',
       'huronsettings',
@@ -623,7 +627,7 @@ export class Config {
     Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports'],
     Partner_Management: ['partnerManagement'],
     User_Admin: ['user-overview', 'userprofile', 'users', 'userRedirect', 'editService', 'addDeviceFlow'],
-    Device_Admin: ['device-overview', 'devices', 'addDeviceFlow', 'place-overview', 'places'],
+    Device_Admin: ['device-overview', 'bulk-overview', 'devices', 'deviceBulkFlow', 'addDeviceFlow', 'place-overview', 'places'],
   };
 
   private readonly TEST_ENV_CONFIG: string = 'TEST_ENV_CONFIG';
