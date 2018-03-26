@@ -342,9 +342,11 @@ export class CsdmDataModelService implements ICsdmDataModelService {
         const existingDevice = this.theDeviceMap[objectToUpdate.url];
         if (existingDevice) {
           existingDevice.tags = newTags;
+          return existingDevice;
+        } else {
+          objectToUpdate.tags = newTags;
+          return objectToUpdate;
         }
-
-        return existingDevice || objectToUpdate;
       });
   }
 
