@@ -108,7 +108,7 @@ describe('Component: csvUploadResults', () => {
           }],
         },
         trackingId: '',
-        itemNumber: 0,
+        lineNum: 0,
         errorMessage: '',
       }];
       this.$scope.$apply();

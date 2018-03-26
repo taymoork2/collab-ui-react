@@ -9,16 +9,6 @@ interface ICounts {
   totalUsers: number;
 }
 
-interface IJobExecutionStatus {
-  createdTime: number;
-  endTime: number;
-  exitStatus: string;
-  id: number;
-  lastUpdatedTime: number;
-  startTime: number;
-  status: string;
-}
-
 interface IStepStatus {
   endTime: string;
   exitCode: string;
@@ -30,6 +20,16 @@ interface IStepStatus {
   statusMessage: string;
   timeElapsed?: number;
   timeRemaining?: number;
+}
+
+export interface IJobExecutionStatus {
+  createdTime: number;
+  endTime: number;
+  exitStatus: string;
+  id: number;
+  lastUpdatedTime: number;
+  startTime: number;
+  status: string;
 }
 
 export interface ITask {
@@ -224,10 +224,11 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
         task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.canceled');
         break;
       case TaskStatus.COMPLETED:
-        task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.completed');
-        break;
-      case TaskStatus.COMPLETED_WITH_ERRORS:
-        task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.completedWithErrors');
+        if (task.counts.usersFailed > 0) {
+          task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.completedWithErrors');
+        } else {
+          task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.completed');
+        }
         break;
       case TaskStatus.FAILED:
         task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.failed');
@@ -235,8 +236,8 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
       case TaskStatus.STOPPED:
         task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.stopped');
         break;
-      case TaskStatus.STOPPED_FOR_MAINTENANCE:
-        task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.stoppedForMaintenance');
+      case TaskStatus.UNKNOWN:
+        task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.unknown');
         break;
     }
   }
@@ -251,7 +252,7 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
 
   private populateTaskDatesAndTime(task: ITask) {
     const jobStatuses: IJobExecutionStatus[] = _.sortBy(task.jobExecutionStatus, status => status.id);
-    const mostRecent = jobStatuses[jobStatuses.length - 1];
+    const mostRecent = _.last(jobStatuses);
 
     // Get original createdTime
     if (jobStatuses[0].createdTime) {

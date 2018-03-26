@@ -406,7 +406,7 @@
       "created": "Created",
       "failed": "Failed",
       "stopped": "Stopped",
-      "stoppedForMaintenance": "Stopped for Maintenance",
+      "unknown": "Status Unknown",
       "processing": "Processing..."
     }
   },

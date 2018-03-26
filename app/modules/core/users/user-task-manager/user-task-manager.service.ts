@@ -2,6 +2,11 @@ import { ITask } from './user-task-manager.component';
 import { TaskStatus } from './user-task-manager.constants';
 import { IErrorItem } from './csv-upload-results.component';
 
+export interface IDateAndTime {
+  date: string;
+  time: string;
+}
+
 export interface IPaging {
   count: number;
   limit: number;
@@ -129,7 +134,7 @@ export class UserTaskManagerService {
       .then(response => `${response.data.displayName} (${response.data.userName})`);
   }
 
-  public getDateAndTime(isoDate: string | number) {
+  public getDateAndTime(isoDate: string | number): IDateAndTime {
     const date = moment(isoDate);
     const isDateValid = date.isValid();
     return {

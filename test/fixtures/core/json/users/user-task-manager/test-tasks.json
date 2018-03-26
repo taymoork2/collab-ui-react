@@ -189,6 +189,16 @@
     "instanceId": 15,
     "jobType": "useronboard",
     "latestExecutionStatus": "COMPLETED",
+    "jobExecutionStatus": [
+      {
+        "id": 18,
+        "createdTime": 1520617504407,
+        "startTime": 1520617504415,
+        "lastUpdatedTime": 1520617504417,
+        "status": "STARTED",
+        "exitStatus": "exitCode=UNKNOWN;exitDescription="
+      }
+    ],
     "startedDate": "Mar 3, 2018",
     "startedTime": "6:30 pm",
     "sourceUserId": "010e453a-865b-4d34-b3d9-daf94ab0805e",

@@ -103,7 +103,7 @@ describe('Component: userTaskManager', () => {
       const activeTask = this.components.csvUploadResults.bindings[0].inputActiveTask;
       expect(activeTask).toEqual(this.taskList[0]);
       expect(activeTask.jobTypeTranslate).toBe('userTaskManagerModal.csvImport');
-      expect(activeTask.statusTranslate).toBe('userTaskManagerModal.taskStatus.completed');
+      expect(activeTask.statusTranslate).toBe('userTaskManagerModal.taskStatus.completedWithErrors');
       expect(activeTask.createdDate).toBe('Mar 9, 2018');
       expect(activeTask.createdTime).toBe('10:33 AM');
       expect(activeTask.startedDate).toBe('Mar 9, 2018');

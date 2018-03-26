@@ -1,4 +1,4 @@
-import { UserTaskManagerService } from 'modules/core/users/user-task-manager';
+import { IDateAndTime, UserTaskManagerService } from 'modules/core/users/user-task-manager';
 import { ITask } from './user-task-manager.component';
 import { Notification } from 'modules/core/notifications';
 
@@ -16,7 +16,7 @@ export interface IError {
 export interface IErrorItem {
   error: IError;
   trackingId: string;
-  itemNumber: number;
+  lineNum: number;
   errorMessage: string;
 }
 
@@ -35,11 +35,10 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
   public isProcessing = false;
   public userErrorArray: IErrorItem[] = [];
   public isCancelledByUser = false;
-  public startedDate?: string;
-  public startedTime?: string;
   public startedBy: string;
 
   private cancelErrorsDeferred?: ng.IDeferred<void>;
+  private startDateAndTime?: IDateAndTime;
 
   /* @ngInject */
   constructor(
@@ -51,6 +50,14 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
     private UserTaskManagerService: UserTaskManagerService,
     private UserCsvService,
   ) {}
+
+  public get startedDate() {
+    return _.get(this.startDateAndTime, 'date');
+  }
+
+  public get startedTime() {
+    return _.get(this.startDateAndTime, 'time');
+  }
 
   private intervalCallback = (task: ITask) => {
     this.setActiveTaskData(task);
@@ -123,8 +130,11 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
     this.isProcessing = this.UserTaskManagerService.isTaskInProcess(task.latestExecutionStatus);
     this.isCancelledByUser = false;
     this.fileName = this.getShortFileName(task.csvFile);
-    this.startedDate = task.startedDate;
-    this.startedTime = task.startedTime;
+    const latestExecutionStatus = _.last(_.sortBy(task.jobExecutionStatus, status => status.id));
+
+    if (latestExecutionStatus) {
+      this.startDateAndTime = this.UserTaskManagerService.getDateAndTime(latestExecutionStatus.startTime);
+    }
 
     this.populateTaskErrors(task);
   }
@@ -159,7 +169,7 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
         _.forEach(this.userErrorArray, errorEntry => {
           this.UserCsvService.setCsvStat({
             userErrorArray: [{
-              row: errorEntry.itemNumber,
+              row: errorEntry.lineNum,
               email: 'User',
               error: errorEntry.errorMessage,
             }],
