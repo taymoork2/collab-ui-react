@@ -1,4 +1,4 @@
-<setting-section setting="$ctrl.title" setting="$ctrl.description" class="needs-border-top">
+<setting-section setting="$ctrl.title" setting="$ctrl.description" ng-if="$ctrl.mfToggle || $ctrl.mfTrustedToggle || $ctrl.mfCascadeToggle" class="needs-border-top">
 	<h5 class="sub-section__label" translate="mediaFusion.easyConfig.sipcalls"></h5>
 	<div class="cs-input-group cs-input-checkbox">
 			<input type="checkbox" id="alertCheckbox" ng-model="$ctrl.isSipSettingsEnabled" ng-change= "$ctrl.sipSettingsEnabled()">
