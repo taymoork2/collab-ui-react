@@ -483,6 +483,7 @@
     .bulleted-searchbox {
       text-decoration: none;
       margin-right: 1rem;
+      overflow: hidden;
 
       .bulleted-searchinput.searcherror {
         background-color: $color-attention-lighter !important;
