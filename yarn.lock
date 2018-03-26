@@ -170,6 +170,10 @@
     angular-formly "~7.3.0"
     api-check "~7.5.0"
 
+"@collabui/collab-ui-icons@^1.0.5":
+  version "1.0.5"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui-icons/-/@collabui/collab-ui-icons-1.0.5.tgz#884abb73afa14612c112bec036c8692175ef146e"
+
 "@collabui/collab-ui-icons@~1.0.4":
   version "1.0.4"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui-icons/-/@collabui/collab-ui-icons-1.0.4.tgz#2ae8f820ce00b717e61f66ecfde6ffd27318fb5c"
@@ -190,11 +194,11 @@
     masonry-layout "^4.1.1"
     moment "^2.10.6"
 
-"@collabui/collab-ui-ng@~8.0.0":
-  version "8.0.0"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui-ng/-/@collabui/collab-ui-ng-8.0.0.tgz#dc4512b6b21bd765c584a6801658d7dffab0d257"
+"@collabui/collab-ui-ng@~8.1.0":
+  version "8.1.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui-ng/-/@collabui/collab-ui-ng-8.1.0.tgz#485781dfc5bb87b362cadd9b230e087f36325c3c"
   dependencies:
-    "@collabui/collab-ui" "~5.3.3"
+    "@collabui/collab-ui" "^5.4.0"
     angular "^1.5.0"
     angular-animate "^1.5.0"
     angular-messages "^1.5.0"
@@ -206,11 +210,23 @@
     masonry-layout "^4.1.1"
     moment "^2.10.6"
 
-"@collabui/collab-ui@~5.3.3", "@collabui/collab-ui@~5.3.6":
+"@collabui/collab-ui@^5.4.0":
+  version "5.4.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui/-/@collabui/collab-ui-5.4.0.tgz#a31828969cae437d3aebfbfd7086fd0716a8fda6"
+  dependencies:
+    "@collabui/collab-ui-icons" "^1.0.5"
+
+"@collabui/collab-ui@~5.3.3":
   version "5.3.6"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui/-/@collabui/collab-ui-5.3.6.tgz#4e3d84b844a340248546a2f6693dc5a5042c5161"
   dependencies:
     "@collabui/collab-ui-icons" "~1.0.4"
+
+"@collabui/collab-ui@~5.4.1":
+  version "5.4.1"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui/-/@collabui/collab-ui-5.4.1.tgz#ba0ccfb1c87942044504c10d1419fb6a33201ed9"
+  dependencies:
+    "@collabui/collab-ui-icons" "^1.0.5"
 
 "@types/amcharts@^0.0.39":
   version "0.0.39"
