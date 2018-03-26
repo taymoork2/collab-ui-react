@@ -222,9 +222,9 @@
   dependencies:
     "@collabui/collab-ui-icons" "~1.0.4"
 
-"@collabui/collab-ui@~5.4.1":
-  version "5.4.1"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui/-/@collabui/collab-ui-5.4.1.tgz#ba0ccfb1c87942044504c10d1419fb6a33201ed9"
+"@collabui/collab-ui@~5.4.2":
+  version "5.4.2"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui/-/@collabui/collab-ui-5.4.2.tgz#25ab6fdff9c7691fb789da1159227156b12445bd"
   dependencies:
     "@collabui/collab-ui-icons" "^1.0.5"
 
