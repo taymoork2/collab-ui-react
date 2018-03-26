@@ -44,7 +44,6 @@ describe('Controller: DevicesReduxCtrl', () => {
     spyOn(this.FeatureToggleService, 'csdmATAGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlasDeviceExportGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue(this.$q.resolve(true));
-    spyOn(this.FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'csdmMultipleDevicesPerPlaceGetStatus').and.returnValue(this.$q.resolve(true));
   }

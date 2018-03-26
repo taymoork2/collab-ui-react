@@ -113,8 +113,6 @@ module.exports = {
   csdmDeviceSupport: 'csdm-device-support',
   csdmHybridCall: 'csdm-hybrid-call',
   csdmMultipleDevicesPerPlace: 'csdm-multiple-devices-per-place',
-  csdmPlaceCalendar: 'csdm-hybrid-calendar',
-  csdmPlaceGuiSettings: 'csdm-place-gui-settings',
   csdmT38: 'csdm-ata-t38',
   deleteContent: 'delete-content',
   dirSync: 'atlas-dir-sync',
