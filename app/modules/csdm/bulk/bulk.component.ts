@@ -12,6 +12,7 @@ class BulkCtrl implements ng.IComponentController {
   public askDelete() {
     this.$state.go('deviceBulkFlow.delete', {
       selectedDevices: this.$state.params.selectedDevices,
+      devicesDeleted: this.$state.params.devicesDeleted,
     });
   }
 }

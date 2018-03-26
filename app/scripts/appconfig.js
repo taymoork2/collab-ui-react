@@ -2881,6 +2881,7 @@
             },
             params: {
               selectedDevices: [],
+              devicesDeleted: null,
               title: 'deviceBulk.deleteDevicesTitle',
             },
           })
