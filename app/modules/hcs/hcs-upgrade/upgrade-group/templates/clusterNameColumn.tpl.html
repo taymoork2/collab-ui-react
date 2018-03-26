@@ -3,8 +3,8 @@
     cs-input
     type="checkbox"
     ng-model="row.entity.selected"
-    id="checkbox{{row.entity.id}}"
-    name="checkbox{{row.entity.id}}"
+    id="checkbox-{{row.entity.id}}"
+    name="checkbox-{{row.entity.clusterName}}"
     cs-input-label="{{row.entity.clusterName}}"
     ng-disabled="row.entity.clusterStatus === 'Compliant'">
 </div>
