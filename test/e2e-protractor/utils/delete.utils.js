@@ -14,10 +14,10 @@ exports.deleteUser = function (email, token) {
     .then(function (token) {
       var options = {
         method: 'delete',
-        url: config.getAdminServiceUrl() + 'user?email=' + encodeURIComponent(email),
+        url: `${config.getAdminServiceUrl()}user?email=${encodeURIComponent(email)}`,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + token,
+          'Authorization': `Bearer ${token}`,
         },
       };
 
@@ -31,10 +31,10 @@ exports.deleteUser = function (email, token) {
 exports.deleteSquaredUCUser = function (customerUuid, userUuid, token) {
   var options = {
     method: 'delete',
-    url: config.getCmiServiceUrl() + 'common/customers/' + customerUuid + '/users/' + userUuid,
+    url: `${config.getCmiServiceUrl()}common/customers/${customerUuid}/users/${userUuid}`,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token,
+      'Authorization': `Bearer ${token}`,
     },
   };
 
@@ -46,10 +46,10 @@ exports.deleteSquaredUCUser = function (customerUuid, userUuid, token) {
 exports.deleteSquaredUCCustomer = function (customerUuid, token) {
   var options = {
     method: 'delete',
-    url: config.getCmiServiceUrl() + 'common/customers/' + customerUuid,
+    url: `${config.getCmiServiceUrl()}common/customers/${customerUuid}`,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token,
+      'Authorization': `Bearer ${token}`,
     },
   };
   return utils.sendRequest(options).then(function () {
@@ -66,7 +66,7 @@ exports.deleteAutoAttendant = function (aaUrl, token) {
     url: aaUrl,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token,
+      'Authorization': `Bearer ${token}`,
     },
   };
 
@@ -89,14 +89,14 @@ exports.extractUUID = function (ceURL) {
 exports.deleteNumberAssignments = function (aaUrl, token) {
   var ceId = exports.extractUUID(aaUrl);
 
-  var cmiUrl = config.getCmiV2ServiceUrl() + 'customers/' + helper.auth['aa-admin'].org + '/features/autoattendants/' + ceId + '/numbers';
+  var cmiUrl = `${config.getCmiV2ServiceUrl()}customers/${helper.auth['aa-admin'].org}/features/autoattendants/${ceId}/numbers`;
 
   var options = {
     method: 'delete',
     url: cmiUrl,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token,
+      'Authorization': `Bearer ${token}`,
     },
   };
 
@@ -158,7 +158,7 @@ exports.deleteRouteToQueue = function () {
         url: config.getAutoAttendantQueueUrl(helper.auth['aa-admin'].org),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + bearer,
+          'Authorization': `Bearer ${bearer}`,
         },
       };
 
@@ -186,7 +186,7 @@ exports.findAndDeleteTestAA = function () {
       var options = {
         url: config.getAutoAttendantsUrl(helper.auth['aa-admin'].org),
         headers: {
-          Authorization: 'Bearer ' + bearer,
+          Authorization: `Bearer ${bearer}`,
         },
       };
 
@@ -216,7 +216,7 @@ exports.deleteSchedules = function (scheduleUrl, token) {
     url: scheduleUrl,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token,
+      'Authorization': `Bearer ${token}`,
     },
   };
   return utils.sendRequest(options).then(function () {
@@ -232,7 +232,7 @@ exports.deleteTestSchedule = function (aaUrl, token) {
     method: 'get',
     url: aaUrl,
     headers: {
-      Authorization: 'Bearer ' + token,
+      Authorization: `Bearer ${token}`,
     },
   };
   request(options,
@@ -253,7 +253,7 @@ function getAutoAssignTemplates(orgId, token) {
     url: `${config.getAdminServiceUrl()}organizations/${orgId}/templates`,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token,
+      'Authorization': `Bearer ${token}`,
     },
   };
   return utils.sendRequest(options).then(response => JSON.parse(response));
@@ -268,7 +268,7 @@ exports.deleteAllAutoAssignTemplates = function (orgId, token) {
           url: `${config.getAdminServiceUrl()}organizations/${orgId}/templates/${templateId}`,
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token,
+            'Authorization': `Bearer ${token}`,
           },
         };
       }
