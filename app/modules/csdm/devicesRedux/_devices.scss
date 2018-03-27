@@ -483,7 +483,6 @@
     .bulleted-searchbox {
       text-decoration: none;
       margin-right: 1rem;
-      overflow: hidden;
 
       .bulleted-searchinput.searcherror {
         background-color: $color-attention-lighter !important;
@@ -678,6 +677,10 @@
       display: flex;
       margin: 2px 4px;
       padding: 3px 5px 1px 10px;
+      span {
+        max-width: 325px;
+        word-wrap: break-word;
+      }
     }
     .bullet_edited {
       display: none;
