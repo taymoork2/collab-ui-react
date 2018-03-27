@@ -1,6 +1,5 @@
 import ssoCertificateModuleName from './index';
 import { SsoCertificateService } from './sso-certificate.service';
-import { Notification } from 'modules/core/notifications';
 
 import 'moment';
 import 'moment-timezone';
@@ -8,7 +7,6 @@ import 'moment-timezone';
 type Test = atlas.test.IServiceTest<{
   Authinfo;
   UrlConfig;
-  Notification: Notification;
   SsoCertificateService: SsoCertificateService;
 }>;
 
@@ -19,7 +17,6 @@ describe('Service: SsoCertificateService', () => {
     this.injectDependencies(
       'Authinfo',
       'UrlConfig',
-      'Notification',
       'SsoCertificateService',
     );
 

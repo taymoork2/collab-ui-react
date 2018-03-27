@@ -2,7 +2,7 @@
 @import 'styles/partials/mixins';
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
-check-certificate, certificate-type, download-metadata-file, test-sso {
+sso-certificate-check, sso-certificate-type, sso-certificate-download-metadata, sso-certificate-test {
   @include keep-flex-container(column);
 
   .reveal-modal.full & .modal-body {
@@ -12,19 +12,19 @@ check-certificate, certificate-type, download-metadata-file, test-sso {
   .sso-certificate-content {
     @include keep-flex-container(column);
 
-    &-check-certificate {
+    &-check {
       max-width: 26.125rem !important; // override modal-body direct child max-width
     }
 
-    &-certificate-type {
+    &-type {
       max-width: 25rem !important; // override modal-body direct child max-width
     }
 
-    &-download-metadata-file {
+    &-download-metadata {
       max-width: 31.25rem !important; // override modal-body direct child max-width
     }
 
-    &-test-sso {
+    &-test {
       max-width: 25rem !important; // override modal-body direct child max-width
     }
 
@@ -32,13 +32,16 @@ check-certificate, certificate-type, download-metadata-file, test-sso {
       align-self: center;
       @include vr-spacing(mt, 6);
       @include vr-spacing(mb, 4);
-      color: $green-base;
+      line-height: 1;
+      &--size100 {
+        font-size: 100px;
+      }
+      &--green {
+        color: $green-base;
+      }
     }
 
     &__paragraph-question {
-      p {
-        font-size: 1.25rem;
-      }
       @include vr-spacing(mb, 1.5);
     }
 
@@ -47,24 +50,15 @@ check-certificate, certificate-type, download-metadata-file, test-sso {
     }
 
     &__paragraph-action1 {
-      p {
-        font-size: 1rem;
-      }
       @include vr-spacing(mb, 0.5);
     }
 
     &__paragraph-action2 {
-      p {
-        font-size: 0.875rem;
-      }
       @include vr-spacing(mb, 2);
     }
 
     &__paragraph-title {
       align-self: center;
-      p {
-        font-size: 1.25rem;
-      }
       @include vr-spacing(mb, 1.5);
     }
 

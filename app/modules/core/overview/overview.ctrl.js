@@ -371,14 +371,16 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
       SsoCertificateService.getOrgCertificates()
         .then(function (certificates) {
           var primaryCert = _.find(certificates, { primary: true });
-          if (!_.isUndefined(primaryCert)) {
-            var today = moment();
-            var certificateExpirationDate = moment(_.get(primaryCert, 'expirationDate'));
-            var daysDiff = certificateExpirationDate.diff(today, 'days');
-            if (daysDiff <= SsoCertExpNotificationService.CERTIFICATE_EXPIRATION_DAYS) {
-              vm.notifications.push(SsoCertificateExpirationNotificationService.createNotification(daysDiff));
-              resizeNotifications();
-            }
+          if (_.isUndefined(primaryCert)) {
+            return;
+          }
+
+          var today = moment();
+          var certificateExpirationDate = moment(_.get(primaryCert, 'expirationDate'));
+          var daysDiff = certificateExpirationDate.diff(today, 'days');
+          if (daysDiff <= SsoCertExpNotificationService.CERTIFICATE_EXPIRATION_DAYS) {
+            vm.notifications.push(SsoCertificateExpirationNotificationService.createNotification(daysDiff));
+            resizeNotifications();
           }
         });
     }
@@ -530,24 +532,25 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
 
     ReportsService.healthMonitor(_.partial(forwardEvent, 'healthStatusUpdatedHandler'));
 
-    var deregisterSipListener = $scope.$on('DISMISS_SIP_NOTIFICATION', function () {
+    $scope.$on('DISMISS_SIP_NOTIFICATION', function () {
       vm.notifications = _.reject(vm.notifications, {
         name: 'cloudSipUri',
       });
     });
 
-    var deregisterSsoCertificateListener = $scope.$on('DISMISS_SSO_CERTIFICATE_NOTIFICATION', function () {
+    $scope.$on('Core::ssoCertificateExpirationNotificationDismissed', function () {
       vm.notifications = _.reject(vm.notifications, {
         name: SsoCertExpNotificationService.SSO_CERTIFICATE_NOTIFICATION_NAME,
       });
     });
 
     $scope.$on('$destroy', function () {
-      deregisterSipListener();
-      deregisterSsoCertificateListener();
+      if (_.isFunction(deregisterSsoEnabledListener)) {
+        deregisterSsoEnabledListener();
+      }
     });
 
-    $rootScope.$watch('ssoEnabled', function (newValue, oldValue) {
+    var deregisterSsoEnabledListener = $rootScope.$watch('ssoEnabled', function (newValue, oldValue) {
       if (newValue !== oldValue) {
         var params = {
           disableCache: true,

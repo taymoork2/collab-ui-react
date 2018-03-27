@@ -1,6 +1,7 @@
-import { SsoCertificateService } from '../sso-certificate.service';
+import { SsoCertificateService } from 'modules/core/sso-certificate/shared/sso-certificate.service';
+import { Notification } from 'modules/core/notifications';
 
-export class DownloadMetadataFileController implements ng.IComponentController {
+export class SsoCertificateDownloadMetadataController implements ng.IComponentController {
   public dismiss: Function;
   public isMultiple: boolean;
   public isLoading = true;
@@ -10,16 +11,18 @@ export class DownloadMetadataFileController implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
-    private $stateParams,
     private Authinfo,
     private SsoCertificateService: SsoCertificateService,
+    private Notification: Notification,
   ) {}
 
   public $onInit(): void {
-    this.isMultiple = _.get<boolean>(this.$stateParams, 'isMultiple', undefined);
     this.SsoCertificateService.addLatestCertificateToOrg()
       .then(() => {
         return this.downloadHostedSp();
+      })
+      .catch((response) => {
+        this.Notification.errorResponse(response);
       })
       .finally(() => {
         this.isLoading = false;
@@ -35,26 +38,30 @@ export class DownloadMetadataFileController implements ng.IComponentController {
   }
 
   public next(): void {
-    this.$state.go('sso-certificate.test-sso');
+    this.$state.go('sso-certificate.sso-certificate-test');
   }
 
   public back(): void {
-    this.$state.go('sso-certificate.certificate-type');
+    this.$state.go('sso-certificate.sso-certificate-type');
   }
 
   private downloadHostedSp(): void {
     this.SsoCertificateService.downloadMetadata(this.isMultiple)
       .then((metadataXml) => {
-        this.filename = 'idb-meta-' + this.Authinfo.getOrgId() + '-SP.xml';
+        this.filename = `idb-meta-${this.Authinfo.getOrgId()}-SP.xml`;
         this.objectUrl = this.SsoCertificateService.createObjectUrl(metadataXml);
+      })
+      .catch((response) => {
+        this.Notification.errorResponse(response);
       });
   }
 }
 
-export class DownloadMetadataFileComponent implements ng.IComponentOptions {
-  public controller = DownloadMetadataFileController;
-  public template = require('./download-metadata-file.html');
+export class SsoCertificateDownloadMetadataComponent implements ng.IComponentOptions {
+  public controller = SsoCertificateDownloadMetadataController;
+  public template = require('./sso-certificate-download-metadata.html');
   public bindings = {
+    isMultiple: '<',
     dismiss: '&',
   };
 }

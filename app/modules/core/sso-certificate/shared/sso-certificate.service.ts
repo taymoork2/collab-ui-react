@@ -1,5 +1,3 @@
-import { Notification } from 'modules/core/notifications';
-
 export interface ICertificate {
   primary?: string;
   id: string;
@@ -47,26 +45,23 @@ export class SsoCertificateService {
     private $window: IWindowService,
     private Authinfo,
     private UrlConfig,
-    private Notification: Notification,
   ) {}
 
-  public getAllCiCertificates(): ng.IPromise<ICertificate[] | void> {
+  public getAllCiCertificates(): ng.IPromise<ICertificate[]> {
     return this.$http<IGetCertificateResponse>({
       method: 'GET',
       url: `${this.SSO_CERTIFICATE_URL}`,
-      data: '',
+      data: '', // to add the Content-Type header in GET, need to add this empty data
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
       },
     }).then(response => {
       this.setLatestCertificate(this.getLatestCertificateFromList(response.data.keys));
       return response.data.keys;
-    }).catch((response) => {
-      this.Notification.errorResponse(response);
     });
   }
 
-  public getOrgCertificates(): ng.IPromise<ICertificate[] | void> {
+  public getOrgCertificates(): ng.IPromise<ICertificate[]> {
     return this.$http<IGetCertificateResponse>({
       method: 'GET',
       url: `${this.SSO_ORG_CERTIFICATE_URL}/keys`,
@@ -74,13 +69,10 @@ export class SsoCertificateService {
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
       },
-    }).then(response => response.data.keys)
-    .catch((response) => {
-      this.Notification.errorResponse(response);
-    });
+    }).then(response => response.data.keys);
   }
 
-  public updateMetadata(patchData: IMetadataPatchPayload): ng.IPromise<IMetadata | void> {
+  public updateMetadata(patchData: IMetadataPatchPayload): ng.IPromise<IMetadata> {
     const patchReq: ng.IRequestConfig = {
       method: 'PATCH',
       url: `${this.SSO_ORG_CERTIFICATE_URL}/samlmetadata/hosted/sp`,
@@ -90,13 +82,10 @@ export class SsoCertificateService {
       data: patchData,
     };
     return this.$http<IMetadata>(patchReq)
-      .then(response => response.data)
-      .catch((response) => {
-        this.Notification.errorResponse(response);
-      });
+      .then(response => response.data);
   }
 
-  public downloadMetadata(isMultipleCertificate: boolean): ng.IPromise<string | void> {
+  public downloadMetadata(isMultipleCertificate: boolean): ng.IPromise<string> {
     const url = isMultipleCertificate ?
     `${this.SSO_ORG_CERTIFICATE_URL}/samlmetadata/hosted/sp?returnLatestCert=false` :
     `${this.SSO_ORG_CERTIFICATE_URL}/samlmetadata/hosted/sp?returnLatestCert=true`;
@@ -108,13 +97,10 @@ export class SsoCertificateService {
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
       },
-    }).then(response => response.data.metadataXml)
-    .catch((response) => {
-      this.Notification.errorResponse(response);
-    });
+    }).then(response => response.data.metadataXml);
   }
 
-  public downloadIdpMetadata(): ng.IPromise<IIdpMetadata | void> {
+  public downloadIdpMetadata(): ng.IPromise<IIdpMetadata> {
     return this.$http<IIdpMetadataResponse>({
       method: 'GET',
       url: `${this.SSO_ORG_CERTIFICATE_URL}/samlmetadata/remote/idp?attributes=id&attributes=entityId`,
@@ -122,13 +108,10 @@ export class SsoCertificateService {
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
       },
-    }).then(response => this.getIdpMetadata(response.data.data[0].url!))
-    .catch((response) => {
-      this.Notification.errorResponse(response);
-    });
+    }).then(response => this.getIdpMetadata(response.data.data[0].url!));
   }
 
-  private getIdpMetadata(url: string): ng.IPromise<IIdpMetadata | void> {
+  private getIdpMetadata(url: string): ng.IPromise<IIdpMetadata> {
     return this.$http<IIdpMetadata>({
       method: 'GET',
       url: url,
@@ -136,16 +119,13 @@ export class SsoCertificateService {
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
       },
-    }).then(response => response.data)
-    .catch((response) => {
-      this.Notification.errorResponse(response);
-    });
+    }).then(response => response.data);
   }
 
   public addLatestCertificateToOrg(): ng.IPromise<IMetadata | void> {
     return this.getOrgCertificates()
       .then((certificates) => {
-        const certificateIds: string[] = _.map(<ICertificate[]>certificates, 'id');
+        const certificateIds = _.map(certificates, certificate => certificate.id);
         certificateIds.push(this.getLatestCertificate().id);
 
         const patchData: IMetadataPatchPayload = {
@@ -156,7 +136,7 @@ export class SsoCertificateService {
       });
   }
 
-  public switchMetadata(): ng.IPromise<IMetadata | void> {
+  public switchMetadata(): ng.IPromise<IMetadata> {
     const patchData: IMetadataPatchPayload = {
       schemas: [SsoCertificateService.METADATA_SCHEMAS],
       primaryCertId: this.getLatestCertificate().id,
@@ -164,11 +144,11 @@ export class SsoCertificateService {
     return this.updateMetadata(patchData);
   }
 
-  private get SSO_CERTIFICATE_URL() {
+  private get SSO_CERTIFICATE_URL(): string {
     return `${this.UrlConfig.getSSOSetupUrl()}v1/keys`;
   }
 
-  private get SSO_ORG_CERTIFICATE_URL() {
+  private get SSO_ORG_CERTIFICATE_URL(): string {
     return `${this.UrlConfig.getSSOSetupUrl()}${this.Authinfo.getOrgId()}/v1`;
   }
 
@@ -176,7 +156,7 @@ export class SsoCertificateService {
     return this.latestCertificate;
   }
 
-  public setLatestCertificate(certificate: ICertificate) {
+  public setLatestCertificate(certificate: ICertificate): void {
     this.latestCertificate = certificate;
   }
 

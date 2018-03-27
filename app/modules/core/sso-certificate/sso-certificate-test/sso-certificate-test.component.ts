@@ -1,8 +1,8 @@
-import { SsoCertificateService, IIdpMetadata } from '../sso-certificate.service';
+import { SsoCertificateService, IIdpMetadata } from 'modules/core/sso-certificate/shared/sso-certificate.service';
 import { Notification } from 'modules/core/notifications';
 import { IToolkitModalService, IToolkitModalSettings } from 'modules/core/modal';
 
-export class TestSsoController implements ng.IComponentController {
+export class SsoCertificateTestController implements ng.IComponentController {
   public dismiss: Function;
   public ssoTested = false;
 
@@ -49,15 +49,21 @@ export class TestSsoController implements ng.IComponentController {
           this.$window.open(testUrl);
           this.ssoTested = true;
         }
+      })
+      .catch((response) => {
+        this.Notification.errorResponse(response);
       });
   }
 
   public switchMetadata(): void {
     this.SsoCertificateService.switchMetadata()
       .then(() => {
-        this.$rootScope.$broadcast('DISMISS_SSO_CERTIFICATE_NOTIFICATION');
+        this.$rootScope.$broadcast('Core::ssoCertificateExpirationNotificationDismissed');
         this.Notification.success('ssoCertificateModal.switchMetadataSuccess');
         this.dismiss();
+      })
+      .catch((response) => {
+        this.Notification.errorResponse(response);
       });
   }
 
@@ -75,9 +81,9 @@ export class TestSsoController implements ng.IComponentController {
   }
 }
 
-export class TestSsoComponent implements ng.IComponentOptions {
-  public controller = TestSsoController;
-  public template = require('./test-sso.html');
+export class SsoCertificateTestComponent implements ng.IComponentOptions {
+  public controller = SsoCertificateTestController;
+  public template = require('./sso-certificate-test.html');
   public bindings = {
     dismiss: '&',
   };

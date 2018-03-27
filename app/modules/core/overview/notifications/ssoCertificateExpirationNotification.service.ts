@@ -17,7 +17,7 @@ export class SsoCertificateExpirationNotificationService {
       dismiss: () => {
       },
       link: () => {
-        this.$state.go('sso-certificate.check-certificate');
+        this.$state.go('sso-certificate.sso-certificate-check');
       },
       linkText: 'ssoCertificateModal.updateCertificate',
       name: SsoCertificateExpirationNotificationService.SSO_CERTIFICATE_NOTIFICATION_NAME,

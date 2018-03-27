@@ -1,11 +1,9 @@
-import ssoCertificateModuleName, {
-  SsoCertificateService,
-} from '../index';
-import { DownloadMetadataFileController } from './download-metadata-file.component';
+import ssoCertificateDownloadMetadataModuleName from './index';
+import { SsoCertificateService } from 'modules/core/sso-certificate/shared/index';
+import { SsoCertificateDownloadMetadataController } from './sso-certificate-download-metadata.component';
 import { MultiStepModalComponent } from 'modules/core/shared/multi-step-modal/multi-step-modal.component';
 
-type Test = atlas.test.IComponentTest<DownloadMetadataFileController, {
-  $stateParams: ng.ui.IStateParamsService;
+type Test = atlas.test.IComponentTest<SsoCertificateDownloadMetadataController, {
   SsoCertificateService: SsoCertificateService;
 }, {
   components: {
@@ -14,7 +12,7 @@ type Test = atlas.test.IComponentTest<DownloadMetadataFileController, {
 }>;
 
 describe('Component: downloadMetadataFile:', () => {
-  const DIALOG_CONTENT = '.sso-certificate-content-download-metadata-file';
+  const DIALOG_CONTENT = '.sso-certificate-content-download-metadata';
   const CONTENT_BUTTON = '.sso-certificate-content__button';
   const CONTENT_TITLE = '.sso-certificate-content__paragraph-title';
   const CONTENT_ACTION2 = '.sso-certificate-content__paragraph-action2';
@@ -24,11 +22,10 @@ describe('Component: downloadMetadataFile:', () => {
       multiStepModal: this.spyOnComponent('multiStepModal'),
     };
     this.initModules(
-      ssoCertificateModuleName,
+      ssoCertificateDownloadMetadataModuleName,
       this.components.multiStepModal,
     );
     this.injectDependencies(
-      '$stateParams',
       'SsoCertificateService',
     );
 
@@ -37,7 +34,7 @@ describe('Component: downloadMetadataFile:', () => {
   });
 
   function initComponent(this: Test) {
-    this.compileComponent('downloadMetadataFile', {});
+    this.compileComponent('ssoCertificateDownloadMetadata', {});
   }
 
   describe('initial state', () => {
@@ -68,10 +65,15 @@ describe('Component: downloadMetadataFile:', () => {
   });
 
   describe('component behavior for multiple certificates', () => {
-    beforeEach(function (this: Test) {
-      this.$stateParams.isMultiple = true;
+    function initComponent() {
+      this.compileComponent('ssoCertificateDownloadMetadata', {
+        isMultiple: true,
+      });
+    }
+
+    beforeEach(function () {
+      initComponent.call(this);
     });
-    beforeEach(initComponent);
 
     it('should have called function to add the latest certificate to the org', function (this: Test) {
       expect(this.SsoCertificateService.addLatestCertificateToOrg).toHaveBeenCalled();
@@ -83,10 +85,15 @@ describe('Component: downloadMetadataFile:', () => {
   });
 
   describe('component behavior for single certificate', () => {
-    beforeEach(function (this: Test) {
-      this.$stateParams.isMultiple = false;
+    function initComponent() {
+      this.compileComponent('ssoCertificateDownloadMetadata', {
+        isMultiple: false,
+      });
+    }
+
+    beforeEach(function () {
+      initComponent.call(this);
     });
-    beforeEach(initComponent);
 
     it('should have called function to add the latest certificate to the org', function (this: Test) {
       expect(this.SsoCertificateService.addLatestCertificateToOrg).toHaveBeenCalled();

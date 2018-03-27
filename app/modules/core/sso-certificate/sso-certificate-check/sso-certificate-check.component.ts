@@ -1,8 +1,8 @@
-import { CertificateCheck } from '../sso-certificate.constants';
-import { SsoCertificateService } from '../sso-certificate.service';
+import { CertificateCheck } from 'modules/core/sso-certificate/shared/sso-certificate.constants';
+import { SsoCertificateService } from 'modules/core/sso-certificate/shared/sso-certificate.service';
 import { Notification } from 'modules/core/notifications';
 
-export class CheckCertificateController implements ng.IComponentController {
+export class SsoCertificateCheckController implements ng.IComponentController {
   public dismiss: Function;
   public nextDisabled = true;
   public submitRemoved = true;
@@ -34,16 +34,14 @@ export class CheckCertificateController implements ng.IComponentController {
   }
 
   public next(): void {
-    this.$state.go('sso-certificate.certificate-type');
+    this.$state.go('sso-certificate.sso-certificate-type');
   }
 
   public submit(): void {
     this.SsoCertificateService.addLatestCertificateToOrg()
+      .then(() => this.SsoCertificateService.switchMetadata())
       .then(() => {
-        this.SsoCertificateService.switchMetadata();
-      })
-      .then(() => {
-        this.$rootScope.$broadcast('DISMISS_SSO_CERTIFICATE_NOTIFICATION');
+        this.$rootScope.$broadcast('Core::ssoCertificateExpirationNotificationDismissed');
         this.Notification.success('ssoCertificateModal.noActionSuccess');
         this.dismiss();
       });
@@ -60,9 +58,9 @@ export class CheckCertificateController implements ng.IComponentController {
   }
 }
 
-export class CheckCertificateComponent implements ng.IComponentOptions {
-  public controller = CheckCertificateController;
-  public template = require('./check-certificate.html');
+export class SsoCertificateCheckComponent implements ng.IComponentOptions {
+  public controller = SsoCertificateCheckController;
+  public template = require('./sso-certificate-check.html');
   public bindings = {
     dismiss: '&',
   };

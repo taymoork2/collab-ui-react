@@ -1,6 +1,6 @@
-import { CertificateType } from '../sso-certificate.constants';
+import { CertificateType } from 'modules/core/sso-certificate/shared/sso-certificate.constants';
 
-export class CertificateTypeController implements ng.IComponentController {
+export class SsoCertificateTypeController implements ng.IComponentController {
   public dismiss: Function;
   public nextDisabled = true;
   public certificateTypeValue = CertificateType.NEITHER;
@@ -16,13 +16,13 @@ export class CertificateTypeController implements ng.IComponentController {
   ) {}
 
   public next(): void {
-    this.$state.go('sso-certificate.download-metadata-file', {
+    this.$state.go('sso-certificate.sso-certificate-download-metadata', {
       isMultiple: this.certificateTypeValue === CertificateType.MULTIPLE,
     });
   }
 
   public back(): void {
-    this.$state.go('sso-certificate.check-certificate');
+    this.$state.go('sso-certificate.sso-certificate-check');
   }
 
   public onCertificateTypeValueChanged(): void {
@@ -30,9 +30,9 @@ export class CertificateTypeController implements ng.IComponentController {
   }
 }
 
-export class CertificateTypeComponent implements ng.IComponentOptions {
-  public controller = CertificateTypeController;
-  public template = require('./certificate-type.html');
+export class SsoCertificateTypeComponent implements ng.IComponentOptions {
+  public controller = SsoCertificateTypeController;
+  public template = require('./sso-certificate-type.html');
   public bindings = {
     dismiss: '&',
   };

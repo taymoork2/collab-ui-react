@@ -1,11 +1,10 @@
-import ssoCertificateModuleName, {
-  SsoCertificateService,
-} from '../index';
-import { CheckCertificateController } from './check-certificate.component';
+import ssoCertificateCheckModuleName from './index';
+import { SsoCertificateService } from 'modules/core/sso-certificate/shared/index';
+import { SsoCertificateCheckController } from './sso-certificate-check.component';
 import { MultiStepModalComponent } from 'modules/core/shared/multi-step-modal/multi-step-modal.component';
-import { CertificateCheck } from '../sso-certificate.constants';
+import { CertificateCheck } from 'modules/core/sso-certificate/shared/sso-certificate.constants';
 
-type Test = atlas.test.IComponentTest<CheckCertificateController, {
+type Test = atlas.test.IComponentTest<SsoCertificateCheckController, {
   SsoCertificateService: SsoCertificateService;
 }, {
   components: {
@@ -14,7 +13,7 @@ type Test = atlas.test.IComponentTest<CheckCertificateController, {
 }>;
 
 describe('Component: checkCertificate:', () => {
-  const DIALOG_CONTENT = '.sso-certificate-content-check-certificate';
+  const DIALOG_CONTENT = '.sso-certificate-content-check';
   const CONTENT_RADIO = '.sso-certificate-content__radio';
   const CONTENT_ACTION1 = '.sso-certificate-content__paragraph-action1';
 
@@ -23,7 +22,7 @@ describe('Component: checkCertificate:', () => {
       multiStepModal: this.spyOnComponent('multiStepModal'),
     };
     this.initModules(
-      ssoCertificateModuleName,
+      ssoCertificateCheckModuleName,
       this.components.multiStepModal,
     );
     this.injectDependencies(
@@ -34,7 +33,7 @@ describe('Component: checkCertificate:', () => {
   });
 
   function initComponent(this: Test) {
-    this.compileComponent('checkCertificate', {});
+    this.compileComponent('ssoCertificateCheck', {});
   }
 
   describe('initial state', () => {
