@@ -1,8 +1,10 @@
 import IHttpPromise = angular.IHttpPromise;
 import { SearchObject } from './search/searchObject';
-import { IHttpService, IQService } from 'angular';
+import { IHttpResponse, IHttpService, IQService } from 'angular';
 import { SearchTranslator } from './search/searchTranslator';
 import { Aggregations } from './search/searchResult';
+import { Dictionary } from 'lodash';
+import { IIdentifiableDevice } from './deviceSearchConverter';
 
 export class CsdmBulkService {
 
@@ -36,6 +38,14 @@ export class CsdmBulkService {
       });
   }
 
+  public getJobStatus(jobUrl: string): IHttpPromise<IBulkResponse> {
+    const expectedStartOfUrl = this.UrlConfig.getCsdmServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/devices/bulk/';
+    if (!_.startsWith(jobUrl, expectedStartOfUrl)) {
+      this.$q.reject();
+    }
+    return this.$http.get<IBulkResponse>(jobUrl);
+  }
+
   public constructSearchRequest(so: SearchObject): any {
     if (!so) {
       throw new Error('Invalid search state.');
@@ -65,13 +75,22 @@ export interface IBulkResponse {
   progressPercentage: number;
   totalNumber: number;
   updateCommand: { type: string };
-  jobUrl: URL;
+  jobUrl: string;
   state: string;
+  async: boolean;
 }
 
 export class BulkAction {
   private _actionName: string;
-  constructor(private action: () => IHttpPromise<IBulkResponse>, actionName: string) {
+  private informHasHappend = false;
+  private jobUrl: string;
+  private currentBulkResponse: IBulkResponse;
+
+  constructor(private $q: IQService, private  CsdmBulkService: CsdmBulkService,
+              private action: () => IHttpPromise<IBulkResponse>,
+              private actionFinalStateSubscriber: (bulkAction: BulkAction, deviceUrlsWithSuccesses: Dictionary<IIdentifiableDevice>) => void,
+              private devices: Dictionary<IIdentifiableDevice>,
+              actionName: string) {
     this._actionName = actionName; //, private updateProgress: (url:string)=> IHttpPromise<IBulkProgress>) {
   }
 
@@ -79,7 +98,40 @@ export class BulkAction {
     return this._actionName;
   }
 
-  public perform(): IHttpPromise<IBulkResponse> {
-    return this.action();
+  public postBulkAction(): IPromise<IHttpResponse<IBulkResponse>> {
+    return this.action().then((b: IHttpResponse<IBulkResponse>) => {
+      if (b.data && b.data.jobUrl) {
+        this.jobUrl = b.data.jobUrl;
+      }
+      return b;
+    });
+  }
+
+  public pullActionProgress(): IPromise<IHttpResponse<IBulkResponse>> {
+    if (!this.jobUrl) {
+      this.$q.reject();
+    }
+    return this.CsdmBulkService.getJobStatus(this.jobUrl).then((result: IHttpResponse<IBulkResponse>) => {
+      if (result.data && (result.data.state === 'finished' || result.data.state === 'failed')) {
+        this.currentBulkResponse = result.data;
+        this.informActionFinalState();
+      }
+      return result;
+    });
+  }
+
+  public informActionFinalState() {
+    if (this.informHasHappend || !this.currentBulkResponse) {
+      return;
+    }
+    if (this.currentBulkResponse && (this.currentBulkResponse.state === 'finished' || this.currentBulkResponse.state === 'failed')) {
+      if (_.isFunction(this.actionFinalStateSubscriber)) {
+        const devices = _.clone(this.devices);
+        _.forEach(this.currentBulkResponse.failures, (_message, key: string) => {
+          delete this.devices[key];
+        });
+        this.actionFinalStateSubscriber(this, devices);
+      }
+    }
   }
 }

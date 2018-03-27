@@ -7,7 +7,7 @@ import { DeviceSearch } from './deviceSearch.component';
 import { GridCellService } from '../../core/csgrid/cs-grid-cell/gridCell.service';
 import IDevice = csdm.IDevice;
 import { Device, DeviceSearchConverter, IIdentifiableDevice } from '../services/deviceSearchConverter';
-import { CsdmBulkService } from '../services/csdmBulk.service';
+import { BulkAction, CsdmBulkService } from '../services/csdmBulk.service';
 import { Dictionary } from 'lodash';
 
 class DeviceList implements ng.IComponentController {
@@ -267,6 +267,7 @@ class DeviceList implements ng.IComponentController {
   public bulkDelete() {
     this.$state.go('deviceBulkFlow.delete', {
       selectedDevices: this.selectedDevices,
+      devicesDeleted: this.devicesDeleted(this.searchHits),
     });
   }
 
@@ -299,11 +300,11 @@ class DeviceList implements ng.IComponentController {
     };
   }
 
-  public devicesDeleted(searchHits) {
-    return function (urls) {
+  public devicesDeleted(searchHits): (bulkAction: BulkAction, sucessfullyDeleted: Dictionary<IIdentifiableDevice>) => void {
+    return (_action: BulkAction, sucessfullyDeleted: Dictionary<IIdentifiableDevice>) => {
       if (searchHits && searchHits.hits) {
         _.remove(searchHits.hits, (device: Device) => {
-          return _.includes(urls, device.url);
+          return sucessfullyDeleted.hasOwnProperty(device.url);
         });
       }
     };

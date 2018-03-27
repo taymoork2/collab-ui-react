@@ -15,16 +15,22 @@ class BulkDeleteCtrl implements IComponentController {
   /* @ngInject */
   constructor(private $state: IStateService,
               private CsdmBulkService: CsdmBulkService,
-              private Notification: Notification) {
+              private Notification: Notification,
+              private $q,
+              ) {
     this.title = this.$state.params.title;
   }
 
   public delete() {
     const bulkAction = new BulkAction(
+      this.$q,
+      this.CsdmBulkService,
       this.CsdmBulkService.delete.bind(this.CsdmBulkService,
         _.keys(this.$state.params.selectedDevices),
         this.deleteEmptyPlaces,
         this.reallyDelete),
+      this.$state.params.devicesDeleted,
+      this.$state.params.selectedDevices,
       'deviceBulk.deleted');
     this.$state.go('deviceBulkFlow.perform',
       {
