@@ -1,4 +1,4 @@
-import { IBsftSettings, BsftSettings, IBsftCustomerStatus, IBsftCustomerLogin } from './bsft-settings';
+import { IBsftSettings, BsftSettings, IBsftCustomerStatus, IBsftCustomerLogin, BsftCustomerStatus } from './bsft-settings';
 
 interface IBsftCustomerResource extends ng.resource.IResourceClass<ng.resource.IResource<IBsftSettings>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
@@ -55,7 +55,7 @@ export class BsftCustomerService {
         failed: _.get(response, 'failed'),
         errorMessage: _.get(response, 'errorMessage'),
       } as IBsftCustomerStatus;
-    });
+    }).catch(() => new BsftCustomerStatus());
   }
 
   public getBsftCustomerLogin(customerId: string): IPromise<IBsftCustomerLogin> {

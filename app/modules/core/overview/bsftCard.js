@@ -22,6 +22,7 @@
         card.cardClass = 'user-card';
         card.icon = 'icon-circle-call';
         card.isUpdating = true;
+        card.disableCrossLaunch = true;
 
         card.openBroadsoftPortal = function () {
           card.loading = true;
@@ -30,6 +31,10 @@
             $window.open(response.crossLaunchUrl, '_blank');
           });
         };
+
+        BsftCustomerService.getBsftCustomerStatus(Authinfo.getOrgId()).then(function (response) {
+          card.disableCrossLaunch = !response.completed;
+        });
 
         return card;
       },
