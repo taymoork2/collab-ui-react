@@ -6,6 +6,7 @@ export interface IBsftSettings {
   postalAddress: IPostalAddress | null;
   contactInfo: IContactInfo | null;
   site: ISite | null;
+  order: IBsftOrder | null;
 }
 
 export class BsftSettings implements IBsftSettings {
@@ -14,6 +15,7 @@ export class BsftSettings implements IBsftSettings {
   public postalAddress: IPostalAddress | null;
   public contactInfo: IContactInfo | null;
   public site: ISite | null;
+  public order: IBsftOrder | null;
 
   constructor(bsftSettings: IBsftSettings = {
     orgId: '',
@@ -21,6 +23,7 @@ export class BsftSettings implements IBsftSettings {
     postalAddress: null,
     contactInfo: null,
     site: null,
+    order: null,
   }) {
     this.name = bsftSettings.name;
     this.postalAddress = _.isNull(bsftSettings.postalAddress) ? new PostalAddress() : new PostalAddress({
@@ -170,4 +173,25 @@ export class BsftCustomerStatus implements IBsftCustomerStatus {
 
 export interface IBsftCustomerLogin {
   crossLaunchUrl: string;
+}
+
+export interface IBsftOrder {
+  billingNumber: ITelephoneNumber | null;
+  numbers: ITelephoneNumber[];
+}
+
+export class BsftOrder implements IBsftOrder {
+  public billingNumber: ITelephoneNumber;
+  public numbers: ITelephoneNumber[];
+
+  constructor (bsftOrder = {
+    billingNumber: null,
+    numbers: [],
+  }) {
+    this.billingNumber = _.isNull(bsftOrder.billingNumber) ? new TelephoneNumber() : new TelephoneNumber({
+      countryCode: _.get(bsftOrder.billingNumber, 'countryCode'),
+      number: _.get(bsftOrder.billingNumber, 'number'),
+    });
+    this.numbers = bsftOrder.numbers;
+  }
 }
