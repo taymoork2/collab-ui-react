@@ -146,6 +146,28 @@ export interface IBsftCustomerStatus {
   errorMessage: string;
 }
 
+export class BsftCustomerStatus implements IBsftCustomerStatus {
+  public rialtoCustomerId: string;
+  public rialtoSiteId: string;
+  public completed: boolean;
+  public failed: boolean;
+  public errorMessage: string;
+
+  constructor(bsftCustomerStatus: IBsftCustomerStatus = {
+    rialtoCustomerId: '',
+    rialtoSiteId: '',
+    completed: false,
+    failed: false,
+    errorMessage: '',
+  }) {
+    this.rialtoCustomerId = bsftCustomerStatus.rialtoCustomerId;
+    this.rialtoSiteId = bsftCustomerStatus.rialtoSiteId;
+    this.completed = bsftCustomerStatus.completed;
+    this.failed = bsftCustomerStatus.failed;
+    this.errorMessage = bsftCustomerStatus.errorMessage;
+  }
+}
+
 export interface IBsftCustomerLogin {
   crossLaunchUrl: string;
 }
