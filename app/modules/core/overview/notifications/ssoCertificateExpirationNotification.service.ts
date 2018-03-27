@@ -1,7 +1,8 @@
 import { IOverviewPageNotification } from 'modules/core/overview/overviewPage.types';
 
 export class SsoCertificateExpirationNotificationService {
-  public static readonly CERTIFICATE_EXPIRATION_DAYS = 120;
+  public static readonly CERTIFICATE_EXPIRATION_DAYS = 90;
+  public static readonly SSO_CERTIFICATE_NOTIFICATION_NAME = 'ssoCertificateUpdate';
 
   /* @ngInject */
   constructor (
@@ -12,15 +13,14 @@ export class SsoCertificateExpirationNotificationService {
     return {
       badgeText: 'common.urgent',
       badgeType: 'alert',
-      canDismiss: true,
+      canDismiss: false,
       dismiss: () => {
-        // TO-DO update with the latest certificate
       },
       link: () => {
-        this.$state.go('sso-certificate.check-certificate');
+        this.$state.go('sso-certificate.sso-certificate-check');
       },
       linkText: 'ssoCertificateModal.updateCertificate',
-      name: 'ssoCertificateUpdate',
+      name: SsoCertificateExpirationNotificationService.SSO_CERTIFICATE_NOTIFICATION_NAME,
       text: 'ssoCertificateModal.certificateExpirationWarning',
       textValues: {
         days: days,

@@ -1,5 +1,5 @@
 export enum CertificateCheck {
-  SIGNING_AUTHN = 'SIGNING_AUTHN',
+  SIGNING = 'SIGNING',
   NONE = 'NONE',
   NEITHER = 'NEITHER',
 }

@@ -1215,11 +1215,23 @@
               },
             },
           })
-          .state('sso-certificate.check-certificate', {
-            template: '<check-certificate dismiss="$dismiss()"></check-certificate>',
+          .state('sso-certificate.sso-certificate-check', {
+            template: '<sso-certificate-check dismiss="$dismiss()"></sso-certificate-check>',
           })
-          .state('sso-certificate.certificate-type', {
-            template: '<certificate-type dismiss="$dismiss()"></certificate-type>',
+          .state('sso-certificate.sso-certificate-type', {
+            template: '<sso-certificate-type dismiss="$dismiss()"></sso-certificate-type>',
+          })
+          .state('sso-certificate.sso-certificate-download-metadata', {
+            template: '<sso-certificate-download-metadata is-multiple="$resolve.isMultiple" dismiss="$dismiss()"></sso-certificate-download-metadata>',
+            resolve: stateParamsToResolveParams({
+              isMultiple: false,
+            }),
+            params: {
+              isMultiple: false,
+            },
+          })
+          .state('sso-certificate.sso-certificate-test', {
+            template: '<sso-certificate-test dismiss="$dismiss()"></sso-certificate-test>',
           })
           .state('editService', {
             parent: 'modal',

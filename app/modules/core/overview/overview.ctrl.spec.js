@@ -146,7 +146,7 @@ describe('Controller: OverviewCtrl', function () {
 
     this.getCard = function (filter) {
       return _(this.controller.cards).filter(function (card) {
-        return card.name == filter;
+        return card.name === filter;
       }).head();
     };
   });
