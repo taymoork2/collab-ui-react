@@ -37,6 +37,7 @@ export class PstnModel {
   private customerFirstName: string;
   private customerLastName: string;
   private customerEmail: string;
+  private confirmCustomerEmail: string;
   private serviceAddress: Address = new Address();
   private customerExists: boolean;
   private resellerExists: boolean;
@@ -63,6 +64,7 @@ export class PstnModel {
     this.customerFirstName = '';
     this.customerLastName = '';
     this.customerEmail = '';
+    this.confirmCustomerEmail = '';
     if (locations) {
       this.serviceAddress.reset();
     } else {
@@ -147,6 +149,14 @@ export class PstnModel {
 
   public getCustomerEmail(): string {
     return this.customerEmail;
+  }
+
+  public setConfirmCustomerEmail(_confirmCustomerEmail: string): void {
+    this.confirmCustomerEmail = _confirmCustomerEmail;
+  }
+
+  public getConfirmCustomerEmail(): string {
+    return this.confirmCustomerEmail;
   }
 
   public setServiceAddress(_serviceAddress: Address) {
