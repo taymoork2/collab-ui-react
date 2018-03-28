@@ -30,7 +30,7 @@ class OrganizationDeleteModalController {
     ],
     onlineSingleUserDelete: [
       'notReversible',
-      'singleUserDelete',
+      'allData',
     ],
     onlineMultiUserMove: [
       'notReversible',
@@ -120,21 +120,38 @@ class OrganizationDeleteModalController {
     const orgId = this.Authinfo.getOrgId();
     this.Orgservice.deleteOrg(orgId, this.action === this.actions.DELETE)
       .then(() => {
-        this.customerType = this.Authinfo.isOnlineCustomer()
-          ? this.Config.customerTypes.online
-          : this.Config.customerTypes.enterprise;
-        this.Analytics.trackEvent(this.Analytics.sections.ORGANIZATION.eventNames.DELETE, {
-          organizationId: orgId,
-          customerType: this.customerType,
-        });
-        this.dismiss();
-        this.openAccountClosedModal();
+        this.deleteOrgSuccess(orgId);
       }).catch((error) => {
-        this.deleteLoading = false;
-        this.Notification.errorResponse(error, 'organizationDeleteModal.deleteOrgError', {
-          orgName: this.Authinfo.getOrgName(),
+        // TODO Remove this code once the deleteOrg API has been fixed
+        // Even though the API returned a failure the org may have been deleted
+        const params = {
+          disableCache: true,
+          basicInfo: true,
+        };
+        this.Orgservice.getAdminOrgAsPromise(orgId, params).then(() => {
+          // Error case: org should not still exist
+          this.deleteLoading = false;
+          this.Notification.errorResponse(error, 'organizationDeleteModal.deleteOrgError', {
+            orgName: this.Authinfo.getOrgName(),
+          });
+        }).catch(() => {
+          // Org was eventually deleted
+          this.deleteOrgSuccess(orgId);
         });
       });
+  }
+
+  public deleteOrgSuccess(orgId): void {
+    this.deleteLoading = false;
+    this.customerType = this.Authinfo.isOnlineCustomer()
+      ? this.Config.customerTypes.online
+      : this.Config.customerTypes.enterprise;
+    this.Analytics.trackEvent(this.Analytics.sections.ORGANIZATION.eventNames.DELETE, {
+      organizationId: orgId,
+      customerType: this.customerType,
+    });
+    this.dismiss();
+    this.openAccountClosedModal();
   }
 
   public openAccountClosedModal(): void {
