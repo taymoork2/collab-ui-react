@@ -24,6 +24,8 @@
       'webex-messenger:get_webextoken',
       'cloud-contact-center:admin',
       'spark-compliance:rooms_read',
+      'spark-compliance:people_read',
+      'spark-compliance:organizations_read',
       'compliance:spark_conversations_read',
       'contact-center-context:pod_read',
       'contact-center-context:pod_write',
