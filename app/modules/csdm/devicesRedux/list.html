@@ -29,16 +29,9 @@
     <div class="buttons">
       <i class="icon icon-trash"
          tooltip="{{ 'deviceBulk.deleteDevices' | translate }}"
+         tooltip-placement="top-right"
          aria-label="{{ 'deviceBulk.deleteDevices' | translate }}"
          ng-click="lctrl.bulkDelete()"></i>
-      <i class="icon icon-download"
-         tooltip="{{ 'deviceBulk.exportAsCSV' | translate }}"
-         aria-label="{{ 'deviceBulk.exportAsCSV' | translate }}"></i>
-      <i class="icon icon-more"
-         tooltip="{{ 'deviceBulk.editDevices' | translate }}"
-         tooltip-placement="top-right"
-         aria-label="{{ 'deviceBulk.editDevices' | translate }}"
-         ng-click="lctrl.expandBulk()"></i>
     </div>
   </div>
   <cs-grid class="gridStyle" grid-api="lctrl.gridApi" grid-options="lctrl.gridOptions"></cs-grid>
