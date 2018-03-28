@@ -1,11 +1,11 @@
 import * as provisioner from '../../../provisioner/provisioner';
 import { huronCustomer } from '../../../provisioner/huron/huron-customer-config';
 import { CallUserPage } from '../../pages/callUser.page';
-import { CallSpeedDialsPage } from '../../pages/callSpeedDials.page';
+import { CallUserPhoneButtonLayoutPage } from '../../pages/callUserPhoneButtonLayout.page';
 import * as featureToggle from '../../../utils/featureToggle.utils';
 
 const CallUser = new CallUserPage();
-const SpeedDialsPage = new CallSpeedDialsPage();
+const PhoneButtonLayoutPage = new CallUserPhoneButtonLayoutPage();
 const now = Date.now();
 
 /* globals LONG_TIMEOUT, manageUsersPage, navigation, users, telephony */
@@ -138,10 +138,10 @@ describe('Huron Functional: add-user', () => {
       utils.expectIsDisplayed(CallUser.callOverview.features.title);
       utils.expectIsDisplayed(CallUser.callOverview.features.speedDials);
     });
-    it('should navigate to Speed Dials details view', () => {
-      utils.click(CallUser.callOverview.features.speedDials);
-      utils.expectIsDisplayed(SpeedDialsPage.title);
-      utils.expectIsDisplayed(SpeedDialsPage.actionMenu);
+    it('should navigate to Phone Button Layout details view', () => {
+      utils.click(CallUser.callOverview.features.phoneButtonLayout);
+      utils.expectIsDisplayed(PhoneButtonLayoutPage.title);
+      utils.expectIsDisplayed(PhoneButtonLayoutPage.actionMenu);
     });
     it('should navigate back to call details view', () => {
       utils.click(CallUser.callSubMenu);

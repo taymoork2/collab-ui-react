@@ -13,7 +13,6 @@ describe('Huron Functional: user-phone-button-layout', () => {
   const customer = huronCustomer({
     test: 'user-phone-btn-layout',
     users: { noOfUsers: 1 },
-    toggle: 'h-i1238',
   });
   const USERS = customer.users;
 
@@ -233,4 +232,4 @@ describe('Huron Functional: user-phone-button-layout', () => {
       });
     });
   });
-}).pend('Phone button layout toggle still disabled. There is a JIRA to resolve this.')
+});
