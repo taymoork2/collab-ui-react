@@ -1175,6 +1175,7 @@ describe('OnboardCtrl: Ctrl', function () {
       beforeEach(initController);
 
       it('should call getAccountLicenses and getAccountLicensesForCare correctly', function () {
+        this.$scope.setCareService();
         this.$scope.radioStates.msgRadio = true;
         this.$scope.controlMsg();
         this.$scope.radioStates.initialCareRadioState = this.$scope.careRadioValue.NONE;
@@ -1182,7 +1183,8 @@ describe('OnboardCtrl: Ctrl', function () {
         this.$scope.recvUpdateIsContextServiceAdminAuthorized(true);
 
         var licenseFeatures = this.$scope.getAccountLicenses();
-        this.$scope.setCareService();
+        this.$scope.sendCareServiceMetrics();
+
         expect(licenseFeatures[0].id).toBe('MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0');
         expect(licenseFeatures[0].idOperation).toBe('ADD');
         expect(licenseFeatures[1].id).toBe('CDC_da652e7d-cd34-4545-8f23-936b74359afd');
@@ -1198,6 +1200,8 @@ describe('OnboardCtrl: Ctrl', function () {
         this.$scope.radioStates.careRadio = this.$scope.careRadioValue.NONE;
         this.$scope.recvUpdateIsContextServiceAdminAuthorized(true);
         this.$scope.getAccountLicenses();
+        this.$scope.sendCareServiceMetrics();
+
         expect(this.LogMetricsService.logMetrics.calls.argsFor(0)[1]).toBe('CAREDISABLED');
       });
     });
@@ -1223,14 +1227,16 @@ describe('OnboardCtrl: Ctrl', function () {
       beforeEach(initController);
 
       it('should call getAccountLicenses and getAccountLicensesForCare correctly', function () {
+        this.$scope.setCareService();
         this.$scope.radioStates.msgRadio = true;
         this.$scope.controlMsg();
         this.$scope.radioStates.initialCareRadioState = this.$scope.careRadioValue.NONE;
         this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K2;
         this.$scope.recvUpdateIsContextServiceAdminAuthorized(true);
-
         var licenseFeatures = this.$scope.getAccountLicenses();
-        this.$scope.setCareService();
+
+        this.$scope.sendCareServiceMetrics();
+
         expect(licenseFeatures[0].id).toBe('MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0');
         expect(licenseFeatures[0].idOperation).toBe('ADD');
         expect(licenseFeatures[1].id).toBe('CVC_va652e7d-cd34-4545-8f23-936b74359afd');
@@ -1246,6 +1252,8 @@ describe('OnboardCtrl: Ctrl', function () {
         this.$scope.radioStates.careRadio = this.$scope.careRadioValue.NONE;
         this.$scope.recvUpdateIsContextServiceAdminAuthorized(true);
         this.$scope.getAccountLicenses();
+        this.$scope.sendCareServiceMetrics();
+
         expect(this.LogMetricsService.logMetrics.calls.argsFor(0)[1]).toBe('CAREVOICEDISABLED');
       });
     });
