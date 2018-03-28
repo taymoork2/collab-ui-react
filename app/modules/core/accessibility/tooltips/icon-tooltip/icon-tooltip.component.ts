@@ -11,10 +11,20 @@ class IconTooltipController implements ng.IComponentController, IBaseTooltipCont
     // notes (for PR discussion only):
     // - use composition instead of classical inheritance to populate properties from a default base source
     // - (bonus) other sources could be added to the args list if re-use of other properties is desired
-    _.assignIn(this, TooltipUtil.mkBaseTooltipController({
+
+    _.assignInWith(this, TooltipUtil.mkBaseTooltipController({
       // defaults the icon trigger to (i)
       defaultClass: 'icon-information',
-    }));
+    }), function (_destValue, _srcValue, propertyName, dest, src) {
+      // copy over getters from source objects as-needed
+      const srcPropertyDescriptor = Object.getOwnPropertyDescriptor(src, propertyName);
+      if (!srcPropertyDescriptor) {
+        return;
+      }
+      if (srcPropertyDescriptor.get) {
+        Object.defineProperty(dest, propertyName, srcPropertyDescriptor);
+      }
+    });
   }
 }
 
