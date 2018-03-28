@@ -57,7 +57,7 @@
     "@ciscospark/plugin-logger": "1.28.5",
     "@ciscospark/spark-core": "1.28.5",
     "@collabui/collab-amcharts": "~3.19.4",
-    "@collabui/collab-ui": "~5.4.1",
+    "@collabui/collab-ui": "~5.4.2",
     "@collabui/collab-ui-formly": "~2.0.3",
     "@collabui/collab-ui-ng": "~8.1.0",
     "acorn": "=5.0.3",
