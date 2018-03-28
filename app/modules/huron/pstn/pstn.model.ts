@@ -4,6 +4,7 @@ import { ContractStatus } from './pstn.const';
 
 export interface IOrderData {
   numbers: string | string[];
+  length?: number;
   areaCode?: string;
   consecutive?: boolean;
   nxx?: string;

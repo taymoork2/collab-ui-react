@@ -261,12 +261,9 @@ export class PstnWizardService {
     }
 
     _.forEach(this.advancedOrders, order => {
-      let quantity: number = 0;
+      let quantity: number | undefined = 0;
       if (order.orderType === BLOCK_ORDER && order.numberType === NUMTYPE_DID) {
-        //Block Order
-        if (_.isArray(order.data)) {
-          quantity = (<any[]>order.data).length;
-        }
+        quantity = order.data.length;
         promise = this.PstnService.orderBlock(this.PstnModel.getCustomerId(), this.PstnModel.getProviderId(), order.data.areaCode, quantity, order.data.consecutive, order.data.nxx)
           .catch(pushErrorArray);
       } else if (order.orderType === BLOCK_ORDER && order.numberType === NUMTYPE_TOLLFREE) {
@@ -500,9 +497,7 @@ export class PstnWizardService {
       case PORT_ORDER:
         return order.data.numbers.length;
       case BLOCK_ORDER:
-        if (_.isArray(order.data)) {
-          return (<any[]>order.data).length;
-        }
+        return order.data.length;
       case undefined:
         return undefined;
     }
