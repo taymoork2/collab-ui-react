@@ -306,6 +306,12 @@ class DeviceList implements ng.IComponentController {
         _.remove(searchHits.hits, (device: Device) => {
           return sucessfullyDeleted.hasOwnProperty(device.url);
         });
+        _.forEach(sucessfullyDeleted, (_sd, k: string) => {
+          delete this.selectedDevices[k];
+        });
+        if (_.size(sucessfullyDeleted) > 0) {
+          this.bulkAll = false;
+        }
       }
     };
   }

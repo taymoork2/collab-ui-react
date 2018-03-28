@@ -8,6 +8,7 @@ class BulkDeleteCtrl implements IComponentController {
   public title: string;
   private deleteEmptyPlaces: boolean;
   private reallyDelete: boolean;
+
   public get numberOfDevices() {
     return _.size(this.$state.params.selectedDevices);
   }
@@ -16,8 +17,7 @@ class BulkDeleteCtrl implements IComponentController {
   constructor(private $state: IStateService,
               private CsdmBulkService: CsdmBulkService,
               private Notification: Notification,
-              private $q,
-              ) {
+              private $q) {
     this.title = this.$state.params.title;
   }
 
@@ -42,8 +42,11 @@ class BulkDeleteCtrl implements IComponentController {
 
   public close() {
     this.dismiss();
-    this.Notification.warning('deviceBulk.deletionStoppedXDeleted',
-      { nDevices: '0/' + _.size(this.$state.params.selectedDevices) },
+    this.Notification.warning('deviceBulk.deletionCompletedXDeleted',
+      {
+        nDevices: '0',
+        nTotalDevices: _.size(this.$state.params.selectedDevices),
+      },
       'deviceBulk.deletionStoppedTitle');
   }
 }

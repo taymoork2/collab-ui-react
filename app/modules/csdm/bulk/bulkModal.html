@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="vm.dismiss()" aria-label="{{::'common.close' | translate}}"></button>
+  <button type="button" class="close" ng-click="vm.dismiss()" ng-disabled="vm.inProgress" aria-label="{{::'common.close' | translate}}"></button>
   <h4 class="modal-title">{{vm.title | translate}}</h4>
 </div>
 <div class="modal-body">

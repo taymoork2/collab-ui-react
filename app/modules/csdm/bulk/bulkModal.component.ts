@@ -3,6 +3,7 @@ import { BulkAction, IBulkFailure, IBulkResponse } from '../services/csdmBulk.se
 import { IHttpResponse, IHttpService, IIntervalService, IScope } from 'angular';
 import IDevice = csdm.IDevice;
 import moment = require('moment');
+import { Notification } from '../../core/notifications/notification.service';
 
 interface IBulkFailureData {
   url: string;
@@ -23,9 +24,14 @@ class BulkModalCtrl implements ng.IComponentController {
   public bulkResult: IBulkResponse;
   public bulkActionPoller: IPromise<void>;
   private bulkAction: BulkAction;
+  private pullProgressErrorCount = 0;
 
   public get title() {
     return _.get(this.$stateParams, 'title');
+  }
+
+  public get inProgress() {
+    return this.pullProgressErrorCount < 10 && (!this.bulkAction || this.bulkAction.inProgress);
   }
 
   public get hasErrors() {
@@ -36,7 +42,8 @@ class BulkModalCtrl implements ng.IComponentController {
   constructor(private $stateParams: IStateParamsService,
               private $interval: IIntervalService,
               private $http: IHttpService,
-              private $scope: IScope) {
+              private $scope: IScope,
+              private Notification: Notification) {
   }
 
   public $onInit() {
@@ -73,15 +80,30 @@ class BulkModalCtrl implements ng.IComponentController {
           this.$interval.cancel(this.bulkActionPoller);
         });
       }
+    }).catch(error => {
+      this.Notification.errorWithTrackingId(error, 'deviceBulk.deletionFullError');
     });
   }
 
   private pollBulkAction() {
     this.bulkAction.pullActionProgress()
       .then((result: IHttpResponse<IBulkResponse>) => {
+        this.pullProgressErrorCount = 0;
         this.processBulkResponse(result.data);
-        if (result.data.state === 'failed' || result.data.state === 'finished') {
+        if (BulkAction.isCompleted(result.data.state)) {
           this.$interval.cancel(this.bulkActionPoller);
+        }
+      })
+      .catch(error => {
+        if (error) {
+          this.pullProgressErrorCount++;
+        } else {
+          //possibly the url is wrong
+          this.Notification.error('deviceBulk.pollProgressError');
+        }
+        if (this.pullProgressErrorCount > 9) { //ten seconds with consecutive errors with the current poller
+          this.$interval.cancel(this.bulkActionPoller);
+          this.Notification.errorWithTrackingId(error, 'deviceBulk.pollProgressError');
         }
       });
   }
@@ -98,6 +120,23 @@ class BulkModalCtrl implements ng.IComponentController {
         });
       }
     });
+    if (BulkAction.isCompleted(response.state)) {
+      if (this.numberOfErrors > 0 || this.numberOfSuccesses !== this.bulkAction.deviceCount) {
+        this.Notification.warning('deviceBulk.deletionCompletedXDeleted',
+          {
+            nDevices: this.numberOfSuccesses,
+            nTotalDevices: this.bulkAction.deviceCount,
+          },
+          'deviceBulk.deletionCompletedWErrorTitle');
+      } else {
+        this.Notification.success('deviceBulk.deletionCompletedXDeleted',
+          {
+            nDevices: this.numberOfSuccesses,
+            nTotalDevices: this.bulkAction.deviceCount,
+          },
+          'deviceBulk.deletionCompletedTitle');
+      }
+    }
   }
 }
 

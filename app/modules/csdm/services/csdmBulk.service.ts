@@ -81,6 +81,9 @@ export interface IBulkResponse {
 }
 
 export class BulkAction {
+  private static finished = 'finished';
+  private static failed = 'failed';
+
   private _actionName: string;
   private informHasHappend = false;
   private jobUrl: string;
@@ -96,6 +99,19 @@ export class BulkAction {
 
   get actionName(): string {
     return this._actionName;
+  }
+
+  public get inProgress(): boolean {
+    return !this.currentBulkResponse ||
+      !BulkAction.isCompleted(this.currentBulkResponse.state);
+  }
+
+  public get deviceCount() {
+    return _.size(this.devices);
+  }
+
+  public static isCompleted(state: string): boolean {
+    return (state === BulkAction.failed || state === BulkAction.finished);
   }
 
   public postBulkAction(): IPromise<IHttpResponse<IBulkResponse>> {
@@ -124,7 +140,7 @@ export class BulkAction {
     if (this.informHasHappend || !this.currentBulkResponse) {
       return;
     }
-    if (this.currentBulkResponse && (this.currentBulkResponse.state === 'finished' || this.currentBulkResponse.state === 'failed')) {
+    if (this.currentBulkResponse && (this.currentBulkResponse.state === BulkAction.finished || this.currentBulkResponse.state === BulkAction.failed)) {
       if (_.isFunction(this.actionFinalStateSubscriber)) {
         const devices = _.clone(this.devices);
         _.forEach(this.currentBulkResponse.failures, (_message, key: string) => {

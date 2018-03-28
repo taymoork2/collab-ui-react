@@ -11173,7 +11173,11 @@
     "deleteEmptyPlaces": "Delete any resulting empty places",
     "deleted": "Deleted",
     "deletionStoppedTitle": "Deletion stopped by user",
-    "deletionStoppedXDeleted": "{{nDevices}} devices were successfully deleted.",
+    "deletionCompletedTitle": "Deletion completed",
+    "deletionCompletedWErrorTitle": "Deletion completed with errors",
+    "deletionCompletedXDeleted": "{{nDevices}}/{{nTotalDevices}} devices were successfully deleted.",
+    "deletionFullError": "Bulk deletion failed",
+    "pollProgressError": "Failures while retrieving the bulk progress",
     "startedAt": "Started {{startTime}}",
     "toResolveErrors": "To resolve errors please try again later or <a href='https://collaborationhelp.cisco.com/'>contact customer support</a>"
   }
