@@ -35,7 +35,7 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
   public isProcessing = false;
   public userErrorArray: IErrorItem[] = [];
   public isCancelledByUser = false;
-  public startedBy: string;
+  public startedBy?: string;
 
   private cancelErrorsDeferred?: ng.IDeferred<void>;
   private startDateAndTime?: IDateAndTime;
@@ -57,6 +57,10 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
 
   public get startedTime() {
     return _.get(this.startDateAndTime, 'time');
+  }
+
+  public get hasUser() {
+    return _.isString(this.startedBy);
   }
 
   private intervalCallback = (task: ITask) => {

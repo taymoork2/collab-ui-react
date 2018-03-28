@@ -2,12 +2,12 @@
   <h4 class="csv-upload-results__title" translate="userManage.bulk.import.status"></h4>
 
   <p class="csv-upload-results__description"
-    ng-if="$ctrl.startedTime && $ctrl.startedDate"
+    ng-if="$ctrl.startedTime && $ctrl.startedDate && !$ctrl.hasUser"
     translate="userTaskManagerModal.startedOn"
     translate-values="{ time: $ctrl.startedTime, date: $ctrl.startedDate }">
   </p>
   <p class="csv-upload-results__description"
-    ng-if="$ctrl.startedTime && $ctrl.startedDate && $ctrl.startedBy"
+    ng-if="$ctrl.startedTime && $ctrl.startedDate && $ctrl.hasUser"
     translate="userTaskManagerModal.startedBy"
     translate-values="{ time: $ctrl.startedTime, date: $ctrl.startedDate, person: $ctrl.startedBy }">
   </p>
