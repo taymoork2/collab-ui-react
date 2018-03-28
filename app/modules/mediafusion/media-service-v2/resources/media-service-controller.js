@@ -16,7 +16,7 @@
       title: $translate.instant('common.settings'),
       state: 'media-service-v2.settings',
     }];
-    if (hasMfClusterWizardFeatureToggle) {
+    if (!hasMfClusterWizardFeatureToggle) {
       vm.addResourceModal = {
         type: 'modal',
         controller: 'ClusterCreationWizardController',

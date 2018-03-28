@@ -58,6 +58,8 @@ describe('ClusterCreationWizardController', function () {
   it('AddResourceSectionService redirectPopUpAndClose should be called for redirectToTargetAndCloseWindowClicked', function () {
     this.controller.emailSubscribers = 'sample@cisco.com';
     this.controller.sipSettingEnabled = true;
+    this.controller.releaseChannel = {};
+    this.controller.releaseChannel.value = 'beta';
     this.controller.createCluster();
     this.$scope.$apply();
     expect(this.AddResourceSectionService.addRedirectTargetClicked).toHaveBeenCalled();

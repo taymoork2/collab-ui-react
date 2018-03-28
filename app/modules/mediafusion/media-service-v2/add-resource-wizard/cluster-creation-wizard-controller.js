@@ -111,7 +111,6 @@
       } else {
         AddResourceSectionService.addRedirectTargetClicked(vm.hostName, vm.clusterName).then(function () {
           if (vm.firstTimeSetup) AddResourceSectionService.enableMediaService();
-          AddResourceSectionService.redirectPopUpAndClose(vm.hostName, vm.clusterName);
           vm.clusterId = AddResourceSectionService.selectClusterId();
           vm.clusterDetail = AddResourceSectionService.selectedClusterDetails();
           if (!_.isUndefined(vm.videoQuality)) VideoQualitySectionService.setVideoQuality(vm.videoQuality, vm.videoPropertySetId);
@@ -121,6 +120,7 @@
           if (!_.isUndefined(vm.releaseChannel)) HybridMediaReleaseChannelService.saveReleaseChannel(vm.clusterId, vm.releaseChannel);
           if (!_.isUndefined(vm.formDataForUpgradeSchedule)) HybridMediaUpgradeScheduleService.updateUpgradeScheduleAndUI(vm.formDataForUpgradeSchedule, vm.clusterId);
           if (!_.isUndefined(vm.emailSubscribers)) HybridMediaEmailNotificationService.saveEmailSubscribers(vm.emailSubscribers);
+          AddResourceSectionService.redirectPopUpAndClose(vm.hostName, vm.clusterName, vm.releaseChannel.value);
         }).then(function () {
           $state.go('media-service-v2.list');
         });
