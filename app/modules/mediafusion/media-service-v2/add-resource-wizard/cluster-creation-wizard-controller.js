@@ -111,7 +111,7 @@
       } else {
         AddResourceSectionService.addRedirectTargetClicked(vm.hostName, vm.clusterName).then(function () {
           if (vm.firstTimeSetup) AddResourceSectionService.enableMediaService();
-          AddResourceSectionService.redirectPopUpAndClose(vm.hostName, vm.clusterName);
+          AddResourceSectionService.redirectPopUpAndClose(vm.hostName, vm.clusterName, vm.releaseChannel.value);
           vm.clusterId = AddResourceSectionService.selectClusterId();
           vm.clusterDetail = AddResourceSectionService.selectedClusterDetails();
           if (!_.isUndefined(vm.videoQuality)) VideoQualitySectionService.setVideoQuality(vm.videoQuality, vm.videoPropertySetId);

@@ -52,7 +52,7 @@
     function redirectToTargetAndCloseWindowClicked(hostName, enteredCluster) {
       $modalInstance.dismiss();
       AddResourceCommonServiceV2.addRedirectTargetClicked(hostName, enteredCluster).then(function () {
-        AddResourceCommonServiceV2.redirectPopUpAndClose(hostName, enteredCluster, vm.selectedClusterId, vm.firstTimeSetup);
+        AddResourceCommonServiceV2.redirectPopUpAndClose(hostName, enteredCluster);
       });
     }
 
