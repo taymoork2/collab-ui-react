@@ -1,4 +1,5 @@
 import { KeyCodes } from 'modules/core/accessibility';
+import { CoreEvent } from 'modules/core/shared/event.constants';
 
 class CsGridCtrl {
   public gridOptions: uiGrid.IGridOptions;
@@ -30,6 +31,14 @@ class CsGridCtrl {
     };
 
     this.gridOptions = _.defaults(this.gridOptions, defaultGridOptions);
+    const resizeGridEvent = this.$rootScope.$on(CoreEvent.SIDENAV_RESIZED, () => {
+      this.$timeout(() => {
+        if (this.gridApi) {
+          this.gridApi.core.handleWindowResize();
+        }
+      }, 500);
+    });
+    this.$scope.$on('$destroy', resizeGridEvent);
 
     if (_.isUndefined(this.gridOptions.onRegisterApi)) {
       this.gridOptions.onRegisterApi = (gridApi: uiGrid.IGridApi): void => {
