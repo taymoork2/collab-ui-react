@@ -7,7 +7,7 @@
     <p translate="domainManagement.verify.verifyThis"></p>
     <p class="domainInput">{{dmpopup.domainName}}</p>
     <p translate="domainManagement.verify.beforeVerify"/>
-    <p class="domainToken"><b>{{dmpopup.domain.token}}</b></p>
+    <p class="domainToken" ng-if="dmpopup.domain.token"><b>ciscocidomainverification={{::dmpopup.domain.token}}</b></p>
     <p translate="domainManagement.verify.learn" translate-value-click="dmpopup.learnMore()" translate-compile></p>
   </section>
 
