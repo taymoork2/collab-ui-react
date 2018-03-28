@@ -11171,6 +11171,7 @@
     "deleteDeviceAreYouSure": "Are you sure you want to delete the selected device?",
     "changeCannotBeUndone": "This action cannot be undone.",
     "deleteEmptyPlaces": "Delete any resulting empty places",
+    "deleteEmptyPlacesExplanation": "Places will only be deleted if the last device in that place is deleted.",
     "deleted": "Deleted",
     "deletionStoppedTitle": "Deletion stopped by user",
     "deletionStoppedXDeleted": "{{nDevices}} devices were successfully deleted.",
