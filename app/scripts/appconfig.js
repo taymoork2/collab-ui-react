@@ -3939,7 +3939,7 @@
               customerCommunicationLicenseIsTrial: '',
               customerRoomSystemsLicenseIsTrial: '',
               showContractIncomplete: false,
-              refreshFn: function () {},
+              refreshFn: function () { },
             },
             views: {
               'modal@': {
@@ -4018,7 +4018,7 @@
             parent: 'modalDialog',
             params: {
               numberInfo: {},
-              refreshFn: function () {},
+              refreshFn: function () { },
             },
             views: {
               'modal@': {
@@ -4404,7 +4404,7 @@
               existingFieldIds: [],
               existingFieldData: {},
               inUse: false,
-              callback: function () {},
+              callback: function () { },
             },
             resolve: {
               existingFieldIds: /* @ngInject */ function ($stateParams) {
@@ -4435,8 +4435,8 @@
             params: {
               adminAuthorizationStatus: {},
               field: {},
-              process: function () {},
-              callback: function () {},
+              process: function () { },
+              callback: function () { },
             },
             resolve: {
               adminAuthorizationStatus: /* @ngInject */ function ($stateParams) {
@@ -4495,7 +4495,7 @@
               existingFieldsetIds: [],
               inUse: false,
               existingFieldsetData: {},
-              callback: function () {},
+              callback: function () { },
             },
             resolve: {
               existingFieldsetIds: /* @ngInject */ function ($stateParams) {
@@ -4526,8 +4526,8 @@
             params: {
               adminAuthorizationStatus: {},
               fieldset: {},
-              process: function () {},
-              callback: function () {},
+              process: function () { },
+              callback: function () { },
             },
             resolve: {
               adminAuthorizationStatus: /* @ngInject */ function ($stateParams) {
@@ -5547,7 +5547,6 @@
 
         $stateProvider
           .state('ediscovery-main', {
-            parent: 'mainLazyLoad',
             views: {
               'main@': {
                 template: require('modules/ediscovery/ediscovery.tpl.html'),
@@ -5555,6 +5554,14 @@
             },
             abstract: true,
             sticky: true,
+            resolve: {
+              // TODO: agendel 2/7/18 why can't we just do parent: 'mainLazyLoad'?
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('./main'));
+                }, 'modules');
+              }),
+            },
           })
           .state('ediscovery', {
             url: '/ediscovery',
@@ -5576,6 +5583,20 @@
             controller: 'EdiscoveryReportsController',
             controllerAs: 'ediscoveryCtrl',
             template: require('modules/ediscovery/ediscovery-reports.html'),
+          })
+          .state('legalhold', {
+            template: '<div ui-view class="legal-hold"></div>',
+            absract: true,
+            parent: 'ediscovery',
+            resolve: {
+              supportsFeature: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.stateSupportsFeature(FeatureToggleService.features.atlasF5955LegalHold);
+              },
+            },
+          })
+          .state('legalhold.landing', {
+            url: '/legalhold',
+            template: '<legal-hold-landing></legal-hold-landing>',
           });
 
         $stateProvider
