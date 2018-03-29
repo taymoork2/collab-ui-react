@@ -58,7 +58,8 @@ class AutoAssignTemplateManageOptionsController implements ng.IComponentControll
       btnType: 'alert',
     }).result.then(() => {
       const templateId = _.get<string>(this.autoAssignTemplates, `${this.DEFAULT_AUTO_ASSIGN_TEMPLATE}.templateId`);
-      return this.AutoAssignTemplateService.deleteTemplate(templateId)
+      return this.AutoAssignTemplateService.deactivateTemplate()
+        .then(() => this.AutoAssignTemplateService.deleteTemplate(templateId))
         .then(() => {
           this.Notification.success('userManage.org.deleteAutoAssignModal.deleteSuccess');
           this.onDelete();
