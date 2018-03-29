@@ -3,7 +3,6 @@ import { ISftpServer } from '../setup/hcs-setup-sftp';
 interface ISftpServerResource extends ng.resource.IResourceClass<ng.resource.IResource<ISftpServer>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<ISftpServer>>;
 }
-const UPGRADE_DEV_URL = 'http://rch-ads-165:9090/hcs-upgrade-service/api/v1'; //TBD-- FOR  local testing only
 
 export class HcsUpgradeService {
   private sftpServerResource: ISftpServerResource;
@@ -12,14 +11,25 @@ export class HcsUpgradeService {
   constructor(
     private $resource: ng.resource.IResourceService,
     private Authinfo,
+    private UrlConfig,
   ) {
+    const BASIC_AUTH_VAL = 'Basic aGNzdXNfdXNlcjo0NGJlNjJiMWNhNzVhMWJjMWI1YzAwNWE5OTJhNTU1NzZhZWEwMjFi'; //To-do Temporary usage from Upgrade Service
+    const BASE_URL = this.UrlConfig.getHcsUpgradeServiceUrl();
+
     const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
     };
+    const saveAction: ng.resource.IActionDescriptor = {
+      method: 'POST',
+      headers: {
+        Authorization: BASIC_AUTH_VAL,
+      },
+    };
 
-    this.sftpServerResource = <ISftpServerResource>this.$resource(UPGRADE_DEV_URL + '/partners/:partnerId/sftpServers/:sftpServerId', {},
+    this.sftpServerResource = <ISftpServerResource>this.$resource(BASE_URL + 'partners/:partnerId/sftpServers/:sftpServerId', {},
       {
         update: updateAction,
+        save: saveAction,
       });
   }
 
