@@ -35,7 +35,7 @@ export class UpgradeGroupCtrl implements ng.IComponentController {
     this.customerName = 'Betty\'s Flower Shop';
     this.tabs.push({
       title: this.$translate.instant('hcs.clustersList.title'),
-      state: `hcs.clusterList({customerId: '${this.customerId}'})`,
+      state: `hcs.clusterList({groupId: '${this.customerId}'})`,
     }, {
       title: this.$translate.instant('hcs.upgradePage.title'),
       state: `hcs.upgradeGroup({customerId: '${this.customerId}'})`,

@@ -3201,30 +3201,38 @@
             template: '<hcs-licenses-subscription></hcs-licenses-subscription>',
           })
           .state('hcs.clusterList', {
-            url: '/hcs/inventory/:customerId/clusters',
+            url: '/hcs/inventory/:groupId/clusters',
             parent: 'partner',
-            template: '<hcs-cluster-list customer-id="$resolve.customerId"></hcs-cluster-list>',
+            template: '<hcs-cluster-list group-id="$resolve.groupId" group-type="$resolve.groupType"></hcs-cluster-list>',
             params: {
-              customerId: '',
+              groupId: '',
+              groupType: '',
             },
             resolve: {
-              customerId: /* @ngInject */ function ($stateParams) {
-                return $stateParams.customerId;
+              groupId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.groupId;
+              },
+              groupType: /* @ngInject */ function ($stateParams) {
+                return $stateParams.groupType;
               },
             },
           })
           .state('hcs.clusterDetail', {
-            url: '/hcs/inventory/:customerId/cluster/:clusterId',
+            url: '/hcs/inventory/:groupId/cluster/:clusterId',
             parent: 'partner',
-            template: '<hcs-cluster-detail customer-id="$resolve.customerId" cluster-id="$resolve.clusterId" cluster-name="$resolve.clusterName"></hcs-cluster-detail>',
+            template: '<hcs-cluster-detail group-id="$resolve.groupId" group-type="$resolve.groupType" cluster-id="$resolve.clusterId" cluster-name="$resolve.clusterName"></hcs-cluster-detail>',
             params: {
-              customerId: '',
+              groupId: '',
+              groupType: '',
               clusterId: '',
               clusterName: '',
             },
             resolve: {
-              customerId: /* @ngInject */ function ($stateParams) {
-                return $stateParams.customerId;
+              groupId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.groupId;
+              },
+              groupType: /* @ngInject */ function ($stateParams) {
+                return $stateParams.groupType;
               },
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;

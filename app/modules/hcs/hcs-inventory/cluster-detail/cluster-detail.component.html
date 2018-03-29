@@ -1,8 +1,10 @@
 <cs-page-header
   class="huron-tabs"
   title-name="{{$ctrl.clusterDetail.clusterName}}"
-  js-back="$ctrl.back"
   back="$ctrl.back"
+  js-back="$ctrl.back"
+  back-url="$ctrl.backState"
+  back-params="$ctrl.backParameters"
   back-aria-label="{{::'common.back' | translate}}">
 </cs-page-header>
 <div class="hcs-cluster-settings">
