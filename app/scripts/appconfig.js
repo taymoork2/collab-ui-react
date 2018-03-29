@@ -5588,12 +5588,15 @@
             template: '<div ui-view class="legal-hold"></div>',
             absract: true,
             parent: 'ediscovery',
-            sticky: true,
+            resolve: {
+              supportsFeature: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.stateSupportsFeature(FeatureToggleService.features.atlasF5955LegalHold);
+              },
+            },
           })
           .state('legalhold.landing', {
             url: '/legalhold',
             template: '<legal-hold-landing></legal-hold-landing>',
-            sticky: true,
           });
 
         $stateProvider
