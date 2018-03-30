@@ -58,13 +58,13 @@
 </div>
 <div class="modal-footer">
   <button ng-show="clusterCreationWizard.currentStep === 0 || clusterCreationWizard.currentStep === 2" class="btn" ng-click="clusterCreationWizard.closeSetupModal()">
-    <span translate="mediaFusion.add-resource-dialog.cancel"></span>
+    <span translate="common.cancel"></span>
   </button>
   <button ng-hide="clusterCreationWizard.currentStep === 0 || clusterCreationWizard.currentStep === 1 || clusterCreationWizard.currentStep === 2 || clusterCreationWizard.currentStep === 7" class="btn" ng-click="clusterCreationWizard.back()">
-    <span translate="mediaFusion.add-resource-dialog.back"></span>
+    <span translate="common.back"></span>
   </button>
   <button ng-hide="clusterCreationWizard.currentStep === 1 || clusterCreationWizard.currentStep === 6 || clusterCreationWizard.currentStep === 7" class="btn activate-button btn--primary" cs-btn loading="clusterCreationWizard.loading" ng-click="clusterCreationWizard.next()" ng-disabled="!clusterCreationWizard.canGoNext()">
-    <span translate="mediaFusion.add-resource-dialog.next"></span>
+    <span translate="common.next"></span>
   </button>
   <button ng-show="clusterCreationWizard.currentStep === 1 || clusterCreationWizard.currentStep === 7" class="btn activate-button btn--primary" ng-click="clusterCreationWizard.closeSetupModal(true)">
       <span translate="common.ok"></span>
