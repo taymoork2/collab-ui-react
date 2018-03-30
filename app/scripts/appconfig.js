@@ -5600,8 +5600,15 @@
           .state('legalhold.landing', {
             url: '/legalhold',
             template: '<legal-hold-landing></legal-hold-landing>',
+          })
+          .state('legalhold.new', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<legal-hold-matter-new dismiss="$dismiss()" class="modal-content legalhold-modal"></legal-hold-matter-new>',
+              },
+            },
           });
-
         $stateProvider
           .state('partnerManagement-main', {
             parent: 'mainLazyLoad',

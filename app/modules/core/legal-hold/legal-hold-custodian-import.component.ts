@@ -55,6 +55,7 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
 
   // for import process
   public progress: number = 0;
+  public fileInputErrorMsg ? = '';
   public file: File | string | undefined;
   public fileName: string;
   private chunks: number = 0;
@@ -181,7 +182,7 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
       return this.returnValidationResult(false, this.$translate.instant('legalHold.custodianImport.errorCsvBadFormat'));
     }
     if (this.csvEmailsArray.length > LegalHoldCustodianImportController.DEFAULTS.maxNumberOfEmails) {
-      return this.returnValidationResult(false, this.$translate.instant('legalHold.custodianImport.errorCsvExceedsMax', { max: LegalHoldCustodianImportController.DEFAULTS.maxNumberOfEmails }));
+      return this.returnValidationResult(false, this.$translate.instant('legalHold.custodianImport.errorCsvExceedsMax', { maxUsers: LegalHoldCustodianImportController.DEFAULTS.maxNumberOfEmails }));
     }
     return this.returnValidationResult(true);
   }
@@ -194,7 +195,8 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
     if (!isValid) {
       this.resetFile();
     }
-    this.onFileValidation({ isValid: isValid, error: error });
+    this.fileInputErrorMsg = (isValid) ? '' : error;
+    this.onFileValidation({ isValid: isValid });
     return isValid;
   }
 

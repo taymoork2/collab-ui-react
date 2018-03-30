@@ -4142,7 +4142,13 @@
       },
       "new": "New Matter"
     },
-    "matterNew": {},
+    "matterNew": {
+      "title": "Create Matter",
+      "name": "Matter Name",
+      "description": "Description",
+      "optional": "(optional)",
+      "addCustodians": "Add Custodians"
+    },
     "custodianImport": {
       "fileBrowser": "Browse...",
       "errorCsvBadFormat": "CSV is not in correct format",
