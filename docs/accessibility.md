@@ -431,23 +431,23 @@ public isSelectedItem(item: IListItem): boolean {
 Because of how many tags go in to creating an accessible tooltip, wrapper components are being created to streamline the tooltip creation process.
 
 Commonalities between tooltip components:
-* All tooltips are added to the tabindex by default, but will include an optional tabindex override: `cs-tabindex`.
-* `aria-label` will only need to be provided in the cases where the tooltip text includes html; these should be passed in using `cs-aria-label`.
-* Tooltips will default to `role="tooltip"` unless a click function or `cs-href` is provided; then it will be set to `role="button"`.  Do not use `ng-click` to append the click function.  Use `on-click-fn` instead.
+* All tooltips are added to the tabindex by default, but will include an optional tabindex override: `tt-tabindex`.
+* `aria-label` will only need to be provided in the cases where the tooltip text includes html; these should be passed in using `tt-aria-label`.
+* Tooltips will default to `role="tooltip"` unless a click function or `tt-href` is provided; then it will be set to `role="button"`.  Do not use `ng-click` to append the click function.  Use `on-click-fn` instead.
 * `tooltip-trigger` is set to `mouseover focus` by default and cannot be modified.
-* `cs-tooltip-placement`, `cs-tooltip-append-to-body`, `cs-tooltip-animation` and `cs-tooltip-class` are pass-throughs to the tooltip tags of the same name (minus the `cs-`) in the [collab-ui tooltip](#tooltips).
+* `tt-tooltip-placement`, `tt-tooltip-append-to-body`, `tt-tooltip-animation` and `tt-tooltip-class` are pass-throughs to the tooltip tags of the same name (minus the `tt-`) in the [collab-ui tooltip](#tooltips).
 * All tooltips will share the following bindings:
 ```typescript
 public bindings = {
-  csAriaLabel: '@?',            // optional aria-label text
-  csClass: '@?',                // optional icon class names; defaults to icon-information
-  csTabindex: '<?',             // optional tabindex override
-  csTooltipAnimation: '<?',     // same as tooltip-animation from collab-ui-ng
-  csTooltipAppendToBody: '<?',  // same as tooltip-append-to-body from collab-ui-ng
-  csTooltipClass: '@?',         // same as tooltip-class from collab-ui-ng
-  csTooltipPlacement: '@?',     // same as tooltip-placement from collab-ui-ng
-  csTooltipText: '@',           // safe text for the tooltip to display, used for the aria-label if cs-aria-label is undefined
-  csTooltipUnsafeText: '@?',    // unsafe text passed into tooltip-html-unsafe; should be used in conjunction with cs-aria-label
+  ttAriaLabel: '@?',            // optional aria-label text
+  ttClass: '@?',                // optional icon class names; defaults to icon-information
+  ttTabindex: '<?',             // optional tabindex override
+  ttTooltipAnimation: '<?',     // same as tooltip-animation from collab-ui-ng
+  ttTooltipAppendToBody: '<?',  // same as tooltip-append-to-body from collab-ui-ng
+  ttTooltipClass: '@?',         // same as tooltip-class from collab-ui-ng
+  ttTooltipPlacement: '@?',     // same as tooltip-placement from collab-ui-ng
+  ttTooltipText: '@',           // safe text for the tooltip to display, used for the aria-label if cs-aria-label is undefined
+  ttTooltipUnsafeText: '@?',    // unsafe text passed into tooltip-html-unsafe; should be used in conjunction with cs-aria-label
   onClickFn: '&?',              // optional click function if tooltip doubles as button; changes role from 'tooltip' to 'button' when present
 };
 ```
@@ -459,13 +459,13 @@ The majority of our tooltips have icon only triggers.  `icon-tooltip` is used sp
 Examples:
 * The minimum effort for an accessible tooltip.  Creates an `icon-information` trigger tooltip with the `tooltip-text` used both in the tooltip itself and as the `aria-label`.
 ```html
-<icon-tooltip cs-tooltip-text="{{::'common.tooltip' | translate}}"></icon-tooltip>
+<icon-tooltip tt-tooltip-text="{{::'common.tooltip' | translate}}"></icon-tooltip>
 ```
 * The minimum effort for an `html-unsafe` tooltip.  Creates an `icon-information` trigger tooltip but requires separate values for the tooltip text and the `aria-label`.
 ```html
 <icon-tooltip
-  cs-aria-label="{{::'common.tooltip' | translate}}"
-  cs-tooltip-unsafe-text="{{::'common.tooltipWithHtml' | translate}}">
+  tt-aria-label="{{::'common.tooltip' | translate}}"
+  tt-tooltip-unsafe-text="{{::'common.tooltipWithHtml' | translate}}">
 </icon-tooltip>
 ```
 
@@ -477,15 +477,15 @@ Examples:
 * The minimum effort for an accessible tooltip.
 ```html
 <text-tooltip
-  cs-tooltip-text="{{::'common.tooltip' | translate}}">
+  tt-tooltip-text="{{::'common.tooltip' | translate}}">
   <span translate="transcluded.text"><span>
 </text-tooltip>
 ```
 * The minimum effort for an `html-unsafe` tooltip.
 ```html
 <text-tooltip
-  cs-aria-label="{{::'common.tooltip' | translate}}"
-  cs-tooltip-unsafe-text="{{::'common.tooltipWithHtml' | translate}}">
+  tt-aria-label="{{::'common.tooltip' | translate}}"
+  tt-tooltip-unsafe-text="{{::'common.tooltipWithHtml' | translate}}">
   <span translate="transcluded.text"><span>
 </text-tooltip>
 ```

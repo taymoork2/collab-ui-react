@@ -69,10 +69,10 @@
           </li>
           <li class="feature" ng-if="$ctrl.selectedSiteInfo.isSiteAdmin && $ctrl.isAutomaticMode()">
             <text-tooltip
-              cs-class="feature-name"
-              cs-tooltip-placement="top-left"
-              cs-tooltip-text="{{::$ctrl.automaticLinkingTooltipText | translate}}">
-              {{::'accountLinking.siteDetails.automaticLinking' | translate}}
+              tt-class="feature-name"
+              tt-tooltip-placement="top-left"
+              tt-tooltip-text="{{::$ctrl.automaticLinkingTooltipText | translate}}">
+              <span translate="accountLinking.siteDetails.automaticLinking"></span>
             </text-tooltip>
             <cs-toggle-switch ng-model="$ctrl.selectedSiteInfo.linkAllUsers"
               size="small"

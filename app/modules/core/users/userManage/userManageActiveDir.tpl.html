@@ -18,11 +18,11 @@
       <p class="user-manage-dir-sync__text--margin">
         <text-tooltip
           ng-if="!umadc.isUserAdmin()"
-          cs-aria-label="{{:: 'userManage.ad.turnOffDS' | translate}} {{::'userManage.ad.turnOffDSToolTip' | translate}}"
-          cs-tooltip-placement="bottom"
-          cs-tooltip-text="{{::'userManage.ad.turnOffDSToolTip'|translate}}"
+          tt-aria-label="{{:: 'userManage.ad.turnOffDS' | translate}} {{::'userManage.ad.turnOffDSToolTip' | translate}}"
+          tt-tooltip-placement="bottom"
+          tt-tooltip-text="{{::'userManage.ad.turnOffDSToolTip'|translate}}"
           on-click-fn="umadc.onTurnOffDS()">
-          {{::'userManage.ad.turnOffDS' | translate}}
+          <span translate="userManage.ad.turnOffDS"></span>
         </text-tooltip>
       </p>
     </div>

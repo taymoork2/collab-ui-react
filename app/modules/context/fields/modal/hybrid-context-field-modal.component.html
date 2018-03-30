@@ -3,9 +3,9 @@
   <h3 ng-if="$ctrl.createMode" class="modal-title" translate="context.dictionary.fieldPage.createNew"></h3>
   <h3 ng-if="!$ctrl.createMode" class="modal-title">
     <text-tooltip
-      cs-tooltip-class="context-tooltip"
-      cs-tooltip-placement="bottom"
-      cs-tooltip="{{$ctrl.fieldData.id}}">
+      tt-tooltip-class="context-tooltip"
+      tt-tooltip-placement="bottom"
+      tt-tooltip="{{$ctrl.fieldData.id}}">
       <span translate="context.dictionary.update"></span>
       <span>{{$ctrl.fieldData.id}}</span>
     </text-tooltip>

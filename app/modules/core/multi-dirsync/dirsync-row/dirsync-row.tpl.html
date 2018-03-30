@@ -4,9 +4,9 @@
     <div ng-repeat="connector in $ctrl.connectors track by $index">
       <cs-statusindicator ng-model="connector.status"></cs-statusindicator>
       <text-tooltip
-        cs-class="{{connector.isInService ? '' : 'connector-disabled'}}"
-        cs-tooltip-placement="bottom"
-        cs-tooltip-text="{{::$ctrl.getTooltip(connector)}}">
+        tt-class="{{connector.isInService ? '' : 'connector-disabled'}}"
+        tt-tooltip-placement="bottom"
+        tt-tooltip-text="{{::$ctrl.getTooltip(connector)}}">
         {{::connector.name}}
       </text-tooltip>
     </div>

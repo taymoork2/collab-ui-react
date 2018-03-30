@@ -4,10 +4,10 @@
       <span ng-if="$ctrl.anchorText">{{::$ctrl.anchorText}}</span>
       <icon-tooltip
         ng-if="!$ctrl.anchorText && !$ctrl.downloading"
-        cs-class="{{::$ctrl.iconClass}}"
-        cs-tooltip-animation="false"
-        cs-tooltip-append-to-body="true"
-        cs-tooltip-text="{{$ctrl.tooltipMessage}}">
+        tt-class="{{::$ctrl.iconClass}}"
+        tt-tooltip-animation="false"
+        tt-tooltip-append-to-body="true"
+        tt-tooltip-text="{{$ctrl.tooltipMessage}}">
       </icon-tooltip>
     </a>
   </div>

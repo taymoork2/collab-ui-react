@@ -7,7 +7,7 @@ describe('DirsyncRowController Component', function () {
   const SUCCESS = 'success';
 
   // html locators
-  const CONNECTOR_NAMES = '.columns.medium-8 a';
+  const CONNECTOR_NAMES = '.columns.medium-8 text-tooltip';
   const CONNECTOR_STATUS = '.columns.medium-8 cs-statusindicator';
   const DOMAIN_NAME = '.columns.medium-8 p';
   const MENU_BUTTON = '#actionsButton';
@@ -71,8 +71,8 @@ describe('DirsyncRowController Component', function () {
 
     it('should display all connectors and have three items in the dropdown menu', function () {
       expect(this.view.find(DOMAIN_NAME).html()).toEqual(this.$scope.dirsync.domains[0].domainName);
-      expect(this.view.find(CONNECTOR_NAMES).first().html()).toEqual(this.dirsyncConnectors[0].name);
-      expect(this.view.find(CONNECTOR_NAMES).last().html()).toEqual(this.dirsyncConnectors[1].name);
+      expect(this.view.find(CONNECTOR_NAMES).first().html()).toEqual(` ${this.dirsyncConnectors[0].name} `);
+      expect(this.view.find(CONNECTOR_NAMES).last().html()).toEqual(` ${this.dirsyncConnectors[1].name} `);
       expect(this.view.find(CONNECTOR_STATUS).first()).toContainElement(`.${PRIMARY}`);
       expect(this.view.find(CONNECTOR_STATUS).last()).toContainElement(`.${PRIMARY}`);
 

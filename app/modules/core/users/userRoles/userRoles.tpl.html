@@ -1,6 +1,13 @@
 <form name="rolesEdit.form" role="form" class="side-panel-form">
   <cs-sp-buttons ng-show="rolesEdit.form.$dirty" title="{{'rolesPanel.editUser' | translate}}">
-    <button cs-btn id="saveButton" class="btn btn--primary" ng-click="updateRoles()" type="button" ng-disabled="rolesEdit.form.$invalid" loading="updatingUser">{{::'common.save'|translate}}</button>
+    <button cs-btn type="button"
+      class="btn btn--primary"
+      id="saveButton"
+      ng-click="updateRoles()"
+      ng-disabled="rolesEdit.form.$invalid"
+      loading="updatingUser">
+      {{::'common.save'|translate}}
+    </button>
     <button id="cancelButton" translate="common.cancel" ng-click="resetFormData()" type="button" ng-disabled="updatingUser"></button>
   </cs-sp-buttons>
   <cs-sp-container cs-tabindex="rolesEdit.form.$dirty ? -1 : 0">
@@ -63,10 +70,10 @@
                     ng-click="clearCheckboxes();"
                     ng-disabled="isNotEditable">
                   <icon-tooltip
-                    cs-aria-label="{{::roleTooltips.fullAdminAria}}"
-                    cs-class="icon-information role-information"
-                    cs-tooltip-placement="right"
-                    cs-tooltip-unsafe-text="{{::roleTooltips.fullAdmin}}">
+                    tt-aria-label="{{::roleTooltips.fullAdminAria}}"
+                    tt-class="icon-information role-information"
+                    tt-tooltip-placement="right"
+                    tt-tooltip-unsafe-text="{{::roleTooltips.fullAdmin}}">
                   </icon-tooltip>
                   </i>
                 </div>
@@ -81,9 +88,9 @@
                     ng-click="clearCheckboxes();"
                     ng-disabled="isNotEditable">
                   <icon-tooltip
-                    cs-class="icon-information role-information"
-                    cs-tooltip-placement="right"
-                    cs-tooltip-text="{{::roleTooltips.readonlyAdmin}}">
+                    tt-class="icon-information role-information"
+                    tt-tooltip-placement="right"
+                    tt-tooltip-text="{{::roleTooltips.readonlyAdmin}}">
                   </icon-tooltip>
                 </div>
 
@@ -106,10 +113,10 @@
                     ng-change="partialCheckboxes()"
                     ng-disabled="isNotEditable">
                   <icon-tooltip
-                    cs-aria-label="{{::roleTooltips.salesAdminAria}}"
-                    cs-class="icon-information role-information"
-                    cs-tooltip-placement="right"
-                    cs-tooltip-unsafe-text="{{::roleTooltips.salesAdmin}}">
+                    tt-aria-label="{{::roleTooltips.salesAdminAria}}"
+                    tt-class="icon-information role-information"
+                    tt-tooltip-placement="right"
+                    tt-tooltip-unsafe-text="{{::roleTooltips.salesAdmin}}">
                   </icon-tooltip>
                 </div>
                 <div class="admin-options indent-checkbox" ng-show="false">
@@ -120,10 +127,10 @@
                     ng-change="partialCheckboxes()"
                     ng-disabled="isNotEditable">
                   <icon-tooltip
-                    cs-aria-label="{{::roleTooltips.billingAdminAria}}"
-                    cs-class="icon-information role-information"
-                    cs-tooltip-placement="right"
-                    cs-tooltip-unsafe-text="{{::roleTooltips.billingAdmin}}">
+                    tt-aria-label="{{::roleTooltips.billingAdminAria}}"
+                    tt-class="icon-information role-information"
+                    tt-tooltip-placement="right"
+                    tt-tooltip-unsafe-text="{{::roleTooltips.billingAdmin}}">
                   </icon-tooltip>
                 </div>
                 <div class="admin-options indent-checkbox">
@@ -134,10 +141,10 @@
                     ng-change="partialCheckboxes()"
                     ng-disabled="isNotEditable || hasUserOrDeviceAdmin()">
                   <icon-tooltip
-                    cs-aria-label="{{::roleTooltips.supportAdminAria}}"
-                    cs-class="icon-information role-information"
-                    cs-tooltip-placement="right"
-                    cs-tooltip-unsafe-text="{{::roleTooltips.supportAdmin}}">
+                    tt-aria-label="{{::roleTooltips.supportAdminAria}}"
+                    tt-class="icon-information role-information"
+                    tt-tooltip-placement="right"
+                    tt-tooltip-unsafe-text="{{::roleTooltips.supportAdmin}}">
                   </icon-tooltip>
                 </div>
                 <div class="admin-options indent-checkbox" ng-if="showUserRole">
@@ -148,10 +155,10 @@
                     ng-change="partialCheckboxesUserAdmin()"
                     ng-disabled="isNotEditable || rolesObj.supportAdminValue">
                   <icon-tooltip
-                    cs-aria-label="{{::roleTooltips.userAdminAria}}"
-                    cs-class="icon-information role-information"
-                    cs-tooltip-placement="right"
-                    cs-tooltip-unsafe-text="{{::roleTooltips.userAdmin}}">
+                    tt-aria-label="{{::roleTooltips.userAdminAria}}"
+                    tt-class="icon-information role-information"
+                    tt-tooltip-placement="right"
+                    tt-tooltip-unsafe-text="{{::roleTooltips.userAdmin}}">
                   </icon-tooltip>
                 </div>
                 <div class="admin-options indent-checkbox" ng-if="showDeviceRole">
@@ -162,10 +169,10 @@
                     ng-change="partialCheckboxes()"
                     ng-disabled="isDeviceCheckboxDisabled()">
                   <icon-tooltip
-                    cs-aria-label="{{::roleTooltips.deviceAdminAria}}"
-                    cs-class="icon-information role-information"
-                    cs-tooltip-placement="right"
-                    cs-tooltip-unsafe-text="{{::roleTooltips.deviceAdmin}}">
+                    tt-aria-label="{{::roleTooltips.deviceAdminAria}}"
+                    tt-class="icon-information role-information"
+                    tt-tooltip-placement="right"
+                    tt-tooltip-unsafe-text="{{::roleTooltips.deviceAdmin}}">
                   </icon-tooltip>
                 </div>
 
@@ -176,12 +183,12 @@
                     ng-model="ccaAdminRole.active"
                     ng-change="partialCheckboxes()"
                     ng-disabled="isNotEditable">
-                  <i aria-label="{{::ccaAdminRole.description}}"
-                    tooltip-html-unsafe="{{::ccaAdminRole.tooltip}}"
-                    tooltip-placement="right"
-                    tooltip-trigger="focus mouseenter"
-                    class="icon icon-information role-information"
-                    tabindex="0"></i>
+                  <icon-tooltip
+                    tt-aria-label="{{::ccaAdminRole.description}}"
+                    tt-class="icon-information role-information"
+                    tt-tooltip-placement="right"
+                    tt-tooltip-unsafe-text="{{::ccaAdminRole.tooltip}}">
+                  </icon-tooltip>
                 </div>
               </div>
 
@@ -196,9 +203,9 @@
                     ng-change="helpdeskOnCheckedHandler()"
                     ng-disabled="isNotEditable">
                   <icon-tooltip
-                    cs-class="icon-information role-information"
-                    cs-tooltip-placement="right"
-                    cs-tooltip-text="{{::roleTooltips.helpdesk}}">
+                    tt-class="icon-information role-information"
+                    tt-tooltip-placement="right"
+                    tt-tooltip-text="{{::roleTooltips.helpdesk}}">
                   </icon-tooltip>
                 </div>
                 <div class="admin-options indent-checkbox" ng-if="showOrderAdminRole">
@@ -209,9 +216,9 @@
                     ng-change="orderadminOnCheckedHandler()"
                     ng-disabled="isNotEditable">
                   <icon-tooltip
-                    cs-class="icon-information role-information"
-                    cs-tooltip-placement="right"
-                    cs-tooltip-text="{{::roleTooltips.orderAdmin}}">
+                    tt-class="icon-information role-information"
+                    tt-tooltip-placement="right"
+                    tt-tooltip-text="{{::roleTooltips.orderAdmin}}">
                   </icon-tooltip>
                 </div>
                 <div class="admin-options" ng-if="showPartnerManagementRole">
@@ -222,9 +229,9 @@
                     ng-change="partnerManagementOnCheckedHandler()"
                     ng-disabled="isNotEditable">
                   <icon-tooltip
-                    cs-class="icon-information role-information"
-                    cs-tooltip-placement="right"
-                    cs-tooltip-text="{{::roleTooltips.partnerMgmt}}">
+                    tt-class="icon-information role-information"
+                    tt-tooltip-placement="right"
+                    tt-tooltip-text="{{::roleTooltips.partnerMgmt}}">
                   </icon-tooltip>
                 </div>
               </div>
@@ -239,9 +246,9 @@
                     ng-model="rolesObj.complianceValue"
                     ng-disabled="isNotEditable">
                   <icon-tooltip
-                    cs-class="icon-information role-information"
-                    cs-tooltip-placement="right"
-                    cs-tooltip-text="{{::roleTooltips.compliance}}">
+                    tt-class="icon-information role-information"
+                    tt-tooltip-placement="right"
+                    tt-tooltip-text="{{::roleTooltips.compliance}}">
                   </icon-tooltip>
                 </div>
               </div>
@@ -257,12 +264,12 @@
                     cs-input-label="{{::ccaRole.displayName}}"
                     ng-model="ccaRole.active"
                     ng-disabled="isNotEditable">
-                  <i aria-label="{{::ccaRole.description}}"
-                    tooltip="{{::ccaRole.tooltip}}"
-                    tooltip-placement="right"
-                    tooltip-trigger="focus mouseenter"
-                    class="icon icon-information role-information"
-                    tabindex="0"></i>
+                  <icon-tooltip
+                    tt-aria-label="{{::ccaRole.description}}"
+                    tt-class="icon-information role-information"
+                    tt-tooltip-placement="right"
+                    tt-tooltip-text="{{::ccaRole.tooltip}}">
+                  </icon-tooltip>
                 </div>
               </div>
 

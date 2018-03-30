@@ -3,31 +3,42 @@ interface IBindings {
 }
 
 export interface IBaseTooltipController {
-  csAriaLabel?: string;
-  csClass?: string;
-  csTabindex?: number;
-  csTooltipAnimation?: boolean;
-  csTooltipAppendToBody?: boolean;
-  csTooltipPlacement?: string;
-  csTooltipText?: string;
-  csTooltipUnsafeText?: string;
+  ttAriaLabel?: string;
+  ttClass?: string;
+  ttTabindex?: number;
+  ttTooltipAnimation?: boolean;
+  ttTooltipAppendToBody?: boolean;
+  ttTooltipPlacement?: string;
+  ttTooltipText?: string;
+  ttTooltipUnsafeText?: string;
   onClickFn?: Function;
 }
 
 export class TooltipUtil {
+  public static assignBindings(_destValue, _srcValue, propertyName, dest, src) {
+    // copy over getters from source objects as-needed
+    const srcPropertyDescriptor = Object.getOwnPropertyDescriptor(src, propertyName);
+    if (!srcPropertyDescriptor) {
+      return;
+    }
+    if (srcPropertyDescriptor.get || srcPropertyDescriptor.set) {
+      Object.defineProperty(dest, propertyName, srcPropertyDescriptor);
+    }
+  }
+
   public static mkBaseTooltipBindings(customBindings: IBindings = {}): IBindings {
     // bindings shared between all tooltip types
     const BASE_TOOLTIP_BINDINGS = {
-      csClass: '@?',
-      csAriaLabel: '@?',
-      csTabindex: '<?',
+      ttClass: '@?',
+      ttAriaLabel: '@?',
+      ttTabindex: '<?',
       onClickFn: '&?',
-      csTooltipAnimation: '<?',
-      csTooltipAppendToBody: '<?',
-      csTooltipClass: '@?',
-      csTooltipPlacement: '@?',
-      csTooltipText: '@',
-      csTooltipUnsafeText: '@?',
+      ttTooltipAnimation: '<?',
+      ttTooltipAppendToBody: '<?',
+      ttTooltipClass: '@?',
+      ttTooltipPlacement: '@?',
+      ttTooltipText: '@',
+      ttTooltipUnsafeText: '@?',
     };
 
     return { ...BASE_TOOLTIP_BINDINGS, ...customBindings };
@@ -46,30 +57,31 @@ export class TooltipUtil {
       defaultClass: defaultClass,
 
       get animation(): boolean {
-        return _.isBoolean(this.csTooltipAnimation) ? this.csTooltipAnimation : true;
+        return _.isBoolean(this.ttTooltipAnimation) ? this.ttTooltipAnimation : true;
       },
 
       get classes(): string {
         const cursor = _.isFunction(this.onClickFn) ? '' : 'default-pointer';
-        const icon = _.isString(this.csClass) ? this.csClass : this.defaultClass;
+        const icon = _.isString(this.ttClass) ? this.ttClass : this.defaultClass;
         return `${icon} ${cursor}`;
       },
 
       get appendToBody(): boolean {
-        return _.isBoolean(this.csTooltipAppendToBody) ? this.csTooltipAppendToBody : false;
+        return _.isBoolean(this.ttTooltipAppendToBody) ? this.ttTooltipAppendToBody : false;
       },
 
       get ariaLabel(): string | undefined {
-        // csAriaLabel is only necessary when creating a tooltip-html-unsafe
-        return _.isString(this.csAriaLabel) ? this.csAriaLabel : this.csTooltipText;
+        // ttAriaLabel is only necessary when creating a tooltip-html-unsafe or in cases where
+        // the aria-label may need to include additional information not found in the tooltip-text
+        return _.isString(this.ttAriaLabel) ? this.ttAriaLabel : this.ttTooltipText;
       },
 
       get isSafe(): boolean {
-        return !_.isString(this.csTooltipUnsafeText);
+        return !_.isString(this.ttTooltipUnsafeText);
       },
 
       get placement(): string {
-        return _.isString(this.csTooltipPlacement) ? this.csTooltipPlacement : 'top';
+        return _.isString(this.ttTooltipPlacement) ? this.ttTooltipPlacement : 'top';
       },
 
       get role(): string {
@@ -79,7 +91,7 @@ export class TooltipUtil {
 
       get tabindex(): number {
         // tabindex should be an integer; defaults to 0
-        return (_.isNumber(this.csTabindex) && _.isInteger(this.csTabindex)) ? this.csTabindex : 0;
+        return (_.isNumber(this.ttTabindex) && _.isInteger(this.ttTabindex)) ? this.ttTabindex : 0;
       },
 
       onClick(): void {

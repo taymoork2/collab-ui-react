@@ -5,10 +5,10 @@
       <i ng-if="$ctrl.setting.icon && !$ctrl.setting.tooltipText" class="icon info-icon" ng-class="$ctrl.setting.icon"></i>
       <icon-tooltip
         ng-if="$ctrl.setting.icon && $ctrl.setting.tooltipText"
-        cs-class="info-icon has-tooltip {{::$ctrl.setting.icon}}"
-        cs-tooltip-append-to-body="true"
-        cs-tooltip-placement="right"
-        cs-tooltip-text="{{::$ctrl.setting.tooltipText | translate}}">
+        tt-class="info-icon has-tooltip {{::$ctrl.setting.icon}}"
+        tt-tooltip-append-to-body="true"
+        tt-tooltip-placement="right"
+        tt-tooltip-text="{{::$ctrl.setting.tooltipText | translate}}">
       </icon-tooltip>
     </h4>
     <p class="section__description" ng-if="$ctrl.setting.description" translate="{{$ctrl.setting.description}}"></p>

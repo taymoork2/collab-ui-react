@@ -6,7 +6,7 @@ import './base-tooltip.scss';
 export { TooltipUtil, IBaseTooltipController } from './tooltip.util';
 
 export default angular
-  .module('core.accessibility.tooltip', [
+  .module('core.accessibility.tooltips', [
     require('@collabui/collab-ui-ng').default,
   ])
   .component('iconTooltip', new IconTooltipComponent())
