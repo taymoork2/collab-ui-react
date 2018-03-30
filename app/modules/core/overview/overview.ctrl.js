@@ -52,6 +52,7 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
     vm.isCSB = Authinfo.isCSB();
     vm.isDeviceManagement = Authinfo.isDeviceMgmt();
     vm.orgData = null;
+    vm.atlasF3745AutoAssignLicensesToggle = false;
 
     var hybridCallHighAvailability = 'atlas.notification.squared-fusion-uc-high-availability.acknowledged';
     var allHybridCalendarsNotification = 'atlas.notification.squared-fusion-all-calendars.acknowledged';
@@ -305,6 +306,7 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
       });
 
       FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus().then(function (toggle) {
+        vm.atlasF3745AutoAssignLicensesToggle = toggle;
         if (toggle) {
           AutoAssignTemplateService.hasDefaultTemplate().then(function (hasDefaultTemplate) {
             if (!hasDefaultTemplate) {

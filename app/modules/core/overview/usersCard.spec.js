@@ -4,15 +4,18 @@ describe('OverviewUsersCard', function () {
     this.injectDependencies(
       '$q',
       '$rootScope',
+      'Authinfo',
       'AutoAssignTemplateService',
       'DirSyncService',
       'FeatureToggleService',
       'MultiDirSyncService',
       'Orgservice',
-      'OverviewUsersCard'
+      'OverviewUsersCard',
+      'UserListService'
     );
     spyOn(this.FeatureToggleService, 'atlasF6980MultiDirSyncGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'autoLicenseGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.DirSyncService, 'requiresRefresh').and.returnValue(false);
     spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(false);
 

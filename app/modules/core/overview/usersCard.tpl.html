@@ -4,8 +4,8 @@
   <span>{{card.name | translate}}</span>
   </div>
 </header>
-<section>
-  <div class="convert-block">
+<section ng-class="{ 'row user-card--auto-assign-enabled' : card.features.atlasF3745AutoAssignLicenses }">
+  <div ng-if="!card.features.atlasF3745AutoAssignLicenses" class="convert-block">
     <div class="convert-text">
       <div ng-if="!card.showLicenseCard">
         <span class="convert-nr h4">{{(card.usersToConvert | number) || 'N/A'}}</span>&nbsp;
@@ -21,7 +21,20 @@
     <button ng-if="card.showLicenseCard" id="convertButton" class="btn btn--primary" translate="overview.cards.licenses.manageUsersButton" ng-click="card.manageUsers()">
     </button>
   </div>
-  <div class="status-block">
+  <div ng-if="card.features.atlasF3745AutoAssignLicenses" class="columns medium-6 onboard-block">
+    <div>
+      <span class="onboard-nr h4">{{ card.usersOnboarded }}</span>
+    </div>
+    <div class="onboard-users-text">
+      <span translate="overview.cards.users.onboardText"></span>
+    </div>
+    <div ng-if="card.features.autoLicense">
+      <a ui-sref="reports">
+        <span translate="reports.title"></span>
+      </a>
+    </div>
+  </div>
+  <div class="status-block" ng-class="[card.features.atlasF3745AutoAssignLicenses ? 'columns medium-6 status-block--auto-assign-enabled' : 'user-border']">
     <ul>
       <li class="status-block__item directory-synchronization">
         <i class="icon icon-spinner" ng-if="card.isUpdating"></i>
