@@ -305,13 +305,13 @@ describe('Controller:MediaReportsController', function () {
     it('should call dummysetParticipantDistribution for setDummyParticipantDistribution when there is no data', function () {
       spyOn(MediaReportsService, 'getParticipantDistributionData').and.callThrough();
       spyOn(MediaReportsDummyGraphService, 'dummyLineChartData').and.callThrough();
-      spyOn(MediaReportsDummyGraphService, 'dummyParticipantDistributionGraph').and.callThrough();
+      spyOn(MediaReportsDummyGraphService, 'dummyClusterLineChartGraph').and.callThrough();
       spyOn(MediaReportsService, 'getOverflowIndicator').and.returnValue($q.resolve(participantChangedata));
       controller.changeTabs(false, true);
       httpMock.flush();
       expect(MediaReportsService.getParticipantDistributionData).toHaveBeenCalled();
       expect(MediaReportsDummyGraphService.dummyLineChartData).toHaveBeenCalled();
-      expect(MediaReportsDummyGraphService.dummyParticipantDistributionGraph).toHaveBeenCalled();
+      expect(MediaReportsDummyGraphService.dummyClusterLineChartGraph).toHaveBeenCalled();
       expect(ParticipantDistributionResourceGraphService.setParticipantDistributionGraph).toHaveBeenCalled();
     });
 
