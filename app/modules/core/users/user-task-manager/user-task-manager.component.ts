@@ -144,7 +144,16 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
         this.activeTask = importedTask;
         this.requestedTaskId = importedTask.id;
       })
-      .catch(response => this.Notification.errorResponse(response, 'userTaskManagerModal.submitCsvError'));
+      .catch(response => {
+        switch (response.status) {
+          case 503:
+            this.Notification.errorResponse(response);
+            break;
+          default:
+            this.Notification.errorResponse(response, 'userTaskManagerModal.submitCsvError');
+            break;
+        }
+      });
   }
 
   private intervalCallback = (tasks: ITask[] = []) => {
