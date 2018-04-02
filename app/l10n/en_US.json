@@ -2355,19 +2355,19 @@
     },
     "clusterSipDestination": {
       "removeModal": {
-        "title": "Remove SIP Destination Override",
-        "message": "Are you sure you want to remove the SIP Destination override for this cluster? If you do, the Expressway cluster will use the default SIP Destination to route all hybrid calls.        ",
-        "notification": "SIP Destination Override successfully removed."
+        "title": "Remove SIP Destination",
+        "message": "Are you sure you want to remove the SIP Destination for this cluster? If you do, this cluster will use the default SIP Destination to route all hybrid calls.",
+        "notification": "SIP Destination successfully removed."
       },
       "configSection": {
         "title": "SIP Destination",
-        "label": "Default SIP Destination Override",
-        "description": "Override the default SIP Destination configured for Hybrid Call Connect in the organization. Review your organization SIP Destinations and certificates from the certificates from the <a ui-sref=\"call-service.settings\">Hybrid Call Settings page.</a>",
-        "warningNotCallCluster": "⚠️ This cluster is not provisioned to support Hybrid Call (Connect).",
-        "warningCallConnectNotSetup": "⚠️ Hybrid Call Connect is not setup.",
-        "inputLabelActive": "Use cluster-specific SIP Destination",
-        "inputLabelInactive": "Use global SIP Destination",
-        "unknownState": "Sorry, we could not load information about SIP Destination Override"
+        "label": "SIP Destination",
+        "description": "Choose a SIP Destination to use for routing hybrid call traffic. Either use the default one or configure a new one for this cluster. Review your SIP Destinations and certificates from the <a ui-sref=\"call-service.settings\">Hybrid Call Settings page.</a>",
+        "warningNotCallCluster": "Call Connector is not installed on this Expressway cluster. To install the connector, go to the <a ui-sref=\"call-service.list\">Hybrid Call page</a>, click Add Resource, and then select this Expressway. Then, you can configure a SIP Destination for this cluster.",
+        "warningCallConnectNotSetup": "Hybrid Call Service Connect is not activated for your organization. To configure a SIP Destination for this Expressway cluster, first active Hybrid Call Service Connect from the <a ui-sref=\"call-service.settings\">Hybrid Call Settings page</a>.",
+        "inputLabelActive": "Configure a SIP Destination for the cluster",
+        "inputLabelInactive": "Use the default SIP Destination",
+        "unknownState": "Sorry, we could not load information about SIP destinations"
       }
     },
     "capacity": {
@@ -2949,12 +2949,14 @@
         "certificatesUpload": "Upload",
         "certificatesModalHeading": "Remove Certificate",
         "sipDomainHeading": "SIP Destination",
+        "defaultSipDomainHeading": "Default SIP Destination",
+        "defaultSipDomainDescription": "Add a default SIP Destination to establish a mutual TLS connection to your Expressway-E. Your default SIP Destination applies to all hybrid call clusters unless you override it in the cluster settings.",
         "sipDomainPlaceholder": "sipmtls.example.com",
         "sipDestinationsOverview": {
-          "title": "SIP Destinations overview",
+          "title": "Overview of SIP Destinations",
           "description": "Review all the SIP Destinations configured in the organization and see the clusters they are configured on.",
           "tableTitle1": "SIP Destination",
-          "tableTitle2": "Used on"
+          "tableTitle2": "Configured on"
         }
       },
       "verifySipDestination": {
