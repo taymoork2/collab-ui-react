@@ -34,6 +34,8 @@ class ClusterSectionCtrl implements ng.IComponentController {
 
   public atlasHybridAuditLogEnabled = false;
   public showRenameSection: boolean;
+  public showSipDestinationSection: boolean;
+  public hasHybridGlobalCallServiceConnectFeature: boolean;
   public clusterName: string;
   public clusterType: string;
   public savingNameState: boolean = false;
@@ -55,6 +57,10 @@ class ClusterSectionCtrl implements ng.IComponentController {
     this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridAuditLog)
       .then((enabled: boolean) => {
         this.atlasHybridAuditLogEnabled = enabled;
+      });
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridGlobalCallServiceConnect)
+      .then(support => {
+        this.hasHybridGlobalCallServiceConnectFeature = support;
       });
   }
 
@@ -148,5 +154,6 @@ export class ClusterSectionComponent implements ng.IComponentOptions {
     deregisterModalOptions: '<',
     onNameUpdate: '&',
     showRenameSection: '<',
+    showSipDestinationSection: '<',
   };
 }
