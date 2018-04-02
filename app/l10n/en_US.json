@@ -8498,7 +8498,38 @@
     "helpTextWaitingEVA": "Customers see this message while waiting for a response to their request.",
     "waitingMessageEVA": "Someone will help you shortly…",
     "helpTextLeaveRoomEVA": "Customers see this message when the user interacting with them ends the chat.",
-    "leaveRoomMessageEVA": "Chat has ended"
+    "leaveRoomMessageEVA": "Chat has ended",
+    "templateConfig": {
+      "default": {
+        "feedbackQueryCall": "Please rate your callback experience.",
+        "additionalDetailsAbtIssue": "Describe the issue you are experiencing",
+        "chattingMessage": "Chat in progress...",
+        "defaultPhoneHintText": "+12345556789",
+        "defaultPromptMessage": "Chat with our solution specialists to help serve you better.",
+        "ratingComment": "Add comments",
+        "feedbackQuery": "Please rate your chat experience",
+        "offHoursDefaultMessage": "We are currently offline. Please try again during our business hours.",
+        "callbackConfirmationMsg": "Callback request received successfully.",
+        "defaultEmailText": "Email",
+        "field3HintText": "Select from the list or type",
+        "defaultWelcomeText": "Welcome to",
+        "connectingMessage": "Connecting you to an Agent",
+        "defaultNameHint": "",
+        "enterRoomMessage": "Agent has entered the chat room",
+        "defaultQuestionText": "How may I assist you?",
+        "leaveRoomMessage": "Agent has left the chat",
+        "waitingMessageEVA": "Someone will help you shortly…",
+        "virtualAssistantWelcomeMessage": "Hello, how can I help you today?",
+        "defaultNameText": "Name",
+        "waitingMessage": "Waiting for an Agent...",
+        "defaultPhoneText": "Phone Number",
+        "additionalDetails": "Additional Details",
+        "bubbleTitleMessage": "Click here to chat with Customer Care",
+        "defaultEmail": "e.g. abc@xyz.com",
+        "agentUnavailableMessage": "Sorry, we are unavailable at the moment. Please try again later.",
+        "leaveRoomMessageEVA": "Chat has ended"
+      }
+    }
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",
