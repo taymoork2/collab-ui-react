@@ -87,6 +87,7 @@ describe('Service: UserManageService', () => {
       expect(this.$state.go).toHaveBeenCalledWith('users.convert', {
         manageUsers: true,
         isDefaultAutoAssignTemplateActivated: false,
+        resetOnboardStoreStates: 'all',
       });
 
       this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = true;
@@ -94,6 +95,7 @@ describe('Service: UserManageService', () => {
       expect(this.$state.go).toHaveBeenCalledWith('users.convert', {
         manageUsers: true,
         isDefaultAutoAssignTemplateActivated: true,
+        resetOnboardStoreStates: 'all',
       });
 
       expect(this.Analytics.trackAddUsers).not.toHaveBeenCalled();

@@ -34,6 +34,7 @@ describe('OnboardCtrl: Ctrl', function () {
       'Notification',
       'NumberService',
       'OnboardService',
+      'OnboardStore',
       'Orgservice',
       'ServiceSetup',
       'SunlightConfigService',
@@ -117,9 +118,6 @@ describe('OnboardCtrl: Ctrl', function () {
 
     spyOn(this.Notification, 'notify');
 
-    spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(function (callback) {
-      callback(this.mock.unlicensedUsers, 200);
-    }.bind(this));
     spyOn(this.Orgservice, 'getOrg').and.callFake(function (callback) {
       callback({}, 200);
     });
@@ -489,7 +487,7 @@ describe('OnboardCtrl: Ctrl', function () {
         name: 'dntodid1',
         address: 'dntodid1@gmail.com',
       }];
-      this.$scope.convertSelectedList = [{
+      this.OnboardStore['users.convert'].convertSelectedList = [{
         name: {
           givenName: 'dntodid',
           familyName: '',
@@ -545,7 +543,7 @@ describe('OnboardCtrl: Ctrl', function () {
       }));
       expect(this.$state.go).toHaveBeenCalledWith('editService.dn');
       expect(this.$scope.editServicesFlow).toBe(true);
-      expect(this.$scope.convertUsersFlow).toBe(false);
+      expect(this.OnboardStore['users.convert'].convertUsersFlow).toBe(false);
     });
 
     it('assignDNForUserList', function () {
@@ -702,16 +700,6 @@ describe('OnboardCtrl: Ctrl', function () {
         expect(licenseFeatures[1].id).toBe('CO_cb9b68a9-ee2d-4896-bc8d-0f4dd830b47d');
         expect(licenseFeatures[1].idOperation).toBe('ADD');
       });
-    });
-  });
-
-  describe('filterList', function () {
-    beforeEach(initController);
-    it('a proper query should call out to organizationService', function () {
-      this.$scope.filterList('sqtest');
-      this.$timeout.flush();
-      expect(this.Orgservice.getUnlicensedUsers.calls.count()).toEqual(2);
-      expect(this.$scope.showSearch).toEqual(true);
     });
   });
 
@@ -1371,18 +1359,6 @@ describe('OnboardCtrl: Ctrl', function () {
 
     it('advanced licenses cmrLic should have 1 record', function () {
       expect(this.$scope.advancedLicenses[0].cmrLic.length).toEqual(1);
-    });
-  });
-
-  describe('opening convert users in the manage users model', function () {
-    it('should go to users.manage when gotToManageUsers() is called', function () {
-      this.$stateParams.manageUsers = true;
-      initController.apply(this);
-      this.$scope.$apply();
-
-      expect(this.$scope.manageUsers).toBeTruthy();
-      this.$scope.goToManageUsers();
-      expect(this.$state.go).toHaveBeenCalledWith('users.manage.picker');
     });
   });
 
