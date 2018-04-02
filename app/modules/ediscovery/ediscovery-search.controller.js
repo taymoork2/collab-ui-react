@@ -53,6 +53,8 @@
     vm.searchModel = null;
     vm.queryModel = null;
     vm.limitErrorMessage = null;
+    vm.searchLimit = 5;
+    vm.searchCriteria = {};
 
     vm.searchResults = {
       keywords: [],
@@ -91,14 +93,19 @@
       vm.error = null;
       vm.warning = null;
 
-      $q.all([
-        ProPackService.hasProPackEnabled(),
-        ProPackService.hasProPackPurchased(),
-      ]).then(function (toggles) {
-        vm.proPackEnabled = toggles[0];
-        vm.proPackPurchased = toggles[1];
+      $q.all({
+        proPackEnabled: ProPackService.hasProPackEnabled(),
+        proPackPurchased: ProPackService.hasProPackPurchased(),
+        searchLimit: FeatureToggleService.atlasF3346EdiscoverySearchLimitGetStatus(),
+      }
+      ).then(function (toggles) {
+        vm.proPackEnabled = toggles.proPackEnabled;
+        vm.proPackPurchased = toggles.proPackPurchased;
         if (!vm.proPackPurchased) {
           vm.firstEnabledDate = moment().subtract(90, 'days').format('YYYY-MM-DD');
+        }
+        if (!_.isNaN(parseInt(toggles.searchLimit, 10))) {
+          vm.searchLimit = toggles.searchLimit;
         }
       });
 
@@ -205,10 +212,11 @@
 
     function searchByLimit() {
       var limit = !_.isNull(vm.searchModel) ? splitWords(vm.searchModel) : null;
-      if (_.isArray(limit) && limit.length > 5) {
-        vm.limitErrorMessage = _.eq(vm.searchByOptions[0], vm.searchBySelected) ? $translate.instant('ediscovery.searchErrors.invalidEmailLimit') : $translate.instant('ediscovery.searchErrors.invalidSpaceIdLimit');
+      if (_.size(limit) > vm.searchLimit) {
+        var l10nErrorKey = vm.searchByOptions[0] === vm.searchBySelected ? 'ediscovery.searchErrors.invalidEmailLimit' : 'ediscovery.searchErrors.invalidSpaceIdLimit';
+        vm.limitErrorMessage = $translate.instant(l10nErrorKey, { limit: vm.searchLimit });
       } else {
-        advancedSearch();
+        vm.advancedSearch();
       }
     }
 
