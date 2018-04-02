@@ -13,12 +13,12 @@ class CtSetupAssistantCtrl extends CtBaseController  {
     public $timeout: ng.ITimeoutService,
     public TemplateWizardService: TemplateWizardService,
     public CTService,
+    public $state,
   ) {
     super($stateParams, TemplateWizardService, CTService, $translate);
 
     this.TemplateWizardService.setSelectedMediaType(this.$stateParams.type);
     this.TemplateWizardService.setInitialState();
-    this.c.log(this.$stateParams);
   }
 
   public $onInit(): void {
@@ -27,7 +27,6 @@ class CtSetupAssistantCtrl extends CtBaseController  {
     this.currentState = this.TemplateWizardService.currentState;
   }
 
-  public animation = 'slide-left';
   private animationTimeout = 10;
 
   private setFocus(page, locator) {
@@ -51,7 +50,7 @@ class CtSetupAssistantCtrl extends CtBaseController  {
   }
 
   private isProfilePageValid() {
-    return true;
+    return this.TemplateWizardService.pageValidationResult.isProfileValid || false;
   }
 
   private isAgentUnavailablePageValid() {
@@ -107,10 +106,6 @@ class CtSetupAssistantCtrl extends CtBaseController  {
         this.setFocus('chatStatusMessages', '#waiting');
         return this.isStatusMessagesPageValid();
       case 'overview':
-        //var cardName = _.get(vm.overviewCards[0], 'name');
-        //if (!_.isUndefined(cardName)) {
-        //  this.setFocus('overview', '#' + cardName);
-        //}
         return true;
       case 'virtualAssistant':
         this.setFocus('virtualAssistant', '#virtualAssistantSelect #selectMain');
@@ -142,12 +137,10 @@ class CtSetupAssistantCtrl extends CtBaseController  {
   }
 
   public previousPage() {
-    this.animation = 'slide-right';
     this.$timeout( () => { this.jumpToPageBy(-1); }, this.animationTimeout);
   }
 
   public nextPage() {
-    this.animation = 'slide-left';
     this.$timeout(() => { this.jumpToPageBy(1); }, this.animationTimeout);
   }
 
@@ -172,10 +165,18 @@ class CtSetupAssistantCtrl extends CtBaseController  {
         this.c.log('Cancell will be called here');
         this.cancelModal();
         break;
+      case KeyCodes.ENTER:
+        if (this.nextButton()) {
+          this.nextPage();
+        }
+        break;
       default:
         break;
     }
   }
+
+  // TODO: functionality will be added later
+  private statusPageNotifier() {}
 
   public navigationHandler() {
     switch (this.TemplateWizardService.currentState) {
@@ -185,14 +186,6 @@ class CtSetupAssistantCtrl extends CtBaseController  {
       case 'chatStatusMessages': this.statusPageNotifier(); break;
     }
   }
-
-  private statusPageNotifier() {
-  //  var notifyMessage = this.$translate.instant('careChatTpl.statusMessage_failureText', { lengthLimit: this.TemplateWizardService.lengthConstants.singleLineMaxCharLimit25 });
-  //  if (!this.isStatusMessagesPageValid() && this.TemplateWizardService.isEditFeature) {
-  //    Notification.error(notifyMessage);
-  //  }
-  }
-
 }
 
 export class CtSetupAssistantComponent implements ng.IComponentOptions {

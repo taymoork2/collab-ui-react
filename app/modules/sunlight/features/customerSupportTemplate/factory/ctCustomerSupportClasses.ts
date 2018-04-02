@@ -6,11 +6,11 @@ export class MediaSpecificConfiguration {
   public useOrgProfile: boolean = true;
   public displayText: string;
   public orgLogoUrl: string;
-  public useAgentRealName: boolean = false;
+  public useAgentRealName: boolean = true;
 
   constructor( authinfo: Authinfo, private ctService: CTService) {
     this.useOrgProfile = true;
-    this.useAgentRealName = false;
+    this.useAgentRealName = true;
     this.displayText  = authinfo.getOrgName();
     this.getOrgLogo();
   }
@@ -30,6 +30,24 @@ export class IdNameConfig {
     this.id = '';
     this.name = '';
   }
+}
+
+export class IdNameIconConfig {
+  public id: string;
+  public name: string;
+  public icon: string;
+
+  constructor() {
+    this.id = '';
+    this.name = '';
+    this.icon = '';
+  }
+}
+
+export enum MediaTypes {
+  chat = 'chat',
+  callback = 'callback',
+  chatPlusCallback = 'chatpluscallback',
 }
 
 export class Attribute {
