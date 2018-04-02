@@ -509,8 +509,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public searchCarrierInventory(areaCode: string, block: boolean, quantity: number, consecutive: boolean, stateAbbreviation: string): void {
     this.loading = true;
     if (this.ftsw) {
-      this.PstnWizardService.searchBsftCarrierInventory(this.model);
-      this.loading = false;
+      this.PstnWizardService.searchBsftCarrierInventory(areaCode, this.model).then(() => this.loading = false);
     } else {
       this.PstnWizardService.searchCarrierInventory(areaCode, block, quantity, consecutive, stateAbbreviation, this.model, this.isTrial).then(() => this.loading = false);
     }

@@ -1,6 +1,7 @@
 import { PstnCarrier } from './pstnProviders/pstnCarrier';
 import { Address } from './shared/pstn-address';
 import { ContractStatus } from './pstn.const';
+import { BsftSettings } from 'modules/call/bsft/settings/shared';
 
 export interface IOrderData {
   numbers: string | string[];
@@ -54,6 +55,7 @@ export class PstnModel {
   private esaSigned: boolean;
   private esaDisclaimerAgreed: boolean;
   private contractStatus: ContractStatus;
+  private bsftCustomer: BsftSettings;
 
   public constructor() {
     this.clear();
@@ -90,6 +92,7 @@ export class PstnModel {
     this.esaSigned = false;
     this.esaDisclaimerAgreed = false;
     this.contractStatus = ContractStatus.UnKnown;
+    this.bsftCustomer = new BsftSettings();
   }
 
   public clearProviderSpecificData(): void {
@@ -288,6 +291,14 @@ export class PstnModel {
 
   public setContractStatus(contractStatus: ContractStatus): void {
     this.contractStatus = contractStatus;
+  }
+
+  public getBsftCustomer() {
+    return this.bsftCustomer;
+  }
+
+  public setBsftCustomer(_bsftCustomer: BsftSettings) {
+    this.bsftCustomer = _bsftCustomer;
   }
 }
 

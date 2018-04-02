@@ -92,7 +92,7 @@ export class ContactInfo implements IContactInfo {
   constructor(contactInfo: IContactInfo = {
     contactFirstName: 'Art',
     contactLastName: 'Vandelay',
-    emailAddress: 'jlowery@cisco.com',
+    emailAddress: 'samwiforcisco+bsfttest@gmail.com',
     telephoneNumber: null,
   }) {
     this.contactFirstName = contactInfo.contactFirstName;
@@ -108,6 +108,9 @@ export class ContactInfo implements IContactInfo {
 export interface ITelephoneNumber {
   countryCode: string;
   number: string;
+  npa?: string;
+  orgId?: string;
+  assigned?: boolean;
 }
 
 export class TelephoneNumber implements ITelephoneNumber {
@@ -184,7 +187,7 @@ export class BsftOrder implements IBsftOrder {
   public billingNumber: ITelephoneNumber;
   public numbers: ITelephoneNumber[];
 
-  constructor (bsftOrder = {
+  constructor (bsftOrder: IBsftOrder = {
     billingNumber: null,
     numbers: [],
   }) {

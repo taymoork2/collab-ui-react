@@ -12,6 +12,7 @@ import { PstnAddressService, Address } from '../shared/pstn-address';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 import { Notification } from 'modules/core/notifications';
 import { LocationsService, Location } from 'modules/call/locations';
+import { BsftCustomerService, BsftOrder, ITelephoneNumber } from 'modules/call/bsft/settings/shared';
 
 export class PstnWizardService {
   public STEP_TITLE: {
@@ -52,6 +53,7 @@ export class PstnWizardService {
     private Orgservice,
     private FeatureToggleService,
     private Authinfo,
+    private BsftCustomerService: BsftCustomerService,
   ) {
     this.PORTING_NUMBERS = this.$translate.instant('pstnSetup.portNumbersLabel');
     this.STEP_TITLE = {
@@ -356,7 +358,7 @@ export class PstnWizardService {
 
   public placeOrder(ftsw?: boolean): ng.IPromise<any> {
     if (ftsw) {
-      return this.$q.resolve();
+      return this.createBsftCustomerAndOrder();
     } else {
       let promise = this.$q.resolve(true);
       if (!this.PstnModel.isCustomerExists()) {
@@ -370,6 +372,17 @@ export class PstnWizardService {
         .then(this.getEnterprisePrivateTrunkingFeatureToggle.bind(this))
         .then(this.createNumbers.bind(this));
     }
+  }
+
+  public createBsftCustomerAndOrder(): ng.IPromise<any> {
+    const numbers: ITelephoneNumber[] = _.map(this.orderCart, (order) => {
+      const number = _.split(_.get(order, 'data.numbers'), '+1')[1];
+      return {
+        countryCode: '+1',
+        number: number,
+      } as ITelephoneNumber;
+    });
+    return this.BsftCustomerService.createBsftCustomer(_.merge(this.PstnModel.getBsftCustomer(), { order: new BsftOrder({ billingNumber: null, numbers: numbers }) }));
   }
 
   private createLocationOrSite(): ng.IPromise<any> {
@@ -675,17 +688,12 @@ export class PstnWizardService {
     return null;
   }
 
-  public searchBsftCarrierInventory(model: INumbersModel) {
-    model.pstn.searchResults = [
-      '(469) 569-9417',
-      '(469) 569-9416',
-      '(469) 569-9415',
-      '(469) 569-9414',
-      '(469) 569-9413',
-      '(469) 569-9412',
-      '(469) 569-9411',
-      '(469) 569-9410',
-    ];
+  public searchBsftCarrierInventory(areaCode, model: INumbersModel) {
+    return this.BsftCustomerService.getBsftNumbers(areaCode).then((numbers: ITelephoneNumber[]) => {
+      model.pstn.searchResults = _.map(numbers, number => {
+        return `+${number.countryCode}${number.npa}${number.number}`;
+      });
+    });
   }
 
   public searchCarrierInventory(areaCode: string, block: boolean, quantity: number, consecutive: boolean, stateAbbreviation: string, model: INumbersModel, isTrial: boolean) {
