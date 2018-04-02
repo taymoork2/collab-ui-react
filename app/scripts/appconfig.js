@@ -1099,7 +1099,7 @@
                 template: '<div ui-view="usersConvert" class="convert-users"></div>',
               },
               'usersConvert@users.convert': {
-                template: '<cr-convert-users-modal/>',
+                template: '<cr-convert-users-modal-xxx/>',
                 resolve: {
                   modalInfo: function ($state) {
                     $state.params.modalId = 'convertDialog';

@@ -1,7 +1,7 @@
 require('./_convertUsersModal.scss');
 
 angular.module('Core')
-  .directive('crConvertUsersModal', directive);
+  .directive('crConvertUsersModalXxx', directive);
 
 function directive() {
   return {
