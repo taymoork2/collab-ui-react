@@ -101,7 +101,7 @@
       if (_.isUndefined(daterange.value)) {
         vm.timeDiff = Math.floor(moment(vm.dateSelected.endTime).diff(moment(vm.dateSelected.startTime)) / 60000);
         if (vm.timeDiff <= 240) {
-          catAxis.minPeriod = '1mm';
+          catAxis.minPeriod = '10mm';
         } else if (vm.timeDiff > 240 && vm.timeDiff <= 1440) {
           catAxis.minPeriod = '10mm';
         } else if (vm.timeDiff > 1440 && vm.timeDiff <= 10080) {

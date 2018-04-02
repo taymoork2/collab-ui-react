@@ -226,26 +226,6 @@
       });
     }
 
-    function getClusterCascadeBandwidthData(time, cluster) {
-      vm.clusterCascadeBandwidthUrl = '/cascade_bandwidth_usage_for_cluster';
-      var returnData = {
-        graphData: [],
-        graphs: [],
-      };
-      var clusterName = cluster.replace(/\W/g, '').toLowerCase();
-      return $http.get(vm.urlBase + getQuerys(vm.cascadeBandwidthUrl, clusterName, time)).then(function (response) {
-        if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
-          returnData.graphData.push(response.data.chartData);
-          var adjustedData = adjustLineGraphData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
-          return InsightGraphService.getAdjustedInsightData(adjustedData);
-        } else {
-          return returnData;
-        }
-      }, function (error) {
-        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallUtilizationGraphError'), returnData);
-      });
-    }
-
     function getStreamsBandwidthData(time, cluster, streamsBandwidthSelected) {
       vm.streamsBandwidthUrl = '/cascade_bandwidth_usage_for_cluster/media/' + streamsBandwidthSelected;
       var returnData = {
@@ -451,7 +431,6 @@
       getAvailabilityData: getAvailabilityData,
       getClusterAvailabilityData: getClusterAvailabilityData,
       getCascadeBandwidthData: getCascadeBandwidthData,
-      getClusterCascadeBandwidthData: getClusterCascadeBandwidthData,
       getStreamsBandwidthData: getStreamsBandwidthData,
       getTotalCallsData: getTotalCallsData,
       getClusterAvailabilityTooltip: getClusterAvailabilityTooltip,

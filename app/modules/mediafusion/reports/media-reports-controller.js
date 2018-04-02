@@ -5,7 +5,7 @@
     .module('Mediafusion')
     .controller('MediaReportsController', MediaReportsController);
   /* @ngInject */
-  function MediaReportsController($q, $scope, $translate, $interval, $timeout, CardUtils, CascadebandwidthGraphService, ClusterCascadeBandwidthGraphService, StreamsBandwidthUsageGraphService, HybridServicesClusterService, UtilizationResourceGraphService, MeetingLocationAdoptionGraphService, ParticipantDistributionResourceGraphService, NumberOfParticipantGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService, AdoptionCardService, Orgservice, hasMFMultipleInsightFeatureToggle, hasMFCascadeBandwidthFeatureToggle) {
+  function MediaReportsController($interval, $q, $scope, $timeout, $translate, AdoptionCardService, AvailabilityResourceGraphService, CallVolumeResourceGraphService, CardUtils, CascadebandwidthGraphService, ClientTypeAdoptionGraphService, ClusterCascadeBandwidthGraphService, HybridServicesClusterService, MediaReportsDummyGraphService, MediaReportsService, MediaSneekPeekResourceService, MeetingLocationAdoptionGraphService, Notification, NumberOfParticipantGraphService, Orgservice, ParticipantDistributionResourceGraphService, StreamsBandwidthUsageGraphService, UtilizationResourceGraphService, hasMFCascadeBandwidthFeatureToggle, hasMFMultipleInsightFeatureToggle) {
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
@@ -681,7 +681,7 @@
     }
 
     function setClusterCascadeBandwidthData() {
-      MediaReportsService.getClusterCascadeBandwidthData(vm.timeSelected, vm.clusterSelected).then(function (response) {
+      MediaReportsService.getCascadeBandwidthData(vm.timeSelected, vm.clusterSelected).then(function (response) {
         if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
           setDummyClusterCascadeBandwidth();
         } else {
@@ -814,7 +814,7 @@
       vm.participantDistributionStatus = vm.EMPTY;
       var response = {
         graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
-        graphs: MediaReportsDummyGraphService.dummyParticipantDistributionGraph(),
+        graphs: MediaReportsDummyGraphService.dummyClusterLineChartGraph(),
       };
       setParticipantDistributionGraph(response);
     }
@@ -850,7 +850,7 @@
       vm.cascadebandwidthStatus = vm.EMPTY;
       var response = {
         graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
-        graphs: MediaReportsDummyGraphService.dummyParticipantDistributionGraph(),
+        graphs: MediaReportsDummyGraphService.dummyClusterLineChartGraph(),
       };
       setCascadeBandwidthGraph(response);
     }
@@ -859,7 +859,7 @@
       vm.clusterCascadebandwidthStatus = vm.EMPTY;
       var response = {
         graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
-        graphs: MediaReportsDummyGraphService.dummyParticipantDistributionGraph(),
+        graphs: MediaReportsDummyGraphService.dummyClusterLineChartGraph(),
       };
       setClusterCascadeBandwidthGraph(response);
     }
@@ -868,7 +868,7 @@
       vm.streamsBandwidthStatus = vm.EMPTY;
       var response = {
         graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
-        graphs: MediaReportsDummyGraphService.dummyParticipantDistributionGraph(),
+        graphs: MediaReportsDummyGraphService.dummyClusterLineChartGraph(),
       };
       setStreamsBandwidthGraph(response);
     }
