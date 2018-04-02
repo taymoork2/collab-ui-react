@@ -33,7 +33,7 @@ let cspDevConfig = mkCspConfig({
     'ws://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
     'ws://localhost:8000', // Browser Sync
     'ws://localhost:8443', // Browser Sync
-    'http://rch-ads-165:9090', // Temporary use for HCS testing
+    'https://upgrade.scplatform.cloud', //HCS Upgrade Service
   ],
   fontSrc: [
     'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
