@@ -1099,7 +1099,7 @@
                 template: '<div ui-view="usersConvert" class="convert-users"></div>',
               },
               'usersConvert@users.convert': {
-                template: '<cr-convert-users-modal-xxx/>',
+                template: '<cr-convert-users-modal manage-users="$resolve.manageUsers" read-only="$resolve.readOnly" dismiss="$dismiss()"></cr-convert-users-modal>',
                 resolve: {
                   modalInfo: function ($state) {
                     $state.params.modalId = 'convertDialog';
@@ -1108,9 +1108,10 @@
               },
             },
             params: {
+              isDefaultAutoAssignTemplateActivated: undefined,
               manageUsers: false,
               readOnly: false,
-              isDefaultAutoAssignTemplateActivated: undefined,
+              resetOnboardStoreStates: null,
             },
             resolve: {
               isDefaultAutoAssignTemplateActivated: /* @ngInject */ function ($stateParams, AutoAssignTemplateModel, AutoAssignTemplateService, FeatureToggleService) {
@@ -1127,6 +1128,15 @@
                     AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = isDefaultAutoAssignTemplateActivated;
                   });
                 });
+              },
+              manageUsers: /* @ngInject */ function ($stateParams) {
+                return $stateParams.manageUsers;
+              },
+              readOnly: /* @ngInject */ function ($stateParams) {
+                return $stateParams.readOnly;
+              },
+              resetOnboardStoreStates: /* @ngInject */ function ($stateParams) {
+                return $stateParams.resetOnboardStoreStates;
               },
             },
           })

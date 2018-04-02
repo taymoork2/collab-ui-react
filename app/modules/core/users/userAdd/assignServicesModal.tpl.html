@@ -10,12 +10,12 @@
   <cr-assign-services></cr-assign-services>
 </div>
 
-<div class="modal-footer" ng-if="!convertUsersFlow">
+<div class="modal-footer" ng-if="!isConvertUsersFlow()">
   <button type="button" id="btnBack" class="btn" ng-click="onBack('users.add.manual')"><span translate="common.back"></span></button>
   <button type="button" id="btnOnboard" cs-btn loading="btnOnboardLoading" class="btn btn--primary" ng-click="assignServicesSave()"><span translate="{{getServicesNextText()}}"></span></button>
 </div>
 
-<div class="modal-footer" ng-if="convertUsersFlow">
+<div class="modal-footer" ng-if="isConvertUsersFlow()">
   <button type="button" id="btnBack" class="btn" ng-click="goToConvertUsers()"><span translate="common.back"></span></button>
   <button type="button" id="btnConvert" cs-btn loading="btnConvertLoad" class="btn btn--primary" ng-click="convertUsersNext()" >
   <span translate="{{getServicesNextText()}}"></span></button>
