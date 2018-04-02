@@ -22,7 +22,6 @@
     },
     AthenaServiceUrl: {
       dev: 'https://athena-intb.ciscospark.com/athena/api/v1',
-      //dev: 'https://athena-a.wbx2.com/athena/api/v1',
       cfe: 'https://athena-loada.ciscospark.com/athena/api/v1',
       integration: 'https://athena-intb.ciscospark.com/athena/api/v1',
       prod: 'https://athena-a.wbx2.com/athena/api/v1',
@@ -95,14 +94,12 @@
     },
     HerculesUrl: {
       dev: 'https://hercules-intb.ciscospark.com/v1',
-      //dev: 'https://hercules-a.wbx2.com/v1',
       cfe: 'https://hercules-loada.ciscospark.com/v1',
       integration: 'https://hercules-intb.ciscospark.com/v1',
       prod: 'https://hercules-a.wbx2.com/v1',
     },
     HerculesUrlV2: {
       dev: 'https://hercules-intb.ciscospark.com/hercules/api/v2',
-      //dev: 'https://hercules-a.wbx2.com/hercules/api/v2',
       cfe: 'https://hercules-loada.ciscospark.com/hercules/api/v2',
       integration: 'https://hercules-intb.ciscospark.com/hercules/api/v2',
       prod: 'https://hercules-a.wbx2.com/hercules/api/v2',
