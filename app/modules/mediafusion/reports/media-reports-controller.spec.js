@@ -105,6 +105,7 @@ describe('Controller:MediaReportsController', function () {
       Log: Log,
       Config: Config,
       hasMFMultipleInsightFeatureToggle: false,
+      hasMFCascadeBandwidthFeatureToggle: false,
     });
   }));
   it('controller should be defined', function () {

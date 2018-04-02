@@ -1,0 +1,13 @@
+.streams-bandwidth-usage-reports {
+    .barchart {
+      position: relative;
+      top: rem-calc(-5);
+    }
+  }
+  .mf-streams-filter {
+    width: 8rem;
+    display: inline-flex;
+    right: 0;
+    margin-right: 5rem;
+    position: absolute;
+  }
