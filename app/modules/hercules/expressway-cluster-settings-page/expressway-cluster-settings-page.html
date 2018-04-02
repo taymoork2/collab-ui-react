@@ -52,9 +52,9 @@
 
   <cluster-sip-destination-section ng-if="$ctrl.hasHybridGlobalCallServiceConnectFeature && $ctrl.cluster" cluster="$ctrl.cluster"></cluster-sip-destination-section>
 
-  <hs-rename-and-deregister-cluster-section
+  <hs-cluster-section
     cluster="$ctrl.cluster"
     show-rename-section="true"
     on-name-update="$ctrl.nameUpdated(name)">
-  </hs-rename-and-deregister-cluster-section>
+  </hs-cluster-section>
 </div>

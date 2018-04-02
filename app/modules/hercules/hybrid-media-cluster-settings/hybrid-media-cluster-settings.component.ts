@@ -1,6 +1,6 @@
 import { IExtendedClusterFusion, ICluster } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
-import { IDeregisterModalOptions } from 'modules/hercules/rename-and-deregister-cluster-section/hs-rename-and-deregister-cluster.component';
+import { IDeregisterModalOptions } from 'modules/hercules/hs-cluster-section/hs-cluster-section.component';
 
 class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
 
