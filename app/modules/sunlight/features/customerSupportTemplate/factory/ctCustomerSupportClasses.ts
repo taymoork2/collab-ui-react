@@ -64,7 +64,7 @@ export class ProActiveFields {
   public promptTime: string;
   public promptTitle: any;
   public promptMessage: any = {
-    message: this.$translate.instant('careChatTpl.defaultPromptMessage'),
+    message: this.$translate.instant('careChatTpl.templateConfig.default.defaultPromptMessage'),
   };
   constructor (
     private $translate: ng.translate.ITranslateService,
@@ -83,7 +83,7 @@ export class ProactivePrompt {
         displayText: authinfo.getOrgName(),
       },
       promptMessage: {
-        message: $translate.instant('careChatTpl.defaultPromptMessage'),
+        message: $translate.instant('careChatTpl.templateConfig.default.defaultPromptMessage'),
       },
     };
   }
@@ -99,7 +99,7 @@ export class VirtualAssistantConfig {
   ) {
     this.enabled = false;
     this.config = new IdNameConfig();
-    this.welcomeMessage = $translate.instant('careChatTpl.virtualAssistantWelcomeMessage');
+    this.welcomeMessage = $translate.instant('careChatTpl.templateConfig.default.virtualAssistantWelcomeMessage');
   }
 }
 
@@ -124,7 +124,7 @@ export class CustomerInformation {
       welcomeHeader: {
         attributes: [{
           name: 'header',
-          value: $translate.instant('careChatTpl.defaultWelcomeText'),
+          value: $translate.instant('careChatTpl.templateConfig.default.defaultWelcomeText'),
         }, {
           name: 'organization',
           value: authinfo.getOrgName(),
@@ -139,10 +139,10 @@ export class CustomerInformation {
           value: ctService.getCategoryTypeObject('customerInfo'),
         }, {
           name: 'label',
-          value: $translate.instant('careChatTpl.defaultNameText'),
+          value: $translate.instant('careChatTpl.templateConfig.default.defaultNameText'),
         }, {
           name: 'hintText',
-          value: $translate.instant('careChatTpl.defaultNameHint'),
+          value: $translate.instant('careChatTpl.templateConfig.default.defaultNameHint'),
         }, {
           name: 'type',
           value: ctService.getTypeObject('name'),
@@ -159,10 +159,10 @@ export class CustomerInformation {
           value: ctService.getCategoryTypeObject('customerInfo'),
         }, {
           name: 'label',
-          value: $translate.instant('careChatTpl.defaultEmailText'),
+          value: $translate.instant('careChatTpl.templateConfig.default.defaultEmailText'),
         }, {
           name: 'hintText',
-          value: $translate.instant('careChatTpl.defaultEmail'),
+          value: $translate.instant('careChatTpl.templateConfig.default.defaultEmail'),
         }, {
           name: 'type',
           value: ctService.getTypeObject('email'),
@@ -179,10 +179,10 @@ export class CustomerInformation {
           value: ctService.getCategoryTypeObject('requestInfo'),
         }, {
           name: 'label',
-          value: $translate.instant('careChatTpl.defaultQuestionText'),
+          value: $translate.instant('careChatTpl.templateConfig.default.defaultQuestionText'),
         }, {
           name: 'hintText',
-          value: $translate.instant('careChatTpl.field3HintText'),
+          value: $translate.instant('careChatTpl.templateConfig.default.field3HintText'),
         }, {
           name: 'type',
           value: ctService.getTypeObject('category'),
@@ -199,10 +199,10 @@ export class CustomerInformation {
           value: ctService.getCategoryTypeObject('requestInfo'),
         }, {
           name: 'label',
-          value: $translate.instant('careChatTpl.additionalDetails'),
+          value: $translate.instant('careChatTpl.templateConfig.default.additionalDetails'),
         }, {
           name: 'hintText',
-          value: $translate.instant('careChatTpl.additionalDetailsAbtIssue'),
+          value: $translate.instant('careChatTpl.templateConfig.default.additionalDetailsAbtIssue'),
         }, {
           name: 'type',
           value: ctService.getTypeObject('reason'),
@@ -223,7 +223,7 @@ export class AgentUnavailable {
     this.enabled = true;
     this.fields = {
       agentUnavailableMessage: {
-        displayText: $translate.instant('careChatTpl.agentUnavailableMessage'),
+        displayText: $translate.instant('careChatTpl.templateConfig.default.agentUnavailableMessage'),
       },
     };
   }
@@ -235,7 +235,7 @@ export class OffHours {
   public schedule: any;
   constructor(ctService: CTService, $translate: ng.translate.ITranslateService) {
     this.enabled = true;
-    this.message = $translate.instant('careChatTpl.offHoursDefaultMessage');
+    this.message = $translate.instant('careChatTpl.templateConfig.default.offHoursDefaultMessage');
     this.schedule = {
       businessDays: _.map(_.filter(ctService.getDays(), 'isSelected'), 'label'),
       open24Hours: true,
@@ -257,10 +257,10 @@ export class Feedback {
     this.enabled = true;
     this.fields = {
       feedbackQuery: {
-        displayText: $translate.instant('careChatTpl.feedbackQueryCall'),
+        displayText: $translate.instant('careChatTpl.templateConfig.default.feedbackQueryCall'),
       },
       comment: {
-        displayText: $translate.instant('careChatTpl.ratingComment'),
+        displayText: $translate.instant('careChatTpl.templateConfig.default.ratingComment'),
         dictionaryType: {
           fieldSet: 'cisco.base.rating',
           fieldName: 'cccRatingComments',
@@ -278,7 +278,7 @@ export class CallbackConfirmation {
     this.enabled = true;
     this.fields = {
       callbackConfirmationMessage: {
-        displayText: $translate.instant('careChatTpl.callbackConfirmationMsg'),
+        displayText: $translate.instant('careChatTpl.templateConfig.default.callbackConfirmationMsg'),
       },
     };
   }
@@ -347,22 +347,22 @@ export class ChatStatusMessages {
   ) {
     this.messages = {
       bubbleTitleMessage: {
-        displayText: $translate.instant('careChatTpl.bubbleTitleMessage'),
+        displayText: $translate.instant('careChatTpl.templateConfig.default.bubbleTitleMessage'),
       },
       connectingMessage: {
-        displayText: $translate.instant('careChatTpl.connectingMessage'),
+        displayText: $translate.instant('careChatTpl.templateConfig.default.connectingMessage'),
       },
       waitingMessage: {
-        displayText: $translate.instant('careChatTpl.waitingMessage'),
+        displayText: $translate.instant('careChatTpl.templateConfig.default.waitingMessage'),
       },
       enterRoomMessage: {
-        displayText: $translate.instant('careChatTpl.enterRoomMessage'),
+        displayText: $translate.instant('careChatTpl.templateConfig.default.enterRoomMessage'),
       },
       leaveRoomMessage: {
-        displayText: $translate.instant('careChatTpl.leaveRoomMessage'),
+        displayText: $translate.instant('careChatTpl.templateConfig.default.leaveRoomMessage'),
       },
       chattingMessage: {
-        displayText: $translate.instant('careChatTpl.chattingMessage'),
+        displayText: $translate.instant('careChatTpl.templateConfig.default.chattingMessage'),
       },
     };
   }

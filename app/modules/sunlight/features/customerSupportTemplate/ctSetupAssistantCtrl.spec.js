@@ -206,6 +206,49 @@ describe('Care Setup Assistant Ctrl', function () {
     $provide.value('Authinfo', spiedAuthinfo);
   }));
 
+  beforeEach(angular.mock.module(function ($translateProvider) {
+    $translateProvider
+      .registerAvailableLanguageKeys(['en_US'], {
+        en_US: 'en_US',
+      })
+      .translations('en_US', {
+        careChatTpl: {
+          templateConfig: {
+            default: {
+              feedbackQueryCall: 'Please rate your callback experience.',
+              additionalDetailsAbtIssue: 'Describe the issue you are experiencing',
+              chattingMessage: 'Chat in progress...',
+              defaultPhoneHintText: '+12345556789',
+              defaultPromptMessage: 'Chat with our solution specialists to help serve you better.',
+              ratingComment: 'Add comments',
+              feedbackQuery: 'Please rate your chat experience',
+              offHoursDefaultMessage: 'We are currently offline. Please try again during our business hours.',
+              callbackConfirmationMsg: 'Callback request received successfully.',
+              defaultEmailText: 'Email',
+              field3HintText: 'Select from the list or type',
+              defaultWelcomeText: 'Welcome to',
+              connectingMessage: 'Connecting you to an Agent',
+              defaultNameHint: '',
+              enterRoomMessage: 'Agent has entered the chat room',
+              defaultQuestionText: 'How may I assist you?',
+              leaveRoomMessage: 'Agent has left the chat',
+              waitingMessageEVA: 'Someone will help you shortly…',
+              virtualAssistantWelcomeMessage: 'Hello, how can I help you today?',
+              defaultNameText: 'Name',
+              waitingMessage: 'Waiting for an Agent...',
+              defaultPhoneText: 'Phone Number',
+              additionalDetails: 'Additional Details',
+              bubbleTitleMessage: 'Click here to chat with Customer Care',
+              defaultEmail: 'e.g. abc@xyz.com',
+              agentUnavailableMessage: 'Sorry, we are unavailable at the moment. Please try again later.',
+              leaveRoomMessageEVA: 'Chat has ended',
+            },
+          },
+        },
+      })
+      .preferredLanguage('en_US');
+  }));
+
   var intializeCtrl = function (mediaType, template, isEditFeature, isCareProactiveChatTrialsFt, isCareAssistantFt, isEvaFlagEnabled) {
     return function (_$rootScope_, $controller, _$modal_, _$q_, _$translate_, _$window_, _CvaService_, _EvaService_, _CTService_, _SunlightConfigService_, _$state_, _Notification_, _$stateParams_, _LogMetricsService_, UrlConfig, _$httpBackend_) {
       $scope = _$rootScope_.$new();
@@ -941,7 +984,7 @@ describe('Care Setup Assistant Ctrl', function () {
       var returnObj = {
         attributes: [{
           name: 'header',
-          value: 'careChatTpl.defaultWelcomeText',
+          value: 'Welcome to',
         }, {
           name: 'organization',
           value: OrgName,
@@ -1121,7 +1164,7 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.template.configuration.proactivePrompt.fields.promptTitle.displayText)
         .toEqual(controller.orgName);
       expect(controller.template.configuration.proactivePrompt.fields.promptMessage.message)
-        .toEqual('careChatTpl.defaultPromptMessage');
+        .toEqual('Chat with our solution specialists to help serve you better.');
     });
 
     it('should disable the next button if promptTitle is more than 25 characters', function () {
@@ -1165,7 +1208,7 @@ describe('Care Setup Assistant Ctrl', function () {
             displayText: controller.orgName,
           },
           promptMessage: {
-            message: 'careChatTpl.defaultPromptMessage',
+            message: 'Chat with our solution specialists to help serve you better.',
           },
         },
       };
@@ -1208,7 +1251,7 @@ describe('Care Setup Assistant Ctrl', function () {
             displayText: controller.orgName,
           },
           promptMessage: {
-            message: 'careChatTpl.defaultPromptMessage',
+            message: 'Chat with our solution specialists to help serve you better.',
           },
         },
       };
@@ -1225,7 +1268,7 @@ describe('Care Setup Assistant Ctrl', function () {
             displayText: controller.orgName,
           },
           promptMessage: {
-            message: 'careChatTpl.defaultPromptMessage',
+            message: 'Chat with our solution specialists to help serve you better.',
           },
         },
       };
@@ -1238,7 +1281,7 @@ describe('Care Setup Assistant Ctrl', function () {
             displayText: controller.orgName,
           },
           promptMessage: {
-            message: 'careChatTpl.defaultPromptMessage',
+            message: 'Chat with our solution specialists to help serve you better.',
           },
         },
       };
@@ -1317,7 +1360,7 @@ describe('Care Setup Assistant Ctrl', function () {
           id: '',
           name: '',
         },
-        welcomeMessage: $translate.instant('careChatTpl.virtualAssistantWelcomeMessage'),
+        welcomeMessage: $translate.instant('careChatTpl.templateConfig.default.virtualAssistantWelcomeMessage'),
       };
 
       controller.template.configuration.virtualAssistant.config.id = VAService.id;
@@ -1341,7 +1384,7 @@ describe('Care Setup Assistant Ctrl', function () {
           id: '',
           name: '',
         },
-        welcomeMessage: $translate.instant('careChatTpl.virtualAssistantWelcomeMessage'),
+        welcomeMessage: $translate.instant('careChatTpl.templateConfig.default.virtualAssistantWelcomeMessage'),
       };
 
       controller.template.configuration.virtualAssistant.config.id = 'id-x';
@@ -1379,7 +1422,7 @@ describe('Care Setup Assistant Ctrl', function () {
     }
 
     it('should set off hours message and business hours by default', function () {
-      expect(controller.template.configuration.pages.offHours.message).toEqual('careChatTpl.offHoursDefaultMessage');
+      expect(controller.template.configuration.pages.offHours.message).toEqual('We are currently offline. Please try again during our business hours.');
       expect(controller.template.configuration.pages.offHours.schedule.open24Hours).toBe(true);
       expect(controller.isOffHoursMessageValid).toBe(true);
       expect(controller.isBusinessHoursDisabled).toBe(false);
@@ -1483,7 +1526,7 @@ describe('Care Setup Assistant Ctrl', function () {
       controller.nextButton();
       expect(controller.template.configuration.pages.offHours).toEqual({
         enabled: true,
-        message: 'careChatTpl.offHoursDefaultMessage',
+        message: 'We are currently offline. Please try again during our business hours.',
         schedule: {
           businessDays: ['Monday', 'Saturday'],
           open24Hours: false,
