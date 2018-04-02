@@ -55,6 +55,7 @@ module.exports = {
   atlasJabberInterop: 'atlas-jabber-interop',
   atlasJira2126UseAltEndpoint: 'atlas-jira-2126-use-alt-endpoint',
   atlasMediaServiceCascadeBwConfig: 'atlas-media-service-cascade-bw-config',
+  atlasMediaServiceCascadeBwReport: 'atlas-media-service-cascade-bw-report',
   atlasMediaServiceClusterWizard: 'atlas-media-service-cluster-wizard',
   atlasMediaServiceMultipleInsights: 'atlas-media-service-multiple-insights',
   atlasMediaServicePhaseTwo: 'atlas-media-service-phase-two',
