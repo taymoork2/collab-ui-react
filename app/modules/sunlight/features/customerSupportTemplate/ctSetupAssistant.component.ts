@@ -55,7 +55,7 @@ class CtSetupAssistantCtrl extends CtBaseController  {
   }
 
   private isAgentUnavailablePageValid() {
-    return true;
+    return this.TemplateWizardService.pageValidationResult.isAgentUnavailableValid || false;
   }
 
   private isFeedbackPageValid() {
