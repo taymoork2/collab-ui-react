@@ -23,6 +23,7 @@ export class TemplateWizardService {
     isNameValid: false,
     chatStatusMsgValid: false,
     offHoursValid: false,
+    isAgentUnavailableValid: false,
   };
 
   //TODO: to set it from the right page
@@ -141,6 +142,27 @@ export class TemplateWizardService {
     // if eva is configured AND escalation to agent is not selected
     return this.evaConfig.isEvaFlagEnabled && this.evaConfig.isEvaConfigured && this.template.configuration.routingLabel &&
       this.template.configuration.routingLabel === this.SunlightConstantsService.routingLabels.EXPERT;
+  }
+
+  public getAttributeValue(attributeName, fieldName, modelName, i): any {
+    const models: any = this.template.configuration.pages;
+    const model: any = _.get(models, modelName);
+
+    return this.getAttributeByModelName(attributeName, fieldName, model, i);
+  }
+
+  private getAttributeByModelName(attributeName, fieldName, model, i): any {
+    const fields: any = model.fields;
+    let field: any = _.get(fields, fieldName);
+
+    if (field.attributes instanceof Array) {
+      field = field.attributes[i];
+    }
+
+    if (field) {
+      return _.get(field, attributeName);
+    }
+    return undefined;
   }
 }
 

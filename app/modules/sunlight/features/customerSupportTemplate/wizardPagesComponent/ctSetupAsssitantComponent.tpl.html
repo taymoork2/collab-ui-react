@@ -56,9 +56,10 @@
                          ng-switch-when = "feedbackCallback"
                          ng-class="careChatSA.animation"></div>
 
-                    <div ct-agent-unavailable
+
+                    <ct-agent-unavailable-component
                          ng-switch-when = "agentUnavailable"
-                         ng-class="careChatSA.animation"></div>
+                         ng-class="careChatSA.animation"></ct-agent-unavailable-component>
 
                     <ct-off-hours-component
                       ng-switch-when = "offHours"
