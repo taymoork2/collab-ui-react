@@ -56,8 +56,8 @@ class BulkModalCtrl implements ng.IComponentController {
   public initGrid() {
     this.gridOptions = {
       columnDefs: [
-        { displayName: 'Device belongs to', name: 'name', width: 200 },
-        { displayName: 'Errors', name: 'error', width: 249 }],
+        { displayName: 'Device belongs to', name: 'name', width: 250 },
+        { displayName: 'Errors', name: 'error', width: 290 }],
       enableSorting: false,
       enableMinHeightCheck: false,
     };
