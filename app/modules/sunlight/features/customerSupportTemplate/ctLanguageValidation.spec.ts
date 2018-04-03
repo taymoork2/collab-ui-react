@@ -48,8 +48,8 @@ describe('Langauage Translations for Config Template Strings', () => {
           if (!translation.startsWith(TRANSLATION_NOT_FOUND)) {
             expect(translation.length).toBeLessThanOrEqual(characterLimit,
           `
-          Translation for key "${translationKey}" (${translation})
-          in language bundle "${lang}" exceeds the character limit of ${characterLimit}"
+          Translation for key "${translationKey}":"${translation}"
+          in language bundle "${lang}" exceeds the character limit of "${characterLimit}"
           `);
           }
         }

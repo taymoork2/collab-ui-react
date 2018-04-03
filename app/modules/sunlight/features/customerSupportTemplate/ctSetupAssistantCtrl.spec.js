@@ -984,7 +984,7 @@ describe('Care Setup Assistant Ctrl', function () {
       var returnObj = {
         attributes: [{
           name: 'header',
-          value: 'Welcome to',
+          value: $translate.instant('careChatTpl.templateConfig.default.defaultWelcomeText'),
         }, {
           name: 'organization',
           value: OrgName,
@@ -1164,7 +1164,7 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.template.configuration.proactivePrompt.fields.promptTitle.displayText)
         .toEqual(controller.orgName);
       expect(controller.template.configuration.proactivePrompt.fields.promptMessage.message)
-        .toEqual('Chat with our solution specialists to help serve you better.');
+        .toEqual($translate.instant('careChatTpl.templateConfig.default.defaultPromptMessage'));
     });
 
     it('should disable the next button if promptTitle is more than 25 characters', function () {
@@ -1208,7 +1208,7 @@ describe('Care Setup Assistant Ctrl', function () {
             displayText: controller.orgName,
           },
           promptMessage: {
-            message: 'Chat with our solution specialists to help serve you better.',
+            message: $translate.instant('careChatTpl.templateConfig.default.defaultPromptMessage'),
           },
         },
       };
@@ -1251,7 +1251,7 @@ describe('Care Setup Assistant Ctrl', function () {
             displayText: controller.orgName,
           },
           promptMessage: {
-            message: 'Chat with our solution specialists to help serve you better.',
+            message: $translate.instant('careChatTpl.templateConfig.default.defaultPromptMessage'),
           },
         },
       };
@@ -1268,7 +1268,7 @@ describe('Care Setup Assistant Ctrl', function () {
             displayText: controller.orgName,
           },
           promptMessage: {
-            message: 'Chat with our solution specialists to help serve you better.',
+            message: $translate.instant('careChatTpl.templateConfig.default.defaultPromptMessage'),
           },
         },
       };
@@ -1281,7 +1281,7 @@ describe('Care Setup Assistant Ctrl', function () {
             displayText: controller.orgName,
           },
           promptMessage: {
-            message: 'Chat with our solution specialists to help serve you better.',
+            message: $translate.instant('careChatTpl.templateConfig.default.defaultPromptMessage'),
           },
         },
       };
@@ -1422,7 +1422,7 @@ describe('Care Setup Assistant Ctrl', function () {
     }
 
     it('should set off hours message and business hours by default', function () {
-      expect(controller.template.configuration.pages.offHours.message).toEqual('We are currently offline. Please try again during our business hours.');
+      expect(controller.template.configuration.pages.offHours.message).toEqual($translate.instant('careChatTpl.templateConfig.default.offHoursDefaultMessage'));
       expect(controller.template.configuration.pages.offHours.schedule.open24Hours).toBe(true);
       expect(controller.isOffHoursMessageValid).toBe(true);
       expect(controller.isBusinessHoursDisabled).toBe(false);
@@ -1526,7 +1526,7 @@ describe('Care Setup Assistant Ctrl', function () {
       controller.nextButton();
       expect(controller.template.configuration.pages.offHours).toEqual({
         enabled: true,
-        message: 'We are currently offline. Please try again during our business hours.',
+        message: $translate.instant('careChatTpl.templateConfig.default.offHoursDefaultMessage'),
         schedule: {
           businessDays: ['Monday', 'Saturday'],
           open24Hours: false,
