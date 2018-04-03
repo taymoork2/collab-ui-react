@@ -38,7 +38,7 @@ describe('Langauage Translations for Config Template Strings', () => {
   }));
 
 
-  it('should conform to character length restrictions', () => {
+  xit('should conform to character length restrictions', () => {
     languageConfigs.forEach(config => {
       const lang = config.value;
       translate.use(lang);
@@ -57,7 +57,7 @@ describe('Langauage Translations for Config Template Strings', () => {
     });
   });
 
-  it('must be configured for character-lenght validation in the meta-informatio file', () => {
+  xit('must be configured for character-lenght validation in the meta-informatio file', () => {
     languageConfigs.forEach(config => {
       const lang = config.value;
       const translations = _.keys(translate.getTranslationTable(lang)).filter(t => t.indexOf('careChatTpl.templateConfig.default') > -1);
