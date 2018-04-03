@@ -4010,7 +4010,7 @@
   "ediscovery": {
     "browserTabHeaderTitle": "eDiscovery Search and Extraction",
     "heading": "Search Compliance Data",
-    "subheading": "Choose to search for specific users or spaces. Add up to 5 users or spaces by separating with commas.",
+    "subheading": "Choose to search for specific users or spaces. Add up to {{limit}} users or spaces by separating with commas.",
     "searchTip": "Search data by space ID",
     "searchingHeader": "Searching Compliance Data",
     "searchingSubheader": "Search may take up to a few minutes",
@@ -4039,8 +4039,8 @@
     },
     "searchErrors": {
       "queryLimit": "query must be 200 characters or less",
-      "invalidEmailLimit": "Enter only up to 5 email addresses",
-      "invalidSpaceIdLimit": "Enter only up to 5 Space IDs",
+      "invalidEmailLimit": "Enter only up to {{limit}} email addresses",
+      "invalidSpaceIdLimit": "Enter only up to {{limit}} Space IDs",
       "noMatchesFound": "No Matches Found",
       "requestFailed": "Request Failed: Tracking ID {{trackingId}}",
       "504RequestFailed": "Search Timed Out: Tracking ID {{trackingId}}"
