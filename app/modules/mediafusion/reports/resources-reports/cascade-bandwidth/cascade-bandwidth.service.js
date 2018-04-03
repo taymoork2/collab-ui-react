@@ -176,10 +176,17 @@
         method: legendHandler,
       }];
 
-
       var chart = AmCharts.makeChart(vm.cascadeBandwidthDiv, chartData);
+      chart.addListener('clickGraph', handleClick);
       chart.addListener('zoomed', handleZoom);
       return chart;
+    }
+
+    function handleClick(event) {
+      var clickedCluster = event.target;
+      $rootScope.$broadcast('clusterClickEvent', {
+        data: clickedCluster.title,
+      });
     }
 
     function handleZoom(event) {
