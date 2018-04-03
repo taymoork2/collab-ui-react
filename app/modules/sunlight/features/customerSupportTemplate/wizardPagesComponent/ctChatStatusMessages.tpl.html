@@ -20,7 +20,7 @@
                 validate-characters="$ctrl.InvalidCharacters"
                 ng-model="$ctrl.template.configuration.chatStatusMessages.messages.waitingMessage.displayText"
                 ng-model-options="{ allowInvalid: true }"
-                placeholder="{{::'careChatTpl.waitingMessage' | translate}}"
+                placeholder="{{::'careChatTpl.templateConfig.default.waitingMessage' | translate}}"
                 ng-change="$ctrl.isStatusMessagesPageValid()"
                 ng-keypress="$ctrl.enterNextPage($event)"/>
             <div class="chat-status-waiting-help-text">
@@ -40,7 +40,7 @@
                 validate-characters="$ctrl.InvalidCharacters"
                 ng-model="$ctrl.template.configuration.chatStatusMessages.messages.chattingMessage.displayText"
                 ng-model-options="{ allowInvalid: true }"
-                placeholder="{{::'careChatTpl.chattingMessage' | translate}}"
+                placeholder="{{::'careChatTpl.templateConfig.default.chattingMessage' | translate}}"
                 ng-change="$ctrl.isStatusMessagesPageValid()"
                 ng-keypress="$ctrl.enterNextPage($event)"/>
               <div class="chat-status-help-text body-small" translate="careChatTpl.helpTextChatting">
@@ -58,7 +58,7 @@
                 validate-characters="$ctrl.InvalidCharacters"
                 ng-model="$ctrl.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText"
                 ng-model-options="{ allowInvalid: true }"
-                placeholder="{{::'careChatTpl.leaveRoomMessage' | translate}}"
+                placeholder="{{::'careChatTpl.templateConfig.default.leaveRoomMessage' | translate}}"
                 ng-change="$ctrl.isStatusMessagesPageValid()"
                 ng-keypress="$ctrl.enterNextPage($event)"/>
               <div class="chat-status-help-text body-small">{{$ctrl.helpTextLeaveRoom()}}
