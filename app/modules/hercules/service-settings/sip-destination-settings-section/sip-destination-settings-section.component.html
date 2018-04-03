@@ -1,13 +1,14 @@
 <div class="sub-section">
   <div class="hercules-sip-settings">
     <p class="sub-section__description">
-      <span class="sub-section__label" translate="hercules.settings.call.sipDomainHeading"></span>
+      <span class="sub-section__label" ng-if="!$ctrl.hasHybridGlobalCallServiceConnectFeature" translate="hercules.settings.call.sipDomainHeading"></span>
+      <span class="sub-section__label" ng-if="$ctrl.hasHybridGlobalCallServiceConnectFeature" translate="hercules.settings.call.defaultSipDomainHeading"></span>
     </p>
-    <p translate="servicesOverview.cards.privateTrunk.destination"></p>
+    <p translate="hercules.settings.call.defaultSipDomainDescription"></p>
     <sip-destination-input sip-destination="$ctrl.sipDestination"></sip-destination-input>
   </div>
 </div>
-<div class="sub-section" ng-if="$ctrl.hasHybridGlobalCallServiceConnectFeature">
+<div class="sub-section" ng-if="$ctrl.hasHybridGlobalCallServiceConnectFeature && $ctrl.displayOverview">
   <h5 class="sub-section__title" translate="hercules.settings.call.sipDestinationsOverview.title"></h5>
   <p class="sub-section__description" translate="hercules.settings.call.sipDestinationsOverview.description"></p>
   <table class="table table-striped">

@@ -1,8 +1,8 @@
-import renameAndDeregisterClusterSection from './index';
+import moduleName from './index';
 
-describe('Component: hsRenameAndDeregisterClusterSection', function () {
+describe('Component: hsClusterSection', function () {
   beforeEach(function () {
-    this.initModules(renameAndDeregisterClusterSection);
+    this.initModules(moduleName);
     this.injectDependencies('$componentController', '$q', '$scope', 'PrivateTrunkService', 'HybridServicesClusterService', 'Notification', 'FeatureToggleService');
 
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
@@ -16,7 +16,7 @@ describe('Component: hsRenameAndDeregisterClusterSection', function () {
     const element: string = '#renameSection';
 
     it ('should contain a rename section if the showRenameSection attribute is true', function() {
-      this.compileComponent('hsRenameAndDeregisterClusterSection', {
+      this.compileComponent('hsClusterSection', {
         showRenameSection: true,
       });
       this.$scope.$apply();
@@ -24,7 +24,7 @@ describe('Component: hsRenameAndDeregisterClusterSection', function () {
     });
 
     it ('should NOT contain a rename section if the showRenameSection attribute is not set', function() {
-      this.compileComponent('hsRenameAndDeregisterClusterSection');
+      this.compileComponent('hsClusterSection');
       this.$scope.$apply();
       expect(this.view).not.toContainElement(element);
     });
@@ -35,7 +35,7 @@ describe('Component: hsRenameAndDeregisterClusterSection', function () {
       this.newName = 'This is a new cluster name';
 
       this.initController = (): void => {
-        this.controller = this.$componentController('hsRenameAndDeregisterClusterSection', null, {
+        this.controller = this.$componentController('hsClusterSection', null, {
           cluster: {
             targetType: 'c_mgmt',
             provisioning: [{
@@ -74,7 +74,7 @@ describe('Component: hsRenameAndDeregisterClusterSection', function () {
     });
 
     it ('should NOT warn when only c_mgmt is provisioned', function () {
-      this.controller = this.$componentController('hsRenameAndDeregisterClusterSection', null, {
+      this.controller = this.$componentController('hsClusterSection', null, {
         cluster: {
           provisioning: [{
             connectorType: 'c_mgmt',
@@ -87,7 +87,7 @@ describe('Component: hsRenameAndDeregisterClusterSection', function () {
     });
 
     it ('should use EnterprisePrivateTrunkService when dealing with private trunks', function () {
-      this.controller = this.$componentController('hsRenameAndDeregisterClusterSection', null, {
+      this.controller = this.$componentController('hsClusterSection', null, {
         cluster: {
           name: 'Private Trunk Cluster',
           targetType: 'ept',
@@ -103,7 +103,7 @@ describe('Component: hsRenameAndDeregisterClusterSection', function () {
     });
 
     it ('should use HybridServicesClusterService when dealing with anything that is not a private trunk', function () {
-      this.controller = this.$componentController('hsRenameAndDeregisterClusterSection', {}, {
+      this.controller = this.$componentController('hsClusterSection', {}, {
         cluster: {
           name: 'Not a Private Trunk Cluster',
           targetType: 'c_mgmt',

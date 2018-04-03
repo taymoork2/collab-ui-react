@@ -1,5 +1,7 @@
 <setting-section setting="$ctrl.clusterSection" class="needs-border-top">
 
+  <cluster-sip-destination-section ng-if="$ctrl.hasHybridGlobalCallServiceConnectFeature && $ctrl.cluster && $ctrl.showSipDestinationSection" cluster="$ctrl.cluster"></cluster-sip-destination-section>
+
   <div class="sub-section" ng-if="$ctrl.showRenameSection" id="renameSection">
     <h5 class="sub-section__label" translate="common.rename"></h5>
     <p ng-if="$ctrl.cluster.targetType !== 'ept'"

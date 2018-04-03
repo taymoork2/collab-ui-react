@@ -18,6 +18,7 @@ interface ITableData {
 class SipDestinationSettingsSectionComponentCtrl implements ng.IComponentController {
   public sipDestination: string;
   public hasHybridGlobalCallServiceConnectFeature: boolean;
+  public displayOverview = false;
   public tableData: ITableData = {
     defaultDestination: [],
     specificDestinations: {},
@@ -56,6 +57,7 @@ class SipDestinationSettingsSectionComponentCtrl implements ng.IComponentControl
         return !_.find(result.clustersSipDestination, { clusterId: cluster.id });
       });
 
+      this.displayOverview = result.clustersSipDestination.length > 0;
       this.tableData.specificDestinations = result.clustersSipDestination.reduce((acc, info) => {
         if (!acc[info.sipDomain]) {
           acc[info.sipDomain] = [];

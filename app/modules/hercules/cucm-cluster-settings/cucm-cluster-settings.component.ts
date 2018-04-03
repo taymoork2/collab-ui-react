@@ -24,7 +24,7 @@ class CucmClusterSettingsPageCtrl implements ng.IComponentController {
       });
   }
 
-  /* Callback function used by <hs-rename-and-deregister-cluster-section>  */
+  /* Callback function used by <hs-cluster-section> */
   public nameUpdated(name) {
     this.$rootScope.$emit('cluster-name-update', name);
   }

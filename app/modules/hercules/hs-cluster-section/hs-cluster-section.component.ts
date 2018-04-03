@@ -16,7 +16,7 @@ export interface IDeregisterModalOptions {
   type?: 'dialog' | 'small' | 'full';
 }
 
-class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
+class ClusterSectionCtrl implements ng.IComponentController {
 
   private clusterId: string;
   private cluster: ICluster;
@@ -28,12 +28,14 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
     },
     controller: 'ClusterDeregisterController',
     controllerAs: 'clusterDeregister',
-    template: require('modules/hercules/rename-and-deregister-cluster-section/deregister-dialog.html'),
+    template: require('./deregister-dialog.html'),
     type: 'dialog',
   };
 
   public atlasHybridAuditLogEnabled = false;
   public showRenameSection: boolean;
+  public showSipDestinationSection: boolean;
+  public hasHybridGlobalCallServiceConnectFeature: boolean;
   public clusterName: string;
   public clusterType: string;
   public savingNameState: boolean = false;
@@ -55,6 +57,10 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
     this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridAuditLog)
       .then((enabled: boolean) => {
         this.atlasHybridAuditLogEnabled = enabled;
+      });
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridGlobalCallServiceConnect)
+      .then(support => {
+        this.hasHybridGlobalCallServiceConnectFeature = support;
       });
   }
 
@@ -140,13 +146,14 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
 
 }
 
-export class RenameAndDeregisterClusterSectionComponent implements ng.IComponentOptions {
-  public controller = RenameAndDeregisterClusterSectionCtrl;
-  public template = require('./hs-rename-and-deregister-cluster.component.html');
+export class ClusterSectionComponent implements ng.IComponentOptions {
+  public controller = ClusterSectionCtrl;
+  public template = require('./hs-cluster-section.component.html');
   public bindings = {
     cluster: '<',
-    showRenameSection: '<',
     deregisterModalOptions: '<',
     onNameUpdate: '&',
+    showRenameSection: '<',
+    showSipDestinationSection: '<',
   };
 }
