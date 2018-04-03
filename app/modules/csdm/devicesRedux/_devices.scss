@@ -14,6 +14,9 @@
     .bulk-select {
       margin-left: 12px;
       box-shadow: unset;
+      .cs-input-group.cs-input-checkbox {
+        display: inline-flex;
+      }
     }
   }
   .ui-grid {
