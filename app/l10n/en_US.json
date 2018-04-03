@@ -8714,7 +8714,8 @@
         "convertText": "Users ready for license conversion review",
         "onboardText": "Total users onboarded",
         "onboardError": "Onboard data is not available, refresh the page or try later.",
-        "unassignedLicenses": "You have <span class=\"convert-nr h4\">{{licenseNumber}}</span> unassigned {{licenseType}} licenses"
+        "unassignedLicenses": "You have <span class=\"convert-nr h4\">{{licenseNumber}}</span> unassigned {{licenseType}} licenses",
+        "unassignedLicensesOnboarding": "unassigned {{licenseType}} licenses"
       },
       "message": {
         "title": "Message",
