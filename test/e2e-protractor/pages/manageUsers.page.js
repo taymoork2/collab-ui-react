@@ -36,7 +36,6 @@ var manageUsersPage = function () {
     radio: {
       orgManual: element(by.css('label[for=org-manual]')),
       orgBulk: element(by.css('label[for=org-bulk]')),
-      orgAdvanced: element(by.css('label[for=org-advanced]')),
     },
   };
 
