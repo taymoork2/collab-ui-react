@@ -1,5 +1,7 @@
 import userTaskManagerModuleName from './index';
 import { UserTaskManagerService } from './user-task-manager.service';
+import { TaskStatus } from './user-task-manager.constants';
+import { ITask } from './user-task-manager.component';
 
 import 'moment';
 import 'moment-timezone';
@@ -24,7 +26,8 @@ describe('Service: UserTaskManagerService', () => {
       'UserTaskManagerService',
     );
 
-    this.taskList = _.cloneDeep(getJSONFixture('core/json/users/user-task-manager/test-tasks.json').taskManagerTasks);
+    this.testTasks = _.cloneDeep(getJSONFixture('core/json/users/user-task-manager/test-tasks.json'));
+    this.taskList = this.testTasks.taskManagerTasks;
 
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('123');
     this.URL = `${this.UrlConfig.getAdminBatchServiceUrl()}/customers/${this.Authinfo.getOrgId()}/jobs/general/useronboard`;
@@ -126,21 +129,24 @@ describe('Service: UserTaskManagerService', () => {
 
   describe('Task Status', () => {
     it('should show pending task', function (this: Test) {
-      expect(this.UserTaskManagerService.isTaskPending('CREATED')).toBe(true);
-      expect(this.UserTaskManagerService.isTaskPending('STARTED')).toBe(true);
-      expect(this.UserTaskManagerService.isTaskPending('STARTING')).toBe(true);
-      expect(this.UserTaskManagerService.isTaskPending('STOPPING')).toBe(true);
+      expect(this.UserTaskManagerService.isTaskPending(TaskStatus.CREATED)).toBe(true);
+      expect(this.UserTaskManagerService.isTaskPending(TaskStatus.STARTED)).toBe(true);
+      expect(this.UserTaskManagerService.isTaskPending(TaskStatus.STARTING)).toBe(true);
+      expect(this.UserTaskManagerService.isTaskPending(TaskStatus.STOPPING)).toBe(true);
     });
 
     it('should show processing task', function (this: Test) {
-      expect(this.UserTaskManagerService.isTaskInProcess('STARTED')).toBe(true);
-      expect(this.UserTaskManagerService.isTaskInProcess('STARTING')).toBe(true);
-      expect(this.UserTaskManagerService.isTaskInProcess('STOPPING')).toBe(true);
+      expect(this.UserTaskManagerService.isTaskPending(TaskStatus.STARTED)).toBe(true);
+      expect(this.UserTaskManagerService.isTaskPending(TaskStatus.STARTING)).toBe(true);
+      expect(this.UserTaskManagerService.isTaskPending(TaskStatus.STOPPING)).toBe(true);
     });
 
     it('should show error task', function (this: Test) {
-      expect(this.UserTaskManagerService.isTaskError('COMPLETED_WITH_ERRORS')).toBe(true);
-      expect(this.UserTaskManagerService.isTaskError('FAILED')).toBe(true);
+      const completedWithErrors: ITask = this.testTasks.completedWithErrorsStatus;
+      const failed: ITask = this.testTasks.failedStatus;
+
+      expect(this.UserTaskManagerService.isTaskError(completedWithErrors)).toBe(true);
+      expect(this.UserTaskManagerService.isTaskError(failed)).toBe(true);
     });
 
     it('should show canceled task', function (this: Test) {

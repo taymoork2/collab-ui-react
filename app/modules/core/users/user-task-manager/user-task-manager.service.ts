@@ -156,8 +156,9 @@ export class UserTaskManagerService {
            status === TaskStatus.STOPPING;
   }
 
-  public isTaskError(status: string): boolean {
-    return status === TaskStatus.COMPLETED_WITH_ERRORS ||
+  public isTaskError(task: ITask): boolean {
+    const status = task.latestExecutionStatus;
+    return (status === TaskStatus.COMPLETED && task.counts.usersFailed > 0) ||
            status === TaskStatus.FAILED;
   }
 

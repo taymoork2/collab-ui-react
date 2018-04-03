@@ -63,6 +63,7 @@ describe('Component: csvUploadResults', () => {
 
   it('should have import description', function (this: Test) {
     expect(this.view.find(IMPORT_STATUS)).toExist();
+    expect(this.view.find(IMPORT_STATUS).length).toBe(3);
     expect(this.controller.startedBy).toBe('User Me (user.me@gmail.com)');
   });
 

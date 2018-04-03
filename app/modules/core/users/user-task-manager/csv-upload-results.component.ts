@@ -39,6 +39,7 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
 
   private cancelErrorsDeferred?: ng.IDeferred<void>;
   private startDateAndTime?: IDateAndTime;
+  private endDateAndTime?: IDateAndTime;
 
   /* @ngInject */
   constructor(
@@ -50,18 +51,6 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
     private UserTaskManagerService: UserTaskManagerService,
     private UserCsvService,
   ) {}
-
-  public get startedDate() {
-    return _.get(this.startDateAndTime, 'date');
-  }
-
-  public get startedTime() {
-    return _.get(this.startDateAndTime, 'time');
-  }
-
-  public get hasUser() {
-    return _.isString(this.startedBy);
-  }
 
   private intervalCallback = (task: ITask) => {
     this.setActiveTaskData(task);
@@ -94,10 +83,42 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
     }
   }
 
+  public get startedDate() {
+    return _.get(this.startDateAndTime, 'date');
+  }
+
+  public get startedTime() {
+    return _.get(this.startDateAndTime, 'time');
+  }
+
+  public get endedDate() {
+    return _.get(this.endDateAndTime, 'date');
+  }
+
+  public get endedTime() {
+    return _.get(this.endDateAndTime, 'time');
+  }
+
+  public get hasUser() {
+    return _.isString(this.startedBy);
+  }
+
   public get progressbarLabel() {
     if (this.isCancelledByUser) {
       return this.$translate.instant('common.cancelingEllipsis');
     }
+  }
+
+  public isCompleted(): boolean {
+    return _.isUndefined(this.activeTask) ? false : !this.UserTaskManagerService.isTaskPending(this.activeTask!.latestExecutionStatus);
+  }
+
+  public isTaskError(): boolean {
+    return _.isUndefined(this.activeTask) ? false : this.UserTaskManagerService.isTaskError(this.activeTask!);
+  }
+
+  public getStatusTranslation() {
+    return _.get(this.activeTask, 'statusTranslate');
   }
 
   public onCancelImport(): void {
@@ -138,6 +159,7 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
 
     if (latestExecutionStatus) {
       this.startDateAndTime = this.UserTaskManagerService.getDateAndTime(latestExecutionStatus.startTime);
+      this.endDateAndTime = this.UserTaskManagerService.getDateAndTime(latestExecutionStatus.endTime);
     }
 
     this.populateTaskErrors(task);
