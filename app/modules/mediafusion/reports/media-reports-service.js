@@ -213,7 +213,8 @@
         graphData: [],
         graphs: [],
       };
-      return $http.get(vm.urlBase + getQuerys(vm.cascadeBandwidthUrl, cluster, time)).then(function (response) {
+      var clusterName = cluster === vm.allClusters ? cluster : cluster.replace(/\W/g, '').toLowerCase();
+      return $http.get(vm.urlBase + getQuerys(vm.cascadeBandwidthUrl, clusterName, time)).then(function (response) {
         if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
           returnData.graphData.push(response.data.chartData);
           var adjustedData = adjustLineGraphData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);

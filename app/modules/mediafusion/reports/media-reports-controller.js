@@ -203,9 +203,7 @@
         setNumberOfParticipantData();
         setCallVolumeData();
         if (vm.hasMFCascadeBandwidthFeatureToggle) {
-          setCascadeBandwidthData();
-          setClusterCascadeBandwidthData();
-          setStreamsBandwidthData();
+          loadClusterCascadeGraphs();
           refreshReportCards();
         }
       });
@@ -216,6 +214,15 @@
       setClientTypeCard();
       setMeetingLocationData();
       setMeetingLocationCard();
+    }
+
+    function loadClusterCascadeGraphs() {
+      if (vm.clusterSelected === vm.allClusters) {
+        setCascadeBandwidthData();
+      } else {
+        setClusterCascadeBandwidthData();
+        setStreamsBandwidthData();
+      }
     }
 
     function clusterUpdate() {
@@ -661,7 +668,7 @@
     }
 
     function setCascadeBandwidthData() {
-      MediaReportsService.getCascadeBandwidthData(vm.timeSelected, vm.clusterId).then(function (response) {
+      MediaReportsService.getCascadeBandwidthData(vm.timeSelected, vm.clusterSelected).then(function (response) {
         if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
           setDummyCascadeBandwidth();
         } else {
