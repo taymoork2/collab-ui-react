@@ -4085,7 +4085,7 @@
       "downloadContent": "Download content such as documents, images and media associated with this report.",
       "reportSizeTooBig": "Report Size Too Big",
       "reportSizeErrorSummary": "The estimated report size is over the 5 GB maximum size allowed for report generation. Go back to search and refine your results.",
-      "maxRoomsReached": "Maximum Roms Reached",
+      "maxRoomsReached": "Maximum Rooms Reached",
       "maxRoomsReachedSummary": "The maximum total rooms of 2500 allowed for report generation has been reached. Go back to search and refine your results.",
       "reportErrorButton": "Go Back to Search",
       "reportTimeout": "Timeout detected. Please cancel the report and try again.",
