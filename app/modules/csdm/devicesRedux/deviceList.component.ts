@@ -22,6 +22,7 @@ class DeviceList implements ng.IComponentController {
   public loadingMoreSpinner = false;
   public selectAllSpinner = false;
   public selectedDevices: Dictionary<IIdentifiableDevice> = {};
+  private allDevicesIdsFromSearch: Dictionary<IIdentifiableDevice> = {};
   private bulkAll: boolean | null = false;
 
   public get bulkSelectionCount() {
@@ -110,7 +111,9 @@ class DeviceList implements ng.IComponentController {
           if (
             _.isUndefined(this.selectedDevices[deviceId])) {
             this.selectedDevices[deviceId] = device;
-            this.bulkAll = null;
+            this.bulkAll = _.size(this.selectedDevices) === _.size(this.allDevicesIdsFromSearch)
+              ? true
+              : null;
           } else {
             delete this.selectedDevices[deviceId];
             this.bulkAll = _.size(this.selectedDevices) === 0 ? false : null;
@@ -160,6 +163,7 @@ class DeviceList implements ng.IComponentController {
           }
         });
       },
+      rowTemplate: require('modules/csdm/templates/_rowTpl.html'),
       columnDefs: [
         {
           displayName: '',
@@ -212,6 +216,7 @@ class DeviceList implements ng.IComponentController {
       this.CsdmBulkService.getIds(this.searchObject).then((response) => {
         if (response && response.data) {
           this.selectedDevices = _.keyBy<any>(response.data.deviceIdentifiers, (uri) => uri);
+          this.allDevicesIdsFromSearch = _.keyBy<any>(response.data.deviceIdentifiers, (uri) => uri);
           if (this.$state.sidepanel) {
             this.expandBulk(); //re expanding
           }
