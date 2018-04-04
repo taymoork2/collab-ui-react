@@ -257,6 +257,28 @@ export class Feedback {
     this.enabled = true;
     this.fields = {
       feedbackQuery: {
+        displayText: $translate.instant('careChatTpl.templateConfig.default.feedbackQuery'),
+      },
+      comment: {
+        displayText: $translate.instant('careChatTpl.templateConfig.default.ratingComment'),
+        dictionaryType: {
+          fieldSet: 'cisco.base.rating',
+          fieldName: 'cccRatingComments',
+        },
+      },
+    };
+  }
+}
+
+export class FeedbackCallback {
+  public enabled: boolean;
+  public fields: any;
+  constructor(
+    $translate: ng.translate.ITranslateService,
+  ) {
+    this.enabled = true;
+    this.fields = {
+      feedbackQuery: {
         displayText: $translate.instant('careChatTpl.templateConfig.default.feedbackQueryCall'),
       },
       comment: {
@@ -307,14 +329,14 @@ export class CallbackPages implements IPages {
   public customerInformation: CustomerInformation;
   public agentUnavailable: AgentUnavailable;
   public offHours: OffHours;
-  public feedbackCallback: Feedback;
+  public feedbackCallback: FeedbackCallback;
   public callbackConfirmation: CallbackConfirmation;
 
   constructor(authinfo: Authinfo, ctService: CTService, $translate: ng.translate.ITranslateService) {
     this.customerInformation = new CustomerInformation(authinfo, ctService, $translate);
     this.agentUnavailable = new AgentUnavailable($translate);
     this.offHours = new OffHours(ctService, $translate);
-    this.feedbackCallback = new Feedback($translate);
+    this.feedbackCallback = new FeedbackCallback($translate);
     this.callbackConfirmation = new CallbackConfirmation($translate);
   }
 }
@@ -326,14 +348,14 @@ export class CBPages implements IPages {
   public offHours: OffHours;
   public feeback: Feedback;
   public callbackConfirmation: CallbackConfirmation;
-  public feedbackCallback: Feedback;
+  public feedbackCallback: FeedbackCallback;
 
   constructor( authinfo: Authinfo, ctService: CTService, $translate: ng.translate.ITranslateService) {
     this.customerInformationChat = new CustomerInformation(authinfo, ctService, $translate);
     this.customerInformationCallback = new CustomerInformation(authinfo, ctService, $translate);
     this.agentUnavailable = new AgentUnavailable($translate);
     this.offHours = new OffHours(ctService, $translate);
-    this.feedbackCallback = new Feedback($translate);
+    this.feedbackCallback = new FeedbackCallback($translate);
     this.feeback = new Feedback($translate);
     this.callbackConfirmation = new CallbackConfirmation($translate);
   }

@@ -58,7 +58,7 @@ class CtSetupAssistantCtrl extends CtBaseController  {
   }
 
   private isFeedbackPageValid() {
-    return true;
+    return this.TemplateWizardService.pageValidationResult.isFeedbackValid || false;
   }
 
   private isStatusMessagesPageValid() {

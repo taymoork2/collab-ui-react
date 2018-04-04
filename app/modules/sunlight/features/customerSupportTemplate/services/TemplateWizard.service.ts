@@ -32,6 +32,7 @@ export class TemplateWizardService {
     isProfileValid: false,
     offHoursValid: false,
     isAgentUnavailableValid: false,
+    isFeedbackValid: false,
   };
 
   //TODO: to set it from the right page
