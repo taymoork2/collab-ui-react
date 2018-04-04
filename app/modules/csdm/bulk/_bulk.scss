@@ -24,24 +24,44 @@
   h3 {
     padding-bottom: 8px;
   }
-  .cs-card article {
-    height: 100px;
-    text-align: center;
-    background-color: $gray-6;
-    .number {
-      font-size: 2rem;
-      padding-top: 10px;
-      &.error {
-        color: $alerts-color;
+  .device-bulk-results {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: 5rem;
+
+    .device-bulk-result-view {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: $gray-light-4;
+
+      + .device-bulk-result-view {
+        @include vr-spacing(ml, 1);
       }
-      &.success {
-        color: $primary-color;
+
+      .number {
+        font-size: 2rem;
+        line-height: 1;
+        font-family: $brand-font-thin;
+        &.error {
+          color: $alerts-color;
+        }
+        &.success {
+          color: $primary-color;
+        }
+      }
+
+      .action-title {
+        font-size: 0.75rem;
       }
     }
   }
   .errors-section {
     padding-top: 22px;
     margin-top: 28px;
-    border-top: 1px solid $gray-4;
+    border-top: 1px solid $gray-light-4;
   }
 }
