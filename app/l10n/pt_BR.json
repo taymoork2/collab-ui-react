@@ -9402,7 +9402,7 @@
       "beforeVerify": "você deve copiar e colar este token de verificação DNS para a seção de registro TXT para provar que você possui o domínio:",
       "warning": "É importante verificar todos os domínios. Os usuários que não pertencem a um domínio verificado serão imediatamente bloqueados, não podendo efetuar logon nem usar os serviços Cisco Spark. Você também não poderá adicionar novos usuários que pertencem a domínios não verificados.",
       "verify": "Verificar",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Saiba mais</a> sobre como inserir o código de verificação DNS."
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Saiba mais</a> sobre como inserir o código de verificação DNS."
     },
     "claim": {
       "header": "Reivindicar domínio",

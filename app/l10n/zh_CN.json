@@ -9402,7 +9402,7 @@
       "beforeVerify": "必须将此 DNS 验证令牌复制粘贴到 TXT 记录部分，以证明您拥有该域：",
       "warning": "务必验证所有域。不属于已验证域的用户将被立即锁定。这些用户将无法登录和使用 Cisco Spark 服务。您也将无法添加任何属于未验证域的新用户。",
       "verify": "验证",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>了解</a>如何输入 DNS 验证令牌的更多信息。"
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>了解</a>如何输入 DNS 验证令牌的更多信息。"
     },
     "claim": {
       "header": "申领域",

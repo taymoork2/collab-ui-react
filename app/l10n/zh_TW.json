@@ -9402,7 +9402,7 @@
       "beforeVerify": "必須複製此 DNS 驗證記號並貼到 TXT 記錄區段，以證明您擁有此網域：",
       "warning": "請務必驗證所有網域。不屬於已驗證網域的使用者將立即予以鎖定。這些使用者將無法登入或使用 Cisco Spark Care。您還將無法新增任何屬於未驗證網域的新使用者。",
       "verify": "驗證",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>進一步瞭解</a>如何輸入 DNS 驗證記號。"
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>進一步瞭解</a>如何輸入 DNS 驗證記號。"
     },
     "claim": {
       "header": "宣告網域",

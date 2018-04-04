@@ -9402,7 +9402,7 @@
       "beforeVerify": "この DNS 確認トークンをコピーし、これを TXT レコードセクションに貼り付けて、このドメインを所有していることを証明します:",
       "warning": "すべてのドメインを確認することは重要です。確認されたドメインに所属していないユーザーは瞬時にロックアウトされます。これらのユーザーはログインしたり、Cisco Spark サービスを使用したりできなくなります。また、未確認のドメインに所属する新規ユーザーを追加できなくなります。",
       "verify": "確認",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>DNS 検証トークンの入力方法</a>の詳細をご覧ください。"
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>DNS 検証トークンの入力方法</a>の詳細をご覧ください。"
     },
     "claim": {
       "header": "ドメインの要求",

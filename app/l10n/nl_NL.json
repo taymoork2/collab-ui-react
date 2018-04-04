@@ -9402,7 +9402,7 @@
       "beforeVerify": "moet u deze DNS-verificatietoken kopiëren en in het gedeelte TXT-record plakken om te bewijzen dat u eigenaar bent van het domein:",
       "warning": "Het is belangrijk om alle domeinen te verifiëren. Gebruikers die niet tot een geverifieerd domein behoren, worden meteen uitgesloten. Ze kunnen zich niet meer aanmelden en geen Cisco Spark-services meer gebruiken. U kunt ook geen nieuwe gebruikers meer toevoegen die tot ongeverifieerde domeinen behoren.",
       "verify": "Verifiëren",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Meer informatie</a> over hoe u de DNS-verificatietoken invoert."
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Meer informatie</a> over hoe u de DNS-verificatietoken invoert."
     },
     "claim": {
       "header": "Domein claimen",

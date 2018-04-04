@@ -9402,7 +9402,7 @@
       "beforeVerify": "Anda harus menyalin dan menempel token verifikasi DNS ini ke bagian data TXT untuk membuktikan bahwa Anda memiliki domain:",
       "warning": "Penting untuk memverifikasi semua domain. Pengguna yang tidak berasal dari domain yang terverifikasi akan langsung dikunci. Pengguna tersebut tidak akan dapat login atau menggunakan layanan Cisco Spark. Anda juga tidak akan dapat menambahkan pengguna baru yang berasal dari domain yang tidak terverifikasi.",
       "verify": "Verifikasi",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Pelajari lebih lanjut</a> tentang cara memasukkan token verifikasi DNS."
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Pelajari lebih lanjut</a> tentang cara memasukkan token verifikasi DNS."
     },
     "claim": {
       "header": "Klaim Domain",
