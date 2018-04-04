@@ -44,6 +44,16 @@ class CtChatStatusMessagesController extends CtBaseController {
     }
   }
 
+  public previewBubbleText(): string {
+    const activeElement = angular.element(document.activeElement);
+    const chatStatusMessagesObj = this.TemplateWizardService.template.configuration.chatStatusMessages.messages;
+    switch (activeElement[0]['id']) {
+      case 'chatting' : return chatStatusMessagesObj.chattingMessage.displayText;
+      case 'leaveRoom' : return chatStatusMessagesObj.leaveRoomMessage.displayText;
+      default: return chatStatusMessagesObj.waitingMessage.displayText;
+    }
+  }
+
   public isStatusMessagesPageValid(): boolean {
     const chatStatusMessagesObj = this.TemplateWizardService.template.configuration.chatStatusMessages.messages;
     const status = this.TemplateWizardService.isValidField(chatStatusMessagesObj.waitingMessage.displayText, this.lengthValidationConstants.singleLineMaxCharLimit50)
