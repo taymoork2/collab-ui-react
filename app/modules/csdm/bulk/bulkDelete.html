@@ -22,7 +22,12 @@
          tooltip="{{ 'deviceBulk.deleteEmptyPlaces' | translate }}"
          aria-label="{{ 'deviceBulk.deleteEmptyPlaces' | translate }}"
          ng-model="$ctrl.deleteEmptyPlaces" />
-  <input id="reallyDelete" cs-input type="checkbox" cs-input-label="REALLY delete?" ng-model="$ctrl.reallyDelete" />
+  <input cs-input
+         id="reallyDelete"
+         type="checkbox"
+         cs-input-label="This is a test"
+         cs-input-help-text="When this checkbox is checked, no devices will actually be deleted."
+         ng-model="$ctrl.testDelete" />
 </div>
 
 <div class="modal-footer">
