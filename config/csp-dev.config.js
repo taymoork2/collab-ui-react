@@ -33,7 +33,9 @@ let cspDevConfig = mkCspConfig({
     'ws://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
     'ws://localhost:8000', // Browser Sync
     'ws://localhost:8443', // Browser Sync
-    'https://upgrade.scplatform.cloud', //HCS Upgrade Service
+    'https://upgrade.int-ucmgmt.cisco.com', //HCS Upgrade
+    'https://licensing.int-ucmgmt.cisco.com', //HCS License
+    'https://controller.int-ucmgmt.cisco.com', //HCS Controller
   ],
   fontSrc: [
     'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
