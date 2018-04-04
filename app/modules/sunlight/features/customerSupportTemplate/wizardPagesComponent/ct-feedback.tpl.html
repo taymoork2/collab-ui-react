@@ -1,0 +1,76 @@
+<div ng-form="feedbackForm">
+    <div class="ct-title">
+        <span class ="h3"> {{$ctrl.getLocalisedFeedbackText()}}</span>
+    </div>
+    <div class="h5 ct-title-desc"> {{$ctrl.getFeedbackDesc()}}</div>
+
+    <div class="cs-card-container ct-feedback ct-sa-content">
+        <cs-card-layout block-view="true" class="ct-card-center">
+            <cs-card class="ct-card">
+              <div class="h4 ct-card-info" translate="careChatTpl.preview"></div>
+              <article class="ct-article articleHeight">
+                <section class="ct-attribute-left-section ct-flex-topleft">
+                  <span title=" {{$ctrl.TemplateWizardService.getAttributeValue('displayText', 'feedbackQuery', $ctrl.currentState)}}"
+                      class="feedback-question-text"
+                      for="feedbackQuery">
+	              {{$ctrl.TemplateWizardService.getAttributeValue('displayText', 'feedbackQuery', $ctrl.currentState)}}
+                  </span>
+                  <div class="feedback-star">
+                    <span class="icon icon-star feedback-star-orange" data-ng-repeat="n in [1,2,3,4]"></span>
+                    <span class="icon icon-star feedback-star-grey"></span>
+                  </div>
+                  <textarea
+                    class="feedback-comment-text cs-input ct-left-cs-input"
+                    id="commentarea"
+                    tabIndex="3"
+                    placeholder=" {{$ctrl.TemplateWizardService.getAttributeValue('displayText', 'comment', $ctrl.currentState)}}"
+                    ng-disabled="true">
+                  </textarea>
+                  <div class="feedback-buttons">
+                    <div class="no-click btn--primary feedback-btn" translate="careChatTpl.submitFeedbackBtn"></div>
+                  </div>
+                </section>
+              </article>
+            </cs-card>
+
+            <cs-card class="ct-card">
+              <div class="h4 ct-card-info" translate="careChatTpl.attributes"></div>
+              <article class="ct-article attributes articleHeight">
+                <section class="ct-attribute-right-section ct-flex-topleft">
+                  <div class="feedback-right-container">
+                    <div class="row ct-attribute-row labelText">
+                      <label class="cs-input__label ct-attribute-field-label  h4 large-11" translate="careChatTpl.label"></label>
+                      <input cs-input type="text"
+                        id="label"
+                        name="feedbackLabelInput"
+                        class="h5 inputField ct-attribute-field-textbox large-11"
+                        cs-input-messages="$ctrl.multiLineValidationMessage"
+                        type="text"
+                        ng-maxlength="$ctrl.lengthValidationConstants.multiLineMaxCharLimit"
+                        validate-characters="$ctrl.InvalidCharacters"
+                        ng-model="$ctrl.getFeedbackModel().fields.feedbackQuery.displayText"
+                        ng-model-options="{ allowInvalid: true }"
+                        ng-keypress="$ctrl.enterNextPage($event)"
+                        ng-change="$ctrl.isFeedbackPageValid()"/>
+                    </div>
+                    <div class="row ct-attribute-row">
+                      <label class="cs-input__label ct-attribute-field-label h4 large-11" translate="careChatTpl.ratingHintText"></label>
+                      <input cs-input type="text"
+                        id="hintText"
+                        name="hintTextInput"
+                        class="h5 inputField ct-attribute-field-textbox large-11"
+                        cs-input-messages="$ctrl.singleLineValidationMessage50"
+                        ng-maxlength="$ctrl.lengthValidationConstants.singleLineMaxCharLimit50"
+                        validate-characters="$ctrl.InvalidCharacters"
+                        ng-model="$ctrl.getFeedbackModel().fields.comment.displayText"
+                        ng-model-options="{ allowInvalid: true }"
+                        ng-keypress="$ctrl.enterNextPage($event)"
+                        ng-change="$ctrl.isFeedbackPageValid()"/>
+                    </div>
+                  </div>
+                </section>
+              </article>
+            </cs-card>
+        </cs-card-layout>
+    </div>
+</div>
