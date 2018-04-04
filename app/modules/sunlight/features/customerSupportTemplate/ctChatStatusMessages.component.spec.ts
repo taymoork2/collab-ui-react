@@ -90,7 +90,7 @@ describe('In CtChatStatusMessagesComponent, The controller', () => {
     controller.TemplateWizardService.setSelectedMediaType('chat');
     controller.TemplateWizardService.template.configuration.routingLabel = 'agent';
     expect(controller.helpTextWaiting()).toEqual('careChatTpl.helpTextWaiting');
-    expect(controller.previewBubbleText()).toEqual('careChatTpl.waitingMessage');
+    expect(controller.previewBubbleText()).toEqual('careChatTpl.templateConfig.default.waitingMessage');
   });
 
 });
