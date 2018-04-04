@@ -47,6 +47,7 @@ require('./_user-add.scss');
     $scope.mapDidToDn = mapDidToDn;
     $scope.resetDns = resetDns;
     $scope.syncGridDidDn = syncGridDidDn;
+    $scope.sendCareServiceMetrics = sendCareServiceMetrics;
     $scope.isMapped = false;
     $scope.isMapInProgress = false;
     $scope.isResetInProgress = false;
@@ -460,6 +461,8 @@ require('./_user-add.scss');
       } else {
         $scope.onboardUsers(true);
       }
+
+      sendCareServiceMetrics();
     };
 
     function initToggles() {
@@ -489,7 +492,25 @@ require('./_user-add.scss');
       } else {
         $scope.updateUserLicense();
       }
+
+      sendCareServiceMetrics();
     };
+
+    function sendCareServiceMetrics() {
+      if ($scope.radioStates.careRadio !== $scope.radioStates.initialCareRadioState) {
+        if ($scope.radioStates.careRadio === $scope.careRadioValue.K1) {
+          LogMetricsService.logMetrics('Enabling care for user', LogMetricsService.getEventType('careEnabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+        } else if ($scope.radioStates.careRadio === $scope.careRadioValue.K2) {
+          LogMetricsService.logMetrics('Enabling care for user', LogMetricsService.getEventType('careVoiceEnabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+        }
+        if ($scope.radioStates.initialCareRadioState === $scope.careRadioValue.K1) {
+          LogMetricsService.logMetrics('Disabling care for user', LogMetricsService.getEventType('careDisabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+        }
+        if ($scope.radioStates.initialCareRadioState === $scope.careRadioValue.K2) {
+          LogMetricsService.logMetrics('Disabling careVoice for user', LogMetricsService.getEventType('careVoiceDisabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+        }
+      }
+    }
 
     function toggleShowExtensions() {
       return DialPlanService.getDialPlan().then(function (response) {
@@ -1246,20 +1267,6 @@ require('./_user-add.scss');
       }
       // END: Care License provisioning for users
 
-      // Metrics for care entitlement for users
-      if ($scope.radioStates.careRadio !== $scope.radioStates.initialCareRadioState) {
-        if ($scope.radioStates.careRadio === $scope.careRadioValue.K1) {
-          LogMetricsService.logMetrics('Enabling care for user', LogMetricsService.getEventType('careEnabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
-        } else if ($scope.radioStates.careRadio === $scope.careRadioValue.K2) {
-          LogMetricsService.logMetrics('Enabling care for user', LogMetricsService.getEventType('careVoiceEnabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
-        }
-        if ($scope.radioStates.initialCareRadioState === $scope.careRadioValue.K1) {
-          LogMetricsService.logMetrics('Disabling care for user', LogMetricsService.getEventType('careDisabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
-        }
-        if ($scope.radioStates.initialCareRadioState === $scope.careRadioValue.K2) {
-          LogMetricsService.logMetrics('Disabling careVoice for user', LogMetricsService.getEventType('careVoiceDisabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
-        }
-      }
       return careLicenses;
     }
 
