@@ -10987,7 +10987,7 @@
     }
   },
   "hcs": {
-    "addService": "Add a Service",
+    "addService": "Add a Feature",
     "agentInstallFiles": "Agent Install Files",
     "cardTitle": "Hosted Collaboration Service",
     "clusterDetail": {
@@ -11035,15 +11035,14 @@
     },
     "license": {
       "all": "All",
-      "description": "Extend Licensing services to Hosted Cloud Solution.",
       "hcsTitle": "HCS Licenses",
       "invalid": "Invalid",
-      "laas": "License as a Service",
+      "laas": "License Reports",
       "other": "Other",
-      "perpetual": "Perpetual",
+      "plm": "PLM Report",
       "standard": "Standard",
       "status": "Status",
-      "subscriptions": "Subscriptions",
+      "customerReport": "Customer Report",
       "subscriptionId": "Subscription ID",
       "telepresence": "Telepresence",
       "title": "Licenses",
@@ -11055,8 +11054,8 @@
     "setup": {
       "finish": "Finish",
       "nextSteps": "Next Steps:",
-      "selectDescription": "Choose the HCS Service for Setup",
-      "titleServices": "Choose Services",
+      "selectDescription": "Choose the HCS features you would like to use.",
+      "titleServices": "Choose Features",
       "finishMsg": "Congratulations! You have set up HCS Services.",
       "next1": "Once the Agent Install File completes it will show on the Agent Install File page to download it.",
       "next2": "Install the Agent File on all Unified Communications instances you wish to manage.",
@@ -11100,10 +11099,10 @@
       "ucxnPlace": "Choose UCXN Version"
     },
     "upgrade": {
-      "title": "HCS Upgrade Settings",
+      "title": "HCS Upgrade",
       "description": "Extend Upgrade services to Hosted Cloud Solution.",
       "softwareProfiles": "Software Profiles",
-      "uaas": "Upgrade as a Service",
+      "uaas": "Upgrades",
       "upgradeGroup": {
         "softwareVersionProfile": {
           "sectionHeader": "Software Version Profile",

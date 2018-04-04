@@ -10,7 +10,9 @@ const mkCspConfig = require('../utils/mkCspConfig');
 let cspIntConfig = mkCspConfig({
   connectSrc: [
     'https://uctaas.cisco.com:8082', // Test as a service DEMO
-    'https://upgrade.scplatform.cloud', //HCS Upgrade as a service
+    'https://upgrade.int-ucmgmt.cisco.com', //HCS Upgrade as a service
+    'https://licensing.int-ucmgmt.cisco.com', //HCS Upgrade as a service
+    'https://controller.int-ucmgmt.cisco.com', //HCS Upgrade as a service
   ],
 });
 

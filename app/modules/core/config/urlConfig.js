@@ -285,22 +285,22 @@
       prod: 'https://speech-services-manager-a.wbx2.com/speech-services-manager/api/v1/',
     },
     HcsLicenseServiceUrl: {
-      dev: 'https://licensing.scplatform.cloud/api/v1/',
-      cfe: 'https://licensing.scplatform.cloud/api/v1/',
-      integration: 'https://licensing.scplatform.cloud/api/v1/',
-      prod: 'https://licensing.scplatform.cloud/api/v1/', //TBD
+      dev: 'https://licensing.int-ucmgmt.cisco.com/api/v1/',
+      cfe: 'https://licensing.int-ucmgmt.cisco.com/api/v1/',
+      integration: 'https://licensing.int-ucmgmt.cisco.com/api/v1/',
+      prod: 'https://licensing.ucmgmt.cisco.com/api/v1/', //TBD
     },
     HcsUpgradeServiceUrl: {
-      dev: 'https://upgrade.scplatform.cloud/api/v1/',
-      cfe: 'https://upgrade.scplatform.cloud/api/v1/',
-      integration: 'https://upgrade.scplatform.cloud/api/v1/',
-      prod: 'https://upgrade.scplatform.cloud/api/v1/', //TBD
+      dev: 'https://upgrade.int-ucmgmt.cisco.com/api/v1/',
+      cfe: 'https://upgrade.int-ucmgmt.cisco.com/api/v1/',
+      integration: 'https://upgrade.int-ucmgmt.cisco.com/api/v1/',
+      prod: 'https://upgrade.ucmgmt.cisco.com/api/v1/', //TBD
     },
     HcsControllerServiceUrl: {
-      dev: 'https://controller.scplatform.cloud/api/v1/',
-      cfe: 'https://controller.scplatform.cloud/api/v1/',
-      integration: 'https://controller.scplatform.cloud/api/v1/',
-      prod: 'https://controller.scplatform.cloud/api/v1/', //TBD
+      dev: 'https://controller.int-ucmgmt.cisco.com/api/v1/',
+      cfe: 'https://controller.int-ucmgmt.cisco.com/api/v1/',
+      integration: 'https://controller.int-ucmgmt.cisco.com/api/v1/',
+      prod: 'https://controller.ucmgmt.cisco.com/api/v1/', //TBD
     },
     QlikReportAppUrl: 'https://%s/custportal/extensions/',
     ProdAdminServiceUrl: 'https://atlas-a.wbx2.com/admin/api/v1/',
