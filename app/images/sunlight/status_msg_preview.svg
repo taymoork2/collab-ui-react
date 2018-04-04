@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="348px" height="365px" viewBox="0 0 348 365" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <!-- Generator: Sketch 49.1 (51147) - http://www.bohemiancoding.com/sketch -->
+  <title>Status Messages Preview</title>
+  <desc>Created with Sketch.</desc>
+  <defs></defs>
+  <g id="Status-Messages-Preview" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="Group">
+      <g id="Website-Preview">
+        <g id="Group-4">
+          <rect id="Rectangle-4" fill="#F5F5F5" x="0" y="0" width="348" height="210"></rect>
+          <rect id="Rectangle-5" fill="#EBEBEB" x="0" y="0" width="348" height="20"></rect>
+          <rect id="Rectangle-7" fill="#FFFFFF" x="35" y="5" width="305" height="10" rx="2"></rect>
+          <circle id="Oval-2" fill="#F5978D" cx="8" cy="10" r="3"></circle>
+          <circle id="Oval-2-Copy" fill="#F9CD64" cx="17" cy="10" r="3"></circle>
+          <circle id="Oval-2-Copy-2" fill="#85E684" cx="26" cy="10" r="3"></circle>
+          <rect id="Rectangle-5-Copy-2" fill="#E7E7E7" x="20" y="60" width="86" height="72"></rect>
+          <rect id="Rectangle-5-Copy-3" fill="#E7E7E7" x="131" y="60" width="86" height="72"></rect>
+          <rect id="Rectangle-5-Copy-4" fill="#E7E7E7" x="242" y="60" width="86" height="72"></rect>
+          <rect id="Rectangle-6" fill="#06B1D2" x="228" y="182" width="100" height="16" rx="8"></rect>
+        </g>
+      </g>
+      <path d="M278,204 L278,364" id="Line" stroke="#979797" stroke-linecap="square"></path>
+      <path id="Line-decoration-1" d="M275,353.2 L278,364 L281,353.2" stroke="#979797" stroke-linecap="square"></path>
+    </g>
+  </g>
+</svg>
