@@ -7,7 +7,7 @@ class BulkDeleteCtrl implements IComponentController {
   private dismiss: Function;
   public title: string;
   private deleteEmptyPlaces: boolean;
-  private reallyDelete: boolean;
+  private testDelete: boolean = true;
 
   public get numberOfDevices() {
     return _.size(this.$state.params.selectedDevices);
@@ -28,7 +28,7 @@ class BulkDeleteCtrl implements IComponentController {
       this.CsdmBulkService.delete.bind(this.CsdmBulkService,
         _.keys(this.$state.params.selectedDevices),
         this.deleteEmptyPlaces,
-        this.reallyDelete),
+        !this.testDelete),
       this.$state.params.devicesDeleted,
       this.$state.params.selectedDevices,
       'deviceBulk.deleted');
