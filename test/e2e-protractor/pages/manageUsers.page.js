@@ -4,7 +4,9 @@ var manageUsersPage = function () {
   this.modal = element(by.css('.modal-content > div > div'));
 
   this.actionCards = {
+    manualAddOrModifyUsers: element(by.cssContainingText('cr-action-card h4', 'Manually Add or Modify Users')),
     manualAddUsers: element(by.cssContainingText('cr-action-card h4', 'Manually Add Users')),
+    csvAddOrModifyUsers: element(by.cssContainingText('cr-action-card h4', 'CSV Add or Modify Users')),
   };
 
   this.buttons = {

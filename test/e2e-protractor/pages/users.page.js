@@ -251,9 +251,12 @@ var UsersPage = function () {
   this.createUser = function (userName) {
     utils.click(navigation.usersTab);
     utils.click(manageUsersPage.buttons.manageUsers);
-    utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
-    utils.click(manageUsersPage.select.radio.orgManual);
-    utils.click(manageUsersPage.buttons.next);
+    if (featureToggle.features.atlasF3745AutoAssignLicenses) {
+      utils.click(manageUsersPage.actionCards.manualAddOrModifyUsers);
+    } else {
+      utils.click(manageUsersPage.select.radio.orgManual);
+      utils.click(manageUsersPage.buttons.next);
+    }
     if (featureToggle.features.atlasEmailSuppress) {
       utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
       utils.click(manageUsersPage.buttons.next);

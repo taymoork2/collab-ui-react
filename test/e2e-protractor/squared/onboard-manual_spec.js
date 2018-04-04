@@ -19,14 +19,16 @@ describe('Onboard users through Manual Invite', function () {
   it('should select manually add/modify users', function () {
     utils.click(navigation.usersTab);
     utils.click(manageUsersPage.buttons.manageUsers);
-    utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
-    utils.click(manageUsersPage.select.radio.orgManual);
-    utils.click(manageUsersPage.buttons.next);
+    if (featureToggle.features.atlasF3745AutoAssignLicenses) {
+      utils.click(manageUsersPage.actionCards.manualAddOrModifyUsers);
+    } else {
+      utils.click(manageUsersPage.select.radio.orgManual);
+      utils.click(manageUsersPage.buttons.next);
+    }
     if (featureToggle.features.atlasEmailSuppress) {
       utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
       utils.click(manageUsersPage.buttons.next);
     }
-    utils.waitForText(manageUsersPage.select.title, 'Manually Add or Modify Users');
   });
 
   it('should Manually Invite multiple users by email address (Message On).', function () {
