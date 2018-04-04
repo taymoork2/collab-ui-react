@@ -8390,7 +8390,38 @@
     "helpTextWaitingEVA": "Kunden sehen diese Nachricht, während Sie auf die Beantwortung Ihrer Anfrage warten.",
     "waitingMessageEVA": "Ihnen wird gleich geholfen …",
     "helpTextLeaveRoomEVA": "Kunden sehen diese Nachricht, wenn der mit ihnen interagierende Benutzer den Chat beendet.",
-    "leaveRoomMessageEVA": "Chat wurde beendet"
+    "leaveRoomMessageEVA": "Chat wurde beendet",
+    "templateConfig": {
+      "default": {
+        "feedbackQueryCall": "Bitte bewerten Sie Ihre Erfahrungen mit dem Rückruf.",
+        "additionalDetailsAbtIssue": "Beschreiben Sie das Problem, das auftritt.",
+        "chattingMessage": "Chat läuft ...",
+        "defaultPhoneHintText": "+12345556789",
+        "defaultPromptMessage": "Im Gespräch mit einem unserer Lösungsexperten können wir Sie besser unterstützen.",
+        "ratingComment": "Kommentare hinzufügen",
+        "feedbackQuery": "Bitte bewerten Sie Ihre Erfahrungen mit dem Chat.",
+        "offHoursDefaultMessage": "Wir sind derzeit offline. Bitte besuchen Sie uns zu unseren Geschäftszeiten erneut.",
+        "callbackConfirmationMsg": "Die Rückrufanforderung wurde erfolgreich empfangen.",
+        "defaultEmailText": "E-Mail",
+        "field3HintText": "Aus der Liste oder Typ wählen",
+        "defaultWelcomeText": "Willkommen bei der",
+        "connectingMessage": "Sie werden mit einem Agenten verbunden",
+        "defaultNameHint": "",
+        "enterRoomMessage": "Agent hat den Chatraum betreten",
+        "defaultQuestionText": "Wie kann ich Ihnen helfen?",
+        "leaveRoomMessage": "Der Agent hat den Chat verlassen.",
+        "waitingMessageEVA": "Ihnen wird gleich geholfen …",
+        "virtualAssistantWelcomeMessage": "Hallo, was kann ich für Sie tun?",
+        "defaultNameText": "Name",
+        "waitingMessage": "Auf einen Agenten wird gewartet ...",
+        "defaultPhoneText": "Telefonnummer",
+        "additionalDetails": "Weitere Details",
+        "bubbleTitleMessage": "Klicken Sie hier, um mit der Kundenbetreuung zu chatten",
+        "defaultEmail": "z. B. abc@xyz.com",
+        "agentUnavailableMessage": "Wir sind derzeit leider nicht verfügbar. Bitte versuchen Sie es später erneut.",
+        "leaveRoomMessageEVA": "Chat wurde beendet"
+      }
+    }
   },
   "huronHuntGroup": {
     "modalTitle": "Verteilungsgruppe",

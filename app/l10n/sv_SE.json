@@ -8390,7 +8390,38 @@
     "helpTextWaitingEVA": "Kunderna ser det här meddelandet medan de väntar på ett svar på sin begäran.",
     "waitingMessageEVA": "Du kommer att få hjälp inom kort ...",
     "helpTextLeaveRoomEVA": "Kunderna ser det här meddelandet när användaren som kommunicerar med dem avslutar chatten.",
-    "leaveRoomMessageEVA": "Chatten har avslutats"
+    "leaveRoomMessageEVA": "Chatten har avslutats",
+    "templateConfig": {
+      "default": {
+        "feedbackQueryCall": "Betygsätt din upplevelse av återuppringningen.",
+        "additionalDetailsAbtIssue": "Beskriv problemet som du har stött på",
+        "chattingMessage": "Chatt pågår...",
+        "defaultPhoneHintText": "+12345556789",
+        "defaultPromptMessage": "Chatta med våra lösningsspecialister för bästa möjliga hjälp.",
+        "ratingComment": "Lägg till kommentarer",
+        "feedbackQuery": "Betygsätt din upplevelse av chatten",
+        "offHoursDefaultMessage": "Vi är för närvarande offline. Försök igen under vår kontorstid.",
+        "callbackConfirmationMsg": "Begäran om återuppringning har tagits emot.",
+        "defaultEmailText": "E-post",
+        "field3HintText": "Välj från listan eller skriv",
+        "defaultWelcomeText": "Välkommen till",
+        "connectingMessage": "Kopplar dig till en agent",
+        "defaultNameHint": "",
+        "enterRoomMessage": "Agenten har gått in i chattrummet",
+        "defaultQuestionText": "Hur kan jag hjälpa dig?",
+        "leaveRoomMessage": "Agenten har lämnat chatten",
+        "waitingMessageEVA": "Du kommer att få hjälp inom kort ...",
+        "virtualAssistantWelcomeMessage": "Hej, vad kan jag hjälpa till med?",
+        "defaultNameText": "Namn",
+        "waitingMessage": "Väntar på en agent ...",
+        "defaultPhoneText": "Telefonnummer",
+        "additionalDetails": "Ytterligare uppgifter",
+        "bubbleTitleMessage": "Klicka här för att chatta med kundtjänst",
+        "defaultEmail": "t.ex. abc@xyz.com",
+        "agentUnavailableMessage": "Beklagar, det går för tillfället inte att nå oss. Försök igen senare.",
+        "leaveRoomMessageEVA": "Chatten har avslutats"
+      }
+    }
   },
   "huronHuntGroup": {
     "modalTitle": "Sökgrupper",

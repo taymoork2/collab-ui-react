@@ -8390,7 +8390,38 @@
     "helpTextWaitingEVA": "リクエストへの応答を待っている間、顧客にはこのメッセージが表示されます。",
     "waitingMessageEVA": "応答があるまでしばらくお待ちください…",
     "helpTextLeaveRoomEVA": "チャット中のユーザーがチャットを終了すると、顧客にはこのメッセージが表示されます。",
-    "leaveRoomMessageEVA": "チャットは終了しました"
+    "leaveRoomMessageEVA": "チャットは終了しました",
+    "templateConfig": {
+      "default": {
+        "feedbackQueryCall": "コールバックによるサポートを評価してください",
+        "additionalDetailsAbtIssue": "発生している問題について説明してください",
+        "chattingMessage": "チャット進行中...",
+        "defaultPhoneHintText": "+12345556789",
+        "defaultPromptMessage": "あなたに最適なソリューションを提供できるよう、当社のソリューション スペシャリストとチャットしてください。",
+        "ratingComment": "コメントの追加",
+        "feedbackQuery": "チャットによるサポートを評価してください",
+        "offHoursDefaultMessage": "現在オフラインになっています。営業時間中に試してください。",
+        "callbackConfirmationMsg": "コールバック要求が正常に受信されました。",
+        "defaultEmailText": "メール",
+        "field3HintText": "リストから選択するか、入力してください",
+        "defaultWelcomeText": "ようこそ",
+        "connectingMessage": "エージェントに接続中",
+        "defaultNameHint": "",
+        "enterRoomMessage": "エージェントがチャット ルームに入室しました",
+        "defaultQuestionText": "どのようなサポートが必要ですか?",
+        "leaveRoomMessage": "エージェントがチャット ルームから退出しました",
+        "waitingMessageEVA": "応答があるまでしばらくお待ちください…",
+        "virtualAssistantWelcomeMessage": "こんにちは。今日はどのようなご用件ですか?",
+        "defaultNameText": "名前",
+        "waitingMessage": "エージェントが参加するのを待っています...",
+        "defaultPhoneText": "電話番号",
+        "additionalDetails": "追加の詳細",
+        "bubbleTitleMessage": "ここをクリックして Customer Care とのチャットを開始する",
+        "defaultEmail": "例: abc@xyz.com",
+        "agentUnavailableMessage": "申し訳ありません。現在使用できません。後でもう一度試してください。",
+        "leaveRoomMessageEVA": "チャットは終了しました"
+      }
+    }
   },
   "huronHuntGroup": {
     "modalTitle": "ハント グループ",

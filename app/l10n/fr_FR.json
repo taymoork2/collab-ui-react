@@ -8390,7 +8390,38 @@
     "helpTextWaitingEVA": "Les clients voient ce message pendant qu'ils attendent la réponse à leur demande.",
     "waitingMessageEVA": "Quelqu'un va vous aider dans quelques instants...",
     "helpTextLeaveRoomEVA": "Les clients voient ce message lorsque l'utilisateur qui interagit avec eux met un terme à la conversation instantanée.",
-    "leaveRoomMessageEVA": "La conversation instantanée a pris fin"
+    "leaveRoomMessageEVA": "La conversation instantanée a pris fin",
+    "templateConfig": {
+      "default": {
+        "feedbackQueryCall": "Veuillez évaluer votre expérience de rappel.",
+        "additionalDetailsAbtIssue": "Décrivez le problème que vous rencontrez",
+        "chattingMessage": "Chat en cours...",
+        "defaultPhoneHintText": "+12345556789",
+        "defaultPromptMessage": "Chatez avec nos spécialistes de la solution qui nous aident à mieux vous servir.",
+        "ratingComment": "Ajouter des commentaires",
+        "feedbackQuery": "Veuillez évaluer votre expérience du chat",
+        "offHoursDefaultMessage": "Nous sommes actuellement hors-ligne. Veuillez réessayer pendant nos heures ouvrées.",
+        "callbackConfirmationMsg": "La demande de rappel a été reçue avec succès.",
+        "defaultEmailText": "Adresse électronique",
+        "field3HintText": "Sélectionner à partir de la liste ou taper",
+        "defaultWelcomeText": "Bienvenue à",
+        "connectingMessage": "Vous allez être connecté(e) à un agent",
+        "defaultNameHint": "",
+        "enterRoomMessage": "L'agent est entré dans la salle de Chat",
+        "defaultQuestionText": "Comment puis-je vous aider ?",
+        "leaveRoomMessage": "L'agent a quitté le Chat",
+        "waitingMessageEVA": "Quelqu'un va vous aider dans quelques instants...",
+        "virtualAssistantWelcomeMessage": "Bonjour, comment puis-je vous aider aujourd'hui ?",
+        "defaultNameText": "Nom",
+        "waitingMessage": "En attente d’un agent...",
+        "defaultPhoneText": "Numéro de téléphone",
+        "additionalDetails": "Informations supplémentaires",
+        "bubbleTitleMessage": "Cliquez ici pour chater avec le Service clientèle",
+        "defaultEmail": "e.g. abc@xyz.com",
+        "agentUnavailableMessage": "Désolés, nous sommes indisponibles pour le moment. Veuillez réessayer ultérieurement.",
+        "leaveRoomMessageEVA": "La conversation instantanée a pris fin"
+      }
+    }
   },
   "huronHuntGroup": {
     "modalTitle": "Groupe de recherche",

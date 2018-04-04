@@ -8390,7 +8390,38 @@
     "helpTextWaitingEVA": "Kundene ser denne meldingen mens de venter på svar på henvendelsen sin.",
     "waitingMessageEVA": "Noen vil hjelpe deg snart …",
     "helpTextLeaveRoomEVA": "Kundene ser denne meldingen når brukeren som kommuniserer med dem, avslutter chatten.",
-    "leaveRoomMessageEVA": "Chatten er avsluttet"
+    "leaveRoomMessageEVA": "Chatten er avsluttet",
+    "templateConfig": {
+      "default": {
+        "feedbackQueryCall": "Gi en tilbakemelding om tilbakeringningsopplevelsen.",
+        "additionalDetailsAbtIssue": "Beskriv problemet du har",
+        "chattingMessage": "Chat pågår …",
+        "defaultPhoneHintText": "+12345556789",
+        "defaultPromptMessage": "Chat med våre løsningsspesialister som kan hjelpe deg.",
+        "ratingComment": "Legg til kommentarer",
+        "feedbackQuery": "Gi en tilbakemelding om chat-opplevelse",
+        "offHoursDefaultMessage": "Vi er for øyeblikket offline, prøv igjen innenfor åpningstiden.",
+        "callbackConfirmationMsg": "Forespørsel om tilbakeringing mottatt.",
+        "defaultEmailText": "E-post",
+        "field3HintText": "Velg fra listen eller skriv inn",
+        "defaultWelcomeText": "Velkommen til",
+        "connectingMessage": "Kobler deg til en Agent",
+        "defaultNameHint": "",
+        "enterRoomMessage": "Kundebehandler har logget på chat-rommet",
+        "defaultQuestionText": "Hvordan kan jeg hjelpe deg?",
+        "leaveRoomMessage": "Agenten har forlatt chatten",
+        "waitingMessageEVA": "Noen vil hjelpe deg snart …",
+        "virtualAssistantWelcomeMessage": "Hei, hvordan kan jeg hjelpe deg i dag?",
+        "defaultNameText": "Navn",
+        "waitingMessage": "Venter på en agent ...",
+        "defaultPhoneText": "Telefonnummer",
+        "additionalDetails": "Flere detaljer",
+        "bubbleTitleMessage": "Klikk her for å chatte med Brukerstøtte",
+        "defaultEmail": "f.eks. abc@xyz.com",
+        "agentUnavailableMessage": "Beklager, vi er ikke tilgjengelig for øyeblikket. Prøv igjen senere.",
+        "leaveRoomMessageEVA": "Chatten er avsluttet"
+      }
+    }
   },
   "huronHuntGroup": {
     "modalTitle": "Huntgruppe",
