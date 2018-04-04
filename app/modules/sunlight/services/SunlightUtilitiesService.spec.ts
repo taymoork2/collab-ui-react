@@ -7,7 +7,10 @@ describe('Test sunlight Util Service for admin profile', function () {
 
   function initDependencies() {
     this.injectDependencies('SunlightUtilitiesService', '$scope', '$q', 'SunlightConfigService', 'Authinfo',
-      'LocalStorage', 'SunlightConstantsService');
+      'LocalStorage', 'SunlightConstantsService', 'FeatureToggleService', 'ContextAdminAuthorizationService');
+    this.constants = {
+      NEEDS_MIGRATION: 'NeedsMigration',
+    };
   }
   function initSpies() {
     deferredRes = this.$q.defer();
@@ -21,6 +24,12 @@ describe('Test sunlight Util Service for admin profile', function () {
     spyOn(this.Authinfo, 'getUserId').and.returnValue('eqcbe9dc-d4c9-490b-8908-738f373d2c4b');
 
     this.status =  this.SunlightConstantsService.status;
+  }
+
+  function initMigrationAdminSpies(isFeatureEnabled, isMigrationNeeded) {
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(isFeatureEnabled));
+    spyOn(this.ContextAdminAuthorizationService, 'isMigrationNeeded').and.returnValue(this.$q.resolve(isMigrationNeeded));
+    spyOn(this.ContextAdminAuthorizationService, 'getAdminAuthorizationStatus').and.returnValue(this.$q.resolve(this.constants.NEEDS_MIGRATION));
   }
 
   beforeEach(function () {
@@ -222,6 +231,25 @@ describe('Test sunlight Util Service for admin profile', function () {
       deferredRes.reject({ status: 404, body: 'dummyBody' });
       careSetupResponse.then(function (res) {
         expect(res).toBe(false);
+      });
+      this.$scope.$digest();
+    });
+
+    it('should get isCareSetup as false for org if migration is needed', function () {
+      const careSetupResponse = this.SunlightUtilitiesService.isCareSetup();
+      deferredRes.resolve(dummyResponse.SuccessStatusResponse);
+      initMigrationAdminSpies.call(this, true, true);
+      careSetupResponse.then(function (res) {
+        expect(res).toBe(false);
+      });
+      this.$scope.$digest();
+    });
+    it('should get isCareSetup as true for org if migration is not needed', function () {
+      const careSetupResponse = this.SunlightUtilitiesService.isCareSetup();
+      deferredRes.resolve(dummyResponse.SuccessStatusResponse);
+      initMigrationAdminSpies.call(this, true, false);
+      careSetupResponse.then(function (res) {
+        expect(res).toBe(true);
       });
       this.$scope.$digest();
     });

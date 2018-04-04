@@ -13,6 +13,7 @@ describe('CareLocalSettingsCtrl', function () {
       IN_PROGRESS: 'inProgress',
       AUTHORIZED: 'Authorized',
       UNAUTHORIZED: 'Unauthorized',
+      NEEDS_MIGRATION: 'NeedsMigration',
     };
     this.constants.status = {
       UNKNOWN: 'Unknown',
@@ -43,6 +44,7 @@ describe('CareLocalSettingsCtrl', function () {
     spyOn(this.SunlightUtilitiesService, 'removeCareSetupKey').and.callFake(function () { });
     this.sunlightChatConfigUrl = this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/chat';
     this.aaCSOnboardingUrl = this.HuronConfig.getCesUrl() + '/customers/' + this.Authinfo.getOrgId() + '/config/csOnboardingStatus';
+    this.migrateOrgUrl = this.UrlConfig.getContextCcfsUrl() + '/migrate';
   }
 
   function initAAFeatureToggleSpies(isFeatureToggleEnable, shouldResolve) {
@@ -1264,6 +1266,251 @@ describe('CareLocalSettingsCtrl', function () {
       expect(this.Notification.error).toHaveBeenCalledWith('context.dictionary.settingPage.synchronizationFailure');
       expect(this.controller.isSynchronizationInProgress).toBe(false);
       done();
+    });
+  });
+
+  describe('Admin Migration for an org', function () {
+    beforeEach(function () {
+      this.initModules(
+        'Sunlight'
+      );
+    });
+    beforeEach(initDependencies);
+    beforeEach(function () {
+      initSpies.call(this, this.orgId, true);
+    });
+
+    function initMigrationAdminSpies(isFeatureEnabled, isMigrationNeeded) {
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(isFeatureEnabled));
+      spyOn(this.ContextAdminAuthorizationService, 'isMigrationNeeded').and.returnValue(this.$q.resolve(isMigrationNeeded));
+    }
+
+    it('should not enable setup care, if migration is not needed for the org ', function () {
+      this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
+        .respond(200, {
+          csOnboardingStatus: this.constants.status.SUCCESS,
+          appOnboardStatus: this.constants.status.SUCCESS,
+          aaOnboardingStatus: this.constants.status.SUCCESS,
+          jwtAppOnboardingStatus: this.constants.status.SUCCESS,
+        });
+      initMigrationAdminSpies.call(this, false, false);
+      initController.call(this);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      expect(this.controller.state).toBe(this.constants.ONBOARDED);
+      this.$httpBackend.flush();
+      expect(this.controller.state).toBe(this.constants.ONBOARDED);
+    });
+
+    it('should enable setup care, if feature flag is enabled and migration is needed for the org ', function () {
+      this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
+        .respond(200, {
+          csOnboardingStatus: this.constants.status.SUCCESS,
+          appOnboardStatus: this.constants.status.SUCCESS,
+          aaOnboardingStatus: this.constants.status.SUCCESS,
+          jwtAppOnboardingStatus: this.constants.status.SUCCESS,
+        });
+      initMigrationAdminSpies.call(this, true, true);
+      initController.call(this);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      expect(this.controller.state).toBe(this.constants.ONBOARDED);
+      this.$httpBackend.flush();
+      expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+    });
+
+    it('should not enable setup care, if isMigrationNeeded  is false ', function () {
+      spyOn(this.ContextAdminAuthorizationService, 'isMigrationNeeded').and.returnValue(this.$q.resolve(false));
+      spyOn(this.ContextAdminAuthorizationService, 'getAdminAuthorizationStatus').and.returnValue(this.$q.resolve(this.constants.AUTHORIZED));
+      this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
+        .respond(200, {
+          csOnboardingStatus: this.constants.status.SUCCESS,
+          appOnboardStatus: this.constants.status.SUCCESS,
+          aaOnboardingStatus: this.constants.status.SUCCESS,
+          jwtAppOnboardingStatus: this.constants.status.SUCCESS,
+        });
+      initController.call(this);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      expect(this.controller.state).toBe(this.constants.ONBOARDED);
+      this.$httpBackend.flush();
+      expect(this.controller.state).toBe(this.constants.ONBOARDED);
+    });
+
+    it('should  call migrateOrganization when setup care is done for is migration needed org ', function () {
+      spyOn(this.ContextAdminAuthorizationService, 'migrateOrganization').and.returnValue(this.$q.resolve());
+      this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
+        .respond(200, {
+          csOnboardingStatus: this.constants.status.SUCCESS,
+          appOnboardStatus: this.constants.status.SUCCESS,
+          aaOnboardingStatus: this.constants.status.SUCCESS,
+          jwtAppOnboardingStatus: this.constants.status.SUCCESS,
+        });
+      initMigrationAdminSpies.call(this, true, true);
+      initController.call(this);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      expect(this.controller.state).toBe(this.constants.ONBOARDED);
+      this.$httpBackend.flush();
+      expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+      this.controller.onboardToCare();
+      this.$scope.$apply();
+      this.$httpBackend.expectGET(this.urServiceUrlRegEx)
+        .respond(200, this.queueDetails);
+      this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
+        .respond(200, {
+          csOnboardingStatus: this.constants.status.SUCCESS,
+          appOnboardStatus: this.constants.status.UNKNOWN,
+          jwtAppOnboardingStatus: this.constants.status.UNKNOWN,
+          aaOnboardingStatus: this.constants.status.SUCCESS,
+        });
+      this.$interval.flush(10001);
+      this.$httpBackend.flush();
+      expect(this.controller.state).toBe(this.constants.IN_PROGRESS);
+      expect(this.ContextAdminAuthorizationService.migrateOrganization).toHaveBeenCalled();
+    });
+
+    it('should  throw toaster notification if migrateOrganization fails', function () {
+      spyOn(this.Notification, 'errorWithTrackingId').and.returnValue(true);
+      spyOn(this.ContextAdminAuthorizationService, 'migrateOrganization').and.returnValue(this.$q.reject('fake migration response'));
+      this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
+        .respond(200, {
+          csOnboardingStatus: this.constants.status.SUCCESS,
+          appOnboardStatus: this.constants.status.SUCCESS,
+          aaOnboardingStatus: this.constants.status.SUCCESS,
+          jwtAppOnboardingStatus: this.constants.status.SUCCESS,
+        });
+      initMigrationAdminSpies.call(this, true, true);
+      initController.call(this);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      expect(this.controller.state).toBe(this.constants.ONBOARDED);
+      this.$httpBackend.flush();
+      expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      this.controller.onboardToCare();
+      this.$scope.$apply();
+      expect(this.controller.csOnboardingStatus).toBe(this.constants.status.SUCCESS);
+      expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+      expect(this.SunlightUtilitiesService.removeCareSetupKey).not.toHaveBeenCalled();
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
+    });
+  });
+
+  describe('Partner Migration for an org', function () {
+    beforeEach(function () {
+      this.initModules(
+        'Sunlight'
+      );
+    });
+    beforeEach(initDependencies);
+    beforeEach(function () {
+      initSpies.call(this, this.userOrgId, true);
+    });
+
+    function initMigrationAdminSpies(isFeatureEnabled, isMigrationNeeded) {
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(isFeatureEnabled));
+      spyOn(this.ContextAdminAuthorizationService, 'isMigrationNeeded').and.returnValue(this.$q.resolve(isMigrationNeeded));
+    }
+
+    it('should not enable setup care, if migration is not needed for the org ', function () {
+      this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
+        .respond(200, {
+          csOnboardingStatus: this.constants.status.SUCCESS,
+          appOnboardStatus: this.constants.status.SUCCESS,
+          aaOnboardingStatus: this.constants.status.SUCCESS,
+          jwtAppOnboardingStatus: this.constants.status.SUCCESS,
+        });
+      initMigrationAdminSpies.call(this, false, false);
+      initController.call(this);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      expect(this.controller.state).toBe(this.constants.ONBOARDED);
+      this.$httpBackend.flush();
+      expect(this.controller.state).toBe(this.constants.ONBOARDED);
+    });
+
+    it('should enable setup care, if feature flag is enabled and migration is needed for the org ', function () {
+      this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
+        .respond(200, {
+          csOnboardingStatus: this.constants.status.SUCCESS,
+          appOnboardStatus: this.constants.status.SUCCESS,
+          aaOnboardingStatus: this.constants.status.SUCCESS,
+          jwtAppOnboardingStatus: this.constants.status.SUCCESS,
+        });
+      initMigrationAdminSpies.call(this, true, true);
+      initController.call(this);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      expect(this.controller.state).toBe(this.constants.ONBOARDED);
+      this.$httpBackend.flush();
+      expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+    });
+
+    it('should not enable setup care, if isMigrationNeeded  is false ', function () {
+      spyOn(this.ContextAdminAuthorizationService, 'isMigrationNeeded').and.returnValue(this.$q.resolve(false));
+      spyOn(this.ContextAdminAuthorizationService, 'getAdminAuthorizationStatus').and.returnValue(this.$q.resolve(this.constants.AUTHORIZED));
+      this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
+        .respond(200, {
+          csOnboardingStatus: this.constants.status.SUCCESS,
+          appOnboardStatus: this.constants.status.SUCCESS,
+          aaOnboardingStatus: this.constants.status.SUCCESS,
+          jwtAppOnboardingStatus: this.constants.status.SUCCESS,
+        });
+      initController.call(this);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      expect(this.controller.state).toBe(this.constants.ONBOARDED);
+      this.$httpBackend.flush();
+      expect(this.controller.state).toBe(this.constants.ONBOARDED);
+    });
+
+    it('should  call migrateOrganization when setup care is done for is migration needed org ', function () {
+      spyOn(this.ContextAdminAuthorizationService, 'migrateOrganization').and.returnValue(this.$q.resolve());
+      this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
+        .respond(200, {
+          csOnboardingStatus: this.constants.status.SUCCESS,
+          appOnboardStatus: this.constants.status.SUCCESS,
+          aaOnboardingStatus: this.constants.status.SUCCESS,
+          jwtAppOnboardingStatus: this.constants.status.SUCCESS,
+        });
+      initMigrationAdminSpies.call(this, true, true);
+      initController.call(this);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      expect(this.controller.state).toBe(this.constants.ONBOARDED);
+      this.$httpBackend.flush();
+      expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+      this.controller.onboardToCare();
+      this.$scope.$apply();
+      this.$httpBackend.expectGET(this.urServiceUrlRegEx)
+        .respond(200, this.queueDetails);
+      this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
+        .respond(200, {
+          csOnboardingStatus: this.constants.status.SUCCESS,
+          appOnboardStatus: this.constants.status.UNKNOWN,
+          jwtAppOnboardingStatus: this.constants.status.UNKNOWN,
+          aaOnboardingStatus: this.constants.status.SUCCESS,
+        });
+      this.$interval.flush(10001);
+      this.$httpBackend.flush();
+      expect(this.ContextAdminAuthorizationService.migrateOrganization).toHaveBeenCalled();
+    });
+
+    it('should  throw toaster notification if migrateOrganization fails', function () {
+      spyOn(this.Notification, 'errorWithTrackingId').and.returnValue(true);
+      spyOn(this.ContextAdminAuthorizationService, 'migrateOrganization').and.returnValue(this.$q.reject('fake migration response'));
+      this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
+        .respond(200, {
+          csOnboardingStatus: this.constants.status.SUCCESS,
+          appOnboardStatus: this.constants.status.SUCCESS,
+          aaOnboardingStatus: this.constants.status.SUCCESS,
+          jwtAppOnboardingStatus: this.constants.status.SUCCESS,
+        });
+      initMigrationAdminSpies.call(this, true, true);
+      initController.call(this);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      expect(this.controller.state).toBe(this.constants.ONBOARDED);
+      this.$httpBackend.flush();
+      expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      this.controller.onboardToCare();
+      this.$scope.$apply();
+      expect(this.controller.csOnboardingStatus).toBe(this.constants.status.SUCCESS);
+      expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+      expect(this.SunlightUtilitiesService.removeCareSetupKey).not.toHaveBeenCalled();
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
     });
   });
 });

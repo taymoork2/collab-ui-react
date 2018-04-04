@@ -6,6 +6,7 @@ export class SunlightUtilitiesService {
     private LocalStorage,
     private SunlightConfigService,
     private SunlightConstantsService,
+    private ContextAdminAuthorizationService,
   ) {}
 
   public getCareSetupKey() {
@@ -72,11 +73,13 @@ export class SunlightUtilitiesService {
     const appOnboarded = _.get(result, 'data.appOnboardStatus');
     const aaOnboarded = _.get(result, 'data.aaOnboardingStatus');
     const jwtOnboarded = _.get(result, 'data.jwtAppOnboardingStatus');
-    if (this.getCareOnboardStatusForAdmin(csOnboarded, appOnboarded, aaOnboarded, jwtOnboarded) ||
-      this.getCareOnboardStatusForPartner(csOnboarded, aaOnboarded)) {
-      isCareOnboarded = true;
-    }
-    return isCareOnboarded;
+    return this.ContextAdminAuthorizationService.isMigrationNeeded().then(function (migrationNeeded) {
+      if (!migrationNeeded && (this.getCareOnboardStatusForAdmin(csOnboarded, appOnboarded, aaOnboarded, jwtOnboarded) ||
+        this.getCareOnboardStatusForPartner(csOnboarded, aaOnboarded))) {
+        isCareOnboarded = true;
+      }
+      return isCareOnboarded;
+    });
   }
 
   public isCareSetup() {

@@ -31,7 +31,7 @@ var HttpStatus = require('http-status-codes');
     vm.appOnboardingStatus = vm.status.UNKNOWN;
     vm.jwtAppOnboardingStatus = vm.status.UNKNOWN;
     vm.cesOnboardingStatus = vm.status.UNKNOWN;
-
+    vm.migrationStatus = vm.status.UNKNOWN;
     vm.defaultQueueId = Authinfo.getOrgId();
     vm.careSetupDoneByOrgAdmin = (Authinfo.getOrgId() === Authinfo.getUserOrgId());
 
@@ -89,7 +89,6 @@ var HttpStatus = require('http-status-codes');
     vm.isAdminAuthorized = false;
     vm.isSynchronizationInProgress = false;
     vm.synchronizeButtonTooltip = '';
-
     vm.synchronize = function () {
       vm.isSynchronizationInProgress = true;
       return ContextAdminAuthorizationService.synchronizeAdmins()
@@ -274,6 +273,12 @@ var HttpStatus = require('http-status-codes');
     }
     function onboardCareWithOtherApps() {
       var promises = {};
+      if (vm.migrationStatus !== vm.status.SUCCESS) {
+        promises.migrateCS = ContextAdminAuthorizationService.migrateOrganization();
+        promises.migrateCS.then(function () {
+          vm.migrationStatus = vm.status.SUCCESS;
+        });
+      }
       if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
         promises.onBoardCS = SunlightConfigService.onBoardCare();
         promises.onBoardCS.then(function (result) {
@@ -476,7 +481,7 @@ var HttpStatus = require('http-status-codes');
       if (vm.defaultQueueStatus !== vm.status.SUCCESS) {
         onboardingDoneByAdminStatus = vm.defaultQueueStatus;
       } else if (vm.csOnboardingStatus === vm.status.SUCCESS && vm.appOnboardingStatus === vm.status.SUCCESS
-        && aaOnboarded === vm.status.SUCCESS) {
+        && aaOnboarded === vm.status.SUCCESS && vm.migrationStatus === vm.status.SUCCESS) {
         onboardingDoneByAdminStatus = vm.jwtAppOnboardingStatus;
       } else if (aaOnboarded !== vm.status.SUCCESS) {
         onboardingDoneByAdminStatus = aaOnboarded;
@@ -484,6 +489,8 @@ var HttpStatus = require('http-status-codes');
         onboardingDoneByAdminStatus = vm.csOnboardingStatus;
       } else if (vm.appOnboardingStatus !== vm.status.SUCCESS) {
         onboardingDoneByAdminStatus = vm.appOnboardingStatus;
+      } else if (vm.migrationStatus !== vm.status.SUCCESS) {
+        onboardingDoneByAdminStatus = vm.migrationStatus;
       }
       return onboardingDoneByAdminStatus;
     }
@@ -492,10 +499,12 @@ var HttpStatus = require('http-status-codes');
       var onboardingDoneByPartnerStatus = vm.status.UNKNOWN;
       if (vm.defaultQueueStatus !== vm.status.SUCCESS) {
         onboardingDoneByPartnerStatus = vm.defaultQueueStatus;
-      } else if (vm.csOnboardingStatus === vm.status.SUCCESS) {
+      } else if (vm.csOnboardingStatus === vm.status.SUCCESS && vm.migrationStatus === vm.status.SUCCESS) {
         onboardingDoneByPartnerStatus = onboardingStatusForAA();
       } else if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
         onboardingDoneByPartnerStatus = vm.csOnboardingStatus;
+      } else if (vm.migrationStatus !== vm.status.SUCCESS) {
+        onboardingDoneByPartnerStatus = vm.migrationStatus;
       }
       return onboardingDoneByPartnerStatus;
     }
@@ -537,9 +546,12 @@ var HttpStatus = require('http-status-codes');
 
 
     function getOnboardingStatusFromOrgChatConfig() {
-      return SunlightConfigService.getChatConfig().then(function (result) {
-        populateOrgChatConfigViewModel(result, true);
-        getOnboardStatusAndUpdateConfigIfRequired(result);
+      var promises = {};
+      promises.getMigrationStatus = getMigrationStatus(); // This needs to be removed once all the orgs are migrated to New CS Onboarding
+      promises.getConfigPromise = SunlightConfigService.getChatConfig();
+      return $q.all(promises).then(function (result) {
+        populateOrgChatConfigViewModel(result.getConfigPromise, true);
+        getOnboardStatusAndUpdateConfigIfRequired(result.getConfigPromise);
       })
         .catch(function (error) {
           if (error.status === 404) {
@@ -625,6 +637,16 @@ var HttpStatus = require('http-status-codes');
       vm.state = vm.sunlightOnboardingState;
     }
 
+    function getMigrationStatus() {
+      return ContextAdminAuthorizationService.isMigrationNeeded().then(function (needMigration) {
+        if (needMigration) {
+          vm.migrationStatus = vm.status.FAILURE;
+        } else {
+          vm.migrationStatus = vm.status.SUCCESS;
+        }
+      });
+    }
+
     function init() {
       FeatureToggleService.atlasCareAutomatedRouteTrialsGetStatus().then(function (result) {
         vm.featureToggles.showRouterToggle = result;
@@ -637,7 +659,6 @@ var HttpStatus = require('http-status-codes');
       FeatureToggleService.supports(FeatureToggleService.features.atlasContextServiceOnboarding).then(function (supports) {
         vm.featureToggles.contextServiceOnboardingFeatureToggle = supports;
       });
-
       var sunlightPromise;
       URService.getQueue(vm.defaultQueueId).then(function (result) {
         vm.defaultQueueStatus = vm.status.SUCCESS;
@@ -676,3 +697,4 @@ var HttpStatus = require('http-status-codes');
     init();
   }
 })();
+
