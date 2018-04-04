@@ -11,6 +11,7 @@
     line-color="$ctrl.lineColor"
     circle-color="$ctrl.circleColor"
     call-legs-data="$ctrl.callLegsData"
+    line-data="$ctrl.lineData"
     tab-type="$ctrl.tabType"
     ng-if="!$ctrl.loading"></dgc-time-line>
   <div ng-if="$ctrl.loading" class="loading">
@@ -35,11 +36,23 @@
       <p>{{$ctrl.overview.meetingType}}</p>
     </li>
     <li ng-if="$ctrl.overview.audioSession">
-      <h6>Audio</h6>
+      <h6>
+        <span class="title" translate="webexReports.audio"></span>
+        <i class="icon icon-info-outline" 
+          tooltip-html-unsafe="{{:: 'webexReports.featureHelper.audioHelper' | translate}}" 
+          tooltip-placement="top">
+        </i>
+      </h6>
       <p>{{$ctrl.overview.audioSession}}</p>
     </li>
-    <li ng-if="$ctrl.overview.audioSession">
-      <h6>Video</h6>
+    <li ng-if="$ctrl.overview.videoSession">
+      <h6>
+          <span class="title" translate="webexReports.video"></span>
+          <i class="icon icon-info-outline" 
+            tooltip-html-unsafe="{{:: 'webexReports.featureHelper.videoHelper' | translate}}" 
+            tooltip-placement="top">
+          </i>
+      </h6>
       <p>{{$ctrl.overview.videoSession}}</p>
     </li>
   </ul>
@@ -56,5 +69,29 @@
       <h6 translate="webexReports.hostEmail"></h6>
       <p>{{$ctrl.overview.hostEmail}}</p>
     </li>
+  </ul>
+
+  <div class="features" translate="webexReports.features"></div>
+  <ul class="overviewInfo">
+      <li>
+        <h6>
+            <span class="title" translate="webexReports.screenShare"></span>
+            <i class="icon icon-info-outline" 
+              tooltip-html-unsafe="{{:: 'webexReports.featureHelper.screenShareHelper' | translate}}" 
+              tooltip-placement="top">
+            </i>
+        </h6>
+        <p class="{{$ctrl.overview.screenShare ? 'green-color' : ''}}">{{$ctrl.overview.screenShare_}}</p>
+      </li>
+      <li>
+        <h6>
+            <span class="title" translate="webexReports.recording"></span>
+            <i class="icon icon-info-outline" 
+              tooltip-html-unsafe="{{:: 'webexReports.featureHelper.recordingHelper' | translate}}" 
+              tooltip-placement="top">
+            </i>
+        </h6>
+        <p class="{{$ctrl.overview.recording ? 'green-color' : ''}}">{{$ctrl.overview.recording_}}</p>
+      </li>
   </ul>
 </div>

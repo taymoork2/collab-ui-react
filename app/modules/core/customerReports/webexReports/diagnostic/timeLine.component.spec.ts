@@ -1,7 +1,37 @@
 import testModule from './index';
-import { Devices, Platforms } from './searchService';
+import * as d3 from 'd3';
 
 describe('Component: dgcTimeLine', () => {
+  const mockNode = {
+    data: () => { return mockNode; },
+    enter: () => { return mockNode; },
+    attr: (name, value) => {
+      if (_.isString(name)) {
+        mockNode.values[name] = value;
+      } else {
+        _.assign(mockNode.values, name);
+      }
+      if (_.isFunction(value)) {
+        value({});
+      }
+      return mockNode;
+    },
+    select: () => { return mockNode; },
+    selectAll: () => { return mockNode; },
+    style: () => { return mockNode; },
+    append: () => { return mockNode; },
+    text: () => { return mockNode; },
+    on: (name, fn) => { mockNode.values[name] = fn; return mockNode; },
+    html: () => { return mockNode; },
+    classed: () => { return mockNode; },
+    transition: () => { return mockNode; },
+    duration: () => { return mockNode; },
+    replace: () => { return mockNode; },
+    remove: () => { return true; },
+    size: () => { return 1; },
+    values: {},
+  };
+
   beforeAll(function () {
     this.sourceData = {
       lines: [],
@@ -65,79 +95,6 @@ describe('Component: dgcTimeLine', () => {
     this.controller.$onChanges({ circleColor: circle });
   });
 
-  it('Should get pstn call in type when device is IP Phone or Phone', function () {
-    const bindings = { sourceData: this.sourceData };
-    const mockData = { items: [{ pstnCallInType: 'Toll Free' }] };
-    spyOn(this.SearchService, 'getPSTNCallInType').and.returnValue(this.$q.resolve(mockData));
-    initComponent.call(this, bindings);
-
-    const msgArr = [{ key: 'SIP', value: '' }];
-    const mockParam = { device: 'IP Phone', pstnCallInType: '' };
-    this.controller.tip = {
-      transition: () => { return this.controller.tip; },
-      html: (ht) => { this.controller.tip.t(ht); return this.controller.tip; },
-      classed: (ht, ft) => { this.controller.tip.t(ht); this.controller.tip.t(ft); return this.controller.tip; },
-      style: (n, ftv) => { this.controller.tip.t(n); this.controller.tip.t(ftv); return this.controller.tip; },
-      duration: (time) => { this.controller.tip.t(time); return this.controller.tip; },
-      replace: (n, ftv) => { this.controller.tip.t(n); this.controller.tip.t(ftv); return this.controller.tip; },
-      t: (t) => { if (t) { return true; } },
-    };
-    this.controller.getDeviceOrPSTNType(mockParam, msgArr);
-    this.$scope.$apply();
-    expect(mockParam['pstnCallInType']).toBe('Toll Free');
-  });
-
-  it('Should hide tips with hideTips', function () {
-    mockLines.call(this, 13);
-    const bindings = { sourceData: this.sourceData };
-    initComponent.call(this, bindings);
-
-    this.controller.hideTips();
-    expect(1).toExist();
-  });
-
-  it('Should get correct data with getJoinMeetingQualityIndex', function () {
-    mockLines.call(this, 13);
-    const bindings = { sourceData: this.sourceData };
-    initComponent.call(this, bindings);
-
-    const item = { joinMeetingTime: 8 };
-    this.controller.getJoinMeetingQualityIndex(item);
-    item.joinMeetingTime = 15;
-    this.controller.getJoinMeetingQualityIndex(item);
-    item.joinMeetingTime = 25;
-    this.controller.getJoinMeetingQualityIndex(item);
-    expect(item).toExist();
-  });
-
-  it('Should get correct data with setMsg', function () {
-    mockLines.call(this, 13);
-    const bindings = { sourceData: this.sourceData };
-    initComponent.call(this, bindings);
-
-    const item = { type: 'video', quality: 4.0, audioMos: 4, callType: 2, lossRate: 3.5, jitter: 2738 };
-    this.controller.setMsg(item);
-    expect(item).toExist();
-  });
-
-  it('Should get correct data with updateGraph', function () {
-    mockLines.call(this, 13);
-    const bindings = { sourceData: this.sourceData };
-    initComponent.call(this, bindings);
-
-    const items = [{
-      guestId: 2120903557,
-      jmtQuality: 2,
-      joinMeetingTime: 6,
-      joinTime: 1519615361000,
-      userId: 0,
-      userName: 'Bangyao' }];
-    this.controller.updateGraph(items);
-    spyOn(this.controller, 'getJoinMeetingQualityIndex').and.returnValue(1);
-    this.controller.updateGraph(items);
-    expect(items).toExist();
-  });
-
   it('Should get correct data with makeTips', function () {
     mockLines.call(this, 13);
     const bindings = { sourceData: this.sourceData };
@@ -159,13 +116,19 @@ describe('Component: dgcTimeLine', () => {
 
   it('Should detect and update device type', function () {
     const bindings = { sourceData: this.sourceData };
-    const mockData = { items: [{ deviceType: 'SIP' }] };
-    spyOn(this.SearchService, 'getRealDevice').and.returnValue(this.$q.resolve(mockData));
     initComponent.call(this, bindings);
 
     const msgArr = [{ key: 'SIP', value: '' }];
+    const mockData = { completed: true, items : [{ deviceType: 'SIP' }] };
+    spyOn(this.SearchService, 'getRealDevice').and.callFake(function () {
+      return {
+        then: function (callback) {
+          return callback(mockData);
+        },
+      };
+    });
 
-    const mockParam = { platform: '10', device: '' };
+    const mockParam = { platform: '10' };
     this.controller.tip = {
       transition: () => { return this.controller.tip; },
       html: (ht) => { this.controller.tip.t(ht); return this.controller.tip; },
@@ -175,49 +138,47 @@ describe('Component: dgcTimeLine', () => {
       replace: (n, ftv) => { this.controller.tip.t(n); this.controller.tip.t(ftv); return this.controller.tip; },
       t: (t) => { if (t) { return true; } },
     };
-    this.controller.getDeviceOrPSTNType(mockParam, msgArr);
-    this.$scope.$apply();
+    this.controller.detectAndUpdateDevice(mockParam, msgArr);
     expect(mockParam['device']).toBe('SIP');
   });
 
-  it('Should get tips function for yAxis: PSTN Toll', function () {
-    mockLines.call(this, 13);
+  it('Should show y axis', function () {
+    const mockData = _.clone(mockNode);
+    spyOn(d3, 'select').and.returnValue(mockData);
     const bindings = { sourceData: this.sourceData };
-    const mockData = { items: [{ pstnCallInType: 'Toll' }] };
-    spyOn(this.SearchService, 'getPSTNCallInType').and.returnValue(this.$q.resolve(mockData));
     initComponent.call(this, bindings);
-    const tipsHandler = this.controller.yAxisTips();
-    const mockParam = { userName: 'Ethan', device: Devices.IP_PHONE, joinTime_: '2018-03-29 10:00:00', duration: 120, y1: 15 };
-    tipsHandler(mockParam);
-    spyOn(this.controller, 'makeTips').and.returnValue(null);
-    this.$timeout.flush();
-    const mockArr = {
-      arr: [
-        { key: 'Ethan' },
-        { key: 'reportsPage.webexMetrics.callIn: ', value: 'Toll' },
-        { key: 'reportsPage.webexMetrics.joinTime: ', value: '2018-03-29 10:00:00' },
-        { key: 'reportsPage.webexMetrics.duration: ', value: 'time.abbreviatedCap.minutes' },
-      ],
-    };
-    expect(this.controller.makeTips).toHaveBeenCalledWith(mockArr, 0, 110.5);
+    this.controller.yAxis();
+    mockData.values['mouseover']({}, 1);
+    mockData.values['mouseout']();
+    expect(mockData.values['class']).toContainText('icon');
   });
 
-  it('Should get tips function for yAxis: CMR device', function () {
-    mockLines.call(this, 13);
+  it('Should update start points: Good', function () {
+    const mockData = _.clone(mockNode);
+    spyOn(d3, 'select').and.returnValue(mockData);
     const bindings = { sourceData: this.sourceData };
     initComponent.call(this, bindings);
-    const tipsHandler = this.controller.yAxisTips();
-    const mockParam = { userName: 'Ethan', device: 'SIP', Platforms: Platforms.TP, joinTime_: '2018-03-29 10:00:00', duration: 120, y1: 15 };
-    spyOn(this.controller, 'makeTips');
-    tipsHandler(mockParam);
-    const mockArr = {
-      arr: [
-        { key: 'Ethan' },
-        { key: 'SIP' },
-        { key: 'reportsPage.webexMetrics.joinTime: ', value: '2018-03-29 10:00:00' },
-        { key: 'reportsPage.webexMetrics.duration: ', value: 'time.abbreviatedCap.minutes' },
-      ],
-    };
-    expect(this.controller.makeTips).toHaveBeenCalledWith(mockArr, 0, 110.5);
+    this.controller.updateStartPoints([{ joinMeetingTime: 1 }]);
+    mockData.values['mouseover']();
+    mockData.values['mouseout']();
+    expect(mockData.values['jmtQuality']).toBe('Good');
+  });
+
+  it('Should update start points: Fair', function () {
+    const mockData = _.clone(mockNode);
+    spyOn(d3, 'select').and.returnValue(mockData);
+    const bindings = { sourceData: this.sourceData };
+    initComponent.call(this, bindings);
+    this.controller.updateStartPoints([{ joinMeetingTime: 15 }]);
+    expect(mockData.values['jmtQuality']).toBe('Fair');
+  });
+
+  it('Should update start points: Poor', function () {
+    const mockData = _.clone(mockNode);
+    spyOn(d3, 'select').and.returnValue(mockData);
+    const bindings = { sourceData: this.sourceData };
+    initComponent.call(this, bindings);
+    this.controller.updateStartPoints([{ joinMeetingTime: 30 }]);
+    expect(mockData.values['jmtQuality']).toBe('Poor');
   });
 });
