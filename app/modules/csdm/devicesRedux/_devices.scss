@@ -37,6 +37,9 @@
       margin: 4px 5px 4px 4px;
       width: 35px;
     }
+    &.b-checked {
+      background-color: $blue-pastel;
+    }
   }
 
   .clipboard-button {

@@ -163,6 +163,7 @@ class DeviceList implements ng.IComponentController {
           }
         });
       },
+      rowTemplate: require('modules/csdm/templates/_rowTpl.html'),
       columnDefs: [
         {
           displayName: '',
