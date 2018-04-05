@@ -11184,8 +11184,6 @@
     "deletionCompletedWErrorTitle": "Deletion completed with errors",
     "deletionCompletedXDeleted": "{{nDevices}}/{{nTotalDevices}} devices were successfully deleted.",
     "deletionFullError": "Bulk deletion failed",
-    "pollProgressError": "Failures while retrieving the bulk progress",
-    "startedAt": "Started {{startTime}}",
-    "toResolveErrors": "To resolve errors, follow the instructions in the table or <a href='https://collaborationhelp.cisco.com/' target='_blank'>contact customer support</a>"
+    "pollProgressError": "Failures while retrieving the bulk progress"
   }
 }
