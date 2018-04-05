@@ -11009,7 +11009,9 @@
       "setupTitle": "Create Agent Install Files",
       "status": "Status",
       "tarFile": ".tar file",
-      "title": "Install Files"
+      "title": "Install Files",
+      "nofileTitle": "No Agent Install Files",
+      "nofileDescription": "Get stated by creating an Agent Install File. These files can take some time to become available"
     },
     "license": {
       "all": "All",

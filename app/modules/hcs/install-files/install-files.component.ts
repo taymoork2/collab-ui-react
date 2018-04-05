@@ -1,3 +1,5 @@
+import { HcsSetupModalService } from 'modules/hcs/shared/';
+
 interface IInstallFileObject {
   id: string;
   name: string;
@@ -16,7 +18,9 @@ export class InstallFilesCtrl implements ng.IComponentController {
   public installFilesList: IInstallFileObject[] = [];
 
   /* @ngInject */
-  constructor() {}
+  constructor(
+    private HcsSetupModalService: HcsSetupModalService,
+  ) {}
 
   public $onInit(): void {
     this.installFilesList.push({
@@ -66,5 +70,7 @@ export class InstallFilesCtrl implements ng.IComponentController {
 
   public cardSelected(): void {}
 
-  public addLocation(): void {}
+  public addAgentInstallFile(): void {
+    this.HcsSetupModalService.openAgentInstallFileModal();
+  }
 }

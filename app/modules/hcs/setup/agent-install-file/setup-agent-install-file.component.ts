@@ -77,16 +77,17 @@ class SetupAgentInstallFileCtrl implements ng.IComponentController {
   }
 
   public editToken(e): void {
-    this.removeToken(e.attrs.value);
+    this.removeToken(e);
     if (!this.validateHttpProxyAddress(e.attrs.value)) {
       this.invalidCount--;
     }
   }
 
-  private removeToken(value): void {
-    const index = _.indexOf(this.httpProxyTokens, value);
+  private removeToken(e): void {
+    const index = _.findIndex(this.httpProxyTokens, (item) => item.value === e.attrs.value);
     if (index > -1) {
       this.httpProxyTokens.splice(index, 1);
+      this.setInstallFileInfo();
     }
   }
 

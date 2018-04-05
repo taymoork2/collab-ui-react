@@ -5,7 +5,7 @@ import { Notification } from 'modules/core/notifications';
 
 export class HcsSetupModalCtrl implements ng.IComponentController {
   private static readonly MAX_INDEX: number = 5;
-  private static readonly FIRST_INDEX: number = 1;
+  private static readonly FIRST_INDEX: number = 0;
 
   public currentStepIndex: number;
   public hcsServices: ICheckbox;
@@ -16,6 +16,8 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
   public hcsSetupModalForm: ng.IFormController;
   public cancelRemoved: boolean = false;
   public finish: boolean = false;
+  public finishDisable: boolean = false;
+  public isFirstTimeSetup: boolean;
 
   /* @ngInject */
   constructor(
@@ -29,19 +31,25 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
     if (_.isUndefined(this.currentStepIndex)) {
       this.currentStepIndex = HcsSetupModalCtrl.FIRST_INDEX;
     }
-    this.hcsServices = { license: false, upgrade: false };
-    this.title = 'hcs.setup.titleServices';
-    if (this.hcsSetupModalForm) {
-      this.hcsSetupModalForm.$setPristine();
-    }
+    this.nextStep();
   }
 
   public nextStep(): void {
     this.currentStepIndex = this.currentStepIndex + 1;
     switch (this.currentStepIndex) {
+      case 1:
+        this.hcsServices = { license: false, upgrade: false };
+        this.title = 'hcs.setup.titleServices';
+        if (this.hcsSetupModalForm) {
+          this.hcsSetupModalForm.$setPristine();
+        }
       case 2:
         this.title = 'hcs.installFiles.setupTitle';
         this.nextEnabled = false;
+        if (!this.isFirstTimeSetup) {
+          this.finish = true;
+          this.finishDisable = true;
+        }
         break;
       case 3:
         if (!this.hcsServices.upgrade) {
@@ -89,6 +97,13 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
 
   public setAgentInstallFile(fileName: string, httpProxyList: string[]): void {
     this.nextEnabled = !_.isEmpty(fileName) && !_.isUndefined(httpProxyList) && httpProxyList.length > 0;
+    if (!this.isFirstTimeSetup) {
+      if (this.nextEnabled) {
+        this.finishDisable = false;
+      } else {
+        this.finishDisable = true;
+      }
+    }
   }
 
   public setSftpServer(sftpServer: ISftpServer) {
@@ -104,9 +119,18 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
   public dismissModal(): void {
     this.HcsSetupModalService.dismissModal();
   }
+
+  public finishFxn() {
+    //save data here if needed or create a save fxn and call here and at the start of nextStep fxn to save previous step data
+    this.dismissModal();
+  }
 }
 
 export class HcsSetupModalComponent implements ng.IComponentOptions {
   public controller = HcsSetupModalCtrl;
   public template = require('modules/hcs/setup/hcs-setup-modal.component.html');
+  public bindings = {
+    isFirstTimeSetup: '<',
+    currentStepIndex: '<',
+  };
 }

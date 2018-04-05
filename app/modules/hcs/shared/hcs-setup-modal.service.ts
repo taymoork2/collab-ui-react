@@ -10,7 +10,16 @@ export class HcsSetupModalService {
   public openSetupModal(): void {
     this.dismissModal();
     this.modal = this.$modal.open({
-      template: '<hcs-setup-modal class="modal-content"></hcs-setup-modal>',
+      template: '<hcs-setup-modal class="modal-content" is-first-time-setup="true"></hcs-setup-modal>',
+      type: 'full',
+      keyboard: false,
+    });
+  }
+
+  public openAgentInstallFileModal(): void {
+    this.dismissModal();
+    this.modal = this.$modal.open({
+      template: '<hcs-setup-modal class="modal-content" is-first-time-setup="false" current-step-index="1"></hcs-setup-modal>',
       type: 'full',
       keyboard: false,
     });
