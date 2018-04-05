@@ -23,7 +23,9 @@ class HybridCallInactiveCardController implements ng.IComponentController {
       resolve: {
         connectorType: () => 'c_ucmc',
         serviceId: () => 'squared-fusion-uc',
-        firstTimeSetup: true,
+        options: {
+          firstTimeSetup: true,
+        },
       },
       controller: 'AddResourceController',
       controllerAs: 'vm',

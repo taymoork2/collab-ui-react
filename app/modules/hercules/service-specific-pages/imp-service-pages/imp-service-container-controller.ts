@@ -15,7 +15,10 @@ export class ImpServiceContainerController extends ExpresswayContainerController
     resolve: {
       connectorType: () => 'c_imp',
       serviceId: () => 'spark-hybrid-impinterop',
-      firstTimeSetup: false,
+      options: {
+        firstTimeSetup: false,
+        hasCapacityFeatureToggle: this.hasCapacityFeatureToggle,
+      },
     },
     controller: 'AddResourceController',
     controllerAs: 'vm',
