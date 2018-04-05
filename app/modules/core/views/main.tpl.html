@@ -7,7 +7,7 @@
   <div class="sidenav-admin-container">
     <div>
       <div class="sidenav-admin-wrapper" ng-controller="TabsCtrl as tCtrl">
-        <cui-sidenav-admin image="{{tCtrl.image}}" ng-attr-icon="{{tCtrl.icon}}" pages="tCtrl.tabs" ng-if="tCtrl.showLeftNav()" collapsed="tCtrl.collapsed">
+        <cui-sidenav-admin image="{{tCtrl.image}}" ng-attr-icon="{{tCtrl.icon}}" pages="tCtrl.tabs" ng-if="tCtrl.showLeftNav()" collapsed="tCtrl.collapsed" on-resize-fn="tCtrl.onResize()">
           <div ng-controller="HeaderCtrl as headerCtrl">
             <cui-sidenav-admin-footer adminpages="headerCtrl.adminTabs" partner="{{headerCtrl.partnerInfo}}" collapsed="tCtrl.collapsed">
               <cr-user-info ng-if="headerCtrl.showUserDropDown()"></cr-user-info>
