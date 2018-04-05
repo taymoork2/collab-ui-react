@@ -121,7 +121,7 @@
     "unorm": "^1.4.1",
     "usertiming": "^0.1.8",
     "uuid": "^3.0.1",
-    "x2js": "git+https://github.com/abdmob/x2js.git#v1.2.0"
+    "x2js": "~3.2.1"
   },
   "//devDependencies": [
     "TODO: upgrade @types/lodash and refactor for undefined return types",

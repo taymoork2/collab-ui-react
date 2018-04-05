@@ -22,15 +22,13 @@
     PersonalMeetingRoomManagementService,
     ServiceSetup,
     SSOService,
-    UrlConfig) {
+    UrlConfig,
+    Utils) {
     var strEntityDesc = '<EntityDescriptor ';
     var strEntityId = 'entityID="';
     var strEntityIdEnd = '"';
     var strSignOn = 'SingleSignOnService';
-    var strLocation = 'Location';
-    var _BINDINGS = 'urn:oasis:names:tc:SAML:2.0:bindings:';
-    var bindingStr = 'Binding="' + _BINDINGS;
-    var strBindingEnd = '" ';
+    var _BINDINGS = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST';
     $scope.updateSSO = updateSSO;
 
     $scope.options = {
@@ -557,12 +555,24 @@
 
     function checkReqBinding() {
       var file = _.get($scope, 'idpFile.file');
-      if (_.isString(file)) {
-        var start = file.indexOf(strSignOn);
-        start = file.indexOf(bindingStr, start);
-        var end = file.indexOf(strLocation, start) - strBindingEnd.length;
-        var reqBinding = file.substring(start + bindingStr.length, end);
-        return reqBinding;
+      if (!_.isString(file)) {
+        return '';
+      }
+
+      // Get the SingleSignOnService keys into an array
+      var ssoServices = Utils.filterKeyInXml(file, strSignOn);
+      if (_.isEmpty(ssoServices)) {
+        return '';
+      }
+
+      var hasPostBinding = _.some(ssoServices, function (i) {
+        return i['_Binding'] === _BINDINGS;
+      });
+
+      if (hasPostBinding) {
+        return '&reqBinding=' + _BINDINGS;
+      } else {
+        return '';
       }
     }
 
@@ -574,10 +584,10 @@
         if (data.success) {
           if (data.data.length > 0) {
             entityId = data.data[0].entityId;
-            reqBinding = checkReqBinding(data);
+            reqBinding = checkReqBinding();
           }
-          if (entityId && reqBinding) {
-            var testUrl = UrlConfig.getSSOTestUrl() + '?metaAlias=/' + Authinfo.getOrgId() + '/sp&idpEntityID=' + encodeURIComponent(entityId) + '&binding=' + _BINDINGS + 'HTTP-POST&reqBinding=' + _BINDINGS + reqBinding;
+          if (entityId) {
+            var testUrl = UrlConfig.getSSOTestUrl() + '?metaAlias=/' + Authinfo.getOrgId() + '/sp&idpEntityID=' + encodeURIComponent(entityId) + '&binding=' + _BINDINGS + reqBinding;
             $window.open(testUrl);
           } else {
             Log.debug('Retrieved null Entity id. Status: ' + status);

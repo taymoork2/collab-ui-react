@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var X2JS = require('x2js');
+
   /* eslint no-cond-assign:0 */
 
   module.exports = angular.module('core.utils', [])
@@ -307,6 +309,8 @@
 
       mailTo: mailTo,
       toUriString: toUriString,
+      filterKeyInXml: filterKeyInXml,
+      filterKeyInObject: filterKeyInObject,
     };
 
     return service;
@@ -321,6 +325,34 @@
     function toUriString(params) {
       /* eslint no-undef:0 */
       return jQuery.param(params);
+    }
+
+    // Find the matched keys in the XML into an array
+    function filterKeyInXml(xmlString, key) {
+      if (_.isUndefined(xmlString) || _.isUndefined(key)) {
+        return [];
+      }
+
+      // Convert xml to a json object
+      var x2js = new X2JS();
+      var obj = x2js.xml2js(xmlString);
+      return _.isObject(obj) ? filterKeyInObject(obj, key) : [];
+    }
+
+    // Find the matched keys in the JSON object into an array
+    function filterKeyInObject(obj, key) {
+      if (!_.isObject(obj)) {
+        return [];
+      }
+
+      if (_.has(obj, key)) {
+        return [obj[key]];
+      }
+
+      // flatten the returned array
+      return _.flattenDeep(_.map(obj, function (i) {
+        return _.isObject(i) ? filterKeyInObject(i, key) : [];
+      }));
     }
   }
 })();

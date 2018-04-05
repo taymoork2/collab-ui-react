@@ -4,6 +4,7 @@ describe('Utils', function () {
   beforeEach(angular.mock.module('Core'));
 
   var Utils;
+  var certificateTestData = _.cloneDeep(getJSONFixture('core/json/sso/test-certificates.json'));
 
   beforeEach(inject(function (_Utils_) {
     Utils = _Utils_;
@@ -39,6 +40,15 @@ describe('Utils', function () {
     it('nearly valid UUID', function () {
       // xxxxxxx-xxxx-7xxx-xxxx-xxxxxxxxxxxx
       uuid = 'df358550-0258-71e6-8d22-5e5517507c66';
+    });
+  });
+
+  describe('function utils.filterKeyInXml', function () {
+    it('should pass with a valid Metadata XML', function () {
+      var idpMetadataXml = certificateTestData.idpMetadataXml;
+      var ssoServices = Utils.filterKeyInXml(idpMetadataXml, 'SingleSignOnService');
+      expect(_.size(ssoServices)).toBe(2);
+      expect(ssoServices[0]['_Binding']).toBe('urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect');
     });
   });
 });

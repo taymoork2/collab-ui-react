@@ -10785,9 +10785,11 @@ x-is-string@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/x-is-string/-/x-is-string-0.1.0.tgz#474b50865af3a49a9c4657f05acd145458f77d82"
 
-"x2js@git+https://github.com/abdmob/x2js.git#v1.2.0":
-  version "1.2.0"
-  resolved "git+https://github.com/abdmob/x2js.git#185e410b3fa621070fea1f86a389b477afa216b9"
+x2js@~3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/x2js/-/x2js-3.2.1.tgz#d7d9eb3ab14a31a98068b9eba1bb1b9397c96714"
+  dependencies:
+    xmldom "^0.1.19"
 
 xml-char-classes@^1.0.0:
   version "1.0.0"
@@ -10815,7 +10817,7 @@ xmlbuilder@>=1.0.0, xmlbuilder@~9.0.1:
   version "9.0.4"
   resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-9.0.4.tgz#519cb4ca686d005a8420d3496f3f0caeecca580f"
 
-xmldom@^0.1.22:
+xmldom@^0.1.19, xmldom@^0.1.22:
   version "0.1.27"
   resolved "https://registry.yarnpkg.com/xmldom/-/xmldom-0.1.27.tgz#d501f97b3bdb403af8ef9ecc20573187aadac0e9"
 
