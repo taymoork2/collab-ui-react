@@ -33,6 +33,7 @@ export class TemplateWizardService {
     offHoursValid: false,
     isAgentUnavailableValid: false,
     isFeedbackValid: false,
+    isChatEscalationValid: false,
   };
 
   //TODO: to set it from the right page
@@ -235,7 +236,7 @@ export class TemplateWizardService {
     //TODO: Dummy impl:  to populate the eva config from chatEscalation page
     this.evaConfig = {
       isEvaFlagEnabled: this.featureFlags.isEvaFlagEnabled,
-      isEvaConfigured: true,
+      isEvaConfigured: false,
     };
 
   }
@@ -400,7 +401,7 @@ export class TemplateWizardService {
       this.logoFile = 'data:image/png;base64,' + this.$window.btoa(String.fromCharCode.apply(null, new Uint8Array(data.data)));
       this.logoUploaded = true;
     });
-     //Should invoke VA config only for chat and chat+callback templates
+    //Should invoke VA config only for chat and chat+callback templates
     if (this.isCareAssistantEnabled && this.selectedMediaType() !== MediaTypes.callback) {
       this.CvaService.listConfigs().then((result) => {
         this.configuredVirtualAssistantServices = result.items;
