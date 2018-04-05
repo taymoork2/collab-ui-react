@@ -9029,6 +9029,7 @@
       "WEBEX": "WebEx Audio",
       "VoIPOnly": "VoIP Only",
       "CCASP": "CCA-SP",
+      "CCAUser": "CCA-SP User",
       "TSP": "TSP Audio",
       "ST": "WebEx Storage",
       "STSPK": "Spark Storage",

@@ -113,12 +113,19 @@
     }
 
     function fetchPendingSubscriptionInfo() {
+      var audioLicense = SetupWizardService.getPendingAudioLicense();
+      var meetingLicenses = SetupWizardService.getPendingMeetingLicenses();
+
+      if (!_.isUndefined(audioLicense)) {
+        meetingLicenses.push(audioLicense);
+      }
+
       // TODO update this logic when Room licenses are implemented.
       vm.pendingLicenses = [
         {
           title: $translate.instant('firstTimeWizard.meeting'),
           icon: 'icon-circle-group',
-          licenses: SetupWizardService.getPendingMeetingLicenses().concat(SetupWizardService.getPendingAudioLicenses()),
+          licenses: meetingLicenses,
         },
         {
           title: $translate.instant('firstTimeWizard.call'),
