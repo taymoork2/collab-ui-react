@@ -33,7 +33,7 @@ export class CsdmBulkService {
         deviceUris: deviceUris,
         updateCommand: really
           ? { type: 'delete', deleteEmptyPlaces: deleteEmptyPlaces }
-          : { type: 'longRun', sleepTimeInMilliSeconds: 1000 },
+          : { type: 'longRun', sleepTimeInMilliSeconds: 111 },
         async: true,
       });
   }
