@@ -8390,7 +8390,38 @@
     "helpTextWaitingEVA": "I clienti visualizzano questo messaggio mentre attendono una risposta alla loro richiesta.",
     "waitingMessageEVA": "Qualcuno offrirà assistenza a breve…",
     "helpTextLeaveRoomEVA": "I clienti visualizzano questo messaggio quando l'utente che interagisce con loro termina la chat.",
-    "leaveRoomMessageEVA": "Chat terminata"
+    "leaveRoomMessageEVA": "Chat terminata",
+    "templateConfig": {
+      "default": {
+        "feedbackQueryCall": "Valutare l'esperienza di richiamata.",
+        "additionalDetailsAbtIssue": "Descrivere il problema che si è verificato",
+        "chattingMessage": "Chat in corso...",
+        "defaultPhoneHintText": "+12345556789",
+        "defaultPromptMessage": "Entrare in chat con gli specialisti della soluzione per ricevere un'assistenza migliore.",
+        "ratingComment": "Aggiungi commenti",
+        "feedbackQuery": "Valuta la tua esperienza di chat",
+        "offHoursDefaultMessage": "Siamo attualmente offline. Riprovare durante il nostro orario lavorativo.",
+        "callbackConfirmationMsg": "Richiesta di richiamata ricevuta correttamente.",
+        "defaultEmailText": "E-mail",
+        "field3HintText": "Selezionare dall'elenco o digitare",
+        "defaultWelcomeText": "Benvenuto in",
+        "connectingMessage": "Connessione a un agente",
+        "defaultNameHint": "",
+        "enterRoomMessage": "L'agente è entrato nella chatroom",
+        "defaultQuestionText": "Come posso aiutarti?",
+        "leaveRoomMessage": "L'agente è uscito dalla chat",
+        "waitingMessageEVA": "Qualcuno offrirà assistenza a breve…",
+        "virtualAssistantWelcomeMessage": "Salve, come posso essere di aiuto oggi?",
+        "defaultNameText": "Nome",
+        "waitingMessage": "In attesa di un agente...",
+        "defaultPhoneText": "Numero di telefono",
+        "additionalDetails": "Ulteriori dettagli",
+        "bubbleTitleMessage": "Fare clic qui per chat con assistenza clienti",
+        "defaultEmail": "ad esempio, abc@xyz.com",
+        "agentUnavailableMessage": "Al momento non siamo disponibili. Riprova in seguito.",
+        "leaveRoomMessageEVA": "Chat terminata"
+      }
+    }
   },
   "huronHuntGroup": {
     "modalTitle": "Gruppo di risposta",

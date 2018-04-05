@@ -8390,7 +8390,38 @@
     "helpTextWaitingEVA": "Klanten zien dit bericht als ze wachten op een reactie op hun bericht.",
     "waitingMessageEVA": "Iemand zal u snel helpen...",
     "helpTextLeaveRoomEVA": "Klanten zien dit bericht als de gebruiker die met hun communiceert, de chat beëindigt.",
-    "leaveRoomMessageEVA": "Chat is beëindigd"
+    "leaveRoomMessageEVA": "Chat is beëindigd",
+    "templateConfig": {
+      "default": {
+        "feedbackQueryCall": "Beoordeel uw terugbelervaring.",
+        "additionalDetailsAbtIssue": "Beschrijf het probleem dat u ervaart",
+        "chattingMessage": "Bezig met chatten...",
+        "defaultPhoneHintText": "+12345556789",
+        "defaultPromptMessage": "Chat met onze oplossingsspecialisten. Zij kunnen u beter van dienst zijn.",
+        "ratingComment": "Opmerkingen toevoegen",
+        "feedbackQuery": "Beoordeel uw chatervaring",
+        "offHoursDefaultMessage": "We zijn momenteel offline. Probeer het opnieuw tijdens kantooruren.",
+        "callbackConfirmationMsg": "Terugbelverzoek ontvangen.",
+        "defaultEmailText": "E-mailadres",
+        "field3HintText": "Selecteer uit de lijst of het type",
+        "defaultWelcomeText": "Welkom bij",
+        "connectingMessage": "U wordt doorverbonden met een agent",
+        "defaultNameHint": "",
+        "enterRoomMessage": "Agent is de chatruimte binnengekomen",
+        "defaultQuestionText": "Waar kan ik u mee helpen?",
+        "leaveRoomMessage": "De agent heeft de chat verlaten",
+        "waitingMessageEVA": "Iemand zal u snel helpen...",
+        "virtualAssistantWelcomeMessage": "Hallo, wat kan ik voor u doen?",
+        "defaultNameText": "Naam",
+        "waitingMessage": "Wachten op een agent...",
+        "defaultPhoneText": "Telefoonnummer",
+        "additionalDetails": "Aanvullende details",
+        "bubbleTitleMessage": "Klik hier om te chatten met Klantenservice",
+        "defaultEmail": "bijvoorbeeld abc@xyz.com",
+        "agentUnavailableMessage": "We zijn op dit moment niet beschikbaar. Probeer het later opnieuw.",
+        "leaveRoomMessageEVA": "Chat is beëindigd"
+      }
+    }
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt-groep",

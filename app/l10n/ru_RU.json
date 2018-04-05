@@ -8390,7 +8390,38 @@
     "helpTextWaitingEVA": "Клиентам отображается это сообщение во время ожидания ответа на запрос.",
     "waitingMessageEVA": "Помощь будет предоставлена в ближайшее время…",
     "helpTextLeaveRoomEVA": "Клиентам отображается это сообщение при завершении чата пользователем, с которым осуществлялось взаимодействие.",
-    "leaveRoomMessageEVA": "Чат завершен"
+    "leaveRoomMessageEVA": "Чат завершен",
+    "templateConfig": {
+      "default": {
+        "feedbackQueryCall": "Оцените свои впечатления от обратного вызова.",
+        "additionalDetailsAbtIssue": "Опишите проблему, с которой вы столкнулись",
+        "chattingMessage": "Выполняется чат...",
+        "defaultPhoneHintText": "+12345556789",
+        "defaultPromptMessage": "Для повышения качества обслуживания предлагаем вам пообщаться с нашими специалистами.",
+        "ratingComment": "Добавить комментарии",
+        "feedbackQuery": "Оцените свои впечатления от работы",
+        "offHoursDefaultMessage": "В данный момент мы не в сети. Повторите попытку в рабочее время.",
+        "callbackConfirmationMsg": "Запрос обратного вызова успешно получен.",
+        "defaultEmailText": "Адрес электронной почты",
+        "field3HintText": "Выберите необходимое в списке или введите собственный текст",
+        "defaultWelcomeText": "Добро пожаловать в",
+        "connectingMessage": "Соединение с оператором",
+        "defaultNameHint": "",
+        "enterRoomMessage": "Оператор вошел в комнату чата",
+        "defaultQuestionText": "Чем я могу вам помочь?",
+        "leaveRoomMessage": "Оператор покинул чат",
+        "waitingMessageEVA": "Помощь будет предоставлена в ближайшее время…",
+        "virtualAssistantWelcomeMessage": "Здравствуйте. Чем я могу вам помочь?",
+        "defaultNameText": "Имя",
+        "waitingMessage": "Ожидание оператора...",
+        "defaultPhoneText": "Номер телефона",
+        "additionalDetails": "Дополнительные сведения",
+        "bubbleTitleMessage": "Щелкните здесь, чтобы начать чат со службой поддержки клиентов",
+        "defaultEmail": "например abc@xyz.com",
+        "agentUnavailableMessage": "К сожалению, мы недоступны в данный момент. Повторите попытку позднее.",
+        "leaveRoomMessageEVA": "Чат завершен"
+      }
+    }
   },
   "huronHuntGroup": {
     "modalTitle": "Группа поиска",

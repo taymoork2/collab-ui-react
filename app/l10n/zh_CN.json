@@ -8390,7 +8390,38 @@
     "helpTextWaitingEVA": "客户在等待对其请求的答复时会看到此消息。",
     "waitingMessageEVA": "很快就会有人来帮助您…",
     "helpTextLeaveRoomEVA": "客户在与其交互的用户结束聊天时会看到此消息。",
-    "leaveRoomMessageEVA": "聊天已结束"
+    "leaveRoomMessageEVA": "聊天已结束",
+    "templateConfig": {
+      "default": {
+        "feedbackQueryCall": "请评价您的回呼体验。",
+        "additionalDetailsAbtIssue": "描述您当前碰到的问题",
+        "chattingMessage": "正在聊天...",
+        "defaultPhoneHintText": "+12345556789",
+        "defaultPromptMessage": "与我们的解决方案专家沟通可以帮助您获得更好的服务。",
+        "ratingComment": "添加评论",
+        "feedbackQuery": "请评价您对聊天的感受",
+        "offHoursDefaultMessage": "我们目前已经下班，请在工作时间内重试。",
+        "callbackConfirmationMsg": "已成功收到回呼请求。",
+        "defaultEmailText": "电子邮件地址",
+        "field3HintText": "从列表或类型中选择",
+        "defaultWelcomeText": "欢迎进入",
+        "connectingMessage": "正在连接客服",
+        "defaultNameHint": "",
+        "enterRoomMessage": "客服已进入聊天室",
+        "defaultQuestionText": "我能帮您吗？",
+        "leaveRoomMessage": "客服已离开聊天",
+        "waitingMessageEVA": "很快就会有人来帮助您…",
+        "virtualAssistantWelcomeMessage": "您好，今天有什么要我帮忙吗？",
+        "defaultNameText": "名称",
+        "waitingMessage": "正在等待客服...",
+        "defaultPhoneText": "电话号码",
+        "additionalDetails": "更多详细信息",
+        "bubbleTitleMessage": "单击此处开始与客服聊天",
+        "defaultEmail": "例如 abc@xyz.com",
+        "agentUnavailableMessage": "对不起，我们此刻不工作。请稍后重试。",
+        "leaveRoomMessageEVA": "聊天已结束"
+      }
+    }
   },
   "huronHuntGroup": {
     "modalTitle": "寻线组",

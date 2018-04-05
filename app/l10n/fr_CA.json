@@ -8390,7 +8390,38 @@
     "helpTextWaitingEVA": "Les clients voient ce message en attendant une réponse à leur demande.",
     "waitingMessageEVA": "Quelqu’un vous aidera sous peu...",
     "helpTextLeaveRoomEVA": "Les clients voient ce message lorsque l’utilisateur qui interagit avec eux termine le clavardage.",
-    "leaveRoomMessageEVA": "Le clavardage est terminé"
+    "leaveRoomMessageEVA": "Le clavardage est terminé",
+    "templateConfig": {
+      "default": {
+        "feedbackQueryCall": "Veuillez noter votre expérience de rappel précédente",
+        "additionalDetailsAbtIssue": "Décrivez les problèmes que vous rencontrez",
+        "chattingMessage": "Clavardage en cours...",
+        "defaultPhoneHintText": "+12345556789",
+        "defaultPromptMessage": "Clavardez avec nos spécialistes afin que nous puissions mieux vous servir.",
+        "ratingComment": "Ajouter des commentaires",
+        "feedbackQuery": "Veuillez noter votre expérience de clavardage",
+        "offHoursDefaultMessage": "Nous sommes actuellement hors ligne, veuillez réessayer durant nos heures d’ouverture.",
+        "callbackConfirmationMsg": "Demande de rappel reçue avec succès.",
+        "defaultEmailText": "Courriel",
+        "field3HintText": "Faites votre choix dans la liste ou tapez",
+        "defaultWelcomeText": "Bienvenue chez",
+        "connectingMessage": "Connexion à un agent",
+        "defaultNameHint": "",
+        "enterRoomMessage": "L’agent est entré dans la salle de clavardage",
+        "defaultQuestionText": "Comment puis-je vous aider?",
+        "leaveRoomMessage": "L’agent a quitté le clavardage",
+        "waitingMessageEVA": "Quelqu’un vous aidera sous peu...",
+        "virtualAssistantWelcomeMessage": "Bonjour, comment puis-je vous aider aujourd’hui?",
+        "defaultNameText": "Nom",
+        "waitingMessage": "En attente d’un agent...",
+        "defaultPhoneText": "Numéro de téléphone",
+        "additionalDetails": "Renseignements supplémentaires",
+        "bubbleTitleMessage": "Cliquez ici pour le service à la clientèle",
+        "defaultEmail": "e.g. abc@xyz.com",
+        "agentUnavailableMessage": "Désolés, nous ne sommes pas disponibles en ce moment. Veuillez réessayer ultérieurement.",
+        "leaveRoomMessageEVA": "Le clavardage est terminé"
+      }
+    }
   },
   "huronHuntGroup": {
     "modalTitle": "Groupe de recherche",
