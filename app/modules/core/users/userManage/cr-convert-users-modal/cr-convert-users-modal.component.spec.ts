@@ -9,8 +9,11 @@ type Test = atlas.test.IComponentTest<CrConvertUsersModalController, {
   Authinfo;
   AutoAssignTemplateModel;
   DirSyncService;
+  FeatureToggleService;
+  mock;
   OnboardStore;
   Orgservice;
+  uiGridConstants;
 }, {}>;
 
 describe('Component: crConvertUsersModal:', () => {
@@ -23,13 +26,27 @@ describe('Component: crConvertUsersModal:', () => {
       'Analytics',
       'Authinfo',
       'AutoAssignTemplateModel',
+      'FeatureToggleService',
       'DirSyncService',
       'OnboardStore',
       'Orgservice',
+      'uiGridConstants',
     );
-    spyOn(this.Authinfo, 'getOrgId').and.returnValue('fake-org-id');
+    initSpies.call(this);
   });
 
+  function initSpies() {
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue('fake-org-id');
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
+
+    this.mock = {
+      unlicensedUsers: getJSONFixture('core/json/organizations/unlicensedUsers.json'),
+    };
+
+    spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(callback => {
+      callback(this.mock.unlicensedUsers, 200);
+    });
+  }
 
   function initFakeGridApi() {
     const fakeGridApi = {};
@@ -64,19 +81,13 @@ describe('Component: crConvertUsersModal:', () => {
 
     describe('getUnlicensedUsers():', () => {
       it('should call "Orgservice.getUnlicensedUsers()" and update "unlicensed" and "showSearch" properties', function (this: Test) {
-        // success response
-        spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(function (callback) {
-          callback({
-            success: true,
-            totalResults: 1,
-          });
-        });
         this.compileComponent('crConvertUsersModal', {});
         this.controller.getUnlicensedUsers();
         this.$scope.$apply();
+
         expect(this.Orgservice.getUnlicensedUsers).toHaveBeenCalled();
         expect(this.controller.showSearch).toBe(true);
-        expect(this.controller.unlicensed).toBe(1);
+        expect(this.controller.unlicensed).toBe(2);
 
         // failure response
         this.Orgservice.getUnlicensedUsers.and.callFake(function (callback) {
@@ -145,41 +156,32 @@ describe('Component: crConvertUsersModal:', () => {
       });
     });
 
-    describe('saveConvertList():', () => {
+    describe('onClickNext():', () => {
       beforeEach(function () {
         spyOn(this.$state, 'go');
-        spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(function (callback) {
-          callback({
-            success: true,
-            totalResults: 1,
-            resources: [{
-              id: 'fake-user-id-1',
-            }],
-          });
-        });
         this.compileComponent('crConvertUsersModal', {});
         initFakeGridApi.call(this);
       });
 
       it('should always set "scopeData.convertUsersFlow" to true', function (this: Test) {
-        this.controller.saveConvertList();
+        this.controller.onClickNext();
         expect(this.controller.scopeData.convertUsersFlow).toBe(true);
       });
 
       it('should set "scopeData.*" properties from respective "gridApi.*" methods', function (this: Test) {
         spyOn(this.controller.gridApi.saveState, 'save').and.returnValue('fake-save-state-data');
         spyOn(this.controller.gridApi.selection, 'getSelectedRows').and.returnValue(['fake-getSelectedRows-data']);
-        this.controller.saveConvertList();
+        this.controller.onClickNext();
         expect(this.controller.scopeData.selectedState).toBe('fake-save-state-data');
         expect(this.controller.scopeData.convertSelectedList).toEqual(['fake-getSelectedRows-data']);
       });
 
       it('should go to either "users.convert.auto-assign-license-summary" or "users.convert.services" states depending on "AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated"', function (this: Test) {
-        this.controller.saveConvertList();
+        this.controller.onClickNext();
         expect(this.$state.go).toHaveBeenCalledWith('users.convert.services', {});
 
         this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = true;
-        this.controller.saveConvertList();
+        this.controller.onClickNext();
         expect(this.$state.go).toHaveBeenCalledWith('users.convert.auto-assign-license-summary');
       });
     });
@@ -193,6 +195,7 @@ describe('Component: crConvertUsersModal:', () => {
 
       it('should return true if "gridApi" property does not yet exist', function (this: Test) {
         this.compileComponent('crConvertUsersModal', {});
+        delete this.controller.gridApi;
         expect(this.controller.gridApi).not.toBeDefined();
         expect(this.controller.convertDisabled()).toBe(true);
       });
@@ -210,6 +213,52 @@ describe('Component: crConvertUsersModal:', () => {
         initFakeGridApi.call(this);
         spyOn(this.controller.gridApi.selection, 'getSelectedRows').and.returnValue(['fake-selected-row-data']);
         expect(this.controller.convertDisabled()).toBe(false);
+      });
+    });
+
+    describe('F7208 GDPR feature', function () {
+      it('should set ftF7208 to true when feature toggle on', function () {
+        this.FeatureToggleService.supports.and.callFake(toggle => {
+          return this.$q.resolve(toggle === this.FeatureToggleService.features.atlasF7208GDPRConvertUser);
+        });
+        this.compileComponent('crConvertUsersModal', {});
+        this.$scope.$apply();
+        expect(this.controller.ftF7208).toBe(true);
+        expect(this.controller.getPotentialUsersList().length).toBe(0);
+        expect(this.controller.getPendingUsersList().length).toBe(0);
+      });
+
+      it('should set ftF7208 to false when feature toggle off', function () {
+        this.compileComponent('crConvertUsersModal', {});
+        this.$scope.$apply();
+        expect(this.controller.ftF7208).toBe(false);
+        expect(this.controller.getPendingUsersList().length).toBe(0);
+        expect(this.controller.getPotentialUsersList().length).toBe(0);
+      });
+
+      describe('tab switching', function () {
+        beforeEach(function () {
+          this.FeatureToggleService.supports.and.callFake(toggle => {
+            return this.$q.resolve(toggle === this.FeatureToggleService.features.atlasF7208GDPRConvertUser);
+          });
+          this.compileComponent('crConvertUsersModal', {});
+          initFakeGridApi.call(this);
+          this.$scope.$apply();
+        });
+
+        it('should change tabs when "selectTab" method used', function () {
+          expect(this.controller.getSelectedTab()).toBe(this.controller.POTENTIAL); // default selection
+          expect(this.controller.isPotentialTabSelected()).toBe(true);
+          expect(this.controller.isPendingTabSelected()).toBe(false);
+          expect(this.controller.getSelectedListCount()).toBe(0);
+
+          this.controller.selectTab(this.controller.PENDING);
+          this.$scope.$apply();
+          expect(this.controller.getSelectedTab()).toBe(this.controller.PENDING);
+          expect(this.controller.isPotentialTabSelected()).toBe(false);
+          expect(this.controller.isPendingTabSelected()).toBe(true);
+          expect(this.controller.getSelectedListCount()).toBe(0);
+        });
       });
     });
   });

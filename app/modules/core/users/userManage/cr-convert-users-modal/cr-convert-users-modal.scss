@@ -22,6 +22,37 @@ cr-convert-users-modal {
     margin-bottom: 10px;
   }
 
+  &__bottom-space--50 {
+    margin-bottom: 0.5rem;
+  }
+
+  &__bottom-space--150 {
+    margin-bottom: 1.50rem;
+  }
+
+  &__grid-filter {
+    & + & {
+      margin-left: 1.5rem;
+    }
+    &--active {
+      color: $color-blue-base;
+    }
+    &--inactive {
+      color: $gray-base;
+    }
+  }
+
+  &__csvDownload {
+    display: flex;
+    float: right;
+    color: $gray-base;
+
+    .csv-simple-export {
+      margin: 0px;
+      padding: 0px;
+    }
+  }
+
   .search {
     width: 100%;
     position: relative;
