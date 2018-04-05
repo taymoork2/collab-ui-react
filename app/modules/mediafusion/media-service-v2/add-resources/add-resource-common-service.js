@@ -10,6 +10,7 @@
     vm.clusterList = [];
     vm.selectedClusterId = '';
     vm.currentServiceId = 'squared-fusion-media';
+    vm.releaseChannel = 'stable';
 
     // Forming clusterList which contains all cluster name of type mf_mgmt and sorting it.
     function updateClusterLists() {
@@ -67,6 +68,7 @@
         var deferred = $q.defer();
         HybridServicesClusterService.preregisterCluster(enteredCluster, 'stable', 'mf_mgmt')
           .then(function (resp) {
+            vm.releaseChannel = resp.releaseChannel;
             vm.selectedClusterId = resp.id;
             // Add the created cluster to property set
             MediaClusterServiceV2.getPropertySets()
@@ -95,6 +97,7 @@
           });
         return deferred.promise;
       } else {
+        vm.releaseChannel = vm.clusterDetail.releaseChannel;
         vm.selectedClusterId = vm.clusterDetail.id;
         return whiteListHost(hostName, vm.selectedClusterId);
       }
@@ -105,7 +108,7 @@
     }
 
     function redirectPopUpAndClose(hostName, enteredCluster) {
-      vm.popup = $window.open('https://' + encodeURIComponent(hostName) + '/?clusterName=' + encodeURIComponent(enteredCluster) + '&clusterId=' + encodeURIComponent(vm.selectedClusterId));
+      vm.popup = $window.open('https://' + encodeURIComponent(hostName) + '/?clusterName=' + encodeURIComponent(enteredCluster) + '&clusterId=' + encodeURIComponent(vm.selectedClusterId) + '&channel=' + encodeURIComponent(vm.releaseChannel));
     }
 
     function enableMediaServiceEntitlements() {
@@ -116,10 +119,16 @@
       return MediaServiceActivationV2.enableMediaService(vm.currentServiceId);
     }
 
+    function validateHostName(hostName) {
+      var regex = new RegExp(/^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)|((?!:\/\/)([a-zA-Z0-9-]+\.)?[a-zA-Z0-9-][a-zA-Z0-9-]+\.[a-zA-Z]{2,6}))$/g);
+      return regex.test(hostName);
+    }
+
     function createFirstTimeSetupCluster(hostName, enteredCluster) {
       var deferred = $q.defer();
       HybridServicesClusterService.preregisterCluster(enteredCluster, 'stable', 'mf_mgmt').then(function (result) {
         deferred.resolve();
+        vm.releaseChannel = result.releaseChannel;
         vm.selectedClusterId = result.id;
         // Cluster created, now creating a property set for video quality
         var payLoad = {
@@ -159,6 +168,7 @@
       enableMediaServiceEntitlements: enableMediaServiceEntitlements,
       createFirstTimeSetupCluster: createFirstTimeSetupCluster,
       enableMediaService: enableMediaService,
+      validateHostName: validateHostName,
     };
   }
   angular

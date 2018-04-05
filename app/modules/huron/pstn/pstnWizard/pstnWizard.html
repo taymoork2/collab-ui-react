@@ -2,12 +2,12 @@
 
 <!-- header -->
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$ctrl.dismissModal()" aria-label="{{::'common.close' | translate}}"></button>
+  <button ng-if="!$ctrl.ftsw" type="button" class="close" ng-click="$ctrl.dismissModal()" aria-label="{{::'common.close' | translate}}"></button>
   <h3 class="modal-title">{{$ctrl.titles[$ctrl.step]}}</h3>
 </div>
 
 <!-- body -->
-<div class="modal-body" ng-class="{trials: $ctrl.step === 4}">
+<div class="modal-body" ng-class="{trials: $ctrl.step === 4}" ng-style="$ctrl.ftsw && {'overflow-x':'hidden'}">
   <div ng-if="$ctrl.step === 1">
     <uc-pstn-providers
       ng-if="$ctrl.enableCarriers"
@@ -38,7 +38,7 @@
     </emergency-services>
   </div>
   <div ng-if="$ctrl.step === 4" class="pstn-selector-container">
-    <div class="flex-container">
+    <div class="flex-container" ng-class="{'ftsw-adjust': $ctrl.ftsw}">
       <cs-tabset class="flex-2" justified="false">
         <cs-tab>
           <cs-tab-heading translate="pstnSetup.newNumbersTab"></cs-tab-heading>
@@ -165,7 +165,7 @@
       <span ng-show="$ctrl.portOrders.length"><i class="icon icon-information left"></i><span class="h5 left" translate="pstnSetup.nextStepPrompt2"></span></span>
       </h2>
       <div>
-        <button class="left btn btn--people" ng-click="$ctrl.launchCustomerPortal()" translate="pstnSetup.launchPortal">
+        <button ng-if="!$ctrl.ftsw" class="left btn btn--people" ng-click="$ctrl.launchCustomerPortal()" translate="pstnSetup.launchPortal">
         </button>
       </div>
     </div>
@@ -231,7 +231,7 @@
     translate="common.back">
   </button>
   <button id="wizardBtn" class="btn btn--primary" type="button" cs-btn loading="$ctrl.placeOrderLoad"
-    ng-click="$ctrl.nextStep()" ng-disabled="$ctrl.nextDisabled()">
+    ng-click="$ctrl.nextStep()" ng-disabled="$ctrl.nextDisabled()" ng-hide="($ctrl.step === 7 && $ctrl.ftsw)">
     <span ng-if="$ctrl.step === 6" translate="pstnSetup.placeOrder"></span>
     <span ng-if="$ctrl.step === 7 || $ctrl.step === 11" translate="common.done"></span>
     <span ng-if="!($ctrl.step === 6 || $ctrl.step === 7 || $ctrl.step === 8 || $ctrl.step === 10 || $ctrl.step === 11)" translate="common.next"></span>

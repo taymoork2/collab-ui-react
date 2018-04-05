@@ -1,4 +1,6 @@
 require('./_overview.scss');
+var SsoCertExpNotificationService = require('modules/core/overview/notifications/ssoCertificateExpirationNotification.service').SsoCertificateExpirationNotificationService;
+
 (function () {
   'use strict';
 
@@ -16,6 +18,7 @@ require('./_overview.scss');
     CardUtils,
     CloudConnectorService,
     Config,
+    EvaService,
     FeatureToggleService,
     HybridServicesClusterService,
     HybridServicesFlagService,
@@ -32,6 +35,8 @@ require('./_overview.scss');
     ReportsService,
     ServiceDescriptorService,
     SetupWizardService,
+    SsoCertificateExpirationNotificationService,
+    SsoCertificateService,
     SubscriptionWithUnsyncedLicensesNotificationService,
     SunlightReportService,
     SunlightUtilitiesService,
@@ -47,6 +52,7 @@ require('./_overview.scss');
     vm.isCSB = Authinfo.isCSB();
     vm.isDeviceManagement = Authinfo.isDeviceMgmt();
     vm.orgData = null;
+    vm.atlasF3745AutoAssignLicensesToggle = false;
 
     var hybridCallHighAvailability = 'atlas.notification.squared-fusion-uc-high-availability.acknowledged';
     var allHybridCalendarsNotification = 'atlas.notification.squared-fusion-all-calendars.acknowledged';
@@ -72,18 +78,24 @@ require('./_overview.scss');
     vm.showUserTaskManagerModal = showUserTaskManagerModal;
 
     ////////////////////////////////
+
     $q.all({
       enabledNotPurchased: ProPackService.hasProPackEnabledAndNotPurchased(),
       purchased: ProPackService.hasProPackPurchased(),
-    }).then(function (proPackToggle) {
-      proPackPurchased = proPackToggle.purchased;
+      broadsoft: FeatureToggleService.supports(FeatureToggleService.features.hI1776),
+    }).then(function (response) {
+      proPackPurchased = response.purchased;
 
-      if (proPackToggle.enabledNotPurchased && isEnterpriseCustomer()) {
+      if (response.enabledNotPurchased && isEnterpriseCustomer()) {
         $scope.$watch(function () {
           return LearnMoreBannerService.isElementVisible(LearnMoreBannerService.OVERVIEW_LOCATION);
         }, function (visible) {
           vm.showLearnMoreNotification = !visible;
         });
+      }
+
+      if (response.broadsoft) {
+        vm.cards.splice(2, 0, OverviewCardFactory.createBroadsoftCard());
       }
 
       init();
@@ -224,6 +236,7 @@ require('./_overview.scss');
       $q.all({
         orgDetails: Orgservice.getOrg(_.noop, Authinfo.getOrgId(), params),
         featureToggle: FeatureToggleService.supports(FeatureToggleService.features.hybridCare),
+        isAtlasSsoCertificateUpdateToggled: FeatureToggleService.atlasSsoCertificateUpdateGetStatus(),
         pt: PrivateTrunkService.getPrivateTrunk(),
         ept: ServiceDescriptorService.getServiceStatus('ept'),
       }).then(function (response) {
@@ -258,7 +271,9 @@ require('./_overview.scss');
               .createCareLicenseNotification('homePage.careLicenseCallMissingTextToggle', 'careChatTpl.learnMoreLink', FeatureToggleService));
           }
         }
+
         checkForUnsyncedSubscriptionLicenses();
+        checkForSsoCertificateExpiration(response.isAtlasSsoCertificateUpdateToggled);
       }).catch(function (response) {
         Notification.errorWithTrackingId(response, 'firstTimeWizard.sparkDomainManagementServiceErrorMessage');
       });
@@ -291,6 +306,7 @@ require('./_overview.scss');
       });
 
       FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus().then(function (toggle) {
+        vm.atlasF3745AutoAssignLicensesToggle = toggle;
         if (toggle) {
           AutoAssignTemplateService.hasDefaultTemplate().then(function (hasDefaultTemplate) {
             if (!hasDefaultTemplate) {
@@ -303,6 +319,31 @@ require('./_overview.scss');
       TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
         vm.trialDaysLeft = daysLeft;
       });
+    }
+
+    // Show Warning if there is an EVA that's missing default expert space
+    if (Authinfo.isCare() && Authinfo.isCustomerAdmin()) {
+      FeatureToggleService.supports(FeatureToggleService.features.atlasExpertVirtualAssistantEnable)
+        .then(function (isEnabled) {
+          if (isEnabled) {
+            EvaService.getMissingDefaultSpaceEva()
+              .then(function (eva) {
+                if (!_.isEmpty(eva)) {
+                  var linkText = 'homePage.goToEditNow';
+                  var text = 'homePage.evaMissingDefaultSpace';
+                  var owner = '';
+                  var access = EvaService.canIEditThisEva(eva);
+                  if (!access) {
+                    linkText = '';
+                    text = 'homePage.evaMissingDefaultSpaceAndNoPermission';
+                    owner = EvaService.getEvaOwner(eva);
+                  }
+                  vm.notifications.push(OverviewNotificationFactory.createEvaMissingDefaultSpaceNotification($state, eva, linkText, text, owner));
+                  resizeNotifications();
+                }
+              });
+          }
+        });
     }
 
     if (Authinfo.isCare() && Authinfo.isCustomerAdmin()) {
@@ -320,6 +361,30 @@ require('./_overview.scss');
           vm.notifications.push(SubscriptionWithUnsyncedLicensesNotificationService.createNotification(unsyncedSubscription));
         });
       });
+    }
+
+    function checkForSsoCertificateExpiration(isAtlasSsoCertificateUpdateToggled) {
+      var ssoEnabled = _.get(vm.orgData, 'ssoEnabled');
+
+      if (!ssoEnabled || !isAtlasSsoCertificateUpdateToggled) {
+        return;
+      }
+
+      SsoCertificateService.getOrgCertificates()
+        .then(function (certificates) {
+          var primaryCert = _.find(certificates, { primary: true });
+          if (_.isUndefined(primaryCert)) {
+            return;
+          }
+
+          var today = moment();
+          var certificateExpirationDate = moment(_.get(primaryCert, 'expirationDate'));
+          var daysDiff = certificateExpirationDate.diff(today, 'days');
+          if (daysDiff <= SsoCertExpNotificationService.CERTIFICATE_EXPIRATION_DAYS) {
+            vm.notifications.push(SsoCertificateExpirationNotificationService.createNotification(daysDiff));
+            resizeNotifications();
+          }
+        });
     }
 
     function getTOSStatus() {
@@ -475,7 +540,19 @@ require('./_overview.scss');
       });
     });
 
-    $rootScope.$watch('ssoEnabled', function (newValue, oldValue) {
+    $scope.$on('Core::ssoCertificateExpirationNotificationDismissed', function () {
+      vm.notifications = _.reject(vm.notifications, {
+        name: SsoCertExpNotificationService.SSO_CERTIFICATE_NOTIFICATION_NAME,
+      });
+    });
+
+    $scope.$on('$destroy', function () {
+      if (_.isFunction(deregisterSsoEnabledListener)) {
+        deregisterSsoEnabledListener();
+      }
+    });
+
+    var deregisterSsoEnabledListener = $rootScope.$watch('ssoEnabled', function (newValue, oldValue) {
       if (newValue !== oldValue) {
         var params = {
           disableCache: true,

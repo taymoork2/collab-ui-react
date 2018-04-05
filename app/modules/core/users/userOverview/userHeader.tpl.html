@@ -8,10 +8,10 @@
   <div class="header-info">
     <div class="header-info-wrap">
       <!-- should be removed from the tabindex when dirsyncEnabled is true because click goes nowhere -->
-      <a id="rolesChevron"
+      <a ng-click="userOverview.goToUserDetails()"
         ng-class="{'default-cursor': userOverview.dirsyncEnabled || userOverview.hasLinkedSites}"
-        ng-click="userOverview.goToUserDetails()"
-        tabindex="{{userOverview.dirsyncEnabled || userOverview.hasLinkedSites ? -1 : 0}}">
+        tabindex="{{userOverview.dirsyncEnabled || userOverview.hasLinkedSites ? -1 : 0}}"
+      >
         <i class="feature-arrow"></i>
         <div class="header-title">
           <span>{{userOverview.titleCard}}</span>

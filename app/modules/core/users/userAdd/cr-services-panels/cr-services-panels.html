@@ -217,8 +217,10 @@
         <div class="entitle-check-grp" ng-show="multipleSubscriptions.showCareLicenses($ctrl.careFeatures)">
           <div class="ckbx" id="paidCare">
             <div class="cs-checkbox-group">
-              <fieldset ng-disabled="!$ctrl.radioStates.msgRadio">
-                <div class="under-careradio-reposition">
+              <fieldset ng-disabled="$ctrl.isCareRadioFieldSetDisabled()">
+                <div class="under-careradio-reposition" tooltip="{{::'onboardModal.contextUnauthorized' | translate}}" tooltip-trigger="focus mouseenter"
+                     tooltip-animation="false" tooltip-enable="$ctrl.showCareRadioTooltip()" tooltip-placement="top"
+                     aria-label="{{::'onboardModal.contextUnauthorized' | translate}}" tabindex="0">
                   <input
                   cs-input
                   type="radio"
@@ -229,7 +231,10 @@
                   cs-input-label="{{::$ctrl.careRadioValue.NONE}}">
                 </div>
 
-                <div ng-if="$ctrl.isCareAndCDCEnabled" class="under-careradio-reposition">
+                <div ng-if="$ctrl.isCareAndCDCEnabled" class="under-careradio-reposition"
+                     tooltip="{{::'onboardModal.contextUnauthorized' | translate}}" tooltip-trigger="focus mouseenter"
+                     tooltip-animation="false" tooltip-enable="$ctrl.showCareRadioTooltip()" tooltip-placement="top"
+                     aria-label="{{::'onboardModal.contextUnauthorized' | translate}}" tabindex="0">
                   <input
                     cs-input
                     type="radio"
@@ -246,7 +251,9 @@
                   </span>
                 </div>
 
-                <div ng-if="$ctrl.isCareAndCVCEnabled" class="under-careradio-reposition">
+                <div ng-if="$ctrl.isCareAndCVCEnabled" class="under-careradio-reposition" tooltip="{{::'onboardModal.contextUnauthorized' | translate}}" tooltip-trigger="focus mouseenter"
+                     tooltip-animation="false" tooltip-enable="$ctrl.showCareRadioTooltip()" tooltip-placement="top"
+                     aria-label="{{::'onboardModal.contextUnauthorized' | translate}}" tabindex="0">
                   <input
                     cs-input
                     type="radio"

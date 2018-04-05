@@ -1,0 +1,36 @@
+<div class="modal-header">
+  <button id="convertModalClose" type="button" class="close" ng-click="$ctrl.dismissModal()" aria-label="{{::'common.close' | translate}}"></button>
+  <h3 class="modal-title">
+    <span translate="homePage.convertUsers"></span>
+  </h3>
+</div>
+<div class="modal-body">
+  <p class="explanation"><span translate="homePage.convertUsersText"></span></p>
+  <h4 translate="homePage.unlicensedUsers"></h4>
+  <div class="text-center" ng-if="!$ctrl.showSearch">
+    <i class="icon icon-spinner icon-2x"></i>
+  </div>
+  <div class="search" ng-if="$ctrl.showSearch">
+    <span class="icon icon-search"></span>
+    <input type="text"
+      id="searchConvertUser"
+      placeholder="{{:: 'usersPage.convertUserSearch' | translate }}"
+      ng-model="$ctrl.scopeData.searchStr"
+      ng-change="$ctrl.filterList($ctrl.scopeData.searchStr)">
+  </div>
+  <div class="unlicensed-user-list" ng-if="$ctrl.unlicensed > 0">
+    <div class="gridStyle grid-checkbox" ui-grid="$ctrl.convertGridOptions" ui-grid-selection ui-grid-save-state></div>
+  </div>
+  <div class="noUnlicensedUsers" ng-if="$ctrl.unlicensed === 0">
+    <h2 translate="usersPage.convertUserNoneFound"></h2>
+    <h3 translate="usersPage.convertUserTryAgain"></h3>
+  </div>
+</div>
+<div class="modal-footer">
+  <button ng-if="$ctrl.manageUsers" type="button" id="btnBack" class="btn" ng-click="$ctrl.goToManageUsers()"><span translate="common.back"></span></button>
+  <button ng-if="!$ctrl.convertUsersReadOnly" id="convertNextButton" class="btn btn--lg btn--primary pull-right" ng-click="$ctrl.saveConvertList()" ng-disabled="$ctrl.convertDisabled()">
+    <span translate="common.next"></span>
+  </button>
+  <button ng-if="$ctrl.convertUsersReadOnly" class="btn btn--primary" translate="common.ok" ng-click="$ctrl.dismissModal()">
+  </button>
+</div>

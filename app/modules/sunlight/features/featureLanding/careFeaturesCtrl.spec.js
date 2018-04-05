@@ -2,7 +2,7 @@
 
 describe('Care Feature Ctrl', function () {
   var controller, $controller, $filter, $q, $rootScope, $state, $scope, Authinfo, CareFeatureList, CvaService, EvaService, aaDeferred,
-    Log, Notification, deferred, callbackDeferred, chatPlusCallbackDeferred, cvaDeferred, evaDeferred, evaSpacesDeferred, $translate,
+    Log, Notification, deferred, callbackDeferred, chatPlusCallbackDeferred, cvaDeferred, evaDeferred, $translate,
     SparkService, getPersonDeferred, FeatureToggleService, AutoAttendantCeInfoModelService, abcDeferred, AbcService;
 
   var spiedAuthinfo = {
@@ -84,11 +84,25 @@ describe('Care Feature Ctrl', function () {
       items: [
         {
           id: 'Expert Virtual Assistant Dev Config',
+          name: 'Expert Virtual Assistant Dev Config',
           email: 'test1@cisco.com',
+          spaces: [
+            {
+              default: true,
+              id: 'evaSpace1',
+              title: 'Finance',
+            },
+            {
+              id: 'evaSpace2',
+              title: 'Accounting',
+            },
+          ],
         },
         {
           id: 'Expert Virtual Assistant PR Config',
+          name: 'Expert Virtual Assistant PR Config',
           email: 'test2@cisco.com',
+          spaces: [],
         },
         {
           id: 'SomeId',
@@ -100,6 +114,8 @@ describe('Care Feature Ctrl', function () {
           name: 'Expert Virtual Assistant Different Owner Config',
           email: 'test4@cisco.com',
           ownerId: 'some_owner',
+          ownerDetails: ownerDetails,
+          spaces: [{ title: 'Room1', default: true }],
         },
       ],
     };
@@ -119,22 +135,6 @@ describe('Care Feature Ctrl', function () {
         {
           id: 'ID 3',
           name: 'Apple Business Chat Staging Config',
-        },
-      ],
-    };
-  };
-
-  var listEvaSpacesSuccess = function () {
-    return {
-      items: [
-        {
-          default: true,
-          id: 'evaSpace1',
-          title: 'Finance',
-        },
-        {
-          id: 'evaSpace2',
-          title: 'Accounting',
         },
       ],
     };
@@ -224,7 +224,6 @@ describe('Care Feature Ctrl', function () {
     cvaDeferred = $q.defer();
     evaDeferred = $q.defer();
     abcDeferred = $q.defer();
-    evaSpacesDeferred = $q.defer();
     aaDeferred = $q.defer();
     getPersonDeferred = $q.defer();
     spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue(aaDeferred.promise);
@@ -233,7 +232,6 @@ describe('Care Feature Ctrl', function () {
     spyOn(CareFeatureList, 'getChatPlusCallbackTemplates').and.returnValue(chatPlusCallbackDeferred.promise);
     spyOn(CvaService.featureList, 'getFeature').and.returnValue(cvaDeferred.promise);
     spyOn(EvaService.featureList, 'getFeature').and.returnValue(evaDeferred.promise);
-    spyOn(EvaService, 'getExpertAssistantSpaces').and.returnValue(evaSpacesDeferred.promise);
     spyOn(AbcService.featureList, 'getFeature').and.returnValue(abcDeferred.promise);
     spyOn($translate, 'instant').and.returnValue('messageKey');
     spyOn($state, 'go');
@@ -258,7 +256,7 @@ describe('Care Feature Ctrl', function () {
     getPersonDeferred.resolve(ownerDetails);
   };
 
-  describe('Feature Toggle for Hybrid is disabled', function () {
+  describe('with Hybrid Feature Toggle disabled', function () {
     beforeEach(function () {
       spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
       controller = $controller('CareFeaturesCtrl', {
@@ -281,7 +279,6 @@ describe('Care Feature Ctrl', function () {
     it('should initialize and get the list of templates and update pageState ', function () {
       expect(controller.pageState).toEqual('Loading');
       getAllTemplatesDeferred();
-      evaSpacesDeferred.resolve(listEvaSpacesSuccess());
       $scope.$apply();
       expect(controller.pageState).toEqual('ShowFeatures');
     });
@@ -289,7 +286,6 @@ describe('Care Feature Ctrl', function () {
     it('should initialize and populate template counts under customerVirtualAssistant feature', function () {
       expect(controller.pageState).toEqual('Loading');
       getAllTemplatesDeferred();
-      evaSpacesDeferred.resolve(listEvaSpacesSuccess());
       $scope.$apply();
       expect(controller.pageState).toEqual('ShowFeatures');
 
@@ -327,48 +323,31 @@ describe('Care Feature Ctrl', function () {
     });
 
     it('should initialize and populate expert spaces under expertVirtualAssistant feature', function () {
-      spyOn(controller, 'generateHtmlPopover').and.returnValue('aHtmlString');
       expect(controller.pageState).toEqual('Loading');
       getAllTemplatesDeferred();
-      evaSpacesDeferred.resolve(listEvaSpacesSuccess());
       $scope.$apply();
       expect(controller.pageState).toEqual('ShowFeatures');
 
-      expect(controller.generateHtmlPopover).toHaveBeenCalled();
-      var listEvaSpaces = listEvaSpacesSuccess().items;
-
-      var evaFeatures = _.find(controller.features, function (feature) {
-        return feature.name === 'expertVirtualAssistant';
+      var evaFeature = _.find(controller.filteredListOfFeatures, function (feature) {
+        return feature.templateId === 'Expert Virtual Assistant Dev Config';
       });
 
-      return _.forEach(evaFeatures.data, function (evaFeature) {
-        expect(controller.generateHtmlPopover).toHaveBeenCalledWith(evaFeature);
-        expect(evaFeature.spaces).toEqual(listEvaSpaces);
-        expect(evaFeature.templatesHtmlPopover).toEqual('<div class="feature-card-popover"><h3 class="header">messageKey</h3><h3 class="sub-header">messageKey</h3><ul class="spaces-list"></ul></div>');
-        expect(evaFeature.spacesHtmlPopover).toEqual('aHtmlString');
-      });
+      expect(evaFeature.templatesHtmlPopover).toEqual('<div class="feature-card-popover"><h3 class="header">messageKey</h3><h3 class="sub-header">messageKey</h3><ul class="spaces-list"></ul></div>');
+      expect(evaFeature.spacesHtmlPopover).toEqual('<div class="feature-card-popover"><h3 class="sub-header">messageKey</h3><ul class="spaces-list"><li>Accounting</li><li>Finance messageKey</li></ul></div>');
     });
 
-    it('should initalize and populate EVA usage data warning under expertVirtualAssistant feature', function () {
-      spyOn(controller, 'generateHtmlPopover').and.returnValue('aHtmlString');
+    it('should initialize and populate EVA usage data warning under expertVirtualAssistant feature', function () {
       expect(controller.pageState).toEqual('Loading');
       getAllTemplatesDeferred();
-      evaSpacesDeferred.reject('evaSpacesError');
       $scope.$apply();
       expect(controller.pageState).toEqual('ShowFeatures');
 
-      expect(controller.generateHtmlPopover).toHaveBeenCalled();
-
-      var evaFeatures = _.find(controller.features, function (feature) {
-        return feature.name === 'expertVirtualAssistant';
+      var evaFeature = _.find(controller.filteredListOfFeatures, function (feature) {
+        return feature.templateId === 'SomeId';
       });
 
-      return _.forEach(evaFeatures.data, function (evaFeature) {
-        expect(controller.generateHtmlPopover).toHaveBeenCalledWith(evaFeature);
-        expect(evaFeature.spaces).toEqual([]);
-        expect(evaFeature.templatesHtmlPopover).toEqual('<div class="feature-card-popover"><h3 class="header">messageKey</h3><h3 class="sub-header">messageKey</h3><ul class="spaces-list"></ul></div>');
-        expect(evaFeature.spacesHtmlPopover).toEqual('aHtmlString');
-      });
+      expect(evaFeature.templatesHtmlPopover).toEqual('<div class="feature-card-popover"><h3 class="header">messageKey</h3><h3 class="sub-header">messageKey</h3><ul class="spaces-list"></ul></div>');
+      expect(evaFeature.spacesHtmlPopover).toEqual('<div class="feature-card-popover-error">messageKey</div>');
     });
 
     it('should be able to call delete function and in turn the $state service ', function () {
@@ -510,6 +489,25 @@ describe('Care Feature Ctrl', function () {
       var evaDifferentOwnerFeature = controller.filteredListOfFeatures[4];
       expect(controller.userHasAccess(evaDifferentOwnerFeature)).toEqual(false);
       expect(controller.filteredListOfFeatures[4].name).toEqual('Expert Virtual Assistant Different Owner Config');
+      controller.showWarning(evaDifferentOwnerFeature);
+      expect($translate.instant).toHaveBeenCalledWith('careChatTpl.virtualAssistant.eva.featureText.nonAdminEditDeleteWarning', {
+        owner: ownerDetails.displayName,
+      });
+    });
+
+    it('should show no default space warning if EVA is not in the default space', function () {
+      var evaFeature = {
+        id: 'Expert Virtual Assistant Feature',
+        featureType: 'expertVirtualAssistant',
+        email: 'evaTest1@cisco.com',
+        spaces: [{ title: 'finance' }, { title: 'management' }, { title: 'accounting' }],
+      };
+
+      controller.showWarning(evaFeature);
+      expect(evaFeature.missingDefaultSpace).toBeTruthy();
+      expect($translate.instant).toHaveBeenCalledWith('careChatTpl.virtualAssistant.eva.featureText.noDefaultSpaceWarning');
+      spyOn(controller, 'userHasAccess');
+      expect(controller.userHasAccess).not.toHaveBeenCalled();
     });
 
     it('should return the accurate number of expert spaces', function () {
@@ -525,11 +523,23 @@ describe('Care Feature Ctrl', function () {
       });
     });
 
-    it('should return the expected EVA usage data warning', function () {
+    it('should not show warning if number of expert spaces is zero', function () {
       var evaFeature = {
         id: 'Expert Virtual Assistant Feature',
         email: 'evaTest1@cisco.com',
         spaces: [],
+      };
+
+      controller.spacesInUseText(evaFeature);
+      expect($translate.instant).toHaveBeenCalledWith('careChatTpl.featureCard.spacesInUseText', {
+        numOfSpaces: 0,
+      });
+    });
+
+    it('should return the expected EVA usage data warning', function () {
+      var evaFeature = {
+        id: 'Expert Virtual Assistant Feature',
+        email: 'evaTest1@cisco.com',
       };
 
       controller.spacesInUseText(evaFeature);
@@ -540,7 +550,7 @@ describe('Care Feature Ctrl', function () {
       var evaFeature = {
         id: 'Expert Virtual Assistant Feature',
         email: 'evaTest1@cisco.com',
-        spaces: [{ title: 'finance', default: true }, { title: 'management' }, { title: 'accounting' }],
+        spaces: [{ title: 'accounting' }, { title: 'finance', default: true }, { title: 'management' }],
       };
 
       var htmlString = controller.generateHtmlPopover(evaFeature);
@@ -562,11 +572,25 @@ describe('Care Feature Ctrl', function () {
       expect(htmlString).toEqual(htmlExpected);
     });
 
-    it('should return expected html string when EVA usage data is unavailable', function () {
+    it('should return expected html string when EVA is in zero spaces ', function () {
       var evaFeature = {
         id: 'Expert Virtual Assistant Feature',
         email: 'evaTest1@cisco.com',
         spaces: [],
+      };
+
+      var htmlString = controller.generateHtmlPopover(evaFeature);
+      expect($translate.instant).toHaveBeenCalledWith('careChatTpl.featureCard.popoverSpacesHeader', {
+        numOfSpaces: 0,
+      });
+      var htmlExpected = '<div class="feature-card-popover"><h3 class="sub-header">messageKey</h3><ul class="spaces-list"></ul></div>';
+      expect(htmlString).toEqual(htmlExpected);
+    });
+
+    it('should return expected html string when EVA usage data is unavailable', function () {
+      var evaFeature = {
+        id: 'Expert Virtual Assistant Feature',
+        email: 'evaTest1@cisco.com',
       };
 
       var htmlString = controller.generateHtmlPopover(evaFeature);
@@ -610,7 +634,6 @@ describe('Care Feature Ctrl', function () {
     it('should get list of AAs and if there is any data, should change the pageState to showFeatures', function () {
       expect(controller.pageState).toBe('Loading');
       getAllTemplatesDeferred();
-      evaSpacesDeferred.resolve(listEvaSpacesSuccess());
       aaDeferred.resolve(ceInfosList());
       $scope.$apply();
       expect(controller.pageState).toBe('ShowFeatures');

@@ -1,48 +1,41 @@
 <div class="sub-section">
   <div class="hercules-sip-settings">
     <p class="sub-section__description">
-      <span class="sub-section__label" translate="hercules.settings.call.sipDomainHeading"></span>
+      <span class="sub-section__label" ng-if="!$ctrl.hasHybridGlobalCallServiceConnectFeature" translate="hercules.settings.call.sipDomainHeading"></span>
+      <span class="sub-section__label" ng-if="$ctrl.hasHybridGlobalCallServiceConnectFeature" translate="hercules.settings.call.defaultSipDomainHeading"></span>
     </p>
-    <p translate="servicesOverview.cards.privateTrunk.destination"></p>
-    <div class="row">
-      <form name="inputSipDestinationForm" class="hercules-sip-destination-table">
-        <input cs-input type="text"
-          cs-input-group-size="medium-7"
-          ng-disabled="$ctrl.savingSip"
-          placeholder="{{'hercules.settings.call.sipDomainPlaceholder' | translate}} "
-          ng-class="{ 'hercules-input-error': $ctrl.warnSipDestination() }"
-          id="sipDomain"
-          ng-model="$ctrl.sipDomain"
-          required>
-        <verify-sip-destination
-          destination-url="$ctrl.sipDomain"
-          on-destination-save="$ctrl.onDestinationSave(warn)"
-          on-test-started="$ctrl.onTestStarted()"
-          on-result-ready="$ctrl.onResultReady(succeeded, resultSet)"></verify-sip-destination>
-        <div ng-show="$ctrl.sipDestinationTestSucceeded !== undefined" class="sip-destination-test-summary">
-          <i ng-if="$ctrl.sipDestinationTestSucceeded" class="icon icon-checkbox"></i>
-          <span ng-if="$ctrl.sipDestinationTestSucceeded" translate="hercules.settings.verifySipDestination.testSucceeded"></span>
-          <i ng-if="!$ctrl.sipDestinationTestSucceeded" class="icon icon-error"></i>
-          <span ng-if="!$ctrl.sipDestinationTestSucceeded" translate="hercules.settings.verifySipDestination.testFailed"></span>
-          <span>
-            <a href ng-click="$ctrl.openSipTestResults()" translate="hercules.settings.verifySipDestination.viewTestResults"></a>
-          </span>
-        </div>
-        <span class="right" ng-if="$ctrl.savingSip">
-          <i class="icon icon-spinner"></i>
-        </span>
-      </form>
-    </div>
-    <div class="row">
-      <div class="cs-input__help-text sip-details">
-        <div translate="hercules.sipExplanation.line1"></div>
-        <ul>
-          <li translate="hercules.sipExplanation.line2" translate-compile></li>
-          <li translate="hercules.sipExplanation.line3" translate-compile></li>
-          <li translate="hercules.sipExplanation.line4" translate-compile></li>
-        </ul>
-        <p translate="hercules.sipExplanation.line5alt" translate-compile></p>
-      </div>
-    </div>
+    <p translate="hercules.settings.call.defaultSipDomainDescription"></p>
+    <sip-destination-input sip-destination="$ctrl.sipDestination"></sip-destination-input>
   </div>
+</div>
+<div class="sub-section" ng-if="$ctrl.hasHybridGlobalCallServiceConnectFeature && $ctrl.displayOverview">
+  <h5 class="sub-section__title" translate="hercules.settings.call.sipDestinationsOverview.title"></h5>
+  <p class="sub-section__description" translate="hercules.settings.call.sipDestinationsOverview.description"></p>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <td translate="hercules.settings.call.sipDestinationsOverview.tableTitle1"></td>
+        <td translate="hercules.settings.call.sipDestinationsOverview.tableTitle2"></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{::$ctrl.sipDestination}} ({{::'common.default' | translate | lowercase}})</td>
+        <td>
+          <div ng-if="$ctrl.tableData.defaultDestination.length === 0">-</div>
+          <div ng-if="$ctrl.tableData.defaultDestination.length > 0" ng-repeat="cluster in $ctrl.tableData.defaultDestination | orderBy:'name'">
+            <a class="link-to-cluster" ui-sref="expressway-cluster.settings({id: cluster.id})">{{::cluster.name}}</a>
+          </div>
+        </td>
+      </tr>
+      <tr ng-repeat="(domain, clusters) in $ctrl.tableData.specificDestinations">
+        <td>{{::domain}}</td>
+        <td>
+          <div ng-repeat="cluster in clusters | orderBy:'name'">
+            <a class="link-to-cluster" ui-sref="expressway-cluster.settings({id: cluster.id})">{{::cluster.name}}</a>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>

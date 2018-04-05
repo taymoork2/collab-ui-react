@@ -423,6 +423,7 @@
     function goToEmergencyServices() {
       var data = {
         currentAddress: deviceOverview.emergencyAddress,
+        currentHuronDevice: deviceOverview.currentDevice,
         currentNumber: deviceOverview.emergencyCallbackNumber,
         status: deviceOverview.emergencyAddressStatus,
         staticNumber: !deviceOverview.currentDevice.isHuronDevice,

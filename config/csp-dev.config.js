@@ -21,7 +21,7 @@ let cspDevConfig = mkCspConfig({
     'https://10.29.42.19:4244',
     'https://10.29.42.19',
   ],
-  objectSrc: [],
+  objectSrc: ["'none'"], // helmet-csp needs atleast one value for this directive
   connectSrc: [
     'http://127.0.0.1:8080', // Local Atlas Backend
     'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
@@ -33,6 +33,9 @@ let cspDevConfig = mkCspConfig({
     'ws://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
     'ws://localhost:8000', // Browser Sync
     'ws://localhost:8443', // Browser Sync
+    'https://upgrade.int-ucmgmt.cisco.com', //HCS Upgrade
+    'https://licensing.int-ucmgmt.cisco.com', //HCS License
+    'https://controller.int-ucmgmt.cisco.com', //HCS Controller
   ],
   fontSrc: [
     'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev

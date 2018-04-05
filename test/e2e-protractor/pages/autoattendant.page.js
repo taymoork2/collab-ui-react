@@ -9,12 +9,21 @@ var AutoAttendantPage = function () {
   this.key0 = '0';
   this.key1 = '1';
   this.key2 = '2';
+  this.phoneMenuActionTargets = element.all(by.css('div.aa-pm-action'));
+  this.routeCall = element(by.css('div.aa-panel-body[name="Route Call"]'));
 
-  this.selectPhoneNumber = element(by.id('select-phone-number'));
-  this.selectPhoneNumberInDropdown = this.selectPhoneNumber.element(by.css('div.dropdown-menu')).element(by.linkText('Telephone Number'));
-  this.selectExtensionInDropdown = this.selectPhoneNumber.element(by.css('div.dropdown-menu')).element(by.linkText('Extension'));
+  this.selectPhoneNumberViaPhoneMenu = this.phoneMenuActionTargets.last().element(by.name('selectPhoneNumber'));
+  this.selectPhoneDropdownViaPhoneMenu = this.selectPhoneNumberViaPhoneMenu.element(by.css('div.dropdown-menu')).element(by.linkText('Telephone Number'));
+
+  this.selectPhoneNumberViaDecision = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.name('selectPhoneNumber'));
+  this.selectPhoneDropdownViaDecision = this.selectPhoneNumberViaDecision.element(by.css('div.dropdown-menu')).element(by.linkText('Telephone Number'));
+
+  this.selectPhoneNumberViaRouteCall = this.routeCall.element(by.name('selectPhoneNumber'));
+  this.selectPhoneDropDownViaRouteCall = this.selectPhoneNumberViaRouteCall.element(by.css('div.dropdown-menu')).element(by.linkText('Telephone Number'));
+  this.selectExtensionViaRouteCall = this.selectPhoneNumberViaRouteCall.element(by.css('div.dropdown-menu')).element(by.linkText('Extension'));
+  
   this.phoneNumberActionTarget = element(by.css('div.aa-route-action')).element(by.name('phoneinput'));
-  this.extensionActionTarget = element(by.css('div.aa-route-action')).element(by.id('extension'));
+  this.extensionActionTarget = element(by.css('div.aa-route-action')).element(by.name('routeToExtension'));
 
   this.firstTimeZone = 'Africa/Abidjan';
   this.routeQueueDetail = element(by.id('route-queue-detail'));
@@ -149,7 +158,6 @@ var AutoAttendantPage = function () {
   this.phoneMenuActionOptionList = element.all(by.css('div.aa-pm-action .dropdown-menu'));
   this.phoneMenuActionContent = element.all(by.css('div.aa-pm-action-select .select-toggle'));
   this.phoneMenuActionOptions = element.all(by.css('div.aa-pm-action-select div.dropdown-menu'));
-  this.phoneMenuActionTargets = element.all(by.css('div.aa-pm-action'));
 
   this.phoneMenuActionTargetsMessageOption = this.phoneMenuActionTargets.last().element(by.css('select[name="messageSelect"] + div span.select-toggle'));
 
@@ -384,7 +392,6 @@ var AutoAttendantPage = function () {
 
   this.restApiTrash = element.all(by.css('.aa-trash-icon')).get(2);
 
-  this.routeCall = element(by.css('div.aa-panel-body[name="Route Call"]'));
   this.routeCallChoose = this.routeCall.element(by.css('div.dropdown'));
   this.routeExternal = this.routeCall.element(by.css('div.dropdown-menu')).all(by.tagName('li')).last();
   this.routeToPhoneNumber = this.routeCall.element(by.css('div.dropdown-menu')).all(by.tagName('li')).get(3);

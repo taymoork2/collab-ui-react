@@ -27,6 +27,7 @@ describe('Component: accountLinkingWizardComponent', () => {
       '$log',
       '$componentController',
       '$state',
+      'MetricsService',
     );
   });
 

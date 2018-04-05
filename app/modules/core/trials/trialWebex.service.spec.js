@@ -43,6 +43,7 @@ describe('Service: Webex Trial Service', function () {
       });
       this.TrialWebexService.validateSiteUrl('trial-acmecorp.webex.com').then(function (response) {
         expect(response.isValid).toBe(true);
+        expect(response.errorCode).toBe(this.TrialWebexService._siteValidationResponseMessage.VALID_SITE);
       });
       this.$httpBackend.flush();
     });
@@ -57,6 +58,7 @@ describe('Service: Webex Trial Service', function () {
       });
       this.TrialWebexService.validateSiteUrl('trial-acmecorp.webex.com').then(function (response) {
         expect(response.isValid).toBe(false);
+        expect(response.errorCode).toBe(this.TrialWebexService._siteValidationResponseMessage.VALID_SITE);
       });
       this.$httpBackend.flush();
     });
@@ -70,6 +72,7 @@ describe('Service: Webex Trial Service', function () {
       });
       this.TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.isValid).toBe(false);
+        expect(response.errorCode).toBe(this.TrialWebexService._siteValidationResponseMessage.DOMAIN_INVALID);
       });
       this.$httpBackend.flush();
     });
@@ -83,6 +86,7 @@ describe('Service: Webex Trial Service', function () {
       });
       this.TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.isValid).toBe(false);
+        expect(response.errorCode).toBe(this.TrialWebexService._siteValidationResponseMessage.DUPLICATE_SITE);
       });
       this.$httpBackend.flush();
     });
@@ -96,6 +100,7 @@ describe('Service: Webex Trial Service', function () {
       });
       this.TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.isValid).toBe(false);
+        expect(response.errorCode).toBe(this.TrialWebexService._siteValidationResponseMessage.DUPLICATE_SITE);
       });
       this.$httpBackend.flush();
     });
@@ -109,6 +114,21 @@ describe('Service: Webex Trial Service', function () {
       });
       this.TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.isValid).toBe(false);
+        expect(response.errorCode).toBe(this.TrialWebexService._siteValidationResponseMessage.DUPLICATE_SITE);
+      });
+      this.$httpBackend.flush();
+    });
+
+    it('should fail to validate with duplicateSite error due to 431205: "Site brand name exists in DNS." error code', function () {
+      this.$httpBackend.whenPOST(this.UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
+        properties: [{
+          isValid: 'false',
+          errorCode: '431205',
+        }],
+      });
+      this.TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
+        expect(response.isValid).toBe(false);
+        expect(response.errorCode).toBe(this.TrialWebexService._siteValidationResponseMessage.DUPLICATE_SITE);
       });
       this.$httpBackend.flush();
     });

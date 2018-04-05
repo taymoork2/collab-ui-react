@@ -141,10 +141,7 @@ var UsersPage = function () {
   this.titleField = element(by.id('titleField'));
   this.userTab = element(by.id('usertab'));
 
-  // TODO: rename 'rolesChevron' to something more appropriate
-  // - as of 2017-08-18, this 'a#rolesChevron' does NOT navigate to a UI state that offers anything
-  //   to do with role-management, only first/last/display name management
-  this.rolesChevron = element(by.css('#rolesChevron .header-title'));
+  this.userEditIcon = element(by.css('.header-title .icon-edit'));
 
   this.breadcrumb = {};
   this.breadcrumb.overview = element(by.cssContainingText('ul.breadcrumbs li a', 'Overview'));
@@ -283,6 +280,18 @@ var UsersPage = function () {
     utils.search(alias);
   };
 
+  this.createUserWithAutoAssignTemplate = function (testUserEmail) {
+    utils.click(navigation.usersTab);
+    utils.click(manageUsersPage.buttons.manageUsers);
+    utils.click(manageUsersPage.actionCards.manualAddUsers);
+    utils.click(manageUsersPage.buttons.next);
+    utils.click(this.addUsersField);
+    utils.sendKeys(this.addUsersField, testUserEmail + protractor.Key.ENTER);
+    utils.click(manageUsersPage.buttons.next);
+    utils.click(manageUsersPage.buttons.save);
+    utils.click(manageUsersPage.buttons.finish);
+  };
+
   this.clickServiceCheckbox = function (alias, expectedMsgState, expectedMtgState, clickService) {
     utils.clickUser(alias);
     utils.expectIsDisplayed(users.servicesPanel);
@@ -322,7 +331,7 @@ var UsersPage = function () {
     var userList = _.chain(0)
       .range(25)
       .map(function (n) {
-        var randomAddress = utils.randomTestGmailwithSalt('CSV');
+        var randomAddress = utils.randomTestGmailWithSalt('CSV');
         fileText += 'Test,User_' + (1000 + n) + ',Test User,' + randomAddress + ',f,t,t,f\r\n';
         return randomAddress;
       })

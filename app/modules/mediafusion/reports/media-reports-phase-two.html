@@ -36,6 +36,11 @@
         <uc-media-utilization parentcntrl="nav"></uc-media-utilization>
         <uc-number-of-participant parentcntrl="nav" ng-class="{'no-display': nav.clusterSelected !== nav.allClusters && nav.clusterSelected !== undefined}"></uc-number-of-participant>
         <uc-media-participant-distribution parentcntrl="nav"></uc-media-participant-distribution>
+        <uc-media-cascade-bandwith parentcntrl="nav"  ng-class="{'no-display': nav.clusterSelected !== nav.allClusters && nav.clusterSelected !== undefined}" ng-if="nav.hasMFCascadeBandwidthFeatureToggle"></uc-media-cascade-bandwith>
+        <cs-card class="cs-card--full cascade-card-container" ng-class="{'no-display': nav.clusterSelected === nav.allClusters}" ng-if="nav.hasMFCascadeBandwidthFeatureToggle">
+          <uc-cluster-cascade-bandwith class="columns large-6 medium-6 small-12" parentcntrl="nav"></uc-cluster-cascade-bandwith>
+          <uc-streams-bandwidth-usage class="columns large-6 medium-6 small-12" parentcntrl="nav"></uc-streams-bandwidth-usage> 
+        </cs-card>
         <uc-media-availability parentcntrl="nav"></uc-media-availability>
       </cs-card-layout>
       <cs-card-layout ng-if="nav.displayAdoption">

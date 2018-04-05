@@ -7,13 +7,14 @@ import { IUserStatusWithExtendedMessages, USSService } from 'modules/hercules/se
 import { Notification } from 'modules/core/notifications';
 import { HybridServiceUserSidepanelHelperService } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
 import { IUserData, UserOverviewService } from 'modules/core/users/userOverview/userOverview.service';
+import { WaitingIntervalService } from 'modules/core/shared/waiting-interval/waiting-interval.service';
 
 interface IServiceSetupStatus {
   id: HybridServiceId;
   status?: IUserStatusWithExtendedMessages;
 }
 
-class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentController {
+export class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentController {
 
   private userId: string;
   private userEntitlements: string[];
@@ -36,12 +37,11 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
   public bothCalendarTypesWarning: boolean;
 
   public loadingPage = false;
-  private userSubscriptionTimer: ng.IPromise<void>;
+  private intervalPromise?: ng.IPromise<void>;
 
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
-    private $timeout: ng.ITimeoutService,
     private Authinfo,
     private CloudConnectorService: CloudConnectorService,
     private FeatureToggleService: FeatureToggleService,
@@ -51,6 +51,7 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
     private ServiceDescriptorService: ServiceDescriptorService,
     private UserOverviewService: UserOverviewService,
     private USSService: USSService,
+    private WaitingIntervalService: WaitingIntervalService,
   ) { }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
@@ -58,12 +59,14 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
     if (user && user.currentValue) {
       this.userId = user.currentValue.id;
       this.userLicenseIDs = user.currentValue.licenseID;
+      this.cancelInterval();
+      this.initInterval();
     }
     this.isLicensed = this.userIsLicensed();
-    this.init();
   }
 
   public $onInit() {
+    this.loadData();
     this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridImp)
       .then((supported) => {
         this.atlasHybridImpFeatureToggle = supported;
@@ -71,12 +74,21 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
   }
 
   public $onDestroy() {
-    if (!_.isUndefined(this.userSubscriptionTimer)) {
-      this.$timeout.cancel(this.userSubscriptionTimer);
-    }
+    this.cancelInterval();
   }
 
-  private init() {
+  private initInterval() {
+    this.intervalPromise = this.WaitingIntervalService.interval(() => {
+      return this.loadData();
+    }, 10000);
+  }
+
+  private cancelInterval() {
+    this.WaitingIntervalService.cancel(this.intervalPromise);
+    this.intervalPromise = undefined;
+  }
+
+  private loadData(): ng.IPromise<void> {
     this.loadingPage = true;
     this.findServicesOrgIsEntitledTo();
 
@@ -85,7 +97,7 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
       this.findServicesEnabledInCCC(),
     ];
 
-    this.HybridServicesUtilsService.allSettled(promises)
+    return this.HybridServicesUtilsService.allSettled(promises)
       .then(() => {
         this.loadingPage = true;
 
@@ -100,11 +112,9 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
       .then(this.getUserFromCommonIdentity)
       .then(this.getStatusesInUSS)
       .then(this.checkInvalidCombinations)
-      .then(this.subscribeToUserStatusUpdates)
       .finally(() => {
         this.loadingPage = false;
       });
-
   }
 
   private userIsLicensed(): boolean {
@@ -124,13 +134,6 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
   private userHasEntitlement = (entitlement: HybridServiceId | 'ciscouc'): boolean => this.userEntitlements && this.userEntitlements.indexOf(entitlement) > -1;
 
   public serviceIcon = (serviceId: HybridServiceId): string => this.HybridServicesUtilsService.serviceId2Icon(serviceId);
-
-  private subscribeToUserStatusUpdates = (): ng.IPromise<void> => {
-    this.loadingPage = false;
-    return this.userSubscriptionTimer = this.$timeout(() => {
-      this.init();
-    }, 10000);
-  }
 
   public getStatus(serviceId: HybridServiceId): 'unknown' | 'not_entitled' | 'error' | 'pending_activation' | 'activated' {
 

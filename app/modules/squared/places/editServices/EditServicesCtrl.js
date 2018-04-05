@@ -18,7 +18,7 @@
     vm.service = initialService;
     var initialEnableCalService = getCalServiceEnabled(wizardData.account.entitlements);
     vm.sparkCallConnectEnabled = !!wizardData.csdmHybridCallFeature && wizardData.hybridCallEnabledOnOrg;
-    vm.sparkCalendarPlaceEnabled = !!wizardData.csdmHybridCalendarFeature && wizardData.hybridCalendarEnabledOnOrg;
+    vm.sparkCalendarPlaceEnabled = wizardData.hybridCalendarEnabledOnOrg;
     vm.enableCalService = wizardData.account.enableCalService || initialEnableCalService;
 
     vm.next = function () {

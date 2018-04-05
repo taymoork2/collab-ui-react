@@ -40,7 +40,7 @@ export class EmergencyServicesService {
   }
 
   public getInitialData(): IEmergencyServicesData {
-    this.currentDevice = this.$stateParams.currentDevice;
+    this.currentDevice = this.$stateParams.currentHuronDevice;
     this.huronDeviceService = this.$stateParams.huronDeviceService;
     const emergencyData = {
       emergencyNumber: this.$stateParams.currentNumber,

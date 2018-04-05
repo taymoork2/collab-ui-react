@@ -23,6 +23,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     name: '',
     ownerId: '',
     ownerDetails: {},
+    missingDefaultSpace: false,
     configuration: {
       mediaType: this.EvaService.evaServiceCard.type,
       pages: {
@@ -117,6 +118,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
       this.template.configuration.pages.evaDefaultSpace.selectedDefaultSpace.id = this.$stateParams.template.defaultSpaceId;
       this.template.ownerId = this.$stateParams.template.ownerId;
       this.template.ownerDetails = this.$stateParams.template.ownerDetails;
+      this.template.missingDefaultSpace = this.$stateParams.template.missingDefaultSpace || this.EvaService.isMissingDefaultSpace(this.$stateParams.template);
 
       if (this.$stateParams.template.iconURL) {
         this.avatarUploadState = this.avatarState.PREVIEW;
@@ -234,10 +236,11 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     const avatarDataUrl = this.template.configuration.pages.vaAvatar.fileValue;
     const defaultSpaceId = this.template.configuration.pages.evaDefaultSpace.selectedDefaultSpace.id;
     if (this.isEditFeature) {
-      const result = this.EvaService.getWarningIfNotOwner(this.template);
-      if (!result.valid) {
+      const access = this.EvaService.canIEditThisEva(this.template);
+      if (!access) {
         this.handleUserAccessForEditError();
-        this.Notification.warning(result.warning.message, result.warning.args);
+        const owner = this.EvaService.getEvaOwner(this.template);
+        this.Notification.warning(this.EvaService.evaServiceCard.editDeleteWarning, { owner });
       } else {
         this.updateFeature(this.template.templateId, name, this.orgId, email, defaultSpaceId, avatarDataUrl);
       }
@@ -322,7 +325,9 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
             })
             .catch(function (response) {
               controller.handleFeatureError(response);
-              controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.updateConfigFailureText'));
+              controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.updateConfigFailureText'), {
+                featureName: controller.$translate.instant('careChatTpl.virtualAssistant.eva.featureText.name'),
+              });
             });
         } else {
           controller.handleFeatureUpdate();
@@ -331,7 +336,9 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
       })
       .catch(function (response) {
         controller.handleFeatureError(response);
-        controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.updateConfigFailureText'));
+        controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.updateConfigFailureText'), {
+          featureName: controller.$translate.instant('careChatTpl.virtualAssistant.eva.featureText.name'),
+        });
       });
   }
 }

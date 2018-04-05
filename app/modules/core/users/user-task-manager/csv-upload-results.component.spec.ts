@@ -49,7 +49,7 @@ describe('Component: csvUploadResults', () => {
     spyOn(this.UserTaskManagerService, 'getUserDisplayAndEmail').and.returnValue(this.$q.resolve('User Me (user.me@gmail.com)'));
     spyOn(this.UserTaskManagerService, 'getTaskErrors').and.returnValue(this.$q.resolve());
 
-    this.aTask = _.cloneDeep(require('./test-tasks.json').csvUploadResultsTasks);
+    this.aTask = _.cloneDeep(getJSONFixture('core/json/users/user-task-manager/test-tasks.json').csvUploadResultsTasks);
     this.$scope.activeTask = this.aTask;
 
     this.compileComponent('csvUploadResults', {
@@ -83,13 +83,13 @@ describe('Component: csvUploadResults', () => {
       this.$scope.$apply();
       expect(this.view.find(PROGRESSBAR)).toExist();
       expect(this.crProgressbar.bindings[0].progressbarValue).toBe(30);
-      expect(this.crProgressbar.bindings[0].progressbarFilename).toBe('100Users.csv');
+      expect(this.crProgressbar.bindings[0].progressbarFilename).toBe('testFile.csv');
       expect(this.crProgressbar.bindings[0].progressbarIsProcessing).toBe(true);
       expect(this.crProgressbar.bindings[0].progressbarLabel).toBeUndefined();
 
       this.crProgressbar.bindings[0].progressbarOnCancel();
       this.$scope.$apply(); // resolve modal promise success
-      expect(this.UserTaskManagerService.cancelTask).toHaveBeenCalledWith(this.$scope.activeTask.jobInstanceId);
+      expect(this.UserTaskManagerService.cancelTask).toHaveBeenCalledWith(this.$scope.activeTask.id);
       expect(this.crProgressbar.bindings[0].progressbarLabel).toBe('common.cancelingEllipsis');
     });
   });
@@ -108,7 +108,7 @@ describe('Component: csvUploadResults', () => {
           }],
         },
         trackingId: '',
-        itemNumber: 0,
+        lineNum: 0,
         errorMessage: '',
       }];
       this.$scope.$apply();

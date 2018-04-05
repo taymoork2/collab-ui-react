@@ -11,7 +11,7 @@
       ng-bind="$ctrl.updatedTotal"></h2>
     <h5 class="user-tile-total__label" ng-bind="::$ctrl.updatedTileLabel"></h5>
   </div>
-  <div class="user-tile-total">
+  <div class="user-tile-total" ng-hide="$ctrl.hideErrorsIfNone && $ctrl.errorTotal === 0">
     <h2 class="user-tile-total__value user-tile-total__value--error"
       ng-class="{'user-tile-total__value--disabled': $ctrl.errorTotal === 0}"
       ng-bind="$ctrl.errorTotal"></h2>

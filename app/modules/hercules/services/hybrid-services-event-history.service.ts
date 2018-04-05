@@ -132,9 +132,10 @@ export class HybridServicesEventHistoryService {
     return res.data;
   }
 
-  public getAllEvents(clusterId: string, orgId?: string, eventsSince?: string): ng.IPromise<IHybridServicesEventHistoryData> {
-    const timestamp = eventsSince || moment().subtract(7, 'days').toISOString();
-    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/events/?clusterId=${clusterId}&fromTime=${timestamp}`;
+  public getAllEvents(clusterId: string, eventsSince?: string, eventsTo?: string, orgId?: string): ng.IPromise<IHybridServicesEventHistoryData> {
+    const fromTimestamp = eventsSince || moment().subtract(7, 'days').toISOString();
+    const toTimestamp = eventsTo || moment().toISOString();
+    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/events/?clusterId=${clusterId}&fromTime=${fromTimestamp}&toTime=${toTimestamp}`;
     return this.$http
       .get(url)
       .then(this.extractData)
@@ -148,7 +149,7 @@ export class HybridServicesEventHistoryService {
         }
         return processedEvents;
       })
-      .then((events) => this.addServiceActivationEvents(events, timestamp, orgId))
+      .then((events) => this.addServiceActivationEvents(events, fromTimestamp, toTimestamp, orgId))
       .then((events) => {
         events.items = _.orderBy(events.items, (event) => event.timestamp, ['desc']);
         return events;
@@ -210,8 +211,8 @@ export class HybridServicesEventHistoryService {
 
   /* Private methods  */
 
-  private addServiceActivationEvents = (existingEvents: IHybridServicesEventHistoryData, timestamp: string, orgId?: string): ng.IPromise<IHybridServicesEventHistoryData> => {
-    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/events/?type=ServiceEnabled&type=ServiceDisabled&fromTime=${timestamp}`;
+  private addServiceActivationEvents = (existingEvents: IHybridServicesEventHistoryData, fromTime: string, toTime: string, orgId?: string): ng.IPromise<IHybridServicesEventHistoryData> => {
+    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/events/?type=ServiceEnabled&type=ServiceDisabled&fromTime=${fromTime}&toTime=${toTime}`;
     return this.$http
       .get(url)
       .then(this.extractData)
@@ -225,7 +226,6 @@ export class HybridServicesEventHistoryService {
   }
 
   private processEvents(events: IRawClusterEvent[]): IHybridServicesEventHistoryItem[] {
-
     const filteredItems = _.filter(events, (event) => this.isKnownEventType(event));
     let processedEvents: IHybridServicesEventHistoryItem[] = [];
     _.forEach(filteredItems, (event) => {

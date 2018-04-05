@@ -1,9 +1,11 @@
 import { PstnCarrier } from './pstnProviders/pstnCarrier';
 import { Address } from './shared/pstn-address';
 import { ContractStatus } from './pstn.const';
+import { BsftSettings } from 'modules/call/bsft/settings/shared';
 
 export interface IOrderData {
   numbers: string | string[];
+  length?: number;
   areaCode?: string;
   consecutive?: boolean;
   nxx?: string;
@@ -37,6 +39,7 @@ export class PstnModel {
   private customerFirstName: string;
   private customerLastName: string;
   private customerEmail: string;
+  private confirmCustomerEmail: string;
   private serviceAddress: Address = new Address();
   private customerExists: boolean;
   private resellerExists: boolean;
@@ -52,6 +55,7 @@ export class PstnModel {
   private esaSigned: boolean;
   private esaDisclaimerAgreed: boolean;
   private contractStatus: ContractStatus;
+  private bsftCustomer: BsftSettings;
 
   public constructor() {
     this.clear();
@@ -63,6 +67,7 @@ export class PstnModel {
     this.customerFirstName = '';
     this.customerLastName = '';
     this.customerEmail = '';
+    this.confirmCustomerEmail = '';
     if (locations) {
       this.serviceAddress.reset();
     } else {
@@ -87,6 +92,7 @@ export class PstnModel {
     this.esaSigned = false;
     this.esaDisclaimerAgreed = false;
     this.contractStatus = ContractStatus.UnKnown;
+    this.bsftCustomer = new BsftSettings();
   }
 
   public clearProviderSpecificData(): void {
@@ -147,6 +153,14 @@ export class PstnModel {
 
   public getCustomerEmail(): string {
     return this.customerEmail;
+  }
+
+  public setConfirmCustomerEmail(_confirmCustomerEmail: string): void {
+    this.confirmCustomerEmail = _confirmCustomerEmail;
+  }
+
+  public getConfirmCustomerEmail(): string {
+    return this.confirmCustomerEmail;
   }
 
   public setServiceAddress(_serviceAddress: Address) {
@@ -277,6 +291,14 @@ export class PstnModel {
 
   public setContractStatus(contractStatus: ContractStatus): void {
     this.contractStatus = contractStatus;
+  }
+
+  public getBsftCustomer() {
+    return this.bsftCustomer;
+  }
+
+  public setBsftCustomer(_bsftCustomer: BsftSettings) {
+    this.bsftCustomer = _bsftCustomer;
   }
 }
 

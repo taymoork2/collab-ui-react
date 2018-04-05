@@ -3,6 +3,8 @@ const CareAppleBusinessChatPage = function () {
   this.setUpRightBtn = element(by.css('.btn--primary.btn--right'));
   this.setUpTitle = element(by.css('.ct-title .h3'));
   this.setUpDesc = element(by.css('.ct-title-desc'));
+  this.cancelBtn = element(by.id('close-panel'));
+  this.confirmCancelBtn = element(by.id('cancelChat'));
 
   //business id page
   this.businessId = element(by.name('idInput'));

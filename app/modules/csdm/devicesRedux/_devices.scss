@@ -11,12 +11,37 @@
   .ui-grid-cell:first-child,
   .ui-grid-header-cell:first-child {
     border-right: 0;
-
-    .space_avatar {
-      margin: 4px 5px 4px 30px;
-      width: 35px;
+    .bulk-select {
+      margin-left: 12px;
+      box-shadow: unset;
+      .cs-input-group.cs-input-checkbox {
+        display: inline-flex;
+      }
     }
   }
+  .ui-grid {
+    .ui-grid-row > :first-child > :first-child {
+      .bulk-select {
+        margin-left: 12px;
+        box-shadow: unset;
+      }
+      .user-img,
+      .space_avatar {
+        margin-left: 30px;
+      }
+    }
+  }
+  .ui-grid-cell {
+    .user-img,
+    .space_avatar {
+      margin: 4px 5px 4px 4px;
+      width: 35px;
+    }
+    &.b-checked {
+      background-color: $blue-pastel;
+    }
+  }
+
   .clipboard-button {
     padding-left: 10px;
   }
@@ -355,6 +380,47 @@
         }
       }
     }
+    .select-all-screen {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      background-color: transparentize($gray-lighter, 0.5);
+      z-index: 1;
+    }
+    .select-all-container {
+      position: relative;
+      width: inherit;
+      height: 0;
+      .select-all {
+        position: relative;
+        height: 100%;
+        top: 100px;
+        text-align: center;
+        z-index: 2;
+        i {
+          margin: 50px 0 5px;
+        }
+      }
+    }
+    .bulk-banner {
+      max-height: 0;
+      &.enable {
+        max-height: 50px;
+        transition: max-height .15s ease-in;
+        display: flex;
+        padding: 10px 2rem 10px 74px;
+        background-color: $blue;
+        width: 100%;
+        height: 2.8125rem;
+        color: $white;
+        div {
+          height: 2rem;
+        }
+        i {
+          padding: 0.5rem;
+        }
+      }
+    }
 
     strong {
       padding: 20px 0 30px;
@@ -460,7 +526,7 @@
           min-width: 35px;
           font-size: 1.125rem;
           background: inherit;
-          padding: 8px 1px 7px 0;
+          padding: 1px;
           margin-left: 4px;
           margin-bottom: 0;
           border: none;
@@ -610,6 +676,10 @@
       display: flex;
       margin: 2px 4px;
       padding: 3px 5px 1px 10px;
+      span {
+        max-width: 325px;
+        word-wrap: break-word;
+      }
     }
     .bullet_edited {
       display: none;

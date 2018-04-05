@@ -1,0 +1,133 @@
+<div>
+  <div class="ct-title">
+    <span class="h3">{{$ctrl.getLocalisedText('careChatTpl.profile')}}</span>
+  </div>
+  <div class="h5 ct-title-desc">{{$ctrl.profileDesc}}</div>
+  <div class="cs-card-container ct-profile ct-sa-content">
+    <cs-card-layout block-view="true" class="ct-card-center">
+      <cs-card class="ct-card">
+        <div class="preview-agent-bot h4 ct-card-info">
+          <span class="h4 ct-card-info" translate="careChatTpl.preview"></span>
+          <span class="agent-bot" ng-if="$ctrl.isAgentProfileWithCVA">
+            <i class="bot icon-bot-six icon-lg"
+              ng-class="{active: $ctrl.selectedAvater === 'bot'}"
+              ng-click="$ctrl.toggleBotAgentSelection('bot')"
+              tooltip="{{::$ctrl.brandingPageTooltipText('bot')}}"
+              tooltip-trigger="mouseenter focus"
+              tooltip-placement="top"
+              tooltip-animation="false"
+              aria-label="{{::$ctrl.brandingPageTooltipText('bot')}}"
+              tabindex="0"></i>
+            <i class="agent icon-user-chat icon-lg"
+              ng-class="{active: $ctrl.selectedAvater === 'agent'}"
+              ng-click="$ctrl.toggleBotAgentSelection('agent')"
+              tooltip="{{::$ctrl.brandingPageTooltipText('agent')}}"
+              tooltip-trigger="mouseenter focus"
+              tooltip-placement="top"
+              tooltip-animation="false"
+              aria-label="{{::$ctrl.brandingPageTooltipText('agent')}}"
+              tabindex="0"></i>
+          </span>
+        </div>
+        <article class="profile-preview ct-article">
+          <header>
+            <div class="img" ng-switch="$ctrl.displaySelectedProfileAttribute">
+              <div ng-switch-when="org">
+                <i class="icon icon-circle-computer-blank icon-3x" ng-hide="$ctrl.logoUploaded"></i>
+                <img
+                  class="uploded-org-img"
+                  ngf-size="{{$ctrl.imgDetails.imageDim}}"
+                  ng-src="{{$ctrl.logoFile}}"
+                  ng-show="$ctrl.logoUploaded"/>
+              </div>
+              <div class="agent" ng-switch-when="agent">
+                <i class="icon icon-user-chat icon-2x"></i>
+              </div>
+              <div ng-switch-default>
+                <img ng-if="$ctrl.selectedVA.icon" class="uploded-org-img" ng-src="{{$ctrl.selectedVA.icon}}"/>
+                <div class="bot" ng-if="!$ctrl.selectedVA.icon">
+                  <i class="icon icon-bot-six icon-2x"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="h5 profile-name" ng-switch = "$ctrl.displaySelectedProfileAttribute">
+              <div class="disp-text" ng-switch-when="org">
+                {{$ctrl.TemplateWizardService.getAttributeParam('value', 'organization', 'welcomeHeader')}}
+              </div>
+              <div class="disp-text" ng-switch-when="agent">
+                {{$ctrl.agentNamePreview}}
+              </div>
+              <div class="disp-text" ng-switch-default>
+                {{::$ctrl.careVirtualAssistantName}}
+              </div>
+            </div>
+            <div class="right actions">
+              <i class="icon icon-minus"></i>
+              <i class="icon icon-close"></i>
+            </div>
+          </header>
+          <section>
+            <div class="customer-details">
+              <span class="customer-message" translate="careChatTpl.agentMsg"></span>
+              <span class="speech-bubble"><span class="top right"></span></span>
+              <div class="body-smallest time" translate="careChatTpl.agentMsgTime"></div>
+            </div>
+            <div class="agent-details">
+              <span class="speech-bubble"><span class="top left"></span></span>
+              <span class="message" translate="careChatTpl.customerMsg"></span>
+              <div class="body-smallest time" translate="careChatTpl.agentMsgTime"></div>
+            </div>
+          </section>
+          <footer class="h6 footer" translate="careChatTpl.typeNewMsg"></footer>
+        </article>
+      </cs-card>
+      <cs-card class="ct-card">
+        <div class="h4 ct-card-info" translate="careChatTpl.attributes"></div>
+        <article class="profile-attributes ct-article">
+          <section>
+            <div class="h4 subheader-text" translate="careChatTpl.profileSelector"></div>
+              <input cs-input type="radio"
+                ng-repeat="profile in $ctrl.profileList"
+                ng-model="$ctrl.selectedTemplateProfile"
+                id="{{profile.header}}"
+                name="profileList"
+                value="{{profile.value}}"
+                cs-input-label="{{profile.header}}"
+                cs-input-help-text="{{profile.label}}"
+                ng-keypress="$ctrl.enterNextPage($event)"
+                ng-click="$ctrl.setUseOrgProfile()">
+            <div class="profile-image" ng-if="$ctrl.selectedTemplateProfile === $ctrl.profiles.agent">
+              <div class="h4 ct-display-txt" translate="careChatTpl.displayText"></div>
+              <div class="escalation-required-info" ng-if="$ctrl.isExpertEscalationSelected">
+                <span class="cs-input__help-text" translate="careChatTpl.display_text_desc"></span>
+              </div>
+              <div focus-on class="agent-name-options">
+                <div ng-repeat="(key, name) in $ctrl.userDetails">
+                  <input cs-input type="radio"
+                    ng-model="$ctrl.selectedAgentProfile"
+                    id="{{name}}"
+                    name="agentList"
+                    value="{{name}}"
+                    cs-input-label="{{name}}"
+                    ng-click="$ctrl.setAgentProfile()"
+                    ng-keypress="$ctrl.enterNextPage($event)">
+                  <div class="user-alias-info" ng-if="$ctrl.isExpertEscalationSelected && key === 'alias'">
+                    <span class="user-alias-info-text cs-input__help-text" translate="careChatTpl.user_alias_desc"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="org-setting-info">
+              <span>
+                <i class="icon icon-info"></i>
+              </span>
+              <span class="setting-info">{{$ctrl.profileSettingInfo}}</span>
+            </div>
+
+          </section>
+        </article>
+      </cs-card>
+    </cs-card-layout>
+  </div>
+</div>

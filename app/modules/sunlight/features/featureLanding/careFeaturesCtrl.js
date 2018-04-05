@@ -66,6 +66,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     vm.tooltip = '';
     vm.purchaseLink = purchaseLink;
     vm.userHasAccess = userHasAccess;
+    vm.showWarning = showWarning;
 
     /* LIST OF FEATURES
      *
@@ -261,10 +262,11 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
         item.templatesHtmlPopover = generateTemplateCountHtmlPopover(popoverMainHeader, item);
       });
 
-      // Generate the template html popover for EVA
+      // Generate the template and spaces html popover for EVA
       _.forEach(listOfEvaFeatures, function (item) {
         var popoverMainHeader = $translate.instant('careChatTpl.featureCard.evaPopoverMainHeader');
         item.templatesHtmlPopover = generateTemplateCountHtmlPopover(popoverMainHeader, item);
+        item.spacesHtmlPopover = generateHtmlPopover(item);
       });
     }
 
@@ -287,9 +289,9 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     }
 
     function generateHtmlPopover(feature) {
-      var spacesList = _.get(feature, 'spaces', []);
+      var spacesList = _.get(feature, 'spaces');
 
-      if (spacesList.length < 1) {
+      if (!spacesList) {
         return '<div class="feature-card-popover-error">' + $translate.instant('careChatTpl.featureCard.popoverErrorMessage') + '</div>';
       }
 
@@ -299,6 +301,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
       var htmlString = '<div class="feature-card-popover"><h3 class="sub-header">' + spacesHeader + '</h3><ul class="spaces-list">';
 
+      spacesList = _.sortBy(spacesList, function (space) { return space.title.toLowerCase(); });
       _.forEach(spacesList, function (expertSpace) {
         htmlString += '<li>' + expertSpace.title;
         if (expertSpace.default) {
@@ -330,20 +333,6 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
         // Adding AutoAttedant as a new feature.
         if (feature.name === 'AA') {
           vm.aaModel = data;
-        }
-
-        if (feature.name === 'expertVirtualAssistant') {
-          _.forEach(feature.data, function (eva, index) {
-            return EvaService.getExpertAssistantSpaces(eva.id)
-              .then(function (result) {
-                feature.data[index].spaces = result.items;
-                feature.data[index].spacesHtmlPopover = vm.generateHtmlPopover(feature.data[index]);
-              })
-              .catch(function () {
-                feature.data[index].spaces = [];
-                feature.data[index].spacesHtmlPopover = vm.generateHtmlPopover(feature.data[index]);
-              });
-          });
         }
       } else {
         feature.isEmpty = true;
@@ -416,6 +405,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
         $event.stopImmediatePropagation();
         if (feature.featureType === EvaService.evaServiceCard.id) {
           EvaService.getExpertAssistant(feature.templateId).then(function (template) {
+            template.missingDefaultSpace = feature.missingDefaultSpace;
             EvaService.evaServiceCard.goToService($state, {
               isEditFeature: true,
               template: template,
@@ -426,6 +416,15 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
         if (feature.featureType === CvaService.cvaServiceCard.id) {
           CvaService.getConfig(feature.templateId).then(function (template) {
             CvaService.cvaServiceCard.goToService($state, {
+              isEditFeature: true,
+              template: template,
+            });
+          });
+          return;
+        }
+        if (feature.featureType === AbcService.abcServiceCard.id) {
+          AbcService.getAbcConfig(feature.templateId).then(function (template) {
+            AbcService.abcServiceCard.goToService($state, {
               isEditFeature: true,
               template: template,
             });
@@ -444,13 +443,33 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
     function userHasAccess(feature) {
       if (feature.featureType === EvaService.evaServiceCard.id) {
-        var result = EvaService.getWarningIfNotOwner(feature);
-        if (!result.valid) {
-          $scope.warning = $translate.instant(result.warning.message, result.warning.args);
+        var hasAccess = EvaService.canIEditThisEva(feature);
+        if (!hasAccess) {
+          var owner = EvaService.getEvaOwner(feature);
+          feature.noAccessTooltip = $translate.instant(EvaService.evaServiceCard.editDeleteWarning, { owner: owner });
         }
-        return result.valid;
+        return hasAccess;
       }
       return true;
+    }
+
+    function showWarning(feature) {
+      if (feature.featureType === EvaService.evaServiceCard.id) {
+        feature.missingDefaultSpace = false;
+        if (EvaService.isMissingDefaultSpace(feature)) {
+          feature.warning = $translate.instant(EvaService.evaServiceCard.noDefaultSpaceWarning);
+          feature.missingDefaultSpace = true;
+
+          // if user has no access, combine the warnings
+          if (!userHasAccess(feature)) {
+            var owner = EvaService.getEvaOwner(feature);
+            feature.warning = $translate.instant(EvaService.evaServiceCard.noDefaultSpaceAndNoAccess, { owner: owner });
+          }
+          return true;
+        }
+      }
+      // only EVA cards have warnings for now
+      return false;
     }
 
     function deleteCareFeature(feature, $event) {
@@ -523,9 +542,9 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     };
 
     function spacesInUseText(feature) {
-      var numOfSpaces = _.get(feature, 'spaces.length', 0);
+      var numOfSpaces = _.get(feature, 'spaces.length', -1);
 
-      if (numOfSpaces > 0) {
+      if (numOfSpaces >= 0) {
         return $translate.instant('careChatTpl.featureCard.spacesInUseText', {
           numOfSpaces: numOfSpaces,
         });

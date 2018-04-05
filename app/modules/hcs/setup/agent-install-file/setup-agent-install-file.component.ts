@@ -27,7 +27,7 @@ class SetupAgentInstallFileCtrl implements ng.IComponentController {
   /* @ngInject*/
   constructor(
     private $timeout: ng.ITimeoutService,
-    public $translate,
+    public $translate: ng.translate.ITranslateService,
     private Notification: Notification,
   ) {
     this.tokenplaceholder = this.$translate.instant('hcs.installFiles.placeholderHttpProxy');
@@ -104,8 +104,8 @@ class SetupAgentInstallFileCtrl implements ng.IComponentController {
         max: this.MAX_PORT,
       });
     }
-    return ((!_.isUndefined(ip) && ip.length === 4 && ipregex.test(ip[0])) ||
-           regex.test(ipdomain[0]) && (portValid && ipdomain[0].length < this.DOMAIN_MAX_LENGTH));
+    return (((!_.isUndefined(ip) && ip.length === 4 && ipregex.test(ip[0])) ||
+           regex.test(ipdomain[0])) && (portValid && ipdomain[0].length < this.DOMAIN_MAX_LENGTH));
   }
 
   private setPlaceholderText(text): void {

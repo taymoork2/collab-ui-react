@@ -14,7 +14,6 @@ class DeviceSettings implements ng.IComponentController {
   public updatingUpgradeChannel;
   public unsupportedDeviceTypeForUpgradeChannel: string;
 
-  public shouldShowSettingsLockDown;
   private _settingsLockedDown;
   public updatingSettingsLockDown;
   public unsupportedDeviceTypeForSettingsLockDown: string;
@@ -22,7 +21,6 @@ class DeviceSettings implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
-    private FeatureToggleService,
     private CsdmUpgradeChannelService: CsdmUpgradeChannelService,
     private CsdmConfigurationService: CsdmConfigurationService,
     private Notification,
@@ -31,6 +29,19 @@ class DeviceSettings implements ng.IComponentController {
 
   public $onInit(): void {
     this.fetchAsyncSettings();
+
+    const firstUnsupportedDeviceUpgradeChannel = _.find(this.deviceList || [], (d: any) =>
+      d.productFamily !== 'Cloudberry' && d.productFamily !== 'Novum');
+    if (firstUnsupportedDeviceUpgradeChannel) {
+      this.unsupportedDeviceTypeForUpgradeChannel = firstUnsupportedDeviceUpgradeChannel.product;
+    }
+
+    const firstUnsupportedDeviceLockDown = _.find(this.deviceList || [], (d: any) =>
+      d.productFamily !== 'Cloudberry' && d.productFamily !== 'Novum');
+    if (firstUnsupportedDeviceLockDown) {
+      this.unsupportedDeviceTypeForSettingsLockDown = firstUnsupportedDeviceLockDown.product;
+    }
+    this.resetSettingsLockedDown();
   }
 
   public onSaveUpgradeChannel() {
@@ -71,11 +82,6 @@ class DeviceSettings implements ng.IComponentController {
     this.BotAuthorizationsModal.open(this.ownerId, this.ownerDisplayName, this.ownerType);
   }
   private fetchAsyncSettings(): void {
-    const firstUnsupportedDevice = _.find(this.deviceList || [], (d: any) =>
-          d.productFamily !== 'Cloudberry' && d.productFamily !== 'Novum');
-    if (firstUnsupportedDevice) {
-      this.unsupportedDeviceTypeForUpgradeChannel = firstUnsupportedDevice.product;
-    }
     this.CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(channels => {
       this.shouldShowUpgradeChannel = channels.length > 1;
       if (this.shouldShowUpgradeChannel) {
@@ -83,18 +89,6 @@ class DeviceSettings implements ng.IComponentController {
           return this.getUpgradeChannelObject(channel);
         });
         this.resetSelectedUpgradeChannel();
-      }
-    });
-
-    this.FeatureToggleService.csdmPlaceGuiSettingsGetStatus().then(placeGuiSettings => {
-      if (placeGuiSettings) {
-        const firstUnsupportedDevice = _.find(this.deviceList || [], (d: any) =>
-          d.productFamily !== 'Cloudberry' && d.productFamily !== 'Novum');
-        if (firstUnsupportedDevice) {
-          this.unsupportedDeviceTypeForSettingsLockDown = firstUnsupportedDevice.product;
-        }
-        this.shouldShowSettingsLockDown = true;
-        this.resetSettingsLockedDown();
       }
     });
   }

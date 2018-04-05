@@ -50,9 +50,9 @@ describe('Component: userTaskManager', () => {
       '$stateParams',
       'UserTaskManagerService',
     );
-    this.taskList = _.cloneDeep(require('./test-tasks.json').taskManagerTasks);
+    this.taskList = _.cloneDeep(getJSONFixture('core/json/users/user-task-manager/test-tasks.json').taskManagerTasks);
 
-    spyOn(this.UserTaskManagerService, 'submitCsvImportTask').and.returnValue(this.$q.resolve(this.taskList[1]));
+    spyOn(this.UserTaskManagerService, 'submitCsvImportTask').and.returnValue(this.$q.resolve(this.taskList[2]));
     spyOn(this.UserTaskManagerService, 'initAllTaskListPolling');
 
     moment.tz.setDefault('America/Los_Angeles');
@@ -103,10 +103,13 @@ describe('Component: userTaskManager', () => {
       const activeTask = this.components.csvUploadResults.bindings[0].inputActiveTask;
       expect(activeTask).toEqual(this.taskList[0]);
       expect(activeTask.jobTypeTranslate).toBe('userTaskManagerModal.csvImport');
-      expect(activeTask.statusTranslate).toBe('userTaskManagerModal.taskStatus.completed');
-      expect(activeTask.jobInstanceId).toBe('CSV Import 1');
-      expect(activeTask.createdDate).toBe('Oct 6, 2017');
-      expect(activeTask.createdTime).toBe('1:54 PM');
+      expect(activeTask.statusTranslate).toBe('userTaskManagerModal.taskStatus.completedWithErrors');
+      expect(activeTask.createdDate).toBe('Mar 9, 2018');
+      expect(activeTask.createdTime).toBe('10:33 AM');
+      expect(activeTask.startedDate).toBe('Mar 9, 2018');
+      expect(activeTask.startedTime).toBe('10:34 AM');
+      expect(activeTask.stoppedDate).toBe('Mar 9, 2018');
+      expect(activeTask.stoppedTime).toBe('10:34 AM');
     });
 
     it('should change result task on task list change', function (this: Test) {
@@ -126,20 +129,20 @@ describe('Component: userTaskManager', () => {
       this.$scope.$apply();
 
       expect(this.components.userTaskListFilter.bindings[0].filter).toBe(TaskListFilterType.ACTIVE);
-      expect(this.components.userTaskList.bindings[0].task).toEqual(this.taskList[1]);
-      expect(this.components.userTaskList.bindings[0].taskList).toEqual([this.taskList[1]]);
-      expect(this.components.csvUploadResults.bindings[0].inputActiveTask).toEqual(this.taskList[1]);
+      expect(this.components.userTaskList.bindings[0].task).toEqual(this.taskList[2]);
+      expect(this.components.userTaskList.bindings[0].taskList).toEqual([this.taskList[2]]);
+      expect(this.components.csvUploadResults.bindings[0].inputActiveTask).toEqual(this.taskList[2]);
     });
 
     it('should update the active task status', function (this: Test) {
-      expect(this.components.userTaskList.bindings[0].taskList[0].status).toBe('COMPLETED');
+      expect(this.components.userTaskList.bindings[0].taskList[0].latestExecutionStatus).toBe('COMPLETED');
 
       this.components.csvUploadResults.bindings[0].onStatusUpdate({
         status: 'STARTED',
       });
       this.$scope.$apply();
 
-      expect(this.components.userTaskList.bindings[0].taskList[0].status).toBe('STARTED');
+      expect(this.components.userTaskList.bindings[0].taskList[0].latestExecutionStatus).toBe('STARTED');
     });
   });
 
@@ -162,9 +165,9 @@ describe('Component: userTaskManager', () => {
         .toHaveBeenCalledWith('AllSparkCall.csv', 'CSV content', true);
 
       expect(this.components.userTaskListFilter.bindings[0].filter).toBe(TaskListFilterType.ACTIVE);
-      expect(this.components.userTaskList.bindings[0].task).toEqual(this.taskList[1]);
-      expect(this.components.userTaskList.bindings[0].taskList).toEqual([this.taskList[1]]);
-      expect(this.components.csvUploadResults.bindings[0].inputActiveTask).toEqual(this.taskList[1]);
+      expect(this.components.userTaskList.bindings[0].task).toEqual(this.taskList[2]);
+      expect(this.components.userTaskList.bindings[0].taskList).toEqual([this.taskList[2]]);
+      expect(this.components.csvUploadResults.bindings[0].inputActiveTask).toEqual(this.taskList[2]);
     });
   });
 });

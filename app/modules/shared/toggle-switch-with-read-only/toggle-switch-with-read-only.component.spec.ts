@@ -1,6 +1,5 @@
 import moduleName from './index';
 import booleanTextFieldModuleName from '../boolean-text-field';
-import toggleSwitchModuleName from '@collabui/collab-ui-ng/src/components/toggleswitch';
 
 describe('Component: ToggleSwitchWithReadOnly:', () => {
 
@@ -8,7 +7,6 @@ describe('Component: ToggleSwitchWithReadOnly:', () => {
     this.initModules(
       moduleName,
       booleanTextFieldModuleName,
-      toggleSwitchModuleName,
     );
     this.injectDependencies(
       '$scope',

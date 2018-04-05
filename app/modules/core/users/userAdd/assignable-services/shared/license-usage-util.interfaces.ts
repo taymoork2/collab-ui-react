@@ -1,4 +1,4 @@
-import { OfferName } from 'modules/core/shared';
+import { OfferName } from 'modules/core/shared/offer-name';
 import { ICrCheckboxItemState } from 'modules/core/users/shared/cr-checkbox-item/cr-checkbox-item.component';
 
 export enum LicenseStatus {
@@ -9,10 +9,13 @@ export enum LicenseStatus {
 
 export interface ILicenseUsage {
   billingServiceId: string;
+  isCIUnifiedSite: boolean;
   licenseId: string;
   offerName: OfferName;
   siteUrl: string;
   status: LicenseStatus;
+  usage: number;
+  volume: number;
 }
 
 export interface ILicenseUsageMap {

@@ -1,6 +1,29 @@
 import './_timeline.scss';
 import * as d3 from 'd3';
 import * as moment from 'moment';
+import { SearchService, Platforms, Devices } from './searchService';
+
+export interface IMessageItem {
+  key: string;
+  value: string;
+}
+
+export interface IParticipantItem {
+  userName: string;
+  userId: string;
+  nodeId: string;
+  conferenceID: string;
+  guestId: string;
+  device: string;
+  pstnCallInType: string;
+  platform: string;
+  deviceIcon: string;
+  ts: number;
+  joinTime_: string;
+  duration: number;
+  x1: number;
+  y1: number;
+}
 
 class TimeLine implements ng.IComponentController {
 
@@ -12,10 +35,15 @@ class TimeLine implements ng.IComponentController {
   private coordinate;
   private data: any = {};
   private sourceData: any;
+  private callLegsData: any;
+  private tabType: string;
 
   /* @ngInject */
   public constructor(
     private $element: ng.IRootElementService,
+    private SearchService: SearchService,
+    private $translate: ng.translate.ITranslateService,
+    private $timeout: ng.ITimeoutService,
   ) {
     this.data = {
       ticks: 0,
@@ -31,6 +59,7 @@ class TimeLine implements ng.IComponentController {
   }
 
   public $onInit() {
+    if (!this.sourceData) { return; }
     this.addFnToD3();
     this.initParameters();
 
@@ -43,7 +72,8 @@ class TimeLine implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
-    const { circleColor, lineColor, pstnData, cmrData } = changes;
+    if (!this.sourceData) { return; }
+    const { circleColor, lineColor, pstnData, cmrData, callLegsData } = changes;
     _.debounce(() => {
       if (_.get(lineColor, 'currentValue')) {
         this.setLineColor(_.get(lineColor, 'currentValue'));
@@ -59,6 +89,10 @@ class TimeLine implements ng.IComponentController {
 
       if (_.get(cmrData, 'currentValue')) {
         this.lineSegment(_.get(cmrData, 'currentValue'), 'cmr');
+      }
+
+      if (_.get(callLegsData, 'currentValue')) {
+        this.updateCallLegsLine(_.get(callLegsData, 'currentValue'));
       }
     }, 500)();
   }
@@ -94,7 +128,7 @@ class TimeLine implements ng.IComponentController {
     ];
     this.dataToline({ data: data, append: 'svg:line', class: 'startEnd' });
     const g = d3.select('.timelineSvg').insert('div', 'svg').attr('class', 'seFlag')
-    .attr('style', `width: ${end - start + 4}px; margin-left: ${start - 2}px; top: -${this.option.gridHeight / 2}px`);
+    .attr('style', `width: ${end - start + 4}px; margin-left: ${start - 2}px; top: -${this.option.gridHeight / 2}px; line-height: 18px;`);
     g.append('span').attr('class', 'badge').text(this.stampToDate(this.sourceData.startTime, 'hh:mm A'));
     g.append('span').attr('class', 'badge').text(this.stampToDate(this.sourceData.endTime, 'hh:mm A'));
   }
@@ -173,6 +207,7 @@ class TimeLine implements ng.IComponentController {
       .attr('class', 'axis')
       .attr('transform', `translate(0, ${this.coordinate.endY})`)
       .call(xAxis);
+    this.svg.selectAll('.tick:last-of-type text').attr('x', -8);
   }
 
   private preData(): void {
@@ -183,7 +218,8 @@ class TimeLine implements ng.IComponentController {
       const arr = _.map(item, (item_: any) => {
         const x2 = this.time2line(this.timestampToDate(item_.leaveTime));
         const x1 = this.time2line(this.timestampToDate(item_.joinTime)) + 13;
-        return _.assignIn({}, item_, { y1: y, y2: y, x2: x2 > x1 ? x2 : x1, x1: x1, filterId: key });
+        const cls = ( this.callLegsData && this.callLegsData[item_.nodeId]) ? 'defaultLine' : '';
+        return _.assignIn({}, item_, { y1: y, y2: y, x2: x2 > x1 ? x2 : x1, x1: x1, filterId: key, cls: cls });
       });
       data = _.concat(data, arr);
     });
@@ -200,24 +236,25 @@ class TimeLine implements ng.IComponentController {
   private drawStartGraph(): void {
     const circles = this.data.data;
     const g = this.svg.append('g').attr('class', 'startPoint');
+    const stopX = this.time2line(this.timestampToDate(this.sourceData.endTime));
     g.selectAll('.startPoint')
       .data(circles)
       .enter()
       .append('circle')
       .attr('r', 9)
-      .attr('transform', item => `translate(${item.x1}, ${item.y1})`)
+      .attr('transform', item => `translate(${item.x1 > stopX ? stopX : item.x1}, ${item.y1})`)
       .attr('id', item => `myDot${item.guestId}-${item.userId}-${item.joinTime}`)
       .on('mouseover', item => {
         const circleId = `#myDot${item.guestId}-${item.userId}-${item.joinTime}`;
         const jmtQuality = this.$element.find(circleId).attr('jmtQuality');
         const joinMeetingTime = this.$element.find(circleId).attr('joinMeetingTime');
-        let jmtVal = 'Unavaliable';
+        let jmtVal = this.$translate.instant('reportsPage.webexMetrics.notAvailable');
         if (!_.isUndefined(joinMeetingTime)) {
-          jmtVal = _.parseInt(joinMeetingTime) === 1 ? `:${joinMeetingTime} Second` : `:${joinMeetingTime} Seconds`;
+          jmtVal = this.SearchService.toMinOrSec(_.parseInt(joinMeetingTime) * 1000);
         }
 
         const msgArr = [
-          { key: (jmtQuality ? `${jmtQuality} ` : '') + 'Join Meeting Time' },
+          { key: this.$translate.instant('reportsPage.webexMetrics.joinMeetingTime') + (jmtQuality ? `: ${jmtQuality} ` : '') },
           { key: jmtVal },
         ];
 
@@ -250,19 +287,76 @@ class TimeLine implements ng.IComponentController {
       .enter()
       .append('p')
       .attr('class', 'ellipsis')
-      .on('mouseover', item => {
-        const msgArr = [
-          { key: item.userName },
-          { key: item.device },
-          { key: 'Join Time: ', value: item.joinTime_ },
-          { key: 'Duration: ', value: _.round(item.duration / 60) + ' Min' },
-        ];
-
-        this.makeTips({ arr: msgArr }, item.y1 - 15, this.option.paddingLeft - 40 );
-      })
+      .on('mouseover', this.yAxisTips())
       .on('mouseout', () => this.hideTips()).text(item => `${item.userName}`).append('i').attr('class', item => `icon ${item.deviceIcon}`);
 
     this.showUnitStr();
+  }
+
+  private yAxisTips(): Function {
+    const DELAY_1_SEC = 1000;
+    return (item: IParticipantItem) => {
+      const msgArr = [
+        { key: item.userName },
+        { key: `${this.$translate.instant('reportsPage.webexMetrics.joinTime')}: `, value: item.joinTime_ },
+        { key: `${this.$translate.instant('reportsPage.webexMetrics.duration')}: `, value: this.SearchService.toMinOrSec(item.duration * 1000) },
+      ];
+
+      if ((item.platform === Platforms.TP && !item.device) || ((item.device === Devices.IP_PHONE || item.device === Devices.PHONE) && !item.pstnCallInType)) {
+        if (item.ts && Date.now() - item.ts < DELAY_1_SEC) {
+          return;
+        }
+        item.ts = Date.now();
+
+        this.getDeviceOrPSTNType(item).then((msgItem) => {
+          if (msgItem) {
+            msgArr.splice(1, 0, msgItem);
+          }
+        });
+        // note: schedule this call (this does not depend on the above API calls)
+        this.$timeout(() => this.makeTips({ arr: msgArr }, item.y1 - 15, this.option.paddingLeft - 40), DELAY_1_SEC);
+      } else if ((item.device === Devices.IP_PHONE || item.device === Devices.PHONE) && item.pstnCallInType) {
+        msgArr.splice(1, 0, { key: `${this.$translate.instant('reportsPage.webexMetrics.callIn')}: `, value: item.pstnCallInType });
+        this.makeTips({ arr: msgArr }, item.y1 - 15, this.option.paddingLeft - 40);
+      } else {
+        msgArr.splice(1, 0, { key: item.device });
+        this.makeTips({ arr: msgArr }, item.y1 - 15, this.option.paddingLeft - 40);
+      }
+    };
+  }
+
+  private getDeviceOrPSTNType(item: IParticipantItem): ng.IPromise<IMessageItem> {
+    let promise;
+    if (!item.device) {
+      if (item.platform === Platforms.TP) {
+        promise = this.SearchService.getRealDevice(item.conferenceID, item.nodeId)
+        .then(response => {
+          const firstItem = _.first(response.items);
+          if (firstItem) {
+            item.device = firstItem.deviceType;
+            return {
+              key: firstItem.deviceType,
+            };
+          }
+        });
+      }
+    } else if (item.device === Devices.IP_PHONE || item.device === Devices.PHONE) {
+      if (!item.pstnCallInType) {
+        promise = this.SearchService.getPSTNCallInType(item.conferenceID, item.nodeId)
+        .then((response: any) => {
+          const firstItem: any = _.first(response.items);
+          if (firstItem) {
+            item.pstnCallInType = firstItem.pstnCallInType;
+            return {
+              key: `${this.$translate.instant('reportsPage.webexMetrics.callIn')}: `,
+              value: firstItem.pstnCallInType,
+            };
+          }
+        });
+      }
+    }
+
+    return promise;
   }
 
   private drawCircle(node, class_, pos) {
@@ -335,10 +429,10 @@ class TimeLine implements ng.IComponentController {
   }
 
   private setLegend(): void {
-    const g = d3.select('.timelineSvg').append('div').attr('class', 'legend').attr('style', `width:${this.option.width}px`);
+    const g = d3.select('.timelineSvg').append('div').attr('class', 'legend').attr('style', `min-width: 1100px`);
     this.legendTitle(g);
-    g.append('div').attr('class', 'legendCircle');
-    g.append('div').attr('class', 'legendLine');
+    g.append('div').attr('class', 'legendCircle').attr('style', 'padding: 0; float: left;');
+    g.append('div').attr('class', 'legendLine').attr('style', 'float: right;');
     _.forEach(this.legendInfo.circle, val => {
       const colorZone = d3.select('.legendCircle').append('div');
       const svg = colorZone.append('svg:svg');
@@ -351,21 +445,33 @@ class TimeLine implements ng.IComponentController {
       }
       svg.append('text').text(val === 'N/A' ? 'Not Available' : val).attr('transform', `translate(24 , 17)`);
     });
-    _.forEach(this.legendInfo.line, val => {
+
+    const qualityLegends = [{ cls: 'goodLine', text: 'Good', width: 80 },
+                            { cls: 'fairLine', text: 'Fair', width: 65 },
+                            { cls: 'poorLine', text: 'Poor', width: 0 },
+                            { cls: 'defaultLine', text: 'Not Available', width: 130 },
+                            { cls: '', text: `${this.tabType} Not Enabled`, width: 155 }];
+    _.each(qualityLegends, (legend, index) => {
       const colorZone = d3.select('.legendLine').append('div');
+      if (legend.width) {
+        colorZone.attr('style', `width: ${legend.width}px`);
+      }
+      if (index === 1 && this.tabType === 'Video') {
+        colorZone.attr('style', 'display: none;');
+      }
       const svg = colorZone.append('svg:svg').attr('class', 'lineSvg');
       svg.append('svg:line')
-      .attr('class', val === 'N/A' ? '' : _.toLower(val) + 'Line')
-      .attr('x1', 3)
-      .attr('y1', 14)
-      .attr('x2', 28)
-      .attr('y2', 14);
-      svg.append('text').text(val === 'N/A' ? 'Not Available' : val).attr('transform', `translate(33 , 17)`);
+        .attr('class', legend.cls)
+        .attr('x1', 3)
+        .attr('y1', 14)
+        .attr('x2', 28)
+        .attr('y2', 14);
+      svg.append('text').text(legend.text).attr('transform', `translate(33 , 17)`);
     });
   }
 
   private legendTitle(g) {
-    g.append('p').text('Join Meeting Time').append('i').attr('class', 'icon icon-info-outline')
+    g.append('p').text(this.$translate.instant('reportsPage.webexMetrics.joinMeetingTime')).attr('style', 'float: left;').append('i').attr('class', 'icon icon-info-outline')
     .on('mouseover', () => {
       const msgArr = [
         { key: `<p class="text-center">Join Meeting Time is<br>calculated in seconds.<br>Good: < 10 seconds<br>Fair: 10-20 seconds<br>Poor: > 20 seconds<br>Not Available: No information</p>` },
@@ -374,16 +480,24 @@ class TimeLine implements ng.IComponentController {
       this.makeTips({ arr: msgArr }, pos.top - 10, pos.left + 17);
     })
     .on('mouseout', () => this.hideTips());
-    g.append('p').text('Meeting Quality').append('i').attr('class', 'icon icon-info-outline')
+    g.append('p').text(`${this.tabType} Quality`).attr('style', 'float: right;').append('i').attr('class', 'icon icon-info-outline')
     .on('mouseover', () => {
+      let msg = '';
+      if (this.tabType === 'Video') {
+        msg = `<p class="text-center">Video quality are measures <br>with latency and packet loss.<br>
+        Packet loss > 5.0% or latency > 400ms = Poor<br>
+        If neither of the above, then the quality is Good</p>`;
+      } else {
+        msg = `<p class="text-center">PSTN quality is measured by a MOS Score. <br>
+        Scores of 4.0-5.0 are Good, <br>
+        3.0-3.9 are Fair and below 3.0 are Poor.<br>
+        VoIP quality are measures<br> with latency and packet loss.<br>
+        Packet loss < 3.0% and latency < 300ms = Good<br>
+        Packet loss > 5.0% and latency > 400ms = Poor<br>
+        If neither of the above, then the quality is Fair</p>`;
+      }
       const msgArr = [
-        { key: `<p class="text-center">PSTN quality is measured by a MOS Score. <br>
-          Scores of 4.0-5.0 are Good, <br>
-          3.0-3.9 are Fair and below 3.0 are Poor.<br>
-          VoIP and Video quality are measures<br> with latency and packet loss.<br>
-          Packet loss < 3.0% and latency < 300ms = Good<br>
-          Packet loss > 5.0% and latency > 400ms = Poor<br>
-          If neither of the above, then the quality is Fair</p>` },
+        { key: msg },
       ];
       const pos = this.$element.find('.legend p i').last().position();
       this.makeTips({ arr: msgArr }, pos.top - 10, pos.left + 17);
@@ -420,13 +534,22 @@ class TimeLine implements ng.IComponentController {
           const qualityKey = this.getJoinMeetingQualityIndex(item);
           const quality = this.legendInfo.circle[qualityKey] === 'N/A' ? '' : this.legendInfo.circle[qualityKey];
           const msgArr = [
-            { key: (quality ? `${quality} ` : '') + 'Join Meeting Time' },
-            { key: item.joinMeetingTime ? `:${item.joinMeetingTime} Seconds` : 'Unavaliable' },
+            { key: this.$translate.instant('reportsPage.webexMetrics.joinMeetingTime') + (quality ? `: ${quality} ` : '') },
+            { key: item.joinMeetingTime ? `${_.parseInt(item.joinMeetingTime)} Seconds` : this.$translate.instant('reportsPage.webexMetrics.notAvailable') },
           ];
 
           this.makeTips({ arr: msgArr }, nodey - 16, nodex);
         })
         .on('mouseout', () => this.hideTips());
+      }
+    });
+  }
+
+  private updateCallLegsLine(data) {
+    _.each(data, (isDefault, nodeId) => {
+      if (isDefault) {
+        d3.select(`#myLine${nodeId}`)
+          .attr('class', 'defaultLine');
       }
     });
   }
@@ -458,8 +581,8 @@ class TimeLine implements ng.IComponentController {
     .on('mouseover', item => {
       const msgArr = [
         { key: `${item.type} Quality:`, value: this.legendInfo.line[_.parseInt(item.dataQuality) - 1] },
-        { key: `Latency:`, value: item.latency },
-        { key: 'Packet Loss:', value: _.round(item.packageLossRate * 100, 2) + ` %` },
+        { key: `Latency:`, value: item.latency * 1 > 999 ? '> 1 Second' : item.latency + ' ms' },
+        { key: 'Packet Loss:', value: item.packageLossRate * 100 > 9.9 ? '> 10%' : _.round(item.packageLossRate * 100, 2) + `%` },
       ];
       this.makeTips({ arr: msgArr }, item.y1 - 10, item.x1 + (item.x2 - item.x1) / 2);
     })
@@ -469,7 +592,11 @@ class TimeLine implements ng.IComponentController {
   private getQosData(data, startx, y) {
     let data_: any = [];
     _.forEach(data, (item) => {
-      const end = this.time2line(this.timestampToDate(item.timeStamp));
+      let timestamp = item.timeStamp;
+      if (timestamp > this.data.endTime) {
+        timestamp = this.data.endTime;
+      }
+      const end = this.time2line(this.timestampToDate(timestamp));
       if (end < startx) {
         return true;
       }
@@ -504,7 +631,8 @@ class TimeLine implements ng.IComponentController {
       .attr('x1', item => item.x1)
       .attr('y1', item => item.y1)
       .attr('x2', item => item.x2)
-      .attr('y2', item => item.y2);
+      .attr('y2', item => item.y2)
+      .attr('class', item => item.cls ? item.cls : '');
   }
 
   private hideTips() {
@@ -527,7 +655,7 @@ class TimeLine implements ng.IComponentController {
       ],
       cmr: [
         { key: `${item.type} Quality: `, value: item.quality },
-        { key: `Loss Rate: `, value: _.round(item.lossRate * 100, 2) + ` %` },
+        { key: `Loss Rate: `, value: _.round(item.lossRate * 100, 2) + `%` },
         { key: 'Jitter: ', value: _.parseInt(item.jitter) === 1 ? `${item.jitter} Millisecond` : `${item.jitter} Milliseconds` },
       ],
     };
@@ -553,8 +681,8 @@ class TimeLine implements ng.IComponentController {
     let unit = 60 * 1000;
     if (duration <= 55 * 6 * 1000) {
       unit = 1 * 1000;
-      this.data.unitStr = 'Min:Sec';
-      this.data.xAxisFormat = '%M:%S %p';
+      this.data.unitStr = 'Hour:Min:Sec';
+      this.data.xAxisFormat = '%I:%M:%S %p';
     }
     return unit;
   }
@@ -595,5 +723,5 @@ class TimeLine implements ng.IComponentController {
 export class DgcTimeLineComponent implements ng.IComponentOptions {
   public controller = TimeLine;
   public template = '<div class="timelineSvg"></div>';
-  public bindings = { sourceData: '<', lineColor: '<', circleColor: '<', pstnData: '<', cmrData: '<' };
+  public bindings = { sourceData: '<', lineColor: '<', circleColor: '<', pstnData: '<', cmrData: '<', callLegsData: '<', tabType: '<' };
 }

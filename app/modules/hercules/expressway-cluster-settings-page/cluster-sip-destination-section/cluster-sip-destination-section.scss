@@ -1,0 +1,18 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import 'styles/partials/mixins';
+
+cluster-sip-destination-section {
+  @include keep-flex-container();
+
+  .padded-element {
+    display: block;
+    margin-left: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .icon-info {
+    color: $blue-base;
+    vertical-align: -1px;
+    margin-right: 0.4rem;
+  }
+}

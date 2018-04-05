@@ -176,6 +176,12 @@
       integration: 'https://ccaportalbts.webex.com/pcs/api/v2/',
       prod: 'https://ccaportal.webex.com/pcs/api/v2/',
     },
+    DiagnosticUrl: {
+      dev: 'https://maestroqa.qa.webex.com/pcsdemo/pcs/api/v2/',
+      cfe: 'https://maestroqa.qa.webex.com/pcsdemo/pcs/api/v2/',
+      integration: 'https://sapmatsbts.webex.com/pcs/api/v2/',
+      prod: 'https://sapmats.webex.com/pcs/api/v2/',
+    },
     GssUrlWebexCHP: {
       dev: 'https://statusbts.webex.com/status',
       cfe: 'https://statusbts.webex.com/status',
@@ -277,6 +283,24 @@
       cfe: 'https://speech-services-manager-loada1.ciscospark.com/speech-services-manager/api/v1/',
       integration: 'https://speech-services-manager.intb1.ciscospark.com/speech-services-manager/api/v1/',
       prod: 'https://speech-services-manager-a.wbx2.com/speech-services-manager/api/v1/',
+    },
+    HcsLicenseServiceUrl: {
+      dev: 'https://licensing.int-ucmgmt.cisco.com/api/v1/',
+      cfe: 'https://licensing.int-ucmgmt.cisco.com/api/v1/',
+      integration: 'https://licensing.int-ucmgmt.cisco.com/api/v1/',
+      prod: 'https://licensing.ucmgmt.cisco.com/api/v1/', //TBD
+    },
+    HcsUpgradeServiceUrl: {
+      dev: 'https://upgrade.int-ucmgmt.cisco.com/api/v1/',
+      cfe: 'https://upgrade.int-ucmgmt.cisco.com/api/v1/',
+      integration: 'https://upgrade.int-ucmgmt.cisco.com/api/v1/',
+      prod: 'https://upgrade.ucmgmt.cisco.com/api/v1/', //TBD
+    },
+    HcsControllerServiceUrl: {
+      dev: 'https://controller.int-ucmgmt.cisco.com/api/v1/',
+      cfe: 'https://controller.int-ucmgmt.cisco.com/api/v1/',
+      integration: 'https://controller.int-ucmgmt.cisco.com/api/v1/',
+      prod: 'https://controller.ucmgmt.cisco.com/api/v1/', //TBD
     },
     QlikReportAppUrl: 'https://%s/custportal/extensions/',
     ProdAdminServiceUrl: 'https://atlas-a.wbx2.com/admin/api/v1/',

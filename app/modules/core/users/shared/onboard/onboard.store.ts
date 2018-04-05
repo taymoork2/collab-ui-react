@@ -22,7 +22,12 @@ export interface IOnboardScopeForUsersAdd {
   };
 }
 
-export interface IOnboardScopeForUsersConvert {}
+export interface IOnboardScopeForUsersConvert {
+  convertSelectedList: any[] | undefined;
+  convertUsersFlow: boolean;
+  searchStr: string;
+  selectedState: any; // TODO (mipark2): better type
+}
 
 export enum OnboardCtrlBoundUIStates {
   ALL = 'all',
@@ -97,6 +102,11 @@ export default class OnboardStore {
   }
 
   private initUsersConvert(): IOnboardScopeForUsersConvert {
-    return {};
+    return {
+      convertSelectedList: undefined,
+      convertUsersFlow: false,
+      searchStr: '',
+      selectedState: undefined,
+    };
   }
 }

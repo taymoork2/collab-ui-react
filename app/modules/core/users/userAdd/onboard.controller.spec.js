@@ -34,6 +34,7 @@ describe('OnboardCtrl: Ctrl', function () {
       'Notification',
       'NumberService',
       'OnboardService',
+      'OnboardStore',
       'Orgservice',
       'ServiceSetup',
       'SunlightConfigService',
@@ -117,9 +118,6 @@ describe('OnboardCtrl: Ctrl', function () {
 
     spyOn(this.Notification, 'notify');
 
-    spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(function (callback) {
-      callback(this.mock.unlicensedUsers, 200);
-    }.bind(this));
     spyOn(this.Orgservice, 'getOrg').and.callFake(function (callback) {
       callback({}, 200);
     });
@@ -489,7 +487,7 @@ describe('OnboardCtrl: Ctrl', function () {
         name: 'dntodid1',
         address: 'dntodid1@gmail.com',
       }];
-      this.$scope.convertSelectedList = [{
+      this.OnboardStore['users.convert'].convertSelectedList = [{
         name: {
           givenName: 'dntodid',
           familyName: '',
@@ -545,7 +543,7 @@ describe('OnboardCtrl: Ctrl', function () {
       }));
       expect(this.$state.go).toHaveBeenCalledWith('editService.dn');
       expect(this.$scope.editServicesFlow).toBe(true);
-      expect(this.$scope.convertUsersFlow).toBe(false);
+      expect(this.OnboardStore['users.convert'].convertUsersFlow).toBe(false);
     });
 
     it('assignDNForUserList', function () {
@@ -702,16 +700,6 @@ describe('OnboardCtrl: Ctrl', function () {
         expect(licenseFeatures[1].id).toBe('CO_cb9b68a9-ee2d-4896-bc8d-0f4dd830b47d');
         expect(licenseFeatures[1].idOperation).toBe('ADD');
       });
-    });
-  });
-
-  describe('filterList', function () {
-    beforeEach(initController);
-    it('a proper query should call out to organizationService', function () {
-      this.$scope.filterList('sqtest');
-      this.$timeout.flush();
-      expect(this.Orgservice.getUnlicensedUsers.calls.count()).toEqual(2);
-      expect(this.$scope.showSearch).toEqual(true);
     });
   });
 
@@ -996,210 +984,174 @@ describe('OnboardCtrl: Ctrl', function () {
       });
     });
 
-    describe('Check that careRadio remains None when user does not have the care License', function () {
-      beforeEach(function () {
-        this.userId = 'dbca1001-ab12-cd34-de56-abcdef123454';
-        spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
-        spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
-        spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServicesWithoutCareLicense.careLicense);
-        spyOn(this.LogMetricsService, 'logMetrics').and.callFake(function () {});
-        this.$stateParams.currentUser = {
-          licenseID: ['MS_cd66217d-a419-4cfb-92b4-a196b7fe3c74'],
-          entitlements: ['cloud-contact-center-digital', 'contact-center-context', 'cloud-contact-center'],
-          roles: ['spark.synckms'],
-          id: this.userId,
-        };
-      });
-      afterEach(function () {
-        this.userId = undefined;
-      });
-      beforeEach(initController);
-
-
-      it('should call getAccountLicenses correctly', function () {
-        this.$scope.radioStates.initialCareRadioState = this.$scope.careRadioValue.NONE;
-        this.$scope.getAccountLicenses();
-        expect(this.$scope.radioStates.careRadio).toBe(this.$scope.careRadioValue.NONE);
-        this.$httpBackend.verifyNoOutstandingRequest();
-      });
-    });
-
-    describe('Check that careRadio remains None when user does not have the care voice License', function () {
-      beforeEach(function () {
-        this.userId = 'dbca1001-ab12-cd34-de56-abcdef123454';
-        spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
-        spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
-        spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServicesWithoutCareVoiceLicense.careVoiceLicense);
-        spyOn(this.LogMetricsService, 'logMetrics').and.callFake(function () {});
-        this.$stateParams.currentUser = {
-          licenseID: ['MS_cd66217d-a419-4cfb-92b4-a196b7fe3c74'],
-          entitlements: ['contact-center-context', 'cloud-contact-center-inbound-voice', 'cloud-contact-center'],
-          roles: ['spark.synckms'],
-          id: this.userId,
-        };
-      });
-      afterEach(function () {
-        this.userId = undefined;
-      });
-      beforeEach(initController);
-
-
-      it('should call getAccountLicenses correctly', function () {
-        this.$scope.radioStates.initialCareRadioState = this.$scope.careRadioValue.NONE;
-        this.$scope.getAccountLicenses();
-        expect(this.$scope.radioStates.careRadio).toBe(this.$scope.careRadioValue.NONE);
-        this.$httpBackend.verifyNoOutstandingRequest();
-      });
-    });
-
-    describe('Check that careRadio remains in same state when user does not have the context entitlement', function () {
+    describe('care radio button selection:', function () {
       beforeEach(function () {
         this.userId = 'dbca1001-ab12-cd34-de56-abcdef123454';
         spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
         spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
         spyOn(this.Authinfo, 'getMessageServices').and.returnValue(this.mock.getMessageServices.singleLicense);
-        spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServices.careLicense);
-        spyOn(this.LogMetricsService, 'logMetrics').and.callFake(function () {});
-        this.$stateParams.currentUser = {
-          licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd'],
-          entitlements: ['cloud-contact-center'],
-          roles: ['spark.synckms'],
-          id: this.userId,
-        };
+        spyOn(this.LogMetricsService, 'logMetrics');
       });
+
       afterEach(function () {
         this.userId = undefined;
       });
-      beforeEach(initController);
 
-      it('should call getAccountLicenses correctly', function () {
-        this.$scope.radioStates.msgRadio = true;
-        this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K1;
-        this.$scope.getAccountLicenses();
-        expect(this.$scope.radioStates.careRadio).toBe(this.$scope.careRadioValue.K1);
-        this.$httpBackend.verifyNoOutstandingRequest();
+      describe('user does not have the care license:', function () {
+        beforeEach(function () {
+          spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServicesWithoutCareLicense.careLicense);
+          this.$stateParams.currentUser = {
+            licenseID: ['MS_cd66217d-a419-4cfb-92b4-a196b7fe3c74'],
+            entitlements: ['cloud-contact-center-digital', 'contact-center-context', 'cloud-contact-center'],
+            roles: ['spark.synckms'],
+            id: this.userId,
+          };
+        });
+
+        beforeEach(initController);
+
+        it('should set care radio value to none if initial radio state is also none', function () {
+          this.$scope.radioStates.initialCareRadioState = this.$scope.careRadioValue.NONE;
+          this.$scope.getAccountLicensesForCare();
+          expect(this.$scope.radioStates.careRadio).toBe(this.$scope.careRadioValue.NONE);
+          this.$httpBackend.verifyNoOutstandingRequest();
+        });
+      });
+
+      describe('user does not have the care voice license:', function () {
+        beforeEach(function () {
+          spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServicesWithoutCareVoiceLicense.careVoiceLicense);
+          this.$stateParams.currentUser = {
+            licenseID: ['MS_cd66217d-a419-4cfb-92b4-a196b7fe3c74'],
+            entitlements: ['contact-center-context', 'cloud-contact-center-inbound-voice', 'cloud-contact-center'],
+            roles: ['spark.synckms'],
+            id: this.userId,
+          };
+        });
+
+        beforeEach(initController);
+
+        it('should set care radio value to none if initial radio state is also none', function () {
+          this.$scope.radioStates.initialCareRadioState = this.$scope.careRadioValue.NONE;
+          this.$scope.getAccountLicensesForCare();
+          expect(this.$scope.radioStates.careRadio).toBe(this.$scope.careRadioValue.NONE);
+          this.$httpBackend.verifyNoOutstandingRequest();
+        });
+      });
+
+      describe('user does not have the context entitlement:', function () {
+        beforeEach(function () {
+          spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServices.careLicense);
+          this.$stateParams.currentUser = {
+            licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd'],
+            entitlements: ['cloud-contact-center'],
+            roles: ['spark.synckms'],
+            id: this.userId,
+          };
+        });
+
+        beforeEach(initController);
+
+        it('should not modify care radio value', function () {
+          this.$scope.radioStates.msgRadio = true;
+          this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K1;
+          this.$scope.getAccountLicensesForCare();
+          expect(this.$scope.radioStates.careRadio).toBe(this.$scope.careRadioValue.K1);
+          this.$httpBackend.verifyNoOutstandingRequest();
+        });
+      });
+
+      describe('user does not have the kms scopes:', function () {
+        beforeEach(function () {
+          spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServices.careLicense);
+          this.$stateParams.currentUser = {
+            licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd'],
+            entitlements: ['contact-center-context', 'cloud-contact-center-digital', 'cloud-contact-center'],
+            roles: [],
+            id: this.userId,
+          };
+        });
+
+        beforeEach(initController);
+
+        it('should not modify care radio value', function () {
+          this.$scope.radioStates.msgRadio = true;
+          this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K1;
+          this.$scope.getAccountLicensesForCare();
+          expect(this.$scope.radioStates.careRadio).toBe(this.$scope.careRadioValue.K1);
+          this.$httpBackend.verifyNoOutstandingRequest();
+        });
+      });
+
+      describe('user does not have the entitlement', function () {
+        beforeEach(function () {
+          spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareVoiceServices.careVoiceLicense);
+          this.$stateParams.currentUser = {
+            licenseID: ['CVC_va652e7d-cd34-4545-8f23-936b74359afd'],
+            entitlements: [],
+            roles: ['spark.synckms'],
+            id: this.userId,
+          };
+        });
+
+        beforeEach(initController);
+
+        it('should set care radio value to none', function () {
+          this.$scope.radioStates.msgRadio = true;
+          this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K2;
+          this.$scope.getAccountLicensesForCare();
+          this.$scope.setCareService();
+          expect(this.$scope.radioStates.careRadio).toBe(this.$scope.careRadioValue.NONE);
+          this.$httpBackend.verifyNoOutstandingRequest();
+        });
+      });
+
+      describe('user does not have the roles', function () {
+        beforeEach(function () {
+          spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareVoiceServices.careVoiceLicense);
+          this.$stateParams.currentUser = {
+            licenseID: ['CVC_va652e7d-cd34-4545-8f23-936b74359afd'],
+            entitlements: ['cloud-contact-center-inbound-voice', 'contact-center-context', 'cloud-contact-center'],
+            roles: [],
+            id: this.userId,
+          };
+        });
+
+        beforeEach(initController);
+
+        it('should set care radio value to none', function () {
+          this.$scope.radioStates.msgRadio = true;
+          this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K2;
+          this.$scope.getAccountLicensesForCare();
+          this.$scope.setCareService();
+          expect(this.$scope.radioStates.careRadio).toBe(this.$scope.careRadioValue.NONE);
+          this.$httpBackend.verifyNoOutstandingRequest();
+        });
+      });
+
+      describe('user does not have the cloud-contact-center-inbound-voice entitlement', function () {
+        beforeEach(function () {
+          spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareVoiceServices.careVoiceLicense);
+          this.$stateParams.currentUser = {
+            licenseID: ['CVC_va652e7d-cd34-4545-8f23-936b74359afd'],
+            entitlements: ['cloud-contact-center'],
+            roles: ['spark.synckms'],
+            id: this.userId,
+          };
+        });
+
+        beforeEach(initController);
+
+        it('should not modify the care radio value', function () {
+          this.$scope.radioStates.msgRadio = true;
+          this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K2;
+          this.$scope.getAccountLicensesForCare();
+          this.$scope.setCareService();
+          expect(this.$scope.radioStates.careRadio).toBe(this.$scope.careRadioValue.NONE);
+          this.$httpBackend.verifyNoOutstandingRequest();
+        });
       });
     });
-
-    describe('Check that careRadio remains in same state when user does not have the kms scopes', function () {
-      beforeEach(function () {
-        this.userId = 'dbca1001-ab12-cd34-de56-abcdef123454';
-        spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
-        spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
-        spyOn(this.Authinfo, 'getMessageServices').and.returnValue(this.mock.getMessageServices.singleLicense);
-        spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServices.careLicense);
-        spyOn(this.LogMetricsService, 'logMetrics').and.callFake(function () {});
-        this.$stateParams.currentUser = {
-          licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd'],
-          entitlements: ['contact-center-context', 'cloud-contact-center-digital', 'cloud-contact-center'],
-          roles: [],
-          id: this.userId,
-        };
-      });
-      afterEach(function () {
-        this.userId = undefined;
-      });
-      beforeEach(initController);
-
-      it('should call getAccountLicenses correctly', function () {
-        this.$scope.radioStates.msgRadio = true;
-        this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K1;
-        this.$scope.getAccountLicenses();
-        expect(this.$scope.radioStates.careRadio).toBe(this.$scope.careRadioValue.K1);
-        this.$httpBackend.verifyNoOutstandingRequest();
-      });
-    });
-
-    describe('Check that careRadio is in none state when user does not have the entitlement', function () {
-      beforeEach(function () {
-        this.userId = 'dbca1001-ab12-cd34-de56-abcdef123454';
-        spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
-        spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
-        spyOn(this.Authinfo, 'getMessageServices').and.returnValue(this.mock.getMessageServices.singleLicense);
-        spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareVoiceServices.careVoiceLicense);
-        spyOn(this.LogMetricsService, 'logMetrics').and.callFake(function () {});
-        this.$stateParams.currentUser = {
-          licenseID: ['CVC_va652e7d-cd34-4545-8f23-936b74359afd'],
-          entitlements: [],
-          roles: ['spark.synckms'],
-          id: this.userId,
-        };
-      });
-      afterEach(function () {
-        this.userId = undefined;
-      });
-      beforeEach(initController);
-
-      it('should call getAccountLicenses correctly and show None selected', function () {
-        this.$scope.radioStates.msgRadio = true;
-        this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K2;
-        this.$scope.getAccountLicenses();
-        this.$scope.setCareService();
-        expect(this.$scope.radioStates.careRadio).toBe(this.$scope.careRadioValue.NONE);
-        this.$httpBackend.verifyNoOutstandingRequest();
-      });
-    });
-
-    describe('Check that careRadio is in none state when user does not have the roles', function () {
-      beforeEach(function () {
-        this.userId = 'dbca1001-ab12-cd34-de56-abcdef123454';
-        spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
-        spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
-        spyOn(this.Authinfo, 'getMessageServices').and.returnValue(this.mock.getMessageServices.singleLicense);
-        spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareVoiceServices.careVoiceLicense);
-        spyOn(this.LogMetricsService, 'logMetrics').and.callFake(function () {});
-        this.$stateParams.currentUser = {
-          licenseID: ['CVC_va652e7d-cd34-4545-8f23-936b74359afd'],
-          entitlements: ['cloud-contact-center-inbound-voice', 'contact-center-context', 'cloud-contact-center'],
-          roles: [],
-          id: this.userId,
-        };
-      });
-      afterEach(function () {
-        this.userId = undefined;
-      });
-      beforeEach(initController);
-
-      it('should call getAccountLicenses correctly and show None selected', function () {
-        this.$scope.radioStates.msgRadio = true;
-        this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K2;
-        this.$scope.getAccountLicenses();
-        this.$scope.setCareService();
-        expect(this.$scope.radioStates.careRadio).toBe(this.$scope.careRadioValue.NONE);
-        this.$httpBackend.verifyNoOutstandingRequest();
-      });
-    });
-
-    describe('Check that careRadio remains in same state when user does not have the cloud-contact-center-inbound-voice entitlement', function () {
-      beforeEach(function () {
-        this.userId = 'dbca1001-ab12-cd34-de56-abcdef123454';
-        spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
-        spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
-        spyOn(this.Authinfo, 'getMessageServices').and.returnValue(this.mock.getMessageServices.singleLicense);
-        spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareVoiceServices.careVoiceLicense);
-        spyOn(this.LogMetricsService, 'logMetrics').and.callFake(function () {});
-        this.$stateParams.currentUser = {
-          licenseID: ['CVC_va652e7d-cd34-4545-8f23-936b74359afd'],
-          entitlements: ['cloud-contact-center'],
-          roles: ['spark.synckms', 'ciscouc.ces'],
-          id: this.userId,
-        };
-      });
-      afterEach(function () {
-        this.userId = undefined;
-      });
-      beforeEach(initController);
-
-      it('should call getAccountLicenses correctly', function () {
-        this.$scope.radioStates.msgRadio = true;
-        this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K2;
-        this.$scope.getAccountLicenses();
-        this.$scope.setCareService();
-        expect(this.$scope.radioStates.careRadio).toBe(this.$scope.careRadioValue.NONE);
-        this.$httpBackend.verifyNoOutstandingRequest();
-      });
-    });
-
 
     describe('Check if multiple licenses (MS, CDC) get assigned correctly', function () {
       beforeEach(function () {
@@ -1208,7 +1160,7 @@ describe('OnboardCtrl: Ctrl', function () {
         spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
         spyOn(this.Authinfo, 'getMessageServices').and.returnValue(this.mock.getMessageServices.singleLicense);
         spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServices.careLicense);
-        spyOn(this.LogMetricsService, 'logMetrics').and.callFake(function () {});
+        spyOn(this.LogMetricsService, 'logMetrics');
         this.$stateParams.currentUser = {
           licenseID: ['MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0', 'CDC_da652e7d-cd34-4545-8f23-936b74359afd'],
           entitlements: ['cloud-contact-center', 'contact-center-context', 'cloud-contact-center-digital'],
@@ -1216,19 +1168,23 @@ describe('OnboardCtrl: Ctrl', function () {
           id: this.userId,
         };
       });
+
       afterEach(function () {
         this.userId = undefined;
       });
       beforeEach(initController);
 
-      it('should call getAccountLicenses correctly', function () {
+      it('should call getAccountLicenses and getAccountLicensesForCare correctly', function () {
+        this.$scope.setCareService();
         this.$scope.radioStates.msgRadio = true;
         this.$scope.controlMsg();
         this.$scope.radioStates.initialCareRadioState = this.$scope.careRadioValue.NONE;
         this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K1;
+        this.$scope.recvUpdateIsContextServiceAdminAuthorized(true);
 
         var licenseFeatures = this.$scope.getAccountLicenses();
-        this.$scope.setCareService();
+        this.$scope.sendCareServiceMetrics();
+
         expect(licenseFeatures[0].id).toBe('MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0');
         expect(licenseFeatures[0].idOperation).toBe('ADD');
         expect(licenseFeatures[1].id).toBe('CDC_da652e7d-cd34-4545-8f23-936b74359afd');
@@ -1242,7 +1198,10 @@ describe('OnboardCtrl: Ctrl', function () {
         this.$scope.radioStates.msgRadio = true;
         this.$scope.radioStates.initialCareRadioState = this.$scope.careRadioValue.K1;
         this.$scope.radioStates.careRadio = this.$scope.careRadioValue.NONE;
+        this.$scope.recvUpdateIsContextServiceAdminAuthorized(true);
         this.$scope.getAccountLicenses();
+        this.$scope.sendCareServiceMetrics();
+
         expect(this.LogMetricsService.logMetrics.calls.argsFor(0)[1]).toBe('CAREDISABLED');
       });
     });
@@ -1254,11 +1213,11 @@ describe('OnboardCtrl: Ctrl', function () {
         spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
         spyOn(this.Authinfo, 'getMessageServices').and.returnValue(this.mock.getMessageServices.singleLicense);
         spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareVoiceServices.careVoiceLicense);
-        spyOn(this.LogMetricsService, 'logMetrics').and.callFake(function () {});
+        spyOn(this.LogMetricsService, 'logMetrics');
         this.$stateParams.currentUser = {
           licenseID: ['MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0', 'CVC_va652e7d-cd34-4545-8f23-936b74359afd'],
           entitlements: ['cloud-contact-center', 'contact-center-context', 'cloud-contact-center-inbound-voice'],
-          roles: ['spark.synckms', 'ciscouc.ces'],
+          roles: ['spark.synckms'],
           id: this.userId,
         };
       });
@@ -1267,14 +1226,17 @@ describe('OnboardCtrl: Ctrl', function () {
       });
       beforeEach(initController);
 
-      it('should call getAccountLicenses correctly', function () {
+      it('should call getAccountLicenses and getAccountLicensesForCare correctly', function () {
+        this.$scope.setCareService();
         this.$scope.radioStates.msgRadio = true;
         this.$scope.controlMsg();
         this.$scope.radioStates.initialCareRadioState = this.$scope.careRadioValue.NONE;
         this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K2;
-
+        this.$scope.recvUpdateIsContextServiceAdminAuthorized(true);
         var licenseFeatures = this.$scope.getAccountLicenses();
-        this.$scope.setCareService();
+
+        this.$scope.sendCareServiceMetrics();
+
         expect(licenseFeatures[0].id).toBe('MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0');
         expect(licenseFeatures[0].idOperation).toBe('ADD');
         expect(licenseFeatures[1].id).toBe('CVC_va652e7d-cd34-4545-8f23-936b74359afd');
@@ -1288,7 +1250,10 @@ describe('OnboardCtrl: Ctrl', function () {
         this.$scope.radioStates.msgRadio = true;
         this.$scope.radioStates.initialCareRadioState = this.$scope.careRadioValue.K2;
         this.$scope.radioStates.careRadio = this.$scope.careRadioValue.NONE;
+        this.$scope.recvUpdateIsContextServiceAdminAuthorized(true);
         this.$scope.getAccountLicenses();
+        this.$scope.sendCareServiceMetrics();
+
         expect(this.LogMetricsService.logMetrics.calls.argsFor(0)[1]).toBe('CAREVOICEDISABLED');
       });
     });
@@ -1402,18 +1367,6 @@ describe('OnboardCtrl: Ctrl', function () {
 
     it('advanced licenses cmrLic should have 1 record', function () {
       expect(this.$scope.advancedLicenses[0].cmrLic.length).toEqual(1);
-    });
-  });
-
-  describe('opening convert users in the manage users model', function () {
-    it('should go to users.manage when gotToManageUsers() is called', function () {
-      this.$stateParams.manageUsers = true;
-      initController.apply(this);
-      this.$scope.$apply();
-
-      expect(this.$scope.manageUsers).toBeTruthy();
-      this.$scope.goToManageUsers();
-      expect(this.$state.go).toHaveBeenCalledWith('users.manage.picker');
     });
   });
 

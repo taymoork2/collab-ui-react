@@ -35,6 +35,7 @@
     var deleteBaseUrl = null;
     var CLIO_APP_TYPE = 'AutoAttendant';
     var ENCRYPTION_POLICY = '{"encryptionPolicy":{"strategy":"SERVER"}}';
+    var isReset = false;
     //media upload controllers will map their unique control identifiers
     //from aa common service to an array of media resources located in clio
     //after specifying whether or not that media upload is active or not
@@ -115,12 +116,29 @@
       return undefined;
     }
 
+    function isUrlActive(deleteUrl) {
+      var urlActive = false;
+      var activeResources;
+      if (isReset) {
+        activeResources = _.filter(resources, { active: true, saved: true });
+      } else {
+        activeResources = _.filter(resources, { active: true });
+      }
+      _.forEach(activeResources, function (activeResource) {
+        if (_.isEqual(deleteUrl, _.get(activeResource, 'uploads[0].deleteUrl', ''))) {
+          urlActive = true;
+        }
+      });
+      return urlActive;
+    }
+
     function resetResources() {
       /* make sure any uploaded media files are deleted except for zero
        * the active one.
        */
       _.forEach(resources, function (resource, key) {
         if (resource.uploads.length > 1) {
+          isReset = true;
           clearResourcesExcept(key, 0);
         }
         resource.uploads = [];
@@ -142,7 +160,7 @@
     function deleteResources(ctrl) {
       var target = _.get(ctrl, 'uploads', []);
       _.each(target, function (value) {
-        if (_.has(value, 'deleteUrl') && !_.isEmpty(value.deleteUrl)) {
+        if (_.has(value, 'deleteUrl') && !_.isEmpty(value.deleteUrl) && !isUrlActive(value.deleteUrl)) {
           httpDeleteRetry(value.deleteUrl, 0);
         }
       });

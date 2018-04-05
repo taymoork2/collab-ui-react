@@ -68,6 +68,14 @@
       getToggleUrl: function () {
         return 'https://toggle.' + this.getBaseDomain() + '/toggle/api/v3';
       },
+
+      getRialtoUrl: function () {
+        return 'https://minerva.' + this.getBaseDomain() + '/api/v1/demo/rialto';
+      },
+
+      getUpgradeUrl: function () { //TBD-- add the devhost:port for local testing
+        return 'http://hcs-upgrade/api/v1';
+      },
     };
     return config;
   }

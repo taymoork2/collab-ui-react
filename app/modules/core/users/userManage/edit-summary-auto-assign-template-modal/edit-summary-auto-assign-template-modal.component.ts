@@ -44,16 +44,19 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
 
   private createTemplate(payload: IAutoAssignTemplateRequestPayload): void {
     this.AutoAssignTemplateService.createTemplate(payload)
-        .then(() => {
-          this.Notification.success('userManage.autoAssignTemplate.editSummary.saveSuccess');
-          this.$state.go('users.list');
-        })
-        .catch((response) => {
-          this.Notification.errorResponse(response, 'userManage.autoAssignTemplate.editSummary.saveError');
-        })
-        .finally(() => {
-          this.saveLoading = false;
-        });
+      .then(() => {
+        return this.AutoAssignTemplateService.activateTemplate();
+      })
+      .then(() => {
+        this.Notification.success('userManage.autoAssignTemplate.editSummary.saveSuccess');
+        this.$state.go('users.list');
+      })
+      .catch((response) => {
+        this.Notification.errorResponse(response, 'userManage.autoAssignTemplate.editSummary.saveError');
+      })
+      .finally(() => {
+        this.saveLoading = false;
+      });
   }
 
   public dismissModal(): void {

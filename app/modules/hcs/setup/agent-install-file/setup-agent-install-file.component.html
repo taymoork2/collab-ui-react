@@ -1,5 +1,5 @@
 <div ng-form="hcsSelectionForm">
-  <h4 translate="hcs.installFiles.setupTitle" class="hcs-service-setup__title"></h4>
+  <h5 translate="hcs.installFiles.description" class="hcs-service-setup__title"></h5>
   <input
     cs-input
     type="text"
@@ -7,17 +7,19 @@
     id="installFilename"
     name="installFilename"
     required="true"
+    placeholder="{{::'hcs.installFiles.enterFileName' | translate}}"
     ng-change="$ctrl.setInstallFileInfo()"
     cs-input-messages="$ctrl.messages"
     cs-input-label="{{:: 'hcs.installFiles.fileName' | translate}}">
-    <h4 translate="hcs.installFiles.httpProxy"></h4>
-    <div>
-      <cs-token-field
-        tokens="$ctrl.httpProxyToken"
-        tokenfieldid="$ctrl.tokenfieldid"
-        tokenoptions="$ctrl.tokenoptions"
-        tokenplaceholder="ctrl.tokenplaceholder"
-        tokenmethods="$ctrl.tokenmethods">
-      </cs-token-field>
-    </div>
+  <label class="cs-input__label" translate="hcs.installFiles.httpProxies"></label>
+  <h6 translate="hcs.installFiles.httpProxyDesc"></h6>
+  <div class="hcs-padding__token hcs-install__token">
+    <cs-token-field
+      tokens="$ctrl.httpProxyToken"
+      tokenfieldid="$ctrl.tokenfieldid"
+      tokenoptions="$ctrl.tokenoptions"
+      tokenplaceholder="ctrl.tokenplaceholder"
+      tokenmethods="$ctrl.tokenmethods">
+    </cs-token-field>
+  </div>
 </div>

@@ -1,0 +1,20 @@
+<div class="ui-grid-cell-contents align-left status-column">
+<div ng-switch="row.entity.clusterStatus">
+  <div ng-switch-when="Compliant">
+    <i class="icon icon-circle status-indicator success"></i>
+    <span>{{row.entity.clusterStatus}}</span>
+  </div>
+  <div ng-switch-when="Needs Update">
+    <i class="icon icon-circle status-indicator warning"></i>
+    <span>{{row.entity.clusterStatus}}</span>
+  </div>
+  <div ng-switch-when="outdated">
+    <i class="icon icon-circle status-indicator danger"></i>
+    <span>{{row.entity.clusterStatus}}</span>
+  </div>
+  <div ng-switch-default>
+    <i class="icon icon-circle"></i>
+    <span translate="common.unknown"></span>
+  </div>
+</div>
+</div>

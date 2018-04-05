@@ -230,4 +230,14 @@ describe('LicenseUsageUtilService:', () => {
       expect(this.LicenseUsageUtilService.isSharedMeetingsLicense({ licenseModel: cloudSharedMeeting })).toBe(true);
     });
   });
+
+  describe('isLegacyWebExLicense(): ', () => {
+    it('should return true if "isCIUnifiedSite" property is false-y or not defined, false otherwise', function () {
+      expect(this.LicenseUsageUtilService.isLegacyWebExLicense({})).toBe(true);
+      expect(this.LicenseUsageUtilService.isLegacyWebExLicense({ isCIUnifiedSite: null })).toBe(true);
+      expect(this.LicenseUsageUtilService.isLegacyWebExLicense({ isCIUnifiedSite: undefined })).toBe(true);
+      expect(this.LicenseUsageUtilService.isLegacyWebExLicense({ isCIUnifiedSite: false })).toBe(true);
+      expect(this.LicenseUsageUtilService.isLegacyWebExLicense({ isCIUnifiedSite: true })).toBe(false);
+    });
+  });
 });

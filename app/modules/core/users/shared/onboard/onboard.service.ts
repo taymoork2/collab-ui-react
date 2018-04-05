@@ -1,7 +1,7 @@
 import { Analytics } from 'modules/core/analytics';
 import Feature from './feature.model';
 import * as addressParser from 'emailjs-addressparser';
-import { ILicenseRequestItem, IOnboardedUsersAggregateResult, IOnboardedUsersAnalyticsProperties, IParsedOnboardedUserResult, IUserEntitlementRequestItem, IConvertUserEntity, IUserNameAndEmail, UserEntitlementName, UserEntitlementState, IMigrateUsersResponse, IParsedOnboardedUserResponse, IUpdateUsersResponse, IOnboardUsersResponse } from 'modules/core/users/shared/onboard/onboard.interfaces';
+import { ILicenseRequestItem, IOnboardedUsersAggregateResult, IOnboardedUsersAnalyticsProperties, IParsedOnboardedUserResult, IUserEntitlementRequestItem, IConvertUserEntity, IUserNameAndEmail, UserEntitlementName, UserEntitlementState, IMigrateUsersResponse, IParsedOnboardedUserResponse, IUpdateUsersResponse, IOnboardUsersResponse, OnboardMethod } from 'modules/core/users/shared/onboard/onboard.interfaces';
 import { Config } from 'modules/core/config/config';
 import * as HttpStatus from 'http-status-codes';
 import * as moment from 'moment';
@@ -187,8 +187,8 @@ export default class OnboardService {
     usersList: IUserNameAndEmail[],
     entitleList: IUserEntitlementRequestItem[],
     licenseList: ILicenseRequestItem[],
-    onboardMethod: string,
     options: {
+      onboardMethod?: OnboardMethod,
       chunkSize?: number,
       servicesSelected?: {},
     } = {},
@@ -197,6 +197,7 @@ export default class OnboardService {
     // - split out users list into smaller list chunks
     // - call 'Userservice.onboardUsers()' for each chunk
     const {
+      onboardMethod = OnboardMethod.OTHER,
       chunkSize = this.Config.batchSize,
       servicesSelected = {},
     } = options;
@@ -206,7 +207,7 @@ export default class OnboardService {
         users: usersListChunk,
         licenses: licenseList,
         userEntitlements: entitleList,
-        onboardMethod: onboardMethod,
+        onboardMethod,
       }) as ng.IHttpPromise<IOnboardUsersResponse>)
       .then((response) => {
         return this.parseOnboardedUsers(response);

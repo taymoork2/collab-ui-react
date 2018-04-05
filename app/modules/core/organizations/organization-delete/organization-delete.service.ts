@@ -6,29 +6,34 @@ export class OrganizationDeleteService {
   /* @ngInject */
   constructor(
     private $modal: IToolkitModalService,
-    private $translate: ng.translate.ITranslateService,
+    private $q,
     private Authinfo,
+    private DirSyncService,
     private FeatureToggleService,
   ) {}
 
   public canOnlineOrgBeDeleted(): ng.IPromise<boolean> {
     return (this.FeatureToggleService.atlasOnlineDeleteOrgGetStatus() as ng.IPromise<boolean>)
       .then(toggle => {
-        if (!toggle) {
+        if (!toggle || !this.Authinfo.isOnlineOnlyCustomer() || this.Authinfo.isOnlinePaid()) {
           return false;
         }
-        return this.Authinfo.isOnlineOnlyCustomer() && !this.Authinfo.isOnlinePaid();
+        const dirSyncPromise = (this.DirSyncService.requiresRefresh() ? this.DirSyncService.refreshStatus() : this.$q.resolve());
+        return dirSyncPromise
+          .then(() => {
+            return !this.DirSyncService.isDirSyncEnabled();
+          }).catch(() => {
+            return false;
+          });
       });
   }
 
-  public openOrgDeleteModal(title = this.$translate.instant('organizationDeleteModal.confirmTitle'),
-                            body = this.$translate.instant('organizationDeleteModal.confirmBody')): void {
+  public openOrgDeleteModal(l10nTitle = 'organizationDeleteModal.title.deleteAccount'): void {
     this.dismissOrgDeleteModal();
     this.deleteModal = this.$modal.open({
-      template: `<organization-delete-modal dismiss="$dismiss()" title="${title}" body="${body}"></organization-delete-modal>`,
+      template: `<organization-delete-modal dismiss="$dismiss()" l10n-title="${l10nTitle}"></organization-delete-modal>`,
       backdrop: 'static',
       keyboard: false,
-      type: 'dialog',
     });
   }
 

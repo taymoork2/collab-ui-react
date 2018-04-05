@@ -26,7 +26,6 @@ export class DevicesCtrl implements ng.IComponentController {
   private showATA: boolean;
   private hybridCallEnabledOnOrg: boolean;
   private hybridCalendarEnabledOnOrg: boolean;
-  private csdmHybridCalendarFeature: boolean;
   private csdmHybridCallFeature: boolean;
   private csdmMultipleDevicesPerPlaceFeature: boolean;
   public deviceExportFeature: boolean;
@@ -216,9 +215,6 @@ export class DevicesCtrl implements ng.IComponentController {
     const personalPromise = this.FeatureToggleService.cloudberryPersonalModeGetStatus().then((showPersonal: boolean) => {
       this.showPersonal = showPersonal;
     });
-    const placeCalendarPromise = this.FeatureToggleService.csdmPlaceCalendarGetStatus().then((feature: boolean) => {
-      this.csdmHybridCalendarFeature = feature;
-    });
     const anyCalendarEnabledPromise = this.ServiceDescriptorService.getServices().then((services) => {
       this.hybridCalendarEnabledOnOrg = this.hybridCalendarEnabledOnOrg || _.chain(this.ServiceDescriptorService.filterEnabledServices(services)).filter((service) => {
         return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
@@ -240,7 +236,7 @@ export class DevicesCtrl implements ng.IComponentController {
     const multipleDevicesPerPlacePromise = this.FeatureToggleService.csdmMultipleDevicesPerPlaceGetStatus().then(feature => {
       this.csdmMultipleDevicesPerPlaceFeature = feature;
     });
-    this.$q.all([ataPromise, hybridPromise, personalPromise, placeCalendarPromise, anyCalendarEnabledPromise, getLoggedOnUserPromise, multipleDevicesPerPlacePromise, office365Promise, googleCalendarPromise]).finally(() => {
+    this.$q.all([ataPromise, hybridPromise, personalPromise, anyCalendarEnabledPromise, getLoggedOnUserPromise, multipleDevicesPerPlacePromise, office365Promise, googleCalendarPromise]).finally(() => {
       this.addDeviceIsDisabled = false;
     });
 
@@ -294,7 +290,6 @@ export class DevicesCtrl implements ng.IComponentController {
         multipleRoomDevices: this.csdmMultipleDevicesPerPlaceFeature,
         admin: this.adminUserDetails,
         csdmHybridCallFeature: this.csdmHybridCallFeature,
-        csdmHybridCalendarFeature: this.csdmHybridCalendarFeature,
         hybridCalendarEnabledOnOrg: this.hybridCalendarEnabledOnOrg,
         hybridCallEnabledOnOrg: this.hybridCallEnabledOnOrg,
         title: 'addDeviceWizard.newDevice',
@@ -372,7 +367,6 @@ export class DevicesCtrl implements ng.IComponentController {
         multipleRoomDevices: this.csdmMultipleDevicesPerPlaceFeature,
         admin: this.adminUserDetails,
         csdmHybridCallFeature: this.csdmHybridCallFeature,
-        csdmHybridCalendarFeature: this.csdmHybridCalendarFeature,
         hybridCalendarEnabledOnOrg: this.hybridCalendarEnabledOnOrg,
         hybridCallEnabledOnOrg: this.hybridCallEnabledOnOrg,
         title: 'addDeviceWizard.newDevice',

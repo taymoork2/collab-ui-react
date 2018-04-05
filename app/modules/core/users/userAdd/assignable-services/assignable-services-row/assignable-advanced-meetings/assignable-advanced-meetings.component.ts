@@ -1,15 +1,17 @@
 import { ILicenseUsage, IOnUpdateParam } from 'modules/core/users/userAdd/assignable-services/shared';
-import { OfferName } from 'modules/core/shared';
+import { LicenseUsageUtilService } from 'modules/core/users/userAdd/assignable-services/shared/license-usage-util.service';
+import { OfferName } from 'modules/core/shared/offer-name';
+import { OfferNameService } from 'modules/core/shared/offer-name/offer-name.service';
 
 class AssignableAdvancedMeetingsController implements ng.IComponentController {
-  private readonly ORDERED_OFFER_NAMES = ['CMR', 'EC', 'EE', 'MC', 'TC'];
   private licenses: ILicenseUsage[];
   private onUpdate: Function;
   public OFFER_NAME = OfferName;
 
   /* @ngInject */
   constructor(
-    private LicenseUsageUtilService,
+    private OfferNameService: OfferNameService,
+    private LicenseUsageUtilService: LicenseUsageUtilService,
   ) {}
 
   public $onInit(): void {
@@ -29,13 +31,14 @@ class AssignableAdvancedMeetingsController implements ng.IComponentController {
   }
 
   private sortLicenses(licenses: ILicenseUsage[]): ILicenseUsage[] {
+    const ORDERED_OFFER_NAMES = this.OfferNameService.getSortedAdvancedMeetingOfferNames();
     return _.sortBy(licenses, [
       // - sorted first by 'siteUrl'
       'siteUrl',
 
       // - then by 'offerName', as determined by ORDERED_OFFER_NAMES
       (license) => {
-        return _.indexOf(this.ORDERED_OFFER_NAMES, license.offerName);
+        return _.indexOf(ORDERED_OFFER_NAMES, license.offerName);
       }]);
   }
 
@@ -83,6 +86,10 @@ class AssignableAdvancedMeetingsController implements ng.IComponentController {
 
   public isSharedMeetingsLicense(license: ILicenseUsage): boolean {
     return this.LicenseUsageUtilService.isSharedMeetingsLicense(license);
+  }
+
+  public isLicenseDisabledByDefault(license: ILicenseUsage): boolean {
+    return this.LicenseUsageUtilService.isLegacyWebExLicense(license);
   }
 
   // notes:

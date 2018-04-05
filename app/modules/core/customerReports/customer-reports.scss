@@ -2,9 +2,12 @@
 @import '~@collabui/collab-ui/scss/settings/page';
 @import '~@collabui/collab-ui/scss/settings/fonts';
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 @import '../../../styles/variables';
 
 .customer-reports {
+  @extend %content-subheader;
+
   .metricsContent {
     overflow: hidden !important;
     padding: 0 !important;
@@ -13,14 +16,6 @@
   .fullSize {
     height: 100%;
     width: 100%;
-  }
-
-  .webexMetricsContent {
-    height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height})) !important;
-  }
-
-  .webexMetricsContentWithReadOnly {
-    height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + #{$read-only-banner-height})) !important;
   }
 
   .metrics-loading-icon {

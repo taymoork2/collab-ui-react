@@ -31,10 +31,7 @@ require('./_user-add.scss');
 
     vm.maxUsersInManual = OnboardService.maxUsersInManual;
 
-    $scope.searchStr = '';
-    $scope.timeoutVal = 1000;
-    $scope.timer = 0;
-    $scope.searchPlaceholder = $translate.instant('usersPage.convertUserSearch');
+    OnboardStore['users.convert'].searchStr = '';
     $scope.manageUsers = $stateParams.manageUsers;
 
     $scope.labelField = '';
@@ -50,7 +47,7 @@ require('./_user-add.scss');
     $scope.mapDidToDn = mapDidToDn;
     $scope.resetDns = resetDns;
     $scope.syncGridDidDn = syncGridDidDn;
-    $scope.filterList = filterList;
+    $scope.sendCareServiceMetrics = sendCareServiceMetrics;
     $scope.isMapped = false;
     $scope.isMapInProgress = false;
     $scope.isResetInProgress = false;
@@ -65,6 +62,8 @@ require('./_user-add.scss');
     $scope.isReset = false;
     $scope.showExtensions = true;
     $scope.isResetEnabled = false;
+
+    $scope.isContextServiceAdminAuthorized = false;
 
     $scope.careRadioValue = {
       NONE: $translate.instant('onboardModal.paidNone'),
@@ -81,7 +80,6 @@ require('./_user-add.scss');
 
     $scope.radioStates.careRadio = $scope.careRadioValue.NONE;
 
-    $scope.convertUsersFlow = false;
     $scope.editServicesFlow = false;
     $scope.hasSite = false;
 
@@ -97,11 +95,16 @@ require('./_user-add.scss');
     $scope.currentUserCommFeature = $scope.selectedCommFeature = null;
 
     $scope.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
-    $scope.convertUsersReadOnly = $stateParams.readOnly || $scope.isDirSyncEnabled;
 
     $scope.controlMsg = controlMsg;
 
     initController();
+
+    OnboardStore['users.convert'].convertUsersFlow = false;
+    $scope.isConvertUsersFlow = isConvertUsersFlow;
+    function isConvertUsersFlow() {
+      return OnboardStore['users.convert'].convertUsersFlow;
+    }
 
     /****************************** License Enforcement START *******************************/
     //***
@@ -171,10 +174,6 @@ require('./_user-add.scss');
           $state.go('my-company.subscriptions');
         });
       }
-    };
-
-    $scope.goToManageUsers = function () {
-      $state.go('users.manage.picker');
     };
 
     /****************************** License Enforcement END *******************************/
@@ -462,6 +461,8 @@ require('./_user-add.scss');
       } else {
         $scope.onboardUsers(true);
       }
+
+      sendCareServiceMetrics();
     };
 
     function initToggles() {
@@ -480,7 +481,7 @@ require('./_user-add.scss');
       if (shouldAddCallService()) {
         $scope.processing = true;
         $scope.editServicesFlow = true;
-        $scope.convertUsersFlow = false;
+        OnboardStore['users.convert'].convertUsersFlow = false;
 
         // Populate list with single user for updateUserLicense()
         $scope.usrlist = [{
@@ -491,7 +492,25 @@ require('./_user-add.scss');
       } else {
         $scope.updateUserLicense();
       }
+
+      sendCareServiceMetrics();
     };
+
+    function sendCareServiceMetrics() {
+      if ($scope.radioStates.careRadio !== $scope.radioStates.initialCareRadioState) {
+        if ($scope.radioStates.careRadio === $scope.careRadioValue.K1) {
+          LogMetricsService.logMetrics('Enabling care for user', LogMetricsService.getEventType('careEnabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+        } else if ($scope.radioStates.careRadio === $scope.careRadioValue.K2) {
+          LogMetricsService.logMetrics('Enabling care for user', LogMetricsService.getEventType('careVoiceEnabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+        }
+        if ($scope.radioStates.initialCareRadioState === $scope.careRadioValue.K1) {
+          LogMetricsService.logMetrics('Disabling care for user', LogMetricsService.getEventType('careDisabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+        }
+        if ($scope.radioStates.initialCareRadioState === $scope.careRadioValue.K2) {
+          LogMetricsService.logMetrics('Disabling careVoice for user', LogMetricsService.getEventType('careVoiceDisabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+        }
+      }
+    }
 
     function toggleShowExtensions() {
       return DialPlanService.getDialPlan().then(function (response) {
@@ -608,6 +627,7 @@ require('./_user-add.scss');
     $scope.populateConf = populateConf;
     $scope.populateConfInvitations = populateConfInvitations;
     $scope.getAccountLicenses = getAccountLicenses;
+    $scope.getAccountLicensesForCare = getAccountLicensesForCare;
     $scope.setCareService = setCareService;
 
     $scope.messageFeatures.push(new ServiceFeature($translate.instant('onboardModal.msgFree'), 0, 'msgRadio', new FakeLicense('freeTeamRoom')));
@@ -1127,21 +1147,6 @@ require('./_user-add.scss');
       return idList;
     };
 
-    function filterList(str) {
-      if ($scope.timer) {
-        $timeout.cancel($scope.timer);
-        $scope.timer = 0;
-      }
-
-      $scope.timer = $timeout(function () {
-        if (str.length >= 3 || str === '') {
-          $scope.searchStr = str;
-          getUnlicensedUsers();
-          Analytics.trackUserOnboarding(Analytics.sections.USER_ONBOARDING.eventNames.CONVERT_USER, $state.current.name, Authinfo.getOrgId());
-        }
-      }, $scope.timeoutVal);
-    }
-
     /**
      * get the list of selected account licenses on the dialog
      *
@@ -1216,58 +1221,53 @@ require('./_user-add.scss');
           }
         }
 
-        // BEGIN: Care License provisioning for users
-        var selCareService = {};
-
-        // get the selected care service according to care radio button selected
-        switch ($scope.radioStates.careRadio) {
-          case $scope.careRadioValue.K1:
-            if ($scope.cdcCareFeature.license.licenseId) {
-              selCareService = $scope.cdcCareFeature;
-            }
-            break;
-          case $scope.careRadioValue.K2:
-            if ($scope.cvcCareFeature.license.licenseId) {
-              selCareService = $scope.cvcCareFeature;
-            }
-            break;
-          case $scope.careRadioValue.NONE:
-            selCareService = $scope.careFeatures[0];
-            break;
-        }
-
-        // push and remove licenses in licenseList as per selected care service
-        var licenseId = _.get(selCareService, 'license.licenseId', null);
-        if (licenseId) {
-          licenseList.push(new LicenseFeature(licenseId, true));
-
-          if (_.startsWith(licenseId, Config.offerCodes.CDC)) {
-            removeCareLicence($scope.cvcCareFeature, licenseList);
-          } else if (_.startsWith(licenseId, Config.offerCodes.CVC)) {
-            removeCareLicence($scope.cdcCareFeature, licenseList);
-          }
-        } else if (action === 'patch' && $scope.careRadioValue.NONE !== $scope.radioStates.initialCareRadioState) { // will get invoked when None is selected in care radio and  previous state was not none
-          removeCareLicence($scope.cdcCareFeature, licenseList);
-          removeCareLicence($scope.cvcCareFeature, licenseList);
-        }
-        // END: Care License provisioning for users
-
-        // Metrics for care entitlement for users
-        if ($scope.radioStates.careRadio !== $scope.radioStates.initialCareRadioState) {
-          if ($scope.radioStates.careRadio === $scope.careRadioValue.K1) {
-            LogMetricsService.logMetrics('Enabling care for user', LogMetricsService.getEventType('careEnabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
-          } else if ($scope.radioStates.careRadio === $scope.careRadioValue.K2) {
-            LogMetricsService.logMetrics('Enabling care for user', LogMetricsService.getEventType('careVoiceEnabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
-          }
-          if ($scope.radioStates.initialCareRadioState === $scope.careRadioValue.K1) {
-            LogMetricsService.logMetrics('Disabling care for user', LogMetricsService.getEventType('careDisabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
-          }
-          if ($scope.radioStates.initialCareRadioState === $scope.careRadioValue.K2) {
-            LogMetricsService.logMetrics('Disabling careVoice for user', LogMetricsService.getEventType('careVoiceDisabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
-          }
+        // BEGIN: Care License provisioning for users, check admin is authorized to CS
+        if ($scope.isContextServiceAdminAuthorized) {
+          var careLicenses = getAccountLicensesForCare(action);
+          licenseList = _.concat(licenseList, careLicenses);
         }
       }
       return licenseList.length === 0 ? null : licenseList;
+    }
+
+    function getAccountLicensesForCare(action) {
+      var selCareService = {};
+      var careLicenses = [];
+
+      // get the selected care service according to care radio button selected
+      switch ($scope.radioStates.careRadio) {
+        case $scope.careRadioValue.K1:
+          if ($scope.cdcCareFeature.license.licenseId) {
+            selCareService = $scope.cdcCareFeature;
+          }
+          break;
+        case $scope.careRadioValue.K2:
+          if ($scope.cvcCareFeature.license.licenseId) {
+            selCareService = $scope.cvcCareFeature;
+          }
+          break;
+        case $scope.careRadioValue.NONE:
+          selCareService = $scope.careFeatures[0];
+          break;
+      }
+
+      // push and remove licenses in licenseList as per selected care service
+      var licenseId = _.get(selCareService, 'license.licenseId', null);
+      if (licenseId) {
+        careLicenses.push(new LicenseFeature(licenseId, true));
+
+        if (_.startsWith(licenseId, Config.offerCodes.CDC)) {
+          removeCareLicence($scope.cvcCareFeature, careLicenses);
+        } else if (_.startsWith(licenseId, Config.offerCodes.CVC)) {
+          removeCareLicence($scope.cdcCareFeature, careLicenses);
+        }
+      } else if (action === 'patch' && $scope.careRadioValue.NONE !== $scope.radioStates.initialCareRadioState) { // will get invoked when None is selected in care radio and  previous state was not none
+        removeCareLicence($scope.cdcCareFeature, careLicenses);
+        removeCareLicence($scope.cvcCareFeature, careLicenses);
+      }
+      // END: Care License provisioning for users
+
+      return careLicenses;
     }
 
     function getCareFeature(offerName) {
@@ -1424,7 +1424,8 @@ require('./_user-add.scss');
       });
 
       var entitleList = [],
-        licenseList = [];
+        licenseList = [],
+        onboardMethod = 'MANUAL';
 
       // notes:
       // - start with all enabled entitlements
@@ -1442,7 +1443,7 @@ require('./_user-add.scss');
 
       entitleList = entitleList.concat(getHybridServicesEntitlements('add'));
 
-      return OnboardService.onboardUsersInChunks(usersList, entitleList, licenseList)
+      return OnboardService.onboardUsersInChunks(usersList, entitleList, licenseList, { onboardMethod: onboardMethod })
         .catch(function (rejectedResponse) {
           // notes:
           // - potentially multiple 'Userservice.onboardUsers()' calls could have been made
@@ -1471,7 +1472,7 @@ require('./_user-add.scss');
           });
 
           $state.go('users.add.results', {
-            convertUsersFlow: $scope.convertUsersFlow,
+            convertUsersFlow: OnboardStore['users.convert'].convertUsersFlow,
             numUpdatedUsers: $scope.numUpdatedUsers,
             numAddedUsers: $scope.numAddedUsers,
             results: $scope.results,
@@ -1667,7 +1668,8 @@ require('./_user-add.scss');
 
       // copy numbers to convertSelectedList
       _.forEach($scope.usrlist, function (user) {
-        var userArray = $scope.convertSelectedList.filter(function (selectedUser) {
+        var convertSelectedList = _.get(OnboardStore['users.convert'], 'convertSelectedList', []);
+        var userArray = convertSelectedList.filter(function (selectedUser) {
           return user.address === selectedUser.userName;
         });
         userArray[0].assignedDn = user.assignedDn;
@@ -1677,23 +1679,13 @@ require('./_user-add.scss');
       return $scope.convertUsers();
     };
 
-    $scope.saveConvertList = function () {
-      $scope.selectedState = $scope.gridApi.saveState.save();
-      $scope.convertSelectedList = $scope.gridApi.selection.getSelectedRows();
-      $scope.convertUsersFlow = true;
-      if (AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated) {
-        $state.go('users.convert.auto-assign-license-summary');
-      } else {
-        $state.go('users.convert.services', {});
-      }
-    };
-
     $scope.convertUsersNext = function () {
       if (shouldAddCallService()) {
         $scope.processing = true;
         // Copying selected users to user list
         $scope.usrlist = [];
-        _.forEach($scope.convertSelectedList, function (selectedUser) {
+        var convertSelectedList = _.get(OnboardStore['users.convert'], 'convertSelectedList', []);
+        _.forEach(convertSelectedList, function (selectedUser) {
           var user = {};
           var givenName = '';
           var familyName = '';
@@ -1732,7 +1724,8 @@ require('./_user-add.scss');
       }
       entitleList = entitleList.concat(getHybridServicesEntitlements('add'));
 
-      OnboardService.convertUsersInChunks($scope.convertSelectedList, {
+      var convertSelectedList = _.get(OnboardStore['users.convert'], 'convertSelectedList', []);
+      OnboardService.convertUsersInChunks(convertSelectedList, {
         shouldUpdateUsers: !AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated,
         licenseList: licenseList,
         entitlementList: entitleList,
@@ -1744,7 +1737,7 @@ require('./_user-add.scss');
         populateScopeBindingsFromAggregateResult(aggregateResults);
 
         $state.go('users.convert.results', {
-          convertUsersFlow: $scope.convertUsersFlow,
+          convertUsersFlow: OnboardStore['users.convert'].convertUsersFlow,
           numUpdatedUsers: $scope.numUpdatedUsers,
           numAddedUsers: $scope.numAddedUsers,
           results: $scope.results,
@@ -1753,65 +1746,6 @@ require('./_user-add.scss');
         $rootScope.$broadcast('USER_LIST_UPDATED');
         $scope.btnConvertLoad = false;
       });
-    };
-
-    var getUnlicensedUsers = function () {
-      $scope.showSearch = false;
-      Orgservice.getUnlicensedUsers(function (data) {
-        $scope.unlicensed = 0;
-        $scope.unlicensedUsersList = null;
-        $scope.showSearch = true;
-        if (data.success) {
-          if (data.totalResults) {
-            $scope.unlicensed = data.totalResults;
-            $scope.unlicensedUsersList = data.resources;
-          }
-        }
-      }, null, $scope.searchStr);
-    };
-
-    $scope.convertDisabled = function () {
-      return $scope.isDirSyncEnabled || !$scope.gridApi || $scope.gridApi.selection.getSelectedRows().length === 0;
-    };
-
-    getUnlicensedUsers();
-
-    $scope.convertGridOptions = {
-      data: 'unlicensedUsersList',
-      rowHeight: 45,
-      enableHorizontalScrollbar: 0,
-      selectionRowHeaderWidth: 50,
-      enableRowHeaderSelection: !$scope.convertUsersReadOnly,
-      enableFullRowSelection: !$scope.convertUsersReadOnly,
-      useExternalSorting: false,
-      enableColumnMenus: false,
-      showFilter: false,
-      saveSelection: true,
-      onRegisterApi: function (gridApi) {
-        $scope.gridApi = gridApi;
-        if ($scope.selectedState) {
-          $timeout(function () {
-            gridApi.saveState.restore($scope, $scope.selectedState);
-          }, 100);
-        }
-        $timeout(gridApi.core.handleWindowResize, 200);
-      },
-      columnDefs: [{
-
-        field: 'displayName',
-        displayName: $translate.instant('usersPage.displayNameHeader'),
-        resizable: false,
-        sortable: true,
-      }, {
-        field: 'userName',
-        displayName: $translate.instant('homePage.emailAddress'),
-        resizable: false,
-        sort: {
-          direction: 'desc',
-          priority: 0,
-        },
-        sortCellFiltered: true,
-      }],
     };
 
     /////////////////////////////////
@@ -2062,5 +1996,9 @@ require('./_user-add.scss');
         $scope.radioStates.careRadio = $scope.careRadioValue.NONE;
       }
     }
+
+    $scope.recvUpdateIsContextServiceAdminAuthorized = function (isAuthorized) {
+      $scope.isContextServiceAdminAuthorized = isAuthorized;
+    };
   }
 })();

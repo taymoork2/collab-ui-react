@@ -17,6 +17,7 @@
     }
     .content-container {
       .overview {
+        background-color: $white;
         padding: 1.8rem 2rem;
       }
 
@@ -167,7 +168,7 @@
 
         li {
           float: left;
-          width: 300px;
+          width: 255px;
           height: 100px;
           padding-bottom: 1rem;
           list-style-type: none;

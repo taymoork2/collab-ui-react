@@ -53,7 +53,7 @@
           appName: 'partner_spark_v1',
           node: data.host,
           qrp: data.qlik_reverse_proxy,
-          persistent: false,
+          persistent: true,
           vID: data.vid,
         };
         var QlikMashupChartsUrl = _.get(QlikService, 'getQlikMashupUrl')(vm.sparkReports.appData.qrp, 'spark', vm.viewType);

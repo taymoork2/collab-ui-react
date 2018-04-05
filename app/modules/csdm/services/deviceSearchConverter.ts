@@ -9,9 +9,10 @@ interface IPlace {
   url: string;
 }
 
-interface IIdentifiableDevice {
+export interface IIdentifiableDevice {
   cisUuid: string;
   displayName: string;
+  url: string;
 }
 
 export class DeviceSearchConverter {

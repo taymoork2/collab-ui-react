@@ -34,6 +34,8 @@ class AbcSetupCtrl extends CommonSetupCtrl {
   public validateNameChars = /[<>]/i;
   public businessIdForm: ng.IFormController;
 
+  private businessId: string;
+
   public template = {
     templateId: '',
     name: '',
@@ -101,6 +103,18 @@ class AbcSetupCtrl extends CommonSetupCtrl {
    */
   public $onInit() {
     this.template.configuration.pages.abcBusinessId.startTimeInMillis = Date.now();
+
+    if (this.businessId) {
+      this.template.configuration.pages.abcBusinessId.value = this.businessId;
+      this.template.configuration.pages.abcBusinessId.enabled = false;
+    }
+    if (this.$stateParams.isEditFeature) {
+      this.isEditFeature = true;
+      this.template.templateId = this.$stateParams.template.id;
+      this.template.configuration.pages.abcBusinessId.value = this.$stateParams.template.id;
+      this.template.configuration.pages.abcBusinessId.enabled = false;
+      this.template.configuration.pages.name.nameValue = this.$stateParams.template.name;
+    }
     this.loadCvaList();
   }
 
@@ -146,7 +160,11 @@ class AbcSetupCtrl extends CommonSetupCtrl {
    */
   public getSummaryDescription(): string {
     const name = this.template.configuration.pages.name.nameValue;
-    return this.getText('summary.abcDesc', { name });
+    let textString = 'summary.abcDesc';
+    if (this.isEditFeature) {
+      textString += 'Edit';
+    }
+    return this.getText(textString, { name });
   }
 
   private pageFocus: IAbcSetupPages = {};
@@ -231,19 +249,58 @@ class AbcSetupCtrl extends CommonSetupCtrl {
       controller.template.configuration.pages.abcCvaSelection.configuredCVAs = [{ name: controller.getText('cvaSelection.virtualAssistantSelectText') }];
       const sortedCVAs = _.sortBy(result.items, [item => item.name.toLowerCase()]);
       controller.template.configuration.pages.abcCvaSelection.configuredCVAs.push(...sortedCVAs);
+      controller.setSelectedCva();
     }, function (error) {
       controller.template.configuration.pages.abcCvaSelection.configuredCVAs = [];
       controller.Notification.errorWithTrackingId(error, 'abcService.getCustomerVirtualAssistantListError');
     });
   }
 
+  private setSelectedCva(): void {
+    //show selected CVA on edit
+    if (this.isEditFeature) {
+      const selectedCva = _.find(this.template.configuration.pages.abcCvaSelection.configuredCVAs, {
+        id: this.$stateParams.template.cvaId,
+      });
+      if (selectedCva) {
+        this.template.configuration.pages.abcCvaSelection.selectedCVA.name = selectedCva.name;
+        this.template.configuration.pages.abcCvaSelection.selectedCVA.id = selectedCva.id;
+      }
+    }
+  }
+
   public submitFeature(): void {
-    // TODO: incorporate the real businessId via deep launch with query params
     const businessId = this.template.configuration.pages.abcBusinessId.value.trim();
     const name = this.template.configuration.pages.name.nameValue.trim();
     const cvaId = this.template.configuration.pages.abcCvaSelection.selectedCVA.id;
     this.creatingTemplate = true;
-    this.createFeature(businessId, name, this.orgId, cvaId);
+    if (this.isEditFeature) {
+      this.updateFeature(businessId, name, this.orgId, cvaId);
+    } else {
+      this.createFeature(businessId, name, this.orgId, cvaId);
+    }
+  }
+
+  /**
+   * update the current feature
+   * @param businessId
+   * @param name
+   * @param orgId
+   * @param cvaId optional
+   */
+  private updateFeature(businessId: string, name: string, orgId: string, cvaId?: string): void {
+    const controller = this;
+    controller.service.updateAbcConfig(businessId, name, orgId, cvaId)
+      .then(function () {
+        controller.handleFeatureUpdate();
+        controller.writeMetrics();
+      })
+      .catch(function (response) {
+        controller.handleFeatureError();
+        controller.Notification.errorWithTrackingId(response, 'careChatTpl.virtualAssistant.messages.updateConfigFailureText', {
+          featureName: controller.$translate.instant('careChatTpl.appleBusinessChat.featureText.name'),
+        });
+      });
   }
 
   /**
@@ -292,6 +349,7 @@ export class AbcSetupComponent implements ng.IComponentOptions {
   public template = require('modules/sunlight/features/appleBusinessChat/abcSetup.tpl.html');
   public bindings = {
     dismiss: '&',
+    businessId: '<',
   };
 }
 

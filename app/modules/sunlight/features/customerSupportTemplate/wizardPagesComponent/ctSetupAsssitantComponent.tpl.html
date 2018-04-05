@@ -1,0 +1,86 @@
+<div class="careChatSetup">
+    <cs-overlay-panel class="care-chat overlay-panel typeahead-group"
+                      overlay-title={{careSetupAssistant.getTitle()}}
+                      close="careSetupAssistant.cancelModal()"
+                      ng-keyup="careSetupAssistant.evalKeyPress($event.keyCode)">
+
+        <cs-setup-assistant
+                previous="careSetupAssistant.previousButton()"
+                next="careSetupAssistant.nextButton()"
+                previous-fn="careSetupAssistant.previousPage()"
+                next-fn="careSetupAssistant.nextPage()"
+                next-aria-label="{{::'common.next' | translate}}"
+                previous-aria-label="{{::'common.previous' | translate}}">
+
+            <form name="careChatSetupForm" class="sa-form">
+                <div ng-switch on="careSetupAssistant.currentState">
+                    <ct-name-component
+                            ng-switch-when="name"
+                            ng-class="careChatSA.animation">
+                    </ct-name-component>
+
+                    <div ct-virtual-assistant
+                         ng-switch-when = "virtualAssistant"
+                         ng-class="careChatSA.animation"></div>
+
+                   <ct-profile-component
+                     ng-switch-when = "profile"
+                     ng-class="careChatSA.animation"></ct-profile-component>
+
+                     <ct-overview-component
+                             ng-switch-when = "overview"
+                             ng-class="careChatSA.animation">
+                     </ct-overview-component>
+
+                    <div ct-proactive-prompt
+                         ng-switch-when = "proactivePrompt"
+                         ng-class="careChatSA.animation"></div>
+
+                    <div ct-customer
+                         ng-switch-when = "customerInformation"
+                         ng-class="careChatSA.animation"></div>
+
+                    <div ct-customer mode="chat"
+                         ng-switch-when = "customerInformationChat"
+                         ng-class="careChatSA.animation"></div>
+
+                    <div ct-customer mode="callback"
+                         ng-switch-when = "customerInformationCallback"
+                         ng-class="careChatSA.animation"></div>
+
+                    <ct-feedback-component
+                         ng-switch-when = "feedback"
+                         ng-class="careChatSA.animation"></ct-feedback-component>
+
+                    <ct-feedback-component
+                         ng-switch-when = "feedbackCallback"
+                         ng-class="careChatSA.animation"></ct-feedback-component>
+
+
+                    <ct-agent-unavailable-component
+                         ng-switch-when = "agentUnavailable"
+                         ng-class="careChatSA.animation"></ct-agent-unavailable-component>
+
+                    <ct-off-hours-component
+                      ng-switch-when = "offHours"
+                      ng-class="careChatSA.animation"></ct-off-hours-component>
+
+                    <ct-chat-status-messages-component
+                      ng-switch-when = "chatStatusMessages"
+                      ng-class="careChatSA.animation"></ct-chat-status-messages-component>
+
+
+                  <div ct-summary
+                         ng-switch-when = "summary"
+                         ng-class="careChatSA.animation"></div>
+
+                    <div ct-chat-escalation-behavior
+                         ng-switch-when = "chatEscalationBehavior"
+                         ng-class="careChatSA.animation"></div>
+
+                </div>
+            </form>
+        </cs-setup-assistant>
+    </cs-overlay-panel>
+
+</div>

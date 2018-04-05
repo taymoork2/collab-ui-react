@@ -125,6 +125,7 @@ exports.config = {
 
     global.TIMEOUT = TIMEOUT;
     global.LONG_TIMEOUT = LONG_TIMEOUT;
+    global.VERY_LONG_TIMEOUT = VERY_LONG_TIMEOUT;
     global.ANIMATION_DURATION_MS = ANIMATION_DURATION_MS;
 
     global.getE2eRunCounter = processEnvUtil.getE2eRunCounter;

@@ -36,9 +36,9 @@ describe('userCsv.controller', function () {
     spyOn(this.ServiceDescriptorService, 'getServices').and.returnValue(this.$q.resolve(this.fusionServices));
     spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
-        return this.$q.resolve(_this.headers);
+        return _this.$q.resolve(_this.headers);
       } else {
-        return this.$q.resolve({});
+        return _this.$q.resolve({});
       }
     });
 
@@ -49,6 +49,12 @@ describe('userCsv.controller', function () {
     spyOn(this.FeatureToggleService, 'getFeaturesForUser').and.returnValue(this.getMyFeatureToggles);
     spyOn(this.FeatureToggleService, 'supports').and.callFake(function () {
       return _this.$q.resolve(false);
+    });
+    spyOn(this.FeatureToggleService, 'atlasCsvImportTaskManagerGetStatus').and.callFake(function () {
+      return _this.$q.resolve(false);
+    });
+    spyOn(this.FeatureToggleService, 'atlasUserCsvSubscriptionEnableGetStatus').and.callFake(function () {
+      return _this.$q.resolve(true);
     });
 
     spyOn(this.Userservice, 'onboardUsers').and.callThrough();
@@ -240,6 +246,7 @@ describe('userCsv.controller', function () {
         threeUsersOneDuplicateEmail: 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nFirst0,Last0,First0 Last0,firstlast0@example.com,5001,,true,true,true,true\nFirst1,Last1,First1 Last1,firstlast1@example.com,5002,,true,true,true,true\nFirst2,Last2,First2 Last2,firstlast0@example.com,5002,,true,true,true,true',
         invalidHeaders: 'John,Doe,John Doe,johndoe@example.com,5001,12223335001,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE\nJane,Doe,Jane Doe,janedoe@example.com,,,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE',
         badCsvFormat: 'fa;lskdhgqiwoep;klnandf',
+        mismatchHeaderName: 'User ID/Email (Required),Meeting 2500 Party\njohn.doe@example.com,true',
         invalidCsvData: {},
         oneInvalidEmailUserTooManySparkCallLicenses: 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Spark Call,Spark Call 2\nJohn,Doe,John Doe,johndoe@example.com,5001,,true,true',
       };
@@ -313,6 +320,15 @@ describe('userCsv.controller', function () {
         expect(this.Notification.error).toHaveBeenCalledWith('firstTimeWizard.uploadCsvBadFormat');
       });
 
+      it('should notify error if any mismatch header name', function () {
+        this.controller.model.file = this.mockCsvData.mismatchHeaderName;
+        this.$scope.$apply();
+        this.$timeout.flush();
+        expect(this.Notification.error).toHaveBeenCalledWith('firstTimeWizard.csvHeaderNameMismatch', {
+          name: 'Meeting 2500 Party',
+        });
+      });
+
       describe('valid one column file content', function () {
         beforeEach(function () {
           this.controller.model.file = this.mockCsvData.oneColumnValidUser;
@@ -355,12 +371,6 @@ describe('userCsv.controller', function () {
 
     describe('Process CSV and Save Users with an invalid user', function () {
       beforeEach(function () {
-        this.controller.model.file = this.mockCsvData.oneInvalidEmailUserTooManySparkCallLicenses;
-        this.$scope.$apply();
-        this.$timeout.flush();
-      });
-
-      it('should fail users that has more than 1 active Spark Call licenses', function () {
         var newHeaders = getJSONFixture('core/json/users/headers.json');
         newHeaders.columns.push({
           name: 'Spark Call 2',
@@ -376,6 +386,14 @@ describe('userCsv.controller', function () {
             return this.$q.resolve({});
           }
         });
+        initController.apply(this);
+
+        this.controller.model.file = this.mockCsvData.oneInvalidEmailUserTooManySparkCallLicenses;
+        this.$scope.$apply();
+        this.$timeout.flush();
+      });
+
+      it('should fail users that has more than 1 active Spark Call licenses', function () {
         this.controller.startUpload();
         this.$scope.$apply();
         this.$timeout.flush();

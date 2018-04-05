@@ -2,7 +2,7 @@
 
 xdescribe('Onboard users with Care Service', function () {
   // TODO : test cases to be enabled once we have sunlight integration org
-  var testUser = utils.randomTestGmailwithSalt('care');
+  var testUser = utils.randomTestGmailWithSalt('care');
   var LICENSE = users.paidCareCheckbox;
 
   it('should login as an account admin', function () {

@@ -1,6 +1,9 @@
 <div class="cs-card-container">
   <cs-card-layout>
-    <cs-card ng-repeat="careFeature in careFeaturesCtrl.filteredListOfFeatures" class="cs-card--small header-background hoverable" ng-class="careFeature.color">
+    <cs-card ng-repeat="careFeature in careFeaturesCtrl.filteredListOfFeatures" class="cs-card--medium header-background hoverable" ng-class="careFeature.color"
+             tooltip="{{careFeature.noAccessTooltip}}"
+             tooltip-placement="top-right"
+             tooltip-trigger="mouseenter focus">
       <article ng-click="careFeaturesCtrl.editCareFeature((careFeature), $event)" hover-delay>
         <header class="card-header">
           <div class="header-with-right-icon">
@@ -40,15 +43,16 @@
                 tooltip-trigger="mouseenter focus"
                 tooltip-placement="top-left"
                 tooltip-animation="false"
+                tooltip-class="icon-tooltip"
                 aria-label="{{careFeaturesCtrl.featureToolTip(feature.featureType, feature.name, careFeature.name)}}">
               </i>
             </span>
           </div>
         </header>
         <section>
-          <div class="warning-sign" ng-if=!careFeaturesCtrl.userHasAccess(careFeature)>
+          <div class="warning-sign" ng-if=careFeaturesCtrl.showWarning(careFeature)>
             <i class="icon icon-lg icon-warning"></i>
-            <div class="warning-text">{{warning}}</div>
+            <div class="warning-text">{{careFeature.warning}}</div>
           </div>
         </section>
         <footer class="card-footer">
@@ -74,7 +78,7 @@
                 popover-placement="auto right"
                 popover-append-to-body="false"
                 class="icon icon-question-circle"
-                aria-label="{{careFeature.templatesHtmlPopove + ' ' + careFeature.spacesHtmlPopove}}">
+                aria-label="{{careFeature.templatesHtmlPopover + ' ' + careFeature.spacesHtmlPopover}}">
               </button>
             </div>
           </div>

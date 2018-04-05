@@ -39,8 +39,10 @@ describe('SetupWizardCtrl', function () {
     spyOn(this.SetupWizardService, 'isCustomerPresent').and.returnValue(this.$q.resolve(true));
     spyOn(this.SetupWizardService, 'isProvisionedSubscription').and.returnValue(false);
     spyOn(this.SetupWizardService, 'hasPendingCCASPPackage').and.returnValue(false);
+    spyOn(this.SetupWizardService, 'hasPendingCCAUserPackage').and.returnValue(false);
     spyOn(this.SetupWizardService, 'hasPendingTSPAudioPackage').and.returnValue(false);
     spyOn(this.SetupWizardService, 'getActiveCCASPPackage').and.returnValue(undefined);
+    spyOn(this.SetupWizardService, 'getActiveCCAUserPackage').and.returnValue(undefined);
     spyOn(this.SetupWizardService, 'getActiveTSPAudioPackage').and.returnValue(undefined);
     spyOn(this.SetupWizardService, 'getOrg');
     spyOn(this.Authinfo, 'getLicenses').and.returnValue([{
@@ -109,6 +111,33 @@ describe('SetupWizardCtrl', function () {
     });
     this.$scope.$apply();
   }
+
+  it('will filter tabs if onlyShowSingleTab is true', function () {
+    this.$controller('SetupWizardCtrl', {
+      $scope: this.$scope,
+      $stateParams: {
+        onlyShowSingleTab: true,
+        currentTab: 'enterpriseSettings',
+      },
+    });
+    this.$scope.$apply();
+
+    this.expectStepOrder(['enterpriseSettings']);
+  });
+
+  it('will filter steps if onlyShowSingleTab is true and currentStep is set.', function () {
+    this.$controller('SetupWizardCtrl', {
+      $scope: this.$scope,
+      $stateParams: {
+        currentTab: 'enterpriseSettings',
+        currentStep: 'init',
+        onlyShowSingleTab: true,
+      },
+    });
+    this.$scope.$apply();
+    this.expectStepOrder(['enterpriseSettings']);
+    this.expectSubStepOrder('enterpriseSettings', ['init', 'exportMetadata', 'importIdp', 'testSSO']);
+  });
 
   describe('Before initializing toggles', function () {
     beforeEach(function () {
@@ -411,7 +440,7 @@ describe('SetupWizardCtrl', function () {
     it('the wizard should have a lot of settings', function () {
       this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'enterpriseSettings']);
       this.expectSubStepOrder('planReview', ['init']);
-      this.expectSubStepOrder('serviceSetup', ['setupCallLocation']);
+      this.expectSubStepOrder('serviceSetup', ['setupBsft', 'bsftPstn']);
       this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'summary']);
       this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
     });
@@ -432,6 +461,26 @@ describe('SetupWizardCtrl', function () {
 
     it('does not display TSP partner view during meeting setup if there is active TSP license present', function () {
       this.SetupWizardService.getActiveTSPAudioPackage.and.returnValue({});
+      this.initController();
+      this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'summary']);
+    });
+  });
+
+  describe('CCAUser license handling', function () {
+    beforeEach(function () {
+      this.SetupWizardService.hasPendingServiceOrder.and.returnValue(true);
+      this.SetupWizardService.hasPendingWebExMeetingLicenses.and.returnValue(true);
+    });
+
+    it('does NOT display the CCASP tab when pending CCAUser Audio license is active', function () {
+      this.SetupWizardService.hasPendingCCAUserPackage.and.returnValue(true);
+      this.SetupWizardService.getActiveCCAUserPackage.and.returnValue({});
+      this.initController();
+      this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'summary']);
+    });
+
+    it('does NOT display the set CCASP tab when pending CCAUser Audio license is NOT present', function () {
+      this.SetupWizardService.hasPendingCCAUserPackage.and.returnValue(false);
       this.initController();
       this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'summary']);
     });
@@ -461,33 +510,6 @@ describe('SetupWizardCtrl', function () {
       this.initController();
       this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'summary']);
     });
-  });
-
-  it('will filter tabs if onlyShowSingleTab is true', function () {
-    this.$controller('SetupWizardCtrl', {
-      $scope: this.$scope,
-      $stateParams: {
-        onlyShowSingleTab: true,
-        currentTab: 'enterpriseSettings',
-      },
-    });
-    this.$scope.$apply();
-
-    this.expectStepOrder(['enterpriseSettings']);
-  });
-
-  it('will filter steps if onlyShowSingleTab is true and currentStep is set.', function () {
-    this.$controller('SetupWizardCtrl', {
-      $scope: this.$scope,
-      $stateParams: {
-        currentTab: 'enterpriseSettings',
-        currentStep: 'init',
-        onlyShowSingleTab: true,
-      },
-    });
-    this.$scope.$apply();
-    this.expectStepOrder(['enterpriseSettings']);
-    this.expectSubStepOrder('enterpriseSettings', ['init', 'exportMetadata', 'importIdp', 'testSSO']);
   });
 
   describe('stateParams with onlyShowSingleTab and numberOfSteps', function () {

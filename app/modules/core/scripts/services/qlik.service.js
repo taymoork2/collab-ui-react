@@ -14,7 +14,7 @@
       webexPremium: ['premium_webex_v1', 'webex-report-premium'],
       sparkBasic: ['basic_spark_v1', 'spark-report-basic'],
       sparkPremium: ['premium_spark_v1', 'spark-report-premium'],
-      sparkPartner: ['basic_webex_v1', 'spark-report-partner'],
+      sparkPartner: ['partner_spark_v1', 'spark-report-partner'],
       webexMEI: ['mei', 'MEI'],
       webexSystem: ['system_webex_v1', 'webex-report-system'],
       /*webexDashboard: ['dashboard_webex_v1', 'webex-report-dashboard'],

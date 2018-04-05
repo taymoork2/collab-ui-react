@@ -1,18 +1,20 @@
 import { SunlightConstantsService } from './SunlightConstantsService';
 import { SunlightUtilitiesService } from './SunlightUtilitiesService';
+import contextAdminAuthorizationServiceModuleName  from 'modules/context/services/context-authorization-service';
+import * as urlConfigModuleName from 'modules/core/config/urlConfig';
+import * as authInfoModuleName from 'modules/core/scripts/services/authinfo';
+
 const SunlightConfigService = require('./sunlightConfigService');
 const SunlightReportService = require('./sunlightReportService');
 const ConfigServices = require('./sunlightServices');
 const URService = require('./urService');
 
-const urlConfigModule = require('modules/core/config/urlConfig');
-const authInfoModule = require('modules/core/scripts/services/authinfo');
-
 export default angular
   .module('sunlight.services', [
     'ngResource',
-    urlConfigModule,
-    authInfoModule,
+    authInfoModuleName,
+    contextAdminAuthorizationServiceModuleName,
+    urlConfigModuleName,
   ])
   .service('SunlightConfigService', SunlightConfigService)
   .service('SunlightReportService', SunlightReportService)

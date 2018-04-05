@@ -553,6 +553,7 @@ describe('Controller: AADecisionCtrl', function () {
   describe('Variable is deleted', function () {
     beforeEach(inject(function () {
       spyOn(AASessionVariableService, 'getSessionVariables').and.returnValue(q.resolve([]));
+      spyOn(AASessionVariableService, 'getSessionVariablesOfDependentCeOnly').and.returnValue(q.resolve());
       spyOn(aaCommonService, 'collectThisCeActionValue').and.returnValue([]);
     }));
 

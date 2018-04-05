@@ -43,6 +43,12 @@
   display: initial;
 }
 
+.node-error {
+  line-height: .95rem;
+  font-size: .75em;
+  color: $color-red-dark;
+}
+
 .addResourceFQDN {
   display: initial;
   color: #0387b8;

@@ -1,4 +1,4 @@
-import { IBmmpAttr } from 'modules/online/upgrade/upgrade.service';
+import { IBmmpAttr } from 'modules/online/upgrade/shared/upgrade.service';
 
 export interface ISubscription {
   changeplanOverride?: any;

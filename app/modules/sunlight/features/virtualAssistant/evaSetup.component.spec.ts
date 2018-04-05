@@ -147,8 +147,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
   };
 
   let getLogoDeferred, getLogoUrlDeferred, controller, listRoomsDeferred, listMembershipsDeferred;
-  let warningIfNotOwnerResult;
-
+  let userAccess = true;
   beforeEach(function () {
     this.initModules('Sunlight', evaSetupModule);
     this.injectDependencies(
@@ -176,7 +175,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     getLogoUrlDeferred = this.$q.defer();
     listRoomsDeferred = this.$q.defer();
     listMembershipsDeferred = this.$q.defer();
-    warningIfNotOwnerResult = { valid: true };
+    userAccess = true;
     spyOn(this.$modal, 'open');
     spyOn(this.CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
     spyOn(this.CTService, 'getLogoUrl').and.returnValue(getLogoUrlDeferred.promise);
@@ -191,7 +190,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     spyOn(this.SparkService, 'getMyPersonId').and.returnValue(personId);
     spyOn(this.SparkService, 'listRooms').and.returnValue(listRoomsDeferred.promise);
     spyOn(this.SparkService, 'listMemberships').and.returnValue(listMembershipsDeferred.promise);
-    spyOn(this.EvaService, 'getWarningIfNotOwner').and.callFake(() => warningIfNotOwnerResult);
+    spyOn(this.EvaService, 'canIEditThisEva').and.callFake(() => userAccess);
 
     this.compileComponent('eva-setup', {
       dismiss: 'dismiss()',
@@ -542,8 +541,9 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       controller.submitFeature();
       this.$scope.$apply();
 
+      const featureNameObj = { featureName: 'careChatTpl.virtualAssistant.eva.featureText.name' };
       expect(controller.saveTemplateErrorOccurred).toBeTruthy();
-      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String));
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String), featureNameObj);
     });
 
     it('should show invalidIconDimensions if update icon fails on Edit', function () {
@@ -570,7 +570,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       this.$scope.$apply();
 
       expect(controller.saveTemplateErrorOccurred).toBeTruthy();
-      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(response, jasmine.any(String));
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(response, jasmine.any(String), { featureName: myTranslation });
       expect(controller.template.configuration.pages.vaAvatar.avatarError).toBe(controller.avatarErrorType.INVALID_ICON_DIMENSIONS);
       expect(controller.summaryErrorMessage).toBe(myTranslation);
     });
@@ -579,14 +579,13 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       //by default, this flag is false
       expect(controller.saveTemplateErrorOccurred).toBeFalsy();
       controller.isEditFeature = true;
+      const owner = 'Some Owner';
+      controller.template.ownerDetails.displayName = owner;
       const expectedWarningMessage = {
         message: 'careChatTpl.virtualAssistant.eva.featureText.nonAdminEditDeleteWarning',
-        args: { owner: 'Some Owner' },
+        args: { owner },
       };
-      warningIfNotOwnerResult = {
-        valid: false,
-        warning: expectedWarningMessage,
-      };
+      userAccess = false;
       controller.submitFeature();
       this.$scope.$apply();
 

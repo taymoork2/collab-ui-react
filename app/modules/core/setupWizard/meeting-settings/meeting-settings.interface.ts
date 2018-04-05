@@ -90,6 +90,7 @@ export interface IPendingLicense {
   volume: number;
   isTrial: boolean;
   status: string;
+  capacity?: number;
 }
 
 export interface ICCASPLicense extends IPendingLicense {

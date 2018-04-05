@@ -1,9 +1,10 @@
 import { HybridServicesEventHistoryService } from 'modules/hercules/services/hybrid-services-event-history.service';
-import { IHybridServicesEventHistoryData, IHybridServicesEventHistoryItem } from 'modules/hercules/services/hybrid-services-event-history.service';
+import { IHybridServicesEventHistoryItem } from 'modules/hercules/services/hybrid-services-event-history.service';
 import { HybridServicesI18NService } from 'modules/hercules/services/hybrid-services-i18n.service';
 import { ConnectorType, HybridServiceId } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 import { Notification } from 'modules/core/notifications';
+import { ITimeFilterOptions } from 'modules/hercules/hybrid-services-event-history-page/hybrid-services-event-history-page.component';
 
 class HybridServicesClusterStatusHistoryTableCtrl implements ng.IComponentController {
 
@@ -12,11 +13,11 @@ class HybridServicesClusterStatusHistoryTableCtrl implements ng.IComponentContro
   public serviceId: string;
 
   public loadingPage = false;
-  public allEvents: IHybridServicesEventHistoryData;
+  public allEvents: IHybridServicesEventHistoryItem[];
 
   public serviceFilter: HybridServiceId | 'all' = 'all';
   public resourceFilter: string = 'all';
-  public earliestTimestampSearchedUpdated: Function;
+  public timeFilter: ITimeFilterOptions['value'] = 'last_day';
   private openedItem: IHybridServicesEventHistoryItem;
 
   /* @ngInject */
@@ -29,19 +30,22 @@ class HybridServicesClusterStatusHistoryTableCtrl implements ng.IComponentContro
     private Notification: Notification,
   ) {}
 
-  public $onInit() {
-    this.getData(this.clusterId);
-  }
-
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
-    const { serviceId, resourceFilter } = changes;
+    const { serviceId, resourceFilter, timeFilter } = changes;
     if (serviceId && serviceId.currentValue) {
       this.serviceFilter = serviceId.currentValue;
     }
     if (resourceFilter && resourceFilter.currentValue) {
       this.resourceFilter = resourceFilter.currentValue;
     }
+    if (timeFilter && timeFilter.currentValue) {
+      // Note: for legacy reasons, the HTTP request to the backend is fetching all data from a cluster, no matter which node or service has been selected
+      // The filtering is done client-side. Expect for the time range, a change trigers a new HTTP request
+      this.timeFilter = timeFilter.currentValue;
+      this.getData(this.clusterId, this.timeFilter);
+    }
   }
+
   public isFilterSetToService(connectorType: ConnectorType | 'all'): boolean {
     if (connectorType === 'all' || this.serviceFilter === 'all') {
       return true;
@@ -56,16 +60,32 @@ class HybridServicesClusterStatusHistoryTableCtrl implements ng.IComponentContro
     return resourceName === this.resourceFilter || clusterName === this.resourceFilter;
   }
 
-  private getData(clusterId: string): void {
+  public getEventsToDisplay(): IHybridServicesEventHistoryItem[] {
+    return _.chain(this.allEvents)
+      .filter(event => {
+        const connectorType = event.connectorType;
+        if (connectorType === 'all' || this.serviceFilter === 'all') {
+          return true;
+        }
+        return this.serviceFilter === this.HybridServicesUtilsService.connectorType2ServicesId(connectorType)[0];
+      })
+      .filter(event => {
+        const resourceName = event.hostname;
+        const clusterName = event.clusterName;
+        if (this.resourceFilter === 'all') {
+          return true;
+        }
+        return resourceName === this.resourceFilter || clusterName === this.resourceFilter;
+      })
+      .value();
+  }
+
+  private getData(clusterId: string, timeFilter: ITimeFilterOptions['value']): void {
     this.loadingPage = true;
-    this.HybridServicesEventHistoryService.getAllEvents(clusterId)
+    const [fromDate, toDate] = this.convertTimeFilterToDates(timeFilter);
+    this.HybridServicesEventHistoryService.getAllEvents(clusterId, fromDate, toDate)
       .then((data) => {
-        this.allEvents = data;
-        this.earliestTimestampSearchedUpdated({
-          options: {
-            earliestTimestampSearched: data.earliestTimestampSearched,
-          },
-        });
+        this.allEvents = _.clone(data.items);
       })
       .catch((error) => {
         this.Notification.errorWithTrackingId(error, 'hercules.eventHistory.cannotReadEventData');
@@ -73,6 +93,19 @@ class HybridServicesClusterStatusHistoryTableCtrl implements ng.IComponentContro
       .finally(() => {
         this.loadingPage = false;
       });
+  }
+
+  private convertTimeFilterToDates(timeFilter: ITimeFilterOptions['value']): string[] {
+    let fromDate = '';
+    const toDate = moment().toISOString();
+    if (timeFilter === 'last_day') {
+      fromDate = moment().subtract(1, 'days').toISOString();
+    } else if (timeFilter === 'last_2_days') {
+      fromDate = moment().subtract(2, 'days').toISOString();
+    } else if (timeFilter === 'last_week') {
+      fromDate = moment().subtract(7, 'days').toISOString();
+    }
+    return [fromDate, toDate];
   }
 
   public formatTime = (timestamp: string): string => this.HybridServicesI18NService.getLocalTimestamp(timestamp);
@@ -106,7 +139,6 @@ class HybridServicesClusterStatusHistoryTableCtrl implements ng.IComponentContro
     }
     return this.$translate.instant('common.unknown');
   }
-
 }
 
 export class HybridServicesClusterStatusHistoryTableComponent implements ng.IComponentOptions {
@@ -117,6 +149,6 @@ export class HybridServicesClusterStatusHistoryTableComponent implements ng.ICom
     connectorId: '<',
     serviceId: '<',
     resourceFilter: '<',
-    earliestTimestampSearchedUpdated: '&',
+    timeFilter: '<',
   };
 }

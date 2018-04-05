@@ -21,6 +21,7 @@
     OverviewDataSecurityNotification,
     OverviewDevicesNotification,
     OverviewEsaDisclaimerNotification,
+    OverviewEVAMissingDefaultSpaceNotification,
     OverviewGoogleCalendarNotification,
     OverviewHybridMediaNotification,
     OverviewHybridMessagingNotification,
@@ -48,6 +49,7 @@
       createCareNotSetupNotification: OverviewCareNotSetupNotification.createNotification,
       createAutoAssignNotification: OverviewAutoAssignNotificationFactory.createNotification,
       createLinkedSitesNotification: LinkedSiteNotification.createNotification,
+      createEvaMissingDefaultSpaceNotification: OverviewEVAMissingDefaultSpaceNotification.createNotification,
     };
   }
 })();

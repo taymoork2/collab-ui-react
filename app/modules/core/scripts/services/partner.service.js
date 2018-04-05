@@ -188,7 +188,7 @@
       return freeServices;
     }
 
-    function _LicensedService(licenseInfo, mapping) {
+    function _LicensedService(licenseInfo, mapping, customerOrgId) {
       var isConference = (mapping[Config.offerCodes.CF] !== undefined);
       var service;
       if (isConference) {
@@ -198,16 +198,22 @@
         if (!service) {
           // TODO: remove after identifying unhandled offers
           var licenseInfoDebug = _.pick(licenseInfo, ['capacity', 'features', 'isCIUnifiedSite', 'isTrial', 'licenseId', 'licenseType', 'offerName', 'partnerOrgId', 'status', 'trialId', 'volume']);
-          MetricsService.trackDiagnosticMetricAndThrow(DiagnosticKey.LICENSE_MAP_ERROR, licenseInfoDebug);
+          licenseInfoDebug.customerOrgId = customerOrgId;
+          MetricsService.trackDiagnosticMetric(DiagnosticKey.LICENSE_MAP_ERROR, licenseInfoDebug);
+        } else {
+          service.licenseType = licenseInfo.licenseType;
         }
-        service.licenseType = licenseInfo.licenseType;
       }
-
-      _.assign(this, service);
-      this.qty = licenseInfo.volume || 0;
+      if (service) {
+        _.assign(this, service);
+        this.qty = licenseInfo.volume || 0;
+      }
     }
 
     function _addService(services, service) {
+      if (!service || _.isEmpty(service)) {
+        return;
+      }
       var existingService = _.find(services, {
         name: service.name,
       });
@@ -234,16 +240,20 @@
       var isShowCMR = options.isShowCMR;
       var isCareEnabled = options.isCareEnabled;
       var isAdvanceCareEnabled = options.isAdvanceCareEnabled;
+      var hiddenWebexServices = [Config.licenseTypes.STORAGE, Config.licenseTypes.AUDIO];
+      var isWebexServiceHidden = _.includes(hiddenWebexServices, service.licenseType);
+      var isServiceProPack = service.licenseType === Config.licenseTypes.MANAGEMENT;
 
       var serviceNotCareOrCareIsShown = (service.licenseType !== Config.licenseTypes.CARE || isCareEnabled) &&
         (service.licenseType !== Config.licenseTypes.ADVANCE_CARE || isAdvanceCareEnabled);
-      var serviceNotHiddenWebex = ((service.licenseType !== Config.licenseTypes.STORAGE) && (isShowCMR || service.licenseType !== Config.licenseTypes.CMR));
+      var serviceNotHiddenWebex = (!isWebexServiceHidden && (isShowCMR || service.licenseType !== Config.licenseTypes.CMR));
+
       //if 'isTrial' it has to be true. Otherwise any false value is fine
       var correctServiceStatus = true;
       if (isTrial !== undefined) {
         correctServiceStatus = (isTrial) ? (service.isTrial === true) : !service.isTrial;
       }
-      return (serviceNotHiddenWebex && serviceNotCareOrCareIsShown && correctServiceStatus);
+      return (serviceNotHiddenWebex && serviceNotCareOrCareIsShown && correctServiceStatus && !isServiceProPack);
     }
 
     function getManagedOrgsList(searchText) {
@@ -414,7 +424,7 @@
         accountStatus: '',
         trialId: customer.trialId,
         customerOrgId: customer.customerOrgId || customer.id,
-        customerName: customer.customerName || customer.displayName,
+        customerName: customer.customerName || customer.displayName || '',
         customerEmail: customer.customerEmail || customer.email,
         endDate: edate,
         startDate: customer.startDate,
@@ -556,8 +566,8 @@
 
     function isServiceManagedByCustomer(serviceObj) {
       return _.isUndefined(serviceObj.partnerOrgId) &&
-      _.isUndefined(serviceObj.partnerEmail) &&
-      !isLicenseFree(serviceObj);
+        _.isUndefined(serviceObj.partnerEmail) &&
+        !isLicenseFree(serviceObj);
     }
 
     // Services that are not licensed will not have the usual properties associated with a license. The volume property is a
@@ -589,8 +599,8 @@
       } else {
         // device and care licenses can be undefined
         return customerData.licenses +
-              (customerData.deviceLicenses || 0) +
-              (_.get(options, 'isCareEnabled', false) ? (customerData.careLicenses || 0) : 0);
+          (customerData.deviceLicenses || 0) +
+          (_.get(options, 'isCareEnabled', false) ? (customerData.careLicenses || 0) : 0);
       }
     }
 
@@ -706,13 +716,13 @@
         });
     }
 
-    function getTrialMeetingServices(licenseList) {
+    function getTrialMeetingServices(licenseList, customerOrgId) {
       var conferenceMapping = helpers.createConferenceMapping();
       var meetingServices = [];
       _.forEach(licenseList, function (licenseInfo) {
         if (licenseInfo.isTrial) {
           if (licenseInfo.licenseType === Config.licenseTypes.CONFERENCING || licenseInfo.licenseType === Config.licenseTypes.CMR) {
-            var service = new helpers.LicensedService(licenseInfo, conferenceMapping);
+            var service = new helpers.LicensedService(licenseInfo, conferenceMapping, customerOrgId);
             helpers.addService(meetingServices, service);
           }
         }
@@ -895,6 +905,7 @@
       var isCareEnabled = options.isCareEnabled;
       var isAdvanceCareEnabled = options.isAdvanceCareEnabled;
       var isTrial = options.isTrial;
+      var customerOrgId = customer.customerOrgId;
 
       var meetingHeader = {
         licenseType: 'MEETING',
@@ -926,13 +937,13 @@
             isTrial: isTrial, isShowCMR: true, isCareEnabled: isCareEnabled, isAdvanceCareEnabled: isAdvanceCareEnabled,
           })) { //if conference
             if (licenseInfo.licenseType === Config.licenseTypes.CONFERENCING || licenseInfo.licenseType === Config.licenseTypes.CMR) {
-              service = new helpers.LicensedService(licenseInfo, conferenceMapping);
+              service = new helpers.LicensedService(licenseInfo, conferenceMapping, customerOrgId);
               helpers.addService(meetingServices, service);
             } else if (licenseInfo.licenseType === Config.licenseTypes.SHARED_DEVICES) {
-              service = new helpers.LicensedService(licenseInfo, roomDeviceMapping);
+              service = new helpers.LicensedService(licenseInfo, roomDeviceMapping, customerOrgId);
               helpers.addService(roomDevices, service);
             } else {
-              service = new helpers.LicensedService(licenseInfo, licenseMapping);
+              service = new helpers.LicensedService(licenseInfo, licenseMapping, customerOrgId);
               helpers.addService(paidServices, service);
             }
           }

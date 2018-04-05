@@ -1,31 +1,35 @@
 <div class="csv-upload-results" ng-if="$ctrl.activeTask !== undefined">
-  <h4 class="csv-upload-results__title"
-    translate="userManage.bulk.import.status"></h4>
+  <h4 class="csv-upload-results__title" translate="userManage.bulk.import.status"></h4>
 
   <p class="csv-upload-results__description"
-    ng-if="$ctrl.startedTime && $ctrl.startedDate && $ctrl.startedBy"
-    translate="userTaskManagerModal.startedAt"
-    translate-values="{ time: $ctrl.startedTime, date: $ctrl.startedDate, person: $ctrl.startedBy }"></p>
+    ng-if="$ctrl.startedTime && $ctrl.startedDate && !$ctrl.hasUser"
+    translate="userTaskManagerModal.startedOn"
+    translate-values="{ time: $ctrl.startedTime, date: $ctrl.startedDate }">
+  </p>
+  <p class="csv-upload-results__description"
+    ng-if="$ctrl.startedTime && $ctrl.startedDate && $ctrl.hasUser"
+    translate="userTaskManagerModal.startedBy"
+    translate-values="{ time: $ctrl.startedTime, date: $ctrl.startedDate, person: $ctrl.startedBy }">
+  </p>
 
   <cr-progressbar ng-if="$ctrl.isProcessing"
-    progressbar-label="$ctrl.progressbarLabel"
     progressbar-filename="$ctrl.fileName"
+    progressbar-label="$ctrl.progressbarLabel"
     progressbar-value="$ctrl.processProgress"
     progressbar-is-processing="$ctrl.isProcessing"
-    progressbar-on-cancel="$ctrl.onCancelImport()"
-    >
+    progressbar-on-cancel="$ctrl.onCancelImport()">
   </cr-progressbar>
 
   <cr-users-tile-totals
-   new-total="$ctrl.numNewUsers"
-   updated-total="$ctrl.numUpdatedUsers"
-   error-total="$ctrl.numErroredUsers">
+    new-total="$ctrl.numNewUsers"
+    updated-total="$ctrl.numUpdatedUsers"
+    error-total="$ctrl.numErroredUsers">
   </cr-users-tile-totals>
 
-  <hr class="csv-upload-results__line-break"
-    ng-if="$ctrl.userErrorArray.length > 0">
+  <hr class="csv-upload-results__line-break" ng-if="$ctrl.userErrorArray.length > 0">
 
-  <cr-users-error-results ng-if="$ctrl.userErrorArray.length > 0"
+  <cr-users-error-results
+    ng-if="$ctrl.userErrorArray.length > 0"
     user-error-array="$ctrl.userErrorArray">
   </cr-users-error-results>
 

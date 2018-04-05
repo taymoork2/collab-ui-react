@@ -1,5 +1,5 @@
 import './_search.scss';
-import { SearchService } from './searchService';
+import { SearchService, Platforms } from './searchService';
 import { Notification } from 'modules/core/notifications';
 
 export interface IGridApiScope extends ng.IScope {
@@ -19,6 +19,7 @@ class Participants implements ng.IComponentController {
     private Notification: Notification,
     private SearchService: SearchService,
     private $stateParams: ng.ui.IStateParamsService,
+    private $translate: ng.translate.ITranslateService,
   ) {
     this.conferenceID = _.get(this.$stateParams, 'cid');
   }
@@ -33,6 +34,9 @@ class Participants implements ng.IComponentController {
       .then((res) => {
         this.gridData = _.map(res, (item: any) => {
           const device = this.SearchService.getDevice({ platform: item.platform, browser: item.browser, sessionType: item.sessionType });
+          if (item.platform === Platforms.TP && !device.name) {
+            device.name = this.$translate.instant('reportsPage.webexMetrics.CMR3DefaultDevice');
+          }
           return _.assignIn({}, item, {
             platform_: _.get(device, 'name'),
             duration: this.SearchService.getDuration(item.duration),

@@ -375,7 +375,7 @@
         id: '',
         name: '',
       },
-      welcomeMessage: $translate.instant('careChatTpl.virtualAssistantWelcomeMessage'),
+      welcomeMessage: $translate.instant('careChatTpl.templateConfig.default.virtualAssistantWelcomeMessage'),
     };
 
     var defaultExpertVirtualAssistantConfig = {
@@ -414,7 +414,7 @@
               displayText: vm.orgName.slice(0, 50),
             },
             promptMessage: {
-              message: $translate.instant('careChatTpl.defaultPromptMessage'),
+              message: $translate.instant('careChatTpl.templateConfig.default.defaultPromptMessage'),
             },
           },
         },
@@ -428,7 +428,7 @@
               welcomeHeader: {
                 attributes: [{
                   name: 'header',
-                  value: $translate.instant('careChatTpl.defaultWelcomeText'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.defaultWelcomeText'),
                 }, {
                   name: 'organization',
                   value: vm.orgName,
@@ -443,10 +443,10 @@
                   value: vm.getCategoryTypeObject('customerInfo'),
                 }, {
                   name: 'label',
-                  value: $translate.instant('careChatTpl.defaultNameText'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.defaultNameText'),
                 }, {
                   name: 'hintText',
-                  value: $translate.instant('careChatTpl.defaultNameHint'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.defaultNameHint'),
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('name'),
@@ -463,10 +463,10 @@
                   value: vm.getCategoryTypeObject('customerInfo'),
                 }, {
                   name: 'label',
-                  value: $translate.instant('careChatTpl.defaultEmailText'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.defaultEmailText'),
                 }, {
                   name: 'hintText',
-                  value: $translate.instant('careChatTpl.defaultEmail'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.defaultEmail'),
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('email'),
@@ -483,10 +483,10 @@
                   value: vm.getCategoryTypeObject('requestInfo'),
                 }, {
                   name: 'label',
-                  value: $translate.instant('careChatTpl.defaultQuestionText'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.defaultQuestionText'),
                 }, {
                   name: 'hintText',
-                  value: $translate.instant('careChatTpl.field3HintText'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.field3HintText'),
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('category'),
@@ -503,10 +503,10 @@
                   value: vm.getCategoryTypeObject('requestInfo'),
                 }, {
                   name: 'label',
-                  value: $translate.instant('careChatTpl.additionalDetails'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.additionalDetails'),
                 }, {
                   name: 'hintText',
-                  value: $translate.instant('careChatTpl.additionalDetailsAbtIssue'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.additionalDetailsAbtIssue'),
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('reason'),
@@ -519,13 +519,13 @@
             enabled: true,
             fields: {
               agentUnavailableMessage: {
-                displayText: $translate.instant('careChatTpl.agentUnavailableMessage'),
+                displayText: $translate.instant('careChatTpl.templateConfig.default.agentUnavailableMessage'),
               },
             },
           },
           offHours: {
             enabled: true,
-            message: $translate.instant('careChatTpl.offHoursDefaultMessage'),
+            message: $translate.instant('careChatTpl.templateConfig.default.offHoursDefaultMessage'),
             schedule: {
               businessDays: _.map(_.filter(vm.days, 'isSelected'), 'label'),
               open24Hours: true,
@@ -540,10 +540,10 @@
             enabled: true,
             fields: {
               feedbackQuery: {
-                displayText: $translate.instant('careChatTpl.feedbackQuery'),
+                displayText: $translate.instant('careChatTpl.templateConfig.default.feedbackQuery'),
               },
               comment: {
-                displayText: $translate.instant('careChatTpl.ratingComment'),
+                displayText: $translate.instant('careChatTpl.templateConfig.default.ratingComment'),
                 dictionaryType: {
                   fieldSet: 'cisco.base.rating',
                   fieldName: 'cccRatingComments',
@@ -555,19 +555,19 @@
         chatStatusMessages: {
           messages: {
             connectingMessage: {
-              displayText: $translate.instant('careChatTpl.connectingMessage'),
+              displayText: $translate.instant('careChatTpl.templateConfig.default.connectingMessage'),
             },
             waitingMessage: {
-              displayText: $translate.instant('careChatTpl.waitingMessage'),
+              displayText: $translate.instant('careChatTpl.templateConfig.default.waitingMessage'),
             },
             enterRoomMessage: {
-              displayText: $translate.instant('careChatTpl.enterRoomMessage'),
+              displayText: $translate.instant('careChatTpl.templateConfig.default.enterRoomMessage'),
             },
             leaveRoomMessage: {
-              displayText: $translate.instant('careChatTpl.leaveRoomMessage'),
+              displayText: $translate.instant('careChatTpl.templateConfig.default.leaveRoomMessage'),
             },
             chattingMessage: {
-              displayText: $translate.instant('careChatTpl.chattingMessage'),
+              displayText: $translate.instant('careChatTpl.templateConfig.default.chattingMessage'),
             },
           },
 
@@ -592,7 +592,7 @@
               welcomeHeader: {
                 attributes: [{
                   name: 'header',
-                  value: $translate.instant('careChatTpl.defaultWelcomeText'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.defaultWelcomeText'),
                 }, {
                   name: 'organization',
                   value: vm.orgName,
@@ -607,10 +607,10 @@
                   value: vm.getCategoryTypeObject('customerInfo'),
                 }, {
                   name: 'label',
-                  value: $translate.instant('careChatTpl.defaultNameText'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.defaultNameText'),
                 }, {
                   name: 'hintText',
-                  value: $translate.instant('careChatTpl.defaultNameHint'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.defaultNameHint'),
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('name'),
@@ -627,10 +627,10 @@
                   value: vm.getCategoryTypeObject('customerInfo'),
                 }, {
                   name: 'label',
-                  value: $translate.instant('careChatTpl.defaultPhoneText'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.defaultPhoneText'),
                 }, {
                   name: 'hintText',
-                  value: $translate.instant('careChatTpl.defaultPhoneHintText'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.defaultPhoneHintText'),
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('phone'),
@@ -646,10 +646,10 @@
                   value: vm.getCategoryTypeObject('requestInfo'),
                 }, {
                   name: 'label',
-                  value: $translate.instant('careChatTpl.defaultQuestionText'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.defaultQuestionText'),
                 }, {
                   name: 'hintText',
-                  value: $translate.instant('careChatTpl.field3HintText'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.field3HintText'),
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('category'),
@@ -665,10 +665,10 @@
                   value: vm.getCategoryTypeObject('requestInfo'),
                 }, {
                   name: 'label',
-                  value: $translate.instant('careChatTpl.additionalDetails'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.additionalDetails'),
                 }, {
                   name: 'hintText',
-                  value: $translate.instant('careChatTpl.additionalDetailsAbtIssue'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.additionalDetailsAbtIssue'),
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('reason'),
@@ -681,13 +681,13 @@
             enabled: false,
             fields: {
               agentUnavailableMessage: {
-                displayText: $translate.instant('careChatTpl.agentUnavailableMessage'),
+                displayText: $translate.instant('careChatTpl.templateConfig.default.agentUnavailableMessage'),
               },
             },
           },
           offHours: {
             enabled: true,
-            message: $translate.instant('careChatTpl.offHoursDefaultMessage'),
+            message: $translate.instant('careChatTpl.templateConfig.default.offHoursDefaultMessage'),
             schedule: {
               businessDays: _.map(_.filter(vm.days, 'isSelected'), 'label'),
               open24Hours: true,
@@ -702,10 +702,10 @@
             enabled: true,
             fields: {
               feedbackQuery: {
-                displayText: $translate.instant('careChatTpl.feedbackQueryCall'),
+                displayText: $translate.instant('careChatTpl.templateConfig.default.feedbackQueryCall'),
               },
               comment: {
-                displayText: $translate.instant('careChatTpl.ratingComment'),
+                displayText: $translate.instant('careChatTpl.templateConfig.default.ratingComment'),
                 dictionaryType: {
                   fieldSet: 'cisco.base.rating',
                   fieldName: 'cccRatingComments',
@@ -718,7 +718,7 @@
             enabled: true,
             fields: {
               callbackConfirmationMessage: {
-                displayText: $translate.instant('careChatTpl.callbackConfirmationMsg'),
+                displayText: $translate.instant('careChatTpl.templateConfig.default.callbackConfirmationMsg'),
               },
             },
           },
@@ -744,7 +744,7 @@
               displayText: vm.orgName.slice(0, 50),
             },
             promptMessage: {
-              message: $translate.instant('careChatTpl.defaultPromptMessage'),
+              message: $translate.instant('careChatTpl.templateConfig.default.defaultPromptMessage'),
             },
           },
         },
@@ -758,7 +758,7 @@
               welcomeHeader: {
                 attributes: [{
                   name: 'header',
-                  value: $translate.instant('careChatTpl.defaultWelcomeText'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.defaultWelcomeText'),
                 }, {
                   name: 'organization',
                   value: vm.orgName,
@@ -773,10 +773,10 @@
                   value: vm.getCategoryTypeObject('customerInfo'),
                 }, {
                   name: 'label',
-                  value: $translate.instant('careChatTpl.defaultNameText'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.defaultNameText'),
                 }, {
                   name: 'hintText',
-                  value: $translate.instant('careChatTpl.defaultNameHint'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.defaultNameHint'),
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('name'),
@@ -793,10 +793,10 @@
                   value: vm.getCategoryTypeObject('customerInfo'),
                 }, {
                   name: 'label',
-                  value: $translate.instant('careChatTpl.defaultEmailText'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.defaultEmailText'),
                 }, {
                   name: 'hintText',
-                  value: $translate.instant('careChatTpl.defaultEmail'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.defaultEmail'),
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('email'),
@@ -813,10 +813,10 @@
                   value: vm.getCategoryTypeObject('requestInfo'),
                 }, {
                   name: 'label',
-                  value: $translate.instant('careChatTpl.defaultQuestionText'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.defaultQuestionText'),
                 }, {
                   name: 'hintText',
-                  value: $translate.instant('careChatTpl.field3HintText'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.field3HintText'),
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('category'),
@@ -832,10 +832,10 @@
                   value: vm.getCategoryTypeObject('requestInfo'),
                 }, {
                   name: 'label',
-                  value: $translate.instant('careChatTpl.additionalDetails'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.additionalDetails'),
                 }, {
                   name: 'hintText',
-                  value: $translate.instant('careChatTpl.additionalDetailsAbtIssue'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.additionalDetailsAbtIssue'),
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('reason'),
@@ -850,7 +850,7 @@
               welcomeHeader: {
                 attributes: [{
                   name: 'header',
-                  value: $translate.instant('careChatTpl.defaultWelcomeText'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.defaultWelcomeText'),
                 }, {
                   name: 'organization',
                   value: vm.orgName,
@@ -865,10 +865,10 @@
                   value: vm.getCategoryTypeObject('customerInfo'),
                 }, {
                   name: 'label',
-                  value: $translate.instant('careChatTpl.defaultNameText'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.defaultNameText'),
                 }, {
                   name: 'hintText',
-                  value: $translate.instant('careChatTpl.defaultNameHint'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.defaultNameHint'),
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('name'),
@@ -884,10 +884,10 @@
                   value: vm.getCategoryTypeObject('customerInfo'),
                 }, {
                   name: 'label',
-                  value: $translate.instant('careChatTpl.defaultPhoneText'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.defaultPhoneText'),
                 }, {
                   name: 'hintText',
-                  value: $translate.instant('careChatTpl.defaultPhoneHintText'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.defaultPhoneHintText'),
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('phone'),
@@ -903,10 +903,10 @@
                   value: vm.getCategoryTypeObject('requestInfo'),
                 }, {
                   name: 'label',
-                  value: $translate.instant('careChatTpl.defaultQuestionText'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.defaultQuestionText'),
                 }, {
                   name: 'hintText',
-                  value: $translate.instant('careChatTpl.field3HintText'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.field3HintText'),
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('category'),
@@ -922,10 +922,10 @@
                   value: vm.getCategoryTypeObject('requestInfo'),
                 }, {
                   name: 'label',
-                  value: $translate.instant('careChatTpl.additionalDetails'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.additionalDetails'),
                 }, {
                   name: 'hintText',
-                  value: $translate.instant('careChatTpl.additionalDetailsAbtIssue'),
+                  value: $translate.instant('careChatTpl.templateConfig.default.additionalDetailsAbtIssue'),
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('reason'),
@@ -938,13 +938,13 @@
             enabled: true,
             fields: {
               agentUnavailableMessage: {
-                displayText: $translate.instant('careChatTpl.agentUnavailableMessage'),
+                displayText: $translate.instant('careChatTpl.templateConfig.default.agentUnavailableMessage'),
               },
             },
           },
           offHours: {
             enabled: true,
-            message: $translate.instant('careChatTpl.offHoursDefaultMessage'),
+            message: $translate.instant('careChatTpl.templateConfig.default.offHoursDefaultMessage'),
             schedule: {
               businessDays: _.map(_.filter(vm.days, 'isSelected'), 'label'),
               open24Hours: true,
@@ -959,10 +959,10 @@
             enabled: true,
             fields: {
               feedbackQuery: {
-                displayText: $translate.instant('careChatTpl.feedbackQueryCall'),
+                displayText: $translate.instant('careChatTpl.templateConfig.default.feedbackQueryCall'),
               },
               comment: {
-                displayText: $translate.instant('careChatTpl.ratingComment'),
+                displayText: $translate.instant('careChatTpl.templateConfig.default.ratingComment'),
                 dictionaryType: {
                   fieldSet: 'cisco.base.rating',
                   fieldName: 'cccRatingComments',
@@ -974,7 +974,7 @@
             enabled: true,
             fields: {
               callbackConfirmationMessage: {
-                displayText: $translate.instant('careChatTpl.callbackConfirmationMsg'),
+                displayText: $translate.instant('careChatTpl.templateConfig.default.callbackConfirmationMsg'),
               },
             },
           },
@@ -982,10 +982,10 @@
             enabled: true,
             fields: {
               feedbackQuery: {
-                displayText: $translate.instant('careChatTpl.feedbackQuery'),
+                displayText: $translate.instant('careChatTpl.templateConfig.default.feedbackQuery'),
               },
               comment: {
-                displayText: $translate.instant('careChatTpl.ratingComment'),
+                displayText: $translate.instant('careChatTpl.templateConfig.default.ratingComment'),
                 dictionaryType: {
                   fieldSet: 'cisco.base.rating',
                   fieldName: 'cccRatingComments',
@@ -997,22 +997,22 @@
         chatStatusMessages: {
           messages: {
             bubbleTitleMessage: {
-              displayText: $translate.instant('careChatTpl.bubbleTitleMessage'),
+              displayText: $translate.instant('careChatTpl.templateConfig.default.bubbleTitleMessage'),
             },
             connectingMessage: {
-              displayText: $translate.instant('careChatTpl.connectingMessage'),
+              displayText: $translate.instant('careChatTpl.templateConfig.default.connectingMessage'),
             },
             waitingMessage: {
-              displayText: $translate.instant('careChatTpl.waitingMessage'),
+              displayText: $translate.instant('careChatTpl.templateConfig.default.waitingMessage'),
             },
             enterRoomMessage: {
-              displayText: $translate.instant('careChatTpl.enterRoomMessage'),
+              displayText: $translate.instant('careChatTpl.templateConfig.default.enterRoomMessage'),
             },
             leaveRoomMessage: {
-              displayText: $translate.instant('careChatTpl.leaveRoomMessage'),
+              displayText: $translate.instant('careChatTpl.templateConfig.default.leaveRoomMessage'),
             },
             chattingMessage: {
-              displayText: $translate.instant('careChatTpl.chattingMessage'),
+              displayText: $translate.instant('careChatTpl.templateConfig.default.chattingMessage'),
             },
           },
         },
@@ -1081,7 +1081,7 @@
 
     function populateCallbackConfirmationMessage() {
       if (vm.template.configuration.pages.callbackConfirmation && vm.selectedMediaType != vm.mediaTypes.chat) {
-        vm.template.configuration.pages.callbackConfirmation.fields.callbackConfirmationMessage.displayText = $translate.instant('careChatTpl.callbackConfirmationMsg');
+        vm.template.configuration.pages.callbackConfirmation.fields.callbackConfirmationMessage.displayText = $translate.instant('careChatTpl.templateConfig.default.callbackConfirmationMsg');
       }
     }
 
@@ -1095,10 +1095,10 @@
           value: vm.getCategoryTypeObject('requestInfo'),
         }, {
           name: 'label',
-          value: $translate.instant('careChatTpl.additionalDetails'),
+          value: $translate.instant('careChatTpl.templateConfig.default.additionalDetails'),
         }, {
           name: 'hintText',
-          value: $translate.instant('careChatTpl.additionalDetailsAbtIssue'),
+          value: $translate.instant('careChatTpl.templateConfig.default.additionalDetailsAbtIssue'),
         }, {
           name: 'type',
           value: vm.getTypeObject('reason'),
@@ -1123,10 +1123,10 @@
           enabled: false,
           fields: {
             feedbackQuery: {
-              displayText: $translate.instant('careChatTpl.feedbackQueryCall'),
+              displayText: $translate.instant('careChatTpl.templateConfig.default.feedbackQueryCall'),
             },
             comment: {
-              displayText: $translate.instant('careChatTpl.ratingComment'),
+              displayText: $translate.instant('careChatTpl.templateConfig.default.ratingComment'),
               dictionaryType: {
                 fieldSet: 'cisco.base.rating',
                 fieldName: 'cccRatingComments',
@@ -1148,7 +1148,7 @@
             displayText: vm.orgName.slice(0, 50),
           },
           promptMessage: {
-            message: $translate.instant('careChatTpl.defaultPromptMessage'),
+            message: $translate.instant('careChatTpl.templateConfig.default.defaultPromptMessage'),
           },
         },
       };
@@ -1223,9 +1223,9 @@
     }
     vm.waitingText = function () {
       if (isExpertEscalationSelected()) {
-        return $translate.instant('careChatTpl.waitingMessageEVA');
+        return $translate.instant('careChatTpl.templateConfig.default.waitingMessageEVA');
       } else {
-        return $translate.instant('careChatTpl.waitingMessage');
+        return $translate.instant('careChatTpl.templateConfig.default.waitingMessage');
       }
     };
 
@@ -1505,9 +1505,9 @@
       vm.userDetails = isExpertEscalationSelected() ? vm.userNames : vm.agentNames;
       vm.selectedAgentProfile = isExpertEscalationSelected() ? vm.userNames.displayName : vm.agentNames.displayName;
       vm.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = isExpertEscalationSelected() ?
-        $translate.instant('careChatTpl.waitingMessageEVA') : $translate.instant('careChatTpl.waitingMessage');
+        $translate.instant('careChatTpl.templateConfig.default.waitingMessageEVA') : $translate.instant('careChatTpl.templateConfig.default.waitingMessage');
       vm.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = isExpertEscalationSelected() ?
-        $translate.instant('careChatTpl.leaveRoomMessageEVA') : $translate.instant('careChatTpl.leaveRoomMessage');
+        $translate.instant('careChatTpl.templateConfig.default.leaveRoomMessageEVA') : $translate.instant('careChatTpl.templateConfig.default.leaveRoomMessage');
       vm.agentNamePreview = isExpertEscalationSelected() ? $translate.instant('careChatTpl.userNamePreview') :
         $translate.instant('careChatTpl.agentNamePreview');
     }
@@ -2042,8 +2042,7 @@
           if (isEvaObjectValid(evaForOrg)) {
             vm.selectedEVA.id = evaForOrg.id;
             vm.selectedEVA.name = evaForOrg.name;
-            var listSpaces = EvaService.getExpertAssistantSpaces(evaForOrg.id, evaForOrg.orgId);
-            getEvaSpaceDetailsText(listSpaces, evaForOrg);
+            getEvaSpaceDetailsText(evaForOrg);
           } else {
             setSpaceDataAsError();
           }
@@ -2051,37 +2050,36 @@
       });
     }
 
-    function getEvaSpaceDetailsText(listSpaces, evaForOrg) {
-      listSpaces.then(function (spaces) {
-        if (spaces && spaces.items && spaces.items.length >= 1) {
-          var numSpaces = spaces.items.length;
-          var evaOrgName = getEvaName(evaForOrg);
-          if (numSpaces === 1) {
-            var evaSpaceDetailsTextOneSpace = $translate.instant('careChatTpl.evaSpaceDetailsTextOneSpace');
+    function getEvaSpaceDetailsText(evaForOrg) {
+      var spaces = evaForOrg.spaces;
+      if (spaces && spaces.length >= 0) {
+        var numSpaces = spaces.length;
+        var evaOrgName = getEvaName(evaForOrg);
+        if (numSpaces === 1) {
+          var evaSpaceDetailsTextOneSpace = $translate.instant('careChatTpl.evaSpaceDetailsTextOneSpace');
 
-            vm.evaSpaceTooltipData = evaOrgName + evaSpaceDetailsTextOneSpace;
-            vm.evaSpaceTooltipAriaLabel = evaOrgName + evaSpaceDetailsTextOneSpace;
-          } else {
-            var evaSpaceDetailsText = $translate.instant('careChatTpl.evaSpaceDetailsText', { numberOfEvaSpaces: numSpaces });
-
-            vm.evaSpaceTooltipData = evaOrgName + evaSpaceDetailsText;
-            vm.evaSpaceTooltipAriaLabel = evaOrgName + evaSpaceDetailsText;
-          }
-          _.forEach(spaces.items, function (space) {
-            if (space.title) {
-              vm.evaSpaceTooltipData += '<li>' + space.title + '</li>';
-              vm.evaSpaceTooltipAriaLabel += ' ' + space.title;
-              if (space.default) {
-                var defaultSpace = $translate.instant('careChatTpl.escalationDetailsDefaultSpace');
-                vm.evaSpaceTooltipData += '<div>' + '    ' + defaultSpace + '<div>';
-                vm.evaSpaceTooltipAriaLabel += ' ' + defaultSpace;
-              }
-            }
-          });
+          vm.evaSpaceTooltipData = evaOrgName + evaSpaceDetailsTextOneSpace;
+          vm.evaSpaceTooltipAriaLabel = evaOrgName + evaSpaceDetailsTextOneSpace;
         } else {
-          setSpaceDataAsError();
+          var evaSpaceDetailsText = $translate.instant('careChatTpl.evaSpaceDetailsText', { numberOfEvaSpaces: numSpaces });
+
+          vm.evaSpaceTooltipData = evaOrgName + evaSpaceDetailsText;
+          vm.evaSpaceTooltipAriaLabel = evaOrgName + evaSpaceDetailsText;
         }
-      });
+        _.forEach(spaces, function (space) {
+          if (space.title) {
+            vm.evaSpaceTooltipData += '<li>' + space.title + '</li>';
+            vm.evaSpaceTooltipAriaLabel += ' ' + space.title;
+            if (space.default) {
+              var defaultSpace = $translate.instant('careChatTpl.escalationDetailsDefaultSpace');
+              vm.evaSpaceTooltipData += '<div>' + '    ' + defaultSpace + '<div>';
+              vm.evaSpaceTooltipAriaLabel += ' ' + defaultSpace;
+            }
+          }
+        });
+      } else {
+        setSpaceDataAsError();
+      }
     }
 
     function setSpaceDataAsError() {

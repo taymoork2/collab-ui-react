@@ -10,10 +10,14 @@
     $sce,
     $scope,
     $window,
+    $state,
+    $log,
+    $q,
     Analytics,
     Authinfo,
     Notification,
     QlikService,
+    FeatureToggleService,
     Userservice
   ) {
     var vm = this;
@@ -32,6 +36,15 @@
           if (data.success) {
             if (data.emails) {
               Authinfo.setEmails(data.emails);
+              var promises = {
+                isFeatureToggleOn: FeatureToggleService.autoLicenseGetStatus(),
+              };
+              $q.all(promises).then(function (features) {
+                $log.log('FeatureToggleService.autoLicenseGetStatus() is ' + features.isFeatureToggleOn);
+                if (!features.isFeatureToggleOn) {
+                  $state.go('reports.care');
+                }
+              });
               loadMetricsReport();
             }
           }
@@ -47,7 +60,6 @@
         vm.iframeContainerClass = 'sparkMetricsContent';
       }
     }
-
 
     function loadMetricsReport() {
       var userInfo = {

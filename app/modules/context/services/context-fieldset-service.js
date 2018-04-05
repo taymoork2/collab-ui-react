@@ -1,8 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('Context')
-    .service('ContextFieldsetsService', contextFieldsetsService);
+  module.exports = contextFieldsetsService;
 
   var searchPath = '/dictionary/fieldset/v1/search';
   var createPath = '/dictionary/fieldset/v1';
@@ -11,7 +10,7 @@
   var MAX_ENTRIES_FOR_FIELDSET_SEARCH = 1500;
 
   /* @ngInject */
-  function contextFieldsetsService($http, Discovery) {
+  function contextFieldsetsService($http, ContextDiscovery) {
     var service = {
       getFieldsets: getFieldsets,
       getFieldMembership: getFieldMembership,
@@ -25,9 +24,9 @@
 
     return service;
 
-    //get fieldsets based on dictionary URL returned from discovery
+    //get fieldsets based on dictionary URL returned from ContextDiscovery
     function getFieldsets() {
-      return Discovery.getEndpointForService('dictionary')
+      return ContextDiscovery.getEndpointForService('dictionary')
         .then(function (dictionaryUrl) {
           var searchQuery = 'id:*';
           return $http.get(dictionaryUrl + searchPath, {
@@ -46,7 +45,7 @@
     }
 
     function getFieldMembership(fieldId) {
-      return Discovery.getEndpointForService('dictionary')
+      return ContextDiscovery.getEndpointForService('dictionary')
         .then(function (dictionaryUrl) {
           var searchQuery = 'fieldId:';
           return $http.get(dictionaryUrl + searchPath, {
@@ -65,7 +64,7 @@
     }
 
     function getFieldset(id) {
-      return Discovery.getEndpointForService('dictionary')
+      return ContextDiscovery.getEndpointForService('dictionary')
         .then(function (dictionaryUrl) {
           return $http.get(dictionaryUrl + getPath + id);
         }).then(function (response) {
@@ -74,7 +73,7 @@
     }
 
     function createFieldset(data) {
-      return Discovery.getEndpointForService('dictionary')
+      return ContextDiscovery.getEndpointForService('dictionary')
         .then(function (dictionaryUrl) {
           return $http.post(dictionaryUrl + createPath, data);
         });
@@ -88,7 +87,7 @@
     }
 
     function getInUse(id) {
-      return Discovery.getEndpointForService('dictionary')
+      return ContextDiscovery.getEndpointForService('dictionary')
         .then(function (dictionaryUrl) {
           return $http.get(dictionaryUrl + statusPath + id)
             .then(function (response) {
@@ -98,7 +97,7 @@
     }
 
     function updateFieldset(data) {
-      return Discovery.getEndpointForService('dictionary')
+      return ContextDiscovery.getEndpointForService('dictionary')
         .then(function (dictionaryUrl) {
           return $http.put(dictionaryUrl + getPath + data.id, data);
         });
@@ -112,7 +111,7 @@
     }
 
     function deleteFieldset(id) {
-      return Discovery.getEndpointForService('dictionary')
+      return ContextDiscovery.getEndpointForService('dictionary')
         .then(function (dictionaryUrl) {
           return $http.delete(dictionaryUrl + getPath + id);
         });

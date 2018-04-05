@@ -8,6 +8,7 @@ describe('Service: OrganizationDeleteService', () => {
       '$modal',
       '$q',
       'Authinfo',
+      'DirSyncService',
       'FeatureToggleService',
       'OrganizationDeleteService',
     );
@@ -22,6 +23,7 @@ describe('Service: OrganizationDeleteService', () => {
       spyOn(this.FeatureToggleService, 'atlasOnlineDeleteOrgGetStatus').and.returnValue(this.$q.resolve(true));
       spyOn(this.Authinfo, 'isOnlineOnlyCustomer').and.returnValue(true);
       spyOn(this.Authinfo, 'isOnlinePaid').and.returnValue(false);
+      spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(false);
       this.OrganizationDeleteService.canOnlineOrgBeDeleted()
         .then((result) => {
           canDelete = result;
@@ -34,6 +36,7 @@ describe('Service: OrganizationDeleteService', () => {
       spyOn(this.FeatureToggleService, 'atlasOnlineDeleteOrgGetStatus').and.returnValue(this.$q.resolve(true));
       spyOn(this.Authinfo, 'isOnlineOnlyCustomer').and.returnValue(true);
       spyOn(this.Authinfo, 'isOnlinePaid').and.returnValue(true);
+      spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(false);
       this.OrganizationDeleteService.canOnlineOrgBeDeleted()
         .then((result) => {
           canDelete = result;
@@ -46,6 +49,7 @@ describe('Service: OrganizationDeleteService', () => {
       spyOn(this.FeatureToggleService, 'atlasOnlineDeleteOrgGetStatus').and.returnValue(this.$q.resolve(true));
       spyOn(this.Authinfo, 'isOnlineOnlyCustomer').and.returnValue(false);
       spyOn(this.Authinfo, 'isOnlinePaid').and.returnValue(false);
+      spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(false);
       this.OrganizationDeleteService.canOnlineOrgBeDeleted()
         .then((result) => {
           canDelete = result;
@@ -58,6 +62,20 @@ describe('Service: OrganizationDeleteService', () => {
       spyOn(this.FeatureToggleService, 'atlasOnlineDeleteOrgGetStatus').and.returnValue(this.$q.resolve(false));
       spyOn(this.Authinfo, 'isOnlineOnlyCustomer').and.returnValue(true);
       spyOn(this.Authinfo, 'isOnlinePaid').and.returnValue(false);
+      spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(false);
+      this.OrganizationDeleteService.canOnlineOrgBeDeleted()
+        .then((result) => {
+          canDelete = result;
+        });
+      this.$scope.$apply();
+      expect(canDelete).toBe(false);
+    });
+
+    it('should not allow an online org to be deleted if it is dir-synced', function () {
+      spyOn(this.FeatureToggleService, 'atlasOnlineDeleteOrgGetStatus').and.returnValue(this.$q.resolve(true));
+      spyOn(this.Authinfo, 'isOnlineOnlyCustomer').and.returnValue(true);
+      spyOn(this.Authinfo, 'isOnlinePaid').and.returnValue(false);
+      spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(true);
       this.OrganizationDeleteService.canOnlineOrgBeDeleted()
         .then((result) => {
           canDelete = result;
@@ -69,15 +87,14 @@ describe('Service: OrganizationDeleteService', () => {
 
   describe('Org Deletion Modal', function () {
     beforeEach(function () {
-      this.OrganizationDeleteService.openOrgDeleteModal();
+      this.OrganizationDeleteService.openOrgDeleteModal('organizationDeleteModal.title.deleteAccount');
     });
 
     it('openOrgDeleteModal() should open static modal', function () {
       expect(this.$modal.open).toHaveBeenCalledWith({
-        template: '<organization-delete-modal dismiss="$dismiss()" title="organizationDeleteModal.confirmTitle" body="organizationDeleteModal.confirmBody"></organization-delete-modal>',
+        template: '<organization-delete-modal dismiss="$dismiss()" l10n-title="organizationDeleteModal.title.deleteAccount"></organization-delete-modal>',
         backdrop: 'static',
         keyboard: false,
-        type: 'dialog',
       });
       expect(this.OrganizationDeleteService.deleteModal).toBeDefined();
     });

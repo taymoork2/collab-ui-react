@@ -19,6 +19,7 @@ export class PstnWizardComponent implements ng.IComponentOptions {
   public bindings = {
     dismiss: '&',
     close: '&',
+    ftsw: '@',
     refreshFn: '&',
     customerId: '<',
     customerName: '<',
@@ -29,6 +30,7 @@ export class PstnWizardComponent implements ng.IComponentOptions {
 }
 
 export class PstnWizardCtrl implements ng.IComponentController {
+  public ftsw: boolean;
   public tollFreeTitle: string;
   public emergencyAcknowledge: boolean = false;
   public swivelNumbers: string[] = [];
@@ -79,18 +81,21 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public ftHI1635: boolean = false;
 
   /* @ngInject */
-  constructor(private PstnModel: PstnModel,
-              private PstnAddressService: PstnAddressService, //Location & Site Based
-              private Notification: Notification,
-              private $state: ng.ui.IStateService,
-              private $window: ng.IWindowService,
-              private $timeout: ng.ITimeoutService,
-              private PstnService: PstnService,
-              private $translate: ng.translate.ITranslateService,
-              private PstnWizardService: PstnWizardService,
-              private PhoneNumberService: PhoneNumberService,
-              private FeatureToggleService,
-              ) {
+  constructor(
+    private PstnModel: PstnModel,
+    private PstnAddressService: PstnAddressService, //Location & Site Based
+    private Notification: Notification,
+    private $state: ng.ui.IStateService,
+    private $window: ng.IWindowService,
+    private $timeout: ng.ITimeoutService,
+    private PstnService: PstnService,
+    private $translate: ng.translate.ITranslateService,
+    private PstnWizardService: PstnWizardService,
+    private PhoneNumberService: PhoneNumberService,
+    private FeatureToggleService,
+    private $scope,
+    private Authinfo,
+  ) {
     this.PORTING_NUMBERS = this.$translate.instant('pstnSetup.portNumbersLabel');
     this.tokenmethods = new TokenMethods(this.createToken.bind(this), this.createdToken.bind(this), this.editToken.bind(this), this.removeToken.bind(this));
     this.titles = this.PstnWizardService.STEP_TITLE;
@@ -101,6 +106,29 @@ export class PstnWizardCtrl implements ng.IComponentController {
   }
 
   public $onInit(): void {
+    if (this.ftsw) {
+      this.$scope.$emit('wizardNextButtonDisable', true);
+      this.PstnModel.setCustomerId(this.Authinfo.getOrgId());
+      this.PstnWizardService.setContact({
+        companyName: this.Authinfo.getOrgName(),
+        firstName: 'Art',
+        lastName: 'Vandelay',
+        emailAddress: this.Authinfo.getCustomerAdminEmail(),
+        confirmEmailAddress: this.Authinfo.getCustomerAdminEmail(),
+      });
+      this.PstnModel.setServiceAddress({
+        uuid: undefined,
+        streetAddress: '2300 E President George Bush Hwy',
+        unit: undefined,
+        city: 'Richardson',
+        state: 'TX',
+        zip: '75082',
+        country: null,
+        default: false,
+        validated: true,
+      } as Address);
+    }
+
     this.PstnWizardService.init().then(() => {
       this.enableCarriers = true;
       //Set the following values after PstnWizardService initializes
@@ -366,10 +394,13 @@ export class PstnWizardCtrl implements ng.IComponentController {
         break;
       case 6:
         this.placeOrderLoad = true;
-        this.PstnWizardService.placeOrder().then(() => {
+        this.PstnWizardService.placeOrder(this.ftsw).then(() => {
           this.refreshFn();
           this.step = 7;
           this.placeOrderLoad = false;
+          if (this.ftsw) {
+            this.$scope.$emit('wizardNextButtonDisable', false);
+          }
         });
         return;
       case 7:
@@ -477,7 +508,11 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   public searchCarrierInventory(areaCode: string, block: boolean, quantity: number, consecutive: boolean, stateAbbreviation: string): void {
     this.loading = true;
-    this.PstnWizardService.searchCarrierInventory(areaCode, block, quantity, consecutive, stateAbbreviation, this.model, this.isTrial).then(() => this.loading = false);
+    if (this.ftsw) {
+      this.PstnWizardService.searchBsftCarrierInventory(areaCode, this.model).then(() => this.loading = false);
+    } else {
+      this.PstnWizardService.searchCarrierInventory(areaCode, block, quantity, consecutive, stateAbbreviation, this.model, this.isTrial).then(() => this.loading = false);
+    }
   }
 
   public searchCarrierTollFreeInventory(areaCode: string, block: boolean, quantity: number, consecutive: boolean): void {
@@ -488,7 +523,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public addToCart(orderType: string, numberType: string, quantity: number, searchResultsModel: boolean[]): void {
     this.model.pstn.addLoading = true;
     this.model.tollFree.addLoading = true;
-    this.PstnWizardService.addToCart(orderType, numberType, quantity, searchResultsModel, this.orderCart, this.model).then(orderCart => {
+    this.PstnWizardService.addToCart(orderType, numberType, quantity, searchResultsModel, this.orderCart, this.model, this.ftsw).then(orderCart => {
       this.orderCart = orderCart;
       this.model.pstn.addLoading = false;
       this.model.tollFree.addLoading = false;
@@ -520,7 +555,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   }
 
   public removeOrder(order: IOrder): void {
-    this.PstnWizardService.removeOrder(order)
+    this.PstnWizardService.removeOrder(order, this.ftsw)
         .then(_.partial(this.removeOrderFromCart.bind(this), order));
   }
 

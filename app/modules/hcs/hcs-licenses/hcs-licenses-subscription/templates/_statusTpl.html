@@ -1,0 +1,5 @@
+<div class="ui-grid-cell-contents" ng-if="row.entity.status">
+  <i class="icon icon-circle status-indicator user-status" ng-class="{'success': row.entity.status === 'Valid', 'danger': row.entity.status === 'Invalid'}">
+  </i>
+  <span> {{row.entity.status_}}&nbsp{{row.entity.status}}</span>
+</div>

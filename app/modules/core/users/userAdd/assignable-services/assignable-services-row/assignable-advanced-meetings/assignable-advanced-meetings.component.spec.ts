@@ -1,6 +1,6 @@
 import moduleName from './index';
 
-import { OfferName } from 'modules/core/shared';
+import { OfferName } from 'modules/core/shared/offer-name';
 import { AssignableServicesItemCategory } from 'modules/core/users/userAdd/assignable-services/shared';
 
 describe('Component: assignableAdvancedMeetings:', () => {
@@ -54,6 +54,10 @@ describe('Component: assignableAdvancedMeetings:', () => {
       }, {
         licenseId: 'fake-license-id-4',
         siteUrl: 'fake-site-url-1',
+        offerName: OfferName.SC,
+      }, {
+        licenseId: 'fake-license-id-5',
+        siteUrl: 'fake-site-url-1',
         offerName: OfferName.TC,
       }];
       this.$scope.siteUrls = [
@@ -66,9 +70,10 @@ describe('Component: assignableAdvancedMeetings:', () => {
       expect(this.view.find('assignable-license-checkbox[l10n-label="subscriptions.licenseTypes.EC"]').length).toBe(1);
       expect(this.view.find('assignable-license-checkbox[l10n-label="subscriptions.licenseTypes.EE"]').length).toBe(1);
       expect(this.view.find('assignable-license-checkbox[l10n-label="subscriptions.licenseTypes.MC"]').length).toBe(1);
+      expect(this.view.find('assignable-license-checkbox[l10n-label="subscriptions.licenseTypes.SC"]').length).toBe(1);
       expect(this.view.find('assignable-license-checkbox[l10n-label="subscriptions.licenseTypes.TC"]').length).toBe(1);
-      expect(this.view.find('assignable-license-checkbox advanced-meeting-license-description').length).toBe(4);
-      expect(this.view.find('assignable-license-checkbox usage-line').length).toBe(4);
+      expect(this.view.find('assignable-license-checkbox advanced-meeting-license-description').length).toBe(5);
+      expect(this.view.find('assignable-license-checkbox usage-line').length).toBe(5);
     });
 
     it('should render an "assignable-license-checkbox" of "CMR"-type as nested', function () {
@@ -114,6 +119,10 @@ describe('Component: assignableAdvancedMeetings:', () => {
         licenseId: 'fake-license-id-5',
         offerName: OfferName.CMR,
         siteUrl: 'fake-site-url-1',
+      }, {
+        licenseId: 'fake-license-id-6',
+        offerName: OfferName.SC,
+        siteUrl: 'fake-site-url-1',
       }];
       this.$scope.siteUrls = [
         'fake-site-url-1',
@@ -122,12 +131,13 @@ describe('Component: assignableAdvancedMeetings:', () => {
         licenses: 'licenses',
         siteUrls: 'siteUrls',
       });
-      expect(this.controller.licenses.length).toBe(5);
+      expect(this.controller.licenses.length).toBe(6);
       expect(_.get(this.controller.licenses, '[0].offerName')).toBe(OfferName.EC);
       expect(_.get(this.controller.licenses, '[1].offerName')).toBe(OfferName.EE);
       expect(_.get(this.controller.licenses, '[2].offerName')).toBe(OfferName.CMR);
       expect(_.get(this.controller.licenses, '[3].offerName')).toBe(OfferName.MC);
-      expect(_.get(this.controller.licenses, '[4].offerName')).toBe(OfferName.TC);
+      expect(_.get(this.controller.licenses, '[4].offerName')).toBe(OfferName.SC);
+      expect(_.get(this.controller.licenses, '[5].offerName')).toBe(OfferName.TC);
     });
 
     describe('sortLicenses():', () => {
@@ -147,6 +157,9 @@ describe('Component: assignableAdvancedMeetings:', () => {
         }, {
           licenseId: 'fake-license-id-5',
           offerName: OfferName.CMR,
+        }, {
+          licenseId: 'fake-license-id-6',
+          offerName: OfferName.SC,
         }];
         this.compileComponent('assignableAdvancedMeetings');
         licenses = this.controller.sortLicenses(licenses);
@@ -154,7 +167,8 @@ describe('Component: assignableAdvancedMeetings:', () => {
         expect(_.get(licenses, '[1].offerName')).toBe(OfferName.EC);
         expect(_.get(licenses, '[2].offerName')).toBe(OfferName.EE);
         expect(_.get(licenses, '[3].offerName')).toBe(OfferName.MC);
-        expect(_.get(licenses, '[4].offerName')).toBe(OfferName.TC);
+        expect(_.get(licenses, '[4].offerName')).toBe(OfferName.SC);
+        expect(_.get(licenses, '[5].offerName')).toBe(OfferName.TC);
       });
     });
 
@@ -271,6 +285,17 @@ describe('Component: assignableAdvancedMeetings:', () => {
         this.compileComponent('assignableAdvancedMeetings');
         this.controller.isSharedMeetingsLicense({ foo: 'bar' });
         expect(this.LicenseUsageUtilService.isSharedMeetingsLicense).toHaveBeenCalledWith({ foo: 'bar' });
+      });
+    });
+
+    describe('isLicenseDisabledByDefault():', () => {
+      it('should call up to "LicenseUsageUtilService.isLegacyWebExLicense()" and return its value', function () {
+        spyOn(this.LicenseUsageUtilService, 'isLegacyWebExLicense').and.returnValue(true);
+        this.compileComponent('assignableAdvancedMeetings');
+        expect(this.controller.isLicenseDisabledByDefault('fake-license-arg')).toBe(true);
+        expect(this.LicenseUsageUtilService.isLegacyWebExLicense).toHaveBeenCalledWith('fake-license-arg');
+        this.LicenseUsageUtilService.isLegacyWebExLicense.and.returnValue(false);
+        expect(this.controller.isLicenseDisabledByDefault('fake-license-arg')).toBe(false);
       });
     });
 

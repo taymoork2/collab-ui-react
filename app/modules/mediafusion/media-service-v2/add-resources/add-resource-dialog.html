@@ -1,153 +1,154 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="redirectResource.closeSetupModal()" aria-label="{{::'common.close' | translate}}"></button>
-  <h5 class="modal-title">
-    <span translate="mediaFusion.add-resource-dialog.titleV2">
-    </span>
-  </h5>
-</div>
-<div class="modal-body">
-  <div ng-show="redirectResource.yesProceed && !redirectResource.enableRedirectToTarget && !redirectResource.showDownloadableOption">
-    <div>
-      <h5 class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.yesInfo1"></h5>
-      <h5 class="addResourceFQDN"
-        tabindex="0"
-        tooltip="{{::'mediaFusion.add-resource-dialog.fqdn' | translate}}"
-        tooltip-trigger="mouseenter focus"
-        translate="mediaFusion.add-resource-dialog.yesInfo2"
-        aria-label="{{::'mediaFusion.add-resource-dialog.fqdn' | translate}}">
-      </h5>
-      <h5 class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.yesInfo3"></h5>
-    </div>
-    <form name="inputHostNameForm" class="inputHostNameForm">
+    <button type="button" class="close" ng-click="redirectResource.closeSetupModal()" aria-label="{{::'common.close' | translate}}"></button>
+    <h5 class="modal-title">
+      <span translate="mediaFusion.add-resource-dialog.titleV2">
+      </span>
+    </h5>
+  </div>
+  <div class="modal-body">
+    <div ng-show="redirectResource.yesProceed && !redirectResource.enableRedirectToTarget && !redirectResource.showDownloadableOption">
       <div>
-        <br>
-        <div class="row showgrid">
-          <div class="columns medium-5">
-            <p translate="mediaFusion.add-resource-dialog.text1V2"></p>
-          </div>
-          <div class="columns medium-6 inputHostNameForm">
-            <cs-select combo="true" ng-model="redirectResource.selectedCluster" options="redirectResource.clusterList" placeholder="redirectResource.selectPlaceholder">
-            </cs-select>
-          </div>
-        </div>
-        <br>
-        <div class="row showgrid">
-          <div class="columns medium-5">
-            <p class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.text3V1"></p>
-            <p class="addResourceFQDN"
-              tabindex="0"
-              tooltip="{{'mediaFusion.add-resource-dialog.fqdn' | translate}}"
-              tooltip-trigger="mouseenter focus"
-              translate="mediaFusion.add-resource-dialog.yesInfo2"
-              aria-label="mediaFusion.add-resource-dialog.yesInfo2">
-            </p>
-            <p class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.text3V3"></p>
-          </div>
-          <div class="columns medium-6 inputHostNameForm">
-            <input type="text" class="cs-input" ng-model="redirectResource.hostName" placeholder="{{::'mediaFusion.add-resource-dialog.hostname-placeholder' | translate}}">
-          </div>
-        </div>
+        <h5 class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.yesInfo1"></h5>
+        <h5 class="addResourceFQDN" tabindex="0" tooltip="{{::'mediaFusion.add-resource-dialog.fqdn' | translate}}" tooltip-trigger="mouseenter focus"
+          translate="mediaFusion.add-resource-dialog.yesInfo2" aria-label="{{::'mediaFusion.add-resource-dialog.fqdn' | translate}}">
+        </h5>
+        <h5 class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.yesInfo3"></h5>
       </div>
-    </form>
-  </div>
-  <div ng-show="redirectResource.enableRedirectToTarget">
-    <h3>
-      <span translate="mediaFusion.add-resource-dialog.grant-registration-success-header-old-cluster"
-        translate-values="{hostname: redirectResource.hostName || '', clustername: redirectResource.selectedCluster || ''}"></span>
-    </h3>
-    <br>
-    <p>
-      <span translate="mediaFusion.add-resource-dialog.grant-success-information"></span>
-    </p>
-  </div>
-  <div ng-hide="!redirectResource.showDownloadableOption">
-    <div>
-      <h5 translate="mediaFusion.add-resource-dialog.firstStep"></h5>
-    </div>
-    <div class="myAddResourceForm">
-      <form name="myAddResourceForm">
-        <div class="cs-radio-group">
-          <div class="radioDisplay">
-            <input cs-input type="radio" ng-model="redirectResource.radio" id="yes" name="redirectResource" value="1" cs-input-label="{{'mediaFusion.add-resource-dialog.yesProceed' | translate}}"
-              class="radioNoTranform">
+      <form name="inputHostNameForm" class="inputHostNameForm">
+        <div>
+          <br>
+          <div class="row showgrid">
+            <div class="columns medium-5">
+              <p translate="mediaFusion.add-resource-dialog.text1V2"></p>
+            </div>
+            <div class="columns medium-6 inputHostNameForm">
+              <cs-select combo="true" ng-model="redirectResource.selectedCluster" options="redirectResource.clusterList" placeholder="redirectResource.selectPlaceholder">
+              </cs-select>
+            </div>
           </div>
-          <div class="radioDisplay">
-            <input cs-input type="radio" ng-model="redirectResource.radio" id="no" name="redirectResource" value="0" cs-input-label="{{'mediaFusion.add-resource-dialog.noProceed' | translate}}"
-              class="radioNoTranform">
-          </div>
-        </div>
-      </form>
-    </div>
-    <div class="myAddResourceDownloadForm" ng-show="redirectResource.radio === '0'">
-      <div translate="mediaFusion.add-resource-dialog.ovaHelpText"></div>
-      <form name="myAddResourceDownloadForm">
-        <div class="cs-radio-group">
-          <div class="radioDisplay">
-            <input cs-input type="radio" ng-model="redirectResource.ovaType" id="full" name="redirectResource" value="1" cs-input-label="{{'mediaFusion.add-resource-dialog.fullOva' | translate}}" class="radioNoTranform"
-              ng-disabled="redirectResource.radio === 1">
-          </div>
-          <div class="radioDisplay">
-            <input cs-input type="radio" ng-model="redirectResource.ovaType" id="demo" name="redirectResource" value="0" cs-input-label="{{'mediaFusion.add-resource-dialog.demoOva' | translate}}" class="radioNoTranform"
-              ng-disabled="redirectResource.radio === 1">
+          <br>
+          <div class="row showgrid">
+            <div class="columns medium-5">
+              <p class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.text3V1"></p>
+              <p class="addResourceFQDN" tabindex="0" tooltip="{{'mediaFusion.add-resource-dialog.fqdn' | translate}}" tooltip-trigger="mouseenter focus"
+                translate="mediaFusion.add-resource-dialog.yesInfo2" aria-label="mediaFusion.add-resource-dialog.yesInfo2">
+              </p>
+              <p class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.text3V3"></p>
+            </div>
+            <div class="columns medium-6 inputHostNameForm">
+              <input type="text" class="cs-input" ng-model="redirectResource.hostName" ng-change="redirectResource.validateHostName()" placeholder="{{::'mediaFusion.add-resource-dialog.hostname-placeholder' | translate}}">
+              <div role="alert" ng-show='!redirectResource.validNode'>
+                  <div class="node-error" ng-if="!$ctrl.validIPCheck" translate="mediaFusion.easyConfig.invalidip"></div>
+              </div>
+            </div>
           </div>
         </div>
       </form>
     </div>
-    <div class="add-resource">
-      <p class="small privacy" translate="hercules.serviceHelpInfo.servicePrivacyStatement"></p>
-    </div>
-  </div>
-  <div ng-show="redirectResource.noProceed">
-    <div>
-      <h5 translate="mediaFusion.add-resource-dialog.noInfoNew" translate-values="{appTitle: redirectResource.getAppTitle()}"></h5>
-    </div>
-    <br>
-    <br>
-    <div ng-show="redirectResource.ovaType === 1">
-      <h5 translate="mediaFusion.add-resource-dialog.noRetryInfo"></h5>
-    </div>
-    <div ng-show="redirectResource.ovaType === 0">
-      <h5 translate="mediaFusion.add-resource-dialog.noRetryDemoInfo"></h5>
-    </div>
-    <div class="addResourceBodyInfo">
+    <div ng-show="redirectResource.enableRedirectToTarget">
+      <h3>
+        <span translate="mediaFusion.add-resource-dialog.grant-registration-success-header-old-cluster" translate-values="{hostname: redirectResource.hostName || '', clustername: redirectResource.selectedCluster || ''}"></span>
+      </h3>
+      <br>
       <p>
-        {{'mediaFusion.add-resource-dialog.noDesc1' | translate}} <a href="https://www.cisco.com/go/hybrid-services-media"
-          target='_blank'>{{'mediaFusion.add-resource-dialog.noDesc2' | translate}}</a>
+        <span translate="mediaFusion.add-resource-dialog.grant-success-information"></span>
       </p>
     </div>
-    <!--div class="addResourceBodyInfo">
-      <p translate="mediaFusion.add-resource-dialog.noDesc3"></p>
-    </div-->
+    <div ng-hide="!redirectResource.showDownloadableOption">
+      <div>
+        <h5 translate="mediaFusion.add-resource-dialog.firstStep"></h5>
+      </div>
+      <div class="myAddResourceForm">
+        <form name="myAddResourceForm">
+          <div class="cs-radio-group">
+            <div class="radioDisplay">
+              <input cs-input type="radio" ng-model="redirectResource.radio" id="yes" name="redirectResource" value="1" cs-input-label="{{'mediaFusion.add-resource-dialog.yesProceed' | translate}}"
+                class="radioNoTranform">
+            </div>
+            <div class="radioDisplay">
+              <input cs-input type="radio" ng-model="redirectResource.radio" id="no" name="redirectResource" value="0" cs-input-label="{{'mediaFusion.add-resource-dialog.noProceed' | translate}}"
+                class="radioNoTranform">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="myAddResourceDownloadForm" ng-show="redirectResource.radio === '0'">
+        <div translate="mediaFusion.add-resource-dialog.ovaHelpText"></div>
+        <form name="myAddResourceDownloadForm">
+          <div class="cs-radio-group">
+            <div class="radioDisplay">
+              <input cs-input type="radio" ng-model="redirectResource.ovaType" id="full" name="redirectResource" value="1" cs-input-label="{{'mediaFusion.add-resource-dialog.fullOva' | translate}}"
+                class="radioNoTranform" ng-disabled="redirectResource.radio === 1">
+            </div>
+            <div class="radioDisplay">
+              <input cs-input type="radio" ng-model="redirectResource.ovaType" id="demo" name="redirectResource" value="0" cs-input-label="{{'mediaFusion.add-resource-dialog.demoOva' | translate}}"
+                class="radioNoTranform" ng-disabled="redirectResource.radio === 1">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="add-resource">
+        <p class="small privacy" translate="hercules.serviceHelpInfo.servicePrivacyStatement"></p>
+      </div>
+    </div>
+    <div ng-show="redirectResource.noProceed">
+      <div>
+        <h5 translate="mediaFusion.add-resource-dialog.noInfoNew" translate-values="{appTitle: redirectResource.getAppTitle()}"></h5>
+      </div>
+      <br>
+      <br>
+      <div ng-show="redirectResource.ovaType === '1'">
+        <h5 translate="mediaFusion.add-resource-dialog.noRetryInfo"></h5>
+      </div>
+      <div ng-show="redirectResource.ovaType === '0'">
+        <h5 translate="mediaFusion.add-resource-dialog.noRetryDemoInfo"></h5>
+      </div>
+      <div class="addResourceBodyInfo">
+        <p>
+          {{'mediaFusion.add-resource-dialog.noDesc1' | translate}}
+          <a href="https://www.cisco.com/go/hybrid-services-media" target='_blank'>{{'mediaFusion.add-resource-dialog.noDesc2' | translate}}</a>
+        </p>
+      </div>
+      <!--div class="addResourceBodyInfo">
+        <p translate="mediaFusion.add-resource-dialog.noDesc3"></p>
+      </div-->
+    </div>
   </div>
-</div>
-<div class="modal-footer">
-  <div ng-hide="redirectResource.noProceed || redirectResource.enableRedirectToTarget || redirectResource.fromClusters">
-    <button class="btn" ng-click="redirectResource.closeSetupModal()">
-      <span translate="mediaFusion.add-resource-dialog.cancel"></span>
-    </button>
-    <button class="btn activate-button btn--primary" ng-click="redirectResource.next()" ng-disabled="!redirectResource.canGoNext()">
-      <span translate="mediaFusion.add-resource-dialog.next"></span>
-    </button>
+  <div class="modal-footer">
+    <div ng-hide="redirectResource.noProceed || redirectResource.enableRedirectToTarget || redirectResource.fromClusters">
+      <button class="btn" ng-click="redirectResource.closeSetupModal()">
+        <span translate="common.cancel"></span>
+      </button>
+      <button class="btn activate-button btn--primary" ng-click="redirectResource.next()" ng-disabled="!redirectResource.canGoNext()">
+        <span translate="common.next"></span>
+      </button>
+    </div>
+    <div ng-hide="redirectResource.noProceed || redirectResource.enableRedirectToTarget || !redirectResource.fromClusters">
+      <span ng-show="redirectResource.yesNoPage">
+        <button class="btn" ng-click="redirectResource.closeSetupModal()">
+          <span translate="common.cancel"></span>
+        </button>
+      </span>
+      <span ng-show="!redirectResource.yesNoPage">
+        <button class="btn" ng-click="redirectResource.back()">
+          <span translate="common.back"></span>
+        </button>
+      </span>
+      <button class="btn activate-button btn--primary" ng-click="redirectResource.next()" ng-disabled="!redirectResource.canGoNext()">
+        <span translate="common.next"></span>
+      </button>
+    </div>
+    <div ng-show="redirectResource.noProceed">
+      <button class="btn activate-button btn--primary" ng-click="redirectResource.closeSetupModal(true)">
+        <span translate="common.ok"></span>
+      </button>
+    </div>
+    <div ng-show="redirectResource.enableRedirectToTarget">
+      <button class="btn" ng-click="redirectResource.back()">
+        <span translate="common.back"></span>
+      </button>
+      <button class="btn register-button btn--primary" ng-click="redirectResource.redirectToTargetAndCloseWindowClicked(redirectResource.hostName, redirectResource.selectedCluster)">
+        <span translate="mediaFusion.add-resource-dialog.register"></span>
+      </button>
+    </div>
   </div>
-  <div ng-hide="redirectResource.noProceed || redirectResource.enableRedirectToTarget || !redirectResource.fromClusters">
-    <button class="btn" ng-click="redirectResource.back()">
-      <span translate="mediaFusion.add-resource-dialog.back"></span>
-    </button>
-    <button class="btn activate-button btn--primary" ng-click="redirectResource.next()" ng-disabled="!redirectResource.canGoNext()">
-      <span translate="mediaFusion.add-resource-dialog.next"></span>
-    </button>
-  </div>
-  <div ng-show="redirectResource.noProceed">
-    <button class="btn activate-button btn--primary" ng-click="redirectResource.closeSetupModal(true)">
-      <span translate="common.ok"></span>
-    </button>
-  </div>
-  <div ng-show="redirectResource.enableRedirectToTarget">
-    <button class="btn" ng-click="redirectResource.back()">
-      <span translate="mediaFusion.add-resource-dialog.back"></span>
-    </button>
-    <button class="btn register-button btn--primary" ng-click="redirectResource.redirectToTargetAndCloseWindowClicked(redirectResource.hostName, redirectResource.selectedCluster)">
-      <span translate="mediaFusion.add-resource-dialog.register"></span>
-    </button>
-  </div>
-</div>

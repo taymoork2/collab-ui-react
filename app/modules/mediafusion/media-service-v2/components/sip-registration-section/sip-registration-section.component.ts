@@ -9,7 +9,10 @@ class SipRegistrationSectionCtrl implements ng.IComponentController {
   public clusterId: string;
   public cluster: ICluster;
   public sipConfigUrl: string | undefined;
+  private onSipConfigUrlUpdate?: Function;
   public isWizard: boolean = false;
+  public sipSettingsEnabled: boolean = false;
+
 
   public sipRegistration = {
     title: 'mediaFusion.sipconfiguration.title',
@@ -22,7 +25,7 @@ class SipRegistrationSectionCtrl implements ng.IComponentController {
   ) { }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
-    const { cluster, isWizard } = changes;
+    const { cluster, isWizard, sipSettingsEnabled } = changes;
     if (cluster && cluster.currentValue) {
       this.cluster = cluster.currentValue;
       this.clusterId = this.cluster.id;
@@ -30,6 +33,7 @@ class SipRegistrationSectionCtrl implements ng.IComponentController {
     } else if ( isWizard && isWizard.currentValue) {
       this.isWizard = isWizard.currentValue;
     }
+    if (sipSettingsEnabled && sipSettingsEnabled.currentValue) { this.sipSettingsEnabled = sipSettingsEnabled.currentValue; }
   }
 
   private getProperties(clusterId): void {
@@ -40,6 +44,11 @@ class SipRegistrationSectionCtrl implements ng.IComponentController {
       });
   }
 
+  public sipUpdate () {
+    if (_.isFunction(this.onSipConfigUrlUpdate)) {
+      this.onSipConfigUrlUpdate({ response: { sipConfigUrl: this.sipConfigUrl } });
+    }
+  }
   public saveSipTrunk(): void {
     this.SipRegistrationSectionService.saveSipTrunkUrl(this.sipConfigUrl, this.clusterId);
   }
@@ -51,6 +60,9 @@ export class SipRegistrationSectionComponent implements ng.IComponentOptions {
   public template = require('./sip-registration-section.tpl.html');
   public bindings = {
     cluster: '<',
-    isWizard: '=',
+    sipSettingsEnabled: '<',
+    isWizard: '<',
+    onSipConfigUrlUpdate: '&?',
   };
 }
+

@@ -1,16 +1,27 @@
-import { HcsSetupModalService } from 'modules/hcs/services';
-import { ICheckbox } from './hcs-setup';
+import { HcsSetupModalService, HcsUpgradeService } from 'modules/hcs/shared';
+import { ICheckbox, ISoftwareProfile } from './hcs-setup';
+import { ISftpServer } from './hcs-setup-sftp';
+import { Notification } from 'modules/core/notifications';
 
 export class HcsSetupModalCtrl implements ng.IComponentController {
-  private static readonly MAX_INDEX: number = 2;
+  private static readonly MAX_INDEX: number = 5;
   private static readonly FIRST_INDEX: number = 1;
 
   public currentStepIndex: number;
   public hcsServices: ICheckbox;
-  private nextEnabled: boolean = false;
+  public sftpServer: ISftpServer;
+  public softwareProfile: ISoftwareProfile;
+  public nextEnabled: boolean = false;
+  public title: string;
+  public hcsSetupModalForm: ng.IFormController;
+  public cancelRemoved: boolean = false;
+  public finish: boolean = false;
+
   /* @ngInject */
   constructor(
-    public HcsSetupModalService: HcsSetupModalService,
+    private HcsSetupModalService: HcsSetupModalService,
+    private HcsUpgradeService: HcsUpgradeService,
+    private Notification: Notification,
   ) {
   }
 
@@ -19,19 +30,52 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
       this.currentStepIndex = HcsSetupModalCtrl.FIRST_INDEX;
     }
     this.hcsServices = { license: false, upgrade: false };
+    this.title = 'hcs.setup.titleServices';
+    if (this.hcsSetupModalForm) {
+      this.hcsSetupModalForm.$setPristine();
+    }
   }
 
   public nextStep(): void {
-    if (this.currentStepIndex < HcsSetupModalCtrl.MAX_INDEX) {
-      this.currentStepIndex = this.currentStepIndex + 1;
-      this.nextEnabled = false;
+    this.currentStepIndex = this.currentStepIndex + 1;
+    switch (this.currentStepIndex) {
+      case 2:
+        this.title = 'hcs.installFiles.setupTitle';
+        this.nextEnabled = false;
+        break;
+      case 3:
+        if (!this.hcsServices.upgrade) {
+          this.title = 'hcs.setup.finish';
+          this.cancelRemoved = true;
+          this.finish = true;
+        } else {
+          this.title = 'hcs.sftp.setupTitle';
+          this.nextEnabled = false;
+        }
+        break;
+      case 4:
+        if (!this.hcsServices.upgrade) {
+          this.dismissModal();
+        } else {
+          this.createSftp();
+          this.title = 'hcs.softwareProfiles.title';
+          this.nextEnabled = false;
+        }
+        break;
+      case HcsSetupModalCtrl.MAX_INDEX:
+        this.cancelRemoved = true;
+        this.finish = true;
+        this.title = 'hcs.setup.finish';
+        break;
+      default:
+        this.dismissModal();
     }
-    if (this.currentStepIndex === 1) {
-      //to-do Create Partner Service Entitlement
-    }
-    if (this.currentStepIndex === 2) {
-      //to-do Create Install files
-    }
+  }
+
+  public createSftp(): void {
+    this.HcsUpgradeService.createSftpServer(this.sftpServer)
+      .then(() => this.Notification.success('hcs.sftp.success'))
+      .catch(e => this.Notification.error(e, 'hcs.sftp.error'));
   }
 
   public disableNext(): boolean  {
@@ -45,7 +89,16 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
 
   public setAgentInstallFile(fileName: string, httpProxyList: string[]): void {
     this.nextEnabled = !_.isEmpty(fileName) && !_.isUndefined(httpProxyList) && httpProxyList.length > 0;
-    //to-do
+  }
+
+  public setSftpServer(sftpServer: ISftpServer) {
+    this.nextEnabled = (sftpServer && this.hcsSetupModalForm.$valid);
+    this.sftpServer = sftpServer;
+  }
+
+  public setSoftwareProfile(profile: ISoftwareProfile) {
+    this.nextEnabled = ( profile && this.hcsSetupModalForm.$valid);
+    this.softwareProfile = profile;
   }
 
   public dismissModal(): void {

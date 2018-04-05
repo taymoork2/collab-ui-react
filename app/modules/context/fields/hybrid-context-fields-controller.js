@@ -187,6 +187,9 @@ var momentFilter = require('../filters/momentFilter').Moment;
           case AdminAuthorizationStatus.UNKNOWN:
             vm.newButtonTooltip = $translate.instant('context.dictionary.unknownAdminAuthorizationStatus');
             break;
+          case AdminAuthorizationStatus.NEEDS_MIGRATION:
+            vm.newButtonTooltip = $translate.instant('context.dictionary.fieldPage.needsMigration');
+            break;
           default:
             break;
         }

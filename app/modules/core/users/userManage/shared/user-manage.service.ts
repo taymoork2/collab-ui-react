@@ -75,6 +75,7 @@ export class UserManageService {
         this.$state.go(State.USERS_CONVERT, {
           manageUsers: true,
           isDefaultAutoAssignTemplateActivated: this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated,
+          resetOnboardStoreStates: OnboardCtrlBoundUIStates.ALL,
         });
         break;
 

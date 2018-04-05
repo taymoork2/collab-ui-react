@@ -104,18 +104,22 @@ $tl-padding-right: 30px;
     }
 
     .goodLine {
-      stroke-dasharray: 0;
+      stroke-dasharray: none;
       stroke: $color-green-base;
     }
 
     .fairLine {
-      stroke-dasharray: 0;
+      stroke-dasharray: none;
       stroke: $color-yellow-base;
     }
 
     .poorLine {
+      stroke-dasharray: none;
       stroke: #FF503C;
-      stroke-dasharray: 1, 7;
+    }
+
+    .defaultLine {
+      stroke-dasharray: none;
     }
   }
 
@@ -127,8 +131,7 @@ $tl-padding-right: 30px;
   }
 
   .legend {
-    padding-left: $tl-padding-left;
-    padding-right:$tl-padding-right / 2;
+    overflow: hidden;
     margin: 0;
     box-sizing: border-box;
     svg {
@@ -152,7 +155,6 @@ $tl-padding-right: 30px;
       width: 50%;
       overflow: hidden;
       margin-top: 20px;
-      display: inline-block;
       box-sizing: border-box;
       text-align: center;
       padding: 0 3rem;
@@ -166,6 +168,9 @@ $tl-padding-right: 30px;
           width: 120px;
         }
       }
+    }
+    .legendLine {
+      padding: 0;
     }
     text {
       stroke-width: 1;

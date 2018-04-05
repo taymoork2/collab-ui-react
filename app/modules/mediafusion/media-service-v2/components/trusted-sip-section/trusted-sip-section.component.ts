@@ -15,6 +15,9 @@ class TrustedSipSectionCtrl implements ng.IComponentController {
   public trustedSip = {
     title: 'mediaFusion.trustedSip.title',
   };
+  public isWizard: boolean = false;
+  public sipSettingsEnabled: boolean = false;
+  private onTrustedSipConfigurationUpdate?: Function;
 
   /* @ngInject */
   constructor(
@@ -23,12 +26,15 @@ class TrustedSipSectionCtrl implements ng.IComponentController {
   ) { }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
-    const { cluster } = changes;
+    const { cluster, isWizard, sipSettingsEnabled } = changes;
     if (cluster && cluster.currentValue) {
       this.cluster = cluster.currentValue;
       this.clusterId = this.cluster.id;
       this.getProperties(this.clusterId);
+    } else if (isWizard && isWizard.currentValue) {
+      this.isWizard = isWizard.currentValue;
     }
+    if (sipSettingsEnabled && sipSettingsEnabled.currentValue) { this.sipSettingsEnabled = sipSettingsEnabled.currentValue; }
   }
 
   public getProperties(clusterId) {
@@ -54,9 +60,15 @@ class TrustedSipSectionCtrl implements ng.IComponentController {
       });
   }
 
+  public trustedSipUpdate () {
+    if (_.isFunction(this.onTrustedSipConfigurationUpdate)) {
+      this.onTrustedSipConfigurationUpdate({ response: { trustedsipconfiguration: this.trustedsipconfiguration } });
+    }
+  }
   public saveTrustedSip(): void {
     this.TrustedSipSectionService.saveSipConfigurations(this.trustedsipconfiguration, this.clusterId);
   }
+
 }
 
 export class TrustedSipSectionComponent implements ng.IComponentOptions {
@@ -64,5 +76,8 @@ export class TrustedSipSectionComponent implements ng.IComponentOptions {
   public template = require('./trusted-sip-section.tpl.html');
   public bindings = {
     cluster: '<',
+    isWizard: '<',
+    sipSettingsEnabled: '<',
+    onTrustedSipConfigurationUpdate: '&?',
   };
 }

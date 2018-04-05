@@ -1,5 +1,6 @@
 import { LinkingOperation, IACSiteInfo, LinkingMode } from './../account-linking.interface';
 import { WizardFsm, SpecialEvent, IFsmTransitionCallback } from './account-linking-wizard-fsm';
+import { DiagnosticKey } from '../../core/metrics/metrics.keys';
 
 enum AccountLinkingWizardState {
   Welcome = 'Welcome',
@@ -40,6 +41,7 @@ class AccountLinkingWizardComponentCtrl implements ng.IComponentController {
   public siteInfo: IACSiteInfo;
   public operation: LinkingOperation;
   public launchWebexFn: Function;
+  public launchSettingsFn: Function;
   public setAccountLinkingModeFn: Function;
   public dismiss: Function;
 
@@ -99,12 +101,13 @@ class AccountLinkingWizardComponentCtrl implements ng.IComponentController {
   // ];
 
   private DEBUG_TRANSITION: boolean = false;
-
+  private LOG_TRANSITION_METRICS = true;
   /* @ngInject */
   constructor(
     private $log: ng.ILogService,
     private $state: ng.ui.IStateService,
-  ) {
+    private MetricsService,
+) {
     // TODO: Use this to distinguish between fresh linking or modified linking in the UI
     if (this.operation === null) {
       this.operation = LinkingOperation.Modify;
@@ -143,6 +146,9 @@ class AccountLinkingWizardComponentCtrl implements ng.IComponentController {
   }
 
   public cancelModal() {
+    if (this.LOG_TRANSITION_METRICS === true) {
+      this.logMetrics({ operation: 'cancelWizard', fromState: this.fsmState });
+    }
     this.dismiss();
   }
 
@@ -264,6 +270,10 @@ class AccountLinkingWizardComponentCtrl implements ng.IComponentController {
     if (this.DEBUG_TRANSITION === true) {
       this.showTransitions(info);
     }
+    if (this.LOG_TRANSITION_METRICS === true) {
+      this.logMetrics(info);
+    }
+
   }
 
   private showTransitions = (info: IFsmTransitionCallback) => {
@@ -278,6 +288,13 @@ class AccountLinkingWizardComponentCtrl implements ng.IComponentController {
       });
     }
     this.$log.debug('-----------------------------------------------------------------------');
+  }
+
+  private logMetrics(info) {
+    this.MetricsService.trackDiagnosticMetric(DiagnosticKey.ACCOUNT_LINKING_WIZARD_OPERATION, {
+      operation: 'buttonClick',
+      info: info,
+    });
   }
 }
 

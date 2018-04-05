@@ -8,18 +8,20 @@ import serviceDescriptorModuleName from 'modules/hercules/services/service-descr
 import ussServiceModuleName from 'modules/hercules/services/uss.service';
 import hybridServiceUserSidepanelHelperServiceModuleName from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
 import userOverviewServiceModuleName from 'modules/core/users/userOverview';
+import waitingIntervalModuleName from 'modules/core/shared/waiting-interval';
 
 export default angular
   .module('hercules.user-sidepanel-section', [
     require('angular-ui-router'),
-    hybridServiceUserSidepanelHelperServiceModuleName,
     authinfoModuleName,
     calendarCloudConnectorModuleName,
     featureToggleServiceModuleName,
+    hybridServiceUserSidepanelHelperServiceModuleName,
     hybridServicesUtilsServiceModuleName,
     serviceDescriptorModuleName,
     ussServiceModuleName,
     userOverviewServiceModuleName,
+    waitingIntervalModuleName,
   ])
   .component('hybridServicesUserSidepanelSection', new HybridServicesUserSidepanelSectionComponent())
   .name;

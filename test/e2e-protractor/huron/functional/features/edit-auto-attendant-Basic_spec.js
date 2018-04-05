@@ -196,18 +196,6 @@ describe('Huron Functional: edit auto attendant BASIC', () => {
       utils.click(autoattendant.phoneMenuKeyOptions.last().all(by.tagName('li')).last());
       utils.click(autoattendant.phoneMenuAction.last());
       utils.click(autoattendant.phoneMenuActionOptions.last().element(by.linkText('Route to Phone Number')));
-      utils.click(autoattendant.phoneMenuActionTargets.last().element(by.name('phoneinput')));
-
-      // a bad external number should not allow save
-      utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.name('phoneinput')), '1111111111');
-
-      utils.expectIsDisabled(autoattendant.saveButton);
-
-      // but a good phone number should be able to be saved
-      utils.clear(autoattendant.phoneMenuActionTargets.last().element(by.name('phoneinput')));
-      utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.name('phoneinput')), '4084741234');
-      // save and assert successful update message
-      utils.expectIsEnabled(autoattendant.saveButton);
       utils.click(autoattendant.saveButton);
     }, 120000);
 
