@@ -36,7 +36,10 @@ describe('Controller: AddResourceController', function () {
         HybridServicesClusterService: this.HybridServicesClusterService,
         FmsOrgSettings: this.FmsOrgSettings,
         HybridServicesExtrasService: this.HybridServicesExtrasService,
-        firstTimeSetup: false,
+        options: {
+          firstTimeSetup: false,
+          hasCapacityFeatureToggle: false,
+        },
         ResourceGroupService: this.ResourceGroupService,
       });
       this.$scope.$apply();
@@ -53,20 +56,20 @@ describe('Controller: AddResourceController', function () {
     });
 
     it('should tell the modal that it must proceed when a connector has been provisioned', function () {
-      this.controller.provisionExpresswayWithNewConnector('fe5acf7a-6246-484f-8f43-3e8c910fc50d', this.newConnectorType);
+      this.controller._provisionExpresswayWithNewConnector('fe5acf7a-6246-484f-8f43-3e8c910fc50d', this.newConnectorType);
       this.$scope.$apply();
       expect(this.controller.provisioningToExistingExpresswayCompleted).toBe(true);
     });
 
     it('should parse the hostname from the connector list of the cluster, and make it available to the view', function () {
-      this.controller.provisionExpresswayWithNewConnector('fe5acf7a-6246-484f-8f43-3e8c910fc50d', this.newConnectorType);
+      this.controller._provisionExpresswayWithNewConnector('fe5acf7a-6246-484f-8f43-3e8c910fc50d', this.newConnectorType);
       this.$scope.$apply();
       expect(this.controller.hostname).toBe('host1.example.org');
     });
 
     it('should not touch the hostname if it cannot find a better one when parsing the connector list', function () {
       this.controller.hostname = 'old_hostname';
-      this.controller.provisionExpresswayWithNewConnector('invalid_cluster_id', this.newConnectorType);
+      this.controller._provisionExpresswayWithNewConnector('invalid_cluster_id', this.newConnectorType);
       this.$scope.$apply();
       expect(this.controller.hostname).toBe('old_hostname');
     });

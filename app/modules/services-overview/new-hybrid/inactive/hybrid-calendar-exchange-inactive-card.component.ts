@@ -20,7 +20,9 @@ class HybridCalendarExchangeInactiveCardController implements ng.IComponentContr
       resolve: {
         connectorType: () => 'c_cal',
         serviceId: () => 'squared-fusion-cal',
-        firstTimeSetup: true,
+        options: {
+          firstTimeSetup: true,
+        },
       },
       controller: 'AddResourceController',
       controllerAs: 'vm',
