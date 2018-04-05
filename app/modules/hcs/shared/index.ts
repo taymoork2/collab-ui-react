@@ -1,8 +1,8 @@
 import { HcsUpgradeService } from './hcs-upgrade.service';
-import { HcsSetupModalService } from './hcs-setup-modal.service';
+import { HcsSetupModalService, HcsSetupModalSelect } from './hcs-setup-modal.service';
 
 export * from './hcs-base';
-export { HcsUpgradeService, HcsSetupModalService };
+export { HcsUpgradeService, HcsSetupModalService, HcsSetupModalSelect };
 
 export default angular
   .module('hcs.shared.services', [

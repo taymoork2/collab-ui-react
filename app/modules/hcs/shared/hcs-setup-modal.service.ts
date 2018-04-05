@@ -1,5 +1,10 @@
 import { IToolkitModalService, IToolkitModalServiceInstance } from 'modules/core/modal';
 
+export enum HcsSetupModalSelect {
+  FirstTimeSetup = 0,
+  AgentInstallFileSetup = 1,
+}
+
 export class HcsSetupModalService {
   private modal: IToolkitModalServiceInstance |  undefined;
   /* @ngInject */
@@ -7,19 +12,10 @@ export class HcsSetupModalService {
     private $modal: IToolkitModalService,
   ) {}
 
-  public openSetupModal(): void {
+  public openSetupModal(isFirstTimeSetup: boolean, currentStepIndex: HcsSetupModalSelect): void {
     this.dismissModal();
     this.modal = this.$modal.open({
-      template: '<hcs-setup-modal class="modal-content" is-first-time-setup="true"></hcs-setup-modal>',
-      type: 'full',
-      keyboard: false,
-    });
-  }
-
-  public openAgentInstallFileModal(): void {
-    this.dismissModal();
-    this.modal = this.$modal.open({
-      template: '<hcs-setup-modal class="modal-content" is-first-time-setup="false" current-step-index="1"></hcs-setup-modal>',
+      template: `<hcs-setup-modal class="modal-content" is-first-time-setup="${isFirstTimeSetup}" current-step-index="${currentStepIndex}"></hcs-setup-modal>`,
       type: 'full',
       keyboard: false,
     });
