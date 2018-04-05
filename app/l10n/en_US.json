@@ -4136,13 +4136,20 @@
       "title": "Matters",
       "name": "Matter Name",
       "description": "Description",
-      "state": "State",
+      "dateReleased": "Date Released",
+      "dateCreated": "Date Created",
+      "createdBy": "Created By",
+      "custodians": "Custodians",
+      "userNotFound": "User not found",
       "filter": {
         "placeholder": "Placeholder",
         "active": "Active",
-        "released": "Released"
+        "released": "Released",
+        "all": "All Matters",
+        "mine": "Created By Me"
+
       },
-      "new": "New Matter"
+      "new": "Create Matter"
     },
     "matterNew": {
       "title": "Create Matter",
