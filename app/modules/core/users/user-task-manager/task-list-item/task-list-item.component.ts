@@ -20,7 +20,7 @@ export class TaskListItemController implements ng.IComponentController {
 
   public isTaskError() {
     if (!_.isUndefined(this.task)) {
-      return this.UserTaskManagerService.isTaskError(this.task.latestExecutionStatus);
+      return this.UserTaskManagerService.isTaskError(this.task);
     } else {
       return false;
     }

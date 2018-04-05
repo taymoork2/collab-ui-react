@@ -396,14 +396,16 @@
     "cancelCsvError": "An error occurred canceling the CSV import.",
     "csvImport": "CSV Import",
     "backgroundTasksRunning": "Background tasks running...",
+    "endedDescription": "Ended at {{time}} on {{date}}",
     "startedOn": "Started at {{time}} on {{date}}",
     "startedBy": "Started at {{time}} on {{date}} by {{person}}",
+    "status": "Status: ",
     "taskStatus": {
       "canceled": "Canceled",
       "completed": "Completed",
       "completedWithErrors": "Completed with Errors",
       "created": "Created",
-      "failed": "Failed",
+      "failed": "System Error",
       "stopped": "Stopped",
       "unknown": "Status Unknown",
       "processing": "Processing..."
