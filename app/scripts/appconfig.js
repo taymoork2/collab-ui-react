@@ -791,7 +791,7 @@
             authenticate: false,
           })
           .state('overview', {
-            url: '/overview',
+            url: '/overview?updateSsoCertificateNow',
             template: require('modules/core/overview/overview.tpl.html'),
             controller: 'OverviewCtrl',
             controllerAs: 'overview',
