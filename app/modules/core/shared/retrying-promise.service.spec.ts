@@ -7,7 +7,7 @@ type Test = atlas.test.IServiceTest<{
 }>;
 
 describe('LicenseUsageUtilService:', () => {
-  let DEFAULT_DELAY_500_MS = 500;
+  const DEFAULT_DELAY_500_MS = 500;
 
   beforeEach(function (this: Test) {
     this.initModules(moduleName);
@@ -29,7 +29,11 @@ describe('LicenseUsageUtilService:', () => {
       });
 
       it('should retry up to 2 times, doubling the delay each time, if the function did not resolve with the expected result', function (this: Test, done) {
-        const fooFn = jasmine.createSpy('fooFn').and.returnValue(this.$q.resolve('bar')); // incorrect result on the first try
+        const fooFn = jasmine.createSpy('fooFn').and.returnValues(
+          this.$q.resolve('bar'), // incorrect result
+          this.$q.resolve('bar'), // incorrect result
+          this.$q.resolve('foo'), // correct result
+        );
         this.RetryingPromiseService.tryUntil(fooFn, 'foo').then((expectedResult) => {
           expect(expectedResult).toBe('foo');
           done();
@@ -37,20 +41,18 @@ describe('LicenseUsageUtilService:', () => {
         this.$timeout.flush(DEFAULT_DELAY_500_MS);
         expect(fooFn.calls.count()).toBe(1);
 
-        fooFn.and.returnValue(this.$q.resolve('bar')); // assume incorrect result on second try
         this.$timeout.flush(DEFAULT_DELAY_500_MS * 2); // second try waits 2x longer before firing
         expect(fooFn.calls.count()).toBe(2);
 
-        fooFn.and.returnValue(this.$q.resolve('foo')); // assume correct result on third try
         this.$timeout.flush(DEFAULT_DELAY_500_MS * 2 * 2); // third try waits 2x longer before firing
         expect(fooFn.calls.count()).toBe(3);
       });
 
       it('should reject if the given function arg rejects', function (this: Test, done) {
         const fooFn = jasmine.createSpy('fooFn').and.returnValue(this.$q.reject());
-        this.RetryingPromiseService.tryUntil(fooFn, 'foo').catch(() => {
-          done();
-        });
+        this.RetryingPromiseService.tryUntil(fooFn, 'foo')
+          .then(fail)
+          .catch(done);
         this.$timeout.flush(500);
       });
 
