@@ -9402,7 +9402,7 @@
       "beforeVerify": "måste du kopiera och klistra in denna DNS-verifieringsnyckel i TXT-registreringsavsnittet för att bevisa att du äger domänen:",
       "warning": "Det är viktigt att verifiera alla domäner. Användare som inte tillhör en verifierad domän kommer omedelbart att låsas ute. Dessa användare kommer inte att kunna logga in eller använda Cisco Spark-tjänsterna. Inte heller kan du lägga till nya användare som tillhör icke-verifierade domäner.",
       "verify": "Verifiera",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Läs mer</a> om hur man anger DNS-verifieringsnyckeln."
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Läs mer</a> om hur man anger DNS-verifieringsnyckeln."
     },
     "claim": {
       "header": "Reservera domän",

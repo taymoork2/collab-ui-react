@@ -15,7 +15,10 @@ export class CalendarServiceContainerController extends ExpresswayContainerContr
     resolve: {
       connectorType: () => 'c_cal',
       serviceId: () => 'squared-fusion-cal',
-      firstTimeSetup: false,
+      options: {
+        firstTimeSetup: false,
+        hasCapacityFeatureToggle: this.hasCapacityFeatureToggle,
+      },
     },
     controller: 'AddResourceController',
     controllerAs: 'vm',

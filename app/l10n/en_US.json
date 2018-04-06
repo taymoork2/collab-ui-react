@@ -396,14 +396,16 @@
     "cancelCsvError": "An error occurred canceling the CSV import.",
     "csvImport": "CSV Import",
     "backgroundTasksRunning": "Background tasks running...",
+    "endedDescription": "Ended at {{time}} on {{date}}",
     "startedOn": "Started at {{time}} on {{date}}",
     "startedBy": "Started at {{time}} on {{date}} by {{person}}",
+    "status": "Status: ",
     "taskStatus": {
       "canceled": "Canceled",
       "completed": "Completed",
       "completedWithErrors": "Completed with Errors",
       "created": "Created",
-      "failed": "Failed",
+      "failed": "System Error",
       "stopped": "Stopped",
       "unknown": "Status Unknown",
       "processing": "Processing..."
@@ -8713,7 +8715,8 @@
         "convertText": "Users ready for license conversion review",
         "onboardText": "Total users onboarded",
         "onboardError": "Onboard data is not available, refresh the page or try later.",
-        "unassignedLicenses": "You have <span class=\"convert-nr h4\">{{licenseNumber}}</span> unassigned {{licenseType}} licenses"
+        "unassignedLicenses": "You have <span class=\"convert-nr h4\">{{licenseNumber}}</span> unassigned {{licenseType}} licenses",
+        "unassignedLicensesOnboarding": "unassigned {{licenseType}} licenses"
       },
       "message": {
         "title": "Message",
@@ -9503,7 +9506,7 @@
       "beforeVerify": "you must copy and paste this DNS verification token to the TXT record section to prove that you own the domain:",
       "warning": "It is important to verify all domains. Users that don't belong to a verified domain will be locked out immediately. Those users will not be able to log in or use Cisco Spark services. Also, you will not be able to add any new users that belong to unverified domains.",
       "verify": "Verify",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Learn more</a> about how to enter the DNS verification token."
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Learn more</a> about how to enter the DNS verification token."
     },
     "claim": {
       "header": "Claim Domain",

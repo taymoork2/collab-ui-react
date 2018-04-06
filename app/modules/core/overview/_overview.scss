@@ -166,7 +166,14 @@
 
     &--auto-assign-enabled {
       padding: 1rem 1.5rem 2rem;
-      display: inline-block;
+
+      @media #{$small-only} {
+        display: inline-block;
+      }
+
+      @media #{$medium-up} {
+        display: flex;
+      }
     }
 
     section {
@@ -176,6 +183,10 @@
 
       .convert-block {
         padding: 0 1.5rem 1rem;
+
+        &--auto-assign-enabled {
+          padding: 0 2rem 1rem;
+        }
 
         .convert-nr {
           color: $color-attention-base;
@@ -187,7 +198,7 @@
       }
 
       .onboard-block {
-        padding: 1rem;
+        padding: 0 1rem 1rem;
         margin-left: 0;
 
         .onboard-nr {
@@ -201,23 +212,32 @@
 
       .status-block {
         @extend .hybrid-card;
+        @include vr-spacing(mb, 2);
 
         &.user-border {
           border-top: 1px solid $gray-light-2;
         }
 
-        &--auto-assign-enabled {
+        &.status-block--auto-assign-enabled {
           display: flex;
           align-items: center;
           flex-direction: column;
-          padding-top: 1rem;
 
           @media #{$small-only} {
+            padding-top: 1rem;
             border-top: 1px solid $gray-light-2;
           }
 
           @media #{$medium-up} {
             border-left: 1px solid $gray-light-2;
+          }
+
+          .convert-nr {
+            padding: 0;
+          }
+
+          ul {
+            margin: 0;
           }
         }
 

@@ -15,7 +15,10 @@ export class CallServiceContainerController extends ExpresswayContainerControlle
     resolve: {
       connectorType: () => 'c_ucmc',
       serviceId: () => 'squared-fusion-uc',
-      firstTimeSetup: false,
+      options: {
+        firstTimeSetup: false,
+        hasCapacityFeatureToggle: this.hasCapacityFeatureToggle,
+      },
     },
     controller: 'AddResourceController',
     controllerAs: 'vm',

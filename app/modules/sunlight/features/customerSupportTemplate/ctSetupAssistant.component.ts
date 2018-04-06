@@ -2,15 +2,18 @@ import { CtBaseController } from './ctBase.controller';
 import { KeyCodes } from 'modules/core/accessibility';
 import { IToolkitModalService } from 'modules/core/modal';
 import { TemplateWizardService } from './services/TemplateWizard.service';
+import { AccessibilityService } from 'modules/core/accessibility';
 
 class CtSetupAssistantCtrl extends CtBaseController  {
 
   /* @ngInject*/
   constructor(
+    private $element: ng.IRootElementService,
     public $stateParams: ng.ui.IStateParamsService,
     public $translate: ng.translate.ITranslateService,
     public $modal: IToolkitModalService,
     public $timeout: ng.ITimeoutService,
+    private AccessibilityService: AccessibilityService,
     public TemplateWizardService: TemplateWizardService,
     public CTService,
     public $state,
@@ -28,9 +31,18 @@ class CtSetupAssistantCtrl extends CtBaseController  {
   }
 
   private animationTimeout = 10;
+  private pageFocus = {};
 
-  private setFocus(page, locator) {
-    this.c.log(page, locator);
+  private setFocus(page: string, locator: string) {
+    const element = this.$element.find(locator);
+    if (!this.pageFocus[page] && element.length > 0) {
+      this.AccessibilityService.setFocus(this.$element, locator);
+
+      _.forEach(this.pageFocus, (_value: boolean, key: string) => {
+        this.pageFocus[key] = false;
+      });
+      this.pageFocus[page] = true;
+    }
   }
 
   private isOffHoursPageValid() {
@@ -70,11 +82,10 @@ class CtSetupAssistantCtrl extends CtBaseController  {
   }
 
   private isChatEscalationBehaviorPageValid() {
-    return true;
+    return this.TemplateWizardService.pageValidationResult.isChatEscalationValid || false;
   }
 
   public nextButton() {
-    this.c.log('next button: state' +  this.TemplateWizardService.currentState);
     switch (this.TemplateWizardService.currentState) {
       case 'summary':
         this.setFocus('summary', '#chatSetupFinishBtn');
@@ -159,10 +170,8 @@ class CtSetupAssistantCtrl extends CtBaseController  {
     });
   }
   public evalKeyPress(keyCode): void {
-    this.c.log('evalKeyPress:' + keyCode );
     switch (keyCode) {
       case KeyCodes.ESCAPE:
-        this.c.log('Cancell will be called here');
         this.cancelModal();
         break;
       case KeyCodes.ENTER:

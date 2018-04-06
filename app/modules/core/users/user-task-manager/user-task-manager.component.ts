@@ -70,6 +70,7 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
   public dismiss: Function;
   public allTaskList: ITask[] = [];
   public inProcessTaskList: ITask[] = [];
+  public errorTaskList: ITask[] = [];
   public activeFilter: TaskListFilterType = TaskListFilterType.ALL;
 
   private fileData: string;
@@ -100,6 +101,8 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
         return this.allTaskList;
       case TaskListFilterType.ACTIVE:
         return this.inProcessTaskList;
+      case TaskListFilterType.ERROR:
+        return this.errorTaskList;
     }
   }
 
@@ -161,6 +164,7 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
     this.allTaskList = tasks;
 
     this.inProcessTaskList = this.filterInProcessTaskList(tasks);
+    this.errorTaskList = this.filterErrorTaskList(tasks);
     this.initSelectedTask();
     this.loading = false;
   }
@@ -185,6 +189,12 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
 
   private getTaskById(id: string): ITask | undefined {
     return _.find(this.taskList, { id });
+  }
+
+  private filterErrorTaskList(tasks: ITask[]) {
+    return _.filter(tasks, task => {
+      return this.UserTaskManagerService.isTaskError(task);
+    });
   }
 
   private filterInProcessTaskList(tasks: ITask[]) {

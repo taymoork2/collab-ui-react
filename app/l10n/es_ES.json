@@ -9403,7 +9403,7 @@
       "beforeVerify": "deberá copiar y pegar el token de comprobación del DNS en la sección de registro en formato TXT para justificar que el dominio es de su propiedad:",
       "warning": "Es importante que compruebe todos los dominios. Se bloqueará de forma inmediata a los usuarios que no pertenezcan a un dominio comprobado y, además, no podrán iniciar sesión en los servicios de Cisco Spark ni utilizarlos. Asimismo, no podrá añadir más usuarios nuevos que pertenezcan a dominios sin comprobar.",
       "verify": "Comprobar",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Obtenga más información</a> sobre cómo introducir el token de comprobación del DNS."
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Obtenga más información</a> sobre cómo introducir el token de comprobación del DNS."
     },
     "claim": {
       "header": "Declarar dominio",

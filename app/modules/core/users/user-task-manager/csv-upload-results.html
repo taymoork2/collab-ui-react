@@ -11,6 +11,18 @@
     translate="userTaskManagerModal.startedBy"
     translate-values="{ time: $ctrl.startedTime, date: $ctrl.startedDate, person: $ctrl.startedBy }">
   </p>
+  <p class="csv-upload-results__description"
+    ng-if="$ctrl.isCompleted()"
+    translate="userTaskManagerModal.endedDescription"
+    translate-values="{ time: $ctrl.endedTime, date: $ctrl.endedDate }">
+  </p>
+  <p class="csv-upload-results__description" ng-if="$ctrl.isCompleted()">
+    <span translate="userTaskManagerModal.status"></span>
+    <span ng-class="{'alert': $ctrl.isTaskError()}">
+      <i class="icon task__subtext-icon icon-error" ng-if="$ctrl.isTaskError()"></i>
+      {{$ctrl.getStatusTranslation()}}
+    </span>
+  </p>
 
   <cr-progressbar ng-if="$ctrl.isProcessing"
     progressbar-filename="$ctrl.fileName"

@@ -34,13 +34,16 @@ describe('Huron Functional: add-user', () => {
   });
 
   describe('Add user flow', () => {
-    it('should navigate to Manage Users page and "Manually add or modify users" radio button is selected', () => {
+    it('should navigate to Manage Users page', () => {
       utils.click(manageUsersPage.buttons.manageUsers);
-      utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
-      utils.expectIsDisplayed(manageUsersPage.select.radio.orgManual);
     });
     it('should navigate to manually add user with "email" or "Names and email" when hit "Next"', () => {
-      utils.click(manageUsersPage.buttons.next);
+      if (featureToggle.features.atlasF3745AutoAssignLicenses) {
+        utils.click(manageUsersPage.actionCards.manualAddOrModifyUsers);
+      } else {
+        utils.expectIsDisplayed(manageUsersPage.select.radio.orgManual);
+        utils.click(manageUsersPage.buttons.next);
+      }
       if (featureToggle.features.atlasEmailSuppress) {
         utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
         utils.click(manageUsersPage.buttons.next);

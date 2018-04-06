@@ -9402,7 +9402,7 @@
       "beforeVerify": "Sie müssen dieses DNS-Verifizierungstoken in den TXT-Aufzeichnungsabschnitt kopieren, um zu belegen, dass Sie Eigentümer der Domäne sind:",
       "warning": "Es ist wichtig, alle Domänen zu verifizieren. Benutzer, die nicht zu einer verifizierten Domäne gehören, werden sofort ausgesperrt und sind nicht mehr in der Lage, sich anzumelden und auf Cisco Spark-Dienste zuzugreifen. Sie können außerdem keine neuen Benutzer hinzufügen, die zu nicht verifizierten Domänen gehören.",
       "verify": "Überprüfen",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Mehr Informationen zur</a> Eingabe des DNS-Verifizierungstoken."
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Mehr Informationen zur</a> Eingabe des DNS-Verifizierungstoken."
     },
     "claim": {
       "header": "Domäne beanspruchen",

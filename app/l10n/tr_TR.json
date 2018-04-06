@@ -9402,7 +9402,7 @@
       "beforeVerify": "etki alanına sahip olduğunuzu doğrulamak için bu DNS doğrulama jetonunu kopyalayıp TXT kayıt bölümüne yapıştırmanız gerekir:",
       "warning": "Tüm etki alanlarını doğrulamak önemlidir. Doğrulanmış bir etki alanına ait olmayan kullanıcılar derhal engellenecektir. Bu kullanıcılar Cisco Spark hizmetlerinde oturum açamayacak veya bu hizmetleri kullanamayacaktır. Ayrıca doğrulanmamış etki alanlarına ait olan yeni kullanıcıları ekleyemeyeceksiniz.",
       "verify": "Doğrula",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>DNS doğrulama jetonunu</a> girme hakkında daha fazla bilgi edinin."
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>DNS doğrulama jetonunu</a> girme hakkında daha fazla bilgi edinin."
     },
     "claim": {
       "header": "Etki Alanını Talep Et",

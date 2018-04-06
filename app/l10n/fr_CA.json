@@ -9402,7 +9402,7 @@
       "beforeVerify": "Vous devez copier et coller ce jeton de vérification DNS dans la section d’enregistrement TXT pour prouver que le domaine vous appartient :",
       "warning": "Il est important de vérifier tous les domaines. Les utilisateurs qui n’appartiennent pas à un domaine vérifié seront immédiatement bloqués et ne pourront pas se connecter et utiliser les services Cisco Spark. Il vous sera également impossible d’ajouter de nouveaux utilisateurs qui appartiennent à des domaines non vérifiés.",
       "verify": "Vérifier",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>En savoir plus </a>sur la saisie du jeton de vérification DNS."
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>En savoir plus </a>sur la saisie du jeton de vérification DNS."
     },
     "claim": {
       "header": "Demander le domaine",

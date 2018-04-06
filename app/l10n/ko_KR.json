@@ -9402,7 +9402,7 @@
       "beforeVerify": "해당 도메인을 소유하고 있음을 증명하기 위해 이 DNS 인증 토큰을 복사하여 TXT 기록 섹션에 붙여넣어야 합니다. 다음:",
       "warning": "모든 도메인을 확인하는 것은 중요합니다. 확인된 도메인에 소속되지 않은 사용자는 즉시 차단됩니다. 해당 사용자는 로그인하거나 Cisco Spark 서비스를 사용할 수 없게 됩니다. 또한 확인되지 않은 도메인을 사용하는 새로운 사용자는 추가할 수 없습니다.",
       "verify": "확인",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>DNS 인증 토큰을 입력하는 방법에 대해서 알아보십시오</a>."
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>DNS 인증 토큰을 입력하는 방법에 대해서 알아보십시오</a>."
     },
     "claim": {
       "header": "도메인 클레임",

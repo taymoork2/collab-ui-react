@@ -9402,7 +9402,7 @@
       "beforeVerify": "du må kopiere og lime inn dette DNS-verifikasjonstoken på TXT-registreringsseksjonen for å bevise at du eier domenet:",
       "warning": "Det er viktig å verifisere alle domener. Brukere som ikke hører hjemme i et verifisert domene blir umiddelbart bli utestengt. Disse brukerne kan ikke logge inn eller bruke Cisco Spark-tjenester. Du vil heller ikke kunne legge til noen nye brukere som hører til domener som ikke er verifisert.",
       "verify": "Verifisere",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Finn ut mer</a> om hvordan du kan oppgi et DNS verifikasjonstoken."
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Finn ut mer</a> om hvordan du kan oppgi et DNS verifikasjonstoken."
     },
     "claim": {
       "header": "Påberop domene",

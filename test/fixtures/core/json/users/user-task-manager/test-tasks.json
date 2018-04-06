@@ -1,4 +1,13 @@
 {
+  "completedWithErrorsStatus": {
+    "latestExecutionStatus": "COMPLETED",
+    "counts": {
+      "usersFailed": 12
+    }
+  },
+  "failedStatus": {
+    "latestExecutionStatus": "FAILED"
+  },
   "taskManagerTasks":[{
     "csvFile": "421f02da-5399-480f-b7ba-50ad8ebfb7c9/testFile.csv_f6a802b9-bc20-413c-9ffb-d50d4eb65fec",
     "id": "3c32ede0-3a9f-4d7e-8316-3524843fa233",

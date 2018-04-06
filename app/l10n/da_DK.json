@@ -9402,7 +9402,7 @@
       "beforeVerify": "du må kopiere og indsætte denne DNS-token til bekræftelse i optagelsesafsnittet TXT for at bevise, at du ejer domænet:",
       "warning": "Det er vigtigt at bekræfte alle domæner. Brugere, som ikke tilhører et bekræftet domæne, vil øjeblikkeligt blive låst ude. De brugere vil ikke være i stand til at logge ind eller bruge Cisco Spark-tjenesteydelser. Du vil heller ikke være i stand til at tilføje nye brugere, der tilhører ikke-bekræftede domæner.",
       "verify": "Bekræft",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Læs mere</a> om, hvordan du indtaster DNS token til bekræftelse."
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Læs mere</a> om, hvordan du indtaster DNS token til bekræftelse."
     },
     "claim": {
       "header": "Gør krav på domæne",
