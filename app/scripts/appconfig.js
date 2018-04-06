@@ -829,6 +829,16 @@
               },
             },
           })
+          // TODO: Enable onboarding state when onboarding reports gets moved to MyCompany Page. chrispha 4/6/18
+          // .state('my-company.onboarding', {
+          //   url: '/my-company/onboarding',
+          //   views: {
+          //     tabContent: {
+          //       controller: 'MyCompanyPageOnboardingCtrl',
+          //       template: require('modules/core/myCompany/myOnboarding/myOnboarding.tpl.html'),
+          //     },
+          //   },
+          // })
           .state('my-company.orders', {
             url: '/my-company/orders',
             views: {

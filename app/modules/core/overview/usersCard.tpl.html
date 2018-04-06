@@ -29,9 +29,11 @@
       <span translate="overview.cards.users.onboardText"></span>
     </div>
     <div ng-if="card.features.autoLicense">
-      <a ui-sref="reports">
+      <a ui-sref="reports"></a>
+      <!-- TODO: Enable onboarding link when onboarding reports gets moved to MyCompany Page. chrispha 4/6/18
+      <a href="/my-company/onboarding" ui-sref="my-company-onboarding">
         <span translate="reports.title"></span>
-      </a>
+      </a> -->
     </div>
   </div>
   <div class="status-block" ng-class="[card.features.atlasF3745AutoAssignLicenses ? 'columns medium-6 status-block--auto-assign-enabled' : 'user-border']">
