@@ -21,7 +21,7 @@
       </div>
     </div>
   </div>
-  <div class="section errors-section" ng-show="vm.hasErrors">
+  <div class="section errors-section" ng-if="vm.hasErrors">
     <h3 translate="common.errors"></h3>
     <cs-grid class="gridStyle" grid-api="vm.gridApi" grid-options="vm.gridOptions"></cs-grid>
   </div>

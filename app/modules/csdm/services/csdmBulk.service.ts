@@ -106,6 +106,21 @@ export class BulkAction {
       !BulkAction.isCompleted(this.currentBulkResponse.state);
   }
 
+  public setToTotalFailure() {
+    this.currentBulkResponse = {
+      state: BulkAction.failed,
+      numberOfSuccesses: 0,
+      progressPercentage: 100,
+      numberOfFailures: this.deviceCount,
+      jobUrl: '',
+      failures: {},
+      updateCommand: { type: '' },
+      totalNumber: this.deviceCount,
+      async: false,
+    };
+    return this.currentBulkResponse;
+  }
+
   public get deviceCount() {
     return _.size(this.devices);
   }

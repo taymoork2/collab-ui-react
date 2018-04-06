@@ -41,6 +41,7 @@ class BulkModalCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(private $stateParams: IStateParamsService,
               private $interval: IIntervalService,
+              private $translate: ng.translate.ITranslateService,
               private $http: IHttpService,
               private $scope: IScope,
               private Notification: Notification) {
@@ -55,9 +56,11 @@ class BulkModalCtrl implements ng.IComponentController {
 
   public initGrid() {
     this.gridOptions = {
+      rowHeight: 45,
+      enableVerticalScrollbar: false,
       columnDefs: [
-        { displayName: 'Device belongs to', name: 'name', width: 250 },
-        { displayName: 'Errors', name: 'error', width: 290 }],
+        { displayName: this.$translate.instant('spacesPage.nameHeader'), name: 'name', width: 200 },
+        { displayName: this.$translate.instant('common.errors'), name: 'error', width: '*', cellTooltip: true }],
       enableSorting: false,
       enableMinHeightCheck: false,
     };
@@ -81,6 +84,8 @@ class BulkModalCtrl implements ng.IComponentController {
         });
       }
     }).catch(error => {
+      const response = this.bulkAction.setToTotalFailure();
+      this.processBulkResponse(response);
       this.Notification.errorWithTrackingId(error, 'deviceBulk.deletionFullError');
     });
   }
@@ -111,13 +116,23 @@ class BulkModalCtrl implements ng.IComponentController {
   private processBulkResponse(response: IBulkResponse) {
     this.progress = response.progressPercentage;
     this.numberOfSuccesses = response.numberOfSuccesses;
+    this.numberOfErrors = response.numberOfFailures;
     _.forEach(response.failures, (failure: IBulkFailure, url: string) => {
       if (!_.some(this.failuresData, ['url', url])) {
-        this.$http.get(url).then((result: IHttpResponse<IDevice>) => {
-          this.failuresData.push({ url: url, error: failure.message, name: result.data.displayName });
-          this.gridOptions.data = this.failuresData;
-          this.numberOfErrors = _.size(this.failuresData);
-        });
+        this.$http.get(url)
+          .then((result: IHttpResponse<IDevice>) => {
+            if (!_.some(this.failuresData, ['url', url])) {
+              this.failuresData.push({ url: url, error: failure.message, name: result.data.displayName });
+              this.gridOptions.data = this.failuresData;
+            }
+          })
+          .catch(() => {
+            if (!_.some(this.failuresData, ['url', url])) {
+              this.failuresData.push(
+                { url: url, error: failure.message, name: this.$translate.instant('common.unknown') });
+              this.gridOptions.data = this.failuresData;
+            }
+          });
       }
     });
     if (BulkAction.isCompleted(response.state)) {
