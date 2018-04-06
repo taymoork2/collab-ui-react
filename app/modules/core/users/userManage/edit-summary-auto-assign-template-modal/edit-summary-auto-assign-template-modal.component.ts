@@ -47,7 +47,7 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
   // notes:
   // - need to ensure the write operation to org-level setting has completed
   // - so we check up to three times (each retry increases delay 2x) that the setting is true
-  private validateAutoAssignIsEnabledForOrg(): ng.IPromise<void> {
+  private validateAutoAssignIsEnabledForOrg(): ng.IPromise<boolean> {
     const checkIsEnabledFn = () => this.AutoAssignTemplateService.isEnabledForOrg();
     const expectedResult = true;
     const options = {

@@ -6,15 +6,15 @@ export class RetryingPromiseService {
       private $timeout: ng.ITimeoutService,
   ) {}
 
-  public tryUntil(
-    tryFn: (...args: any[]) => {} | ng.IPromise<{}>,
-    expectedResult: any,
+  public tryUntil<T>(
+    tryFn: (...args: any[]) => T | ng.IPromise<T>,
+    expectedResult: T,
     options: {
       callCounter?: number,
       maxCalls?: number,
       startDelay?: number,
       backOffFn?: Function,
-    } = {}): ng.IPromise<any> {
+    } = {}): ng.IPromise<T> {
 
     const DEFAULT_CALL_COUNTER = 1;
     const DEFAULT_MAX_CALLS = 3;
