@@ -209,16 +209,16 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
             if (target.selectionEnd === 0) {
               this.deleteLastBullet();
             } else if (target.selectionStart === target.selectionEnd
-              && target.value[target.selectionEnd] === '"'
-              && target.value[target.selectionEnd - 1] === '"') {
+              && target.value[target.selectionEnd!] === '"'
+              && target.value[target.selectionEnd! - 1] === '"') {
               const selectionEnd = target.selectionEnd;
-              target.value = [target.value.slice(0, selectionEnd), target.value.slice(selectionEnd + 1)].join('');
+              target.value = [target.value.slice(0, selectionEnd!), target.value.slice(selectionEnd! + 1)].join('');
               target.selectionEnd = selectionEnd;
             } else if (target.selectionStart === target.selectionEnd
-              && target.value[target.selectionEnd] === ')'
-              && target.value[target.selectionEnd - 1] === '(') {
+              && target.value[target.selectionEnd!] === ')'
+              && target.value[target.selectionEnd! - 1] === '(') {
               const selectionEnd = target.selectionEnd;
-              target.value = [target.value.slice(0, selectionEnd), target.value.slice(selectionEnd + 1)].join('');
+              target.value = [target.value.slice(0, selectionEnd!), target.value.slice(selectionEnd! + 1)].join('');
               target.selectionEnd = selectionEnd;
             }
           }
@@ -250,26 +250,26 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
       switch ($keyEvent.key) {
         case '"':
           if (!this.searchObject.hasError) {
-            if (!target.value[target.selectionEnd]) {
-              const selectionStart = target.selectionStart;
-              target.value = [target.value.slice(0, selectionStart), '"', target.value.slice(target.selectionEnd)].join('');
+            if (!target.value[target.selectionEnd!]) {
+              const selectionStart = target.selectionStart!;
+              target.value = [target.value.slice(0, selectionStart), '"', target.value.slice(target.selectionEnd!)].join('');
               target.selectionEnd = selectionStart;
-            } else if (target.value[target.selectionEnd] === '"') {
-              target.selectionEnd += 1;
+            } else if (target.value[target.selectionEnd!] === '"') {
+              target.selectionEnd! += 1;
               return false;
             }
           }
           break;
         case '(':
-          if (!target.value[target.selectionEnd]) {
-            const selectionStart = target.selectionStart;
-            target.value = [target.value.slice(0, selectionStart), ')', target.value.slice(target.selectionEnd)].join('');
+          if (!target.value[target.selectionEnd!]) {
+            const selectionStart = target.selectionStart!;
+            target.value = [target.value.slice(0, selectionStart), ')', target.value.slice(target.selectionEnd!)].join('');
             target.selectionEnd = selectionStart;
           }
           break;
         case ')':
-          if (target.value.length >= 2 && target.value[target.selectionEnd - 1] === '(' && target.value[target.selectionEnd] === ')') {
-            target.selectionEnd += 1;
+          if (target.value.length >= 2 && target.value[target.selectionEnd! - 1] === '(' && target.value[target.selectionEnd!] === ')') {
+            target.selectionEnd! += 1;
             return false;
           }
           break;
