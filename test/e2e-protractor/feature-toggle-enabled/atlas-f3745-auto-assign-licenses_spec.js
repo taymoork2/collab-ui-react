@@ -39,7 +39,7 @@ describe('Auto-Assign Licenses', function () {
   describe('overview page:', function () {
     describe('overview card:', function () {
       it('should have a disabled entry "Auto-Assign Licenses" for the "Licenses" card', function () {
-        utils.expectIsDisplayed(overview.cards.licenses.headerText);
+        utils.expectIsDisplayed(overview.cards.licenses.headerIcon);
         utils.expectIsDisplayed(overview.cards.licenses.autoAssignLicensesStatusIndicator);
         utils.expectIsDisplayed(overview.cards.licenses.autoAssignLicensesText);
       });
