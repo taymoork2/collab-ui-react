@@ -1,4 +1,4 @@
-<div ng-class="{'selected' : row.isSelected, 'b-checked' : grid.appScope.isSelected(row.entity).value}"
+<div ng-class="{'b-checked' : grid.appScope.isSelected(row.entity).value}"
      ng-click="grid.appScope.fnOne(row)"
      ng-repeat="col in colContainer.renderedColumns track by col.colDef.name"
      class="ui-grid-cell" ui-grid-cell></div>

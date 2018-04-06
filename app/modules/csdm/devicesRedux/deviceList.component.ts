@@ -169,21 +169,15 @@ class DeviceList implements ng.IComponentController {
           displayName: '',
           field: 'selection',
           cellTemplate: require('modules/csdm/templates/_selectionTpl.html'),
-          width: 70,
+          width: 55,
           visible: false,
           enableSorting: false,
           headerCellTemplate: require('modules/csdm/templates/_selectionHeaderTpl.html'),
-        },
-        {
-          field: 'photos',
-          displayName: '',
-          cellTemplate: require('modules/csdm/templates/_imageTpl.html'),
-          width: 70,
         }, {
           field: 'displayName',
           displayName: this.$translate.instant('spacesPage.nameHeader'),
+          cellTemplate: require('modules/csdm/templates/_belongsToTpl.html'),
           suppressRemoveSort: true,
-          cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.expandDevice(row.entity)" cell-value="row.entity.displayName"></cs-grid-cell>',
         }, {
           field: 'connectionStatus',
           displayName: this.$translate.instant('spacesPage.statusHeader'),
@@ -208,7 +202,7 @@ class DeviceList implements ng.IComponentController {
 
   private handleSelections() {
     if (this.bulkAll === false) {
-      if (this.$state.sidepanel) {
+      if (this.$state.sidepanel && this.$state.name === 'bulk-overview') {
         this.$state.sidepanel.close();
       }
     } else if (this.bulkAll) {
@@ -217,14 +211,14 @@ class DeviceList implements ng.IComponentController {
         if (response && response.data) {
           this.selectedDevices = _.keyBy<any>(response.data.deviceIdentifiers, (uri) => uri);
           this.allDevicesIdsFromSearch = _.keyBy<any>(response.data.deviceIdentifiers, (uri) => uri);
-          if (this.$state.sidepanel) {
+          if (this.$state.sidepanel && this.$state.name === 'bulk-overview') {
             this.expandBulk(); //re expanding
           }
         }
         this.selectAllSpinner = false;
       });
     } else {
-      if (this.$state.sidepanel) {
+      if (this.$state.sidepanel && this.$state.name === 'bulk-overview') {
         this.expandBulk(); //re expanding
       }
     }

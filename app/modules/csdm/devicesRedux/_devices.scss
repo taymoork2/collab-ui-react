@@ -8,37 +8,69 @@
 
 .devices-redux {
 
+  .ui-grid-cell:first-child > .bulk-select {
+    background-color: $white;
+  }
   .ui-grid-cell:first-child,
   .ui-grid-header-cell:first-child {
-    border-right: 0;
     .bulk-select {
-      margin-left: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 8px 0 8px 0;
       box-shadow: unset;
       .cs-input-group.cs-input-checkbox {
-        display: inline-flex;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 4px 0 0 12px;
       }
     }
   }
-  .ui-grid {
-    .ui-grid-row > :first-child > :first-child {
-      .bulk-select {
-        margin-left: 12px;
-        box-shadow: unset;
-      }
-      .user-img,
-      .space_avatar {
-        margin-left: 30px;
-      }
-    }
-  }
-  .ui-grid-cell {
+  .grid-cell-image-text {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 16px 0 20px;
+
     .user-img,
     .space_avatar {
-      margin: 4px 5px 4px 4px;
+      margin: 0;
       width: 35px;
     }
-    &.b-checked {
-      background-color: $blue-pastel;
+
+    .account_avatar {
+      flex-shrink: 0;
+      height: 35px;
+      width: 35px;
+      .icon {
+        line-height: 35px;
+      }
+    }
+
+    .place_avatar {
+      .icon {
+        font-size: 17px;
+        bottom: -1px;
+      }
+    }
+
+    .belongs-to {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  .grid-cell-image-text > * {
+    margin-left: 12px;
+  }
+
+  .ui-grid-row:not(:hover):not(.ui-grid-row-selected) {
+    .ui-grid-cell {
+      &.b-checked {
+        background-color: $blue-pastel;
+      }
     }
   }
 
