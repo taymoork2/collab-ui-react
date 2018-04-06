@@ -98,11 +98,7 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
   public setAgentInstallFile(fileName: string, httpProxyList: string[]): void {
     this.nextEnabled = !_.isEmpty(fileName) && !_.isUndefined(httpProxyList) && httpProxyList.length > 0;
     if (!this.isFirstTimeSetup) {
-      if (this.nextEnabled) {
-        this.finishDisable = false;
-      } else {
-        this.finishDisable = true;
-      }
+      this.finishDisable = !this.nextEnabled;
     }
   }
 
