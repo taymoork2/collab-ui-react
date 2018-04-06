@@ -66,9 +66,9 @@ describe('In ctChatEscalationBehaviorComponent, The controller', () => {
     expect(controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText).toEqual(this.TemplateWizardService.$translate.instant('careChatTpl.templateConfig.default.leaveRoomMessage'));
   });
 
-  it('setRequiredValue should set values properly when isExpertEscalationSelected is true and mediaType is chatpluscallback', function() {
-    this.TemplateWizardService.setSelectedMediaType('chatpluscallback');
-    const template = this.TemplateWizardService.getDefaultTemplate('chatpluscallback');
+  it('setRequiredValue should set values properly when isExpertEscalationSelected is true and mediaType is chatPlusCallback', function() {
+    this.TemplateWizardService.setSelectedMediaType('chatPlusCallback');
+    const template = this.TemplateWizardService.getDefaultTemplate('chatPlusCallback');
     this.TemplateWizardService.isExpertEscalationSelected.and.returnValue(true);
     controller.template = template;
     controller.setRequiredValue();
@@ -78,9 +78,9 @@ describe('In ctChatEscalationBehaviorComponent, The controller', () => {
     expect(controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText).toEqual(this.TemplateWizardService.$translate.instant('careChatTpl.templateConfig.default.leaveRoomMessageEVA'));
   });
 
-  it('setRequiredValue should set values properly when isExpertEscalationSelected is true and mediaType is chatpluscallback', function() {
-    this.TemplateWizardService.setSelectedMediaType('chatpluscallback');
-    const template = this.TemplateWizardService.getDefaultTemplate('chatpluscallback');
+  it('setRequiredValue should set values properly when isExpertEscalationSelected is false and mediaType is chatPlusCallback', function() {
+    this.TemplateWizardService.setSelectedMediaType('chatPlusCallback');
+    const template = this.TemplateWizardService.getDefaultTemplate('chatPlusCallback');
     this.TemplateWizardService.isExpertEscalationSelected.and.returnValue(false);
     controller.template = template;
     controller.setRequiredValue();

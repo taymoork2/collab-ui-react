@@ -1,5 +1,5 @@
 import { TemplateWizardService } from './TemplateWizard.service';
-import { IdNameIconConfig } from '../factory/ctCustomerSupportClasses';
+import { CVAConfig } from '../factory/ctCustomerSupportClasses';
 
 describe('TemplateWizardService ', () => {
 
@@ -21,8 +21,8 @@ describe('TemplateWizardService ', () => {
     expect(templateWizardService.getDefaultTemplate('callback').configuration.mediaType === 'callback').toBe(true);
   });
 
-  it('getDefaultTemplate get the right template for mediaTye = chatpluscallback', () => {
-    expect(templateWizardService.getDefaultTemplate('chatpluscallback').configuration.mediaType === 'chatpluscallback').toBe(true);
+  it('getDefaultTemplate get the right template for mediaTye = chatPlusCallback', () => {
+    expect(templateWizardService.getDefaultTemplate('chatPlusCallback').configuration.mediaType === 'chatPlusCallback').toBe(true);
   });
 
   it('setSelectedMediaType to set the mediaType in the service and get the default template', () => {
@@ -120,7 +120,7 @@ describe('TemplateWizardService ', () => {
     templateWizardService.setSelectedMediaType('chat');
     expect(templateWizardService.getCustomerInformationFormFields()).toBe(templateWizardService.template.configuration.pages.customerInformation.fields);
 
-    templateWizardService.setSelectedMediaType('chatpluscallback');
+    templateWizardService.setSelectedMediaType('chatPlusCallback');
     templateWizardService.cardMode = 'callback';
     expect(templateWizardService.getCustomerInformationFormFields()).toBe(templateWizardService.template.configuration.pages.customerInformationCallback.fields);
     templateWizardService.cardMode = 'chat';
@@ -155,7 +155,7 @@ describe('TemplateWizardService ', () => {
 
   it('vaSelectionCommit should set proper config data', function() {
     templateWizardService.setSelectedMediaType('chat');
-    templateWizardService.selectedVA = new IdNameIconConfig();
+    templateWizardService.selectedVA = new CVAConfig();
     templateWizardService.selectedVA.id = '1';
     templateWizardService.selectedVA.name = 'VA';
     templateWizardService.vaSelectionCommit();
