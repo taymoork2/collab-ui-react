@@ -1,8 +1,10 @@
 import { HcsUpgradeService } from './hcs-upgrade.service';
 import { HcsSetupModalService, HcsSetupModalSelect } from './hcs-setup-modal.service';
+import { HcsLicenseService } from './hcs-license.service';
 
 export * from './hcs-base';
-export { HcsUpgradeService, HcsSetupModalService, HcsSetupModalSelect };
+export * from './hcs-license';
+export { HcsUpgradeService, HcsSetupModalService, HcsSetupModalSelect, HcsLicenseService };
 
 export default angular
   .module('hcs.shared.services', [
@@ -11,4 +13,5 @@ export default angular
   ])
   .service('HcsSetupModalService', HcsSetupModalService)
   .service('HcsUpgradeService', HcsUpgradeService)
+  .service('HcsLicenseService', HcsLicenseService)
   .name;
