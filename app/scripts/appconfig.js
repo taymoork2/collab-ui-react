@@ -2968,7 +2968,7 @@
             url: '/reports',
             template: '<div ui-view></div>',
             controller: /* @ngInject */ function ($state) {
-              $state.go('partnerreports.tab.base');
+              $state.go('partnerreports.tab.spark');
             },
           })
           .state('partnerreports.tab', {
@@ -2980,6 +2980,12 @@
             url: '/metrics',
             template: require('modules/core/partnerReports/partnerReports.tpl.html'),
             controller: 'PartnerReportCtrl',
+            controllerAs: 'nav',
+          })
+          .state('partnerreports.tab.spark', {
+            url: '/spark',
+            template: require('modules/core/partnerReports/sparkReports/sparkReports.tpl.html'),
+            controller: 'SparkReportsCtrl',
             controllerAs: 'nav',
           })
           .state('partnerreports.tab.ccaReports', {

@@ -74,8 +74,8 @@
     tab: 'reportTab',
     icon: 'icon-bars',
     title: 'tabs.reportTab',
-    state: 'partnerreports.tab.base',
-    link: '/partner/metrics',
+    state: 'partnerreports.tab.spark',
+    link: '/partner/spark',
   }, {
     tab: 'taasOverviewTab',
     icon: 'icon-outline',
@@ -200,8 +200,8 @@
     tab: 'reportTab',
     icon: 'icon-analysis-active',
     title: 'tabs.reportTab',
-    state: 'partnerreports.tab.base',
-    link: '/partner/metrics',
+    state: 'partnerreports.tab.spark',
+    link: '/partner/spark',
     iconClass: 'icon-outline',
   }, {
     tab: 'supportTab',
