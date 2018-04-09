@@ -83,10 +83,9 @@ class BulkModalCtrl implements ng.IComponentController {
           this.$interval.cancel(this.bulkActionPoller);
         });
       }
-    }).catch(error => {
+    }).catch(() => {
       const response = this.bulkAction.setToTotalFailure();
       this.processBulkResponse(response);
-      this.Notification.errorWithTrackingId(error, 'deviceBulk.deletionFullError');
     });
   }
 
@@ -135,23 +134,6 @@ class BulkModalCtrl implements ng.IComponentController {
           });
       }
     });
-    if (BulkAction.isCompleted(response.state)) {
-      if (this.numberOfErrors > 0 || this.numberOfSuccesses !== this.bulkAction.deviceCount) {
-        this.Notification.warning('deviceBulk.deletionCompletedXDeleted',
-          {
-            nDevices: this.numberOfSuccesses,
-            nTotalDevices: this.bulkAction.deviceCount,
-          },
-          'deviceBulk.deletionCompletedWErrorTitle');
-      } else {
-        this.Notification.success('deviceBulk.deletionCompletedXDeleted',
-          {
-            nDevices: this.numberOfSuccesses,
-            nTotalDevices: this.bulkAction.deviceCount,
-          },
-          'deviceBulk.deletionCompletedTitle');
-      }
-    }
   }
 }
 
