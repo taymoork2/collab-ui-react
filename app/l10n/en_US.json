@@ -11015,18 +11015,19 @@
     },
     "license": {
       "all": "All",
+      "compliant": "Compliant",
+      "foundation": "Foundation",
       "hcsTitle": "HCS Licenses",
-      "invalid": "Invalid",
       "laas": "License Reports",
+      "nonCompliant": "Non-Compliant",
       "other": "Other",
-      "plm": "PLM Report",
+      "plmReport": "PLM Report",
       "standard": "Standard",
       "status": "Status",
       "customerReport": "Customer Report",
       "subscriptionId": "Subscription ID",
       "telepresence": "Telepresence",
-      "title": "Licenses",
-      "valid": "Valid"
+      "title": "Licenses"
     },
     "nodesList": {
       "title": "Nodes"
