@@ -24,6 +24,7 @@ var HttpStatus = require('http-status-codes');
       FAILURE: 'Failure',
       INITIALIZING: 'Initializing',
     };
+    vm.DEFAULT_QUEUE = 'Queue 1';
 
     vm.defaultQueueStatus = vm.status.UNKNOWN;
     vm.csOnboardingStatus = vm.status.UNKNOWN;
@@ -148,7 +149,7 @@ var HttpStatus = require('http-status-codes');
       vm.isQueueProcessing = true;
       URService.getQueue(vm.defaultQueueId).then(function () {
         var updateQueueRequest = {
-          queueName: 'DEFAULT',
+          queueName: vm.DEFAULT_QUEUE,
           routingType: queueConfig.routingType,
           notificationUrls: queueConfig.notificationUrls,
         };
@@ -170,7 +171,7 @@ var HttpStatus = require('http-status-codes');
         if (err.status === 404) {
           var createQueueRequest = {
             queueId: Authinfo.getOrgId(),
-            queueName: 'DEFAULT',
+            queueName: vm.DEFAULT_QUEUE,
             notificationUrls: queueConfig.notificationUrls,
             routingType: queueConfig.routingType,
           };
@@ -334,7 +335,7 @@ var HttpStatus = require('http-status-codes');
       if (vm.defaultQueueStatus !== vm.status.SUCCESS) {
         var createQueueRequest = {
           queueId: Authinfo.getOrgId(),
-          queueName: 'DEFAULT',
+          queueName: vm.DEFAULT_QUEUE,
           notificationUrls: [],
           routingType: 'pick',
         };
@@ -697,4 +698,3 @@ var HttpStatus = require('http-status-codes');
     init();
   }
 })();
-
