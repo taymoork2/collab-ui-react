@@ -1,7 +1,6 @@
 import { IStateService } from 'angular-ui-router';
 import { BulkAction, CsdmBulkService } from '../services/csdmBulk.service';
 import { IComponentController, IComponentOptions } from 'angular';
-import { Notification } from 'modules/core/notifications/notification.service';
 
 class BulkDeleteCtrl implements IComponentController {
   private dismiss: Function;
@@ -16,7 +15,6 @@ class BulkDeleteCtrl implements IComponentController {
   /* @ngInject */
   constructor(private $state: IStateService,
               private CsdmBulkService: CsdmBulkService,
-              private Notification: Notification,
               private $q) {
     this.title = this.$state.params.title;
   }
@@ -42,12 +40,6 @@ class BulkDeleteCtrl implements IComponentController {
 
   public close() {
     this.dismiss();
-    this.Notification.warning('deviceBulk.deletionCompletedXDeleted',
-      {
-        nDevices: '0',
-        nTotalDevices: _.size(this.$state.params.selectedDevices),
-      },
-      'deviceBulk.deletionStoppedTitle');
   }
 }
 

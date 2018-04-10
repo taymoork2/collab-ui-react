@@ -11186,11 +11186,6 @@
     "deleteEmptyPlaces": "Delete resulting empty places",
     "deleteEmptyPlacesExplanation": "If the last device in a place is deleted, that place will also be deleted.",
     "deleted": "Deleted",
-    "deletionStoppedTitle": "Deletion stopped by user",
-    "deletionCompletedTitle": "Deletion completed",
-    "deletionCompletedWErrorTitle": "Deletion completed with errors",
-    "deletionCompletedXDeleted": "{{nDevices}}/{{nTotalDevices}} devices were successfully deleted.",
-    "deletionFullError": "Bulk deletion failed",
     "pollProgressError": "Failures while retrieving the bulk progress"
   }
 }

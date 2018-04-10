@@ -63,8 +63,10 @@
     padding-top: 22px;
     margin-top: 28px;
     border-top: 1px solid $gray-light-4;
-    min-height: 400px;
     .ui-grid {
+      .ui-grid-viewport, .ui-grid-canvas {
+        height: unset;
+      }
       .ui-grid-row {
         &:hover {
           background-color: transparent;
