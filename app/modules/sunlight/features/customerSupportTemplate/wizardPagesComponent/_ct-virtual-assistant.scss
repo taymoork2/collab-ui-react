@@ -4,26 +4,6 @@
 .ct-virtual-assistant {
   align-items: center;
 
-  @mixin placeholder {
-    /* stylelint-disable selector-no-vendor-prefix */
-    ::-webkit-input-placeholder {
-      @content;
-    }
-
-    :-moz-placeholder {
-      @content;
-    }
-
-    ::-moz-placeholder {
-      @content;
-    }
-
-    :-ms-input-placeholder {
-      @content;
-    }
-    /* stylelint-enable selector-no-vendor-prefix */
-  }
-
   .inputField {
     @include vr-spacing(mb, 0);
 
@@ -104,12 +84,12 @@
 
       .bot-message {
         float: left;
-        font-size: 0rem;
+        font-size: 0;
         text-align: left;
         @include vr-spacing(mt, 1);
 
         .message {
-          border-radius: 5px 5px 5px 0px;
+          border-radius: 0.3125rem 0.3125rem 0.3125rem 0;
           background-color: $gray-light-3;
           display: inline-block;
           max-width: 16rem;
@@ -143,22 +123,22 @@
           }
 
           .top {
-            top: -15px;
+            top: -0.9375rem;
           }
 
           .left {
-            left: -20px;
+            left: -1.25rem;
           }
         }
       }
 
       .customer-details {
         float: right;
-        font-size: 0rem;
+        font-size: 0;
         padding-top: 2rem;
 
         .customer-message {
-          border-radius: 5px 5px 0px;
+          border-radius: 0.3125rem 0.3125rem 0;
           color: $white;
           background-color: $color-people-base;
           display: inline-block;
@@ -192,11 +172,11 @@
           }
 
           .top {
-            top: -15px;
+            top: -0.9375rem;
           }
 
           .right {
-            right: -20px;
+            right: -1.25rem;
           }
         }
       }
@@ -245,9 +225,9 @@
     }
 
     .setting-info-text {
-      font-size: 10px;
+      font-size: 0.625rem;
       letter-spacing: 0;
-      line-height: 16px;
+      line-height: 1rem;
     }
   }
 

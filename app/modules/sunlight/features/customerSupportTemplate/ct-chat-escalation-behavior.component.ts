@@ -107,7 +107,7 @@ class CtChatEscalationBehaviorController extends CtBaseController {
     const radioButtonValue = this.TemplateWizardService.isExpertEscalationSelected() ? 'required' : 'optional';
     switch (this.TemplateWizardService.selectedMediaType()) {
       case MediaTypes.CHAT: this.setRequiredValueChat(radioButtonValue); break;
-      case MediaTypes.CHATPLUSCALLBACK: this.setRequiredValueChatPlusCallback(radioButtonValue); break;
+      case MediaTypes.CHAT_PLUS_CALLBACK: this.setRequiredValueChatPlusCallback(radioButtonValue); break;
     }
     const agentPageDisabled = this.template.configuration.pages['agentUnavailable'];
     agentPageDisabled.enabled = !this.TemplateWizardService.isExpertEscalationSelected();

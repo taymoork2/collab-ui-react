@@ -66,8 +66,8 @@ describe('Test', () => {
       controller = undefined;
     });
     it('should set default promptTime, promptTitle and promptMessage', function () {
-      expect(controller.promptTime.label).toEqual('careChatTpl.promptTimeOption1');
-      expect(controller.promptTime.value).toEqual(30);
+      expect(controller.promptTime.label).toBe('careChatTpl.promptTimeOption1');
+      expect(controller.promptTime.value).toBe(30);
       expect(controller.template.configuration.proactivePrompt.fields.promptTitle.displayText)
         .toBe(orgName);
       expect(controller.template.configuration.proactivePrompt.fields.promptMessage.message)
@@ -165,7 +165,7 @@ describe('Test', () => {
 
     it('should set default promptTitle to Org Name (up-to first 50 characters only)', function () {
       expect(controller.template.configuration.proactivePrompt.fields.promptTitle.displayText)
-      .toEqual(orgName.slice(0, 50));
+      .toBe(orgName.slice(0, 50));
     });
   });
 });

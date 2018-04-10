@@ -46,6 +46,7 @@ export class TemplateWizardService {
   //TODO: to set it from the right page
   public hasConfiguredVirtualAssistantServices = false;
 
+  //TODO: assign types to the variables
   private mediaType;
   public currentState;
   public activeItem;
@@ -169,7 +170,7 @@ export class TemplateWizardService {
   public getCustomerInformationFormFields () {
     let custInfoFields;
     const type = (this.cardMode) ? this.cardMode : this.selectedMediaType();
-    if (this.selectedMediaType() !== MediaTypes.CHATPLUSCALLBACK) {
+    if (this.selectedMediaType() !== MediaTypes.CHAT_PLUS_CALLBACK) {
       custInfoFields = this.template.configuration.pages.customerInformation.fields;
     } else {
       switch (type) {
@@ -220,7 +221,7 @@ export class TemplateWizardService {
         return this.templateFactory.getDefaultChatTemplate(media);
       case MediaTypes.CALLBACK:
         return this.templateFactory.getDefaultCallbackTemplate(media);
-      case MediaTypes.CHATPLUSCALLBACK:
+      case MediaTypes.CHAT_PLUS_CALLBACK:
         return this.templateFactory.getDefaultChatPlusCallbackTemplate(media);
       default:
         return this.templateFactory.getDefaultChatTemplate(media);

@@ -5,9 +5,9 @@ import { CTService } from './services/CTService';
 
 class CtProactivePromptController extends CtBaseController {
 
-  public promptTime: any;
+  public promptTime: any; // TODO: define correct type
   public promptTimeOptions: any[];
-  private selectedMediaTypeLocal: String;
+  private selectedMediaTypeLocal: string;
 
   /* @ngInject*/
   constructor(
@@ -24,7 +24,7 @@ class CtProactivePromptController extends CtBaseController {
   }
 
   public $onInit(): void {
-    if (this.selectedMediaTypeLocal === MediaTypes.CHAT || this.selectedMediaTypeLocal === MediaTypes.CHATPLUSCALLBACK) {
+    if (this.selectedMediaTypeLocal === MediaTypes.CHAT || this.selectedMediaTypeLocal === MediaTypes.CHAT_PLUS_CALLBACK) {
       if (this.TemplateWizardService.template.configuration.proactivePrompt === undefined) {
         this.TemplateWizardService.template.configuration.proactivePrompt =
           new ProactivePrompt(this.Authinfo, this.CTService, this.$translate);

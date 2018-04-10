@@ -34,7 +34,7 @@ export class IdNameConfig {
 export enum MediaTypes {
   CHAT = 'chat',
   CALLBACK = 'callback',
-  CHATPLUSCALLBACK = 'chatPlusCallback',
+  CHAT_PLUS_CALLBACK = 'chatPlusCallback',
 }
 
 export class IdNameIconConfig {

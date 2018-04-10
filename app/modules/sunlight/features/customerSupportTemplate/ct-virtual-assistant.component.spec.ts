@@ -59,8 +59,8 @@ describe('In CVA, The controller', () => {
       id: 'testId',
     };
     controller.vaSelectionCommit();
-    expect(controller.template.configuration.virtualAssistant.config.id).toEqual(controller.selectedVA.id);
-    expect(controller.template.configuration.virtualAssistant.config.name).toEqual(controller.selectedVA.name);
+    expect(controller.template.configuration.virtualAssistant.config.id).toBe(controller.selectedVA.id);
+    expect(controller.template.configuration.virtualAssistant.config.name).toBe(controller.selectedVA.name);
   });
 
   it('should not allow to navigate next page if No VA is selected in the page', function () {
@@ -93,8 +93,8 @@ describe('In CVA, The controller', () => {
     controller.initializeCVA();
 
     expect(controller.selectedVA as CVAConfig).toEqual(VAService);
-    expect(controller.template.configuration.virtualAssistant.config.id).toEqual(VAService.id);
-    expect(controller.template.configuration.virtualAssistant.config.name).toEqual(VAService.name);
+    expect(controller.template.configuration.virtualAssistant.config.id).toBe(VAService.id);
+    expect(controller.template.configuration.virtualAssistant.config.name).toBe(VAService.name);
   });
 
   it('should disable VA if bot is deleted', function () {
