@@ -19,9 +19,9 @@
                             ng-class="careChatSA.animation">
                     </ct-name-component>
 
-                    <div ct-virtual-assistant
+                    <ct-virtual-assistant-component
                          ng-switch-when = "virtualAssistant"
-                         ng-class="careChatSA.animation"></div>
+                         ng-class="careChatSA.animation"></ct-virtual-assistant-component>
 
                    <ct-profile-component
                      ng-switch-when = "profile"
@@ -32,9 +32,9 @@
                              ng-class="careChatSA.animation">
                      </ct-overview-component>
 
-                    <div ct-proactive-prompt
+                    <ct-proactive-prompt-component
                          ng-switch-when = "proactivePrompt"
-                         ng-class="careChatSA.animation"></div>
+                         ng-class="careChatSA.animation"></ct-proactive-prompt-component>
 
                     <div ct-customer
                          ng-switch-when = "customerInformation"

@@ -1,5 +1,5 @@
 import { CtBaseController } from './ctBase.controller';
-import { IdNameIconConfig } from './factory/ctCustomerSupportClasses';
+import { CVAConfig } from './factory/ctCustomerSupportClasses';
 
 class CtProfileController extends CtBaseController {
 
@@ -12,7 +12,7 @@ class CtProfileController extends CtBaseController {
   public selectedAgentProfile: string;
   public agentNames: any;
   public userNames: any;
-  public selectedVA: IdNameIconConfig;
+  public selectedVA: CVAConfig;
   public logoFile: string;
   public logoUploaded: boolean;
   /* @ngInject*/

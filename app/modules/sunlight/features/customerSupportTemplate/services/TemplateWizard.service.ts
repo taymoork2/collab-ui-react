@@ -1,20 +1,25 @@
-import TemplateFactory from '../factory/ctCustomerSupportTemplate.factory';
-import { MediaTypes, IdNameConfig, IdNameIconConfig, VirtualAssistantConfig } from '../factory/ctCustomerSupportClasses';
+import { CTService } from './CTService';
+import { CvaService } from 'modules/sunlight/features/virtualAssistant/services/cvaService';
+import { Notification } from 'modules/core/notifications';
+import TemplateFactory from 'modules/sunlight/features/customerSupportTemplate/factory/ctCustomerSupportTemplate.factory';
+import { MediaTypes, IdNameConfig, CVAConfig,
+  VirtualAssistantConfig } from 'modules/sunlight/features/customerSupportTemplate/factory/ctCustomerSupportClasses';
 export class TemplateWizardService {
   private templateFactory;
 
   /* @ngInject */
   constructor(
     public $translate: ng.translate.ITranslateService,
+    public Notification: Notification,
     public SunlightConstantsService,
-    public CTService,
+    public CTService: CTService,
+    public CvaService: CvaService,
     public Authinfo,
     public EvaService,
-    public CvaService,
-    public Notification,
     public $window,
   ) {
     this.templateFactory = new TemplateFactory(Authinfo, CTService, $translate, SunlightConstantsService);
+    this.setInitialState();
     this.setEvaTemplateData();
     this.setCVATemplateData();
   }
@@ -27,6 +32,8 @@ export class TemplateWizardService {
 
   //TODO: each compoent will put it's validation status here
   public pageValidationResult = {
+    isProactivePromptPageValid: false,
+    isVirtualAssistantValid: false,
     isNameValid: false,
     chatStatusMsgValid: false,
     isProfileValid: false,
@@ -37,29 +44,27 @@ export class TemplateWizardService {
   };
 
   //TODO: to set it from the right page
+  public hasConfiguredVirtualAssistantServices = false;
 
+  //TODO: assign types to the variables
   private mediaType;
   public currentState;
   public activeItem;
   public cardMode;
   public template;
+  public isEvaFlagEnabled;
+  public configuredVirtualAssistantServices: CVAConfig[] = [];
   public featureFlags;
-  public isCareProactiveChatTrialsEnabled;
-  public isCareAssistantEnabled;
-
 
   // constants
   public lengthConstants = this.CTService.getLengthValidationConstants();
   public selectedAvater = 'agent';
   public isCVAEnabled = false;
-  private InvalidCharacters = /[<>]/i; // add your invalid character to this regex
   public orgName = this.Authinfo.getOrgName();
   public evaSpaceTooltipData = '';
   public evaSpaceTooltipAriaLabel = '';
   public selectedEVA = new IdNameConfig();
-  public selectedVA = new IdNameIconConfig();
-  public configuredVirtualAssistantServices = [];
-  public hasConfiguredVirtualAssistantServices = false;
+  public selectedVA = new CVAConfig();
   public logoUploaded = false;
   public logoFile = '';
 
@@ -165,11 +170,11 @@ export class TemplateWizardService {
   public getCustomerInformationFormFields () {
     let custInfoFields;
     const type = (this.cardMode) ? this.cardMode : this.selectedMediaType();
-    if (this.selectedMediaType() !== MediaTypes.chatPlusCallback) {
+    if (this.selectedMediaType() !== MediaTypes.CHAT_PLUS_CALLBACK) {
       custInfoFields = this.template.configuration.pages.customerInformation.fields;
     } else {
       switch (type) {
-        case MediaTypes.callback:
+        case MediaTypes.CALLBACK:
           custInfoFields = this.template.configuration.pages.customerInformationCallback.fields;
           break;
         default:
@@ -212,11 +217,11 @@ export class TemplateWizardService {
 
   public getDefaultTemplate(media: string): any {
     switch (media) {
-      case 'chat':
+      case MediaTypes.CHAT:
         return this.templateFactory.getDefaultChatTemplate(media);
-      case 'callback':
+      case MediaTypes.CALLBACK:
         return this.templateFactory.getDefaultCallbackTemplate(media);
-      case 'chatpluscallback':
+      case MediaTypes.CHAT_PLUS_CALLBACK:
         return this.templateFactory.getDefaultChatPlusCallbackTemplate(media);
       default:
         return this.templateFactory.getDefaultChatTemplate(media);
@@ -226,11 +231,12 @@ export class TemplateWizardService {
   public setInitialState(): void {
     //TODO: feature flags to be handled
     this.featureFlags = {
+      isProactiveFlagEnabled: true,
       isCareAssistantEnabled: true,
       isCareProactiveChatTrialsEnabled: true, //vm.isCareProactiveChatTrialsEnabled,
       isEvaFlagEnabled: true, //vm.evaConfig.isEvaFlagEnabled,
     };
-    this.states = this.CTService.getStatesBasedOnType(this.selectedMediaType(), this.featureFlags);
+    this.states = this.CTService.getStatesBasedOnType(this.selectedMediaType() as string, this.featureFlags);
     this.currentState = this.states[0];
 
     //TODO: Dummy impl:  to populate the eva config from chatEscalation page
@@ -238,7 +244,6 @@ export class TemplateWizardService {
       isEvaFlagEnabled: this.featureFlags.isEvaFlagEnabled,
       isEvaConfigured: false,
     };
-
   }
 
   public getPageIndex() {
@@ -270,7 +275,8 @@ export class TemplateWizardService {
   }
 
   public isInputValid (input) {
-    const res = !(this.InvalidCharacters.test(input));
+    const InvalidCharacters = /[<>]/i;
+    const res = !(InvalidCharacters.test(input));
     return res;
   }
 
@@ -344,7 +350,7 @@ export class TemplateWizardService {
   }
 
   public setEvaTemplateData() {
-    const evaObj = this.EvaService.listExpertAssistants();
+    const evaObj = this.EvaService.listExpertAssistants(this.Authinfo.getOrgId());
     evaObj.then((data) => {
       if (data && data.items && data.items.length >= 1) {
         this.evaConfig.isEvaConfigured = true;
@@ -367,8 +373,7 @@ export class TemplateWizardService {
   }
 
   public vaSelectionCommit() {
-    this.template.configuration.virtualAssistant.config.id = this.selectedVA.id;
-    this.template.configuration.virtualAssistant.config.name = this.selectedVA.name;
+    this.template.configuration.virtualAssistant.config = this.selectedVA;
   }
 
   public populateVirtualAssistantInfo() {
@@ -387,13 +392,16 @@ export class TemplateWizardService {
         this.selectedVA.icon = selectedVAFound.icon;
         this.vaSelectionCommit();
       } else {
-        this.template.configuration.virtualAssistant = new VirtualAssistantConfig(this.$translate);
-        this.selectedVA = this.template.configuration.virtualAssistant.config;
+        this.resetVA();
       }
     } else {
-      this.template.configuration.virtualAssistant = new VirtualAssistantConfig(this.$translate);
-      this.selectedVA = this.template.configuration.virtualAssistant.config;
+      this.resetVA();
     }
+  }
+
+  private resetVA () {
+    this.template.configuration.virtualAssistant = new VirtualAssistantConfig(this.$translate);
+    this.selectedVA = this.template.configuration.virtualAssistant.config;
   }
 
   public setCVATemplateData() {
@@ -401,27 +409,28 @@ export class TemplateWizardService {
       this.logoFile = 'data:image/png;base64,' + this.$window.btoa(String.fromCharCode.apply(null, new Uint8Array(data.data)));
       this.logoUploaded = true;
     });
-    //Should invoke VA config only for chat and chat+callback templates
-    if (this.isCareAssistantEnabled && this.selectedMediaType() !== MediaTypes.callback) {
-      this.CvaService.listConfigs().then((result) => {
-        this.configuredVirtualAssistantServices = result.items;
-        this.hasConfiguredVirtualAssistantServices = (this.configuredVirtualAssistantServices.length > 0);
+     //Should invoke VA config only for chat and chat+callback templates
+    if (!(this.featureFlags.isCareAssistantEnabled && this.selectedMediaType() !== MediaTypes.CALLBACK)) {
+      return;
+    }
+    this.CvaService.listConfigs(this.Authinfo.getOrgId())
+      .then((result) => {
+        this.configuredVirtualAssistantServices = _.sortBy(result.items, (item) => item.name);
+        this.hasConfiguredVirtualAssistantServices = !_.isEmpty(this.configuredVirtualAssistantServices);
         //if the virtual assistant list has only one VA available. use it by default.
         if (this.configuredVirtualAssistantServices.length === 1 && !this.isEditFeature) {
           const data: any = this.configuredVirtualAssistantServices[0];
-          this.selectedVA = this.selectedVA || {};
-          this.selectedVA.id = data.id;
-          this.selectedVA.name = data.name;
-
+          this.selectedVA = _.assignIn(new CVAConfig, data);
           this.vaSelectionCommit();
         } else if (this.isEditFeature) {
           this.populateVirtualAssistantInfo();
         }
-      }, function (error) {
+      })
+      .catch ((error) => {
         this.configuredVirtualAssistantServices = [];
+        this.hasConfiguredVirtualAssistantServices = false;
         this.Notification.errorWithTrackingId(error, 'careChatTpl.getVirtualAssistantListError');
       });
-    }
   }
 
   public isExpertOnlyEscalationSelected() {

@@ -3,26 +3,6 @@
 .ct-feedback {
   align-items: center;
 
-  @mixin placeholder {
-    /* stylelint-disable selector-no-vendor-prefix */
-    ::-webkit-input-placeholder {
-      @content;
-    }
-
-    :-moz-placeholder {
-      @content;
-    }
-
-    ::-moz-placeholder {
-      @content;
-    }
-
-    :-ms-input-placeholder {
-      @content;
-    }
-    /* stylelint-enable selector-no-vendor-prefix */
-  }
-
   .ct-left-row {
     &:hover {
       background-color: $color-primary-lighter;

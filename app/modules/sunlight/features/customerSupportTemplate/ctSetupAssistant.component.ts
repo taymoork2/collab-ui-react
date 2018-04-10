@@ -50,7 +50,7 @@ class CtSetupAssistantCtrl extends CtBaseController  {
   }
 
   private isProactivePromptPageValid() {
-    return true;
+    return this.TemplateWizardService.pageValidationResult.isProactivePromptPageValid || false;
   }
 
   private isNamePageValid(): boolean {
@@ -78,7 +78,7 @@ class CtSetupAssistantCtrl extends CtBaseController  {
   }
 
   private isVirtualAssistantPageValid() {
-    return true;
+    return this.TemplateWizardService.pageValidationResult.isVirtualAssistantValid || false;
   }
 
   private isChatEscalationBehaviorPageValid() {
