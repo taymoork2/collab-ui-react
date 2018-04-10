@@ -1,0 +1,6 @@
+<div class="ui-grid-cell-contents" ng-if="row.entity.createdByName === null">
+  <div cs-loader class="waiting" />
+</div>
+<div class="ui-grid-cell-contents" ng-if="row.entity.createdByName !== null">
+  {{row.entity.createdByName}}
+</div>
