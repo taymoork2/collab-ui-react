@@ -10,7 +10,7 @@ require('./_user-csv.scss');
   /* @ngInject */
   function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, $previousState,
     Analytics, Authinfo, Config, CsvDownloadService, HuronCustomer, LogMetricsService, NAME_DELIMITER, OnboardService,
-    Notification, ServiceDescriptorService, PhoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService, DirSyncService,
+    Notification, PhoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService, DirSyncService,
     FeatureToggleService) {
     // variables
     var vm = this;
@@ -66,21 +66,7 @@ require('./_user-csv.scss');
     var processingError;
     var headers;
     var idIndex;
-    var isCalendarServiceEnabled = false;
-    var isCalendarOrCallServiceEntitled = false;
-
-    ServiceDescriptorService.getServices()
-      .then(function (services) {
-        _.forEach(services, function (service) {
-          if (service.id === Config.entitlements.fusion_cal) {
-            isCalendarServiceEnabled = service.enabled;
-            isCalendarOrCallServiceEntitled = true;
-          } else if (service.id === Config.entitlements.fusion_uc) {
-            isCalendarOrCallServiceEntitled = true;
-          }
-        });
-        vm.handleHybridServicesResourceGroups = isCalendarOrCallServiceEntitled;
-      });
+    vm.handleHybridServicesResourceGroups = Authinfo.isFusionUC() || Authinfo.isFusionCal() || Authinfo.isFusionIMP();
 
     var bulkStartLog = null;
     var hasVoicemailService = false;
@@ -747,19 +733,17 @@ require('./_user-csv.scss');
             } else if (_.isArray(header.entitlements) && header.entitlements.length > 0) {
               if (isTrue(input) || isFalse(input)) {
                 _.forEach(header.entitlements, function (entitlement) {
-                  // if lincense is Calendar Service, only process if it is enabled
-                  if (entitlement.toUpperCase().indexOf('SQUAREDFUSIONCAL') === -1 || isCalendarServiceEnabled) {
-                    if (isTrue(input)) {
-                      if (hasMutuallyExclusiveCalendarEntitlements(entitlement, entitleList)) {
-                        processingError = true;
-                        addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.mutuallyExclusiveCalendarEntitlements'));
-                      } else {
-                        entitleList.push(new Feature(entitlement, true));
-                      }
-                    } else if (isFalse(input)) {
-                      if (vm.model.enableRemove) {
-                        entitleList.push(new Feature(entitlement, false));
-                      }
+                  // if license is Calendar Service, only process if it is enabled
+                  if (isTrue(input)) {
+                    if (hasMutuallyExclusiveCalendarEntitlements(entitlement, entitleList)) {
+                      processingError = true;
+                      addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.mutuallyExclusiveCalendarEntitlements'));
+                    } else {
+                      entitleList.push(new Feature(entitlement, true));
+                    }
+                  } else if (isFalse(input)) {
+                    if (vm.model.enableRemove) {
+                      entitleList.push(new Feature(entitlement, false));
                     }
                   }
                 });
