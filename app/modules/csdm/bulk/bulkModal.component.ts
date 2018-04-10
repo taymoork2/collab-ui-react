@@ -14,13 +14,11 @@ interface IBulkFailureData {
 class BulkModalCtrl implements ng.IComponentController {
   private failuresData: IBulkFailureData[] = [];
   public dismiss: Function;
-  public gridApi: uiGrid.IGridApi;
   public numberOfSuccesses = 0;
   public numberOfErrors = 0;
   public progress = 0;
   public actionName;
   public startTime;
-  public gridOptions: uiGrid.IGridOptionsOf<IBulkFailureData>;
   public bulkResult: IBulkResponse;
   public bulkActionPoller: IPromise<void>;
   private bulkAction: BulkAction;
@@ -35,7 +33,7 @@ class BulkModalCtrl implements ng.IComponentController {
   }
 
   public get hasErrors() {
-    return this.gridOptions.data && this.gridOptions.data.length > 0;
+    return _.some(this.failuresData);
   }
 
   /* @ngInject */
@@ -50,20 +48,7 @@ class BulkModalCtrl implements ng.IComponentController {
   public $onInit() {
     this.actionName = this.$stateParams.bulkAction.actionName;
     this.bulkAction = this.$stateParams.bulkAction;
-    this.initGrid();
     this.perform();
-  }
-
-  public initGrid() {
-    this.gridOptions = {
-      rowHeight: 45,
-      enableVerticalScrollbar: false,
-      columnDefs: [
-        { displayName: this.$translate.instant('spacesPage.nameHeader'), name: 'name', width: 200 },
-        { displayName: this.$translate.instant('common.errors'), name: 'error', width: '*', cellTooltip: true }],
-      enableSorting: false,
-      enableMinHeightCheck: false,
-    };
   }
 
   public perform() {
@@ -122,14 +107,12 @@ class BulkModalCtrl implements ng.IComponentController {
           .then((result: IHttpResponse<IDevice>) => {
             if (!_.some(this.failuresData, ['url', url])) {
               this.failuresData.push({ url: url, error: failure.message, name: result.data.displayName });
-              this.gridOptions.data = this.failuresData;
             }
           })
           .catch(() => {
             if (!_.some(this.failuresData, ['url', url])) {
               this.failuresData.push(
                 { url: url, error: failure.message, name: this.$translate.instant('common.unknown') });
-              this.gridOptions.data = this.failuresData;
             }
           });
       }
