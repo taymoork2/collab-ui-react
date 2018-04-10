@@ -28,7 +28,7 @@ describe('ContextAdminAuthorizationService', () => {
   });
 
   describe('getAdminAuthorizationStatus', () => {
-    const ADMIN_AUTHORIZATION_URL = [CCFS_URL, 'AdminAuthorizationStatus/12345'].join('');
+    const ADMIN_AUTHORIZATION_URL = [CCFS_URL, 'admin/authorizationStatus/12345'].join('');
     describe('Feature flag is on', () => {
       beforeEach(function () {
         spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
