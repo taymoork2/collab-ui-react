@@ -47,8 +47,18 @@
     <i class="icon icon-spinner icon-4x"></i>
   </div>
   <div ng-if="$ctrl.showSearch" class="convert-users__bottom-space--50">
-    <span ng-class="['h5 convert-users__grid-filter', $ctrl.isPotentialTabSelected() ? 'convert-users__grid-filter--active' : 'convert-users__grid-filter--inactive']" ng-click="$ctrl.selectTab($ctrl.POTENTIAL)" translate="convertUsersModal.tab.potential"></span>
-    <span ng-class="['h5 convert-users__grid-filter', $ctrl.isPendingTabSelected() ? 'convert-users__grid-filter--active' : 'convert-users__grid-filter--inactive']" ng-click="$ctrl.selectTab($ctrl.PENDING)" translate="convertUsersModal.tab.pending"></span>
+    <span
+      ng-class="['h5 convert-users__grid-filter', $ctrl.isPotentialTabSelected() ? 'convert-users__grid-filter--active' : 'convert-users__grid-filter--inactive']"
+      ng-click="$ctrl.selectTab($ctrl.POTENTIAL)"
+      translate="convertUsersModal.tab.potential"
+      translate-value-count="{{$ctrl.getPotentialUsersList().length}}">
+    </span>
+    <span
+      ng-class="['h5 convert-users__grid-filter', $ctrl.isPendingTabSelected() ? 'convert-users__grid-filter--active' : 'convert-users__grid-filter--inactive']"
+      ng-click="$ctrl.selectTab($ctrl.PENDING)"
+      translate="convertUsersModal.tab.pending"
+      translate-value-count="{{$ctrl.getPendingUsersList().length}}">
+    </span>
     <div ng-show="$ctrl.isPendingTabSelected() && ($ctrl.getSelectedListCount() > 0)" class="h5 convert-users__csvDownload">
       <csv-simple-export
         anchor-text="{{::'convertUsersModal.csv' | translate}}"

@@ -7,8 +7,14 @@ import OnboardStore from 'modules/core/users/shared/onboard/onboard.store';
 
 interface IConversionStatus {
   type: string;
-  jsonKey: string;
+  key: string;
   cellVal: string | Function;
+}
+
+interface ICsvRow {
+  name: string;
+  email: string;
+  status: string;
 }
 
 export class CrConvertUsersModalController implements ng.IComponentController {
@@ -25,23 +31,12 @@ export class CrConvertUsersModalController implements ng.IComponentController {
   public ftF7208: boolean;
   public POTENTIAL: string = 'potential';
   public PENDING: string = 'pending';
-  public conversionStatus: IConversionStatus[];
-  public daysToConvert: number = 14;  // How many days does a user have to convert their account?b
-  public exportCSV: Function;
-  public getPendingUsersList: Function;
-  public getPotentialUsersList: Function;
-  public getSelectedTab: Function;
-  public getSelectedList: Function;
-  public getSelectedListCount: Function;
-  public getStatusText: Function;
-  public isPotentialTabSelected: Function;
-  public isPendingTabSelected: Function;
-  public selectTab: Function;
+  public conversionStatusMap: IConversionStatus[];
+  public daysToConvert: number = 14;  // How many days does a user have to convert their account?
 
-  private selectedTab: string = 'potential';
+  private selectedTab: string = this.POTENTIAL;
   private gridPotentialUsers: uiGrid.IGridOptions;
   private gridPendingUsers: uiGrid.IGridOptions;
-  private addGridColumns: Function;
 
   /* @ngInject */
   constructor(
@@ -108,11 +103,12 @@ export class CrConvertUsersModalController implements ng.IComponentController {
     };
 
     // F7208 - convert users Modal work...
-    this.conversionStatus = [
-      { type: this.POTENTIAL, jsonKey: 'IMMEDIATE', cellVal: this.$translate.instant('convertUsersModal.status.immediate') },
-      { type: this.POTENTIAL, jsonKey: 'DELAYED', cellVal: this.$translate.instant('convertUsersModal.status.delayed') },
-      { type: this.PENDING, jsonKey: 'TRANSIENT', cellVal: user => { return _.get(user, 'meta.created'); } },
+    this.conversionStatusMap = [
+      { type: this.POTENTIAL, key: 'IMMEDIATE', cellVal: this.$translate.instant('convertUsersModal.status.immediate') },
+      { type: this.POTENTIAL, key: 'DELAYED', cellVal: this.$translate.instant('convertUsersModal.status.delayed') },
+      { type: this.PENDING, key: 'TRANSIENT', cellVal: user => { return _.get(user, 'meta.created'); } },
     ];
+
     // grid option data
     this.gridPotentialUsers = {
       data: undefined,
@@ -129,9 +125,10 @@ export class CrConvertUsersModalController implements ng.IComponentController {
             this.gridApi.saveState.restore(this.$scope, this.scopeData.selectedState);
           }, DELAY_100_MS);
         }
-        this.$timeout(gridApi.core.handleWindowResize, 200);
+        this.$timeout(gridApi.core.handleWindowResize, DELAY_200_MS);
       },
     };
+
     this.gridPendingUsers = {
       data: undefined,
       rowHeight: 45,
@@ -143,103 +140,6 @@ export class CrConvertUsersModalController implements ng.IComponentController {
         this.gridApi = gridApi;
       },
     };
-    // helper function for building grid options
-    this.addGridColumns = grid => {
-      grid.columnDefs = [{
-        field: 'displayName',
-        displayName: this.$translate.instant('convertUsersModal.tableHeader.name'),
-        resizable: false,
-        sortable: true,
-      }, {
-        field: 'userName',
-        displayName: this.$translate.instant('convertUsersModal.tableHeader.email'),
-        resizable: false,
-        sort: {
-          direction: this.uiGridConstants.ASC,
-          priority: 0,
-        },
-        sortCellFiltered: true,
-      }, {
-        field: 'statusText',
-        displayName: this.$translate.instant('convertUsersModal.tableHeader.status'),
-        resizable: false,
-        sort: {
-          priority: 0,
-        },
-        sortCellFiltered: true,
-      }];
-    };
-    this.exportCSV = () => {
-      return this.$q((resolve) => {
-        const csv: object[] = [];
-
-        // push column headers
-        const row: object = {};
-        _.forEach(['name', 'email', 'status'], (key: string) => {
-          row[key] = this.$translate.instant('convertUsersModal.tableHeader.' + key);
-        });
-        csv.push(row);
-
-        // push row data
-        _.forEach(this.getPendingUsersList(), function (o) {
-          csv.push({
-            name: o.displayName || '',
-            email: o.userName || '',
-            status: o.statusText || '',
-          });
-        });
-
-        resolve(csv);
-      });
-    };
-    this.getPendingUsersList = () => {
-      return _.get(this, 'gridPendingUsers.data', []);
-    };
-    this.getPotentialUsersList = () => {
-      return _.get(this, 'gridPotentialUsers.data', []);
-    };
-    this.getSelectedTab = () => {
-      return this.selectedTab;
-    };
-    this.getSelectedList = () => {
-      switch (this.getSelectedTab()) {
-        case this.PENDING:
-          return this.getPendingUsersList();
-        case this.POTENTIAL:
-          return this.getPotentialUsersList();
-      }
-      return [];
-    };
-    this.getSelectedListCount = () => {
-      return this.getSelectedList().length;
-    };
-    // getStatusText - map between backend JSON key values and translated text (to be shown in grid cells)
-    this.getStatusText = (user) => {
-      const status: any = _.find(this.conversionStatus, { jsonKey: user.conversionStatus });
-      if (_.isUndefined(status)) {
-        return '';
-      }
-
-      if (_.isFunction(status.cellVal)) {
-        return status.cellVal(user);
-      }
-
-      return status.cellVal || '';
-    };
-    this.isPotentialTabSelected = () => {
-      return this.getSelectedTab() === this.POTENTIAL;
-    };
-    this.isPendingTabSelected = () => {
-      return this.getSelectedTab() === this.PENDING;
-    };
-    this.selectTab = (tab) => {
-      if ([this.PENDING, this.POTENTIAL].indexOf(tab) !== -1) {
-        this.saveConvertList();
-        this.selectedTab = tab;
-        return true;
-      }
-      return false;
-    };
 
     this.addGridColumns(this.gridPotentialUsers);
     this.addGridColumns(this.gridPendingUsers);
@@ -248,6 +148,110 @@ export class CrConvertUsersModalController implements ng.IComponentController {
       this.ftF7208 = supported;
       this.getUnlicensedUsers();
     });
+  }
+
+  // helper function for building grid options
+  private addGridColumns(grid): void {
+    grid.columnDefs = [{
+      field: 'displayName',
+      displayName: this.$translate.instant('convertUsersModal.tableHeader.name'),
+    }, {
+      field: 'userName',
+      displayName: this.$translate.instant('convertUsersModal.tableHeader.email'),
+      sort: {
+        direction: this.uiGridConstants.ASC,
+        priority: 0,
+      },
+      sortCellFiltered: true,
+    }, {
+      field: 'statusText',
+      displayName: this.$translate.instant('convertUsersModal.tableHeader.status'),
+      sort: {
+        priority: 0,
+      },
+      sortCellFiltered: true,
+    }];
+  }
+
+  public exportCSV(): ng.IPromise<ICsvRow[]> {
+    return this.$q((resolve) => {
+      const csv: ICsvRow[] = [];
+
+      // push column headers
+      csv.push({
+        name: this.$translate.instant('convertUsersModal.tableHeader.name'),
+        email: this.$translate.instant('convertUsersModal.tableHeader.email'),
+        status: this.$translate.instant('convertUsersModal.tableHeader.status'),
+      });
+
+      // push row data
+      _.forEach(this.getPendingUsersList(), function (o) {
+        csv.push({
+          name: o.displayName || '',
+          email: o.userName || '',
+          status: o.statusText || '',
+        });
+      });
+
+      resolve(csv);
+    });
+  }
+
+  public getPendingUsersList(): any[] {
+    return _.get(this, 'gridPendingUsers.data', []);
+  }
+
+  public getPotentialUsersList(): any[] {
+    return _.get(this, 'gridPotentialUsers.data', []);
+  }
+
+  public getSelectedTab(): string {
+    return this.selectedTab;
+  }
+
+  public getSelectedList(): any[] {
+    switch (this.getSelectedTab()) {
+      case this.PENDING:
+        return this.getPendingUsersList();
+      case this.POTENTIAL:
+        return this.getPotentialUsersList();
+    }
+    return [];
+  }
+
+  public getSelectedListCount(): number {
+    return this.getSelectedList().length;
+  }
+
+  // getStatusText - map between backend JSON key values and translated text (to be shown in grid cells)
+  public getStatusText(user): string {
+    const status: any = _.find(this.conversionStatusMap, { key: user.conversionStatus });
+    if (_.isUndefined(status)) {
+      return '';
+    }
+
+    if (_.isFunction(status.cellVal)) {
+      return status.cellVal(user);
+    }
+
+    return status.cellVal || '';
+  }
+
+  public isPotentialTabSelected(): boolean {
+    return this.getSelectedTab() === this.POTENTIAL;
+  }
+
+  public isPendingTabSelected(): boolean {
+    return this.getSelectedTab() === this.PENDING;
+  }
+
+  public selectTab(tab): boolean {
+    if ([this.PENDING, this.POTENTIAL].indexOf(tab) !== -1) {
+      this.saveConvertList();
+      this.selectedTab = tab;
+      return true;
+    }
+    return false;
   }
 
   public get convertUsersReadOnly(): boolean {
@@ -267,9 +271,9 @@ export class CrConvertUsersModalController implements ng.IComponentController {
           const potentialList: any[] = [];
           _.forEach(data.resources, user => {
             user.statusText = this.getStatusText(user);
-            if (_.findIndex(this.conversionStatus, { type: this.POTENTIAL, jsonKey: user.conversionStatus }) !== -1) {
+            if (_.some(this.conversionStatusMap, { type: this.POTENTIAL, key: user.conversionStatus })) {
               potentialList.push(user);
-            } else if (_.findIndex(this.conversionStatus, { type: this.PENDING, jsonKey: user.conversionStatus }) !== -1) {
+            } else if (_.some(this.conversionStatusMap, { type: this.PENDING, key: user.conversionStatus })) {
               pendingList.push(user);
             }
           });

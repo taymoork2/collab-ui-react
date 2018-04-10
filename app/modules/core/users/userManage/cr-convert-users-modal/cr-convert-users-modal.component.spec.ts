@@ -10,7 +10,6 @@ type Test = atlas.test.IComponentTest<CrConvertUsersModalController, {
   AutoAssignTemplateModel;
   DirSyncService;
   FeatureToggleService;
-  mock;
   OnboardStore;
   Orgservice;
   uiGridConstants;
@@ -40,7 +39,7 @@ describe('Component: crConvertUsersModal:', () => {
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
 
     this.mock = {
-      unlicensedUsers: getJSONFixture('core/json/organizations/unlicensedUsers.json'),
+      unlicensedUsers: _.cloneDeep(getJSONFixture('core/json/organizations/unlicensedUsers.json')),
     };
 
     spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(callback => {
@@ -217,36 +216,33 @@ describe('Component: crConvertUsersModal:', () => {
     });
 
     describe('F7208 GDPR feature', function () {
-      it('should set ftF7208 to true when feature toggle on', function () {
+      it('should set ftF7208 to true when feature toggle on', function (this: Test) {
         this.FeatureToggleService.supports.and.callFake(toggle => {
           return this.$q.resolve(toggle === this.FeatureToggleService.features.atlasF7208GDPRConvertUser);
         });
         this.compileComponent('crConvertUsersModal', {});
-        this.$scope.$apply();
         expect(this.controller.ftF7208).toBe(true);
         expect(this.controller.getPotentialUsersList().length).toBe(0);
         expect(this.controller.getPendingUsersList().length).toBe(0);
       });
 
-      it('should set ftF7208 to false when feature toggle off', function () {
+      it('should set ftF7208 to false when feature toggle off', function (this: Test) {
         this.compileComponent('crConvertUsersModal', {});
-        this.$scope.$apply();
         expect(this.controller.ftF7208).toBe(false);
         expect(this.controller.getPendingUsersList().length).toBe(0);
         expect(this.controller.getPotentialUsersList().length).toBe(0);
       });
 
-      describe('tab switching', function () {
+      describe('tab switching', function (this: Test) {
         beforeEach(function () {
           this.FeatureToggleService.supports.and.callFake(toggle => {
             return this.$q.resolve(toggle === this.FeatureToggleService.features.atlasF7208GDPRConvertUser);
           });
           this.compileComponent('crConvertUsersModal', {});
           initFakeGridApi.call(this);
-          this.$scope.$apply();
         });
 
-        it('should change tabs when "selectTab" method used', function () {
+        it('should change tabs when "selectTab" method used', function (this: Test) {
           expect(this.controller.getSelectedTab()).toBe(this.controller.POTENTIAL); // default selection
           expect(this.controller.isPotentialTabSelected()).toBe(true);
           expect(this.controller.isPendingTabSelected()).toBe(false);

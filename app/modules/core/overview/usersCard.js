@@ -24,16 +24,32 @@
         card.isUpdating = true;
         card.showLicenseCard = false;
         card.isDirsyncEnabled = false;
+        card.deferredFT = $q.defer(); // only process unlicensed data after featureToggles resolve
 
         card.unlicensedUsersHandler = function (data) {
           if (data.success) {
-            // for now use the length to get the count as there is a bug in CI and totalResults is not accurate.
-            card.usersToConvert = Math.max((data.resources || []).length, data.totalResults);
-            if (card.usersToConvert === 0) {
-              card.name = 'overview.cards.licenses.title';
-              card.showLicenseCard = true;
-              getUnassignedLicenses();
-            }
+            card.deferredFT.promise.then(function () {
+              if (card.features.atlasF7208GDPRConvertUser) {
+                card.potentialConversions = 0;
+                card.pendingConversions = 0;
+                _.forEach(data.resources, function (user) {
+                  if (user.conversionStatus === 'IMMEDIATE' || user.conversionStatus === 'DELAYED') {
+                    card.potentialConversions += 1;
+                  } else if (user.conversionStatus == 'TRANSIENT') {
+                    card.pendingConversions += 1;
+                  }
+                });
+                card.usersToConvert = card.pendingConversions + card.potentialConversions;
+              } else {
+                // for now use the length to get the count as there is a bug in CI and totalResults is not accurate.
+                card.usersToConvert = Math.max((data.resources || []).length, data.totalResults);
+              }
+              if (card.usersToConvert === 0) {
+                card.name = 'overview.cards.licenses.title';
+                card.showLicenseCard = true;
+                getUnassignedLicenses();
+              }
+            });
           }
         };
 
@@ -207,6 +223,7 @@
           return $q.all({
             atlasF3745AutoAssignLicenses: FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus(),
             atlasF6980MultiDirSync: FeatureToggleService.atlasF6980MultiDirSyncGetStatus(),
+            atlasF7208GDPRConvertUser: FeatureToggleService.atlasF7208GDPRConvertUserGetStatus(),
             autoLicense: FeatureToggleService.autoLicenseGetStatus(),
           }).then(function (features) {
             card.features = features;
@@ -215,6 +232,7 @@
         }
 
         function initAutoAssignTemplate() {
+          card.deferredFT.resolve();
           if (card.features.atlasF3745AutoAssignLicenses) {
             card.name = 'overview.cards.users.onboardTitle';
             getNumberOnboardedUsers();
