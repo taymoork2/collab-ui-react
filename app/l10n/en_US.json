@@ -1790,7 +1790,11 @@
   "time": {
     "seconds": "{time, plural, =1{# second} other{# seconds}}",
     "minutes": "{time, plural, =1{# minute} other{# minutes}}",
-    "hours": "{time, plural, =1{# hour} other{# hours}}"
+    "hours": "{time, plural, =1{# hour} other{# hours}}",
+    "abbreviatedCap": {
+      "seconds": "{time, plural, =1{# Sec} other{# Secs}}",
+      "minutes": "{time, plural, =1{# Min} other{# Mins}}"
+    }
   },
   "callDestination": {
     "numberFormat": "Number Format",

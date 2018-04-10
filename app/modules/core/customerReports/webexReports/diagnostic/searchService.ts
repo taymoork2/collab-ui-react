@@ -270,15 +270,15 @@ export class SearchService {
     if (!deltaInMs) {
       return '';
     }
+    let result = '';
     const duration = moment.duration(deltaInMs);
-    let min = this.$translate.instant('webexReports.minute');
-    let sec = this.$translate.instant('webexReports.second');
-    if (duration.minutes() > 1) {
-      min = this.$translate.instant('webexReports.minutes');
+    if (Math.floor(duration.asMinutes())) {
+      const minutes = Math.ceil(duration.asMinutes());
+      result = this.$translate.instant('time.abbreviatedCap.minutes', { time: minutes }, 'messageformat');
+    } else {
+      const seconds = Math.floor(duration.asSeconds());
+      result = this.$translate.instant('time.abbreviatedCap.seconds', { time: seconds }, 'messageformat');
     }
-    if (!duration.minutes() && duration.seconds() > 1) {
-      sec = this.$translate.instant('webexReports.seconds');
-    }
-    return (duration.minutes()) ? `${duration.minutes()} ${min}` : `${duration.seconds()} ${sec}`;
+    return result;
   }
 }
