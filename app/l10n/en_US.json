@@ -11032,15 +11032,23 @@
     "license": {
       "all": "All",
       "compliant": "Compliant",
+      "customerReport": "Customer Report",
       "foundation": "Foundation",
       "hcsTitle": "HCS Licenses",
       "laas": "License Reports",
-      "nonCompliant": "Non-Compliant",
+      "nonCompliant": "Non-compliant",
       "other": "Other",
-      "plmReport": "PLM Report",
+      "plmReport": {
+        "title": "PLM Report",
+        "plmId": "PLM ID",
+        "plmName": "PLM",
+        "basicLicense": "Basic",
+        "essentialLicense": "Essential",
+        "foundationLicense": "Foundation",
+        "standardLicense": "Standard"
+      },
       "standard": "Standard",
       "status": "Status",
-      "customerReport": "Customer Report",
       "subscriptionId": "Subscription ID",
       "telepresence": "Telepresence",
       "title": "Licenses"

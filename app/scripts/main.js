@@ -293,6 +293,7 @@
     require('modules/hcs/hcs-upgrade/upgrade-group').default,
     require('modules/hcs/agent-install-files-list').default,
     require('modules/hcs/hcs-licenses/hcs-licenses-subscription').default,
+    require('modules/hcs/hcs-licenses/hcs-licenses-plm-report').default,
     require('modules/hcs/setup').default,
   ]);
 
