@@ -9,6 +9,7 @@ describe('Controller: OverviewCtrl', function () {
       '$rootScope',
       '$scope',
       '$state',
+      '$location',
       '$translate',
       'Authinfo',
       'AutoAssignTemplateService',
@@ -30,7 +31,8 @@ describe('Controller: OverviewCtrl', function () {
       'LocalStorage',
       'TrialService',
       'LinkedSitesService',
-      'EvaService'
+      'EvaService',
+      'SsoCertificateService'
     );
 
     this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/1/v1/Users/me').respond(200);
@@ -39,6 +41,7 @@ describe('Controller: OverviewCtrl', function () {
     this.usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
     this.services = getJSONFixture('squared/json/services.json');
     this.PSTN_ESA_DISCLAIMER_ACCEPT = require('modules/huron/pstn/pstn.const').PSTN_ESA_DISCLAIMER_ACCEPT;
+    this.certificateTestData = _.cloneDeep(getJSONFixture('core/json/sso/test-certificates.json'));
 
     spyOn(this.Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue([{
       license: {
@@ -119,6 +122,7 @@ describe('Controller: OverviewCtrl', function () {
         $rootScope: this.$rootScope,
         $scope: this.$scope,
         $state: this.$state,
+        $location: this.$location,
         $translate: this.$translate,
         Authinfo: this.Authinfo,
         Config: this.Config,
@@ -140,6 +144,7 @@ describe('Controller: OverviewCtrl', function () {
         TrialService: this.TrialService,
         LinkedSitesService: this.LinkedSitesService,
         EvaService: this.EvaService,
+        SsoCertificateService: this.SsoCertificateService,
       });
       this.$scope.$apply();
     };
@@ -508,6 +513,34 @@ describe('Controller: OverviewCtrl', function () {
       spyOn(this.EvaService, 'getMissingDefaultSpaceEva').and.returnValue(this.$q.resolve());
       this.initController();
       expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS);
+    });
+  });
+
+  describe('updateSsoCertificateNow search param', function () {
+    it('should be removed if present', function () {
+      spyOn(this.$location, 'search').and.returnValue({
+        updateSsoCertificateNow: 'true',
+      });
+      this.initController();
+      expect(this.$location.search).toHaveBeenCalledWith('updateSsoCertificateNow', null);
+    });
+
+    it('should open sso-certificate.sso-certificate-check dialog', function () {
+      spyOn(this.$location, 'search').and.returnValue({
+        updateSsoCertificateNow: 'true',
+      });
+      var orgData = _.cloneDeep(this.orgServiceJSONFixture.getOrgNoSip);
+      orgData.ssoEnabled = true;
+      this.Orgservice.getOrg.and.returnValue(this.$q.resolve({ data: orgData }));
+
+      var orgCertificates = _.cloneDeep(this.certificateTestData.orgCertificates);
+      orgCertificates.expirationDate = moment().format(); // make sure the expiration date is today
+
+      spyOn(this.SsoCertificateService, 'getOrgCertificates').and.returnValue(this.$q.resolve(orgCertificates));
+      spyOn(this.$state, 'go').and.callFake(_.noop);
+
+      this.initController();
+      expect(this.$state.go).toHaveBeenCalledWith('sso-certificate.sso-certificate-check');
     });
   });
 });
