@@ -70,8 +70,8 @@
             <i class="icon icon-warning"></i>
           </div>
           <div class="alert-text-container">
-            <p>If you add {{'hercules.hybridServiceNames.' + vm.serviceId | translate}} to this Expressway cluster, its capacity will be reduced for running Hybrid Services.</p>
-            <p>None of your users will lose service.</p>
+            <p translate="hercules.addResourceDialog.capacityReduced" translate-value-service="{{vm.getServiceNameKey(vm.serviceId)}}"></p>
+            <p translate="hercules.addResourceDialog.noServiceLost"></p>
           </div>
         </div>
         <div ng-if="vm.numberOfUsersWithoutService > 0">
@@ -79,9 +79,9 @@
             <i class="icon icon-error"></i>
           </div>
           <div class="alert-text-container">
-            <p ng-if="!vm.resourceGroupName">Action Not Allowed: If you add {{'hercules.hybridServiceNames.' + vm.serviceId | translate}} to this Expressway cluster, it will exceed the capacity limits for running other Hybrid Services. {{vm.numberOfUsersWithoutService}} users will lose service.</p>
-            <p ng-if="vm.resourceGroupName">Action Not Allowed: If you add {{'hercules.hybridServiceNames.' + vm.serviceId | translate}} to this Expressway cluster, it will exceed the capacity limits for running other Hybrid Services. {{vm.numberOfUsersWithoutService}} users in Resource Group {{vm.resourceGroupName}} will lose service.</p>
-            <p>Please select another cluster or register a new one.</p>
+            <p ng-if="!vm.resourceGroupName" translate="hercules.addResourceDialog.actionNotAllowedWithoutResourceGroup" translate-value-service="{{vm.getServiceNameKey(vm.serviceId)}}" translate-value-users="{{vm.numberOfUsersWithoutService}}"></p>
+            <p ng-if="vm.resourceGroupName" translate="hercules.addResourceDialog.actionNotAllowedWithResourceGroup" translate-value-service="{{vm.getServiceNameKey(vm.serviceId)}}" translate-value-users="{{vm.numberOfUsersWithoutService}}" translate-value-name="{{vm.resourceGroupName}}"></p>
+            <p translate="hercules.addResourceDialog.serviceLost"></p>
         </div>
       </div>
     </div>

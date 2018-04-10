@@ -2482,7 +2482,12 @@
       "partnersCannotConfigureClusters": "You cannot add this resource. A customer administrator must perform this step.",
       "nextStepIsConfigure": "Next steps and cluster configuration",
       "useTheNotifications": "Use the notifications <div class=\"notification-button success\"><div class=\"icon icon-bell\"></div><div class=\"notification-label\" translate=\"hercules.notificationDropdown.label\">2 Notifications</div></div> in the top left corner of {{ServiceName}} pages for next steps in configuration.",
-      "afterRegistration": "After registration, configure your new cluster. Click on the cluster and then “Edit cluster settings”."
+      "afterRegistration": "After registration, configure your new cluster. Click on the cluster and then “Edit cluster settings”.",
+      "capacityReduced": "If you add {{service}} to this Expressway cluster, its capacity will be reduced for running Hybrid Services.",
+      "noServiceLost": "None of your users will lose service.",
+      "actionNotAllowedWithoutResourceGroup": "Action Not Allowed: If you add {{service}} to this Expressway cluster, it will exceed the capacity limits for running other Hybrid Services. {{users}} users will lose service.",
+      "actionNotAllowedWithResourceGroup": "Action Not Allowed: If you add {{service}} to this Expressway cluster, it will exceed the capacity limits for running other Hybrid Services. {{users}} users in Resource Group {{name}} will lose service.",
+      "serviceLost": "Please select another cluster or register a new one."
     },
     "activateService": {
       "ingress": "Extend the Cloud to your On-Premise Environment",

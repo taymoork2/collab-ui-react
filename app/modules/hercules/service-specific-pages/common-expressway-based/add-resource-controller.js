@@ -98,6 +98,10 @@
         });
     };
 
+    vm.getServiceNameKey = function (serviceId) {
+      return $translate.instant('hercules.hybridServiceNames.' + serviceId);
+    };
+
     function warning() {
       if (_.some(vm.connectors, function (connector) {
         vm.warningMessage = $translate.instant('hercules.addResourceDialog.hostnameRegistered');
