@@ -13,7 +13,7 @@ describe('userCsv.controller', function () {
 
     this.injectDependencies('$controller', '$interval', '$modal', '$previousState', '$q', '$rootScope',
       '$scope', '$state', '$timeout', 'Analytics', 'Authinfo', 'CsvDownloadService', 'FeatureToggleService',
-      'HuronCustomer', 'Notification', 'Orgservice', 'ResourceGroupService', 'ServiceDescriptorService', 'UserCsvService', 'Userservice', 'USSService', 'DirSyncService');
+      'HuronCustomer', 'Notification', 'Orgservice', 'ResourceGroupService', 'UserCsvService', 'Userservice', 'USSService', 'DirSyncService');
 
     initFixtures.apply(this);
     initMocks.apply(this);
@@ -25,6 +25,9 @@ describe('userCsv.controller', function () {
     spyOn(this.$state, 'go').and.returnValue(this.$q.resolve());
     spyOn(this.Analytics, 'trackAddUsers').and.returnValue(this.$q.resolve());
     spyOn(this.Authinfo, 'isOnline').and.returnValue(true);
+    spyOn(this.Authinfo, 'isFusionUC').and.returnValue(false);
+    spyOn(this.Authinfo, 'isFusionCal').and.returnValue(true);
+    spyOn(this.Authinfo, 'isFusionIMP').and.returnValue(false);
     this.modalDefer = this.$q.defer();
     spyOn(this.$modal, 'open').and.returnValue({
       result: this.modalDefer.promise,
@@ -33,7 +36,6 @@ describe('userCsv.controller', function () {
     spyOn(this.DirSyncService, 'requiresRefresh').and.returnValue(false);
     spyOn(this.DirSyncService, 'refreshStatus').and.returnValue(this.$q.resolve());
 
-    spyOn(this.ServiceDescriptorService, 'getServices').and.returnValue(this.$q.resolve(this.fusionServices));
     spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
         return _this.$q.resolve(_this.headers);
@@ -82,7 +84,6 @@ describe('userCsv.controller', function () {
     this.getUserMe = getJSONFixture('core/json/users/me.json');
     this.getMigrateUsers = getJSONFixture('core/json/users/migrate.json');
     this.getMyFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
-    this.fusionServices = getJSONFixture('core/json/authInfo/fusionServices.json');
     this.headers = getJSONFixture('core/json/users/headers.json');
     this.customer = getJSONFixture('huron/json/settings/customer.json');
     this.resourceGroups = getJSONFixture('core/json/users/resource_groups.json');
@@ -755,7 +756,6 @@ describe('userCsv.controller', function () {
       this.FeatureToggleService.supports.and.callFake(function () {
         return _this.$q.resolve(true);
       });
-      this.fusionServices = getJSONFixture('core/json/users/hybridServices.json');
       this.headers = getJSONFixture('core/json/users/headersForHybridServicesOld.json');
 
       initMocks.apply(this);
