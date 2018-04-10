@@ -22,7 +22,7 @@
     vm.streamsTypeMap = {
       audioMegabytes: $translate.instant('mediaFusion.metrics.streamsBandwidthType.audio'),
       videoMegabytes: $translate.instant('mediaFusion.metrics.streamsBandwidthType.video'),
-      presentationMegabytes: $translate.instant('mediaFusion.metrics.streamsBandwidthType.presentation'),
+      presMegabytes: $translate.instant('mediaFusion.metrics.streamsBandwidthType.presentation'),
     };
 
     vm.zoomedEndTime = null;
@@ -146,7 +146,7 @@
       }
       var cluster = _.replace(clusterSelected, /\s/g, '_');
       dateLabel = _.replace(dateLabel, /\s/g, '_');
-      var ExportFileName = 'MediaService_CascadeBandwidth_' + cluster + '_' + dateLabel + '_' + new Date();
+      var ExportFileName = 'MediaService_StreamsBandwidth_' + cluster + '_' + dateLabel + '_' + new Date();
       if (!isDummy) {
         graphs.push({
           title: vm.allOff,
