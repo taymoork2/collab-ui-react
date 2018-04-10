@@ -1,3 +1,5 @@
+var XmlService = require('modules/core/shared/xml-service/xml-service.service').XmlService;
+
 (function () {
   'use strict';
 
@@ -22,12 +24,10 @@
     PersonalMeetingRoomManagementService,
     ServiceSetup,
     SSOService,
-    UrlConfig,
-    Utils) {
+    UrlConfig) {
     var strEntityDesc = '<EntityDescriptor ';
     var strEntityId = 'entityID="';
     var strEntityIdEnd = '"';
-    var strSignOn = 'SingleSignOnService';
     var _BINDINGS = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST';
     $scope.updateSSO = updateSSO;
 
@@ -559,21 +559,8 @@
         return '';
       }
 
-      // Get the SingleSignOnService keys into an array
-      var ssoServices = Utils.filterKeyInXml(file, strSignOn);
-      if (_.isEmpty(ssoServices)) {
-        return '';
-      }
-
-      var hasPostBinding = _.some(ssoServices, function (i) {
-        return i['_Binding'] === _BINDINGS;
-      });
-
-      if (hasPostBinding) {
-        return '&reqBinding=' + _BINDINGS;
-      } else {
-        return '';
-      }
+      var xmlService = new XmlService();
+      return xmlService.getReqBinding(file);
     }
 
     $scope.openTest = function () {
