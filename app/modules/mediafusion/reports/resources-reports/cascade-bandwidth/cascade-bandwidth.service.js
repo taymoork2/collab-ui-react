@@ -227,8 +227,6 @@
         }
       });
       tempData = _.sortBy(tempData, 'title');
-      var avgLegend = tempData.shift();
-      tempData.push(avgLegend);
       return tempData;
     }
 
