@@ -309,7 +309,7 @@ export class HcsLicensesSubscriptionCtrl implements ng.IComponentController {
     this.gridOptions.data = this.licenseSubscriptionList;
     this.gridRefresh = false;
     this.placeholder.count = this.licenseSubscriptionList.length;
-    this.filters[0].count = this.licenseSubscriptionList.filter(customer => 'compliant' === customer.status.toLowerCase()).length;
+    this.filters[0].count = this.licenseSubscriptionList.filter(customer => this.filters[0].name.toLowerCase() === customer.status.toLowerCase()).length;
     this.filters[1].count = this.placeholder.count - this.filters[0].count;
   }
 

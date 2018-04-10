@@ -1,4 +1,4 @@
-import { Promise } from 'q';
+//import { Promise } from 'q';
 
 type ITab = {
   title: string;
@@ -35,16 +35,20 @@ export class HcsLicensesPlmReportCtrl implements ng.IComponentController {
   public timeoutVal: number = 1000;
   public timer: any = undefined;
   public searchStr: string = '';
+  public statusCompliant: string;
+  public statusNoncompliant: string;
 
   /* @ngInject */
   constructor(
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
-    private $rootScope: ng.IRootScopeService,
+    //private $rootScope: ng.IRootScopeService,
   ) {}
 
   public $onInit() {
     this.title = this.$translate.instant('hcs.license.title');
+    this.statusCompliant = this.$translate.instant('hcs.license.compliant');
+    this.statusNoncompliant = this.$translate.instant('hcs.license.nonCompliant');
 
     this.tabs = [{
       title: this.$translate.instant('hcs.license.plmReport.title'),
@@ -61,11 +65,11 @@ export class HcsLicensesPlmReportCtrl implements ng.IComponentController {
     };
 
     this.filters = [{
-      name: this.$translate.instant('hcs.license.compliant'),
+      name: this.statusCompliant,
       filterValue: 'Compliant',
       count: 0,
     }, {
-      name: this.$translate.instant('hcs.license.nonCompliant'),
+      name: this.statusNoncompliant,
       filterValue: 'Non-compliant',
       count: 0,
     }];
@@ -121,7 +125,7 @@ export class HcsLicensesPlmReportCtrl implements ng.IComponentController {
     // Below lines Must come in the then fxn after data is retrieved.
     this.gridOptions.data = this.plmData;
     this.placeholder.count = this.plmData.length;
-    this.filters[0].count = this.plmData.filter(plm => 'compliant' === plm.plmStatus.toLowerCase()).length;
+    this.filters[0].count = this.plmData.filter(plm => this.statusCompliant.toLowerCase() === plm.plmStatus.toLowerCase()).length;
     this.filters[1].count = this.placeholder.count - this.filters[0].count;
   }
 
@@ -235,41 +239,41 @@ export class HcsLicensesPlmReportCtrl implements ng.IComponentController {
     }, this.timeoutVal);
   }
 
-  private exportCsvPromise = Promise((resolve) => {
-    this.$rootScope.$broadcast('EXPORTING');
+  // private exportCsvPromise = Promise((resolve) => {
+  //   this.$rootScope.$broadcast('EXPORTING');
 
-    const exportedPlms = _.map(this.plmData, plm => {
-      const exportedPlm: IPlmGrid = {
-        id: plm.id,
-        plmName: plm.plmName,
-        basicLicense: plm.basicLicense,
-        essentialLicense: plm.essentialLicense,
-        standardLicense: plm.standardLicense,
-        foundationLicense: plm.foundationLicense,
-        plmStatus: plm.plmStatus,
-      };
-      // future nodification of data
-      return exportedPlm;
-    });
+  //   const exportedPlms = _.map(this.plmData, plm => {
+  //     const exportedPlm: IPlmGrid = {
+  //       id: plm.id,
+  //       plmName: plm.plmName,
+  //       basicLicense: plm.basicLicense,
+  //       essentialLicense: plm.essentialLicense,
+  //       standardLicense: plm.standardLicense,
+  //       foundationLicense: plm.foundationLicense,
+  //       plmStatus: plm.plmStatus,
+  //     };
+  //     // future nodification of data
+  //     return exportedPlm;
+  //   });
 
-    // header line for CSV file
-    const header: IPlmGrid = {
-      id:  this.$translate.instant('hcs.license.plmReport.plmId'),
-      plmName: this.$translate.instant('hcs.license.plmReport.plmName'),
-      basicLicense: this.$translate.instant('hcs.license.plmReport.basicLicense'),
-      essentialLicense: this.$translate.instant('hcs.license.plmReport.essentialLicense'),
-      standardLicense: this.$translate.instant('hcs.license.plmReport.standardLicense'),
-      foundationLicense: this.$translate.instant('hcs.license.plmReport.foundationLicense'),
-      plmStatus: this.$translate.instant('hcs.license.status'),
-    };
-    exportedPlms.unshift(header);
-    resolve(exportedPlms);
-  });
+  //   // header line for CSV file
+  //   const header: IPlmGrid = {
+  //     id:  this.$translate.instant('hcs.license.plmReport.plmId'),
+  //     plmName: this.$translate.instant('hcs.license.plmReport.plmName'),
+  //     basicLicense: this.$translate.instant('hcs.license.plmReport.basicLicense'),
+  //     essentialLicense: this.$translate.instant('hcs.license.plmReport.essentialLicense'),
+  //     standardLicense: this.$translate.instant('hcs.license.plmReport.standardLicense'),
+  //     foundationLicense: this.$translate.instant('hcs.license.plmReport.foundationLicense'),
+  //     plmStatus: this.$translate.instant('hcs.license.status'),
+  //   };
+  //   exportedPlms.unshift(header);
+  //   resolve(exportedPlms);
+  // });
 
   public exportCsv() {
     // To-Do
-    return this.exportCsvPromise.then(res => {
-      return res;
-    });
+    // return this.exportCsvPromise.then(res => {
+    //   return res;
+    // });
   }
 }

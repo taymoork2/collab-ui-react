@@ -1,5 +1,5 @@
 <div class="ui-grid-cell-contents" ng-if="row.entity.plmStatus">
-  <i class="icon icon-circle status-indicator user-status" ng-class="{'success': row.entity.plmStatus === 'Compliant', 'danger': row.entity.plmStatus === 'Non-compliant'}">
+  <i class="icon icon-circle status-indicator user-status" ng-class="{'success': row.entity.plmStatus === grid.appScope.statusCompliant, 'danger': row.entity.plmStatus === grid.appScope.statusNoncompliant}">
   </i>
   <span> {{row.entity.plmStatus_}}&nbsp{{row.entity.plmStatus}}</span>
 </div>
