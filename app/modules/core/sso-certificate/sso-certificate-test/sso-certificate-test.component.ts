@@ -1,12 +1,10 @@
 import { SsoCertificateService } from 'modules/core/sso-certificate/shared/sso-certificate.service';
 import { Notification } from 'modules/core/notifications';
 import { IToolkitModalService, IToolkitModalSettings } from 'modules/core/modal';
-import { XmlService } from 'modules/core/shared/xml-service/xml-service.service';
 
 export class SsoCertificateTestController implements ng.IComponentController {
   public dismiss: Function;
   public ssoTested = false;
-  public readonly _BINDINGS = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST';
 
   /* @ngInject */
   constructor(
@@ -18,7 +16,6 @@ export class SsoCertificateTestController implements ng.IComponentController {
     private $window: ng.IWindowService,
     private Authinfo,
     private UrlConfig,
-    private XmlService: XmlService,
   ) {}
 
   public dismissModal(): void {
@@ -46,8 +43,8 @@ export class SsoCertificateTestController implements ng.IComponentController {
       .then(response => {
         const entityId = response.entityId;
         if (entityId) {
-          const reqBinding = this.XmlService.getReqBinding(response.metadataXml!);
-          const testUrl = `${this.UrlConfig.getSSOTestUrl()}?metaAlias=/${this.Authinfo.getOrgId()}/sp&idpEntityID=${encodeURIComponent(entityId)}&binding=${this._BINDINGS}${reqBinding}&reqCertId=${this.SsoCertificateService.getLatestCertificate().id}`;
+          const reqBinding = this.SsoCertificateService.getReqBinding(response.metadataXml!);
+          const testUrl = `${this.UrlConfig.getSSOTestUrl()}?metaAlias=/${this.Authinfo.getOrgId()}/sp&idpEntityID=${encodeURIComponent(entityId)}&binding=${this.SsoCertificateService.HTTP_POST_BINDINGS}${reqBinding}&reqCertId=${this.SsoCertificateService.getLatestCertificate().id}`;
           this.$window.open(testUrl);
           this.ssoTested = true;
         }

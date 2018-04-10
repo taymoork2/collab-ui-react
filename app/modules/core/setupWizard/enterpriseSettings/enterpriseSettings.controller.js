@@ -1,5 +1,3 @@
-var XmlService = require('modules/core/shared/xml-service/xml-service.service').XmlService;
-
 (function () {
   'use strict';
 
@@ -24,11 +22,11 @@ var XmlService = require('modules/core/shared/xml-service/xml-service.service').
     PersonalMeetingRoomManagementService,
     ServiceSetup,
     SSOService,
+    SsoCertificateService,
     UrlConfig) {
     var strEntityDesc = '<EntityDescriptor ';
     var strEntityId = 'entityID="';
     var strEntityIdEnd = '"';
-    var _BINDINGS = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST';
     $scope.updateSSO = updateSSO;
 
     $scope.options = {
@@ -559,8 +557,7 @@ var XmlService = require('modules/core/shared/xml-service/xml-service.service').
         return '';
       }
 
-      var xmlService = new XmlService();
-      return xmlService.getReqBinding(file);
+      return SsoCertificateService.getReqBinding(file);
     }
 
     $scope.openTest = function () {
@@ -574,7 +571,7 @@ var XmlService = require('modules/core/shared/xml-service/xml-service.service').
             reqBinding = checkReqBinding();
           }
           if (entityId) {
-            var testUrl = UrlConfig.getSSOTestUrl() + '?metaAlias=/' + Authinfo.getOrgId() + '/sp&idpEntityID=' + encodeURIComponent(entityId) + '&binding=' + _BINDINGS + reqBinding;
+            var testUrl = UrlConfig.getSSOTestUrl() + '?metaAlias=/' + Authinfo.getOrgId() + '/sp&idpEntityID=' + encodeURIComponent(entityId) + '&binding=' + SsoCertificateService.HTTP_POST_BINDINGS + reqBinding;
             $window.open(testUrl);
           } else {
             Log.debug('Retrieved null Entity id. Status: ' + status);
