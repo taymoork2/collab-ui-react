@@ -29,8 +29,8 @@ export class CrConvertUsersModalController implements ng.IComponentController {
   public scopeData: IOnboardScopeForUsersConvert;
 
   public ftF7208: boolean;
-  public POTENTIAL: string = 'potential';
-  public PENDING: string = 'pending';
+  public readonly POTENTIAL = 'potential';
+  public readonly PENDING = 'pending';
   public conversionStatusMap: IConversionStatus[];
   public daysToConvert: number = 14;  // How many days does a user have to convert their account?
 
@@ -220,7 +220,7 @@ export class CrConvertUsersModalController implements ng.IComponentController {
   }
 
   public getSelectedListCount(): number {
-    return this.getSelectedList().length;
+    return _.size(this.getSelectedList());
   }
 
   // getStatusText - map between backend JSON key values and translated text (to be shown in grid cells)

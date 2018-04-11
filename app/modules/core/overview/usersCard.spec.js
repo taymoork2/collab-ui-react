@@ -186,7 +186,6 @@ describe('OverviewUsersCard', function () {
     describe('atlasF7208GDPRConvertUser', function () {
       var mock;
       beforeEach(function () {
-        // $TODO - add conversion mock data to JSON (waiting on backend completion)
         mock = _.cloneDeep(getJSONFixture('core/json/organizations/unlicensedUsers.json'));
       });
 
