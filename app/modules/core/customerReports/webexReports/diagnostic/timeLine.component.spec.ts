@@ -196,7 +196,7 @@ describe('Component: dgcTimeLine', () => {
         { key: 'Ethan' },
         { key: 'reportsPage.webexMetrics.callIn: ', value: 'Toll' },
         { key: 'reportsPage.webexMetrics.joinTime: ', value: '2018-03-29 10:00:00' },
-        { key: 'reportsPage.webexMetrics.duration: ', value: '2 webexReports.minutes' },
+        { key: 'reportsPage.webexMetrics.duration: ', value: 'time.abbreviatedCap.minutes' },
       ],
     };
     expect(this.controller.makeTips).toHaveBeenCalledWith(mockArr, 0, 110.5);
@@ -215,7 +215,7 @@ describe('Component: dgcTimeLine', () => {
         { key: 'Ethan' },
         { key: 'SIP' },
         { key: 'reportsPage.webexMetrics.joinTime: ', value: '2018-03-29 10:00:00' },
-        { key: 'reportsPage.webexMetrics.duration: ', value: '2 webexReports.minutes' },
+        { key: 'reportsPage.webexMetrics.duration: ', value: 'time.abbreviatedCap.minutes' },
       ],
     };
     expect(this.controller.makeTips).toHaveBeenCalledWith(mockArr, 0, 110.5);
