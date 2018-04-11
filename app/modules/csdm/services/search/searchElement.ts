@@ -2,6 +2,7 @@ import { SearchObject } from './searchObject';
 import { QueryParser } from './queryParser';
 import { isUndefined } from 'util';
 import { NormalizeHelper } from '../../../core/l10n/normalize.helper';
+import { SearchTranslator } from './searchTranslator';
 
 export abstract class SearchElement {
 
@@ -37,7 +38,7 @@ export abstract class SearchElement {
 
   public abstract isEqual(other: SearchElement): boolean;
 
-  public abstract toQuery(): string;
+  public abstract toQuery(translator?: SearchTranslator): string;
 
   public abstract getCommonField(): string;
 
@@ -89,12 +90,24 @@ export abstract class CollectionOperator extends SearchElement {
     this.subElements = subElements;
   }
 
+  public toQuery(translator?: SearchTranslator): string {
+    const joinedQuery = _.join(_.map(this.subElements, (e) => e.toQuery(translator)), ' ' + this.getOperator() + ' ');
+
+    if (this.getParent()) {
+      return '(' + joinedQuery + ')';
+    } else {
+      return joinedQuery;
+    }
+  }
+
   public addSubElement(newElement: SearchElement) {
     this.subElements.push(newElement);
     newElement.setParent(this);
   }
 
   public abstract containsEffectOf(element: SearchElement): SearchElement | undefined;
+
+  protected abstract getOperator(): string;
 }
 
 export class FieldQuery extends SearchElement {
@@ -110,8 +123,8 @@ export class FieldQuery extends SearchElement {
     this.type = queryType;
   }
 
-  public getQueryPrefix(): string {
-    return (this.field) ? this.field + this.getCommonMatchOperator() : '';
+  public getQueryPrefix(translator?: SearchTranslator): string {
+    return (this.field) ? (translator ? translator.translateQueryField(this.field) : this.field) + this.getCommonMatchOperator() : '';
   }
 
   public getCommonField(): string {
@@ -179,8 +192,11 @@ export class FieldQuery extends SearchElement {
     return _.includes(_.toLower(value), _.toLower(this.query));
   }
 
-  public toQuery(): string {
-    return this.getQueryPrefix() + this.getQueryWithoutField();
+  public toQuery(translator?: SearchTranslator): string {
+    if (translator && this.field && this.type === FieldQuery.QueryTypeExact) {
+      return this.getQueryPrefix(translator) + translator.lookupTranslatedQueryValueDisplayName(this.query, this.field);
+    }
+    return this.getQueryPrefix(translator) + this.getQueryWithoutField();
   }
 
   public toJSON(): any {
@@ -194,14 +210,18 @@ export class FieldQuery extends SearchElement {
 
 export class OperatorAnd extends CollectionOperator {
 
-  public and: SearchElement[];
-
   constructor(andedElements: SearchElement[], takeOwnerShip: boolean = true) {
     super(andedElements);
     this.and = andedElements;
     if (takeOwnerShip) {
       _.each(andedElements, s => s.setParent(this));
     }
+  }
+
+  public and: SearchElement[];
+
+  protected getOperator(): string {
+    return 'and';
   }
 
   public getCommonField(): string {
@@ -240,16 +260,6 @@ export class OperatorAnd extends CollectionOperator {
     }).length === 0;
   }
 
-  public toQuery(): string {
-    const joinedQuery = _.join(_.map(this.and, (e) => e.toQuery()), ' and ');
-
-    if (this.getParent()) {
-      return '(' + joinedQuery + ')';
-    } else {
-      return joinedQuery;
-    }
-  }
-
   public toJSON(): any {
     return {
       and: this.and,
@@ -267,7 +277,6 @@ export class OperatorAnd extends CollectionOperator {
 }
 
 export class OperatorOr extends CollectionOperator {
-  public or: SearchElement[];
 
   constructor(oredElements: SearchElement[], takeOwnerShip: boolean = true) {
     super(oredElements);
@@ -275,6 +284,12 @@ export class OperatorOr extends CollectionOperator {
     if (takeOwnerShip) {
       _.each(oredElements, s => s.setParent(this));
     }
+  }
+
+  public or: SearchElement[];
+
+  protected getOperator(): string {
+    return 'or';
   }
 
   public matches(value: string, field?: string): boolean {
@@ -337,16 +352,6 @@ export class OperatorOr extends CollectionOperator {
       }
     }
     return '';
-  }
-
-  public toQuery(): string {
-    const joinedQuery = _.join(_.map(this.or, (e) => e.toQuery()), ' or ');
-
-    if (this.getParent()) {
-      return '(' + joinedQuery + ')';
-    } else {
-      return joinedQuery;
-    }
   }
 
   public toJSON(): any {
