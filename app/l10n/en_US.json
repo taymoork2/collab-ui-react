@@ -4156,7 +4156,6 @@
         "released": "Released",
         "all": "All Matters",
         "mine": "Created By Me"
-
       },
       "new": "Create Matter"
     },
@@ -8732,7 +8731,9 @@
         "onboardText": "Total users onboarded",
         "onboardError": "Onboard data is not available, refresh the page or try later.",
         "unassignedLicenses": "You have <span class=\"convert-nr h4\">{{licenseNumber}}</span> unassigned {{licenseType}} licenses",
-        "unassignedLicensesOnboarding": "unassigned {{licenseType}} licenses"
+        "unassignedLicensesOnboarding": "unassigned {{licenseType}} licenses",
+        "potentialConversions": "Potential new users",
+        "pendingConversions": "Pending conversions"
       },
       "message": {
         "title": "Message",
@@ -11211,5 +11212,31 @@
     "deleteEmptyPlacesExplanation": "If the last device in a place is deleted, that place will also be deleted.",
     "deleted": "Deleted",
     "pollProgressError": "Failures while retrieving the bulk progress"
+  },
+  "convertUsersModal": {
+    "title": "Convert Users",
+    "subTitle": "Select Users for Conversion",
+    "desc": "Selected users will be sent a conversion invite email. Users without any recent activity or in <strong>Pending</strong> status will be converted immediately. Users who do not take any action will be converted after {count, plural, =1{# day} other{# days}}.",
+    "csv": "CSV",
+    "csvFilename": "unlicensed_users.csv",
+    "tab": {
+      "potential": "Potential Conversion {{count}}",
+      "pending": "Pending Conversion {{count}}"
+    },
+    "tableHeader": {
+      "name": "Display Name",
+      "email": "Email Address",
+      "status": "Status"
+    },
+    "status": {
+      "immediate": "Immediate Conversion",
+      "delayed": "Delayed Conversion"
+    },
+    "banner": {
+      "text": "Manage users' licenses more conveniently, <a href=\"{{href}}\" target=\"_blank\">configure Auto Assign</a>"
+    },
+    "error": {
+      "noUsers": "No users found matching this criteria."
+    }
   }
 }

@@ -39,6 +39,7 @@ module.exports = {
   atlasF5955LegalHold: 'atlas-f5955-legal-hold',
   atlasF6980MultiDirSync: 'atlas-f6980-multi-dir-sync',
   atlasF6980MultiDirSyncManageUsers: 'atlas-f6980-multi-dir-sync-manage-users',
+  atlasF7208GDPRConvertUser: 'atlas-f7208-gdpr-convert-user',
   atlasFileSharingControlSettings: 'atlas-file-sharing-control-settings',
   atlasHelpDeskExt: 'atlas-helpdesk-extended-information',
   atlasHelpDeskOrderSearch: 'atlas-helpdesk-order-search',
