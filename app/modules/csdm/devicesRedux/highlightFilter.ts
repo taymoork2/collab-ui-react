@@ -1,5 +1,7 @@
 import { FieldQuery, SearchElement } from '../services/search/searchElement';
 import _ = require('lodash');
+import { SearchObject } from '../services/search/searchObject';
+
 /* @ngInject */
 export function highlightFilter($sanitize) {
 
@@ -25,23 +27,32 @@ export function highlightFilter($sanitize) {
   };
 }
 
-/* @ngInject */
-export function highlightAndTranslate($translate, $sanitize) {
-  const theFilter = highlightFilter($sanitize);
-  const thisFilter = (input: string, searchElement: SearchElement | null, highlightMask: HighlightMask, applyHighlight): string => {
+function getThisFilter(theFilter) {
+  const thisFilter = (input: string, searchElement: SearchElement | null, highlightMask: HighlightMask, applyHighlight, restrictToField: string | undefined): string => {
     if (searchElement) {
       if (searchElement instanceof FieldQuery) {
-        input = theFilter(input, searchElement.field, false, highlightMask, false);
-        input = theFilter(input, searchElement.query, false, highlightMask, applyHighlight);
+        if (!(restrictToField && searchElement.field && searchElement.field !== restrictToField)) {
+          input = theFilter(input, searchElement.field, false, highlightMask, false);
+          input = theFilter(input, searchElement.query, false, highlightMask, applyHighlight);
+        }
       } else {
         _.forEach(searchElement.getExpressions(), (element) => {
-          input = thisFilter(input, element, highlightMask, false);
+          input = thisFilter(input, element, highlightMask, false, restrictToField);
         });
-        input = highlightMask.highlight(input);
+        if (applyHighlight) {
+          input = highlightMask.highlight(input);
+        }
       }
     }
     return input;
   };
+  return thisFilter;
+}
+
+/* @ngInject */
+export function highlightAndTranslate($translate, $sanitize) {
+  const theFilter = highlightFilter($sanitize);
+  const thisFilter = getThisFilter(theFilter);
 
   return (textNoneTranslatable: string, textTranslationKey: string | null, textTranslationParams: { [key: string]: string } | null, workingElement: SearchElement | null): string => {
     const sanitizedInput = $sanitize(_.escape(textTranslationParams && textTranslationKey || textNoneTranslatable));
@@ -51,18 +62,37 @@ export function highlightAndTranslate($translate, $sanitize) {
         return $translate.instant(sanitizedInput, _.reduce(textTranslationParams, (result, value, key) => {
           const sanitizedValue = $sanitize(_.escape(value));
           const innerHighlightMask = new HighlightMask(sanitizedValue);
-          result[key] = thisFilter(sanitizedValue, workingElement, innerHighlightMask, true);
+          result[key] = thisFilter(sanitizedValue, workingElement, innerHighlightMask, true, undefined);
           return result;
         }, {}), undefined, undefined, null);
       } else {
-        return thisFilter(sanitizedInput, workingElement, highlightMask, true);
+        return thisFilter(sanitizedInput, workingElement, highlightMask, true, undefined);
       }
     }
     if (textTranslationKey && textTranslationParams) {
-      return thisFilter($translate.instant(textTranslationKey, textTranslationParams), null, highlightMask, true);
+      return thisFilter($translate.instant(textTranslationKey, textTranslationParams), null, highlightMask, true,
+        undefined);
     }
-    return thisFilter(sanitizedInput, null, highlightMask, true);
+    return thisFilter(sanitizedInput, null, highlightMask, true, undefined);
   };
+}
+
+/* @ngInject */
+export function highlightFromSearch($sanitize) {
+  const theFilter = highlightFilter($sanitize);
+  const thisFilter = getThisFilter(theFilter);
+  return (input: string, search: SearchObject | null, restrictToField: string): string => {
+    const sanitizedInput = $sanitize(_.escape(input));
+    const highlightMask = new HighlightMask(sanitizedInput);
+    if (search) {
+      const workingElement = search.lastGoodQuery;
+      return highlightMask.highlight(
+        thisFilter(sanitizedInput, workingElement, highlightMask, false, restrictToField),
+      );
+    }
+    return sanitizedInput;
+  };
+
 }
 
 export class HighlightMask {

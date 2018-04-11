@@ -1,5 +1,5 @@
 <div class="ui-grid-cell-contents" ng-click="grid.appScope.selectRow(grid, row)">
   <span title="{{row.entity.product}}">
-    {{row.entity.product}} <span class="feature-status" ng-if="row.entity.addOnModuleCount > 0">+ {{row.entity.addOnModuleCount}} {{ :: 'deviceOverviewPage.kem' | translate }}</span>
+    <span ng-bind-html="row.entity.product | highlightFromSearch:grid.appScope.searchObject():'product'"></span><span class="feature-status" ng-if="row.entity.addOnModuleCount > 0"> + {{row.entity.addOnModuleCount}} {{ :: 'deviceOverviewPage.kem' | translate }}</span>
   </span>
 </div>
