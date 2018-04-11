@@ -440,16 +440,15 @@
         max-height: 50px;
         transition: max-height .15s ease-in;
         display: flex;
-        padding: 10px 2rem 10px 74px;
+        align-items: center;
+        padding-left: 74px;
         background-color: $blue;
         width: 100%;
-        height: 2.8125rem;
+        height: 2.75rem;
         color: $white;
-        div {
-          height: 2rem;
-        }
         i {
-          padding: 0.5rem 0.5rem 0.5rem 1rem;
+          padding-left: 1rem;
+          padding-bottom: 0.25rem;
         }
       }
     }
