@@ -34,7 +34,7 @@
     }
 
     function showOrgName() {
-      return (Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin()) && Utils.isAdminPage();
+      return (Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin() || Authinfo.isPartialAdmin()) && Utils.isAdminPage();
     }
 
     function showUserDropDown() {

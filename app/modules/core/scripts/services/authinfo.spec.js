@@ -406,6 +406,41 @@ describe('Authinfo:', function () {
     });
   });
 
+
+  describe('isPartialAdmin', function () {
+    it('should return false when the user is a full admin', function () {
+      setupConfig();
+      var Authinfo = setupUser({
+        roles: ['Full_Admin'],
+      });
+      expect(Authinfo.isPartialAdmin()).toEqual(false);
+    });
+
+    it('should return true when the user is a device admin', function () {
+      setupConfig();
+      var Authinfo = setupUser({
+        roles: ['Device_Admin'],
+      });
+      expect(Authinfo.isPartialAdmin()).toEqual(true);
+    });
+
+    it('should return true when the user is a support admin', function () {
+      setupConfig();
+      var Authinfo = setupUser({
+        roles: ['Support'],
+      });
+      expect(Authinfo.isPartialAdmin()).toEqual(true);
+    });
+
+    it('should return true when the user is a user admin', function () {
+      setupConfig();
+      var Authinfo = setupUser({
+        roles: ['User_Admin'],
+      });
+      expect(Authinfo.isPartialAdmin()).toEqual(true);
+    });
+  });
+
   describe('customer with CONFERENCING license', function () {
     var accountData = {
       customers: [{

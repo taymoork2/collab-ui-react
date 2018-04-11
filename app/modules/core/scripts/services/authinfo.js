@@ -422,6 +422,13 @@
       isReadOnlyAdmin: function () {
         return this.hasRole('Readonly_Admin') && !this.isAdmin();
       },
+      isPartialAdmin: function () {
+        // partial admins can only see some pages
+        return (this.hasRole(Config.roles.device_admin) ||
+          this.hasRole(Config.roles.support) ||
+          this.hasRole(Config.roles.user_admin)) &&
+          !this.isAdmin();
+      },
       isCustomerAdmin: function () {
         return this.hasRole(Config.roles.full_admin);
       },
@@ -471,13 +478,13 @@
         return this.hasRole('WX2_SquaredInviter');
       },
       isSupportUser: function () {
-        return this.hasRole('Support') && !this.isAdmin();
+        return this.hasRole(Config.roles.support) && !this.isAdmin();
       },
       isUserAdminUser: function () {
-        return this.hasRole('User_Admin') && !this.isAdmin();
+        return this.hasRole(Config.roles.user_admin) && !this.isAdmin();
       },
       isDeviceAdminUser: function () {
-        return this.hasRole('Device_Admin') && !this.isAdmin();
+        return this.hasRole(Config.roles.device_admin) && !this.isAdmin();
       },
       isTechSupport: function () {
         return this.hasRole('Tech_Support');
