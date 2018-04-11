@@ -22,7 +22,26 @@
   </div>
   <div class="section errors-section" ng-if="vm.hasErrors">
     <h3 translate="common.errors"></h3>
-    <cs-grid class="gridStyle" grid-api="vm.gridApi" grid-options="vm.gridOptions"></cs-grid>
+    <table>
+      <thead>
+      <th class="">{{'spacesPage.nameHeader' | translate}}</th>
+      <th class="">{{'common.errors' | translate}}</th>
+      </thead>
+      <colgroup>
+        <col class="medium-4">
+        <col class="medium-8">
+      </colgroup>
+      <tbody>
+      <tr ng-repeat="error in vm.failuresData">
+        <td>
+          {{error.name}}
+        </td>
+        <td>
+          {{error.error}}
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </div>
 
 </div>

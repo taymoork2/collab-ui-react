@@ -1,6 +1,7 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
 @import '~@collabui/collab-ui/scss/settings/forms';
 @import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/settings/settings-collab-ui';
 @import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 @import '~@collabui/collab-ui/scss/tools/mixins/easing';
@@ -63,14 +64,24 @@
     padding-top: 22px;
     margin-top: 28px;
     border-top: 1px solid $gray-light-4;
-    .ui-grid {
-      .ui-grid-viewport, .ui-grid-canvas {
-        height: unset;
+    table {
+      border-collapse: collapse;
+      tbody tr:last-child td {
+        border-bottom: none;
       }
-      .ui-grid-row {
-        &:hover {
-          background-color: transparent;
+      th, td {
+        color: $gray-dark-1;
+        font-size: $h6-font-size;
+        font-family: $brand-font-cisco-TT-Light, sans-serif;
+        border-right: 1px solid $ui-grid-border-color;
+        border-bottom: 1px solid $ui-grid-border-color;
+
+        &:last-child {
+          border-right: none;
         }
+      }
+      th {
+        background-color: $gray-light-4;
       }
     }
   }
