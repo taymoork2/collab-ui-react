@@ -546,12 +546,12 @@
         var onboardUsersPromise = $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users/onboard', userPayload, {
           timeout: cancelPromise,
         });
-        var originalPostResponse;
+        var onboardUsersResponse;
         return onboardUsersPromise
           .then(function (response) {
             // notes:
             // - save the original http post response from onboarding users to resolve with later
-            originalPostResponse = response;
+            onboardUsersResponse = response;
 
             // - chain necessary Care-specific logic for updating users as-appropriate
             // - prevent rejections from Care-specific logic from causing the original promise chain to reject
@@ -559,7 +559,7 @@
               .catch(_.noop);
           })
           .then(function () {
-            return originalPostResponse;
+            return onboardUsersResponse;
           });
       } else {
         return $q.reject('No valid emails entered.');
