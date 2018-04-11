@@ -48,6 +48,7 @@
       getPreferredWebExSiteForCalendaring: getPreferredWebExSiteForCalendaring,
       updateUserData: updateUserData,
       _helpers: {
+        checkAndUpdateSunlightUser: checkAndUpdateSunlightUser,
         mkOnboardUsersPayload: mkOnboardUsersPayload,
         onboardUsersAPI: onboardUsersAPI,
       },
@@ -554,7 +555,7 @@
 
             // - chain necessary Care-specific logic for updating users as-appropriate
             // - prevent rejections from Care-specific logic from causing the original promise chain to reject
-            return checkAndUpdateSunlightUser(response.data.userResponse, userPayload.users)
+            return service._helpers.checkAndUpdateSunlightUser(response.data.userResponse, userPayload.users)
               .catch(_.noop);
           })
           .then(function () {
