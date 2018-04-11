@@ -5,7 +5,8 @@
     <div ng-if="$ctrl.hasEventHistoryFeatureToggle">
       <h4 class="section-title-row section-name" translate="hercules.eventHistory.pageTitle"></h4>
       <p translate="hercules.eventHistory.featureDescription"></p>
-      <a class="btn" ui-sref="hybrid-services-event-history-page({clusterId: $ctrl.connector.clusterId, connectorId: $ctrl.connector.id, serviceId: $ctrl.serviceId})" translate="hercules.eventHistory.viewHistory"></a>
+      <a class="btn" ui-sref="hybrid-services-event-history-page({nodeHostname: $ctrl.connector.hostname, serviceId: $ctrl.serviceId})" translate="hercules.eventHistory.viewHistory"></a>
+      <!-- <a class="btn" ui-sref="hybrid-services-event-history-page({clusterId: $ctrl.connector.clusterId, nodeHostname: $ctrl.connector.hostname, serviceId: $ctrl.serviceId})" translate="hercules.eventHistory.viewHistory"></a> -->
     </div>
   </cs-sp-container>
 </div>

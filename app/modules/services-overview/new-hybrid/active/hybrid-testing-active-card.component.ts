@@ -23,9 +23,9 @@ export class HybridTestingActiveCardComponent implements ng.IComponentOptions {
           </div>
         </div>
         <div class="active-card_footer">
-          <a>
-            <span translate="{{'servicesOverview.cardStatus.'+ $ctrl.serviceStatus.status}}"></span>
+          <a class="active-card_footer_status-link">
             <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass" ng-click="$ctrl.openClusterMapping()"></cs-statusindicator>
+            <span translate="{{'servicesOverview.cardStatus.'+ $ctrl.serviceStatus.status}}"></span>
           </a>
         </div>
       </article>
