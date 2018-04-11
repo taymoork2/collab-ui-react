@@ -3210,6 +3210,11 @@
             url: '/hcs/subscription',
             template: '<hcs-licenses-subscription></hcs-licenses-subscription>',
           })
+          .state('hcs.plmReport', {
+            parent: 'partner',
+            url: '/hcs/plm-report',
+            template: '<hcs-licenses-plm-report></hcs-licenses-plm-report>',
+          })
           .state('hcs.clusterList', {
             url: '/hcs/inventory/:groupId/clusters',
             parent: 'partner',

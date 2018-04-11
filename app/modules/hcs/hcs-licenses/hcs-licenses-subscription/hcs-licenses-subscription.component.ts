@@ -104,6 +104,21 @@ export class HcsLicensesSubscriptionCtrl implements ng.IComponentController {
   ) {}
 
   public $onInit() {
+    this.placeholder = {
+      name: this.$translate.instant('hcs.license.all'),
+      filterValue: 'all',
+      count: 0,
+    };
+
+    this.filters = [{
+      name: this.$translate.instant('hcs.license.compliant'),
+      filterValue: 'Compliant',
+      count: 0,
+    }, {
+      name: this.$translate.instant('hcs.license.nonCompliant'),
+      filterValue: 'Non-Compliant',
+      count: 0,
+    }];
     this.setGridOptions();
     this.loading = true;
     //TBD-- remove when Apis are ready
@@ -190,22 +205,6 @@ export class HcsLicensesSubscriptionCtrl implements ng.IComponentController {
     this.initCustomerLicenseReport();
     this.loading = false;
 
-    this.placeholder = {
-      name: this.$translate.instant('hcs.license.all'),
-      filterValue: 'all',
-      count: 0,
-    };
-
-    this.filters = [{
-      name: this.$translate.instant('hcs.license.compliant'),
-      filterValue: 'Compliant',
-      count: 0,
-    }, {
-      name: this.$translate.instant('hcs.license.nonCompliant'),
-      filterValue: 'Non-Compliant',
-      count: 0,
-    }];
-
     this.sort = {
       by: 'customer',
       order: '-asc',
@@ -217,8 +216,8 @@ export class HcsLicensesSubscriptionCtrl implements ng.IComponentController {
     this.title = this.$translate.instant('hcs.license.title');
 
     this.tabs = [{
-      title: this.$translate.instant('hcs.license.plmReport'),
-      state: 'hcs.subscription',
+      title: this.$translate.instant('hcs.license.plmReport.title'),
+      state: 'hcs.plmReport',
     }, {
       title: this.$translate.instant('hcs.license.customerReport'),
       state: 'hcs.subscription',
@@ -238,7 +237,7 @@ export class HcsLicensesSubscriptionCtrl implements ng.IComponentController {
     this.timer = this.$timeout(() => {
       if (str.length >= 3 || str === '') {
         this.searchStr = str;
-        this.getLicenseSubscription();
+        this.gridOptions.data = this.licenseSubscriptionList.filter(customer => _.includes(customer.customerName.toLowerCase(), str.toLowerCase()));
         this.currentDataPosition = 0;
       }
     }, this.timeoutVal);
@@ -279,10 +278,14 @@ export class HcsLicensesSubscriptionCtrl implements ng.IComponentController {
     }
   }
 
-  public setFilter(filter: IFilter) {
-    if (this.activeFilter !== filter.name) {
-      this.activeFilter = filter.name;
-      this.getLicenseSubscription();
+  public setFilter(filter) {
+    if (this.activeFilter !== filter) {
+      this.activeFilter = filter;
+      if (this.activeFilter === 'all') {
+        this.gridOptions.data = this.licenseSubscriptionList;
+      } else {
+        this.gridOptions.data = this.licenseSubscriptionList.filter(customer => this.activeFilter.toLowerCase() === customer.status.toLowerCase());
+      }
       this.currentDataPosition = 0;
     }
   }
@@ -305,6 +308,9 @@ export class HcsLicensesSubscriptionCtrl implements ng.IComponentController {
     });
     this.gridOptions.data = this.licenseSubscriptionList;
     this.gridRefresh = false;
+    this.placeholder.count = this.licenseSubscriptionList.length;
+    this.filters[0].count = this.licenseSubscriptionList.filter(customer => this.filters[0].name.toLowerCase() === customer.status.toLowerCase()).length;
+    this.filters[1].count = this.placeholder.count - this.filters[0].count;
   }
 
   public getLicenseSubscription(): void {

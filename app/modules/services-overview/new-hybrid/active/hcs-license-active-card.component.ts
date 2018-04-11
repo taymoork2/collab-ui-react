@@ -13,7 +13,7 @@ export class HcsLicenseActiveCardComponent implements ng.IComponentOptions {
       </div>
       <div class="active-card_content active-card-center_content">
         <div class="active-card_section">
-          <div class="active-card_action"><a translate="hcs.license.plmReport"></a></div>
+          <div class="active-card_action"><a ui-sref="hcs.plmReport" translate="hcs.license.plmReport.title"></a></div>
         </div>
         <div class="active-card_section">
           <div class="active-card_action"><a ui-sref="hcs.subscription" translate="hcs.license.customerReport"></a></div>

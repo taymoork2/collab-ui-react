@@ -133,11 +133,11 @@ export class InventoryListCtrl implements ng.IComponentController {
         } else if (this.filter.selected.length === 0 && this.currentSearchString.length > 1) {
           // if only search and no filter
           const inventoryName = _.get(inventory, 'name', 'Unassigned');
-          present = _.includes(inventoryName.toLowerCase(), this.currentSearchString.toLocaleLowerCase());
+          present = _.includes(inventoryName.toLowerCase(), this.currentSearchString.toLowerCase());
         } else {
           // if both search and filter
           const inventoryName = _.get(inventory, 'name', 'Unassigned');
-          if (_.find(this.filter.selected, (selected) => selected.value === inventory.status && _.includes(inventoryName.toLowerCase(), this.currentSearchString.toLocaleLowerCase()))) {
+          if (_.find(this.filter.selected, (selected) => selected.value === inventory.status && _.includes(inventoryName.toLowerCase(), this.currentSearchString.toLowerCase()))) {
             present = true;
           }
         }
