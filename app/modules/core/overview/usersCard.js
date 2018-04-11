@@ -228,11 +228,11 @@
           }).then(function (features) {
             card.features = features;
             card.cardClass = card.features.atlasF3745AutoAssignLicenses ? 'cs-card--x-large user-card' : 'cs-card--medium user-card';
+            card.deferredFT.resolve();
           });
         }
 
         function initAutoAssignTemplate() {
-          card.deferredFT.resolve();
           if (card.features.atlasF3745AutoAssignLicenses) {
             card.name = 'overview.cards.users.onboardTitle';
             getNumberOnboardedUsers();

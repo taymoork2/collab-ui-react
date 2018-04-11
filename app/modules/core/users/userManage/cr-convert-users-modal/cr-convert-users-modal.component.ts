@@ -225,7 +225,7 @@ export class CrConvertUsersModalController implements ng.IComponentController {
 
   // getStatusText - map between backend JSON key values and translated text (to be shown in grid cells)
   public getStatusText(user): string {
-    const status: any = _.find(this.conversionStatusMap, { key: user.conversionStatus });
+    const status = _.find(this.conversionStatusMap, { key: user.conversionStatus });
     if (_.isUndefined(status)) {
       return '';
     }

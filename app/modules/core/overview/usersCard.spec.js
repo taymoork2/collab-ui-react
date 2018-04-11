@@ -184,17 +184,16 @@ describe('OverviewUsersCard', function () {
     });
 
     describe('atlasF7208GDPRConvertUser', function () {
-      var mock;
       beforeEach(function () {
-        mock = _.cloneDeep(getJSONFixture('core/json/organizations/unlicensedUsers.json'));
+        this.mock = _.cloneDeep(getJSONFixture('core/json/organizations/unlicensedUsers.json'));
       });
 
       describe('enabled:', function () {
         beforeEach(function () {
           this.FeatureToggleService.atlasF7208GDPRConvertUserGetStatus.and.returnValue(this.$q.resolve(true));
           this.card = this.OverviewUsersCard.createCard();
-          this.card.orgEventHandler(mock);
-          this.card.unlicensedUsersHandler(mock);
+          this.card.orgEventHandler(this.mock);
+          this.card.unlicensedUsersHandler(this.mock);
           this.$rootScope.$apply();
         });
         it('should set potential and pending conversions properties', function () {
@@ -206,8 +205,8 @@ describe('OverviewUsersCard', function () {
       describe('disabled:', function () {
         beforeEach(function () {
           this.card = this.OverviewUsersCard.createCard();
-          this.card.orgEventHandler(mock);
-          this.card.unlicensedUsersHandler(mock);
+          this.card.orgEventHandler(this.mock);
+          this.card.unlicensedUsersHandler(this.mock);
           this.$rootScope.$apply();
         });
         it('should not set pontential and pending conversions properties', function () {
