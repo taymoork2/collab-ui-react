@@ -152,7 +152,7 @@ describe('User Service', function () {
     });
   });
 
-  describe('onboardUsers():', function () {
+  describe('onboardUsersLegacy():', function () {
     it('onboardUsers success with sunlight K1 license should send PUT request to Sunlight Config', function () {
       this.$httpBackend
         .expectPOST(this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/users/onboard')
