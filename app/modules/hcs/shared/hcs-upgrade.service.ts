@@ -25,11 +25,18 @@ export class HcsUpgradeService {
         Authorization: BASIC_AUTH_VAL,
       },
     };
+    const queryAction: ng.resource.IActionDescriptor = {
+      method: 'GET',
+      headers: {
+        Authorization: BASIC_AUTH_VAL,
+      },
+    };
 
     this.sftpServerResource = <ISftpServerResource>this.$resource(BASE_URL + 'partners/:partnerId/sftpServers/:sftpServerId', {},
       {
         update: updateAction,
         save: saveAction,
+        query: queryAction,
       });
   }
 
@@ -53,7 +60,7 @@ export class HcsUpgradeService {
     }, sftpServer).$promise;
   }
 
-  public listSftpServers() {
+  public listSftpServers(): ng.IPromise <any[]> {
     return this.sftpServerResource.query({
       partnerId: this.Authinfo.getOrgId(),
     }).$promise;
