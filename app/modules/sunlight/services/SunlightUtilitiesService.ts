@@ -73,7 +73,7 @@ export class SunlightUtilitiesService {
     const appOnboarded = _.get(result, 'data.appOnboardStatus');
     const aaOnboarded = _.get(result, 'data.aaOnboardingStatus');
     const jwtOnboarded = _.get(result, 'data.jwtAppOnboardingStatus');
-    return this.ContextAdminAuthorizationService.isMigrationNeeded().then(function (migrationNeeded) {
+    return this.ContextAdminAuthorizationService.isMigrationNeeded().then((migrationNeeded) => {
       if (!migrationNeeded && (this.getCareOnboardStatusForAdmin(csOnboarded, appOnboarded, aaOnboarded, jwtOnboarded) ||
         this.getCareOnboardStatusForPartner(csOnboarded, aaOnboarded))) {
         isCareOnboarded = true;
