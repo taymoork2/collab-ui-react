@@ -3641,6 +3641,41 @@
               orgId: null,
             },
           })
+          // TODO: Landing page for heldesk to admin elevation
+          .state('helpdesk-admin-elevation', {
+            parent: 'mainLazyLoad',
+            url: '/helpdesk-admin-elevation?orgId&signature&customerUserId&userId&timestamp',
+            views: {
+              'main@': {
+                template: '<helpdesk-admin-elevation timestamp="$resolve.timestamp" user-id="$resolve.userId" org-id="$resolve.orgId" signature="$resolve.signature" customer-user-id="$resolve.customerUserId"></helpdesk-admin-elevation>',
+              },
+            },
+            params: {
+              orgId: null,
+              signature: null,
+              customerEmail: null,
+              userId: null,
+              timestamp: null,
+            },
+            authenticate: false,
+            resolve: {
+              orgId: /*@ngInject */ function ($stateParams) {
+                return $stateParams['orgId'];
+              },
+              signature: /*@ngInject */ function ($stateParams) {
+                return $stateParams['signature'];
+              },
+              customerUserId: /*@ngInject */ function ($stateParams) {
+                return $stateParams['customerUserId'];
+              },
+              userId: /*@ngInject */ function ($stateParams) {
+                return $stateParams['userId'];
+              },
+              timestamp: /*@ngInject */ function ($stateParams) {
+                return $stateParams['timestamp'];
+              },
+            },
+          })
           .state('provisioning-main', {
             views: {
               'main@': {

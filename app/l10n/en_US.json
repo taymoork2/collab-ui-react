@@ -9172,6 +9172,8 @@
     "verification": "Verification",
     "resend": "Resend Invite",
     "resendSuccess": "Invitation resent successfully.",
+    "requestFullAdminAccessToOrg": "Request full admin access to organization",
+    "sendRequestForFullAdminAccess": "Send request",
     "sendCode": "Send Code",
     "usage": "{{usage}} of {{volume}} in use",
     "numbers": "Numbers",

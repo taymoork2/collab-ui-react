@@ -21,6 +21,19 @@
 
       <hr>
 
+      <div ng-if="helpdeskUserCtrl.showSendRequestForFullAdminAccess()" class="row">
+        <div class="medium-5 columns details-heading">
+          <span>{{'helpdesk.requestFullAdminAccessToOrg' | translate}}:</span>
+        </div>
+        <div class="medium-7 columns details-value">
+          <span ng-if="helpdeskUserCtrl.requestFullAdminAccessToOrg" style="padding-right: 1rem">{{helpdeskUserCtrl.requestFullAdminAccessToOrg}}</span>
+          <button class="action secondary small details-button" type="button"
+                  ng-click="helpdeskUserCtrl.sendRequestForFullAdminAccess()" translate="helpdesk.sendRequestForFullAdminAccess"
+                  ng-if="helpdeskUserCtrl.showSendRequestForFullAdminAccess()">
+          </button>
+        </div>
+      </div>
+
       <div class="row">
         <div class="medium-5 columns details-heading">
           <span>{{'helpdesk.verification' | translate}}:</span>

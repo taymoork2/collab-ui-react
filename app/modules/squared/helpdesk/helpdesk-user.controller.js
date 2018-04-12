@@ -8,7 +8,7 @@
   var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
   /* @ngInject */
-  function HelpdeskUserController($modal, $q, $stateParams, $translate, $window, AccessibilityService, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, HybridServicesI18NService, HybridServicesClusterService, ResourceGroupService, UCCService) {
+  function HelpdeskUserController($log, $modal, $q, $stateParams, $translate, $window, AccessibilityService, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, HybridServicesI18NService, HybridServicesClusterService, ResourceGroupService, UCCService) {
     var vm = this;
     var SUPPRESSED_STATE = {
       LOADING: 'loading',
@@ -39,6 +39,8 @@
     vm.hybridServicesCard = {};
     vm.keyPressHandler = keyPressHandler;
     vm.sendCode = sendCode;
+    vm.showSendRequestForFullAdminAccess = showSendRequestForFullAdminAccess;
+    vm.sendRequestForFullAdminAccess = sendRequestForFullAdminAccess;
     vm.downloadLog = downloadLog;
     vm.isAuthorizedForLog = isAuthorizedForLog;
     vm.isCare = false;
@@ -86,6 +88,20 @@
           }
         })
         .catch(vm._helpers.notifyError);
+    }
+
+    function showSendRequestForFullAdminAccess() {
+      $log.info('balle');
+      if (vm.user != undefined && vm.user.roles != undefined) {
+        return vm.user.roles.length > 0 && vm.user.roles.includes('id_full_admin');
+      }
+      return false;
+    }
+
+    function sendRequestForFullAdminAccess() {
+      HelpdeskService.sendRequestForFullAdminAccess(vm.user.id, vm.user.orgId).then(function () {
+        vm.sendRequestForFullAdminAccess = false;
+      }, vm._helpers.notifyError);
     }
 
     function sendCode() {

@@ -1,0 +1,44 @@
+<div class="helpdesk-app-container admin-elevation">
+  <cs-header navstyle="" headertitle="Temporary Admin Elevation" icon="icon-cisco-logo">
+    <cs-header-left>
+    </cs-header-left>
+  </cs-header>
+  <div class="helpdesk-content-view">
+    <div ng-show="$ctrl.state === 'INIT'" class="loading">
+      <span class="spinner">
+        <i class="icon icon-spinner"></i>
+      </span>
+    </div>
+    <div ng-show="$ctrl.state === 'VALID_SIGNATURE' || $ctrl.state === 'ELEVATION_DONE' || $ctrl.state === 'REJECTED'" class="info-wrapper">
+      <p class="admin-elevation-info">
+        Do you want Helpdesk Operator {{$ctrl.helpDeskOperatorName}} to temporary (max 1 hour time limit) <br/> become Full Administrator for Organization {{$ctrl.orgName}} ?
+      </p>
+    </div>
+    <div ng-show="$ctrl.state === 'VALID_SIGNATURE' || $ctrl.state === 'INVALID_SIGNATURE' || $ctrl.state === 'ELEVATION_DONE' || $ctrl.state === 'REJECTED' || $ctrl.state === 'ERROR'" class="admin-elevation-wrapper">
+      <div class="admin-elevation-buttons" ng-show="$ctrl.state === 'VALID_SIGNATURE' || $ctrl.state === 'ELEVATION_DONE' || $ctrl.state === 'REJECTED'">
+        <button ng-click="$ctrl.rejectElevation()" ng-disabled="$ctrl.state === 'ELEVATION_DONE' || $ctrl.state === 'REJECTED'" href="" class="btn btn--large">Reject</button>
+        <button ng-click="$ctrl.grantElevation()" ng-disabled="$ctrl.state === 'ELEVATION_DONE' || $ctrl.state === 'REJECTED'" href="" class="btn btn--primary btn--large">Grant</button>
+      </div>
+      <div ng-show="$ctrl.state === 'ELEVATION_DONE'">
+        <p class="admin-elevation-info">
+          Help Desk Operator {{$ctrl.helpDeskOperatorName}} is now given a temporary Full Administrator access to Organization {{$ctrl.orgName}}.
+        </p>
+      </div>
+      <div ng-show="$ctrl.state === 'REJECTED'">
+        <p class="admin-elevation-info">
+          Grant was rejected. Contact Help Desk Operator if new grant is needed.
+        </p>
+      </div>
+      <div ng-show="$ctrl.state === 'INVALID_SIGNATURE' || $ctrl.state === 'INVALID_SIGNATURE'">
+        <p class="admin-elevation-info">
+          This page was accessed with invalid parameters or signature has timed out. Contact Helpesk Operator for further help.
+        </p>
+      </div>
+      <div ng-show="$ctrl.state === 'ERROR'">
+        <p class="admin-elevation-info">
+          An error occured. Contact Helpesk Operator for further help.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
