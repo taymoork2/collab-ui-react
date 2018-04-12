@@ -53,15 +53,22 @@
           }
         };
 
+        // notes:
+        // - as of 2018-04-16, if a GET call is made for an org with too many users (3000+), CI will respond with a 403 status containing an error code of `'200045'`
         function getNumberOnboardedUsers() {
           var params = {
             orgId: Authinfo.getOrgId(),
+            noErrorNotificationOnReject: true,
           };
           UserListService.listUsersAsPromise(params).then(function (response) {
-            var numUsers = response.data.Resources.length;
-            card.usersOnboarded = numUsers >= 3000 ? '3000+' : numUsers;
-          }).catch(function () {
-            card.usersOnboarded = $translate.instant('overview.cards.users.onboardError');
+            card.usersOnboarded = response.data.totalResults;
+          }).catch(function (error) {
+            var errors = error.data.Errors;
+            if (error.status === 403 && _.some(errors, { errorCode: '200045' })) {
+              card.usersOnboarded = '3000+';
+            } else {
+              card.usersOnboarded = $translate.instant('overview.cards.users.onboardError');
+            }
           });
         }
 
