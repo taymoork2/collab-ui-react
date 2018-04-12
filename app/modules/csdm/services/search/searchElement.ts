@@ -43,17 +43,27 @@ export abstract class SearchElement {
 
   public abstract getCommonMatchOperator(): string;
 
-  public setBeingEdited(beingEdited: boolean) {
-    this._isBeingEdited = beingEdited;
-  }
-
   public abstract tryFlattenIntoParent();
+
+  public abstract toJSON(): any;
 
   public isBeingEdited(): boolean {
     return this._isBeingEdited;
   }
 
-  public abstract toJSON(): any;
+  public setBeingEdited(beingEdited: boolean) {
+    this._isBeingEdited = beingEdited;
+  }
+
+  public getRootPill(): SearchElement {
+    const myParent = this.getParent();
+
+    if (!myParent || !myParent.getParent()) {
+      return this;
+    } else {
+      return myParent.getRootPill();
+    }
+  }
 
   public removeFromParent() {
     const index = this.parent.getExpressions().indexOf(this, 0);
@@ -183,6 +193,7 @@ export class FieldQuery extends SearchElement {
 }
 
 export class OperatorAnd extends CollectionOperator {
+
   public and: SearchElement[];
 
   constructor(andedElements: SearchElement[], takeOwnerShip: boolean = true) {

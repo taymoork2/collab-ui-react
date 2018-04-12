@@ -1,4 +1,4 @@
-import { ConnectorType, HybridServiceId, IExtendedClusterServiceStatus, IExtendedClusterFusion, IExtendedConnector } from 'modules/hercules/hybrid-services.types';
+import { ConnectorType, HybridServiceId, IExtendedClusterServiceStatus, IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
 import enterprisePrivateTrunkServiceModuleName, { EnterprisePrivateTrunkService, IPrivateTrunkResourceWithStatus } from 'modules/hercules/services/enterprise-private-trunk-service';
 import hybridServicesUtilsServiceModuleName, { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 import gridModuleName, { GridCellService } from 'modules/core/csgrid';
@@ -7,6 +7,7 @@ import hybridServicesClusterStatesServiceModuleName, { HybridServicesClusterStat
 import hybridServiceClusterServiceModuleName, { HighLevelStatusForService, HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 import ussServiceName, { IExtendedStatusByClusters, USSService } from 'modules/hercules/services/uss.service';
 import * as ngTranslateModuleName from 'angular-translate';
+import hybridServicesExtrasServiceModuleName, { HybridServicesExtrasService, ICapacityInformation } from 'modules/hercules/services/hybrid-services-extras.service';
 
 interface ISelectOption {
   label: string;
@@ -34,7 +35,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
   public capacity = 0;
   public maxUsers = 0;
   public tooltip: string = '';
-  public progressBarType: 'success' | 'warning' | 'danger' = 'success';
+  public progressBarType: ICapacityInformation['progressBarType'] = 'success';
 
   private subscribeStatusesSummary: any;
   private serviceId: HybridServiceId;
@@ -52,6 +53,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
     private GridCellService: GridCellService,
     private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
+    private HybridServicesExtrasService: HybridServicesExtrasService,
     private HybridServicesUtilsService: HybridServicesUtilsService,
     private USSService: USSService,
   ) {
@@ -143,40 +145,13 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
   }
 
   private updateCapacity(clusters: IExtendedClusterFusion[]): void {
-    this.maxUsers = _.chain(clusters)
-      .map(cluster => cluster.connectors)
-      .flatten<IExtendedConnector>()
-      .filter(connector => connector.connectorType === this.connectorType)
-      .map(connector => connector.userCapacity)
-      .sum()
-      .value();
-
-    let users = 0;
-    const relevantClusterIds = _.reduce(clusters, (acc, cluster) => {
-      acc.push(cluster.id);
-      // The data we get from the User Statuses summary could use the legacy device id instead of the current cluster id
-      if (cluster.legacyDeviceClusterId) {
-        acc.push(cluster.legacyDeviceClusterId);
-      }
-      return acc;
-    }, <string[]>[]);
-    if (this.userStatusesByClustersSummary && this.userStatusesByClustersSummary.length > 0) {
-      users = _.sum(_.map(this.userStatusesByClustersSummary, summary => {
-        if (_.includes(relevantClusterIds, summary.id)) {
-          return summary.users;
-        }
-        return 0;
-      }));
-    }
-    this.capacity = Math.ceil(users / this.maxUsers * 100);
-    if (this.capacity > 90) {
-      this.progressBarType = 'danger';
-    } else if (this.capacity > 60) {
-      this.progressBarType = 'warning';
-    }
+    const capacityInfo = this.HybridServicesExtrasService.getCapacityInformation(clusters, this.connectorType, this.userStatusesByClustersSummary);
+    this.capacity = capacityInfo.capacity;
+    this.maxUsers = capacityInfo.maxUsers;
+    this.progressBarType = capacityInfo.progressBarType;
     this.tooltip = this.$translate.instant('hercules.capacity.tooltip', {
       capacity: this.capacity,
-      total: users,
+      total: capacityInfo.users,
       max: this.maxUsers,
     });
   }
@@ -341,6 +316,7 @@ export default angular
     gridModuleName,
     hybridServiceClusterServiceModuleName,
     hybridServicesClusterStatesServiceModuleName,
+    hybridServicesExtrasServiceModuleName,
     hybridServicesUtilsServiceModuleName,
     ussServiceName,
   ])

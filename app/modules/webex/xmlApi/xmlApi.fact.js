@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  /* global X2JS */
+  var X2JS = require('x2js');
 
   /* @ngInject */
   function WebExXmlApiFact(
@@ -506,7 +506,7 @@
           'fullBodyXml=' + '\n' + fullBodyXml;
         // $log.log(logMsg);
 
-        var fullBodyJson = x2js.xml_str2json(fullBodyXml);
+        var fullBodyJson = x2js.xml2js(fullBodyXml);
 
         logMsg = funcName + ': ' + commentText + '\n' +
           'fullBodyJson=\n' + JSON.stringify(fullBodyJson);

@@ -19,6 +19,17 @@ interface IResourceGroup {
   releaseChannel: string;
 }
 
+interface IAddDryRun {
+  clusterId: string;
+  connectorType: ConnectorType;
+  userCapacitiesBefore: {
+    [connecotType: string]: number;
+  };
+  userCapacitiesAfter: {
+    [connecotType: string]: number;
+  };
+}
+
 export interface IResourceGroups {
   groups: IResourceGroup[];
   unassigned: IExtendedClusterFusion[];
@@ -289,10 +300,16 @@ export class HybridServicesClusterService {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}/provisioning/actions/add/invoke?connectorType=${connectorType}`;
     return this.$http.post<''>(url, null)
       .then(this.extractDataFromResponse)
-      .then((res) => {
+      .then(res => {
         this.clearCache();
         return res;
       });
+  }
+
+  public provisionConnectorDryRun(clusterId: string, connectorType: ConnectorType): ng.IPromise<IAddDryRun> {
+    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}/provisioning/actions/dryRunAdd/invoke?connectorType=${connectorType}`;
+    return this.$http.post<IAddDryRun>(url, null)
+      .then(this.extractDataFromResponse);
   }
 
   public hasOnlyOneExpresswayWithConnectorProvisioned(connectorType: ConnectorType): ng.IPromise<boolean> {

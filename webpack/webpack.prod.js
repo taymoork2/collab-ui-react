@@ -42,7 +42,7 @@ function webpackConfig(env) {
         ngStrictDi: '',
       }),
       new ExtractTextPlugin({
-        filename: 'styles/[name].[chunkhash].css',
+        filename: 'styles/[name].[contenthash].css',
         allChunks: true,
       }),
       new webpack.NoEmitOnErrorsPlugin(),

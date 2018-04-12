@@ -1,6 +1,7 @@
 export enum TaskListFilterType {
   ALL,
   ACTIVE,
+  ERROR,
 }
 
 export enum TaskStatus {
@@ -9,11 +10,10 @@ export enum TaskStatus {
   STARTED = 'STARTED',
   STOPPING = 'STOPPING',
   STOPPED = 'STOPPED',
-  STOPPED_FOR_MAINTENANCE = 'STOPPED_FOR_MAINTENANCE',
   COMPLETED = 'COMPLETED',
-  COMPLETED_WITH_ERRORS = 'COMPLETED_WITH_ERRORS',
   FAILED = 'FAILED',
   ABANDONED = 'ABANDONED',
+  UNKNOWN = 'UNKNOWN',
 }
 
 export enum TaskType {

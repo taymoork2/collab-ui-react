@@ -1,5 +1,37 @@
 <div class="result-pane">
-  <cs-grid class="gridStyle" grid-api="lctrl.gridApi" grid-options="lctrl.gridOptions" ></cs-grid>
+  <div ng-show="lctrl.selectAllSpinner">
+    <div class="select-all-screen"></div>
+    <div class="select-all-container">
+      <div class="select-all">
+        <i class="icon icon-2x icon-spinner"/>
+      </div>
+    </div>
+  </div>
+  <div class="bulk-banner" ng-class="lctrl.bulkAll !== false ? 'enable' : ''">
+
+    <i class="icon icon-spinner" ng-show="lctrl.selectAllSpinner"/>
+    <span
+      class="text"
+      ng-show="!lctrl.selectAllSpinner && lctrl.bulkSelectionCount === 1"
+      id="header-title"
+      translate="deviceBulk.1DeviceSelected">
+    </span>
+    <span
+      class="text"
+      ng-show="!lctrl.selectAllSpinner && lctrl.bulkSelectionCount > 1"
+      id="header-title"
+      translate="deviceBulk.xDevicesSelected"
+      translate-values="{nDevices: lctrl.bulkSelectionCount}">
+    </span>
+
+    <i class="icon icon-trash"
+       ng-show="!lctrl.selectAllSpinner && lctrl.bulkSelectionCount >= 1"
+       tooltip="{{ 'deviceBulk.deleteDevices' | translate }}"
+       tooltip-animation="true"
+       aria-label="{{ 'deviceBulk.deleteDevices' | translate }}"
+       ng-click="lctrl.bulkDelete()"></i>
+  </div>
+  <cs-grid class="gridStyle" grid-api="lctrl.gridApi" grid-options="lctrl.gridOptions"></cs-grid>
   <div class="loadmorecontainer">
     <div class="loadmore" ng-show="lctrl.loadingMoreSpinner">
       <i class="icon icon-2x icon-spinner"/>

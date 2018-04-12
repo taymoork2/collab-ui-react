@@ -5,7 +5,7 @@ var testModule = require('./index').default;
 
 describe(' URService', function () {
   var URService, $httpBackend, queueId, orgId, queueDetails, sunlightURQueueURUrl;
-
+  var DEFAULT_QUEUE = 'Queue 1';
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
   };
@@ -36,7 +36,7 @@ describe(' URService', function () {
 
   it('should update default queue for default queueId', function () {
     var updateQueueRequest = {
-      queueName: 'DEFAULT',
+      queueName: DEFAULT_QUEUE,
       notificationUrls: [],
       routingType: 'push',
     };
@@ -67,7 +67,7 @@ describe(' URService', function () {
   it('should create default queue in sunlight URService', function () {
     var createQueueRequest = {
       queueId: orgId,
-      queueName: 'DEFAULT',
+      queueName: DEFAULT_QUEUE,
       notificationUrls: [],
       routingType: 'pick',
     };
@@ -81,7 +81,7 @@ describe(' URService', function () {
   it('should fail to create chat template in sunlight config service when there is a service error', function () {
     var createQueueRequest = {
       queueId: orgId,
-      queueName: 'DEFAULT',
+      queueName: DEFAULT_QUEUE,
       notificationUrls: [],
       routingType: 'pick',
     };

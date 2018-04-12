@@ -8390,7 +8390,38 @@
     "helpTextWaitingEVA": "客戶在等待其要求的回應時，會看到此訊息。",
     "waitingMessageEVA": "很快會有人協助您…",
     "helpTextLeaveRoomEVA": "當與客戶互動的使用者結束聊天時，客戶會看到此訊息。",
-    "leaveRoomMessageEVA": "聊天已結束"
+    "leaveRoomMessageEVA": "聊天已結束",
+    "templateConfig": {
+      "default": {
+        "feedbackQueryCall": "請評價回撥體驗。",
+        "additionalDetailsAbtIssue": "說明您遇到的問題",
+        "chattingMessage": "正在聊天...",
+        "defaultPhoneHintText": "+12345556789",
+        "defaultPromptMessage": "與我們的解決方案專家溝通，以協助我們為您提供更出色的服務。",
+        "ratingComment": "新增意見",
+        "feedbackQuery": "請評價對聊天的感受",
+        "offHoursDefaultMessage": "我們目前離線。請於工作時間再試。",
+        "callbackConfirmationMsg": "已成功收到回撥請求。",
+        "defaultEmailText": "電子郵件",
+        "field3HintText": "從清單或類型中選取",
+        "defaultWelcomeText": "歡迎進入",
+        "connectingMessage": "正在將您連線至客服人員",
+        "defaultNameHint": "",
+        "enterRoomMessage": "客服人員已進入聊天室",
+        "defaultQuestionText": "您需要什麼協助？",
+        "leaveRoomMessage": "客服人員已離開聊天",
+        "waitingMessageEVA": "很快會有人協助您…",
+        "virtualAssistantWelcomeMessage": "您好，我今天可以幫您嗎？",
+        "defaultNameText": "名稱",
+        "waitingMessage": "正在等待客服人員...",
+        "defaultPhoneText": "電話號碼",
+        "additionalDetails": "其他詳細資料",
+        "bubbleTitleMessage": "請按一下這裡以與 Customer Care 聊天",
+        "defaultEmail": "例如 abc@xyz.com",
+        "agentUnavailableMessage": "抱歉，目前無法使用。請稍後再試一次。",
+        "leaveRoomMessageEVA": "聊天已結束"
+      }
+    }
   },
   "huronHuntGroup": {
     "modalTitle": "群組搜尋",
@@ -9371,7 +9402,7 @@
       "beforeVerify": "必須複製此 DNS 驗證記號並貼到 TXT 記錄區段，以證明您擁有此網域：",
       "warning": "請務必驗證所有網域。不屬於已驗證網域的使用者將立即予以鎖定。這些使用者將無法登入或使用 Cisco Spark Care。您還將無法新增任何屬於未驗證網域的新使用者。",
       "verify": "驗證",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>進一步瞭解</a>如何輸入 DNS 驗證記號。"
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>進一步瞭解</a>如何輸入 DNS 驗證記號。"
     },
     "claim": {
       "header": "宣告網域",

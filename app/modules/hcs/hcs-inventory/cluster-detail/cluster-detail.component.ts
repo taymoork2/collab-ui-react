@@ -9,38 +9,47 @@ export interface ICsInputMessage {
   maxlength?: string;
 }
 
+export interface IBackParameters {
+  groupId: string;
+  groupType: string;
+}
+
 export class ClusterDetailComponent implements ng.IComponentOptions {
   public controller = ClusterDetailCtrl;
   public template = require('./cluster-detail.component.html');
   public bindings = {
     clusterId: '<',
     clusterName: '<',
-    customerId: '<',
+    groupId: '<',
+    groupType: '<',
   };
 }
 
 export class ClusterDetailCtrl implements ng.IComponentController {
   public clusterId: string;
   public clusterName: string;
-  public customerId: string;
+  public groupId: string;
+  public groupType: string;
   public back: boolean = true;
   public form: ng.IFormController;
   public sftpLocationSelected: ISftpLocationOption;
   public sftpLocationOptions: ISftpLocationOption[];
   public clusterNameInputMessages: ICsInputMessage;
   public clusterDetail: any;
-    /* @ngInject */
-  constructor() {}
+  public backParameters: IBackParameters;
+  public backState: string = 'hcs.clusterList';
+
+  /* @ngInject */
+  constructor(
+    private $state: ng.ui.IStateService,
+  ) {
+    this.backParameters = {
+      groupId: this.groupId,
+      groupType: this.groupType,
+    };
+  }
 
   public $onInit(): void {
-    this.sftpLocationOptions = [{
-      label: 'sftpserver1',
-      value: 'sftpserver1',
-    }, {
-      label: 'sftpserver2',
-      value: 'sftpserver2',
-    }];
-
     this.sftpLocationSelected = { label: 'sftpserver1', value: 'sftpserver1' };
     this.clusterNameInputMessages = {
       required: 'This field is required',
@@ -79,5 +88,9 @@ export class ClusterDetailCtrl implements ng.IComponentController {
 
   }
   public onSftpLocationChanged() {
+  }
+
+  public onBack(): void {
+    this.$state.go('hcs.clusterList', { groupId: this.groupId, groupType: this.groupType });
   }
 }

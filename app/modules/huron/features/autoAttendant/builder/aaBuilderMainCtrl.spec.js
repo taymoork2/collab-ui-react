@@ -931,6 +931,16 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(_.get(this.controller.aaModel.aaRecord.actionSets[0], 'actions').length).toBe(4);
       expect(_.get(this.controller.aaModel.aaRecord.actionSets[0], 'actions[1].doREST.id')).toBe(this.restId);
     });
+
+    it('should return an error when uuid of a number is different on CMI and CES', function () {
+      this.$scope.vm.aaModel = {};
+      this.$scope.vm.aaModel.aaRecords = this.ces;
+      this.$scope.vm.aaModel.aaRecords[1].assignedResources.uuid = '00097a86-45ef-44a7-aa78-6d32a0ca1d3c';
+      this.controller.selectAA('AAA2');
+      this.$scope.$apply();
+      this.$scope.vm.aaModel.aaRecords[1].assignedResources.uuid = '00097a86-45ef-44a7-aa78-6d32a0ca1d3b';
+      expect(this.AANotificationService.error).toHaveBeenCalled();
+    });
   });
 
   describe('setupTemplate', function () {

@@ -2,23 +2,26 @@ import { CtBaseController } from './ctBase.controller';
 import { KeyCodes } from 'modules/core/accessibility';
 import { IToolkitModalService } from 'modules/core/modal';
 import { TemplateWizardService } from './services/TemplateWizard.service';
+import { AccessibilityService } from 'modules/core/accessibility';
 
 class CtSetupAssistantCtrl extends CtBaseController  {
 
   /* @ngInject*/
   constructor(
+    private $element: ng.IRootElementService,
     public $stateParams: ng.ui.IStateParamsService,
     public $translate: ng.translate.ITranslateService,
     public $modal: IToolkitModalService,
     public $timeout: ng.ITimeoutService,
+    private AccessibilityService: AccessibilityService,
     public TemplateWizardService: TemplateWizardService,
     public CTService,
+    public $state,
   ) {
     super($stateParams, TemplateWizardService, CTService, $translate);
 
     this.TemplateWizardService.setSelectedMediaType(this.$stateParams.type);
     this.TemplateWizardService.setInitialState();
-    this.c.log(this.$stateParams);
   }
 
   public $onInit(): void {
@@ -27,11 +30,19 @@ class CtSetupAssistantCtrl extends CtBaseController  {
     this.currentState = this.TemplateWizardService.currentState;
   }
 
-  public animation = 'slide-left';
   private animationTimeout = 10;
+  private pageFocus = {};
 
-  private setFocus(page, locator) {
-    this.c.log(page, locator);
+  private setFocus(page: string, locator: string) {
+    const element = this.$element.find(locator);
+    if (!this.pageFocus[page] && element.length > 0) {
+      this.AccessibilityService.setFocus(this.$element, locator);
+
+      _.forEach(this.pageFocus, (_value: boolean, key: string) => {
+        this.pageFocus[key] = false;
+      });
+      this.pageFocus[page] = true;
+    }
   }
 
   private isOffHoursPageValid() {
@@ -39,7 +50,7 @@ class CtSetupAssistantCtrl extends CtBaseController  {
   }
 
   private isProactivePromptPageValid() {
-    return true;
+    return this.TemplateWizardService.pageValidationResult.isProactivePromptPageValid || false;
   }
 
   private isNamePageValid(): boolean {
@@ -51,15 +62,15 @@ class CtSetupAssistantCtrl extends CtBaseController  {
   }
 
   private isProfilePageValid() {
-    return true;
+    return this.TemplateWizardService.pageValidationResult.isProfileValid || false;
   }
 
   private isAgentUnavailablePageValid() {
-    return true;
+    return this.TemplateWizardService.pageValidationResult.isAgentUnavailableValid || false;
   }
 
   private isFeedbackPageValid() {
-    return true;
+    return this.TemplateWizardService.pageValidationResult.isFeedbackValid || false;
   }
 
   private isStatusMessagesPageValid() {
@@ -67,15 +78,14 @@ class CtSetupAssistantCtrl extends CtBaseController  {
   }
 
   private isVirtualAssistantPageValid() {
-    return true;
+    return this.TemplateWizardService.pageValidationResult.isVirtualAssistantValid || false;
   }
 
   private isChatEscalationBehaviorPageValid() {
-    return true;
+    return this.TemplateWizardService.pageValidationResult.isChatEscalationValid || false;
   }
 
   public nextButton() {
-    this.c.log('next button: state' +  this.TemplateWizardService.currentState);
     switch (this.TemplateWizardService.currentState) {
       case 'summary':
         this.setFocus('summary', '#chatSetupFinishBtn');
@@ -107,10 +117,6 @@ class CtSetupAssistantCtrl extends CtBaseController  {
         this.setFocus('chatStatusMessages', '#waiting');
         return this.isStatusMessagesPageValid();
       case 'overview':
-        //var cardName = _.get(vm.overviewCards[0], 'name');
-        //if (!_.isUndefined(cardName)) {
-        //  this.setFocus('overview', '#' + cardName);
-        //}
         return true;
       case 'virtualAssistant':
         this.setFocus('virtualAssistant', '#virtualAssistantSelect #selectMain');
@@ -142,12 +148,10 @@ class CtSetupAssistantCtrl extends CtBaseController  {
   }
 
   public previousPage() {
-    this.animation = 'slide-right';
     this.$timeout( () => { this.jumpToPageBy(-1); }, this.animationTimeout);
   }
 
   public nextPage() {
-    this.animation = 'slide-left';
     this.$timeout(() => { this.jumpToPageBy(1); }, this.animationTimeout);
   }
 
@@ -166,16 +170,22 @@ class CtSetupAssistantCtrl extends CtBaseController  {
     });
   }
   public evalKeyPress(keyCode): void {
-    this.c.log('evalKeyPress:' + keyCode );
     switch (keyCode) {
       case KeyCodes.ESCAPE:
-        this.c.log('Cancell will be called here');
         this.cancelModal();
+        break;
+      case KeyCodes.ENTER:
+        if (this.nextButton()) {
+          this.nextPage();
+        }
         break;
       default:
         break;
     }
   }
+
+  // TODO: functionality will be added later
+  private statusPageNotifier() {}
 
   public navigationHandler() {
     switch (this.TemplateWizardService.currentState) {
@@ -185,14 +195,6 @@ class CtSetupAssistantCtrl extends CtBaseController  {
       case 'chatStatusMessages': this.statusPageNotifier(); break;
     }
   }
-
-  private statusPageNotifier() {
-  //  var notifyMessage = this.$translate.instant('careChatTpl.statusMessage_failureText', { lengthLimit: this.TemplateWizardService.lengthConstants.singleLineMaxCharLimit25 });
-  //  if (!this.isStatusMessagesPageValid() && this.TemplateWizardService.isEditFeature) {
-  //    Notification.error(notifyMessage);
-  //  }
-  }
-
 }
 
 export class CtSetupAssistantComponent implements ng.IComponentOptions {

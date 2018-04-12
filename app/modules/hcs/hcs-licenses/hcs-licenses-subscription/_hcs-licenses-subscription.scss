@@ -7,18 +7,9 @@
   @extend %grid-subheader;
 
   .ui-grid {
-    .standardColumn,
-    .telepresenceColumn,
-    .otherColumn {
-      text-align: center;
-    }
     .statusColumn {
       text-align: left;
     }
-    .ui-grid-cell.standard {
-      text-align: center;
-    }
-
     .ui-grid-row {
       border-bottom: none;
       background-color: $white;
@@ -36,6 +27,8 @@
 
   .ui-grid-header-cell.customer,
   .ui-grid-header-cell.subscriptionId,
+  .ui-grid-header-cell.standard,
+  .ui-grid-header-cell.foundation,
   .ui-grid-header-cell.status {
     text-align: left;
   }

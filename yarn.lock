@@ -170,6 +170,10 @@
     angular-formly "~7.3.0"
     api-check "~7.5.0"
 
+"@collabui/collab-ui-icons@^1.0.5":
+  version "1.0.5"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui-icons/-/@collabui/collab-ui-icons-1.0.5.tgz#884abb73afa14612c112bec036c8692175ef146e"
+
 "@collabui/collab-ui-icons@~1.0.4":
   version "1.0.4"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui-icons/-/@collabui/collab-ui-icons-1.0.4.tgz#2ae8f820ce00b717e61f66ecfde6ffd27318fb5c"
@@ -190,11 +194,11 @@
     masonry-layout "^4.1.1"
     moment "^2.10.6"
 
-"@collabui/collab-ui-ng@~8.0.0":
-  version "8.0.0"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui-ng/-/@collabui/collab-ui-ng-8.0.0.tgz#dc4512b6b21bd765c584a6801658d7dffab0d257"
+"@collabui/collab-ui-ng@~8.1.2":
+  version "8.1.2"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui-ng/-/@collabui/collab-ui-ng-8.1.2.tgz#05b1e0a8c6ed9202fc584ccaaff917d637fdcc51"
   dependencies:
-    "@collabui/collab-ui" "~5.3.3"
+    "@collabui/collab-ui" "^5.4.0"
     angular "^1.5.0"
     angular-animate "^1.5.0"
     angular-messages "^1.5.0"
@@ -206,11 +210,23 @@
     masonry-layout "^4.1.1"
     moment "^2.10.6"
 
-"@collabui/collab-ui@~5.3.3", "@collabui/collab-ui@~5.3.6":
+"@collabui/collab-ui@^5.4.0":
+  version "5.4.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui/-/@collabui/collab-ui-5.4.0.tgz#a31828969cae437d3aebfbfd7086fd0716a8fda6"
+  dependencies:
+    "@collabui/collab-ui-icons" "^1.0.5"
+
+"@collabui/collab-ui@~5.3.3":
   version "5.3.6"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui/-/@collabui/collab-ui-5.3.6.tgz#4e3d84b844a340248546a2f6693dc5a5042c5161"
   dependencies:
     "@collabui/collab-ui-icons" "~1.0.4"
+
+"@collabui/collab-ui@~5.4.2":
+  version "5.4.2"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@collabui/collab-ui/-/@collabui/collab-ui-5.4.2.tgz#25ab6fdff9c7691fb789da1159227156b12445bd"
+  dependencies:
+    "@collabui/collab-ui-icons" "^1.0.5"
 
 "@types/amcharts@^0.0.39":
   version "0.0.39"
@@ -10140,9 +10156,9 @@ typedarray@^0.0.6, typedarray@~0.0.5:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typescript@^2.7.2:
-  version "2.7.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.7.2.tgz#2d615a1ef4aee4f574425cdff7026edf81919836"
+typescript@^2.8.1:
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.8.1.tgz#6160e4f8f195d5ba81d4876f9c0cc1fbc0820624"
 
 typhonjs-ast-walker@^0.1.0:
   version "0.1.1"
@@ -10769,9 +10785,11 @@ x-is-string@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/x-is-string/-/x-is-string-0.1.0.tgz#474b50865af3a49a9c4657f05acd145458f77d82"
 
-"x2js@git+https://github.com/abdmob/x2js.git#v1.2.0":
-  version "1.2.0"
-  resolved "git+https://github.com/abdmob/x2js.git#185e410b3fa621070fea1f86a389b477afa216b9"
+x2js@~3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/x2js/-/x2js-3.2.1.tgz#d7d9eb3ab14a31a98068b9eba1bb1b9397c96714"
+  dependencies:
+    xmldom "^0.1.19"
 
 xml-char-classes@^1.0.0:
   version "1.0.0"
@@ -10799,7 +10817,7 @@ xmlbuilder@>=1.0.0, xmlbuilder@~9.0.1:
   version "9.0.4"
   resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-9.0.4.tgz#519cb4ca686d005a8420d3496f3f0caeecca580f"
 
-xmldom@^0.1.22:
+xmldom@^0.1.19, xmldom@^0.1.22:
   version "0.1.27"
   resolved "https://registry.yarnpkg.com/xmldom/-/xmldom-0.1.27.tgz#d501f97b3bdb403af8ef9ecc20573187aadac0e9"
 

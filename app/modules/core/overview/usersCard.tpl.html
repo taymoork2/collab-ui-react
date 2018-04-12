@@ -4,9 +4,25 @@
   <span>{{card.name | translate}}</span>
   </div>
 </header>
-<section>
-  <div class="convert-block">
-    <div class="convert-text">
+<section ng-class="{ 'row user-card--auto-assign-enabled' : card.features.atlasF3745AutoAssignLicenses }">
+  <div ng-if="!card.features.atlasF3745AutoAssignLicenses" class="convert-block">
+    <!-- F7208 GDPR enabled-->
+    <div class="convert-text" ng-if="card.features.atlasF7208GDPRConvertUser">
+      <div ng-if="!card.showLicenseCard">
+        <span class="convert-nr h4">{{(card.potentialConversions | number) || 'N/A'}}</span>&nbsp;
+        <span translate="overview.cards.users.potentialConversions" id="convertText"></span>
+      </div>
+      <div ng-if="!card.showLicenseCard">
+        <span class="convert-pending h4">{{(card.pendingConversions | number) || 'N/A'}}</span>&nbsp;
+        <span translate="overview.cards.users.pendingConversions" id="convertText"></span>
+      </div>
+      <div ng-if="card.showLicenseCard">
+        <span translate="overview.cards.users.unassignedLicenses"
+          translate-values="{licenseNumber: card.licenseNumber, licenseType: card.licenseType}"></span>
+      </div>
+    </div>
+    <!-- F7208 GDPR disabled -->
+    <div class="convert-text" ng-if="!card.features.atlasF7208GDPRConvertUser">
       <div ng-if="!card.showLicenseCard">
         <span class="convert-nr h4">{{(card.usersToConvert | number) || 'N/A'}}</span>&nbsp;
         <span translate="overview.cards.users.convertText" id="convertText"></span>
@@ -16,24 +32,60 @@
           translate-values="{licenseNumber: card.licenseNumber, licenseType: card.licenseType}"></span>
       </div>
     </div>
+    <!-- F7208 GPPR end -->
     <button ng-if="!card.showLicenseCard" id="convertButton" class="btn btn--cta" translate="overview.cards.users.convertButton" ng-click="card.openConvertModal()" ng-disabled="card.isConvertButtonDisabled()">
     </button>
     <button ng-if="card.showLicenseCard" id="convertButton" class="btn btn--primary" translate="overview.cards.licenses.manageUsersButton" ng-click="card.manageUsers()">
     </button>
   </div>
-  <div class="status-block">
+  <div ng-if="card.features.atlasF3745AutoAssignLicenses" class="columns medium-6 onboard-block">
+    <div>
+      <span class="onboard-nr h4">{{ card.usersOnboarded }}</span>
+    </div>
+    <div class="onboard-users-text">
+      <span translate="overview.cards.users.onboardText"></span>
+    </div>
+    <div ng-if="card.features.autoLicense">
+      <a ui-sref="reports"></a>
+      <!-- TODO: Enable onboarding link when onboarding reports gets moved to MyCompany Page. chrispha 4/6/18
+      <a href="/my-company/onboarding" ui-sref="my-company-onboarding">
+        <span translate="reports.title"></span>
+      </a> -->
+    </div>
+  </div>
+  <div class="status-block" ng-class="[card.features.atlasF3745AutoAssignLicenses ? 'columns medium-6 status-block--auto-assign-enabled' : 'user-border']">
+    <div ng-if="card.features.atlasF3745AutoAssignLicenses" class="convert-block convert-block--auto-assign-enabled">
+      <div>
+        <div ng-if="!card.showLicenseCard">
+          <div class="convert-nr h4">{{(card.usersToConvert | number) || 'N/A'}}</div>
+          <div class="h6" translate="overview.cards.users.convertText"></div>
+        </div>
+        <div ng-if="card.showLicenseCard">
+          <div class="convert-nr h4">{{card.licenseNumber}}</div>
+          <div class="h6" translate="overview.cards.users.unassignedLicensesOnboarding"
+            translate-values="{licenseType: card.licenseType}"></div>
+        </div>
+      </div>
+      <button ng-if="!card.showLicenseCard" id="convertButton" class="btn btn--primary"
+        translate="overview.cards.users.convertButton" ng-click="card.openConvertModal()"
+        ng-disabled="card.isConvertButtonDisabled()">
+      </button>
+      <button ng-if="card.showLicenseCard" id="convertButton" class="btn btn--primary"
+        translate="overview.cards.licenses.manageUsersButton" ng-click="card.manageUsers()">
+      </button>
+    </div>
     <ul>
       <li class="status-block__item directory-synchronization">
         <i class="icon icon-spinner" ng-if="card.isUpdating"></i>
         <i class="icon icon-circle status-indicator" ng-class="{ 'success' : card.dirsyncEnabled, 'disabled': !card.dirsyncEnabled }" ng-if="!card.isUpdating"></i>
-        <span translate="overview.cards.users.directorySynchronization"></span>
+        <span ng-class="{ 'body-small': card.features.atlasF3745AutoAssignLicenses }" translate="overview.cards.users.directorySynchronization"></span>
         <a href id="viewDirSyncSettings" ng-click="card.showDirSyncSettings()" aria-label="{{::'overview.cards.users.directorySynchronization' | translate}}">
           <i class="icon-settings icon"></i>
         </a>
       </li>
       <li class="status-block__item single-sign-on">
         <i class="icon icon-circle status-indicator" ng-class="card.ssoEnabled ? 'success' : 'disabled' "></i>
-        <span translate="overview.cards.users.singleSignOn"></span>
+        <span ng-class="{ 'body-small': card.features.atlasF3745AutoAssignLicenses }" translate="overview.cards.users.singleSignOn"></span>
         <a href id="viewSsoSettings" ng-click="card.showSSOSettings()" aria-label="{{::'overview.cards.users.singleSignOn' | translate}}">
           <i class="icon-settings icon"></i>
         </a>
@@ -41,7 +93,8 @@
 
       <li class="status-block__item auto-assign-licenses" cr-feature-toggle feature-show="atlas-f3745-auto-assign-licenses">
         <i class="icon icon-circle status-indicator" ng-class="card.getAutoAssignLicensesStatusCssClass()"></i>
-        <span translate="overview.cards.users.autoAssignLicenses"></span>
+        <span ng-class="{ 'body-small': card.features.atlasF3745AutoAssignLicenses }" 
+          translate="overview.cards.users.autoAssignLicenses"></span>
         <a href ng-click="card.showEditAutoAssignTemplateModal()" aria-label="{{::'overview.cards.users.autoAssignLicenses' | translate}}">
           <i class="icon-settings icon"></i>
         </a>

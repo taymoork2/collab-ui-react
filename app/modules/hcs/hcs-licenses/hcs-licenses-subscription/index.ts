@@ -3,7 +3,7 @@ import featureModule from 'modules/core/featureToggle';
 import './_hcs-licenses-subscription.scss';
 
 export default angular
-  .module('Sunlight.numbers', [
+  .module('hcs.license.subscription', [
     require('modules/core/scripts/services/authinfo'),
     featureModule,
   ])

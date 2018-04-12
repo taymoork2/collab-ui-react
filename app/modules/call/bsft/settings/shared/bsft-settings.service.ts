@@ -1,6 +1,7 @@
-import { BsftSettings, IBsftSettings } from './bsft-settings';
+import { BsftSettings } from './bsft-settings';
 import { BsftCustomerService } from './bsft-customer.service';
 import { Notification } from 'modules/core/notifications';
+import { PstnModel } from 'modules/huron/pstn';
 
 export class BsftSettingsData {
   public bsftSettings: BsftSettings;
@@ -14,18 +15,16 @@ export class BsftSettingsService {
     private $q: ng.IQService,
     private BsftCustomerService: BsftCustomerService,
     private Notification: Notification,
+    private PstnModel: PstnModel,
   ) {}
 
   public get(customerId?: string | undefined) {
     return this.getBsftSettingsData(customerId);
   }
 
-  public save(bsftSettings: BsftSettings): IPromise<IBsftSettings> {
-    return this.BsftCustomerService.createBsftCustomer(bsftSettings)
-      .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error));
-        return this.$q.reject();
-      });
+  public save(bsftSettings: BsftSettings): IPromise<void> {
+    this.PstnModel.setBsftCustomer(bsftSettings);
+    return this.$q.resolve();
   }
 
   private getBsftSettingsData(customerId) {

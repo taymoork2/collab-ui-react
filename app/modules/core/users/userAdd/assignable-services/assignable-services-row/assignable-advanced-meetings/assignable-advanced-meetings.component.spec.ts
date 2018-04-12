@@ -288,6 +288,17 @@ describe('Component: assignableAdvancedMeetings:', () => {
       });
     });
 
+    describe('isLicenseDisabledByDefault():', () => {
+      it('should call up to "LicenseUsageUtilService.isLegacyWebExLicense()" and return its value', function () {
+        spyOn(this.LicenseUsageUtilService, 'isLegacyWebExLicense').and.returnValue(true);
+        this.compileComponent('assignableAdvancedMeetings');
+        expect(this.controller.isLicenseDisabledByDefault('fake-license-arg')).toBe(true);
+        expect(this.LicenseUsageUtilService.isLegacyWebExLicense).toHaveBeenCalledWith('fake-license-arg');
+        this.LicenseUsageUtilService.isLegacyWebExLicense.and.returnValue(false);
+        expect(this.controller.isLicenseDisabledByDefault('fake-license-arg')).toBe(false);
+      });
+    });
+
     describe('getBuddyLicenseFor():', () => {
       it('should return a buddy license, given a license with "EE", "MC", or "CMR"', function () {
         this.$scope.licenses = [{

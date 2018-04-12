@@ -18,11 +18,10 @@ describe('Component: userTaskStatus', () => {
       'FeatureToggleService',
       'UserTaskManagerService',
     );
-    this.taskList = require('./test-tasks.json').taskStatusTasks;
+    this.taskList = getJSONFixture('core/json/users/user-task-manager/test-tasks.json').taskStatusTasks;
 
     spyOn(this.FeatureToggleService, 'atlasCsvImportTaskManagerGetStatus').and.returnValue(this.$q.resolve(true));
     this.getInProcessTasksSpy = spyOn(this.UserTaskManagerService, 'getInProcessTasks');
-
   });
 
   describe('with running tasks', () => {

@@ -4,27 +4,41 @@
 <div class="modal-body">
   <div ng-if="$ctrl.state === $ctrl.states.USER_ACTION">
     <div class="organization-delete-modal__intro">
-      <span>{{::'organizationDeleteModal.moveOrDelete'|translate}}</span>
+      <h4>{{$ctrl.moveOrDeleteLabel}}</h4>
     </div>
-    <div class="cs-radio-group">
+    <div class="cs-radio-group" ng-if="$ctrl.userCount === 1">
       <input cs-input type="radio"
         ng-model="$ctrl.action"
         id="moveUsers"
         name="userAction"
         ng-value="$ctrl.actions.MOVE"
-        cs-input-label="{{::'organizationDeleteModal.moveUsers'|translate}}">
+        cs-input-label="{{::'organizationDeleteModal.singleMoveUsers'|translate}}">
       <input cs-input type="radio"
         ng-model="$ctrl.action"
         id="deleteUsers"
         name="userAction"
         ng-value="$ctrl.actions.DELETE"
-        cs-input-label="{{::'organizationDeleteModal.deleteUsers'|translate}}">
+        cs-input-label="{{::'organizationDeleteModal.singleDeleteUsers'|translate}}">
+    </div>
+    <div class="cs-radio-group" ng-if="$ctrl.userCount > 1">
+      <input cs-input type="radio"
+        ng-model="$ctrl.action"
+        id="moveUsers"
+        name="userAction"
+        ng-value="$ctrl.actions.MOVE"
+        cs-input-label="{{::'organizationDeleteModal.multMoveUsers'|translate}}">
+      <input cs-input type="radio"
+        ng-model="$ctrl.action"
+        id="deleteUsers"
+        name="userAction"
+        ng-value="$ctrl.actions.DELETE"
+        cs-input-label="{{::'organizationDeleteModal.multDeleteUsers'|translate}}">
     </div>
   </div>
   <div ng-if="$ctrl.state === $ctrl.states.DELETE_ORG">
     <div class="organization-delete-modal__intro">
       <i class="icon icon-check icon-lg organization-delete-modal__intro-icon"></i>
-      <span>{{::'organizationDeleteModal.checkBoxes'|translate}}</span>
+      <h4>{{::'organizationDeleteModal.checkBoxes'|translate}}</h4>
     </div>
     <div class="cs-checkbox-group" ng-repeat="text in $ctrl.checkBoxText track by $index" ng-if="$ctrl.state === $ctrl.states.DELETE_ORG">
       <input class="checkbox-text" cs-input type="checkbox"

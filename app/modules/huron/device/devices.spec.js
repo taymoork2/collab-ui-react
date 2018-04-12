@@ -71,27 +71,6 @@ describe('Controller: DevicesCtrlHuron', function () {
     expect(controller.csdmHuronUserDeviceService).toBe(poller);
   });
 
-  describe('device settings', function () {
-    it('should not be visible without "csdmPlaceGuiSettings" feature toggle and without channels', function () {
-      spyOn(FeatureToggleService, 'csdmPlaceGuiSettingsGetStatus').and.returnValue($q.resolve(false));
-      initController();
-      expect(controller.showDeviceSettings).toBeFalsy();
-    });
-
-    it('should be visible with channels', function () {
-      CsdmUpgradeChannelService.getUpgradeChannelsPromise.and.returnValue($q.resolve(['a channel', 'and another']));
-      spyOn(FeatureToggleService, 'csdmPlaceGuiSettingsGetStatus').and.returnValue($q.resolve(false));
-      initController();
-      expect(controller.showDeviceSettings).toBeTruthy();
-    });
-
-    it('should be visible with "csdmPlaceGuiSettings" feature toggle', function () {
-      spyOn(FeatureToggleService, 'csdmPlaceGuiSettingsGetStatus').and.returnValue($q.resolve(true));
-      initController();
-      expect(controller.showDeviceSettings).toBeTruthy();
-    });
-  });
-
   describe('activate() method', function () {
     describe('is called at the correct times', function () {
       beforeEach(function () {

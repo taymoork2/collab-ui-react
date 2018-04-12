@@ -102,35 +102,27 @@ abstract class SuggestionGroupBase implements ISuggestionGroup {
 
   public updateBasedOnInput(currentEditedElement: SearchElement | null, _totalCount?: number): void {
     this.recalculateRankAndHighlight(currentEditedElement);
-    if (currentEditedElement) {
-      if (currentEditedElement instanceof FieldQuery) {
-        if (!currentEditedElement.field) {
-          this.limit = Limit.Some;
-          this.hidden = this.rank === 0;
-          return;
+    if (!currentEditedElement) {
+      this.limit = Limit.All;
+      this.hidden = false;
+      return;
+    }
+    if (currentEditedElement instanceof FieldQuery) {
+      if (!currentEditedElement.field) {
+        this.limit = Limit.Some;
+        this.hidden = this.rank === 0;
+      } else {
+        if (currentEditedElement.field === this.field) {
+          this.limit = Limit.None;
+          this.hidden = false;
         } else {
-          if (currentEditedElement.field === this.field) {
-            this.limit = Limit.None;
-            this.hidden = false;
-            return;
-          } else {
-            this.hidden = true;
-            return;
-          }
+          this.hidden = true;
         }
       }
-      if (currentEditedElement instanceof FieldQuery && currentEditedElement.query !== '') {
-        this.limit = Limit.Some;
-        this.hidden = this.rank === 0;
-        return;
-      } else {
-        this.limit = Limit.Some;
-        this.hidden = this.rank === 0;
-        return;
-      }
+    } else {
+      this.limit = Limit.Some;
+      this.hidden = this.rank === 0;
     }
-    this.limit = Limit.All;
-    this.hidden = false;
   }
 
   public getFirstSuggestion() {
@@ -321,39 +313,39 @@ export class AllContainingGroup extends SuggestionGroupBase {
   }
 
   public updateBasedOnInput(currentEditedElement: SearchElement | null, totalCount: number | undefined = undefined): void {
-    if (!currentEditedElement) {
+    if (!currentEditedElement
+      || (currentEditedElement instanceof FieldQuery && currentEditedElement.field !== '')
+      || currentEditedElement.toQuery() === '') {
       this.hidden = true;
       return;
     }
-    this.hidden = currentEditedElement.toQuery() === '' || currentEditedElement.getCommonField() !== '';
-    if (currentEditedElement.getCommonField() === '') {
-      this.suggestions = [new Suggestion(
+
+    this.suggestions = [new Suggestion(
+      this,
+      {
+        count: totalCount,
+        searchString: currentEditedElement.toQuery(),
+        readableField: this.$translate.instant('spacesPage.allDevices'),
+        textTranslationKey: 'spacesPage.containingQuery',
+        textTranslationParams: { query: currentEditedElement.toQuery() },
+        isInputBased: true,
+      })];
+    if (currentEditedElement instanceof OperatorAnd &&
+      _.every(currentEditedElement.and, child => {
+        return child instanceof FieldQuery;
+      })) {
+      const phraseQuery = `"${_.map(currentEditedElement.and, e => {
+        return e.toQuery();
+      }).join(' ')}"`;
+      this.suggestions.push(new Suggestion(
         this,
         {
-          count: totalCount,
-          searchString: currentEditedElement.toQuery(),
+          searchString: phraseQuery,
           readableField: this.$translate.instant('spacesPage.allDevices'),
           textTranslationKey: 'spacesPage.containingQuery',
-          textTranslationParams: { query: currentEditedElement.toQuery() },
+          textTranslationParams: { query: phraseQuery },
           isInputBased: true,
-        })];
-      if (currentEditedElement instanceof OperatorAnd &&
-        _.every(currentEditedElement.and, child => {
-          return child instanceof FieldQuery;
-        })) {
-        const phraseQuery = `"${_.map(currentEditedElement.and, e => {
-          return e.toQuery();
-        }).join(' ')}"`;
-        this.suggestions.push(new Suggestion(
-          this,
-          {
-            searchString: phraseQuery,
-            readableField: this.$translate.instant('spacesPage.allDevices'),
-            textTranslationKey: 'spacesPage.containingQuery',
-            textTranslationParams: { query: phraseQuery },
-            isInputBased: true,
-          }));
-      }
+        }));
     }
     super.updateBasedOnInput(currentEditedElement, totalCount);
   }

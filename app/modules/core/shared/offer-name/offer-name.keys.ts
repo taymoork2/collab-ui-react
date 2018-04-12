@@ -16,6 +16,7 @@ export enum OfferName {
   MGMTPRO = 'MGMTPRO', // IT Pro Pack
   TSP = 'TSP',         // Telephony Service Provider
   CCASP = 'CCASP',     // Cloud Connected Audio - Service Partners
+  CCAUser = 'CCAUser',     // Cloud Connected Audio - User
 }
 
 export enum AdvancedMeetingOfferName {

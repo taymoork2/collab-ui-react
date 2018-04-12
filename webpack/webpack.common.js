@@ -60,7 +60,6 @@ function webpackConfig(env) {
       MessageFormat: 'messageformat',
       moment: 'moment',
       punycode: 'punycode',
-      X2JS: 'x2js',
     }),
   ];
 
@@ -85,7 +84,6 @@ function webpackConfig(env) {
       humanizeDuration: 'angular-timer/bower_components/humanize-duration/humanize-duration.js',
       jquery: 'jquery/dist/jquery',
       jstimezonedetect: 'jstimezonedetect/dist/jstz.js',
-      x2js: 'x2js/xml2json.js',
       // Test aliases
       sinon: 'sinon/pkg/sinon.js',
       imagesloaded: 'imagesloaded/imagesloaded.pkgd.js',

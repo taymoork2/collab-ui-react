@@ -332,6 +332,12 @@ describe('Care admin should be able to', function () {
     validateTitleAndDesc('Status Messages', 'Configure the status message to display in the customer chat window');
     validateChatStatusMessagesDefaultPage();
     validateChatStatusMessagesChange();
+    /* TODO
+    Preview is currently part of new route.
+    Uncomment the below function call once we completely move to the new route and test the preview flow.
+    validateChatMessagePreviewPage();
+    validateChatMessagePreviewPageOnFocusChange();
+    */
   }
 
   function validateContentsOfSummaryPage(successMessage, expectedMessage) {
@@ -375,4 +381,17 @@ describe('Care admin should be able to', function () {
       utils.expectIsEnabled(careChatTemplateSetupPage.chatStatusMessages.get(i));
     });
   }
+
+  /* TODO
+  Uncomment the below code once preview is included in the main route code and we completely move to it.
+  For now it's only there in new route.
+  function validateChatMessagePreviewPage() {
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusPreviewMessage, 'Waiting for an Agent...');
+  }
+
+  function validateChatMessagePreviewPageOnFocusChange() {
+    utils.click(careChatTemplateSetupPage.chatStatusMessages.get(1));
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusPreviewMessage, 'Chat in progress...');
+  }
+  */
 });

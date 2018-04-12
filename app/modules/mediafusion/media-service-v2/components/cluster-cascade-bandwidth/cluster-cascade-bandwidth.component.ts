@@ -11,6 +11,7 @@ export class ClusterCascadeBandwidthController implements ng.IComponentControlle
   public cascadeBandwidthConfiguration: number = 42;
   public bandwidthError: boolean = false;
   public isWizard: boolean = false;
+  public sipSettingsEnabled: boolean = false;
 
 
   public clusterBandwidth = {
@@ -24,7 +25,7 @@ export class ClusterCascadeBandwidthController implements ng.IComponentControlle
   ) { }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
-    const { cluster , isWizard } = changes;
+    const { cluster , isWizard, sipSettingsEnabled } = changes;
     if (cluster && cluster.currentValue) {
       this.cluster = cluster.currentValue;
       this.clusterId = this.cluster.id;
@@ -32,6 +33,7 @@ export class ClusterCascadeBandwidthController implements ng.IComponentControlle
     } else if (isWizard && isWizard.currentValue) {
       this.isWizard = isWizard.currentValue;
     }
+    if (sipSettingsEnabled && sipSettingsEnabled.currentValue) { this.sipSettingsEnabled = sipSettingsEnabled.currentValue; }
   }
 
   public validate(): void {
@@ -66,7 +68,8 @@ export class ClusterCascadeBandwidthComponent implements ng.IComponentOptions {
   public template = require('./cluster-cascade-bandwidth.html');
   public bindings = {
     cluster: '<',
-    isWizard: '=',
+    isWizard: '<',
+    sipSettingsEnabled: '<',
     onCascadeBandwidthUpdate: '&?',
   };
 }

@@ -1,24 +1,23 @@
-<setting-section setting="$ctrl.trustedSip" class="needs-border-top">
-    <div class="sub-section">
-    <h5 class="sub-section__label" translate="mediaFusion.trustedSip.title"></h5>
-    <p class="sub-section__description" translate="mediaFusion.trustedSip.description"></p>
-    <tags-input add-on-blur="true"
-                on-tag-added="$ctrl.saveTrustedSip()"
-                on-tag-removed="$ctrl.saveTrustedSip()"
-                placeholder="{{:: 'mediaFusion.trustedSip.placeholder' | translate}}"
-                ng-if="!$ctrl.isWizard"
-                ng-model="$ctrl.trustedsipconfiguration"
-                type="text"
-                allowed-tags-pattern="((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)|((?!:\/\/)([a-zA-Z0-9]+\.)?[a-zA-Z0-9][a-zA-Z0-9-]+\.[a-zA-Z]{2,6}))">
-    </tags-input>
-    <tags-input add-on-blur="true"
-                on-tag-added="$ctrl.trustedSipUpdate()"
-                on-tag-removed="$ctrl.trustedSipUpdate()"
-                placeholder="{{:: 'mediaFusion.trustedSip.placeholder' | translate}}"
-                ng-if="$ctrl.isWizard"
-                ng-model="$ctrl.trustedsipconfiguration"
-                type="text"
-                allowed-tags-pattern="((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)|((?!:\/\/)([a-zA-Z0-9]+\.)?[a-zA-Z0-9][a-zA-Z0-9-]+\.[a-zA-Z]{2,6}))">
-    </tags-input>
-    </div>
-</setting-section>
+
+<h5 class="sub-section__label" translate="mediaFusion.trustedSip.title"></h5>
+<p class="sub-section__description" translate="mediaFusion.trustedSip.description"></p>
+<tags-input add-on-blur="true"
+	on-tag-added="$ctrl.saveTrustedSip()"
+	on-tag-removed="$ctrl.saveTrustedSip()"
+	placeholder="{{:: 'mediaFusion.trustedSip.placeholder' | translate}}"
+	ng-if="!$ctrl.isWizard"
+	ng-model="$ctrl.trustedsipconfiguration"
+	type="text"
+	ng-disabled="!$ctrl.sipSettingsEnabled"
+	allowed-tags-pattern="((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)|((?!:\/\/)([a-zA-Z0-9]+\.)?[a-zA-Z0-9][a-zA-Z0-9-]+\.[a-zA-Z]{2,6}))">
+</tags-input>
+<tags-input add-on-blur="true"
+	on-tag-added="$ctrl.trustedSipUpdate()"
+	on-tag-removed="$ctrl.trustedSipUpdate()"
+	placeholder="{{:: 'mediaFusion.trustedSip.placeholder' | translate}}"
+	ng-if="$ctrl.isWizard"
+	ng-model="$ctrl.trustedsipconfiguration"
+	type="text"
+	ng-disabled="!$ctrl.sipSettingsEnabled"
+	allowed-tags-pattern="((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)|((?!:\/\/)([a-zA-Z0-9]+\.)?[a-zA-Z0-9][a-zA-Z0-9-]+\.[a-zA-Z]{2,6}))">
+</tags-input>

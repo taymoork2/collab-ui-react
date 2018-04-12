@@ -57,6 +57,9 @@ describe('ClusterCreationWizardController', function () {
 
   it('AddResourceSectionService redirectPopUpAndClose should be called for redirectToTargetAndCloseWindowClicked', function () {
     this.controller.emailSubscribers = 'sample@cisco.com';
+    this.controller.sipSettingEnabled = true;
+    this.controller.releaseChannel = {};
+    this.controller.releaseChannel.value = 'beta';
     this.controller.createCluster();
     this.$scope.$apply();
     expect(this.AddResourceSectionService.addRedirectTargetClicked).toHaveBeenCalled();
@@ -78,22 +81,6 @@ describe('ClusterCreationWizardController', function () {
     sampleData.hostName = 'Sample Host';
     this.controller.hostNameUpdated(sampleData);
     expect(this.controller.hostName).toBe('Sample Host');
-  });
-
-  it('controller update cascadeBandwidth', function () {
-    var sampleData = {};
-    sampleData.cascadeBandwidth = 45;
-    sampleData.inValidBandwidth = true;
-    this.controller.cascadeBandwidthUpdated(sampleData);
-    expect(this.controller.cascadeBandwidth).toBe(45);
-    expect(this.controller.validCascadeBandwidth).toBe(true);
-  });
-
-  it('controller update cluster list', function () {
-    var sampleData = {};
-    sampleData.trustedsipconfiguration = 'Sample.123';
-    this.controller.trustedSipConfigUpdated(sampleData);
-    expect(this.controller.trustedsipconfiguration).toBe('Sample.123');
   });
 
   it('controller radio for ova downlaod selected', function () {

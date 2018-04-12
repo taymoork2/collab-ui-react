@@ -23,22 +23,23 @@ export class CtBaseController implements ng.IComponentController {
 
   public singleLineValidationMessage50;
   public multiLineValidationMessage;
+  public multiLineValidationMessage100;
+  public singleLineValidationMessage25;
   public $onInit() {
     this.c.log('Base Controller inited');
+    this.singleLineValidationMessage25 = this.CTService.getValidationMessages(0, this.lengthValidationConstants.singleLineMaxCharLimit25);
     this.singleLineValidationMessage50 = this.CTService.getValidationMessages(0, this.lengthValidationConstants.singleLineMaxCharLimit50);
     this.multiLineValidationMessage = this.CTService.getValidationMessages(0, this.lengthValidationConstants.multiLineMaxCharLimit);
+    this.multiLineValidationMessage100 = this.CTService.getValidationMessages(0, this.lengthValidationConstants.multiLineMaxCharLimit100);
   }
-
   public InvalidCharacters = /[<>]/i;
 
 
-  public selectedMediaType(): String {
+  public selectedMediaType(): string {
     return this.TemplateWizardService.selectedMediaType();
   }
 
   public getLocalisedText(name): string {
     return this.$translate.instant(name + '_' + this.TemplateWizardService.selectedMediaType());
   }
-
 }
-

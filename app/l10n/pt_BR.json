@@ -8390,7 +8390,38 @@
     "helpTextWaitingEVA": "Os clientes veem esta mensagem enquanto esperam uma resposta à solicitação.",
     "waitingMessageEVA": "Alguém irá ajudá-lo em breve...",
     "helpTextLeaveRoomEVA": "Os clientes veem esta mensagem quando o usuário que está interagindo com eles termina o bate-papo.",
-    "leaveRoomMessageEVA": "O bate-papo terminou"
+    "leaveRoomMessageEVA": "O bate-papo terminou",
+    "templateConfig": {
+      "default": {
+        "feedbackQueryCall": "Avalie sua experiência de chamada de retorno.",
+        "additionalDetailsAbtIssue": "Descreva o problema que você está enfrentando",
+        "chattingMessage": "Bate-papo em andamento...",
+        "defaultPhoneHintText": "+12345556789",
+        "defaultPromptMessage": "Converse com nossos especialistas em soluções para ajudar a servi-lo melhor.",
+        "ratingComment": "Adicionar comentários",
+        "feedbackQuery": "Avalie sua experiência de bate-papo",
+        "offHoursDefaultMessage": "Estamos off-line no momento. Tente novamente durante nosso horário comercial.",
+        "callbackConfirmationMsg": "Solicitações de retorno de chamada recebidas com êxito.",
+        "defaultEmailText": "E-mail",
+        "field3HintText": "Selecione da lista ou tipo",
+        "defaultWelcomeText": "Bem-vindo a",
+        "connectingMessage": "Conectando você a um Agente",
+        "defaultNameHint": "",
+        "enterRoomMessage": "O agente entrou na sala de bate-papo",
+        "defaultQuestionText": "Como posso ajudá-lo?",
+        "leaveRoomMessage": "O agente saiu do bate-papo",
+        "waitingMessageEVA": "Alguém irá ajudá-lo em breve...",
+        "virtualAssistantWelcomeMessage": "Olá, como posso ajudá-lo hoje?",
+        "defaultNameText": "Nome",
+        "waitingMessage": "Aguardando um agente...",
+        "defaultPhoneText": "Números de telefone",
+        "additionalDetails": "Detalhes adicionais",
+        "bubbleTitleMessage": "Clique aqui para conversar com o Atendimento ao Cliente",
+        "defaultEmail": "por exemplo, abc@xyz.com",
+        "agentUnavailableMessage": "Desculpe, mas não estamos disponíveis no momento. Tente novamente mais tarde.",
+        "leaveRoomMessageEVA": "O bate-papo terminou"
+      }
+    }
   },
   "huronHuntGroup": {
     "modalTitle": "Grupo de busca",
@@ -9371,7 +9402,7 @@
       "beforeVerify": "você deve copiar e colar este token de verificação DNS para a seção de registro TXT para provar que você possui o domínio:",
       "warning": "É importante verificar todos os domínios. Os usuários que não pertencem a um domínio verificado serão imediatamente bloqueados, não podendo efetuar logon nem usar os serviços Cisco Spark. Você também não poderá adicionar novos usuários que pertencem a domínios não verificados.",
       "verify": "Verificar",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Saiba mais</a> sobre como inserir o código de verificação DNS."
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Saiba mais</a> sobre como inserir o código de verificação DNS."
     },
     "claim": {
       "header": "Reivindicar domínio",

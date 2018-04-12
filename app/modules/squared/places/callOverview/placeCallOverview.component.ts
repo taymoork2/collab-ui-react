@@ -24,9 +24,7 @@ class PlaceCallOverview implements ng.IComponentController {
   public primaryLineEnabled: boolean;
   public userPrimaryNumber: PrimaryNumber;
   public isPrimaryLineFeatureEnabled: boolean = true;
-  private showPhoneButtonLayout: boolean = false;
   public primaryLineFeature: IPrimaryLineFeature;
-  public buttonLayoutPromise: any;
 
   /* @ngInject */
   constructor(
@@ -34,7 +32,6 @@ class PlaceCallOverview implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     $stateParams: any,
     private $translate: ng.translate.ITranslateService,
-    private FeatureToggleService,
     CsdmDataModelService: any,
     private LineService: LineService,
     private PlaceCallOverviewService: PlaceCallOverviewService,
@@ -55,10 +52,6 @@ class PlaceCallOverview implements ng.IComponentController {
 
   public $onInit(): void {
     if (this.hasSparkCall) {
-      this.buttonLayoutPromise = this.FeatureToggleService.supports(this.FeatureToggleService.features.huronPhoneButtonLayout)
-      .then(result => {
-        this.showPhoneButtonLayout = result;
-      });
       this.initActions();
       this.initNumbers();
       this.initServices();
@@ -90,34 +83,20 @@ class PlaceCallOverview implements ng.IComponentController {
       this.userPrimaryNumber = _.get(data[2], 'primaryNumber');
       this.checkPrimaryLineFeature(this.userPrimaryNumber);
     }).then (() => {
-      this.buttonLayoutPromise.finally(() => {
-        this.initFeatures();
-      });
+      this.initFeatures();
     });
   }
 
   private initFeatures(): void {
     this.features = [];
     if (this.currentPlace.type === 'huron') {
-      const service: IFeature = {
-        name: this.$translate.instant('telephonyPreview.speedDials'),
-        state: 'speedDials',
-        detail: undefined,
-        actionAvailable: true,
-      };
-      if (!this.showPhoneButtonLayout) {
-        this.features.push(service);
-      }
-
       const phoneButtonLayoutService: IFeature = {
         name: this.$translate.instant('telephonyPreview.phoneButtonLayout'),
         state: 'phoneButtonLayout',
         detail: undefined,
         actionAvailable: true,
       };
-      if (this.showPhoneButtonLayout) {
-        this.features.push(phoneButtonLayoutService);
-      }
+      this.features.push(phoneButtonLayoutService);
 
       const cosService: IFeature = {
         name: this.$translate.instant('serviceSetupModal.cos.title'),
@@ -126,9 +105,7 @@ class PlaceCallOverview implements ng.IComponentController {
         actionAvailable: true,
       };
       this.features.push(cosService);
-    }
 
-    if (this.currentPlace.type === 'huron') {
       const transferService: IFeature = {
         name: this.$translate.instant('telephonyPreview.externalTransfer'),
         state: 'externaltransfer',

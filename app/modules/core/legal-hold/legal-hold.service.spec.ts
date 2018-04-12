@@ -27,6 +27,7 @@ describe('Service: LegalHoldService', () => {
     this.getUserUrl = 'https://atlas-intb.ciscospark.com/admin/api/v1/user?email=';
 
     spyOn(this.Authinfo, 'getUserId').and.returnValue('user123');
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
     installPromiseMatchers();
   });
 
@@ -36,7 +37,7 @@ describe('Service: LegalHoldService', () => {
   });
 
   describe('Basic matter functions', () => {
-    it('should create a matter passes without flush', function (this: Test) {
+    it('should create a matter', function (this: Test) {
       const matter = Matter.matterFromResponseData(this.matterList[1]);
       this.Authinfo.getUserId.and.returnValue(this.matterList[1]['createdBy']);
       const data = {
@@ -127,8 +128,8 @@ describe('Service: LegalHoldService', () => {
 
   describe('Retrieving user info from email address', function (this: Test) {
     it('and reject if user is not found', function () {
-      this.$httpBackend.expectGET(this.getUserUrl + 'test1%40gmail.com').respond(404);
-      expect(this.LegalHoldService.getCustodian('test1@gmail.com')).toBeRejectedWith(jasmine.objectContaining({ status: 404 }));
+      this.$httpBackend.expectGET(this.getUserUrl + 'test1%40gmail.com').respond(404, { status: 'error' });
+      expect(this.LegalHoldService.getCustodian('12345', 'test1@gmail.com')).toBeRejectedWith(jasmine.objectContaining({ error: 'legalHold.custodianImport.errorUserNotFound' }));
     });
 
     it('should return userId and first and last names if user is found', function () {
@@ -136,15 +137,18 @@ describe('Service: LegalHoldService', () => {
         userId: '123',
         firstName: 'Jane',
         lastName: 'Doe',
+        orgId: '12345',
+        emailAddress: 'test@gmail.com',
       };
       const expResponse = {
         id: '123',
         firstName: 'Jane',
         lastName: 'Doe',
+        orgId: '12345',
         otherProp: 'something else',
       };
       this.$httpBackend.expectGET(this.getUserUrl + 'test%40gmail.com').respond(200, expResponse);
-      expect(this.LegalHoldService.getCustodian('test@gmail.com')).toBeResolvedWith(expResult);
+      expect(this.LegalHoldService.getCustodian('12345', 'test@gmail.com')).toBeResolvedWith(expResult);
     });
   });
 });

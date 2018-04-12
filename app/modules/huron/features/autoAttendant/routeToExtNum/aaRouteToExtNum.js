@@ -49,9 +49,9 @@
     vm.extensionMaxLength = 10;
     vm.orgHasHybridEnabled = false;
     vm.validationMessages = {
-      required: 'Extension field cannot be empty',
-      minlength: 'Extension length is too short',
-      pattern: 'Only numbers are allowed',
+      required: $translate.instant('autoAttendant.extensionRequiredError'),
+      minlength: $translate.instant('autoAttendant.extensionMinLengthError'),
+      pattern: $translate.instant('autoAttendant.extensionPatternError'),
     };
 
 

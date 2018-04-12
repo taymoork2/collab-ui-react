@@ -56,9 +56,6 @@ require('../devices/_devices.scss');
           var hybridPromise = FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
             vm.csdmHybridCallFeature = feature;
           });
-          var placeCalendarPromise = FeatureToggleService.csdmPlaceCalendarGetStatus().then(function (feature) {
-            vm.csdmHybridCalendarFeature = feature;
-          });
           var anyCalendarEnabledPromise = ServiceDescriptorService.getServices().then(function (services) {
             vm.hybridCalendarEnabledOnOrg = vm.hybridCalendarEnabledOnOrg || _.chain(ServiceDescriptorService.filterEnabledServices(services)).filter(function (service) {
               return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
@@ -77,7 +74,7 @@ require('../devices/_devices.scss');
           var googleCalendarPromise = CloudConnectorService.getService('squared-fusion-gcal').then(function (service) {
             vm.hybridCalendarEnabledOnOrg = vm.hybridCalendarEnabledOnOrg || service.provisioned;
           });
-          $q.all([ataPromise, hybridPromise, placeCalendarPromise, anyCalendarEnabledPromise, office365Promise, googleCalendarPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
+          $q.all([ataPromise, hybridPromise, anyCalendarEnabledPromise, office365Promise, googleCalendarPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
             vm.addPlaceIsDisabled = false;
           });
         }
@@ -172,7 +169,6 @@ require('../devices/_devices.scss');
               showATA: vm.showATA,
               admin: vm.adminUserDetails,
               csdmHybridCallFeature: vm.csdmHybridCallFeature,
-              csdmHybridCalendarFeature: vm.csdmHybridCalendarFeature,
               hybridCalendarEnabledOnOrg: vm.hybridCalendarEnabledOnOrg,
               hybridCallEnabledOnOrg: vm.hybridCallEnabledOnOrg,
               title: 'addDeviceWizard.newSharedSpace.title',

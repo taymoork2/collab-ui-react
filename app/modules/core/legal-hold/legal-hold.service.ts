@@ -1,6 +1,6 @@
 import { Matter } from './matter.model';
 import { ICustodian, IMatterJsonData } from './legal-hold.interfaces';
-import { MatterState } from './legal-hold.enums';
+import { MatterState, CustodianImportErrors } from './legal-hold.enums';
 export enum Actions {
   CREATE = 'CREATE',
   READ = 'READ',
@@ -19,6 +19,8 @@ export class LegalHoldService {
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
+    private $q: ng.IQService,
+    private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private UrlConfig,
   ) {
@@ -118,15 +120,29 @@ export class LegalHoldService {
       .then(result => <string[]>result.data);
   }
 
-  public getCustodian(emailAddress: string): ng.IPromise<ICustodian> {
+  public getCustodian(orgId: string, emailAddress: string): ng.IPromise<ICustodian> {
     return this.$http.get(this.getUserUrl(emailAddress))
       .then(response => {
-        const result: ICustodian = {
+        const userOrIg = _.get<string>(response, 'data.orgId', '');
+        const user: ICustodian = {
           userId: _.get<string>(response, 'data.id', ''),
+          emailAddress: emailAddress,
           firstName: _.get<string>(response, 'data.firstName', ''),
           lastName: _.get<string>(response, 'data.lastName', ''),
+          orgId: _.get<string>(response, 'data.orgId', ''),
         };
-        return result;
+        if (userOrIg !== orgId) {
+          user.error = this.$translate.instant(`legalHold.custodianImport.${CustodianImportErrors.DIFF_ORG}`);
+        }
+        return user;
+      })
+      .catch(error => {
+        const err = (_.get(error, 'status', '').toString() === '404') ?  CustodianImportErrors.NOT_FOUND :  CustodianImportErrors.UNKNOWN;
+        const user: ICustodian = {
+          emailAddress: emailAddress,
+          error: this.$translate.instant(`legalHold.custodianImport.${err}`),
+        };
+        return this.$q.reject(user);
       });
   }
 }

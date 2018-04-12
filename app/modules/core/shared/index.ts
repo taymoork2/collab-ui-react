@@ -7,6 +7,8 @@ import taskContainerModuleName from './task-container';
 import usageLineModuleName from './usage-line';
 import waitingIntervalModuleName from './waiting-interval';
 
+import { RetryingPromiseService } from './retrying-promise.service';
+export { RetryingPromiseService };
 import { StringUtilService } from './string-util.service';
 export { StringUtilService };
 
@@ -21,5 +23,6 @@ export default angular
     usageLineModuleName,
     waitingIntervalModuleName,
   ])
+  .service('RetryingPromiseService', RetryingPromiseService)
   .service('StringUtilService', StringUtilService)
   .name;

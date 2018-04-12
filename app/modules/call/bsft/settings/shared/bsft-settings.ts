@@ -6,6 +6,7 @@ export interface IBsftSettings {
   postalAddress: IPostalAddress | null;
   contactInfo: IContactInfo | null;
   site: ISite | null;
+  order: IBsftOrder | null;
 }
 
 export class BsftSettings implements IBsftSettings {
@@ -14,6 +15,7 @@ export class BsftSettings implements IBsftSettings {
   public postalAddress: IPostalAddress | null;
   public contactInfo: IContactInfo | null;
   public site: ISite | null;
+  public order: IBsftOrder | null;
 
   constructor(bsftSettings: IBsftSettings = {
     orgId: '',
@@ -21,6 +23,7 @@ export class BsftSettings implements IBsftSettings {
     postalAddress: null,
     contactInfo: null,
     site: null,
+    order: null,
   }) {
     this.name = bsftSettings.name;
     this.postalAddress = _.isNull(bsftSettings.postalAddress) ? new PostalAddress() : new PostalAddress({
@@ -89,7 +92,7 @@ export class ContactInfo implements IContactInfo {
   constructor(contactInfo: IContactInfo = {
     contactFirstName: 'Art',
     contactLastName: 'Vandelay',
-    emailAddress: 'jlowery@cisco.com',
+    emailAddress: 'samwiforcisco+bsfttest@gmail.com',
     telephoneNumber: null,
   }) {
     this.contactFirstName = contactInfo.contactFirstName;
@@ -105,6 +108,9 @@ export class ContactInfo implements IContactInfo {
 export interface ITelephoneNumber {
   countryCode: string;
   number: string;
+  npa?: string;
+  orgId?: string;
+  assigned?: boolean;
 }
 
 export class TelephoneNumber implements ITelephoneNumber {
@@ -146,6 +152,49 @@ export interface IBsftCustomerStatus {
   errorMessage: string;
 }
 
+export class BsftCustomerStatus implements IBsftCustomerStatus {
+  public rialtoCustomerId: string;
+  public rialtoSiteId: string;
+  public completed: boolean;
+  public failed: boolean;
+  public errorMessage: string;
+
+  constructor(bsftCustomerStatus: IBsftCustomerStatus = {
+    rialtoCustomerId: '',
+    rialtoSiteId: '',
+    completed: false,
+    failed: false,
+    errorMessage: '',
+  }) {
+    this.rialtoCustomerId = bsftCustomerStatus.rialtoCustomerId;
+    this.rialtoSiteId = bsftCustomerStatus.rialtoSiteId;
+    this.completed = bsftCustomerStatus.completed;
+    this.failed = bsftCustomerStatus.failed;
+    this.errorMessage = bsftCustomerStatus.errorMessage;
+  }
+}
+
 export interface IBsftCustomerLogin {
   crossLaunchUrl: string;
+}
+
+export interface IBsftOrder {
+  billingNumber: ITelephoneNumber | null;
+  numbers: ITelephoneNumber[];
+}
+
+export class BsftOrder implements IBsftOrder {
+  public billingNumber: ITelephoneNumber;
+  public numbers: ITelephoneNumber[];
+
+  constructor (bsftOrder: IBsftOrder = {
+    billingNumber: null,
+    numbers: [],
+  }) {
+    this.billingNumber = _.isNull(bsftOrder.billingNumber) ? new TelephoneNumber() : new TelephoneNumber({
+      countryCode: _.get(bsftOrder.billingNumber, 'countryCode'),
+      number: _.get(bsftOrder.billingNumber, 'number'),
+    });
+    this.numbers = bsftOrder.numbers;
+  }
 }

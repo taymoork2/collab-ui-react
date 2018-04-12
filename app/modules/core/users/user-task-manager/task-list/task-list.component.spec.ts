@@ -12,22 +12,7 @@ describe('Component: userTaskList', () => {
     this.injectDependencies(
       '$scope',
     );
-    const taskList = [{
-      jobInstanceId: '123',
-      started: 'Jan 1',
-      status: 'STARTED',
-      stopped: 'Jan 2',
-    }, {
-      jobInstanceId: '456',
-      started: 'Jan 1',
-      status: 'STARTED',
-      stopped: 'Jan 2',
-    }, {
-      jobInstanceId: '789',
-      started: 'Jan 1',
-      status: 'STARTED',
-      stopped: 'Jan 2',
-    }];
+    const taskList = _.cloneDeep(getJSONFixture('core/json/users/user-task-manager/test-tasks.json').taskManagerTasks);
     this.$scope.onActiveTaskChange = jasmine.createSpy('onActiveTaskChange');
     this.compileComponent('userTaskList', {
       taskList,

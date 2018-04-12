@@ -359,7 +359,7 @@ export class PstnService {
 
   public orderBlock(
     customerId: string,  _carrierId: string, npa: undefined | string,
-    quantity: number, isSequential: undefined | boolean,  nxx: undefined | string): ng.IPromise<any> {
+    quantity: undefined | number, isSequential: undefined | boolean,  nxx: undefined | string): ng.IPromise<any> {
     const payload = {
       npa: npa,
       quantity: quantity,

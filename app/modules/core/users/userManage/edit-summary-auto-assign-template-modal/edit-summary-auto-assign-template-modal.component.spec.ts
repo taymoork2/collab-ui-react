@@ -68,6 +68,7 @@ describe('Component: editSummaryAutoAssignTemplateModal:', () => {
       };
       spyOn(this.AutoAssignTemplateService, 'autoAssignTemplateDataToPayload').and.returnValue('fake-autoAssignTemplateDataToPayload-result');
       spyOn(this.AutoAssignTemplateService, 'createTemplate').and.returnValue(this.$q.resolve({}));
+      spyOn(this.AutoAssignTemplateService, 'activateTemplate').and.returnValue(this.$q.resolve());
       spyOn(this.AutoAssignTemplateService, 'updateTemplate').and.returnValue(this.$q.resolve({}));
     });
 
@@ -78,7 +79,9 @@ describe('Component: editSummaryAutoAssignTemplateModal:', () => {
         isEditTemplateMode: false,
       });
       this.components.multiStepModal.bindings[0].save();
+      this.$scope.$apply();
       expect(this.AutoAssignTemplateService.createTemplate).toHaveBeenCalledWith('fake-autoAssignTemplateDataToPayload-result');
+      expect(this.AutoAssignTemplateService.activateTemplate).toHaveBeenCalled();
     });
 
     it('should call updateTemplate if isEditTemplateMode is true', function (this: Test) {
@@ -88,6 +91,7 @@ describe('Component: editSummaryAutoAssignTemplateModal:', () => {
         isEditTemplateMode: true,
       });
       this.components.multiStepModal.bindings[0].save();
+      this.$scope.$apply();
       expect(this.AutoAssignTemplateService.updateTemplate).toHaveBeenCalledWith('fake-template-id', 'fake-autoAssignTemplateDataToPayload-result');
     });
   });

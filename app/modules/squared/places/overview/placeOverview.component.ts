@@ -19,7 +19,6 @@ class PlaceOverview implements ng.IComponentController {
   public showPstn: boolean = false;
   public showATA: boolean = false;
   public csdmHybridCallFeature: boolean = false;
-  private csdmHybridCalendarFeature = false;
   private hybridCalendarEnabledOnOrg = false;
   private hybridCallEnabledOnOrg = false;
   public generateCodeIsDisabled = true;
@@ -29,7 +28,7 @@ class PlaceOverview implements ng.IComponentController {
   private currentPlace: IPlace = <IPlace>{ devices: {} };
   private csdmHuronUserDeviceService;
   private adminUserDetails;
-  private showDeviceSettings = false;
+  public showDeviceSettings = false;
 
   public ishI1484: boolean = false;
 
@@ -57,7 +56,6 @@ class PlaceOverview implements ng.IComponentController {
     private ServiceDescriptorService: ServiceDescriptorService,
     private Userservice,
     private WizardFactory,
-    private CsdmUpgradeChannelService,
     public LocationsService: LocationsService,
     private PlaceCallOverviewService: PlaceCallOverviewService,
     private Notification: Notification,
@@ -76,6 +74,7 @@ class PlaceOverview implements ng.IComponentController {
       this.getPlaceLocation();
     }
     this.fetchAsyncSettings();
+    this.showDeviceSettings = this.currentPlace.type === 'cloudberry';
     this.setDisplayDescription();
     if (this.showLanguage()) {
       this.initPreferredLanguage();
@@ -201,9 +200,6 @@ class PlaceOverview implements ng.IComponentController {
     this.FeatureToggleService.csdmHybridCallGetStatus().then(feature => {
       this.csdmHybridCallFeature = feature;
     });
-    this.FeatureToggleService.csdmPlaceCalendarGetStatus().then(feature => {
-      this.csdmHybridCalendarFeature = feature;
-    });
     this.ServiceDescriptorService.getServices().then(services => {
       this.hybridCalendarEnabledOnOrg = this.hybridCalendarEnabledOnOrg || _.chain(this.ServiceDescriptorService.filterEnabledServices(services)).filter(service => {
         return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
@@ -225,20 +221,6 @@ class PlaceOverview implements ng.IComponentController {
 
     this.fetchDetailsForLoggedInUser();
 
-    if (this.currentPlace.type === 'cloudberry') {
-      this.FeatureToggleService.csdmPlaceGuiSettingsGetStatus().then(feature => {
-        if (feature) {
-          this.showDeviceSettings = true;
-        } else {
-          this.CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(channels => {
-            this.showDeviceSettings = this.showDeviceSettings || channels.length > 1;
-          });
-        }
-      });
-      this.FeatureToggleService.csdmApiAccessGetStatus().then((result: boolean) => {
-        this.showDeviceSettings = this.showDeviceSettings || result;
-      });
-    }
     this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
     .then(result => this.ishI1484 = result);
   }
@@ -289,7 +271,6 @@ class PlaceOverview implements ng.IComponentController {
         function: 'editServices',
         title: 'usersPreview.editServices',
         csdmHybridCallFeature: this.csdmHybridCallFeature,
-        csdmHybridCalendarFeature: this.csdmHybridCalendarFeature,
         hybridCalendarEnabledOnOrg: this.hybridCalendarEnabledOnOrg,
         hybridCallEnabledOnOrg: this.hybridCallEnabledOnOrg,
         account: {
@@ -367,17 +348,12 @@ class PlaceOverview implements ng.IComponentController {
     this.$state.go('place-overview.' + feature.state);
   }
 
-  public anyHybridServiceToggle() {
-    return this.csdmHybridCalendarFeature || this.csdmHybridCallFeature;
-  }
-
   public onGenerateOtpFn(): void {
     const wizardState = {
       data: {
         function: 'showCode',
         showATA: this.showATA,
         csdmHybridCallFeature: this.csdmHybridCallFeature,
-        csdmHybridCalendarFeature: this.csdmHybridCalendarFeature,
         hybridCalendarEnabledOnOrg: this.hybridCalendarEnabledOnOrg,
         hybridCallEnabledOnOrg: this.hybridCallEnabledOnOrg,
         admin: this.adminUserDetails,

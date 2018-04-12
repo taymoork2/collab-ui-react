@@ -1,4 +1,5 @@
 import testModule from './index';
+import { Devices, Platforms } from './searchService';
 
 describe('Component: dgcTimeLine', () => {
   beforeAll(function () {
@@ -64,38 +65,26 @@ describe('Component: dgcTimeLine', () => {
     this.controller.$onChanges({ circleColor: circle });
   });
 
-  it('Should get pstn call in type when there is not user name', function () {
-    mockLines.call(this, 13);
+  it('Should get pstn call in type when device is IP Phone or Phone', function () {
     const bindings = { sourceData: this.sourceData };
+    const mockData = { items: [{ pstnCallInType: 'Toll Free' }] };
+    spyOn(this.SearchService, 'getPSTNCallInType').and.returnValue(this.$q.resolve(mockData));
     initComponent.call(this, bindings);
 
-    const mockData = { completed: true, description: 'Return results.', items: [{ pstnCallInType: 'TollFree' }] };
-    spyOn(this.SearchService, 'getPSTNCallInType').and.callFake(function () {
-      return {
-        then: function (callback) {
-          return callback(mockData);
-        },
-      };
-    });
-    spyOn(this.controller, 'makeTips').and.returnValue(0);
-    const line = { conferenceID: '434', nodeId: '234234', device: 'IP Phone', joinTime: 1497829243001, userId: 62527, guestId: 0, leaveTime: 1497829527000, userName: 'fnln', platform: '0' };
-    const msgArr = [ { key: 'Join Time: ', value: '' }];
-    const tollFree = {};
-    this.controller.getPSTNCallInType(tollFree, msgArr, line);
-    expect(tollFree['fnlnstartTime']).toBe(0);
-  });
-
-  it('Should get pstn call in type when there is user name', function () {
-    mockLines.call(this, 13);
-    const bindings = { sourceData: this.sourceData };
-    initComponent.call(this, bindings);
-
-    spyOn(this.controller, 'makeTips').and.returnValue(0);
-    const mockTollFreeData = { User: 'Normal User' };
-    const mockMsgArr = [{ key: 'Join Time', value: '1' }, { key: 'Leave Time', value: '2' }];
-    const mockItem = { device: 'Phone', userName: 'User' };
-    this.controller.getPSTNCallInType(mockTollFreeData, mockMsgArr, mockItem);
-    expect(mockMsgArr[1].value).toBe('Normal User');
+    const msgArr = [{ key: 'SIP', value: '' }];
+    const mockParam = { device: 'IP Phone', pstnCallInType: '' };
+    this.controller.tip = {
+      transition: () => { return this.controller.tip; },
+      html: (ht) => { this.controller.tip.t(ht); return this.controller.tip; },
+      classed: (ht, ft) => { this.controller.tip.t(ht); this.controller.tip.t(ft); return this.controller.tip; },
+      style: (n, ftv) => { this.controller.tip.t(n); this.controller.tip.t(ftv); return this.controller.tip; },
+      duration: (time) => { this.controller.tip.t(time); return this.controller.tip; },
+      replace: (n, ftv) => { this.controller.tip.t(n); this.controller.tip.t(ftv); return this.controller.tip; },
+      t: (t) => { if (t) { return true; } },
+    };
+    this.controller.getDeviceOrPSTNType(mockParam, msgArr);
+    this.$scope.$apply();
+    expect(mockParam['pstnCallInType']).toBe('Toll Free');
   });
 
   it('Should hide tips with hideTips', function () {
@@ -154,7 +143,7 @@ describe('Component: dgcTimeLine', () => {
     const bindings = { sourceData: this.sourceData };
     initComponent.call(this, bindings);
 
-    const msgArr = [ { key: 'Join Time: ', value: '' }];
+    const msgArr = [{ key: 'Join Time: ', value: '' }];
     this.controller.tip = {
       transition: () => { return this.controller.tip; },
       html: (ht) => { this.controller.tip.t(ht); return this.controller.tip; },
@@ -170,19 +159,13 @@ describe('Component: dgcTimeLine', () => {
 
   it('Should detect and update device type', function () {
     const bindings = { sourceData: this.sourceData };
+    const mockData = { items: [{ deviceType: 'SIP' }] };
+    spyOn(this.SearchService, 'getRealDevice').and.returnValue(this.$q.resolve(mockData));
     initComponent.call(this, bindings);
 
-    const msgArr = [ { key: 'SIP', value: '' }];
-    const mockData = { items : [{ deviceType: 'SIP' }] };
-    spyOn(this.SearchService, 'getRealDevice').and.callFake(function () {
-      return {
-        then: function (callback) {
-          return callback(mockData);
-        },
-      };
-    });
+    const msgArr = [{ key: 'SIP', value: '' }];
 
-    const mockParam = { platform: '10' };
+    const mockParam = { platform: '10', device: '' };
     this.controller.tip = {
       transition: () => { return this.controller.tip; },
       html: (ht) => { this.controller.tip.t(ht); return this.controller.tip; },
@@ -192,7 +175,49 @@ describe('Component: dgcTimeLine', () => {
       replace: (n, ftv) => { this.controller.tip.t(n); this.controller.tip.t(ftv); return this.controller.tip; },
       t: (t) => { if (t) { return true; } },
     };
-    this.controller.detectAndUpdateDevice(mockParam, msgArr);
+    this.controller.getDeviceOrPSTNType(mockParam, msgArr);
+    this.$scope.$apply();
     expect(mockParam['device']).toBe('SIP');
+  });
+
+  it('Should get tips function for yAxis: PSTN Toll', function () {
+    mockLines.call(this, 13);
+    const bindings = { sourceData: this.sourceData };
+    const mockData = { items: [{ pstnCallInType: 'Toll' }] };
+    spyOn(this.SearchService, 'getPSTNCallInType').and.returnValue(this.$q.resolve(mockData));
+    initComponent.call(this, bindings);
+    const tipsHandler = this.controller.yAxisTips();
+    const mockParam = { userName: 'Ethan', device: Devices.IP_PHONE, joinTime_: '2018-03-29 10:00:00', duration: 120, y1: 15 };
+    tipsHandler(mockParam);
+    spyOn(this.controller, 'makeTips').and.returnValue(null);
+    this.$timeout.flush();
+    const mockArr = {
+      arr: [
+        { key: 'Ethan' },
+        { key: 'reportsPage.webexMetrics.callIn: ', value: 'Toll' },
+        { key: 'reportsPage.webexMetrics.joinTime: ', value: '2018-03-29 10:00:00' },
+        { key: 'reportsPage.webexMetrics.duration: ', value: 'time.abbreviatedCap.minutes' },
+      ],
+    };
+    expect(this.controller.makeTips).toHaveBeenCalledWith(mockArr, 0, 110.5);
+  });
+
+  it('Should get tips function for yAxis: CMR device', function () {
+    mockLines.call(this, 13);
+    const bindings = { sourceData: this.sourceData };
+    initComponent.call(this, bindings);
+    const tipsHandler = this.controller.yAxisTips();
+    const mockParam = { userName: 'Ethan', device: 'SIP', Platforms: Platforms.TP, joinTime_: '2018-03-29 10:00:00', duration: 120, y1: 15 };
+    spyOn(this.controller, 'makeTips');
+    tipsHandler(mockParam);
+    const mockArr = {
+      arr: [
+        { key: 'Ethan' },
+        { key: 'SIP' },
+        { key: 'reportsPage.webexMetrics.joinTime: ', value: '2018-03-29 10:00:00' },
+        { key: 'reportsPage.webexMetrics.duration: ', value: 'time.abbreviatedCap.minutes' },
+      ],
+    };
+    expect(this.controller.makeTips).toHaveBeenCalledWith(mockArr, 0, 110.5);
   });
 });

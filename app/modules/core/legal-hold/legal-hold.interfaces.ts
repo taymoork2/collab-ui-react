@@ -13,8 +13,26 @@ export interface IMatterJsonData {
 }
 
 export interface ICustodian {
-  userId: string;
-  firstName: string;
-  lastName: string;
+  emailAddress: string;
+  userId?: string;
+  orgId?: string;
+  firstName?: string;
+  lastName?: string;
+  error?: string;
 }
 
+
+export interface IMatterJsonDataForDisplay extends IMatterJsonData {
+  createdByName: string | null;
+  numberOfCustodians: number;
+}
+
+export interface IImportComponentApi {
+  convertEmailsToUsers: Function;
+  displayResults: Function;
+}
+
+export interface IImportResult {
+  success: ICustodian[];
+  error: ICustodian[];
+}

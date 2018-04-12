@@ -19,34 +19,32 @@ class OrganizationDeleteModalController {
   public l10nTitle;
   private href = 'http://www.webex.com';
   public allChecked = false;
+  public moveOrDeleteLabel: string;
   public checkBoxText;
   // TODO support all enterprise use cases
   private checkBoxTextList = {
     onlineSingleUserMove: [
-      'singleUserMove',
-      'allData',
       'notReversible',
+      'allData',
+      'singleUserMove',
     ],
     onlineSingleUserDelete: [
-      'singleUserDelete',
-      'allData',
       'notReversible',
+      'allData',
     ],
     onlineMultiUserMove: [
-      'multiUserMove',
-      'allData',
       'notReversible',
+      'allData',
+      'multiUserMove',
     ],
     onlineMultiUserDelete: [
-      'multiUserDelete',
-      'allData',
       'notReversible',
+      'multiUserDelete',
     ],
     enterprise: [
-      'allUsers',
-      'allData',
-      'allDevices',
       'notReversible',
+      'allUsers',
+      'allDevices',
       'customerPermission',
     ],
   };
@@ -55,6 +53,7 @@ class OrganizationDeleteModalController {
   constructor(
     private $http: ng.IHttpService,
     private $modal: IToolkitModalService,
+    private $translate: ng.translate.ITranslateService,
     private Analytics,
     private Auth,
     private Authinfo,
@@ -70,34 +69,42 @@ class OrganizationDeleteModalController {
     ? this.Config.customerTypes.online
     : this.Config.customerTypes.enterprise;
 
+  public $onInit() {
+    this.getUserCount().then((count) => {
+      this.userCount = count;
+      if (this.userCount === 1) {
+        this.moveOrDeleteLabel = this.$translate.instant('organizationDeleteModal.singleMoveOrDelete');
+      } else {
+        this.moveOrDeleteLabel = this.$translate.instant('organizationDeleteModal.multMoveOrDelete');
+      }
+    });
+  }
+
   public checkboxesChanged(): void {
     this.allChecked = _.every(this.checked, v => v);
   }
 
   public continue(): void {
-    this.getUserCount().then((count) => {
-      this.userCount = count;
-      if (this.customerType === this.Config.customerTypes.online) {
+    if (this.customerType === this.Config.customerTypes.online) {
+      if (this.userCount === 1) {
         if (this.action === this.actions.MOVE) {
-          if (this.userCount === 1) {
-            this.checkBoxText = this.checkBoxTextList.onlineSingleUserMove;
-          } else {
-            this.checkBoxText = this.checkBoxTextList.onlineMultiUserMove;
-          }
+          this.checkBoxText = this.checkBoxTextList.onlineSingleUserMove;
         } else {
-          if (this.userCount === 1) {
-            this.checkBoxText = this.checkBoxTextList.onlineSingleUserDelete;
-          } else {
-            this.checkBoxText = this.checkBoxTextList.onlineMultiUserDelete;
-          }
+          this.checkBoxText = this.checkBoxTextList.onlineSingleUserDelete;
         }
       } else {
-        // TODO handle all enterprise cases
-        this.checkBoxText = this.checkBoxTextList.enterprise;
+        if (this.action === this.actions.MOVE) {
+          this.checkBoxText = this.checkBoxTextList.onlineMultiUserMove;
+        } else {
+          this.checkBoxText = this.checkBoxTextList.onlineMultiUserDelete;
+        }
       }
-      this.checked = _.fill(Array(this.checkBoxText.length), false);
-      this.state = this.states.DELETE_ORG;
-    });
+    } else {
+      // TODO handle all enterprise cases
+      this.checkBoxText = this.checkBoxTextList.enterprise;
+    }
+    this.checked = _.fill(Array(this.checkBoxText.length), false);
+    this.state = this.states.DELETE_ORG;
   }
 
   public close(): void {
@@ -113,21 +120,38 @@ class OrganizationDeleteModalController {
     const orgId = this.Authinfo.getOrgId();
     this.Orgservice.deleteOrg(orgId, this.action === this.actions.DELETE)
       .then(() => {
-        this.customerType = this.Authinfo.isOnlineCustomer()
-          ? this.Config.customerTypes.online
-          : this.Config.customerTypes.enterprise;
-        this.Analytics.trackEvent(this.Analytics.sections.ORGANIZATION.eventNames.DELETE, {
-          organizationId: orgId,
-          customerType: this.customerType,
-        });
-        this.dismiss();
-        this.openAccountClosedModal();
+        this.deleteOrgSuccess(orgId);
       }).catch((error) => {
-        this.deleteLoading = false;
-        this.Notification.errorResponse(error, 'organizationDeleteModal.deleteOrgError', {
-          orgName: this.Authinfo.getOrgName(),
+        // TODO Remove this code once the deleteOrg API has been fixed
+        // Even though the API returned a failure the org may have been deleted
+        const params = {
+          disableCache: true,
+          basicInfo: true,
+        };
+        this.Orgservice.getAdminOrgAsPromise(orgId, params).then(() => {
+          // Error case: org should not still exist
+          this.deleteLoading = false;
+          this.Notification.errorResponse(error, 'organizationDeleteModal.deleteOrgError', {
+            orgName: this.Authinfo.getOrgName(),
+          });
+        }).catch(() => {
+          // Org was eventually deleted
+          this.deleteOrgSuccess(orgId);
         });
       });
+  }
+
+  public deleteOrgSuccess(orgId): void {
+    this.deleteLoading = false;
+    this.customerType = this.Authinfo.isOnlineCustomer()
+      ? this.Config.customerTypes.online
+      : this.Config.customerTypes.enterprise;
+    this.Analytics.trackEvent(this.Analytics.sections.ORGANIZATION.eventNames.DELETE, {
+      organizationId: orgId,
+      customerType: this.customerType,
+    });
+    this.dismiss();
+    this.openAccountClosedModal();
   }
 
   public openAccountClosedModal(): void {

@@ -79,6 +79,16 @@ export interface IServerTime {
   timestamp: number;
 }
 
+export enum Platforms {
+  TP = '10',
+  THIN_CLIENT = '15',
+}
+
+export enum Devices {
+  IP_PHONE = 'IP Phone',
+  PHONE = 'Phone',
+}
+
 export class SearchService {
   private url;
   private data: any = {};
@@ -89,7 +99,10 @@ export class SearchService {
     private $http: ng.IHttpService,
     private $translate: ng.translate.ITranslateService,
   ) {
-    this.url = `${this.UrlConfig.getGeminiUrl()}`;
+    this.url = `${this.UrlConfig.getDiagnosticUrl()}`;
+    this.$http.get<IMeetingDetail>(`${this.url}healthcheck`).catch(() => {
+      this.url = `${this.UrlConfig.getGeminiUrl()}`;
+    });
   }
 
   public getMeetings(data): ng.IPromise<IMeeting[]> {
@@ -251,5 +264,21 @@ export class SearchService {
 
   private extractData<T>(response: ng.IHttpResponse<T>): T {
     return _.get(response, 'data');
+  }
+
+  public toMinOrSec(deltaInMs: number): string {
+    if (!deltaInMs) {
+      return '';
+    }
+    let result = '';
+    const duration = moment.duration(deltaInMs);
+    if (Math.floor(duration.asMinutes())) {
+      const minutes = Math.ceil(duration.asMinutes());
+      result = this.$translate.instant('time.abbreviatedCap.minutes', { time: minutes }, 'messageformat');
+    } else {
+      const seconds = Math.floor(duration.asSeconds());
+      result = this.$translate.instant('time.abbreviatedCap.seconds', { time: seconds }, 'messageformat');
+    }
+    return result;
   }
 }

@@ -139,6 +139,23 @@ describe('Controller: UserRolesCtrl', function () {
       expect($scope.rolesObj.complianceValue).toBeDefined();
       expect($scope.rolesObj.complianceValue).toBe(false);
     });
+
+    it('should match Device Admin to User Admin settings when partialCheckboxesUserAdmin is called', function () {
+      initController();
+      spyOn($scope, 'partialCheckboxes').and.callThrough();
+
+      $scope.rolesObj.userAdminValue = true;
+      $scope.partialCheckboxesUserAdmin();
+      expect($scope.rolesObj.deviceAdminValue).toEqual(true);
+      expect($scope.partialCheckboxes).toHaveBeenCalledTimes(1);
+      expect($scope.isDeviceCheckboxDisabled()).toEqual(true);
+
+      $scope.rolesObj.userAdminValue = false;
+      $scope.partialCheckboxesUserAdmin();
+      expect($scope.rolesObj.deviceAdminValue).toEqual(false);
+      expect($scope.partialCheckboxes).toHaveBeenCalledTimes(2);
+      expect($scope.isDeviceCheckboxDisabled()).toEqual(false);
+    });
   });
 
   describe('Initialize isPartner from current org response', function () {

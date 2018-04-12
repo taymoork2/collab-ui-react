@@ -48,6 +48,7 @@ export default angular
     require('modules/hercules/services/calendar-cloud-connector.service').default,
     require('modules/hercules/services/enterprise-private-trunk-service').default,
     require('modules/hercules/services/hybrid-services-cluster.service').default,
+    require('modules/hercules/services/hybrid-services-extras.service').default,
     require('modules/hercules/services/uss.service').default,
     require('modules/services-overview/new-hybrid/card-users-summary').default,
     require('modules/services-overview/new-hybrid/prerequisites-modals/private-trunk-prereq').default,

@@ -7,13 +7,12 @@
 
   /* @ngInject */
   function DevicesCtrlHuron($q, $scope, $state, $stateParams, Config, CsdmHuronUserDeviceService, CsdmDataModelService,
-    CsdmUpgradeChannelService, WizardFactory, FeatureToggleService, Userservice, Authinfo) {
+    WizardFactory, FeatureToggleService, Userservice, Authinfo) {
     var vm = this;
     vm.devices = {};
     vm.otps = [];
     vm.currentUser = $stateParams.currentUser;
     vm.csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);
-    vm.showDeviceSettings = false;
 
     function init() {
       fetchAsyncSettings();
@@ -30,16 +29,6 @@
         activate();
       });
       fetchDetailsForLoggedInUser();
-
-      FeatureToggleService.csdmPlaceGuiSettingsGetStatus().then(function (result) {
-        if (result) {
-          vm.showDeviceSettings = true;
-        } else {
-          CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(function (channels) {
-            vm.showDeviceSettings = channels.length > 1;
-          });
-        }
-      });
     }
 
     function fetchDetailsForLoggedInUser() {

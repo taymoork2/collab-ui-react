@@ -121,7 +121,7 @@ describe('Care ABC Setup Component', () => {
     expect(controller.nextButton()).toEqual(nextButtonState);
   }
 
-  describe('should test the', function () {
+  describe('get and cancel', function () {
     let deferred;
     beforeEach(function () {
       deferred = this.$q.defer();
@@ -129,40 +129,57 @@ describe('Care ABC Setup Component', () => {
       spyOn(controller, 'getCommonText').and.returnValue(deferred.promise);
     });
 
-    it('getTitle', function () {
+    it('should call getCommonText when getTitle is called', function () {
       controller.getTitle();
       expect(controller.getCommonText).toHaveBeenCalledWith('createTitle');
     });
 
-    it('getSummaryDescription', function () {
+    it('should call getSummaryDescription with summary desc', function () {
       controller.template.configuration.pages.name.nameValue = 'testName';
       controller.getSummaryDescription();
       expect(controller.getText).toHaveBeenCalledWith('summary.abcDesc', { name: controller.template.configuration.pages.name.nameValue });
     });
 
-    it('cancelModal', function () {
+    it('should call getSummaryDescription with edit summary desc when isEditFeature set to true', function () {
+      controller.template.configuration.pages.name.nameValue = 'testName';
+      controller.isEditFeature = true;
+      controller.getSummaryDescription();
+      expect(controller.getText).toHaveBeenCalledWith('summary.abcDescEdit', { name: controller.template.configuration.pages.name.nameValue });
+    });
+
+    it('should open a modal with right text when calling cancelModal', function () {
       spyOn(this.$translate, 'instant').and.callThrough();
       controller.cancelModal();
       expect(this.$translate.instant).toHaveBeenCalledWith('careChatTpl.cancelCreateDialog',
         { featureName: 'careChatTpl.appleBusinessChat.featureText.name' });
+      expect(this.$modal.open).toHaveBeenCalled();
+    });
+
+    it('should open a modal with right text when calling cancelModal with isEditFeature set to true', function () {
+      spyOn(this.$translate, 'instant').and.callThrough();
+      controller.isEditFeature = true;
+      controller.cancelModal();
+      expect(this.$translate.instant).toHaveBeenCalledWith('careChatTpl.cancelEditDialog',
+        { featureName: 'careChatTpl.appleBusinessChat.featureText.name' });
+      expect(this.$modal.open).toHaveBeenCalled();
     });
   });
 
   describe('Page Structures', function () {
-    it('States correlate to pages', function () {
+    it('should correlate the states to pages', function () {
       expect(controller.states).toEqual(expectedStates);
     });
 
-    it('First state is initial state', function () {
+    it('should set initial state correctly', function () {
       expect(controller.currentState).toEqual(controller.states[0]);
     });
 
-    it('keyboard functionality', function () {
+    it('should open modal when escape key is pressed', function () {
       controller.evalKeyPress(KeyCodes.ESCAPE);
       expect(this.$modal.open).toHaveBeenCalled();
     });
 
-    it('Walk pages forward in order ', function () {
+    it('should walk pages forward in order ', function () {
       for (let i = 0; i < controller.states.length; i++) {
         expect(controller.currentState).toEqual(controller.states[i]);
         controller.nextPage();
@@ -172,7 +189,7 @@ describe('Care ABC Setup Component', () => {
       }
     });
 
-    it('Walk pages Backward in order ', function () {
+    it('should walk pages Backward in order ', function () {
       controller.currentState = controller.states[controller.states.length - 1];
       for (let i = (controller.states.length - 1); 0 <= i; i--) {
         expect(controller.currentState).toEqual(controller.states[i]);
@@ -308,9 +325,18 @@ describe('Care ABC Setup Component', () => {
 
   describe('Summary Page', function () {
     let deferred, updateDeferred, updateIconDeferred, listEvasDeferred;
+    const failedData = {
+      success: false,
+      status: 403,
+      Errors: [{
+        errorCode: '100106',
+      }],
+    };
+
     beforeEach(function () {
       deferred = this.$q.defer();
       spyOn(this.AbcService, 'addAbcConfig').and.returnValue(deferred.promise);
+      spyOn(this.AbcService, 'updateAbcConfig').and.returnValue(deferred.promise);
       spyOn(this.$translate, 'instant').and.callThrough();
     });
 
@@ -318,18 +344,9 @@ describe('Care ABC Setup Component', () => {
       deferred = updateDeferred = updateIconDeferred = listEvasDeferred = undefined;
     });
 
-    it("should fail to submit Apple Business Chat Feature when the 'saveTemplateErrorOccurred' is set", function () {
+    it('should fail to submit on create', function () {
       //by default, this flag is false
       expect(controller.saveTemplateErrorOccurred).toBeFalsy();
-
-      const failedData = {
-        success: false,
-        status: 403,
-        Errors: [{
-          errorCode: '100106',
-        }],
-      };
-
       deferred.reject(failedData);
 
       controller.submitFeature();
@@ -344,7 +361,7 @@ describe('Care ABC Setup Component', () => {
 
     });
 
-    it('should submit template successfully', function () {
+    it('should submit successfully on create', function () {
       //by default, this flag is false
       expect(controller.saveTemplateErrorOccurred).toBeFalsy();
 
@@ -363,6 +380,41 @@ describe('Care ABC Setup Component', () => {
       expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.APPLE_BUSINESS_CHAT.eventNames.ABC_SUMMARY_PAGE, { durationInMillis: 10 });
       expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.APPLE_BUSINESS_CHAT.eventNames.ABC_START_FINISH, { durationInMillis: 0 });
       expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.APPLE_BUSINESS_CHAT.eventNames.ABC_CREATE_SUCCESS);
+    });
+
+    it('should submit successfully on edit', function () {
+      //by default, this flag is false
+      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
+      controller.isEditFeature = true;
+      spyOn(this.$state, 'go');
+      deferred.resolve({
+        success: true,
+        status: 200,
+      });
+      controller.submitFeature();
+      this.$scope.$apply();
+
+      expect(this.Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
+        featureName: jasmine.any(String),
+      });
+      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
+      expect(this.$state.go).toHaveBeenCalled();
+      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.APPLE_BUSINESS_CHAT.eventNames.ABC_SUMMARY_PAGE, { durationInMillis: 10 });
+      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.APPLE_BUSINESS_CHAT.eventNames.ABC_START_FINISH, { durationInMillis: 0 });
+    });
+
+    it('should fail to submit on edit', function () {
+      //by default, this flag is false
+      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
+      deferred.reject(failedData);
+      controller.isEditFeature = true;
+
+      controller.submitFeature();
+      this.$scope.$apply();
+
+      const featureNameObj = { featureName: 'careChatTpl.appleBusinessChat.featureText.name' };
+      expect(controller.saveTemplateErrorOccurred).toBeTruthy();
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String), featureNameObj);
     });
   });
 });

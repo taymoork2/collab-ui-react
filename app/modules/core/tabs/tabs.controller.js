@@ -4,6 +4,8 @@
   angular.module('Core')
     .controller('TabsCtrl', TabsCtrl);
 
+  var CoreEvent = require('modules/core/shared/event.constants').CoreEvent;
+
   /* @ngInject */
   function TabsCtrl($rootScope, $scope, $translate, $location, $q, Utils, Authinfo, Config, FeatureToggleService, ControlHubService) {
     var vm = this;
@@ -12,6 +14,7 @@
     vm.image = null;
     vm.collapsed = null;
     vm.icon = null;
+    vm.onResize = onResize;
 
     initTabs();
 
@@ -152,6 +155,10 @@
       $q.all(toggles).then(function () {
         filterTabsOnFeaturesAndSetActiveTab();
       });
+    }
+
+    function onResize() {
+      $rootScope.$emit(CoreEvent.SIDENAV_RESIZED);
     }
   }
 })();

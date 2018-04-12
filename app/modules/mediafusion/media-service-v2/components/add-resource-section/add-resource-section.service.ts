@@ -33,6 +33,7 @@ export class AddResourceSectionService {
   private selectedClusterId: string;
   public showDownloadableOption: boolean;
   public radio: string = '1';
+  public releaseChannel: string = 'stable';
   public yesProceed: boolean;
 
   private getClusterList() {
@@ -107,6 +108,7 @@ export class AddResourceSectionService {
           this.Notification.errorWithTrackingId(error, errorMessage);
         });
     } else {
+      this.releaseChannel = this.clusterDetail.releaseChannel;
       this.selectedClusterId = this.clusterDetail.id;
       return this.whiteListHost(hostName, this.selectedClusterId);
     }
@@ -124,8 +126,9 @@ export class AddResourceSectionService {
     return this.HybridServicesExtrasService.addPreregisteredClusterToAllowList(hostName, clusterId);
   }
 
-  public redirectPopUpAndClose(hostName, enteredCluster) {
-    this.$window.open('https://' + encodeURIComponent(hostName) + '/?clusterName=' + encodeURIComponent(enteredCluster) + '&clusterId=' + encodeURIComponent(this.selectedClusterId));
+  public redirectPopUpAndClose(hostName, enteredCluster, releaseChannel) {
+    if (!_.isUndefined(releaseChannel)) { this.releaseChannel = releaseChannel; }
+    this.$window.open('https://' + encodeURIComponent(hostName) + '/?clusterName=' + encodeURIComponent(enteredCluster) + '&clusterId=' + encodeURIComponent(this.selectedClusterId) + '&channel=' + encodeURIComponent(this.releaseChannel));
   }
 
   public enableMediaServiceEntitlements() {

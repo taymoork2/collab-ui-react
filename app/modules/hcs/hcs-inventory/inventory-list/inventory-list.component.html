@@ -32,7 +32,7 @@
               <i ng-switch-when="Agent Inactive" class="icon icon-circle status-indicator danger"></i>
                {{inventory.status}}
             </div>
-            <div class="columns medium-1"><a ui-sref="hcs.clusterList({customerId: inventory.id, customerName: inventory.name})" translate="common.settings" /></div>
+            <div class="columns medium-1"><a ng-click="$ctrl.onClickSettings(inventory.id)" translate="common.settings" /></div>
           </div>
         </section>
       </article>

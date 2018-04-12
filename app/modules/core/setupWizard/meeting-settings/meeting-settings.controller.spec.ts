@@ -4,6 +4,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
   const actingSubscriptions = _.clone(getJSONFixture('core/json/customerSubscriptions/getSubscriptionsData.json'));
   const conferenceServices = _.clone(getJSONFixture('core/json/authInfo/confServices.json'));
   const actingSubscription = _.find(actingSubscriptions, { subscriptionId: '235235-2352532-42352311d-87235221-d05b7c3523596f577' });
+  const transferredSubscriptionServices = _.find(actingSubscriptions, { subscriptionId: '2675675-2365756-42365756-8767575-d05b7c67657' });
   const savedDataFromMeetingSetup = _.clone(getJSONFixture('core/json/setupWizard/meeting-settings/savedSitesData.json'));
 
   beforeEach(function () {
@@ -24,12 +25,11 @@ describe('Controller: MeetingSettingsCtrl', () => {
       'TrialWebexService');
 
     spyOn(this.TrialTimeZoneService, 'getTimeZones').and.returnValue(this.$q.resolve({}));
-    spyOn(this.SetupWizardService, 'getPendingAudioLicenses').and.returnValue([{ offerName: 'TSP' }]);
+    spyOn(this.SetupWizardService, 'getPendingAudioLicense').and.returnValue({ offerName: 'TSP' });
     spyOn(this.SetupWizardService, 'getActingSubscriptionLicenses').and.returnValue(actingSubscription['licenses']);
+    spyOn(this.SetupWizardService, 'getActingSubscriptionPendingTransferServices').and.returnValue(transferredSubscriptionServices['licenses']);
     spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(conferenceServices);
     spyOn(this.SetupWizardService, 'validateCCASPPartner').and.returnValue(this.$q.resolve({ isValid: true }));
-    spyOn(this.SetupWizardService, 'hasPendingCCASPPackage').and.returnValue(true);
-    spyOn(this.SetupWizardService, 'getActiveCCASPPackage').and.returnValue(undefined);
     spyOn(this.SetupWizardService, 'getCCASPPartners').and.returnValue(this.$q.resolve(['partner1', 'partner2']));
     spyOn(this.TrialWebexService, 'getProvisioningWebexSitesData').and.returnValue({});
     spyOn(this.Analytics, 'trackServiceSetupSteps').and.returnValue(this.$q.resolve());
@@ -48,10 +48,18 @@ describe('Controller: MeetingSettingsCtrl', () => {
 
     it('should find existing WebEx licenses on acting subscription and push them to sitesArray', function () {
       expect(this.SetupWizardService.getActingSubscriptionLicenses).toHaveBeenCalled();
-      expect(this.controller.sitesArray.length).toBe(2);
+      expect(this.controller.sitesArray.length).toBe(3);
       const hasSiteUrlFromActiveLicense = _.some(this.controller.sitesArray, { siteUrl: 'frankSinatraTest.dmz' });
       expect(this.controller.sitesArray[0]['keepExistingSite']).toBeTruthy();
       expect(hasSiteUrlFromActiveLicense).toBe(true);
+    });
+
+    it('should extract WebEx licenses from transferred subscription services on acting subscription and push them to sitesArray', function () {
+      expect(this.SetupWizardService.getActingSubscriptionPendingTransferServices).toHaveBeenCalled();
+      expect(this.controller.webexSitesFromTransferredSubscriptionServices.length).toBe(1);
+      const hasSiteUrlFromTransferredWebexLicence = _.some(this.controller.sitesArray, { siteUrl: 'shafiTest.dmz' });
+      expect(this.controller.sitesArray[0]['keepExistingSite']).toBeTruthy();
+      expect(hasSiteUrlFromTransferredWebexLicence).toBe(true);
     });
 
     it('should find existing trial WebEx licenses on acting subscription and push them to sitesArray', function () {
@@ -71,7 +79,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
     it('should set the user management setup type correctly', function () {
       const sparkSetupSite = _.find(this.controller.sitesArray, { siteUrl: 'frankSinatraTest.dmz' });
       const legacySetupSite = _.find(this.controller.sitesArray, { siteUrl: 'frankSinatraTestWX.dmz' });
-      expect(this.controller.sitesArray.length).toEqual(2);
+      expect(this.controller.sitesArray.length).toEqual(3);
       expect(sparkSetupSite['setupType']).toBeUndefined();
       expect(legacySetupSite.hasOwnProperty('setupType')).toBeTruthy();
       expect(legacySetupSite['setupType']).toEqual(this.Config.setupTypes.legacy);
@@ -168,6 +176,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
 
   describe('when pending licenses include CCASP and there are no CCASP active licenses', function () {
     beforeEach(function () {
+      spyOn(this.SetupWizardService, 'hasPendingCCASPPackage').and.returnValue(true);
       initController.apply(this);
       spyOn(this.controller, 'setNextDisableStatus').and.callThrough();
       this.controller.ccasp.partnerNameSelected = 'bob';
@@ -206,7 +215,8 @@ describe('Controller: MeetingSettingsCtrl', () => {
         ccaspPartnerName: 'West IP Communications',
         ccaspSubscriptionId: 'Sub1154854',
       };
-      this.SetupWizardService.getActiveCCASPPackage.and.returnValue(ccaspActivePackcage);
+      spyOn(this.SetupWizardService, 'hasPendingCCASPPackage').and.returnValue(true);
+      spyOn(this.SetupWizardService, 'getActiveCCASPPackage').and.returnValue(ccaspActivePackcage);
       initController.apply(this);
       spyOn(this.controller, 'setNextDisableStatus').and.callThrough();
     });
@@ -215,7 +225,29 @@ describe('Controller: MeetingSettingsCtrl', () => {
     });
     it('should populate partner subscription data from active subscription', function () {
       expect(this.controller.audioPartnerName).toEqual('West IP Communications');
-      expect(this.controller.ccasp.subscriptionId).toEqual('Sub1154854');
+      expect(this.controller.ccasp.subscriptionId).toBe('Sub1154854');
+    });
+  });
+
+  describe('pending when licenses include CCAUser active license', function () {
+    beforeEach(function () {
+      const license = {
+        licenseId: 'CCAUser_8c8098f4-e324-45af-8abc-ff75594090c8_testccanew002-ittest.dmz.webex.com',
+        offerName: 'CCAUser',
+        licenseType: 'AUDIO',
+        status: 'ACTIVE',
+        ccaspPartnerName: 'West IP Communications',
+      };
+      spyOn(this.SetupWizardService, 'hasPendingCCAUserPackage').and.returnValue(true);
+      spyOn(this.SetupWizardService, 'getActiveCCAUserPackage').and.returnValue(license);
+      initController.apply(this);
+      spyOn(this.controller, 'setNextDisableStatus').and.callThrough();
+    });
+    it('should not get the list of ccaspPartners ', function () {
+      expect(this.SetupWizardService.getCCASPPartners).not.toHaveBeenCalled();
+    });
+    it('should populate partner name from active subscription', function () {
+      expect(this.controller.audioPartnerName).toBe('West IP Communications');
     });
   });
 

@@ -92,6 +92,7 @@ class CtOffHoursController extends CtBaseController {
   }
 
   public $onInit(): void {
+    super.$onInit();
     this.populateViewModal();
     this.isOffHoursPageValid();
   }

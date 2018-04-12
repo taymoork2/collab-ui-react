@@ -61,6 +61,7 @@ var ChatTemplateCreation = function () {
   this.agentUnavailableMessageField = element(by.id('agentUnavailableMessageField'));
   this.agentUnavailableMessage = element(by.id('agentUnavailableMessage'));
   this.chatStatusMessages = element.all(by.css('.ct-attribute-field-textbox'));
+  this.chatStatusPreviewMessage = element(by.css('.preview-ellipsis-text'));
   this.offHoursMessage = element(by.css('.offhours-message textarea'));
   this.days = element.all(by.css('.day-picker .day'));
   this.wednesday = element.all(by.css('.day-picker .day')).get(3);

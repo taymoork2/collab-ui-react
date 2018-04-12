@@ -60,6 +60,11 @@
     "files": [
       "app/modules/sunlight/**/*"
     ]
+  }, {
+    "name": "mipark2",
+    "files": [
+      "app/modules/core/users/userAdd/onboard.controller.js"
+    ]
   }],
   "fileBlacklist": [
     "app/l10n/*.json",
@@ -72,7 +77,6 @@
     "claughbo",
     "cstoy",
     "kjeree",
-    "mikecan",
     "stimurbe",
     "svanneyg",
     "thobasse",

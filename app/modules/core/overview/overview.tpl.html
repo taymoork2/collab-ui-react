@@ -2,7 +2,7 @@
   <cs-page-header title-name="{{'overview.pageTitle' | translate}}"></cs-page-header>
   <div class="cs-card-container multiple-layouts">
     <cs-card-layout class="three-fourths"  block-view="true">
-      <cs-card class="cs-card--medium menu-card overview-card" ng-class="card.cardClass" ng-repeat="card in overview.cards">
+      <cs-card class="menu-card overview-card cs-card--medium" ng-class="card.cardClass" ng-repeat="card in overview.cards">
         <!--
           currently ng-include templates loaded through ngtemplate-loader
           TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive

@@ -1,0 +1,85 @@
+<div class="modal-header">
+  <h3 class="modal-title" translate="organizationDeleteModal.title.accountExpired"></h3>
+</div>
+<div class="modal-body">
+  <div>
+    <h4 class="account-expired-modal__header">{{::'onlineUpgradeModal.accountExpired.suspended'|translate}}</h4>
+    <h4>{{::'onlineUpgradeModal.accountExpired.whatToDo'|translate}}</h4>
+  </div>
+  <div class="cs-card-container text-center">
+    <cs-card-layout block-view="true">
+      <cs-card ng-class="$ctrl.cardCount === 3 ? 'cs-card--medium' : 'cs-card--large'">
+        <article>
+          <header class="align-center">
+            <h3 translate="onlineUpgradeModal.accountExpired.buy.header"></h3>
+          </header>
+          <section>
+            <p>{{::'onlineUpgradeModal.accountExpired.buy.host'|translate}}</p>
+            <p>{{::'onlineUpgradeModal.accountExpired.buy.calling'|translate}}</p>
+            <p>{{::'onlineUpgradeModal.accountExpired.buy.admin'|translate}}</p>
+          </section>
+          <footer>
+            <bmmp-subscription-upgrade-button
+              class="btn btn--primary"
+              id="buyButton"
+              ng-class="{'account-expired-modal__disable-button': $ctrl.bmmpDisabled}"
+              ng-click="$ctrl.logout()"
+              show-loading="true"
+              bmmp-attr="$ctrl.bmmpAttr"
+              widget-location="online-upgrade-modal">
+            </bmmp-subscription-upgrade-button>
+          </footer>
+        </article>
+      </cs-card>
+      <cs-card ng-class="$ctrl.cardCount === 3 ? 'cs-card--medium' : 'cs-card--large'" ng-if="$ctrl.showUseFreeButton">
+        <article class="card-article">
+          <header class="align-center">
+            <h3 class="text-center" translate="onlineUpgradeModal.accountExpired.useFree.header"></h3>
+          </header>
+          <section>
+            <p>{{::'onlineUpgradeModal.accountExpired.useFree.meetings'|translate}}</p>
+            <p>{{::'onlineUpgradeModal.accountExpired.useFree.messaging'|translate}}</p>
+          </section>
+          <footer>
+            <button
+              class="btn btn--default"
+              id="freeButton"
+              cs-btn
+              loading="$ctrl.useFreeLoading"
+              ng-click="$ctrl.useFree()">
+              <span translate="onlineUpgradeModal.accountExpired.useFree.button"></span>
+            </button>
+          </footer>
+        </article>
+      </cs-card>
+      <cs-card ng-class="$ctrl.cardCount === 3 ? 'cs-card--medium' : 'cs-card--large'" ng-if="$ctrl.showDeleteButton">
+        <article class="card-article">
+            <header class="align-center">
+              <h3 class="text-center" translate="onlineUpgradeModal.accountExpired.deleteAccount.header"></h3>
+            </header>
+          <section>
+            <p>{{$ctrl.orgName}}</p>
+          </section>
+          <footer>
+            <button
+              class="btn btn--default"
+              id="deleteButton"
+              cs-btn
+              loading="$ctrl.deleteLoading"
+              ng-disabled="$ctrl.deleteDisabled"
+              ng-click="$ctrl.delete()">
+              <span translate="onlineUpgradeModal.accountExpired.deleteAccount.header"></span>
+            </button>
+          </footer>
+        </article>
+      </cs-card>
+    </cs-card-layout>
+  </div>
+</div>
+<div class="modal-footer">
+  <button
+    class="btn btn--default"
+    ng-click="$ctrl.close()">
+    <span>{{::'common.cancel' | translate}}</span>
+  </button>
+</div>    

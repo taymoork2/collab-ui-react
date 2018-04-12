@@ -20,6 +20,8 @@ var HttpStatus = require('http-status-codes');
     vm.NOT_ONBOARDED = 'notOnboarded';
     vm.IN_PROGRESS = 'inProgress';
 
+    vm.DEFAULT_QUEUE = 'Queue 1';
+
     vm.defaultQueueStatus = vm.status.UNKNOWN;
     vm.csOnboardingStatus = vm.status.UNKNOWN;
     vm.aaOnboardingStatus = vm.status.UNKNOWN;
@@ -91,7 +93,7 @@ var HttpStatus = require('http-status-codes');
       if (vm.defaultQueueStatus !== vm.status.SUCCESS) {
         var createQueueRequest = {
           queueId: Authinfo.getOrgId(),
-          queueName: 'DEFAULT',
+          queueName: vm.DEFAULT_QUEUE,
           notificationUrls: [],
           routingType: 'pick',
         };

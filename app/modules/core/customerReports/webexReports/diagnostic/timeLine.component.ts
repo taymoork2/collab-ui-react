@@ -1,7 +1,29 @@
 import './_timeline.scss';
 import * as d3 from 'd3';
 import * as moment from 'moment';
-import { SearchService } from './searchService';
+import { SearchService, Platforms, Devices } from './searchService';
+
+export interface IMessageItem {
+  key: string;
+  value: string;
+}
+
+export interface IParticipantItem {
+  userName: string;
+  userId: string;
+  nodeId: string;
+  conferenceID: string;
+  guestId: string;
+  device: string;
+  pstnCallInType: string;
+  platform: string;
+  deviceIcon: string;
+  ts: number;
+  joinTime_: string;
+  duration: number;
+  x1: number;
+  y1: number;
+}
 
 class TimeLine implements ng.IComponentController {
 
@@ -21,6 +43,7 @@ class TimeLine implements ng.IComponentController {
     private $element: ng.IRootElementService,
     private SearchService: SearchService,
     private $translate: ng.translate.ITranslateService,
+    private $timeout: ng.ITimeoutService,
   ) {
     this.data = {
       ticks: 0,
@@ -225,9 +248,9 @@ class TimeLine implements ng.IComponentController {
         const circleId = `#myDot${item.guestId}-${item.userId}-${item.joinTime}`;
         const jmtQuality = this.$element.find(circleId).attr('jmtQuality');
         const joinMeetingTime = this.$element.find(circleId).attr('joinMeetingTime');
-        let jmtVal = 'Not Available';
+        let jmtVal = this.$translate.instant('reportsPage.webexMetrics.notAvailable');
         if (!_.isUndefined(joinMeetingTime)) {
-          jmtVal = _.parseInt(joinMeetingTime) <= 1 ? `${joinMeetingTime} Second` : `${joinMeetingTime} Seconds`;
+          jmtVal = this.SearchService.toMinOrSec(_.parseInt(joinMeetingTime) * 1000);
         }
 
         const msgArr = [
@@ -257,7 +280,6 @@ class TimeLine implements ng.IComponentController {
   }
 
   private yAxis(): void {
-    const tollFreeData = {};
     const data = _.uniqBy(this.data.data, 'filterId');
     const g = d3.select('.timelineSvg').insert('div', 'svg').attr('class', 'yaxis').attr('style', `height: ${this.option.height}px`);
     g.selectAll('.yaxis')
@@ -265,65 +287,76 @@ class TimeLine implements ng.IComponentController {
       .enter()
       .append('p')
       .attr('class', 'ellipsis')
-      .on('mouseover', item => {
-        const msgArr = [
-          { key: item.userName },
-          { key: 'Join Time: ', value: item.joinTime_ },
-          { key: 'Duration: ', value: _.round(item.duration / 60) + ' Min' },
-        ];
-
-        if (!item.device) {
-          this.detectAndUpdateDevice(item, msgArr);
-        } else {
-          msgArr.splice(1, 0, { key: item.device });
-          this.getPSTNCallInType(tollFreeData, msgArr, item);
-        }
-
-        this.makeTips({ arr: msgArr }, item.y1 - 15, this.option.paddingLeft - 40 );
-      })
+      .on('mouseover', this.yAxisTips())
       .on('mouseout', () => this.hideTips()).text(item => `${item.userName}`).append('i').attr('class', item => `icon ${item.deviceIcon}`);
 
     this.showUnitStr();
   }
 
-  private detectAndUpdateDevice(item: any, msgArr) {
-    if (item.platform === '10') {
-      this.SearchService.getRealDevice(item.conferenceID, item.nodeId)
-        .then( res => item.device = this.updateDevice(res, item, msgArr) );
-    }
-  }
+  private yAxisTips(): Function {
+    const DELAY_1_SEC = 1000;
+    return (item: IParticipantItem) => {
+      const msgArr = [
+        { key: item.userName },
+        { key: `${this.$translate.instant('reportsPage.webexMetrics.joinTime')}: `, value: item.joinTime_ },
+        { key: `${this.$translate.instant('reportsPage.webexMetrics.duration')}: `, value: this.SearchService.toMinOrSec(item.duration * 1000) },
+      ];
 
-  private updateDevice(deviceInfo, item, msgArr) {
-    if (deviceInfo.items && deviceInfo.items.length > 0) {
-      const device = deviceInfo.items[0].deviceType;
-      msgArr.splice(1, 0, { key: device });
-      this.makeTips({ arr: msgArr }, item.y1 - 15, this.option.paddingLeft - 40 );
-      return device;
-    }
-
-    return '';
-  }
-
-  private getPSTNCallInType(tollFreeData, msgArr, item): void {
-    if (item.device === 'IP Phone' || item.device === 'Phone') {
-      msgArr.splice(1, 1);
-      if (!tollFreeData[item.userName]) {
-        if (!tollFreeData[item.userName + 'startTime'] || new Date().getTime() - tollFreeData[item.userName + 'startTime'] > 1000) {
-          tollFreeData[item.userName + 'startTime'] = new Date().getTime();
-          this.SearchService.getPSTNCallInType(item.conferenceID, item.nodeId).then((res: any) => {
-            if (res.completed && res.items && res.items.length > 0 && res.items[0]) {
-              tollFreeData[item.userName] = res.items[0].pstnCallInType;
-              msgArr.splice(1, 0, { key: 'Call in: ', value: res.items[0].pstnCallInType });
-              this.makeTips({ arr: msgArr }, item.y1 - 15, this.option.paddingLeft - 40 );
-              tollFreeData[item.userName + 'startTime'] = 0;
-            }
-          });
+      if ((item.platform === Platforms.TP && !item.device) || ((item.device === Devices.IP_PHONE || item.device === Devices.PHONE) && !item.pstnCallInType)) {
+        if (item.ts && Date.now() - item.ts < DELAY_1_SEC) {
+          return;
         }
+        item.ts = Date.now();
+
+        this.getDeviceOrPSTNType(item).then((msgItem) => {
+          if (msgItem) {
+            msgArr.splice(1, 0, msgItem);
+          }
+        });
+        // note: schedule this call (this does not depend on the above API calls)
+        this.$timeout(() => this.makeTips({ arr: msgArr }, item.y1 - 15, this.option.paddingLeft - 40), DELAY_1_SEC);
+      } else if ((item.device === Devices.IP_PHONE || item.device === Devices.PHONE) && item.pstnCallInType) {
+        msgArr.splice(1, 0, { key: `${this.$translate.instant('reportsPage.webexMetrics.callIn')}: `, value: item.pstnCallInType });
+        this.makeTips({ arr: msgArr }, item.y1 - 15, this.option.paddingLeft - 40);
       } else {
-        msgArr.splice(1, 0, { key: 'Call in: ', value: tollFreeData[item.userName] });
+        msgArr.splice(1, 0, { key: item.device });
+        this.makeTips({ arr: msgArr }, item.y1 - 15, this.option.paddingLeft - 40);
+      }
+    };
+  }
+
+  private getDeviceOrPSTNType(item: IParticipantItem): ng.IPromise<IMessageItem> {
+    let promise;
+    if (!item.device) {
+      if (item.platform === Platforms.TP) {
+        promise = this.SearchService.getRealDevice(item.conferenceID, item.nodeId)
+        .then(response => {
+          const firstItem = _.first(response.items);
+          if (firstItem) {
+            item.device = firstItem.deviceType;
+            return {
+              key: firstItem.deviceType,
+            };
+          }
+        });
+      }
+    } else if (item.device === Devices.IP_PHONE || item.device === Devices.PHONE) {
+      if (!item.pstnCallInType) {
+        promise = this.SearchService.getPSTNCallInType(item.conferenceID, item.nodeId)
+        .then((response: any) => {
+          const firstItem: any = _.first(response.items);
+          if (firstItem) {
+            item.pstnCallInType = firstItem.pstnCallInType;
+            return {
+              key: `${this.$translate.instant('reportsPage.webexMetrics.callIn')}: `,
+              value: firstItem.pstnCallInType,
+            };
+          }
+        });
       }
     }
-    this.makeTips({ arr: msgArr }, item.y1 - 15, this.option.paddingLeft - 40 );
+
+    return promise;
   }
 
   private drawCircle(node, class_, pos) {
@@ -398,8 +431,8 @@ class TimeLine implements ng.IComponentController {
   private setLegend(): void {
     const g = d3.select('.timelineSvg').append('div').attr('class', 'legend').attr('style', `min-width: 1100px`);
     this.legendTitle(g);
-    g.append('div').attr('class', 'legendCircle').attr('style', 'padding: 0; width: 350px;');
-    g.append('div').attr('class', 'legendLine').attr('style', 'width: 520px; float: right;');
+    g.append('div').attr('class', 'legendCircle').attr('style', 'padding: 0; float: left;');
+    g.append('div').attr('class', 'legendLine').attr('style', 'float: right;');
     _.forEach(this.legendInfo.circle, val => {
       const colorZone = d3.select('.legendCircle').append('div');
       const svg = colorZone.append('svg:svg');
@@ -438,7 +471,7 @@ class TimeLine implements ng.IComponentController {
   }
 
   private legendTitle(g) {
-    g.append('p').text(this.$translate.instant('reportsPage.webexMetrics.joinMeetingTime')).attr('style', 'width: 350px;').append('i').attr('class', 'icon icon-info-outline')
+    g.append('p').text(this.$translate.instant('reportsPage.webexMetrics.joinMeetingTime')).attr('style', 'float: left;').append('i').attr('class', 'icon icon-info-outline')
     .on('mouseover', () => {
       const msgArr = [
         { key: `<p class="text-center">Join Meeting Time is<br>calculated in seconds.<br>Good: < 10 seconds<br>Fair: 10-20 seconds<br>Poor: > 20 seconds<br>Not Available: No information</p>` },
@@ -447,7 +480,7 @@ class TimeLine implements ng.IComponentController {
       this.makeTips({ arr: msgArr }, pos.top - 10, pos.left + 17);
     })
     .on('mouseout', () => this.hideTips());
-    g.append('p').text(`${this.tabType} Quality`).attr('style', 'width: 520px; float: right;').append('i').attr('class', 'icon icon-info-outline')
+    g.append('p').text(`${this.tabType} Quality`).attr('style', 'float: right;').append('i').attr('class', 'icon icon-info-outline')
     .on('mouseover', () => {
       let msg = '';
       if (this.tabType === 'Video') {
@@ -502,7 +535,7 @@ class TimeLine implements ng.IComponentController {
           const quality = this.legendInfo.circle[qualityKey] === 'N/A' ? '' : this.legendInfo.circle[qualityKey];
           const msgArr = [
             { key: this.$translate.instant('reportsPage.webexMetrics.joinMeetingTime') + (quality ? `: ${quality} ` : '') },
-            { key: item.joinMeetingTime ? `${item.joinMeetingTime} Seconds` : 'Not Available' },
+            { key: item.joinMeetingTime ? `${_.parseInt(item.joinMeetingTime)} Seconds` : this.$translate.instant('reportsPage.webexMetrics.notAvailable') },
           ];
 
           this.makeTips({ arr: msgArr }, nodey - 16, nodex);

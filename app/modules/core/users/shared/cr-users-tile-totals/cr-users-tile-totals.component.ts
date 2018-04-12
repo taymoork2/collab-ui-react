@@ -40,9 +40,10 @@ export class CrUsersTileTotalsComponent implements ng.IComponentOptions {
     newTotal: '<',
     updatedTotal: '<',
     errorTotal: '<',
-    newLabel: '<?',
-    updatedLabel: '<?',
-    errorLabel: '<?',
+    newLabel: '@?',
+    updatedLabel: '@?',
+    errorLabel: '@?',
     hideNew: '<?',
+    hideErrorsIfNone: '<?',
   };
 }

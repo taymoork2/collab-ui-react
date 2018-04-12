@@ -1,0 +1,39 @@
+<multi-step-modal
+  l10n-title="ssoCertificateModal.updateCertificate"
+  dismiss="$ctrl.dismissModal()"
+  next="$ctrl.next()"
+  next-disabled="$ctrl.nextDisabled"
+  back="$ctrl.back()"
+  >
+
+  <div class="sso-certificate-content sso-certificate-content-type">
+    <i class="icon icon-server-circle_100 sso-certificate-content__icon sso-certificate-content__icon--size100"></i>
+    <p class="sso-certificate-content__paragraph-question h4"
+      translate="ssoCertificateModal.certificateType">
+    </p>
+    <div class="sso-certificate-content__radio cs-radio-group">
+      <input cs-input type="radio"
+              ng-model="$ctrl.certificateTypeValue"
+              name="certificateRadio"
+              ng-change="$ctrl.onCertificateTypeValueChanged()"
+              id="multiple"
+              ng-value="::$ctrl.certificateType.MULTIPLE"
+              cs-input-label="{{:: 'ssoCertificateModal.multipleCertificates' | translate}}">
+      <input cs-input type="radio"
+              ng-model="$ctrl.certificateTypeValue"
+              name="certificateRadio"
+              ng-change="$ctrl.onCertificateTypeValueChanged()"
+              id="single"
+              ng-value="::$ctrl.certificateType.SINGLE"
+              cs-input-label="{{:: 'ssoCertificateModal.singleCertificate' | translate}}">
+    </div>
+    <p class="sso-certificate-content__paragraph-action1 h5"
+      ng-if="$ctrl.certificateTypeValue === $ctrl.certificateType.SINGLE"
+      translate="ssoCertificateModal.singleCertificateWarning">
+    </p>
+    <p class="sso-certificate-content__paragraph-action2 h6"
+      ng-if="$ctrl.certificateTypeValue === $ctrl.certificateType.SINGLE"
+      translate="ssoCertificateModal.singleCertificateMessage">
+    </p>
+  </div>
+</multi-step-modal>

@@ -15,7 +15,7 @@
       </button>
       <button type="button"
         class="btn"
-        ng-if="(!wizard.isFirstStep() || !wizard.isFirstTab()) && wizard.isLastTab() && wizard.isLastStep() && !wizard.willNotProvision() && !wizard.isMeetingSetupTabOnly()"
+        ng-if="(!wizard.isFirstStep() || !wizard.isFirstTab()) && !(wizard.isLastTab() && wizard.isLastStep() && !wizard.willNotProvision() && !wizard.isMeetingSetupTabOnly())"
         ng-click="wizard.previousStep()"
         translate="common.back">
       </button>

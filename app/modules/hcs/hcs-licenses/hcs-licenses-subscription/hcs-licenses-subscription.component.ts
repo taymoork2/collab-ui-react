@@ -1,9 +1,16 @@
-// import { Config } from 'modules/core/config/config';
 import { IGridApi } from 'ui-grid';
+import { HcsCustomerLicense, HcsCustomerReport, IHcsCustomerReport, IHcsLicense } from 'modules/hcs/shared';
 type ITab = {
   title: string;
   state: string;
 };
+
+interface IFilter {
+  name: string;
+  filterValue: string;
+  count: number;
+}
+
 export class HcsLicensesSubscriptionCtrl implements ng.IComponentController {
 
   public loading: boolean = false;
@@ -17,6 +24,14 @@ export class HcsLicensesSubscriptionCtrl implements ng.IComponentController {
   public timer: any = undefined;
   public tabs: ITab[];
   public title: string;
+  public placeholder;
+  public filters: IFilter[];
+  public sort;
+  public currentCustomer;
+  public gridOptions;
+  public licenses: HcsCustomerLicense[] = [];
+  public licenseSubscriptionList: HcsCustomerReport[] = [];
+  public fieldLabel: string[];
 
   public columnDefs = [{
     field: 'customer',
@@ -29,7 +44,7 @@ export class HcsLicensesSubscriptionCtrl implements ng.IComponentController {
       priority: 0,
     },
     sortCellFiltered: true,
-    cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.clearRows()" cell-value="row.entity.customer"></cs-grid-cell>',
+    cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.clearRows()" cell-value="row.entity.customerName"></cs-grid-cell>',
   }, {
     field: 'subscriptionId',
     displayName: this.$translate.instant('hcs.license.subscriptionId'),
@@ -46,38 +61,26 @@ export class HcsLicensesSubscriptionCtrl implements ng.IComponentController {
     field: 'standard',
     displayName: this.$translate.instant('hcs.license.standard'),
     cellClass: 'standardColumn',
+    headerCellClass: 'standard',
     sort: {
       direction: 'desc',
       priority: 0,
     },
     sortCellFiltered: true,
-    width: '16.5%',
-    headerCellTemplate: require('./templates/_headerTpl.html'),
-    cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.clearRows()" cell-value="row.entity.standard"></cs-grid-cell>',
+    width: '20%',
+    cellTemplate: require('./templates/_standardTpl.html'),
   }, {
-    field: 'telepresence',
-    displayName: this.$translate.instant('hcs.license.telepresence'),
-    cellClass: 'telepresenceColumn',
-    headerCellClass: 'subscriptionId',
+    field: 'foundation',
+    displayName: this.$translate.instant('hcs.license.foundation'),
+    cellClass: 'foundationColumn',
+    headerCellClass: 'foundation',
     sort: {
       direction: 'desc',
       priority: 0,
     },
     sortCellFiltered: true,
-    width: '16.5%',
-    cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.clearRows()" cell-value="row.entity.telepresence"></cs-grid-cell>',
-  }, {
-    field: 'other',
-    displayName: this.$translate.instant('hcs.license.other'),
-    cellClass: 'otherColumn',
-    headerCellClass: 'other',
-    sort: {
-      direction: 'desc',
-      priority: 0,
-    },
-    sortCellFiltered: true,
-    width: '16.5%',
-    cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.clearRows()" cell-value="row.entity.other"></cs-grid-cell>',
+    width: '20%',
+    cellTemplate: require('./templates/_foundationTpl.html'),
   }, {
     field: 'displayField()',
     displayName: this.$translate.instant('hcs.license.status'),
@@ -90,14 +93,6 @@ export class HcsLicensesSubscriptionCtrl implements ng.IComponentController {
     cellClass: 'status',
     headerCellClass: 'status',
   }];
-  public placeholder;
-  public filters;
-  public sort;
-  public currentCustomer;
-  public gridOptions;
-  public licenseSubscriptionList: any[] = [];
-  public totalLicenses: any;
-  public fieldLabel: string[];
 
 
   /* @ngInject */
@@ -109,46 +104,6 @@ export class HcsLicensesSubscriptionCtrl implements ng.IComponentController {
   ) {}
 
   public $onInit() {
-    this.setGridOptions();
-    this.loading = true;
-    //To-Do Temp code until apis are ready
-    this.totalLicenses = {
-      hcs_standard: {
-        used: 350,
-        purchased: 1000,
-      },
-      hcs_telepresence: {
-        used: 350,
-        purchased: 1000,
-      },
-    };
-
-    this.licenseSubscriptionList.push({
-      customer: 'Arizona Diamondbacks',
-      subscriptionId: 'Sub101123, Sub101111',
-      standard: 100,
-      telepresence: 5,
-      other: 3,
-      status: 'Valid',
-    }, {
-      customer: 'Atlanta Braves',
-      subscriptionId: 'Sub101124',
-      standard: 100,
-      telepresence: 15,
-      other: 3,
-      status: 'Valid',
-    }, {
-      customer: 'Allen Eagles',
-      subscriptionId: 'Sub101125',
-      standard: 150,
-      telepresence: 10,
-      other: 3,
-      status: 'Invalid',
-    });
-
-    this.getLicensesSubscription();
-    this.loading = false;
-
     this.placeholder = {
       name: this.$translate.instant('hcs.license.all'),
       filterValue: 'all',
@@ -156,12 +111,99 @@ export class HcsLicensesSubscriptionCtrl implements ng.IComponentController {
     };
 
     this.filters = [{
-      name: this.$translate.instant('hcs.license.valid'),
-      filterValue: 'Valid',
+      name: this.$translate.instant('hcs.license.compliant'),
+      filterValue: 'Compliant',
+      count: 0,
     }, {
-      name: this.$translate.instant('hcs.license.invalid'),
-      filterValue: 'Invalid',
+      name: this.$translate.instant('hcs.license.nonCompliant'),
+      filterValue: 'Non-Compliant',
+      count: 0,
     }];
+    this.setGridOptions();
+    this.loading = true;
+    //TBD-- remove when Apis are ready
+    this.licenses.push({
+      partnerOrgId: '1234',
+      customerId: '1236',
+      customerOrgId: null,
+      customerName: 'Arizona Diamondbacks',
+      subscriptionList: [{
+        id: 'Sub101123',
+        licenseType: 'standard',
+        ordered: 100,
+      }, {
+        id: 'Sub101123',
+        licenseType: 'foundation',
+        ordered: 100,
+      }, {
+        id: 'Sub101124',
+        licenseType: 'basic',
+        ordered: 100,
+      }],
+      plmList: [{
+        plmId: 'PLMWest',
+        plmName: 'PLMWest',
+        violationsCount: 1,
+      }],
+      licenseList: [{
+        licenseType: 'HCS_Basic',
+        productType: 'CUCM',
+        required: 10, //sum of usages for this license type for the products belonging to this customer.
+        ordered: 100,
+      }, {
+        licenseType: 'HCS_Standard',
+        productType: 'CUCM',
+        required: 10, //sum of usages for this license type for the products belonging to this customer.
+        ordered: 100,
+      }, {
+        licenseType: 'HCS_Foundation',
+        productType: 'CUCM',
+        required: 10, //sum of usages for this license type for the products belonging to this customer.
+        ordered: 100,
+      },
+      ]}, {
+        partnerOrgId: '1234',
+        customerId: '1235',
+        customerOrgId: null,
+        customerName: 'Allen Eagles',
+        subscriptionList: [{
+          id: 'Sub101126',
+          licenseType: 'standard',
+          ordered: 100,
+        }, {
+          id: 'Sub101127',
+          licenseType: 'foundation',
+          ordered: 100,
+        }, {
+          id: 'Sub101127',
+          licenseType: 'basic',
+          ordered: 100,
+        }],
+        plmList: [{
+          plmId: 'PLMWest',
+          plmName: 'PLMWest',
+          violationsCount: 0,
+        }],
+        licenseList: [{
+          licenseType: 'HCS_Basic',
+          productType: 'CUCM',
+          required: 5, //sum of usages for this license type for the products belonging to this customer.
+          ordered: 200,
+        }, {
+          licenseType: 'HCS_Standard',
+          productType: 'CUCM',
+          required: 0, //sum of usages for this license type for the products belonging to this customer.
+          ordered: 20,
+        }, {
+          licenseType: 'HCS_Foundation',
+          productType: 'CUCM',
+          required: 10, //sum of usages for this license type for the products belonging to this customer.
+          ordered: 100,
+        }],
+      });
+
+    this.initCustomerLicenseReport();
+    this.loading = false;
 
     this.sort = {
       by: 'customer',
@@ -174,10 +216,10 @@ export class HcsLicensesSubscriptionCtrl implements ng.IComponentController {
     this.title = this.$translate.instant('hcs.license.title');
 
     this.tabs = [{
-      title: this.$translate.instant('hcs.license.perpetual'),
-      state: 'hcs.subscription',
+      title: this.$translate.instant('hcs.license.plmReport.title'),
+      state: 'hcs.plmReport',
     }, {
-      title: this.$translate.instant('hcs.license.subscriptions'),
+      title: this.$translate.instant('hcs.license.customerReport'),
       state: 'hcs.subscription',
     }];
   }
@@ -195,7 +237,7 @@ export class HcsLicensesSubscriptionCtrl implements ng.IComponentController {
     this.timer = this.$timeout(() => {
       if (str.length >= 3 || str === '') {
         this.searchStr = str;
-        this.getLicensesSubscription();
+        this.gridOptions.data = this.licenseSubscriptionList.filter(customer => _.includes(customer.customerName.toLowerCase(), str.toLowerCase()));
         this.currentDataPosition = 0;
       }
     }, this.timeoutVal);
@@ -232,20 +274,53 @@ export class HcsLicensesSubscriptionCtrl implements ng.IComponentController {
         vm.sort.by = sortBy.toLowerCase();
         vm.sort.order = sortOrder.toLowerCase();
       }
-      vm.getLicensesSubscription();
+      vm.getLicenseSubscription();
     }
   }
 
   public setFilter(filter) {
     if (this.activeFilter !== filter) {
       this.activeFilter = filter;
-      this.getLicensesSubscription();
+      if (this.activeFilter === 'all') {
+        this.gridOptions.data = this.licenseSubscriptionList;
+      } else {
+        this.gridOptions.data = this.licenseSubscriptionList.filter(customer => this.activeFilter.toLowerCase() === customer.status.toLowerCase());
+      }
       this.currentDataPosition = 0;
     }
   }
 
-  public getLicensesSubscription() {
+  public initCustomerLicenseReport(): void {
+    _.each(this.licenses, (lic) => {
+      const subIds = _.map(_.get(lic, 'subscriptionList'), sub => _.get(sub, 'id'));
+      const licenses = _.get<IHcsLicense[]>(lic, 'licenseList');
+      const licenseCust: IHcsCustomerReport = {
+        customerName: _.get(lic, 'customerName'),
+        subscriptionId: _.join(_.uniq(subIds), ', '),
+        standard: _.find(licenses, { licenseType: 'HCS_Standard' }),
+        foundation: _.find(licenses, { licenseType: 'HCS_Foundation' }),
+        basic: _.find(licenses, { licenseType: 'HCS_Basic' }),
+        telepresence: _.find(licenses, { licenseType: 'HCS_Telepresence' }),
+        essential: _.find(licenses, { licenseType: 'HCS_Essential' }),
+        status: (_.isUndefined(_.find(_.get(lic, 'plmList'), plm => plm.violationsCount > 0 ))) ? 'Compliant' : 'Non-Compliant',
+      };
+      this.licenseSubscriptionList.push(licenseCust);
+    });
     this.gridOptions.data = this.licenseSubscriptionList;
+    this.gridRefresh = false;
+    this.placeholder.count = this.licenseSubscriptionList.length;
+    this.filters[0].count = this.licenseSubscriptionList.filter(customer => this.filters[0].name.toLowerCase() === customer.status.toLowerCase()).length;
+    this.filters[1].count = this.placeholder.count - this.filters[0].count;
+  }
+
+  public getLicenseSubscription(): void {
+    if (!_.isEmpty(this.searchStr)) {
+      this.gridOptions.data = _.filter(this.licenseSubscriptionList, lic => {
+        return lic.customerName.toLowerCase().indexOf(this.searchStr.toLowerCase()) !== -1;
+      });
+    } else {
+      this.gridOptions.data = this.licenseSubscriptionList;
+    }
     this.gridRefresh = false;
     //TO-DO
   }

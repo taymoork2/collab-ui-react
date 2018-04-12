@@ -1,15 +1,25 @@
-<setting-section setting="$ctrl.clusterBandwidth" class="needs-border-top">
-  <div class="sub-section row">
-    <h5 class="sub-section__label" translate="mediaFusion.clusterBandwidth.title"></h5>
-    <p class="sub-section__description" translate="mediaFusion.clusterBandwidth.description"></p>
-    <div class="cascade-input-div" ng-class="{'input-error': $ctrl.bandwidthError}">
-      <input cs-input type="text" id="cascadeBandwidthConfiguration" ng-model="$ctrl.cascadeBandwidthConfiguration" cs-input-group-size="medium-6"
-        cs-input-help-text="{{:: 'mediaFusion.clusterBandwidth.range' | translate}}" ng-change="$ctrl.validate()">
-      <span class="cascade-span" translate="mediaFusion.clusterBandwidth.mbps"></span>
-      </input>
-    </div>
-    <div ng-show="$ctrl.bandwidthChange">
-      <button type="button" ng-if="!$ctrl.isWizard" class="btn btn--primary" ng-click="$ctrl.saveCascadeConfig()" ng-disabled="$ctrl.inValidValue" translate="common.save"></button>
-    </div>
-  </div>
-</setting-section>
+<h5 class="sub-section__label" translate="mediaFusion.clusterBandwidth.title"></h5>
+<p class="sub-section__description" translate="mediaFusion.clusterBandwidth.description"></p>
+<div class="cascade-input-div" ng-class="{'input-error': $ctrl.bandwidthError}">
+  <input 
+    cs-input type="text"
+    id="cascadeBandwidthConfiguration"
+    ng-model="$ctrl.cascadeBandwidthConfiguration"
+    cs-input-group-size="medium-6"
+    cs-input-help-text="{{:: 'mediaFusion.clusterBandwidth.range' | translate}}" 
+    ng-disabled="!$ctrl.sipSettingsEnabled" 
+    ng-change="$ctrl.validate()">
+    <span class="cascade-span" translate="mediaFusion.clusterBandwidth.mbps"></span>
+  </input>
+</div>
+<div ng-show="$ctrl.bandwidthChange">
+  <button 
+    type="button" 
+    ng-if="!$ctrl.isWizard"
+    class="btn btn--primary"
+    ng-hide="!$ctrl.sipSettingsEnabled"
+    ng-click="$ctrl.saveCascadeConfig()"
+    ng-disabled="$ctrl.inValidValue"
+    translate="common.save">
+  </button>
+</div>

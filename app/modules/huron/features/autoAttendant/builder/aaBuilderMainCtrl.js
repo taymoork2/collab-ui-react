@@ -759,7 +759,50 @@
             AutoAttendantCeService.readCe(aaRecord.callExperienceURL).then(
               function (data) {
                 vm.aaModel.aaRecord = data;
-
+                //Getting Numbers from CES and CMI
+                var cesPilotNumbers = _.map(vm.aaModel.aaRecord.assignedResources, function (resource) {
+                  return resource.number;
+                });
+                var cmiPilotNumbers = _.map(aaRecord.assignedResources, function (resource) {
+                  return resource.number;
+                });
+                //Getting common Numbers which exists in both CES and CMI
+                var commonPilotNumbers = _.intersection(cesPilotNumbers, cmiPilotNumbers);
+                if (commonPilotNumbers.length > 0) {
+                  var cesUUIDs = [];
+                  //Gettting UUIDs of commmon Numbers from CES and CMI
+                  _.forEach(vm.aaModel.aaRecord.assignedResources, function (resource) {
+                    _.forEach(commonPilotNumbers, function (pilotNumber) {
+                      if (_.isEqual(pilotNumber, resource.number)) {
+                        cesUUIDs.push(resource.uuid);
+                      }
+                    });
+                  });
+                  var cmiUUIDs = [];
+                  _.forEach(aaRecord.assignedResources, function (resource) {
+                    _.forEach(commonPilotNumbers, function (pilotNumber) {
+                      if (_.isEqual(pilotNumber, resource.number)) {
+                        cmiUUIDs.push(resource.uuid);
+                      }
+                    });
+                  });
+                  //Getting all the conflicting UUIDs from CES and CMI
+                  var conflictingUUIDs = _.difference(cesUUIDs, cmiUUIDs);
+                  //displaying error message for inconsistency if any conflicting UUIDs are found in CES and CMI
+                  if (conflictingUUIDs.length > 0) {
+                    var phoneNumbers = [];
+                    _.forEach(vm.aaModel.aaRecord.assignedResources, function (resource) {
+                      _.forEach(conflictingUUIDs, function (uuid) {
+                        if (_.isEqual(uuid, resource.uuid)) {
+                          phoneNumbers.push(resource.number);
+                        }
+                      });
+                    });
+                    AANotificationService.error('autoAttendant.errorNumberInconsistency', {
+                      phoneNumbers: phoneNumbers,
+                    });
+                  }
+                }
                 // make sure assigned numbers are from CMI, CES might be out of date.
                 vm.aaModel.aaRecord.assignedResources = _.cloneDeep(aaRecord.assignedResources);
 

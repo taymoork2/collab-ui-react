@@ -8390,7 +8390,38 @@
     "helpTextWaitingEVA": "Los clientes verán este mensaje cuando esperen una respuesta a su solicitud.",
     "waitingMessageEVA": "Alguien lo ayudará en breve…",
     "helpTextLeaveRoomEVA": "Los clientes verán este mensaje cuando el usuario que interactúa con ellos finalice el chat.",
-    "leaveRoomMessageEVA": "El chat ha finalizado"
+    "leaveRoomMessageEVA": "El chat ha finalizado",
+    "templateConfig": {
+      "default": {
+        "feedbackQueryCall": "Califique su experiencia de devolución de llamada.",
+        "additionalDetailsAbtIssue": "Describa el problema que está experimentando",
+        "chattingMessage": "Chat en curso...",
+        "defaultPhoneHintText": "+12345556789",
+        "defaultPromptMessage": "Chatee con nuestros especialistas en soluciones y lo ayudaremos de la mejor manera posible.",
+        "ratingComment": "Agregar comentarios",
+        "feedbackQuery": "Califique su experiencia en el chat",
+        "offHoursDefaultMessage": "En este momento no estamos conectados. Vuelva a intentarlo durante el horario laboral.",
+        "callbackConfirmationMsg": "Se recibió correctamente la solicitud de devolución de llamada.",
+        "defaultEmailText": "Correo electrónico",
+        "field3HintText": "Seleccionar de la lista o escribir",
+        "defaultWelcomeText": "Bienvenido a",
+        "connectingMessage": "Conectándolo con un agente",
+        "defaultNameHint": "",
+        "enterRoomMessage": "El agente ha ingresado a la sala de chat",
+        "defaultQuestionText": "¿Cómo puedo ayudarlo?",
+        "leaveRoomMessage": "El agente ha abandonado el chat",
+        "waitingMessageEVA": "Alguien lo ayudará en breve…",
+        "virtualAssistantWelcomeMessage": "Hola, ¿cómo puedo ayudarlo hoy?",
+        "defaultNameText": "Nombre",
+        "waitingMessage": "Esperando un agente...",
+        "defaultPhoneText": "Número de teléfono",
+        "additionalDetails": "Detalles adicionales",
+        "bubbleTitleMessage": "Haga clic aquí y chatee con Atención al cliente",
+        "defaultEmail": "P. ej.: abc@xyz.com",
+        "agentUnavailableMessage": "No estamos disponibles en este momento. Vuelva a intentarlo más tarde.",
+        "leaveRoomMessageEVA": "El chat ha finalizado"
+      }
+    }
   },
   "huronHuntGroup": {
     "modalTitle": "Grupo de búsqueda",
@@ -9371,7 +9402,7 @@
       "beforeVerify": "Debe copiar y pegar este token de comprobación de DNS en la sección de registro de TXT para demostrar que posee el dominio:",
       "warning": "Es importante verificar todos los dominios. Los usuarios que no pertenezcan a un dominio verificado se bloquearán inmediatamente. Esos usuarios no podrán conectarse ni utilizar los servicios de Cisco Spark. Usted tampoco podrá agregar a ningún usuario nuevo que pertenezca a dominios no verificados.",
       "verify": "Comprobar",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Obtenga más información</a> sobre cómo introducir el token de comprobación de DNS."
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Obtenga más información</a> sobre cómo introducir el token de comprobación de DNS."
     },
     "claim": {
       "header": "Reclamar dominio",

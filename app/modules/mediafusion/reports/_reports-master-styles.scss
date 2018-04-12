@@ -7,7 +7,38 @@
 @import 'adoption-report/meeting-location/_meeting-location-styles';
 @import 'media-report-card/_media_report_card';
 @import 'media-report-flip-card/_media-report-flip-styles.scss';
+@import 'resources-reports/cluster-cascade-bandwidth/_cluster-cascade-bandwidth';
+@import 'resources-reports/streams-bandwidth-usage/_streams-bandwidth-usage';
+@import 'resources-reports/cascade-bandwidth/_cascade-bandwidth';
 .media-reports {
+  .cascade-bandwidth-card {
+    float: left;
+    left: 0!important;
+    width: 100%!important;
+    position: relative;
+    display: flex!important;
+  }
+  .cascade-card-container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .cascade-bandwidth-card > article {
+    position: relative;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 2px;
+    -webkit-box-shadow: 0 1px 2px 1px rgba(52,53,55,.18);
+    box-shadow: 0 1px 2px 1px rgba(52,53,55,.18);
+    color: #666;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    vertical-align: top;
+  }
   @extend %content-subheader;
   @extend %page-content-padding;
   .utilization-reports,
@@ -83,7 +114,6 @@
       z-index: 50;
     }
     .amExportButton {
-      left: calc(95% + 0.1rem);
       ul,
       .export-main,
       .export-list {

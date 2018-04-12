@@ -13,6 +13,7 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
     $rootScope,
     $scope,
     $state,
+    $location,
     Authinfo,
     AutoAssignTemplateService,
     CardUtils,
@@ -36,6 +37,7 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
     ServiceDescriptorService,
     SetupWizardService,
     SsoCertificateExpirationNotificationService,
+    SsoCertificateService,
     SubscriptionWithUnsyncedLicensesNotificationService,
     SunlightReportService,
     SunlightUtilitiesService,
@@ -51,6 +53,7 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
     vm.isCSB = Authinfo.isCSB();
     vm.isDeviceManagement = Authinfo.isDeviceMgmt();
     vm.orgData = null;
+    vm.atlasF3745AutoAssignLicensesToggle = false;
 
     var hybridCallHighAvailability = 'atlas.notification.squared-fusion-uc-high-availability.acknowledged';
     var allHybridCalendarsNotification = 'atlas.notification.squared-fusion-all-calendars.acknowledged';
@@ -74,8 +77,16 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
     vm.notificationComparator = notificationComparator;
     vm.ftEnterpriseTrunking = false;
     vm.showUserTaskManagerModal = showUserTaskManagerModal;
+    var updateSsoCertificateNow = false;
 
     ////////////////////////////////
+    // Remove the updateSsoCertificateNow search param if present,
+    // because we only want to show SSO Certificate Update dialog
+    // the very first time when going into the Overview page.
+    if (_.toLower($location.search().updateSsoCertificateNow) === 'true') {
+      $location.search('updateSsoCertificateNow', null);
+      updateSsoCertificateNow = true;
+    }
 
     $q.all({
       enabledNotPurchased: ProPackService.hasProPackEnabledAndNotPurchased(),
@@ -304,6 +315,7 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
       });
 
       FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus().then(function (toggle) {
+        vm.atlasF3745AutoAssignLicensesToggle = toggle;
         if (toggle) {
           AutoAssignTemplateService.hasDefaultTemplate().then(function (hasDefaultTemplate) {
             if (!hasDefaultTemplate) {
@@ -367,13 +379,24 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
         return;
       }
 
-      var today = moment();
-      var certificateExpirationDate = moment(_.get(vm.orgData, 'hostedSpPrimaryCertExpiration'));
-      var daysDiff = certificateExpirationDate.diff(today, 'days');
-      if (daysDiff <= SsoCertExpNotificationService.CERTIFICATE_EXPIRATION_DAYS) {
-        vm.notifications.push(SsoCertificateExpirationNotificationService.createNotification(daysDiff));
-        resizeNotifications();
-      }
+      SsoCertificateService.getOrgCertificates()
+        .then(function (certificates) {
+          var primaryCert = _.find(certificates, { primary: true });
+          if (_.isUndefined(primaryCert)) {
+            return;
+          }
+
+          var today = moment();
+          var certificateExpirationDate = moment(_.get(primaryCert, 'expirationDate'));
+          var daysDiff = certificateExpirationDate.diff(today, 'days');
+          if (daysDiff <= SsoCertExpNotificationService.CERTIFICATE_EXPIRATION_DAYS) {
+            vm.notifications.push(SsoCertificateExpirationNotificationService.createNotification(daysDiff));
+            resizeNotifications();
+            if (updateSsoCertificateNow) {
+              $state.go('sso-certificate.sso-certificate-check');
+            }
+          }
+        });
     }
 
     function getTOSStatus() {
@@ -529,7 +552,19 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
       });
     });
 
-    $rootScope.$watch('ssoEnabled', function (newValue, oldValue) {
+    $scope.$on('Core::ssoCertificateExpirationNotificationDismissed', function () {
+      vm.notifications = _.reject(vm.notifications, {
+        name: SsoCertExpNotificationService.SSO_CERTIFICATE_NOTIFICATION_NAME,
+      });
+    });
+
+    $scope.$on('$destroy', function () {
+      if (_.isFunction(deregisterSsoEnabledListener)) {
+        deregisterSsoEnabledListener();
+      }
+    });
+
+    var deregisterSsoEnabledListener = $rootScope.$watch('ssoEnabled', function (newValue, oldValue) {
       if (newValue !== oldValue) {
         var params = {
           disableCache: true,
