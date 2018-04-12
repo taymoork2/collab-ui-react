@@ -2,7 +2,7 @@ import { CtBaseController } from './ctBase.controller';
 import { CTService } from './services/CTService';
 import { TemplateWizardService } from './services/TemplateWizard.service';
 import { DomainManagementService } from 'modules/core/domainManagement/domainmanagement.service';
-import { SunlightConfigService } from 'modules/sunlight/services/SunlightConfigService';
+import { SunlightConfigService } from 'modules/sunlight/services/sunlightConfigService';
 import { Notification } from 'modules/core/notifications/notification.service';
 class CtSummaryComponentController extends CtBaseController {
 
