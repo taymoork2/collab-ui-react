@@ -4,6 +4,7 @@ import { HcsLicenseService } from './hcs-license.service';
 
 export * from './hcs-base';
 export * from './hcs-license';
+export * from './hcs-delete-modal';
 export { HcsUpgradeService, HcsSetupModalService, HcsSetupModalSelect, HcsLicenseService };
 
 export default angular
